@@ -17,12 +17,10 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* @ts-expect-error Async Server Component */}
       <GlobalMetricsBar />
       <PriceTicker initial={prices} />
       <Hero />
       <ReassuranceSection />
-      {/* @ts-expect-error Async Server Component */}
       <MarketTable limit={20} />
       <Top10CryptosSection />
       <HiddenGemsSection />
