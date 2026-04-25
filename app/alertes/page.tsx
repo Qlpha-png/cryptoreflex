@@ -35,14 +35,14 @@ import AlertsManager, {
 const PAGE_URL = `${BRAND.url}/alertes`;
 
 export const metadata: Metadata = {
-  title: "Alertes prix crypto par email — gratuites, sans compte | Cryptoreflex",
+  title: "Alertes prix crypto par email — gratuites, sans compte",
   description:
     "Crée tes alertes prix crypto en 30 secondes. Reçois un email dès que Bitcoin, Ethereum ou n'importe quelle crypto franchit ton seuil — gratuit, sans pub, désinscription en 1 clic.",
   alternates: { canonical: PAGE_URL },
   openGraph: {
     type: "website",
     url: PAGE_URL,
-    title: "Alertes prix crypto par email — gratuites | Cryptoreflex",
+    title: "Alertes prix crypto par email — gratuites",
     description:
       "Sois prévenu·e par email dès qu'une crypto franchit ton seuil. Gratuit, sans compte, RGPD-friendly.",
   },
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Comment fonctionnent les alertes prix Cryptoreflex ?",
-    a: "Tu choisis une crypto, un seuil (par exemple Bitcoin > 50 000 €), tu indiques ton email, et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification toutes les 15 minutes via CoinGecko, anti-spam de 24h entre deux déclenchements pour la même alerte.",
+    a: "Tu choisis une crypto, un seuil (par exemple Bitcoin > 50 000 €), tu indiques ton email, et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
   },
   {
     q: "Faut-il créer un compte ?",
@@ -157,7 +157,7 @@ export default function AlertesPage() {
           <p className="mt-4 text-lg text-fg/80 max-w-3xl">
             Reçois un message dès qu'une crypto franchit ton seuil — Bitcoin
             au-dessus de 80 000 €, Ethereum sous 2 500 $, peu importe.
-            Vérification toutes les 15 minutes, désinscription en 1 clic.
+            Vérification quotidienne, désinscription en 1 clic.
           </p>
 
           {/* Trust signals */}
@@ -168,7 +168,7 @@ export default function AlertesPage() {
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Zap className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
-              Données CoinGecko · cron 15 min
+              Données CoinGecko · cron quotidien
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-primary-soft" aria-hidden="true" />
@@ -279,7 +279,7 @@ export default function AlertesPage() {
 
         {/* Mentions */}
         <p className="mt-12 text-[11px] text-muted leading-relaxed">
-          Données prix : CoinGecko (mise à jour toutes les 15 min côté cron Cryptoreflex).
+          Données prix : CoinGecko (vérification quotidienne par cron Cryptoreflex à 8h UTC).
           Cette page n'est pas un conseil en investissement — voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>.
           Les emails sont envoyés depuis le domaine officiel <strong>{BRAND.domain}</strong>.

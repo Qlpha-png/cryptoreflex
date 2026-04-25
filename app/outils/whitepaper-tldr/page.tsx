@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: PAGE_URL,
-    title: "Whitepaper TL;DR — Score BS instantane | Cryptoreflex",
+    title: "Whitepaper TL;DR — Score BS instantane",
     description:
       "Outil gratuit pour decoder un whitepaper crypto : resume structure + score BS sur 100 + verdict Serieux/Mitige/Suspect.",
   },
