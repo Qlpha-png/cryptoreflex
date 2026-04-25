@@ -1,0 +1,387 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-25",
+    "purpose": "10 cryptos moins connues mais avec fondamentaux solides + reliability scoring",
+    "selectionCriteria": [
+      "Cap entre 100M$ et 5Md$",
+      "Projet actif depuis 2+ ans",
+      "Équipe identifiée",
+      "Code open-source",
+      "Pas de scandale majeur",
+      "Audit Certik/Hacken/Trail of Bits récent",
+      "Disponible sur 2+ exchanges régulés"
+    ]
+  },
+  "hiddenGems": [
+    {
+      "rank": 1,
+      "id": "near-protocol",
+      "name": "NEAR Protocol",
+      "symbol": "NEAR",
+      "coingeckoId": "near",
+      "marketCapRange": "2Md$ - 4Md$",
+      "yearCreated": 2020,
+      "category": "Layer 1",
+      "tagline": "Le Layer 1 sharded qui mise sur l'IA et l'expérience utilisateur web2",
+      "what": "NEAR est une blockchain Layer 1 qui utilise le sharding (Nightshade) pour traiter des milliers de transactions par seconde. Comptes lisibles type 'alice.near' et SDK qui permet aux devs web2 d'onboarder facilement.",
+      "whyHiddenGem": "NEAR s'est positionné en 2024-2026 comme leader des 'User-Owned AI'. Co-fondateur Illia Polosukhin (ex-Google, co-auteur 'Attention is All You Need'). Chain Abstraction permet d'interagir avec Bitcoin/Ethereum sans bridge.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Halborn", "Trail of Bits", "Zellic"],
+        "lastAuditDate": "2025-08",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun. Pause temporaire du réseau en 2022 résolue rapidement.",
+        "fundingRaised": "525M$",
+        "backers": ["Andreessen Horowitz (a16z)", "Pantera Capital", "Tiger Global", "Coinbase Ventures"]
+      },
+      "risks": [
+        "Concurrence frontale avec Solana, Aptos et Sui",
+        "Pivot stratégique vers l'IA encore non prouvé en revenus on-chain",
+        "Inflation annuelle ~5% qui dilue les holders"
+      ],
+      "useCase": "dApps haute performance, agents IA on-chain, micro-paiements, NFT gaming, comptes abstraits",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "OKX"],
+      "officialUrl": "https://near.org",
+      "monitoringSignals": [
+        "Comptes actifs quotidiens sur nearblocks.io (objectif >500k DAU)",
+        "TVL DeFi sur DefiLlama",
+        "Activité GitHub (commits hebdo, PRs mergés)"
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "celestia",
+      "name": "Celestia",
+      "symbol": "TIA",
+      "coingeckoId": "celestia",
+      "marketCapRange": "500M$ - 1.5Md$",
+      "yearCreated": 2023,
+      "category": "Modular Blockchain / Data Availability",
+      "tagline": "La première blockchain modulaire dédiée à la disponibilité des données",
+      "what": "Celestia est une blockchain modulaire qui se concentre sur la couche 'Data Availability' (DA). Elle laisse les rollups gérer leur propre exécution et leur fournit un espace de stockage de données vérifiable et bon marché.",
+      "whyHiddenGem": "Pionnier du paradigme modulaire qui domine les architectures L2/L3 en 2026. Adopté par Manta, Eclipse, Movement. Mainnet 'Lemongrass' et 'Ginger' ont multiplié par 10x la capacité DA en 2025.",
+      "reliability": {
+        "score": 8.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Informal Systems", "OtterSec", "Binary Builders"],
+        "lastAuditDate": "2025-06",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun. Controverse modérée sur le calendrier de déblocage des tokens fin 2024.",
+        "fundingRaised": "155M$",
+        "backers": ["Bain Capital Crypto", "Polychain Capital", "Placeholder", "Galaxy Digital"]
+      },
+      "risks": [
+        "Concurrence directe d'EigenDA et Avail",
+        "Dépendance à l'adoption des rollups : si les L2 préfèrent ETH DA, TIA perd sa thèse",
+        "Forte inflation (8% annuel) et déblocages VC en cours"
+      ],
+      "useCase": "Stockage de données pour rollups Ethereum, sovereign rollups, app-chains modulaires, gaming on-chain à coût réduit",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "officialUrl": "https://celestia.org",
+      "monitoringSignals": [
+        "Nombre de rollups utilisant Celestia DA (Modular.cloud)",
+        "Octets de données postés par jour (celenium.io)",
+        "Market share DA vs EigenDA et Avail"
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "the-graph",
+      "name": "The Graph",
+      "symbol": "GRT",
+      "coingeckoId": "the-graph",
+      "marketCapRange": "800M$ - 2Md$",
+      "yearCreated": 2020,
+      "category": "Infrastructure / Indexation",
+      "tagline": "Le Google de la blockchain : indexation décentralisée des données on-chain",
+      "what": "The Graph est un protocole décentralisé qui indexe et organise les données blockchain pour qu'elles soient interrogeables via API GraphQL ('subgraphs'). Quasiment toutes les dApps DeFi majeures (Uniswap, Aave) l'utilisent.",
+      "whyHiddenGem": "Souvent oublié car peu spéculatif, c'est l'infrastructure invisible du Web3. Migration vers le 'New Era' (subgraphs sur réseau décentralisé uniquement) achevée en 2024. Pivot vers le service de données IA en 2025.",
+      "reliability": {
+        "score": 9.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["OpenZeppelin", "Consensys Diligence"],
+        "lastAuditDate": "2025-04",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun incident de sécurité majeur depuis le lancement.",
+        "fundingRaised": "60M$",
+        "backers": ["Coinbase Ventures", "DCG", "Multicoin Capital", "Framework Ventures"]
+      },
+      "risks": [
+        "Concurrence open-source d'alternatives gratuites (Subsquid, indexers internes)",
+        "Token GRT subit pression vendeuse régulière des indexers",
+        "Demande de queries payantes encore inférieure aux récompenses inflationnaires"
+      ],
+      "useCase": "Indexation pour dApps, dashboards analytiques, oracles de données historiques, agents IA",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitstamp", "Bitget"],
+      "officialUrl": "https://thegraph.com",
+      "monitoringSignals": [
+        "Query fees payés en GRT par mois",
+        "Nombre de subgraphs actifs",
+        "Nombre d'indexers actifs (>100 = bonne décentralisation)"
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "render",
+      "name": "Render Network",
+      "symbol": "RNDR",
+      "coingeckoId": "render-token",
+      "marketCapRange": "2Md$ - 4Md$",
+      "yearCreated": 2017,
+      "category": "DePIN / GPU Computing",
+      "tagline": "Le AWS décentralisé du rendu graphique et du calcul GPU pour l'IA",
+      "what": "Render Network connecte les détenteurs de GPU inutilisées aux artistes 3D, studios VFX et entreprises IA. Fondé par Jules Urbach (CEO d'OTOY, partenaire Disney/HBO).",
+      "whyHiddenGem": "Migration réussie d'Ethereum vers Solana en 2023 a réduit drastiquement les frais. Adoption croissante par l'écosystème IA (Stability AI, Apple Vision Pro). Équipe avec 15+ ans d'expérience via OTOY.",
+      "reliability": {
+        "score": 8.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Halborn", "OtterSec"],
+        "lastAuditDate": "2025-07",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack. Critiques sur la lenteur d'adoption avant 2023.",
+        "fundingRaised": "30M$ + ICO 2018",
+        "backers": ["Multicoin Capital", "Solana Ventures"]
+      },
+      "risks": [
+        "Concurrence frontale avec io.net, Akash et Aethir",
+        "Dépendance forte à OTOY (centralisation économique)",
+        "Demande GPU IA dépend de la demande globale (AWS, GCP restent dominants)"
+      ],
+      "useCase": "Rendu 3D pour films/jeux, entraînement et inférence de modèles IA, génération d'images, métaverses 3D",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "officialUrl": "https://rendernetwork.com",
+      "monitoringSignals": [
+        "Jobs de rendu complétés par mois (dashboard Render)",
+        "Node operators actifs",
+        "Croissance du burn-and-mint (BME) de RNDR"
+      ]
+    },
+    {
+      "rank": 5,
+      "id": "ondo-finance",
+      "name": "Ondo Finance",
+      "symbol": "ONDO",
+      "coingeckoId": "ondo-finance",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2021,
+      "category": "Real World Assets (RWA)",
+      "tagline": "Tokenisation institutionnelle de bons du Trésor américain et obligations",
+      "what": "Ondo Finance tokenise des actifs traditionnels comme les bons du Trésor US (produit OUSG) et les obligations d'entreprise pour les rendre disponibles on-chain. Co-fondé par Nathan Allman, ex-Goldman Sachs Digital Assets.",
+      "whyHiddenGem": "Leader incontesté du secteur RWA avec >1Md$ de TVL en 2026. Partenariats avec BlackRock (BUIDL fund), Franklin Templeton et lancement de Ondo Chain (L1 RWA-focused). Le secteur RWA est l'une des thèses macro les plus solides du cycle.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Code4rena", "Trail of Bits"],
+        "lastAuditDate": "2025-10",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun. Conforme régulations US (Reg D, Reg S).",
+        "fundingRaised": "46M$",
+        "backers": ["Founders Fund (Peter Thiel)", "Pantera", "Coinbase Ventures", "Tiger Global"]
+      },
+      "risks": [
+        "Risque réglementaire majeur si la SEC requalifie les produits comme securities non-conformes",
+        "Forte concentration des holders (token unlock cliffs en 2026-2027)",
+        "Dépendance aux taux d'intérêt US"
+      ],
+      "useCase": "Investissement institutionnel on-chain, collatéral DeFi à rendement, gestion de trésorerie DAO, accès non-US aux Treasuries",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "officialUrl": "https://ondo.finance",
+      "monitoringSignals": [
+        "TVL des produits OUSG et USDY sur DefiLlama",
+        "Nombre d'institutions onboardées (rapports trimestriels Ondo)",
+        "Volume de trading on-chain des produits tokenisés"
+      ]
+    },
+    {
+      "rank": 6,
+      "id": "arbitrum",
+      "name": "Arbitrum",
+      "symbol": "ARB",
+      "coingeckoId": "arbitrum",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2021,
+      "category": "Layer 2 Ethereum",
+      "tagline": "Le L2 Ethereum dominant en TVL avec le plus large écosystème DeFi",
+      "what": "Arbitrum est un Layer 2 Ethereum 'Optimistic Rollup' qui réduit les frais de ~10-100x tout en héritant de la sécurité d'Ethereum. Développé par Offchain Labs (co-fondé par Ed Felten, ex-deputy CTO de la Maison Blanche).",
+      "whyHiddenGem": "Bien que connu, le token ARB est sous-valorisé par rapport au TVL massif (>15Md$ historique). Stylus (smart contracts en Rust/C++) ouvre l'écosystème. Orbit chains permet aux projets de lancer leur propre L3.",
+      "reliability": {
+        "score": 9.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Trail of Bits", "ConsenSys Diligence", "OpenZeppelin"],
+        "lastAuditDate": "2025-09",
+        "yearsActive": 5,
+        "majorIncidents": "Outage du sequencer 78 minutes en 2023, sans perte de fonds.",
+        "fundingRaised": "143M$",
+        "backers": ["Lightspeed", "Polychain", "Pantera", "Mark Cuban"]
+      },
+      "risks": [
+        "Sequencer encore centralisé (Offchain Labs) malgré roadmap de décentralisation",
+        "Concurrence intense avec Base (Coinbase), Optimism, zkSync, Linea",
+        "Token ARB a une utilité limitée (gouvernance uniquement)"
+      ],
+      "useCase": "DeFi à frais réduits (GMX, Camelot, Pendle), gaming on-chain, NFT, lancement de L3 via Arbitrum Orbit",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "OKX"],
+      "officialUrl": "https://arbitrum.io",
+      "monitoringSignals": [
+        "TVL Arbitrum One sur DefiLlama (objectif >10Md$)",
+        "Transactions quotidiennes sur arbiscan.io",
+        "Nombre de chains Orbit lancées"
+      ]
+    },
+    {
+      "rank": 7,
+      "id": "pyth-network",
+      "name": "Pyth Network",
+      "symbol": "PYTH",
+      "coingeckoId": "pyth-network",
+      "marketCapRange": "500M$ - 2Md$",
+      "yearCreated": 2021,
+      "category": "Infrastructure / Oracles",
+      "tagline": "L'oracle de prix institutionnel multi-chain alimenté par Wall Street",
+      "what": "Pyth Network agrège des données de prix en temps réel directement depuis 100+ institutions financières (Jane Street, CBOE, Binance). Présent sur 70+ blockchains.",
+      "whyHiddenGem": "Concurrent crédible de Chainlink avec un modèle 'pull-based' plus rapide et moins coûteux. Adopté massivement par les DEX perp (Drift, Hyperliquid, Synthetix). Pyth Pro pour données institutionnelles payantes en 2025.",
+      "reliability": {
+        "score": 8.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["OtterSec", "Zellic", "Trail of Bits"],
+        "lastAuditDate": "2025-05",
+        "yearsActive": 5,
+        "majorIncidents": "Incident de 'mauvais prix' BTC en septembre 2023 (~5 sec), corrigé sans pertes majeures.",
+        "fundingRaised": "Non public (incubé par Jump Crypto)",
+        "backers": ["Jump Crypto", "Multicoin Capital", "Wintermute", "Castle Island Ventures"]
+      },
+      "risks": [
+        "Concurrence frontale avec Chainlink, leader avec ~70% du marché oracle",
+        "Forte dépendance à Jump Crypto",
+        "Token PYTH avec déblocages massifs jusqu'en 2027"
+      ],
+      "useCase": "Oracles de prix pour DEX, lending protocols, dérivés on-chain, données financières institutionnelles, RWA pricing",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "officialUrl": "https://pyth.network",
+      "monitoringSignals": [
+        "Total Value Secured (TVS) sur pyth.network",
+        "Nombre de price feeds actifs et de chains supportées",
+        "Part de marché vs Chainlink (DefiLlama Oracles)"
+      ]
+    },
+    {
+      "rank": 8,
+      "id": "filecoin",
+      "name": "Filecoin",
+      "symbol": "FIL",
+      "coingeckoId": "filecoin",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2020,
+      "category": "DePIN / Stockage décentralisé",
+      "tagline": "Le réseau de stockage décentralisé qui rivalise avec AWS S3",
+      "what": "Filecoin est un réseau de stockage décentralisé où les utilisateurs paient en FIL pour stocker leurs données chez des 'storage providers' partout dans le monde. Développé par Protocol Labs (créateurs d'IPFS).",
+      "whyHiddenGem": "Souvent décrié pour son ICO record (200M$ en 2017), Filecoin a pivoté avec succès via Filecoin Virtual Machine (FVM) en 2023, permettant le DeFi sur le stockage. Partenariats avec UC Berkeley, Internet Archive, Lockheed Martin.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Trail of Bits", "Sigma Prime", "Consensys Diligence"],
+        "lastAuditDate": "2025-03",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun hack majeur. Critiques persistantes sur l'utilisation réelle vs capacité totale.",
+        "fundingRaised": "257M$ ICO + funding privé",
+        "backers": ["Sequoia", "Andreessen Horowitz", "Union Square Ventures", "Y Combinator"]
+      },
+      "risks": [
+        "Faible ratio stockage 'utile' vs capacité totale (beaucoup de stockage 'fake' pour le farming)",
+        "Concurrence d'Arweave et Walrus (Sui)",
+        "Inflation FIL importante via les récompenses aux storage providers"
+      ],
+      "useCase": "Stockage décentralisé, archivage long terme, datasets IA, NFT metadata, sauvegardes d'entreprise, données scientifiques",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitstamp", "OKX"],
+      "officialUrl": "https://filecoin.io",
+      "monitoringSignals": [
+        "Données réelles stockées vs capacité totale (filfox.info)",
+        "TVL sur Filecoin FVM (DefiLlama)",
+        "Nombre de deals actifs avec clients enterprise"
+      ]
+    },
+    {
+      "rank": 9,
+      "id": "injective",
+      "name": "Injective",
+      "symbol": "INJ",
+      "coingeckoId": "injective-protocol",
+      "marketCapRange": "800M$ - 3Md$",
+      "yearCreated": 2020,
+      "category": "Layer 1 / DeFi",
+      "tagline": "Le Layer 1 spécialisé dans les dérivés financiers et le trading on-chain",
+      "what": "Injective est un Layer 1 basé sur Cosmos SDK, optimisé pour les applications financières (DEX perp, options, prediction markets, RWA). Orderbook on-chain natif et compatibilité multi-VM (CosmWasm, EVM, SVM).",
+      "whyHiddenGem": "Tokenomics agressifs avec 'burn auction' qui brûle 60% des frais générés (déflationniste). Lancement de inEVM et inSVM en 2024-2025. Croissance avec Helix, Dojo, Black Panther.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Informal Systems", "Halborn", "CertiK"],
+        "lastAuditDate": "2025-06",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun hack majeur. Critiques sur la concentration des validateurs.",
+        "fundingRaised": "57M$",
+        "backers": ["Binance Labs", "Pantera", "Jump Crypto", "Mark Cuban"]
+      },
+      "risks": [
+        "Concentration validateurs (top 10 contrôle >40% du stake)",
+        "Concurrence forte de dYdX, Hyperliquid, Sei",
+        "Écosystème dApps encore limité"
+      ],
+      "useCase": "DEX de dérivés perpétuels, options on-chain, prediction markets, tokenisation d'actifs synthétiques, structured products",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "officialUrl": "https://injective.com",
+      "monitoringSignals": [
+        "Volume burn auction hebdomadaire (injburn.com)",
+        "Volume de trading sur Helix DEX",
+        "TVL Injective sur DefiLlama"
+      ]
+    },
+    {
+      "rank": 10,
+      "id": "mina-protocol",
+      "name": "Mina Protocol",
+      "symbol": "MINA",
+      "coingeckoId": "mina-protocol",
+      "marketCapRange": "150M$ - 600M$",
+      "yearCreated": 2021,
+      "category": "Layer 1 / Privacy / ZK",
+      "tagline": "La blockchain la plus légère au monde (22 KB) grâce aux preuves zero-knowledge",
+      "what": "Mina est une blockchain de taille constante (22 kilobytes seulement) grâce aux preuves récursives zk-SNARKs. Permet de vérifier la blockchain entière depuis un téléphone et d'exécuter des 'zkApps' qui prouvent des données sans les révéler.",
+      "whyHiddenGem": "Pionnier des zkApps avec un focus privacy. Adoption croissante dans l'identité (KYC privé, attestation off-chain). Équipe O(1) Labs avec cryptographes de pointe (Evan Shapiro, Izaak Meckler). Mainnet Berkeley a apporté les zkApps en 2024.",
+      "reliability": {
+        "score": 7.0,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": ["Trail of Bits", "Veridise"],
+        "lastAuditDate": "2025-02",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun hack majeur. Controverse en 2021 sur la distribution initiale.",
+        "fundingRaised": "48M$",
+        "backers": ["Polychain", "Coinbase Ventures", "Paradigm"]
+      },
+      "risks": [
+        "Adoption zkApps lente : peu de dApps grand public en production",
+        "Concurrence ZK générale (Aleo, Aztec, Polygon zkEVM, StarkNet)",
+        "Liquidity faible, volatilité élevée"
+      ],
+      "useCase": "Identité décentralisée privée, KYC zero-knowledge, vérification off-chain (credit scoring, attestations), oracles privés, voting privé",
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "OKX", "Bitget"],
+      "officialUrl": "https://minaprotocol.com",
+      "monitoringSignals": [
+        "Nombre de zkApps déployés sur le mainnet (minascan.io)",
+        "Block producers actifs (décentralisation)",
+        "Activité GitHub d'O(1) Labs"
+      ]
+    }
+  ]
+}

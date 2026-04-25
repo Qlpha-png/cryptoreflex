@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #0B0D10;
+  color: #F4F5F7;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Halo gold doux en haut, signal premium discret */
+body {
+  background-image: radial-gradient(
+    ellipse 60% 35% at 50% -10%,
+    rgba(245, 165, 36, 0.08),
+    transparent 60%
+  );
+  background-attachment: fixed;
+}
+
+/* Tabular nums pour tous les chiffres en mono — alignement parfait des prix */
+.font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  .glass {
+    @apply bg-elevated/70 backdrop-blur-xl border border-border;
+  }
+  /* Highlight d'identité : un seul accent gold, pas de gradient multi-couleurs */
+  .gradient-text {
+    @apply text-primary;
+  }
+  /* Bordure sobre — pas l'effet glow violet/cyan qui criait "trader" */
+  .glow-border {
+    @apply border border-primary/30;
+  }
+  .accent-text {
+    @apply text-primary;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
+           bg-primary text-white
+           transition-colors hover:bg-primary-glow active:bg-primary
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
+           border border-border text-white/90 hover:border-primary/60 hover:text-white
+           transition-colors;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium;
+  }
+  .badge-trust {
+    @apply badge border-accent-green/40 bg-accent-green/10 text-accent-green;
+  }
+  .badge-info {
+    @apply badge border-primary/40 bg-primary/10 text-primary-soft;
+  }
+}
+
+/* Dotted grid — pattern recommandé par le design lead, plus subtil que la grille linéaire */
+.bg-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(245, 245, 247, 0.04) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* Pulse dot vert : signal "live data" sur le widget hero */
+.live-dot::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  margin-right: 6px;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #171A21;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2F3A;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C2410C;
+}
