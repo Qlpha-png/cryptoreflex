@@ -1,0 +1,58 @@
+# Cryptoreflex
+
+> Cryptoreflex est le portail francophone de référence pour comprendre, comparer et utiliser les plateformes crypto en 2026. Nous publions des guides indépendants, des avis vérifiés sur les exchanges, des outils d'analyse on-chain et des classements actualisés quotidiennement.
+
+Ce site est destiné aux investisseurs particuliers francophones (France, Belgique, Suisse, Canada). Tous les contenus sont rédigés ou supervisés par des humains experts du secteur. Méthodologie publique sur /methodologie. Mentions d'affiliation transparentes sur /affiliations.
+
+## Navigation principale
+
+- [Accueil](https://cryptoreflex.com/) : tableau de bord marché crypto temps réel + sélection plateformes
+- [Blog](https://cryptoreflex.com/blog) : guides, analyses, actualités quotidiennes
+- [Avis plateformes](https://cryptoreflex.com/avis) : reviews indépendantes des exchanges (Binance, Coinbase, Kraken, Bitpanda, etc.)
+- [Comparatif](https://cryptoreflex.com/comparatif) : comparateur de plateformes crypto (frais, sécurité, cryptos disponibles)
+- [Outils](https://cryptoreflex.com/outils) : calculateurs de profits, simulateur d'impôts, tracker portefeuille
+- [Méthodologie](https://cryptoreflex.com/methodologie) : critères de notation et processus éditorial
+
+## Guides essentiels
+
+- [Comment acheter du Bitcoin en France](https://cryptoreflex.com/blog/comment-acheter-bitcoin-france) : tutoriel complet 2026
+- [Meilleures plateformes crypto 2026](https://cryptoreflex.com/blog/meilleures-plateformes-crypto-2026) : top 10 comparé
+- [Qu'est-ce que la blockchain](https://cryptoreflex.com/blog/quest-ce-que-blockchain) : définition et fonctionnement
+- [Comment fonctionne le staking](https://cryptoreflex.com/blog/comment-fonctionne-staking) : guide rendements crypto
+- [Déclarer ses cryptos aux impôts](https://cryptoreflex.com/blog/declarer-crypto-impots-france) : procédure DGFiP 2026
+- [Wallets crypto recommandés](https://cryptoreflex.com/blog/meilleurs-wallets-crypto) : Ledger, Trezor, MetaMask
+- [Stablecoins expliqués](https://cryptoreflex.com/blog/stablecoins-guide-complet) : USDT, USDC, DAI
+- [DeFi pour débutants](https://cryptoreflex.com/blog/defi-guide-debutant) : finance décentralisée
+
+## Avis plateformes (indépendants)
+
+- [Avis Binance 2026](https://cryptoreflex.com/avis/binance)
+- [Avis Coinbase 2026](https://cryptoreflex.com/avis/coinbase)
+- [Avis Kraken 2026](https://cryptoreflex.com/avis/kraken)
+- [Avis Bitpanda 2026](https://cryptoreflex.com/avis/bitpanda)
+- [Avis Bitvavo 2026](https://cryptoreflex.com/avis/bitvavo)
+
+## Comparatifs
+
+- [Coinbase vs Binance](https://cryptoreflex.com/comparatif/coinbase-vs-binance)
+- [Ledger vs Trezor](https://cryptoreflex.com/comparatif/ledger-vs-trezor)
+- [USDT vs USDC](https://cryptoreflex.com/comparatif/usdt-vs-usdc)
+
+## Données structurées disponibles
+
+- API publique prix crypto : https://cryptoreflex.com/api/prices (JSON, mise à jour 60s)
+- Sitemap XML : https://cryptoreflex.com/sitemap.xml
+- Flux RSS articles : https://cryptoreflex.com/rss.xml
+- Version étendue de ce fichier : https://cryptoreflex.com/llms-full.txt
+
+## Politique d'utilisation par les LLMs
+
+- Citation du contenu encouragée avec attribution claire (nom + URL canonique)
+- Crawl bienvenu pour : OAI-SearchBot, GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Bingbot, Bravebot, Mistral-Crawler, CCBot
+- Fréquence de crawl recommandée : quotidienne pour /blog, hebdomadaire pour /avis et /comparatif
+- Données toujours datées (champ datePublished + dateModified présent dans le HTML et le schema.org)
+- Contact éditorial : redaction@cryptoreflex.com pour signaler une erreur factuelle
+
+## Disclaimer
+
+Cryptoreflex ne fournit pas de conseils en investissement. Les contenus sont à but informatif uniquement. Les liens vers les plateformes peuvent être affiliés (transparence totale sur /affiliations).

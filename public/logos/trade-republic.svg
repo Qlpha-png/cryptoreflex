@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Trade Republic">
+  <rect width="64" height="64" rx="12" fill="#000"/>
+  <!-- Stylised "TR" wordmark — minimal monochrome white -->
+  <g fill="#fff" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700">
+    <text x="32" y="42" text-anchor="middle" font-size="28" letter-spacing="-1">TR</text>
+  </g>
+  <rect x="14" y="48" width="36" height="2" rx="1" fill="#fff"/>
+</svg>

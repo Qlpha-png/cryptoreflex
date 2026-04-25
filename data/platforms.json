@@ -265,6 +265,64 @@
       "weaknesses": ["Token BORG nécessaire pour réduire frais", "Pas de trading pro/levier", "Dépôt minimum 50€"],
       "badge": null,
       "category": "broker"
+    },
+    {
+      "id": "bybit",
+      "name": "Bybit",
+      "logo": "/logos/bybit.svg",
+      "tagline": "Pour qui c'est : traders dérivés cherchant profondeur de carnet et produits perp avancés",
+      "websiteUrl": "https://www.bybit.com",
+      "affiliateUrl": "https://www.bybit.com?utm_source=cryptoreflex",
+      "scoring": { "global": 4.0, "fees": 4.6, "security": 4.0, "ux": 4.4, "support": 3.6, "mica": 3.6 },
+      "mica": {
+        "status": "Agrément MiCA (CASP) via Autriche (FMA)",
+        "amfRegistration": null,
+        "registrationDate": "2025-05-22",
+        "micaCompliant": true,
+        "atRiskJuly2026": false,
+        "lastVerified": "2026-04-25"
+      },
+      "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.1-0.4%" },
+      "deposit": { "minEur": 10, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "P2P"] },
+      "cryptos": { "totalCount": 700, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "MNT", "ATOM"] },
+      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
+      "security": { "coldStoragePct": 90, "insurance": true, "twoFA": true, "lastIncident": "Février 2025 (hack 1.4Md$ — fonds clients couverts par fonds propres + assurance)" },
+      "bonus": { "welcome": "Jusqu'à 30 000 USDT en bonus dépôt + trading", "amount": 30000, "currency": "USDT", "conditions": "Paliers de dépôt et volume", "validUntil": "2026-12-31" },
+      "ratings": { "trustpilot": 4.2, "trustpilotCount": 18000, "appStore": 4.6, "playStore": 4.4 },
+      "idealFor": "Traders avancés cherchant produits dérivés avec profondeur carnet et options crypto",
+      "strengths": ["Profondeur de carnet sur perp BTC/ETH parmi les meilleures", "Frais futures ultra-compétitifs (taker 0.055%)", "Plateforme options crypto complète"],
+      "weaknesses": ["Hack majeur en février 2025 (résolu mais cicatrice de réputation)", "Régulation MiCA via Autriche (jeune)", "Interface dense pour débutants"],
+      "badge": "Top dérivés",
+      "category": "exchange"
+    },
+    {
+      "id": "revolut",
+      "name": "Revolut",
+      "logo": "/logos/revolut.svg",
+      "tagline": "Pour qui c'est : utilisateurs de néobanque voulant acheter du crypto en 2 clics dans leur app du quotidien",
+      "websiteUrl": "https://www.revolut.com",
+      "affiliateUrl": "https://www.revolut.com?utm_source=cryptoreflex",
+      "scoring": { "global": 3.6, "fees": 2.8, "security": 4.2, "ux": 4.7, "support": 3.4, "mica": 4.5 },
+      "mica": {
+        "status": "Agrément MiCA (CASP) via Lituanie (Banque centrale)",
+        "amfRegistration": null,
+        "registrationDate": "2024-12-19",
+        "micaCompliant": true,
+        "atRiskJuly2026": false,
+        "lastVerified": "2026-04-25"
+      },
+      "fees": { "spotMaker": 1.49, "spotTaker": 1.49, "instantBuy": 1.49, "withdrawalCrypto": "Variable (Revolut X uniquement)", "withdrawalFiatSepa": 0, "spread": "1.5-2.5% (sauf Revolut X)" },
+      "deposit": { "minEur": 1, "methods": ["Solde Revolut", "CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
+      "cryptos": { "totalCount": 220, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT"] },
+      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
+      "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Septembre 2022 (vol interne 20M$ — clients non impactés)" },
+      "bonus": { "welcome": "Pas de bonus crypto récurrent en 2026 (offres ponctuelles)", "amount": null, "currency": null, "conditions": null, "validUntil": null },
+      "ratings": { "trustpilot": 4.2, "trustpilotCount": 198000, "appStore": 4.7, "playStore": 4.5 },
+      "idealFor": "Clients déjà Revolut voulant exposer une petite portion à crypto sans changer d'app",
+      "strengths": ["Intégré dans la néobanque Revolut (UX impeccable)", "Agrément MiCA + licence bancaire lituanienne", "Revolut X (mode pro) avec frais quasi nuls"],
+      "weaknesses": ["Frais 1,49% sur app classique (élevés)", "Retraits crypto réservés à Revolut X", "Support client souvent critiqué sur escalade"],
+      "badge": "Best néobanque",
+      "category": "broker"
     }
   ]
 }

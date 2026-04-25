@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SwissBorg">
+  <defs>
+    <linearGradient id="sb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00C3FF"/>
+      <stop offset="100%" stop-color="#0066FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#sb-grad)"/>
+  <!-- Stylised "S" / wave -->
+  <path d="M44 22c-3-4-8-6-13-6-6 0-11 4-11 9 0 4 3 7 9 8l6 1c4 .6 6 2 6 4 0 3-3 5-7 5-5 0-9-2-12-6"
+        stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+</svg>

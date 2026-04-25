@@ -1,0 +1,10 @@
+PLACEHOLDER — Régénérer en PNG 1200x630 à partir de /public/og-default.svg pour les crawlers
+qui n'acceptent pas le SVG en og:image (Twitter, Slack, LinkedIn, Discord).
+
+Commande recommandée :
+  magick -density 144 -background "#0B0D10" -resize 1200x630 public/og-default.svg public/og-default.png
+
+ou en CI :
+  npx sharp-cli -i public/og-default.svg -o public/og-default.png --width 1200 --height 630
+
+Tant que ce placeholder est en place, fallback sur og-default.svg dans <meta property="og:image" />.

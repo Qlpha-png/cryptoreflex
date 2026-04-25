@@ -1,0 +1,12 @@
+Placeholder pour /authors/kevin-voisin.jpg
+
+Remplace ce fichier par une vraie photo JPG de Kevin Voisin :
+- Format : JPG
+- Dimensions recommandées : 800x800 px (carré)
+- Poids : < 100 KB (compresser via squoosh.app ou tinyjpg.com)
+- Nom exact : kevin-voisin.jpg
+
+Tant que la vraie photo n'est pas en place, on rend un SVG de fallback
+(/authors/kevin-voisin.svg) — le composant <Image /> de Next acceptera
+les deux formats sans changement de code (mettre à jour `data/authors.json`
+si tu veux pointer vers le SVG temporairement : "image": "/authors/kevin-voisin.svg").

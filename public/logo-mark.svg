@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="crm-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="crm-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="50" r="12" fill="url(#crm-gold)"/>
+  <circle cx="32" cy="29" r="9"  fill="url(#crm-gold-soft)"/>
+  <circle cx="32" cy="13" r="6"  fill="#FCD34D"/>
+</svg>

@@ -1,61 +1,89 @@
 import Link from "next/link";
-import { Bitcoin, Twitter, Github, Send, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import Logo from "./Logo";
+
+/**
+ * Classes utilisées pour TOUT lien du footer :
+ *  - texte muted lisible 4.5:1 sur bg-surface
+ *  - hover & focus-visible explicites (WCAG 2.4.7)
+ *  - rounded pour que le ring soit propre
+ */
+const FOOTER_LINK =
+  "hover:text-white rounded focus:outline-none focus-visible:ring-2 " +
+  "focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export default function Footer() {
   return (
-    <footer className="mt-32 border-t border-border/60 bg-surface/40">
+    <footer
+      role="contentinfo"
+      aria-label="Pied de page"
+      className="mt-32 border-t border-border/60 bg-surface/40"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent-cyan shadow-glow">
-                <Bitcoin className="h-5 w-5 text-white" />
-              </span>
-              <span className="font-bold text-lg">
-                Crypto<span className="gradient-text">reflex</span>
-              </span>
-            </div>
+            <Logo variant="full" height={36} className="mb-3" />
+
             <p className="text-sm text-muted max-w-md">
               Votre guide pour naviguer dans l'univers crypto. Comparatifs de plateformes,
               guides pour débutants et outils gratuits — sans jargon.
             </p>
-            <div className="flex items-center gap-3 mt-4">
-              <Link href="#" aria-label="Twitter" className="p-2 rounded-lg border border-border hover:border-primary/60 transition-colors">
-                <Twitter className="h-4 w-4" />
-              </Link>
-              <Link href="#" aria-label="Telegram" className="p-2 rounded-lg border border-border hover:border-primary/60 transition-colors">
-                <Send className="h-4 w-4" />
-              </Link>
-              <Link href="#" aria-label="GitHub" className="p-2 rounded-lg border border-border hover:border-primary/60 transition-colors">
-                <Github className="h-4 w-4" />
-              </Link>
-              <Link href="#" aria-label="Email" className="p-2 rounded-lg border border-border hover:border-primary/60 transition-colors">
-                <Mail className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-semibold mb-3 text-white/90">Navigation</h4>
-            <ul className="space-y-2 text-sm text-muted">
-              <li><Link href="/" className="hover:text-white">Accueil</Link></li>
-              <li><Link href="/#plateformes" className="hover:text-white">Plateformes</Link></li>
-              <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
-              <li><Link href="/outils" className="hover:text-white">Outils</Link></li>
-              <li><Link href="/partenariats" className="hover:text-white">Partenariats</Link></li>
+            {/*
+              Audit P0-7 : suppression des liens sociaux placeholder (href="#").
+              Twitter / Telegram / GitHub : aucune URL réelle dans BRAND ;
+              les conserver dégradait SEO + a11y (lien sans destination).
+              Seul le contact e-mail (BRAND.email réel) est conservé.
+            */}
+            <ul
+              aria-label="Contact"
+              className="flex items-center gap-3 mt-4 list-none p-0"
+            >
+              <li>
+                <a
+                  href={`mailto:${BRAND.email}`}
+                  aria-label={`Contacter ${BRAND.name} par e-mail`}
+                  className={`p-2 rounded-lg border border-border hover:border-primary/60 transition-colors inline-flex ${FOOTER_LINK}`}
+                >
+                  <Mail className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-semibold mb-3 text-white/90">Légal & transparence</h4>
+          <nav aria-labelledby="footer-nav-heading">
+            <h2 id="footer-nav-heading" className="font-semibold mb-3 text-white/90 text-sm">
+              Navigation
+            </h2>
             <ul className="space-y-2 text-sm text-muted">
-              <li><Link href="/methodologie" className="hover:text-white">Méthodologie</Link></li>
-              <li><Link href="/affiliations" className="hover:text-white">Politique d'affiliation</Link></li>
-              <li><Link href="/confidentialite" className="hover:text-white">Confidentialité (RGPD)</Link></li>
-              <li><Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link></li>
+              <li><Link href="/" className={FOOTER_LINK}>Accueil</Link></li>
+              <li><Link href="/#plateformes" className={FOOTER_LINK}>Plateformes</Link></li>
+              <li><Link href="/blog" className={FOOTER_LINK}>Blog</Link></li>
+              <li><Link href="/actualites" className={FOOTER_LINK}>Actualités crypto</Link></li>
+              <li><Link href="/calendrier-crypto" className={FOOTER_LINK}>Calendrier événements</Link></li>
+              <li><Link href="/outils" className={FOOTER_LINK}>Outils</Link></li>
+              <li><Link href="/alertes" className={FOOTER_LINK}>Alertes prix</Link></li>
+              <li><Link href="/quiz/plateforme" className={FOOTER_LINK}>Quiz plateforme</Link></li>
+              <li><Link href="/quiz/crypto" className={FOOTER_LINK}>Quiz : quelle crypto pour toi ?</Link></li>
+              <li><Link href="/wizard/premier-achat" className={FOOTER_LINK}>Mon premier achat</Link></li>
+              <li><Link href="/watchlist" className={FOOTER_LINK}>Ma watchlist</Link></li>
+              <li><Link href="/portefeuille" className={FOOTER_LINK}>Mon portefeuille</Link></li>
+              <li><Link href="/academie" className={FOOTER_LINK}>Académie crypto</Link></li>
+              <li><Link href="/partenariats" className={FOOTER_LINK}>Partenariats</Link></li>
             </ul>
-          </div>
+          </nav>
+
+          <nav aria-labelledby="footer-legal-heading">
+            <h2 id="footer-legal-heading" className="font-semibold mb-3 text-white/90 text-sm">
+              Légal &amp; transparence
+            </h2>
+            <ul className="space-y-2 text-sm text-muted">
+              <li><Link href="/methodologie" className={FOOTER_LINK}>Méthodologie</Link></li>
+              <li><Link href="/affiliations" className={FOOTER_LINK}>Politique d'affiliation</Link></li>
+              <li><Link href="/confidentialite" className={FOOTER_LINK}>Confidentialité (RGPD)</Link></li>
+              <li><Link href="/mentions-legales" className={FOOTER_LINK}>Mentions légales</Link></li>
+            </ul>
+          </nav>
         </div>
 
         <div className="mt-10 pt-6 border-t border-border/60 space-y-3 text-xs text-muted">
@@ -63,15 +91,29 @@ export default function Footer() {
             <p>© {new Date().getFullYear()} {BRAND.name}. Tous droits réservés.</p>
             <p>Site indépendant non affilié à l'AMF ni à un PSI.</p>
           </div>
-          <p className="leading-relaxed border border-amber-500/30 bg-amber-500/5 rounded-lg p-3 text-amber-200/80">
-            <strong className="text-amber-300">⚠️ Avertissement légal</strong> — L'investissement
-            en cryptoactifs comporte un risque élevé de perte partielle ou totale du capital. Les
-            performances passées ne préjugent pas des performances futures. Les contenus de {BRAND.name}
-            ont une vocation purement informative et pédagogique et ne constituent pas un conseil
-            en investissement au sens de l'article L.321-1 du Code monétaire et financier. Consultez
-            un conseiller en investissements financiers (CIF) enregistré ORIAS pour toute décision
-            patrimoniale significative. Certains liens sont des liens d'affiliation —{" "}
-            <Link href="/affiliations" className="underline hover:text-amber-100">en savoir plus</Link>.
+          <p
+            role="note"
+            className="leading-relaxed border border-amber-500/30 bg-amber-500/5 rounded-lg p-3 text-amber-100"
+          >
+            <strong className="text-amber-200">
+              <span aria-hidden="true">⚠️ </span>Avertissement légal
+            </strong>{" "}
+            — L'investissement en cryptoactifs comporte un risque élevé de perte partielle ou
+            totale du capital. Les performances passées ne préjugent pas des performances futures.
+            Les contenus de {BRAND.name} ont une vocation purement informative et pédagogique et
+            ne constituent pas un conseil en investissement au sens de l'article L.321-1 du Code
+            monétaire et financier. Consultez un conseiller en investissements financiers (CIF)
+            enregistré ORIAS pour toute décision patrimoniale significative. Certains liens sont
+            des liens d'affiliation —{" "}
+            <Link
+              href="/affiliations"
+              className="underline hover:text-white rounded
+                         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                         focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              en savoir plus
+            </Link>
+            .
           </p>
         </div>
       </div>

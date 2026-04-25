@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Coinbase">
+  <circle cx="32" cy="32" r="32" fill="#0052FF"/>
+  <path d="M32 16a16 16 0 1 0 0 32 16 16 0 0 0 0-32zm0 22.4a6.4 6.4 0 1 1 6.32-7.46h6.46A12.8 12.8 0 1 0 32 44.8a12.8 12.8 0 0 0 12.78-11.74h-6.46A6.4 6.4 0 0 1 32 38.4z" fill="#fff"/>
+  <rect x="26.4" y="26.4" width="11.2" height="11.2" rx="1.5" fill="#fff"/>
+</svg>

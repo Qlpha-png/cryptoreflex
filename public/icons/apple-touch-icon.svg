@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="crap-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="crap-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <!-- iOS coupe les coins lui-même : on remplit jusqu'aux bords. -->
+  <rect width="180" height="180" fill="#0B0D10"/>
+  <circle cx="90" cy="130" r="32" fill="url(#crap-gold)"/>
+  <circle cx="90" cy="80"  r="24" fill="url(#crap-gold-soft)"/>
+  <circle cx="90" cy="40"  r="17" fill="#FCD34D"/>
+</svg>

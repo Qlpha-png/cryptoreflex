@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" role="img" aria-label="Cryptoreflex">
+  <g transform="translate(8 8)" fill="currentColor">
+    <circle cx="32" cy="50" r="14"/>
+    <circle cx="32" cy="28" r="10"/>
+    <circle cx="32" cy="11" r="7"/>
+  </g>
+  <text x="84" y="52"
+        font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+        font-weight="700"
+        font-size="30"
+        letter-spacing="-0.5"
+        fill="currentColor">Cryptoreflex</text>
+</svg>

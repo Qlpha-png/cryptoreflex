@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="og-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0D10"/>
+      <stop offset="100%" stop-color="#16191F"/>
+    </linearGradient>
+    <linearGradient id="og-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <radialGradient id="og-glow" cx="20%" cy="35%" r="50%">
+      <stop offset="0%" stop-color="#F5A524" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#F5A524" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="og-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#262B33" stroke-width="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+  <rect width="1200" height="630" fill="url(#og-grid)" opacity="0.4"/>
+  <rect width="1200" height="630" fill="url(#og-glow)"/>
+
+  <!-- Gold accent bar (top-left) -->
+  <rect x="0" y="0" width="6" height="630" fill="url(#og-gold)"/>
+
+  <!-- Cairn logomark (large) -->
+  <g transform="translate(140 180)">
+    <circle cx="0" cy="180" r="56" fill="url(#og-gold)"/>
+    <circle cx="0" cy="90"  r="42" fill="#FBBF24"/>
+    <circle cx="0" cy="20"  r="28" fill="#FCD34D"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="260" y="320"
+        font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+        font-weight="700"
+        font-size="96"
+        letter-spacing="-2"
+        fill="#F4F5F7">Crypto<tspan fill="url(#og-gold)">reflex</tspan></text>
+
+  <!-- Tagline -->
+  <text x="260" y="380"
+        font-family="'Inter', system-ui, sans-serif"
+        font-weight="500"
+        font-size="34"
+        fill="#9BA3AF">Comparatifs, guides et outils crypto</text>
+
+  <!-- Bottom row : trust signals -->
+  <g transform="translate(260 470)" font-family="'Inter', system-ui, sans-serif" font-size="22" fill="#F4F5F7">
+    <g transform="translate(0 0)">
+      <circle cx="10" cy="10" r="6" fill="#22C55E"/>
+      <text x="28" y="17" font-weight="600">Conforme MiCA</text>
+    </g>
+    <g transform="translate(260 0)">
+      <circle cx="10" cy="10" r="6" fill="#0E7490"/>
+      <text x="28" y="17" font-weight="600">Données live</text>
+    </g>
+    <g transform="translate(490 0)">
+      <circle cx="10" cy="10" r="6" fill="#F5A524"/>
+      <text x="28" y="17" font-weight="600">100% gratuit</text>
+    </g>
+  </g>
+
+  <!-- Domain -->
+  <text x="1140" y="600" text-anchor="end"
+        font-family="'JetBrains Mono', ui-monospace, monospace"
+        font-size="20"
+        fill="#9BA3AF">cryptoreflex.fr</text>
+</svg>

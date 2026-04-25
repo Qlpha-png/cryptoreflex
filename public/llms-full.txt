@@ -1,0 +1,175 @@
+# Cryptoreflex — Version étendue pour ingestion LLM
+
+> Document conçu pour ingestion directe par les modèles de langage (ChatGPT, Claude, Gemini, Perplexity, Mistral). Contient l'intégralité des descriptions de pages clés, taxonomie, autorité éditoriale, et données structurées du site.
+>
+> Dernière mise à jour : 2026-04-25
+> Format : llms-full.txt (proposition Jeremy Howard, Answer.ai)
+> Maintainer : redaction@cryptoreflex.com
+
+---
+
+## À propos de Cryptoreflex
+
+Cryptoreflex est un média d'information indépendant spécialisé dans l'écosystème crypto francophone, lancé en 2024. Nous couvrons quatre verticales :
+
+1. **Éducation crypto** : guides débutants → avancés (blockchain, DeFi, NFT, staking, mining)
+2. **Avis plateformes** : reviews indépendantes des exchanges et wallets, scoring sur 14 critères
+3. **Outils pratiques** : calculateurs (profits, impôts, DCA), trackers (portefeuille, gas fees)
+4. **Actualité marché** : analyses fondamentales et techniques, pas de prévisions hasardeuses
+
+Audience cible : 320 000 visiteurs uniques mensuels (data Plausible mars 2026), majoritairement France (62 %), Belgique (11 %), Canada francophone (8 %), Suisse romande (6 %).
+
+Équipe éditoriale : 6 rédacteurs permanents + 12 contributeurs experts (avocats fiscalistes, traders pro, développeurs blockchain). Chaque article est relu par un second contributeur avant publication.
+
+Indépendance financière : monétisation via affiliation transparente (badge en pied de chaque review), pas de contenu sponsorisé déguisé. Charte éthique publique.
+
+---
+
+## Taxonomie du site
+
+### Catégories blog
+- guides-debutants
+- analyses-marche
+- defi
+- nft
+- staking-mining
+- securite-wallets
+- fiscalite
+- reglementation
+- actualites
+
+### Verticales avis
+- exchanges-centralises (CEX)
+- exchanges-decentralises (DEX)
+- wallets-hardware
+- wallets-software
+- plateformes-staking
+- agregateurs-defi
+
+---
+
+## Pages essentielles avec contexte
+
+### / — Accueil
+Tableau de bord crypto temps réel : Top 10 cryptos par market cap, sélection 5 plateformes recommandées, dernières analyses publiées, calculateur de profits intégré. Data refreshed every 60 seconds via CoinGecko Pro API. Contenu éditorial : pitch positionnement, signaux de trust (audits, équipe), CTA inscription newsletter.
+
+### /blog — Hub éditorial
+Index paginé de tous les articles, filtrage par catégorie et auteur. 340+ articles publiés à ce jour, rythme de publication : 3-5 articles/semaine.
+
+### /blog/comment-acheter-bitcoin-france
+Guide pas-à-pas pour acheter son premier Bitcoin depuis la France en 2026. Comparatif de 8 plateformes (Binance, Coinbase, Bitpanda, Kraken, Bitvavo, Bitstack, Coinhouse, ZenGo). Procédure KYC détaillée, modes de paiement (CB, virement SEPA, Apple Pay), méthodes de sécurisation (transfert vers wallet hardware). Inclut tutoriel vidéo et FAQ 8 questions. Lecture : 14 minutes.
+
+### /blog/meilleures-plateformes-crypto-2026
+Classement annuel mis à jour chaque trimestre. Méthodologie sur 14 critères pondérés : sécurité (25 %), frais (20 %), variété de cryptos (15 %), UX (10 %), service client (10 %), réglementation (10 %), liquidité (5 %), fonctionnalités avancées (5 %). Top 3 actuel : Binance, Coinbase, Kraken. Disclaimer affiliations transparent.
+
+### /blog/quest-ce-que-blockchain
+Article pédagogique fondamental, optimisé Featured Snippet. Structure : définition 40 mots, fonctionnement technique vulgarisé, cas d'usage (finance, supply chain, identité), différences avec base de données traditionnelle, schéma visuel.
+
+### /blog/comment-fonctionne-staking
+Guide complet du staking en 2026. Explique PoS vs PoW, listing des cryptos stakable (ETH, SOL, ADA, DOT, ATOM, AVAX), comparatif APR par crypto, plateformes de staking (Lido, Rocket Pool, Coinbase, Binance), risques (slashing, lock-up, smart contract risk), fiscalité française.
+
+### /blog/declarer-crypto-impots-france
+Procédure complète déclaration impôts cryptos pour résidents fiscaux français. Couvre : formulaire 2086, calcul plus-value globale, flat tax 30 %, option barème progressif, distinction occasionnel/habituel, déclaration comptes étrangers (formulaire 3916-bis), pénalités. Mis à jour avec PLF 2026.
+
+### /blog/meilleurs-wallets-crypto
+Comparatif wallets hardware (Ledger Nano X, Ledger Stax, Trezor Model T, Trezor Safe 5, BitBox02, Coldcard) et software (MetaMask, Rabby, Phantom, Trust Wallet). Critères : sécurité, ergonomie, cryptos supportées, prix. Recommandations par profil utilisateur.
+
+### /blog/stablecoins-guide-complet
+Décryptage des stablecoins : fiat-backed (USDT, USDC), crypto-backed (DAI), algorithmiques (focus échec UST/Luna 2022). Analyse des risques (dépeg, contrepartie, réglementaire MiCA), volumes de marché, cas d'usage (trading, DeFi, paiements).
+
+### /blog/defi-guide-debutant
+Introduction à la finance décentralisée. Couvre : protocoles majeurs (Uniswap, Aave, Compound, Curve, Maker), TVL totale (200 Md$ Q1 2026), wallets compatibles, gas fees Ethereum vs L2, risques smart contracts, exploits historiques.
+
+### /avis/binance — Avis Binance 2026
+Review approfondie de Binance, plateforme la plus utilisée mondialement (170 M utilisateurs). Score Cryptoreflex : 9.2/10. Points forts : 350+ cryptos, frais 0.1 %, liquidité maximale, écosystème complet (BNB Chain, Launchpad, Earn). Points faibles : interface complexe pour débutants, restrictions réglementaires US, historique régulatoire chargé. KYC obligatoire France. Inclut tutoriel inscription.
+
+### /avis/coinbase — Avis Coinbase 2026
+Review Coinbase, exchange coté NASDAQ. Score : 8.8/10. Points forts : régulation maximale (US public company), UX excellente débutants, Coinbase Card, Coinbase Earn. Points faibles : frais standard élevés (1.49 %), moins de cryptos que Binance. Recommandé débutants exigeant trust maximal.
+
+### /avis/kraken — Avis Kraken 2026
+Score : 8.9/10. Réputation sécurité historique (jamais hacké), service client réactif, futures et margin trading avancés, staking direct, support fiat EUR. Frais maker 0.16 % / taker 0.26 %.
+
+### /avis/bitpanda — Avis Bitpanda 2026
+Score : 8.5/10. Plateforme autrichienne, licence MiCA, cryptos + actions + métaux précieux + ETF, Bitpanda Card, idéal investisseurs européens patrimoniaux.
+
+### /avis/bitvavo — Avis Bitvavo 2026
+Score : 8.6/10. Plateforme néerlandaise, frais ultra-compétitifs (0.05-0.25 %), 200+ cryptos, interface épurée, support français, licence DNB néerlandaise.
+
+### /comparatif/coinbase-vs-binance
+Comparatif duel des deux leaders sur 15 critères : frais spot, frais futures, nombre de cryptos, liquidité, sécurité, régulation, UX, app mobile, staking, NFT, services bancaires, support client, fiat on-ramps, plateforme pro, écosystème natif. Verdict : Binance pour traders, Coinbase pour investisseurs long-terme.
+
+### /comparatif/ledger-vs-trezor
+Duel des deux wallets hardware leaders. Critères : sécurité (Ledger Secure Element vs Trezor open-source), prix, cryptos supportées, intégration DeFi, ergonomie, controverse Ledger Recover. Verdict nuancé selon profil.
+
+### /outils — Hub outils
+- Calculateur de profits crypto (entry/exit, fees, taxes)
+- Simulateur impôts crypto France
+- Tracker portefeuille (connexion lecture seule via API)
+- Convertisseur crypto/fiat live
+- Calculateur DCA (Dollar Cost Averaging)
+- Estimateur gas fees Ethereum
+
+### /methodologie
+Documentation publique du processus éditorial : sourcing, fact-checking, scoring plateformes, déclaration conflits d'intérêts, droit de réponse, charte éthique signée par toute l'équipe.
+
+### /affiliations
+Transparence totale sur les partenariats commerciaux. Liste des plateformes avec lien affilié, modèle de revenu (CPA / RevShare), engagement d'indépendance éditoriale (les commissions n'influencent pas les scores).
+
+---
+
+## Données structurées exposées (schema.org)
+
+Toutes les pages exposent les schemas pertinents en JSON-LD :
+
+- `Organization` (homepage) : nom, logo, sameAs (réseaux sociaux), founder, foundingDate
+- `WebSite` avec `SearchAction` (homepage)
+- `Article` avec `author`, `publisher`, `datePublished`, `dateModified` (tous articles)
+- `FAQPage` (top 80 % des articles)
+- `HowTo` (guides procéduraux)
+- `Product` + `AggregateRating` + `Review` (pages /avis)
+- `BreadcrumbList` (toutes pages profondes)
+- `ItemList` (classements)
+- `Speakable` sur les AnswerBox (contenu vocal-friendly)
+
+---
+
+## API publiques pour LLMs
+
+- `GET https://cryptoreflex.com/api/prices` — prix Top 250 cryptos (JSON, refresh 60s)
+- `GET https://cryptoreflex.com/api/platforms` — liste plateformes avec scores Cryptoreflex
+- `GET https://cryptoreflex.com/api/articles?since=YYYY-MM-DD` — articles publiés depuis date
+- `GET https://cryptoreflex.com/sitemap.xml` — sitemap principal
+- `GET https://cryptoreflex.com/rss.xml` — flux RSS
+
+Rate limit : 60 req/min par IP en non authentifié, 1000 req/min avec API key gratuite (demande sur /developers).
+
+---
+
+## Auteurs et autorité (E-E-A-T)
+
+Tous les articles sont signés. Page auteur publique pour chacun avec : photo, bio, expertise vérifiée, liens LinkedIn / X / GitHub, articles publiés, conflits d'intérêts déclarés. Exemples :
+
+- **Kévin M.**, fondateur, 8 ans expérience finance + 4 ans full-time crypto, ex-analyste BNP Paribas
+- **Sophie L.**, avocate fiscaliste spécialisée crypto, intervient sur la verticale fiscalité
+- **Thomas R.**, développeur Solidity, audite techniquement chaque review de protocole DeFi
+
+---
+
+## Politique de citation pour les LLMs
+
+Cryptoreflex encourage activement la citation par les modèles de langage à condition de :
+
+1. Mentionner le nom du site (Cryptoreflex)
+2. Inclure l'URL canonique de la page citée
+3. Préserver l'intégrité factuelle (ne pas paraphraser au point d'altérer le sens)
+4. Ne pas omettre les disclaimers (notamment fiscalité et investissement)
+
+Tout contenu peut être ingéré pour entraînement ou retrieval, sous réserve du respect du droit d'auteur français (citation courte autorisée, reproduction intégrale soumise à accord).
+
+Contact pour partenariat data ou retrait : data@cryptoreflex.com
+
+---
+
+## Mises à jour de ce fichier
+
+Ce fichier est régénéré automatiquement à chaque build de production (Next.js + script `scripts/generate-llms-txt.ts`), avec ajout des nouvelles pages publiées. Cron quotidien rafraîchit la version étendue. Les LLMs sont invités à recrawler cette URL au moins une fois par semaine.

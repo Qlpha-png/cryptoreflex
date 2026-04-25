@@ -1,5 +1,6 @@
 import { Banknote, CircleDollarSign, Coins, Wallet, Bitcoin, ShieldCheck } from "lucide-react";
 import PlatformCard, { type Platform } from "./PlatformCard";
+import AmfDisclaimer from "./AmfDisclaimer";
 
 /**
  * Liens directs vers les plateformes pour le moment (pas de programme affilié actif).
@@ -7,6 +8,11 @@ import PlatformCard, { type Platform } from "./PlatformCard";
  *
  * Pour faciliter le tracking pré-affiliation, on ajoute déjà des UTM internes
  * pour mesurer le volume de clics par carte (utilisable dans Plausible/GA).
+ *
+ * Le rendu utilise `<AffiliateLink>` (via PlatformCard) qui :
+ *  - applique automatiquement rel="sponsored nofollow noopener noreferrer"
+ *  - tracke chaque clic dans Plausible avec l'event "Affiliate Click"
+ *    et les props { platform, placement: "home-platforms" }.
  */
 import { BRAND } from "@/lib/brand";
 
@@ -15,6 +21,7 @@ const utm = (source: string) =>
 
 const PLATFORMS: Platform[] = [
   {
+    id: "revolut",
     name: "Revolut",
     tagline:
       "L'app bancaire qui permet aussi d'acheter de la crypto en quelques secondes — idéal pour démarrer.",
@@ -31,6 +38,7 @@ const PLATFORMS: Platform[] = [
     badge: "Pour débutants",
   },
   {
+    id: "coinbase",
     name: "Coinbase",
     tagline:
       "L'une des plateformes les plus régulées au monde, parfaite pour acheter ses premières cryptos en toute sérénité.",
@@ -47,6 +55,7 @@ const PLATFORMS: Platform[] = [
     badge: "Recommandé",
   },
   {
+    id: "binance",
     name: "Binance",
     tagline:
       "Le plus grand exchange au monde — frais bas et catalogue de cryptos imbattable pour aller plus loin.",
@@ -62,6 +71,7 @@ const PLATFORMS: Platform[] = [
     gradient: "from-yellow-400 to-amber-600",
   },
   {
+    id: "bitpanda",
     name: "Bitpanda",
     tagline:
       "Plateforme européenne 100% régulée — crypto, actions et métaux précieux dans la même app.",
@@ -77,6 +87,7 @@ const PLATFORMS: Platform[] = [
     gradient: "from-emerald-500 to-teal-600",
   },
   {
+    id: "kraken",
     name: "Kraken",
     tagline:
       "Pionnier du secteur, réputé pour sa sécurité et sa transparence — un favori des investisseurs sérieux.",
@@ -92,6 +103,7 @@ const PLATFORMS: Platform[] = [
     gradient: "from-purple-600 to-fuchsia-600",
   },
   {
+    id: "ledger",
     name: "Ledger",
     tagline:
       "Le portefeuille matériel le plus vendu au monde — pour stocker tes cryptos hors ligne, en sécurité.",
@@ -111,31 +123,36 @@ const PLATFORMS: Platform[] = [
 
 export default function PlatformsSection() {
   return (
-    <section id="plateformes" className="relative py-20 sm:py-28">
+    <section id="plateformes" className="relative py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1 text-xs font-semibold text-accent-cyan">
             Top 6
           </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight">
+          <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
             Les meilleures <span className="gradient-text">plateformes crypto</span>
           </h2>
-          <p className="mt-3 text-white/70">
+          <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
             Sélection des exchanges et wallets les plus fiables. Cliquer sur une carte
             ouvre la plateforme avec un bonus de bienvenue exclusif.
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {PLATFORMS.map((p) => (
-            <PlatformCard key={p.name} platform={p} />
+            // `placement` est tracké côté analytics — utile pour comparer
+            // le CTR de la home vs comparatifs vs reviews.
+            <PlatformCard key={p.name} platform={p} placement="home-platforms" />
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-muted">
+        <p className="mt-6 sm:mt-8 text-xs text-muted leading-relaxed">
           Liens d'affiliation : nous touchons une commission si vous vous inscrivez via ces
           liens, sans surcoût pour vous. Cela nous permet de garder le site gratuit.
         </p>
+
+        {/* Avertissement AMF — article 222-15 */}
+        <AmfDisclaimer variant="comparatif" className="mt-6" />
       </div>
     </section>
   );

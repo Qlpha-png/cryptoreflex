@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="ic-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#0B0D10"/>
+  <circle cx="16" cy="24" r="6"   fill="url(#ic-gold)"/>
+  <circle cx="16" cy="14" r="4.5" fill="#FBBF24"/>
+  <circle cx="16" cy="6.5" r="3"  fill="#FCD34D"/>
+</svg>

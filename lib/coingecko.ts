@@ -1,4 +1,18 @@
+import { unstable_cache } from "next/cache";
+
 export type CoinId = "bitcoin" | "ethereum" | "solana" | "binancecoin" | "ripple" | "cardano";
+
+/**
+ * Cache tags pour revalidation ciblée via revalidateTag().
+ * - "coingecko:prices"  → fetchPrices (top 6 ticker)
+ * - "coingecko:market"  → fetchTopMarket (top 20 table)
+ * - "coingecko:global"  → fetchGlobalMetrics (KPIs)
+ */
+export const CG_TAGS = {
+  prices: "coingecko:prices",
+  market: "coingecko:market",
+  global: "coingecko:global",
+} as const;
 
 export interface CoinPrice {
   id: CoinId;
@@ -31,10 +45,9 @@ export const DEFAULT_COINS: CoinId[] = [
 ];
 
 /**
- * Fetch live prices from CoinGecko.
- * We use the /coins/markets endpoint which returns price + 24h change + image in one call.
+ * Implementation interne de fetchPrices — wrappée par unstable_cache plus bas.
  */
-export async function fetchPrices(ids: CoinId[] = DEFAULT_COINS): Promise<CoinPrice[]> {
+async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
     ","
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=false&price_change_percentage=24h`;
@@ -42,7 +55,7 @@ export async function fetchPrices(ids: CoinId[] = DEFAULT_COINS): Promise<CoinPr
   try {
     const res = await fetch(url, {
       // ISR-style caching: refresh every 60s on the server.
-      next: { revalidate: 60 },
+      next: { revalidate: 60, tags: [CG_TAGS.prices] },
       headers: { accept: "application/json" },
     });
 
@@ -69,7 +82,7 @@ export async function fetchPrices(ids: CoinId[] = DEFAULT_COINS): Promise<CoinPr
       marketCap: c.market_cap,
       image: c.image,
     }));
-  } catch (err) {
+  } catch {
     // Graceful fallback so the site still renders if the API is rate-limited.
     return ids.map((id) => ({
       id,
@@ -82,6 +95,18 @@ export async function fetchPrices(ids: CoinId[] = DEFAULT_COINS): Promise<CoinPr
     }));
   }
 }
+
+/**
+ * Fetch live prices from CoinGecko, dédupliquées via unstable_cache
+ * (Data Cache + Request Memoization). Sur Vercel, plusieurs composants
+ * de la même requête partagent un seul appel ; entre requêtes, le cache
+ * dure 60 s. Revalidation ciblée : `revalidateTag("coingecko:prices")`.
+ */
+export const fetchPrices = unstable_cache(
+  async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
+  ["coingecko-prices-v1"],
+  { revalidate: 60, tags: [CG_TAGS.prices] }
+);
 
 export function formatUsd(value: number): string {
   if (!value) return "—";
@@ -117,10 +142,10 @@ export interface GlobalMetrics {
   activeCryptos: number;
 }
 
-export async function fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
+async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
   try {
     const res = await fetch(`${COINGECKO_BASE}/global`, {
-      next: { revalidate: 300 }, // 5 min — données globales bougent peu
+      next: { revalidate: 300, tags: [CG_TAGS.global] }, // 5 min
       headers: { accept: "application/json" },
     });
     if (!res.ok) throw new Error(`CoinGecko global ${res.status}`);
@@ -138,6 +163,12 @@ export async function fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
     return null;
   }
 }
+
+export const fetchGlobalMetrics = unstable_cache(
+  _fetchGlobalMetrics,
+  ["coingecko-global-v1"],
+  { revalidate: 300, tags: [CG_TAGS.global] }
+);
 
 export interface FearGreedData {
   value: number; // 0-100
@@ -193,11 +224,11 @@ export interface MarketCoin {
   ath: number;
 }
 
-export async function fetchTopMarket(limit = 20): Promise<MarketCoin[]> {
+async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
   try {
     const res = await fetch(url, {
-      next: { revalidate: 120 },
+      next: { revalidate: 120, tags: [CG_TAGS.market] },
       headers: { accept: "application/json" },
     });
     if (!res.ok) throw new Error(`CoinGecko markets ${res.status}`);
@@ -238,6 +269,12 @@ export async function fetchTopMarket(limit = 20): Promise<MarketCoin[]> {
   }
 }
 
+export const fetchTopMarket = unstable_cache(
+  async (limit = 20) => _fetchTopMarket(limit),
+  ["coingecko-top-market-v1"],
+  { revalidate: 120, tags: [CG_TAGS.market] }
+);
+
 export function formatCompactUsd(value: number): string {
   if (!value) return "—";
   return new Intl.NumberFormat("en-US", {
@@ -245,5 +282,106 @@ export function formatCompactUsd(value: number): string {
     currency: "USD",
     notation: "compact",
     maximumFractionDigits: 1,
+  }).format(value);
+}
+
+/* ============================================================
+ * Détail d'une coin (pour pages /cryptos/[slug])
+ * ============================================================ */
+
+export interface CoinDetail {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  currentPrice: number;
+  priceChange24h: number;
+  priceChange7d: number | null;
+  marketCap: number;
+  marketCapRank: number;
+  totalVolume: number;
+  circulatingSupply: number;
+  totalSupply: number | null;
+  maxSupply: number | null;
+  ath: number;
+  athDate: string | null;
+  atl: number;
+  atlDate: string | null;
+  sparkline7d: number[];
+}
+
+async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
+  // Endpoint /coins/markets en single-id : permet d'obtenir sparkline 7d + variations
+  // sans payer le coût d'/coins/{id}/market_chart (10 000 datapoints).
+  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: 300, tags: [CG_TAGS.market] },
+      headers: { accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(`CoinGecko detail ${res.status}`);
+    const json = (await res.json()) as Array<{
+      id: string;
+      symbol: string;
+      name: string;
+      image: string;
+      current_price: number;
+      price_change_percentage_24h: number;
+      price_change_percentage_7d_in_currency: number | null;
+      market_cap: number;
+      market_cap_rank: number;
+      total_volume: number;
+      circulating_supply: number;
+      total_supply: number | null;
+      max_supply: number | null;
+      ath: number;
+      ath_date: string | null;
+      atl: number;
+      atl_date: string | null;
+      sparkline_in_7d: { price: number[] };
+    }>;
+    const c = json?.[0];
+    if (!c) return null;
+    return {
+      id: c.id,
+      symbol: c.symbol.toUpperCase(),
+      name: c.name,
+      image: c.image,
+      currentPrice: c.current_price,
+      priceChange24h: c.price_change_percentage_24h ?? 0,
+      priceChange7d: c.price_change_percentage_7d_in_currency,
+      marketCap: c.market_cap,
+      marketCapRank: c.market_cap_rank,
+      totalVolume: c.total_volume,
+      circulatingSupply: c.circulating_supply,
+      totalSupply: c.total_supply,
+      maxSupply: c.max_supply,
+      ath: c.ath,
+      athDate: c.ath_date,
+      atl: c.atl,
+      atlDate: c.atl_date,
+      sparkline7d: c.sparkline_in_7d?.price ?? [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Détail enrichi d'une crypto (prix, sparkline 7j, supply, ATH/ATL).
+ * Cache 5 min côté serveur, partagé entre composants via unstable_cache.
+ */
+export const fetchCoinDetail = unstable_cache(
+  async (coingeckoId: string) => _fetchCoinDetail(coingeckoId),
+  ["coingecko-coin-detail-v1"],
+  { revalidate: 300, tags: [CG_TAGS.market] }
+);
+
+/** Format compact pour les supplies (ex: 19.7M, 120B). */
+export function formatCompactNumber(value: number | null | undefined): string {
+  if (!value && value !== 0) return "—";
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 2,
   }).format(value);
 }

@@ -1,7 +1,29 @@
-import { CheckCircle2, ExternalLink, Star } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, CheckCircle2, ExternalLink, Star } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
+import AffiliateLink from "./AffiliateLink";
+import PlatformLogo from "./PlatformLogo";
+
+/**
+ * Liste des `id` pour lesquels on a un logo SVG officiel dans /public/logos/.
+ * Si l'id est dans cette liste, on rend le vrai logo via <PlatformLogo>.
+ * Sinon, on garde la pastille gradient + icône Lucide (rétro-compat Revolut/Ledger…).
+ */
+const HAS_OFFICIAL_LOGO = new Set([
+  "coinbase",
+  "binance",
+  "bitpanda",
+  "kraken",
+  "bitget",
+  "trade-republic",
+  "coinhouse",
+  "bitstack",
+  "swissborg",
+]);
 
 export interface Platform {
+  /** Identifiant kebab-case utilisé pour le tracking analytics (ex: "coinbase"). */
+  id?: string;
   name: string;
   tagline: string;
   rating: number; // 0–5
@@ -18,38 +40,73 @@ export interface Platform {
 
 interface Props {
   platform: Platform;
+  /** Zone d'apparition de la carte (utilisée pour la prop `placement` de l'analytics). */
+  placement?: string;
 }
 
-export default function PlatformCard({ platform }: Props) {
-  const { name, tagline, rating, bonus, features, affiliateUrl, Icon, gradient, badge } =
-    platform;
+export default function PlatformCard({ platform, placement }: Props) {
+  const {
+    id,
+    name,
+    tagline,
+    rating,
+    bonus,
+    features,
+    affiliateUrl,
+    Icon,
+    gradient,
+    badge,
+  } = platform;
+
+  // Fallback : si pas d'`id` fourni, on dérive un identifiant kebab-case
+  // depuis le nom (suffisant pour Plausible).
+  const platformId = id ?? name.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <div className="group relative glass glow-border rounded-2xl p-6 flex flex-col h-full hover:translate-y-[-4px] transition-transform">
+    <div className="group relative glass glow-border rounded-2xl p-5 sm:p-6 flex flex-col h-full hover:translate-y-[-4px] transition-transform">
       {badge && (
-        <span className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-primary to-accent-cyan px-3 py-1 text-xs font-semibold text-white shadow-glow">
+        <span className="absolute -top-3 right-4 sm:right-6 rounded-full bg-gradient-to-r from-primary to-accent-cyan px-3 py-1 text-xs font-semibold text-white shadow-glow">
           {badge}
         </span>
       )}
 
-      <div className="flex items-center gap-4">
-        <div
-          className={`flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg`}
-        >
-          <Icon className="h-7 w-7 text-white" />
-        </div>
-        <div>
-          <h3 className="font-bold text-lg text-white">{name}</h3>
-          <div className="flex items-center gap-1 mt-0.5">
+      <div className="flex items-center gap-3 sm:gap-4">
+        {HAS_OFFICIAL_LOGO.has(platformId) ? (
+          // Vrai logo officiel (SVG inline depuis /public/logos/<id>.svg)
+          <div
+            aria-hidden="true"
+            className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 border border-border/60 overflow-hidden shrink-0"
+          >
+            <PlatformLogo id={platformId} name={name} size={48} rounded={false} />
+          </div>
+        ) : (
+          // Fallback : pastille gradient + icône Lucide (Revolut, Ledger, etc.)
+          <div
+            aria-hidden="true"
+            className={`flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg shrink-0`}
+          >
+            <Icon className="h-7 w-7 text-white" aria-hidden="true" />
+          </div>
+        )}
+        <div className="min-w-0">
+          <h3 className="font-bold text-lg text-white truncate">{name}</h3>
+          <div
+            className="flex items-center gap-1 mt-0.5"
+            role="img"
+            aria-label={`Note : ${rating.toFixed(1)} sur 5 étoiles`}
+          >
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
                 key={i}
+                aria-hidden="true"
                 className={`h-3.5 w-3.5 ${
                   i < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "text-border"
                 }`}
               />
             ))}
-            <span className="ml-1 text-xs text-muted">{rating.toFixed(1)}/5</span>
+            <span className="ml-1 text-xs text-muted" aria-hidden="true">
+              {rating.toFixed(1)}/5
+            </span>
           </div>
         </div>
       </div>
@@ -66,21 +123,41 @@ export default function PlatformCard({ platform }: Props) {
       <ul className="mt-4 space-y-2 text-sm text-white/80 flex-1">
         {features.map((f) => (
           <li key={f} className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-cyan shrink-0 mt-0.5" />
+            <CheckCircle2 className="h-4 w-4 text-accent-cyan shrink-0 mt-0.5" aria-hidden="true" />
             <span>{f}</span>
           </li>
         ))}
       </ul>
 
-      <a
+      {/*
+        AffiliateLink :
+         - rel="sponsored nofollow noopener noreferrer" automatique
+         - tracking Plausible (event "Affiliate Click" + props {platform, placement})
+      */}
+      <AffiliateLink
         href={affiliateUrl}
-        target="_blank"
-        rel="noopener noreferrer sponsored"
+        platform={platformId}
+        placement={placement}
         className="mt-6 btn-primary w-full"
       >
         S'inscrire sur {name}
-        <ExternalLink className="h-4 w-4" />
-      </a>
+        <span className="sr-only"> (lien sponsorisé, ouvre un nouvel onglet)</span>
+        <ExternalLink className="h-4 w-4" aria-hidden="true" />
+      </AffiliateLink>
+
+      {/* Sub-CTA (audit P0-8) : option éditoriale, pour les visiteurs qui
+          veulent lire avant de cliquer "S'inscrire". Non concurrentiel avec
+          le CTA principal grâce à un style link-only discret. */}
+      <Link
+        href={`/avis/${platformId}`}
+        className="mt-2 inline-flex items-center justify-center gap-1 text-sm text-primary-soft hover:text-primary
+                   focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                   focus-visible:ring-offset-background rounded transition-colors"
+        aria-label={`Lire notre avis détaillé sur ${name}`}
+      >
+        Lire notre avis détaillé
+        <ArrowRight className="h-[14px] w-[14px]" aria-hidden="true" />
+      </Link>
     </div>
   );
 }

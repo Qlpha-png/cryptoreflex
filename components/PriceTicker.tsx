@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
 
@@ -8,30 +9,65 @@ interface Props {
   initial: CoinPrice[];
 }
 
+const REFRESH_MS = 120_000; // 120 s : ménage l'API CoinGecko (50 calls/min free tier).
+
 /**
- * Auto-scrolling price ticker. Hydrates with server-fetched data,
- * then refreshes every 60s from /api/prices to stay live.
+ * Auto-scrolling price ticker. Hydrate avec les données serveur, puis
+ * refresh toutes les 120 s via /api/prices — uniquement quand l'onglet
+ * est visible (économie batterie + quotas API).
  */
 export default function PriceTicker({ initial }: Props) {
   const [prices, setPrices] = useState<CoinPrice[]>(initial);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cancelledRef = useRef(false);
 
   useEffect(() => {
-    let cancelled = false;
+    cancelledRef.current = false;
+
     const tick = async () => {
       try {
         const res = await fetch("/api/prices", { cache: "no-store" });
         if (!res.ok) return;
         const data = (await res.json()) as { prices: CoinPrice[] };
-        if (!cancelled && data.prices?.length) setPrices(data.prices);
+        if (!cancelledRef.current && data.prices?.length) {
+          setPrices(data.prices);
+        }
       } catch {
         /* keep previous data */
       }
     };
 
-    const id = setInterval(tick, 60_000);
+    const start = () => {
+      if (intervalRef.current) return;
+      intervalRef.current = setInterval(tick, REFRESH_MS);
+    };
+    const stop = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        // Refresh immédiat au retour, puis reprise du polling.
+        tick();
+        start();
+      } else {
+        stop();
+      }
+    };
+
+    // Démarrage : poll seulement si l'onglet est visible à l'init.
+    if (document.visibilityState === "visible") {
+      start();
+    }
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
-      cancelled = true;
-      clearInterval(id);
+      cancelledRef.current = true;
+      stop();
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
@@ -39,8 +75,21 @@ export default function PriceTicker({ initial }: Props) {
   const loop = [...prices, ...prices];
 
   return (
-    <div className="relative overflow-hidden border-y border-border/60 bg-surface/60 backdrop-blur">
-      <div className="flex animate-ticker-scroll whitespace-nowrap py-3">
+    <div
+      role="region"
+      aria-label="Prix des cryptomonnaies en direct"
+      className="relative overflow-hidden border-y border-border/60 bg-surface/60 backdrop-blur"
+    >
+      {/*
+        aria-live="off" : on coupe les annonces continues du ticker (scroll
+        infini → spam pour les lecteurs d'écran). Les utilisateurs AT pourront
+        consulter les prix précis dans MarketTable juste en dessous.
+      */}
+      <div
+        aria-live="off"
+        aria-atomic="false"
+        className="flex animate-ticker-scroll whitespace-nowrap py-3"
+      >
         {loop.map((coin, idx) => {
           const up = coin.change24h >= 0;
           return (
@@ -49,12 +98,15 @@ export default function PriceTicker({ initial }: Props) {
               className="flex items-center gap-3 px-8 border-r border-border/40 last:border-r-0"
             >
               {coin.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={coin.image}
                   alt={coin.name}
+                  width={24}
+                  height={24}
                   className="h-6 w-6 rounded-full"
                   loading="lazy"
+                  sizes="24px"
+                  unoptimized
                 />
               ) : (
                 <span className="h-6 w-6 rounded-full bg-elevated" />
@@ -67,10 +119,13 @@ export default function PriceTicker({ initial }: Props) {
                 }`}
               >
                 {up ? (
-                  <ArrowUpRight className="h-4 w-4" />
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 ) : (
-                  <ArrowDownRight className="h-4 w-4" />
+                  <ArrowDownRight className="h-4 w-4" aria-hidden="true" />
                 )}
+                <span className="sr-only">
+                  {up ? "Hausse de" : "Baisse de"}
+                </span>
                 {formatPct(coin.change24h)}
               </span>
             </div>

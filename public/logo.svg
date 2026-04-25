@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="cr-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="cr-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cairn (3 stacked circles) -->
+  <g transform="translate(8 8)">
+    <!-- base circle (largest) -->
+    <circle cx="32" cy="50" r="14" fill="url(#cr-gold)"/>
+    <!-- middle circle -->
+    <circle cx="32" cy="28" r="10" fill="url(#cr-gold-soft)"/>
+    <!-- top circle (smallest) -->
+    <circle cx="32" cy="11" r="7" fill="#FCD34D"/>
+  </g>
+
+  <!-- Wordmark "Cryptoreflex" — Space Grotesk Bold -->
+  <text x="84" y="52"
+        font-family="'Space Grotesk', 'Inter', system-ui, sans-serif"
+        font-weight="700"
+        font-size="30"
+        letter-spacing="-0.5"
+        fill="#F4F5F7">Crypto<tspan fill="url(#cr-gold)">reflex</tspan></text>
+</svg>

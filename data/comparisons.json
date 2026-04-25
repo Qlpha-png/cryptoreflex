@@ -1,0 +1,118 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-25",
+    "source": "Keyword research Cryptoreflex (Ahrefs FR + SEMrush avril 2026)",
+    "schemaVersion": "1.0",
+    "note": "Liste des 12 comparaisons prioritaires (run éditorial Q2 2026). Le slug suit la convention canonique a-vs-b avec a < b alphabétique. Les ids référencent platforms.json ou wallets.json."
+  },
+  "comparisons": [
+    {
+      "slug": "binance-vs-coinbase",
+      "platforme1_id": "binance",
+      "platforme2_id": "coinbase",
+      "intent": "debutant",
+      "volume_estime": 2400,
+      "kw_principal": "binance vs coinbase",
+      "criteres_focus": ["frais", "securite", "mica", "catalogue", "ux"]
+    },
+    {
+      "slug": "bitpanda-vs-bitstack",
+      "platforme1_id": "bitpanda",
+      "platforme2_id": "bitstack",
+      "intent": "debutant",
+      "volume_estime": 260,
+      "kw_principal": "bitpanda ou bitstack",
+      "criteres_focus": ["frais", "ux", "catalogue", "epargne_dca", "mica"]
+    },
+    {
+      "slug": "ledger-vs-trezor",
+      "platforme1_id": "ledger",
+      "platforme2_id": "trezor",
+      "intent": "avance",
+      "volume_estime": 1900,
+      "kw_principal": "ledger vs trezor",
+      "criteres_focus": ["securite", "open_source", "catalogue", "ux", "prix_materiel"]
+    },
+    {
+      "slug": "binance-vs-kraken",
+      "platforme1_id": "binance",
+      "platforme2_id": "kraken",
+      "intent": "avance",
+      "volume_estime": 1300,
+      "kw_principal": "binance vs kraken",
+      "criteres_focus": ["frais", "securite", "liquidite", "support", "mica"]
+    },
+    {
+      "slug": "coinbase-vs-bitpanda",
+      "platforme1_id": "bitpanda",
+      "platforme2_id": "coinbase",
+      "intent": "debutant",
+      "volume_estime": 430,
+      "kw_principal": "coinbase vs bitpanda",
+      "criteres_focus": ["mica", "ux", "catalogue", "frais", "support"]
+    },
+    {
+      "slug": "revolut-vs-trade-republic",
+      "platforme1_id": "revolut",
+      "platforme2_id": "trade-republic",
+      "intent": "debutant",
+      "volume_estime": 540,
+      "kw_principal": "revolut vs trade republic",
+      "criteres_focus": ["frais", "ux", "epargne_dca", "diversification", "mica"]
+    },
+    {
+      "slug": "bitget-vs-bybit",
+      "platforme1_id": "bitget",
+      "platforme2_id": "bybit",
+      "intent": "avance",
+      "volume_estime": 720,
+      "kw_principal": "bitget vs bybit",
+      "criteres_focus": ["frais", "derives", "copy_trading", "catalogue", "mica"]
+    },
+    {
+      "slug": "bitpanda-vs-coinhouse",
+      "platforme1_id": "bitpanda",
+      "platforme2_id": "coinhouse",
+      "intent": "debutant",
+      "volume_estime": 320,
+      "kw_principal": "coinhouse vs bitpanda",
+      "criteres_focus": ["acteur_francais", "frais", "support", "mica", "catalogue"]
+    },
+    {
+      "slug": "bitpanda-vs-trade-republic",
+      "platforme1_id": "bitpanda",
+      "platforme2_id": "trade-republic",
+      "intent": "debutant",
+      "volume_estime": 720,
+      "kw_principal": "bitpanda vs trade republic",
+      "criteres_focus": ["mica", "diversification", "epargne_dca", "frais", "ux"]
+    },
+    {
+      "slug": "bitpanda-vs-swissborg",
+      "platforme1_id": "bitpanda",
+      "platforme2_id": "swissborg",
+      "intent": "debutant",
+      "volume_estime": 200,
+      "kw_principal": "swissborg vs bitpanda",
+      "criteres_focus": ["yield_staking", "frais", "ux", "mica", "catalogue"]
+    },
+    {
+      "slug": "coinbase-vs-kraken",
+      "platforme1_id": "coinbase",
+      "platforme2_id": "kraken",
+      "intent": "avance",
+      "volume_estime": 1100,
+      "kw_principal": "coinbase vs kraken",
+      "criteres_focus": ["securite", "frais", "mica", "support", "staking"]
+    },
+    {
+      "slug": "binance-vs-bitget",
+      "platforme1_id": "binance",
+      "platforme2_id": "bitget",
+      "intent": "avance",
+      "volume_estime": 590,
+      "kw_principal": "binance vs bitget",
+      "criteres_focus": ["frais", "derives", "copy_trading", "catalogue", "mica"]
+    }
+  ]
+}

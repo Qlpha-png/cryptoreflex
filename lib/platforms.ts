@@ -1,4 +1,5 @@
 import platformsData from "@/data/platforms.json";
+import walletsData from "@/data/wallets.json";
 
 export interface Platform {
   id: string;
@@ -66,16 +67,25 @@ export interface PlatformsData {
 }
 
 const data = platformsData as unknown as PlatformsData;
+const wallets = walletsData as unknown as PlatformsData;
 
-/** Toutes les plateformes triées par score global décroissant. */
+/** Concatène exchanges/brokers + hardware wallets (source pour comparatifs cross-catégorie). */
+const ALL = [...data.platforms, ...wallets.platforms];
+
+/** Toutes les plateformes (exchanges + brokers + wallets) triées par score global décroissant. */
 export function getAllPlatforms(): Platform[] {
+  return [...ALL].sort((a, b) => b.scoring.global - a.scoring.global);
+}
+
+/** Uniquement les exchanges / brokers (sans hardware wallets). */
+export function getExchangePlatforms(): Platform[] {
   return [...data.platforms].sort(
     (a, b) => b.scoring.global - a.scoring.global
   );
 }
 
 export function getPlatformById(id: string): Platform | undefined {
-  return data.platforms.find((p) => p.id === id);
+  return ALL.find((p) => p.id === id);
 }
 
 /** Top N plateformes pour la home (par score global). */

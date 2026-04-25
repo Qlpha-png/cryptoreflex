@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="crmk-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="crmk-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <!--
+    Maskable icon : la "safe zone" est un cercle de Ø ~409px (80% de 512).
+    Le reste peut être croppé par Android selon la forme système.
+    On remplit donc tout le canvas en couleur de marque, et on garde le motif
+    bien centré dans la safe zone.
+  -->
+  <rect width="512" height="512" fill="#0B0D10"/>
+  <!-- Motif (3 cercles empilés) centré, plus compact pour rester dans la safe zone. -->
+  <circle cx="256" cy="332" r="72" fill="url(#crmk-gold)"/>
+  <circle cx="256" cy="222" r="54" fill="url(#crmk-gold-soft)"/>
+  <circle cx="256" cy="138" r="38" fill="#FCD34D"/>
+</svg>

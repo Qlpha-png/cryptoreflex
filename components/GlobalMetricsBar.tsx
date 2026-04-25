@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 import {
   fetchGlobalMetrics,
@@ -82,11 +83,16 @@ export default async function GlobalMetricsBar() {
 
           {fearGreed && (
             <Metric label="Fear & Greed">
-              <span className={`font-mono font-semibold ${fearColor} inline-flex items-center gap-1`}>
+              <Link
+                href="/marche/fear-greed"
+                className={`font-mono font-semibold ${fearColor} inline-flex items-center gap-1 rounded hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+                aria-label={`Fear and Greed Index ${fearGreed.value} sur 100, ${fearGreed.classification}, voir la page détaillée`}
+              >
                 <Activity className="h-3 w-3" />
                 {fearGreed.value}/100
                 <span className="text-muted font-normal">· {fearGreed.classification}</span>
-              </span>
+                <span className="text-muted font-normal text-[10px] ml-1">voir détail →</span>
+              </Link>
             </Metric>
           )}
         </div>

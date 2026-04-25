@@ -1,8 +1,58 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
+import PlausibleScript from "@/components/PlausibleScript";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import SkipToContent from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
+import { logEnvValidationOnce } from "@/lib/env";
+
+// Validation env au boot — server-side uniquement (pas de window).
+// Le helper est idempotent : un flag statique évite le spam en HMR / cold-start.
+// On log en `console.warn`/`error` ; visible dans Vercel logs sans casser le rendu.
+if (typeof window === "undefined") {
+  logEnvValidationOnce();
+}
+
+// Fonts auto-hébergées via next/font (zéro request vers fonts.googleapis.com).
+// `display: swap` évite le FOIT, `variable` expose les --font-* à Tailwind.
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+/**
+ * Domaine Plausible. À configurer via la variable d'environnement
+ * `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (cf. .env.example).
+ * Fallback : le domaine de la marque (cryptoreflex.fr).
+ */
+const PLAUSIBLE_DOMAIN =
+  process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || BRAND.domain;
+
+/**
+ * Tokens de vérification pour la propriété du site.
+ * À récupérer après inscription (cf. plan/code/analytics-setup.md) puis :
+ *   - Google Search Console : NEXT_PUBLIC_GOOGLE_VERIFICATION
+ *   - Bing Webmaster Tools  : NEXT_PUBLIC_BING_VERIFICATION
+ *
+ * Les balises ne sont rendues QUE si une valeur est fournie : pas de meta vide.
+ */
+const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION;
+const BING_VERIFICATION = process.env.NEXT_PUBLIC_BING_VERIFICATION;
 
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
@@ -25,6 +75,10 @@ export const metadata: Metadata = {
     "Revolut",
   ],
   authors: [{ name: BRAND.name }],
+  // OpenGraph : l'image est générée automatiquement par app/opengraph-image.tsx
+  // (Next.js détecte le fichier et l'ajoute dans <head> pour CHAQUE page).
+  // Inutile de re-déclarer `images` ici — le fallback global est piloté
+  // par opengraph-image.tsx au niveau racine.
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -34,19 +88,63 @@ export const metadata: Metadata = {
     description:
       "Tout ce qu'il faut pour démarrer dans la crypto : comparatifs, guides et outils gratuits.",
   },
+  // Twitter Card : `summary_large_image` = image pleine largeur (1200x630).
+  // L'image est fournie automatiquement par app/twitter-image.tsx
+  // (clone d'opengraph-image, mais Next.js gère les deux séparément).
+  // NOTE handle X : "@cryptoreflex" est un placeholder — à confirmer/modifier
+  // dès que le compte officiel sera créé. Si le handle réel diffère, mettre à
+  // jour ici (un seul endroit, pas de constante exposée par BRAND).
   twitter: {
     card: "summary_large_image",
-    title: BRAND.name,
+    title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
       "Comparatifs des meilleures plateformes crypto, guides débutants et outils gratuits.",
+    site: "@cryptoreflex",
+    creator: "@cryptoreflex",
   },
   robots: { index: true, follow: true },
+  // Vérification de propriété pour les Webmaster Tools.
+  // Next.js gère nativement Google ; pour Bing on injecte une meta custom plus bas.
+  verification: {
+    google: GOOGLE_VERIFICATION,
+    other: BING_VERIFICATION
+      ? { "msvalidate.01": BING_VERIFICATION }
+      : undefined,
+  },
+  /**
+   * PWA — instructions iOS Safari.
+   * - capable: true → ouverture en mode "standalone" depuis l'écran d'accueil
+   * - statusBarStyle: "black-translucent" → status bar transparente, contenu sous la barre
+   * - title: nom court affiché sous l'icône
+   */
+  appleWebApp: {
+    capable: true,
+    title: "Cryptoreflex",
+    statusBarStyle: "black-translucent",
+  },
+  /**
+   * Icônes PWA (le manifest gère l'install Android, ces liens couvrent iOS/legacy).
+   * apple-touch-icon : iOS Safari l'utilise pour "Ajouter à l'écran d'accueil".
+   */
+  icons: {
+    apple: [
+      { url: "/icons/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" },
+    ],
+    other: [
+      { rel: "mask-icon", url: "/icons/icon-512.svg", color: "#FCD34D" },
+    ],
+  },
+  // manifest.webmanifest est exposé automatiquement via app/manifest.ts.
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#05060A",
+  // PWA : couleur de la barre d'adresse / chrome navigateur en mode installé.
+  // Cohérente avec manifest.theme_color et background_color.
+  themeColor: "#0B0D10",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -55,11 +153,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
-      <body className="min-h-screen flex flex-col antialiased">
+    <html
+      lang="fr"
+      className={`${inter.variable} ${mono.variable} ${display.variable}`}
+    >
+      <body className="min-h-screen flex flex-col antialiased font-sans">
+        {/* WCAG 2.4.1 — premier stop Tab : skip link visible au focus */}
+        <SkipToContent />
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+          {children}
+        </main>
         <Footer />
+        <CookieBanner />
+        {/*
+          Plausible Analytics — chargé uniquement si l'utilisateur a accepté
+          la catégorie "Mesure d'audience" dans le bandeau cookies.
+          Si NEXT_PUBLIC_PLAUSIBLE_DOMAIN n'est pas défini, on fallback sur
+          le domaine de prod (cryptoreflex.fr).
+        */}
+        <PlausibleScript domain={PLAUSIBLE_DOMAIN} />
+        {/*
+          Service worker PWA — enregistre /sw.js côté client (uniquement en prod).
+          Active le mode offline minimal + cache des assets statiques.
+        */}
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

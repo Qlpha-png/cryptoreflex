@@ -1,94 +1,78 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, FileText } from "lucide-react";
+import { getAllArticleSummaries } from "@/lib/mdx";
+import EmptyState from "@/components/ui/EmptyState";
 
-export interface Article {
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  readTime: string;
-  date: string;
-  /** Tailwind gradient utilities used for the cover */
-  gradient: string;
-}
+/**
+ * Aperçu blog en home — sert les 3 articles les plus récents lus depuis MDX
+ * (cf. `lib/mdx.ts`). Server Component async : aucun JS client, valeurs
+ * fraîches au build (cache `unstable_cache`, revalidate horaire).
+ */
+export default async function BlogPreview() {
+  const articles = (await getAllArticleSummaries()).slice(0, 3);
 
-export const ARTICLES: Article[] = [
-  {
-    slug: "guide-debutant-bitcoin",
-    title: "Bitcoin : le guide complet pour débuter en 2026",
-    excerpt:
-      "Comprendre Bitcoin sans jargon, choisir sa plateforme, faire son premier achat et stocker ses BTC en sécurité.",
-    category: "Débutant",
-    readTime: "8 min",
-    date: "2026-04-12",
-    gradient: "from-amber-500/40 to-orange-600/40",
-  },
-  {
-    slug: "wallet-froid-vs-chaud",
-    title: "Wallet froid vs wallet chaud : que choisir ?",
-    excerpt:
-      "Différences entre les deux, cas d'usage concrets et comment combiner les deux pour une sécurité optimale.",
-    category: "Sécurité",
-    readTime: "6 min",
-    date: "2026-04-05",
-    gradient: "from-cyan-500/40 to-blue-600/40",
-  },
-  {
-    slug: "fiscalite-crypto-france",
-    title: "Fiscalité crypto en France : ce qu'il faut savoir",
-    excerpt:
-      "Flat tax, déclaration des comptes étrangers, plus-values, NFT… tout ce qui change pour 2026.",
-    category: "Fiscalité",
-    readTime: "10 min",
-    date: "2026-03-28",
-    gradient: "from-emerald-500/40 to-teal-600/40",
-  },
-];
+  if (articles.length === 0) {
+    return (
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <EmptyState
+            icon={<FileText className="h-6 w-6" aria-hidden="true" />}
+            title="Pas encore d'articles publiés"
+            description="On prépare nos premiers guides — abonne-toi à la newsletter pour être prévenu dès la sortie."
+            cta={{ label: "S'abonner à la newsletter", href: "#newsletter" }}
+            secondaryCta={{ label: "Voir les outils", href: "/outils" }}
+          />
+        </div>
+      </section>
+    );
+  }
 
-export default function BlogPreview() {
   return (
     <section className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent-rose/30 bg-accent-rose/10 px-3 py-1 text-xs font-semibold text-accent-rose">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
               <BookOpen className="h-3.5 w-3.5" />
               Blog & Guides
             </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight">
-              Apprenez la crypto, <span className="gradient-text">étape par étape</span>
+            <h2 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+              Apprenez la crypto,{" "}
+              <span className="gradient-text">étape par étape</span>
             </h2>
           </div>
-          <Link href="/blog" className="btn-ghost text-sm py-2.5 self-start">
+          <Link href="/blog" className="btn-ghost self-start py-2.5 text-sm">
             Tous les articles
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {ARTICLES.map((a) => (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {articles.map((a) => (
             <Link
               key={a.slug}
               href={`/blog/${a.slug}`}
-              className="group glass rounded-2xl overflow-hidden hover:translate-y-[-2px] transition-transform"
+              className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]"
             >
               <div className={`relative h-40 bg-gradient-to-br ${a.gradient}`}>
                 <div className="absolute inset-0 bg-grid opacity-30" />
-                <span className="absolute top-3 left-3 rounded-full bg-background/70 backdrop-blur px-2.5 py-1 text-xs font-semibold">
+                <span className="absolute left-3 top-3 rounded-full bg-background/70 px-2.5 py-1 text-xs font-semibold backdrop-blur">
                   {a.category}
                 </span>
               </div>
               <div className="p-5">
-                <h3 className="font-semibold text-lg text-white group-hover:text-primary-glow transition-colors">
+                <h3 className="text-lg font-semibold text-fg transition-colors group-hover:text-primary-glow">
                   {a.title}
                 </h3>
-                <p className="mt-2 text-sm text-white/70 line-clamp-3">{a.excerpt}</p>
+                <p className="mt-2 line-clamp-3 text-sm text-fg/70">
+                  {a.description}
+                </p>
                 <div className="mt-4 flex items-center gap-3 text-xs text-muted">
                   <span className="inline-flex items-center gap-1">
                     <Clock className="h-3.5 w-3.5" />
                     {a.readTime}
                   </span>
-                  <span>•</span>
+                  <span>·</span>
                   <span>
                     {new Date(a.date).toLocaleDateString("fr-FR", {
                       day: "2-digit",

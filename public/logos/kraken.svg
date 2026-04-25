@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kraken">
+  <rect width="64" height="64" rx="12" fill="#5741D9"/>
+  <!-- Stylised octopus / K (3 tentacles motif) -->
+  <g fill="#fff">
+    <path d="M32 12c-2.2 0-4 1.8-4 4v32a4 4 0 0 0 8 0V16c0-2.2-1.8-4-4-4z"/>
+    <path d="M22 18c-2.2 0-4 1.8-4 4v22a4 4 0 0 0 8 0V22c0-2.2-1.8-4-4-4z"/>
+    <path d="M42 18c-2.2 0-4 1.8-4 4v22a4 4 0 0 0 8 0V22c0-2.2-1.8-4-4-4z"/>
+  </g>
+  <ellipse cx="32" cy="48" rx="14" ry="3" fill="#fff" opacity="0.4"/>
+</svg>

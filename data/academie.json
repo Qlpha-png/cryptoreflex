@@ -1,0 +1,154 @@
+{
+  "lessons": [
+    {
+      "id": "qu-est-ce-qu-une-cryptomonnaie",
+      "level": "debutant",
+      "title": "Qu'est-ce qu'une cryptomonnaie ?",
+      "slug": "qu-est-ce-qu-une-cryptomonnaie",
+      "targetUrl": "/glossaire/blockchain",
+      "summary": "La définition simple : un actif numérique décentralisé, sans banque centrale. Origines, utilité, différences avec un compte bancaire classique.",
+      "readingTime": 5,
+      "order": 1
+    },
+    {
+      "id": "bitcoin-pour-les-nuls",
+      "level": "debutant",
+      "title": "Bitcoin pour les nuls",
+      "slug": "bitcoin-guide-complet-debutant-2026",
+      "targetUrl": "/blog/bitcoin-guide-complet-debutant-2026",
+      "summary": "Le guide ultra-complet sur Bitcoin : fonctionnement, plateformes, fiscalité, sécurisation. Un must-read avant d'acheter ton premier sat.",
+      "readingTime": 28,
+      "order": 2
+    },
+    {
+      "id": "choisir-plateforme-crypto",
+      "level": "debutant",
+      "title": "Comment choisir une plateforme crypto",
+      "slug": "choisir-plateforme-crypto",
+      "targetUrl": "/quiz/plateforme",
+      "summary": "Un quiz interactif de 6 questions pour identifier la plateforme MiCA qui colle vraiment à ton profil (frais, débutant friendly, support FR…).",
+      "readingTime": 4,
+      "order": 3
+    },
+    {
+      "id": "premier-achat-crypto",
+      "level": "debutant",
+      "title": "Acheter ta première crypto",
+      "slug": "premier-achat-crypto",
+      "targetUrl": "/wizard/premier-achat",
+      "summary": "Le wizard pas-à-pas qui te tient la main du KYC à ton premier ordre, avec les pièges concrets (frais cachés, instant buy vs spot, etc.).",
+      "readingTime": 8,
+      "order": 4
+    },
+    {
+      "id": "securiser-cryptos-wallet-2fa",
+      "level": "debutant",
+      "title": "Sécuriser tes crypto (wallet, 2FA)",
+      "slug": "securiser-cryptos-wallet-2fa-2026",
+      "targetUrl": "/blog/securiser-cryptos-wallet-2fa-2026",
+      "summary": "2FA, hardware wallet, seed phrase, anti-phishing. Les 5 bonnes pratiques minimales pour ne pas perdre ton capital sur une bête erreur.",
+      "readingTime": 9,
+      "order": 5
+    },
+    {
+      "id": "dca-explique",
+      "level": "intermediaire",
+      "title": "Le DCA expliqué",
+      "slug": "dca-explique",
+      "targetUrl": "/outils/simulateur-dca",
+      "summary": "La stratégie d'achat programmé qui lisse la volatilité. Notre simulateur te montre ce que 100 €/mois sur BTC depuis X années auraient donné.",
+      "readingTime": 6,
+      "order": 6
+    },
+    {
+      "id": "staking-comment-ca-marche",
+      "level": "intermediaire",
+      "title": "Staking : comment ça marche",
+      "slug": "staking-comment-ca-marche",
+      "targetUrl": "/staking",
+      "summary": "Comparateur des 20 cryptos staking-éligibles sur les exchanges MiCA français : APY, lock-up, risque de slashing. Combien tu peux espérer gagner ?",
+      "readingTime": 7,
+      "order": 7
+    },
+    {
+      "id": "fiscalite-crypto-fr",
+      "level": "intermediaire",
+      "title": "Comprendre la fiscalité crypto FR",
+      "slug": "fiscalite-crypto-fr",
+      "targetUrl": "/outils/calculateur-fiscalite",
+      "summary": "Flat tax 30%, formulaire 2086, déclaration des wallets étrangers (3916-bis). Le calculateur t'aide à estimer ce que tu devras payer.",
+      "readingTime": 7,
+      "order": 8
+    },
+    {
+      "id": "mica-regulation-europe",
+      "level": "intermediaire",
+      "title": "MiCA : la régulation européenne",
+      "slug": "mica-regulation-europe-2026",
+      "targetUrl": "/blog/mica-regulation-europe-2026",
+      "summary": "Le règlement européen qui change tout pour les exchanges crypto. Pourquoi MiCA va éliminer 60% des plateformes, et ce que ça implique pour toi.",
+      "readingTime": 8,
+      "order": 9
+    },
+    {
+      "id": "trader-vs-dca-vs-hodl",
+      "level": "intermediaire",
+      "title": "Trader vs DCA vs HODL",
+      "slug": "trader-vs-dca-vs-hodl",
+      "targetUrl": "/blog/trader-vs-dca-vs-hodl",
+      "summary": "Trois philosophies, trois résultats radicalement différents. Laquelle est statistiquement la meilleure pour un investisseur particulier ? Le verdict des données.",
+      "readingTime": 8,
+      "order": 10
+    },
+    {
+      "id": "layer-2-ethereum",
+      "level": "avance",
+      "title": "Layer 2 et scaling Ethereum",
+      "slug": "layer-2-ethereum",
+      "targetUrl": "/glossaire/layer-2",
+      "summary": "Arbitrum, Optimism, Base, zkSync. Comment les L2 permettent à Ethereum de scaler. Différences rollups optimistes vs zk-rollups.",
+      "readingTime": 9,
+      "order": 11
+    },
+    {
+      "id": "defi-protocoles-rendements",
+      "level": "avance",
+      "title": "DeFi : protocoles et rendements",
+      "slug": "defi-protocoles-rendements",
+      "targetUrl": "/glossaire/defi",
+      "summary": "Aave, Uniswap, Curve, Lido. Les briques de la finance décentralisée et comment générer du rendement on-chain (sans se faire rug-puller).",
+      "readingTime": 12,
+      "order": 12
+    },
+    {
+      "id": "restaking-liquid-staking",
+      "level": "avance",
+      "title": "Restaking et liquid staking",
+      "slug": "restaking-liquid-staking",
+      "targetUrl": "/glossaire/staking",
+      "summary": "EigenLayer, stETH, rsETH. Comment empiler plusieurs couches de yield sur tes ETH stakés — et pourquoi le risque grimpe vite.",
+      "readingTime": 10,
+      "order": 13
+    },
+    {
+      "id": "stablecoins-usdt-usdc-dai",
+      "level": "avance",
+      "title": "Stablecoins : USDT vs USDC vs DAI",
+      "slug": "stablecoins-usdt-usdc-dai",
+      "targetUrl": "/glossaire/mica",
+      "summary": "Tether, Circle, MakerDAO. Les 3 grands stablecoins comparés sur la transparence des réserves, la conformité MiCA, et le risque de dépeg.",
+      "readingTime": 10,
+      "order": 14
+    },
+    {
+      "id": "diversification-au-dela-btc-eth",
+      "level": "avance",
+      "title": "Diversification crypto au-delà de BTC/ETH",
+      "slug": "diversification-au-dela-btc-eth",
+      "targetUrl": "/cryptos/bitcoin",
+      "summary": "Faut-il pondérer Solana, ATOM, hidden gems ? Les principes d'allocation pour un portefeuille crypto qui ne dépend pas que du BTC.",
+      "readingTime": 11,
+      "order": 15
+    }
+  ]
+}

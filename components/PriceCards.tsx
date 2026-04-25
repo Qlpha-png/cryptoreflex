@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
 
@@ -25,9 +26,20 @@ export default function PriceCards({ prices }: Props) {
           >
             {/* Header */}
             <div className="flex items-center gap-3">
-              {coin.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={coin.image} alt={coin.name} className="h-9 w-9 rounded-full" />
+              {coin.image ? (
+                <Image
+                  src={coin.image}
+                  alt={coin.name}
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 rounded-full"
+                  // Hero / above-the-fold : pas de lazy.
+                  priority
+                  sizes="36px"
+                  unoptimized
+                />
+              ) : (
+                <span className="h-9 w-9 rounded-full bg-elevated" />
               )}
               <div className="min-w-0">
                 <div className="font-semibold text-white truncate">{coin.name}</div>

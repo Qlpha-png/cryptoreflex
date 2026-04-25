@@ -9,12 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.453.0",
     "next": "^14.2.34",
+    "next-mdx-remote": "^5.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-heading-id": "^1.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -1,5 +1,7 @@
 import hiddenGemsData from "@/data/hidden-gems.json";
 import { Gem, ShieldCheck, AlertTriangle, ExternalLink, Activity } from "lucide-react";
+import AmfDisclaimer from "./AmfDisclaimer";
+import ScrollReveal from "./ui/ScrollReveal";
 
 interface HiddenGem {
   rank: number;
@@ -40,38 +42,33 @@ export default function HiddenGemsSection() {
   const gems = hiddenGemsData.hiddenGems as HiddenGem[];
 
   return (
-    <section id="hidden-gems" className="py-16 sm:py-20 bg-surface/30">
+    <section id="hidden-gems" className="py-12 sm:py-20 bg-surface/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <span className="badge-info">
-            <Gem className="h-3.5 w-3.5" />
+            <Gem className="h-3.5 w-3.5" aria-hidden="true" />
             Pépites cachées
           </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">
+          <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
             10 cryptos prometteuses, <span className="gradient-text">moins connues</span>
           </h2>
-          <p className="mt-2 text-muted text-sm max-w-2xl">
+          <p className="mt-2 text-muted text-sm max-w-2xl leading-relaxed">
             Notre sélection de projets crypto avec fondamentaux solides : équipe identifiée,
             audit récent, code open-source, sans scandale majeur. Chaque carte affiche un score
             de fiabilité calculé selon une méthode publique.
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {gems.map((g) => (
-            <GemCard key={g.id} gem={g} />
+        <div className="mt-8 sm:mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+          {gems.map((g, i) => (
+            <ScrollReveal key={g.id} delay={i * 80} direction="up">
+              <GemCard gem={g} />
+            </ScrollReveal>
           ))}
         </div>
 
-        {/* Disclaimer obligatoire */}
-        <div className="mt-10 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-amber-200/80 leading-relaxed">
-          <strong className="text-amber-300">⚠️ Disclaimer obligatoire</strong> — Cette sélection
-          ne constitue PAS un conseil en investissement. Investir dans les cryptomonnaies comporte
-          un risque élevé de perte en capital. La capitalisation, l'équipe et les fondamentaux d'un
-          projet peuvent évoluer rapidement. Ne placez que ce que vous êtes prêt à perdre. Consultez
-          un conseiller en investissement financier (CIF) enregistré ORIAS pour toute décision
-          patrimoniale significative.
-        </div>
+        {/* Disclaimer obligatoire — conforme article 222-15 AMF */}
+        <AmfDisclaimer variant="speculation" className="mt-10" />
       </div>
     </section>
   );
@@ -87,11 +84,11 @@ function GemCard({ gem }: { gem: HiddenGem }) {
       : "text-accent-rose border-accent-rose/40 bg-accent-rose/10";
 
   return (
-    <article className="glass rounded-2xl p-6 hover:border-primary/40 transition-colors">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 text-xs text-muted mb-1">
+    <article className="glass rounded-2xl p-5 sm:p-6 hover:border-primary/40 hover-lift">
+      {/* Header — mobile : score gauge plus gros (min 64px) pour lisibilité */}
+      <div className="flex items-start justify-between gap-3 sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 text-[11px] text-muted mb-1 flex-wrap">
             <span className="font-mono">#{gem.rank}</span>
             <span>·</span>
             <span>{gem.category}</span>
@@ -105,11 +102,21 @@ function GemCard({ gem }: { gem: HiddenGem }) {
           <p className="text-xs text-muted mt-0.5">{gem.marketCapRange}</p>
         </div>
 
-        <div className={`shrink-0 rounded-xl border px-3 py-2 text-center ${scoreColor}`}>
-          <div className="text-[10px] font-semibold uppercase tracking-wider opacity-70">
+        <div
+          className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-center min-w-[64px] ${scoreColor}`}
+          role="img"
+          aria-label={`Score de fiabilité : ${score.toFixed(1)} sur 10`}
+        >
+          <div
+            aria-hidden="true"
+            className="text-[10px] font-semibold uppercase tracking-wider opacity-70"
+          >
             Fiabilité
           </div>
-          <div className="font-mono font-bold text-lg leading-none mt-0.5">
+          <div
+            aria-hidden="true"
+            className="font-mono font-bold text-2xl sm:text-xl leading-none mt-1"
+          >
             {score.toFixed(1)}
           </div>
         </div>
@@ -152,19 +159,32 @@ function GemCard({ gem }: { gem: HiddenGem }) {
 
       {gem.reliability.auditedBy.length > 0 && (
         <div className="mt-3 text-xs text-muted">
-          <ShieldCheck className="inline h-3.5 w-3.5 text-accent-green mr-1" />
+          <ShieldCheck
+            className="inline h-3.5 w-3.5 text-accent-green mr-1"
+            aria-hidden="true"
+          />
           Audité par : <span className="text-fg">{gem.reliability.auditedBy.join(", ")}</span>{" "}
           <span className="text-muted/70">({gem.reliability.lastAuditDate})</span>
         </div>
       )}
 
-      {/* Risks - critical transparency */}
+      {/*
+        Risks — <details>/<summary> est nativement keyboard-accessible :
+        Tab focus + Enter/Space pour ouvrir/fermer (WCAG 2.1.1).
+        focus-visible:ring pour le visuel de focus (WCAG 2.4.7).
+      */}
       <details className="mt-4 group">
-        <summary className="cursor-pointer text-xs font-semibold text-amber-300 hover:text-amber-200 inline-flex items-center gap-1.5">
-          <AlertTriangle className="h-3.5 w-3.5" />
+        <summary
+          className="cursor-pointer text-sm font-semibold text-amber-300 hover:text-amber-200
+                     inline-flex items-center gap-1.5 min-h-[44px] py-2 px-1 -mx-1 rounded-lg
+                     active:bg-amber-500/10
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                     focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+        >
+          <AlertTriangle className="h-4 w-4" aria-hidden="true" />
           Voir les risques ({gem.risks.length})
         </summary>
-        <ul className="mt-2 space-y-1 text-xs text-fg/70 pl-5 list-disc marker:text-amber-400/60">
+        <ul className="mt-2 space-y-1.5 text-sm text-fg/75 pl-5 list-disc marker:text-amber-400/60 leading-relaxed">
           {gem.risks.map((risk) => (
             <li key={risk}>{risk}</li>
           ))}
@@ -172,20 +192,26 @@ function GemCard({ gem }: { gem: HiddenGem }) {
       </details>
 
       {/* Monitoring signals */}
-      <details className="mt-2 group">
-        <summary className="cursor-pointer text-xs font-semibold text-muted hover:text-fg inline-flex items-center gap-1.5">
-          <Activity className="h-3.5 w-3.5" />
+      <details className="mt-1 group">
+        <summary
+          className="cursor-pointer text-sm font-semibold text-muted hover:text-fg
+                     inline-flex items-center gap-1.5 min-h-[44px] py-2 px-1 -mx-1 rounded-lg
+                     active:bg-elevated/50
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                     focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+        >
+          <Activity className="h-4 w-4" aria-hidden="true" />
           Indicateurs à surveiller
         </summary>
-        <ul className="mt-2 space-y-1 text-xs text-fg/70 pl-5 list-disc marker:text-primary/60">
+        <ul className="mt-2 space-y-1.5 text-sm text-fg/75 pl-5 list-disc marker:text-primary/60 leading-relaxed">
           {gem.monitoringSignals.map((s) => (
             <li key={s}>{s}</li>
           ))}
         </ul>
       </details>
 
-      {/* Footer */}
-      <div className="mt-5 pt-4 border-t border-border flex items-center justify-between gap-3 text-xs">
+      {/* Footer — empilé sur mobile pour éviter compression */}
+      <div className="mt-5 pt-4 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
         <div className="text-muted">
           <span>Disponible sur : </span>
           <span className="text-fg font-medium">{gem.whereToBuy.slice(0, 3).join(", ")}</span>
@@ -194,10 +220,14 @@ function GemCard({ gem }: { gem: HiddenGem }) {
           href={gem.officialUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-primary-soft hover:text-primary font-semibold"
+          aria-label={`Site officiel de ${gem.name} (ouvre un nouvel onglet)`}
+          className="inline-flex items-center gap-1 text-primary-soft hover:text-primary font-semibold
+                     min-h-[44px] py-2 rounded
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                     focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
           Site officiel
-          <ExternalLink className="h-3 w-3" />
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
       </div>
     </article>

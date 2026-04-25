@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Cryptoreflex">
+  <defs>
+    <linearGradient id="cr192-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="55%" stop-color="#F5A524"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="cr192-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="38" fill="#0B0D10"/>
+  <circle cx="96" cy="138" r="34" fill="url(#cr192-gold)"/>
+  <circle cx="96" cy="84"  r="26" fill="url(#cr192-gold-soft)"/>
+  <circle cx="96" cy="42"  r="18" fill="#FCD34D"/>
+</svg>

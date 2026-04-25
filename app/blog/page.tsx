@@ -1,68 +1,52 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Clock, BookOpen } from "lucide-react";
-import { ARTICLES } from "@/components/BlogPreview";
+import { BookOpen } from "lucide-react";
+
+import { getAllArticleSummaries, getAllCategories } from "@/lib/mdx";
+import BlogIndexClient from "@/components/blog/BlogIndexClient";
 
 export const metadata: Metadata = {
   title: "Blog & guides crypto",
   description:
-    "Guides clairs pour débuter dans la crypto : Bitcoin, wallets, fiscalité, sécurité et plus encore.",
+    "Guides clairs pour débuter dans la crypto : Bitcoin, MiCA, wallets, fiscalité, sécurité, comparatifs de plateformes.",
+  alternates: { canonical: "/blog" },
 };
 
-export default function BlogIndexPage() {
+/**
+ * /blog — index des articles.
+ *
+ * Architecture (P1-8 audit-front-2026) :
+ *  - Server Component : fetch les summaries + catégories (cache 1h).
+ *  - Délégue le rendu interactif (filtre + recherche + pagination) à
+ *    `BlogIndexClient` qui gère tout côté client. Le HTML initial reste
+ *    compatible SSR : pas de filtre, page 1, query vide.
+ *  - L'ancienne pagination via `?page=` / `?cat=` est remplacée par un
+ *    état client. Les bots crawlent toujours la liste complète au-dessus
+ *    du fold (les links dans visible[] sont rendus dès le SSR).
+ */
+export default async function BlogIndexPage() {
+  const articles = await getAllArticleSummaries();
+  const categories = await getAllCategories();
+
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent-pink/30 bg-accent-pink/10 px-3 py-1 text-xs font-semibold text-accent-pink">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
             <BookOpen className="h-3.5 w-3.5" />
             Blog
           </span>
-          <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
+          <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
             Tous les <span className="gradient-text">guides crypto</span>
           </h1>
-          <p className="mt-3 text-white/70">
-            Articles écrits pour rendre la crypto accessible — du tout débutant à
-            l'investisseur intermédiaire.
+          <p className="mt-3 text-fg/70">
+            Articles écrits pour rendre la crypto accessible — du tout débutant
+            à l'investisseur intermédiaire. Comparatifs MiCA, fiscalité,
+            sécurité, choix de plateforme.
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ARTICLES.map((a) => (
-            <Link
-              key={a.slug}
-              href={`/blog/${a.slug}`}
-              className="group glass rounded-2xl overflow-hidden hover:translate-y-[-2px] transition-transform"
-            >
-              <div className={`relative h-40 bg-gradient-to-br ${a.gradient}`}>
-                <div className="absolute inset-0 bg-grid opacity-30" />
-                <span className="absolute top-3 left-3 rounded-full bg-background/70 backdrop-blur px-2.5 py-1 text-xs font-semibold">
-                  {a.category}
-                </span>
-              </div>
-              <div className="p-5">
-                <h2 className="font-semibold text-lg text-white group-hover:text-primary-glow transition-colors">
-                  {a.title}
-                </h2>
-                <p className="mt-2 text-sm text-white/70 line-clamp-3">{a.excerpt}</p>
-                <div className="mt-4 flex items-center gap-3 text-xs text-muted">
-                  <span className="inline-flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
-                    {a.readTime}
-                  </span>
-                  <span>•</span>
-                  <span>
-                    {new Date(a.date).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <BlogIndexClient articles={articles} categories={categories} />
       </div>
     </section>
   );

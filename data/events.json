@@ -1,0 +1,226 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-25",
+    "schemaVersion": "1",
+    "notes": "Dates « ~ » = approximations basées sur les estimations publiques (block-time, calendriers tokens, agendas conférences). À actualiser tous les trimestres."
+  },
+  "events": [
+    {
+      "id": "paris-blockchain-week-2026",
+      "title": "Paris Blockchain Week 2026",
+      "category": "conference",
+      "date": "2026-04-15",
+      "isApproximate": false,
+      "description": "9e édition de la PBW au Carrousel du Louvre — Tier-1 institutionnel, agenda focus régulation MiCA et tokenisation.",
+      "impact": "medium",
+      "links": [
+        { "label": "Site officiel", "url": "https://www.parisblockchainweek.com/" }
+      ]
+    },
+    {
+      "id": "aptos-unlock-2026-05",
+      "title": "Token unlock Aptos (APT)",
+      "category": "unlock",
+      "date": "2026-05-12",
+      "isApproximate": false,
+      "description": "Déblocage mensuel APT (vesting linéaire) — pression vendeuse modérée historique sur ce token.",
+      "impact": "medium"
+    },
+    {
+      "id": "sui-unlock-2026-05",
+      "title": "Token unlock Sui (SUI)",
+      "category": "unlock",
+      "date": "2026-05-01",
+      "isApproximate": false,
+      "description": "Tranche mensuelle SUI — surveiller l'impact sur la liquidité spot.",
+      "impact": "medium"
+    },
+    {
+      "id": "arbitrum-unlock-2026-05",
+      "title": "Token unlock Arbitrum (ARB)",
+      "category": "unlock",
+      "date": "2026-05-16",
+      "isApproximate": false,
+      "description": "Déblocage cliff ARB (équipe + investisseurs early). Volume historique > 90 M$ sur la précédente unlock.",
+      "impact": "high"
+    },
+    {
+      "id": "consensus-miami-2026",
+      "title": "Consensus Miami 2026",
+      "category": "conference",
+      "date": "2026-05-12",
+      "isApproximate": true,
+      "description": "Édition Miami de Consensus by CoinDesk — l'un des plus gros rassemblements crypto-fi des Amériques.",
+      "impact": "medium",
+      "links": [
+        { "label": "Programme", "url": "https://consensus.coindesk.com/" }
+      ]
+    },
+    {
+      "id": "mica-fr-deadline-2026",
+      "title": "Deadline MiCA — fin du régime PSAN en France",
+      "category": "regulation",
+      "date": "2026-07-01",
+      "isApproximate": false,
+      "description": "Fin de la période de transition : seuls les CASP agréés MiCA peuvent fournir des services crypto en France après cette date. Les PSAN non-MiCA doivent cesser leur activité (peine encourue : 2 ans + 30 000 €).",
+      "impact": "high",
+      "links": [
+        { "label": "Communiqué AMF", "url": "https://www.amf-france.org/en/news-publications/news/amf-reminds-digital-asset-service-providers-transitional-period-allowing-them-continue-providing" },
+        { "label": "Notre dossier MiCA", "url": "/blog" }
+      ]
+    },
+    {
+      "id": "mining-disrupt-miami-2026",
+      "title": "Mining Disrupt Miami",
+      "category": "conference",
+      "date": "2026-07-21",
+      "isApproximate": false,
+      "description": "Salon dédié au mining Bitcoin & infrastructure énergétique. Miami Airport Convention Center.",
+      "impact": "low",
+      "links": [
+        { "label": "Site officiel", "url": "https://miningdisrupt.com/" }
+      ]
+    },
+    {
+      "id": "token2049-singapore-2026",
+      "title": "Token2049 Singapore",
+      "category": "conference",
+      "date": "2026-10-01",
+      "isApproximate": true,
+      "description": "Plus grand sommet crypto APAC — annonces protocoles + flux institutionnel asiatique.",
+      "impact": "medium"
+    },
+    {
+      "id": "devcon-2026",
+      "title": "Devcon 8 — Ethereum Foundation",
+      "category": "conference",
+      "date": "2026-11-03",
+      "isApproximate": true,
+      "description": "Conférence développeurs Ethereum (annonces L2, scalabilité, roadmap). Attendue novembre 2026.",
+      "impact": "medium"
+    },
+    {
+      "id": "ethereum-etf-staking-2026",
+      "title": "Décision SEC — staking dans les ETF Ethereum spot",
+      "category": "etf-deadline",
+      "date": "2026-06-30",
+      "isApproximate": true,
+      "description": "Date limite pour les amendements ETF (Fidelity, Franklin, Invesco, 21Shares, VanEck) sur l'intégration du staking ETH. Yield ~3,2 % directement perçu par les détenteurs de l'ETF en cas d'approbation.",
+      "impact": "high"
+    },
+    {
+      "id": "sol-etf-decision-2026",
+      "title": "Décision SEC — Spot ETF Solana (Franklin Templeton)",
+      "category": "etf-deadline",
+      "date": "2026-05-30",
+      "isApproximate": true,
+      "description": "Probabilité d'approbation estimée > 95 % par les analystes Bloomberg en début 2026.",
+      "impact": "high"
+    },
+    {
+      "id": "xrp-etf-decision-2026",
+      "title": "Décision SEC — Spot ETF XRP",
+      "category": "etf-deadline",
+      "date": "2026-05-30",
+      "isApproximate": true,
+      "description": "Q1 2026 : 1,4 Md $ déjà drainés vers les ETF XRP existants. Décision finale attendue Q2.",
+      "impact": "high"
+    },
+    {
+      "id": "ethdenver-2027",
+      "title": "ETHDenver 2027",
+      "category": "conference",
+      "date": "2027-02-17",
+      "isApproximate": true,
+      "description": "Gros rendez-vous BUIDL Ethereum US, focus DevX & DeFi. Date alignée sur le pattern \"3e semaine de février\".",
+      "impact": "low"
+    },
+    {
+      "id": "ethcc-cannes-2027",
+      "title": "EthCC[10] — Cannes",
+      "category": "conference",
+      "date": "2027-04-05",
+      "isApproximate": false,
+      "description": "10e édition de la Ethereum Community Conference au Palais des Festivals de Cannes. Hébergement confirmé jusqu'en 2028.",
+      "impact": "medium"
+    },
+    {
+      "id": "paris-blockchain-week-2027",
+      "title": "Paris Blockchain Week 2027",
+      "category": "conference",
+      "date": "2027-04-14",
+      "isApproximate": true,
+      "description": "10e édition (estimée) — 1ère grande convention crypto FR post-MiCA.",
+      "impact": "medium"
+    },
+    {
+      "id": "litecoin-halving-2027",
+      "title": "Halving Litecoin (LTC)",
+      "category": "halving",
+      "date": "2027-07-27",
+      "isApproximate": true,
+      "description": "4e halving Litecoin au block 3 360 000 — récompense par bloc divisée par 2 (6,25 → 3,125 LTC). Estimation basée sur un block-time moyen de 150 s.",
+      "impact": "high",
+      "links": [
+        { "label": "Litecoin halving tracker", "url": "https://www.litecoinhalving.com/" }
+      ]
+    },
+    {
+      "id": "token2049-singapore-2027",
+      "title": "Token2049 Singapore 2027",
+      "category": "conference",
+      "date": "2027-10-01",
+      "isApproximate": true,
+      "description": "Édition annuelle APAC — focus DePIN, AI x Crypto, RWA.",
+      "impact": "medium"
+    },
+    {
+      "id": "ethcc-cannes-2028",
+      "title": "EthCC[11] — Cannes",
+      "category": "conference",
+      "date": "2028-04-03",
+      "isApproximate": false,
+      "description": "11e édition (et dernière de la trilogie Cannes confirmée) de la Ethereum Community Conference.",
+      "impact": "medium"
+    },
+    {
+      "id": "bch-halving-2028",
+      "title": "Halving Bitcoin Cash (BCH)",
+      "category": "halving",
+      "date": "2028-04-10",
+      "isApproximate": true,
+      "description": "Halving estimé BCH — récompense bloc 3,125 → 1,5625 BCH. Quelques jours avant le halving Bitcoin attendu.",
+      "impact": "medium"
+    },
+    {
+      "id": "btc-halving-2028",
+      "title": "Halving Bitcoin (BTC)",
+      "category": "halving",
+      "date": "2028-04-15",
+      "isApproximate": true,
+      "description": "5e halving Bitcoin au block 1 050 000 — récompense par bloc 3,125 → 1,5625 BTC. Date estimée mi-avril 2028, peut varier de quelques jours selon le hashrate.",
+      "impact": "high",
+      "links": [
+        { "label": "Notre page halving + countdown", "url": "/halving-bitcoin" }
+      ]
+    },
+    {
+      "id": "btc-mainnet-anniversary-2029",
+      "title": "20 ans du genesis block Bitcoin",
+      "category": "mainnet-launch",
+      "date": "2029-01-03",
+      "isApproximate": false,
+      "description": "20e anniversaire du genesis block (3 janvier 2009). Évènement symbolique majeur pour la communauté.",
+      "impact": "low"
+    },
+    {
+      "id": "consensus-2027",
+      "title": "Consensus 2027",
+      "category": "conference",
+      "date": "2027-05-15",
+      "isApproximate": true,
+      "description": "Édition annuelle Consensus by CoinDesk — keynote leaders TradFi/CeFi/DeFi.",
+      "impact": "low"
+    }
+  ]
+}

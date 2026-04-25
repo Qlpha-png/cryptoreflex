@@ -2,18 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap");
+/* Fonts: chargées via next/font (app/layout.tsx) — pas d'@import render-blocking. */
 
 :root {
   color-scheme: dark;
+  /* iOS safe areas (notch + home indicator) */
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --safe-right: env(safe-area-inset-right);
+  /* Hauteur de la sticky bar mobile, utilisée pour padding bottom du body */
+  --mobile-bar-h: 64px;
+
+  /* ----------------------------------------------------------------
+   * DESIGN TOKENS — exposés en CSS vars pour SVG / Canvas / JS.
+   * Source de vérité = tailwind.config.ts. Garder synchronisé.
+   * Doc complète : plan/code/design-system.md
+   * ---------------------------------------------------------------- */
+  --color-bg: #0b0d10;
+  --color-surface: #16191f;
+  --color-elevated: #1f242c;
+  --color-border: #262b33;
+  --color-fg: #f4f5f7;
+  --color-muted: #9ba3af;
+
+  --color-primary: #f5a524;
+  --color-primary-glow: #fbbf24;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #0ea5e9;
+
+  /* Motion tokens */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
 }
 
 html,
 body {
-  background: #0B0D10;
-  color: #F4F5F7;
+  background: var(--color-bg);
+  color: var(--color-fg);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  /* Empêche le scroll horizontal accidentel sur mobile (bug fréquent overflow tableau) */
+  overflow-x: hidden;
+}
+
+/* Padding bottom mobile = laisser de la place pour la sticky bar */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: calc(var(--mobile-bar-h) + var(--safe-bottom));
+  }
 }
 
 /* Halo gold doux en haut, signal premium discret */
@@ -29,6 +74,70 @@ body {
 /* Tabular nums pour tous les chiffres en mono — alignement parfait des prix */
 .font-mono {
   font-variant-numeric: tabular-nums;
+}
+
+/* Empêche le zoom auto iOS sur focus input (font-size < 16px → iOS zoom) */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ================================================================
+ * TYPOGRAPHY UTILITIES — appliquent la typography scale du design system.
+ * Préférer ces classes aux combos `text-3xl sm:text-4xl font-extrabold ...`
+ * répétés dans chaque composant. Voir plan/code/design-system.md.
+ * ================================================================ */
+@layer components {
+  .ds-display {
+    @apply font-display text-h2 sm:text-h1 md:text-display text-fg;
+  }
+  .ds-h1 {
+    @apply font-display text-h2 sm:text-h1 text-fg;
+  }
+  .ds-h2 {
+    @apply font-display text-h3 sm:text-h2 text-fg;
+  }
+  .ds-h3 {
+    @apply font-display text-h4 sm:text-h3 text-fg;
+  }
+  .ds-h4 {
+    @apply font-sans text-h5 sm:text-h4 text-fg;
+  }
+  .ds-h5 {
+    @apply font-sans text-h6 sm:text-h5 text-fg;
+  }
+  .ds-h6 {
+    @apply font-sans text-h6 text-fg;
+  }
+  .ds-lead {
+    @apply text-body sm:text-lead text-fg/75;
+  }
+  .ds-body {
+    @apply text-body text-fg/85;
+  }
+  .ds-small {
+    @apply text-small text-muted;
+  }
+  .ds-caption {
+    @apply text-caption uppercase tracking-wider text-muted;
+  }
+  .ds-eyebrow {
+    @apply text-caption font-semibold uppercase tracking-wider text-primary-soft;
+  }
+
+  /* Surface utilities — élévation cohérente (cf. shadow.e1..e5) */
+  .surface-1 {
+    @apply bg-surface border border-border rounded-2xl shadow-e1;
+  }
+  .surface-2 {
+    @apply bg-elevated border border-border rounded-2xl shadow-e2;
+  }
+  .surface-3 {
+    @apply bg-elevated border border-border rounded-2xl shadow-e3;
+  }
 }
 
 @layer components {
@@ -47,25 +156,184 @@ body {
     @apply text-primary;
   }
   .btn-primary {
+    /* min-h-tap = 44px = guideline Apple HIG / WCAG 2.5.5 (tap target) */
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
-           bg-primary text-white
-           transition-colors hover:bg-primary-glow active:bg-primary
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary;
+           min-h-tap
+           bg-primary text-white shadow-e2
+           transition-all duration-normal ease-emphasized
+           hover:bg-primary-glow hover:shadow-[0_8px_24px_-8px_rgba(245,165,36,0.5)] hover:-translate-y-[1px]
+           active:bg-primary active:translate-y-0 active:shadow-none
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
-           border border-border text-white/90 hover:border-primary/60 hover:text-white
-           transition-colors;
+           min-h-tap
+           border border-border text-white/90
+           transition-all duration-normal ease-emphasized
+           hover:border-primary/60 hover:text-white hover:bg-primary/5
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50;
   }
   .badge {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium;
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-caption font-medium;
   }
   .badge-trust {
-    @apply badge border-accent-green/40 bg-accent-green/10 text-accent-green;
+    @apply badge border-success/40 bg-success/10 text-success;
   }
   .badge-info {
     @apply badge border-primary/40 bg-primary/10 text-primary-soft;
   }
+  .badge-warning {
+    @apply badge border-warning/40 bg-warning/10 text-warning-fg;
+  }
+  .badge-danger {
+    @apply badge border-danger/40 bg-danger/10 text-danger-fg;
+  }
+  /* Tap target accessible : utilitaire générique (icône, lien icône, etc.) */
+  .tap-target {
+    @apply inline-flex items-center justify-center min-h-tap min-w-tap;
+  }
+  /* Conteneur scroll horizontal mobile (évite que le table cassée le layout global) */
+  .mobile-scroll-x {
+    @apply overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ============================================================
+   * PREMIUM UTILITIES — visual polish v2 (fintech grade)
+   * card-premium / text-gradient-gold / divider-gradient
+   * ============================================================ */
+
+  /*
+   * Card premium : depth multi-shadow + ring subtil gold + bg gradient
+   * subtil (linear top-down). À utiliser sur les cartes "phares".
+   */
+  .card-premium {
+    background:
+      linear-gradient(180deg, rgba(31, 36, 44, 0.85) 0%, rgba(22, 25, 31, 0.85) 100%);
+    border: 1px solid rgba(38, 43, 51, 0.9);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+      0 8px 24px -8px rgba(0, 0, 0, 0.4),
+      0 2px 4px -2px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    @apply rounded-2xl ring-1 ring-primary/10;
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 220ms ease;
+  }
+  @media (hover: hover) {
+    .card-premium:hover {
+      transform: translateY(-3px);
+      border-color: rgba(245, 165, 36, 0.25);
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+        0 16px 36px -10px rgba(0, 0, 0, 0.55),
+        0 4px 8px -4px rgba(0, 0, 0, 0.3),
+        0 0 32px -12px rgba(245, 165, 36, 0.35);
+    }
+  }
+  /* Variante gold prononcée : platforms section */
+  @media (hover: hover) {
+    .card-premium-gold:hover {
+      border-color: rgba(245, 165, 36, 0.4);
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+        0 18px 40px -10px rgba(0, 0, 0, 0.6),
+        0 4px 12px -4px rgba(0, 0, 0, 0.35),
+        0 0 48px -10px rgba(245, 165, 36, 0.55);
+    }
+  }
+
+  /*
+   * Texte gradient gold — highlights premium (h1, h2 marketing).
+   */
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary-soft to-primary-glow;
+    background-size: 200% auto;
+    will-change: background-position;
+  }
+  .text-gradient-gold-animate {
+    @apply text-gradient-gold;
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+
+  /*
+   * Divider gradient — 1px line gold qui fade aux extrémités.
+   * Plus premium qu'un border-t plat, à utiliser pour séparer sections internes.
+   */
+  .divider-gradient {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(245, 165, 36, 0.0) 5%,
+      rgba(245, 165, 36, 0.35) 50%,
+      rgba(245, 165, 36, 0.0) 95%,
+      transparent 100%
+    );
+    border: 0;
+  }
+
+  /* Glow gold mesuré — pour scores, badges, CTA */
+  .glow-gold-soft {
+    box-shadow: 0 0 24px -6px rgba(245, 165, 36, 0.4);
+  }
+  .glow-gold-medium {
+    box-shadow:
+      0 0 0 1px rgba(245, 165, 36, 0.3),
+      0 0 28px -4px rgba(245, 165, 36, 0.55);
+  }
+}
+
+/* Gradient shift animation pour text-gradient-gold-animate */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* Hero entrance animation — fade-up cascade */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-hero-fade-up {
+  animation: hero-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-hero-fade-up-delay-1 { animation-delay: 80ms; }
+.animate-hero-fade-up-delay-2 { animation-delay: 180ms; }
+.animate-hero-fade-up-delay-3 { animation-delay: 280ms; }
+.animate-hero-fade-up-delay-4 { animation-delay: 380ms; }
+
+/* Sparkline glow — appliqué via class sur le path SVG */
+.sparkline-glow-up {
+  filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.45));
+}
+.sparkline-glow-down {
+  filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.45));
+}
+
+/* Row hover refined : gradient sweep gauche → droite très subtil */
+.row-hover-refined {
+  position: relative;
+  transition: background-color 220ms ease, box-shadow 220ms ease;
+}
+.row-hover-refined:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 165, 36, 0.05) 0%,
+    rgba(31, 36, 44, 0.55) 28%,
+    rgba(31, 36, 44, 0.55) 100%
+  );
+  box-shadow: inset 2px 0 0 0 rgba(245, 165, 36, 0.45);
 }
 
 /* Dotted grid — pattern recommandé par le design lead, plus subtil que la grille linéaire */
@@ -78,6 +346,69 @@ body {
   background-size: 24px 24px;
 }
 
+/* ============================================================
+ * Hero — halo gold premium + particules CSS pures
+ * Pas de JS, pas de requestAnimationFrame.
+ * Désactivé sur mobile (perf) et prefers-reduced-motion (a11y).
+ * ============================================================ */
+.hero-halo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 22% 18%,
+      rgba(245, 165, 36, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 45% at 82% 8%,
+      rgba(251, 191, 36, 0.10),
+      transparent 65%
+    );
+}
+
+/* Conteneur des particules — caché sous 768px (perf) */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: none;
+}
+@media (min-width: 768px) {
+  .hero-particles { display: block; }
+}
+
+.hero-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(252, 211, 77, 0.55);
+  box-shadow: 0 0 12px 2px rgba(245, 165, 36, 0.45);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: particle-drift 14s ease-in-out infinite;
+}
+.hero-particle.p1 { top: 18%; left: 12%; animation-delay: 0s;  }
+.hero-particle.p2 { top: 62%; left: 28%; animation-delay: 3s;  width: 3px; height: 3px; }
+.hero-particle.p3 { top: 30%; left: 70%; animation-delay: 6s;  }
+.hero-particle.p4 { top: 78%; left: 82%; animation-delay: 9s;  width: 5px; height: 5px; }
+.hero-particle.p5 { top: 45%; left: 50%; animation-delay: 11s; width: 3px; height: 3px; }
+
+@keyframes particle-drift {
+  0%   { opacity: 0;    transform: translate3d(0, 0, 0); }
+  20%  { opacity: 0.85; }
+  50%  { opacity: 0.6;  transform: translate3d(14px, -22px, 0); }
+  80%  { opacity: 0.4; }
+  100% { opacity: 0;    transform: translate3d(-8px, -40px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-particles { display: none !important; }
+}
+
 /* Pulse dot vert : signal "live data" sur le widget hero */
 .live-dot::before {
   content: "";
@@ -85,7 +416,7 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #22c55e;
+  background: var(--color-success);
   margin-right: 6px;
   box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -96,12 +427,300 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #171A21;
+  background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
   background: #2A2F3A;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C2410C;
+  background: var(--color-primary);
+}
+
+/* Modal: lock body scroll quand modal full-screen mobile ouverte */
+body.modal-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ───────────────────────── SKELETON / SHIMMER ─────────────────────────
+   Utilisé par les loading.tsx (Hero, cards, tables).
+   Animation subtile gauche→droite — pas un pulse criard.
+   Le @media prefers-reduced-motion plus haut désactive l'animation.
+*/
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #1F242C; /* elevated */
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.04) 20%,
+    rgba(245, 165, 36, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 800px 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 0.5rem;
+}
+
+/* Animation fade-in / slide-up pour modal et sticky bar */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-slide-up {
+  animation: slide-up var(--duration-slow) var(--ease-emphasized);
+}
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) var(--ease-decelerate);
+}
+
+/* ============================================================
+ * News ticker (home) — défilement horizontal lent des derniers articles.
+ * Utilisé par <NewsTicker />. Pause au hover/focus, off en reduced-motion
+ * (la classe .news-ticker-scroll est masquée via JS @media côté composant,
+ *  on garde ici le keyframe + l'utilitaire animation).
+ * ============================================================ */
+@keyframes news-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.news-ticker-track {
+  animation: news-scroll 60s linear infinite;
+}
+/* Pause confortable au hover et au focus dans la zone défilante */
+.news-ticker-scroll:hover .news-ticker-track,
+.news-ticker-scroll:focus-within .news-ticker-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .news-ticker-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Slide depuis le haut — utilisé par la Command Palette (Cmd+K) */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-slide-down {
+  animation: slide-down var(--duration-normal, 240ms) var(--ease-decelerate, cubic-bezier(0.05, 0.7, 0.1, 1));
+}
+
+/* =========================================================================
+   MICRO-INTERACTIONS PREMIUM — pure CSS, zero JS lib (no framer-motion)
+   ========================================================================= */
+
+/*
+ * Scroll reveal — base hidden state.
+ * Le composant React <ScrollReveal> ajoute .scroll-reveal + observe via IO,
+ * puis bascule .in-view dès que l'élément entre dans le viewport.
+ *
+ * Variantes directionnelles : -up (default) / -down / -left / -right.
+ * Stagger : on supporte un --reveal-delay custom prop pour cascader proprement
+ * sans générer 1 classe CSS par index.
+ */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.scroll-reveal.reveal-down  { transform: translateY(-20px); }
+.scroll-reveal.reveal-left  { transform: translateX(20px); }
+.scroll-reveal.reveal-right { transform: translateX(-20px); }
+
+.scroll-reveal.in-view {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/*
+ * Hover lift refined — élévation discrète + ombre carte.
+ * Transition séparée transform/box-shadow pour un easing visuellement plus net.
+ */
+.hover-lift {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease;
+  will-change: transform;
+}
+@media (hover: hover) {
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/*
+ * Card tilt subtil — rotation perspective au hover.
+ * Reste très léger (0.5deg) pour ne pas tomber dans le gimmick.
+ */
+.card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+@media (hover: hover) {
+  .card-tilt:hover {
+    transform: perspective(900px) rotateX(0.5deg) rotateY(-0.5deg) translateY(-2px);
+  }
+}
+
+/*
+ * Skeleton shimmer — loading states (MarketTable, Top10, Hero).
+ * Gradient qui balaye horizontalement le placeholder.
+ */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background-color: #1F242C;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/*
+ * Pulse "live" indicator amélioré — combine fade + ring expanding.
+ * Surcharge .live-dot::before existant pour un signal plus premium.
+ */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+.live-dot::before {
+  /* base déjà définie plus haut — on ajoute le ring expanding */
+  animation:
+    pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite,
+    pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/*
+ * Button ripple effect — pure CSS via ::after qui s'étend depuis le centre
+ * au clic (active). Pas de JS, pas de coordonnées exactes (compromis simplicité).
+ */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 50% 50% 50% 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 600ms ease;
+}
+.btn-ripple:active::after {
+  inset: -50% -50% -50% -50%;
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0ms, opacity 0ms;
+}
+
+/* Accessibilité : respect strict de prefers-reduced-motion.
+ * Tout est désactivé : reveal, hover lift, tilt, shimmer, pulse, ripple.
+ * Les éléments scroll-reveal sont rendus visibles immédiatement pour ne pas
+ * bloquer le contenu derrière une animation neutralisée.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-ticker-scroll {
+    animation: none !important;
+    transform: none !important;
+  }
+  .live-dot::before {
+    animation: none !important;
+  }
+  /* Force le contenu reveal à être visible immédiatement */
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hover-lift:hover,
+  .card-tilt:hover {
+    transform: none !important;
+  }
+  .skeleton {
+    animation: none !important;
+    background-image: none !important;
+  }
+  /* Premium polish v2 — neutralise hero entrance + gradient shift */
+  .animate-hero-fade-up,
+  .animate-hero-fade-up-delay-1,
+  .animate-hero-fade-up-delay-2,
+  .animate-hero-fade-up-delay-3,
+  .animate-hero-fade-up-delay-4,
+  .text-gradient-gold-animate {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .card-premium:hover,
+  .card-premium-gold:hover {
+    transform: none !important;
+  }
 }
