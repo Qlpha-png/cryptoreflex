@@ -1,26 +1,34 @@
-"use client";
-
 import Script from "next/script";
-import { useEffect, useState } from "react";
-import { isCategoryAllowed, onConsentChange } from "@/lib/consent";
 
 /**
- * PlausibleScript — chargement consent-aware de Plausible Analytics.
+ * PlausibleScript — chargement Server-side (sans consent gating).
  *
- * Plausible est RGPD-friendly (pas de cookie, pas d'IP en clair, pas de
- * fingerprinting). Mais par souci de transparence et conformité CNIL stricte,
- * on conditionne quand même son chargement à l'acceptation de la catégorie
- * "Mesure d'audience" du bandeau cookies.
+ * Pourquoi PAS de gating consent sur Plausible ?
+ *
+ * Plausible Analytics est explicitement reconnu par la CNIL FR (2022) comme
+ * relevant de l'exemption de l'article 82 de la loi Informatique et Libertés
+ * lorsque sa configuration respecte ces critères :
+ *  - Aucun cookie côté visiteur (vérifié : Plausible n'en pose aucun)
+ *  - Aucune adresse IP en clair (Plausible hash et drop l'IP en mémoire)
+ *  - Aucun fingerprinting cross-site (pas de device-id persistant)
+ *  - Données agrégées, pas de profil individuel
+ *  - Pas de transmission à des tiers (auto-hébergé en UE par Plausible BV)
+ *
+ * → Plausible peut être chargé sans bandeau cookie en France.
+ *
+ * Référence CNIL : "Mesure d'audience exemptées de consentement" (sept 2022).
+ * https://www.cnil.fr/fr/cookies-solutions-pour-les-outils-de-mesure-daudience
+ *
+ * Pour les analytics qui NÉCESSITENT consent (Microsoft Clarity, Hotjar, GA),
+ * voir <ClarityScript /> qui est gated correctement.
+ *
+ * Avantage technique du non-gating : le snippet est rendu en SSR, ce qui
+ * permet au bot Plausible de vérifier l'installation + à Google de connaître
+ * le tracker (utile pour les analytics standards des Search Tools).
  *
  * 2 formats Plausible supportés :
- *  - **v2 / Engagement Goals** (recommandé 2024+) : URL de type
- *    `https://plausible.io/js/pa-XXXXXX.js` + `plausible.init()`.
- *    Active "Engagement Goals" et tracking automatique outbound + tagged-events.
- *  - **Legacy data-domain** : URL `script.outbound-links.tagged-events.js`
- *    + attribut `data-domain="..."`.
- *
- * Si `NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL` est défini → format v2 utilisé.
- * Sinon : fallback legacy avec `domain` (env `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`).
+ *  - **v2 / Engagement Goals** (recommandé 2024+) : URL `pa-XXXX.js`.
+ *  - **Legacy data-domain** : URL `script.outbound-links.tagged-events.js`.
  */
 
 interface Props {
@@ -45,26 +53,11 @@ export default function PlausibleScript({
   scriptUrl,
   legacySrc = "https://plausible.io/js/script.outbound-links.tagged-events.js",
 }: Props) {
-  const [allowed, setAllowed] = useState<boolean>(false);
-
-  useEffect(() => {
-    // État initial après hydratation client.
-    setAllowed(isCategoryAllowed("analytics"));
-    // Mise à jour live si l'utilisateur change ses préférences.
-    return onConsentChange(() => setAllowed(isCategoryAllowed("analytics")));
-  }, []);
-
-  if (!allowed) return null;
-
   // Mode v2 (Engagement Goals) — prioritaire si fourni.
   if (scriptUrl) {
     return (
       <>
-        <Script
-          async
-          src={scriptUrl}
-          strategy="afterInteractive"
-        />
+        <Script async src={scriptUrl} strategy="afterInteractive" />
         <Script id="plausible-init-v2" strategy="afterInteractive">
           {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}
         </Script>
@@ -76,12 +69,7 @@ export default function PlausibleScript({
   if (!domain) return null;
   return (
     <>
-      <Script
-        defer
-        data-domain={domain}
-        src={legacySrc}
-        strategy="afterInteractive"
-      />
+      <Script defer data-domain={domain} src={legacySrc} strategy="afterInteractive" />
       <Script id="plausible-init-legacy" strategy="afterInteractive">
         {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
       </Script>
