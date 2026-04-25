@@ -48,7 +48,7 @@ export default function ComparisonHero({ a, b, entry, verdictDate }: Props) {
       <div className="absolute inset-0 bg-grid opacity-40" aria-hidden />
       <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <nav
-          aria-label="Fil d'ariane"
+          aria-label="Fil d'Ariane"
           className="text-xs text-muted"
         >
           <Link href="/" className="hover:text-white">Accueil</Link>

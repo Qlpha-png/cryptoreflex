@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { fetchPrices, fetchTopMarket } from "@/lib/coingecko";
 import GlobalMetricsBar from "@/components/GlobalMetricsBar";
 import Hero from "@/components/Hero";
@@ -14,8 +16,30 @@ import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
 import NewsTickerServer from "@/components/NewsTickerServer";
 import NewsBar from "@/components/NewsBar";
+import StructuredData from "@/components/StructuredData";
+import { BRAND } from "@/lib/brand";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+  websiteSchema,
+} from "@/lib/schema";
 
 export const revalidate = 60;
+
+/**
+ * Métadonnées de la home — canonical explicite (P0-3 audit-back-live-final).
+ *
+ * Pourquoi un canonical explicite alors que la home est implicitement la racine ?
+ * Sans canonical déclaré, Google peut considérer le `?utm_source=…` ou les
+ * variantes apex/www comme des duplicates, et choisir une version arbitraire.
+ * Le canonical absolu (BRAND.url, déjà en `www.`) verrouille la version
+ * canonique pour tous les crawlers.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: BRAND.url },
+  openGraph: { url: BRAND.url },
+};
 
 export default async function HomePage() {
   // Parallélise prix top 6 (ticker) et top 20 (table + sparklines BTC/ETH/SOL pour Hero).
@@ -33,8 +57,18 @@ export default async function HomePage() {
   // Date "MAJ" affichée dans le widget — ISO du build/refresh courant.
   const updatedAt = new Date().toISOString();
 
+  // JSON-LD home : Organization + WebSite (avec SearchAction) + Breadcrumb minimal.
+  // Régression P0-3 : la home n'avait aucun JSON-LD avant ce fix.
+  const homeSchema = graphSchema([
+    organizationSchema(),
+    websiteSchema(),
+    breadcrumbSchema([{ name: "Accueil", url: "/" }]),
+  ]);
+
   return (
     <>
+      <StructuredData data={homeSchema} id="home-graph" />
+
       {/* 1. Données globales du marché — contexte instantané */}
       <GlobalMetricsBar />
 

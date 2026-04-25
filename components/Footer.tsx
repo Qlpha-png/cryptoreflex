@@ -23,7 +23,13 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <Logo variant="full" height={36} className="mb-3" />
+            {/*
+              P0-7 audit-front : pas de Link wrappant le Logo en footer
+              (la Navbar porte déjà le lien Accueil ; et "Accueil" figure
+              dans la liste de nav en dessous). Logo purement décoratif ici
+              pour éviter le triple aria-label "Cryptoreflex — Accueil".
+            */}
+            <Logo variant="full" height={36} className="mb-3" asLink={false} title="Cryptoreflex" />
 
             <p className="text-sm text-muted max-w-md">
               Votre guide pour naviguer dans l'univers crypto. Comparatifs de plateformes,

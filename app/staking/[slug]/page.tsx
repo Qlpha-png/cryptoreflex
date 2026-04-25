@@ -20,6 +20,7 @@ import { getPlatformById, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
@@ -160,7 +161,7 @@ export default function StakingDetailPage({ params }: Props) {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'ariane" className="text-xs text-muted mb-6">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">Accueil</Link>
             <span className="mx-1.5">/</span>
             <Link href="/staking" className="hover:text-fg">Staking</Link>
@@ -387,6 +388,17 @@ export default function StakingDetailPage({ params }: Props) {
           <AmfDisclaimer variant="comparatif" className="mt-12" />
         </div>
       </article>
+
+      {/* Sticky CTA mobile : best plateforme staking pour cette crypto. */}
+      {platforms[0] && (
+        <MobileStickyCTA
+          platformId={platforms[0].id}
+          title={`Staker ${pair.name}`}
+          label={`Aller sur ${platforms[0].name}`}
+          href={platforms[0].affiliateUrl}
+          surface="staking-page"
+        />
+      )}
     </>
   );
 }

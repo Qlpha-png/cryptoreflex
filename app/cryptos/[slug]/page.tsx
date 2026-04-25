@@ -42,6 +42,8 @@ import PriceChart from "@/components/crypto-detail/PriceChart";
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
 import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
+import { getAllPlatforms } from "@/lib/platforms";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -181,6 +183,18 @@ export default async function CryptoPage({ params }: Props) {
   const isGem = c.kind === "hidden-gem";
   const kindLabel = isGem ? "Hidden Gem" : `Top ${c.rank} mondial`;
   const pageUrl = `${BRAND.url}/cryptos/${c.id}`;
+
+  // Plateforme recommandée pour la sticky CTA mobile : on prend la 1re plateforme
+  // listée dans `whereToBuy` qui a une fiche dans `lib/platforms.ts`.
+  const knownPlatforms = getAllPlatforms();
+  const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
+  const recommendedPlatform = c.whereToBuy
+    .map((name) =>
+      knownPlatforms.find(
+        (kp) => norm(kp.name) === norm(name) || norm(kp.id) === norm(name)
+      )
+    )
+    .find((p): p is NonNullable<typeof p> => Boolean(p));
 
   // SEO Schemas — Article + Breadcrumb + FAQPage groupés en @graph.
   const schemas = graphSchema([
@@ -532,6 +546,17 @@ export default async function CryptoPage({ params }: Props) {
           et notre <Link href="/affiliations" className="underline hover:text-fg">page affiliations</Link>.
         </p>
       </div>
+
+      {/* Sticky CTA mobile : meilleure plateforme connue listée pour cette crypto. */}
+      {recommendedPlatform && (
+        <MobileStickyCTA
+          platformId={recommendedPlatform.id}
+          title={`Acheter ${c.name}`}
+          label={`Aller sur ${recommendedPlatform.name}`}
+          href={recommendedPlatform.affiliateUrl}
+          surface="crypto-page"
+        />
+      )}
     </article>
   );
 }

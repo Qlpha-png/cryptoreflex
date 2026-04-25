@@ -10,7 +10,9 @@ import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
 
-const TITLE = `Quiz : quelle plateforme crypto pour toi ? — ${BRAND.name}`;
+// Note : le suffixe "| Cryptoreflex" est ajouté automatiquement par le template
+// title de app/layout.tsx — on l'omet ici pour éviter la duplication.
+const TITLE = `Quiz : quelle plateforme crypto pour toi ?`;
 const DESCRIPTION =
   "6 questions courtes pour trouver la plateforme crypto la plus adaptée à ton profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/plateforme";
@@ -74,7 +76,7 @@ export default function QuizPlateformePage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'ariane" className="text-xs text-muted mb-6">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">
               Accueil
             </Link>

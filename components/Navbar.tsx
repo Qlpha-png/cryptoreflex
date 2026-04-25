@@ -85,8 +85,25 @@ export default function Navbar() {
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <Logo variant="full" height={36} className="hidden sm:inline-flex" />
-            <Logo variant="mark" height={32} className="sm:hidden" />
+            {/*
+              P0-7 audit-front : Logo en mode décoratif (asLink=false).
+              Le wrapping <Link> ci-dessus porte déjà le rôle de lien Accueil.
+              Sans ça, on aurait <a><a>…</a></a> + double aria-label.
+            */}
+            <Logo
+              variant="full"
+              height={36}
+              className="hidden sm:inline-flex"
+              asLink={false}
+              title="Cryptoreflex"
+            />
+            <Logo
+              variant="mark"
+              height={32}
+              className="sm:hidden"
+              asLink={false}
+              title="Cryptoreflex"
+            />
           </Link>
 
           <nav

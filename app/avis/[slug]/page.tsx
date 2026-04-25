@@ -22,6 +22,7 @@ import {
   COMPARISONS,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -36,7 +37,8 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const p = getPlatformById(params.slug);
   if (!p) return {};
-  const title = `Avis ${p.name} 2026 : tests, frais, sécurité, MiCA — ${BRAND.name}`;
+  // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
+  const title = `Avis ${p.name} 2026 : tests, frais, sécurité, MiCA`;
   const description = `Notre avis détaillé sur ${p.name} : ${p.scoring.global}/5. ${p.tagline} Frais, sécurité, agrément MiCA, bonus, support FR. Mis à jour ${p.mica.lastVerified}.`;
   return {
     title,
@@ -627,6 +629,15 @@ export default function ReviewPage({ params }: Props) {
           </p>
         </section>
       </div>
+
+      {/* Sticky CTA mobile : visible après scroll, jusqu'à l'arrivée du footer. */}
+      <MobileStickyCTA
+        platformId={p.id}
+        title={p.name}
+        label={`Aller sur ${p.name}`}
+        href={p.affiliateUrl}
+        surface="avis-page"
+      />
     </article>
   );
 }

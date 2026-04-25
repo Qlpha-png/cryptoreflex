@@ -84,13 +84,15 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
         {/* Mobile : cards verticales (md:hidden) — tri non exposé (UX simplifiée),
             mais on respecte l'ordre serveur (rank). */}
         <div className="md:hidden space-y-2">
-          {coins.map((coin, idx) => {
+          {coins.map((coin) => {
             const hasPage = slugSet.has(coin.id);
             return (
               <CoinCardMobile
                 key={coin.id}
                 coin={coin}
-                priority={idx < 3}
+                // P0-1 audit-front : MarketTable n'est pas le LCP de la home.
+                // priority retiré pour ne pas concurrencer le Hero.
+                priority={false}
                 hasPage={hasPage}
               />
             );
@@ -188,15 +190,16 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
                 </tr>
               </thead>
               <tbody>
-                {sortedCoins.map((coin, idx) => {
+                {sortedCoins.map((coin) => {
                   const hasPage = slugSet.has(coin.id);
                   return (
                     <CoinRow
                       key={coin.id}
                       coin={coin}
-                      // Priority sur top 5 visibles : ces logos sont above-the-fold.
-                      // On reste prudent (idx du tableau trié, pas du rang).
-                      priority={idx < 5}
+                      // P0-1 audit-front : MarketTable est below-the-fold sur la home
+                      // (après Hero + Reassurance + WhyTrustUs + Newsletter).
+                      // On laisse le navigateur lazy-loader ces 20 logos.
+                      priority={false}
                       hasPage={hasPage}
                     />
                   );

@@ -46,11 +46,12 @@ const ALLOWED_IDS = new Set<string>([
   ...getAllCryptos().map((c) => c.coingeckoId),
 ]);
 
-const limiter = createRateLimiter({ limit: 60, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 60, windowMs: 60_000, key: "prices" });
 
 export async function GET(request: Request) {
   // ---- Rate limit ----
-  const rl = limiter(getClientIp(request));
+  const rl = await limiter(getClientIp(request));
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes — réessaie dans une minute." },

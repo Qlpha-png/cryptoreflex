@@ -138,28 +138,120 @@ export interface HistoricalPoint {
   price: number;
 }
 
-/**
- * Récupère N jours d'historique (close quotidien) en EUR pour un coinId CoinGecko.
- * `days` peut aller jusqu'à 1825 (5 ans) sur le free tier — au-delà CoinGecko renvoie 401.
- */
-async function _fetchHistoricalPrices(
+/* -------------------------------------------------------------------------- */
+/*  FIX P0 audit-fonctionnel-live-final #2                                    */
+/*                                                                            */
+/*  CoinGecko free tier : `market_chart?days=N` retourne `[]` silencieusement */
+/*  pour N > 365 (et 401 sur certains coins). Pour aller jusqu'à 5 ans (1825j)*/
+/*  on chunk en fenêtres de 90 jours via `market_chart_range` (timestamps     */
+/*  unix from/to en secondes), supporté en free tier.                         */
+/*                                                                            */
+/*  Stratégie :                                                               */
+/*   - Si `days <= 365` → ancien chemin `market_chart?days=N` (1 fetch).      */
+/*   - Si `days > 365`  → multi-fetch 90j via `market_chart_range`,           */
+/*     en parallèle (CoinGecko free tolère ~30 req/min — on reste large       */
+/*     sous la limite : 21 chunks pour 5 ans). Concaténation triée + dedup.   */
+/*                                                                            */
+/*  Cache : `unstable_cache` 1 h, tag "coingecko-historical" inchangé.        */
+/* -------------------------------------------------------------------------- */
+
+const CHUNK_DAYS = 90;
+const SECONDS_PER_DAY = 86_400;
+
+/** Fetch un range arbitraire (timestamps unix secondes). Renvoie [] si erreur. */
+async function _fetchHistoricalRange(
   coinId: string,
-  days: number
+  fromSec: number,
+  toSec: number,
 ): Promise<HistoricalPoint[]> {
-  const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=eur&days=${days}&interval=daily`;
+  const url =
+    `${COINGECKO_BASE}/coins/${coinId}/market_chart/range` +
+    `?vs_currency=eur&from=${fromSec}&to=${toSec}`;
   try {
     const res = await fetch(url, {
       headers: { accept: "application/json" },
-      // unstable_cache gère la couche externe ; on coupe le cache fetch interne.
       cache: "no-store",
     });
-    if (!res.ok) throw new Error(`CoinGecko ${coinId} ${days}d → ${res.status}`);
-    const json = (await res.json()) as { prices: [number, number][] };
+    if (!res.ok) throw new Error(`CoinGecko range ${coinId} → ${res.status}`);
+    const json = (await res.json()) as { prices?: [number, number][] };
     return (json.prices ?? []).map(([t, price]) => ({ t, price }));
   } catch (err) {
-    console.warn("[historical-prices] fetch failed:", err);
+    console.warn(
+      `[historical-prices] range fetch failed (${coinId}, ${fromSec}-${toSec}):`,
+      err,
+    );
     return [];
   }
+}
+
+/**
+ * Récupère N jours d'historique (close quotidien) en EUR pour un coinId CoinGecko.
+ * - `days <= 365` : 1 seul appel `market_chart?days=N`.
+ * - `days > 365`  : chunked `market_chart_range` 90j, parallèle.
+ *
+ * Sortie : tableau trié par `t` croissant, dedupliqué (au cas où des chunks
+ * se chevauchent par exactement 1 timestamp aux bords).
+ */
+async function _fetchHistoricalPrices(
+  coinId: string,
+  days: number,
+): Promise<HistoricalPoint[]> {
+  // ---- Cas simple : <= 365j ----
+  if (days <= 365) {
+    const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=eur&days=${days}&interval=daily`;
+    try {
+      const res = await fetch(url, {
+        headers: { accept: "application/json" },
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error(`CoinGecko ${coinId} ${days}d → ${res.status}`);
+      const json = (await res.json()) as { prices: [number, number][] };
+      return (json.prices ?? []).map(([t, price]) => ({ t, price }));
+    } catch (err) {
+      console.warn("[historical-prices] fetch failed:", err);
+      return [];
+    }
+  }
+
+  // ---- Cas chunked : > 365j ----
+  // FIX P0 audit-fonctionnel-live-final #2 : on évite le silent-empty de
+  // CoinGecko en chunkant des fenêtres de 90 jours via `market_chart_range`.
+  const nowSec = Math.floor(Date.now() / 1000);
+  const totalSpanSec = days * SECONDS_PER_DAY;
+  const chunkSpanSec = CHUNK_DAYS * SECONDS_PER_DAY;
+  const chunks: Array<{ from: number; to: number }> = [];
+
+  // On construit les chunks de la fin vers le début pour aligner sur "today",
+  // puis on les inversera pour requêter dans l'ordre chronologique (UI plus
+  // intuitive en cas de timeout sur un chunk : on garde le passé lointain).
+  let cursorTo = nowSec;
+  let remaining = totalSpanSec;
+  while (remaining > 0) {
+    const span = Math.min(remaining, chunkSpanSec);
+    const cursorFrom = cursorTo - span;
+    chunks.push({ from: cursorFrom, to: cursorTo });
+    cursorTo = cursorFrom;
+    remaining -= span;
+  }
+
+  // Parallèle : CoinGecko free tolère un burst raisonnable (rate limit ~30/min
+  // par IP, et notre cache 1h limite la fréquence). 21 chunks pour 5 ans = OK.
+  const all = await Promise.all(
+    chunks.map((c) => _fetchHistoricalRange(coinId, c.from, c.to)),
+  );
+
+  // Concaténation + dedup par timestamp (Map garde la dernière occurrence).
+  const dedup = new Map<number, number>();
+  for (const arr of all) {
+    for (const p of arr) {
+      dedup.set(p.t, p.price);
+    }
+  }
+
+  // Tri chronologique pour l'UI (DCA simulator s'attend à des données triées).
+  return Array.from(dedup.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([t, price]) => ({ t, price }));
 }
 
 /**

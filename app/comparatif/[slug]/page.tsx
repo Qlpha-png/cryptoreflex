@@ -22,6 +22,7 @@ import {
   parseComparisonSlug,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
 
 export const revalidate = 86400;
 
@@ -233,6 +234,9 @@ export default function ComparisonPage({ params }: Props) {
   const rows = buildRows(a, b);
   const verdict = buildVerdict(a, b);
 
+  // Plateforme gagnante par score global → CTA mobile sticky (égalité → a).
+  const winner = b.scoring.global > a.scoring.global ? b : a;
+
   // Comparatifs liés (autres duels où l'une des 2 plateformes apparaît)
   const related = COMPARISONS.filter(
     (c) => c.slug !== spec.slug && (c.a === a.id || c.b === a.id || c.a === b.id || c.b === b.id)
@@ -341,8 +345,8 @@ export default function ComparisonPage({ params }: Props) {
               {section.title}
             </h2>
             <p className="mt-2 text-sm text-white/75 leading-relaxed">{section.intro}</p>
-            <div className="mt-4 overflow-hidden rounded-xl border border-border">
-              <table className="w-full text-sm">
+            <div className="mt-4 overflow-x-auto rounded-xl border border-border">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead className="bg-elevated">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-muted">
@@ -501,6 +505,15 @@ export default function ComparisonPage({ params }: Props) {
           </p>
         </section>
       </div>
+
+      {/* Sticky CTA mobile sur le verdict / la plateforme recommandée. */}
+      <MobileStickyCTA
+        platformId={winner.id}
+        title={`Verdict : ${winner.name}`}
+        label={`Aller sur ${winner.name}`}
+        href={winner.affiliateUrl}
+        surface="comparatif-page"
+      />
     </article>
   );
 }

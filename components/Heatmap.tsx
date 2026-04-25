@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback, useId } from "react";
+import { useMemo, useState, useCallback, useId, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   formatCompactUsd,
@@ -74,21 +74,98 @@ function textForChange(value: number | null): string {
   return "text-fg";
 }
 
+/** Délais (ms) pour les 3 tentatives de retry automatique côté client. */
+const RETRY_DELAYS_MS = [5_000, 15_000, 30_000];
+
 export default function Heatmap({ coins, internalSlugs }: Props) {
   const [topFilter, setTopFilter] = useState<TopFilter>(100);
   const [period, setPeriod] = useState<Period>("24h");
   const [hovered, setHovered] = useState<string | null>(null);
+  // État local : permet au composant de re-fetcher en client-side si jamais
+  // la prop SSR `coins` arrive vide (CoinGecko down entre 2 revalidations ISR).
+  const [liveCoins, setLiveCoins] = useState<MarketCoin[]>(coins);
+  const [retryAttempt, setRetryAttempt] = useState(0);
   const slugSet = useMemo(() => new Set(internalSlugs), [internalSlugs]);
   const tooltipId = useId();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Sync prop → state : si la page est re-render avec de nouvelles données
+  // (ex : revalidatePath), on remplace le state local.
+  useEffect(() => {
+    if (coins.length > 0) {
+      setLiveCoins(coins);
+      setRetryAttempt(0);
+    }
+  }, [coins]);
+
+  // Auto-retry exponentiel : si liveCoins est vide après mount, on tente 3×
+  // avec un backoff 5s / 15s / 30s. Au-delà : on laisse l'utilisateur cliquer.
+  useEffect(() => {
+    if (liveCoins.length > 0) return;
+    if (retryAttempt >= RETRY_DELAYS_MS.length) return;
+
+    const delay = RETRY_DELAYS_MS[retryAttempt];
+    timerRef.current = setTimeout(async () => {
+      try {
+        // On retombe sur l'API publique (cache 60s) — pas idéal pour le top 100
+        // mais évite un nouveau full-page reload. Si dispo on hydrate l'UI.
+        const res = await fetch("/api/prices", { cache: "no-store" });
+        if (res.ok) {
+          // Pas de payload top 100 ici — on déclenche juste un soft-refresh
+          // en bumpant retryAttempt ; la prochaine ISR servira les nouvelles
+          // données via le re-render du Server Component parent.
+          window.location.reload();
+          return;
+        }
+      } catch {
+        // Silencieux : on retentera au prochain délai.
+      }
+      setRetryAttempt((n) => n + 1);
+    }, delay);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [liveCoins.length, retryAttempt]);
 
   // Vérifie si la donnée existe pour la période sélectionnée
   // (1h et 7d peuvent être null selon l'API CoinGecko).
   const hasPeriodData = useCallback(
-    (p: Period) => coins.some((c) => changeForPeriod(c, p) !== null),
-    [coins]
+    (p: Period) => liveCoins.some((c) => changeForPeriod(c, p) !== null),
+    [liveCoins]
   );
 
-  const visible = useMemo(() => coins.slice(0, topFilter), [coins, topFilter]);
+  const visible = useMemo(
+    () => liveCoins.slice(0, topFilter),
+    [liveCoins, topFilter]
+  );
+
+  // Si le SSR a renvoyé du vide ET les retries n'ont rien donné encore,
+  // on affiche un skeleton (10×10 cellules) pendant les tentatives.
+  if (liveCoins.length === 0) {
+    return (
+      <div>
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label="Chargement de la heatmap…"
+          className="grid gap-1.5 grid-cols-3 sm:grid-cols-5 lg:grid-cols-10"
+        >
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div
+              key={i}
+              className="aspect-square min-h-[64px] rounded-md bg-elevated/60 animate-pulse"
+            />
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-muted text-center">
+          {retryAttempt < RETRY_DELAYS_MS.length
+            ? `Tentative de récupération des données (${retryAttempt + 1}/${RETRY_DELAYS_MS.length})…`
+            : "Données momentanément indisponibles. Rechargez la page pour réessayer."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

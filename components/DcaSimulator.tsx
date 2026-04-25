@@ -49,6 +49,9 @@ export default function DcaSimulator() {
   const [history, setHistory] = useState<HistoricalPoint[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // FIX P0 audit-fonctionnel-live-final #2 : on garde aussi le flag clamped
+  // de l'API pour disclaimer si CoinGecko a renvoyé moins que demandé.
+  const [clamped, setClamped] = useState(false);
 
   // Charge l'historique 5 ans (couvre toutes les durées max).
   useEffect(() => {
@@ -60,8 +63,11 @@ export default function DcaSimulator() {
         if (!r.ok) throw new Error("Données indisponibles");
         return r.json();
       })
-      .then((data: { points: HistoricalPoint[] }) => {
-        if (!cancelled) setHistory(data.points);
+      .then((data: { points: HistoricalPoint[]; clamped?: boolean }) => {
+        if (!cancelled) {
+          setHistory(data.points);
+          setClamped(Boolean(data.clamped));
+        }
       })
       .catch((e) => {
         if (!cancelled) setError(e.message);
@@ -73,6 +79,25 @@ export default function DcaSimulator() {
       cancelled = true;
     };
   }, [coin]);
+
+  // FIX P0 audit-fonctionnel-live-final #2 : durées effectivement disponibles
+  // selon ce qu'on a reçu de CoinGecko (1 point ~= 1 jour). Si l'API a clampé,
+  // on désactive les options 3 ans / 5 ans pour ne pas tromper l'utilisateur.
+  const availableDays = history ? history.length : 1825;
+  const availableMonths = Math.floor(availableDays / 30);
+
+  // Si l'utilisateur avait sélectionné une durée qu'on ne peut plus servir
+  // (ex: bascule BTC → SOL dont l'historique CG est plus court), on rétrograde
+  // automatiquement pour éviter d'afficher un calcul biaisé.
+  useEffect(() => {
+    if (history && months > availableMonths && availableMonths > 0) {
+      // On choisit la plus grande durée présente dans la liste qui tient.
+      const fallback = [...DURATION_OPTIONS]
+        .reverse()
+        .find((o) => o.months <= availableMonths);
+      if (fallback) setMonths(fallback.months);
+    }
+  }, [history, availableMonths, months]);
 
   const result = useMemo<SimulationResult | null>(() => {
     if (!history || history.length < 30 || monthly <= 0 || months <= 0) return null;
@@ -202,22 +227,51 @@ export default function DcaSimulator() {
               Durée
             </span>
             <div className="mt-2 grid grid-cols-2 gap-2">
-              {DURATION_OPTIONS.map((opt) => (
-                <button
-                  key={opt.months}
-                  type="button"
-                  onClick={() => setMonths(opt.months)}
-                  className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
-                    months === opt.months
-                      ? "border-primary bg-primary/10 text-primary-soft"
-                      : "border-border bg-background text-white/70 hover:border-primary/50"
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
+              {DURATION_OPTIONS.map((opt) => {
+                // FIX P0 audit-fonctionnel-live-final #2 : si CoinGecko a renvoyé
+                // moins de données que demandé, on désactive les durées trop longues.
+                const disabled = opt.months > availableMonths;
+                return (
+                  <button
+                    key={opt.months}
+                    type="button"
+                    onClick={() => !disabled && setMonths(opt.months)}
+                    disabled={disabled}
+                    title={
+                      disabled
+                        ? "Données limitées à 1 an (CoinGecko free tier)"
+                        : undefined
+                    }
+                    className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                      months === opt.months
+                        ? "border-primary bg-primary/10 text-primary-soft"
+                        : "border-border bg-background text-white/70 hover:border-primary/50"
+                    } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {/* FIX P0 audit-fonctionnel-live-final #2 : disclaimer visible quand
+              le dataset est dégradé (free tier CoinGecko qui silencieusement
+              tronque au-delà de 365j). On informe l'utilisateur honnêtement
+              au lieu d'afficher un ROI sous-estimé. */}
+          {clamped && (
+            <div
+              role="note"
+              className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200"
+            >
+              <strong className="text-amber-100">Données limitées</strong> à
+              {" "}
+              {availableMonths} mois (~{Math.floor(availableMonths / 12)} an
+              {availableMonths >= 24 ? "s" : ""}). CoinGecko free tier ne
+              fournit pas l'historique complet — les options plus longues sont
+              désactivées.
+            </div>
+          )}
 
           <div className="rounded-lg border border-border bg-background/50 p-3 text-xs text-muted">
             <p>

@@ -28,10 +28,11 @@ const ALLOWED_IDS = new Set<string>([
   "solana",
 ]);
 
-const limiter = createRateLimiter({ limit: 30, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 30, windowMs: 60_000, key: "historical" });
 
 export async function GET(req: NextRequest) {
-  const rl = limiter(getClientIp(req));
+  const rl = await limiter(getClientIp(req));
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes — réessaie dans une minute." },
@@ -56,13 +57,28 @@ export async function GET(req: NextRequest) {
   }
 
   const points = await fetchHistoricalPrices(coin, days);
+
+  // FIX P0 audit-fonctionnel-live-final #2 : détecte un dataset "amputé" par
+  // CoinGecko (ex: free tier qui renvoie [] pour days > 365 quand le multi-fetch
+  // chunked a échoué partiellement). On expose un header pour que le client
+  // puisse afficher un disclaimer plutôt que de silently undercount le ROI.
+  //
+  // Heuristique : on attend ~1 point par jour. Si on a < 75 % du nombre attendu,
+  // on considère le dataset clamped/dégradé.
+  const expected = days;
+  const clamped = points.length > 0 && points.length < Math.floor(expected * 0.75);
+
+  const headers: Record<string, string> = {
+    "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=21600",
+    "X-Days-Requested": String(days),
+    "X-Days-Returned": String(points.length),
+  };
+  if (clamped) {
+    headers["X-Days-Clamped"] = "true";
+  }
+
   return NextResponse.json(
-    { points, coin, days },
-    {
-      headers: {
-        // cache CDN/edge 1 h, SWR 6 h
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=21600",
-      },
-    }
+    { points, coin, days, clamped },
+    { headers },
   );
 }

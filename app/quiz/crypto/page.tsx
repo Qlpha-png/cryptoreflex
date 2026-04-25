@@ -10,7 +10,8 @@ import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
 
-const TITLE = `Quiz : quelle crypto correspond à ton profil ? — ${BRAND.name}`;
+// Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
+const TITLE = `Quiz : quelle crypto correspond à ton profil ?`;
 const DESCRIPTION =
   "6 questions courtes pour découvrir la crypto la plus adaptée à ton profil : tolérance au risque, horizon, type de projet, capital, stratégie. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/crypto";
@@ -69,7 +70,7 @@ export default function QuizCryptoPage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'ariane" className="text-xs text-muted mb-6">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">
               Accueil
             </Link>

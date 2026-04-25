@@ -30,7 +30,8 @@ export const dynamic = "force-dynamic";
 // honnête, bloque les bots basiques. Helper unifié `lib/rate-limit.ts`.
 // Pas distribué -> ne survit pas aux redémarrages / multi-instances.
 // Pour scale -> Upstash Redis + sliding window.
-const limiter = createRateLimiter({ limit: 10, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 10, windowMs: 60_000, key: "newsletter-subscribe" });
 
 const ALLOWED_SOURCES: ReadonlySet<SubscribeSource> = new Set<SubscribeSource>([
   "inline",
@@ -44,7 +45,7 @@ const ALLOWED_SOURCES: ReadonlySet<SubscribeSource> = new Set<SubscribeSource>([
 export async function POST(req: NextRequest) {
   // ---- Rate limit ----
   const ip = getClientIp(req);
-  const rl = limiter(ip);
+  const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Trop de tentatives. Réessaie dans une minute." },

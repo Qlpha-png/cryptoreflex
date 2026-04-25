@@ -14,7 +14,8 @@ import {
 
 export const revalidate = 86400;
 
-const TITLE = `Mon premier achat crypto — Wizard pas-à-pas ${BRAND.name}`;
+// Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
+const TITLE = `Mon premier achat crypto — Wizard pas-à-pas`;
 const DESCRIPTION =
   "Assistant interactif 5 étapes pour faire ton premier achat crypto en toute sécurité : budget, choix de la crypto, plateforme MiCA débutant FR, méthode de paiement, lancement.";
 const PATH = "/wizard/premier-achat";
@@ -88,7 +89,7 @@ export default function WizardPremierAchatPage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'ariane" className="text-xs text-muted mb-6">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">
               Accueil
             </Link>

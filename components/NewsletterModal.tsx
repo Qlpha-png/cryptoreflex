@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 /**
  * NewsletterModal — version contrôlée du NewsletterPopup.
@@ -45,6 +46,8 @@ export default function NewsletterModal({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // FIX P0 audit-fonctionnel-live-final #3 : flag mocked renvoyé par l'API.
+  const [mocked, setMocked] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   // Focus trap minimal + Escape pour fermer.
@@ -89,6 +92,7 @@ export default function NewsletterModal({
       const json = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
+        mocked?: boolean;
       };
 
       if (!res.ok || !json.ok) {
@@ -98,7 +102,15 @@ export default function NewsletterModal({
       }
 
       setStatus("success");
-      setCookie(COOKIE_SUBSCRIBED, "1", 365);
+      // FIX P0 audit-fonctionnel-live-final #3 : pas de cookie ni de "Bienvenue"
+      // si l'inscription était mockée — on track un event séparé à la place.
+      if (json.mocked) {
+        setMocked(true);
+        track("Newsletter Signup Mocked", { source });
+      } else {
+        setMocked(false);
+        setCookie(COOKIE_SUBSCRIBED, "1", 365);
+      }
     } catch {
       setStatus("error");
       setErrorMsg("Service indisponible. Réessaie plus tard.");
@@ -216,12 +228,24 @@ export default function NewsletterModal({
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-green/15 text-accent-green">
               <CheckCircle2 className="h-6 w-6" />
             </span>
+            {/* FIX P0 audit-fonctionnel-live-final #3 : message honnête en mode mocked. */}
             <h2 className="mt-4 text-xl sm:text-2xl font-extrabold text-fg">
-              Parfait ! Voici ton guide.
+              {mocked ? "Email bien noté" : "Parfait ! Voici ton guide."}
             </h2>
             <p className="mt-2 text-sm text-fg/80">
-              Confirmation envoyée à <strong>{email}</strong>. Tu peux télécharger le PDF
-              tout de suite :
+              {mocked ? (
+                <>
+                  Newsletter en cours de configuration — ton email{" "}
+                  <strong>{email}</strong> a été noté côté Cryptoreflex, on te
+                  recontactera dès que c&apos;est prêt. En attendant, télécharge
+                  ton guide :
+                </>
+              ) : (
+                <>
+                  Confirmation envoyée à <strong>{email}</strong>. Tu peux
+                  télécharger le PDF tout de suite :
+                </>
+              )}
             </p>
             <a
               href={LEAD_MAGNET_URL}

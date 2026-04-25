@@ -32,14 +32,24 @@ export default function Logo({
   asLink = true,
   title = "Cryptoreflex — Accueil",
 }: LogoProps) {
+  // Quand le SVG est ENVELOPPÉ par un container accessible (Link asLink=true ou
+  // span asLink=false avec aria-label), le SVG lui-même devient décoratif :
+  // sinon les lecteurs d'écran annoncent "Cryptoreflex Cryptoreflex Accueil".
   const svg =
-    variant === "mark" ? <Mark height={height} /> :
-    variant === "mono" ? <Mono height={height} /> :
-    <Full height={height} />;
+    variant === "mark" ? <Mark height={height} decorative /> :
+    variant === "mono" ? <Mono height={height} decorative /> :
+    <Full height={height} decorative />;
 
   if (!asLink) {
+    // Span purement présentationnel : on a déjà la marque dans la wave de
+    // navigation (Navbar / Footer nav). Pas besoin d'un 4e "Cryptoreflex"
+    // exposé aux lecteurs d'écran.
     return (
-      <span className={`inline-flex items-center ${className}`} aria-label={title}>
+      <span
+        className={`inline-flex items-center ${className}`}
+        aria-hidden="true"
+        data-logo={title}
+      >
         {svg}
       </span>
     );
@@ -58,17 +68,19 @@ export default function Logo({
 
 /* ─────────────────── Sub-renderers (inline SVG, zero network) ─────────────────── */
 
-function Full({ height }: { height: number }) {
+function Full({ height, decorative }: { height: number; decorative?: boolean }) {
   // viewBox 320x80 → ratio 4
   const width = (height * 320) / 80;
+  const a11y = decorative
+    ? { "aria-hidden": true as const, focusable: false as const }
+    : { role: "img" as const, "aria-label": "Cryptoreflex" };
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 320 80"
       width={width}
       height={height}
-      role="img"
-      aria-label="Cryptoreflex"
+      {...a11y}
       className="select-none transition-transform group-hover:scale-[1.02]"
     >
       <defs>
@@ -102,7 +114,10 @@ function Full({ height }: { height: number }) {
   );
 }
 
-function Mark({ height }: { height: number }) {
+function Mark({ height, decorative }: { height: number; decorative?: boolean }) {
+  const a11y = decorative
+    ? { "aria-hidden": true as const, focusable: false as const }
+    : { role: "img" as const, "aria-label": "Cryptoreflex" };
   // viewBox 64x64 → carré
   return (
     <svg
@@ -110,8 +125,7 @@ function Mark({ height }: { height: number }) {
       viewBox="0 0 64 64"
       width={height}
       height={height}
-      role="img"
-      aria-label="Cryptoreflex"
+      {...a11y}
       className="select-none transition-transform group-hover:scale-[1.05]"
     >
       <defs>
@@ -132,16 +146,18 @@ function Mark({ height }: { height: number }) {
   );
 }
 
-function Mono({ height }: { height: number }) {
+function Mono({ height, decorative }: { height: number; decorative?: boolean }) {
   const width = (height * 320) / 80;
+  const a11y = decorative
+    ? { "aria-hidden": true as const, focusable: false as const }
+    : { role: "img" as const, "aria-label": "Cryptoreflex" };
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 320 80"
       width={width}
       height={height}
-      role="img"
-      aria-label="Cryptoreflex"
+      {...a11y}
       className="select-none transition-transform group-hover:scale-[1.02]"
     >
       <g transform="translate(8 8)" fill="currentColor">

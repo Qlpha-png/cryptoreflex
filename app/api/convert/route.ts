@@ -26,10 +26,11 @@ const ALLOWED = new Set<string>([
   ...FIAT_CODES,
 ]);
 
-const limiter = createRateLimiter({ limit: 30, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 30, windowMs: 60_000, key: "convert" });
 
 export async function GET(req: NextRequest) {
-  const rl = limiter(getClientIp(req));
+  const rl = await limiter(getClientIp(req));
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes — réessaie dans une minute." },

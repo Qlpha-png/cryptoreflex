@@ -23,8 +23,8 @@ import { getClientIp } from "@/lib/ip";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// ---- Rate limiter in-memory (helper unifié `lib/rate-limit.ts`) ----
-const limiter = createRateLimiter({ limit: 10, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 10, windowMs: 60_000, key: "alerts-create" });
 
 /**
  * CSRF léger : on accepte uniquement les Origins same-host.
@@ -47,7 +47,7 @@ function isOriginAllowed(req: NextRequest): boolean {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // Rate limit
   const ip = getClientIp(req);
-  const rl = limiter(ip);
+  const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Trop de tentatives — réessaie dans une minute." },

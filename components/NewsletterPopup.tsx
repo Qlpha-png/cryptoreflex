@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 /**
  * NewsletterPopup — capture intent-based pour booster les conversions.
@@ -69,6 +70,11 @@ export default function NewsletterPopup() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // FIX P0 audit-fonctionnel-live-final #3 : trace si la réponse était mockée
+  // (Beehiiv non configuré côté serveur). On change le copy + on ne pose pas
+  // le cookie "subscribed" pour que l'utilisateur puisse se ré-inscrire quand
+  // l'infra sera prête.
+  const [mocked, setMocked] = useState(false);
   // Choix d'envoi (audit P0-6) : par défaut on coche "PDF + newsletter" car
   // c'est notre objectif business prioritaire, mais l'utilisateur peut
   // explicitement opter pour "PDF uniquement" — moins manipulatif.
@@ -169,6 +175,7 @@ export default function NewsletterPopup() {
       const json = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
+        mocked?: boolean;
       };
 
       if (!res.ok || !json.ok) {
@@ -178,7 +185,16 @@ export default function NewsletterPopup() {
       }
 
       setStatus("success");
-      setCookie(COOKIE_SUBSCRIBED, "1", 365);
+      // FIX P0 audit-fonctionnel-live-final #3 : si mocked, on n'écrit PAS le
+      // cookie "subscribed" (l'inscription est fictive) et on track un event
+      // dédié pour comptabiliser ces leads en attente d'infra Beehiiv.
+      if (json.mocked) {
+        setMocked(true);
+        track("Newsletter Signup Mocked", { source: "popup" });
+      } else {
+        setMocked(false);
+        setCookie(COOKIE_SUBSCRIBED, "1", 365);
+      }
     } catch {
       setStatus("error");
       setErrorMsg("Service indisponible. Réessaie plus tard.");
@@ -339,11 +355,25 @@ export default function NewsletterPopup() {
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-green/15 text-accent-green">
               <CheckCircle2 className="h-6 w-6" />
             </span>
+            {/* FIX P0 audit-fonctionnel-live-final #3 : copy honnête en mode
+                mocked. On évite "Bienvenue !" trompeur quand Beehiiv n'est pas
+                configuré côté serveur. */}
             <h2 className="mt-4 text-xl sm:text-2xl font-extrabold text-fg">
-              {wantsNewsletter ? "Parfait, c'est en route ✓" : "PDF envoyé"}
+              {mocked
+                ? "Email bien noté"
+                : wantsNewsletter
+                  ? "Parfait, c'est en route"
+                  : "PDF envoyé"}
             </h2>
             <p className="mt-2 text-sm text-fg/80">
-              {wantsNewsletter ? (
+              {mocked ? (
+                <>
+                  Newsletter en cours de configuration — ton email{" "}
+                  <strong>{email}</strong> a été noté côté Cryptoreflex, on te
+                  recontactera dès que c&apos;est prêt. En attendant, télécharge
+                  ton guide :
+                </>
+              ) : wantsNewsletter ? (
                 <>
                   Confirmation envoyée à <strong>{email}</strong>. Le guide PDF arrive
                   par email — et la prochaine édition de la newsletter aussi.

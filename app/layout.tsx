@@ -160,6 +160,45 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col antialiased font-sans">
         {/* WCAG 2.4.1 — premier stop Tab : skip link visible au focus */}
         <SkipToContent />
+        {/*
+          Fallback no-JS : nos formulaires (alertes, quiz, wizard, portefeuille)
+          et le cookie banner sont des Client Components. Sans JS, ils ne
+          s'affichent pas. On informe l'utilisateur honnêtement, sans casser
+          le SSR pour les contenus statiques (articles, comparatifs).
+        */}
+        <noscript>
+          <div
+            role="alert"
+            style={{
+              padding: "12px 16px",
+              background: "#1a1d21",
+              borderBottom: "1px solid #2a2d31",
+              color: "#fcd34d",
+              fontSize: "14px",
+              textAlign: "center",
+              lineHeight: 1.5,
+            }}
+          >
+            JavaScript est désactivé. Le contenu éditorial reste lisible mais
+            les outils interactifs (calculateurs, alertes, portefeuille,
+            bandeau cookies) sont indisponibles.{" "}
+            <a
+              href="https://www.enable-javascript.com/fr/"
+              rel="noopener noreferrer"
+              style={{ color: "#fcd34d", textDecoration: "underline" }}
+            >
+              Activer JavaScript
+            </a>{" "}
+            ou{" "}
+            <a
+              href="mailto:contact@cryptoreflex.fr"
+              style={{ color: "#fcd34d", textDecoration: "underline" }}
+            >
+              contacter Cryptoreflex
+            </a>
+            .
+          </div>
+        </noscript>
         <Navbar />
         <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
           {children}

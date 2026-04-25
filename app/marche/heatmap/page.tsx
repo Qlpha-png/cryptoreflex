@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Activity, Flame, Info } from "lucide-react";
+import { Flame, Info } from "lucide-react";
 
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
@@ -13,7 +13,7 @@ import {
 
 import StructuredData from "@/components/StructuredData";
 import Heatmap from "@/components/Heatmap";
-import EmptyState from "@/components/ui/EmptyState";
+import HeatmapEmpty from "./HeatmapEmpty";
 
 /**
  * /marche/heatmap — Heatmap top 100 cryptos style CoinMarketCap / TradingView.
@@ -128,13 +128,7 @@ export default async function HeatmapPage() {
         </header>
 
         {coins.length === 0 ? (
-          <EmptyState
-            icon={<Activity className="h-6 w-6" aria-hidden="true" />}
-            title="Données marché indisponibles"
-            description="Notre fournisseur de cours est temporairement injoignable. Réessayez dans quelques minutes."
-            cta={{ label: "Réessayer", href: "/marche/heatmap" }}
-            secondaryCta={{ label: "Voir les guides", href: "/blog" }}
-          />
+          <HeatmapEmpty />
         ) : (
           <Heatmap coins={coins} internalSlugs={internalSlugs} />
         )}

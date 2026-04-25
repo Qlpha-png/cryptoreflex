@@ -33,8 +33,7 @@ export default function PriceCards({ prices }: Props) {
                   width={36}
                   height={36}
                   className="h-9 w-9 rounded-full"
-                  // Hero / above-the-fold : pas de lazy.
-                  priority
+                  loading="lazy"
                   sizes="36px"
                   unoptimized
                 />

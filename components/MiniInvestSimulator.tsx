@@ -66,6 +66,8 @@ export default function MiniInvestSimulator() {
   const [points, setPoints] = useState<HistoricalPoint[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // FIX P0 audit-fonctionnel-live-final #2 : flag clamped renvoyé par l'API.
+  const [clamped, setClamped] = useState(false);
 
   const fetchKey = `${coinId}-${days}`;
   const lastFetchRef = useRef<string | null>(null);
@@ -84,8 +86,12 @@ export default function MiniInvestSimulator() {
       })
         .then(async (r) => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          const data = (await r.json()) as { points: HistoricalPoint[] };
+          const data = (await r.json()) as {
+            points: HistoricalPoint[];
+            clamped?: boolean;
+          };
           setPoints(Array.isArray(data.points) ? data.points : []);
+          setClamped(Boolean(data.clamped));
         })
         .catch(() => {
           setError("Données indisponibles pour le moment.");
@@ -238,12 +244,22 @@ export default function MiniInvestSimulator() {
         )}
 
         {result && !loading && (
-          <ResultBlock
-            result={result}
-            amount={amount}
-            coinSymbol={coinSymbol}
-            periodLabel={periodLabel}
-          />
+          <>
+            <ResultBlock
+              result={result}
+              amount={amount}
+              coinSymbol={coinSymbol}
+              periodLabel={periodLabel}
+            />
+            {/* FIX P0 audit-fonctionnel-live-final #2 : disclaimer si CoinGecko
+                a tronqué le dataset (free tier limite >365j). */}
+            {clamped && (
+              <p className="mt-2 text-[11px] text-amber-300/90">
+                Données limitées par CoinGecko free tier — résultat indicatif
+                sur la période disponible.
+              </p>
+            )}
+          </>
         )}
 
         {!result && !loading && !error && (

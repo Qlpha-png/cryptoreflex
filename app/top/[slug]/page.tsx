@@ -75,7 +75,7 @@ export default function TopListiclePage({ params }: Props) {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'ariane" className="text-xs text-muted mb-6">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">Accueil</Link>
             <span className="mx-1.5">/</span>
             <Link href="/top" className="hover:text-fg">Top</Link>

@@ -160,11 +160,19 @@ export function websiteSchema(): JsonLd {
     description: BRAND.description,
     inLanguage: "fr-FR",
     publisher: { "@id": ORGANIZATION_ID },
+    /**
+     * SearchAction — éligible Sitelinks Search Box dans Google.
+     *
+     * On pointe sur `/blog?q=…` parce qu'il n'existe pas (encore) de page
+     * /recherche dédiée : la barre de recherche du blog (cf. BlogIndexClient)
+     * filtre la liste sur le query string `?q=`. Le formulaire `not-found.tsx`
+     * pointe également vers /blog?q.
+     */
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${SITE_URL}/recherche?q={search_term_string}`,
+        urlTemplate: `${SITE_URL}/blog?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },

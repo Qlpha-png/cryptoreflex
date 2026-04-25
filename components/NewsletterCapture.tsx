@@ -11,10 +11,14 @@ import {
   AlertCircle,
   Download,
 } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 /**
  * NewsletterCapture — capture inline (pas modal) pour ne pas casser le flow.
- * V1 : mock submission. À brancher sur Beehiiv API plus tard.
+ *
+ * FIX P0 audit-fonctionnel-live-final #3 : passe en vrai POST `/api/newsletter/subscribe`
+ * (avant : mock setTimeout 800ms qui mentait à l'utilisateur dans tous les cas).
+ * On gère également l'état mocked si Beehiiv n'est pas configuré côté serveur.
  *
  * Critique conversion :
  *  - Promesse explicite (3 min, sans spam)
@@ -25,6 +29,8 @@ export default function NewsletterCapture() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // FIX P0 audit-fonctionnel-live-final #3 : flag mocked renvoyé par l'API.
+  const [mocked, setMocked] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,9 +48,45 @@ export default function NewsletterCapture() {
     setStatus("loading");
 
     try {
-      // Mock API call — à remplacer par fetch('/api/newsletter') vers Beehiiv
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: trimmed,
+          source: "newsletter-page",
+          utm: {
+            source: "cryptoreflex",
+            medium: "website",
+            campaign: "newsletter-capture",
+          },
+        }),
+      });
+
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        mocked?: boolean;
+      };
+
+      if (!res.ok || !json.ok) {
+        setStatus("error");
+        setErrorMsg(json.error ?? "Une erreur est survenue. Réessaie.");
+        return;
+      }
+
       setStatus("success");
+      if (json.mocked) {
+        setMocked(true);
+        track("Newsletter Signup Mocked", { source: "newsletter-page" });
+      } else {
+        setMocked(false);
+        try {
+          document.cookie =
+            "cr_newsletter_subscribed=1; path=/; max-age=31536000; samesite=lax";
+        } catch {
+          /* SSR-safe */
+        }
+      }
     } catch {
       setStatus("error");
       setErrorMsg("Une erreur est survenue. Réessaie dans un instant.");
@@ -150,17 +192,30 @@ export default function NewsletterCapture() {
                 </span>
                 <span className="badge-trust">
                   <CheckCircle2 className="h-3.5 w-3.5" />
-                  Inscription confirmée
+                  {/* FIX P0 audit-fonctionnel-live-final #3 : badge honnête en mode mocked. */}
+                  {mocked ? "Email noté" : "Inscription confirmée"}
                 </span>
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight">
-                Bienvenue ! Vérifie ta boîte mail.
+                {mocked ? "Email bien noté" : "Bienvenue ! Vérifie ta boîte mail."}
               </h2>
 
               <p className="mt-3 text-fg/75 max-w-2xl">
-                Un email de confirmation vient de t'être envoyé à <strong className="text-fg">{email}</strong>.
-                Clique sur le lien pour activer ton inscription et recevoir ton guide PDF.
+                {mocked ? (
+                  <>
+                    Newsletter en cours de configuration — ton email{" "}
+                    <strong className="text-fg">{email}</strong> a été noté côté
+                    Cryptoreflex, on te recontactera dès que c&apos;est prêt. En
+                    attendant, télécharge ton guide&nbsp;:
+                  </>
+                ) : (
+                  <>
+                    Un email de confirmation vient de t&apos;être envoyé à{" "}
+                    <strong className="text-fg">{email}</strong>. Clique sur le
+                    lien pour activer ton inscription et recevoir ton guide PDF.
+                  </>
+                )}
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">

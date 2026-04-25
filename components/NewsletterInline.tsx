@@ -9,6 +9,7 @@ import {
   Download,
   X,
 } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 /**
  * NewsletterInline — formulaire compact, droppable n'importe où.
@@ -54,6 +55,8 @@ export default function NewsletterInline({
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [showPopin, setShowPopin] = useState(false);
+  // FIX P0 audit-fonctionnel-live-final #3 : flag mocked renvoyé par l'API.
+  const [mocked, setMocked] = useState(false);
   const popinRef = useRef<HTMLDivElement>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -82,6 +85,7 @@ export default function NewsletterInline({
       const json = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
+        mocked?: boolean;
       };
 
       if (!res.ok || !json.ok) {
@@ -92,11 +96,20 @@ export default function NewsletterInline({
 
       setStatus("success");
       setShowPopin(true);
-      // Marque le succès en cookie pour la logique de NewsletterPopup (no double-prompt)
-      try {
-        document.cookie = "cr_newsletter_subscribed=1; path=/; max-age=31536000; samesite=lax";
-      } catch {
-        /* SSR-safe */
+      // FIX P0 audit-fonctionnel-live-final #3 : si mocked, pas de cookie
+      // (l'utilisateur doit pouvoir se ré-inscrire quand l'infra sera prête)
+      // et on track un event dédié pour comptabiliser ces leads en attente.
+      if (json.mocked) {
+        setMocked(true);
+        track("Newsletter Signup Mocked", { source });
+      } else {
+        setMocked(false);
+        // Marque le succès en cookie pour la logique de NewsletterPopup (no double-prompt)
+        try {
+          document.cookie = "cr_newsletter_subscribed=1; path=/; max-age=31536000; samesite=lax";
+        } catch {
+          /* SSR-safe */
+        }
       }
     } catch {
       setStatus("error");
@@ -196,9 +209,15 @@ export default function NewsletterInline({
         )}
 
         {status === "success" && !showPopin && (
-          <p className="mt-2 text-xs text-accent-green inline-flex items-center gap-1.5">
+          <p
+            className={`mt-2 text-xs inline-flex items-center gap-1.5 ${
+              mocked ? "text-amber-300" : "text-accent-green"
+            }`}
+          >
             <CheckCircle2 className="h-3.5 w-3.5" />
-            Inscription confirmée — vérifie ta boîte mail.
+            {mocked
+              ? "Email noté — newsletter en cours de configuration."
+              : "Inscription confirmée — vérifie ta boîte mail."}
           </p>
         )}
       </div>
@@ -233,13 +252,25 @@ export default function NewsletterInline({
               <CheckCircle2 className="h-6 w-6" />
             </span>
 
+            {/* FIX P0 audit-fonctionnel-live-final #3 : copy honnête en mode mocked. */}
             <h2 id="nl-popin-title" className="mt-4 text-xl sm:text-2xl font-extrabold text-fg">
-              Bienvenue à bord !
+              {mocked ? "Email bien noté" : "Bienvenue à bord !"}
             </h2>
 
             <p className="mt-2 text-sm text-fg/75">
-              Un email de confirmation est en route vers <strong>{email}</strong>. Pendant
-              ce temps, télécharge ton guide PDF :
+              {mocked ? (
+                <>
+                  Newsletter en cours de configuration — ton email{" "}
+                  <strong>{email}</strong> a été noté côté Cryptoreflex, on te
+                  recontactera dès que c&apos;est prêt. En attendant, télécharge
+                  ton guide :
+                </>
+              ) : (
+                <>
+                  Un email de confirmation est en route vers <strong>{email}</strong>.
+                  Pendant ce temps, télécharge ton guide PDF :
+                </>
+              )}
             </p>
 
             <a

@@ -37,12 +37,13 @@ interface RequestBody {
 /*  Helper unifié `lib/rate-limit.ts` (in-memory, non distribué V1).         */
 /*  Pour scaler multi-instances, migrer vers Upstash Redis.                  */
 /* ------------------------------------------------------------------------- */
-const limiter = createRateLimiter({ limit: 5, windowMs: 60_000 });
+// FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
+const limiter = createRateLimiter({ limit: 5, windowMs: 60_000, key: "analyze-whitepaper" });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // Rate limit AVANT lecture du body (économise CPU + mémoire)
   const ip = getClientIp(req);
-  const rl = limiter(ip);
+  const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes — réessaie dans une minute." },
