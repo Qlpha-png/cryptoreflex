@@ -440,7 +440,7 @@ export default function ProPage() {
               className="text-sm text-primary-soft underline hover:text-primary"
             >
               <Mail className="inline-block h-4 w-4 mr-1 align-text-bottom" aria-hidden="true" />
-              Contacter l&apos;équipe (entreprises, créateurs, > 20 utilisateurs)
+              Contacter l&apos;équipe (entreprises, créateurs, &gt; 20 utilisateurs)
             </a>
           </div>
         </div>

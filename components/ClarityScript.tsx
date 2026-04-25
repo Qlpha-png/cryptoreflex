@@ -75,7 +75,7 @@ export default function ClarityScript({ projectId }: Props) {
       const queue: unknown[][] = [];
       const stub = (...args: unknown[]) => queue.push(args);
       stub.q = queue;
-      w.clarity = w.clarity ?? (stub as typeof w.clarity);
+      w.clarity = w.clarity ?? (stub as unknown as typeof w.clarity);
 
       const script = document.createElement("script");
       script.async = true;

@@ -21,7 +21,7 @@ export default function Footer() {
       className="mt-32 border-t border-border/60 bg-surface/40"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
             {/*
               P0-7 audit-front : pas de Link wrappant le Logo en footer
@@ -75,7 +75,20 @@ export default function Footer() {
               <li><Link href="/watchlist" className={FOOTER_LINK}>Ma watchlist</Link></li>
               <li><Link href="/portefeuille" className={FOOTER_LINK}>Mon portefeuille</Link></li>
               <li><Link href="/academie" className={FOOTER_LINK}>Académie crypto</Link></li>
-              <li><Link href="/partenariats" className={FOOTER_LINK}>Partenariats</Link></li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-business-heading">
+            <h2 id="footer-business-heading" className="font-semibold mb-3 text-white/90 text-sm">
+              Cryptoreflex Pro &amp; contact
+            </h2>
+            <ul className="space-y-2 text-sm text-muted">
+              <li><Link href="/pro" className={FOOTER_LINK}>Cryptoreflex Pro</Link></li>
+              <li><Link href="/ambassadeurs" className={FOOTER_LINK}>Programme ambassadeurs</Link></li>
+              <li><Link href="/sponsoring" className={FOOTER_LINK}>Sponsoring articles</Link></li>
+              <li><Link href="/partenariats" className={FOOTER_LINK}>Partenariats marques</Link></li>
+              <li><Link href="/contact" className={FOOTER_LINK}>Contact</Link></li>
+              <li><Link href="/newsletter" className={FOOTER_LINK}>Newsletter</Link></li>
             </ul>
           </nav>
 

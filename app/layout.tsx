@@ -37,12 +37,17 @@ const display = Space_Grotesk({
 });
 
 /**
- * Domaine Plausible. À configurer via la variable d'environnement
- * `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (cf. .env.example).
- * Fallback : le domaine de la marque (cryptoreflex.fr).
+ * Configuration Plausible.
+ *  - V2 (Engagement Goals, recommandé) : set `NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL`
+ *    avec l'URL complète fournie par Plausible (ex: https://plausible.io/js/pa-XXXX.js).
+ *  - Legacy (data-domain) : set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (ex: cryptoreflex.fr).
+ *    Fallback : domaine de la marque (cryptoreflex.fr).
+ *
+ * Le composant <PlausibleScript /> détecte le mode automatiquement.
  */
 const PLAUSIBLE_DOMAIN =
   process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || BRAND.domain;
+const PLAUSIBLE_SCRIPT_URL = process.env.NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL;
 
 /**
  * Project ID Microsoft Clarity (heatmaps + session recording).
@@ -219,7 +224,7 @@ export default function RootLayout({
           Si NEXT_PUBLIC_PLAUSIBLE_DOMAIN n'est pas défini, on fallback sur
           le domaine de prod (cryptoreflex.fr).
         */}
-        <PlausibleScript domain={PLAUSIBLE_DOMAIN} />
+        <PlausibleScript domain={PLAUSIBLE_DOMAIN} scriptUrl={PLAUSIBLE_SCRIPT_URL} />
         {/*
           Microsoft Clarity — heatmaps + session recording (gratuit, illimité).
           Chargé uniquement si :

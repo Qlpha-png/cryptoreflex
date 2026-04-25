@@ -46,7 +46,8 @@
  *   // ---- Client Component ----
  *   // Le hook s'occupe du cookie + du tracking d'exposure automatiquement.
  *   "use client";
- *   import { useVariant, trackVariantConversion } from "@/lib/abtest";
+ *   import { useVariant } from "@/lib/abtest-client";
+ *   import { trackVariantConversion } from "@/lib/abtest";
  *
  *   export function CtaBlock() {
  *     const variant = useVariant("cta-color-v1");
@@ -64,8 +65,6 @@
  *     );
  *   }
  */
-
-import { useEffect, useState } from "react";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -271,29 +270,6 @@ export function trackVariantConversion(
   }
 }
 
-/**
- * Hook React Client : assigne un variant + log l'exposure au montage.
- *
- * - SSR : retourne "control" (cohérent avec `getVariant`).
- * - Client : effet une seule fois → tirage du cookie si absent + POST exposure.
- *
- * Le re-render après hydration peut produire un "flash" (control → variant) ;
- * pour les expériences visuelles fortes, préférer placer le composant testé
- * dans un wrapper `suppressHydrationWarning` ou utiliser `getVariant` en SC
- * avec un cookie lu côté serveur (V2).
- */
-export function useVariant(experimentId: string): string {
-  // Initialisation : "control" pour matcher le SSR (évite hydration mismatch).
-  const [variant, setVariant] = useState<string>("control");
-
-  useEffect(() => {
-    const v = getVariant(experimentId);
-    setVariant(v);
-    // Track l'exposition une fois (le hook est appelé 1 fois par mount du composant).
-    trackVariantExposure(experimentId, v);
-    // experimentId est typiquement constant à la durée du composant.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [experimentId]);
-
-  return variant;
-}
+// NB : le hook React Client `useVariant` est exporté depuis `lib/abtest-client.ts`
+// (séparation pour permettre l'import de ce module-ci dans des Server Components
+// et des routes API sans tirer la dépendance React Hooks).

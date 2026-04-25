@@ -97,8 +97,8 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     // Texte effectif du CTA : prop explicite > extraction children > undefined.
     const effectiveCta =
       ctaText ??
-      extractText(children).replace(/\s+/g, " ").trim().slice(0, 80) ||
-      undefined;
+      (extractText(children).replace(/\s+/g, " ").trim().slice(0, 80) ||
+        undefined);
 
     const fire = () => trackAffiliateClick(platform, placement, effectiveCta);
 
