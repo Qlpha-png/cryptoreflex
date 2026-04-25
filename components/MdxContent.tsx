@@ -263,6 +263,15 @@ export default function MdxContent({ source, components }: MdxContentProps) {
         source={source}
         components={{ ...mdxComponents, ...(components ?? {}) }}
         options={{
+          // ⚠ next-mdx-remote v6 (sécurité) : `blockJS` est `true` par défaut,
+          // ce qui supprime toutes les expressions JS dans le MDX (`rows={[...]}`,
+          // `items={[...]}`, etc.) et casse nos composants (props deviennent
+          // undefined). Notre contenu MDX vient EXCLUSIVEMENT de `content/articles/`
+          // (auteurs internes, contenu de confiance, pas user-generated) — on peut
+          // donc autoriser les expressions JS sans risque d'XSS.
+          // `blockDangerousJS: true` (default) reste actif : eval/Function/process
+          // restent bloqués, par défense en profondeur.
+          blockJS: false,
           mdxOptions: {
             // ⚠ MDX 3 parse `{...}` au niveau document AVANT les plugins remark.
             // Donc la syntaxe `## Titre {#anchor-id}` est interdite (acorn crash).
