@@ -17,12 +17,15 @@ export default function MentionsLegalesPage() {
       <ul className="text-fg/85 leading-relaxed">
         <li><strong>Nom du site</strong> : {BRAND.name}</li>
         <li><strong>URL</strong> : {BRAND.url}</li>
-        <li><strong>Éditeur</strong> : [À compléter — nom et prénom OU raison sociale]</li>
-        <li><strong>Statut juridique</strong> : [À compléter — micro-entreprise / SAS / SARL / particulier]</li>
-        <li><strong>SIREN / SIRET</strong> : [À compléter si applicable]</li>
-        <li><strong>Numéro TVA intracommunautaire</strong> : [À compléter si applicable]</li>
-        <li><strong>Siège social / Adresse</strong> : [À compléter]</li>
-        <li><strong>Directeur de la publication</strong> : [À compléter]</li>
+        <li><strong>Éditeur</strong> : [Nom Prénom à compléter]</li>
+        <li><strong>Statut juridique</strong> : Entrepreneur Individuel (EI)</li>
+        <li><strong>SIREN</strong> : 103 352 621</li>
+        <li><strong>SIRET du siège social</strong> : 103 352 621 00017</li>
+        <li><strong>Activité principale</strong> : Portails Internet (NAF 63.12Z) — édition de contenus éditoriaux et comparateurs en ligne</li>
+        <li><strong>Régime de TVA</strong> : Franchise en base de TVA (article 293 B du CGI) — TVA non applicable</li>
+        <li><strong>Date d'immatriculation au RNE (INPI)</strong> : 15 avril 2026</li>
+        <li><strong>Siège social / Adresse</strong> : [Adresse à compléter]</li>
+        <li><strong>Directeur de la publication</strong> : [Nom Prénom à compléter]</li>
         <li><strong>Contact</strong> : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a></li>
       </ul>
 
