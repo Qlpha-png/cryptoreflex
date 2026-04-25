@@ -10,6 +10,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   Bell,
   Mail,
@@ -176,9 +177,13 @@ export default function AlertesPage() {
           </ul>
         </header>
 
-        {/* Manager Client (form + liste) */}
+        {/* Manager Client (form + liste) — wrapped in Suspense car
+            <AlertsManager> utilise useSearchParams (?cryptoId=...). Sans Suspense,
+            Next.js 14+ throw React error #329 au prerender. */}
         <section className="mt-10">
-          <AlertsManager cryptos={cryptos} />
+          <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-elevated/40" />}>
+            <AlertsManager cryptos={cryptos} />
+          </Suspense>
         </section>
 
         {/* Comment ça marche */}
