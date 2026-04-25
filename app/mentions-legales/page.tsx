@@ -17,15 +17,15 @@ export default function MentionsLegalesPage() {
       <ul className="text-fg/85 leading-relaxed">
         <li><strong>Nom du site</strong> : {BRAND.name}</li>
         <li><strong>URL</strong> : {BRAND.url}</li>
-        <li><strong>Éditeur</strong> : [Nom Prénom à compléter]</li>
+        <li><strong>Éditeur</strong> : Kevin VOISIN, Entrepreneur Individuel</li>
         <li><strong>Statut juridique</strong> : Entrepreneur Individuel (EI)</li>
         <li><strong>SIREN</strong> : 103 352 621</li>
         <li><strong>SIRET du siège social</strong> : 103 352 621 00017</li>
         <li><strong>Activité principale</strong> : Portails Internet (NAF 63.12Z) — édition de contenus éditoriaux et comparateurs en ligne</li>
         <li><strong>Régime de TVA</strong> : Franchise en base de TVA (article 293 B du CGI) — TVA non applicable</li>
         <li><strong>Date d'immatriculation au RNE (INPI)</strong> : 15 avril 2026</li>
-        <li><strong>Siège social / Adresse</strong> : [Adresse à compléter]</li>
-        <li><strong>Directeur de la publication</strong> : [Nom Prénom à compléter]</li>
+        <li><strong>Adresse postale</strong> : communiquée sur demande à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> (réponse sous 48h ouvrées). L'adresse complète est consultable sur l'<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/103352621" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Annuaire des Entreprises (data.gouv.fr)</a> via le SIREN ci-dessus.</li>
+        <li><strong>Directeur de la publication</strong> : Kevin VOISIN</li>
         <li><strong>Contact</strong> : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a></li>
       </ul>
 
