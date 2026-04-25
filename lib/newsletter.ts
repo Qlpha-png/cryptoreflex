@@ -25,6 +25,7 @@ export type SubscribeSource =
   | "newsletter-page"
   | "footer"
   | "blog-cta"
+  | "pro-waitlist"
   | "unknown";
 
 export type SubscribeInput = {

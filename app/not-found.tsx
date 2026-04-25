@@ -79,16 +79,16 @@ export default function NotFound() {
             on a quelques pistes pour toi 👇
           </p>
 
-          {/* Search bar — placeholder, branchée plus tard */}
+          {/* Recherche transverse — pointe vers /recherche?q=... qui consomme /api/search. */}
           <form
             role="search"
-            action="/blog"
+            action="/recherche"
             method="get"
             className="mt-8 max-w-md mx-auto"
             aria-label="Rechercher sur Cryptoreflex"
           >
             <label htmlFor="nf-search" className="sr-only">
-              Rechercher
+              Rechercher sur Cryptoreflex
             </label>
             <div className="relative">
               <Search
@@ -99,13 +99,13 @@ export default function NotFound() {
                 id="nf-search"
                 name="q"
                 type="search"
-                placeholder="Rechercher un guide, un exchange…"
+                placeholder="Rechercher un guide, un exchange, une crypto…"
                 autoComplete="off"
                 className="w-full rounded-xl bg-elevated border border-border pl-11 pr-4 py-3 text-fg placeholder:text-muted focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30 transition-colors"
               />
             </div>
             <p className="mt-2 text-[11px] text-muted">
-              La recherche est en cours d'intégration — pour l'instant on t'envoie sur le blog.
+              La recherche couvre articles, plateformes, cryptos, comparatifs, outils et glossaire.
             </p>
           </form>
 

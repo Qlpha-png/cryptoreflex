@@ -33,7 +33,7 @@ import { track } from "@/lib/analytics";
 type Variant = "default" | "minimal";
 
 interface NewsletterInlineProps {
-  source?: "blog-cta" | "footer" | "inline" | "newsletter-page";
+  source?: "blog-cta" | "footer" | "inline" | "newsletter-page" | "pro-waitlist";
   variant?: Variant;
   title?: string;
   subtitle?: string;

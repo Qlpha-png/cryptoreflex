@@ -67,7 +67,9 @@ export default function MobileStickyCTA({
 
   const handleClick = () => {
     try {
-      trackAffiliateClick(platformId, surface);
+      // Le `label` est exactement le wording affiché à l'utilisateur
+      // (ex: "S'inscrire", "Acheter") : utile pour A/B-tester le wording.
+      trackAffiliateClick(platformId, surface, label);
     } catch {
       // analytics never blocks UX
     }

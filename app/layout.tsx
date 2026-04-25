@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import PlausibleScript from "@/components/PlausibleScript";
+import ClarityScript from "@/components/ClarityScript";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
 import { BRAND } from "@/lib/brand";
@@ -42,6 +43,13 @@ const display = Space_Grotesk({
  */
 const PLAUSIBLE_DOMAIN =
   process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || BRAND.domain;
+
+/**
+ * Project ID Microsoft Clarity (heatmaps + session recording).
+ * Optionnel : si absent, le composant ClarityScript ne fait rien.
+ * Cf. components/ClarityScript.tsx pour la procédure d'activation.
+ */
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
 
 /**
  * Tokens de vérification pour la propriété du site.
@@ -212,6 +220,14 @@ export default function RootLayout({
           le domaine de prod (cryptoreflex.fr).
         */}
         <PlausibleScript domain={PLAUSIBLE_DOMAIN} />
+        {/*
+          Microsoft Clarity — heatmaps + session recording (gratuit, illimité).
+          Chargé uniquement si :
+            1. NEXT_PUBLIC_CLARITY_PROJECT_ID est défini en env vars Vercel.
+            2. L'utilisateur a accepté la catégorie "Mesure d'audience".
+          Cf. components/ClarityScript.tsx pour la procédure de setup.
+        */}
+        <ClarityScript projectId={CLARITY_PROJECT_ID} />
         {/*
           Service worker PWA — enregistre /sw.js côté client (uniquement en prod).
           Active le mode offline minimal + cache des assets statiques.

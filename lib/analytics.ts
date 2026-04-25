@@ -14,6 +14,11 @@
  *   https://plausible.io/docs/custom-event-goals
  *   La fonction globale `window.plausible(eventName, { props: {...} })`
  *   est exposée par le snippet `script.js` quand `data-domain` est défini.
+ *
+ * Server-side analytics indépendant Plausible :
+ *  - `trackAffiliateClick` POST aussi vers `/api/analytics/affiliate-click`
+ *    pour persister un compteur KV (`analytics:aff-click:...`). Permet de
+ *    construire la page /admin/stats sans dépendre de l'API Plausible.
  */
 
 type PlausibleEventOptions = {
@@ -58,19 +63,64 @@ export function track(
 
 /**
  * Clic sur un lien d'affiliation.
- * @param platform identifiant kebab-case de la plateforme (ex: "coinbase")
- * @param placement zone du site où le clic a eu lieu (ex: "platforms-section",
- *   "comparison-table", "review-cta"). Optionnel mais TRÈS utile pour mesurer
- *   ce qui convertit le mieux.
+ *
+ * Surcharge volontairement permissive : on garde l'ancienne signature
+ * `(platform, placement?)` pour compat avec tous les composants existants
+ * et on ajoute un overload enrichi `(platform, placement, ctaText)`.
+ *
+ * @param platformId identifiant kebab-case de la plateforme (ex: "coinbase")
+ * @param placement zone du site où le clic a eu lieu (ex: "home-platforms",
+ *   "comparison-table", "review-cta", "platform-card-sub-cta"). TRÈS utile
+ *   pour identifier ce qui convertit le mieux.
+ * @param ctaText texte exact du CTA cliqué (ex: "S'inscrire sur Coinbase",
+ *   "Lire l'avis détaillé"). Utile pour A/B-tester le wording des boutons.
  */
 export function trackAffiliateClick(
-  platform: string,
-  placement?: string
+  platformId: string,
+  placement?: string,
+  ctaText?: string,
 ): void {
+  // 1) Plausible custom event (côté browser, conditionnel au consent).
   track(EVENTS.AffiliateClick, {
-    platform,
+    platform: platformId,
     ...(placement ? { placement } : {}),
+    ...(ctaText ? { cta: ctaText } : {}),
   });
+
+  // 2) POST KV server-side (independent de Plausible / consent).
+  //    On n'a pas besoin du consent ici : les compteurs KV sont totalement
+  //    anonymes (aucune donnée perso, aucun cookie posé). Conforme RGPD.
+  postAffiliateClickServerSide(platformId, placement, ctaText);
+}
+
+/**
+ * Fire-and-forget POST vers /api/analytics/affiliate-click pour persister
+ * la stat côté KV (servir la page /admin/stats). Aucune exception remontée.
+ */
+function postAffiliateClickServerSide(
+  platformId: string,
+  placement?: string,
+  ctaText?: string,
+): void {
+  if (typeof window === "undefined") return;
+  try {
+    void fetch("/api/analytics/affiliate-click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        platformId,
+        placement: placement ?? "unknown",
+        cta: ctaText ?? null,
+      }),
+      // keepalive : la requête survit si l'utilisateur quitte la page
+      // (essentiel : on tracke souvent juste avant un redirect affilié).
+      keepalive: true,
+    }).catch(() => {
+      /* analytics never blocks UX */
+    });
+  } catch {
+    /* ignore */
+  }
 }
 
 /**

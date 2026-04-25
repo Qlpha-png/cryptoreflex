@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { ArrowRight, CheckCircle2, ExternalLink, Star } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
 import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "./PlatformLogo";
+import PlatformCardSubCta from "./PlatformCardSubCta";
 
 /**
  * Liste des `id` pour lesquels on a un logo SVG officiel dans /public/logos/.
@@ -132,12 +132,17 @@ export default function PlatformCard({ platform, placement }: Props) {
       {/*
         AffiliateLink :
          - rel="sponsored nofollow noopener noreferrer" automatique
-         - tracking Plausible (event "Affiliate Click" + props {platform, placement})
+         - tracking Plausible (event "Affiliate Click" + props {platform, placement, cta})
+         - tracking KV server-side (cf. /api/analytics/affiliate-click) pour
+           alimenter /admin/stats sans dépendre de Plausible.
+        On passe `ctaText` explicite pour normaliser le wording dans les stats
+        (l'extraction automatique des children inclurait l'aria-label sr-only).
       */}
       <AffiliateLink
         href={affiliateUrl}
         platform={platformId}
         placement={placement}
+        ctaText={`S'inscrire sur ${name}`}
         className="mt-6 btn-primary w-full"
       >
         S'inscrire sur {name}
@@ -147,17 +152,11 @@ export default function PlatformCard({ platform, placement }: Props) {
 
       {/* Sub-CTA (audit P0-8) : option éditoriale, pour les visiteurs qui
           veulent lire avant de cliquer "S'inscrire". Non concurrentiel avec
-          le CTA principal grâce à un style link-only discret. */}
-      <Link
-        href={`/avis/${platformId}`}
-        className="mt-2 inline-flex items-center justify-center gap-1 text-sm text-primary-soft hover:text-primary
-                   focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-                   focus-visible:ring-offset-background rounded transition-colors"
-        aria-label={`Lire notre avis détaillé sur ${name}`}
-      >
-        Lire notre avis détaillé
-        <ArrowRight className="h-[14px] w-[14px]" aria-hidden="true" />
-      </Link>
+          le CTA principal grâce à un style link-only discret.
+          Le sous-CTA est tracké côté Plausible (event "Affiliate Click" avec
+          placement spécifique "platform-card-sub-cta") + KV server-side pour
+          mesurer l'attribution même si l'utilisateur n'a pas accepté le consent. */}
+      <PlatformCardSubCta platformId={platformId} platformName={name} />
     </div>
   );
 }

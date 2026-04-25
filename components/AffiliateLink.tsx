@@ -12,8 +12,11 @@ import { trackAffiliateClick } from "@/lib/analytics";
  *    septembre 2019 — ne pas oublier `nofollow` pour les vieux crawlers).
  *  - Sécurité : `noopener noreferrer` empêche le tabnabbing.
  *  - UX : ouvre dans un nouvel onglet par défaut.
- *  - Analytics : déclenche `trackAffiliateClick(platform, placement)` à chaque
- *    clic (y compris molette / Cmd+clic, via l'event `auxclick`).
+ *  - Analytics : déclenche `trackAffiliateClick(platform, placement, ctaText)`
+ *    à chaque clic (y compris molette / Cmd+clic, via l'event `auxclick`).
+ *    Le `ctaText` est dérivé automatiquement du contenu textuel des children
+ *    (utile pour mesurer quel wording de bouton convertit le mieux), avec un
+ *    override possible via la prop `ctaText`.
  *
  * Usage :
  *   <AffiliateLink href={url} platform="coinbase" placement="home-card">
@@ -30,6 +33,11 @@ export interface AffiliateLinkProps
   platform: string;
   /** Zone du site (ex: "home-platforms", "comparison-table", "review-cta"). */
   placement?: string;
+  /**
+   * Wording exact du CTA pour le tracking. Si absent, dérivé du contenu
+   * textuel des children. Utile pour A/B-tester le label des boutons.
+   */
+  ctaText?: string;
   /** Forcer un autre target (par défaut "_blank"). */
   target?: "_blank" | "_self";
   /**
@@ -40,12 +48,33 @@ export interface AffiliateLinkProps
   children: ReactNode;
 }
 
+/**
+ * Best-effort : extrait le texte d'un ReactNode pour en faire un ctaText.
+ * - Pour `<>S'inscrire <span>sur X</span><Icon/></>`, retourne "S'inscrire sur X".
+ * - Stoppé à 80 chars pour éviter de pousser un wording absurdement long.
+ */
+function extractText(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join(" ");
+  if (
+    typeof node === "object" &&
+    node !== null &&
+    "props" in node &&
+    typeof (node as { props?: { children?: ReactNode } }).props?.children !== "undefined"
+  ) {
+    return extractText((node as { props: { children: ReactNode } }).props.children);
+  }
+  return "";
+}
+
 const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
   function AffiliateLink(
     {
       href,
       platform,
       placement,
+      ctaText,
       target = "_blank",
       ugc = false,
       onClick,
@@ -65,7 +94,13 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     if (ugc) relParts.push("ugc");
     const rel = relParts.join(" ");
 
-    const fire = () => trackAffiliateClick(platform, placement);
+    // Texte effectif du CTA : prop explicite > extraction children > undefined.
+    const effectiveCta =
+      ctaText ??
+      extractText(children).replace(/\s+/g, " ").trim().slice(0, 80) ||
+      undefined;
+
+    const fire = () => trackAffiliateClick(platform, placement, effectiveCta);
 
     return (
       <a
