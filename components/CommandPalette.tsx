@@ -21,12 +21,15 @@ import {
   ArrowUp,
   ArrowDown,
 } from "lucide-react";
+// IMPORTANT : importer depuis `lib/search-client` (pur, zéro Node) et NON
+// depuis `lib/search` qui pull `lib/mdx.ts` (node:fs + node:path) → casse
+// le bundle webpack côté navigateur. Cf. RCA commits d776b2d → 7bd30ba.
 import {
   searchIndex,
   type SearchItem,
   type SearchResult,
   type SearchType,
-} from "@/lib/search";
+} from "@/lib/search-client";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes UI                                                             */
