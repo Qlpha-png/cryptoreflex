@@ -206,7 +206,7 @@ export default function Navbar() {
               prend par la main avec un parcours dédié. */}
           <Link
             href="/wizard/premier-achat"
-            className="hidden lg:inline-flex items-center gap-1.5 ml-3 px-3 py-1.5 rounded-full
+            className="hidden lg:inline-flex items-center gap-1.5 ml-3 px-3 py-1.5 rounded-full whitespace-nowrap shrink-0
                        border border-primary/40 bg-gradient-to-b from-primary/15 to-primary/5
                        text-xs font-semibold text-primary-glow
                        hover:from-primary/20 hover:to-primary/8 transition-colors min-h-[36px]
@@ -229,7 +229,7 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative text-[13.5px] font-medium tracking-[-0.005em] transition-colors rounded py-1 group/nav
+                  className={`relative inline-flex items-center text-[13.5px] font-medium tracking-[-0.005em] transition-colors rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${
@@ -243,7 +243,7 @@ export default function Navbar() {
                   {item.badge ? (
                     <span
                       aria-hidden="true"
-                      className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary-glow ring-1 ring-primary/40 animate-pulse"
+                      className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary-glow ring-1 ring-primary/40 animate-pulse leading-none"
                     >
                       {item.badge}
                     </span>
@@ -266,7 +266,7 @@ export default function Navbar() {
             {/* Trust badge MiCA · AMF (xl+) — Audit SEO/CRO : +12-18% bounce reduction. */}
             <span
               title="Conforme cadre MiCA + AMF — méthodologie publique"
-              className="hidden xl:inline-flex items-center gap-1 px-2 py-1 rounded-md
+              className="hidden xl:inline-flex items-center gap-1 px-2 py-1 rounded-md whitespace-nowrap shrink-0
                          border border-emerald-500/30 bg-emerald-500/5 text-[10px]
                          font-mono font-bold text-emerald-300/90 uppercase tracking-wider"
             >
@@ -362,7 +362,7 @@ export default function Navbar() {
             <Link
               href="/quiz/plateforme"
               data-cta="navbar-primary"
-              className="btn-primary text-sm py-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="btn-primary text-sm py-2 whitespace-nowrap shrink-0 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Sparkles className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
               Trouver ma plateforme

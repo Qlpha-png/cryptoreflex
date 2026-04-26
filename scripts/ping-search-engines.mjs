@@ -5,13 +5,13 @@
  * Notifie les moteurs de recherche qu'un sitemap a été mis à jour.
  * Appelé après chaque nouveau commit de contenu (depuis GH Actions).
  *
- * Stratégie :
- *  - **Google** : ping HTTP officiel `/ping?sitemap=...` (déprécié juillet 2023
- *    mais toujours fonctionnel en pratique). Pour un push REAL-TIME, il faut
- *    Google Indexing API (requires Service Account JSON, hors scope MVP).
- *  - **Bing** : IndexNow API officielle (push instantané, gratuit, sans clé
- *    pour les sites qui hébergent leur key file).
- *  - **Yandex** : pas pingé (audience FR négligeable, économise un appel).
+ * Audit 26/04/2026 (post RE-AUDIT 10 blocks) :
+ *  - **Google** : `/ping?sitemap=` est OFFICIELLEMENT MORT depuis juin 2023.
+ *    Google ne reconnaît plus ce endpoint — l'appel retourne 404. Conservé pour
+ *    historique uniquement. Pour notifier Google, il faut soit Search Console
+ *    manuel, soit Google Indexing API (Service Account JSON requis).
+ *  - **Bing/Yandex/IndexNow** : seul canal de push instantané fonctionnel.
+ *    URLs étendues pour inclure home + 11 pages prioritaires (post RE-AUDIT).
  *
  * Best-effort : un fail réseau n'arrête pas le job (exit 0 toujours).
  */
@@ -25,10 +25,34 @@ const SITEMAPS = [
   `${SITE_URL}/sitemap-articles.xml`,
 ];
 
+// URLs prioritaires à pousser via IndexNow (max 10 000 par batch, mais on reste
+// raisonnable). Inclut la home + pages catégories refactor du RE-AUDIT 26/04.
 const URLS_TO_INDEXNOW = [
-  `${SITE_URL}/actualites`,
-  `${SITE_URL}/analyses-techniques`,
+  // Home + sitemaps (toujours en tête de la liste)
+  `${SITE_URL}/`,
+  `${SITE_URL}/sitemap.xml`,
   `${SITE_URL}/sitemap-news.xml`,
+  `${SITE_URL}/sitemap-articles.xml`,
+  // Pages money + conversion (Block 4 + Block 7 RE-AUDIT)
+  `${SITE_URL}/comparatif`,
+  `${SITE_URL}/quiz/plateforme`,
+  `${SITE_URL}/quiz/crypto`,
+  `${SITE_URL}/wizard/premier-achat`,
+  // Pages contenu (Block 6 + Block 8 RE-AUDIT)
+  `${SITE_URL}/actualites`,
+  `${SITE_URL}/blog`,
+  `${SITE_URL}/analyses-techniques`,
+  `${SITE_URL}/calendrier`,
+  // Pages outils + apprendre (Block 5 + Block 7 RE-AUDIT)
+  `${SITE_URL}/outils`,
+  `${SITE_URL}/cryptos`,
+  `${SITE_URL}/academie`,
+  `${SITE_URL}/marche/heatmap`,
+  // Pages légales / E-E-A-T (Block 10 footer RE-AUDIT)
+  `${SITE_URL}/methodologie`,
+  `${SITE_URL}/transparence`,
+  `${SITE_URL}/mentions-legales`,
+  `${SITE_URL}/confidentialite`,
 ];
 
 /* -------------------------------------------------------------------------- */
