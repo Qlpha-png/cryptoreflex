@@ -22,20 +22,30 @@ interface Props {
   news: NewsSummary;
 }
 
-/** Couleurs Tailwind par catégorie — pré-générées (purge-safe). */
+/**
+ * Couleurs Tailwind par catégorie — pré-générées (purge-safe).
+ *
+ * BUG FIX BLOCK 11 (Agent /actualites audit P2 26/04/2026) :
+ *  Avant : clés ASCII "Marche"/"Regulation" mais NEWS_CATEGORIES utilise les
+ *  formes accentuées canoniques "Marché"/"Régulation" (cf. lib/news-types.ts
+ *  ligne 35-40). Résultat : 2 catégories sur 4 toujours en fallback gris,
+ *  dégradé d'expérience visuelle invisible (pas d'erreur runtime, juste un
+ *  rendu cassé silencieux).
+ *  Après : clés alignées sur les valeurs canoniques accentuées.
+ */
 const CATEGORY_BADGE: Record<string, string> = {
-  Marche:      "bg-amber-500/15 text-amber-200 ring-amber-500/30",
-  Regulation:  "bg-rose-500/15 text-rose-200 ring-rose-500/30",
-  Technologie: "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
-  Plateformes: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
+  "Marché":     "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+  "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
+  Technologie:  "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
+  Plateformes:  "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
 };
 
 /** Gradient cover fallback si image absente. */
 const CATEGORY_GRADIENT: Record<string, string> = {
-  Marche:      "from-amber-500/40 to-orange-600/40",
-  Regulation:  "from-rose-500/40 to-pink-600/40",
-  Technologie: "from-cyan-500/40 to-blue-600/40",
-  Plateformes: "from-fuchsia-500/40 to-purple-600/40",
+  "Marché":     "from-amber-500/40 to-orange-600/40",
+  "Régulation": "from-rose-500/40 to-pink-600/40",
+  Technologie:  "from-cyan-500/40 to-blue-600/40",
+  Plateformes:  "from-fuchsia-500/40 to-purple-600/40",
 };
 
 export default function NewsCard({ news }: Props) {

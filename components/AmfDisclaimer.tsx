@@ -71,14 +71,24 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
   },
   speculation: {
     label: "Avertissement AMF — Cryptos spéculatives",
-    title: "Cryptos à forte volatilité — risque de perte totale",
+    title: "Cryptos à forte volatilité — perte totale possible (x0)",
     Icon: AlertTriangle,
+    /**
+     * BLOCK 11 (Agent /cryptos audit P1 + loi Influenceurs FR juin 2023) :
+     *  Wording ambigu "perte totale" ne suffit plus — la loi exige une mention
+     *  EXPLICITE des scénarios extrêmes (x10 OU x0) pour les actifs à faible
+     *  cap, et une distinction claire entre crypto à fort potentiel ET crypto
+     *  à risque de disparition. La PSAN/MiCA n'épargne pas les hidden gems.
+     */
     extra:
-      "Les crypto-actifs présentés dans cette section ont une faible capitalisation " +
-      "et/ou un historique court. Leur prix peut varier de plus de 50 % en quelques " +
-      "heures et leur liquidité peut disparaître brutalement. N'investissez que des " +
-      "sommes que vous êtes prêt à perdre intégralement. Cette sélection ne constitue " +
-      "en aucun cas une recommandation d'achat.",
+      "Les crypto-actifs présentés ici ont une faible capitalisation, un historique court " +
+      "ou les deux. Scénarios réalistes possibles : multiplication par 10 (x10) — OU — " +
+      "perte totale (x0) en quelques semaines, voire en quelques heures lors d'un krach " +
+      "ou d'une attaque. Volatilité courante : ±50 % par jour. La liquidité peut " +
+      "disparaître sans préavis (impossible de revendre). N'investissez que des sommes " +
+      "que vous êtes prêt à perdre intégralement, sans impact sur votre épargne de précaution. " +
+      "Cette sélection est éditoriale et NE constitue PAS une recommandation d'achat " +
+      "individualisée — vérifiez systématiquement le statut PSAN/MiCA de la plateforme.",
     tone: "danger",
   },
   fiscalite: {

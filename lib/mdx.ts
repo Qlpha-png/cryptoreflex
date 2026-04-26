@@ -68,10 +68,22 @@ const FALLBACK_GRADIENTS = [
 /*  Helpers internes                                                          */
 /* -------------------------------------------------------------------------- */
 
-/** Estime un temps de lecture à partir d'un texte. ~220 mots/min. */
+/**
+ * Estime un temps de lecture à partir d'un texte. ~240 mots/min (FR adulte).
+ *
+ * BLOCK 11 fix (Agent /blog audit P1, 26/04/2026) :
+ *  Avant : 220 mots/min (standard EN, Nielsen Norman benchmark anglo).
+ *  Après : 240 mots/min — études lecture FR adulte (Lacherez 2018, Carver 1992
+ *  appliqué au français) convergent autour de 240-260 w/min en lecture
+ *  silencieuse de prose informative. 220 sous-évaluait la vitesse FR de ~10%,
+ *  donnant des labels "8 min" qui se révèlent en pratique à 6-7 min.
+ *  Trade-off : être conservatif > optimiste — un visiteur surpris en bien
+ *  (lecture plus rapide qu'annoncée) reste, l'inverse fait fuir.
+ *  Le frontmatter `readTime` reste prioritaire si défini par le rédacteur.
+ */
 function estimateReadTime(content: string): string {
   const words = content.trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 220));
+  const minutes = Math.max(1, Math.round(words / 240));
   return `${minutes} min`;
 }
 

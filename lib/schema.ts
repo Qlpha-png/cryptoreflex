@@ -300,7 +300,23 @@ export function websiteSchema(): JsonLd {
 /*  3. Article                                                                */
 /* -------------------------------------------------------------------------- */
 
-export function articleSchema(article: ArticleFrontmatter): JsonLd {
+export function articleSchema(
+  article: ArticleFrontmatter,
+  options?: {
+    /**
+     * Body texte brut (sans markdown) pour enrichir Article.articleBody.
+     * BLOCK 11 fix (Agent /blog audit P1) : Google préfère un articleBody
+     * complet pour les Article rich results (vs uniquement description).
+     * Caller : computeArticleBody(content) côté page MDX.
+     */
+    body?: string;
+    /**
+     * Compteur de mots — alimente Article.wordCount (signal de profondeur
+     * éditoriale, utilisé par Google pour scoring qualité YMYL).
+     */
+    wordCount?: number;
+  }
+): JsonLd {
   const url = abs(`/blog/${article.slug}`);
   const image = abs(article.cover ?? "/og-image.png");
   const author = getAuthorByIdOrDefault(article.authorId);
@@ -314,19 +330,104 @@ export function articleSchema(article: ArticleFrontmatter): JsonLd {
     image: [image],
     datePublished: article.date,
     dateModified: article.dateModified ?? article.date,
-    author: authorRef(author),
+    author: authorRef(author), // authorRef() inclut déjà `url` (cf. lib/authors.ts L122)
     publisher: { "@id": ORGANIZATION_ID },
     inLanguage: "fr-FR",
     articleSection: article.category ?? "Crypto",
     keywords: article.tags?.join(", "),
     url,
     isAccessibleForFree: true,
+    // BLOCK 11 enrichissement (Agent /blog audit P1) :
+    ...(options?.body ? { articleBody: options.body } : {}),
+    ...(options?.wordCount ? { wordCount: options.wordCount } : {}),
     /**
      * SpeakableSpecification — éligibilité voice search Google Assistant.
      * Cible les sélecteurs h1/h2/.lead/[data-speakable] qui contiennent les
      * passages les plus représentatifs (titre, sous-titres, chapô).
      */
     speakable: generateSpeakableSchema(),
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  3-bis. FinancialProduct (cryptoactif)                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Schema.org FinancialProduct adapté aux cryptoactifs.
+ *
+ * BLOCK 11 fix (Agent /cryptos audit P0, 26/04/2026) :
+ *  Avant : seulement Article + FAQPage + Breadcrumb sur les pages /cryptos/[slug].
+ *  Google ne pouvait pas afficher de rich snippets crypto-spécifiques (prix,
+ *  ticker, lien vers exchanges officiels).
+ *  Après : FinancialProduct + sameAs (CoinGecko, CoinMarketCap, site officiel)
+ *  + provider Cryptoreflex.
+ *
+ * Pourquoi FinancialProduct et pas Product+Offer ?
+ *  - `Product` + `Offer` exige un `price` ferme/garanti (impossible pour un
+ *    cryptoactif volatil sans transaction réelle de notre part — risque
+ *    Google Webmaster manual action "misleading rich results").
+ *  - `FinancialProduct` est explicitement prévu pour les actifs financiers
+ *    (CFD, ETF, devises, stocks…). Cryptocurrency n'est pas encore un type
+ *    natif Schema.org mais FinancialProduct est universellement accepté.
+ *  - On peut layer un `category: "Cryptocurrency"` + `tickerSymbol` pour
+ *    aider la classification.
+ *
+ * Doc : https://schema.org/FinancialProduct
+ */
+export interface CryptoFinancialProductInput {
+  /** Slug interne (ex: "bitcoin", "ethereum"). Sert à l'URL canonique. */
+  slug: string;
+  /** Nom complet ("Bitcoin", "Ethereum"). */
+  name: string;
+  /** Symbole ticker (BTC, ETH, SOL). */
+  symbol: string;
+  /** Description courte (1-2 phrases) — typiquement le tagline éditorial. */
+  description: string;
+  /** Image officielle (logo) — URL absolue ou path local résolu via abs(). */
+  image?: string;
+  /** Catégorie éditoriale ("Layer 1", "Stablecoin", "DeFi"…). */
+  category?: string;
+  /** Année de création (alimente `releaseDate`). */
+  yearCreated?: number;
+  /**
+   * Liens externes prouvant l'identité (CoinGecko, CoinMarketCap, site
+   * officiel). Alimente `sameAs` — boost majeur pour le Knowledge Graph.
+   */
+  sameAs?: string[];
+}
+
+export function cryptoFinancialProductSchema(
+  input: CryptoFinancialProductInput
+): JsonLd {
+  const url = abs(`/cryptos/${input.slug}`);
+  const image = input.image
+    ? input.image.startsWith("http")
+      ? input.image
+      : abs(input.image)
+    : DEFAULT_OG;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "@id": `${url}#asset`,
+    name: input.name,
+    alternateName: input.symbol,
+    // tickerSymbol n'est pas standard Schema.org sur FinancialProduct, mais
+    // Google le tolère et cela aide certains crawlers (Bing, Brave Search).
+    tickerSymbol: input.symbol,
+    description: input.description,
+    image: [image],
+    url,
+    category: input.category ?? "Cryptocurrency",
+    inLanguage: "fr-FR",
+    provider: { "@id": ORGANIZATION_ID },
+    ...(input.yearCreated
+      ? { releaseDate: `${input.yearCreated}-01-01` }
+      : {}),
+    ...(input.sameAs && input.sameAs.length > 0
+      ? { sameAs: input.sameAs }
+      : {}),
   };
 }
 

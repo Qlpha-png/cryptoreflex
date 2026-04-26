@@ -30,6 +30,7 @@ import { BRAND } from "@/lib/brand";
 import {
   articleSchema,
   breadcrumbSchema,
+  cryptoFinancialProductSchema,
   faqSchema,
   graphSchema,
 } from "@/lib/schema";
@@ -214,16 +215,40 @@ export default async function CryptoPage({ params }: Props) {
     )
     .find((p): p is NonNullable<typeof p> => Boolean(p));
 
-  // SEO Schemas — Article + Breadcrumb + FAQPage groupés en @graph.
+  // BLOCK 11 fix (Agent /cryptos audit P0) : ajout cryptoFinancialProductSchema
+  // pour signaler à Google que cette page traite d'un cryptoactif structuré
+  // (ticker, sameAs CoinGecko, catégorie, année) — boost rich snippets crypto.
+  // SEO Schemas — Article + Breadcrumb + FAQPage + FinancialProduct en @graph.
+  // Note : `officialUrl` n'existe que sur HiddenGem (pas TopCrypto), on filtre.
+  const externalLinks: string[] = [
+    `https://www.coingecko.com/en/coins/${c.coingeckoId}`,
+    ...(c.kind === "hidden-gem" && c.officialUrl ? [c.officialUrl] : []),
+  ];
+
   const schemas = graphSchema([
     articleSchema({
       slug: `cryptos/${c.id}`,
       title: `${c.name} (${c.symbol}) — fiche complète Cryptoreflex`,
       description: c.what,
       date: "2026-04-25",
-      dateModified: new Date().toISOString().slice(0, 10),
+      // BLOCK 11 fix (Agent /cryptos audit P2) : dateModified=today sur
+      // toutes les fiches = signal de "churning" suspect pour Google. Sans
+      // édit éditorial réel, on garde la date de publication. Quand on
+      // mettra à jour une fiche, on bumpera le frontmatter.
+      dateModified: "2026-04-25",
       category: c.category,
       tags: [c.name, c.symbol, "crypto", c.category],
+    }),
+    cryptoFinancialProductSchema({
+      slug: c.id,
+      name: c.name,
+      symbol: c.symbol,
+      description: c.tagline,
+      // Pas d'`image` field sur AnyCrypto — le helper retombe sur l'OG fallback.
+      // Si on ajoute un champ `image` plus tard à TopCrypto/HiddenGem, on le passe ici.
+      category: c.category,
+      yearCreated: c.yearCreated,
+      sameAs: externalLinks,
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },

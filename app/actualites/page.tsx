@@ -177,12 +177,15 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
             <>
               <Link href={PAGE_PATH} className="hover:text-fg">Actualités</Link>
               <span className="mx-2" aria-hidden="true">/</span>
-              <span className="text-fg/80">
+              {/* BLOCK 11 fix (Agent /actualites audit P2) : aria-current="page"
+                  sur dernier élément du fil d'Ariane → annonce explicite SR
+                  que c'est la page courante (WCAG 2.4.8 Location). */}
+              <span className="text-fg/80" aria-current="page">
                 {NEWS_CATEGORY_LABELS[activeCategory]}
               </span>
             </>
           ) : (
-            <span className="text-fg/80">Actualités</span>
+            <span className="text-fg/80" aria-current="page">Actualités</span>
           )}
         </nav>
 

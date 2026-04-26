@@ -58,8 +58,13 @@ export async function GET(): Promise<Response> {
       // ou ISO complet. On normalise.
       const pubDate = new Date(n.date).toISOString();
 
+      // BLOCK 11 fix (Agent /actualites audit P1) : ajout <lastmod> standard
+      // sitemap. Google News pondère freshness via <news:publication_date>,
+      // mais Bing News + crawlers tiers (Yandex News) lisent <lastmod>. Sans
+      // ce signal, fraîcheur sous-estimée hors écosystème Google.
       return `  <url>
     <loc>${xmlEscape(url)}</loc>
+    <lastmod>${pubDate}</lastmod>
     <news:news>
       <news:publication>
         <news:name>${xmlEscape(BRAND.name)}</news:name>
