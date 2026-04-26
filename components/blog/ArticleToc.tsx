@@ -166,6 +166,36 @@ export default function ArticleToc({
         />
       </div>
 
+      {/* Audit Mobile UX 26/04/2026 : avant `hidden lg:block` masquait le TOC
+          sur mobile alors que les articles font ~12 sections. UX dégradée pour
+          70% du trafic. Maintenant : sur mobile, TOC en accordéon collapsable
+          (details/summary) ; sur lg+, sticky sidebar comme avant. */}
+
+      {/* MOBILE : accordéon natif HTML (pas de JS) */}
+      <details className="lg:hidden not-prose mb-6 rounded-xl border border-border/60 bg-elevated/40 overflow-hidden">
+        <summary className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer text-sm font-semibold text-primary-soft hover:bg-elevated transition-colors list-none [&::-webkit-details-marker]:hidden">
+          <span className="inline-flex items-center gap-2">
+            <List className="h-4 w-4" aria-hidden="true" />
+            Sommaire ({items.length} sections)
+          </span>
+          <span aria-hidden="true" className="text-muted text-xs">▼</span>
+        </summary>
+        <ol className="space-y-1 text-sm px-4 py-3 border-t border-border/40">
+          {items.map((h) => (
+            <li key={`mobile-${h.id}`} className={h.level === 3 ? "pl-4" : ""}>
+              <a
+                href={`#${h.id}`}
+                onClick={(e) => onJump(e, h.id)}
+                className="block py-1.5 text-fg/80 hover:text-primary-soft transition-colors"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </details>
+
+      {/* DESKTOP : sticky sidebar (inchangé) */}
       <nav
         aria-label="Sommaire de l'article"
         className="not-prose hidden lg:block sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2"

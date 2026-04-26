@@ -452,6 +452,28 @@ body.modal-open {
   overscroll-behavior: contain;
 }
 
+/* Audit Mobile UX 26/04/2026 (Agent 4) :
+   - overscroll-behavior-y: none global -> empeche pull-to-refresh iOS
+     accidentel qui rechargeait la page intempestivement
+   - prefers-reduced-data : desactive les gradients animes pour respecter
+     le data-saver mode + battery
+   - active:scale subtil sur les liens/boutons pour feel "press" iOS */
+html {
+  overscroll-behavior-y: none;
+}
+@media (prefers-reduced-data: reduce) {
+  .text-gradient-gold-animate,
+  .gradient-text-animated {
+    animation: none !important;
+  }
+}
+button:active,
+a:active {
+  /* Effet "press" tactile subtil — feel iOS / Material */
+  transform: scale(0.98);
+  transition: transform 100ms ease-out;
+}
+
 /* Scroll-margin-top pour les sections cibles de HomeAnchorNav (chips
    sticky). Sans ça, scrollIntoView() positionne la section EXACTEMENT
    en haut du viewport, donc cachée derrière la nav sticky (h-16 navbar
