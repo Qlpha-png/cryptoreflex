@@ -35,8 +35,8 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       </h2>
       <p className="mt-2 text-sm text-muted max-w-3xl">
         Les plateformes ci-dessous sont régulées (PSAN AMF ou agrément MiCA européen)
-        et listent {cryptoName} en avril 2026. Cliquez pour ouvrir un compte directement
-        depuis le lien d'affiliation Cryptoreflex (sans surcoût pour vous).
+        et listent {cryptoName} en avril 2026. Clique pour ouvrir un compte directement
+        depuis le lien d'affiliation Cryptoreflex (sans surcoût pour toi).
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

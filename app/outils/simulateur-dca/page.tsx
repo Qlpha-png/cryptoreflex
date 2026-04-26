@@ -44,22 +44,22 @@ const FAQ_ITEMS = [
   {
     question: "Le DCA est-il vraiment plus performant qu'un achat unique ?",
     answer:
-      "Pas toujours. Statistiquement, sur les marchés haussiers de long terme (comme le Bitcoin entre 2020 et 2024), un achat unique au début surperforme souvent le DCA. En revanche, le DCA réduit drastiquement le risque de timing — vous évitez d'acheter juste avant un krach. C'est un trade-off entre performance maximale et tranquillité d'esprit.",
+      "Pas toujours. Statistiquement, sur les marchés haussiers de long terme (comme le Bitcoin entre 2020 et 2024), un achat unique au début surperforme souvent le DCA. En revanche, le DCA réduit drastiquement le risque de timing — tu évites d'acheter juste avant un krach. C'est un trade-off entre performance maximale et tranquillité d'esprit.",
   },
   {
     question: "Sur quelles données est basé ce simulateur ?",
     answer:
-      "Les prix historiques proviennent de l'API publique CoinGecko (clôtures quotidiennes en EUR), couvrant jusqu'à 5 ans glissants. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoutez ces frais à votre prix moyen.",
+      "Les prix historiques proviennent de l'API publique CoinGecko (clôtures quotidiennes en EUR), couvrant jusqu'à 5 ans glissants. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoute ces frais à ton prix moyen.",
   },
   {
     question: "Quelle plateforme propose du DCA automatique en France ?",
     answer:
-      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Coinbase et Bitpanda proposent aussi des achats récurrents sur Ethereum et Solana. Sur la plupart des grandes plateformes, vous pouvez programmer un virement SEPA mensuel et un ordre d'achat automatique.",
+      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Coinbase et Bitpanda proposent aussi des achats récurrents sur Ethereum et Solana. Sur la plupart des grandes plateformes, tu peux programmer un virement SEPA mensuel et un ordre d'achat automatique.",
   },
   {
     question: "Quel montant DCA pour débuter ?",
     answer:
-      "Il n'y a pas de minimum universel, mais la règle est simple : ne jamais investir plus que ce que vous pouvez vous permettre de perdre. Beaucoup d'investisseurs commencent à 50-100 € par mois sur Bitcoin uniquement, puis diversifient progressivement. L'important est la régularité, pas le montant.",
+      "Il n'y a pas de minimum universel, mais la règle est simple : ne jamais investir plus que ce que tu peux te permettre de perdre. Beaucoup d'investisseurs commencent à 50-100 € par mois sur Bitcoin uniquement, puis diversifient progressivement. L'important est la régularité, pas le montant.",
   },
   {
     question: "Combien de temps faut-il faire du DCA ?",

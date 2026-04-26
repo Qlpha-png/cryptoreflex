@@ -45,7 +45,7 @@ const FAQ_ITEMS = [
   {
     question: "Comment fonctionne l'outil Whitepaper TL;DR ?",
     answer:
-      "Vous collez le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une serie d'heuristiques (regex et detection de mots-cles) puis retourne un resume structure FR (probleme, solution, tokenomics, equipe), une liste de red flags detectes, un score BS sur 100 et un verdict (Serieux, Mitige ou Suspect).",
+      "Tu colles le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une serie d'heuristiques (regex et detection de mots-cles) puis retourne un resume structure FR (probleme, solution, tokenomics, equipe), une liste de red flags detectes, un score BS sur 100 et un verdict (Serieux, Mitige ou Suspect).",
   },
   {
     question: "Mes donnees sont-elles stockees ?",

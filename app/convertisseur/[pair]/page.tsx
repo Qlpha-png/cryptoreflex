@@ -192,7 +192,7 @@ export default async function PairPage({ params }: PageProps) {
               Convertisseur {fromName} → {toName}
             </h2>
             <p className="text-white/70">
-              Cette page vous permet de convertir{" "}
+              Cette page te permet de convertir{" "}
               <strong className="text-white">{fromName} ({fromUp})</strong> en{" "}
               <strong className="text-white">{toName} ({toUp})</strong> avec le taux
               de change marché actuel. Les données proviennent de l'API CoinGecko,
@@ -200,12 +200,12 @@ export default async function PairPage({ params }: PageProps) {
               (Binance, Coinbase, Kraken…). Le taux est rafraîchi toutes les 60 secondes.
             </p>
             <p className="text-white/70 mt-3">
-              Pour une conversion réelle (achat / vente), passez par une plateforme
+              Pour une conversion réelle (achat / vente), passe par une plateforme
               régulée MiCA en France. Notre{" "}
               <Link href="/comparatif" className="text-primary-soft hover:text-primary-glow">
                 comparatif des plateformes crypto
               </Link>{" "}
-              vous aide à choisir celle avec les frais les plus bas pour la paire {fromUp}/{toUp}.
+              t'aide à choisir celle avec les frais les plus bas pour la paire {fromUp}/{toUp}.
             </p>
           </div>
 

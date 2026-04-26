@@ -69,7 +69,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "À quelle fréquence l'indice est-il mis à jour ?",
-    a: "L'API publie un nouveau score chaque jour, généralement vers minuit UTC. Cette page Cryptoreflex met en cache la donnée pendant 1 heure côté serveur (ISR Next.js) pour économiser les appels API. Si vous voyez un score qui semble bloqué pendant plusieurs heures, c'est normal — alternative.me publie une seule valeur par jour.",
+    a: "L'API publie un nouveau score chaque jour, généralement vers minuit UTC. Cette page Cryptoreflex met en cache la donnée pendant 1 heure côté serveur (ISR Next.js) pour économiser les appels API. Si tu vois un score qui semble bloqué pendant plusieurs heures, c'est normal — alternative.me publie une seule valeur par jour.",
   },
   {
     q: "Quelle est la différence avec le Fear & Greed des actions ?",
@@ -298,7 +298,7 @@ export default async function FearGreedPage() {
               <div>
                 <p className="text-sm text-fg/85 leading-relaxed">
                   Un graphique d'historique sur 30, 90 et 365 jours sera
-                  disponible prochainement (V2). En attendant, vous pouvez
+                  disponible prochainement (V2). En attendant, tu peux
                   consulter l'historique complet directement sur{" "}
                   <a
                     href="https://alternative.me/crypto/fear-and-greed-index/"

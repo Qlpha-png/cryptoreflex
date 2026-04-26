@@ -108,7 +108,7 @@ const faqs = [
     a: "Un lien de désinscription en 1 clic est présent en bas de chaque email. Pas de friction, pas de confirmation, pas de formulaire à rallonge.",
   },
   {
-    q: "Vous donnez des conseils d'investissement ?",
+    q: "Tu donnes des conseils d'investissement ?",
     a: "Non. Cryptoreflex n'est pas un PSAN ni un conseiller financier. La newsletter délivre de l'information factuelle sur le marché crypto, pas des recommandations d'achat ou de vente.",
   },
   {

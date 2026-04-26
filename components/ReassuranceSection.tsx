@@ -4,9 +4,9 @@ import {
   Eye,
   Calendar,
   Award,
-  Users,
+  Sparkles,
   Building2,
-  Newspaper,
+  BookOpen,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -17,18 +17,26 @@ interface ReassuranceItem {
   hint?: string;
 }
 
+/**
+ * Métriques affichées en bandeau de réassurance.
+ *
+ * Audit crédibilité 26/04/2026 :
+ *  - L'ancienne carte "10 000+ visiteurs/mois" a été supprimée (mensonge :
+ *    site lancé le 15/04/2026, audience réelle 0-50 visiteurs/jour).
+ *  - L'ancienne carte "60+ plateformes auditées" a été remplacée par
+ *    "11 plateformes comparées" (chiffre réel = nombre d'entrées dans
+ *    data/platforms.json, vérifiable).
+ *  - On garde la 4e carte "Lancement avril 2026" pour transformer la jeunesse
+ *    en gage de transparence (+ lien vers /impact pour le dashboard public).
+ *  - Toute future remontée d'un chiffre doit s'appuyer sur une donnée
+ *    auditable (Plausible public, Beehiiv public, etc.).
+ */
 const ITEMS: ReassuranceItem[] = [
   {
-    Icon: Users,
-    value: "10 000+",
-    label: "Visiteurs / mois",
-    hint: "Audience FR vérifiée Plausible",
-  },
-  {
     Icon: Award,
-    value: "60+",
-    label: "Plateformes auditées",
-    hint: "PSAN, brokers, exchanges",
+    value: "11",
+    label: "Plateformes comparées",
+    hint: "PSAN, brokers, exchanges régulés MiCA",
   },
   {
     Icon: Eye,
@@ -41,6 +49,12 @@ const ITEMS: ReassuranceItem[] = [
     value: "Mensuelle",
     label: "Mise à jour des comparatifs",
     hint: "Statut MiCA suivi en temps réel",
+  },
+  {
+    Icon: Sparkles,
+    value: "Avril 2026",
+    label: "Site lancé en transparence",
+    hint: "Audience en construction — dashboard public sur /impact",
   },
 ];
 
@@ -73,20 +87,36 @@ const REGULATORS: RegulatorBadge[] = [
   },
 ];
 
-// "Vu dans" — placeholder à remplir avec presse réelle dès qu'on a des mentions
-const PRESS_PLACEHOLDERS: string[] = [
-  "Les Échos",
-  "BFM Crypto",
-  "Cointribune",
-  "Journal du Coin",
+/**
+ * Sources publiques effectivement citées dans nos comparatifs/articles.
+ * Remplace l'ancien bloc "Vu dans (bientôt)" (Les Échos / BFM / Cointribune
+ * / JDC) — supprimé le 26/04/2026 car aucune mention presse réelle à ce jour
+ * (loi influenceurs n°2023-451 + loyauté CNIL/AMF).
+ *
+ * Liste à compléter en restant strict : seulement les sources qu'on cite
+ * vraiment dans le contenu (jamais d'autorité prêtée).
+ */
+interface CitedSource {
+  short: string;
+  full: string;
+}
+
+const CITED_SOURCES: CitedSource[] = [
+  { short: "ESMA", full: "Autorité européenne des marchés financiers" },
+  { short: "AMF", full: "Registre PSAN, communications officielles" },
+  { short: "BOFiP", full: "Doctrine fiscale française" },
+  { short: "CoinGecko", full: "Données de marché (prix, capitalisations)" },
+  { short: "Trustpilot", full: "Avis utilisateurs publics agrégés" },
 ];
 
 /**
- * Bandeau "pourquoi nous croire" — réassurance critique pour un débutant crypto FR méfiant.
- * Score audit UX 5/10 → on remonte avec :
- *  - Métriques quantifiées (10k+ visiteurs, 60+ plateformes auditées)
+ * Bandeau "pourquoi nous croire" — réassurance critique pour un débutant
+ * crypto FR méfiant.
+ *
+ * Refonte 26/04/2026 (audit crédibilité P0) :
+ *  - Métriques honnêtes seulement (chiffres vérifiables dans le repo)
  *  - Logos régulateurs (AMF, ESMA, MiCA, TRACFIN)
- *  - "Vu dans" (placeholder, à remplir avec vraie presse)
+ *  - "Sources que nous citons" remplace "Vu dans (bientôt)"
  */
 export default function ReassuranceSection() {
   return (
@@ -142,29 +172,33 @@ export default function ReassuranceSection() {
           </ul>
         </div>
 
-        {/* "Vu dans" — placeholder */}
+        {/* "Sources que nous citons" — remplace l'ancien "Vu dans (bientôt)"
+            qui prêtait des mentions presse non vérifiées (Les Échos, BFM,
+            Cointribune, JDC). Voir audit crédibilité 26/04/2026. */}
         <div className="mt-10 pt-8 border-t border-border">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Newspaper className="h-4 w-4 text-muted" />
+            <BookOpen className="h-4 w-4 text-muted" />
             <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Vu dans <span className="text-muted/60 normal-case font-normal">(bientôt)</span>
+              Sources que nous citons
             </p>
           </div>
           <ul
-            className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 opacity-50"
-            aria-label="Mentions presse à venir"
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
+            aria-label="Sources fact-checkées utilisées par Cryptoreflex"
           >
-            {PRESS_PLACEHOLDERS.map((media) => (
+            {CITED_SOURCES.map(({ short, full }) => (
               <li
-                key={media}
-                className="font-display text-base sm:text-lg font-semibold text-fg/60 italic"
+                key={short}
+                title={full}
+                className="font-display text-base sm:text-lg font-semibold text-fg/80"
               >
-                {media}
+                {short}
               </li>
             ))}
           </ul>
           <p className="mt-3 text-center text-[11px] text-muted/70">
-            Mentions presse en cours d'obtention — section actualisée dès publication.
+            Sources vérifiées à chaque mise à jour — aucune mention presse
+            n&apos;est revendiquée tant qu&apos;elle n&apos;est pas réelle.
           </p>
         </div>
 

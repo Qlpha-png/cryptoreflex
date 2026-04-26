@@ -186,7 +186,7 @@ function buildVerdict(a: Platform, b: Platform): { intro: string; pickA: string;
 
   let intro: string;
   if (Math.abs(a.scoring.global - b.scoring.global) < 0.2) {
-    intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${a.scoring.global} vs ${b.scoring.global}). C'est une comparaison où le bon choix dépend strictement de vos priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur votre profil de trading, l'importance de l'expérience mobile, et la place que vous accordez à un support en français.`;
+    intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${a.scoring.global} vs ${b.scoring.global}). C'est une comparaison où le bon choix dépend strictement de tes priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur ton profil de trading, l'importance de l'expérience mobile, et la place que tu accordes à un support en français.`;
   } else if (a.scoring.global > b.scoring.global) {
     intro = `${a.name} (${a.scoring.global}/5) devance ${b.name} (${b.scoring.global}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${b.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
   } else {
@@ -195,21 +195,21 @@ function buildVerdict(a: Platform, b: Platform): { intro: string; pickA: string;
 
   const pickA =
     aFeesAdv > 0.3
-      ? `Choisissez ${a.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${a.fees.spotMaker}% vs ${b.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
+      ? `Choisis ${a.name} si tu trades régulièrement en spot — tu économises du capital à chaque opération sur les frais (${a.fees.spotMaker}% vs ${b.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv > 0.3
-        ? `Choisissez ${a.name} si la sécurité est votre priorité non-négociable. ${a.security.coldStoragePct}% en cold storage et un score MiCA ${a.scoring.mica}/5 placent la barre haut.`
+        ? `Choisis ${a.name} si la sécurité est ta priorité non-négociable. ${a.security.coldStoragePct}% en cold storage et un score MiCA ${a.scoring.mica}/5 placent la barre haut.`
         : aUxAdv > 0.3
-          ? `Choisissez ${a.name} si l'expérience utilisateur est déterminante — l'app mobile note ${a.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
-          : `Choisissez ${a.name} si vous valorisez : ${a.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${b.name}.`;
+          ? `Choisis ${a.name} si l'expérience utilisateur est déterminante — l'app mobile note ${a.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
+          : `Choisis ${a.name} si tu valorises : ${a.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${b.name}.`;
 
   const pickB =
     aFeesAdv < -0.3
-      ? `Choisissez ${b.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${b.fees.spotMaker}% vs ${a.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
+      ? `Choisis ${b.name} si tu trades régulièrement en spot — tu économises du capital à chaque opération sur les frais (${b.fees.spotMaker}% vs ${a.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv < -0.3
-        ? `Choisissez ${b.name} si la sécurité est votre priorité non-négociable. ${b.security.coldStoragePct}% en cold storage et un score MiCA ${b.scoring.mica}/5 placent la barre haut.`
+        ? `Choisis ${b.name} si la sécurité est ta priorité non-négociable. ${b.security.coldStoragePct}% en cold storage et un score MiCA ${b.scoring.mica}/5 placent la barre haut.`
         : aUxAdv < -0.3
-          ? `Choisissez ${b.name} si l'expérience utilisateur est déterminante — l'app mobile note ${b.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
-          : `Choisissez ${b.name} si vous valorisez : ${b.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${a.name}.`;
+          ? `Choisis ${b.name} si l'expérience utilisateur est déterminante — l'app mobile note ${b.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
+          : `Choisis ${b.name} si tu valorises : ${b.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${a.name}.`;
 
   const tradeoff = `Le vrai trade-off entre ${a.name} et ${b.name} se joue sur ${
     Math.abs(aFeesAdv) > Math.abs(aUxAdv) && Math.abs(aFeesAdv) > Math.abs(aSecAdv)
@@ -361,7 +361,7 @@ export default function ComparisonPage({ params }: Props) {
           [
             { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${a.fees.spotMaker}% en maker contre ${b.fees.spotMaker}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
             { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `Les deux plateformes opèrent sous agrément MiCA en France. La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
-            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Notes d'app mobile, Trustpilot et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil — un investisseur passif accordera plus de poids à l'app, un trader actif au catalogue.` },
+            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Notes d'app mobile, Trustpilot et taille du catalogue. Ces métriques ne pèsent pas pareil selon ton profil — un investisseur passif accordera plus de poids à l'app, un trader actif au catalogue.` },
             { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (KYC bloqué, retrait en attente, suspicion de fraude), la qualité du support fait la différence entre une résolution en 24h et un mois de cauchemar administratif.` },
           ] as const
         ).map((section) => (
@@ -534,7 +534,7 @@ export default function ComparisonPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). Les liens marqués « Publicité » génèrent une commission à {BRAND.name} sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
+            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). Les liens marqués « Publicité » génèrent une commission à {BRAND.name} sans surcoût pour toi, ce qui n'influence pas l'attribution du verdict — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
           </p>
         </section>
       </div>

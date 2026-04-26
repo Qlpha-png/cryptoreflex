@@ -128,7 +128,7 @@ export default function CookieBanner() {
                 id={titleId}
                 className="text-base sm:text-lg font-bold tracking-tight"
               >
-                Nous respectons votre vie privée
+                Nous respectons ta vie privée
               </h2>
               <p
                 id={descId}
@@ -137,8 +137,8 @@ export default function CookieBanner() {
                 Cryptoreflex utilise{" "}
                 <strong className="text-fg">Plausible Analytics</strong>{" "}
                 (RGPD-friendly, sans cookie de tracking) pour mesurer
-                l'audience. Aucun cookie publicitaire n'est déposé sans votre
-                accord. Vous pouvez modifier vos choix à tout moment depuis la
+                l'audience. Aucun cookie publicitaire n'est déposé sans ton
+                accord. Tu peux modifier tes choix à tout moment depuis la
                 page{" "}
                 <a
                   href="/confidentialite"

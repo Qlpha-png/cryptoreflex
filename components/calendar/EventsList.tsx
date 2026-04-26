@@ -45,7 +45,7 @@ export default function EventsList({ events }: EventsListProps) {
     return (
       <div className="rounded-2xl border border-dashed border-border bg-surface/40 p-12 text-center">
         <p className="text-body text-muted">
-          Aucun événement ne correspond à vos filtres.
+          Aucun événement ne correspond à tes filtres.
         </p>
       </div>
     );

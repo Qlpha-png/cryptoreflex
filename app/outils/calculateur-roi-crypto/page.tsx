@@ -86,17 +86,17 @@ const FAQ_ITEMS = [
   {
     question: "À partir de quel montant les plus-values crypto sont-elles imposables ?",
     answer:
-      "Le seuil annuel d'exonération est de 305 € de cessions totales (vers euros ou stablecoins). En-dessous, aucune imposition. Au-delà, vous devez déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
+      "Le seuil annuel d'exonération est de 305 € de cessions totales (vers euros ou stablecoins). En-dessous, aucune imposition. Au-delà, tu dois déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
   },
   {
     question: "Faut-il déclarer même si on n'a pas vendu en euros ?",
     answer:
-      "Oui. Les conversions crypto-vers-stablecoin (USDC, USDT, DAI) sont assimilées à des cessions taxables par l'administration fiscale française. En revanche, les conversions crypto-vers-crypto pures sont exonérées tant qu'on ne touche pas à un stablecoin ou à un FIAT. Pour un calcul exhaustif, utilisez notre calculateur fiscalité complet.",
+      "Oui. Les conversions crypto-vers-stablecoin (USDC, USDT, DAI) sont assimilées à des cessions taxables par l'administration fiscale française. En revanche, les conversions crypto-vers-crypto pures sont exonérées tant qu'on ne touche pas à un stablecoin ou à un FIAT. Pour un calcul exhaustif, utilise notre calculateur fiscalité complet.",
   },
   {
     question: "Cet outil est-il fiable pour préparer ma déclaration ?",
     answer:
-      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, vous devez agréger l'ensemble de vos cessions de l'année, calculer le prix moyen pondéré d'acquisition (PMPA) et remplir le Cerfa 2086. Notre outil dédié /outils/calculateur-fiscalite gère cette complexité, ou consultez un expert-comptable spécialisé crypto.",
+      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, tu dois agréger l'ensemble de tes cessions de l'année, calculer le prix moyen pondéré d'acquisition (PMPA) et remplir le Cerfa 2086. Notre outil dédié /outils/calculateur-fiscalite gère cette complexité, ou consulte un expert-comptable spécialisé crypto.",
   },
 ];
 

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-25",
+    "lastUpdated": "2026-04-26",
     "purpose": "10 cryptos moins connues mais avec fondamentaux solides + reliability scoring",
     "selectionCriteria": [
       "Cap entre 100M$ et 5Md$",
@@ -42,7 +42,7 @@
         "Inflation annuelle ~5% qui dilue les holders"
       ],
       "useCase": "dApps haute performance, agents IA on-chain, micro-paiements, NFT gaming, comptes abstraits",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "Bybit"],
       "officialUrl": "https://near.org",
       "monitoringSignals": [
         "Comptes actifs quotidiens sur nearblocks.io (objectif >500k DAU)",
@@ -79,7 +79,7 @@
         "Forte inflation (8% annuel) et déblocages VC en cours"
       ],
       "useCase": "Stockage de données pour rollups Ethereum, sovereign rollups, app-chains modulaires, gaming on-chain à coût réduit",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://celestia.org",
       "monitoringSignals": [
         "Nombre de rollups utilisant Celestia DA (Modular.cloud)",
@@ -116,7 +116,7 @@
         "Demande de queries payantes encore inférieure aux récompenses inflationnaires"
       ],
       "useCase": "Indexation pour dApps, dashboards analytiques, oracles de données historiques, agents IA",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitstamp", "Bitget"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://thegraph.com",
       "monitoringSignals": [
         "Query fees payés en GRT par mois",
@@ -153,7 +153,7 @@
         "Demande GPU IA dépend de la demande globale (AWS, GCP restent dominants)"
       ],
       "useCase": "Rendu 3D pour films/jeux, entraînement et inférence de modèles IA, génération d'images, métaverses 3D",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://rendernetwork.com",
       "monitoringSignals": [
         "Jobs de rendu complétés par mois (dashboard Render)",
@@ -190,7 +190,7 @@
         "Dépendance aux taux d'intérêt US"
       ],
       "useCase": "Investissement institutionnel on-chain, collatéral DeFi à rendement, gestion de trésorerie DAO, accès non-US aux Treasuries",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://ondo.finance",
       "monitoringSignals": [
         "TVL des produits OUSG et USDY sur DefiLlama",
@@ -227,7 +227,7 @@
         "Token ARB a une utilité limitée (gouvernance uniquement)"
       ],
       "useCase": "DeFi à frais réduits (GMX, Camelot, Pendle), gaming on-chain, NFT, lancement de L3 via Arbitrum Orbit",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "Bybit"],
       "officialUrl": "https://arbitrum.io",
       "monitoringSignals": [
         "TVL Arbitrum One sur DefiLlama (objectif >10Md$)",
@@ -264,7 +264,7 @@
         "Token PYTH avec déblocages massifs jusqu'en 2027"
       ],
       "useCase": "Oracles de prix pour DEX, lending protocols, dérivés on-chain, données financières institutionnelles, RWA pricing",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://pyth.network",
       "monitoringSignals": [
         "Total Value Secured (TVS) sur pyth.network",
@@ -301,7 +301,7 @@
         "Inflation FIL importante via les récompenses aux storage providers"
       ],
       "useCase": "Stockage décentralisé, archivage long terme, datasets IA, NFT metadata, sauvegardes d'entreprise, données scientifiques",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitstamp", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://filecoin.io",
       "monitoringSignals": [
         "Données réelles stockées vs capacité totale (filfox.info)",
@@ -338,7 +338,7 @@
         "Écosystème dApps encore limité"
       ],
       "useCase": "DEX de dérivés perpétuels, options on-chain, prediction markets, tokenisation d'actifs synthétiques, structured products",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "OKX"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://injective.com",
       "monitoringSignals": [
         "Volume burn auction hebdomadaire (injburn.com)",
@@ -375,7 +375,7 @@
         "Liquidity faible, volatilité élevée"
       ],
       "useCase": "Identité décentralisée privée, KYC zero-knowledge, vérification off-chain (credit scoring, attestations), oracles privés, voting privé",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "OKX", "Bitget"],
+      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
       "officialUrl": "https://minaprotocol.com",
       "monitoringSignals": [
         "Nombre de zkApps déployés sur le mainnet (minascan.io)",

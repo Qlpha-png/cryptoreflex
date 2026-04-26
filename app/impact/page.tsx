@@ -421,8 +421,8 @@ export default function ImpactPage() {
                 de chiffres gonflés, pas de «&nbsp;+1 200 utilisateurs
                 actifs&nbsp;» fantômes&nbsp;: si on en compte 12, on écrit 12.
                 Cette honnêteté brute est notre seul vrai différenciant face
-                aux comparateurs historiques. Quand vous ouvrez un compte via
-                un lien {BRAND.name}, vous savez exactement où vous tombez et
+                aux comparateurs historiques. Quand tu ouvres un compte via
+                un lien {BRAND.name}, tu sais exactement où tu tombes et
                 combien on touche.
               </p>
               <div className="flex flex-wrap items-center gap-4 pt-2">

@@ -26,7 +26,10 @@ const PLATFORMS: Platform[] = [
     tagline:
       "L'app bancaire qui permet aussi d'acheter de la crypto en quelques secondes — idéal pour démarrer.",
     rating: 4.5,
-    bonus: "Compte gratuit + frais réduits le 1er mois",
+    // Audit P1-9 (2026-04-26) : bonus chiffrés obsolètes en zone UE post-MiCA.
+    // On affiche un libellé générique pour rester conforme à la loi commerciale FR
+    // (pas de promesse engageante non vérifiée). Détails à voir sur la plateforme.
+    bonus: "Bonus actuel — voir conditions sur la plateforme",
     features: [
       "Achat de 100+ cryptos en un clic",
       "Compte multi-devises",
@@ -43,7 +46,7 @@ const PLATFORMS: Platform[] = [
     tagline:
       "L'une des plateformes les plus régulées au monde, parfaite pour acheter ses premières cryptos en toute sérénité.",
     rating: 4.6,
-    bonus: "10$ offerts en BTC à l'inscription",
+    bonus: "Bonus actuel — voir conditions sur la plateforme",
     features: [
       "Régulée aux US et en Europe",
       "Interface ultra simple",
@@ -60,7 +63,7 @@ const PLATFORMS: Platform[] = [
     tagline:
       "Le plus grand exchange au monde — frais bas et catalogue de cryptos imbattable pour aller plus loin.",
     rating: 4.7,
-    bonus: "Jusqu'à 100$ en bons de trading",
+    bonus: "Bonus actuel — voir conditions sur la plateforme",
     features: [
       "Frais à partir de 0,1%",
       "+350 cryptos disponibles",
@@ -76,7 +79,7 @@ const PLATFORMS: Platform[] = [
     tagline:
       "Plateforme européenne 100% régulée — crypto, actions et métaux précieux dans la même app.",
     rating: 4.4,
-    bonus: "1$ offert sur ton premier achat",
+    bonus: "Bonus actuel — voir conditions sur la plateforme",
     features: [
       "Basée en Autriche, conforme MiCA",
       "Investissement programmé (DCA)",
@@ -92,7 +95,7 @@ const PLATFORMS: Platform[] = [
     tagline:
       "Pionnier du secteur, réputé pour sa sécurité et sa transparence — un favori des investisseurs sérieux.",
     rating: 4.5,
-    bonus: "Frais réduits sur les paires spot",
+    bonus: "Bonus actuel — voir conditions sur la plateforme",
     features: [
       "Réserves prouvées (Proof of Reserves)",
       "Interface Pro pour traders",
@@ -108,7 +111,7 @@ const PLATFORMS: Platform[] = [
     tagline:
       "Le portefeuille matériel le plus vendu au monde — pour stocker tes cryptos hors ligne, en sécurité.",
     rating: 4.8,
-    bonus: "-10% sur Ledger Nano S Plus",
+    bonus: "Promotions matériel — voir boutique officielle",
     features: [
       "Sécurité hardware niveau bancaire",
       "Compatible 5 500+ cryptos",
@@ -134,7 +137,7 @@ export default function PlatformsSection() {
           </h2>
           <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
             Sélection des exchanges et wallets les plus fiables. Cliquer sur une carte
-            ouvre la plateforme avec un bonus de bienvenue exclusif.
+            ouvre la plateforme partenaire (vérifie les bonus en cours sur place).
           </p>
         </div>
 
@@ -147,8 +150,8 @@ export default function PlatformsSection() {
         </div>
 
         <p className="mt-6 sm:mt-8 text-xs text-muted leading-relaxed">
-          Liens d'affiliation : nous touchons une commission si vous vous inscrivez via ces
-          liens, sans surcoût pour vous. Cela nous permet de garder le site gratuit.
+          Liens d'affiliation : nous touchons une commission si tu t'inscris via ces
+          liens, sans surcoût pour toi. Cela nous permet de garder le site gratuit.
         </p>
 
         {/* Avertissement AMF — article 222-15 */}

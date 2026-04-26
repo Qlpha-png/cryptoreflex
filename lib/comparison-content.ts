@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Génération du contenu rédactionnel (1500+ mots / unique) pour chaque page
  * /comparatif/[slug]. Approche hybride :
  *
@@ -133,7 +133,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
   return [
     {
       question: `${a.name} ou ${b.name} : laquelle est la moins chère en frais ?`,
-      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Sur l'achat instantané CB, ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si vous tradez plus que vous ne HODLez.`,
+      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Sur l'achat instantané CB, ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si tu trades plus que tu ne HODLez.`,
     },
     {
       question: `${a.name} et ${b.name} sont-elles régulées MiCA en France ?`,
@@ -149,7 +149,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
     },
     {
       question: `Peut-on cumuler les bonus de bienvenue ${a.name} et ${b.name} ?`,
-      answer: `Oui — chaque inscription est indépendante. ${a.bonus.welcome ? `${a.name} : ${a.bonus.welcome}.` : ""} ${b.bonus.welcome ? `${b.name} : ${b.bonus.welcome}.` : ""} Cumul recommandé pour tester les deux interfaces avec un capital limité avant de centraliser sur la plateforme qui correspond le mieux à votre usage. Vérifiez les conditions de déblocage (montant minimum, KYC complet).`,
+      answer: `Oui — chaque inscription est indépendante. ${a.bonus.welcome ? `${a.name} : ${a.bonus.welcome}.` : ""} ${b.bonus.welcome ? `${b.name} : ${b.bonus.welcome}.` : ""} Cumul recommandé pour tester les deux interfaces avec un capital limité avant de centraliser sur la plateforme qui correspond le mieux à ton usage. Vérifiez les conditions de déblocage (montant minimum, KYC complet).`,
     },
   ];
 }
@@ -181,12 +181,12 @@ function defaultProfiles(a: Platform, b: Platform): ProfileVerdict[] {
     {
       profile: "trader_actif",
       winner: traderWinner,
-      reasoning: `Si vous tradez plusieurs fois par semaine, chaque point de base compte. ${traderWinner === "a" ? a.name : traderWinner === "b" ? b.name : "Les deux plateformes"} affiche${traderWinner === "tie" ? "nt" : ""} les frais taker les plus bas (${traderWinner === "a" ? fmtPct(a.fees.spotTaker) : traderWinner === "b" ? fmtPct(b.fees.spotTaker) : `${fmtPct(a.fees.spotTaker)} = ${fmtPct(b.fees.spotTaker)}`}), avec une liquidité suffisante pour exécuter des ordres marché sans slippage majeur sur les paires majeures.`,
+      reasoning: `Si tu trades plusieurs fois par semaine, chaque point de base compte. ${traderWinner === "a" ? a.name : traderWinner === "b" ? b.name : "Les deux plateformes"} affiche${traderWinner === "tie" ? "nt" : ""} les frais taker les plus bas (${traderWinner === "a" ? fmtPct(a.fees.spotTaker) : traderWinner === "b" ? fmtPct(b.fees.spotTaker) : `${fmtPct(a.fees.spotTaker)} = ${fmtPct(b.fees.spotTaker)}`}), avec une liquidité suffisante pour exécuter des ordres marché sans slippage majeur sur les paires majeures.`,
     },
     {
       profile: "investisseur_francais",
       winner: frWinner,
-      reasoning: `Pour un résident fiscal français qui veut un interlocuteur en France et une déclaration simplifiée, ${frWinner === "a" ? a.name : frWinner === "b" ? b.name : "les deux options se valent"}. ${frWinner !== "tie" ? `Avantage à ${frWinner === "a" ? a.name : b.name} grâce à ${(frWinner === "a" ? a.mica.amfRegistration : b.mica.amfRegistration) ? "son enregistrement AMF (PSAN) historique" : "son support client en français"} — élément clé en cas de litige ou de demande de l'administration fiscale.` : `Aucun atout local décisif d'un côté ou de l'autre — choisissez selon vos autres priorités (frais, catalogue).`}`,
+      reasoning: `Pour un résident fiscal français qui veut un interlocuteur en France et une déclaration simplifiée, ${frWinner === "a" ? a.name : frWinner === "b" ? b.name : "les deux options se valent"}. ${frWinner !== "tie" ? `Avantage à ${frWinner === "a" ? a.name : b.name} grâce à ${(frWinner === "a" ? a.mica.amfRegistration : b.mica.amfRegistration) ? "son enregistrement AMF (PSAN) historique" : "son support client en français"} — élément clé en cas de litige ou de demande de l'administration fiscale.` : `Aucun atout local décisif d'un côté ou de l'autre — choisissez selon tes autres priorités (frais, catalogue).`}`,
     },
   ];
 }
@@ -204,7 +204,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour 90 % des Français qui débutent : ${b.name} (interface, MiCA solide). Pour qui veut trader actif et explorer 380+ altcoins : ${a.name}, à condition d'accepter une UX plus dense.`,
     finalVerdict: (a, b) =>
-      `${b.name} reste notre recommandation par défaut pour les particuliers français : agrément MiCA via E2023-035, plateforme cotée NASDAQ (transparence comptable), interface qui pardonne aux débutants. ${a.name} prend l'avantage dès que vous dépassez 1 000 € de volume mensuel ou que vous voulez accéder aux altcoins exotiques : les frais de 0,1 % maker/taker sont 4 à 6 fois moins chers que ${b.name} (0,4 / 0,6 %), et le catalogue de 380 cryptos couvre 95 % des opportunités. La friction reste l'historique réglementaire de ${a.name} (SEC US, DOJ) — sans impact direct sur les utilisateurs européens depuis l'agrément MiCA, mais à garder en tête.`,
+      `${b.name} reste notre recommandation par défaut pour les particuliers français : agrément MiCA via E2023-035, plateforme cotée NASDAQ (transparence comptable), interface qui pardonne aux débutants. ${a.name} prend l'avantage dès que tu dépassez 1 000 € de volume mensuel ou que tu veux accéder aux altcoins exotiques : les frais de 0,1 % maker/taker sont 4 à 6 fois moins chers que ${b.name} (0,4 / 0,6 %), et le catalogue de 380 cryptos couvre 95 % des opportunités. La friction reste l'historique réglementaire de ${a.name} (SEC US, DOJ) — sans impact direct sur les utilisateurs européens depuis l'agrément MiCA, mais à garder en tête.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -255,7 +255,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour le trader actif qui maximise frais et choix : ${a.name}. Pour qui dort mieux la nuit avec un acteur jamais hacké en 14 ans : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} reste, à frais quasi équivalents (0,16/0,26 % vs 0,1/0,1 %), la plateforme la plus saine du marché : aucun hack majeur depuis 2011, Proof-of-Reserves audité trimestriellement, support téléphonique en français — un combo rare. ${a.name} compense par un catalogue 30 % plus large (380 vs 290), la liquidité spot la plus profonde au monde et un écosystème futures complet. Pour la majorité des particuliers européens, l'écart de frais n'est pas décisif (0,16 % suffit). Conclusion : ${b.name} pour la tranquillité, ${a.name} si vous cherchez un asset spécifique introuvable ailleurs ou si vous tradez plus de 5 000 € / mois.`,
+      `${b.name} reste, à frais quasi équivalents (0,16/0,26 % vs 0,1/0,1 %), la plateforme la plus saine du marché : aucun hack majeur depuis 2011, Proof-of-Reserves audité trimestriellement, support téléphonique en français — un combo rare. ${a.name} compense par un catalogue 30 % plus large (380 vs 290), la liquidité spot la plus profonde au monde et un écosystème futures complet. Pour la majorité des particuliers européens, l'écart de frais n'est pas décisif (0,16 % suffit). Conclusion : ${b.name} pour la tranquillité, ${a.name} si tu cherches un asset spécifique introuvable ailleurs ou si tu trades plus de 5 000 € / mois.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -265,7 +265,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour un Européen qui veut crypto + actions + or dans une seule app régulée : ${a.name}. Pour la sécurité d'une plateforme cotée NASDAQ et la marque la plus connue : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} est notre choix par défaut pour un investisseur européen long terme : agrément MiCA double (BaFin Allemagne + AMF France), 480 cryptos, plans d'épargne automatiques, et surtout la diversification multi-actifs (crypto + actions fractionnées + ETF + métaux précieux) — un atout structurel face à un pure-player crypto. ${b.name} reste imbattable sur deux dimensions : la confiance institutionnelle (cotée NASDAQ, communique des bilans audités tous les trimestres) et la pédagogie débutant (Coinbase Learn, programme Earn). Si vous voulez UNIQUEMENT du crypto et la marque la plus rassurante : ${b.name}. Si vous voulez bâtir un patrimoine diversifié dans une seule app : ${a.name}.`,
+      `${a.name} est notre choix par défaut pour un investisseur européen long terme : agrément MiCA double (BaFin Allemagne + AMF France), 480 cryptos, plans d'épargne automatiques, et surtout la diversification multi-actifs (crypto + actions fractionnées + ETF + métaux précieux) — un atout structurel face à un pure-player crypto. ${b.name} reste imbattable sur deux dimensions : la confiance institutionnelle (cotée NASDAQ, communique des bilans audités tous les trimestres) et la pédagogie débutant (Coinbase Learn, programme Earn). Si tu veux UNIQUEMENT du crypto et la marque la plus rassurante : ${b.name}. Si tu veux bâtir un patrimoine diversifié dans une seule app : ${a.name}.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -295,7 +295,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour un acteur 100 % français avec bureau Paris et support téléphonique : ${b.name}. Pour le meilleur rapport frais/catalogue européen : ${a.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} et ${a.name} ciblent tous les deux le marché français mais avec deux philosophies opposées. ${b.name} est le 1er PSAN enregistré en France (E2020-001), basé à Paris, avec support téléphonique en français et conseil patrimonial humain — un atout fort pour qui veut un interlocuteur identifié et la fiscalité simplifiée. Le prix : des frais parmi les plus élevés du marché (1,49 / 1,99 % spot, 2,49 % instant) et un catalogue limité (60 cryptos). ${a.name} offre frais 5x moins chers (0,15 / 0,25 %), catalogue 8x plus large (480 cryptos) et la diversification crypto + actions + métaux. Recommandation : ${b.name} si vous valorisez le contact humain et l'ancrage local au point de payer 5x plus cher en frais ; ${a.name} sinon.`,
+      `${b.name} et ${a.name} ciblent tous les deux le marché français mais avec deux philosophies opposées. ${b.name} est le 1er PSAN enregistré en France (E2020-001), basé à Paris, avec support téléphonique en français et conseil patrimonial humain — un atout fort pour qui veut un interlocuteur identifié et la fiscalité simplifiée. Le prix : des frais parmi les plus élevés du marché (1,49 / 1,99 % spot, 2,49 % instant) et un catalogue limité (60 cryptos). ${a.name} offre frais 5x moins chers (0,15 / 0,25 %), catalogue 8x plus large (480 cryptos) et la diversification crypto + actions + métaux. Recommandation : ${b.name} si tu valorisez le contact humain et l'ancrage local au point de payer 5x plus cher en frais ; ${a.name} sinon.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -335,7 +335,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour la liquidité maximale, l'écosystème complet et la marque #1 mondiale : ${a.name}. Pour le copy trading et les altcoins exotiques (800+) : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} reste le n°1 incontournable pour qui veut la liquidité maximale, un écosystème complet (Earn, Launchpad, NFT marketplace, Pay) et l'agrément MiCA via Binance France (E2022-037, AMF historique). ${b.name} se positionne comme le challenger spécialisé : leader mondial du copy trading (suivre les positions de traders performants), catalogue altcoins record (800+, dont mémecoins très récents), frais futures ultra-compétitifs. Le compromis ${b.name} : régulation MiCA via Lituanie (jeune, moins stricte que France/Allemagne), pas d'enregistrement AMF direct. Verdict : ${a.name} pour la majorité des cas d'usage ; ${b.name} si vous voulez tester le copy trading ou chercher un altcoin introuvable ailleurs.`,
+      `${a.name} reste le n°1 incontournable pour qui veut la liquidité maximale, un écosystème complet (Earn, Launchpad, NFT marketplace, Pay) et l'agrément MiCA via Binance France (E2022-037, AMF historique). ${b.name} se positionne comme le challenger spécialisé : leader mondial du copy trading (suivre les positions de traders performants), catalogue altcoins record (800+, dont mémecoins très récents), frais futures ultra-compétitifs. Le compromis ${b.name} : régulation MiCA via Lituanie (jeune, moins stricte que France/Allemagne), pas d'enregistrement AMF direct. Verdict : ${a.name} pour la majorité des cas d'usage ; ${b.name} si tu veux tester le copy trading ou chercher un altcoin introuvable ailleurs.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -367,7 +367,7 @@ export function buildComparisonCopy(
 
   /* ----------------------- TL;DR ----------------------- */
 
-  const tldrIntro = `${a.name} et ${b.name} sont deux des plateformes crypto les plus recherchées par les internautes francophones (${entry.volume_estime.toLocaleString("fr-FR")} requêtes/mois sur ce duel précis). Sur le papier, ${a.name} score ${fmtScore(a.scoring.global)} et ${b.name} ${fmtScore(b.scoring.global)} dans notre méthodologie Cryptoreflex. En pratique, le bon choix dépend de votre profil — ce comparatif détaille 15+ critères pour trancher en connaissance de cause. ${override?.angle ? `Angle clé : ${override.angle}.` : ""}`;
+  const tldrIntro = `${a.name} et ${b.name} sont deux des plateformes crypto les plus recherchées par les internautes francophones (${entry.volume_estime.toLocaleString("fr-FR")} requêtes/mois sur ce duel précis). Sur le papier, ${a.name} score ${fmtScore(a.scoring.global)} et ${b.name} ${fmtScore(b.scoring.global)} dans notre méthodologie Cryptoreflex. En pratique, le bon choix dépend de ton profil — ce comparatif détaille 15+ critères pour trancher en connaissance de cause. ${override?.angle ? `Angle clé : ${override.angle}.` : ""}`;
 
   const tldrBullets = [
     `Frais spot : ${a.name} ${fmtPct(a.fees.spotMaker)}/${fmtPct(a.fees.spotTaker)} vs ${b.name} ${fmtPct(b.fees.spotMaker)}/${fmtPct(b.fees.spotTaker)} — avantage ${fees.winner.name}.`,
@@ -400,7 +400,7 @@ export function buildComparisonCopy(
 
   const uxAnalysis = [
     `${ux.winner.name} affiche la meilleure note UX (${fmtScore(ux.winner.scoring.ux)} vs ${fmtScore(ux.loser.scoring.ux)}). Cela se vérifie dans 3 dimensions : la fluidité de l'onboarding KYC (passage de l'inscription à la première transaction en moins de 10 minutes en moyenne), la lisibilité de l'app mobile (notes ${ux.winner.ratings.appStore}/5 App Store, ${ux.winner.ratings.playStore}/5 Play Store), et la qualité du parcours d'achat.`,
-    `${ux.loser.name} reste tout à fait utilisable (${fmtScore(ux.loser.scoring.ux)} : ${ux.loser.ratings.appStore}/5 App Store, ${ux.loser.ratings.playStore}/5 Play Store), mais peut paraître plus dense sur certains parcours — typique des plateformes qui privilégient la profondeur fonctionnelle (trading avancé, dérivés) au détriment de la simplicité. Le verdict UX dépend donc fortement de votre profil : un débutant total privilégiera ${ux.winner.name}, un trader expérimenté valorisera la richesse fonctionnelle de ${ux.loser.name}.`,
+    `${ux.loser.name} reste tout à fait utilisable (${fmtScore(ux.loser.scoring.ux)} : ${ux.loser.ratings.appStore}/5 App Store, ${ux.loser.ratings.playStore}/5 Play Store), mais peut paraître plus dense sur certains parcours — typique des plateformes qui privilégient la profondeur fonctionnelle (trading avancé, dérivés) au détriment de la simplicité. Le verdict UX dépend donc fortement de ton profil : un débutant total privilégiera ${ux.winner.name}, un trader expérimenté valorisera la richesse fonctionnelle de ${ux.loser.name}.`,
   ];
 
   const supportAnalysis = [
@@ -409,7 +409,7 @@ export function buildComparisonCopy(
   ];
 
   const catalogAnalysis = [
-    `${cat.winner.name} domine sur le nombre brut de cryptos disponibles : ${cat.winner.cryptos.totalCount} cryptos contre ${cat.loser.cryptos.totalCount} pour ${cat.loser.name}. Cet écart est décisif si vous chassez les altcoins exotiques ou les nouvelles narratives (mémecoins Solana, tokens Layer 2, IA crypto). Pour 90 % des investisseurs qui restent sur top 30 (BTC, ETH, SOL, XRP, ADA…), les deux catalogues sont équivalents.`,
+    `${cat.winner.name} domine sur le nombre brut de cryptos disponibles : ${cat.winner.cryptos.totalCount} cryptos contre ${cat.loser.cryptos.totalCount} pour ${cat.loser.name}. Cet écart est décisif si tu chassez les altcoins exotiques ou les nouvelles narratives (mémecoins Solana, tokens Layer 2, IA crypto). Pour 90 % des investisseurs qui restent sur top 30 (BTC, ETH, SOL, XRP, ADA…), les deux catalogues sont équivalents.`,
     `Côté staking : ${a.name} ${a.cryptos.stakingAvailable ? `propose le staking sur ${a.cryptos.stakingCryptos.length} cryptos (${a.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking natif"}. ${b.name} ${b.cryptos.stakingAvailable ? `couvre ${b.cryptos.stakingCryptos.length} cryptos en staking (${b.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking"}. Le rendement varie de 3 % (ETH) à 15 % (cryptos émergentes), mais attention à la fiscalité française : les rewards de staking sont imposés à la valeur de marché au jour de réception (régime des BNC).`,
   ];
 
@@ -417,7 +417,7 @@ export function buildComparisonCopy(
 
   const finalVerdict = override?.finalVerdict
     ? override.finalVerdict(a, b)
-    : `Notre méthodologie place ${a.scoring.global >= b.scoring.global ? a.name : b.name} légèrement en tête (${fmtScore(Math.max(a.scoring.global, b.scoring.global))} vs ${fmtScore(Math.min(a.scoring.global, b.scoring.global))}), mais l'écart reste marginal. Les deux plateformes sont conformes MiCA et adaptées à un investisseur français en 2026. Le bon choix dépend de votre profil : voir la section "Quelle plateforme selon votre profil ?" ci-dessous pour une recommandation argumentée.`;
+    : `Notre méthodologie place ${a.scoring.global >= b.scoring.global ? a.name : b.name} légèrement en tête (${fmtScore(Math.max(a.scoring.global, b.scoring.global))} vs ${fmtScore(Math.min(a.scoring.global, b.scoring.global))}), mais l'écart reste marginal. Les deux plateformes sont conformes MiCA et adaptées à un investisseur français en 2026. Le bon choix dépend de ton profil : voir la section "Quelle plateforme selon ton profil ?" ci-dessous pour une recommandation argumentée.`;
 
   const profileVerdicts = override?.profiles
     ? override.profiles(a, b)

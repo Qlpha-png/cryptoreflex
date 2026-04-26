@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/academy-quizzes.ts — Quiz de validation par track (5 questions chacun).
  *
  * Hardcodé volontairement (pas de CMS) pour que le contenu pédagogique reste
@@ -79,7 +79,7 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Le PFU (flat tax) est de 30 % toutes-taxes-comprises : 12,8 % d'IR + 17,2 % de prélèvements sociaux. Une option pour le barème progressif (case 2OP) peut être plus avantageuse selon ton TMI.",
+      "Le PFU (flat tax) est de 30 % toutes-taxes-comprises : 12,8 % d'IR + 17,2 % de prélèvements sociaux. Une option pour le barème progressif (case 2OP) peut être plus avantageuse selon ta TMI.",
   },
   {
     id: "deb-q5-cold-vs-hot",
@@ -219,7 +219,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
       "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU 30% sur tes plus-values crypto ?",
     choices: [
       "Toujours.",
-      "Quand ton TMI est à 0% ou 11% : le total avec PS reste sous 30%.",
+      "Quand ta TMI est à 0% ou 11% : le total avec PS reste sous 30%.",
       "Quand tu es en TMI 45%.",
       "Jamais.",
     ],

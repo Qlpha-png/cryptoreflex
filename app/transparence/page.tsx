@@ -160,9 +160,9 @@ export default function TransparencePage() {
           </h1>
           <p className="mt-5 text-lg text-fg/80 leading-relaxed">
             {BRAND.name} est un comparateur indépendant financé par des liens
-            d'affiliation. Chaque fois que vous ouvrez un compte sur une
+            d'affiliation. Chaque fois que tu ouvres un compte sur une
             plateforme via l'un de nos liens, nous percevons une commission —
-            <strong className="text-fg"> sans aucun surcoût pour vous</strong>.
+            <strong className="text-fg"> sans aucun surcoût pour toi</strong>.
             Cette page liste exhaustivement nos partenariats actifs, leur
             statut réglementaire MiCA, et le type de rémunération perçu.
           </p>
@@ -304,24 +304,24 @@ export default function TransparencePage() {
               </h2>
               <div className="mt-3 space-y-3 text-fg/85 leading-relaxed text-sm sm:text-base">
                 <p>
-                  Quand vous cliquez sur un lien marqué « Publicité » et que
-                  vous ouvrez un compte chez la plateforme partenaire, votre
+                  Quand tu cliques sur un lien marqué « Publicité » et que
+                  tu ouvres un compte chez la plateforme partenaire, ton
                   navigateur transmet un identifiant unique (souvent un
                   paramètre <code className="rounded bg-surface px-1 py-0.5 text-xs">?ref=CRYPTOREFLEX</code> ou un cookie d'attribution)
-                  à la plateforme. Si vous remplissez ensuite la condition
+                  à la plateforme. Si tu remplis ensuite la condition
                   prévue par le programme — premier dépôt, premier trade,
                   achat hardware… — la plateforme nous reverse une commission
                   qui peut être un montant fixe (ex&nbsp;: 10€ pour Bitpanda),
-                  un pourcentage des frais que vous payez (ex&nbsp;: 50% sur 3
+                  un pourcentage des frais que tu paies (ex&nbsp;: 50% sur 3
                   mois pour Coinbase), ou un pourcentage du panier (ex&nbsp;:
                   10% sur les ventes Ledger).
                 </p>
                 <p>
                   Cette commission est <strong>payée par la plateforme,
                   prélevée sur sa propre marge</strong> — jamais sur ce que
-                  vous déposez. Le tarif que vous payez (frais de trading,
+                  tu déposes. Le tarif que tu paies (frais de trading,
                   spread, prix d'un Nano X) est strictement identique à celui
-                  que vous obtiendriez en accédant à la plateforme directement
+                  que tu obtiendrais en accédant à la plateforme directement
                   sans passer par {BRAND.name}.
                 </p>
                 <p>
@@ -345,13 +345,13 @@ export default function TransparencePage() {
         {/* CE QUE ÇA CHANGE POUR VOUS --------------------------------------- */}
         <section className="mt-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-fg">
-            Ce que ça change pour vous
+            Ce que ça change pour toi
           </h2>
           <div className="mt-6 grid md:grid-cols-3 gap-4">
             <BenefitCard
               Icon={CheckCircle2}
-              title="0€ pour vous"
-              body="Le prix payé est exactement celui de la plateforme. La commission est prélevée sur la marge du partenaire, jamais sur votre dépôt ou vos frais."
+              title="0€ pour toi"
+              body="Le prix payé est exactement celui de la plateforme. La commission est prélevée sur la marge du partenaire, jamais sur ton dépôt ou tes frais."
             />
             <BenefitCard
               Icon={Eye}

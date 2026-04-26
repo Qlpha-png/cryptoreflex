@@ -238,12 +238,12 @@ export default function GlossaryTermPage({ params }: PageProps) {
           {/* CTA bas de page */}
           <section className="mt-12 rounded-2xl border border-border bg-surface/40 p-6 text-center">
             <p className="text-white/80">
-              Vous débutez en crypto&nbsp;?{" "}
+              Tu débutes en crypto&nbsp;?{" "}
               <Link
                 href="/blog"
                 className="text-primary-soft hover:text-primary underline-offset-2 hover:underline font-semibold"
               >
-                Consultez nos guides
+                Consulte nos guides
               </Link>{" "}
               ou{" "}
               <Link

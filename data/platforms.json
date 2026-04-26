@@ -1,8 +1,9 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-25",
+    "lastUpdated": "2026-04-26",
     "source": "Recherche Cryptoreflex (à recouper avec données AMF/ESMA officielles avant publication)",
-    "schemaVersion": "1.0"
+    "schemaVersion": "1.0",
+    "bonusPolicy": "Les promotions/bonus crypto évoluent fréquemment et ne sont pas tous valides en zone UE/FR (durcissement post-MiCA). Pour rester conforme à la loi commerciale FR (pas de promesse engageante non vérifiée) on n'affiche plus de montant chiffré : libellé générique uniquement, l'utilisateur doit consulter les conditions sur la plateforme."
   },
   "platforms": [
     {
@@ -19,14 +20,14 @@
         "registrationDate": "2023-09-19",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.4, "spotTaker": 0.6, "instantBuy": 1.49, "withdrawalCrypto": "Variable selon réseau", "withdrawalFiatSepa": 0.15, "spread": "0.5-2%" },
       "deposit": { "minEur": 2, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "PayPal"] },
       "cryptos": { "totalCount": 260, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "XTZ"] },
       "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<24h" },
       "security": { "coldStoragePct": 98, "insurance": true, "twoFA": true, "lastIncident": "Mai 2024 (data breach via support tiers)" },
-      "bonus": { "welcome": "10$ offerts en BTC après premier achat", "amount": 10, "currency": "USD", "conditions": "Premier achat de 100€ minimum", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme refer-a-friend variable selon zone géographique (UE post-MiCA)", "validUntil": null },
       "ratings": { "trustpilot": 1.6, "trustpilotCount": 28500, "appStore": 4.7, "playStore": 4.6 },
       "idealFor": "Débutants prudents qui veulent la plateforme la plus régulée et cotée en Bourse",
       "strengths": ["Cotée NASDAQ + agrément MiCA complet", "Interface ultra simple", "Coinbase Earn (gagner crypto en apprenant)"],
@@ -48,14 +49,14 @@
         "registrationDate": "2022-05-04",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.8, "withdrawalCrypto": "Variable selon réseau", "withdrawalFiatSepa": 0, "spread": "0.1-0.5%" },
       "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
       "cryptos": { "totalCount": 380, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BNB", "MATIC", "AVAX"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<48h" },
       "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Aucun majeur depuis SAFU 2019" },
-      "bonus": { "welcome": "Jusqu'à 100€ en bons de trading + 10% de réduction frais à vie", "amount": 100, "currency": "EUR", "conditions": "Dépôt de 50€+ et trading de 50€+", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus cash garanti en UE depuis durcissement réglementaire MiCA — offres ponctuelles à vérifier", "validUntil": null },
       "ratings": { "trustpilot": 2.5, "trustpilotCount": 152000, "appStore": 4.5, "playStore": 4.4 },
       "idealFor": "Traders intermédiaires et avancés cherchant frais bas et large catalogue",
       "strengths": ["Frais spot parmi les plus bas (0.1%)", "Catalogue le plus large au monde (380+)", "Liquidité inégalée"],
@@ -77,14 +78,14 @@
         "registrationDate": "2023-12-08",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.15, "spotTaker": 0.25, "instantBuy": 1.49, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1-2%" },
       "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay", "Skrill", "Neteller"] },
       "cryptos": { "totalCount": 480, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "MATIC"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
       "security": { "coldStoragePct": 99, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Pas de bonus inscription récurrent en 2026", "amount": null, "currency": null, "conditions": "Programme parrainage actif", "validUntil": null },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme Tell-a-Friend (referrer/referee) — pas un bonus garanti, conditions variables", "validUntil": null },
       "ratings": { "trustpilot": 4.3, "trustpilotCount": 47000, "appStore": 4.7, "playStore": 4.5 },
       "idealFor": "Investisseurs européens long terme voulant diversifier (crypto + actions + ETF + or)",
       "strengths": ["Régulation européenne complète (MiCA + MiFID II)", "Plans d'épargne automatiques", "Diversification crypto + actions + métaux"],
@@ -106,14 +107,14 @@
         "registrationDate": "2024-03-21",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.16, "spotTaker": 0.26, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0.35, "spread": "0.2-0.8%" },
       "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
       "cryptos": { "totalCount": 290, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "XTZ", "MATIC", "ALGO"] },
       "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<12h" },
       "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Aucun hack majeur depuis création (2011)" },
-      "bonus": { "welcome": "Aucun bonus de bienvenue récurrent", "amount": null, "currency": null, "conditions": null, "validUntil": null },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus de bienvenue récurrent — offres ponctuelles via parrainage", "validUntil": null },
       "ratings": { "trustpilot": 3.5, "trustpilotCount": 9500, "appStore": 4.6, "playStore": 4.5 },
       "idealFor": "Investisseurs expérimentés priorisant sécurité, audit Proof-of-Reserves et staking",
       "strengths": ["Aucun hack majeur en 14 ans", "Proof-of-Reserves audité", "Support FR par téléphone"],
@@ -135,14 +136,14 @@
         "registrationDate": "2025-07-14",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.1-0.4%" },
       "deposit": { "minEur": 10, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "P2P"] },
       "cryptos": { "totalCount": 800, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BGB", "ATOM"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
       "security": { "coldStoragePct": 90, "insurance": true, "twoFA": true, "lastIncident": "Aucun hack confirmé" },
-      "bonus": { "welcome": "Jusqu'à 6200 USDT en bonus + 20% de réduction frais", "amount": 6200, "currency": "USDT", "conditions": "Dépôt et trading progressif", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programmes promotionnels (dépôt + trading) variables — vérifier les paliers en vigueur", "validUntil": null },
       "ratings": { "trustpilot": 4.4, "trustpilotCount": 32000, "appStore": 4.6, "playStore": 4.5 },
       "idealFor": "Traders intermédiaires/avancés intéressés par dérivés et copy trading",
       "strengths": ["Copy trading leader du marché", "Catalogue altcoins très large (800+)", "Frais futures parmi les plus bas"],
@@ -164,14 +165,14 @@
         "registrationDate": "2024-11-15",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Non disponible (custodial fermé)", "withdrawalFiatSepa": 0, "spread": "1-2%" },
       "deposit": { "minEur": 1, "methods": ["SEPA", "Virement instantané", "Apple Pay", "Google Pay"] },
       "cryptos": { "totalCount": 70, "stakingAvailable": false, "stakingCryptos": [] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<48h" },
       "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Jusqu'à 200€ d'actions/crypto offertes via parrainage", "amount": 200, "currency": "EUR", "conditions": "Parrainage + premier dépôt", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (action/crypto offerte) — montant et conditions variables", "validUntil": null },
       "ratings": { "trustpilot": 3.8, "trustpilotCount": 28000, "appStore": 4.6, "playStore": 4.5 },
       "idealFor": "Investisseurs débutants long terme voulant tout-en-un (crypto + actions + ETF)",
       "strengths": ["Régulé BaFin + agrément MiCA", "Interface mobile excellente", "Plans d'épargne crypto/ETF dès 1€"],
@@ -193,14 +194,14 @@
         "registrationDate": "2020-03-31",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 1.49, "spotTaker": 1.99, "instantBuy": 2.49, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1.5-3%" },
       "deposit": { "minEur": 30, "methods": ["CB", "SEPA", "Virement instantané"] },
       "cryptos": { "totalCount": 60, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM"] },
       "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<4h en semaine" },
       "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "30€ offerts en BTC à l'inscription via parrainage", "amount": 30, "currency": "EUR", "conditions": "Premier achat de 100€+", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (BTC offert) — conditions variables sur le 1er achat", "validUntil": null },
       "ratings": { "trustpilot": 4.4, "trustpilotCount": 4800, "appStore": 4.5, "playStore": 4.3 },
       "idealFor": "Débutants français cherchant accompagnement humain et acteur local",
       "strengths": ["1er PSAN enregistré en France (2020)", "Support FR par téléphone et bureau Paris", "Conseil patrimonial humain"],
@@ -222,14 +223,14 @@
         "registrationDate": "2022-09-12",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1-2%" },
       "deposit": { "minEur": 1, "methods": ["SEPA", "Virement instantané", "CB", "Apple Pay"] },
       "cryptos": { "totalCount": 25, "stakingAvailable": false, "stakingCryptos": [] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
       "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "5€ offerts en BTC après premier arrondi", "amount": 5, "currency": "EUR", "conditions": "Activation arrondi + premier achat", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (BTC offert via arrondi) — conditions variables", "validUntil": null },
       "ratings": { "trustpilot": 4.6, "trustpilotCount": 3200, "appStore": 4.7, "playStore": 4.5 },
       "idealFor": "Débutants total voulant épargner en BTC via arrondi automatique",
       "strengths": ["DCA automatique via arrondi sur achats CB", "PSAN français + agrément MiCA", "Onboarding ultra simple"],
@@ -251,14 +252,14 @@
         "registrationDate": "2022-04-08",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.5-1.5% (réduit avec BORG)" },
       "deposit": { "minEur": 50, "methods": ["SEPA", "Virement instantané", "CB"] },
       "cryptos": { "totalCount": 100, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BORG", "MATIC"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<12h" },
       "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Jusqu'à 100€ en BTC offerts (paliers selon dépôt)", "amount": 100, "currency": "EUR", "conditions": "Dépôts progressifs", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Bonus dépôt à paliers — conditions et montants variables", "validUntil": null },
       "ratings": { "trustpilot": 4.5, "trustpilotCount": 7800, "appStore": 4.7, "playStore": 4.6 },
       "idealFor": "Investisseurs intermédiaires européens voulant yield + best execution",
       "strengths": ["Smart Engine (best execution multi-exchange)", "Earn programs jusqu'à 20% APR", "App mobile très bien notée"],
@@ -280,14 +281,14 @@
         "registrationDate": "2025-05-22",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.1-0.4%" },
       "deposit": { "minEur": 10, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "P2P"] },
       "cryptos": { "totalCount": 700, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "MNT", "ATOM"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
       "security": { "coldStoragePct": 90, "insurance": true, "twoFA": true, "lastIncident": "Février 2025 (hack 1.4Md$ — fonds clients couverts par fonds propres + assurance)" },
-      "bonus": { "welcome": "Jusqu'à 30 000 USDT en bonus dépôt + trading", "amount": 30000, "currency": "USDT", "conditions": "Paliers de dépôt et volume", "validUntil": "2026-12-31" },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programmes promotionnels (dépôt + volume) variables — vérifier les paliers", "validUntil": null },
       "ratings": { "trustpilot": 4.2, "trustpilotCount": 18000, "appStore": 4.6, "playStore": 4.4 },
       "idealFor": "Traders avancés cherchant produits dérivés avec profondeur carnet et options crypto",
       "strengths": ["Profondeur de carnet sur perp BTC/ETH parmi les meilleures", "Frais futures ultra-compétitifs (taker 0.055%)", "Plateforme options crypto complète"],
@@ -309,14 +310,14 @@
         "registrationDate": "2024-12-19",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-25"
+        "lastVerified": "2026-04-26"
       },
       "fees": { "spotMaker": 1.49, "spotTaker": 1.49, "instantBuy": 1.49, "withdrawalCrypto": "Variable (Revolut X uniquement)", "withdrawalFiatSepa": 0, "spread": "1.5-2.5% (sauf Revolut X)" },
       "deposit": { "minEur": 1, "methods": ["Solde Revolut", "CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
       "cryptos": { "totalCount": 220, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT"] },
       "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
       "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Septembre 2022 (vol interne 20M$ — clients non impactés)" },
-      "bonus": { "welcome": "Pas de bonus crypto récurrent en 2026 (offres ponctuelles)", "amount": null, "currency": null, "conditions": null, "validUntil": null },
+      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus crypto récurrent — offres ponctuelles via app Revolut", "validUntil": null },
       "ratings": { "trustpilot": 4.2, "trustpilotCount": 198000, "appStore": 4.7, "playStore": 4.5 },
       "idealFor": "Clients déjà Revolut voulant exposer une petite portion à crypto sans changer d'app",
       "strengths": ["Intégré dans la néobanque Revolut (UX impeccable)", "Agrément MiCA + licence bancaire lituanienne", "Revolut X (mode pro) avec frais quasi nuls"],

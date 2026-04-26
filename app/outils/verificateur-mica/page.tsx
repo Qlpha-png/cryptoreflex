@@ -366,10 +366,10 @@ const FAQ = [
   },
   {
     q: "Puis-je intégrer un badge sur mon site ?",
-    a: "Oui. Sur la fiche d'une plateforme, cliquez sur 'Partager (embed iframe)' pour copier le code HTML à coller sur votre site. Le badge se met à jour automatiquement en cas de changement de statut.",
+    a: "Oui. Sur la fiche d'une plateforme, clique sur 'Partager (embed iframe)' pour copier le code HTML à coller sur ton site. Le badge se met à jour automatiquement en cas de changement de statut.",
   },
   {
     q: "Cryptoreflex fait-il du conseil en investissement ?",
-    a: "Non. Cet outil fournit une information factuelle et publique sur le statut réglementaire des plateformes. Il ne constitue ni un conseil en investissement, ni une recommandation d'achat ou de vente. Consultez un professionnel agréé pour toute décision financière.",
+    a: "Non. Cet outil fournit une information factuelle et publique sur le statut réglementaire des plateformes. Il ne constitue ni un conseil en investissement, ni une recommandation d'achat ou de vente. Consulte un professionnel agréé pour toute décision financière.",
   },
 ];

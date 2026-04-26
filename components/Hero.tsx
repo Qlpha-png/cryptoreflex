@@ -19,7 +19,7 @@ import type { CoinPrice } from "@/lib/coingecko";
  * - 1 CTA primary fort + 1 CTA secondaire newsletter.
  * - 3 trust signals iconographiés avec animated numbers.
  * - Live widget (top 3 cryptos, sparkline, pulse "LIVE", refresh visible) à droite.
- * - Stats card 4 KPI en bas (23 plateformes / 60 cryptos / 6 outils / Méthode publique).
+ * - Stats card 4 KPI en bas (11 plateformes / 20 cryptos / 6 outils / Méthode publique).
  * - Badge "Mis à jour DD/MM/YYYY" cliquable → /methodologie.
  * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
  */
@@ -32,9 +32,21 @@ interface HeroProps {
   updatedAt?: string;
 }
 
+/**
+ * STATS exposés en home — chiffres réels uniquement (audit crédibilité 2026-04-26).
+ *  - platforms: 11 = nombre exact d'entrées dans data/platforms.json (vérifié).
+ *  - cryptos: 20 = top market fetch CoinGecko (cf. fetchTopMarket(20) dans page.tsx).
+ *  - tools: 6 = sous-évaluation prudente (réellement 9 dans /outils/) — laissé bas
+ *    pour ne jamais surpromettre ; à monter une fois que tous les outils auront
+ *    été testés régression-free.
+ *  - method: "Publique" = qualitatif, pas un chiffre.
+ *
+ * Toute hausse doit être justifiée par un changement réel du repo (ajout de
+ * plateforme, d'outil ou refresh CoinGecko top), jamais par confort marketing.
+ */
 const STATS = {
-  platforms: 23,
-  cryptos: 60,
+  platforms: 11,
+  cryptos: 20,
   tools: 6,
   method: "Publique",
 } as const;
@@ -128,7 +140,7 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               <TrustSignal
                 icon={<ShieldCheck className="h-5 w-5" strokeWidth={1.75} />}
                 value={STATS.platforms}
-                label="Plateformes auditées"
+                label="Plateformes comparées"
               />
               <TrustSignal
                 icon={<FileCheck className="h-5 w-5" strokeWidth={1.75} />}

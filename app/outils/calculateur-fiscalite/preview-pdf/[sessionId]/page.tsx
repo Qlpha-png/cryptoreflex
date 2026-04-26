@@ -23,9 +23,9 @@ import PrintButton from "@/components/calculateur-fiscalite/PrintButton";
 import { getCalculation } from "@/lib/calculateur-pdf-storage";
 
 export const metadata: Metadata = {
-  title: "Aperçu PDF de votre simulation fiscalité crypto — Cryptoreflex",
+  title: "Aperçu PDF de ta simulation fiscalité crypto — Cryptoreflex",
   description:
-    "Aperçu personnel de votre simulation fiscalité crypto, prêt à imprimer ou sauvegarder en PDF.",
+    "Aperçu personnel de ta simulation fiscalité crypto, prêt à imprimer ou sauvegarder en PDF.",
   robots: { index: false, follow: false, nocache: true },
 };
 

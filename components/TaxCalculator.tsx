@@ -34,26 +34,26 @@ interface FormState {
 const STEPS: StepConfig[] = [
   {
     id: "acquisitionsTotales",
-    label: "Combien avez-vous investi au total ?",
-    hint: "Somme de tous vos achats crypto, en euros, depuis le début (frais d'achat inclus).",
+    label: "Combien as-tu investi au total ?",
+    hint: "Somme de tous tes achats crypto, en euros, depuis le début (frais d'achat inclus).",
     placeholder: "Ex. 5000",
   },
   {
     id: "valeurPortefeuilleActuelle",
-    label: "Valeur actuelle de votre portefeuille ?",
-    hint: "Valorisation totale de toutes vos cryptos au prix du jour.",
+    label: "Valeur actuelle de ton portefeuille ?",
+    hint: "Valorisation totale de toutes tes cryptos au prix du jour.",
     placeholder: "Ex. 12000",
   },
   {
     id: "totalCessionsAnnee",
-    label: "Combien avez-vous vendu cette année ?",
+    label: "Combien as-tu vendu cette année ?",
     hint: "Total des cessions vers euros (€) ou monnaie ayant cours légal en 2026. Les conversions crypto ↔ crypto ne comptent pas.",
     placeholder: "Ex. 4000",
   },
   {
     id: "valeurPortefeuilleAuMomentVente",
     label: "Valeur du portefeuille au moment de la vente ?",
-    hint: "Valorisation totale de votre portefeuille (incluant la part vendue) juste avant la cession.",
+    hint: "Valorisation totale de ton portefeuille (incluant la part vendue) juste avant la cession.",
     placeholder: "Ex. 10000",
   },
 ];
@@ -415,8 +415,8 @@ export default function TaxCalculator() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border/60 pt-6">
             <p className="text-xs text-muted">
-              Vous pouvez modifier vos réponses à tout moment, vos données restent
-              sur votre appareil.
+              Tu peux modifier tes réponses à tout moment, tes données restent
+              sur ton appareil.
             </p>
             <div className="flex gap-3">
               <button

@@ -171,7 +171,7 @@ export default function SponsoringForm() {
             rows={5}
             maxLength={2000}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            placeholder="Présente brièvement votre produit, l'objectif (acquisition, awareness, lancement), la cible idéale et la deadline souhaitée."
+            placeholder="Présente brièvement ton produit, l'objectif (acquisition, awareness, lancement), la cible idéale et la deadline souhaitée."
           />
         </div>
 

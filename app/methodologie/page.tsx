@@ -81,10 +81,10 @@ export default function MethodologiePage() {
         <li>Service client en langues autres que le français</li>
       </ul>
 
-      <h2 className="mt-12 text-2xl font-bold text-fg">Vous pensez qu'on a fait une erreur ?</h2>
+      <h2 className="mt-12 text-2xl font-bold text-fg">Tu penses qu'on a fait une erreur ?</h2>
       <p className="text-fg/85 leading-relaxed">
-        Si vous repérez une donnée obsolète, une note injustifiée ou un manque sur une fiche,
-        écrivez-nous : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
+        Si tu repères une donnée obsolète, une note injustifiée ou un manque sur une fiche,
+        écris-nous : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
         Nous corrigeons sous 7 jours et publions la correction de manière transparente.
       </p>
     </article>

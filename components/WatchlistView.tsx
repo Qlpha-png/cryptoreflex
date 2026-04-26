@@ -146,7 +146,7 @@ export default function WatchlistView() {
 
   const handleClearAll = useCallback(() => {
     const ok = window.confirm(
-      "Vider votre watchlist ? Cette action est irréversible."
+      "Vider ta watchlist ? Cette action est irréversible."
     );
     if (!ok) return;
     clearWatchlist();
@@ -176,8 +176,8 @@ export default function WatchlistView() {
     return (
       <EmptyState
         icon={<Star className="h-6 w-6" aria-hidden="true" />}
-        title="Votre watchlist est vide"
-        description="Ajoutez jusqu'à 10 cryptos depuis le marché ou les fiches détaillées pour les retrouver ici, prix live inclus."
+        title="Ta watchlist est vide"
+        description="Ajoute jusqu'à 10 cryptos depuis le marché ou les fiches détaillées pour les retrouver ici, prix live inclus."
         cta={{ label: "Voir le marché", href: "/#marche" }}
         secondaryCta={{ label: "Top 10 cryptos", href: "/top" }}
       />
@@ -215,7 +215,7 @@ export default function WatchlistView() {
       <div className="hidden sm:block overflow-hidden rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
           <caption className="sr-only">
-            Cryptos dans votre watchlist : prix actuel, variation 24h, et
+            Cryptos dans ta watchlist : prix actuel, variation 24h, et
             actions de retrait.
           </caption>
           <thead className="bg-elevated text-xs uppercase tracking-wider text-muted">

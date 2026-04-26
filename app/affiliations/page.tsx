@@ -26,7 +26,7 @@ export default function AffiliationsPage() {
         </div>
         <div className="rounded-xl border border-accent-green/40 bg-accent-green/5 p-4">
           <Heart className="h-5 w-5 text-accent-green mb-2" />
-          <div className="font-semibold text-fg text-sm">100% gratuit pour vous</div>
+          <div className="font-semibold text-fg text-sm">100% gratuit pour toi</div>
           <p className="text-xs text-muted mt-1">Pas de paywall, pas d'inscription forcée.</p>
         </div>
       </div>
@@ -34,9 +34,9 @@ export default function AffiliationsPage() {
       <h2 className="mt-12 text-2xl font-bold text-fg">Comment {BRAND.name} se finance</h2>
       <p className="text-fg/85 leading-relaxed">
         {BRAND.name} est un site indépendant, financé majoritairement par des <strong>commissions
-        d'affiliation</strong>. Lorsque vous cliquez sur un lien partenaire et vous inscrivez sur
+        d'affiliation</strong>. Lorsque tu cliques sur un lien partenaire et t'inscris sur
         une plateforme crypto via ce lien, nous touchons une commission, sans aucun surcoût pour
-        vous (le tarif que vous payez est exactement le même que si vous étiez allé sur la
+        toi (le tarif que tu paies est exactement le même que si tu étais allé sur la
         plateforme directement).
       </p>
       <p className="text-fg/85 leading-relaxed">

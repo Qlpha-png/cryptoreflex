@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/email-drip-templates.ts — Templates HTML pour la séquence drip welcome 7 jours.
  *
  * Pourquoi un fichier dédié plutôt que d'étendre `email-templates.ts` ?
@@ -29,7 +29,7 @@
  *
  * Contenu :
  *  - Tone factuel cohérent avec la ligne éditoriale Cryptoreflex.
- *  - Pas de "vous" — on tutoie comme dans le reste du site.
+ *  - Pas de "tu" — on tutoie comme dans le reste du site.
  *  - Mentions AMF systématiques en footer.
  */
 

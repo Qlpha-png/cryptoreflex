@@ -220,6 +220,41 @@ export default function RootLayout({
         {/* WCAG 2.4.1 — premier stop Tab : skip link visible au focus */}
         <SkipToContent />
         {/*
+          Fallback no-JS pour conformité CNIL stricte (audit 26-04 issue #14) :
+          le CookieBanner est un Client Component → invisible sans JS. La CNIL
+          exige que l'information sur les traceurs soit accessible y compris
+          en l'absence de JavaScript. On rend ce <noscript> dans layout.tsx
+          (Server Component) plutôt que dans CookieBanner pour garantir qu'il
+          soit dans le HTML SSR initial. Renvoie vers /confidentialite pour
+          l'information complète + gestion des préférences.
+        */}
+        <noscript>
+          <div
+            role="alert"
+            style={{
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: "12px 16px",
+              background: "#0B0D10",
+              borderTop: "2px solid #FCD34D",
+              color: "#fff",
+              fontSize: "14px",
+              textAlign: "center",
+              zIndex: 9999,
+              lineHeight: 1.5,
+            }}
+          >
+            Ce site utilise des outils de mesure d'audience (Plausible, sans cookies tiers).
+            JavaScript étant désactivé, tu peux consulter notre{" "}
+            <a href="/confidentialite" style={{ color: "#FCD34D", textDecoration: "underline" }}>
+              politique de confidentialité
+            </a>{" "}
+            pour plus d'informations.
+          </div>
+        </noscript>
+        {/*
           Fallback no-JS : nos formulaires (alertes, quiz, wizard, portefeuille)
           et le cookie banner sont des Client Components. Sans JS, ils ne
           s'affichent pas. On informe l'utilisateur honnêtement, sans casser

@@ -23,9 +23,11 @@ import {
 import { formatRelativeFr } from "@/lib/news-aggregator";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
+import AuthorCard from "@/components/AuthorCard";
 import RelatedNews from "@/components/news/RelatedNews";
 import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 
 /**
  * /actualites/[slug] — Page détail d'une analyse Cryptoreflex.
@@ -269,6 +271,11 @@ export default async function NewsDetailPage({ params }: PageProps) {
             {news.sourceUrl}
           </a>
         </aside>
+
+        {/* Encart auteur E-E-A-T (P0-#11) — éditorialement responsable
+            de la sélection / réécriture de cette news. Le frontmatter peut
+            indiquer un id explicite ; sinon fallback sur l'auteur par défaut. */}
+        <AuthorCard authorId={DEFAULT_AUTHOR_ID} variant="full" />
 
         {/* NEWSLETTER CTA */}
         <div className="mt-10">

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/beehiiv.ts — Helpers Beehiiv API V2 (segmentation et custom fields).
  *
  * Ce module COMPLÈTE `lib/newsletter.ts` (qui gère l'inscription POST initiale).

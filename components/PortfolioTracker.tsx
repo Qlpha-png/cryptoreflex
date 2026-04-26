@@ -294,11 +294,11 @@ export default function PortfolioTracker() {
             <Wallet className="h-7 w-7" aria-hidden="true" />
           </div>
           <h3 className="text-lg sm:text-xl font-semibold text-fg">
-            Ajoutez votre première crypto
+            Ajoute ta première crypto
           </h3>
           <p className="mt-2 max-w-md mx-auto text-sm text-muted">
-            Sélectionnez une crypto et indiquez la quantité que vous détenez.
-            Vos données restent dans votre navigateur — Cryptoreflex ne stocke
+            Sélectionne une crypto et indique la quantité que tu détiens.
+            Tes données restent dans ton navigateur — Cryptoreflex ne stocke
             rien côté serveur.
           </p>
         </div>
@@ -400,7 +400,7 @@ export default function PortfolioTracker() {
       <div className="rounded-2xl border border-info/30 bg-info/5 p-5 flex items-start gap-3">
         <Info className="h-5 w-5 text-info-fg mt-0.5 shrink-0" />
         <p className="text-sm text-fg leading-relaxed">
-          <strong>100 % local :</strong> vos positions sont stockées
+          <strong>100 % local :</strong> tes positions sont stockées
           uniquement dans le localStorage de ce navigateur. Aucune donnée
           n'est envoyée à Cryptoreflex ni à un tiers (hormis les requêtes
           publiques CoinGecko pour les prix).

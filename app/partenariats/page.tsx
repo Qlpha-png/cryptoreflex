@@ -5,7 +5,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Partenariats & Sponsors",
   description:
-    "Vous êtes une plateforme crypto, un wallet ou un projet Web3 ? Découvrez nos formats sponsorisés, audience et tarifs.",
+    "Tu es une plateforme crypto, un wallet ou un projet Web3 ? Découvre nos formats sponsorisés, audience et tarifs.",
 };
 
 const STATS = [
@@ -19,13 +19,13 @@ const FORMATS = [
   {
     title: "Carte plateforme sponsorisée",
     description:
-      "Votre plateforme mise en avant en page d'accueil avec badge dédié, bonus de bienvenue et CTA tracé.",
+      "Ta plateforme mise en avant en page d'accueil avec badge dédié, bonus de bienvenue et CTA tracé.",
     deliverables: ["Carte premium en home", "Badge \"Partenaire\"", "Lien d'affiliation tracé", "Reporting mensuel"],
   },
   {
     title: "Article de fond dédié",
     description:
-      "Un guide approfondi (1 500–2 500 mots) sur votre produit, optimisé SEO sur les requêtes de votre cible.",
+      "Un guide approfondi (1 500–2 500 mots) sur ton produit, optimisé SEO sur les requêtes de ta cible.",
     deliverables: ["Article original ≥ 1 500 mots", "Optimisation SEO", "Mise à jour 1×/an incluse", "Disclosure transparent"],
   },
   {
@@ -49,7 +49,7 @@ export default function PartenariatsPage() {
             Touchez une audience <span className="gradient-text">crypto francophone qualifiée</span>
           </h1>
           <p className="mt-4 text-white/70 text-lg">
-            {BRAND.name} aide les Français à choisir où acheter leurs cryptos. Si votre
+            {BRAND.name} aide les Français à choisir où acheter leurs cryptos. Si ta
             plateforme veut être recommandée à des investisseurs en phase de décision,
             discutons-en.
           </p>
@@ -96,7 +96,7 @@ export default function PartenariatsPage() {
               Discutons d'un <span className="gradient-text">partenariat</span>
             </h2>
             <p className="mt-3 text-white/70">
-              Envoyez un email avec votre brief — taille de la marque, objectif (acquisition,
+              Envoie un email avec ton brief — taille de la marque, objectif (acquisition,
               awareness, lancement) et budget approximatif. Réponse sous 48h.
             </p>
             <a

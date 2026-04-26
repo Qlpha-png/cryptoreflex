@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/email-series/fiscalite-crypto-series.ts
  * ------------------------------------------------------------------
  * Séquence email "Fiscalité crypto en 5 emails" déclenchée après
@@ -197,7 +197,7 @@ function wrapEmail(opts: {
   const footer =
     '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:24px;border-top:1px solid #374151;padding-top:16px;">' +
     "<tr><td align=\"center\" style=\"font-family:Arial,sans-serif;font-size:11px;line-height:1.6;color:#9CA3AF;\">" +
-    "Vous recevez cet email car vous vous êtes inscrit·e à la newsletter Cryptoreflex via le calculateur fiscalité.<br>" +
+    "Tu recevez cet email car tu tu es inscrit·e à la newsletter Cryptoreflex via le calculateur fiscalité.<br>" +
     "Cryptoreflex — Édition indépendante française — SIRET 103 352 621<br>" +
     '<a href="{{unsubscribe_url}}" style="color:#F5A524;text-decoration:underline;">Se désinscrire en 1 clic</a>' +
     " · " +

@@ -85,7 +85,7 @@ export default async function AnalysesTechniquesPage() {
             </p>
             <p className="mt-2 text-xs text-muted">
               Cette analyse n'est pas un conseil d'investissement. La crypto est
-              volatile : faites vos propres recherches.
+              volatile : fais tes propres recherches.
             </p>
           </div>
 

@@ -14,10 +14,12 @@ import {
 } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
+import AuthorCard from "@/components/AuthorCard";
 import TrendBadge from "@/components/ta/TrendBadge";
 import IndicatorsTable from "@/components/ta/IndicatorsTable";
 import SupportResistanceList from "@/components/ta/SupportResistanceList";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 
 // PriceChart : Client Component (fetch /api/historical au mount).
 // Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
@@ -253,6 +255,10 @@ export default async function TAArticlePage({ params }: Props) {
 
           {/* Body MDX */}
           <MdxContent source={article.content} />
+
+          {/* Encart auteur E-E-A-T (P0-#11) — analyste éditorialement
+              responsable de l'analyse technique du jour. */}
+          <AuthorCard authorId={DEFAULT_AUTHOR_ID} variant="full" />
 
           {/* CTA bas — re-engagement */}
           <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 p-6">

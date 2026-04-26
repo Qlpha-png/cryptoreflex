@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/email-templates.ts — Templates HTML pour les emails transactionnels.
  *
  * Pourquoi du HTML inline plutôt qu'un moteur de template (Handlebars / MJML) ?
@@ -268,7 +268,7 @@ function regimeLabelEmail(regime: string): string {
  * Sujet de l'email post-calcul. Centralisé pour cohérence avec le préheader.
  */
 export const calculateurFiscaliteWelcomeSubject =
-  "Votre simulation fiscalité crypto + nos 5 conseils gratuits";
+  "Ton simulation fiscalité crypto + nos 5 conseils gratuits";
 
 /**
  * Génère le HTML d'un email transactionnel envoyé après le calcul fiscalité.

@@ -59,10 +59,10 @@ export default function VerdictByProfile({ a, b, verdicts }: Props) {
   return (
     <section id="verdict-profil" className="scroll-mt-24">
       <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-        Quelle plateforme selon votre profil ?
+        Quelle plateforme selon ton profil ?
       </h2>
       <p className="mt-2 text-sm text-muted">
-        Notre recommandation dépend de ce que vous cherchez. 4 profils types, 4 verdicts
+        Notre recommandation dépend de ce que tu cherches. 4 profils types, 4 verdicts
         argumentés.
       </p>
 
@@ -97,7 +97,7 @@ export default function VerdictByProfile({ a, b, verdicts }: Props) {
                   </Link>
                 ) : (
                   <span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 font-semibold text-primary-soft">
-                    Égalité — selon vos préférences
+                    Égalité — selon tes préférences
                   </span>
                 )}
               </div>

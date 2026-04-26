@@ -5,7 +5,8 @@ import {
   LayoutGrid,
   Mail as MailIcon,
   Package,
-  Users,
+  Sparkles,
+  Eye,
   TrendingUp,
   Globe2,
   ShieldCheck,
@@ -39,42 +40,58 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Sponsoriser un article Cryptoreflex — articles, display, newsletter",
   description:
-    "Articles sponsorisés (1 500 €), display affiliate premium (500 €/mois), newsletter (300 €) ou packs combinés. Audience crypto FR qualifiée, 5K visites/mo, 97 % organique.",
+    "Articles sponsorisés (1 500 €), display affiliate premium (500 €/mois), newsletter (300 €) ou packs combinés. Site lancé en avril 2026, audience FR crypto en construction, 100 % organique.",
   alternates: { canonical: `${BRAND.url}/sponsoring` },
   openGraph: {
     title: "Sponsoriser un article Cryptoreflex",
     description:
-      "Mettez votre plateforme crypto en avant auprès d'investisseurs FR. Articles, display ou newsletter — process transparent et mention 'sponsorisé' obligatoire.",
+      "Mets ta plateforme crypto en avant auprès d'investisseurs FR. Articles, display ou newsletter — process transparent et mention 'sponsorisé' obligatoire.",
     url: `${BRAND.url}/sponsoring`,
     type: "website",
   },
   robots: { index: true, follow: true },
 };
 
+/**
+ * Stats publiées sur la page sponsoring — refonte 26/04/2026 (audit
+ * crédibilité P0). Le site est lancé depuis le 15/04/2026 ; toute métrique
+ * d'audience doit être soit (a) un chiffre réel et auditable, soit (b)
+ * remplacée par une promesse de transparence et un renvoi vers /impact.
+ *
+ * Anciennes valeurs supprimées :
+ *  - "5 000+ visites mensuelles uniques" → site a 11 jours, audience réelle
+ *    0-50 visiteurs/jour, le chiffre était mensonger.
+ *  - "500+ abonnés newsletter" → cohérence avec IMPACT_STATS.newsletterSubscribers
+ *    (= 47 au 26/04/2026). On préfère ne rien afficher de chiffré tant qu'on
+ *    n'a pas un volume crédible (>1 000 abos).
+ *  - "97 % trafic organique" → fabriqué (pas d'historique sur 11 jours).
+ *
+ * On garde uniquement les promesses qualitatives vérifiables aujourd'hui.
+ */
 const TRUST_STATS = [
   {
-    Icon: Users,
-    value: "5 000+",
-    label: "visites mensuelles uniques",
-    hint: "Mesure Plausible (avril 2026)",
-  },
-  {
-    Icon: MailIcon,
-    value: "500+",
-    label: "abonnés newsletter quotidienne",
-    hint: "Audience FR active, 35 % open-rate",
+    Icon: Sparkles,
+    value: "Avril 2026",
+    label: "site lancé en transparence",
+    hint: "Dashboard public d'audience sur /impact, mis à jour mensuellement",
   },
   {
     Icon: TrendingUp,
-    value: "97 %",
-    label: "trafic organique (SEO)",
-    hint: "Pas de paid ads, donc audience qualifiée",
+    value: "100 %",
+    label: "trafic organique (zéro paid ads)",
+    hint: "Acquisition SEO + bouche-à-oreille uniquement",
+  },
+  {
+    Icon: Eye,
+    value: "Publique",
+    label: "méthodologie de scoring",
+    hint: "Critères, pondérations et sources publiés sur /methodologie",
   },
   {
     Icon: Globe2,
     value: "France + EU",
-    label: "audience principale",
-    hint: "Investisseurs débutants → confirmés",
+    label: "audience visée",
+    hint: "Investisseurs débutants → confirmés post-MiCA",
   },
 ];
 
@@ -95,7 +112,7 @@ const OFFERS: Offer[] = [
     price: "1 500 €",
     cadence: "/ article",
     description:
-      "Article rédigé par notre équipe selon votre brief. Mention 'sponsorisé' obligatoire en haut + en bas.",
+      "Article rédigé par notre équipe selon ton brief. Mention 'sponsorisé' obligatoire en haut + en bas.",
     perks: [
       "1 500 – 2 500 mots optimisés SEO",
       "Brief validé conjointement",
@@ -111,7 +128,7 @@ const OFFERS: Offer[] = [
     price: "500 €",
     cadence: "/ mois",
     description:
-      "Votre plateforme positionnée en tête de nos comparatifs avec badge 'Partenaire'.",
+      "Ta plateforme positionnée en tête de nos comparatifs avec badge 'Partenaire'.",
     perks: [
       "Position #1 sur la home + comparatifs",
       "Badge 'Partenaire' + bonus de bienvenue",
@@ -126,7 +143,7 @@ const OFFERS: Offer[] = [
     price: "300 €",
     cadence: "/ envoi",
     description:
-      "Encart 200 mots dans 1 envoi de la newsletter quotidienne (500+ abonnés FR engagés).",
+      "Encart 200 mots dans 1 envoi de la newsletter quotidienne (audience FR en construction depuis avril 2026, volumes publiés sur /impact).",
     perks: [
       "Encart 200 mots + image",
       "Mention 'sponsor du jour' explicite",
@@ -157,11 +174,11 @@ const FAQS = [
     a: "1) Tu remplis le formulaire ci-dessous. 2) On te répond sous 48h ouvrées avec un devis détaillé et une plage de publication. 3) Brief co-construit (1 visio 30 min). 4) Rédaction par notre équipe sous 7-10 jours. 5) Validation finale par tes soins (1 round de modifs inclus). 6) Publication + reporting mensuel.",
   },
   {
-    q: "Avez-vous un contrôle éditorial sur le contenu sponsorisé ?",
-    a: "Oui, et c'est non-négociable : nous nous réservons le droit de refuser tout angle qui contredirait nos principes éditoriaux (ex : promotion de tokens à risque non régulés, rendement irréaliste, nivellement par le bas du discours sur la sécurité). On t'oriente vers une autre angle qui respecte la charte sans diluer ton message.",
+    q: "As-tu un contrôle éditorial sur le contenu sponsorisé ?",
+    a: "Oui, et c'est non-négociable : nous nous réservons le droit de refuser tout angle qui contredirait nos principes éditoriaux (ex : promotion de tokens à risque non régulés, rendement irréaliste, nivellement par le bas du discours sur la sécurité). On t'oriente vers un autre angle qui respecte la charte sans diluer ton message.",
   },
   {
-    q: "Le sponsoring influence-t-il votre note ou votre verdict ?",
+    q: "Le sponsoring influence-t-il ta note ou ton verdict ?",
     a: "Non, jamais. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Tu peux acheter un article sponsorisé tout en recevant une note 6,5/10 — c'est arrivé.",
   },
   {

@@ -48,12 +48,12 @@ const MOBILE_EXTRA = [
   {
     href: "/watchlist",
     label: "Ma watchlist",
-    desc: "Vos cryptos favorites (max 10)",
+    desc: "Tes cryptos favorites (max 10)",
   },
   {
     href: "/portefeuille",
     label: "Mon portefeuille",
-    desc: "Suivi de vos positions (max 30)",
+    desc: "Suivi de tes positions (max 30)",
   },
 ];
 

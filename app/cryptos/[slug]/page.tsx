@@ -123,12 +123,12 @@ function buildVerdict(c: AnyCrypto): string {
   // Top10
   const t = c as TopCrypto;
   if (t.beginnerFriendly >= 5) {
-    return `${t.name} est un excellent point d'entrée pour quelqu'un qui n'a jamais touché aux cryptos : disponible sur toutes les plateformes régulées en France, niveau de risque "${t.riskLevel.toLowerCase()}" relatif au reste du marché, et un cas d'usage suffisamment intuitif pour ne pas avoir à comprendre la blockchain pour s'en servir. Notre score "beginner-friendly" de ${t.beginnerFriendly}/5 confirme cette accessibilité. Comme pour toute crypto, la règle reste la même : ne mettez que ce que vous êtes prêt à voir baisser de 50 % sans paniquer.`;
+    return `${t.name} est un excellent point d'entrée pour quelqu'un qui n'a jamais touché aux cryptos : disponible sur toutes les plateformes régulées en France, niveau de risque "${t.riskLevel.toLowerCase()}" relatif au reste du marché, et un cas d'usage suffisamment intuitif pour ne pas avoir à comprendre la blockchain pour s'en servir. Notre score "beginner-friendly" de ${t.beginnerFriendly}/5 confirme cette accessibilité. Comme pour toute crypto, la règle reste la même : ne mets que ce que tu es prêt à voir baisser de 50 % sans paniquer.`;
   }
   if (t.beginnerFriendly >= 4) {
-    return `${t.name} fait partie des cryptos majeures et reste accessible pour un débutant — ${t.beginnerFriendly}/5 sur notre score "beginner-friendly". Le risque est ${t.riskLevel.toLowerCase()} relativement aux altcoins, mais largement supérieur à celui d'actions cotées. Stratégie raisonnable : un Dollar Cost Averaging (DCA) mensuel, sur une plateforme régulée MiCA, avec une exposition qui reste sous 5 % de votre patrimoine financier total tant que vous n'êtes pas à l'aise avec la volatilité.`;
+    return `${t.name} fait partie des cryptos majeures et reste accessible pour un débutant — ${t.beginnerFriendly}/5 sur notre score "beginner-friendly". Le risque est ${t.riskLevel.toLowerCase()} relativement aux altcoins, mais largement supérieur à celui d'actions cotées. Stratégie raisonnable : un Dollar Cost Averaging (DCA) mensuel, sur une plateforme régulée MiCA, avec une exposition qui reste sous 5 % de ton patrimoine financier total tant que tu n'es pas à l'aise avec la volatilité.`;
   }
-  return `${t.name} reste accessible pour un débutant éduqué, mais nécessite de comprendre son cas d'usage spécifique (${t.category.toLowerCase()}) avant d'investir. Score "beginner-friendly" ${t.beginnerFriendly}/5 : ce n'est pas un Bitcoin ou un Ethereum qu'on peut acheter "parce que tout le monde en parle". Lisez la section "À quoi ça sert" et "Forces/Faiblesses" ci-dessus avant de prendre position. Si l'usage ne vous parle pas, mieux vaut rester sur les majors.`;
+  return `${t.name} reste accessible pour un débutant éduqué, mais nécessite de comprendre son cas d'usage spécifique (${t.category.toLowerCase()}) avant d'investir. Score "beginner-friendly" ${t.beginnerFriendly}/5 : ce n'est pas un Bitcoin ou un Ethereum qu'on peut acheter "parce que tout le monde en parle". Lis la section "À quoi ça sert" et "Forces/Faiblesses" ci-dessus avant de prendre position. Si l'usage ne te parle pas, mieux vaut rester sur les majors.`;
 }
 
 function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
@@ -141,7 +141,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 
   faq.push({
     q: `Comment acheter ${c.name} en France en 2026 ?`,
-    a: `Vous pouvez acheter ${c.name} sur ${c.whereToBuy.slice(0, 3).join(", ")} et d'autres plateformes régulées MiCA. La procédure standard prend 5 à 10 minutes : création du compte, vérification d'identité (KYC), dépôt en euros par virement SEPA ou carte bancaire, puis ordre d'achat sur le marché spot. Voir la section "Où acheter" plus haut pour la liste complète et les liens directs.`,
+    a: `Tu peux acheter ${c.name} sur ${c.whereToBuy.slice(0, 3).join(", ")} et d'autres plateformes régulées MiCA. La procédure standard prend 5 à 10 minutes : création du compte, vérification d'identité (KYC), dépôt en euros par virement SEPA ou carte bancaire, puis ordre d'achat sur le marché spot. Voir la section "Où acheter" plus haut pour la liste complète et les liens directs.`,
   });
 
   if (c.kind === "hidden-gem") {
@@ -162,7 +162,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
     const t = c as TopCrypto;
     faq.push({
       q: `${t.name} est-il un bon investissement pour un débutant ?`,
-      a: `Notre score "beginner-friendly" est de ${t.beginnerFriendly}/5 et le niveau de risque ${t.riskLevel.toLowerCase()}. ${t.name} est ${t.beginnerFriendly >= 4 ? "généralement adapté" : "à aborder avec prudence"} pour un débutant, à condition de respecter les bases : passer par une plateforme régulée MiCA, n'investir que de l'épargne dont vous n'avez pas besoin à 1-3 ans, et privilégier un DCA (achats étalés) à un achat unique pour lisser la volatilité.`,
+      a: `Notre score "beginner-friendly" est de ${t.beginnerFriendly}/5 et le niveau de risque ${t.riskLevel.toLowerCase()}. ${t.name} est ${t.beginnerFriendly >= 4 ? "généralement adapté" : "à aborder avec prudence"} pour un débutant, à condition de respecter les bases : passer par une plateforme régulée MiCA, n'investir que de l'épargne dont tu n'as pas besoin à 1-3 ans, et privilégier un DCA (achats étalés) à un achat unique pour lisser la volatilité.`,
     });
     faq.push({
       q: `Quelle est la quantité maximale de ${t.symbol} ?`,
@@ -178,7 +178,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 
   faq.push({
     q: `Quelle fiscalité s'applique aux gains sur ${c.name} en France ?`,
-    a: `En 2026, les plus-values crypto pour un particulier sont imposées au PFU (Prélèvement Forfaitaire Unique) de 30 % par défaut (12,8 % d'impôt + 17,2 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que vous restez en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite-crypto pour simuler votre note fiscale.`,
+    a: `En 2026, les plus-values crypto pour un particulier sont imposées au PFU (Prélèvement Forfaitaire Unique) de 30 % par défaut (12,8 % d'impôt + 17,2 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que tu restes en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite-crypto pour simuler ta note fiscale.`,
   });
 
   return faq;
@@ -376,7 +376,7 @@ export default async function CryptoPage({ params }: Props) {
                   Première étape
                 </div>
                 <p className="mt-1 text-sm text-fg/85 leading-relaxed">
-                  Choisissez une plateforme régulée MiCA dans la liste ci-dessous (Coinbase, Bitpanda et Coinhouse sont les plus accessibles en français), créez un compte avec votre vraie identité et déposez 50 à 100 € pour vous familiariser.
+                  Choisis une plateforme régulée MiCA dans la liste ci-dessous (Coinbase, Bitpanda et Coinhouse sont les plus accessibles en français), crée un compte avec ta vraie identité et dépose 50 à 100 € pour te familiariser.
                 </p>
               </div>
               <div>
@@ -384,7 +384,7 @@ export default async function CryptoPage({ params }: Props) {
                   Stratégie recommandée
                 </div>
                 <p className="mt-1 text-sm text-fg/85 leading-relaxed">
-                  Préférez le DCA (Dollar Cost Averaging) : un petit montant chaque mois automatiquement, plutôt qu'un gros achat unique. Cela lisse la volatilité et évite le stress du timing parfait. Voir notre <Link href="/outils/simulateur-dca" className="underline hover:text-fg">simulateur DCA</Link>.
+                  Préfère le DCA (Dollar Cost Averaging) : un petit montant chaque mois automatiquement, plutôt qu'un gros achat unique. Cela lisse la volatilité et évite le stress du timing parfait. Voir notre <Link href="/outils/simulateur-dca" className="underline hover:text-fg">simulateur DCA</Link>.
                 </p>
               </div>
               <div>
@@ -392,7 +392,7 @@ export default async function CryptoPage({ params }: Props) {
                   Bonne hygiène de portefeuille
                 </div>
                 <p className="mt-1 text-sm text-fg/85 leading-relaxed">
-                  Activez la 2FA, ne stockez pas votre mot de passe dans un mail, et au-delà de 1 000 € envisagez un wallet hardware (Ledger, Trezor) pour sortir vos fonds de la plateforme.
+                  Active la 2FA, ne stocke pas ton mot de passe dans un mail, et au-delà de 1 000 € envisage un wallet hardware (Ledger, Trezor) pour sortir tes fonds de la plateforme.
                 </p>
               </div>
               <div>
@@ -400,7 +400,7 @@ export default async function CryptoPage({ params }: Props) {
                   Erreurs à éviter
                 </div>
                 <p className="mt-1 text-sm text-fg/85 leading-relaxed">
-                  Ne jamais investir plus que ce que vous êtes prêt à perdre. Ignorer les "conseils" de TikTok/YouTube qui promettent du x10. Vérifier toujours le statut MiCA d'une plateforme avant de déposer.
+                  Ne jamais investir plus que ce que tu es prêt à perdre. Ignorer les "conseils" de TikTok/YouTube qui promettent du x10. Vérifier toujours le statut MiCA d'une plateforme avant de déposer.
                 </p>
               </div>
             </div>
@@ -564,8 +564,8 @@ export default async function CryptoPage({ params }: Props) {
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
           Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées le 25/04/2026
           par l'équipe {BRAND.name}. Cette page contient des liens d'affiliation : Cryptoreflex
-          perçoit une commission si vous ouvrez un compte chez l'une des plateformes recommandées,
-          sans surcoût pour vous et sans impact sur le classement. Pour le détail, voir notre{" "}
+          perçoit une commission si tu ouvres un compte chez l'une des plateformes recommandées,
+          sans surcoût pour toi et sans impact sur le classement. Pour le détail, voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>{" "}
           et notre <Link href="/affiliations" className="underline hover:text-fg">page affiliations</Link>.
         </p>

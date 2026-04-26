@@ -53,7 +53,13 @@ function AnimatedNumberImpl({
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const rafRef = useRef<number | null>(null);
-  const [display, setDisplay] = useState(0);
+  // SSR fallback (audit a11y/crédibilité 26-04 issue #4) :
+  // l'état initial = `value` (target) pour que le HTML SSR contienne déjà la
+  // valeur finale. Sans JS, l'utilisateur voit le bon chiffre (pas "0").
+  // Avec JS, on reset à 0 dans useEffect puis on anime — le 1er render Client
+  // matche le SSR (pas de hydration mismatch), c'est seulement après mount
+  // que la valeur descend à 0 puis remonte.
+  const [display, setDisplay] = useState<number>(value);
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -68,6 +74,10 @@ function AnimatedNumberImpl({
       setDisplay(value);
       return;
     }
+
+    // Reset à 0 uniquement côté client (post-hydration) pour préparer l'anim.
+    // Le SSR a déjà rendu `value` → pas de mismatch (1er render Client = value).
+    setDisplay(0);
 
     const start = () => {
       if (startedRef.current && once) return;

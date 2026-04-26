@@ -167,7 +167,7 @@ export default function PdfPreview({
         {/* ====================== INPUTS SAISIS ======================== */}
         <section className="pdf-section mt-5 rounded-lg border border-slate-200 p-4">
           <h2 className="text-[12pt] font-bold text-slate-900">
-            1. Vos données saisies
+            1. Tes données saisies
           </h2>
           <table className="mt-2 w-full text-[10pt]">
             <tbody className="divide-y divide-slate-200">

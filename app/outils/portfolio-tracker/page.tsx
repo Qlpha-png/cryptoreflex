@@ -43,7 +43,7 @@ const PortfolioTrackerClient = dynamic(
 const PAGE_TITLE =
   "Portfolio Tracker crypto gratuit — suivi multi-coins en EUR";
 const PAGE_DESCRIPTION =
-  "Suivez la valeur de votre portefeuille crypto en temps réel : ajoutez vos positions, prix EUR live CoinGecko, variation 24 h, export CSV. 100 % gratuit, 100 % local (vos données restent sur votre navigateur).";
+  "Suis la valeur de ton portefeuille crypto en temps réel : ajoute tes positions, prix EUR live CoinGecko, variation 24 h, export CSV. 100 % gratuit, 100 % local (tes données restent sur ton navigateur).";
 const PAGE_PATH = "/outils/portfolio-tracker";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -120,14 +120,14 @@ export default function PortfolioTrackerPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold text-success-fg">
               <Lock className="h-3.5 w-3.5" />
-              100 % local — vos données restent chez vous
+              100 % local — tes données restent chez toi
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               <span className="gradient-text">Portfolio Tracker</span> crypto
             </h1>
             <p className="mt-4 text-lg text-muted leading-relaxed">
-              Suivez en temps réel la valeur de votre portefeuille crypto en
-              euros. Ajoutez vos positions manuellement, prix CoinGecko
+              Suis en temps réel la valeur de ton portefeuille crypto en
+              euros. Ajoute tes positions manuellement, prix CoinGecko
               actualisés toutes les 60 secondes, variation 24 h et export
               CSV. Sans wallet connect, sans inscription, sans tracking.
             </p>
@@ -137,11 +137,11 @@ export default function PortfolioTrackerPage() {
           <div className="mt-8 rounded-2xl border border-success/30 bg-success/5 p-5 flex items-start gap-3">
             <ShieldCheck className="h-5 w-5 text-success-fg mt-0.5 shrink-0" />
             <p className="text-sm text-fg leading-relaxed">
-              <strong>Confidentialité totale.</strong> Vos positions sont
-              stockées exclusivement dans le localStorage de votre navigateur.
+              <strong>Confidentialité totale.</strong> Tes positions sont
+              stockées exclusivement dans le localStorage de ton navigateur.
               Cryptoreflex ne reçoit, ne stocke et ne partage aucune donnée.
-              Si vous changez de navigateur ou videz vos cookies, vos
-              positions seront effacées — pensez à exporter votre CSV
+              Si tu changes de navigateur ou vides tes cookies, tes
+              positions seront effacées — pense à exporter ton CSV
               régulièrement.
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function PortfolioTrackerPage() {
             tracker est purement pédagogique. Les valeurs affichées dépendent
             de l'API publique CoinGecko (prix EUR, latence ~60 s) et ne
             constituent pas une comptabilité officielle. Cet outil ne
-            sécurise pas vos cryptos — pour cela, utilisez un hardware
+            sécurise pas tes cryptos — pour cela, utilise un hardware
             wallet (Ledger, Trezor) et un wallet non-custodial. Cet outil
             ne représente en aucun cas un conseil en investissement.
           </p>

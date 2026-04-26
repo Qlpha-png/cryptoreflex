@@ -5,7 +5,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Hors ligne",
   description:
-    "Vous êtes actuellement hors ligne. Reconnectez-vous pour accéder à toutes les ressources Cryptoreflex.",
+    "Tu es actuellement hors ligne. Reconnecte-toi pour accéder à toutes les ressources Cryptoreflex.",
   robots: { index: false, follow: false },
 };
 
@@ -49,7 +49,7 @@ export default function OfflinePage() {
       </div>
 
       <h1 className="mb-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
-        Vous êtes hors ligne
+        Tu es hors ligne
       </h1>
 
       <p className="mx-auto mb-8 max-w-md text-base text-neutral-300">

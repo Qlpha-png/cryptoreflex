@@ -52,7 +52,7 @@ const FOOTER_STYLES = {
 export function EmailFooter({
   email,
   unsubscribeUrl,
-  reason = "Vous recevez cet email car vous êtes abonné·e à la newsletter Cryptoreflex.",
+  reason = "Tu reçois cet email car tu es abonné·e à la newsletter Cryptoreflex.",
 }: EmailFooterProps) {
   return (
     <table

@@ -32,7 +32,7 @@ export default function Footer() {
             <Logo variant="full" height={36} className="mb-3" asLink={false} title="Cryptoreflex" />
 
             <p className="text-sm text-muted max-w-md">
-              Votre guide pour naviguer dans l'univers crypto. Comparatifs de plateformes,
+              Ton guide pour naviguer dans l'univers crypto. Comparatifs de plateformes,
               guides pour débutants et outils gratuits — sans jargon.
             </p>
             {/*
