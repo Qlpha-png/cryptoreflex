@@ -23,7 +23,7 @@
  * si tu as modifié l'une des deux parties.
  */
 
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -66,98 +66,269 @@ try {
   process.exit(1);
 }
 
-// CSS template (aligne sur la charte Cryptoreflex : dark + accent doré, mais
-// on inverse en mode "print friendly" — fond blanc, texte noir, accent doré
-// pour les headings et les liens).
+// CSS template — refonte 26/04/2026 (feedback utilisateur "feuilles mal agencées")
+// Objectif : pages aérées, page-break propre entre chapitres, typographie magazine.
+// Un PDF de 22k mots doit faire 40-50 pages, pas 8.
 const PRINT_CSS = `
   @page {
     size: A4;
-    margin: 1.8cm 2cm;
+    margin: 2.2cm 2.2cm 2.5cm 2.2cm;
   }
+  /* Header / footer auto-paginés */
+  @page {
+    @bottom-center {
+      content: counter(page);
+      font-family: 'Inter', sans-serif;
+      font-size: 9pt;
+      color: #888;
+    }
+  }
+  * { box-sizing: border-box; }
   body {
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    color: #111;
-    line-height: 1.55;
-    font-size: 11pt;
+    color: #1a1a1a;
+    line-height: 1.65;
+    font-size: 11.5pt;
     max-width: 100%;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
+  /* H1 : seulement le titre principal du document (rare, après cover) */
   h1 {
     color: #0B0D10;
-    border-bottom: 4px solid #F5A524;
-    padding-bottom: 12px;
-    font-size: 26pt;
-    margin-top: 0;
+    border-bottom: 5px solid #F5A524;
+    padding-bottom: 14px;
+    font-size: 28pt;
+    margin: 0 0 32px 0;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     page-break-after: avoid;
   }
+  /* H2 = nouveau chapitre = NOUVELLE PAGE pour aerer.
+     Evite la densite catastrophique du precedent rendu.
+     Note : on combine break-before page (moderne) ET page-break-before always
+     (legacy) pour max compat Chromium. Padding-top pour que le titre
+     respire en haut de la nouvelle page. */
   h2 {
     color: #0B0D10;
-    margin-top: 28px;
-    font-size: 18pt;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 6px;
+    margin: 0 0 22px 0;
+    padding: 30px 0 12px 0;
+    font-size: 22pt;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    border-bottom: 3px solid #F5A524;
+    break-before: page;
+    page-break-before: always;
+    break-after: avoid;
     page-break-after: avoid;
+  }
+  /* Le 1er H2 du document NE force PAS de page break (sinon page blanche après cover) */
+  h1 + h2,
+  .first-section h2 {
+    break-before: auto;
+    page-break-before: auto;
+    padding-top: 0;
   }
   h3 {
-    color: #B07515;
-    margin-top: 20px;
-    font-size: 14pt;
+    color: #0B0D10;
+    margin: 32px 0 14px 0;
+    font-size: 15pt;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    page-break-after: avoid;
+    border-left: 4px solid #F5A524;
+    padding-left: 12px;
+  }
+  h4 {
+    color: #333;
+    font-size: 12.5pt;
+    font-weight: 700;
+    margin: 24px 0 10px 0;
     page-break-after: avoid;
   }
-  h4 { color: #333; font-size: 12pt; }
-  p, li { font-size: 11pt; }
+  p {
+    margin: 0 0 14px 0;
+    font-size: 11.5pt;
+    text-align: justify;
+    hyphens: auto;
+    orphans: 3;
+    widows: 3;
+  }
+  ul, ol {
+    margin: 0 0 16px 0;
+    padding-left: 26px;
+  }
+  li {
+    font-size: 11.5pt;
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
   blockquote {
-    border-left: 4px solid #F5A524;
+    border-left: 5px solid #F5A524;
     background: #FFF8E6;
-    padding: 8px 14px;
-    margin: 14px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
     color: #5a3e00;
     font-style: italic;
+    border-radius: 0 6px 6px 0;
+    page-break-inside: avoid;
   }
+  blockquote p { margin: 0; }
   code {
-    background: #F5F5F5;
-    padding: 1px 6px;
+    background: #F5F0E6;
+    padding: 1.5px 6px;
     border-radius: 3px;
     font-family: 'JetBrains Mono', Consolas, monospace;
     font-size: 10pt;
-    color: #B07515;
+    color: #8B5A00;
   }
   pre {
-    background: #F5F5F5;
-    padding: 10px;
+    background: #F8F6F1;
+    padding: 14px;
     border-radius: 6px;
     overflow-x: auto;
     font-size: 9.5pt;
+    margin: 16px 0;
+    page-break-inside: avoid;
+    border-left: 3px solid #F5A524;
   }
-  pre code { background: none; padding: 0; color: #111; }
-  a { color: #B07515; text-decoration: none; border-bottom: 1px dotted #B07515; }
+  pre code { background: none; padding: 0; color: #1a1a1a; }
+  a {
+    color: #B07515;
+    text-decoration: none;
+    border-bottom: 1px dotted #B07515;
+  }
   table {
     border-collapse: collapse;
     width: 100%;
-    margin: 14px 0;
+    margin: 18px 0;
     page-break-inside: avoid;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px 10px;
-    text-align: left;
     font-size: 10pt;
   }
-  th { background: #F5A524; color: white; font-weight: 700; }
-  tr:nth-child(even) { background: #FAFAFA; }
-  hr { border: none; border-top: 2px dashed #ddd; margin: 24px 0; }
-  ul, ol { padding-left: 22px; }
-  strong { color: #0B0D10; }
-  /* Frontmatter YAML — on cache le bloc */
+  th, td {
+    border: 1px solid #e0d8c5;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #F5A524;
+    color: white;
+    font-weight: 700;
+    font-size: 10pt;
+    letter-spacing: 0.02em;
+  }
+  tr:nth-child(even) { background: #FBF8F1; }
+  hr {
+    border: none;
+    border-top: 2px dashed #d4c89a;
+    margin: 32px auto;
+    width: 60%;
+  }
+  strong { color: #0B0D10; font-weight: 700; }
+  em { color: #5a3e00; }
+  /* Frontmatter YAML — on cache le bloc s'il fuit */
   .frontmatter { display: none; }
+  /* Évite de couper une image, un tableau, une citation au milieu */
+  img, table, blockquote, pre, figure { page-break-inside: avoid; }
+  /* Forced page-break pour un nouveau chapitre — injecté avant chaque H2.
+     Chromium ignore page-break-before sur <div> vides ; on utilise un
+     <hr> avec hauteur 1px + visibility hidden : le moteur d'impression
+     traite le hr comme un noeud de bloc et applique la pagination. */
+  hr.pb {
+    page-break-before: always !important;
+    break-before: page !important;
+    visibility: hidden;
+    height: 1px;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 const COVER_HTML = (title, subtitle, author, date, version) => `
-  <section style="page-break-after: always; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #0B0D10 0%, #1a1a2e 100%); color: white; margin: -1.8cm -2cm; padding: 2cm;">
-    <div style="font-size: 40pt; font-weight: 900; line-height: 1.1; color: #F5A524; margin-bottom: 14px;">${title}</div>
-    <div style="font-size: 18pt; color: rgba(255,255,255,0.85); margin-bottom: 60px; max-width: 600px;">${subtitle ?? ""}</div>
-    <div style="font-size: 12pt; color: rgba(255,255,255,0.6);">
-      <div>${author ?? "Cryptoreflex"} — ${date ?? ""}</div>
-      <div>v${version ?? "1.0"}</div>
+  <section style="
+    page-break-after: always;
+    height: calc(100vh - 4.7cm);
+    min-height: 24cm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    background: linear-gradient(135deg, #0B0D10 0%, #1a1a2e 50%, #2d1b00 100%);
+    color: white;
+    margin: -2.2cm -2.2cm 0 -2.2cm;
+    padding: 4cm 3cm 3cm 3cm;
+    position: relative;
+    overflow: hidden;
+  ">
+    <!-- Accent diagonal en background -->
+    <div style="position: absolute; top: 0; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(245,165,36,0.25) 0%, transparent 70%); pointer-events: none;"></div>
+
+    <!-- Header logo + tag -->
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="
+        width: 60px; height: 60px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #FCD34D 0%, #B45309 100%);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 32pt; font-weight: 900; color: #0B0D10;
+      ">₿</div>
+      <div>
+        <div style="font-size: 18pt; font-weight: 800; letter-spacing: -0.02em;">Cryptoreflex</div>
+        <div style="font-size: 10pt; color: rgba(255,255,255,0.6); letter-spacing: 0.1em; text-transform: uppercase;">Étude indépendante</div>
+      </div>
+    </div>
+
+    <!-- Title block -->
+    <div>
+      <div style="
+        font-size: 11pt;
+        color: #F5A524;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 18px;
+      ">Guide PDF gratuit · ${date ?? ""}</div>
+      <div style="
+        font-size: 38pt;
+        font-weight: 900;
+        line-height: 1.05;
+        color: white;
+        letter-spacing: -0.025em;
+        margin-bottom: 24px;
+      ">${title}</div>
+      ${subtitle ? `<div style="
+        font-size: 15pt;
+        color: rgba(255,255,255,0.78);
+        line-height: 1.4;
+        max-width: 14cm;
+        font-weight: 400;
+      ">${subtitle}</div>` : ""}
+    </div>
+
+    <!-- Footer -->
+    <div style="
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(245,165,36,0.3);
+      padding-top: 18px;
+    ">
+      <div>
+        <div style="font-size: 10pt; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em;">Auteur</div>
+        <div style="font-size: 12pt; color: white; font-weight: 600; margin-top: 4px;">${author ?? "Cryptoreflex"}</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 10pt; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em;">Version</div>
+        <div style="font-size: 12pt; color: white; font-weight: 600; margin-top: 4px;">v${version ?? "1.0"}</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 10pt; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em;">Site</div>
+        <div style="font-size: 12pt; color: #F5A524; font-weight: 600; margin-top: 4px;">cryptoreflex.fr</div>
+      </div>
     </div>
   </section>
 `;
@@ -192,7 +363,22 @@ async function buildPdf(magnet) {
   const raw = readFileSync(srcPath, "utf-8");
   const { meta, body } = parseFrontmatter(raw);
   const cover = COVER_HTML(meta.title || magnet.title, meta.subtitle, meta.author, meta.date, meta.version);
-  const bodyHtml = marked.parse(body);
+  let bodyHtml = marked.parse(body);
+
+  // Force page break avant chaque H2 via attribut style inline.
+  // ATTENTION : on capture le caractere SUIVANT (espace ou >) et on le re-injecte
+  // a la fin pour ne pas casser le tag. Bug initial : sans cette precaution, on
+  // produisait <h2 style="..."Sommaire</h2> (sans le > de fermeture du tag) ce
+  // qui faisait que TOUT le contenu post-H2 etait aspire dans un seul h2 geant
+  // et le PDF se compressait a 8 pages au lieu de 50.
+  let firstH2Replaced = false;
+  bodyHtml = bodyHtml.replace(/<h2(\s|>)/g, (match, captured) => {
+    if (!firstH2Replaced) {
+      firstH2Replaced = true;
+      return match;
+    }
+    return `<h2 style="page-break-before:always !important; break-before:page !important;"${captured}`;
+  });
 
   const html = `<!doctype html>
 <html lang="fr">
@@ -208,13 +394,22 @@ async function buildPdf(magnet) {
 </html>`;
 
   const browser = await chromium.launch();
-  const ctx = await browser.newContext();
+  // Viewport A4 (794x1123 px @ 96 DPI) pour que Chromium pagine comme prevu
+  // au lieu d'utiliser le viewport screen 1280x720 par defaut qui ne refletait
+  // pas la pagination print.
+  const ctx = await browser.newContext({ viewport: { width: 794, height: 1123 } });
   const page = await ctx.newPage();
   await page.setContent(html, { waitUntil: "networkidle" });
+  // DEBUG : ecrit aussi le HTML pour inspection
+  writeFileSync(outPath.replace(".pdf", ".html"), html, "utf-8");
+  // CRITIQUE : sans emulateMedia print, Chromium IGNORE les page-break CSS.
+  // Sans cette ligne, un document de 22k mots tient sur 8 pages (densité
+  // catastrophique). Avec, il s'aère sur 40-50 pages avec un break par H2.
+  await page.emulateMedia({ media: "print" });
   await page.pdf({
     path: outPath,
     format: "A4",
-    margin: { top: "1.8cm", bottom: "1.8cm", left: "2cm", right: "2cm" },
+    margin: { top: "2.2cm", bottom: "2.5cm", left: "2.2cm", right: "2.2cm" },
     printBackground: true,
   });
   await browser.close();

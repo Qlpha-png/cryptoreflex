@@ -63,13 +63,13 @@ Cryptoreflex est un site lancé en avril 2026. Nous n'avons pas dix ans d'histor
 
 La plupart des comparateurs crypto fonctionnent comme suit : ils négocient une commission d'affiliation, puis rédigent une fiche "Top 3" où les plateformes partenaires arrivent mécaniquement en tête. Il n'y a pas de transparence sur les pondérations, pas de publication des sous-notes, et les "faiblesses" sont soit absentes soit rédigées de façon à ne pas dissuader. Ce modèle est parfaitement légal mais produit de l'information biaisée.
 
-Notre approche est différente sur trois points concrets. D'abord, la formule de scoring est publique et codée dans `lib/scoring.ts` — n'importe quel lecteur peut recalculer n'importe quelle note à partir des sous-notes affichées. Ensuite, nous publions les sous-notes de tous les critères, y compris ceux qui désavantagent nos partenaires. Enfin, nous incluons une section "Faiblesses" honnête pour chaque plateforme — y compris celles avec lesquelles nous avons une relation commerciale. Une plateforme peut tout à fait nous payer pour un article sponsorisé et recevoir une note 4,0/5 — c'est la règle du jeu que nous avons fixée publiquement.
+Notre approche est différente sur trois points concrets. D'abord, la formule de scoring est publique et codée dans notre formule de calcul — n'importe quel lecteur peut recalculer n'importe quelle note à partir des sous-notes affichées. Ensuite, nous publions les sous-notes de tous les critères, y compris ceux qui désavantagent nos partenaires. Enfin, nous incluons une section "Faiblesses" honnête pour chaque plateforme — y compris celles avec lesquelles nous avons une relation commerciale. Une plateforme peut tout à fait nous payer pour un article sponsorisé et recevoir une note 4,0/5 — c'est la règle du jeu que nous avons fixée publiquement.
 
 ### Comment lire ce document
 
 Ce guide est structuré pour être lu dans l'ordre ou consulté de façon ciblée. Si tu découvres le sujet, commence par le Chapitre 2 (méthodologie) pour comprendre comment les notes sont construites, puis consulte le Chapitre 3 (tableau récapitulatif) pour une vue d'ensemble rapide. Les Chapitres 4 et 5 contiennent les fiches détaillées des 11 plateformes, à lire selon tes besoins : inutile de tout parcourir si tu sais déjà que tu cherches un broker simple pour faire du DCA. Le Chapitre 6 synthétise les recommandations par profil. Les Chapitres 7 à 10 sont des ressources complémentaires : simulations de frais, décryptage des enjeux sécurité/MiCA, pièges courants, et FAQ.
 
-Une note sur les données : toutes les valeurs chiffrées de ce document sont issues de `data/platforms.json`, notre base de données interne mise à jour au 26 avril 2026. Aucun chiffre n'est inventé. Les frais et bonus peuvent évoluer après cette date — consulte les fiches en ligne sur cryptoreflex.fr pour les valeurs à jour.
+Une note sur les données : toutes les valeurs chiffrées de ce document sont issues de notre base de données, notre base de données interne mise à jour au 26 avril 2026. Aucun chiffre n'est inventé. Les frais et bonus peuvent évoluer après cette date — consulte les fiches en ligne sur cryptoreflex.fr pour les valeurs à jour.
 
 ---
 
@@ -77,7 +77,7 @@ Une note sur les données : toutes les valeurs chiffrées de ce document sont is
 
 ### 2.1 Les 6 critères et leurs pondérations
 
-Le score global de chaque plateforme est une moyenne pondérée de 6 critères, notés de 0 à 5. Les pondérations sont les suivantes (source : `app/methodologie/page.tsx`, `lib/scoring.ts`) :
+Le score global de chaque plateforme est une moyenne pondérée de 6 critères, notés de 0 à 5. Les pondérations sont les suivantes :
 
 | Critère | Poids | Définition |
 |---|---:|---|
@@ -106,7 +106,7 @@ La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les 
 
 ### 2.3 Comment on calcule le score Catalogue (déterministe, reproductible)
 
-Le critère catalogue est le seul critère entièrement dérivé de façon algorithmique. L'objectif est d'éviter tout jugement subjectif sur "ce catalogue est bien ou mal" et de s'en tenir à des dimensions mesurables. La formule est publique dans `lib/scoring.ts` et recalculée automatiquement par `scripts/compute-platform-scores.mjs` à chaque mise à jour du JSON.
+Le critère catalogue est le seul critère entièrement dérivé de façon algorithmique. L'objectif est d'éviter tout jugement subjectif sur "ce catalogue est bien ou mal" et de s'en tenir à des dimensions mesurables. La formule est publique dans notre formule de calcul et recalculée automatiquement par notre script de recalcul automatique à chaque mise à jour des données.
 
 **Base — courbe sur le nombre de cryptos listées :**
 
@@ -134,11 +134,11 @@ Exemple de calcul pour Binance (380 cryptos, staking oui, 5 méthodes de paiemen
 - +0,2 (5 méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay) = 4,96
 - Arrondi à 5,0 (cap)
 
-Résultat : 5,0 — ce qui correspond bien à la valeur dans `data/platforms.json`.
+Résultat : 5,0 — ce qui correspond bien à la valeur dans notre base de données.
 
 ### 2.4 Calcul du score global
 
-La formule de score global est la suivante (source : `lib/scoring.ts`, constante `SCORING_WEIGHTS`) :
+La formule de score global est la suivante (source : notre formule de calcul) :
 
 **Global = 0,20 × Frais + 0,25 × Sécurité + 0,20 × MiCA + 0,15 × UX + 0,10 × Support + 0,10 × Catalogue**
 
@@ -154,7 +154,7 @@ Le résultat est arrondi à une décimale. Exemple de vérification pour Bitpand
 | Catalogue | 5,0 | 10 % | 0,50 |
 | **Global** | **4,4** | 100 % | **4,365 → arrondi 4,4** |
 
-Ce calcul est reproductible par n'importe qui avec une calculatrice. Le code TypeScript dans `lib/scoring.ts` implémente exactement cette formule et lève une erreur en CI si le score stocké dans le JSON dérive de plus de 0,05 point par rapport au score calculé dynamiquement.
+Ce calcul est reproductible par n'importe qui avec une calculatrice. Le code source dans notre formule de calcul implémente exactement cette formule et déclenche une alerte automatique si le score affiché ne correspond pas à la formule à 0,05 point près par rapport au score calculé dynamiquement.
 
 ### 2.5 Pourquoi nos scores ne flatteront jamais une plateforme parce qu'elle nous paie
 
@@ -180,7 +180,7 @@ La date de dernière mise à jour est toujours visible en haut de chaque fiche s
 
 ## Chapitre 3 — Tableau récapitulatif des 11 plateformes {#chapitre-3}
 
-Le tableau ci-dessous est trié par score global décroissant. Toutes les notes sont issues du calcul au 26 avril 2026 (source : `data/platforms.json`, formule `lib/scoring.ts`).
+Le tableau ci-dessous est trié par score global décroissant. Toutes les notes sont issues du calcul au 26 avril 2026 .
 
 | Rang | Plateforme | Catégorie | Global /5 | Forces | Faiblesses | Idéal pour |
 |---:|---|---|---:|---|---|---|
@@ -237,7 +237,7 @@ Coinbase détient un agrément MiCA de type CASP. Enregistrement AMF : E2023-035
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,49 % à l'achat (14,90 €) + 0,60 % à la vente (5,40 € sur 1 000 € nets) + spread estimé 1 % sur le retour = environ **27 à 35 € pour un aller-retour de 1 000 €**. C'est le prix le plus élevé du panel parmi les grandes plateformes.
 
 **Catalogue & services :**
-- 260 cryptos listées (source : `data/platforms.json`)
+- 260 cryptos listées 
 - Staking disponible : oui — ETH, SOL, ADA, DOT, ATOM, XTZ
 - Méthodes de paiement : CB, SEPA, Apple Pay, Google Pay, PayPal (5 méthodes — bonus calculé dans score catalogue)
 - Services additionnels : Coinbase Earn (gagner des cryptos en regardant des tutoriels), Coinbase One (abonnement pour frais réduits), Coinbase Advanced Trade (interface pro avec carnet d'ordres)
@@ -253,7 +253,7 @@ Coinbase détient un agrément MiCA de type CASP. Enregistrement AMF : E2023-035
 - Téléphone FR : oui
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 1,6 / 5 (28 500 avis)
 - App Store : 4,7 / 5
 - Play Store : 4,6 / 5
@@ -273,8 +273,7 @@ La dissonance entre le Trustpilot (1,6/5) et les stores mobiles (4,6-4,7/5) mér
 **Verdict Cryptoreflex :**
 Coinbase est la plateforme que tu choisis quand ta priorité absolue est la sécurité réglementaire et que tu acceptes de payer un premium pour ça. Cotée en Bourse, agréée MiCA, historique sans perte de fonds clients — c'est un dossier solide. Si tu achètes 100 € de Bitcoin par mois et que tu ne regardes pas les frais à la loupe, Coinbase est un choix totalement défendable. Si tu gères des montants importants ou si tu fais du trading actif, les frais de 1,49 % sur achat instantané deviennent vite significatifs — regarde Kraken ou Binance. À éviter si tu cherches des altcoins exotiques (catalogue limité à 260 cryptos) ou des produits dérivés.
 
-**Source des données :** `data/platforms.json`, id `coinbase`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/coinbase
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
@@ -309,7 +308,7 @@ Binance opère en France via Binance France, qui détient un agrément MiCA de t
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,80 % à l'achat (18 €) + 0,10 % à la vente (0,90 € sur 1 000 € nets) + spread 0,3 % estimé = environ **20 à 22 € pour un aller-retour de 1 000 €** en mode instantané. En trading spot avec ordre limite (mode maker), le coût descend à environ 3 € pour un aller-retour — l'un des plus bas du marché.
 
 **Catalogue & services :**
-- 380 cryptos listées (source : `data/platforms.json`)
+- 380 cryptos listées 
 - Staking disponible : oui — ETH, SOL, ADA, DOT, BNB, MATIC, AVAX
 - Méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay (5 méthodes)
 - Services additionnels : Binance Futures (dérivés perpétuels), Binance Earn (staking, lending, liquidity pools), Binance Card (carte Visa crypto), Launchpad (nouvelles cryptos en avant-première), NFT marketplace
@@ -325,7 +324,7 @@ Binance opère en France via Binance France, qui détient un agrément MiCA de t
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 48 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 2,5 / 5 (152 000 avis)
 - App Store : 4,5 / 5
 - Play Store : 4,4 / 5
@@ -345,8 +344,7 @@ Le Trustpilot de Binance (2,5/5 sur 152 000 avis) est difficile à ignorer par s
 **Verdict Cryptoreflex :**
 Binance est l'outil de travail des traders actifs. Si tu passes des ordres plusieurs fois par semaine sur des paires spot, que tu veux accéder à des altcoins mid-cap que les brokers européens ne listent pas, ou que tu fais du staking sur BNB, Binance est difficile à battre sur les frais et la profondeur de marché. Pour un investisseur long terme qui achète en DCA tous les mois, l'avantage de frais spot à 0,1 % est moins décisif que tu ne le crois : c'est le spread et les frais d'achat instantané (1,8 %) qui comptent pour toi. À éviter si tu recherches la garantie réglementaire maximale dans l'UE, ou si l'interface complexe te décourage.
 
-**Source des données :** `data/platforms.json`, id `binance`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/binance
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
@@ -381,7 +379,7 @@ Bitpanda détient un agrément MiCA CASP via l'Allemagne (BaFin) et la France. E
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,49 % à l'achat (14,90 €) + 0,25 % à la vente (2,25 €) + spread 1,5 % estimé sur Bitpanda Swap = environ **18 à 30 € pour un aller-retour de 1 000 €**. Le spread de 1 à 2 % est le poste de coût le plus significatif sur Bitpanda — il est intégré dans le prix affiché et n'apparaît pas dans les frais visibles, ce qui donne une impression de frais faibles alors que le coût réel est modéré.
 
 **Catalogue & services :**
-- 480 cryptos listées (source : `data/platforms.json`) — le plus large catalogue broker du panel
+- 480 cryptos listées — le plus large catalogue broker du panel
 - Staking disponible : oui — ETH, SOL, ADA, DOT, ATOM, MATIC
 - Méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay, Skrill, Neteller (7 méthodes — bonus calculé dans score catalogue)
 - Services additionnels : actions (+ de 1 500 actions US et européennes), ETF (+ de 300 ETF), métaux précieux (or, argent, platine), plans d'épargne automatiques (DCA programmable sur n'importe quel actif), Bitpanda Plus (service premium)
@@ -390,14 +388,14 @@ Bitpanda détient un agrément MiCA CASP via l'Allemagne (BaFin) et la France. E
 - Cold storage : 99 % des fonds clients — le plus élevé du panel parmi les grandes plateformes
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun (source : `data/platforms.json`, `lastIncident: null`)
+- Dernier incident significatif : aucun (aucun)
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,3 / 5 (47 000 avis)
 - App Store : 4,7 / 5
 - Play Store : 4,5 / 5
@@ -417,8 +415,7 @@ Bitpanda est l'une des rares grandes plateformes crypto à maintenir un Trustpil
 **Verdict Cryptoreflex :**
 Bitpanda est le choix cohérent pour un investisseur européen qui pense en années, pas en semaines. La combinaison crypto + actions + ETF + or dans une seule app régulée MiCA et MiFID II est une proposition de valeur unique dans le panel. Les plans d'épargne automatiques sont parmi les mieux conçus du marché. Le seul vrai reproche est le spread de 1 à 2 % — si tu investis régulièrement des montants importants, ce coût s'accumule. Pour un DCA mensuel de 100 à 500 €, Bitpanda est un excellent compromis. Pour du trading actif ou de la recherche d'altcoins très liquides, regarde Binance ou Kraken. À éviter si tu as besoin de déplacer tes cryptos vers un wallet externe régulièrement (le spread rend ces transferts coûteux).
 
-**Source des données :** `data/platforms.json`, id `bitpanda`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/bitpanda
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
@@ -453,7 +450,7 @@ Kraken détient un agrément MiCA CASP via l'Irlande. Enregistrement AMF : E2024
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,50 % à l'achat (15 €) + 0,26 % à la vente (2,36 €) + spread 0,5 % estimé = environ **20 à 25 € pour un aller-retour de 1 000 €**. Les frais taker spot à 0,26 % sont légèrement supérieurs à Binance (0,10 %) mais le spread bien inférieur à Bitpanda (1-2 %). Kraken Pro (interface avancée) offre des tarifs encore réduits à partir de certains volumes.
 
 **Catalogue & services :**
-- 290 cryptos listées (source : `data/platforms.json`)
+- 290 cryptos listées 
 - Staking disponible : oui — ETH, SOL, ADA, DOT, ATOM, XTZ, MATIC, ALGO (le plus large programme de staking du panel parmi les exchanges, 8 cryptos)
 - Méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay (5 méthodes)
 - Services additionnels : Kraken Pro (interface trading avancée), futures perpétuels, staking on-chain et off-chain, Kraken NFT marketplace, Proof-of-Reserves (audit mensuel)
@@ -469,7 +466,7 @@ Kraken détient un agrément MiCA CASP via l'Irlande. Enregistrement AMF : E2024
 - Téléphone FR : oui — fait rare dans le panel, partagé uniquement avec Coinbase et Coinhouse
 - Temps de réponse moyen : inférieur à 12 h — le meilleur du panel parmi les exchanges
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 3,5 / 5 (9 500 avis)
 - App Store : 4,6 / 5
 - Play Store : 4,5 / 5
@@ -489,8 +486,7 @@ Un Trustpilot de 3,5/5 sur un volume modéré (9 500 avis) est dans la moyenne d
 **Verdict Cryptoreflex :**
 Kraken mérite son score de 4,5/5 et la première place du classement. C'est la seule plateforme du panel à combiner 14 ans sans hack, un Proof-of-Reserves audité mensuellement, un support téléphonique en français, et un agrément MiCA solide. Pour un investisseur qui place des montants significatifs (au-delà de quelques milliers d'euros), ce profil de sécurité vaut largement le premium de quelques dixièmes de pourcent de frais par rapport à Binance. Pour un débutant total qui commence avec 50 à 200 €, l'interface Pro peut être un frein — mais Kraken a travaillé sur son interface Simple, qui est tout à fait accessible. À recommander sans hésitation pour l'investisseur expérimenté ; à considérer sérieusement pour tout investisseur qui accorde de la valeur à la sécurité.
 
-**Source des données :** `data/platforms.json`, id `kraken`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/kraken
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
@@ -525,7 +521,7 @@ Bitget détient un agrément MiCA CASP via la Lituanie. Pas d'enregistrement AMF
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,50 % à l'achat (15 €) + 0,10 % à la vente (0,90 €) + spread 0,25 % estimé = environ **18 à 20 € pour un aller-retour de 1 000 €** en mode instantané. En trading spot avec ordre limite, le coût descend à environ 3 à 4 € — très compétitif.
 
 **Catalogue & services :**
-- 800 cryptos listées — le plus grand catalogue du panel (source : `data/platforms.json`)
+- 800 cryptos listées — le plus grand catalogue du panel 
 - Staking disponible : oui — ETH, SOL, ADA, DOT, BGB, ATOM
 - Méthodes de paiement : CB, SEPA, Apple Pay, Google Pay, P2P (5 méthodes)
 - Services additionnels : Bitget Futures (dérivés perpétuels, options), Copy Trading (reproduire automatiquement les stratégies des meilleurs traders), Bitget Earn (staking, savings), PoolX (mining pools), Launchpad altcoins
@@ -534,14 +530,14 @@ Bitget détient un agrément MiCA CASP via la Lituanie. Pas d'enregistrement AMF
 - Cold storage : 90 % des fonds clients — le plus bas du panel parmi les exchanges retenus
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun hack confirmé (source : `data/platforms.json`)
+- Dernier incident significatif : aucun hack confirmé 
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,4 / 5 (32 000 avis)
 - App Store : 4,6 / 5
 - Play Store : 4,5 / 5
@@ -561,8 +557,7 @@ Le Trustpilot de Bitget (4,4/5 sur 32 000 avis) est l'un des plus solides du pan
 **Verdict Cryptoreflex :**
 Bitget est la plateforme référence pour deux cas d'usage spécifiques : le copy trading et la recherche d'altcoins pointus. Si tu veux apprendre le trading en suivant des traders vérifiés avec une reproduction automatique, il n'y a pas de meilleure interface dans ce panel. Si tu cherches un altcoin précis qui n'est pas listé chez Binance, Bitget a 800 cryptos. En dehors de ces deux usages, Bitget n'a pas d'avantage décisif sur Binance ou Kraken. Le point de vigilance reste la conformité MiCA : l'agrément lituanien est valide mais récent (juillet 2025) et la supervision moins directe qu'un enregistrement AMF. À éviter si ta priorité est la solidité réglementaire maximale en France.
 
-**Source des données :** `data/platforms.json`, id `bitget`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/bitget
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
@@ -597,7 +592,7 @@ Trade Republic détient un agrément MiCA CASP via l'Allemagne (BaFin). Pas d'en
 - **Coût total simulé — achat 1 000 € + 1 vente :** ~1,00 % à l'achat (10 €) + 1,00 % à la vente (10 €) + spread 1,5 % estimé = environ **22 à 30 € pour un aller-retour de 1 000 €**. Note : la grille tarifaire de Trade Republic est plus transparente que la plupart des brokers — 1 % sur tout, sans frais cachés structurels. Le spread reste cependant un coût réel.
 
 **Catalogue & services :**
-- 70 cryptos listées (source : `data/platforms.json`) — le catalogue crypto le plus limité du panel
+- 70 cryptos listées — le catalogue crypto le plus limité du panel
 - Staking disponible : non
 - Méthodes de paiement : SEPA, Virement instantané, Apple Pay, Google Pay (4 méthodes)
 - Services additionnels (c'est là que Trade Republic se distingue) : plus de 9 000 actions mondiales, plus de 2 500 ETF, obligations, ETF de métaux précieux, plans d'épargne automatiques sur actions, ETF et cryptos, compte rémunéré (intérêts sur les liquidités), carte de paiement Trade Republic
@@ -606,14 +601,14 @@ Trade Republic détient un agrément MiCA CASP via l'Allemagne (BaFin). Pas d'en
 - Cold storage : 100 % des fonds clients crypto
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun (source : `data/platforms.json`, `lastIncident: null`)
+- Dernier incident significatif : aucun (aucun)
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 48 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 3,8 / 5 (28 000 avis)
 - App Store : 4,6 / 5
 - Play Store : 4,5 / 5
@@ -633,8 +628,7 @@ Un Trustpilot de 3,8/5 sur 28 000 avis est respectable pour un broker. Les plain
 **Verdict Cryptoreflex :**
 Trade Republic est un excellent choix pour une catégorie très précise d'investisseurs : ceux qui veulent construire un patrimoine à long terme mêlant crypto, ETF monde, et actions en automatique, sans avoir à gérer plusieurs applications. La combinaison d'une interface mobile remarquable, de plans d'épargne dès 1 €, d'un agrément BaFin et d'un catalogue boursier complet est difficile à battre dans cette niche. L'absence de retrait crypto vers wallet externe est le point de vigilance majeur : si tu as l'intention un jour de déplacer tes cryptos vers un wallet hardware (Ledger, Trezor), Trade Republic n'est pas fait pour toi. Si tu penses garder tes cryptos en custodial sur le long terme dans le cadre d'un portefeuille diversifié, c'est une plateforme solide.
 
-**Source des données :** `data/platforms.json`, id `trade-republic`, lastUpdated 2026-04-26.
-Voir la fiche complète sur cryptoreflex.fr/avis/trade-republic
+Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ## Chapitre 4 (suite) — Les 11 fiches plateformes (2/2 — fiches 7 à 11) {#chapitre-4-suite}
 
@@ -671,7 +665,7 @@ Coinhouse détient un agrément MiCA de type CASP via la France. Enregistrement 
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** 2,49 % à l'achat (24,90 €) + 1,99 % à la vente (17,92 € sur 975,10 €) + spread estimé 2 % = environ **60 à 70 € pour un aller-retour de 1 000 €**. C'est le coût le plus élevé du panel, de loin. Sur un DCA de 200 €/mois, tu paies environ 60 € de frais par an rien que sur les achats. Ce chiffre est à connaître avant d'ouvrir un compte.
 
 **Catalogue & services :**
-- 60 cryptos listées (source : `data/platforms.json`) — catalogue volontairement restreint, focus sur les crypto-actifs établis
+- 60 cryptos listées — catalogue volontairement restreint, focus sur les crypto-actifs établis
 - Staking disponible : oui — ETH, SOL, ADA, DOT, ATOM
 - Méthodes de paiement : CB, SEPA, Virement instantané (3 méthodes)
 - Dépôt minimum : 30 €
@@ -681,14 +675,14 @@ Coinhouse détient un agrément MiCA de type CASP via la France. Enregistrement 
 - Cold storage : 100 % des fonds clients — le même ratio que Trade Republic, le maximum observable
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun (source : `data/platforms.json`, `lastIncident: null`)
+- Dernier incident significatif : aucun (aucun)
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : oui — disponible en semaine avec un temps de réponse annoncé inférieur à 4 heures. C'est le meilleur support téléphonique du panel, partagé avec Kraken et Coinbase mais avec une réactivité supérieure sur les heures ouvrées françaises
 - Temps de réponse moyen : inférieur à 4 h en semaine
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,4 / 5 (4 800 avis)
 - App Store : 4,5 / 5
 - Play Store : 4,3 / 5
@@ -708,7 +702,6 @@ Un Trustpilot de 4,4/5 est le même score que Bitget — mais sur un volume d'av
 **Verdict Cryptoreflex :**
 Coinhouse est une plateforme honnêtement chère, et cette honnêteté force l'admiration. Elle ne cache pas ses frais derrière des spreads opaques : tu vois exactement ce que tu paies. Ce que tu achètes avec ce premium, c'est un interlocuteur humain francophone disponible en moins de 4 heures, un acteur 100 % français avec le plus ancien enregistrement AMF du marché, et un cold storage à 100 %. Pour un investisseur qui démarre avec 5 000 € et qui a besoin d'être guidé — ou pour quelqu'un qui gère un patrimoine significatif et veut un conseil personnalisé — ce prix peut être justifié. Pour un trader actif ou un investisseur en DCA régulier sur de petits montants, les frais grèveront mécaniquement la performance. Si tu veux les meilleurs frais du marché, regarde Binance ou Bybit. Si tu veux le meilleur accompagnement humain français, Coinhouse n'a pas de concurrent direct dans ce panel.
 
-**Source des données :** `data/platforms.json`, id `coinhouse`, lastUpdated 2026-04-26.
 Voir notre fiche complète sur cryptoreflex.fr/avis/coinhouse
 
 ---
@@ -744,7 +737,7 @@ Bitstack détient un agrément MiCA de type CASP via la France. Enregistrement A
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** 1,00 % à l'achat (10 €) + 1,00 % à la vente (9,90 € sur 990 €) + spread estimé 1,5 % = environ **30 à 35 € pour un aller-retour de 1 000 €**. Le spread de 1 à 2 % est le coût réel le plus significatif et mérite attention : comme sur Bitpanda, il est intégré dans le prix affiché. Sur un DCA mensuel de 100 €, le coût annuel oscille entre 24 et 36 €. C'est acceptable pour le niveau de simplicité offert.
 
 **Catalogue & services :**
-- 25 cryptos listées (source : `data/platforms.json`) — le catalogue le plus étroit du panel, intentionnellement
+- 25 cryptos listées — le catalogue le plus étroit du panel, intentionnellement
 - Staking disponible : non
 - Méthodes de paiement : SEPA, Virement instantané, CB, Apple Pay (4 méthodes)
 - Dépôt minimum : 1 €
@@ -754,14 +747,14 @@ Bitstack détient un agrément MiCA de type CASP via la France. Enregistrement A
 - Cold storage : 100 % des fonds clients — niveau maximal, partagé avec Trade Republic et Coinhouse
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun (source : `data/platforms.json`, `lastIncident: null`)
+- Dernier incident significatif : aucun (aucun)
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,6 / 5 (3 200 avis)
 - App Store : 4,7 / 5
 - Play Store : 4,5 / 5
@@ -781,7 +774,6 @@ La note Trustpilot de 4,6/5 est la plus élevée du panel — mais sur le volume
 **Verdict Cryptoreflex :**
 Bitstack est une application avec un positionnement très clair : t'aider à épargner en Bitcoin de la façon la plus simple possible. Elle réussit brillamment dans cet objectif précis. L'arrondi automatique est une fonctionnalité pédagogiquement puissante — elle rend l'épargne en crypto quasi invisible, ce qui est exactement ce que les recherches en finance comportementale recommandent pour construire une habitude d'épargne. Si tu démarres, que tu veux juste du BTC, que tu ne veux pas passer de temps à comprendre des interfaces complexes, et que tu es prêt à payer 1 % + spread, Bitstack est un excellent point d'entrée. Si tu évolues vers plus d'autonomie ou si tu veux diversifier sur des altcoins, tu devras ouvrir un compte ailleurs — Bitstack n'essaie pas d'être la plateforme universelle, et c'est sa force.
 
-**Source des données :** `data/platforms.json`, id `bitstack`, lastUpdated 2026-04-26.
 Voir notre fiche complète sur cryptoreflex.fr/avis/bitstack
 
 ---
@@ -817,7 +809,7 @@ SwissBorg détient un agrément MiCA de type CASP via la France. Enregistrement 
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** 1,00 % à l'achat (10 €) + 1,00 % à la vente (9,90 € sur 990 €) + spread estimé 1 % = environ **25 à 30 € pour un aller-retour de 1 000 €** sans BORG. Avec le token BORG, ce coût peut descendre à 15 à 20 €. C'est le meilleur rapport frais/services pour un broker non-exchange du panel.
 
 **Catalogue & services :**
-- 100 cryptos listées (source : `data/platforms.json`) — catalogue équilibré, couvrant les 100 crypto-actifs les plus liquides du marché
+- 100 cryptos listées — catalogue équilibré, couvrant les 100 crypto-actifs les plus liquides du marché
 - Staking disponible : oui — ETH, SOL, ADA, DOT, BORG, MATIC
 - Méthodes de paiement : SEPA, Virement instantané, CB (3 méthodes — pas de bonus méthodes de paiement dans le calcul catalogue)
 - Dépôt minimum : 50 € — la condition d'entrée la plus haute du panel
@@ -827,14 +819,14 @@ SwissBorg détient un agrément MiCA de type CASP via la France. Enregistrement 
 - Cold storage : 100 % des fonds clients — maximum du panel
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun (source : `data/platforms.json`, `lastIncident: null`)
+- Dernier incident significatif : aucun (aucun)
 
 **Support FR :**
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 12 h — le meilleur temps de réponse pour un broker sans téléphone dans le panel, comparable à Kraken
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,5 / 5 (7 800 avis)
 - App Store : 4,7 / 5
 - Play Store : 4,6 / 5
@@ -854,7 +846,6 @@ Le Trustpilot de SwissBorg (4,5/5 sur 7 800 avis) est l'un des plus solides du p
 **Verdict Cryptoreflex :**
 SwissBorg est le broker qui donne le plus l'impression d'avoir réfléchi à l'expérience utilisateur globale plutôt qu'à simplement cocher les cases réglementaires. Le Smart Engine est une vraie valeur ajoutée technique pour l'investisseur particulier — il te garantit de ne pas te faire gruger sur le prix d'exécution, ce qui compte réellement sur des achats répétés. Les programmes Earn sont transparents sur les APR et les risques, ce qui tranche avec certains produits de yield moins bien encadrés du marché. La note UX de 4,7/5 n'est pas un hasard. La seule réserve sérieuse est la dépendance au token BORG pour les meilleures conditions : si tu ne veux pas ajouter une exposition à un token de gouvernance dans ton portefeuille, tu ne profites pas pleinement du modèle. Pour un investisseur intermédiaire avec 500 € à 5 000 € à déployer, qui veut un outil premium sans la complexité d'un exchange, SwissBorg est une recommandation forte.
 
-**Source des données :** `data/platforms.json`, id `swissborg`, lastUpdated 2026-04-26.
 Voir notre fiche complète sur cryptoreflex.fr/avis/swissborg
 
 ---
@@ -891,7 +882,7 @@ Bybit détient un agrément MiCA de type CASP via l'Autriche (FMA — Finanzmark
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** 1,50 % à l'achat (15 €) + 0,10 % à la vente (0,98 € sur 985 €) + spread estimé 0,25 % = environ **18 à 20 € pour un aller-retour de 1 000 €** en mode instantané. En trading spot avec ordre limite (maker), le coût descend à environ 3 € pour un aller-retour — identique à Binance. Pour les futures, le coût est encore plus bas grâce aux frais taker à 0,055 %.
 
 **Catalogue & services :**
-- 700 cryptos listées (source : `data/platforms.json`) — le deuxième plus large catalogue du panel après Bitget (800)
+- 700 cryptos listées — le deuxième plus large catalogue du panel après Bitget (800)
 - Staking disponible : oui — ETH, SOL, ADA, DOT, MNT, ATOM
 - Méthodes de paiement : CB, SEPA, Apple Pay, Google Pay, P2P (5 méthodes)
 - Dépôt minimum : 10 €
@@ -908,7 +899,7 @@ Bybit détient un agrément MiCA de type CASP via l'Autriche (FMA — Finanzmark
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,2 / 5 (18 000 avis)
 - App Store : 4,6 / 5
 - Play Store : 4,4 / 5
@@ -928,7 +919,6 @@ Un Trustpilot de 4,2/5 sur 18 000 avis est correct pour un exchange de cette tai
 **Verdict Cryptoreflex :**
 Bybit est une plateforme sérieuse pour les traders qui savent ce qu'ils font. Ses frais sur les dérivés sont parmi les meilleurs du marché, sa profondeur de carnet est réelle, et sa gestion du hack 2025 — aussi douloureuse qu'elle soit pour la réputation — a montré qu'elle avait les reins assez solides pour couvrir 1,4 milliard de dollars de pertes sans toucher aux fonds clients. Ce n'est pas rien. Mais Bybit n'est pas la plateforme des débutants, ni des investisseurs prudents, ni de ceux qui veulent la meilleure conformité réglementaire. Elle est pour toi si tu fais du trading actif sur des dérivés crypto et que tu comprends les risques que tu prends. Si tu en es là, tu trouveras difficile de faire mieux en termes de frais et de profondeur sur les perp BTC/ETH.
 
-**Source des données :** `data/platforms.json`, id `bybit`, lastUpdated 2026-04-26.
 Voir notre fiche complète sur cryptoreflex.fr/avis/bybit
 
 ---
@@ -964,7 +954,7 @@ Revolut détient un agrément MiCA de type CASP via la Lituanie (Banque centrale
 - **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker (app classique) :** 1,49 % à l'achat (14,90 €) + 1,49 % à la vente (14,67 € sur 985,10 €) + spread estimé 2 % = environ **50 à 55 € pour un aller-retour de 1 000 €** sur l'app classique. C'est le deuxième coût le plus élevé du panel après Coinhouse. Sur Revolut X (mode pro), le coût chute drastiquement à des niveaux comparables aux exchanges.
 
 **Catalogue & services :**
-- 220 cryptos listées (source : `data/platforms.json`)
+- 220 cryptos listées 
 - Staking disponible : oui — ETH, SOL, ADA, DOT
 - Méthodes de paiement : Solde Revolut, CB, SEPA, SEPA Instant, Apple Pay, Google Pay (6 méthodes)
 - Dépôt minimum : 1 €
@@ -981,7 +971,7 @@ Revolut détient un agrément MiCA de type CASP via la Lituanie (Banque centrale
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h — mais avec un bémol : les utilisateurs rapportent des difficultés sur l'escalade (passer du bot de premier niveau à un agent humain compétent prend souvent plusieurs échanges). Le score support de 3,4/5 est le plus bas du panel pour cette raison.
 
-**Notes externes (source : `data/platforms.json`) :**
+**Notes externes :**
 - Trustpilot : 4,2 / 5 (198 000 avis)
 - App Store : 4,7 / 5
 - Play Store : 4,5 / 5
@@ -1001,14 +991,13 @@ Le Trustpilot de Revolut (4,2/5 sur 198 000 avis) est le volume d'avis le plus i
 **Verdict Cryptoreflex :**
 Revolut crypto est une offre à deux vitesses. Sur l'app classique, c'est une porte d'entrée dans la crypto avec des frais franchement élevés — on paie le confort de l'intégration. Pour un client Revolut qui veut juste mettre 100 € en Bitcoin et ne pas y toucher pendant six mois, c'est acceptable. Pour tous les autres, Revolut X change la donne : frais quasi nuls, retraits vers wallet, carnet d'ordres. Mais Revolut X est une application distincte avec sa propre courbe d'apprentissage — à ce stade, autant aller directement chez Binance ou Kraken qui offrent les mêmes fonctionnalités sans la contrainte de l'écosystème fermé. Le choix de Revolut ne se justifie vraiment que si tu es déjà client Revolut et que tu veux éviter la friction d'un nouveau compte sur une plateforme dédiée. Dès que tu montes en niveau, les limitations te pousseront vers autre chose.
 
-**Source des données :** `data/platforms.json`, id `revolut`, lastUpdated 2026-04-26.
 Voir notre fiche complète sur cryptoreflex.fr/avis/revolut
 
 ---
 
 ## Chapitre 5 — Tableaux comparatifs synthétiques {#chapitre-5}
 
-Les quatre tableaux ci-dessous synthétisent les données clés des 11 plateformes pour une comparaison rapide. Toutes les valeurs sont issues de `data/platforms.json` au 26 avril 2026.
+Les quatre tableaux ci-dessous synthétisent les données clés des 11 plateformes pour une comparaison rapide. Toutes les valeurs sont issues de notre base de données au 26 avril 2026.
 
 ---
 
@@ -1048,7 +1037,7 @@ Pour un investisseur en DCA mensuel de 200 €, la différence entre Bybit (3,20
 
 ### 5.2 Statut MiCA et juridiction des 11 plateformes
 
-Ce tableau est basé sur les données `mica.status`, `mica.amfRegistration`, `mica.registrationDate` et `mica.atRiskJuly2026` du fichier `data/platforms.json`. Dernière vérification : 26 avril 2026.
+Ce tableau est basé sur les données `mica.status`, `mica.amfRegistration`, `mica.registrationDate` et `mica.atRiskJuly2026` du fichier notre base de données. Dernière vérification : 26 avril 2026.
 
 | Plateforme | Statut MiCA | Juridiction | Enreg. AMF | Date enreg. | À risque juil. 2026 ? |
 |---|---|---|---|---|---|
@@ -1414,9 +1403,9 @@ La méthodologie de scoring utilisée dans ce guide est entièrement publique et
 
 **cryptoreflex.fr/methodologie** — description complète des 6 critères, de leurs pondérations (Frais 20 %, Sécurité 25 %, MiCA 20 %, UX 15 %, Support 10 %, Catalogue 10 %), et de la formule de calcul du score global. Cette page est la référence officielle en cas de divergence.
 
-**lib/scoring.ts** — le code TypeScript qui implémente la formule de score. Disponible en open source dans le dépôt public Cryptoreflex. Il calcule le score global via la moyenne pondérée des 6 sous-notes, et lève une erreur en CI si un score stocké dans `data/platforms.json` s'écarte de plus de 0,05 point de la formule calculée dynamiquement.
+**lib/scoring.ts** — le code source qui implémente la formule de score. Disponible en open source dans le dépôt public Cryptoreflex. Il calcule le score global via la moyenne pondérée des 6 sous-notes, et déclenche une alerte automatique si un score stocké dans notre base de données s'écarte de plus de 0,05 point de la formule calculée dynamiquement.
 
-**scripts/compute-platform-scores.mjs** — le script Node.js qui recalcule automatiquement tous les scores à partir des données brutes du JSON. Totalement reproductible : n'importe qui avec le dépôt et Node.js installé peut vérifier toutes les notes en une commande.
+**scripts/compute-platform-scores.mjs** — le script Node.js qui recalcule automatiquement tous les scores à partir des données brutes des données. Totalement reproductible : n'importe qui avec le dépôt et Node.js installé peut vérifier toutes les notes en une commande.
 
 Si tu penses qu'une note est injustifiée, tu as les outils pour le vérifier. Si tu trouves une erreur, écris-nous.
 
@@ -1442,7 +1431,7 @@ Ce document suit un cycle de mise à jour trimestriel : **avril, juillet, octobr
 
 **Déclencheurs de mise à jour urgente** (hors cycle trimestriel) : changement de statut MiCA d'une plateforme, hack ou incident de sécurité majeur, modification significative d'une grille tarifaire. Dans ce cas, la correction est déployée dans les 7 jours et les abonnés newsletter sont notifiés par email.
 
-**Suivi des modifications :** le dépôt Git public Cryptoreflex trace tous les changements apportés aux données. Tu peux vérifier ce qui a changé entre deux versions en consultant l'historique des commits sur le fichier `data/platforms.json`.
+**Suivi des modifications :** le dépôt Git public Cryptoreflex trace tous les changements apportés aux données. Tu peux vérifier ce qui a changé entre deux versions en consultant l'historique des commits sur le fichier notre base de données.
 
 **Abonnés newsletter :** si tu as téléchargé ce PDF via la newsletter Cryptoreflex, tu recevras automatiquement un email lors de la publication de chaque nouvelle version avec un lien de téléchargement direct.
 
