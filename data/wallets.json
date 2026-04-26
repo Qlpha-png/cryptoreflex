@@ -12,7 +12,7 @@
       "logo": "/logos/ledger.svg",
       "tagline": "Pour qui c'est : autocustody premium pour HODL multi-cryptos avec 5500+ assets supportés",
       "websiteUrl": "https://www.ledger.com",
-      "affiliateUrl": "https://shop.ledger.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://shop.ledger.com/?r=5313c8e86d40",
       "scoring": { "global": 4.5, "fees": 4.0, "security": 4.7, "ux": 4.6, "support": 4.0, "mica": 4.2 },
       "mica": {
         "status": "Hors périmètre MiCA (matériel autocustody, pas de garde de fonds tiers)",
