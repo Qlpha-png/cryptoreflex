@@ -408,9 +408,13 @@ export default function ComparatifHubPage() {
 
 function PlatformMiniCard({ platform }: { platform: Platform }) {
   const profiles = profilesFor(platform);
+  // Refonte 26/04/2026 (audit Lighthouse P0 #3) : carte avec 2 CTA distincts.
+  // Avant : 1 seul <Link> wrap autour de la card -> aucun lien rel="sponsored"
+  // dans le HTML SSR -> non-conformite Loi Influenceurs juin 2023 sur la
+  // page de conversion principale. Maintenant : "Voir l'avis" (interne) +
+  // "Visiter" (affilie avec rel="sponsored nofollow noopener noreferrer").
   return (
-    <Link
-      href={`/avis/${platform.id}`}
+    <div
       data-profile={profiles.join(" ")}
       className="platform-card group flex-col rounded-2xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
     >
@@ -437,11 +441,28 @@ function PlatformMiniCard({ platform }: { platform: Platform }) {
         )}
       </div>
       <div className="mt-3 text-xs text-fg/60 line-clamp-2">{platform.tagline}</div>
-      <div className="mt-3 flex items-center justify-between text-xs text-primary-soft font-semibold">
-        <span>Voir l&apos;avis</span>
-        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+      <div className="mt-4 flex items-center gap-2 text-xs">
+        <Link
+          href={`/avis/${platform.id}`}
+          className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 font-semibold text-fg/80 hover:bg-elevated hover:border-primary/30 transition-colors flex-1 justify-center"
+        >
+          Voir l&apos;avis
+        </Link>
+        <a
+          href={platform.affiliateUrl}
+          target="_blank"
+          rel="sponsored nofollow noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded-lg bg-primary text-background px-3 py-2 font-semibold hover:bg-primary-glow transition-colors flex-1 justify-center"
+          aria-label={`Visiter ${platform.name} (lien sponsorisé)`}
+        >
+          Visiter
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </a>
       </div>
-    </Link>
+      <p className="mt-2 text-[10px] text-muted text-center">
+        Lien sponsorisé — <Link href="/transparence" className="underline hover:text-fg">commission Cryptoreflex</Link>
+      </p>
+    </div>
   );
 }
 
