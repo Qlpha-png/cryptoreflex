@@ -3,6 +3,8 @@ import { BookOpen } from "lucide-react";
 
 import { getAllArticleSummaries, getAllCategories } from "@/lib/mdx";
 import BlogIndexClient from "@/components/blog/BlogIndexClient";
+import StructuredData from "@/components/StructuredData";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Blog & guides crypto",
@@ -27,8 +29,14 @@ export default async function BlogIndexPage() {
   const articles = await getAllArticleSummaries();
   const categories = await getAllCategories();
 
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Blog", url: "/blog" },
+  ]);
+
   return (
     <section className="py-16 sm:py-20">
+      <StructuredData data={breadcrumbs} id="blog-index-breadcrumb" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-2xl">

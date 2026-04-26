@@ -31,8 +31,9 @@ import {
 /*  France 2026" + variantes longues (PFU 30 %, barème, BIC).                 */
 /* -------------------------------------------------------------------------- */
 
-const PAGE_TITLE =
-  "Calculateur fiscalité crypto 2026 — PFU 30%, Barème, Cerfa 2086 (Gratuit)";
+// Audit SEO 26-04 — title raccourci de 75 → 50 chars (≤ 60 cible Google SERP).
+// On garde le mot-clé principal "Calculateur fiscalité crypto 2026" intact.
+const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 30%, Cerfa";
 // 158 caractères, optimisé Google SERP
 const PAGE_DESCRIPTION =
   "Calcule ton impôt crypto 2026 en 2 min : PFU 30%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";

@@ -23,6 +23,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import EventCard from "./EventCard";
 import { IMPORTANCE_COLOR, type CryptoEvent } from "@/lib/events-types";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 interface CalendarGridProps {
   events: CryptoEvent[];
@@ -75,6 +76,9 @@ export default function CalendarGrid({ events }: CalendarGridProps) {
   });
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // Focus trap actif tant qu'un jour est sélectionné (modale ouverte).
+  // WCAG 2.4.3 — Tab ne doit pas sortir de la modale vers le contenu masqué.
+  const dialogRef = useFocusTrap<HTMLDivElement>(selectedDay !== null);
 
   // Index events par date "YYYY-MM-DD" pour lookup O(1).
   const eventsByDate = useMemo(() => {
@@ -111,7 +115,10 @@ export default function CalendarGrid({ events }: CalendarGridProps) {
     setView({ year: now.getUTCFullYear(), month: now.getUTCMonth() });
   }
 
-  // Focus sur le bouton close à l'ouverture de la modal (a11y).
+  // Focus initial sur le bouton close à l'ouverture (en complément du
+  // useFocusTrap qui se chargera ensuite du cycle Tab et de la restauration
+  // au unmount). Garde la garantie qu'on ne se retrouve pas avec le focus sur
+  // un élément non-pertinent si l'ordre DOM change.
   useEffect(() => {
     if (selectedDay && closeButtonRef.current) {
       closeButtonRef.current.focus();
@@ -315,6 +322,7 @@ export default function CalendarGrid({ events }: CalendarGridProps) {
       {/* Modal */}
       {selectedDay && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="day-modal-title"

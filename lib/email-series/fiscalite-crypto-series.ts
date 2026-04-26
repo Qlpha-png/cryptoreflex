@@ -32,6 +32,36 @@
  */
 
 import { BRAND } from "@/lib/brand";
+import { generateUnsubscribeToken } from "@/lib/auth-tokens";
+
+/* -------------------------------------------------------------------------- */
+/*  Helper unsubscribe (RGPD)                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Construit l'URL de désinscription one-click pour un email donné.
+ *
+ * Le token HMAC permet de valider la légitimité du lien sans état serveur :
+ *  - Pas besoin de stocker un token par envoi en DB / KV
+ *  - Le lien reste valide indéfiniment (tant que UNSUBSCRIBE_SECRET ne change pas)
+ *  - Un attaquant ne peut pas désinscrire arbitrairement les abonnés sans
+ *    connaître le secret (et l'enumération est protégée côté Beehiiv via la
+ *    réponse "ok" générique de unsubscribeFromBeehiiv)
+ *
+ * Substitué dans les emails à la place de `{{unsubscribe_url}}` par
+ * `lib/email-renderer.ts` au moment de l'envoi (côté cron).
+ */
+export function buildUnsubscribeUrl(email: string): string {
+  const base = BRAND.url.replace(/\/$/, "");
+  const token = generateUnsubscribeToken(email);
+  return (
+    base +
+    "/api/newsletter/unsubscribe?email=" +
+    encodeURIComponent(email) +
+    "&token=" +
+    encodeURIComponent(token)
+  );
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */

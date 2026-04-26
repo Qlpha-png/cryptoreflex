@@ -239,7 +239,7 @@ export default function PortfolioTracker() {
       <div className="glass rounded-2xl p-5 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-glow">
-            <Plus className="h-5 w-5 text-white" />
+            <Plus className="h-5 w-5 text-background" />
           </div>
           <div>
             <h2 className="font-bold text-lg text-fg">Ajouter une crypto</h2>

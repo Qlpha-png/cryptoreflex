@@ -24,7 +24,7 @@ import {
 } from "@/lib/events";
 
 /**
- * EventTimeline — composant client interactif pour /calendrier-crypto.
+ * EventTimeline — composant client interactif pour le calendrier événements.
  *
  * Server-Component-friendly : la donnée est passée en props (déjà triée par
  * date asc), le seul état local est le filtre catégorie + le mode de vue.
@@ -35,7 +35,7 @@ import {
  *  - Calendar : grille 12 mois avec un indicateur par mois ayant >=1 event.
  *
  * Filtres catégorie : multi-select via chips. URL `?cat=halving` pré-sélectionne
- * une catégorie (utilisé pour le cross-link `/halving-bitcoin → /calendrier-crypto?cat=halving`).
+ * une catégorie (utilisé pour le cross-link `/halving-bitcoin → /calendrier?cat=halving`).
  *
  * a11y :
  *  - Tablist sémantique pour la bascule de vues.

@@ -23,6 +23,7 @@ import { BRAND } from "@/lib/brand";
 import { TRACKS, getTrack } from "@/lib/academy-tracks";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
+import { breadcrumbSchema } from "@/lib/schema";
 
 interface Props {
   params: { track: string };
@@ -91,9 +92,15 @@ export default function TrackPage({ params }: Props) {
     })),
   };
 
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Académie", url: "/academie" },
+    { name: track.title, url: `/academie/${track.id}` },
+  ]);
+
   return (
     <main className="py-10 sm:py-14">
-      <StructuredData data={schema} id={`track-${track.id}`} />
+      <StructuredData data={[schema, breadcrumbs]} id={`track-${track.id}`} />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}

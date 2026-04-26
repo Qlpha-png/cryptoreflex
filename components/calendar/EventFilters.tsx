@@ -124,6 +124,7 @@ export default function EventFilters({
             className="flex w-full items-center justify-between rounded-lg bg-elevated px-3 py-2 text-small text-fg ring-1 ring-border hover:ring-primary/50 focus:outline-none focus:ring-2 focus:ring-primary"
             aria-haspopup="listbox"
             aria-expanded={cryptoMenuOpen}
+            aria-controls="cryptos-dropdown"
             aria-label="Sélectionner les cryptos à afficher"
           >
             <span>
@@ -146,6 +147,7 @@ export default function EventFilters({
           </button>
           {cryptoMenuOpen && (
             <div
+              id="cryptos-dropdown"
               role="listbox"
               aria-multiselectable="true"
               className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-border bg-elevated p-1 shadow-e4"

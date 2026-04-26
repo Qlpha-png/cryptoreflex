@@ -25,6 +25,7 @@ import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 import { getArticleBySlug } from "@/lib/mdx";
 import { TRACKS, getTrack, getLesson, getNeighbors } from "@/lib/academy-tracks";
+import { breadcrumbSchema } from "@/lib/schema";
 
 interface Props {
   params: { track: string; lesson: string };
@@ -103,9 +104,22 @@ export default async function LessonPage({ params }: Props) {
     },
   };
 
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Académie", url: "/academie" },
+    { name: track.title, url: `/academie/${track.id}` },
+    {
+      name: `Leçon ${lesson.order} — ${lesson.title}`,
+      url: `/academie/${track.id}/${lesson.articleSlug}`,
+    },
+  ]);
+
   return (
     <main className="py-8 sm:py-12">
-      <StructuredData data={schema} id={`lesson-${lesson.articleSlug}`} />
+      <StructuredData
+        data={[schema, breadcrumbs]}
+        id={`lesson-${lesson.articleSlug}`}
+      />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb + retour */}

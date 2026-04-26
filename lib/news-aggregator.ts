@@ -163,7 +163,7 @@ export const NEWS_KEYWORDS: readonly string[] = [
 export function inferCategory(text: string): NewsCategory {
   const t = text.toLowerCase();
   if (/\b(mica|amf|esma|régulation|regulation|loi|tax|fiscal|pfu|décret)\b/i.test(t)) {
-    return "Regulation";
+    return "Régulation";
   }
   if (/\b(binance|coinbase|kraken|bitget|bitpanda|exchange|plateforme|psan|casp|wallet)\b/i.test(t)) {
     return "Plateformes";
@@ -171,7 +171,7 @@ export function inferCategory(text: string): NewsCategory {
   if (/\b(layer\s*2|l2|upgrade|fork|halving technique|eip|consensus|proof|merge|node|protocol)\b/i.test(t)) {
     return "Technologie";
   }
-  return "Marche";
+  return "Marché";
 }
 
 /**
@@ -305,6 +305,9 @@ export interface FetchNewsRawOpts {
 export async function fetchNewsRaw(opts: FetchNewsRawOpts = {}): Promise<NewsRaw[]> {
   const { perSourceLimit = 15, totalLimit = 25, keywords = NEWS_KEYWORDS } = opts;
 
+  // Garde-fou anti-DoS : 5 MB max par flux RSS (cf. lib/rss.ts).
+  const MAX_RSS_BYTES = 5 * 1024 * 1024;
+
   const fetched = await Promise.all(
     REWRITER_SOURCES.map(async (src) => {
       try {
@@ -321,7 +324,15 @@ export async function fetchNewsRaw(opts: FetchNewsRawOpts = {}): Promise<NewsRaw
         }).finally(() => clearTimeout(timer));
 
         if (!res.ok) return [];
+
+        // Pré-check Content-Length pour abort cheap si l'origine annonce trop gros.
+        const cl = res.headers.get("content-length");
+        if (cl && Number.parseInt(cl, 10) > MAX_RSS_BYTES) return [];
+
         const xml = await res.text();
+        // Re-check post-lecture : couvre le cas chunked sans Content-Length.
+        if (xml.length > MAX_RSS_BYTES) return [];
+
         return parseRssWithImages(xml, src.name, perSourceLimit);
       } catch {
         return [];

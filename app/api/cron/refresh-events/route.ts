@@ -25,6 +25,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { _fetchEventsRaw, EVENTS_CACHE_TAG } from "@/lib/events-fetcher";
 import { EVENTS_SEED } from "@/lib/events-seed";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -53,13 +54,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // -- Auth --
   const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      // 404 délibéré (cf. doc evaluate-alerts) — security through obscurity.
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-  } else {
+  if (!verifyBearer(req, secret)) {
+    // 404 délibéré (cf. doc evaluate-alerts) — security through obscurity.
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
     console.warn(
       `[cron/refresh-events] session=${sessionId} CRON_SECRET absent — endpoint ouvert (dev mode).`
     );

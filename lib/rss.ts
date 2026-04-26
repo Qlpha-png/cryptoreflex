@@ -154,8 +154,17 @@ export function parseRssXml(xml: string, source: string, maxItems = 10): RssItem
 /* -------------------------------------------------------------------------- */
 
 /**
+ * Garde-fou anti-DoS : taille max d'un body RSS qu'on accepte de parser.
+ * Un flux RSS sain pèse 10–500 KB ; au-delà de 5 MB c'est soit une source
+ * compromise (XML bomb), soit un flux malformé. On préfère retourner `[]`
+ * plutôt que de risquer un OOM dans le worker Vercel.
+ */
+const MAX_RSS_BYTES = 5 * 1024 * 1024;
+
+/**
  * Récupère un feed RSS et le parse. Failover gracieux :
  *  - timeout 5s par source via AbortController
+ *  - bornage à 5 MB (Content-Length puis taille effective du body)
  *  - retourne `[]` si fetch / parse fail (jamais throw)
  *  - cache `unstable_cache` 1h, tag `news-rss`
  */
@@ -175,7 +184,17 @@ async function _fetchRssFeed(url: string, source: string): Promise<RssItem[]> {
     }).finally(() => clearTimeout(timer));
 
     if (!res.ok) return [];
+
+    // Pré-check Content-Length : abort cheap si le serveur annonce déjà trop gros.
+    const cl = res.headers.get("content-length");
+    if (cl && Number.parseInt(cl, 10) > MAX_RSS_BYTES) {
+      return [];
+    }
+
     const xml = await res.text();
+    // Re-check post-lecture : certains serveurs (chunked) n'annoncent pas Content-Length.
+    if (xml.length > MAX_RSS_BYTES) return [];
+
     return parseRssXml(xml, source, 10);
   } catch {
     return [];

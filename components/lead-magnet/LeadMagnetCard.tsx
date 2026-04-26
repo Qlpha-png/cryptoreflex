@@ -118,7 +118,7 @@ export default function LeadMagnetCard({
   }
 
   return (
-    <article className="flex flex-col rounded-xl border border-border bg-surface p-6 transition hover:border-accent/50">
+    <article className="flex flex-col rounded-xl border border-border bg-surface p-6 transition hover:border-primary/50">
       <div className="mb-4 flex items-start gap-4">
         {previewSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -131,13 +131,13 @@ export default function LeadMagnetCard({
             loading="lazy"
           />
         ) : (
-          <div className="flex h-22 w-16 items-center justify-center rounded border border-border bg-background text-accent">
+          <div className="flex h-22 w-16 items-center justify-center rounded border border-border bg-background text-primary-soft">
             <FileText className="h-6 w-6" aria-hidden />
           </div>
         )}
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-          <div className="mt-1 inline-flex items-center gap-2 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+          <h3 className="text-lg font-semibold text-fg">{title}</h3>
+          <div className="mt-1 inline-flex items-center gap-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-soft">
             PDF · {pages} pages
           </div>
         </div>
@@ -146,7 +146,11 @@ export default function LeadMagnetCard({
       <p className="mb-4 text-sm leading-relaxed text-muted">{description}</p>
 
       {status === "success" ? (
-        <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-3 text-sm text-green-300">
+        <div
+          className="rounded-lg border border-success-fg/30 bg-success-fg/10 p-3 text-sm text-success-fg"
+          role="status"
+          aria-live="polite"
+        >
           <CheckCircle2 className="mr-2 inline h-4 w-4" aria-hidden />
           Téléchargement lancé. Vérifie aussi tes mails.
         </div>
@@ -163,19 +167,19 @@ export default function LeadMagnetCard({
             placeholder="ton@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted/60 focus:border-accent focus:outline-none"
+            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted/60 focus:border-primary focus:outline-none"
             disabled={status === "loading"}
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-background transition hover:bg-accent/90 disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition hover:bg-primary-glow disabled:opacity-50"
           >
             <Download className="h-4 w-4" aria-hidden />
             {status === "loading" ? "Envoi…" : ctaLabel}
           </button>
           {status === "error" && errorMsg ? (
-            <p className="flex items-center gap-1 text-xs text-red-300">
+            <p className="flex items-center gap-1 text-xs text-danger-fg" role="alert">
               <AlertCircle className="h-3 w-3" aria-hidden />
               {errorMsg}
             </p>

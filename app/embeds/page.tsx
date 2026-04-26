@@ -26,13 +26,13 @@ import {
 import { BRAND } from "@/lib/brand";
 
 /**
- * /embeds — landing page qui présente les 4 widgets embeddables aux autres
- * sites (blogs crypto FR, sites finance perso, agrégateurs).
+ * /embeds â€” landing page qui prÃ©sente les 4 widgets embeddables aux autres
+ * sites (blogs crypto FR, sites finance perso, agrÃ©gateurs).
  *
- * Stratégie linkable assets : chaque embed externe = un backlink dofollow
+ * StratÃ©gie linkable assets : chaque embed externe = un backlink dofollow
  * vers cryptoreflex.fr (clause d'attribution CC-BY 4.0). Plus la page est
  * convaincante (preview, snippet copy-paste, FAQ, "pourquoi"), plus on
- * réduit la friction d'adoption.
+ * rÃ©duit la friction d'adoption.
  *
  * Cible SEO long-tail : "widget crypto gratuit", "calculateur crypto
  * embed", "iframe crypto pour blog".
@@ -40,10 +40,11 @@ import { BRAND } from "@/lib/brand";
 
 const PAGE_PATH = "/embeds";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const PAGE_TITLE =
-  "Intégrer les outils Cryptoreflex sur ton site — gratuit (iframes embed)";
+// Audit SEO 26-04 â€” title raccourci de 86 â†’ 44 chars (â‰¤ 60 cible Google SERP).
+// Mot-clÃ© long-tail "widgets crypto embed gratuits" + brand en suffixe.
+const PAGE_TITLE = "Widgets crypto embed gratuits | Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "4 widgets crypto gratuits à intégrer en 1 ligne sur ton blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
+  "4 widgets crypto gratuits Ã  intÃ©grer en 1 ligne sur ton blog ou site finance : calculateur fiscalitÃ©, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -67,38 +68,38 @@ const FAQ_ITEMS = [
   {
     question: "Puis-je modifier le widget (couleurs, taille, langue) ?",
     answer:
-      "La taille (width / height) est libre — utilise les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du dark theme Cryptoreflex (gold + dark). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonne-toi à la newsletter pour être notifié.",
+      "La taille (width / height) est libre â€” utilise les attributs HTML standard de l'iframe. Pour les couleurs, le widget hÃ©rite du dark theme Cryptoreflex (gold + dark). Une version Â« light Â» et des couleurs personnalisables sont prÃ©vues pour la V2 â€” abonne-toi Ã  la newsletter pour Ãªtre notifiÃ©.",
   },
   {
     question: "Quelle license s'applique ?",
     answer:
-      "Creative Commons BY 4.0. Tu peux intégrer les widgets gratuitement, y compris sur des sites commerciaux ou monétisés (pub, affiliation), à une seule condition : conserver l'attribution « Powered by Cryptoreflex » avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
+      "Creative Commons BY 4.0. Tu peux intÃ©grer les widgets gratuitement, y compris sur des sites commerciaux ou monÃ©tisÃ©s (pub, affiliation), Ã  une seule condition : conserver l'attribution Â« Powered by Cryptoreflex Â» avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
   },
   {
     question: "Les iframes ralentissent-elles ma page ?",
     answer:
-      "Très peu. Les widgets utilisent loading=\"lazy\" par défaut (ils se chargent quand l'utilisateur scrolle dessus) et le bundle JS est tree-shaké. Sur un test Lighthouse standard, l'impact LCP / CLS est négligeable. Le widget tourne en CSR (Client-Side Rendering) chez Cryptoreflex, pas chez toi.",
+      "TrÃ¨s peu. Les widgets utilisent loading=\"lazy\" par dÃ©faut (ils se chargent quand l'utilisateur scrolle dessus) et le bundle JS est tree-shakÃ©. Sur un test Lighthouse standard, l'impact LCP / CLS est nÃ©gligeable. Le widget tourne en CSR (Client-Side Rendering) chez Cryptoreflex, pas chez toi.",
   },
   {
     question:
-      "Est-ce que mes utilisateurs sont trackés par Cryptoreflex ?",
+      "Est-ce que mes utilisateurs sont trackÃ©s par Cryptoreflex ?",
     answer:
-      "Uniquement avec Plausible (analytics RGPD-friendly, sans cookie, sans IP stockée). On voit qu'un widget a été affiché sur ton domaine, c'est tout. Aucune fingerprint, aucun cross-site tracking. Le code source est inspectable.",
+      "Uniquement avec Plausible (analytics RGPD-friendly, sans cookie, sans IP stockÃ©e). On voit qu'un widget a Ã©tÃ© affichÃ© sur ton domaine, c'est tout. Aucune fingerprint, aucun cross-site tracking. Le code source est inspectable.",
   },
   {
-    question: "Que se passe-t-il si Cryptoreflex met à jour le widget ?",
+    question: "Que se passe-t-il si Cryptoreflex met Ã  jour le widget ?",
     answer:
-      "L'iframe pointe vers une URL stable (ex: /embed/calculateur-fiscalite). Quand on améliore le widget côté serveur, ton intégration bénéficie automatiquement de l'update — sans rien toucher chez toi. On s'engage à ne pas casser la rétro-compatibilité visuelle.",
+      "L'iframe pointe vers une URL stable (ex: /embed/calculateur-fiscalite). Quand on amÃ©liore le widget cÃ´tÃ© serveur, ton intÃ©gration bÃ©nÃ©ficie automatiquement de l'update â€” sans rien toucher chez toi. On s'engage Ã  ne pas casser la rÃ©tro-compatibilitÃ© visuelle.",
   },
   {
-    question: "Un site WordPress / Webflow / Shopify peut-il l'intégrer ?",
+    question: "Un site WordPress / Webflow / Shopify peut-il l'intÃ©grer ?",
     answer:
-      "Oui, partout où tu peux coller du HTML brut. Sur WordPress, utilise le bloc « HTML personnalisé » ou un shortcode iframe. Sur Webflow, le composant Embed. Sur Shopify, dans une section « Custom Liquid ». Aucun plugin requis.",
+      "Oui, partout oÃ¹ tu peux coller du HTML brut. Sur WordPress, utilise le bloc Â« HTML personnalisÃ© Â» ou un shortcode iframe. Sur Webflow, le composant Embed. Sur Shopify, dans une section Â« Custom Liquid Â». Aucun plugin requis.",
   },
   {
-    question: "Comment être notifié des nouveaux widgets ?",
+    question: "Comment Ãªtre notifiÃ© des nouveaux widgets ?",
     answer:
-      "Inscris-toi à la newsletter Cryptoreflex (lien en footer du site) — on annonce chaque nouveau widget embeddable. Notre roadmap inclut un widget heatmap marché, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
+      "Inscris-toi Ã  la newsletter Cryptoreflex (lien en footer du site) â€” on annonce chaque nouveau widget embeddable. Notre roadmap inclut un widget heatmap marchÃ©, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
   },
 ];
 
@@ -133,16 +134,16 @@ export default function EmbedsLandingPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              License CC-BY 4.0 — gratuit, à vie
+              License CC-BY 4.0 â€” gratuit, Ã  vie
             </span>
-            <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-              Intègre les outils{" "}
+            <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
+              IntÃ¨gre les outils{" "}
               <span className="gradient-text">Cryptoreflex</span> sur ton site
             </h1>
-            <p className="mt-4 text-lg text-white/80">
-              4 widgets crypto prêts à coller sur ton blog, ton site finance
-              perso ou ton agrégateur. Une ligne d'iframe, zéro maintenance —
-              on s'occupe des updates côté serveur.
+            <p className="mt-4 text-lg text-fg/80">
+              4 widgets crypto prÃªts Ã  coller sur ton blog, ton site finance
+              perso ou ton agrÃ©gateur. Une ligne d'iframe, zÃ©ro maintenance â€”
+              on s'occupe des updates cÃ´tÃ© serveur.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
@@ -154,7 +155,7 @@ export default function EmbedsLandingPage() {
               </a>
               <Link
                 href="/ressources-libres"
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-elevated/50 px-4 py-2.5 text-sm font-semibold text-white/90 hover:border-primary/40"
+                className="inline-flex items-center gap-2 rounded-xl border border-border bg-elevated/50 px-4 py-2.5 text-sm font-semibold text-fg/90 hover:border-primary/40"
               >
                 <Globe className="h-4 w-4" />
                 Toutes les ressources libres
@@ -164,13 +165,13 @@ export default function EmbedsLandingPage() {
         </div>
       </section>
 
-      {/* ===================== Pourquoi intégrer ====================== */}
+      {/* ===================== Pourquoi intÃ©grer ====================== */}
       <section className="py-12 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Pourquoi nos widgets</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white">
-              Plus d'engagement, plus de temps passé sur ton site
+            <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
+              Plus d'engagement, plus de temps passÃ© sur ton site
             </h2>
           </div>
 
@@ -178,17 +179,17 @@ export default function EmbedsLandingPage() {
             <BenefitCard
               icon={<Zap className="h-6 w-6" />}
               title="UX gain pour ton audience"
-              text="Tes lecteurs n'ont plus besoin de quitter ton site pour calculer un ROI ou un impôt crypto. Time-on-page +30 % en moyenne sur les pages avec outil interactif."
+              text="Tes lecteurs n'ont plus besoin de quitter ton site pour calculer un ROI ou un impÃ´t crypto. Time-on-page +30 % en moyenne sur les pages avec outil interactif."
             />
             <BenefitCard
               icon={<ShieldCheck className="h-6 w-6" />}
               title="SEO benefit pour toi"
-              text="Google récompense les pages utiles avec rich content. Un calculateur intégré envoie un signal d'usefulness qui aide ton ranking sur les requêtes long-tail."
+              text="Google rÃ©compense les pages utiles avec rich content. Un calculateur intÃ©grÃ© envoie un signal d'usefulness qui aide ton ranking sur les requÃªtes long-tail."
             />
             <BenefitCard
               icon={<Code className="h-6 w-6" />}
-              title="Zéro maintenance"
-              text="On gère les updates (taux CoinGecko, fiscalité 2026, MiCA…) côté serveur. Toi, tu gardes ton iframe — tu profites des améliorations sans toucher à rien."
+              title="ZÃ©ro maintenance"
+              text="On gÃ¨re les updates (taux CoinGecko, fiscalitÃ© 2026, MiCAâ€¦) cÃ´tÃ© serveur. Toi, tu gardes ton iframe â€” tu profites des amÃ©liorations sans toucher Ã  rien."
             />
           </div>
         </div>
@@ -199,12 +200,12 @@ export default function EmbedsLandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Catalogue</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white">
-              4 widgets disponibles immédiatement
+            <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
+              4 widgets disponibles immÃ©diatement
             </h2>
-            <p className="mt-3 text-white/70">
-              Clique sur « Copier » et colle le snippet où tu veux. C'est
-              prêt — l'attribution dofollow vers Cryptoreflex est déjà
+            <p className="mt-3 text-fg/70">
+              Clique sur Â« Copier Â» et colle le snippet oÃ¹ tu veux. C'est
+              prÃªt â€” l'attribution dofollow vers Cryptoreflex est dÃ©jÃ 
               incluse (clause CC-BY).
             </p>
           </div>
@@ -223,16 +224,16 @@ export default function EmbedsLandingPage() {
                     {tool.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-display font-bold text-lg text-white leading-tight">
+                    <h3 className="font-display font-bold text-lg text-fg leading-tight">
                       {tool.shortName}
                     </h3>
-                    <p className="mt-1 text-sm text-white/70 leading-relaxed">
+                    <p className="mt-1 text-sm text-fg/70 leading-relaxed">
                       {tool.description}
                     </p>
                   </div>
                 </header>
 
-                {/* Preview iframe — height limitée pour la grille */}
+                {/* Preview iframe â€” height limitÃ©e pour la grille */}
                 <div className="rounded-xl overflow-hidden border border-border bg-background/40">
                   <iframe
                     src={`/embed/${tool.slug}`}
@@ -240,7 +241,7 @@ export default function EmbedsLandingPage() {
                     height={Math.min(tool.height, 420)}
                     frameBorder={0}
                     loading="lazy"
-                    title={`Aperçu : ${tool.shortName}`}
+                    title={`AperÃ§u : ${tool.shortName}`}
                     className="block w-full"
                   />
                 </div>
@@ -256,7 +257,7 @@ export default function EmbedsLandingPage() {
                     href={`/outils/${tool.slug}`}
                     className="inline-flex items-center gap-1.5 text-sm text-primary-soft hover:text-primary-glow font-semibold"
                   >
-                    Voir la version complète
+                    Voir la version complÃ¨te
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -270,26 +271,26 @@ export default function EmbedsLandingPage() {
       <section className="py-12 border-t border-border/60">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
-            <h2 className="font-display text-2xl font-extrabold text-white">
+            <h2 className="font-display text-2xl font-extrabold text-fg">
               License Creative Commons BY 4.0
             </h2>
-            <p className="mt-3 text-sm text-white/80 leading-relaxed">
-              Tu peux intégrer ces widgets <strong>gratuitement</strong>, y
+            <p className="mt-3 text-sm text-fg/80 leading-relaxed">
+              Tu peux intÃ©grer ces widgets <strong>gratuitement</strong>, y
               compris sur des sites commerciaux, en respectant{" "}
-              <strong>une seule règle</strong> : conserver l'attribution
-              « Powered by Cryptoreflex » avec le lien <em>dofollow</em>
+              <strong>une seule rÃ¨gle</strong> : conserver l'attribution
+              Â« Powered by Cryptoreflex Â» avec le lien <em>dofollow</em>
               inclus en bas du widget. Ne masque pas le footer, ne supprime
-              pas le lien — c'est le contrat moral.
+              pas le lien â€” c'est le contrat moral.
             </p>
-            <p className="mt-3 text-sm text-white/80 leading-relaxed">
-              En cas de question, écris-nous à{" "}
+            <p className="mt-3 text-sm text-fg/80 leading-relaxed">
+              En cas de question, Ã©cris-nous Ã {" "}
               <a
                 href={`mailto:${BRAND.email}`}
                 className="text-primary-soft underline-offset-2 hover:underline"
               >
                 {BRAND.email}
               </a>
-              . On accepte les demandes de personnalisation pour les médias
+              . On accepte les demandes de personnalisation pour les mÃ©dias
               partenaires.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
@@ -297,16 +298,16 @@ export default function EmbedsLandingPage() {
                 href="https://creativecommons.org/licenses/by/4.0/deed.fr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-white/90 hover:border-primary/40"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-fg/90 hover:border-primary/40"
               >
                 <Download className="h-3.5 w-3.5" />
                 Texte complet de la license
               </a>
               <Link
                 href="/mentions-legales"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-white/90 hover:border-primary/40"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-fg/90 hover:border-primary/40"
               >
-                Mentions légales Cryptoreflex
+                Mentions lÃ©gales Cryptoreflex
               </Link>
             </div>
           </div>
@@ -316,9 +317,9 @@ export default function EmbedsLandingPage() {
       {/* ============================ FAQ ============================ */}
       <section className="py-16 border-t border-border/60">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <span className="badge-info">FAQ intégrateurs</span>
-          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-white">
-            Questions fréquentes
+          <span className="badge-info">FAQ intÃ©grateurs</span>
+          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
+            Questions frÃ©quentes
           </h2>
           <div className="mt-8 space-y-3">
             {FAQ_ITEMS.map((item) => (
@@ -326,7 +327,7 @@ export default function EmbedsLandingPage() {
                 key={item.question}
                 className="group glass rounded-xl p-5 open:border-primary/40 transition-colors"
               >
-                <summary className="cursor-pointer list-none flex items-start justify-between gap-3 font-semibold text-white">
+                <summary className="cursor-pointer list-none flex items-start justify-between gap-3 font-semibold text-fg">
                   <span>{item.question}</span>
                   <span
                     className="text-primary-soft text-xl leading-none mt-0.5 transition-transform group-open:rotate-45"
@@ -335,7 +336,7 @@ export default function EmbedsLandingPage() {
                     +
                   </span>
                 </summary>
-                <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                <p className="mt-3 text-sm text-fg/75 leading-relaxed">
                   {item.answer}
                 </p>
               </details>
@@ -361,8 +362,8 @@ function BenefitCard({
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft border border-primary/30">
         {icon}
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/70 leading-relaxed">{text}</p>
+      <h3 className="mt-4 font-bold text-fg">{title}</h3>
+      <p className="mt-2 text-sm text-fg/70 leading-relaxed">{text}</p>
     </article>
   );
 }

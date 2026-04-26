@@ -32,9 +32,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { isValidEmail } from "@/lib/newsletter";
 import { isActiveSubscriber } from "@/lib/beehiiv";
 import { BRAND } from "@/lib/brand";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+// Anti-abus : 10 téléchargements/IP/heure. Largement au-dessus du besoin
+// légitime (un user qui veut le PDF clique 1-2 fois max), mais bloque les
+// scripts de scraping massifs ou un attaquant qui voudrait tester massivement
+// des emails contre l'API Beehiiv via cette route.
+const limiter = createRateLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000, // 1 heure
+  key: "lead-magnet",
+});
 
 /** Mapping id → fichier PDF dans /public/lead-magnets/. */
 const LEAD_MAGNET_FILES: Record<string, { filename: string; title: string }> = {
@@ -81,6 +93,15 @@ export async function GET(
   { params }: { params: { id: string } },
 ): Promise<NextResponse> {
   const id = params.id;
+
+  // 0) Rate limit — défense anti-scraping/brute-force avant tout traitement.
+  const rl = await limiter(getClientIp(req));
+  if (!rl.ok) {
+    return NextResponse.json(
+      { ok: false, error: "Trop de requêtes — réessayez plus tard." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
+    );
+  }
 
   // 1) Validation id (whitelist)
   if (!isValidLeadMagnetId(id)) {

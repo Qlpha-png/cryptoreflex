@@ -222,14 +222,14 @@ export default function RessourcesPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Hero */}
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+            <span className="inline-flex items-center gap-2 rounded-full border border-success-fg/30 bg-success-fg/10 px-3 py-1 text-xs font-semibold text-success-fg">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               100 % gratuit · sans carte bleue · français
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
               Ressources gratuites <span className="gradient-text">Cryptoreflex</span>
             </h1>
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-fg/70">
               Tout ce qu'il te faut pour comprendre, calculer et déclarer tes
               cryptos en 2026 : 3 PDFs téléchargeables (Bible Fiscalité,
               Checklist déclaration, Glossaire), 8 outils interactifs et
@@ -240,14 +240,14 @@ export default function RessourcesPage() {
           {/* Lead magnets PDF */}
           <div className="mt-12">
             <div className="flex items-baseline justify-between">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-fg">
                 Lead magnets PDF
               </h2>
               <span className="text-xs text-muted">
                 Email requis · désinscription en 1 clic
               </span>
             </div>
-            <p className="mt-2 max-w-2xl text-white/70">
+            <p className="mt-2 max-w-2xl text-fg/70">
               Trois PDF essentiels pour préparer ta déclaration crypto 2026. En
               t'inscrivant, tu reçois aussi notre série email "Fiscalité crypto en
               5 emails" — 14 jours pour tout maîtriser.
@@ -268,17 +268,17 @@ export default function RessourcesPage() {
           {/* Outils interactifs */}
           <div className="mt-16">
             <div className="flex items-baseline justify-between">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-fg">
                 Outils interactifs
               </h2>
               <Link
                 href="/outils"
-                className="text-sm text-accent hover:underline"
+                className="text-sm text-primary-soft hover:underline"
               >
                 Voir tous les outils →
               </Link>
             </div>
-            <p className="mt-2 max-w-2xl text-white/70">
+            <p className="mt-2 max-w-2xl text-fg/70">
               Calculateurs, simulateurs et glossaires utilisables sans
               inscription. Tes données ne quittent jamais ton navigateur.
             </p>
@@ -293,17 +293,17 @@ export default function RessourcesPage() {
           <div className="mt-16 rounded-xl border border-border bg-surface p-6 sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-fg">
                   Tu préfères du contenu long format ?
                 </h2>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg/70">
                   Plus de 200 articles éditoriaux : analyses techniques, guides
                   débutants, comparatifs plateformes, news quotidiennes.
                 </p>
               </div>
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-lg border border-accent bg-accent/10 px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent/20"
+                className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary-soft transition hover:bg-primary/20"
               >
                 <FileText className="h-4 w-4" aria-hidden />
                 Lire le blog
@@ -336,19 +336,19 @@ function ToolCard({ tool }: { tool: ToolMeta }) {
   return (
     <Link
       href={href}
-      className="group relative flex flex-col rounded-xl border border-border bg-surface p-5 transition hover:border-accent/50 hover:shadow-lg"
+      className="group relative flex flex-col rounded-xl border border-border bg-surface p-5 transition hover:border-primary/50 hover:shadow-lg"
     >
       {badge ? (
-        <span className="absolute right-4 top-4 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-bold uppercase text-accent">
+        <span className="absolute right-4 top-4 rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase text-primary-soft">
           {badge}
         </span>
       ) : null}
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
         <Icon className="h-5 w-5" aria-hidden />
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 flex-1 text-sm text-white/70">{description}</p>
-      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent transition group-hover:gap-2">
+      <h3 className="mt-4 font-bold text-fg">{title}</h3>
+      <p className="mt-2 flex-1 text-sm text-fg/70">{description}</p>
+      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-soft transition group-hover:gap-2">
         Ouvrir l'outil <ArrowRight className="h-4 w-4" aria-hidden />
       </span>
     </Link>

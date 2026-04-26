@@ -6,7 +6,12 @@ import { ArrowRight, Calendar, ExternalLink, ShoppingBag } from "lucide-react";
 
 import { getTAArticleBySlug, getTASlugs, getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
-import { breadcrumbSchema } from "@/lib/schema";
+import {
+  breadcrumbSchema,
+  generateSpeakableSchema,
+  organizationSchema,
+  graphSchema,
+} from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
 import TrendBadge from "@/components/ta/TrendBadge";
@@ -131,6 +136,7 @@ export default async function TAArticlePage({ params }: Props) {
       "@type": "Thing",
       name: `${article.name} (${article.symbol})`,
     },
+    speakable: generateSpeakableSchema(),
   };
 
   const breadcrumbs = breadcrumbSchema([

@@ -22,6 +22,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { evaluateAndFire } from "@/lib/alerts";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,14 +38,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
   const sessionId = crypto.randomUUID();
 
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    const expected = `Bearer ${secret}`;
-    if (auth !== expected) {
-      // 404 délibérément (security through obscurity, faible mais utile contre les scrapers).
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-  } else {
+  if (!verifyBearer(req, secret)) {
+    // 404 délibérément (security through obscurity, faible mais utile contre les scrapers).
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
     // Mode dev / preview : on log clairement.
     console.warn("[cron/evaluate-alerts] CRON_SECRET absent — endpoint ouvert (mode dev).");
   }

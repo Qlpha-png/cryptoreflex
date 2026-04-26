@@ -16,8 +16,10 @@
  *  - Toggle vue : Calendrier mensuel <CalendarGrid /> | Liste <EventsList />.
  *  - Disclaimer pédagogique en bas.
  *
- * Distinct de /calendrier-crypto (page evergreen legacy basée sur events.json) :
- *  cette page consomme un dataset dynamique (seed + API) avec UI interactive.
+ * Note historique : avant le 26-04-2026, une page legacy /calendrier-crypto
+ * (events.json statique) cohabitait avec celle-ci → CRIT-3 cannibalisation
+ * dans l'audit SEO. Décision : garder cette page V2 (dynamique + UI riche),
+ * 301 le legacy vers ici (cf. next.config.js).
  */
 
 import type { Metadata } from "next";

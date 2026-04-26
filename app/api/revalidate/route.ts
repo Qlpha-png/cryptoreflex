@@ -29,6 +29,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,12 +40,20 @@ export const dynamic = "force-dynamic";
  * Pourquoi une whitelist : éviter qu'un attaquant qui aurait CRON_SECRET
  * puisse bust n'importe quel cache (DoS). On ne expose que les buckets
  * dont le bust est cohérent avec l'usage légitime.
+ *
+ * Les tags news-mdx / ta-articles / events sont émis par les crons
+ * aggregate-news, generate-ta et refresh-events après écriture / refresh ;
+ * ils doivent être dans la whitelist pour qu'un commit manuel ou un script
+ * externe puisse re-bust le cache sans passer par le cron complet.
  */
 const ALLOWED_TAGS = new Set([
   "articles",         // tous les articles MDX (lib/mdx.ts)
   "cryptos",          // data/cryptos.json + dérivés
   "rss",              // alias historique du flux RSS aggregator
   "news-aggregated",  // tag réel utilisé par lib/news-aggregator.ts (audit Perf 26-04)
+  "news-mdx",         // pages /actualites + /actualites/[slug] (Pilier 1)
+  "ta-articles",      // analyses techniques /analyses-tech/[slug] (Pilier 2)
+  "events",           // calendrier /calendrier (Pilier 4)
 ]);
 
 const PATH_REGEX = /^\/[a-z0-9\-/_\[\]]+$/i;
@@ -53,14 +62,11 @@ const PATH_MAX_LEN = 200;
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
 
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    const expected = `Bearer ${secret}`;
-    if (auth !== expected) {
-      // 404 délibéré pour ne pas révéler l'existence de la route à un scanner.
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-  } else {
+  if (!verifyBearer(req, secret)) {
+    // 404 délibéré pour ne pas révéler l'existence de la route à un scanner.
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
     console.warn(
       "[api/revalidate] CRON_SECRET absent — endpoint ouvert (mode dev).",
     );

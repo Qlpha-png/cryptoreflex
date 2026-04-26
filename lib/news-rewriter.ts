@@ -49,13 +49,13 @@ import { inferCategory, slugify } from "@/lib/news-aggregator";
  *    catégorie, on choisit les 3-4 plus pertinents pour chaque thème.
  */
 const RELATED_LINKS: Record<NewsCategory, ReadonlyArray<{ slug: string; label: string }>> = {
-  Marche: [
+  "Marché": [
     { slug: "bitcoin-guide-complet-debutant-2026",         label: "Bitcoin : guide complet débutant 2026" },
     { slug: "etf-bitcoin-spot-europe-2026-arbitrage",      label: "ETF Bitcoin spot en Europe : arbitrage et fiscalité" },
     { slug: "trader-vs-dca-vs-hodl",                       label: "Trader vs DCA vs HODL : quelle stratégie en 2026 ?" },
     { slug: "comment-acheter-bitcoin-france-2026-guide-debutant", label: "Comment acheter Bitcoin en France en 2026" },
   ],
-  Regulation: [
+  "Régulation": [
     { slug: "mica-phase-2-juillet-2026-ce-qui-change",     label: "MiCA Phase 2 (juillet 2026) : ce qui change concrètement" },
     { slug: "mica-juillet-2026-checklist-survie",          label: "Checklist de survie MiCA juillet 2026" },
     { slug: "comment-declarer-crypto-impots-2026-guide-complet", label: "Comment déclarer ses cryptos aux impôts en 2026" },

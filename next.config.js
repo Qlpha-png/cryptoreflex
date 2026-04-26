@@ -60,6 +60,22 @@ const nextConfig = {
         destination: "/blog/formulaire-2086-3916-bis-crypto-2026",
         permanent: true,
       },
+      // Audit SEO 26-04-2026 / CRIT-3 — résolution cannibalisation
+      // /calendrier-crypto (legacy evergreen, JSON statique) vs /calendrier
+      // (V2 dynamique avec API + UI interactive).
+      // Décision : conserver /calendrier (plus moderne, donnée fraîche cron),
+      // 301 le legacy. Préserve les backlinks externes éventuels.
+      {
+        source: "/calendrier-crypto",
+        destination: "/calendrier",
+        permanent: true, // 301 (en réalité 308 côté Next mais comportement SEO identique)
+      },
+      // Conserve aussi le query param ?cat=halving (utilisé par /halving-bitcoin).
+      {
+        source: "/calendrier-crypto/:path*",
+        destination: "/calendrier/:path*",
+        permanent: true,
+      },
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.
@@ -78,13 +94,18 @@ const nextConfig = {
   async headers() {
     // CSP pour l'ensemble du site — frame-ancestors 'none' = personne ne peut
     // nous embarquer (anti-clickjacking).
+    //
+    // Whitelist analytics : Plausible (analytics produit) + Microsoft Clarity
+    // (heatmaps + session replay). Clarity charge des scripts depuis
+    // www.clarity.ms (loader) et des sub-domaines régionaux *.clarity.ms,
+    // pose un pixel image (img-src) et envoie les events via XHR (connect-src).
     const cspDefault = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.io",
+      "script-src 'self' 'unsafe-inline' https://plausible.io https://www.clarity.ms https://*.clarity.ms",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io https://www.clarity.ms https://*.clarity.ms",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
@@ -99,6 +120,9 @@ const nextConfig = {
     // chaque embed externe = un backlink dofollow vers cryptoreflex.fr via
     // l'attribution "Powered by Cryptoreflex" obligatoire dans le footer du
     // widget. SEO-friendly + zéro démarchage.
+    //
+    // Note : on garde Clarity OFF côté embeds — les widgets externes n'ont
+    // pas vocation à tracker les sessions des sites tiers qui nous embarquent.
     const cspEmbed = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' https://plausible.io",

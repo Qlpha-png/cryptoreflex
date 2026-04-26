@@ -5,21 +5,26 @@
  * Génère 1 analyse technique MDX par crypto top 5 (BTC/ETH/SOL/XRP/ADA),
  * écrit dans `content/analyses-tech/`. Skip propre si le fichier du jour existe.
  *
- * Sécurité : Bearer CRON_SECRET (404 si invalide pour ne pas révéler la route).
+ * Sécurité : Bearer CRON_SECRET via `verifyBearer` (timing-safe, 404 si
+ * invalide pour ne pas révéler la route).
  *
  * Logs structurés : préfixe `[ta-cron-*]` pour grep facile dans Vercel logs.
  *
  * Réponse JSON :
  *   { ok, sessionId, processed, created, skipped, errors[] }
  *
+ * LIMITATION VERCEL — IMPORTANT :
+ *   Sur Vercel Lambda, le filesystem est read-only sauf `/tmp` (éphémère).
+ *   Toute tentative `fs.writeFile()` jette EROFS et le fichier généré est
+ *   perdu au prochain cold start. Ce cron short-circuit (no-op + warn) si
+ *   `process.env.VERCEL` est truthy ET `ALLOW_FS_WRITE` n'est pas défini.
+ *   Workflow recommandé : génération locale + commit MDX + push.
+ *   Cf. plan/code/CRONS-VERCEL-LIMITATIONS.md pour l'analyse complète.
+ *
  * Limitations :
  *  - 5 fichiers max / run (1 par crypto). Pas de retry sur échec API individuel.
  *  - Si CoinGecko renvoie une série vide, la crypto est skippée et reportée
  *    dans `errors`. Le cron ne crash pas.
- *  - Côté Vercel, l'écriture FS est éphémère sur Hobby (lambda RO).
- *    En prod, l'idée est d'utiliser un build hook ou un commit Git via
- *    GitHub API (out of scope ici — ce route gère le cas dev/edge runtime
- *    où FS est writable, ou un déploiement avec volume monté).
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -43,6 +48,7 @@ import { fetchHistoricalPrices } from "@/lib/historical-prices";
 import { fetchPrices } from "@/lib/coingecko";
 import type { CoinId } from "@/lib/coingecko";
 import type { TAData } from "@/lib/ta-types";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -70,29 +76,36 @@ interface CronReport {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Auth                                                                      */
-/* -------------------------------------------------------------------------- */
-
-function checkAuth(req: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) {
-    console.warn("[ta-cron-warn] CRON_SECRET absent — endpoint ouvert (mode dev).");
-    return true;
-  }
-  const auth = req.headers.get("authorization") ?? "";
-  return auth === `Bearer ${secret}`;
-}
-
-/* -------------------------------------------------------------------------- */
 /*  Handler                                                                   */
 /* -------------------------------------------------------------------------- */
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const sessionId = crypto.randomUUID();
+  const cronName = "ta-cron";
+  const secret = process.env.CRON_SECRET;
 
-  if (!checkAuth(req)) {
+  if (!verifyBearer(req, secret)) {
     // 404 délibéré (security through obscurity).
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
+    console.warn("[ta-cron-warn] CRON_SECRET absent — endpoint ouvert (mode dev).");
+  }
+
+  // Vercel Lambda = filesystem READ-ONLY (sauf /tmp éphémère).
+  // Si on tourne sur Vercel sans flag d'override, on no-op proprement
+  // au lieu d'accumuler des EROFS dans les logs.
+  if (process.env.VERCEL && !process.env.ALLOW_FS_WRITE) {
+    console.warn(
+      `[${cronName}-skip] session=${sessionId} reason=vercel-lambda-readonly ` +
+        `hint="commit MDX files to git in dev, or implement GitHub API write for prod"`,
+    );
+    return NextResponse.json({
+      ok: true,
+      sessionId,
+      skipped: "vercel-lambda-readonly",
+      note: "Files cannot be written on Vercel Lambda. Generate locally and commit to Git, or implement GitHub API write strategy for prod automation.",
+    }, { status: 200 });
   }
 
   const startedAt = Date.now();

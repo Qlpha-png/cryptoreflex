@@ -17,6 +17,7 @@ import {
   breadcrumbSchema,
   graphSchema,
   organizationSchema,
+  generateSpeakableSchema,
   type JsonLd,
 } from "@/lib/schema";
 import { formatRelativeFr } from "@/lib/news-aggregator";
@@ -154,6 +155,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
     url: canonicalUrl,
     dateline: "Paris, France",
     isAccessibleForFree: true,
+    speakable: generateSpeakableSchema(),
   };
 
   const schemas = graphSchema([

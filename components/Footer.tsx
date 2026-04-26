@@ -66,7 +66,7 @@ export default function Footer() {
               <li><Link href="/#plateformes" className={FOOTER_LINK}>Plateformes</Link></li>
               <li><Link href="/blog" className={FOOTER_LINK}>Blog</Link></li>
               <li><Link href="/actualites" className={FOOTER_LINK}>Actualités crypto</Link></li>
-              <li><Link href="/calendrier-crypto" className={FOOTER_LINK}>Calendrier événements</Link></li>
+              <li><Link href="/calendrier" className={FOOTER_LINK}>Calendrier événements</Link></li>
               <li><Link href="/outils" className={FOOTER_LINK}>Outils</Link></li>
               <li><Link href="/alertes" className={FOOTER_LINK}>Alertes prix</Link></li>
               <li><Link href="/quiz/plateforme" className={FOOTER_LINK}>Quiz plateforme</Link></li>

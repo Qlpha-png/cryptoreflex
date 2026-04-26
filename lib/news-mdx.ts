@@ -20,7 +20,7 @@ import {
   type NewsArticle,
   type NewsSummary,
   type NewsCategory,
-  isNewsCategory,
+  normalizeNewsCategory,
 } from "@/lib/news-types";
 
 /* -------------------------------------------------------------------------- */
@@ -66,8 +66,11 @@ function normalizeNewsFrontmatter(
       rawContent.replace(/\s+/g, " ").trim().slice(0, 160) + "…"
   );
 
-  const rawCategory = String(raw.category ?? "Marche");
-  const category: NewsCategory = isNewsCategory(rawCategory) ? rawCategory : "Marche";
+  // Catégorie : on accepte les valeurs canoniques (avec accents) ET les
+  // alias ASCII historiques ("Marche", "Regulation"). Tout est normalisé
+  // vers la valeur canonique, fallback "Marché".
+  const category: NewsCategory =
+    normalizeNewsCategory(raw.category) ?? "Marché";
 
   const keywords: string[] = Array.isArray(raw.keywords)
     ? raw.keywords.map(String)
@@ -195,8 +198,8 @@ export async function getRelatedNews(
 export async function getNewsCountsByCategory(): Promise<Record<NewsCategory, number>> {
   const all = await getAllNewsSummaries();
   const counts: Record<NewsCategory, number> = {
-    Marche: 0,
-    Regulation: 0,
+    "Marché": 0,
+    "Régulation": 0,
     Technologie: 0,
     Plateformes: 0,
   };

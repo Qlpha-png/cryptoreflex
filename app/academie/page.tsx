@@ -28,6 +28,7 @@ import { TRACKS } from "@/lib/academy-tracks";
 import TrackCard from "@/components/academy/TrackCard";
 import StructuredData from "@/components/StructuredData";
 import FAQ from "@/components/mdx/FAQ";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export const revalidate = 86400; // 1 jour — contenu très stable
 
@@ -121,9 +122,14 @@ export default function AcademiePage() {
     })),
   };
 
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Académie", url: "/academie" },
+  ]);
+
   return (
     <main className="py-12 sm:py-16">
-      <StructuredData data={courseSchema} id="academie-course" />
+      <StructuredData data={[courseSchema, breadcrumbs]} id="academie-course" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}

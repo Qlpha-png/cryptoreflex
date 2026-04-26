@@ -33,6 +33,7 @@ import {
   FISCALITE_EMAIL_SERIES,
   FISCALITE_SERIES_SOURCE,
   FISCALITE_VALID_OFFSETS,
+  buildUnsubscribeUrl,
   getFiscaliteEmailByOffset,
   type EmailInSequence,
 } from "@/lib/email-series/fiscalite-crypto-series";
@@ -44,7 +45,7 @@ import {
 import { sendEmail } from "@/lib/email";
 import { renderEmailHtml } from "@/lib/email-renderer";
 import { getKv } from "@/lib/kv";
-import { BRAND } from "@/lib/brand";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -154,20 +155,6 @@ async function markSent(email: string, offset: number): Promise<void> {
   }
 }
 
-/**
- * Construit l'URL de désinscription Beehiiv. En prod, Beehiiv inject l'URL
- * réelle si on utilise leur SMTP relay ; comme on envoie via Resend, on
- * fournit notre propre endpoint /api/newsletter/unsubscribe.
- */
-function buildUnsubscribeUrl(email: string): string {
-  const base = BRAND.url.replace(/\/$/, "");
-  // Note : le token de désinscription est calculé côté /api/newsletter/unsubscribe
-  // selon le mécanisme déjà existant (cf. email-drip-templates.ts). Ici on passe
-  // simplement l'email en clair — l'endpoint de unsubscribe gère le token via
-  // un autre paramètre (ou validation côté Beehiiv).
-  return base + "/api/newsletter/unsubscribe?email=" + encodeURIComponent(email);
-}
-
 /* -------------------------------------------------------------------------- */
 /*  Handler                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -178,12 +165,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
 
   // Auth Bearer (404 plutôt que 401 : security through obscurity)
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    if (auth !== "Bearer " + secret) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-  } else {
+  if (!verifyBearer(req, secret)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
     console.warn("[fiscalite-cron] CRON_SECRET absent — endpoint ouvert (mode dev).");
   }
 

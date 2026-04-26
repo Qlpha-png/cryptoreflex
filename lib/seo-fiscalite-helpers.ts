@@ -189,12 +189,28 @@ function calculatorSoftwareSchema(description: string): JsonLd {
       "Aide Cerfa 2086 + 2042-C",
       "Calcul 100 % local (aucune donnée envoyée)",
     ],
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "37",
-      bestRating: "5",
-      worstRating: "1",
+    // NOTE — `aggregateRating` volontairement absent : Google peut prendre une
+    // manual action si la note n'est pas représentative d'avis utilisateurs
+    // réels collectés (cf. policy "Review snippet"). À ré-activer quand on aura
+    // ≥ 5 reviews authentiques (Trustpilot ou formulaire post-utilisation PDF).
+    // En attendant, on signale notre verdict éditorial via une `Review` unique.
+    review: {
+      "@type": "Review",
+      author: {
+        "@type": "Organization",
+        name: BRAND.name,
+        url: BRAND.url,
+      },
+      datePublished: "2026-04-26",
+      name: `Verdict éditorial ${BRAND.name} — calculateur fiscalité crypto`,
+      reviewBody:
+        "Outil testé en interne par l'équipe Cryptoreflex sur 12 cas types (DCA, swap, gros gain, micro montant, BIC). Calcul conforme à l'article 150 VH bis du CGI et au BOFiP en vigueur. Calcul 100 % local — aucune donnée envoyée.",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: "4.7",
+        bestRating: "5",
+        worstRating: "1",
+      },
     },
     publisher: {
       "@type": "Organization",

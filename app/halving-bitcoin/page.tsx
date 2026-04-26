@@ -420,7 +420,7 @@ export default function HalvingPage() {
             . Pour visualiser tous les halvings et autres dates clés à venir,
             consultez notre{" "}
             <Link
-              href="/calendrier-crypto?cat=halving"
+              href="/calendrier?cat=halving"
               className="underline hover:text-primary-soft font-semibold"
             >
               calendrier crypto

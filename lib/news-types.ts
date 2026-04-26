@@ -26,32 +26,59 @@
 
 /**
  * Taxonomie news Cryptoreflex. 4 entrées seulement — toute valeur hors set
- * doit être normalisée vers `Marche` (catch-all par défaut).
+ * doit être normalisée vers `Marché` (catch-all par défaut).
+ *
+ * Les valeurs canoniques portent les accents français (cohérence éditoriale
+ * avec le reste du site). Les variantes ASCII ("Marche", "Regulation") sont
+ * tolérées en lecture via `isNewsCategory` pour la rétro-compatibilité.
  */
 export const NEWS_CATEGORIES = [
-  "Marche",        // évolutions de prix, ETF spot, halving, ATH/ATL
-  "Regulation",    // MiCA, AMF, ESMA, fiscalité, banques centrales
+  "Marché",        // évolutions de prix, ETF spot, halving, ATH/ATL
+  "Régulation",    // MiCA, AMF, ESMA, fiscalité, banques centrales
   "Technologie",   // upgrades L1/L2, EIPs, halvings techniques, Layer 2
   "Plateformes",   // exchanges, wallets, agréments CASP/PSAN, listings
 ] as const;
 
 export type NewsCategory = (typeof NEWS_CATEGORIES)[number];
 
-/** Libellés affichés (avec accents) — stables pour l'UI et SEO H1/breadcrumb. */
+/** Libellés affichés — identiques aux valeurs canoniques (accents inclus). */
 export const NEWS_CATEGORY_LABELS: Record<NewsCategory, string> = {
-  Marche: "Marché",
-  Regulation: "Régulation",
+  "Marché": "Marché",
+  "Régulation": "Régulation",
   Technologie: "Technologie",
   Plateformes: "Plateformes",
 };
 
 /** Slugs URL (kebab-case ASCII) — utilisés dans `?categorie=...`. */
 export const NEWS_CATEGORY_SLUGS: Record<NewsCategory, string> = {
-  Marche: "marche",
-  Regulation: "regulation",
+  "Marché": "marche",
+  "Régulation": "regulation",
   Technologie: "technologie",
   Plateformes: "plateformes",
 };
+
+/**
+ * Map des variantes ASCII (rétro-compatibilité avec les anciens fichiers MDX
+ * ou flux RSS qui pourraient encore contenir les valeurs sans accent).
+ */
+const NEWS_CATEGORY_ALIASES: Record<string, NewsCategory> = {
+  Marche: "Marché",
+  marche: "Marché",
+  "Marché": "Marché",
+  Regulation: "Régulation",
+  regulation: "Régulation",
+  "Régulation": "Régulation",
+  Technologie: "Technologie",
+  technologie: "Technologie",
+  Plateformes: "Plateformes",
+  plateformes: "Plateformes",
+};
+
+/** Normalise une valeur quelconque vers la catégorie canonique (ou null). */
+export function normalizeNewsCategory(value: unknown): NewsCategory | null {
+  if (typeof value !== "string") return null;
+  return NEWS_CATEGORY_ALIASES[value.trim()] ?? null;
+}
 
 /** Reverse map slug → category (case-insensitive côté caller). */
 export function categoryFromSlug(slug: string | undefined | null): NewsCategory | null {
@@ -63,9 +90,15 @@ export function categoryFromSlug(slug: string | undefined | null): NewsCategory 
   return null;
 }
 
-/** Garde-fou typage : true si `value` est une catégorie connue. */
+/**
+ * Garde-fou typage : true si `value` est une catégorie connue (canonique
+ * ou alias ASCII). Les alias sont tolérés pour ne pas casser les fichiers
+ * MDX historiques.
+ */
 export function isNewsCategory(value: unknown): value is NewsCategory {
-  return typeof value === "string" && (NEWS_CATEGORIES as readonly string[]).includes(value);
+  if (typeof value !== "string") return false;
+  if ((NEWS_CATEGORIES as readonly string[]).includes(value)) return true;
+  return value in NEWS_CATEGORY_ALIASES;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -7,8 +7,8 @@ import { TOP_PAIRS } from "@/lib/historical-prices";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 import { ALL_LISTICLES } from "@/lib/listicles";
 // Piliers V2 (26-04) : News auto, Analyses TA auto, Académie certifiante.
-import { getNewsSlugs } from "@/lib/news-mdx";
-import { getTASlugs } from "@/lib/ta-mdx";
+import { getAllNewsSummaries } from "@/lib/news-mdx";
+import { getAllTASummaries } from "@/lib/ta-mdx";
 import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
@@ -23,7 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/actualites`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
-    { url: `${SITE_URL}/calendrier-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    // NOTE — /calendrier-crypto (legacy) supprimé du sitemap : redirige 301
+    // vers /calendrier (cf. next.config.js, audit SEO 26-04 CRIT-3).
     { url: `${SITE_URL}/outils`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Phase 3 / Agent A4 — page hub /ressources (lead magnets PDF + outils + blog).
     // Priority 0.7 (~ /outils) car page de conversion newsletter via lead magnet gating.
@@ -163,19 +164,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   /* ----------------------------------------------------------------
    * 5. Piliers V2 — News, Analyses TA, Académie (parcours + leçons)
+   *
+   * NOTE — `lastModified` utilise la VRAIE date de publication de l'article
+   * (frontmatter `date`) plutôt que `now`. Sinon Google reçoit un signal
+   * "tout a bougé hier" alors que les news de la semaine dernière n'ont pas
+   * été touchées → cannibalise le freshness signal des nouveaux articles.
    * ---------------------------------------------------------------- */
-  const newsSlugs = await getNewsSlugs();
-  const newsRoutes: MetadataRoute.Sitemap = newsSlugs.map((slug) => ({
-    url: `${SITE_URL}/actualites/${slug}`,
-    lastModified: now,
+  const newsSummaries = await getAllNewsSummaries();
+  const newsRoutes: MetadataRoute.Sitemap = newsSummaries.map((n) => ({
+    url: `${SITE_URL}/actualites/${n.slug}`,
+    lastModified: new Date(n.date),
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
-  const taSlugs = await getTASlugs();
-  const taRoutes: MetadataRoute.Sitemap = taSlugs.map((slug) => ({
-    url: `${SITE_URL}/analyses-techniques/${slug}`,
-    lastModified: now,
+  const taSummaries = await getAllTASummaries();
+  const taRoutes: MetadataRoute.Sitemap = taSummaries.map((a) => ({
+    url: `${SITE_URL}/analyses-techniques/${a.slug}`,
+    lastModified: new Date(a.date),
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));

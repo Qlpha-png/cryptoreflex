@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { track } from "@/lib/analytics";
 import type { FiscaliteInput, FiscaliteResult } from "@/lib/fiscalite";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -61,7 +62,10 @@ export default function PdfModal({
   const [errorMsg, setErrorMsg] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
 
-  const dialogRef = useRef<HTMLDivElement>(null);
+  // Focus trap : pendant que la modale est ouverte, Tab cycle UNIQUEMENT sur
+  // ses focusables internes (WCAG 2.4.3). Le hook restaure aussi le focus sur
+  // l'élément précédent à la fermeture.
+  const dialogRef = useFocusTrap<HTMLDivElement>(open);
   const inputRef = useRef<HTMLInputElement>(null);
 
   /* ------------- Reset state à chaque ouverture ------------- */
@@ -183,7 +187,7 @@ export default function PdfModal({
           type="button"
           onClick={onClose}
           aria-label="Fermer la fenêtre"
-          className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-muted hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-muted hover:text-fg hover:bg-fg/5 focus:outline-none focus:ring-2 focus:ring-primary/40"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -201,11 +205,11 @@ export default function PdfModal({
               <div className="flex-1">
                 <h2
                   id="pdf-modal-title"
-                  className="font-display text-lg font-bold text-white"
+                  className="font-display text-lg font-bold text-fg"
                 >
                   Télécharge ta simulation en PDF
                 </h2>
-                <p className="mt-1 text-sm text-white/75">
+                <p className="mt-1 text-sm text-fg/75">
                   Reçois ta simulation par email + nos{" "}
                   <strong className="text-primary-soft">5 conseils fiscalité crypto</strong>{" "}
                   (gratuits).
@@ -228,7 +232,7 @@ export default function PdfModal({
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={step === "error"}
                 aria-describedby={errorMsg ? "pdf-modal-msg" : undefined}
-                className="w-full rounded-xl bg-background border border-border px-4 py-3 text-white placeholder-muted focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-xl bg-background border border-border px-4 py-3 text-fg placeholder-muted focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
               {step === "error" && errorMsg && (
                 <p
@@ -246,7 +250,7 @@ export default function PdfModal({
               </button>
             </form>
 
-            <div className="mt-4 flex items-start gap-2 rounded-lg border border-border/60 bg-background/40 p-3 text-[11px] text-white/60">
+            <div className="mt-4 flex items-start gap-2 rounded-lg border border-border/60 bg-background/40 p-3 text-[11px] text-fg/60">
               <ShieldCheck
                 className="h-4 w-4 shrink-0 text-primary-soft mt-0.5"
                 aria-hidden="true"
@@ -269,11 +273,11 @@ export default function PdfModal({
             />
             <h2
               id="pdf-modal-title"
-              className="mt-4 font-display text-lg font-bold text-white"
+              className="mt-4 font-display text-lg font-bold text-fg"
             >
               Préparation de ta simulation…
             </h2>
-            <p className="mt-1 text-sm text-white/70">
+            <p className="mt-1 text-sm text-fg/70">
               On enregistre ton calcul et on t'envoie un récap par email.
             </p>
           </div>
@@ -281,7 +285,12 @@ export default function PdfModal({
 
         {/* ============================ STEP : SUCCESS ============================ */}
         {step === "success" && (
-          <div className="py-2 text-center">
+          <div
+            className="py-2 text-center"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             <div
               className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/15 text-success"
               aria-hidden="true"
@@ -290,11 +299,11 @@ export default function PdfModal({
             </div>
             <h2
               id="pdf-modal-title"
-              className="mt-4 font-display text-lg font-bold text-white"
+              className="mt-4 font-display text-lg font-bold text-fg"
             >
               C'est prêt !
             </h2>
-            <p className="mt-1 text-sm text-white/75">
+            <p className="mt-1 text-sm text-fg/75">
               Ta simulation et nos 5 conseils arrivent dans ta boîte mail.
               Ouvre l'aperçu pour l'imprimer en PDF.
             </p>

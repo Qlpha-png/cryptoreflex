@@ -131,7 +131,7 @@ export default function Navbar() {
 
           <nav
             aria-label="Navigation principale"
-            className="hidden md:flex items-center gap-8"
+            className="hidden md:flex items-center gap-4 lg:gap-8"
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
@@ -145,8 +145,8 @@ export default function Navbar() {
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${
                                active
-                                 ? "text-white font-semibold"
-                                 : "text-white/80 hover:text-white"
+                                 ? "text-fg font-semibold"
+                                 : "text-fg/80 hover:text-fg"
                              }`}
                 >
                   {item.label}
@@ -238,7 +238,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setOpen(!open)}
             className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg
-                       text-white hover:bg-elevated hover:ring-1 hover:ring-primary/20
+                       text-fg hover:bg-elevated hover:ring-1 hover:ring-primary/20
                        active:bg-elevated/80 transition-all duration-fast
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background"

@@ -302,6 +302,119 @@ export async function updateSubscriberCustomField(
 }
 
 /**
+ * Désinscrit un email de la newsletter Beehiiv (status=inactive).
+ *
+ * RGPD : cet endpoint sert le droit de retrait (art. 21 RGPD). Il est appelé
+ * depuis `/api/newsletter/unsubscribe` après vérification d'un token HMAC.
+ *
+ * Implémentation :
+ *  1. Lookup du subscription_id via `?email=`
+ *  2. PUT (Beehiiv documente PUT en V2 pour status update) sur l'endpoint
+ *     /subscriptions/{subId} avec body { status: "inactive" }
+ *
+ * Mode mock (BEEHIIV_API_KEY absente) : retourne `{ ok: true }` pour ne pas
+ * bloquer les tests locaux. Le caller affichera quand même la confirmation
+ * utilisateur (pas de leak si l'email n'existait pas → security through
+ * obscurity, on confirme toujours pour ne pas permettre l'enumération).
+ *
+ * @param email — adresse à désinscrire (case-insensitive)
+ * @returns `{ ok: true }` si succès ou mode mock, `{ ok: false }` sinon
+ */
+export async function unsubscribeFromBeehiiv(email: string): Promise<{ ok: boolean }> {
+  const creds = getCreds();
+  if (!creds) {
+    console.info("[beehiiv] mode mock — unsubscribeFromBeehiiv() no-op", { email });
+    return { ok: true };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!normalizedEmail.includes("@")) return { ok: false };
+
+  // 1) Lookup subscription_id
+  let subId: string | null = null;
+  try {
+    const lookupUrl =
+      BEEHIIV_BASE +
+      "/publications/" +
+      encodeURIComponent(creds.pubId) +
+      "/subscriptions?email=" +
+      encodeURIComponent(normalizedEmail);
+    const res = await fetch(lookupUrl, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + creds.apiKey,
+        accept: "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+    if (!res.ok) {
+      console.error("[beehiiv] unsubscribe lookup error", {
+        status: res.status,
+        email: normalizedEmail,
+      });
+      return { ok: false };
+    }
+    const json = (await res.json()) as { data?: Array<{ id?: string }> };
+    subId = json.data?.[0]?.id ?? null;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "unknown";
+    console.error("[beehiiv] unsubscribe lookup fetch failed", {
+      email: normalizedEmail,
+      message: msg,
+    });
+    return { ok: false };
+  }
+
+  if (!subId) {
+    // Email pas trouvé → on retourne ok pour ne pas leaker (anti-enumeration).
+    // Côté UX c'est une confirmation : "vous êtes bien désinscrit".
+    console.info("[beehiiv] unsubscribe — subscriber not found (anti-enum, returning ok)", {
+      email: normalizedEmail,
+    });
+    return { ok: true };
+  }
+
+  // 2) PUT status=inactive
+  try {
+    const putUrl =
+      BEEHIIV_BASE +
+      "/publications/" +
+      encodeURIComponent(creds.pubId) +
+      "/subscriptions/" +
+      encodeURIComponent(subId);
+    const res = await fetch(putUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + creds.apiKey,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({ status: "inactive" }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("[beehiiv] unsubscribe PUT error", {
+        status: res.status,
+        email: normalizedEmail,
+        body: body.slice(0, 300),
+      });
+      return { ok: false };
+    }
+    return { ok: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "unknown";
+    console.error("[beehiiv] unsubscribe PUT fetch failed", {
+      email: normalizedEmail,
+      message: msg,
+    });
+    return { ok: false };
+  }
+}
+
+/**
  * Vérifie si un email est un abonné actif.
  * Utilisé par /api/lead-magnet/[id] pour gater les téléchargements.
  *

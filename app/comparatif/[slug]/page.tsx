@@ -24,6 +24,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
 
@@ -257,11 +258,21 @@ export default function ComparisonPage({ params }: Props) {
     ],
   };
 
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Comparatif", url: "/comparatif" },
+    { name: `${a.name} vs ${b.name}`, url: `/comparatif/${spec.slug}` },
+  ]);
+
   return (
     <article className="py-12 sm:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

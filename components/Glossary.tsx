@@ -159,9 +159,10 @@ export default function Glossary({ initialSlug }: GlossaryProps) {
         ))}
       </div>
 
-      {/* Compteur + reset */}
+      {/* Compteur + reset — role=status pour annoncer en douceur le nombre
+          de résultats après chaque filter/search (WCAG 4.1.3). */}
       <div className="flex items-center justify-between text-sm text-muted">
-        <span aria-live="polite">
+        <span role="status" aria-live="polite" aria-atomic="true">
           <strong className="text-fg">{filtered.length}</strong>{" "}
           terme{filtered.length > 1 ? "s" : ""}
           {isFilterActive ? " trouvés" : ""}

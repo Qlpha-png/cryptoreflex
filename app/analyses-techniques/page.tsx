@@ -25,8 +25,10 @@ import AnalysesIndexClient from "@/components/ta/AnalysesIndexClient";
 
 export const revalidate = 1800; // 30 min ISR
 
+// Audit SEO 26-04 — title raccourci de 67 → 56 chars (≤ 60 cible Google SERP).
+// Mot-clé principal "Analyses techniques crypto" + tickers majeurs en tête.
 export const metadata: Metadata = {
-  title: "Analyses techniques crypto quotidiennes — BTC, ETH, SOL, XRP, ADA",
+  title: "Analyses techniques crypto BTC, ETH, SOL — Cryptoreflex",
   description:
     "Analyses techniques quotidiennes des principales cryptos : RSI, MACD, moyennes mobiles, supports/résistances, scénarios. Mises à jour automatiques sur Cryptoreflex.",
   alternates: { canonical: "/analyses-techniques" },

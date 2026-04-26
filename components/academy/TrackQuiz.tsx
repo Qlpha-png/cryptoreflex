@@ -213,11 +213,22 @@ export default function TrackQuiz({
       aria-label={`Résultats du quiz ${trackTitle}`}
       className="rounded-2xl border border-border bg-surface p-6 sm:p-8"
     >
-      <header className="text-center">
+      {/*
+        Wrapper aria-live=polite : annonce le résultat aux lecteurs d'écran
+        dès l'apparition (passage de phase "playing" → "results"). aria-atomic
+        pour relire toute la zone (titre + score) plutôt que les diffs.
+        WCAG 4.1.3 — Status Messages.
+      */}
+      <header
+        className="text-center"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <div
           className={`mx-auto inline-flex h-16 w-16 items-center justify-center rounded-full ${
             passed
-              ? "bg-emerald-500/15 text-emerald-300"
+              ? "bg-success-fg/15 text-success-fg"
               : "bg-warning-soft text-warning-fg"
           }`}
         >
@@ -239,8 +250,13 @@ export default function TrackQuiz({
         </p>
       </header>
 
-      {/* Détail des réponses */}
-      <ol className="mt-8 space-y-3">
+      {/* Détail des réponses — aria-live polite pour le feedback question par
+          question (annonce le détail après le score global, dans l'ordre). */}
+      <ol
+        className="mt-8 space-y-3"
+        aria-label="Détail des réponses"
+        aria-live="polite"
+      >
         {questions.map((q, i) => {
           const userAns = answers[i];
           const correct = userAns === q.correctIndex;
@@ -249,19 +265,19 @@ export default function TrackQuiz({
               key={q.id}
               className={`rounded-xl border p-4 text-sm ${
                 correct
-                  ? "border-emerald-500/30 bg-emerald-500/5"
-                  : "border-rose-500/30 bg-rose-500/5"
+                  ? "border-success-fg/30 bg-success-fg/5"
+                  : "border-danger-fg/30 bg-danger-fg/5"
               }`}
             >
               <div className="flex items-start gap-2">
                 {correct ? (
                   <CheckCircle2
-                    className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-success-fg"
                     aria-label="Bonne réponse"
                   />
                 ) : (
                   <XCircle
-                    className="mt-0.5 h-4 w-4 shrink-0 text-rose-400"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-danger-fg"
                     aria-label="Mauvaise réponse"
                   />
                 )}
@@ -338,7 +354,7 @@ export default function TrackQuiz({
             </button>
           </div>
           {downloadError && (
-            <p className="mt-2 text-xs text-rose-300" role="alert">
+            <p className="mt-2 text-xs text-danger-fg" role="alert">
               {downloadError}
             </p>
           )}

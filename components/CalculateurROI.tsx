@@ -96,7 +96,7 @@ export default function CalculateurROI() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-glow">
-          <Calculator className="h-5 w-5 text-white" />
+          <Calculator className="h-5 w-5 text-background" />
         </div>
         <div>
           <h2 className="font-bold text-xl text-fg">Calculateur ROI crypto</h2>

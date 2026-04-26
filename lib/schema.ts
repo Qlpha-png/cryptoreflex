@@ -11,6 +11,7 @@
 import { BRAND } from "@/lib/brand";
 import { getAllPlatforms, getTopPlatforms, type Platform } from "@/lib/platforms";
 import { authorRef, getAuthorByIdOrDefault } from "@/lib/authors";
+import { generateSpeakableSchema } from "@/lib/schema-speakable";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -80,9 +81,46 @@ const PERSON_ID = `${SITE_URL}/#author-cryptoreflex`;
 /** Réseaux sociaux officiels (à mettre à jour quand les comptes sont créés). */
 const SAME_AS: string[] = [
   "https://twitter.com/cryptoreflex_fr",
+  "https://x.com/cryptoreflex",
   "https://www.linkedin.com/company/cryptoreflex",
   "https://t.me/cryptoreflex",
   "https://github.com/cryptoreflex",
+  "https://fr.trustpilot.com/review/cryptoreflex.fr",
+];
+
+/**
+ * Liste thématique exhaustive — alimente `Organization.knowsAbout` (Knowledge
+ * Panel Google) ET `Person.knowsAbout` du fondateur. Chaque entrée doit avoir
+ * une page dédiée ou un cluster d'articles pour signal de pertinence cohérent.
+ */
+const ORG_KNOWS_ABOUT: string[] = [
+  "Cryptomonnaies",
+  "Bitcoin",
+  "Ethereum",
+  "Stablecoins (USDT, USDC)",
+  "Plateformes crypto régulées (Coinbase, Binance, Kraken, Bitpanda)",
+  "Régulation MiCA",
+  "PSAN AMF",
+  "Fiscalité crypto France (article 150 VH bis)",
+  "Formulaire 2086 Cerfa",
+  "Flat tax 30% (PFU)",
+  "Staking & DeFi",
+  "Hardware wallets (Ledger, Trezor)",
+  "Halving Bitcoin",
+  "Analyse technique crypto",
+];
+
+/**
+ * Pays desservis (FR primaire + 3 régions FR-speaking où le contenu est
+ * pertinent). Empêche que Google considère le contenu duplicate quand un
+ * visiteur BE/CH/CA arrive sur cryptoreflex.fr.
+ */
+const ORG_AREA_SERVED = [
+  { "@type": "Country" as const, name: "France" },
+  { "@type": "Country" as const, name: "Belgium" },
+  { "@type": "Country" as const, name: "Switzerland" },
+  { "@type": "Country" as const, name: "Luxembourg" },
+  { "@type": "Country" as const, name: "Canada" },
 ];
 
 /** Convertit un chemin relatif en URL absolue. */
@@ -107,13 +145,35 @@ export function jsonLdSafe(obj: JsonLd): string {
 /*  1. Organization                                                           */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Description longue Organization — utilisée par le Knowledge Panel Google.
+ * Plus dense et SEO-précise que `BRAND.description` (qui sert pour les meta
+ * tags). Inclut les chiffres-clés, la mission, et les piliers de notation.
+ */
+const ORG_DESCRIPTION_LONG =
+  "Cryptoreflex.fr est le portail francophone indépendant de référence pour comparer les plateformes crypto régulées MiCA, comprendre la fiscalité crypto en France (article 150 VH bis, formulaire 2086, flat tax 30%) et se former à l'investissement crypto. Méthodologie publique en 6 critères, tests réels par le fondateur Kevin Voisin, transparence intégrale sur les rémunérations affiliées.";
+
 export function organizationSchema(): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
     name: BRAND.name,
-    legalName: BRAND.name,
+    /**
+     * Raison sociale — cohérent avec mentions légales (entrepreneur individuel
+     * Kevin VOISIN exploitant la marque commerciale Cryptoreflex). Si la
+     * structure passe en SAS plus tard, modifier ici + mentions-legales.
+     */
+    legalName: "Kevin VOISIN — Cryptoreflex",
+    /**
+     * SIREN INSEE — identifiant unique d'entreprise française. Aide Google à
+     * croiser le profil organisation avec data.gouv / Pappers (E-E-A-T fort).
+     */
+    taxID: "103352621",
+    /**
+     * VAT ID — non renseigné car franchise en base de TVA (CA < 36 800 €).
+     * Quand on bascule en TVA, ajouter `vatID: "FR..."` ici (1 ligne).
+     */
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
@@ -122,9 +182,36 @@ export function organizationSchema(): JsonLd {
       height: 512,
     },
     image: LOGO_URL,
-    description: BRAND.description,
+    description: ORG_DESCRIPTION_LONG,
     slogan: BRAND.tagline,
-    foundingDate: "2026-01-01",
+    /**
+     * Date de création précise (lancement public du site). Permet à Google de
+     * pondérer la fraîcheur (entité jeune mais en croissance ≠ entité morte).
+     */
+    foundingDate: "2026-04-15",
+    foundingLocation: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "FR",
+      },
+    },
+    /**
+     * Founder référencé via @id stable (Person schema dédié). Connecte
+     * l'organisation à son humain réel — critère E-E-A-T majeur pour YMYL
+     * (finance / fiscalité).
+     */
+    founder: { "@id": PERSON_ID },
+    knowsAbout: ORG_KNOWS_ABOUT,
+    knowsLanguage: ["fr", "fr-FR"],
+    availableLanguage: ["fr"],
+    areaServed: ORG_AREA_SERVED,
+    /**
+     * `award` : placeholder. À renseigner quand on aura un classement reconnu
+     * (ex : "Top 10 sites crypto FR 2027 — JDG"). Garder vide pour V1 — un
+     * award fictif serait pénalisé par Google E-E-A-T.
+     */
+    // award: [],
     email: BRAND.email,
     sameAs: SAME_AS,
     contactPoint: [
@@ -141,10 +228,6 @@ export function organizationSchema(): JsonLd {
         availableLanguage: ["French", "English"],
       },
     ],
-    areaServed: {
-      "@type": "Country",
-      name: "France",
-    },
   };
 }
 
@@ -165,16 +248,18 @@ export function websiteSchema(): JsonLd {
     /**
      * SearchAction — éligible Sitelinks Search Box dans Google.
      *
-     * On pointe sur `/blog?q=…` parce qu'il n'existe pas (encore) de page
-     * /recherche dédiée : la barre de recherche du blog (cf. BlogIndexClient)
-     * filtre la liste sur le query string `?q=`. Le formulaire `not-found.tsx`
-     * pointe également vers /blog?q.
+     * Pointe sur `/recherche?q=…` (page transverse fuzzy index, cf.
+     * `app/recherche/page.tsx` + `/api/search`). Cette page recherche
+     * articles, plateformes, fiches crypto, comparatifs, outils, glossaire
+     * — bien plus complet que le filtre blog historique.
+     *
+     * Doc : https://developers.google.com/search/docs/appearance/sitelinks-searchbox
      */
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${SITE_URL}/blog?q={search_term_string}`,
+        urlTemplate: `${SITE_URL}/recherche?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -206,6 +291,12 @@ export function articleSchema(article: ArticleFrontmatter): JsonLd {
     keywords: article.tags?.join(", "),
     url,
     isAccessibleForFree: true,
+    /**
+     * SpeakableSpecification — éligibilité voice search Google Assistant.
+     * Cible les sélecteurs h1/h2/.lead/[data-speakable] qui contiennent les
+     * passages les plus représentatifs (titre, sous-titres, chapô).
+     */
+    speakable: generateSpeakableSchema(),
   };
 }
 
@@ -479,6 +570,7 @@ export function newsArticleSchema(article: ArticleFrontmatter): JsonLd {
     ...base,
     "@type": "NewsArticle",
     dateline: "Paris, France",
+    // `speakable` est déjà hérité de `articleSchema()` via le spread.
   };
 }
 
@@ -497,3 +589,6 @@ export function graphSchema(schemas: JsonLd[]): JsonLd {
     }),
   };
 }
+
+// Re-export pour permettre `import { generateSpeakableSchema } from "@/lib/schema"`.
+export { generateSpeakableSchema } from "@/lib/schema-speakable";

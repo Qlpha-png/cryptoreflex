@@ -28,6 +28,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -177,12 +178,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sessionId = crypto.randomUUID();
   const start = Date.now();
 
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-  } else {
+  if (!verifyBearer(req, secret)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (!secret) {
     console.warn(
       "[orchestrator] CRON_SECRET absent — endpoint ouvert (mode dev).",
     );

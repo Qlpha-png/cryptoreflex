@@ -30,9 +30,28 @@
 import { NextResponse } from "next/server";
 import { getTrack, type TrackId } from "@/lib/academy-tracks";
 import { BRAND } from "@/lib/brand";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/**
+ * Rate limit : 30 certificats / heure / IP.
+ *
+ * Pourquoi 30/h : un user honnête en génère 1-3 (un par track terminé).
+ * 30 laisse une grosse marge pour les retours/regen sans bloquer, mais
+ * empêche un bot de cramer 1000 certificats/min (chacun coûte un buildHtml
+ * qui mange ~2 KB de RAM + envoie ~6 KB sur le réseau).
+ *
+ * Audit M9 (26-04) : la route était sans limit avant — un attaquant pouvait
+ * facilement saturer le pod / faire grimper les coûts Vercel.
+ */
+const rateLimiter = createRateLimiter({
+  limit: 30,
+  windowMs: 3600 * 1000,
+  key: "academy-cert",
+});
 
 function escapeHtml(input: string): string {
   return input
@@ -346,6 +365,23 @@ const VALID_TRACKS: ReadonlySet<TrackId> = new Set([
 ]);
 
 export async function POST(req: Request) {
+  // Rate limit anti-abus (audit M9, 26-04). Headers Retry-After + X-RateLimit-Remaining
+  // pour qu'un client honnête sache attendre / un bot serveur backoff naturellement.
+  const ip = getClientIp(req);
+  const rl = await rateLimiter(ip);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rl.retryAfter),
+          "X-RateLimit-Remaining": "0",
+        },
+      },
+    );
+  }
+
   let body: { trackId?: unknown; name?: unknown };
   try {
     body = (await req.json()) as { trackId?: unknown; name?: unknown };
