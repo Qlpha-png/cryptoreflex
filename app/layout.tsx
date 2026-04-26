@@ -144,11 +144,15 @@ export const metadata: Metadata = {
   },
   // Vérification de propriété pour les Webmaster Tools.
   // Next.js gère nativement Google ; pour Bing on injecte une meta custom plus bas.
+  // Trustpilot one-time domain verification : meta hardcodée le temps de la vérif,
+  // peut être retirée une fois le domaine validé côté Trustpilot Business.
   verification: {
     google: GOOGLE_VERIFICATION,
-    other: BING_VERIFICATION
-      ? { "msvalidate.01": BING_VERIFICATION }
-      : undefined,
+    other: {
+      ...(BING_VERIFICATION ? { "msvalidate.01": BING_VERIFICATION } : {}),
+      "trustpilot-one-time-domain-verification-id":
+        "dc12dfb2-b1ab-4c13-a784-a42baadd3e9e",
+    },
   },
   /**
    * PWA — instructions iOS Safari.
