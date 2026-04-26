@@ -406,23 +406,24 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
         </span>
       </div>
 
-      {/* CTAs distincts : lire la fiche complète vs aller au comparateur plateformes.
-          Avant 26/04/2026 il n'y avait qu'un "Acheter →" qui pointait vers #plateformes
-          (ancre interne), ce qui faisait croire à l'utilisateur que la fiche était
-          un faux article. La nav primaire est maintenant la fiche détaillée. */}
-      <div className="mt-3 flex items-center justify-between gap-2 text-xs">
+      {/* Audit Block 5 26/04/2026 (Agent visual+CTA) : avant 'Voir où acheter'
+          en text-muted = trop discret pour un CTA monétisable. Maintenant les
+          2 CTAs sont en boutons distincts (primary fiche, ghost acheter)
+          pour signaler clairement les 2 chemins user. */}
+      <div className="mt-4 flex flex-col sm:flex-row items-stretch gap-2 text-sm">
         <a
           href={`/cryptos/${crypto.id}`}
-          className="inline-flex items-center gap-1 text-primary-soft font-semibold hover:text-primary"
+          className="flex-1 inline-flex items-center justify-center gap-1 min-h-[40px] py-2 px-3 rounded-lg border border-border hover:border-primary/40 text-fg/80 hover:text-fg hover:bg-elevated transition-colors font-medium"
         >
-          Lire la fiche complète
+          Voir la fiche
           <ArrowRight className="h-3.5 w-3.5" />
         </a>
         <a
-          href="#plateformes"
-          className="text-muted hover:text-fg"
+          href="/comparatif"
+          className="flex-1 inline-flex items-center justify-center gap-1 min-h-[40px] py-2 px-3 rounded-lg bg-primary text-background hover:bg-primary-glow transition-colors font-semibold"
         >
-          Voir où acheter
+          Acheter
+          <ArrowRight className="h-3.5 w-3.5" />
         </a>
       </div>
     </article>
