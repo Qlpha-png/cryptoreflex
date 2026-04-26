@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   title: "Calculateur APY staking crypto 2026 — ETH, SOL, ADA, DOT, ATOM, NEAR",
   description:
     "Calcule tes récompenses de staking en EUR sur ETH, SOL, ADA, DOT, ATOM, NEAR. Compare staking direct vs liquid staking (Lido, Marinade) vs CEX (Binance, Coinbase). APY indicatifs Q1 2026.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils/calculateur-apy-staking" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils/calculateur-apy-staking" },
   openGraph: {
     title: "Calculateur APY staking crypto — comparatif 2026",
     description:
       "Estime tes récompenses de staking sur 6 cryptos majeurs et compare staking direct, liquid staking et CEX en 2 secondes.",
-    url: "https://cryptoreflex.fr/outils/calculateur-apy-staking",
+    url: "https://www.cryptoreflex.fr/outils/calculateur-apy-staking",
     type: "website",
   },
 };

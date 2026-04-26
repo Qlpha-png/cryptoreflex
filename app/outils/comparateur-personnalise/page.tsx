@@ -24,12 +24,12 @@ export const metadata: Metadata = {
   title: "Quelle plateforme crypto choisir 2026 ? Quiz personnalisé en 60 sec",
   description:
     "Réponds à 5 questions et reçois ton top 3 personnalisé parmi Bitstack, Bitpanda, Binance, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur ton profil.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils/comparateur-personnalise" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils/comparateur-personnalise" },
   openGraph: {
     title: "Quelle plateforme crypto choisir ? Quiz personnalisé 2026",
     description:
       "5 questions, ton top 3 personnalisé. Compare prix, UX, sécurité selon TON profil — pas un comparatif générique.",
-    url: "https://cryptoreflex.fr/outils/comparateur-personnalise",
+    url: "https://www.cryptoreflex.fr/outils/comparateur-personnalise",
     type: "website",
   },
 };

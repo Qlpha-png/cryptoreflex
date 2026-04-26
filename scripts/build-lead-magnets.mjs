@@ -371,7 +371,26 @@ async function buildPdf(magnet) {
   const raw = readFileSync(srcPath, "utf-8");
   const { meta, body } = parseFrontmatter(raw);
   const cover = COVER_HTML(meta.title || magnet.title, meta.subtitle, meta.author, meta.date, meta.version);
-  let bodyHtml = marked.parse(body);
+
+  // Strip GFM heading anchors `{#chapitre-1}` du markdown — `marked` les rend
+  // litteralement dans le titre ("Chapitre 1 — Pourquoi {#chapitre-1}").
+  // Signale utilisateur 26/04/2026 "2 truc du sommaire mal agence" + screenshot
+  // montrant l'anchor visible. On preserve l'id pour la TOC en injectant un
+  // attribut id sur le H2/H3 apres rendering.
+  const headingIds = new Map(); // text -> id
+  const cleanBody = body.replace(/^(#{1,6}\s+.*?)\s*\{#([^}]+)\}\s*$/gm, (_match, heading, id) => {
+    const text = heading.replace(/^#+\s+/, "").trim();
+    headingIds.set(text, id);
+    return heading;
+  });
+
+  let bodyHtml = marked.parse(cleanBody);
+
+  // Re-injecte les id sur les headings rendus pour preserver les ancres TOC.
+  bodyHtml = bodyHtml.replace(/<(h[1-6])>([^<]+)<\/\1>/g, (match, tag, text) => {
+    const id = headingIds.get(text.trim());
+    return id ? `<${tag} id="${id}">${text}</${tag}>` : match;
+  });
 
   // PAS d'injection de page-break sur tous les H2 (signale utilisateur
   // 26/04/2026 "PDF trou de trou" : forcer un break apres chaque section

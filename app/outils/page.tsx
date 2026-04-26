@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Outils crypto gratuits — calculateurs, simulateurs, glossaire, portfolio",
   description:
     "11 outils gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, calculateur APY staking, simulateur halving Bitcoin, comparateur personnalisé, vérificateur MiCA, ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
 };
 
 type ToolStatus = "available" | "coming-soon";

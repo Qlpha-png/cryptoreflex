@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "Convertisseur crypto temps réel — BTC, ETH, SOL en EUR/USD",
   description:
     "Convertis instantanément Bitcoin, Ethereum, Solana et 12 autres cryptos en euros, dollars ou stablecoins. Taux CoinGecko en temps réel, gratuit, sans inscription.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils/convertisseur" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils/convertisseur" },
   openGraph: {
     title: "Convertisseur crypto temps réel — Cryptoreflex",
     description:
       "Conversion BTC, ETH, SOL, USDT vers EUR/USD avec les taux CoinGecko. Cross-crypto supporté.",
-    url: "https://cryptoreflex.fr/outils/convertisseur",
+    url: "https://www.cryptoreflex.fr/outils/convertisseur",
     type: "website",
   },
 };

@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   title: "Simulateur DCA crypto gratuit — backtest 5 ans (BTC, ETH, SOL)",
   description:
     "Calcule la performance d'un Dollar Cost Averaging sur Bitcoin, Ethereum ou Solana. Backtest réel sur 5 ans, comparaison avec un achat unique, prix moyen d'achat et ROI.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils/simulateur-dca" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils/simulateur-dca" },
   openGraph: {
     title: "Simulateur DCA crypto — backtest 5 ans gratuit",
     description:
       "Investis un montant fixe chaque mois en BTC, ETH ou SOL et visualise la performance réelle sur 1 à 5 ans.",
-    url: "https://cryptoreflex.fr/outils/simulateur-dca",
+    url: "https://www.cryptoreflex.fr/outils/simulateur-dca",
     type: "website",
   },
 };

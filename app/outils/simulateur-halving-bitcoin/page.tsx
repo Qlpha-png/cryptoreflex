@@ -24,12 +24,12 @@ export const metadata: Metadata = {
   title: "Simulateur halving Bitcoin 2028 — projection DCA jusqu'en 2036",
   description:
     "Simule ton DCA Bitcoin jusqu'aux halvings 2028, 2032, 2036. 3 scénarios (conservateur, moyen, bullish), graphique recharts, basé sur les cycles historiques BTC.",
-  alternates: { canonical: "https://cryptoreflex.fr/outils/simulateur-halving-bitcoin" },
+  alternates: { canonical: "https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin" },
   openGraph: {
     title: "Simulateur halving Bitcoin 2028 — projection DCA",
     description:
       "Combien vaudra ton DCA Bitcoin après les prochains halvings ? 3 scénarios sourcés sur les cycles passés.",
-    url: "https://cryptoreflex.fr/outils/simulateur-halving-bitcoin",
+    url: "https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin",
     type: "website",
   },
 };

@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const fromUp = parsed.from.toUpperCase();
   const toUp = parsed.to.toUpperCase();
 
-  const url = `https://cryptoreflex.fr/convertisseur/${parsed.from}-${parsed.to}`;
+  const url = `https://www.cryptoreflex.fr/convertisseur/${parsed.from}-${parsed.to}`;
 
   return {
     title: `Convertir ${fromUp} en ${toUp} — ${fromName} ${toName} en temps réel`,
