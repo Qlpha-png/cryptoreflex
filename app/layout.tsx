@@ -8,8 +8,14 @@ import PlausibleScript from "@/components/PlausibleScript";
 import ClarityScript from "@/components/ClarityScript";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
+import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
+import {
+  graphSchema,
+  organizationSchema,
+  websiteSchema,
+} from "@/lib/schema";
 
 // Validation env au boot — server-side uniquement (pas de window).
 // Le helper est idempotent : un flag statique évite le spam en HMR / cold-start.
@@ -201,6 +207,16 @@ export default function RootLayout({
       className={`${inter.variable} ${mono.variable} ${display.variable}`}
     >
       <body className="min-h-screen flex flex-col antialiased font-sans">
+        {/*
+          JSON-LD global — Organization (Knowledge Panel) + WebSite (sitelinks
+          search box). Injecté DANS body en premier élément pour être détecté
+          par Googlebot dès le premier scan. graphSchema mutualise les @id pour
+          permettre les références croisées sans duplication.
+        */}
+        <StructuredData
+          id="global-graph"
+          data={graphSchema([organizationSchema(), websiteSchema()])}
+        />
         {/* WCAG 2.4.1 — premier stop Tab : skip link visible au focus */}
         <SkipToContent />
         {/*
