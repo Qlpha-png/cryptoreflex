@@ -116,6 +116,32 @@ export const metadata: Metadata = {
     creator: "@cryptoreflex",
   },
   robots: { index: true, follow: true },
+  /**
+   * Hreflang multi-région — déclare au crawler Google que le contenu FR
+   * cible explicitement France/Belgique/Suisse/Québec, sans avoir à dupliquer
+   * le contenu sous /be /ch /ca (impossible vu nos effectifs).
+   *
+   * Pourquoi c'est utile sans rewrites par marché :
+   *  - Google Search comprend "le même contenu sert 4 régions FR"
+   *  - Évite que GoogleBot considère duplicate content si un visiteur BE/CH/CA
+   *    arrive sur cryptoreflex.fr (cas standard pour un site .fr unique)
+   *  - Le `x-default` indique le fallback canonique
+   *
+   * Si plus tard on lance des sous-versions /be /ch /ca, on remplace les URLs
+   * (4 lignes à éditer ici, le reste suit via canonical/sitemap dynamiques).
+   *
+   * Source : audit SEO 26-04 (issue critique #1 "Hreflang manquant").
+   */
+  alternates: {
+    canonical: BRAND.url,
+    languages: {
+      "fr-FR": BRAND.url,
+      "fr-BE": BRAND.url,
+      "fr-CH": BRAND.url,
+      "fr-CA": BRAND.url,
+      "x-default": BRAND.url,
+    },
+  },
   // Vérification de propriété pour les Webmaster Tools.
   // Next.js gère nativement Google ; pour Bing on injecte une meta custom plus bas.
   verification: {
