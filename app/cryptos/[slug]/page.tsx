@@ -38,7 +38,23 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
-import PriceChart from "@/components/crypto-detail/PriceChart";
+import dynamic from "next/dynamic";
+
+// Lazy-load PriceChart : Client Component lourd (chart + fetch /api/historical
+// au mount), positionné below-the-fold sous Hero+Stats. Audit Perf 26-04 :
+// gain JS eval -50ms + TTI -100ms par chart différée.
+const PriceChart = dynamic(
+  () => import("@/components/crypto-detail/PriceChart"),
+  {
+    loading: () => (
+      <div
+        className="h-96 animate-pulse rounded-2xl bg-elevated/40"
+        aria-label="Chargement du graphique de prix"
+      />
+    ),
+    ssr: false,
+  },
+);
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
 import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";

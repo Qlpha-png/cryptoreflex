@@ -11,9 +11,22 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 
+import dynamic from "next/dynamic";
 import StructuredData from "@/components/StructuredData";
-import Heatmap from "@/components/Heatmap";
 import HeatmapEmpty from "./HeatmapEmpty";
+
+// Lazy-load Heatmap : Client lourd (~15 KB, grille 100 coins + retry logic).
+// Below-the-fold sous breadcrumb + header. HeatmapEmpty fallback couvre le
+// cas pas de données. Audit Perf 26-04 : gain JS eval -60ms.
+const Heatmap = dynamic(() => import("@/components/Heatmap"), {
+  loading: () => (
+    <div
+      className="h-[600px] animate-pulse rounded-2xl bg-elevated/40"
+      aria-label="Chargement de la heatmap"
+    />
+  ),
+  ssr: false,
+});
 
 /**
  * /marche/heatmap — Heatmap top 100 cryptos style CoinMarketCap / TradingView.

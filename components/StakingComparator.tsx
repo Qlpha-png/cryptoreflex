@@ -273,7 +273,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
             Staker sur {bestPlatform.name}
             <span className="sr-only">
               {" "}
-              (lien sponsorisé, ouvre un nouvel onglet)
+              (publicité, lien d'affiliation, ouvre un nouvel onglet)
             </span>
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </AffiliateLink>

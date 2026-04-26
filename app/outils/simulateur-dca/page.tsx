@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TrendingUp, ShieldCheck, Zap, ArrowRight, BookOpen } from "lucide-react";
-import DcaSimulator from "@/components/DcaSimulator";
+import dynamic from "next/dynamic";
+
+// Lazy-load DcaSimulator : Client lourd (chart Recharts + fetch historique
+// CoinGecko + recalcul on input change). Below-the-fold sous Hero. Audit
+// Perf 26-04 : différer le bundle (~10 KB) accélère LCP.
+const DcaSimulator = dynamic(() => import("@/components/DcaSimulator"), {
+  loading: () => (
+    <div
+      className="h-[600px] animate-pulse rounded-2xl bg-elevated/40"
+      aria-label="Chargement du simulateur DCA"
+    />
+  ),
+  ssr: false,
+});
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { getPlatformById } from "@/lib/platforms";

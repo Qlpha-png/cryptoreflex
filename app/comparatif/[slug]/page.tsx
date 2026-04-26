@@ -515,7 +515,7 @@ export default function ComparisonPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). Les liens marqués "sponsorisé" génèrent une commission à {BRAND.name} sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
+            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). Les liens marqués « Publicité » génèrent une commission à {BRAND.name} sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
           </p>
         </section>
       </div>

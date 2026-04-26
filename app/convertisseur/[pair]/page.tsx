@@ -9,7 +9,20 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import Converter from "@/components/Converter";
+import dynamic from "next/dynamic";
+
+// Lazy-load Converter : Client interactif (fetch /api/convert au mount + on
+// input change), positionné below-the-fold sous H1 + descriptif. Audit Perf
+// 26-04 : différer le bundle Converter accélère LCP/INP.
+const Converter = dynamic(() => import("@/components/Converter"), {
+  loading: () => (
+    <div
+      className="h-64 animate-pulse rounded-2xl bg-elevated/40"
+      aria-label="Chargement du convertisseur"
+    />
+  ),
+  ssr: false,
+});
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import {

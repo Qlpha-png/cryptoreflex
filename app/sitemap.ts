@@ -42,6 +42,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // V2 juin 2026 = compteurs live via webhook Beehiiv + partenaires affil.
     { url: `${SITE_URL}/impact`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/affiliations`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    // Page de transparence (loi Influenceurs juin 2023 + DGCCRF) — liste
+    // exhaustive des partenariats actifs, statut MiCA et rémunération perçue.
+    { url: `${SITE_URL}/transparence`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/mentions-legales`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/confidentialite`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/top`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },

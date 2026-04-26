@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { trackAffiliateClick } from "@/lib/analytics";
 
@@ -17,6 +18,14 @@ import { trackAffiliateClick } from "@/lib/analytics";
  *    Le `ctaText` est dérivé automatiquement du contenu textuel des children
  *    (utile pour mesurer quel wording de bouton convertit le mieux), avec un
  *    override possible via la prop `ctaText`.
+ *  - Conformité loi Influenceurs (n°2023-451 du 9 juin 2023) + DGCCRF :
+ *    rend visible la mention « Publicité — Cryptoreflex perçoit une commission »
+ *    sous chaque CTA, cliquable vers /transparence. La formulation reprend
+ *    explicitement le terme « Publicité » exigé par la loi pour qualifier
+ *    une communication commerciale, ainsi que l'information de rémunération
+ *    (Art. L121-1 du Code de la consommation modifié).
+ *    Désactivable via `showCaption={false}` quand un disclaimer global est
+ *    déjà présent à proximité (ex : sidebar /avis, table de comparatif).
  *
  * Usage :
  *   <AffiliateLink href={url} platform="coinbase" placement="home-card">
@@ -45,6 +54,12 @@ export interface AffiliateLinkProps
    * le lien provient d'un commentaire/forum). Par défaut : false.
    */
   ugc?: boolean;
+  /**
+   * Affiche la mention légale « Publicité — commission » sous le CTA (loi
+   * Influenceurs juin 2023). Par défaut `true`. Mettre `false` quand un
+   * disclaimer plus complet est déjà rendu à proximité (ex : sidebar /avis).
+   */
+  showCaption?: boolean;
   children: ReactNode;
 }
 
@@ -77,6 +92,7 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
       ctaText,
       target = "_blank",
       ugc = false,
+      showCaption = true,
       onClick,
       onAuxClick,
       children,
@@ -103,27 +119,39 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     const fire = () => trackAffiliateClick(platform, placement, effectiveCta);
 
     return (
-      <a
-        ref={ref}
-        href={href}
-        target={target}
-        rel={rel}
-        // data-* pour debug & pour permettre des sélecteurs CSS/QA dédiés.
-        data-affiliate-platform={platform}
-        data-affiliate-placement={placement}
-        onClick={(e) => {
-          fire();
-          onClick?.(e);
-        }}
-        // Capte aussi le clic-molette / Cmd+clic (ouverture nouvel onglet).
-        onAuxClick={(e) => {
-          if (e.button === 1) fire();
-          onAuxClick?.(e);
-        }}
-        {...rest}
-      >
-        {children}
-      </a>
+      <>
+        <a
+          ref={ref}
+          href={href}
+          target={target}
+          rel={rel}
+          aria-label="Lien d'affiliation publicitaire"
+          // data-* pour debug & pour permettre des sélecteurs CSS/QA dédiés.
+          data-affiliate-platform={platform}
+          data-affiliate-placement={placement}
+          onClick={(e) => {
+            fire();
+            onClick?.(e);
+          }}
+          // Capte aussi le clic-molette / Cmd+clic (ouverture nouvel onglet).
+          onAuxClick={(e) => {
+            if (e.button === 1) fire();
+            onAuxClick?.(e);
+          }}
+          {...rest}
+        >
+          {children}
+        </a>
+        {showCaption && (
+          <Link
+            href="/transparence"
+            className="mt-1 block text-[10px] text-muted/70 hover:text-muted underline underline-offset-2"
+            aria-label="En savoir plus sur nos liens d'affiliation et nos partenariats"
+          >
+            Publicité — Cryptoreflex perçoit une commission
+          </Link>
+        )}
+      </>
     );
   }
 );

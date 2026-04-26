@@ -313,7 +313,7 @@ export default function ReviewPage({ params }: Props) {
               <ExternalLink className="h-4 w-4" />
             </a>
             <p className="mt-3 text-[11px] text-muted leading-relaxed">
-              Lien sponsorisé. Cryptoreflex perçoit une commission si vous ouvrez un compte, sans surcoût pour vous. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link>).
+              Publicité — Cryptoreflex perçoit une commission si vous ouvrez un compte, sans surcoût pour vous. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
             </p>
           </aside>
         </header>

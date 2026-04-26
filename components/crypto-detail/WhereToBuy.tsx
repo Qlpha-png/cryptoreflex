@@ -46,8 +46,9 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       </div>
 
       <p className="mt-4 text-[11px] text-muted leading-relaxed">
-        Liens sponsorisés. Cryptoreflex perçoit une commission lorsqu'un visiteur ouvre
-        un compte via l'un de ces liens — cela ne change ni le classement, ni la note attribuée.
+        Publicité. Cryptoreflex perçoit une commission lorsqu'un visiteur ouvre
+        un compte via l'un de ces liens — cela ne change ni le classement, ni la note attribuée
+        (cf. <a href="/transparence" className="underline hover:text-white">page transparence</a>).
         Vérifiez systématiquement le statut MiCA et les frais avant tout dépôt.
       </p>
     </section>
