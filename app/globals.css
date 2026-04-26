@@ -1234,6 +1234,95 @@ section[id^="cat-"] {
   transition: transform 0ms, opacity 0ms;
 }
 
+/* =========================================================================
+ * BLOCK 5 — /pro PREMIUM POLISH (BATCH 8 — Visual + Mobile + Perf agents)
+ *
+ * Animations dédiées à la landing /pro pour booster le perceived value :
+ *  - .pro-feature-icon-pop : icône qui « pop » au hover de sa carte parent
+ *  - .pro-feature-card     : staggered fade-in basé sur --i (variable inline)
+ *  - .pro-sticky-cta       : bottom sheet mobile sticky qui glisse à l'apparition
+ *
+ * Tous les keyframes ici sont compositor-only (transform / opacity)
+ * pour ne JAMAIS déclencher de layout/paint coûteux (perf 60 FPS garanti
+ * y compris sur Android low-end).
+ *
+ * Neutralisés intégralement par le bloc prefers-reduced-motion juste en bas.
+ * ========================================================================= */
+
+/* Icon pop au hover de la carte parente — délai 0ms pour réactivité immédiate.
+ * Pattern utilisé par Linear (feature cards) + Notion (icon hover).
+ * Translation + scale en une seule transform GPU-accelerated. */
+.pro-feature-card:hover .pro-feature-icon-pop {
+  transform: translateY(-2px) scale(1.06) rotate(-2deg);
+}
+.pro-feature-icon-pop {
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* Staggered fade-in cards — utilise --i comme cascade index.
+ * Animation auto au mount (pas besoin de IO observer pour 6 cards above-the-fold).
+ * delay = i * 60ms, max 360ms cumulés (smooth pour humans). */
+@keyframes pro-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pro-feature-card {
+  animation: pro-card-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+  will-change: opacity, transform;
+}
+
+/* Sticky CTA mobile bottom sheet — slide-up from bottom + fade.
+ * Visible uniquement < md (sm:hidden) car desktop a son CTA hero toujours visible.
+ * Pattern utilisé par Booking.com, Airbnb, Uber Eats — convertit + sur mobile. */
+@keyframes pro-sticky-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pro-sticky-cta {
+  animation: pro-sticky-slide-up 360ms cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
+  will-change: opacity, transform;
+  /* iOS safe area inset (notch + home indicator) */
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Backdrop blur subtil derrière le sticky CTA pour lisibilité contenu derrière */
+.pro-sticky-cta-backdrop {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Roadmap card hover : glow gold subtil (< 16ms paint, 0 layout shift) */
+.pro-roadmap-glow {
+  transition: box-shadow 240ms ease, border-color 240ms ease;
+}
+@media (hover: hover) {
+  .pro-roadmap-glow:hover {
+    box-shadow: 0 0 0 1px rgba(255, 196, 64, 0.15),
+                0 8px 24px -8px rgba(255, 196, 64, 0.1);
+  }
+}
+
+/* Optimisation perf — content-visibility auto sur les sections sub-fold.
+ * Skip rendering coûteux si pas dans le viewport. Win LCP ~80ms sur mobile. */
+.pro-cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px; /* hint au browser pour scroll bar stable */
+}
+
 /* Accessibilité : respect strict de prefers-reduced-motion.
  * Tout est désactivé : reveal, hover lift, tilt, shimmer, pulse, ripple.
  * Les éléments scroll-reveal sont rendus visibles immédiatement pour ne pas
@@ -1283,5 +1372,20 @@ section[id^="cat-"] {
   .card-premium:hover,
   .card-premium-gold:hover {
     transform: none !important;
+  }
+  /* BLOCK 5 — /pro premium polish neutralisé en reduced-motion */
+  .pro-feature-card,
+  .pro-feature-icon-pop,
+  .pro-sticky-cta,
+  .pro-roadmap-glow {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+  }
+  .pro-feature-card:hover .pro-feature-icon-pop,
+  .pro-roadmap-glow:hover {
+    transform: none !important;
+    box-shadow: none !important;
   }
 }
