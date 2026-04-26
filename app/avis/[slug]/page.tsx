@@ -29,6 +29,7 @@ import {
   graphSchema,
   platformReviewSchema,
 } from "@/lib/schema";
+import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -280,6 +281,20 @@ export default function ReviewPage({ params }: Props) {
             <div className="text-xs uppercase tracking-wide text-muted">
               Tester {p.name}
             </div>
+            {/*
+              MiCA badge JUSTE au-dessus du CTA = trust signal au moment exact
+              où l'utilisateur s'apprête à cliquer. Source : audit Trust 26-04
+              (issue critique #6). Estimation impact +7-12% conversion.
+            */}
+            {p.mica.micaCompliant && (
+              <div className="mt-3 flex justify-center">
+                <MiCAComplianceBadge
+                  variant="compact"
+                  jurisdiction={p.mica.amfRegistration ? "France" : undefined}
+                  verifiedAt={p.mica.lastVerified}
+                />
+              </div>
+            )}
             {p.bonus.amount && (
               <div className="mt-2 rounded-lg border border-accent-green/30 bg-accent-green/5 px-3 py-2">
                 <div className="flex items-center gap-2">
