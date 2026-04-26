@@ -248,18 +248,19 @@ export default function BlogIndexClient({ articles, categories }: Props) {
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              {/* Hero : OG image dynamique (200 OK confirme prod 26/04).
-                  PNG 1200x630 avec titre + categorie + auteur baked. ArticleHero
-                  CSS reste fallback via onError pour les rares failures. */}
-              <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${a.gradient}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/blog/${a.slug}/opengraph-image`}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-                />
+              {/* Cover CSS-only via ArticleHero (Audit user 26/04 : "trouve une vraie solution").
+                  Bug : <img src=opengraph-image loading=lazy> ne charge pas côté client
+                  (IntersectionObserver foireux, même bug que crypto logos b1bb58b).
+                  Solution radicale : ArticleHero 100% CSS, ZÉRO image, ZÉRO bug. */}
+              <div className="relative aspect-[16/9] overflow-hidden">
+                <div className="absolute inset-0 transition-transform duration-slow group-hover:scale-[1.03]">
+                  <ArticleHero
+                    category={a.category}
+                    title={a.title}
+                    gradient={a.gradient}
+                    height="h-full"
+                  />
+                </div>
               </div>
               <div className="p-5">
                 <h2 className="text-lg font-semibold text-fg group-hover:text-primary-glow">

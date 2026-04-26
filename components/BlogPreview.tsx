@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, FileText, Sparkles } from "lucide-react";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import EmptyState from "@/components/ui/EmptyState";
+import ArticleHero from "@/components/ui/ArticleHero";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 
@@ -188,37 +189,46 @@ export default async function BlogPreview() {
                     itemProp="url"
                     className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    {/* Cover image avec gradient overlay + Ken Burns */}
-                    <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${article.gradient}`}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/blog/${article.slug}/opengraph-image`}
-                        alt={`Illustration de l'article : ${article.title}`}
-                        loading="lazy"
-                        decoding="async"
-                        width={1200}
-                        height={630}
+                    {/*
+                      Cover CSS-only via ArticleHero (Audit user 26/04 :
+                      "trouve une vraie solution" pour le bug image qui revient).
+                      Avant : <img src="/blog/{slug}/opengraph-image" loading="lazy">
+                      bug confirmé : route OG retourne 200 OK en curl mais l'img
+                      tag ne charge pas côté client (loading=lazy IntersectionObserver
+                      foireux, même bug que crypto logos commit b1bb58b).
+                      Solution radicale : ArticleHero 100% CSS — gradient + icon
+                      + watermark, ZÉRO requête réseau, ZÉRO risque de bug image,
+                      affichage instantané. L'OG dynamique reste pour Twitter/LinkedIn
+                      via metadata.openGraph.images (où elle est requise).
+                      transition-transform group-hover:scale-105 conservée pour Ken Burns.
+                    */}
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <div
+                        className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
                         itemProp="image"
-                        className="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
-                      />
+                      >
+                        <ArticleHero
+                          category={article.category}
+                          title={article.title}
+                          gradient={article.gradient}
+                          height="h-full"
+                        />
+                      </div>
                       {/* Gradient overlay subtle pour lisibilité badge */}
                       <div className="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
 
                       {/* Badge "Nouveau" pulse-strong gold si <7j */}
                       {isNew && (
-                        <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-10">
+                        <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-10 whitespace-nowrap">
                           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
                           Nouveau
                         </span>
                       )}
 
-                      {/* Badge catégorie visible (Audit UX P0) */}
-                      <span
-                        itemProp="articleSection"
-                        className="absolute top-3 right-3 inline-flex items-center rounded-full bg-elevated/85 backdrop-blur-sm border border-border/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-fg/85 z-10"
-                      >
-                        {article.category}
-                      </span>
+                      {/* Badge catégorie visible — Audit Visual : top-right (mais
+                          attention ArticleHero a déjà un badge catégorie top-left,
+                          on cache le notre pour éviter doublon). */}
+                      <meta itemProp="articleSection" content={article.category} />
                     </div>
 
                     <div className="p-5 flex-1 flex flex-col">

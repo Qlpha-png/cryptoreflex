@@ -49,23 +49,21 @@ export default function NewsCard({ news }: Props) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-elevated
                  transition-all duration-fast hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2"
     >
-      {/* Cover : utilise l'OG image dynamique (route /actualites/[slug]/opengraph-image)
-          qui genere un PNG 1200x630 avec titre + categorie + source + date.
-          Le 500 d'avant (Agent D) est resolu (test 26/04 prod = 200 OK).
-          Si jamais l'OG image fail, fallback sur ArticleHero CSS via onError. */}
-      <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={
-            news.image && news.image !== "/og-default.png"
-              ? news.image
-              : `/actualites/${news.slug}/opengraph-image`
-          }
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-        />
+      {/* Cover CSS-only via ArticleHero (Audit user 26/04 : "trouve une vraie solution").
+          Bug confirmé : route OG retourne 200 OK en curl mais <img loading=lazy>
+          ne charge pas côté client (IntersectionObserver foireux).
+          Solution radicale : ArticleHero 100% CSS — gradient + icon + watermark,
+          ZÉRO requête réseau, ZÉRO risque image cassée, affichage instantané.
+          L'OG dynamique reste pour Twitter/LinkedIn metadata. */}
+      <div className="relative aspect-[16/9] overflow-hidden">
+        <div className="absolute inset-0 transition-transform duration-slow group-hover:scale-[1.03]">
+          <ArticleHero
+            category={catLabel ?? news.category}
+            title={news.title}
+            gradient={gradient}
+            height="h-full"
+          />
+        </div>
         <span
           className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
