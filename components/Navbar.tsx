@@ -9,6 +9,7 @@ import {
   Sparkles,
   ChevronRight,
   Search,
+  Crown,
 } from "lucide-react";
 import Logo from "./Logo";
 
@@ -56,11 +57,28 @@ import Logo from "./Logo";
  *  - Quiz garde son CTA primary "Trouver ma plateforme" (un seul lien vers
  *    /quiz/plateforme au lieu de 2 cannibalisés gold).
  */
+/**
+ * NAV — 5 items dont 1 monétisation explicite "Pro".
+ *
+ * Audit business 27/04/2026 (user feedback) :
+ *  "fais une catégorie dans le dashboard pour que les gens le voient sur le
+ *   site, le but c'est qu'on gagne de l'argent l'oublie pas !"
+ *  -> Ajout d'un 5e item NAV "Pro" qui pousse vers /pro (abonnements payants
+ *     9,99 €/mois ou 79,99 €/an). Style distinctif (couleur or + Crown icon)
+ *     pour qu'il ressorte sans casser la hiérarchie des 4 autres items.
+ *
+ * On dépasse temporairement la règle "Hick's law max 4-5" mais c'est le seul
+ * lien monétisé sur le site (tous les autres sont gratuits / éducatifs / SEO).
+ * Trade-off acceptable : si le Pro pèse 60-80% du revenu, il mérite cette
+ * exposition permanente sur toutes les pages. Style or = signal "premium"
+ * universel, pas un bug visuel.
+ */
 const NAV = [
   { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
   { href: "/academie", label: "Apprendre", desc: "Académie + Wizard 1er achat + Quiz" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses" },
+  { href: "/pro", label: "Pro", desc: "Abonnements premium (9,99 €/mois ou 79,99 €/an)", premium: true as const },
 ];
 
 /**
@@ -227,26 +245,43 @@ export default function Navbar() {
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
+              const isPremium = "premium" in item && item.premium === true;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative inline-flex items-center text-[14px] font-medium tracking-[-0.01em] transition-colors rounded py-1 group/nav whitespace-nowrap
+                  data-nav-item={isPremium ? "pro" : "regular"}
+                  className={`relative inline-flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] transition-colors rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${
-                               active
-                                 ? "text-fg font-semibold"
-                                 : "text-fg/70 hover:text-fg"
+                               isPremium
+                                 ? active
+                                   ? "text-primary-glow font-bold"
+                                   : "text-primary hover:text-primary-glow font-semibold"
+                                 : active
+                                   ? "text-fg font-semibold"
+                                   : "text-fg/70 hover:text-fg"
                              }`}
                 >
+                  {isPremium && (
+                    <Crown
+                      className="h-3.5 w-3.5"
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                  )}
                   {item.label}
-                  {/* Audit Visual P0 : underline 1px discret (au lieu de dot gold lumineux
-                      qui était un 5e accent coloré cannibalisant le CTA). */}
+                  {/* Audit Visual P0 : underline 1px discret. Pour l'item Pro,
+                      la couleur or rend déjà l'underline implicite, on garde une
+                      version plus visible (h-0.5 au lieu de h-px) pour signaler
+                      la "valeur premium" sans cannibaliser le CTA principal. */}
                   <span
                     aria-hidden="true"
-                    className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px bg-fg transition-opacity duration-200 ${
+                    className={`pointer-events-none absolute left-0 right-0 -bottom-1 transition-opacity duration-200 ${
+                      isPremium ? "h-0.5 bg-primary" : "h-px bg-fg"
+                    } ${
                       active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"
                     }`}
                   />

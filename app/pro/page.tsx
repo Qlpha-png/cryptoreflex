@@ -81,12 +81,12 @@ const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "79 €";
 export const metadata: Metadata = {
   title: "Cryptoreflex Pro — calculateur fiscal, portfolio et alertes premium",
   description:
-    `Cryptoreflex Pro à ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : calculateur fiscalité PRO (export Cerfa 2086 + 3916-bis), alertes prix illimitées, portfolio PRO, glossaire expert, brief hebdomadaire alpha + réponse fiscale perso 48h. Early-bird ${META_EARLYBIRD_PRICE} la 1re année.`,
+    `Cryptoreflex Pro à ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : calculateur fiscalité PRO (export Cerfa 2086 + 3916-bis), alertes prix illimitées, portfolio PRO, glossaire expert, brief hebdomadaire alpha + réponse fiscale perso 48h. Annulation 1 clic, garantie 14 j remboursé.`,
   alternates: { canonical: `${BRAND.url}/pro` },
   openGraph: {
     title: "Cryptoreflex Pro — l'abonnement crypto premium FR",
     description:
-      `${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an. Calculateur PRO + Cerfa 2086 prêt-à-imprimer, alertes illimitées, portfolio multi-comptes, réponse fiscale perso 48h. Early-bird ${META_EARLYBIRD_PRICE} la 1re année.`,
+      `${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an. Calculateur PRO + Cerfa 2086 prêt-à-imprimer, alertes illimitées, portfolio multi-comptes, réponse fiscale perso 48h. Annulation 1 clic.`,
     url: `${BRAND.url}/pro`,
     type: "website",
   },
@@ -212,7 +212,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       ctaLabel: paymentsEnabled
         ? MONTHLY_HAS_OWN_LINK
           ? `S'abonner — ${MONTHLY_PRICE}/mois`
-          : `Précommander early-bird ${EARLYBIRD_PRICE}`
+          : `S'abonner — voir les plans`
         : "Rejoindre la liste d'attente",
       ctaHref: paymentsEnabled ? MONTHLY_LINK : "#waitlist",
       highlight: true,
@@ -241,7 +241,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       ctaLabel: paymentsEnabled
         ? ANNUAL_HAS_OWN_LINK
           ? `S'abonner — ${ANNUAL_PRICE}/an`
-          : `Précommander early-bird ${EARLYBIRD_PRICE}`
+          : `S'abonner — voir les plans`
         : "Rejoindre la liste d'attente",
       ctaHref: paymentsEnabled ? ANNUAL_LINK : "#waitlist",
       availability: paymentsEnabled
@@ -298,16 +298,16 @@ const FEATURES = [
 
 const FAQS = [
   {
-    q: "Quand Cryptoreflex Pro sort-il vraiment ?",
-    a: "Lancement officiel automne 2026 (objectif octobre 2026) avec Stripe checkout intégré. D'ici là, tu peux précommander en early-bird à 49 € pour la première année (au lieu de 79 €) — Payment Link Stripe sécurisé.",
+    q: "Comment je m'abonne à Cryptoreflex Pro ?",
+    a: `Tu choisis Mensuel (${MONTHLY_PRICE}/mois) ou Annuel (${ANNUAL_PRICE}/an) sur cette page, tu cliques "S'abonner". Tu es redirigé vers une page de paiement Stripe sécurisée — carte bancaire, Apple Pay, Google Pay ou SEPA. Accès Pro activé immédiatement après paiement, facture envoyée par email.`,
   },
   {
-    q: "Que vaut l'early-bird à 49 € exactement ?",
-    a: "1 année complète d'accès Pro à 49 € (au lieu de 79 €) avec lock-in du tarif sur le renouvellement automatique du 2e cycle si tu ne résilies pas. Ouvert tant que la Stripe Payment Link n'est pas désactivée publiquement.",
+    q: "Quelle est la différence entre Mensuel et Annuel ?",
+    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)}€/mois — soit environ 33% d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12). Tu paies en une fois, tu es tranquille pour 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
   },
   {
-    q: "Quels moyens de paiement seront acceptés ?",
-    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay au lancement. Paiement en crypto envisagé en V2 (BTC / USDC) après stabilisation.",
+    q: "Quels moyens de paiement sont acceptés ?",
+    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay sur mobile. Paiement en crypto (BTC / USDC) envisagé en V2 après stabilisation.",
   },
   {
     q: "Comment annuler mon abonnement ?",
@@ -341,40 +341,32 @@ function buildProductSchema(paymentsEnabled: boolean): JsonLd {
     },
   ];
 
-  // Les Offers Pro ne sont expose à Google QUE quand Stripe est configuré.
-  // Sinon : Google indexait des offers `PreOrder` à 9 €/79 €/49 € qui ne
-  // pouvaient pas être honorées techniquement -> rich snippet trompeur +
-  // risque flag "deceptive content".
+  // Les Offers Pro ne sont exposees a Google QUE quand Stripe est configure.
+  // Helper pour parser un prix EUR ("9,99 €" / "79,99 €") -> "9.99" / "79.99"
+  // (Schema.org Offer.price exige un format decimal point).
+  const parseEurPrice = (s: string): string => {
+    const num = parseFloat(s.replace(/[^\d,.]/g, "").replace(",", "."));
+    return Number.isFinite(num) ? num.toFixed(2) : "0.00";
+  };
+
   if (paymentsEnabled) {
     offers.push(
       {
         "@type": "Offer",
         name: "Cryptoreflex Pro mensuel",
-        price: "9.00",
+        price: parseEurPrice(META_MONTHLY_PRICE),
         priceCurrency: "EUR",
-        priceValidUntil: "2026-12-31",
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${BRAND.url}/pro#plans`,
         category: "Subscription",
       },
       {
         "@type": "Offer",
         name: "Cryptoreflex Pro annuel",
-        price: "79.00",
+        price: parseEurPrice(META_ANNUAL_PRICE),
         priceCurrency: "EUR",
-        priceValidUntil: "2026-12-31",
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${BRAND.url}/pro#plans`,
-        category: "Subscription",
-      },
-      {
-        "@type": "Offer",
-        name: "Cryptoreflex Pro early-bird 1ère année",
-        price: "49.00",
-        priceCurrency: "EUR",
-        priceValidUntil: "2026-09-30",
-        availability: "https://schema.org/PreOrder",
-        url: `${BRAND.url}/pro#early-bird`,
         category: "Subscription",
       }
     );
@@ -443,7 +435,7 @@ export default function ProPage() {
               <span className="gradient-text">Cryptoreflex Pro</span>
               {earlybirdConfigured ? (
                 <>
-                  <br className="hidden sm:block" /> 9 €/mois ou 79 €/an
+                  <br className="hidden sm:block" /> {MONTHLY_PRICE}/mois ou {ANNUAL_PRICE}/an
                 </>
               ) : (
                 <>
@@ -475,11 +467,11 @@ export default function ProPage() {
             {earlybirdConfigured ? (
               <div
                 role="note"
-                className="mt-6 inline-flex items-center gap-2 rounded-full border border-warning/40 bg-warning/10 px-4 py-2 text-xs text-warning-fg"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-accent-green/40 bg-accent-green/10 px-4 py-2 text-xs text-accent-green"
               >
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                Lancement Stripe automne 2026 — early-bird disponible :{" "}
-                <strong>49 € la 1re année (au lieu de 79 €)</strong>
+                Disponible immédiatement — abonnement Stripe sécurisé,{" "}
+                <strong>annulation 1 clic, garantie 14 j remboursé</strong>
               </div>
             ) : (
               /*
@@ -493,24 +485,21 @@ export default function ProPage() {
               >
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 Cryptoreflex Pro arrive bientôt — inscris-toi à la liste
-                d&apos;attente, on te prévient à l&apos;ouverture (tarif
-                early-bird privilégié).
+                d&apos;attente, on te prévient à l&apos;ouverture.
               </div>
             )}
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               {earlybirdConfigured ? (
                 <a
-                  href={EARLYBIRD_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#plans"
                   className="btn-primary"
-                  id="early-bird"
+                  id="cta-plans"
                 >
-                  Précommander Pro 49 € early-bird
+                  Choisir mon plan ({MONTHLY_PRICE}/mois ou {ANNUAL_PRICE}/an)
                 </a>
               ) : (
-                <a href="#waitlist" className="btn-primary" id="early-bird">
+                <a href="#waitlist" className="btn-primary" id="cta-waitlist">
                   Rejoindre la liste d&apos;attente
                 </a>
               )}
@@ -552,8 +541,8 @@ export default function ProPage() {
               Pas encore prêt ? Rejoins la waitlist
             </h2>
             <p className="mt-2 text-fg/70 max-w-xl mx-auto">
-              On te notifie à l&apos;ouverture officielle de Stripe + 30 jours
-              gratuits offerts à tous les early-access.
+              On te tient informé des nouvelles features Pro et des codes promo
+              exceptionnels réservés aux abonnés newsletter.
             </p>
           </div>
 
