@@ -1,0 +1,239 @@
+---
+title: "Shamir Backup (SLIP-39) : découper sa seed en parts en 2026"
+slug: "shamir-backup-seed-decouper-en-parts-2026"
+description: "Shamir Backup et SLIP-39 en 2026 : guide complet pour découper sa seed Bitcoin en plusieurs parts (2-sur-3, 3-sur-5). Comparatif vs seed 24 mots, implémentations Trezor Model T, Shamir39 manuel, use cases héritage et dispersion géographique."
+excerpt: "Le Shamir Backup transforme ta seed unique en 3, 5 ou 10 parts dont seule une majorité reconstruit le wallet. Idéal pour la dispersion géographique et l'héritage. Voici comment ça fonctionne et qui devrait l'utiliser."
+category: "Self-custody"
+date: "2026-04-26"
+lastUpdated: "2026-04-26"
+dateModified: "2026-04-26"
+readTime: "12 min"
+readingTime: 12
+author: "Cryptoreflex"
+authorId: "cryptoreflex"
+cover: "/covers/shamir-backup.jpg"
+gradient: "from-fuchsia-500/40 to-pink-600/40"
+disclaimer: true
+tags:
+  - "shamir backup"
+  - "slip-39"
+  - "trezor"
+  - "seed phrase"
+  - "self-custody"
+  - "héritage bitcoin"
+keywords:
+  - "Shamir backup"
+  - "SLIP-39"
+  - "Shamir secret sharing"
+  - "découper seed phrase"
+  - "Trezor Shamir"
+  - "trezor model t"
+  - "seed split bitcoin"
+---
+
+Tu as gravé ta seed phrase de 24 mots sur une plaque acier, tu l'as rangée dans un coffre-fort, et tu te dis pourtant : **« Et si ma maison brûle ? Et si on me cambriole ? Et si je meurs sans avoir transmis ? »**. Ces angoisses légitimes ont une réponse technique élégante depuis 2017 : le **Shamir Backup**, normalisé dans le standard **SLIP-39**.
+
+Ce guide te donne tout : le fonctionnement cryptographique réel (sans bullshit), la comparaison honnête vs seed 24 mots BIP39 classique, les **2 implémentations sérieuses** en 2026 (Trezor Model T natif et Shamir39 manuel), et les vrais cas d'usage où le Shamir Backup change la donne (héritage, dispersion géographique, couples).
+
+<Callout type="tip" title="TL;DR (en 60 secondes)">
+- **Shamir Backup** = découpe une seed en N parts, dont K parts suffisent à la reconstruire (ex : 3-sur-5).
+- **Avantage clé** : tu peux stocker chaque part dans un lieu différent. Aucun lieu unique ne peut compromettre ou perdre tout.
+- **Standard SLIP-39** créé par SatoshiLabs (Trezor) en 2017, basé sur Shamir's Secret Sharing (1979).
+- **Implémentation native** : Trezor Model T et Trezor Safe 5. Ledger ne supporte pas Shamir nativement (utilise le Shamir39 manuel via outil tiers).
+- **Pour qui ?** Patrimoines moyens à importants (plus de 30 000 €), familles, situations d'héritage.
+</Callout>
+
+## 1. Qu'est-ce que le Shamir Secret Sharing, en 2 minutes
+
+Le **Shamir Secret Sharing** est un schéma cryptographique inventé par **Adi Shamir** (le S de RSA) en 1979. L'idée : prendre un secret (ici, ta seed), le diviser mathématiquement en **N parts**, de telle façon que :
+
+- **K parts ou plus** permettent de reconstruire le secret (K = "threshold", seuil).
+- **K-1 parts ou moins** ne donnent **strictement aucune information** sur le secret.
+
+Mathématiquement, c'est basé sur **l'interpolation polynomiale** : on construit un polynôme de degré K-1 dont le terme constant est le secret, et on évalue ce polynôme en N points distincts. Les K points suffisent pour reconstruire le polynôme entier (et donc le secret), tandis que K-1 points sont insuffisants.
+
+**Exemple concret** : configuration **3-sur-5**. Tu obtiens 5 parts. Tu peux en perdre 2 sans problème (3 parts restantes = reconstruction). Mais 2 parts seules ne révèlent **rien** de la seed.
+
+### SLIP-39 : la version standardisée
+
+Le **SLIP-39** (SatoshiLabs Improvement Proposal n°39) est le standard ouvert qui implémente Shamir's Secret Sharing pour les seeds crypto. Publié en 2017 par SatoshiLabs (les créateurs de Trezor), il définit :
+
+- Le **codage des parts** en mots prononçables (33 mots par part au lieu de 24, dont les 2 premiers identifient la "configuration" Shamir).
+- Le **vocabulaire** spécifique de 1 024 mots (différent du BIP39).
+- Les **groupes** : possibilité d'avoir plusieurs niveaux de seuils (ex : 2 groupes de 3 parts, dont au moins 1 groupe complet requis).
+
+## 2. Shamir Backup vs seed 24 mots BIP39 classique
+
+| Critère | Seed 24 mots BIP39 | Shamir Backup SLIP-39 |
+|---|---|---|
+| **Format** | 1 seule liste de 24 mots | N parts de 33 mots, K requises |
+| **Configurations possibles** | Aucune (1 secret = 1 backup) | 2-sur-3, 3-sur-5, 4-sur-7, etc. |
+| **Stockage** | 1 seul lieu critique | Multi-lieux possibles |
+| **Risque perte 1 lieu** | Catastrophique | Acceptable (autres parts suffisent) |
+| **Risque vol 1 lieu** | Catastrophique | Inoffensif (1 part seule ne révèle rien) |
+| **Compatibilité hardware wallets** | Universelle (tous les wallets) | Trezor Model T / Safe 5 nativement |
+| **Compatibilité Ledger** | Native | Non native (via outil tiers Shamir39) |
+| **Complexité opérationnelle** | Faible | Moyenne |
+| **Vocabulaire** | Liste BIP39 (2 048 mots) | Liste SLIP-39 (1 024 mots) |
+| **Pour qui ?** | Tous, débutants compris | Patrimoines moyens-importants, familles |
+
+**À noter** : Shamir et BIP39 ne sont **pas interchangeables**. Une seed configurée en SLIP-39 sur Trezor Model T n'est pas restaurable directement sur Ledger (qui ne supporte pas SLIP-39). Tu dois choisir ton standard à la configuration de l'appareil.
+
+## 3. Les 2 implémentations sérieuses en 2026
+
+### Implémentation 1 — Trezor Model T (et Safe 5) : SLIP-39 natif
+
+C'est la **référence**. Trezor a inventé le standard et l'implémente nativement. Procédure :
+
+1. À l'initialisation du Trezor Model T, choisis **Advanced backup** → **Shamir backup**.
+2. Sélectionne ta configuration : **2-sur-3, 3-sur-5, ou jusqu'à 16 parts**.
+3. L'appareil génère les parts une par une. Chaque part = 33 mots à noter sur un carnet séparé.
+4. Vérification : pour chaque part, l'appareil te demande de re-saisir certains mots pour confirmer.
+5. À la restauration, tu insères K parts au choix (peu importe lesquelles) et le wallet est reconstruit.
+
+**Avantages** :
+- 100 % géré par l'appareil, pas de risque d'erreur de calcul.
+- Le standard SLIP-39 est ouvert et auditable.
+- Mode **avancé** : possibilité de configurer **plusieurs groupes** (ex : groupe 1 = famille, groupe 2 = professionnels, exiger 1 groupe complet pour reconstruire).
+
+**Limite** : seul Trezor Model T et Safe 5 supportent ce mode nativement. Si tu perds ton Trezor, tu dois racheter un Trezor compatible pour restaurer (pas de Ledger ni autre wallet capable de lire SLIP-39 directement sans outil intermédiaire).
+
+<Callout type="info" title="Le seul hardware wallet avec Shamir natif">
+Si Shamir Backup t'intéresse fortement (notamment pour héritage ou dispersion géographique), le <a href="https://trezor.io/" target="_blank" rel="noopener noreferrer">Trezor Model T</a> reste **le seul hardware wallet** à le supporter nativement avec une UX dédiée (le Trezor Safe 5 aussi depuis 2024). C'est un cas concret où Trezor surpasse Ledger fonctionnellement. Pour le reste (catalogue cryptos, Bluetooth, app mobile), Ledger Nano X garde l'avantage.
+</Callout>
+
+### Implémentation 2 — Shamir39 manuel via outil tiers
+
+Pour les utilisateurs Ledger ou ceux qui veulent rester sur BIP39 tout en ayant un mécanisme de partage Shamir, il existe **Shamir39** : un outil ouvert qui prend une seed BIP39 standard et la divise en parts via Shamir's Secret Sharing.
+
+Outils notables :
+- **iancoleman.io/shamir39/** (le plus connu, code open source).
+- **SeedQuest** (interface graphique).
+- **bash-Shamir-Secret-Sharing** (ligne de commande pour les paranoïaques, sur machine air-gappée).
+
+**Procédure manuelle recommandée** :
+1. Télécharger l'outil sur une machine **air-gappée** (jamais en ligne).
+2. Saisir la seed 24 mots BIP39.
+3. Choisir N et K (par exemple 3-sur-5).
+4. Récupérer les parts générées.
+5. **Détruire** l'outil et formater la machine après usage.
+
+**Avantages** :
+- Compatible avec n'importe quel hardware wallet (la seed reste BIP39 standard).
+- Aucune dépendance à un fournisseur précis.
+
+**Risques opérationnels** :
+- Erreur humaine plus probable (calcul, saisie).
+- Si l'outil est compromis (faux site, malware), tes parts sont compromises.
+- Restauration plus complexe (tu dois recombiner les parts via le même outil).
+
+**Recommandation** : pour 95 % des utilisateurs, soit tu utilises **Trezor Model T avec Shamir natif**, soit tu restes sur **Ledger avec passphrase BIP39** (alternative équivalente en sécurité). Le Shamir39 manuel est réservé aux experts qui acceptent la complexité.
+
+## 4. Cas d'usage concrets en 2026
+
+### Cas 1 — Héritage Bitcoin pour famille
+
+**Contexte** : Marc, 55 ans, 180 000 € en BTC. Veut transmettre proprement à ses 2 enfants en cas de décès, sans compromettre la sécurité de son vivant.
+
+**Setup Shamir 3-sur-5** sur Trezor Safe 5 :
+- Part 1 : chez Marc (coffre domestique).
+- Part 2 : chez Marc (coffre bancaire, accès Marc seul).
+- Part 3 : chez son notaire (testament).
+- Part 4 : enfant 1 (avec instructions à n'utiliser qu'au décès, validé par le notaire).
+- Part 5 : enfant 2 (idem).
+
+**Du vivant de Marc** : il utilise les parts 1 et 2 (2 sur 3 ne suffit pas → il en faut 3, donc il combine 1, 2 et va chercher la 3 chez le notaire si besoin de gros mouvements). Aucun enfant ne peut accéder seul.
+
+**Au décès** : les enfants présentent leurs parts 4 et 5 + récupèrent la part 3 chez le notaire (sur preuve de décès). 3 parts → reconstruction → fonds accessibles.
+
+### Cas 2 — Dispersion géographique anti-incendie
+
+**Contexte** : Sophie, 35 ans, 60 000 € en BTC. Vit en zone à risque (incendie de forêt). Ne veut pas qu'un sinistre majeur sur son domicile détruise tous ses backups.
+
+**Setup Shamir 2-sur-3** :
+- Part 1 : domicile principal.
+- Part 2 : maison de ses parents en Bretagne.
+- Part 3 : coffre bancaire Paris.
+
+Si la maison principale brûle entièrement avec sa plaque acier dedans, elle a toujours 2 parts ailleurs et peut reconstruire.
+
+### Cas 3 — Couple avec patrimoine commun
+
+**Contexte** : couple, 40 et 38 ans, 120 000 € BTC commun. Veulent éviter qu'une personne seule (vol d'identité, divorce conflictuel) puisse vider le wallet.
+
+**Setup Shamir 2-sur-3** :
+- Part 1 : conjoint A.
+- Part 2 : conjoint B.
+- Part 3 : confiance commune (un parent, un notaire, un coffre conjoint).
+
+Aucun ne peut dépenser seul. À deux, ils peuvent. En cas de séparation, la part 3 (chez le notaire) garantit qu'aucun ne peut bloquer l'autre.
+
+## 5. Erreurs courantes à éviter
+
+1. **Configurer 2-sur-2** : aucun gain par rapport à une seed unique (perte d'1 part = tout perdu). Préfère minimum **2-sur-3**.
+2. **Stocker 2 parts sur 3 dans le même lieu** : annule complètement l'avantage Shamir. Géographie obligatoire pour chaque part.
+3. **Ne pas tester la reconstruction** : un Shamir non testé est théorique. Test annuel recommandé sur un Trezor vierge.
+4. **Mélanger BIP39 et SLIP-39** : ce sont 2 standards distincts non interchangeables. Choisis l'un, documente, t'y tiens.
+5. **Croire que Shamir = multi-sig** : non, ce sont 2 concepts différents. Shamir reconstruit une **seule** seed à partir de parts. Multi-sig nécessite **plusieurs signatures distinctes** sur chaque transaction. Le multi-sig est plus sécurisé contre certaines attaques (notamment quand tu dépenses), Shamir est plus simple à sauvegarder.
+
+## 6. Shamir vs passphrase vs multi-sig : quelle option choisir ?
+
+| Solution | Avantage principal | Inconvénient principal | Pour qui ? |
+|---|---|---|---|
+| **Seed 24 mots simple + plaque acier** | Simplicité maximale | 1 seul backup à protéger | Débutants, moins de 30 000 € |
+| **Seed 24 mots + passphrase BIP39** | Plausible deniability (wrench attack) | Passphrase à mémoriser ou backuper séparément | Avancés, 20 000-100 000 €, paranoïa physique |
+| **Shamir Backup SLIP-39** | Dispersion géographique, tolérance aux pertes | Trezor uniquement (natif) | Familles, héritage, plus de 30 000 € |
+| **Multi-sig 2-sur-3 (Casa, Sparrow)** | Sécurité maximale (signatures distinctes) | Complexité opérationnelle élevée, coût | HNWI, plus de 100 000 €, entreprises |
+
+**Combinaisons possibles** : tu peux avoir un **multi-sig** où chaque clé est elle-même protégée par une **passphrase**, et où chaque seed est sauvegardée en **Shamir Backup**. C'est le setup ultra-paranoïaque pour patrimoines très importants (plus de 500 000 €).
+
+<Callout type="warning" title="Tu n'as pas encore de hardware wallet ?">
+Avant tout setup avancé (Shamir, passphrase, multi-sig), il te faut un hardware wallet. Pour la majorité des utilisateurs français, le <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-shamir-base">Ledger Nano X</AffiliateLink> reste le standard (sans Shamir natif, mais avec passphrase BIP39). Si Shamir est ta priorité, tourne-toi vers le Trezor Model T ou Safe 5. Voir notre <a href="/blog/ledger-vs-trezor-duel-objectif-2026-par-profil">comparatif détaillé Ledger vs Trezor</a> pour trancher.
+</Callout>
+
+## Pour aller plus loin
+
+- [Backup seed phrase : 5 méthodes ultra-sûres](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026) — l'article central sur la sauvegarde.
+- [Configurer ton Ledger Nano X en 30 minutes](/blog/configurer-ledger-nano-x-30-minutes-guide-pas-a-pas) — alternative BIP39 standard.
+- [Passphrase BIP39 (25e mot)](/blog/passphrase-bip39-25e-mot-securite-avance-2026) — alternative ou complément à Shamir.
+- [Multi-sig wallet Bitcoin débutant 2026](/blog/multi-sig-wallet-bitcoin-debutant-2026) — pour aller au-delà de Shamir.
+- [Cold wallet vs hot wallet : guide complet](/blog/cold-wallet-vs-hot-wallet-guide-complet-2026) — la base.
+- [Ledger vs Trezor : duel objectif 2026](/blog/ledger-vs-trezor-duel-objectif-2026-par-profil) — choisir Trezor pour Shamir natif.
+
+<Callout type="warning" title="Avertissement (YMYL — sécurité crypto)">
+Le Shamir Backup est une technique avancée de sauvegarde. **Une mauvaise configuration ou une perte irrécupérable de plus de N-K parts entraîne la perte définitive et irréversible de tes fonds**. Cryptoreflex ne fournit pas de conseil personnalisé. Avant tout setup Shamir avec des montants importants, **teste la procédure de reconstruction** sur des montants négligeables, documente précisément la configuration (N et K), et planifie une révision annuelle. La self-custody implique une responsabilité totale.
+</Callout>
+
+## FAQ : tes questions sur le Shamir Backup
+
+<FAQ items={[
+  {
+    question: "Le Shamir Backup est-il compatible avec Ledger ?",
+    answer: "Pas nativement. Ledger ne supporte pas SLIP-39 directement. Tu peux utiliser un outil tiers (Shamir39) pour découper une seed BIP39 en parts Shamir, mais la procédure est manuelle et hors de l'appareil — donc plus risquée. Pour Shamir natif et propre, c'est Trezor Model T ou Safe 5 uniquement."
+  },
+  {
+    question: "Combien de parts maximum en SLIP-39 ?",
+    answer: "Le standard SLIP-39 supporte jusqu'à 16 parts par groupe et 16 groupes, soit 256 parts maximum. En pratique, la majorité des utilisateurs s'en tiennent à des configurations simples : 2-sur-3 ou 3-sur-5. Au-delà, la complexité opérationnelle (où sont les parts, qui les détient) devient ingérable pour un particulier."
+  },
+  {
+    question: "Si je perds 2 parts sur 5 en config 3-sur-5, suis-je en danger ?",
+    answer: "Non si tu as toujours 3 parts ou plus accessibles. Mais c'est un signal pour reconfigurer rapidement : crée un nouveau Shamir Backup et migre les fonds. Avoir 3 parts sur 3 restantes signifie qu'un seul incident supplémentaire = tout perdu, ce qui annule la sécurité Shamir."
+  },
+  {
+    question: "Shamir et multi-sig, c'est la même chose ?",
+    answer: "Non. Shamir reconstruit **une seule seed** à partir de parts (toutes les parts viennent du même secret initial). Multi-sig utilise **plusieurs seeds indépendantes** où chaque transaction nécessite N signatures sur M. Multi-sig est plus sécurisé pour le quotidien (pas de moment où la seed entière est reconstruite). Shamir est plus simple à sauvegarder mais expose la seed entière au moment de la restauration."
+  },
+  {
+    question: "Puis-je restaurer un Shamir SLIP-39 sur un Ledger ?",
+    answer: "Pas directement. Si tu as un wallet Trezor avec SLIP-39 et que tu veux migrer vers Ledger, tu dois d'abord restaurer sur un Trezor compatible (Model T ou Safe 5), puis créer un nouveau wallet sur Ledger en BIP39 standard, et transférer les fonds via une transaction onchain. C'est une opération à planifier avec un test sur micro-montant."
+  }
+]} />
+
+## Sources
+
+- [SLIP-0039 spécification officielle](https://github.com/satoshilabs/slips/blob/master/slip-0039.md)
+- [Trezor Wiki — Shamir backup](https://wiki.trezor.io/Shamir_Backup)
+- [Adi Shamir — How to share a secret (1979)](https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf)
+- [iancoleman.io/shamir39 — Outil Shamir39 BIP39](https://iancoleman.io/shamir39/)
+
+Le Shamir Backup n'est pas pour tout le monde. C'est une **solution élégante** à un problème spécifique : la dispersion géographique, l'héritage, ou la sécurité face aux sinistres physiques. Si ces use cases te concernent et que tu acceptes de passer sur Trezor Model T pour bénéficier du support natif, c'est un excellent investissement. Sinon, un setup Ledger + plaque acier + passphrase couvre la majorité des situations avec moins de complexité.

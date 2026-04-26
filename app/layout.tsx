@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -16,6 +17,13 @@ import {
   organizationSchema,
   websiteSchema,
 } from "@/lib/schema";
+
+// Audit Performance 26-04-2026 — PerfMonitor monitore LCP/INP/CLS/FCP/TTFB
+// passivement et envoie à Plausible (custom event "WebVitals"). Lazy-loaded
+// ssr:false pour ne pas bloquer le first paint ni alourdir le bundle initial.
+const PerfMonitor = dynamic(() => import("@/components/PerfMonitor"), {
+  ssr: false,
+});
 
 // Validation env au boot — server-side uniquement (pas de window).
 // Le helper est idempotent : un flag statique évite le spam en HMR / cold-start.
@@ -319,6 +327,12 @@ export default function RootLayout({
           Active le mode offline minimal + cache des assets statiques.
         */}
         <ServiceWorkerRegister />
+        {/*
+          Audit Perf 26-04 — Web Vitals passifs envoyés à Plausible
+          (event "WebVitals"). Aucun effet sur le rendu, ne bloque pas le
+          first paint (dynamic ssr:false → chunk séparé chargé après hydration).
+        */}
+        <PerfMonitor />
       </body>
     </html>
   );

@@ -14,7 +14,10 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import StructuredData from "@/components/StructuredData";
 import NewsletterInline from "@/components/NewsletterInline";
 import PopularArticles from "@/components/blog/PopularArticles";
+import ArticleToc from "@/components/blog/ArticleToc";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import MobileStickyCTA from "@/components/MobileStickyCTA";
+import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import {
   articleSchema,
@@ -84,6 +87,65 @@ function formatFrenchDate(iso: string): string {
     month: "long",
     year: "numeric",
   });
+}
+
+/**
+ * FIX #2 audit conversion 2026-04-26 — mappe la `category` éditoriale d'un
+ * article vers un `context` consommé par <NewsletterInline /> pour servir un
+ * copy ciblé (ex: catégorie "Fiscalité" → copy "Optimise ta fisca crypto 2026").
+ *
+ * Categories libres autorisées dans le frontmatter MDX → match insensible à la
+ * casse + tolérant aux accents. Si aucun match → return undefined (le copy
+ * "blog-cta" générique reste appliqué).
+ */
+function categoryToNewsletterContext(
+  category?: string,
+):
+  | "fiscalite"
+  | "securite"
+  | "trading"
+  | "debutant"
+  | "actualites"
+  | "defi"
+  | "regulation"
+  | undefined {
+  if (!category) return undefined;
+  const c = category
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+  if (c.includes("fisc") || c.includes("impot") || c.includes("tax"))
+    return "fiscalite";
+  if (
+    c.includes("secur") ||
+    c.includes("scam") ||
+    c.includes("arnaque") ||
+    c.includes("wallet") ||
+    c.includes("hack")
+  )
+    return "securite";
+  if (c.includes("trading") || c.includes("analyse")) return "trading";
+  if (
+    c.includes("debut") ||
+    c.includes("guide") ||
+    c.includes("comprendre") ||
+    c.includes("acheter") ||
+    c.includes("apprend")
+  )
+    return "debutant";
+  if (c.includes("defi") || c.includes("staking") || c.includes("yield"))
+    return "defi";
+  if (
+    c.includes("regul") ||
+    c.includes("mica") ||
+    c.includes("amf") ||
+    c.includes("psan") ||
+    c.includes("loi")
+  )
+    return "regulation";
+  if (c.includes("actu") || c.includes("news") || c.includes("marche"))
+    return "actualites";
+  return undefined;
 }
 
 /**
@@ -167,6 +229,32 @@ export default async function BlogArticlePage({ params }: Props) {
   // Split MDX pour insérer la NewsletterInline ~60% (P1-9).
   const [contentHead, contentTail] = splitContentForInlineCta(article.content);
 
+  // FIX #5 audit conversion 2026-04-26 — détection intent commercial pour
+  // afficher un MobileStickyCTA d'affiliation. Heuristique :
+  //  - slug commence par "acheter-" OU contient "ou-acheter"
+  //  - OU 1er keyword contient "acheter"
+  // Si match, on cherche la 1re plateforme connue mentionnée dans le titre/desc
+  // ou on retombe sur la mieux notée (Coinbase / Bitpanda) en MiCA-compliant.
+  const isTransactionalArticle =
+    /^acheter-/.test(article.slug) ||
+    /ou-acheter/.test(article.slug) ||
+    article.keywords.some((k) => /acheter/i.test(k));
+
+  let stickyPlatform: ReturnType<typeof getAllPlatforms>[number] | undefined;
+  if (isTransactionalArticle) {
+    const allPlatforms = getAllPlatforms();
+    const haystack = `${article.title} ${article.description}`.toLowerCase();
+    stickyPlatform = allPlatforms.find((p) =>
+      haystack.includes(p.name.toLowerCase()),
+    );
+    if (!stickyPlatform) {
+      // Fallback : meilleure plateforme MiCA-compliant par score global.
+      stickyPlatform = allPlatforms
+        .filter((p) => p.mica.micaCompliant)
+        .sort((a, b) => b.scoring.global - a.scoring.global)[0];
+    }
+  }
+
   return (
     <>
       <StructuredData data={schemas} id="article-graph" />
@@ -241,13 +329,16 @@ export default async function BlogArticlePage({ params }: Props) {
                 <MdxContent source={contentHead} />
               </div>
 
-              {/* NewsletterInline — encart au cœur de l'article (P1-9) */}
+              {/* NewsletterInline — encart au cœur de l'article (P1-9).
+                  FIX #2 audit conversion 2026-04-26 : on passe `context` mappé
+                  depuis la catégorie d'article. Le copy générique reste fallback
+                  si la catégorie ne matche aucun preset. Les overrides
+                  title/subtitle ne sont plus passés explicitement pour laisser
+                  le contexte ciblé prendre le dessus. */}
               <div className="my-10">
                 <NewsletterInline
                   source="blog-cta"
-                  title="Tu lis ? Garde une longueur d'avance"
-                  subtitle="3 actus crypto pertinentes par jour, en 3 minutes. Bonus : guide PDF des plateformes."
-                  ctaLabel="S'abonner"
+                  context={categoryToNewsletterContext(article.category)}
                 />
               </div>
 
@@ -319,15 +410,35 @@ export default async function BlogArticlePage({ params }: Props) {
               />
             </div>
 
-            {/* Sidebar — Articles populaires (P1-9) */}
+            {/* Sidebar — TOC sticky + Articles populaires.
+                FIX #3 audit conversion 2026-04-26 : ArticleToc ajouté en
+                premier (au-dessus du fold sidebar) pour donner une vue
+                d'ensemble de l'article + progress bar haut de page. */}
             <aside className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-6">
-                <PopularArticles excludeSlug={article.slug} limit={5} />
+              <div className="space-y-8">
+                <ArticleToc slug={article.slug} minHeadings={3} />
+                <div className="lg:sticky lg:top-24">
+                  <PopularArticles excludeSlug={article.slug} limit={5} />
+                </div>
               </div>
             </aside>
           </div>
         </div>
       </article>
+
+      {/* Sticky CTA mobile (intent commercial uniquement).
+          FIX #5 audit conversion 2026-04-26 : sur articles "acheter X", on
+          expose une CTA affilié persistante mobile. Pas affichée sur articles
+          informationnels (réglementation, sécurité…) pour ne pas saouler. */}
+      {isTransactionalArticle && stickyPlatform && (
+        <MobileStickyCTA
+          platformId={stickyPlatform.id}
+          title={`Recommandé : ${stickyPlatform.name}`}
+          label={`Aller sur ${stickyPlatform.name}`}
+          href={stickyPlatform.affiliateUrl}
+          surface="blog-transactional"
+        />
+      )}
     </>
   );
 }

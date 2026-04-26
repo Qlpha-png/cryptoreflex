@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { submitAmbassadeur, type FormResult } from "@/lib/partnership-forms";
@@ -29,6 +30,7 @@ const CHANNEL_OPTIONS = [
 ];
 
 export default function AmbassadeurForm() {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<FormResult | null>(null);
 
@@ -40,7 +42,12 @@ export default function AmbassadeurForm() {
     startTransition(async () => {
       const r = await submitAmbassadeur(formData);
       setResult(r);
-      if (r.ok) form.reset();
+      if (r.ok) {
+        form.reset();
+        // Redirect vers la page merci pour faciliter le tracking conversion
+        // (analytics event "ambassadeur_apply_submit" déclenché côté merci).
+        router.push("/ambassadeurs/merci");
+      }
     });
   }
 
@@ -76,6 +83,14 @@ export default function AmbassadeurForm() {
     >
       <fieldset disabled={isPending} className="space-y-5">
         <legend className="sr-only">Formulaire de candidature ambassadeur</legend>
+
+        {/* Honeypot anti-spam — invisible aux humains, rempli par les bots. */}
+        <div aria-hidden="true" className="hidden" style={{ position: "absolute", left: "-9999px" }}>
+          <label>
+            Ne pas remplir
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>

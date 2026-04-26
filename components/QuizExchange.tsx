@@ -181,7 +181,14 @@ export default function QuizExchange({ platforms }: Props) {
     }
   }, [answers, hasStarted]);
 
-  /* ---------------- Tracking : Quiz Completed (résultat) ----------------- */
+  /* ---------------- Tracking : Quiz Completed + Result Shown ------------- */
+  // FIX #4 audit conversion 2026-04-26 : on splitte en 2 events distincts pour
+  // mesurer proprement le funnel quiz → clic affilié :
+  //   - Quiz Completed         = quiz fini (toutes questions OK)
+  //   - Quiz Result Shown      = écran résultat affiché ET visible (pour calculer
+  //                              le taux exact result-vu / clic-affilié)
+  // Avant : un seul event "Completed" rendait impossible de distinguer
+  // "résultat affiché mais user parti immédiatement" vs "résultat ignoré".
   useEffect(() => {
     if (showResult && result && result.top3[0]) {
       track("Quiz Completed", {
@@ -189,6 +196,17 @@ export default function QuizExchange({ platforms }: Props) {
         profil: result.profile.id,
         top1Platform: result.top3[0].platform.id,
       });
+      // Délai 800ms pour confirmer que l'utilisateur a au moins "vu" le résultat
+      // (pas un fast-bounce). Sinon on ne le compte pas dans le funnel.
+      const t = window.setTimeout(() => {
+        track("Quiz Result Shown", {
+          quiz: "trouve-ton-exchange",
+          profil: result.profile.id,
+          top1Platform: result.top3[0].platform.id,
+          rejectedCount: result.rejected.length,
+        });
+      }, 800);
+      return () => window.clearTimeout(t);
     }
   }, [showResult, result]);
 

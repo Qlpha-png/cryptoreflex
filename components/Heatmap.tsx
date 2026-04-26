@@ -1,6 +1,14 @@
 "use client";
 
-import { useMemo, useState, useCallback, useId, useEffect, useRef } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Link from "next/link";
 import {
   formatCompactUsd,
@@ -135,9 +143,15 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
     [liveCoins]
   );
 
+  // Audit Perf 26-04 / INP — useDeferredValue déprorise le re-render du grid
+  // 100 cells (≈40-80ms sur mobile mid-range). Le toggle Top 50/100 reste
+  // immédiat visuellement (le bouton "active" change sans attendre), seul le
+  // contenu du grid suit en background.
+  const deferredTopFilter = useDeferredValue(topFilter);
+  const deferredPeriod = useDeferredValue(period);
   const visible = useMemo(
-    () => liveCoins.slice(0, topFilter),
-    [liveCoins, topFilter]
+    () => liveCoins.slice(0, deferredTopFilter),
+    [liveCoins, deferredTopFilter]
   );
 
   // Si le SSR a renvoyé du vide ET les retries n'ont rien donné encore,
@@ -262,14 +276,14 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
         className="grid gap-1.5 grid-cols-3 sm:grid-cols-5 lg:grid-cols-10"
       >
         {visible.map((coin) => {
-          const change = changeForPeriod(coin, period);
+          const change = changeForPeriod(coin, deferredPeriod);
           const bg = colorForChange(change);
           const txt = textForChange(change);
           const hasPage = slugSet.has(coin.id);
           const cellLabel = `${coin.name} (${coin.symbol}), ${
             change === null
               ? "variation indisponible"
-              : `variation ${period} ${formatPct(change)}`
+              : `variation ${deferredPeriod} ${formatPct(change)}`
           }, prix ${formatUsd(coin.currentPrice)}, capitalisation ${formatCompactUsd(
             coin.marketCap
           )}`;

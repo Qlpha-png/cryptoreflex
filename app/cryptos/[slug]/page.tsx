@@ -56,6 +56,7 @@ const PriceChart = dynamic(
   },
 );
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
+import QuickBuyBox from "@/components/crypto-detail/QuickBuyBox";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
 import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
@@ -262,6 +263,17 @@ export default async function CryptoPage({ params }: Props) {
             kindLabel={kindLabel}
             // CoinGecko id = clé canonique de la watchlist (alignée avec MarketCoin.id).
             cryptoId={c.coingeckoId}
+          />
+        </div>
+
+        {/* QUICK BUY BOX (FIX #1 audit conversion 2026-04-26) — encart d'achat
+            above-the-fold, top 2 plateformes par score. <WhereToBuy /> en bas
+            reste la source de vérité détaillée. */}
+        <div className="mt-8">
+          <QuickBuyBox
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+            platformNames={c.whereToBuy}
           />
         </div>
 

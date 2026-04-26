@@ -90,6 +90,12 @@ export async function submitAmbassadeur(
     return { ok: false, error: "Trop de tentatives. Réessaie dans une minute." };
   }
 
+  // Honeypot — un humain ne voit pas ce champ ; un bot le remplit.
+  // On retourne `ok: true` mock pour ne pas révéler la présence du honeypot.
+  if (clean(formData.get("website"), 50)) {
+    return { ok: true, mocked: true };
+  }
+
   const email = clean(formData.get("email"), 200);
   const name = clean(formData.get("name"), 120);
   const profileUrl = clean(formData.get("profileUrl"), 500);
@@ -142,6 +148,26 @@ export async function submitAmbassadeur(
   if (!result.ok) {
     return { ok: false, error: result.error };
   }
+
+  // Confirmation au candidat — best-effort, on n'échoue pas si l'email
+  // accusé de réception part en vrac (le partenaire interne a déjà reçu).
+  await sendEmail({
+    to: email,
+    subject: `Ta candidature ambassadeur ${BRAND.name} a bien été reçue`,
+    html: `
+      <h2>Merci ${escapeHtml(name)} !</h2>
+      <p>On a bien reçu ta candidature au programme ambassadeurs ${BRAND.name}.</p>
+      <p>Notre équipe t'écrit sous 5 à 7 jours ouvrés depuis <strong>${BRAND.partnersEmail}</strong>.
+      D'ici là, n'hésite pas à compléter ton message en répondant à cet email
+      (capture d'audience, exemple de contenu, etc.).</p>
+      <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(profileUrl)} – ${escapeHtml(channel || "canal non précisé")}</p>
+      <hr>
+      <p style="color:#888;font-size:12px">${BRAND.name} – ${BRAND.url}</p>
+    `,
+    tag: "ambassadeur",
+    replyTo: BRAND.partnersEmail,
+  });
+
   return { ok: true, mocked: "mocked" in result ? result.mocked : false };
 }
 
@@ -154,6 +180,11 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
   const rl = await sponsoringLimiter(ip);
   if (!rl.ok) {
     return { ok: false, error: "Trop de tentatives. Réessaie dans une minute." };
+  }
+
+  // Honeypot — bot guard sans alerter le bot qu'il s'est fait choper.
+  if (clean(formData.get("website"), 50)) {
+    return { ok: true, mocked: true };
   }
 
   const email = clean(formData.get("email"), 200);
@@ -204,6 +235,26 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
   });
 
   if (!result.ok) return { ok: false, error: result.error };
+
+  // Confirmation au demandeur (best-effort)
+  await sendEmail({
+    to: email,
+    subject: `Ta demande de sponsoring ${BRAND.name} est en file de traitement`,
+    html: `
+      <h2>Merci pour ton intérêt</h2>
+      <p>${BRAND.name} a bien reçu ta demande au nom de <strong>${escapeHtml(company)}</strong>.</p>
+      <p>Notre équipe partenariats te répond <strong>sous 48 h ouvrées</strong> depuis ${BRAND.partnersEmail} avec :
+      un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne un PSAN.</p>
+      <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(offer || "offre non précisée")} – budget ${escapeHtml(budget || "non précisé")}</p>
+      <hr>
+      <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un PSAN ni un CIF.
+      Tout contenu sponsorisé est explicitement signalé conformément à l'art. 222-15 du règlement général AMF
+      et à la charte ARPP. ${BRAND.url}</p>
+    `,
+    tag: "sponsoring",
+    replyTo: BRAND.partnersEmail,
+  });
+
   return { ok: true, mocked: "mocked" in result ? result.mocked : false };
 }
 

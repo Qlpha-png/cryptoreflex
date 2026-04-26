@@ -2,22 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Crown,
-  Check,
-  X as XIcon,
   Mail,
   ShieldCheck,
   Sparkles,
   Bell,
-  Wallet,
   GraduationCap,
   FileText,
   Zap,
   Users,
   HelpCircle,
   Clock,
+  Calculator,
+  MessagesSquare,
+  AlertTriangle,
 } from "lucide-react";
 import NewsletterInline from "@/components/NewsletterInline";
 import StructuredData from "@/components/StructuredData";
+import TieredPricing, { type PricingTier } from "@/components/TieredPricing";
 import {
   faqSchema,
   breadcrumbSchema,
@@ -27,29 +28,40 @@ import {
 import { BRAND } from "@/lib/brand";
 
 /**
- * /pro — landing page Cryptoreflex Pro (€9.99/mo).
+ * /pro — landing page Cryptoreflex Pro.
  *
- * V1 : page de waitlist.
- *  - Pas encore de checkout Stripe (TODO milestone M+4-6 plan 2026).
- *  - CTA principal = inscription waitlist via API newsletter (source: pro-waitlist).
- *  - Mailto secondaire pour les leads VIP (entreprises, créateurs gros volume).
+ * Refonte 26/04/2026 — focus session « offer Pro » :
+ *  - Calculateur fiscalité PRO (export PDF Cerfa 2086 + 3916-bis)
+ *  - Portfolio tracker PRO (alertes prix illimitées)
+ *  - Glossaire PRO (Q/A par expert)
+ *  - Newsletter premium (insights weekly + Discord)
+ *  - Articles premium
+ *
+ * Pricing :
+ *  - Gratuit (current)
+ *  - Pro Mensuel 9 €/mois
+ *  - Pro Annuel 79 €/an (économie 33 % vs mensuel : 108 € → 79 €)
+ *
+ * Stripe arrive automne 2026. En attendant, CTA early-bird précommande
+ * 49 €/an via Stripe Payment Link.
+ *
+ * Var d'env attendue : NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK
+ *  - Si absente, fallback vers la waitlist newsletter.
  *
  * SEO :
- *  - Schema Product + Offer (3 plans) + FAQPage + BreadcrumbList
+ *  - Schema Product + Offer (3 plans) + ItemList des features + FAQPage + BreadcrumbList
  *  - Metadata canonique + OG dédié
- *
- * Design : cohérent dark + gold premium (utilise card-premium / glass / glow-border).
  */
 
 export const metadata: Metadata = {
-  title: "Cryptoreflex Pro — abonnement premium 9,99 €/mo",
+  title: "Cryptoreflex Pro — calculateur fiscal, portfolio et alertes premium",
   description:
-    "Watchlist illimitée, alertes prix illimitées, portfolio multi-comptes, académie premium, support prioritaire. Lancement juin 2026 — inscris-toi à la waitlist.",
+    "Cryptoreflex Pro à 9 €/mois ou 79 €/an : calculateur fiscalité PRO (export Cerfa 2086 + 3916-bis), alertes prix illimitées, portfolio PRO, glossaire expert et Discord. Précommande early-bird 49 €/an.",
   alternates: { canonical: `${BRAND.url}/pro` },
   openGraph: {
     title: "Cryptoreflex Pro — l'abonnement crypto premium FR",
     description:
-      "Pro à 9,99 €/mo : watchlist & alertes illimitées, portfolio multi-API, masterclass vidéo, support 24h. Inscris-toi à la waitlist.",
+      "9 €/mois ou 79 €/an. Calculateur PRO + Cerfa 2086 prêt-à-imprimer, alertes illimitées, portfolio multi-comptes, Discord. Stripe arrive automne 2026.",
     url: `${BRAND.url}/pro`,
     type: "website",
   },
@@ -57,146 +69,157 @@ export const metadata: Metadata = {
 };
 
 /* -------------------------------------------------------------------------- */
-/*  Données : plans, features, FAQ                                            */
+/*  Plans                                                                     */
 /* -------------------------------------------------------------------------- */
 
-interface Plan {
-  id: "free" | "pro" | "pro-annuel";
-  name: string;
-  badge?: string;
-  price: string;
-  priceUnit: string;
-  description: string;
-  features: { label: string; included: boolean }[];
-  ctaLabel: string;
-  ctaHref: string;
-  highlight?: boolean;
-}
+// Stripe Payment Link early-bird — fallback vers waitlist si non configuré.
+const EARLYBIRD_LINK =
+  process.env.NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK ?? "#waitlist";
 
-const PLANS: Plan[] = [
+const TIERS: PricingTier[] = [
   {
     id: "free",
-    name: "Free",
+    name: "Gratuit",
+    Icon: Sparkles,
     price: "0 €",
     priceUnit: "à vie",
-    description: "Tout l'essentiel pour suivre la crypto sans engagement.",
+    description: "L'essentiel pour suivre la crypto sans engagement.",
     features: [
-      { label: "Watchlist 10 cryptos", included: true },
-      { label: "Portfolio 30 positions", included: true },
-      { label: "5 alertes prix par email", included: true },
-      { label: "Académie standard", included: true },
-      { label: "Watchlist illimitée", included: false },
-      { label: "Portfolio multi-comptes (API)", included: false },
-      { label: "Alertes prix illimitées", included: false },
-      { label: "Académie premium (vidéos)", included: false },
-      { label: "Export PDF mensuel", included: false },
-      { label: "Support prioritaire 24h", included: false },
+      "Calculateur fiscalité standard",
+      "Portfolio tracker (30 positions)",
+      "5 alertes prix par email",
+      "Glossaire 200+ termes",
+      "Newsletter quotidienne",
+      "Comparateur MiCA complet",
+    ],
+    excluded: [
+      "Export Cerfa 2086 prêt-à-imprimer",
+      "Alertes prix illimitées",
+      "Q/A expert sur le glossaire",
+      "Accès Discord communauté",
+      "Articles premium",
     ],
     ctaLabel: "Commencer gratuitement",
-    ctaHref: "/watchlist",
+    ctaHref: "/calculateur",
+    availability: "Disponible aujourd'hui",
   },
   {
-    id: "pro",
-    name: "Pro",
+    id: "pro-monthly",
+    name: "Pro Mensuel",
     badge: "Le plus populaire",
-    price: "9,99 €",
+    Icon: Crown,
+    price: "9 €",
     priceUnit: "/ mois",
-    description: "Pour les investisseurs sérieux qui veulent du sans-friction.",
+    description:
+      "Pour les investisseurs sérieux qui veulent l'outillage complet sans engagement annuel.",
     features: [
-      { label: "Watchlist illimitée", included: true },
-      { label: "Portfolio multi-comptes (API)", included: true },
-      { label: "Alertes prix illimitées", included: true },
-      { label: "Académie premium (vidéos masterclass)", included: true },
-      { label: "Export PDF mensuel", included: true },
-      { label: "Support prioritaire 24h", included: true },
-      { label: "Sans pub, sans tracker tiers", included: true },
-      { label: "Annulation 1 clic", included: true },
+      "Calculateur fiscalité PRO + export Cerfa 2086",
+      "Export 3916-bis (comptes étrangers crypto)",
+      "Portfolio PRO (positions illimitées + API)",
+      "Alertes prix illimitées (toutes cryptos)",
+      "Glossaire PRO — Q/A par un expert",
+      "Newsletter premium (insights weekly)",
+      "Accès Discord communauté Pro",
+      "Tous les articles premium",
+      "Annulation 1 clic",
     ],
-    ctaLabel: "Rejoindre la waitlist",
-    ctaHref: "#waitlist",
+    ctaLabel: "Précommander early-bird 49 €",
+    ctaHref: EARLYBIRD_LINK,
     highlight: true,
+    availability: "Stripe — automne 2026",
   },
   {
-    id: "pro-annuel",
+    id: "pro-annual",
     name: "Pro Annuel",
-    badge: "−20 %",
-    price: "95 €",
+    badge: "Économie 33 %",
+    Icon: Crown,
+    price: "79 €",
     priceUnit: "/ an",
-    description: "Tout Pro + accès anticipé aux nouvelles features.",
+    description:
+      "Tout le plan mensuel avec 29 € d'économie sur l'année + accès anticipé aux nouvelles features.",
     features: [
-      { label: "Tout le plan Pro", included: true },
-      { label: "Économise 25 € / an", included: true },
-      { label: "Accès anticipé nouvelles features", included: true },
-      { label: "Badge « Founding member »", included: true },
-      { label: "1 session bilan portfolio /an", included: true },
+      "Tout le plan Pro Mensuel",
+      "Économie de 29 € / an (vs 108 € mensuel)",
+      "Accès anticipé nouvelles features",
+      "Badge « Founding member » Discord",
+      "1 audit portfolio offert /an (visio 30 min)",
     ],
-    ctaLabel: "Rejoindre la waitlist",
-    ctaHref: "#waitlist",
+    ctaLabel: "Précommander early-bird 49 €",
+    ctaHref: EARLYBIRD_LINK,
+    availability: "Stripe — automne 2026",
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/*  Features détaillées                                                       */
+/* -------------------------------------------------------------------------- */
 
 const FEATURES = [
   {
-    icon: Bell,
-    title: "Alertes prix illimitées",
-    text: "Configure autant d'alertes que tu veux par email — seuils up/down, %, marché crash.",
-  },
-  {
-    icon: Wallet,
-    title: "Portfolio multi-comptes",
-    text: "Connecte tes comptes Binance, Kraken, Coinbase via API read-only. Suivi consolidé temps réel.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Académie premium",
-    text: "10+ heures de masterclass vidéo : analyse on-chain, fiscalité avancée, sécurité hardware wallet.",
+    icon: Calculator,
+    title: "Calculateur fiscalité PRO",
+    text: "Tous les calculs du calculateur free + export PDF Cerfa 2086 prêt-à-imprimer + formulaire 3916-bis pré-rempli pour les comptes crypto étrangers.",
   },
   {
     icon: FileText,
-    title: "Export PDF mensuel",
-    text: "Bilan portfolio + plus-values latentes prêts pour ta déclaration ou ton CGP.",
+    title: "Export Cerfa 2086 prêt-à-imprimer",
+    text: "Plus besoin de recopier ligne par ligne dans Impots.gouv. Le PDF généré reprend la forme exacte du Cerfa 2086 millésime 2026.",
   },
   {
-    icon: Zap,
-    title: "Sans pub ni tracker",
-    text: "Expérience clean : aucune pub d'affiliation, aucun pixel tiers, aucune dark pattern.",
+    icon: Bell,
+    title: "Alertes prix illimitées",
+    text: "Configure autant d'alertes que tu veux par email — seuils up/down, %, marché crash. Pas de limite à 5 comme la version free.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Glossaire PRO + Q/A expert",
+    text: "Au-delà des 200 définitions free, accède à un Q/A enrichi par notre expert : « pourquoi cette taxonomie », « cas limite fiscal », exemples concrets.",
+  },
+  {
+    icon: MessagesSquare,
+    title: "Discord communauté Pro",
+    text: "Channel privé avec autres abonnés Pro + équipe Cryptoreflex. Posez vos questions techniques, recevez les insights avant la newsletter publique.",
   },
   {
     icon: Users,
-    title: "Support prioritaire 24h",
-    text: "Réponse garantie sous 24h ouvrées par email avec un humain de l'équipe Cryptoreflex.",
-  },
-];
-
-const FAQS = [
-  {
-    q: "Combien coûte Cryptoreflex Pro ?",
-    a: "9,99 € par mois ou 95 € par an (soit 7,92 €/mo, économie de 20 %). Sans engagement, annulation en 1 clic depuis ton espace personnel.",
-  },
-  {
-    q: "Quels moyens de paiement seront acceptés ?",
-    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay au lancement. Paiement en crypto envisagé en V2 (BTC / USDC).",
-  },
-  {
-    q: "Comment annuler mon abonnement ?",
-    a: "En 1 clic depuis ton espace « Abonnement ». Pas de questionnaire, pas de friction. L'accès Pro reste actif jusqu'à la fin de la période payée.",
-  },
-  {
-    q: "Mes données portfolio sont-elles vraiment privées (RGPD) ?",
-    a: "Oui. Les clés API exchange sont stockées chiffrées (AES-256) sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Tu peux exporter ou supprimer toutes tes données depuis ton espace.",
-  },
-  {
-    q: "Y a-t-il une garantie satisfait ou remboursé ?",
-    a: "Oui — 14 jours de remboursement intégral à compter de la date du premier paiement. Aucune justification requise. Politique alignée sur le droit de rétractation européen pour les services numériques.",
-  },
-  {
-    q: "Comment Cryptoreflex Pro se compare à Cryptoast Pro ?",
-    a: "Cryptoreflex Pro est ~50 % moins cher (9,99 € vs ~19,99 €), 100 % francophone et conforme MiCA. Nous misons sur l'outillage portfolio et alertes plutôt que sur l'analyse signaux trading. Aucun cashback affiliation discutable. Comparatif détaillé dispo bientôt.",
+    title: "Articles premium + insights weekly",
+    text: "1 newsletter premium hebdomadaire avec analyse marché + accès aux articles fond de Cryptoreflex (decks fiscalité, on-chain, MiCA).",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Schema.org : Product + 3 Offers + FAQ + Breadcrumb                        */
+/*  FAQ (6 questions)                                                         */
+/* -------------------------------------------------------------------------- */
+
+const FAQS = [
+  {
+    q: "Quand Cryptoreflex Pro sort-il vraiment ?",
+    a: "Lancement officiel automne 2026 (objectif octobre 2026) avec Stripe checkout intégré. D'ici là, tu peux précommander en early-bird à 49 € pour la première année (au lieu de 79 €) — Payment Link Stripe sécurisé.",
+  },
+  {
+    q: "Que vaut l'early-bird à 49 € exactement ?",
+    a: "1 année complète d'accès Pro à 49 € (au lieu de 79 €) avec lock-in du tarif sur le renouvellement automatique du 2e cycle si tu ne résilies pas. Ouvert tant que la Stripe Payment Link n'est pas désactivée publiquement.",
+  },
+  {
+    q: "Quels moyens de paiement seront acceptés ?",
+    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay au lancement. Paiement en crypto envisagé en V2 (BTC / USDC) après stabilisation.",
+  },
+  {
+    q: "Comment annuler mon abonnement ?",
+    a: "En 1 clic depuis ton espace « Abonnement ». Pas de questionnaire, pas de friction. L'accès Pro reste actif jusqu'à la fin de la période payée, puis tu repasses automatiquement en plan Gratuit.",
+  },
+  {
+    q: "Y a-t-il une garantie satisfait ou remboursé ?",
+    a: "Oui — 14 jours de remboursement intégral à compter de la date du premier paiement. Aucune justification requise. Politique alignée sur le droit de rétractation européen pour les services numériques (art. L221-18 Code de la consommation).",
+  },
+  {
+    q: "Mes données portfolio et calculs fiscaux restent-ils privés ?",
+    a: "Oui. Les données sont stockées chiffrées (AES-256) sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Tu peux exporter ou supprimer toutes tes données depuis ton espace personnel à tout moment (RGPD).",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Schema.org : Product + Offers + ItemList features + FAQ + Breadcrumb      */
 /* -------------------------------------------------------------------------- */
 
 function buildProductSchema(): JsonLd {
@@ -205,7 +228,7 @@ function buildProductSchema(): JsonLd {
     "@type": "Product",
     name: "Cryptoreflex Pro",
     description:
-      "Abonnement premium pour les investisseurs crypto français : watchlist illimitée, alertes prix illimitées, portfolio multi-comptes, académie premium, support prioritaire.",
+      "Abonnement premium pour investisseurs crypto français : calculateur fiscalité avec export Cerfa 2086 et 3916-bis, alertes prix illimitées, portfolio multi-comptes, glossaire expert, Discord et articles premium.",
     brand: { "@type": "Brand", name: BRAND.name },
     image: `${BRAND.url}/og-image.png`,
     url: `${BRAND.url}/pro`,
@@ -213,21 +236,31 @@ function buildProductSchema(): JsonLd {
       {
         "@type": "Offer",
         name: "Cryptoreflex Pro mensuel",
-        price: "9.99",
+        price: "9.00",
         priceCurrency: "EUR",
         priceValidUntil: "2026-12-31",
         availability: "https://schema.org/PreOrder",
-        url: `${BRAND.url}/pro#waitlist`,
+        url: `${BRAND.url}/pro#plans`,
         category: "Subscription",
       },
       {
         "@type": "Offer",
         name: "Cryptoreflex Pro annuel",
-        price: "95.00",
+        price: "79.00",
         priceCurrency: "EUR",
         priceValidUntil: "2026-12-31",
         availability: "https://schema.org/PreOrder",
-        url: `${BRAND.url}/pro#waitlist`,
+        url: `${BRAND.url}/pro#plans`,
+        category: "Subscription",
+      },
+      {
+        "@type": "Offer",
+        name: "Cryptoreflex Pro early-bird 1ère année",
+        price: "49.00",
+        priceCurrency: "EUR",
+        priceValidUntil: "2026-09-30",
+        availability: "https://schema.org/PreOrder",
+        url: `${BRAND.url}/pro#early-bird`,
         category: "Subscription",
       },
       {
@@ -236,10 +269,24 @@ function buildProductSchema(): JsonLd {
         price: "0",
         priceCurrency: "EUR",
         availability: "https://schema.org/InStock",
-        url: `${BRAND.url}/watchlist`,
+        url: `${BRAND.url}/calculateur`,
         category: "Subscription",
       },
     ],
+  };
+}
+
+function buildItemListSchema(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Fonctionnalités Cryptoreflex Pro",
+    itemListElement: FEATURES.map((f, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: f.title,
+      description: f.text,
+    })),
   };
 }
 
@@ -250,12 +297,15 @@ function buildProductSchema(): JsonLd {
 export default function ProPage() {
   const schema = graphSchema([
     buildProductSchema(),
+    buildItemListSchema(),
     faqSchema(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Cryptoreflex Pro", url: "/pro" },
     ]),
   ]);
+
+  const earlybirdConfigured = EARLYBIRD_LINK.startsWith("http");
 
   return (
     <div className="min-h-screen">
@@ -273,23 +323,26 @@ export default function ProPage() {
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
               <span className="gradient-text">Cryptoreflex Pro</span>
-              <br className="hidden sm:block" /> 9,99 €/mo
+              <br className="hidden sm:block" /> 9 €/mois ou 79 €/an
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Watchlist illimitée, alertes prix illimitées, portfolio
-              multi-comptes API, académie premium et support prioritaire 24h.
-              Pour les investisseurs qui veulent passer la vitesse supérieure.
+              Calculateur fiscalité PRO avec export PDF Cerfa 2086 prêt-à-imprimer,
+              alertes prix illimitées, portfolio multi-comptes, glossaire expert
+              et Discord communauté. Pour les investisseurs qui veulent les
+              outils sans la friction.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs">
               <span className="badge badge-trust">
                 <ShieldCheck className="h-3 w-3" aria-hidden="true" /> 100 % RGPD
+                · serveurs UE
               </span>
               <span className="badge badge-info">
                 <Zap className="h-3 w-3" aria-hidden="true" /> Annulation 1 clic
               </span>
               <span className="badge badge-info">
-                <Clock className="h-3 w-3" aria-hidden="true" /> Pas de carte requise pour la waitlist
+                <Clock className="h-3 w-3" aria-hidden="true" /> Garantie 14 j
+                remboursé
               </span>
             </div>
 
@@ -298,117 +351,54 @@ export default function ProPage() {
               className="mt-6 inline-flex items-center gap-2 rounded-full border border-warning/40 bg-warning/10 px-4 py-2 text-xs text-warning-fg"
             >
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Pro arrive en juin 2026 — inscris-toi pour être notifié(e) en avant-première.
+              Lancement Stripe automne 2026 — early-bird disponible :{" "}
+              <strong>49 € la 1re année (au lieu de 79 €)</strong>
+            </div>
+
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              {earlybirdConfigured ? (
+                <a
+                  href={EARLYBIRD_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                  id="early-bird"
+                >
+                  Précommander Pro 49 € early-bird
+                </a>
+              ) : (
+                <a href="#waitlist" className="btn-primary" id="early-bird">
+                  Rejoindre la waitlist Pro
+                </a>
+              )}
+              <a href="#plans" className="btn-ghost">
+                Voir les 3 plans
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PLANS */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Choisis ton plan
-          </h2>
-          <p className="mt-2 text-fg/70">
-            Toujours une version gratuite généreuse. Pro débloque l&apos;outillage avancé.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {PLANS.map((plan) => (
-            <article
-              key={plan.id}
-              aria-labelledby={`plan-${plan.id}-name`}
-              className={`rounded-3xl p-6 sm:p-8 flex flex-col ${
-                plan.highlight
-                  ? "card-premium ring-2 ring-primary/40 relative shadow-[0_20px_60px_-20px_rgba(245,165,36,0.4)]"
-                  : "glass"
-              }`}
-            >
-              {plan.badge && (
-                <span
-                  className={`absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
-                    plan.highlight
-                      ? "bg-primary text-background"
-                      : "bg-elevated border border-border text-primary-soft"
-                  }`}
-                  style={plan.highlight ? undefined : { position: "static", transform: "none" }}
-                >
-                  {plan.badge}
-                </span>
-              )}
-
-              <h3
-                id={`plan-${plan.id}-name`}
-                className="text-2xl font-extrabold text-white"
-              >
-                {plan.name}
-              </h3>
-              <p className="mt-2 text-sm text-white/70">{plan.description}</p>
-
-              <div className="mt-6 flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold text-white tabular-nums">
-                  {plan.price}
-                </span>
-                <span className="text-sm text-white/60">{plan.priceUnit}</span>
-              </div>
-
-              <ul className="mt-6 space-y-3 text-sm flex-1" role="list">
-                {plan.features.map((f) => (
-                  <li
-                    key={f.label}
-                    className={`flex items-start gap-2 ${
-                      f.included ? "text-white/90" : "text-white/40 line-through"
-                    }`}
-                  >
-                    {f.included ? (
-                      <Check
-                        className="h-4 w-4 mt-0.5 text-success shrink-0"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <XIcon
-                        className="h-4 w-4 mt-0.5 text-white/30 shrink-0"
-                        aria-hidden="true"
-                      />
-                    )}
-                    <span>{f.label}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8">
-                {plan.ctaHref.startsWith("#") ? (
-                  <a
-                    href={plan.ctaHref}
-                    className={plan.highlight ? "btn-primary w-full" : "btn-ghost w-full"}
-                  >
-                    {plan.ctaLabel}
-                  </a>
-                ) : (
-                  <Link
-                    href={plan.ctaHref}
-                    className={plan.highlight ? "btn-primary w-full" : "btn-ghost w-full"}
-                  >
-                    {plan.ctaLabel}
-                  </Link>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-
+      {/* PLANS (TieredPricing) */}
+      <section
+        id="plans"
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 scroll-mt-24"
+      >
+        <TieredPricing
+          tiers={TIERS}
+          heading="Choisis ton plan"
+          subheading="Toujours une version gratuite généreuse. Pro débloque l'outillage fiscal et les alertes."
+        />
         {/*
-          TODO M+4-6 — remplacer le CTA "waitlist" par un Stripe Checkout :
+          TODO automne 2026 — remplacer le CTA "early-bird" par un Stripe Checkout :
           - Créer 2 prix Stripe (price_pro_monthly, price_pro_yearly)
           - Endpoint POST /api/stripe/checkout-session avec lookup_key
           - Webhook /api/stripe/webhook pour activer le rôle "pro" en DB
-          - Provisionner accès Académie premium + alertes illimitées + API key
+          - Provisionner accès Académie premium + alertes illimitées + invite Discord
         */}
       </section>
 
-      {/* WAITLIST CTA */}
+      {/* WAITLIST CTA (fallback si early-bird link absent) */}
       <section
         id="waitlist"
         className="border-y border-border bg-surface/40 scroll-mt-24"
@@ -416,12 +406,11 @@ export default function ProPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Rejoins la waitlist Pro
+              Pas encore prêt ? Rejoins la waitlist
             </h2>
             <p className="mt-2 text-fg/70 max-w-xl mx-auto">
-              Inscris-toi pour recevoir l&apos;accès anticipé en juin 2026, plus
-              <span className="text-primary-soft"> 30 jours offerts </span>
-              à toute l&apos;équipe early-access.
+              On te notifie à l&apos;ouverture officielle de Stripe + 30 jours
+              gratuits offerts à tous les early-access.
             </p>
           </div>
 
@@ -439,8 +428,12 @@ export default function ProPage() {
               href={`mailto:${BRAND.email}?subject=Cryptoreflex%20Pro%20%E2%80%94%20Lead%20VIP`}
               className="text-sm text-primary-soft underline hover:text-primary"
             >
-              <Mail className="inline-block h-4 w-4 mr-1 align-text-bottom" aria-hidden="true" />
-              Contacter l&apos;équipe (entreprises, créateurs, &gt; 20 utilisateurs)
+              <Mail
+                className="inline-block h-4 w-4 mr-1 align-text-bottom"
+                aria-hidden="true"
+              />
+              Contacter l&apos;équipe (entreprises, créateurs, &gt; 20
+              utilisateurs)
             </a>
           </div>
         </div>
@@ -453,7 +446,8 @@ export default function ProPage() {
             Ce que tu gagnes <span className="gradient-text">en passant Pro</span>
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
-            6 améliorations concrètes qui changent ta routine d&apos;investisseur.
+            6 améliorations concrètes qui changent ta routine
+            d&apos;investisseur — surtout en mai (déclaration fiscale).
           </p>
         </div>
 
@@ -474,11 +468,16 @@ export default function ProPage() {
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="flex items-center gap-2 mb-6">
           <HelpCircle className="h-5 w-5 text-primary" aria-hidden="true" />
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">Questions fréquentes</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
+            Questions fréquentes
+          </h2>
         </div>
         <div className="divide-y divide-border border border-border rounded-2xl overflow-hidden">
           {FAQS.map((f) => (
-            <details key={f.q} className="group bg-elevated/40 open:bg-elevated/70">
+            <details
+              key={f.q}
+              className="group bg-elevated/40 open:bg-elevated/70"
+            >
               <summary className="flex items-center justify-between cursor-pointer list-none px-5 py-4 font-medium text-fg hover:bg-elevated/80">
                 <span>{f.q}</span>
                 <span
@@ -488,24 +487,55 @@ export default function ProPage() {
                   +
                 </span>
               </summary>
-              <div className="px-5 pb-5 text-sm text-fg/75 leading-relaxed">{f.a}</div>
+              <div className="px-5 pb-5 text-sm text-fg/75 leading-relaxed">
+                {f.a}
+              </div>
             </details>
           ))}
         </div>
       </section>
 
-      {/* RGPD footer note */}
+      {/* DISCLAIMER FINAL */}
       <section className="border-t border-border bg-surface/30">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 text-xs text-muted leading-relaxed">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 text-xs text-muted leading-relaxed space-y-3">
           <p className="flex items-start gap-2">
-            <ShieldCheck className="h-4 w-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertTriangle
+              className="h-4 w-4 text-warning shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
             <span>
-              <strong className="text-fg">Mention RGPD —</strong> En t&apos;inscrivant
-              à la waitlist Pro, ton email est traité par {BRAND.name} (responsable de
-              traitement) et stocké chez Beehiiv (sous-traitant) sur la base de ton
-              consentement explicite. Conservation 24 mois maximum. Aucun partage avec
-              des tiers commerciaux. Désinscription en 1 clic en pied de chaque email,
-              ou via{" "}
+              <strong className="text-fg">But pédagogique uniquement —</strong>{" "}
+              Les outils Cryptoreflex Pro (calculateur fiscalité, portfolio
+              tracker, alertes) sont conçus à but pédagogique et
+              d&apos;assistance à la déclaration fiscale. Ils ne constituent
+              <strong> pas un conseil d&apos;investissement personnalisé </strong>
+              ni un conseil fiscal réglementé. En cas de doute sur ta
+              déclaration, consulte un expert-comptable ou un CGP.
+            </span>
+          </p>
+          <p className="flex items-start gap-2">
+            <ShieldCheck
+              className="h-4 w-4 text-success shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
+            <span>
+              <strong className="text-fg">Statut éditeur —</strong>{" "}
+              {BRAND.name} est un éditeur web indépendant français. Nous ne
+              sommes ni un PSAN ni un CIF. L&apos;abonnement Pro est un service
+              numérique payant, pas un produit financier.
+            </span>
+          </p>
+          <p className="flex items-start gap-2">
+            <FileText
+              className="h-4 w-4 text-accent-cyan shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
+            <span>
+              <strong className="text-fg">Mention RGPD —</strong> En
+              t&apos;inscrivant à la waitlist Pro, ton email est traité par{" "}
+              {BRAND.name} (responsable de traitement) et stocké chez Beehiiv
+              (sous-traitant) sur la base de ton consentement explicite.
+              Conservation 24 mois max. Désinscription en 1 clic via{" "}
               <Link
                 href="/confidentialite"
                 className="text-primary-soft underline hover:text-primary"

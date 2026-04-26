@@ -45,6 +45,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/outils/glossaire-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/outils/calculateur-roi-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/outils/portfolio-tracker`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+    // Pilier "Innovation features killer" (26-04-2026) — 3 outils différenciants
+    // qui n'existent pas chez les concurrents FR (Cryptoast, JDC).
+    { url: `${SITE_URL}/outils/calculateur-apy-staking`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/simulateur-halving-bitcoin`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/comparateur-personnalise`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Piliers V2 (26-04) : pages-mère pour News auto, Analyses TA auto, Calendrier événements.
     { url: `${SITE_URL}/analyses-techniques`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/calendrier`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },

@@ -11,13 +11,16 @@ import {
   BookOpen,
   LineChart,
   Briefcase,
+  Coins,
+  Calendar,
+  GitCompare,
 } from "lucide-react";
 import ProfitCalculator from "@/components/ProfitCalculator";
 
 export const metadata: Metadata = {
   title: "Outils crypto gratuits — calculateurs, simulateurs, glossaire, portfolio",
   description:
-    "8 outils gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur, vérificateur MiCA, calculateur ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
+    "11 outils gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, calculateur APY staking, simulateur halving Bitcoin, comparateur personnalisé, vérificateur MiCA, ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
   alternates: { canonical: "https://cryptoreflex.fr/outils" },
 };
 
@@ -105,6 +108,36 @@ const TOOLS: Tool[] = [
     status: "available",
     badge: "Nouveau",
   },
+  // Pilier "Innovation features killer" (26-04-2026) — 3 outils différenciants
+  // qui n'existent pas chez Cryptoast / JDC : APY staking comparé, simulateur
+  // halving multi-cycles, comparateur personnalisé 5 questions.
+  {
+    title: "Calculateur APY staking",
+    description:
+      "Compare le rendement staking ETH, SOL, ADA, DOT, ATOM, NEAR — direct vs liquid staking (Lido, Marinade) vs CEX.",
+    href: "/outils/calculateur-apy-staking",
+    Icon: Coins,
+    status: "available",
+    badge: "Nouveau",
+  },
+  {
+    title: "Simulateur halving Bitcoin",
+    description:
+      "Projection DCA Bitcoin jusqu'aux halvings 2028, 2032, 2036 — 3 scénarios basés sur les cycles passés.",
+    href: "/outils/simulateur-halving-bitcoin",
+    Icon: Calendar,
+    status: "available",
+    badge: "Nouveau",
+  },
+  {
+    title: "Comparateur personnalisé",
+    description:
+      "Quiz 5 questions, top 3 plateformes adaptées à TON profil — score sur prix, UX, sécurité.",
+    href: "/outils/comparateur-personnalise",
+    Icon: GitCompare,
+    status: "available",
+    badge: "Nouveau",
+  },
 ];
 
 export default function OutilsPage() {
@@ -137,9 +170,9 @@ export default function OutilsPage() {
             Tous les outils
           </h2>
           <p className="mt-2 text-white/70">
-            Huit outils complémentaires pour couvrir tout le parcours
-            investisseur, du premier achat au calcul de fiscalité, en passant
-            par le suivi de portefeuille et le glossaire technique.
+            Onze outils complémentaires pour couvrir tout le parcours
+            investisseur : du premier achat à la projection halving 2036, en passant
+            par le calcul de fiscalité, le staking APY, le portfolio et le glossaire technique.
           </p>
 
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

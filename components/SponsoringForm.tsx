@@ -70,6 +70,14 @@ export default function SponsoringForm() {
       <fieldset disabled={isPending} className="space-y-5">
         <legend className="sr-only">Formulaire de demande de sponsoring</legend>
 
+        {/* Honeypot anti-spam — invisible aux humains, rempli par les bots. */}
+        <div aria-hidden="true" className="hidden" style={{ position: "absolute", left: "-9999px" }}>
+          <label>
+            Ne pas remplir
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="sp-company" className="block text-sm font-medium text-white mb-1.5">

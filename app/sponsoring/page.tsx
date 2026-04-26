@@ -4,7 +4,6 @@ import {
   FileText,
   LayoutGrid,
   Mail as MailIcon,
-  Package,
   Sparkles,
   Eye,
   TrendingUp,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import SponsoringForm from "@/components/SponsoringForm";
 import StructuredData from "@/components/StructuredData";
+import TieredPricing, { type PricingTier } from "@/components/TieredPricing";
 import {
   faqSchema,
   breadcrumbSchema,
@@ -24,182 +24,216 @@ import {
 import { BRAND } from "@/lib/brand";
 
 /**
- * /sponsoring — page commerciale articles sponso + display + newsletter.
+ * /sponsoring — page commerciale B2B Cryptoreflex.
  *
- * Cible : marques B2C crypto (exchanges, wallets, projets MiCA-friendly).
+ * Refonte 26/04/2026 — focus session « Lancement programme ambassadeurs +
+ * sponsoring B2B » (consultant senior B2B).
  *
- * Note méthodologique critique :
- *  - Mention "sponsorisé" obligatoire (charte ARPP + DDPP).
- *  - Ne change ni la note ni le verdict éditorial.
- *  - Max 1 article sponsorisé par mois pour préserver la confiance lecteurs.
+ * Choix produit :
+ *  - 3 offres claires (V1 dispo, V2 M3+, V3 M4+) — pas de sur-vente.
+ *  - Tarifs publics : article 800 €, comparateur 1 500 €/mois, newsletter 500 €.
+ *  - Audience non gonflée : projection M6 = 6 000 visites/mois (à vérifier),
+ *    snapshot officiel sur /impact (mise à jour mensuelle).
+ *  - Sélection éditoriale stricte : pas de PSAN douteux, validation MiCA
+ *    obligatoire, max 1 sponso/mois pour préserver la confiance lecteur.
+ *  - Disclaimer AMF (art. 222-15) + ARPP + DDPP visible en haut & bas.
  *
- * SEO : Schema Service + FAQ + Breadcrumb (Product non pertinent : c'est un
- * service B2B vendu à des sociétés, pas un produit consommateur).
+ * SEO : Schema Service + Offers + FAQ + Breadcrumb (graph).
  */
 
 export const metadata: Metadata = {
-  title: "Sponsoriser un article Cryptoreflex — articles, display, newsletter",
+  title:
+    "Sponsoring & placements B2B Cryptoreflex — articles, comparateur, newsletter",
   description:
-    "Articles sponsorisés (1 500 €), display affiliate premium (500 €/mois), newsletter (300 €) ou packs combinés. Site lancé en avril 2026, audience FR crypto en construction, 100 % organique.",
+    "PSAN, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
   alternates: { canonical: `${BRAND.url}/sponsoring` },
   openGraph: {
-    title: "Sponsoriser un article Cryptoreflex",
+    title: "Sponsoriser un placement Cryptoreflex",
     description:
-      "Mets ta plateforme crypto en avant auprès d'investisseurs FR. Articles, display ou newsletter — process transparent et mention 'sponsorisé' obligatoire.",
+      "Touche les investisseurs FR qualifiés via du contenu éditorial, du placement comparateur premium ou de la newsletter — tarifs publics, MiCA-only.",
     url: `${BRAND.url}/sponsoring`,
     type: "website",
   },
   robots: { index: true, follow: true },
 };
 
-/**
- * Stats publiées sur la page sponsoring — refonte 26/04/2026 (audit
- * crédibilité P0). Le site est lancé depuis le 15/04/2026 ; toute métrique
- * d'audience doit être soit (a) un chiffre réel et auditable, soit (b)
- * remplacée par une promesse de transparence et un renvoi vers /impact.
- *
- * Anciennes valeurs supprimées :
- *  - "5 000+ visites mensuelles uniques" → site a 11 jours, audience réelle
- *    0-50 visiteurs/jour, le chiffre était mensonger.
- *  - "500+ abonnés newsletter" → cohérence avec IMPACT_STATS.newsletterSubscribers
- *    (= 47 au 26/04/2026). On préfère ne rien afficher de chiffré tant qu'on
- *    n'a pas un volume crédible (>1 000 abos).
- *  - "97 % trafic organique" → fabriqué (pas d'historique sur 11 jours).
- *
- * On garde uniquement les promesses qualitatives vérifiables aujourd'hui.
- */
+/* -------------------------------------------------------------------------- */
+/*  Trust strip — chiffres honnêtes uniquement                                */
+/* -------------------------------------------------------------------------- */
+
 const TRUST_STATS = [
   {
     Icon: Sparkles,
     value: "Avril 2026",
-    label: "site lancé en transparence",
-    hint: "Dashboard public d'audience sur /impact, mis à jour mensuellement",
+    label: "Site lancé en transparence",
+    hint: "Audience FR en construction — snapshot mensuel sur /impact",
   },
   {
     Icon: TrendingUp,
-    value: "100 %",
-    label: "trafic organique (zéro paid ads)",
-    hint: "Acquisition SEO + bouche-à-oreille uniquement",
+    value: "~6 000",
+    label: "visites/mois (projection M6)",
+    hint: "Chiffre cible à vérifier — voir /impact pour le réel actuel",
   },
   {
     Icon: Eye,
     value: "Publique",
     label: "méthodologie de scoring",
-    hint: "Critères, pondérations et sources publiés sur /methodologie",
+    hint: "Critères, sources et pondérations sur /methodologie",
   },
   {
     Icon: Globe2,
-    value: "France + EU",
+    value: "France + UE",
     label: "audience visée",
     hint: "Investisseurs débutants → confirmés post-MiCA",
   },
 ];
 
-interface Offer {
-  Icon: typeof FileText;
-  title: string;
-  price: string;
-  cadence: string;
-  description: string;
-  perks: string[];
-  highlight?: boolean;
-}
+/* -------------------------------------------------------------------------- */
+/*  3 offres tarifées — V1 dispo / V2 M3+ / V3 M4+                            */
+/* -------------------------------------------------------------------------- */
 
-const OFFERS: Offer[] = [
+const TIERS: PricingTier[] = [
   {
+    id: "article",
+    name: "Article sponsorisé",
+    badge: "V1 — disponible",
     Icon: FileText,
-    title: "Article sponsorisé",
-    price: "1 500 €",
-    cadence: "/ article",
+    price: "800 €",
+    priceUnit: "/ article",
+    availability: "Disponible dès aujourd'hui",
     description:
-      "Article rédigé par notre équipe selon ton brief. Mention 'sponsorisé' obligatoire en haut + en bas.",
-    perks: [
+      "Article 1 500 – 2 500 mots écrit par notre équipe selon ton brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
+    features: [
       "1 500 – 2 500 mots optimisés SEO",
-      "Brief validé conjointement",
-      "Liens trackés UTM",
+      "Brief co-construit (1 visio 30 min)",
+      "1 mention dédiée dans la newsletter quotidienne",
+      "Liens trackés UTM + reporting CTR mensuel",
       "Mise à jour 1×/an offerte",
-      "Reporting mensuel performance (CTR, conversions)",
+      "Mention « Sponsorisé » obligatoire (charte ARPP)",
     ],
+    ctaLabel: "Réserver un article",
+    ctaHref: "#contact",
     highlight: true,
   },
   {
+    id: "comparateur",
+    name: "Placement comparateur premium",
+    badge: "V2 — à partir du M3",
     Icon: LayoutGrid,
-    title: "Display affiliate premium",
-    price: "500 €",
-    cadence: "/ mois",
+    price: "1 500 €",
+    priceUnit: "/ mois",
+    availability: "Ouverture juin 2026",
     description:
-      "Ta plateforme positionnée en tête de nos comparatifs avec badge 'Partenaire'.",
-    perks: [
-      "Position #1 sur la home + comparatifs",
-      "Badge 'Partenaire' + bonus de bienvenue",
-      "Lien d'affiliation tracé",
+      "Visibilité top sur /comparatif et chaque page /avis/[slug] de ta plateforme. Engagement 3 mois minimum, badge « Partenaire » + bonus de bienvenue mis en avant.",
+    features: [
+      "Position #1 + carte premium /comparatif",
+      "Encart « Partenaire » sur ton /avis/[slug]",
+      "Badge bonus de bienvenue valorisé",
+      "Lien d'affiliation tracé UTM unique",
       "Reporting clics + conversions mensuel",
       "Engagement minimum 3 mois",
     ],
+    ctaLabel: "Pré-réserver M3",
+    ctaHref: "#contact",
   },
   {
+    id: "newsletter",
+    name: "Newsletter sponsoring",
+    badge: "V3 — à partir du M4",
     Icon: MailIcon,
-    title: "Newsletter sponsoring",
-    price: "300 €",
-    cadence: "/ envoi",
+    price: "500 €",
+    priceUnit: "/ encart",
+    availability: "Ouverture juillet 2026 (≥ 3 000 abonnés)",
     description:
-      "Encart 200 mots dans 1 envoi de la newsletter quotidienne (audience FR en construction depuis avril 2026, volumes publiés sur /impact).",
-    perks: [
-      "Encart 200 mots + image",
-      "Mention 'sponsor du jour' explicite",
-      "Lien tracé UTM unique",
-      "Stats ouverture / clics fournies",
+      "Encart 200 mots dans la newsletter quotidienne. Lancement conditionné à 3 000 abonnés — point d'avancement public sur /impact.",
+    features: [
+      "Encart 200 mots + 1 visuel",
+      "Mention « Sponsor du jour » explicite",
+      "Lien UTM unique + stats ouverture / clics",
+      "Disponible quand ≥ 3 000 abonnés newsletter",
+      "Annulable jusqu'à 48 h avant l'envoi",
     ],
-  },
-  {
-    Icon: Package,
-    title: "Pack combiné",
-    price: "4 000 €",
-    cadence: "/ pack",
-    description:
-      "3 articles sponsorisés répartis sur 3 mois + 1 mois de display affiliate premium offert.",
-    perks: [
-      "3 articles thématiques (1 500 €/u → 4 500 € value)",
-      "1 mois display premium (500 € value)",
-      "Économie totale : 1 000 €",
-      "Calendrier éditorial co-construit",
-      "Bilan trimestriel offert",
-    ],
-  },
-];
-
-const FAQS = [
-  {
-    q: "Quel est le process de A à Z ?",
-    a: "1) Tu remplis le formulaire ci-dessous. 2) On te répond sous 48h ouvrées avec un devis détaillé et une plage de publication. 3) Brief co-construit (1 visio 30 min). 4) Rédaction par notre équipe sous 7-10 jours. 5) Validation finale par tes soins (1 round de modifs inclus). 6) Publication + reporting mensuel.",
-  },
-  {
-    q: "As-tu un contrôle éditorial sur le contenu sponsorisé ?",
-    a: "Oui, et c'est non-négociable : nous nous réservons le droit de refuser tout angle qui contredirait nos principes éditoriaux (ex : promotion de tokens à risque non régulés, rendement irréaliste, nivellement par le bas du discours sur la sécurité). On t'oriente vers un autre angle qui respecte la charte sans diluer ton message.",
-  },
-  {
-    q: "Le sponsoring influence-t-il ta note ou ton verdict ?",
-    a: "Non, jamais. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Tu peux acheter un article sponsorisé tout en recevant une note 6,5/10 — c'est arrivé.",
-  },
-  {
-    q: "Comment se passe la mention « sponsorisé » légalement ?",
-    a: "Mention obligatoire en haut d'article (badge 'Sponsorisé' visible) et rappel en bas. Conforme charte ARPP + recommandations DDPP sur le contenu publicitaire en ligne. Pas de native ad cachée — la transparence est notre socle de confiance.",
-  },
-  {
-    q: "Puis-je désengager mon contrat en cours de route ?",
-    a: "Articles : non remboursable une fois publié (workflow déjà engagé). Display : préavis 1 mois, prorata du mois en cours non remboursé. Newsletter : annulable jusqu'à 48h avant l'envoi prévu. Conditions complètes dans le devis.",
+    ctaLabel: "Être notifié à l'ouverture",
+    ctaHref: "#contact",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Schema.org : Service + FAQ + Breadcrumb                                   */
+/*  Conditions strictes                                                       */
+/* -------------------------------------------------------------------------- */
+
+const CONDITIONS = [
+  "Ta plateforme doit être enregistrée PSAN AMF (ou en cours d'enregistrement MiCA via l'autorité d'un État membre UE).",
+  "Pas de promotion de tokens à rendement irréaliste, schémas pump, NFT spéculatifs sans utilité, ou produits non conformes MiCA.",
+  "Validation MiCA obligatoire : nous vérifions ton statut sur le registre AMF avant signature de devis.",
+  "Maximum 1 article sponsorisé par mois sur Cryptoreflex — pour préserver la valeur perçue par nos lecteurs.",
+  "Contrôle éditorial préservé : nous gardons le droit de refuser un angle qui contredit notre charte (sécurité, fiscalité, transparence).",
+  "Mention « Sponsorisé » obligatoire en haut + bas conformément à l'art. 222-15 du règlement général AMF et à la charte ARPP.",
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Process commercial                                                        */
+/* -------------------------------------------------------------------------- */
+
+const PROCESS_STEPS = [
+  {
+    n: 1,
+    title: "Email ou formulaire",
+    text: `Envoie ta demande à ${BRAND.partnersEmail} ou via le formulaire en bas. Précise format souhaité, brief, deadline.`,
+  },
+  {
+    n: 2,
+    title: "Devis sous 48 h",
+    text: "Réponse manuelle avec devis détaillé, validation MiCA et créneau de publication confirmé.",
+  },
+  {
+    n: 3,
+    title: "Brief & rédaction",
+    text: "Visio 30 min de cadrage. Rédaction par notre équipe sous 5 jours ouvrés. Tu valides 1 round de modifs.",
+  },
+  {
+    n: 4,
+    title: "Publication sous 7 j",
+    text: "Mise en ligne sur Cryptoreflex + push newsletter. Reporting envoyé à J+30 (clics, conversions, trafic).",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  FAQ (5 questions)                                                         */
+/* -------------------------------------------------------------------------- */
+
+const FAQS = [
+  {
+    q: "Quelles plateformes acceptez-vous comme sponsor ?",
+    a: "Uniquement des PSAN enregistrés AMF ou des projets crypto en cours d'enregistrement MiCA dans un État membre UE. On vérifie systématiquement ton statut sur le registre officiel AMF avant signature. On refuse les exchanges offshore non régulés, les memecoins isolés, les schémas de rendement irréaliste, et tout token sans utilité avérée.",
+  },
+  {
+    q: "Le sponsoring influence-t-il votre note ou votre verdict éditorial ?",
+    a: "Non. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA, support FR) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Tu peux acheter un article sponsorisé tout en recevant une note 6,5/10 sur le comparateur — c'est déjà arrivé.",
+  },
+  {
+    q: "Comment se passe la mention « sponsorisé » légalement ?",
+    a: "Mention obligatoire en haut d'article (badge « Sponsorisé » visible) + rappel en bas. Conforme à l'art. 222-15 du règlement général AMF, à la charte ARPP « Communication publicitaire numérique » et aux recommandations DDPP sur le contenu publicitaire en ligne. Pas de native ad cachée.",
+  },
+  {
+    q: "Quels sont vos chiffres d'audience réels aujourd'hui ?",
+    a: "Site lancé le 15 avril 2026 — l'audience est en construction. Le snapshot mensuel public est sur /impact (mis à jour le 26 de chaque mois). Projection à 6 mois : ~6 000 visites/mois. On préfère sous-promettre et tenir que de te vendre des chiffres gonflés.",
+  },
+  {
+    q: "Puis-je désengager mon contrat en cours ?",
+    a: "Articles : non remboursable une fois la rédaction lancée (workflow déjà engagé). Comparateur premium : préavis 1 mois, prorata du mois en cours non remboursé. Newsletter : annulable jusqu'à 48 h avant l'envoi prévu. Conditions complètes dans le devis détaillé envoyé après ta demande.",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Schema.org : Service + Offers + FAQ + Breadcrumb                          */
 /* -------------------------------------------------------------------------- */
 
 function buildServiceSchema(): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    serviceType: "Sponsoring éditorial et display publicitaire",
+    serviceType: "Sponsoring éditorial et placement comparateur B2B",
     name: "Sponsoring Cryptoreflex",
     provider: {
       "@type": "Organization",
@@ -207,43 +241,25 @@ function buildServiceSchema(): JsonLd {
       url: BRAND.url,
     },
     description:
-      "Articles sponsorisés, display affiliate premium et newsletter sponsoring pour les marques crypto B2C ciblant l'audience francophone.",
+      "Articles sponsorisés, placement comparateur premium et encarts newsletter pour PSAN, fintech et outils crypto FR ciblant l'audience francophone post-MiCA.",
     areaServed: { "@type": "Country", name: "France" },
     audience: {
       "@type": "BusinessAudience",
-      name: "Plateformes crypto, wallets, projets MiCA-compliant",
+      name: "PSAN, fintech crypto, outils crypto FR conformes MiCA",
     },
     url: `${BRAND.url}/sponsoring`,
-    offers: [
-      {
-        "@type": "Offer",
-        name: "Article sponsorisé",
-        price: "1500",
-        priceCurrency: "EUR",
-        category: "Branded content",
-      },
-      {
-        "@type": "Offer",
-        name: "Display affiliate premium",
-        price: "500",
-        priceCurrency: "EUR",
-        category: "Display",
-      },
-      {
-        "@type": "Offer",
-        name: "Newsletter sponsoring",
-        price: "300",
-        priceCurrency: "EUR",
-        category: "Email",
-      },
-      {
-        "@type": "Offer",
-        name: "Pack combiné 3 articles + 1 mois display",
-        price: "4000",
-        priceCurrency: "EUR",
-        category: "Bundle",
-      },
-    ],
+    offers: TIERS.map((t) => ({
+      "@type": "Offer",
+      name: t.name,
+      price: t.price.replace(/[^\d]/g, ""),
+      priceCurrency: "EUR",
+      availability:
+        t.id === "article"
+          ? "https://schema.org/InStock"
+          : "https://schema.org/PreOrder",
+      category: t.id,
+      url: `${BRAND.url}/sponsoring#${t.id}`,
+    })),
   };
 }
 
@@ -273,24 +289,32 @@ export default function SponsoringPage() {
           <div className="flex flex-col items-center text-center">
             <span className="badge-info">
               <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              Pour les marques crypto
+              Sponsoring B2B — PSAN & fintech crypto FR
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
-              Sponsorise un article{" "}
-              <span className="gradient-text">Cryptoreflex</span>
+              Touche{" "}
+              <span className="gradient-text">6 000+ investisseurs FR</span>{" "}
+              qualifiés
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Touche 5 000+ investisseurs crypto francophones qualifiés via du
-              contenu éditorial, du display ou de la newsletter — toujours avec
-              mention « sponsorisé » et zéro impact sur nos verdicts.
+              Site lancé en avril 2026 — audience FR en construction (projection
+              M6 = 6 000 visites/mois, snapshot public sur{" "}
+              <Link
+                href="/impact"
+                className="text-primary-soft underline hover:text-primary"
+              >
+                /impact
+              </Link>
+              ). 3 formats sponsorisés tarifés, validation MiCA obligatoire, mention
+              « Sponsorisé » conforme art. 222-15 AMF.
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <a href="#offres" className="btn-primary">
-                Voir les offres
+                Voir les 3 offres
               </a>
               <a href="#contact" className="btn-ghost">
-                Demander un devis
+                Devenir partenaire
               </a>
             </div>
           </div>
@@ -302,8 +326,13 @@ export default function SponsoringPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {TRUST_STATS.map((s) => (
             <div key={s.label} className="glass rounded-2xl p-5">
-              <s.Icon className="h-6 w-6 text-accent-cyan mb-3" aria-hidden="true" />
-              <div className="text-2xl font-bold text-white tabular-nums">{s.value}</div>
+              <s.Icon
+                className="h-6 w-6 text-accent-cyan mb-3"
+                aria-hidden="true"
+              />
+              <div className="text-2xl font-bold text-white tabular-nums">
+                {s.value}
+              </div>
               <div className="text-sm text-white/80 mt-1">{s.label}</div>
               <div className="text-xs text-muted mt-1">{s.hint}</div>
             </div>
@@ -317,14 +346,18 @@ export default function SponsoringPage() {
           role="note"
           className="rounded-2xl border border-warning/40 bg-warning/5 p-5 sm:p-6 flex items-start gap-3"
         >
-          <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" aria-hidden="true" />
+          <AlertTriangle
+            className="h-5 w-5 text-warning shrink-0 mt-0.5"
+            aria-hidden="true"
+          />
           <div className="text-sm text-white/90 leading-relaxed">
             <strong className="text-warning-fg">Engagement éditorial.</strong>{" "}
-            Le sponsoring n&apos;influence ni notre note, ni notre verdict, ni le
-            classement de nos comparatifs. Mention « sponsorisé » obligatoire,
-            visible en haut et en bas de chaque contenu sponsorisé. Maximum
-            <span className="text-warning-fg"> 1 article sponsorisé par mois </span>
-            pour préserver la confiance des lecteurs.{" "}
+            Le sponsoring n&apos;influence ni notre note, ni notre verdict, ni
+            le classement de nos comparatifs. Tout sponso est{" "}
+            <strong className="text-warning-fg">
+              explicitement signalé conformément à l&apos;art. 222-15 AMF
+            </strong>{" "}
+            et à la charte ARPP. Maximum 1 article sponsorisé par mois.{" "}
             <Link
               href="/methodologie"
               className="underline text-primary-soft hover:text-primary"
@@ -336,85 +369,98 @@ export default function SponsoringPage() {
         </div>
       </section>
 
-      {/* OFFRES */}
+      {/* OFFRES (TieredPricing) */}
       <section
         id="offres"
-        className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 scroll-mt-24"
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 scroll-mt-24"
       >
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Offres disponibles
-          </h2>
-          <p className="mt-2 text-fg/70">Tarifs publics, sans frais cachés.</p>
+        <TieredPricing
+          tiers={TIERS}
+          heading="3 offres tarifées publiquement"
+          subheading="Pas de devis opaque. Pas de frais cachés. Tu sais combien et quand."
+        />
+      </section>
+
+      {/* CONDITIONS STRICTES */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="glass rounded-3xl p-6 sm:p-8">
+          <div className="flex items-center gap-2 mb-4">
+            <ShieldCheck
+              className="h-5 w-5 text-success"
+              aria-hidden="true"
+            />
+            <h2 className="text-xl sm:text-2xl font-extrabold text-fg">
+              Conditions d&apos;acceptation strictes
+            </h2>
+          </div>
+          <ul className="space-y-2 text-sm text-white/85" role="list">
+            {CONDITIONS.map((c) => (
+              <li key={c} className="flex items-start gap-2">
+                <span
+                  className="mt-1.5 h-1.5 w-1.5 rounded-full bg-success shrink-0"
+                  aria-hidden="true"
+                />
+                <span>{c}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {OFFERS.map((o) => (
-            <article
-              key={o.title}
-              aria-labelledby={`offer-${o.title}`}
-              className={`rounded-3xl p-6 sm:p-8 ${
-                o.highlight ? "card-premium ring-1 ring-primary/30" : "glass"
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary shrink-0">
-                  <o.Icon className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 id={`offer-${o.title}`} className="text-xl font-extrabold text-white">
-                    {o.title}
-                  </h3>
-                  <p className="mt-1 text-sm text-white/70">{o.description}</p>
-                </div>
-              </div>
+      </section>
 
-              <div className="mt-5 flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold text-white tabular-nums">
-                  {o.price}
+      {/* PROCESS */}
+      <section className="border-y border-border bg-surface/40">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
+              Process en 4 étapes — publication sous 7 jours
+            </h2>
+          </div>
+          <ol
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 list-none p-0"
+            role="list"
+          >
+            {PROCESS_STEPS.map((s) => (
+              <li key={s.n} className="glass rounded-2xl p-5 relative">
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-3 -left-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-background font-extrabold shadow-e2"
+                >
+                  {s.n}
                 </span>
-                <span className="text-sm text-white/60">{o.cadence}</span>
-              </div>
-
-              <ul className="mt-5 space-y-2 text-sm text-white/85" role="list">
-                {o.perks.map((p) => (
-                  <li key={p} className="flex items-start gap-2">
-                    <span
-                      className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
+                <h3 className="mt-3 font-bold text-fg">{s.title}</h3>
+                <p className="mt-1.5 text-sm text-fg/70">{s.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
       {/* FORMULAIRE */}
       <section
         id="contact"
-        className="border-y border-border bg-surface/40 scroll-mt-24"
+        className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 scroll-mt-24"
       >
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Demander un devis
-            </h2>
-            <p className="mt-2 text-fg/70">
-              Réponse sous 48h ouvrées avec devis détaillé et planning.
-            </p>
-          </div>
-          <SponsoringForm />
-          <div className="mt-6 text-center">
-            <a
-              href={`mailto:${BRAND.partnersEmail}?subject=Demande%20sponsoring%20${encodeURIComponent(BRAND.name)}`}
-              className="text-sm text-primary-soft underline hover:text-primary"
-            >
-              <MailIcon className="inline-block h-4 w-4 mr-1 align-text-bottom" aria-hidden="true" />
-              Préfères un email ? {BRAND.partnersEmail}
-            </a>
-          </div>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
+            Devenir partenaire
+          </h2>
+          <p className="mt-2 text-fg/70">
+            Réponse sous 48 h ouvrées avec devis et planning. Validation MiCA
+            faite avant signature.
+          </p>
+        </div>
+        <SponsoringForm />
+        <div className="mt-6 text-center">
+          <a
+            href={`mailto:${BRAND.partnersEmail}?subject=Demande%20sponsoring%20${encodeURIComponent(BRAND.name)}`}
+            className="text-sm text-primary-soft underline hover:text-primary"
+          >
+            <MailIcon
+              className="inline-block h-4 w-4 mr-1 align-text-bottom"
+              aria-hidden="true"
+            />
+            Préfères un email direct ? {BRAND.partnersEmail}
+          </a>
         </div>
       </section>
 
@@ -428,7 +474,10 @@ export default function SponsoringPage() {
         </div>
         <div className="divide-y divide-border border border-border rounded-2xl overflow-hidden">
           {FAQS.map((f) => (
-            <details key={f.q} className="group bg-elevated/40 open:bg-elevated/70">
+            <details
+              key={f.q}
+              className="group bg-elevated/40 open:bg-elevated/70"
+            >
               <summary className="flex items-center justify-between cursor-pointer list-none px-5 py-4 font-medium text-fg hover:bg-elevated/80">
                 <span>{f.q}</span>
                 <span
@@ -438,23 +487,54 @@ export default function SponsoringPage() {
                   +
                 </span>
               </summary>
-              <div className="px-5 pb-5 text-sm text-fg/75 leading-relaxed">{f.a}</div>
+              <div className="px-5 pb-5 text-sm text-fg/75 leading-relaxed">
+                {f.a}
+              </div>
             </details>
           ))}
         </div>
       </section>
 
-      {/* RGPD note */}
+      {/* DISCLAIMER LEGAL FINAL */}
       <section className="border-t border-border bg-surface/30">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 text-xs text-muted leading-relaxed">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 text-xs text-muted leading-relaxed space-y-3">
           <p className="flex items-start gap-2">
-            <ShieldCheck className="h-4 w-4 text-success shrink-0 mt-0.5" aria-hidden="true" />
+            <ShieldCheck
+              className="h-4 w-4 text-success shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
             <span>
-              <strong className="text-fg">Mention RGPD —</strong> Les données
-              soumises (société, contact, brief) sont uniquement transmises à
-              l&apos;équipe partenariats {BRAND.name} pour étudier la demande
-              commerciale. Conservation 24 mois max. Aucun partage tiers.
-              Droit d&apos;accès / suppression à tout moment via{" "}
+              <strong className="text-fg">Statut éditeur —</strong>{" "}
+              {BRAND.name} est un éditeur web indépendant français. Nous ne
+              sommes ni un PSAN (prestataire de services sur actifs numériques),
+              ni un CIF (conseiller en investissements financiers). Aucun
+              contenu publié ne constitue un conseil en investissement
+              personnalisé.
+            </span>
+          </p>
+          <p className="flex items-start gap-2">
+            <AlertTriangle
+              className="h-4 w-4 text-warning shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
+            <span>
+              <strong className="text-fg">Mention publicitaire —</strong> Tout
+              contenu sponsorisé est explicitement signalé conformément à
+              l&apos;art. 222-15 du règlement général AMF, à la charte ARPP
+              « Communication publicitaire numérique » et aux recommandations
+              DDPP. Aucune promotion d&apos;actif numérique non régulé MiCA.
+            </span>
+          </p>
+          <p className="flex items-start gap-2">
+            <FileText
+              className="h-4 w-4 text-accent-cyan shrink-0 mt-0.5"
+              aria-hidden="true"
+            />
+            <span>
+              <strong className="text-fg">RGPD —</strong> Données soumises
+              transmises uniquement à l&apos;équipe partenariats {BRAND.name}.
+              Conservation 24 mois max. Aucun partage tiers. Droits
+              d&apos;accès / suppression via{" "}
               <Link
                 href="/confidentialite"
                 className="text-primary-soft underline hover:text-primary"

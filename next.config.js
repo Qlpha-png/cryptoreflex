@@ -27,6 +27,17 @@ const nextConfig = {
       { protocol: "https", hostname: "coin-images.coingecko.com" },
       { protocol: "https", hostname: "cryptologos.cc" },
     ],
+    // Audit Perf 26-04-2026 — formats modernes (gain ~30-50 % poids vs PNG/JPG).
+    // AVIF first (meilleure compression mais ~10× plus lent à encoder), WebP en
+    // fallback. Vercel cache les conversions ; pénalité one-time uniquement.
+    formats: ["image/avif", "image/webp"],
+    // deviceSizes/imageSizes : on resserre la grille pour générer moins de
+    // variantes inutiles. Mobile-first mais on couvre Retina 2x/3x.
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // 1 an de cache CDN sur les assets optimisés (les transforms sont
+    // immutables tant que la source ne change pas).
+    minimumCacheTTL: 31_536_000,
   },
 
   // ────────────────────────────────────────────────────────────────────
@@ -139,6 +150,28 @@ const nextConfig = {
     ].join("; ");
 
     return [
+      // 0. Cache long pour assets statiques (Audit Perf 26-04-2026).
+      //    Next.js fingerprintifie les builds dans /_next/static/<hash>/, donc
+      //    on peut servir avec immutable + 1 an. Idem pour les SVG des logos
+      //    (changements rares, fingerprint manuel via filename si refonte).
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/logos/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/icons/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
+        ],
+      },
       // 1. Headers /embed/* — DOIT précéder la règle générique pour gagner.
       //    On retire X-Frame-Options (incompatible avec frame-ancestors *)
       //    et on remplace la CSP par la version embed.

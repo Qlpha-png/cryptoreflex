@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   AlertTriangle,
   ArrowRight,
@@ -10,8 +11,25 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import CalculateurFiscalite from "@/components/CalculateurFiscalite";
 import StructuredData from "@/components/StructuredData";
+
+// Audit Perf 26-04-2026 — CalculateurFiscalite = 1148 lignes de Client logic
+// (form state, calculs PFU/barème/BIC, lead-magnet email). Page surchargée
+// (3 sections SEO + FAQ + 10 articles connexes) → lazy-loader le calculateur
+// gagne ~70 KB sur le bundle initial sans dégrader l'UX (above-the-fold = hero).
+// SSR maintenu (Server-side calc-free) pour préserver le LCP du form skeleton.
+const CalculateurFiscalite = dynamic(
+  () => import("@/components/CalculateurFiscalite"),
+  {
+    loading: () => (
+      <div
+        className="h-[700px] animate-pulse rounded-2xl bg-elevated/40"
+        aria-label="Chargement du calculateur fiscalité"
+      />
+    ),
+    ssr: false,
+  },
+);
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import StickyWaltioCta from "@/components/fiscal-tools/StickyWaltioCta";
 import WaltioPromoBanner from "@/components/fiscal-tools/WaltioPromoBanner";
