@@ -8,10 +8,7 @@ import {
   X,
   Sparkles,
   ChevronRight,
-  Star,
-  Briefcase,
   Search,
-  ShieldCheck,
 } from "lucide-react";
 import Logo from "./Logo";
 
@@ -47,25 +44,41 @@ import Logo from "./Logo";
  *  - Tap targets confirmés ≥44px partout.
  */
 
+/**
+ * NAV — Audit Pro convergent 4 agents (UX + Visual + Mobile + CRO) 26/04/2026 :
+ * réduit de 8 à 4 items (Hick's law, +30-50% CTR CTA estimé). Les items virés
+ * (Quiz, Actualités, Analyses, Calendrier) restent accessibles via :
+ *  - MOBILE_EXTRA pour le burger
+ *  - Footer (silos restructurés Block 10)
+ *  - Search ⌘K (palette pédagogue avec PersonaCards)
+ *  - Mega-menus (à venir Phase 2 : Marché → Actualités/Analyses/Calendrier ;
+ *    Apprendre → Académie/Quiz/Wizard)
+ *  - Quiz garde son CTA primary "Trouver ma plateforme" (un seul lien vers
+ *    /quiz/plateforme au lieu de 2 cannibalisés gold).
+ */
 const NAV = [
-  { href: "/marche", label: "Marché", desc: "Hub marché : prix live, heatmap, gainers/losers, Fear &amp; Greed" },
-  { href: "/actualites", label: "Actualités", desc: "News crypto quotidiennes" },
-  { href: "/analyses-techniques", label: "Analyses", desc: "RSI, MACD, niveaux clés top 5" },
-  { href: "/academie", label: "Apprendre", desc: "Parcours certifiants gratuits" },
+  { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
+  { href: "/academie", label: "Apprendre", desc: "Académie + Wizard 1er achat + Quiz" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
-  // Quiz : badge "5Q" gold-pulse pour le rendre visible (Audit UX P1 N°4).
-  { href: "/quiz/plateforme", label: "Quiz", desc: "Trouve ta plateforme idéale en 5 questions", badge: "5Q" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses" },
-  { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
 ];
 
+/**
+ * MOBILE_EXTRA — items secondaires disponibles UNIQUEMENT dans le burger mobile.
+ * Audit Pro CRO : ne pas surcharger desktop avec ces items (faibles intent + features
+ * power-user). Disponibles via Search ⌘K, Footer, et burger mobile.
+ */
 const MOBILE_EXTRA = [
+  { href: "/quiz/plateforme", label: "Quiz plateforme", desc: "Trouve ta plateforme idéale en 5 questions" },
   { href: "/wizard/premier-achat", label: "1er achat crypto", desc: "Parcours guidé en 5 étapes" },
   { href: "/comparatif", label: "Comparatif complet", desc: "11 plateformes notées" },
+  { href: "/actualites", label: "Actualités", desc: "News crypto quotidiennes" },
+  { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
+  { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
   { href: "/#cat-apprendre", label: "Top 10 cryptos", desc: "Bitcoin, Ethereum, Solana…" },
-  { href: "/a-propos", label: "À propos", desc: "Qui est derrière Cryptoreflex" },
   { href: "/watchlist", label: "Ma watchlist", desc: "Tes cryptos favorites (max 10)" },
   { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi de tes positions (max 30)" },
+  { href: "/a-propos", label: "À propos", desc: "Qui est derrière Cryptoreflex" },
 ];
 
 /**
@@ -201,29 +214,16 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Chip "Débutant ?" (lg+) — segmente persona dès le 1er fold.
-              Audit SEO/CRO : 70% du trafic crypto FR = débutants → on les
-              prend par la main avec un parcours dédié. */}
-          <Link
-            href="/wizard/premier-achat"
-            className="hidden lg:inline-flex items-center gap-1.5 ml-5 xl:ml-7 px-3 py-1.5 rounded-full whitespace-nowrap shrink-0
-                       border border-primary/40 bg-gradient-to-b from-primary/15 to-primary/5
-                       text-xs font-semibold text-primary-glow
-                       hover:from-primary/20 hover:to-primary/8 transition-colors min-h-[36px]
-                       focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
-                       focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            aria-label="Parcours guidé pour débutants — premier achat crypto en 5 étapes"
-          >
-            <Sparkles className="h-3 w-3" strokeWidth={1.75} aria-hidden="true" />
-            Débutant ?
-          </Link>
+          {/* Audit Pro UX 26/04 P0-1 : chip "Débutant ?" RETIRÉE de la navbar
+              (parasite visuelle, le persona débutant se traite dans le Hero,
+              pas dans la nav). Le wizard /premier-achat reste accessible via
+              footer + mega-menu Apprendre + Hero CTA. */}
 
-          {/* Séparateur visuel entre [Logo + Débutant ?] et [NAV items] */}
-          <span aria-hidden="true" className="hidden lg:block h-6 w-px bg-border/60 mx-1 xl:mx-2 shrink-0" />
-
+          {/* NAV principale — 4 items (au lieu de 8). Système d'espacement UNIQUE
+              (gap-10) cohérent avec Stripe/Linear/Vercel (audit Visual Designer P0). */}
           <nav
             aria-label="Navigation principale"
-            className="hidden md:flex items-center gap-x-6 lg:gap-x-7 xl:gap-x-9 ml-4 lg:ml-2 xl:ml-3"
+            className="hidden md:flex items-center gap-10 ml-12"
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
@@ -232,7 +232,7 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`relative inline-flex items-center text-[13.5px] font-medium tracking-[-0.005em] transition-colors rounded py-1 group/nav whitespace-nowrap
+                  className={`relative inline-flex items-center text-[14px] font-medium tracking-[-0.01em] transition-colors rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${
@@ -242,43 +242,24 @@ export default function Navbar() {
                              }`}
                 >
                   {item.label}
-                  {/* Badge gold-pulse pour Quiz (rendre visible — Audit UX P1) */}
-                  {item.badge ? (
-                    <span
-                      aria-hidden="true"
-                      className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary-glow ring-1 ring-primary/40 animate-pulse leading-none"
-                    >
-                      {item.badge}
-                    </span>
-                  ) : null}
-                  {/* Audit Visual (Agent Visual P4) : underline trait droit
-                      remplacé par dot gold lumineux qui glisse (style Arc tabs). */}
+                  {/* Audit Visual P0 : underline 1px discret (au lieu de dot gold lumineux
+                      qui était un 5e accent coloré cannibalisant le CTA). */}
                   <span
                     aria-hidden="true"
-                    className={`pointer-events-none absolute left-1/2 -bottom-1.5 h-1 w-1 -translate-x-1/2 rounded-full
-                               bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]
-                               transition-all duration-300 ease-emphasized
-                               ${active ? "opacity-100 scale-100" : "opacity-0 scale-50 group-hover/nav:opacity-100 group-hover/nav:scale-100"}`}
+                    className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px bg-fg transition-opacity duration-200 ${
+                      active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"
+                    }`}
                   />
                 </Link>
               );
             })}
           </nav>
 
-          {/* Séparateur visuel entre [NAV items] et [cluster droite] */}
-          <span aria-hidden="true" className="hidden lg:block h-6 w-px bg-border/60 mx-1 xl:mx-2 shrink-0" />
-
-          <div className="hidden md:flex items-center gap-2 lg:gap-3 ml-4 lg:ml-2 xl:ml-3">
-            {/* Trust badge MiCA · AMF (xl+) — Audit SEO/CRO : +12-18% bounce reduction. */}
-            <span
-              title="Conforme cadre MiCA + AMF — méthodologie publique"
-              className="hidden xl:inline-flex items-center gap-1 px-2 py-1 rounded-md whitespace-nowrap shrink-0
-                         border border-emerald-500/30 bg-emerald-500/5 text-[10px]
-                         font-mono font-bold text-emerald-300/90 uppercase tracking-wider"
-            >
-              <ShieldCheck className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
-              MiCA · AMF
-            </span>
+          <div className="hidden md:flex items-center gap-2 lg:gap-3 ml-auto pl-4 lg:pl-6">
+            {/* Audit Pro UX 26/04 P0-1 : trust badge MiCA·AMF RETIRÉ de la navbar
+                (10px font-mono dans une nav = invisible en pratique, ne convertit pas).
+                Le badge est conservé dans le footer + sous-Hero ReassuranceSection
+                où il a vraiment un impact (12-18% bounce reduction estimé). */}
 
             {/* Search avec kbd ⌘K visible (lg+) — style Stripe/Linear/Vercel.
                 Plus reconnaissable, signale clairement le shortcut. */}
@@ -340,44 +321,11 @@ export default function Navbar() {
               <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
             </button>
 
-            {/* Watchlist : icône discrète */}
-            <Link
-              href="/watchlist"
-              aria-label="Ouvrir ma watchlist"
-              title="Ma watchlist"
-              aria-current={pathname === "/watchlist" ? "page" : undefined}
-              prefetch={false}
-              className={`inline-flex items-center justify-center h-9 w-9 rounded-lg
-                          border transition-colors
-                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
-                          focus-visible:ring-offset-2 focus-visible:ring-offset-background
-                          ${
-                            pathname === "/watchlist"
-                              ? "border-primary/60 text-primary bg-primary/10"
-                              : "border-border/60 text-muted hover:text-primary-soft hover:border-primary/40"
-                          }`}
-            >
-              <Star className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-            </Link>
-            {/* Portefeuille : icône valise */}
-            <Link
-              href="/portefeuille"
-              aria-label="Ouvrir mon portefeuille"
-              title="Mon portefeuille"
-              aria-current={pathname === "/portefeuille" ? "page" : undefined}
-              prefetch={false}
-              className={`inline-flex items-center justify-center h-9 w-9 rounded-lg
-                          border transition-colors
-                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
-                          focus-visible:ring-offset-2 focus-visible:ring-offset-background
-                          ${
-                            pathname === "/portefeuille"
-                              ? "border-primary/60 text-primary bg-primary/10"
-                              : "border-border/60 text-muted hover:text-primary-soft hover:border-primary/40"
-                          }`}
-            >
-              <Briefcase className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-            </Link>
+            {/* Audit Pro UX 26/04 P0-1 : icônes Watchlist (Star) + Portefeuille
+                (Briefcase) RETIRÉES de la navbar desktop (features power-user à
+                <5% d'usage). Restent accessibles via burger menu mobile + footer
+                + page /watchlist /portefeuille directes via search ⌘K.
+                Result : cluster droite passe de 4 éléments à 2 (Search + CTA). */}
             {/* CTA primary — Audit SEO/CRO : "/quiz/plateforme" (KPI conversion)
                 au lieu de "/#plateformes" (ancre, 0 PageRank, 0 conversion attribuée). */}
             <Link
