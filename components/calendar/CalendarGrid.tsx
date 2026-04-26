@@ -68,13 +68,32 @@ function isoFromDate(d: Date): string {
 }
 
 export default function CalendarGrid({ events }: CalendarGridProps) {
-  // État viewport — démarre sur le mois courant.
-  const today = new Date();
+  // BUG FIX CRITIQUE 26/04/2026 (Agent 2 hydration audit) : `new Date()` au
+  // render initial créait un mismatch SSR (UTC server) vs CSR (client local TZ).
+  // Si le client était dans un fuseau positif et qu'il chargeait pile au
+  // changement de jour, isoFromDate(today) divergeait → React bail-out
+  // hydration → TOUS les event handlers de toutes les pages sharing
+  // app/layout.tsx étaient détachés (notamment burger menu Navbar).
+  //
+  // Fix : initial state à null, puis on hydrate `today` dans useEffect.
+  // Pendant le 1er render (server + client matched), on affiche le mois
+  // basé sur les events futurs (premier event upcoming), puis useEffect
+  // recalcule la valeur cliente correcte.
+  const firstEventDate = events.length > 0 ? new Date(events[0].date) : new Date(Date.UTC(2026, 0, 1));
+  const [today, setToday] = useState<Date | null>(null);
   const [view, setView] = useState({
-    year: today.getUTCFullYear(),
-    month: today.getUTCMonth(),
+    year: firstEventDate.getUTCFullYear(),
+    month: firstEventDate.getUTCMonth(),
   });
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+
+  // Hydrate `today` côté client uniquement (post-hydration) puis recale `view`
+  // sur le mois courant client (geste utilisateur attendu).
+  useEffect(() => {
+    const now = new Date();
+    setToday(now);
+    setView({ year: now.getUTCFullYear(), month: now.getUTCMonth() });
+  }, []);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   // Focus trap actif tant qu'un jour est sélectionné (modale ouverte).
   // WCAG 2.4.3 — Tab ne doit pas sortir de la modale vers le contenu masqué.
@@ -136,7 +155,9 @@ export default function CalendarGrid({ events }: CalendarGridProps) {
   }, [selectedDay]);
 
   const monthLabel = `${MONTH_NAMES[view.month].charAt(0).toUpperCase()}${MONTH_NAMES[view.month].slice(1)} ${view.year}`;
-  const todayIso = isoFromDate(today);
+  // todayIso = "" tant que today n'est pas hydraté → `isToday` sera false sur
+  // toutes les cellules (acceptable pour le 1er render, devient correct après).
+  const todayIso = today ? isoFromDate(today) : "";
   const selectedEvents = selectedDay ? eventsByDate.get(selectedDay) ?? [] : [];
 
   return (

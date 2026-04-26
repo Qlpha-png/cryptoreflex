@@ -28,6 +28,7 @@ import QuizPromo from "@/components/QuizPromo";
 import NewsBar from "@/components/NewsBar";
 import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
 import HomeAnchorNav from "@/components/HomeAnchorNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 import {
@@ -311,6 +312,11 @@ export default async function HomePage() {
         </h2>
         <NewsletterCapture />
       </section>
+
+      {/* Guide "main tenue" — feedback utilisateur 26/04/2026 :
+          "guider le trafic comme un enfant qu'on tient la main pour
+          qu'il visite tout le site". 3 next steps contextuels. */}
+      <NextStepsGuide context="homepage" />
     </>
   );
 }

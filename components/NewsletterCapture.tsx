@@ -229,8 +229,11 @@ export default function NewsletterCapture() {
               </p>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                {/* Audit crawl 26/04/2026 : avant pointait sur acheter-premiere-
+                    crypto-france-2026.pdf qui n'existait pas (404). Bascule sur
+                    le vrai PDF "11 plateformes" servi en prod. */}
                 <a
-                  href="/lead-magnets/acheter-premiere-crypto-france-2026.pdf"
+                  href="/lead-magnets/guide-plateformes-crypto-2026.pdf"
                   download
                   className="btn-primary"
                 >

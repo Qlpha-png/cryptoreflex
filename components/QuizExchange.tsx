@@ -865,8 +865,10 @@ function LeadMagnetForm({
             )}
           </p>
           <div className="mt-4">
+            {/* Audit crawl 26/04/2026 : PDF acheter-premiere-crypto inexistant.
+                Bascule sur guide 11 plateformes (vrai PDF en prod). */}
             <a
-              href="/lead-magnets/acheter-premiere-crypto-france-2026.pdf"
+              href="/lead-magnets/guide-plateformes-crypto-2026.pdf"
               download
               className="btn-primary"
             >

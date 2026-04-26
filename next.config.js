@@ -56,6 +56,15 @@ const nextConfig = {
   // ────────────────────────────────────────────────────────────────────
   async redirects() {
     return [
+      // Audit crawl 26/04/2026 (Agent 3) : 14 liens hardcodés dans 6 MDX
+      // pointent vers /articles/<slug> mais les pages existent sous /blog/<slug>
+      // (legacy folder rename jamais migré dans le contenu). 301 catch-all
+      // pour ne pas casser ces liens internes.
+      {
+        source: "/articles/:slug*",
+        destination: "/blog/:slug*",
+        permanent: true,
+      },
       {
         source: "/blog/guide-debutant-bitcoin",
         destination: "/blog/bitcoin-guide-complet-debutant-2026",

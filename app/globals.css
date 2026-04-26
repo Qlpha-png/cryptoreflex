@@ -156,10 +156,14 @@ body {
     @apply text-primary;
   }
   .btn-primary {
-    /* min-h-tap = 44px = guideline Apple HIG / WCAG 2.5.5 (tap target) */
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
+    /* min-h-tap = 44px = guideline Apple HIG / WCAG 2.5.5 (tap target).
+       Audit a11y 26/04/2026 : avant text-white sur bg-primary (#f5a524 or)
+       donnait un contraste 2.04:1, sous le seuil WCAG AA 4.5:1. Texte
+       passe à text-background (#0B0D10) qui donne ~9.5:1 sur fond or.
+       Bonus visuel : look "prix d'or sur fond or" plus pro et plus fort. */
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-extrabold
            min-h-tap
-           bg-primary text-white shadow-e2
+           bg-primary text-background shadow-e2
            transition-all duration-normal ease-emphasized
            hover:bg-primary-glow hover:shadow-[0_8px_24px_-8px_rgba(245,165,36,0.5)] hover:-translate-y-[1px]
            active:bg-primary active:translate-y-0 active:shadow-none
