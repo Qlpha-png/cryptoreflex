@@ -38,7 +38,30 @@ type AnswerKey =
   | "deposit"
   | "mica";
 
-type Answers = Partial<Record<AnswerKey, string>>;
+/**
+ * Refonte 26/04/2026 (feedback utilisateur "plusieurs réponses ?")
+ *
+ * Une `Answer` est :
+ *  - `string` pour une question single-select (Q1 profil, Q2 montant, Q6 MiCA)
+ *  - `string[]` pour une question multi-select (Q3 frequence, Q4 priorite, Q5 depot)
+ *
+ * Helpers `getAnswer()` et `hasAnswer()` normalisent l'accès — toute la logique
+ * de scoring travaille sur des `string[]` même pour les single (1 elem ou 0).
+ */
+type AnswerValue = string | string[];
+type Answers = Partial<Record<AnswerKey, AnswerValue>>;
+
+/** Normalise toute Answer en string[] (vide si undefined). Helper interne. */
+function getAnswer(answers: Answers, key: AnswerKey): string[] {
+  const v = answers[key];
+  if (v === undefined) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+/** Test si une question a la valeur `value` (que single ou multi). */
+function hasAnswer(answers: Answers, key: AnswerKey, value: string): boolean {
+  return getAnswer(answers, key).includes(value);
+}
 
 interface QuestionOption {
   /** Valeur stockée dans `answers[questionKey]`. */
@@ -51,6 +74,10 @@ interface QuestionOption {
 
 interface Question {
   key: AnswerKey;
+  /** "single" = radio (1 réponse), "multi" = checkbox (plusieurs). */
+  type: "single" | "multi";
+  /** Limite supérieure de selections pour les multi (par defaut: pas de limite). */
+  maxSelections?: number;
   title: string;
   subtitle?: string;
   options: QuestionOption[];
@@ -59,6 +86,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     key: "profile",
+    type: "single",
     title: "Tu débutes ou tu as déjà investi en crypto ?",
     subtitle:
       "On va calibrer la complexité de l'interface et le niveau de support requis.",
@@ -70,6 +98,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "amount",
+    type: "single",
     title: "Combien comptes-tu investir au début ?",
     subtitle: "Cela influence la pertinence des dépôts minimums et la sécurité.",
     options: [
@@ -81,9 +110,11 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "frequency",
-    title: "Tu vas trader souvent ou DCA mensuel ?",
+    type: "multi",
+    maxSelections: 2,
+    title: "Comment tu vas acheter (plusieurs réponses possibles) ?",
     subtitle:
-      "Le coût total dépend autant des frais que de leur fréquence d'application.",
+      "Tu peux combiner — ex : DCA mensuel + quelques trades opportunistes.",
     options: [
       { value: "once", label: "Achat unique", hint: "Buy & hold long terme" },
       { value: "dca", label: "DCA mensuel", hint: "Achat récurrent automatique" },
@@ -92,8 +123,11 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "priority",
-    title: "Ce qui compte le plus pour toi ?",
-    subtitle: "Une seule réponse — celle qui pèsera le plus dans le score.",
+    type: "multi",
+    maxSelections: 2,
+    title: "Tes 2 priorités max — qu'est-ce qui compte vraiment ?",
+    subtitle:
+      "Choisis 1 ou 2 critères. Pondération : 1ère priorité × 2, 2ème × 1.",
     options: [
       { value: "fees", label: "Frais bas", hint: "Optimiser le coût total" },
       { value: "security", label: "Sécurité maximale", hint: "Cold storage, assurance, MiCA" },
@@ -103,16 +137,19 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "deposit",
-    title: "Comment tu veux déposer ?",
+    type: "multi",
+    maxSelections: 2,
+    title: "Comment tu veux déposer (CB et SEPA cumulables) ?",
     subtitle: "CB = instantané mais 1.5-3 % de frais. SEPA = quasi gratuit, 1-24 h.",
     options: [
       { value: "card", label: "Carte bancaire", hint: "Instantané, frais 1.5-3 %" },
       { value: "sepa", label: "Virement SEPA", hint: "1-24 h, frais ~0 %" },
-      { value: "any", label: "Peu importe", hint: "Les deux dispos m'arrange" },
+      { value: "any", label: "Peu importe", hint: "Les deux me vont" },
     ],
   },
   {
     key: "mica",
+    type: "single",
     title: "Tu veux uniquement des plateformes 100 % MiCA-compliant ?",
     subtitle:
       "MiCA = règlement européen sur les crypto-actifs. Obligatoire en France juillet 2026.",
@@ -132,6 +169,9 @@ interface ScoreBreakdown {
   base: number;
   bonuses: number;
   total: number;
+  /** Liste des raisons textuelles qui ont contribué au bonus — affichées
+   *  dans le résultat pour expliquer pourquoi cette plateforme est dans le Top 3. */
+  reasons: string[];
   excluded?: string; // raison d'exclusion si applicable
 }
 
@@ -167,66 +207,109 @@ function scorePlatform(p: Platform, answers: Answers): ScoreBreakdown {
   const base = p.scoring.global * 20;
   let bonuses = 0;
   let excluded: string | undefined;
+  const reasons: string[] = []; // explication par bonus appliqué
 
   // EXCLUSIONS dures
-  if (answers.mica === "must" && !p.mica.micaCompliant) {
+  if (hasAnswer(answers, "mica", "must") && !p.mica.micaCompliant) {
     excluded = "Pas MiCA-compliant";
   }
-  if (answers.amount === "tiny" && p.deposit.minEur > 25) {
+  if (hasAnswer(answers, "amount", "tiny") && p.deposit.minEur > 25) {
     excluded = "Dépôt minimum trop élevé pour < 100 €";
   }
-  // Hardware wallets : pas pertinents comme "plateforme d'achat"
   if (p.category === "wallet") {
     excluded = "Hardware wallet — pas une plateforme d'achat";
   }
 
-  // PROFIL
-  if (answers.profile === "beginner" && p.scoring.ux >= 4.5) bonuses += 12;
-  if (answers.profile === "advanced" && p.scoring.fees >= 4.5) bonuses += 12;
-
-  // FRÉQUENCE
-  if (answers.frequency === "trader") {
-    if (p.fees.spotTaker < 0.15) bonuses += 18;
-    else if (p.fees.spotTaker < 0.3) bonuses += 10;
+  // PROFIL (single)
+  if (hasAnswer(answers, "profile", "beginner") && p.scoring.ux >= 4.5) {
+    bonuses += 12;
+    reasons.push("Interface adaptée débutants");
   }
-  if (answers.frequency === "dca" && p.fees.instantBuy < 1) bonuses += 10;
-
-  // PRIORITÉ
-  if (answers.priority === "fees") {
-    if (p.scoring.fees >= 4.5) bonuses += 14;
-    else if (p.scoring.fees >= 4) bonuses += 8;
-  }
-  if (answers.priority === "security") {
-    if (p.scoring.security >= 4.5) bonuses += 14;
-    else if (p.scoring.security >= 4) bonuses += 8;
-  }
-  if (answers.priority === "support_fr") {
-    bonuses += p.support.frenchChat ? 20 : -8;
-  }
-  if (answers.priority === "catalog") {
-    if (p.cryptos.totalCount >= 300) bonuses += 12;
-    else if (p.cryptos.totalCount >= 200) bonuses += 6;
+  if (hasAnswer(answers, "profile", "advanced") && p.scoring.fees >= 4.5) {
+    bonuses += 12;
+    reasons.push("Frais bas pour trader actif");
   }
 
-  // DÉPÔT
-  if (answers.deposit === "card") {
-    bonuses += p.deposit.methods.some((m) => m.toUpperCase().includes("CB"))
-      ? 4
-      : -10;
+  // FRÉQUENCE (multi : trader + dca + once peuvent cumuler)
+  if (hasAnswer(answers, "frequency", "trader")) {
+    if (p.fees.spotTaker < 0.15) {
+      bonuses += 18;
+      reasons.push("Frais taker ultra bas pour trading");
+    } else if (p.fees.spotTaker < 0.3) {
+      bonuses += 10;
+      reasons.push("Frais taker corrects pour trading");
+    }
   }
-  if (answers.deposit === "sepa") {
-    bonuses += p.deposit.methods.some((m) => m.toUpperCase().includes("SEPA"))
-      ? 4
-      : -10;
+  if (hasAnswer(answers, "frequency", "dca") && p.fees.instantBuy < 1) {
+    bonuses += 10;
+    reasons.push("Achat instantané peu cher pour DCA");
   }
 
-  // MICA
-  if (answers.mica === "prefer" && p.mica.micaCompliant) bonuses += 6;
+  // PRIORITÉ (multi avec pondération : 1ère priorite ×2, 2ème ×1)
+  // L'utilisateur a déclaré ses priorités dans l'ordre — on respecte cet ordre.
+  const priorityList = getAnswer(answers, "priority");
+  priorityList.forEach((priority, idx) => {
+    const weight = idx === 0 ? 2 : 1; // 1ère ×2, 2ème ×1
+    if (priority === "fees") {
+      if (p.scoring.fees >= 4.5) {
+        bonuses += 14 * weight;
+        reasons.push(idx === 0 ? "Frais bas (priorité #1)" : "Frais bas (priorité #2)");
+      } else if (p.scoring.fees >= 4) {
+        bonuses += 8 * weight;
+      }
+    }
+    if (priority === "security") {
+      if (p.scoring.security >= 4.5) {
+        bonuses += 14 * weight;
+        reasons.push(idx === 0 ? "Sécurité top (priorité #1)" : "Sécurité top (priorité #2)");
+      } else if (p.scoring.security >= 4) {
+        bonuses += 8 * weight;
+      }
+    }
+    if (priority === "support_fr") {
+      bonuses += (p.support.frenchChat ? 20 : -8) * weight;
+      if (p.support.frenchChat) {
+        reasons.push(idx === 0 ? "Support FR (priorité #1)" : "Support FR (priorité #2)");
+      }
+    }
+    if (priority === "catalog") {
+      if (p.cryptos.totalCount >= 300) {
+        bonuses += 12 * weight;
+        reasons.push(idx === 0 ? "Large catalogue (priorité #1)" : "Large catalogue (priorité #2)");
+      } else if (p.cryptos.totalCount >= 200) {
+        bonuses += 6 * weight;
+      }
+    }
+  });
 
-  // MONTANT large
-  if (answers.amount === "large") {
-    if (p.scoring.security >= 4) bonuses += 10;
-    if (p.security.insurance) bonuses += 6;
+  // DÉPÔT (multi : card + sepa peuvent cumuler — chaque méthode dispo = bonus)
+  if (hasAnswer(answers, "deposit", "card")) {
+    const hasCard = p.deposit.methods.some((m) => m.toUpperCase().includes("CB"));
+    bonuses += hasCard ? 4 : -10;
+    if (hasCard) reasons.push("Dépôt carte bancaire dispo");
+  }
+  if (hasAnswer(answers, "deposit", "sepa")) {
+    const hasSepa = p.deposit.methods.some((m) => m.toUpperCase().includes("SEPA"));
+    bonuses += hasSepa ? 4 : -10;
+    if (hasSepa) reasons.push("Virement SEPA dispo");
+  }
+
+  // MICA (single)
+  if (hasAnswer(answers, "mica", "prefer") && p.mica.micaCompliant) {
+    bonuses += 6;
+    reasons.push("Conforme MiCA (préférence)");
+  }
+
+  // MONTANT large (single)
+  if (hasAnswer(answers, "amount", "large")) {
+    if (p.scoring.security >= 4) {
+      bonuses += 10;
+      reasons.push("Sécurité élevée pour gros patrimoine");
+    }
+    if (p.security.insurance) {
+      bonuses += 6;
+      reasons.push("Fonds assurés");
+    }
   }
 
   return {
@@ -234,12 +317,27 @@ function scorePlatform(p: Platform, answers: Answers): ScoreBreakdown {
     bonuses,
     total: excluded ? -1 : base + bonuses,
     excluded,
+    reasons,
   };
 }
 
+/**
+ * Refonte 26/04/2026 (feedback utilisateur "résultat top 3 ?")
+ *
+ * On retourne maintenant les 3 meilleures plateformes au lieu de Top 1 + backup.
+ * Justification UX :
+ *  - Plus crédible (pas "voici LA meilleure", plus humble)
+ *  - Pédagogique : l'utilisateur voit pourquoi #1 vs #2 vs #3 (raisons distinctes)
+ *  - Conversion : 3 affiliés visibles plutôt qu'1
+ *  - Liberté de choix utilisateur (offre vs imposition)
+ */
+interface QuizResultEntry {
+  platform: Platform;
+  score: ScoreBreakdown;
+  rank: 1 | 2 | 3;
+}
 interface QuizResult {
-  top: Platform;
-  backup?: Platform;
+  top3: QuizResultEntry[];
 }
 
 function computeResult(platforms: Platform[], answers: Answers): QuizResult | null {
@@ -249,10 +347,14 @@ function computeResult(platforms: Platform[], answers: Answers): QuizResult | nu
     .sort((a, b) => b.score.total - a.score.total);
 
   if (scored.length === 0) return null;
-  return {
-    top: scored[0].p,
-    backup: scored[1]?.p,
-  };
+
+  const top3: QuizResultEntry[] = scored.slice(0, 3).map((s, idx) => ({
+    platform: s.p,
+    score: s.score,
+    rank: (idx + 1) as 1 | 2 | 3,
+  }));
+
+  return { top3 };
 }
 
 /* ------------------------------------------------------------------ */
@@ -294,15 +396,38 @@ export default function PlatformQuiz({ platforms }: Props) {
 
   function selectAnswer(value: string) {
     if (!currentQuestion) return;
-    const next: Answers = { ...answers, [currentQuestion.key]: value };
-    setAnswers(next);
-    // Avance auto à la question suivante après ~280ms (laisse voir la sélection)
-    const goNext = () => setStep((s) => s + 1);
-    if (typeof window !== "undefined") {
-      window.setTimeout(goNext, 280);
+    const isMulti = currentQuestion.type === "multi";
+    const max = currentQuestion.maxSelections ?? Infinity;
+
+    if (isMulti) {
+      // Multi-select : toggle la valeur dans le tableau
+      const current = getAnswer(answers, currentQuestion.key);
+      const isAlreadySelected = current.includes(value);
+      let next: string[];
+      if (isAlreadySelected) {
+        // Toggle off
+        next = current.filter((v) => v !== value);
+      } else {
+        // Toggle on (mais respecte maxSelections : si depasse, retire le plus ancien)
+        next = [...current, value];
+        if (next.length > max) next = next.slice(-max);
+      }
+      setAnswers({ ...answers, [currentQuestion.key]: next });
+      // PAS d'auto-advance pour les multi (l'utilisateur clique "Suivant" quand pret)
     } else {
-      goNext();
+      // Single-select : remplace + auto-advance
+      setAnswers({ ...answers, [currentQuestion.key]: value });
+      const goNext = () => setStep((s) => s + 1);
+      if (typeof window !== "undefined") {
+        window.setTimeout(goNext, 280);
+      } else {
+        goNext();
+      }
     }
+  }
+
+  function goNext() {
+    setStep((s) => s + 1);
   }
 
   function goPrev() {
@@ -319,10 +444,10 @@ export default function PlatformQuiz({ platforms }: Props) {
     if (targetStep >= 0 && targetStep <= TOTAL_STEPS) setStep(targetStep);
   }
 
-  // Track : quand le user atteint l'écran résultat
+  // Track : quand le user atteint l'écran résultat (top 1 = id principal logge)
   useEffect(() => {
-    if (showResult && result) {
-      trackToolUsage("platform-quiz", `result:${result.top.id}`);
+    if (showResult && result && result.top3[0]) {
+      trackToolUsage("platform-quiz", `result:${result.top3[0].platform.id}`);
     }
   }, [showResult, result]);
 
@@ -387,7 +512,7 @@ export default function PlatformQuiz({ platforms }: Props) {
       {/* Live region pour SR */}
       <div id={liveRegionId} aria-live="polite" className="sr-only">
         {showResult
-          ? `Résultat du quiz : ${result?.top.name ?? "aucune plateforme ne correspond"}.`
+          ? `Résultat du quiz : ${result?.top3[0]?.platform.name ?? "aucune plateforme ne correspond"}.`
           : `Étape ${step + 1} sur ${TOTAL_STEPS} : ${currentQuestion?.title ?? ""}`}
       </div>
 
@@ -411,20 +536,28 @@ export default function PlatformQuiz({ platforms }: Props) {
             </p>
           )}
 
+          {/* Options : single = role=radiogroup + aria-checked, multi = role=group
+              + aria-pressed (toggle multi-select). Visuel partage le meme look,
+              juste le badge de gauche change (chiffre 1-9 vs checkmark). */}
           <div
-            role="radiogroup"
+            role={currentQuestion.type === "multi" ? "group" : "radiogroup"}
             aria-label={currentQuestion.title}
             className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3"
           >
             {currentQuestion.options.map((opt, idx) => {
-              const isSelected = answers[currentQuestion.key] === opt.value;
+              const isMulti = currentQuestion.type === "multi";
+              const isSelected = isMulti
+                ? hasAnswer(answers, currentQuestion.key, opt.value)
+                : answers[currentQuestion.key] === opt.value;
+              const ariaProps = isMulti
+                ? { "aria-pressed": isSelected }
+                : { role: "radio", "aria-checked": isSelected };
               return (
                 <button
                   key={opt.value}
                   ref={idx === 0 ? firstOptionRef : undefined}
                   type="button"
-                  role="radio"
-                  aria-checked={isSelected}
+                  {...ariaProps}
                   onClick={() => selectAnswer(opt.value)}
                   className={`group text-left rounded-2xl p-4 sm:p-5 border transition-all duration-fast
                               focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
@@ -445,7 +578,7 @@ export default function PlatformQuiz({ platforms }: Props) {
                                       : "bg-elevated text-muted group-hover:text-primary-soft"
                                   }`}
                     >
-                      {idx + 1}
+                      {isSelected && isMulti ? "✓" : idx + 1}
                     </span>
                     <div className="min-w-0">
                       <div className="font-semibold text-fg text-base sm:text-lg">
@@ -463,6 +596,15 @@ export default function PlatformQuiz({ platforms }: Props) {
             })}
           </div>
 
+          {/* Helper texte multi-select : combien sélectionnés + max */}
+          {currentQuestion.type === "multi" && (
+            <p className="mt-3 text-xs text-muted">
+              {getAnswer(answers, currentQuestion.key).length} / {currentQuestion.maxSelections ?? currentQuestion.options.length} sélectionné(s)
+              {currentQuestion.maxSelections ? ` (max ${currentQuestion.maxSelections})` : ""}
+              {" — "}clique sur "Suivant" quand tu as fini.
+            </p>
+          )}
+
           {/* Navigation */}
           <div className="mt-8 flex items-center justify-between gap-3">
             <button
@@ -478,9 +620,21 @@ export default function PlatformQuiz({ platforms }: Props) {
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Précédent
             </button>
-            <p className="text-[11px] text-muted hidden sm:block">
-              Astuce — appuie sur <kbd className="font-mono px-1 py-0.5 rounded border border-border bg-elevated text-fg">1-{currentQuestion.options.length}</kbd> pour répondre
-            </p>
+            {currentQuestion.type === "multi" ? (
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={getAnswer(answers, currentQuestion.key).length === 0}
+                className="btn-primary text-sm py-2 px-4 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Suivant
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : (
+              <p className="text-[11px] text-muted hidden sm:block">
+                Astuce — appuie sur <kbd className="font-mono px-1 py-0.5 rounded border border-border bg-elevated text-fg">1-{currentQuestion.options.length}</kbd> pour répondre
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -533,104 +687,26 @@ function ResultView({
   onRestart: () => void;
   onEditAnswer: (qIdx: number) => void;
 }) {
-  const { top, backup } = result;
+  // Refonte 26/04/2026 : Top 3 au lieu de Top 1 + backup
+  const { top3 } = result;
 
   return (
     <div>
       <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
         <Trophy className="h-4 w-4" aria-hidden="true" />
-        Notre recommandation pour toi
+        Tes 3 plateformes recommandées
       </div>
+      <p className="mt-1 text-xs text-muted max-w-2xl">
+        Classement basé sur tes réponses + notre méthodologie publique. Compare,
+        choisis selon tes préférences perso.
+      </p>
 
-      {/* Top platform */}
-      <article className="mt-3 glass glow-border rounded-2xl p-6 sm:p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative">
-          <div className="flex items-start justify-between gap-3 flex-wrap">
-            <div>
-              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                <span className="gradient-text">{top.name}</span>
-              </h3>
-              <p className="mt-2 text-fg/80 max-w-xl">{top.tagline}</p>
-            </div>
-            <span className="badge-info shrink-0" aria-label={`Score Cryptoreflex ${top.scoring.global} sur 5`}>
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              {top.scoring.global}/5
-            </span>
-          </div>
-
-          <dl className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <Stat label="Frais spot taker" value={`${top.fees.spotTaker}%`} />
-            <Stat
-              label="Dépôt min"
-              value={`${top.deposit.minEur} €`}
-            />
-            <Stat
-              label="Support FR"
-              value={top.support.frenchChat ? "Oui (chat)" : "Anglais"}
-            />
-            <Stat
-              label="MiCA"
-              value={top.mica.micaCompliant ? "Conforme" : "En cours"}
-            />
-          </dl>
-
-          <div className="mt-6 flex items-center gap-3 flex-wrap">
-            <a
-              href={top.affiliateUrl}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              onClick={() => trackAffiliateClick(top.id, "platform-quiz-top")}
-              className="btn-primary"
-            >
-              Voir le site officiel
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <Link href={`/avis/${top.id}`} className="btn-ghost">
-              Lire l'avis Cryptoreflex
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </article>
-
-      {/* Backup */}
-      {backup && (
-        <article className="mt-4 rounded-2xl border border-border bg-elevated/40 p-5 sm:p-6">
-          <div className="flex items-center gap-2 text-xs text-muted font-semibold uppercase tracking-wider">
-            <Target className="h-3.5 w-3.5" aria-hidden="true" />
-            Plan B
-          </div>
-          <div className="mt-2 flex items-start justify-between gap-3 flex-wrap">
-            <div>
-              <h4 className="text-xl font-bold text-fg">{backup.name}</h4>
-              <p className="mt-1 text-sm text-fg/75">{backup.tagline}</p>
-            </div>
-            <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2.5 py-1 whitespace-nowrap">
-              {backup.scoring.global}/5
-            </span>
-          </div>
-          <div className="mt-4 flex items-center gap-3 flex-wrap">
-            <a
-              href={backup.affiliateUrl}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              onClick={() => trackAffiliateClick(backup.id, "platform-quiz-backup")}
-              className="text-xs font-semibold text-primary-soft hover:text-primary inline-flex items-center gap-1"
-            >
-              Voir le site
-              <ExternalLink className="h-3 w-3" aria-hidden="true" />
-            </a>
-            <Link
-              href={`/avis/${backup.id}`}
-              className="text-xs font-semibold text-fg/85 hover:text-fg inline-flex items-center gap-1"
-            >
-              Lire l'avis
-              <ArrowRight className="h-3 w-3" aria-hidden="true" />
-            </Link>
-          </div>
-        </article>
-      )}
+      {/* Top 3 grille (1 carte par rang) */}
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {top3.map((entry) => (
+          <Top3Card key={entry.platform.id} entry={entry} />
+        ))}
+      </div>
 
       {/* Récap des réponses */}
       <section className="mt-8" aria-label="Récap de tes réponses">
@@ -639,8 +715,14 @@ function ResultView({
         </h4>
         <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {QUESTIONS.map((q, idx) => {
-            const ans = answers[q.key];
-            const opt = q.options.find((o) => o.value === ans);
+            // Refonte 26/04/2026 : answer peut etre string OU string[] selon
+            // que la question est single ou multi. On affiche tous les labels
+            // separes par " + " pour les multi.
+            const answerValues = getAnswer(answers, q.key);
+            const labels = answerValues
+              .map((v) => q.options.find((o) => o.value === v)?.label)
+              .filter(Boolean);
+            const displayLabel = labels.length ? labels.join(" + ") : "—";
             return (
               <li
                 key={q.key}
@@ -651,7 +733,7 @@ function ResultView({
                     Q{idx + 1}
                   </div>
                   <div className="text-sm text-fg truncate">
-                    {opt?.label ?? "—"}
+                    {displayLabel}
                   </div>
                 </div>
                 <button
@@ -735,5 +817,124 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dt className="text-muted">{label}</dt>
       <dd className="mt-1 font-mono font-semibold text-fg">{value}</dd>
     </div>
+  );
+}
+
+/**
+ * Top3Card — carte unique d'une plateforme dans le Top 3 du quiz.
+ * Visuel : médaille (or/argent/bronze) + nom + score + raisons + CTA affilie.
+ * Style : la #1 a un glow gold accentué, les #2 et #3 plus discrets.
+ */
+const RANK_STYLES: Record<1 | 2 | 3, { medal: string; bg: string; border: string; label: string }> = {
+  1: {
+    medal: "🥇",
+    bg: "bg-primary/10",
+    border: "border-primary/50 shadow-[0_0_30px_-8px_rgba(245,165,36,0.4)]",
+    label: "Notre meilleur match",
+  },
+  2: {
+    medal: "🥈",
+    bg: "bg-elevated/60",
+    border: "border-border",
+    label: "Très bonne alternative",
+  },
+  3: {
+    medal: "🥉",
+    bg: "bg-elevated/40",
+    border: "border-border/60",
+    label: "À considérer aussi",
+  },
+};
+
+function Top3Card({ entry }: { entry: QuizResultEntry }) {
+  const { platform: p, score, rank } = entry;
+  const style = RANK_STYLES[rank];
+  // 3 raisons max affichees pour ne pas surcharger
+  const topReasons = score.reasons.slice(0, 3);
+
+  return (
+    <article
+      className={`relative rounded-2xl border p-5 ${style.bg} ${style.border} flex flex-col`}
+    >
+      {/* Header : médaille + label rang */}
+      <div className="flex items-center gap-2 text-xs font-semibold text-primary-soft uppercase tracking-wider">
+        <span className="text-2xl leading-none" aria-hidden="true">
+          {style.medal}
+        </span>
+        <span>{style.label}</span>
+      </div>
+
+      {/* Nom + score */}
+      <div className="mt-3 flex items-start justify-between gap-2">
+        <h4 className={rank === 1 ? "text-2xl font-extrabold" : "text-xl font-bold"}>
+          {rank === 1 ? <span className="gradient-text">{p.name}</span> : <span className="text-fg">{p.name}</span>}
+        </h4>
+        <span
+          className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5 whitespace-nowrap shrink-0"
+          aria-label={`Note Cryptoreflex ${p.scoring.global} sur 5`}
+        >
+          {p.scoring.global}/5
+        </span>
+      </div>
+
+      <p className="mt-2 text-sm text-fg/75 line-clamp-2">{p.tagline}</p>
+
+      {/* Pourquoi ce match (basé sur les bonus appliqués) */}
+      {topReasons.length > 0 && (
+        <ul className="mt-4 space-y-1.5 text-xs text-fg/85" role="list">
+          {topReasons.map((reason) => (
+            <li key={reason} className="flex items-start gap-1.5">
+              <span className="text-primary-soft mt-0.5" aria-hidden="true">
+                ✓
+              </span>
+              <span>{reason}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Stats compactes (frais + MiCA) */}
+      <div className="mt-4 grid grid-cols-2 gap-3 text-[11px]">
+        <div>
+          <div className="text-muted uppercase tracking-wider">Frais taker</div>
+          <div className="mt-0.5 font-mono font-semibold text-fg">{p.fees.spotTaker}%</div>
+        </div>
+        <div>
+          <div className="text-muted uppercase tracking-wider">MiCA</div>
+          <div className="mt-0.5 font-mono font-semibold text-fg">
+            {p.mica.micaCompliant ? "Conforme" : "En cours"}
+          </div>
+        </div>
+      </div>
+
+      {/* CTAs */}
+      <div className="mt-5 flex flex-col gap-2 text-sm">
+        <a
+          href={p.affiliateUrl}
+          target="_blank"
+          rel="sponsored noopener noreferrer"
+          onClick={() => trackAffiliateClick(p.id, `platform-quiz-rank-${rank}`)}
+          className={
+            rank === 1
+              ? "btn-primary justify-center text-sm py-2.5"
+              : "inline-flex items-center justify-center gap-1 rounded-lg bg-primary text-background px-3 py-2 font-semibold hover:bg-primary-glow transition-colors"
+          }
+        >
+          Visiter {p.name}
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+        <Link
+          href={`/avis/${p.id}`}
+          className="inline-flex items-center justify-center gap-1 rounded-lg border border-border px-3 py-2 text-fg/80 hover:bg-elevated hover:border-primary/30 transition-colors"
+        >
+          Lire notre avis détaillé
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+
+      <p className="mt-2 text-[10px] text-muted text-center">
+        Lien sponsorisé — <Link href="/transparence" className="underline hover:text-fg">commission Cryptoreflex</Link>
+      </p>
+    </article>
   );
 }

@@ -97,9 +97,14 @@ export default function NewsletterCapture() {
     <section
       id="newsletter"
       aria-labelledby="newsletter-title"
-      className="border-y border-border bg-gradient-to-b from-surface/60 to-background"
+      className="bg-gradient-to-b from-surface/60 to-background border-b border-border"
     >
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+      {/* Refonte 26/04/2026 (feedback "positionnement Étape 5 bizarre") :
+          retire pt-14 lg:pt-20 qui doublait le gap après CategoryHeader (16+14=30
+          en sm, 20+20=40 en lg). Maintenant pt-4 lg:pt-6 — la respiration
+          haute vient déjà du CategoryHeader. Retire aussi border-t (CategoryDivider
+          gère déjà la séparation visuelle au-dessus). */}
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-4 pb-14 lg:pt-6 lg:pb-20">
         <div className="glass rounded-2xl p-6 sm:p-10">
           {status !== "success" ? (
             <>
@@ -175,12 +180,17 @@ export default function NewsletterCapture() {
                 </div>
               )}
 
-              {/* Bonus visible : lead magnet teasé pour booster conversion */}
+              {/* Bonus visible : lead magnet existant teasé pour booster conversion.
+                  26/04/2026 : avant on mentionnait "Acheter sa première crypto en France
+                  en 2026" qui n'existait pas. On a 4 vrais PDFs gratuits — on met en
+                  avant le plus engageant : "Les 11 plateformes crypto à utiliser en
+                  France 2026" (62 pages, vraie etude). */}
               <div className="mt-6 pt-5 border-t border-border flex items-start gap-3 text-sm text-fg/70">
                 <Download className="h-4 w-4 text-primary-soft mt-0.5 shrink-0" />
                 <span>
-                  <strong className="text-fg">Bonus à l'inscription :</strong> le PDF "Acheter sa première
-                  crypto en France en 2026" (12 pages, méthode pas-à-pas).
+                  <strong className="text-fg">Bonus à l'inscription :</strong> le PDF "Les 11 plateformes
+                  crypto à utiliser en France 2026" (62 pages, étude indépendante avec méthodologie
+                  publique 6 critères).
                 </span>
               </div>
             </>
