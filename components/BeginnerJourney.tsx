@@ -32,9 +32,9 @@ const STEPS: JourneyStep[] = [
     Icon: Scale,
     title: "Choisir une plateforme",
     description:
-      "Notre comparateur indépendant des plateformes PSAN/MiCA agréées en France.",
+      "Compare les plateformes agréées PSAN (enregistrées AMF) et conformes MiCA — en 2 minutes.",
     href: "/comparatif",
-    cta: "Voir le comparateur",
+    cta: "Comparer les plateformes",
   },
   {
     step: "03",
@@ -50,7 +50,7 @@ const STEPS: JourneyStep[] = [
     Icon: ShieldCheck,
     title: "Sécuriser",
     description:
-      "Wallet hardware, 2FA, phrase de récupération : protéger tes cryptos comme un pro.",
+      "Portefeuille physique (wallet), double authentification (2FA), phrase secrète : protège tes cryptos comme un pro.",
     href: "/blog/securiser-cryptos-wallet-2fa-2026",
     cta: "Lire le guide sécurité",
   },
@@ -77,29 +77,33 @@ export default function BeginnerJourney() {
             id="beginner-journey-title"
             className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-fg"
           >
-            Premiers pas en crypto
+            Démarrer en crypto sereinement, en 4 étapes
           </h2>
           <p className="mt-3 text-fg/75 text-lg">
-            4 étapes simples, dans l'ordre. Aucun prérequis, aucun investissement nécessaire pour
-            commencer.
+            ~15 min de lecture. 100&nbsp;% gratuit, aucun prérequis, aucun investissement
+            nécessaire pour commencer.
           </p>
         </div>
 
-        <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Audit Block 3 26/04/2026 (Agents mobile + visual) :
+            - gap-5 -> gap-6 sm:gap-8 (respiration cartes)
+            - Ligne connexion h-px -> h-0.5 + bg-primary/30 (visibility) */}
+        <ol className="mt-10 grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(({ step, Icon, title, description, href, cta }, idx) => (
             <li key={step} className="relative">
               {/* Ligne de connexion (visible desktop entre cartes) */}
               {idx < STEPS.length - 1 && (
                 <span
                   aria-hidden
-                  className="hidden lg:block absolute top-9 -right-3 h-px w-6 bg-gradient-to-r from-border to-transparent"
+                  className="hidden lg:block absolute top-12 -right-2.5 h-0.5 w-5 bg-gradient-to-r from-primary/40 to-transparent"
                 />
               )}
 
               <Link
                 href={href}
+                title={`${cta} — ${description}`}
                 className="group relative flex h-full flex-col rounded-2xl border border-border bg-surface
-                           p-6 transition-all hover:border-primary/50 hover:bg-elevated
+                           p-5 sm:p-6 transition-colors motion-reduce:transition-none hover:border-primary/50 hover:bg-elevated
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <div className="flex items-center justify-between">
