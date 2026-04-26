@@ -307,9 +307,21 @@ export default function EmbedsLandingPage() {
                 href="/mentions-legales"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-fg/90 hover:border-primary/40"
               >
-                Mentions lÃ©gales Cryptoreflex
+                Mentions legales Cryptoreflex
               </Link>
+              <a
+                href={`mailto:${BRAND.partnersEmail}?subject=Notification%20integration%20widget%20Cryptoreflex&body=Bonjour%2C%0A%0AJ%27ai%20integre%20le%20widget%20%5BNOM%5D%20sur%20%5BURL%5D.%0AAttribution%20conservee%20%3A%20%5BOUI%2FNON%5D.%0A%0AMerci.`}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary-soft hover:bg-primary/20"
+              >
+                Notifier Cryptoreflex de ton integration (optionnel)
+              </a>
             </div>
+            <p className="mt-4 text-xs text-fg/60 leading-relaxed">
+              <strong>Pourquoi nous notifier ?</strong> Pour qu&apos;on suive
+              l&apos;adoption des widgets, qu&apos;on remercie les sites
+              integrateurs (mention dans notre page Partenaires si tu acceptes),
+              et qu&apos;on te previenne en cas de breaking change.
+            </p>
           </div>
         </div>
       </section>

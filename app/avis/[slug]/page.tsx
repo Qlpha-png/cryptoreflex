@@ -23,6 +23,7 @@ import {
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import AffiliateLink from "@/components/AffiliateLink";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -45,18 +46,32 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const p = getPlatformById(params.slug);
   if (!p) return {};
-  // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
-  const title = `Avis ${p.name} 2026 : tests, frais, sécurité, MiCA`;
-  const description = `Notre avis détaillé sur ${p.name} : ${p.scoring.global}/5. ${p.tagline} Frais, sécurité, agrément MiCA, bonus, support FR. Mis à jour ${p.mica.lastVerified}.`;
+  // SEO long-tail "[plateforme] avis 2026" : keyword exact en première position,
+  // marque en suffixe auto-ajouté par root layout. Title <60c, description <155c.
+  const title = `${p.name} avis 2026 — Test complet par Cryptoreflex`;
+  const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${p.scoring.global}/5) basé sur 30 jours de test.`;
   return {
     title,
     description,
+    keywords: [
+      `${p.name} avis 2026`,
+      `${p.name} avis`,
+      `${p.name} frais`,
+      `${p.name} France`,
+      `${p.name} MiCA`,
+      `avis ${p.name}`,
+    ],
     alternates: { canonical: `${BRAND.url}/avis/${p.id}` },
     openGraph: {
       title,
       description,
       url: `${BRAND.url}/avis/${p.id}`,
       type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -184,6 +199,21 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
       : `${p.bonus.welcome}. ${p.bonus.conditions ?? "Pas de conditions spécifiques."}`,
   });
 
+  // Q6 — quel dépôt minimum / how to start
+  faq.push({
+    q: `Quel est le dépôt minimum sur ${p.name} et comment recharger ?`,
+    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Tu peux recharger ton compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${p.fees.instantBuy}%.`,
+  });
+
+  // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
+  const competitor = p.scoring.fees >= 4.4 ? "Coinbase" : "Binance";
+  if (p.name !== competitor) {
+    faq.push({
+      q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,
+      a: `Tout dépend de ta priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "les frais bas et le catalogue le plus large"}. Notre comparatif détaillé tranche selon ton profil.`,
+    });
+  }
+
   return faq;
 }
 
@@ -254,7 +284,10 @@ export default function ReviewPage({ params }: Props) {
               </span>
             )}
             <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">
-              Avis {p.name} 2026
+              {p.name} avis 2026
+              <span className="block mt-1 text-2xl sm:text-3xl text-fg/70 font-bold">
+                Test complet par Cryptoreflex
+              </span>
             </h1>
             <p className="mt-3 text-lg text-white/70">{p.tagline}</p>
 
@@ -304,20 +337,147 @@ export default function ReviewPage({ params }: Props) {
                 </div>
               </div>
             )}
-            <a
+            <AffiliateLink
               href={p.affiliateUrl}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
+              platform={p.id}
+              placement="avis-sidebar"
+              ctaText={`Aller sur ${p.name}`}
+              showCaption={false}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
               Aller sur {p.name}
               <ExternalLink className="h-4 w-4" />
-            </a>
+            </AffiliateLink>
             <p className="mt-3 text-[11px] text-muted leading-relaxed">
               Publicité — Cryptoreflex perçoit une commission si tu ouvres un compte, sans surcoût pour toi. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
             </p>
           </aside>
         </header>
+
+        {/* VERDICT EXPRESS — 3 lignes en intro (CRO best practice : on donne
+            la conclusion dès le scroll-fold pour les visiteurs qui scannent) */}
+        <section className="mt-10 rounded-2xl border-l-4 border-primary bg-surface p-5 sm:p-6">
+          <div className="text-xs uppercase tracking-wide text-primary-glow font-semibold">
+            Verdict express — 3 lignes
+          </div>
+          <ul className="mt-3 space-y-2 text-sm sm:text-base text-white/85 leading-relaxed">
+            <li className="flex gap-2">
+              <span className="text-primary-glow shrink-0">·</span>
+              <span><strong className="text-white">Note globale :</strong> {p.scoring.global.toFixed(1)}/5 — {p.badge ?? p.tagline}.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary-glow shrink-0">·</span>
+              <span><strong className="text-white">Idéal pour :</strong> {p.idealFor}.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-primary-glow shrink-0">·</span>
+              <span><strong className="text-white">À éviter si :</strong> {p.weaknesses[0] ?? "aucun dealbreaker structurel."}.</span>
+            </li>
+          </ul>
+          <div className="mt-5">
+            <AffiliateLink
+              href={p.affiliateUrl}
+              platform={p.id}
+              placement="avis-verdict-express"
+              ctaText={`Tester ${p.name}`}
+              showCaption={false}
+              className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-glow hover:bg-primary/25 transition-colors"
+            >
+              Tester {p.name}
+              <ExternalLink className="h-4 w-4" />
+            </AffiliateLink>
+          </div>
+        </section>
+
+        {/* POUR QUI / POUR QUI PAS — table 2 colonnes (CRO + clarté) */}
+        <section className="mt-10">
+          <h2 className="text-2xl font-bold tracking-tight">
+            {p.name} : pour qui c&apos;est fait, pour qui ce ne l&apos;est pas
+          </h2>
+          <div className="mt-5 overflow-hidden rounded-2xl border border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border">
+              <div className="bg-accent-green/5 p-5">
+                <div className="flex items-center gap-2 text-sm font-bold text-accent-green">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Fait pour toi si…
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-white/85">
+                  {p.scoring.fees >= 4.4 && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu chasses les frais les plus bas du marché.</li>
+                  )}
+                  {p.scoring.security >= 4.7 && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> La sécurité (cold storage, audits) prime sur tout le reste.</li>
+                  )}
+                  {p.scoring.ux >= 4.5 && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu démarres et veux une interface qui ne te perd pas.</li>
+                  )}
+                  {p.support.frenchPhone && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu veux un support FR par téléphone (pas que par chat).</li>
+                  )}
+                  {p.cryptos.stakingAvailable && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu veux faire du staking ({p.cryptos.stakingCryptos.length} cryptos éligibles).</li>
+                  )}
+                  {p.mica.micaCompliant && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un dealbreaker pour toi.</li>
+                  )}
+                </ul>
+              </div>
+              <div className="bg-accent-rose/5 p-5">
+                <div className="flex items-center gap-2 text-sm font-bold text-accent-rose">
+                  <XCircle className="h-4 w-4" />
+                  Pas pour toi si…
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-white/85">
+                  {p.weaknesses.slice(0, 3).map((w) => (
+                    <li key={w} className="flex gap-2"><span className="text-accent-rose">•</span> {w}.</li>
+                  ))}
+                  {!p.support.frenchPhone && (
+                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Tu as besoin d&apos;un support téléphonique en français.</li>
+                  )}
+                  {!p.cryptos.stakingAvailable && (
+                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Le staking est un de tes critères principaux.</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FRAIS RÉELS CHIFFRÉS — exemple concret (CRO : transparence frais) */}
+        <section className="mt-10 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Frais réels chiffrés sur {p.name} (exemple 1 000 €)
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Estimation indicative au {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} — recoupe avec le backoffice de la plateforme avant tout investissement engageant.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-elevated p-4">
+              <div className="text-xs uppercase tracking-wide text-muted">Achat instantané (CB)</div>
+              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+              </div>
+              <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
+            </div>
+            <div className="rounded-xl border border-border bg-elevated p-4">
+              <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
+              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                {(1000 * p.fees.spotTaker / 100).toFixed(2)} €
+              </div>
+              <div className="mt-1 text-xs text-fg/60">{p.fees.spotTaker}% sur 1 000 €</div>
+            </div>
+            <div className="rounded-xl border border-border bg-elevated p-4">
+              <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
+              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                {(1000 * p.fees.spotMaker / 100).toFixed(2)} €
+              </div>
+              <div className="mt-1 text-xs text-fg/60">{p.fees.spotMaker}% sur 1 000 €</div>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-muted leading-relaxed">
+            <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, tu paies environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
+          </p>
+        </section>
 
         {/* SCORING DÉTAILLÉ */}
         <section className="mt-12">
@@ -423,6 +583,29 @@ export default function ReviewPage({ params }: Props) {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* CTA milieu — après section sécurité (pic d'engagement) */}
+        <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+          <div>
+            <div className="text-base font-bold text-white">
+              Prêt à tester {p.name} ?
+            </div>
+            <p className="mt-1 text-sm text-white/70 max-w-xl">
+              {p.mica.micaCompliant ? "Plateforme agréée MiCA" : "Statut en cours de revue"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
+            </p>
+          </div>
+          <AffiliateLink
+            href={p.affiliateUrl}
+            platform={p.id}
+            placement="avis-mid-content"
+            ctaText={`Ouvrir un compte ${p.name}`}
+            showCaption={false}
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition shrink-0"
+          >
+            Ouvrir un compte {p.name}
+            <ExternalLink className="h-4 w-4" />
+          </AffiliateLink>
         </section>
 
         {/* CRYPTOS & STAKING */}
@@ -556,6 +739,19 @@ export default function ReviewPage({ params }: Props) {
               <div className="mt-1 text-sm text-white/90">{verdict.avoid}</div>
             </div>
           </div>
+          <div className="mt-6">
+            <AffiliateLink
+              href={p.affiliateUrl}
+              platform={p.id}
+              placement="avis-verdict-final"
+              ctaText={`S'inscrire sur ${p.name}`}
+              showCaption={false}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
+            >
+              S&apos;inscrire sur {p.name}
+              <ExternalLink className="h-4 w-4" />
+            </AffiliateLink>
+          </div>
         </section>
 
         {/* FAQ */}
@@ -616,24 +812,54 @@ export default function ReviewPage({ params }: Props) {
           variant="default"
         />
 
-        {/* AUTRES PLATEFORMES */}
+        {/* ALTERNATIVES À ${p.name} */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold tracking-tight">Autres avis plateformes</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Alternatives à {p.name}
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Trois plateformes comparables — choisis celle qui matche ton profil ou
+            <Link href={`/comparatif`} className="text-primary-glow hover:underline"> compare-les en duel</Link>.
+          </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            {otherPlatforms.map((op) => (
-              <Link
-                key={op.id}
-                href={`/avis/${op.id}`}
-                className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
-              >
-                <div className="text-sm font-semibold text-white">{op.name}</div>
-                <div className="mt-1 text-xs text-muted">{op.tagline.slice(0, 70)}…</div>
-                <div className="mt-2 flex items-center gap-2">
-                  <Stars n={op.scoring.global} />
-                  <span className="text-xs text-muted">{op.scoring.global.toFixed(1)}/5</span>
+            {otherPlatforms.map((op) => {
+              const altSlug = `${p.id}-vs-${op.id}`;
+              const altExists = COMPARISONS.some((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`);
+              const realSlug = COMPARISONS.find((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`)?.slug;
+              return (
+                <div
+                  key={op.id}
+                  className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors flex flex-col"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-sm font-semibold text-white">{op.name}</div>
+                    <div className="flex items-center gap-1 text-xs text-amber-300">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span className="font-mono tabular-nums">{op.scoring.global.toFixed(1)}</span>
+                    </div>
+                  </div>
+                  <div className="mt-1 text-xs text-muted line-clamp-2">{op.tagline}</div>
+                  <div className="mt-3 flex items-center gap-3 text-[11px] text-fg/60">
+                    <span>Frais : {op.fees.spotTaker}%</span>
+                    <span>·</span>
+                    <span>{op.cryptos.totalCount} cryptos</span>
+                  </div>
+                  <div className="mt-auto pt-3 flex items-center gap-2 text-xs">
+                    <Link href={`/avis/${op.id}`} className="text-primary-glow hover:underline">
+                      Voir l&apos;avis
+                    </Link>
+                    {altExists && realSlug && (
+                      <>
+                        <span className="text-muted">·</span>
+                        <Link href={`/comparatif/${realSlug}`} className="text-primary-glow hover:underline">
+                          Comparer
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
 

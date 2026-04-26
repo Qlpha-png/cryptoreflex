@@ -5,15 +5,23 @@ import {
   Trophy,
   Sparkles,
   TrendingUp,
+  Zap,
+  ShieldCheck,
+  Star,
 } from "lucide-react";
 
-import { getPlatformById } from "@/lib/platforms";
+import {
+  getAllPlatforms,
+  getPlatformById,
+  type Platform,
+} from "@/lib/platforms";
 import {
   getPublishableComparisons,
   type ComparisonSpec,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
+import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import {
   breadcrumbSchema,
   graphSchema,
@@ -104,8 +112,27 @@ const BUCKET_DESCRIPTIONS: Record<ComparisonSpec["bucket"], string> = {
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/*  Profils — segmentation visiteur (issue #17 backlog : intent commercial)   */
+/* -------------------------------------------------------------------------- */
+/**
+ * Mapping plateforme -> profils recommandés (heuristique basée sur scoring) :
+ *  - debutant  : UX >= 4.5 (prioritise simplicité)
+ *  - avance    : fees >= 4.4 (prioritise frais bas)
+ *  - intermediaire : tout le reste avec score global >= 4.0 (équilibre).
+ * Une plateforme peut appartenir à plusieurs profils.
+ */
+function profilesFor(p: Platform): Array<"debutant" | "intermediaire" | "avance"> {
+  const out: Array<"debutant" | "intermediaire" | "avance"> = [];
+  if (p.scoring.ux >= 4.5) out.push("debutant");
+  if (p.scoring.fees >= 4.4) out.push("avance");
+  if (p.scoring.global >= 4.0) out.push("intermediaire");
+  return out.length ? out : ["intermediaire"];
+}
+
 export default function ComparatifHubPage() {
   const all = getPublishableComparisons();
+  const topPlatforms = getAllPlatforms().slice(0, 8);
 
   // Regroupement par bucket.
   const byBucket = new Map<ComparisonSpec["bucket"], ComparisonSpec[]>();
@@ -182,6 +209,100 @@ export default function ComparatifHubPage() {
             </p>
           </header>
 
+          {/* Quiz CTA pré-fold (issue #17 — intent commercial fort) */}
+          <Link
+            href="/quiz/trouve-ton-exchange"
+            className="mt-8 group flex items-center justify-between gap-4 rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-primary-glow/10 p-5 hover:border-primary/70 transition-colors"
+          >
+            <div className="flex items-center gap-4 min-w-0">
+              <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/20 border border-primary/40 text-primary-glow">
+                <Zap className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-lg font-bold text-fg">
+                  Tu hésites entre 3 plateformes ? Fais le quiz en 30s
+                </div>
+                <div className="mt-0.5 text-xs sm:text-sm text-fg/70">
+                  6 questions · résultat personnalisé · aucune inscription requise
+                </div>
+              </div>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-xl bg-primary/20 px-3 py-2 text-sm font-semibold text-primary-glow group-hover:bg-primary/30 transition-colors shrink-0">
+              Démarrer
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </div>
+          </Link>
+
+          {/* Top plateformes — cards avec badges MiCA (issue #19) */}
+          <section className="mt-12">
+            <header className="flex items-center gap-3 mb-6">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green/10 border border-accent-green/30 text-accent-green">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">
+                  Top plateformes agréées MiCA
+                </h2>
+                <p className="text-sm text-fg/70 mt-0.5">
+                  Filtre par profil pour voir celles qui te correspondent.
+                </p>
+              </div>
+            </header>
+
+            {/* Filtres profil — interaction CSS pure via :checked + sibling */}
+            <div className="profile-filter-wrap">
+              <div className="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Filtre par profil">
+                <input type="radio" name="profile" id="profile-all" defaultChecked className="peer/all sr-only" />
+                <label
+                  htmlFor="profile-all"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/all:border-primary peer-checked/all:bg-primary/15 peer-checked/all:text-primary-glow transition-colors"
+                >
+                  Tous
+                </label>
+                <input type="radio" name="profile" id="profile-debutant" className="peer/deb sr-only" />
+                <label
+                  htmlFor="profile-debutant"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/deb:border-primary peer-checked/deb:bg-primary/15 peer-checked/deb:text-primary-glow transition-colors"
+                >
+                  Débutant
+                </label>
+                <input type="radio" name="profile" id="profile-inter" className="peer/int sr-only" />
+                <label
+                  htmlFor="profile-inter"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/int:border-primary peer-checked/int:bg-primary/15 peer-checked/int:text-primary-glow transition-colors"
+                >
+                  Intermédiaire
+                </label>
+                <input type="radio" name="profile" id="profile-av" className="peer/av sr-only" />
+                <label
+                  htmlFor="profile-av"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/av:border-primary peer-checked/av:bg-primary/15 peer-checked/av:text-primary-glow transition-colors"
+                >
+                  Avancé
+                </label>
+              </div>
+
+              {/*
+                Filtre purement CSS : on rend toutes les cards et on les masque via
+                ~ (sibling) en fonction du radio coché. Pas de JS donc compatible
+                Server Component, et l'état n'est pas perdu au refresh.
+              */}
+              <style>{`
+                .profile-filter-wrap input[name="profile"] { display: none; }
+                .profile-filter-wrap .platform-card { display: flex; }
+                .profile-filter-wrap input#profile-debutant:checked ~ .platform-grid .platform-card:not([data-profile~="debutant"]) { display: none; }
+                .profile-filter-wrap input#profile-inter:checked ~ .platform-grid .platform-card:not([data-profile~="intermediaire"]) { display: none; }
+                .profile-filter-wrap input#profile-av:checked ~ .platform-grid .platform-card:not([data-profile~="avance"]) { display: none; }
+              `}</style>
+
+              <div className="platform-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {topPlatforms.map((p) => (
+                  <PlatformMiniCard key={p.id} platform={p} />
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Top 6 mis en avant */}
           <section className="mt-12">
             <header className="flex items-center gap-3 mb-6">
@@ -198,6 +319,25 @@ export default function ComparatifHubPage() {
               ))}
             </div>
           </section>
+
+          {/* CTA milieu de page — push vers quiz pour les indécis */}
+          <div className="mt-12 rounded-2xl border border-border bg-surface p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+            <div>
+              <div className="text-base font-bold text-fg">
+                Toujours pas décidé ?
+              </div>
+              <p className="mt-1 text-sm text-fg/70 max-w-xl">
+                Notre quiz croise tes priorités (frais, sécurité, support FR, niveau) avec les data 2026 et te sort 1 plateforme principale + 2 alternatives.
+              </p>
+            </div>
+            <Link
+              href="/quiz/trouve-ton-exchange"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-background hover:bg-primary-glow transition-colors shrink-0"
+            >
+              Faire le quiz (30s)
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
 
           {/* Buckets */}
           <div className="mt-16 space-y-16">
@@ -232,9 +372,76 @@ export default function ComparatifHubPage() {
               );
             })}
           </div>
+
+          {/* CTA bas de page — répétition (CRO best practice) */}
+          <section className="mt-16 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary-glow/10 p-6 sm:p-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Trouve ta plateforme en 30 secondes
+            </h2>
+            <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
+              Plus rapide que de comparer 11 fiches : le quiz pose 6 questions et te sort la plateforme calibrée pour ton profil — débutant, intermédiaire ou avancé.
+            </p>
+            <Link
+              href="/quiz/trouve-ton-exchange"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
+            >
+              <Zap className="h-4 w-4" />
+              Lancer le quiz
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </section>
+
+          {/* Disclaimer AMF + affiliation */}
+          <p className="mt-10 text-xs text-muted leading-relaxed max-w-3xl">
+            Cryptoreflex est un média éditorial indépendant. Nous percevons une commission via les liens d&apos;affiliation, sans surcoût pour toi et sans biais sur les notes attribuées (méthodologie publique sur <Link href="/methodologie" className="underline hover:text-fg">/methodologie</Link>). Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
+          </p>
         </div>
       </section>
     </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  PlatformMiniCard — card avec badges visuels MiCA / score / profile       */
+/*  Issue #19 backlog : badges MiCA prominents sur les cards.                 */
+/* -------------------------------------------------------------------------- */
+
+function PlatformMiniCard({ platform }: { platform: Platform }) {
+  const profiles = profilesFor(platform);
+  return (
+    <Link
+      href={`/avis/${platform.id}`}
+      data-profile={profiles.join(" ")}
+      className="platform-card group flex-col rounded-2xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="font-bold text-fg truncate">{platform.name}</div>
+        <div className="inline-flex items-center gap-1 text-xs text-amber-300 shrink-0">
+          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+          <span className="font-mono tabular-nums">{platform.scoring.global.toFixed(1)}</span>
+        </div>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {platform.mica.micaCompliant && (
+          <MiCAComplianceBadge variant="compact" />
+        )}
+        {platform.security.coldStoragePct >= 95 && !platform.security.lastIncident && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green">
+            0 incident
+          </span>
+        )}
+        {platform.scoring.security >= 4.7 && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-blue-400/30 bg-blue-400/10 px-2 py-0.5 text-[10px] font-semibold text-blue-300">
+            Audit récent
+          </span>
+        )}
+      </div>
+      <div className="mt-3 text-xs text-fg/60 line-clamp-2">{platform.tagline}</div>
+      <div className="mt-3 flex items-center justify-between text-xs text-primary-soft font-semibold">
+        <span>Voir l&apos;avis</span>
+        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+      </div>
+    </Link>
   );
 }
 

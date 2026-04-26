@@ -103,6 +103,8 @@ export default function CalculateurFiscalite() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
     {},
   );
+  // Tracking : calc-fiscal-start émis 1x dès le premier input utilisateur
+  const [hasStarted, setHasStarted] = useState(false);
 
   // Lead magnet state
   const [email, setEmail] = useState("");
@@ -152,14 +154,23 @@ export default function CalculateurFiscalite() {
   /* --------- Handlers ------------------------------------------------------ */
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    // Tracking : calc-fiscal-start (1× / page) au premier input non-vide
+    if (!hasStarted && typeof value === "string" && value.length > 0) {
+      setHasStarted(true);
+      track("calc-fiscal-start", { tool: "tax-calculator-fr" });
+    }
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!validate()) return;
     setShowResult(true);
-    // Plausible : usage de l'outil
+    // Plausible : usage de l'outil + résultat affiché (audit CRO 26-04)
     track("Tool Usage", { tool: "tax-calculator-fr", action: "compute" });
+    track("calc-fiscal-result-shown", {
+      tool: "tax-calculator-fr",
+      regime: form.regime,
+    });
     // Scroll vers le résultat (mobile friendly)
     if (typeof window !== "undefined") {
       requestAnimationFrame(() => {
@@ -412,7 +423,10 @@ export default function CalculateurFiscalite() {
           <div className="mt-6 flex justify-center">
             <button
               type="button"
-              onClick={() => setPdfModalOpen(true)}
+              onClick={() => {
+                setPdfModalOpen(true);
+                track("calc-pdf-modal-open", { tool: "tax-calculator-fr" });
+              }}
               className="btn-primary"
             >
               <FileText className="h-4 w-4" aria-hidden="true" />
@@ -420,9 +434,13 @@ export default function CalculateurFiscalite() {
             </button>
           </div>
 
-          {/* Encart Waltio (post-résultat) */}
+          {/* Encart Waltio (post-résultat) — bénéfice ciblé selon profil */}
           <div className="mt-8">
-            <WaltioPostResultCta />
+            <WaltioPostResultCta
+              taxAmount={result.impotTotal}
+              isExonere={result.exonere}
+              regime={form.regime}
+            />
           </div>
         </div>
       )}
@@ -454,7 +472,17 @@ export default function CalculateurFiscalite() {
 /*    + label « Lien d'affiliation publicitaire » (loi Influenceurs juin 2023)*/
 /* -------------------------------------------------------------------------- */
 
-function WaltioPostResultCta() {
+interface WaltioPostResultCtaProps {
+  taxAmount: number;
+  isExonere: boolean;
+  regime: Regime;
+}
+
+function WaltioPostResultCta({
+  taxAmount,
+  isExonere,
+  regime,
+}: WaltioPostResultCtaProps) {
   // URL d'affiliation Waltio — synchronisée avec data/fiscal-tools.json.
   // Hardcodée ici pour rester côté client sans import data JSON inutile.
   const waltioAffiliateUrl =
@@ -463,8 +491,8 @@ function WaltioPostResultCta() {
   function handleAffiliateClick() {
     trackAffiliateClick(
       "waltio",
-      "calculator-post-result",
-      "Essayer Waltio (post-result)",
+      "post-result",
+      "Économise 40h sur ta déclaration crypto",
     );
   }
 
@@ -473,6 +501,33 @@ function WaltioPostResultCta() {
       placement: "calculator-post-result",
       target: "/outils/declaration-fiscale-crypto",
     });
+  }
+
+  // Headline contextuel selon le profil fiscal (CRO 26-04)
+  // - Exonéré (≤ 305 €) : focus sur 3916-bis (obligatoire même sans impôt)
+  // - Régime BIC : focus expert-comptable / pro
+  // - Gros impôt > 1000 € : focus optimisation (moins-values reportables, etc.)
+  // - Cas standard : focus économie de temps
+  let headline: string;
+  let pitch: string;
+  if (isExonere) {
+    headline = "Tu es exonéré — mais le 3916-bis reste obligatoire";
+    pitch =
+      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 1 500 € d'amende par compte oublié. Waltio le pré-remplit automatiquement à partir de tes connexions API.";
+  } else if (regime === "bic") {
+    headline = "BIC professionnel : ton expert-comptable va t'aimer";
+    pitch =
+      "Au régime BIC, ton expert-comptable facture 600 € à 5 000 € selon le volume. Waltio Pro (549 €/an) fournit un dossier propre avec accès partagé : tu divises sa facture par 2 ou 3 et tu gardes un audit-trail complet en cas de contrôle.";
+  } else if (taxAmount >= 1000) {
+    headline = `Économise potentiellement des centaines d'€ sur ces ${formatEuro(
+      taxAmount,
+    )}`;
+    pitch =
+      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit te coûtent cher. Waltio retrouve automatiquement tes moins-values reportables (10 ans), tous tes frais de cession et te calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
+  } else {
+    headline = "Économise 40 h sur ta déclaration crypto";
+    pitch =
+      "Notre calculateur te donne le montant. Waltio (édité en France) connecte tes exchanges, calcule chaque cession au prorata article 150 VH bis et génère le Cerfa 2086 + 3916-bis prêts à téléverser sur impots.gouv.fr en 30 minutes au lieu d'un week-end entier.";
   }
 
   return (
@@ -493,20 +548,42 @@ function WaltioPostResultCta() {
             className="font-display font-bold text-white"
           >
             <span aria-hidden="true">🎯 </span>
-            Pour générer ton Cerfa 3916-bis automatiquement
+            {headline}
           </h4>
           <p className="mt-2 text-sm text-white/75">
-            Tu as plusieurs centaines de transactions ou des comptes sur
-            plusieurs exchanges ? On recommande{" "}
-            <strong className="text-white">Waltio</strong> (édité en France) :
-            il connecte tes plateformes, calcule tes plus-values et pré-remplit
-            les formulaires 2086 et 3916-bis prêts à téléverser sur
-            impots.gouv.fr. Bénéficie de{" "}
+            {pitch}{" "}
             <strong className="text-primary-soft">
-              30 % de réduction Cryptoreflex
-            </strong>
-            .
+              -30 % avec le code CRYPTOREFLEX
+            </strong>{" "}
+            (jusqu'au 31 mai 2026).
           </p>
+
+          {/* Trust strip — bénéfices clés (à remplacer par vrais témoignages
+              quand collectés ; volontairement factuel et conservateur). */}
+          <ul className="mt-3 grid sm:grid-cols-3 gap-2 text-xs text-white/70">
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2
+                className="h-3.5 w-3.5 shrink-0 text-success"
+                aria-hidden="true"
+              />
+              220+ exchanges connectés
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2
+                className="h-3.5 w-3.5 shrink-0 text-success"
+                aria-hidden="true"
+              />
+              Cerfa 2086 + 3916-bis prêts
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2
+                className="h-3.5 w-3.5 shrink-0 text-success"
+                aria-hidden="true"
+              />
+              Support client en français
+            </li>
+          </ul>
+
           <div className="mt-4 flex flex-col sm:flex-row gap-2">
             <a
               href="/outils/declaration-fiscale-crypto"
@@ -518,14 +595,14 @@ function WaltioPostResultCta() {
             <a
               href={waltioAffiliateUrl}
               target="_blank"
-              rel="sponsored noopener noreferrer"
+              rel="sponsored nofollow noopener noreferrer"
               aria-label="Lien d'affiliation publicitaire vers Waltio"
               onClick={handleAffiliateClick}
               data-affiliate-platform="waltio"
-              data-affiliate-placement="calculator-post-result"
+              data-affiliate-placement="post-result"
               className="btn-primary justify-center text-sm"
             >
-              Essayer Waltio
+              Essayer Waltio gratuitement
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>

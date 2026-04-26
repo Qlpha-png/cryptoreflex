@@ -33,24 +33,68 @@ import { track } from "@/lib/analytics";
 type Variant = "default" | "minimal";
 
 interface NewsletterInlineProps {
-  source?: "blog-cta" | "footer" | "inline" | "newsletter-page" | "pro-waitlist";
+  source?: "blog-cta" | "footer" | "inline" | "newsletter-page" | "pro-waitlist" | "sidebar" | "bottom-article" | "hero";
   variant?: Variant;
   title?: string;
   subtitle?: string;
   leadMagnet?: boolean;
   ctaLabel?: string;
+  /** Affiche un preview "Voici un exemple du dernier email" sous le formulaire. */
+  showPreview?: boolean;
 }
 
 const LEAD_MAGNET_URL = "/lead-magnets/guide-plateformes-crypto-2026.pdf";
 
+/**
+ * Defaults de copy par contexte (source). Ne sont appliques que si le caller
+ * ne fournit pas explicitement title/subtitle/ctaLabel.
+ *
+ * Pourquoi ? Le meme composant est utilise sur 5+ surfaces (sidebar, bottom
+ * d'article, hero, footer, newsletter page). Forcer un copy generique partout
+ * baisse la conversion ; un copy contextuel (ex: "Tu as aime cet article ?
+ * Recois la suite par email" en bottom-article) peut faire +20-40 % de signup
+ * (benchmark conservatif a verifier en A/B Plausible).
+ */
+const COPY_DEFAULTS: Record<
+  string,
+  { title: string; subtitle: string; ctaLabel: string }
+> = {
+  "bottom-article": {
+    title: "Tu as aime cet article ?",
+    subtitle: "Recois 3 infos crypto FR comme celle-ci, chaque matin a 7h.",
+    ctaLabel: "Recevoir la newsletter",
+  },
+  sidebar: {
+    title: "Newsletter quotidienne",
+    subtitle: "3 minutes, 7h du matin. Sans hype, sans pub.",
+    ctaLabel: "M'abonner",
+  },
+  hero: {
+    title: "La crypto FR en 3 minutes, chaque matin",
+    subtitle: "Gratuit. Desabonnement 1 clic. Bonus PDF immediat.",
+    ctaLabel: "Recevoir la newsletter",
+  },
+  "newsletter-page": {
+    title: "Inscription a la newsletter",
+    subtitle: "Gratuit. Desabonnement 1 clic. Bonus PDF immediat.",
+    ctaLabel: "Recevoir la newsletter",
+  },
+};
+
 export default function NewsletterInline({
   source = "inline",
   variant = "default",
-  title = "La newsletter quotidienne crypto FR",
-  subtitle = "3 infos crypto qui comptent, en 3 minutes, chaque matin.",
+  title,
+  subtitle,
   leadMagnet = true,
-  ctaLabel = "S'abonner",
+  ctaLabel,
+  showPreview = false,
 }: NewsletterInlineProps) {
+  const ctxDefault = COPY_DEFAULTS[source];
+  const resolvedTitle = title ?? ctxDefault?.title ?? "La newsletter quotidienne crypto FR";
+  const resolvedSubtitle =
+    subtitle ?? ctxDefault?.subtitle ?? "3 infos crypto qui comptent, en 3 minutes, chaque matin.";
+  const resolvedCtaLabel = ctaLabel ?? ctxDefault?.ctaLabel ?? "S'abonner";
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -148,8 +192,8 @@ export default function NewsletterInline({
               <Mail className="h-4 w-4" />
             </span>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-fg leading-tight truncate">{title}</h3>
-              <p className="text-xs text-muted">{subtitle}</p>
+              <h3 className="text-base font-bold text-fg leading-tight truncate">{resolvedTitle}</h3>
+              <p className="text-xs text-muted">{resolvedSubtitle}</p>
             </div>
           </div>
         )}
@@ -182,7 +226,7 @@ export default function NewsletterInline({
             disabled={status === "loading" || status === "success"}
             className="btn-primary text-sm py-2.5 px-4 disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
           >
-            {status === "loading" ? "…" : ctaLabel}
+            {status === "loading" ? "…" : resolvedCtaLabel}
             {status !== "loading" && status !== "success" && (
               <ArrowRight className="h-4 w-4" />
             )}
@@ -195,6 +239,29 @@ export default function NewsletterInline({
             <span className="text-primary-soft font-medium">Bonus :</span> guide PDF
             "10 plateformes crypto à utiliser en France 2026" à l'inscription.
           </p>
+        )}
+
+        {showPreview && variant === "default" && status === "idle" && (
+          <details className="mt-3 group">
+            <summary className="cursor-pointer text-xs text-primary-soft hover:text-primary inline-flex items-center gap-1 list-none">
+              <span className="group-open:rotate-90 transition-transform inline-block">→</span>
+              Voir un exemple du dernier email
+            </summary>
+            <div className="mt-2 rounded-lg border border-border bg-elevated/40 p-3 text-xs text-fg/70 leading-relaxed">
+              <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda decroche son agrement MiCA — 3 conséquences pour toi</p>
+              <p className="mt-1.5 italic text-muted">7h02 · Edition du jour</p>
+              <p className="mt-2">
+                1/ <strong>Bitpanda Asset Management AG</strong> rejoint la liste des entites MiCA-compliant en zone UE.
+                Ce que ca change concretement…
+              </p>
+              <p className="mt-1">
+                2/ <strong>Marche</strong> : BTC consolide entre 95 et 102 k$, ETH teste resistance 3 800 $.
+              </p>
+              <p className="mt-1">
+                3/ <strong>Fisca FR</strong> : rappel — declaration crypto 2025 ouverte des avril 2026.
+              </p>
+            </div>
+          </details>
         )}
 
         {status === "error" && (

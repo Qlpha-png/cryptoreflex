@@ -34,10 +34,15 @@ import {
   AlertCircle,
   FileText,
   ShieldCheck,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
-import { track } from "@/lib/analytics";
+import { track, trackAffiliateClick } from "@/lib/analytics";
 import type { FiscaliteInput, FiscaliteResult } from "@/lib/fiscalite";
 import { useFocusTrap } from "@/lib/use-focus-trap";
+
+const WALTIO_AFFILIATE_URL_POST_PDF =
+  "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-post-pdf";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -144,6 +149,14 @@ export default function PdfModal({
           ? "moyen"
           : "gros";
       track("calc-pdf-download", {
+        tool: "tax-calculator-fr",
+        regime: result.regime,
+        tier,
+      });
+      // Audit CRO 26-04 : event explicite côté lead-submit (alias plus lisible
+      // dans les goals Plausible — calc-pdf-download est gardé pour ne pas
+      // perdre l'historique).
+      track("calc-pdf-lead-submit", {
         tool: "tax-calculator-fr",
         regime: result.regime,
         tier,
@@ -319,6 +332,46 @@ export default function PdfModal({
               S'ouvre dans un nouvel onglet — utilise « Imprimer » puis
               « Enregistrer en PDF ».
             </p>
+
+            {/* Audit CRO 26-04 : CTA Waltio post-PDF (étape "remerciement") */}
+            <div className="mt-6 rounded-xl border border-primary/40 bg-primary/5 p-4 text-left">
+              <div className="flex items-start gap-2">
+                <Sparkles
+                  className="h-4 w-4 shrink-0 text-primary-soft mt-0.5"
+                  aria-hidden="true"
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-fg">
+                    Et si Waltio le faisait pour toi ?
+                  </p>
+                  <p className="mt-1 text-xs text-fg/70">
+                    Le PDF, c'est ton calcul. Waltio génère en plus le Cerfa
+                    2086 + 3916-bis prêts à téléverser.{" "}
+                    <strong className="text-primary-soft">-30 %</strong> avec le
+                    code CRYPTOREFLEX.
+                  </p>
+                  <a
+                    href={WALTIO_AFFILIATE_URL_POST_PDF}
+                    target="_blank"
+                    rel="sponsored nofollow noopener noreferrer"
+                    onClick={() =>
+                      trackAffiliateClick(
+                        "waltio",
+                        "post-pdf",
+                        "Génère mes formulaires Cerfa avec Waltio",
+                      )
+                    }
+                    data-affiliate-platform="waltio"
+                    data-affiliate-placement="post-pdf"
+                    aria-label="Lien d'affiliation publicitaire vers Waltio"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary"
+                  >
+                    Génère mes formulaires Cerfa avec Waltio
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

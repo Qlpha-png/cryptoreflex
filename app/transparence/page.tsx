@@ -17,11 +17,17 @@ import {
 import { BRAND } from "@/lib/brand";
 import { getAllPlatforms, type Platform } from "@/lib/platforms";
 import StructuredData from "@/components/StructuredData";
+import MicaCountdown from "@/components/MicaCountdown";
 import {
   graphSchema,
   breadcrumbSchema,
   organizationSchema,
 } from "@/lib/schema";
+import {
+  NOT_PSAN_NOT_CIF_NOTICE,
+  INFLUENCER_LAW_DISCLAIMER,
+  MICA_TRANSITION_NOTICE,
+} from "@/lib/legal-disclaimers";
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata SEO                                                              */
@@ -364,6 +370,126 @@ export default function TransparencePage() {
               body="Nous évaluons aussi des plateformes sans partenariat (Coinhouse, Kraken FR…) avec la même méthodologie. Aucune note ne dépend du programme d'affiliation."
             />
           </div>
+        </section>
+
+        {/* STATUT JURIDIQUE — NI PSAN NI CIF -------------------------------- */}
+        <section
+          id="statut-juridique"
+          className="mt-16 rounded-2xl border border-accent-cyan/30 bg-accent-cyan/5 p-6 sm:p-8"
+        >
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="h-6 w-6 text-accent-cyan shrink-0 mt-1" />
+            <div>
+              <h2 className="text-2xl font-bold text-fg">
+                Cryptoreflex n'est ni PSAN ni CIF
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed">
+                {NOT_PSAN_NOT_CIF_NOTICE}
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-fg/80 leading-relaxed list-disc pl-5">
+                <li>
+                  <strong className="text-fg">Pas de gestion de fonds&nbsp;:</strong>{" "}
+                  les utilisateurs ne déposent jamais d'argent ou de cryptos
+                  sur Cryptoreflex. Aucun wallet, aucun compte, aucune custody.
+                </li>
+                <li>
+                  <strong className="text-fg">Pas de conseil personnalisé&nbsp;:</strong>{" "}
+                  les comparatifs, calculateurs et guides s'adressent au grand
+                  public sans tenir compte de la situation patrimoniale ou des
+                  objectifs d'un utilisateur particulier.
+                </li>
+                <li>
+                  <strong className="text-fg">Pas d'exécution d'ordres&nbsp;:</strong>{" "}
+                  Cryptoreflex ne reçoit ni ne transmet aucun ordre d'achat ou
+                  de vente. Les redirections vers les plateformes partenaires
+                  via lien d'affiliation sont des recommandations éditoriales,
+                  pas une activité de réception-transmission au sens de
+                  l'article L.321-1 du CMF.
+                </li>
+              </ul>
+              <p className="mt-4 text-xs text-muted">
+                Pour toute décision d'investissement significative, consultez un
+                Conseiller en Investissements Financiers (CIF) immatriculé à
+                l'<a
+                  href="https://www.orias.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-soft underline"
+                >
+                  ORIAS
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CONFORMITÉ LOI INFLUENCEURS -------------------------------------- */}
+        <section
+          id="loi-influenceurs"
+          className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8"
+        >
+          <div className="flex items-start gap-3">
+            <Sparkles className="h-6 w-6 text-primary-glow shrink-0 mt-1" />
+            <div>
+              <h2 className="text-2xl font-bold text-fg">
+                Conformité loi Influenceurs (juin 2023)
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed">
+                {INFLUENCER_LAW_DISCLAIMER}
+              </p>
+              <p className="mt-3 text-xs text-muted">
+                Manquements signalables à la DGCCRF via{" "}
+                <a
+                  href="https://signal.conso.gouv.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-soft underline"
+                >
+                  signal.conso.gouv.fr
+                </a>
+                . Sanctions encourues&nbsp;: jusqu'à 6 mois d'emprisonnement et
+                300&nbsp;000&nbsp;€ d'amende (art. L121-1 du Code de la
+                consommation).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CONFORMITÉ MICA PHASE 2 ------------------------------------------ */}
+        <section id="mica-phase-2" className="mt-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-fg">
+            Conformité MiCA Phase 2 (1<sup>er</sup> juillet 2026)
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed max-w-3xl">
+            {MICA_TRANSITION_NOTICE}
+          </p>
+          <div className="mt-6">
+            <MicaCountdown variant="card" />
+          </div>
+          <p className="mt-4 text-xs text-muted">
+            Les statuts CASP affichés sur Cryptoreflex sont vérifiés
+            mensuellement auprès du{" "}
+            <a
+              href="https://protect.amf-france.org/registre-psan/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-soft underline"
+            >
+              registre PSAN/CASP de l'AMF
+            </a>{" "}
+            et de l'<a
+              href="https://www.esma.europa.eu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-soft underline"
+            >
+              ESMA
+            </a>
+            . Toute plateforme dont l'agrément n'est pas confirmé au 1
+            <sup>er</sup> juin 2026 sera explicitement étiquetée
+            « à risque juillet 2026 » dans nos comparatifs.
+          </p>
         </section>
 
         {/* BANDEAU LÉGAL ---------------------------------------------------- */}

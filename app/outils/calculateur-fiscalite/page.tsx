@@ -13,6 +13,8 @@ import {
 import CalculateurFiscalite from "@/components/CalculateurFiscalite";
 import StructuredData from "@/components/StructuredData";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import StickyWaltioCta from "@/components/fiscal-tools/StickyWaltioCta";
+import WaltioPromoBanner from "@/components/fiscal-tools/WaltioPromoBanner";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -164,6 +166,24 @@ const FAQ_ITEMS = [
     answer:
       "Non. Le calcul se fait 100 % localement dans ton navigateur. Aucune donnée (montant des cessions, plus-value, identité) n'est transmise à Cryptoreflex ou à un tiers. Tu peux fermer la page : rien n'est conservé. Aide Cerfa par email uniquement si tu donnes ton email volontairement.",
   },
+  /* ----- 3 questions ciblées Waltio (audit CRO 26-04) ----- */
+  {
+    question:
+      "Pourquoi utiliser Waltio plutôt que de tout faire à la main ?",
+    answer:
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte tes exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Compte 30 minutes au total au lieu d'un week-end. 30 % de réduction via Cryptoreflex sur le plan Hodler (79 €).",
+  },
+  {
+    question:
+      "Combien me coûte Waltio par rapport à un expert-comptable crypto ?",
+    answer:
+      "Waltio plan Hodler 79 €/an (jusqu'à 500 transactions) ou Trader 199 €/an (jusqu'à 5 000 + DeFi/NFT). Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, garde l'expert-comptable mais utilise Waltio Pro (549 €/an, mode partagé inclus) pour livrer un dossier propre et baisser ses honoraires.",
+  },
+  {
+    question: "Waltio prend-il en compte le DeFi, le staking et les NFT ?",
+    answer:
+      "Oui — sur les plans Trader (199 €) et Pro (549 €). Le moteur Waltio gère DeFi multi-chain (Ethereum, BNB Chain, Polygon, Arbitrum, Solana), pools de liquidité (LP tokens), staking (Cosmos, Tezos, Polkadot, Lido), airdrops automatiques et NFT (OpenSea, Blur, LooksRare). Notre calculateur ne couvre que la plus-value classique : pour ces cas, Waltio est indispensable. Plan Découverte gratuit pour visualiser ton portefeuille avant d'acheter un export Cerfa.",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -257,6 +277,9 @@ export default function CalculateurFiscalitePage() {
           ...fiscaliteNodes,
         ])}
       />
+
+      {/* ============================ Banner promo Waltio (-30 % jusqu'au 31/05) ============================ */}
+      <WaltioPromoBanner />
 
       {/* ============================ Hero ============================ */}
       <section className="relative py-16 sm:py-20">
@@ -976,6 +999,9 @@ export default function CalculateurFiscalitePage() {
           />
         </div>
       </section>
+
+      {/* Sticky CTA Waltio — apparaît au-delà de 45 % de scroll */}
+      <StickyWaltioCta />
     </>
   );
 }
