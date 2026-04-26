@@ -215,7 +215,8 @@ export default function Top10CryptosClient({
                   type="button"
                   role="radio"
                   aria-checked={active}
-                  aria-pressed={active}
+                  // Audit Block 5 26/04/2026 (Agent a11y) : aria-pressed retire
+                  // car incompatible avec role="radio" (WCAG 4.1.2).
                   aria-label={`${f.label}, ${n} crypto${n > 1 ? "s" : ""}`}
                   disabled={disabled}
                   onClick={() => setBucket(f.value)}
@@ -317,9 +318,12 @@ export default function Top10CryptosClient({
             </button>
           </div>
         ) : view === "grid" ? (
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
+          // Audit Block 5 26/04/2026 (Agent perf+mobile) :
+          // - lg:grid-cols-2 -> xl:grid-cols-3 (sous-utilisation desktop >=1280)
+          // - delay i*60ms cap a 240ms max (avant: 540ms LCP penalty cards 8-10)
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {filtered.map((c, i) => (
-              <ScrollReveal key={c.id} delay={mounted ? i * 60 : 0} direction="up">
+              <ScrollReveal key={c.id} delay={mounted ? Math.min(i * 60, 240) : 0} direction="up">
                 <CryptoCard crypto={c} />
               </ScrollReveal>
             ))}
