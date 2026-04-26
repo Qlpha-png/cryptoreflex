@@ -192,25 +192,83 @@ export interface TACryptoMeta {
 /**
  * Liste des cryptos pour analyses techniques quotidiennes.
  *
- * Audit 26/04/2026 (user request "plus de crypto") : étendu de 5 -> 12 cryptos.
- *  - 5 originales : BTC ETH SOL XRP ADA
- *  - 7 nouvelles : BNB DOGE AVAX DOT MATIC LINK TRX
+ * Audit 26/04/2026 (user request "50 cryptos catalogue dynamique vraie source de
+ * savoir") : étendu de 12 -> 50 cryptos couvrant le top 50 market cap.
  *
- * Note : les nouveaux logos sont résolus via CryptoLogo (fallback gradient gold
- * + initiales si pas de SVG officiel dans /public/logos/). Pour ajouter un
- * vrai SVG officiel, déposer le fichier dans /public/logos/{symbol-lower}.svg.
+ * Catégorisation :
+ *  - Layer 1 majeurs : BTC, ETH, BNB, SOL, ADA, AVAX, DOT, NEAR, ATOM, etc.
+ *  - Stablecoins : USDT, USDC, DAI
+ *  - DeFi blue chips : UNI, AAVE, MKR, LDO, COMP, CRV
+ *  - Memecoins : DOGE, SHIB, PEPE
+ *  - Layer 2 / scaling : MATIC, ARB, OP, IMX, MNT
+ *  - Wrapped : WBTC
+ *  - Forks : LTC, BCH, ETC
+ *  - Storage / oracles / infra : FIL, LINK, GRT, AR
+ *  - Web3 / gaming : SAND, AXS, FLOW, MANA
+ *  - Privacy : XMR, ZEC
+ *  - Asia-prominent : TON, KAS, RUNE, OKB, CRO
+ *
+ * Notes techniques :
+ *  - coingeckoId = id officiel API CoinGecko (ne pas inventer, vérifier sur api.coingecko.com)
+ *  - logos : si SVG absent dans /public/logos/, CryptoLogo fallback gradient gold
+ *  - cron generate-ta peut échantillonner (10/jour rotation) si quota CG limité
+ *  - filtres AnalysesIndexClient sont DYNAMIQUES depuis articles présents,
+ *    affichent uniquement les symbols qui ont au moins 1 analyse générée
  */
 export const TA_CRYPTOS: TACryptoMeta[] = [
+  // Top 10 market cap
   { symbol: "BTC", name: "Bitcoin", slug: "bitcoin", coingeckoId: "bitcoin", image: "/logos/bitcoin.svg" },
   { symbol: "ETH", name: "Ethereum", slug: "ethereum", coingeckoId: "ethereum", image: "/logos/ethereum.svg" },
+  { symbol: "USDT", name: "Tether", slug: "tether", coingeckoId: "tether", image: "/logos/tether.svg" },
+  { symbol: "BNB", name: "BNB", slug: "bnb", coingeckoId: "binancecoin", image: "/logos/bnb.svg" },
   { symbol: "SOL", name: "Solana", slug: "solana", coingeckoId: "solana", image: "/logos/solana.svg" },
+  { symbol: "USDC", name: "USD Coin", slug: "usdc", coingeckoId: "usd-coin", image: "/logos/usdc.svg" },
   { symbol: "XRP", name: "XRP", slug: "xrp", coingeckoId: "ripple", image: "/logos/xrp.svg" },
   { symbol: "ADA", name: "Cardano", slug: "cardano", coingeckoId: "cardano", image: "/logos/cardano.svg" },
-  { symbol: "BNB", name: "BNB", slug: "bnb", coingeckoId: "binancecoin", image: "/logos/bnb.svg" },
   { symbol: "DOGE", name: "Dogecoin", slug: "dogecoin", coingeckoId: "dogecoin", image: "/logos/dogecoin.svg" },
   { symbol: "AVAX", name: "Avalanche", slug: "avalanche", coingeckoId: "avalanche-2", image: "/logos/avalanche.svg" },
-  { symbol: "DOT", name: "Polkadot", slug: "polkadot", coingeckoId: "polkadot", image: "/logos/polkadot.svg" },
-  { symbol: "MATIC", name: "Polygon", slug: "polygon", coingeckoId: "matic-network", image: "/logos/polygon.svg" },
-  { symbol: "LINK", name: "Chainlink", slug: "chainlink", coingeckoId: "chainlink", image: "/logos/chainlink.svg" },
+  // Top 20
   { symbol: "TRX", name: "TRON", slug: "tron", coingeckoId: "tron", image: "/logos/tron.svg" },
+  { symbol: "SHIB", name: "Shiba Inu", slug: "shiba-inu", coingeckoId: "shiba-inu", image: "/logos/shiba-inu.svg" },
+  { symbol: "DOT", name: "Polkadot", slug: "polkadot", coingeckoId: "polkadot", image: "/logos/polkadot.svg" },
+  { symbol: "TON", name: "Toncoin", slug: "toncoin", coingeckoId: "the-open-network", image: "/logos/toncoin.svg" },
+  { symbol: "LINK", name: "Chainlink", slug: "chainlink", coingeckoId: "chainlink", image: "/logos/chainlink.svg" },
+  { symbol: "MATIC", name: "Polygon", slug: "polygon", coingeckoId: "matic-network", image: "/logos/polygon.svg" },
+  { symbol: "WBTC", name: "Wrapped Bitcoin", slug: "wbtc", coingeckoId: "wrapped-bitcoin", image: "/logos/wbtc.svg" },
+  { symbol: "BCH", name: "Bitcoin Cash", slug: "bitcoin-cash", coingeckoId: "bitcoin-cash", image: "/logos/bitcoin-cash.svg" },
+  { symbol: "LTC", name: "Litecoin", slug: "litecoin", coingeckoId: "litecoin", image: "/logos/litecoin.svg" },
+  { symbol: "UNI", name: "Uniswap", slug: "uniswap", coingeckoId: "uniswap", image: "/logos/uniswap.svg" },
+  // Top 30
+  { symbol: "DAI", name: "Dai", slug: "dai", coingeckoId: "dai", image: "/logos/dai.svg" },
+  { symbol: "XLM", name: "Stellar", slug: "stellar", coingeckoId: "stellar", image: "/logos/stellar.svg" },
+  { symbol: "ICP", name: "Internet Computer", slug: "icp", coingeckoId: "internet-computer", image: "/logos/icp.svg" },
+  { symbol: "APT", name: "Aptos", slug: "aptos", coingeckoId: "aptos", image: "/logos/aptos.svg" },
+  { symbol: "XMR", name: "Monero", slug: "monero", coingeckoId: "monero", image: "/logos/monero.svg" },
+  { symbol: "ATOM", name: "Cosmos", slug: "cosmos", coingeckoId: "cosmos", image: "/logos/cosmos.svg" },
+  { symbol: "NEAR", name: "NEAR Protocol", slug: "near", coingeckoId: "near", image: "/logos/near.svg" },
+  { symbol: "FIL", name: "Filecoin", slug: "filecoin", coingeckoId: "filecoin", image: "/logos/filecoin.svg" },
+  { symbol: "ARB", name: "Arbitrum", slug: "arbitrum", coingeckoId: "arbitrum", image: "/logos/arbitrum.svg" },
+  { symbol: "ETC", name: "Ethereum Classic", slug: "ethereum-classic", coingeckoId: "ethereum-classic", image: "/logos/etc.svg" },
+  // Top 40
+  { symbol: "CRO", name: "Cronos", slug: "cronos", coingeckoId: "crypto-com-chain", image: "/logos/cronos.svg" },
+  { symbol: "OP", name: "Optimism", slug: "optimism", coingeckoId: "optimism", image: "/logos/optimism.svg" },
+  { symbol: "OKB", name: "OKB", slug: "okb", coingeckoId: "okb", image: "/logos/okb.svg" },
+  { symbol: "MKR", name: "Maker", slug: "maker", coingeckoId: "maker", image: "/logos/maker.svg" },
+  { symbol: "AAVE", name: "Aave", slug: "aave", coingeckoId: "aave", image: "/logos/aave.svg" },
+  { symbol: "VET", name: "VeChain", slug: "vechain", coingeckoId: "vechain", image: "/logos/vechain.svg" },
+  { symbol: "HBAR", name: "Hedera", slug: "hedera", coingeckoId: "hedera-hashgraph", image: "/logos/hedera.svg" },
+  { symbol: "QNT", name: "Quant", slug: "quant", coingeckoId: "quant-network", image: "/logos/quant.svg" },
+  { symbol: "GRT", name: "The Graph", slug: "the-graph", coingeckoId: "the-graph", image: "/logos/the-graph.svg" },
+  { symbol: "ALGO", name: "Algorand", slug: "algorand", coingeckoId: "algorand", image: "/logos/algorand.svg" },
+  // Top 50
+  { symbol: "MNT", name: "Mantle", slug: "mantle", coingeckoId: "mantle", image: "/logos/mantle.svg" },
+  { symbol: "IMX", name: "Immutable X", slug: "imx", coingeckoId: "immutable-x", image: "/logos/imx.svg" },
+  { symbol: "STX", name: "Stacks", slug: "stacks", coingeckoId: "stacks", image: "/logos/stacks.svg" },
+  { symbol: "INJ", name: "Injective", slug: "injective", coingeckoId: "injective-protocol", image: "/logos/injective.svg" },
+  { symbol: "LDO", name: "Lido DAO", slug: "lido", coingeckoId: "lido-dao", image: "/logos/lido.svg" },
+  { symbol: "FTM", name: "Fantom", slug: "fantom", coingeckoId: "fantom", image: "/logos/fantom.svg" },
+  { symbol: "SAND", name: "The Sandbox", slug: "sandbox", coingeckoId: "the-sandbox", image: "/logos/sandbox.svg" },
+  { symbol: "AXS", name: "Axie Infinity", slug: "axie-infinity", coingeckoId: "axie-infinity", image: "/logos/axs.svg" },
+  { symbol: "FLOW", name: "Flow", slug: "flow", coingeckoId: "flow", image: "/logos/flow.svg" },
+  { symbol: "RUNE", name: "THORChain", slug: "thorchain", coingeckoId: "thorchain", image: "/logos/thorchain.svg" },
 ];

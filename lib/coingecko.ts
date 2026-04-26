@@ -3,6 +3,16 @@ import { unstable_cache } from "next/cache";
 export type CoinId = "bitcoin" | "ethereum" | "solana" | "binancecoin" | "ripple" | "cardano";
 
 /**
+ * Type permissif pour les coingeckoId au-delà du top 6 (utilisé pour TA_CRYPTOS,
+ * analyses techniques, market table top 50, etc.). Audit 26/04/2026 : extension
+ * du catalogue à 50 cryptos sans toucher au typage strict de fetchPrices().
+ *
+ * Format : kebab-case lowercase, identique à `id` dans CoinGecko API
+ * (ex: "shiba-inu", "the-open-network", "matic-network").
+ */
+export type CoinGeckoId = string;
+
+/**
  * Cache tags pour revalidation ciblée via revalidateTag().
  * - "coingecko:prices"  → fetchPrices (top 6 ticker)
  * - "coingecko:market"  → fetchTopMarket (top 20 table)

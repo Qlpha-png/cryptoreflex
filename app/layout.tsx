@@ -26,6 +26,14 @@ const PerfMonitor = dynamic(() => import("@/components/PerfMonitor"), {
   ssr: false,
 });
 
+// Audit 26/04/2026 (user "Search Rechercher ne marche pas") : CommandPalette
+// existait dans le repo mais n'était JAMAIS monté = bouton search Navbar dispatch
+// l'event 'cmdk:open' dans le vide. Fix : monté en dynamic ssr:false (chargé
+// après LCP, ne bloque pas le first paint).
+const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
+  ssr: false,
+});
+
 // Validation env au boot — server-side uniquement (pas de window).
 // Le helper est idempotent : un flag statique évite le spam en HMR / cold-start.
 // On log en `console.warn`/`error` ; visible dans Vercel logs sans casser le rendu.
@@ -387,6 +395,9 @@ export default function RootLayout({
           first paint (dynamic ssr:false → chunk séparé chargé après hydration).
         */}
         <PerfMonitor />
+        {/* CommandPalette ⌘K — déclenché via window.dispatchEvent('cmdk:open')
+            par les boutons Search Navbar (desktop + mobile). */}
+        <CommandPalette />
       </body>
     </html>
   );

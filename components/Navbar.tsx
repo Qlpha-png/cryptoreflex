@@ -220,7 +220,7 @@ export default function Navbar() {
 
           <nav
             aria-label="Navigation principale"
-            className="hidden md:flex items-center gap-x-5 lg:gap-x-7"
+            className="hidden md:flex items-center gap-x-6 lg:gap-x-8 ml-4 lg:ml-6"
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
@@ -262,7 +262,7 @@ export default function Navbar() {
             })}
           </nav>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-3 ml-4 lg:ml-6">
             {/* Trust badge MiCA · AMF (xl+) — Audit SEO/CRO : +12-18% bounce reduction. */}
             <span
               title="Conforme cadre MiCA + AMF — méthodologie publique"
