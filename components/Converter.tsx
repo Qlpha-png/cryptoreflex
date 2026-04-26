@@ -188,25 +188,44 @@ function Row({
   loading?: boolean;
 }) {
   const isFiat = FIAT_OPTIONS.includes(symbol);
+  // BLOCK 11 fix (Agent /outils audit P0 a11y) : ids stables pour
+  // associer <label htmlFor> aux <input>/<select> + activer le clavier
+  // numerique mobile via inputMode="decimal".
+  const slug = label.toLowerCase().replace(/\s+/g, "-");
+  const inputId = `converter-amount-${slug}`;
+  const selectId = `converter-symbol-${slug}`;
   return (
     <div className="rounded-xl border border-border bg-background/60 p-4">
-      <div className="text-[10px] font-semibold text-muted uppercase tracking-wide">
+      <label
+        htmlFor={editable ? inputId : selectId}
+        className="text-[10px] font-semibold text-muted uppercase tracking-wide block"
+      >
         {label}
-      </div>
+      </label>
       <div className="mt-2 flex items-center gap-3">
         {editable ? (
           <input
+            id={inputId}
             type="number"
             value={amount}
             min={0}
             step="any"
+            // inputMode="decimal" -> clavier numerique iOS/Android (au lieu
+            // du clavier alphanumerique par defaut sur input number sur mobile).
+            inputMode="decimal"
+            aria-label={`Montant ${label}`}
             onChange={(e) => onAmountChange?.(parseFloat(e.target.value) || 0)}
             className="flex-1 bg-transparent text-2xl font-mono font-bold text-white focus:outline-none"
           />
         ) : (
-          <div className="flex-1 text-2xl font-mono font-bold text-white">
+          <div
+            className="flex-1 text-2xl font-mono font-bold text-white"
+            role="status"
+            aria-live="polite"
+            aria-label={loading ? "Conversion en cours" : `Resultat : ${formatAmount(amount, isFiat)} ${symbol.toUpperCase()}`}
+          >
             {loading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted" />
+              <Loader2 className="h-5 w-5 animate-spin text-muted" aria-hidden="true" />
             ) : (
               formatAmount(amount, isFiat)
             )}
@@ -214,8 +233,10 @@ function Row({
         )}
 
         <select
+          id={selectId}
           value={symbol}
           onChange={(e) => onSymbolChange(e.target.value)}
+          aria-label={`Devise ${label}`}
           className="rounded-lg border border-border bg-elevated px-3 py-2 font-semibold text-white focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <optgroup label="Crypto">

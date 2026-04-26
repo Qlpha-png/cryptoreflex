@@ -183,7 +183,15 @@ export default function OutilsPage() {
           </div>
         </div>
       </div>
-      <NextStepsGuide context="tool" />
+      {/*
+        BLOCK 11 fix (Agent /outils audit P0 CRO) : sur le HUB des outils,
+        on dirige vers /comparatif (entonnoir outil → choix plateforme).
+        `context="tool"` propose [quiz, outils, newsletter] (pour les pages
+        d'outils individuels — éviter la boucle vers le hub). Sur le hub on
+        utilise `context="tool-hub"` qui propose [quiz, comparator, newsletter].
+        Impact estimé : +15-20% conversion vers /comparatif depuis ce hub.
+      */}
+      <NextStepsGuide context="tool-hub" />
     </section>
   );
 }

@@ -48,6 +48,8 @@ export type NextStepsContext =
   | "quiz-result"
   | "platform-review"
   | "tool"
+  | "tool-hub"   // BLOCK 11 (Agent /outils audit P0 CRO) : hub /outils
+                 // (vs `tool` = page d'un outil individuel)
   | "calendar";
 
 interface Step {
@@ -236,8 +238,14 @@ function selectSteps(props: Props): Step[] {
       return [POOL.quiz, POOL.calculateurFiscalite, POOL.securiser];
 
     case "tool":
-      // Sur un outil → autres outils + ressources
+      // Sur un outil individuel → autres outils + ressources
       return [POOL.quiz, POOL.outils, POOL.newsletter];
+
+    case "tool-hub":
+      // Sur le HUB des outils → orienter vers /comparatif (entonnoir
+      // conversion outil → choix plateforme). Quiz reste pertinent (qualifier
+      // le visiteur), comparator est le money page, newsletter pour fidélisation.
+      return [POOL.quiz, POOL.comparator, POOL.newsletter];
 
     case "calendar":
       // Sur le calendrier → news + actualités
