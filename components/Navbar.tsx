@@ -285,13 +285,23 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new CustomEvent("cmdk:open"));
-                  // Audit SEO : track search intent pour insights éditoriaux.
-                  if (typeof (window as { plausible?: (e: string, o?: object) => void }).plausible === "function") {
-                    (window as { plausible: (e: string, o?: object) => void }).plausible("Search Open", { props: { source: "navbar" } });
-                  }
+                if (typeof window === "undefined") return;
+                // Tente d'ouvrir la palette via event custom.
+                window.dispatchEvent(new CustomEvent("cmdk:open"));
+                // Track Plausible.
+                if (typeof (window as { plausible?: (e: string, o?: object) => void }).plausible === "function") {
+                  (window as { plausible: (e: string, o?: object) => void }).plausible("Search Open", { props: { source: "navbar" } });
                 }
+                // Audit user 26/04 ('Ne fonctionne pas') : fallback robuste.
+                // Si CommandPalette n'est PAS encore monté (dynamic ssr:false +
+                // chunk en cours de chargement), l'event tombe dans le vide.
+                // On vérifie après 350ms si une modal est ouverte ; sinon on
+                // navigue vers /recherche (page search dédiée).
+                window.setTimeout(() => {
+                  if (!document.querySelector('[role="dialog"][aria-label*="Recherche"]')) {
+                    window.location.href = "/recherche";
+                  }
+                }, 350);
               }}
               aria-label="Ouvrir la recherche (Ctrl+K)"
               title="Recherche (⌘K)"
@@ -310,9 +320,14 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new CustomEvent("cmdk:open"));
-                }
+                if (typeof window === "undefined") return;
+                window.dispatchEvent(new CustomEvent("cmdk:open"));
+                // Fallback /recherche si palette pas chargée (cf. button desktop).
+                window.setTimeout(() => {
+                  if (!document.querySelector('[role="dialog"][aria-label*="Recherche"]')) {
+                    window.location.href = "/recherche";
+                  }
+                }, 350);
               }}
               aria-label="Ouvrir la recherche (Ctrl+K)"
               title="Recherche (⌘K)"

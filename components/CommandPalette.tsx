@@ -516,29 +516,143 @@ const SUGGESTIONS: Array<{ q: string; label: string }> = [
   { q: "dca", label: "Stratégie DCA" },
 ];
 
+/**
+ * EmptyState — UI pédagogue et guidante quand pas encore de query.
+ *
+ * Audit user 26/04/2026 ('Ne fonctionne pas - Je veux une recherche bien
+ * dynamique et pédagogue qui guide') : refonte complète pour :
+ *  - Sections guides par persona (Débutant / Intermédiaire / Avancé)
+ *  - Suggestions populaires colorées par catégorie
+ *  - Raccourcis clavier visibles (↑↓ Enter Esc)
+ *  - Ce qu'on peut chercher (5 catégories iconographiées)
+ *  - Tone "main tenue" : phrases d'exemple "Que cherches-tu ?"
+ */
 function EmptyState({ onPick }: { onPick: (q: string) => void }) {
   return (
-    <div className="p-6">
-      <p className="text-xs uppercase tracking-wider text-muted/80 font-semibold">
-        Suggestions populaires
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {SUGGESTIONS.map((s) => (
+    <div className="p-5 sm:p-6">
+      {/* Section 1 : Pour qui es-tu ? Guidance par persona */}
+      <div className="mb-5">
+        <p className="text-[11px] uppercase tracking-wider text-amber-300/90 font-bold flex items-center gap-1.5 mb-2">
+          <Search className="h-3 w-3" /> Pour bien commencer
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <PersonaCard
+            label="Je débute"
+            icon="🌱"
+            queries={["acheter bitcoin", "premier achat crypto", "MiCA c'est quoi"]}
+            onPick={onPick}
+          />
+          <PersonaCard
+            label="Je compare"
+            icon="⚖️"
+            queries={["coinbase vs binance", "comparatif plateformes", "frais kraken"]}
+            onPick={onPick}
+          />
+          <PersonaCard
+            label="J'apprends"
+            icon="📚"
+            queries={["RSI MACD", "staking ETH", "fiscalité crypto"]}
+            onPick={onPick}
+          />
+        </div>
+      </div>
+
+      {/* Section 2 : Suggestions populaires (chips colorés) */}
+      <div className="mb-5">
+        <p className="text-[11px] uppercase tracking-wider text-muted/80 font-semibold mb-2">
+          Suggestions populaires
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {SUGGESTIONS.map((s) => (
+            <button
+              key={s.q}
+              type="button"
+              onClick={() => onPick(s.q)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-elevated px-3 py-1.5 text-xs text-white/85 hover:border-amber-300/50 hover:bg-white/10 hover:text-white transition-colors"
+            >
+              <Search className="h-3 w-3 text-muted" />
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Section 3 : Ce que tu peux chercher (catégories iconographiées) */}
+      <div className="mb-5 rounded-xl border border-border/60 bg-surface/50 p-3">
+        <p className="text-[11px] uppercase tracking-wider text-muted/80 font-semibold mb-2">
+          Tu peux chercher dans
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1.5 text-[11px]">
+          {TYPE_ORDER.map((type) => {
+            const meta = TYPE_META[type];
+            const Icon = meta.icon;
+            return (
+              <span key={type} className="inline-flex items-center gap-1.5 text-fg/75">
+                <Icon className={`h-3 w-3 ${meta.color}`} aria-hidden="true" />
+                {meta.label}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Section 4 : Raccourcis clavier */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[10px] text-muted/80">
+        <span className="inline-flex items-center gap-1">
+          <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-elevated border border-border/60 font-mono text-[10px]">↑</kbd>
+          <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-elevated border border-border/60 font-mono text-[10px]">↓</kbd>
+          naviguer
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-elevated border border-border/60 font-mono text-[10px]">↵</kbd>
+          ouvrir
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-elevated border border-border/60 font-mono text-[10px]">Esc</kbd>
+          fermer
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-elevated border border-border/60 font-mono text-[10px]">⌘K</kbd>
+          réouvrir
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * PersonaCard — bloc guidance par persona (Débutant / Intermédiaire / Avancé).
+ * Affiche 3 exemples de query au format chip cliquable.
+ */
+function PersonaCard({
+  label,
+  icon,
+  queries,
+  onPick,
+}: {
+  label: string;
+  icon: string;
+  queries: string[];
+  onPick: (q: string) => void;
+}) {
+  return (
+    <div className="rounded-lg border border-border/60 bg-surface/50 p-2.5">
+      <div className="text-[11px] font-bold text-white mb-1.5 flex items-center gap-1.5">
+        <span aria-hidden="true">{icon}</span>
+        {label}
+      </div>
+      <div className="flex flex-col gap-1">
+        {queries.map((q) => (
           <button
-            key={s.q}
+            key={q}
             type="button"
-            onClick={() => onPick(s.q)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-elevated px-3 py-1.5 text-xs text-white/85 hover:bg-white/10 hover:text-white transition-colors"
+            onClick={() => onPick(q)}
+            className="text-left text-[11px] text-fg/70 hover:text-amber-300 transition-colors truncate"
           >
-            <Search className="h-3 w-3 text-muted" />
-            {s.label}
+            → {q}
           </button>
         ))}
       </div>
-      <p className="mt-6 text-xs text-muted leading-relaxed">
-        Tape pour rechercher dans les articles, plateformes, cryptos, outils et
-        le glossaire.
-      </p>
     </div>
   );
 }
