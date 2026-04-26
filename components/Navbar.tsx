@@ -266,7 +266,14 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu de navigation"
-          className="md:hidden fixed inset-0 top-16 z-40 bg-background/98 backdrop-blur-2xl animate-fade-in overflow-y-auto"
+          // BUG FIX 26/04/2026 (Chrome MCP live test) : avant `inset-0 top-16
+          // bg-background/98` collapsait le menu à h=16px + bg transparent.
+          // Cause : `bg-background/98` (opacity arbitrary) ne compile pas
+          // toujours en CSS valide selon la version Tailwind (background n'est
+          // pas un theme color natif), et `inset-0 top-16` ne fonctionne pas
+          // comme attendu sur certains navigateurs (top override mais bottom
+          // non respecté). Fix : props CSS longhand + bg-background opaque.
+          className="md:hidden fixed left-0 right-0 top-16 bottom-0 z-40 bg-background backdrop-blur-xl overflow-y-auto"
           style={{ paddingBottom: "calc(var(--safe-bottom) + 16px)" }}
         >
           <nav
