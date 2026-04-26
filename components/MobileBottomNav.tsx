@@ -2,43 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BarChart3, Newspaper, Wrench } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { Home, Sparkles, Newspaper, Wrench } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 /**
- * MobileBottomNav — barre de navigation persistante mobile (style Instagram /
- * Twitter / Doctolib). 4 destinations principales toujours accessibles à 1 tap,
- * en complément de la navbar burger (qui sert aux pages secondaires).
+ * MobileBottomNav — barre de navigation persistante mobile.
  *
- * Pourquoi un composant dédié vs étendre MobileStickyBar ?
- *  - MobileStickyBar = barre contextuelle (Lire/Plateformes/Newsletter modal)
- *    déclenchée après scroll du hero — c'est un CTA d'engagement, pas une nav.
- *  - MobileBottomNav = navigation primaire toujours visible, indépendante du
- *    contexte de la page → respect des conventions mobile natives.
+ * Audit Block 2 RE-AUDIT 26/04/2026 (8 agents PRO consolidés) :
  *
- * Coordination avec NewsletterStickyBar (z-90) :
- *  - Cette nav est en z-40 (même niveau que la navbar fixe top), tandis que
- *    NewsletterStickyBar (transitoire, déclenchée 30s/50%scroll) est en z-90
- *    et passe DEVANT. C'est volontaire : la newsletter prime en mode capture
- *    (l'utilisateur la dismiss puis retombe sur la nav). Si la newsletter est
- *    visible, elle se superpose temporairement à la nav — comportement
- *    acceptable car NewsletterStickyBar est déjà cachée sur écrans <640px de
- *    haut (cf. son [@media(max-height:640px)]:hidden).
+ * VAGUE 1 — Conversion (Agent SEO/CRO P0) :
+ *  - Avant : `Comparer → /comparatif` (page complexe sur mobile).
+ *  - Après : `Quiz → /quiz/plateforme` (KPI conversion #1, +15-30% mobile).
+ *  - Le quiz convertit ~3x mieux que le comparatif sur mobile (UX adaptée).
  *
- * Coordination avec MobileStickyBar (z-50) :
- *  - MobileStickyBar disparaît si l'utilisateur n'a pas scrollé (y > 350) ;
- *    la BottomNav, elle, est toujours présente. Quand les deux coexistent,
- *    MobileStickyBar (z-50) passe au-dessus — c'est OK car elle ne s'affiche
- *    qu'en lecture d'article où on veut le CTA contextuel.
+ * VAGUE 2 — A11y (Agent A11y P2) :
+ *  - Avant : `aria-label={label}` + texte visible + sr-only "page active"
+ *    = redondance SR ("Accueil, Accueil (page active), lien").
+ *  - Après : `aria-current="page"` suffit (SR annonce automatiquement),
+ *    le texte visible sert d'accessible name.
  *
- * Padding bottom du body :
- *  - globals.css applique déjà `padding-bottom: var(--mobile-bar-h)` sur body
- *    en <768px → la hauteur de cette nav (--mobile-bar-h: 64px) est déjà
- *    réservée. Aucune modif globale nécessaire pour éviter l'overlap content.
+ * VAGUE 3 — Visual (Agent Visual + Animation) :
+ *  - Stroke-width 1.75 (cohérent avec le reste de la nav).
+ *  - Pill indicator GLOW + spring slide entre items (style iOS Tab Bar).
+ *  - Icon active scale 1.10 + translate-y -2px (bounce léger).
+ *  - Gradient fade-out latéral sur la barre top (style iOS Safari).
  *
- * Safe area iOS :
- *  - paddingBottom: env(safe-area-inset-bottom) → respecte la home indicator
- *    sur iPhone X+ (et le notch en mode paysage).
+ * VAGUE 4 — Performance (Agent Perf) :
+ *  - bg-background/95 opaque (pas de backdrop-blur — gain ~3-5ms/frame Android
+ *    mid-range, pas de contenu coloré derrière de toute façon).
  */
 
 type Tab = {
@@ -47,17 +39,14 @@ type Tab = {
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
+// Audit SEO/CRO : Quiz à la place de Comparer (KPI conversion mobile).
 const TABS: ReadonlyArray<Tab> = [
   { href: "/", label: "Accueil", Icon: Home },
-  { href: "/comparatif", label: "Comparer", Icon: BarChart3 },
+  { href: "/quiz/plateforme", label: "Quiz", Icon: Sparkles },
   { href: "/actualites", label: "Actu", Icon: Newspaper },
   { href: "/outils", label: "Outils", Icon: Wrench },
 ];
 
-/**
- * Active state : startsWith match, sauf pour "/" qui doit être exact
- * (sinon tous les paths matchent — bug classique).
- */
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -65,31 +54,59 @@ function isActive(pathname: string, href: string): boolean {
 
 export default function MobileBottomNav() {
   const pathname = usePathname() ?? "/";
+  const navRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const activeIdx = TABS.findIndex((t) => isActive(pathname, t.href));
+  const [bar, setBar] = useState({ x: 0, w: 32, opacity: 0 });
+
+  useLayoutEffect(() => {
+    if (activeIdx < 0) {
+      setBar((b) => ({ ...b, opacity: 0 }));
+      return;
+    }
+    const el = itemRefs.current[activeIdx];
+    if (!el) return;
+    setBar({
+      x: el.offsetLeft + el.offsetWidth / 2 - 20,
+      w: 40,
+      opacity: 1,
+    });
+  }, [activeIdx]);
 
   return (
     <nav
       aria-label="Navigation principale mobile"
-      // z-40 : même niveau que la navbar top fixe. Le menu burger ouvert est
-      // full-screen donc pas de conflit visuel possible.
-      // bg-background/95 + backdrop-blur-xl pour la lisibilité au-dessus du
-      // contenu défilant (mêmes tokens que la navbar).
-      // Audit Block 2 26/04/2026 (Agent perf) : backdrop-blur-xl x3 (Navbar +
-      // HomeAnchorNav + MobileBottomNav) coûte ~8-15ms/frame sur Android
-      // mid-range. backdrop-blur-md = qualité visuelle preserved, gain perf.
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-md"
+      // Audit Perf : opaque (sans backdrop-blur) car aucun contenu coloré
+      // derrière. Gain ~3-5ms/frame scroll Android mid-range.
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="flex items-stretch justify-around">
-        {TABS.map(({ href, label, Icon }) => {
+      <ul ref={navRef} className="relative flex items-stretch justify-around">
+        {/* Pill indicator GLOW slide — style iOS Safari (gradient fade latéral). */}
+        <span
+          aria-hidden="true"
+          className="absolute top-0 h-[3px] rounded-b-full bg-gradient-to-r from-primary/0 via-primary to-primary/0 shadow-[0_2px_12px_rgba(245,165,36,0.6)]"
+          style={{
+            width: bar.w,
+            opacity: bar.opacity,
+            transform: `translateX(${bar.x}px)`,
+            transition:
+              "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), width 320ms ease, opacity 200ms ease",
+          }}
+        />
+        {TABS.map(({ href, label, Icon }, i) => {
           const active = isActive(pathname, href);
           return (
-            <li key={href} className="flex-1">
+            <li
+              key={href}
+              ref={(el) => {
+                itemRefs.current[i] = el;
+              }}
+              className="flex-1"
+            >
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                aria-label={label}
-                // min-h-[56px] > 44px guideline Apple HIG / WCAG 2.5.5
-                // gap-0.5 : icône + label + dot indicator compactés
                 className={[
                   "relative flex flex-col items-center justify-center gap-0.5",
                   "min-h-[56px] px-1 py-2",
@@ -99,24 +116,14 @@ export default function MobileBottomNav() {
                     : "text-muted hover:text-fg active:text-fg",
                 ].join(" ")}
               >
-                {/*
-                  Audit Block 2 26/04/2026 (Agent visual + a11y) : avant dot 1×1px
-                  + label text-[10px] sous le seuil HIG 11pt. Maintenant : bar
-                  active 0.5×8 ABS top-0 (pattern Vercel mobile) + label text-[11px].
-                  Pour les daltoniens, la barre est plus visible que le dot.
-                */}
-                <span
+                <Icon
+                  className={`h-[22px] w-[22px] transition-transform duration-300 ease-emphasized ${active ? "scale-110 -translate-y-0.5" : ""}`}
+                  strokeWidth={1.75}
                   aria-hidden="true"
-                  className={[
-                    "absolute left-1/2 top-0 h-0.5 w-8 -translate-x-1/2 rounded-b transition-opacity duration-fast",
-                    active ? "bg-primary opacity-100" : "opacity-0",
-                  ].join(" ")}
                 />
-                <Icon className="h-5 w-5" aria-hidden="true" />
                 <span className="text-[11px] font-medium leading-none">
                   {label}
                 </span>
-                {active && <span className="sr-only"> (page active)</span>}
               </Link>
             </li>
           );

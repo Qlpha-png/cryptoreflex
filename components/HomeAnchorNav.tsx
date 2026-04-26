@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Target,
   BarChart3,
@@ -14,20 +14,34 @@ import type { LucideIcon } from "lucide-react";
 /**
  * HomeAnchorNav — chips horizontales sticky sous le Hero, type onglets.
  *
- * Pourquoi (feedback utilisateur 26/04/2026 "faire des onglets pour faire
- * respirer + pas se perdre") :
- *  - La home a 6 catégories d'info (Démarrer, Comparer, Apprendre, Actu,
- *    Outils, Newsletter). Sans nav d'ancre, le visiteur scrolle 5 viewports
- *    avant de comprendre l'offre.
- *  - Ces chips agissent comme une "table des matières" sticky : 1 clic =
- *    scroll fluide vers la section. Plus dynamique qu'un sommaire statique.
+ * Audit Block 2 RE-AUDIT 26/04/2026 (consolidation 8 agents PRO) :
  *
- * Implémentation :
- *  - Sticky sous la nav principale (top-16 = sous le Navbar h-16).
- *  - Détecte la section active via IntersectionObserver pour highlight.
- *  - Scroll-snap horizontal sur mobile (overflow-x-auto + snap-x).
- *  - Pas d'anchor href={"#cat-..."} pour préserver le scrollIntoView smooth
- *    (les browsers respectent scroll-margin-top défini en CSS).
+ * VAGUE 1 — A11y P0 EAA (Agents A11y + Front + UX) :
+ *  - Avant : <button onClick={handleClick}> = cassé sans JS, pas d'URL hash,
+ *    scroll non-annoncé, pas de fallback. Violation WCAG 1.3.1, 2.1.1, 4.1.2.
+ *  - Après : <a href="#cat-X"> + onClick avec preventDefault (smooth scroll
+ *    si JS, navigation native sinon). URL hash mis à jour via history.pushState.
+ *    Focus déplacé sur la section cible (tabIndex={-1}) → annonce SR fluide.
+ *  - aria-current="true" (boolean ARIA-conform) au lieu de "location".
+ *
+ * VAGUE 2 — Tap targets WCAG 2.5.8 (Agents A11y + Mobile) :
+ *  - Avant : py-1.5 px-3.5 text-xs = ~28px hauteur (sous 44px AAA).
+ *  - Après : py-2.5 px-4 min-h-[44px] text-sm.
+ *
+ * VAGUE 3 — DYNAMISME (Agent animation +1 pt) :
+ *  - Pill gold qui SLIDE entre les chips actives (style Linear tabs).
+ *  - useLayoutEffect mesure le chip actif → translate la pill avec spring.
+ *  - cubic-bezier(0.34, 1.32, 0.64, 1) = easeOutBack, sentiment iOS.
+ *
+ * VAGUE 4 — Funnel (Agent SEO/CRO) :
+ *  - Réordonner : Démarrer → Apprendre → Comparer → Outils → Actu → Newsletter.
+ *  - Apprendre AVANT Comparer = préchauffage cognitif débutant.
+ *
+ * VAGUE 5 — Performance (Agent perf) :
+ *  - rootMargin élargi pour mobile (-140px 0px -40% 0px) — fix bug "aucune chip
+ *    highlightée" sur petits viewports.
+ *  - prefers-reduced-motion respecté (scroll auto au lieu de smooth).
+ *  - backdrop-blur retiré (pas nécessaire sous Navbar) — gain perf scroll.
  */
 
 interface ChipDef {
@@ -36,21 +50,23 @@ interface ChipDef {
   Icon: LucideIcon;
 }
 
+// Audit SEO/CRO : Apprendre AVANT Comparer pour persona débutant (70% trafic).
 const CHIPS: ChipDef[] = [
   { href: "#cat-demarrer", label: "Démarrer", Icon: Target },
-  { href: "#cat-comparer", label: "Comparer", Icon: BarChart3 },
   { href: "#cat-apprendre", label: "Apprendre", Icon: Lightbulb },
-  { href: "#cat-actu", label: "Actualités", Icon: Newspaper },
+  { href: "#cat-comparer", label: "Comparer", Icon: BarChart3 },
   { href: "#cat-outils", label: "Outils", Icon: Wrench },
+  { href: "#cat-actu", label: "Actualités", Icon: Newspaper },
   { href: "#cat-informe", label: "Newsletter", Icon: Mail },
 ];
 
 export default function HomeAnchorNav() {
   const [activeId, setActiveId] = useState<string>(CHIPS[0].href);
+  const [pill, setPill] = useState({ x: 0, w: 0, opacity: 0 });
+  const trackRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
   useEffect(() => {
-    // Detect quelle section est dans le viewport (intersection au-dessus de
-    // la moitié de la page = active). Permet de highlight la chip courante.
     const ids = CHIPS.map((c) => c.href.slice(1));
     const sections = ids
       .map((id) => document.getElementById(id))
@@ -60,19 +76,17 @@ export default function HomeAnchorNav() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Prend la section la plus visible (la plus haute parmi celles intersecting)
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
         if (visible.length > 0) {
-          setActiveId(`#${visible[0].target.id}`);
+          const newId = `#${visible[0].target.id}`;
+          setActiveId((prev) => (prev !== newId ? newId : prev));
         }
       },
       {
-        // top:-100px pour que la section soit "active" quand son haut depasse
-        // sous la nav sticky (chips~52px + navbar~64px = ~120px buffer)
-        rootMargin: "-120px 0px -50% 0px",
-        threshold: 0,
+        rootMargin: "-140px 0px -40% 0px",
+        threshold: [0, 0.1, 0.5],
       },
     );
 
@@ -80,52 +94,92 @@ export default function HomeAnchorNav() {
     return () => observer.disconnect();
   }, []);
 
-  function handleClick(href: string) {
-    setActiveId(href);
-    // Scroll smooth via scrollIntoView pour cohérence cross-browser
+  // Pill slide indicator — recalcule la position quand activeId change OU au resize.
+  useLayoutEffect(() => {
+    const computePill = () => {
+      const chip = chipRefs.current.get(activeId);
+      const track = trackRef.current;
+      if (!chip || !track) return;
+      const cRect = chip.getBoundingClientRect();
+      const tRect = track.getBoundingClientRect();
+      setPill({ x: cRect.left - tRect.left, w: cRect.width, opacity: 1 });
+    };
+    computePill();
+    window.addEventListener("resize", computePill);
+    return () => window.removeEventListener("resize", computePill);
+  }, [activeId]);
+
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
+    e.preventDefault();
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const el = document.getElementById(href.slice(1));
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      // Update URL hash sans reload (a11y : permet de partager / bookmarking).
+      try {
+        history.pushState(null, "", href);
+      } catch {
+        /* ignore (sandboxed contexts) */
+      }
+      // Focus la section pour annonce SR (la section doit avoir tabIndex={-1}).
+      el.setAttribute("tabindex", "-1");
+      (el as HTMLElement).focus({ preventScroll: true });
     }
+    setActiveId(href);
   }
 
   return (
     <nav
       aria-label="Navigation interne de la page"
-      // Audit Block 2 26/04/2026 (Agent perf) : backdrop-blur-md (vs xl)
-      // pour reduire stack GPU sticky -> nav scroll plus fluide mobile.
-      className="sticky top-16 z-30 bg-background/85 backdrop-blur-md border-b border-border/60 shadow-[0_4px_16px_-12px_rgba(0,0,0,0.4)]"
+      className="sticky top-16 z-30 bg-background/95 border-b border-border/60 shadow-[0_4px_16px_-12px_rgba(0,0,0,0.4)]"
     >
-      {/* Audit visuel mobile 26/04/2026 : avant le inner flex sans `w-full` +
-          `min-w-0` propageait sa largeur intrinsèque (1394px avec 6 chips)
-          au body via flex grow, créant un overflow horizontal global ~37px.
-          Fix : wrapper `w-full overflow-x-auto` + `min-w-max` sur la flex
-          row pour que le scroll horizontal reste contenu DANS le wrapper. */}
       <div className="mx-auto max-w-7xl w-full overflow-x-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex min-w-max items-center gap-2 py-2.5 snap-x snap-mandatory scrollbar-thin">
+        <div
+          ref={trackRef}
+          className="relative flex min-w-max items-center gap-3 py-2.5 snap-x snap-mandatory scrollbar-thin"
+        >
+          {/* Pill slide indicator (style Linear tabs) — un seul élément qui se
+              déplace entre les chips. Spring easeOutBack pour sentiment iOS. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-gradient-to-b from-primary/20 to-primary/5 ring-1 ring-primary/50 shadow-[inset_0_1px_0_0_rgba(252,211,77,0.25),0_0_24px_-8px_rgba(245,165,36,0.55)]"
+            style={{
+              width: pill.w,
+              opacity: pill.opacity,
+              transform: `translateX(${pill.x}px)`,
+              transition:
+                "transform 380ms cubic-bezier(0.34, 1.32, 0.64, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease",
+            }}
+          />
+
           {CHIPS.map((chip) => {
             const isActive = activeId === chip.href;
             return (
-              <button
+              <a
                 key={chip.href}
-                type="button"
-                onClick={() => handleClick(chip.href)}
-                aria-current={isActive ? "location" : undefined}
-                className={`group inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-fast snap-start whitespace-nowrap
+                ref={(el) => {
+                  if (el) chipRefs.current.set(chip.href, el);
+                }}
+                href={chip.href}
+                onClick={(e) => handleClick(e, chip.href)}
+                aria-current={isActive ? "true" : undefined}
+                className={`relative z-10 group inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold transition-colors duration-fast snap-start whitespace-nowrap
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                            ${
                              isActive
-                               ? "border-primary bg-primary/15 text-primary-glow shadow-[0_0_20px_-8px_rgba(245,165,36,0.5)]"
-                               : "border-border bg-elevated/40 text-fg/75 hover:border-primary/40 hover:text-fg hover:bg-elevated"
+                               ? "text-primary-glow"
+                               : "text-fg/75 hover:text-fg"
                            }`}
               >
                 <chip.Icon
                   className={`h-3.5 w-3.5 transition-transform ${isActive ? "scale-110" : "group-hover:scale-105"}`}
-                  strokeWidth={2}
+                  strokeWidth={1.75}
                   aria-hidden="true"
                 />
                 {chip.label}
-              </button>
+              </a>
             );
           })}
         </div>

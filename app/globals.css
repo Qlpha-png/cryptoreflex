@@ -518,6 +518,78 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ============================================================
+ * BLOCK 2 NAV DYNAMISM — Audit Block 2 RE-AUDIT 26/04/2026
+ * (Agent animation/dynamism — réplique sensation "vivant news"
+ * sur la nav : logo qui respire, drawer spring, hairline gold
+ * qui apparait au scroll, etc.)
+ * ============================================================ */
+
+/* Logo Cryptoreflex — entrance signature au mount (subtle scale + fade) */
+@keyframes logo-mount {
+  0%   { opacity: 0; transform: scale(0.96) translateY(-2px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.logo-mount {
+  animation: logo-mount 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Drawer mobile — slide-in from right + spring easeOutBack (style iOS/Stripe) */
+@keyframes drawer-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes backdrop-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes drawer-item-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.drawer-panel {
+  animation: drawer-slide-in 420ms cubic-bezier(0.34, 1.32, 0.64, 1) both;
+  will-change: transform;
+}
+.drawer-backdrop {
+  animation: backdrop-fade-in 240ms ease-out both;
+}
+.drawer-item {
+  opacity: 0;
+  animation: drawer-item-up 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* Stagger via --i CSS var (set via inline style sur chaque item) */
+  animation-delay: calc(120ms + var(--i, 0) * 40ms);
+}
+
+/* View Transitions API — page transition fade+slide (Chrome 111+, Safari 18+, Firefox flag).
+   Fallback gracieux : navigateurs non supportés ignorent. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) {
+  animation: vt-fade-out 200ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-fade-in 320ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+}
+@keyframes vt-fade-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-fade-in  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* prefers-reduced-motion : neutralise tous les keyframes Block 2 nav. */
+@media (prefers-reduced-motion: reduce) {
+  .logo-mount,
+  .drawer-panel,
+  .drawer-backdrop,
+  .drawer-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 /* prefers-reduced-motion : neutralise tous les keyframes Block 1 dynamism. */
 @media (prefers-reduced-motion: reduce) {
   .hero-halo,

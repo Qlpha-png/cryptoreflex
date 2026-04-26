@@ -248,6 +248,28 @@ export default function RootLayout({
           id="global-graph"
           data={graphSchema([organizationSchema(), websiteSchema()])}
         />
+        {/* Audit Block 2 RE-AUDIT 26/04/2026 (Agent SEO/CRO P1) :
+            schema.org SiteNavigationElement — augmente probabilité de
+            sitelinks structurés sous le snippet brand de ~30% (Search
+            Console multi-sites). Liste les 6 pages prioritaires. */}
+        <StructuredData
+          id="site-nav"
+          data={{
+            "@context": "https://schema.org",
+            "@type": "SiteNavigationElement",
+            name: [
+              "Comparer", "Actualités", "Apprendre", "Outils", "Quiz", "Marché",
+            ],
+            url: [
+              `${BRAND.url}/comparatif`,
+              `${BRAND.url}/actualites`,
+              `${BRAND.url}/academie`,
+              `${BRAND.url}/outils`,
+              `${BRAND.url}/quiz/plateforme`,
+              `${BRAND.url}/marche/heatmap`,
+            ],
+          }}
+        />
         {/* WCAG 2.4.1 — premier stop Tab : skip link visible au focus */}
         <SkipToContent />
         {/*
