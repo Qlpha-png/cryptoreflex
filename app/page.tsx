@@ -298,8 +298,8 @@ export default async function HomePage() {
         <CategoryHeader
           Icon={Wrench}
           eyebrow="Étape 5"
-          title="Outils & marché live"
-          intro="Calculateurs, simulateurs, convertisseur, et le tableau des prix — tout est gratuit, sans inscription."
+          title="Outils"
+          intro="Calculateurs, simulateurs, convertisseur — tout est gratuit, sans inscription, sans email demandé."
           ctaHref="/outils"
           ctaLabel="Tous les outils"
           anchorId="cat-outils"
