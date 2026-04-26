@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import PlausibleScript from "@/components/PlausibleScript";
@@ -314,6 +315,15 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        {/*
+          MobileBottomNav — barre de navigation persistante (style Instagram /
+          Twitter / Doctolib) visible uniquement <768px. 4 destinations primaires
+          (Accueil, Comparer, Actu, Outils). Le padding-bottom du body défini
+          dans globals.css (--mobile-bar-h: 64px) réserve déjà la place pour
+          éviter l'overlap avec le contenu. NewsletterStickyBar (z-90) passe
+          par-dessus volontairement quand elle est déclenchée.
+        */}
+        <MobileBottomNav />
         <CookieBanner />
         {/*
           Plausible Analytics — chargé uniquement si l'utilisateur a accepté
