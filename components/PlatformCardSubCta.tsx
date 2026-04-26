@@ -35,10 +35,10 @@ export default function PlatformCardSubCta({ platformId, platformName }: Props) 
     }
   };
 
+  // Audit Block 4 26/04/2026 (Agent mobile + a11y) :
+  // - mt-2 -> mt-3, py-2 + min-h-[44px] : tap target WCAG 2.5.8 AA
+  // - "Lire notre avis détaillé" -> "Voir l'avis" : 2x plus court, scannable
   return (
-    {/* Audit Block 4 26/04/2026 (Agent mobile + a11y) :
-        - mt-2 -> mt-3, py-2 + min-h-[44px] : tap target WCAG 2.5.8 AA
-        - "Lire notre avis détaillé" -> "Voir l'avis" : 2x plus court, scannable */}
     <Link
       href={`/avis/${platformId}`}
       onClick={handleClick}
