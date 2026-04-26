@@ -53,13 +53,14 @@ if (filterSlug && targets.length === 0) {
 
 // Import dynamique (évite l'erreur si playwright/marked pas installés et que
 // l'utilisateur veut juste lire ce script).
-let chromium, marked;
+let chromium, marked, PDFDocument;
 try {
   ({ chromium } = await import("playwright"));
   ({ marked } = await import("marked"));
+  ({ PDFDocument } = await import("pdf-lib"));
 } catch (e) {
   console.error("Dépendances manquantes. Installe :");
-  console.error("  pnpm install --save-dev playwright marked");
+  console.error("  pnpm install --save-dev playwright marked pdf-lib");
   console.error("  npx playwright install chromium");
   console.error("");
   console.error("Erreur originale :", e.message);
@@ -406,15 +407,40 @@ async function buildPdf(magnet) {
   // Sans cette ligne, un document de 22k mots tient sur 8 pages (densité
   // catastrophique). Avec, il s'aère sur 40-50 pages avec un break par H2.
   await page.emulateMedia({ media: "print" });
-  await page.pdf({
-    path: outPath,
+  // On rend dans un buffer puis on post-traite avec pdf-lib (cf. plus bas).
+  const rawPdfBuffer = await page.pdf({
     format: "A4",
     margin: { top: "2.2cm", bottom: "2.5cm", left: "2.2cm", right: "2.2cm" },
     printBackground: true,
   });
   await browser.close();
 
-  console.log(`OK ${path.relative(ROOT, outPath)}`);
+  // ----- POST-PROCESSING : aplatir l'arbre /Pages -----
+  // Bug Chromium / Playwright : page.pdf() produit un PDF correct (toutes
+  // les pages sont là, le contenu est paginé proprement) MAIS l'arbre /Pages
+  // est multi-niveaux : 8 sous-arbres + un sous-arbre racine. Conséquence :
+  // l'utilitaire `file` (et beaucoup d'autres outils basiques) lit le PREMIER
+  // /Count rencontré (=8) au lieu du /Count racine (=69 par exemple), et
+  // rapporte un compte de pages faux. Les visualiseurs PDF sérieux (Acrobat,
+  // pdftotext, navigateurs) lisent l'arbre correctement.
+  // Pour avoir un PDF dont `file` rapporte le bon nombre de pages, on
+  // recopie les pages dans un nouveau document via pdf-lib : ça produit un
+  // /Pages plat (un seul /Count au début).
+  const srcPdf = await PDFDocument.load(rawPdfBuffer);
+  const dstPdf = await PDFDocument.create();
+  const copied = await dstPdf.copyPages(srcPdf, srcPdf.getPageIndices());
+  copied.forEach((p) => dstPdf.addPage(p));
+  // Métadonnées propres
+  dstPdf.setTitle(meta.title || magnet.title);
+  if (meta.author) dstPdf.setAuthor(meta.author);
+  if (meta.subtitle) dstPdf.setSubject(meta.subtitle);
+  dstPdf.setProducer("Cryptoreflex lead-magnet builder (Playwright + pdf-lib)");
+  dstPdf.setCreator("Cryptoreflex");
+  const finalPdf = await dstPdf.save({ useObjectStreams: false });
+  writeFileSync(outPath, finalPdf);
+
+  const pageCount = dstPdf.getPageCount();
+  console.log(`OK ${path.relative(ROOT, outPath)} (${pageCount} pages)`);
   return true;
 }
 
