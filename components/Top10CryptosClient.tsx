@@ -383,9 +383,15 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
 
       <p className="mt-4 text-sm font-medium text-primary-soft italic">{crypto.tagline}</p>
 
-      <p className="mt-3 text-sm text-fg/80 leading-relaxed">{crypto.what}</p>
+      {/* Audit mobile 26/04/2026 : `what` clamp 2 lignes sur mobile (3 sur sm+),
+          la section "À quoi ça sert" cachée sur petit écran (déjà résumée par
+          tagline + what + lien fiche complète). Réduit la card de ~150 px sur
+          smartphone (de 350 → 200 px). */}
+      <p className="mt-3 text-sm text-fg/80 leading-relaxed line-clamp-2 sm:line-clamp-none">
+        {crypto.what}
+      </p>
 
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="hidden sm:block mt-4 pt-4 border-t border-border">
         <div className="text-xs font-semibold uppercase tracking-wide text-muted mb-1">
           À quoi ça sert
         </div>

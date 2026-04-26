@@ -437,10 +437,15 @@ body {
   background: var(--color-primary);
 }
 
-/* Modal: lock body scroll quand modal full-screen mobile ouverte */
+/* Modal: lock body scroll quand modal full-screen mobile ouverte.
+   Avant 26/04/2026 on avait `touch-action: none` qui bloquait TOUS les
+   touchstart/pointerdown du body — donc le burger button restait inerte
+   sur mobile (impossible de fermer le menu, parfois impossible de l'ouvrir
+   selon timing). On utilise `overscroll-behavior: contain` qui empêche
+   le rubber-band scroll iOS sans bloquer les interactions tactiles. */
 body.modal-open {
   overflow: hidden;
-  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 /* ───────────────────────── SKELETON / SHIMMER ─────────────────────────

@@ -161,7 +161,12 @@ export default function NewsletterStickyBar() {
     <div
       role="region"
       aria-label="Inscription newsletter rapide"
-      className="md:hidden fixed inset-x-0 bottom-0 z-[90] border-t border-border bg-background/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.4)] animate-fade-in-up"
+      // Audit mobile 26/04/2026 : caché sur écrans courts (<640px de hauteur)
+      // pour ne pas empiler 3 bandeaux (cookies + newsletter + sticky bar) qui
+      // mangeaient ~25 % du viewport sur petit smartphone. La règle
+      // `[@media(max-height:640px)]:hidden` est une syntaxe arbitraire Tailwind
+      // qui s'applique sans avoir à configurer un breakpoint custom.
+      className="md:hidden [@media(max-height:640px)]:hidden fixed inset-x-0 bottom-0 z-[90] border-t border-border bg-background/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.4)] animate-fade-in-up"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="px-4 py-3">

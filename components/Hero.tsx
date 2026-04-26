@@ -105,8 +105,9 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               </span>
             </h1>
 
-            {/* Sous-titre concret — ≤ 25 mots */}
-            <p className="ds-lead mt-5 max-w-xl leading-relaxed animate-hero-fade-up animate-hero-fade-up-delay-2">
+            {/* Sous-titre concret — ≤ 25 mots. Audit mobile 26/04/2026 :
+                taille minimale text-base (16px) pour lisibilité smartphone. */}
+            <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
               On a comparé{" "}
               <strong className="text-fg font-semibold">
                 {STATS.platforms} plateformes
@@ -155,8 +156,11 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
             </ul>
           </div>
 
-          {/* Colonne droite — live widget */}
-          <div className="lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
+          {/* Colonne droite — live widget. Audit mobile 26/04/2026 : caché
+              sous lg pour ne pas doubler la hauteur du hero sur smartphone
+              (déjà chargé avec H1, sub, CTAs, trust signals). Le widget reste
+              accessible via la section /marche en bas de page. */}
+          <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
             <HeroLiveWidget
               prices={prices}
               sparklines={sparklines}
