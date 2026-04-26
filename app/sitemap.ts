@@ -55,6 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/halving-bitcoin`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
     { url: `${SITE_URL}/quiz/plateforme`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/quiz/crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    // Quiz "Trouve ton exchange en 60 sec" (P0-différenciation : aucun concurrent FR
+    // n'a de quiz interactif). Lead magnet ultra-converting → priority 0.85, weekly.
+    { url: `${SITE_URL}/quiz/trouve-ton-exchange`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/wizard/premier-achat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Alertes prix par email — page outil, à indexer (potentiel "alerte prix bitcoin", etc.)

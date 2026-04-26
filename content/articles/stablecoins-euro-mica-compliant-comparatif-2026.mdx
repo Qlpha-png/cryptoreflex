@@ -1,0 +1,337 @@
+---
+title: "Stablecoins euro MiCA 2026 : EURC, EURI, EURØP comparatif"
+slug: "stablecoins-euro-mica-compliant-comparatif-2026"
+description: "Comparatif des stablecoins euro conformes MiCA en 2026 : EURC (Circle), EURI (Banking Circle), EURØP (Société Générale). Émetteurs, frais, sécurité."
+excerpt: "Trois stablecoins euro dominent le marché européen post-MiCA : EURC, EURI et EURØP. On les compare émetteur par émetteur — garanties, blockchains supportées, intégrations exchanges, frais de redemption — pour vous aider à choisir selon votre usage."
+category: "MiCA"
+date: "2026-04-26"
+publishedAt: "2026-04-26"
+updatedAt: "2026-04-26"
+lastUpdated: "2026-04-26"
+dateModified: "2026-04-26"
+readTime: "12 min"
+readingTime: 12
+author: "Kevin Voisin"
+authorId: "kevin-voisin"
+cover: "/blog/stablecoins-euro-mica-cover.jpg"
+gradient: "from-emerald-500/40 to-teal-600/40"
+tags:
+  - "mica"
+  - "stablecoins"
+  - "stablecoins euro"
+  - "eurc"
+  - "europ"
+  - "euri"
+  - "circle"
+  - "société générale"
+keywords:
+  - "stablecoins euro mica"
+  - "eurc stablecoin"
+  - "europ société générale"
+  - "stablecoin euro régulé"
+  - "alternative usdt mica"
+  - "comparatif stablecoins euro"
+  - "eurc vs europ"
+type: "guide"
+status: "published"
+featured: true
+schema:
+  type: "Article"
+  headline: "Stablecoins euro MiCA 2026 : EURC, EURI, EURØP comparatif"
+  about: "Comparatif des trois principaux stablecoins euro conformes au règlement MiCA en 2026"
+  audience: "Particuliers francophones (France, Belgique, Suisse, Québec) cherchant un stablecoin euro régulé pour épargne, trading ou paiements"
+---
+
+<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="26 avril 2026" readingTime="12 min" methodology="/methodologie" />
+
+Depuis l'entrée en vigueur de la **Phase 1 de MiCA** le 30 juin 2024, les stablecoins distribués dans l'Union européenne doivent être émis par un établissement agréé (banque ou EMI) et catégorisés en EMT (E-Money Tokens) ou ART (Asset-Referenced Tokens). Cette régulation a deux conséquences majeures : la disparition progressive d'**USDT** des plateformes européennes, et l'émergence de stablecoins **euro** réellement adossés à des dépôts bancaires européens.
+
+Trois acteurs dominent aujourd'hui le marché : **EURC** émis par Circle (le plus liquide), **EURI** émis par Banking Circle (la finance B2B européenne), et **EURØP** émis par Société Générale Forge (premier stablecoin euro d'une banque tier-1). Cet article les compare émetteur par émetteur, en détaillant les frais, les blockchains supportées, les intégrations exchanges, et le bon choix selon votre usage. Cryptoreflex est partenaire affilié de Coinbase et Bitpanda, plateformes citées dans cet article — notre indépendance éditoriale est documentée sur la page [méthodologie](/methodologie).
+
+## TL;DR (60 secondes)
+
+- **MiCA Phase 1** impose un cadre strict aux stablecoins distribués en UE : émetteur EMI ou banque, garanties séparées, audit régulier.
+- **USDT n'est pas MiCA-compliant** : Tether n'a pas demandé d'agrément, et est progressivement délisté des plateformes CASP européennes.
+- **EURC** (Circle) — le plus liquide, multichaîne, intégré à toutes les grandes plateformes européennes.
+- **EURI** (Banking Circle) — niche B2B, infrastructure paiements, market cap modeste mais croissant.
+- **EURØP** (SG Forge) — premier stablecoin euro émis par une banque tier-1, légitimité institutionnelle, intégration corporate.
+- **Choix recommandé selon usage** : EURC pour trading et exchanges, EURØP pour épargne / paiements long terme, EURI pour cas d'usage B2B / treasury.
+
+> Pour aller plus loin : [MiCA Phase 2 : ce qui change pour les Français](/blog/mica-phase-2-juillet-2026-ce-qui-change), [calculateur de fiscalité crypto](/outils/calculateur-fiscalite).
+
+---
+
+## 1. Pourquoi MiCA exige des stablecoins régulés
+
+Le règlement (UE) 2023/1114 (MiCA) impose pour la première fois un **cadre prudentiel européen** aux stablecoins. La logique : protéger les utilisateurs contre les risques systémiques observés en 2022-2023 (effondrement de Terra-Luna, dépeg de l'USDC à 0,87 $ pendant la crise SVB, opacité des réserves de Tether).
+
+### Deux catégories juridiques distinctes
+
+MiCA distingue deux types de stablecoins :
+
+- **EMT (E-Money Token)** — stablecoin **adossé à une seule monnaie ayant cours légal** (euro, dollar, etc.). L'émetteur doit être agréé **EMI** (Établissement de Monnaie Électronique) ou **établissement de crédit** (banque) dans un État membre. EURC, USDC, EURI et EURØP relèvent de cette catégorie. C'est le cadre le plus strict — proche d'une banque traditionnelle.
+- **ART (Asset-Referenced Token)** — stablecoin **adossé à un panier d'actifs** (multi-devises, matières premières, indices). Beaucoup plus rare en pratique, soumis à des exigences supplémentaires sur le pool d'actifs et la gouvernance.
+
+### Trois obligations clés pour les émetteurs
+
+1. **Réserves 1:1 ségréguées** : chaque token émis doit être adossé à un dépôt bancaire ou un actif ultra-liquide équivalent, séparé des fonds propres de l'émetteur. Les réserves doivent être détenues dans des banques agréées dans l'UE pour les "significant" EMT.
+2. **Droit de redemption à vue** : tout détenteur doit pouvoir échanger son stablecoin contre la monnaie sous-jacente, à valeur nominale, sur demande, sans frais excessifs. Article 49 du règlement.
+3. **Audit régulier et transparence** : publication mensuelle de la composition des réserves, audit indépendant trimestriel, communication des incidents au régulateur dans les 24h.
+
+<Callout type="info" title="Significant EMT : un seuil critique">
+Un stablecoin est qualifié de **"significant"** par l'EBA dès qu'il dépasse certains seuils (10 millions d'utilisateurs, 5 milliards € de market cap, 2,5 millions de transactions/jour, etc.). Conséquence : supervision directe par l'EBA, exigences de fonds propres renforcées, et restrictions sur les volumes de paiements quotidiens. EURC pourrait basculer dans cette catégorie courant 2026 selon Circle.
+</Callout>
+
+---
+
+## 2. Pourquoi USDT n'est pas MiCA-compliant en 2026
+
+**Tether (USDT)** est de loin le plus gros stablecoin mondial avec une market cap qui dépasse les 130 milliards $. C'est aussi le plus controversé : opacité historique sur la composition des réserves, absence d'audit complet, sanctions répétées de la CFTC américaine en 2021 et 2024.
+
+Tether **n'a pas demandé d'agrément MiCA** et a publiquement déclaré qu'il ne le ferait pas, considérant le cadre européen comme "incompatible avec son modèle d'émission". Conséquences concrètes :
+
+- **Coinbase Europe** a délisté USDT en décembre 2024.
+- **Kraken** a délisté les paires USDT/EUR en mars 2025 (paires USDT/crypto encore disponibles dans certains cas).
+- **Bitpanda** a retiré USDT début 2025.
+- **Binance France** a délisté USDT en juin 2025 sur les comptes francisés (paires conservées sur l'instance internationale, inaccessibles aux clients UE).
+
+**Pouvez-vous encore détenir des USDT ?** Oui, en **self-custody** (Ledger, MetaMask, Trezor) — MiCA ne s'applique pas aux wallets personnels, seulement aux prestataires. Mais **vendre vos USDT contre EUR sur une plateforme CASP française devient compliqué** : vous devez les convertir en USDC ou EURC tant que vous le pouvez, ou passer par un wallet tiers vers une plateforme hors-UE (avec les frais et risques associés).
+
+**USDC (Circle)** est en revanche **conforme MiCA** depuis juillet 2024 : Circle a obtenu un agrément EMI en France via sa filiale Circle Mint France. USDC reste utilisable normalement sur toutes les plateformes CASP européennes.
+
+---
+
+## 3. EURC (Circle) — le stablecoin euro le plus liquide
+
+**Circle** est l'émetteur de l'**USDC** (deuxième stablecoin mondial après USDT) depuis 2018. La société a lancé **EURC** en juin 2022, initialement sur Ethereum, puis a étendu progressivement le multichaîne. Avec MiCA Phase 1, Circle a obtenu son agrément EMI en France via sa filiale **Circle Mint France**, ce qui en fait l'un des premiers stablecoins euro pleinement conformes.
+
+### Caractéristiques techniques
+
+- **Émetteur** : Circle Internet Financial (US) via sa filiale Circle Mint France (agréée EMI par l'ACPR depuis juillet 2024).
+- **Catégorie MiCA** : EMT.
+- **Réserves** : 100 % en dépôts bancaires euro auprès d'établissements européens agréés (BNP Paribas, Société Générale, Bank of New York Mellon Europe).
+- **Audit** : Deloitte, attestation mensuelle publiée sur le site Circle.
+- **Blockchains supportées** : Ethereum (ERC-20), Solana (SPL), Avalanche (C-Chain), Stellar, Base, Hedera. Bridges officiels via CCTP (Cross-Chain Transfer Protocol) pour mouvements inter-chaînes sans liquidité fragmentée.
+- **Market cap** (avril 2026) : environ 240 millions €, en croissance constante depuis le délistage USDT.
+
+### Intégrations exchanges
+
+EURC est listé sur **Coinbase Europe** (paires EUR/EURC, BTC/EURC, ETH/EURC, USDC/EURC), **Kraken** (paires complètes), **Bitpanda** (intégration native depuis 2024), **Binance France** (paires depuis 2025), **Bitstack** (DCA EURC disponible). C'est de loin le stablecoin euro avec la plus large intégration plateforme.
+
+### Frais et redemption
+
+- **Émission/redemption institutionnelle** : Circle Mint propose 0 frais pour les comptes business avec un minimum de 100 000 €. Pas de frais retail direct.
+- **Pour le retail** : passez par un exchange. Sur Coinbase, le swap EUR → EURC coûte 0 % (intégré dans le spread). Le retrait on-chain coûte les frais réseau standards (Ethereum gas, Solana < 0,01 €).
+- **Délai de conversion** : instantané sur exchange ; 1 à 2 jours ouvrés pour une demande institutionnelle directe.
+
+### Point fort / point faible
+
+**Point fort** : la liquidité. EURC est intégré quasi partout, son spread est resserré, et son orderbook est profond sur les grandes plateformes. C'est le choix par défaut pour le trading et les arbitrages en euros.
+
+**Point faible** : émetteur américain. Même si Circle Mint France est une entité française régulée par l'ACPR, la maison-mère est aux US — donc soumise potentiellement à des injonctions extraterritoriales (FATCA, sanctions OFAC). Risque faible mais non nul pour un utilisateur francophone privilégiant la pleine souveraineté européenne.
+
+---
+
+## 4. EURI (Banking Circle) — la niche B2B européenne
+
+**Banking Circle** est un établissement bancaire européen basé au **Luxembourg**, spécialisé dans l'infrastructure des paiements transfrontaliers B2B. La banque a lancé **EURI** courant 2024, comme stablecoin euro destiné principalement aux **fintechs et acteurs corporate** ayant besoin d'un euro on-chain pour leurs flux internes.
+
+### Caractéristiques techniques
+
+- **Émetteur** : Banking Circle SA (Luxembourg), établissement de crédit agréé CSSF.
+- **Catégorie MiCA** : EMT, sous statut bancaire (avantage par rapport au statut EMI : exigences de fonds propres encore plus strictes).
+- **Réserves** : 100 % en dépôts bancaires euro chez la maison-mère, avec ségrégation totale et accès à la BCE en dernier ressort (statut bancaire).
+- **Audit** : KPMG Luxembourg, attestation mensuelle.
+- **Blockchains supportées** : Ethereum (ERC-20), Solana, Polygon. Pas (encore) de bridges natifs entre chaînes.
+- **Market cap** (avril 2026) : environ 90 millions €. Volume modeste vs EURC, mais en croissance B2B rapide.
+
+### Intégrations exchanges
+
+EURI a une présence retail beaucoup plus limitée. Listé sur **Bitpanda** (depuis fin 2024) et sur quelques exchanges de niche (CEX nordiques, plateformes B2B). Pas encore sur Coinbase, Kraken ou Binance à date. C'est cohérent avec le positionnement Banking Circle : EURI vise le **B2B corporate**, pas le retail trading.
+
+### Frais et redemption
+
+- **Émission/redemption** : 0 frais pour les comptes business B2B, accès direct via API Banking Circle.
+- **Pour le retail** : limité aux frais d'exchange. Sur Bitpanda, swap EUR → EURI à 0,5 % via le module standard.
+- **Délai** : instantané on-chain, 1 jour ouvré pour redemption directe.
+
+### Point fort / point faible
+
+**Point fort** : statut bancaire. EURI est l'un des rares stablecoins émis par une **banque agréée**, avec accès à la BCE en dernier ressort. C'est un cran au-dessus en termes de garantie systémique.
+
+**Point faible** : faible liquidité et faible disponibilité retail. Pour un usage particulier (épargne, paiements simples), EURI offre peu d'avantages par rapport à EURC à date, à l'exception d'un argument symbolique sur la garantie bancaire.
+
+---
+
+## 5. EURØP (Société Générale Forge) — le stablecoin de banque tier-1
+
+**SG Forge** est la filiale crypto de **Société Générale**, créée en 2018. La société a obtenu son **agrément PSAN agréé** dès 2023 (l'un des tout premiers en France) et a lancé **EURØP** en avril 2023, devenant ainsi le **premier stablecoin euro émis par une banque tier-1 européenne**. Avec l'entrée en vigueur de MiCA, EURØP a basculé naturellement sous statut EMT, en s'appuyant sur l'agrément bancaire de la maison-mère.
+
+### Caractéristiques techniques
+
+- **Émetteur** : Société Générale Forge SA (France), établissement de crédit (filiale Société Générale, banque G-SIB).
+- **Catégorie MiCA** : EMT, sous statut bancaire.
+- **Réserves** : 100 % en dépôts auprès de la Société Générale, avec ségrégation totale et accès BCE.
+- **Audit** : PwC France, attestation mensuelle, reporting trimestriel à l'ACPR.
+- **Blockchains supportées** : Ethereum (ERC-20), avec extensions prévues à Solana et Tezos courant 2026 selon la roadmap publique.
+- **Market cap** (avril 2026) : environ 60 millions €. Croissance significative depuis l'agrément CASP de SG Forge.
+
+### Intégrations exchanges
+
+EURØP est listé sur **Bitpanda**, **Coinhouse**, **SwissBorg** (depuis octobre 2025), et sur la plateforme institutionnelle **Forge Exchange** (B2B). Plus récemment, **Binance France** a annoncé en mars 2026 son intention de lister EURØP. Encore absent de Coinbase Europe et Kraken — politique de listing prudente, EURØP n'a pas demandé l'intégration sur les exchanges anglo-saxons.
+
+### Frais et redemption
+
+- **Émission/redemption** : 0 frais via Forge Exchange pour les clients corporate avec compte SG.
+- **Pour le retail** : sur Bitpanda, swap EUR → EURØP à 0,4 % à 0,7 % selon le volume. Sur Coinhouse, frais alignés sur la grille standard de l'exchange.
+- **Délai** : instantané on-chain, 1 jour ouvré pour redemption Forge directe.
+
+### Point fort / point faible
+
+**Point fort** : la légitimité institutionnelle. Société Générale est une banque G-SIB (Global Systemically Important Bank) supervisée directement par la BCE. Pour un utilisateur français recherchant la pleine souveraineté européenne et un émetteur français, EURØP est sans équivalent.
+
+**Point faible** : la liquidité reste modeste vs EURC, et l'intégration exchange est encore en construction. Si vous tradez activement plusieurs cryptos contre euro, vous trouverez moins de paires disponibles avec EURØP. Pour de l'épargne ou des paiements ponctuels, c'est un excellent choix ; pour du day trading, EURC reste plus pratique.
+
+---
+
+## 6. Tableau comparatif EURC vs EURI vs EURØP
+
+| Critère | EURC | EURI | EURØP |
+|---|---|---|---|
+| **Émetteur** | Circle Mint France (FR) | Banking Circle (LU) | SG Forge (FR) |
+| **Statut juridique émetteur** | EMI agréé ACPR | Établissement de crédit CSSF | Établissement de crédit ACPR |
+| **Catégorie MiCA** | EMT | EMT bancaire | EMT bancaire |
+| **Maison-mère** | Circle (US) | Banking Circle (LU) | Société Générale (FR, G-SIB) |
+| **Market cap (avril 2026)** | ~240 M€ | ~90 M€ | ~60 M€ |
+| **Blockchains** | ETH, SOL, AVAX, Stellar, Base, Hedera | ETH, SOL, Polygon | ETH (SOL/Tezos prévus 2026) |
+| **Audit réserves** | Deloitte (mensuel) | KPMG (mensuel) | PwC (mensuel) |
+| **Coinbase Europe** | Oui (paires complètes) | Non | Non |
+| **Kraken** | Oui | Non | Non |
+| **Bitpanda** | Oui | Oui | Oui |
+| **Binance France** | Oui | Non | À venir mars 2026 |
+| **Bitstack (DCA)** | Oui | Non | Non |
+| **Frais swap retail typique** | 0 % à 0,5 % | 0,5 % | 0,4 % à 0,7 % |
+| **Redemption directe minimum** | 100 000 € (B2B) | Variable B2B | Variable B2B |
+| **Intégration native paiements** | CCTP cross-chain | API Banking Circle | Forge Exchange |
+| **Profil recommandé** | Trading et exchanges | B2B / treasury | Épargne / paiements |
+
+---
+
+## 7. Quel stablecoin choisir selon votre usage ?
+
+### Si vous tradez activement sur plusieurs plateformes
+
+**Choix : EURC**. C'est le seul stablecoin euro listé sur Coinbase Europe, Kraken, Bitpanda, Binance France et Bitstack. La liquidité est la meilleure du marché, les spreads les plus serrés, et les bridges multichaînes fluides via CCTP. Vous pouvez basculer vos EURC entre Ethereum et Solana sans perte significative.
+
+### Si vous épargnez en stablecoin sur plusieurs mois
+
+**Choix : EURØP**. La garantie d'une banque G-SIB française supervisée par la BCE offre le meilleur niveau de sécurité institutionnelle. Vos EURØP sont indirectement adossés aux dépôts Société Générale, avec un cadre prudentiel équivalent à un compte bancaire en termes de stabilité de l'émetteur. Pour une stratégie d'épargne long terme en euro on-chain, c'est l'option la plus conservatrice.
+
+### Si vous gérez de la treasury B2B ou des flux paiements pro
+
+**Choix : EURI**. Banking Circle est conçu pour le B2B avec une API robuste et des intégrations natives aux plateformes paiements européennes. Si vous êtes une fintech, un PSP ou une entreprise gérant des flux euros on-chain, EURI offre les meilleurs SLA et tarifs B2B.
+
+### Si vous voulez sortir d'USDT en urgence
+
+**Choix : EURC** (sur exchange) ou **USDC** (si vous voulez rester en stablecoin dollar). USDC est conforme MiCA et plus liquide globalement qu'EURC. Sur Coinbase Europe ou Kraken, le swap USDT → USDC ou USDT → EURC est instantané, tant que la paire reste cotée.
+
+<CTABox
+  variant="primary"
+  title="Vous voulez DCA en EURC chaque semaine ?"
+  description="Les plateformes CASP-agréées en France permettent de programmer des achats récurrents (DCA) en EURC, EURØP ou USDC. Notre comparatif détaille les frais, les seuils minimum et les options de versement automatique pour construire votre exposition crypto sans timing."
+  ctaText="Voir le comparatif plateformes"
+  ctaUrl="/comparatif"
+  disclosure="Cryptoreflex est partenaire affilié de Coinbase, Bitpanda et Bitstack. Méthodologie complète sur /methodologie."
+/>
+
+---
+
+## 8. Risques résiduels à connaître
+
+Aussi régulés soient-ils, les stablecoins ne sont pas sans risque. Trois points de vigilance :
+
+**Risque émetteur** : même un EMI agréé peut faire défaut. En cas de défaillance de Circle Mint France, vos EURC sont théoriquement garantis par les réserves ségréguées — mais le délai de remboursement peut prendre plusieurs mois (cas observé sur d'anciens EMI européens). Pour les stablecoins bancaires (EURI, EURØP), le risque est plus faible mais existe : un défaut de Société Générale ou Banking Circle, bien que extrêmement improbable, n'est pas couvert par le **FGDR** (Fonds de Garantie des Dépôts), car les stablecoins ne sont pas des dépôts au sens bancaire strict.
+
+**Risque smart contract** : les stablecoins sont implémentés par des smart contracts (ERC-20, SPL, etc.) qui peuvent contenir des bugs. Tous les contracts EURC, EURI et EURØP ont été audités par des cabinets reconnus (Trail of Bits, OpenZeppelin, Halborn), mais aucun audit n'élimine totalement le risque. Les émetteurs disposent en pratique de fonctions de **freeze** et de **pause** pour bloquer en urgence le contrat — ce qui rassure côté régulation mais limite la décentralisation.
+
+**Risque de dépeg temporaire** : tous les stablecoins ont déjà connu des écarts ponctuels par rapport à leur peg de référence (USDC à 0,87 $ pendant la crise SVB en mars 2023, dépegs ponctuels à 1-2 % sur les exchanges illiquides). En général, le peg est rétabli en 24-72h grâce au mécanisme d'arbitrage. Restez vigilant sur les exchanges secondaires à faible volume.
+
+<Callout type="warning" title="Stablecoins ≠ comptes bancaires">
+Un stablecoin euro **n'est pas équivalent à un dépôt bancaire**. Vos euros bancaires sont garantis jusqu'à 100 000 € par le FGDR. Vos stablecoins ne le sont pas — ils sont protégés par la ségrégation des réserves de l'émetteur, ce qui est très différent. Pour une épargne supérieure à 50-100 k€, ne mettez jamais l'intégralité en stablecoin : diversifiez entre comptes bancaires, cryptoactifs et stablecoins selon votre profil de risque.
+</Callout>
+
+---
+
+## 9. Fiscalité des stablecoins euro pour un résident français
+
+Bonne nouvelle : la conversion **EUR → stablecoin euro** (EURC, EURI, EURØP) **n'est pas un fait générateur fiscal** au sens de l'article 150 VH bis du CGI. C'est considéré comme un échange entre actifs équivalents en valeur, sans plus-value à constater.
+
+**Mais attention** : le swap **stablecoin euro → autre crypto** (par exemple EURC → BTC) **est un fait générateur fiscal** si vous êtes en plus-value sur la position globale de votre portefeuille. Tenez bien votre comptabilité (formulaire 2086) et utilisez notre [calculateur de fiscalité crypto](/outils/calculateur-fiscalite) pour estimer votre imposition.
+
+Par ailleurs, **détenir des stablecoins sur une plateforme étrangère** (même CASP-agréée si elle est passeportée depuis l'Allemagne, l'Irlande, l'Autriche...) déclenche l'obligation de déclarer le compte via le **formulaire 3916-bis** au printemps 2027 pour l'année 2026. L'oubli coûte 750 € par compte (ou 1 500 € si solde > 50 000 €). Voir notre [guide complet de la déclaration crypto](/blog/comment-declarer-crypto-impots-2026-guide-complet).
+
+---
+
+## FAQ
+
+<FAQ items={[
+  {
+    question: "EURC, EURI ou EURØP : lequel est le plus sûr en cas de crise ?",
+    answer: "Sur le critère de la sécurité de l'émetteur, EURØP arrive en tête : Société Générale est une banque G-SIB supervisée directement par la BCE, avec accès à la liquidité d'urgence. EURI (Banking Circle) bénéficie aussi d'un statut bancaire luxembourgeois. EURC (Circle) est sous statut EMI, qui reste très solide mais sans accès BCE. À noter qu'aucun des trois n'est couvert par le FGDR (qui ne s'applique qu'aux dépôts bancaires classiques) — la protection passe par la ségrégation des réserves."
+  },
+  {
+    question: "Puis-je remplacer mes USDT par des EURC sans payer d'impôts ?",
+    answer: "Oui. La conversion USDT → EURC est un échange crypto-crypto sans plus-value imposable au sens fiscal français, à condition que vous restiez en stablecoin (équivalence de valeur). Vous devez tout de même tracer le mouvement dans votre comptabilité crypto pour reporter correctement le prix d'acquisition dans le calcul futur de plus-value lors d'une cession en EUR. Pensez à utiliser notre calculateur de fiscalité pour estimer."
+  },
+  {
+    question: "Les stablecoins euro paient-ils des intérêts ?",
+    answer: "Par défaut, non. EURC, EURI et EURØP ne génèrent aucun intérêt à la simple détention — c'est l'émetteur qui touche les intérêts sur les réserves bancaires (rémunération BCE actuellement autour de 2,5 %). Certaines plateformes proposent des produits 'earn' rémunérés en stablecoins euro (typiquement 1 % à 4 % brut), mais ce sont des produits dérivés régulés différemment, avec un risque de contrepartie sur la plateforme."
+  },
+  {
+    question: "Pourquoi USDT n'est pas conforme MiCA et peut-il le devenir ?",
+    answer: "USDT (Tether) n'a pas demandé d'agrément EMI ni d'agrément bancaire dans l'UE, condition obligatoire pour distribuer un EMT en Europe. Tether a publiquement déclaré qu'il ne le ferait pas, considérant les exigences MiCA comme incompatibles avec son modèle. Conséquence : USDT est progressivement délisté des plateformes CASP européennes (Coinbase, Kraken, Bitpanda, Binance France). Vous pouvez encore le détenir en self-custody, mais le revendre contre EUR sur une plateforme française devient compliqué."
+  },
+  {
+    question: "Quelle est la différence entre EURC et l'euro digital de la BCE ?",
+    answer: "EURC est un stablecoin privé émis par Circle, adossé à des dépôts bancaires. L'euro digital (en projet par la BCE pour 2027-2028) sera une CBDC (Central Bank Digital Currency), c'est-à-dire une monnaie de banque centrale au sens strict — équivalent direct des billets, sans intermédiaire bancaire. Les deux coexisteront probablement, avec des usages différents : stablecoins privés pour la programmabilité et les usages crypto natifs, euro digital pour les paiements quotidiens et la souveraineté monétaire."
+  }
+]} />
+
+---
+
+<CTABox
+  variant="secondary"
+  title="Calculez votre fiscalité crypto en 2 minutes"
+  description="Notre calculateur intègre les règles 2026 de l'article 150 VH bis du CGI : PFU 30 %, option barème, swaps stablecoins, abattement et frais déductibles. Importez votre historique d'exchange et obtenez votre formulaire 2086 prêt à transmettre."
+  ctaText="Lancer le calculateur"
+  ctaUrl="/outils/calculateur-fiscalite"
+  disclosure="Outil gratuit. Calcul indicatif — pour les patrimoines > 100 k€, consultez un fiscaliste agréé."
+/>
+
+---
+
+## Sources et lectures complémentaires
+
+**Sources officielles**
+
+- [Règlement MiCA (UE) 2023/1114 — texte intégral EUR-Lex](https://eur-lex.europa.eu/eli/reg/2023/1114/oj)
+- [Page AMF dédiée stablecoins et MiCA](https://www.amf-france.org/fr/professionnels/fintech/mes-relations-avec-lamf/regulation-europeenne-mica)
+- [EBA — Reporting et supervision des EMT](https://www.eba.europa.eu/regulation-and-policy/markets-in-crypto-assets-mica)
+- [Circle Mint — Transparence des réserves EURC](https://www.circle.com/transparency)
+- [Société Générale Forge — EURØP](https://sg-forge.com/en/europ/)
+
+**Articles Cryptoreflex liés**
+
+- [MiCA Phase 2 (juillet 2026) : ce qui change pour les Français](/blog/mica-phase-2-juillet-2026-ce-qui-change)
+- [PSAN vs CASP : tout comprendre du nouveau statut MiCA](/blog/psan-vs-casp-statut-mica-plateformes-crypto)
+- [Plateformes crypto à risque post-MiCA Phase 2](/blog/plateformes-crypto-risque-mica-phase-2-alternatives)
+- [Avis Coinbase 2026](/avis/coinbase) | [Avis Bitpanda 2026](/avis/bitpanda)
+- [Comment déclarer ses crypto aux impôts en 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet)
+
+**Notre indépendance**
+
+Cryptoreflex est partenaire affilié de Coinbase, Bitpanda et Bitstack, plateformes citées dans cet article. Cette affiliation n'influence ni notre méthodologie de scoring ni nos recommandations. Détail complet sur la page [méthodologie](/methodologie).
+
+---
+
+EURC, EURI et EURØP sont les trois piliers du nouveau marché des stablecoins euro régulés. Aucun n'est universellement supérieur — le bon choix dépend de votre usage : EURC pour le trading, EURØP pour l'épargne, EURI pour le B2B. Et surtout : préparez la sortie d'USDT avant la fin du grandfathering MiCA, fenêtre qui se ferme rapidement sur les plateformes CASP françaises.
