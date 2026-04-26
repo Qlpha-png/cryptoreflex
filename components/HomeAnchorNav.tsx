@@ -94,8 +94,13 @@ export default function HomeAnchorNav() {
       aria-label="Navigation interne de la page"
       className="sticky top-16 z-30 bg-background/85 backdrop-blur-xl border-b border-border/60 shadow-[0_4px_16px_-12px_rgba(0,0,0,0.4)]"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2 overflow-x-auto py-2.5 scroll-smooth snap-x snap-mandatory scrollbar-thin">
+      {/* Audit visuel mobile 26/04/2026 : avant le inner flex sans `w-full` +
+          `min-w-0` propageait sa largeur intrinsèque (1394px avec 6 chips)
+          au body via flex grow, créant un overflow horizontal global ~37px.
+          Fix : wrapper `w-full overflow-x-auto` + `min-w-max` sur la flex
+          row pour que le scroll horizontal reste contenu DANS le wrapper. */}
+      <div className="mx-auto max-w-7xl w-full overflow-x-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-max items-center gap-2 py-2.5 snap-x snap-mandatory scrollbar-thin">
           {CHIPS.map((chip) => {
             const isActive = activeId === chip.href;
             return (
