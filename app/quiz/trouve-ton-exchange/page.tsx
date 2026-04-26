@@ -6,6 +6,7 @@ import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import QuizExchange from "@/components/QuizExchange";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -259,6 +260,9 @@ export default function QuizTrouveTonExchangePage() {
           </aside>
         </div>
       </article>
+
+      {/* Next Steps Guide — main tenue : actions post-quiz (ROI, premier achat, newsletter). */}
+      <NextStepsGuide context="quiz-result" />
     </>
   );
 }

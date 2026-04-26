@@ -26,6 +26,7 @@ import MobileStickyCTA from "@/components/MobileStickyCTA";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import { breadcrumbSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const revalidate = 86400;
 
@@ -538,6 +539,9 @@ export default function ComparisonPage({ params }: Props) {
           </p>
         </section>
       </div>
+
+      {/* Next Steps Guide — main tenue : quiz personnalisé + autres ressources. */}
+      <NextStepsGuide context="comparator" />
 
       {/* Sticky CTA mobile sur le verdict / la plateforme recommandée. */}
       <MobileStickyCTA

@@ -39,6 +39,7 @@ import {
 } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import CalendarPageClient from "@/components/calendar/CalendarPageClient";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import type { CryptoEvent } from "@/lib/events-types";
 
 export const revalidate = 3600;
@@ -196,6 +197,9 @@ export default async function CalendarPage() {
           </div>
         </aside>
       </main>
+
+      {/* Next Steps Guide — main tenue : actualités, newsletter, blog. */}
+      <NextStepsGuide context="calendar" />
     </>
   );
 }

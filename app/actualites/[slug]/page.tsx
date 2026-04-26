@@ -27,6 +27,7 @@ import AuthorCard from "@/components/AuthorCard";
 import RelatedNews from "@/components/news/RelatedNews";
 import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 
 /**
@@ -292,6 +293,9 @@ export default async function NewsDetailPage({ params }: PageProps) {
           variant="default"
         />
       </div>
+
+      {/* Next Steps Guide — main tenue : autres news, calendrier, newsletter. */}
+      <NextStepsGuide context="news" />
     </article>
   );
 }

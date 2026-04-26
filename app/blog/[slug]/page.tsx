@@ -17,6 +17,7 @@ import PopularArticles from "@/components/blog/PopularArticles";
 import ArticleToc from "@/components/blog/ArticleToc";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import ArticleHero from "@/components/ui/ArticleHero";
 import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
@@ -434,6 +435,10 @@ export default async function BlogArticlePage({ params }: Props) {
           </div>
         </div>
       </article>
+
+      {/* Next Steps Guide — main tenue : 3 prochaines étapes contextuelles
+          selon la catégorie de l'article (fiscalité, sécurité, débutant…). */}
+      <NextStepsGuide context="article" articleCategory={article.category} />
 
       {/* Sticky CTA mobile (intent commercial uniquement).
           FIX #5 audit conversion 2026-04-26 : sur articles "acheter X", on

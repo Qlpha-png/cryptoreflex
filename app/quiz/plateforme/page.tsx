@@ -6,6 +6,7 @@ import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
@@ -138,6 +139,9 @@ export default function QuizPlateformePage() {
           </aside>
         </div>
       </article>
+
+      {/* Next Steps Guide — main tenue : actions post-quiz (ROI, premier achat, newsletter). */}
+      <NextStepsGuide context="quiz-result" />
     </>
   );
 }

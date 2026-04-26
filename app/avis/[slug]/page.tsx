@@ -32,6 +32,7 @@ import {
 } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -870,6 +871,9 @@ export default function ReviewPage({ params }: Props) {
           </p>
         </section>
       </div>
+
+      {/* Next Steps Guide — main tenue : quiz, fiscalité, sécurité (excl. plateforme courante). */}
+      <NextStepsGuide context="platform-review" platformId={p.id} />
 
       {/* Sticky CTA mobile : visible après scroll, jusqu'à l'arrivée du footer. */}
       <MobileStickyCTA
