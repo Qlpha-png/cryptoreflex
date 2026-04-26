@@ -106,31 +106,38 @@ const PRINT_CSS = `
     letter-spacing: -0.02em;
     page-break-after: avoid;
   }
-  /* H2 = nouveau chapitre = NOUVELLE PAGE pour aerer.
-     Evite la densite catastrophique du precedent rendu.
-     Note : on combine break-before page (moderne) ET page-break-before always
-     (legacy) pour max compat Chromium. Padding-top pour que le titre
-     respire en haut de la nouvelle page. */
+  /* H2 = nouveau chapitre. Pagination NATURELLE pour eviter les trous
+     blancs (signale utilisateur 26/04/2026 "PDF trou de trou").
+     - PAS de page-break-before forced (sinon contenu court = trou enorme
+       en bas de page)
+     - page-break-after: avoid pour que le titre ne reste pas seul en bas
+     - margin-top genereux pour separation visuelle sans pagination forcee
+     - SEULEMENT les chapitres marques .force-break (rares) forcent une
+       nouvelle page (utiliser <h2 class="force-break"> dans le markdown
+       pour vraiment isoler un chapitre majeur) */
   h2 {
     color: #0B0D10;
-    margin: 0 0 22px 0;
-    padding: 30px 0 12px 0;
+    margin: 50px 0 22px 0;
+    padding: 0 0 12px 0;
     font-size: 22pt;
     line-height: 1.2;
     font-weight: 800;
     letter-spacing: -0.015em;
     border-bottom: 3px solid #F5A524;
-    break-before: page;
-    page-break-before: always;
     break-after: avoid;
     page-break-after: avoid;
   }
-  /* Le 1er H2 du document NE force PAS de page break (sinon page blanche après cover) */
+  /* Le 1er H2 du document a une marge top reduite (proche du H1) */
   h1 + h2,
   .first-section h2 {
-    break-before: auto;
-    page-break-before: auto;
-    padding-top: 0;
+    margin-top: 0;
+  }
+  /* Force page break uniquement sur les H2 explicitement marques. Permet
+     de garder l'aspect "vraie etude" pour les chapitres majeurs sans
+     creer de trou systematiquement. */
+  h2.force-break {
+    break-before: page;
+    page-break-before: always;
   }
   h3 {
     color: #0B0D10;
@@ -224,9 +231,9 @@ const PRINT_CSS = `
   tr:nth-child(even) { background: #FBF8F1; }
   hr {
     border: none;
-    border-top: 2px dashed #d4c89a;
-    margin: 32px auto;
-    width: 60%;
+    border-top: 1px solid #e8dec5;
+    margin: 24px auto;
+    width: 40%;
   }
   strong { color: #0B0D10; font-weight: 700; }
   em { color: #5a3e00; }
@@ -366,20 +373,13 @@ async function buildPdf(magnet) {
   const cover = COVER_HTML(meta.title || magnet.title, meta.subtitle, meta.author, meta.date, meta.version);
   let bodyHtml = marked.parse(body);
 
-  // Force page break avant chaque H2 via attribut style inline.
-  // ATTENTION : on capture le caractere SUIVANT (espace ou >) et on le re-injecte
-  // a la fin pour ne pas casser le tag. Bug initial : sans cette precaution, on
-  // produisait <h2 style="..."Sommaire</h2> (sans le > de fermeture du tag) ce
-  // qui faisait que TOUT le contenu post-H2 etait aspire dans un seul h2 geant
-  // et le PDF se compressait a 8 pages au lieu de 50.
-  let firstH2Replaced = false;
-  bodyHtml = bodyHtml.replace(/<h2(\s|>)/g, (match, captured) => {
-    if (!firstH2Replaced) {
-      firstH2Replaced = true;
-      return match;
-    }
-    return `<h2 style="page-break-before:always !important; break-before:page !important;"${captured}`;
-  });
+  // PAS d'injection de page-break sur tous les H2 (signale utilisateur
+  // 26/04/2026 "PDF trou de trou" : forcer un break apres chaque section
+  // produit des pages a moitie vides quand le contenu precedent est court).
+  // La pagination est desormais NATURELLE — Chromium decide lui-meme ou
+  // couper en respectant orphans/widows + page-break-after:avoid sur H2.
+  // Pour vraiment forcer une nouvelle page sur un chapitre majeur,
+  // utiliser <h2 class="force-break"> dans le markdown source.
 
   const html = `<!doctype html>
 <html lang="fr">
@@ -401,8 +401,8 @@ async function buildPdf(magnet) {
   const ctx = await browser.newContext({ viewport: { width: 794, height: 1123 } });
   const page = await ctx.newPage();
   await page.setContent(html, { waitUntil: "networkidle" });
-  // DEBUG : ecrit aussi le HTML pour inspection
-  writeFileSync(outPath.replace(".pdf", ".html"), html, "utf-8");
+  // (debug helper retire — uncomment pour inspecter le HTML genere)
+  // writeFileSync(outPath.replace(".pdf", ".html"), html, "utf-8");
   // CRITIQUE : sans emulateMedia print, Chromium IGNORE les page-break CSS.
   // Sans cette ligne, un document de 22k mots tient sur 8 pages (densité
   // catastrophique). Avec, il s'aère sur 40-50 pages avec un break par H2.
