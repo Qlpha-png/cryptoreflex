@@ -56,8 +56,24 @@ export default function MethodologiePage() {
       </p>
       <p className="text-fg/85 leading-relaxed">
         Exemple Bitpanda (avril 2026) :
-        Frais 3.0/5 (×20%) + Sécurité 4.7/5 (×25%) + MiCA 4.9/5 (×20%) + UX 4.6/5 (×15%) + Support 4.2/5 (×10%) + Catalogue 4.5/5 (×10%) = <strong>4.3/5</strong>.
+        Frais 3.0/5 (×20%) + Sécurité 4.7/5 (×25%) + MiCA 4.9/5 (×20%) + UX 4.6/5 (×15%) + Support 4.2/5 (×10%) + Catalogue 5.0/5 (×10%) = <strong>4.4/5</strong>.
+        Le calcul est public, déterministe et recalculé automatiquement
+        (cf. <code className="text-primary-soft">scripts/compute-platform-scores.mjs</code>) à chaque mise à jour
+        d&apos;une sous-note pour qu&apos;aucun score ne dérive jamais de la formule.
       </p>
+
+      <h3 className="mt-8 text-xl font-bold text-fg">Comment on calcule le score Catalogue ?</h3>
+      <p className="text-fg/85 leading-relaxed text-sm">
+        Pour rester reproductible, le critère « Catalogue &amp; services » est dérivé
+        d&apos;inputs vérifiables, sans jugement subjectif :
+      </p>
+      <ul className="text-fg/85 leading-relaxed text-sm mt-2">
+        <li><strong>Base</strong> selon le nombre de cryptos listées (courbe : 30→2.5, 100→3.5, 300→4.3, 500→4.7, 700+→5.0).</li>
+        <li><strong>+0.3</strong> si le staking est disponible directement.</li>
+        <li><strong>+0.2</strong> si la plateforme accepte au moins 5 méthodes de paiement.</li>
+        <li><strong>+0.3</strong> si l&apos;acteur est un broker multi-actifs (actions + ETF + métaux en plus de la crypto).</li>
+        <li>Plafonné à 5.0.</li>
+      </ul>
 
       <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
         <RefreshCw className="h-6 w-6" />

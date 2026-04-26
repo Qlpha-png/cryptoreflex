@@ -3,7 +3,9 @@
     "lastUpdated": "2026-04-26",
     "source": "Recherche Cryptoreflex (à recouper avec données AMF/ESMA officielles avant publication)",
     "schemaVersion": "1.0",
-    "bonusPolicy": "Les promotions/bonus crypto évoluent fréquemment et ne sont pas tous valides en zone UE/FR (durcissement post-MiCA). Pour rester conforme à la loi commerciale FR (pas de promesse engageante non vérifiée) on n'affiche plus de montant chiffré : libellé générique uniquement, l'utilisateur doit consulter les conditions sur la plateforme."
+    "bonusPolicy": "Les promotions/bonus crypto évoluent fréquemment et ne sont pas tous valides en zone UE/FR (durcissement post-MiCA). Pour rester conforme à la loi commerciale FR (pas de promesse engageante non vérifiée) on n'affiche plus de montant chiffré : libellé générique uniquement, l'utilisateur doit consulter les conditions sur la plateforme.",
+    "lastScored": "2026-04-26",
+    "scoringFormula": "global = 0.20·fees + 0.25·security + 0.20·mica + 0.15·ux + 0.10·support + 0.10·catalogue"
   },
   "platforms": [
     {
@@ -13,7 +15,15 @@
       "tagline": "Pour qui c'est : débutants qui veulent la plateforme la plus régulée du marché",
       "websiteUrl": "https://coinbase.com",
       "affiliateUrl": "https://coinbase.com?utm_source=cryptoreflex",
-      "scoring": { "global": 4.4, "fees": 3.2, "security": 4.9, "ux": 4.7, "support": 3.8, "mica": 4.8 },
+      "scoring": {
+        "global": 4.4,
+        "fees": 3.2,
+        "security": 4.9,
+        "ux": 4.7,
+        "support": 3.8,
+        "mica": 4.8,
+        "catalogue": 4.6
+      },
       "mica": {
         "status": "Agrément MiCA (CASP)",
         "amfRegistration": "E2023-035",
@@ -22,16 +32,71 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.4, "spotTaker": 0.6, "instantBuy": 1.49, "withdrawalCrypto": "Variable selon réseau", "withdrawalFiatSepa": 0.15, "spread": "0.5-2%" },
-      "deposit": { "minEur": 2, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "PayPal"] },
-      "cryptos": { "totalCount": 260, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "XTZ"] },
-      "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 98, "insurance": true, "twoFA": true, "lastIncident": "Mai 2024 (data breach via support tiers)" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme refer-a-friend variable selon zone géographique (UE post-MiCA)", "validUntil": null },
-      "ratings": { "trustpilot": 1.6, "trustpilotCount": 28500, "appStore": 4.7, "playStore": 4.6 },
+      "fees": {
+        "spotMaker": 0.4,
+        "spotTaker": 0.6,
+        "instantBuy": 1.49,
+        "withdrawalCrypto": "Variable selon réseau",
+        "withdrawalFiatSepa": 0.15,
+        "spread": "0.5-2%"
+      },
+      "deposit": {
+        "minEur": 2,
+        "methods": [
+          "CB",
+          "SEPA",
+          "Apple Pay",
+          "Google Pay",
+          "PayPal"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 260,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "ATOM",
+          "XTZ"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": true,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 98,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Mai 2024 (data breach via support tiers)"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programme refer-a-friend variable selon zone géographique (UE post-MiCA)",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 1.6,
+        "trustpilotCount": 28500,
+        "appStore": 4.7,
+        "playStore": 4.6
+      },
       "idealFor": "Débutants prudents qui veulent la plateforme la plus régulée et cotée en Bourse",
-      "strengths": ["Cotée NASDAQ + agrément MiCA complet", "Interface ultra simple", "Coinbase Earn (gagner crypto en apprenant)"],
-      "weaknesses": ["Frais élevés sur achat instantané (1.49%)", "Trustpilot très bas malgré la régulation", "Support client souvent critiqué"],
+      "strengths": [
+        "Cotée NASDAQ + agrément MiCA complet",
+        "Interface ultra simple",
+        "Coinbase Earn (gagner crypto en apprenant)"
+      ],
+      "weaknesses": [
+        "Frais élevés sur achat instantané (1.49%)",
+        "Trustpilot très bas malgré la régulation",
+        "Support client souvent critiqué"
+      ],
       "badge": "Le plus régulé",
       "category": "exchange"
     },
@@ -42,7 +107,15 @@
       "tagline": "Pour qui c'est : traders cherchant le plus large catalogue crypto au monde",
       "websiteUrl": "https://binance.com",
       "affiliateUrl": "https://www.binance.com/register?ref=CRYPTOREFLEX",
-      "scoring": { "global": 4.2, "fees": 4.7, "security": 4.0, "ux": 4.3, "support": 3.5, "mica": 3.8 },
+      "scoring": {
+        "global": 4.2,
+        "fees": 4.7,
+        "security": 4,
+        "ux": 4.3,
+        "support": 3.5,
+        "mica": 3.8,
+        "catalogue": 5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Binance France",
         "amfRegistration": "E2022-037",
@@ -51,16 +124,72 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.8, "withdrawalCrypto": "Variable selon réseau", "withdrawalFiatSepa": 0, "spread": "0.1-0.5%" },
-      "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
-      "cryptos": { "totalCount": 380, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BNB", "MATIC", "AVAX"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<48h" },
-      "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Aucun majeur depuis SAFU 2019" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus cash garanti en UE depuis durcissement réglementaire MiCA — offres ponctuelles à vérifier", "validUntil": null },
-      "ratings": { "trustpilot": 2.5, "trustpilotCount": 152000, "appStore": 4.5, "playStore": 4.4 },
+      "fees": {
+        "spotMaker": 0.1,
+        "spotTaker": 0.1,
+        "instantBuy": 1.8,
+        "withdrawalCrypto": "Variable selon réseau",
+        "withdrawalFiatSepa": 0,
+        "spread": "0.1-0.5%"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "CB",
+          "SEPA",
+          "SEPA Instant",
+          "Apple Pay",
+          "Google Pay"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 380,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "BNB",
+          "MATIC",
+          "AVAX"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<48h"
+      },
+      "security": {
+        "coldStoragePct": 95,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Aucun majeur depuis SAFU 2019"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Pas de bonus cash garanti en UE depuis durcissement réglementaire MiCA — offres ponctuelles à vérifier",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 2.5,
+        "trustpilotCount": 152000,
+        "appStore": 4.5,
+        "playStore": 4.4
+      },
       "idealFor": "Traders intermédiaires et avancés cherchant frais bas et large catalogue",
-      "strengths": ["Frais spot parmi les plus bas (0.1%)", "Catalogue le plus large au monde (380+)", "Liquidité inégalée"],
-      "weaknesses": ["Interface intimidante pour débutants", "Historique réglementaire chargé (SEC, DOJ)", "Support client lent"],
+      "strengths": [
+        "Frais spot parmi les plus bas (0.1%)",
+        "Catalogue le plus large au monde (380+)",
+        "Liquidité inégalée"
+      ],
+      "weaknesses": [
+        "Interface intimidante pour débutants",
+        "Historique réglementaire chargé (SEC, DOJ)",
+        "Support client lent"
+      ],
       "badge": "Frais les plus bas",
       "category": "exchange"
     },
@@ -71,7 +200,15 @@
       "tagline": "Pour qui c'est : Européens cherchant un broker tout-en-un (crypto, actions, métaux)",
       "websiteUrl": "https://bitpanda.com",
       "affiliateUrl": "https://www.bitpanda.com/?ref=146755795768201190",
-      "scoring": { "global": 4.3, "fees": 3.0, "security": 4.7, "ux": 4.6, "support": 4.2, "mica": 4.9 },
+      "scoring": {
+        "global": 4.4,
+        "fees": 3,
+        "security": 4.7,
+        "ux": 4.6,
+        "support": 4.2,
+        "mica": 4.9,
+        "catalogue": 5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) - Allemagne (BaFin) + France",
         "amfRegistration": "E2023-058",
@@ -80,16 +217,73 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.15, "spotTaker": 0.25, "instantBuy": 1.49, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1-2%" },
-      "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay", "Skrill", "Neteller"] },
-      "cryptos": { "totalCount": 480, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "MATIC"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 99, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme Tell-a-Friend (referrer/referee) — pas un bonus garanti, conditions variables", "validUntil": null },
-      "ratings": { "trustpilot": 4.3, "trustpilotCount": 47000, "appStore": 4.7, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 0.15,
+        "spotTaker": 0.25,
+        "instantBuy": 1.49,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "1-2%"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "CB",
+          "SEPA",
+          "SEPA Instant",
+          "Apple Pay",
+          "Google Pay",
+          "Skrill",
+          "Neteller"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 480,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "ATOM",
+          "MATIC"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 99,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": null
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programme Tell-a-Friend (referrer/referee) — pas un bonus garanti, conditions variables",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.3,
+        "trustpilotCount": 47000,
+        "appStore": 4.7,
+        "playStore": 4.5
+      },
       "idealFor": "Investisseurs européens long terme voulant diversifier (crypto + actions + ETF + or)",
-      "strengths": ["Régulation européenne complète (MiCA + MiFID II)", "Plans d'épargne automatiques", "Diversification crypto + actions + métaux"],
-      "weaknesses": ["Spread élevé (1-2%)", "Frais cachés dans le spread", "Pas de trading avancé/levier"],
+      "strengths": [
+        "Régulation européenne complète (MiCA + MiFID II)",
+        "Plans d'épargne automatiques",
+        "Diversification crypto + actions + métaux"
+      ],
+      "weaknesses": [
+        "Spread élevé (1-2%)",
+        "Frais cachés dans le spread",
+        "Pas de trading avancé/levier"
+      ],
       "badge": "Champion européen",
       "category": "broker"
     },
@@ -100,7 +294,15 @@
       "tagline": "Pour qui c'est : utilisateurs expérimentés valorisant sécurité et profondeur de marché",
       "websiteUrl": "https://kraken.com",
       "affiliateUrl": "https://kraken.com?utm_source=cryptoreflex",
-      "scoring": { "global": 4.5, "fees": 4.0, "security": 4.9, "ux": 4.2, "support": 4.3, "mica": 4.6 },
+      "scoring": {
+        "global": 4.5,
+        "fees": 4,
+        "security": 4.9,
+        "ux": 4.2,
+        "support": 4.3,
+        "mica": 4.6,
+        "catalogue": 4.8
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Irlande",
         "amfRegistration": "E2024-012",
@@ -109,16 +311,73 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.16, "spotTaker": 0.26, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0.35, "spread": "0.2-0.8%" },
-      "deposit": { "minEur": 1, "methods": ["CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
-      "cryptos": { "totalCount": 290, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "XTZ", "MATIC", "ALGO"] },
-      "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<12h" },
-      "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Aucun hack majeur depuis création (2011)" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus de bienvenue récurrent — offres ponctuelles via parrainage", "validUntil": null },
-      "ratings": { "trustpilot": 3.5, "trustpilotCount": 9500, "appStore": 4.6, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 0.16,
+        "spotTaker": 0.26,
+        "instantBuy": 1.5,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0.35,
+        "spread": "0.2-0.8%"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "CB",
+          "SEPA",
+          "SEPA Instant",
+          "Apple Pay",
+          "Google Pay"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 290,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "ATOM",
+          "XTZ",
+          "MATIC",
+          "ALGO"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": true,
+        "responseTime": "<12h"
+      },
+      "security": {
+        "coldStoragePct": 95,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Aucun hack majeur depuis création (2011)"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Pas de bonus de bienvenue récurrent — offres ponctuelles via parrainage",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 3.5,
+        "trustpilotCount": 9500,
+        "appStore": 4.6,
+        "playStore": 4.5
+      },
       "idealFor": "Investisseurs expérimentés priorisant sécurité, audit Proof-of-Reserves et staking",
-      "strengths": ["Aucun hack majeur en 14 ans", "Proof-of-Reserves audité", "Support FR par téléphone"],
-      "weaknesses": ["Interface Pro intimidante", "Frais Instant Buy élevés", "Staking US restreint depuis SEC"],
+      "strengths": [
+        "Aucun hack majeur en 14 ans",
+        "Proof-of-Reserves audité",
+        "Support FR par téléphone"
+      ],
+      "weaknesses": [
+        "Interface Pro intimidante",
+        "Frais Instant Buy élevés",
+        "Staking US restreint depuis SEC"
+      ],
       "badge": "Plus sécurisé",
       "category": "exchange"
     },
@@ -129,7 +388,15 @@
       "tagline": "Pour qui c'est : traders dérivés et amateurs de copy trading",
       "websiteUrl": "https://bitget.com",
       "affiliateUrl": "https://bitget.com?utm_source=cryptoreflex",
-      "scoring": { "global": 3.9, "fees": 4.5, "security": 4.0, "ux": 4.2, "support": 3.5, "mica": 3.5 },
+      "scoring": {
+        "global": 4.1,
+        "fees": 4.5,
+        "security": 4,
+        "ux": 4.2,
+        "support": 3.5,
+        "mica": 3.5,
+        "catalogue": 5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Lituanie",
         "amfRegistration": null,
@@ -138,16 +405,71 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.1-0.4%" },
-      "deposit": { "minEur": 10, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "P2P"] },
-      "cryptos": { "totalCount": 800, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BGB", "ATOM"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 90, "insurance": true, "twoFA": true, "lastIncident": "Aucun hack confirmé" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programmes promotionnels (dépôt + trading) variables — vérifier les paliers en vigueur", "validUntil": null },
-      "ratings": { "trustpilot": 4.4, "trustpilotCount": 32000, "appStore": 4.6, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 0.1,
+        "spotTaker": 0.1,
+        "instantBuy": 1.5,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "0.1-0.4%"
+      },
+      "deposit": {
+        "minEur": 10,
+        "methods": [
+          "CB",
+          "SEPA",
+          "Apple Pay",
+          "Google Pay",
+          "P2P"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 800,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "BGB",
+          "ATOM"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 90,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Aucun hack confirmé"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programmes promotionnels (dépôt + trading) variables — vérifier les paliers en vigueur",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.4,
+        "trustpilotCount": 32000,
+        "appStore": 4.6,
+        "playStore": 4.5
+      },
       "idealFor": "Traders intermédiaires/avancés intéressés par dérivés et copy trading",
-      "strengths": ["Copy trading leader du marché", "Catalogue altcoins très large (800+)", "Frais futures parmi les plus bas"],
-      "weaknesses": ["Régulation MiCA via Lituanie (moins stricte)", "Pas d'enregistrement AMF direct", "Réputation historique sur dérivés"],
+      "strengths": [
+        "Copy trading leader du marché",
+        "Catalogue altcoins très large (800+)",
+        "Frais futures parmi les plus bas"
+      ],
+      "weaknesses": [
+        "Régulation MiCA via Lituanie (moins stricte)",
+        "Pas d'enregistrement AMF direct",
+        "Réputation historique sur dérivés"
+      ],
       "badge": "Top copy trading",
       "category": "exchange"
     },
@@ -158,7 +480,15 @@
       "tagline": "Pour qui c'est : investisseurs long terme voulant crypto + actions + ETF",
       "websiteUrl": "https://traderepublic.com",
       "affiliateUrl": "https://refnocode.trade.re/cc7ffrbj",
-      "scoring": { "global": 4.0, "fees": 3.8, "security": 4.6, "ux": 4.7, "support": 3.8, "mica": 4.7 },
+      "scoring": {
+        "global": 4.3,
+        "fees": 3.8,
+        "security": 4.6,
+        "ux": 4.7,
+        "support": 3.8,
+        "mica": 4.7,
+        "catalogue": 3.6
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Allemagne (BaFin)",
         "amfRegistration": null,
@@ -167,16 +497,63 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Non disponible (custodial fermé)", "withdrawalFiatSepa": 0, "spread": "1-2%" },
-      "deposit": { "minEur": 1, "methods": ["SEPA", "Virement instantané", "Apple Pay", "Google Pay"] },
-      "cryptos": { "totalCount": 70, "stakingAvailable": false, "stakingCryptos": [] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<48h" },
-      "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (action/crypto offerte) — montant et conditions variables", "validUntil": null },
-      "ratings": { "trustpilot": 3.8, "trustpilotCount": 28000, "appStore": 4.6, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 1,
+        "spotTaker": 1,
+        "instantBuy": 1,
+        "withdrawalCrypto": "Non disponible (custodial fermé)",
+        "withdrawalFiatSepa": 0,
+        "spread": "1-2%"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "SEPA",
+          "Virement instantané",
+          "Apple Pay",
+          "Google Pay"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 70,
+        "stakingAvailable": false,
+        "stakingCryptos": []
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<48h"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": null
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programme parrainage (action/crypto offerte) — montant et conditions variables",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 3.8,
+        "trustpilotCount": 28000,
+        "appStore": 4.6,
+        "playStore": 4.5
+      },
       "idealFor": "Investisseurs débutants long terme voulant tout-en-un (crypto + actions + ETF)",
-      "strengths": ["Régulé BaFin + agrément MiCA", "Interface mobile excellente", "Plans d'épargne crypto/ETF dès 1€"],
-      "weaknesses": ["Pas de retrait crypto possible", "Catalogue crypto limité (70)", "Pas de staking ni DeFi"],
+      "strengths": [
+        "Régulé BaFin + agrément MiCA",
+        "Interface mobile excellente",
+        "Plans d'épargne crypto/ETF dès 1€"
+      ],
+      "weaknesses": [
+        "Pas de retrait crypto possible",
+        "Catalogue crypto limité (70)",
+        "Pas de staking ni DeFi"
+      ],
       "badge": "Meilleur tout-en-un",
       "category": "broker"
     },
@@ -187,7 +564,15 @@
       "tagline": "Pour qui c'est : Français cherchant un acteur 100% local avec accompagnement humain",
       "websiteUrl": "https://coinhouse.com",
       "affiliateUrl": "https://coinhouse.com?utm_source=cryptoreflex",
-      "scoring": { "global": 3.8, "fees": 2.5, "security": 4.5, "ux": 4.0, "support": 4.7, "mica": 4.8 },
+      "scoring": {
+        "global": 4,
+        "fees": 2.5,
+        "security": 4.5,
+        "ux": 4,
+        "support": 4.7,
+        "mica": 4.8,
+        "catalogue": 3.5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) - France",
         "amfRegistration": "E2020-001",
@@ -196,16 +581,68 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 1.49, "spotTaker": 1.99, "instantBuy": 2.49, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1.5-3%" },
-      "deposit": { "minEur": 30, "methods": ["CB", "SEPA", "Virement instantané"] },
-      "cryptos": { "totalCount": 60, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM"] },
-      "support": { "frenchChat": true, "frenchPhone": true, "responseTime": "<4h en semaine" },
-      "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (BTC offert) — conditions variables sur le 1er achat", "validUntil": null },
-      "ratings": { "trustpilot": 4.4, "trustpilotCount": 4800, "appStore": 4.5, "playStore": 4.3 },
+      "fees": {
+        "spotMaker": 1.49,
+        "spotTaker": 1.99,
+        "instantBuy": 2.49,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "1.5-3%"
+      },
+      "deposit": {
+        "minEur": 30,
+        "methods": [
+          "CB",
+          "SEPA",
+          "Virement instantané"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 60,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "ATOM"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": true,
+        "responseTime": "<4h en semaine"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": null
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programme parrainage (BTC offert) — conditions variables sur le 1er achat",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.4,
+        "trustpilotCount": 4800,
+        "appStore": 4.5,
+        "playStore": 4.3
+      },
       "idealFor": "Débutants français cherchant accompagnement humain et acteur local",
-      "strengths": ["1er PSAN enregistré en France (2020)", "Support FR par téléphone et bureau Paris", "Conseil patrimonial humain"],
-      "weaknesses": ["Frais parmi les plus élevés du marché", "Catalogue limité (60 cryptos)", "Pas de trading avancé"],
+      "strengths": [
+        "1er PSAN enregistré en France (2020)",
+        "Support FR par téléphone et bureau Paris",
+        "Conseil patrimonial humain"
+      ],
+      "weaknesses": [
+        "Frais parmi les plus élevés du marché",
+        "Catalogue limité (60 cryptos)",
+        "Pas de trading avancé"
+      ],
       "badge": "100% français",
       "category": "broker"
     },
@@ -216,7 +653,15 @@
       "tagline": "Pour qui c'est : débutants voulant DCA Bitcoin automatiquement avec l'arrondi",
       "websiteUrl": "https://bitstack.com",
       "affiliateUrl": "https://bitstack.com?utm_source=cryptoreflex",
-      "scoring": { "global": 4.1, "fees": 3.5, "security": 4.5, "ux": 4.6, "support": 4.0, "mica": 4.7 },
+      "scoring": {
+        "global": 4.1,
+        "fees": 3.5,
+        "security": 4.5,
+        "ux": 4.6,
+        "support": 4,
+        "mica": 4.7,
+        "catalogue": 2.5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) - France",
         "amfRegistration": "E2022-019",
@@ -225,16 +670,63 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "1-2%" },
-      "deposit": { "minEur": 1, "methods": ["SEPA", "Virement instantané", "CB", "Apple Pay"] },
-      "cryptos": { "totalCount": 25, "stakingAvailable": false, "stakingCryptos": [] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programme parrainage (BTC offert via arrondi) — conditions variables", "validUntil": null },
-      "ratings": { "trustpilot": 4.6, "trustpilotCount": 3200, "appStore": 4.7, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 1,
+        "spotTaker": 1,
+        "instantBuy": 1,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "1-2%"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "SEPA",
+          "Virement instantané",
+          "CB",
+          "Apple Pay"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 25,
+        "stakingAvailable": false,
+        "stakingCryptos": []
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": null
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programme parrainage (BTC offert via arrondi) — conditions variables",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.6,
+        "trustpilotCount": 3200,
+        "appStore": 4.7,
+        "playStore": 4.5
+      },
       "idealFor": "Débutants total voulant épargner en BTC via arrondi automatique",
-      "strengths": ["DCA automatique via arrondi sur achats CB", "PSAN français + agrément MiCA", "Onboarding ultra simple"],
-      "weaknesses": ["Catalogue très limité (25 cryptos)", "Frais 1% sur tout", "Pas de trading actif"],
+      "strengths": [
+        "DCA automatique via arrondi sur achats CB",
+        "PSAN français + agrément MiCA",
+        "Onboarding ultra simple"
+      ],
+      "weaknesses": [
+        "Catalogue très limité (25 cryptos)",
+        "Frais 1% sur tout",
+        "Pas de trading actif"
+      ],
       "badge": "Idéal débutant DCA",
       "category": "broker"
     },
@@ -245,7 +737,15 @@
       "tagline": "Pour qui c'est : européens cherchant best execution et yield programs",
       "websiteUrl": "https://swissborg.com",
       "affiliateUrl": "https://swissborg.com?utm_source=cryptoreflex",
-      "scoring": { "global": 4.2, "fees": 3.8, "security": 4.6, "ux": 4.7, "support": 4.2, "mica": 4.6 },
+      "scoring": {
+        "global": 4.4,
+        "fees": 3.8,
+        "security": 4.6,
+        "ux": 4.7,
+        "support": 4.2,
+        "mica": 4.6,
+        "catalogue": 4.1
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via France",
         "amfRegistration": "E2022-005",
@@ -254,16 +754,69 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 1.0, "spotTaker": 1.0, "instantBuy": 1.0, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.5-1.5% (réduit avec BORG)" },
-      "deposit": { "minEur": 50, "methods": ["SEPA", "Virement instantané", "CB"] },
-      "cryptos": { "totalCount": 100, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "BORG", "MATIC"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<12h" },
-      "security": { "coldStoragePct": 100, "insurance": true, "twoFA": true, "lastIncident": null },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Bonus dépôt à paliers — conditions et montants variables", "validUntil": null },
-      "ratings": { "trustpilot": 4.5, "trustpilotCount": 7800, "appStore": 4.7, "playStore": 4.6 },
+      "fees": {
+        "spotMaker": 1,
+        "spotTaker": 1,
+        "instantBuy": 1,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "0.5-1.5% (réduit avec BORG)"
+      },
+      "deposit": {
+        "minEur": 50,
+        "methods": [
+          "SEPA",
+          "Virement instantané",
+          "CB"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 100,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "BORG",
+          "MATIC"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<12h"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": null
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Bonus dépôt à paliers — conditions et montants variables",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.5,
+        "trustpilotCount": 7800,
+        "appStore": 4.7,
+        "playStore": 4.6
+      },
       "idealFor": "Investisseurs intermédiaires européens voulant yield + best execution",
-      "strengths": ["Smart Engine (best execution multi-exchange)", "Earn programs jusqu'à 20% APR", "App mobile très bien notée"],
-      "weaknesses": ["Token BORG nécessaire pour réduire frais", "Pas de trading pro/levier", "Dépôt minimum 50€"],
+      "strengths": [
+        "Smart Engine (best execution multi-exchange)",
+        "Earn programs jusqu'à 20% APR",
+        "App mobile très bien notée"
+      ],
+      "weaknesses": [
+        "Token BORG nécessaire pour réduire frais",
+        "Pas de trading pro/levier",
+        "Dépôt minimum 50€"
+      ],
       "badge": null,
       "category": "broker"
     },
@@ -274,7 +827,15 @@
       "tagline": "Pour qui c'est : traders dérivés cherchant profondeur de carnet et produits perp avancés",
       "websiteUrl": "https://www.bybit.com",
       "affiliateUrl": "https://www.bybit.com?utm_source=cryptoreflex",
-      "scoring": { "global": 4.0, "fees": 4.6, "security": 4.0, "ux": 4.4, "support": 3.6, "mica": 3.6 },
+      "scoring": {
+        "global": 4.2,
+        "fees": 4.6,
+        "security": 4,
+        "ux": 4.4,
+        "support": 3.6,
+        "mica": 3.6,
+        "catalogue": 5
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Autriche (FMA)",
         "amfRegistration": null,
@@ -283,16 +844,71 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0.1, "spotTaker": 0.1, "instantBuy": 1.5, "withdrawalCrypto": "Variable", "withdrawalFiatSepa": 0, "spread": "0.1-0.4%" },
-      "deposit": { "minEur": 10, "methods": ["CB", "SEPA", "Apple Pay", "Google Pay", "P2P"] },
-      "cryptos": { "totalCount": 700, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "MNT", "ATOM"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 90, "insurance": true, "twoFA": true, "lastIncident": "Février 2025 (hack 1.4Md$ — fonds clients couverts par fonds propres + assurance)" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Programmes promotionnels (dépôt + volume) variables — vérifier les paliers", "validUntil": null },
-      "ratings": { "trustpilot": 4.2, "trustpilotCount": 18000, "appStore": 4.6, "playStore": 4.4 },
+      "fees": {
+        "spotMaker": 0.1,
+        "spotTaker": 0.1,
+        "instantBuy": 1.5,
+        "withdrawalCrypto": "Variable",
+        "withdrawalFiatSepa": 0,
+        "spread": "0.1-0.4%"
+      },
+      "deposit": {
+        "minEur": 10,
+        "methods": [
+          "CB",
+          "SEPA",
+          "Apple Pay",
+          "Google Pay",
+          "P2P"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 700,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "MNT",
+          "ATOM"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 90,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Février 2025 (hack 1.4Md$ — fonds clients couverts par fonds propres + assurance)"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Programmes promotionnels (dépôt + volume) variables — vérifier les paliers",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.2,
+        "trustpilotCount": 18000,
+        "appStore": 4.6,
+        "playStore": 4.4
+      },
       "idealFor": "Traders avancés cherchant produits dérivés avec profondeur carnet et options crypto",
-      "strengths": ["Profondeur de carnet sur perp BTC/ETH parmi les meilleures", "Frais futures ultra-compétitifs (taker 0.055%)", "Plateforme options crypto complète"],
-      "weaknesses": ["Hack majeur en février 2025 (résolu mais cicatrice de réputation)", "Régulation MiCA via Autriche (jeune)", "Interface dense pour débutants"],
+      "strengths": [
+        "Profondeur de carnet sur perp BTC/ETH parmi les meilleures",
+        "Frais futures ultra-compétitifs (taker 0.055%)",
+        "Plateforme options crypto complète"
+      ],
+      "weaknesses": [
+        "Hack majeur en février 2025 (résolu mais cicatrice de réputation)",
+        "Régulation MiCA via Autriche (jeune)",
+        "Interface dense pour débutants"
+      ],
       "badge": "Top dérivés",
       "category": "exchange"
     },
@@ -303,7 +919,15 @@
       "tagline": "Pour qui c'est : utilisateurs de néobanque voulant acheter du crypto en 2 clics dans leur app du quotidien",
       "websiteUrl": "https://www.revolut.com",
       "affiliateUrl": "https://www.revolut.com?utm_source=cryptoreflex",
-      "scoring": { "global": 3.6, "fees": 2.8, "security": 4.2, "ux": 4.7, "support": 3.4, "mica": 4.5 },
+      "scoring": {
+        "global": 4,
+        "fees": 2.8,
+        "security": 4.2,
+        "ux": 4.7,
+        "support": 3.4,
+        "mica": 4.5,
+        "catalogue": 4.8
+      },
       "mica": {
         "status": "Agrément MiCA (CASP) via Lituanie (Banque centrale)",
         "amfRegistration": null,
@@ -312,16 +936,70 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 1.49, "spotTaker": 1.49, "instantBuy": 1.49, "withdrawalCrypto": "Variable (Revolut X uniquement)", "withdrawalFiatSepa": 0, "spread": "1.5-2.5% (sauf Revolut X)" },
-      "deposit": { "minEur": 1, "methods": ["Solde Revolut", "CB", "SEPA", "SEPA Instant", "Apple Pay", "Google Pay"] },
-      "cryptos": { "totalCount": 220, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<24h" },
-      "security": { "coldStoragePct": 95, "insurance": true, "twoFA": true, "lastIncident": "Septembre 2022 (vol interne 20M$ — clients non impactés)" },
-      "bonus": { "welcome": "Bonus actuel — voir conditions sur la plateforme", "amount": null, "currency": null, "conditions": "Pas de bonus crypto récurrent — offres ponctuelles via app Revolut", "validUntil": null },
-      "ratings": { "trustpilot": 4.2, "trustpilotCount": 198000, "appStore": 4.7, "playStore": 4.5 },
+      "fees": {
+        "spotMaker": 1.49,
+        "spotTaker": 1.49,
+        "instantBuy": 1.49,
+        "withdrawalCrypto": "Variable (Revolut X uniquement)",
+        "withdrawalFiatSepa": 0,
+        "spread": "1.5-2.5% (sauf Revolut X)"
+      },
+      "deposit": {
+        "minEur": 1,
+        "methods": [
+          "Solde Revolut",
+          "CB",
+          "SEPA",
+          "SEPA Instant",
+          "Apple Pay",
+          "Google Pay"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 220,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<24h"
+      },
+      "security": {
+        "coldStoragePct": 95,
+        "insurance": true,
+        "twoFA": true,
+        "lastIncident": "Septembre 2022 (vol interne 20M$ — clients non impactés)"
+      },
+      "bonus": {
+        "welcome": "Bonus actuel — voir conditions sur la plateforme",
+        "amount": null,
+        "currency": null,
+        "conditions": "Pas de bonus crypto récurrent — offres ponctuelles via app Revolut",
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.2,
+        "trustpilotCount": 198000,
+        "appStore": 4.7,
+        "playStore": 4.5
+      },
       "idealFor": "Clients déjà Revolut voulant exposer une petite portion à crypto sans changer d'app",
-      "strengths": ["Intégré dans la néobanque Revolut (UX impeccable)", "Agrément MiCA + licence bancaire lituanienne", "Revolut X (mode pro) avec frais quasi nuls"],
-      "weaknesses": ["Frais 1,49% sur app classique (élevés)", "Retraits crypto réservés à Revolut X", "Support client souvent critiqué sur escalade"],
+      "strengths": [
+        "Intégré dans la néobanque Revolut (UX impeccable)",
+        "Agrément MiCA + licence bancaire lituanienne",
+        "Revolut X (mode pro) avec frais quasi nuls"
+      ],
+      "weaknesses": [
+        "Frais 1,49% sur app classique (élevés)",
+        "Retraits crypto réservés à Revolut X",
+        "Support client souvent critiqué sur escalade"
+      ],
       "badge": "Best néobanque",
       "category": "broker"
     }

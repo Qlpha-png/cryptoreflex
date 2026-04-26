@@ -15,6 +15,12 @@ export interface Platform {
     ux: number;
     support: number;
     mica: number;
+    /**
+     * Catalogue & services — pondéré 10% dans le global (cf. /methodologie).
+     * Calculé déterministe depuis cryptos.totalCount + staking + payment methods
+     * + bonus broker multi-actifs. Source : lib/scoring.ts + scripts/compute-platform-scores.mjs.
+     */
+    catalogue: number;
   };
   mica: {
     status: string;

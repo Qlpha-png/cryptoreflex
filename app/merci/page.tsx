@@ -100,7 +100,7 @@ export default function MerciPage() {
                 <div className="min-w-0">
                   <h2 className="font-bold text-fg">Ton guide PDF, tout de suite</h2>
                   <p className="text-xs text-muted mt-1">
-                    Les 10 plateformes crypto à utiliser en France 2026 (PDF, ~1.2 Mo)
+                    Les 11 plateformes crypto à utiliser en France 2026 (PDF, ~1.2 Mo)
                   </p>
                 </div>
               </div>
