@@ -49,34 +49,30 @@ export default function NewsCard({ news }: Props) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-elevated
                  transition-all duration-fast hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2"
     >
-      {/* Cover. Si la news a une `image` non-default, on l'utilise (sponso/featured).
-          Sinon : ArticleHero CSS-only (avant on chargeait /opengraph-image
-          dynamique qui retourne HTTP 500 en prod côté serverless). */}
-      {news.image && news.image !== "/og-default.png" ? (
-        <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={news.image}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-          />
-          <span
-            className={`absolute left-3 top-3 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
-                        font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
-          >
-            {catLabel}
-          </span>
-        </div>
-      ) : (
-        <ArticleHero
-          category={catLabel}
-          title={news.title}
-          gradient={gradient}
-          height="aspect-[16/9]"
+      {/* Cover : utilise l'OG image dynamique (route /actualites/[slug]/opengraph-image)
+          qui genere un PNG 1200x630 avec titre + categorie + source + date.
+          Le 500 d'avant (Agent D) est resolu (test 26/04 prod = 200 OK).
+          Si jamais l'OG image fail, fallback sur ArticleHero CSS via onError. */}
+      <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={
+            news.image && news.image !== "/og-default.png"
+              ? news.image
+              : `/actualites/${news.slug}/opengraph-image`
+          }
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
         />
-      )}
+        <span
+          className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
+                      font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
+        >
+          {catLabel}
+        </span>
+      </div>
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5">

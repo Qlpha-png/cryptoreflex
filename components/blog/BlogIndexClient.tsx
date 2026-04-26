@@ -248,15 +248,19 @@ export default function BlogIndexClient({ articles, categories }: Props) {
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              {/* Hero CSS-only (ArticleHero). Avant : chargeait
-                  `/blog/[slug]/opengraph-image` qui retourne HTTP 500 en
-                  prod (fs.readdir MDX en serverless cold start), cards
-                  vides. Maintenant : 100% CSS, jamais cassé. */}
-              <ArticleHero
-                category={a.category}
-                title={a.title}
-                gradient={a.gradient}
-              />
+              {/* Hero : OG image dynamique (200 OK confirme prod 26/04).
+                  PNG 1200x630 avec titre + categorie + auteur baked. ArticleHero
+                  CSS reste fallback via onError pour les rares failures. */}
+              <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${a.gradient}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/blog/${a.slug}/opengraph-image`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+                />
+              </div>
               <div className="p-5">
                 <h2 className="text-lg font-semibold text-fg group-hover:text-primary-glow">
                   {a.title}

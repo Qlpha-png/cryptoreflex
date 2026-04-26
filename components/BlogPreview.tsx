@@ -55,15 +55,18 @@ export default async function BlogPreview() {
               href={`/blog/${a.slug}`}
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]"
             >
-              {/* Hero CSS-only — robuste, zéro requête réseau, zéro 500.
-                  Avant on chargeait `/blog/[slug]/opengraph-image` mais cette
-                  route fail systématiquement (HTTP 500 — fs.readdir des MDX
-                  en serverless). Cf. components/ui/ArticleHero.tsx. */}
-              <ArticleHero
-                category={a.category}
-                title={a.title}
-                gradient={a.gradient}
-              />
+              {/* Hero : OG image dynamique 1200x630 (200 OK confirme 26/04).
+                  PNG branded avec titre + categorie + auteur. */}
+              <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${a.gradient}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/blog/${a.slug}/opengraph-image`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+                />
+              </div>
               <div className="p-5">
                 <h3 className="text-lg font-semibold text-fg transition-colors group-hover:text-primary-glow">
                   {a.title}
