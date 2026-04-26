@@ -277,7 +277,10 @@ export const fetchTopMarket = unstable_cache(
 
 export function formatCompactUsd(value: number): string {
   if (!value) return "—";
-  return new Intl.NumberFormat("en-US", {
+  // Audit Block 1 26/04/2026 (Agent copy + GlobalMetricsBar) : audience FR,
+  // donc formatage FR ("3,2 Bn $" au lieu de "$3.2T") + virgule décimale.
+  // Le suffixe Bn (milliards) est plus parlant que T (trillion en US).
+  return new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "USD",
     notation: "compact",

@@ -96,8 +96,10 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         <div className="mt-6 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
-            {/* H1 SEO — 2 lignes, gradient gold sur la partie clé */}
-            <h1 className="ds-h1 leading-[1.05] animate-hero-fade-up animate-hero-fade-up-delay-1">
+            {/* H1 SEO — 2 lignes, gradient gold sur la partie clé.
+                Audit perf 26/04/2026 : retire animate-hero-fade-up-delay-1
+                (delay 80ms) qui retardait le LCP. H1 visible immediat. */}
+            <h1 className="ds-h1 leading-[1.05]">
               Choisis la bonne plateforme crypto en France,
               <br className="hidden sm:inline" />{" "}
               <span className="hero-headline-accent">
@@ -118,17 +120,21 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
 
             {/* CTAs — 1 primary fort + 1 secondaire newsletter */}
             <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 animate-hero-fade-up animate-hero-fade-up-delay-3">
+              {/* Audit Block 1 26/04/2026 (Agents copy + CTA conversion) :
+                  - "Voir le comparatif" trop generique. Remplace par bénéfice
+                    chiffré + temps : "Trouver ma plateforme en 2 min".
+                  - Newsletter CTA passé en text-base mobile (16px lisibilité). */}
               <Link
                 href="#plateformes"
                 className="btn-primary btn-ripple text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
-                aria-label="Voir le comparatif des plateformes crypto"
+                aria-label="Trouver ma plateforme crypto en 2 minutes"
               >
-                Voir le comparatif
+                Trouver ma plateforme en 2 min
                 <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
               </Link>
               <Link
                 href="#newsletter"
-                className="btn-ghost text-small sm:text-body w-full sm:w-auto"
+                className="btn-ghost text-base w-full sm:w-auto"
                 aria-label="S'inscrire à la newsletter quotidienne"
               >
                 <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -136,24 +142,12 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               </Link>
             </div>
 
-            {/* Trust signals — 3 colonnes, animated numbers */}
-            <ul className="mt-8 grid grid-cols-3 gap-3 sm:gap-5 max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
-              <TrustSignal
-                icon={<ShieldCheck className="h-5 w-5" strokeWidth={1.75} />}
-                value={STATS.platforms}
-                label="Plateformes comparées"
-              />
-              <TrustSignal
-                icon={<FileCheck className="h-5 w-5" strokeWidth={1.75} />}
-                value={STATS.cryptos}
-                label="Cryptos suivies"
-              />
-              <TrustSignal
-                icon={<Users className="h-5 w-5" strokeWidth={1.75} />}
-                value={STATS.tools}
-                label="Outils gratuits"
-              />
-            </ul>
+            {/* Audit Block 1 26/04/2026 (Agent visual) : DUPLICATION CRITIQUE
+                identifiée — les TrustSignals ici (3 KPI : platforms/cryptos/
+                tools) faisaient doublon avec la KpiCell en card-premium plus
+                bas (mêmes chiffres, même labels). Suppression -> hero plus
+                respirant, hierarchie + claire. La card-premium reste comme
+                seul affichage des stats. */}
           </div>
 
           {/* Colonne droite — live widget. Audit mobile 26/04/2026 : caché

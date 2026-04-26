@@ -70,6 +70,10 @@ export default function CryptoLogo({
     // optimisé CoinGecko), aucun benefice perf au lazy load. Decode async
     // pour ne pas bloquer le main thread.
     /* eslint-disable-next-line @next/next/no-img-element */
+    // Audit Block 1 26/04/2026 (Agent perf) : avant loading="eager" partout
+    // -> 48 logos crypto en High priority dans PriceTicker (24 coins × 2 loop)
+    // qui retardaient le 1er paint. Fix : loading="lazy" par défaut, "eager"
+    // uniquement quand priority prop true (Hero widget above-fold).
     return (
       <img
         src={resolved}
@@ -78,7 +82,7 @@ export default function CryptoLogo({
         height={size}
         className={baseClass}
         style={{ width: size, height: size, objectFit: "cover" }}
-        loading={priority ? "eager" : "eager"}
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
         {...(priority ? { fetchPriority: "high" as const } : {})}
       />
