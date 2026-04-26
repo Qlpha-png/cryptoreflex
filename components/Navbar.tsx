@@ -252,39 +252,41 @@ export default function Navbar() {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   data-nav-item={isPremium ? "pro" : "regular"}
-                  className={`relative inline-flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] transition-colors rounded py-1 group/nav whitespace-nowrap
+                  className={`relative inline-flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${
                                isPremium
-                                 ? active
-                                   ? "text-primary-glow font-bold"
-                                   : "text-primary hover:text-primary-glow font-semibold"
+                                 ? `nav-pro overflow-hidden rounded-full px-2.5 py-1 ring-1 ring-primary/25 bg-primary/[0.08]
+                                    transition-[color,background-color,box-shadow] duration-200
+                                    hover:ring-primary/50 hover:bg-primary/[0.14]
+                                    motion-safe:animate-nav-pro-pulse
+                                    ${active ? "text-primary-glow font-bold ring-primary/60 bg-primary/[0.16]" : "text-primary hover:text-primary-glow font-semibold"}`
                                  : active
-                                   ? "text-fg font-semibold"
-                                   : "text-fg/70 hover:text-fg"
+                                   ? "text-fg font-semibold transition-colors"
+                                   : "text-fg/70 hover:text-fg transition-colors"
                              }`}
                 >
                   {isPremium && (
                     <Crown
-                      className="h-3.5 w-3.5"
+                      className="h-3.5 w-3.5 transition-transform duration-300 ease-out
+                                 motion-safe:group-hover/nav:-rotate-[8deg] motion-safe:group-hover/nav:scale-110
+                                 drop-shadow-[0_0_6px_rgba(252,211,77,0.45)]"
                       strokeWidth={2}
                       aria-hidden="true"
                     />
                   )}
                   {item.label}
-                  {/* Audit Visual P0 : underline 1px discret. Pour l'item Pro,
-                      la couleur or rend déjà l'underline implicite, on garde une
-                      version plus visible (h-0.5 au lieu de h-px) pour signaler
-                      la "valeur premium" sans cannibaliser le CTA principal. */}
-                  <span
-                    aria-hidden="true"
-                    className={`pointer-events-none absolute left-0 right-0 -bottom-1 transition-opacity duration-200 ${
-                      isPremium ? "h-0.5 bg-primary" : "h-px bg-fg"
-                    } ${
-                      active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"
-                    }`}
-                  />
+                  {/* Underline classique pour les items non-premium ; pour Pro,
+                      le pill ring + bg + pulse remplacent l'underline visuellement. */}
+                  {!isPremium && (
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px bg-fg transition-opacity duration-200 ${
+                        active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"
+                      }`}
+                    />
+                  )}
                 </Link>
               );
             })}
