@@ -27,6 +27,15 @@ export type SubscribeSource =
   | "blog-cta"
   | "pro-waitlist"
   | "quiz-exchange"
+  // Phase 3 / Agent A4 — déclencheur séquence email fiscalité (5 emails / 14j).
+  // La valeur exacte de la string est référencée par
+  // `lib/email-series/fiscalite-crypto-series.ts` (FISCALITE_SERIES_SOURCE).
+  | "calculateur-fiscalite-pdf"
+  // Lead magnets PDF (gated via /api/lead-magnet/[id]).
+  | "lead-magnet-bible-fiscalite"
+  | "lead-magnet-checklist"
+  | "lead-magnet-glossaire"
+  | "lead-magnet-guide-plateformes"
   | "unknown";
 
 export type SubscribeInput = {

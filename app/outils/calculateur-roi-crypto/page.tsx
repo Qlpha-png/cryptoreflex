@@ -17,6 +17,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 
 /* ISR : recalcul tous les 24 h (la page est essentiellement statique). */
@@ -108,22 +109,10 @@ export default function CalculateurROIPage() {
       { name: "Outils", url: "/outils" },
       { name: "Calculateur ROI crypto", url: PAGE_PATH },
     ]),
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "@id": `${PAGE_URL}#webapp`,
+    generateWebApplicationSchema({
+      slug: "calculateur-roi-crypto",
       name: "Calculateur ROI crypto Cryptoreflex",
       description: PAGE_DESCRIPTION,
-      url: PAGE_URL,
-      applicationCategory: "FinanceApplication",
-      operatingSystem: "Any (web browser)",
-      isAccessibleForFree: true,
-      inLanguage: "fr-FR",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "EUR",
-      },
       featureList: [
         "Calcul ROI net en pourcentage",
         "Plus-value brute et nette en euros",
@@ -132,7 +121,13 @@ export default function CalculateurROIPage() {
         "Seuil d'exonération 305 €",
         "Copier les résultats en un clic",
       ],
-    },
+      keywords: [
+        "calculateur ROI crypto",
+        "plus-value crypto",
+        "PFU 30",
+        "impôt crypto France",
+      ],
+    }),
     faqSchema(FAQ_ITEMS),
   ];
 

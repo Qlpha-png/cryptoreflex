@@ -16,6 +16,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 
 /* Pas d'ISR particulier — la page est statique, le composant est Client. */
@@ -76,22 +77,10 @@ export default function PortfolioTrackerPage() {
       { name: "Outils", url: "/outils" },
       { name: "Portfolio Tracker", url: PAGE_PATH },
     ]),
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "@id": `${PAGE_URL}#webapp`,
+    generateWebApplicationSchema({
+      slug: "portfolio-tracker",
       name: "Portfolio Tracker crypto Cryptoreflex",
       description: PAGE_DESCRIPTION,
-      url: PAGE_URL,
-      applicationCategory: "FinanceApplication",
-      operatingSystem: "Any (web browser)",
-      isAccessibleForFree: true,
-      inLanguage: "fr-FR",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "EUR",
-      },
       featureList: [
         "Ajout illimité de cryptos (top 100 CoinGecko)",
         "Prix EUR live actualisés toutes les 60 secondes",
@@ -100,7 +89,13 @@ export default function PortfolioTrackerPage() {
         "Stockage 100 % local (localStorage)",
         "Aucune connexion wallet requise",
       ],
-    },
+      keywords: [
+        "portfolio tracker crypto",
+        "suivi portefeuille crypto",
+        "tracker crypto EUR",
+        "portefeuille Bitcoin",
+      ],
+    }),
   ];
 
   return (

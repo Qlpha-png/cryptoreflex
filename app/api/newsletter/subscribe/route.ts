@@ -41,6 +41,13 @@ const ALLOWED_SOURCES: ReadonlySet<SubscribeSource> = new Set<SubscribeSource>([
   "blog-cta",
   "pro-waitlist",
   "quiz-exchange",
+  // Phase 3 / Agent A4 — sources marketing pour la séquence email fiscalité
+  // et les lead magnets PDF (gated via /api/lead-magnet/[id]).
+  "calculateur-fiscalite-pdf",
+  "lead-magnet-bible-fiscalite",
+  "lead-magnet-checklist",
+  "lead-magnet-glossaire",
+  "lead-magnet-guide-plateformes",
   "unknown",
 ]);
 

@@ -18,6 +18,7 @@
 | Bitget | EN REVIEW | Direct | Crypto USDT | 10 USDT | Hebdo | En attente approbation |
 | SwissBorg | EN REVIEW | Direct | Cashback BTC | N/A | Auto | En attente approbation |
 | Trezor | EN REVIEW | Direct | Virement / PayPal | 100 € | NET60 | En attente approbation |
+| **Waltio** | **À CANDIDATER** | **Direct** | **Virement SEPA** | **50 €** | **NET30** | **🔴 À FAIRE — Phase 3** |
 
 ---
 
@@ -101,6 +102,56 @@
 
 ---
 
+## Programmes À CANDIDATER
+
+### 9. Waltio Affiliate (Phase 3 — Outil fiscal partenaire)
+- **Statut** : À CANDIDATER (priorité #1 Phase 3 / Agent A1)
+- **Réseau** : Direct (programme interne Waltio, pas via Awin)
+- **URL inscription (à vérifier)** : https://waltio.com/affiliate
+  - URL probable d'après recherche éditoriale ; si 404, fallback sur :
+    - https://www.waltio.com/partenaires
+    - email direct : `partenariats@waltio.com`
+  - À confirmer côté Waltio (dashboard ou formulaire de candidature affiliée)
+- **Méthode paiement attendue** : Virement SEPA (Waltio = société française basée à Paris,
+  IBAN EUR pratique)
+- **Seuil minimum estimé** : 50 € (à confirmer après validation candidature)
+- **Fréquence** : NET30 (paiement le mois suivant après validation des conversions)
+- **Commission attendue** : **30 % récurrente sur la durée de vie du client**
+  - Les abonnements Waltio sont annuels (renouvelés chaque année par le client)
+  - → 30 % la 1re année, ET 30 % aussi sur chaque renouvellement annuel
+  - Ex : client souscrit Hodler 79 €/an → 23,70 €/an de commission, sur N années
+  - LTV moyenne attendue : 2-3 ans = 47-71 € par client converti
+- **Cookie attendu** : 30 jours (standard SaaS B2C français)
+- **Pages où Waltio sera promu** :
+  - `/outils/declaration-fiscale-crypto` (page comparative dédiée — créée Phase 3)
+  - `/outils/calculateur-fiscalite` (encart post-résultat dans `<CalculateurFiscalite />`)
+  - `/blog/comment-declarer-crypto-impots`
+  - `/blog/cerfa-3916-bis-crypto`
+  - `/blog/fiscalite-defi`
+  - `/blog/fiscalite-staking`
+  - `/blog/fiscalite-nft`
+- **Composant promo** : `<WaltioPromoCard />` (3 variantes : compact, card, banner)
+- **Conformité loi Influenceurs** :
+  - Tous les CTA passent par `<AffiliateLink />` (rel="sponsored noopener noreferrer")
+  - OU par balise `<a>` directe avec :
+    - `rel="sponsored noopener noreferrer"`
+    - `aria-label="Lien d'affiliation publicitaire"`
+    - caption « Publicité — Cryptoreflex perçoit une commission » sous le CTA
+- **Promo annoncée aux lecteurs** : « 30 % de réduction Cryptoreflex »
+  (à valider avec Waltio que cette remise est bien activable côté code promo /
+  landing dédiée — dans le doute, c'est notre angle marketing par défaut, on
+  ajustera quand l'affiliation sera validée)
+- **Action requise** :
+  1. Créer un compte Waltio (essai gratuit pour tester le produit)
+  2. Aller sur https://waltio.com/affiliate (ou écrire à `partenariats@waltio.com`)
+  3. Renseigner URL Cryptoreflex + audience (visiteurs FR mensuels)
+  4. Demander un code promo dédié `CRYPTOREFLEX` (-30 % 1re année si possible)
+  5. Une fois activé : remplacer `?ref=cryptoreflex` dans `data/fiscal-tools.json`
+     par le vrai paramètre tracking fourni (ex: `?aff=12345`)
+  6. Configurer IBAN dans le dashboard affilié Waltio
+
+---
+
 ## Récap fiscal France
 
 ⚠️ **Toutes les commissions d'affiliation sont des revenus imposables en France** :
@@ -114,7 +165,7 @@
 
 ## Diversification hors crypto (à venir)
 
-- **Waltio** (déclaration fiscale crypto) → commission 30% récurrent — virement SEPA NET30
+- ~~**Waltio** (déclaration fiscale crypto)~~ → ✅ promu en programme actif (cf. section #9 "À CANDIDATER" ci-dessus, Phase 3 / Agent A1)
 - **NordVPN** (VPN sécurité) → commission 40% premier achat — virement / PayPal NET30
 - **ProtonMail** (email chiffré) → commission 20% premier achat — PayPal NET30
 

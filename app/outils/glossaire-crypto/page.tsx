@@ -9,6 +9,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import {
   GLOSSARY,
   GLOSSARY_FLAT_CATEGORIES,
@@ -93,23 +94,26 @@ export default function GlossaireCryptoPage() {
       { name: "Outils", url: "/outils" },
       { name: "Glossaire crypto", url: PAGE_PATH },
     ]),
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "@id": `${PAGE_URL}#webapp`,
+    generateWebApplicationSchema({
+      slug: "glossaire-crypto",
       name: "Glossaire crypto français Cryptoreflex",
       description: PAGE_DESCRIPTION,
-      url: PAGE_URL,
-      applicationCategory: "FinanceApplication",
-      operatingSystem: "Any (web browser)",
-      isAccessibleForFree: true,
-      inLanguage: "fr-FR",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "EUR",
-      },
-    },
+      featureList: [
+        `${GLOSSARY.length}+ termes crypto définis en français`,
+        "Recherche instantanée + filtres par catégorie",
+        "Index alphabétique A-Z",
+        "Couvre Bitcoin, DeFi, MiCA, halving, staking, NFT, Layer 2",
+        "Liens d'ancre partageables (URL fragment)",
+        "Mise à jour 2026",
+      ],
+      keywords: [
+        "glossaire crypto",
+        "définition Bitcoin",
+        "définition DeFi",
+        "vocabulaire crypto",
+        "MiCA définition",
+      ],
+    }),
     buildFlatDefinedTermSetSchema(BRAND.url),
   ];
 

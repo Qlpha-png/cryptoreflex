@@ -4,6 +4,7 @@ import { ArrowDownUp, Globe, Zap, ArrowRight } from "lucide-react";
 import Converter from "@/components/Converter";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
 
 export const metadata: Metadata = {
@@ -48,6 +49,27 @@ export default function ConvertisseurPage() {
     <>
       <StructuredData
         data={graphSchema([
+          generateWebApplicationSchema({
+            slug: "convertisseur",
+            name: "Convertisseur crypto temps réel Cryptoreflex",
+            description:
+              "Convertisseur BTC, ETH, SOL, USDT et 11 autres cryptos vers EUR/USD avec taux CoinGecko en temps réel.",
+            featureList: [
+              "15 cryptos majeures (BTC, ETH, SOL, BNB, XRP, ADA, USDT, USDC…)",
+              "Conversion fiat (EUR, USD)",
+              "Cross-crypto (BTC vers ETH, etc.) via EUR pivot",
+              "Taux CoinGecko rafraîchis toutes les 60 secondes",
+              "Aucune inscription, aucune publicité",
+              "Mode pleine page ou widget embeddable",
+            ],
+            keywords: [
+              "convertisseur crypto",
+              "BTC EUR",
+              "ETH EUR",
+              "convertisseur Bitcoin",
+              "taux CoinGecko",
+            ],
+          }),
           breadcrumbSchema([
             { name: "Accueil", url: "/" },
             { name: "Outils", url: "/outils" },

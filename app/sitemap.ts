@@ -25,11 +25,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/actualites`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/calendrier-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/outils`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    // Phase 3 / Agent A4 — page hub /ressources (lead magnets PDF + outils + blog).
+    // Priority 0.7 (~ /outils) car page de conversion newsletter via lead magnet gating.
+    { url: `${SITE_URL}/ressources`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/outils/simulateur-dca`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/outils/convertisseur`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // P1 #1 roadmap : LE outil viral (Cryptoast top 3 Google sur "fiscalité crypto").
     // Priority 0.85 supérieur aux autres outils car lead magnet principal.
     { url: `${SITE_URL}/outils/calculateur-fiscalite`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    // Phase 3 / Agent A1 — page comparative outils fiscaux (Waltio recommandé).
+    // Cluster fiscalité : co-positionnement avec /outils/calculateur-fiscalite.
+    { url: `${SITE_URL}/outils/declaration-fiscale-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     // Vérificateur MiCA : trafic stratégique sur "plateforme MiCA conforme" + redirige vers /comparatif.
     { url: `${SITE_URL}/outils/verificateur-mica`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
     // Whitepaper TL;DR : outil expérimental, priorité standard.
@@ -79,6 +85,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/wizard/premier-achat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Alertes prix par email — page outil, à indexer (potentiel "alerte prix bitcoin", etc.)
     { url: `${SITE_URL}/alertes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    // Phase 3 / A5 — landing widgets embeddables + page ressources libres
+    // (linkable assets pour générer des backlinks organiques sans démarchage).
+    // Les routes /embed/* restent volontairement HORS sitemap (noindex).
+    { url: `${SITE_URL}/embeds`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/ressources-libres`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     // Portefeuille : noindex côté metadata (page perso) mais on l'inclut pour

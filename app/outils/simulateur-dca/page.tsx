@@ -17,6 +17,7 @@ const DcaSimulator = dynamic(() => import("@/components/DcaSimulator"), {
 });
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { getPlatformById } from "@/lib/platforms";
 
 export const metadata: Metadata = {
@@ -73,6 +74,27 @@ export default function SimulateurDcaPage() {
     <>
       <StructuredData
         data={graphSchema([
+          generateWebApplicationSchema({
+            slug: "simulateur-dca",
+            name: "Simulateur DCA crypto Cryptoreflex",
+            description:
+              "Simulateur DCA backtest réel BTC/ETH/SOL sur 5 ans glissants — données CoinGecko, comparaison vs achat unique.",
+            featureList: [
+              "Backtest historique sur 1 à 5 ans (CoinGecko)",
+              "Bitcoin, Ethereum et Solana supportés",
+              "Comparaison DCA vs achat unique (lump sum)",
+              "Calcul prix moyen pondéré d'acquisition",
+              "Visualisation graphique de la performance",
+              "Aucune inscription requise",
+            ],
+            keywords: [
+              "simulateur DCA",
+              "Dollar Cost Averaging",
+              "backtest Bitcoin",
+              "DCA Ethereum",
+              "DCA Solana",
+            ],
+          }),
           breadcrumbSchema([
             { name: "Accueil", url: "/" },
             { name: "Outils", url: "/outils" },

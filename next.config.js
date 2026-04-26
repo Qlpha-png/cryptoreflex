@@ -76,16 +76,17 @@ const nextConfig = {
   // Note CSP : 'unsafe-inline' nécessaire pour JSON-LD inline (StructuredData.tsx)
   // et Tailwind/Next CSS critique. Plausible whitelisté pour analytics.
   async headers() {
-    const csp = [
+    // CSP pour l'ensemble du site — frame-ancestors 'none' = personne ne peut
+    // nous embarquer (anti-clickjacking).
+    const cspDefault = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' https://plausible.io",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
       "font-src 'self' data:",
       "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io",
-      // TradingView widget (lightweight iframe). On garde la directive
-      // `frame-ancestors 'none'` qui empêche QU'ON soit embarqué ailleurs ;
-      // `frame-src` autorise NOUS à embarquer TradingView (sens inverse).
+      // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
+      // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
@@ -93,26 +94,64 @@ const nextConfig = {
       "object-src 'none'",
     ].join("; ");
 
+    // CSP pour les routes /embed/* — `frame-ancestors *` autorise
+    // n'importe quel site à embarquer nos widgets. Stratégie linkable assets :
+    // chaque embed externe = un backlink dofollow vers cryptoreflex.fr via
+    // l'attribution "Powered by Cryptoreflex" obligatoire dans le footer du
+    // widget. SEO-friendly + zéro démarchage.
+    const cspEmbed = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://plausible.io",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
+      "font-src 'self' data:",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io",
+      "frame-src https://s.tradingview.com https://www.tradingview.com",
+      // Autorise n'importe quel parent → embed cross-origin OK.
+      "frame-ancestors *",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+    ].join("; ");
+
     return [
+      // 1. Headers /embed/* — DOIT précéder la règle générique pour gagner.
+      //    On retire X-Frame-Options (incompatible avec frame-ancestors *)
+      //    et on remplace la CSP par la version embed.
       {
-        source: "/(.*)",
+        source: "/embed/:path*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          // HSTS — force HTTPS pendant 2 ans, includeSubDomains, preload-eligible.
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
-          // Restreint l'accès aux APIs sensibles du navigateur.
           {
             key: "Permissions-Policy",
             value:
               "geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=()",
           },
-          // Content Security Policy — anti-XSS, restreint origines.
-          { key: "Content-Security-Policy", value: csp },
+          { key: "Content-Security-Policy", value: cspEmbed },
+        ],
+      },
+      // 2. Headers globaux — toutes les autres routes (clickjacking-protected).
+      {
+        source: "/((?!embed).*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=()",
+          },
+          { key: "Content-Security-Policy", value: cspDefault },
         ],
       },
     ];

@@ -22,8 +22,10 @@
 import { useMemo, useState, type FormEvent, type ChangeEvent } from "react";
 import {
   AlertCircle,
+  ArrowRight,
   Calculator,
   CheckCircle2,
+  FileText,
   Info,
   Loader2,
   Mail,
@@ -40,7 +42,8 @@ import {
   type Regime,
   type TmiRate,
 } from "@/lib/fiscalite";
-import { track } from "@/lib/analytics";
+import { track, trackAffiliateClick } from "@/lib/analytics";
+import PdfModal from "@/components/calculateur-fiscalite/PdfModal";
 
 /* -------------------------------------------------------------------------- */
 /*  Types & constantes                                                        */
@@ -108,6 +111,9 @@ export default function CalculateurFiscalite() {
   >("idle");
   const [emailMsg, setEmailMsg] = useState("");
 
+  // PDF modal state (Phase 3 / A3 — export PDF lead magnet)
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
+
   /* --------- Calcul mémoïsé ------------------------------------------------ */
   const result = useMemo(() => {
     const input: FiscaliteInput = {
@@ -171,6 +177,7 @@ export default function CalculateurFiscalite() {
     setEmail("");
     setEmailState("idle");
     setEmailMsg("");
+    setPdfModalOpen(false);
   }
 
   async function handleEmailSubmit(e: FormEvent<HTMLFormElement>) {
@@ -400,9 +407,135 @@ export default function CalculateurFiscalite() {
             onEmailChange={setEmail}
             onEmailSubmit={handleEmailSubmit}
           />
+
+          {/* CTA "Télécharger ma simulation PDF" (Phase 3 / A3) */}
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setPdfModalOpen(true)}
+              className="btn-primary"
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Télécharger ma simulation PDF
+            </button>
+          </div>
+
+          {/* Encart Waltio (post-résultat) */}
+          <div className="mt-8">
+            <WaltioPostResultCta />
+          </div>
         </div>
       )}
+
+      {/* Modal email gate → preview-pdf */}
+      <PdfModal
+        open={pdfModalOpen}
+        onClose={() => setPdfModalOpen(false)}
+        input={{
+          totalCessions: parseEuroInput(form.totalCessions),
+          totalAchats: parseEuroInput(form.totalAchats),
+          fraisCourtage: parseEuroInput(form.fraisCourtage),
+          regime: form.regime,
+          tmi: form.tmi,
+          reportablePrevious: parseEuroInput(form.reportablePrevious),
+        }}
+        result={result}
+      />
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  WaltioPostResultCta — encart promotionnel après le calcul                 */
+/*                                                                            */
+/*  Inline pour rester dans un Client Component sans import dynamique.        */
+/*  - CTA #1 (interne) → /outils/declaration-fiscale-crypto                   */
+/*  - CTA #2 (affilié) → Waltio direct, tagué sponsored noopener noreferrer   */
+/*    + label « Lien d'affiliation publicitaire » (loi Influenceurs juin 2023)*/
+/* -------------------------------------------------------------------------- */
+
+function WaltioPostResultCta() {
+  // URL d'affiliation Waltio — synchronisée avec data/fiscal-tools.json.
+  // Hardcodée ici pour rester côté client sans import data JSON inutile.
+  const waltioAffiliateUrl =
+    "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-post-result";
+
+  function handleAffiliateClick() {
+    trackAffiliateClick(
+      "waltio",
+      "calculator-post-result",
+      "Essayer Waltio (post-result)",
+    );
+  }
+
+  function handleInternalClick() {
+    track("Internal CTA", {
+      placement: "calculator-post-result",
+      target: "/outils/declaration-fiscale-crypto",
+    });
+  }
+
+  return (
+    <section
+      aria-labelledby="waltio-post-result-title"
+      className="rounded-2xl border border-primary/40 bg-primary/5 p-5 sm:p-6"
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-soft"
+          aria-hidden="true"
+        >
+          <Calculator className="h-5 w-5 text-background" />
+        </div>
+        <div className="flex-1">
+          <h4
+            id="waltio-post-result-title"
+            className="font-display font-bold text-white"
+          >
+            <span aria-hidden="true">🎯 </span>
+            Pour générer ton Cerfa 3916-bis automatiquement
+          </h4>
+          <p className="mt-2 text-sm text-white/75">
+            Tu as plusieurs centaines de transactions ou des comptes sur
+            plusieurs exchanges ? On recommande{" "}
+            <strong className="text-white">Waltio</strong> (édité en France) :
+            il connecte tes plateformes, calcule tes plus-values et pré-remplit
+            les formulaires 2086 et 3916-bis prêts à téléverser sur
+            impots.gouv.fr. Bénéficie de{" "}
+            <strong className="text-primary-soft">
+              30 % de réduction Cryptoreflex
+            </strong>
+            .
+          </p>
+          <div className="mt-4 flex flex-col sm:flex-row gap-2">
+            <a
+              href="/outils/declaration-fiscale-crypto"
+              onClick={handleInternalClick}
+              className="btn-ghost justify-center text-sm"
+            >
+              Comparatif Waltio vs Koinly vs CoinTracking
+            </a>
+            <a
+              href={waltioAffiliateUrl}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              aria-label="Lien d'affiliation publicitaire vers Waltio"
+              onClick={handleAffiliateClick}
+              data-affiliate-platform="waltio"
+              data-affiliate-placement="calculator-post-result"
+              className="btn-primary justify-center text-sm"
+            >
+              Essayer Waltio
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+          <p className="mt-2 text-[10px] text-muted/70">
+            Lien d'affiliation publicitaire — Cryptoreflex perçoit une
+            commission. <a href="/transparence" className="underline">En savoir plus</a>.
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 

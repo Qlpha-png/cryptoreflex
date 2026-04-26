@@ -1,0 +1,240 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-26",
+    "source": "Recherche éditoriale Cryptoreflex (sites officiels Waltio, Koinly, CoinTracking — données 2025-2026 à recouper avant publication)",
+    "schemaVersion": "1.0"
+  },
+  "tools": [
+    {
+      "id": "waltio",
+      "name": "Waltio",
+      "logoUrl": "/logos/waltio.svg",
+      "websiteUrl": "https://waltio.com",
+      "affiliateUrl": "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=fiscalite-fr",
+      "country": "FR",
+      "pricingModel": "subscription",
+      "freeTrial": true,
+      "supportFr": true,
+      "micaCompliant": true,
+      "plansEur": [
+        {
+          "name": "Découverte",
+          "priceEur": 0,
+          "maxTransactions": 30,
+          "features": [
+            "Connexion à 200+ plateformes",
+            "Visualisation portefeuille",
+            "Aperçu plus-values",
+            "Aucun export Cerfa"
+          ]
+        },
+        {
+          "name": "Hodler",
+          "priceEur": 79,
+          "maxTransactions": 500,
+          "features": [
+            "Export Cerfa 2086 + 2042-C",
+            "Pré-remplissage 3916-bis",
+            "Support email FR",
+            "Mise à jour annuelle incluse"
+          ]
+        },
+        {
+          "name": "Trader",
+          "priceEur": 199,
+          "maxTransactions": 5000,
+          "features": [
+            "Tout Hodler",
+            "DeFi multi-chain (ETH, BNB, Polygon, Arbitrum, Solana)",
+            "NFT & airdrops automatiques",
+            "Support chat prioritaire FR"
+          ]
+        },
+        {
+          "name": "Pro",
+          "priceEur": 549,
+          "maxTransactions": 50000,
+          "features": [
+            "Tout Trader",
+            "Comptes illimités sur exchanges",
+            "Mode expert-comptable (accès partagé)",
+            "Support téléphonique FR"
+          ]
+        }
+      ],
+      "supportedExchanges": 220,
+      "exportCerfa3916bis": true,
+      "exportPdf": true,
+      "exportCsv": true,
+      "integrationsCount": 220,
+      "accountantSupport": true,
+      "customerSupport": ["fr", "en"],
+      "pros": [
+        "Édité en France, 100 % conforme à la fiscalité française (article 150 VH bis CGI)",
+        "Génère le formulaire 2086 + 3916-bis prêt à téléverser sur impots.gouv.fr",
+        "Support client en français par chat et email (réponse <24h)",
+        "Compatible DeFi, staking, NFT et airdrops sans config manuelle",
+        "Partenariats officiels avec Bitpanda, Binance France, Coinhouse"
+      ],
+      "cons": [
+        "Pas de plan gratuit pour l'export Cerfa (palier 79 €/an minimum)",
+        "Interface mobile limitée (web-first)"
+      ],
+      "score": 9.4,
+      "recommended": true,
+      "notes": "Notre recommandation #1 pour les contribuables français. Partenaire officiel Cryptoreflex — code promo réduction 30 %."
+    },
+    {
+      "id": "koinly",
+      "name": "Koinly",
+      "logoUrl": "/logos/koinly.svg",
+      "websiteUrl": "https://koinly.io",
+      "affiliateUrl": "https://koinly.io?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate",
+      "country": "GB",
+      "pricingModel": "subscription",
+      "freeTrial": true,
+      "supportFr": false,
+      "micaCompliant": false,
+      "plansEur": [
+        {
+          "name": "Free",
+          "priceEur": 0,
+          "maxTransactions": 10000,
+          "features": [
+            "Suivi portefeuille",
+            "Calcul plus-values illimité",
+            "Aucun export fiscal téléchargeable"
+          ]
+        },
+        {
+          "name": "Newbie",
+          "priceEur": 49,
+          "maxTransactions": 100,
+          "features": [
+            "Export fiscal complet",
+            "Support 20+ pays",
+            "Pas de Cerfa 2086 spécifique FR"
+          ]
+        },
+        {
+          "name": "Hodler",
+          "priceEur": 99,
+          "maxTransactions": 1000,
+          "features": [
+            "Tout Newbie",
+            "Rapports DeFi & NFT",
+            "Audit trail complet"
+          ]
+        },
+        {
+          "name": "Trader",
+          "priceEur": 179,
+          "maxTransactions": 10000,
+          "features": [
+            "Tout Hodler",
+            "Support prioritaire (anglais)",
+            "Accès expert-comptable"
+          ]
+        }
+      ],
+      "supportedExchanges": 800,
+      "exportCerfa3916bis": false,
+      "exportPdf": true,
+      "exportCsv": true,
+      "integrationsCount": 800,
+      "accountantSupport": true,
+      "customerSupport": ["en"],
+      "pros": [
+        "Le plus grand catalogue d'intégrations du marché (800+ exchanges, wallets et chains)",
+        "Free tier généreux pour visualiser jusqu'à 10 000 transactions",
+        "Excellente UX et application mobile native iOS/Android",
+        "Support DeFi très complet (200+ protocoles)"
+      ],
+      "cons": [
+        "Pas de support en français — uniquement anglais",
+        "Pas d'export pré-rempli pour le formulaire 2086 ou 3916-bis FR",
+        "Adapté aux US, UK, AU, DE — la France est gérée en mode générique",
+        "Tarification en USD, conversion EUR variable"
+      ],
+      "score": 8.1,
+      "recommended": false,
+      "notes": "Excellent outil international, mais inadapté pour une déclaration française clé-en-main."
+    },
+    {
+      "id": "cointracking",
+      "name": "CoinTracking",
+      "logoUrl": "/logos/cointracking.svg",
+      "websiteUrl": "https://cointracking.info",
+      "affiliateUrl": "https://cointracking.info?ref=cryptoreflex",
+      "country": "DE",
+      "pricingModel": "freemium",
+      "freeTrial": true,
+      "supportFr": false,
+      "micaCompliant": false,
+      "plansEur": [
+        {
+          "name": "Free",
+          "priceEur": 0,
+          "maxTransactions": 200,
+          "features": [
+            "Tableau de bord portefeuille",
+            "13 reports fiscaux (FIFO, LIFO, HIFO…)",
+            "Export CSV brut"
+          ]
+        },
+        {
+          "name": "Pro",
+          "priceEur": 99,
+          "maxTransactions": 3500,
+          "features": [
+            "Tout Free",
+            "Reports fiscaux PDF",
+            "Backups automatiques"
+          ]
+        },
+        {
+          "name": "Expert",
+          "priceEur": 199,
+          "maxTransactions": 20000,
+          "features": [
+            "Tout Pro",
+            "Reports prioritaires",
+            "Mode comptable"
+          ]
+        },
+        {
+          "name": "Unlimited",
+          "priceEur": 599,
+          "maxTransactions": "unlimited",
+          "features": [
+            "Tout Expert",
+            "Transactions illimitées à vie (option lifetime)",
+            "Support prioritaire (anglais/allemand)"
+          ]
+        }
+      ],
+      "supportedExchanges": 300,
+      "exportCerfa3916bis": false,
+      "exportPdf": true,
+      "exportCsv": true,
+      "integrationsCount": 110,
+      "accountantSupport": true,
+      "customerSupport": ["en", "de"],
+      "pros": [
+        "Vétéran du secteur (depuis 2013) avec base de données fiscale très profonde",
+        "Free tier permanent jusqu'à 200 transactions",
+        "13 méthodes de calcul de plus-values configurables",
+        "Données historiques de prix très précises (10 ans+)"
+      ],
+      "cons": [
+        "Pas de support français (anglais et allemand uniquement)",
+        "Interface datée et moins intuitive que Waltio ou Koinly",
+        "Aucun export Cerfa 2086 ou 3916-bis spécifique France",
+        "Synchronisation auto plus limitée (110 intégrations API)"
+      ],
+      "score": 7.4,
+      "recommended": false,
+      "notes": "Référence historique pour les power users germanophones. Non recommandé pour un profil FR débutant."
+    }
+  ]
+}
