@@ -170,13 +170,32 @@ async function readArticlesFromDisk(): Promise<Article[]> {
 /*  API publique cachée                                                        */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * TTL revalidate des caches MDX.
+ *
+ * Pourquoi 60s vs 3600s d'avant :
+ *  Bug observé 26-04 : si Googlebot ou un visiteur hit /blog/<slug> AVANT
+ *  qu'un nouvel article ne soit déployé, `getArticleBySlug` cache un `null`
+ *  pendant 1h. Après deploy, la page renvoie encore "Article introuvable"
+ *  jusqu'à expiration TTL.
+ *
+ *  Avec 60s, fenêtre de bug réduite de 1h → 1 min. Trade-off perf : 60×
+ *  plus de lectures FS, mais le coût est négligeable (les fichiers MDX font
+ *  10-30 KB chacun, lecture <5ms, et Vercel Data Cache deduplicate les
+ *  appels concurrents).
+ *
+ *  Le cache reste tagué "articles" pour permettre un bust manuel via
+ *  POST /api/revalidate?tag=articles + revalidatePath ciblé.
+ */
+const ARTICLES_CACHE_TTL_SEC = 60;
+
 /** Retourne tous les articles (avec leur contenu MDX), triés par date desc. */
 export const getAllArticles = unstable_cache(
   async (): Promise<Article[]> => {
     return readArticlesFromDisk();
   },
   ["mdx:all-articles"],
-  { tags: ["articles"], revalidate: 3600 }
+  { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
 /**
@@ -189,7 +208,7 @@ export const getAllArticleSummaries = unstable_cache(
     return all.map(({ content: _content, ...rest }) => rest);
   },
   ["mdx:all-summaries"],
-  { tags: ["articles"], revalidate: 3600 }
+  { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
 /** Retourne un article par slug, ou `null` si introuvable. */
@@ -199,7 +218,7 @@ export const getArticleBySlug = unstable_cache(
     return all.find((a) => a.slug === slug) ?? null;
   },
   ["mdx:article-by-slug"],
-  { tags: ["articles"], revalidate: 3600 }
+  { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
 /** Retourne uniquement les slugs (pour generateStaticParams). */
@@ -209,7 +228,7 @@ export const getArticleSlugs = unstable_cache(
     return all.map((a) => a.slug);
   },
   ["mdx:article-slugs"],
-  { tags: ["articles"], revalidate: 3600 }
+  { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
 /** Toutes les catégories distinctes, triées alphabétiquement. */
