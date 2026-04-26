@@ -69,7 +69,9 @@ export interface HowToTool {
 /* -------------------------------------------------------------------------- */
 
 const SITE_URL = BRAND.url.replace(/\/$/, "");
-const LOGO_URL = `${SITE_URL}/logo.png`;
+// Logo dynamique servi par app/api/logo/route.tsx (ImageResponse 512x512 PNG).
+// Utilisé par Schema.org Organization (Knowledge Panel Google).
+const LOGO_URL = `${SITE_URL}/api/logo`;
 const DEFAULT_OG = `${SITE_URL}/og-image.png`;
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;

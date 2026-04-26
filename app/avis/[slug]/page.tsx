@@ -23,6 +23,12 @@ import {
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import {
+  breadcrumbSchema,
+  faqSchema,
+  graphSchema,
+  platformReviewSchema,
+} from "@/lib/schema";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -194,47 +200,33 @@ export default function ReviewPage({ params }: Props) {
     .filter((x) => x.id !== p.id)
     .slice(0, 3);
 
-  // Schema.org Review (Product)
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    itemReviewed: {
-      "@type": "FinancialProduct",
-      name: p.name,
-      url: p.websiteUrl,
-      provider: { "@type": "Organization", name: p.name },
-    },
-    author: { "@type": "Organization", name: BRAND.name, url: BRAND.url },
-    publisher: { "@type": "Organization", name: BRAND.name, url: BRAND.url },
-    datePublished: p.mica.lastVerified,
-    reviewRating: {
-      "@type": "Rating",
-      ratingValue: p.scoring.global,
-      bestRating: 5,
-      worstRating: 0,
-    },
-    reviewBody: verdict.recommendation,
-  };
-
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
+  /*
+   * Schema.org @graph — combine 3 entités liées par @id :
+   *  1. Product + AggregateRating + Review (via platformReviewSchema())
+   *     → permet à Google d'afficher les ⭐ étoiles dans les SERP
+   *     (rich result Product nécessite aggregateRating, pas juste Rating)
+   *  2. FAQPage → rich result Q&A déroulable dans Google
+   *  3. BreadcrumbList → fil d'Ariane visible dans les SERP
+   *
+   * AVANT (bug SEO) : on injectait un simple `Review` avec `Rating` (sans
+   * aggregate) → Google ignorait les étoiles. Maintenant : Product+AggregateRating
+   * (via reviewCount=trustpilotCount) = étoiles éligibles dans les résultats.
+   */
+  const jsonLd = graphSchema([
+    platformReviewSchema(p),
+    faqSchema(faq.map((item) => ({ question: item.q, answer: item.a }))),
+    breadcrumbSchema([
+      { name: "Accueil", url: "/" },
+      { name: "Avis plateformes", url: "/#plateformes" },
+      { name: p.name, url: `/avis/${p.id}` },
+    ]),
+  ]);
 
   return (
     <article className="py-12 sm:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

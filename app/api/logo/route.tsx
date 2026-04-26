@@ -1,31 +1,23 @@
 import { ImageResponse } from "next/og";
 
 /**
- * /logo.png — logo carré 512×512 dynamique pour le Knowledge Panel Google.
+ * /api/logo — logo carré 512×512 dynamique pour Schema.org Organization.
  *
- * Pourquoi ce route handler plutôt qu'un PNG statique dans /public/ ?
- *  - Source unique : la définition visuelle vit ici, pas dans un binaire
- *  - Edge-cached par Vercel (immutable Cache-Control via `headers`)
- *  - Sera redrawn auto si on change la marque (pas de re-export Figma)
- *
- * Dimensions choisies (512×512) :
- *  - Google Knowledge Panel exige PNG/JPEG carré, min 112×112
- *  - Recommande 600×600+ pour rétrofuture (HDPI displays)
- *  - 512 = sweet spot : assez net, < 50 KB générés
- *
- * Schéma visuel :
- *  - Fond carré dark (`#0B0D10`, identique au site) + radius 96 (pour éviter
- *    les coins durs sur Google qui ajoute parfois son propre rounding)
- *  - Cairn (3 cercles empilés ascendants) centré, gradient or
- *  - Wordmark "Cryptoreflex" sous le cairn (Space Grotesk style)
+ * Pourquoi ici (api/logo) plutôt que app/logo.png/route.tsx ?
+ *  - Le route handler `app/logo.png/route.tsx` causait un build error
+ *    Next.js 14 : "contentType is not a valid Route export field" — ce
+ *    field n'est autorisé que sur les conventions (icon.tsx, opengraph-image.tsx).
+ *  - Le path `/api/logo` est sûr (pas de collision conventions Next.js).
+ *  - Le Content-Type `image/png` est posé automatiquement par ImageResponse.
  *
  * Référencé par : Schema.org Organization (lib/schema.ts → LOGO_URL).
+ *
+ * Schéma visuel : cairn (3 cercles or empilés) sur fond dark + wordmark
+ * "Cryptoreflex" — cohérent avec /icon, /apple-icon, OG image.
  */
 
 export const runtime = "edge";
-export const contentType = "image/png";
 
-// Couleurs de la marque (identiques à logo-mark.svg + tailwind.config).
 const GOLD_BRIGHT = "#FCD34D";
 const GOLD_MID = "#F5A524";
 const GOLD_DEEP = "#B45309";
@@ -46,15 +38,11 @@ export async function GET() {
           alignItems: "center",
           justifyContent: "center",
           background: BG,
-          // Le radius est cosmétique côté Google (qui re-crop souvent en cercle),
-          // mais utile sur les surfaces qui affichent le PNG tel quel (Slack OG,
-          // Open Graph debugger, certains Knowledge Panels).
           borderRadius: 96,
           position: "relative",
         }}
       >
-        {/* === Cairn — 3 cercles empilés (ascendant taille de bas en haut) === */}
-        {/* Bottom circle (le plus grand) — gradient gold complet */}
+        {/* Bottom circle (le plus grand) */}
         <div
           style={{
             position: "absolute",
@@ -76,7 +64,7 @@ export async function GET() {
             background: `linear-gradient(135deg, ${GOLD_SOFT_TOP} 0%, ${GOLD_SOFT_BOT} 100%)`,
           }}
         />
-        {/* Top circle (le plus petit) — flat gold bright */}
+        {/* Top circle (le plus petit) */}
         <div
           style={{
             position: "absolute",
@@ -88,7 +76,7 @@ export async function GET() {
           }}
         />
 
-        {/* === Wordmark "Cryptoreflex" sous le cairn === */}
+        {/* Wordmark "Cryptoreflex" */}
         <div
           style={{
             position: "absolute",
@@ -116,10 +104,6 @@ export async function GET() {
     {
       width: 512,
       height: 512,
-      // Cache 1 an au CDN ; on bust en changeant ce fichier (déploiement Vercel
-      // génère une nouvelle URL hashée pour les assets). Pour le PNG public
-      // /logo.png on s'appuie sur le re-fetch Google côté Knowledge Panel
-      // (qui re-crawle environ 1×/mois sans force).
       headers: {
         "cache-control": "public, max-age=31536000, immutable",
       },

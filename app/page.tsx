@@ -22,6 +22,7 @@ import {
   breadcrumbSchema,
   graphSchema,
   organizationSchema,
+  topPlatformsItemListSchema,
   websiteSchema,
 } from "@/lib/schema";
 
@@ -36,9 +37,23 @@ export const revalidate = 60;
  * Le canonical absolu (BRAND.url, déjà en `www.`) verrouille la version
  * canonique pour tous les crawlers.
  */
+/**
+ * Description home — surcharge le fallback générique de layout.tsx.
+ *
+ * Format optimisé SERP (≤ 160 chars + keywords primaires + CTA implicite) :
+ *  - "comparateur" + "crypto" + "France" → query intent matching
+ *  - "MiCA" + "AMF" → trust signal + filter MiCA-aware audience
+ *  - "guides + outils gratuits" → value prop scanable
+ */
 export const metadata: Metadata = {
+  description:
+    "Comparateur crypto FR : Coinbase, Binance, Bitpanda, Kraken… Frais, sécurité, MiCA. Guides débutants, calculateurs gratuits, fiscalité française.",
   alternates: { canonical: BRAND.url },
-  openGraph: { url: BRAND.url },
+  openGraph: {
+    url: BRAND.url,
+    description:
+      "Compare les meilleures plateformes crypto régulées MiCA en France. Guides débutants, calculateurs frais/fiscalité, alertes prix gratuites.",
+  },
 };
 
 export default async function HomePage() {
@@ -57,11 +72,23 @@ export default async function HomePage() {
   // Date "MAJ" affichée dans le widget — ISO du build/refresh courant.
   const updatedAt = new Date().toISOString();
 
-  // JSON-LD home : Organization + WebSite (avec SearchAction) + Breadcrumb minimal.
-  // Régression P0-3 : la home n'avait aucun JSON-LD avant ce fix.
+  /*
+   * JSON-LD home : @graph contenant 4 entités liées par @id :
+   *  - Organization (Knowledge Panel + logo Google Search)
+   *  - WebSite + SearchAction (Sitelinks Search Box éligible)
+   *  - ItemList des Top 6 plateformes (rich result Carousel possible)
+   *  - BreadcrumbList minimal (navigation SERP)
+   *
+   * Pourquoi `topPlatformsItemListSchema` sur la home ?
+   * Audit SEO Cryptoreflex 2026-04 : la fonction existait dans lib/schema.ts
+   * mais n'était jamais injectée. Google peut désormais afficher un Carousel
+   * "Top plateformes crypto" directement dans les SERP, taggé avec aggregateRating
+   * pour chaque plateforme — gros boost CTR sur la requête "meilleur exchange crypto".
+   */
   const homeSchema = graphSchema([
     organizationSchema(),
     websiteSchema(),
+    topPlatformsItemListSchema(6),
     breadcrumbSchema([{ name: "Accueil", url: "/" }]),
   ]);
 
