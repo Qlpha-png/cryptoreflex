@@ -206,7 +206,7 @@ export default function Navbar() {
               prend par la main avec un parcours dédié. */}
           <Link
             href="/wizard/premier-achat"
-            className="hidden lg:inline-flex items-center gap-1.5 ml-3 px-3 py-1.5 rounded-full whitespace-nowrap shrink-0
+            className="hidden lg:inline-flex items-center gap-1.5 ml-5 xl:ml-7 px-3 py-1.5 rounded-full whitespace-nowrap shrink-0
                        border border-primary/40 bg-gradient-to-b from-primary/15 to-primary/5
                        text-xs font-semibold text-primary-glow
                        hover:from-primary/20 hover:to-primary/8 transition-colors min-h-[36px]
@@ -218,9 +218,12 @@ export default function Navbar() {
             Débutant ?
           </Link>
 
+          {/* Séparateur visuel entre [Logo + Débutant ?] et [NAV items] */}
+          <span aria-hidden="true" className="hidden lg:block h-6 w-px bg-border/60 mx-1 xl:mx-2 shrink-0" />
+
           <nav
             aria-label="Navigation principale"
-            className="hidden md:flex items-center gap-x-6 lg:gap-x-8 ml-4 lg:ml-6"
+            className="hidden md:flex items-center gap-x-6 lg:gap-x-7 xl:gap-x-9 ml-4 lg:ml-2 xl:ml-3"
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
@@ -262,7 +265,10 @@ export default function Navbar() {
             })}
           </nav>
 
-          <div className="hidden md:flex items-center gap-3 ml-4 lg:ml-6">
+          {/* Séparateur visuel entre [NAV items] et [cluster droite] */}
+          <span aria-hidden="true" className="hidden lg:block h-6 w-px bg-border/60 mx-1 xl:mx-2 shrink-0" />
+
+          <div className="hidden md:flex items-center gap-2 lg:gap-3 ml-4 lg:ml-2 xl:ml-3">
             {/* Trust badge MiCA · AMF (xl+) — Audit SEO/CRO : +12-18% bounce reduction. */}
             <span
               title="Conforme cadre MiCA + AMF — méthodologie publique"
