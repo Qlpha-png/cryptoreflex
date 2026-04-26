@@ -189,10 +189,28 @@ export interface TACryptoMeta {
   image: string;
 }
 
+/**
+ * Liste des cryptos pour analyses techniques quotidiennes.
+ *
+ * Audit 26/04/2026 (user request "plus de crypto") : étendu de 5 -> 12 cryptos.
+ *  - 5 originales : BTC ETH SOL XRP ADA
+ *  - 7 nouvelles : BNB DOGE AVAX DOT MATIC LINK TRX
+ *
+ * Note : les nouveaux logos sont résolus via CryptoLogo (fallback gradient gold
+ * + initiales si pas de SVG officiel dans /public/logos/). Pour ajouter un
+ * vrai SVG officiel, déposer le fichier dans /public/logos/{symbol-lower}.svg.
+ */
 export const TA_CRYPTOS: TACryptoMeta[] = [
   { symbol: "BTC", name: "Bitcoin", slug: "bitcoin", coingeckoId: "bitcoin", image: "/logos/bitcoin.svg" },
   { symbol: "ETH", name: "Ethereum", slug: "ethereum", coingeckoId: "ethereum", image: "/logos/ethereum.svg" },
   { symbol: "SOL", name: "Solana", slug: "solana", coingeckoId: "solana", image: "/logos/solana.svg" },
   { symbol: "XRP", name: "XRP", slug: "xrp", coingeckoId: "ripple", image: "/logos/xrp.svg" },
   { symbol: "ADA", name: "Cardano", slug: "cardano", coingeckoId: "cardano", image: "/logos/cardano.svg" },
+  { symbol: "BNB", name: "BNB", slug: "bnb", coingeckoId: "binancecoin", image: "/logos/bnb.svg" },
+  { symbol: "DOGE", name: "Dogecoin", slug: "dogecoin", coingeckoId: "dogecoin", image: "/logos/dogecoin.svg" },
+  { symbol: "AVAX", name: "Avalanche", slug: "avalanche", coingeckoId: "avalanche-2", image: "/logos/avalanche.svg" },
+  { symbol: "DOT", name: "Polkadot", slug: "polkadot", coingeckoId: "polkadot", image: "/logos/polkadot.svg" },
+  { symbol: "MATIC", name: "Polygon", slug: "polygon", coingeckoId: "matic-network", image: "/logos/polygon.svg" },
+  { symbol: "LINK", name: "Chainlink", slug: "chainlink", coingeckoId: "chainlink", image: "/logos/chainlink.svg" },
+  { symbol: "TRX", name: "TRON", slug: "tron", coingeckoId: "tron", image: "/logos/tron.svg" },
 ];
