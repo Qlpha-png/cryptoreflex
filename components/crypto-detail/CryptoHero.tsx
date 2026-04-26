@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import Sparkline from "./Sparkline";
 import { formatPct, formatUsd, type CoinDetail } from "@/lib/coingecko";
 import WatchlistButton from "@/components/WatchlistButton";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface Props {
   name: string;
@@ -49,20 +49,16 @@ export default function CryptoHero({
           </span>
         )}
         <div className="mt-3 flex items-center gap-4">
-          {detail?.image ? (
-            <Image
-              src={detail.image}
-              alt={`Logo ${name}`}
-              width={64}
-              height={64}
-              className="rounded-2xl ring-1 ring-border"
-              unoptimized
-            />
-          ) : (
-            <div className="h-16 w-16 rounded-2xl bg-elevated ring-1 ring-border flex items-center justify-center font-mono text-lg font-bold text-muted">
-              {symbol.slice(0, 2)}
-            </div>
-          )}
+          <CryptoLogo
+            symbol={symbol}
+            coingeckoId={cryptoId}
+            imageUrl={detail?.image}
+            size={64}
+            shape="rounded"
+            className="ring-1 ring-border"
+            alt={`Logo ${name}`}
+            priority
+          />
           <div>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight flex items-center gap-3 flex-wrap">
               <span>

@@ -10,6 +10,7 @@ import {
 import { Plus, Search, X, Check } from "lucide-react";
 import { ALL_CRYPTOS, type CryptoMeta } from "@/lib/programmatic";
 import { addHolding, MAX_HOLDINGS, type Holding } from "@/lib/portfolio";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface AddHoldingDialogProps {
   open: boolean;
@@ -278,9 +279,11 @@ export default function AddHoldingDialog({
             {selected ? (
               <div className="flex items-center justify-between gap-3 rounded-lg border border-primary/40 bg-primary/5 px-3 py-2.5">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-primary/15 text-primary text-[10px] font-bold uppercase">
-                    {selected.symbol.slice(0, 3)}
-                  </span>
+                  <CryptoLogo
+                    symbol={selected.symbol}
+                    coingeckoId={selected.coingeckoId}
+                    size={24}
+                  />
                   <span className="font-semibold text-fg truncate">
                     {selected.name}
                   </span>
@@ -344,6 +347,11 @@ export default function AddHoldingDialog({
                                 : "text-fg/90 hover:bg-white/5"
                             }`}
                           >
+                            <CryptoLogo
+                              symbol={c.symbol}
+                              coingeckoId={c.coingeckoId}
+                              size={20}
+                            />
                             <span className="font-semibold truncate">{c.name}</span>
                             <span className="text-xs text-muted font-mono uppercase">
                               {c.symbol}

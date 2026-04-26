@@ -10,9 +10,9 @@
  * pour éviter les fausses manips sur mobile.
  */
 
-import Image from "next/image";
 import { Trash2, AlertCircle } from "lucide-react";
 import type { PortfolioWithPrices } from "@/lib/portfolio-types";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface PortfolioRowProps {
   row: PortfolioWithPrices;
@@ -68,18 +68,12 @@ export default function PortfolioRow({
       {/* Crypto (logo + nom + symbol) */}
       <td className="py-3 px-3 sm:px-4">
         <div className="flex items-center gap-3 min-w-0">
-          {entry.cryptoImage ? (
-            <Image
-              src={entry.cryptoImage}
-              alt=""
-              width={28}
-              height={28}
-              className="rounded-full shrink-0"
-              unoptimized
-            />
-          ) : (
-            <div className="h-7 w-7 rounded-full bg-elevated border border-border shrink-0" />
-          )}
+          <CryptoLogo
+            symbol={entry.cryptoSymbol}
+            coingeckoId={entry.cryptoId}
+            imageUrl={entry.cryptoImage}
+            size={28}
+          />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-fg truncate">

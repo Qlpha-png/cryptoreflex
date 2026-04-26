@@ -15,8 +15,8 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import { ChevronDown, Search } from "lucide-react";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface CoinSuggestion {
   id: string;
@@ -135,16 +135,12 @@ export default function CryptoAutocomplete({
       >
         {value ? (
           <span className="flex items-center gap-2 min-w-0">
-            {value.image && (
-              <Image
-                src={value.image}
-                alt=""
-                width={20}
-                height={20}
-                className="rounded-full"
-                unoptimized
-              />
-            )}
+            <CryptoLogo
+              symbol={value.symbol}
+              coingeckoId={value.id}
+              imageUrl={value.image}
+              size={20}
+            />
             <span className="font-semibold text-fg truncate">
               {value.name}
             </span>
@@ -197,16 +193,12 @@ export default function CryptoAutocomplete({
                     value?.id === c.id ? "bg-primary/10" : ""
                   }`}
                 >
-                  {c.image && (
-                    <Image
-                      src={c.image}
-                      alt=""
-                      width={20}
-                      height={20}
-                      className="rounded-full shrink-0"
-                      unoptimized
-                    />
-                  )}
+                  <CryptoLogo
+                    symbol={c.symbol}
+                    coingeckoId={c.id}
+                    imageUrl={c.image}
+                    size={20}
+                  />
                   <span className="flex-1 min-w-0">
                     <span className="block font-semibold text-fg truncate">
                       {c.name}

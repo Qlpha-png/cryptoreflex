@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
@@ -11,6 +10,7 @@ import {
   type MarketCoin,
 } from "@/lib/coingecko";
 import WatchlistButton from "@/components/WatchlistButton";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 /**
  * MarketTableClient — version Client de la table marché (audit P0-3 / P0-4).
@@ -308,21 +308,13 @@ function CoinCardMobile({
         {coin.marketCapRank}
       </span>
 
-      {coin.image ? (
-        <Image
-          src={coin.image}
-          alt={coin.name}
-          width={36}
-          height={36}
-          className="h-9 w-9 rounded-full shrink-0"
-          priority={priority}
-          loading={priority ? undefined : "lazy"}
-          sizes="36px"
-          unoptimized
-        />
-      ) : (
-        <span className="h-9 w-9 rounded-full bg-elevated shrink-0" />
-      )}
+      <CryptoLogo
+        symbol={coin.symbol}
+        coingeckoId={coin.id}
+        imageUrl={coin.image}
+        size={36}
+        priority={priority}
+      />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
@@ -420,21 +412,13 @@ function CoinRow({
 
       <td className="px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
-          {coin.image ? (
-            <Image
-              src={coin.image}
-              alt={coin.name}
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-full shrink-0"
-              priority={priority}
-              loading={priority ? undefined : "lazy"}
-              sizes="28px"
-              unoptimized
-            />
-          ) : (
-            <span className="h-7 w-7 rounded-full bg-elevated shrink-0" />
-          )}
+          <CryptoLogo
+            symbol={coin.symbol}
+            coingeckoId={coin.id}
+            imageUrl={coin.image}
+            size={28}
+            priority={priority}
+          />
           <div className="min-w-0">
             {hasPage ? (
               <Link

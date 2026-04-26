@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
 import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import PlatformLogo from "@/components/PlatformLogo";
 
 interface Props {
   cryptoName: string;
@@ -87,7 +88,9 @@ function PlatformRow({
   return (
     <div className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col">
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 flex items-start gap-3">
+          <PlatformLogo id={p.id} name={p.name} size={40} />
+          <div className="min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="text-base font-bold text-fg">{p.name}</h3>
             {p.mica.micaCompliant && (
@@ -100,6 +103,7 @@ function PlatformRow({
             )}
           </div>
           <p className="mt-1 text-xs text-muted line-clamp-2">{p.tagline}</p>
+          </div>
         </div>
         <div className="shrink-0 text-right">
           <div className="inline-flex items-center gap-1 text-xs text-fg">

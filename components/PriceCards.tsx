@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface Props {
   prices: CoinPrice[];
@@ -26,20 +26,12 @@ export default function PriceCards({ prices }: Props) {
           >
             {/* Header */}
             <div className="flex items-center gap-3">
-              {coin.image ? (
-                <Image
-                  src={coin.image}
-                  alt={coin.name}
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 rounded-full"
-                  loading="lazy"
-                  sizes="36px"
-                  unoptimized
-                />
-              ) : (
-                <span className="h-9 w-9 rounded-full bg-elevated" />
-              )}
+              <CryptoLogo
+                symbol={coin.symbol}
+                coingeckoId={coin.id}
+                imageUrl={coin.image}
+                size={36}
+              />
               <div className="min-w-0">
                 <div className="font-semibold text-white truncate">{coin.name}</div>
                 <div className="text-xs text-muted font-mono">{coin.symbol}/USD</div>

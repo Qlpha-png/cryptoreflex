@@ -2,12 +2,15 @@ import hiddenGemsData from "@/data/hidden-gems.json";
 import { Gem, ShieldCheck, AlertTriangle, ExternalLink, Activity } from "lucide-react";
 import AmfDisclaimer from "./AmfDisclaimer";
 import ScrollReveal from "./ui/ScrollReveal";
+import CryptoLogo from "./ui/CryptoLogo";
 
 interface HiddenGem {
   rank: number;
   id: string;
   name: string;
   symbol: string;
+  /** ID CoinGecko (utilisé pour le logo officiel via lib/crypto-logos.ts). */
+  coingeckoId?: string;
   marketCapRange: string;
   yearCreated: number;
   category: string;
@@ -87,19 +90,27 @@ function GemCard({ gem }: { gem: HiddenGem }) {
     <article className="glass rounded-2xl p-5 sm:p-6 hover:border-primary/40 hover-lift">
       {/* Header — mobile : score gauge plus gros (min 64px) pour lisibilité */}
       <div className="flex items-start justify-between gap-3 sm:gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5 text-[11px] text-muted mb-1 flex-wrap">
-            <span className="font-mono">#{gem.rank}</span>
-            <span>·</span>
-            <span>{gem.category}</span>
-            <span>·</span>
-            <span>{gem.yearCreated}</span>
+        <div className="min-w-0 flex-1 flex items-start gap-3">
+          <CryptoLogo
+            symbol={gem.symbol}
+            coingeckoId={gem.coingeckoId ?? gem.id}
+            size={44}
+            className="ring-1 ring-border"
+          />
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 text-[11px] text-muted mb-1 flex-wrap">
+              <span className="font-mono">#{gem.rank}</span>
+              <span>·</span>
+              <span>{gem.category}</span>
+              <span>·</span>
+              <span>{gem.yearCreated}</span>
+            </div>
+            <h3 className="font-bold text-lg text-fg truncate">
+              {gem.name}{" "}
+              <span className="text-muted font-mono text-sm">{gem.symbol}</span>
+            </h3>
+            <p className="text-xs text-muted mt-0.5">{gem.marketCapRange}</p>
           </div>
-          <h3 className="font-bold text-lg text-fg truncate">
-            {gem.name}{" "}
-            <span className="text-muted font-mono text-sm">{gem.symbol}</span>
-          </h3>
-          <p className="text-xs text-muted mt-0.5">{gem.marketCapRange}</p>
         </div>
 
         <div

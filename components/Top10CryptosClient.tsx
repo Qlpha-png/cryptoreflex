@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import ScrollReveal from "./ui/ScrollReveal";
+import CryptoLogo from "./ui/CryptoLogo";
 
 /**
  * Top10CryptosClient — version interactive de la section "Top 10 expliquées".
@@ -31,6 +32,8 @@ export interface TopCrypto {
   id: string;
   name: string;
   symbol: string;
+  /** ID CoinGecko (utilisé pour résoudre le logo officiel via lib/crypto-logos.ts). */
+  coingeckoId?: string;
   yearCreated: number;
   category: string;
   tagline: string;
@@ -346,9 +349,20 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
     <article className="glass rounded-2xl p-6 hover:border-primary/50 hover-lift group">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary font-bold font-mono text-sm shrink-0">
-            #{crypto.rank}
-          </span>
+          <div className="relative shrink-0">
+            <CryptoLogo
+              symbol={crypto.symbol}
+              coingeckoId={crypto.coingeckoId ?? crypto.id}
+              size={44}
+              className="ring-1 ring-border"
+            />
+            <span
+              aria-label={`Rang ${crypto.rank}`}
+              className="absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-background font-bold font-mono text-[10px] px-1 ring-2 ring-background"
+            >
+              {crypto.rank}
+            </span>
+          </div>
           <div className="min-w-0">
             <h3 className="font-bold text-lg text-fg truncate">
               {crypto.name}{" "}
@@ -405,9 +419,14 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
       className="flex items-center gap-3 px-4 py-3 hover:bg-elevated/40 active:bg-elevated/60 transition-colors
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary font-bold font-mono text-xs shrink-0">
-        #{crypto.rank}
+      <span className="flex h-7 w-7 items-center justify-center text-muted font-mono text-[11px] shrink-0 tabular-nums">
+        {crypto.rank}
       </span>
+      <CryptoLogo
+        symbol={crypto.symbol}
+        coingeckoId={crypto.coingeckoId ?? crypto.id}
+        size={32}
+      />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">

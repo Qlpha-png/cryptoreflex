@@ -1,4 +1,4 @@
-import Image from "next/image";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 import Link from "next/link";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
@@ -71,20 +71,12 @@ export default function GainerLoserList({
                 >
                   {idx + 1}
                 </span>
-                {c.image ? (
-                  <Image
-                    src={c.image}
-                    alt=""
-                    width={28}
-                    height={28}
-                    className="rounded-full shrink-0"
-                    loading="lazy"
-                    sizes="28px"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full bg-elevated shrink-0" aria-hidden="true" />
-                )}
+                <CryptoLogo
+                  symbol={c.symbol}
+                  coingeckoId={c.id}
+                  imageUrl={c.image}
+                  size={28}
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="font-mono font-bold text-sm text-fg">

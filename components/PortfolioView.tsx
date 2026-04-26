@@ -7,8 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -566,21 +566,12 @@ function HoldingRow({
     <tr className="border-t border-border hover:bg-elevated/50 transition-colors">
       <td className="px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
-          {price?.image ? (
-            <Image
-              src={price.image}
-              alt={holding.name}
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-full shrink-0"
-              sizes="28px"
-              unoptimized
-            />
-          ) : (
-            <span className="h-7 w-7 rounded-full bg-elevated shrink-0 inline-flex items-center justify-center text-[9px] font-bold text-muted uppercase">
-              {holding.symbol.slice(0, 3)}
-            </span>
-          )}
+          <CryptoLogo
+            symbol={holding.symbol}
+            coingeckoId={holding.cryptoId}
+            imageUrl={price?.image}
+            size={28}
+          />
           <div className="min-w-0">
             <Link
               href={`/cryptos/${holding.cryptoId}`}
@@ -677,21 +668,12 @@ function HoldingCardMobile({
   return (
     <div className="rounded-xl border border-border bg-surface p-3">
       <div className="flex items-center gap-3">
-        {price?.image ? (
-          <Image
-            src={price.image}
-            alt={holding.name}
-            width={36}
-            height={36}
-            className="h-9 w-9 rounded-full shrink-0"
-            sizes="36px"
-            unoptimized
-          />
-        ) : (
-          <span className="h-9 w-9 rounded-full bg-elevated shrink-0 inline-flex items-center justify-center text-[10px] font-bold text-muted uppercase">
-            {holding.symbol.slice(0, 3)}
-          </span>
-        )}
+        <CryptoLogo
+          symbol={holding.symbol}
+          coingeckoId={holding.cryptoId}
+          imageUrl={price?.image}
+          size={36}
+        />
         <div className="min-w-0 flex-1">
           <Link
             href={`/cryptos/${holding.cryptoId}`}

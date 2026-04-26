@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface Props {
   initial: CoinPrice[];
@@ -97,20 +97,12 @@ export default function PriceTicker({ initial }: Props) {
               key={`${coin.id}-${idx}`}
               className="flex items-center gap-3 px-8 border-r border-border/40 last:border-r-0"
             >
-              {coin.image ? (
-                <Image
-                  src={coin.image}
-                  alt={coin.name}
-                  width={24}
-                  height={24}
-                  className="h-6 w-6 rounded-full"
-                  loading="lazy"
-                  sizes="24px"
-                  unoptimized
-                />
-              ) : (
-                <span className="h-6 w-6 rounded-full bg-elevated" />
-              )}
+              <CryptoLogo
+                symbol={coin.symbol}
+                coingeckoId={coin.id}
+                imageUrl={coin.image}
+                size={24}
+              />
               <span className="font-semibold text-white/90">{coin.symbol}</span>
               <span className="font-mono text-white">{formatUsd(coin.price)}</span>
               <span

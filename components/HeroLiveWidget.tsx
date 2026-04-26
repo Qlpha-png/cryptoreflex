@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import type { CoinPrice } from "@/lib/coingecko";
 import { formatUsd, formatPct } from "@/lib/coingecko";
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 /**
  * HeroLiveWidget — server component.
@@ -104,22 +104,12 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
   return (
     <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
       <div className="flex items-center gap-3 min-w-0">
-        {coin.image ? (
-          <Image
-            src={coin.image}
-            alt=""
-            width={28}
-            height={28}
-            className="rounded-full"
-            sizes="28px"
-            unoptimized
-          />
-        ) : (
-          <span
-            className="h-7 w-7 rounded-full bg-elevated border border-border"
-            aria-hidden="true"
-          />
-        )}
+        <CryptoLogo
+          symbol={coin.symbol}
+          coingeckoId={coin.id}
+          imageUrl={coin.image}
+          size={28}
+        />
         <div className="min-w-0">
           <div className="text-sm font-semibold text-fg truncate leading-tight">
             {coin.name}
