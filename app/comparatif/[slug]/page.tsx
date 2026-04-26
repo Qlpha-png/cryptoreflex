@@ -23,6 +23,7 @@ import {
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 
 export const revalidate = 86400;
 
@@ -305,6 +306,19 @@ export default function ComparisonPage({ params }: Props) {
                     <div className="text-[10px] uppercase text-muted">Note globale</div>
                   </div>
                 </div>
+                {/*
+                  MiCA badge JUSTE avant le CTA = trust signal au moment du clic.
+                  Source : audit Trust 26-04 + agent #3 mapping (insertion dans
+                  carte versus). Variant compact pour ne pas dominer le CTA.
+                */}
+                {plat.mica.micaCompliant && (
+                  <div className="flex justify-center">
+                    <MiCAComplianceBadge
+                      variant="compact"
+                      jurisdiction={plat.mica.amfRegistration ? "France" : undefined}
+                    />
+                  </div>
+                )}
                 <a
                   href={plat.affiliateUrl}
                   target="_blank"

@@ -370,7 +370,22 @@ export interface EvaluationReport {
  *  - Une erreur sur une crypto ne casse pas les autres.
  *  - Aucun mail si KV mocked ET pas d'API (logs uniquement, retour cohérent).
  */
-export async function evaluateAndFire(): Promise<EvaluationReport> {
+/**
+ * Marker KV "alerte déjà fired aujourd'hui" — TTL 24h.
+ * Posé AVANT sendEmail (idempotence transactionnelle) : si le process est
+ * tué entre sendEmail succès et updateAlert, le marker existe quand même
+ * et empêche le re-trigger à la prochaine évaluation cron du même jour.
+ *
+ * Source : audit cron 26-04 (issue #1 idempotence incomplète). Sans ce marker,
+ * un timeout Vercel à 60s pendant la boucle pourrait re-déclencher les emails
+ * déjà envoyés au prochain run du cron.
+ */
+const FIRED_MARKER_PREFIX = "alerts:fired:";
+const FIRED_MARKER_TTL_SEC = 86_400; // 24h
+
+export async function evaluateAndFire(
+  signal?: AbortSignal,
+): Promise<EvaluationReport> {
   const startedAt = Date.now();
   const report: EvaluationReport = {
     checked: 0,
@@ -381,6 +396,9 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
   };
 
   const kv = getKv();
+
+  /** Helper : check abort + breaker. Si signal aborté, on note l'erreur et break. */
+  const isAborted = () => Boolean(signal?.aborted);
 
   let allKeys: string[] = [];
   try {
@@ -399,6 +417,11 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
   // Grouper les alertes actives par cryptoId
   const byCrypto = new Map<string, PriceAlert[]>();
   for (const key of allKeys) {
+    if (isAborted()) {
+      report.errors.push("aborted during keys scan");
+      report.durationMs = Date.now() - startedAt;
+      return report;
+    }
     let alert: PriceAlert | null = null;
     try {
       alert = await kv.get<PriceAlert>(key);
@@ -423,6 +446,11 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
 
   // Pour chaque crypto, on fetch le prix puis on évalue ses alertes.
   for (const [cryptoId, alerts] of byCrypto) {
+    if (isAborted()) {
+      report.errors.push(`aborted before crypto ${cryptoId}`);
+      break;
+    }
+
     let prices: { eur: number; usd: number } | null = null;
     try {
       prices = await fetchSimplePriceForAlert(cryptoId);
@@ -436,6 +464,11 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
     }
 
     for (const alert of alerts) {
+      if (isAborted()) {
+        report.errors.push(`aborted before alert ${alert.id}`);
+        break;
+      }
+
       try {
         const current = alert.currency === "eur" ? prices.eur : prices.usd;
         if (!Number.isFinite(current) || current <= 0) {
@@ -449,8 +482,19 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
             : current <= alert.threshold;
         if (!hit) continue;
 
-        // Throttling : 24h depuis dernier firing
+        // Throttling #1 : 24h depuis dernier firing (mémoire alerte).
         if (alert.lastTriggered && now - alert.lastTriggered < TRIGGER_THROTTLE_MS) {
+          report.skipped++;
+          continue;
+        }
+
+        // Throttling #2 (idempotence transactionnelle) : marker KV "fired"
+        // posé avant l'envoi email. Si le marker existe, c'est qu'un run cron
+        // précédent a déjà envoyé le mail (même si updateAlert n'a pas eu le
+        // temps de persister `lastTriggered`).
+        const firedKey = `${FIRED_MARKER_PREFIX}${alert.id}`;
+        const alreadyFired = await kv.get<{ sentAt: number }>(firedKey).catch(() => null);
+        if (alreadyFired) {
           report.skipped++;
           continue;
         }
@@ -474,6 +518,16 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
           currency: alert.currency,
         });
 
+        // POSE marker AVANT sendEmail (window de re-trigger réduite à ~50ms).
+        // Si sendEmail échoue ensuite, on supprime le marker pour permettre retry.
+        await kv
+          .set(firedKey, { sentAt: now, email: alert.email }, { ex: FIRED_MARKER_TTL_SEC })
+          .catch((err) => {
+            // Marker non posé = on continue quand même (best-effort).
+            // Au pire, double email si crash mid-flight.
+            console.warn(`[alerts] fired marker write failed for ${alert.id}:`, err);
+          });
+
         const mail = await sendEmail({
           to: alert.email,
           subject,
@@ -482,6 +536,8 @@ export async function evaluateAndFire(): Promise<EvaluationReport> {
         });
 
         if (!mail.ok) {
+          // Email échoué → on supprime le marker pour permettre retry au prochain cron.
+          await kv.del(firedKey).catch(() => undefined);
           report.errors.push(`mail ${alert.id} failed: ${mail.error}`);
           continue;
         }
