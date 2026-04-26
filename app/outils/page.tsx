@@ -16,6 +16,7 @@ import {
   GitCompare,
 } from "lucide-react";
 import ProfitCalculator from "@/components/ProfitCalculator";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
   title: "Outils crypto gratuits — calculateurs, simulateurs, glossaire, portfolio",
@@ -182,6 +183,7 @@ export default function OutilsPage() {
           </div>
         </div>
       </div>
+      <NextStepsGuide context="tool" />
     </section>
   );
 }

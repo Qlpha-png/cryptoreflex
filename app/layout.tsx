@@ -40,15 +40,22 @@ const inter = Inter({
   variable: "--font-sans",
   display: "swap",
 });
+// Lighthouse perf audit 26/04/2026 (Agent Mobile 2) :
+// 4 woff2 chargés en High prio retardaient le LCP de ~1500ms.
+// JetBrains_Mono = utilisé seulement dans les blocs <code> (jamais above-fold).
+// Space_Grotesk = utilisé pour les H1 display, mais Inter est sufficient au 1er paint.
+// preload:false = font chargée mais pas en High prio (download en background).
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
+  preload: false,
 });
 const display = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  preload: false,
 });
 
 /**
@@ -223,6 +230,13 @@ export default function RootLayout({
       lang="fr"
       className={`${inter.variable} ${mono.variable} ${display.variable}`}
     >
+      <head>
+        {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
+            preconnect aux 2 CDN tiers utilises above-fold => -100ms LCP.
+            CoinGecko = logos crypto + prix live ; Plausible = analytics. */}
+        <link rel="preconnect" href="https://assets.coingecko.com" crossOrigin="" />
+        <link rel="preconnect" href="https://plausible.io" crossOrigin="" />
+      </head>
       <body className="min-h-screen flex flex-col antialiased font-sans">
         {/*
           JSON-LD global — Organization (Knowledge Panel) + WebSite (sitelinks

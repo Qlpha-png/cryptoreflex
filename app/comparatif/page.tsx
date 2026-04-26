@@ -22,6 +22,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import {
   breadcrumbSchema,
   graphSchema,
@@ -397,6 +398,7 @@ export default function ComparatifHubPage() {
           </p>
         </div>
       </section>
+      <NextStepsGuide context="comparator" />
     </>
   );
 }
