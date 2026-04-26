@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
 import { NEWS_CATEGORY_LABELS, NEWS_CATEGORY_SLUGS } from "@/lib/news-types";
 import { formatRelativeFr } from "@/lib/news-aggregator";
+import ArticleHero from "@/components/ui/ArticleHero";
 
 /**
  * NewsCard (pilier news MDX) — carte d'une news Cryptoreflex réécrite.
@@ -48,15 +49,12 @@ export default function NewsCard({ news }: Props) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-elevated
                  transition-all duration-fast hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2"
     >
-      {/* Cover. Avant 26/04/2026 toutes les news utilisaient `/og-default.png`
-          (gradient orange générique) ce qui rendait les cards visuellement
-          identiques. On préfère désormais l'OG image dynamique par slug
-          (app/actualites/[slug]/opengraph-image.tsx) qui embarque titre +
-          catégorie + source + date — chaque card est unique. Si l'article a
-          une `image` non-default, on l'utilise (cas sponso/featured). */}
-      <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
-        {news.image && news.image !== "/og-default.png" ? (
-          // eslint-disable-next-line @next/next/no-img-element
+      {/* Cover. Si la news a une `image` non-default, on l'utilise (sponso/featured).
+          Sinon : ArticleHero CSS-only (avant on chargeait /opengraph-image
+          dynamique qui retourne HTTP 500 en prod côté serverless). */}
+      {news.image && news.image !== "/og-default.png" ? (
+        <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={news.image}
             alt=""
@@ -64,25 +62,21 @@ export default function NewsCard({ news }: Props) {
             decoding="async"
             className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
           />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={`/actualites/${news.slug}/opengraph-image`}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-          />
-        )}
-
-        {/* Badge catégorie en overlay */}
-        <span
-          className={`absolute left-3 top-3 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
-                      font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
-        >
-          {catLabel}
-        </span>
-      </div>
+          <span
+            className={`absolute left-3 top-3 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
+                        font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
+          >
+            {catLabel}
+          </span>
+        </div>
+      ) : (
+        <ArticleHero
+          category={catLabel}
+          title={news.title}
+          gradient={gradient}
+          height="aspect-[16/9]"
+        />
+      )}
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5">

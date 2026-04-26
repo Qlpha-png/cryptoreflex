@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kraken">
-  <rect width="64" height="64" rx="12" fill="#5741D9"/>
-  <!-- Stylised octopus / K (3 tentacles motif) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Kraken">
+  <rect width="64" height="64" rx="14" fill="#5741D9"/>
+  <!-- Kraken — 8 tentacles + body silhouette (stylised, official violet) -->
   <g fill="#fff">
-    <path d="M32 12c-2.2 0-4 1.8-4 4v32a4 4 0 0 0 8 0V16c0-2.2-1.8-4-4-4z"/>
-    <path d="M22 18c-2.2 0-4 1.8-4 4v22a4 4 0 0 0 8 0V22c0-2.2-1.8-4-4-4z"/>
-    <path d="M42 18c-2.2 0-4 1.8-4 4v22a4 4 0 0 0 8 0V22c0-2.2-1.8-4-4-4z"/>
+    <!-- Center body -->
+    <ellipse cx="32" cy="22" rx="9" ry="7"/>
+    <!-- 8 tentacles fanning down -->
+    <path d="M14 30c0-1.7 1.4-3 3-3s3 1.3 3 3v18c0 1.7-1.4 3-3 3s-3-1.3-3-3z"/>
+    <path d="M21 30c0-1.7 1.4-3 3-3s3 1.3 3 3v20c0 1.7-1.4 3-3 3s-3-1.3-3-3z"/>
+    <path d="M28 30c0-1.7 1.4-3 3-3s3 1.3 3 3v22c0 1.7-1.4 3-3 3s-3-1.3-3-3z"/>
+    <path d="M35 30c0-1.7 1.4-3 3-3s3 1.3 3 3v22c0 1.7-1.4 3-3 3s-3-1.3-3-3z"/>
+    <path d="M42 30c0-1.7 1.4-3 3-3s3 1.3 3 3v20c0 1.7-1.4 3-3 3s-3-1.3-3-3z"/>
+    <path d="M49 30c0-1.7-1.4-3-3-3s-3 1.3-3 3v18c0 1.7 1.4 3 3 3s3-1.3 3-3z" opacity=".7"/>
   </g>
-  <ellipse cx="32" cy="48" rx="14" ry="3" fill="#fff" opacity="0.4"/>
+  <!-- Eyes -->
+  <circle cx="29" cy="21" r="1.6" fill="#5741D9"/>
+  <circle cx="35" cy="21" r="1.6" fill="#5741D9"/>
 </svg>

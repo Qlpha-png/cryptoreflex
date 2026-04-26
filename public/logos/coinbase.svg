@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Coinbase">
-  <circle cx="32" cy="32" r="32" fill="#0052FF"/>
-  <path d="M32 16a16 16 0 1 0 0 32 16 16 0 0 0 0-32zm0 22.4a6.4 6.4 0 1 1 6.32-7.46h6.46A12.8 12.8 0 1 0 32 44.8a12.8 12.8 0 0 0 12.78-11.74h-6.46A6.4 6.4 0 0 1 32 38.4z" fill="#fff"/>
-  <rect x="26.4" y="26.4" width="11.2" height="11.2" rx="1.5" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Coinbase">
+  <rect width="64" height="64" rx="14" fill="#0052FF"/>
+  <!-- Coinbase official "C" mark -->
+  <path d="M32 12a20 20 0 1 0 0 40 20 20 0 0 0 0-40zm0 30.4c-5.74 0-10.4-4.66-10.4-10.4S26.26 21.6 32 21.6c5.07 0 9.3 3.65 10.21 8.46h-9.84a2.66 2.66 0 0 0-2.41 1.94 2.66 2.66 0 0 0 2.59 3.34h9.66C40.97 39.95 36.85 42.4 32 42.4z" fill="#fff"/>
+  <rect x="27.5" y="27.5" width="9" height="9" rx="1.5" fill="#fff"/>
 </svg>

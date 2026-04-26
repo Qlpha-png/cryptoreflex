@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, FileText } from "lucide-react";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import EmptyState from "@/components/ui/EmptyState";
+import ArticleHero from "@/components/ui/ArticleHero";
 
 /**
  * Aperçu blog en home — sert les 3 articles les plus récents lus depuis MDX
@@ -54,22 +55,15 @@ export default async function BlogPreview() {
               href={`/blog/${a.slug}`}
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]"
             >
-              {/* Hero = OG image dynamique du slug — embarque titre/cat/auteur.
-                  Cf. components/blog/BlogIndexClient.tsx pour le pattern complet. */}
-              <div
-                className={`relative h-40 overflow-hidden bg-gradient-to-br ${a.gradient}`}
-              >
-                <img
-                  src={`/blog/${a.slug}/opengraph-image`}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-                <span className="absolute left-3 top-3 z-10 rounded-full bg-background/80 px-2.5 py-1 text-xs font-semibold backdrop-blur">
-                  {a.category}
-                </span>
-              </div>
+              {/* Hero CSS-only — robuste, zéro requête réseau, zéro 500.
+                  Avant on chargeait `/blog/[slug]/opengraph-image` mais cette
+                  route fail systématiquement (HTTP 500 — fs.readdir des MDX
+                  en serverless). Cf. components/ui/ArticleHero.tsx. */}
+              <ArticleHero
+                category={a.category}
+                title={a.title}
+                gradient={a.gradient}
+              />
               <div className="p-5">
                 <h3 className="text-lg font-semibold text-fg transition-colors group-hover:text-primary-glow">
                   {a.title}

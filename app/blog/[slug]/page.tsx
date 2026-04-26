@@ -17,6 +17,7 @@ import PopularArticles from "@/components/blog/PopularArticles";
 import ArticleToc from "@/components/blog/ArticleToc";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import ArticleHero from "@/components/ui/ArticleHero";
 import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import {
@@ -302,18 +303,17 @@ export default async function BlogArticlePage({ params }: Props) {
 
                 <p className="mt-4 text-lg text-fg/70">{article.description}</p>
 
-                {/* Hero header = OG image dynamique. Avant 26/04/2026 c'était
-                    juste un dégradé vide → l'article paraissait inachevé. L'OG
-                    image embarque titre + catégorie + auteur, donne le ton. */}
-                <div
-                  className={`mt-8 h-48 sm:h-64 rounded-2xl bg-gradient-to-br ${article.gradient} relative overflow-hidden`}
-                >
-                  <img
-                    src={`/blog/${article.slug}/opengraph-image`}
-                    alt=""
-                    loading="eager"
-                    decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover"
+                {/* Hero header CSS-only — robuste, jamais cassé.
+                    Avant on chargeait `/blog/[slug]/opengraph-image` qui
+                    retourne HTTP 500 en prod (fs MDX en serverless), l'article
+                    affichait un cadre vide. ArticleHero rend gradient +
+                    icône catégorie + watermark, immédiat. */}
+                <div className="mt-8 rounded-2xl overflow-hidden">
+                  <ArticleHero
+                    category={article.category}
+                    title={article.title}
+                    gradient={article.gradient}
+                    height="h-48 sm:h-64"
                   />
                 </div>
 

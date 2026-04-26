@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bitget">
-  <rect width="64" height="64" rx="12" fill="#000"/>
-  <!-- Bitget mark : two interlocking diamonds -->
-  <g fill="#00F0B5">
-    <path d="M32 10 L52 30 L32 30 Z"/>
-    <path d="M32 54 L12 34 L32 34 Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Bitget">
+  <rect width="64" height="64" rx="14" fill="#000"/>
+  <!-- Bitget two-diamond mark (official turquoise) -->
+  <g fill="#54FFC9">
+    <path d="M32 8 L52 28 L32 28 Z"/>
+    <path d="M32 56 L12 36 L32 36 Z"/>
   </g>
-  <path d="M32 30 L52 30 L32 50 Z" fill="#00F0B5" opacity="0.55"/>
-  <path d="M32 34 L12 34 L32 14 Z" fill="#00F0B5" opacity="0.55"/>
+  <path d="M32 28 L52 28 L32 48 Z" fill="#54FFC9" opacity=".55"/>
+  <path d="M32 36 L12 36 L32 16 Z" fill="#54FFC9" opacity=".55"/>
 </svg>
