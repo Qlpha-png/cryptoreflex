@@ -16,6 +16,7 @@ import {
   formatMicaDate,
 } from "@/lib/mica";
 import { BRAND } from "@/lib/brand";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 const PAGE_URL = `${BRAND.url}/outils/verificateur-mica`;
 
@@ -305,6 +306,13 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
               </details>
             ))}
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/verificateur-mica"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

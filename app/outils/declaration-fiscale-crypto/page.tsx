@@ -15,6 +15,7 @@ import StructuredData from "@/components/StructuredData";
 import FiscalToolCard from "@/components/fiscal-tools/FiscalToolCard";
 import FiscalToolComparisonTable from "@/components/fiscal-tools/FiscalToolComparisonTable";
 import WaltioPromoCard from "@/components/fiscal-tools/WaltioPromoCard";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 import {
   getAllFiscalTools,
   getRecommendedFiscalTool,
@@ -501,6 +502,13 @@ export default function DeclarationFiscaleCryptoPage() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/declaration-fiscale-crypto"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

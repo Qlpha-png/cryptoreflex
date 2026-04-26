@@ -21,6 +21,7 @@ import MdxContent from "@/components/MdxContent";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import LessonNavigator from "@/components/academy/LessonNavigator";
 import StructuredData from "@/components/StructuredData";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 import { BRAND } from "@/lib/brand";
 import { getArticleBySlug } from "@/lib/mdx";
@@ -180,6 +181,13 @@ export default async function LessonPage({ params }: Props) {
               next={next}
               position={lesson.order}
               total={track.lessons.length}
+            />
+
+            {/* Maillage interne — cluster sémantique du graphe */}
+            <RelatedPagesNav
+              currentPath={`/academie/${track.id}/${lesson.articleSlug}`}
+              limit={4}
+              variant="default"
             />
           </article>
 

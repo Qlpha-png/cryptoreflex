@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import CalculateurFiscalite from "@/components/CalculateurFiscalite";
 import StructuredData from "@/components/StructuredData";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -966,6 +967,13 @@ export default function CalculateurFiscalitePage() {
               </Link>
             ))}
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/calculateur-fiscalite"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

@@ -17,6 +17,7 @@ import MdxContent from "@/components/MdxContent";
 import TrendBadge from "@/components/ta/TrendBadge";
 import IndicatorsTable from "@/components/ta/IndicatorsTable";
 import SupportResistanceList from "@/components/ta/SupportResistanceList";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 // PriceChart : Client Component (fetch /api/historical au mount).
 // Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
@@ -314,6 +315,13 @@ export default async function TAArticlePage({ params }: Props) {
               </ul>
             </section>
           )}
+
+          {/* Maillage interne — cluster sémantique du graphe */}
+          <RelatedPagesNav
+            currentPath={`/analyses-techniques/${article.slug}`}
+            limit={4}
+            variant="default"
+          />
         </div>
       </article>
     </>

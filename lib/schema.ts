@@ -12,6 +12,7 @@ import { BRAND } from "@/lib/brand";
 import { getAllPlatforms, getTopPlatforms, type Platform } from "@/lib/platforms";
 import { authorRef, getAuthorByIdOrDefault } from "@/lib/authors";
 import { generateSpeakableSchema } from "@/lib/schema-speakable";
+import { getActiveBrandUrls } from "@/lib/brand-mentions";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -78,15 +79,18 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 const PERSON_ID = `${SITE_URL}/#author-cryptoreflex`;
 
-/** Réseaux sociaux officiels (à mettre à jour quand les comptes sont créés). */
-const SAME_AS: string[] = [
-  "https://twitter.com/cryptoreflex_fr",
-  "https://x.com/cryptoreflex",
-  "https://www.linkedin.com/company/cryptoreflex",
-  "https://t.me/cryptoreflex",
-  "https://github.com/cryptoreflex",
-  "https://fr.trustpilot.com/review/cryptoreflex.fr",
-];
+/**
+ * Réseaux sociaux & preuves d'identité officielles — alimente
+ * `Organization.sameAs` (signal majeur Knowledge Panel Google).
+ *
+ * La liste vit dans `lib/brand-mentions.ts` pour DRY entre :
+ *  - Schema.org JSON-LD (ce fichier)
+ *  - Page /a-propos
+ *  - Page /transparence
+ *
+ * NE PAS hardcoder ici : chaque URL doit être prouvable et active.
+ */
+const SAME_AS: string[] = getActiveBrandUrls();
 
 /**
  * Liste thématique exhaustive — alimente `Organization.knowsAbout` (Knowledge
@@ -197,11 +201,37 @@ export function organizationSchema(): JsonLd {
       },
     },
     /**
-     * Founder référencé via @id stable (Person schema dédié). Connecte
-     * l'organisation à son humain réel — critère E-E-A-T majeur pour YMYL
-     * (finance / fiscalité).
+     * Founder — structure enrichie pointant vers Person via @id stable.
+     *
+     * On ne se contente pas du @id seul : Google recommande d'inclure
+     * name + jobTitle + url directement dans `founder` (pratique
+     * courante dans les Knowledge Panels FR). Le Person complet reste
+     * référencé via @id pour éviter la duplication de graphe.
+     *
+     * Critère E-E-A-T majeur pour YMYL (finance / fiscalité) — le
+     * Knowledge Panel Google affiche souvent le founder en sous-titre.
      */
-    founder: { "@id": PERSON_ID },
+    founder: {
+      "@id": PERSON_ID,
+      "@type": "Person",
+      name: "Kevin Voisin",
+      jobTitle: "Fondateur & Rédacteur en chef",
+      url: `${SITE_URL}/auteur/kevin-voisin`,
+    },
+    /**
+     * `parentOrganization` — non renseigné : Cryptoreflex est exploitée
+     * par un entrepreneur individuel sans société-mère. Si bascule en
+     * SAS / filialisation, ajouter ici un objet { @type: Organization,
+     * name: "...", url: "..." }.
+     *
+     * `subOrganization` — pas de filiale. Idem laissé absent.
+     *
+     * `member` / `affiliation` — placeholder pour adhésion future à une
+     * association professionnelle (Adan, FFP, AMAFI…). Ne PAS inventer.
+     */
+    // parentOrganization: undefined,
+    // subOrganization: undefined,
+    // memberOf: [{ "@type": "Organization", name: "ADAN", url: "https://www.adan.eu" }],
     knowsAbout: ORG_KNOWS_ABOUT,
     knowsLanguage: ["fr", "fr-FR"],
     availableLanguage: ["fr"],

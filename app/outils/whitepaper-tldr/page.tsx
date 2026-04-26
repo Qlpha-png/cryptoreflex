@@ -16,6 +16,7 @@ import {
   howToSchema,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
@@ -312,6 +313,13 @@ export default function WhitepaperTldrPage() {
               </Link>
             </div>
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/whitepaper-tldr"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

@@ -60,6 +60,7 @@ import RiskBadge from "@/components/crypto-detail/RiskBadge";
 import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms } from "@/lib/platforms";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -519,6 +520,13 @@ export default async function CryptoPage({ params }: Props) {
             ))}
           </div>
         </section>
+
+        {/* Maillage interne — cluster sémantique du graphe (compact, en chips) */}
+        <RelatedPagesNav
+          currentPath={`/cryptos/${c.id}`}
+          limit={6}
+          variant="compact"
+        />
 
         {/* ARTICLES CONNEXES */}
         {related.length > 0 && (

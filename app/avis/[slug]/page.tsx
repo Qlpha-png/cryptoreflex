@@ -30,6 +30,7 @@ import {
   platformReviewSchema,
 } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -607,6 +608,13 @@ export default function ReviewPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        {/* Maillage interne — cluster sémantique du graphe */}
+        <RelatedPagesNav
+          currentPath={`/avis/${p.id}`}
+          limit={4}
+          variant="default"
+        />
 
         {/* AUTRES PLATEFORMES */}
         <section className="mt-12">

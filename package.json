@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:daily": "node scripts/generate-daily-content.mjs",
+    "refresh:events": "node scripts/refresh-events.mjs",
+    "ping:search-engines": "node scripts/ping-search-engines.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

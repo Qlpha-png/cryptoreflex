@@ -19,6 +19,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { getPlatformById } from "@/lib/platforms";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 export const metadata: Metadata = {
   title: "Simulateur DCA crypto gratuit — backtest 5 ans (BTC, ETH, SOL)",
@@ -231,6 +232,13 @@ export default function SimulateurDcaPage() {
               ))}
             </div>
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/simulateur-dca"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

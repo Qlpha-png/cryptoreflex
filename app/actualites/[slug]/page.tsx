@@ -25,6 +25,7 @@ import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
 import RelatedNews from "@/components/news/RelatedNews";
 import NewsletterInline from "@/components/NewsletterInline";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 /**
  * /actualites/[slug] — Page détail d'une analyse Cryptoreflex.
@@ -276,6 +277,13 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
         {/* ARTICLES LIÉS */}
         <RelatedNews items={related} excludeSlug={news.slug} />
+
+        {/* Maillage interne — cluster sémantique du graphe */}
+        <RelatedPagesNav
+          currentPath={`/actualites/${news.slug}`}
+          limit={4}
+          variant="default"
+        />
       </div>
     </article>
   );

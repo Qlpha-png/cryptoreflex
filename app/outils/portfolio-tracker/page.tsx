@@ -18,6 +18,7 @@ import {
 } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 /* Pas d'ISR particulier — la page est statique, le composant est Client. */
 export const revalidate = 86400;
@@ -198,6 +199,13 @@ export default function PortfolioTrackerPage() {
             wallet (Ledger, Trezor) et un wallet non-custodial. Cet outil
             ne représente en aucun cas un conseil en investissement.
           </p>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/portfolio-tracker"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

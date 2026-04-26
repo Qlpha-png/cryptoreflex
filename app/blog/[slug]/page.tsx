@@ -14,6 +14,7 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import StructuredData from "@/components/StructuredData";
 import NewsletterInline from "@/components/NewsletterInline";
 import PopularArticles from "@/components/blog/PopularArticles";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { BRAND } from "@/lib/brand";
 import {
   articleSchema,
@@ -309,6 +310,13 @@ export default async function BlogArticlePage({ params }: Props) {
                   </div>
                 </section>
               )}
+
+              {/* Maillage interne — cluster sémantique du graphe */}
+              <RelatedPagesNav
+                currentPath={`/blog/${article.slug}`}
+                limit={4}
+                variant="default"
+              />
             </div>
 
             {/* Sidebar — Articles populaires (P1-9) */}

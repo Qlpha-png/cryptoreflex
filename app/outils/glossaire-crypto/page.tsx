@@ -16,6 +16,7 @@ import {
   buildFlatDefinedTermSetSchema,
 } from "@/lib/glossary";
 import { BRAND } from "@/lib/brand";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 /* -------------------------------------------------------------------------- */
 /*  ISR — revalidate every 24 h                                                */
@@ -226,6 +227,13 @@ export default function GlossaireCryptoPage() {
               Contactez-nous
             </Link>
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/glossaire-crypto"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

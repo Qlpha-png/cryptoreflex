@@ -25,6 +25,7 @@ import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import { breadcrumbSchema } from "@/lib/schema";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 export const revalidate = 86400;
 
@@ -522,6 +523,13 @@ export default function ComparisonPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        {/* Maillage interne — cluster sémantique du graphe */}
+        <RelatedPagesNav
+          currentPath={`/comparatif/${spec.slug}`}
+          limit={4}
+          variant="default"
+        />
 
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">

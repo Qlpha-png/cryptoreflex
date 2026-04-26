@@ -19,6 +19,7 @@ import {
 } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 /* ISR : recalcul tous les 24 h (la page est essentiellement statique). */
 export const revalidate = 86400;
@@ -309,6 +310,13 @@ export default function CalculateurROIPage() {
             expert-comptable agréé crypto-actifs pour toute déclaration
             officielle.
           </p>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/calculateur-roi-crypto"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>

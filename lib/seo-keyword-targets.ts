@@ -1,0 +1,1453 @@
+/**
+ * lib/seo-keyword-targets.ts
+ *
+ * Catalogue de sujets SEO long-tail FR pour le générateur d'articles
+ * hebdomadaires (`scripts/generate-weekly-article.mjs`).
+ *
+ * Stratégie :
+ * - Cibler des requêtes peu concurrentielles avec un volume mensuel modeste
+ *   mais qualifié (50-1500 recherches/mois selon les estimations Ahrefs / GSC).
+ * - Densifier les silos (cluster) déjà publiés pour renforcer les pillar pages.
+ * - Fournir un outline H2 et 2-4 slugs d'articles existants à mailler.
+ *
+ * Ajouter un nouveau topic :
+ * 1. Pousse une nouvelle entrée dans SEO_TOPICS (slug en kebab-case unique).
+ * 2. Vérifie qu'aucun fichier `content/articles/{slug}.mdx` n'existe déjà.
+ * 3. Le script weekly picker prendra le topic non publié avec la
+ *    plus faible compétition + le plus gros volume.
+ *
+ * Désactiver un topic : commente-le ou ajoute `disabled: true` (champ optionnel).
+ */
+
+export type SeoCategory =
+  | "fiscalite"
+  | "mica"
+  | "securite"
+  | "acheter"
+  | "comprendre"
+  | "marche";
+
+export type CompetitionLevel = "low" | "medium" | "high";
+
+export interface SeoTopic {
+  slug: string;
+  title: string;
+  category: SeoCategory;
+  /** Estimation volume mensuel FR (Ahrefs / GSC / hypothèse). */
+  searchVolumeMo: number;
+  competitionLevel: CompetitionLevel;
+  /** Identifiant cluster pour dashboards SEO (ex: "fiscalite-pertes"). */
+  cluster: string;
+  /** 5-8 H2 suggérés pour le LLM. */
+  outline: string[];
+  /** Slugs d'articles existants à lier en internal links. */
+  internalLinksHints: string[];
+  /** Optionnel : si true, le picker ignore ce topic. */
+  disabled?: boolean;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  FISCALITÉ (cluster impôts crypto FR — pillar : comment-declarer-crypto-impots-2026)  */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_FISCALITE: SeoTopic[] = [
+  {
+    slug: "calculer-plus-value-crypto-formule-officielle-2026",
+    title: "Calculer une plus-value crypto en 2026 : formule officielle (article 150 VH bis)",
+    category: "fiscalite",
+    searchVolumeMo: 880,
+    competitionLevel: "low",
+    cluster: "fiscalite-calcul",
+    outline: [
+      "Pourquoi la formule du prix moyen pondéré est imposée",
+      "Formule officielle article 150 VH bis pas-à-pas",
+      "Exemple chiffré 1 : un seul achat, une seule vente",
+      "Exemple chiffré 2 : DCA mensuel sur 12 mois",
+      "Exemple chiffré 3 : staking + revente (cas mixte)",
+      "Erreurs fréquentes (FIFO, prix unitaire, oublis)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "calcul-pfu-30-crypto-exemple-chiffre",
+      "deduire-pertes-crypto-impot-2026",
+    ],
+  },
+  {
+    slug: "fiscalite-airdrop-crypto-france-2026",
+    title: "Fiscalité d'un airdrop crypto en France 2026 : revenu ou plus-value ?",
+    category: "fiscalite",
+    searchVolumeMo: 720,
+    competitionLevel: "low",
+    cluster: "fiscalite-airdrop",
+    outline: [
+      "Définition fiscale d'un airdrop selon le BOFiP",
+      "Cas 1 : airdrop sans contrepartie (pas d'imposition à la réception)",
+      "Cas 2 : airdrop avec activité (interaction protocole, KYC, social)",
+      "Comment déclarer la cession de tokens reçus en airdrop",
+      "Impact MiCA 2026 sur les airdrops européens",
+      "Cas pratique chiffré (Arbitrum / Jito / Starknet)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
+      "calcul-pfu-30-crypto-exemple-chiffre",
+    ],
+  },
+  {
+    slug: "compte-titres-crypto-vs-pea-pme-2026",
+    title: "Compte-titres crypto vs PEA-PME : peut-on loger ses cryptos ?",
+    category: "fiscalite",
+    searchVolumeMo: 290,
+    competitionLevel: "low",
+    cluster: "fiscalite-enveloppes",
+    outline: [
+      "Pourquoi les cryptos restent hors PEA / PEA-PME",
+      "Le compte-titres ordinaire : seule enveloppe accessible aux ETP/ETF crypto",
+      "Comparaison fiscale CTO vs détention directe",
+      "Cas particulier des ETF Bitcoin spot européens",
+      "Stratégie pour optimiser ETP crypto + détention directe",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "bareme-progressif-vs-pfu-crypto-2026",
+    ],
+  },
+  {
+    slug: "crypto-don-succession-fiscalite-france-2026",
+    title: "Donner ou transmettre ses cryptos en France : fiscalité 2026",
+    category: "fiscalite",
+    searchVolumeMo: 480,
+    competitionLevel: "low",
+    cluster: "fiscalite-transmission",
+    outline: [
+      "Crypto-actifs et patrimoine taxable : ce que dit la loi française",
+      "Donation manuelle vs notariée : abattements 2026",
+      "Évaluation des cryptos au jour de la donation (art. 758 CGI)",
+      "Succession crypto : seed phrase, mandat post-mortem, dévolution",
+      "Cas pratique : transmission de 50 000 € en BTC à un enfant",
+      "Optimisations légales (donation graduelle, démembrement)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "backup-seed-phrase-5-methodes-ultra-sures-2026",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026",
+    ],
+  },
+  {
+    slug: "crypto-deficit-foncier-imputable-2026",
+    title: "Pertes crypto et déficit foncier : peut-on cumuler les imputations ?",
+    category: "fiscalite",
+    searchVolumeMo: 210,
+    competitionLevel: "low",
+    cluster: "fiscalite-pertes",
+    outline: [
+      "Rappel : règle d'imputation intra-annuelle des moins-values crypto",
+      "Pourquoi crypto et foncier sont fiscalement étanches",
+      "Cas concret : 5 000 € de moins-value crypto + 8 000 € de déficit foncier",
+      "Erreurs fréquentes en déclaration",
+      "Stratégie tax-loss harvesting fin d'année",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "deduire-pertes-crypto-impot-2026",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "calcul-pfu-30-crypto-exemple-chiffre",
+    ],
+  },
+  {
+    slug: "stablecoin-conversion-fiscalite-france-2026",
+    title: "Conversion BTC vers USDC : événement fiscal en France 2026 ?",
+    category: "fiscalite",
+    searchVolumeMo: 950,
+    competitionLevel: "medium",
+    cluster: "fiscalite-cessions",
+    outline: [
+      "Notion fiscale d'opération imposable selon BOFiP",
+      "Crypto vers crypto : le cas particulier français",
+      "Crypto vers stablecoin : événement déclencheur ou non ?",
+      "Cas pratique : DCA puis swap mensuel BTC → USDC",
+      "Stratégie HODL vs trading actif (impact PFU)",
+      "Outils pour tracer les conversions (Koinly, Waltio)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "acheter-usdc-usdt-france-2026-stablecoins",
+      "calcul-pfu-30-crypto-exemple-chiffre",
+      "trader-vs-dca-vs-hodl",
+    ],
+  },
+  {
+    slug: "fiscalite-jeux-play-to-earn-france-2026",
+    title: "Play-to-earn et fiscalité française 2026 : BIC, BNC ou plus-value ?",
+    category: "fiscalite",
+    searchVolumeMo: 320,
+    competitionLevel: "low",
+    cluster: "fiscalite-revenus",
+    outline: [
+      "Le P2E à la lumière du droit fiscal français",
+      "Activité occasionnelle : régime de la plus-value",
+      "Activité habituelle : BNC ou BIC ?",
+      "NFT in-game : statut fiscal au moment de la vente",
+      "Cas pratique : Axie Infinity, Star Atlas, Pixels",
+      "Comment éviter une requalification en activité professionnelle",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "fiscalite-nft-france-2026-guide-complet-creation-achat-vente",
+      "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "fiscalite-mining-crypto-particulier-france-2026",
+    title: "Miner du Bitcoin en France 2026 : fiscalité particulier vs entreprise",
+    category: "fiscalite",
+    searchVolumeMo: 410,
+    competitionLevel: "low",
+    cluster: "fiscalite-revenus",
+    outline: [
+      "Cadre légal du mining en France",
+      "Mineur particulier occasionnel : régime BNC",
+      "Mineur professionnel : seuils, statuts, micro-BNC",
+      "Évaluation fiscale des coins minés (jour de réception)",
+      "Frais déductibles : électricité, matériel, amortissement",
+      "Cas pratique : 1 ASIC à domicile, 6 mois d'activité",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "fiscalite-staking-eth-sol-ada-france-2026-guide-complet",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+      "frais-acquisition-crypto-deductible-2026",
+    ],
+  },
+  {
+    slug: "lmnp-revenu-locatif-vs-staking-crypto-2026",
+    title: "Staking crypto vs LMNP : comparatif fiscal 2026 pour revenus passifs",
+    category: "fiscalite",
+    searchVolumeMo: 180,
+    competitionLevel: "low",
+    cluster: "fiscalite-comparatifs",
+    outline: [
+      "Pourquoi comparer LMNP et staking crypto",
+      "LMNP : régime micro-BIC ou réel",
+      "Staking : BNC professionnel ou plus-value (selon profil)",
+      "Tableau comparatif rendement net après impôt",
+      "Risques propres à chaque enveloppe",
+      "Diversification : combiner les deux",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "fiscalite-staking-eth-sol-ada-france-2026-guide-complet",
+      "staking-eth-vs-sol-vs-ada-2026",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "tax-loss-harvesting-crypto-decembre-2026",
+    title: "Tax-loss harvesting crypto en décembre 2026 : checklist fin d'année",
+    category: "fiscalite",
+    searchVolumeMo: 540,
+    competitionLevel: "low",
+    cluster: "fiscalite-strategie",
+    outline: [
+      "Pourquoi décembre est le mois clé fiscalement",
+      "Identifier ses moins-values latentes",
+      "Réaliser la vente avant le 31/12 (timing exact)",
+      "Règles anti-abus et délais de rachat",
+      "Cas pratique : portefeuille -12 000 €, comment compenser",
+      "Outils pour automatiser le calcul",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "deduire-pertes-crypto-impot-2026",
+      "calcul-pfu-30-crypto-exemple-chiffre",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  MiCA (cluster régulation EU — pillar : mica-regulation-europe-2026)       */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_MICA: SeoTopic[] = [
+  {
+    slug: "mica-impact-stablecoin-usdt-2026",
+    title: "MiCA et USDT : pourquoi Tether est sous pression en Europe en 2026",
+    category: "mica",
+    searchVolumeMo: 1200,
+    competitionLevel: "medium",
+    cluster: "mica-stablecoins",
+    outline: [
+      "Rappel : qu'est-ce qu'un EMT (Electronic Money Token) sous MiCA",
+      "Les 5 obligations EMT que Tether n'a pas (encore) remplies",
+      "Pourquoi Binance, Crypto.com et Kraken ont délisté USDT en Europe",
+      "Les alternatives MiCA-compliant : USDC, EURC, EURCV",
+      "Que faire si tu détiens encore de l'USDT en 2026",
+      "Roadmap : Tether peut-il revenir en Europe ?",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "stablecoins-euro-mica-compliant-comparatif-2026",
+      "acheter-usdc-usdt-france-2026-stablecoins",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+    ],
+  },
+  {
+    slug: "mica-defi-impact-protocoles-2026",
+    title: "MiCA et DeFi : la régulation s'applique-t-elle aux protocoles décentralisés ?",
+    category: "mica",
+    searchVolumeMo: 680,
+    competitionLevel: "low",
+    cluster: "mica-defi",
+    outline: [
+      "Le périmètre exact de MiCA selon le règlement UE 2023/1114",
+      "Pourquoi la DeFi fully on-chain échappe (pour l'instant)",
+      "Les zones grises : front-end UI, oracles, gouvernance DAO",
+      "Le rapport ESMA 2025 sur la DeFi (signal pour 2026-2027)",
+      "Impact pour utilisateur français de Aave, Uniswap, Curve",
+      "Anticiper MiCA 2 (DeFi Act prévu 2027)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+      "mica-regulation-europe-2026",
+      "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
+    ],
+  },
+  {
+    slug: "psan-vs-casp-difference-pratique-2026",
+    title: "PSAN vs CASP : la différence concrète pour un investisseur français",
+    category: "mica",
+    searchVolumeMo: 920,
+    competitionLevel: "low",
+    cluster: "mica-statuts",
+    outline: [
+      "Les deux régimes : héritage AMF (PSAN) vs MiCA (CASP)",
+      "Calendrier de transition jusqu'au 30 juin 2026",
+      "Plateformes encore PSAN seules : risques pour utilisateur",
+      "Plateformes déjà CASP agréées (liste mise à jour)",
+      "Que faire si ta plateforme reste PSAN après juillet 2026",
+      "Procédure de migration : PSAN → CASP",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "psan-vs-casp-statut-mica-plateformes-crypto",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+      "alternative-binance-france-post-mica",
+    ],
+  },
+  {
+    slug: "mica-nft-collection-marketplace-2026",
+    title: "MiCA s'applique-t-elle aux NFT ? Le cas des collections et marketplaces",
+    category: "mica",
+    searchVolumeMo: 520,
+    competitionLevel: "low",
+    cluster: "mica-nft",
+    outline: [
+      "Article 2(3) MiCA : exclusion explicite des NFT 'unique et non fongible'",
+      "La zone grise : NFT 'fractionnés' ou 'series'",
+      "L'avis de l'ESMA sur les collections semi-fongibles",
+      "Cas pratique : OpenSea, Blur, Magic Eden vs MiCA",
+      "Conséquences pour créateurs et collectionneurs",
+      "Roadmap réglementaire NFT 2026-2028",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "fiscalite-nft-france-2026-guide-complet-creation-achat-vente",
+      "mica-regulation-europe-2026",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+    ],
+  },
+  {
+    slug: "mica-art-marketing-crypto-influenceurs-2026",
+    title: "MiCA et marketing crypto : ce que les influenceurs FR risquent en 2026",
+    category: "mica",
+    searchVolumeMo: 380,
+    competitionLevel: "low",
+    cluster: "mica-marketing",
+    outline: [
+      "Les obligations MiCA en matière de promotion (article 7)",
+      "Loi Influence française (Loi du 9 juin 2023) : rappel",
+      "Les 5 mentions obligatoires sur tout post crypto sponsorisé",
+      "Sanctions AMF + DGCCRF en cas de manquement",
+      "Cas concrets sanctionnés en 2025-2026",
+      "Bonnes pratiques pour créateurs FR",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "mica-regulation-europe-2026",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+      "premier-achat-crypto-france-2026-guide-step-by-step",
+    ],
+  },
+  {
+    slug: "mica-conservation-cryptos-tiers-protection-2026",
+    title: "MiCA et conservation : tes cryptos sont-elles vraiment protégées chez ton CASP ?",
+    category: "mica",
+    searchVolumeMo: 440,
+    competitionLevel: "low",
+    cluster: "mica-conservation",
+    outline: [
+      "Article 75 MiCA : ségrégation obligatoire des actifs clients",
+      "Différence avec un compte bancaire (pas de garantie 100k€)",
+      "Le mécanisme de responsabilité du CASP en cas de hack",
+      "Cas FTX : pourquoi MiCA aurait limité les dégâts",
+      "Self-custody vs CASP : comparatif sécurité 2026",
+      "Quand passer en cold wallet (seuil de patrimoine)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+    ],
+  },
+  {
+    slug: "mica-staking-as-a-service-2026",
+    title: "Staking-as-a-service post-MiCA 2026 : Coinbase, Kraken, Bitpanda autorisés ?",
+    category: "mica",
+    searchVolumeMo: 610,
+    competitionLevel: "low",
+    cluster: "mica-staking",
+    outline: [
+      "Cadre MiCA pour le staking proposé par les CASP",
+      "Différence staking pooling vs staking délégué",
+      "Le précédent SEC vs Kraken (USA) et son écho européen",
+      "Les CASP autorisés à proposer du staking en France",
+      "Risques propres : slashing, lock-up, fees cachés",
+      "Comparatif APY post-frais 2026",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "staking-eth-vs-sol-vs-ada-2026",
+      "fiscalite-staking-eth-sol-ada-france-2026-guide-complet",
+      "psan-vs-casp-statut-mica-plateformes-crypto",
+    ],
+  },
+  {
+    slug: "mica-travel-rule-tfr-2026-explication",
+    title: "Travel Rule TFR 2026 : tu dois nommer ton wallet, voici comment",
+    category: "mica",
+    searchVolumeMo: 1100,
+    competitionLevel: "medium",
+    cluster: "mica-conformite",
+    outline: [
+      "Qu'est-ce que la Travel Rule (Règlement TFR UE 2023/1113)",
+      "Calendrier : entrée en vigueur 30 décembre 2024",
+      "Obligations CASP : collecter et transmettre les données",
+      "Self-hosted wallets : ce qui change pour Ledger, MetaMask, Phantom",
+      "Cas pratique : envoi 2 000 € de BTC vers ton wallet perso",
+      "Bonnes pratiques pour rester en conformité",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "configurer-ledger-nano-x-30-minutes-guide-pas-a-pas",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+      "psan-vs-casp-statut-mica-plateformes-crypto",
+    ],
+  },
+  {
+    slug: "mica-passport-europeen-casp-2026",
+    title: "Passeport européen CASP 2026 : comment ça change ton choix de plateforme",
+    category: "mica",
+    searchVolumeMo: 290,
+    competitionLevel: "low",
+    cluster: "mica-statuts",
+    outline: [
+      "Le mécanisme du passeport européen (article 65 MiCA)",
+      "Liste 2026 des CASP agréés avec passeport (Allemagne, Malte, France)",
+      "Pourquoi un CASP allemand peut servir des Français",
+      "Risques juridictionnels : ESMA convergence ou divergence ?",
+      "Tableau : 10 CASP avec passeport et leurs spécificités",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "psan-vs-casp-statut-mica-plateformes-crypto",
+      "alternative-binance-france-post-mica",
+    ],
+  },
+  {
+    slug: "mica-comparaison-mifid-marche-financier-2026",
+    title: "MiCA vs MiFID II : comparatif pour les investisseurs crypto-actions",
+    category: "mica",
+    searchVolumeMo: 240,
+    competitionLevel: "low",
+    cluster: "mica-comparatifs",
+    outline: [
+      "Pourquoi comparer MiCA et MiFID II",
+      "Périmètre : MiFID couvre les instruments financiers traditionnels",
+      "Tableau comparatif des 10 obligations clés",
+      "Le cas hybride des security tokens",
+      "Implications pour Trade Republic, eToro, Bitpanda",
+      "Roadmap convergence 2026-2030",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "trade-republic-crypto-avis-2026",
+      "mica-regulation-europe-2026",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  SÉCURITÉ (cluster custody, wallets, opsec)                                */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_SECURITE: SeoTopic[] = [
+  {
+    slug: "multi-sig-wallet-bitcoin-debutant-2026",
+    title: "Multi-sig wallet Bitcoin pour débutant : guide pas-à-pas 2026",
+    category: "securite",
+    searchVolumeMo: 590,
+    competitionLevel: "low",
+    cluster: "securite-multisig",
+    outline: [
+      "Qu'est-ce qu'un multi-sig (2-of-3, 3-of-5)",
+      "Pourquoi le multi-sig protège contre 90 % des attaques",
+      "Comparatif : Sparrow, Specter, Casa, Unchained",
+      "Tutoriel pas-à-pas : 2-of-3 avec 2 Ledger + 1 Trezor",
+      "Sécuriser les seed phrases en cold storage géographique",
+      "Procédure de récupération si une clé est perdue",
+      "Coût total et complexité opérationnelle",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "backup-seed-phrase-5-methodes-ultra-sures-2026",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+    ],
+  },
+  {
+    slug: "passphrase-bip39-25e-mot-securite-avance-2026",
+    title: "Passphrase BIP39 (25e mot) : sécuriser son hardware wallet en 2026",
+    category: "securite",
+    searchVolumeMo: 470,
+    competitionLevel: "low",
+    cluster: "securite-seed",
+    outline: [
+      "Différence seed phrase 24 mots vs passphrase BIP39",
+      "Pourquoi le 25e mot crée un wallet 'caché'",
+      "Activer la passphrase sur Ledger Nano X / S Plus",
+      "Activer la passphrase sur Trezor Safe 3",
+      "Stratégie 'duress wallet' : leurre vs vrai stockage",
+      "Risques : oubli de passphrase = perte totale",
+      "Bonnes pratiques de mémorisation et backup",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "configurer-ledger-nano-x-30-minutes-guide-pas-a-pas",
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "backup-seed-phrase-5-methodes-ultra-sures-2026",
+    ],
+  },
+  {
+    slug: "shamir-backup-seed-decouper-en-parts-2026",
+    title: "Shamir Backup (SLIP-39) : découper sa seed phrase en 2026",
+    category: "securite",
+    searchVolumeMo: 280,
+    competitionLevel: "low",
+    cluster: "securite-seed",
+    outline: [
+      "Le standard SLIP-39 : différence avec BIP39",
+      "Concept de 'M-of-N parts' (ex: 2-of-3, 3-of-5)",
+      "Wallets compatibles : Trezor Safe, Keystone Pro 3",
+      "Tutoriel découpe en 5 parts (3 nécessaires)",
+      "Stockage géographique des parts (banque, famille, coffre)",
+      "Limites et cas d'usage déconseillés",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "backup-seed-phrase-5-methodes-ultra-sures-2026",
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+    ],
+  },
+  {
+    slug: "wallet-air-gap-vs-bluetooth-securite-2026",
+    title: "Wallet air-gap vs Bluetooth : lequel est vraiment plus sûr en 2026 ?",
+    category: "securite",
+    searchVolumeMo: 340,
+    competitionLevel: "low",
+    cluster: "securite-hardware",
+    outline: [
+      "Définition air-gap : QR code, micro-SD, USB obligatoire",
+      "Vecteurs d'attaque Bluetooth (BlueBorne, KNOB)",
+      "Comparatif : Keystone, Cobo Vault vs Ledger Nano X",
+      "Tests de sécurité indépendants (Wallet.fail, Donjon)",
+      "Cas pratiques : signature d'une transaction air-gap",
+      "Verdict par profil utilisateur (>10k€, >100k€)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "configurer-ledger-nano-x-30-minutes-guide-pas-a-pas",
+    ],
+  },
+  {
+    slug: "phishing-crypto-2026-eviter-arnaques-courantes",
+    title: "Phishing crypto 2026 : reconnaître et éviter les 10 arnaques courantes",
+    category: "securite",
+    searchVolumeMo: 1450,
+    competitionLevel: "medium",
+    cluster: "securite-arnaques",
+    outline: [
+      "Pourquoi le phishing crypto explose en 2026",
+      "Arnaque 1 : faux email Ledger/Trezor (drainer fund)",
+      "Arnaque 2 : faux support Coinbase/Binance via Telegram",
+      "Arnaque 3 : approval malveillante (token approve scam)",
+      "Arnaque 4 : faux airdrop (sign-in malicieux)",
+      "Arnaque 5 : ICE phishing (signature off-chain)",
+      "Outils de protection : Wallet Guard, Pocket Universe",
+      "Réflexes : que faire si tu as cliqué",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "securiser-cryptos-wallet-2fa-2026",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "ledger-live-tout-ce-qu-on-peut-faire-2026",
+    ],
+  },
+  {
+    slug: "securiser-2fa-totp-vs-sms-crypto-2026",
+    title: "2FA crypto en 2026 : pourquoi le SMS est dangereux (et quoi utiliser)",
+    category: "securite",
+    searchVolumeMo: 720,
+    competitionLevel: "medium",
+    cluster: "securite-auth",
+    outline: [
+      "Les 4 types de 2FA (SMS, TOTP, U2F, biométrie)",
+      "Pourquoi le SIM swap rend le SMS obsolète",
+      "Setup TOTP avec Aegis (Android) ou Raivo (iOS)",
+      "Setup U2F avec YubiKey 5 / Solo Key",
+      "Activer la 2FA sur Coinbase, Kraken, Bitpanda, Binance",
+      "Backup des seed TOTP : risques et best practices",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "securiser-cryptos-wallet-2fa-2026",
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "premier-achat-crypto-france-2026-guide-step-by-step",
+    ],
+  },
+  {
+    slug: "wallet-mobile-crypto-securise-iphone-android-2026",
+    title: "Wallet mobile crypto sécurisé en 2026 : comparatif iPhone vs Android",
+    category: "securite",
+    searchVolumeMo: 880,
+    competitionLevel: "medium",
+    cluster: "securite-mobile",
+    outline: [
+      "Pourquoi un wallet mobile reste un hot wallet (limites)",
+      "Top wallets iOS : Trust, Phantom, Rainbow, MetaMask",
+      "Top wallets Android : MetaMask, Coinbase Wallet, Exodus",
+      "Spécificités sécurité iOS (Secure Enclave) vs Android (TEE)",
+      "Hardware integration : Ledger Bluetooth + mobile",
+      "Bonnes pratiques : montant max, séparation des wallets",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "securiser-cryptos-wallet-2fa-2026",
+      "ledger-live-tout-ce-qu-on-peut-faire-2026",
+    ],
+  },
+  {
+    slug: "audit-smart-contract-defi-comprendre-rapport-2026",
+    title: "Comprendre un audit de smart contract DeFi en 2026 : guide pratique",
+    category: "securite",
+    searchVolumeMo: 230,
+    competitionLevel: "low",
+    cluster: "securite-defi",
+    outline: [
+      "Pourquoi lire les audits avant de mettre 1 € en DeFi",
+      "Top auditors : OpenZeppelin, Trail of Bits, ConsenSys Diligence",
+      "Lire un rapport : critical, high, medium, low",
+      "Cas pratique : audit Aave V4 décortiqué",
+      "Limites de l'audit (zero-day, gouvernance)",
+      "Outils complémentaires : DeFiSafety, Immunefi",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+      "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+    ],
+  },
+  {
+    slug: "social-recovery-wallet-erc4337-2026",
+    title: "Social recovery wallet (ERC-4337) : la fin des seed phrases en 2026 ?",
+    category: "securite",
+    searchVolumeMo: 410,
+    competitionLevel: "low",
+    cluster: "securite-aa",
+    outline: [
+      "Account Abstraction (ERC-4337) : c'est quoi vraiment",
+      "Le concept de 'guardians' (récupération sociale)",
+      "Wallets pionniers : Argent, Safe{Wallet}, Ambire",
+      "Comparatif UX vs MetaMask classique",
+      "Risques : centralisation des guardians",
+      "Roadmap Ethereum : EIP-3074 vs ERC-4337",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "securiser-cryptos-wallet-2fa-2026",
+    ],
+  },
+  {
+    slug: "voyage-crypto-passer-frontiere-securite-2026",
+    title: "Voyager avec ses cryptos en 2026 : passer une frontière en sécurité",
+    category: "securite",
+    searchVolumeMo: 380,
+    competitionLevel: "low",
+    cluster: "securite-pratique",
+    outline: [
+      "Cryptos et déclaration douanière : ce que dit la loi",
+      "Sécuriser sa seed phrase pendant un déplacement",
+      "Hardware wallet en cabine vs soute (recommandation)",
+      "Setup duress wallet (passphrase BIP39)",
+      "Pays à risque : interdictions et restrictions 2026",
+      "Cloud backup chiffré (Cryptosteel + Veracrypt)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "backup-seed-phrase-5-methodes-ultra-sures-2026",
+      "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "ledger-vs-trezor-duel-objectif-2026-par-profil",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  ACHETER (cluster onboarding, plateformes, alternatives)                   */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_ACHETER: SeoTopic[] = [
+  {
+    slug: "acheter-bitcoin-100-euros-france-2026",
+    title: "Acheter du Bitcoin avec 100 € en France 2026 : guide minimaliste",
+    category: "acheter",
+    searchVolumeMo: 1900,
+    competitionLevel: "medium",
+    cluster: "acheter-petit-budget",
+    outline: [
+      "Pourquoi 100 € est un excellent ticket d'entrée",
+      "Choisir une plateforme MiCA-compliant FR (Bitpanda, Trade Republic)",
+      "Frais cachés : spread, frais d'achat, frais de retrait",
+      "Setup compte 5 minutes (KYC, virement SEPA)",
+      "Faire son premier achat : marché vs limit order",
+      "Sécuriser : laisser sur plateforme ou wallet ?",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "premier-achat-crypto-france-2026-guide-step-by-step",
+    ],
+  },
+  {
+    slug: "alternative-coinbase-france-2026",
+    title: "Alternatives à Coinbase en France 2026 : 5 plateformes MiCA-compliant",
+    category: "acheter",
+    searchVolumeMo: 1100,
+    competitionLevel: "medium",
+    cluster: "acheter-alternatives",
+    outline: [
+      "Pourquoi chercher une alternative à Coinbase",
+      "Alt 1 : Bitpanda (broker autrichien CASP)",
+      "Alt 2 : Kraken (low fees, expert)",
+      "Alt 3 : Bitstack (DCA simple FR)",
+      "Alt 4 : Trade Republic (CTO + crypto)",
+      "Alt 5 : Bitvavo (NL, low fees)",
+      "Tableau comparatif frais / paires / KYC",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "alternative-binance-france-post-mica",
+      "trade-republic-crypto-avis-2026",
+    ],
+  },
+  {
+    slug: "acheter-bitcoin-sans-kyc-france-2026-legal",
+    title: "Peut-on acheter du Bitcoin sans KYC en France 2026 ? (cadre légal)",
+    category: "acheter",
+    searchVolumeMo: 1300,
+    competitionLevel: "medium",
+    cluster: "acheter-anonyme",
+    outline: [
+      "État du droit : KYC obligatoire au-dessus de 1 000 €",
+      "P2P (HodlHodl, Bisq) : limites et risques",
+      "Bitcoin ATMs FR : couverture et plafonds 2026",
+      "Cadeau / pourboire crypto : régime fiscal",
+      "Alerte : risques d'arnaques sur le 'no-KYC'",
+      "Recommandation Cryptoreflex",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "acheter-cardano-ada-france-2026-guide",
+    title: "Acheter du Cardano (ADA) en France 2026 : guide complet débutant",
+    category: "acheter",
+    searchVolumeMo: 590,
+    competitionLevel: "low",
+    cluster: "acheter-altcoin",
+    outline: [
+      "Pourquoi Cardano garde sa pertinence en 2026",
+      "Plateformes FR proposant ADA (Bitpanda, Kraken, Coinbase)",
+      "Comparatif frais d'achat sur 100 €, 1k€, 10k€",
+      "Staking ADA via plateforme vs wallet (Daedalus, Yoroi)",
+      "Fiscalité du staking ADA en France 2026",
+      "Risques : maximalisme Bitcoin vs roadmap Cardano",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "staking-eth-vs-sol-vs-ada-2026",
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "fiscalite-staking-eth-sol-ada-france-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "acheter-xrp-france-2026-guide-complet",
+    title: "Acheter du XRP en France 2026 : guide complet post-procès SEC",
+    category: "acheter",
+    searchVolumeMo: 820,
+    competitionLevel: "medium",
+    cluster: "acheter-altcoin",
+    outline: [
+      "XRP en 2026 : rappel du verdict SEC (juillet 2023)",
+      "Plateformes FR proposant XRP",
+      "Spécificité tag XRP (memo ID) : risque de perte",
+      "Comparatif frais d'achat",
+      "Cas d'usage XRP en 2026 (paiements transfrontaliers)",
+      "Risques : centralisation Ripple Labs",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "comment-declarer-crypto-impots-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "acheter-bitcoin-cb-vs-virement-sepa-2026",
+    title: "Acheter Bitcoin par CB vs virement SEPA : quelle méthode en 2026 ?",
+    category: "acheter",
+    searchVolumeMo: 670,
+    competitionLevel: "low",
+    cluster: "acheter-paiement",
+    outline: [
+      "Carte bancaire : rapide mais frais élevés",
+      "Virement SEPA standard : 1 jour ouvré, frais minimes",
+      "SEPA Instant : nouveau standard 2026 (instantané)",
+      "Apple Pay / Google Pay : disponibilité par plateforme",
+      "PayPal crypto : encore pertinent en 2026 ?",
+      "Tableau comparatif frais sur 1 000 €",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "premier-achat-crypto-france-2026-guide-step-by-step",
+      "meilleure-plateforme-crypto-debutant-france-2026",
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+    ],
+  },
+  {
+    slug: "alternative-binance-trader-experimente-2026",
+    title: "Alternative à Binance pour trader expérimenté en 2026 (post-MiCA)",
+    category: "acheter",
+    searchVolumeMo: 510,
+    competitionLevel: "low",
+    cluster: "acheter-alternatives",
+    outline: [
+      "Pourquoi Binance reste limitée en France post-MiCA",
+      "Alt 1 : Kraken (futures, margin, low fees)",
+      "Alt 2 : Bitget (copy-trading, dérivés)",
+      "Alt 3 : Bitfinex (advanced order types)",
+      "Alt 4 : OKX (API trading, perp)",
+      "Comparatif fees, profondeur orderbook, KYC",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "alternative-binance-france-post-mica",
+      "bitget-avis-france-2026",
+      "trader-vs-dca-vs-hodl",
+    ],
+  },
+  {
+    slug: "acheter-eth-staking-direct-vs-lst-2026",
+    title: "Acheter ETH pour staker en 2026 : staking direct vs LST (Lido, Rocket Pool)",
+    category: "acheter",
+    searchVolumeMo: 460,
+    competitionLevel: "low",
+    cluster: "acheter-eth-staking",
+    outline: [
+      "Rappel : 32 ETH minimum pour valider en solo",
+      "Staking pool : Lido (stETH) vs Rocket Pool (rETH)",
+      "Liquid Staking Token (LST) : avantages et risques",
+      "Plateformes FR proposant le staking ETH",
+      "Comparatif APY 2026 et frais",
+      "Fiscalité du LST en France",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "acheter-ethereum-eth-france-2026-guide",
+      "staking-eth-vs-sol-vs-ada-2026",
+      "fiscalite-staking-eth-sol-ada-france-2026-guide-complet",
+    ],
+  },
+  {
+    slug: "acheter-stablecoin-eurc-eurcv-france-2026",
+    title: "Acheter EURC ou EURCV en 2026 : stablecoins euro MiCA-compliant",
+    category: "acheter",
+    searchVolumeMo: 380,
+    competitionLevel: "low",
+    cluster: "acheter-stablecoin",
+    outline: [
+      "Différence EURC (Circle) vs EURCV (Société Générale-Forge)",
+      "Statut MiCA EMT : qui est agréé en 2026",
+      "Plateformes FR proposant EURC / EURCV",
+      "Cas d'usage : DCA, paiement, parking de cash",
+      "Rendement stable + EMT : stratégies",
+      "Risques : peg, gouvernance émetteur",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "stablecoins-euro-mica-compliant-comparatif-2026",
+      "acheter-usdc-usdt-france-2026-stablecoins",
+      "mica-phase-2-juillet-2026-ce-qui-change",
+    ],
+  },
+  {
+    slug: "etf-bitcoin-vs-bitcoin-direct-france-2026",
+    title: "ETF Bitcoin vs Bitcoin direct en France 2026 : que choisir vraiment ?",
+    category: "acheter",
+    searchVolumeMo: 1280,
+    competitionLevel: "medium",
+    cluster: "acheter-etf",
+    outline: [
+      "Rappel : pas d'ETF Bitcoin spot US accessible en France",
+      "ETN/ETP européens : 21Shares, CoinShares, ETC Group",
+      "Différence fiscale ETP (CTO) vs Bitcoin direct (PFU)",
+      "Coûts cachés : TER, spread, custody",
+      "Cas pratique : 10k€ en ETP vs 10k€ en BTC direct",
+      "Recommandation Cryptoreflex par profil",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "trade-republic-crypto-avis-2026",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  COMPRENDRE (cluster pédagogie technique)                                  */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_COMPRENDRE: SeoTopic[] = [
+  {
+    slug: "qu-est-ce-qu-une-dao-fonctionnement-exemples-2026",
+    title: "Qu'est-ce qu'une DAO ? Fonctionnement et exemples concrets 2026",
+    category: "comprendre",
+    searchVolumeMo: 980,
+    competitionLevel: "low",
+    cluster: "comprendre-gouvernance",
+    outline: [
+      "Définition d'une DAO (Decentralized Autonomous Organization)",
+      "Fonctionnement : token, vote, treasury, smart contract",
+      "Exemple 1 : MakerDAO (gouvernance DAI)",
+      "Exemple 2 : Uniswap (proposals UNI)",
+      "Exemple 3 : Aragon, Snapshot, Tally (outils)",
+      "Statut juridique en France et UE",
+      "Risques : whales, vote apathy, gouvernance d'attaque",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+      "qu-est-ce-que-la-blockchain-guide-ultra-simple-2026",
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+    ],
+  },
+  {
+    slug: "arbitrum-optimism-base-comparatif-layer-2-2026",
+    title: "Arbitrum, Optimism, Base : quel Layer 2 Ethereum choisir en 2026 ?",
+    category: "comprendre",
+    searchVolumeMo: 730,
+    competitionLevel: "low",
+    cluster: "comprendre-layer2",
+    outline: [
+      "Pourquoi un Layer 2 sur Ethereum ?",
+      "Optimistic rollups : Arbitrum vs Optimism",
+      "ZK-rollups : zkSync, Starknet, Polygon zkEVM",
+      "Base (Coinbase) : positionnement 2026",
+      "Comparatif TVL, frais, dapps phares",
+      "Comment bridger entre Ethereum et un L2 (avec wallet FR)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+      "acheter-ethereum-eth-france-2026-guide",
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+    ],
+  },
+  {
+    slug: "eip-1559-ethereum-burn-explication-2026",
+    title: "EIP-1559 et le burn d'ETH : explication complète en 2026",
+    category: "comprendre",
+    searchVolumeMo: 380,
+    competitionLevel: "low",
+    cluster: "comprendre-ethereum",
+    outline: [
+      "Avant EIP-1559 : enchères de gas chaotiques",
+      "Le mécanisme base fee + priority fee",
+      "Pourquoi le base fee est brûlé (burn)",
+      "Impact sur l'offre d'ETH (deflationary monetary)",
+      "Données : ETH brûlé total depuis août 2021",
+      "EIP-4844 (proto-danksharding) : suite logique",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+      "acheter-ethereum-eth-france-2026-guide",
+      "proof-of-stake-vs-proof-of-work-difference-5-minutes",
+    ],
+  },
+  {
+    slug: "hard-fork-vs-soft-fork-difference-exemples-2026",
+    title: "Hard fork vs soft fork : différence et exemples concrets 2026",
+    category: "comprendre",
+    searchVolumeMo: 420,
+    competitionLevel: "low",
+    cluster: "comprendre-blockchain",
+    outline: [
+      "Définition technique : changement consensus rules",
+      "Soft fork : rétro-compatible (exemple SegWit Bitcoin)",
+      "Hard fork : non rétro-compatible (exemple Ethereum / ETC)",
+      "Hard forks Bitcoin notables : BCH, BSV, BTG",
+      "Hard forks Ethereum : The DAO, The Merge, Shanghai",
+      "Risques pour utilisateur (replay attack)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "qu-est-ce-que-la-blockchain-guide-ultra-simple-2026",
+      "bitcoin-vs-ethereum-differences-debutant-2026",
+      "proof-of-stake-vs-proof-of-work-difference-5-minutes",
+    ],
+  },
+  {
+    slug: "merkle-tree-blockchain-explication-simple-2026",
+    title: "Qu'est-ce qu'un Merkle tree ? Explication simple pour comprendre la blockchain",
+    category: "comprendre",
+    searchVolumeMo: 290,
+    competitionLevel: "low",
+    cluster: "comprendre-cryptographie",
+    outline: [
+      "Le problème : prouver l'intégrité d'un grand volume de données",
+      "Concept de hash : SHA-256 en 2 minutes",
+      "Construction d'un Merkle tree pas-à-pas (schéma)",
+      "Merkle root : pourquoi c'est si puissant",
+      "Cas d'usage Bitcoin : SPV (Simple Payment Verification)",
+      "Merkle proof : preuve de réserve d'un exchange",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "qu-est-ce-que-la-blockchain-guide-ultra-simple-2026",
+      "proof-of-stake-vs-proof-of-work-difference-5-minutes",
+      "bitcoin-guide-complet-debutant-2026",
+    ],
+  },
+  {
+    slug: "lightning-network-bitcoin-comprendre-utiliser-2026",
+    title: "Lightning Network Bitcoin en 2026 : comprendre et utiliser",
+    category: "comprendre",
+    searchVolumeMo: 850,
+    competitionLevel: "low",
+    cluster: "comprendre-bitcoin-l2",
+    outline: [
+      "Pourquoi Bitcoin a besoin d'un Layer 2 (limites L1)",
+      "Le concept de payment channel",
+      "Routing et liquidity providers",
+      "Wallets Lightning recommandés (Phoenix, Breez, Wallet of Satoshi)",
+      "Cas d'usage 2026 : remittances, micropaiements, IA",
+      "Limites et risques (force-close, liquidity)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "bitcoin-guide-complet-debutant-2026",
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "qu-est-ce-que-la-blockchain-guide-ultra-simple-2026",
+    ],
+  },
+  {
+    slug: "rwa-real-world-assets-tokenisation-2026",
+    title: "RWA : qu'est-ce que la tokenisation des actifs réels en 2026 ?",
+    category: "comprendre",
+    searchVolumeMo: 1340,
+    competitionLevel: "medium",
+    cluster: "comprendre-rwa",
+    outline: [
+      "Définition : RWA (Real World Assets) on-chain",
+      "Catégories : trésor US, immobilier, commodities, factures",
+      "Acteurs majeurs : Ondo, Maple, Centrifuge, Securitize",
+      "Pourquoi BlackRock parie sur la tokenisation",
+      "Cadre réglementaire EU (MiCA + MiFID overlap)",
+      "Risques : custody, juridiction, liquidité",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "mica-regulation-europe-2026",
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+    ],
+  },
+  {
+    slug: "zk-proof-zero-knowledge-explication-debutant-2026",
+    title: "Zero-knowledge proof : explication débutant pour comprendre les ZK-rollups en 2026",
+    category: "comprendre",
+    searchVolumeMo: 470,
+    competitionLevel: "low",
+    cluster: "comprendre-cryptographie",
+    outline: [
+      "Le concept : prouver sans révéler",
+      "Analogie de la grotte d'Ali Baba (vulgarisation)",
+      "ZK-SNARK vs ZK-STARK : différence pratique",
+      "Cas d'usage : ZK-rollups (zkSync, Starknet)",
+      "Cas d'usage : confidentialité (Zcash, Aleo)",
+      "Limites : trusted setup, complexité",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+      "qu-est-ce-que-la-blockchain-guide-ultra-simple-2026",
+      "proof-of-stake-vs-proof-of-work-difference-5-minutes",
+    ],
+  },
+  {
+    slug: "mev-maximal-extractable-value-explication-2026",
+    title: "MEV (Maximal Extractable Value) : comprendre l'arbitrage opaque d'Ethereum",
+    category: "comprendre",
+    searchVolumeMo: 350,
+    competitionLevel: "low",
+    cluster: "comprendre-defi",
+    outline: [
+      "Définition : MEV, sandwich attack, front-running",
+      "Acteurs : searchers, builders, validators",
+      "MEV-Boost : la solution Flashbots post-Merge",
+      "Impact pour utilisateur DeFi (slippage caché)",
+      "Outils de protection : MEV Blocker, CowSwap, Flashbots Protect",
+      "Roadmap Ethereum : PBS et anti-MEV",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "defi-pour-debutants-savoir-avant-commencer-2026",
+      "layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026",
+      "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
+    ],
+  },
+  {
+    slug: "bitcoin-ordinals-runes-explication-2026",
+    title: "Bitcoin Ordinals et Runes en 2026 : NFT et tokens sur Bitcoin",
+    category: "comprendre",
+    searchVolumeMo: 590,
+    competitionLevel: "low",
+    cluster: "comprendre-bitcoin",
+    outline: [
+      "Origine des Ordinals (Casey Rodarmor, janvier 2023)",
+      "Inscriptions vs ordinals : différence technique",
+      "Le protocole Runes (avril 2024) : tokens fongibles sur BTC",
+      "Impact sur les fees Bitcoin et les mineurs",
+      "Marketplaces : Magic Eden, OKX, Unisat",
+      "Position des bitcoin maximalistes (controverse)",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "bitcoin-guide-complet-debutant-2026",
+      "fiscalite-nft-france-2026-guide-complet-creation-achat-vente",
+      "comment-acheter-bitcoin-france-2026-guide-debutant",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  MARCHÉ (cluster cycles, on-chain, dominance)                              */
+/* -------------------------------------------------------------------------- */
+
+const TOPICS_MARCHE: SeoTopic[] = [
+  {
+    slug: "comprendre-cycle-bitcoin-2026-2030",
+    title: "Comprendre le cycle Bitcoin 2026-2030 : phases, halving et stratégies",
+    category: "marche",
+    searchVolumeMo: 480,
+    competitionLevel: "low",
+    cluster: "marche-cycles",
+    outline: [
+      "Qu'est-ce qu'un cycle crypto ?",
+      "Les 4 phases du cycle Bitcoin (accumulation, expansion, distribution, capitulation)",
+      "Impact du halving 2024 sur le cycle 2026-2028",
+      "Stratégies d'investissement par phase",
+      "Erreurs à éviter en fin de cycle",
+      "Indicateurs on-chain à surveiller",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "trader-vs-dca-vs-hodl",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "bitcoin-guide-complet-debutant-2026",
+    ],
+  },
+  {
+    slug: "bitcoin-dominance-comprendre-utiliser-2026",
+    title: "Bitcoin dominance en 2026 : comprendre et utiliser cet indicateur",
+    category: "marche",
+    searchVolumeMo: 720,
+    competitionLevel: "low",
+    cluster: "marche-indicateurs",
+    outline: [
+      "Définition de la BTC dominance",
+      "Calcul exact (avec ou sans stablecoins)",
+      "Lecture historique : altseason vs Bitcoin season",
+      "Niveaux clés (40 %, 50 %, 60 %)",
+      "Limites de l'indicateur en 2026 (poids des stablecoins)",
+      "Cas pratique : comment l'utiliser dans son allocation",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "trader-vs-dca-vs-hodl",
+      "bitcoin-vs-ethereum-differences-debutant-2026",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+  {
+    slug: "on-chain-analytics-debuter-glassnode-2026",
+    title: "On-chain analytics : comment débuter avec Glassnode et CryptoQuant en 2026",
+    category: "marche",
+    searchVolumeMo: 410,
+    competitionLevel: "low",
+    cluster: "marche-onchain",
+    outline: [
+      "Pourquoi l'analyse on-chain est unique à la crypto",
+      "Glassnode vs CryptoQuant vs Nansen : pour qui",
+      "5 indicateurs essentiels pour débuter (MVRV, SOPR, NUPL, exchange flows, dormancy)",
+      "Lire un MVRV ratio sur 10 ans",
+      "Cas pratique : déceler une distribution avant un dump",
+      "Plans gratuits et limites",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "bitcoin-guide-complet-debutant-2026",
+      "trader-vs-dca-vs-hodl",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+  {
+    slug: "halving-bitcoin-impact-prix-historique-2026",
+    title: "Halving Bitcoin : impact sur le prix selon les données historiques 2012-2024",
+    category: "marche",
+    searchVolumeMo: 1200,
+    competitionLevel: "medium",
+    cluster: "marche-halving",
+    outline: [
+      "Rappel : le halving en 2 minutes",
+      "Halving 2012 : +9 000 % en 12 mois",
+      "Halving 2016 : +2 800 % en 18 mois",
+      "Halving 2020 : +600 % en 18 mois",
+      "Halving 2024 : situation 2026 (rendement à date)",
+      "Théorie du 'diminishing returns'",
+      "Projection 2028 : scenarios prudents et bullish",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "bitcoin-guide-complet-debutant-2026",
+      "trader-vs-dca-vs-hodl",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+  {
+    slug: "fear-greed-index-crypto-utiliser-2026",
+    title: "Fear & Greed Index crypto : comment l'utiliser sans se tromper en 2026",
+    category: "marche",
+    searchVolumeMo: 980,
+    competitionLevel: "medium",
+    cluster: "marche-sentiment",
+    outline: [
+      "Composition de l'indice (volatilité, momentum, social, sondages)",
+      "Lecture : 0-25 fear extrême, 75-100 greed extrême",
+      "Backtest sur 2017-2024 (efficacité réelle)",
+      "Limites : indicateur court terme",
+      "Combiner avec MVRV et BTC dominance",
+      "Cas pratique : DCA renforcé en zone de fear",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "trader-vs-dca-vs-hodl",
+      "bitcoin-guide-complet-debutant-2026",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+  {
+    slug: "stock-to-flow-bitcoin-modele-mort-2026",
+    title: "Stock-to-flow Bitcoin : le modèle est-il mort en 2026 ?",
+    category: "marche",
+    searchVolumeMo: 350,
+    competitionLevel: "low",
+    cluster: "marche-modeles",
+    outline: [
+      "Origine du modèle (PlanB, 2019)",
+      "Calcul S2F et projection initiale",
+      "Pourquoi le modèle a déraillé en 2022",
+      "Critiques académiques (Vitalik Buterin, Nic Carter)",
+      "Modèles alternatifs : Power Law, Rainbow Chart",
+      "Verdict 2026",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "bitcoin-guide-complet-debutant-2026",
+      "trader-vs-dca-vs-hodl",
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+    ],
+  },
+  {
+    slug: "etf-bitcoin-flux-impact-prix-2026",
+    title: "Flux ETF Bitcoin spot : comment ils influencent vraiment le prix en 2026",
+    category: "marche",
+    searchVolumeMo: 670,
+    competitionLevel: "medium",
+    cluster: "marche-etf",
+    outline: [
+      "Rappel : 11 ETF spot US approuvés (janvier 2024)",
+      "Acteurs majeurs : BlackRock IBIT, Fidelity FBTC",
+      "Lire les daily flows (sources : Farside Investors)",
+      "Corrélation flux ETF / prix BTC",
+      "Impact des sorties (outflows) en cas de stress",
+      "ETP européens : volume comparé en 2026",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "bitcoin-guide-complet-debutant-2026",
+      "trade-republic-crypto-avis-2026",
+    ],
+  },
+  {
+    slug: "altseason-2026-quand-arrive-signaux",
+    title: "Altseason 2026 : quand arrive-t-elle ? Signaux à surveiller",
+    category: "marche",
+    searchVolumeMo: 1450,
+    competitionLevel: "medium",
+    cluster: "marche-cycles",
+    outline: [
+      "Définition d'une altseason",
+      "Conditions historiques (BTC dominance ↓, ETH/BTC ↑)",
+      "Indicateurs spécifiques (Altseason Index)",
+      "Catégories qui performent : L1, L2, DeFi, AI, RWA",
+      "Pièges : altcoins illiquides et rug pulls",
+      "Stratégie d'allocation altseason",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "trader-vs-dca-vs-hodl",
+      "bitcoin-vs-ethereum-differences-debutant-2026",
+      "staking-eth-vs-sol-vs-ada-2026",
+    ],
+  },
+  {
+    slug: "exchange-reserves-bitcoin-indicateur-2026",
+    title: "Exchange reserves Bitcoin : pourquoi cet indicateur est crucial en 2026",
+    category: "marche",
+    searchVolumeMo: 280,
+    competitionLevel: "low",
+    cluster: "marche-onchain",
+    outline: [
+      "Définition : balance BTC sur les exchanges centralisés",
+      "Pourquoi une baisse = signal bullish (supply shock)",
+      "Données 2020-2026 : tendance long terme",
+      "Effet ETF : transfert massif vers custody (Coinbase Prime)",
+      "Comparer aux flux mineurs et stablecoin supply",
+      "Limites : qualité des données par source",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "bitcoin-guide-complet-debutant-2026",
+      "trader-vs-dca-vs-hodl",
+    ],
+  },
+  {
+    slug: "correlation-bitcoin-nasdaq-or-2026",
+    title: "Bitcoin, Nasdaq, or : analyse de corrélation 2020-2026",
+    category: "marche",
+    searchVolumeMo: 380,
+    competitionLevel: "low",
+    cluster: "marche-correlations",
+    outline: [
+      "Méthodologie : coefficient de corrélation 90j",
+      "Phase risk-on (2020-2021) : BTC ↔ Nasdaq",
+      "Phase 2022-2023 : BTC suit le Fed",
+      "Phase 2024-2026 : émergence comme 'or numérique'",
+      "BTC vs or sur 5 ans (rendement, drawdown)",
+      "Implications pour l'allocation diversifiée",
+      "FAQ",
+    ],
+    internalLinksHints: [
+      "etf-bitcoin-spot-europe-2026-arbitrage",
+      "bitcoin-guide-complet-debutant-2026",
+      "trader-vs-dca-vs-hodl",
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Export                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export const SEO_TOPICS: SeoTopic[] = [
+  ...TOPICS_FISCALITE,
+  ...TOPICS_MICA,
+  ...TOPICS_SECURITE,
+  ...TOPICS_ACHETER,
+  ...TOPICS_COMPRENDRE,
+  ...TOPICS_MARCHE,
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Utilitaire de tri pour le picker                                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Ordre de priorité des niveaux de compétition (plus c'est petit, plus c'est prioritaire).
+ */
+const COMPETITION_PRIORITY: Record<CompetitionLevel, number> = {
+  low: 0,
+  medium: 1,
+  high: 2,
+};
+
+/**
+ * Trie une liste de topics par : compétition (low first) → volume desc.
+ * Utilisé par le picker du script weekly.
+ */
+export function sortTopicsByPriority(topics: SeoTopic[]): SeoTopic[] {
+  return [...topics].sort((a, b) => {
+    const compDiff =
+      COMPETITION_PRIORITY[a.competitionLevel] -
+      COMPETITION_PRIORITY[b.competitionLevel];
+    if (compDiff !== 0) return compDiff;
+    return b.searchVolumeMo - a.searchVolumeMo;
+  });
+}

@@ -6,6 +6,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 export const metadata: Metadata = {
   title: "Convertisseur crypto temps réel — BTC, ETH, SOL en EUR/USD",
@@ -167,6 +168,13 @@ export default function ConvertisseurPage() {
               ))}
             </div>
           </div>
+
+          {/* Maillage interne — graphe sémantique cross-clusters */}
+          <RelatedPagesNav
+            currentPath="/outils/convertisseur"
+            limit={4}
+            variant="default"
+          />
         </div>
       </section>
     </>
