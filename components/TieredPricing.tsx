@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Check, Sparkles, type LucideIcon } from "lucide-react";
 
@@ -9,14 +7,17 @@ import { Check, Sparkles, type LucideIcon } from "lucide-react";
  * Utilisé sur :
  *  - /sponsoring (offres B2B)
  *  - /pro (plans abonnement)
+ *  - /ambassadeurs (3 paliers)
  *
- * Pourquoi un seul composant pour deux usages différents :
+ * Pourquoi un seul composant pour 3 usages différents :
  *  - Même grille visuelle (1 colonne mobile, n colonnes desktop).
  *  - Même logique de "highlight" sur 1 plan (ring or + ombre dorée).
  *  - Même CTA (Link interne ou ancre selon le préfixe `#` ou `/`).
  *
- * On garde côté client à cause de l'usage de Link et des classNames
- * dynamiques — pas de Server Action ici.
+ * Server Component (pas de "use client") — les pages parents passent des
+ * `Icon: LucideIcon` (fonctions) en props. RSC interdit le passage de
+ * fonctions vers un Client Component, donc on reste serveur (pas besoin
+ * d'état ni de handler — Link/anchor/lucide fonctionnent côté serveur).
  */
 
 export interface PricingTier {
