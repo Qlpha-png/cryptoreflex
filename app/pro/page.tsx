@@ -27,6 +27,15 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 
+/* -------------------------------------------------------------------------- */
+/*  Constantes pricing (read once via env, hoisted pour metadata)             */
+/* -------------------------------------------------------------------------- */
+// Hoist au top : ces constantes sont utilisées dans `metadata` ET dans
+// `buildTiers()`. Plus simple de les déclarer une seule fois ici.
+const META_EARLYBIRD_PRICE = process.env.NEXT_PUBLIC_PRO_EARLYBIRD_PRICE ?? "49 €";
+const META_MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "9 €";
+const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "79 €";
+
 /**
  * /pro — landing page Cryptoreflex Pro.
  *
@@ -72,12 +81,12 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Cryptoreflex Pro — calculateur fiscal, portfolio et alertes premium",
   description:
-    "Cryptoreflex Pro à 9 €/mois ou 79 €/an : calculateur fiscalité PRO (export Cerfa 2086 + 3916-bis), alertes prix illimitées, portfolio PRO, glossaire expert, brief hebdomadaire alpha + réponse fiscale perso 48h. Précommande early-bird 49 €/an.",
+    `Cryptoreflex Pro à ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : calculateur fiscalité PRO (export Cerfa 2086 + 3916-bis), alertes prix illimitées, portfolio PRO, glossaire expert, brief hebdomadaire alpha + réponse fiscale perso 48h. Early-bird ${META_EARLYBIRD_PRICE} la 1re année.`,
   alternates: { canonical: `${BRAND.url}/pro` },
   openGraph: {
     title: "Cryptoreflex Pro — l'abonnement crypto premium FR",
     description:
-      "9 €/mois ou 79 €/an. Calculateur PRO + Cerfa 2086 prêt-à-imprimer, alertes illimitées, portfolio multi-comptes, réponse fiscale perso 48h. Stripe arrive automne 2026.",
+      `${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an. Calculateur PRO + Cerfa 2086 prêt-à-imprimer, alertes illimitées, portfolio multi-comptes, réponse fiscale perso 48h. Early-bird ${META_EARLYBIRD_PRICE} la 1re année.`,
     url: `${BRAND.url}/pro`,
     type: "website",
   },
@@ -88,9 +97,38 @@ export const metadata: Metadata = {
 /*  Plans                                                                     */
 /* -------------------------------------------------------------------------- */
 
-// Stripe Payment Link early-bird — fallback vers waitlist si non configuré.
+/**
+ * Stripe Payment Links — 3 produits potentiels.
+ *
+ * Chaque variable peut être :
+ *   - Une URL https://buy.stripe.com/xxxxx (Payment Link configuré → vrai prix EUR)
+ *   - Absente / vide → fallback vers le early-bird (ou waitlist si même early-bird absent)
+ *
+ * Configuration Vercel (Production scope) :
+ *   NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK = https://buy.stripe.com/xxx (early-bird 49€)
+ *   NEXT_PUBLIC_PRO_MONTHLY_STRIPE_LINK   = https://buy.stripe.com/yyy (mensuel récurrent)
+ *   NEXT_PUBLIC_PRO_ANNUAL_STRIPE_LINK    = https://buy.stripe.com/zzz (annuel récurrent)
+ *
+ * Prix configurables aussi (au cas où l'utilisateur change ses tarifs Stripe) :
+ *   NEXT_PUBLIC_PRO_EARLYBIRD_PRICE = "49 €" (défaut)
+ *   NEXT_PUBLIC_PRO_MONTHLY_PRICE   = "9 €" (défaut, peut être "9,99 €")
+ *   NEXT_PUBLIC_PRO_ANNUAL_PRICE    = "79 €" (défaut, peut être "79,99 €")
+ */
 const EARLYBIRD_LINK =
   process.env.NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK ?? "#waitlist";
+const MONTHLY_LINK =
+  process.env.NEXT_PUBLIC_PRO_MONTHLY_STRIPE_LINK ?? EARLYBIRD_LINK;
+const ANNUAL_LINK =
+  process.env.NEXT_PUBLIC_PRO_ANNUAL_STRIPE_LINK ?? EARLYBIRD_LINK;
+
+/** Prix affichés (alias des constantes hoistées en haut du fichier). */
+const EARLYBIRD_PRICE = META_EARLYBIRD_PRICE;
+const MONTHLY_PRICE = META_MONTHLY_PRICE;
+const ANNUAL_PRICE = META_ANNUAL_PRICE;
+
+/** Détecte si une URL Payment Link spécifique est configurée (vs fallback). */
+const MONTHLY_HAS_OWN_LINK = (process.env.NEXT_PUBLIC_PRO_MONTHLY_STRIPE_LINK ?? "").startsWith("http");
+const ANNUAL_HAS_OWN_LINK = (process.env.NEXT_PUBLIC_PRO_ANNUAL_STRIPE_LINK ?? "").startsWith("http");
 
 /**
  * Mode "paiements activés" :
@@ -153,9 +191,10 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       name: "Pro Mensuel",
       badge: paymentsEnabled ? "Le plus populaire" : "À venir",
       Icon: Crown,
-      // Pas de prix EUR affiché tant que Stripe n'est pas connecté
-      // (protection commerce loyal, voir constante PAYMENTS_ENABLED).
-      price: paymentsEnabled ? "9 €" : "Bientôt",
+      // Prix EUR + CTA conditionnels sur PAYMENTS_ENABLED + URL spécifique du plan.
+      // Si l'utilisateur a configuré NEXT_PUBLIC_PRO_MONTHLY_STRIPE_LINK,
+      // on pointe vers le checkout récurrent dédié. Sinon fallback vers early-bird.
+      price: paymentsEnabled ? MONTHLY_PRICE : "Bientôt",
       priceUnit: paymentsEnabled ? "/ mois" : "tarif indicatif à venir",
       description:
         "Pour les investisseurs sérieux qui veulent l'outillage complet sans engagement annuel.",
@@ -171,12 +210,16 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         "Annulation 1 clic",
       ],
       ctaLabel: paymentsEnabled
-        ? "Précommander early-bird 49 €"
+        ? MONTHLY_HAS_OWN_LINK
+          ? `S'abonner — ${MONTHLY_PRICE}/mois`
+          : `Précommander early-bird ${EARLYBIRD_PRICE}`
         : "Rejoindre la liste d'attente",
-      ctaHref: paymentsEnabled ? EARLYBIRD_LINK : "#waitlist",
+      ctaHref: paymentsEnabled ? MONTHLY_LINK : "#waitlist",
       highlight: true,
       availability: paymentsEnabled
-        ? "Stripe — automne 2026"
+        ? MONTHLY_HAS_OWN_LINK
+          ? "Disponible — paiement immédiat"
+          : "Early-bird en attendant le mensuel"
         : "Liste d'attente ouverte",
     },
     {
@@ -184,7 +227,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       name: "Pro Annuel",
       badge: paymentsEnabled ? "Économie 33 %" : "À venir",
       Icon: Crown,
-      price: paymentsEnabled ? "79 €" : "Bientôt",
+      price: paymentsEnabled ? ANNUAL_PRICE : "Bientôt",
       priceUnit: paymentsEnabled ? "/ an" : "tarif indicatif à venir",
       description:
         "Tout le plan mensuel avec 29 € d'économie sur l'année + accès anticipé aux nouvelles features.",
@@ -196,11 +239,15 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         "Statut « Founding member » + accès direct au fondateur",
       ],
       ctaLabel: paymentsEnabled
-        ? "Précommander early-bird 49 €"
+        ? ANNUAL_HAS_OWN_LINK
+          ? `S'abonner — ${ANNUAL_PRICE}/an`
+          : `Précommander early-bird ${EARLYBIRD_PRICE}`
         : "Rejoindre la liste d'attente",
-      ctaHref: paymentsEnabled ? EARLYBIRD_LINK : "#waitlist",
+      ctaHref: paymentsEnabled ? ANNUAL_LINK : "#waitlist",
       availability: paymentsEnabled
-        ? "Stripe — automne 2026"
+        ? ANNUAL_HAS_OWN_LINK
+          ? "Disponible — paiement immédiat"
+          : "Early-bird en attendant l'annuel"
         : "Liste d'attente ouverte",
     },
   ];
