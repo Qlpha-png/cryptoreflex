@@ -26,7 +26,12 @@ export const CRYPTO_LOGOS: Record<string, string> = {
   binancecoin: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
   solana: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
   "usd-coin": "https://assets.coingecko.com/coins/images/6319/large/usdc.png",
-  cardano: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
+  // Bug UX 26-04 — l'utilisateur a remonté que le logo CoinGecko de Cardano
+  // (PNG bleu avec motif "vague") ressemble à un globe terrestre à petite taille
+  // (~32-40 px en card). On bascule sur cryptologos.cc qui sert le SVG officiel
+  // IOHK avec un meilleur contraste / lisibilité. CDN déjà whitelisté dans
+  // next.config.js (img-src + remotePatterns).
+  cardano: "https://cryptologos.cc/logos/cardano-ada-logo.svg",
   dogecoin: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png",
   tron: "https://assets.coingecko.com/coins/images/1094/large/tron-logo.png",
   "avalanche-2": "https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png",

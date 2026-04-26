@@ -12,6 +12,10 @@ const NAV = [
   { href: "/analyses-techniques", label: "Analyses TA", desc: "RSI, MACD, niveaux clés top 5" },
   { href: "/academie", label: "Académie", desc: "Parcours certifiants gratuits" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
+  // Bug UX 26-04 — le quiz "trouve ta plateforme" était caché dans /quiz/plateforme
+  // sans aucune entrée nav. Ajout d'un item dédié entre Outils et Blog (catégorie
+  // naturelle : c'est un outil d'aide à la décision).
+  { href: "/quiz/plateforme", label: "Quiz", desc: "Trouve ta plateforme idéale en 5 questions" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses" },
   { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
 ];

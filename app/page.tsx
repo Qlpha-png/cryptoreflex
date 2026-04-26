@@ -23,6 +23,7 @@ import PlatformsSection from "@/components/PlatformsSection";
 import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
 import NewsTickerServer from "@/components/NewsTickerServer";
+import QuizPromo from "@/components/QuizPromo";
 import NewsBar from "@/components/NewsBar";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
@@ -248,6 +249,10 @@ export default async function HomePage() {
           Outils et marché
         </h2>
         <ToolsTeaser />
+        {/* QuizPromo : ajout 26/04/2026 — feedback utilisateur "Le quizz et caché
+            dur de le trouver il faut une catégorie". On le place dans la cat
+            "Outils" car c'est un outil interactif d'aide à la décision. */}
+        <QuizPromo />
         <MarketTable limit={10} />
       </section>
 
