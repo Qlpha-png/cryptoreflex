@@ -206,13 +206,105 @@ const RELATED_LINKS = {
   ],
 };
 
-function rewriteTitle(rawTitle) {
-  let t = rawTitle
+/**
+ * Heuristique langue : compare marqueurs FR vs EN explicites. Les loanwords
+ * crypto neutres (bitcoin, halving, usdc, etc.) sont ignorés. Un titre est
+ * EN seulement si markersEN >= 2 ET markersEN > markersFR — sinon les
+ * titres FR avec termes crypto anglais étaient faux-positifs (signalé
+ * utilisateur 26/04/2026 quand le rewriter déterministe sortait des titres
+ * EN bruts en prod).
+ */
+function looksEnglish(text) {
+  if (!text) return false;
+  const words = text
+    .toLowerCase()
+    .replace(/[^\p{L}\s]/gu, " ")
+    .split(/\s+/)
+    .filter((w) => w.length >= 2);
+  if (words.length < 4) return false;
+
+  const ENGLISH = new Set([
+    "the", "and", "for", "with", "from", "that", "this", "have", "has", "are", "was", "were",
+    "been", "their", "there", "what", "when", "where", "which", "buys", "buy", "sells", "sell",
+    "leads", "push", "contain", "fallout", "exploit", "rates", "rate", "money", "his", "her",
+    "our", "out", "into", "over", "under", "after", "before", "another", "between", "during",
+    "year", "month", "week", "days", "billion", "million", "trillion", "founder", "company",
+    "report", "reports", "raises", "raised", "soldier", "blocked", "bets", "case", "ruling",
+    "court", "judge", "lawsuit", "sues", "settles", "files", "filing", "approved",
+    "denies", "rejected", "agrees", "agree", "sign", "signed", "buying", "selling", "holding",
+    "amid", "while", "across", "against", "than",
+  ]);
+  const FRENCH = new Set([
+    "le", "la", "les", "des", "un", "une", "et", "ou", "mais", "donc", "car", "ni",
+    "est", "sont", "été", "était", "sera", "fait", "faire", "avoir", "être",
+    "pour", "par", "sur", "dans", "avec", "sans", "sous", "vers", "chez", "entre",
+    "qui", "que", "quoi", "dont", "où", "comment", "pourquoi", "quand", "quel",
+    "ce", "cette", "ces", "son", "sa", "ses", "leur", "leurs", "notre", "nos",
+    "très", "plus", "moins", "trop", "bien", "mal", "déjà", "encore",
+    "jour", "semaine", "mois", "année", "depuis", "après", "avant",
+    "marché", "régulation", "fiscalité", "déclaration", "investisseur",
+  ]);
+
+  let englishCount = 0;
+  let frenchCount = 0;
+  for (const w of words) {
+    if (ENGLISH.has(w)) englishCount++;
+    if (FRENCH.has(w)) frenchCount++;
+  }
+  return englishCount >= 2 && englishCount > frenchCount;
+}
+
+/**
+ * Génère un titre 100 % FR depuis catégorie + mots-clés détectés.
+ * Utilisé quand le titre source est en anglais ET qu'on est en fallback
+ * déterministe (LLM indisponible).
+ */
+function generateFrenchTitle(raw, category) {
+  const date = new Date(TODAY).toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  const kw = (raw.matchedKeywords || []).slice(0, 2).filter(Boolean);
+
+  const templates = {
+    "Régulation": [
+      `Régulation crypto : nouvelle actualité ${kw[0] ? `sur ${kw[0].toUpperCase()}` : "à suivre"} (${date})`,
+      `Actualité MiCA et régulation crypto du ${date}${kw[0] ? ` — focus ${kw[0].toUpperCase()}` : ""}`,
+    ],
+    "Technologie": [
+      `Innovation crypto : ${kw[0] ? `mise à jour ${kw[0].toUpperCase()} ` : ""}à connaître (${date})`,
+      `Tech crypto du ${date} — actualité ${kw[0] ? kw[0].toUpperCase() : "blockchain"}`,
+    ],
+    "Plateformes": [
+      `Plateformes crypto : ${kw[0] ? `actualité ${kw[0].toUpperCase()} ` : "info marché "}du ${date}`,
+      `Mouvements exchanges crypto — ${date}${kw[0] ? ` (${kw[0].toUpperCase()})` : ""}`,
+    ],
+    "Marché": [
+      `Marché crypto du ${date} — ${kw[0] ? `actualité ${kw[0].toUpperCase()}` : "tendances à analyser"}`,
+      `Tendances crypto ${date} : ${kw[0] ? `focus ${kw[0].toUpperCase()}` : "panorama du marché"}`,
+    ],
+  };
+  const list = templates[category] || templates["Marché"];
+  // Choix déterministe basé sur la longueur du title source (pas de Math.random pour reproductibilité tests)
+  const idx = (raw.title?.length || 0) % list.length;
+  let t = list[idx];
+  const suffix = " — analyse Cryptoreflex";
+  if (t.length + suffix.length > 110) t = t.slice(0, 110 - suffix.length - 3) + "...";
+  return t + suffix;
+}
+
+function rewriteTitle(rawTitle, raw, category) {
+  let t = (rawTitle || "")
     .replace(/^[\s—–\-•]+/, "")
     .replace(/\s*[–—|]\s*(CoinTelegraph|Decrypt|CryptoSlate).*$/i, "")
     .replace(/^(BREAKING|JUST IN|UPDATE|EXCLUSIVE)\s*[:\-–]\s*/i, "")
     .replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\s*/u, "")
     .trim();
+
+  // Si la source est en anglais, on remplace par un titre FR généré
+  // (sans LLM on ne peut pas traduire fidèlement — mieux vaut un titre
+  // générique 100 % FR qu'un titre EN qui décrédibilise le site).
+  if (looksEnglish(t) && raw && category) {
+    return generateFrenchTitle(raw, category);
+  }
+
   if (!t) t = "Actualité crypto";
   t = t.charAt(0).toUpperCase() + t.slice(1);
   const suffix = " — analyse Cryptoreflex";
@@ -247,38 +339,54 @@ ${raw.matchedKeywords.slice(0, 5).map((k) => `  - "${k}"`).join("\n")}
 function rewriteNewsDeterministic(raw) {
   const fullText = `${raw.title} ${raw.description}`;
   const category = inferCategory(fullText);
-  const title = rewriteTitle(raw.title);
+  // 26/04/2026 fix : rewriteTitle reçoit maintenant raw + category pour pouvoir
+  // générer un titre FR si la source est en anglais (cas Decrypt / CoinDesk EN).
+  const title = rewriteTitle(raw.title, raw, category);
   const slugBase = slugify(raw.title);
   const slug = `${TODAY}-${slugBase}`;
-  const description = `Analyse Cryptoreflex : ${raw.title.slice(0, 70).replace(/\.+$/, "")}. Décryptage ${category} pour les investisseurs français.`.slice(0, 160);
+
+  // Description toujours FR (avant on pastait raw.title qui pouvait être EN).
+  const dateFr = new Date(TODAY).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const description = `Actualité ${category.toLowerCase()} crypto du ${dateFr} — analyse Cryptoreflex pour les investisseurs français. Source originale : ${raw.source}.`.slice(0, 160);
 
   const links = RELATED_LINKS[category] ?? RELATED_LINKS["Marché"];
   const linksMd = links.slice(0, 4).map((l) => `- [${l.label}](/blog/${l.slug})`).join("\n");
 
-  const body = `## ${title.replace(" — analyse Cryptoreflex", "")}
+  // 26/04/2026 fix : on ne paste plus raw.description (souvent en anglais).
+  // Le body est 100% FR avec un lien vers la source pour le détail original.
+  const body = `## Ce qu'il s'est passé
 
-${raw.description.slice(0, 250).replace(/[<>]/g, "")}.
+Une actualité crypto vient d'être publiée par **${raw.source}** le ${dateFr}, classée dans la catégorie « ${category} » par notre système d'analyse automatique.
 
-## Les faits clés
+> Le détail factuel complet est disponible sur la source originale ci-dessous. Cet article fournit un éclairage Cryptoreflex pour les investisseurs francophones.
+
+## Pourquoi ça nous concerne en France
+
+Cette actualité s'inscrit dans le contexte plus large du marché crypto français en 2026, particulièrement marqué par :
+
+- L'application de **MiCA Phase 2** (1er juillet 2026) qui redéfinit les règles d'opération des plateformes en zone UE.
+- La transmission automatique des données utilisateurs des exchanges UE à la DGFiP (**directive DAC8**).
+- L'évolution constante de la doctrine BOFIP sur la fiscalité crypto (PFU 30 %, formulaire 2086, déclaration 3916-bis).
+
+Les actualités de la catégorie « ${category} » impactent directement les choix de plateforme, de produits financiers et de stratégie fiscale des investisseurs français.
+
+## Les points-clés à retenir
 
 - **Catégorie** : ${category}
 - **Source** : ${raw.source}
-- **Mots-clés détectés** : ${raw.matchedKeywords.slice(0, 4).join(", ")}
+- **Mots-clés détectés** : ${(raw.matchedKeywords || []).slice(0, 4).join(", ") || "aucun mot-clé spécifique"}
+- **Date de publication** : ${dateFr}
 
-## Ce qu'il faut retenir
-
-Cette actualité s'inscrit dans le contexte plus large du marché crypto français en 2026, particulièrement marqué par l'application de MiCA Phase 2 (1er juillet 2026) et l'évolution de la fiscalité des actifs numériques.
-
-## Pour aller plus loin
+## Pour aller plus loin sur Cryptoreflex
 
 ${linksMd}
 
 ---
 
-> **Source originale** : [${raw.source}](${raw.sourceUrl}) — communication publique reformulée par Cryptoreflex.
+> **Source originale** : [${raw.source}](${raw.sourceUrl}) — lien direct vers l'article publié par la source. La traduction et l'analyse française détaillée seront ajoutées prochainement (rewriter LLM en cours d'optimisation).
 
 <Callout type="warning" title="Avertissement">
-Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital.
+Cet article est une synthèse automatique à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital. Vérifie toujours les informations à la source avant toute décision.
 </Callout>
 `;
 

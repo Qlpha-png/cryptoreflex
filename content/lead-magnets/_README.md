@@ -15,6 +15,12 @@ Pourquoi séparer source Markdown / PDF compilé ?
 | `bible-fiscalite-crypto-2026.md` | `bible-fiscalite-crypto-2026.pdf` | 30 | À générer |
 | `checklist-declaration-crypto-2026.md` | `checklist-declaration-crypto-2026.pdf` | 1 | À générer |
 | `glossaire-fiscal-crypto.md` | `glossaire-fiscal-crypto.pdf` | 8 | À générer |
+| `guide-plateformes-crypto-2026.md` | `guide-plateformes-crypto-2026.pdf` | ~50 | À générer |
+
+> **Note** : `guide-plateformes-crypto-2026.md` est généré automatiquement par
+> `scripts/_assemble-guide-plateformes.mjs` à partir de 2 fichiers source
+> (`-PART-A.md` et `-PART-B.md`). Modifier les sources, puis relancer le script
+> avant de regénérer le PDF.
 
 ## Comment générer les PDF
 

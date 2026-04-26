@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Newspaper, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
 import { NEWS_CATEGORY_LABELS, NEWS_CATEGORY_SLUGS } from "@/lib/news-types";
 import { formatRelativeFr } from "@/lib/news-aggregator";
@@ -48,9 +48,14 @@ export default function NewsCard({ news }: Props) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-elevated
                  transition-all duration-fast hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2"
     >
-      {/* Cover */}
+      {/* Cover. Avant 26/04/2026 toutes les news utilisaient `/og-default.png`
+          (gradient orange générique) ce qui rendait les cards visuellement
+          identiques. On préfère désormais l'OG image dynamique par slug
+          (app/actualites/[slug]/opengraph-image.tsx) qui embarque titre +
+          catégorie + source + date — chaque card est unique. Si l'article a
+          une `image` non-default, on l'utilise (cas sponso/featured). */}
       <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${gradient}`}>
-        {news.image ? (
+        {news.image && news.image !== "/og-default.png" ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={news.image}
@@ -60,9 +65,14 @@ export default function NewsCard({ news }: Props) {
             className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <Newspaper className="h-12 w-12 text-white/40" aria-hidden="true" />
-          </div>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`/actualites/${news.slug}/opengraph-image`}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+          />
         )}
 
         {/* Badge catégorie en overlay */}

@@ -184,6 +184,14 @@ export const metadata: Metadata = {
    * apple-touch-icon : iOS Safari l'utilise pour "Ajouter à l'écran d'accueil".
    */
   icons: {
+    // Favicon onglet navigateur — sans cette ligne explicite, déclarer apple/other
+    // SUPPRIME l'auto-discovery de app/icon.svg + app/icon.tsx => onglet montre
+    // l'icône globe par défaut. On force le pointage vers les 2 sources.
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: [{ url: "/icon.svg" }],
     apple: [
       { url: "/icons/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" },
     ],
