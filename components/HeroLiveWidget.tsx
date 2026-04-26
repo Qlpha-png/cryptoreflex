@@ -111,6 +111,7 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
             width={28}
             height={28}
             className="rounded-full"
+            sizes="28px"
             unoptimized
           />
         ) : (

@@ -79,6 +79,7 @@ export default function GainerLoserList({
                     height={28}
                     className="rounded-full shrink-0"
                     loading="lazy"
+                    sizes="28px"
                     unoptimized
                   />
                 ) : (

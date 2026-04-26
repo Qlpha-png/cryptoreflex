@@ -41,9 +41,10 @@ export const dynamic = "force-dynamic";
  * dont le bust est cohérent avec l'usage légitime.
  */
 const ALLOWED_TAGS = new Set([
-  "articles", // tous les articles MDX (lib/mdx.ts)
-  "cryptos",  // data/cryptos.json + dérivés
-  "rss",      // flux RSS aggregator (lib/news-aggregator.ts)
+  "articles",         // tous les articles MDX (lib/mdx.ts)
+  "cryptos",          // data/cryptos.json + dérivés
+  "rss",              // alias historique du flux RSS aggregator
+  "news-aggregated",  // tag réel utilisé par lib/news-aggregator.ts (audit Perf 26-04)
 ]);
 
 const PATH_REGEX = /^\/[a-z0-9\-/_\[\]]+$/i;

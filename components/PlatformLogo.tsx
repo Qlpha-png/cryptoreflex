@@ -91,6 +91,7 @@ export default function PlatformLogo({
       className={baseClass}
       priority={priority}
       loading={priority ? undefined : "lazy"}
+      sizes={`${size}px`}
       unoptimized
     />
   );

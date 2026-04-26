@@ -40,6 +40,7 @@ const ALLOWED_SOURCES: ReadonlySet<SubscribeSource> = new Set<SubscribeSource>([
   "footer",
   "blog-cta",
   "pro-waitlist",
+  "quiz-exchange",
   "unknown",
 ]);
 
