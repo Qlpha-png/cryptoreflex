@@ -18,8 +18,6 @@ import {
   BookOpen,
   X,
   CornerDownLeft,
-  ArrowUp,
-  ArrowDown,
 } from "lucide-react";
 // IMPORTANT : importer depuis `lib/search-client` (pur, zéro Node) et NON
 // depuis `lib/search` qui pull `lib/mdx.ts` (node:fs + node:path) → casse
@@ -457,21 +455,15 @@ export default function CommandPalette() {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-border/60 bg-background/60 px-4 py-2 text-[11px] text-muted hidden sm:flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Hint icon={<ArrowUp className="h-3 w-3" />} label="Naviguer" />
-            <Hint icon={<ArrowDown className="h-3 w-3" />} label="" />
-            <Hint
-              icon={<CornerDownLeft className="h-3 w-3" />}
-              label="Ouvrir"
-            />
-            <Hint label="Esc" textOnly>
-              Fermer
-            </Hint>
-          </div>
-          <span>Cryptoreflex Search</span>
-        </div>
+        {/*
+          User feedback 26/04/2026 : "Faut enlever ça dans la barre recherche
+          dynamique, j'aime quand tu fais les choses dynamique au faite".
+          Le footer keyboard hints faisait DOUBLON avec la section "Raccourcis"
+          du EmptyState (visible juste au-dessus quand pas de query). Retire.
+          Quand il y a des résultats, l'utilisateur n'a pas besoin de rappel —
+          le hover state + aria-selected + l'auto-scroll de l'item actif font
+          le job dynamiquement.
+        */}
       </div>
     </div>
   );
@@ -480,35 +472,10 @@ export default function CommandPalette() {
 /* -------------------------------------------------------------------------- */
 /*  Sub-components                                                            */
 /* -------------------------------------------------------------------------- */
-
-function Hint({
-  icon,
-  label,
-  textOnly,
-  children,
-}: {
-  icon?: React.ReactNode;
-  label?: string;
-  textOnly?: boolean;
-  children?: React.ReactNode;
-}) {
-  return (
-    <span className="inline-flex items-center gap-1">
-      {icon && (
-        <kbd className="inline-flex items-center justify-center h-5 min-w-[20px] rounded border border-border/60 bg-elevated px-1 text-muted">
-          {icon}
-        </kbd>
-      )}
-      {textOnly && label && (
-        <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded border border-border/60 bg-elevated text-[10px] text-muted">
-          {label}
-        </kbd>
-      )}
-      {label && !textOnly && <span>{label}</span>}
-      {children && <span>{children}</span>}
-    </span>
-  );
-}
+// Note : la fonction Hint() qui rendait des kbd décoratifs dans le footer a
+// été retirée le 26/04/2026 (user feedback : "Faut enlever ça… j'aime quand
+// tu fais les choses dynamique"). Les raccourcis clavier restent visibles
+// uniquement dans EmptyState (4ème section avec kbd, plus jolie).
 
 const SUGGESTIONS: Array<{ q: string; label: string }> = [
   { q: "binance", label: "Binance" },
