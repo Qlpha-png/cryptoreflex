@@ -109,7 +109,9 @@ export default function Navbar() {
         niveau racine du composant), donc fixed = relative au viewport. */}
     <header
       role="banner"
-      className="sticky top-0 z-50 backdrop-blur-xl bg-background/75 border-b border-border/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04),0_1px_24px_-12px_rgba(0,0,0,0.45)]"
+      // Audit Block 2 26/04/2026 (Agent perf) : backdrop-blur-md au lieu de
+      // backdrop-blur-xl pour reduire le coût GPU sticky (~8-15ms/frame mobile).
+      className="sticky top-0 z-50 backdrop-blur-md bg-background/85 border-b border-border/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04),0_1px_24px_-12px_rgba(0,0,0,0.45)]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -259,6 +261,7 @@ export default function Navbar() {
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={open}
             aria-controls="mobile-menu"
+            aria-haspopup="dialog"
           >
             {open ? (
               <X className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" />

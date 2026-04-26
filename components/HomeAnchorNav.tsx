@@ -92,7 +92,9 @@ export default function HomeAnchorNav() {
   return (
     <nav
       aria-label="Navigation interne de la page"
-      className="sticky top-16 z-30 bg-background/85 backdrop-blur-xl border-b border-border/60 shadow-[0_4px_16px_-12px_rgba(0,0,0,0.4)]"
+      // Audit Block 2 26/04/2026 (Agent perf) : backdrop-blur-md (vs xl)
+      // pour reduire stack GPU sticky -> nav scroll plus fluide mobile.
+      className="sticky top-16 z-30 bg-background/85 backdrop-blur-md border-b border-border/60 shadow-[0_4px_16px_-12px_rgba(0,0,0,0.4)]"
     >
       {/* Audit visuel mobile 26/04/2026 : avant le inner flex sans `w-full` +
           `min-w-0` propageait sa largeur intrinsèque (1394px avec 6 chips)
@@ -108,7 +110,7 @@ export default function HomeAnchorNav() {
                 key={chip.href}
                 type="button"
                 onClick={() => handleClick(chip.href)}
-                aria-current={isActive ? "true" : undefined}
+                aria-current={isActive ? "location" : undefined}
                 className={`group inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-fast snap-start whitespace-nowrap
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                            ${

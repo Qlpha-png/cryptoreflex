@@ -73,7 +73,10 @@ export default function MobileBottomNav() {
       // full-screen donc pas de conflit visuel possible.
       // bg-background/95 + backdrop-blur-xl pour la lisibilité au-dessus du
       // contenu défilant (mêmes tokens que la navbar).
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-xl"
+      // Audit Block 2 26/04/2026 (Agent perf) : backdrop-blur-xl x3 (Navbar +
+      // HomeAnchorNav + MobileBottomNav) coûte ~8-15ms/frame sur Android
+      // mid-range. backdrop-blur-md = qualité visuelle preserved, gain perf.
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-md"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="flex items-stretch justify-around">
@@ -97,22 +100,23 @@ export default function MobileBottomNav() {
                 ].join(" ")}
               >
                 {/*
-                  Indicator dot gold au-dessus de l'icône — signale visuellement
-                  l'onglet actif sans dépendre uniquement de la couleur (a11y).
-                  Reservation d'espace via h-1 (visible ou invisible) pour que
-                  les onglets ne sautent pas verticalement au changement.
+                  Audit Block 2 26/04/2026 (Agent visual + a11y) : avant dot 1×1px
+                  + label text-[10px] sous le seuil HIG 11pt. Maintenant : bar
+                  active 0.5×8 ABS top-0 (pattern Vercel mobile) + label text-[11px].
+                  Pour les daltoniens, la barre est plus visible que le dot.
                 */}
                 <span
                   aria-hidden="true"
                   className={[
-                    "h-1 w-1 rounded-full transition-opacity duration-fast",
+                    "absolute left-1/2 top-0 h-0.5 w-8 -translate-x-1/2 rounded-b transition-opacity duration-fast",
                     active ? "bg-primary opacity-100" : "opacity-0",
                   ].join(" ")}
                 />
                 <Icon className="h-5 w-5" aria-hidden="true" />
-                <span className="text-[10px] font-medium leading-none">
+                <span className="text-[11px] font-medium leading-none">
                   {label}
                 </span>
+                {active && <span className="sr-only"> (page active)</span>}
               </Link>
             </li>
           );
