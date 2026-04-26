@@ -101,12 +101,12 @@ export default function PlatformCard({ platform, placement }: Props) {
               <Star
                 key={i}
                 aria-hidden="true"
-                className={`h-3.5 w-3.5 ${
+                className={`h-4 w-4 ${
                   i < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "text-border"
                 }`}
               />
             ))}
-            <span className="ml-1 text-xs text-muted" aria-hidden="true">
+            <span className="ml-1 text-sm font-semibold text-fg" aria-hidden="true">
               {rating.toFixed(1)}/5
             </span>
           </div>

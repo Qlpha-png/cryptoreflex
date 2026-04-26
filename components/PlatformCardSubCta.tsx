@@ -36,15 +36,18 @@ export default function PlatformCardSubCta({ platformId, platformName }: Props) 
   };
 
   return (
+    {/* Audit Block 4 26/04/2026 (Agent mobile + a11y) :
+        - mt-2 -> mt-3, py-2 + min-h-[44px] : tap target WCAG 2.5.8 AA
+        - "Lire notre avis détaillé" -> "Voir l'avis" : 2x plus court, scannable */}
     <Link
       href={`/avis/${platformId}`}
       onClick={handleClick}
-      className="mt-2 inline-flex items-center justify-center gap-1 text-sm text-primary-soft hover:text-primary
+      className="mt-3 inline-flex w-full items-center justify-center gap-1 min-h-[44px] py-2 px-3 text-sm font-medium text-primary-soft hover:text-primary
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-                 focus-visible:ring-offset-background rounded transition-colors"
-      aria-label={`Lire notre avis détaillé sur ${platformName}`}
+                 focus-visible:ring-offset-background rounded-lg transition-colors hover:bg-elevated/40"
+      aria-label={`Voir l'avis détaillé de ${platformName}`}
     >
-      Lire notre avis détaillé
+      Voir l&apos;avis
       <ArrowRight className="h-[14px] w-[14px]" aria-hidden="true" />
     </Link>
   );

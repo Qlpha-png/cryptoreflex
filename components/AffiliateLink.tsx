@@ -125,7 +125,11 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
           href={href}
           target={target}
           rel={rel}
-          aria-label="Lien d'affiliation publicitaire"
+          // Audit Block 4 26/04/2026 (Agent a11y) : retire aria-label fixe qui
+          // ecrasait le texte visible (WCAG 2.5.3 Label-in-Name). Le sr-only
+          // "(publicite, lien d'affiliation, ouvre un nouvel onglet)" + le
+          // texte enfant suffisent. SR annonce maintenant "S'inscrire sur
+          // Coinbase, lien (publicite...)" au lieu de juste "Lien d'affiliation".
           // data-* pour debug & pour permettre des sélecteurs CSS/QA dédiés.
           data-affiliate-platform={platform}
           data-affiliate-placement={placement}
@@ -145,7 +149,7 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
         {showCaption && (
           <Link
             href="/transparence"
-            className="mt-1 block text-[10px] text-muted/70 hover:text-muted underline underline-offset-2"
+            className="mt-1 block text-xs text-muted hover:text-fg underline underline-offset-2"
             aria-label="En savoir plus sur nos liens d'affiliation et nos partenariats"
           >
             Publicité — Cryptoreflex perçoit une commission
