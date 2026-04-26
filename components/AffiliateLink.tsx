@@ -66,6 +66,10 @@ export interface AffiliateLinkProps
 /**
  * Best-effort : extrait le texte d'un ReactNode pour en faire un ctaText.
  * - Pour `<>S'inscrire <span>sur X</span><Icon/></>`, retourne "S'inscrire sur X".
+ * - Audit Block 4 RE-AUDIT 26/04/2026 (Agent Front #6) : SKIP les `<span class="sr-only">`
+ *   sinon le ctaText analytics contient l'aria-label (ex: "publicité, lien d'affiliation,
+ *   ouvre un nouvel onglet"). Polluait Plausible pour tous les consommateurs qui ne
+ *   passaient pas un `ctaText` explicite.
  * - Stoppé à 80 chars pour éviter de pousser un wording absurdement long.
  */
 function extractText(node: ReactNode): string {
@@ -75,10 +79,16 @@ function extractText(node: ReactNode): string {
   if (
     typeof node === "object" &&
     node !== null &&
-    "props" in node &&
-    typeof (node as { props?: { children?: ReactNode } }).props?.children !== "undefined"
+    "props" in node
   ) {
-    return extractText((node as { props: { children: ReactNode } }).props.children);
+    const props = (node as { props?: { className?: unknown; children?: ReactNode } }).props;
+    // Skip sr-only nodes (textes accessibility-only, pas conversion analytics)
+    if (typeof props?.className === "string" && props.className.includes("sr-only")) {
+      return "";
+    }
+    if (typeof props?.children !== "undefined") {
+      return extractText(props.children);
+    }
   }
   return "";
 }
@@ -100,13 +110,15 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     },
     ref
   ) {
-    // rel SEO conforme aux guidelines Google :
+    // rel SEO conforme aux guidelines Google + Audit Block 4 RE-AUDIT (Agent A11y V8) :
     //  - sponsored : lien monétisé / affiliation
     //  - nofollow  : doublon historique pour anciens crawlers
-    //  - noopener noreferrer : sécurité quand target=_blank
+    //  - noopener  : sécurité tabnabbing quand target=_blank
+    //  - PAS de `noreferrer` : casse l'attribution affiliation chez certains
+    //    partenaires (Binance, Kraken). Le tabnabbing reste prévenu par `noopener`.
     //  - ugc (optionnel) : contenu utilisateur
     const relParts = ["sponsored", "nofollow"];
-    if (target === "_blank") relParts.push("noopener", "noreferrer");
+    if (target === "_blank") relParts.push("noopener");
     if (ugc) relParts.push("ugc");
     const rel = relParts.join(" ");
 

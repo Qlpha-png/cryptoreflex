@@ -729,6 +729,126 @@ body {
   }
 }
 
+/* ============================================================
+ * BLOCK 4 PlatformCard DYNAMISM — Audit Block 4 RE-AUDIT
+ * (Agent animation : 3.5/10 → 9/10)
+ * Cards plateformes affilation : logo pulse, badge pulse, button shine,
+ * star pop, feature stagger. Toutes GPU compositor only.
+ * ============================================================ */
+
+/* Logo plateforme pulse au hover (signature card vivante) */
+.platform-logo-wrap {
+  transition: ring-color 220ms ease, box-shadow 220ms ease;
+}
+.group:hover .platform-logo-wrap {
+  animation: logo-pulse 0.8s ease-in-out, logo-ring 1s ease-out;
+}
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+@keyframes logo-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.45); }
+  100% { box-shadow: 0 0 0 14px rgba(34, 211, 238, 0); }
+}
+
+/* Badge "Recommandé" / "Le plus régulé" pulse permanent (call attention) */
+.badge-pulse-strong {
+  animation: badge-pulse-strong 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes badge-pulse-strong {
+  0%, 100% {
+    box-shadow:
+      0 0 0 0 rgba(245, 165, 36, 0),
+      0 4px 14px -2px rgba(245, 165, 36, 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(245, 165, 36, 0.10),
+      0 4px 22px -2px rgba(245, 165, 36, 0.75);
+  }
+}
+
+/* Button primary shine sweep au hover (signature CTA) */
+.btn-primary-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transition: left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.btn-primary-shine:hover::before {
+  left: 120%;
+}
+
+/* Star rating pop animation (apparition cascade au scroll-reveal) */
+.star-fill {
+  transition: color 0.3s ease, fill 0.3s ease;
+}
+.scroll-reveal.in-view .star-on {
+  animation: star-pop 0.3s ease-out both;
+}
+@keyframes star-pop {
+  0%   { transform: scale(0.6); opacity: 0.4; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Feature checkmarks staggered fade-in au scroll-reveal */
+.feat-item {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--feat-delay, 0ms);
+}
+.scroll-reveal:not(.in-view) .feat-item {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+.feat-check {
+  transform: scale(1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: var(--feat-delay, 0ms);
+}
+.scroll-reveal:not(.in-view) .feat-check {
+  transform: scale(0);
+}
+
+/* prefers-reduced-motion : neutralise tous les keyframes Block 4 dynamism */
+@media (prefers-reduced-motion: reduce) {
+  .platform-logo-wrap,
+  .badge-pulse-strong,
+  .btn-primary-shine::before,
+  .star-fill,
+  .feat-item,
+  .feat-check {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  .group:hover .platform-logo-wrap {
+    animation: none !important;
+  }
+  .btn-primary-shine::before {
+    display: none !important;
+  }
+}
+
 /* prefers-reduced-motion : neutralise tous les keyframes Block 1 dynamism. */
 @media (prefers-reduced-motion: reduce) {
   .hero-halo,

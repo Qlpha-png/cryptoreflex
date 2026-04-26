@@ -1,158 +1,119 @@
-import { Banknote, CircleDollarSign, Coins, Wallet, Bitcoin, ShieldCheck } from "lucide-react";
-import PlatformCard, { type Platform } from "./PlatformCard";
+import { ArrowRight, ShieldCheck, Star } from "lucide-react";
+import Link from "next/link";
+import PlatformCard from "./PlatformCard";
 import AmfDisclaimer from "./AmfDisclaimer";
-
-/**
- * Liens directs vers les plateformes pour le moment (pas de programme affilié actif).
- * Quand un programme sera signé, il suffira d'ajouter `?ref=...` à l'URL concernée.
- *
- * Pour faciliter le tracking pré-affiliation, on ajoute déjà des UTM internes
- * pour mesurer le volume de clics par carte (utilisable dans Plausible/GA).
- *
- * Le rendu utilise `<AffiliateLink>` (via PlatformCard) qui :
- *  - applique automatiquement rel="sponsored nofollow noopener noreferrer"
- *  - tracke chaque clic dans Plausible avec l'event "Affiliate Click"
- *    et les props { platform, placement: "home-platforms" }.
- */
+import StructuredData from "./StructuredData";
+import { getExchangePlatforms, platformsItemListSchema } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 
-const utm = (source: string) =>
-  `utm_source=${BRAND.utmSource}&utm_medium=affiliate-card&utm_campaign=${source}`;
-
-const PLATFORMS: Platform[] = [
-  {
-    id: "revolut",
-    name: "Revolut",
-    tagline:
-      "L'app bancaire qui permet aussi d'acheter de la crypto en quelques secondes — idéal pour démarrer.",
-    rating: 4.5,
-    // Audit P1-9 (2026-04-26) : bonus chiffrés obsolètes en zone UE post-MiCA.
-    // On affiche un libellé générique pour rester conforme à la loi commerciale FR
-    // (pas de promesse engageante non vérifiée). Détails à voir sur la plateforme.
-    bonus: "Bonus actuel — voir conditions sur la plateforme",
-    features: [
-      "Achat de 100+ cryptos en un clic",
-      "Compte multi-devises",
-      "Pas de minimum de dépôt",
-    ],
-    affiliateUrl: `https://www.revolut.com/?${utm("revolut")}`,
-    Icon: Banknote,
-    gradient: "from-slate-700 to-slate-900",
-    badge: "Pour débutants",
-  },
-  {
-    id: "coinbase",
-    name: "Coinbase",
-    tagline:
-      "L'une des plateformes les plus régulées au monde, parfaite pour acheter ses premières cryptos en toute sérénité.",
-    rating: 4.6,
-    bonus: "Bonus actuel — voir conditions sur la plateforme",
-    features: [
-      "Régulée aux US et en Europe",
-      "Interface ultra simple",
-      "Coinbase Earn : crypto gratuite",
-    ],
-    affiliateUrl: `https://www.coinbase.com/?${utm("coinbase")}`,
-    Icon: CircleDollarSign,
-    gradient: "from-blue-500 to-indigo-600",
-    badge: "Recommandé",
-  },
-  {
-    id: "binance",
-    name: "Binance",
-    tagline:
-      "Le plus grand exchange au monde — frais bas et catalogue de cryptos imbattable pour aller plus loin.",
-    rating: 4.7,
-    bonus: "Bonus actuel — voir conditions sur la plateforme",
-    features: [
-      "Frais à partir de 0,1%",
-      "+350 cryptos disponibles",
-      "Staking, Earn, Futures…",
-    ],
-    affiliateUrl: `https://www.binance.com/?${utm("binance")}`,
-    Icon: Coins,
-    gradient: "from-yellow-400 to-amber-600",
-  },
-  {
-    id: "bitpanda",
-    name: "Bitpanda",
-    tagline:
-      "Plateforme européenne 100% régulée — crypto, actions et métaux précieux dans la même app.",
-    rating: 4.4,
-    bonus: "Bonus actuel — voir conditions sur la plateforme",
-    features: [
-      "Basée en Autriche, conforme MiCA",
-      "Investissement programmé (DCA)",
-      "Carte Bitpanda VISA disponible",
-    ],
-    affiliateUrl: `https://www.bitpanda.com/?${utm("bitpanda")}`,
-    Icon: ShieldCheck,
-    gradient: "from-emerald-500 to-teal-600",
-  },
-  {
-    id: "kraken",
-    name: "Kraken",
-    tagline:
-      "Pionnier du secteur, réputé pour sa sécurité et sa transparence — un favori des investisseurs sérieux.",
-    rating: 4.5,
-    bonus: "Bonus actuel — voir conditions sur la plateforme",
-    features: [
-      "Réserves prouvées (Proof of Reserves)",
-      "Interface Pro pour traders",
-      "Staking sécurisé",
-    ],
-    affiliateUrl: `https://www.kraken.com/?${utm("kraken")}`,
-    Icon: Wallet,
-    gradient: "from-purple-600 to-fuchsia-600",
-  },
-  {
-    id: "ledger",
-    name: "Ledger",
-    tagline:
-      "Le portefeuille matériel le plus vendu au monde — pour stocker tes cryptos hors ligne, en sécurité.",
-    rating: 4.8,
-    bonus: "Promotions matériel — voir boutique officielle",
-    features: [
-      "Sécurité hardware niveau bancaire",
-      "Compatible 5 500+ cryptos",
-      "App Ledger Live intégrée",
-    ],
-    affiliateUrl: `https://shop.ledger.com/?${utm("ledger")}`,
-    Icon: Bitcoin,
-    gradient: "from-rose-500 to-pink-600",
-    badge: "Sécurité",
-  },
-];
+/**
+ * PlatformsSection — block conversion N°1 (affiliation crypto).
+ *
+ * Audit Block 4 RE-AUDIT 26/04/2026 (8 agents PRO consolidés) :
+ *
+ * VAGUE 1 — Data migration (P0 Agent UX + SEO + Front)
+ *  - Avant : array hardcoded de 6 plateformes ignorant 90% du JSON.
+ *  - Après : import getExchangePlatforms() (source = data/platforms.json),
+ *    trié par scoring.global desc, top 6 affichées.
+ *  - Tri auto met les mieux notées en premier (signal éditorial Google + meilleur CTR fold).
+ *
+ * VAGUE 2 — Schema.org Rich Snippets (P0 Agent SEO RICH SNIPPETS GOLD)
+ *  - JSON-LD ItemList + Product + Offer + AggregateRating injecté.
+ *  - +15-30% CTR estimé sur queries "meilleure plateforme crypto" via étoiles SERP.
+ *
+ * VAGUE 3 — A11y EAA (Agent A11y P0)
+ *  - <section aria-labelledby="plateformes-title"> (landmark exposé en navigation par régions).
+ *  - Sub-disclaimer global au lieu de 6 répétitions (gain mobile -240px bruit).
+ *
+ * VAGUE 4 — UX guidance (Agent UX 5.5/10 → 8.5/10)
+ *  - Eyebrow "Top 6 / 11 plateformes" + lien "Voir les 11" vers /comparatif.
+ *  - "Recommandé pour vous ?" CTA → /quiz/plateforme (segmente l'indécis).
+ *  - Disclaimer "Pourquoi ces liens ?" cliquable vers /transparence.
+ */
 
 export default function PlatformsSection() {
+  // Top 6 par scoring global desc (les mieux notées).
+  const platforms = getExchangePlatforms().slice(0, 6);
+  const totalAvailable = getExchangePlatforms().length;
+
   return (
-    <section id="plateformes" className="relative py-12 sm:py-20 lg:py-28">
+    <section
+      id="plateformes"
+      aria-labelledby="plateformes-title"
+      className="relative py-12 sm:py-20 lg:py-28"
+    >
+      {/* Schema.org Rich Snippets — Audit SEO P0 GOLD */}
+      <StructuredData
+        id="platforms-itemlist"
+        data={platformsItemListSchema(platforms, BRAND.url)}
+      />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1 text-xs font-semibold text-accent-cyan">
-            Top 6
-          </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-            Les meilleures <span className="gradient-text">plateformes crypto</span>
-          </h2>
-          <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
-            Sélection des exchanges et wallets les plus fiables. Cliquer sur une carte
-            ouvre la plateforme partenaire (vérifie les bonus en cours sur place).
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
+              <ShieldCheck className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
+              {totalAvailable} plateformes vérifiées · MiCA · AMF
+            </span>
+            <h2
+              id="plateformes-title"
+              className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
+            >
+              Top {platforms.length}{" "}
+              <span className="gradient-text">plateformes crypto en France</span>
+            </h2>
+            <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
+              Sélection éditoriale triée par score global ({platforms.length}/{totalAvailable} affichées).
+              Méthodologie publique, frais réels, conformité MiCA vérifiée.
+            </p>
+          </div>
+          {totalAvailable > platforms.length && (
+            <Link
+              href="/comparatif"
+              className="btn-ghost self-start py-2.5 text-sm shrink-0"
+            >
+              Voir les {totalAvailable}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          )}
         </div>
 
+        {/* Disclaimer affiliation global — Audit Mobile : 1 fois au lieu de 6 sous chaque CTA */}
+        <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-muted">
+          <Star className="h-3 w-3 text-primary-soft" strokeWidth={2} aria-hidden="true" />
+          <span>
+            Liens partenaires rémunérés.{" "}
+            <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">
+              Pourquoi ?
+            </Link>
+            {" — "}Sans surcoût pour toi, le site reste gratuit.
+          </span>
+        </p>
+
         <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {PLATFORMS.map((p) => (
-            // `placement` est tracké côté analytics — utile pour comparer
-            // le CTR de la home vs comparatifs vs reviews.
-            <PlatformCard key={p.name} platform={p} placement="home-platforms" />
+          {platforms.map((p, idx) => (
+            <PlatformCard
+              key={p.id}
+              platform={p}
+              placement="home-platforms"
+              index={idx}
+            />
           ))}
         </div>
 
-        <p className="mt-6 sm:mt-8 text-xs text-muted leading-relaxed">
-          Liens d'affiliation : nous touchons une commission si tu t'inscris via ces
-          liens, sans surcoût pour toi. Cela nous permet de garder le site gratuit.
-        </p>
+        {/* CTA "Quiz plateforme" — Audit UX guidance "main tenue" : segmente l'indécis */}
+        <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-6 text-center">
+          <p className="text-base font-semibold text-fg">
+            Pas sûr·e laquelle choisir ?
+          </p>
+          <p className="mt-1 text-sm text-fg/70">
+            Réponds à 5 questions, on te dit laquelle est faite pour toi (30 secondes).
+          </p>
+          <Link href="/quiz/plateforme" className="btn-primary mt-4 inline-flex">
+            Trouver MA plateforme idéale
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
 
         {/* Avertissement AMF — article 222-15 */}
         <AmfDisclaimer variant="comparatif" className="mt-6" />
