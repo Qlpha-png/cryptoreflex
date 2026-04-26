@@ -100,9 +100,9 @@ export default function HeroLiveWidget({
       {/* CTA voir tout */}
       <div className="mt-4 pt-4 border-t border-border/60 flex items-center justify-between">
         <Link
-          href="/marche/heatmap"
+          href="/marche"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary transition-colors min-h-tap py-2"
-          aria-label="Voir tout le marché crypto (heatmap top 100)"
+          aria-label="Voir tout le marché crypto"
         >
           Voir tout le marché
           <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />

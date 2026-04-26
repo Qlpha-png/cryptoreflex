@@ -85,9 +85,9 @@ export default function HeroLiveWidgetMobile({
           ) : null}
         </div>
         <Link
-          href="/marche/heatmap"
+          href="/marche"
           className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-soft hover:text-primary transition-colors min-h-[32px]"
-          aria-label="Voir tout le marché crypto (heatmap top 100)"
+          aria-label="Voir tout le marché crypto"
         >
           Tout voir
           <ArrowUpRight className="h-3 w-3" aria-hidden="true" />

@@ -48,7 +48,7 @@ import Logo from "./Logo";
  */
 
 const NAV = [
-  { href: "/marche/heatmap", label: "Marché", desc: "Heatmap top 100 en temps réel" },
+  { href: "/marche", label: "Marché", desc: "Hub marché : prix live, heatmap, gainers/losers, Fear &amp; Greed" },
   { href: "/actualites", label: "Actualités", desc: "News crypto quotidiennes" },
   { href: "/analyses-techniques", label: "Analyses", desc: "RSI, MACD, niveaux clés top 5" },
   { href: "/academie", label: "Apprendre", desc: "Parcours certifiants gratuits" },
