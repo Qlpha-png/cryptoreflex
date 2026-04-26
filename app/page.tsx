@@ -23,7 +23,7 @@ import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
 import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
-import NewsTickerServer from "@/components/NewsTickerServer";
+// NewsTickerServer retiré le 26/04 (doublon avec NewsBar — feedback user "mal agencé")
 import QuizPromo from "@/components/QuizPromo";
 import NewsBar from "@/components/NewsBar";
 import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
@@ -192,13 +192,12 @@ export default async function HomePage() {
         updatedAt={updatedAt}
       />
       <ReassuranceSection />
-      {/* Bandeaux live data — sous le Hero, en bordure haute des sections
-          de contenu. Densifient la perception "site vivant" SANS bloquer
-          le LCP du H1 ni écraser le pli mobile. */}
+      {/* Bandeaux live data — sous le Hero, simplifiés (audit user 26/04 :
+          "mal agencé" — avant 4 bandeaux empilés). Maintenant 3 max, et
+          NewsTickerServer retiré (doublon avec NewsBar). */}
       <GlobalMetricsBar />
       <NewsBar />
       <PriceTicker initial={prices} />
-      <NewsTickerServer />
 
       {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
           26/04/2026 "des onglets pour faire respirer + pas se perdre".
@@ -330,7 +329,7 @@ export default async function HomePage() {
           Icon={Mail}
           eyebrow="Étape 6"
           title="Rester informé"
-          intro="Une newsletter par semaine — les actus crypto FR qui comptent vraiment, sans hype ni shilling."
+          intro="Le brief crypto FR du matin, en 3 minutes — les actus qui comptent vraiment, sans hype ni shilling."
           anchorId="cat-informe"
         />
         <NewsletterCapture />

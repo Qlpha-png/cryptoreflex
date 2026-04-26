@@ -6,7 +6,6 @@ import {
   Mail,
   ArrowRight,
   CheckCircle2,
-  ShieldCheck,
   Clock,
   AlertCircle,
   Download,
@@ -178,46 +177,31 @@ export default function NewsletterCapture() {
         <div className="glass rounded-2xl p-6 sm:p-10">
           {status !== "success" ? (
             <>
-              <div className="flex flex-wrap items-center gap-3 mb-5">
-                {/* Audit Visual : Mail icon avec trust-ring pulse (réutilise live-dot pattern) */}
-                <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                  <Mail className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" focusable="false" />
+              {/* Header simplifié — Mail icon + Title sur même ligne (avant : icon flottant + 3 badges
+                  encombrés + redites). Audit user 26/04 'mal agencé'. */}
+              <div className="flex items-start gap-4 mb-3">
+                <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary shrink-0">
+                  <Mail className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" focusable="false" />
                   <span
                     aria-hidden="true"
                     className="absolute inset-0 rounded-xl ring-2 ring-primary/30 motion-safe:animate-pulse"
                   />
                 </span>
-                <span className="badge-trust">
-                  <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" focusable="false" />
-                  Sans spam, 1 clic pour se désinscrire
-                </span>
-                {/* Badge RGPD compliance (Audit Visual) */}
-                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
-                  <Lock className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  RGPD · CNIL
-                </span>
-                {/* Social proof badge (Audit UX) */}
-                <span className="inline-flex items-center gap-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 px-2 py-0.5 text-[10px] font-semibold text-accent-cyan">
-                  <Users className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  +250 inscrits cette semaine
-                </span>
+                <div className="min-w-0 flex-1">
+                  <h2
+                    id="newsletter-title"
+                    className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight"
+                  >
+                    Le brief crypto FR <span className="gradient-text">en 3 minutes</span>
+                  </h2>
+                  <p className="mt-2 text-fg/85 max-w-2xl">
+                    Chaque matin à 7h, les 3 infos qui comptent : statut MiCA, alertes plateformes, fiscalité.
+                  </p>
+                </div>
               </div>
 
-              <h2
-                id="newsletter-title"
-                className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight"
-              >
-                La newsletter quotidienne crypto FR{" "}
-                <span className="gradient-text">en 3 minutes</span>.
-              </h2>
-
-              <p className="mt-3 text-fg/85 max-w-2xl">
-                Chaque matin à 7h : les 3 infos crypto qui comptent vraiment pour un investisseur français,
-                résumées en français clair. Statut MiCA, alertes plateformes, fiscalité.
-              </p>
-
-              {/* Audit UX : "Ce que tu reçois" 3 puces visibles avant le form */}
-              <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-fg/75" role="list">
+              {/* 3 puces "Ce que tu reçois" — concises et visibles */}
+              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-fg/75" role="list">
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
                   Lundi → vendredi à 7h
@@ -229,6 +213,10 @@ export default function NewsletterCapture() {
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
                   Désinscription 1 clic
+                </li>
+                <li className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
+                  RGPD · sans spam
                 </li>
               </ul>
 
@@ -291,10 +279,23 @@ export default function NewsletterCapture() {
                 </button>
               </form>
 
-              <p id="newsletter-hint" className="mt-3 text-xs text-fg/65 flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" focusable="false" />
-                Newsletter quotidienne 3 min, sans spam — désinscription en 1 clic.
-              </p>
+              {/* Trust signals déplacés sous le form (visible mais pas encombrant le top) */}
+              <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-fg/65">
+                <span className="inline-flex items-center gap-1">
+                  <Users className="h-3 w-3 text-accent-cyan" strokeWidth={2.5} aria-hidden="true" focusable="false" />
+                  <strong className="text-fg/85 tabular-nums">+250</strong> inscrits cette semaine
+                </span>
+                <span aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1">
+                  <Lock className="h-3 w-3 text-emerald-400" strokeWidth={2.5} aria-hidden="true" focusable="false" />
+                  RGPD · CNIL conforme
+                </span>
+                <span aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
+                  Désinscription en 1 clic
+                </span>
+              </div>
 
               {/* Live region PERMANENTE (Audit A11y P0 : avant la div était démontée) */}
               <div

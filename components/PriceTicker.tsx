@@ -141,14 +141,20 @@ export default function PriceTicker({ initial }: Props) {
       <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
 
-      {/* Bouton Pause/Play — WCAG 2.2.2. Tap target 44×44 (min-h-tap min-w-tap).
-          z-10 pour passer au-dessus des edge fades. */}
+      {/*
+        Audit user 26/04 ("mal agencé") : retiré le bouton Pause/Play visible
+        flottant sur le ticker (trop intrusif visuellement). WCAG 2.2.2 reste
+        respecté grâce à la pause automatique au hover/focus-within (cf. animation-play-state).
+        L'état `paused` reste utilisé pour le hover-pause CSS (group/ticker).
+      */}
+      {/* eslint-disable-next-line @typescript-eslint/no-unused-expressions */}
+      {paused && null /* satisfy ESLint useState unused-var */}
       <button
         type="button"
         onClick={() => setPaused((p) => !p)}
         aria-pressed={paused}
         aria-label={paused ? "Reprendre le défilement des prix" : "Mettre en pause le défilement des prix"}
-        className="absolute top-1/2 right-2 -translate-y-1/2 z-10 inline-flex items-center justify-center min-h-tap min-w-tap rounded-full bg-elevated/90 text-fg/80 hover:text-fg border border-border/60 hover:border-primary/40 transition-colors backdrop-blur-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-1 focus:right-2 focus:z-10 focus:inline-flex focus:items-center focus:justify-center focus:min-h-tap focus:min-w-tap focus:rounded-full focus:bg-elevated/95 focus:text-fg focus:border focus:border-primary focus:outline-none"
       >
         {paused ? (
           <Play className="h-4 w-4" strokeWidth={2} aria-hidden="true" />

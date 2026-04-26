@@ -62,7 +62,10 @@ const CHIPS: ChipDef[] = [
 
 export default function HomeAnchorNav() {
   const [activeId, setActiveId] = useState<string>(CHIPS[0].href);
-  const [pill, setPill] = useState({ x: 0, w: 0, opacity: 0 });
+  // opacity: 0 initial pour éviter le pill mal positionné au mount
+  // (avant useLayoutEffect calcule, le pill était à x:0 w:0 mais opacity 0).
+  // Audit user 26/04 : "pill déborde sur le chip Démarrer".
+  const [pill, setPill] = useState<{ x: number; w: number; opacity: number; ready: boolean }>({ x: 0, w: 0, opacity: 0, ready: false });
   const trackRef = useRef<HTMLDivElement>(null);
   const chipRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
@@ -95,6 +98,8 @@ export default function HomeAnchorNav() {
   }, []);
 
   // Pill slide indicator — recalcule la position quand activeId change OU au resize.
+  // Audit user 26/04 : pill ne s'affiche QU'APRÈS le 1er calcul (ready=true) pour
+  // éviter le débordement visuel sur le chip "Démarrer" au mount initial.
   useLayoutEffect(() => {
     const computePill = () => {
       const chip = chipRefs.current.get(activeId);
@@ -102,7 +107,7 @@ export default function HomeAnchorNav() {
       if (!chip || !track) return;
       const cRect = chip.getBoundingClientRect();
       const tRect = track.getBoundingClientRect();
-      setPill({ x: cRect.left - tRect.left, w: cRect.width, opacity: 1 });
+      setPill({ x: cRect.left - tRect.left, w: cRect.width, opacity: 1, ready: true });
     };
     computePill();
     window.addEventListener("resize", computePill);
@@ -141,18 +146,22 @@ export default function HomeAnchorNav() {
           className="relative flex min-w-max items-center gap-3 py-2.5 snap-x snap-mandatory scrollbar-thin"
         >
           {/* Pill slide indicator (style Linear tabs) — un seul élément qui se
-              déplace entre les chips. Spring easeOutBack pour sentiment iOS. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-gradient-to-b from-primary/20 to-primary/5 ring-1 ring-primary/50 shadow-[inset_0_1px_0_0_rgba(252,211,77,0.25),0_0_24px_-8px_rgba(245,165,36,0.55)]"
-            style={{
-              width: pill.w,
-              opacity: pill.opacity,
-              transform: `translateX(${pill.x}px)`,
-              transition:
-                "transform 380ms cubic-bezier(0.34, 1.32, 0.64, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease",
-            }}
-          />
+              déplace entre les chips. Spring easeOutBack pour sentiment iOS.
+              Audit user 26/04 : ne s'affiche QU'APRÈS calcul initial (ready) pour
+              éviter le débordement visuel sur le 1er chip au mount. */}
+          {pill.ready && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-gradient-to-b from-primary/20 to-primary/5 ring-1 ring-primary/50 shadow-[inset_0_1px_0_0_rgba(252,211,77,0.25),0_0_24px_-8px_rgba(245,165,36,0.55)]"
+              style={{
+                width: pill.w,
+                opacity: pill.opacity,
+                transform: `translateX(${pill.x}px)`,
+                transition:
+                  "transform 380ms cubic-bezier(0.34, 1.32, 0.64, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease",
+              }}
+            />
+          )}
 
           {CHIPS.map((chip) => {
             const isActive = activeId === chip.href;
