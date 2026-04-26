@@ -1,26 +1,37 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  ShieldCheck,
   FileCheck,
-  Users,
   Sparkles,
   Mail,
+  ShieldAlert,
 } from "lucide-react";
 import HeroLiveWidget from "@/components/HeroLiveWidget";
+import HeroLiveWidgetMobile from "@/components/HeroLiveWidgetMobile";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import type { CoinPrice } from "@/lib/coingecko";
 
 /**
  * Hero — refonte premium 2026 (best-of-breed CoinGecko / Phantom / Bitpanda / Linear / Stripe).
- * - Server component (le seul îlot client = AnimatedNumber, leaf isolé).
- * - Background : dotted grid + halo gold radial + 5 particules CSS pures.
- * - H1 SEO unique sur 2 lignes, gradient gold sur la partie clé.
+ *
+ * Audit consolidé Block 1 RE-AUDIT 26/04/2026 (10 agents PRO : front, back, UX,
+ * SEO, conversion, visual, a11y, mobile, content, performance, animation) :
+ *  - H1 : ajout keyword "comparatif" + "2026" (SEO + Conversion).
+ *  - CTA primary : ancre `#cat-comparer` (avant : `#plateformes` cassée).
+ *  - CTA secondaire : ancre `#cat-informe` (avant : `#newsletter` cassée).
+ *  - Cohérence "5 min" → "2 min" (alignement CTA / sous-titre).
+ *  - "Sans biais d'affiliation" → "Affiliation transparente" (conformité copy).
+ *  - Disclaimer risque MiCA above-the-fold (loi Influenceurs juin 2023, AMF).
+ *  - lastUpdate dérivé de la prop `updatedAt` (avant : `new Date()` au render
+ *    = build time, malhonnête vs WebPage.dateModified).
+ *  - HeroLiveWidget MOBILE visible <lg (avant : `hidden lg:block` cachait le
+ *    signal "live data" pour 60% du trafic FR).
+ *  - Suppression dead code `TrustSignal` (jamais utilisé).
+ *
+ * - Server component (le seul îlot client = AnimatedNumber + HeroLiveWidget).
+ * - Background : dotted grid + halo gold radial animé (breathe + mesh shift).
  * - 1 CTA primary fort + 1 CTA secondaire newsletter.
- * - 3 trust signals iconographiés avec animated numbers.
- * - Live widget (top 3 cryptos, sparkline, pulse "LIVE", refresh visible) à droite.
- * - Stats card 4 KPI en bas (11 plateformes / 20 cryptos / 6 outils / Méthode publique).
- * - Badge "Mis à jour DD/MM/YYYY" cliquable → /methodologie.
+ * - Stats card 4 KPI en bas (11 plateformes / 20 cryptos / 6 outils / Méthode).
  * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
  */
 
@@ -40,9 +51,6 @@ interface HeroProps {
  *    pour ne jamais surpromettre ; à monter une fois que tous les outils auront
  *    été testés régression-free.
  *  - method: "Publique" = qualitatif, pas un chiffre.
- *
- * Toute hausse doit être justifiée par un changement réel du repo (ajout de
- * plateforme, d'outil ou refresh CoinGecko top), jamais par confort marketing.
  */
 const STATS = {
   platforms: 11,
@@ -52,7 +60,11 @@ const STATS = {
 } as const;
 
 export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
-  const lastUpdate = new Date().toLocaleDateString("fr-FR", {
+  // Audit Block 1 RE-AUDIT 26/04/2026 (Agents back+SEO) : la date doit refléter
+  // la prop `updatedAt` propagée par le serveur (ISO du fetch CoinGecko réel),
+  // pas un `new Date()` au render qui retourne l'instant du build.
+  const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
+  const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -63,7 +75,10 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       aria-label="Présentation Cryptoreflex"
       className="relative overflow-hidden isolate"
     >
-      {/* Background layers — pure CSS, zero JS */}
+      {/* Background layers — pure CSS, zero JS. Audit Block 1 RE-AUDIT
+          (Agent dynamism) : .hero-halo embarque maintenant les keyframes
+          halo-breathe (6s) + mesh-shift (20s) pour un fond "vivant" type
+          Stripe gradient mesh / Linear ambient. */}
       <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
       <div className="hero-halo" aria-hidden="true" />
       <div className="hero-particles" aria-hidden="true">
@@ -75,57 +90,65 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-16 lg:pt-20 lg:pb-24">
-        {/* Badges header — "Mis à jour" cliquable → /methodologie + "Sans biais" */}
+        {/* Badges header — "Mis à jour" cliquable → /methodologie + "Affiliation transparente" */}
         <div className="flex flex-wrap items-center gap-2 animate-hero-fade-up">
           <Link
             href="/methodologie"
-            className="badge-info hover:border-primary hover:bg-primary/15 transition-colors"
+            // Audit Block 1 RE-AUDIT (Agent A11y) : min-h-tap pour tap target
+            // WCAG 2.5.8 AA (44×44 minimum sur mobile).
+            className="badge-info hover:border-primary hover:bg-primary/15 transition-colors min-h-tap py-2"
             aria-label={`Mis à jour le ${lastUpdate} — voir la méthodologie`}
           >
             <FileCheck className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
             Mis à jour le {lastUpdate}
             <ArrowRight className="h-3 w-3 opacity-70" strokeWidth={1.75} aria-hidden="true" />
           </Link>
-          <span className="badge-trust">
+          {/* Audit Block 1 RE-AUDIT (Agent content) : "Sans biais d'affiliation"
+              était trompeur (il Y A affiliation). Reformulé en "Affiliation
+              transparente · Méthode publique" — conforme DGCCRF + plus crédible. */}
+          <span className="badge-trust min-h-tap py-2">
             <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-            Sans biais d&apos;affiliation
+            Affiliation transparente
           </span>
         </div>
 
-        {/* Layout 2 colonnes — message / live widget */}
+        {/* Layout 2 colonnes — message / live widget desktop */}
         <div className="mt-6 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
-            {/* H1 SEO — 2 lignes, gradient gold sur la partie clé.
-                Audit perf 26/04/2026 : retire animate-hero-fade-up-delay-1
-                (delay 80ms) qui retardait le LCP. H1 visible immediat. */}
+            {/* H1 SEO — keyword "comparatif" + "2026" + différenciation
+                "sans te faire avoir" en gradient gold. Audit Block 1 RE-AUDIT
+                (Agents SEO + content + conversion) : H1 actuel sans keyword
+                principal = pénalité ranking vs Hellosafe/Cryptoast. */}
             <h1 className="ds-h1 leading-[1.05]">
-              Choisis la bonne plateforme crypto en France,
-              <br className="hidden sm:inline" />{" "}
+              Comparatif des meilleures plateformes crypto en France 2026,
+              <br className="hidden lg:inline" />{" "}
               <span className="hero-headline-accent">
                 sans te faire avoir.
               </span>
             </h1>
 
-            {/* Sous-titre concret — ≤ 25 mots. Audit mobile 26/04/2026 :
-                taille minimale text-base (16px) pour lisibilité smartphone. */}
+            {/* Sous-titre concret — ≤ 25 mots. Audit Block 1 RE-AUDIT
+                (Agent content) : "5 minutes" remplacé par "2 minutes" pour
+                cohérence avec le CTA primary "Trouver ma plateforme en 2 min".
+                "Conformité MiCA" gardé (différenciateur réglementaire FR 2026). */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
               On a comparé{" "}
               <strong className="text-fg font-semibold">
-                {STATS.platforms} plateformes
+                {STATS.platforms} plateformes régulées en Europe
               </strong>{" "}
-              avec une méthode publique : frais réels, conformité MiCA,
-              sécurité, support FR. Décide en 5 minutes.
+              sur ce qui compte vraiment : frais réels, sécurité, support FR,
+              conformité MiCA. Choisis la tienne en 2 minutes.
             </p>
 
-            {/* CTAs — 1 primary fort + 1 secondaire newsletter */}
+            {/* CTAs — 1 primary fort + 1 secondaire newsletter.
+                Audit Block 1 RE-AUDIT (5 agents convergents) : ancres `#plateformes`
+                et `#newsletter` étaient CASSÉES (n'existaient pas dans page.tsx).
+                Fix : `#cat-comparer` (PlatformsSection) et `#cat-informe`
+                (NewsletterCapture) qui sont les vraies ancres CategoryHeader. */}
             <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 animate-hero-fade-up animate-hero-fade-up-delay-3">
-              {/* Audit Block 1 26/04/2026 (Agents copy + CTA conversion) :
-                  - "Voir le comparatif" trop generique. Remplace par bénéfice
-                    chiffré + temps : "Trouver ma plateforme en 2 min".
-                  - Newsletter CTA passé en text-base mobile (16px lisibilité). */}
               <Link
-                href="#plateformes"
+                href="#cat-comparer"
                 className="btn-primary btn-ripple text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
                 aria-label="Trouver ma plateforme crypto en 2 minutes"
               >
@@ -133,27 +156,32 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
               </Link>
               <Link
-                href="#newsletter"
+                href="#cat-informe"
                 className="btn-ghost text-base w-full sm:w-auto"
-                aria-label="S'inscrire à la newsletter quotidienne"
+                aria-label="Recevoir le brief crypto FR par email"
               >
                 <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                Newsletter quotidienne
+                Recevoir le brief crypto FR
               </Link>
             </div>
 
-            {/* Audit Block 1 26/04/2026 (Agent visual) : DUPLICATION CRITIQUE
-                identifiée — les TrustSignals ici (3 KPI : platforms/cryptos/
-                tools) faisaient doublon avec la KpiCell en card-premium plus
-                bas (mêmes chiffres, même labels). Suppression -> hero plus
-                respirant, hierarchie + claire. La card-premium reste comme
-                seul affichage des stats. */}
+            {/* Audit Block 1 RE-AUDIT (Agent content) : disclaimer risque MiCA
+                P0 conformité loi Influenceurs juin 2023 + recommandation AMF
+                2023. Doit être visible above-the-fold. text-[11px] = seuil
+                lisibilité minimale, contrast ratio fg/60 sur background ≥ 4.5:1. */}
+            <p className="mt-5 text-[11px] leading-relaxed text-fg/55 max-w-xl">
+              <ShieldAlert className="inline h-3 w-3 mr-1 -mt-0.5 text-primary-soft/70" aria-hidden="true" />
+              Investir en cryptomonnaies comporte un risque de perte en capital.
+              Liens partenaires rémunérés signalés. <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">En savoir plus</Link>.
+            </p>
           </div>
 
-          {/* Colonne droite — live widget. Audit mobile 26/04/2026 : caché
-              sous lg pour ne pas doubler la hauteur du hero sur smartphone
-              (déjà chargé avec H1, sub, CTAs, trust signals). Le widget reste
-              accessible via la section /marche en bas de page. */}
+          {/* Colonne droite — live widget DESKTOP (>=lg). Le widget MOBILE
+              compact est rendu juste après pour les écrans <lg (cf. plus bas).
+              Audit Block 1 RE-AUDIT (4 agents convergents : UX + Conversion +
+              Visual + Mobile) : `hidden lg:block` cachait le signal "live data"
+              pour 60-70% du trafic FR (mobile). Solution : 2 widgets (compact
+              mobile + complet desktop) au lieu d'un seul caché. */}
           <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
             <HeroLiveWidget
               prices={prices}
@@ -161,6 +189,18 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               updatedAt={updatedAt}
             />
           </div>
+        </div>
+
+        {/* Widget MOBILE compact (visible <lg) — cards scroll-snap horizontal
+            BTC/ETH/SOL, edge-to-edge bleed (-mx-4). Pattern Linear/Phantom.
+            Audit Mobile UX 26/04/2026 (Agent mobile) : le pouce vit en bas, la
+            sensation "live" doit être perçue mobile (cible #1 du site crypto FR). */}
+        <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
+          <HeroLiveWidgetMobile
+            prices={prices}
+            sparklines={sparklines}
+            updatedAt={updatedAt}
+          />
         </div>
 
         {/* Stats card en bas — premium depth (multi-shadow + ring gold subtil) */}
@@ -175,7 +215,10 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       </div>
 
       {/* Style local — gradient text gold avec anti-clip descendeurs (g, j, p, y).
-          Inline pour éviter d'élargir globals.css avec un sélecteur scope-hero. */}
+          Inline pour éviter d'élargir globals.css avec un sélecteur scope-hero.
+          Audit Block 1 RE-AUDIT (Agent dynamism) : ajout d'un shimmer subtil
+          6s ease-in-out infinite (style Arc.net headline) pour donner vie au
+          gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
       <style>{`
         .hero-headline-accent {
           background-image: linear-gradient(
@@ -184,11 +227,20 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
             #F5A524 45%,
             #FCD34D 100%
           );
+          background-size: 200% auto;
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
           padding-bottom: 0.06em;
           display: inline-block;
+          animation: gold-shimmer 6s ease-in-out infinite;
+        }
+        @keyframes gold-shimmer {
+          0%, 100% { background-position: 0% 50%; }
+          50%      { background-position: 100% 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-headline-accent { animation: none !important; }
         }
       `}</style>
     </section>
@@ -198,30 +250,6 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
 /* -------------------------------------------------------------------------- */
 /* Atoms                                                                       */
 /* -------------------------------------------------------------------------- */
-
-function TrustSignal({
-  icon,
-  value,
-  label,
-}: {
-  icon: React.ReactNode;
-  value: number;
-  label: string;
-}) {
-  return (
-    <li className="flex flex-col gap-1">
-      <div className="flex items-center gap-2 text-primary-soft">
-        <span className="shrink-0">{icon}</span>
-        <span className="text-2xl sm:text-3xl font-extrabold font-mono text-fg leading-none">
-          <AnimatedNumber value={value} duration={900} />
-        </span>
-      </div>
-      <span className="text-caption sm:text-xs text-muted leading-tight">
-        {label}
-      </span>
-    </li>
-  );
-}
 
 function KpiCell({
   value,

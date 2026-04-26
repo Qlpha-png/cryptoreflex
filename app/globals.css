@@ -426,6 +426,117 @@ body {
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* ============================================================
+ * BLOCK 1 DYNAMISM — Audit Block 1 RE-AUDIT 26/04/2026
+ * (Agent animation/dynamism — réplique la sensation "vivant comme
+ * la section news" demandée par le user).
+ *
+ * Tous les keyframes ci-dessous utilisent transform/opacity/box-shadow
+ * (compositor only, GPU). Aucun width/height/top/left → 0 layout reflow.
+ * Tous neutralisés via prefers-reduced-motion (cf. bas de fichier).
+ * ============================================================ */
+
+/* Halo Hero respire (6s) — opacity + scale subtil. Style Linear ambient. */
+.hero-halo {
+  animation: halo-breathe 6s ease-in-out infinite, mesh-shift 20s linear infinite;
+  background-size: 200% 200%;
+  will-change: opacity, transform, background-position;
+}
+@keyframes halo-breathe {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%      { opacity: 0.78; transform: scale(1.04); }
+}
+@keyframes mesh-shift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Live dot — radar pulse (deuxième ring décalé 1s pour effet "ping ping").
+   Ajout en plus du ::before existant. */
+.live-dot { position: relative; }
+.live-dot::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite 1s;
+  pointer-events: none;
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0.55); opacity: 1; }
+  70%  { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);   opacity: 0; }
+  100% { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0);   opacity: 0; }
+}
+
+/* Sparkline drawn progressively (1.2s) — style Stripe dashboard.
+   Le path SVG doit avoir pathLength="1" pour que dasharray=1 fonctionne. */
+.spark-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: spark-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) 200ms forwards;
+}
+@keyframes spark-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Flash GREEN/RED 600ms quand un prix change (signal "live data" Binance-style).
+   Appliqué via React class toggle (cf. PriceFlash dans HeroLiveWidgetMobile). */
+.flash-up {
+  animation: flash-bg-up 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 6px;
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 -4px;
+}
+.flash-down {
+  animation: flash-bg-down 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 6px;
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 -4px;
+}
+@keyframes flash-bg-up {
+  0%   { background: rgba(34, 197, 94, 0.35); }
+  100% { background: transparent; }
+}
+@keyframes flash-bg-down {
+  0%   { background: rgba(239, 68, 68, 0.35); }
+  100% { background: transparent; }
+}
+
+/* News rotation — fade + translateY (style NewsBar rotation 5s). */
+.news-fade-in {
+  animation: news-fade-in 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes news-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* prefers-reduced-motion : neutralise tous les keyframes Block 1 dynamism. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-halo,
+  .live-dot::after,
+  .spark-draw,
+  .flash-up,
+  .flash-down,
+  .news-fade-in {
+    animation: none !important;
+  }
+  .hero-halo {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .spark-draw {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

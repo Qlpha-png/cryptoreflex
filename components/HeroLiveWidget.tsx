@@ -3,16 +3,29 @@ import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import type { CoinPrice } from "@/lib/coingecko";
 import { formatUsd, formatPct } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import LiveAge from "@/components/ui/LiveAge";
 
 /**
- * HeroLiveWidget — server component.
- * Card glass premium affichant le top 3 (BTC/ETH/SOL) avec sparkline mini
- * + pulse dot "LIVE" + lien marché.
+ * HeroLiveWidget — server component (desktop only, >=lg).
  *
- * - 100% server (no "use client", no JS bundle).
- * - Sparkline = mini SVG inline (déterministe, généré à partir d'un seed
- *   stable basé sur le prix actuel quand la prop sparkline n'est pas fournie).
- * - Pas de "use client" : le pulse dot vient de la classe .live-dot (CSS pur).
+ * Card glass premium affichant le top 3 (BTC/ETH/SOL) avec sparkline mini
+ * + pulse dot "LIVE" + lien marché. La variante mobile compacte est dans
+ * <HeroLiveWidgetMobile> (cards scroll-snap horizontal).
+ *
+ * Audit Block 1 RE-AUDIT 26/04/2026 :
+ *  - SVG id collision fix : `spk-${coin.id}` au lieu de `spk-up`/`spk-down`
+ *    (avant : 2 sparklines même tendance partageaient le même gradient id).
+ *  - ARIA live region polite sur la liste (annonce changement prix SR).
+ *  - figcaption sr-only "Tendance haussière/baissière" (WCAG 1.1.1 Non-text).
+ *  - Sparkline drawn progressively (.spark-draw class, animation 1.2s à mount).
+ *  - LiveAge component (countdown 1s) au lieu de label statique "MAJ Xs".
+ *  - role="status" sur le badge LIVE.
+ *
+ * - 100% server (no "use client" sur le widget principal).
+ * - LiveAge est un mini client component (1 setInterval 1s, Page Visibility).
+ * - Sparkline = SVG inline déterministe avec spark-draw animation au mount.
+ * - Pas de "use client" sur le widget : le pulse dot vient de la classe
+ *   .live-dot (CSS pur) + radar via .live-dot::after.
  */
 
 type CoinWithSpark = CoinPrice & { sparkline?: number[] };
@@ -32,26 +45,30 @@ export default function HeroLiveWidget({
   sparklines,
   updatedAt,
 }: HeroLiveWidgetProps) {
-  // Sélectionne BTC / ETH / SOL dans cet ordre exact.
-  const top3: CoinWithSpark[] = FOCUS_IDS.map((id) => {
+  // Sélectionne BTC / ETH / SOL dans cet ordre exact (flatMap = pas de
+  // type predicate fragile, narrowing TS automatique).
+  const top3: CoinWithSpark[] = FOCUS_IDS.flatMap((id) => {
     const found = prices.find((p) => p.id === id);
-    if (!found) return null;
-    return { ...found, sparkline: sparklines?.[id] };
-  }).filter(Boolean) as CoinWithSpark[];
-
-  const refreshLabel = updatedAt
-    ? formatRelative(updatedAt)
-    : "à l'instant";
+    if (!found) return [];
+    return [{ ...found, sparkline: sparklines?.[id] }];
+  });
 
   return (
     <aside
       aria-label="Marché crypto en direct"
       className="glass rounded-2xl p-5 sm:p-6 shadow-card hover-lift"
     >
-      {/* Header : LIVE + refresh */}
+      {/* Header : LIVE + refresh countdown */}
       <header className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="live-dot inline-flex items-center text-[11px] font-bold uppercase tracking-[0.14em] text-accent-green">
+        <div
+          className="flex items-center gap-2"
+          role="status"
+          aria-label="Données de marché en direct"
+        >
+          <span
+            className="live-dot inline-flex items-center text-[11px] font-bold uppercase tracking-[0.14em] text-accent-green"
+            aria-hidden="true"
+          >
             Live
           </span>
           <span
@@ -61,13 +78,20 @@ export default function HeroLiveWidget({
             · Marché crypto
           </span>
         </div>
-        <span className="text-[11px] text-muted font-mono" title={`Mis à jour ${refreshLabel}`}>
-          MAJ {refreshLabel}
+        <span
+          className="text-[11px] text-muted font-mono tabular-nums"
+          aria-label="Dernière mise à jour"
+        >
+          MAJ {updatedAt ? <LiveAge since={updatedAt} /> : <span>à l&apos;instant</span>}
         </span>
       </header>
 
-      {/* Liste top 3 */}
-      <ul className="mt-4 divide-y divide-border/60">
+      {/* Liste top 3 avec aria-live polite (annonce changement prix SR). */}
+      <ul
+        className="mt-4 divide-y divide-border/60"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {top3.map((coin) => (
           <CoinRow key={coin.id} coin={coin} />
         ))}
@@ -76,8 +100,9 @@ export default function HeroLiveWidget({
       {/* CTA voir tout */}
       <div className="mt-4 pt-4 border-t border-border/60 flex items-center justify-between">
         <Link
-          href="/#marche"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary transition-colors"
+          href="/#cat-outils"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary transition-colors min-h-tap py-2"
+          aria-label="Voir tout le marché crypto"
         >
           Voir tout le marché
           <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -97,8 +122,7 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
   const TrendIcon = up ? TrendingUp : TrendingDown;
   const trendCls = up ? "text-accent-green" : "text-accent-rose";
 
-  // Sparkline : utilise la prop si dispo, sinon une mini courbe synthétique
-  // (reste cohérente avec le sens de la variation 24h pour rester crédible).
+  // Sparkline : utilise la prop si dispo, sinon une mini courbe synthétique.
   const points = coin.sparkline?.length ? coin.sparkline : synthSpark(coin);
 
   return (
@@ -120,20 +144,24 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
         </div>
       </div>
 
-      {/* Sparkline mini */}
-      <div className="hidden sm:block shrink-0" aria-hidden="true">
-        <Sparkline points={points} up={up} />
-      </div>
+      {/* Sparkline mini avec figcaption sr-only (WCAG 1.1.1 Non-text Content) */}
+      <figure className="hidden sm:block shrink-0">
+        <Sparkline points={points} up={up} coinId={coin.id} />
+        <figcaption className="sr-only">
+          Tendance 7 jours {up ? "haussière" : "baissière"}
+        </figcaption>
+      </figure>
 
-      {/* Prix + variation */}
+      {/* Prix + variation 24h */}
       <div className="text-right shrink-0">
-        <div className="text-sm font-semibold text-fg font-mono leading-tight">
+        <div className="text-sm font-semibold text-fg font-mono leading-tight tabular-nums">
           {formatUsd(coin.price)}
         </div>
         <div
           className={`mt-0.5 inline-flex items-center gap-1 text-[11px] font-mono font-semibold ${trendCls}`}
         >
           <TrendIcon className="h-3 w-3" aria-hidden="true" />
+          <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>
           {formatPct(coin.change24h)}
         </div>
       </div>
@@ -142,10 +170,10 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Sparkline SVG (server-rendered, no JS)                                      */
+/* Sparkline SVG (server-rendered, no JS) avec spark-draw animation            */
 /* -------------------------------------------------------------------------- */
 
-function Sparkline({ points, up }: { points: number[]; up: boolean }) {
+function Sparkline({ points, up, coinId }: { points: number[]; up: boolean; coinId: string }) {
   const W = 64;
   const H = 22;
   if (!points || points.length < 2) {
@@ -167,7 +195,10 @@ function Sparkline({ points, up }: { points: number[]; up: boolean }) {
     .join(" ");
   const area = `${d} L${W},${H} L0,${H} Z`;
   const stroke = up ? "#22C55E" : "#EF4444";
-  const fillId = up ? "spk-up" : "spk-down";
+  // Audit Block 1 RE-AUDIT (Agent front) : id unique par coin (avant :
+  // "spk-up"/"spk-down" hardcodés -> collision SVG si 2 coins même tendance,
+  // le 1er gradient gagne dans le DOM, les autres perdent leur fill).
+  const fillId = `spk-${coinId}`;
 
   return (
     <svg
@@ -191,6 +222,8 @@ function Sparkline({ points, up }: { points: number[]; up: boolean }) {
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        pathLength="1"
+        className="spark-draw"
       />
     </svg>
   );
@@ -207,11 +240,11 @@ function Sparkline({ points, up }: { points: number[]; up: boolean }) {
 function synthSpark(coin: CoinPrice): number[] {
   const base = coin.price || 100;
   const drift = (coin.change24h || 0) / 100;
-  // 16 points, marche aléatoire déterministe seedée sur le symbol + prix
+  // 16 points, marche aléatoire déterministe seedée sur le symbol + prix.
   const seed = (coin.symbol.charCodeAt(0) || 1) + Math.round(base);
   const rng = mulberry32(seed);
   const out: number[] = [];
-  let v = base * (1 - drift); // commence avant la variation
+  let v = base * (1 - drift);
   for (let i = 0; i < 16; i++) {
     const noise = (rng() - 0.5) * 0.012 * base;
     const trend = (drift / 16) * base;
@@ -230,15 +263,4 @@ function mulberry32(a: number) {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
-}
-
-function formatRelative(iso: string): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "à l'instant";
-  const diffSec = Math.max(0, Math.round((Date.now() - then) / 1000));
-  if (diffSec < 60) return `${diffSec}s`;
-  const min = Math.round(diffSec / 60);
-  if (min < 60) return `${min}min`;
-  const h = Math.round(min / 60);
-  return `${h}h`;
 }
