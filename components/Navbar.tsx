@@ -97,6 +97,16 @@ export default function Navbar() {
   }, [open]);
 
   return (
+    <>
+    {/* BUG FIX FINAL 26/04/2026 (Chrome MCP live test) :
+        Avant, le mobile menu était RENDERED DEDANS <header> qui a
+        `backdrop-blur-xl`. Or `backdrop-filter` (comme `transform`, `filter`,
+        `perspective`) crée un nouveau **containing block** pour les
+        descendants `position: fixed`. Donc le menu fixed top-16 bottom-0
+        était contenu dans la box du header (h:64px) au lieu du viewport
+        entier -> menu de 16px de haut, invisible.
+        Fix : restructurer en Fragment avec menu SIBLING du header (au
+        niveau racine du composant), donc fixed = relative au viewport. */}
     <header
       role="banner"
       className="sticky top-0 z-50 backdrop-blur-xl bg-background/75 border-b border-border/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04),0_1px_24px_-12px_rgba(0,0,0,0.45)]"
@@ -259,21 +269,18 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menu mobile : full-screen overlay (vs accordion serré qui poussait le contenu) */}
-      {open && (
+    </header>
+
+    {/* Menu mobile RENDERED AS SIBLING DU HEADER (cf. comment top de Fragment).
+        Si dedans header -> backdrop-filter du header = containing block ->
+        fixed restreint à 64px de haut. Outside -> fixed = viewport entier. */}
+    {open && (
         <div
           id="mobile-menu"
           role="dialog"
           aria-modal="true"
           aria-label="Menu de navigation"
-          // BUG FIX 26/04/2026 (Chrome MCP live test) : avant `inset-0 top-16
-          // bg-background/98` collapsait le menu à h=16px + bg transparent.
-          // Cause : `bg-background/98` (opacity arbitrary) ne compile pas
-          // toujours en CSS valide selon la version Tailwind (background n'est
-          // pas un theme color natif), et `inset-0 top-16` ne fonctionne pas
-          // comme attendu sur certains navigateurs (top override mais bottom
-          // non respecté). Fix : props CSS longhand + bg-background opaque.
-          className="md:hidden fixed left-0 right-0 top-16 bottom-0 z-40 bg-background backdrop-blur-xl overflow-y-auto"
+          className="md:hidden fixed left-0 right-0 top-16 bottom-0 z-50 bg-background overflow-y-auto"
           style={{ paddingBottom: "calc(var(--safe-bottom) + 16px)" }}
         >
           <nav
@@ -331,7 +338,7 @@ export default function Navbar() {
             Site indépendant, non affilié à l'AMF.
           </p>
         </div>
-      )}
-    </header>
+    )}
+    </>
   );
 }
