@@ -302,10 +302,19 @@ export default async function BlogArticlePage({ params }: Props) {
 
                 <p className="mt-4 text-lg text-fg/70">{article.description}</p>
 
+                {/* Hero header = OG image dynamique. Avant 26/04/2026 c'était
+                    juste un dégradé vide → l'article paraissait inachevé. L'OG
+                    image embarque titre + catégorie + auteur, donne le ton. */}
                 <div
                   className={`mt-8 h-48 sm:h-64 rounded-2xl bg-gradient-to-br ${article.gradient} relative overflow-hidden`}
                 >
-                  <div className="absolute inset-0 bg-grid opacity-30" />
+                  <img
+                    src={`/blog/${article.slug}/opengraph-image`}
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                 </div>
 
                 <div className="mt-6">

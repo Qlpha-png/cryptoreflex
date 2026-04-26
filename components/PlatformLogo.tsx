@@ -26,6 +26,8 @@ const KNOWN_IDS = new Set([
   "coinhouse",
   "bitstack",
   "swissborg",
+  "bybit",
+  "revolut",
   // Aliases courants pour fallback (cas où on appellerait avec un slug différent)
   "trade_republic",
   "traderepublic",

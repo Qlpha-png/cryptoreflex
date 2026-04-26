@@ -24,7 +24,7 @@ const STEPS: JourneyStep[] = [
     title: "Comprendre",
     description:
       "Bitcoin, Ethereum, blockchain, MiCA… les bases en français clair, sans jargon ni hype.",
-    href: "/blog/guide-debutant-crypto",
+    href: "/blog/bitcoin-guide-complet-debutant-2026",
     cta: "Lire le guide débutant",
   },
   {
@@ -42,7 +42,7 @@ const STEPS: JourneyStep[] = [
     title: "Acheter sa 1ère crypto",
     description:
       "Tutoriel pas-à-pas avec captures d'écran : du virement à ton premier bitcoin.",
-    href: "/blog/acheter-premiere-crypto",
+    href: "/blog/premier-achat-crypto-france-2026-guide-step-by-step",
     cta: "Suivre le tuto",
   },
   {
@@ -51,7 +51,7 @@ const STEPS: JourneyStep[] = [
     title: "Sécuriser",
     description:
       "Wallet hardware, 2FA, phrase de récupération : protéger tes cryptos comme un pro.",
-    href: "/blog/securiser-crypto-wallet",
+    href: "/blog/securiser-cryptos-wallet-2fa-2026",
     cta: "Lire le guide sécurité",
   },
 ];

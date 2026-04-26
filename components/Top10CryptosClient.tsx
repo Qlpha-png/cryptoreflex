@@ -392,20 +392,31 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
         <p className="text-sm text-fg/75 leading-relaxed line-clamp-3">{crypto.useCase}</p>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 text-xs">
-        <div className="inline-flex items-center gap-1 text-muted">
-          <ShieldCheck className="h-3.5 w-3.5 text-accent-green" />
-          <span>Disponible sur :</span>
-          <span className="text-fg font-medium">
-            {crypto.whereToBuy.slice(0, 3).join(", ")}
-          </span>
-        </div>
+      <div className="mt-4 inline-flex items-center gap-1 text-xs text-muted">
+        <ShieldCheck className="h-3.5 w-3.5 text-accent-green" />
+        <span>Disponible sur :</span>
+        <span className="text-fg font-medium">
+          {crypto.whereToBuy.slice(0, 3).join(", ")}
+        </span>
+      </div>
+
+      {/* CTAs distincts : lire la fiche complète vs aller au comparateur plateformes.
+          Avant 26/04/2026 il n'y avait qu'un "Acheter →" qui pointait vers #plateformes
+          (ancre interne), ce qui faisait croire à l'utilisateur que la fiche était
+          un faux article. La nav primaire est maintenant la fiche détaillée. */}
+      <div className="mt-3 flex items-center justify-between gap-2 text-xs">
         <a
-          href={`#plateformes`}
+          href={`/cryptos/${crypto.id}`}
           className="inline-flex items-center gap-1 text-primary-soft font-semibold hover:text-primary"
         >
-          Acheter
+          Lire la fiche complète
           <ArrowRight className="h-3.5 w-3.5" />
+        </a>
+        <a
+          href="#plateformes"
+          className="text-muted hover:text-fg"
+        >
+          Voir où acheter
         </a>
       </div>
     </article>

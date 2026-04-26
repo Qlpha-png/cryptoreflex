@@ -247,9 +247,22 @@ export default function BlogIndexClient({ articles, categories }: Props) {
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <div className={`relative h-40 bg-gradient-to-br ${a.gradient}`}>
-                <div className="absolute inset-0 bg-grid opacity-30" />
-                <span className="absolute left-3 top-3 rounded-full bg-background/70 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+              {/* Hero image = OG image dynamique (app/blog/[slug]/opengraph-image.tsx).
+                  Avant 26/04/2026 c'était juste un dégradé vide → "carte sans image
+                  pas attirante". L'OG image embarque le titre + categorie + auteur,
+                  ce qui ressemble à une vraie carte d'article. Fallback gradient si
+                  l'image échoue (CSS background sous-jacent). */}
+              <div
+                className={`relative h-40 overflow-hidden bg-gradient-to-br ${a.gradient}`}
+              >
+                <img
+                  src={`/blog/${a.slug}/opengraph-image`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-background/80 px-2.5 py-1 text-xs font-semibold backdrop-blur">
                   {a.category}
                 </span>
               </div>

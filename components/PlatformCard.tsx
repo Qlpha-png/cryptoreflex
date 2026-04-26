@@ -19,6 +19,8 @@ const HAS_OFFICIAL_LOGO = new Set([
   "coinhouse",
   "bitstack",
   "swissborg",
+  "bybit",
+  "revolut",
 ]);
 
 export interface Platform {

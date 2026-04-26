@@ -54,9 +54,19 @@ export default async function BlogPreview() {
               href={`/blog/${a.slug}`}
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]"
             >
-              <div className={`relative h-40 bg-gradient-to-br ${a.gradient}`}>
-                <div className="absolute inset-0 bg-grid opacity-30" />
-                <span className="absolute left-3 top-3 rounded-full bg-background/70 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+              {/* Hero = OG image dynamique du slug — embarque titre/cat/auteur.
+                  Cf. components/blog/BlogIndexClient.tsx pour le pattern complet. */}
+              <div
+                className={`relative h-40 overflow-hidden bg-gradient-to-br ${a.gradient}`}
+              >
+                <img
+                  src={`/blog/${a.slug}/opengraph-image`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-background/80 px-2.5 py-1 text-xs font-semibold backdrop-blur">
                   {a.category}
                 </span>
               </div>
