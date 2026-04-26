@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { resolveCryptoLogo } from "@/lib/crypto-logos";
 
 /**
@@ -63,18 +62,25 @@ export default function CryptoLogo({
   const altText = alt ?? `Logo ${symbol.toUpperCase()}`;
 
   if (resolved) {
+    // Bug fix 26/04/2026 (Chrome MCP live test) : avant <Image> Next.js
+    // unoptimized + loading="lazy" -> 50 logos crypto en `complete: false,
+    // naturalWidth: 0` en prod. L'IntersectionObserver natif de Next/Image
+    // ne triggerait pas reliably avec unoptimized. Switch sur <img> natif
+    // + loading="eager" : les logos crypto font ~9KB chacun (PNG 250x250
+    // optimisé CoinGecko), aucun benefice perf au lazy load. Decode async
+    // pour ne pas bloquer le main thread.
+    /* eslint-disable-next-line @next/next/no-img-element */
     return (
-      <Image
+      <img
         src={resolved}
         alt={altText}
         width={size}
         height={size}
         className={baseClass}
-        style={{ width: size, height: size }}
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
-        sizes={`${size}px`}
-        unoptimized
+        style={{ width: size, height: size, objectFit: "cover" }}
+        loading={priority ? "eager" : "eager"}
+        decoding="async"
+        {...(priority ? { fetchPriority: "high" as const } : {})}
       />
     );
   }
