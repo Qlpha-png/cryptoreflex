@@ -250,34 +250,56 @@ export default function ComparatifHubPage() {
               </div>
             </header>
 
-            {/* Filtres profil — interaction CSS pure via :checked + sibling */}
+            {/*
+              Filtres profil — interaction CSS pure via :checked + sibling.
+
+              BLOCK 11 fix (Agent /comparatif audit P0/P1) :
+                - Avant : role="tablist" sur wrapper + radios sr-only sans
+                  focus-visible style. WCAG 2.4.7 (focus visible) cassé +
+                  axe-core "aria-required-children" score 0/10 (tablist
+                  attend des tabpanel enfants, qu'on n'a pas).
+                - Après : role="radiogroup" + aria-label + peer-focus-visible
+                  ring sur chaque label (l'input reste sr-only mais reçoit
+                  toujours le focus clavier via Tab/Arrow native — radios
+                  groupés par name="profile"). On retire role="tablist" qui
+                  était incorrect.
+
+              Comportement clavier natif :
+                Tab focus le 1er radio, ←→/↑↓ change la sélection (browser
+                radio group native), zéro JS. Le ring visible est piloté par
+                peer-focus-visible/X sur chaque label associé.
+            */}
             <div className="profile-filter-wrap">
-              <div className="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Filtre par profil">
+              <div
+                className="flex flex-wrap gap-2 mb-5"
+                role="radiogroup"
+                aria-label="Filtre par profil utilisateur"
+              >
                 <input type="radio" name="profile" id="profile-all" defaultChecked className="peer/all sr-only" />
                 <label
                   htmlFor="profile-all"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/all:border-primary peer-checked/all:bg-primary/15 peer-checked/all:text-primary-glow transition-colors"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/all:border-primary peer-checked/all:bg-primary/15 peer-checked/all:text-primary-glow peer-focus-visible/all:ring-2 peer-focus-visible/all:ring-primary peer-focus-visible/all:ring-offset-2 peer-focus-visible/all:ring-offset-background transition-colors"
                 >
                   Tous
                 </label>
                 <input type="radio" name="profile" id="profile-debutant" className="peer/deb sr-only" />
                 <label
                   htmlFor="profile-debutant"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/deb:border-primary peer-checked/deb:bg-primary/15 peer-checked/deb:text-primary-glow transition-colors"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/deb:border-primary peer-checked/deb:bg-primary/15 peer-checked/deb:text-primary-glow peer-focus-visible/deb:ring-2 peer-focus-visible/deb:ring-primary peer-focus-visible/deb:ring-offset-2 peer-focus-visible/deb:ring-offset-background transition-colors"
                 >
                   Débutant
                 </label>
                 <input type="radio" name="profile" id="profile-inter" className="peer/int sr-only" />
                 <label
                   htmlFor="profile-inter"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/int:border-primary peer-checked/int:bg-primary/15 peer-checked/int:text-primary-glow transition-colors"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/int:border-primary peer-checked/int:bg-primary/15 peer-checked/int:text-primary-glow peer-focus-visible/int:ring-2 peer-focus-visible/int:ring-primary peer-focus-visible/int:ring-offset-2 peer-focus-visible/int:ring-offset-background transition-colors"
                 >
                   Intermédiaire
                 </label>
                 <input type="radio" name="profile" id="profile-av" className="peer/av sr-only" />
                 <label
                   htmlFor="profile-av"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/av:border-primary peer-checked/av:bg-primary/15 peer-checked/av:text-primary-glow transition-colors"
+                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/av:border-primary peer-checked/av:bg-primary/15 peer-checked/av:text-primary-glow peer-focus-visible/av:ring-2 peer-focus-visible/av:ring-primary peer-focus-visible/av:ring-offset-2 peer-focus-visible/av:ring-offset-background transition-colors"
                 >
                   Avancé
                 </label>

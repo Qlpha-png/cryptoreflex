@@ -44,7 +44,7 @@ export interface FiscalTool {
   /**
    * URL d'affiliation Cryptoreflex (avec UTM / ?ref=).
    * IMPORTANT : tous les CTA doivent passer par <AffiliateLink /> ou
-   * `rel="sponsored noopener noreferrer"` pour conformité loi Influenceurs
+   * `rel="sponsored nofollow noopener noreferrer"` pour conformité loi Influenceurs
    * (n°2023-451 du 9 juin 2023).
    */
   affiliateUrl: string;

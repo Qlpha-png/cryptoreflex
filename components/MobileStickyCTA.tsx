@@ -96,7 +96,7 @@ export default function MobileStickyCTA({
         <a
           href={href}
           target="_blank"
-          rel="sponsored noopener noreferrer"
+          rel="sponsored nofollow noopener noreferrer"
           onClick={handleClick}
           className="inline-flex shrink-0 items-center justify-center gap-1.5
                      min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold

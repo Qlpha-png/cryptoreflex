@@ -10,7 +10,7 @@
  *  - /blog/fiscalite-nft
  *
  * Server Component (data statique). Le CTA passe par <AffiliateLink />
- * (rel="sponsored noopener noreferrer" + caption "Publicité — commission").
+ * (rel="sponsored nofollow noopener noreferrer" + caption "Publicité — commission").
  *
  * Variantes via prop `variant` :
  *  - "compact" : 1 ligne, lien inline

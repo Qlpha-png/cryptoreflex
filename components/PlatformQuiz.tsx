@@ -912,7 +912,7 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
         <a
           href={p.affiliateUrl}
           target="_blank"
-          rel="sponsored noopener noreferrer"
+          rel="sponsored nofollow noopener noreferrer"
           onClick={() => trackAffiliateClick(p.id, `platform-quiz-rank-${rank}`)}
           className={
             rank === 1

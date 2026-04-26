@@ -194,7 +194,7 @@ export default function SimulateurDcaPage() {
                 <a
                   href={bitstack.affiliateUrl}
                   target="_blank"
-                  rel="sponsored noopener noreferrer"
+                  rel="sponsored nofollow noopener noreferrer"
                   className="btn-primary whitespace-nowrap"
                 >
                   Démarrer mon DCA

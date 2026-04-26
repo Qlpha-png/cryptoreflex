@@ -48,7 +48,7 @@ export default function CTABox({
   ) : isAffiliate ? (
     <a
       href={ctaUrl}
-      rel="sponsored noopener noreferrer"
+      rel="sponsored nofollow noopener noreferrer"
       className="btn-primary shrink-0"
     >
       {ctaText}

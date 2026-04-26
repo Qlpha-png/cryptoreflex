@@ -5,7 +5,7 @@
  * Server Component (pas d'interactivité, data statique).
  *
  * Conformité loi Influenceurs (juin 2023) : le CTA passe par <AffiliateLink />
- * qui gère automatiquement `rel="sponsored noopener noreferrer"` + caption
+ * qui gère automatiquement `rel="sponsored nofollow noopener noreferrer"` + caption
  * "Publicité — Cryptoreflex perçoit une commission".
  */
 
