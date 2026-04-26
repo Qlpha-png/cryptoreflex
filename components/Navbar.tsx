@@ -8,20 +8,43 @@ import Logo from "./Logo";
 
 const NAV = [
   { href: "/marche/heatmap", label: "Marché", desc: "Heatmap top 100 en temps réel" },
-  { href: "/#top10", label: "Top 10", desc: "Cryptos expliquées simplement" },
-  { href: "/#hidden-gems", label: "Hidden gems", desc: "Pépites moins connues" },
-  { href: "/#plateformes", label: "Plateformes", desc: "Comparatif exchanges FR" },
-  { href: "/academie", label: "Académie", desc: "Apprends crypto pas-à-pas" },
+  { href: "/actualites", label: "Actualités", desc: "News crypto quotidiennes" },
+  { href: "/analyses-techniques", label: "Analyses TA", desc: "RSI, MACD, niveaux clés top 5" },
+  { href: "/academie", label: "Académie", desc: "Parcours certifiants gratuits" },
+  { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses" },
-  { href: "/outils", label: "Outils", desc: "Calculateurs gratuits" },
-  { href: "/a-propos", label: "À propos", desc: "Qui est derrière Cryptoreflex" },
+  { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
 ];
 
 // Items additionnels injectés SEULEMENT dans le menu mobile (full-screen overlay
 // — il y a la place). Sur desktop, watchlist + portefeuille sont exposés via
 // icônes discrètes à droite du cluster CTA pour ne pas surcharger la nav
 // principale.
+//
+// Refonte 26-04 : on déplace ici les items secondaires (Top 10, Hidden gems,
+// Plateformes, À propos) pour libérer la nav desktop et faire de la place
+// aux 3 piliers V2 (Actualités, Analyses TA, Calendrier).
 const MOBILE_EXTRA = [
+  {
+    href: "/#top10",
+    label: "Top 10",
+    desc: "Cryptos expliquées simplement",
+  },
+  {
+    href: "/#hidden-gems",
+    label: "Hidden gems",
+    desc: "Pépites moins connues",
+  },
+  {
+    href: "/#plateformes",
+    label: "Plateformes",
+    desc: "Comparatif exchanges FR",
+  },
+  {
+    href: "/a-propos",
+    label: "À propos",
+    desc: "Qui est derrière Cryptoreflex",
+  },
   {
     href: "/watchlist",
     label: "Ma watchlist",

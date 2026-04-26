@@ -8,13 +8,16 @@ import {
   ShieldCheck,
   Receipt,
   ArrowRight,
+  BookOpen,
+  LineChart,
+  Briefcase,
 } from "lucide-react";
 import ProfitCalculator from "@/components/ProfitCalculator";
 
 export const metadata: Metadata = {
-  title: "Outils crypto gratuits — calculateurs, simulateurs, convertisseur",
+  title: "Outils crypto gratuits — calculateurs, simulateurs, glossaire, portfolio",
   description:
-    "Calculateur de profits, simulateur DCA backtest 5 ans, convertisseur temps réel, vérificateur MiCA et calculateur fiscalité crypto — 100 % gratuit, sans inscription.",
+    "8 outils gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur, vérificateur MiCA, calculateur ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
   alternates: { canonical: "https://cryptoreflex.fr/outils" },
 };
 
@@ -74,6 +77,34 @@ const TOOLS: Tool[] = [
     status: "available",
     badge: "Nouveau",
   },
+  // Pilier 5 V2 (26-04) — 3 nouveaux outils interactifs ajoutés au catalogue.
+  {
+    title: "Calculateur ROI",
+    description:
+      "Calcule plus-value brute / nette + impôt PFU estimé sur n'importe quel achat-vente crypto. Frais inclus.",
+    href: "/outils/calculateur-roi-crypto",
+    Icon: LineChart,
+    status: "available",
+    badge: "Nouveau",
+  },
+  {
+    title: "Portfolio Tracker",
+    description:
+      "Suis tes positions crypto en EUR temps réel. Données dans ton navigateur (zéro tracking), export CSV.",
+    href: "/outils/portfolio-tracker",
+    Icon: Briefcase,
+    status: "available",
+    badge: "Nouveau",
+  },
+  {
+    title: "Glossaire crypto",
+    description:
+      "250+ termes crypto définis en français : DeFi, MiCA, halving, staking, rollup, tokenomics, etc.",
+    href: "/outils/glossaire-crypto",
+    Icon: BookOpen,
+    status: "available",
+    badge: "Nouveau",
+  },
 ];
 
 export default function OutilsPage() {
@@ -106,8 +137,9 @@ export default function OutilsPage() {
             Tous les outils
           </h2>
           <p className="mt-2 text-white/70">
-            Cinq outils complémentaires pour couvrir tout le parcours
-            investisseur, du calcul de ROI à la fiscalité.
+            Huit outils complémentaires pour couvrir tout le parcours
+            investisseur, du premier achat au calcul de fiscalité, en passant
+            par le suivi de portefeuille et le glossaire technique.
           </p>
 
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

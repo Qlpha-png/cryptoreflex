@@ -6,6 +6,10 @@ import { getAllAuthors } from "@/lib/authors";
 import { TOP_PAIRS } from "@/lib/historical-prices";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 import { ALL_LISTICLES } from "@/lib/listicles";
+// Piliers V2 (26-04) : News auto, Analyses TA auto, Académie certifiante.
+import { getNewsSlugs } from "@/lib/news-mdx";
+import { getTASlugs } from "@/lib/ta-mdx";
+import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -30,6 +34,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/outils/verificateur-mica`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
     // Whitepaper TL;DR : outil expérimental, priorité standard.
     { url: `${SITE_URL}/outils/whitepaper-tldr`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    // Pilier 5 (V2) — 3 nouveaux outils interactifs ajoutés le 26-04-2026.
+    { url: `${SITE_URL}/outils/glossaire-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/calculateur-roi-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE_URL}/outils/portfolio-tracker`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+    // Piliers V2 (26-04) : pages-mère pour News auto, Analyses TA auto, Calendrier événements.
+    { url: `${SITE_URL}/analyses-techniques`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${SITE_URL}/calendrier`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/partenariats`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     // Pages business / monétisation (M+4-6 plan 2026)
     { url: `${SITE_URL}/pro`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
@@ -139,6 +150,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  /* ----------------------------------------------------------------
+   * 5. Piliers V2 — News, Analyses TA, Académie (parcours + leçons)
+   * ---------------------------------------------------------------- */
+  const newsSlugs = await getNewsSlugs();
+  const newsRoutes: MetadataRoute.Sitemap = newsSlugs.map((slug) => ({
+    url: `${SITE_URL}/actualites/${slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  const taSlugs = await getTASlugs();
+  const taRoutes: MetadataRoute.Sitemap = taSlugs.map((slug) => ({
+    url: `${SITE_URL}/analyses-techniques/${slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  // Académie : 3 routes parcours + N routes leçons (1 par couple track × article).
+  const academyTrackRoutes: MetadataRoute.Sitemap = TRACKS.map((t) => ({
+    url: `${SITE_URL}/academie/${t.id}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
+  }));
+  const academyLessonRoutes: MetadataRoute.Sitemap = TRACKS.flatMap((track) =>
+    track.lessons.map((lesson) => ({
+      url: `${SITE_URL}/academie/${track.id}/${lesson.articleSlug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  );
+
   return [
     ...staticRoutes,
     ...listicleRoutes,
@@ -147,5 +193,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...authorRoutes,
     ...programmaticRoutes,
     ...converterPairRoutes,
+    ...newsRoutes,
+    ...taRoutes,
+    ...academyTrackRoutes,
+    ...academyLessonRoutes,
   ];
 }

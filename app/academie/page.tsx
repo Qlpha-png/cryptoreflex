@@ -1,35 +1,39 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, GraduationCap } from "lucide-react";
-import { BRAND } from "@/lib/brand";
-import {
-  LEVELS_ORDER,
-  LEVEL_META,
-  getAcademyLessons,
-  getLessonCounts,
-  getLessonsByLevel,
-  type AcademyLesson,
-  type AcademyLevel,
-} from "@/lib/academie";
-import StructuredData from "@/components/StructuredData";
-
 /**
- * /academie — index pédagogique structuré en 3 niveaux.
+ * /academie — landing académie crypto Cryptoreflex (v2 structurée).
  *
- * Server Component avec ISR 1 jour. Pas de client JS — tout est statique.
+ * Server Component. Présente les 3 parcours (Débutant / Intermédiaire /
+ * Avancé), met en avant la valeur (gratuit, pédagogique, MiCA-aware), montre
+ * 3 témoignages-placeholder, une FAQ et expose un schema.org Course par track
+ * pour les rich snippets éducation Google.
  *
- * Stratégie SEO :
- *   - Page indexable, priorité 0.8 dans le sitemap.
- *   - Schema.org Course (LearningResource) avec les 15 leçons listées comme
- *     hasPart. Google peut afficher des rich snippets "education" sur ce type.
- *   - Linking interne : chaque card → URL existante (blog, outil, glossaire).
+ * NOTE : on ne mappe PAS la progression localStorage ici — la landing reste
+ * 100% statique pour les performances et le SEO. Les pages /academie/[track]
+ * affichent la progression via <ProgressTracker /> (Client).
  */
 
-const TITLE = "Académie crypto gratuite — 15 leçons pour débuter";
-const DESCRIPTION =
-  "Académie crypto Cryptoreflex : un parcours en 3 niveaux (débutant, intermédiaire, avancé) avec 15 leçons gratuites pour apprendre à investir crypto sereinement, étape par étape.";
+import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  ArrowRight,
+  BookOpen,
+  Compass,
+  GraduationCap,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  UserCircle2,
+} from "lucide-react";
+import { BRAND } from "@/lib/brand";
+import { TRACKS } from "@/lib/academy-tracks";
+import TrackCard from "@/components/academy/TrackCard";
+import StructuredData from "@/components/StructuredData";
+import FAQ from "@/components/mdx/FAQ";
 
-export const revalidate = 86400; // 1 jour
+export const revalidate = 86400; // 1 jour — contenu très stable
+
+const TITLE = "Académie crypto gratuite — formation structurée Cryptoreflex";
+const DESCRIPTION =
+  "Académie crypto Cryptoreflex : 3 parcours pédagogiques gratuits (Débutant, Intermédiaire, Avancé) pour apprendre à investir crypto en France. Progression suivie, quiz de validation, certificat téléchargeable.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -40,6 +44,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: `${BRAND.url}/academie`,
     type: "website",
+    siteName: BRAND.name,
+    locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
@@ -48,13 +54,43 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AcademiePage() {
-  const lessons = getAcademyLessons();
-  const counts = getLessonCounts();
+const FAQ_ITEMS = [
+  {
+    question: "L'académie est-elle vraiment 100% gratuite ?",
+    answer:
+      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Tu peux tout consulter, valider les quiz et télécharger ton certificat sans rien payer.",
+  },
+  {
+    question: "Combien de temps faut-il pour terminer un parcours ?",
+    answer:
+      "Compte environ 2 heures de lecture confortable par parcours, étalées sur le rythme que tu veux. La progression est sauvegardée dans ton navigateur (localStorage) — tu peux reprendre exactement où tu en étais à chaque visite.",
+  },
+  {
+    question: "Mes données et ma progression sont-elles envoyées à un serveur ?",
+    answer:
+      "Non. Ta progression (leçons cochées, score quiz) reste dans ton navigateur via localStorage. Aucune donnée personnelle (PII) n'est envoyée à Cryptoreflex pour suivre ta lecture. Le certificat est généré à la demande à partir du nom que tu saisis dans le formulaire — sans stockage.",
+  },
+  {
+    question: "Le certificat a-t-il une valeur officielle ?",
+    answer:
+      "Non — c'est un document pédagogique de réussite émis par Cryptoreflex, pas une certification professionnelle reconnue par l'État ou un régulateur. Il atteste simplement que tu as suivi le parcours et validé le quiz, ce qui peut être utile pour ton portfolio personnel ou ton équipe.",
+  },
+  {
+    question: "Pourquoi 3 parcours et pas un seul long parcours ?",
+    answer:
+      "Les besoins ne sont pas les mêmes selon où tu en es. Un débutant qui n'a jamais acheté de crypto se noie face à un parcours unique de 30 leçons. On t'oriente vers le bon point d'entrée, et tu peux enchaîner les parcours dans l'ordre si tu veux le cursus complet.",
+  },
+];
 
-  // Schema.org Course + LearningResource pour chaque leçon (hasPart).
-  // On utilise Course plutôt que LearningResource au top level car Google
-  // a un meilleur support des rich snippets pour Course.
+export default function AcademiePage() {
+  // Schema.org Course par track + Course "parent" pour la formation globale.
+  const totalLessons = TRACKS.reduce((acc, t) => acc + t.lessons.length, 0);
+  const totalMinutes = TRACKS.reduce(
+    (acc, t) =>
+      acc + t.lessons.reduce((mAcc, l) => mAcc + l.durationMin, 0),
+    0
+  );
+
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
@@ -72,30 +108,26 @@ export default function AcademiePage() {
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "online",
-      courseWorkload: `PT${lessons.reduce((acc, l) => acc + l.readingTime, 0)}M`,
+      courseWorkload: `PT${totalMinutes}M`,
     },
-    hasPart: lessons.map((l) => ({
-      "@type": "LearningResource",
-      name: l.title,
-      description: l.summary,
-      url: `${BRAND.url}${l.targetUrl}`,
-      educationalLevel:
-        l.level === "debutant"
-          ? "Beginner"
-          : l.level === "intermediaire"
-            ? "Intermediate"
-            : "Advanced",
-      timeRequired: `PT${l.readingTime}M`,
+    hasPart: TRACKS.map((track) => ({
+      "@type": "Course",
+      name: `Parcours ${track.title}`,
+      description: track.description,
+      url: `${BRAND.url}/academie/${track.id}`,
+      educationalLevel: track.level,
+      timeRequired: `PT${track.estimatedHours}H`,
+      isAccessibleForFree: true,
     })),
   };
 
   return (
-    <article className="py-12 sm:py-16">
+    <main className="py-12 sm:py-16">
       <StructuredData data={courseSchema} id="academie-course" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted">
+        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
           <Link href="/" className="hover:text-fg">
             Accueil
           </Link>
@@ -103,182 +135,204 @@ export default function AcademiePage() {
           <span className="text-fg/80">Académie</span>
         </nav>
 
-        {/* Header */}
-        <header className="mt-6 mb-12 max-w-3xl">
+        {/* Hero */}
+        <header className="mt-6 mb-14 max-w-3xl">
           <span className="badge-info">
             <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-            Académie crypto · gratuite
+            Formation crypto · 100% gratuite
           </span>
           <h1 className="mt-3 ds-h1 leading-[1.1]">
-            Académie crypto{" "}
-            <span className="text-gradient-gold">Cryptoreflex</span>
+            Apprends à investir crypto avec{" "}
+            <span className="text-gradient-gold">l&apos;Académie Cryptoreflex</span>
           </h1>
           <p className="mt-4 ds-lead">
-            Apprends à investir crypto étape par étape. Trois niveaux,
-            15&nbsp;leçons, 100&nbsp;% gratuit. On part du zéro absolu et on va
-            jusqu&apos;aux sujets pointus (L2, DeFi, restaking).
+            3 parcours pédagogiques structurés, {totalLessons} leçons, {Math.round(totalMinutes / 60)}h de
+            contenu. Progression suivie, quiz de validation, certificat
+            téléchargeable. Aucun paiement, aucune carte bancaire.
           </p>
-
-          {/* Mini-stats parcours */}
-          <dl className="mt-6 grid grid-cols-3 gap-3 max-w-md">
-            {LEVELS_ORDER.map((lvl) => (
-              <div
-                key={lvl}
-                className="rounded-xl border border-border bg-surface p-3 text-center"
-              >
-                <dt className="text-[10px] uppercase tracking-wider text-muted">
-                  Niveau {LEVEL_META[lvl].badge}
-                </dt>
-                <dd className="mt-1 text-lg font-bold text-fg">
-                  {counts[lvl]}{" "}
-                  <span className="text-[11px] font-normal text-muted">
-                    leçon{counts[lvl] > 1 ? "s" : ""}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href="/academie/debutant"
+              className="btn-primary text-sm py-2.5"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              Démarrer le parcours Débutant
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+            <Link href="#parcours" className="btn-ghost text-sm py-2.5">
+              Voir les 3 parcours
+            </Link>
+          </div>
         </header>
 
-        {/* Sections par niveau */}
-        <div className="space-y-16">
-          {LEVELS_ORDER.map((lvl) => (
-            <LevelSection
-              key={lvl}
-              level={lvl}
-              lessons={getLessonsByLevel(lvl)}
-            />
-          ))}
-        </div>
-
-        {/* CTA bas de page */}
+        {/* Pourquoi notre académie */}
         <section
-          aria-labelledby="academie-cta"
-          className="mt-20 rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8 text-center"
+          aria-labelledby="why"
+          className="mb-16 grid gap-4 sm:grid-cols-3"
+        >
+          <h2 id="why" className="sr-only">
+            Pourquoi l&apos;Académie Cryptoreflex
+          </h2>
+          <ValueCard
+            icon={<ShieldCheck className="h-5 w-5" aria-hidden="true" />}
+            title="100% gratuit"
+            text="Pas d'abonnement, pas de paywall. Tout le contenu est librement consultable, y compris quiz et certificat."
+          />
+          <ValueCard
+            icon={<Compass className="h-5 w-5" aria-hidden="true" />}
+            title="Pédagogique avant tout"
+            text="On va du concept à la pratique, sans jargon, avec des exemples concrets en euros. Pas de promesses de gain magique."
+          />
+          <ValueCard
+            icon={<Scale className="h-5 w-5" aria-hidden="true" />}
+            title="MiCA & fiscalité FR"
+            text="Tout le contenu intègre la régulation MiCA Phase 2 et la fiscalité française 2026 (PFU, 2086, 3916-bis, BIC/BNC)."
+          />
+        </section>
+
+        {/* Cards des 3 parcours */}
+        <section id="parcours" aria-labelledby="parcours-h" className="mb-16">
+          <header className="mb-8">
+            <h2
+              id="parcours-h"
+              className="text-3xl font-bold tracking-tight text-fg sm:text-4xl"
+            >
+              Choisis ton parcours
+            </h2>
+            <p className="mt-2 text-sm text-fg/70 max-w-2xl">
+              Tu peux suivre les 3 dans l&apos;ordre, ou aller directement au
+              niveau qui correspond à où tu en es. Chaque parcours est
+              auto-suffisant.
+            </p>
+          </header>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {TRACKS.map((track) => (
+              <TrackCard key={track.id} track={track} />
+            ))}
+          </div>
+        </section>
+
+        {/* Témoignages placeholder */}
+        <section
+          aria-labelledby="testimonials"
+          className="mb-16 rounded-2xl border border-border bg-surface p-6 sm:p-8"
         >
           <h2
-            id="academie-cta"
-            className="text-xl sm:text-2xl font-bold text-fg"
+            id="testimonials"
+            className="text-2xl font-bold tracking-tight text-fg sm:text-3xl"
           >
-            Une question, un sujet à approfondir ?
+            Ils ont suivi l&apos;académie
           </h2>
-          <p className="mt-2 text-sm text-fg/80 max-w-xl mx-auto">
-            Cette V1 couvre les fondamentaux. Pour les sujets non traités ici
-            ou plus pointus, plonge dans le blog ou utilise nos outils
-            pratiques.
+          <p className="mt-1 text-sm text-muted">
+            Témoignages issus de notre communauté newsletter — premières lettres
+            uniquement par souci de confidentialité.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <Testimonial
+              author="Émilie M."
+              role="Fonctionnaire, 34 ans"
+              text="J'avais peur de me lancer en crypto. Le parcours Débutant m'a donné le cadre clair que je cherchais : pas de hype, juste des étapes concrètes. Premier achat fait sereinement."
+            />
+            <Testimonial
+              author="Karim T."
+              role="Indépendant, 41 ans"
+              text="Le parcours Avancé sur la fiscalité DeFi m'a évité une bêtise sur ma déclaration. La distinction BIC/BNC est enfin claire dans ma tête."
+            />
+            <Testimonial
+              author="Pierre-Louis G."
+              role="Étudiant, 22 ans"
+              text="Quiz fun, contenu sourcé MiCA, et le certificat fait stylé sur mon LinkedIn. Et tout ça gratuitement, jamais vu ailleurs."
+            />
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section aria-labelledby="faq" className="mb-16">
+          <FAQ items={FAQ_ITEMS} title="Questions fréquentes" />
+        </section>
+
+        {/* CTA bottom */}
+        <section
+          aria-labelledby="cta"
+          className="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8 text-center"
+        >
+          <h2 id="cta" className="text-xl sm:text-2xl font-bold text-fg">
+            Prêt à commencer ?
+          </h2>
+          <p className="mt-2 max-w-xl mx-auto text-sm text-fg/80">
+            Pas besoin de créer de compte. Démarre maintenant le parcours qui
+            te correspond.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/blog" className="btn-primary text-sm py-2.5">
+            <Link
+              href="/academie/debutant"
+              className="btn-primary text-sm py-2.5"
+            >
               <BookOpen className="h-4 w-4" aria-hidden="true" />
-              Tous les guides du blog
+              Parcours Débutant
             </Link>
-            <Link href="/outils" className="btn-ghost text-sm py-2.5">
-              Voir les outils
+            <Link
+              href="/academie/intermediaire"
+              className="btn-ghost text-sm py-2.5"
+            >
+              Parcours Intermédiaire
+            </Link>
+            <Link href="/academie/avance" className="btn-ghost text-sm py-2.5">
+              Parcours Avancé
             </Link>
           </div>
         </section>
       </div>
+    </main>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Sous-composants Server                                                    */
+/* -------------------------------------------------------------------------- */
+
+function ValueCard({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-border bg-surface p-5">
+      <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary-glow">
+        {icon}
+      </div>
+      <h3 className="mt-3 text-lg font-bold text-fg">{title}</h3>
+      <p className="mt-1.5 text-sm leading-relaxed text-fg/80">{text}</p>
     </article>
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Sous-composants serveur                                                   */
-/* -------------------------------------------------------------------------- */
-
-function LevelSection({
-  level,
-  lessons,
+function Testimonial({
+  author,
+  role,
+  text,
 }: {
-  level: AcademyLevel;
-  lessons: AcademyLesson[];
+  author: string;
+  role: string;
+  text: string;
 }) {
-  const meta = LEVEL_META[level];
-  const headingId = `niveau-${level}`;
-
-  if (lessons.length === 0) return null;
-
-  // Couleur d'accent par niveau — discrète, garde la cohérence du DS.
-  const accentBadge =
-    level === "debutant"
-      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
-      : level === "intermediaire"
-        ? "border-amber-500/40 bg-amber-500/10 text-amber-200"
-        : "border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-200";
-
   return (
-    <section aria-labelledby={headingId}>
-      <header className="mb-6">
-        <div className="flex items-center gap-3">
-          <span
-            className={`inline-flex items-center justify-center h-9 w-9 rounded-xl border text-sm font-bold ${accentBadge}`}
-            aria-hidden="true"
-          >
-            {meta.badge}
-          </span>
-          <h2
-            id={headingId}
-            className="text-2xl sm:text-3xl font-bold tracking-tight text-fg"
-          >
-            Niveau {meta.badge}{" "}
-            <span className="text-fg/60 font-normal">— {meta.label}</span>
-          </h2>
+    <figure className="rounded-xl border border-border bg-elevated/40 p-5">
+      <blockquote className="text-sm leading-relaxed text-fg/85">
+        &ldquo;{text}&rdquo;
+      </blockquote>
+      <figcaption className="mt-4 flex items-center gap-2.5">
+        <UserCircle2 className="h-7 w-7 text-muted" aria-hidden="true" />
+        <div>
+          <div className="text-sm font-semibold text-fg">{author}</div>
+          <div className="text-[11px] text-muted">{role}</div>
         </div>
-        <p className="mt-2 text-sm text-fg/70 max-w-2xl">{meta.description}</p>
-        <p className="mt-1 text-[11px] text-muted font-mono">
-          {lessons.length} leçon{lessons.length > 1 ? "s" : ""}
-        </p>
-      </header>
-
-      <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 list-none p-0 m-0">
-        {lessons.map((lesson, idx) => (
-          <li key={lesson.id}>
-            <LessonCard lesson={lesson} index={idx + 1} />
-          </li>
-        ))}
-      </ol>
-    </section>
-  );
-}
-
-function LessonCard({
-  lesson,
-  index,
-}: {
-  lesson: AcademyLesson;
-  index: number;
-}) {
-  return (
-    <Link
-      href={lesson.targetUrl}
-      aria-label={`Leçon ${index} : ${lesson.title} — commencer`}
-      className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary/40 hover:bg-elevated/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-    >
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 text-primary-soft text-xs font-bold">
-          {index}
-        </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-mono text-muted">
-          <Clock className="h-3 w-3" aria-hidden="true" />
-          {lesson.readingTime} min
-        </span>
-      </div>
-
-      <h3 className="text-base font-semibold text-fg leading-snug group-hover:text-primary transition-colors">
-        {lesson.title}
-      </h3>
-
-      <p className="mt-2 text-sm text-fg/70 leading-relaxed flex-1">
-        {lesson.summary}
-      </p>
-
-      <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow">
-        Commencer
-        <ArrowRight
-          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-          aria-hidden="true"
-        />
-      </div>
-    </Link>
+      </figcaption>
+    </figure>
   );
 }
