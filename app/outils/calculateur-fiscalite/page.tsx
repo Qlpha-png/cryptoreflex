@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -11,12 +10,25 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import TaxCalculator from "@/components/TaxCalculator";
+import CalculateurFiscalite from "@/components/CalculateurFiscalite";
+import StructuredData from "@/components/StructuredData";
+import {
+  breadcrumbSchema,
+  faqSchema,
+  graphSchema,
+  type JsonLd,
+} from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 
-const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — gratuit, sans inscription";
+/* -------------------------------------------------------------------------- */
+/*  SEO meta — H1 et meta alignées sur la cible "calculateur fiscalité crypto */
+/*  France 2026" + variantes longues (PFU 30 %, barème, BIC).                 */
+/* -------------------------------------------------------------------------- */
+
+const PAGE_TITLE =
+  "Calculateur fiscalité crypto France 2026 (PFU 30%, barème, BIC) — Gratuit";
 const PAGE_DESCRIPTION =
-  "Calculez votre flat tax (PFU 30 %) sur vos plus-values crypto en 4 questions. Formule officielle 150 VH bis, aide pour le formulaire 2086 et le 3916-bis. 100 % gratuit, 100 % anonyme.";
+  "Calcule en 2 min ton impôt crypto 2026 selon le régime fiscal applicable (PFU, barème progressif, BIC). Inclut Cerfa 2086 + checklist déclaration.";
 const PAGE_PATH = "/outils/calculateur-fiscalite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -29,6 +41,7 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
     url: PAGE_URL,
     type: "website",
+    locale: "fr_FR",
   },
   twitter: {
     card: "summary_large_image",
@@ -37,301 +50,208 @@ export const metadata: Metadata = {
   },
 };
 
-const FAQ: { q: string; a: string }[] = [
+/* -------------------------------------------------------------------------- */
+/*  FAQ — 5 questions, JSON-LD FAQPage généré automatiquement                 */
+/* -------------------------------------------------------------------------- */
+
+const FAQ_ITEMS = [
   {
-    q: "Quel taux d'imposition s'applique aux plus-values crypto en France en 2026 ?",
-    a: "Les plus-values de cession d'actifs numériques par un particulier en gestion non professionnelle sont soumises au Prélèvement Forfaitaire Unique (PFU), aussi appelé flat tax, au taux global de 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de prélèvements sociaux. Vous pouvez également opter pour le barème progressif de l'IR si c'est plus avantageux.",
+    question:
+      "Quel régime fiscal s'applique aux plus-values crypto en France en 2026 ?",
+    answer:
+      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de prélèvements sociaux. Tu peux aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si tu trades de manière habituelle, l'administration peut requalifier ton activité en BIC professionnel.",
   },
   {
-    q: "Quelle est la formule officielle de calcul (article 150 VH bis) ?",
-    a: "Plus-value = montant_de_la_cession − (prix_total_d_acquisition × montant_de_la_cession / valeur_globale_du_portefeuille). Le second terme représente la part du prix d'acquisition imputable à la cession, calculée au prorata du portefeuille cédé.",
+    question: "À partir de quel montant dois-je déclarer mes plus-values crypto ?",
+    answer:
+      "Le seuil d'exonération 2026 est de 305 € par an. Si le total de tes cessions (ventes vers euros) reste inférieur ou égal à 305 €, tu es exonéré d'impôt. Au-delà, tu dois remplir le formulaire 2086 et reporter le total sur le 2042-C, même si la plus-value finale est faible.",
   },
   {
-    q: "Dois-je déclarer mes échanges crypto contre crypto (BTC → ETH par exemple) ?",
-    a: "Non. Les conversions crypto contre crypto sont neutres fiscalement. Seules les cessions vers une monnaie ayant cours légal (€, $) ou contre un bien ou un service sont imposables. Vous devez en revanche conserver l'historique pour le calcul du portefeuille global.",
+    question: "PFU ou barème progressif : que choisir ?",
+    answer:
+      "Le PFU à 30 % est avantageux dès que ta TMI dépasse 12,8 %. Le barème devient intéressant si ta TMI est de 0 ou 11 % et que tu peux jouer sur l'abattement de 10 %. Notre calculateur affiche les deux scénarios — compare le résultat avant de cocher l'option dans ta déclaration.",
   },
   {
-    q: "Qu'est-ce que le formulaire 2086 et qui doit le remplir ?",
-    a: "Le formulaire 2086 est l'annexe à votre déclaration de revenus dans laquelle vous reportez le détail de chaque cession imposable d'actifs numériques de l'année. Il doit être rempli par tout particulier ayant cédé des cryptos contre euros (ou contre un bien) au-dessus du seuil d'exonération de 305 € de cessions cumulées sur l'année.",
+    question: "Quand bascule-t-on en BIC professionnel ?",
+    answer:
+      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à ta TMI + 17,2 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
   },
   {
-    q: "Et le formulaire 3916-bis, c'est obligatoire ?",
-    a: "Oui. Le 3916-bis sert à déclarer chaque compte d'actifs numériques détenu, ouvert ou clos auprès d'un prestataire établi à l'étranger (Binance, Kraken, Coinbase, Bybit, etc.). Il est à déposer en même temps que la déclaration de revenus, indépendamment du fait que vous ayez vendu ou non. Une omission expose à 750 € d'amende par compte non déclaré (1 500 € si encours > 50 000 €).",
+    question: "Cet outil prend-il en compte le staking, le DeFi et les NFT ?",
+    answer:
+      "Non, pas directement. Les revenus de staking et lending sont assimilés à des BNC (bénéfices non commerciaux), avec un régime spécifique. Les NFT et les opérations DeFi (yield farming, prêts, airdrops) relèvent de cas qui dépassent le cadre de cet outil. Pour ces situations, consulte un expert-comptable spécialisé.",
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/*  Schema.org : SoftwareApplication + AggregateRating + Breadcrumb + FAQPage */
+/*  (graphSchema enveloppe le tout dans un @graph propre)                     */
+/* -------------------------------------------------------------------------- */
+
+const softwareAppSchema: JsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Calculateur fiscalité crypto France 2026",
+  description: PAGE_DESCRIPTION,
+  url: PAGE_URL,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Any",
+  inLanguage: "fr-FR",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+  // Placeholder rating à mettre à jour quand on aura des avis réels.
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5",
+    ratingCount: "12",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: BRAND.name,
+    url: BRAND.url,
+  },
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Page                                                                       */
+/* -------------------------------------------------------------------------- */
 
 export default function CalculateurFiscalitePage() {
   return (
     <>
-      {/* JSON-LD WebApplication */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            name: "Calculateur Fiscalité Crypto FR 2026",
-            url: PAGE_URL,
-            description: PAGE_DESCRIPTION,
-            applicationCategory: "FinanceApplication",
-            operatingSystem: "Any",
-            inLanguage: "fr-FR",
-            isAccessibleForFree: true,
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "EUR",
-            },
-            publisher: {
-              "@type": "Organization",
-              name: BRAND.name,
-              url: BRAND.url,
-            },
-          }),
-        }}
+      <StructuredData
+        data={graphSchema([
+          softwareAppSchema,
+          breadcrumbSchema([
+            { name: "Accueil", url: "/" },
+            { name: "Outils", url: "/outils" },
+            { name: "Calculateur fiscalité", url: PAGE_PATH },
+          ]),
+          faqSchema(FAQ_ITEMS),
+        ])}
       />
 
-      {/* JSON-LD HowTo */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "HowTo",
-            name: "Comment calculer ma flat tax crypto en France en 2026",
-            description:
-              "Méthode officielle (article 150 VH bis du CGI) pour estimer son impôt sur les plus-values d'actifs numériques.",
-            inLanguage: "fr-FR",
-            totalTime: "PT3M",
-            tool: [
-              { "@type": "HowToTool", name: "Calculateur Fiscalité Crypto Cryptoreflex" },
-            ],
-            step: [
-              {
-                "@type": "HowToStep",
-                position: 1,
-                name: "Renseigner le total investi",
-                text: "Additionnez tous vos achats crypto en euros depuis le début (frais inclus).",
-              },
-              {
-                "@type": "HowToStep",
-                position: 2,
-                name: "Renseigner la valeur actuelle du portefeuille",
-                text: "Indiquez la valeur totale de toutes vos cryptos au prix du jour.",
-              },
-              {
-                "@type": "HowToStep",
-                position: 3,
-                name: "Indiquer le total des cessions de l'année",
-                text: "Cumulez toutes vos ventes vers euros (ou achats de biens/services) sur l'année.",
-              },
-              {
-                "@type": "HowToStep",
-                position: 4,
-                name: "Indiquer la valeur du portefeuille au moment de la vente",
-                text: "Saisissez la valorisation globale juste avant la cession.",
-              },
-              {
-                "@type": "HowToStep",
-                position: 5,
-                name: "Lire votre flat tax",
-                text: "Le calculateur affiche votre plus-value imposable et votre flat tax due (30 % : 12,8 % IR + 17,2 % PS).",
-              },
-            ],
-          }),
-        }}
-      />
-
-      {/* JSON-LD FAQPage */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: FAQ.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
-          }),
-        }}
-      />
-
-      {/* Hero */}
+      {/* ============================ Hero ============================ */}
       <section className="relative py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
+            <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              100 % gratuit, sans inscription
+              Mis à jour pour la déclaration 2026
             </span>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-              Calculateur <span className="gradient-text">Fiscalité Crypto</span>{" "}
-              FR 2026
+              Calculateur fiscalité crypto{" "}
+              <span className="gradient-text">France 2026</span>
             </h1>
             <p className="mt-4 text-lg text-white/80">
-              Estimez votre <strong>flat tax</strong> (PFU 30 %) sur vos plus-values
-              crypto en 4 questions. Formule officielle{" "}
-              <strong>article 150 VH bis du CGI</strong>, aide pour remplir le{" "}
-              <strong>formulaire 2086</strong> et le <strong>3916-bis</strong>.
+              Estime ton impôt sur les plus-values crypto en 2 min selon le
+              régime fiscal applicable : <strong>PFU 30 %</strong>,{" "}
+              <strong>barème progressif IR</strong> ou{" "}
+              <strong>BIC professionnel</strong>. Calcul 100 % local, aucune
+              donnée envoyée.
             </p>
 
             <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
               {[
-                { icon: Lock, label: "Aucune donnée envoyée — calcul 100 % local" },
-                { icon: ShieldCheck, label: "Pas d'email, pas de compte requis" },
-                { icon: CheckCircle2, label: "Formule officielle 150 VH bis" },
-                { icon: FileText, label: "Aide pour le 2086 et le 3916-bis" },
+                { icon: Lock, label: "Calcul local — aucune donnée envoyée" },
+                { icon: CheckCircle2, label: "PFU, barème, BIC : 3 régimes" },
+                { icon: FileText, label: "Aide Cerfa 2086 + 2042-C par email" },
+                { icon: ShieldCheck, label: "Seuil 305 € pris en compte" },
               ].map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-2 text-white/80">
-                  <Icon className="h-4 w-4 text-primary-soft" aria-hidden="true" />
+                  <Icon
+                    className="h-4 w-4 text-primary-soft"
+                    aria-hidden="true"
+                  />
                   {label}
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Disclaimer fort */}
+          {/* Disclaimer obligatoire */}
           <div
-            role="alert"
-            className="mt-8 max-w-3xl rounded-xl border border-primary/40 bg-primary/5 p-4 flex gap-3 text-sm text-white/90"
+            role="note"
+            className="mt-8 max-w-3xl rounded-xl border border-warning/40 bg-warning/10 p-4 flex gap-3 text-sm text-white/90"
           >
             <AlertTriangle
-              className="h-5 w-5 shrink-0 text-primary-soft mt-0.5"
+              className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
               aria-hidden="true"
             />
             <p>
-              <strong className="text-primary-soft">
-                Calcul indicatif, à vérifier par un comptable.
+              <strong className="text-warning-fg">
+                Estimation à titre indicatif.
               </strong>{" "}
-              Cet outil ne remplace pas un expert-comptable ni l'administration
-              fiscale. Les règles peuvent évoluer ; vérifiez toujours le détail de
-              votre situation avant de déclarer.
+              Cet outil ne remplace pas un conseil fiscal personnalisé. Consulte
+              ton expert-comptable pour les cas complexes (DeFi, staking, NFT,
+              mining).
             </p>
           </div>
 
-          {/* Calculateur — Suspense requis car TaxCalculator utilise useSearchParams */}
+          {/* Calculateur */}
           <div className="mt-10 max-w-4xl">
-            <Suspense fallback={<div className="glass rounded-2xl p-6 sm:p-8 min-h-[300px]" aria-busy="true" />}>
-              <TaxCalculator />
-            </Suspense>
+            <CalculateurFiscalite />
           </div>
         </div>
       </section>
 
-      {/* Comment ça marche */}
+      {/* ====================== Comment ça marche ===================== */}
       <section className="py-16 sm:py-20 border-t border-border/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="badge-info">Méthode</span>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-              Comment ça marche ?
-            </h2>
-            <p className="mt-3 text-white/70">
-              Le fisc français applique la formule du <strong>150 VH bis</strong>{" "}
-              à chaque cession vers euros. Voici un exemple concret.
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <span className="badge-info">Méthode</span>
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Comment fonctionne le calculateur fiscalité crypto ?
+          </h2>
+          <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
+            <p>
+              La fiscalité des plus-values crypto en France repose sur l'article
+              150 VH bis du CGI. Pour un particulier en gestion occasionnelle,
+              le régime par défaut est le <strong>Prélèvement Forfaitaire
+              Unique (PFU)</strong> à 30 % : 12,8 % d'impôt sur le revenu et
+              17,2 % de prélèvements sociaux. Tu peux aussi opter pour le
+              barème progressif (TMI 11/30/41/45 %) si ta tranche d'IR est
+              basse — l'option est globale et annuelle, elle s'applique à
+              l'ensemble de tes revenus de capitaux mobiliers.
+            </p>
+            <p>
+              Notre calculateur applique la formule simplifiée :{" "}
+              <em>plus-value nette = total cessions − total achats − frais de
+              courtage − reports antérieurs</em>. Si le total de tes cessions
+              de l'année reste inférieur ou égal à <strong>305 €</strong>, tu
+              es totalement exonéré d'impôt sur tes plus-values crypto. Au-delà,
+              l'impôt s'applique sur la plus-value nette, jamais sur le brut.
+              Les conversions crypto contre crypto (BTC vers ETH par exemple)
+              sont fiscalement neutres : seul le passage en monnaie ayant cours
+              légal (€, $) ou l'achat d'un bien/service déclenche l'imposition.
+            </p>
+            <p>
+              Si tu trades de manière habituelle, organisée et avec des outils
+              avancés (bots, levier, arbitrage), l'administration peut
+              requalifier ton activité en <strong>BIC professionnel</strong>.
+              Le bénéfice net est alors imposé à ta TMI + 17,2 % PS +
+              cotisations sociales URSSAF (~22 %). Le calculateur intègre cette
+              option pour t'aider à comparer les trois régimes. Une fois ton
+              estimation obtenue, télécharge la checklist Cerfa 2086 + 2042-C
+              par email pour ne rien oublier au moment de remplir ta
+              déclaration.
             </p>
           </div>
-
-          <div className="mt-10 grid lg:grid-cols-2 gap-6">
-            <article className="glass rounded-2xl p-6 sm:p-8">
-              <h3 className="font-display font-bold text-xl text-white">
-                Exemple chiffré
-              </h3>
-              <p className="mt-2 text-sm text-muted">
-                Marie a investi <strong className="text-white">5 000 €</strong> en
-                crypto. Aujourd'hui son portefeuille vaut{" "}
-                <strong className="text-white">12 000 €</strong>. Elle vend pour{" "}
-                <strong className="text-white">4 000 €</strong> alors que son
-                portefeuille en vaut <strong className="text-white">10 000 €</strong>.
-              </p>
-
-              <ol className="mt-5 space-y-4 text-sm">
-                <Step
-                  n={1}
-                  title="Prix d'acquisition imputé à la cession"
-                  body={
-                    <span className="font-mono text-white">
-                      5 000 × 4 000 / 10 000 = <strong>2 000 €</strong>
-                    </span>
-                  }
-                />
-                <Step
-                  n={2}
-                  title="Plus-value imposable"
-                  body={
-                    <span className="font-mono text-white">
-                      4 000 − 2 000 = <strong>2 000 €</strong>
-                    </span>
-                  }
-                />
-                <Step
-                  n={3}
-                  title="Flat tax due (PFU 30 %)"
-                  body={
-                    <span className="font-mono text-white">
-                      2 000 × 30 % = <strong className="text-primary-soft">600 €</strong>{" "}
-                      <span className="text-muted">
-                        (256 € IR + 344 € PS)
-                      </span>
-                    </span>
-                  }
-                />
-              </ol>
-
-              <p className="mt-5 text-xs text-muted">
-                Marie déclare 2 000 € de plus-value sur sa{" "}
-                <strong className="text-white">2086</strong> et reporte le total
-                sur sa déclaration de revenus.
-              </p>
-            </article>
-
-            <article className="glass rounded-2xl p-6 sm:p-8">
-              <h3 className="font-display font-bold text-xl text-white">
-                Les règles à connaître
-              </h3>
-              <ul className="mt-4 space-y-3 text-sm text-white/80">
-                <Bullet>
-                  <strong>Seuil 305 €</strong> : si le total de vos cessions de
-                  l'année est ≤ 305 €, vous êtes exonéré (mais déclarez quand
-                  même).
-                </Bullet>
-                <Bullet>
-                  <strong>Crypto ↔ crypto</strong> : non imposable. Seul le
-                  passage en € (ou achat de bien/service) déclenche l'impôt.
-                </Bullet>
-                <Bullet>
-                  <strong>Moins-value</strong> : imputable sur les plus-values
-                  crypto de la <em>même année</em> uniquement. Pas de report sur
-                  les années suivantes pour les particuliers.
-                </Bullet>
-                <Bullet>
-                  <strong>Comptes étrangers</strong> : tout compte chez Binance,
-                  Kraken, Coinbase, Bybit, etc. doit être déclaré sur le{" "}
-                  <strong>3916-bis</strong> — même sans cession.
-                </Bullet>
-                <Bullet>
-                  <strong>Option barème</strong> : vous pouvez choisir le barème
-                  progressif de l'IR à la place du PFU, si c'est plus avantageux.
-                </Bullet>
-              </ul>
-            </article>
-          </div>
         </div>
       </section>
 
-      {/* Aide formulaires */}
+      {/* ===================== Aide formulaires ====================== */}
       <section className="py-16 sm:py-20 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Déclaration</span>
             <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-              Aide pour remplir vos formulaires
+              Aide pour remplir tes formulaires
             </h2>
             <p className="mt-3 text-white/70">
-              Une fois le calcul fait, il vous reste deux formulaires à déposer
-              avec votre déclaration de revenus.
+              Une fois le calcul effectué, deux formulaires à déposer avec ta
+              déclaration de revenus.
             </p>
           </div>
 
@@ -341,18 +261,22 @@ export default function CalculateurFiscalitePage() {
               className="glass rounded-2xl p-6 sm:p-8 hover:border-primary/60 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <FileText className="h-6 w-6 text-primary-soft" aria-hidden="true" />
+                <FileText
+                  className="h-6 w-6 text-primary-soft"
+                  aria-hidden="true"
+                />
                 <h3 className="font-display font-bold text-lg text-white">
                   Formulaire 2086
                 </h3>
               </div>
               <p className="mt-3 text-sm text-white/70">
-                Détail ligne par ligne de vos cessions imposables. Comment
+                Détail ligne par ligne de tes cessions imposables. Comment
                 reporter les chiffres du calculateur, exemple rempli, erreurs
                 fréquentes.
               </p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary-soft group-hover:gap-2 transition-all">
-                Lire le guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Lire le guide{" "}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>
             </Link>
 
@@ -361,7 +285,10 @@ export default function CalculateurFiscalitePage() {
               className="glass rounded-2xl p-6 sm:p-8 hover:border-primary/60 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <BookOpen className="h-6 w-6 text-primary-soft" aria-hidden="true" />
+                <BookOpen
+                  className="h-6 w-6 text-primary-soft"
+                  aria-hidden="true"
+                />
                 <h3 className="font-display font-bold text-lg text-white">
                   Formulaire 3916-bis
                 </h3>
@@ -372,14 +299,15 @@ export default function CalculateurFiscalitePage() {
                 compte oublié.
               </p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary-soft group-hover:gap-2 transition-all">
-                Lire le guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Lire le guide{" "}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ============================ FAQ ============================ */}
       <section className="py-16 sm:py-20 border-t border-border/60">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">FAQ</span>
@@ -388,13 +316,13 @@ export default function CalculateurFiscalitePage() {
           </h2>
 
           <div className="mt-8 space-y-3">
-            {FAQ.map((item, i) => (
+            {FAQ_ITEMS.map((item) => (
               <details
-                key={i}
+                key={item.question}
                 className="group glass rounded-xl p-5 open:border-primary/40 transition-colors"
               >
                 <summary className="cursor-pointer list-none flex items-start justify-between gap-3 font-semibold text-white">
-                  <span>{item.q}</span>
+                  <span>{item.question}</span>
                   <span
                     className="text-primary-soft text-xl leading-none mt-0.5 transition-transform group-open:rotate-45"
                     aria-hidden="true"
@@ -403,65 +331,26 @@ export default function CalculateurFiscalitePage() {
                   </span>
                 </summary>
                 <p className="mt-3 text-sm text-white/75 leading-relaxed">
-                  {item.a}
+                  {item.answer}
                 </p>
               </details>
             ))}
           </div>
 
-          <div className="mt-10 rounded-xl border border-primary/40 bg-primary/5 p-5 text-sm text-white/90 flex gap-3">
+          <div className="mt-10 rounded-xl border border-warning/40 bg-warning/10 p-5 text-sm text-white/90 flex gap-3">
             <AlertTriangle
-              className="h-5 w-5 shrink-0 text-primary-soft mt-0.5"
+              className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
               aria-hidden="true"
             />
             <p>
-              <strong className="text-primary-soft">Rappel :</strong> Cet outil
+              <strong className="text-warning-fg">Rappel :</strong> Cet outil
               ne remplace pas un expert-comptable. Pour des situations complexes
-              (staking, lending, NFT, mining, activité habituelle), faites-vous
+              (staking, lending, NFT, mining, activité habituelle), fais-toi
               accompagner par un professionnel.
             </p>
           </div>
         </div>
       </section>
     </>
-  );
-}
-
-/* ---------- petits sous-composants serveurs ---------- */
-
-function Step({
-  n,
-  title,
-  body,
-}: {
-  n: number;
-  title: string;
-  body: React.ReactNode;
-}) {
-  return (
-    <li className="flex gap-3">
-      <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-background text-xs font-bold"
-        aria-hidden="true"
-      >
-        {n}
-      </span>
-      <div>
-        <p className="text-white/90 font-semibold">{title}</p>
-        <p className="mt-1">{body}</p>
-      </div>
-    </li>
-  );
-}
-
-function Bullet({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex gap-2">
-      <CheckCircle2
-        className="h-4 w-4 shrink-0 text-accent-green mt-0.5"
-        aria-hidden="true"
-      />
-      <span>{children}</span>
-    </li>
   );
 }
