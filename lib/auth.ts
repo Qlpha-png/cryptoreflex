@@ -41,7 +41,19 @@ import { timingSafeEqual } from "node:crypto";
  * @returns `true` si autorisé, `false` sinon
  */
 export function verifyBearer(req: Request, secret: string | undefined): boolean {
-  if (!secret) return true; // mode dev sans secret
+  if (!secret) {
+    // Audit BACK 26/04/2026 P1 #5 : avant on retournait toujours true sans
+    // secret. Si CRON_SECRET disparaissait par accident de l'env Vercel
+    // (typo, suppression), tous les crons devenaient publics SILENCIEUSEMENT.
+    // Maintenant : refus strict en prod, autorisation seulement en dev.
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[verifyBearer] SECRET MANQUANT en production — refus de l'accès. Configurer CRON_SECRET dans Vercel.",
+      );
+      return false;
+    }
+    return true; // mode dev sans secret
+  }
   const auth = req.headers.get("authorization") ?? "";
   const expected = `Bearer ${secret}`;
   // Longueurs différentes → reject sans appeler timingSafeEqual (qui throw).
