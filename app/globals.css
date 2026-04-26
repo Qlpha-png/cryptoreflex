@@ -448,6 +448,26 @@ body.modal-open {
   overscroll-behavior: contain;
 }
 
+/* Scroll-margin-top pour les sections cibles de HomeAnchorNav (chips
+   sticky). Sans ça, scrollIntoView() positionne la section EXACTEMENT
+   en haut du viewport, donc cachée derrière la nav sticky (h-16 navbar
+   + ~52px chips = ~120px). Cette règle décale automatiquement. */
+section[id^="cat-"] {
+  scroll-margin-top: 130px;
+}
+
+/* Custom scrollbar minimaliste pour la chips horizontale mobile */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
 /* ───────────────────────── SKELETON / SHIMMER ─────────────────────────
    Utilisé par les loading.tsx (Hero, cards, tables).
    Animation subtile gauche→droite — pas un pulse criard.

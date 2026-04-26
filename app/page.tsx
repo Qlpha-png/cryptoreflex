@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BarChart3,
   Lightbulb,
+  Mail,
   Newspaper,
   Target,
   Wrench,
@@ -25,6 +26,8 @@ import ToolsTeaser from "@/components/ToolsTeaser";
 import NewsTickerServer from "@/components/NewsTickerServer";
 import QuizPromo from "@/components/QuizPromo";
 import NewsBar from "@/components/NewsBar";
+import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
+import HomeAnchorNav from "@/components/HomeAnchorNav";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 import {
@@ -161,6 +164,11 @@ export default async function HomePage() {
       />
       <ReassuranceSection />
 
+      {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
+          26/04/2026 "des onglets pour faire respirer + pas se perdre".
+          Permet au visiteur de scroll-to-section direct vs scroller 5 viewports. */}
+      <HomeAnchorNav />
+
       {/* ──────────────────────────────────────────────────────────────────
           CATÉGORIE 1 — DÉMARRER MAINTENANT
           Pour qui n'a jamais acheté de crypto. On ramène le parcours
@@ -231,7 +239,29 @@ export default async function HomePage() {
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 4 — OUTILS & MARCHÉ
+          CATÉGORIE 4 — ACTUALITÉS & CALENDRIER (ajout 26/04/2026)
+          Feedback utilisateur "les gens sont pas assez mis au courant des
+          news journalières / événements calendrier". On expose les 3 news
+          du jour + 3 events à venir, avec pulse rouge "À la une" + compteur
+          "X publiées cette semaine" pour donner du dynamisme.
+         ────────────────────────────────────────────────────────────────── */}
+      <section aria-labelledby="cat-actu">
+        <CategoryHeader
+          Icon={Newspaper}
+          eyebrow="Étape 4"
+          title="Actualités & calendrier"
+          intro="Les news crypto qui comptent vraiment + les events à ne pas rater (halvings, FOMC, ETF deadlines)."
+        />
+        <h2 id="cat-actu" className="sr-only">
+          Actualités et calendrier
+        </h2>
+        <TodaysNewsAndEvents />
+      </section>
+
+      <CategoryDivider />
+
+      {/* ──────────────────────────────────────────────────────────────────
+          CATÉGORIE 5 — OUTILS & MARCHÉ
           Tableau de marché + outils gratuits regroupés. Le marché live
           est désormais positionné en "ressource pratique" (et non comme
           un mur de données en milieu de page).
@@ -239,7 +269,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-outils">
         <CategoryHeader
           Icon={Wrench}
-          eyebrow="Étape 4"
+          eyebrow="Étape 5"
           title="Outils & marché live"
           intro="Calculateurs, simulateurs, convertisseur, et le tableau des prix — tout est gratuit, sans inscription."
           ctaHref="/outils"
@@ -271,8 +301,8 @@ export default async function HomePage() {
          ────────────────────────────────────────────────────────────────── */}
       <section aria-labelledby="cat-informe">
         <CategoryHeader
-          Icon={Newspaper}
-          eyebrow="Étape 5"
+          Icon={Mail}
+          eyebrow="Étape 6"
           title="Rester informé"
           intro="Une newsletter par semaine — les actus crypto FR qui comptent vraiment, sans hype ni shilling."
         />

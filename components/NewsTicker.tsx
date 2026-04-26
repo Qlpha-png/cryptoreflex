@@ -123,26 +123,22 @@ function NewsItem({
 /* -------------------------------------------------------------------------- */
 
 /**
- * Formatte une date ISO en relatif compact ("il y a 2h", "il y a 3j", "12 mars").
- * 100 % SSR-deterministe : on calcule par rapport à `Date.now()` côté client
- * uniquement, mais comme l'output est court (< 8 caractères) la première
- * frame avant hydration affichera la valeur serveur — pas de mismatch
- * tant que la valeur reste stable au format "JJ mois".
+ * Formatte une date ISO en absolu compact ("12 mars", "26 avr.").
  *
- * Pour rester safe : on retourne un format absolu si l'écart est >= 7j.
+ * Bug fix critique 26/04/2026 : avant on utilisait `Date.now()` au render,
+ * ce qui creait un mismatch hydration SSR vs CSR (le serveur calculait
+ * "il y a 2h", le client en hydratant calculait "il y a 4h" -> React bail
+ * out -> TOUS les event handlers de la page detaches -> burger menu mobile
+ * inerte, etc). Erreurs React #422 + #425 dans le console Lighthouse.
+ *
+ * Solution : on rend desormais un format absolu deterministe ("12 mars")
+ * qui produit le meme output sur serveur et client. Pas de "il y a X h"
+ * possible sans Date.now() dans le render.
  */
 function formatRelative(iso: string): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "";
-  const now = Date.now();
-  const diffMs = now - then;
-  const diffH = Math.floor(diffMs / (1000 * 60 * 60));
-  if (diffH < 1) return "à l'instant";
-  if (diffH < 24) return `il y a ${diffH}h`;
-  const diffD = Math.floor(diffH / 24);
-  if (diffD < 7) return `il y a ${diffD}j`;
-  // Au-delà : format absolu court FR ("12 mars")
-  return new Date(iso).toLocaleDateString("fr-FR", {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "short",
   });
