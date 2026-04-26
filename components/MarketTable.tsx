@@ -27,12 +27,16 @@ export default async function MarketTable({ limit = 20 }: { limit?: number }) {
     return (
       <section id="marche" className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Audit Block 7 RE-AUDIT (UX F8) : "Réessayer" -> "/#marche" était un
+              lien circulaire qui ne re-fetch pas (Server Component, ISR 2 min).
+              Frustration garantie. Suppression du CTA primary, garde uniquement
+              le secondary "Voir les guides" qui amène vers du contenu utile. */}
           <EmptyState
             icon={<BarChart3 className="h-6 w-6" aria-hidden="true" />}
             title="Données marché indisponibles"
-            description="Notre fournisseur de cours est temporairement injoignable. Les prix reviendront dans quelques minutes."
-            cta={{ label: "Réessayer", href: "/#marche" }}
-            secondaryCta={{ label: "Voir les guides", href: "/blog" }}
+            description="Notre fournisseur de cours est temporairement injoignable. Les prix reviendront dans quelques minutes — en attendant, découvrez nos guides crypto."
+            cta={{ label: "Voir les guides crypto", href: "/blog" }}
+            secondaryCta={{ label: "Comparer les plateformes", href: "/comparatif" }}
           />
         </div>
       </section>
@@ -40,8 +44,9 @@ export default async function MarketTable({ limit = 20 }: { limit?: number }) {
   }
 
   // Slugs cliquables : on n'enroule la ligne dans un <Link> que si la crypto
-  // a une fiche éditoriale dédiée dans lib/cryptos.ts (sinon lien mort = pire UX).
-  const internalSlugs = new Set(getCryptoSlugs());
+  // a une fiche éditoriale dédiée (sinon lien mort = pire UX).
+  // Audit Block 7 RE-AUDIT (Front #5) : passe directement string[] (vs Set->Array->Set).
+  const internalSlugs = getCryptoSlugs();
 
-  return <MarketTableClient coins={coins} limit={limit} internalSlugs={Array.from(internalSlugs)} />;
+  return <MarketTableClient coins={coins} limit={limit} internalSlugs={internalSlugs} />;
 }

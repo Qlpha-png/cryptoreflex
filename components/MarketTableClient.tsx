@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
@@ -13,14 +13,26 @@ import WatchlistButton from "@/components/WatchlistButton";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 
 /**
- * MarketTableClient — version Client de la table marché (audit P0-3 / P0-4).
+ * MarketTableClient — version Client de la table marché.
  *
- * Responsabilités :
- *  - Tri client-side sur 6 colonnes (rang, prix, 24h, 7j, market cap, volume).
- *  - Indicateur visuel ▲/▼ sur l'en-tête actif + aria-sort ARIA-correct.
- *  - Lignes cliquables vers /cryptos/[slug] uniquement si le slug existe
- *    dans `lib/cryptos.ts` (slugs passés en props par le Server parent).
- *  - Préserve les 2 layouts (mobile cards / desktop table).
+ * Audit Block 7 RE-AUDIT 26/04/2026 (3 agents PRO consolidés) :
+ *
+ * VAGUE 1 — Bugs critiques (Agent Front)
+ *  - Mobile : map sur sortedCoins (avant : coins) - tri ignoré sur mobile.
+ *  - tr cursor-pointer retiré (UX menteur, no onClick handler attaché).
+ *  - PctCell : signe +/− explicite (WCAG 1.4.1 Use of Color, agent A11y V5).
+ *  - Sparkline mémoisée (React.memo) - évite recalcul 168pts × 20 cards à chaque tri.
+ *
+ * VAGUE 2 — A11y EAA P0 (Agent A11y)
+ *  - V1 P0 : Live region role=status pour annonce de tri (aria-sort lu seulement au focus).
+ *  - V4 : sr-only + aria-hidden sur header icon ★ (au lieu de aria-label sur span non-interactif).
+ *  - V5 P0 : Use of Color fix - signe +/− textuel + flèches h-4 (au lieu de h-3).
+ *  - aria-labelledby="market-title" sur section.
+ *
+ * VAGUE 3 — DYNAMISME (Agent Visual+Animation 3/10 → 8/10)
+ *  - Live badge heartbeat .live-dot (réutilise Block 1 keyframe pulse-dot + ring).
+ *  - Sparkline premium : gradient fill + dot final (signature CoinGecko/TradingView).
+ *  - Row hover : translate-y-0.5 + border-l-2 primary (signature Phantom).
  */
 
 type SortKey = "rank" | "price" | "change24h" | "change7d" | "marketCap" | "volume";
@@ -66,25 +78,44 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
     }
   }
 
+  // Audit A11y V1 P0 : message de live region annoncé au tri.
+  const sortLabel = SORT_LABELS[sortKey] ?? sortKey;
+  const sortAnnouncement = `Tableau trié par ${sortLabel}, ordre ${sortDir === "asc" ? "croissant" : "décroissant"}`;
+
   return (
-    <section id="marche" className="py-12 sm:py-20">
+    <section
+      id="marche"
+      aria-labelledby="market-title"
+      className="py-12 sm:py-20"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8 flex-wrap">
           <div>
-            <span className="badge-info">Marché en direct</span>
-            <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            {/* Live badge avec heartbeat .live-dot (réutilise Block 1) */}
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-accent-green">
+              <span className="live-dot inline-flex" aria-hidden="true" />
+              Marché en direct
+            </span>
+            <h2 id="market-title" className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
               Top {limit} <span className="gradient-text">cryptomonnaies</span>
             </h2>
-            <p className="mt-2 text-sm text-muted">
-              Capitalisation, volume, variations en temps réel via CoinGecko. Mis à jour toutes les 2 min.
+            <p className="mt-2 text-sm text-fg/65">
+              {/* Audit UX F6 : sous-titre vulgarisé pour débutants */}
+              Capitalisation, volume, variations en temps réel via CoinGecko.
+              <span className="hidden sm:inline">{" "}Repère les cryptos en hausse <span className="text-accent-green font-semibold">(vert)</span> ou en baisse <span className="text-accent-rose font-semibold">(rouge)</span> sur 24h.</span>
             </p>
           </div>
         </div>
 
-        {/* Mobile : cards verticales (md:hidden) — tri non exposé (UX simplifiée),
-            mais on respecte l'ordre serveur (rank). */}
+        {/* Audit A11y V1 P0 : Live region pour annonce de tri (sr-only) */}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {sortAnnouncement}
+        </div>
+
+        {/* Mobile : cards verticales (md:hidden) — Audit Front #1 P0 BUG :
+            map sur sortedCoins (avant : coins, tri desktop ignoré sur mobile). */}
         <div className="md:hidden space-y-2">
-          {coins.map((coin) => {
+          {sortedCoins.map((coin) => {
             const hasPage = slugSet.has(coin.id);
             return (
               <CoinCardMobile
@@ -111,14 +142,14 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
               </caption>
               <thead className="bg-elevated text-xs uppercase tracking-wider text-muted">
                 <tr>
-                  {/* Watchlist column — étoile, tout à gauche, non triable */}
+                  {/* Watchlist column — étoile, tout à gauche, non triable.
+                      Audit A11y V4 : sr-only au lieu de aria-label sur span non-interactif. */}
                   <th
                     scope="col"
                     className="text-center px-2 py-3 font-medium w-10"
                   >
-                    <span aria-label="Ajouter à la watchlist" title="Watchlist">
-                      ★
-                    </span>
+                    <span className="sr-only">Watchlist</span>
+                    <span aria-hidden="true">★</span>
                   </th>
                   <SortableTh
                     label="#"
@@ -185,7 +216,8 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
                     scope="col"
                     className="text-center px-2 py-3 font-medium hidden xl:table-cell w-32"
                   >
-                    <span aria-label="Tendance des prix sur 7 jours">7 jours</span>
+                    <span className="sr-only">Tendance des prix sur 7 jours</span>
+                    <span aria-hidden="true">7 jours</span>
                   </th>
                 </tr>
               </thead>
@@ -389,15 +421,15 @@ function CoinRow({
   priority?: boolean;
   hasPage: boolean;
 }) {
-  // Pour préserver la sémantique <table>, on n'utilise PAS de <Link> autour du <tr>
-  // (HTML invalide). À la place : <Link> sur la cellule "Crypto" + <tr> cliquable
-  // par bubbling (onClick) — pattern compatible accessibilité car le focus visible
-  // tape déjà sur le <Link> de la 2e colonne.
+  // Pour préserver la sémantique <table>, on n'utilise PAS de <Link> autour du <tr>.
+  // Audit A11y V2 P0 + Front #4 : retire cursor-pointer (UX menteur — pas d'onClick
+  // handler, le clavier ne pouvait pas activer la "ligne cliquable"). Le <Link> sur
+  // la cellule "Crypto" reste l'unique cible interactive (focus-visible OK).
   return (
     <tr
       className={[
-        "border-t border-border transition-colors",
-        hasPage ? "hover:bg-elevated/50 cursor-pointer" : "cursor-default",
+        "border-t border-border transition-colors group/row",
+        hasPage ? "hover:bg-elevated/50" : "",
       ].join(" ")}
     >
       <td className="px-2 py-3 text-center">
@@ -469,6 +501,11 @@ function CoinRow({
   );
 }
 
+/**
+ * PctCell — affichage d'une variation en %.
+ * Audit A11y V5 P0 (1.4.1 Use of Color) : signe +/− textuel explicite + flèche
+ * plus grosse (h-4 vs h-3) pour daltoniens. Pas color-only.
+ */
 function PctCell({ value }: { value: number | null }) {
   if (value === null || value === undefined)
     return (
@@ -477,37 +514,49 @@ function PctCell({ value }: { value: number | null }) {
       </span>
     );
   const up = value >= 0;
+  // Audit A11y V5 : signe +/− explicite avant la valeur (pas color-only).
+  const sign = up ? "+" : "−";
   return (
     <span
-      className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold ${
+      className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold tabular-nums ${
         up ? "text-accent-green" : "text-accent-rose"
       }`}
     >
       {up ? (
-        <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+        <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
       ) : (
-        <ArrowDownRight className="h-3 w-3" aria-hidden="true" />
+        <ArrowDownRight className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
       )}
       <span className="sr-only">{up ? "hausse de" : "baisse de"} </span>
-      {formatPct(value)}
+      {sign}
+      {formatPct(value).replace(/^[+-−]/, "")}
     </span>
   );
 }
 
 /**
- * Sparkline SVG ultra-léger (pas de lib externe).
- * Trace les 168 points de prix 7j en une polyline normalisée.
+ * Sparkline SVG premium (Audit Visual+Animation P0) :
+ *  - Gradient fill sous la courbe (style CoinGecko/TradingView signature)
+ *  - Dot final pulsé (signature dynamism — point lumineux qui respire)
+ *  - strokeLinecap="round" + width 1.75 (premium)
+ *  - React.memo (Audit Perf L4) : évite recalcul 168pts × 20 cards à chaque tri
+ *
+ * Note : pas de polling client cette pass, donc le dot pulsé est le seul indicateur
+ * visuel "vivant" — quand polling sera ajouté, le PriceFlash s'activera automatiquement.
  */
-function Sparkline({
+const Sparkline = memo(function SparklineImpl({
   points,
   positive,
   width = 100,
   height = 32,
+  coinId,
 }: {
   points: number[];
   positive: boolean;
   width?: number;
   height?: number;
+  /** Id unique pour gradient SVG (évite collision quand multiple Sparkline rendered). */
+  coinId?: string;
 }) {
   if (!points || points.length < 2) return null;
   const w = width;
@@ -516,31 +565,64 @@ function Sparkline({
   const max = Math.max(...points);
   const range = max - min || 1;
   const stepX = w / (points.length - 1);
-  const path = points
-    .map(
-      (p, i) =>
-        `${i === 0 ? "M" : "L"}${(i * stepX).toFixed(2)},${(h - ((p - min) / range) * h).toFixed(2)}`
-    )
+
+  const coords = points.map((p, i) => ({
+    x: i * stepX,
+    y: h - ((p - min) / range) * h,
+  }));
+
+  const path = coords
+    .map((c, i) => `${i === 0 ? "M" : "L"}${c.x.toFixed(2)},${c.y.toFixed(2)}`)
     .join(" ");
+  const areaPath = `${path} L${w},${h} L0,${h} Z`;
   const stroke = positive ? "#22C55E" : "#EF4444";
+  const gradientId = `spk-mkt-${coinId ?? "default"}-${positive ? "up" : "down"}`;
+  const lastPoint = coords[coords.length - 1];
+
   return (
     <svg
       width={w}
       height={h}
       viewBox={`0 0 ${w} ${h}`}
-      className="inline-block shrink-0"
+      className="inline-block shrink-0 overflow-visible"
       aria-hidden="true"
     >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0.18" />
+          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradientId})`} />
       <path
         d={path}
         fill="none"
         stroke={stroke}
-        strokeWidth={1.5}
+        strokeWidth={1.75}
+        strokeLinecap="round"
         strokeLinejoin="round"
+      />
+      {/* Dot final pulsé — signature visual TradingView/Phantom */}
+      <circle
+        cx={lastPoint.x}
+        cy={lastPoint.y}
+        r={2}
+        fill={stroke}
+        className="motion-safe:animate-pulse"
       />
     </svg>
   );
-}
+});
+
+/** Labels FR pour le live region tri (Audit A11y V1). */
+const SORT_LABELS: Record<SortKey, string> = {
+  rank: "Rang",
+  price: "Prix",
+  change24h: "Variation 24 heures",
+  change7d: "Variation 7 jours",
+  marketCap: "Capitalisation",
+  volume: "Volume 24 heures",
+};
 
 function getSortValue(coin: MarketCoin, key: SortKey): number | null {
   switch (key) {
