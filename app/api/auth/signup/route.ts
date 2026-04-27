@@ -6,29 +6,28 @@
  *  2. admin.createUser({ email, password, email_confirm: true })
  *     → user créé immédiatement comme confirmé, AUCUN email envoyé
  *  3. signInWithPassword({ email, password })
- *     → Supabase set le cookie de session
+ *     → Supabase set le cookie de session (collecté par applyCookies)
  *  4. Réponse 200 → client redirect /mon-compte
  *
+ * FIX cookies : le helper createRouteHandlerClient bind les cookies set par
+ * Supabase sur la NextResponse explicitement, sinon Next 14 ne les propage
+ * pas (le user pense etre connecte mais le cookie n'arrive jamais cote browser).
+ *
  * SÉCURITÉ :
- *  - Rate limit : 3 inscriptions / heure / IP
- *  - Si email existe déjà → on tente signInWithPassword (au cas où le user
- *    réutilise le même password). Si ça matche → OK. Sinon → erreur claire.
- *  - Service role utilisé UNIQUEMENT pour createUser, jamais exposé client.
+ *  - Rate limit : 20 inscriptions / heure / IP (large, anti-spam reel)
+ *  - Si email existe deja → tente signInWithPassword. Si match → connecte.
+ *    Sinon → message clair "compte existant, /connexion ou /mot-de-passe-oublie".
+ *  - Service role utilise UNIQUEMENT pour createUser cote serveur.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import {
-  createSupabaseServerClient,
-  createSupabaseServiceRoleClient,
-} from "@/lib/supabase/server";
+import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Rate limit signup : 20 par heure / IP (large pour tests + retry user honnête).
-// Anti-spam reel : on garde 20 vrais comptes/h ce qui suffit pour bloquer un bot.
-// Cle "auth-signup-v2" pour reset le compteur des users qui ont teste avec v1.
 const limiter = createRateLimiter({
   limit: 20,
   windowMs: 60 * 60 * 1000,
@@ -55,7 +54,6 @@ function isPasswordStrong(pwd: string): { ok: boolean; reason?: string } {
   return { ok: true };
 }
 
-/** Pattern matching pour identifier les erreurs "user already exists" Supabase. */
 function isUserExistsError(message: string): boolean {
   const m = message.toLowerCase();
   return (
@@ -76,15 +74,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const supabase = createSupabaseServerClient();
+  const client = createRouteHandlerClient(req);
   const admin = createSupabaseServiceRoleClient();
 
-  if (!supabase || !admin) {
+  if (!client || !admin) {
     return NextResponse.json(
       { error: "Inscription temporairement indisponible." },
       { status: 503 }
     );
   }
+  const { supabase, applyCookies } = client;
 
   let body: { email?: string; password?: string };
   try {
@@ -113,43 +112,36 @@ export async function POST(req: NextRequest) {
     await admin.auth.admin.createUser({
       email,
       password,
-      email_confirm: true, // marque comme confirmé immédiatement
+      email_confirm: true,
     });
 
-  // Si user existe déjà : on tente signInWithPassword (peut-être réutilise le même pwd)
   if (createError) {
     console.error("[auth/signup] createUser error:", createError.message);
 
     if (isUserExistsError(createError.message)) {
-      // STEP 2a : user existe, on tente login avec le password fourni
+      // Tente login avec le password fourni (peut-etre meme pwd ou user a deja set son pwd)
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (!signInError) {
-        // Match → user existant, password OK, on le connecte
-        return NextResponse.json({
-          ok: true,
-          message: "Connexion réussie.",
-        });
+        return applyCookies(
+          NextResponse.json({ ok: true, message: "Connexion réussie." })
+        );
       }
 
-      // Password ne match pas : compte existe mais autre pwd → message clair
       return NextResponse.json(
         {
           error:
-            "Cet email a déjà un compte. Va sur /connexion pour te connecter, ou utilise « Mot de passe oublié » si tu ne t'en souviens plus.",
+            "Cet email a déjà un compte. Va sur /connexion pour te connecter, ou utilise « Mot de passe oublié ».",
         },
         { status: 409 }
       );
     }
 
-    // Autre erreur (DB, validation Supabase, etc.)
     return NextResponse.json(
-      {
-        error: `Erreur lors de l'inscription : ${createError.message}`,
-      },
+      { error: `Erreur lors de l'inscription : ${createError.message}` },
       { status: 500 }
     );
   }
@@ -161,7 +153,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // STEP 2b : user créé, on le connecte immédiatement (set cookie de session)
+  // STEP 2 : user créé, on le connecte (signInWithPassword set les cookies)
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -169,17 +161,15 @@ export async function POST(req: NextRequest) {
 
   if (signInError) {
     console.error("[auth/signup] signInWithPassword after create:", signInError.message);
-    // User créé mais session échouée → on demande de se connecter manuellement
     return NextResponse.json({
       ok: true,
       needsLogin: true,
-      message:
-        "Compte créé ! Va sur /connexion pour te connecter avec ton mot de passe.",
+      message: "Compte créé. Va sur /connexion pour te connecter.",
     });
   }
 
-  return NextResponse.json({
-    ok: true,
-    message: "Compte créé. Tu es connecté.",
-  });
+  // FIX critique : applique les cookies set par signInWithPassword sur la response
+  return applyCookies(
+    NextResponse.json({ ok: true, message: "Compte créé. Tu es connecté." })
+  );
 }

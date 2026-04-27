@@ -3,24 +3,22 @@
  *
  * Flow :
  *  1. POST { email, password } → supabase.auth.signInWithPassword()
- *  2. Si succès : Supabase set le cookie de session (httpOnly)
- *  3. Réponse 200 ok + on laisse le client redirect vers /mon-compte
+ *  2. Si succès : on bind les cookies set par Supabase sur la NextResponse
+ *     via applyCookies() (FIX cookies non propagés en Next 14 Route Handler)
+ *  3. Réponse 200 ok → client redirect vers /mon-compte
  *
  * SÉCURITÉ :
- *  - Rate limit anti-brute force : 5 tentatives / 15 min / IP
- *  - Erreur uniformisée pour éviter user enumeration (mauvais email vs mauvais pwd)
+ *  - Rate limit anti-brute force : 30 tentatives / 15 min / IP
+ *  - Erreur uniformisée pour éviter user enumeration
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Rate limit anti-brute force : 30 tentatives / 15 min / IP.
-// Bump vs 5 pour ne pas bloquer un user honnete qui se trompe + tests.
-// Cle "auth-login-password-v2" pour reset le compteur v1.
 const limiter = createRateLimiter({
   limit: 30,
   windowMs: 15 * 60 * 1000,
@@ -43,13 +41,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const supabase = createSupabaseServerClient();
-  if (!supabase) {
+  const client = createRouteHandlerClient(req);
+  if (!client) {
     return NextResponse.json(
       { error: "Connexion bientôt disponible" },
       { status: 503 }
     );
   }
+  const { supabase, applyCookies } = client;
 
   let body: { email?: string; password?: string };
   try {
@@ -75,12 +74,13 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.error("[auth/login-password] signInWithPassword error:", error.message);
-    // Erreur uniformisée pour éviter de révéler si l'email existe ou non
     return NextResponse.json(
       { error: "Identifiants invalides." },
       { status: 401 }
     );
   }
 
-  return NextResponse.json({ ok: true });
+  // FIX critique : applique les cookies set par signInWithPassword sur la response.
+  // Sans ça, le cookie session reste cote serveur et le navigateur ne le recoit jamais.
+  return applyCookies(NextResponse.json({ ok: true }));
 }
