@@ -53,6 +53,11 @@ export function createRouteHandlerClient(req: NextRequest) {
     return null;
   }
 
+  // Detection HTTPS : Vercel met x-forwarded-proto, sinon on suppose true en prod.
+  const isHttps =
+    req.headers.get("x-forwarded-proto") === "https" ||
+    req.url.startsWith("https://");
+
   const supabase = createServerClient(url, anonKey, {
     cookies: {
       getAll() {
@@ -60,8 +65,19 @@ export function createRouteHandlerClient(req: NextRequest) {
       },
       setAll(cookies) {
         cookies.forEach(({ name, value, options }) => {
-          // On stocke pour application sur la NextResponse plus tard.
-          cookiesToApply.push({ name, value, options });
+          // FIX critique cookie session :
+          // - secure: true (HTTPS only) — sinon Chrome rejette en prod
+          // - httpOnly: true (defense XSS — server-side auth, pas besoin JS)
+          // - sameSite: 'lax' (autorise magic link clic depuis email)
+          // - path: '/' (cookie disponible sur toute l'app)
+          const safeOptions = {
+            ...options,
+            secure: isHttps,
+            httpOnly: true,
+            sameSite: (options?.sameSite ?? "lax") as "lax" | "strict" | "none",
+            path: options?.path ?? "/",
+          };
+          cookiesToApply.push({ name, value, options: safeOptions });
         });
       },
     },
