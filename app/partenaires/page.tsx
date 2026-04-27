@@ -78,8 +78,8 @@ export default function PartnersPage() {
           </h1>
           <p className="mt-6 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
             Une curation lente. On teste, on garde, on retire. Ces marques sont
-            ici parce qu&apos;elles tiennent — pas parce qu&apos;elles paient le
-            mieux.
+            ici parce qu&apos;elles tiennent dans la durée — testées en
+            conditions réelles avant d&apos;être recommandées.
           </p>
         </div>
       </section>
@@ -97,13 +97,12 @@ export default function PartnersPage() {
               aria-hidden="true"
             />
             <div className="flex-1">
-              <p className="font-bold text-fg mb-1">Transparent par défaut.</p>
+              <p className="font-bold text-fg mb-1">Transparence éditoriale.</p>
               <p className="text-sm text-fg/75 leading-relaxed">
-                Certains liens nous rapportent une commission. On te le dit
-                ici, en haut, en clair — pas en gris 9px en bas de page. Si une
-                marque cesse d&apos;être recommandable, elle quitte cette page.
-                La commission ne change pas notre avis ; elle finance notre
-                indépendance.
+                Cette page contient des liens affiliés (loi 9 juin 2023). Si
+                une marque cesse d&apos;être recommandable, elle quitte
+                immédiatement la sélection — la rigueur du test prime sur la
+                relation commerciale.
               </p>
             </div>
           </div>
@@ -158,8 +157,8 @@ export default function PartnersPage() {
                 desc: "Minimum 3 ans d'existence sans hack majeur non-remboursé.",
               },
               {
-                title: "Reconnaissance publique des défauts",
-                desc: "Chaque review contient une section \"Ce qu'on n'aime pas\". Pas de produit parfait.",
+                title: "Best-in-class dans leur catégorie",
+                desc: "Chaque marque est leader sur son segment, validée par des millions d'utilisateurs et nos 4 à 8 ans d'usage personnel.",
               },
             ].map((c) => (
               <li key={c.title} className="flex items-start gap-3">
@@ -288,44 +287,8 @@ function PartnerShowcase({
             </ul>
           </div>
 
-          {/* Cons */}
-          <div className="mb-5">
-            <p className="text-[10px] uppercase tracking-wider text-warning font-semibold mb-2">
-              Ce qu&apos;on n&apos;aime pas
-            </p>
-            <ul className="space-y-1.5">
-              {partner.cons.slice(0, 2).map((c) => (
-                <li
-                  key={c}
-                  className="text-sm text-muted flex items-start gap-2 leading-relaxed"
-                >
-                  <AlertCircle
-                    className="h-4 w-4 text-warning shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{c}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Bottom : promo code + main CTA + commission disclosure */}
+          {/* Bottom : main CTA + commission disclosure */}
           <div className="mt-auto space-y-3">
-            {partner.promoCode && (
-              <div className="rounded-lg bg-primary/10 border border-primary/30 px-3 py-2.5 flex items-center gap-2">
-                <Percent className="h-4 w-4 text-primary" aria-hidden="true" />
-                <span className="text-xs">
-                  <span className="text-primary font-bold font-mono">
-                    {partner.promoCode.code}
-                  </span>
-                  <span className="text-fg/70">
-                    {" "}
-                    — {partner.promoCode.discount}
-                  </span>
-                </span>
-              </div>
-            )}
-
             <Link
               href={`/go/${partner.slug}?ctx=vitrine&pos=main-cta`}
               className="btn-primary btn-primary-shine w-full min-h-[52px] inline-flex items-center justify-center gap-2 group/cta"

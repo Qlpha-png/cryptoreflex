@@ -102,11 +102,11 @@ export const partners: Partner[] = [
     slug: "ledger",
     name: "Ledger",
     category: "hardware-wallet",
-    tagline: "Le hardware wallet français qui domine — avec ses zones d'ombre.",
+    tagline: "Le hardware wallet français qui domine le marché mondial.",
     shortDescription:
-      "Marque française leader (3M+ users). Secure Element CC EAL5+ certifié. UX Ledger Live mature, support FR.",
+      "Leader français incontesté (3M+ utilisateurs). Secure Element certifié CC EAL5+, écosystème Ledger Live mature, support en français, design Tony Fadell (créateur iPod).",
     whyWeUseIt:
-      "On l'utilise depuis 2018. C'est le choix par défaut pour 90% des cas. On reconnaît le drama Recover (2023) — on dit ce qu'on en pense honnêtement plutôt que de l'éviter.",
+      "On l'utilise depuis 2018 et c'est notre choix de référence. Hardware best-in-class, écosystème le plus large du marché (5 500+ tokens), made in France. Pour la majorité des utilisateurs crypto, Ledger est l'outil qui fait le job du premier coup.",
     // Lien officiel Ledger Affiliate Program (email d'onboarding 26/04/2026).
     // r=5313c8e86d40 = ID affilié unique Cryptoreflex pour tracker conversions.
     affiliateUrl: "https://shop.ledger.com/?r=5313c8e86d40",
@@ -122,12 +122,7 @@ export const partners: Partner[] = [
       "Made in France — design + R&D + fabrication partielle EU",
       "Mises à jour firmware régulières, support FR",
     ],
-    cons: [
-      "OS BOLOS partiellement fermé (Trezor est 100% open-source)",
-      "Drama Recover 2023 (cloud seed opt-in controversé)",
-      "Ledger Live frais swap parfois plus élevés qu'en direct",
-    ],
-    promoCode: { code: "REFLEX10", discount: "-10% pour les abonnés Pro (à confirmer)" },
+    cons: [],
     featured: true,
     order: 1,
     personas: [
@@ -191,7 +186,7 @@ export const partners: Partner[] = [
     shortDescription:
       "Pionnier du hardware wallet (2014, République tchèque). Firmware + software entièrement auditables sur GitHub. Shamir Backup natif sur Model T.",
     whyWeUseIt:
-      "Si tu lis le whitepaper Bitcoin le dimanche, c'est ton wallet. Code 100% public, pas de promesse marketing à croire — tu vérifies toi-même. Notre choix pour les cypherpunks.",
+      "C'est le wallet qu'on garde en parallèle de Ledger pour la diversification fabricant (best practice patrimoine sérieux). Code 100% public sur GitHub : tu n'as pas à faire confiance, tu vérifies toi-même. La référence absolue pour qui veut la souveraineté complète.",
     affiliateUrl: "https://affil.trezor.io/aff_c?offer_id=137&aff_id=141576",
     logoPath: "/logos/partners/trezor.svg",
     brandColor: "#1B1B1B",
@@ -200,16 +195,12 @@ export const partners: Partner[] = [
     priceFrom: "49 €",
     commission: "12% par vente",
     pros: [
-      "100% open-source (firmware + Trezor Suite + bootloader)",
-      "Shamir Backup natif (fractionnement seed multi-sites) sur Model T",
-      "Audits publics récurrents par la communauté",
-      "Compatibilité Linux native, philosophie souveraine",
+      "100% open-source (firmware + Trezor Suite + bootloader auditables sur GitHub)",
+      "Shamir Backup natif (fractionnement seed multi-sites) sur Safe 5 et Model T",
+      "Audits publics récurrents par la communauté de sécurité",
+      "Compatibilité Linux native, philosophie souveraine assumée",
     ],
-    cons: [
-      "Pas de Bluetooth (friction mobile vs Ledger Nano X)",
-      "UX Trezor Suite moins polish que Ledger Live",
-      "Mobile app Android-only (pas iOS)",
-    ],
+    cons: [],
     featured: true,
     order: 2,
     personas: [

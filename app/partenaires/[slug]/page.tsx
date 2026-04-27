@@ -221,12 +221,10 @@ export default function PartnerDetailPage({ params }: Props) {
               aria-hidden="true"
             />
             <p className="text-xs sm:text-sm text-fg/75 leading-relaxed">
-              <span className="font-bold text-fg">Lien affilié.</span>{" "}
-              Cryptoreflex perçoit{" "}
-              {partner.commission ?? "une commission"} sur chaque achat via
-              cette page, sans surcoût pour toi. Notre note ({review.rating}/5)
-              est basée sur {review.testDuration} de test réel — la commission
-              ne change pas notre verdict.
+              <span className="font-bold text-fg">Lien affilié.</span> Cette
+              page contient des liens affiliés (loi 9 juin 2023). Notre note de{" "}
+              {review.rating}/5 résulte de {review.testDuration} de test
+              terrain — pas d&apos;un partenariat commercial.
             </p>
           </div>
         </aside>
@@ -366,16 +364,7 @@ function PartnerHero({
 
             {/* Disclosure légère */}
             <p className="mt-3 text-[11px] text-muted">
-              Lien affilié — sans surcoût pour toi.{" "}
-              {partner.promoCode && (
-                <>
-                  Code{" "}
-                  <span className="font-mono text-primary font-bold">
-                    {partner.promoCode.code}
-                  </span>{" "}
-                  : {partner.promoCode.discount}.
-                </>
-              )}
+              Lien affilié — sans surcoût pour toi.
             </p>
           </div>
 
@@ -547,47 +536,25 @@ function PartnerVerdict({
           &ldquo;{review.verdict.summary}&rdquo;
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-success/30 bg-success/5 p-5">
-            <p className="ds-eyebrow text-success inline-flex items-center gap-1.5 mb-3">
-              <Target className="h-3.5 w-3.5" aria-hidden="true" />À CHOISIR SI
-            </p>
-            <ul className="space-y-2">
-              {review.verdict.bestFor.map((b) => (
-                <li
-                  key={b}
-                  className="text-sm text-fg/85 flex items-start gap-2 leading-relaxed"
-                >
-                  <CheckCircle2
-                    className="h-4 w-4 text-success shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-warning/30 bg-warning/5 p-5">
-            <p className="ds-eyebrow text-warning inline-flex items-center gap-1.5 mb-3">
-              <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
-              À NE PAS PRENDRE SI
-            </p>
-            <ul className="space-y-2">
-              {review.verdict.notFor.map((n) => (
-                <li
-                  key={n}
-                  className="text-sm text-fg/85 flex items-start gap-2 leading-relaxed"
-                >
-                  <AlertCircle
-                    className="h-4 w-4 text-warning shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{n}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="rounded-2xl border border-success/30 bg-success/5 p-5">
+          <p className="ds-eyebrow text-success inline-flex items-center gap-1.5 mb-3">
+            <Target className="h-3.5 w-3.5" aria-hidden="true" />
+            FAIT POUR
+          </p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+            {review.verdict.bestFor.map((b) => (
+              <li
+                key={b}
+                className="text-sm text-fg/85 flex items-start gap-2 leading-relaxed"
+              >
+                <CheckCircle2
+                  className="h-4 w-4 text-success shrink-0 mt-0.5"
+                  aria-hidden="true"
+                />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* CTA in-content */}
@@ -1538,21 +1505,6 @@ function FinalCta({
         <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
           {review.verdict.summary.split(".")[0]}.
         </p>
-
-        {partner.promoCode && (
-          <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary/15 border border-primary/40 px-4 py-2">
-            <Percent
-              className="h-4 w-4 text-primary"
-              aria-hidden="true"
-            />
-            <span className="text-sm">
-              <span className="font-mono font-extrabold text-primary">
-                {partner.promoCode.code}
-              </span>{" "}
-              <span className="text-fg/80">— {partner.promoCode.discount}</span>
-            </span>
-          </div>
-        )}
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
           <Link

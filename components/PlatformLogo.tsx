@@ -81,16 +81,21 @@ export default function PlatformLogo({
     );
   }
 
-  // SVG officiel reproduit dans /public/logos/<id>.svg
+  // SVG officiel reproduit dans /public/logos/<id>.svg.
   // unoptimized=true car les SVG ne bénéficient pas de l'optimiseur Next
-  // (et on évite un round-trip vers /_next/image pour 1 KB).
+  // (et on évite un round-trip vers /_next/image pour 1-10 KB).
+  //
+  // object-contain : indispensable pour les wordmarks officiels (Bitpanda,
+  // Trade Republic, etc. dont le viewBox est ~3:1) — sans ça, l'image se
+  // ferait écraser dans un carré size×size.
   return (
     <Image
       src={`/logos/${normalized}.svg`}
       alt={`Logo ${name}`}
       width={size}
       height={size}
-      className={baseClass}
+      className={`${baseClass} object-contain`}
+      style={{ width: size, height: size }}
       priority={priority}
       loading={priority ? undefined : "lazy"}
       sizes={`${size}px`}
