@@ -228,10 +228,17 @@ async function handleSubscriptionUpdate(
   const status = subscription.status;
   const item = subscription.items.data[0];
   const priceId = item?.price.id;
+  // Product ID extrait de la subscription (price.product peut être string ou
+  // expanded Product object). On le passe en fallback à priceIdToPlan() pour
+  // supporter les env vars configurées avec des Product IDs au lieu de Price IDs.
+  const productId =
+    typeof item?.price.product === "string"
+      ? item.price.product
+      : item?.price.product?.id;
 
   if (!priceId) return;
 
-  const plan = status === "active" ? priceIdToPlan(priceId) : "free";
+  const plan = status === "active" ? priceIdToPlan(priceId, productId) : "free";
   // Dans l'API Stripe 2026-04 (dahlia), `current_period_end` est sur l'item
   // de subscription, pas sur la subscription elle-même.
   const periodEnd = item?.current_period_end;

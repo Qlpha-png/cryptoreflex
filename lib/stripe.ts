@@ -34,14 +34,36 @@ export function getStripeClient(): Stripe | null {
 }
 
 /**
- * Mapping Stripe Price ID → Plan interne.
+ * Mapping Stripe Price OU Product ID → Plan interne.
  *
  * Configuré via env vars pour ne pas hardcoder les prix dans le code.
- * Les Price IDs sont créés dans Stripe Dashboard > Products.
+ * Pourquoi accepter les deux :
+ *  - Price IDs (price_xxx) sont les identifiants des prix Stripe (1 produit
+ *    peut avoir plusieurs prix : mensuel, annuel, devises différentes…)
+ *  - Product IDs (prod_xxx) sont les identifiants des produits Stripe
+ *  - Les Payment Links sont liés à un Product, et la subscription expose
+ *    `subscription.items[0].price.product` qui contient le Product ID
+ *
+ * On regarde d'abord le Price ID (plus précis), puis le Product ID en fallback.
+ * Les env vars peuvent contenir l'un OU l'autre — on s'en fiche.
+ *
+ * @param priceId — l'ID du price Stripe (price_xxx)
+ * @param productId — optionnel, l'ID du product (prod_xxx)
  */
-export function priceIdToPlan(priceId: string): Plan {
-  if (priceId === process.env.STRIPE_PRICE_PRO_MONTHLY) return "pro_monthly";
-  if (priceId === process.env.STRIPE_PRICE_PRO_ANNUAL) return "pro_annual";
+export function priceIdToPlan(priceId: string, productId?: string): Plan {
+  // Lookup Price ID
+  const monthlyEnv = process.env.STRIPE_PRICE_PRO_MONTHLY;
+  const annualEnv = process.env.STRIPE_PRICE_PRO_ANNUAL;
+
+  if (monthlyEnv && priceId === monthlyEnv) return "pro_monthly";
+  if (annualEnv && priceId === annualEnv) return "pro_annual";
+
+  // Fallback Product ID (si l'utilisateur a configuré des Product IDs au lieu de Price IDs)
+  if (productId) {
+    if (monthlyEnv && productId === monthlyEnv) return "pro_monthly";
+    if (annualEnv && productId === annualEnv) return "pro_annual";
+  }
+
   return "free";
 }
 
