@@ -1,26 +1,22 @@
 /**
- * Email templates Cryptoreflex Pro.
+ * Email templates Cryptoreflex Pro — design system pro.
  *
- * 3 templates au lancement :
- *  - welcomeProEmail() : envoyé après paiement Stripe (via webhook)
- *  - cancelConfirmationEmail() : envoyé après résiliation
- *  - paymentFailedEmail() : envoyé après échec de paiement
+ * 3 templates principaux :
+ *  - welcomeProEmail()   : post-paiement Stripe (welcome + magic link)
+ *  - cancelConfirmationEmail() : post-cancel (respectueux + porte ouverte)
+ *  - paymentFailedEmail() : payment failed (empathique + grace period 7j)
  *
- * Tous retournent { subject, preheader, html, text } pour passer à sendEmail().
+ * Tous wrappés via wrapEmail() de components.ts pour cohérence visuelle.
  *
- * Style : ton chaleureux mais pro, vouvoiement implicite (pas de "tu/vous"
- * dans les variables génériques pour rester neutre — adresse à la marque
- * pas à la personne).
+ * Refonte 27/04/2026 : design system 10 agents email experts (header gradient,
+ * footer RGPD, bulletproof button, dark mode forcé, mobile responsive, mso conditional).
  */
+
+import { wrapEmail, renderButton } from "./components";
+import { EMAIL_TOKENS as T } from "./tokens";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
-const PRIMARY = "#F59E0B"; // gold
-const FG = "#FAFAFA";
-const MUTED = "#A1A1AA";
-const SUCCESS = "#22C55E";
-const WARNING = "#F59E0B";
-const DANGER = "#EF4444";
 
 interface EmailContent {
   subject: string;
@@ -41,61 +37,118 @@ export function welcomeProEmail(opts: {
   const planLabel =
     opts.plan === "pro_annual" ? "Pro Annuel (79,99 €/an)" : "Pro Mensuel (9,99 €/mois)";
 
-  return {
-    subject: `Bienvenue dans Cryptoreflex Pro`,
-    preheader: `Votre accès est actif. 3 actions à faire en 60 secondes.`,
-    html: `
-<h1 style="margin:0 0 16px;font-size:24px;line-height:1.3;color:${FG};font-weight:800;">
-Bienvenue dans Cryptoreflex <span style="color:${PRIMARY};">Pro</span>
+  const subject = `Bienvenue dans Cryptoreflex Pro`;
+  const preheader = `Ton accès Pro est actif. 4 actions à faire en 60 secondes.`;
+
+  const content = `
+<!-- H1 -->
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+  Bienvenue dans Cryptoreflex&nbsp;<span style="color:${T.colors.primary};">Pro</span>
 </h1>
 
-<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${FG};">
-Merci de votre confiance. Votre paiement <strong>${planLabel}</strong> est confirmé et votre accès Pro est actif dès maintenant.
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">Merci. Vraiment.</p>
+
+<p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
+Ton paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Ton accès Pro est actif <em>maintenant</em>. Tu débloques :
+portfolio illimité, alertes prix illimitées, glossaire 250+ termes, brief PRO hebdo et réponse fiscale 48&nbsp;h.
 </p>
 
-<p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:${FG};">
-Voici votre lien de connexion sécurisé (valide 1 heure) :
+<!-- Quick wins -->
+<p style="margin:24px 0 14px;font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.5px;">
+À faire dans les 60 prochaines secondes
 </p>
 
-<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 28px;">
-<tr><td style="background:${PRIMARY};border-radius:10px;">
-<a href="${opts.magicLink}" style="display:inline-block;padding:14px 32px;color:#0A0A0A;font-size:15px;font-weight:700;text-decoration:none;">
-Accéder à mon espace Pro →
-</a>
-</td></tr>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+  <tr>
+    <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">①</td>
+    <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
+      <strong>Lance le Radar 3916-bis</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Détecte tes amendes potentielles avant la deadline mai 2026 (1500-10000€/compte).</span>
+    </td>
+  </tr>
+  <tr>
+    <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">②</td>
+    <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
+      <strong>Configure ton portfolio</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Suivi multi-wallets, P&L automatique, allocation pie chart, export CSV.</span>
+    </td>
+  </tr>
+  <tr>
+    <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">③</td>
+    <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
+      <strong>Active une alerte prix</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Seuil up/down, % de variation, market crash — illimitées en Pro.</span>
+    </td>
+  </tr>
+  <tr>
+    <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">④</td>
+    <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
+      <strong>Pose ta première question fiscale</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Réponds simplement à cet email — réponse argumentée sous 48&nbsp;h.</span>
+    </td>
+  </tr>
 </table>
 
-<div style="border-top:1px solid #2A2D35;padding-top:24px;margin-top:8px;">
-<p style="margin:0 0 12px;font-size:13px;font-weight:700;color:${MUTED};text-transform:uppercase;letter-spacing:1px;">
-Prochaines étapes
-</p>
-<ol style="margin:0 0 16px;padding-left:20px;font-size:14px;line-height:1.8;color:${FG};">
-<li><strong>Lancez le Radar 3916-bis</strong> — détectez vos amendes potentielles avant la deadline mai 2026 (<a href="${SITE_URL}/outils/radar-3916-bis" style="color:${PRIMARY};text-decoration:underline;">accéder</a>)</li>
-<li><strong>Configurez votre portfolio</strong> — suivez vos positions crypto en temps réel (<a href="${SITE_URL}/outils/portfolio-tracker" style="color:${PRIMARY};text-decoration:underline;">accéder</a>)</li>
-<li><strong>Posez votre première question fiscale</strong> — réponse argumentée sous 48 h (répondez simplement à cet email)</li>
-</ol>
+<!-- CTA principal -->
+<div style="text-align:center;margin:32px 0 12px;">
+  ${renderButton({ href: opts.magicLink, label: "Accéder à mon espace Pro →" })}
 </div>
 
-<p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:${MUTED};">
-Une question ou un souci ? Répondez à cet email — on lit tout, on répond sous 24 h ouvrées.
+<p style="margin:14px 0 0;font-size:12px;color:${T.colors.textMuted};text-align:center;">
+Lien sécurisé valide 1&nbsp;heure. Pas besoin de mot de passe.
 </p>
-`,
+
+<!-- Plan info card -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${T.colors.surface};border:1px solid ${T.colors.border};border-radius:10px;margin:32px 0 24px;">
+  <tr><td style="padding:18px 20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;padding-bottom:8px;">Ton abonnement</td>
+        <td align="right" style="font-size:11px;font-weight:700;color:${T.colors.success};text-transform:uppercase;letter-spacing:1.2px;padding-bottom:8px;">● Actif</td>
+      </tr>
+      <tr>
+        <td style="font-size:14px;color:${T.colors.text};font-weight:600;padding:2px 0;">${planLabel}</td>
+      </tr>
+    </table>
+    <div style="border-top:1px solid ${T.colors.border};margin-top:14px;padding-top:12px;font-size:12px;line-height:1.5;color:${T.colors.textMuted};">
+      Tu peux annuler à tout moment, en 1&nbsp;clic, depuis <a href="${SITE_URL}/mon-compte" style="color:${T.colors.textMuted};text-decoration:underline;">ton espace</a>. Pas de question, pas de friction.
+    </div>
+  </td></tr>
+</table>
+
+<!-- Sign off -->
+<p style="margin:24px 0 6px;font-size:14px;line-height:1.55;color:${T.colors.text};font-weight:600;">
+Une question&nbsp;? Réponds simplement à cet email.
+</p>
+<p style="margin:0;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
+C'est une vraie boîte mail surveillée. Réponse sous 24&nbsp;h ouvrées, par un humain.
+</p>
+`;
+
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
     text: `Bienvenue dans Cryptoreflex Pro
 
-Votre paiement ${planLabel} est confirmé. Votre accès Pro est actif.
+Merci. Vraiment.
 
-Connexion sécurisée (valide 1 heure) :
+Ton paiement ${planLabel} est confirmé. Ton accès Pro est actif maintenant.
+
+Connexion sécurisée (1 h, usage unique) :
 ${opts.magicLink}
 
-3 prochaines étapes :
-1. Lancez le Radar 3916-bis avant mai 2026 : ${SITE_URL}/outils/radar-3916-bis
-2. Configurez votre portfolio : ${SITE_URL}/outils/portfolio-tracker
-3. Posez votre première question fiscale (répondez à cet email)
+À faire dans les 60 prochaines secondes :
+1. Radar 3916-bis (avant mai 2026) : ${SITE_URL}/outils/radar-3916-bis
+2. Configure ton portfolio : ${SITE_URL}/outils/portfolio-tracker
+3. Active une alerte prix
+4. Pose ta première question fiscale (réponds à cet email)
 
-Question ? Répondez simplement à ce message.
+Une question ? Réponds simplement à ce message — réponse sous 24 h.
 
 —
-Cryptoreflex — éditeur indépendant français · SIREN 103 352 621`,
+Cryptoreflex EI · SIREN 103 352 621
+Tu peux annuler à tout moment depuis ${SITE_URL}/mon-compte`,
   };
 }
 
@@ -113,56 +166,68 @@ export function cancelConfirmationEmail(opts: {
     year: "numeric",
   });
 
-  return {
-    subject: `Résiliation confirmée — accès maintenu jusqu'au ${endDateFr}`,
-    preheader: `Votre accès Pro reste actif jusqu'au ${endDateFr}, puis bascule en Free.`,
-    html: `
-<h1 style="margin:0 0 16px;font-size:24px;line-height:1.3;color:${FG};font-weight:800;">
-Résiliation enregistrée
+  const subject = `Annulation enregistrée — accès Pro jusqu'au ${endDateFr}`;
+  const preheader = `Ton accès Pro reste actif jusqu'au ${endDateFr}. Aucun nouveau prélèvement.`;
+
+  const content = `
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+C'est confirmé.
 </h1>
 
-<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${FG};">
-Votre demande de résiliation est bien prise en compte.
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
+Ta demande d'annulation est bien prise en compte. Aucun nouveau prélèvement ne sera effectué après le ${endDateFr}.
 </p>
 
-<div style="background:#0A0A0A;border-left:3px solid ${SUCCESS};border-radius:6px;padding:14px 18px;margin:0 0 20px;">
-<p style="margin:0;font-size:14px;line-height:1.6;color:${FG};">
-Votre accès Pro reste actif jusqu'au <strong style="color:${SUCCESS};">${endDateFr}</strong>. Aucun nouveau prélèvement ne sera effectué après cette date.
-</p>
-</div>
+<!-- End date banner success -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);border-radius:10px;margin:24px 0;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:12px;color:${T.colors.success};text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Accès Pro maintenu</p>
+    <p style="margin:0;font-size:18px;color:${T.colors.text};font-weight:700;">Jusqu'au ${endDateFr}</p>
+  </td></tr>
+</table>
 
-<p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:${FG};">
-Après le ${endDateFr}, votre compte basculera automatiquement en plan Gratuit. Vous conservez :
-</p>
-
-<ul style="margin:0 0 24px;padding-left:20px;font-size:14px;line-height:1.7;color:${FG};">
-<li>Tous vos calculateurs gratuits (fiscal, DCA, ROI, halving…)</li>
-<li>Le Radar 3916-bis (gratuit également)</li>
-<li>Vos préférences et votre historique de connexion</li>
+<h2 style="margin:32px 0 12px;font-size:17px;font-weight:700;color:${T.colors.text};">Ce que tu gardes en Free</h2>
+<ul style="margin:0;padding:0 0 0 20px;font-size:15px;color:${T.colors.text};line-height:1.7;">
+  <li style="margin-bottom:6px;">Tous les calculateurs gratuits (fiscal, DCA, ROI, halving, glossaire 100 termes)</li>
+  <li style="margin-bottom:6px;">Le Radar 3916-bis (gratuit, sans limite)</li>
+  <li style="margin-bottom:6px;">Tes préférences et ton historique</li>
 </ul>
 
-<p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:${MUTED};">
-Une question ou un retour à partager sur votre expérience Pro ? Répondez à ce message — chaque feedback nous aide à améliorer le service.
+<h2 style="margin:24px 0 8px;font-size:15px;font-weight:600;color:${T.colors.textMuted};">Ce qui change après le ${endDateFr}</h2>
+<p style="margin:0;font-size:14px;color:${T.colors.textMuted};">Limites Free : 10 positions portfolio, 3 alertes prix.</p>
+
+<p style="margin:32px 0 0;font-size:14px;color:${T.colors.textMuted};line-height:1.55;">
+Si tu changes d'avis, tu peux te réabonner à tout moment depuis <a href="${SITE_URL}/pro" style="color:${T.colors.primary};text-decoration:underline;">cryptoreflex.fr/pro</a>.
 </p>
 
-<p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:${MUTED};">
-La porte reste ouverte. Si vous souhaitez revenir un jour, vous pouvez vous réabonner à tout moment depuis <a href="${SITE_URL}/pro" style="color:${PRIMARY};text-decoration:underline;">/pro</a>.
+<p style="margin:24px 0 0;font-size:13px;color:${T.colors.textMuted};line-height:1.55;">
+On reste à l'écoute. Réponds simplement à ce message si tu as une question.
 </p>
-`,
-    text: `Résiliation enregistrée
+`;
 
-Votre accès Pro reste actif jusqu'au ${endDateFr}. Aucun prélèvement après cette date.
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
+    text: `C'est confirmé.
 
-Après le ${endDateFr}, votre compte bascule en plan Gratuit. Vous conservez :
+Ta demande d'annulation est bien prise en compte.
+Aucun nouveau prélèvement ne sera effectué après le ${endDateFr}.
+
+Accès Pro maintenu jusqu'au ${endDateFr}.
+
+Ce que tu gardes en Free :
 - Tous les calculateurs gratuits
-- Le Radar 3916-bis
-- Vos préférences et historique
+- Le Radar 3916-bis (gratuit)
+- Tes préférences et ton historique
 
-Une question ou un retour ? Répondez à ce message.
+Si tu changes d'avis, tu peux te réabonner à tout moment :
+${SITE_URL}/pro
+
+On reste à l'écoute. Réponds simplement à ce message si tu as une question.
 
 —
-Cryptoreflex — éditeur indépendant français · SIREN 103 352 621
-Vous pouvez vous réabonner à tout moment : ${SITE_URL}/pro`,
+Cryptoreflex EI · SIREN 103 352 621`,
   };
 }
 
@@ -175,53 +240,58 @@ export function paymentFailedEmail(opts: {
   updatePaymentUrl: string;
   graceDays: number;
 }): EmailContent {
-  return {
-    subject: `Petit souci avec votre paiement Cryptoreflex`,
-    preheader: `Pas de panique — vous avez ${opts.graceDays} jours pour mettre à jour votre carte.`,
-    html: `
-<h1 style="margin:0 0 16px;font-size:24px;line-height:1.3;color:${FG};font-weight:800;">
-Votre paiement n'est pas passé
+  const subject = `Petit souci avec ton paiement Cryptoreflex`;
+  const preheader = `Pas de panique — ${opts.graceDays} jours pour mettre à jour ta carte.`;
+
+  const content = `
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+Ton paiement n'est pas passé
 </h1>
 
-<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${FG};">
-Pas de panique — ça arrive régulièrement. Les causes les plus fréquentes :
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
+Pas de panique — ça arrive régulièrement. Causes les plus fréquentes :
 </p>
 
-<ul style="margin:0 0 20px;padding-left:20px;font-size:14px;line-height:1.7;color:${FG};">
-<li>Carte expirée ou bloquée</li>
-<li>Plafond de paiement atteint</li>
-<li>Refus de l'authentification 3D Secure</li>
+<ul style="margin:0 0 24px;padding:0 0 0 20px;font-size:15px;color:${T.colors.text};line-height:1.7;">
+  <li style="margin-bottom:6px;">Carte expirée ou bloquée</li>
+  <li style="margin-bottom:6px;">Plafond de paiement atteint</li>
+  <li style="margin-bottom:6px;">Refus de l'authentification 3D Secure</li>
 </ul>
 
-<div style="background:#0A0A0A;border-left:3px solid ${WARNING};border-radius:6px;padding:14px 18px;margin:0 0 24px;">
-<p style="margin:0;font-size:14px;line-height:1.6;color:${FG};">
-Vous avez <strong style="color:${WARNING};">${opts.graceDays} jours</strong> pour mettre à jour votre moyen de paiement. Pendant ce délai, votre accès Pro reste actif.
-</p>
-</div>
-
-<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 24px;">
-<tr><td style="background:${PRIMARY};border-radius:10px;">
-<a href="${opts.updatePaymentUrl}" style="display:inline-block;padding:14px 32px;color:#0A0A0A;font-size:15px;font-weight:700;text-decoration:none;">
-Mettre à jour ma carte →
-</a>
-</td></tr>
+<!-- Grace period banner warning -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;margin:24px 0;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 4px;font-size:14px;color:${T.colors.warning};font-weight:700;">Tu as ${opts.graceDays} jours pour mettre à jour ta carte</p>
+    <p style="margin:0;font-size:13px;color:${T.colors.text};line-height:1.5;">Pendant ce délai, ton accès Pro reste actif. Aucune interruption, aucune perte de données.</p>
+  </td></tr>
 </table>
 
-<p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:${MUTED};">
-Besoin d'aide ? Répondez à ce message, on traite sous 24 h ouvrées.
+<!-- CTA principal -->
+<div style="text-align:center;margin:32px 0 12px;">
+  ${renderButton({ href: opts.updatePaymentUrl, label: "Mettre à jour ma carte →" })}
+</div>
+
+<p style="margin:24px 0 0;font-size:13px;color:${T.colors.textMuted};line-height:1.55;text-align:center;">
+Besoin d'aide ? Réponds à ce message — on traite sous 24&nbsp;h ouvrées.
 </p>
-`,
-    text: `Votre paiement n'est pas passé
+`;
 
-Pas de panique — ça arrive. Causes possibles : carte expirée, plafond, refus 3D Secure.
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
+    text: `Ton paiement n'est pas passé
 
-Vous avez ${opts.graceDays} jours pour mettre à jour votre carte. Accès Pro maintenu pendant ce délai.
+Pas de panique — ça arrive. Causes : carte expirée, plafond, refus 3D Secure.
+
+Tu as ${opts.graceDays} jours pour mettre à jour ta carte.
+Pendant ce délai, ton accès Pro reste actif.
 
 Mettre à jour : ${opts.updatePaymentUrl}
 
-Besoin d'aide ? Répondez à ce message.
+Besoin d'aide ? Réponds à ce message.
 
 —
-Cryptoreflex — éditeur indépendant français`,
+Cryptoreflex EI · SIREN 103 352 621`,
   };
 }
