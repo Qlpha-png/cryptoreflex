@@ -107,16 +107,15 @@ export const partners: Partner[] = [
       "Marque française leader (3M+ users). Secure Element CC EAL5+ certifié. UX Ledger Live mature, support FR.",
     whyWeUseIt:
       "On l'utilise depuis 2018. C'est le choix par défaut pour 90% des cas. On reconnaît le drama Recover (2023) — on dit ce qu'on en pense honnêtement plutôt que de l'éviter.",
-    // ⚠️ Lien affilié officiel Ledger pas encore activé - programme Impact.com
-    // en cours d'activation par le founder. Tant que cette valeur reste vide,
-    // la card Ledger reste cachée de la vitrine (featured=false).
-    affiliateUrl: "",
+    // Lien officiel Ledger Affiliate Program (email d'onboarding 26/04/2026).
+    // r=5313c8e86d40 = ID affilié unique Cryptoreflex pour tracker conversions.
+    affiliateUrl: "https://shop.ledger.com/?r=5313c8e86d40",
     logoPath: "/logos/partners/ledger.svg",
     brandColor: "#000000",
     since: "2014",
     country: "France",
     priceFrom: "79 €",
-    commission: "à partir de 10% par vente",
+    commission: "taux compétitif Ledger Affiliate",
     pros: [
       "Secure Element certifié CC EAL5+ (résiste extraction physique)",
       "Écosystème mature : 5 500+ tokens, MetaMask/Rabby intégrations",
@@ -128,7 +127,8 @@ export const partners: Partner[] = [
       "Drama Recover 2023 (cloud seed opt-in controversé)",
       "Ledger Live frais swap parfois plus élevés qu'en direct",
     ],
-    featured: false, // Caché tant que lien affilié officiel pas reçu
+    promoCode: { code: "REFLEX10", discount: "-10% pour les abonnés Pro (à confirmer)" },
+    featured: true,
     order: 1,
     personas: [
       {
