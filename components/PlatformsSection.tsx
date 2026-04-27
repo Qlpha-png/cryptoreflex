@@ -87,11 +87,34 @@ export default function PlatformsSection() {
 
         {/* Carousel horizontal swipeable — toutes les plateformes en defile */}
         <div className="relative mt-8 sm:mt-12 -mx-4 sm:-mx-6 lg:-mx-8">
-          {/* Container scroll-snap-x — visible aux extremites grace au negative margin */}
+          {/* Gradient fades latéraux : signal visuel "il y a plus de contenu"
+              (pattern Netflix / Apple App Store carousel). pointer-events-none
+              pour ne pas bloquer les clicks/swipes. */}
+          <div
+            aria-hidden="true"
+            className="hidden md:block absolute top-0 bottom-0 left-0 w-12 lg:w-16 z-10 pointer-events-none"
+            style={{
+              background: "linear-gradient(to right, var(--background, #0B0D10) 0%, transparent 100%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="hidden md:block absolute top-0 bottom-0 right-0 w-12 lg:w-16 z-10 pointer-events-none"
+            style={{
+              background: "linear-gradient(to left, var(--background, #0B0D10) 0%, transparent 100%)",
+            }}
+          />
+          {/* Container scroll-snap-x — visible aux extremites grace au negative margin.
+              CRITICAL : overflow-x-auto implique overflow-y: hidden CSS spec ;
+              on force overflow-y: visible + padding-top pour que les badges
+              "PLUS SECURISE" etc. (positionnes -top-3 sur chaque card) ne
+              soient PAS clippes par le container. */}
           <div
             id="platforms-carousel-track"
-            className="overflow-x-auto scroll-smooth platforms-carousel-track px-4 sm:px-6 lg:px-8 pb-2"
+            className="scroll-smooth platforms-carousel-track px-4 sm:px-6 lg:px-8 pt-4 pb-2"
             style={{
+              overflowX: "auto",
+              overflowY: "visible",
               scrollSnapType: "x mandatory",
               scrollPadding: "0 1rem",
               WebkitOverflowScrolling: "touch",
