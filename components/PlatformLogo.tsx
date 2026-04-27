@@ -16,22 +16,23 @@ import { Coins } from "lucide-react";
  * comparatif (fair use). Mention dans /mentions-legales.
  */
 
-const KNOWN_IDS = new Set([
-  "coinbase",
-  "binance",
-  "bitpanda",
-  "kraken",
-  "bitget",
-  "trade-republic",
-  "coinhouse",
-  "bitstack",
-  "swissborg",
-  "bybit",
-  "revolut",
-  // Aliases courants pour fallback (cas où on appellerait avec un slug différent)
-  "trade_republic",
-  "traderepublic",
-]);
+/** Map id -> extension. Par défaut .svg ; PNG quand on n'a que la version
+ *  raster officielle (CoinMarketCap CDN pour Kraken/Bybit/Bitget/Coinhouse). */
+const ID_EXTENSIONS: Record<string, "svg" | "png"> = {
+  coinbase: "svg",
+  binance: "svg",
+  bitpanda: "svg",
+  "trade-republic": "svg",
+  bitstack: "svg",
+  swissborg: "svg",
+  revolut: "svg",
+  // PNG officiels CoinMarketCap (pas de SVG public dispo) :
+  kraken: "png",
+  bybit: "png",
+  bitget: "png",
+  coinhouse: "png",
+};
+const KNOWN_IDS = new Set(Object.keys(ID_EXTENSIONS));
 
 /** Normalise l'id éventuel (Trade_Republic, TradeRepublic → trade-republic). */
 function normalize(id: string): string {
@@ -93,9 +94,10 @@ export default function PlatformLogo({
   // (7 jours). Quand on remplace un logo (real official vs ancien custom),
   // les navigateurs gardent le vieux 7 jours. On change ?v=N pour forcer
   // la requête fraîche immédiatement à tous les visiteurs.
+  const ext = ID_EXTENSIONS[normalized] ?? "svg";
   return (
     <Image
-      src={`/logos/${normalized}.svg?v=2`}
+      src={`/logos/${normalized}.${ext}?v=2`}
       alt={`Logo ${name}`}
       width={size}
       height={size}
