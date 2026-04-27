@@ -1,27 +1,31 @@
 /**
- * /api/auth/signup — Inscription par email + mot de passe.
+ * /api/auth/signup — Inscription par email + mot de passe (sans SMTP).
  *
- * Flow :
- *  1. POST { email, password } → Supabase signUp() crée l'user
- *  2. Si email confirmation activée côté Supabase → user reçoit email de confirmation
- *  3. Si auto-confirm activé → session immédiate, cookie set
- *  4. Réponse uniformisée pour éviter user enumeration
+ * Flow (bypass SMTP entièrement) :
+ *  1. POST { email, password }
+ *  2. admin.createUser({ email, password, email_confirm: true })
+ *     → user créé immédiatement comme confirmé, AUCUN email envoyé
+ *  3. signInWithPassword({ email, password })
+ *     → Supabase set le cookie de session
+ *  4. Réponse 200 → client redirect /mon-compte
  *
  * SÉCURITÉ :
- *  - Rate limit anti-spam : 3 inscriptions / heure / IP
- *  - Password policy : min 8 chars (Supabase default), idéalement 12+
- *  - Email enumeration prevention : on répond toujours 200 avec message uniforme
- *  - Token unique 1-shot pour confirmation (géré par Supabase)
+ *  - Rate limit : 3 inscriptions / heure / IP
+ *  - Si email existe déjà → on tente signInWithPassword (au cas où le user
+ *    réutilise le même password). Si ça matche → OK. Sinon → erreur claire.
+ *  - Service role utilisé UNIQUEMENT pour createUser, jamais exposé client.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  createSupabaseServerClient,
+  createSupabaseServiceRoleClient,
+} from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Rate limit signup : 3 par heure / IP (anti-spam comptes vides)
 const limiter = createRateLimiter({
   limit: 3,
   windowMs: 60 * 60 * 1000,
@@ -34,11 +38,9 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") ?? "unknown";
 }
 
-/** Validation password : 8+ chars, au moins 1 chiffre OU 1 symbole. */
 function isPasswordStrong(pwd: string): { ok: boolean; reason?: string } {
   if (pwd.length < 8) return { ok: false, reason: "Au moins 8 caractères." };
   if (pwd.length > 72) return { ok: false, reason: "Maximum 72 caractères." };
-  // bcrypt limite à 72 bytes — on bloque côté client pour éviter erreur silencieuse
   const hasLetter = /[a-zA-Z]/.test(pwd);
   const hasDigitOrSym = /[\d\W]/.test(pwd);
   if (!hasLetter || !hasDigitOrSym) {
@@ -50,8 +52,18 @@ function isPasswordStrong(pwd: string): { ok: boolean; reason?: string } {
   return { ok: true };
 }
 
+/** Pattern matching pour identifier les erreurs "user already exists" Supabase. */
+function isUserExistsError(message: string): boolean {
+  const m = message.toLowerCase();
+  return (
+    m.includes("registered") ||
+    m.includes("already") ||
+    m.includes("exists") ||
+    m.includes("duplicate")
+  );
+}
+
 export async function POST(req: NextRequest) {
-  // Rate limit FIRST
   const ip = getClientIp(req);
   const rl = await limiter(ip);
   if (!rl.ok) {
@@ -62,9 +74,11 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createSupabaseServerClient();
-  if (!supabase) {
+  const admin = createSupabaseServiceRoleClient();
+
+  if (!supabase || !admin) {
     return NextResponse.json(
-      { error: "Inscription bientôt disponible" },
+      { error: "Inscription temporairement indisponible." },
       { status: 503 }
     );
   }
@@ -91,41 +105,78 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: pwdCheck.reason }, { status: 400 });
   }
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/api/auth/callback`,
-    },
-  });
+  // STEP 1 : créer le user via admin API (bypass SMTP)
+  const { data: createData, error: createError } =
+    await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true, // marque comme confirmé immédiatement
+    });
 
-  if (error) {
-    console.error("[auth/signup] signUp error:", error.message);
-    // Si email déjà inscrit → Supabase renvoie une erreur explicite,
-    // on la traduit en message générique pour éviter user enumeration.
-    if (error.message.includes("registered") || error.message.includes("already")) {
-      return NextResponse.json({
-        ok: true,
-        message:
-          "Si cet email n'est pas déjà utilisé, tu vas recevoir un email de confirmation.",
+  // Si user existe déjà : on tente signInWithPassword (peut-être réutilise le même pwd)
+  if (createError) {
+    console.error("[auth/signup] createUser error:", createError.message);
+
+    if (isUserExistsError(createError.message)) {
+      // STEP 2a : user existe, on tente login avec le password fourni
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
+
+      if (!signInError) {
+        // Match → user existant, password OK, on le connecte
+        return NextResponse.json({
+          ok: true,
+          message: "Connexion réussie.",
+        });
+      }
+
+      // Password ne match pas : compte existe mais autre pwd → message clair
+      return NextResponse.json(
+        {
+          error:
+            "Cet email a déjà un compte. Va sur /connexion pour te connecter, ou utilise « Mot de passe oublié » si tu ne t'en souviens plus.",
+        },
+        { status: 409 }
+      );
     }
+
+    // Autre erreur (DB, validation Supabase, etc.)
     return NextResponse.json(
-      { error: "Erreur lors de l'inscription. Réessaye plus tard." },
+      {
+        error: `Erreur lors de l'inscription : ${createError.message}`,
+      },
       { status: 500 }
     );
   }
 
-  // Si Supabase a une session immédiatement → email confirmation désactivée,
-  // l'user est connecté via le cookie set par Supabase.
-  // Sinon → user doit confirmer son email avant de se connecter.
-  const needsConfirmation = !data.session;
+  if (!createData?.user) {
+    return NextResponse.json(
+      { error: "Erreur lors de la création du compte." },
+      { status: 500 }
+    );
+  }
+
+  // STEP 2b : user créé, on le connecte immédiatement (set cookie de session)
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (signInError) {
+    console.error("[auth/signup] signInWithPassword after create:", signInError.message);
+    // User créé mais session échouée → on demande de se connecter manuellement
+    return NextResponse.json({
+      ok: true,
+      needsLogin: true,
+      message:
+        "Compte créé ! Va sur /connexion pour te connecter avec ton mot de passe.",
+    });
+  }
 
   return NextResponse.json({
     ok: true,
-    needsConfirmation,
-    message: needsConfirmation
-      ? "Vérifie ta boîte mail pour confirmer ton inscription."
-      : "Compte créé. Tu es connecté.",
+    message: "Compte créé. Tu es connecté.",
   });
 }
