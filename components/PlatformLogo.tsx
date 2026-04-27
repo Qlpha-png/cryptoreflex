@@ -88,9 +88,14 @@ export default function PlatformLogo({
   // object-contain : indispensable pour les wordmarks officiels (Bitpanda,
   // Trade Republic, etc. dont le viewBox est ~3:1) — sans ça, l'image se
   // ferait écraser dans un carré size×size.
+  //
+  // ?v=2 cache-bust : Vercel sert les SVG avec Cache-Control max-age=604800
+  // (7 jours). Quand on remplace un logo (real official vs ancien custom),
+  // les navigateurs gardent le vieux 7 jours. On change ?v=N pour forcer
+  // la requête fraîche immédiatement à tous les visiteurs.
   return (
     <Image
-      src={`/logos/${normalized}.svg`}
+      src={`/logos/${normalized}.svg?v=2`}
       alt={`Logo ${name}`}
       width={size}
       height={size}

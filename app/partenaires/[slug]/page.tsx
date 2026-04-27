@@ -383,7 +383,7 @@ function PartnerHero({
                   aria-hidden="true"
                 >
                   <Image
-                    src={partner.logoPath}
+                    src={`${partner.logoPath}?v=2`}
                     alt={`Logo ${partner.name}`}
                     width={64}
                     height={64}
