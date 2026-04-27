@@ -80,7 +80,7 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!partner || !review) return {};
 
   const title = `${partner.name} avis 2026 — Test ${review.testDuration} par Cryptoreflex`;
-  const description = `${partner.tagline} Note ${review.rating}/5 après ${review.testDuration} d'usage réel. Pros, cons, prix, FAQ — sans bullshit.`;
+  const description = `${partner.tagline} Note ${review.rating}/5 après ${review.testDuration} d'usage réel. Avantages, prix, FAQ et guide complet.`;
 
   return {
     title,

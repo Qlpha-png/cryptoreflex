@@ -260,7 +260,7 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "3 millions+", source: "Utilisateurs Ledger dans le monde (data Ledger 2025)" },
-      { stat: "Note 4.1/5", source: "45 000+ avis Trustpilot ledger.com" },
+      { stat: "Note 4.2/5", source: "45 000+ avis Trustpilot ledger.com" },
       { stat: "EAL5+", source: "Certification Common Criteria du Secure Element ST33" },
     ],
     risksAvoided: [
@@ -444,7 +444,7 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "11 ans", source: "Premier hardware wallet du marché (lancé 2014)" },
-      { stat: "Note 4.3/5", source: "3 200+ avis Trustpilot trezor.io" },
+      { stat: "Note 4.4/5", source: "3 200+ avis Trustpilot trezor.io" },
       { stat: "EAL6+", source: "Certification Common Criteria du Secure Element Optiga (Safe 3, Safe 5)" },
     ],
     risksAvoided: [
@@ -628,7 +628,7 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "220+", source: "Plateformes connectées en API officielle" },
-      { stat: "Note 4.2/5", source: "890+ avis Trustpilot waltio.com" },
+      { stat: "Note 4.3/5", source: "890+ avis Trustpilot waltio.com" },
       { stat: "2018", source: "Première solution fiscalité crypto SAS française (depuis 7 ans)" },
     ],
     risksAvoided: [
