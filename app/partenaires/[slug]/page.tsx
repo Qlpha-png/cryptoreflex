@@ -17,6 +17,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   Sparkles,
@@ -378,13 +379,18 @@ function PartnerHero({
             >
               <div className="flex items-start justify-between gap-3 mb-6">
                 <span
-                  className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 text-fg font-extrabold text-3xl backdrop-blur-sm"
-                  style={{
-                    background: `linear-gradient(135deg, ${partner.brandColor}40, ${partner.brandColor}10)`,
-                  }}
+                  className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 overflow-hidden shrink-0"
                   aria-hidden="true"
                 >
-                  {partner.name.charAt(0)}
+                  <Image
+                    src={partner.logoPath}
+                    alt={`Logo ${partner.name}`}
+                    width={64}
+                    height={64}
+                    className="object-contain"
+                    priority
+                    unoptimized
+                  />
                 </span>
                 <span className="badge badge-trust shrink-0">
                   <Crown className="h-3 w-3" aria-hidden="true" />
@@ -1077,10 +1083,21 @@ function ProductCard({
               "radial-gradient(circle at center, rgba(245,158,11,0.18) 0%, transparent 65%)",
           }}
         />
-        <Icon
-          className="relative h-16 w-16 text-fg/85 group-hover/card:text-primary group-hover/card:scale-110 transition-all duration-500"
-          strokeWidth={1.4}
-        />
+        {product.imagePath ? (
+          <Image
+            src={product.imagePath}
+            alt={product.name}
+            width={160}
+            height={160}
+            className="relative object-contain max-h-[85%] w-auto group-hover/card:scale-105 transition-transform duration-500"
+            unoptimized
+          />
+        ) : (
+          <Icon
+            className="relative h-16 w-16 text-fg/85 group-hover/card:text-primary group-hover/card:scale-110 transition-all duration-500"
+            strokeWidth={1.4}
+          />
+        )}
       </div>
 
       <div className="flex flex-col flex-1 p-5">

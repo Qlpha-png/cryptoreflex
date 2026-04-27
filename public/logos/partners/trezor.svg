@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Trezor">
+  <!-- Background : gris anthracite Trezor (officiel #1B1B1B) -->
+  <rect width="64" height="64" rx="14" fill="#1B1B1B"/>
+  <!-- Bouclier vert (référence à l'identité shield-secure de Trezor) -->
+  <path
+    d="M32 12 L46 18 L46 32 C46 41 39.5 47.5 32 50 C24.5 47.5 18 41 18 32 L18 18 Z"
+    fill="none"
+    stroke="#01B757"
+    stroke-width="2"
+    stroke-linejoin="round"
+  />
+  <!-- "T" centré dans le bouclier -->
+  <text
+    x="32"
+    y="36"
+    font-family="'Inter', 'Helvetica Neue', system-ui, sans-serif"
+    font-weight="800"
+    font-size="18"
+    fill="#ffffff"
+    text-anchor="middle"
+  >T</text>
+</svg>

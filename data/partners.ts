@@ -44,8 +44,15 @@ export interface PartnerProduct {
   price: string;
   /** Description 1 ligne (USP unique) */
   description: string;
-  /** Icône Lucide pour le visuel produit (avant qu'on ait les images officielles) */
+  /** Icône Lucide pour le visuel produit (fallback si pas d'imagePath). */
   Icon: LucideIcon;
+  /**
+   * Chemin image officielle produit dans /public (ex: /products/nano-s-plus.png).
+   * Optionnel — quand présent, affiché à la place de l'Icon dans la vitrine
+   * et la page détail. Fournir des PNG transparents 600×600+ ou WebP.
+   * Sources : kits affiliés Ledger / Trezor / Waltio (Creatives section).
+   */
+  imagePath?: string;
   /** Badge optionnel (ex: "Best-seller", "Recommandé", "Nouveau") */
   badge?: { label: string; tone: "primary" | "success" | "warning" | "info" };
   /** URL affiliée spécifique au produit (optionnel - sinon utilise affiliateUrl global) */
@@ -222,6 +229,7 @@ export const partners: Partner[] = [
         price: "79 €",
         description: "Secure Element + open-source. Le sweet spot du marché.",
         Icon: ShieldCheck,
+        imagePath: "/products/trezor-safe-3.png",
         badge: { label: "Best-seller", tone: "success" },
         highlights: [
           "Secure Element EAL6+ certifié",
@@ -235,6 +243,7 @@ export const partners: Partner[] = [
         price: "169 €",
         description: "Écran tactile couleur, haptic feedback premium.",
         Icon: Smartphone,
+        imagePath: "/products/trezor-safe-5.png",
         highlights: [
           "Écran tactile couleur 1.54\"",
           "Vibrations haptic feedback",
@@ -247,6 +256,7 @@ export const partners: Partner[] = [
         price: "189 €",
         description: "Modèle premium historique, support coins étendu.",
         Icon: Crown,
+        imagePath: "/products/trezor-model-t.png",
         highlights: [
           "Écran tactile couleur",
           "Shamir Backup (SLIP-39)",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Sparkles,
   ArrowRight,
@@ -215,13 +216,17 @@ function PartnerShowcase({
           <header className="flex items-start justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
               <span
-                className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-border text-fg font-extrabold text-2xl shrink-0"
-                style={{
-                  background: `linear-gradient(135deg, ${partner.brandColor}25, ${partner.brandColor}05)`,
-                }}
+                className="inline-flex h-14 w-14 items-center justify-center rounded-2xl overflow-hidden shrink-0 border border-border"
                 aria-hidden="true"
               >
-                {partner.name.charAt(0)}
+                <Image
+                  src={partner.logoPath}
+                  alt={`Logo ${partner.name}`}
+                  width={56}
+                  height={56}
+                  className="object-contain"
+                  unoptimized
+                />
               </span>
               <div className="min-w-0">
                 <h2 className="font-extrabold text-fg text-2xl tracking-[-0.02em]">
@@ -419,10 +424,21 @@ function ProductTile({
               "radial-gradient(circle at center, rgba(245,158,11,0.15) 0%, transparent 65%)",
           }}
         />
-        <Icon
-          className="relative h-14 w-14 text-fg/80 group-hover/tile:text-primary group-hover/tile:scale-110 transition-all duration-500"
-          strokeWidth={1.5}
-        />
+        {product.imagePath ? (
+          <Image
+            src={product.imagePath}
+            alt={product.name}
+            width={120}
+            height={120}
+            className="relative object-contain max-h-[80%] w-auto group-hover/tile:scale-105 transition-transform duration-500"
+            unoptimized
+          />
+        ) : (
+          <Icon
+            className="relative h-14 w-14 text-fg/80 group-hover/tile:text-primary group-hover/tile:scale-110 transition-all duration-500"
+            strokeWidth={1.5}
+          />
+        )}
       </div>
 
       {/* Content */}
