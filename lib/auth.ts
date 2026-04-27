@@ -98,21 +98,13 @@ export interface CryptoreflexUser {
  */
 export async function getUser(): Promise<CryptoreflexUser | null> {
   const supabase = createSupabaseServerClient();
-  if (!supabase) {
-    console.warn("[auth/getUser] Supabase client null (env not configured)");
-    return null;
-  }
+  if (!supabase) return null;
 
-  const { data: authData, error: authErr } = await supabase.auth.getUser();
-  const authUser = authData?.user;
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
 
-  if (authErr) {
-    console.error("[auth/getUser] supabase.auth.getUser error:", authErr.message, "status:", authErr.status);
-  }
-  if (!authUser) {
-    console.warn("[auth/getUser] No authUser returned (null user, error?:", authErr?.message ?? "none", ")");
-    return null;
-  }
+  if (!authUser) return null;
 
   const { data: profile, error: profileErr } = await supabase
     .from("users")
