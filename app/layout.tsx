@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
 import PlausibleScript from "@/components/PlausibleScript";
 import ClarityScript from "@/components/ClarityScript";
@@ -355,6 +356,13 @@ export default function RootLayout({
           </div>
         </noscript>
         <Navbar />
+        {/*
+          BackButton global — visible sur toutes les pages sauf `/` et `/embed/*`.
+          Click → router.back() si l'historique le permet, sinon fallback vers
+          le parent calculé depuis le pathname (sécurise les arrivées directes
+          depuis Google/email où window.history.length === 1).
+        */}
+        <BackButton />
         <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
           {children}
         </main>

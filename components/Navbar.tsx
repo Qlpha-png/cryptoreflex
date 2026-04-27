@@ -11,6 +11,7 @@ import {
   Search,
   Crown,
   UserCircle2,
+  ShoppingBag,
 } from "lucide-react";
 import Logo from "./Logo";
 
@@ -74,11 +75,28 @@ import Logo from "./Logo";
  * exposition permanente sur toutes les pages. Style or = signal "premium"
  * universel, pas un bug visuel.
  */
+/**
+ * NAV — 6 items dont 2 monétisation (Partenaires affiliés + Pro).
+ *
+ * Audit business 28/04/2026 : "C'est notre source de revenu, je veux des
+ * experts pour qu'on ait le plus de clients donc bien agencé sur mobile et
+ * desktop !" → ajout de Partenaires (revenu affilié : Ledger / Trezor /
+ * Waltio) à HAUTE VISIBILITÉ.
+ *
+ * Placement (CRO) :
+ *  - Cluster revenu à DROITE (recency bias = dernière chose lue avant CTA)
+ *  - Partenaires APRÈS Blog, AVANT Pro (les 2 items revenu collés)
+ *  - Style "revenueAccent" = ShoppingBag icon gold + soft hover gold
+ *    (distinct de Pro qui a le pill plein gold + Crown — pas de cannibalisation)
+ *  - Sur md (768-1023px), on cache Blog pour garder Partenaires visible
+ *    (Blog est éditorial low-conversion ; Partenaires est revenu direct)
+ */
 const NAV = [
   { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
   { href: "/academie", label: "Apprendre", desc: "Académie + Wizard 1er achat + Quiz" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
-  { href: "/blog", label: "Blog", desc: "Guides débutants & analyses" },
+  { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", hideOnMd: true as const },
+  { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés", revenueAccent: true as const },
   { href: "/pro", label: "Pro", desc: "Abonnements premium (9,99 €/mois ou 79,99 €/an)", premium: true as const },
 ];
 
@@ -238,24 +256,29 @@ export default function Navbar() {
               pas dans la nav). Le wizard /premier-achat reste accessible via
               footer + mega-menu Apprendre + Hero CTA. */}
 
-          {/* NAV principale — 4 items (au lieu de 8). Système d'espacement UNIQUE
-              (gap-10) cohérent avec Stripe/Linear/Vercel (audit Visual Designer P0). */}
+          {/* NAV principale — 6 items dont 2 revenue (Partenaires + Pro).
+              Espacement gap-7 lg+, gap-5 md (cohérent Stripe/Linear/Vercel).
+              Audit Visual : Partenaires hover gold subtil, Pro pill gold plein
+              → 2 niveaux de signaux revenu sans cannibalisation visuelle. */}
           <nav
             aria-label="Navigation principale"
-            className="hidden md:flex items-center gap-10 ml-12"
+            className="hidden md:flex items-center gap-5 lg:gap-7 ml-6 lg:ml-10"
           >
             {NAV.map((item) => {
               const active = isActive(item.href, pathname);
               const isPremium = "premium" in item && item.premium === true;
+              const isRevenue = "revenueAccent" in item && item.revenueAccent === true;
+              const hideOnMd = "hideOnMd" in item && item.hideOnMd === true;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  data-nav-item={isPremium ? "pro" : "regular"}
+                  data-nav-item={isPremium ? "pro" : isRevenue ? "partenaires" : "regular"}
                   className={`relative inline-flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
+                             ${hideOnMd ? "hidden lg:inline-flex" : ""}
                              ${
                                isPremium
                                  ? `nav-pro overflow-hidden rounded-full px-2.5 py-1 ring-1 ring-primary/25 bg-primary/[0.08]
@@ -263,9 +286,12 @@ export default function Navbar() {
                                     hover:ring-primary/50 hover:bg-primary/[0.14]
                                     motion-safe:animate-nav-pro-pulse
                                     ${active ? "text-primary-glow font-bold ring-primary/60 bg-primary/[0.16]" : "text-primary hover:text-primary-glow font-semibold"}`
-                                 : active
-                                   ? "text-fg font-semibold transition-colors"
-                                   : "text-fg/70 hover:text-fg transition-colors"
+                                 : isRevenue
+                                   ? `transition-colors duration-200
+                                      ${active ? "text-primary font-semibold" : "text-fg/85 hover:text-primary font-semibold"}`
+                                   : active
+                                     ? "text-fg font-semibold transition-colors"
+                                     : "text-fg/70 hover:text-fg transition-colors"
                              }`}
                 >
                   {isPremium && (
@@ -277,14 +303,25 @@ export default function Navbar() {
                       aria-hidden="true"
                     />
                   )}
+                  {isRevenue && (
+                    <ShoppingBag
+                      className={`h-3.5 w-3.5 transition-all duration-300 ease-out
+                                  motion-safe:group-hover/nav:-translate-y-0.5 motion-safe:group-hover/nav:scale-110
+                                  ${active ? "text-primary" : "text-primary/80 group-hover/nav:text-primary"}`}
+                      strokeWidth={1.85}
+                      aria-hidden="true"
+                    />
+                  )}
                   {item.label}
                   {/* Underline classique pour les items non-premium ; pour Pro,
                       le pill ring + bg + pulse remplacent l'underline visuellement. */}
                   {!isPremium && (
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px bg-fg transition-opacity duration-200 ${
-                        active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"
+                      className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px transition-opacity duration-200 ${
+                        isRevenue ? "bg-primary" : "bg-fg"
+                      } ${
+                        active ? "opacity-100" : isRevenue ? "opacity-0 group-hover/nav:opacity-70" : "opacity-0 group-hover/nav:opacity-40"
                       }`}
                     />
                   )}

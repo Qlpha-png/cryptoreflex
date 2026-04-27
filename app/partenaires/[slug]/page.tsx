@@ -21,7 +21,6 @@ import { notFound } from "next/navigation";
 import {
   Sparkles,
   ArrowRight,
-  ArrowLeft,
   ExternalLink,
   CheckCircle2,
   AlertCircle,
@@ -39,6 +38,12 @@ import {
   TrendingUp,
   ListChecks,
   HelpCircle,
+  AlertTriangle,
+  Lightbulb,
+  Settings2,
+  Coins,
+  XCircle,
+  ArrowDown,
 } from "lucide-react";
 import {
   getPartner,
@@ -195,19 +200,8 @@ export default function PartnerDetailPage({ params }: Props) {
         brandColor={partner.brandColor}
       />
 
-      {/* ───────────────────────── BREADCRUMB + BACK ─────────────────────── */}
-      <nav
-        aria-label="Fil d'Ariane"
-        className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6"
-      >
-        <Link
-          href="/partenaires"
-          className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-fg transition-colors"
-        >
-          <ArrowLeft className="h-3 w-3" aria-hidden="true" />
-          Retour à la vitrine
-        </Link>
-      </nav>
+      {/* Note : le bouton "Retour" global est monté dans app/layout.tsx
+          (visible automatiquement sur cette page). On évite le doublon. */}
 
       {/* ───────────────────────────── HERO ──────────────────────────────── */}
       <PartnerHero partner={partner} review={review} />
@@ -240,6 +234,12 @@ export default function PartnerDetailPage({ params }: Props) {
 
       {/* ─────────────────────── VERDICT 30 SECONDES ─────────────────────── */}
       <PartnerVerdict review={review} partner={partner} />
+
+      {/* ─────────────────── PEDAGOGIE : COMPRENDRE EN 3 MIN ──────────────── */}
+      <Pedagogy partner={partner} review={review} />
+
+      {/* ─────────────────── BEFORE / AFTER : VOILÀ CE QUI CHANGE ────────── */}
+      <BeforeAfter partner={partner} review={review} />
 
       {/* ───────────────────── POURQUOI MAINTENANT ───────────────────────── */}
       <WhyBuyNow partner={partner} review={review} />
@@ -606,6 +606,354 @@ function PartnerVerdict({
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ========================================================================== */
+/*  PEDAGOGY — "Comprendre en 3 min" : 4 cards (probleme/solution/mecanisme/ROI)
+/*  Conçu pour donner ENVIE d'acheter en expliquant POURQUOI honnêtement.
+/* ========================================================================== */
+
+function Pedagogy({
+  partner,
+  review,
+}: {
+  partner: Partner;
+  review: PartnerReview;
+}) {
+  const { problem, solution, mechanism, roi } = review.pedagogy;
+  return (
+    <section
+      aria-labelledby="pedagogy-title"
+      className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-16"
+    >
+      <header
+        className="partner-section text-center max-w-3xl mx-auto mb-8"
+        style={{ ["--i" as never]: 0 }}
+      >
+        <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
+          <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
+          COMPRENDRE {partner.name.toUpperCase()} EN 3 MINUTES
+        </span>
+        <h2
+          id="pedagogy-title"
+          className="mt-3 text-3xl sm:text-4xl font-extrabold text-fg tracking-[-0.02em] leading-tight"
+        >
+          Pourquoi tu en as <span className="text-primary">vraiment</span> besoin
+        </h2>
+        <p className="mt-3 text-base text-fg/70 leading-relaxed">
+          Pas de jargon. Pas de marketing. Juste les 4 vérités qui justifient
+          (ou pas) cet investissement pour toi.
+        </p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
+        <PedagogyCard
+          step={1}
+          title={problem.title}
+          body={problem.body}
+          stat={problem.stat}
+          tone="warning"
+          Icon={AlertTriangle}
+          partner={partner}
+          index={1}
+        />
+        <PedagogyCard
+          step={2}
+          title={solution.title}
+          body={solution.body}
+          stat={solution.stat}
+          tone="success"
+          Icon={Lightbulb}
+          partner={partner}
+          index={2}
+        />
+        <PedagogyCard
+          step={3}
+          title={mechanism.title}
+          body={mechanism.body}
+          tone="primary"
+          Icon={Settings2}
+          partner={partner}
+          index={3}
+          steps={mechanism.steps}
+        />
+        <PedagogyCard
+          step={4}
+          title={roi.title}
+          body={roi.body}
+          stat={roi.stat}
+          tone="primary"
+          Icon={Coins}
+          partner={partner}
+          index={4}
+        />
+      </div>
+    </section>
+  );
+}
+
+function PedagogyCard({
+  step,
+  title,
+  body,
+  stat,
+  tone,
+  Icon,
+  partner,
+  index,
+  steps,
+}: {
+  step: number;
+  title: string;
+  body: string;
+  stat?: string;
+  tone: "warning" | "success" | "primary";
+  Icon: typeof Star;
+  partner: Partner;
+  index: number;
+  steps?: string[];
+}) {
+  const toneClasses: Record<typeof tone, string> = {
+    warning:
+      "border-warning/35 bg-gradient-to-br from-warning/8 via-warning/4 to-transparent",
+    success:
+      "border-success/35 bg-gradient-to-br from-success/8 via-success/4 to-transparent",
+    primary:
+      "border-primary/35 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent",
+  };
+  const iconBgClasses: Record<typeof tone, string> = {
+    warning: "bg-warning/15 text-warning ring-warning/30",
+    success: "bg-success/15 text-success ring-success/30",
+    primary: "bg-primary/15 text-primary ring-primary/30",
+  };
+  const labelClasses: Record<typeof tone, string> = {
+    warning: "text-warning",
+    success: "text-success",
+    primary: "text-primary-soft",
+  };
+  const labelByTone: Record<typeof tone, string> = {
+    warning: "ACTE 1 · LE PROBLÈME",
+    success: "ACTE 2 · LA SOLUTION",
+    primary: step === 3 ? "ACTE 3 · COMMENT ÇA MARCHE" : "ACTE 4 · LE ROI",
+  };
+
+  return (
+    <article
+      className={`partner-section group relative overflow-hidden rounded-3xl border p-6 sm:p-7 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/30 ${toneClasses[tone]}`}
+      style={{ ["--i" as never]: index }}
+    >
+      {/* Glow brand color subtle au hover */}
+      <span
+        aria-hidden="true"
+        className="absolute -top-20 -right-20 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-700"
+        style={{
+          background: `radial-gradient(circle, ${partner.brandColor}55 0%, transparent 70%)`,
+        }}
+      />
+
+      <header className="relative flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          <span
+            className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ring-1 ${iconBgClasses[tone]} group-hover:scale-110 transition-transform duration-500`}
+            aria-hidden="true"
+          >
+            <Icon className="h-5 w-5" strokeWidth={1.85} />
+          </span>
+          <div className="min-w-0">
+            <p
+              className={`text-[10px] font-bold tracking-[0.12em] uppercase ${labelClasses[tone]}`}
+            >
+              {labelByTone[tone]}
+            </p>
+            <h3 className="mt-0.5 text-lg sm:text-xl font-extrabold text-fg leading-tight">
+              {title}
+            </h3>
+          </div>
+        </div>
+        {stat && (
+          <span
+            className={`shrink-0 text-2xl sm:text-3xl font-extrabold font-mono tabular-nums tracking-[-0.02em] partner-stat-pop ${labelClasses[tone]}`}
+            style={{ ["--i" as never]: index }}
+            aria-hidden="true"
+          >
+            {stat}
+          </span>
+        )}
+      </header>
+
+      <p className="relative text-sm sm:text-[15px] text-fg/80 leading-relaxed">
+        {body}
+      </p>
+
+      {steps && steps.length > 0 && (
+        <ol className="relative mt-4 space-y-2 border-l-2 border-primary/30 pl-4">
+          {steps.map((s, i) => (
+            <li
+              key={i}
+              className="text-sm text-fg/85 leading-relaxed flex items-start gap-2.5"
+            >
+              <span
+                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-[11px] font-extrabold font-mono tabular-nums mt-0.5"
+                aria-hidden="true"
+              >
+                {i + 1}
+              </span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </article>
+  );
+}
+
+/* ========================================================================== */
+/*  BEFORE / AFTER — visualisation "Sans X" vs "Avec X"                       */
+/* ========================================================================== */
+
+function BeforeAfter({
+  partner,
+  review,
+}: {
+  partner: Partner;
+  review: PartnerReview;
+}) {
+  const { beforeTitle, beforeItems, afterTitle, afterItems } =
+    review.beforeAfter;
+
+  return (
+    <section
+      aria-labelledby="before-after-title"
+      className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-16"
+    >
+      <header
+        className="partner-section text-center max-w-3xl mx-auto mb-8"
+        style={{ ["--i" as never]: 0 }}
+      >
+        <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
+          <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
+          VOILÀ CE QUI CHANGE POUR TOI
+        </span>
+        <h2
+          id="before-after-title"
+          className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight leading-tight"
+        >
+          La différence concrète, jour après jour
+        </h2>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5 relative">
+        {/* Card BEFORE — rouge / friction */}
+        <div
+          className="partner-section relative rounded-3xl border border-warning/30 bg-gradient-to-br from-warning/8 via-warning/3 to-transparent p-6 sm:p-7 overflow-hidden"
+          style={{ ["--i" as never]: 1 }}
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <span
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-warning/15 text-warning ring-1 ring-warning/30"
+              aria-hidden="true"
+            >
+              <XCircle className="h-5 w-5" strokeWidth={1.85} />
+            </span>
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-warning">
+                Aujourd&apos;hui
+              </p>
+              <h3 className="mt-0.5 text-lg font-extrabold text-fg/90 leading-tight">
+                {beforeTitle}
+              </h3>
+            </div>
+          </div>
+          <ul className="space-y-2.5">
+            {beforeItems.map((it, i) => (
+              <li
+                key={i}
+                className="text-sm text-fg/75 leading-relaxed flex items-start gap-2.5"
+              >
+                <XCircle
+                  className="h-4 w-4 text-warning shrink-0 mt-0.5"
+                  aria-hidden="true"
+                />
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Flèche centrale (mobile : flèche verticale ; desktop : horizontale) */}
+        <span
+          aria-hidden="true"
+          className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 h-12 w-12 items-center justify-center rounded-full bg-elevated/90 backdrop-blur-md border border-primary/40 shadow-lg shadow-primary/10"
+        >
+          <ArrowRight className="h-5 w-5 text-primary" />
+        </span>
+
+        {/* Card AFTER — vert / résolution */}
+        <div
+          className="partner-section relative rounded-3xl border border-success/30 bg-gradient-to-br from-success/8 via-success/3 to-transparent p-6 sm:p-7 overflow-hidden"
+          style={{ ["--i" as never]: 2 }}
+        >
+          {/* Halo brand color subtle */}
+          <span
+            aria-hidden="true"
+            className="absolute -top-20 -right-20 w-48 h-48 rounded-full blur-3xl opacity-30"
+            style={{
+              background: `radial-gradient(circle, ${partner.brandColor}55 0%, transparent 70%)`,
+            }}
+          />
+          <div className="relative flex items-center gap-3 mb-5">
+            <span
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-success/15 text-success ring-1 ring-success/30"
+              aria-hidden="true"
+            >
+              <CheckCircle2 className="h-5 w-5" strokeWidth={1.85} />
+            </span>
+            <div>
+              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-success">
+                Avec {partner.name}
+              </p>
+              <h3 className="mt-0.5 text-lg font-extrabold text-fg leading-tight">
+                {afterTitle}
+              </h3>
+            </div>
+          </div>
+          <ul className="relative space-y-2.5">
+            {afterItems.map((it, i) => (
+              <li
+                key={i}
+                className="text-sm text-fg/85 leading-relaxed flex items-start gap-2.5"
+              >
+                <CheckCircle2
+                  className="h-4 w-4 text-success shrink-0 mt-0.5"
+                  aria-hidden="true"
+                />
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* CTA après le before/after — moment de bascule émotionnelle idéal */}
+      <div
+        className="partner-section mt-7 text-center"
+        style={{ ["--i" as never]: 3 }}
+      >
+        <Link
+          href={`/go/${partner.slug}?ctx=detail&pos=after-beforeafter`}
+          rel="sponsored noopener"
+          target="_blank"
+          className="btn-primary btn-primary-shine min-h-[52px] inline-flex items-center justify-center gap-2 px-7 text-base font-bold"
+        >
+          Passer du côté &ldquo;Avec {partner.name}&rdquo;
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+        </Link>
+        <p className="mt-2 text-[11px] text-muted">
+          Lien affilié — sans surcoût pour toi.
+        </p>
       </div>
     </section>
   );

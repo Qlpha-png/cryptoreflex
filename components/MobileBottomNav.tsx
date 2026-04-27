@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Home, Sparkles, Newspaper, Wrench } from "lucide-react";
+import { Home, Sparkles, Newspaper, Wrench, ShoppingBag } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 /**
@@ -37,12 +37,30 @@ type Tab = {
   href: string;
   label: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
+  /** Revenue-driving slot (Partenaires affiliés) → accent gold permanent. */
+  revenue?: boolean;
 };
 
-// Audit SEO/CRO : Quiz à la place de Comparer (KPI conversion mobile).
+/**
+ * TABS — 5 items, slot central = revenue-driving (thumb-zone optimal).
+ *
+ * Audit business 28/04/2026 : "C'est notre source de revenu, je veux des
+ * experts pour qu'on ait le plus de clients donc bien agencé sur mobile et
+ * desktop !" → ajout de "Boutique" (vitrine partenaires affiliés Ledger /
+ * Trezor / Waltio) au CENTRE de la barre.
+ *
+ * Pourquoi le centre ?
+ *  - Étude Steven Hoober (mobile UX) : pouce droitier au repos = arc 60-110°
+ *    centré sur le bas de l'écran. Le slot du milieu est l'OPTIMUM ergonomique.
+ *  - Pattern Instagram (caméra), TikTok (+), Twitter (X) : tous mettent le
+ *    CTA principal au centre — pas par hasard.
+ *  - "Boutique" (8 chars) tient dans 60-72px de slot sur 360px+ devices.
+ *  - Accent gold permanent (vs hover only) : signal "cliquable rentable" 24/7.
+ */
 const TABS: ReadonlyArray<Tab> = [
   { href: "/", label: "Accueil", Icon: Home },
   { href: "/quiz/plateforme", label: "Quiz", Icon: Sparkles },
+  { href: "/partenaires", label: "Boutique", Icon: ShoppingBag, revenue: true },
   { href: "/actualites", label: "Actu", Icon: Newspaper },
   { href: "/outils", label: "Outils", Icon: Wrench },
 ];
@@ -94,8 +112,11 @@ export default function MobileBottomNav() {
               "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), width 320ms ease, opacity 200ms ease",
           }}
         />
-        {TABS.map(({ href, label, Icon }, i) => {
+        {TABS.map(({ href, label, Icon, revenue }, i) => {
           const active = isActive(pathname, href);
+          // Slot revenue (Partenaires) : couleur gold permanente, pas seulement
+          // au hover/active → signal CTA constant "ici tu peux acheter".
+          const revenueIdle = revenue && !active;
           return (
             <li
               key={href}
@@ -113,15 +134,24 @@ export default function MobileBottomNav() {
                   "transition-colors duration-fast",
                   active
                     ? "text-primary"
-                    : "text-muted hover:text-fg active:text-fg",
+                    : revenueIdle
+                      ? "text-primary/85 hover:text-primary active:text-primary"
+                      : "text-muted hover:text-fg active:text-fg",
                 ].join(" ")}
               >
+                {/* Slot revenu : halo gold subtil derrière l'icône au repos */}
+                {revenueIdle && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute top-1.5 left-1/2 -translate-x-1/2 h-7 w-7 rounded-full bg-primary/15 blur-md"
+                  />
+                )}
                 <Icon
-                  className={`h-[22px] w-[22px] transition-transform duration-300 ease-emphasized ${active ? "scale-110 -translate-y-0.5" : ""}`}
-                  strokeWidth={1.75}
+                  className={`relative h-[22px] w-[22px] transition-transform duration-300 ease-emphasized ${active ? "scale-110 -translate-y-0.5" : revenueIdle ? "scale-105" : ""}`}
+                  strokeWidth={1.85}
                   aria-hidden="true"
                 />
-                <span className="text-[11px] font-medium leading-none">
+                <span className={`relative text-[11px] leading-none ${revenue ? "font-bold" : "font-medium"}`}>
                   {label}
                 </span>
               </Link>

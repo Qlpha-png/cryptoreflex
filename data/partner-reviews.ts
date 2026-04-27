@@ -24,6 +24,28 @@ export interface ReviewFAQ {
   answer: string;
 }
 
+/** Rédaction pédagogique 4 actes — "Comprendre [partenaire] en 3 minutes". */
+export interface PartnerPedagogy {
+  /** Acte 1 : le pain réel que vit le persona avant le partenaire */
+  problem: { title: string; body: string; stat?: string };
+  /** Acte 2 : ce que le partenaire change concrètement */
+  solution: { title: string; body: string; stat?: string };
+  /** Acte 3 : explication mécanique simple en 3 étapes (donne confiance) */
+  mechanism: { title: string; body: string; steps: string[] };
+  /** Acte 4 : calcul ROI / valeur — chiffré, défendable */
+  roi: { title: string; body: string; stat?: string };
+}
+
+/** Comparaison "Sans X" vs "Avec X" — visuel before/after sales. */
+export interface PartnerBeforeAfter {
+  /** Tagline 1-line "before" (le quotidien actuel sans le partenaire) */
+  beforeTitle: string;
+  beforeItems: string[];
+  /** Tagline 1-line "after" (le quotidien avec le partenaire) */
+  afterTitle: string;
+  afterItems: string[];
+}
+
 export interface PartnerReview {
   /** Slug partenaire (lien avec data/partners.ts) */
   slug: string;
@@ -43,6 +65,10 @@ export interface PartnerReview {
     bestFor: string[];
     notFor: string[];
   };
+  /** Pédagogie 4-actes — "Comprendre en 3 min" (sales-driven) */
+  pedagogy: PartnerPedagogy;
+  /** Visualisation "Sans X" vs "Avec X" — bascule before/after */
+  beforeAfter: PartnerBeforeAfter;
   /** Sections de la review long-form (markdown-light, paragraphes simples) */
   sections: ReviewSection[];
   /** Specs techniques détaillées */
@@ -84,6 +110,48 @@ export const partnerReviews: PartnerReview[] = [
         "Puristes open-source absolus (préférer Trezor)",
         "Cypherpunks qui exigent firmware 100% auditable",
         "Linux-only users (Ledger Live tourne mais moins natif)",
+      ],
+    },
+    pedagogy: {
+      problem: {
+        title: "Tes cryptos sur un exchange ne t'appartiennent pas",
+        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que tes cryptos sont sur Binance, Coinbase ou Bitpanda, tu détiens une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
+        stat: "30 Md$",
+      },
+      solution: {
+        title: "Une puce certifiée militaire qui garde tes clés hors-ligne",
+        body: "Ledger isole tes clés privées dans un Secure Element (puce certifiée Common Criteria EAL5+, même grade que les passeports biométriques). Cette puce résiste aux attaques physiques connues : extraction par micro-soudure, glitching électrique, side-channel. Même si ton ordinateur est piraté demain, tes cryptos restent intactes parce que la signature des transactions se fait DANS l'appareil, pas sur ton PC.",
+        stat: "EAL5+",
+      },
+      mechanism: {
+        title: "Comment ça fonctionne, simplement",
+        body: "Tu n'as pas besoin d'être ingénieur. Le hardware wallet sépare deux choses qui devraient toujours être séparées : ton portefeuille (la blockchain, où sont tes cryptos) et ta clé pour y accéder (qui doit rester chez toi).",
+        steps: [
+          "À l'achat, tu génères une seed de 24 mots — c'est la clé maîtresse, à noter sur papier (jamais photo, jamais cloud).",
+          "Chaque transaction nécessite une confirmation physique sur l'écran du Ledger : tu vérifies l'adresse, tu valides avec un bouton.",
+          "Si tu perds ou casses l'appareil, tu rachètes n'importe quel hardware compatible BIP-39 et tu restaures avec ta seed.",
+        ],
+      },
+      roi: {
+        title: "Le calcul, sans bullshit",
+        body: "Nano S Plus : 79 €. Si tu protèges ne serait-ce que 5 000 € de cryptos, c'est 1,6% de ton patrimoine alloué à la sécurité physique — l'équivalent d'une assurance habitation pour ton portefeuille. Lissé sur 8 ans d'usage moyen : 0,82 €/mois. Le coût d'un café par trimestre pour ne pas finir comme un client FTX qui attend toujours son dépôt 4 ans après.",
+        stat: "0,82 €/mois",
+      },
+    },
+    beforeAfter: {
+      beforeTitle: "Sans hardware wallet",
+      beforeItems: [
+        "Tes cryptos vivent sur un exchange — tu détiens une promesse, pas du Bitcoin",
+        "Un hack du PC, un mot de passe leaké, un phishing email = vidange instantanée",
+        "Tu vérifies frénétiquement les news pour voir si \"ton\" exchange tient encore",
+        "En cas de défaillance (FTX, Celsius), tu deviens créancier dans une procédure de 4+ ans",
+      ],
+      afterTitle: "Avec ton Ledger",
+      afterItems: [
+        "Tes clés sont OFFLINE dans le Secure Element — inaccessibles à distance",
+        "Chaque transaction nécessite TA confirmation physique sur l'écran du Nano",
+        "Tu dors tranquille même si Binance fait la une demain matin",
+        "Ta seed phrase de 24 mots = filet de sécurité absolu, recoverable n'importe où",
       ],
     },
     sections: [
@@ -228,6 +296,48 @@ export const partnerReviews: PartnerReview[] = [
         "Audience FR exigeant un support en français (UI/doc majoritairement EN)",
       ],
     },
+    pedagogy: {
+      problem: {
+        title: "Faire confiance à un fabricant, c'est encore faire confiance",
+        body: "Le marketing crypto te vend de la \"sécurité\" comme une boîte noire : achète ce produit, fais-nous confiance, on te promet que c'est bien fait. Mais comment vérifies-tu ? Si le firmware est fermé, tu n'as aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer ta seed sans que tu t'en aperçoives — et tu ne pourrais pas le démontrer.",
+        stat: "0%",
+      },
+      solution: {
+        title: "100% du code public sur GitHub — vérifiable par n'importe qui",
+        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Tu n'achètes pas un produit qui te promet la sécurité — tu achètes un produit dont la sécurité est démontrable mathématiquement et publiquement.",
+        stat: "11 ans",
+      },
+      mechanism: {
+        title: "Comment la transparence crée la sécurité",
+        body: "Le paradoxe : montrer le code rend l'appareil PLUS sûr, pas moins. Parce que des milliers d'yeux scrutent en permanence ce que mille employés Ledger ne pourraient pas vérifier eux-mêmes. C'est le principe \"many eyes\" cher à la sécurité informatique sérieuse depuis Linux.",
+        steps: [
+          "Tu télécharges Trezor Suite (open-source) — tu peux compiler depuis source si tu veux la paranoïa absolue.",
+          "Tu génères ta seed BIP-39 24 mots, OU tu actives Shamir Backup (5 parts dont 3 nécessaires) sur Safe 5.",
+          "Chaque transaction est signée hors-ligne dans le Secure Element Optiga (EAL6+), avec validation visuelle sur l'écran couleur.",
+        ],
+      },
+      roi: {
+        title: "Le prix de la souveraineté crypto",
+        body: "Trezor Safe 3 : 79 €. Sur un horizon crypto réaliste de 10 ans, ça fait 7,90 €/an pour la liberté de NE PAS faire confiance. Pour un investisseur qui dépasse les 20 k€ en patrimoine numérique, ce coût est insignifiant face au principe : tu ne délègues à personne le contrôle de ton avenir financier.",
+        stat: "7,90 €/an",
+      },
+    },
+    beforeAfter: {
+      beforeTitle: "Sans contrôle souverain",
+      beforeItems: [
+        "Tu fais confiance à un fabricant qui peut, en théorie, pousser une update opaque",
+        "En cas de pression étatique sur la marque, tu n'as aucun moyen de savoir si le firmware a été modifié",
+        "Si la société disparaît ou est rachetée, le code peut devenir inaccessible",
+        "Tu ne peux pas démontrer la sécurité — tu y crois sur parole marketing",
+      ],
+      afterTitle: "Avec Trezor open-source",
+      afterItems: [
+        "Chaque ligne de firmware est sur GitHub — tu peux la lire, la compiler, la flasher toi-même",
+        "Toute backdoor serait détectée par la communauté en heures, signalée publiquement",
+        "Si SatoshiLabs disparaît demain, le projet continue (déjà arrivé : Trezor One forké à plusieurs reprises)",
+        "Shamir Backup natif : tu fragmentes ta seed sur 5 lieux, 3 nécessaires pour restaurer",
+      ],
+    },
     sections: [
       {
         title: "Pourquoi on garde Trezor en parallèle de Ledger",
@@ -368,6 +478,48 @@ export const partnerReviews: PartnerReview[] = [
         "Résident fiscal hors France (Koinly plus universel)",
         "Trader ultra-haute fréquence > 50 000 transactions (Trader 549 €/an cher)",
         "User <30 transactions (le plan Découverte gratuit suffit)",
+      ],
+    },
+    pedagogy: {
+      problem: {
+        title: "Déclarer ses cryptos en France, c'est un piège technique",
+        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré case 8UU du formulaire 3916-bis — sous peine de 1 500 € à 10 000 € d'amende PAR compte oublié (art. 1736 IV bis CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
+        stat: "10 000 €",
+      },
+      solution: {
+        title: "Le seul SaaS qui produit un Cerfa 2086 prêt à téléverser",
+        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Tu connectes tes exchanges, l'outil applique automatiquement la méthode PMP, classe tes plus-values cession par cession, et te génère deux PDFs : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Tu n'as qu'à recopier les chiffres sur impots.gouv.fr.",
+        stat: "100% Bercy",
+      },
+      mechanism: {
+        title: "Comment Waltio transforme 14h de Excel en 45 min",
+        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour te laisser uniquement la partie qui demande ta validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
+        steps: [
+          "Tu colles les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
+          "L'IA reconnaît et classe 95% des transactions ; tu réconcilies manuellement les 5% restants (15-30 min).",
+          "Tu télécharges les PDFs Cerfa 2086 + 3916-bis pré-remplis et tu les recopies sur impots.gouv.fr (15 min).",
+        ],
+      },
+      roi: {
+        title: "Le ROI sale et défendable, en chiffres",
+        body: "Plan Investisseur : 199 €/an. Tu gagnes 12 heures de saisie chaque mai (× 30 €/h de ton temps facturé = 360 € de valeur récupérée dès la 1ère année). Tu évites 1 500 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon ton profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
+        stat: "ROI 1.8x–250x",
+      },
+    },
+    beforeAfter: {
+      beforeTitle: "Sans Waltio en mai",
+      beforeItems: [
+        "14 heures de Excel multi-onglets pour calculer tes plus-values en PMP manuellement",
+        "Risque réel d'amende 1 500 € à 10 000 € par compte étranger oublié au 3916-bis",
+        "Stress fiscal jusqu'au dépôt — tu doutes de chaque calcul, tu refais 3 fois",
+        "Pas de traçabilité : si Bercy t'audite, tu n'as pas de méthode défendable",
+      ],
+      afterTitle: "Avec Waltio Investisseur",
+      afterItems: [
+        "1h30 la première année, 45 min les suivantes — incrémental automatique",
+        "Cerfa 2086 + 3916-bis pré-remplis selon doctrine BOFiP, prêts à téléverser",
+        "Toutes tes plateformes étrangères listées exhaustivement, aucun oubli possible",
+        "Méthode PMP horodatée + sources légales citées : tu es défendable face à un audit fiscal",
       ],
     },
     sections: [
