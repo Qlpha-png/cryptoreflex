@@ -1412,3 +1412,70 @@ section[id^="cat-"] {
     box-shadow: none !important;
   }
 }
+
+/* ──────────────────────── PARTENAIRES DETAIL PAGE ────────────────────────
+   Effets dynamiques pour /partenaires/[slug] :
+   - .partner-hero-glow : halo brand color qui pulse derrière le hero
+   - .partner-section : reveal stagger via --i, équivalent .account-card
+   - .partner-stat-pop : keyframes scale + opacity pour le pop des chiffres
+   - .gold-shine-text : gradient gold pulse subtil sur les chiffres clés
+*/
+.partner-hero-glow {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: partner-halo-breathe 8s ease-in-out infinite;
+}
+@keyframes partner-halo-breathe {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(1.05); }
+}
+
+.partner-section {
+  animation: hero-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+
+.partner-stat-pop {
+  display: inline-block;
+  animation: partner-stat-pop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(200ms + var(--i, 0) * 90ms);
+}
+@keyframes partner-stat-pop {
+  0%   { opacity: 0; transform: scale(0.7) translateY(8px); }
+  60%  { transform: scale(1.08) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* CTA hero pulse subtle gold ring (signature buy-now) */
+.partner-cta-pulse {
+  position: relative;
+}
+.partner-cta-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid rgba(245, 158, 11, 0.6);
+  pointer-events: none;
+  animation: partner-cta-ring 2.5s ease-out infinite;
+}
+@keyframes partner-cta-ring {
+  0%   { opacity: 0.85; transform: scale(1); }
+  70%  { opacity: 0; transform: scale(1.18); }
+  100% { opacity: 0; transform: scale(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-hero-glow,
+  .partner-section,
+  .partner-stat-pop,
+  .partner-cta-pulse::after {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

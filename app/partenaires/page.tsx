@@ -21,8 +21,16 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
   description:
-    "Notre sélection curée de partenaires crypto : Trezor, Waltio. Avis indépendants, transparence totale sur les commissions affiliées.",
+    "Notre sélection curée de partenaires crypto : Ledger, Trezor, Waltio. Avis indépendants après 4 à 8 ans d'usage réel, transparence totale sur les commissions affiliées.",
   alternates: { canonical: `${BRAND.url}/partenaires` },
+  openGraph: {
+    title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
+    description:
+      "Sélection curée : Ledger, Trezor, Waltio. Avis indépendants après usage réel, commissions transparentes.",
+    url: `${BRAND.url}/partenaires`,
+    type: "website",
+    siteName: BRAND.name,
+  },
 };
 
 const TONE_STYLES: Record<
@@ -329,6 +337,14 @@ function PartnerShowcase({
                 className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5"
                 aria-hidden="true"
               />
+            </Link>
+
+            <Link
+              href={`/partenaires/${partner.slug}`}
+              className="w-full min-h-[44px] inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-elevated/40 hover:bg-elevated/70 hover:border-primary/30 text-sm font-semibold text-fg/80 hover:text-fg transition-all"
+            >
+              Lire notre avis détaillé
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
 
             <p className="text-[11px] text-center text-muted leading-relaxed">

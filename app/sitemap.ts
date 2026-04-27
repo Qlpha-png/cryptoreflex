@@ -10,6 +10,7 @@ import { ALL_LISTICLES } from "@/lib/listicles";
 import { getAllNewsSummaries } from "@/lib/news-mdx";
 import { getAllTASummaries } from "@/lib/ta-mdx";
 import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
+import { partners as affiliatePartners } from "@/data/partners";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -54,6 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/analyses-techniques`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/calendrier`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/partenariats`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    // Vitrine partenaires affiliés (3 marques curées) + détail par slug.
+    // Priority 0.85 (vitrine principale revenue-driving) — détails 0.8.
+    { url: `${SITE_URL}/partenaires`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     // Pages business / monétisation (M+4-6 plan 2026)
     { url: `${SITE_URL}/pro`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${SITE_URL}/ambassadeurs`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
@@ -111,6 +115,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.75,
+  }));
+
+  /* ----------------------------------------------------------------
+   * 1quater. Pages partenaires affiliés (revenue-driving long-form reviews)
+   * ---------------------------------------------------------------- */
+  const partnerRoutes: MetadataRoute.Sitemap = affiliatePartners.map((p) => ({
+    url: `${SITE_URL}/partenaires/${p.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   }));
 
   /* ----------------------------------------------------------------
@@ -209,6 +223,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticRoutes,
+    ...partnerRoutes,
     ...listicleRoutes,
     ...glossaryRoutes,
     ...articleRoutes,
