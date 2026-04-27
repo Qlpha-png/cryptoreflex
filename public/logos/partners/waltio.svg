@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Waltio">
-  <!-- Background : bleu Waltio officiel (#0066FF) -->
   <defs>
     <linearGradient id="walt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#1E7BFF"/>
       <stop offset="100%" stop-color="#0050D6"/>
     </linearGradient>
   </defs>
+  <!-- Fond bleu gradient Waltio officiel -->
   <rect width="64" height="64" rx="14" fill="url(#walt-grad)"/>
-  <!-- "Waltio" wordmark blanc compact -->
-  <text
-    x="32"
-    y="40"
-    font-family="'Inter', 'Helvetica Neue', system-ui, sans-serif"
-    font-weight="800"
-    font-size="14"
-    letter-spacing="-0.4"
-    fill="#ffffff"
-    text-anchor="middle"
-  >Waltio</text>
-  <!-- Petite icone document fiscal (référence Cerfa) sous le wordmark -->
-  <g fill="#ffffff" opacity="0.85">
-    <rect x="26" y="46" width="12" height="1.4" rx="0.5"/>
-    <rect x="28" y="49" width="8" height="1" rx="0.4" opacity="0.7"/>
+  <!-- Logomark "W" géométrique stylisé Waltio (pur path, no font dep) -->
+  <g fill="#ffffff" stroke="#ffffff" stroke-width="0">
+    <!-- W formé par 4 triangles inversés -->
+    <path d="M 14 18 L 18 18 L 23 38 L 28 22 L 32 22 L 36 38 L 41 18 L 45 18 L 38 46 L 34 46 L 30 32 L 26 46 L 22 46 Z"/>
+    <!-- Petit accent ligne sous le W (référence Cerfa/document) -->
+    <rect x="22" y="50" width="20" height="1.6" rx="0.8" opacity="0.7"/>
   </g>
 </svg>

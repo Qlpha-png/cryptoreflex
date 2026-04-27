@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Ledger">
-  <!-- Background : noir Ledger officiel -->
+  <!-- Fond noir signature Ledger officiel -->
   <rect width="64" height="64" rx="14" fill="#000000"/>
-  <!-- "Ledger" wordmark blanc, typo Inter Bold compact (-1 letter-spacing) -->
-  <text
-    x="32"
-    y="40"
-    font-family="'Inter', 'Helvetica Neue', system-ui, sans-serif"
-    font-weight="800"
-    font-size="15"
-    letter-spacing="-0.5"
-    fill="#ffffff"
-    text-anchor="middle"
-  >Ledger</text>
-  <!-- Accent line signature sous le wordmark (rappel logo officiel) -->
-  <rect x="20" y="46" width="24" height="1.4" rx="0.7" fill="#ffffff" opacity="0.7"/>
+  <!-- Logomark "L" stylisé Ledger : sharp serif moderne, géométrique pur (no font deps) -->
+  <g fill="#ffffff">
+    <!-- Vertical bar du L (large, premium) -->
+    <rect x="20" y="16" width="6" height="32" rx="0.8"/>
+    <!-- Horizontal bar du L -->
+    <rect x="20" y="42" width="22" height="6" rx="0.8"/>
+    <!-- Accent dot signature top-right (rappel logo Ledger Live) -->
+    <circle cx="44" cy="20" r="3" fill="#F59E0B"/>
+  </g>
 </svg>
