@@ -88,9 +88,25 @@ export function renderButton({ href, label, variant = "primary" }: ButtonArgs): 
       <a href="${href}" target="_blank" style="display:inline-block;padding:13px 31px;font-family:${T.fonts.sans};font-size:15px;font-weight:600;color:${T.colors.primary};text-decoration:none;border-radius:10px;">${label}</a>
     </td></tr></table>`;
   }
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td align="center" bgcolor="${T.colors.primary}" style="border-radius:10px;background-color:${T.colors.primary};box-shadow:0 4px 14px rgba(245,158,11,0.35);">
-    <a href="${href}" target="_blank" style="display:inline-block;padding:14px 32px;font-family:${T.fonts.sans};font-size:15px;font-weight:700;color:#0A0A0A;text-decoration:none;border-radius:10px;letter-spacing:0.2px;">${label}</a>
-  </td></tr></table>`;
+  // Bulletproof CTA primary
+  // - VML pour Outlook 2007-2019 (sinon le bg n'est pas rendu)
+  // - Multi-bg : table, td bgcolor, et a background-color → defense en profondeur
+  //   contre Gmail dark mode qui peut stripper certaines couleurs
+  // - Border 2px solid gold → outline visible meme si bg foire
+  // - mso-hide:all sur le <a> → Outlook voit uniquement le VML
+  // - line-height + height fixes pour eviter que padding bug en dark mode
+  return `<!--[if mso]>
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:48px;v-text-anchor:middle;width:280px;" arcsize="22%" strokecolor="${T.colors.primary}" fill="t" fillcolor="${T.colors.primary}">
+<w:anchorlock/>
+<center style="color:#0A0A0A;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.2px;">${label}</center>
+</v:roundrect>
+<![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="border-collapse:separate;border-spacing:0;background-color:${T.colors.primary};border-radius:10px;mso-hide:all;">
+<tr><td align="center" bgcolor="${T.colors.primary}" style="background-color:${T.colors.primary};border:2px solid ${T.colors.primary};border-radius:10px;box-shadow:0 4px 14px rgba(245,158,11,0.35);mso-hide:all;">
+<a href="${href}" target="_blank" style="background-color:${T.colors.primary};border-radius:10px;color:#0A0A0A;display:inline-block;font-family:${T.fonts.sans};font-size:15px;font-weight:700;letter-spacing:0.2px;line-height:1;padding:15px 32px;text-decoration:none;mso-hide:all;">
+<span style="color:#0A0A0A;text-decoration:none;">${label}</span>
+</a>
+</td></tr></table>`;
 }
 
 /* -------------------------------------------------------------------------- */

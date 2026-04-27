@@ -96,7 +96,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // STEP 2 : genere le magic link (renvoie action_link, n'envoie PAS d'email)
+  // STEP 2 : genere le magic link → on recupere hashed_token (PAS action_link)
+  // action_link pointe vers Supabase /verify qui redirige avec hash fragment
+  // (illisible serveur). Avec hashed_token + verifyOtp dans notre callback,
+  // on contourne ce probleme et on set la session via cookies.
   const { data: linkData, error: linkError } =
     await admin.auth.admin.generateLink({
       type: "magiclink",
@@ -106,16 +109,18 @@ export async function POST(req: NextRequest) {
       },
     });
 
-  if (linkError || !linkData?.properties?.action_link) {
+  if (linkError || !linkData?.properties?.hashed_token) {
     console.error("[auth/login] generateLink error:", linkError?.message);
-    // On masque l'erreur pour eviter user enumeration
     return NextResponse.json({
       ok: true,
       message: "Si ce compte existe, un email de connexion a été envoyé.",
     });
   }
 
-  const magicLink = linkData.properties.action_link;
+  // Build NOTRE URL : pointe direct sur /api/auth/callback avec token_hash.
+  // Le callback fera verifyOtp() qui set le cookie session puis redirige.
+  const tokenHash = linkData.properties.hashed_token;
+  const magicLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=/mon-compte`;
 
   // STEP 3 : envoie l'email via NOTRE Resend (qui marche)
   const tmpl = magicLinkEmail({ email, magicLink });

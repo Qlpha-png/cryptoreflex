@@ -89,23 +89,25 @@ export async function POST(req: NextRequest) {
     return uniformResponse;
   }
 
-  // STEP 2 : genere le recovery link (renvoie action_link)
+  // STEP 2 : genere le recovery link → recupere hashed_token (cf /api/auth/login
+  // pour explication : action_link supabase verify utilise hash fragment illisible
+  // serveur, donc on construit notre URL avec token_hash + verifyOtp dans le callback)
   const { data: linkData, error: linkError } =
     await admin.auth.admin.generateLink({
       type: "recovery",
       email,
       options: {
-        redirectTo: `${siteUrl}/api/auth/callback?next=/mon-compte/mot-de-passe`,
+        redirectTo: `${siteUrl}/api/auth/callback`,
       },
     });
 
-  if (linkError || !linkData?.properties?.action_link) {
+  if (linkError || !linkData?.properties?.hashed_token) {
     console.error("[auth/reset-password] generateLink error:", linkError?.message);
-    // On masque l'erreur cote user pour eviter user enumeration
     return uniformResponse;
   }
 
-  const resetLink = linkData.properties.action_link;
+  const tokenHash = linkData.properties.hashed_token;
+  const resetLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=recovery&next=/mon-compte/mot-de-passe`;
 
   // STEP 3 : envoie l'email via Resend
   const tmpl = resetPasswordEmail({ email, resetLink });

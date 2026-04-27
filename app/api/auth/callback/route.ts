@@ -1,53 +1,103 @@
 /**
- * /api/auth/callback — Callback du magic link Supabase.
+ * /api/auth/callback — Callback magic link / reset / OAuth Supabase.
  *
- * Quand le user clique sur le magic link reçu par email :
- *   https://www.cryptoreflex.fr/api/auth/callback?code=xxx
+ * Supporte 2 flows distincts :
  *
- * 1. On échange le code contre une session (exchangeCodeForSession)
- * 2. Supabase set le cookie de session (httpOnly, secure, sameSite=lax)
- * 3. On redirect vers /mon-compte (ou /pro/welcome pour les nouveaux abonnés)
+ *  1. PKCE / OAuth : ?code=xxx → exchangeCodeForSession()
+ *     Pour les futurs flows OAuth (Google, GitHub) ou PKCE custom.
  *
- * SÉCURITÉ :
- *  - Header `Referrer-Policy: no-referrer` évite que le code leak via referrer
- *  - Redirect 302 immédiat vide l'URL bar → pas de leak via browser history
- *  - Code 1-shot consommé en transaction côté Supabase
+ *  2. OTP / Magic link / Recovery : ?token_hash=xxx&type=magiclink|recovery
+ *     Pour les magic links et reset password generes via admin.generateLink().
+ *     On utilise verifyOtp() qui accepte le token_hash directement.
+ *
+ * Pourquoi pas Supabase verify endpoint : Supabase /auth/v1/verify redirige
+ * en mettant les tokens dans le HASH FRAGMENT (#access_token=...), illisible
+ * cote serveur. Notre callback construit l'URL avec ?token_hash= en query
+ * param et call verifyOtp() qui set la session via cookies.
+ *
+ * Apres succes : redirect vers `next` (default /mon-compte).
+ *
+ * SECURITE :
+ *  - Header Referrer-Policy: no-referrer evite leak du token via referrer
+ *  - Redirect 302 immediat vide l'URL bar → pas de leak via browser history
+ *  - Token 1-shot consomme en transaction cote Supabase
+ *  - Cookies session set via applyCookies (helper bulletproof Next 14)
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+type OtpType =
+  | "magiclink"
+  | "recovery"
+  | "signup"
+  | "invite"
+  | "email"
+  | "email_change";
+
+const VALID_OTP_TYPES = new Set<OtpType>([
+  "magiclink",
+  "recovery",
+  "signup",
+  "invite",
+  "email",
+  "email_change",
+]);
+
 export async function GET(req: NextRequest) {
-  const supabase = createSupabaseServerClient();
-  if (!supabase) {
+  const client = createRouteHandlerClient(req);
+  if (!client) {
     return NextResponse.redirect(
       new URL("/connexion?error=service_unavailable", req.url)
     );
   }
+  const { supabase, applyCookies } = client;
 
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
+  const tokenHash = url.searchParams.get("token_hash");
+  const typeParam = url.searchParams.get("type");
   const next = url.searchParams.get("next") ?? "/mon-compte";
 
-  if (!code) {
-    return NextResponse.redirect(new URL("/connexion?error=missing_code", req.url));
+  let authError: string | null = null;
+
+  if (code) {
+    // FLOW 1 : PKCE / OAuth
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) authError = error.message;
+  } else if (tokenHash && typeParam) {
+    // FLOW 2 : OTP / Magic link / Recovery
+    const type = typeParam as OtpType;
+    if (!VALID_OTP_TYPES.has(type)) {
+      console.error("[auth/callback] type OTP invalide:", typeParam);
+      return NextResponse.redirect(
+        new URL("/connexion?error=invalid_code", req.url)
+      );
+    }
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type,
+    });
+    if (error) authError = error.message;
+  } else {
+    return NextResponse.redirect(
+      new URL("/connexion?error=missing_code", req.url)
+    );
   }
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-  if (error) {
-    console.error("[auth/callback] exchangeCodeForSession error:", error.message);
+  if (authError) {
+    console.error("[auth/callback] auth error:", authError);
     return NextResponse.redirect(
       new URL("/connexion?error=invalid_code", req.url)
     );
   }
 
-  // Redirect avec headers de sécurité
+  // Redirect avec session cookies appliques + headers de securite
   const response = NextResponse.redirect(new URL(next, req.url));
   response.headers.set("Referrer-Policy", "no-referrer");
   response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
-  return response;
+  return applyCookies(response);
 }
