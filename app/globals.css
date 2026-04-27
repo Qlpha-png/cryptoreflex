@@ -317,6 +317,29 @@ body {
 .animate-hero-fade-up-delay-3 { animation-delay: 280ms; }
 .animate-hero-fade-up-delay-4 { animation-delay: 380ms; }
 
+/* Account dashboard cards — stagger fade-up via --i index */
+.account-card {
+  animation: hero-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(80ms + var(--i, 0) * 70ms);
+  will-change: opacity, transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Eyebrow premium — letter-spacing 0.12em (vs Tailwind tracking-wider 0.05em) */
+.ds-eyebrow {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
 /* Sparkline glow — appliqué via class sur le path SVG */
 .sparkline-glow-up {
   filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.45));

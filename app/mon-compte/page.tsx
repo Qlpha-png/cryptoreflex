@@ -16,10 +16,19 @@ import {
   Lock,
   ArrowRight,
 } from "lucide-react";
+import {
+  Bell,
+  Wallet,
+  ReceiptText,
+  CalendarDays,
+} from "lucide-react";
 import { getUser } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 import ManageSubscriptionButton from "@/components/account/ManageSubscriptionButton";
+import OnboardingChecklist from "@/components/account/OnboardingChecklist";
+import KpiCard from "@/components/account/KpiCard";
+import FreeUserDashboard from "@/components/account/FreeUserDashboard";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -42,17 +51,45 @@ export default async function AccountPage() {
 
   const isPro = user.plan === "pro_monthly" || user.plan === "pro_annual";
 
+  // Calcul KPI dynamiques (data-driven, ZERO invention)
+  const daysLeftPro =
+    isPro && user.planExpiresAt
+      ? Math.max(
+          0,
+          Math.ceil(
+            (user.planExpiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          )
+        )
+      : null;
+
+  const annualSavings =
+    user.plan === "pro_annual"
+      ? "+39,89 €" // 9,99 × 12 - 79,99 = 39,89 économie réelle
+      : null;
+
+  // Username dérivé de l'email (avant @)
+  const usernameDisplay = user.email.split("@")[0];
+
   return (
-    <section className="min-h-[80vh] py-12 sm:py-16">
+    <section className="min-h-[80vh] py-12 sm:py-16" aria-labelledby="page-title">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Header avec status */}
-        <header className="mb-8 flex items-start justify-between gap-4 flex-wrap">
+        {/* Header */}
+        <header
+          className="account-card mb-8 flex items-start justify-between gap-4 flex-wrap"
+          style={{ ["--i" as never]: 0 }}
+        >
           <div>
             <span className="ds-eyebrow text-primary-soft">MON ESPACE</span>
-            <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-fg">
-              Bonjour
+            <h1
+              id="page-title"
+              className="mt-2 text-3xl sm:text-4xl font-extrabold text-fg tracking-[-0.025em]"
+            >
+              Bonjour, <span className="gradient-text">{usernameDisplay}</span>
             </h1>
-            <p className="mt-1 text-sm text-fg/70">{user.email}</p>
+            <p className="mt-1 text-sm text-muted">
+              <span className="sr-only">Compte connecté&nbsp;: </span>
+              {user.email}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             {isPro && (
@@ -64,42 +101,73 @@ export default async function AccountPage() {
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                className="text-sm text-muted hover:text-fg inline-flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-elevated/60 transition-colors min-h-[40px]"
-                title="Se déconnecter"
+                className="text-sm text-muted hover:text-fg inline-flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-elevated/60 transition-colors min-h-[44px]"
+                aria-label="Se déconnecter de mon compte"
               >
                 <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden sm:inline">Déconnexion</span>
+                <span className="hidden sm:inline" aria-hidden="true">
+                  Déconnexion
+                </span>
               </button>
             </form>
           </div>
         </header>
 
-        {/* Si pas Pro : invitation à upgrader */}
-        {!isPro && (
-          <div className="glass rounded-2xl p-6 mb-8 border border-primary/40 bg-primary/5">
-            <div className="flex items-start gap-4">
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/30">
-                <Crown className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div className="flex-1 min-w-0">
-                <h2 className="font-bold text-fg text-lg">
-                  Tu n&apos;es pas encore Pro
-                </h2>
-                <p className="mt-1 text-sm text-fg/70 leading-relaxed">
-                  Débloque l&apos;outillage complet (alertes illimitées,
-                  Radar 3916-bis avec mémo PDF, brief alpha, réponse fiscale
-                  perso) dès 9,99 €/mois.
-                </p>
-                <Link
-                  href="/pro"
-                  className="mt-3 btn-primary btn-primary-shine min-h-[44px] inline-flex"
-                >
-                  Découvrir Pro
-                </Link>
-              </div>
-            </div>
+        {/* Onboarding checklist Pro (post-paiement) */}
+        {isPro && <OnboardingChecklist />}
+
+        {/* KPI cards Pro — data-driven uniquement */}
+        {isPro && (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
+            aria-label="Indicateurs clés de ton abonnement"
+          >
+            {daysLeftPro !== null && (
+              <KpiCard
+                index={0}
+                tone="info"
+                Icon={CalendarDays}
+                label="Jours Pro restants"
+                value={daysLeftPro}
+                subText={
+                  user.planExpiresAt
+                    ? `renouv. le ${user.planExpiresAt.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}`
+                    : undefined
+                }
+              />
+            )}
+            {annualSavings && (
+              <KpiCard
+                index={1}
+                tone="success"
+                Icon={ReceiptText}
+                label="Économie vs mensuel"
+                value={annualSavings}
+                trend={{ direction: "up", pct: "33%" }}
+                subText="sur 12 mois"
+              />
+            )}
+            <KpiCard
+              index={2}
+              tone="info"
+              Icon={Bell}
+              label="Alertes Pro"
+              value="Illimité"
+              subText="vs 5 max en Free"
+            />
+            <KpiCard
+              index={3}
+              tone="info"
+              Icon={Wallet}
+              label="Portfolio"
+              value="Illimité"
+              subText="vs 5 positions Free"
+            />
           </div>
         )}
+
+        {/* Si pas Pro : nouvelle vue conversion premium */}
+        {!isPro && <FreeUserDashboard />}
 
         {/* Grid principal */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
