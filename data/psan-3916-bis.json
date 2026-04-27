@@ -1,0 +1,327 @@
+{
+  "$schema": "Cryptoreflex - Database PSAN pour Radar 3916-bis",
+  "lastUpdated": "2026-04-27",
+  "disclaimer": "Données basées sur informations publiques (Mentions Légales officielles, registres AMF/MFSA/ESMA, BOI-CF-CPF-30-20). Pour chaque exchange, le champ 'verifiedFields' liste ce qui est confirmé. Les champs marqués 'À vérifier' demandent une consultation directe des Mentions Légales officielles avant déclaration. Le user reste juridiquement responsable de ses déclarations.",
+  "legal": {
+    "boi": "BOI-CF-CPF-30-20 (Comptes ouverts à l'étranger - obligation déclarative)",
+    "cgi": "Article 1736 IV bis du Code Général des Impôts",
+    "amendeStandard": 1500,
+    "amendeNonCooperatif": 10000,
+    "perCount": true,
+    "form": "Cerfa 3916-bis (intégré au formulaire 2042 / impots.gouv.fr rubrique 'Comptes à l'étranger')",
+    "deadline": "Même date que la déclaration de revenus annuelle (typiquement mai-juin)",
+    "obligation": "Toute personne physique fiscalement domiciliée en France ayant ouvert, détenu, utilisé ou clôturé au moins UN compte d'actifs numériques auprès d'un exchange établi à l'étranger doit le déclarer chaque année, MÊME si le compte est vide ou inactif."
+  },
+  "nonCooperativeJurisdictions2026": [
+    "Anguilla",
+    "Bahamas",
+    "Fidji",
+    "Guam",
+    "Iles Vierges américaines",
+    "Iles Vierges britanniques",
+    "Palaos",
+    "Panama",
+    "Samoa",
+    "Samoa américaines",
+    "Seychelles",
+    "Trinité-et-Tobago",
+    "Vanuatu"
+  ],
+  "exchanges": [
+    {
+      "id": "binance",
+      "name": "Binance",
+      "logo": "binance",
+      "verifiedFields": ["name", "country"],
+      "warning": "Binance a opéré historiquement via une entité basée aux Iles Caïmans/Malte. Depuis 2023, Binance France SAS est enregistrée PSAN auprès de l'AMF. Si vous avez ouvert votre compte AVANT migration vers Binance France, le pays de référence peut être différent.",
+      "entities": [
+        {
+          "label": "Binance France (depuis 2023+)",
+          "legalName": "À vérifier sur la page Mentions Légales binance.com/fr",
+          "country": "France",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        },
+        {
+          "label": "Binance Holdings (entité historique)",
+          "legalName": "À vérifier sur vos anciens emails/contrats Binance",
+          "country": "Iles Caïmans (historique)",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.binance.com/fr/terms",
+      "instruction": "Connectez-vous à Binance > Profil > Vérification de compte : votre entité légale est précisée."
+    },
+    {
+      "id": "coinbase",
+      "name": "Coinbase",
+      "logo": "coinbase",
+      "verifiedFields": ["name", "country", "legalName", "address"],
+      "entities": [
+        {
+          "label": "Coinbase Europe (clients UE depuis 2024)",
+          "legalName": "Coinbase Europe Limited",
+          "address": "70 Sir John Rogerson's Quay, Dublin 2, D02 R296, Ireland",
+          "registrationNumber": "Irish Company Number 629930 (à reconfirmer sur registre CRO)",
+          "country": "Irlande",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.coinbase.com/legal/user_agreement/europe",
+      "instruction": "Pour les clients UE, l'entité contractante est Coinbase Europe Limited (Irlande)."
+    },
+    {
+      "id": "kraken",
+      "name": "Kraken",
+      "logo": "kraken",
+      "verifiedFields": ["name", "country", "legalName"],
+      "entities": [
+        {
+          "label": "Kraken UE (depuis 2024)",
+          "legalName": "Payward Europe Digital Solutions Ltd",
+          "address": "Dublin, Irlande - adresse précise à confirmer sur kraken.com/legal",
+          "country": "Irlande",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.kraken.com/legal",
+      "instruction": "Vérifiez votre entité contractante sur la page Mentions Légales en bas de kraken.com."
+    },
+    {
+      "id": "crypto-com",
+      "name": "Crypto.com",
+      "logo": "crypto-com",
+      "verifiedFields": ["name", "country"],
+      "entities": [
+        {
+          "label": "Crypto.com UE (Malte)",
+          "legalName": "Foris DAX MT Limited",
+          "address": "Malte - adresse précise à confirmer",
+          "country": "Malte",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://crypto.com/eea/legal-and-privacy",
+      "instruction": "L'entité Foris DAX MT Limited (Malte) sert les utilisateurs UE depuis l'agrément MiCA 2025."
+    },
+    {
+      "id": "bybit",
+      "name": "Bybit",
+      "logo": "bybit",
+      "verifiedFields": ["name"],
+      "warning": "ATTENTION : Bybit a 2 entités. L'historique Bybit Fintech Limited (BVI = pays NON-coopératif) génère une amende de 10 000 € si non déclaré. Bybit EU GmbH (Autriche) génère 1 500 €.",
+      "entities": [
+        {
+          "label": "Bybit EU GmbH (depuis 2025)",
+          "legalName": "Bybit EU GmbH",
+          "address": "Autriche - adresse précise à confirmer",
+          "country": "Autriche",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        },
+        {
+          "label": "Bybit Fintech Limited (entité historique)",
+          "legalName": "Bybit Fintech Limited",
+          "address": "Road Town, Tortola, British Virgin Islands - adresse à reconfirmer",
+          "country": "Iles Vierges britanniques",
+          "isNonCooperative": true,
+          "amendeRisque": 10000
+        }
+      ],
+      "officialLegalUrl": "https://www.bybit.com/en/help-center/article/Terms-of-Service",
+      "instruction": "Vérifiez votre entité contractante dans vos emails de bienvenue Bybit ou dans Profil > Documents légaux."
+    },
+    {
+      "id": "mexc",
+      "name": "MEXC",
+      "logo": "mexc",
+      "verifiedFields": ["name"],
+      "warning": "MEXC est généralement domicilié aux Seychelles = PAYS NON-COOPÉRATIF. Amende de 10 000 € par compte non déclaré. À CONFIRMER ABSOLUMENT sur vos contrats personnels.",
+      "entities": [
+        {
+          "label": "MEXC (entité Seychelles présumée)",
+          "legalName": "MEXC Global / MEXC Technology Limited - à confirmer",
+          "address": "Seychelles - adresse précise à confirmer",
+          "country": "Seychelles",
+          "isNonCooperative": true,
+          "amendeRisque": 10000
+        }
+      ],
+      "officialLegalUrl": "https://www.mexc.com/user-agreement",
+      "instruction": "Consultez vos Mentions Légales MEXC OU contactez le support pour confirmer l'entité contractante. Probable Seychelles = pays non-coopératif."
+    },
+    {
+      "id": "kucoin",
+      "name": "KuCoin",
+      "logo": "kucoin",
+      "verifiedFields": ["name"],
+      "warning": "KuCoin est généralement domicilié aux Seychelles = PAYS NON-COOPÉRATIF. Amende 10 000 € par compte non déclaré. À CONFIRMER sur vos contrats.",
+      "entities": [
+        {
+          "label": "KuCoin (entité Seychelles présumée)",
+          "legalName": "Mek Global Limited / Phoenixfin - à confirmer",
+          "address": "Seychelles - adresse précise à confirmer",
+          "country": "Seychelles",
+          "isNonCooperative": true,
+          "amendeRisque": 10000
+        }
+      ],
+      "officialLegalUrl": "https://www.kucoin.com/legal/terms-of-use",
+      "instruction": "Consultez vos Mentions Légales KuCoin pour confirmer."
+    },
+    {
+      "id": "okx",
+      "name": "OKX",
+      "logo": "okx",
+      "verifiedFields": ["name", "country"],
+      "entities": [
+        {
+          "label": "OKX UE (depuis 2025)",
+          "legalName": "OKCOIN Europe Ltd",
+          "address": "Malte - adresse précise à confirmer",
+          "country": "Malte",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.okx.com/eu/help/okcoin-europe-ltd-user-agreement",
+      "instruction": "Pour les clients UE, l'entité contractante est OKCOIN Europe Ltd (Malte)."
+    },
+    {
+      "id": "bitget",
+      "name": "Bitget",
+      "logo": "bitget",
+      "verifiedFields": ["name"],
+      "warning": "Bitget est généralement domicilié aux Seychelles = PAYS NON-COOPÉRATIF. Amende 10 000 € par compte non déclaré. À CONFIRMER.",
+      "entities": [
+        {
+          "label": "Bitget (entité Seychelles présumée)",
+          "legalName": "Bitget Limited - à confirmer",
+          "address": "Seychelles - adresse précise à confirmer",
+          "country": "Seychelles",
+          "isNonCooperative": true,
+          "amendeRisque": 10000
+        }
+      ],
+      "officialLegalUrl": "https://www.bitget.com/terms-agreement",
+      "instruction": "Consultez les Mentions Légales pour confirmer l'entité."
+    },
+    {
+      "id": "bitvavo",
+      "name": "Bitvavo",
+      "logo": "bitvavo",
+      "verifiedFields": ["name", "country", "legalName", "address", "registrationNumber"],
+      "entities": [
+        {
+          "label": "Bitvavo BV (Pays-Bas)",
+          "legalName": "Bitvavo B.V.",
+          "address": "Keizersgracht 281, 1016 ED Amsterdam, Pays-Bas",
+          "registrationNumber": "KvK (Chambre de commerce néerlandaise) 67587880",
+          "country": "Pays-Bas",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://bitvavo.com/en/about-bitvavo",
+      "instruction": "L'entité Bitvavo B.V. (Pays-Bas) est l'unique entité opérationnelle."
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "logo": "gemini",
+      "verifiedFields": ["name"],
+      "entities": [
+        {
+          "label": "Gemini UE",
+          "legalName": "Gemini Intergalactic UK / Gemini Europe Services - à confirmer",
+          "address": "À vérifier sur gemini.com/legal",
+          "country": "À vérifier (Irlande ou Malte selon contrat)",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.gemini.com/legal/user-agreement",
+      "instruction": "Consultez vos Mentions Légales Gemini pour confirmer l'entité."
+    },
+    {
+      "id": "bitstamp",
+      "name": "Bitstamp",
+      "logo": "bitstamp",
+      "verifiedFields": ["name", "country", "legalName"],
+      "entities": [
+        {
+          "label": "Bitstamp UE (Luxembourg)",
+          "legalName": "Bitstamp Europe S.A.",
+          "address": "5, allée Scheffer, L-2520 Luxembourg",
+          "registrationNumber": "RCS Luxembourg - n° précis à confirmer",
+          "country": "Luxembourg",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.bitstamp.net/terms-of-use/",
+      "instruction": "L'entité Bitstamp Europe S.A. (Luxembourg) sert les clients UE."
+    },
+    {
+      "id": "bitpanda",
+      "name": "Bitpanda",
+      "logo": "bitpanda",
+      "verifiedFields": ["name", "country", "legalName", "address", "registrationNumber"],
+      "entities": [
+        {
+          "label": "Bitpanda GmbH (Autriche)",
+          "legalName": "Bitpanda GmbH",
+          "address": "Stella-Klein-Löw-Weg 17, 1020 Vienne, Autriche",
+          "registrationNumber": "FN 423018k (Handelsgericht Wien)",
+          "country": "Autriche",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://www.bitpanda.com/en/legal/imprint",
+      "instruction": "Bitpanda GmbH (Autriche) est l'entité opérationnelle pour tous les clients."
+    },
+    {
+      "id": "bitfinex",
+      "name": "Bitfinex",
+      "logo": "bitfinex",
+      "verifiedFields": ["name", "country"],
+      "warning": "ATTENTION : Bitfinex (iFinex Inc.) est domicilié aux Iles Vierges britanniques = PAYS NON-COOPÉRATIF. Amende 10 000 € par compte non déclaré.",
+      "entities": [
+        {
+          "label": "Bitfinex / iFinex Inc.",
+          "legalName": "iFinex Inc.",
+          "address": "Road Town, Tortola, British Virgin Islands - adresse précise à confirmer",
+          "country": "Iles Vierges britanniques",
+          "isNonCooperative": true,
+          "amendeRisque": 10000
+        }
+      ],
+      "officialLegalUrl": "https://www.bitfinex.com/legal/terms",
+      "instruction": "iFinex Inc. (BVI) = pays non-coopératif au sens de l'article 238-0 A du CGI."
+    },
+    {
+      "id": "bingx",
+      "name": "BingX",
+      "logo": "bingx",
+      "verifiedFields": ["name"],
+      "warning": "BingX a plusieurs entités selon votre contrat (Lituanie ou offshore). À confirmer ABSOLUMENT.",
+      "entities": [
+        {
+          "label": "BingX (entité à confirmer)",
+          "legalName": "BingX Technology Co., Limited - à confirmer",
+          "address": "À vérifier sur bingx.com",
+          "country": "À vérifier (Lituanie ou Seychelles selon contrat)",
+          "isNonCooperative": false,
+          "amendeRisque": 1500
+        }
+      ],
+      "officialLegalUrl": "https://bingx.com/en-us/support/articles/360017574493",
+      "instruction": "Consultez vos Mentions Légales personnelles BingX. Si entité offshore (Seychelles), amende portée à 10 000 €."
+    }
+  ]
+}

@@ -327,16 +327,24 @@ const TIERS = buildTiers(PAYMENTS_ENABLED);
  * mai/juin 2026 — transparence loyale = zéro risque légal.
  */
 /**
- * FEATURES enrichies (BATCH 4) — chaque feature porte maintenant :
+ * FEATURES enrichies (BATCH 4 + Radar 3916-bis ajouté en HEAD) :
  *  - kpi  : un chiffre saillant (badge en tête de carte) — booste le scan
  *  - text : une description-bénéfice claire
- *  - tag  : un mot-clé court qui catégorise (Productivité, Confort, etc.)
+ *  - tag  : un mot-clé court qui catégorise
+ *  - href : lien optionnel vers la feature (pour Radar = lien direct vers l'outil)
  *
- * Pourquoi : les LP B2C SaaS qui surperforment (Notion, Linear, Cal.com)
- * convertissent mieux quand chaque feature est associée à 1 chiffre concret
- * (étude Nielsen Norman 2024 : "users scan, they don't read").
+ * USP fiscal en HEAD car c'est le revenue driver le plus immédiat
+ * (saisonnalité mai 2026, douleur réelle 1500-10000€ par compte oublié).
  */
 const FEATURES = [
+  {
+    icon: ShieldCheck,
+    kpi: "10 000 €",
+    tag: "Fiscal",
+    title: "Radar 3916-bis + mémo PDF",
+    text: "Détecte tes amendes potentielles sur tes comptes Binance, MEXC, Bybit oubliés (1 500 € à 10 000 € par compte). En Pro : génération automatique d'un mémo PDF pré-rempli + rappel email avant la deadline mai 2026.",
+    href: "/outils/radar-3916-bis",
+  },
   {
     icon: Bell,
     kpi: "∞",
@@ -927,41 +935,74 @@ export default function ProPage() {
       >
         <div className="text-center mb-12">
           <span className="ds-eyebrow text-primary-soft">
-            6 BÉNÉFICES TANGIBLES
+            7 BÉNÉFICES TANGIBLES
           </span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg">
             Ce que tu gagnes <span className="gradient-text">en passant Pro</span>
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
-            6 améliorations concrètes qui changent ta routine
+            7 améliorations concrètes qui changent ta routine
             d&apos;investisseur — surtout en mai (déclaration fiscale).
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURES.map((f, idx) => (
-            <article
-              key={f.title}
-              className="pro-feature-card glass rounded-2xl p-5 flex flex-col h-full transition-all duration-300 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
-              style={{ ["--i" as string]: idx }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <span className="pro-feature-icon-pop inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/20 transition-transform">
-                  <f.icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider rounded-full bg-elevated text-muted border border-border px-2 py-1 whitespace-nowrap">
-                  {f.tag}
-                </span>
-              </div>
-              <p className="mt-4 text-2xl font-extrabold font-mono tabular-nums text-primary leading-none">
-                {f.kpi}
-              </p>
-              <h3 className="mt-2 font-bold text-fg text-base">{f.title}</h3>
-              <p className="mt-2 text-sm text-fg/70 leading-relaxed flex-1">
-                {f.text}
-              </p>
-            </article>
-          ))}
+          {FEATURES.map((f, idx) => {
+            const inner = (
+              <>
+                <div className="flex items-start justify-between gap-3">
+                  <span className="pro-feature-icon-pop inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/20 transition-transform">
+                    <f.icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider rounded-full bg-elevated text-muted border border-border px-2 py-1 whitespace-nowrap">
+                    {f.tag}
+                  </span>
+                </div>
+                <p className="mt-4 text-2xl font-extrabold font-mono tabular-nums text-primary leading-none">
+                  {f.kpi}
+                </p>
+                <h3 className="mt-2 font-bold text-fg text-base">{f.title}</h3>
+                <p className="mt-2 text-sm text-fg/70 leading-relaxed flex-1">
+                  {f.text}
+                </p>
+                {f.href && (
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft group-hover:text-primary">
+                    Essayer l&apos;outil gratuit
+                    <ArrowRight
+                      className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </span>
+                )}
+              </>
+            );
+
+            const baseClasses =
+              "pro-feature-card glass rounded-2xl p-5 flex flex-col h-full transition-all duration-300 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5 group";
+            const style = { ["--i" as string]: idx } as React.CSSProperties;
+
+            if (f.href) {
+              return (
+                <Link
+                  key={f.title}
+                  href={f.href}
+                  className={baseClasses}
+                  style={style}
+                >
+                  {inner}
+                </Link>
+              );
+            }
+            return (
+              <article
+                key={f.title}
+                className={baseClasses}
+                style={style}
+              >
+                {inner}
+              </article>
+            );
+          })}
         </div>
       </section>
 

@@ -21,6 +21,8 @@
  */
 
 import { timingSafeEqual } from "node:crypto";
+import { redirect } from "next/navigation";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
  * Vérifie un Bearer token en temps constant pour éviter les timing attacks.
@@ -59,4 +61,110 @@ export function verifyBearer(req: Request, secret: string | undefined): boolean 
   // Longueurs différentes → reject sans appeler timingSafeEqual (qui throw).
   if (auth.length !== expected.length) return false;
   return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
+}
+
+/* -------------------------------------------------------------------------- */
+/*  USER AUTH (Supabase) — abonnement Cryptoreflex Pro                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Helpers d'authentification user (Supabase magic link + Stripe subscription).
+ *
+ * Utilisés par :
+ *  - /mon-compte (dashboard user)
+ *  - /pro/welcome (post-paiement)
+ *  - <ProGate /> client component pour feature gating UI
+ *  - Routes API qui doivent connaître le plan du user
+ *
+ * GRACEFUL DEGRADATION : si Supabase n'est pas configuré (env vars absentes),
+ * `getUser()` retourne null. Les pages qui utilisent ces helpers doivent
+ * gérer ce cas et afficher un message "Connexion bientôt disponible" plutôt
+ * que crasher.
+ */
+
+export type Plan = "free" | "pro_monthly" | "pro_annual";
+
+export interface CryptoreflexUser {
+  id: string;
+  email: string;
+  plan: Plan;
+  planExpiresAt: Date | null;
+  stripeCustomerId: string | null;
+}
+
+/**
+ * Récupère l'utilisateur courant + son plan depuis Supabase.
+ * Retourne null si non authentifié OU si Supabase n'est pas configuré.
+ */
+export async function getUser(): Promise<CryptoreflexUser | null> {
+  const supabase = createSupabaseServerClient();
+  if (!supabase) return null;
+
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
+  if (!authUser) return null;
+
+  const { data: profile, error } = await supabase
+    .from("users")
+    .select("plan, plan_expires_at, stripe_customer_id")
+    .eq("id", authUser.id)
+    .single();
+
+  if (error || !profile) {
+    // Utilisateur authentifié mais pas encore de ligne dans `users` table
+    // (cas post-signup avant que le webhook Stripe ne crée le profil).
+    return {
+      id: authUser.id,
+      email: authUser.email ?? "",
+      plan: "free",
+      planExpiresAt: null,
+      stripeCustomerId: null,
+    };
+  }
+
+  const planExpiresAt = profile.plan_expires_at
+    ? new Date(profile.plan_expires_at)
+    : null;
+
+  // Si la date d'expiration est passée, on considère le plan comme `free`
+  // (le webhook Stripe devrait l'avoir mis à jour, mais double sécurité).
+  const isExpired =
+    planExpiresAt !== null && planExpiresAt.getTime() < Date.now();
+
+  return {
+    id: authUser.id,
+    email: authUser.email ?? "",
+    plan: isExpired ? "free" : (profile.plan as Plan),
+    planExpiresAt,
+    stripeCustomerId: profile.stripe_customer_id,
+  };
+}
+
+/** Check rapide : l'utilisateur est-il Pro actif ? */
+export function isPro(user: CryptoreflexUser | null): boolean {
+  if (!user) return false;
+  return user.plan === "pro_monthly" || user.plan === "pro_annual";
+}
+
+/** Server Component / Route Handler guard : redirect vers /pro si pas Pro. */
+export async function requirePro(): Promise<CryptoreflexUser> {
+  const user = await getUser();
+  if (!user) {
+    redirect("/connexion?next=/mon-compte");
+  }
+  if (!isPro(user)) {
+    redirect("/pro");
+  }
+  return user;
+}
+
+/** Server Component / Route Handler guard : redirect vers /connexion si pas authentifié. */
+export async function requireAuth(): Promise<CryptoreflexUser> {
+  const user = await getUser();
+  if (!user) {
+    redirect("/connexion?next=/mon-compte");
+  }
+  return user;
 }

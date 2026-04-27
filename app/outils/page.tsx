@@ -14,14 +14,15 @@ import {
   Coins,
   Calendar,
   GitCompare,
+  Radar,
 } from "lucide-react";
 import ProfitCalculator from "@/components/ProfitCalculator";
 import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
-  title: "Outils crypto gratuits — calculateurs, simulateurs, glossaire, portfolio",
+  title: "Outils crypto gratuits — Radar 3916-bis, calculateurs, glossaire",
   description:
-    "11 outils gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, calculateur APY staking, simulateur halving Bitcoin, comparateur personnalisé, vérificateur MiCA, ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
+    "12 outils gratuits Cryptoreflex : Radar 3916-bis (amendes crypto 1 500-10 000 €), calculateur fiscalité PFU 30 %, simulateur DCA, APY staking, halving Bitcoin, vérificateur MiCA, ROI, glossaire 250+ termes, portfolio tracker. Sans inscription.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
 };
 
@@ -37,6 +38,16 @@ interface Tool {
 }
 
 const TOOLS: Tool[] = [
+  // Radar 3916-bis = USP fiscal positionné en HEAD du catalogue (urgence mai 2026)
+  {
+    title: "Radar 3916-bis",
+    description:
+      "Détecte tes amendes potentielles (1 500 € à 10 000 €/compte) sur tes comptes crypto étrangers Binance, MEXC, Bybit, KuCoin... Check en 2 min.",
+    href: "/outils/radar-3916-bis",
+    Icon: Radar,
+    status: "available",
+    badge: "Urgent — mai 2026",
+  },
   {
     title: "Calculateur de profits",
     description:
