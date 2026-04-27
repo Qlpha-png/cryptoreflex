@@ -276,7 +276,8 @@ export const partners: Partner[] = [
       "On déclare nos propres plus-values dessus depuis 2022. Le seul outil qui produit un Cerfa 2086 conforme à la doctrine fiscale française — Koinly et CoinTracking ne le font pas pour la France.",
     affiliateUrl: "https://www.waltio.com/fr/?a_aid=Cryptoreflex",
     logoPath: "/logos/partners/waltio.svg",
-    brandColor: "#0066FF",
+    // Couleur officielle Waltio = purple #503BFF (vérifiée logo officiel waltio.com).
+    brandColor: "#503BFF",
     since: "2018",
     country: "France",
     priceFrom: "Gratuit",
