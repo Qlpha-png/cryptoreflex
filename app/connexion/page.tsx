@@ -6,9 +6,9 @@ import { BRAND } from "@/lib/brand";
 import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Connexion — Cryptoreflex Pro",
+  title: "Connexion — Cryptoreflex",
   description:
-    "Connecte-toi à ton compte Cryptoreflex Pro via un lien magique envoyé par email. Pas de mot de passe à retenir, sécurisé et rapide.",
+    "Connecte-toi à ton compte Cryptoreflex avec ton email et ton mot de passe, ou via un lien magique. Sécurisé, rapide.",
   alternates: { canonical: `${BRAND.url}/connexion` },
   robots: { index: false, follow: true }, // pas indexable
 };
@@ -42,8 +42,8 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
             Connexion à <span className="gradient-text">ton compte</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
-            Entre ton email — on t&apos;envoie un lien magique pour te connecter
-            sans mot de passe.
+            Avec ton email et ton mot de passe — ou un lien magique si tu
+            préfères.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
 
         <p className="mt-8 text-center text-xs text-muted flex items-center justify-center gap-1.5">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-          Pas de mot de passe · Lien chiffré · Expire en 1 h
+          Connexion chiffrée · Cookies sécurisés · Aucun tracker
         </p>
       </div>
     </section>

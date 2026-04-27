@@ -13,6 +13,8 @@ import {
   Mail,
   LogOut,
   AlertCircle,
+  Lock,
+  ArrowRight,
 } from "lucide-react";
 import { getUser } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
@@ -182,6 +184,30 @@ export default async function AccountPage() {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Sécurité */}
+        <div className="mt-4 glass rounded-2xl p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Lock
+              className="h-4 w-4 text-primary-soft"
+              aria-hidden="true"
+            />
+            <h2 className="font-bold text-fg">Sécurité</h2>
+          </div>
+          <p className="text-sm text-fg/70 leading-relaxed mb-4">
+            Définis un mot de passe pour te connecter sans attendre un email à
+            chaque fois. Tu peux aussi continuer à utiliser le lien magique si
+            tu préfères.
+          </p>
+          <Link
+            href="/mon-compte/mot-de-passe"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary px-3 py-2 rounded-lg border border-border hover:bg-elevated/60 transition-colors min-h-[40px]"
+          >
+            <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+            Définir / Modifier mon mot de passe
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
         </div>
 
         {/* RGPD */}

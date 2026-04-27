@@ -1,24 +1,71 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { Loader2, CheckCircle2, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Loader2,
+  CheckCircle2,
+  ArrowRight,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Sparkles,
+} from "lucide-react";
 
 /**
- * LoginForm — Formulaire magic link.
+ * LoginForm — Formulaire de connexion à 2 modes.
  *
- * Flow :
- *  1. User entre email + clic
- *  2. POST /api/auth/login → Supabase envoie magic link
- *  3. Affichage success "Vérifie ta boîte mail"
- *  4. User clique le lien dans son email → callback → /mon-compte
+ * Mode 1 (DEFAULT) : email + mot de passe → /api/auth/login-password
+ * Mode 2 (FALLBACK) : email seul → magic link → /api/auth/login
+ *
+ * Pourquoi password en default :
+ *  - Friction zéro pour les users récurrents (pas d'aller-retour email)
+ *  - Toujours fonctionnel même si SMTP / inbox spam pose problème
+ *  - Respecte la demande user "pas tout le temps demander un mail"
+ *
+ * Magic link reste dispo pour :
+ *  - Users qui ont oublié leur mot de passe (lien de reset à part)
+ *  - Users créés via Stripe webhook qui n'ont pas encore défini de pwd
  */
 export default function LoginForm() {
+  const router = useRouter();
+  const [mode, setMode] = useState<"password" | "magic">("password");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
+  async function handlePasswordSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/login-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Identifiants invalides");
+      }
+
+      // Connecté — full reload pour que le middleware récupère le cookie
+      window.location.href = "/mon-compte";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur inattendue");
+      setLoading(false);
+    }
+  }
+
+  async function handleMagicSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -44,6 +91,7 @@ export default function LoginForm() {
     }
   }
 
+  // === Magic link sent confirmation ===
   if (sent) {
     return (
       <div className="glass rounded-2xl p-6 text-center">
@@ -51,21 +99,22 @@ export default function LoginForm() {
           className="h-10 w-10 text-success mx-auto mb-3"
           aria-hidden="true"
         />
-        <h2 className="text-lg font-bold text-fg mb-2">
-          Email envoyé !
-        </h2>
+        <h2 className="text-lg font-bold text-fg mb-2">Email envoyé&nbsp;!</h2>
         <p className="text-sm text-fg/75 leading-relaxed">
           Vérifie ta boîte mail (et tes spams) — clique sur le lien pour te
           connecter. Le lien expire dans 1 heure.
         </p>
         <p className="mt-4 text-xs text-muted">
-          Pas reçu ?{" "}
+          Pas reçu&nbsp;?{" "}
           <button
             type="button"
-            onClick={() => setSent(false)}
+            onClick={() => {
+              setSent(false);
+              setMode("password");
+            }}
             className="text-primary-soft underline hover:text-primary"
           >
-            Réessayer
+            Utilise plutôt ton mot de passe
           </button>
         </p>
       </div>
@@ -73,50 +122,208 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 space-y-4">
-      <label className="block">
-        <span className="block text-sm font-semibold text-fg mb-2">
-          Ton email
-        </span>
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="ton@email.com"
-          autoComplete="email"
-          className="w-full rounded-lg border border-border bg-elevated px-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
-          disabled={loading}
-        />
-      </label>
+    <div className="glass rounded-2xl p-6 space-y-5">
+      {/* Toggle mode */}
+      <div
+        role="tablist"
+        aria-label="Méthode de connexion"
+        className="grid grid-cols-2 gap-1 rounded-lg bg-elevated/60 p-1 border border-border"
+      >
+        <button
+          role="tab"
+          type="button"
+          aria-selected={mode === "password"}
+          onClick={() => {
+            setMode("password");
+            setError(null);
+          }}
+          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition ${
+            mode === "password"
+              ? "bg-primary text-bg shadow-sm"
+              : "text-fg/70 hover:text-fg"
+          }`}
+        >
+          <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+          Mot de passe
+        </button>
+        <button
+          role="tab"
+          type="button"
+          aria-selected={mode === "magic"}
+          onClick={() => {
+            setMode("magic");
+            setError(null);
+          }}
+          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition ${
+            mode === "magic"
+              ? "bg-primary text-bg shadow-sm"
+              : "text-fg/70 hover:text-fg"
+          }`}
+        >
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+          Lien magique
+        </button>
+      </div>
 
-      {error && (
-        <p role="alert" className="text-sm text-danger">
-          {error}
-        </p>
+      {/* PASSWORD MODE */}
+      {mode === "password" && (
+        <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <label className="block">
+            <span className="block text-sm font-semibold text-fg mb-2">
+              Email
+            </span>
+            <div className="relative">
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
+                aria-hidden="true"
+              />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ton@email.com"
+                autoComplete="email"
+                className="w-full rounded-lg border border-border bg-elevated pl-10 pr-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
+                disabled={loading}
+              />
+            </div>
+          </label>
+
+          <label className="block">
+            <div className="flex items-center justify-between mb-2">
+              <span className="block text-sm font-semibold text-fg">
+                Mot de passe
+              </span>
+              <Link
+                href="/mot-de-passe-oublie"
+                className="text-xs text-primary-soft hover:text-primary underline"
+              >
+                Oublié&nbsp;?
+              </Link>
+            </div>
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
+                aria-hidden="true"
+              />
+              <input
+                type={showPwd ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ton mot de passe"
+                autoComplete="current-password"
+                className="w-full rounded-lg border border-border bg-elevated pl-10 pr-11 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+                aria-label={
+                  showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
+                }
+              >
+                {showPwd ? (
+                  <EyeOff className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Eye className="h-4 w-4" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+          </label>
+
+          {error && (
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading || !email || !password}
+            className="btn-primary btn-primary-shine w-full min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                Connexion…
+              </>
+            ) : (
+              <>
+                Se connecter
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </>
+            )}
+          </button>
+
+          <p className="text-xs text-muted text-center">
+            Pas encore de compte&nbsp;?{" "}
+            <Link
+              href="/inscription"
+              className="text-primary-soft hover:text-primary underline font-semibold"
+            >
+              Crée-en un en 30 sec
+            </Link>
+          </p>
+        </form>
       )}
 
-      <button
-        type="submit"
-        disabled={loading || !email}
-        className="btn-primary btn-primary-shine w-full min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {loading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            Envoi en cours...
-          </>
-        ) : (
-          <>
-            Recevoir mon lien magique
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </>
-        )}
-      </button>
+      {/* MAGIC LINK MODE */}
+      {mode === "magic" && (
+        <form onSubmit={handleMagicSubmit} className="space-y-4">
+          <label className="block">
+            <span className="block text-sm font-semibold text-fg mb-2">
+              Ton email
+            </span>
+            <div className="relative">
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
+                aria-hidden="true"
+              />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ton@email.com"
+                autoComplete="email"
+                className="w-full rounded-lg border border-border bg-elevated pl-10 pr-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
+                disabled={loading}
+              />
+            </div>
+          </label>
 
-      <p className="text-xs text-muted text-center">
-        Aucun mot de passe à retenir. Sécurisé par Supabase Auth.
-      </p>
-    </form>
+          {error && (
+            <p role="alert" className="text-sm text-danger">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading || !email}
+            className="btn-primary btn-primary-shine w-full min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                Envoi en cours…
+              </>
+            ) : (
+              <>
+                Recevoir mon lien magique
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </>
+            )}
+          </button>
+
+          <p className="text-xs text-muted text-center leading-relaxed">
+            Aucun mot de passe à retenir. Le lien arrive en 30&nbsp;sec.
+          </p>
+        </form>
+      )}
+    </div>
   );
 }
