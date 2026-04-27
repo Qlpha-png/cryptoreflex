@@ -2,21 +2,37 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Sparkles,
-  ShieldCheck,
   ArrowRight,
   ExternalLink,
   CheckCircle2,
   AlertCircle,
   Crown,
+  Globe,
+  Calendar,
+  Percent,
 } from "lucide-react";
-import { getFeaturedPartners, type Partner } from "@/data/partners";
+import {
+  getFeaturedPartners,
+  type Partner,
+  type PartnerProduct,
+} from "@/data/partners";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
   description:
-    "Notre sélection curée de partenaires crypto : Ledger, Trezor, Waltio. Avis indépendants, transparence totale sur les commissions affiliées.",
+    "Notre sélection curée de partenaires crypto : Trezor, Waltio. Avis indépendants, transparence totale sur les commissions affiliées.",
   alternates: { canonical: `${BRAND.url}/partenaires` },
+};
+
+const TONE_STYLES: Record<
+  NonNullable<PartnerProduct["badge"]>["tone"],
+  string
+> = {
+  primary: "bg-primary/15 text-primary ring-1 ring-primary/30",
+  success: "bg-success/15 text-success ring-1 ring-success/30",
+  warning: "bg-warning/15 text-warning ring-1 ring-warning/30",
+  info: "bg-elevated/80 text-fg/80 ring-1 ring-border",
 };
 
 export default function PartnersPage() {
@@ -29,10 +45,10 @@ export default function PartnersPage() {
         aria-labelledby="partners-hero"
         className="relative overflow-hidden py-16 sm:py-24"
       >
-        {/* Ambient gold halo (CSS only, prefers-reduced-motion respected) */}
+        {/* Ambient gold halo CSS only */}
         <div
           aria-hidden="true"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full pointer-events-none -z-10"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full pointer-events-none -z-10 motion-safe:animate-pulse-slow"
           style={{
             background:
               "radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)",
@@ -60,7 +76,7 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* DISCLOSURE BANDEAU (au-dessus des cards, RGPD/loi 9 juin 2023) */}
+      {/* DISCLOSURE BANDEAU */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mb-12">
         <aside
           role="note"
@@ -86,16 +102,14 @@ export default function PartnersPage() {
         </aside>
       </section>
 
-      {/* VITRINE GRID */}
+      {/* VITRINE — sections par partenaire avec produits */}
       <section
         aria-label="Partenaires sélectionnés"
-        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16"
+        className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-16 space-y-16"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featured.map((partner, idx) => (
-            <PartnerVitrineCard key={partner.slug} partner={partner} index={idx} />
-          ))}
-        </div>
+        {featured.map((partner, idx) => (
+          <PartnerShowcase key={partner.slug} partner={partner} index={idx} />
+        ))}
       </section>
 
       {/* PHILOSOPHIE EDITORIALE */}
@@ -162,10 +176,10 @@ export default function PartnersPage() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Card vitrine                                                              */
+/*  Partner Showcase — section large par partenaire avec ses produits visibles
 /* -------------------------------------------------------------------------- */
 
-function PartnerVitrineCard({
+function PartnerShowcase({
   partner,
   index,
 }: {
@@ -174,143 +188,296 @@ function PartnerVitrineCard({
 }) {
   return (
     <article
-      className="account-card group relative glass rounded-3xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 flex flex-col"
+      className="account-card group relative glass rounded-3xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-500"
       style={{ ["--i" as never]: index }}
     >
-      {/* Glass reflet diagonal au hover */}
+      {/* Glass diagonal reflet on hover */}
       <span
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
         style={{
           background:
-            "linear-gradient(115deg, transparent 30%, rgba(245,158,11,0.06) 50%, transparent 70%)",
+            "linear-gradient(115deg, transparent 30%, rgba(245,158,11,0.04) 50%, transparent 70%)",
         }}
       />
 
-      {/* Header avec brand badge */}
-      <header className="px-6 pt-6 pb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span
-            className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-elevated border border-border text-fg font-extrabold text-lg"
-            style={{ backgroundColor: partner.brandColor + "15" }}
-            aria-hidden="true"
-          >
-            {partner.name.charAt(0)}
-          </span>
-          <div>
-            <h2 className="font-extrabold text-fg text-xl tracking-[-0.01em]">
-              {partner.name}
-            </h2>
-            <p className="text-xs text-muted mt-0.5">
-              {partner.country} · depuis {partner.since}
+      <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 sm:p-8 lg:p-10">
+        {/* COLONNE GAUCHE : Identité partenaire */}
+        <div className="lg:col-span-5 flex flex-col">
+          {/* Header */}
+          <header className="flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3">
+              <span
+                className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-border text-fg font-extrabold text-2xl shrink-0"
+                style={{
+                  background: `linear-gradient(135deg, ${partner.brandColor}25, ${partner.brandColor}05)`,
+                }}
+                aria-hidden="true"
+              >
+                {partner.name.charAt(0)}
+              </span>
+              <div className="min-w-0">
+                <h2 className="font-extrabold text-fg text-2xl tracking-[-0.02em]">
+                  {partner.name}
+                </h2>
+                <div className="mt-1 flex items-center gap-2 text-xs text-muted flex-wrap">
+                  <span className="inline-flex items-center gap-1">
+                    <Globe className="h-3 w-3" aria-hidden="true" />
+                    {partner.country}
+                  </span>
+                  <span className="text-border">·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="h-3 w-3" aria-hidden="true" />
+                    depuis {partner.since}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <span className="badge badge-trust shrink-0 hidden sm:inline-flex">
+              <Crown className="h-3 w-3" aria-hidden="true" />
+              Vérifié
+            </span>
+          </header>
+
+          {/* Tagline */}
+          <p className="text-base sm:text-lg font-bold text-primary leading-snug mb-3">
+            {partner.tagline}
+          </p>
+
+          {/* Description */}
+          <p className="text-sm text-fg/75 leading-relaxed mb-5">
+            {partner.shortDescription}
+          </p>
+
+          {/* Why we use it */}
+          <div className="mb-5 rounded-xl bg-elevated/40 border border-border p-4">
+            <p className="text-[10px] uppercase tracking-wider text-primary-soft font-semibold mb-1.5">
+              Pourquoi on l&apos;utilise
+            </p>
+            <p className="text-sm text-fg/80 leading-relaxed italic">
+              &ldquo;{partner.whyWeUseIt}&rdquo;
+            </p>
+          </div>
+
+          {/* Pros */}
+          <div className="mb-4">
+            <p className="text-[10px] uppercase tracking-wider text-success font-semibold mb-2">
+              Ce qu&apos;on aime
+            </p>
+            <ul className="space-y-1.5">
+              {partner.pros.slice(0, 3).map((p) => (
+                <li
+                  key={p}
+                  className="text-sm text-fg/75 flex items-start gap-2 leading-relaxed"
+                >
+                  <CheckCircle2
+                    className="h-4 w-4 text-success shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cons */}
+          <div className="mb-5">
+            <p className="text-[10px] uppercase tracking-wider text-warning font-semibold mb-2">
+              Ce qu&apos;on n&apos;aime pas
+            </p>
+            <ul className="space-y-1.5">
+              {partner.cons.slice(0, 2).map((c) => (
+                <li
+                  key={c}
+                  className="text-sm text-muted flex items-start gap-2 leading-relaxed"
+                >
+                  <AlertCircle
+                    className="h-4 w-4 text-warning shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Bottom : promo code + main CTA + commission disclosure */}
+          <div className="mt-auto space-y-3">
+            {partner.promoCode && (
+              <div className="rounded-lg bg-primary/10 border border-primary/30 px-3 py-2.5 flex items-center gap-2">
+                <Percent className="h-4 w-4 text-primary" aria-hidden="true" />
+                <span className="text-xs">
+                  <span className="text-primary font-bold font-mono">
+                    {partner.promoCode.code}
+                  </span>
+                  <span className="text-fg/70">
+                    {" "}
+                    — {partner.promoCode.discount}
+                  </span>
+                </span>
+              </div>
+            )}
+
+            <Link
+              href={`/go/${partner.slug}?ctx=vitrine&pos=main-cta`}
+              className="btn-primary btn-primary-shine w-full min-h-[52px] inline-flex items-center justify-center gap-2 group/cta"
+              rel="sponsored noopener"
+              target="_blank"
+            >
+              Voir tous les produits {partner.name}
+              <ExternalLink
+                className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+
+            <p className="text-[11px] text-center text-muted leading-relaxed">
+              Lien affilié — Cryptoreflex perçoit{" "}
+              {partner.commission ?? "une commission"} sans surcoût pour toi.
             </p>
           </div>
         </div>
-        <span className="badge badge-trust shrink-0">
-          <Crown className="h-3 w-3" aria-hidden="true" />
-          Vérifié
-        </span>
-      </header>
 
-      {/* Tagline */}
-      <div className="px-6 pb-2">
-        <p className="text-sm font-semibold text-primary leading-snug">
-          {partner.tagline}
-        </p>
-      </div>
+        {/* COLONNE DROITE : Vitrine produits */}
+        <div className="lg:col-span-7">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <h3 className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
+              <Sparkles className="h-3 w-3" aria-hidden="true" />
+              {partner.products.length} PRODUIT
+              {partner.products.length > 1 ? "S" : ""} EN VITRINE
+            </h3>
+            {partner.commission && (
+              <span className="text-[11px] text-muted hidden sm:inline">
+                Commission : {partner.commission}
+              </span>
+            )}
+          </div>
 
-      {/* Description */}
-      <div className="px-6 pb-4">
-        <p className="text-sm text-fg/75 leading-relaxed">
-          {partner.shortDescription}
-        </p>
-      </div>
-
-      {/* Why we use it */}
-      <div className="mx-6 mb-4 rounded-xl bg-elevated/40 border border-border p-4">
-        <p className="text-[10px] uppercase tracking-wider text-primary-soft font-semibold mb-1.5">
-          Pourquoi on l&apos;utilise
-        </p>
-        <p className="text-xs text-fg/80 leading-relaxed italic">
-          &ldquo;{partner.whyWeUseIt}&rdquo;
-        </p>
-      </div>
-
-      {/* Pros / Cons */}
-      <div className="px-6 pb-4 grid grid-cols-1 gap-3">
-        <div>
-          <p className="text-[10px] uppercase tracking-wider text-success font-semibold mb-1.5">
-            Ce qu&apos;on aime
-          </p>
-          <ul className="space-y-1">
-            {partner.pros.slice(0, 3).map((p) => (
-              <li
-                key={p}
-                className="text-xs text-fg/75 flex items-start gap-1.5 leading-relaxed"
-              >
-                <span className="text-success shrink-0">✓</span>
-                <span>{p}</span>
-              </li>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {partner.products.map((product, pIdx) => (
+              <ProductTile
+                key={product.id}
+                product={product}
+                partner={partner}
+                index={pIdx}
+              />
             ))}
-          </ul>
-        </div>
-        <div>
-          <p className="text-[10px] uppercase tracking-wider text-warning font-semibold mb-1.5">
-            Ce qu&apos;on n&apos;aime pas
-          </p>
-          <ul className="space-y-1">
-            {partner.cons.slice(0, 2).map((c) => (
-              <li
-                key={c}
-                className="text-xs text-muted flex items-start gap-1.5 leading-relaxed"
-              >
-                <span className="text-warning shrink-0">·</span>
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+          </div>
 
-      {/* Promo code si applicable */}
-      {partner.promoCode && (
-        <div className="mx-6 mb-4 rounded-lg bg-primary/10 border border-primary/30 px-3 py-2">
-          <p className="text-xs">
-            <span className="text-primary font-bold font-mono">
-              {partner.promoCode.code}
-            </span>
-            <span className="text-fg/70"> — {partner.promoCode.discount}</span>
-          </p>
+          {/* Personas */}
+          {partner.personas.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <p className="ds-eyebrow text-primary-soft mb-3">POUR QUI</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {partner.personas.map((persona) => (
+                  <div
+                    key={persona.name}
+                    className="rounded-xl bg-elevated/40 border border-border p-4"
+                  >
+                    <p className="text-sm font-bold text-fg mb-1">
+                      {persona.name}
+                    </p>
+                    <p className="text-xs text-fg/70 leading-relaxed">
+                      {persona.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
-
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* CTA Section */}
-      <div className="px-6 pb-6 mt-2 space-y-2">
-        <div className="flex items-baseline justify-between mb-2">
-          <span className="text-xs text-muted">À partir de</span>
-          <span className="text-xl font-extrabold text-fg font-mono tabular-nums">
-            {partner.priceFrom}
-          </span>
-        </div>
-        <Link
-          href={`/go/${partner.slug}?ctx=vitrine&pos=card`}
-          className="btn-primary btn-primary-shine w-full min-h-[48px] inline-flex items-center justify-center gap-1.5 group/cta"
-          rel="sponsored noopener"
-          target="_blank"
-        >
-          Voir l&apos;offre {partner.name}
-          <ExternalLink
-            className="h-3.5 w-3.5 transition-transform group-hover/cta:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </Link>
-        <p className="text-[10px] text-center text-muted">
-          Lien affilié — commission perçue, prix inchangé
-        </p>
       </div>
     </article>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Product Tile — petite card par produit (icone + nom + prix + CTA)
+/* -------------------------------------------------------------------------- */
+
+function ProductTile({
+  product,
+  partner,
+  index,
+}: {
+  product: PartnerProduct;
+  partner: Partner;
+  index: number;
+}) {
+  const Icon = product.Icon;
+  return (
+    <Link
+      href={`/go/${partner.slug}?ctx=product&pos=${product.id}`}
+      rel="sponsored noopener"
+      target="_blank"
+      className="group/tile relative flex flex-col rounded-2xl border border-border bg-elevated/30 hover:border-primary/40 hover:bg-elevated/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 overflow-hidden"
+      style={{
+        animationDelay: `${index * 80}ms`,
+      }}
+    >
+      {/* Badge top-right */}
+      {product.badge && (
+        <span
+          className={`absolute top-2 right-2 z-10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full ${TONE_STYLES[product.badge.tone]}`}
+        >
+          {product.badge.label}
+        </span>
+      )}
+
+      {/* Icon visual avec gradient brand */}
+      <div
+        className="relative h-28 sm:h-32 flex items-center justify-center overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${partner.brandColor}25 0%, ${partner.brandColor}05 60%, transparent 100%)`,
+        }}
+        aria-hidden="true"
+      >
+        {/* Glow gold subtle on hover */}
+        <span
+          className="absolute inset-0 opacity-0 group-hover/tile:opacity-100 transition-opacity duration-500"
+          style={{
+            background:
+              "radial-gradient(circle at center, rgba(245,158,11,0.15) 0%, transparent 65%)",
+          }}
+        />
+        <Icon
+          className="relative h-14 w-14 text-fg/80 group-hover/tile:text-primary group-hover/tile:scale-110 transition-all duration-500"
+          strokeWidth={1.5}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-4">
+        <h4 className="text-sm font-extrabold text-fg leading-tight mb-1">
+          {product.name}
+        </h4>
+        <p className="text-xs text-fg/65 leading-relaxed mb-3 line-clamp-2">
+          {product.description}
+        </p>
+
+        {/* Highlights */}
+        <ul className="space-y-1 mb-3">
+          {product.highlights.slice(0, 3).map((h) => (
+            <li
+              key={h}
+              className="text-[11px] text-fg/70 flex items-start gap-1.5 leading-snug"
+            >
+              <span className="text-primary shrink-0 font-bold">·</span>
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto pt-2 flex items-center justify-between gap-2">
+          <span className="text-base font-extrabold text-primary font-mono tabular-nums">
+            {product.price}
+          </span>
+          <span className="text-xs text-fg/60 inline-flex items-center gap-1 group-hover/tile:text-primary transition-colors">
+            Voir
+            <ArrowRight className="h-3 w-3 transition-transform group-hover/tile:translate-x-0.5" />
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
