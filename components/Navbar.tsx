@@ -108,7 +108,7 @@ const NAV = [
 const MOBILE_EXTRA = [
   { href: "/quiz/plateforme", label: "Quiz plateforme", desc: "Trouve ta plateforme idéale en 5 questions" },
   { href: "/wizard/premier-achat", label: "1er achat crypto", desc: "Parcours guidé en 5 étapes" },
-  { href: "/comparatif", label: "Comparatif complet", desc: "11 plateformes notées" },
+  { href: "/comparatif", label: "Comparatif complet", desc: "Plateformes crypto notées · MiCA" },
   { href: "/actualites", label: "Actualités", desc: "News crypto quotidiennes" },
   { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
   { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },

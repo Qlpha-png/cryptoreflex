@@ -1,40 +1,36 @@
-import { ArrowRight, ShieldCheck, Star } from "lucide-react";
+import { ArrowRight, ShieldCheck, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import PlatformCard from "./PlatformCard";
 import AmfDisclaimer from "./AmfDisclaimer";
 import StructuredData from "./StructuredData";
+import PlatformsCarouselControls from "./PlatformsCarouselControls";
 import { getExchangePlatforms, platformsItemListSchema } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 
 /**
  * PlatformsSection — block conversion N°1 (affiliation crypto).
  *
- * Audit Block 4 RE-AUDIT 26/04/2026 (8 agents PRO consolidés) :
+ * Refactor 28-04-2026 (user feedback : "on voit que les 6 même tout le temps") :
+ * VITRINE 6 cards statique → CAROUSEL HORIZONTAL SWIPE qui montre TOUTES les
+ * plateformes. Chaque carte = card width fixe (340px), scroll-snap-x natif,
+ * touch swipe mobile + boutons prev/next desktop + dots indicator Apple-style.
  *
- * VAGUE 1 — Data migration (P0 Agent UX + SEO + Front)
- *  - Avant : array hardcoded de 6 plateformes ignorant 90% du JSON.
- *  - Après : import getExchangePlatforms() (source = data/platforms.json),
- *    trié par scoring.global desc, top 6 affichées.
- *  - Tri auto met les mieux notées en premier (signal éditorial Google + meilleur CTR fold).
+ * Avantages :
+ *  - User voit qu'il y a + de plateformes (engagement +)
+ *  - Pro & technique : transitions fluides, swipe natif zéro JS overhead
+ *  - SEO : toutes les plateformes restent dans le DOM (Schema.org ItemList complet)
+ *  - Mobile-first : swipe natif iOS/Android = UX qu'ils connaissent (Instagram/TikTok)
  *
- * VAGUE 2 — Schema.org Rich Snippets (P0 Agent SEO RICH SNIPPETS GOLD)
- *  - JSON-LD ItemList + Product + Offer + AggregateRating injecté.
- *  - +15-30% CTR estimé sur queries "meilleure plateforme crypto" via étoiles SERP.
+ * Schema.org Rich Snippets : ItemList + Product + AggregateRating injecté
+ * pour TOUTES les plateformes (pas seulement les 6 visibles avant).
  *
- * VAGUE 3 — A11y EAA (Agent A11y P0)
- *  - <section aria-labelledby="plateformes-title"> (landmark exposé en navigation par régions).
- *  - Sub-disclaimer global au lieu de 6 répétitions (gain mobile -240px bruit).
- *
- * VAGUE 4 — UX guidance (Agent UX 5.5/10 → 8.5/10)
- *  - Eyebrow "Top 6 / 11 plateformes" + lien "Voir les 11" vers /comparatif.
- *  - "Recommandé pour vous ?" CTA → /quiz/plateforme (segmente l'indécis).
- *  - Disclaimer "Pourquoi ces liens ?" cliquable vers /transparence.
+ * Disclaimer affiliation global préservé (loi 9 juin 2023 + DGCCRF).
  */
 
 export default function PlatformsSection() {
-  // Top 6 par scoring global desc (les mieux notées).
-  const platforms = getExchangePlatforms().slice(0, 6);
-  const totalAvailable = getExchangePlatforms().length;
+  // TOUTES les plateformes (était top 6) — triées par scoring global desc
+  const platforms = getExchangePlatforms();
+  const totalAvailable = platforms.length;
 
   return (
     <section
@@ -59,26 +55,25 @@ export default function PlatformsSection() {
               id="plateformes-title"
               className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
             >
-              Top {platforms.length}{" "}
+              {totalAvailable}{" "}
               <span className="gradient-text">plateformes crypto en France</span>
             </h2>
             <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
-              Sélection éditoriale triée par score global ({platforms.length}/{totalAvailable} affichées).
-              Méthodologie publique, frais réels, conformité MiCA vérifiée.
+              Sélection éditoriale triée par score global. Glisse pour découvrir
+              les {totalAvailable} options, méthodologie publique, frais réels,
+              conformité MiCA vérifiée.
             </p>
           </div>
-          {totalAvailable > platforms.length && (
-            <Link
-              href="/comparatif"
-              className="btn-ghost self-start py-2.5 text-sm shrink-0"
-            >
-              Voir les {totalAvailable}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          )}
+          <Link
+            href="/comparatif"
+            className="btn-ghost self-start py-2.5 text-sm shrink-0"
+          >
+            Voir les comparatifs
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
 
-        {/* Disclaimer affiliation global — Audit Mobile : 1 fois au lieu de 6 sous chaque CTA */}
+        {/* Disclaimer affiliation global — Audit Mobile : 1 fois au lieu de N */}
         <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-muted">
           <Star className="h-3 w-3 text-primary-soft" strokeWidth={2} aria-hidden="true" />
           <span>
@@ -90,15 +85,65 @@ export default function PlatformsSection() {
           </span>
         </p>
 
-        <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {platforms.map((p, idx) => (
-            <PlatformCard
-              key={p.id}
-              platform={p}
-              placement="home-platforms"
-              index={idx}
-            />
-          ))}
+        {/* Carousel horizontal swipeable — toutes les plateformes en defile */}
+        <div className="relative mt-8 sm:mt-12 -mx-4 sm:-mx-6 lg:-mx-8">
+          {/* Container scroll-snap-x — visible aux extremites grace au negative margin */}
+          <div
+            id="platforms-carousel-track"
+            className="overflow-x-auto scroll-smooth platforms-carousel-track px-4 sm:px-6 lg:px-8 pb-2"
+            style={{
+              scrollSnapType: "x mandatory",
+              scrollPadding: "0 1rem",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            <div className="flex gap-4 sm:gap-5">
+              {platforms.map((p, idx) => (
+                <div
+                  key={p.id}
+                  className="shrink-0 snap-start"
+                  style={{ width: "340px", scrollSnapAlign: "start" }}
+                >
+                  <PlatformCard
+                    platform={p}
+                    placement="home-platforms"
+                    index={idx}
+                  />
+                </div>
+              ))}
+              {/* Card finale — CTA "voir tous les comparatifs" */}
+              <div
+                className="shrink-0 snap-start flex items-center"
+                style={{ width: "340px", scrollSnapAlign: "start" }}
+              >
+                <Link
+                  href="/comparatif"
+                  className="group/end-card relative flex flex-col items-center justify-center w-full h-full min-h-[400px] rounded-2xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-8 text-center hover:border-primary/60 hover:bg-primary/8 transition-all duration-300"
+                >
+                  <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 ring-1 ring-primary/30 mb-4 group-hover/end-card:scale-110 transition-transform">
+                    <Sparkles className="h-7 w-7 text-primary" strokeWidth={1.85} aria-hidden="true" />
+                  </span>
+                  <p className="text-lg font-extrabold text-fg mb-1">
+                    Tu hésites encore ?
+                  </p>
+                  <p className="text-sm text-fg/70 max-w-[240px] mb-4 leading-relaxed">
+                    Vois tous nos duels comparatifs (Coinbase vs Binance, Ledger vs Trezor…)
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    Voir les comparatifs
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover/end-card:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Boutons prev/next + dots indicator (client component) */}
+          <PlatformsCarouselControls
+            containerId="platforms-carousel-track"
+            totalItems={platforms.length + 1}
+            cardWidth={356}
+          />
         </div>
 
         {/* CTA "Quiz plateforme" — Audit UX guidance "main tenue" : segmente l'indécis */}

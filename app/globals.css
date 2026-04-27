@@ -1027,6 +1027,16 @@ section[id^="cat-"] {
   border-radius: 2px;
 }
 
+/* Carousel plateformes — scrollbar invisible mais scroll natif preserve.
+   Le user voit les controls + dots indicator au lieu d'une scrollbar moche.
+   Touch swipe iOS/Android natif via -webkit-overflow-scrolling: touch.       */
+.platforms-carousel-track {
+  scrollbar-width: none; /* Firefox */
+}
+.platforms-carousel-track::-webkit-scrollbar {
+  display: none; /* Chrome / Safari / Edge */
+}
+
 /* ───────────────────────── SKELETON / SHIMMER ─────────────────────────
    Utilisé par les loading.tsx (Hero, cards, tables).
    Animation subtile gauche→droite — pas un pulse criard.
