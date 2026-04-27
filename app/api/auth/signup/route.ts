@@ -26,10 +26,13 @@ import { createRateLimiter } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Rate limit signup : 20 par heure / IP (large pour tests + retry user honnête).
+// Anti-spam reel : on garde 20 vrais comptes/h ce qui suffit pour bloquer un bot.
+// Cle "auth-signup-v2" pour reset le compteur des users qui ont teste avec v1.
 const limiter = createRateLimiter({
-  limit: 3,
+  limit: 20,
   windowMs: 60 * 60 * 1000,
-  key: "auth-signup",
+  key: "auth-signup-v2",
 });
 
 function getClientIp(req: NextRequest): string {

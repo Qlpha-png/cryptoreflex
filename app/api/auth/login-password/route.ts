@@ -18,11 +18,13 @@ import { createRateLimiter } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Rate limit anti-brute force : 5 tentatives / 15 min / IP
+// Rate limit anti-brute force : 30 tentatives / 15 min / IP.
+// Bump vs 5 pour ne pas bloquer un user honnete qui se trompe + tests.
+// Cle "auth-login-password-v2" pour reset le compteur v1.
 const limiter = createRateLimiter({
-  limit: 5,
+  limit: 30,
   windowMs: 15 * 60 * 1000,
-  key: "auth-login-password",
+  key: "auth-login-password-v2",
 });
 
 function getClientIp(req: NextRequest): string {
