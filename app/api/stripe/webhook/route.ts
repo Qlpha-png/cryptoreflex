@@ -30,6 +30,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { getStripeClient, priceIdToPlan, planToExpirationDate } from "@/lib/stripe";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email/client";
+import { welcomeProEmail, paymentFailedEmail } from "@/lib/email/templates";
 import type Stripe from "stripe";
 
 export const runtime = "nodejs"; // Stripe SDK nécessite Node, pas Edge
@@ -142,20 +144,26 @@ async function handleCheckoutCompleted(
   const plan = session.amount_total === 999 ? "pro_monthly" : "pro_annual";
   const expiresAt = planToExpirationDate(plan);
 
-  // Crée ou met à jour le user dans Supabase via auth.admin.inviteUserByEmail()
-  // → envoie automatiquement un magic link pour qu'il se connecte
-  const { data: invited, error: inviteError } =
-    await supabase.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/mon-compte`,
+  // Génère un magic link pour la connexion immédiate
+  // Utilise generateLink (admin only) plutôt que inviteUserByEmail pour
+  // contrôler le redirect et envoyer notre propre email branded.
+  const { data: linkData, error: linkError } =
+    await supabase.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/mon-compte`,
+      },
     });
 
-  if (inviteError && inviteError.code !== "email_exists") {
-    console.error("[checkout.completed] Invitation échouée:", inviteError);
-    return;
+  if (linkError) {
+    console.error("[checkout.completed] generateLink échoué:", linkError);
+    // On continue quand même pour upsert le user — il pourra se reconnecter
+    // via /connexion plus tard
   }
 
   // Récupère l'user (qu'il vienne d'être créé ou qu'il existait déjà)
-  let userId = invited?.user?.id;
+  let userId = linkData?.user?.id;
   if (!userId) {
     const { data: existing } = await supabase
       .from("users")
@@ -185,8 +193,30 @@ async function handleCheckoutCompleted(
 
   if (upsertError) {
     console.error("[checkout.completed] Upsert user échoué:", upsertError);
+    return;
+  }
+
+  console.log(`[checkout.completed] User ${email} mis à jour en plan ${plan}`);
+
+  // Envoie l'email de bienvenue avec le magic link
+  // (action_link contient le lien de connexion sécurisé Supabase)
+  const magicLink =
+    linkData?.properties?.action_link ||
+    `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/connexion`;
+
+  const welcome = welcomeProEmail({ email, plan, magicLink });
+  const emailResult = await sendEmail({
+    to: email,
+    subject: welcome.subject,
+    preheader: welcome.preheader,
+    html: welcome.html,
+    text: welcome.text,
+  });
+
+  if (!emailResult.ok) {
+    console.error(`[checkout.completed] Email welcome non envoyé à ${email}:`, emailResult.error);
   } else {
-    console.log(`[checkout.completed] User ${email} mis à jour en plan ${plan}`);
+    console.log(`[checkout.completed] Email welcome envoyé à ${email}`);
   }
 }
 
@@ -258,6 +288,29 @@ async function handlePaymentFailed(
     `[payment.failed] Customer ${customerId} - facture ${invoice.id} échouée, grace period 7j`
   );
 
-  // TODO : envoyer email payment-failed au user via Resend
-  // (cf. lib/email-templates/payment-failed.tsx — à créer)
+  // Récupère l'email du user pour l'alerter
+  const { data: user } = await supabase
+    .from("users")
+    .select("email")
+    .eq("stripe_customer_id", customerId)
+    .single();
+
+  if (!user?.email) return;
+
+  // URL pour mettre à jour la carte = redirection vers Customer Portal
+  const updateUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/mon-compte`;
+
+  const failed = paymentFailedEmail({
+    email: user.email,
+    updatePaymentUrl: updateUrl,
+    graceDays: 7,
+  });
+
+  await sendEmail({
+    to: user.email,
+    subject: failed.subject,
+    preheader: failed.preheader,
+    html: failed.html,
+    text: failed.text,
+  });
 }

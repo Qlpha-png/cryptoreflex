@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   stripe_customer_id TEXT UNIQUE,
   plan TEXT NOT NULL DEFAULT 'free' CHECK (plan IN ('free', 'pro_monthly', 'pro_annual')),
   plan_expires_at TIMESTAMPTZ,
+  unsubscribed_at TIMESTAMPTZ,  -- RGPD : désinscription newsletter (RFC 8058 List-Unsubscribe)
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

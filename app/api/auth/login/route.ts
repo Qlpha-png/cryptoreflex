@@ -17,11 +17,37 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Rate limit anti-brute force sur les magic links :
+// 5 tentatives par IP toutes les 15 minutes.
+// Empêche un attaquant de spammer des emails de connexion à des cibles.
+const limiter = createRateLimiter({
+  limit: 5,
+  windowMs: 15 * 60 * 1000,
+  key: "auth-login",
+});
+
+function getClientIp(req: NextRequest): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
+
 export async function POST(req: NextRequest) {
+  // Rate limit FIRST (avant toute logique coûteuse)
+  const ip = getClientIp(req);
+  const rl = await limiter(ip);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessayez dans quelques minutes." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+    );
+  }
+
   const supabase = createSupabaseServerClient();
   if (!supabase) {
     return NextResponse.json(
@@ -41,11 +67,6 @@ export async function POST(req: NextRequest) {
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
-
-  // TODO : ajouter rate limiting Upstash Ratelimit (5 / 15min / IP+email)
-  // import { Ratelimit } from "@upstash/ratelimit";
-  // const { success } = await ratelimit.limit(`auth:${ip}|${sha256(email)}`);
-  // if (!success) return NextResponse.json({ error: "Trop de tentatives" }, { status: 429 });
 
   const { error } = await supabase.auth.signInWithOtp({
     email,

@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Search,
   Crown,
+  UserCircle2,
 } from "lucide-react";
 import Logo from "./Logo";
 
@@ -363,6 +364,22 @@ export default function Navbar() {
                 <5% d'usage). Restent accessibles via burger menu mobile + footer
                 + page /watchlist /portefeuille directes via search ⌘K.
                 Result : cluster droite passe de 4 éléments à 2 (Search + CTA). */}
+            {/* Mon compte — icône discrète (visible md+, lg+ avec label).
+                Renvoie /connexion (qui redirige vers /mon-compte si déjà connecté). */}
+            <Link
+              href="/connexion"
+              aria-label="Mon compte"
+              title="Mon compte"
+              className="hidden md:inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg
+                         text-muted hover:text-fg hover:bg-elevated/60
+                         transition-colors duration-fast
+                         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                         focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <UserCircle2 className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+              <span className="hidden lg:inline text-[12.5px]">Mon compte</span>
+            </Link>
+
             {/* CTA primary — Audit SEO/CRO : "/quiz/plateforme" (KPI conversion)
                 au lieu de "/#plateformes" (ancre, 0 PageRank, 0 conversion attribuée). */}
             <Link
