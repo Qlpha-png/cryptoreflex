@@ -1,7 +1,9 @@
 /**
  * Email templates Cryptoreflex Pro — design system pro.
  *
- * 3 templates principaux :
+ * 5 templates principaux :
+ *  - magicLinkEmail()    : connexion magic link (bypass Supabase SMTP)
+ *  - resetPasswordEmail() : reset password (bypass Supabase SMTP)
  *  - welcomeProEmail()   : post-paiement Stripe (welcome + magic link)
  *  - cancelConfirmationEmail() : post-cancel (respectueux + porte ouverte)
  *  - paymentFailedEmail() : payment failed (empathique + grace period 7j)
@@ -23,6 +25,141 @@ interface EmailContent {
   preheader: string;
   html: string;
   text: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  0. MAGIC LINK — connexion sans password                                   */
+/* -------------------------------------------------------------------------- */
+
+export function magicLinkEmail(opts: {
+  email: string;
+  magicLink: string;
+}): EmailContent {
+  const subject = `Ton lien de connexion à Cryptoreflex`;
+  const preheader = `Lien sécurisé valide 1 heure. Pas besoin de mot de passe.`;
+
+  const content = `
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+Bienvenue&nbsp;👋
+</h1>
+
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
+Ton lien de connexion à <strong style="color:${T.colors.primary};">Cryptoreflex</strong> est prêt.
+</p>
+
+<p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
+Clique sur le bouton ci-dessous pour accéder à ton espace. Pas de mot de passe à retenir, pas de friction.
+</p>
+
+<!-- CTA principal -->
+<div style="text-align:center;margin:32px 0 12px;">
+  ${renderButton({ href: opts.magicLink, label: "Me connecter →" })}
+</div>
+
+<p style="margin:14px 0 0;font-size:12px;color:${T.colors.textMuted};text-align:center;">
+Lien sécurisé valide 1&nbsp;heure. Usage unique.
+</p>
+
+<!-- Fallback URL en clair -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${T.colors.surface};border:1px solid ${T.colors.border};border-radius:10px;margin:32px 0 24px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;">Le bouton ne fonctionne pas&nbsp;?</p>
+    <p style="margin:0;font-size:12px;line-height:1.5;color:${T.colors.textMuted};word-break:break-all;">
+      Copie-colle ce lien dans ton navigateur&nbsp;:<br>
+      <a href="${opts.magicLink}" style="color:${T.colors.primary};text-decoration:underline;font-size:11px;">${opts.magicLink}</a>
+    </p>
+  </td></tr>
+</table>
+
+<p style="margin:24px 0 6px;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
+Tu n'as pas demandé ce lien&nbsp;? Tu peux ignorer ce message en toute sécurité — sans clic, rien ne se passe.
+</p>
+`;
+
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
+    text: `Bienvenue 👋
+
+Ton lien de connexion à Cryptoreflex :
+${opts.magicLink}
+
+Lien sécurisé valide 1 heure. Usage unique.
+
+Tu n'as pas demandé ce lien ? Tu peux l'ignorer en toute sécurité.
+
+—
+Cryptoreflex EI · SIREN 103 352 621
+${SITE_URL}/confidentialite`,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  0bis. RESET PASSWORD — reinitialisation password                          */
+/* -------------------------------------------------------------------------- */
+
+export function resetPasswordEmail(opts: {
+  email: string;
+  resetLink: string;
+}): EmailContent {
+  const subject = `Réinitialisation de ton mot de passe Cryptoreflex`;
+  const preheader = `Lien sécurisé valide 1 heure. Si tu n'as rien demandé, ignore cet email.`;
+
+  const content = `
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+Mot de passe oublié&nbsp;?
+</h1>
+
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
+Ça arrive. Voici un lien sécurisé pour en définir un nouveau, en 30&nbsp;secondes.
+</p>
+
+<p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
+Le lien expire dans 1&nbsp;heure et ne peut être utilisé qu'une seule fois.
+</p>
+
+<div style="text-align:center;margin:32px 0 12px;">
+  ${renderButton({ href: opts.resetLink, label: "Définir un nouveau mot de passe →" })}
+</div>
+
+<p style="margin:14px 0 0;font-size:12px;color:${T.colors.textMuted};text-align:center;">
+Lien sécurisé · Expire en 1&nbsp;h · Usage unique
+</p>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${T.colors.surface};border:1px solid ${T.colors.border};border-radius:10px;margin:32px 0 24px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;">Le bouton ne fonctionne pas&nbsp;?</p>
+    <p style="margin:0;font-size:12px;line-height:1.5;color:${T.colors.textMuted};word-break:break-all;">
+      <a href="${opts.resetLink}" style="color:${T.colors.primary};text-decoration:underline;font-size:11px;">${opts.resetLink}</a>
+    </p>
+  </td></tr>
+</table>
+
+<!-- Sécurité : note discrète -->
+<p style="margin:24px 0 6px;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
+<strong style="color:${T.colors.text};">Tu n'as pas demandé de réinitialisation&nbsp;?</strong> Ignore ce message — ton mot de passe actuel reste valide. Si tu reçois ce mail souvent sans le demander, contacte-nous.
+</p>
+`;
+
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
+    text: `Mot de passe oublié ?
+
+Voici ton lien sécurisé pour en définir un nouveau :
+${opts.resetLink}
+
+Le lien expire dans 1 heure et ne peut être utilisé qu'une seule fois.
+
+Tu n'as pas demandé cette réinitialisation ? Ignore ce message,
+ton mot de passe actuel reste valide.
+
+—
+Cryptoreflex EI · SIREN 103 352 621
+${SITE_URL}/confidentialite`,
+  };
 }
 
 /* -------------------------------------------------------------------------- */

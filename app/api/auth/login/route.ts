@@ -1,34 +1,38 @@
 /**
- * /api/auth/login — Envoie un magic link au user.
+ * /api/auth/login — Envoie un magic link au user (BYPASS Supabase SMTP).
  *
  * Flow :
- *  1. POST { email } → on appelle supabase.auth.signInWithOtp()
- *  2. Supabase envoie un email avec un magic link unique (TTL 1h)
- *  3. User clique → atterrit sur /api/auth/callback?code=xxx
- *  4. Callback échange le code contre une session → cookie de session set
- *  5. Redirect vers /mon-compte
+ *  1. POST { email } → admin.generateLink({ type: 'magiclink', email })
+ *     → recupere l'action_link sans envoyer d'email via Supabase
+ *  2. On envoie l'email NOUS-MEMES via Resend (sendEmail + magicLinkEmail)
+ *     → utilise notre setup Resend qui marche, AUCUN passage par SMTP Supabase
+ *  3. User clique le lien → /api/auth/callback?code=xxx → session + cookie
  *
- * SÉCURITÉ :
- *  - Email enumeration prevention : on répond toujours 200 OK même si email
- *    inconnu (Supabase signInWithOtp gère ça nativement avec shouldCreateUser=true)
- *  - Rate limiting : à ajouter via Upstash Ratelimit (5 tentatives / 15 min / IP)
- *  - Token unique 1-shot, expire 1h (configuré côté Supabase Auth)
+ * Pourquoi bypass : Supabase SMTP (config interne) ne marche pas malgre une
+ * config qui semble correcte (port 587, host smtp.resend.com, key valide).
+ * En passant par admin API + notre Resend client, on a un seul point de
+ * defaillance (Resend) au lieu de deux (Supabase + Resend).
+ *
+ * SECURITE :
+ *  - Email enumeration prevention : on repond 200 OK meme si email inconnu
+ *  - Si user inexistant : admin.generateLink le cree (shouldCreateUser default)
+ *  - Rate limiting : 5 tentatives / 15 min / IP
+ *  - Token unique 1-shot, expire 1h (gere par Supabase)
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email/client";
+import { magicLinkEmail } from "@/lib/email/templates";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Rate limit anti-brute force sur les magic links :
-// 5 tentatives par IP toutes les 15 minutes.
-// Empêche un attaquant de spammer des emails de connexion à des cibles.
 const limiter = createRateLimiter({
   limit: 5,
   windowMs: 15 * 60 * 1000,
-  key: "auth-login",
+  key: "auth-login-magic-v2",
 });
 
 function getClientIp(req: NextRequest): string {
@@ -38,18 +42,17 @@ function getClientIp(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
-  // Rate limit FIRST (avant toute logique coûteuse)
   const ip = getClientIp(req);
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessayez dans quelques minutes." },
+      { error: "Trop de tentatives. Réessaye dans quelques minutes." },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     );
   }
 
-  const supabase = createSupabaseServerClient();
-  if (!supabase) {
+  const admin = createSupabaseServiceRoleClient();
+  if (!admin) {
     return NextResponse.json(
       { error: "Connexion bientôt disponible" },
       { status: 503 }
@@ -68,20 +71,72 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr"}/api/auth/callback`,
-      shouldCreateUser: true, // crée le user si inexistant (utile pour Pro acheté avant compte)
-    },
-  });
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
 
-  if (error) {
-    console.error("[auth/login] signInWithOtp error:", error.message);
-    // On masque l'erreur exacte pour éviter email enumeration
+  // STEP 1 : verifie si user existe (admin.generateLink ne cree pas auto)
+  // Si user inexistant, on le cree d'abord (anti-spam : limite par rate limit).
+  const { data: usersData } = await admin.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
+  const existingUser = usersData?.users.find(
+    (u) => u.email?.toLowerCase() === email
+  );
+
+  if (!existingUser) {
+    // Cree l'user comme confirme (email_confirm: true) sans envoyer d'email
+    const { error: createError } = await admin.auth.admin.createUser({
+      email,
+      email_confirm: true,
+    });
+    if (createError && !createError.message.toLowerCase().includes("already")) {
+      console.error("[auth/login] createUser error:", createError.message);
+      // On continue quand meme — peut-etre erreur transitoire, generateLink essaiera
+    }
   }
 
-  // Réponse uniformisée (success même si email inconnu — anti-enumeration)
+  // STEP 2 : genere le magic link (renvoie action_link, n'envoie PAS d'email)
+  const { data: linkData, error: linkError } =
+    await admin.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: {
+        redirectTo: `${siteUrl}/api/auth/callback`,
+      },
+    });
+
+  if (linkError || !linkData?.properties?.action_link) {
+    console.error("[auth/login] generateLink error:", linkError?.message);
+    // On masque l'erreur pour eviter user enumeration
+    return NextResponse.json({
+      ok: true,
+      message: "Si ce compte existe, un email de connexion a été envoyé.",
+    });
+  }
+
+  const magicLink = linkData.properties.action_link;
+
+  // STEP 3 : envoie l'email via NOTRE Resend (qui marche)
+  const tmpl = magicLinkEmail({ email, magicLink });
+  const result = await sendEmail({
+    to: email,
+    subject: tmpl.subject,
+    preheader: tmpl.preheader,
+    html: tmpl.html,
+    text: tmpl.text,
+  });
+
+  if (!result.ok) {
+    console.error("[auth/login] sendEmail error:", result.error);
+    return NextResponse.json(
+      { error: "Erreur d'envoi du lien. Réessaye dans quelques instants." },
+      { status: 500 }
+    );
+  }
+
+  console.log(`[auth/login] Magic link envoye a ${email} (Resend id: ${result.id})`);
+
   return NextResponse.json({
     ok: true,
     message: "Si ce compte existe, un email de connexion a été envoyé.",
