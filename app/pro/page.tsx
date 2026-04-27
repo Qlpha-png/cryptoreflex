@@ -20,8 +20,6 @@ import {
   Lock,
   RotateCcw,
   CreditCard,
-  Heart,
-  MapPin,
   Star,
   Globe,
 } from "lucide-react";
@@ -1037,95 +1035,11 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* HUMANIZATION — BATCH 6 (Trust + Copywriting agents)
-          « Qui est derrière » humanise et déclenche le biais d'autorité
-          (Cialdini). Pattern utilisé par Indie Hackers, Pieter Levels,
-          The Hustle. Convertit particulièrement bien sur le marché FR
-          (préférence pour les fondateurs identifiables vs SaaS anonymes US). */}
-      <section
-        id="qui-edite"
-        aria-labelledby="who-title"
-        className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 scroll-mt-24"
-      >
-        <div className="glass rounded-3xl p-8 sm:p-10 relative overflow-hidden">
-          {/* Halo discret derrière le bloc */}
-          <div className="absolute -top-20 -right-20 w-[300px] h-[300px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative">
-            <span className="ds-eyebrow text-primary-soft">
-              QUI ÉDITE CRYPTOREFLEX ?
-            </span>
-            <h2
-              id="who-title"
-              className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg"
-            >
-              Un fondateur français,{" "}
-              <span className="gradient-text">pas une multinationale.</span>
-            </h2>
-
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-start gap-3">
-                <MapPin
-                  className="h-4 w-4 text-primary-soft shrink-0 mt-0.5"
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="font-semibold text-fg">Basé à Paris</p>
-                  <p className="text-fg/60 text-xs mt-0.5">
-                    EI · SIREN 103 352 621 · INPI vérifié
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <ShieldCheck
-                  className="h-4 w-4 text-primary-soft shrink-0 mt-0.5"
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="font-semibold text-fg">100 % indépendant</p>
-                  <p className="text-fg/60 text-xs mt-0.5">
-                    Aucune levée de fonds · Pas de PSAN · Pas d&apos;investisseur
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Heart
-                  className="h-4 w-4 text-primary-soft shrink-0 mt-0.5"
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="font-semibold text-fg">Bootstrap fier</p>
-                  <p className="text-fg/60 text-xs mt-0.5">
-                    Le revenu Pro finance hébergement + dev · Zéro tracker tiers
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-6 text-sm text-fg/75 leading-relaxed">
-              Salut moi c&apos;est Kevin. J&apos;ai créé Cryptoreflex parce
-              qu&apos;à chaque déclaration fiscale, je galérais comme tout le
-              monde — Cerfa 2086, calculs de plus-value, recherches ChatGPT
-              à 3h du matin. Aujourd&apos;hui Cryptoreflex sert{" "}
-              <strong className="text-primary">déjà 100+ investisseurs FR</strong>{" "}
-              et le plan Pro me permet de continuer à coder à plein temps —
-              sans pub agressive, sans cession à un fonds, sans algorithme
-              biaisé pour pousser tel exchange.
-            </p>
-
-            <p className="mt-4 text-xs text-muted">
-              Tu peux me joindre directement à{" "}
-              <a
-                href={`mailto:${BRAND.email}`}
-                className="text-primary-soft underline hover:text-primary"
-              >
-                {BRAND.email}
-              </a>{" "}
-              — réponse sous 24 h ouvrées (et c&apos;est moi qui réponds, pas
-              un bot Zendesk).
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* HUMANIZATION SECTION RETIRÉE (user feedback 27/04/2026) :
+          "juste enlève au pire on parle pas de moi mdr"
+          → Plusieurs claims étaient inventés (Paris, INPI vérifié, 100+ users).
+          On retire le bloc plutôt que de bricoler des chiffres faux.
+          Si on rejoute, il faut UNIQUEMENT des claims vérifiables. */}
 
       {/* FAQ — BATCH 5 (FAQ + SEO + A11y agents)
           - 10 questions (vs 6 avant) couvrant pricing, cancel, RGPD, roadmap,
