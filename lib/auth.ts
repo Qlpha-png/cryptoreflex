@@ -103,24 +103,24 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
     return null;
   }
 
-  const { data, error } = await supabase.auth.getUser();
-  const authUser = data?.user;
+  const { data: authData, error: authErr } = await supabase.auth.getUser();
+  const authUser = authData?.user;
 
-  if (error) {
-    console.error("[auth/getUser] supabase.auth.getUser error:", error.message, "status:", error.status, "code:", error.code);
+  if (authErr) {
+    console.error("[auth/getUser] supabase.auth.getUser error:", authErr.message, "status:", authErr.status);
   }
   if (!authUser) {
-    console.warn("[auth/getUser] No authUser returned (null user, error?:", error?.message ?? "none", ")");
+    console.warn("[auth/getUser] No authUser returned (null user, error?:", authErr?.message ?? "none", ")");
     return null;
   }
 
-  const { data: profile, error } = await supabase
+  const { data: profile, error: profileErr } = await supabase
     .from("users")
     .select("plan, plan_expires_at, stripe_customer_id")
     .eq("id", authUser.id)
     .single();
 
-  if (error || !profile) {
+  if (profileErr || !profile) {
     // Utilisateur authentifié mais pas encore de ligne dans `users` table
     // (cas post-signup avant que le webhook Stripe ne crée le profil).
     return {
