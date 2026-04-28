@@ -152,7 +152,7 @@ export default function HomeAnchorNav() {
           {pill.ready && (
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-gradient-to-b from-primary/20 to-primary/5 ring-1 ring-primary/50 shadow-[inset_0_1px_0_0_rgba(252,211,77,0.25),0_0_24px_-8px_rgba(245,165,36,0.55)]"
+              className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-primary/12 ring-1 ring-primary/50 shadow-[0_0_20px_-6px_rgba(245,165,36,0.45)]"
               style={{
                 width: pill.w,
                 opacity: pill.opacity,
