@@ -149,28 +149,20 @@ export default function HomeAnchorNav() {
                 onClick={(e) => handleClick(e, chip.href)}
                 aria-current={isActive ? "true" : undefined}
                 style={{ textDecoration: "none" }}
-                className={`group relative inline-flex items-center gap-1.5 rounded-md px-3 py-2.5 min-h-[44px] text-sm no-underline hover:no-underline focus:no-underline transition-colors duration-200 snap-start whitespace-nowrap
+                className={`relative inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold no-underline hover:no-underline focus:no-underline transition-all duration-200 snap-start whitespace-nowrap
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                            ${
                              isActive
-                               ? "text-primary-glow font-bold"
-                               : "text-fg/70 hover:text-fg font-semibold"
+                               ? "text-primary-glow bg-primary/10 ring-1 ring-primary/50 shadow-[0_0_18px_-6px_rgba(245,165,36,0.45)]"
+                               : "text-fg/75 hover:text-fg hover:bg-elevated/60"
                            }`}
               >
                 <chip.Icon
                   className={`h-3.5 w-3.5 transition-transform ${isActive ? "scale-110" : "group-hover:scale-105"}`}
-                  strokeWidth={1.85}
+                  strokeWidth={1.75}
                   aria-hidden="true"
                 />
                 {chip.label}
-                {/* Indicateur visuel actif : underline gold sous le chip
-                    (hors zone de texte = aucun risque de ligne parasite). */}
-                {isActive && (
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.7)]"
-                  />
-                )}
               </a>
             );
           })}
