@@ -42,21 +42,26 @@ export type OgFont = {
 let _fontsCache: OgFont[] | null = null;
 
 /**
- * Charge les fonts Inter Regular (400) + Bold (700) depuis /public/fonts/.
+ * Charge les fonts Inter Regular (400) + Bold (700) + ExtraBold (800)
+ * depuis /public/fonts/. Couvre les weights utilises dans toutes les OG
+ * images (les 800 sont les plus frequents pour les titres).
+ *
  * Compatible edge + Node.js runtimes (fetch URL absolu, supporte partout).
  */
 export async function loadOgFonts(): Promise<OgFont[]> {
   if (_fontsCache) return _fontsCache;
 
   const base = BRAND.url; // https://www.cryptoreflex.fr
-  const [regularData, boldData] = await Promise.all([
+  const [regularData, boldData, extraBoldData] = await Promise.all([
     fetch(`${base}/fonts/Inter-Regular.woff`).then((r) => r.arrayBuffer()),
     fetch(`${base}/fonts/Inter-Bold.woff`).then((r) => r.arrayBuffer()),
+    fetch(`${base}/fonts/Inter-ExtraBold.woff`).then((r) => r.arrayBuffer()),
   ]);
 
   _fontsCache = [
     { name: "Inter", data: regularData, weight: 400, style: "normal" },
     { name: "Inter", data: boldData, weight: 700, style: "normal" },
+    { name: "Inter", data: extraBoldData, weight: 800, style: "normal" },
   ];
 
   return _fontsCache;
