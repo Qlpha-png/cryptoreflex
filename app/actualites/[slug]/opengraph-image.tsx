@@ -102,7 +102,7 @@ export default async function NewsOgImage({ params }: Props) {
                 color: "#0B0D10",
               }}
             >
-              ₿
+              B
             </div>
             <div
               style={{

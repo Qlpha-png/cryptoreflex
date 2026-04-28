@@ -55,7 +55,7 @@ export default async function Image() {
               color: "#05060A",
             }}
           >
-            ₿
+            B
           </div>
           <div
             style={{

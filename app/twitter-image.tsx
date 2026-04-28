@@ -71,7 +71,7 @@ export default async function TwitterImage() {
               fontWeight: 800,
             }}
           >
-            ₿
+            B
           </div>
           <div
             style={{

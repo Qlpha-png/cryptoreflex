@@ -72,7 +72,7 @@ export default async function OpenGraphImage() {
               fontWeight: 800,
             }}
           >
-            ₿
+            B
           </div>
           <div
             style={{

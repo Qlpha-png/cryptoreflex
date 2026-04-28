@@ -91,7 +91,7 @@ export default async function OgImage({ params }: Props) {
               color: "#05060A",
             }}
           >
-            ₿
+            B
           </div>
           <div
             style={{

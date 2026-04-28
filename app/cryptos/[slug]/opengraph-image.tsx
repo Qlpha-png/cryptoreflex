@@ -73,7 +73,7 @@ export default async function OgImage({ params }: Props) {
                 fontWeight: 800,
               }}
             >
-              ₿
+              B
             </div>
             <div
               style={{
