@@ -22,11 +22,29 @@ interface Props {
   params: { slug: string };
 }
 
-const CATEGORY_GRADIENTS: Record<string, string> = {
-  "Marché": "radial-gradient(ellipse at 20% 10%, #4b2e0a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #b45309 0%, transparent 50%), #0B0D10",
-  "Régulation": "radial-gradient(ellipse at 20% 10%, #4c1d24 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #be185d 0%, transparent 50%), #0B0D10",
-  "Technologie": "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #0a2540 0%, transparent 50%), #05060A",
-  "Plateformes": "radial-gradient(ellipse at 20% 10%, #2e1065 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #581c87 0%, transparent 50%), #0B0D10",
+// Satori (next/og) ne supporte qu'un seul background-image par element ;
+// on stocke ici une couleur de base + un seul radial-gradient par categorie.
+interface CategoryBg {
+  color: string;
+  image: string;
+}
+const CATEGORY_GRADIENTS: Record<string, CategoryBg> = {
+  "Marché": {
+    color: "#0B0D10",
+    image: "radial-gradient(ellipse at 20% 10%, #4b2e0a 0%, transparent 60%)",
+  },
+  "Régulation": {
+    color: "#0B0D10",
+    image: "radial-gradient(ellipse at 20% 10%, #4c1d24 0%, transparent 60%)",
+  },
+  "Technologie": {
+    color: "#05060A",
+    image: "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
+  },
+  "Plateformes": {
+    color: "#0B0D10",
+    image: "radial-gradient(ellipse at 20% 10%, #2e1065 0%, transparent 60%)",
+  },
 };
 
 const CATEGORY_ACCENT: Record<string, string> = {
@@ -46,7 +64,7 @@ export default async function NewsOgImage({ params }: Props) {
   const dateFr = news?.date
     ? new Date(news.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
     : "";
-  const background = CATEGORY_GRADIENTS[categoryKey] ?? CATEGORY_GRADIENTS["Marché"];
+  const bg = CATEGORY_GRADIENTS[categoryKey] ?? CATEGORY_GRADIENTS["Marché"];
   const accent = CATEGORY_ACCENT[categoryKey] ?? "#fbbf24";
 
   return new ImageResponse(
@@ -59,7 +77,8 @@ export default async function NewsOgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background,
+          backgroundColor: bg.color,
+          backgroundImage: bg.image,
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}

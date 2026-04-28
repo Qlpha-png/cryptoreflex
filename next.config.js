@@ -65,6 +65,15 @@ const nextConfig = {
         destination: "/blog/:slug*",
         permanent: true,
       },
+      // /lead-magnets (sans suffixe) -> /ressources (page hub des PDFs)
+      // Les PDFs eux-memes restent accessibles a /lead-magnets/<filename>.pdf
+      // (servis par Vercel CDN). Cette redirect concerne uniquement le path
+      // racine que les bots scannent occasionnellement.
+      {
+        source: "/lead-magnets",
+        destination: "/ressources",
+        permanent: false, // 307 (le path peut bouger plus tard)
+      },
       {
         source: "/blog/guide-debutant-bitcoin",
         destination: "/blog/bitcoin-guide-complet-debutant-2026",

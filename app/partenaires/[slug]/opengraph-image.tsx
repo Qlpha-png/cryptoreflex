@@ -41,7 +41,10 @@ export default async function OgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: `radial-gradient(ellipse at 25% 10%, ${brandColor}40 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, rgba(245,158,11,0.18) 0%, transparent 60%), #05060A`,
+          // Satori : un seul background-image autorise. Brand color halo +
+          // base solide ; le 2e halo gold est rendu via overlay <div> plus bas.
+          backgroundColor: "#05060A",
+          backgroundImage: `radial-gradient(ellipse at 25% 10%, ${brandColor}40 0%, transparent 55%)`,
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
           position: "relative",

@@ -44,14 +44,30 @@ export default async function OgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background:
-            "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #0a2540 0%, transparent 50%), #05060A",
+          // Satori ne supporte qu'un seul background-image. On utilise une
+          // couleur solide ici, et on ajoute les halos via des <div> overlay
+          // positionnes en absolute (chacun avec un seul radial-gradient).
+          backgroundColor: "#05060A",
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
           position: "relative",
         }}
       >
-        {/* Halo accent */}
+        {/* Halo bleu top-left */}
+        <div
+          style={{
+            position: "absolute",
+            top: -120,
+            left: -120,
+            width: 720,
+            height: 720,
+            borderRadius: "50%",
+            backgroundImage:
+              "radial-gradient(circle, rgba(26, 31, 58, 0.9) 0%, rgba(5, 6, 10, 0) 60%)",
+            display: "flex",
+          }}
+        />
+        {/* Halo cyan accent top-right */}
         <div
           style={{
             position: "absolute",
@@ -60,8 +76,8 @@ export default async function OgImage({ params }: Props) {
             width: 600,
             height: 600,
             borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(34, 211, 238, 0.25) 0%, transparent 70%)",
+            backgroundImage:
+              "radial-gradient(circle, rgba(34, 211, 238, 0.25) 0%, rgba(34, 211, 238, 0) 70%)",
             display: "flex",
           }}
         />

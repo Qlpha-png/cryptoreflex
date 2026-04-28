@@ -17,8 +17,9 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 70,
-          background:
-            "radial-gradient(ellipse at 15% 10%, #2a1f0a 0%, transparent 60%), radial-gradient(ellipse at 85% 90%, #0a2540 0%, transparent 50%), #05060A",
+          backgroundColor: "#05060A",
+          backgroundImage:
+            "radial-gradient(ellipse at 15% 10%, #2a1f0a 0%, transparent 60%)",
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
           position: "relative",

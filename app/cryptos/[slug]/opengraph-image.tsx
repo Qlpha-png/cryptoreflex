@@ -40,9 +40,11 @@ export default async function OgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: isGem
-            ? "radial-gradient(ellipse at 80% 20%, rgba(245, 158, 11, 0.25) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(244, 63, 94, 0.15) 0%, transparent 50%), #05060A"
-            : "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #0a2540 0%, transparent 50%), #05060A",
+          // Satori : un seul background-image autorise. Couleur base + 1 radial.
+          backgroundColor: "#05060A",
+          backgroundImage: isGem
+            ? "radial-gradient(ellipse at 80% 20%, rgba(245, 158, 11, 0.25) 0%, transparent 60%)"
+            : "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}

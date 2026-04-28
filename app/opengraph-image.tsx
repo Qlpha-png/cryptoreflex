@@ -33,8 +33,9 @@ export default async function OpenGraphImage() {
           justifyContent: "space-between",
           padding: 80,
           // Fond identique au thème du site (cf. app/globals.css : --background #05060A).
-          background:
-            "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%), radial-gradient(ellipse at 80% 90%, #0a2540 0%, transparent 50%), #05060A",
+          backgroundColor: "#05060A",
+          backgroundImage:
+            "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
           fontFamily: "system-ui, -apple-system, sans-serif",
           position: "relative",
