@@ -174,7 +174,7 @@ export default function HomeAnchorNav() {
                 href={chip.href}
                 onClick={(e) => handleClick(e, chip.href)}
                 aria-current={isActive ? "true" : undefined}
-                className={`relative z-10 group inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold transition-colors duration-fast snap-start whitespace-nowrap
+                className={`relative z-10 group inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold no-underline transition-colors duration-fast snap-start whitespace-nowrap
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                            ${
                              isActive
