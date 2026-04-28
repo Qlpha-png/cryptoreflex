@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Target,
   BarChart3,
@@ -62,10 +62,6 @@ const CHIPS: ChipDef[] = [
 
 export default function HomeAnchorNav() {
   const [activeId, setActiveId] = useState<string>(CHIPS[0].href);
-  // opacity: 0 initial pour éviter le pill mal positionné au mount
-  // (avant useLayoutEffect calcule, le pill était à x:0 w:0 mais opacity 0).
-  // Audit user 26/04 : "pill déborde sur le chip Démarrer".
-  const [pill, setPill] = useState<{ x: number; w: number; opacity: number; ready: boolean }>({ x: 0, w: 0, opacity: 0, ready: false });
   const trackRef = useRef<HTMLDivElement>(null);
   const chipRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
 
@@ -97,22 +93,9 @@ export default function HomeAnchorNav() {
     return () => observer.disconnect();
   }, []);
 
-  // Pill slide indicator — recalcule la position quand activeId change OU au resize.
-  // Audit user 26/04 : pill ne s'affiche QU'APRÈS le 1er calcul (ready=true) pour
-  // éviter le débordement visuel sur le chip "Démarrer" au mount initial.
-  useLayoutEffect(() => {
-    const computePill = () => {
-      const chip = chipRefs.current.get(activeId);
-      const track = trackRef.current;
-      if (!chip || !track) return;
-      const cRect = chip.getBoundingClientRect();
-      const tRect = track.getBoundingClientRect();
-      setPill({ x: cRect.left - tRect.left, w: cRect.width, opacity: 1, ready: true });
-    };
-    computePill();
-    window.addEventListener("resize", computePill);
-    return () => window.removeEventListener("resize", computePill);
-  }, [activeId]);
+  // Pill slide indicator retire : style actif applique directement sur le
+  // <a> chip (cf. ternary isActive plus bas). Plus simple, plus fiable, et
+  // elimine tout risque visuel de "ligne" parasite (cf. screenshots user).
 
   function handleClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
     e.preventDefault();
@@ -149,19 +132,10 @@ export default function HomeAnchorNav() {
               déplace entre les chips. Spring easeOutBack pour sentiment iOS.
               Audit user 26/04 : ne s'affiche QU'APRÈS calcul initial (ready) pour
               éviter le débordement visuel sur le 1er chip au mount. */}
-          {pill.ready && (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-0 h-9 -translate-y-1/2 rounded-full bg-primary/12 ring-1 ring-primary/50 shadow-[0_0_20px_-6px_rgba(245,165,36,0.45)]"
-              style={{
-                width: pill.w,
-                opacity: pill.opacity,
-                transform: `translateX(${pill.x}px)`,
-                transition:
-                  "transform 380ms cubic-bezier(0.34, 1.32, 0.64, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease",
-              }}
-            />
-          )}
+          {/* Pill flottant retiree : provoquait visuellement une "ligne" a
+              travers le texte de la chip active (peut-etre artefact gradient
+              + inset shadow + alignement vertical). Style actif directement
+              sur le <a> chip = zero positionnement absolu, zero risque visuel. */}
 
           {CHIPS.map((chip) => {
             const isActive = activeId === chip.href;
@@ -175,12 +149,12 @@ export default function HomeAnchorNav() {
                 onClick={(e) => handleClick(e, chip.href)}
                 aria-current={isActive ? "true" : undefined}
                 style={{ textDecoration: "none" }}
-                className={`relative z-10 group inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold no-underline hover:no-underline focus:no-underline transition-colors duration-fast snap-start whitespace-nowrap
+                className={`relative inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 min-h-[44px] text-sm font-semibold no-underline hover:no-underline focus:no-underline transition-all duration-200 snap-start whitespace-nowrap
                            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                            ${
                              isActive
-                               ? "text-primary-glow"
-                               : "text-fg/75 hover:text-fg"
+                               ? "text-primary-glow bg-primary/10 ring-1 ring-primary/50 shadow-[0_0_18px_-6px_rgba(245,165,36,0.45)]"
+                               : "text-fg/75 hover:text-fg hover:bg-elevated/60"
                            }`}
               >
                 <chip.Icon
