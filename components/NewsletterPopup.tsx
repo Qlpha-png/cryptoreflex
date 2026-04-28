@@ -26,7 +26,7 @@ import { track } from "@/lib/analytics";
  *  - Hide sur les routes /merci et /newsletter (pas de double prompt).
  *  - Respect prefers-reduced-motion.
  *
- * Lead magnet : guide PDF "11 plateformes crypto à utiliser en France 2026".
+ * Lead magnet : guide PDF "14 plateformes crypto à utiliser en France 2026".
  * C'est l'asset "haute valeur perçue" qui justifie l'inscription.
  */
 
@@ -239,7 +239,7 @@ export default function NewsletterPopup() {
               className="mt-4 text-xl sm:text-2xl font-extrabold text-fg leading-tight"
             >
               Reçois notre guide PDF des{" "}
-              <span className="gradient-text">11 plateformes crypto</span> à utiliser en 2026
+              <span className="gradient-text">14 plateformes crypto</span> à utiliser en 2026
             </h2>
 
             <p className="mt-2 text-sm text-fg/80">

@@ -402,7 +402,7 @@ export default function ComparatifHubPage() {
               Trouve ta plateforme en 30 secondes
             </h2>
             <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
-              Plus rapide que de comparer 11 fiches : le quiz pose 6 questions et te sort la plateforme calibrée pour ton profil — débutant, intermédiaire ou avancé.
+              Plus rapide que de comparer 14 fiches : le quiz pose 6 questions et te sort la plateforme calibrée pour ton profil — débutant, intermédiaire ou avancé.
             </p>
             <Link
               href="/quiz/trouve-ton-exchange"

@@ -90,14 +90,14 @@ const POOL: Record<string, Step> = {
   comparator: {
     href: "/comparatif",
     Icon: BarChart3,
-    label: "Compare les 11 plateformes",
+    label: "Compare les 14 plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
   pdfPlateformes: {
     href: "/lead-magnets/guide-plateformes-crypto-2026.pdf",
     Icon: Download,
     label: "Télécharge le PDF gratuit",
-    desc: "62 pages — étude indépendante des 11 plateformes crypto FR.",
+    desc: "62 pages — étude indépendante des 14 plateformes crypto FR.",
   },
   pdfFiscalite: {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
@@ -176,7 +176,7 @@ const POOL: Record<string, Step> = {
     href: "#newsletter",
     Icon: Mail,
     label: "Newsletter quotidienne",
-    desc: "1 email matin (3 min) — actu + bonus PDF 11 plateformes.",
+    desc: "1 email matin (3 min) — actu + bonus PDF 14 plateformes.",
   },
   outils: {
     href: "/outils",

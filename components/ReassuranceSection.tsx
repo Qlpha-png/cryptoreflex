@@ -23,9 +23,9 @@ interface ReassuranceItem {
  * Audit crédibilité 26/04/2026 :
  *  - L'ancienne carte "10 000+ visiteurs/mois" a été supprimée (mensonge :
  *    site lancé le 15/04/2026, audience réelle 0-50 visiteurs/jour).
- *  - L'ancienne carte "60+ plateformes auditées" a été remplacée par
- *    "11 plateformes comparées" (chiffre réel = nombre d'entrées dans
- *    data/platforms.json, vérifiable).
+ *  - "14 marques fiables sélectionnées" (chiffre réel) :
+ *    11 exchanges/brokers (data/platforms.json) + 2 hardware wallets
+ *    (data/wallets.json : Ledger + Trezor) + 1 SaaS fiscalité (Waltio).
  *  - On garde la 4e carte "Lancement avril 2026" pour transformer la jeunesse
  *    en gage de transparence (+ lien vers /impact pour le dashboard public).
  *  - Toute future remontée d'un chiffre doit s'appuyer sur une donnée
@@ -34,9 +34,9 @@ interface ReassuranceItem {
 const ITEMS: ReassuranceItem[] = [
   {
     Icon: Award,
-    value: "11",
-    label: "Plateformes comparées",
-    hint: "PSAN, brokers, exchanges régulés MiCA",
+    value: "14",
+    label: "Marques fiables sélectionnées",
+    hint: "Exchanges, brokers, wallets, fiscalité — toutes MiCA / régulées",
   },
   {
     Icon: Eye,

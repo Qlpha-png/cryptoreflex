@@ -31,7 +31,7 @@ import type { CoinPrice } from "@/lib/coingecko";
  * - Server component (le seul îlot client = AnimatedNumber + HeroLiveWidget).
  * - Background : dotted grid + halo gold radial animé (breathe + mesh shift).
  * - 1 CTA primary fort + 1 CTA secondaire newsletter.
- * - Stats card 4 KPI en bas (11 plateformes / 20 cryptos / 6 outils / Méthode).
+ * - Stats card 4 KPI en bas (14 plateformes / 20 cryptos / 6 outils / Méthode).
  * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
  */
 
@@ -45,7 +45,10 @@ interface HeroProps {
 
 /**
  * STATS exposés en home — chiffres réels uniquement (audit crédibilité 2026-04-26).
- *  - platforms: 11 = nombre exact d'entrées dans data/platforms.json (vérifié).
+ *  - platforms: 14 = total marques sélectionnées et auditées par Cryptoreflex
+ *    (11 exchanges/brokers data/platforms.json + 2 hardware wallets data/wallets.json
+ *    + 1 SaaS fiscalité Waltio data/partners.ts). Cohérent avec ReassuranceSection
+ *    et NewsletterPopup ("14 marques fiables 2026").
  *  - cryptos: 20 = top market fetch CoinGecko (cf. fetchTopMarket(20) dans page.tsx).
  *  - tools: 6 = sous-évaluation prudente (réellement 9 dans /outils/) — laissé bas
  *    pour ne jamais surpromettre ; à monter une fois que tous les outils auront
@@ -53,7 +56,7 @@ interface HeroProps {
  *  - method: "Publique" = qualitatif, pas un chiffre.
  */
 const STATS = {
-  platforms: 11,
+  platforms: 14,
   cryptos: 20,
   tools: 6,
   method: "Publique",
@@ -133,12 +136,12 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 cohérence avec le CTA primary "Trouver ma plateforme en 2 min".
                 "Conformité MiCA" gardé (différenciateur réglementaire FR 2026). */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              On a comparé{" "}
+              On a sélectionné{" "}
               <strong className="text-fg font-semibold">
-                {STATS.platforms} plateformes régulées en Europe
+                {STATS.platforms} marques fiables régulées en Europe
               </strong>{" "}
-              sur ce qui compte vraiment : frais réels, sécurité, support FR,
-              conformité MiCA. Choisis la tienne en 2 minutes.
+              (exchanges, brokers, hardware wallets, fiscalité) sur ce qui compte vraiment :
+              frais réels, sécurité, support FR, conformité MiCA. Choisis la tienne en 2 minutes.
             </p>
 
             {/* CTAs — 1 primary fort + 1 secondaire newsletter.
@@ -206,7 +209,7 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         {/* Stats card en bas — premium depth (multi-shadow + ring gold subtil) */}
         <div className="mt-10 lg:mt-14 animate-hero-fade-up animate-hero-fade-up-delay-4">
           <div className="card-premium p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
-            <KpiCell value={STATS.platforms} label="Plateformes" accent />
+            <KpiCell value={STATS.platforms} label="Marques fiables" accent />
             <KpiCell value={STATS.cryptos} label="Cryptos suivies" />
             <KpiCell value={STATS.tools} label="Outils gratuits" />
             <KpiCell text={STATS.method} label="Méthode" />

@@ -158,7 +158,7 @@ export default function NewsletterModal({
             </h2>
 
             <p className="mt-2 text-sm text-fg/80">
-              <strong className="text-fg">"Les 11 plateformes crypto à utiliser en France
+              <strong className="text-fg">"Les 14 plateformes crypto à utiliser en France
               en 2026"</strong> — comparatif complet, frais réels, statut MiCA, fiabilité.
               Envoyé après inscription à la newsletter (3 min/jour).
             </p>
