@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadOgFonts } from "@/lib/og-fonts";
 import { getArticleBySlug } from "@/lib/mdx";
 import { BRAND } from "@/lib/brand";
 
@@ -31,8 +30,6 @@ export default async function OgImage({ params }: Props) {
   const category = article?.category ?? "Crypto";
   const readTime = article?.readTime ?? "—";
   const author = article?.author ?? BRAND.name;
-
-  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -139,6 +136,6 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }

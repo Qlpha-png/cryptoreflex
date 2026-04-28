@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadOgFonts } from "@/lib/og-fonts";
 import { getPlatformById } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 
@@ -34,8 +33,6 @@ export default async function OgImage({ params }: Props) {
     platform?.tagline ?? "Comparatifs et avis indépendants Cryptoreflex";
   const score = platform?.scoring.global ?? null;
   const micaCompliant = platform?.mica.micaCompliant ?? false;
-
-  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -243,6 +240,6 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }

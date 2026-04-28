@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadOgFonts } from "@/lib/og-fonts";
 import { getPartner } from "@/data/partners";
 import { getPartnerReview } from "@/data/partner-reviews";
 import { BRAND } from "@/lib/brand";
@@ -31,8 +30,6 @@ export default async function OgImage({ params }: Props) {
   const priceFrom = partner?.priceFrom ?? "";
   const brandColor = partner?.brandColor ?? "#F59E0B";
   const since = partner?.since ?? "";
-
-  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -294,6 +291,6 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }

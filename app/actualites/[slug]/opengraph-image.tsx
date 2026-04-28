@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadOgFonts } from "@/lib/og-fonts";
 import { getNewsBySlug } from "@/lib/news-mdx";
 import { NEWS_CATEGORY_LABELS } from "@/lib/news-types";
 import { BRAND } from "@/lib/brand";
@@ -67,8 +66,6 @@ export default async function NewsOgImage({ params }: Props) {
     : "";
   const bg = CATEGORY_GRADIENTS[categoryKey] ?? CATEGORY_GRADIENTS["Marché"];
   const accent = CATEGORY_ACCENT[categoryKey] ?? "#fbbf24";
-
-  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -173,6 +170,6 @@ export default async function NewsOgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }

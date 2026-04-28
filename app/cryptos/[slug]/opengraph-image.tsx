@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadOgFonts } from "@/lib/og-fonts";
 import { getCryptoBySlug } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 
@@ -30,8 +29,6 @@ export default async function OgImage({ params }: Props) {
     crypto?.tagline ?? "Toutes nos fiches crypto et analyses sur Cryptoreflex.";
   const isGem = crypto?.kind === "hidden-gem";
   const category = crypto?.category ?? "Cryptomonnaie";
-
-  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -189,6 +186,6 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size }
   );
 }
