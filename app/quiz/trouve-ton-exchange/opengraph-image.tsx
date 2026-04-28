@@ -21,7 +21,7 @@ export default async function Image() {
           backgroundImage:
             "radial-gradient(ellipse at 15% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontFamily: "sans-serif",
           position: "relative",
         }}
       >

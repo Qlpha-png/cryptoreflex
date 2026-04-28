@@ -49,7 +49,7 @@ export default async function OgImage({ params }: Props) {
           // positionnes en absolute (chacun avec un seul radial-gradient).
           backgroundColor: "#05060A",
           color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontFamily: "sans-serif",
           position: "relative",
         }}
       >

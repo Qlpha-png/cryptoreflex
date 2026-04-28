@@ -80,7 +80,7 @@ export default async function NewsOgImage({ params }: Props) {
           backgroundColor: bg.color,
           backgroundImage: bg.image,
           color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontFamily: "sans-serif",
         }}
       >
         {/* Header : logo + badge catégorie */}

@@ -48,7 +48,7 @@ export default async function OgImage({ params }: Props) {
           backgroundImage:
             "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontFamily: "sans-serif",
         }}
       >
         {/* Header */}
