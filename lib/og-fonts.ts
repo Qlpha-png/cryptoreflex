@@ -42,19 +42,41 @@ export type OgFont = {
 let _fontsCache: OgFont[] | null = null;
 
 /**
+ * Lit un fichier relatif au module courant en gerant les 2 runtimes :
+ *  - Edge runtime (file URL non-supportee) → fetch(URL)
+ *  - Node.js runtime (file:// URL) → fs.readFile + ArrayBuffer slice
+ *
+ * `/blog/[slug]/opengraph-image.tsx` et `/actualites/[slug]/opengraph-image.tsx`
+ * tournent en Node.js (pour lire MDX via fs). Les autres OG tournent en edge.
+ * Ce helper fait abstraction de la difference.
+ */
+async function readFontBuffer(relPath: string): Promise<ArrayBuffer> {
+  const url = new URL(relPath, import.meta.url);
+
+  if (url.protocol === "file:") {
+    // Node.js runtime : fetch ne supporte pas file://, on lit avec fs.
+    const { readFile } = await import("node:fs/promises");
+    const { fileURLToPath } = await import("node:url");
+    const buf = await readFile(fileURLToPath(url));
+    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+  }
+
+  // Edge runtime : fetch resout l'URL au runtime via le bundle Vercel.
+  const res = await fetch(url);
+  return res.arrayBuffer();
+}
+
+/**
  * Charge les fonts Inter Regular (400) + Bold (700) depuis le bundle.
  * Cache le resultat en module-level pour ne pas re-fetcher entre invocations.
+ * Compatible edge ET Node.js runtimes via readFontBuffer.
  */
 export async function loadOgFonts(): Promise<OgFont[]> {
   if (_fontsCache) return _fontsCache;
 
   const [regularData, boldData] = await Promise.all([
-    fetch(new URL("./fonts/Inter-Regular.woff", import.meta.url)).then((r) =>
-      r.arrayBuffer()
-    ),
-    fetch(new URL("./fonts/Inter-Bold.woff", import.meta.url)).then((r) =>
-      r.arrayBuffer()
-    ),
+    readFontBuffer("./fonts/Inter-Regular.woff"),
+    readFontBuffer("./fonts/Inter-Bold.woff"),
   ]);
 
   _fontsCache = [
