@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { loadOgFonts } from "@/lib/og-fonts";
 import { getPlatformById } from "@/lib/platforms";
 import { parseComparisonSlug } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
@@ -33,6 +34,8 @@ export default async function OgImage({ params }: Props) {
   const bName = b?.name ?? parsed?.b ?? "Plateforme B";
   const aScore = a?.scoring.global ?? null;
   const bScore = b?.scoring.global ?? null;
+
+  const fonts = await loadOgFonts();
 
   return new ImageResponse(
     (
@@ -212,6 +215,6 @@ export default async function OgImage({ params }: Props) {
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }
