@@ -37,7 +37,6 @@ export default async function OpenGraphImage() {
           backgroundImage:
             "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
-          fontFamily: "sans-serif",
           position: "relative",
         }}
       >

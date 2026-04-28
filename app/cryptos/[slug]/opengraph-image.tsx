@@ -46,7 +46,6 @@ export default async function OgImage({ params }: Props) {
             ? "radial-gradient(ellipse at 80% 20%, rgba(245, 158, 11, 0.25) 0%, transparent 60%)"
             : "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
           color: "white",
-          fontFamily: "sans-serif",
         }}
       >
         {/* Header */}
@@ -131,7 +130,6 @@ export default async function OgImage({ params }: Props) {
                 lineHeight: 1,
                 display: "flex",
                 color: isGem ? "#fbbf24" : "#22d3ee",
-                fontFamily: "monospace",
               }}
             >
               {symbol}
