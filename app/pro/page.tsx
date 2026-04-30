@@ -40,9 +40,12 @@ import { BRAND } from "@/lib/brand";
 /* -------------------------------------------------------------------------- */
 // Hoist au top : ces constantes sont utilisées dans `metadata` ET dans
 // `buildTiers()`. Plus simple de les déclarer une seule fois ici.
-const META_EARLYBIRD_PRICE = process.env.NEXT_PUBLIC_PRO_EARLYBIRD_PRICE ?? "29 €";
-const META_MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "3 €";
-const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "29 €";
+// Prix par défaut alignés sur la décision business 30/04/2026 :
+// 2,99 €/mois et 28,99 €/an (effet seuil psychologique x,99 plus convertissant
+// que 3,00 €/29,00 €). Les env vars Vercel overrident ces défauts si présentes.
+const META_EARLYBIRD_PRICE = process.env.NEXT_PUBLIC_PRO_EARLYBIRD_PRICE ?? "28,99 €";
+const META_MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
+const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "28,99 €";
 
 /**
  * /pro — landing page Cryptoreflex Soutien.
@@ -278,7 +281,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         "Le plan Mensuel avec ~20 % d'économie. Le moyen le plus simple de soutenir un projet solo et indépendant.",
       features: [
         "Tout le plan Soutien Mensuel",
-        "Économie ~7 € / an (vs Mensuel × 12)",
+        "Économie ~6,89 € / an (vs 2,99 € × 12 = 35,88 €)",
         "Accès anticipé étendu (2 semaines avant les autres)",
         "Tu permets au projet de tenir 12 mois supplémentaires",
         "Annulation 1 clic, garantie 14 j remboursé intégral",
@@ -443,7 +446,7 @@ const FAQS = [
   },
   {
     q: "Quelle est la différence entre Mensuel et Annuel ?",
-    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 20 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12). Tu paies en une fois, tu n'y penses plus pendant 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
+    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 19 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12 = 35,88 €). Tu paies en une fois, tu n'y penses plus pendant 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
   },
   {
     q: "Quels moyens de paiement sont acceptés ?",
