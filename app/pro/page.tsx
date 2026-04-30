@@ -601,7 +601,7 @@ function buildHowToSchema(): JsonLd {
     steps: [
       {
         name: "Choisir son plan",
-        text: `Compare les plans Mensuel (${META_MONTHLY_PRICE}/mois) et Annuel (${META_ANNUAL_PRICE}/an, économie 33 %) sur la page /pro. Sélectionne celui qui correspond à ton usage.`,
+        text: `Compare les plans Mensuel (${META_MONTHLY_PRICE}/mois) et Annuel (${META_ANNUAL_PRICE}/an, économie 19 %) sur la page /pro. Sélectionne celui qui correspond à ton usage.`,
         url: "/pro#plans",
       },
       {
@@ -726,7 +726,7 @@ export default function ProPage() {
                 <strong className="text-primary text-base font-mono tabular-nums">
                   {ANNUAL_PRICE}/an
                 </strong>{" "}
-                (économie ~33 %)
+                (économie ~19 %)
               </p>
             )}
 
