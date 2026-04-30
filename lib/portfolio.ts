@@ -8,14 +8,30 @@
  *
  * Persistance : `localStorage["cr:portfolio:v1"] = JSON.stringify(Holding[])`.
  * - Une seule version (v1) — bumper le suffixe si on change le format.
- * - Limite stricte à 30 entrées (anti-overflow localStorage : ~1KB / holding).
  *
- * Le user n'a pas de compte, donc pas de auth. Tout est local. Si le user
- * vide son cache ou change de navigateur, ses positions sont perdues — c'est
- * documenté côté UI.
+ * Limites :
+ *  - Free (défaut) : FREE_LIMITS.portfolio = 10 positions
+ *  - Pro          : PRO_LIMITS.portfolio = 500 positions
+ *
+ * Audit cohérence 30/04/2026 : avant cette refonte, MAX_HOLDINGS = 30 était
+ * hardcodé pour TOUS les utilisateurs (Free comme Pro), rendant la promesse
+ * "portfolio illimité" du plan /pro mensongère. Maintenant les fonctions
+ * `addHolding()` / etc. acceptent un paramètre `maxHoldings` que le composant
+ * appelant lit depuis /api/me selon le plan de l'utilisateur. La constante
+ * MAX_HOLDINGS est gardée comme fallback (pour code legacy ou SSR sans plan).
  */
 
-export const MAX_HOLDINGS = 30;
+import { FREE_LIMITS, PRO_LIMITS } from "@/lib/limits";
+
+/**
+ * Limite par défaut (Free) — exportée pour rétrocompatibilité avec code legacy.
+ * Les nouveaux callers doivent passer leur propre `maxHoldings` selon le plan
+ * lu via /api/me.
+ */
+export const MAX_HOLDINGS = FREE_LIMITS.portfolio;
+
+/** Plafond de sécurité absolu (anti-overflow localStorage). */
+const ABSOLUTE_MAX = PRO_LIMITS.portfolio;
 
 /** Clé localStorage. Le suffixe `:v1` permet de migrer si le format change. */
 const STORAGE_KEY = "cr:portfolio:v1";
@@ -103,8 +119,11 @@ function readRaw(): Holding[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    // Filtre défensif : on jette les entrées corrompues et on plafonne à MAX.
-    return parsed.filter(isHolding).slice(0, MAX_HOLDINGS);
+    // Filtre défensif : on jette les entrées corrompues et on plafonne à
+    // ABSOLUTE_MAX (Pro). Si l'utilisateur a downgradé Pro → Free, ses
+    // anciennes positions au-delà de la limite Free restent lisibles
+    // (read-only) — il devra en supprimer pour pouvoir en ajouter une nouvelle.
+    return parsed.filter(isHolding).slice(0, ABSOLUTE_MAX);
   } catch {
     return [];
   }
@@ -137,11 +156,20 @@ export function getHoldings(): Holding[] {
  *   - quantity > 0
  *   - avgBuyPriceEur >= 0
  *   - cryptoId / symbol / name non-vides
- *   - max MAX_HOLDINGS positions au total
+ *   - nombre de positions actuelles < `maxHoldings`
  *
+ * @param input Données de la position
+ * @param maxHoldings Limite à appliquer (défaut FREE_LIMITS.portfolio = 10).
+ *                   Le caller doit passer la limite récupérée via /api/me
+ *                   selon le plan de l'utilisateur. Si non fourni, on
+ *                   applique la limite Free par sécurité (jamais Pro par
+ *                   défaut — sinon le gating serait contournable).
  * @returns Le `Holding` créé, ou `null` si validation/limite KO.
  */
-export function addHolding(input: HoldingInput): Holding | null {
+export function addHolding(
+  input: HoldingInput,
+  maxHoldings: number = MAX_HOLDINGS
+): Holding | null {
   if (isServer()) return null;
   if (!input || typeof input !== "object") return null;
 
@@ -155,8 +183,12 @@ export function addHolding(input: HoldingInput): Holding | null {
   if (!isFiniteNumber(quantity) || quantity <= 0) return null;
   if (!isFiniteNumber(avgBuyPriceEur) || avgBuyPriceEur < 0) return null;
 
+  // Borne supérieure absolue (anti-abus) : même un user "Pro" ne peut pas
+  // dépasser ABSOLUTE_MAX (500). Si maxHoldings dépasse, on clamp.
+  const effectiveMax = Math.min(Math.max(0, maxHoldings | 0), ABSOLUTE_MAX);
+
   const current = readRaw();
-  if (current.length >= MAX_HOLDINGS) return null;
+  if (current.length >= effectiveMax) return null;
 
   const holding: Holding = {
     id: genId(),

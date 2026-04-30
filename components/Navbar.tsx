@@ -113,8 +113,8 @@ const MOBILE_EXTRA = [
   { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
   { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
   { href: "/#cat-apprendre", label: "Top 10 cryptos", desc: "Bitcoin, Ethereum, Solana…" },
-  { href: "/watchlist", label: "Ma watchlist", desc: "Tes cryptos favorites (max 10)" },
-  { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi de tes positions (max 30)" },
+  { href: "/watchlist", label: "Ma watchlist", desc: "Tes cryptos favorites (10 en Free, illimité en Soutien)" },
+  { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi de tes positions (10 en Free, illimité en Soutien)" },
   { href: "/a-propos", label: "À propos", desc: "Qui est derrière Cryptoreflex" },
 ];
 

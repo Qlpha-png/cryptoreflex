@@ -6,7 +6,16 @@
  *
  * Persistance : `localStorage["cr:watchlist:v1"] = JSON.stringify(string[])`.
  * - Une seule version (v1) — bumper le suffixe si on change le format.
- * - Limite stricte à 10 entrées (UX volontaire — au-delà c'est du tracking).
+ *
+ * Limites :
+ *  - Free (défaut) : FREE_LIMITS.watchlist = 10 cryptos
+ *  - Pro          : PRO_LIMITS.watchlist = 200 cryptos
+ *
+ * Audit cohérence 30/04/2026 : avant cette refonte, MAX_WATCHLIST = 10 était
+ * hardcodé pour TOUS les utilisateurs, rendant la promesse "watchlist
+ * illimitée" du plan /pro mensongère. Maintenant `addToWatchlist()` accepte
+ * un paramètre `maxWatchlist` que le composant WatchlistButton lit depuis
+ * /api/me selon le plan de l'utilisateur.
  *
  * Sync cross-component : un évènement custom `watchlist:changed` est dispatché
  * sur `window` après chaque écriture. Les composants qui ont besoin d'être
@@ -14,7 +23,12 @@
  * cet évènement plutôt que de poller le storage.
  */
 
-export const MAX_WATCHLIST = 10;
+import { FREE_LIMITS, PRO_LIMITS } from "@/lib/limits";
+
+export const MAX_WATCHLIST = FREE_LIMITS.watchlist;
+
+/** Plafond absolu (Pro). Anti-abus si un user édite son storage à la main. */
+const ABSOLUTE_MAX = PRO_LIMITS.watchlist;
 
 /** Clé localStorage. Le suffixe `:v1` permet de migrer si le format change. */
 const STORAGE_KEY = "cr:watchlist:v1";
@@ -43,7 +57,7 @@ function readRaw(): string[] {
     // a édité son storage à la main ou si une vieille version stockait autre chose.
     const cleaned = parsed
       .filter((x): x is string => typeof x === "string" && x.length > 0)
-      .slice(0, MAX_WATCHLIST);
+      .slice(0, ABSOLUTE_MAX);
     return Array.from(new Set(cleaned));
   } catch {
     return [];
@@ -72,13 +86,22 @@ export function getWatchlist(): string[] {
 
 /**
  * Ajoute un ID à la watchlist.
+ * @param id ID CoinGecko à ajouter
+ * @param maxWatchlist Limite à appliquer (défaut Free = 10). Le composant
+ *                     WatchlistButton lit cette limite via /api/me selon le
+ *                     plan de l'utilisateur. Si non fourni : limite Free
+ *                     par sécurité (jamais Pro par défaut).
  * @returns `true` si ajouté, `false` si déjà présent ou limite atteinte.
  */
-export function addToWatchlist(id: string): boolean {
+export function addToWatchlist(
+  id: string,
+  maxWatchlist: number = MAX_WATCHLIST
+): boolean {
   if (isServer() || !id) return false;
+  const effectiveMax = Math.min(Math.max(0, maxWatchlist | 0), ABSOLUTE_MAX);
   const current = readRaw();
   if (current.includes(id)) return false;
-  if (current.length >= MAX_WATCHLIST) return false;
+  if (current.length >= effectiveMax) return false;
   writeRaw([...current, id]);
   return true;
 }

@@ -79,7 +79,18 @@ export interface CreateAlertError {
 /*  Constantes                                                                */
 /* -------------------------------------------------------------------------- */
 
-export const MAX_ALERTS_PER_EMAIL = 5;
+/**
+ * Limite par défaut Free.
+ *
+ * Audit cohérence 30/04/2026 : avant cette refonte la valeur était hardcodée
+ * à 5 pour TOUS les utilisateurs (Free comme Pro), rendant la promesse
+ * "alertes illimitées" du plan /pro mensongère. Maintenant `createAlert()`
+ * accepte un paramètre `maxAlerts` optionnel, et la route /api/alerts/create
+ * lit le plan via Supabase pour passer la bonne limite (Free 3, Pro 100).
+ *
+ * On garde MAX_ALERTS_PER_EMAIL exporté à 3 pour rétrocompat (Free strict).
+ */
+export const MAX_ALERTS_PER_EMAIL = 3;
 export const TRIGGER_THROTTLE_MS = 24 * 60 * 60 * 1000; // 24h
 const THRESHOLD_MIN = 0;
 const THRESHOLD_MAX = 1e12;
@@ -206,8 +217,17 @@ export async function verifyUnsubscribeToken(email: string, token: string): Prom
 /*  CRUD                                                                      */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Crée une alerte de prix.
+ *
+ * @param raw Données de l'alerte (email, cryptoId, condition, threshold, currency)
+ * @param maxAlerts Limite à appliquer (défaut MAX_ALERTS_PER_EMAIL = 3 Free).
+ *                  La route /api/alerts/create lit le plan de l'utilisateur
+ *                  via Supabase et passe 100 si Pro, 3 sinon.
+ */
 export async function createAlert(
   raw: CreateAlertInput,
+  maxAlerts: number = MAX_ALERTS_PER_EMAIL,
 ): Promise<CreateAlertResult | CreateAlertError> {
   // ---- Validation ----
   const email = typeof raw.email === "string" ? raw.email.trim().toLowerCase() : "";
@@ -236,13 +256,17 @@ export async function createAlert(
     return { ok: false, error: "Devise invalide (eur/usd).", field: "currency" };
   }
 
-  // ---- Anti-abus : max N alertes / email ----
+  // ---- Anti-abus : max N alertes / email (selon plan Free/Pro) ----
   const existing = await getAlertsByEmail(email);
   const activeCount = existing.filter((a) => a.status === "active").length;
-  if (activeCount >= MAX_ALERTS_PER_EMAIL) {
+  if (activeCount >= maxAlerts) {
+    const upgradeHint =
+      maxAlerts <= MAX_ALERTS_PER_EMAIL
+        ? " Passe en plan Soutien sur /pro pour des alertes illimitées."
+        : "";
     return {
       ok: false,
-      error: `Tu as déjà ${MAX_ALERTS_PER_EMAIL} alertes actives — supprime-en une avant d'en créer une nouvelle.`,
+      error: `Tu as déjà ${maxAlerts} alertes actives — supprime-en une avant d'en créer une nouvelle.${upgradeHint}`,
       field: "email",
     };
   }

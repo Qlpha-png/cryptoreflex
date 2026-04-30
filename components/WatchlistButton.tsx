@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import {
-  MAX_WATCHLIST,
   WATCHLIST_EVENT,
   addToWatchlist,
   isInWatchlist,
   removeFromWatchlist,
 } from "@/lib/watchlist";
+import { useUserPlan } from "@/lib/use-user-plan";
 
 interface Props {
   cryptoId: string;
@@ -50,6 +50,13 @@ export default function WatchlistButton({
   const [pulse, setPulse] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  // Récupère la limite watchlist selon le plan (Free 10, Pro 200).
+  // Si /api/me n'a pas encore répondu, `loading=true` → on bloque l'ajout
+  // (l'utilisateur clique 50ms après mount, on évite d'appliquer une mauvaise
+  // limite par défaut).
+  const { limits, isPro, loading: planLoading } = useUserPlan();
+  const maxWatchlist = limits.watchlist;
+
   // Sync initiale + abonnement aux events cross-component.
   useEffect(() => {
     setActive(isInWatchlist(cryptoId));
@@ -84,7 +91,11 @@ export default function WatchlistButton({
         setActive(false);
         showFeedback(`${cryptoName} retiré de la watchlist`);
       } else {
-        const ok = addToWatchlist(cryptoId);
+        if (planLoading) {
+          showFeedback("Chargement…");
+          return;
+        }
+        const ok = addToWatchlist(cryptoId, maxWatchlist);
         if (ok) {
           setActive(true);
           setPulse(true);
@@ -92,11 +103,15 @@ export default function WatchlistButton({
           setTimeout(() => setPulse(false), 420);
           showFeedback(`${cryptoName} ajouté à la watchlist`);
         } else {
-          showFeedback(`Watchlist pleine (max ${MAX_WATCHLIST})`);
+          // Distinction Free vs Pro pour le hint d'upgrade.
+          const upgradeHint = isPro
+            ? ""
+            : " — passe Soutien sur /pro pour étendre";
+          showFeedback(`Watchlist pleine (max ${maxWatchlist})${upgradeHint}`);
         }
       }
     },
-    [active, cryptoId, cryptoName, showFeedback]
+    [active, cryptoId, cryptoName, showFeedback, maxWatchlist, isPro, planLoading]
   );
 
   const sizeBox = size === "md" ? "h-9 w-9" : "h-7 w-7";

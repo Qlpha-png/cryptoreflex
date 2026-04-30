@@ -9,7 +9,8 @@ import {
 } from "react";
 import { Plus, Search, X, Check } from "lucide-react";
 import { ALL_CRYPTOS, type CryptoMeta } from "@/lib/programmatic";
-import { addHolding, MAX_HOLDINGS, type Holding } from "@/lib/portfolio";
+import { addHolding, type Holding } from "@/lib/portfolio";
+import { useUserPlan } from "@/lib/use-user-plan";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface AddHoldingDialogProps {
@@ -62,7 +63,11 @@ export default function AddHoldingDialog({
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const quantityRef = useRef<HTMLInputElement>(null);
 
-  const isFull = currentCount >= MAX_HOLDINGS;
+  // Limite portfolio selon plan (Free 10, Pro 500). Si /api/me en cours,
+  // on applique Free par sécurité (jamais Pro par défaut sans confirmation).
+  const { limits, isPro } = useUserPlan();
+  const maxHoldings = limits.portfolio;
+  const isFull = currentCount >= maxHoldings;
 
   /* -------- Reset quand le dialog s'ouvre/ferme ------------------------- */
   useEffect(() => {
@@ -150,25 +155,31 @@ export default function AddHoldingDialog({
       }
 
       setSubmitting(true);
-      const created = addHolding({
-        cryptoId: selected.coingeckoId,
-        symbol: selected.symbol,
-        name: selected.name,
-        quantity: q,
-        avgBuyPriceEur: p,
-      });
+      const created = addHolding(
+        {
+          cryptoId: selected.coingeckoId,
+          symbol: selected.symbol,
+          name: selected.name,
+          quantity: q,
+          avgBuyPriceEur: p,
+        },
+        maxHoldings
+      );
       setSubmitting(false);
 
       if (!created) {
+        const upgradeHint = isPro
+          ? ""
+          : " — passe Soutien sur /pro pour étendre la limite.";
         setError(
-          `Impossible d'ajouter (limite ${MAX_HOLDINGS} positions atteinte ?).`
+          `Impossible d'ajouter (limite ${maxHoldings} positions atteinte).${upgradeHint}`
         );
         return;
       }
       onAdded?.(created);
       onClose();
     },
-    [submitting, selected, quantity, price, onAdded, onClose]
+    [submitting, selected, quantity, price, onAdded, onClose, maxHoldings, isPro]
   );
 
   /* -------- Keyboard global (focus trap + escape + flèches combobox) --- */

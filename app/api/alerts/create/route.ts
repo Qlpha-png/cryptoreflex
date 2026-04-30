@@ -19,6 +19,9 @@ import { createAlert } from "@/lib/alerts";
 import { getKv } from "@/lib/kv";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { getLimits } from "@/lib/limits";
+import type { Plan } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -100,7 +103,45 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     threshold = NaN;
   }
 
-  const result = await createAlert({ email, cryptoId, condition, threshold, currency });
+  // P0 GATING SERVEUR (audit cohérence 30/04/2026) — résolution Free vs Pro :
+  //
+  // Lookup du plan de l'utilisateur depuis Supabase via son email.
+  // Si la table `users` contient une ligne avec `email = X` ET `plan = "pro_*"`
+  // ET `plan_expires_at > now()`, on applique la limite Pro (100 alertes).
+  // Sinon → limite Free (3 alertes).
+  //
+  // Pourquoi cette résolution est sûre :
+  //  - L'email est validé par le createAlert ci-dessous (regex strict)
+  //  - Le plan est en DB (pas en client) — l'utilisateur ne peut pas
+  //    forger un plan Pro depuis le navigateur
+  //  - Le webhook Stripe écrit `plan_expires_at` après chaque paiement, donc
+  //    un user qui annule passe automatiquement en Free à expiration
+  let alertsLimit = getLimits("free").alerts;
+  if (email) {
+    const supabase = createSupabaseServiceRoleClient();
+    if (supabase) {
+      const { data: userRow } = await supabase
+        .from("users")
+        .select("plan, plan_expires_at")
+        .ilike("email", email)
+        .maybeSingle();
+      if (userRow?.plan) {
+        const planValue = userRow.plan as Plan;
+        const expiresAt = userRow.plan_expires_at
+          ? new Date(userRow.plan_expires_at).getTime()
+          : 0;
+        const isExpired = expiresAt > 0 && expiresAt < Date.now();
+        if (!isExpired) {
+          alertsLimit = getLimits(planValue).alerts;
+        }
+      }
+    }
+  }
+
+  const result = await createAlert(
+    { email, cryptoId, condition, threshold, currency },
+    alertsLimit
+  );
   if (!result.ok) {
     return NextResponse.json(result, { status: 400 });
   }
