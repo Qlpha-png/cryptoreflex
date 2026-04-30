@@ -102,7 +102,7 @@ const TIERS: PricingTier[] = [
     priceUnit: "/ article",
     availability: "Disponible dès aujourd'hui",
     description:
-      "Article 1 500 – 2 500 mots écrit par notre équipe selon ton brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
+      "Article 1 500 – 2 500 mots rédigé par le fondateur selon ton brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
     features: [
       "1 500 – 2 500 mots optimisés SEO",
       "Brief co-construit (1 visio 30 min)",
@@ -183,18 +183,18 @@ const PROCESS_STEPS = [
   },
   {
     n: 2,
-    title: "Devis sous 48 h",
-    text: "Réponse manuelle avec devis détaillé, validation MiCA et créneau de publication confirmé.",
+    title: "Devis sous 5 jours ouvrés",
+    text: "Réponse personnelle de Kevin (fondateur solo) avec devis détaillé, validation MiCA et créneau de publication confirmé.",
   },
   {
     n: 3,
     title: "Brief & rédaction",
-    text: "Visio 30 min de cadrage. Rédaction par notre équipe sous 5 jours ouvrés. Tu valides 1 round de modifs.",
+    text: "Visio 30 min de cadrage. Rédaction par le fondateur sous 7 à 10 jours ouvrés selon planning. Tu valides 1 round de modifications.",
   },
   {
     n: 4,
-    title: "Publication sous 7 j",
-    text: "Mise en ligne sur Cryptoreflex + push newsletter. Reporting envoyé à J+30 (clics, conversions, trafic).",
+    title: "Publication sous 14 j max",
+    text: "Mise en ligne sur Cryptoreflex + mention dans la newsletter quotidienne. Reporting envoyé à J+30 (clics, conversions, trafic).",
   },
 ];
 
@@ -292,21 +292,28 @@ export default function SponsoringPage() {
               Sponsoring B2B — PSAN & fintech crypto FR
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
-              Touche{" "}
-              <span className="gradient-text">6 000+ investisseurs FR</span>{" "}
-              qualifiés
+              Touche une{" "}
+              <span className="gradient-text">audience FR en construction</span>{" "}
+              — sans gonflage de chiffres
             </h1>
+            {/* Refonte 30/04/2026 — fix audit cohérence/légal :
+                avant Hero "Touche 6 000+ investisseurs FR qualifiés" alors que
+                les 6 000 sont une PROJECTION M6, audience réelle non encore
+                atteinte. Risque DGCCRF L121-2 (pratique trompeuse B2B).
+                Maintenant : on assume l'audience en construction et on renvoie
+                vers /impact pour les chiffres réels actualisés. */}
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Site lancé en avril 2026 — audience FR en construction (projection
-              M6 = 6 000 visites/mois, snapshot public sur{" "}
+              Site lancé en avril 2026, audience FR encore modeste mais en
+              construction (snapshot public sur{" "}
               <Link
                 href="/impact"
                 className="text-primary-soft underline hover:text-primary"
               >
                 /impact
               </Link>
-              ). 3 formats sponsorisés tarifés, validation MiCA obligatoire, mention
-              « Sponsorisé » conforme art. 222-15 AMF.
+              , projection M6 = ~6 000 visites/mois). 3 formats tarifés, validation
+              MiCA obligatoire, mention « Sponsorisé » conforme art. 222-15 AMF.
+              On préfère sous-promettre et tenir.
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
@@ -412,7 +419,7 @@ export default function SponsoringPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Process en 4 étapes — publication sous 7 jours
+              Process en 4 étapes — publication sous 14 jours max
             </h2>
           </div>
           <ol
@@ -445,8 +452,8 @@ export default function SponsoringPage() {
             Devenir partenaire
           </h2>
           <p className="mt-2 text-fg/70">
-            Réponse sous 48 h ouvrées avec devis et planning. Validation MiCA
-            faite avant signature.
+            Réponse personnelle sous 5 jours ouvrés avec devis et planning.
+            Validation MiCA faite avant signature.
           </p>
         </div>
         <SponsoringForm />

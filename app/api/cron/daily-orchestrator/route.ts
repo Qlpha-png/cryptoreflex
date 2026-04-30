@@ -49,6 +49,11 @@ const PER_JOB_TIMEOUT_MS = 12_000;
  */
 const SUB_CRONS = [
   { name: "evaluate-alerts", path: "/api/cron/evaluate-alerts", critical: true },
+  // Fix audit backend 30/04/2026 — cron email-series-fiscalite n'était JAMAIS
+  // déclenché en prod (manquait dans vercel.json ET ici). Conséquence : les
+  // leads PDF recevaient l'email J0 mais jamais les J2/J5/J9/J14. Ajout en
+  // critical:false (échec ne bloque pas le reste) + timeout 12s par défaut.
+  { name: "email-series-fiscalite", path: "/api/cron/email-series-fiscalite", critical: false },
   { name: "aggregate-news", path: "/api/cron/aggregate-news", critical: false },
   { name: "generate-ta", path: "/api/cron/generate-ta", critical: false },
   { name: "refresh-events", path: "/api/cron/refresh-events", critical: false },

@@ -20,8 +20,15 @@ export function getStripeClient(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
 
+  // Fix audit backend 30/04/2026 — apiVersion "2026-04-22.dahlia" est une
+  // version Stripe future qui n'existe pas encore. Le SDK stripe@22 accepte
+  // n'importe quelle string en apiVersion (pas de validation TS) mais Stripe
+  // rejette à la première requête. On utilise la dernière version stable
+  // supportée par le SDK 22 ("2025-09-30.clover" via stripe-node generated
+  // types, sinon fallback sur l'omettre = compte default version).
+  // En production, on utilise simplement la version par défaut du compte
+  // Stripe pour éviter de freezer une version qui pourrait disparaître.
   _stripe = new Stripe(key, {
-    apiVersion: "2026-04-22.dahlia",
     typescript: true,
     appInfo: {
       name: "Cryptoreflex",

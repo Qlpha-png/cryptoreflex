@@ -52,6 +52,11 @@ export const revalidate = 60;
  * canonique pour tous les crawlers.
  */
 export const metadata: Metadata = {
+  // Fix audit SEO 30/04/2026 — avant : pas de `title` exporté ici → la home
+  // utilisait le `default` du root layout (« Cryptoreflex — Comparatifs,
+  // guides et outils crypto », 51 chars, aucun keyword "France" ni "MiCA").
+  // Maintenant : title explicite ciblé sur la requête principale.
+  title: "Comparatif plateformes crypto France 2026 — Cryptoreflex",
   description:
     "Comparateur crypto FR : Coinbase, Binance, Bitpanda, Kraken… Frais, sécurité, MiCA. Guides débutants, calculateurs gratuits, fiscalité française.",
   alternates: { canonical: BRAND.url },

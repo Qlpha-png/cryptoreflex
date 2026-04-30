@@ -25,10 +25,12 @@ export default function MethodologiePage() {
       </p>
 
       <p className="mt-8 text-fg/85 leading-relaxed">
-        Pour permettre à nos lecteurs de comparer objectivement les plateformes crypto, nous avons
-        construit une méthodologie de scoring publique, identique pour toutes les plateformes
-        (qu'elles soient affiliées ou non avec {BRAND.name}). Elle est inspirée des pratiques de
-        comparateurs indépendants type UFC-Que Choisir, adaptée au marché crypto français.
+        Pour permettre aux lecteurs de comparer objectivement les plateformes crypto, le fondateur
+        Kevin Voisin a construit une méthodologie de scoring publique, identique pour toutes les
+        plateformes (qu&apos;elles soient affiliées ou non avec {BRAND.name}). Elle est inspirée
+        des pratiques de comparateurs indépendants type UFC-Que Choisir, adaptée au marché crypto
+        français. Le projet est solo et indépendant — la méthodologie est documentée pour qu&apos;un
+        tiers puisse vérifier ou contester chaque note.
       </p>
 
       <h2 className="mt-12 text-2xl font-bold text-fg">Les 6 critères et leurs pondérations</h2>
@@ -50,16 +52,26 @@ export default function MethodologiePage() {
         Calcul du score global
       </h2>
       <p className="text-fg/85 leading-relaxed">
-        Chaque critère est noté de 0 à 5 par notre équipe sur la base de tests réels et de données
-        publiques vérifiables. Le score global est la moyenne pondérée des 6 critères, sur une
-        échelle 0–5.
+        Chaque critère est noté de 0 à 5 par le fondateur sur la base de tests personnels (ouverture
+        de compte, achat, retrait) et de sources publiques vérifiables (registre PSAN/CASP de
+        l&apos;AMF, conditions tarifaires officielles, audits de sécurité publiés). Le score global
+        est la moyenne pondérée des 6 critères, sur une échelle 0–5.
       </p>
       <p className="text-fg/85 leading-relaxed">
-        Exemple Bitpanda (avril 2026) :
-        Frais 3.0/5 (×20%) + Sécurité 4.7/5 (×25%) + MiCA 4.9/5 (×20%) + UX 4.6/5 (×15%) + Support 4.2/5 (×10%) + Catalogue 5.0/5 (×10%) = <strong>4.4/5</strong>.
+        Exemple de calcul (modèle générique) : si une plateforme obtient
+        Frais 3.0/5 (×20%) + Sécurité 4.7/5 (×25%) + MiCA 4.9/5 (×20%) + UX 4.6/5 (×15%) + Support 4.2/5 (×10%) + Catalogue 5.0/5 (×10%), son score consolidé est <strong>4.4/5</strong>.
         Le calcul est public, déterministe et recalculé automatiquement
         (cf. <code className="text-primary-soft">scripts/compute-platform-scores.mjs</code>) à chaque mise à jour
-        d&apos;une sous-note pour qu&apos;aucun score ne dérive jamais de la formule.
+        d&apos;une sous-note. Aucun score ne dérive jamais de la formule.
+      </p>
+      <p className="text-sm text-muted leading-relaxed">
+        Note de transparence (avril 2026) : le site étant récent, certaines sous-notes restent en
+        cours de validation. Chaque fiche plateforme indique la date de dernière vérification et
+        la source de chaque sous-note. Si tu repères une note injustifiée, écris à{" "}
+        <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
+          {BRAND.email}
+        </a>{" "}
+        — correction sous 7 jours.
       </p>
 
       <h3 className="mt-8 text-xl font-bold text-fg">Comment on calcule le score Catalogue ?</h3>

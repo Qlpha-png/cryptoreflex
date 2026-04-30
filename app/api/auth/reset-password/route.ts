@@ -69,13 +69,13 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
 
   // STEP 1 : verifie si user existe (sinon on repond pareil mais on n'envoie rien)
-  const { data: usersData } = await admin.auth.admin.listUsers({
-    page: 1,
-    perPage: 1000,
-  });
-  const existingUser = usersData?.users.find(
-    (u) => u.email?.toLowerCase() === email
-  );
+  // P1 FIX (audit backend 30/04/2026) — N+1 sur chaque reset, voir login/route.ts.
+  const { data: publicUser } = await admin
+    .from("users")
+    .select("id, email")
+    .ilike("email", email)
+    .maybeSingle();
+  const existingUser = publicUser ? { email: publicUser.email } : null;
 
   // Reponse uniforme pour eviter user enumeration
   const uniformResponse = NextResponse.json({

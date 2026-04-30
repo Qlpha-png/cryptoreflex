@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Crown, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 /**
  * ProStickyMobileCTA — sticky bottom-sheet mobile only (sm:hidden).
@@ -78,7 +78,7 @@ export default function ProStickyMobileCTA({ enabled, monthlyPrice }: Props) {
   return (
     <div
       role="complementary"
-      aria-label="Passer Pro"
+      aria-label="Soutenir Cryptoreflex"
       className="pro-sticky-cta pro-sticky-cta-backdrop fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-elevated/85 border-t border-border px-4 pt-3"
     >
       <a
@@ -86,8 +86,8 @@ export default function ProStickyMobileCTA({ enabled, monthlyPrice }: Props) {
         className="btn-primary btn-primary-shine min-h-[52px] w-full text-base font-bold flex items-center justify-center gap-2 group"
         data-cta="sticky-mobile"
       >
-        <Crown className="h-4 w-4" aria-hidden="true" />
-        Passer Pro — dès {monthlyPrice}/mois
+        <Sparkles className="h-4 w-4" aria-hidden="true" />
+        Soutenir — dès {monthlyPrice}/mois
         <ArrowRight
           className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
           aria-hidden="true"

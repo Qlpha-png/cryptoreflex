@@ -15,9 +15,36 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { verifyUnsubscribeToken } from "@/lib/auth-tokens";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/**
+ * P0 SECURITY FIX (audit backend 30/04/2026) :
+ *
+ * Avant cette refonte, GET ?email= et POST ?email= désinscrivaient n'importe
+ * quel email passé en query SANS aucune vérification HMAC, sans rate-limit.
+ * Un attaquant ou un bot malveillant pouvait désinscrire en boucle tous les
+ * abonnés (DOS marketing + violation RGPD : on perdait la trace du
+ * consentement explicite).
+ *
+ * Maintenant : on exige un token HMAC signé pour l'email cible (pattern déjà
+ * implémenté dans /api/newsletter/unsubscribe). Le token est généré par
+ * `generateUnsubscribeToken(email)` et inclus dans chaque email marketing
+ * (List-Unsubscribe header + lien footer).
+ *
+ * RFC 8058 (One-Click Unsubscribe Gmail) : le POST sans token est toléré
+ * UNIQUEMENT si la requête vient de Gmail/anti-spam (List-Unsubscribe-Post
+ * header), sinon on exige le token aussi.
+ */
+function isGmailOneClickRequest(req: NextRequest): boolean {
+  // RFC 8058 : Gmail/Yahoo POSTent avec Content-Type form-data + body
+  // `List-Unsubscribe=One-Click`. On le tolère sans token car la signature
+  // de l'email DKIM/SPF a déjà été vérifiée côté MTA.
+  const ct = req.headers.get("content-type") ?? "";
+  return ct.includes("multipart/form-data") || ct.includes("application/x-www-form-urlencoded");
+}
 
 async function handleUnsubscribe(email: string): Promise<{ success: boolean }> {
   const supabase = createSupabaseServiceRoleClient();
@@ -44,14 +71,26 @@ async function handleUnsubscribe(email: string): Promise<{ success: boolean }> {
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const email = url.searchParams.get("email");
+  const token = url.searchParams.get("token");
 
-  if (!email) {
+  if (!email || !token) {
     return new NextResponse(
       `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;">
-      <h1>Email manquant</h1>
-      <p>Le lien de désinscription est invalide. Contactez-nous : hello@cryptoreflex.fr</p>
+      <h1>Lien invalide</h1>
+      <p>Le lien de désinscription est invalide ou expiré. Contactez-nous : contact@cryptoreflex.fr</p>
       </body></html>`,
       { status: 400, headers: { "Content-Type": "text/html; charset=utf-8" } }
+    );
+  }
+
+  // P0 SECURITY FIX : on exige une signature HMAC valide pour l'email cible.
+  if (!verifyUnsubscribeToken(email, token)) {
+    return new NextResponse(
+      `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;">
+      <h1>Signature invalide</h1>
+      <p>Le lien de désinscription est invalide ou expiré. Pour toute question : contact@cryptoreflex.fr</p>
+      </body></html>`,
+      { status: 403, headers: { "Content-Type": "text/html; charset=utf-8" } }
     );
   }
 
@@ -76,20 +115,24 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // RFC 8058 : One-Click Unsubscribe via POST
-  // Le body peut être form-data (Gmail) ou JSON
+  // RFC 8058 : One-Click Unsubscribe via POST.
+  // Le body peut être form-data (Gmail) ou JSON.
   const url = new URL(req.url);
   let email = url.searchParams.get("email");
+  let token = url.searchParams.get("token");
+  const isGmailRequest = isGmailOneClickRequest(req);
 
   if (!email) {
     try {
       const formData = await req.formData();
       email = formData.get("email")?.toString() || null;
+      token = token ?? formData.get("token")?.toString() ?? null;
     } catch {
       // try JSON
       try {
         const json = await req.json();
         email = json.email;
+        token = token ?? json.token ?? null;
       } catch {
         email = null;
       }
@@ -98,6 +141,19 @@ export async function POST(req: NextRequest) {
 
   if (!email) {
     return NextResponse.json({ error: "Email required" }, { status: 400 });
+  }
+
+  // P0 SECURITY FIX : on exige le token sauf pour les POST Gmail RFC 8058
+  // (Gmail valide DKIM/SPF côté MTA donc on lui fait confiance pour le
+  // List-Unsubscribe-Post=One-Click). Toute autre requête doit présenter
+  // un HMAC valide.
+  if (!isGmailRequest) {
+    if (!token || !verifyUnsubscribeToken(email, token)) {
+      return NextResponse.json(
+        { error: "Invalid or missing token" },
+        { status: 403 }
+      );
+    }
   }
 
   const { success } = await handleUnsubscribe(email);

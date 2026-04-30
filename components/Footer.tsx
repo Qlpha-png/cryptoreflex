@@ -106,12 +106,11 @@ const NAV_GROUPS: FooterGroup[] = [
   },
   {
     id: "footer-pro-heading",
-    title: "Pro & contact",
+    title: "Soutien & contact",
     links: [
-      { href: "/pro", label: "Cryptoreflex Pro" },
+      { href: "/pro", label: "Soutenir Cryptoreflex" },
       { href: "/ambassadeurs", label: "Programme ambassadeurs" },
-      { href: "/sponsoring", label: "Sponsoring articles" },
-      { href: "/partenariats", label: "Partenariats marques" },
+      { href: "/sponsoring", label: "Sponsoring B2B" },
       { href: "/contact", label: "Nous contacter" },
     ],
   },
@@ -174,10 +173,11 @@ export default function Footer() {
               guides pour débutants et outils gratuits — sans jargon.
             </p>
 
-            {/* Contact (uniformisé aria-labelledby) */}
-            <h2 id="footer-contact-heading" className="sr-only">
+            {/* Contact (uniformisé aria-labelledby) — H3 (audit a11y :
+                Footer ne doit pas concurrencer la hiérarchie H2 du contenu). */}
+            <h3 id="footer-contact-heading" className="sr-only">
               Contact Cryptoreflex
-            </h2>
+            </h3>
             <ul
               aria-labelledby="footer-contact-heading"
               className="flex items-center gap-3 mt-4 list-none p-0"
@@ -194,10 +194,14 @@ export default function Footer() {
               </li>
             </ul>
 
-            {/* Mention éditoriale E-E-A-T (Audit SEO P0) */}
-            <p className="mt-5 text-[11px] text-fg/55 leading-relaxed max-w-md">
-              Édité depuis la France par <span className="text-fg/75 font-medium">Cryptoreflex</span>.{" "}
-              Directeur de publication : Cryptoreflex Editorial.{" "}
+            {/* Mention éditoriale E-E-A-T — fix audit 30/04/2026 :
+                avant "Cryptoreflex Editorial" (entité fictive) + contraste 11px/55%
+                inférieur à 4.5:1 = WCAG AA fail. Maintenant : nom réel du
+                directeur de publication + opacité 70% pour contraste AA strict. */}
+            <p className="mt-5 text-[11px] text-fg/70 leading-relaxed max-w-md">
+              Édité depuis la France par{" "}
+              <span className="text-fg/90 font-medium">Kevin Voisin</span>{" "}
+              (Entreprise Individuelle). Directeur de publication : Kevin Voisin.{" "}
               Hébergé en UE (Vercel · Frankfurt).
             </p>
           </div>
@@ -209,9 +213,11 @@ export default function Footer() {
               aria-labelledby={group.id}
               className="lg:col-span-2"
             >
-              <h2 id={group.id} className="font-semibold mb-3 text-white/90 text-sm">
+              {/* H3 (Footer ne doit pas avoir 5 H2 qui noient le rotor SR
+                  par-dessus la hiérarchie de contenu — audit a11y 30/04/2026). */}
+              <h3 id={group.id} className="font-semibold mb-3 text-white/90 text-sm">
                 {group.title}
-              </h2>
+              </h3>
               <ul className="space-y-2 text-sm text-fg/75">
                 {group.links.map((link) => (
                   <li key={link.href}>
@@ -223,8 +229,13 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Trust ring final ligne avant copyright (Audit Visual) */}
-        <div className="mt-10 pt-4 border-t border-border/60 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-fg/55">
+        {/* Trust ring final — fix audit 30/04/2026 :
+            SUPPRIMÉ "SEPA · CIF ORIAS partenaires vérifiés" qui sous-entendait
+            une collaboration avec des Conseillers en Investissements Financiers
+            agréés AMF — RISQUE AMF (démarchage régulé non détenu).
+            Cryptoreflex n'a aucun partenariat CIF ORIAS et n'est pas autorisé
+            à le suggérer. Contraste passé à fg/70 pour WCAG AA. */}
+        <div className="mt-10 pt-4 border-t border-border/60 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-fg/70">
           <span className="inline-flex items-center gap-1">
             <Lock className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
             Hébergé en UE
@@ -235,15 +246,15 @@ export default function Footer() {
             HTTPS uniquement
           </span>
           <span aria-hidden="true">·</span>
-          <span>SEPA · CIF ORIAS partenaires vérifiés</span>
+          <span>RGPD · CNIL</span>
           <span aria-hidden="true">·</span>
           <span className="inline-flex items-center gap-1">
             <Sparkles className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
-            Mis à jour quotidiennement
+            Éditeur web indépendant
           </span>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-border/60 space-y-3 text-xs text-fg/65">
+        <div className="mt-6 pt-4 border-t border-border/60 space-y-3 text-xs text-fg/75">
           <div className="flex flex-col md:flex-row justify-between gap-3">
             <p>© {CURRENT_YEAR} {BRAND.name}. Tous droits réservés.</p>
             <p>Site indépendant non affilié à l&apos;AMF ni à un PSI.</p>

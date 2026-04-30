@@ -93,22 +93,22 @@ export async function POST(req: NextRequest) {
   }
 
   // Step 1 : trouver l'user par email
-  const { data: usersData, error: listError } = await admin.auth.admin.listUsers({
-    page: 1,
-    perPage: 1000,
-  });
+  // P1 FIX (audit backend 30/04/2026) — N+1 listUsers remplacé par query directe.
+  const { data: publicUser, error: listError } = await admin
+    .from("users")
+    .select("id, email")
+    .ilike("email", email)
+    .maybeSingle();
 
   if (listError) {
-    console.error("[admin/set-password] listUsers error:", listError.message);
+    console.error("[admin/set-password] users query error:", listError.message);
     return NextResponse.json(
       { error: "Erreur Supabase: " + listError.message },
       { status: 500 }
     );
   }
 
-  const user = usersData.users.find(
-    (u) => u.email?.toLowerCase() === email
-  );
+  const user = publicUser ? { id: publicUser.id, email: publicUser.email } : null;
 
   if (!user) {
     return NextResponse.json(

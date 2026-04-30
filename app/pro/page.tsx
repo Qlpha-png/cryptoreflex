@@ -12,7 +12,6 @@ import {
   Users,
   HelpCircle,
   Clock,
-  MessagesSquare,
   AlertTriangle,
   Wallet,
   BookOpen,
@@ -41,50 +40,49 @@ import { BRAND } from "@/lib/brand";
 /* -------------------------------------------------------------------------- */
 // Hoist au top : ces constantes sont utilisées dans `metadata` ET dans
 // `buildTiers()`. Plus simple de les déclarer une seule fois ici.
-const META_EARLYBIRD_PRICE = process.env.NEXT_PUBLIC_PRO_EARLYBIRD_PRICE ?? "49 €";
-const META_MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "9 €";
-const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "79 €";
+const META_EARLYBIRD_PRICE = process.env.NEXT_PUBLIC_PRO_EARLYBIRD_PRICE ?? "29 €";
+const META_MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "3 €";
+const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "29 €";
 
 /**
- * /pro — landing page Cryptoreflex Pro.
+ * /pro — landing page Cryptoreflex Soutien.
  *
- * Refonte 26/04/2026 — focus session « offer Pro » :
- *  - Calculateur fiscalité PRO (export PDF Cerfa 2086 + 3916-bis)
- *  - Portfolio tracker PRO (alertes prix illimitées)
- *  - Glossaire PRO (Q/A par expert)
- *  - Brief PRO hebdomadaire (alpha + on-chain)
- *  - Articles premium + analyses approfondies
- *  - Réponse fiscale personnalisée par email (48h)
+ * REFONTE COMPLÈTE 30/04/2026 — pivot honnête (user feedback : "j'ai pas
+ * d'argent donc pas de fausse promesse, on doit créer de la valeur mais
+ * qu'on peut faire").
  *
- * Refonte v2 (user feedback 26/04/2026 soir) :
- *  "Pas de Discord" + "Le site offre presque tout gratuit, et si les gens
- *   payent l'argent, ba ou ?"
- *  -> Suppression COMPLETE des mentions Discord (pas de serveur en place,
- *     promesse non-tenable juridiquement = risque consommateur).
- *  -> Restriction du plan Gratuit pour rendre Pro réellement différenciant :
- *      Portfolio 30 -> 10 positions
- *      Alertes 5 -> 3 par email
- *      Glossaire 200+ -> "100 essentiels" (le reste reste lisible mais pas
- *      téléchargeable / pas de Q/A)
- *  -> Renforcement Pro : "Réponse fiscale perso 48h" remplace "Discord"
- *      (livrable réel via support email Crisp existant) + "Brief PRO
- *      hebdomadaire" se distingue clairement de la newsletter quotidienne
- *      gratuite (alpha + on-chain insights = valeur premium claire).
+ * AVANT (risque DGCCRF L121-2 — pratique commerciale trompeuse) :
+ *  - "Réponse fiscale perso 48h par notre expert" → pas d'expert, juste Kevin
+ *    solo, SLA non tenable, statut CIF non détenu → risque amende DGCCRF
+ *    et signalement AMF (conseil financier sans agrément).
+ *  - "Brief PRO hebdomadaire alpha + on-chain insights" → aucun système
+ *    éditorial en place pour produire du contenu hebdomadaire premium.
+ *  - "1 audit portfolio écrit par email /an" → pas viable solo.
+ *  - "Statut Founding Member" / "badge identité dans newsletter" → newsletter
+ *    actuellement broadcast unique, pas de personnalisation.
+ *  - Roadmap V2 avec dates précises (Mai/Juin/Été 2026) → engagements
+ *    contractuels qu'on ne peut pas garantir tenir.
+ *  - "Pro Mensuel 9,99 €/mois" / "Pro Annuel 79 €/an" → tarif SaaS premium
+ *    qui suggère un produit étoffé alors qu'on n'a pas l'équipe pour livrer.
  *
- * Pricing :
- *  - Gratuit (current)
- *  - Pro Mensuel 9 €/mois
- *  - Pro Annuel 79 €/an (économie 33 % vs mensuel : 108 € → 79 €)
+ * APRÈS (modèle « soutien éditeur indépendant » à la Plausible/Buy-Me-a-Coffee) :
+ *  - On ne vend QUE des bénéfices techniques 100% automatisables (limites
+ *    relevées, fonctionnalités déjà codées) — zéro promesse humaine.
+ *  - Tarifs revus à la baisse pour matcher la valeur réelle (3 €/mois,
+ *    29 €/an) → positionnement « tu soutiens, on continue de coder ».
+ *  - Suppression des dates précises de roadmap → "idées explorées si
+ *    le projet trouve son public", pas de calendrier engageant.
+ *  - Garantie 14j remboursé conservée (art. L221-18 Code conso = obligatoire).
  *
- * Stripe arrive automne 2026. En attendant, CTA early-bird précommande
- * 49 €/an via Stripe Payment Link.
+ * Pricing post-refonte :
+ *  - Gratuit (inchangé, généreux par conviction)
+ *  - Soutien Mensuel 3 €/mois — annulable à tout moment
+ *  - Soutien Annuel 29 €/an — ~20% économie + bonus accès anticipé features
  *
- * Var d'env attendue : NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK
- *  - Si absente, fallback vers la waitlist newsletter.
- *
- * SEO :
- *  - Schema Product + Offer (3 plans) + ItemList des features + FAQPage + BreadcrumbList
+ * SEO conservé :
+ *  - Schema Product + Offer + FAQPage + BreadcrumbList
  *  - Metadata canonique + OG dédié
+ *  - Mais Schema reformulé pour refléter le nouveau modèle.
  */
 
 export const metadata: Metadata = {
@@ -93,20 +91,19 @@ export const metadata: Metadata = {
   //  - Description 150-155 char optimale, USP + prix + garantie
   //  - openGraph / twitter complets (Cards Summary Large Image)
   //  - robots avec max-image-preview / max-snippet (Google 2024+)
-  title: "Cryptoreflex Pro — Outils crypto premium FR à 9,99 €/mois",
-  description: `Pro à ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio illimité, alertes prix illimitées, glossaire 250+ termes, brief alpha hebdo + réponse fiscale 48h. Annulation 1 clic, 14 j remboursé. RGPD UE.`,
+  title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
+  description: `Soutiens un éditeur web indépendant français. ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio illimité, alertes illimitées, glossaire complet, accès anticipé aux nouvelles features. Annulation 1 clic, 14 j remboursé.`,
   alternates: { canonical: `${BRAND.url}/pro` },
   keywords: [
-    "abonnement crypto français",
-    "outil crypto premium",
-    "fiscalité crypto Cerfa 2086",
+    "soutenir éditeur crypto français",
+    "abonnement crypto indépendant",
     "portfolio crypto illimité",
     "alertes prix bitcoin",
-    "Cryptoreflex Pro",
+    "Cryptoreflex Soutien",
   ],
   openGraph: {
-    title: "Cryptoreflex Pro — l'outillage crypto premium pensé pour les Français",
-    description: `À partir de ${META_MONTHLY_PRICE}/mois. Portfolio illimité, alertes prix illimitées, brief alpha hebdo, réponse fiscale 48 h. Annulation 1 clic. Sans Discord, sans engagement.`,
+    title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
+    description: `À partir de ${META_MONTHLY_PRICE}/mois. Portfolio illimité, alertes illimitées, glossaire complet, accès anticipé. Annulation 1 clic, sans engagement.`,
     url: `${BRAND.url}/pro`,
     siteName: BRAND.name,
     locale: "fr_FR",
@@ -116,14 +113,14 @@ export const metadata: Metadata = {
         url: `${BRAND.url}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Cryptoreflex Pro — abonnement premium crypto FR",
+        alt: "Cryptoreflex Soutien — éditeur crypto indépendant FR",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cryptoreflex Pro — abonnement crypto premium FR",
-    description: `Portfolio + alertes illimités, brief alpha, réponse fiscale 48 h. ${META_MONTHLY_PRICE}/mois — annulation 1 clic.`,
+    title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
+    description: `Portfolio + alertes illimités, glossaire complet, accès anticipé. ${META_MONTHLY_PRICE}/mois — annulation 1 clic.`,
     images: [`${BRAND.url}/og-image.png`],
   },
   robots: {
@@ -210,60 +207,59 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       Icon: Sparkles,
       price: "0 €",
       priceUnit: "à vie",
-      description: "L'essentiel pour découvrir la crypto sans engagement.",
+      description:
+        "Tous les outils essentiels accessibles sans engagement et sans email demandé.",
       features: [
-        "Calculateur fiscalité standard",
+        "Tous les calculateurs (fiscalité, ROI, DCA, staking)",
         "Portfolio tracker (10 positions)",
         "3 alertes prix par email",
+        "Watchlist 10 cryptos",
         "Glossaire — 100 termes essentiels",
-        "Newsletter quotidienne",
-        "Comparateur MiCA complet",
+        "Newsletter quotidienne (opt-in)",
+        "Comparateur MiCA complet, méthodologie publique",
       ],
       excluded: [
         "Portfolio illimité (vs 10 positions Free)",
         "Alertes prix illimitées (vs 3 Free)",
-        "Watchlist 50 cryptos ou + (vs 10 Free)",
-        "Glossaire complet 250 termes (vs 100 Free)",
-        "Brief PRO hebdomadaire (alpha + on-chain)",
-        "Réponse fiscale perso par email (48 h)",
-        "Statut Pro visible (badge identité)",
+        "Watchlist illimitée (vs 10 Free)",
+        "Glossaire complet 250+ termes (vs 100 Free)",
+        "Export CSV illimité (portfolio, transactions, alertes)",
+        "Accès anticipé aux nouvelles features",
       ],
       ctaLabel: "Commencer gratuitement",
-      ctaHref: "/calculateur",
+      ctaHref: "/outils",
       availability: "Disponible aujourd'hui",
     },
     {
-      id: "pro-monthly",
-      name: "Pro Mensuel",
-      badge: paymentsEnabled ? "Le plus populaire" : "À venir",
-      Icon: Crown,
+      id: "soutien-monthly",
+      name: "Soutien Mensuel",
+      badge: paymentsEnabled ? "Flexible" : "À venir",
+      Icon: Sparkles,
       // Prix EUR + CTA conditionnels sur PAYMENTS_ENABLED + URL spécifique du plan.
       // Si l'utilisateur a configuré NEXT_PUBLIC_PRO_MONTHLY_STRIPE_LINK,
       // on pointe vers le checkout récurrent dédié. Sinon fallback vers early-bird.
       price: paymentsEnabled ? MONTHLY_PRICE : "Bientôt",
       priceUnit: paymentsEnabled ? "/ mois" : "tarif indicatif à venir",
       description:
-        "Pour les investisseurs sérieux qui veulent l'outillage complet sans engagement annuel.",
+        "Tu soutiens un éditeur web indépendant français et tu débloques les limites techniques du plan Gratuit.",
       features: [
         "Portfolio illimité (positions illimitées vs 10 en Free)",
         "Alertes prix illimitées (toutes cryptos, vs 3 en Free)",
-        "Watchlist 50 cryptos (vs 10 en Free)",
+        "Watchlist illimitée (vs 10 en Free)",
         "Glossaire complet — 250+ termes (vs 100 en Free)",
-        "Brief PRO hebdomadaire — alpha + on-chain insights",
-        "Réponse fiscale personnalisée par email (sous 48 h)",
-        "Statut Pro visible — badge identité dans newsletter",
+        "Export CSV illimité (portfolio, transactions, alertes)",
+        "Accès anticipé aux nouvelles features (avant les autres)",
         "Annulation 1 clic, sans engagement, garantie 14 j remboursé",
-        "Tu soutiens un éditeur web 100% indépendant français",
+        "Tu finances directement le développement et l'hébergement UE",
       ],
       ctaLabel: paymentsEnabled
         ? MONTHLY_HAS_OWN_LINK
-          ? `S'abonner — ${MONTHLY_PRICE}/mois`
-          : `S'abonner — voir les plans`
+          ? `Soutenir — ${MONTHLY_PRICE}/mois`
+          : `Soutenir — voir les plans`
         : "Rejoindre la liste d'attente",
       ctaHref: paymentsEnabled ? MONTHLY_LINK : "#waitlist",
-      // Bug detection agent (P1) : un seul `highlight: true` autorisé pour
-      // éviter l'ambiguïté visuelle. Le plan ANNUEL est mis en avant car LTV
-      // x12 + churn 3-4× plus faible que le mensuel.
+      // Un seul `highlight: true` autorisé pour éviter l'ambiguïté visuelle.
+      // Le plan ANNUEL est mis en avant (économie + accès anticipé).
       highlight: false,
       availability: paymentsEnabled
         ? MONTHLY_HAS_OWN_LINK
@@ -272,30 +268,28 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         : "Liste d'attente ouverte",
     },
     {
-      id: "pro-annual",
-      name: "Pro Annuel",
-      badge: paymentsEnabled ? "Économie 33 %" : "À venir",
+      id: "soutien-annual",
+      name: "Soutien Annuel",
+      badge: paymentsEnabled ? "Recommandé · ~20 % économie" : "À venir",
       Icon: Crown,
       price: paymentsEnabled ? ANNUAL_PRICE : "Bientôt",
       priceUnit: paymentsEnabled ? "/ an" : "tarif indicatif à venir",
       description:
-        "Tout le plan mensuel avec ~33% d'économie + bonus exclusifs Founding Members.",
+        "Le plan Mensuel avec ~20 % d'économie. Le moyen le plus simple de soutenir un projet solo et indépendant.",
       features: [
-        "Tout le plan Pro Mensuel",
-        "Économie ~39,89 € / an (vs 9,99 € × 12 = 119,88 €)",
-        "Watchlist illimitée (vs 50 en Pro Mensuel)",
-        "Accès anticipé features beta (2 semaines avant Mensuel)",
-        "Statut « Founding Member » exclusif (badge or distinct)",
-        "1 audit portfolio écrit par email /an (analyse + recommandations perso)",
-        "Tu soutiens fortement un éditeur web 100% indépendant français",
+        "Tout le plan Soutien Mensuel",
+        "Économie ~7 € / an (vs Mensuel × 12)",
+        "Accès anticipé étendu (2 semaines avant les autres)",
+        "Tu permets au projet de tenir 12 mois supplémentaires",
+        "Annulation 1 clic, garantie 14 j remboursé intégral",
       ],
       ctaLabel: paymentsEnabled
         ? ANNUAL_HAS_OWN_LINK
-          ? `Économiser 33 % — ${ANNUAL_PRICE}/an`
-          : `S'abonner — voir les plans`
+          ? `Soutenir 1 an — ${ANNUAL_PRICE}`
+          : `Soutenir — voir les plans`
         : "Rejoindre la liste d'attente",
       ctaHref: paymentsEnabled ? ANNUAL_LINK : "#waitlist",
-      // Bug detection agent (P1) : Annuel = highlight unique (LTV x12, churn -75%).
+      // Annuel = highlight unique pour rester focalisé.
       highlight: true,
       availability: paymentsEnabled
         ? ANNUAL_HAS_OWN_LINK
@@ -313,111 +307,107 @@ const TIERS = buildTiers(PAYMENTS_ENABLED);
 /* -------------------------------------------------------------------------- */
 
 /**
- * FEATURES réellement livrables au lancement (V1).
+ * FEATURES réellement livrables — toutes 100% techniques et automatisables.
  *
- * Cleanup audit légal 27/04/2026 : on retire toutes les features qui n'ont PAS
- * encore été buildées pour respecter le Code conso art. L121-2 (interdiction
- * pratique commerciale trompeuse) — promettre Cerfa 2086 PDF prêt-à-imprimer
- * sans le code derrière = remboursement obligatoire + amende DGCCRF jusqu'à
- * 10% CA. Ce qu'on liste ici DOIT être livrable dans les 5 jours suivant le
- * 1er paiement client.
+ * REFONTE 30/04/2026 — uniquement ce qui existe déjà dans le code, zéro
+ * promesse de support humain (pas d'expert, pas de SLA 48h, pas de brief
+ * éditorial hebdo, pas d'audit perso). Le projet est solo et sans budget,
+ * on ne vend que des bénéfices techniques que la machine livre seule.
  *
- * Les features déplacées en V2 (Cerfa PDF, 3916-bis, articles premium, sync API)
- * sont annoncées dans la section "ROADMAP_V2" plus bas, avec dates explicites
- * mai/juin 2026 — transparence loyale = zéro risque légal.
- */
-/**
- * FEATURES enrichies (BATCH 4 + Radar 3916-bis ajouté en HEAD) :
  *  - kpi  : un chiffre saillant (badge en tête de carte) — booste le scan
- *  - text : une description-bénéfice claire
+ *  - text : une description-bénéfice claire et vérifiable
  *  - tag  : un mot-clé court qui catégorise
- *  - href : lien optionnel vers la feature (pour Radar = lien direct vers l'outil)
- *
- * USP fiscal en HEAD car c'est le revenue driver le plus immédiat
- * (saisonnalité mai 2026, douleur réelle 1500-10000€ par compte oublié).
+ *  - href : lien optionnel vers la feature (pour la tester en Free)
  */
 const FEATURES = [
   {
-    icon: ShieldCheck,
-    kpi: "10 000 €",
-    tag: "Fiscal",
-    title: "Radar 3916-bis + mémo PDF",
-    text: "Détecte tes amendes potentielles sur tes comptes Binance, MEXC, Bybit oubliés (1 500 € à 10 000 € par compte). En Pro : génération automatique d'un mémo PDF pré-rempli + rappel email avant la deadline mai 2026.",
-    href: "/outils/radar-3916-bis",
+    icon: Wallet,
+    kpi: "Illimité",
+    tag: "Portfolio",
+    title: "Portfolio sans limite",
+    text: "Suis autant de positions crypto que tu veux (vs 10 en Free). Multi-wallets, P&L automatique, pie chart d'allocation, export CSV illimité.",
+    href: "/portefeuille",
   },
   {
     icon: Bell,
     kpi: "∞",
     tag: "Alertes",
     title: "Alertes prix illimitées",
-    text: "Configure autant d'alertes que tu veux par email — seuils up/down, % de variation, market crash. Plus de limite à 3 comme la version Free.",
-  },
-  {
-    icon: Wallet,
-    kpi: "Multi-wallets",
-    tag: "Portfolio",
-    title: "Portfolio illimité",
-    text: "Suis autant de positions crypto que tu veux (vs 10 en Free). Multi-wallets, calcul P&L automatique, allocation pie chart, export CSV.",
+    text: "Crée autant d'alertes email que nécessaire — seuils up/down, % de variation, niveaux clés. La limite de 3 alertes du plan Free saute.",
+    href: "/alertes",
   },
   {
     icon: GraduationCap,
     kpi: "250+ termes",
     tag: "Lexique",
     title: "Glossaire complet",
-    text: "Accède aux 250+ définitions de notre lexique crypto vulgarisé. Au-delà des 100 termes essentiels du Free : DeFi avancé, MEV, restaking, RWA, etc.",
+    text: "Accède aux 250+ définitions du lexique crypto vulgarisé. Au-delà des 100 termes essentiels du Free : DeFi avancé, MEV, restaking, RWA, etc.",
+    href: "/glossaire",
   },
   {
-    icon: MessagesSquare,
-    kpi: "< 48 h",
-    tag: "Support",
-    title: "Réponse fiscale perso",
-    text: "Tu poses ta question fiscale crypto par email (cas réel : DCA staking ETH, swap DeFi, vente NFT…), réponse argumentée sous 48 h ouvrées par notre expert. Pas de Discord avec 200 inconnus — un échange ciblé sur TON cas.",
+    icon: ShieldCheck,
+    kpi: "0 pub",
+    tag: "Confort",
+    title: "Watchlist illimitée",
+    text: "Plus de plafond à 10 cryptos. Suis l'intégralité du marché qui t'intéresse depuis ton tableau de bord.",
+    href: "/watchlist",
+  },
+  {
+    icon: FileText,
+    kpi: "CSV",
+    tag: "Export",
+    title: "Export CSV illimité",
+    text: "Exporte ton portfolio, tes transactions, tes alertes — autant que tu veux, sans plafond. Pratique pour ton comptable ou ta déclaration.",
+  },
+  {
+    icon: Zap,
+    kpi: "Beta",
+    tag: "Anticipé",
+    title: "Accès anticipé aux nouvelles features",
+    text: "Quand une nouvelle feature est codée, les abonnés Soutien y accèdent en avant-première (≈ 2 semaines avant le grand public).",
   },
   {
     icon: Users,
-    kpi: "1×/sem.",
-    tag: "Insights",
-    title: "Brief PRO hebdomadaire",
-    text: "1 newsletter premium par semaine : alpha actionnable + on-chain insights (whale moves, ETF flows, signaux marché). Lecture en 4 minutes le dimanche soir.",
-  },
-  {
-    icon: Crown,
-    kpi: "Founding",
-    tag: "Identité",
-    title: "Statut Pro visible",
-    text: "Badge identité Pro dans tes échanges newsletter. Sur le plan Annuel : statut « Founding Member » distinct (badge or) + accès direct au fondateur par email.",
+    kpi: "Indé",
+    tag: "Mission",
+    title: "Tu finances un éditeur indépendant",
+    text: "Pas de levée de fonds, pas d'investisseur, pas de PSAN. Ton soutien finance directement le développement, l'hébergement UE et les outils gratuits.",
   },
 ];
 
 /**
- * ROADMAP V2 — features annoncées comme "à venir" avec dates précises.
- * Affichage dans une section dédiée /pro pour transparence loyale (anti-trompeur).
- * Dates basées sur l'effort dev estimé par l'agent T3 (audit features) + buffer.
+ * IDÉES FUTURES — délibérément SANS dates précises pour ne rien promettre.
+ *
+ * REFONTE 30/04/2026 — anciennement "ROADMAP V2" avec dates Mai/Juin/Été 2026,
+ * c'était un engagement contractuel non tenable solo. Reformulé en "idées
+ * explorées si le projet trouve son public" — aucune date, aucune garantie.
+ * L'utilisateur sait qu'il paie pour CE QUI EXISTE AUJOURD'HUI, pas pour
+ * une promesse future.
  */
 const ROADMAP_V2 = [
   {
     icon: FileText,
-    title: "Export Cerfa 2086 PDF prêt-à-imprimer",
-    eta: "Mai 2026",
-    text: "PDF officiel format DGFiP millésime 2026, pré-rempli depuis ton portfolio. Plus besoin de recopier ligne par ligne sur impots.gouv.fr.",
+    title: "Export Cerfa 2086 PDF",
+    eta: "Idée",
+    text: "PDF pré-rempli depuis ton portfolio (format DGFiP). À l'étude — sera proposé si la base de soutiens permet d'y consacrer le temps de dev.",
   },
   {
     icon: FileText,
-    title: "Export Cerfa 3916-bis (comptes étrangers)",
-    eta: "Mai 2026",
-    text: "1 PDF par compte crypto étranger (Binance, Kraken IE…), pré-rempli. Évite l'amende 750-1500 € par compte oublié.",
+    title: "Export Cerfa 3916-bis",
+    eta: "Idée",
+    text: "1 PDF par compte crypto étranger pré-rempli. À l'étude. Pour l'instant, le radar 3916-bis liste les comptes à déclarer (gratuit).",
   },
   {
     icon: BookOpen,
-    title: "Articles premium (analyses on-chain avancées)",
-    eta: "Juin 2026",
-    text: "Decks experts fiscalité DeFi, MEV, restaking, NFT et RWA. Mise à jour mensuelle.",
+    title: "Analyses on-chain approfondies",
+    eta: "Idée",
+    text: "Articles long-format sur la fiscalité DeFi avancée, MEV, restaking. Dépend du temps disponible — pas de calendrier promis.",
   },
   {
     icon: Zap,
-    title: "Sync API exchanges (Binance/Kraken/Coinbase auto)",
-    eta: "Été 2026",
-    text: "Auto-sync de tes positions sans CSV manuel. Connexions read-only sécurisées.",
+    title: "Sync API exchanges (read-only)",
+    eta: "Idée",
+    text: "Auto-sync de tes positions sans CSV. Très demandé techniquement complexe — sera proposé seulement si on peut le faire de façon sécurisée et fiable.",
   },
 ];
 
@@ -440,44 +430,52 @@ const ROADMAP_V2 = [
  */
 const FAQS = [
   {
-    q: "Comment je m'abonne à Cryptoreflex Pro ?",
-    a: `Tu choisis Mensuel (${MONTHLY_PRICE}/mois) ou Annuel (${ANNUAL_PRICE}/an) sur cette page, tu cliques "S'abonner". Tu es redirigé vers une page de paiement Stripe sécurisée — carte bancaire, Apple Pay, Google Pay ou SEPA. Accès Pro activé immédiatement après paiement, facture envoyée par email.`,
+    q: "Pourquoi un abonnement « Soutien » et pas « Pro premium » ?",
+    a: `Parce qu'on est solo et sans budget. Promettre du support 48h, des briefs hebdo écrits par des "experts" ou des audits perso annuels reviendrait à mentir — on n'a ni l'équipe ni le temps pour le tenir. À la place, on vend uniquement ce que la machine peut livrer seule (limites relevées, glossaire complet, accès anticipé). Si tu cherches un cabinet de conseil fiscal, ce n'est pas nous — et on préfère le dire.`,
+  },
+  {
+    q: "Concrètement, qu'est-ce que je débloque par rapport au Gratuit ?",
+    a: "Portfolio illimité (vs 10 positions), alertes prix illimitées (vs 3), watchlist illimitée (vs 10), glossaire complet 250+ termes (vs 100), export CSV sans plafond et accès anticipé aux nouvelles features. C'est tout — et on s'y tient. Tout le reste (calculateurs, comparateur, méthodologie publique, newsletter) reste gratuit pour tout le monde.",
+  },
+  {
+    q: "Comment je m'abonne ?",
+    a: `Tu choisis Mensuel (${MONTHLY_PRICE}/mois) ou Annuel (${ANNUAL_PRICE}/an), tu cliques "Soutenir". Tu es redirigé vers une page de paiement Stripe sécurisée — carte bancaire, Apple Pay, Google Pay ou SEPA. Accès activé immédiatement après paiement, facture envoyée par email.`,
   },
   {
     q: "Quelle est la différence entre Mensuel et Annuel ?",
-    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 33 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12). Tu paies en une fois, tu es tranquille pour 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
+    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 20 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12). Tu paies en une fois, tu n'y penses plus pendant 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
   },
   {
     q: "Quels moyens de paiement sont acceptés ?",
-    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay sur mobile. Paiement en crypto (BTC / USDC) envisagé en V2 après stabilisation.",
+    a: "Carte bancaire (Visa, Mastercard, Amex) et SEPA via Stripe. Apple Pay et Google Pay sur mobile. Le paiement en crypto (BTC / USDC) sera étudié plus tard — pas de date promise.",
   },
   {
     q: "Comment annuler mon abonnement ?",
-    a: "En 1 clic depuis ton espace « Abonnement » (style Amazon Prime — pas de questionnaire, pas de friction). L'accès Pro reste actif jusqu'à la fin de la période payée, puis tu repasses automatiquement en plan Gratuit. Conforme décret 2022-34 (résiliation 3 clics max — on en fait 1).",
+    a: "En 1 clic depuis ton espace « Abonnement » (style Amazon Prime — pas de questionnaire, pas de friction). L'accès Soutien reste actif jusqu'à la fin de la période payée, puis tu repasses automatiquement en plan Gratuit. Conforme décret 2022-34 (résiliation 3 clics max — on en fait 1).",
   },
   {
     q: "Y a-t-il une garantie satisfait ou remboursé ?",
     a: "Oui — 14 jours de remboursement intégral à compter de la date du premier paiement. Aucune justification requise. Politique alignée sur le droit de rétractation européen pour les services numériques (art. L221-18 Code de la consommation).",
   },
   {
-    q: "Mes données portfolio et calculs fiscaux restent-ils privés ?",
-    a: "Oui. Les données sont stockées chiffrées (AES-256) sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Tu peux exporter ou supprimer toutes tes données depuis ton espace personnel à tout moment (RGPD).",
+    q: "Mes données portfolio restent-elles privées ?",
+    a: "Oui. Les données sont stockées chiffrées sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Tu peux exporter ou supprimer toutes tes données depuis ton espace personnel à tout moment (RGPD art. 17 & 20).",
   },
   {
-    q: "Que se passe-t-il pour mes données si je me désabonne ?",
-    a: "Tes données restent accessibles 90 jours après l'arrêt de l'abonnement (export CSV illimité), puis elles sont anonymisées automatiquement. Tu peux aussi demander la suppression immédiate via dpo@cryptoreflex.fr (réponse < 30 j garantie RGPD).",
+    q: "Et si je me désabonne, que deviennent mes données ?",
+    a: `Tes données restent accessibles depuis ton compte Free pendant 90 jours (export CSV illimité), puis elles sont anonymisées automatiquement. Tu peux aussi demander la suppression immédiate via ${BRAND.email} (réponse sous 30 jours, garantie RGPD).`,
   },
   {
-    q: "Toutes les fonctionnalités annoncées sont-elles déjà disponibles ?",
-    a: "Non — et on l'écrit en toutes lettres. Les exports Cerfa 2086/3916-bis, articles premium et sync API exchanges sont planifiés sur mai-été 2026 (cf. section Roadmap). Tu n'es jamais facturé pour une feature non livrée — les abonnements en cours en bénéficient automatiquement à la sortie.",
+    q: "Les « idées futures » listées sur cette page sont-elles garanties ?",
+    a: "Non — et c'est volontaire. Les exports Cerfa 2086/3916-bis, articles long-format, sync API exchanges sont des idées qu'on aimerait livrer si la base de soutiens permet d'y passer du temps. Aucune date n'est promise. Tu paies pour ce qui existe AUJOURD'HUI, pas pour une feature future. Si elles sortent, les abonnés Soutien y accèdent en premier sans surcoût.",
+  },
+  {
+    q: "Y a-t-il une « réponse fiscale perso 48h » comme dans certaines pubs SaaS ?",
+    a: `Non, et on tient à le préciser. On n'a pas d'équipe d'experts fiscaux et on n'est pas un CIF (Conseiller en Investissements Financiers) immatriculé ORIAS. Pour une question fiscale précise, on te recommande un expert-comptable ou un CIF — on peut t'orienter vers les calculs et la doctrine BOFiP via nos outils gratuits, mais pas remplacer un professionnel réglementé.`,
   },
   {
     q: "Qui est derrière Cryptoreflex ?",
-    a: "Kevin, fondateur français basé à Paris (EI / SIREN 103352621). Cryptoreflex est un éditeur web indépendant — pas de levée de fonds, pas d'investisseur, pas de PSAN. Le revenu Pro finance directement le développement et l'hébergement UE. Contact direct par email pour les abonnés Pro.",
-  },
-  {
-    q: "Pourquoi pas Coinhouse, Waltio ou Koinly à la place ?",
-    a: "Waltio/Koinly facturent 99-249 € pour le seul calcul fiscal annuel. Coinhouse vise les portefeuilles > 50 k€ avec abonnement 39 €/mois. Cryptoreflex Pro à 9,99 €/mois couvre fiscalité + portfolio + alertes + brief alpha pour l'investisseur retail FR — sans dépendance à un PSAN.",
+    a: "Kevin Voisin, fondateur français (Entreprise Individuelle, SIREN 103 352 621). Projet solo, sans levée de fonds, sans investisseur, sans PSAN. Le revenu Soutien finance directement le développement et l'hébergement UE.",
   },
 ];
 
@@ -572,12 +570,12 @@ function buildProductSchema(paymentsEnabled: boolean): JsonLd {
     // Type hybride : SoftwareApplication = meilleur rich result SaaS,
     // Product = enable les Offers + Reviews + AggregateRating quand disponible.
     "@type": ["SoftwareApplication", "Product"],
-    name: "Cryptoreflex Pro",
+    name: "Cryptoreflex Soutien",
     applicationCategory: "FinanceApplication",
-    applicationSubCategory: "Cryptocurrency Portfolio Tracker",
+    applicationSubCategory: "Cryptocurrency Portfolio Tracker (free + supporter tier)",
     operatingSystem: "Web (any modern browser)",
     description:
-      "Abonnement premium pour investisseurs crypto français : portfolio illimité, alertes prix illimitées, glossaire expert 250+ termes, brief PRO hebdomadaire alpha + on-chain et réponse fiscale personnalisée 48 h. Calculateurs gratuits inclus.",
+      "Abonnement Soutien pour un éditeur web crypto indépendant français : portfolio illimité, alertes prix illimitées, watchlist illimitée, glossaire complet 250+ termes, export CSV sans plafond et accès anticipé aux nouvelles features. Calculateurs et outils essentiels gratuits pour tous.",
     brand: { "@type": "Brand", name: BRAND.name },
     image: `${BRAND.url}/og-image.png`,
     url: `${BRAND.url}/pro`,
@@ -674,26 +672,28 @@ export default function ProPage() {
 
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-32">
           <div className="flex flex-col items-center text-center">
-            {/* Eyebrow gold premium signal */}
+            {/* Eyebrow honnête : projet solo indépendant */}
             <span className="ds-eyebrow inline-flex items-center gap-1.5 text-primary-soft">
-              <Crown className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
-              CRYPTOREFLEX PRO · ABONNEMENT PREMIUM
+              <Sparkles className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+              CRYPTOREFLEX SOUTIEN · ÉDITEUR INDÉPENDANT FR
             </span>
 
-            {/* H1 outcome-driven (sans prix dedans, prix = sous-CTA discret) */}
+            {/* H1 honnête : soutenir un projet, pas acheter un produit premium */}
             <h1
               id="hero-title"
               className="mt-6 text-[28px] sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.05] tracking-tight max-w-3xl"
             >
-              L&apos;outillage crypto premium
+              Soutiens un projet crypto FR
               <br className="hidden sm:block" />{" "}
-              <span className="text-gradient-gold-animate">pensé pour les Français.</span>
+              <span className="text-gradient-gold-animate">100&nbsp;% indépendant.</span>
             </h1>
 
-            {/* Lead concret + chiffré */}
+            {/* Lead transparent : ce que tu débloques, sans promesse humaine */}
             <p className="mt-6 text-base sm:text-lg text-fg/80 max-w-2xl leading-relaxed">
-              Alertes prix illimitées, portfolio multi-comptes, glossaire expert et
-              brief alpha hebdomadaire — sans friction, sans engagement, sans Discord.
+              Tous les outils essentiels restent gratuits. Le plan Soutien lève les
+              limites techniques (portfolio, alertes, glossaire) et finance directement
+              le projet — pas d&apos;équipe, pas de levée de fonds, juste un dev solo
+              en France.
             </p>
 
             {/* Trust badges — un row aéré, focus visibles */}
@@ -736,7 +736,7 @@ export default function ProPage() {
                   data-cta="hero-primary"
                   id="cta-plans"
                 >
-                  Choisir mon plan
+                  Voir les plans
                   <ArrowRight
                     className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                     aria-hidden="true"
@@ -755,7 +755,7 @@ export default function ProPage() {
                 href="#features-pro"
                 className="text-sm font-semibold text-primary-soft hover:text-primary transition-colors underline underline-offset-2 decoration-primary/40 hover:decoration-primary"
               >
-                Voir les 6 fonctionnalités Pro
+                Ce que je débloque
               </a>
             </div>
           </div>
@@ -779,14 +779,14 @@ export default function ProPage() {
             id="comparison-title"
             className="ds-eyebrow text-center mb-8 text-primary-soft"
           >
-            CE QUE PRO DÉBLOQUE
+            CE QUE LE SOUTIEN DÉBLOQUE
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-8">
             {[
               { from: "10 positions", to: "Illimité", label: "Portfolio" },
               { from: "3 alertes", to: "Illimité", label: "Alertes prix" },
+              { from: "10 cryptos", to: "Illimité", label: "Watchlist" },
               { from: "100 termes", to: "250+ termes", label: "Glossaire" },
-              { from: "Newsletter quoti.", to: "+ Brief alpha", label: "Insights" },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <p className="text-xs uppercase tracking-wider text-muted mb-2 font-semibold">
@@ -811,8 +811,8 @@ export default function ProPage() {
       >
         <TieredPricing
           tiers={TIERS}
-          heading="Choisis ton plan"
-          subheading="Toujours une version gratuite généreuse. Pro débloque l'outillage fiscal et les alertes."
+          heading="Choisis ton mode de soutien"
+          subheading="Le plan Gratuit reste généreux pour tout le monde. Le plan Soutien lève les limites techniques et finance le projet."
         />
         {/*
           TODO automne 2026 — passer au Stripe Checkout dynamique (Subscription
@@ -926,23 +926,22 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* CE QUE TU GAGNES — id="features-pro" pour l'ancre du hero CTA
-          BATCH 4 : refonte avec KPI badges + tag éyebrow + hover-pop icon
-          + scroll-reveal stagger via CSS variable --i (cf. globals.css). */}
+      {/* CE QUE TU DÉBLOQUES — id="features-pro" pour l'ancre du hero CTA */}
       <section
         id="features-pro"
         className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 scroll-mt-24"
       >
         <div className="text-center mb-12">
           <span className="ds-eyebrow text-primary-soft">
-            7 BÉNÉFICES TANGIBLES
+            BÉNÉFICES 100&nbsp;% TECHNIQUES
           </span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg">
-            Ce que tu gagnes <span className="gradient-text">en passant Pro</span>
+            Ce que tu débloques <span className="gradient-text">en soutenant le projet</span>
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
-            7 améliorations concrètes qui changent ta routine
-            d&apos;investisseur — surtout en mai (déclaration fiscale).
+            Aucune promesse de support humain ni d&apos;équipe d&apos;experts. Uniquement
+            des bénéfices techniques que la machine livre seule, immédiatement
+            après ton paiement.
           </p>
         </div>
 
@@ -967,7 +966,7 @@ export default function ProPage() {
                 </p>
                 {f.href && (
                   <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft group-hover:text-primary">
-                    Essayer l&apos;outil gratuit
+                    Essayer l&apos;outil (Free)
                     <ArrowRight
                       className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
                       aria-hidden="true"
@@ -1021,18 +1020,20 @@ export default function ProPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="text-center mb-10">
             <span className="ds-eyebrow text-primary-soft">
-              ROADMAP TRANSPARENTE
+              IDÉES — SANS DATES PROMISES
             </span>
             <h2
               id="roadmap-title"
               className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg"
             >
-              Ce qui arrive — <span className="gradient-text">avec dates</span>
+              Ce qu&apos;on aimerait livrer —{" "}
+              <span className="gradient-text">si on en a le temps</span>
             </h2>
             <p className="mt-3 text-sm text-fg/70 max-w-2xl mx-auto leading-relaxed">
-              On préfère lister ce qui n&apos;est pas encore livré que de le
-              promettre. Founding Members (plan Annuel) y ont accès 2 semaines
-              avant les autres.
+              On préfère lister sans date promise que de t&apos;engager sur un
+              calendrier qu&apos;on ne pourrait pas tenir solo. Tu paies pour ce
+              qui existe AUJOURD&apos;HUI — si l&apos;une de ces idées sort,
+              tu y accèdes en avant-première sans surcoût.
             </p>
           </div>
 
@@ -1069,9 +1070,11 @@ export default function ProPage() {
           </ol>
 
           <p className="mt-8 text-center text-xs text-muted">
-            Aucune feature listée ci-dessus n&apos;est facturée tant qu&apos;elle
-            n&apos;est pas livrée. Les abonnements en cours en bénéficient
-            automatiquement à la sortie, sans surcoût.
+            Aucune de ces idées n&apos;est garantie ni facturée tant
+            qu&apos;elle n&apos;est pas livrée. Les abonnements Soutien en
+            bénéficient automatiquement à la sortie, sans surcoût. Si rien ne
+            sort, tu gardes le bénéfice immédiat de ton plan (limites
+            techniques levées).
           </p>
         </div>
       </section>
@@ -1082,14 +1085,7 @@ export default function ProPage() {
           On retire le bloc plutôt que de bricoler des chiffres faux.
           Si on rejoute, il faut UNIQUEMENT des claims vérifiables. */}
 
-      {/* FAQ — BATCH 5 (FAQ + SEO + A11y agents)
-          - 10 questions (vs 6 avant) couvrant pricing, cancel, RGPD, roadmap,
-            identité, comparaison concurrents
-          - Header centré + eyebrow signal pro
-          - Wrapper rounded glass premium au lieu du divide-y plat
-          - Hover background lift + group-open visual feedback
-          - Schema FAQPage généré dans graphSchema (cf. plus bas)
-          - mailto contact fallback en bas pour les questions hors-FAQ */}
+      {/* FAQ — questions transparentes : ce qu'on fait, ce qu'on ne fait PAS. */}
       <section
         id="faq"
         aria-labelledby="faq-title"
@@ -1104,10 +1100,12 @@ export default function ProPage() {
             id="faq-title"
             className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg"
           >
-            Tout ce que tu te demandes <span className="gradient-text">avant de t&apos;abonner</span>
+            Tout ce que tu te demandes{" "}
+            <span className="gradient-text">avant de soutenir</span>
           </h2>
           <p className="mt-3 text-sm text-fg/70 max-w-xl mx-auto">
-            10 réponses transparentes — pricing, annulation, RGPD, roadmap.
+            12 réponses transparentes — pricing, annulation, RGPD, ce qu&apos;on
+            ne promet PAS.
           </p>
         </div>
 
@@ -1170,19 +1168,19 @@ export default function ProPage() {
           <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
             <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              PRÊT À PASSER PRO ?
+              PRÊT À SOUTENIR ?
             </span>
             <h2
               id="closer-title"
               className="mt-3 text-2xl sm:text-4xl font-extrabold text-fg leading-tight"
             >
-              Moins cher qu&apos;un café{" "}
-              <span className="text-gradient-gold-animate">par semaine.</span>
+              Moins qu&apos;un café{" "}
+              <span className="text-gradient-gold-animate">par mois.</span>
             </h2>
             <p className="mt-4 text-base text-fg/75 max-w-xl mx-auto leading-relaxed">
-              {MONTHLY_PRICE}/mois ou {ANNUAL_PRICE}/an pour débloquer
-              alertes illimitées, portfolio multi-comptes, brief alpha
-              hebdomadaire et réponse fiscale perso 48 h.
+              {MONTHLY_PRICE}/mois ou {ANNUAL_PRICE}/an pour lever toutes les
+              limites techniques (portfolio, alertes, watchlist, glossaire) et
+              financer un projet crypto FR 100&nbsp;% indépendant.
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-3">

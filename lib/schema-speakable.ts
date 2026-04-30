@@ -25,13 +25,19 @@ import type { JsonLd } from "@/lib/schema";
  * Helper unique réutilisable. Pas de paramètres : la spec s'applique de la même
  * manière à tous les articles (le DOM source des sélecteurs varie pas).
  *
- * Si un jour on a besoin d'overrides par page (ex : un article où le résumé
- * vocal doit pointer sur `.tldr` au lieu de `.lead`), on étendra la signature.
+ * Fix audit SEO 30/04/2026 — Google recommande de cibler 1-2 paragraphes
+ * spécifiques (pas tous les H1+H2 d'une page, sinon l'assistant vocal lit
+ * une suite décousue de titres). On garde le H1 (titre principal lu en
+ * premier), `.lead` (chapô) et `[data-speakable]` (opt-in manuel par
+ * paragraphe) — pas tous les H2 de la page.
+ *
+ * Si un jour on a besoin d'overrides par page (ex : `.tldr` au lieu de
+ * `.lead`), on étendra la signature.
  */
 export function generateSpeakableSchema(): JsonLd {
   return {
     "@type": "SpeakableSpecification",
-    cssSelector: ["h1", "h2", ".lead", "[data-speakable]"],
+    cssSelector: ["h1", ".lead", "[data-speakable]"],
     xpath: ["/html/head/title"],
   };
 }

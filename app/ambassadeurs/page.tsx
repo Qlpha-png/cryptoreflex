@@ -80,13 +80,13 @@ const VALUE_PROPS = [
   },
   {
     icon: LineChart,
-    title: "Dashboard transparent",
-    text: "Suivi clics + inscriptions + revenus en temps réel (V2 — M+3). En attendant, reporting détaillé envoyé chaque mois par email.",
+    title: "Reporting mensuel détaillé",
+    text: "Suivi clics + inscriptions + revenus envoyé chaque mois par email (système manuel V1). Le dashboard temps réel sera proposé plus tard si le programme se développe — pas de date promise.",
   },
   {
     icon: Handshake,
-    title: "Paiement mensuel garanti",
-    text: "Virement SEPA, PayPal ou USDC dès que tu passes le seuil de 50 € accumulés. En dessous, le solde est reporté au mois suivant.",
+    title: "Paiement mensuel sur facture",
+    text: "Virement SEPA, PayPal ou USDC sur facture EI Kevin Voisin, dès que tu passes le seuil de 50 € accumulés. En dessous, le solde est reporté au mois suivant.",
   },
 ];
 

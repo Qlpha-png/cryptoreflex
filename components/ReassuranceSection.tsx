@@ -36,19 +36,24 @@ const ITEMS: ReassuranceItem[] = [
     Icon: Award,
     value: "14",
     label: "Marques fiables sélectionnées",
-    hint: "Exchanges, brokers, wallets, fiscalité — toutes MiCA / régulées",
+    // Fix audit cohérence 30/04/2026 — "toutes MiCA / régulées" était faux :
+    // hardware wallets (Ledger, Trezor) ne sont PAS sous MiCA (matériel,
+    // pas service), Waltio est SaaS de fiscalité (pas PSAN). Reformulé.
+    hint: "Exchanges régulés MiCA + wallets matériels + fiscalité SaaS",
   },
   {
     Icon: Eye,
     value: "100 %",
     label: "Méthodologie publique",
-    hint: "Notre scoring est ouvert et auditable",
+    hint: "Le scoring est ouvert et auditable",
   },
   {
     Icon: Calendar,
-    value: "Mensuelle",
+    value: "Cible mensuelle",
     label: "Mise à jour des comparatifs",
-    hint: "Statut MiCA suivi en temps réel",
+    // Fix audit cohérence 30/04/2026 — "Statut MiCA suivi en temps réel" est
+    // une promesse trop forte (vérification manuelle solo, pas du temps réel).
+    hint: "Vérification manuelle des fiches, statut MiCA tracké via AMF/ESMA",
   },
   {
     Icon: Sparkles,

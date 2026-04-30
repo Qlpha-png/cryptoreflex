@@ -21,6 +21,18 @@ function verifyAdminSecret(req: NextRequest): boolean {
 }
 
 export async function GET(req: NextRequest) {
+  // P0 SECURITY FIX (audit backend 30/04/2026) :
+  // Cette route exposait sans auth les noms de cookies + un preview du JWT
+  // Supabase + l'URL projet + l'anon key preview. Et avec le header
+  // x-admin-secret, elle leakait les prefixes de TOUS les secrets prod
+  // (Stripe live, service_role, Resend, CRON_SECRET).
+  // Si CRON_SECRET fuite par n'importe quel canal, l'attaquant peut tester
+  // ses dictionary attacks à partir des prefixes leakés.
+  // Solution : 404 strict en production. La route reste utile en dev.
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
   // Mode admin : retourne aussi les prefixes des secrets pour audit env vars.
   const isAdmin = verifyAdminSecret(req);
 

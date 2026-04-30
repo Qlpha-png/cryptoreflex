@@ -25,8 +25,9 @@ const CARDS: TrustCard[] = [
     title: "Méthodologie publique",
     pitch:
       "Notre grille de notation des plateformes est entièrement documentée et auditable.",
+    // Fix audit cohérence 30/04/2026 — méthodologie déclare 6 critères (pas 5).
     detail:
-      "Chaque plateforme est notée sur 5 critères pondérés : conformité (PSAN/MiCA), frais réels, sécurité, ergonomie, support FR. Les pondérations, formules de calcul et sources sont publiées sur la page Méthodologie. N'importe qui peut reproduire nos scores. Aucune opacité, aucun classement \"sponsorisé\".",
+      "Chaque plateforme est notée sur 6 critères pondérés : frais réels (20%), sécurité (25%), conformité MiCA/PSAN (20%), expérience utilisateur (15%), support FR (10%), catalogue & services (10%). Les pondérations, formules de calcul et sources sont publiées sur la page Méthodologie. N'importe qui peut reproduire nos scores. Aucune opacité, aucun classement \"sponsorisé\".",
     cta: { label: "Lire la méthodologie complète", href: "/methodologie" },
   },
   {
@@ -34,18 +35,25 @@ const CARDS: TrustCard[] = [
     title: "0 € reçus pour modifier les notes",
     pitch:
       "Les liens d'affiliation rémunèrent le site, jamais les classements.",
+    // Fix audit cohérence 30/04/2026 — /partenariats a été 301 vers /transparence.
+    // Aussi : « notre n°1 actuel n'est pas notre meilleur partenaire commercial »
+    // était un claim de spectacle invérifiable retiré (le site est jeune, peu de
+    // comparaisons probantes). Reformulé en engagement procédural.
     detail:
-      "Nous percevons des commissions d'affiliation lorsqu'un visiteur ouvre un compte via nos liens — c'est notre modèle économique. Mais aucune plateforme ne peut acheter sa note, son rang ou sa visibilité. La preuve : notre n°1 actuel n'est pas notre meilleur partenaire commercial. Politique d'affiliation publique en page Partenariats.",
-    cta: { label: "Voir la charte d'affiliation", href: "/partenariats" },
+      "Nous percevons des commissions d'affiliation quand un visiteur ouvre un compte via nos liens — c'est le modèle économique. Mais la méthodologie de scoring est appliquée de façon identique à tous les acteurs (affiliés ou non). La preuve : nos 3 vrais partenaires commerciaux (Ledger, Trezor, Waltio) sont aussi listés à côté de plateformes non affiliées dans nos comparatifs. Détail des programmes sur la page Transparence.",
+    cta: { label: "Voir le détail des affiliations", href: "/transparence" },
   },
   {
     Icon: RefreshCw,
-    title: "Mise à jour mensuelle",
+    title: "Mise à jour à fréquence cible",
     pitch:
-      "Le marché crypto bouge vite. Nos comparatifs aussi — chaque mois, vérification complète.",
+      "Le marché crypto bouge vite. On vise une revérification mensuelle, avec horodatage public.",
+    // Fix audit cohérence 30/04/2026 — promesse « 1er de chaque mois manuellement »
+    // + « alerte newsletter sous 48h » non tenable solo. Reformulé en engagement
+    // de fréquence cible avec horodatage transparent (pas de SLA fictif).
     detail:
-      "Frais, fonctionnalités, statut réglementaire (PSAN, agrément MiCA, sanctions AMF) : tout est revérifié manuellement le 1er de chaque mois. La date de dernière mise à jour est affichée en haut de chaque comparatif. Si une plateforme change de statut entre deux passages, on publie une alerte sur la newsletter sous 48h.",
-    cta: { label: "Voir le journal des mises à jour", href: "/blog" },
+      "Frais, fonctionnalités, statut réglementaire (PSAN, agrément MiCA, sanctions AMF) : on vise une revérification mensuelle de chaque fiche. La date de dernière vérification est affichée en haut de chaque comparatif — si elle est ancienne, on l'assume publiquement plutôt que d'écrire une fausse promesse. Si une plateforme change de statut, on met à jour dès qu'on le voit (en pratique : sous quelques jours).",
+    cta: { label: "Voir la méthodologie", href: "/methodologie" },
   },
 ];
 

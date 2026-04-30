@@ -62,11 +62,27 @@ export const metadata: Metadata = {
 /* -------------------------------------------------------------------------- */
 /*  Const partnerships (rémunération + date de mise en place)                 */
 /*                                                                            */
-/*  Hardcodé ici plutôt que dans data/platforms.json parce que :              */
-/*   - cette information est de nature légale/financière, pas éditoriale      */
-/*   - on veut un seul fichier à auditer pour la DGCCRF                       */
-/*   - le statut "EN REVIEW" peut changer rapidement (candidature acceptée /  */
-/*     refusée) sans impacter le reste du site.                               */
+/*  REFONTE 30/04/2026 — clarification juridique critique :                   */
+/*                                                                            */
+/*  Avant : on mélangeait dans la même catégorie des PROGRAMMES               */
+/*  D'AFFILIATION (contrat commercial entre Cryptoreflex et la plateforme,    */
+/*  ex : Ledger via Impact.com 10% commission) et des CODES DE PARRAINAGE     */
+/*  PERSONNELS (le code que tout utilisateur peut générer depuis son compte,  */
+/*  ex : Trade Republic in-app 15€/filleul, Bitpanda Tell-a-Friend, Binance   */
+/*  code referral). Ce mélange était trompeur car il laissait penser que      */
+/*  Cryptoreflex était officiellement partenaire de Trade Republic / Binance, */
+/*  ce qui n'est PAS le cas. Le code parrainage est juste celui de Kevin      */
+/*  Voisin en tant que client particulier.                                    */
+/*                                                                            */
+/*  Maintenant on sépare clairement :                                         */
+/*   1. AFFILIATIONS = 3 vrais contrats commerciaux (Ledger, Trezor, Waltio)  */
+/*      via plateformes professionnelles (Impact.com, Cellxpert, programme    */
+/*      d'affiliation Waltio).                                                */
+/*   2. CODES PARRAINAGE PERSO = Trade Republic, Bitpanda, Binance — Kevin    */
+/*      partage SON code de filleul personnel, ce n'est pas un partenariat.   */
+/*   3. Les "candidatures EN REVIEW" précédentes (Coinbase, Bitget, SwissBorg)*/
+/*      sont retirées : tant qu'elles ne sont pas live, elles n'ont rien à    */
+/*      faire dans une page de divulgation légale.                            */
 /* -------------------------------------------------------------------------- */
 
 type PartnershipStatus = "live" | "review";
@@ -75,53 +91,66 @@ interface PartnershipMeta {
   revenue: string;
   since: string;
   status: PartnershipStatus;
+  /** Type juridique : programme d'affiliation commercial OU code parrainage personnel. */
+  kind: "affiliate" | "referral";
 }
 
 const PARTNERSHIPS: Record<string, PartnershipMeta> = {
-  binance: {
-    revenue: "Commission via code referral CRYPTOREFLEX",
-    since: "2026-04-25",
-    status: "live",
-  },
-  bitpanda: {
-    revenue:
-      "Tell-a-Friend (10€/filleul). Application Partners en cours (25% lifetime).",
-    since: "2026-04-25",
-    status: "live",
-  },
-  "trade-republic": {
-    revenue: "Parrainage in-app (15€/filleul + 200€ d'actions au filleul)",
-    since: "2026-04-25",
-    status: "live",
-  },
+  // === 3 VRAIS PROGRAMMES D'AFFILIATION ===
+  // Contrats commerciaux signés via plateformes pro (Impact.com / Cellxpert /
+  // programmes maison). Cryptoreflex est référencé comme éditeur affilié,
+  // perçoit une commission tracée sur conversion.
   ledger: {
-    revenue: "10% commission sur hardware (Nano S+, Nano X, Stax)",
+    revenue: "10 % commission sur hardware (Nano S+, Nano X, Stax) via Impact.com",
     since: "2026-04-26",
     status: "live",
-  },
-  coinbase: {
-    revenue: "EN REVIEW — 50% des fees pendant 3 mois (Impact.com)",
-    since: "candidature soumise 2026-04-25",
-    status: "review",
-  },
-  bitget: {
-    revenue: "EN REVIEW — 50% commission (programme Influencer)",
-    since: "candidature soumise 2026-04-25",
-    status: "review",
-  },
-  swissborg: {
-    revenue: "EN REVIEW",
-    since: "candidature soumise 2026-04-25",
-    status: "review",
+    kind: "affiliate",
   },
   trezor: {
-    revenue: "EN REVIEW — 12-15% hardware (Cellxpert)",
-    since: "candidature soumise 2026-04-26",
-    status: "review",
+    revenue: "12-15 % commission sur hardware (Safe 3, Safe 5, Model T) via Cellxpert",
+    since: "2026-04-26",
+    status: "live",
+    kind: "affiliate",
+  },
+  waltio: {
+    revenue: "Commission sur souscription au logiciel de fiscalité crypto",
+    since: "2026-04-26",
+    status: "live",
+    kind: "affiliate",
+  },
+
+  // === CODES DE PARRAINAGE PERSONNELS ===
+  // PAS un partenariat commercial avec Cryptoreflex. Ce sont les codes
+  // parrainage que TOUT utilisateur peut générer depuis son compte, partagés
+  // ici par Kevin Voisin en tant que client particulier des plateformes.
+  // La rémunération éventuelle (10€/filleul Bitpanda, 15€/filleul Trade
+  // Republic) est versée à Kevin Voisin en tant que filleul historique, pas
+  // à Cryptoreflex en tant qu'éditeur. Inscrits ici par souci de
+  // transparence loyale (loi Influenceurs).
+  bitpanda: {
+    revenue:
+      "Code parrainage personnel — Tell-a-Friend Bitpanda (10 € au parrain et au filleul)",
+    since: "2026-04-25",
+    status: "live",
+    kind: "referral",
+  },
+  "trade-republic": {
+    revenue:
+      "Code parrainage personnel — Programme in-app Trade Republic (15 € au parrain + 200 € d'actions au filleul)",
+    since: "2026-04-25",
+    status: "live",
+    kind: "referral",
+  },
+  binance: {
+    revenue:
+      "Code parrainage personnel — Programme referral Binance (réduction de frais et bonus filleul)",
+    since: "2026-04-25",
+    status: "live",
+    kind: "referral",
   },
 };
 
-const PAGE_LAST_UPDATED = "2026-04-26";
+const PAGE_LAST_UPDATED = "2026-04-30";
 
 /* -------------------------------------------------------------------------- */
 /*  Page                                                                      */
@@ -129,18 +158,20 @@ const PAGE_LAST_UPDATED = "2026-04-26";
 
 export default function TransparencePage() {
   const allPlatforms = getAllPlatforms();
-  // On ne montre dans le tableau que les plateformes pour lesquelles un statut
-  // de partenariat est documenté ci-dessus (live OU review).
+  // On ne montre dans les tableaux que les plateformes pour lesquelles un
+  // statut de partenariat est documenté ci-dessus.
   const trackedRows: Array<Platform & { partnership: PartnershipMeta }> =
     allPlatforms
       .filter((p) => PARTNERSHIPS[p.id])
       .map((p) => ({ ...p, partnership: PARTNERSHIPS[p.id] }));
 
-  const livePartnerships = trackedRows.filter(
-    (r) => r.partnership.status === "live"
+  // SÉPARATION CLAIRE : programmes d'affiliation (contrats commerciaux) vs
+  // codes parrainage personnels (codes filleul perso de Kevin Voisin).
+  const affiliatePartnerships = trackedRows.filter(
+    (r) => r.partnership.kind === "affiliate"
   );
-  const reviewPartnerships = trackedRows.filter(
-    (r) => r.partnership.status === "review"
+  const referralPartnerships = trackedRows.filter(
+    (r) => r.partnership.kind === "referral"
   );
 
   const breadcrumbs = breadcrumbSchema([
@@ -214,32 +245,36 @@ export default function TransparencePage() {
           </div>
         </section>
 
-        {/* TABLEAU PARTENARIATS LIVE ---------------------------------------- */}
+        {/* TABLEAU 1 — VRAIS PROGRAMMES D'AFFILIATION ----------------------- */}
         <section className="mt-16">
           <div className="flex items-baseline justify-between gap-4 flex-wrap">
             <h2 className="text-2xl sm:text-3xl font-bold text-fg">
-              Partenariats actifs
+              Programmes d&apos;affiliation
             </h2>
             <span className="text-xs text-muted">
-              {livePartnerships.length} plateforme
-              {livePartnerships.length > 1 ? "s" : ""} en production
+              {affiliatePartnerships.length} contrat
+              {affiliatePartnerships.length > 1 ? "s" : ""} actif
+              {affiliatePartnerships.length > 1 ? "s" : ""}
             </span>
           </div>
           <p className="mt-2 text-sm text-muted max-w-3xl">
-            Pour chaque partenaire actif : statut MiCA, numéro d'enregistrement
-            AMF, type exact de rémunération que perçoit {BRAND.name}, et date
-            de mise en place du programme.
+            Vrais contrats commerciaux signés entre {BRAND.name} et le partenaire
+            (via plateforme professionnelle Impact.com, Cellxpert ou programme
+            d&apos;affiliation maison). Pour chaque ligne : statut MiCA, numéro
+            d&apos;enregistrement AMF (le cas échéant), commission perçue, date
+            de mise en place. Mention « Publicité — lien affilié » obligatoire
+            sur chaque CTA pointant vers ces partenaires.
           </p>
 
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-surface/40">
             <table className="w-full min-w-[760px] text-sm">
               <thead className="bg-surface/70 text-xs uppercase tracking-wide text-muted">
                 <tr>
-                  <th className="px-4 py-3 text-left font-semibold">Plateforme</th>
+                  <th className="px-4 py-3 text-left font-semibold">Partenaire</th>
                   <th className="px-4 py-3 text-left font-semibold">Statut MiCA</th>
                   <th className="px-4 py-3 text-left font-semibold">N° AMF</th>
                   <th className="px-4 py-3 text-left font-semibold">
-                    Rémunération perçue
+                    Commission perçue
                   </th>
                   <th className="px-4 py-3 text-left font-semibold">Depuis</th>
                   <th className="px-4 py-3 text-left font-semibold sr-only">
@@ -248,7 +283,7 @@ export default function TransparencePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {livePartnerships.map((row) => (
+                {affiliatePartnerships.map((row) => (
                   <PartnershipRow key={row.id} row={row} />
                 ))}
               </tbody>
@@ -256,23 +291,28 @@ export default function TransparencePage() {
           </div>
         </section>
 
-        {/* TABLEAU PARTENARIATS EN REVIEW ----------------------------------- */}
-        <section className="mt-12">
+        {/* TABLEAU 2 — CODES PARRAINAGE PERSONNELS -------------------------- */}
+        <section className="mt-16">
           <div className="flex items-baseline justify-between gap-4 flex-wrap">
             <h2 className="text-xl sm:text-2xl font-bold text-fg">
-              Candidatures en cours
+              Codes de parrainage personnels
             </h2>
             <span className="text-xs text-muted">
-              {reviewPartnerships.length} dossier
-              {reviewPartnerships.length > 1 ? "s" : ""} soumis
+              {referralPartnerships.length} code
+              {referralPartnerships.length > 1 ? "s" : ""} partagé
+              {referralPartnerships.length > 1 ? "s" : ""}
             </span>
           </div>
           <p className="mt-2 text-sm text-muted max-w-3xl">
-            Plateformes pour lesquelles {BRAND.name} a soumis une candidature
-            d'affiliation, encore en cours d'instruction par le partenaire.
-            Aucune commission n'est encore perçue tant que ces lignes restent
-            en review — mais la mention « Publicité » est appliquée dès
-            l'activation.
+            <strong className="text-fg">⚠ Pas un partenariat commercial.</strong>{" "}
+            Ces codes sont les liens de parrainage personnels que Kevin Voisin
+            (fondateur, en tant que client particulier des plateformes) a
+            générés depuis son compte. La rémunération éventuelle (10 €/filleul
+            Bitpanda, 15 €/filleul Trade Republic, etc.) est versée au compte
+            personnel de Kevin Voisin en tant que filleul historique —{" "}
+            <strong className="text-fg">pas à {BRAND.name} en tant qu&apos;éditeur</strong>.
+            Inscrits ici par souci de transparence loyale (loi Influenceurs
+            n°2023-451).
           </p>
 
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-surface/40">
@@ -283,16 +323,16 @@ export default function TransparencePage() {
                   <th className="px-4 py-3 text-left font-semibold">Statut MiCA</th>
                   <th className="px-4 py-3 text-left font-semibold">N° AMF</th>
                   <th className="px-4 py-3 text-left font-semibold">
-                    Rémunération prévue
+                    Type de programme
                   </th>
-                  <th className="px-4 py-3 text-left font-semibold">Statut</th>
+                  <th className="px-4 py-3 text-left font-semibold">Depuis</th>
                   <th className="px-4 py-3 text-left font-semibold sr-only">
                     Avis
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {reviewPartnerships.map((row) => (
+                {referralPartnerships.map((row) => (
                   <PartnershipRow key={row.id} row={row} />
                 ))}
               </tbody>
@@ -528,14 +568,15 @@ export default function TransparencePage() {
                 </li>
               </ul>
               <p className="mt-3 text-xs text-amber-50/70 leading-relaxed">
-                Pour signaler une mention manquante ou inexacte, écrivez à{" "}
+                Pour signaler une mention manquante ou inexacte, écris à{" "}
                 <a
                   href={`mailto:${BRAND.email}?subject=Transparence%20-%20signalement`}
                   className="underline hover:text-amber-100"
                 >
                   {BRAND.email}
                 </a>
-                . Nous corrigeons sous 48h ouvrées.
+                . Correction sous 7 jours ouvrés (engagement personnel — pas
+                d&apos;équipe légale dédiée, juste Kevin solo).
               </p>
             </div>
           </div>

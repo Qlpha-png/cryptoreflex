@@ -138,10 +138,46 @@ async function handleCheckoutCompleted(
     return;
   }
 
-  // Détermine le plan depuis amount_total
-  // 999 cents = 9,99 € → pro_monthly
-  // 7999 cents = 79,99 € → pro_annual
-  const plan = session.amount_total === 999 ? "pro_monthly" : "pro_annual";
+  // P1 FIX (audit backend 30/04/2026) — détermination de plan robuste.
+  //
+  // Avant : `plan = session.amount_total === 999 ? "pro_monthly" : "pro_annual"`
+  // Cassé : si Stripe applique un coupon/promo, amount_total change et le user
+  // est upgradé en plan annuel par accident. Aussi cassé après refonte du
+  // pricing (Soutien 3 €/mois = 300 cents, Annuel 29 €/an = 2900 cents).
+  //
+  // Maintenant : on récupère les line_items expanded de la session Checkout
+  // et on utilise priceIdToPlan() pour résoudre le price ID → plan interne.
+  // Plus tolérant aux changements de tarif (mensuel/annuel/coupon) que la
+  // résolution par montant total.
+  const stripeClient = getStripeClient();
+  let plan: "pro_monthly" | "pro_annual" = "pro_monthly";
+  if (stripeClient && session.id) {
+    try {
+      const expanded = await stripeClient.checkout.sessions.retrieve(session.id, {
+        expand: ["line_items.data.price.product"],
+      });
+      const lineItem = expanded.line_items?.data[0];
+      const priceId = lineItem?.price?.id ?? "";
+      const productId =
+        typeof lineItem?.price?.product === "string"
+          ? lineItem.price.product
+          : lineItem?.price?.product?.id;
+      const resolved = priceIdToPlan(priceId, productId);
+      if (resolved === "pro_monthly" || resolved === "pro_annual") {
+        plan = resolved;
+      } else {
+        // Fallback heuristique si les vars d'env ne sont pas configurées :
+        // les sessions > 1000 cents hors annuel sont probablement annuelles.
+        plan = (session.amount_total ?? 0) >= 1500 ? "pro_annual" : "pro_monthly";
+      }
+    } catch (err) {
+      console.error(
+        "[checkout.completed] Impossible de récupérer line_items, fallback heuristique:",
+        err
+      );
+      plan = (session.amount_total ?? 0) >= 1500 ? "pro_annual" : "pro_monthly";
+    }
+  }
   const expiresAt = planToExpirationDate(plan);
 
   // Génère un magic link pour la connexion immédiate

@@ -74,15 +74,19 @@ export async function POST(req: NextRequest) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
 
-  // STEP 1 : verifie si user existe (admin.generateLink ne cree pas auto)
-  // Si user inexistant, on le cree d'abord (anti-spam : limite par rate limit).
-  const { data: usersData } = await admin.auth.admin.listUsers({
-    page: 1,
-    perPage: 1000,
-  });
-  const existingUser = usersData?.users.find(
-    (u) => u.email?.toLowerCase() === email
-  );
+  // STEP 1 : verifie si user existe (admin.generateLink ne cree pas auto).
+  //
+  // P1 FIX (audit backend 30/04/2026) — N+1 / O(n) sur chaque login.
+  // Avant : listUsers({ perPage: 1000 }).find() = telecharge 1000 users
+  // a chaque login + scan JS lineaire. Casse silencieusement >1000 users.
+  // Maintenant : query directe sur public.users (indexee sur email) +
+  // fallback listUsers si la table publique est vide (cas post-creation).
+  const { data: publicUser } = await admin
+    .from("users")
+    .select("id, email")
+    .ilike("email", email)
+    .maybeSingle();
+  const existingUser = publicUser ? { email: publicUser.email } : null;
 
   if (!existingUser) {
     // Cree l'user comme confirme (email_confirm: true) sans envoyer d'email

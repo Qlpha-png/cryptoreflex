@@ -502,11 +502,16 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
       "Sélection des meilleures plateformes crypto disponibles en France, classées par score Cryptoreflex (frais, sécurité, UX, conformité MiCA).",
     numberOfItems: platforms.length,
     itemListOrder: "https://schema.org/ItemListOrderDescending",
-    itemListElement: platforms.map((p, idx) => ({
-      "@type": "ListItem",
-      position: idx + 1,
-      url: abs(`/plateformes/${p.id}`),
-      item: {
+    itemListElement: platforms.map((p, idx) => {
+      // Fix audit SEO 30/04/2026 — URL réelle est /avis/[slug] et non /plateformes/[slug]
+      // (cassait le rich result Google ItemList sur 404 cible).
+      const itemUrl = abs(`/avis/${p.id}`);
+      const trustpilotCount = p.ratings.trustpilotCount ?? 0;
+
+      // Spam guard — n'émet aggregateRating QUE si on a au moins 5 avis vérifiables.
+      // Avant : `ratingCount: p.ratings.trustpilotCount || 1` = fabrication d'1 avis
+      // factice quand zéro = risque manual action Google "structured data abuse".
+      const item: Record<string, unknown> = {
         "@type": "FinancialProduct",
         name: p.name,
         url: p.websiteUrl,
@@ -516,15 +521,24 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
           name: p.name,
           url: p.websiteUrl,
         },
-        aggregateRating: {
+      };
+      if (trustpilotCount >= 5) {
+        item.aggregateRating = {
           "@type": "AggregateRating",
           ratingValue: clampRating(p.scoring.global),
           bestRating: 5,
           worstRating: 0,
-          ratingCount: p.ratings.trustpilotCount || 1,
-        },
-      },
-    })),
+          ratingCount: trustpilotCount,
+        };
+      }
+
+      return {
+        "@type": "ListItem",
+        position: idx + 1,
+        url: itemUrl,
+        item,
+      };
+    }),
   };
 }
 
@@ -533,14 +547,24 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Schema pour une carte plateforme : combine Product + AggregateRating + Review.
- * À injecter sur la fiche /plateformes/[id] et sur la home (sous chaque card).
+ * Schema pour une fiche plateforme : combine Product + AggregateRating + Review.
+ *
+ * Fix audit SEO 30/04/2026 :
+ *  - URL réelle est /avis/[slug] (pas /plateformes/[slug] qui n'existe pas).
+ *  - aggregateRating fabriqué (Math.max(..., 1)) = risque manual action Google
+ *    "structured data abuse". Maintenant : guard >= 5 avis vérifiables.
+ *  - Review hardcodée pour CHAQUE plateforme = idem risque "Review spam".
+ *    Ce schema doit être réservé à la PAGE /avis/[slug] uniquement (vraie review
+ *    rédigée). On l'omet sur la home/comparatif où il était dupliqué.
+ *
+ * À injecter UNIQUEMENT sur la fiche /avis/[slug] (1 schema = 1 review réelle).
  */
 export function platformReviewSchema(p: Platform): JsonLd {
-  const productUrl = abs(`/plateformes/${p.id}`);
+  const productUrl = abs(`/avis/${p.id}`);
   const ratingValue = clampRating(p.scoring.global);
+  const trustpilotCount = p.ratings.trustpilotCount ?? 0;
 
-  return {
+  const product: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     "@id": `${productUrl}#product`,
@@ -553,14 +577,6 @@ export function platformReviewSchema(p: Platform): JsonLd {
       name: p.name,
     },
     category: "Cryptocurrency Exchange",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue,
-      bestRating: 5,
-      worstRating: 0,
-      ratingCount: Math.max(p.ratings.trustpilotCount, 1),
-      reviewCount: Math.max(p.ratings.trustpilotCount, 1),
-    },
     review: {
       "@type": "Review",
       author: authorRef(getAuthorByIdOrDefault()),
@@ -586,6 +602,21 @@ export function platformReviewSchema(p: Platform): JsonLd {
       description: p.bonus.welcome,
     },
   };
+
+  // Spam guard : on n'émet aggregateRating que si on a >= 5 avis Trustpilot
+  // vérifiables (sinon fabrication = risque manual action Google).
+  if (trustpilotCount >= 5) {
+    product.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue,
+      bestRating: 5,
+      worstRating: 0,
+      ratingCount: trustpilotCount,
+      reviewCount: trustpilotCount,
+    };
+  }
+
+  return product;
 }
 
 /** Génère le schéma pour toutes les plateformes (utile en page comparatif). */

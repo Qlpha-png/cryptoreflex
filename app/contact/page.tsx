@@ -4,7 +4,6 @@ import {
   Mail,
   MessageSquare,
   Briefcase,
-  Newspaper,
   ShieldCheck,
   ArrowRight,
 } from "lucide-react";
@@ -18,36 +17,34 @@ import {
 import { BRAND } from "@/lib/brand";
 
 /**
- * /contact — page contact générale (3 voies : général / partenariats / presse).
+ * /contact — page contact (2 voies : général / partenariats B2B).
  *
- * Pourquoi 3 emails distincts ?
- *  - contact@ : usage général, réponse sous 48h.
- *  - partenariats@ : leads commerciaux, sponso → équipe partner (priorité).
- *  - presse@ : journalistes, interviews → réponse sous 24h ouvrées.
+ * REFONTE 30/04/2026 (audit cohérence) :
+ *  - Avant : 3 ContactPoints distincts (contact@, partenariats@, presse@) +
+ *    SLA "48h ouvrées (24h presse)" + "Notre équipe" — incohérent avec la
+ *    réalité solo (Kevin Voisin EI, pas d'équipe presse, pas de SLA tenable).
+ *  - Maintenant : 2 ContactPoints réels (général + partenariats B2B), SLA
+ *    "5 jours ouvrés" honnête, ton "réponse personnelle" pas "équipe".
+ *  - presse@cryptoreflex.fr supprimée car n'existait nulle part ailleurs (pas
+ *    d'alias mail configuré, juste une chimère SEO).
  *
- * Le formulaire dispatche automatiquement vers le bon destinataire via la
- * Server Action `submitContact` (cf. lib/partnership-forms.ts).
- *
- * SEO : Schema ContactPage + Organization avec contactPoints multiples
- * (signal fort à Google sur la légitimité de la marque).
+ * SEO : Schema ContactPage + Organization avec 2 contactPoints réels.
  */
 
 export const metadata: Metadata = {
-  title: "Contacter Cryptoreflex — questions, partenariats, presse",
+  title: "Contacter Cryptoreflex — questions et partenariats",
   description:
-    "Une question, une opportunité de partenariat ou une demande presse ? Contacte l'équipe Cryptoreflex via le bon canal — réponse sous 48h ouvrées.",
+    "Une question, un retour ou une opportunité de partenariat B2B ? Réponse personnelle de Kevin sous 5 jours ouvrés.",
   alternates: { canonical: `${BRAND.url}/contact` },
   openGraph: {
     title: "Contacter Cryptoreflex",
     description:
-      "3 canaux : questions générales, partenariats, presse. Réponse sous 48h ouvrées.",
+      "2 canaux : général et partenariats B2B. Réponse personnelle sous 5 jours ouvrés.",
     url: `${BRAND.url}/contact`,
     type: "website",
   },
   robots: { index: true, follow: true },
 };
-
-const PRESSE_EMAIL = "presse@cryptoreflex.fr";
 
 interface ContactCard {
   Icon: typeof Mail;
@@ -62,24 +59,16 @@ const CONTACT_CARDS: ContactCard[] = [
     Icon: MessageSquare,
     title: "Question générale",
     description:
-      "Suggestion de sujet, signalement d'erreur, retour utilisateur, demande pédagogique sur la crypto.",
+      "Suggestion de sujet, signalement d'erreur, retour utilisateur, demande pédagogique sur la crypto, demande presse.",
     email: BRAND.email,
   },
   {
     Icon: Briefcase,
-    title: "Partenariats",
+    title: "Partenariats B2B",
     description:
-      "Sponsoring articles, display affiliate, programme ambassadeurs, lead magnets co-brandés.",
+      "Sponsoring articles, programme ambassadeurs, display affiliate, lead magnets co-brandés (PSAN/fintech FR).",
     email: BRAND.partnersEmail,
     cta: { label: "Voir les offres sponsoring", href: "/sponsoring" },
-  },
-  {
-    Icon: Newspaper,
-    title: "Presse",
-    description:
-      "Interview, citation, demande de chiffres, vérification d'information avant publication.",
-    email: PRESSE_EMAIL,
-    cta: { label: "Voir notre méthodologie", href: "/methodologie" },
   },
 ];
 
@@ -95,34 +84,29 @@ function buildContactSchema(): JsonLd[] {
       name: `Contacter ${BRAND.name}`,
       url: `${BRAND.url}/contact`,
       description:
-        "Page de contact officielle de Cryptoreflex pour questions générales, partenariats et presse.",
+        "Page de contact officielle de Cryptoreflex pour questions générales et partenariats B2B.",
     },
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: BRAND.name,
       url: BRAND.url,
+      // 2 contactPoints réels (vs 3 dans la version précédente) — presse@
+      // n'existait pas comme alias mail configuré.
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer support",
           email: BRAND.email,
-          availableLanguage: ["French", "English"],
+          availableLanguage: ["French"],
           areaServed: "FR",
         },
         {
           "@type": "ContactPoint",
           contactType: "sales",
           email: BRAND.partnersEmail,
-          availableLanguage: ["French", "English"],
+          availableLanguage: ["French"],
           areaServed: ["FR", "EU"],
-        },
-        {
-          "@type": "ContactPoint",
-          contactType: "press",
-          email: PRESSE_EMAIL,
-          availableLanguage: ["French", "English"],
-          areaServed: "FR",
         },
       ],
     },
@@ -160,8 +144,8 @@ export default function ContactPage() {
               Contacter <span className="gradient-text">{BRAND.name}</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Choisis le canal adapté à ta demande. Notre équipe répond sous
-              48h ouvrées (24h pour les demandes presse).
+              Choisis le canal adapté à ta demande. Réponse personnelle de
+              Kevin (fondateur solo) sous 5 jours ouvrés.
             </p>
           </div>
         </div>
@@ -169,7 +153,7 @@ export default function ContactPage() {
 
       {/* 3 CARDS */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {CONTACT_CARDS.map((c) => (
             <article
               key={c.title}

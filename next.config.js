@@ -105,6 +105,28 @@ const nextConfig = {
         destination: "/calendrier/:path*",
         permanent: true,
       },
+      // Audit cohérence 30/04/2026 — /partenariats était un doublon obsolète
+      // de /sponsoring (template ancien, pas de tarifs publics, CTA mailto seul).
+      // /sponsoring est la version canonique avec offres tarifées (800 € article,
+      // 1500 € comparateur, 500 € newsletter). 301 permanent pour préserver
+      // d'éventuels backlinks externes vers /partenariats.
+      {
+        source: "/partenariats",
+        destination: "/sponsoring",
+        permanent: true,
+      },
+      // Idem audit : /affiliations était une page texte qui dupliquait
+      // partiellement /transparence (qui contient désormais le tableau complet
+      // des programmes d'affiliation + codes parrainage personnels). On
+      // consolide tout dans /transparence pour éviter les contradictions de
+      // statuts entre les 2 pages (audit a remonté 11 partenaires actifs sur
+      // /affiliations vs 4 live + 4 review sur /transparence — incohérence
+      // résolue par fusion).
+      {
+        source: "/affiliations",
+        destination: "/transparence",
+        permanent: true,
+      },
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.

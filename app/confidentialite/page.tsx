@@ -4,7 +4,9 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Politique de confidentialité",
   description: `Comment ${BRAND.name} collecte, utilise et protège vos données personnelles.`,
-  robots: { index: true, follow: false },
+  // Fix audit SEO 30/04/2026 — avant `follow: false` brûlait le PageRank
+  // vers /transparence et /mentions-legales linkés depuis cette page.
+  robots: { index: true, follow: true },
 };
 
 export default function ConfidentialitePage() {

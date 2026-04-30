@@ -102,9 +102,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/ressources-libres`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    // Portefeuille : noindex côté metadata (page perso) mais on l'inclut pour
-    // la découvrabilité interne / surface PageRank côté footer
-    { url: `${SITE_URL}/portefeuille`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car
+    // disallow dans robots.txt (cohérence stricte : disallow > sitemap pour
+    // Google, mais une URL sitemap ignorée envoie un signal de pollution).
+    // Le PageRank passe quand même via les liens internes du Footer/Navbar.
   ];
 
   /* ----------------------------------------------------------------

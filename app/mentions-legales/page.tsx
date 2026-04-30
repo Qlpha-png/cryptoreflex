@@ -4,7 +4,9 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description: `Mentions légales de ${BRAND.name} : éditeur, hébergeur, contact, propriété intellectuelle.`,
-  robots: { index: true, follow: false },
+  // Fix audit SEO 30/04/2026 — `follow: true` permet au PageRank de circuler
+  // vers /confidentialite et /transparence linkés depuis cette page.
+  robots: { index: true, follow: true },
 };
 
 export default function MentionsLegalesPage() {

@@ -54,7 +54,7 @@ export default function RegulatoryFooter({
           en cryptoactifs comporte un risque élevé de perte totale en capital.
           Les liens marqués{" "}
           <span className="text-fg/80">« Publicité »</span> sont des liens
-          d'affiliation rémunérés sans surcoût pour vous. Détails sur{" "}
+          d&apos;affiliation rémunérés sans surcoût pour toi. Détails sur{" "}
           <Link
             href="/transparence"
             className="text-primary-soft hover:text-primary underline underline-offset-2"
