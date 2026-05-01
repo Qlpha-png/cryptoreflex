@@ -174,6 +174,38 @@ export default async function AccountPage() {
           </div>
         )}
 
+        {/* Pro feature spotlight : Cerfa 2086 auto */}
+        {isPro && (
+          <Link
+            href="/outils/cerfa-2086-auto"
+            className="block mb-6 group rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/10 to-transparent p-5 hover:border-gold/70 transition-colors"
+            aria-label="Accéder à l'outil Cerfa 2086 auto, réservé aux abonnés Soutien"
+          >
+            <div className="flex items-start gap-4">
+              <div className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-full bg-gold/20 text-gold">
+                <FileText className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <div className="flex-1">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gold">
+                  <Sparkles className="h-3 w-3" aria-hidden="true" />
+                  Nouveau Soutien
+                </span>
+                <h3 className="mt-1 font-display text-lg font-extrabold text-fg">
+                  Génère ton Cerfa 2086 auto
+                </h3>
+                <p className="mt-1 text-sm text-fg/70">
+                  Importe ton CSV Binance/Coinbase et reçois un PDF Cerfa 2086 +
+                  3916-bis pré-rempli en 30 secondes.
+                </p>
+              </div>
+              <ArrowRight
+                className="h-5 w-5 text-gold mt-1 transition-transform group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </div>
+          </Link>
+        )}
+
         {/* Si pas Pro : nouvelle vue conversion premium */}
         {!isPro && <FreeUserDashboard />}
 

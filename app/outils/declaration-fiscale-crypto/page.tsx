@@ -320,6 +320,36 @@ export default function DeclarationFiscaleCryptoPage() {
               description="Connecte tes exchanges (Binance, Kraken, Coinbase, Ledger…), Waltio calcule automatiquement tes plus-values selon la fiscalité française et te livre les formulaires prêts à téléverser sur impots.gouv.fr. 30 % de réduction via Cryptoreflex."
             />
           </div>
+
+          {/* Pro feature : Cerfa 2086 auto Cryptoreflex (alternative complémentaire) */}
+          <div className="mt-6 rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/10 to-transparent p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <Sparkles
+                className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
+                aria-hidden="true"
+              />
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-warning-fg">
+                  Soutien Cryptoreflex
+                </span>
+                <h3 className="mt-2 font-display font-bold text-lg text-fg">
+                  Tu veux le PDF Cerfa 2086 sans payer Waltio ? Outil Pro
+                </h3>
+                <p className="mt-1 text-sm text-fg/70">
+                  Notre outil Soutien (2,99 €/mois) génère un Cerfa 2086 +
+                  3916-bis pré-rempli depuis ton CSV. Idéal pour les profils
+                  &lt; 200 transactions / an.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/outils/cerfa-2086-auto"
+              className="btn-ghost justify-center shrink-0"
+            >
+              Tester l'outil Pro
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -884,6 +884,35 @@ export default function CalculateurFiscalitePage() {
             </p>
           </div>
 
+          {/* CTA Pro : Cerfa 2086 auto */}
+          <div className="mt-8 rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/10 to-transparent p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <Sparkles
+                className="h-6 w-6 shrink-0 text-gold mt-0.5"
+                aria-hidden="true"
+              />
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gold">
+                  Soutien Pro
+                </span>
+                <h3 className="mt-2 font-display font-bold text-lg text-white">
+                  Tu veux le PDF Cerfa 2086 pré-rempli ? Outil Pro
+                </h3>
+                <p className="mt-1 text-sm text-white/70">
+                  Importe ton CSV Binance/Coinbase et reçois un Cerfa 2086 +
+                  3916-bis auto en 30 s. Réservé aux abonnés Soutien.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/outils/cerfa-2086-auto"
+              className="btn-primary justify-center shrink-0"
+            >
+              Génération auto
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+
           <div className="mt-8 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-start gap-3">
               <FileText

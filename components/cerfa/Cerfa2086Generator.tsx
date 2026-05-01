@@ -578,6 +578,107 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         </p>
       </div>
 
+      {/* Mode "guidé" — 3 étapes visuelles pour rassurer un débutant */}
+      <ol className="grid sm:grid-cols-3 gap-3 text-sm">
+        {[
+          {
+            n: "1",
+            title: "Exporte ton CSV",
+            desc: "Sur Binance/Coinbase/Bitpanda : Compte → Historique → Exporter en CSV.",
+            done: transactions.length > 0,
+          },
+          {
+            n: "2",
+            title: "Importe-le ici",
+            desc: "Glisse-dépose ou clique pour parcourir. Le calcul est instantané.",
+            done: state === "preview" || state === "success",
+          },
+          {
+            n: "3",
+            title: "Télécharge ton PDF",
+            desc: "Vérifie l'aperçu, clique « Télécharger ». Cerfa 2086 + 3916-bis prêts.",
+            done: state === "success",
+          },
+        ].map((step) => (
+          <li
+            key={step.n}
+            className={`relative rounded-2xl border p-4 transition-colors ${
+              step.done
+                ? "border-success/40 bg-success/5"
+                : "border-border bg-elevated/40"
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
+                  step.done
+                    ? "bg-success text-background"
+                    : "bg-primary/15 text-primary"
+                }`}
+                aria-hidden="true"
+              >
+                {step.done ? <CheckCircle2 className="h-4 w-4" /> : step.n}
+              </span>
+              <h3 className="font-bold text-fg">{step.title}</h3>
+            </div>
+            <p className="text-xs text-fg/65 leading-relaxed">{step.desc}</p>
+          </li>
+        ))}
+      </ol>
+
+      {/* Tutoriel "Où trouver mon CSV ?" — repliable */}
+      <details className="glass rounded-xl p-4 text-sm">
+        <summary className="cursor-pointer font-semibold text-fg flex items-center gap-2">
+          <FileText className="h-4 w-4 text-primary-soft" aria-hidden="true" />
+          Où trouver mon CSV de transactions ? (clique pour voir le pas-à-pas par
+          plateforme)
+        </summary>
+        <div className="mt-4 grid sm:grid-cols-3 gap-3 text-xs">
+          {[
+            {
+              name: "Binance",
+              steps: [
+                "Connecte-toi sur binance.com",
+                "Compte (icône en haut à droite) → Historique de transactions",
+                "Sélectionne la période (toute l'année fiscale)",
+                "Clique « Exporter rapport CSV » — délai 24-48h, email envoyé",
+              ],
+            },
+            {
+              name: "Coinbase",
+              steps: [
+                "Connecte-toi sur coinbase.com",
+                "Profil → Rapports → Générer un rapport",
+                "Période : année fiscale complète",
+                "Format CSV → Télécharger",
+              ],
+            },
+            {
+              name: "Bitpanda",
+              steps: [
+                "Connecte-toi sur bitpanda.com",
+                "Mon profil → Historique → Exporter",
+                "Type : Toutes les transactions",
+                "Format CSV → Télécharger",
+              ],
+            },
+          ].map((p) => (
+            <div key={p.name} className="rounded-lg border border-border/60 bg-elevated/40 p-3">
+              <div className="font-bold text-fg mb-2">{p.name}</div>
+              <ol className="list-decimal list-inside space-y-1 text-fg/70">
+                {p.steps.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] text-fg/55">
+          Tu utilises un autre exchange ? Importe ton export Waltio (JSON) — c&apos;est
+          le format pivot universel pour les déclarants crypto FR.
+        </p>
+      </details>
+
       {/* Inputs : nom + année */}
       <div className="grid sm:grid-cols-2 gap-4">
         <label className="block">
