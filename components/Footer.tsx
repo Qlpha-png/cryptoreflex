@@ -122,6 +122,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/transparence", label: "Affiliation transparente" },
       { href: "/confidentialite", label: "Confidentialité (RGPD)" },
       { href: "/mentions-legales", label: "Mentions légales" },
+      { href: "/cgv-abonnement", label: "CGV abonnement" },
       { href: "/accessibilite", label: "Accessibilité (RGAA)" },
     ],
   },

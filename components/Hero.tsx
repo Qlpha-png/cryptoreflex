@@ -57,7 +57,7 @@ interface HeroProps {
  */
 const STATS = {
   platforms: 14,
-  cryptos: 20,
+  cryptos: 100,
   tools: 6,
   method: "Publique",
 } as const;
@@ -210,7 +210,7 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         <div className="mt-10 lg:mt-14 animate-hero-fade-up animate-hero-fade-up-delay-4">
           <div className="card-premium p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
             <KpiCell value={STATS.platforms} label="Marques fiables" accent />
-            <KpiCell value={STATS.cryptos} label="Cryptos suivies" />
+            <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
             <KpiCell value={STATS.tools} label="Outils gratuits" />
             <KpiCell text={STATS.method} label="Méthode" />
           </div>

@@ -261,9 +261,9 @@ export default async function HomePage() {
           Icon={Lightbulb}
           eyebrow="Étape 3"
           title="Apprendre la crypto"
-          intro="Les cryptos qui comptent, expliquées simplement, et nos guides pour ne pas faire les erreurs classiques de débutant."
+          intro="100 cryptos analysées en détail (top 10 + 90 hidden gems avec score de fiabilité), expliquées simplement. Plus nos guides pour éviter les erreurs classiques de débutant."
           ctaHref="/cryptos"
-          ctaLabel="Toutes les cryptos"
+          ctaLabel="100 cryptos analysées →"
           anchorId="cat-apprendre"
         />
         <Top10CryptosSection />

@@ -25,6 +25,7 @@ import {
 import NewsletterInline from "@/components/NewsletterInline";
 import StructuredData from "@/components/StructuredData";
 import TieredPricing, { type PricingTier } from "@/components/TieredPricing";
+import GatedProTiers from "@/components/subscription/GatedProTiers";
 import ProStickyMobileCTA from "@/components/ProStickyMobileCTA";
 import {
   faqSchema,
@@ -816,16 +817,24 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* PLANS (TieredPricing) */}
+      {/* PLANS — encart consentement client (GatedProTiers, gating via DOM
+          listener) + TieredPricing server à part. Si PAYMENTS_ENABLED=false
+          (mode pré-launch waitlist), GatedProTiers retourne null. */}
       <section
         id="plans"
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 scroll-mt-24"
       >
-        <TieredPricing
-          tiers={TIERS}
-          heading="Choisis ton mode de soutien"
-          subheading="Le plan Gratuit reste généreux pour tout le monde. Le plan Soutien lève les limites techniques et finance le projet."
-        />
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
+            Choisis ton mode de soutien
+          </h2>
+          <p className="mt-2 text-fg/70 max-w-2xl mx-auto">
+            Le plan Gratuit reste généreux pour tout le monde. Le plan Soutien lève les
+            limites techniques et finance le projet.
+          </p>
+        </div>
+        <GatedProTiers enabled={PAYMENTS_ENABLED} />
+        <TieredPricing tiers={TIERS} />
         {/*
           TODO automne 2026 — passer au Stripe Checkout dynamique (Subscription
           Sessions) au lieu des Payment Links statiques :
