@@ -19,6 +19,7 @@ import Link from "next/link";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 
+import remarkAutoLinkEntities from "@/lib/remark-auto-link-entities";
 import Callout from "@/components/mdx/Callout";
 import AffiliateLink from "@/components/mdx/AffiliateLink";
 import PlatformCardInline from "@/components/mdx/PlatformCardInline";
@@ -276,7 +277,13 @@ export default function MdxContent({ source, components }: MdxContentProps) {
             // ⚠ MDX 3 parse `{...}` au niveau document AVANT les plugins remark.
             // Donc la syntaxe `## Titre {#anchor-id}` est interdite (acorn crash).
             // → Utiliser uniquement `## Titre` ; rehype-slug génère l'id depuis le texte.
-            remarkPlugins: [remarkGfm],
+            remarkPlugins: [
+              remarkGfm,
+              // Auto-linking entity-driven (cryptos, platforms, tools, glossary).
+              // Plafond 12 liens auto par article ; 1 lien max par entité.
+              // Skip code/pre/headings/links existants — cf. lib/remark-auto-link-entities.ts.
+              [remarkAutoLinkEntities, { maxLinks: 12 }],
+            ],
             rehypePlugins: [rehypeSlug],
           },
           parseFrontmatter: false, // déjà parsé par lib/mdx.ts

@@ -16,6 +16,7 @@ import NewsletterInline from "@/components/NewsletterInline";
 import PopularArticles from "@/components/blog/PopularArticles";
 import ArticleToc from "@/components/blog/ArticleToc";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import RelatedEntities from "@/components/RelatedEntities";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import ArticleHero from "@/components/ui/ArticleHero";
@@ -411,6 +412,12 @@ export default async function BlogArticlePage({ params }: Props) {
                   </div>
                 </section>
               )}
+
+              {/* "Voir aussi" entity-driven — cryptos / plateformes / outils
+                  / termes mentionnés dans le texte de l'article. Complémentaire
+                  du graphe cluster (RelatedPagesNav) : ce bloc-ci est dérivé
+                  data, l'autre est curaté humainement. */}
+              <RelatedEntities text={article.content} limit={6} />
 
               {/* Maillage interne — cluster sémantique du graphe */}
               <RelatedPagesNav

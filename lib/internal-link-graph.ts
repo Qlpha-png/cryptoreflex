@@ -1,6 +1,14 @@
 /**
  * lib/internal-link-graph.ts — Graphe sémantique des liens internes Cryptoreflex.
  *
+ * Deux couches coexistent :
+ *  1. Graphe **clusters / hubs** (CLUSTERS, getRelatedPages, …) — historique,
+ *     curatif, optimisé pour le maillage stratégique hub→article.
+ *  2. **EntityIndex** (buildEntityIndex, getEntityIndex, …) — couche déclarative
+ *     dérivée des datasets (cryptos, platforms, tools, comparisons, glossary).
+ *     Sert à l'auto-linking dans le texte des articles MDX et au composant
+ *     <RelatedEntities/> (bloc "Voir aussi" en bas d'article).
+ *
  * # Pourquoi ce module ?
  *
  * Sur un site avec ~280 routes (V2 + Phase 3), Google passe vite à côté des
@@ -316,4 +324,295 @@ function humanizePath(path: string): string {
   return last
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/* ========================================================================== */
+/*  ENTITY INDEX — graphe d'entités auto pour auto-linking & "Voir aussi"     */
+/* ========================================================================== */
+
+import { getAllCryptos } from "./cryptos";
+import { getAllPlatforms } from "./platforms";
+import { getAllFiscalTools } from "./fiscal-tools";
+import { getAllComparisons } from "./comparisons";
+import { GLOSSARY as GLOSSARY_FLAT } from "./glossary";
+
+export type EntityType =
+  | "crypto"
+  | "platform"
+  | "tool"
+  | "comparison"
+  | "term";
+
+export interface EntityIndexEntry {
+  type: EntityType;
+  slug: string;
+  /** Libellé canonique (ex: "Bitcoin", "Binance"). */
+  label: string;
+  /** URL absolue locale (ex: "/cryptos/bitcoin"). */
+  url: string;
+  /**
+   * Variantes textuelles à matcher dans le texte d'un article. Toutes les
+   * entrées sont déjà en lower-case. Ordre de priorité : du plus spécifique
+   * au plus générique (le matcher essaie le plus long en premier).
+   */
+  aliases: string[];
+  /** Description courte pour le bloc "Voir aussi". */
+  description?: string;
+}
+
+/**
+ * Singleton — calculé au premier accès (boot serveur), gardé en mémoire
+ * jusqu'au prochain hot-reload / reboot. Coût ~5 ms (lecture JSON déjà fait
+ * + map en mémoire), donc on évite de spammer le rebuild.
+ */
+let _cachedIndex: Map<string, EntityIndexEntry> | null = null;
+let _cachedAliasOrder: string[] | null = null;
+
+/* -------------------------------------------------------------------------- */
+/*  Helpers normalisation                                                     */
+/* -------------------------------------------------------------------------- */
+
+/** Lower + strip accents pour matching insensible. */
+function normalizeAlias(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+}
+
+function pushAlias(set: Set<string>, alias: string | undefined | null) {
+  if (!alias) return;
+  const n = normalizeAlias(alias);
+  if (n.length < 2) return; // évite "à", "le", etc.
+  set.add(n);
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Construction de l'index                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Construit le graphe d'entités à partir de toutes les sources de données.
+ * Idempotent — peut être rappelé pour reset le cache (tests).
+ *
+ * Convention de routes (cf. `app/`) :
+ *  - cryptos     → /cryptos/{slug}
+ *  - platforms   → /avis/{slug}
+ *  - tools       → /outils/{slug}
+ *  - comparisons → /comparatif/{slug}    (comparatif plateformes éditorial)
+ *  - terms       → /outils/glossaire-crypto#{slug}
+ *
+ * À ne pas confondre avec `/comparer/{slug}` qui adresse les comparatifs de
+ * cryptos data-driven (lib/programmatic.ts), pas les duels plateformes.
+ */
+export function buildEntityIndex(): Map<string, EntityIndexEntry> {
+  const index = new Map<string, EntityIndexEntry>();
+
+  /* ---------------------------- 1. CRYPTOS -------------------------------- */
+  for (const c of getAllCryptos()) {
+    const aliases = new Set<string>();
+    pushAlias(aliases, c.name);
+    pushAlias(aliases, c.symbol);
+    pushAlias(aliases, `${c.name} (${c.symbol})`);
+    // Le "le Bitcoin" / "l'Ethereum" — fréquent en FR
+    pushAlias(aliases, `le ${c.name}`);
+    pushAlias(aliases, `${c.name} (${c.id})`);
+    index.set(`crypto:${c.id}`, {
+      type: "crypto",
+      slug: c.id,
+      label: c.name,
+      url: `/cryptos/${c.id}`,
+      aliases: Array.from(aliases),
+      description: c.tagline,
+    });
+  }
+
+  /* ---------------------------- 2. PLATFORMS ------------------------------ */
+  for (const p of getAllPlatforms()) {
+    const aliases = new Set<string>();
+    pushAlias(aliases, p.name);
+    pushAlias(aliases, p.id);
+    index.set(`platform:${p.id}`, {
+      type: "platform",
+      slug: p.id,
+      label: p.name,
+      url: `/avis/${p.id}`,
+      aliases: Array.from(aliases),
+      description: p.tagline,
+    });
+  }
+
+  /* ---------------------------- 3. TOOLS ---------------------------------- */
+  for (const t of getAllFiscalTools()) {
+    const aliases = new Set<string>();
+    pushAlias(aliases, t.name);
+    // Pas d'alias-slug ici : éviter "waltio-pro" matché en pleine phrase.
+    index.set(`tool:${t.id}`, {
+      type: "tool",
+      slug: t.id,
+      label: t.name,
+      url: `/outils/${t.id}`,
+      aliases: Array.from(aliases),
+      // FiscalTool n'a pas de tagline ; on prend les `notes` éditoriales si dispo,
+      // sinon on tombe sur les `pros[0]` qui forment souvent une phrase complète.
+      description: t.notes ?? t.pros?.[0] ?? undefined,
+    });
+  }
+
+  /* ---------------------------- 4. COMPARISONS ---------------------------- */
+  for (const cmp of getAllComparisons()) {
+    const aliases = new Set<string>();
+    // Un comparatif "binance-vs-coinbase" : on n'auto-link PAS le texte (trop
+    // ambigu — "binance vs coinbase" en plein article ne pointe pas forcément
+    // sur notre comparatif). On expose surtout cette entrée pour le bloc
+    // "Voir aussi" via les cryptos/platforms mentionnées.
+    pushAlias(aliases, cmp.kw_principal);
+    index.set(`comparison:${cmp.slug}`, {
+      type: "comparison",
+      slug: cmp.slug,
+      label: cmp.kw_principal,
+      url: `/comparatif/${cmp.slug}`,
+      aliases: Array.from(aliases),
+    });
+  }
+
+  /* ---------------------------- 5. GLOSSARY TERMS ------------------------- */
+  for (const term of GLOSSARY_FLAT) {
+    const aliases = new Set<string>();
+    pushAlias(aliases, term.term);
+    // Les termes très génériques (1-3 lettres) sont skip via pushAlias().
+    index.set(`term:${term.slug}`, {
+      type: "term",
+      slug: term.slug,
+      label: term.term,
+      url: `/outils/glossaire-crypto#${term.slug}`,
+      aliases: Array.from(aliases),
+      description: term.definition.slice(0, 140),
+    });
+  }
+
+  return index;
+}
+
+/**
+ * Retourne le singleton de l'index. À utiliser partout — recalcul = explicite
+ * via `resetEntityIndexCache()`.
+ */
+export function getEntityIndex(): Map<string, EntityIndexEntry> {
+  if (_cachedIndex === null) {
+    _cachedIndex = buildEntityIndex();
+  }
+  return _cachedIndex;
+}
+
+/** Pour les tests / hot reload. */
+export function resetEntityIndexCache(): void {
+  _cachedIndex = null;
+  _cachedAliasOrder = null;
+}
+
+/**
+ * Liste plate (alias normalisé → entry) triée par longueur d'alias DÉCROISSANTE.
+ * Indispensable pour l'auto-linker : on doit matcher le plus long alias en
+ * premier ("le Bitcoin" avant "Bitcoin"), sinon on mange les caractères courts.
+ *
+ * Cache calculée à la demande, conservée jusqu'au reset.
+ */
+export interface AliasMatchEntry {
+  alias: string;
+  entry: EntityIndexEntry;
+}
+
+export function getAliasMatchList(): AliasMatchEntry[] {
+  if (_cachedAliasOrder !== null) {
+    // Reconstruit la liste depuis l'ordre cached.
+    const idx = getEntityIndex();
+    const flat: AliasMatchEntry[] = [];
+    for (const e of idx.values()) {
+      for (const a of e.aliases) {
+        flat.push({ alias: a, entry: e });
+      }
+    }
+    return flat.sort((a, b) => b.alias.length - a.alias.length);
+  }
+  const idx = getEntityIndex();
+  const flat: AliasMatchEntry[] = [];
+  for (const e of idx.values()) {
+    for (const a of e.aliases) {
+      flat.push({ alias: a, entry: e });
+    }
+  }
+  flat.sort((a, b) => b.alias.length - a.alias.length);
+  _cachedAliasOrder = flat.map((f) => f.alias);
+  return flat;
+}
+
+/**
+ * Trouve les entités mentionnées dans un texte donné (article complet).
+ * Utilisé par <RelatedEntities/> pour proposer le bloc "Voir aussi".
+ *
+ * Approche : scan simple insensible à la casse. Pas besoin d'AST ici car on
+ * cherche juste à détecter la PRÉSENCE des entités (pas à les transformer).
+ *
+ * @param text — Le contenu MDX brut (string).
+ * @returns Set des entités mentionnées, dédupliquées.
+ */
+export function findEntitiesInText(text: string): EntityIndexEntry[] {
+  const normText = normalizeAlias(text);
+  const found = new Map<string, EntityIndexEntry>(); // dedup par url
+  for (const { alias, entry } of getAliasMatchList()) {
+    if (found.has(entry.url)) continue;
+    // Word boundary FR-friendly : on accepte les bords de mot ASCII +
+    // début/fin de string. On évite les regex coûteuses sur 200+ aliases en
+    // utilisant indexOf + check des caractères adjacents.
+    const i = normText.indexOf(alias);
+    if (i === -1) continue;
+    const before = i === 0 ? " " : normText[i - 1] ?? " ";
+    const after =
+      i + alias.length >= normText.length
+        ? " "
+        : normText[i + alias.length] ?? " ";
+    if (/[a-z0-9]/.test(before) || /[a-z0-9]/.test(after)) continue;
+    found.set(entry.url, entry);
+  }
+  return Array.from(found.values());
+}
+
+/**
+ * Retourne les entités à afficher dans le bloc "Voir aussi" pour un article.
+ * Stratégie :
+ *  - Top 3 cryptos mentionnées
+ *  - Top 1 platform mentionnée
+ *  - Top 1 tool mentionné
+ *  - Top 1 comparatif mentionné (rarement matché → fallback OK)
+ * Cap global = `limit` (défaut 6).
+ */
+export function pickRelatedEntities(
+  text: string,
+  limit = 6
+): EntityIndexEntry[] {
+  const all = findEntitiesInText(text);
+  const cryptos = all.filter((e) => e.type === "crypto").slice(0, 3);
+  const platforms = all.filter((e) => e.type === "platform").slice(0, 1);
+  const tools = all.filter((e) => e.type === "tool").slice(0, 1);
+  const comparisons = all.filter((e) => e.type === "comparison").slice(0, 1);
+  const terms = all.filter((e) => e.type === "term").slice(0, 2);
+  const merged: EntityIndexEntry[] = [
+    ...cryptos,
+    ...platforms,
+    ...tools,
+    ...comparisons,
+    ...terms,
+  ];
+  // Dedup défensif (au cas où un slug serait dupliqué sur plusieurs types).
+  const seen = new Set<string>();
+  const out: EntityIndexEntry[] = [];
+  for (const e of merged) {
+    if (seen.has(e.url)) continue;
+    seen.add(e.url);
+    out.push(e);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
