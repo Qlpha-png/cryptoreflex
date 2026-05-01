@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import Logo from "./Logo";
+import LiveCommunityStats from "./LiveCommunityStats";
 
 /**
  * Footer — pied de page Cryptoreflex (CRITIQUE SEO sitelinks Google + UX engagement final).
@@ -128,7 +129,7 @@ const NAV_GROUPS: FooterGroup[] = [
   },
 ];
 
-export default function Footer() {
+export default async function Footer() {
   return (
     <footer
       // Audit A11y : retire role="contentinfo" redondant (<footer> top-level l'a déjà implicite).
@@ -253,6 +254,19 @@ export default function Footer() {
             <Sparkles className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
             Éditeur web indépendant
           </span>
+        </div>
+
+        {/*
+          Étude 02/05/2026 — Proposition #18 (LiveCommunityStats compact) :
+          bandeau "communauté en vie" au-dessus du copyright. Server Component
+          async qui fetch /api/community-stats (cache 5 min). Variant "compact"
+          = 3 chiffres en ligne, pas d'icônes lourdes pour rester discret.
+        */}
+        <div
+          className="mt-6 pt-4 border-t border-border/60"
+          aria-label="Communauté Cryptoreflex en vie"
+        >
+          <LiveCommunityStats variant="compact" />
         </div>
 
         <div className="mt-6 pt-4 border-t border-border/60 space-y-3 text-xs text-fg/75">

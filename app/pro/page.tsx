@@ -27,6 +27,7 @@ import StructuredData from "@/components/StructuredData";
 import TieredPricing, { type PricingTier } from "@/components/TieredPricing";
 import GatedProTiers from "@/components/subscription/GatedProTiers";
 import ProStickyMobileCTA from "@/components/ProStickyMobileCTA";
+import LiveCommunityStats from "@/components/LiveCommunityStats";
 import {
   faqSchema,
   breadcrumbSchema,
@@ -806,6 +807,28 @@ export default function ProPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/*
+        Étude 02/05/2026 — Proposition #18 (LiveCommunityStats full).
+        Bandeau social proof "communauté en vie" placé juste avant les
+        plans pour booster la conversion (effet de groupe / bandwagon).
+        Server Component async qui bénéficie du cache 5 min côté API.
+      */}
+      <section
+        aria-labelledby="community-stats-title"
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10"
+      >
+        <div className="text-center mb-6">
+          <p className="ds-eyebrow text-primary-soft">LA COMMUNAUTÉ EN VIE</p>
+          <h2
+            id="community-stats-title"
+            className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg"
+          >
+            Tu rejoins un groupe qui grandit chaque mois
+          </h2>
+        </div>
+        <LiveCommunityStats variant="full" />
       </section>
 
       {/* PLANS — encart consentement client (GatedProTiers, gating via DOM
