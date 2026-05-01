@@ -265,4 +265,33 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// ────────────────────────────────────────────────────────────────────────
+// Sentry — wrapping de la config Next.js pour activer source maps upload,
+// tunnel route (/monitoring → bypass adblockers qui bloquent ingest.sentry.io),
+// et les hooks d'instrumentation.
+//
+// Sans SENTRY_AUTH_TOKEN (typique en local dev / preview sans secret), le
+// plugin Sentry passe en mode "no-op upload" : on a quand même les hooks
+// runtime, juste pas de source maps déployées. Build ne casse pas.
+// ────────────────────────────────────────────────────────────────────────
+const { withSentryConfig } = require("@sentry/nextjs");
+
+const sentryWebpackPluginOptions = {
+  // Ne pollue pas les logs build (le plugin est très verbeux par défaut).
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  // Source maps : élargit la liste des chunks uploadés pour avoir les
+  // stack traces lisibles côté Sentry (sinon on voit du JS minifié).
+  widenClientFileUpload: true,
+  // Tunnel SDK → /monitoring : bypass des adblockers qui drop les requêtes
+  // vers *.ingest.sentry.io. Next.js proxy transparent, zéro latence ajoutée.
+  tunnelRoute: "/monitoring",
+  // Désactive le logger Sentry runtime pour économiser ~5KB sur le bundle
+  // client (les warnings de la lib elle-même).
+  disableLogger: true,
+  // En CI sans SENTRY_AUTH_TOKEN : pas de tentative d'upload (évite errors).
+  dryRun: !process.env.SENTRY_AUTH_TOKEN,
+};
+
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);

@@ -28,6 +28,15 @@ const PerfMonitor = dynamic(() => import("@/components/PerfMonitor"), {
   ssr: false,
 });
 
+// Étude 02/05/2026 — WebVitalsReporter envoie les Core Web Vitals à
+// /api/analytics/vitals (KV) pour alimenter le dashboard /admin/vitals avec
+// p75 historique. Utilise next/web-vitals (déjà dispo, ~3 KB) + sendBeacon.
+// Lazy-loaded ssr:false (useReportWebVitals = client-only).
+const WebVitalsReporter = dynamic(
+  () => import("@/components/WebVitalsReporter"),
+  { ssr: false }
+);
+
 // Audit 26/04/2026 (user "Search Rechercher ne marche pas") : CommandPalette
 // existait dans le repo mais n'était JAMAIS monté = bouton search Navbar dispatch
 // l'event 'cmdk:open' dans le vide. Fix : monté en dynamic ssr:false (chargé
@@ -422,6 +431,12 @@ export default function RootLayout({
           first paint (dynamic ssr:false → chunk séparé chargé après hydration).
         */}
         <PerfMonitor />
+        {/*
+          WebVitalsReporter — POST des Core Web Vitals vers /api/analytics/vitals
+          (KV). Coexiste avec PerfMonitor (qui envoie à Plausible). Le flux KV
+          alimente le dashboard /admin/vitals avec p75 calculé serveur.
+        */}
+        <WebVitalsReporter />
         {/* CommandPalette ⌘K — déclenché via window.dispatchEvent('cmdk:open')
             par les boutons Search Navbar (desktop + mobile). */}
         <CommandPalette />
