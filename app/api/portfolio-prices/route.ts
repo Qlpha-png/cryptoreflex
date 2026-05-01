@@ -27,6 +27,9 @@ interface PortfolioPrice {
   symbol?: string;
   name?: string;
   image?: string;
+  /** Sparkline 7j (168 points horaires CoinGecko) — UNIQUEMENT renseigné si
+      le query param `?include=sparkline` est présent. */
+  sparkline7d?: number[];
 }
 
 interface CoinGeckoSimple {
@@ -44,19 +47,28 @@ interface CoinGeckoMarket {
   image: string;
   current_price: number;
   price_change_percentage_24h: number;
+  sparkline_in_7d?: { price: number[] };
 }
 
 /**
  * Fetch interne — utilise /coins/markets pour avoir image + symbol + name +
  * prix EUR + variation 24h en un seul appel. Plus lourd que /simple/price
  * mais évite un round-trip pour récupérer les meta de la coin.
+ *
+ * Si `withSparkline` → ajoute `sparkline_in_7d.price` à la réponse (~1 KB
+ * extra par coin). Cache key séparée plus bas pour ne pas casser le cache
+ * "light" historique.
  */
-async function _fetchPortfolioPrices(ids: string[]): Promise<PortfolioPrice[]> {
+async function _fetchPortfolioPrices(
+  ids: string[],
+  withSparkline = false
+): Promise<PortfolioPrice[]> {
   if (ids.length === 0) return [];
 
+  const sparklineFlag = withSparkline ? "true" : "false";
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=eur&ids=${ids.join(
     ","
-  )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=false&price_change_percentage=24h`;
+  )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=${sparklineFlag}&price_change_percentage=24h`;
 
   try {
     const res = await fetch(url, {
@@ -72,6 +84,9 @@ async function _fetchPortfolioPrices(ids: string[]): Promise<PortfolioPrice[]> {
       symbol: c.symbol?.toUpperCase(),
       name: c.name,
       image: c.image,
+      ...(withSparkline
+        ? { sparkline7d: c.sparkline_in_7d?.price ?? [] }
+        : {}),
     }));
   } catch {
     // Graceful : le portfolio reste lisible (PRU + quantité) même sans live.
@@ -99,11 +114,17 @@ function makeIdsKey(ids: string[]): string {
   return [...ids].sort().join(",");
 }
 
-async function fetchPortfolioPricesCached(ids: string[]): Promise<PortfolioPrice[]> {
+async function fetchPortfolioPricesCached(
+  ids: string[],
+  withSparkline = false
+): Promise<PortfolioPrice[]> {
   const key = makeIdsKey(ids);
+  // Cache key séparée pour les variantes light vs sparkline → on ne pollue
+  // pas un cache hit "light" en y forçant la variante lourde, et inversement.
+  const cacheTag = withSparkline ? "spk" : "light";
   const cached = unstable_cache(
-    () => _fetchPortfolioPrices(ids),
-    ["portfolio-prices-eur-v2", key],
+    () => _fetchPortfolioPrices(ids, withSparkline),
+    ["portfolio-prices-eur-v2", cacheTag, key],
     { revalidate: 60, tags: ["coingecko:portfolio"] }
   );
   return cached();
@@ -112,6 +133,11 @@ async function fetchPortfolioPricesCached(ids: string[]): Promise<PortfolioPrice
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const idsParam = searchParams.get("ids") ?? "";
+  const includeParam = searchParams.get("include") ?? "";
+  const withSparkline = includeParam
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .includes("sparkline");
 
   // Sanitize : split, trim, dedupe, kebab-only, plafonne à MAX_IDS.
   const ids = Array.from(
@@ -134,7 +160,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const prices = await fetchPortfolioPricesCached(ids);
+  const prices = await fetchPortfolioPricesCached(ids, withSparkline);
 
   return NextResponse.json(
     { prices, updatedAt: new Date().toISOString() },

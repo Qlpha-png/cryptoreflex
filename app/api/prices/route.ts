@@ -21,6 +21,7 @@
 import { NextResponse } from "next/server";
 import {
   fetchPrices,
+  fetchPricesWithSparkline,
   DEFAULT_COINS,
   type CoinId,
 } from "@/lib/coingecko";
@@ -105,7 +106,18 @@ export async function GET(request: Request) {
     ids = valid as CoinId[];
   }
 
-  const prices = await fetchPrices(ids);
+  // Option : ?include=sparkline → renvoie chaque CoinPrice avec sparkline7d
+  // (168 points horaires CoinGecko). Cache séparé pour ne pas dégrader
+  // la latence des appels "light" qui n'ont pas besoin du payload sparkline.
+  const includeParam = searchParams.get("include") ?? "";
+  const includeSparkline = includeParam
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .includes("sparkline");
+
+  const prices = includeSparkline
+    ? await fetchPricesWithSparkline(ids)
+    : await fetchPrices(ids);
 
   return NextResponse.json(
     { prices, updatedAt: new Date().toISOString() },

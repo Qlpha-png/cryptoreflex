@@ -33,6 +33,7 @@ import EditHoldingDialog from "@/components/EditHoldingDialog";
 import PortfolioPieChart, {
   type PieSlice,
 } from "@/components/PortfolioPieChart";
+import Sparkline from "@/components/Sparkline";
 
 const REFRESH_MS = 120_000; // 2 min — aligné avec le ticker / watchlist
 
@@ -43,6 +44,8 @@ interface LivePrice {
   symbol?: string;
   name?: string;
   image?: string;
+  /** Sparkline 7j (168 points horaires CoinGecko) — opt-in via ?include=sparkline. */
+  sparkline7d?: number[];
 }
 
 interface ApiResponse {
@@ -107,7 +110,7 @@ export default function PortfolioView() {
     try {
       const url = `/api/portfolio-prices?ids=${encodeURIComponent(
         ids.join(",")
-      )}`;
+      )}&include=sparkline`;
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
         setLoading(false);
@@ -429,6 +432,12 @@ export default function PortfolioView() {
               <th scope="col" className="text-right px-4 py-3 font-medium">
                 Prix actuel (€)
               </th>
+              <th
+                scope="col"
+                className="hidden lg:table-cell text-right px-4 py-3 font-medium"
+              >
+                7 jours
+              </th>
               <th scope="col" className="text-right px-4 py-3 font-medium">
                 Valeur (€)
               </th>
@@ -594,6 +603,11 @@ function HoldingRow({
       <td className="px-4 py-3 text-right font-mono text-fg/85 tabular-nums">
         {hasPrice ? formatEur(cur) : "—"}
       </td>
+      <td className="hidden lg:table-cell px-4 py-3 text-right">
+        <div className="inline-flex justify-end">
+          <Sparkline data={price?.sparkline7d ?? []} width={80} height={22} />
+        </div>
+      </td>
       <td className="px-4 py-3 text-right font-mono font-semibold text-fg tabular-nums">
         {hasPrice ? formatEur(value) : "—"}
       </td>
@@ -726,6 +740,15 @@ function HoldingCardMobile({
           </div>
         </div>
       </div>
+
+      {price?.sparkline7d && price.sparkline7d.length > 1 && (
+        <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2">
+          <span className="text-[10px] uppercase tracking-wider text-muted">
+            7 jours
+          </span>
+          <Sparkline data={price.sparkline7d} width={120} height={26} showLast />
+        </div>
+      )}
 
       <div className="mt-3 flex items-center justify-end gap-2">
         <button

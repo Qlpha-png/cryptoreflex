@@ -17,6 +17,7 @@ import {
   removeFromWatchlist,
 } from "@/lib/watchlist";
 import EmptyState from "@/components/ui/EmptyState";
+import Sparkline from "@/components/Sparkline";
 
 /**
  * Modèle simplifié des prix retournés par /api/prices.
@@ -30,6 +31,8 @@ interface LivePrice {
   change24h: number;
   marketCap: number;
   image: string;
+  /** Sparkline 7j (168 points horaires CoinGecko) — opt-in via ?include=sparkline. */
+  sparkline7d?: number[];
 }
 
 interface ApiResponse {
@@ -83,7 +86,7 @@ export default function WatchlistView() {
       return;
     }
     try {
-      const url = `/api/prices?ids=${encodeURIComponent(currentIds.join(","))}`;
+      const url = `/api/prices?ids=${encodeURIComponent(currentIds.join(","))}&include=sparkline`;
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
         setLoading(false);
@@ -240,6 +243,12 @@ export default function WatchlistView() {
               </th>
               <th
                 scope="col"
+                className="hidden md:table-cell text-right px-4 py-3 font-medium"
+              >
+                7 jours
+              </th>
+              <th
+                scope="col"
                 className="text-right px-4 py-3 font-medium"
               >
                 <span className="sr-only">Actions</span>
@@ -338,6 +347,11 @@ function PriceRow({
           <span className="sr-only">{up ? "hausse de" : "baisse de"} </span>
           {formatPct(price.change24h)}
         </span>
+      </td>
+      <td className="hidden md:table-cell px-4 py-3 text-right">
+        <div className="inline-flex justify-end">
+          <Sparkline data={price.sparkline7d ?? []} width={84} height={22} />
+        </div>
       </td>
       <td className="px-4 py-3 text-right">
         <button

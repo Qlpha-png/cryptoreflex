@@ -32,6 +32,9 @@ export interface CoinPrice {
   change24h: number;
   marketCap: number;
   image: string;
+  /** Sparkline 7j (168 points horaires CoinGecko) — UNIQUEMENT renseigné si
+      la fonction `fetchPricesWithSparkline()` est utilisée. Sinon vide. */
+  sparkline7d?: number[];
 }
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
@@ -156,6 +159,68 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
 export const fetchPrices = unstable_cache(
   async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
   ["coingecko-prices-v1"],
+  { revalidate: 60, tags: [CG_TAGS.prices] }
+);
+
+/**
+ * Variante de `_fetchPrices` qui inclut sparkline7d (168 points horaires).
+ * Cache key séparée pour ne pas polluer le cache "light" — surcoût payload
+ * ~1 KB/coin, mais permet d'afficher des sparklines live dans les vues
+ * Portfolio / Watchlist sans charger un endpoint séparé.
+ *
+ * Acceptee aussi des coingeckoId hors top 6 (string permissive) pour
+ * couvrir le cas Portfolio / Watchlist multi-cryptos.
+ */
+async function _fetchPricesWithSparkline(
+  ids: string[]
+): Promise<CoinPrice[]> {
+  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
+    ","
+  )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=true&price_change_percentage=24h`;
+  try {
+    const res = await fetchWithRetry(url, {
+      next: { revalidate: 60, tags: [CG_TAGS.prices] },
+      headers: cgHeaders(),
+    });
+    if (!res.ok) throw new Error(`CoinGecko prices+spk ${res.status}`);
+    const json = (await res.json()) as Array<{
+      id: string;
+      symbol: string;
+      name: string;
+      current_price: number;
+      price_change_percentage_24h: number;
+      market_cap: number;
+      image: string;
+      sparkline_in_7d: { price: number[] };
+    }>;
+    return json.map((c) => ({
+      id: c.id as CoinId,
+      symbol: (COIN_META[c.id as CoinId]?.symbol ?? c.symbol).toUpperCase(),
+      name: COIN_META[c.id as CoinId]?.name ?? c.name,
+      price: c.current_price,
+      change24h: c.price_change_percentage_24h ?? 0,
+      marketCap: c.market_cap,
+      image: c.image,
+      sparkline7d: c.sparkline_in_7d?.price ?? [],
+    }));
+  } catch {
+    // Graceful : retourne des entries vides plutôt que crasher
+    return ids.map((id) => ({
+      id: id as CoinId,
+      symbol: COIN_META[id as CoinId]?.symbol ?? id.toUpperCase(),
+      name: COIN_META[id as CoinId]?.name ?? id,
+      price: 0,
+      change24h: 0,
+      marketCap: 0,
+      image: "",
+      sparkline7d: [],
+    }));
+  }
+}
+
+export const fetchPricesWithSparkline = unstable_cache(
+  async (ids: string[]) => _fetchPricesWithSparkline(ids),
+  ["coingecko-prices-sparkline-v1"],
   { revalidate: 60, tags: [CG_TAGS.prices] }
 );
 
