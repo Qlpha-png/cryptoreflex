@@ -1,16 +1,27 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { CoinPrice } from "@/lib/coingecko";
 import { formatUsd, formatPct } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import LiveAge from "@/components/ui/LiveAge";
+import { useLivePrices } from "@/lib/hooks/useLivePrices";
 
 /**
- * HeroLiveWidget — server component (desktop only, >=lg).
+ * HeroLiveWidget — client component (desktop only, >=lg).
  *
  * Card glass premium affichant le top 3 (BTC/ETH/SOL) avec sparkline mini
  * + pulse dot "LIVE" + lien marché. La variante mobile compacte est dans
  * <HeroLiveWidgetMobile> (cards scroll-snap horizontal).
+ *
+ * Migration ETUDE-AMELIORATIONS-2026-05-02 #1 :
+ *  - Bascule en client component pour brancher useLivePrices (SSE).
+ *  - Le serveur fournit les prix initiaux (hydration), useLivePrices prend
+ *    le relais avec des updates ~2.5s via /api/prices/stream.
+ *  - Flash GREEN/RED 600ms via PriceFlash sur changement de prix.
+ *  - Le sparkline reste SSR-rendered (figé au mount, pas un live chart).
  *
  * Audit Block 1 RE-AUDIT 26/04/2026 :
  *  - SVG id collision fix : `spk-${coin.id}` au lieu de `spk-up`/`spk-down`
@@ -20,13 +31,9 @@ import LiveAge from "@/components/ui/LiveAge";
  *  - Sparkline drawn progressively (.spark-draw class, animation 1.2s à mount).
  *  - LiveAge component (countdown 1s) au lieu de label statique "MAJ Xs".
  *  - role="status" sur le badge LIVE.
- *
- * - 100% server (no "use client" sur le widget principal).
- * - LiveAge est un mini client component (1 setInterval 1s, Page Visibility).
- * - Sparkline = SVG inline déterministe avec spark-draw animation au mount.
- * - Pas de "use client" sur le widget : le pulse dot vient de la classe
- *   .live-dot (CSS pur) + radar via .live-dot::after.
  */
+
+const LIVE_IDS = ["bitcoin", "ethereum", "solana"];
 
 type CoinWithSpark = CoinPrice & { sparkline?: number[] };
 
@@ -45,13 +52,28 @@ export default function HeroLiveWidget({
   sparklines,
   updatedAt,
 }: HeroLiveWidgetProps) {
+  // SSE live updates (~2.5s) sur BTC/ETH/SOL.
+  const { prices: livePrices, lastUpdate } = useLivePrices(LIVE_IDS);
+
   // Sélectionne BTC / ETH / SOL dans cet ordre exact (flatMap = pas de
-  // type predicate fragile, narrowing TS automatique).
+  // type predicate fragile, narrowing TS automatique). Chaque prix/variation
+  // est mergé avec le live SSE si dispo (sinon on garde le serveur initial).
   const top3: CoinWithSpark[] = FOCUS_IDS.flatMap((id) => {
     const found = prices.find((p) => p.id === id);
     if (!found) return [];
-    return [{ ...found, sparkline: sparklines?.[id] }];
+    const live = livePrices[id];
+    return [
+      {
+        ...found,
+        sparkline: sparklines?.[id],
+        price: live?.price ?? found.price,
+        change24h: live?.change24h ?? found.change24h,
+      },
+    ];
   });
+
+  // Affiche le timestamp du dernier event live si dispo, sinon le serveur.
+  const effectiveUpdatedAt = lastUpdate ? lastUpdate.toISOString() : updatedAt;
 
   return (
     <aside
@@ -82,7 +104,7 @@ export default function HeroLiveWidget({
           className="text-[11px] text-muted font-mono tabular-nums"
           aria-label="Dernière mise à jour"
         >
-          MAJ {updatedAt ? <LiveAge since={updatedAt} /> : <span>à l&apos;instant</span>}
+          MAJ {effectiveUpdatedAt ? <LiveAge since={effectiveUpdatedAt} /> : <span>à l&apos;instant</span>}
         </span>
       </header>
 
@@ -154,9 +176,11 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
 
       {/* Prix + variation 24h */}
       <div className="text-right shrink-0">
-        <div className="text-sm font-semibold text-fg font-mono leading-tight tabular-nums">
-          {formatUsd(coin.price)}
-        </div>
+        <PriceFlash price={coin.price}>
+          <span className="text-sm font-semibold text-fg font-mono leading-tight tabular-nums inline-block">
+            {formatUsd(coin.price)}
+          </span>
+        </PriceFlash>
         <div
           className={`mt-0.5 inline-flex items-center gap-1 text-[11px] font-mono font-semibold ${trendCls}`}
         >
@@ -170,7 +194,30 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Sparkline SVG (server-rendered, no JS) avec spark-draw animation            */
+/* PriceFlash — flash GREEN/RED 600ms quand le prix change                     */
+/* -------------------------------------------------------------------------- */
+
+function PriceFlash({ price, children }: { price: number; children: React.ReactNode }) {
+  const prev = useRef(price);
+  const [flash, setFlash] = useState<"up" | "down" | null>(null);
+
+  useEffect(() => {
+    if (price === prev.current) return;
+    setFlash(price > prev.current ? "up" : "down");
+    prev.current = price;
+    const t = setTimeout(() => setFlash(null), 600);
+    return () => clearTimeout(t);
+  }, [price]);
+
+  return (
+    <span className={flash === "up" ? "flash-up" : flash === "down" ? "flash-down" : ""}>
+      {children}
+    </span>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sparkline SVG (déterministe, animation .spark-draw au mount)                */
 /* -------------------------------------------------------------------------- */
 
 function Sparkline({ points, up, coinId }: { points: number[]; up: boolean; coinId: string }) {

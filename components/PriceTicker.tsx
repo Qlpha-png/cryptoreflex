@@ -2,83 +2,52 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Pause, Play } from "lucide-react";
-import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
+import { type CoinPrice, formatPct, formatUsd, DEFAULT_COINS } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import { useLivePrices } from "@/lib/hooks/useLivePrices";
 
 interface Props {
   initial: CoinPrice[];
 }
 
-const REFRESH_MS = 120_000; // 120 s : ménage l'API CoinGecko (50 calls/min free tier).
-
 /**
  * Auto-scrolling price ticker. Hydrate avec les données serveur, puis
- * refresh toutes les 120 s via /api/prices — uniquement quand l'onglet
- * est visible (économie batterie + quotas API).
+ * **stream live** via SSE `/api/prices/stream` (proxy Binance REST côté
+ * Edge runtime, broadcastés à tous les clients connectés).
  *
  * Audit Block 1 RE-AUDIT 26/04/2026 (Agent A11y P0) :
- *  - WCAG 2.2.2 Pause/Stop/Hide : ajout d'un bouton pause visible + pause au
- *    hover (CSS .animate-ticker-scroll:hover) + pause au touchstart mobile.
+ *  - WCAG 2.2.2 Pause/Stop/Hide : pause au hover/focus-within (CSS) +
+ *    bouton pause sr-only.
  *  - WCAG 2.5.8 Target Size : tap target 44×44 (min-h-tap min-w-tap).
  *  - aria-pressed sur le toggle, aria-label clair.
+ *
+ * Migration ETUDE-AMELIORATIONS-2026-05-02 #1 (SSE temps réel) :
+ *  - Plus de polling 120s. SSE pousse les updates dès que Binance bouge.
+ *  - Flash GREEN/RED 600ms sur changement de prix (classes CSS .flash-up
+ *    / .flash-down déjà présentes dans globals.css).
+ *  - Fallback REST automatique si SSE down 3× d'affilée (cf. useLivePrices).
  */
 export default function PriceTicker({ initial }: Props) {
   const [prices, setPrices] = useState<CoinPrice[]>(initial);
   const [paused, setPaused] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const cancelledRef = useRef(false);
 
+  // Stream live des 6 coins du ticker (DEFAULT_COINS = top 6).
+  const { prices: livePrices } = useLivePrices(DEFAULT_COINS as unknown as string[]);
+
+  // Merge des deltas SSE dans la liste serveur initiale (préserve l'ordre,
+  // n'efface rien si une crypto est absente de Binance temporairement).
   useEffect(() => {
-    cancelledRef.current = false;
-
-    const tick = async () => {
-      try {
-        const ac = new AbortController();
-        const timeout = setTimeout(() => ac.abort(), 4000);
-        const res = await fetch("/api/prices", { cache: "no-store", signal: ac.signal });
-        clearTimeout(timeout);
-        if (!res.ok) return;
-        const data = (await res.json()) as { prices: CoinPrice[] };
-        if (!cancelledRef.current && data.prices?.length) {
-          setPrices(data.prices);
+    setPrices((prev) =>
+      prev.map((coin) => {
+        const live = livePrices[coin.id];
+        if (!live) return coin;
+        if (coin.price === live.price && coin.change24h === live.change24h) {
+          return coin;
         }
-      } catch {
-        /* keep previous data */
-      }
-    };
-
-    const start = () => {
-      if (intervalRef.current) return;
-      intervalRef.current = setInterval(tick, REFRESH_MS);
-    };
-    const stop = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
-        // Refresh immédiat au retour, puis reprise du polling.
-        tick();
-        start();
-      } else {
-        stop();
-      }
-    };
-
-    if (document.visibilityState === "visible") {
-      start();
-    }
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    return () => {
-      cancelledRef.current = true;
-      stop();
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, []);
+        return { ...coin, price: live.price, change24h: live.change24h };
+      }),
+    );
+  }, [livePrices]);
 
   // Duplicate the list for a seamless infinite scroll loop.
   const loop = [...prices, ...prices];
@@ -116,7 +85,9 @@ export default function PriceTicker({ initial }: Props) {
                 size={24}
               />
               <span className="font-semibold text-white/90">{coin.symbol}</span>
-              <span className="font-mono text-white">{formatUsd(coin.price)}</span>
+              <PriceFlash price={coin.price}>
+                <span className="font-mono text-white">{formatUsd(coin.price)}</span>
+              </PriceFlash>
               <span
                 className={`inline-flex items-center gap-1 text-sm font-medium ${
                   up ? "text-accent-green" : "text-accent-rose"
@@ -163,5 +134,28 @@ export default function PriceTicker({ initial }: Props) {
         )}
       </button>
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* PriceFlash — flash GREEN/RED 600ms quand le prix change                     */
+/* -------------------------------------------------------------------------- */
+
+function PriceFlash({ price, children }: { price: number; children: React.ReactNode }) {
+  const prev = useRef(price);
+  const [flash, setFlash] = useState<"up" | "down" | null>(null);
+
+  useEffect(() => {
+    if (price === prev.current) return;
+    setFlash(price > prev.current ? "up" : "down");
+    prev.current = price;
+    const t = setTimeout(() => setFlash(null), 600);
+    return () => clearTimeout(t);
+  }, [price]);
+
+  return (
+    <span className={flash === "up" ? "flash-up" : flash === "down" ? "flash-down" : ""}>
+      {children}
+    </span>
   );
 }
