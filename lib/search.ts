@@ -117,14 +117,14 @@ const GLOSSARY: Array<{
     term: "Formulaire 2086",
     definition:
       "Déclaration française des plus-values crypto (annexe à la 2042). Obligatoire pour toute cession.",
-    url: "/blog/formulaire-2086-3916-bis-crypto-2026",
+    url: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
     keywords: ["fiscalite", "impots", "declaration", "plus-value", "france", "2086", "3916"],
   },
   {
     term: "3916-bis",
     definition:
       "Déclaration des comptes crypto détenus à l'étranger (Binance, Kraken…). Pénalités lourdes en cas d'oubli.",
-    url: "/blog/formulaire-2086-3916-bis-crypto-2026",
+    url: "/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026",
     keywords: ["fiscalite", "compte", "etranger", "declaration", "amende"],
   },
   {

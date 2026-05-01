@@ -127,6 +127,16 @@ const nextConfig = {
         destination: "/transparence",
         permanent: true,
       },
+      // Cleanup cannibalisation SEO 01/05/2026 — l'article
+      // /blog/formulaire-2086-3916-bis-crypto-2026 est un doublon strict du
+      // pillar /blog/comment-declarer-crypto-impots-2026-guide-complet
+      // (mêmes keywords, même intent, auteur "Équipe Fiscalité Crypto"
+      // fictive). On consolide les signaux SEO sur le pillar via 301.
+      {
+        source: "/blog/formulaire-2086-3916-bis-crypto-2026",
+        destination: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
+        permanent: true,
+      },
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.

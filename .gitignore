@@ -34,4 +34,8 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Lighthouse / a11y test residues (local artefacts only)
 tmp-lh/
+tmp-a11y/
+tmp-*/
