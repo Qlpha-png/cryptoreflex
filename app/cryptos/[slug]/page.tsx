@@ -145,6 +145,14 @@ import { getAllPlatforms } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { getWalletsForCrypto } from "@/lib/crypto-wallets";
 import { getRoadmapFor } from "@/lib/crypto-roadmaps";
+// Programmatic SEO #8 (ETUDE-2026-05-02) : maillage interne vers les pages
+// /comparer/[a]/[b] (435 paires) et /acheter/[crypto]/[pays] (600 guides).
+import {
+  COUNTRIES,
+  COUNTRY_CODES,
+  buildComparerPairUrl,
+  getSimilarCryptosForCompare,
+} from "@/lib/programmatic-pages";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -747,6 +755,71 @@ export default async function CryptoPage({ params }: Props) {
           limit={6}
           variant="compact"
         />
+
+        {/* COMPARER AVEC… (Programmatic SEO #8) — top 5 cryptos similaires
+            avec lien direct vers /comparer/[a]/[b]. Filtré sur TOP_30_CRYPTO_IDS
+            pour ne pointer que vers des pages programmatic réellement générées. */}
+        {(() => {
+          const compareTargets = getSimilarCryptosForCompare(c.id, 5);
+          if (compareTargets.length === 0) return null;
+          return (
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold tracking-tight">
+                Comparer {c.name} avec…
+              </h2>
+              <p className="mt-2 text-sm text-muted">
+                Cryptos comparables (même catégorie ou top 30 market cap) :
+              </p>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {compareTargets.map((other) => (
+                  <li key={other.id}>
+                    <Link
+                      href={buildComparerPairUrl(c.id, other.id)}
+                      className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3 hover:border-primary/40"
+                    >
+                      <span className="text-sm font-semibold text-fg">
+                        {c.symbol} vs {other.symbol}
+                      </span>
+                      <span className="text-xs text-muted">{other.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })()}
+
+        {/* ACHETER DANS TON PAYS (Programmatic SEO #8) — 6 liens vers
+            /acheter/{slug}/{country} pour chaque pays FR-speaking. */}
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Acheter {c.name} dans ton pays
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Guides MiCA localisés (fiscalité, régulateur, devise) pour 6 pays
+            francophones :
+          </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {COUNTRY_CODES.map((code) => {
+              const co = COUNTRIES[code];
+              return (
+                <li key={code}>
+                  <Link
+                    href={`/acheter/${c.id}/${code}`}
+                    className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3 hover:border-primary/40"
+                  >
+                    <span className="text-sm font-semibold text-fg">
+                      Acheter {c.symbol} en {co.name}
+                    </span>
+                    <span className="text-xs text-muted">
+                      {co.regulator} · {co.currency}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
 
         {/* ARTICLES CONNEXES */}
         {related.length > 0 && (

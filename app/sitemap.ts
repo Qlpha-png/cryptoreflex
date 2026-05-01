@@ -3,6 +3,10 @@ import { getAllArticleSummaries } from "@/lib/mdx";
 import { BRAND } from "@/lib/brand";
 import { getAllProgrammaticRoutes } from "@/lib/programmatic";
 import { getAllCryptoComparisonSlugs } from "@/lib/crypto-comparisons";
+import {
+  getComparerPairRoutes,
+  getAcheterRoutes,
+} from "@/lib/programmatic-pages";
 import { getAllAuthors } from "@/lib/authors";
 import { TOP_PAIRS } from "@/lib/historical-prices";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
@@ -194,6 +198,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   /* ----------------------------------------------------------------
+   * 3ter. Programmatic SEO massif (proposition #8 ETUDE-2026-05-02) :
+   *       /comparer/[a]/[b]      → 435 paires top 30 cryptos
+   *       /acheter/[crypto]/[pays] → 600 (100 cryptos × 6 pays FR-speaking)
+   *       Source : lib/programmatic-pages.ts.
+   *
+   *       Volume total ajouté : ~1035 URLs. Le sitemap reste largement sous
+   *       la limite Google (50k URLs) — pas besoin de splitter en sous-sitemaps.
+   * ---------------------------------------------------------------- */
+  const comparerPairRoutes: MetadataRoute.Sitemap = getComparerPairRoutes().map((r) => ({
+    url: `${SITE_URL}${r.path}`,
+    lastModified: now,
+    changeFrequency: r.changeFrequency,
+    priority: r.priority,
+  }));
+  const acheterRoutes: MetadataRoute.Sitemap = getAcheterRoutes().map((r) => ({
+    url: `${SITE_URL}${r.path}`,
+    lastModified: now,
+    changeFrequency: r.changeFrequency,
+    priority: r.priority,
+  }));
+
+  /* ----------------------------------------------------------------
    * 4. Pages convertisseur SEO programmatic (top 30 pairs)
    * ---------------------------------------------------------------- */
   const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) => ({
@@ -252,6 +278,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...authorRoutes,
     ...programmaticRoutes,
     ...cryptoComparisonRoutes,
+    ...comparerPairRoutes,
+    ...acheterRoutes,
     ...converterPairRoutes,
     ...newsRoutes,
     ...taRoutes,
