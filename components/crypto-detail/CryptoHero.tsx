@@ -3,6 +3,8 @@ import Sparkline from "./Sparkline";
 import { formatPct, formatUsd, type CoinDetail } from "@/lib/coingecko";
 import WatchlistButton from "@/components/WatchlistButton";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import { getCategoryTheme } from "@/lib/category-theme";
+import AnimatedStat from "./AnimatedStat";
 
 interface Props {
   name: string;
@@ -39,13 +41,27 @@ export default function CryptoHero({
   const change24h = detail?.priceChange24h ?? 0;
   const positive = change24h >= 0;
   const positive7d = (detail?.priceChange7d ?? 0) >= 0;
+  const theme = getCategoryTheme(category);
 
   return (
     <header className="grid gap-8 lg:grid-cols-[1fr_auto] items-start">
       <div>
         {kindLabel && (
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft uppercase tracking-wider">
+          <span
+            className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider"
+            style={{
+              borderColor: `${theme.accent}55`,
+              backgroundColor: theme.accentSoft,
+              color: theme.accent,
+            }}
+          >
+            <span
+              className="inline-block h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: theme.accent }}
+              aria-hidden="true"
+            />
             {kindLabel}
+            <span className="text-muted/80 normal-case font-normal">· {theme.label}</span>
           </span>
         )}
         <div className="mt-3 flex items-center gap-4">
@@ -80,6 +96,13 @@ export default function CryptoHero({
           </div>
         </div>
 
+        {/* Séparateur gradient hérité du thème de catégorie */}
+        <div
+          aria-hidden="true"
+          className="mt-4 h-[2px] w-24 rounded-full"
+          style={{ backgroundImage: theme.gradient }}
+        />
+
         <p className="mt-5 text-lg text-fg/85 italic max-w-2xl">{tagline}</p>
 
         {/* Prix temps réel */}
@@ -87,7 +110,17 @@ export default function CryptoHero({
           <div>
             <div className="text-xs uppercase tracking-wider text-muted">Prix actuel</div>
             <div className="mt-1 font-mono text-3xl sm:text-4xl font-bold text-fg tabular-nums">
-              {formatUsd(price)}
+              {price > 0 ? (
+                <AnimatedStat
+                  value={price}
+                  // formatUsd retourne "—" pour 0 — on patch le 1er frame
+                  // mid-anim pour éviter le flash avec un format "$0.00".
+                  format={(n) => (n === 0 ? "$0.00" : formatUsd(n))}
+                  duration={1100}
+                />
+              ) : (
+                formatUsd(price)
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">

@@ -1,25 +1,78 @@
 import type { CSSProperties } from "react";
 
+export type SkeletonVariant = "text" | "card" | "circle" | "chart";
+
 interface SkeletonProps {
   className?: string;
   style?: CSSProperties;
   /** Pour aria-label : décrit le contenu en cours de chargement. */
   label?: string;
+  /**
+   * Variante de shape :
+   *  - "text"  : ligne de 16px, rounded-md
+   *  - "card"  : carte rounded-2xl, hauteur héritée
+   *  - "circle": cercle rounded-full
+   *  - "chart" : zone graphique 256px hauteur, rounded-2xl
+   * Si non spécifié, fallback "raw" (le shimmer de base, contrôlé par className).
+   */
+  variant?: SkeletonVariant;
 }
+
+/**
+ * Classes Tailwind par variant — appliquées EN PLUS de `className`.
+ * Permet d'avoir des placeholders cohérents partout sans copier-coller.
+ */
+const VARIANT_CLASSES: Record<SkeletonVariant, string> = {
+  text: "h-4 w-full rounded-md",
+  card: "rounded-2xl",
+  circle: "rounded-full",
+  chart: "h-64 rounded-2xl",
+};
 
 /**
  * Brique de base — une bande shimmer.
  * S'utilise via les compositions ci-dessous (SkeletonCard / List / Hero)
- * ou en standalone pour des placeholders custom.
+ * ou en standalone pour des placeholders custom (avec ou sans variant).
  */
-export function Skeleton({ className = "", style, label }: SkeletonProps) {
+export function Skeleton({
+  className = "",
+  style,
+  label,
+  variant,
+}: SkeletonProps) {
+  const variantClass = variant ? VARIANT_CLASSES[variant] : "";
   return (
     <div
-      className={`skeleton ${className}`.trim()}
+      className={`skeleton ${variantClass} ${className}`.trim()}
       style={style}
       role="status"
       aria-busy="true"
       aria-label={label ?? "Chargement…"}
+    />
+  );
+}
+
+/**
+ * SkeletonChart — placeholder dédié aux charts dynamiques (PriceChart,
+ * TradingView). Hauteur 384px par défaut (h-96) pour matcher PriceChart,
+ * surchargeable via `height` en px.
+ */
+export function SkeletonChart({
+  className = "",
+  height = 384,
+  label = "Chargement du graphique",
+}: {
+  className?: string;
+  height?: number;
+  label?: string;
+}) {
+  return (
+    <div
+      className={`skeleton rounded-2xl ${className}`.trim()}
+      style={{ height }}
+      role="status"
+      aria-busy="true"
+      aria-label={label}
     />
   );
 }

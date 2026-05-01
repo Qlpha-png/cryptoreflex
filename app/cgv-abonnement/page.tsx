@@ -37,20 +37,39 @@ export default function CgvAbonnementPage() {
         </h2>
         <ul className="mt-4 space-y-2 text-sm text-fg/85 leading-relaxed">
           <li className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span><strong>Tu peux annuler à tout moment</strong> en 1 clic depuis ton portail Stripe (lien dans /mon-compte). L&apos;accès reste actif jusqu&apos;à la fin de la période payée.</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span><strong>14 jours de remboursement intégral</strong> sans justification (art. L221-18 Code conso) — sauf si tu as utilisé le service de manière intensive (téléchargements massifs, export CSV répétés).</span>
-          </li>
-          <li className="flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-            <span><strong>Exécution immédiate :</strong> en validant l&apos;abonnement, tu demandes que les services numériques (portfolio illimité, alertes, etc.) débutent immédiatement. Tu reconnais que le délai de rétractation peut donc être affecté pour les services déjà consommés (art. L221-28 12° du Code de la consommation).</span>
+            <span>
+              <strong>Renonciation au droit de rétractation 14 jours :</strong> en cochant la
+              case obligatoire avant le paiement, tu renonces expressément à ton droit de
+              rétractation de 14 jours pour bénéficier immédiatement des services numériques
+              (art. L221-28 12° Code de la consommation) — pratique standard chez Netflix,
+              Spotify, Notion, etc.
+            </span>
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span><strong>Paiement 100 % sécurisé Stripe</strong> (PCI-DSS niveau 1). On ne stocke aucune donnée bancaire chez nous.</span>
+            <span>
+              <strong>Annulation 1 clic à tout moment</strong> depuis ton portail Stripe (lien
+              dans /mon-compte). Ton accès reste actif jusqu&apos;à la fin de la période déjà
+              payée — aucune facture future émise.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
+            <span>
+              <strong>Garantie commerciale 7 jours :</strong> même si tu as renoncé au droit
+              légal de rétractation, on s&apos;engage volontairement à te rembourser dans les
+              7 jours suivant ton premier paiement si la plateforme ne te convient pas — sur
+              simple demande à <a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft underline">contact@cryptoreflex.fr</a>,
+              sans justification.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
+            <span>
+              <strong>Paiement 100 % sécurisé Stripe</strong> (PCI-DSS niveau 1). Aucune donnée
+              bancaire stockée sur nos serveurs.
+            </span>
           </li>
         </ul>
       </div>
@@ -106,47 +125,95 @@ export default function CgvAbonnementPage() {
         du CGI » figurant sur les factures Stripe.
       </p>
 
-      {/* 3. Droit de rétractation */}
+      {/* 3. Renonciation au droit de rétractation */}
       <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
         <RotateCcw className="h-6 w-6 text-primary" />
-        3. Droit de rétractation et exécution immédiate
+        3. Renonciation expresse au droit de rétractation
       </h2>
 
-      <h3 className="mt-6 text-lg font-bold text-fg">3.1 Délai légal de 14 jours</h3>
+      <h3 className="mt-6 text-lg font-bold text-fg">3.1 Le principe légal</h3>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Conformément à l&apos;<strong>article L221-18 du Code de la consommation</strong>,
-        tu disposes d&apos;un délai de 14 jours calendaires pour te rétracter de ton
-        abonnement, sans avoir à motiver ta décision. Le délai court à compter de la
-        date du premier paiement.
+        L&apos;<strong>article L221-18 du Code de la consommation</strong> prévoit un délai
+        de 14 jours calendaires pour se rétracter d&apos;un contrat à distance, sans avoir à
+        motiver sa décision. Ce délai court à compter de la date de conclusion du contrat
+        (premier paiement).
       </p>
 
-      <h3 className="mt-6 text-lg font-bold text-fg">3.2 Demande d&apos;exécution immédiate</h3>
-      <div className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
-        <p className="text-sm text-fg/85 leading-relaxed">
-          <strong className="text-amber-300">Important :</strong> en validant l&apos;abonnement,
-          tu <strong>demandes expressément que les services numériques débutent
-          immédiatement</strong>, avant la fin du délai de rétractation. Tu reconnais
-          que conformément à l&apos;<strong>article L221-28 12° du Code de la
-          consommation</strong>, le droit de rétractation ne peut être exercé pour les
-          services pleinement exécutés avec ton accord exprès et la perte du droit
-          de rétractation reconnue.
+      <h3 className="mt-6 text-lg font-bold text-fg">
+        3.2 La renonciation expresse à ce droit (case à cocher obligatoire)
+      </h3>
+      <div className="mt-3 rounded-xl border-2 border-amber-500/50 bg-amber-500/10 p-5">
+        <p className="text-sm text-fg leading-relaxed">
+          <strong className="text-amber-300">⚠ Important — comme sur Netflix, Spotify ou Notion :</strong>
+        </p>
+        <p className="mt-3 text-sm text-fg/90 leading-relaxed">
+          L&apos;abonnement Soutien donne accès à des <strong>contenus numériques fournis
+          immédiatement après paiement</strong> (en quelques secondes : portfolio illimité,
+          alertes, glossaire, etc.). Pour pouvoir te livrer ce service immédiatement, nous
+          devons obtenir ton <strong>accord exprès préalable et ta renonciation
+          expresse à ton droit de rétractation</strong>.
+        </p>
+        <p className="mt-3 text-sm text-fg/90 leading-relaxed">
+          C&apos;est pourquoi, <strong>avant de pouvoir cliquer sur « Soutenir »</strong>,
+          tu dois cocher une case dans laquelle tu déclares :
+        </p>
+        <blockquote className="mt-3 ml-2 border-l-4 border-amber-400 pl-4 py-1 text-sm italic text-fg/95">
+          « Je renonce expressément à mon droit de rétractation de 14 jours et je demande à
+          bénéficier immédiatement des services numériques de l&apos;abonnement Soutien
+          (art. L221-28 12° Code de la consommation). »
+        </blockquote>
+        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+          Cette renonciation est conforme à l&apos;<strong>article L221-28 12°</strong> du
+          Code de la consommation, qui prévoit explicitement cette exception pour les
+          contenus numériques non fournis sur support matériel.
         </p>
       </div>
-      <p className="mt-4 text-sm text-fg/85 leading-relaxed">
-        En pratique :
-      </p>
-      <ul className="mt-2 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li><strong>Si tu te rétractes dans les 14 jours sans avoir significativement utilisé le service</strong> → remboursement intégral sous 14 jours sur ton moyen de paiement initial.</li>
-        <li><strong>Si tu te rétractes dans les 14 jours mais as utilisé le service de manière intensive</strong> (création portfolio importante, configuration de nombreuses alertes, exports CSV répétés) → remboursement <em>au prorata</em> de la valeur des services non encore consommés. La justification de l&apos;usage est faite sur la base des logs techniques.</li>
-        <li><strong>Au-delà de 14 jours</strong> → l&apos;abonnement reste résiliable à tout moment (cf. § 4) mais sans remboursement de la période en cours.</li>
+
+      <h3 className="mt-6 text-lg font-bold text-fg">3.3 Conséquences pratiques</h3>
+      <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
+        <li>
+          <strong>Sans cocher la case → impossible de payer.</strong> Le bouton de paiement
+          est techniquement bloqué tant que tu n&apos;as pas exprimé ton accord exprès.
+        </li>
+        <li>
+          <strong>En cochant la case → renonciation valable.</strong> Ton paiement Stripe
+          est immédiat et tes services Pro sont activés en quelques secondes. Aucun
+          remboursement légal au titre du droit de rétractation ne pourra ensuite être
+          réclamé.
+        </li>
+        <li>
+          <strong>Annulation à tout moment :</strong> tu peux toujours annuler ton abonnement
+          en 1 clic depuis ton portail Stripe (cf. § 4). Aucune facture future ne sera
+          émise. Cette annulation n&apos;est pas un remboursement de la période en cours.
+        </li>
       </ul>
-      <p className="mt-4 text-sm text-fg/85 leading-relaxed">
-        Pour exercer ton droit de rétractation, tu peux :
-      </p>
-      <ul className="mt-2 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li>Envoyer un email à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> avec l&apos;objet « Rétractation abonnement »</li>
-        <li>Annuler depuis ton portail Stripe puis demander remboursement par email</li>
-      </ul>
+
+      <h3 className="mt-6 text-lg font-bold text-fg">
+        3.4 Garantie commerciale satisfait-ou-remboursé 7 jours (volontaire)
+      </h3>
+      <div className="mt-3 rounded-xl border border-accent-green/30 bg-accent-green/5 p-5">
+        <p className="text-sm text-fg/90 leading-relaxed">
+          <strong className="text-accent-green">Engagement Cryptoreflex au-delà de la loi :</strong>{" "}
+          même si tu as juridiquement renoncé à ton droit de rétractation, on s&apos;engage
+          volontairement à te <strong>rembourser intégralement</strong> ton premier paiement
+          si tu nous le demandes <strong>dans les 7 jours suivant la souscription</strong>,
+          sans avoir à fournir de justification.
+        </p>
+        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+          Pour activer cette garantie, envoie un email à{" "}
+          <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline font-semibold">
+            {BRAND.email}
+          </a>{" "}
+          avec l&apos;objet « Satisfait ou remboursé » et ton email Stripe. Réponse et
+          remboursement sous 5 jours ouvrés.
+        </p>
+        <p className="mt-3 text-xs text-muted leading-relaxed">
+          Cette garantie est un engagement contractuel volontaire de Cryptoreflex au-delà
+          du cadre légal. Elle n&apos;est applicable qu&apos;une seule fois par compte
+          Stripe. En cas d&apos;abus manifeste (exports CSV massifs, scraping, etc.), on se
+          réserve le droit de la refuser.
+        </p>
+      </div>
 
       {/* 4. Résiliation */}
       <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">

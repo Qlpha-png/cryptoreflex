@@ -106,23 +106,30 @@ export default function GatedProTiers({ enabled }: { enabled: boolean }) {
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-base sm:text-lg font-bold text-fg">
-            Avant de souscrire — droit de rétractation et exécution immédiate
+            Avant de souscrire — renonciation au droit de rétractation
           </h3>
 
           <div className="mt-3 space-y-2 text-xs sm:text-sm text-fg/85 leading-relaxed">
             <p>
-              <strong className="text-fg">Tu disposes de 14 jours</strong> pour te rétracter
-              (art. <abbr title="Code de la consommation">L221-18</abbr>) avec remboursement
-              intégral si tu n&apos;as pas significativement utilisé le service.
+              <strong className="text-fg">Comment fonctionne ton abonnement :</strong> dès la
+              validation du paiement, tes services numériques (portfolio illimité, alertes,
+              glossaire complet, accès anticipé) sont activés en quelques secondes. C&apos;est
+              de la <strong className="text-fg">fourniture immédiate de contenu numérique</strong>.
             </p>
             <p>
-              <strong className="text-fg">Mais l&apos;abonnement débute immédiatement</strong>{" "}
-              après paiement (portfolio illimité, alertes, glossaire actifs en quelques secondes).
-              Conformément à l&apos;art.{" "}
-              <abbr title="Code de la consommation">L221-28 12°</abbr>, en cochant la case
-              ci-dessous tu <strong className="text-fg">demandes expressément cette exécution
-              immédiate</strong> et reconnais que ton droit de rétractation peut être affecté
-              pour les services déjà consommés.
+              <strong className="text-fg">Conséquence légale :</strong> conformément à
+              l&apos;art. <abbr title="Code de la consommation">L221-28 12°</abbr> du Code de la
+              consommation, en cochant la case ci-dessous tu{" "}
+              <strong className="text-amber-300">renonces expressément à ton droit de rétractation
+              de 14 jours</strong> (art.{" "}
+              <abbr title="Code de la consommation">L221-18</abbr>) — comme tu le ferais sur
+              Netflix, Spotify ou Notion. Sans ta renonciation, on ne peut pas te livrer
+              immédiatement le service.
+            </p>
+            <p>
+              Tu peux toutefois <strong className="text-fg">annuler à tout moment en 1 clic</strong>{" "}
+              depuis ton portail Stripe : ton accès reste actif jusqu&apos;à la fin de la période
+              déjà payée, et aucune facture future n&apos;est émise.
             </p>
             <p className="text-muted">
               <Link
@@ -150,31 +157,40 @@ export default function GatedProTiers({ enabled }: { enabled: boolean }) {
               className={`relative shrink-0 mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded border-2 transition-all ${
                 checked ? "border-accent-green bg-accent-green" : "border-amber-400 bg-background"
               }`}
-              aria-label="J'accepte les CGV et l'exécution immédiate"
+              aria-label="Je renonce expressément à mon droit de rétractation pour bénéficier immédiatement du service"
             >
               {checked && (
                 <Check className="h-3.5 w-3.5 text-background" strokeWidth={3} />
               )}
             </button>
             <span className="text-sm leading-snug text-fg select-none">
-              <strong>J&apos;ai lu les CGV</strong> et je demande expressément que les services
-              numériques débutent immédiatement après paiement. Je reconnais que mon droit de
-              rétractation peut être affecté pour les services pleinement exécutés (art. L221-28
-              12° Code de la consommation).
+              <strong>Je renonce expressément à mon droit de rétractation de 14 jours</strong>{" "}
+              et je demande à bénéficier <strong>immédiatement</strong> des services numériques
+              de l&apos;abonnement Soutien (art. L221-28 12° Code de la consommation). J&apos;ai
+              lu et accepte les{" "}
+              <Link
+                href="/cgv-abonnement"
+                className="text-primary-soft hover:text-primary underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                CGV
+              </Link>
+              .
             </span>
           </label>
 
           {hydrated && !checked && (
             <p className="mt-3 text-xs text-amber-300 flex items-center gap-1.5">
               <Info className="h-3.5 w-3.5 shrink-0" />
-              Coche la case pour activer les boutons d&apos;abonnement Mensuel / Annuel
+              Coche la case pour débloquer les boutons d&apos;abonnement Mensuel / Annuel
               ci-dessous.
             </p>
           )}
           {hydrated && checked && (
             <p className="mt-3 text-xs text-accent-green flex items-center gap-1.5">
               <Check className="h-3.5 w-3.5 shrink-0" />
-              Consentement enregistré — les boutons d&apos;abonnement sont actifs.
+              Renonciation enregistrée — tu peux maintenant souscrire en toute connaissance
+              de cause.
             </p>
           )}
         </div>

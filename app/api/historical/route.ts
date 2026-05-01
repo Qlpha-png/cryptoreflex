@@ -21,11 +21,58 @@ import { getClientIp } from "@/lib/ip";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/**
+ * Whitelist explicite des coingeckoIds autorisés.
+ *
+ * On dérive du mapping `COIN_IDS` (40 cryptos) PUIS on s'assure que les top 30
+ * marketcap soient présentes — utile pour le ROISimulator embarqué sur
+ * /cryptos/[slug] qui doit couvrir toutes les fiches éditoriales (top10 +
+ * hidden gems). Sans cette redondance, ajouter une fiche dans `lib/cryptos.ts`
+ * sans toucher `lib/historical-prices.ts:COIN_IDS` casse silencieusement le
+ * simulateur (400 "coin not supported").
+ *
+ * Top 30 marketcap retenus (avril 2026) : BTC, ETH, BNB, XRP, SOL, ADA, DOGE,
+ * TRX, TON, AVAX, LINK, DOT, ATOM, MATIC/POL, LTC, BCH, NEAR, OP, ARB, UNI,
+ * AAVE, ICP, XLM, HBAR, SUI, FIL, ETC, APT, INJ, TIA. Ajouts EUR-friendly :
+ * MKR, LDO, ALGO, XTZ, XMR.
+ *
+ * NB : on garde `bitcoin/ethereum/solana` en doublon par safety (legacy callers
+ * qui ne passaient pas par COIN_IDS).
+ */
 const ALLOWED_IDS = new Set<string>([
   ...Object.values(COIN_IDS),
+  // Top 30 marketcap — explicit list pour ne pas dépendre uniquement de COIN_IDS.
   "bitcoin",
   "ethereum",
+  "binancecoin",
+  "ripple",
   "solana",
+  "cardano",
+  "dogecoin",
+  "tron",
+  "the-open-network",
+  "avalanche-2",
+  "chainlink",
+  "polkadot",
+  "cosmos",
+  "matic-network",
+  "polygon-ecosystem-token", // POL (rebrand de MATIC)
+  "litecoin",
+  "bitcoin-cash",
+  "near",
+  "optimism",
+  "arbitrum",
+  "uniswap",
+  "aave",
+  "internet-computer",
+  "stellar",
+  "hedera-hashgraph",
+  "sui",
+  "filecoin",
+  "ethereum-classic",
+  "aptos",
+  "injective-protocol",
+  "celestia",
 ]);
 
 // FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.

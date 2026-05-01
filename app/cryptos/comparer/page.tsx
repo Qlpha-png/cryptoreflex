@@ -1,0 +1,816 @@
+/**
+ * /cryptos/comparer?ids=solana,avalanche,near
+ *
+ * Comparateur side-by-side de 2 à 4 cryptos issues du dataset éditorial
+ * (top10 + hidden gems). 100% server-rendered : SSR pur + fetch CoinGecko
+ * server-side pour les prix temps réel (cache 5 min via fetchCoinDetail).
+ *
+ * Particularités :
+ *  - `searchParams.ids` = source unique de vérité côté serveur.
+ *    La synchro avec `localStorage` se fait via le CompareDrawer / les
+ *    boutons Remove côté client (qui font router.replace).
+ *  - Si moins de 2 cryptos valides → redirect vers `/cryptos`.
+ *  - `robots: { index: false }` : URL paramétrée = trop de combinaisons
+ *    pour mériter d'être indexée (et risque de duplicate content).
+ *  - Mobile : tableau stack vertical (cards par crypto) via Tailwind.
+ */
+
+import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import {
+  ArrowRight,
+  Scale,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  ShieldCheck,
+  Sparkles,
+  ExternalLink,
+} from "lucide-react";
+
+import { getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
+import { fetchCoinDetail, formatUsd, formatCompactUsd, type CoinDetail } from "@/lib/coingecko";
+import { resolveCryptoLogo } from "@/lib/crypto-logos";
+import { BRAND } from "@/lib/brand";
+import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import StructuredData from "@/components/StructuredData";
+import AmfDisclaimer from "@/components/AmfDisclaimer";
+import CopyCompareLink from "@/components/cryptos/CopyCompareLink";
+import RemoveFromCompareButton from "@/components/cryptos/RemoveFromCompareButton";
+
+/* -------------------------------------------------------------------------- */
+/*  Constantes                                                                */
+/* -------------------------------------------------------------------------- */
+
+/** Plafond serveur (cohérent avec MAX_COMPARE côté hook). */
+const MAX_IDS = 4;
+
+interface Props {
+  searchParams: { ids?: string | string[] };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Helpers                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Parse `?ids=` en liste de slugs valides (existants dans le dataset).
+ * - Tolère `ids=a,b` ou `ids=a&ids=b` (Next normalise).
+ * - Dédupe en conservant l'ordre.
+ * - Filtre les slugs inconnus (silencieusement — un slug typo ne fait pas
+ *   crasher la page, on rend juste les autres).
+ * - Coupe à MAX_IDS.
+ */
+function parseIds(raw: string | string[] | undefined): AnyCrypto[] {
+  if (!raw) return [];
+  const tokens = (Array.isArray(raw) ? raw.join(",") : raw)
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  const seen = new Set<string>();
+  const cryptos: AnyCrypto[] = [];
+  for (const t of tokens) {
+    if (seen.has(t)) continue;
+    const c = getCryptoBySlug(t);
+    if (c) {
+      seen.add(t);
+      cryptos.push(c);
+    }
+    if (cryptos.length >= MAX_IDS) break;
+  }
+  return cryptos;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Metadata                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export function generateMetadata({ searchParams }: Props): Metadata {
+  const cryptos = parseIds(searchParams.ids);
+  if (cryptos.length < 2) {
+    return {
+      title: "Comparateur de cryptomonnaies",
+      description:
+        "Compare jusqu'à 4 cryptos côte à côte : prix, fiabilité, forces, faiblesses, où acheter en France.",
+      robots: { index: false, follow: true },
+    };
+  }
+  const names = cryptos.map((c) => `${c.name}`).join(" vs ");
+  const symbols = cryptos.map((c) => c.symbol).join(" vs ");
+  return {
+    title: `${names} — Comparatif crypto ${BRAND.name}`,
+    description: `Comparatif détaillé ${symbols} : prix temps réel, fiabilité, forces, faiblesses, plateformes régulées MiCA. Analyse Cryptoreflex.`,
+    // URL paramétrée → on N'INDEXE PAS (combinatoire infinie + risque duplicate).
+    // On garde follow pour permettre à Google de suivre les liens vers les fiches.
+    robots: { index: false, follow: true },
+    alternates: {
+      canonical: `${BRAND.url}/cryptos/comparer?ids=${cryptos
+        .map((c) => c.id)
+        .join(",")}`,
+    },
+    openGraph: {
+      title: `${names} — Comparatif crypto`,
+      description: `Compare ${symbols} en un coup d'œil sur ${BRAND.name}.`,
+      type: "website",
+    },
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Page                                                                      */
+/* -------------------------------------------------------------------------- */
+
+export const revalidate = 300; // 5 min — aligné sur le cache CoinGecko
+
+export default async function CryptoComparePage({ searchParams }: Props) {
+  const cryptos = parseIds(searchParams.ids);
+
+  // < 2 cryptos = pas de comparatif possible. Redirect vers le hub /cryptos
+  // pour que l'utilisateur puisse en sélectionner plusieurs.
+  if (cryptos.length < 2) {
+    redirect("/cryptos");
+  }
+
+  // Fetch parallèle des détails CoinGecko (prix temps réel, market cap, ATH...)
+  // fetchCoinDetail est cached 5 min côté serveur → safe à appeler même sur
+  // un trafic important.
+  const details = await Promise.all(
+    cryptos.map((c) => fetchCoinDetail(c.coingeckoId))
+  );
+
+  const ids = cryptos.map((c) => c.id).join(",");
+  const permalink = `${BRAND.url}/cryptos/comparer?ids=${ids}`;
+
+  // Calcule les "best by row" pour highlight visuel (cellule avec halo gold).
+  const bestIdx = computeBestIndex(cryptos, details);
+
+  const schemas = graphSchema([
+    breadcrumbSchema([
+      { name: "Accueil", url: "/" },
+      { name: "Cryptos", url: "/cryptos" },
+      { name: "Comparer", url: `/cryptos/comparer?ids=${ids}` },
+    ]),
+  ]);
+
+  return (
+    <article className="py-10 sm:py-14">
+      <StructuredData data={schemas} id="crypto-compare" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <nav className="text-xs text-muted">
+          <Link href="/" className="hover:text-fg">
+            Accueil
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/cryptos" className="hover:text-fg">
+            Cryptos
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-fg/80">Comparer</span>
+        </nav>
+
+        {/* Header */}
+        <header className="mt-6 max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+            <Scale className="h-3.5 w-3.5" aria-hidden="true" />
+            Comparateur multi-cryptos
+          </div>
+          <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
+            {cryptos.map((c, i) => (
+              <span key={c.id}>
+                <span className="gradient-text">{c.name}</span>
+                {i < cryptos.length - 1 && (
+                  <span className="text-muted font-normal"> vs </span>
+                )}
+              </span>
+            ))}
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-muted">
+            Comparatif côte à côte de {cryptos.length} cryptos issues de notre
+            base de 100 fiches. Prix CoinGecko (cache 5 min), données éditoriales
+            vérifiées par {BRAND.name}.
+          </p>
+        </header>
+
+        {/* Permalink + copy */}
+        <div className="mt-6 rounded-2xl border border-border bg-surface p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted">
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Permalien partageable
+          </div>
+          <div className="mt-2">
+            <CopyCompareLink url={permalink} />
+          </div>
+        </div>
+
+        {/* === DESKTOP TABLE === */}
+        <div className="mt-10 hidden lg:block">
+          <DesktopTable
+            cryptos={cryptos}
+            details={details}
+            bestIdx={bestIdx}
+          />
+        </div>
+
+        {/* === MOBILE STACK === */}
+        <div className="mt-10 grid gap-4 lg:hidden sm:grid-cols-2">
+          {cryptos.map((c, i) => (
+            <MobileCard
+              key={c.id}
+              crypto={c}
+              detail={details[i]}
+              bestFor={bestForCrypto(bestIdx, i)}
+            />
+          ))}
+        </div>
+
+        {/* CTA retour */}
+        <div className="mt-10 flex flex-wrap items-center gap-3 text-sm">
+          <Link
+            href="/cryptos"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface px-4 py-2 font-semibold text-fg hover:border-primary/40 transition-colors"
+          >
+            <ArrowRight className="h-4 w-4 rotate-180" aria-hidden="true" />
+            Choisir d&apos;autres cryptos
+          </Link>
+          <span className="text-xs text-muted">
+            Tu peux comparer jusqu&apos;à {MAX_IDS} cryptos en même temps.
+          </span>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-10">
+          <AmfDisclaimer variant="educatif" />
+        </div>
+
+        <p className="mt-6 text-[11px] text-muted leading-relaxed">
+          Les prix et capitalisations proviennent de CoinGecko (cache 5 min).
+          Les scores éditoriaux (fiabilité, beginner-friendly) sont calculés
+          par {BRAND.name} selon une{" "}
+          <Link href="/methodologie" className="underline hover:text-fg">
+            méthodologie publique
+          </Link>
+          . Cette page contient des liens d&apos;affiliation : voir notre{" "}
+          <Link href="/transparence" className="underline hover:text-fg">
+            page transparence
+          </Link>
+          .
+        </p>
+      </div>
+    </article>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Helpers : "best by row" pour highlight visuel                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Pour chaque "ligne sémantique" (prix, fiabilité, beginner...), on identifie
+ * l'index de la "meilleure" crypto. Index = -1 si pas applicable / égalité.
+ *
+ * Conventions :
+ *  - marketCap : plus haut = mieux (signal de liquidité / maturité).
+ *  - reliability : plus haut = mieux (mais uniquement parmi les hidden gems).
+ *  - beginnerFriendly : plus haut = mieux (mais uniquement parmi les top10).
+ *  - yearCreated : plus ancien = mieux (track record + maturité).
+ */
+type BestIdx = {
+  marketCap: number;
+  reliability: number;
+  beginnerFriendly: number;
+  oldest: number;
+};
+
+function computeBestIndex(
+  cryptos: AnyCrypto[],
+  details: (CoinDetail | null)[]
+): BestIdx {
+  const argmax = <T,>(arr: T[], key: (t: T, i: number) => number | null): number => {
+    let best = -1;
+    let bestVal = -Infinity;
+    arr.forEach((item, i) => {
+      const v = key(item, i);
+      if (v === null || !Number.isFinite(v)) return;
+      if (v > bestVal) {
+        bestVal = v;
+        best = i;
+      }
+    });
+    return best;
+  };
+  const argmin = <T,>(arr: T[], key: (t: T, i: number) => number | null): number => {
+    let best = -1;
+    let bestVal = Infinity;
+    arr.forEach((item, i) => {
+      const v = key(item, i);
+      if (v === null || !Number.isFinite(v)) return;
+      if (v < bestVal) {
+        bestVal = v;
+        best = i;
+      }
+    });
+    return best;
+  };
+
+  return {
+    marketCap: argmax(cryptos, (_c, i) => details[i]?.marketCap ?? null),
+    reliability: argmax(cryptos, (c) =>
+      c.kind === "hidden-gem" ? c.reliability.score : null
+    ),
+    beginnerFriendly: argmax(cryptos, (c) =>
+      c.kind === "top10" ? c.beginnerFriendly : null
+    ),
+    oldest: argmin(cryptos, (c) => c.yearCreated ?? null),
+  };
+}
+
+function bestForCrypto(b: BestIdx, i: number): string[] {
+  const labels: string[] = [];
+  if (b.marketCap === i) labels.push("Plus grosse capi");
+  if (b.reliability === i) labels.push("Meilleure fiabilité");
+  if (b.beginnerFriendly === i) labels.push("Plus accessible");
+  if (b.oldest === i) labels.push("Plus ancien");
+  return labels;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Desktop : tableau side-by-side                                            */
+/* -------------------------------------------------------------------------- */
+
+function DesktopTable({
+  cryptos,
+  details,
+  bestIdx,
+}: {
+  cryptos: AnyCrypto[];
+  details: (CoinDetail | null)[];
+  bestIdx: BestIdx;
+}) {
+  const cols = cryptos.length;
+  const gridTemplate = `200px repeat(${cols}, minmax(180px, 1fr))`;
+
+  // Helper highlight cellule "best".
+  const cell = (children: React.ReactNode, isBest: boolean, key: string) => (
+    <div
+      key={key}
+      className={`px-4 py-3 border-b border-border text-sm ${
+        isBest
+          ? "bg-primary/5 ring-1 ring-inset ring-primary/30 text-fg font-semibold"
+          : "text-fg/85"
+      }`}
+    >
+      {children}
+    </div>
+  );
+
+  // Wrapper pour overflow horizontal sécurisé sur écrans intermédiaires.
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+      <div
+        className="min-w-[800px]"
+        style={{ display: "grid", gridTemplateColumns: gridTemplate }}
+      >
+        {/* HEADER ROW */}
+        <div className="px-4 py-4 border-b border-border bg-elevated/60 text-xs font-semibold uppercase tracking-wider text-muted">
+          Critère
+        </div>
+        {cryptos.map((c) => {
+          const logo = resolveCryptoLogo({
+            coingeckoId: c.coingeckoId,
+            symbol: c.symbol,
+          });
+          return (
+            <div
+              key={c.id}
+              className="px-4 py-4 border-b border-border bg-elevated/60"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    {logo ? (
+                      <Image
+                        src={logo}
+                        alt=""
+                        width={24}
+                        height={24}
+                        className="h-6 w-6 rounded-full"
+                        unoptimized
+                      />
+                    ) : (
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary-soft">
+                        {c.symbol.slice(0, 2)}
+                      </span>
+                    )}
+                    <Link
+                      href={`/cryptos/${c.id}`}
+                      className="text-sm font-bold text-fg hover:text-primary truncate"
+                    >
+                      {c.name}
+                    </Link>
+                  </div>
+                  <div className="mt-0.5 text-[11px] text-muted">
+                    <span className="font-mono">{c.symbol}</span> ·{" "}
+                    {c.kind === "hidden-gem" ? "Hidden Gem" : `Top ${c.rank}`}
+                  </div>
+                </div>
+                <RemoveFromCompareButton slug={c.id} cryptoName={c.name} />
+              </div>
+            </div>
+          );
+        })}
+
+        {/* ROWS */}
+        <RowLabel label="Prix" />
+        {cryptos.map((c, i) => {
+          const d = details[i];
+          return cell(
+            d ? (
+              <div className="font-mono tabular-nums">{formatUsd(d.currentPrice)}</div>
+            ) : (
+              <span className="text-muted">—</span>
+            ),
+            false,
+            `price-${c.id}`
+          );
+        })}
+
+        <RowLabel label="Capitalisation" />
+        {cryptos.map((c, i) => {
+          const d = details[i];
+          return cell(
+            <div className="space-y-0.5">
+              <div className="font-mono tabular-nums">
+                {d ? formatCompactUsd(d.marketCap) : c.kind === "hidden-gem" ? c.marketCapRange : "—"}
+              </div>
+              {d?.marketCapRank && (
+                <div className="text-[11px] text-muted">Rang #{d.marketCapRank}</div>
+              )}
+            </div>,
+            bestIdx.marketCap === i,
+            `mc-${c.id}`
+          );
+        })}
+
+        <RowLabel label="Année de création" />
+        {cryptos.map((c, i) =>
+          cell(c.yearCreated, bestIdx.oldest === i, `year-${c.id}`)
+        )}
+
+        <RowLabel label="Catégorie" />
+        {cryptos.map((c) =>
+          cell(<span className="text-fg/85">{c.category}</span>, false, `cat-${c.id}`)
+        )}
+
+        <RowLabel label="Type / Profil" />
+        {cryptos.map((c) =>
+          cell(
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                c.kind === "hidden-gem"
+                  ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
+                  : "border border-primary/30 bg-primary/10 text-primary-soft"
+              }`}
+            >
+              {c.kind === "hidden-gem" ? "Hidden Gem" : `Top ${c.rank}`}
+            </span>,
+            false,
+            `kind-${c.id}`
+          )
+        )}
+
+        <RowLabel label="Consensus" />
+        {cryptos.map((c) =>
+          cell(
+            c.kind === "top10" ? c.consensus : <span className="text-muted">—</span>,
+            false,
+            `cons-${c.id}`
+          )
+        )}
+
+        <RowLabel label="Block time" />
+        {cryptos.map((c) =>
+          cell(
+            c.kind === "top10" ? c.blockTime : <span className="text-muted">—</span>,
+            false,
+            `bt-${c.id}`
+          )
+        )}
+
+        <RowLabel label="Supply max" />
+        {cryptos.map((c) =>
+          cell(
+            c.kind === "top10" ? c.maxSupply : <span className="text-muted">—</span>,
+            false,
+            `sup-${c.id}`
+          )
+        )}
+
+        <RowLabel
+          label="Score Cryptoreflex"
+          icon={<ShieldCheck className="h-3.5 w-3.5 text-primary" />}
+        />
+        {cryptos.map((c, i) => {
+          if (c.kind === "hidden-gem") {
+            const isBest = bestIdx.reliability === i;
+            return cell(
+              <div className="space-y-0.5">
+                <div className="font-mono text-base font-bold tabular-nums">
+                  {c.reliability.score.toFixed(1)}/10
+                </div>
+                <div className="text-[11px] text-muted">Fiabilité</div>
+              </div>,
+              isBest,
+              `rel-${c.id}`
+            );
+          }
+          const isBest = bestIdx.beginnerFriendly === i;
+          return cell(
+            <div className="space-y-0.5">
+              <div className="font-mono text-base font-bold tabular-nums">
+                {c.beginnerFriendly}/5
+              </div>
+              <div className="text-[11px] text-muted">
+                Beginner-friendly · Risque {c.riskLevel.toLowerCase()}
+              </div>
+            </div>,
+            isBest,
+            `bf-${c.id}`
+          );
+        })}
+
+        <RowLabel
+          label="Forces"
+          icon={<CheckCircle2 className="h-3.5 w-3.5 text-accent-green" />}
+        />
+        {cryptos.map((c) => {
+          const items =
+            c.kind === "top10"
+              ? c.strengths.slice(0, 3)
+              : [c.whyHiddenGem.slice(0, 140) + (c.whyHiddenGem.length > 140 ? "…" : "")];
+          return cell(
+            <ul className="space-y-1.5">
+              {items.map((s, idx) => (
+                <li key={idx} className="flex items-start gap-1.5 text-xs">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>,
+            false,
+            `str-${c.id}`
+          );
+        })}
+
+        <RowLabel
+          label="Faiblesses / Risques"
+          icon={<AlertTriangle className="h-3.5 w-3.5 text-amber-400" />}
+        />
+        {cryptos.map((c) => {
+          const items =
+            c.kind === "top10" ? c.weaknesses.slice(0, 3) : c.risks.slice(0, 3);
+          return cell(
+            <ul className="space-y-1.5">
+              {items.map((s, idx) => (
+                <li key={idx} className="flex items-start gap-1.5 text-xs">
+                  <XCircle className="h-3.5 w-3.5 text-accent-rose shrink-0 mt-0.5" />
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>,
+            false,
+            `wk-${c.id}`
+          );
+        })}
+
+        <RowLabel label="Où acheter" />
+        {cryptos.map((c) =>
+          cell(
+            <div className="flex flex-wrap gap-1.5">
+              {c.whereToBuy.slice(0, 5).map((p) => (
+                <span
+                  key={p}
+                  className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"
+                >
+                  {p}
+                </span>
+              ))}
+            </div>,
+            false,
+            `wtb-${c.id}`
+          )
+        )}
+
+        <RowLabel label="Fiche complète" />
+        {cryptos.map((c) =>
+          cell(
+            <Link
+              href={`/cryptos/${c.id}`}
+              className="inline-flex items-center gap-1 rounded-lg bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary-soft hover:bg-primary/25 transition-colors"
+            >
+              Voir la fiche
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </Link>,
+            false,
+            `link-${c.id}`
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RowLabel({
+  label,
+  icon,
+}: {
+  label: string;
+  icon?: React.ReactNode;
+}) {
+  return (
+    <div className="px-4 py-3 border-b border-border bg-elevated/30 text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5 sticky left-0">
+      {icon}
+      {label}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Mobile : 1 card par crypto                                                */
+/* -------------------------------------------------------------------------- */
+
+function MobileCard({
+  crypto: c,
+  detail: d,
+  bestFor,
+}: {
+  crypto: AnyCrypto;
+  detail: CoinDetail | null;
+  bestFor: string[];
+}) {
+  const logo = resolveCryptoLogo({
+    coingeckoId: c.coingeckoId,
+    symbol: c.symbol,
+  });
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-5 flex flex-col gap-4">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          {logo ? (
+            <Image
+              src={logo}
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full"
+              unoptimized
+            />
+          ) : (
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-sm font-bold text-primary-soft">
+              {c.symbol.slice(0, 2)}
+            </span>
+          )}
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-fg truncate">{c.name}</div>
+            <div className="text-[11px] text-muted">
+              <span className="font-mono">{c.symbol}</span> ·{" "}
+              {c.kind === "hidden-gem" ? "Hidden Gem" : `Top ${c.rank}`}
+            </div>
+          </div>
+        </div>
+        <RemoveFromCompareButton slug={c.id} cryptoName={c.name} />
+      </div>
+
+      {/* Best-for badges */}
+      {bestFor.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {bestFor.map((b) => (
+            <span
+              key={b}
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-soft"
+            >
+              <Sparkles className="h-3 w-3" aria-hidden="true" />
+              {b}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Stats compactes */}
+      <dl className="grid grid-cols-2 gap-3 text-xs">
+        <Stat
+          label="Prix"
+          value={d ? formatUsd(d.currentPrice) : "—"}
+        />
+        <Stat
+          label="Capitalisation"
+          value={
+            d
+              ? formatCompactUsd(d.marketCap)
+              : c.kind === "hidden-gem"
+                ? c.marketCapRange
+                : "—"
+          }
+        />
+        <Stat label="Année" value={String(c.yearCreated)} />
+        <Stat label="Catégorie" value={c.category} />
+        {c.kind === "top10" ? (
+          <>
+            <Stat label="Consensus" value={c.consensus} />
+            <Stat label="Block time" value={c.blockTime} />
+            <Stat
+              label="Beginner-friendly"
+              value={`${c.beginnerFriendly}/5`}
+            />
+            <Stat label="Risque" value={c.riskLevel} />
+          </>
+        ) : (
+          <>
+            <Stat
+              label="Fiabilité"
+              value={`${c.reliability.score.toFixed(1)}/10`}
+            />
+            <Stat label="Années actives" value={`${c.reliability.yearsActive}`} />
+          </>
+        )}
+      </dl>
+
+      {/* Forces */}
+      <div>
+        <div className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1.5">
+          <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" /> Forces
+        </div>
+        <ul className="mt-2 space-y-1.5 text-xs text-fg/85">
+          {(c.kind === "top10"
+            ? c.strengths.slice(0, 3)
+            : [c.whyHiddenGem.slice(0, 160) + (c.whyHiddenGem.length > 160 ? "…" : "")]
+          ).map((s, idx) => (
+            <li key={idx} className="flex items-start gap-1.5">
+              <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Faiblesses */}
+      <div>
+        <div className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1.5">
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />{" "}
+          {c.kind === "top10" ? "Faiblesses" : "Risques"}
+        </div>
+        <ul className="mt-2 space-y-1.5 text-xs text-fg/85">
+          {(c.kind === "top10" ? c.weaknesses : c.risks).slice(0, 3).map((s, idx) => (
+            <li key={idx} className="flex items-start gap-1.5">
+              <XCircle className="h-3.5 w-3.5 text-accent-rose shrink-0 mt-0.5" />
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Where to buy */}
+      <div>
+        <div className="text-[11px] uppercase tracking-wider text-muted">
+          Où acheter
+        </div>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {c.whereToBuy.slice(0, 5).map((p) => (
+            <span
+              key={p}
+              className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA fiche */}
+      <Link
+        href={`/cryptos/${c.id}`}
+        className="mt-2 inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/15 px-3 py-2 text-xs font-semibold text-primary-soft hover:bg-primary/25 transition-colors"
+      >
+        Voir la fiche complète
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </Link>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-wider text-muted">
+        {label}
+      </dt>
+      <dd className="mt-0.5 font-mono text-sm font-semibold text-fg tabular-nums truncate">
+        {value}
+      </dd>
+    </div>
+  );
+}

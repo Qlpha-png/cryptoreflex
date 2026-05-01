@@ -35,6 +35,16 @@ const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
   ssr: false,
 });
 
+// CompareDrawer — barre flottante du comparateur multi-cryptos (lib/use-compare-list).
+// Lazy-load ssr:false : le composant lit localStorage au mount, donc rien à
+// pré-rendre côté serveur. Reste invisible tant que la liste est vide ou
+// non hydratée → coût CPU négligeable sur les pages où l'utilisateur ne
+// l'a jamais utilisé.
+const CompareDrawer = dynamic(
+  () => import("@/components/cryptos/CompareDrawer"),
+  { ssr: false }
+);
+
 // Validation env au boot — server-side uniquement (pas de window).
 // Le helper est idempotent : un flag statique évite le spam en HMR / cold-start.
 // On log en `console.warn`/`error` ; visible dans Vercel logs sans casser le rendu.
@@ -406,6 +416,11 @@ export default function RootLayout({
         {/* CommandPalette ⌘K — déclenché via window.dispatchEvent('cmdk:open')
             par les boutons Search Navbar (desktop + mobile). */}
         <CommandPalette />
+        {/* Drawer flottant du comparateur multi-cryptos. Ne s'affiche que
+            si l'utilisateur a ajouté ≥ 1 crypto via AddToCompareButton.
+            Z-index 95 = au-dessus du MobileBottomNav (z-90), sous les
+            modales (z-100+). */}
+        <CompareDrawer />
       </body>
     </html>
   );

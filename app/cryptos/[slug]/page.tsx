@@ -39,7 +39,9 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
+import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import dynamic from "next/dynamic";
+import { SkeletonChart } from "@/components/ui/Skeleton";
 
 // Lazy-load PriceChart : Client Component lourd (chart + fetch /api/historical
 // au mount), positionné below-the-fold sous Hero+Stats. Audit Perf 26-04 :
@@ -48,9 +50,46 @@ const PriceChart = dynamic(
   () => import("@/components/crypto-detail/PriceChart"),
   {
     loading: () => (
+      <SkeletonChart height={384} label="Chargement du graphique de prix" />
+    ),
+    ssr: false,
+  },
+);
+
+// Polish UX 01/05/2026 : composants Client purement décoratifs lazy-loadés
+// pour 0 coût SSR. Aucun n'est critique au LCP.
+const ReadingProgressBar = dynamic(
+  () => import("@/components/crypto-detail/ReadingProgressBar"),
+  { ssr: false },
+);
+const StickyBreadcrumb = dynamic(
+  () => import("@/components/crypto-detail/StickyBreadcrumb"),
+  { ssr: false },
+);
+const FloatingShareButton = dynamic(
+  () => import("@/components/crypto-detail/FloatingShareButton"),
+  { ssr: false },
+);
+
+// Lazy-load OnChainMetricsLive : Client Component qui fetch /api/onchain au
+// mount. SSR désactivé pour 0 coût TTFB et pour ne pas bloquer le ISR de la page.
+// Si la donnée n'est pas dispo, le composant rend null → aucun bloc fantôme.
+const OnChainMetricsLive = dynamic(
+  () => import("@/components/crypto-detail/OnChainMetricsLive"),
+  { ssr: false },
+);
+
+// Lazy-load ROISimulator : Client Component interactif (sliders + fetch
+// /api/historical) positionné après le verdict pour engager le visiteur
+// avant la roadmap. ssr:false : aucun intérêt à SSR une UI qui dépend
+// d'un fetch client + Date.now().
+const ROISimulator = dynamic(
+  () => import("@/components/crypto-detail/ROISimulator"),
+  {
+    loading: () => (
       <div
-        className="h-96 animate-pulse rounded-2xl bg-elevated/40"
-        aria-label="Chargement du graphique de prix"
+        className="h-[420px] animate-pulse rounded-2xl bg-elevated/40"
+        aria-label="Chargement du simulateur ROI"
       />
     ),
     ssr: false,
@@ -59,7 +98,17 @@ const PriceChart = dynamic(
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import QuickBuyBox from "@/components/crypto-detail/QuickBuyBox";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
-import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";
+// Lazy-load TradingView : iframe externe qui charge ~200KB de JS quand
+// dépliée. Skeleton chart court (replié par défaut, on évite un trou visuel).
+const TradingViewWidget = dynamic(
+  () => import("@/components/crypto-detail/TradingViewWidget"),
+  {
+    loading: () => (
+      <SkeletonChart height={120} label="Chargement du graphique avancé TradingView" />
+    ),
+    ssr: false,
+  },
+);
 import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
 import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
@@ -268,20 +317,18 @@ export default async function CryptoPage({ params }: Props) {
     <article className="py-12 sm:py-16">
       <StructuredData data={schemas} id={`crypto-${c.id}`} />
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/cryptos" className="hover:text-fg">
-            Cryptos
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">{c.name}</span>
-        </nav>
+      {/* Polish UX 01/05/2026 — barre de progression de lecture sticky top */}
+      <ReadingProgressBar targetSelector="article" />
 
+      {/* Breadcrumb sticky : devient fixed après 200px de scroll */}
+      <StickyBreadcrumb
+        cryptoName={c.name}
+        cryptoSymbol={c.symbol}
+        logoUrl={detail?.image}
+        slug={c.id}
+      />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* HERO */}
         <div className="mt-6">
           <CryptoHero
@@ -295,6 +342,13 @@ export default async function CryptoPage({ params }: Props) {
             // CoinGecko id = clé canonique de la watchlist (alignée avec MarketCoin.id).
             cryptoId={c.coingeckoId}
           />
+        </div>
+
+        {/* ACTION : ajouter au comparateur multi-cryptos. Subtile, sous le
+            Hero, au-dessus du QuickBuyBox pour rester accessible sans gêner
+            la conversion. Le drawer global remontera ensuite la sélection. */}
+        <div className="mt-4">
+          <AddToCompareButton slug={c.id} cryptoName={c.name} />
         </div>
 
         {/* QUICK BUY BOX (FIX #1 audit conversion 2026-04-26) — encart d'achat
@@ -314,6 +368,16 @@ export default async function CryptoPage({ params }: Props) {
             symbol={c.symbol}
             detail={detail}
             fallbackMaxSupply={c.kind === "top10" ? c.maxSupply : c.marketCapRange}
+          />
+        </div>
+
+        {/* ON-CHAIN METRICS LIVE — TVL DeFiLlama + dominance + FDV + holders.
+            Lazy-loaded, fetch côté client, rend null si la donnée est indispo
+            pour ne pas dégrader la fiche. */}
+        <div className="mt-8">
+          <OnChainMetricsLive
+            coingeckoId={c.coingeckoId}
+            cryptoName={c.name}
           />
         </div>
 
@@ -499,6 +563,18 @@ export default async function CryptoPage({ params }: Props) {
           <p className="mt-3 text-base text-fg/85 leading-relaxed">{verdict}</p>
         </section>
 
+        {/* ROI SIMULATOR — composant interactif "Et si tu avais investi…" :
+            sliders montant/date/stratégie + chart sparkline. Lazy-load
+            ssr:false (cf. import en haut). Engage le visiteur entre verdict
+            et roadmap. */}
+        <div className="mt-12">
+          <ROISimulator
+            coingeckoId={c.coingeckoId}
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+          />
+        </div>
+
         {/* ROADMAP — uniquement si on a des données fiables pour cette crypto */}
         {roadmapEvents && (
           <div className="mt-12">
@@ -641,6 +717,13 @@ export default async function CryptoPage({ params }: Props) {
           surface="crypto-page"
         />
       )}
+
+      {/* Polish UX 01/05/2026 — bouton de partage flottant (bottom-left). */}
+      <FloatingShareButton
+        url={pageUrl}
+        title={`${c.name} (${c.symbol}) — Cryptoreflex`}
+        shareText={`${c.name} (${c.symbol}) : ${c.tagline} — Analyse Cryptoreflex`}
+      />
     </article>
   );
 }

@@ -537,8 +537,8 @@
       "yearCreated": 2020,
       "category": "Layer 0 / Interoperabilité",
       "tagline": "Le réseau de blockchains qui se parlent : un Internet des chaines",
-      "what": "Polkadot est un protocole Layer 0 qui relie plusieurs blockchains spécialisées ('parachains') autour d'une chaine centrale ('Relay Chain') qui assure leur sécurité. Chaque parachain peut avoir ses propres regles tout en partageant la sécurité et la communication inter-chaines de Polkadot.",
-      "whyHiddenGem": "Cofondé par Gavin Wood, cocréateur d'Ethereum et auteur du Yellow Paper. La mise a jour 'Polkadot 2.0' (Agile Coretime, JAM) a transformé le modèle economique en 2024-2025. Très faible empreinte énergétique grâce au Nominated Proof-of-Stake.",
+      "what": "Polkadot est un protocole Layer 0 qui relie plusieurs blockchains spécialisées ('parachains') autour d'une chaine centrale ('Relay Chain') qui assure leur sécurité. Chaque parachain peut avoir ses propres règles tout en partageant la sécurité et la communication inter-chaines de Polkadot.",
+      "whyHiddenGem": "Cofondé par Gavin Wood, cocréateur d'Ethereum et auteur du Yellow Paper. La mise à jour 'Polkadot 2.0' (Agile Coretime, JAM) a transformé le modèle économique en 2024-2025. Très faible empreinte énergétique grâce au Nominated Proof-of-Stake.",
       "reliability": {
         "score": 8.5,
         "teamIdentified": true,
@@ -588,8 +588,8 @@
       "marketCapRange": "1.5Md$ - 4Md$",
       "yearCreated": 2019,
       "category": "Layer 0 / Interopérabilité",
-      "tagline": "L'Internet des Blockchains : chaque app sa propre chaine, toutes connectees",
-      "what": "Cosmos est un écosystème de blockchains independantes (appelées 'app-chains') construites avec le Cosmos SDK et reliées par le protocole IBC (Inter-Blockchain Communication). ATOM est le token de la Cosmos Hub, la chaine centrale historique.",
+      "tagline": "L'Internet des Blockchains : chaque app sa propre chaine, toutes connectées",
+      "what": "Cosmos est un écosystème de blockchains indépendantes (appelées 'app-chains') construites avec le Cosmos SDK et reliées par le protocole IBC (Inter-Blockchain Communication). ATOM est le token de la Cosmos Hub, la chaine centrale historique.",
       "whyHiddenGem": "Plus de 90 chaines IBC-enabled (dYdX, Celestia, Injective, Sei, Osmosis...) représentent un écosystème très actif. IBC est devenu le standard de facto pour la communication inter-chaines. Ethos open-source et neutre cher aux développeurs.",
       "reliability": {
         "score": 7.5,
@@ -613,9 +613,9 @@
       "risks": [
         "Capture de valeur faible : ATOM bénéficie peu du succès des chaines de l'écosystème",
         "Gouvernance fragmentée, plusieurs propositions de 'ATOM 2.0' rejetées",
-        "Forte inflation (jusqu'a 20% historique, réduite par la communauté en 2024)"
+        "Forte inflation (jusqu'à 20% historique, réduite par la communauté en 2024)"
       ],
-      "useCase": "Hub d'interopérabilité IBC, staking, sécurité partagee (Interchain Security), gouvernance",
+      "useCase": "Hub d'interopérabilité IBC, staking, sécurité partagée (Interchain Security), gouvernance",
       "whereToBuy": [
         "Binance",
         "Coinbase",
@@ -640,7 +640,7 @@
       "yearCreated": 2023,
       "category": "Layer 1 / Smart contracts",
       "tagline": "La blockchain orientée objets conçue par les ex-architectes du projet Diem de Meta",
-      "what": "Sui est une blockchain Layer 1 fondée par Mysten Labs, équipe issue du projet Diem (ex-Libra) de Meta. Elle utilise le langage Move et un modèle 'orient objet' qui permet d'exécuter en parallele des transactions independantes, atteignant des débits très élevés.",
+      "what": "Sui est une blockchain Layer 1 fondée par Mysten Labs, équipe issue du projet Diem (ex-Libra) de Meta. Elle utilise le langage Move et un modèle 'orient objet' qui permet d'exécuter en parallèle des transactions indépendantes, atteignant des débits très élevés.",
       "whyHiddenGem": "Architecture technique innovante adoptée par le gaming Web3 et la DeFi haute frequence. Croissance rapide en TVL et utilisateurs en 2024-2025. Onboarding facilité via zkLogin (connexion Google/Apple sans seed phrase).",
       "reliability": {
         "score": 7,
@@ -693,7 +693,7 @@
       "yearCreated": 2022,
       "category": "Layer 1 / Smart contracts",
       "tagline": "L'autre héritier du projet Diem de Meta, en concurrence frontale avec Sui",
-      "what": "Aptos est une blockchain Layer 1 fondée par Aptos Labs, autre équipe issue du projet Diem de Meta. Elle utilise aussi le langage Move mais avec une architecture différente de Sui (modèle compte). Vise des transactions paralleles (Block-STM) et une latence sub-seconde.",
+      "what": "Aptos est une blockchain Layer 1 fondée par Aptos Labs, autre équipe issue du projet Diem de Meta. Elle utilise aussi le langage Move mais avec une architecture différente de Sui (modèle compte). Vise des transactions parallèles (Block-STM) et une latence sub-seconde.",
       "whyHiddenGem": "Partenariats institutionnels notables (Microsoft, Mastercard, Franklin Templeton). Adoption en Asie (Corée, Japon) particulièrement forte. Fondation Aptos active dans les programmes RWA (Real World Assets).",
       "reliability": {
         "score": 7,
@@ -842,9 +842,9 @@
       "marketCapRange": "1Md$ - 3Md$",
       "yearCreated": 2019,
       "category": "Layer 1 / Smart contracts",
-      "tagline": "Le Layer 1 académique fonde par le prix Turing Silvio Micali",
-      "what": "Algorand est une blockchain Layer 1 fondée par Silvio Micali, professeur du MIT et lauréat du Prix Turing (Nobel d'informatique). Elle utilise un consensus Pure Proof-of-Stake avec finalite instantanée et zero fork. Carbon negative officiellement.",
-      "whyHiddenGem": "Bases scientifiques très solides (preuves cryptographiques formelles). Adoption institutionnelle au Salvador, en Italie (FIDA Sostenibile), aux EAU (banque centrale). Éligible MiCA et utilisee pour des CBDC pilotes.",
+      "tagline": "Le Layer 1 académique fondé par le prix Turing Silvio Micali",
+      "what": "Algorand est une blockchain Layer 1 fondée par Silvio Micali, professeur du MIT et lauréat du Prix Turing (Nobel d'informatique). Elle utilise un consensus Pure Proof-of-Stake avec finalité instantanée et zero fork. Carbon negative officiellement.",
+      "whyHiddenGem": "Bases scientifiques très solides (preuves cryptographiques formelles). Adoption institutionnelle au Salvador, en Italie (FIDA Sostenibile), aux EAU (banque centrale). Éligible MiCA et utilisée pour des CBDC pilotes.",
       "reliability": {
         "score": 8,
         "teamIdentified": true,
@@ -945,7 +945,7 @@
       "yearCreated": 2021,
       "category": "Layer 1 / Cloud décentralisé",
       "tagline": "Le 'cloud décentralisé' qui héberge sites et applications full on-chain",
-      "what": "Internet Computer (ICP) est une blockchain développée par la fondation suisse DFINITY. Elle permet d'heberger des applications web complettes (frontend + backend) directement on-chain, sans serveur traditionnel, via des 'canisters' (smart contracts persistents).",
+      "what": "Internet Computer (ICP) est une blockchain développée par la fondation suisse DFINITY. Elle permet d'héberger des applications web complètes (frontend + backend) directement on-chain, sans serveur traditionnel, via des 'canisters' (smart contracts persistents).",
       "whyHiddenGem": "Capacité technique unique : sites web et apps 100% on-chain, Chain Key (intégration Bitcoin/Ethereum native sans bridge). Équipe académique d'élite (Dominic Williams, Jan Camenisch, Andreas Rossberg). HTTPS outcalls et threshold ECDSA sont réellement innovants.",
       "reliability": {
         "score": 6.5,
@@ -968,7 +968,7 @@
       },
       "risks": [
         "Réputation entachée par la controverse Genesis 2021 (perte de confiance investisseurs)",
-        "Tokenomics complexes (neurons, 8-year staking) difficiles a comprendre",
+        "Tokenomics complexes (neurons, 8-year staking) difficiles à comprendre",
         "Centralisation perceptive : la DFINITY Foundation reste le principal contributeur de code"
       ],
       "useCase": "Hébergement web on-chain, dApps SocialFi (OpenChat, DSCVR), intégration Bitcoin/Ethereum sans bridge, IA on-chain",
@@ -1047,7 +1047,7 @@
       "yearCreated": 2023,
       "category": "Layer 1 / Trading optimisé",
       "tagline": "Le Layer 1 spécialisé pour le trading on-chain ultra-rapide",
-      "what": "Sei est une blockchain Layer 1 optimisée pour les applications de trading (DEX, perpetuals, order books on-chain). Elle utilise un consensus Twin-Turbo et un parallelisme natif. La V2 (décembre 2023) a ajoute la compatibilite EVM en plus du Cosmos SDK.",
+      "what": "Sei est une blockchain Layer 1 optimisée pour les applications de trading (DEX, perpetuals, order books on-chain). Elle utilise un consensus Twin-Turbo et un parallélisme natif. La V2 (décembre 2023) a ajouté la compatibilité EVM en plus du Cosmos SDK.",
       "whyHiddenGem": "Architecture techniquement pertinente pour le trading ordre carnet on-chain (alternative a Solana et Injective). Adoption progressive par des DEX (Astroport, Levana). Équipe issue de Robinhood et Goldman Sachs.",
       "reliability": {
         "score": 6.5,
@@ -1099,7 +1099,7 @@
       "marketCapRange": "2Md$ - 6Md$",
       "yearCreated": 2021,
       "category": "Layer 1 / Proof-of-Work",
-      "tagline": "Le Proof-of-Work de nouvelle génération : la rapidite sans sacrifier la décentralisation",
+      "tagline": "Le Proof-of-Work de nouvelle génération : la rapidité sans sacrifier la décentralisation",
       "what": "Kaspa est une blockchain Layer 1 Proof-of-Work qui utilise le protocole GhostDAG (un DAG, pas une chaine linéaire) permettant 1 bloc par seconde et plusieurs milliers de TPS, tout en conservant la sécurité du PoW. Pas de prévente, pas d'ICO, pas d'allocation insiders.",
       "whyHiddenGem": "Lancé en 'fair launch' intégral (sans premine, sans VC) comme Bitcoin. Conception académique solide par Yonatan Sompolinsky (auteur du protocole GHOST cité dans le whitepaper Ethereum). Supply fixe (28.7Md KAS, émission déflationniste).",
       "reliability": {
@@ -1119,7 +1119,7 @@
       },
       "risks": [
         "Pas d'audits de cabinets de sécurité reconnus (Trail of Bits, Halborn...)",
-        "Ecosysteme dApps très limite (pas de smart contracts sophistiqués avant Crescendo/EVM L2 prévu)",
+        "Écosystème dApps très limite (pas de smart contracts sophistiqués avant Crescendo/EVM L2 prévu)",
         "Accès limite sur les CEX MiCA majeurs en France (souvent absent ou restreint)"
       ],
       "useCase": "Paiements PoW rapides, store of value alternatif, future couche smart contracts (KRC-20, EVM L2 en développement)",
@@ -1145,9 +1145,9 @@
       "marketCapRange": "3Md$ - 7Md$",
       "yearCreated": 2014,
       "category": "Privacy / Layer 1",
-      "tagline": "La crypto privée de référence : transactions confidentielles par defaut",
-      "what": "Monero est une blockchain Proof-of-Work axée sur la confidentialité. Toutes les transactions sont privées par defaut (montants, expéditeurs, destinataires masqués) grâce a trois technologies combinees : Ring Signatures, Stealth Addresses et RingCT. Fair launch en 2014, sans premine.",
-      "whyHiddenGem": "Référence absolue de la privacy crypto. Communauté développeur très engagee, gouvernance décentralisée. Résistance prouvée aux attaques (désanonymisation IRS Chainalysis encore non confirmee). ASIC-résistant (algo RandomX).",
+      "tagline": "La crypto privée de référence : transactions confidentielles par défaut",
+      "what": "Monero est une blockchain Proof-of-Work axée sur la confidentialité. Toutes les transactions sont privées par défaut (montants, expéditeurs, destinataires masqués) grâce a trois technologies combinées : Ring Signatures, Stealth Addresses et RingCT. Fair launch en 2014, sans premine.",
+      "whyHiddenGem": "Référence absolue de la privacy crypto. Communauté développeur très engagée, gouvernance décentralisée. Résistance prouvée aux attaques (désanonymisation IRS Chainalysis encore non confirmée). ASIC-résistant (algo RandomX).",
       "reliability": {
         "score": 8,
         "teamIdentified": false,
@@ -1170,7 +1170,7 @@
         "Risque réglementaire majeur : interdiction probable dans plusieurs pays (déjà le cas en Corée, Japon)",
         "Accès très restreint pour particuliers FR via plateformes régulées : a privilégier DEX ou plateformes hors UE"
       ],
-      "useCase": "Paiements confidentiels, protection vie privée financiere, store of value résistant a la censure",
+      "useCase": "Paiements confidentiels, protection vie privée financière, store of value résistant a la censure",
       "whereToBuy": [
         "Kraken (hors UE uniquement)",
         "TradeOgre",
@@ -1193,8 +1193,8 @@
       "marketCapRange": "5Md$ - 12Md$",
       "yearCreated": 2011,
       "category": "Layer 1 / Paiements PoW",
-      "tagline": "L'argent face a l'or de Bitcoin : la crypto de paiement la plus ancienne et stable",
-      "what": "Litecoin est un fork de Bitcoin créé en 2011 par Charlie Lee (ex-Google, ex-Coinbase). Il vise les transactions plus rapides (bloc toutes les 2.5 minutes vs 10 pour BTC) et moins coûteuses. Supply fixe de 84M LTC. A integre MimbleWimble (MWEB) en 2022 pour des transactions optionnellement privées.",
+      "tagline": "L'argent face à l'or de Bitcoin : la crypto de paiement la plus ancienne et stable",
+      "what": "Litecoin est un fork de Bitcoin créé en 2011 par Charlie Lee (ex-Google, ex-Coinbase). Il vise les transactions plus rapides (bloc toutes les 2.5 minutes vs 10 pour BTC) et moins coûteuses. Supply fixe de 84M LTC. A intégré MimbleWimble (MWEB) en 2022 pour des transactions optionnellement privées.",
       "whyHiddenGem": "Une des cryptos les plus anciennes et stables, sans hack majeur en 14 ans. Adoption marchande réelle via BitPay, plus de 2000 commerçants. MimbleWimble a relancé l'intérêt privacy. ASIC-mineable mais décentralisé.",
       "reliability": {
         "score": 9,
@@ -1213,7 +1213,7 @@
       },
       "risks": [
         "Quelques délistages partiels en UE post-MiCA suite au support MWEB (privacy optionnelle)",
-        "Récit 'argent vs or' affaibli depuis l'arrivee des stablecoins comme moyen de paiement",
+        "Récit 'argent vs or' affaibli depuis l'arrivée des stablecoins comme moyen de paiement",
         "Innovation lente vs concurrents (peu d'évolutions majeures depuis MWEB en 2022)"
       ],
       "useCase": "Paiements quotidiens, remittances, store of value alternatif, transactions privées optionnelles (MWEB)",
@@ -1241,7 +1241,7 @@
       "yearCreated": 2017,
       "category": "Layer 1 / Paiements PoW",
       "tagline": "Le hard fork historique de Bitcoin pour des paiements pas chers et rapides",
-      "what": "Bitcoin Cash est un hard fork de Bitcoin survenu en août 2017, ne du désaccord sur la taille des blocs. BCH a augmenté la taille des blocs (32 MB vs 1-4 MB pour BTC) afin de permettre plus de transactions a moindre coût, au prix d'une décentralisation réduite des nœuds.",
+      "what": "Bitcoin Cash est un hard fork de Bitcoin survenu en août 2017, né du désaccord sur la taille des blocs. BCH a augmenté la taille des blocs (32 MB vs 1-4 MB pour BTC) afin de permettre plus de transactions à moindre coût, au prix d'une décentralisation réduite des nœuds.",
       "whyHiddenGem": "Réseau historique avec 8 ans de fonctionnement sans hack du protocole. Frais réellement minimes (<0.01$). Smart contracts CashScript et CashTokens (2023) ont ouvert des cas d'usage NFT et tokens. Adoption significative en Amérique Latine (Bitcoin.com).",
       "reliability": {
         "score": 7.5,
@@ -1252,7 +1252,7 @@
         ],
         "lastAuditDate": "n/a",
         "yearsActive": 9,
-        "majorIncidents": "Hard fork BCH/BSV en novembre 2018 (chain split) qui a divise la communauté. Pas de hack du protocole. Volatilité réputationnelle liée a Roger Ver.",
+        "majorIncidents": "Hard fork BCH/BSV en novembre 2018 (chain split) qui a divisé la communauté. Pas de hack du protocole. Volatilité réputationnelle liée a Roger Ver.",
         "fundingRaised": "0$ (fork, pas d'ICO)",
         "backers": [
           "Communaute (Bitcoin Cash Node, BCHD developers)"
@@ -1261,7 +1261,7 @@
       "risks": [
         "Communauté fragmentée (multiples forks : BSV, eCash) qui dilue l'attention",
         "Hashrate inférieur a BTC : risque théorique d'attaque 51% plus élevé",
-        "Récit paiements concurrence par Lightning Network sur BTC et stablecoins"
+        "Récit paiements concurrencé par Lightning Network sur BTC et stablecoins"
       ],
       "useCase": "Paiements peer-to-peer a frais bas, micropaiements, CashTokens (NFT et tokens natifs), smart contracts CashScript",
       "whereToBuy": [
@@ -1273,7 +1273,7 @@
       ],
       "officialUrl": "https://bitcoincash.org",
       "monitoringSignals": [
-        "Hashrate SHA-256 partage avec BTC",
+        "Hashrate SHA-256 partagé avec BTC",
         "Volume CashTokens et adoption smart contracts",
         "Adoption marchande (notamment Amérique Latine)"
       ]
@@ -1288,7 +1288,7 @@
       "yearCreated": 2016,
       "category": "Privacy / Layer 1",
       "tagline": "La privacy par zk-SNARKs : transactions optionnellement confidentielles",
-      "what": "Zcash est une blockchain Proof-of-Work qui utilise les zk-SNARKs (preuves a divulgation nulle) pour offrir des transactions privées optionnelles. Deux types d'adresses : transparentes (t-addr, comme BTC) et blindées (z-addr, totalement chiffrées). Fork du code Bitcoin avec ajout cryptographique avance.",
+      "what": "Zcash est une blockchain Proof-of-Work qui utilise les zk-SNARKs (preuves à divulgation nulle) pour offrir des transactions privées optionnelles. Deux types d'adresses : transparentes (t-addr, comme BTC) et blindées (z-addr, totalement chiffrées). Fork du code Bitcoin avec ajout cryptographique avancé.",
       "whyHiddenGem": "Recherche cryptographique de pointe (Electric Coin Company, Zcash Foundation, MIT, Technion). Inspiration directe pour les rollups ZK actuels (zkSync, StarkNet). Migration vers Proof-of-Stake en cours via Crosslink/Halo 2.",
       "reliability": {
         "score": 7.5,
@@ -1301,7 +1301,7 @@
         ],
         "lastAuditDate": "2024-09",
         "yearsActive": 10,
-        "majorIncidents": "Bug d'inflation potentielle découvert en 2018 (corrigé discrètement avant exploitation - 'Counterfeiting Vulnerability'). Aucun fonds perdu, mais episode controverse sur la divulgation tardive.",
+        "majorIncidents": "Bug d'inflation potentielle découvert en 2018 (corrigé discrètement avant exploitation - 'Counterfeiting Vulnerability'). Aucun fonds perdu, mais épisode controversé sur la divulgation tardive.",
         "fundingRaised": "3M$ (financement initial) + Founder's Reward / Dev Fund",
         "backers": [
           "Electric Coin Company (ECC)",
@@ -1313,7 +1313,7 @@
       "risks": [
         "DÉLISTAGE généralisé depuis 2024 : Binance, OKX, Bitstamp ne listent plus ZEC en UE pour cause MiCA",
         "Très faible utilisation des transactions privées (z-addrs) : <5% du volume",
-        "Cérémonie de setup initiale (Powers of Tau) historiquement controversee (trust assumption)"
+        "Cérémonie de setup initiale (Powers of Tau) historiquement controversée (trust assumption)"
       ],
       "useCase": "Transactions privées optionnelles, recherche cryptographique zk, paiements confidentiels",
       "whereToBuy": [
@@ -1338,7 +1338,7 @@
       "yearCreated": 2014,
       "category": "Layer 1 / Paiements semi-privés",
       "tagline": "Le 'digital cash' avec InstantSend et PrivateSend, focus paiements quotidiens",
-      "what": "Dash (anciennement Darkcoin) est un fork de Bitcoin lancé en 2014. Il propose des transactions instantanées (InstantSend via masternodes) et un melange optionnel de transactions (PrivateSend, base sur CoinJoin). Première crypto avec un système de gouvernance on-chain et de trésorerie auto-financée.",
+      "what": "Dash (anciennement Darkcoin) est un fork de Bitcoin lancé en 2014. Il propose des transactions instantanées (InstantSend via masternodes) et un mélange optionnel de transactions (PrivateSend, base sur CoinJoin). Première crypto avec un système de gouvernance on-chain et de trésorerie auto-financée.",
       "whyHiddenGem": "Adoption marchande historique au Venezuela, en Colombie, au Nigeria (paiements alternatifs en zone d'inflation). Réseau de masternodes (1000 DASH minimum) qui finance le développement. Long historique sans hack majeur.",
       "reliability": {
         "score": 7,
@@ -1349,7 +1349,7 @@
         ],
         "lastAuditDate": "n/a",
         "yearsActive": 12,
-        "majorIncidents": "Premine controverse au lancement (1.9M DASH créés en 2 jours, ~10% supply) admis par le fondateur Evan Duffield (bug de difficulty). Aucun hack technique majeur.",
+        "majorIncidents": "Premine controversé au lancement (1.9M DASH créés en 2 jours, ~10% supply) admis par le fondateur Evan Duffield (bug de difficulty). Aucun hack technique majeur.",
         "fundingRaised": "Trésorerie auto-financée via le réseau (10% des récompenses bloc)",
         "backers": [
           "Dash Core Group",
@@ -1358,7 +1358,7 @@
       },
       "risks": [
         "DÉLISTAGE généralisé depuis 2024 : Binance, OKX, Bitstamp ne listent plus DASH en UE pour cause MiCA (PrivateSend)",
-        "Cas d'usage paiements concurrence par stablecoins (USDT, USDC) en Amérique Latine",
+        "Cas d'usage paiements concurrencé par stablecoins (USDT, USDC) en Amérique Latine",
         "Activité développeur en déclin relatif depuis 2020"
       ],
       "useCase": "Paiements quotidiens (Amérique Latine, Afrique), transactions instantanées, mixing optionnel (PrivateSend)",
@@ -1408,7 +1408,7 @@
       "risks": [
         "Sécurité dépendante du matériel Intel SGX : si SGX est compromis, la confidentialité l'est aussi",
         "Accès très restreint sur les CEX UE post-MiCA (privacy)",
-        "Cap de marché très faible : risque de liquidite et de volatilité extrême"
+        "Cap de marché très faible : risque de liquidité et de volatilité extrême"
       ],
       "useCase": "Smart contracts privés, NFT confidentiels, vote on-chain anonyme, DeFi privée, identité",
       "whereToBuy": [
@@ -1419,7 +1419,7 @@
       "officialUrl": "https://scrt.network",
       "monitoringSignals": [
         "Nombre de dApps actives sur scrt.network",
-        "Mises a jour de sécurité des TEE Intel SGX",
+        "Mises à jour de sécurité des TEE Intel SGX",
         "Volume de transactions confidentielles vs transparentes"
       ]
     },
@@ -1433,8 +1433,8 @@
       "yearCreated": 2020,
       "category": "Layer 2 Ethereum / Multi-chain",
       "tagline": "L'écosystème multi-chaines Ethereum, du PoS aux ZK-rollups",
-      "what": "Polygon est un écosystème de scaling Ethereum qui regroupe plusieurs chaines : Polygon PoS (sidechain historique), zkEVM (rollup ZK), Polygon CDK (kit pour app-chains ZK), et l'AggLayer (couche d'aggregation cross-chain). Le token MATIC a été migré vers POL en 2024 pour devenir le token unifié de tout l'écosystème.",
-      "whyHiddenGem": "L'un des Layer 2 les plus utilises avec Arbitrum et Base. Adoption enterprise massive : Starbucks, Nike, Reddit, Disney y ont déployé des NFT/loyalty. Stratégie 'Polygon 2.0' axée sur l'agrégation ZK est ambitieuse.",
+      "what": "Polygon est un écosystème de scaling Ethereum qui regroupe plusieurs chaines : Polygon PoS (sidechain historique), zkEVM (rollup ZK), Polygon CDK (kit pour app-chains ZK), et l'AggLayer (couche d'agrégation cross-chain). Le token MATIC a été migré vers POL en 2024 pour devenir le token unifié de tout l'écosystème.",
+      "whyHiddenGem": "L'un des Layer 2 les plus utilisés avec Arbitrum et Base. Adoption enterprise massive : Starbucks, Nike, Reddit, Disney y ont déployé des NFT/loyalty. Stratégie 'Polygon 2.0' axée sur l'agrégation ZK est ambitieuse.",
       "reliability": {
         "score": 8.5,
         "teamIdentified": true,
@@ -1473,7 +1473,7 @@
       "officialUrl": "https://polygon.technology",
       "monitoringSignals": [
         "TVL DeFi sur DefiLlama (Polygon PoS + zkEVM + CDK chains)",
-        "Adoption AggLayer (chaines connectees, volume de messages)",
+        "Adoption AggLayer (chaines connectées, volume de messages)",
         "Avancement migration MATIC -> POL (>95% déjà migrés mi-2025)"
       ]
     },
@@ -1487,8 +1487,8 @@
       "yearCreated": 2021,
       "category": "Layer 2 Ethereum / Optimistic Rollup",
       "tagline": "L'Optimistic Rollup pionnier qui alimente la Superchain de Base et OP Mainnet",
-      "what": "Optimism est un Layer 2 Ethereum de type Optimistic Rollup. Il exécute les transactions hors chaine puis les ancre sur Ethereum, divisant les frais par 10 a 100x. Sa pile technique open-source (OP Stack) est utilisee par Coinbase Base, World Chain, Mode, Zora et d'autres pour former la 'Superchain'.",
-      "whyHiddenGem": "OP Stack est devenu un standard de l'écosystème L2 (Base, Worldcoin's World Chain, Zora utilisent tous OP Stack). Modèle de revenus partage entre les chains de la Superchain et OP Mainnet. Gouvernance bicamérale (Token House + Citizens House) innovante.",
+      "what": "Optimism est un Layer 2 Ethereum de type Optimistic Rollup. Il exécute les transactions hors chaine puis les ancre sur Ethereum, divisant les frais par 10 à 100x. Sa pile technique open-source (OP Stack) est utilisée par Coinbase Base, World Chain, Mode, Zora et d'autres pour former la 'Superchain'.",
+      "whyHiddenGem": "OP Stack est devenu un standard de l'écosystème L2 (Base, Worldcoin's World Chain, Zora utilisent tous OP Stack). Modèle de revenus partagés entre les chains de la Superchain et OP Mainnet. Gouvernance bicamérale (Token House + Citizens House) innovante.",
       "reliability": {
         "score": 8.5,
         "teamIdentified": true,
@@ -1501,7 +1501,7 @@
         ],
         "lastAuditDate": "2025-10",
         "yearsActive": 5,
-        "majorIncidents": "Bug critique découvert en février 2022 par Jay Freeman (Saurik) - 2M$ de bounty paye. Aucun hack ni perte de fonds utilisateurs. Sequencer centralisé (assume) avec roadmap de décentralisation en cours.",
+        "majorIncidents": "Bug critique découvert en février 2022 par Jay Freeman (Saurik) - 2M$ de bounty payé. Aucun hack ni perte de fonds utilisateurs. Sequencer centralisé (assumé) avec roadmap de décentralisation en cours.",
         "fundingRaised": "178M$",
         "backers": [
           "Andreessen Horowitz (a16z)",
@@ -1525,7 +1525,7 @@
       ],
       "officialUrl": "https://optimism.io",
       "monitoringSignals": [
-        "TVL combinee Superchain (DefiLlama : OP Mainnet + Base + autres)",
+        "TVL combinée Superchain (DefiLlama : OP Mainnet + Base + autres)",
         "Avancement décentralisation du sequencer (fault proofs déployés en 2024)",
         "Revenus partages entre Superchain (Base génère 90%+)"
       ]

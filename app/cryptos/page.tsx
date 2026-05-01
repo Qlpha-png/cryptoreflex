@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowRight, Gem, Trophy, X } from "lucide-react";
+import { Search, Filter, ArrowRight, Gem, Trophy, X, Scale } from "lucide-react";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
+import { useCompareList } from "@/lib/use-compare-list";
 
 type FilterKind = "all" | "top10" | "hidden-gem";
 
@@ -29,6 +30,7 @@ export default function CryptosIndexPage() {
   const [filter, setFilter] = useState<FilterKind>("all");
   const [category, setCategory] = useState<string>("");
   const [query, setQuery] = useState("");
+  const { list: compareList, hydrated: compareHydrated } = useCompareList();
 
   // Catégories agrégées dynamiquement depuis les datasets — on regroupe les
   // catégories proches via une heuristique simple pour ne pas avoir 40 chips.
@@ -121,6 +123,35 @@ export default function CryptosIndexPage() {
             backers, risques — tout est documenté.
           </p>
         </header>
+
+        {/* CTA Comparer — visible quand l'utilisateur a déjà sélectionné 2+
+            cryptos via les boutons "+ Comparer" sur les fiches. Permet de
+            sauter directement au comparatif sans re-cliquer dans le drawer. */}
+        {compareHydrated && compareList.length >= 2 && (
+          <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/15">
+                <Scale className="h-4 w-4 text-primary" aria-hidden="true" />
+              </span>
+              <div>
+                <div className="text-sm font-semibold text-fg">
+                  {compareList.length} crypto
+                  {compareList.length > 1 ? "s" : ""} dans ton comparateur
+                </div>
+                <div className="text-xs text-muted">
+                  Visualise-les côte à côte sur une seule page.
+                </div>
+              </div>
+            </div>
+            <Link
+              href={`/cryptos/comparer?ids=${compareList.join(",")}`}
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Ouvrir le comparatif
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          </div>
+        )}
 
         {/* Filtres kind + recherche */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
