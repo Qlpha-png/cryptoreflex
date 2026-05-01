@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import NewsletterStickyBar from "@/components/NewsletterStickyBar";
 import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
@@ -386,6 +387,14 @@ export default function RootLayout({
           par-dessus volontairement quand elle est déclenchée.
         */}
         <MobileBottomNav />
+        {/*
+          NewsletterStickyBar — barre flottante mobile-first (md:hidden) qui
+          apparaît après 30s OU 50% scroll, dismissable 7j (localStorage).
+          Audit-UX-CONVERSION P1-9 (2026-05-01) : capture newsletter mobile
+          renforcée (avant 1 seul touch via NewsletterCapture home).
+          Auto-hide sur /newsletter et /merci pour éviter double prompt.
+        */}
+        <NewsletterStickyBar />
         <CookieBanner />
         {/*
           Plausible Analytics — chargé uniquement si l'utilisateur a accepté

@@ -30,6 +30,7 @@ import OnboardingChecklist from "@/components/account/OnboardingChecklist";
 import KpiCard from "@/components/account/KpiCard";
 import FreeUserDashboard from "@/components/account/FreeUserDashboard";
 import DeleteAccountButton from "@/components/account/DeleteAccountButton";
+import AskAiQuotaCard from "@/components/account/AskAiQuotaCard";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -174,36 +175,134 @@ export default async function AccountPage() {
           </div>
         )}
 
-        {/* Pro feature spotlight : Cerfa 2086 auto */}
+        {/* Section "Tes outils Soutien" — grille des features Pro accessibles */}
         {isPro && (
-          <Link
-            href="/outils/cerfa-2086-auto"
-            className="block mb-6 group rounded-2xl border border-gold/40 bg-gradient-to-br from-gold/10 to-transparent p-5 hover:border-gold/70 transition-colors"
-            aria-label="Accéder à l'outil Cerfa 2086 auto, réservé aux abonnés Soutien"
+          <section
+            aria-labelledby="pro-tools-title"
+            className="mb-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-background p-5 sm:p-6"
           >
-            <div className="flex items-start gap-4">
-              <div className="shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-full bg-gold/20 text-gold">
-                <FileText className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <div className="flex-1">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-gold">
-                  <Sparkles className="h-3 w-3" aria-hidden="true" />
-                  Nouveau Soutien
-                </span>
-                <h3 className="mt-1 font-display text-lg font-extrabold text-fg">
-                  Génère ton Cerfa 2086 auto
-                </h3>
-                <p className="mt-1 text-sm text-fg/70">
-                  Importe ton CSV Binance/Coinbase et reçois un PDF Cerfa 2086 +
-                  3916-bis pré-rempli en 30 secondes.
-                </p>
-              </div>
-              <ArrowRight
-                className="h-5 w-5 text-gold mt-1 transition-transform group-hover:translate-x-1"
-                aria-hidden="true"
-              />
+            <div className="flex items-baseline justify-between gap-3 flex-wrap mb-4">
+              <h2
+                id="pro-tools-title"
+                className="font-display text-lg font-extrabold text-fg flex items-center gap-2"
+              >
+                <Crown className="h-4 w-4 text-primary" aria-hidden="true" />
+                Tes outils Soutien
+              </h2>
+              <Link
+                href="/outils"
+                className="text-xs font-semibold text-primary-soft hover:text-primary inline-flex items-center gap-1"
+              >
+                Tous les outils
+                <ArrowRight className="h-3 w-3" />
+              </Link>
             </div>
-          </Link>
+
+            <div className="grid sm:grid-cols-2 gap-3">
+              {/* Cerfa 2086 — feature flagship */}
+              <Link
+                href="/outils/cerfa-2086-auto"
+                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25 transition-colors">
+                    <FileText className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-400">
+                      ✨ Nouveau
+                    </span>
+                    <h3 className="mt-1 font-bold text-fg text-sm">
+                      Cerfa 2086 + 3916-bis auto
+                    </h3>
+                    <p className="mt-1 text-xs text-fg/70 leading-snug">
+                      Importe ton CSV → PDF pré-rempli en 30s. 5 PDF/jour.
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Link>
+
+              {/* IA Q&A par fiche */}
+              <Link
+                href="/cryptos"
+                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-primary/15 text-primary group-hover:bg-primary/25 transition-colors">
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-primary">
+                      ✨ Nouveau
+                    </span>
+                    <h3 className="mt-1 font-bold text-fg text-sm">
+                      IA Q&amp;A par fiche
+                    </h3>
+                    <p className="mt-1 text-xs text-fg/70 leading-snug">
+                      20 questions/jour Claude Haiku contextualisé.
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Link>
+
+              {/* Portfolio étendu 500 */}
+              <Link
+                href="/portefeuille"
+                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
+                    <Wallet className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-fg text-sm">Portfolio 500</h3>
+                    <p className="mt-1 text-xs text-fg/70 leading-snug">
+                      Suis 500 positions (vs 10 Free). Allocation, P&amp;L live.
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Link>
+
+              {/* Alertes 100 */}
+              <Link
+                href="/alertes"
+                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-blue-500/15 text-blue-400 group-hover:bg-blue-500/25 transition-colors">
+                    <Bell className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-fg text-sm">Alertes 100</h3>
+                    <p className="mt-1 text-xs text-fg/70 leading-snug">
+                      100 alertes prix par email (vs 3 Free).
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+              </Link>
+            </div>
+
+            {/* Quota IA Q&A en pied de section */}
+            <div className="mt-4">
+              <AskAiQuotaCard />
+            </div>
+          </section>
         )}
 
         {/* Si pas Pro : nouvelle vue conversion premium */}

@@ -1,8 +1,9 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-26",
+    "schemaVersion": "2.0",
+    "lastUpdated": "2026-05-01",
     "purpose": "Roadmap d'événements connus / attendus pour les cryptos majeures. Ne contient que des cryptos avec une roadmap publique crédible.",
-    "schema": "Mapping crypto.id → array d'événements. Status: 'done' | 'in-progress' | 'planned'. Date approximative format YYYY-MM."
+    "schema": "Mapping crypto.id → array d'événements. Status: 'done' | 'in-progress' | 'planned'. Date approximative format YYYY-MM ou YYYY-Qn. Champs optionnels: sourceUrl (URL primaire), sourceVerifiedAt (YYYY-MM de la dernière vérif manuelle)."
   },
   "roadmaps": {
     "bitcoin": [
@@ -10,13 +11,17 @@
         "date": "2024-04",
         "status": "done",
         "title": "Halving #4",
-        "description": "Récompense des blocs passée de 6,25 à 3,125 BTC. Réduction de l'émission de moitié, comme tous les 4 ans depuis 2009."
+        "description": "Récompense des blocs passée de 6,25 à 3,125 BTC. Réduction de l'émission de moitié, comme tous les 4 ans depuis 2009.",
+        "sourceUrl": "https://bitcoin.org/en/bitcoin-paper",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-01",
         "status": "done",
         "title": "ETF Bitcoin spot approuvés US",
-        "description": "La SEC a autorisé 11 ETF Bitcoin spot (BlackRock IBIT, Fidelity FBTC, etc.). Influx massif de capital institutionnel."
+        "description": "La SEC a autorisé 11 ETF Bitcoin spot (BlackRock IBIT, Fidelity FBTC, etc.). Influx massif de capital institutionnel.",
+        "sourceUrl": "https://www.sec.gov/news/statement/gensler-statement-spot-bitcoin-011023",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-01",
@@ -34,7 +39,9 @@
         "date": "2028-04",
         "status": "planned",
         "title": "Halving #5",
-        "description": "Récompense passera de 3,125 à 1,5625 BTC. Historiquement, le halving précède un cycle haussier d'environ 12-18 mois."
+        "description": "Récompense passera de 3,125 à 1,5625 BTC. Historiquement, le halving précède un cycle haussier d'environ 12-18 mois.",
+        "sourceUrl": "https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "ethereum": [
@@ -42,31 +49,41 @@
         "date": "2022-09",
         "status": "done",
         "title": "The Merge",
-        "description": "Passage du Proof-of-Work au Proof-of-Stake. Réduction de 99,95% de la consommation énergétique."
+        "description": "Passage du Proof-of-Work au Proof-of-Stake. Réduction de 99,95% de la consommation énergétique.",
+        "sourceUrl": "https://ethereum.org/en/roadmap/merge/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-03",
         "status": "done",
         "title": "Dencun (EIP-4844)",
-        "description": "Activation du proto-danksharding via les 'blobs'. Réduction des frais L2 de 10-100x. Boom des rollups."
+        "description": "Activation du proto-danksharding via les 'blobs'. Réduction des frais L2 de 10-100x. Boom des rollups.",
+        "sourceUrl": "https://eips.ethereum.org/EIPS/eip-4844",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-05",
         "status": "done",
         "title": "Pectra",
-        "description": "Limite de stake validateur portée à 2048 ETH. Comptes EOA peuvent agir comme smart contracts (EIP-7702). Améliore UX."
+        "description": "Limite de stake validateur portée à 2048 ETH. Comptes EOA peuvent agir comme smart contracts (EIP-7702). Améliore UX.",
+        "sourceUrl": "https://eips.ethereum.org/EIPS/eip-7702",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q4",
         "status": "in-progress",
         "title": "Fusaka",
-        "description": "Augmentation du nombre de blobs par bloc. Encore plus de scaling pour les L2. PeerDAS pour data availability."
+        "description": "Augmentation du nombre de blobs par bloc. Encore plus de scaling pour les L2. PeerDAS pour data availability.",
+        "sourceUrl": "https://ethereum.org/en/roadmap/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2027+",
         "status": "planned",
         "title": "The Verge / Statelessness",
-        "description": "Verkle Trees → nœuds plus légers. The Purge → suppression de l'historique ancien. Roadmap Vitalik long terme."
+        "description": "Verkle Trees → nœuds plus légers. The Purge → suppression de l'historique ancien. Roadmap Vitalik long terme.",
+        "sourceUrl": "https://ethereum.org/en/roadmap/",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "xrp": [
@@ -86,13 +103,17 @@
         "date": "2025-Q4",
         "status": "done",
         "title": "RLUSD stablecoin Ripple",
-        "description": "Lancement du stablecoin Ripple, conforme NYDFS. Adoption pour règlements institutionnels."
+        "description": "Lancement du stablecoin Ripple, conforme NYDFS. Adoption pour règlements institutionnels.",
+        "sourceUrl": "https://ripple.com/rlusd/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q3",
         "status": "in-progress",
         "title": "EVM sidechain mainnet",
-        "description": "Lancement de la sidechain compatible Ethereum (smart contracts via EVM)."
+        "description": "Lancement de la sidechain compatible Ethereum (smart contracts via EVM).",
+        "sourceUrl": "https://xrpl.org/about/uses",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "solana": [
@@ -112,13 +133,17 @@
         "date": "2025-Q3",
         "status": "done",
         "title": "Firedancer beta",
-        "description": "Validateur alternatif développé par Jump Crypto. Devrait supporter 1M TPS et améliorer la fiabilité du réseau."
+        "description": "Validateur alternatif développé par Jump Crypto. Devrait supporter 1M TPS et améliorer la fiabilité du réseau.",
+        "sourceUrl": "https://github.com/firedancer-io/firedancer",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q4",
         "status": "in-progress",
         "title": "Firedancer mainnet généralisé",
-        "description": "Diversification client validateur : amélioration majeure de la résilience du réseau (fini les outages 2022)."
+        "description": "Diversification client validateur : amélioration majeure de la résilience du réseau (fini les outages 2022).",
+        "sourceUrl": "https://github.com/firedancer-io/firedancer",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "cardano": [
@@ -126,25 +151,33 @@
         "date": "2023-09",
         "status": "done",
         "title": "CIP-1694 voting on-chain",
-        "description": "Mise en place de la gouvernance décentralisée par les holders d'ADA."
+        "description": "Mise en place de la gouvernance décentralisée par les holders d'ADA.",
+        "sourceUrl": "https://github.com/cardano-foundation/CIPs/tree/master/CIP-1694",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q1",
         "status": "done",
         "title": "Hard fork Chang",
-        "description": "Activation de la gouvernance on-chain (DReps, Constitutional Committee)."
+        "description": "Activation de la gouvernance on-chain (DReps, Constitutional Committee).",
+        "sourceUrl": "https://github.com/cardano-foundation/CIPs/tree/master/CIP-1694",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q2",
         "status": "in-progress",
         "title": "Hydra Heads scaling",
-        "description": "Solution L2 native qui permet des dizaines de milliers de TPS via state channels."
+        "description": "Solution L2 native qui permet des dizaines de milliers de TPS via state channels.",
+        "sourceUrl": "https://hydra.family/head-protocol/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q4",
         "status": "planned",
         "title": "Midnight sidechain",
-        "description": "Sidechain ZK-privacy par IOG : confidentialité programmable pour entreprises (KYC, données médicales)."
+        "description": "Sidechain ZK-privacy par IOG : confidentialité programmable pour entreprises (KYC, données médicales).",
+        "sourceUrl": "https://midnight.network/",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "polkadot": [
@@ -152,19 +185,25 @@
         "date": "2023-Q3",
         "status": "done",
         "title": "JAM (Join-Accumulate Machine) annoncé",
-        "description": "Successeur du Relay Chain proposé par Gavin Wood. Architecture totalement repensée."
+        "description": "Successeur du Relay Chain proposé par Gavin Wood. Architecture totalement repensée.",
+        "sourceUrl": "https://polkadot.com/jam",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q3",
         "status": "done",
         "title": "Coretime marketplace",
-        "description": "Marché de cores pour parachains : achat à la demande remplaçant les enchères de slots."
+        "description": "Marché de cores pour parachains : achat à la demande remplaçant les enchères de slots.",
+        "sourceUrl": "https://wiki.polkadot.network/learn/learn-agile-coretime/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q4",
         "status": "in-progress",
         "title": "JAM testnet",
-        "description": "Première phase de test de la nouvelle architecture. Migration progressive prévue 2027-2028."
+        "description": "Première phase de test de la nouvelle architecture. Migration progressive prévue 2027-2028.",
+        "sourceUrl": "https://polkadot.com/jam",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "near-protocol": [
@@ -172,13 +211,17 @@
         "date": "2024-Q1",
         "status": "done",
         "title": "Nightshade 2.0 sharding",
-        "description": "Sharding optimisé : performance multipliée par 4 sans dégrader la sécurité."
+        "description": "Sharding optimisé : performance multipliée par 4 sans dégrader la sécurité.",
+        "sourceUrl": "https://pages.near.org/blog/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-Q4",
         "status": "done",
         "title": "Chain Abstraction",
-        "description": "Lancement de l'abstraction inter-chaînes : signer des transactions Bitcoin/Ethereum depuis NEAR sans bridge."
+        "description": "Lancement de l'abstraction inter-chaînes : signer des transactions Bitcoin/Ethereum depuis NEAR sans bridge.",
+        "sourceUrl": "https://docs.near.org/concepts/abstraction/chain-signatures",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q3",
@@ -190,7 +233,9 @@
         "date": "2026-Q3",
         "status": "in-progress",
         "title": "Stateless validators",
-        "description": "Validateurs sans historique complet → onboarding plus rapide et meilleure décentralisation."
+        "description": "Validateurs sans historique complet → onboarding plus rapide et meilleure décentralisation.",
+        "sourceUrl": "https://near.org/papers/the-official-near-white-paper",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "celestia": [
@@ -198,25 +243,33 @@
         "date": "2023-10",
         "status": "done",
         "title": "Mainnet Genesis",
-        "description": "Lancement du mainnet de la première blockchain modulaire dédiée à la data availability."
+        "description": "Lancement du mainnet de la première blockchain modulaire dédiée à la data availability.",
+        "sourceUrl": "https://blog.celestia.org/mainnet-beta-is-live/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-Q3",
         "status": "done",
         "title": "Lemongrass upgrade",
-        "description": "Augmentation de la capacité DA et IBC pour Cosmos."
+        "description": "Augmentation de la capacité DA et IBC pour Cosmos.",
+        "sourceUrl": "https://docs.celestia.org/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q2",
         "status": "done",
         "title": "Ginger upgrade",
-        "description": "Capacité DA multipliée par 10x. Adoption massive par rollups Manta, Eclipse, Movement."
+        "description": "Capacité DA multipliée par 10x. Adoption massive par rollups Manta, Eclipse, Movement.",
+        "sourceUrl": "https://docs.celestia.org/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q3",
         "status": "in-progress",
         "title": "Lazybridging",
-        "description": "Bridge natif sans confiance Celestia ↔ Ethereum. Devrait massivement améliorer la composabilité."
+        "description": "Bridge natif sans confiance Celestia ↔ Ethereum. Devrait massivement améliorer la composabilité.",
+        "sourceUrl": "https://blog.celestia.org/",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "arbitrum": [
@@ -224,25 +277,33 @@
         "date": "2023-03",
         "status": "done",
         "title": "Token ARB airdrop",
-        "description": "Distribution de 1.16Md tokens ARB aux utilisateurs early du L2."
+        "description": "Distribution de 1.16Md tokens ARB aux utilisateurs early du L2.",
+        "sourceUrl": "https://arbitrum.foundation/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-Q1",
         "status": "done",
         "title": "Stylus mainnet",
-        "description": "Smart contracts en Rust/C++/C — première fois sur Ethereum scaling."
+        "description": "Smart contracts en Rust/C++/C — première fois sur Ethereum scaling.",
+        "sourceUrl": "https://docs.arbitrum.io/stylus/gentle-introduction",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-Q3",
         "status": "done",
         "title": "Arbitrum Orbit pour L3s",
-        "description": "Framework permettant à n'importe quel projet de lancer son propre L3 sur Arbitrum."
+        "description": "Framework permettant à n'importe quel projet de lancer son propre L3 sur Arbitrum.",
+        "sourceUrl": "https://docs.arbitrum.io/launch-orbit-chain/orbit-gentle-introduction",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q4",
         "status": "in-progress",
         "title": "Sequencer décentralisé",
-        "description": "Décentralisation progressive du séquenceur (encore opéré par Offchain Labs aujourd'hui)."
+        "description": "Décentralisation progressive du séquenceur (encore opéré par Offchain Labs aujourd'hui).",
+        "sourceUrl": "https://docs.arbitrum.io/how-arbitrum-works/sequencer",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "avalanche": [
@@ -250,7 +311,9 @@
         "date": "2024-Q1",
         "status": "done",
         "title": "Avalanche9000 + ACP-77",
-        "description": "Subnets renommés 'L1s'. Frais de validation réduits de 99%. Adoption institutionnelle facilitée."
+        "description": "Subnets renommés 'L1s'. Frais de validation réduits de 99%. Adoption institutionnelle facilitée.",
+        "sourceUrl": "https://github.com/avalanche-foundation/ACPs/tree/main/ACPs/77-reinventing-subnets",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q2",
@@ -262,7 +325,9 @@
         "date": "2026-Q3",
         "status": "in-progress",
         "title": "Etna L1 customizable",
-        "description": "Outil no-code pour créer son propre L1 Avalanche en quelques heures."
+        "description": "Outil no-code pour créer son propre L1 Avalanche en quelques heures.",
+        "sourceUrl": "https://build.avax.network/",
+        "sourceVerifiedAt": "2026-05"
       }
     ],
     "ondo-finance": [
@@ -270,25 +335,669 @@
         "date": "2023-Q3",
         "status": "done",
         "title": "OUSG (Treasuries tokenisés)",
-        "description": "Premier produit RWA de Ondo : bons du Trésor US tokenisés on-chain. Adopté par BlackRock BUIDL."
+        "description": "Premier produit RWA de Ondo : bons du Trésor US tokenisés on-chain. Adopté par BlackRock BUIDL.",
+        "sourceUrl": "https://ondo.finance/ousg",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2024-Q4",
         "status": "done",
         "title": "USDY stablecoin yield",
-        "description": "Stablecoin adossé à des Treasuries qui génère un rendement natif (4-5%)."
+        "description": "Stablecoin adossé à des Treasuries qui génère un rendement natif (4-5%).",
+        "sourceUrl": "https://ondo.finance/usdy",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2025-Q4",
         "status": "done",
         "title": "Ondo Chain testnet",
-        "description": "L1 dédié au RWA institutionnel, KYC natif, compatible BlackRock et Franklin Templeton."
+        "description": "L1 dédié au RWA institutionnel, KYC natif, compatible BlackRock et Franklin Templeton.",
+        "sourceUrl": "https://ondo.finance/",
+        "sourceVerifiedAt": "2026-05"
       },
       {
         "date": "2026-Q3",
         "status": "in-progress",
         "title": "Ondo Chain mainnet",
-        "description": "Lancement officiel du L1 RWA. Partenariats déjà signés avec banques européennes pour la tokenisation d'obligations."
+        "description": "Lancement officiel du L1 RWA. Partenariats déjà signés avec banques européennes pour la tokenisation d'obligations.",
+        "sourceUrl": "https://ondo.finance/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "tether": [
+      {
+        "date": "2024-12",
+        "status": "done",
+        "title": "Délistage USDT en zone EEE (MiCA Phase 1)",
+        "description": "Coinbase, Crypto.com et plusieurs CEX retirent USDT des paires europe car Tether n'est pas e-money licensed sous MiCA.",
+        "sourceUrl": "https://www.esma.europa.eu/sites/default/files/2024-12/ESMA75-453128700-1391_Statement_on_provision_of_certain_crypto-asset_services_in_relation_to_non-MiCA_compliant_ARTs_and_EMTs.pdf",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-09",
+        "status": "done",
+        "title": "USDT0 multi-chain via LayerZero",
+        "description": "Lancement de USDT0, version omnichain de USDT déployée nativement sur 10+ chaînes via LayerZero OFT."
+      },
+      {
+        "date": "2026-Q2",
+        "status": "in-progress",
+        "title": "MiCA Phase 2 enforcement",
+        "description": "ESMA renforce les exigences EMT/ART. Tether reste hors UE faute de licence ; concurrence directe avec USDC et EURC.",
+        "sourceUrl": "https://www.esma.europa.eu/policy-activities/crypto-assets",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "usd-coin": [
+      {
+        "date": "2024-07",
+        "status": "done",
+        "title": "MiCA EMT compliant",
+        "description": "Circle obtient sa licence Electronic Money Institution en France via l'ACPR. USDC et EURC deviennent les premiers stablecoins majeurs MiCA-ready.",
+        "sourceUrl": "https://www.circle.com/blog/circle-is-first-global-stablecoin-issuer-compliant-with-mica-europes-landmark-crypto-law",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-06",
+        "status": "done",
+        "title": "Circle IPO (NYSE)",
+        "description": "Circle Internet Group introduit en bourse au NYSE sous le ticker CRCL. Première cotation publique d'un émetteur de stablecoin majeur.",
+        "sourceUrl": "https://www.circle.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q1",
+        "status": "done",
+        "title": "USDC sur 20+ blockchains",
+        "description": "Déploiement natif (CCTP V2) sur Sui, Aptos, World Chain, Codex et autres. USDC devient le stablecoin multi-chain de référence.",
+        "sourceUrl": "https://www.circle.com/multi-chain-usdc",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q4",
+        "status": "in-progress",
+        "title": "Arc L1 mainnet (Circle)",
+        "description": "Circle développe Arc, blockchain L1 dédiée aux paiements stablecoin avec finalité sub-seconde.",
+        "sourceUrl": "https://www.circle.com/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "binancecoin": [
+      {
+        "date": "2017-07",
+        "status": "done",
+        "title": "ICO BNB",
+        "description": "Levée de 15M USD via ICO. Token utilisé pour réduire les frais sur Binance et alimenter BNB Chain."
+      },
+      {
+        "date": "2020-09",
+        "status": "done",
+        "title": "Lancement BNB Smart Chain",
+        "description": "BSC mainnet : EVM compatible, 3 secondes de bloc, frais minimes. Devient la chain n°2 en TVL.",
+        "sourceUrl": "https://docs.bnbchain.org/bnb-smart-chain/overview/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q2",
+        "status": "in-progress",
+        "title": "Burn BNB trimestriel #36",
+        "description": "Burn auto-pilot basé sur le prix de BNB et le nombre de blocs produits. Objectif long terme : ramener supply de 200M à 100M.",
+        "sourceUrl": "https://www.bnbchain.org/en/bnb-auto-burn",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "planned",
+        "title": "BNB Chain Pascal/Lorentz upgrades",
+        "description": "Hard forks pour réduire la latence (sub-second blocks) et améliorer la compatibilité Ethereum (EIP-7702).",
+        "sourceUrl": "https://github.com/bnb-chain/bsc/releases",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "dogecoin": [
+      {
+        "date": "2014-09",
+        "status": "done",
+        "title": "Auxiliary Proof-of-Work avec Litecoin",
+        "description": "Activation du merge mining avec Litecoin : sécurité héritée du hashpower LTC sans coût supplémentaire pour les mineurs.",
+        "sourceUrl": "https://github.com/dogecoin/dogecoin/blob/master/doc/release-notes/release-notes-1.8.0.md",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-09",
+        "status": "done",
+        "title": "Dogecoin Core 1.14.9",
+        "description": "Mise à jour mainline avec corrections de bugs et amélioration des performances réseau. Pas de breaking change.",
+        "sourceUrl": "https://github.com/dogecoin/dogecoin/releases",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "planned",
+        "title": "Dogecoin Core 1.21+",
+        "description": "Rebase potentiel sur Bitcoin Core 0.21. Bénéfice : Taproot-like features, mempool plus moderne.",
+        "sourceUrl": "https://github.com/dogecoin/dogecoin/releases",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "tron": [
+      {
+        "date": "2018-06",
+        "status": "done",
+        "title": "Mainnet indépendant",
+        "description": "Migration depuis Ethereum (ERC-20) vers la blockchain TRON native. DPoS avec 27 super representatives."
+      },
+      {
+        "date": "2024-Q3",
+        "status": "done",
+        "title": "USDT sur TRON dépasse 60Md",
+        "description": "TRON devient la blockchain n°1 pour les transferts USDT en volume, devant Ethereum, grâce à ses frais quasi-nuls."
+      },
+      {
+        "date": "2025-Q4",
+        "status": "done",
+        "title": "Justin Sun rejoint Trump WLFI",
+        "description": "Investissement de 75M USD dans World Liberty Financial. Repositionnement réglementaire favorable aux US."
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "TRON-Ethereum bridge natif",
+        "description": "Pont sans wrapping pour USDT et autres assets entre TRON et Ethereum.",
+        "sourceUrl": "https://tron.network/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "toncoin": [
+      {
+        "date": "2023-11",
+        "status": "done",
+        "title": "TON Connect 2.0",
+        "description": "SDK officiel d'intégration wallets dans Telegram. Base technique de l'adoption mass-market."
+      },
+      {
+        "date": "2024-Q2",
+        "status": "done",
+        "title": "Notcoin viral via Telegram Mini Apps",
+        "description": "Premier mini-app Telegram à exploser : 35M utilisateurs en 3 mois. Démontre le potentiel de TON pour la distribution.",
+        "sourceUrl": "https://docs.ton.org/v3/documentation/dapps/telegram-apps/overview",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q4",
+        "status": "done",
+        "title": "USDT natif sur TON",
+        "description": "Tether déploie USDT directement sur TON. Permet les transferts USDT in-chat dans Telegram pour 900M utilisateurs."
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Accelerator pour adoption TMA",
+        "description": "TON Foundation finance les Telegram Mini Apps via grants. Objectif : 500M utilisateurs actifs Web3 via Telegram.",
+        "sourceUrl": "https://ton.org/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "chainlink": [
+      {
+        "date": "2023-07",
+        "status": "done",
+        "title": "CCIP mainnet",
+        "description": "Cross-Chain Interoperability Protocol : standard inter-chaînes adopté par SWIFT, ANZ, BNY Mellon dans des pilotes.",
+        "sourceUrl": "https://docs.chain.link/ccip",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q4",
+        "status": "done",
+        "title": "Staking v0.2",
+        "description": "Pool de staking étendu à 45M LINK. Rewards pour node operators et community stakers.",
+        "sourceUrl": "https://chain.link/economics/staking",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q2",
+        "status": "done",
+        "title": "SVR (Smart Value Recapture)",
+        "description": "Recapture de la MEV pour les protocoles utilisant les oracles Chainlink. Première intégration : Aave.",
+        "sourceUrl": "https://blog.chain.link/smart-value-recapture-svr/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q4",
+        "status": "in-progress",
+        "title": "CCIP v1.5 + privacy",
+        "description": "Améliorations CCIP avec messaging privé pour cas d'usage institutionnels (TradFi tokenisation).",
+        "sourceUrl": "https://docs.chain.link/ccip",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "polygon": [
+      {
+        "date": "2024-09",
+        "status": "done",
+        "title": "Migration MATIC → POL",
+        "description": "Swap 1:1 de MATIC vers POL. Nouveau token natif pour Polygon 2.0 avec staking restakeable multi-chain.",
+        "sourceUrl": "https://polygon.technology/blog/save-the-date-matic-pol-migration-coming-on-september-4th",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q1",
+        "status": "done",
+        "title": "AggLayer v1 mainnet",
+        "description": "Couche d'agrégation cross-chain pour unifier liquidité entre chaînes connectées (CDK et autres).",
+        "sourceUrl": "https://polygon.technology/agglayer",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "Rio upgrade (Polygon PoS)",
+        "description": "Améliorations consensus + finality plus rapide sur Polygon PoS. Préparation à la fusion avec AggLayer.",
+        "sourceUrl": "https://polygon.technology/blog",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "AggLayer v2 + pessimistic proofs",
+        "description": "Sécurité cross-chain renforcée par preuves pessimistes ZK. Intégration de chaînes non-CDK.",
+        "sourceUrl": "https://polygon.technology/agglayer",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "uniswap": [
+      {
+        "date": "2023-06",
+        "status": "done",
+        "title": "Uniswap v4 annoncé",
+        "description": "Architecture avec hooks : pools personnalisables (TWAP, limit orders, MEV). Singleton contract → -99% gas pour le déploiement de pools.",
+        "sourceUrl": "https://blog.uniswap.org/uniswap-v4",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-01",
+        "status": "done",
+        "title": "Uniswap v4 mainnet",
+        "description": "Déploiement v4 sur Ethereum, Arbitrum, Optimism, Base, Polygon. Premiers hooks tiers en production.",
+        "sourceUrl": "https://blog.uniswap.org/uniswap-v4-is-here",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q4",
+        "status": "done",
+        "title": "Unichain mainnet (L2 Uniswap)",
+        "description": "L2 dédié aux swaps DeFi, basé sur OP Stack. Block time 1s pour réduire le slippage.",
+        "sourceUrl": "https://www.unichain.org/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Fee switch (gouvernance)",
+        "description": "Vote on-chain pour activer le partage des frais avec les holders UNI. Catalyseur potentiel majeur pour le token.",
+        "sourceUrl": "https://gov.uniswap.org/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "aave": [
+      {
+        "date": "2023-01",
+        "status": "done",
+        "title": "Aave v3 multi-chain",
+        "description": "Déploiement v3 sur 7 chaînes : Polygon, Avalanche, Optimism, Arbitrum, Fantom, Harmony, Metis. Portal pour bridge cross-chain.",
+        "sourceUrl": "https://aave.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q3",
+        "status": "done",
+        "title": "GHO stablecoin live",
+        "description": "Lancement de GHO, stablecoin natif décentralisé d'Aave, surcollatéralisé. Atteint 250M USD de supply.",
+        "sourceUrl": "https://gho.aave.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q2",
+        "status": "done",
+        "title": "Umbrella (safety module v2)",
+        "description": "Refonte du safety module : staking aTokens pour couvrir le shortfall risk. Plus capital-efficient que stkAAVE.",
+        "sourceUrl": "https://governance.aave.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q4",
+        "status": "in-progress",
+        "title": "Aave v4 mainnet",
+        "description": "Hub & spoke : un Liquidity Hub central, des Spokes spécialisés (RWA, perp, isolation). Architecture unifiée cross-chain.",
+        "sourceUrl": "https://governance.aave.com/t/aave-2030-update/19519",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "optimism": [
+      {
+        "date": "2023-06",
+        "status": "done",
+        "title": "Bedrock upgrade",
+        "description": "Refonte technique majeure : -50% sur les frais L1, EVM equivalence, modularité pour OP Stack.",
+        "sourceUrl": "https://docs.optimism.io/superchain/superchain-explainer",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q1",
+        "status": "done",
+        "title": "Base passe sous OP Stack",
+        "description": "Coinbase Base devient officiellement membre de la Superchain. Apport de revenus partagés vers Optimism Collective.",
+        "sourceUrl": "https://docs.optimism.io/superchain/superchain-explainer",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q1",
+        "status": "done",
+        "title": "Fault Proofs mainnet",
+        "description": "Activation des preuves de fraude permissionless. Optimism passe officiellement Stage 1 selon classification L2BEAT.",
+        "sourceUrl": "https://docs.optimism.io/stack/protocol/fault-proofs/overview",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Interop Superchain mainnet",
+        "description": "Messaging cross-chain natif sub-second entre toutes les OP Chains (Base, Mode, World, Soneium, etc.).",
+        "sourceUrl": "https://docs.optimism.io/stack/interop/explainer",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "sui": [
+      {
+        "date": "2023-05",
+        "status": "done",
+        "title": "Mainnet launch",
+        "description": "Lancement de Sui par Mysten Labs (ex-Meta Diem). Object-centric model en Move, parallel execution.",
+        "sourceUrl": "https://docs.sui.io/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q3",
+        "status": "done",
+        "title": "zkLogin + Sponsored transactions",
+        "description": "Onboarding sans seed phrase via Google/Apple OAuth. Frais payés par le dApp pour l'utilisateur final.",
+        "sourceUrl": "https://docs.sui.io/concepts/cryptography/zklogin",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q2",
+        "status": "in-progress",
+        "title": "Token unlocks mensuels",
+        "description": "Déblocages mensuels de 1-2% de la supply (community/early contributors). Pression vendeuse récurrente jusqu'en 2030.",
+        "sourceUrl": "https://docs.sui.io/concepts/tokenomics/sui-tokenomics",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q4",
+        "status": "planned",
+        "title": "Mysticeti consensus v2",
+        "description": "Évolution du consensus DAG-based pour réduire la latence sub-400ms et augmenter le débit au-delà de 200k TPS.",
+        "sourceUrl": "https://blog.sui.io/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "aptos": [
+      {
+        "date": "2022-10",
+        "status": "done",
+        "title": "Mainnet launch",
+        "description": "Lancement par Aptos Labs (ex-Meta Diem). Move VM, Block-STM pour parallel execution."
+      },
+      {
+        "date": "2024-Q3",
+        "status": "done",
+        "title": "Move v2 + compiler upgrade",
+        "description": "Améliorations du langage Move : enums, receiver-style functions. Outils dev plus modernes.",
+        "sourceUrl": "https://aptos.dev/move/move-on-aptos",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q2",
+        "status": "done",
+        "title": "Shardines (test) + Raptr consensus",
+        "description": "Recherche pour scaler au-delà de 100k TPS via sharding partiel et consensus pipeliné.",
+        "sourceUrl": "https://aptosfoundation.org/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Token unlocks mensuels",
+        "description": "Unlocks programmés des allocations team/investors/foundation. Calendrier transparent dans le whitepaper.",
+        "sourceUrl": "https://aptosfoundation.org/currents/aptos-tokenomics-overview",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "stellar": [
+      {
+        "date": "2023-Q3",
+        "status": "done",
+        "title": "Soroban testnet",
+        "description": "Première version publique des smart contracts Stellar en Rust (WASM). Adoption par devs DeFi cross-chain."
+      },
+      {
+        "date": "2024-02",
+        "status": "done",
+        "title": "Soroban mainnet (Protocol 20)",
+        "description": "Activation des smart contracts sur le mainnet Stellar. Onboarding de protocoles DeFi (Blend, Aquarius).",
+        "sourceUrl": "https://stellar.org/blog/developers/protocol-20-smart-contracts-have-arrived-on-mainnet",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "USDC + EURC natifs sur Stellar",
+        "description": "Circle déploie USDC et EURC nativement sur Stellar. Intégration MoneyGram pour cash-out fiat dans 180+ pays.",
+        "sourceUrl": "https://www.circle.com/multi-chain-usdc",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q4",
+        "status": "in-progress",
+        "title": "Protocol 23 + DAS upgrades",
+        "description": "Améliorations performance Soroban (parallel execution, state archival). Préparation à des cas d'usage RWA institutionnels.",
+        "sourceUrl": "https://stellar.org/developers",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "hedera": [
+      {
+        "date": "2023-Q1",
+        "status": "done",
+        "title": "Council 30+ membres globaux",
+        "description": "Conseil de gouvernance étendu à Google, IBM, Boeing, LG, Standard Bank, Dell. Modèle hybride enterprise/public."
+      },
+      {
+        "date": "2024-Q4",
+        "status": "done",
+        "title": "HBAR Foundation + RWA push",
+        "description": "Foundation indépendante pour les grants devs. Focus RWA tokenisation : partenariat avec EQTY Lab et Archax.",
+        "sourceUrl": "https://hedera.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "Hedera Improvement Proposals (HIPs) v2",
+        "description": "Process de gouvernance technique formalisé. HIP-991 (Hedera Networking) et HIP-1064 (custom fees) actifs.",
+        "sourceUrl": "https://hips.hedera.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Hedera Smart Node (multi-region)",
+        "description": "Déploiement des nodes dans plus de zones géographiques pour réduire la latence et améliorer la décentralisation.",
+        "sourceUrl": "https://hedera.com/council",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "internet-computer": [
+      {
+        "date": "2024-Q1",
+        "status": "done",
+        "title": "ckBTC mainnet",
+        "description": "Bitcoin natif sur Internet Computer (sans bridge custodial). Première intégration directe BTC ↔ smart contracts.",
+        "sourceUrl": "https://internetcomputer.org/ckbtc",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q4",
+        "status": "done",
+        "title": "ckETH + ckERC20",
+        "description": "Wrapper natif pour ETH et tokens ERC-20 sur ICP. Compatible HTTP outcalls pour DeFi cross-chain sans oracle externe.",
+        "sourceUrl": "https://internetcomputer.org/cketh",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "Caffeine AI (no-code dApps)",
+        "description": "Plateforme AI développée par DFINITY pour créer des canisters via prompt naturel. Repositionnement IA souveraine.",
+        "sourceUrl": "https://internetcomputer.org/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Solana RPC integration + ckSOL",
+        "description": "Extension de la chain-key cryptography à Solana. Permet aux canisters ICP d'interagir directement avec SOL.",
+        "sourceUrl": "https://internetcomputer.org/roadmap",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "filecoin": [
+      {
+        "date": "2023-03",
+        "status": "done",
+        "title": "FVM (Filecoin Virtual Machine)",
+        "description": "Smart contracts EVM-compatible sur Filecoin. Permet des dApps DeFi nativement liées au stockage décentralisé.",
+        "sourceUrl": "https://docs.filecoin.io/smart-contracts/fundamentals/the-filecoin-virtual-machine",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2024-Q2",
+        "status": "done",
+        "title": "Filecoin Web Services (FWS)",
+        "description": "Catalogue de services au-dessus de Filecoin : compute, RAG, IPFS pinning. Concurrence d'AWS pour les charges décentralisées."
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "Onramp + PDP (Proof of Data Possession)",
+        "description": "PDP : preuves légères pour data hot. Onramp : SDK pour upload data on-chain en 1 ligne.",
+        "sourceUrl": "https://github.com/filecoin-project/FIPs",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "FilecoinAI + decentralized inference",
+        "description": "Stack pour servir des modèles AI depuis du stockage Filecoin. Pivot vers data layer pour IA souveraine.",
+        "sourceUrl": "https://filecoin.io/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "injective": [
+      {
+        "date": "2023-Q4",
+        "status": "done",
+        "title": "inEVM mainnet",
+        "description": "Rollup EVM compatible posé sur Injective. Permet aux dApps Solidity de tourner avec la liquidité Injective."
+      },
+      {
+        "date": "2024-Q1",
+        "status": "done",
+        "title": "Volan upgrade + RWA module",
+        "description": "Module natif pour la tokenisation des actifs réels. Premiers produits institutionnels (Treasuries, FX) sur Helix.",
+        "sourceUrl": "https://injective.com/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q4",
+        "status": "done",
+        "title": "Native EVM mainnet (Altaris)",
+        "description": "EVM intégré au L1 Injective (pas de rollup séparé). Stack unique CosmWasm + EVM avec liquidité partagée.",
+        "sourceUrl": "https://injective.com/blog/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "iAssets v2 + AI agents",
+        "description": "Synthétiques on-chain (actions, indices, FX) gérés par agents AI. Cas d'usage trading 24/7 pour actions tokenisées.",
+        "sourceUrl": "https://injective.com/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "cosmos": [
+      {
+        "date": "2023-09",
+        "status": "done",
+        "title": "Replicated Security (Interchain Security)",
+        "description": "Cosmos Hub sécurise des consumer chains (Neutron, Stride). ATOM sert au-delà du seul Hub."
+      },
+      {
+        "date": "2024-Q2",
+        "status": "done",
+        "title": "ATOM Wars + Atom 2.0 pivot",
+        "description": "Restructuration de la gouvernance : abandon de la vision Atom 2.0 d'origine au profit de IBC Eureka et Hub minimalism.",
+        "sourceUrl": "https://forum.cosmos.network/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "IBC Eureka mainnet",
+        "description": "IBC connecté à Ethereum L1 et major L2s. Cosmos devient un vrai hub interchain au-delà de l'écosystème Cosmos SDK.",
+        "sourceUrl": "https://docs.cosmos.network/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Hub minimalism + ATOM economic zone",
+        "description": "Cosmos Hub se concentre sur la sécurité et l'interop. Réflexions actives sur la dilution ATOM via gouvernance.",
+        "sourceUrl": "https://forum.cosmos.network/",
+        "sourceVerifiedAt": "2026-05"
+      }
+    ],
+    "lido-dao": [
+      {
+        "date": "2023-Q2",
+        "status": "done",
+        "title": "stETH withdrawals (Shapella)",
+        "description": "Activation des retraits stETH après Shapella sur Ethereum. Lido devient pleinement liquide pour les stakers."
+      },
+      {
+        "date": "2024-Q4",
+        "status": "done",
+        "title": "Simple DVT (Distributed Validator Tech)",
+        "description": "Premiers validateurs Lido en DVT (Obol, SSV). Réduit le risque opérateur unique et améliore la décentralisation.",
+        "sourceUrl": "https://blog.lido.fi/simple-dvt-module/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2025-Q3",
+        "status": "done",
+        "title": "Lido v3 (stVaults)",
+        "description": "Stakers customisent leurs validateurs (set d'opérateurs, frais, MEV strategy). Concurrence directe à Eigenlayer LRT.",
+        "sourceUrl": "https://research.lido.fi/",
+        "sourceVerifiedAt": "2026-05"
+      },
+      {
+        "date": "2026-Q3",
+        "status": "in-progress",
+        "title": "Dual Governance live",
+        "description": "Mécanisme permettant aux stETH holders de bloquer les votes LDO. Réduit le risque de capture gouvernance.",
+        "sourceUrl": "https://research.lido.fi/t/lip-28-redefining-lido-governance-with-dual-governance-dg/5780",
+        "sourceVerifiedAt": "2026-05"
       }
     ]
   }

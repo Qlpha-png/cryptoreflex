@@ -13,7 +13,14 @@
       "tagline": "Pour qui c'est : autocustody premium pour HODL multi-cryptos avec 5500+ assets supportés",
       "websiteUrl": "https://www.ledger.com",
       "affiliateUrl": "https://shop.ledger.com/?r=5313c8e86d40",
-      "scoring": { "global": 4.5, "fees": 4.0, "security": 4.7, "ux": 4.6, "support": 4.0, "mica": 4.2 },
+      "scoring": {
+        "global": 4.5,
+        "fees": 4,
+        "security": 4.7,
+        "ux": 4.6,
+        "support": 4,
+        "mica": 4.2
+      },
       "mica": {
         "status": "Hors périmètre MiCA (matériel autocustody, pas de garde de fonds tiers)",
         "amfRegistration": null,
@@ -22,13 +29,57 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0, "spotTaker": 0, "instantBuy": 0, "withdrawalCrypto": "Frais réseau uniquement", "withdrawalFiatSepa": 0, "spread": "Spread broker intégré (Ledger Live ~1-2%)" },
-      "deposit": { "minEur": 0, "methods": ["N/A — auto-custody"] },
-      "cryptos": { "totalCount": 5500, "stakingAvailable": true, "stakingCryptos": ["ETH", "SOL", "ADA", "DOT", "ATOM", "XTZ", "MATIC"] },
-      "support": { "frenchChat": true, "frenchPhone": false, "responseTime": "<48h" },
-      "security": { "coldStoragePct": 100, "insurance": false, "twoFA": true, "lastIncident": "Juillet 2020 (fuite emails clients via prestataire e-commerce — pas d'atteinte aux fonds)" },
-      "bonus": { "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle", "amount": null, "currency": null, "conditions": null, "validUntil": null },
-      "ratings": { "trustpilot": 4.4, "trustpilotCount": 18500, "appStore": 4.5, "playStore": 4.3 },
+      "fees": {
+        "spotMaker": 0,
+        "spotTaker": 0,
+        "instantBuy": 0,
+        "withdrawalCrypto": "Frais réseau uniquement",
+        "withdrawalFiatSepa": 0,
+        "spread": "Spread broker intégré (Ledger Live ~1-2%)"
+      },
+      "deposit": {
+        "minEur": 0,
+        "methods": [
+          "N/A — auto-custody"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 5500,
+        "stakingAvailable": true,
+        "stakingCryptos": [
+          "ETH",
+          "SOL",
+          "ADA",
+          "DOT",
+          "ATOM",
+          "XTZ",
+          "MATIC"
+        ]
+      },
+      "support": {
+        "frenchChat": true,
+        "frenchPhone": false,
+        "responseTime": "<48h"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": false,
+        "twoFA": true,
+        "lastIncident": "Juillet 2020 (fuite emails clients via prestataire e-commerce — pas d'atteinte aux fonds)"
+      },
+      "bonus": {
+        "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle",
+        "amount": null,
+        "currency": null,
+        "conditions": null,
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.4,
+        "trustpilotCount": 18500,
+        "appStore": 4.5,
+        "playStore": 4.3
+      },
       "idealFor": "Investisseurs long terme voulant retirer leurs cryptos des exchanges et gérer un large catalogue d'assets en autocustody",
       "strengths": [
         "Élément sécurisé certifié CC EAL5+ (Nano S+, Nano X, Stax, Flex)",
@@ -38,7 +89,7 @@
       "weaknesses": [
         "Polémique Ledger Recover (2023) — code propriétaire débattu",
         "Spread broker élevé sur achat in-app (1-2%)",
-        "Stax/Flex coûteux (>250€) face à concurrence open source"
+        "Stax/Flex coûteux (>250 €) face à concurrence open source"
       ],
       "badge": "Leader hardware wallet",
       "category": "wallet"
@@ -50,7 +101,14 @@
       "tagline": "Pour qui c'est : maximalistes Bitcoin et puristes open source cherchant transparence totale",
       "websiteUrl": "https://trezor.io",
       "affiliateUrl": "https://shop.trezor.io?utm_source=cryptoreflex",
-      "scoring": { "global": 4.4, "fees": 4.0, "security": 4.8, "ux": 4.2, "support": 3.9, "mica": 4.2 },
+      "scoring": {
+        "global": 4.4,
+        "fees": 4,
+        "security": 4.8,
+        "ux": 4.2,
+        "support": 3.9,
+        "mica": 4.2
+      },
       "mica": {
         "status": "Hors périmètre MiCA (matériel autocustody, pas de garde de fonds tiers)",
         "amfRegistration": null,
@@ -59,13 +117,49 @@
         "atRiskJuly2026": false,
         "lastVerified": "2026-04-26"
       },
-      "fees": { "spotMaker": 0, "spotTaker": 0, "instantBuy": 0, "withdrawalCrypto": "Frais réseau uniquement", "withdrawalFiatSepa": 0, "spread": "Spread partenaires intégré (Invity ~1-2.5%)" },
-      "deposit": { "minEur": 0, "methods": ["N/A — auto-custody"] },
-      "cryptos": { "totalCount": 1800, "stakingAvailable": false, "stakingCryptos": [] },
-      "support": { "frenchChat": false, "frenchPhone": false, "responseTime": "<72h (anglais)" },
-      "security": { "coldStoragePct": 100, "insurance": false, "twoFA": true, "lastIncident": "Aucun fonds compromis ; vulnérabilité physique Kraken Labs (2020) sur Trezor One sans passphrase" },
-      "bonus": { "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle", "amount": null, "currency": null, "conditions": null, "validUntil": null },
-      "ratings": { "trustpilot": 4.3, "trustpilotCount": 6500, "appStore": 4.4, "playStore": 4.1 },
+      "fees": {
+        "spotMaker": 0,
+        "spotTaker": 0,
+        "instantBuy": 0,
+        "withdrawalCrypto": "Frais réseau uniquement",
+        "withdrawalFiatSepa": 0,
+        "spread": "Spread partenaires intégré (Invity ~1-2.5%)"
+      },
+      "deposit": {
+        "minEur": 0,
+        "methods": [
+          "N/A — auto-custody"
+        ]
+      },
+      "cryptos": {
+        "totalCount": 1800,
+        "stakingAvailable": false,
+        "stakingCryptos": []
+      },
+      "support": {
+        "frenchChat": false,
+        "frenchPhone": false,
+        "responseTime": "<72h (anglais)"
+      },
+      "security": {
+        "coldStoragePct": 100,
+        "insurance": false,
+        "twoFA": true,
+        "lastIncident": "Aucun fonds compromis ; vulnérabilité physique Kraken Labs (2020) sur Trezor One sans passphrase"
+      },
+      "bonus": {
+        "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle",
+        "amount": null,
+        "currency": null,
+        "conditions": null,
+        "validUntil": null
+      },
+      "ratings": {
+        "trustpilot": 4.3,
+        "trustpilotCount": 6500,
+        "appStore": 4.4,
+        "playStore": 4.1
+      },
       "idealFor": "Bitcoiners et utilisateurs orientés open source acceptant un catalogue plus restreint en échange d'une transparence totale du code",
       "strengths": [
         "Firmware 100% open source (auditable par la communauté)",
