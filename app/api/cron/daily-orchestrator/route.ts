@@ -57,6 +57,10 @@ const SUB_CRONS = [
   { name: "aggregate-news", path: "/api/cron/aggregate-news", critical: false },
   { name: "generate-ta", path: "/api/cron/generate-ta", critical: false },
   { name: "refresh-events", path: "/api/cron/refresh-events", critical: false },
+  // Daily Brief — Tier S #3 (Café Crypto 7h). Génère un MDX dans content/news/
+  // avec top movers, événements à venir et FAQ rotative AEO. Critical:false
+  // car si CoinGecko down, on ne veut pas casser les autres jobs.
+  { name: "daily-brief", path: "/api/cron/daily-brief", critical: false },
 ] as const;
 
 /* -------------------------------------------------------------------------- */
