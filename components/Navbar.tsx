@@ -359,8 +359,9 @@ export default function Navbar() {
                   }
                 }, 350);
               }}
-              aria-label="Ouvrir la recherche (Ctrl+K)"
-              title="Recherche (⌘K)"
+              aria-label="Ouvrir la palette de commandes (Ctrl+K)"
+              aria-keyshortcuts="Control+K Meta+K"
+              title="Palette ⌘K — recherche & actions"
               className="hidden lg:inline-flex items-center gap-2 h-9 pl-3 pr-1.5 rounded-lg
                          border border-border/60 bg-elevated/40 text-muted hover:text-fg hover:border-primary/30 hover:bg-elevated
                          transition-colors duration-fast
@@ -372,7 +373,10 @@ export default function Navbar() {
               <kbd className="ml-1 inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted">⌘K</kbd>
             </button>
 
-            {/* Search compact (md only) — sans kbd, juste icône */}
+            {/* Search compact (md only) — icône + kbd compacte ⌘K (étude
+                02/05/2026 — proposition #7 : palette devient cockpit avec
+                actions exécutables, donc on rend le shortcut visible aussi
+                sur md, plus juste lg). */}
             <button
               type="button"
               onClick={() => {
@@ -385,15 +389,17 @@ export default function Navbar() {
                   }
                 }, 350);
               }}
-              aria-label="Ouvrir la recherche (Ctrl+K)"
-              title="Recherche (⌘K)"
-              className="lg:hidden inline-flex items-center justify-center h-9 w-9 rounded-lg
+              aria-label="Ouvrir la palette de commandes (Ctrl+K)"
+              aria-keyshortcuts="Control+K Meta+K"
+              title="Palette ⌘K — recherche & actions"
+              className="lg:hidden inline-flex items-center gap-1.5 h-9 px-2 rounded-lg
                          border border-border/60 text-muted hover:text-primary-soft hover:border-primary/40
                          transition-colors
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                          focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 text-[9px] font-mono text-muted">⌘K</kbd>
             </button>
 
             {/* Audit Pro UX 26/04 P0-1 : icônes Watchlist (Star) + Portefeuille

@@ -140,6 +140,28 @@ export default function AlertsManager({ cryptos }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* --------- CommandPalette ⌘K (étude 02/05/2026 — proposition #7) -------
+   * Écoute `cmdk:open-create-alert` (émis depuis ⌘K) et `?new=1` (arrivée
+   * depuis ⌘K sur autre page). Pas de dialog ici (le form est inline) :
+   * on focus le champ crypto + scrollIntoView. */
+  useEffect(() => {
+    const focusForm = () => {
+      requestAnimationFrame(() => {
+        cryptoInputRef.current?.focus();
+        cryptoInputRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+    };
+    const onOpen = () => focusForm();
+    window.addEventListener("cmdk:open-create-alert", onOpen);
+    if (searchParams?.get("new") === "1") {
+      focusForm();
+    }
+    return () => {
+      window.removeEventListener("cmdk:open-create-alert", onOpen);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* --------- Fetch alertes existantes pour l'email courant ----------------- */
   const fetchAlerts = useCallback(async (mail: string) => {
     if (!EMAIL_REGEX.test(mail)) {

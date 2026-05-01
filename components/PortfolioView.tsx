@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import {
   ArrowDownRight,
@@ -93,6 +94,24 @@ export default function PortfolioView() {
       window.removeEventListener(PORTFOLIO_EVENT, onChange);
       window.removeEventListener("storage", onChange);
     };
+  }, []);
+
+  /* -------- CommandPalette ⌘K (étude 02/05/2026 — proposition #7) -------
+   * Écoute l'event `cmdk:open-add-holding` émis par CommandPalette quand
+   * l'utilisateur lance l'action "Ajouter au portefeuille…" depuis ⌘K.
+   * Et : si on arrive sur la page via `/portefeuille?add=1` (depuis ⌘K
+   * sur une autre page), on ouvre le dialog au mount. */
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const onOpen = () => setAddOpen(true);
+    window.addEventListener("cmdk:open-add-holding", onOpen);
+    if (searchParams?.get("add") === "1") {
+      setAddOpen(true);
+    }
+    return () => {
+      window.removeEventListener("cmdk:open-add-holding", onOpen);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* -------- Fetch prix -------------------------------------------------- */
