@@ -30,7 +30,10 @@ export const dynamic = "force-dynamic";
 const limiter = createRateLimiter({ limit: 30, windowMs: 60_000, key: "abtest-conversion" });
 const COUNTER_TTL_SEC = 90 * 24 * 60 * 60; // 90 j (idem exposure)
 
-/** Conversions reconnues — soft whitelist pour éviter la prolifération de types. */
+/** Conversions reconnues — soft whitelist pour éviter la prolifération de types.
+ *  Vague A/B mai 2026 : ajout des métriques `scroll_50`, `click_pro_cta`,
+ *  `newsletter_signup` (underscore), `click_checkout`, `checkout_complete`
+ *  pour les 3 expériences hero_headline_v1 / pricing_display_v1 / askai_cta_v1. */
 const ALLOWED_TYPES: ReadonlySet<string> = new Set([
   "newsletter-signup",
   "affiliate-click",
@@ -38,6 +41,12 @@ const ALLOWED_TYPES: ReadonlySet<string> = new Set([
   "tool-usage",
   "outbound",
   "custom",
+  // Métriques wave 2026-05
+  "scroll_50",
+  "click_pro_cta",
+  "newsletter_signup",
+  "click_checkout",
+  "checkout_complete",
 ]);
 
 /** Clamp + sanitize conversionType (alphanum + tirets / underscores, max 32 chars). */

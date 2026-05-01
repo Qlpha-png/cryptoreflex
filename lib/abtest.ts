@@ -104,6 +104,26 @@ export const EXPERIMENTS: Record<string, Experiment> = {
     // un baseline stable pendant la phase d'apprentissage.
     weights: [0.5, 0.25, 0.25],
   },
+  // ─────────────────────────────────────────────────────────────────────────
+  // Vague A/B mai 2026 (proposition #15 ETUDE-AMELIORATIONS-2026-05-02) :
+  // 3 expé concurrentes sur les 3 leviers Conversion principaux. On garde
+  // weights équiprobables (33/33/33) car les 3 variants sont jouables — pas
+  // de "control sécurisé" majoritaire à protéger ici, on cherche le winner.
+  // Les définitions UI (description, métriques trackées, copies) vivent dans
+  // `lib/abtest-experiments.ts` pour ne pas polluer ce module bas-niveau.
+  // ─────────────────────────────────────────────────────────────────────────
+  hero_headline_v1: {
+    id: "hero_headline_v1",
+    variants: ["control", "social-proof", "speed"],
+  },
+  pricing_display_v1: {
+    id: "pricing_display_v1",
+    variants: ["monthly", "annual-upfront", "cafe-frame"],
+  },
+  askai_cta_v1: {
+    id: "askai_cta_v1",
+    variants: ["control", "discount", "trial"],
+  },
 };
 
 /* -------------------------------------------------------------------------- */

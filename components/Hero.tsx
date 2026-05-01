@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import HeroLiveWidget from "@/components/HeroLiveWidget";
 import HeroLiveWidgetMobile from "@/components/HeroLiveWidgetMobile";
+import HeroHeadline from "@/components/HeroHeadline";
+import HeroPrimaryCta from "@/components/HeroPrimaryCta";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import type { CoinPrice } from "@/lib/coingecko";
 
@@ -120,16 +122,11 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         <div className="mt-6 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
-            {/* H1 — refonte 01/05/2026 : ne se présente plus juste comme un
-                "comparateur plateformes", mais comme la PLATEFORME ÉDITORIALE
-                & TECHNIQUE crypto FR (100 fiches, simulateurs, on-chain live,
-                IA, comparateur, fiscalité, alertes). Garde le keyword "crypto
-                France 2026" pour SEO mais en H1-friendly. */}
-            <h1 className="ds-h1 leading-[1.05]">
-              Tout pour investir <span className="hero-headline-accent">en crypto</span>
-              <br className="hidden lg:inline" />{" "}
-              <span className="text-fg">en France, sans te faire avoir.</span>
-            </h1>
+            {/* H1 — A/B test `hero_headline_v1` (mai 2026, vague Conversion).
+                Variants : control (copie SEO actuelle) / social-proof / speed.
+                SSR rend "control" puis Client réassigne. Cf. components/HeroHeadline.tsx
+                + lib/abtest-experiments.ts. */}
+            <HeroHeadline />
 
             {/* Sous-titre — promet l'étendue concrète : analyse + outils +
                 régulation + IA. Pas juste un comparateur. */}
@@ -171,14 +168,14 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 Fix : `#cat-comparer` (PlatformsSection) et `#cat-informe`
                 (NewsletterCapture) qui sont les vraies ancres CategoryHeader. */}
             <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 animate-hero-fade-up animate-hero-fade-up-delay-3">
-              <Link
+              {/* CTA primary — wrappé Client pour tracker la conversion
+                  `click_pro_cta` de l'expé `hero_headline_v1`. Cf.
+                  components/HeroPrimaryCta.tsx. */}
+              <HeroPrimaryCta
                 href="#cat-comparer"
-                className="btn-primary btn-ripple text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
-                aria-label="Trouver ma plateforme crypto en 2 minutes"
-              >
-                Trouver ma plateforme en 2 min
-                <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
-              </Link>
+                label="Trouver ma plateforme en 2 min"
+                ariaLabel="Trouver ma plateforme crypto en 2 minutes"
+              />
               <Link
                 href="#cat-informe"
                 className="btn-ghost text-base w-full sm:w-auto"

@@ -268,6 +268,15 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
           ? "Disponible — paiement immédiat"
           : "Configuration en cours"
         : "Liste d'attente ouverte",
+      // A/B `pricing_display_v1` (vague mai 2026) : actif uniquement si
+      // paiements activés (sinon pas de prix réel à comparer entre variants).
+      ...(paymentsEnabled
+        ? {
+            abTestKey: "pricing_display_v1" as const,
+            abTestMonthlyPrice: MONTHLY_PRICE,
+            abTestAnnualPrice: ANNUAL_PRICE,
+          }
+        : {}),
     },
     {
       id: "soutien-annual",

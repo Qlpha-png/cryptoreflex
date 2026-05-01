@@ -12,6 +12,8 @@ import {
   ArrowRight,
   Square,
 } from "lucide-react";
+import { useVariant } from "@/lib/abtest-client";
+import { trackVariantConversion } from "@/lib/abtest";
 
 interface Props {
   cryptoId: string;
@@ -63,9 +65,22 @@ const SUGGESTED_QUESTIONS = (name: string, symbol: string) => [
  *  - Bouton Stop pour interrompre via AbortController
  *  - Cleanup auto au démontage (useEffect return)
  */
+/* A/B `askai_cta_v1` — 3 variants pour le CTA Soutien sur lock AskAI :
+ *  - control  : "Devenir Soutien — 2,99 € / mois"          → /pro#plans
+ *  - discount : "Débloquer pour 2,99 € — sans engagement"   → /pro#plans
+ *  - trial    : "Essayer gratuitement 7j"                   → /pro?trial=1
+ *
+ * Le hook `useVariant` est appelé inconditionnellement (règle des hooks),
+ * mais il n'a d'impact UI que dans la branche `!isPro` plus bas. Tracking
+ * conversion `click_pro_cta` au click du CTA. La conversion `checkout_complete`
+ * reste à instrumenter côté webhook Stripe (hors scope V1).
+ */
+const ASKAI_EXPERIMENT_ID = "askai_cta_v1";
+
 export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
   const [plan, setPlan] = useState<UserPlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(true);
+  const askAiVariant = useVariant(ASKAI_EXPERIMENT_ID);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string>("");
   const [streaming, setStreaming] = useState(false);
@@ -269,10 +284,23 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
                   crypto.
                 </p>
                 <Link
-                  href="/pro#plans"
+                  href={
+                    askAiVariant === "trial" ? "/pro?trial=1" : "/pro#plans"
+                  }
+                  onClick={() =>
+                    trackVariantConversion(
+                      ASKAI_EXPERIMENT_ID,
+                      askAiVariant,
+                      "click_pro_cta",
+                    )
+                  }
                   className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-background hover:bg-primary/90 transition-colors"
                 >
-                  Devenir Soutien — 2,99 € / mois
+                  {askAiVariant === "discount"
+                    ? "Débloquer pour 2,99 € — sans engagement"
+                    : askAiVariant === "trial"
+                      ? "Essayer gratuitement 7j"
+                      : "Devenir Soutien — 2,99 € / mois"}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

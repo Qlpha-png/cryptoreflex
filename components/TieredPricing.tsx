@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Check, Sparkles, type LucideIcon } from "lucide-react";
+import PricingPriceDisplay from "@/components/PricingPriceDisplay";
+import PricingCheckoutLink from "@/components/PricingCheckoutLink";
 
 /**
  * <TieredPricing /> — composant réutilisable de pricing 2 ou 3 colonnes.
@@ -39,6 +41,22 @@ export interface PricingTier {
   availability?: string;
   /** Icône Lucide affichée au-dessus du titre. */
   Icon?: LucideIcon;
+  /**
+   * A/B testing — si fourni, le tier opt-in à l'expérience pricing.
+   *
+   * Actuellement seule clé reconnue : `"pricing_display_v1"` (vague mai 2026).
+   * Quand active :
+   *  - le bloc prix natif est remplacé par <PricingPriceDisplay /> (3 variants).
+   *  - le CTA est wrappé par <PricingCheckoutLink /> (track `click_checkout`).
+   *  - les props `abTestMonthlyPrice` et `abTestAnnualPrice` doivent être
+   *    fournies pour que les variants `annual-upfront` et `cafe-frame`
+   *    puissent afficher les bons prix.
+   */
+  abTestKey?: "pricing_display_v1";
+  /** Prix mensuel formaté (ex "2,99 €"). Requis si `abTestKey` set. */
+  abTestMonthlyPrice?: string;
+  /** Prix annuel formaté (ex "35,88 €"). Requis si `abTestKey` set. */
+  abTestAnnualPrice?: string;
 }
 
 interface TieredPricingProps {
@@ -125,12 +143,22 @@ export default function TieredPricing({
                 <p className="mt-2 text-sm text-white/70">{tier.description}</p>
               )}
 
-              <div className="mt-5 flex items-baseline gap-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
-                  {tier.price}
-                </span>
-                <span className="text-sm text-white/60">{tier.priceUnit}</span>
-              </div>
+              {tier.abTestKey === "pricing_display_v1" &&
+              tier.abTestMonthlyPrice &&
+              tier.abTestAnnualPrice ? (
+                <PricingPriceDisplay
+                  monthlyPrice={tier.abTestMonthlyPrice}
+                  annualPrice={tier.abTestAnnualPrice}
+                  defaultUnit={tier.priceUnit}
+                />
+              ) : (
+                <div className="mt-5 flex items-baseline gap-1">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
+                    {tier.price}
+                  </span>
+                  <span className="text-sm text-white/60">{tier.priceUnit}</span>
+                </div>
+              )}
 
               <ul className="mt-5 space-y-2 text-sm flex-1" role="list">
                 {tier.features.map((f) => (
@@ -157,7 +185,13 @@ export default function TieredPricing({
               </ul>
 
               <div className="mt-6">
-                {isExternal ? (
+                {tier.abTestKey === "pricing_display_v1" ? (
+                  <PricingCheckoutLink
+                    href={tier.ctaHref}
+                    label={tier.ctaLabel}
+                    className={ctaClass}
+                  />
+                ) : isExternal ? (
                   <a
                     href={tier.ctaHref}
                     target="_blank"
