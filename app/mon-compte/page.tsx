@@ -31,6 +31,7 @@ import KpiCard from "@/components/account/KpiCard";
 import FreeUserDashboard from "@/components/account/FreeUserDashboard";
 import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 import AskAiQuotaCard from "@/components/account/AskAiQuotaCard";
+import EditableDisplayName from "@/components/account/EditableDisplayName";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -76,8 +77,9 @@ export default async function AccountPage() {
       ? "+6,89 €" // 2,99 × 12 = 35,88 ; 35,88 - 28,99 = 6,89 économie réelle
       : null;
 
-  // Username dérivé de l'email (avant @)
-  const usernameDisplay = user.email.split("@")[0];
+  // Display name : metadata Supabase si défini, sinon dérivé de l'email.
+  // L'utilisateur peut le personnaliser via EditableDisplayName.
+  const usernameDisplay = user.displayName;
 
   return (
     <section className="min-h-[80vh] py-12 sm:py-16" aria-labelledby="page-title">
@@ -91,20 +93,33 @@ export default async function AccountPage() {
             <span className="ds-eyebrow text-primary-soft">MON ESPACE</span>
             <h1
               id="page-title"
-              className="mt-2 text-3xl sm:text-4xl font-extrabold text-fg tracking-[-0.025em]"
+              className="mt-2 text-3xl sm:text-4xl font-extrabold text-fg tracking-[-0.025em] flex items-center flex-wrap gap-2"
             >
-              Bonjour, <span className="gradient-text">{usernameDisplay}</span>
+              <span>Bonjour,</span>
+              <EditableDisplayName initialName={usernameDisplay} />
             </h1>
             <p className="mt-1 text-sm text-muted">
               <span className="sr-only">Compte connecté&nbsp;: </span>
               {user.email}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            {user.isAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300 hover:bg-amber-400/20 transition-colors"
+                aria-label="Accéder au dashboard admin"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                Admin
+              </Link>
+            )}
             {isPro && (
               <span className="badge badge-trust">
                 <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-                Pro {user.plan === "pro_annual" ? "Annuel" : "Mensuel"}
+                {user.isAdmin
+                  ? "Admin (accès Pro)"
+                  : `Pro ${user.plan === "pro_annual" ? "Annuel" : "Mensuel"}`}
               </span>
             )}
             <form action="/api/auth/logout" method="POST">

@@ -90,6 +90,39 @@ export interface CryptoreflexUser {
   plan: Plan;
   planExpiresAt: Date | null;
   stripeCustomerId: string | null;
+  /** Nom d'affichage personnalisé (depuis users.display_name si présent, sinon
+      dérivé de l'email avant @). */
+  displayName: string;
+  /** True si l'utilisateur fait partie de la liste hardcodée admin (env var
+      ADMIN_EMAILS séparés par virgule, fallback : kevinvoisin2016@gmail.com). */
+  isAdmin: boolean;
+}
+
+/**
+ * Liste des emails administrateurs. Lus depuis ADMIN_EMAILS env var (csv) ou
+ * fallback hardcodé sur l'email du fondateur.
+ *
+ * Les admins ont accès gratuit à toutes les features Pro (pas besoin de payer
+ * leur propre site) et au dashboard /admin.
+ */
+function getAdminEmails(): string[] {
+  const raw = process.env.ADMIN_EMAILS;
+  if (raw) {
+    return raw
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+  }
+  // Fallback : email fondateur (cohérent avec lib/brand.ts BRAND.email).
+  return ["kevinvoisin2016@gmail.com", "contact@cryptoreflex.fr"];
+}
+
+const ADMIN_EMAILS = new Set(getAdminEmails());
+
+/** Check rapide : un email est-il admin ? */
+export function isAdminEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return ADMIN_EMAILS.has(email.toLowerCase());
 }
 
 /**
@@ -106,6 +139,19 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
 
   if (!authUser) return null;
 
+  const email = authUser.email ?? "";
+  const admin = isAdminEmail(email);
+
+  // Helper : dérive un display name lisible à partir de l'email + override
+  // user_metadata.display_name (Supabase Auth permet de stocker des metadata
+  // arbitraires sans migration DB).
+  const metaDisplayName =
+    typeof authUser.user_metadata?.display_name === "string"
+      ? authUser.user_metadata.display_name.trim()
+      : "";
+  const fallbackName = email.split("@")[0] || "Utilisateur";
+  const displayName = metaDisplayName || fallbackName;
+
   const { data: profile, error: profileErr } = await supabase
     .from("users")
     .select("plan, plan_expires_at, stripe_customer_id")
@@ -115,12 +161,15 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   if (profileErr || !profile) {
     // Utilisateur authentifié mais pas encore de ligne dans `users` table
     // (cas post-signup avant que le webhook Stripe ne crée le profil).
+    // Si admin → accès gratuit à tout (plan pro_annual virtuel).
     return {
       id: authUser.id,
-      email: authUser.email ?? "",
-      plan: "free",
-      planExpiresAt: null,
+      email,
+      plan: admin ? "pro_annual" : "free",
+      planExpiresAt: admin ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : null,
       stripeCustomerId: null,
+      displayName,
+      isAdmin: admin,
     };
   }
 
@@ -133,12 +182,25 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   const isExpired =
     planExpiresAt !== null && planExpiresAt.getTime() < Date.now();
 
+  // Si admin → on FORCE plan pro_annual, peu importe ce qui est en DB
+  // (équivalent "free trial à vie" pour les admins de la plateforme).
+  const finalPlan: Plan = admin
+    ? "pro_annual"
+    : isExpired
+      ? "free"
+      : (profile.plan as Plan);
+  const finalExpires: Date | null = admin
+    ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+    : planExpiresAt;
+
   return {
     id: authUser.id,
-    email: authUser.email ?? "",
-    plan: isExpired ? "free" : (profile.plan as Plan),
-    planExpiresAt,
+    email,
+    plan: finalPlan,
+    planExpiresAt: finalExpires,
     stripeCustomerId: profile.stripe_customer_id,
+    displayName,
+    isAdmin: admin,
   };
 }
 
