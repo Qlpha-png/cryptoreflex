@@ -245,8 +245,8 @@ export default function AProposPage() {
                 </Link>
                 ). Quand un partenariat existe, il est signalé en clair sur la fiche, et
                 le détail de notre rémunération est publié sur la page{" "}
-                <Link href="/affiliations" className="text-primary-soft hover:underline">
-                  Politique d'affiliation
+                <Link href="/transparence" className="text-primary-soft hover:underline">
+                  Transparence et partenariats
                 </Link>
                 .
               </p>

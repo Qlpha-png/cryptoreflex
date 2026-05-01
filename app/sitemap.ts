@@ -54,7 +54,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Piliers V2 (26-04) : pages-mère pour News auto, Analyses TA auto, Calendrier événements.
     { url: `${SITE_URL}/analyses-techniques`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/calendrier`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/partenariats`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    // Fix audit SEO 01/05/2026 — `/partenariats` a été 301 vers `/sponsoring`.
+    // Le retirer du sitemap évite que Google crawle un redirect inutile et
+    // signale "Submitted URL has redirect" en Search Console.
     // Vitrine partenaires affiliés (3 marques curées) + détail par slug.
     // Priority 0.85 (vitrine principale revenue-driving) — détails 0.8.
     { url: `${SITE_URL}/partenaires`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
@@ -68,7 +70,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Dashboard public d'impact (audit Trust 26-04 "idée killer") — V1 statique,
     // V2 juin 2026 = compteurs live via webhook Beehiiv + partenaires affil.
     { url: `${SITE_URL}/impact`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/affiliations`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    // Fix audit SEO 01/05/2026 — `/affiliations` a été 301 vers `/transparence`.
+    // Retirer du sitemap pour éviter un redirect inutile dans Google Search Console.
     // Page de transparence (loi Influenceurs juin 2023 + DGCCRF) — liste
     // exhaustive des partenariats actifs, statut MiCA et rémunération perçue.
     { url: `${SITE_URL}/transparence`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },

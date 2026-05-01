@@ -1,13 +1,19 @@
 /**
- * FreeUserDashboard — Vue Free user ULTRA conversion.
+ * FreeUserDashboard — Vue Free user alignée sur le modèle « Soutien indé ».
  *
- * Conçu suite aux recommandations des 10 agents experts dashboard + 20 agents Pro value prop.
+ * REFONTE 01/05/2026 — alignement avec /pro :
+ *  - Prix : 2,99 €/mois (lit env var NEXT_PUBLIC_PRO_MONTHLY_PRICE, fallback 2,99 €)
+ *  - Features : uniquement les 6 bénéfices techniques 100 % automatisables
+ *    (alignés avec /pro après refonte). Suppression de toutes les fausses
+ *    promesses humaines (Brief alpha, Réponse fiscale 48h, Cerfa PDF,
+ *    Mémo 3916-bis) qui étaient des engagements non tenables solo.
+ *  - Limites : 10/3/10/100 (alignées avec FREE_LIMITS de lib/limits.ts +
+ *    /api/me). Avant : 5/5/100/1mois — incohérent avec le code réel.
  *
  * Principes appliqués :
- *  - Loss aversion (Kahneman) : H1 + line-through sur les limites Free
- *  - Curiosity gap : features Pro grisées avec lock visible
- *  - Friction-reversal : trust strip avec sources légales (L221-18, décret 2022-34)
- *  - ZERO claims inventés : aucun "X users en ligne", aucun fake counter
+ *  - Loss aversion : line-through sur les limites Free réelles
+ *  - ZERO claim invendable : aucune feature humaine promise
+ *  - Trust : sources légales (L221-18, décret 2022-34) — réelles
  */
 
 import Link from "next/link";
@@ -21,55 +27,58 @@ import {
   Wallet,
   Bell,
   BookOpen,
-  MessagesSquare,
+  Zap,
   FileText,
-  TrendingUp,
+  Sparkles,
 } from "lucide-react";
+
+// Lecture du prix depuis env (cohérence avec /pro). Server Component.
+const MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
 
 const LOCKED_FEATURES = [
   {
     Icon: Wallet,
     title: "Portfolio illimité",
-    free: "5 positions max",
-    pro: "Multi-wallets · P&L live · CSV export",
+    free: "10 positions max",
+    pro: "Multi-wallets · P&L live · CSV export sans plafond",
   },
   {
     Icon: Bell,
     title: "Alertes prix illimitées",
-    free: "5 alertes (1/crypto)",
-    pro: "Multi-seuils · whales · DeFi · stablecoin depeg",
+    free: "3 alertes par email",
+    pro: "Toutes cryptos, toutes conditions (above/below, %, crash)",
+  },
+  {
+    Icon: Sparkles,
+    title: "Watchlist illimitée",
+    free: "10 cryptos max",
+    pro: "Suis l'intégralité du marché qui t'intéresse",
   },
   {
     Icon: BookOpen,
-    title: "Brief PRO hebdomadaire",
-    free: "1 brief/mois (teaser)",
-    pro: "Alpha + on-chain dimanche soir",
-  },
-  {
-    Icon: MessagesSquare,
-    title: "Réponse fiscale 48 h",
-    free: "Pas inclus",
-    pro: "Cas perso DCA, swap, NFT — humain, sources citées",
+    title: "Glossaire complet 250+ termes",
+    free: "100 termes essentiels",
+    pro: "DeFi avancé, MEV, restaking, RWA, stablecoins exotiques…",
   },
   {
     Icon: FileText,
-    title: "Cerfa 2086 PDF auto-rempli",
-    free: "Pas inclus",
-    pro: "Mai 2026 · économise 99 € vs Waltio",
+    title: "Export CSV illimité",
+    free: "Limité",
+    pro: "Portfolio, transactions, alertes — sans plafond",
   },
   {
-    Icon: TrendingUp,
-    title: "Mémo 3916-bis multi-année",
-    free: "Radar gratuit",
-    pro: "PDF pré-rempli + alerte deadline",
+    Icon: Zap,
+    title: "Accès anticipé aux nouvelles features",
+    free: "Sortie standard",
+    pro: "≈ 2 semaines avant le grand public sur le plan Annuel",
   },
 ];
 
 const COMPARISON = [
-  { label: "Portfolio", free: "5", pro: "Illimité" },
-  { label: "Alertes", free: "5", pro: "Illimité" },
+  { label: "Portfolio", free: "10", pro: "Illimité" },
+  { label: "Alertes", free: "3", pro: "Illimité" },
+  { label: "Watchlist", free: "10", pro: "Illimité" },
   { label: "Glossaire", free: "100", pro: "250+" },
-  { label: "Brief alpha", free: "1/mois", pro: "1/semaine" },
 ];
 
 const TRUST_BADGES = [
@@ -93,7 +102,7 @@ const TRUST_BADGES = [
 export default function FreeUserDashboard() {
   return (
     <div className="mb-8 space-y-6">
-      {/* HERO Free dashboard */}
+      {/* HERO Free dashboard — modèle Soutien indé */}
       <section
         aria-labelledby="free-hero"
         className="account-card glass rounded-2xl p-6 sm:p-8 border border-primary/40 bg-gradient-to-br from-primary/10 to-transparent"
@@ -101,19 +110,21 @@ export default function FreeUserDashboard() {
       >
         <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
           <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-          PLAN GRATUIT — DÉBLOQUE PRO
+          PLAN GRATUIT — DÉBLOQUE LES LIMITES
         </span>
         <h2
           id="free-hero"
           className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg leading-tight"
         >
           Tu utilises l&apos;outillage{" "}
-          <span className="gradient-text">limité</span>.
+          <span className="gradient-text">avec limites Free</span>.
         </h2>
         <p className="mt-3 text-sm sm:text-base text-fg/75 max-w-xl leading-relaxed">
-          6 fonctionnalités majeures sont verrouillées sur ton plan Free. Pro
-          les débloque toutes, dès 9,99&nbsp;€/mois — annulation 1 clic,
-          14&nbsp;j remboursé sans question.
+          Le plan <strong className="text-fg">Soutien</strong> lève les limites
+          techniques (portfolio, alertes, watchlist, glossaire) et finance
+          directement le projet — dès {MONTHLY_PRICE}/mois, annulation 1 clic,
+          14&nbsp;j remboursé. Pas de fausse promesse de support humain ni
+          d&apos;équipe d&apos;experts : juste un dev solo en France.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
           <Link
@@ -121,7 +132,7 @@ export default function FreeUserDashboard() {
             className="btn-primary btn-primary-shine min-h-[48px] px-6 group"
             data-cta="account-free-hero"
           >
-            Débloquer mon outillage Pro — 9,99 €/mois
+            Soutenir — dès {MONTHLY_PRICE}/mois
             <ArrowRight
               className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
               aria-hidden="true"
@@ -136,7 +147,7 @@ export default function FreeUserDashboard() {
         </div>
       </section>
 
-      {/* COMPARISON STRIP */}
+      {/* COMPARISON STRIP — limites réelles alignées avec FREE_LIMITS */}
       <section
         aria-labelledby="acc-comparison"
         className="account-card glass rounded-2xl p-5 sm:p-6"
@@ -165,22 +176,22 @@ export default function FreeUserDashboard() {
         </div>
       </section>
 
-      {/* PREVIEW FEATURES PRO LOCKED */}
+      {/* PREVIEW FEATURES PRO LOCKED — uniquement bénéfices techniques réels */}
       <section
         aria-labelledby="acc-locked"
         className="account-card space-y-3"
         style={{ ["--i" as never]: 2 }}
       >
         <p id="acc-locked" className="ds-eyebrow text-primary-soft">
-          VERROUILLÉ — DÉBLOQUE AVEC PRO
+          VERROUILLÉ — DÉBLOQUE AVEC LE PLAN SOUTIEN
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {LOCKED_FEATURES.map((f) => (
             <div
               key={f.title}
               className="relative glass rounded-2xl p-5 overflow-hidden border border-border group cursor-not-allowed"
-              title="Pro débloque, dès 9,99 €/mois"
-              aria-label={`${f.title} — verrouillé. Pro débloque, dès 9,99 €/mois.`}
+              title={`Soutien débloque, dès ${MONTHLY_PRICE}/mois`}
+              aria-label={`${f.title} — verrouillé. Soutien débloque, dès ${MONTHLY_PRICE}/mois.`}
             >
               <div className="opacity-50 grayscale-[80%] pointer-events-none select-none">
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/20">
@@ -206,7 +217,7 @@ export default function FreeUserDashboard() {
             href="/pro#plans"
             className="btn-primary btn-primary-shine min-h-[48px] px-6 inline-flex"
           >
-            Débloquer les 6 fonctionnalités — 9,99 €/mois
+            Soutenir et débloquer — {MONTHLY_PRICE}/mois
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

@@ -72,7 +72,7 @@ export default function MentionsLegalesPage() {
         figurant sur ce site sont des <strong>liens d'affiliation</strong>. Nous percevons une
         commission lorsqu'un utilisateur s'inscrit à un service via ces liens, sans surcoût pour
         lui. Notre politique d'affiliation est détaillée dans la page{" "}
-        <a href="/affiliations" className="text-primary-soft hover:underline">Affiliations</a>.
+        <a href="/transparence" className="text-primary-soft hover:underline">Transparence et partenariats</a>.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">6. Données personnelles</h2>

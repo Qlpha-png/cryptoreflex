@@ -166,16 +166,29 @@ async function handleCheckoutCompleted(
       if (resolved === "pro_monthly" || resolved === "pro_annual") {
         plan = resolved;
       } else {
-        // Fallback heuristique si les vars d'env ne sont pas configurées :
-        // les sessions > 1000 cents hors annuel sont probablement annuelles.
-        plan = (session.amount_total ?? 0) >= 1500 ? "pro_annual" : "pro_monthly";
+        // Fix audit code review 01/05/2026 — on lit l'interval de récurrence
+        // (year vs month) depuis le price expanded, AU LIEU d'un seuil cents
+        // qui devient obsolète à chaque refonte de pricing (avant : 1500
+        // cents qui assignait pro_monthly à un coupon -50% sur l'annuel).
+        const interval = lineItem?.price?.recurring?.interval;
+        if (interval === "year") {
+          plan = "pro_annual";
+        } else if (interval === "month") {
+          plan = "pro_monthly";
+        } else {
+          // Vraiment aucun signal → fallback amount_total mais avec un seuil
+          // calculé dynamiquement (3 × prix mensuel cents = transition).
+          // Avec pricing 2,99 €/mois = 299 cents, seuil = 897 → tout >= 897
+          // = annuel probable. Pas parfait mais documenté.
+          plan = (session.amount_total ?? 0) >= 897 ? "pro_annual" : "pro_monthly";
+        }
       }
     } catch (err) {
       console.error(
         "[checkout.completed] Impossible de récupérer line_items, fallback heuristique:",
         err
       );
-      plan = (session.amount_total ?? 0) >= 1500 ? "pro_annual" : "pro_monthly";
+      plan = (session.amount_total ?? 0) >= 897 ? "pro_annual" : "pro_monthly";
     }
   }
   const expiresAt = planToExpirationDate(plan);

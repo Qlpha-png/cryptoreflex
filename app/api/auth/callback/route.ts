@@ -61,18 +61,24 @@ export async function GET(req: NextRequest) {
   const tokenHash = url.searchParams.get("token_hash");
   const typeParam = url.searchParams.get("type");
 
-  // P0 OPEN REDIRECT FIX (audit sécurité backend 30/04/2026) :
+  // P0 OPEN REDIRECT FIX (audit sécurité backend 30/04/2026, durci 01/05/2026) :
   // Avant : `next = url.searchParams.get("next") ?? "/mon-compte"` puis
   // `new URL(next, req.url)` — le constructeur URL accepte une URL absolue
   // comme premier arg et IGNORE la base. Donc `?next=https://evil.com` =
   // redirect off-site avec session déjà active = phishing parfait.
   //
   // Maintenant : on accepte UNIQUEMENT les chemins relatifs commençant par
-  // `/` mais pas `//` (qui serait `//evil.com` = même bug). Tout le reste
-  // tombe sur le défaut `/mon-compte`.
+  // `/` mais pas `//` (qui serait `//evil.com`), pas `/\\` ni `/\` (que
+  // certains navigateurs Safari/Chrome legacy normalisent en `//evil.com`).
+  // Tout le reste tombe sur le défaut `/mon-compte`.
   const rawNext = url.searchParams.get("next") ?? "/mon-compte";
-  const next =
-    rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/mon-compte";
+  const isSafePath =
+    rawNext.startsWith("/") &&
+    !rawNext.startsWith("//") &&
+    !rawNext.startsWith("/\\") &&
+    !rawNext.startsWith("/%2f") && // décodage `/` — `/%2fevil.com`
+    !rawNext.startsWith("/%5c"); // décodage `\` — `/%5cevil.com`
+  const next = isSafePath ? rawNext : "/mon-compte";
 
   let authError: string | null = null;
 

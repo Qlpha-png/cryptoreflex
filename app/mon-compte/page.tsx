@@ -29,6 +29,7 @@ import ManageSubscriptionButton from "@/components/account/ManageSubscriptionBut
 import OnboardingChecklist from "@/components/account/OnboardingChecklist";
 import KpiCard from "@/components/account/KpiCard";
 import FreeUserDashboard from "@/components/account/FreeUserDashboard";
+import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -62,9 +63,16 @@ export default async function AccountPage() {
         )
       : null;
 
+  // Lecture des prix depuis env (cohérence avec /pro). Fallbacks alignés
+  // sur la décision business 30/04/2026 (2,99 €/mois, 28,99 €/an).
+  const monthlyPriceLabel =
+    process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
+  const annualPriceLabel =
+    process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "28,99 €";
+
   const annualSavings =
     user.plan === "pro_annual"
-      ? "+39,89 €" // 9,99 × 12 - 79,99 = 39,89 économie réelle
+      ? "+6,89 €" // 2,99 × 12 = 35,88 ; 35,88 - 28,99 = 6,89 économie réelle
       : null;
 
   // Username dérivé de l'email (avant @)
@@ -143,7 +151,7 @@ export default async function AccountPage() {
                 Icon={ReceiptText}
                 label="Économie vs mensuel"
                 value={annualSavings}
-                trend={{ direction: "up", pct: "33%" }}
+                trend={{ direction: "up", pct: "19%" }}
                 subText="sur 12 mois"
               />
             )}
@@ -153,7 +161,7 @@ export default async function AccountPage() {
               Icon={Bell}
               label="Alertes Pro"
               value="Illimité"
-              subText="vs 5 max en Free"
+              subText="vs 3 max en Free"
             />
             <KpiCard
               index={3}
@@ -161,7 +169,7 @@ export default async function AccountPage() {
               Icon={Wallet}
               label="Portfolio"
               value="Illimité"
-              subText="vs 5 positions Free"
+              subText="vs 10 positions Free"
             />
           </div>
         )}
@@ -190,8 +198,8 @@ export default async function AccountPage() {
                     </span>
                     <span className="text-base font-extrabold text-primary">
                       {user.plan === "pro_annual"
-                        ? "Pro Annuel — 79,99 €/an"
-                        : "Pro Mensuel — 9,99 €/mois"}
+                        ? `Soutien Annuel — ${annualPriceLabel}/an`
+                        : `Soutien Mensuel — ${monthlyPriceLabel}/mois`}
                     </span>
                   </div>
                   {user.planExpiresAt && (
@@ -289,8 +297,9 @@ export default async function AccountPage() {
           </div>
           <p className="text-sm text-fg/70 leading-relaxed mb-4">
             Conformément au RGPD, tu peux à tout moment exporter ou supprimer
-            tes données. Pour l&apos;instant, ces actions se font par email
-            (réponse sous 30 jours garantis).
+            tes données. La suppression de compte est{" "}
+            <strong className="text-fg">automatique en 1 clic</strong> via le
+            bouton ci-dessous (pas besoin d&apos;email).
           </p>
           <div className="flex flex-wrap gap-3">
             <a
@@ -298,15 +307,11 @@ export default async function AccountPage() {
               className="text-sm font-semibold text-primary-soft hover:text-primary inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border hover:bg-elevated/60 transition-colors min-h-[40px]"
             >
               <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              Exporter mes données
+              Exporter mes données (par email)
             </a>
-            <a
-              href={`mailto:${BRAND.email}?subject=Demande%20suppression%20compte%20RGPD&body=Email%20du%20compte%3A%20${encodeURIComponent(user.email)}`}
-              className="text-sm font-semibold text-danger hover:text-danger inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-danger/40 hover:bg-danger/10 transition-colors min-h-[40px]"
-            >
-              <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
-              Demander la suppression
-            </a>
+            {/* Bouton DSR RGPD art. 17 — appelle /api/account/delete avec
+                double confirmation. Cancel auto Stripe + delete Supabase. */}
+            <DeleteAccountButton />
           </div>
           <p className="mt-3 text-xs text-muted">
             Note : conformément à l&apos;article L123-22 du Code de commerce,

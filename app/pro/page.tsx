@@ -593,11 +593,20 @@ function buildProductSchema(paymentsEnabled: boolean): JsonLd {
  * la moitié de l'écran sur mobile en SERP — booste le CTR.
  */
 function buildHowToSchema(): JsonLd {
+  // Fix audit code review 01/05/2026 — `estimatedCost.value` doit refléter
+  // META_MONTHLY_PRICE actuel (2,99 €) sinon Google warning rich result
+  // inconsistency entre Offer (2.99) et HowTo (9.99 d'avant).
+  const monthlyValue = parseFloat(
+    META_MONTHLY_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")
+  );
   return howToSchema({
-    name: "Comment s'abonner à Cryptoreflex Pro",
-    description: `S'abonner à Cryptoreflex Pro en 3 étapes : choisir son plan, payer via Stripe sécurisé, accéder immédiatement aux fonctionnalités premium.`,
+    name: "Comment soutenir Cryptoreflex",
+    description: `Soutenir Cryptoreflex en 3 étapes : choisir son plan, payer via Stripe sécurisé, accéder immédiatement aux limites étendues.`,
     totalTime: "PT2M",
-    estimatedCost: { currency: "EUR", value: 9.99 },
+    estimatedCost: {
+      currency: "EUR",
+      value: Number.isFinite(monthlyValue) ? monthlyValue : 2.99,
+    },
     steps: [
       {
         name: "Choisir son plan",

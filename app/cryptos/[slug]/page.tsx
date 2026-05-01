@@ -600,11 +600,11 @@ export default async function CryptoPage({ params }: Props) {
         {/* MENTIONS */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
           Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées le 25/04/2026
-          par l'équipe {BRAND.name}. Cette page contient des liens d'affiliation : Cryptoreflex
-          perçoit une commission si tu ouvres un compte chez l'une des plateformes recommandées,
+          par le fondateur {BRAND.name} (Kevin Voisin). Cette page contient des liens d'affiliation :
+          Cryptoreflex perçoit une commission si tu ouvres un compte chez l'une des plateformes recommandées,
           sans surcoût pour toi et sans impact sur le classement. Pour le détail, voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>{" "}
-          et notre <Link href="/affiliations" className="underline hover:text-fg">page affiliations</Link>.
+          et notre <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.
         </p>
       </div>
 

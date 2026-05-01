@@ -40,12 +40,26 @@ interface MeResponse {
   limits: FeatureLimits;
 }
 
-/** Cache module-scope (1 fetch / page load max). */
+/**
+ * Cache module-scope avec TTL court (30s).
+ *
+ * Fix audit code review 01/05/2026 : avant, le cache module-scope ne se
+ * vidait JAMAIS jusqu'à F5. Conséquence : après un login magic link, le
+ * user voyait son ancien état "non authentifié" et limites Free jusqu'à
+ * un hard refresh. TTL 30s suffit à invalider après login (le user prend
+ * forcément >30s entre clic email et navigation).
+ */
+const CACHE_TTL_MS = 30_000;
 let cachedState: MeResponse | null = null;
+let cachedAt = 0;
 let inflight: Promise<MeResponse> | null = null;
 
+function isCacheFresh(): boolean {
+  return cachedState !== null && Date.now() - cachedAt < CACHE_TTL_MS;
+}
+
 async function fetchMe(): Promise<MeResponse> {
-  if (cachedState) return cachedState;
+  if (isCacheFresh()) return cachedState as MeResponse;
   if (inflight) return inflight;
   inflight = fetch("/api/me", {
     credentials: "include",
@@ -56,6 +70,7 @@ async function fetchMe(): Promise<MeResponse> {
       if (!r.ok) throw new Error(`/api/me ${r.status}`);
       const data = (await r.json()) as MeResponse;
       cachedState = data;
+      cachedAt = Date.now();
       return data;
     })
     .catch(() => {
@@ -68,6 +83,7 @@ async function fetchMe(): Promise<MeResponse> {
         limits: { ...FREE_LIMITS },
       };
       cachedState = fallback;
+      cachedAt = Date.now();
       return fallback;
     })
     .finally(() => {
@@ -85,7 +101,7 @@ async function fetchMe(): Promise<MeResponse> {
  */
 export function useUserPlan(): UserPlanState {
   const [state, setState] = useState<UserPlanState>(() => {
-    if (cachedState) {
+    if (isCacheFresh() && cachedState) {
       return { ...cachedState, loading: false };
     }
     return {
@@ -115,5 +131,6 @@ export function useUserPlan(): UserPlanState {
 /** Force un refresh du cache (utile après login/logout/upgrade Stripe). */
 export function refreshUserPlan(): void {
   cachedState = null;
+  cachedAt = 0;
   inflight = null;
 }

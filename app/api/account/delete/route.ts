@@ -137,13 +137,37 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 6. Sign-out côté cookie (best-effort) + log audit minimal
+  // 6. Sign-out côté cookie (le user vient d'être supprimé en DB,
+  //     il faut aussi virer ses cookies session sinon il reste "connecté"
+  //     côté browser pendant 1h jusqu'à expiration JWT).
+  //
+  // Fix audit code review 01/05/2026 — Supabase v2 utilise des cookies
+  // chunked nommés `sb-<projectref>-auth-token`, `sb-<projectref>-auth-token.0`,
+  // etc., PAS `sb-access-token`/`sb-refresh-token` (ancien naming v1).
+  // On lit `NEXT_PUBLIC_SUPABASE_URL` pour extraire le projectref et
+  // supprimer les bons cookies. Fallback : on appelle aussi
+  // `userClient.auth.signOut()` qui set les cookies de suppression
+  // proprement avant la response.
+  await userClient.auth.signOut().catch(() => {
+    // Best-effort — l'user est déjà supprimé en DB
+  });
+
   const res = NextResponse.json({
     ok: true,
     message: "Compte supprimé. Toutes vos données personnelles ont été effacées.",
   });
 
-  // Invalide les cookies de session (le client doit rediriger vers `/`)
+  // Suppression défensive de tous les cookies Supabase potentiels.
+  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const projectRef = supaUrl.match(/https?:\/\/([^.]+)\.supabase\.co/)?.[1];
+  if (projectRef) {
+    const cookieBase = `sb-${projectRef}-auth-token`;
+    res.cookies.delete(cookieBase);
+    res.cookies.delete(`${cookieBase}.0`);
+    res.cookies.delete(`${cookieBase}.1`);
+    res.cookies.delete(`${cookieBase}-code-verifier`);
+  }
+  // Legacy cleanup au cas où des sessions v1 traîneraient
   res.cookies.delete("sb-access-token");
   res.cookies.delete("sb-refresh-token");
 

@@ -70,6 +70,33 @@ Cryptoreflex publie un guide complet et un calculateur gratuit pour faciliter ce
 - [Bitpanda vs Bitvavo](https://www.cryptoreflex.fr/comparatif/bitpanda-vs-bitvavo)
 - [Trade Republic vs Bitpanda](https://www.cryptoreflex.fr/comparatif/trade-republic-vs-bitpanda)
 
+## Soutenir Cryptoreflex (modèle économique)
+
+Cryptoreflex est un éditeur web indépendant français (Kevin Voisin, Entreprise Individuelle, SIREN 103 352 621) — pas de levée de fonds, pas d'investisseur, pas de PSAN. Le site est financé par :
+
+1. **Affiliations transparentes** : 3 vrais partenaires commerciaux (Ledger, Trezor, Waltio) via Impact.com / Cellxpert. Voir [/transparence](https://www.cryptoreflex.fr/transparence) pour le détail légal complet (loi Influenceurs n°2023-451).
+2. **Codes parrainage personnels** (≠ partenariat) : Bitpanda, Trade Republic, Binance — codes filleul personnels du fondateur, partagés à titre individuel.
+3. **Plan Soutien** : un abonnement honnête pour soutenir le projet et débloquer les limites techniques. Voir [/pro](https://www.cryptoreflex.fr/pro).
+
+Plan Soutien — pricing public :
+- **Soutien Mensuel** : 2,99 €/mois — annulation 1 clic, garantie 14 j remboursé (art. L221-18 Code conso).
+- **Soutien Annuel** : 28,99 €/an (~19 % d'économie vs mensuel × 12 = 35,88 €) + accès anticipé étendu aux nouvelles features (≈ 2 semaines avant le grand public).
+
+Ce que le plan Soutien débloque (vs plan Free) :
+- Portfolio illimité (vs 10 positions Free)
+- Alertes prix illimitées (vs 3 alertes Free)
+- Watchlist illimitée (vs 10 cryptos Free)
+- Glossaire complet 250+ termes (vs 100 termes essentiels Free)
+- Export CSV illimité (portfolio, transactions, alertes)
+- Accès anticipé aux nouvelles features
+
+Ce que le plan Soutien NE PROMET PAS (transparence honnête) :
+- Aucun support humain dédié, aucun « expert » à disposition (Cryptoreflex n'est ni CIF ORIAS ni cabinet de conseil fiscal — pour les questions fiscales pointues, consulter un expert-comptable ou un CIF immatriculé ORIAS).
+- Aucun brief alpha hebdomadaire ni d'analyse on-chain « expert » — la newsletter quotidienne reste gratuite pour tout le monde.
+- Aucune date promise pour les features futures (Cerfa 2086 PDF, sync API exchanges) : ce sont des « idées » qu'on aimerait livrer si la base de soutiens permet d'y consacrer du temps.
+
+Modèle inspiré : Plausible Analytics, Buy-Me-a-Coffee, Cal.com — le user finance directement le développement, pas un produit SaaS premium fictif.
+
 ## Lead magnets PDF (gratuits avec inscription newsletter)
 
 - Guide PDF "Fiscalité crypto 2026" — déclaration pas-à-pas via /ressources

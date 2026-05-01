@@ -539,12 +539,12 @@ export default function Navbar() {
               Trouver ma plateforme
             </Link>
             <Link
-              href="/partenariats"
+              href="/sponsoring"
               onClick={() => setOpen(false)}
               prefetch={false}
               className="btn-ghost w-full text-base mt-3"
             >
-              Partenariats
+              Sponsoring B2B
             </Link>
           </div>
 

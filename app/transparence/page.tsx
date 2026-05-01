@@ -156,14 +156,47 @@ const PAGE_LAST_UPDATED = "2026-04-30";
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Stub minimal pour les partenaires qui ne sont pas dans data/platforms.json
+ * (Waltio = SaaS fiscalité, pas une "platform" crypto au sens technique).
+ *
+ * Fix audit live 01/05/2026 : avant, le tableau "Programmes d'affiliation"
+ * affichait 2 contrats (Ledger + Trezor) au lieu de 3 — Waltio était absent
+ * car `getAllPlatforms()` ne le contient pas. Maintenant on synthétise une
+ * ligne minimale pour les partenaires hors-platforms.
+ */
+const FALLBACK_PARTNERS: Record<
+  string,
+  Pick<Platform, "id" | "name" | "logo" | "category" | "mica">
+> = {
+  waltio: {
+    id: "waltio",
+    name: "Waltio",
+    logo: "/logos/waltio.svg",
+    category: "fiscalité crypto",
+    mica: {
+      status: "Hors périmètre MiCA (SaaS fiscalité, pas un PSAN/CASP)",
+      lastVerified: "2026-04-26",
+      amfRegistration: undefined,
+    } as Platform["mica"],
+  },
+};
+
 export default function TransparencePage() {
   const allPlatforms = getAllPlatforms();
-  // On ne montre dans les tableaux que les plateformes pour lesquelles un
-  // statut de partenariat est documenté ci-dessus.
-  const trackedRows: Array<Platform & { partnership: PartnershipMeta }> =
-    allPlatforms
-      .filter((p) => PARTNERSHIPS[p.id])
-      .map((p) => ({ ...p, partnership: PARTNERSHIPS[p.id] }));
+
+  // On combine les plateformes connues + les fallbacks pour les partenaires
+  // qui ne sont pas dans data/platforms.json (Waltio etc.).
+  const allPartnerSources: Array<Platform | typeof FALLBACK_PARTNERS[string]> = [
+    ...allPlatforms,
+    ...Object.values(FALLBACK_PARTNERS).filter(
+      (f) => !allPlatforms.find((p) => p.id === f.id)
+    ),
+  ];
+
+  const trackedRows = allPartnerSources
+    .filter((p) => PARTNERSHIPS[p.id])
+    .map((p) => ({ ...(p as Platform), partnership: PARTNERSHIPS[p.id] }));
 
   // SÉPARATION CLAIRE : programmes d'affiliation (contrats commerciaux) vs
   // codes parrainage personnels (codes filleul perso de Kevin Voisin).
@@ -374,14 +407,8 @@ export default function TransparencePage() {
                   Pour des raisons de transparence comptable et conformément
                   aux obligations DGCCRF, l'ensemble des revenus d'affiliation
                   perçus est consolidé dans un audit annuel public publié
-                  chaque janvier sur la page{" "}
-                  <Link
-                    href="/affiliations"
-                    className="text-primary-glow underline underline-offset-2"
-                  >
-                    /affiliations
-                  </Link>
-                  .
+                  chaque janvier sur cette même page (section dédiée à venir
+                  janvier 2027 — site lancé en avril 2026).
                 </p>
               </div>
             </div>
