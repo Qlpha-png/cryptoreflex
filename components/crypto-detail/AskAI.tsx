@@ -81,11 +81,13 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
     setError(null);
     setAnswer(null);
     try {
+      // Honeypot : `website` reste TOUJOURS vide côté client (champ invisible
+      // dans le DOM ci-dessous). Si rempli côté serveur → bot détecté.
       const res = await fetch(`/api/ask/${cryptoId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, website: "" }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -128,8 +130,9 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
           </div>
           <p className="mt-2 text-sm text-fg/75">
             Réponses contextualisées propulsées par Claude Haiku — réservé aux
-            abonnés Soutien. 20 questions par jour, pas de conseil financier (juste
-            de la pédagogie).
+            abonnés Soutien. <strong className="text-fg">Limité à 20 questions/jour</strong>,
+            <strong className="text-fg"> 5/heure</strong>, et uniquement sur la crypto
+            ou la fiscalité crypto FR. Pas de conseil financier (juste de la pédagogie).
           </p>
         </div>
       </div>
@@ -182,6 +185,25 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
       {!planLoading && isPro && (
         <div className="mt-6 space-y-4">
           <form onSubmit={onSubmit} className="flex gap-2 flex-col sm:flex-row">
+            {/* Honeypot anti-bot — invisible utilisateur, visible des bots
+                qui remplissent automatiquement tous les champs. Si rempli côté
+                serveur → 400 silencieux. Style absolute + opacity 0 pour
+                rester non-cliquable même pour les screen readers. */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                opacity: 0,
+                pointerEvents: "none",
+                left: "-9999px",
+              }}
+            />
             <input
               type="text"
               value={question}
