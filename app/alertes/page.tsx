@@ -72,7 +72,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Combien d'alertes puis-je créer ?",
-    a: "Jusqu'à 5 alertes actives en simultané par adresse email. C'est volontaire pour éviter le spam et garder le service gratuit pour tout le monde. Une alerte déclenchée libère automatiquement un slot.",
+    a: "3 alertes actives en simultané par adresse email en gratuit, jusqu'à 100 en plan Soutien. Une alerte déclenchée libère automatiquement un slot. Limite Free volontaire pour éviter le spam et garder le service gratuit pour tout le monde.",
   },
   {
     q: "Comment me désinscrire ?",
@@ -172,7 +172,7 @@ export default function AlertesPage() {
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-primary-soft" aria-hidden="true" />
-              5 alertes max / email
+              3 alertes Free · 100 en Soutien
             </li>
           </ul>
         </header>

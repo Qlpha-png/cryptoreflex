@@ -16,7 +16,7 @@ import StructuredData from "@/components/StructuredData";
 export const metadata: Metadata = {
   title: "Tracker portefeuille crypto — gratuit, 100% local",
   description:
-    "Suis ton portefeuille crypto Cryptoreflex (jusqu'à 30 positions, valeur live en EUR, gain/perte, allocation). Données stockées uniquement sur ton appareil — aucun compte, aucun envoi serveur.",
+    "Suis ton portefeuille crypto Cryptoreflex (10 positions en gratuit, jusqu'à 500 en Pro, valeur live en EUR, gain/perte, allocation). Données stockées uniquement sur ton appareil — aucun compte, aucun envoi serveur.",
   alternates: { canonical: `${BRAND.url}/portefeuille` },
   robots: { index: false, follow: true },
 };
@@ -67,8 +67,8 @@ export default function PortefeuillePage() {
           </h1>
           <p className="mt-3 ds-lead max-w-2xl">
             Suis la valeur live de tes positions, ton gain/perte global et
-            l&apos;allocation de ton portefeuille. Jusqu&apos;à 30 cryptos, prix
-            actualisés toutes les 2 minutes.
+            l&apos;allocation de ton portefeuille. Jusqu&apos;à 10 cryptos en gratuit
+            (500 en Soutien), prix actualisés toutes les 2 minutes.
           </p>
 
           {/* Bandeau réassurance RGPD — important AVANT que l'user saisisse

@@ -2,12 +2,44 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * AnimatedStat — count-up animation pour stats numériques.
+ *
+ * RSC-safe : on accepte un `format` STRING (préset) et NON une fonction,
+ * pour pouvoir être appelé depuis des Server Components (CryptoStats etc.).
+ * Les fonctions ne traversent pas la frontière RSC (Next 14).
+ *
+ * Présets de format :
+ *  - "compact-usd"     → 1,2 Md $
+ *  - "usd"             → 1 234,56 $
+ *  - "compact-number"  → 21 M
+ *  - "number"          → 21 234 567,89
+ *  - "percent"         → 12,3 %
+ *  - "raw"             → 21234567.89 (toString brut, pour cas custom)
+ *
+ * Optionnel : `suffix` (ex: " BTC") concaténé après le nombre formaté.
+ *
+ * - IntersectionObserver : déclenchement au scroll dans le viewport
+ * - requestAnimationFrame : 60fps GPU-friendly
+ * - prefers-reduced-motion : valeur finale instantanée, pas d'anim
+ * - SSR-safe : valeur finale rendue côté serveur, anim côté client
+ * - tabular-nums : zéro jitter pendant le compte
+ */
+
+type FormatType =
+  | "compact-usd"
+  | "usd"
+  | "compact-number"
+  | "number"
+  | "percent"
+  | "raw";
+
 interface AnimatedStatProps {
-  /** Valeur cible numérique. */
   value: number;
-  /** Fonction de formatage du nombre. */
-  format: (n: number) => string;
-  /** Durée de l'animation (ms). Default 1000. */
+  format: FormatType;
+  /** Texte concaténé après la valeur (ex: " BTC"). */
+  suffix?: string;
+  /** Durée de l'animation en ms. Default 1000. */
   duration?: number;
   /** Classe CSS sur le span racine. */
   className?: string;
@@ -15,29 +47,51 @@ interface AnimatedStatProps {
   once?: boolean;
 }
 
-/**
- * easeOutCubic — démarre fort, ralentit vers la fin. Sensation snappy.
- */
+function formatValue(n: number, type: FormatType): string {
+  switch (type) {
+    case "compact-usd":
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "USD",
+        notation: "compact",
+        maximumFractionDigits: 1,
+      }).format(n);
+    case "usd":
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+      }).format(n);
+    case "compact-number":
+      return new Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 2,
+      }).format(n);
+    case "number":
+      return new Intl.NumberFormat("fr-FR", {
+        maximumFractionDigits: 2,
+      }).format(n);
+    case "percent":
+      return new Intl.NumberFormat("fr-FR", {
+        style: "percent",
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 2,
+      }).format(n / 100);
+    case "raw":
+      return String(Math.round(n * 100) / 100);
+    default:
+      return String(n);
+  }
+}
+
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-/**
- * AnimatedStat — version stat-card de AnimatedNumber.
- *
- * Différence-clé vs AnimatedNumber : on accepte un `format(n)` arbitraire
- * (pour pouvoir réutiliser formatCompactUsd / formatUsd / formatCompactNumber
- * de lib/coingecko.ts au lieu de re-coder les unités).
- *
- * - IntersectionObserver pour déclencher uniquement au scroll dans le viewport.
- * - requestAnimationFrame pour la boucle (60fps natif, GPU-friendly).
- * - prefers-reduced-motion : valeur finale instantanée.
- * - SSR-safe : valeur finale rendue côté serveur, 0 puis anim côté client.
- * - tabular-nums pour éviter le jitter pendant le compte.
- */
 export default function AnimatedStat({
   value,
   format,
+  suffix,
   duration = 1000,
   className = "",
   once = true,
@@ -109,7 +163,8 @@ export default function AnimatedStat({
 
   return (
     <span ref={ref} className={`tabular-nums ${className}`.trim()}>
-      {format(display)}
+      {formatValue(display, format)}
+      {suffix ?? ""}
     </span>
   );
 }

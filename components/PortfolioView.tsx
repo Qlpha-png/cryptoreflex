@@ -301,7 +301,7 @@ export default function PortfolioView() {
         <EmptyState
           icon={<Briefcase className="h-6 w-6" aria-hidden="true" />}
           title="Tu n'as pas encore ajouté de crypto à ton portefeuille"
-          description="Ajoute jusqu'à 30 positions (jeton + quantité + prix moyen d'achat) pour suivre ta valeur en temps réel et tes plus/moins-values latentes. Les données restent sur ton appareil."
+          description="Ajoute tes positions (jeton + quantité + prix moyen d'achat) pour suivre ta valeur en temps réel et tes plus/moins-values latentes. 10 positions max en gratuit, 500 en Soutien. Les données restent sur ton appareil."
         />
         <div className="mt-6 flex justify-center">
           <button

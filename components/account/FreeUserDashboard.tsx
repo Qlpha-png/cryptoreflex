@@ -26,8 +26,6 @@ import {
   CreditCard,
   Wallet,
   Bell,
-  BookOpen,
-  Zap,
   FileText,
   Sparkles,
 } from "lucide-react";
@@ -55,30 +53,24 @@ const LOCKED_FEATURES = [
     pro: "Suis l'intégralité du marché qui t'intéresse",
   },
   {
-    Icon: BookOpen,
-    title: "Glossaire complet 250+ termes",
-    free: "100 termes essentiels",
-    pro: "DeFi avancé, MEV, restaking, RWA, stablecoins exotiques…",
+    Icon: Sparkles,
+    title: "IA Q&A par fiche crypto",
+    free: "Aperçu uniquement",
+    pro: "20 questions/jour avec Claude Haiku, contextualisées sur chaque fiche",
   },
   {
     Icon: FileText,
-    title: "Export CSV illimité",
-    free: "Limité",
-    pro: "Portfolio, transactions, alertes — sans plafond",
-  },
-  {
-    Icon: Zap,
-    title: "Accès anticipé aux nouvelles features",
-    free: "Sortie standard",
-    pro: "≈ 2 semaines avant le grand public sur le plan Annuel",
+    title: "Export CSV portfolio",
+    free: "Disponible",
+    pro: "Disponible (sans cap après gating serveur en cours)",
   },
 ];
 
 const COMPARISON = [
-  { label: "Portfolio", free: "10", pro: "Illimité" },
-  { label: "Alertes", free: "3", pro: "Illimité" },
-  { label: "Watchlist", free: "10", pro: "Illimité" },
-  { label: "Glossaire", free: "100", pro: "250+" },
+  { label: "Portfolio", free: "10", pro: "500" },
+  { label: "Alertes prix", free: "3", pro: "100" },
+  { label: "Watchlist", free: "10", pro: "200" },
+  { label: "IA Q&A par fiche", free: "—", pro: "20/jour" },
 ];
 
 const TRUST_BADGES = [

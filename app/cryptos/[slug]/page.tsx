@@ -111,6 +111,17 @@ const TradingViewWidget = dynamic(
 );
 import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
 import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
+// Lazy-load AskAI : Client Component qui fetch /api/me + /api/ask. Pro-only.
+// ssr:false : aucun intérêt à SSR (état dépend du plan user via fetch).
+const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
+  ssr: false,
+  loading: () => (
+    <div
+      className="h-64 animate-pulse rounded-3xl bg-elevated/40"
+      aria-label="Chargement de l'assistant IA"
+    />
+  ),
+});
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -570,6 +581,19 @@ export default async function CryptoPage({ params }: Props) {
         <div className="mt-12">
           <ROISimulator
             coingeckoId={c.coingeckoId}
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+          />
+        </div>
+
+        {/* ASK AI — Q&A IA contextuelle Pro-only, post-ROISimulator pour
+            engager le visiteur déjà conquis par les outils interactifs.
+            Free voit un lock + CTA Pro, Pro voit l'input fonctionnel.
+            Modèle Claude Haiku 4.5 (~$0.0025 par question, viable) avec
+            gate triple : auth + plan + rate limit 20/jour/user. */}
+        <div className="mt-12">
+          <AskAI
+            cryptoId={c.id}
             cryptoName={c.name}
             cryptoSymbol={c.symbol}
           />

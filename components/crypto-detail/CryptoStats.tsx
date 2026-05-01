@@ -1,5 +1,4 @@
 import {
-  formatCompactUsd,
   formatCompactNumber,
   formatUsd,
   type CoinDetail,
@@ -20,38 +19,16 @@ interface Props {
  * Les KPIs principaux (market cap, volume 24h, supply) sont animés via
  * <AnimatedStat /> avec un IntersectionObserver — déclenchement au scroll
  * dans le viewport, durée 1000ms easeOutCubic.
+ *
+ * Note RSC : on passe `format` en STRING preset à AnimatedStat (pas une
+ * fonction). Les fonctions ne traversent pas la frontière Server → Client
+ * Component (Next 14 RSC).
  */
 export default function CryptoStats({
   symbol,
   detail,
   fallbackMaxSupply,
 }: Props) {
-  // Helpers de format réutilisés à la fois pour SSR (display final si detail
-  // est null) et pour AnimatedStat (qui anime de 0 jusqu'à la valeur cible).
-  //
-  // Note importante : formatCompactUsd / formatCompactNumber retournent "—"
-  // quand value === 0. Pendant l'animation count-up qui démarre à 0, ça
-  // ferait flasher "—" au 1er frame. On wrappe pour formater "0" au lieu
-  // dès que la cible est connue > 0.
-  const fmtUsd = (n: number) =>
-    n === 0
-      ? new Intl.NumberFormat("fr-FR", {
-          style: "currency",
-          currency: "USD",
-          notation: "compact",
-          maximumFractionDigits: 1,
-        }).format(0)
-      : formatCompactUsd(n);
-  const fmtCompactNumber = (n: number) =>
-    n === 0
-      ? new Intl.NumberFormat("en-US", {
-          notation: "compact",
-          maximumFractionDigits: 2,
-        }).format(0)
-      : formatCompactNumber(n);
-  const formatSupplyWithSymbol = (n: number) =>
-    `${fmtCompactNumber(n)} ${symbol}`;
-
   const athDate = detail?.athDate
     ? new Date(detail.athDate).toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -77,7 +54,7 @@ export default function CryptoStats({
         {detail ? (
           <AnimatedStat
             value={detail.marketCap}
-            format={fmtUsd}
+            format="compact-usd"
             duration={1100}
           />
         ) : (
@@ -90,7 +67,7 @@ export default function CryptoStats({
         {detail ? (
           <AnimatedStat
             value={detail.totalVolume}
-            format={fmtUsd}
+            format="compact-usd"
             duration={900}
           />
         ) : (
@@ -110,7 +87,8 @@ export default function CryptoStats({
         {detail ? (
           <AnimatedStat
             value={detail.circulatingSupply}
-            format={formatSupplyWithSymbol}
+            format="compact-number"
+            suffix={` ${symbol}`}
             duration={1000}
           />
         ) : (

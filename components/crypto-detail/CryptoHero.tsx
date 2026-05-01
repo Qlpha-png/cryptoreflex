@@ -113,9 +113,7 @@ export default function CryptoHero({
               {price > 0 ? (
                 <AnimatedStat
                   value={price}
-                  // formatUsd retourne "—" pour 0 — on patch le 1er frame
-                  // mid-anim pour éviter le flash avec un format "$0.00".
-                  format={(n) => (n === 0 ? "$0.00" : formatUsd(n))}
+                  format="usd"
                   duration={1100}
                 />
               ) : (

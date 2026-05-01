@@ -15,6 +15,7 @@
     "test:cov": "vitest run --coverage"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.92.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.1",
     "@web3icons/react": "^4.1.17",
