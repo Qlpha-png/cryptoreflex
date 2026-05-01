@@ -198,6 +198,27 @@ export default async function HeatmapPage() {
           </div>
         </section>
 
+        {/* EMBED CTA — propose d'intégrer la heatmap sur un site tiers */}
+        <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight text-fg">
+            Embarque la heatmap sur ton site
+          </h2>
+          <p className="mt-2 text-sm text-fg/80 leading-relaxed">
+            Une iframe, zéro maintenance — la heatmap top 20 live (SSE Binance)
+            directement sur ton blog, ton dashboard ou ton agrégateur. License
+            CC-BY 4.0 (attribution dofollow vers Cryptoreflex incluse).
+          </p>
+          <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background/60 p-3 text-[11px] leading-relaxed text-white/85 font-mono whitespace-pre-wrap break-all">
+{`<iframe src="https://www.cryptoreflex.fr/embed/heatmap" width="100%" height="620" frameborder="0" loading="lazy" title="Heatmap crypto live — Cryptoreflex"></iframe>`}
+          </pre>
+          <Link
+            href="/embeds#widgets"
+            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary-glow"
+          >
+            Voir tous les widgets embeddables →
+          </Link>
+        </section>
+
         {/* MENTIONS */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
           Données de marché fournies par CoinGecko (cache serveur 2 min). Cette

@@ -243,6 +243,12 @@ export const EMBEDDABLE_TOOLS: Array<{
   description: string;
   height: number;
   emoji: string;
+  /**
+   * Path absolu vers la version complète (lien "Voir la version complète").
+   * Par défaut `/outils/<slug>`. À override pour les widgets dont la page
+   * canonique vit ailleurs (ex: heatmap → /marche/heatmap).
+   */
+  fullPath?: string;
 }> = [
   {
     slug: "calculateur-fiscalite",
@@ -279,5 +285,15 @@ export const EMBEDDABLE_TOOLS: Array<{
       "ROI net, plus-value et impôt PFU 30 % en 5 secondes — frais inclus.",
     height: 700,
     emoji: "💰",
+  },
+  {
+    slug: "heatmap",
+    name: "Heatmap crypto live (top 20)",
+    shortName: "Heatmap live",
+    description:
+      "Treemap animée du top 20 cryptos — taille = market cap, couleur = variation 24h, ticks live SSE Binance.",
+    height: 620,
+    emoji: "🔥",
+    fullPath: "/marche/heatmap",
   },
 ];

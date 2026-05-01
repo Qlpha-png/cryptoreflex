@@ -109,7 +109,7 @@ const collectionSchema = generateCollectionPageSchema({
   url: PAGE_URL,
   items: EMBEDDABLE_TOOLS.map((t) => ({
     name: t.shortName,
-    url: `${BRAND.url}/outils/${t.slug}`,
+    url: `${BRAND.url}${t.fullPath ?? `/outils/${t.slug}`}`,
     description: t.description,
   })),
 });
@@ -254,7 +254,7 @@ export default function EmbedsLandingPage() {
 
                 <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-border/60">
                   <Link
-                    href={`/outils/${tool.slug}`}
+                    href={tool.fullPath ?? `/outils/${tool.slug}`}
                     className="inline-flex items-center gap-1.5 text-sm text-primary-soft hover:text-primary-glow font-semibold"
                   >
                     Voir la version complète

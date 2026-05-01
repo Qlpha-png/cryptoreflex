@@ -91,9 +91,12 @@ export async function middleware(request: NextRequest) {
  *  - /_next/image (optimisation images)
  *  - /favicon.ico, robots.txt, sitemap.xml, manifest
  *  - /api/stripe/webhook (signature HMAC vérifiée séparément, body raw requis)
+ *  - /embed/* (widgets iframe destinés à être hostés sur des sites tiers —
+ *    le middleware injecte X-Frame-Options: DENY qui bloquerait l'iframing.
+ *    Pas d'auth Supabase nécessaire sur les pages embed (pages publiques).)
  */
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/).*)",
   ],
 };
