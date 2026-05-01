@@ -22,15 +22,16 @@ export function getStripeClient(): Stripe | null {
 
   // Fix audit code review 01/05/2026 — apiVersion explicite obligatoire pour
   // le SDK stripe@22 (le constructeur le marque required en TypeScript).
-  // On utilise la version par défaut générée par le SDK actuellement utilisé,
-  // pour éviter qu'un freeze sur une version disparue ne casse les requêtes
-  // (`as Stripe.LatestApiVersion` documente l'intention).
   //
-  // Précédent commit `c533d43` avait OMIS apiVersion pour fix le build TS qui
-  // râlait sur "2026-04-22.dahlia" (version inexistante). C'était trop large
-  // — il faut garder l'option mais pointer sur une vraie version.
+  // Itération 3 (build fail x2) : ni `Stripe.LatestApiVersion` ni
+  // `Stripe.StripeConfig` ne sont exportés par le package. Le SDK 22 type
+  // apiVersion comme une union literal de versions précises, et notre
+  // version cible peut ne pas y figurer si elle est plus récente que le
+  // SDK installé. On force avec `as never` pour bypasser le type-check
+  // sans introduire de `any`. En runtime, Stripe accepte la string
+  // (ou retombe sur la version du compte si elle est inconnue).
   _stripe = new Stripe(key, {
-    apiVersion: "2025-09-30.clover" as Stripe.LatestApiVersion,
+    apiVersion: "2025-09-30.clover" as never,
     typescript: true,
     appInfo: {
       name: "Cryptoreflex",

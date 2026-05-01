@@ -165,10 +165,25 @@ const PAGE_LAST_UPDATED = "2026-04-30";
  * car `getAllPlatforms()` ne le contient pas. Maintenant on synthétise une
  * ligne minimale pour les partenaires hors-platforms.
  */
-const FALLBACK_PARTNERS: Record<
-  string,
-  Pick<Platform, "id" | "name" | "logo" | "category" | "mica">
-> = {
+/**
+ * Sub-type minimal pour les fallback rows — on n'a pas besoin de tout le
+ * type Platform (avec ses 30+ champs) pour rendre une ligne du tableau
+ * transparence. PartnerRowMinimal couvre les champs effectivement lus
+ * par le composant PartnershipRow ci-dessous.
+ */
+interface PartnerRowMinimal {
+  id: string;
+  name: string;
+  logo: string;
+  category: string;
+  mica: {
+    status: string;
+    amfRegistration?: string | null;
+    lastVerified: string;
+  };
+}
+
+const FALLBACK_PARTNERS: Record<string, PartnerRowMinimal> = {
   waltio: {
     id: "waltio",
     name: "Waltio",
@@ -177,8 +192,8 @@ const FALLBACK_PARTNERS: Record<
     mica: {
       status: "Hors périmètre MiCA (SaaS fiscalité, pas un PSAN/CASP)",
       lastVerified: "2026-04-26",
-      amfRegistration: undefined,
-    } as Platform["mica"],
+      amfRegistration: null,
+    },
   },
 };
 
@@ -186,9 +201,21 @@ export default function TransparencePage() {
   const allPlatforms = getAllPlatforms();
 
   // On combine les plateformes connues + les fallbacks pour les partenaires
-  // qui ne sont pas dans data/platforms.json (Waltio etc.).
-  const allPartnerSources: Array<Platform | typeof FALLBACK_PARTNERS[string]> = [
-    ...allPlatforms,
+  // qui ne sont pas dans data/platforms.json (Waltio etc.). On utilise le
+  // sous-type PartnerRowMinimal pour les deux côtés (Platform a tous les
+  // champs requis, donc ça marche par contravariance structurelle).
+  const allPartnerSources: PartnerRowMinimal[] = [
+    ...allPlatforms.map((p) => ({
+      id: p.id,
+      name: p.name,
+      logo: p.logo,
+      category: p.category,
+      mica: {
+        status: p.mica.status,
+        amfRegistration: p.mica.amfRegistration ?? null,
+        lastVerified: p.mica.lastVerified,
+      },
+    })),
     ...Object.values(FALLBACK_PARTNERS).filter(
       (f) => !allPlatforms.find((p) => p.id === f.id)
     ),
@@ -196,7 +223,7 @@ export default function TransparencePage() {
 
   const trackedRows = allPartnerSources
     .filter((p) => PARTNERSHIPS[p.id])
-    .map((p) => ({ ...(p as Platform), partnership: PARTNERSHIPS[p.id] }));
+    .map((p) => ({ ...p, partnership: PARTNERSHIPS[p.id] }));
 
   // SÉPARATION CLAIRE : programmes d'affiliation (contrats commerciaux) vs
   // codes parrainage personnels (codes filleul perso de Kevin Voisin).
@@ -664,7 +691,10 @@ function BenefitCard({
 function PartnershipRow({
   row,
 }: {
-  row: Platform & { partnership: PartnershipMeta };
+  // PartnerRowMinimal couvre tous les champs lus ci-dessous (id, name, logo,
+  // category, mica.{status, amfRegistration, lastVerified}). Plus permissif
+  // que `Platform` complet pour accepter les fallbacks Waltio etc.
+  row: PartnerRowMinimal & { partnership: PartnershipMeta };
 }) {
   const isReview = row.partnership.status === "review";
   return (
