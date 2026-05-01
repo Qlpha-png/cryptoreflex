@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -10,6 +10,7 @@ import {
   AlertCircle,
   Bot,
   ArrowRight,
+  Square,
 } from "lucide-react";
 
 interface Props {
@@ -23,6 +24,17 @@ interface UserPlanResponse {
   isPro: boolean;
   isAuthenticated: boolean;
 }
+
+/** SSE event types — DOIT rester aligné avec app/api/ask/[cryptoId]/route.ts */
+type AskStreamEvent =
+  | {
+      type: "meta";
+      crypto: { id: string; name: string; symbol: string };
+      model: string;
+    }
+  | { type: "text"; text: string }
+  | { type: "done"; inputTokens: number; outputTokens: number }
+  | { type: "error"; message: string };
 
 const SUGGESTED_QUESTIONS = (name: string, symbol: string) => [
   `${name} est-il sécurisé pour un débutant français ?`,
@@ -40,18 +52,26 @@ const SUGGESTED_QUESTIONS = (name: string, symbol: string) => [
  *  - Pro authentifié : input fonctionnel + bouton envoyer + affichage réponse
  *  - Loading / Error : feedback inline
  *
- * Backend : POST /api/ask/{cryptoId} avec gating triple (auth + plan + rate limit)
+ * Backend : POST /api/ask/{cryptoId} en STREAMING SSE (depuis 2026-05-02).
+ * Time-to-first-token ~400ms vs 4-8s en non-streamé. Format event JSON :
+ * meta / text / done / error.
  *
- * Pas de streaming pour simplicité initiale — on attend la réponse complète,
- * affichage fade-in. Streaming SSE possible en V2.
+ * Le client gère :
+ *  - Détection du Content-Type pour distinguer SSE (200) vs erreur JSON (4xx/5xx)
+ *  - Parser SSE manuel (split sur \n\n, parse JSON par event)
+ *  - Curseur clignotant ▌ tant que stream ouvert
+ *  - Bouton Stop pour interrompre via AbortController
+ *  - Cleanup auto au démontage (useEffect return)
  */
 export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
   const [plan, setPlan] = useState<UserPlanResponse | null>(null);
   const [planLoading, setPlanLoading] = useState(true);
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [answer, setAnswer] = useState<string>("");
+  const [streaming, setStreaming] = useState(false);
+  const [waitingFirstToken, setWaitingFirstToken] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,34 +91,130 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
     };
   }, []);
 
+  // Cleanup : si le composant démonte en plein stream → abort
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+    };
+  }, []);
+
+  const handleStop = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setStreaming(false);
+    setWaitingFirstToken(false);
+  }, []);
+
   const handleAsk = async (q: string) => {
     if (!plan?.isPro) return;
     if (!q.trim() || q.length < 5) {
       setError("Question trop courte (minimum 5 caractères).");
       return;
     }
-    setLoading(true);
+
+    // Si un stream est déjà en cours → on l'annule
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setError(null);
-    setAnswer(null);
+    setAnswer("");
+    setStreaming(true);
+    setWaitingFirstToken(true);
+
     try {
-      // Honeypot : `website` reste TOUJOURS vide côté client (champ invisible
-      // dans le DOM ci-dessous). Si rempli côté serveur → bot détecté.
       const res = await fetch(`/api/ask/${cryptoId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ question: q, website: "" }),
+        signal: controller.signal,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Erreur inconnue.");
+
+      // Si la réponse n'est PAS un SSE → c'est une erreur JSON pré-stream
+      // (rate limit, plan, validation, injection, on-topic, honeypot...)
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!res.ok || !contentType.includes("text/event-stream")) {
+        let errorMsg = "Erreur inconnue.";
+        try {
+          const data = await res.json();
+          errorMsg = data.error ?? errorMsg;
+        } catch {
+          errorMsg = `Erreur HTTP ${res.status}.`;
+        }
+        setError(errorMsg);
+        setStreaming(false);
+        setWaitingFirstToken(false);
         return;
       }
-      setAnswer(data.answer);
-    } catch {
-      setError("Erreur réseau. Réessaie.");
+
+      // Lecture SSE
+      const reader = res.body?.getReader();
+      if (!reader) {
+        setError("Stream indisponible (navigateur trop ancien ?).");
+        setStreaming(false);
+        setWaitingFirstToken(false);
+        return;
+      }
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse les events SSE complets (séparés par \n\n)
+        let sepIdx = buffer.indexOf("\n\n");
+        while (sepIdx !== -1) {
+          const rawEvent = buffer.slice(0, sepIdx);
+          buffer = buffer.slice(sepIdx + 2);
+          sepIdx = buffer.indexOf("\n\n");
+
+          // Format : "data: {json}" — supporte aussi les events multi-lignes
+          // mais Anthropic n'en envoie pas ici.
+          const dataLine = rawEvent
+            .split("\n")
+            .find((l) => l.startsWith("data: "));
+          if (!dataLine) continue;
+          const jsonStr = dataLine.slice(6);
+          let event: AskStreamEvent;
+          try {
+            event = JSON.parse(jsonStr) as AskStreamEvent;
+          } catch {
+            continue;
+          }
+
+          if (event.type === "text") {
+            setWaitingFirstToken(false);
+            setAnswer((prev) => prev + event.text);
+          } else if (event.type === "error") {
+            setError(event.message);
+            setStreaming(false);
+            setWaitingFirstToken(false);
+            return;
+          } else if (event.type === "done") {
+            setStreaming(false);
+            setWaitingFirstToken(false);
+            return;
+          }
+          // Event "meta" : on l'ignore pour l'instant (pourrait servir à
+          // afficher le modèle utilisé en live).
+        }
+      }
+      // Stream fermé sans event "done" → on considère que c'est OK
+      setStreaming(false);
+      setWaitingFirstToken(false);
+    } catch (err) {
+      // AbortError (user a cliqué Stop ou démontage) → silencieux
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
+      }
+      setError("Connexion interrompue. Réessaie.");
+      setStreaming(false);
+      setWaitingFirstToken(false);
     } finally {
-      setLoading(false);
+      if (abortRef.current === controller) abortRef.current = null;
     }
   };
 
@@ -212,30 +328,33 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
               minLength={5}
               maxLength={500}
               className="flex-1 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-fg placeholder:text-muted focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-              disabled={loading}
+              disabled={streaming}
               aria-label="Question à l'IA"
             />
-            <button
-              type="submit"
-              disabled={loading || question.trim().length < 5}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-background hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Réflexion...
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" />
-                  Demander
-                </>
-              )}
-            </button>
+            {streaming ? (
+              <button
+                type="button"
+                onClick={handleStop}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-rose/15 border border-accent-rose/40 px-5 py-3 text-sm font-semibold text-accent-rose hover:bg-accent-rose/25 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-rose focus:ring-offset-2 focus:ring-offset-background"
+                aria-label="Arrêter la génération"
+              >
+                <Square className="h-4 w-4" fill="currentColor" />
+                Arrêter
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={question.trim().length < 5}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-background hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+              >
+                <Send className="h-4 w-4" />
+                Demander
+              </button>
+            )}
           </form>
 
           {/* Suggestions cliquables */}
-          {!answer && !loading && (
+          {!answer && !streaming && (
             <div>
               <div className="text-[11px] uppercase tracking-wider text-muted mb-2">
                 Suggestions
@@ -258,6 +377,14 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
             </div>
           )}
 
+          {/* Loader pré-premier-token */}
+          {waitingFirstToken && (
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-center gap-2 text-sm text-primary-soft">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Réflexion en cours…</span>
+            </div>
+          )}
+
           {/* Erreur */}
           {error && (
             <div className="rounded-xl border border-accent-rose/30 bg-accent-rose/5 p-4 flex items-start gap-2 text-sm text-accent-rose">
@@ -266,22 +393,30 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
             </div>
           )}
 
-          {/* Réponse */}
-          {answer && (
+          {/* Réponse — affichée dès le premier token, curseur clignotant pendant stream */}
+          {(answer || streaming) && !waitingFirstToken && (
             <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5 animate-fade-up">
               <div className="flex items-center gap-2 mb-3">
                 <Bot className="h-4 w-4 text-primary" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-primary-soft">
-                  Réponse IA · Claude Haiku
+                  Réponse IA · Claude Haiku{streaming ? " · streaming…" : ""}
                 </span>
               </div>
               <div className="text-sm text-fg/90 leading-relaxed whitespace-pre-wrap">
                 {answer}
+                {streaming && (
+                  <span
+                    className="inline-block w-[0.55em] h-[1em] align-text-bottom ml-0.5 bg-primary animate-cursor-blink"
+                    aria-hidden="true"
+                  />
+                )}
               </div>
-              <div className="mt-4 text-[11px] text-muted border-t border-border/50 pt-3">
-                Réponse IA générique — non un conseil financier. Cryptoreflex
-                n&apos;est pas PSAN. Limite : 20 questions par jour.
-              </div>
+              {!streaming && (
+                <div className="mt-4 text-[11px] text-muted border-t border-border/50 pt-3">
+                  Réponse IA générique — non un conseil financier. Cryptoreflex
+                  n&apos;est pas PSAN. Limite : 20 questions par jour.
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -294,6 +429,8 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-up { animation: fadeUp 0.4s ease-out; }
+        @keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+        .animate-cursor-blink { animation: cursorBlink 1s step-end infinite; }
       `}</style>
     </section>
   );
