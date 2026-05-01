@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-26",
+    "purpose": "Mapping crypto/catégorie → wallets recommandés. Lookup hiérarchique : par id d'abord, puis par catégorie/chain, puis fallback default.",
+    "schema": "Le rendu prend en priorité byId[crypto.id], sinon une heuristique sur category, sinon default."
+  },
+  "byId": {
+    "bitcoin": {
+      "chain": "Bitcoin",
+      "recommendations": [
+        { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Recommandé long terme", "url": "/avis/ledger", "note": "Standard pour stocker BTC offline. Compatible avec Ledger Live + Sparrow." },
+        { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Alternative open-source", "url": "/avis/trezor", "note": "Concurrent direct de Ledger, firmware 100% open-source. Excellent UX écran tactile." },
+        { "name": "Sparrow Wallet", "type": "Desktop wallet", "level": "Pour utilisateurs avancés", "url": null, "note": "Wallet desktop self-custody, tournant sur ton propre nœud Bitcoin si possible. Compatible matériel." },
+        { "name": "Coinbase / Bitpanda", "type": "Custodial (exchange)", "level": "Court terme uniquement", "url": "/avis/coinbase", "note": "Garder sur exchange = plateforme contrôle tes clés. À éviter pour > 6 mois." }
+      ]
+    },
+    "ethereum": {
+      "chain": "Ethereum (EVM)",
+      "recommendations": [
+        { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Recommandé long terme", "url": "/avis/ledger", "note": "Combine Ledger Live + MetaMask via 'Connect Hardware Wallet'. Signe les transactions hors-ligne." },
+        { "name": "Rabby Wallet", "type": "Browser extension", "level": "Recommandé DeFi quotidien", "url": null, "note": "Successeur spirituel de MetaMask, simulation de transactions intégrée. Open-source par DeBank." },
+        { "name": "MetaMask", "type": "Browser extension", "level": "Standard historique", "url": null, "note": "Le plus connu. Compatible avec 99% des dApps. Coupler avec Ledger pour la sécurité." },
+        { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Alternative", "url": "/avis/trezor", "note": "Compatible Ethereum + tokens ERC-20. Bien intégré avec MetaMask et Rabby." }
+      ]
+    },
+    "solana": {
+      "chain": "Solana",
+      "recommendations": [
+        { "name": "Phantom", "type": "Browser/Mobile extension", "level": "Standard Solana", "url": null, "note": "Wallet le plus populaire de Solana. Excellent UX, détection scams intégrée." },
+        { "name": "Solflare", "type": "Browser/Mobile/Desktop", "level": "Alternative complète", "url": null, "note": "Compatible staking SOL natif, Ledger via Bluetooth, plus orienté power user." },
+        { "name": "Ledger Nano X", "type": "Hardware wallet", "level": "Recommandé > 1000€", "url": "/avis/ledger", "note": "Connectable à Phantom et Solflare. Solana app dispo dans Ledger Live." },
+        { "name": "Backpack", "type": "Browser/Mobile", "level": "Pour xNFTs", "url": null, "note": "Wallet natif xNFT par l'équipe Mad Lads. Intéressant pour l'écosystème NFT/gaming." }
+      ]
+    },
+    "monero": {
+      "chain": "Monero",
+      "recommendations": [
+        { "name": "Monero CLI / GUI Wallet", "type": "Desktop wallet", "level": "Standard officiel", "url": null, "note": "Wallet officiel téléchargeable sur getmonero.org. Fonctionne avec ton propre nœud pour préserver la confidentialité." },
+        { "name": "Cake Wallet", "type": "Mobile/Desktop", "level": "Mobile recommandé", "url": null, "note": "Wallet open-source XMR/BTC, connexion à des nœuds publics ou privés. Excellent UX mobile." },
+        { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Hardware support", "url": "/avis/trezor", "note": "Trezor supporte Monero depuis le firmware Suite. Pas Ledger (pas d'app XMR officielle)." },
+        { "name": "Feather Wallet", "type": "Desktop", "level": "Léger et privé", "url": null, "note": "Alternative légère au CLI/GUI officiel, par l'équipe Tari. Reconnu pour sa simplicité." }
+      ]
+    }
+  },
+  "byChain": {
+    "Bitcoin": [
+      { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Recommandé long terme", "url": "/avis/ledger", "note": "Le standard du marché. Combine sécurité offline + UX simple via Ledger Live." },
+      { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Alternative open-source", "url": "/avis/trezor", "note": "Firmware 100% ouvert, écran tactile haute définition." }
+    ],
+    "EVM": [
+      { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Recommandé > 500€", "url": "/avis/ledger", "note": "Compatible MetaMask et Rabby. Signe les transactions hors-ligne." },
+      { "name": "Rabby Wallet", "type": "Browser extension", "level": "Quotidien DeFi", "url": null, "note": "Simulation de transactions avant signature, anti-scam intégré." },
+      { "name": "MetaMask", "type": "Browser extension", "level": "Standard historique", "url": null, "note": "Le plus universel. Coupler avec Ledger pour les gros montants." },
+      { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Alternative", "url": "/avis/trezor", "note": "Open-source, compatible MetaMask/Rabby." }
+    ],
+    "Solana": [
+      { "name": "Phantom", "type": "Browser/Mobile", "level": "Standard Solana", "url": null, "note": "Leader UX sur Solana. Détection scams native." },
+      { "name": "Solflare", "type": "Browser/Mobile/Desktop", "level": "Power user", "url": null, "note": "Staking SOL natif, support Ledger Bluetooth." },
+      { "name": "Ledger Nano X", "type": "Hardware wallet", "level": "Pour gros montants", "url": "/avis/ledger", "note": "Connecte Phantom/Solflare au Ledger via app Solana." }
+    ],
+    "Cosmos": [
+      { "name": "Keplr Wallet", "type": "Browser extension", "level": "Standard Cosmos", "url": null, "note": "Le wallet de référence pour Cosmos, IBC chains, staking ATOM, INJ, TIA, etc." },
+      { "name": "Leap Wallet", "type": "Browser/Mobile", "level": "Mobile-first", "url": null, "note": "UX moderne, support Cosmos Hub + 50 chains IBC." },
+      { "name": "Ledger Nano X", "type": "Hardware wallet", "level": "Pour gros montants", "url": "/avis/ledger", "note": "Compatible Cosmos via Keplr en mode 'Connect hardware'." }
+    ],
+    "Polkadot": [
+      { "name": "Talisman Wallet", "type": "Browser extension", "level": "Standard Polkadot", "url": null, "note": "Wallet polyvalent Polkadot/Kusama/Substrate parachains. Staking DOT natif." },
+      { "name": "Nova Wallet", "type": "Mobile", "level": "Mobile-first", "url": null, "note": "Wallet mobile open-source par l'équipe Novasama. Excellent pour staking nominatif." },
+      { "name": "Ledger Nano X", "type": "Hardware wallet", "level": "Pour gros montants", "url": "/avis/ledger", "note": "App Polkadot officielle + intégration Polkadot.js / Talisman." }
+    ],
+    "BNB Chain": [
+      { "name": "Trust Wallet", "type": "Mobile/Browser", "level": "Standard BNB", "url": null, "note": "Wallet officiel acquis par Binance. Multi-chain mais excellent BNB Chain." },
+      { "name": "Rabby Wallet", "type": "Browser extension", "level": "DeFi BSC", "url": null, "note": "Compatible BSC + simulation transactions." },
+      { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Hardware", "url": "/avis/ledger", "note": "BNB Chain supportée via app BSC + MetaMask/Rabby." }
+    ],
+    "Bitcoin-fork": [
+      { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Recommandé", "url": "/avis/trezor", "note": "Excellent support des forks Bitcoin (LTC, BCH, DASH, ZEC) avec firmware open-source." },
+      { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Alternative", "url": "/avis/ledger", "note": "Apps dédiées pour Litecoin, Bitcoin Cash, Dash dans Ledger Live." },
+      { "name": "Exodus Wallet", "type": "Desktop/Mobile", "level": "UX simple", "url": null, "note": "Wallet hot multi-chain, idéal petits montants et débutants." }
+    ]
+  },
+  "default": [
+    { "name": "Ledger Nano S+ / Nano X", "type": "Hardware wallet", "level": "Long terme", "url": "/avis/ledger", "note": "Standard du marché — supporte 5500+ cryptos via apps dédiées dans Ledger Live." },
+    { "name": "Trezor Safe 5", "type": "Hardware wallet", "level": "Alternative", "url": "/avis/trezor", "note": "Firmware open-source, écran tactile, support large des principales cryptos." },
+    { "name": "Plateforme régulée MiCA", "type": "Custodial", "level": "Court terme uniquement", "url": "/comparatif", "note": "Garder sur Coinbase/Bitpanda/Kraken = OK pour quelques semaines max. Au-delà, transfère vers ton hardware." }
+  ]
+}

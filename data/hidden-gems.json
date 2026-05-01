@@ -1,7 +1,7 @@
 {
   "_meta": {
     "lastUpdated": "2026-04-26",
-    "purpose": "10 cryptos moins connues mais avec fondamentaux solides + reliability scoring",
+    "purpose": "90 cryptos analysées (10 hidden gems originaux + 80 nouvelles fiches : Layer 1, DeFi, DePIN, AI, memecoins, RWA, stablecoins, etc.). Combinées aux 10 du data/top-cryptos.json, on couvre les 100 cryptos analysées du site Cryptoreflex.",
     "selectionCriteria": [
       "Cap entre 100M$ et 5Md$",
       "Projet actif depuis 2+ ans",
@@ -10,7 +10,8 @@
       "Pas de scandale majeur",
       "Audit Certik/Hacken/Trail of Bits récent",
       "Disponible sur 2+ exchanges régulés"
-    ]
+    ],
+    "totalEntries": 90
   },
   "hiddenGems": [
     {
@@ -29,12 +30,21 @@
         "score": 8.5,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Halborn", "Trail of Bits", "Zellic"],
+        "auditedBy": [
+          "Halborn",
+          "Trail of Bits",
+          "Zellic"
+        ],
         "lastAuditDate": "2025-08",
         "yearsActive": 6,
         "majorIncidents": "Aucun. Pause temporaire du réseau en 2022 résolue rapidement.",
         "fundingRaised": "525M$",
-        "backers": ["Andreessen Horowitz (a16z)", "Pantera Capital", "Tiger Global", "Coinbase Ventures"]
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Pantera Capital",
+          "Tiger Global",
+          "Coinbase Ventures"
+        ]
       },
       "risks": [
         "Concurrence frontale avec Solana, Aptos et Sui",
@@ -42,7 +52,13 @@
         "Inflation annuelle ~5% qui dilue les holders"
       ],
       "useCase": "dApps haute performance, agents IA on-chain, micro-paiements, NFT gaming, comptes abstraits",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "Bybit"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitget",
+        "Bybit"
+      ],
       "officialUrl": "https://near.org",
       "monitoringSignals": [
         "Comptes actifs quotidiens sur nearblocks.io (objectif >500k DAU)",
@@ -63,15 +79,24 @@
       "what": "Celestia est une blockchain modulaire qui se concentre sur la couche 'Data Availability' (DA). Elle laisse les rollups gérer leur propre exécution et leur fournit un espace de stockage de données vérifiable et bon marché.",
       "whyHiddenGem": "Pionnier du paradigme modulaire qui domine les architectures L2/L3 en 2026. Adopté par Manta, Eclipse, Movement. Mainnet 'Lemongrass' et 'Ginger' ont multiplié par 10x la capacité DA en 2025.",
       "reliability": {
-        "score": 8.0,
+        "score": 8,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Informal Systems", "OtterSec", "Binary Builders"],
+        "auditedBy": [
+          "Informal Systems",
+          "OtterSec",
+          "Binary Builders"
+        ],
         "lastAuditDate": "2025-06",
         "yearsActive": 3,
         "majorIncidents": "Aucun. Controverse modérée sur le calendrier de déblocage des tokens fin 2024.",
         "fundingRaised": "155M$",
-        "backers": ["Bain Capital Crypto", "Polychain Capital", "Placeholder", "Galaxy Digital"]
+        "backers": [
+          "Bain Capital Crypto",
+          "Polychain Capital",
+          "Placeholder",
+          "Galaxy Digital"
+        ]
       },
       "risks": [
         "Concurrence directe d'EigenDA et Avail",
@@ -79,7 +104,13 @@
         "Forte inflation (8% annuel) et déblocages VC en cours"
       ],
       "useCase": "Stockage de données pour rollups Ethereum, sovereign rollups, app-chains modulaires, gaming on-chain à coût réduit",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://celestia.org",
       "monitoringSignals": [
         "Nombre de rollups utilisant Celestia DA (Modular.cloud)",
@@ -100,15 +131,23 @@
       "what": "The Graph est un protocole décentralisé qui indexe et organise les données blockchain pour qu'elles soient interrogeables via API GraphQL ('subgraphs'). Quasiment toutes les dApps DeFi majeures (Uniswap, Aave) l'utilisent.",
       "whyHiddenGem": "Souvent oublié car peu spéculatif, c'est l'infrastructure invisible du Web3. Migration vers le 'New Era' (subgraphs sur réseau décentralisé uniquement) achevée en 2024. Pivot vers le service de données IA en 2025.",
       "reliability": {
-        "score": 9.0,
+        "score": 9,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["OpenZeppelin", "Consensys Diligence"],
+        "auditedBy": [
+          "OpenZeppelin",
+          "Consensys Diligence"
+        ],
         "lastAuditDate": "2025-04",
         "yearsActive": 6,
         "majorIncidents": "Aucun incident de sécurité majeur depuis le lancement.",
         "fundingRaised": "60M$",
-        "backers": ["Coinbase Ventures", "DCG", "Multicoin Capital", "Framework Ventures"]
+        "backers": [
+          "Coinbase Ventures",
+          "DCG",
+          "Multicoin Capital",
+          "Framework Ventures"
+        ]
       },
       "risks": [
         "Concurrence open-source d'alternatives gratuites (Subsquid, indexers internes)",
@@ -116,7 +155,13 @@
         "Demande de queries payantes encore inférieure aux récompenses inflationnaires"
       ],
       "useCase": "Indexation pour dApps, dashboards analytiques, oracles de données historiques, agents IA",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://thegraph.com",
       "monitoringSignals": [
         "Query fees payés en GRT par mois",
@@ -137,15 +182,21 @@
       "what": "Render Network connecte les détenteurs de GPU inutilisées aux artistes 3D, studios VFX et entreprises IA. Fondé par Jules Urbach (CEO d'OTOY, partenaire Disney/HBO).",
       "whyHiddenGem": "Migration réussie d'Ethereum vers Solana en 2023 a réduit drastiquement les frais. Adoption croissante par l'écosystème IA (Stability AI, Apple Vision Pro). Équipe avec 15+ ans d'expérience via OTOY.",
       "reliability": {
-        "score": 8.0,
+        "score": 8,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Halborn", "OtterSec"],
+        "auditedBy": [
+          "Halborn",
+          "OtterSec"
+        ],
         "lastAuditDate": "2025-07",
         "yearsActive": 9,
         "majorIncidents": "Aucun hack. Critiques sur la lenteur d'adoption avant 2023.",
         "fundingRaised": "30M$ + ICO 2018",
-        "backers": ["Multicoin Capital", "Solana Ventures"]
+        "backers": [
+          "Multicoin Capital",
+          "Solana Ventures"
+        ]
       },
       "risks": [
         "Concurrence frontale avec io.net, Akash et Aethir",
@@ -153,7 +204,13 @@
         "Demande GPU IA dépend de la demande globale (AWS, GCP restent dominants)"
       ],
       "useCase": "Rendu 3D pour films/jeux, entraînement et inférence de modèles IA, génération d'images, métaverses 3D",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://rendernetwork.com",
       "monitoringSignals": [
         "Jobs de rendu complétés par mois (dashboard Render)",
@@ -177,12 +234,20 @@
         "score": 8.5,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Code4rena", "Trail of Bits"],
+        "auditedBy": [
+          "Code4rena",
+          "Trail of Bits"
+        ],
         "lastAuditDate": "2025-10",
         "yearsActive": 5,
         "majorIncidents": "Aucun. Conforme régulations US (Reg D, Reg S).",
         "fundingRaised": "46M$",
-        "backers": ["Founders Fund (Peter Thiel)", "Pantera", "Coinbase Ventures", "Tiger Global"]
+        "backers": [
+          "Founders Fund (Peter Thiel)",
+          "Pantera",
+          "Coinbase Ventures",
+          "Tiger Global"
+        ]
       },
       "risks": [
         "Risque réglementaire majeur si la SEC requalifie les produits comme securities non-conformes",
@@ -190,7 +255,13 @@
         "Dépendance aux taux d'intérêt US"
       ],
       "useCase": "Investissement institutionnel on-chain, collatéral DeFi à rendement, gestion de trésorerie DAO, accès non-US aux Treasuries",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://ondo.finance",
       "monitoringSignals": [
         "TVL des produits OUSG et USDY sur DefiLlama",
@@ -211,15 +282,24 @@
       "what": "Arbitrum est un Layer 2 Ethereum 'Optimistic Rollup' qui réduit les frais de ~10-100x tout en héritant de la sécurité d'Ethereum. Développé par Offchain Labs (co-fondé par Ed Felten, ex-deputy CTO de la Maison Blanche).",
       "whyHiddenGem": "Bien que connu, le token ARB est sous-valorisé par rapport au TVL massif (>15Md$ historique). Stylus (smart contracts en Rust/C++) ouvre l'écosystème. Orbit chains permet aux projets de lancer leur propre L3.",
       "reliability": {
-        "score": 9.0,
+        "score": 9,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Trail of Bits", "ConsenSys Diligence", "OpenZeppelin"],
+        "auditedBy": [
+          "Trail of Bits",
+          "ConsenSys Diligence",
+          "OpenZeppelin"
+        ],
         "lastAuditDate": "2025-09",
         "yearsActive": 5,
         "majorIncidents": "Outage du sequencer 78 minutes en 2023, sans perte de fonds.",
         "fundingRaised": "143M$",
-        "backers": ["Lightspeed", "Polychain", "Pantera", "Mark Cuban"]
+        "backers": [
+          "Lightspeed",
+          "Polychain",
+          "Pantera",
+          "Mark Cuban"
+        ]
       },
       "risks": [
         "Sequencer encore centralisé (Offchain Labs) malgré roadmap de décentralisation",
@@ -227,7 +307,13 @@
         "Token ARB a une utilité limitée (gouvernance uniquement)"
       ],
       "useCase": "DeFi à frais réduits (GMX, Camelot, Pendle), gaming on-chain, NFT, lancement de L3 via Arbitrum Orbit",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bitget", "Bybit"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitget",
+        "Bybit"
+      ],
       "officialUrl": "https://arbitrum.io",
       "monitoringSignals": [
         "TVL Arbitrum One sur DefiLlama (objectif >10Md$)",
@@ -248,15 +334,24 @@
       "what": "Pyth Network agrège des données de prix en temps réel directement depuis 100+ institutions financières (Jane Street, CBOE, Binance). Présent sur 70+ blockchains.",
       "whyHiddenGem": "Concurrent crédible de Chainlink avec un modèle 'pull-based' plus rapide et moins coûteux. Adopté massivement par les DEX perp (Drift, Hyperliquid, Synthetix). Pyth Pro pour données institutionnelles payantes en 2025.",
       "reliability": {
-        "score": 8.0,
+        "score": 8,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["OtterSec", "Zellic", "Trail of Bits"],
+        "auditedBy": [
+          "OtterSec",
+          "Zellic",
+          "Trail of Bits"
+        ],
         "lastAuditDate": "2025-05",
         "yearsActive": 5,
         "majorIncidents": "Incident de 'mauvais prix' BTC en septembre 2023 (~5 sec), corrigé sans pertes majeures.",
         "fundingRaised": "Non public (incubé par Jump Crypto)",
-        "backers": ["Jump Crypto", "Multicoin Capital", "Wintermute", "Castle Island Ventures"]
+        "backers": [
+          "Jump Crypto",
+          "Multicoin Capital",
+          "Wintermute",
+          "Castle Island Ventures"
+        ]
       },
       "risks": [
         "Concurrence frontale avec Chainlink, leader avec ~70% du marché oracle",
@@ -264,7 +359,13 @@
         "Token PYTH avec déblocages massifs jusqu'en 2027"
       ],
       "useCase": "Oracles de prix pour DEX, lending protocols, dérivés on-chain, données financières institutionnelles, RWA pricing",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://pyth.network",
       "monitoringSignals": [
         "Total Value Secured (TVS) sur pyth.network",
@@ -288,12 +389,21 @@
         "score": 7.5,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Trail of Bits", "Sigma Prime", "Consensys Diligence"],
+        "auditedBy": [
+          "Trail of Bits",
+          "Sigma Prime",
+          "Consensys Diligence"
+        ],
         "lastAuditDate": "2025-03",
         "yearsActive": 6,
         "majorIncidents": "Aucun hack majeur. Critiques persistantes sur l'utilisation réelle vs capacité totale.",
         "fundingRaised": "257M$ ICO + funding privé",
-        "backers": ["Sequoia", "Andreessen Horowitz", "Union Square Ventures", "Y Combinator"]
+        "backers": [
+          "Sequoia",
+          "Andreessen Horowitz",
+          "Union Square Ventures",
+          "Y Combinator"
+        ]
       },
       "risks": [
         "Faible ratio stockage 'utile' vs capacité totale (beaucoup de stockage 'fake' pour le farming)",
@@ -301,7 +411,13 @@
         "Inflation FIL importante via les récompenses aux storage providers"
       ],
       "useCase": "Stockage décentralisé, archivage long terme, datasets IA, NFT metadata, sauvegardes d'entreprise, données scientifiques",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://filecoin.io",
       "monitoringSignals": [
         "Données réelles stockées vs capacité totale (filfox.info)",
@@ -325,12 +441,21 @@
         "score": 7.5,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Informal Systems", "Halborn", "CertiK"],
+        "auditedBy": [
+          "Informal Systems",
+          "Halborn",
+          "CertiK"
+        ],
         "lastAuditDate": "2025-06",
         "yearsActive": 6,
         "majorIncidents": "Aucun hack majeur. Critiques sur la concentration des validateurs.",
         "fundingRaised": "57M$",
-        "backers": ["Binance Labs", "Pantera", "Jump Crypto", "Mark Cuban"]
+        "backers": [
+          "Binance Labs",
+          "Pantera",
+          "Jump Crypto",
+          "Mark Cuban"
+        ]
       },
       "risks": [
         "Concentration validateurs (top 10 contrôle >40% du stake)",
@@ -338,7 +463,13 @@
         "Écosystème dApps encore limité"
       ],
       "useCase": "DEX de dérivés perpétuels, options on-chain, prediction markets, tokenisation d'actifs synthétiques, structured products",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://injective.com",
       "monitoringSignals": [
         "Volume burn auction hebdomadaire (injburn.com)",
@@ -359,15 +490,22 @@
       "what": "Mina est une blockchain de taille constante (22 kilobytes seulement) grâce aux preuves récursives zk-SNARKs. Permet de vérifier la blockchain entière depuis un téléphone et d'exécuter des 'zkApps' qui prouvent des données sans les révéler.",
       "whyHiddenGem": "Pionnier des zkApps avec un focus privacy. Adoption croissante dans l'identité (KYC privé, attestation off-chain). Équipe O(1) Labs avec cryptographes de pointe (Evan Shapiro, Izaak Meckler). Mainnet Berkeley a apporté les zkApps en 2024.",
       "reliability": {
-        "score": 7.0,
+        "score": 7,
         "teamIdentified": true,
         "openSource": true,
-        "auditedBy": ["Trail of Bits", "Veridise"],
+        "auditedBy": [
+          "Trail of Bits",
+          "Veridise"
+        ],
         "lastAuditDate": "2025-02",
         "yearsActive": 5,
         "majorIncidents": "Aucun hack majeur. Controverse en 2021 sur la distribution initiale.",
         "fundingRaised": "48M$",
-        "backers": ["Polychain", "Coinbase Ventures", "Paradigm"]
+        "backers": [
+          "Polychain",
+          "Coinbase Ventures",
+          "Paradigm"
+        ]
       },
       "risks": [
         "Adoption zkApps lente : peu de dApps grand public en production",
@@ -375,12 +513,4053 @@
         "Liquidity faible, volatilité élevée"
       ],
       "useCase": "Identité décentralisée privée, KYC zero-knowledge, vérification off-chain (credit scoring, attestations), oracles privés, voting privé",
-      "whereToBuy": ["Binance", "Coinbase", "Kraken", "Bybit", "Bitget"],
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
       "officialUrl": "https://minaprotocol.com",
       "monitoringSignals": [
         "Nombre de zkApps déployés sur le mainnet (minascan.io)",
         "Block producers actifs (décentralisation)",
         "Activité GitHub d'O(1) Labs"
+      ]
+    },
+    {
+      "rank": 11,
+      "id": "polkadot",
+      "name": "Polkadot",
+      "symbol": "DOT",
+      "coingeckoId": "polkadot",
+      "marketCapRange": "4Md$ - 9Md$",
+      "yearCreated": 2020,
+      "category": "Layer 0 / Interoperabilité",
+      "tagline": "Le réseau de blockchains qui se parlent : un Internet des chaines",
+      "what": "Polkadot est un protocole Layer 0 qui relie plusieurs blockchains specialisees ('parachains') autour d'une chaine centrale ('Relay Chain') qui assure leur securite. Chaque parachain peut avoir ses propres regles tout en partageant la securite et la communication inter-chaines de Polkadot.",
+      "whyHiddenGem": "Cofonde par Gavin Wood, cocreateur d'Ethereum et auteur du Yellow Paper. La mise a jour 'Polkadot 2.0' (Agile Coretime, JAM) a transforme le modele economique en 2024-2025. Tres faible empreinte energetique grace au Nominated Proof-of-Stake.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "SR Labs",
+          "Trail of Bits",
+          "Quarkslab"
+        ],
+        "lastAuditDate": "2025-09",
+        "yearsActive": 6,
+        "majorIncidents": "Bug du multisig Parity en 2017 ayant gele 513k ETH (anterieur au lancement de DOT). Aucun incident majeur sur le mainnet Polkadot depuis 2020.",
+        "fundingRaised": "144M$ (ICO 2017) + 100M$ (private 2020)",
+        "backers": [
+          "Web3 Foundation",
+          "Polychain Capital",
+          "Pantera Capital",
+          "Coinfund"
+        ]
+      },
+      "risks": [
+        "Adoption parachains plus lente que prevu, plusieurs slots non renouveles depuis 2024",
+        "Concurrence directe de Cosmos et des architectures modulaires (Celestia, EigenLayer)",
+        "Inflation annuelle DOT autour de 8-10% qui dilue les holders non-stakers"
+      ],
+      "useCase": "Interoperabilite multi-chaines, parachains specialisees (DeFi, identite, IoT), gouvernance OpenGov, staking via nomination",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://polkadot.network",
+      "monitoringSignals": [
+        "Nombre de parachains actives et taux de renouvellement Coretime",
+        "Volume de messages XCM (cross-chain) inter-parachains",
+        "Ratio DOT staked vs supply totale (objectif >50%)"
+      ]
+    },
+    {
+      "rank": 12,
+      "id": "cosmos",
+      "name": "Cosmos",
+      "symbol": "ATOM",
+      "coingeckoId": "cosmos",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2019,
+      "category": "Layer 0 / Interoperabilite",
+      "tagline": "L'Internet des Blockchains : chaque app sa propre chaine, toutes connectees",
+      "what": "Cosmos est un ecosysteme de blockchains independantes (appelees 'app-chains') construites avec le Cosmos SDK et reliees par le protocole IBC (Inter-Blockchain Communication). ATOM est le token de la Cosmos Hub, la chaine centrale historique.",
+      "whyHiddenGem": "Plus de 90 chaines IBC-enabled (dYdX, Celestia, Injective, Sei, Osmosis...) representent un ecosysteme tres actif. IBC est devenu le standard de facto pour la communication inter-chaines. Ethos open-source et neutre cher aux developpeurs.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Informal Systems",
+          "Oak Security",
+          "Halborn"
+        ],
+        "lastAuditDate": "2025-07",
+        "yearsActive": 7,
+        "majorIncidents": "Halt du reseau plusieurs fois (2021, 2022) corrige rapidement. Disputes internes recurrentes entre Tendermint Inc, Informal Systems et l'Interchain Foundation.",
+        "fundingRaised": "17M$ (ICO 2017)",
+        "backers": [
+          "Interchain Foundation",
+          "Paradigm (indirect via dYdX)",
+          "1confirmation"
+        ]
+      },
+      "risks": [
+        "Capture de valeur faible : ATOM beneficie peu du succes des chaines de l'ecosysteme",
+        "Gouvernance fragmentee, plusieurs propositions de 'ATOM 2.0' rejetees",
+        "Forte inflation (jusqu'a 20% historique, reduite par la communaute en 2024)"
+      ],
+      "useCase": "Hub d'interoperabilite IBC, staking, securite partagee (Interchain Security), gouvernance",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://cosmos.network",
+      "monitoringSignals": [
+        "Volume de transferts IBC mensuels (mapofzones.com)",
+        "Nombre de chaines utilisant Interchain Security",
+        "Activite GitHub du Cosmos SDK et CometBFT"
+      ]
+    },
+    {
+      "rank": 13,
+      "id": "sui",
+      "name": "Sui",
+      "symbol": "SUI",
+      "coingeckoId": "sui",
+      "marketCapRange": "8Md$ - 18Md$",
+      "yearCreated": 2023,
+      "category": "Layer 1 / Smart contracts",
+      "tagline": "La blockchain orientee objets concue par les ex-architectes du projet Diem de Meta",
+      "what": "Sui est une blockchain Layer 1 fondee par Mysten Labs, equipe issue du projet Diem (ex-Libra) de Meta. Elle utilise le langage Move et un modele 'orient objet' qui permet d'executer en parallele des transactions independantes, atteignant des debits tres eleves.",
+      "whyHiddenGem": "Architecture technique innovante adoptee par le gaming Web3 et la DeFi haute frequence. Croissance rapide en TVL et utilisateurs en 2024-2025. Onboarding facilite via zkLogin (connexion Google/Apple sans seed phrase).",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OtterSec",
+          "Zellic",
+          "Halborn"
+        ],
+        "lastAuditDate": "2025-10",
+        "yearsActive": 3,
+        "majorIncidents": "Halt reseau bref en novembre 2024 (correctif applique en 2h). Controverse sur la distribution initiale jugee trop concentree (insiders et VCs).",
+        "fundingRaised": "336M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "FTX Ventures (impacte par faillite)",
+          "Binance Labs",
+          "Coinbase Ventures",
+          "Jump Crypto"
+        ]
+      },
+      "risks": [
+        "Forte concentration des tokens entre fondateurs et VCs : deblocages massifs jusqu'en 2030",
+        "Jeunesse du projet : moins de 3 ans en mainnet, recul limite sur la robustesse",
+        "Lien historique avec FTX (ex-investisseur), risque de pression vendeuse via la liquidation"
+      ],
+      "useCase": "Gaming on-chain, DeFi haute frequence, NFT dynamiques, social Web3, paiements",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://sui.io",
+      "monitoringSignals": [
+        "TPS reel sur suiscan.xyz et nombre de transactions quotidiennes",
+        "TVL DeFi sur DefiLlama (objectif >1Md$ stable)",
+        "Calendrier de deblocage des tokens insiders (token.unlocks.app)"
+      ]
+    },
+    {
+      "rank": 14,
+      "id": "aptos",
+      "name": "Aptos",
+      "symbol": "APT",
+      "coingeckoId": "aptos",
+      "marketCapRange": "3Md$ - 8Md$",
+      "yearCreated": 2022,
+      "category": "Layer 1 / Smart contracts",
+      "tagline": "L'autre heritier du projet Diem de Meta, en concurrence frontale avec Sui",
+      "what": "Aptos est une blockchain Layer 1 fondee par Aptos Labs, autre equipe issue du projet Diem de Meta. Elle utilise aussi le langage Move mais avec une architecture differente de Sui (modele compte). Vise des transactions paralleles (Block-STM) et une latence sub-seconde.",
+      "whyHiddenGem": "Partenariats institutionnels notables (Microsoft, Mastercard, Franklin Templeton). Adoption en Asie (Coree, Japon) particulierement forte. Fondation Aptos active dans les programmes RWA (Real World Assets).",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "OtterSec",
+          "Zellic"
+        ],
+        "lastAuditDate": "2025-08",
+        "yearsActive": 4,
+        "majorIncidents": "Aucun hack. Critiques sur la centralisation (peu de validateurs au lancement, distribution token tres concentree insiders/VCs).",
+        "fundingRaised": "400M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "FTX Ventures (impacte)",
+          "Multicoin Capital",
+          "Binance Labs",
+          "Jump Crypto"
+        ]
+      },
+      "risks": [
+        "Tokenomics tres dilutifs : plus de 50% de la supply detenue initialement par insiders et fondation",
+        "Concurrence directe et permanente avec Sui sur le meme positionnement Move",
+        "TVL en stagnation depuis 2024 malgre les annonces partenariats"
+      ],
+      "useCase": "Smart contracts haute performance, RWA, paiements institutionnels, gaming, DeFi",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://aptosfoundation.org",
+      "monitoringSignals": [
+        "TVL DeFi sur DefiLlama et nombre d'utilisateurs actifs",
+        "Calendrier de deblocage des tokens (token.unlocks.app)",
+        "Adoption RWA et nombre de partenariats institutionnels concretises"
+      ]
+    },
+    {
+      "rank": 15,
+      "id": "hedera",
+      "name": "Hedera",
+      "symbol": "HBAR",
+      "coingeckoId": "hedera-hashgraph",
+      "marketCapRange": "5Md$ - 12Md$",
+      "yearCreated": 2019,
+      "category": "Layer 1 / DLT enterprise",
+      "tagline": "La DLT enterprise gouvernee par Google, IBM, Boeing et 30+ multinationales",
+      "what": "Hedera n'est pas une blockchain classique mais un DLT (Distributed Ledger) base sur l'algorithme Hashgraph (consensus aBFT). Elle est gouvernee par un Conseil de 39 membres (Google, IBM, Boeing, LG, Standard Bank, Deutsche Telekom...) qui gerent les noeuds.",
+      "whyHiddenGem": "Adoption enterprise reelle (tokenisation par Standard Bank, identite par Avery Dennison). Frais ultra-bas (0.0001$). Fait partie des rares blockchains conformes a la reglementation US et MiCA. Carbon negative officiellement.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Carnegie Mellon (academique)",
+          "FormVerified (verification formelle)"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 7,
+        "majorIncidents": "Exploit du Smart Contract Service en mars 2023 (51M$ de tokens compromis sur DEXs partenaires), reseau pause 12h le temps du correctif. Aucun fonds utilisateur perdu.",
+        "fundingRaised": "124M$ (vente initiale) + Hedera Treasury",
+        "backers": [
+          "Hedera Governing Council (Google, IBM, Boeing, LG, Deutsche Telekom...)"
+        ]
+      },
+      "risks": [
+        "Modele permissionne : seuls 39 membres du Council gerent les noeuds (decentralisation limitee)",
+        "Brevets historiques sur Hashgraph detenus par Hedera (perception 'pas vraiment ouvert')",
+        "Concurrence des chains permissionees (Quorum, Corda) cote enterprise"
+      ],
+      "useCase": "Tokenisation enterprise, micropaiements, supply chain, identite, RWA, audit logs",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://hedera.com",
+      "monitoringSignals": [
+        "Nombre de transactions quotidiennes sur HashScan (objectif >5M/jour)",
+        "Nouveaux membres du Governing Council et rotation",
+        "Adoption RWA (tokenisation reelle on-chain par les membres)"
+      ]
+    },
+    {
+      "rank": 16,
+      "id": "stellar",
+      "name": "Stellar",
+      "symbol": "XLM",
+      "coingeckoId": "stellar",
+      "marketCapRange": "5Md$ - 14Md$",
+      "yearCreated": 2014,
+      "category": "Layer 1 / Paiements",
+      "tagline": "Le rail de paiement crypto pour les remises et la finance inclusive",
+      "what": "Stellar est une blockchain Layer 1 specialisee dans les paiements transfrontaliers et l'emission d'actifs (stablecoins, monnaies tokenisees). Cofondee par Jed McCaleb (cofondateur de Ripple), elle vise les zones bancarisees insuffisamment.",
+      "whyHiddenGem": "Partenariats reels avec MoneyGram, Circle (USDC natif sur Stellar), Franklin Templeton (fonds tokenise BENJI). Frais quasi nuls (<0.001$). Lancement de Soroban (smart contracts) en 2024 a relance l'ecosysteme dev.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "NCC Group"
+        ],
+        "lastAuditDate": "2025-05",
+        "yearsActive": 12,
+        "majorIncidents": "Bug d'inflation en 2017 ayant cree 2.25Md XLM excedentaires (correctif applique, surplus brule). Aucun incident depuis.",
+        "fundingRaised": "39M$ (Stellar Development Foundation, dotation initiale)",
+        "backers": [
+          "Stellar Development Foundation (non-profit)",
+          "Stripe (don initial 3M$)"
+        ]
+      },
+      "risks": [
+        "Concentration de XLM detenue historiquement par la SDF (fondation), bien que reduite",
+        "Concurrence frontale de Ripple (XRP) sur le meme creneau paiements",
+        "Adoption Soroban encore modeste vs ecosystemes EVM/Solana"
+      ],
+      "useCase": "Remittances internationales, stablecoins (USDC), tokenisation d'actifs, micropaiements, smart contracts Soroban",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://stellar.org",
+      "monitoringSignals": [
+        "Volume USDC sur Stellar (Circle reporting)",
+        "Nombre de paiements MoneyGram on-chain",
+        "Croissance des contrats Soroban deployes"
+      ]
+    },
+    {
+      "rank": 17,
+      "id": "algorand",
+      "name": "Algorand",
+      "symbol": "ALGO",
+      "coingeckoId": "algorand",
+      "marketCapRange": "1Md$ - 3Md$",
+      "yearCreated": 2019,
+      "category": "Layer 1 / Smart contracts",
+      "tagline": "Le Layer 1 academique fonde par le prix Turing Silvio Micali",
+      "what": "Algorand est une blockchain Layer 1 fondee par Silvio Micali, professeur du MIT et laureat du Prix Turing (Nobel d'informatique). Elle utilise un consensus Pure Proof-of-Stake avec finalite instantanee et zero fork. Carbon negative officiellement.",
+      "whyHiddenGem": "Bases scientifiques tres solides (preuves cryptographiques formelles). Adoption institutionnelle au Salvador, en Italie (FIDA Sostenibile), aux EAU (banque centrale). Eligible MiCA et utilisee pour des CBDC pilotes.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "NCC Group",
+          "Trail of Bits",
+          "Halborn"
+        ],
+        "lastAuditDate": "2025-06",
+        "yearsActive": 7,
+        "majorIncidents": "Aucun hack ni halt majeur. Critiques sur le calendrier d'allocation tokens (insiders/fondation) qui a pese sur le prix 2021-2023.",
+        "fundingRaised": "122M$ + ICO 2019",
+        "backers": [
+          "Algorand Foundation",
+          "Union Square Ventures",
+          "Pillar Venture Capital"
+        ]
+      },
+      "risks": [
+        "Concurrence ferme des Layer 1 plus 'hype' (Sui, Aptos) sur le segment performance",
+        "Croissance d'ecosysteme ralentie depuis 2022 malgre les fondamentaux solides",
+        "Dependance a la Algorand Foundation pour les subventions de developpement"
+      ],
+      "useCase": "CBDC, tokenisation d'actifs reglementes, paiements, identite, jeux a frais bas, RWA",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://algorand.co",
+      "monitoringSignals": [
+        "Adoption institutionnelle et CBDC pilotes",
+        "TVL DeFi sur DefiLlama (objectif >200M$)",
+        "Activite developpeur (commits, dApps deployees)"
+      ]
+    },
+    {
+      "rank": 18,
+      "id": "tezos",
+      "name": "Tezos",
+      "symbol": "XTZ",
+      "coingeckoId": "tezos",
+      "marketCapRange": "600M$ - 1.5Md$",
+      "yearCreated": 2018,
+      "category": "Layer 1 / Smart contracts",
+      "tagline": "La blockchain auto-evolutive privilegiee par les institutions et l'art digital",
+      "what": "Tezos est une blockchain Layer 1 capable de se mettre a jour elle-meme via un mecanisme de gouvernance on-chain (sans hard fork). Elle utilise le langage Michelson et OCaml pour des smart contracts verifiables formellement.",
+      "whyHiddenGem": "Adoption par le luxe (LVMH via plateforme Aura), le sport (Manchester United, Red Bull Racing), la BCE (pilote CBDC numerique). Plusieurs upgrades majeurs (Mumbai, Nairobi, Oxford) sans interruption. Etheriumlink Etherlink (rollup EVM) lance en 2024.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Nomadic Labs (peer review)",
+          "Inria (academique)"
+        ],
+        "lastAuditDate": "2025-04",
+        "yearsActive": 8,
+        "majorIncidents": "Disputes legales 2017-2018 entre cofondateurs (Breitman) et la Tezos Foundation (resolues). Aucun incident technique majeur.",
+        "fundingRaised": "232M$ (ICO 2017)",
+        "backers": [
+          "Tezos Foundation (Suisse)",
+          "Polychain Capital",
+          "Draper Associates (Tim Draper)"
+        ]
+      },
+      "risks": [
+        "Volume on-chain et activite developpeur en declin relatif depuis 2022",
+        "Token XTZ sous-performant vs marche depuis 2 ans",
+        "Concurrence des L1 plus modernes pour les smart contracts NFT"
+      ],
+      "useCase": "NFT (TzKT, fxhash, art digital), gouvernance on-chain, RWA institutionnels, CBDC, smart contracts verifies formellement",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitget",
+        "Bybit"
+      ],
+      "officialUrl": "https://tezos.com",
+      "monitoringSignals": [
+        "Volume des transactions Etherlink (rollup EVM)",
+        "Nombre de propositions on-chain votees par cycle",
+        "Adoption institutionnelle (annonces marques, banques centrales)"
+      ]
+    },
+    {
+      "rank": 19,
+      "id": "internet-computer",
+      "name": "Internet Computer",
+      "symbol": "ICP",
+      "coingeckoId": "internet-computer",
+      "marketCapRange": "3Md$ - 8Md$",
+      "yearCreated": 2021,
+      "category": "Layer 1 / Cloud decentralise",
+      "tagline": "Le 'cloud decentralise' qui heberge sites et applications full on-chain",
+      "what": "Internet Computer (ICP) est une blockchain developpee par la fondation suisse DFINITY. Elle permet d'heberger des applications web complettes (frontend + backend) directement on-chain, sans serveur traditionnel, via des 'canisters' (smart contracts persistents).",
+      "whyHiddenGem": "Capacite technique unique : sites web et apps 100% on-chain, Chain Key (integration Bitcoin/Ethereum native sans bridge). Equipe academique d'elite (Dominic Williams, Jan Camenisch, Andreas Rossberg). HTTPS outcalls et threshold ECDSA sont reellement innovants.",
+      "reliability": {
+        "score": 6.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "NCC Group"
+        ],
+        "lastAuditDate": "2025-03",
+        "yearsActive": 5,
+        "majorIncidents": "Forte controverse au lancement (Genesis mai 2021) : token chute de 700$ a moins de 30$ en quelques mois, accusations de dump par les insiders et la fondation, plusieurs class actions aux US (rejetees ou setllees). Aucun hack technique majeur depuis.",
+        "fundingRaised": "195M$ (DFINITY Foundation)",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Polychain Capital",
+          "Aspect Ventures",
+          "Multicoin Capital"
+        ]
+      },
+      "risks": [
+        "Reputation entachee par la controverse Genesis 2021 (perte de confiance investisseurs)",
+        "Tokenomics complexes (neurons, 8-year staking) difficiles a comprendre",
+        "Centralisation perceptive : la DFINITY Foundation reste le principal contributeur de code"
+      ],
+      "useCase": "Hebergement web on-chain, dApps SocialFi (OpenChat, DSCVR), integration Bitcoin/Ethereum sans bridge, IA on-chain",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://internetcomputer.org",
+      "monitoringSignals": [
+        "Nombre de canisters actifs et croissance des dApps (dashboard.internetcomputer.org)",
+        "Volume des HTTPS outcalls et integrations BTC/ETH",
+        "Activite de gouvernance (NNS proposals votees)"
+      ]
+    },
+    {
+      "rank": 20,
+      "id": "toncoin",
+      "name": "Toncoin",
+      "symbol": "TON",
+      "coingeckoId": "the-open-network",
+      "marketCapRange": "8Md$ - 20Md$",
+      "yearCreated": 2021,
+      "category": "Layer 1 / Smart contracts",
+      "tagline": "La blockchain integree a Telegram et ses 950M d'utilisateurs",
+      "what": "TON (The Open Network) est une blockchain Layer 1 initialement developpee par Telegram en 2018 puis abandonnee suite a un proces SEC (2020). Elle a ete reprise par la communaute open-source (TON Foundation) et est integree nativement dans l'app Telegram via wallets et mini-apps.",
+      "whyHiddenGem": "Distribution naturelle via Telegram (950M users, dont 100M+ exposés a TON via mini-apps comme Notcoin, Hamster Kombat). Architecture sharded performante. Soutien explicite de Pavel Durov bien que Telegram et TON Foundation soient juridiquement separes.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "CertiK",
+          "SlowMist",
+          "Halborn"
+        ],
+        "lastAuditDate": "2025-09",
+        "yearsActive": 5,
+        "majorIncidents": "Proces SEC 2020 contre Telegram (1.7Md$ a rembourser, projet abandonne par Telegram). Arrestation de Pavel Durov en France (aout 2024) a fait chuter TON de 30%. Aucun hack reseau majeur.",
+        "fundingRaised": "1.7Md$ (ICO 2018, rembourse par Telegram), reprise communautaire ensuite",
+        "backers": [
+          "TON Foundation",
+          "Pantera Capital",
+          "Animoca Brands",
+          "Mirana Ventures"
+        ]
+      },
+      "risks": [
+        "Risque reglementaire lie a Telegram (affaire Durov, pression FR/UE sur la moderation)",
+        "Concentration des wallets actifs sur quelques mini-apps virales (rotation rapide)",
+        "Distribution initiale opaque (heritage du fork de la blockchain Telegram abandonnee)"
+      ],
+      "useCase": "Mini-apps Telegram, paiements in-app, NFT (.ton domains), GameFi, stablecoins (USDT TON)",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX"
+      ],
+      "officialUrl": "https://ton.org",
+      "monitoringSignals": [
+        "Nombre d'utilisateurs actifs des mini-apps Telegram (Notcoin, Hamster, etc.)",
+        "Volume USDT circulant sur TON",
+        "Statut juridique de Pavel Durov et evolution reglementaire Telegram en UE"
+      ]
+    },
+    {
+      "rank": 21,
+      "id": "sei",
+      "name": "Sei",
+      "symbol": "SEI",
+      "coingeckoId": "sei-network",
+      "marketCapRange": "800M$ - 2.5Md$",
+      "yearCreated": 2023,
+      "category": "Layer 1 / Trading optimise",
+      "tagline": "Le Layer 1 specialise pour le trading on-chain ultra-rapide",
+      "what": "Sei est une blockchain Layer 1 optimisee pour les applications de trading (DEX, perpetuals, order books on-chain). Elle utilise un consensus Twin-Turbo et un parallelisme natif. La V2 (decembre 2023) a ajoute la compatibilite EVM en plus du Cosmos SDK.",
+      "whyHiddenGem": "Architecture techniquement pertinente pour le trading ordre carnet on-chain (alternative a Solana et Injective). Adoption progressive par des DEX (Astroport, Levana). Equipe issue de Robinhood et Goldman Sachs.",
+      "reliability": {
+        "score": 6.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "OtterSec",
+          "Zellic"
+        ],
+        "lastAuditDate": "2025-08",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun hack ni halt majeur. Critiques au lancement sur la concentration des airdrops et la presence d'insiders precoces.",
+        "fundingRaised": "120M$",
+        "backers": [
+          "Multicoin Capital",
+          "Jump Crypto",
+          "Coinbase Ventures",
+          "Distributed Global",
+          "Delphi Digital"
+        ]
+      },
+      "risks": [
+        "Projet jeune (moins de 3 ans en mainnet) : recul tres limite",
+        "Concurrence directe de Solana, Injective, Hyperliquid sur le segment trading on-chain",
+        "Calendrier de deblocage des tokens VC etale jusqu'en 2027 (pression vendeuse continue)"
+      ],
+      "useCase": "DEX a carnet d'ordres, derives perpetuels, trading haute frequence, RWA",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://sei.io",
+      "monitoringSignals": [
+        "Volume DEX et nombre d'utilisateurs traders actifs",
+        "TVL DeFi sur DefiLlama",
+        "Calendrier de deblocage tokens (token.unlocks.app)"
+      ]
+    },
+    {
+      "rank": 22,
+      "id": "kaspa",
+      "name": "Kaspa",
+      "symbol": "KAS",
+      "coingeckoId": "kaspa",
+      "marketCapRange": "2Md$ - 6Md$",
+      "yearCreated": 2021,
+      "category": "Layer 1 / Proof-of-Work",
+      "tagline": "Le Proof-of-Work de nouvelle generation : la rapidite sans sacrifier la decentralisation",
+      "what": "Kaspa est une blockchain Layer 1 Proof-of-Work qui utilise le protocole GhostDAG (un DAG, pas une chaine lineaire) permettant 1 bloc par seconde et plusieurs milliers de TPS, tout en conservant la securite du PoW. Pas de prevente, pas d'ICO, pas d'allocation insiders.",
+      "whyHiddenGem": "Lance en 'fair launch' integral (sans premine, sans VC) comme Bitcoin. Conception academique solide par Yonatan Sompolinsky (auteur du protocole GHOST cite dans le whitepaper Ethereum). Supply fixe (28.7Md KAS, emission deflationniste).",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Audit communautaire (pas de cabinet officiel public)"
+        ],
+        "lastAuditDate": "n/a",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun hack majeur. Critiques sur l'absence d'audits formels par cabinets externes reconnus.",
+        "fundingRaised": "0$ (fair launch, pas de prevente)",
+        "backers": [
+          "Communaute uniquement (pas de VC)"
+        ]
+      },
+      "risks": [
+        "Pas d'audits de cabinets de securite reconnus (Trail of Bits, Halborn...)",
+        "Ecosysteme dApps tres limite (pas de smart contracts sophistiques avant Crescendo/EVM L2 prevu)",
+        "Acces limite sur les CEX MiCA majeurs en France (souvent absent ou restreint)"
+      ],
+      "useCase": "Paiements PoW rapides, store of value alternatif, future couche smart contracts (KRC-20, EVM L2 en developpement)",
+      "whereToBuy": [
+        "Kraken",
+        "Bitget",
+        "MEXC",
+        "Kucoin"
+      ],
+      "officialUrl": "https://kaspa.org",
+      "monitoringSignals": [
+        "Hashrate du reseau Kaspa (kas.fyi)",
+        "Nombre d'adresses actives quotidiennes",
+        "Avancement des smart contracts L2 (Crescendo, EVM)"
+      ]
+    },
+    {
+      "rank": 23,
+      "id": "monero",
+      "name": "Monero",
+      "symbol": "XMR",
+      "coingeckoId": "monero",
+      "marketCapRange": "3Md$ - 7Md$",
+      "yearCreated": 2014,
+      "category": "Privacy / Layer 1",
+      "tagline": "La crypto privee de reference : transactions confidentielles par defaut",
+      "what": "Monero est une blockchain Proof-of-Work axee sur la confidentialite. Toutes les transactions sont privees par defaut (montants, expediteurs, destinataires masques) grace a trois technologies combinees : Ring Signatures, Stealth Addresses et RingCT. Fair launch en 2014, sans premine.",
+      "whyHiddenGem": "Reference absolue de la privacy crypto. Communaute developpeur tres engagee, gouvernance decentralisee. Resistance prouvee aux attaques (deanonymisation IRS Chainalysis encore non confirmee). ASIC-resistant (algo RandomX).",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Kudelski Security",
+          "QuarksLab",
+          "Trail of Bits (audits historiques)"
+        ],
+        "lastAuditDate": "2024-02",
+        "yearsActive": 12,
+        "majorIncidents": "Bug d'inflation 2017 corrige avant exploitation. Attaques mineures de spam transactionnel (resolues). Aucun hack majeur du protocole.",
+        "fundingRaised": "0$ (fair launch, pas de prevente)",
+        "backers": [
+          "Communaute (Monero Community Crowdfunding System)"
+        ]
+      },
+      "risks": [
+        "DELISTAGE GENERALISE depuis 2024 : Binance, Kraken (US), OKX, Coinbase, Bitstamp ne listent plus XMR en UE/USA pour cause MiCA et reglementation AML",
+        "Risque reglementaire majeur : interdiction probable dans plusieurs pays (deja le cas en Coree, Japon)",
+        "Acces tres restreint pour particuliers FR via plateformes regulees : a privilegier DEX ou plateformes hors UE"
+      ],
+      "useCase": "Paiements confidentiels, protection vie privee financiere, store of value resistant a la censure",
+      "whereToBuy": [
+        "Kraken (hors UE uniquement)",
+        "TradeOgre",
+        "Cake Wallet (P2P)",
+        "DEX atomic swaps"
+      ],
+      "officialUrl": "https://www.getmonero.org",
+      "monitoringSignals": [
+        "Hashrate du reseau (RandomX) sur miningpoolstats.stream",
+        "Nombre de transactions on-chain quotidiennes",
+        "Evolution reglementaire MiCA et delistages additionnels"
+      ]
+    },
+    {
+      "rank": 24,
+      "id": "litecoin",
+      "name": "Litecoin",
+      "symbol": "LTC",
+      "coingeckoId": "litecoin",
+      "marketCapRange": "5Md$ - 12Md$",
+      "yearCreated": 2011,
+      "category": "Layer 1 / Paiements PoW",
+      "tagline": "L'argent face a l'or de Bitcoin : la crypto de paiement la plus ancienne et stable",
+      "what": "Litecoin est un fork de Bitcoin cree en 2011 par Charlie Lee (ex-Google, ex-Coinbase). Il vise les transactions plus rapides (bloc toutes les 2.5 minutes vs 10 pour BTC) et moins coûteuses. Supply fixe de 84M LTC. A integre MimbleWimble (MWEB) en 2022 pour des transactions optionnellement privees.",
+      "whyHiddenGem": "Une des cryptos les plus anciennes et stables, sans hack majeur en 14 ans. Adoption marchande reelle via BitPay, plus de 2000 commercants. MimbleWimble a relance l'interet privacy. ASIC-mineable mais decentralise.",
+      "reliability": {
+        "score": 9,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Audits communautaires (code derive de Bitcoin Core)"
+        ],
+        "lastAuditDate": "n/a (revues continues code Bitcoin)",
+        "yearsActive": 14,
+        "majorIncidents": "Aucun hack du protocole. Attaque 51% theoriquement faisable mais jamais reussie. Un faux communique sur Walmart en 2021 a temporairement fait monter puis chuter LTC.",
+        "fundingRaised": "0$ (fair launch, pas de prevente, pas d'ICO)",
+        "backers": [
+          "Litecoin Foundation (non-profit)"
+        ]
+      },
+      "risks": [
+        "Quelques delistages partiels en UE post-MiCA suite au support MWEB (privacy optionnelle)",
+        "Recit 'argent vs or' affaibli depuis l'arrivee des stablecoins comme moyen de paiement",
+        "Innovation lente vs concurrents (peu d'evolutions majeures depuis MWEB en 2022)"
+      ],
+      "useCase": "Paiements quotidiens, remittances, store of value alternatif, transactions privees optionnelles (MWEB)",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://litecoin.org",
+      "monitoringSignals": [
+        "Hashrate Scrypt du reseau",
+        "Adoption commercants via BitPay et processeurs paiement",
+        "Volume transactions MWEB vs transactions standard"
+      ]
+    },
+    {
+      "rank": 25,
+      "id": "bitcoin-cash",
+      "name": "Bitcoin Cash",
+      "symbol": "BCH",
+      "coingeckoId": "bitcoin-cash",
+      "marketCapRange": "5Md$ - 12Md$",
+      "yearCreated": 2017,
+      "category": "Layer 1 / Paiements PoW",
+      "tagline": "Le hard fork historique de Bitcoin pour des paiements pas chers et rapides",
+      "what": "Bitcoin Cash est un hard fork de Bitcoin survenu en aout 2017, ne du desaccord sur la taille des blocs. BCH a augmente la taille des blocs (32 MB vs 1-4 MB pour BTC) afin de permettre plus de transactions a moindre cout, au prix d'une decentralisation reduite des noeuds.",
+      "whyHiddenGem": "Reseau historique avec 8 ans de fonctionnement sans hack du protocole. Frais reellement minimes (<0.01$). Smart contracts CashScript et CashTokens (2023) ont ouvert des cas d'usage NFT et tokens. Adoption significative en Amerique Latine (Bitcoin.com).",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Audits communautaires (heritage code Bitcoin Core)"
+        ],
+        "lastAuditDate": "n/a",
+        "yearsActive": 9,
+        "majorIncidents": "Hard fork BCH/BSV en novembre 2018 (chain split) qui a divise la communaute. Pas de hack du protocole. Volatilite reputationnelle liee a Roger Ver.",
+        "fundingRaised": "0$ (fork, pas d'ICO)",
+        "backers": [
+          "Communaute (Bitcoin Cash Node, BCHD developers)"
+        ]
+      },
+      "risks": [
+        "Communaute fragmentee (multiples forks : BSV, eCash) qui dilue l'attention",
+        "Hashrate inferieur a BTC : risque theorique d'attaque 51% plus eleve",
+        "Recit paiements concurrence par Lightning Network sur BTC et stablecoins"
+      ],
+      "useCase": "Paiements peer-to-peer a frais bas, micropaiements, CashTokens (NFT et tokens natifs), smart contracts CashScript",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://bitcoincash.org",
+      "monitoringSignals": [
+        "Hashrate SHA-256 partage avec BTC",
+        "Volume CashTokens et adoption smart contracts",
+        "Adoption marchande (notamment Amerique Latine)"
+      ]
+    },
+    {
+      "rank": 26,
+      "id": "zcash",
+      "name": "Zcash",
+      "symbol": "ZEC",
+      "coingeckoId": "zcash",
+      "marketCapRange": "300M$ - 1Md$",
+      "yearCreated": 2016,
+      "category": "Privacy / Layer 1",
+      "tagline": "La privacy par zk-SNARKs : transactions optionnellement confidentielles",
+      "what": "Zcash est une blockchain Proof-of-Work qui utilise les zk-SNARKs (preuves a divulgation nulle) pour offrir des transactions privees optionnelles. Deux types d'adresses : transparentes (t-addr, comme BTC) et blindees (z-addr, totalement chiffrees). Fork du code Bitcoin avec ajout cryptographique avance.",
+      "whyHiddenGem": "Recherche cryptographique de pointe (Electric Coin Company, Zcash Foundation, MIT, Technion). Inspiration directe pour les rollups ZK actuels (zkSync, StarkNet). Migration vers Proof-of-Stake en cours via Crosslink/Halo 2.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "NCC Group",
+          "Trail of Bits",
+          "Least Authority"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 10,
+        "majorIncidents": "Bug d'inflation potentielle decouvert en 2018 (corrige discretement avant exploitation - 'Counterfeiting Vulnerability'). Aucun fonds perdu, mais episode controverse sur la divulgation tardive.",
+        "fundingRaised": "3M$ (financement initial) + Founder's Reward / Dev Fund",
+        "backers": [
+          "Electric Coin Company (ECC)",
+          "Zcash Foundation",
+          "Pantera Capital",
+          "Digital Currency Group"
+        ]
+      },
+      "risks": [
+        "DELISTAGE generalise depuis 2024 : Binance, OKX, Bitstamp ne listent plus ZEC en UE pour cause MiCA",
+        "Tres faible utilisation des transactions privees (z-addrs) : <5% du volume",
+        "Cermonie de setup initiale (Powers of Tau) historiquement controversee (trust assumption)"
+      ],
+      "useCase": "Transactions privees optionnelles, recherche cryptographique zk, paiements confidentiels",
+      "whereToBuy": [
+        "Kraken (hors UE)",
+        "Gemini",
+        "Bitfinex"
+      ],
+      "officialUrl": "https://z.cash",
+      "monitoringSignals": [
+        "Pourcentage de transactions blindees (z-addr) vs transparentes",
+        "Avancement de la transition Proof-of-Stake (Crosslink)",
+        "Evolution reglementaire MiCA et delistages additionnels"
+      ]
+    },
+    {
+      "rank": 27,
+      "id": "dash",
+      "name": "Dash",
+      "symbol": "DASH",
+      "coingeckoId": "dash",
+      "marketCapRange": "200M$ - 600M$",
+      "yearCreated": 2014,
+      "category": "Layer 1 / Paiements semi-prives",
+      "tagline": "Le 'digital cash' avec InstantSend et PrivateSend, focus paiements quotidiens",
+      "what": "Dash (anciennement Darkcoin) est un fork de Bitcoin lance en 2014. Il propose des transactions instantanees (InstantSend via masternodes) et un melange optionnel de transactions (PrivateSend, base sur CoinJoin). Premiere crypto avec un systeme de gouvernance on-chain et de tresorerie auto-financee.",
+      "whyHiddenGem": "Adoption marchande historique au Venezuela, en Colombie, au Nigeria (paiements alternatifs en zone d'inflation). Reseau de masternodes (1000 DASH minimum) qui finance le developpement. Long historique sans hack majeur.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Audits communautaires (code derive de Bitcoin Core)"
+        ],
+        "lastAuditDate": "n/a",
+        "yearsActive": 12,
+        "majorIncidents": "Premine controverse au lancement (1.9M DASH crees en 2 jours, ~10% supply) admis par le fondateur Evan Duffield (bug de difficulty). Aucun hack technique majeur.",
+        "fundingRaised": "Tresorerie auto-financee via le reseau (10% des recompenses bloc)",
+        "backers": [
+          "Dash Core Group",
+          "Dash Investment Foundation"
+        ]
+      },
+      "risks": [
+        "DELISTAGE generalise depuis 2024 : Binance, OKX, Bitstamp ne listent plus DASH en UE pour cause MiCA (PrivateSend)",
+        "Cas d'usage paiements concurrence par stablecoins (USDT, USDC) en Amerique Latine",
+        "Activite developpeur en declin relatif depuis 2020"
+      ],
+      "useCase": "Paiements quotidiens (Amerique Latine, Afrique), transactions instantanees, mixing optionnel (PrivateSend)",
+      "whereToBuy": [
+        "Kraken (hors UE)",
+        "Bitfinex",
+        "Bitstamp (selon juridiction)"
+      ],
+      "officialUrl": "https://www.dash.org",
+      "monitoringSignals": [
+        "Nombre de masternodes actifs (objectif >3000)",
+        "Adoption commercants en Amerique Latine et Afrique",
+        "Evolution reglementaire MiCA et delistages additionnels"
+      ]
+    },
+    {
+      "rank": 28,
+      "id": "secret-network",
+      "name": "Secret Network",
+      "symbol": "SCRT",
+      "coingeckoId": "secret",
+      "marketCapRange": "30M$ - 150M$",
+      "yearCreated": 2020,
+      "category": "Privacy / Smart contracts",
+      "tagline": "Les smart contracts confidentiels grace au calcul dans des enclaves securisees",
+      "what": "Secret Network est une blockchain de l'ecosysteme Cosmos qui execute des smart contracts confidentiels. Les donnees (etats, entrees, sorties) sont chiffrees et traitees dans des enclaves materielles securisees (TEE, principalement Intel SGX), permettant des dApps preservant la vie privee.",
+      "whyHiddenGem": "Approche unique des smart contracts prives par TEE plutot que par cryptographie pure (zk). Cas d'usage interessants : NFT prives, vote confidentiel, DeFi privee. Compatible IBC avec le reste de l'ecosysteme Cosmos.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "Informal Systems"
+        ],
+        "lastAuditDate": "2024-12",
+        "yearsActive": 6,
+        "majorIncidents": "Vulnerabilite 'xAPIC/AEPIC Leak' affectant les TEE Intel SGX revelee en 2022 a impacte la garantie de confidentialite (correctifs deployes). Aucun hack direct du reseau.",
+        "fundingRaised": "11.5M$",
+        "backers": [
+          "Arrington Capital",
+          "Hashed",
+          "CoinFund",
+          "Spartan Group"
+        ]
+      },
+      "risks": [
+        "Securite dependante du materiel Intel SGX : si SGX est compromis, la confidentialite l'est aussi",
+        "Acces tres restreint sur les CEX UE post-MiCA (privacy)",
+        "Cap de marche tres faible : risque de liquidite et de volatilite extreme"
+      ],
+      "useCase": "Smart contracts prives, NFT confidentiels, vote on-chain anonyme, DeFi privee, identite",
+      "whereToBuy": [
+        "Kraken (selon juridiction)",
+        "MEXC",
+        "Gate.io"
+      ],
+      "officialUrl": "https://scrt.network",
+      "monitoringSignals": [
+        "Nombre de dApps actives sur scrt.network",
+        "Mises a jour de securite des TEE Intel SGX",
+        "Volume de transactions confidentielles vs transparentes"
+      ]
+    },
+    {
+      "rank": 29,
+      "id": "polygon",
+      "name": "Polygon",
+      "symbol": "POL",
+      "coingeckoId": "matic-network",
+      "marketCapRange": "2Md$ - 6Md$",
+      "yearCreated": 2020,
+      "category": "Layer 2 Ethereum / Multi-chain",
+      "tagline": "L'ecosysteme multi-chaines Ethereum, du PoS aux ZK-rollups",
+      "what": "Polygon est un ecosysteme de scaling Ethereum qui regroupe plusieurs chaines : Polygon PoS (sidechain historique), zkEVM (rollup ZK), Polygon CDK (kit pour app-chains ZK), et l'AggLayer (couche d'aggregation cross-chain). Le token MATIC a ete migre vers POL en 2024 pour devenir le token unifie de tout l'ecosysteme.",
+      "whyHiddenGem": "L'un des Layer 2 les plus utilises avec Arbitrum et Base. Adoption enterprise massive : Starbucks, Nike, Reddit, Disney y ont deploye des NFT/loyalty. Strategie 'Polygon 2.0' axee sur l'agregation ZK est ambitieuse.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "Trail of Bits",
+          "Hexens",
+          "Spearbit"
+        ],
+        "lastAuditDate": "2025-09",
+        "yearsActive": 6,
+        "majorIncidents": "Bug critique decouvert en decembre 2021 sur Polygon PoS (3.8Md MATIC en risque), corrige en silence avec un hard fork (controverse sur le manque de transparence). Hack de Galaxy Pool 2022 (mineur). Aucun fonds utilisateur perdu.",
+        "fundingRaised": "450M$ (incluant tour Polygon Labs 2022)",
+        "backers": [
+          "Sequoia Capital India",
+          "Tiger Global",
+          "Softbank",
+          "Galaxy Digital",
+          "Coinbase Ventures"
+        ]
+      },
+      "risks": [
+        "Concurrence intense des autres L2 (Arbitrum, Base, Optimism) qui captent plus d'activite DeFi",
+        "Migration MATIC vers POL et adoption AggLayer encore en cours, succes non garanti",
+        "Polygon PoS n'est techniquement pas un vrai L2 Ethereum (sidechain), recit parfois ambigu"
+      ],
+      "useCase": "Layer 2 Ethereum (PoS, zkEVM), NFT enterprise, jeux, paiements, RWA, AggLayer cross-chain",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://polygon.technology",
+      "monitoringSignals": [
+        "TVL DeFi sur DefiLlama (Polygon PoS + zkEVM + CDK chains)",
+        "Adoption AggLayer (chaines connectees, volume de messages)",
+        "Avancement migration MATIC -> POL (>95% deja migres mi-2025)"
+      ]
+    },
+    {
+      "rank": 30,
+      "id": "optimism",
+      "name": "Optimism",
+      "symbol": "OP",
+      "coingeckoId": "optimism",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2021,
+      "category": "Layer 2 Ethereum / Optimistic Rollup",
+      "tagline": "L'Optimistic Rollup pionnier qui alimente la Superchain de Base et OP Mainnet",
+      "what": "Optimism est un Layer 2 Ethereum de type Optimistic Rollup. Il execute les transactions hors chaine puis les ancre sur Ethereum, divisant les frais par 10 a 100x. Sa pile technique open-source (OP Stack) est utilisee par Coinbase Base, World Chain, Mode, Zora et d'autres pour former la 'Superchain'.",
+      "whyHiddenGem": "OP Stack est devenu un standard de l'ecosysteme L2 (Base, Worldcoin's World Chain, Zora utilisent tous OP Stack). Modele de revenus partage entre les chains de la Superchain et OP Mainnet. Gouvernance bicamerale (Token House + Citizens House) innovante.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "OpenZeppelin",
+          "Spearbit",
+          "Sigma Prime"
+        ],
+        "lastAuditDate": "2025-10",
+        "yearsActive": 5,
+        "majorIncidents": "Bug critique decouvert en fevrier 2022 par Jay Freeman (Saurik) - 2M$ de bounty paye. Aucun hack ni perte de fonds utilisateurs. Sequencer centralise (assume) avec roadmap de decentralisation en cours.",
+        "fundingRaised": "178M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Paradigm",
+          "IDEO CoLab",
+          "Coinbase Ventures"
+        ]
+      },
+      "risks": [
+        "Sequencer encore centralise (Optimism Foundation) : risque de censure et single point of failure",
+        "Concurrence directe d'Arbitrum (autre Optimistic Rollup, TVL plus eleve) et des ZK-rollups",
+        "Capture de valeur par OP debattue : Base (Superchain) genere bcp plus de revenus qu'OP Mainnet"
+      ],
+      "useCase": "Layer 2 Ethereum (DeFi, NFT, jeux), OP Stack pour app-chains, gouvernance Superchain, RetroPGF (financement biens publics)",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://optimism.io",
+      "monitoringSignals": [
+        "TVL combinee Superchain (DefiLlama : OP Mainnet + Base + autres)",
+        "Avancement decentralisation du sequencer (fault proofs deployes en 2024)",
+        "Revenus partages entre Superchain (Base genere 90%+)"
+      ]
+    },
+    {
+      "rank": 31,
+      "id": "uniswap",
+      "name": "Uniswap",
+      "symbol": "UNI",
+      "coingeckoId": "uniswap",
+      "marketCapRange": "5Md$ - 12Md$",
+      "yearCreated": 2018,
+      "category": "DeFi / DEX",
+      "tagline": "Le DEX historique qui a inventé le swap automatique on-chain.",
+      "what": "Uniswap est le plus grand échange décentralisé (DEX) au monde, basé sur un modèle d'Automated Market Maker (AMM). Il permet d'échanger des tokens ERC-20 sans passerelle centralisée, via des pools de liquidité fournis par les utilisateurs.",
+      "whyHiddenGem": "Volume cumulé supérieur à 2000 milliards de dollars, déploiement multi-chain (Ethereum, Base, Arbitrum, Optimism, Polygon...) et passage à V4 avec hooks personnalisables qui ouvre la voie à des AMM sur-mesure. Le débat 'fee switch' reste un catalyseur potentiel pour les détenteurs d'UNI.",
+      "reliability": {
+        "score": 9.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "ABDK Consulting",
+          "OpenZeppelin"
+        ],
+        "lastAuditDate": "2024-01",
+        "yearsActive": 8,
+        "majorIncidents": "Aucun hack majeur du protocole core ; quelques exploits de phishing front-end isolés en 2022.",
+        "fundingRaised": "176M$",
+        "backers": [
+          "a16z",
+          "Paradigm",
+          "Union Square Ventures",
+          "SV Angel"
+        ]
+      },
+      "risks": [
+        "Token UNI sans cashflow direct (fee switch non activé)",
+        "Concurrence accrue de DEX agrégateurs et de Hyperliquid sur le perp",
+        "Risque réglementaire SEC (Wells Notice 2024 abandonné mais surveillance persistante)"
+      ],
+      "useCase": "Swap de tokens, fourniture de liquidité, gouvernance protocole, déploiement multi-chain via Uniswap V4 hooks",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitstamp",
+        "Bitget"
+      ],
+      "officialUrl": "https://uniswap.org",
+      "monitoringSignals": [
+        "Volume quotidien sur Uniswap V3/V4",
+        "Avancement du fee switch via gouvernance",
+        "TVL multi-chain et adoption des hooks V4"
+      ]
+    },
+    {
+      "rank": 32,
+      "id": "aave",
+      "name": "Aave",
+      "symbol": "AAVE",
+      "coingeckoId": "aave",
+      "marketCapRange": "3Md$ - 8Md$",
+      "yearCreated": 2017,
+      "category": "DeFi / Lending",
+      "tagline": "Le protocole de prêt décentralisé qui attire les institutionnels.",
+      "what": "Aave est la principale plateforme de prêt et d'emprunt décentralisée. Les utilisateurs déposent des actifs pour générer des intérêts ou empruntent en surcollatéralisant leur position, avec liquidation automatique on-chain.",
+      "whyHiddenGem": "Adoption institutionnelle croissante via Aave Arc (KYC) et la version GHO (stablecoin natif). Aave V4 introduit une architecture modulaire avec hub central de liquidité unifié et primitives de risque dynamiques. Présence sur 12+ chaînes et plus de 25 milliards de dollars en TVL cumulée.",
+      "reliability": {
+        "score": 9.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OpenZeppelin",
+          "Trail of Bits",
+          "Certora",
+          "SigmaPrime"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 8,
+        "majorIncidents": "Bug v2 isolé sur marché Harmony en 2022 (~5M$, indemnisé), aucun exploit majeur sur le core protocol.",
+        "fundingRaised": "49M$",
+        "backers": [
+          "Three Arrows Capital (avant faillite)",
+          "ParaFi",
+          "Standard Crypto",
+          "Blockchain Capital"
+        ]
+      },
+      "risks": [
+        "Risque de liquidations en cascade lors de crashs violents",
+        "Dépréciation des stablecoins listés (cf. UST 2022 évité de justesse)",
+        "Compétition de Spark, Morpho et Euler V2"
+      ],
+      "useCase": "Prêt et emprunt crypto, génération de yield, flash loans, stablecoin GHO, déploiements RWA institutionnels",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitstamp",
+        "Bitget"
+      ],
+      "officialUrl": "https://aave.com",
+      "monitoringSignals": [
+        "TVL multi-chain et part de marché lending",
+        "Adoption du stablecoin GHO et son peg",
+        "Lancement effectif d'Aave V4 et migration"
+      ]
+    },
+    {
+      "rank": 33,
+      "id": "sky-maker",
+      "name": "Sky (ex-Maker)",
+      "symbol": "MKR",
+      "coingeckoId": "maker",
+      "marketCapRange": "1Md$ - 3Md$",
+      "yearCreated": 2017,
+      "category": "DeFi / Stablecoin & RWA",
+      "tagline": "Le pionnier du stablecoin décentralisé qui se réinvente avec Endgame.",
+      "what": "MakerDAO, rebaptisé Sky en 2024, est le protocole derrière le stablecoin DAI (et désormais USDS). Les utilisateurs verrouillent des collatéraux (ETH, RWA, USDC) pour minter du DAI/USDS, garanti par surcollatéralisation.",
+      "whyHiddenGem": "La transition Endgame restructure l'écosystème en SubDAOs spécialisés et lance les tokens SKY (ex-MKR) et USDS (ex-DAI) avec mécanique de récompenses. Plus de 50% des revenus proviennent désormais de Real-World Assets (bons du Trésor US tokenisés), modèle hybride DeFi-TradFi unique.",
+      "reliability": {
+        "score": 9,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "PeckShield",
+          "ChainSecurity",
+          "Runtime Verification"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 9,
+        "majorIncidents": "Black Thursday mars 2020 : 4M$ de bad debt couverts par dilution MKR ; aucun exploit sur smart contracts depuis.",
+        "fundingRaised": "61M$",
+        "backers": [
+          "a16z",
+          "Polychain Capital",
+          "Paradigm",
+          "Dragonfly"
+        ]
+      },
+      "risks": [
+        "Complexité de la transition Sky / Endgame qui peut perdre les utilisateurs historiques",
+        "Dépendance aux RWA et donc au cadre réglementaire US",
+        "Migration MKR -> SKY optionnelle qui crée fragmentation temporaire"
+      ],
+      "useCase": "Émission de stablecoin DAI/USDS, collatéralisation crypto et RWA, gouvernance Sky DAO, exposition tokenisée aux Treasuries US",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitstamp",
+        "Bitget"
+      ],
+      "officialUrl": "https://sky.money",
+      "monitoringSignals": [
+        "Capitalisation DAI vs USDS et adoption de la migration",
+        "Revenus issus des RWA et TVL totale",
+        "Avancement des phases Endgame (SubDAOs, NewChain)"
+      ]
+    },
+    {
+      "rank": 34,
+      "id": "lido-dao",
+      "name": "Lido DAO",
+      "symbol": "LDO",
+      "coingeckoId": "lido-dao",
+      "marketCapRange": "1Md$ - 3Md$",
+      "yearCreated": 2020,
+      "category": "DeFi / Liquid Staking",
+      "tagline": "Le leader du liquid staking ETH avec stETH comme primitive DeFi.",
+      "what": "Lido est le plus grand protocole de liquid staking sur Ethereum. Les utilisateurs déposent leur ETH et reçoivent du stETH, un token liquide qui rapporte les récompenses de staking tout en restant utilisable dans la DeFi.",
+      "whyHiddenGem": "Plus de 9 millions d'ETH stakés (~28% du staking ETH total), stETH est devenu un collatéral standard sur Aave, MakerDAO et Curve. Lido V3 introduit les stVaults pour le staking institutionnel modulaire et adresse les critiques de centralisation.",
+      "reliability": {
+        "score": 9,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Quantstamp",
+          "Sigma Prime",
+          "Certora",
+          "MixBytes"
+        ],
+        "lastAuditDate": "2024-06",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun exploit du protocole ; débat persistant sur la concentration de validateurs.",
+        "fundingRaised": "144M$",
+        "backers": [
+          "Paradigm",
+          "a16z",
+          "Coinbase Ventures",
+          "Three Arrows Capital (avant faillite)",
+          "Dragonfly"
+        ]
+      },
+      "risks": [
+        "Centralisation du staking ETH (Lido > 28% du total, débat sur seuil 33%)",
+        "Risque de slashing sur les validateurs sous-jacents",
+        "stETH peut perdre temporairement son peg en cas de stress (cf. mai 2022 -7%)"
+      ],
+      "useCase": "Liquid staking ETH/MATIC, collatéral DeFi via stETH/wstETH, gouvernance Lido DAO, infrastructure validateurs",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://lido.fi",
+      "monitoringSignals": [
+        "Part de marché Lido vs concurrents (Rocket Pool, EtherFi)",
+        "Peg stETH/ETH sur Curve",
+        "Adoption de Lido V3 stVaults institutionnels"
+      ]
+    },
+    {
+      "rank": 35,
+      "id": "pendle",
+      "name": "Pendle",
+      "symbol": "PENDLE",
+      "coingeckoId": "pendle",
+      "marketCapRange": "500M$ - 2Md$",
+      "yearCreated": 2021,
+      "category": "DeFi / Yield Trading",
+      "tagline": "La bourse du rendement on-chain : tradez le yield comme un actif.",
+      "what": "Pendle permet de séparer un actif portant intérêt en deux composants : Principal Token (PT) qui représente le capital et Yield Token (YT) qui représente les rendements futurs. On peut ainsi locker du yield fixe, spéculer sur les taux ou farmer des points.",
+      "whyHiddenGem": "Croissance explosive en 2024-2025 grâce au boom des LRT (eETH, ezETH) et aux saisons de points (EigenLayer, Ethena). TVL passée de 200M$ à plus de 5 milliards de dollars. Outil unique pour la gestion de taux on-chain, comparable à un marché obligataire DeFi.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Ackee Blockchain",
+          "WatchPug",
+          "Spearbit",
+          "Code4rena"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun exploit majeur, modèle robuste depuis 2021.",
+        "fundingRaised": "3.7M$",
+        "backers": [
+          "HashKey Capital",
+          "Mechanism Capital",
+          "Crypto.com Capital",
+          "Spartan Group"
+        ]
+      },
+      "risks": [
+        "TVL très dépendante des cycles de points et LRT (volatilité forte)",
+        "Complexité conceptuelle PT/YT qui rebute les débutants",
+        "Smart contract risk sur les pools intégrant des actifs tiers (eETH, sUSDe...)"
+      ],
+      "useCase": "Yield fixe sur stablecoins/ETH, spéculation sur les taux, farming de points avec leverage YT, hedging de rendements",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://pendle.finance",
+      "monitoringSignals": [
+        "TVL Pendle par catégorie (LST, LRT, stables)",
+        "Volume hebdomadaire et émissions vePENDLE",
+        "Rotation des saisons de points et nouvelles intégrations"
+      ]
+    },
+    {
+      "rank": 36,
+      "id": "curve-dao",
+      "name": "Curve DAO",
+      "symbol": "CRV",
+      "coingeckoId": "curve-dao-token",
+      "marketCapRange": "500M$ - 1.5Md$",
+      "yearCreated": 2020,
+      "category": "DeFi / DEX Stableswap",
+      "tagline": "L'AMM optimisé pour les stablecoins et actifs corrélés.",
+      "what": "Curve est un DEX spécialisé dans les échanges entre actifs de valeurs proches (stablecoins, dérivés ETH). Sa courbe de bonding minimise le slippage et l'impermanent loss, ce qui en fait l'infrastructure de base pour les pools de liquidité stables.",
+      "whyHiddenGem": "Modèle veCRV (vote-escrowed) pionnier qui a inspiré toute la DeFi (ve-tokenomics). Lancement de crvUSD avec mécanisme LLAMMA innovant pour des liquidations douces. Reste un pilier liquidité avec plus de 2 milliards de dollars de TVL et un wars autour des votes Convex/Curve.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Quantstamp",
+          "MixBytes",
+          "ChainSecurity"
+        ],
+        "lastAuditDate": "2024-07",
+        "yearsActive": 6,
+        "majorIncidents": "Hack juillet 2023 via vulnérabilité Vyper compiler reentrancy, ~73M$ drainés (en partie restitués) ; founder a vendu CRV en OTC pour rembourser.",
+        "fundingRaised": "Pas de levée VC significative (modèle communautaire)",
+        "backers": [
+          "Communautaire (pas de VC majeurs)"
+        ]
+      },
+      "risks": [
+        "Rappel du hack 2023 et dépendance aux compilateurs Vyper",
+        "Position personnelle leveragée du fondateur Michael Egorov (risque de force-sell)",
+        "Pression sur les émissions CRV qui pèse sur le prix"
+      ],
+      "useCase": "Swap stablecoins low-slippage, fourniture de liquidité, vote-locking veCRV, stablecoin crvUSD, bribes via Convex/Votium",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://curve.fi",
+      "monitoringSignals": [
+        "TVL Curve et volume sur les pools clés (3pool, tricrypto)",
+        "Adoption de crvUSD (supply et peg)",
+        "Position OTC du fondateur sur les prêts CRV"
+      ]
+    },
+    {
+      "rank": 37,
+      "id": "compound",
+      "name": "Compound",
+      "symbol": "COMP",
+      "coingeckoId": "compound-governance-token",
+      "marketCapRange": "300M$ - 800M$",
+      "yearCreated": 2018,
+      "category": "DeFi / Lending",
+      "tagline": "Le pionnier du lending DeFi, devenu plus discret face à Aave.",
+      "what": "Compound est l'un des premiers protocoles de prêt et d'emprunt décentralisés sur Ethereum. Il a popularisé le yield farming en 2020 avec la distribution de COMP. Compound III (Comet) propose un modèle simplifié avec un seul actif empruntable par marché.",
+      "whyHiddenGem": "Réputation solide et code battle-tested depuis 2018, gouvernance mature. Compound III adresse les critiques de complexité et déploiement sur plusieurs chaînes (Ethereum, Base, Arbitrum, Polygon, Optimism). Reste une référence pour les développeurs DeFi qui forkent son code.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OpenZeppelin",
+          "Trail of Bits",
+          "ChainSecurity",
+          "Certora"
+        ],
+        "lastAuditDate": "2024-05",
+        "yearsActive": 8,
+        "majorIncidents": "Bug de distribution COMP en sept 2021 (~80M$ distribués par erreur, partiellement récupérés) ; aucun hack technique du protocole.",
+        "fundingRaised": "33M$",
+        "backers": [
+          "a16z",
+          "Polychain Capital",
+          "Bain Capital Ventures",
+          "Paradigm"
+        ]
+      },
+      "risks": [
+        "Perte de parts de marché face à Aave et Morpho",
+        "Token COMP en émission continue sans capture de valeur claire",
+        "Activité gouvernance ralentie en 2024-2025"
+      ],
+      "useCase": "Prêt et emprunt crypto, génération d'intérêts cTokens, gouvernance protocole, infrastructure de référence pour forks",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitstamp",
+        "Bitget"
+      ],
+      "officialUrl": "https://compound.finance",
+      "monitoringSignals": [
+        "TVL Compound III vs concurrents",
+        "Activité de la gouvernance (propositions, quorum)",
+        "Déploiements sur nouvelles chaînes"
+      ]
+    },
+    {
+      "rank": 38,
+      "id": "gmx",
+      "name": "GMX",
+      "symbol": "GMX",
+      "coingeckoId": "gmx",
+      "marketCapRange": "200M$ - 800M$",
+      "yearCreated": 2021,
+      "category": "DeFi / Perpetual DEX",
+      "tagline": "Le perp DEX qui a démocratisé le trading on-chain sur Arbitrum.",
+      "what": "GMX est un DEX de produits dérivés perpetuels permettant de trader avec leverage jusqu'à 100x sur Arbitrum et Avalanche. Le pool GLP/GM agrège la liquidité et redistribue les fees aux holders de GMX et fournisseurs de liquidité.",
+      "whyHiddenGem": "Modèle revenue-sharing rare en DeFi : les holders de GMX reçoivent une part des frais réels en ETH. GMX V2 introduit des pools isolés par marché, des frais réduits et un meilleur risk management. Précurseur d'un secteur (perp DEX) en plein boom.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "ABDK Consulting",
+          "Quantstamp",
+          "Guardian Audits"
+        ],
+        "lastAuditDate": "2024-03",
+        "yearsActive": 5,
+        "majorIncidents": "Exploit septembre 2022 sur l'oracle AVAX (~565k$) ; bug V1 en 2023 sur AVAX/USD à exposition limitée.",
+        "fundingRaised": "Pas de levée publique (lancement fair launch)",
+        "backers": [
+          "Communautaire (fair launch)"
+        ]
+      },
+      "risks": [
+        "Équipe principale anonyme (X, X, etc.)",
+        "Concurrence intense de Hyperliquid, dYdX et Jupiter Perp",
+        "Risque counterparty pour les LP GLP/GM lors de gros mouvements"
+      ],
+      "useCase": "Trading perpetuel avec leverage, liquidity providing GLP/GM, staking GMX pour fees, gouvernance",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://gmx.io",
+      "monitoringSignals": [
+        "Volume quotidien GMX V2 vs concurrents",
+        "Revenue sharing en ETH pour holders GMX",
+        "Évolution PnL des LPs (GM/GLP)"
+      ]
+    },
+    {
+      "rank": 39,
+      "id": "dydx",
+      "name": "dYdX",
+      "symbol": "DYDX",
+      "coingeckoId": "dydx-chain",
+      "marketCapRange": "300M$ - 1Md$",
+      "yearCreated": 2017,
+      "category": "DeFi / Perpetual DEX",
+      "tagline": "Le perp DEX historique migré vers son propre L1 Cosmos.",
+      "what": "dYdX est une plateforme de trading décentralisée de perpetuels avec un orderbook on-chain, à la différence des AMM. La V4 a migré l'ensemble du protocole d'un L2 StarkEx vers une chaîne Cosmos SDK dédiée (dYdX Chain).",
+      "whyHiddenGem": "Architecture orderbook + matching engine décentralisé unique, avec performance proche d'un CEX. Plus de 1000 milliards de dollars de volume cumulé historique. Programme de revenue sharing aux stakers DYDX (100% des fees redistribués) renforce la valeur du token.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Informal Systems",
+          "Trail of Bits",
+          "Zellic"
+        ],
+        "lastAuditDate": "2024-10",
+        "yearsActive": 8,
+        "majorIncidents": "Migration v3 -> v4 délicate (fragmentation liquidité 2023-2024), aucun hack du protocole.",
+        "fundingRaised": "87M$",
+        "backers": [
+          "Paradigm",
+          "a16z",
+          "Polychain Capital",
+          "Three Arrows Capital (avant faillite)"
+        ]
+      },
+      "risks": [
+        "Fragmentation entre dYdX v3 (Ethereum L2) et v4 (Cosmos chain)",
+        "Concurrence frontale de Hyperliquid qui a pris des parts de marché en 2024-2025",
+        "Liquidité encore inférieure aux CEX leaders"
+      ],
+      "useCase": "Trading perpétuel avec orderbook, staking DYDX pour fees, gouvernance dYdX Chain, validation réseau Cosmos",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://dydx.exchange",
+      "monitoringSignals": [
+        "Volume dYdX v4 vs Hyperliquid",
+        "Revenue distribué aux stakers DYDX",
+        "Croissance du nombre de validateurs Cosmos"
+      ]
+    },
+    {
+      "rank": 40,
+      "id": "synthetix",
+      "name": "Synthetix",
+      "symbol": "SNX",
+      "coingeckoId": "havven",
+      "marketCapRange": "200M$ - 600M$",
+      "yearCreated": 2018,
+      "category": "DeFi / Synthetic Assets",
+      "tagline": "Le protocole d'actifs synthétiques décentralisés sur Ethereum & Optimism.",
+      "what": "Synthetix permet de créer des actifs synthétiques (sUSD, sETH, etc.) collatéralisés par du SNX. Les Synths suivent le prix d'actifs réels via oracles. Le protocole alimente notamment les perps de Kwenta, Polynomial et Lyra.",
+      "whyHiddenGem": "L'un des protocoles DeFi les plus anciens et innovants. Synthetix V3 propose une architecture modulaire qui sépare collatéral, marchés et oracles, ouvrant la voie à des intégrations multi-chain. Acquisition de TLX et expansion sur Base en 2024.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "iosiro",
+          "Sigma Prime",
+          "Macro",
+          "Cantina"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 8,
+        "majorIncidents": "Front-running oracle juin 2019 (~37M sETH mintés frauduleusement, situation rétablie) ; nombreux ajustements paramétriques mais pas d'exploit récent majeur.",
+        "fundingRaised": "30M$",
+        "backers": [
+          "Paradigm",
+          "Coinbase Ventures",
+          "Framework Ventures",
+          "ParaFi"
+        ]
+      },
+      "risks": [
+        "Modèle économique complexe (debt pool partagé) qui peut surprendre les nouveaux stakers",
+        "Migration V3 inachevée et adoption variable",
+        "Compétition forte sur les perps (Hyperliquid, GMX)"
+      ],
+      "useCase": "Émission de Synths (sUSD, sETH, etc.), staking SNX pour fees, infrastructure pour perp DEX (Kwenta, Polynomial), exposition synthétique aux actifs",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://synthetix.io",
+      "monitoringSignals": [
+        "TVL Synthetix V3 et adoption multi-chain",
+        "Volume des perps construits sur Synthetix",
+        "C-Ratio moyen des stakers SNX"
+      ]
+    },
+    {
+      "rank": 41,
+      "id": "jupiter",
+      "name": "Jupiter",
+      "symbol": "JUP",
+      "coingeckoId": "jupiter-exchange-solana",
+      "marketCapRange": "1Md$ - 4Md$",
+      "yearCreated": 2021,
+      "category": "DeFi / DEX Aggregator (Solana)",
+      "tagline": "L'agrégateur DEX dominant de l'écosystème Solana.",
+      "what": "Jupiter est l'agrégateur de liquidité numéro 1 sur Solana, qui route les swaps via tous les DEX (Raydium, Orca, Meteora...) pour offrir le meilleur prix. Il propose aussi des perpetuels (Jupiter Perp), du DCA, des limit orders et un launchpad (Jupiter Studio).",
+      "whyHiddenGem": "Plus de 80% des swaps Solana passent par Jupiter, position quasi-monopolistique. Suite produit complète (perps, lending via Jupiter Lend, mobile app) qui en fait une 'super-app' DeFi. Airdrop en 4 phases avec gouvernance active de la communauté JUP.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OtterSec",
+          "Sec3",
+          "Offside Labs"
+        ],
+        "lastAuditDate": "2024-12",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun exploit majeur du protocole ; controverses gouvernance sur tokenomics et burns en 2024.",
+        "fundingRaised": "Pas de levée publique (modèle bootstrap)",
+        "backers": [
+          "Bootstrap (pas de VC majeurs)"
+        ]
+      },
+      "risks": [
+        "Dépendance totale à la santé et performance de Solana",
+        "Tokenomics et burns ajustés plusieurs fois (incertitude sur dilution)",
+        "Concurrence émergente d'autres agrégateurs (DFlow, Titan)"
+      ],
+      "useCase": "Swap multi-DEX optimisé Solana, trading perpetuel Jupiter Perp, lending Jupiter Lend, DCA et limit orders, launchpad Jupiter Studio",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken",
+        "DEX Solana via Jupiter app"
+      ],
+      "officialUrl": "https://jup.ag",
+      "monitoringSignals": [
+        "Volume quotidien Jupiter (swap + perp)",
+        "Part de marché agrégation Solana",
+        "Calendrier des unlocks JUP et politique de burn"
+      ]
+    },
+    {
+      "rank": 42,
+      "id": "raydium",
+      "name": "Raydium",
+      "symbol": "RAY",
+      "coingeckoId": "raydium",
+      "marketCapRange": "300M$ - 1.5Md$",
+      "yearCreated": 2021,
+      "category": "DeFi / DEX (Solana)",
+      "tagline": "Le DEX historique de Solana, principal hub de liquidité memecoins.",
+      "what": "Raydium est un AMM hybride sur Solana qui combine pools de liquidité automatisés et orderbook (historiquement Serum, désormais OpenBook). Il est devenu le DEX de référence pour les lancements de memecoins via son module CPMM et son intégration avec Pump.fun.",
+      "whyHiddenGem": "Bénéficie directement du boom memecoin Solana 2024-2025 : volume record et fees redistribués au token RAY (programme de buyback). Architecture multi-pool (CPMM, CLMM) flexible. Lancement réussi de LaunchLab pour concurrencer Pump.fun.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Kudelski Security",
+          "MadShield",
+          "OtterSec"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 5,
+        "majorIncidents": "Hack décembre 2022 via clé admin compromise (~4.4M$, indemnisé partiellement par treasury et émissions RAY) ; aucun exploit récent.",
+        "fundingRaised": "Pas de levée publique majeure",
+        "backers": [
+          "Alameda Research (avant faillite FTX)",
+          "Proche écosystème Serum/Solana initial"
+        ]
+      },
+      "risks": [
+        "Équipe partiellement anonyme et antécédent hack 2022",
+        "Forte exposition à l'activité memecoin (volatilité des revenus)",
+        "Compétition Pump.fun, Meteora, Orca sur la liquidité Solana"
+      ],
+      "useCase": "Swap AMM Solana, fourniture de liquidité, launchpad memecoin via CPMM, staking RAY, intégration native avec Pump.fun et Jupiter",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken",
+        "DEX Solana via Raydium app"
+      ],
+      "officialUrl": "https://raydium.io",
+      "monitoringSignals": [
+        "Volume Raydium et fees redistribués",
+        "Part de marché vs Orca/Meteora sur Solana",
+        "Activité du segment memecoin et LaunchLab"
+      ]
+    },
+    {
+      "rank": 43,
+      "id": "hyperliquid",
+      "name": "Hyperliquid",
+      "symbol": "HYPE",
+      "coingeckoId": "hyperliquid",
+      "marketCapRange": "5Md$ - 20Md$",
+      "yearCreated": 2023,
+      "category": "DeFi / Perpetual DEX & L1",
+      "tagline": "Le perp DEX qui a explosé en 2024-2025 avec son propre L1 ultra-rapide.",
+      "what": "Hyperliquid est un échange de perpetuels décentralisé construit sur sa propre blockchain L1 (HyperBFT), avec orderbook on-chain à très haute fréquence. Il combine performance d'un CEX avec la transparence d'un DEX, et propose désormais un EVM (HyperEVM) pour des dApps.",
+      "whyHiddenGem": "Airdrop HYPE en novembre 2024 (l'un des plus généreux et transparents de l'histoire) avec 31% des tokens à la communauté. Volume devenu comparable à celui de Binance Futures sur certaines paires. Développement HyperEVM ouvre l'écosystème aux apps tierces.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": false,
+        "openSource": false,
+        "auditedBy": [
+          "Zellic"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 2,
+        "majorIncidents": "Mars 2025 : exploit du marché JELLY (memecoin) ayant exposé HLP (~13M$ de risque), ticker délisté manuellement par la fondation, polémique sur la centralisation.",
+        "fundingRaised": "Aucune levée VC publique (équipe anonyme auto-financée)",
+        "backers": [
+          "Auto-financement équipe"
+        ]
+      },
+      "risks": [
+        "Équipe largement anonyme (Jeff Yan, fondateur identifié, mais reste de l'équipe peu transparente)",
+        "Code propriétaire non open-source et incident JELLY 2025 montre une centralisation de fait",
+        "Tokenomics post-airdrop fragile : 70% des tokens encore à débloquer, risque de dilution massive 2026-2028"
+      ],
+      "useCase": "Trading perpetuel décentralisé high-performance, staking HYPE pour validation, fourniture de liquidité HLP, déploiement dApps sur HyperEVM",
+      "whereToBuy": [
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "DEX uniquement (Hyperliquid frontend) pour trading principal"
+      ],
+      "officialUrl": "https://hyperliquid.xyz",
+      "monitoringSignals": [
+        "Volume Hyperliquid vs CEX leaders (Binance, Bybit)",
+        "Performance HLP et incidents éventuels",
+        "Calendrier d'unlock HYPE et adoption HyperEVM"
+      ]
+    },
+    {
+      "rank": 44,
+      "id": "1inch",
+      "name": "1inch",
+      "symbol": "1INCH",
+      "coingeckoId": "1inch",
+      "marketCapRange": "150M$ - 500M$",
+      "yearCreated": 2020,
+      "category": "DeFi / DEX Aggregator",
+      "tagline": "L'agrégateur DEX historique multi-chain pour le meilleur prix on-chain.",
+      "what": "1inch est un agrégateur qui scanne plusieurs DEX (Uniswap, Curve, Sushi, Balancer...) pour offrir le meilleur prix d'exécution sur un swap. Il propose aussi son Aggregation Protocol, son Limit Order Protocol et son Fusion+ pour des swaps cross-chain protégés du MEV.",
+      "whyHiddenGem": "Volume cumulé supérieur à 600 milliards de dollars depuis 2020. Présence sur 12+ chaînes EVM. Fusion+ permet des swaps cross-chain sans bridges centralisés, une innovation rare. Token 1INCH avec staking et rôle utilitaire (Resolver) dans Fusion.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OpenZeppelin",
+          "ChainSecurity",
+          "MixBytes",
+          "Consensys Diligence"
+        ],
+        "lastAuditDate": "2024-06",
+        "yearsActive": 6,
+        "majorIncidents": "Octobre 2024 : exploit de l'ancien Resolver (~5M$) lié à un Resolver tiers obsolète, fonds remboursés ; pas d'exploit du core protocol.",
+        "fundingRaised": "187M$",
+        "backers": [
+          "Pantera Capital",
+          "Galaxy Digital",
+          "Blockchain Capital",
+          "Mark Cuban"
+        ]
+      },
+      "risks": [
+        "Concurrence forte d'agrégateurs natifs (CoW Swap, Odos, Matcha, Jupiter sur Solana)",
+        "Token 1INCH sans capture directe de fees protocole",
+        "Géoblocage US strict qui limite la base utilisateurs"
+      ],
+      "useCase": "Agrégation de swap multi-DEX, swaps cross-chain Fusion+, limit orders on-chain, staking 1INCH (st1INCH)",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://1inch.io",
+      "monitoringSignals": [
+        "Volume 1inch Aggregation et part de marché",
+        "Adoption Fusion+ sur cross-chain swaps",
+        "Activité staking st1INCH et gouvernance"
+      ]
+    },
+    {
+      "rank": 45,
+      "id": "convex-finance",
+      "name": "Convex Finance",
+      "symbol": "CVX",
+      "coingeckoId": "convex-finance",
+      "marketCapRange": "150M$ - 500M$",
+      "yearCreated": 2021,
+      "category": "DeFi / Yield Booster (Curve)",
+      "tagline": "Le booster de rendement Curve qui a déclenché les Curve Wars.",
+      "what": "Convex est un protocole construit sur Curve qui permet aux fournisseurs de liquidité Curve de booster leurs rewards CRV sans avoir à locker eux-mêmes. Convex agrège les CRV pour devenir le plus gros vlCRV holder, qui peut diriger les émissions Curve (gauges).",
+      "whyHiddenGem": "Détient plus de 50% du veCRV total, contrôle structurel sur les émissions Curve. Marché des bribes très actif (Votium, StakeDAO, Hidden Hand) qui génère du yield additionnel pour les holders vlCVX. Modèle d'agrégateur de gouvernance copié partout en DeFi.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "MixBytes",
+          "Peckshield",
+          "Macro"
+        ],
+        "lastAuditDate": "2023-11",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun hack majeur ; exposé indirectement aux risques de Curve (juillet 2023 reentrancy n'a pas affecté CVX directement).",
+        "fundingRaised": "Aucune levée publique (lancement fair launch 2021)",
+        "backers": [
+          "Fair launch communautaire"
+        ]
+      },
+      "risks": [
+        "Dépendance totale à Curve : un déclin de Curve impacte directement Convex",
+        "Équipe pseudonyme (C2tP & co) malgré track record solide",
+        "Émissions CVX en cours de queue (rares à venir), thèse rendement future moins claire"
+      ],
+      "useCase": "Boost de yield Curve sans lock CRV, staking vlCVX pour bribes et gouvernance, staking cvxCRV pour rewards, primitive d'agrégation pour autres protocoles",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://www.convexfinance.com",
+      "monitoringSignals": [
+        "Part de veCRV détenue par Convex",
+        "Volume des bribes via Votium/Hidden Hand",
+        "Émissions CVX restantes (proche de la fin)"
+      ]
+    },
+    {
+      "rank": 46,
+      "id": "rocket-pool",
+      "name": "Rocket Pool",
+      "symbol": "RPL",
+      "coingeckoId": "rocket-pool",
+      "marketCapRange": "150M$ - 500M$",
+      "yearCreated": 2017,
+      "category": "DeFi / Liquid Staking (ETH)",
+      "tagline": "L'alternative décentralisée à Lido pour le liquid staking ETH.",
+      "what": "Rocket Pool permet de staker du ETH avec un seuil bas (0,01 ETH côté utilisateur) et reçoit du rETH, un token rebasing reflétant les rewards. Côté node operator, il faut seulement 8 ETH (au lieu de 32) plus du collatéral RPL, ce qui décentralise davantage le staking.",
+      "whyHiddenGem": "Modèle plus décentralisé que Lido avec opérateurs permissionless. Mise en place de Saturn 1/2 pour réduire encore le seuil ETH et renforcer la résilience. Présence forte dans la communauté Ethereum et alignement maximaliste.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Sigma Prime",
+          "ConsenSys Diligence",
+          "Trail of Bits"
+        ],
+        "lastAuditDate": "2024-04",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack majeur du protocole ; débats internes sur la tokenomics RPL en 2024 (réduction des inflation rewards).",
+        "fundingRaised": "Pas de levée VC majeure (lancement progressif depuis 2017)",
+        "backers": [
+          "Communauté Ethereum",
+          "ConsenSys (early)"
+        ]
+      },
+      "risks": [
+        "Croissance lente face à Lido et EtherFi (parts de marché stagnantes)",
+        "Réforme de la tokenomics RPL contestée par une partie des node operators",
+        "Risque de slashing partiellement supporté par les RPL stakés"
+      ],
+      "useCase": "Liquid staking ETH avec rETH, opération de nodes Ethereum à seuil réduit, staking RPL en collatéral, gouvernance décentralisée",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://rocketpool.net",
+      "monitoringSignals": [
+        "TVL et nombre de minipools actifs",
+        "Part de marché Rocket Pool vs Lido / EtherFi",
+        "Avancement Saturn upgrades et seuils ETH"
+      ]
+    },
+    {
+      "rank": 47,
+      "id": "frax-share",
+      "name": "Frax Share",
+      "symbol": "FXS",
+      "coingeckoId": "frax-share",
+      "marketCapRange": "150M$ - 500M$",
+      "yearCreated": 2020,
+      "category": "DeFi / Stablecoin & Ecosystem",
+      "tagline": "L'écosystème stablecoin modulaire avec son propre L2 Fraxtal.",
+      "what": "Frax était initialement un stablecoin partiellement algorithmique (FRAX), désormais 100% collatéralisé. Le protocole s'est étendu en suite complète : frxETH (LST), Fraxlend (lending), Fraxswap (DEX), Fraxferry (bridge) et Fraxtal (L2 OP-stack).",
+      "whyHiddenGem": "Stratégie verticalement intégrée unique en DeFi : stable + LST + lending + DEX + L1. Frax v3 supprime le côté algo et ajoute l'exposition RWA. Lancement de Fraxtal en 2024 avec FlOX (Fraxtal Locked OXygen) comme nouveau modèle d'incitation.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Certik",
+          "Code4rena"
+        ],
+        "lastAuditDate": "2024-07",
+        "yearsActive": 6,
+        "majorIncidents": "Stress sur peg FRAX en mars 2023 lors de la dépeg USDC (~3% temporaire), résolu sans pertes ; pas de hack technique majeur.",
+        "fundingRaised": "14M$",
+        "backers": [
+          "Parafi Capital",
+          "Dragonfly Capital",
+          "Mechanism Capital"
+        ]
+      },
+      "risks": [
+        "Complexité de la suite Frax (multi-produits) qui dilue l'attention",
+        "Token FXS avec tokenomics en révision (fork frxUSD, FRAX vers Fraxtal gas)",
+        "Concurrence de Sky/USDS et Ethena sur la stablecoin yield"
+      ],
+      "useCase": "Stablecoin frxUSD (ex-FRAX), LST ETH avec frxETH/sfrxETH, lending Fraxlend, gas token sur Fraxtal L2, staking veFXS pour gouvernance",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://frax.finance",
+      "monitoringSignals": [
+        "TVL totale écosystème Frax (stablecoin + LST + L2)",
+        "Adoption de Fraxtal (TVL, dApps déployées)",
+        "Évolution du peg frxUSD et collatéral réserves"
+      ]
+    },
+    {
+      "rank": 48,
+      "id": "ethena",
+      "name": "Ethena",
+      "symbol": "ENA",
+      "coingeckoId": "ethena",
+      "marketCapRange": "1Md$ - 4Md$",
+      "yearCreated": 2023,
+      "category": "DeFi / Synthetic Dollar",
+      "tagline": "Le 'dollar synthétique' USDe avec rendement issu du carry trade ETH.",
+      "what": "Ethena émet USDe, un dollar synthétique adossé à des positions delta-neutres : long ETH/BTC spot + short perpetuels équivalents. Le rendement provient des funding rates positifs sur les perps + staking ETH. Le sUSDe (staked USDe) capture ces rendements pour les holders.",
+      "whyHiddenGem": "Croissance fulgurante depuis 2024 : USDe est devenu le 3e plus grand stablecoin avec plus de 5 milliards de dollars de supply. Modèle innovant de yield natif sans dépendance aux Treasuries US. Partenariats institutionnels (BlackRock BUIDL via USDtb) renforcent la crédibilité.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Spearbit",
+          "Cantina",
+          "Pashov Audit Group",
+          "Quantstamp"
+        ],
+        "lastAuditDate": "2024-10",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun exploit smart contract ; tensions de funding rate négatif lors de phases bear (rendement sUSDe peut chuter ou devenir nul).",
+        "fundingRaised": "20M$",
+        "backers": [
+          "Dragonfly Capital",
+          "BitMEX",
+          "Bybit",
+          "Wintermute",
+          "Galaxy Digital"
+        ]
+      },
+      "risks": [
+        "Risque sUSDe : rendement dépend du funding rate qui peut devenir négatif en bear market durable",
+        "Risque de carry trade hedge : dépendance aux CEX (Binance, Bybit, OKX) pour les positions short perp (counterparty risk)",
+        "Custody centralisée des collatéraux via Copper, Fireblocks (modèle off-exchange settlement)"
+      ],
+      "useCase": "Stablecoin USDe pour la DeFi, sUSDe pour yield natif (carry trade), collatéral DeFi (Aave, Pendle, Morpho), USDtb pour exposition Treasuries via BUIDL",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Coinbase"
+      ],
+      "officialUrl": "https://ethena.fi",
+      "monitoringSignals": [
+        "Funding rate ETH/BTC perpétuels (drive du yield sUSDe)",
+        "Supply USDe et sUSDe ratio",
+        "Diversification du collatéral et part USDtb (Treasuries)"
+      ]
+    },
+    {
+      "rank": 49,
+      "id": "eigenlayer",
+      "name": "EigenLayer",
+      "symbol": "EIGEN",
+      "coingeckoId": "eigenlayer",
+      "marketCapRange": "500M$ - 2.5Md$",
+      "yearCreated": 2021,
+      "category": "DeFi / Restaking",
+      "tagline": "Le pionnier du restaking qui réutilise la sécurité d'Ethereum.",
+      "what": "EigenLayer permet de 'restaker' du ETH déjà staké pour sécuriser des services tiers appelés AVS (Actively Validated Services) : oracles, bridges, DA layers, etc. En échange, les restakers reçoivent des rewards additionnels mais s'exposent à du slashing supplémentaire.",
+      "whyHiddenGem": "Concept innovant qui crée un marché de la sécurité Ethereum pour des dApps. Plus de 10 milliards de dollars en restaking au pic. Token EIGEN avec mécanique unique d'intersubjective slashing. Catalyseur entier d'une nouvelle catégorie (LRT : EtherFi, Renzo, Kelp...).",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Sigma Prime",
+          "Consensys Diligence",
+          "Spearbit",
+          "Cantina"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 4,
+        "majorIncidents": "Aucun exploit majeur du protocole core ; controverses sur le geoblocage de l'airdrop et accusations de favoritisme dans la distribution.",
+        "fundingRaised": "155M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Polychain",
+          "Blockchain Capital",
+          "Coinbase Ventures"
+        ]
+      },
+      "risks": [
+        "Risque de slashing en cascade : un AVS malveillant peut entraîner du slashing sur tous les restakers exposés",
+        "AVS encore peu nombreux et avec peu de revenus réels (yield futur incertain)",
+        "Concentration via les LRT (EtherFi, Renzo) qui aggrave le risque systémique sur Ethereum"
+      ],
+      "useCase": "Restaking ETH/LST pour sécuriser des AVS, déploiement d'AVS (oracles, bridges, DA), gouvernance via EIGEN, primitive pour LRT (EtherFi, Renzo, Kelp)",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Coinbase"
+      ],
+      "officialUrl": "https://www.eigenlayer.xyz",
+      "monitoringSignals": [
+        "TVL restaking total et concentration LRT",
+        "Nombre d'AVS actifs et leur revenu généré",
+        "Activation du slashing et son impact sur les restakers"
+      ]
+    },
+    {
+      "rank": 50,
+      "id": "aerodrome-finance",
+      "name": "Aerodrome Finance",
+      "symbol": "AERO",
+      "coingeckoId": "aerodrome-finance",
+      "marketCapRange": "500M$ - 2Md$",
+      "yearCreated": 2023,
+      "category": "DeFi / DEX (Base)",
+      "tagline": "Le DEX dominant de Base, fork évolué de Velodrome.",
+      "what": "Aerodrome est un DEX ve(3,3) construit sur Base (L2 de Coinbase). Il combine pools volatiles et stables, avec un modèle de gauges où les holders veAERO votent pour diriger les émissions. Devenu rapidement le hub de liquidité central de Base.",
+      "whyHiddenGem": "Largement leader sur Base avec plus de 60% du TVL DEX de la chaîne. Bénéficie directement de la croissance de Base (apps Coinbase, social, AI agents). Slipstream introduit la liquidité concentrée style Uni V3 pour optimiser le capital. Émissions agressives mais alignées avec activité réelle.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Spearbit",
+          "yAudit"
+        ],
+        "lastAuditDate": "2024-05",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun exploit majeur du protocole ; héritage du code Velodrome battle-tested sur Optimism.",
+        "fundingRaised": "Aucune levée VC (fork de Velodrome, équipe anonyme)",
+        "backers": [
+          "Communauté Velodrome",
+          "Coinbase Ventures (post-launch)"
+        ]
+      },
+      "risks": [
+        "Dépendance totale à l'adoption de Base et aux décisions de Coinbase / Optimism",
+        "Émissions AERO élevées qui peuvent peser sur le prix si l'activité ralentit",
+        "Compétition de Uniswap V4 sur Base et autres DEX émergents"
+      ],
+      "useCase": "Swap AMM sur Base, liquidity providing volatile/stable, vote-locking veAERO pour gauges, bribes pour diriger les émissions, infrastructure de liquidité Base",
+      "whereToBuy": [
+        "Coinbase",
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "DEX uniquement (Aerodrome) pour la majorité des paires"
+      ],
+      "officialUrl": "https://aerodrome.finance",
+      "monitoringSignals": [
+        "TVL et volume Aerodrome (part de marché Base)",
+        "Croissance écosystème Base globale",
+        "Lock-rate veAERO et marché des bribes"
+      ]
+    },
+    {
+      "rank": 51,
+      "id": "helium",
+      "name": "Helium",
+      "symbol": "HNT",
+      "coingeckoId": "helium",
+      "marketCapRange": "500M$ - 1.5Md$",
+      "yearCreated": 2019,
+      "category": "DePIN / Wireless Network",
+      "tagline": "Le réseau sans-fil décentralisé qui défie les opérateurs télécoms traditionnels",
+      "what": "Helium est un réseau DePIN qui rémunère les particuliers déployant des hotspots LoRaWAN (IoT) et 5G CBRS. Les utilisateurs gagnent des HNT en fournissant de la couverture réseau vérifiée par 'Proof-of-Coverage'.",
+      "whyHiddenGem": "La migration vers Solana en avril 2023 a divisé les coûts par 1000 et stabilisé le réseau. Helium Mobile (sub-réseau MOBILE) propose un forfait illimité à 20$/mois aux US grâce au partenariat T-Mobile signé en 2023, avec plus de 100k abonnés en 2025.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Halborn"
+        ],
+        "lastAuditDate": "2025-04",
+        "yearsActive": 7,
+        "majorIncidents": "Aucun hack majeur. Critiques en 2022 sur la qualité réelle de la couverture LoRaWAN et faibles revenus data, résolues par le pivot 5G/Mobile.",
+        "fundingRaised": "365M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Multicoin Capital",
+          "Tiger Global",
+          "Khosla Ventures"
+        ]
+      },
+      "risks": [
+        "Dépendance à l'adoption Helium Mobile et au partenariat T-Mobile",
+        "Modèle économique IoT historique encore peu rentable pour les hotspots",
+        "Concurrence DePIN télécoms (Pollen, World Mobile, XNET)"
+      ],
+      "useCase": "Couverture IoT LoRaWAN, opérateur 5G décentralisé, forfaits mobiles aux US, infrastructure capteurs urbains",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.helium.com",
+      "monitoringSignals": [
+        "Nombre d'abonnés Helium Mobile (objectif >250k en 2026)",
+        "Hotspots actifs et data transferred sur explorer.helium.com",
+        "Revenus DC (Data Credits) brûlés par mois"
+      ]
+    },
+    {
+      "rank": 52,
+      "id": "akash-network",
+      "name": "Akash Network",
+      "symbol": "AKT",
+      "coingeckoId": "akash-network",
+      "marketCapRange": "300M$ - 1Md$",
+      "yearCreated": 2020,
+      "category": "DePIN / Decentralized Cloud Compute",
+      "tagline": "L'AWS décentralisé qui loue de la puissance GPU pour l'IA à coût réduit",
+      "what": "Akash est une marketplace décentralisée de cloud computing où des fournisseurs louent leur capacité CPU/GPU inutilisée. Les utilisateurs déploient containers Docker via une bid-engine, à un coût souvent 60-80% inférieur à AWS.",
+      "whyHiddenGem": "Avec l'explosion de la demande GPU pour entraînement IA en 2024-2025, Akash héberge désormais des H100 et A100 NVIDIA pour des charges LLM. Supercloud passé de quelques centaines à >15 000 GPU disponibles. Construit sur Cosmos SDK avec gouvernance active.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "NCC Group",
+          "Informal Systems"
+        ],
+        "lastAuditDate": "2025-05",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun incident de sécurité majeur. Quelques pannes de fournisseurs individuels sans impact sur le réseau.",
+        "fundingRaised": "20M$",
+        "backers": [
+          "Multicoin Capital",
+          "Mechanism Capital",
+          "Hashkey Capital"
+        ]
+      },
+      "risks": [
+        "Concurrence directe d'io.net et Render Network sur le segment GPU AI",
+        "Adoption entreprise encore limitée vs hyperscalers (AWS, GCP, Azure)",
+        "Disponibilité variable selon fournisseurs et régions"
+      ],
+      "useCase": "Hébergement web décentralisé, entraînement modèles IA, inférence LLM, rendu 3D, nœuds blockchain",
+      "whereToBuy": [
+        "Kraken",
+        "Coinbase",
+        "KuCoin",
+        "Bybit",
+        "Gate.io"
+      ],
+      "officialUrl": "https://akash.network",
+      "monitoringSignals": [
+        "Nombre de GPU actifs et leases sur stats.akash.network",
+        "USD spent par mois sur la marketplace",
+        "Adoption entreprises IA (annonces partenariats)"
+      ]
+    },
+    {
+      "rank": 53,
+      "id": "io-net",
+      "name": "io.net",
+      "symbol": "IO",
+      "coingeckoId": "io-net",
+      "marketCapRange": "200M$ - 800M$",
+      "yearCreated": 2023,
+      "category": "DePIN / GPU Compute for AI",
+      "tagline": "L'agrégateur GPU décentralisé sur Solana qui mutualise la puissance pour l'IA",
+      "what": "io.net agrège les GPU sous-utilisés (datacenters, miners crypto, particuliers) en clusters distribués accessibles via API. Construit sur Solana, il propose accès à des H100, A100 et RTX 4090 pour entraînement IA.",
+      "whyHiddenGem": "Levée de 30M$ en série A (Hack VC, Multicoin) début 2024, listing Binance et explosion en 2024 lors du narratif AI x Crypto. Plus de 300 000 GPU enregistrés sur le réseau, partenariats avec Render, Filecoin et Aethir pour interopérabilité compute.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "Certik"
+        ],
+        "lastAuditDate": "2025-02",
+        "yearsActive": 3,
+        "majorIncidents": "Avril 2024 : exploitation d'une faille dans le système de récompenses (faux GPU IDs) corrigée en 24h, sans perte d'utilisateur. Volatilité forte du token post-TGE.",
+        "fundingRaised": "30M$",
+        "backers": [
+          "Hack VC",
+          "Multicoin Capital",
+          "Solana Ventures",
+          "OKX Ventures",
+          "Aptos Labs"
+        ]
+      },
+      "risks": [
+        "Projet jeune (2023), tokenomics encore en phase d'unlocks importants",
+        "Concurrence Akash, Render, Aethir sur même verticale",
+        "Vérification réelle de la qualité des GPU déclarés (PoW)"
+      ],
+      "useCase": "Entraînement modèles IA, inférence LLM, fine-tuning, batch processing, ML research",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "KuCoin"
+      ],
+      "officialUrl": "https://io.net",
+      "monitoringSignals": [
+        "GPU clusters actifs et heures réservées",
+        "Burn rate du token IO",
+        "Croissance utilisateurs entreprise vs particuliers"
+      ]
+    },
+    {
+      "rank": 54,
+      "id": "theta-network",
+      "name": "Theta Network",
+      "symbol": "THETA",
+      "coingeckoId": "theta-token",
+      "marketCapRange": "800M$ - 2Md$",
+      "yearCreated": 2018,
+      "category": "DePIN / Video Streaming + AI Compute",
+      "tagline": "La blockchain dédiée au streaming vidéo et au compute IA via edge nodes",
+      "what": "Theta est une blockchain spécialisée qui décentralise la diffusion vidéo grâce à des edge nodes (particuliers partageant bande passante et GPU). Les viewers gagnent des TFUEL en relayant les flux. Pivot 2023-2024 vers EdgeCloud pour AI compute.",
+      "whyHiddenGem": "Partenariats historiques : Samsung VR, Sony, Google Cloud (validateur), Lionsgate. EdgeCloud lancée en mai 2024 propose 80 000+ GPU pour rendu et IA. Steve Chen (co-fondateur YouTube) au advisory board.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Certik",
+          "PeckShield"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 8,
+        "majorIncidents": "Aucun hack. Critiques sur la centralisation relative des Enterprise Validator Nodes (Google, Sony, Samsung).",
+        "fundingRaised": "20M$",
+        "backers": [
+          "Sony Innovation Fund",
+          "Samsung NEXT",
+          "DCM Ventures"
+        ]
+      },
+      "risks": [
+        "Adoption streaming consommateur reste de niche vs Twitch/YouTube",
+        "Pivot AI compute en concurrence avec acteurs établis (Akash, io.net)",
+        "Validateurs entreprise concentrés (faible décentralisation)"
+      ],
+      "useCase": "Streaming vidéo P2P, edge compute IA, rendu 3D, distribution NFT vidéo",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.thetatoken.org",
+      "monitoringSignals": [
+        "GPU actifs sur EdgeCloud et heures vendues",
+        "Edge nodes actifs (>200k visé)",
+        "Annonces partenariats média/IA"
+      ]
+    },
+    {
+      "rank": 55,
+      "id": "bittensor",
+      "name": "Bittensor",
+      "symbol": "TAO",
+      "coingeckoId": "bittensor",
+      "marketCapRange": "2Md$ - 5Md$",
+      "yearCreated": 2021,
+      "category": "AI / Decentralized Machine Learning",
+      "tagline": "Le réseau décentralisé qui récompense la production de modèles d'IA open-source",
+      "what": "Bittensor est un protocole où des miners entraînent et servent des modèles ML (LLM, vision, audio) répartis sur des 'subnets' spécialisés. Les modèles sont notés par des validateurs et les meilleurs reçoivent des TAO selon le consensus 'Yuma'.",
+      "whyHiddenGem": "Avec le mécanisme Yuma Subtensor et plus de 32 subnets actifs (text generation, prediction markets, finetuning), Bittensor est devenu une infrastructure clé du narratif Decentralized AI. Tokenomics inspirée de Bitcoin (halving, 21M max supply). Équipe identifiée : Const (Jacob Steeves) + Yuma Group.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "Quantstamp"
+        ],
+        "lastAuditDate": "2025-09",
+        "yearsActive": 5,
+        "majorIncidents": "Juillet 2024 : exploit du wallet Opentensor Foundation (~8M$ drainés via libraries Python compromises), compensé partiellement. Réseau lui-même non touché.",
+        "fundingRaised": "Non publié (financement principalement par mining)",
+        "backers": [
+          "Polychain Capital",
+          "Pantera Capital",
+          "Dao5",
+          "FirstMark Capital"
+        ]
+      },
+      "risks": [
+        "Complexité technique élevée pour comprendre le mécanisme Yuma et les subnets",
+        "Qualité variable des modèles selon les subnets",
+        "Concurrence Render/Akash + acteurs IA centralisés (OpenAI, Anthropic)"
+      ],
+      "useCase": "Entraînement collaboratif LLM, inférence décentralisée, marchés de prédiction IA, données synthétiques",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "KuCoin"
+      ],
+      "officialUrl": "https://bittensor.com",
+      "monitoringSignals": [
+        "Nombre de subnets actifs et qualité des modèles produits",
+        "TAO staked et validateurs actifs sur taostats.io",
+        "Adoption applications b2c construites sur Bittensor"
+      ]
+    },
+    {
+      "rank": 56,
+      "id": "fetch-ai",
+      "name": "Artificial Superintelligence Alliance",
+      "symbol": "FET",
+      "coingeckoId": "fetch-ai",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2017,
+      "category": "AI / Autonomous Agents",
+      "tagline": "La fusion FET + AGIX + OCEAN qui forme l'alliance leader de l'IA décentralisée",
+      "what": "Fetch.ai propose une plateforme d'agents autonomes (uAgents) capables de négocier, transacter et exécuter des tâches sur blockchain. En mars 2024, fusion votée avec SingularityNET (AGIX) et Ocean Protocol (OCEAN) pour former l'ASI Alliance autour du token unique FET.",
+      "whyHiddenGem": "Réunit trois projets historiques de l'IA crypto sous un seul token (cap visée 7.5Md$ tokens). Backer Bosch (partenariat industriel). Cas d'usage concrets : agents de mobilité, marketplaces énergie, agents de trading. Ben Goertzel (AGIX) et Bruce Pon (Ocean) au comité.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "CertiK",
+          "Hacken"
+        ],
+        "lastAuditDate": "2025-03",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack majeur. Incertitude pré-merger 2024 sur calendrier et ratios d'échange (résolue Q3 2024).",
+        "fundingRaised": "100M$ (cumul ASI alliance)",
+        "backers": [
+          "Outlier Ventures",
+          "GDA Capital",
+          "Bosch (partenariat)"
+        ]
+      },
+      "risks": [
+        "Intégration technique des trois écosystèmes encore en cours",
+        "Concurrence Bittensor, Virtuals, Render sur narratif AI x Crypto",
+        "Tokenomics post-fusion complexe pour les holders historiques AGIX/OCEAN"
+      ],
+      "useCase": "Agents IA autonomes, marketplace de données IA, AGI research, IoT industriel",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://superintelligence.io",
+      "monitoringSignals": [
+        "Nombre d'uAgents déployés sur Agentverse",
+        "Avancement de l'unification technique ASI Chain",
+        "Volume on-chain DeFi sur Fetch.ai"
+      ]
+    },
+    {
+      "rank": 57,
+      "id": "worldcoin",
+      "name": "Worldcoin",
+      "symbol": "WLD",
+      "coingeckoId": "worldcoin-wld",
+      "marketCapRange": "1Md$ - 3Md$",
+      "yearCreated": 2023,
+      "category": "AI / Proof-of-Personhood",
+      "tagline": "Le protocole d'identité humaine basé sur le scan d'iris, controversé en Europe",
+      "what": "Worldcoin (Tools for Humanity) propose un Proof-of-Personhood biométrique : un Orb scanne l'iris pour générer un World ID prouvant qu'on est humain unique. Les utilisateurs reçoivent des WLD. Lancé par Sam Altman (CEO OpenAI) pour préparer un futur avec UBI / IA généralisée.",
+      "whyHiddenGem": "Plus de 25 millions d'utilisateurs vérifiés mi-2025. World ID intégré à Reddit, Shopify, Discord, Telegram. Base technique solide (zk-proofs, MPC). Pivot 'World Network' avec World Chain (L2 OP Stack) lancée en 2024.",
+      "reliability": {
+        "score": 5.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Nethermind",
+          "Least Authority"
+        ],
+        "lastAuditDate": "2025-01",
+        "yearsActive": 3,
+        "majorIncidents": "Critique majeure de la CNIL (FR) et de l'autorité bavaroise (BayLDA) en 2023 sur la collecte biométrique. Suspension en France et en Espagne (TFR) en 2024. Enquêtes en cours au Royaume-Uni et au Portugal.",
+        "fundingRaised": "240M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Bain Capital",
+          "Khosla Ventures",
+          "Blockchain Capital"
+        ]
+      },
+      "risks": [
+        "WLD non disponible aux résidents français (suspension CNIL/AMF) et restreint en UE",
+        "Risques RGPD et collecte biométrique : controverse permanente",
+        "Forte inflation prévue (unlock progressif jusqu'en 2038)"
+      ],
+      "useCase": "Proof-of-personhood, anti-bot, distribution d'aides (UBI), authentification dApps, World App wallet",
+      "whereToBuy": [
+        "Binance (hors FR)",
+        "Bybit (hors FR)",
+        "OKX (hors FR)",
+        "Kraken (selon juridiction)"
+      ],
+      "officialUrl": "https://world.org",
+      "monitoringSignals": [
+        "Nombre de World ID vérifiés (uniques humains)",
+        "Évolution de la position des régulateurs européens (CNIL, EDPB)",
+        "Adoption World ID par dApps tierces"
+      ]
+    },
+    {
+      "rank": 58,
+      "id": "arweave",
+      "name": "Arweave",
+      "symbol": "AR",
+      "coingeckoId": "arweave",
+      "marketCapRange": "300M$ - 1Md$",
+      "yearCreated": 2018,
+      "category": "Storage / Permanent Data",
+      "tagline": "Le stockage permanent payé une seule fois, pour les 200 prochaines années",
+      "what": "Arweave permet de stocker des fichiers de manière permanente via un paiement unique. Le mécanisme 'Blockweave' + endowment crée une réserve qui rémunère les miners pour conserver les données indéfiniment. Beaucoup utilisé pour archives Web (Permaweb), NFTs Solana, journalisme.",
+      "whyHiddenGem": "Infrastructure historique du stockage permanent crypto, utilisée par Solana NFTs, Mirror.xyz, Meta (KYC pour metaverse), gouvernement Ukrainien (archives guerre). Lancement de AO (Hyper Parallel Computer) en 2024 ouvre Arweave au compute permanent.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 8,
+        "majorIncidents": "Aucun incident de sécurité réseau. Données stockées toujours accessibles depuis 2018.",
+        "fundingRaised": "22M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Union Square Ventures",
+          "Coinbase Ventures",
+          "Multicoin Capital"
+        ]
+      },
+      "risks": [
+        "Modèle économique de l'endowment dépend de la baisse du coût du stockage à long terme",
+        "Concurrence Filecoin (vol bcp plus élevé) et Walrus (Sui)",
+        "Adoption AO encore embryonnaire vs incumbents compute"
+      ],
+      "useCase": "Stockage permanent NFT, archivage web, hébergement dApps, datasets IA, journalisme décentralisé",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "OKX"
+      ],
+      "officialUrl": "https://www.arweave.org",
+      "monitoringSignals": [
+        "Données totales stockées (en TB) sur viewblock.io",
+        "Adoption de AO et nombre de processus actifs",
+        "Coût moyen au GB stocké (doit rester compétitif)"
+      ]
+    },
+    {
+      "rank": 59,
+      "id": "storj",
+      "name": "Storj",
+      "symbol": "STORJ",
+      "coingeckoId": "storj",
+      "marketCapRange": "100M$ - 400M$",
+      "yearCreated": 2017,
+      "category": "Storage / Decentralized Cloud Storage",
+      "tagline": "L'alternative décentralisée à Amazon S3, compatible API et chiffrée bout-en-bout",
+      "what": "Storj fragmente les fichiers, les chiffre et les distribue chez des opérateurs de nœuds (storage node operators) à travers le monde. L'API est compatible S3, ce qui facilite la migration depuis AWS. Modèle SaaS + on-chain.",
+      "whyHiddenGem": "Plus de 18 000 nœuds, 30+ PB stockés. Adoption B2B sérieuse : Acronis, Plesk, Splunk, FilebaseSDK. Tarif ~70-80% moins cher que S3. Statut juridique solide (entreprise US, Delaware).",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Protocol Labs review"
+        ],
+        "lastAuditDate": "2024-12",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun incident de perte de données client. Token STORJ est ERC-20 sans utilité on-chain forte (paiement aux opérateurs uniquement).",
+        "fundingRaised": "50M$",
+        "backers": [
+          "Foundation Capital",
+          "Founders Fund",
+          "Coinbase Ventures"
+        ]
+      },
+      "risks": [
+        "Token utilité limitée (pas de staking, pas de gouvernance forte) : valeur dépend du paiement aux nœuds",
+        "Disponibilité STORJ restreinte sur certains exchanges régulés FR/UE",
+        "Concurrence forte Filecoin, Sia, AWS S3, R2 Cloudflare"
+      ],
+      "useCase": "Backup entreprise, hébergement vidéo, datasets IA, archivage long terme, CDN décentralisé",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bitget",
+        "KuCoin"
+      ],
+      "officialUrl": "https://www.storj.io",
+      "monitoringSignals": [
+        "Données stockées et bande passante consommée",
+        "Croissance clients enterprise",
+        "Usage du token (paiements vs spéculation)"
+      ]
+    },
+    {
+      "rank": 60,
+      "id": "band-protocol",
+      "name": "Band Protocol",
+      "symbol": "BAND",
+      "coingeckoId": "band-protocol",
+      "marketCapRange": "50M$ - 250M$",
+      "yearCreated": 2019,
+      "category": "Oracle / Cross-chain Data",
+      "tagline": "L'oracle multi-chain construit sur Cosmos qui sécurise les données pour 30+ blockchains",
+      "what": "Band Protocol est un oracle décentralisé qui aggrège des données off-chain (prix, météo, sport) et les sert à des smart contracts sur 30+ blockchains. Architecture Cosmos SDK avec son propre BandChain.",
+      "whyHiddenGem": "Alternative crédible à Chainlink, particulièrement adoptée dans l'écosystème Cosmos et BNB Chain. Prix BAND staké pour sécuriser le réseau. Partenariats historiques Binance, ICON, Polygon.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "CertiK",
+          "Quantstamp"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 7,
+        "majorIncidents": "Aucun hack. Critiques sur la baisse d'adoption relative vs Chainlink et Pyth depuis 2022.",
+        "fundingRaised": "13M$",
+        "backers": [
+          "Sequoia Capital",
+          "Binance Labs",
+          "Dunamu & Partners"
+        ]
+      },
+      "risks": [
+        "Domination écrasante de Chainlink + montée en puissance de Pyth",
+        "Volume de requêtes oracle en stagnation",
+        "Token underperformance vs concurrents oracle depuis 2 ans"
+      ],
+      "useCase": "Prix DeFi, données sportives pour paris décentralisés, oracles IoT, calculs de rendement",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "OKX"
+      ],
+      "officialUrl": "https://www.bandprotocol.com",
+      "monitoringSignals": [
+        "Nombre de requêtes oracle quotidiennes",
+        "Montant total BAND staké",
+        "Nouvelles intégrations blockchains/dApps"
+      ]
+    },
+    {
+      "rank": 61,
+      "id": "api3",
+      "name": "API3",
+      "symbol": "API3",
+      "coingeckoId": "api3",
+      "marketCapRange": "100M$ - 400M$",
+      "yearCreated": 2020,
+      "category": "Oracle / First-Party Data",
+      "tagline": "L'oracle 'first-party' où les fournisseurs de données opèrent directement leurs propres feeds",
+      "what": "API3 propose un modèle d'oracles différent : ce sont les fournisseurs de données originaux (Airnodes) qui exploitent eux-mêmes leur API on-chain, sans intermédiaire. Cela réduit les coûts et améliore la transparence vs oracles traditionnels.",
+      "whyHiddenGem": "OEV Network (Oracle Extractable Value) lancé en 2024 redistribue la MEV oracle aux dApps. Plus de 130 data feeds dApi sur 30+ chains. Gouvernance DAO active.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Quantstamp"
+        ],
+        "lastAuditDate": "2025-02",
+        "yearsActive": 6,
+        "majorIncidents": "Aucun hack des feeds. Légère controverse en 2022 sur la centralisation initiale des airnodes (résolue avec dApi).",
+        "fundingRaised": "23M$ (incluant ICO)",
+        "backers": [
+          "Placeholder",
+          "Pantera Capital",
+          "Hashed"
+        ]
+      },
+      "risks": [
+        "Concurrence Chainlink, Pyth, RedStone difficile",
+        "Adoption first-party encore minoritaire",
+        "Capitalisation faible vs leaders du secteur"
+      ],
+      "useCase": "Prix DeFi, oracles random (QRNG), données spécialisées, OEV redistribution",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://api3.org",
+      "monitoringSignals": [
+        "Nombre de dApi déployés et chains supportées",
+        "Volume OEV récupéré et redistribué",
+        "Valeur sécurisée par les feeds"
+      ]
+    },
+    {
+      "rank": 62,
+      "id": "virtuals-protocol",
+      "name": "Virtuals Protocol",
+      "symbol": "VIRTUAL",
+      "coingeckoId": "virtual-protocol",
+      "marketCapRange": "500M$ - 3Md$",
+      "yearCreated": 2024,
+      "category": "AI Agents / Tokenization Platform",
+      "tagline": "La plateforme de lancement d'agents IA tokenisés qui a explosé sur Base en 2024",
+      "what": "Virtuals Protocol permet de créer et tokeniser des agents IA autonomes (chatbots, KOL virtuels, NPCs gaming) sur Base (L2 d'Ethereum). Chaque agent dispose d'un token dédié dont les revenus retournent aux holders via buybacks.",
+      "whyHiddenGem": "Explosion 2024 sur Base avec >17 000 agents lancés et un agent star (AIXBT) capitalisant >500M$. Modèle 'agent-as-a-token' devenu référence du secteur. Backé par l'écosystème Coinbase/Base.",
+      "reliability": {
+        "score": 5.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "PeckShield"
+        ],
+        "lastAuditDate": "2025-01",
+        "yearsActive": 2,
+        "majorIncidents": "Plusieurs agents tokenisés se sont effondrés ('rugs' soft) après hype initial. Plateforme elle-même non hackée. Critiques sur la spéculation extrême type memecoin.",
+        "fundingRaised": "Non publié officiellement",
+        "backers": [
+          "Coinbase Ventures (via Base ecosystem)",
+          "Animoca Brands"
+        ]
+      },
+      "risks": [
+        "Forte volatilité, narratif AI Agents potentiellement spéculatif",
+        "Qualité très variable des agents lancés",
+        "Concurrence ai16z, Eliza Framework, Holoworld"
+      ],
+      "useCase": "Lancement agents IA (KOL, gaming, divertissement), tokenisation IP, communautés fan-token",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "OKX",
+        "Bitget",
+        "KuCoin"
+      ],
+      "officialUrl": "https://www.virtuals.io",
+      "monitoringSignals": [
+        "Nombre d'agents actifs et leurs market caps cumulés",
+        "Buybacks de VIRTUAL effectués",
+        "Volume on-chain Base pour agents Virtuals"
+      ]
+    },
+    {
+      "rank": 63,
+      "id": "ocean-protocol",
+      "name": "Ocean Protocol",
+      "symbol": "OCEAN",
+      "coingeckoId": "ocean-protocol",
+      "marketCapRange": "200M$ - 700M$",
+      "yearCreated": 2017,
+      "category": "AI / Data Marketplace",
+      "tagline": "Le marketplace de datasets pour entraîner les IA, intégré à l'ASI Alliance",
+      "what": "Ocean Protocol permet de monétiser et d'échanger des données IA via 'datatokens'. Compute-to-Data autorise l'entraînement d'IA sur datasets sans jamais exposer les données brutes. Membre de l'ASI Alliance avec Fetch.ai et SingularityNET.",
+      "whyHiddenGem": "Pionnier du marché de la donnée crypto. Fusion ASI annoncée en 2024 vers le token unique FET, mais OCEAN reste pour l'instant tradable et utilisé. Bruce Pon (co-fondateur) reconnu dans le secteur Big Data.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "ConsenSys Diligence"
+        ],
+        "lastAuditDate": "2024-07",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack majeur. Pre-merger uncertainty 2024 sur calendrier de conversion en FET, encore source de confusion pour holders.",
+        "fundingRaised": "25M$",
+        "backers": [
+          "Outlier Ventures",
+          "Digital Currency Group"
+        ]
+      },
+      "risks": [
+        "Conversion en FET obligatoire à terme : holders OCEAN doivent suivre la migration",
+        "Adoption marketplace data encore limitée vs hyperscalers (Snowflake, Databricks)",
+        "Liquidité OCEAN diminue progressivement"
+      ],
+      "useCase": "Marketplace datasets IA, compute-to-data, monétisation data privée, recherche IA",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://oceanprotocol.com",
+      "monitoringSignals": [
+        "Avancement conversion OCEAN -> FET",
+        "Datasets actifs et volume Ocean Market",
+        "Communications ASI Alliance"
+      ]
+    },
+    {
+      "rank": 64,
+      "id": "aethir",
+      "name": "Aethir",
+      "symbol": "ATH",
+      "coingeckoId": "aethir",
+      "marketCapRange": "200M$ - 700M$",
+      "yearCreated": 2022,
+      "category": "DePIN / GPU Cloud Gaming + AI",
+      "tagline": "Le cloud GPU décentralisé spécialisé gaming et IA, avec partenariats AAA",
+      "what": "Aethir agrège des GPU enterprise-grade (H100, A100) répartis dans 90+ pays pour fournir compute aux studios de gaming cloud (NVIDIA GeForce NOW concurrent) et aux entreprises IA. Architecture 'Checker Nodes' pour vérifier la qualité de service.",
+      "whyHiddenGem": "Levée >150M$ d'investissement infrastructure. Partenariats avec studios (NetEase, Sphere, Ankr). Plus de 43 000 nœuds enterprise, dont 3 000+ H100. TGE en mai 2024 sur Arbitrum.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "PeckShield",
+          "Salus Security"
+        ],
+        "lastAuditDate": "2024-10",
+        "yearsActive": 4,
+        "majorIncidents": "Aucun hack. Critiques sur la centralisation des GPU enterprise (vs DePIN 'pur' avec consumer GPUs). Volatilité forte post-TGE.",
+        "fundingRaised": "150M$+ (compute commitments)",
+        "backers": [
+          "Framework Ventures",
+          "Hashkey Capital",
+          "Merit Circle",
+          "Sanctor Capital",
+          "Animoca Brands"
+        ]
+      },
+      "risks": [
+        "Code source partiellement fermé (transparence limitée)",
+        "Concurrence directe io.net, Akash, Render",
+        "Schedule d'unlocks tokens importants en 2026"
+      ],
+      "useCase": "Cloud gaming, inférence IA, rendu 3D, training LLM, infrastructure VR/AR",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "OKX",
+        "Bitget",
+        "Gate.io"
+      ],
+      "officialUrl": "https://aethir.com",
+      "monitoringSignals": [
+        "Heures GPU vendues et clients enterprise",
+        "Croissance du nombre de Checker Nodes actifs",
+        "Calendrier d'unlocks ATH"
+      ]
+    },
+    {
+      "rank": 65,
+      "id": "livepeer",
+      "name": "Livepeer",
+      "symbol": "LPT",
+      "coingeckoId": "livepeer",
+      "marketCapRange": "100M$ - 400M$",
+      "yearCreated": 2017,
+      "category": "DePIN / Video Transcoding + AI",
+      "tagline": "Le réseau décentralisé de transcodage vidéo qui pivote vers l'inférence IA",
+      "what": "Livepeer est un réseau de transcodage vidéo décentralisé : des orchestrateurs (avec GPU) traitent les flux vidéo livestream pour des prix 50-100x inférieurs à AWS Elemental. Pivot 2024-2025 vers AI Subnet pour inférence vidéo (génération, upscaling).",
+      "whyHiddenGem": "Adopté par des plateformes streaming web3 (Huddle01, Lens) et infrastructure traditionnelle. AI Subnet permet désormais d'utiliser le réseau pour text-to-video (Stable Video Diffusion). Construit sur Arbitrum.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "ChainSafe"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack. Réseau opérationnel sans interruption majeure depuis 2018.",
+        "fundingRaised": "20M$",
+        "backers": [
+          "Northzone",
+          "DCG",
+          "Coinbase Ventures",
+          "Pantera Capital"
+        ]
+      },
+      "risks": [
+        "Adoption AI subnet doit s'accélérer pour justifier valorisation",
+        "Concurrence transcodage cloud traditionnel (AWS, Cloudflare Stream)",
+        "Forte inflation du token (mining-style)"
+      ],
+      "useCase": "Live streaming décentralisé, transcodage vidéo, AI vidéo (génération, upscale), VOD",
+      "whereToBuy": [
+        "Coinbase",
+        "Binance",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://livepeer.org",
+      "monitoringSignals": [
+        "Minutes vidéo transcodées par mois (livepeer.cloud)",
+        "Adoption AI Subnet et compute facturé",
+        "Évolution du nombre d'orchestrateurs actifs"
+      ]
+    },
+    {
+      "rank": 66,
+      "id": "story-protocol",
+      "name": "Story Protocol",
+      "symbol": "IP",
+      "coingeckoId": "story-2",
+      "marketCapRange": "500M$ - 2.5Md$",
+      "yearCreated": 2025,
+      "category": "AI / Intellectual Property Layer 1",
+      "tagline": "La blockchain dédiée à la propriété intellectuelle à l'ère de l'IA générative",
+      "what": "Story Protocol est une L1 EVM-compatible spécialisée dans la tokenisation et la gestion de la propriété intellectuelle (IP). Permet aux créateurs de licencier leurs œuvres on-chain avec royalties programmables, particulièrement pertinent face à l'IA générative.",
+      "whyHiddenGem": "Levée 140M$ en série B mené par a16z et Polychain en 2024 (valorisation 2.25Md$). Mainnet lancé en février 2025. Use case clair : permettre aux artistes de protéger et monétiser leur IP face aux modèles IA. PIL (Programmable IP License) standardisé.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OpenZeppelin",
+          "Cantina"
+        ],
+        "lastAuditDate": "2025-01",
+        "yearsActive": 1,
+        "majorIncidents": "Aucun à ce jour, mais réseau très récent (mainnet 2025). À surveiller dans les premiers mois.",
+        "fundingRaised": "140M$",
+        "backers": [
+          "Andreessen Horowitz (a16z)",
+          "Polychain Capital",
+          "Hasu",
+          "Stability AI (advisory)"
+        ]
+      },
+      "risks": [
+        "Projet très récent (2025), peu de recul opérationnel",
+        "Adoption par créateurs/studios traditionnels reste à prouver",
+        "Concurrence Story vs systèmes IP traditionnels (Disney, ASCAP, etc.)"
+      ],
+      "useCase": "Tokenisation IP, licences musique/art on-chain, royalties IA, remix programmable, agents créatifs",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "OKX",
+        "Bitget",
+        "Kraken"
+      ],
+      "officialUrl": "https://www.story.foundation",
+      "monitoringSignals": [
+        "Nombre d'IP Assets enregistrés sur Story",
+        "Partenariats studios/labels signés",
+        "Licences et royalties payées on-chain"
+      ]
+    },
+    {
+      "rank": 67,
+      "id": "grass",
+      "name": "Grass",
+      "symbol": "GRASS",
+      "coingeckoId": "grass",
+      "marketCapRange": "200M$ - 1Md$",
+      "yearCreated": 2023,
+      "category": "DePIN / AI Data Network",
+      "tagline": "Le réseau qui rémunère les internautes pour louer leur bande passante et nourrir l'IA",
+      "what": "Grass est un protocole DePIN qui transforme la bande passante inutilisée des particuliers en infrastructure de scraping web pour entraîner des modèles IA. Les utilisateurs installent une extension Chrome ou app mobile et gagnent des GRASS.",
+      "whyHiddenGem": "Plus de 3 millions d'utilisateurs actifs en 2025. Construit sur Solana avec un L2 dédié (Grass Layer 2 sur Solana). Use case clair : datasets web pour entraînement LLM (alternative aux scraping illégaux par OpenAI, etc.). Airdrop massif 2024.",
+      "reliability": {
+        "score": 5.5,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "Halborn"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun hack. Critiques en 2024 sur la transparence des transactions internes du token et sur le modèle 'utilisateur = produit'.",
+        "fundingRaised": "4.5M$ seed (Polychain, Tribe Capital)",
+        "backers": [
+          "Polychain Capital",
+          "Tribe Capital",
+          "No Limit Holdings",
+          "Bitscale Capital"
+        ]
+      },
+      "risks": [
+        "Code partiellement fermé (extension propriétaire)",
+        "Risques juridiques : scraping web parfois en zone grise (RGPD, ToS sites)",
+        "Tokenomics avec gros unlocks à venir"
+      ],
+      "useCase": "Datasets training LLM, scraping web décentralisé, intelligence concurrentielle, AI search",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "OKX",
+        "Bitget",
+        "KuCoin"
+      ],
+      "officialUrl": "https://www.grass.io",
+      "monitoringSignals": [
+        "Utilisateurs actifs et bande passante totale",
+        "Datasets vendus aux labs IA",
+        "Calendrier d'unlocks GRASS"
+      ]
+    },
+    {
+      "rank": 68,
+      "id": "hivemapper",
+      "name": "Hivemapper",
+      "symbol": "HONEY",
+      "coingeckoId": "hivemapper",
+      "marketCapRange": "30M$ - 200M$",
+      "yearCreated": 2022,
+      "category": "DePIN / Decentralized Maps",
+      "tagline": "Le Google Maps décentralisé alimenté par les dashcams des conducteurs",
+      "what": "Hivemapper est un réseau DePIN sur Solana où les conducteurs équipés d'une dashcam Hivemapper Bee captent les routes et reçoivent des HONEY. Les images sont assemblées en cartes haute fréquence vendues aux entreprises (logistique, navigation, IA conduite autonome).",
+      "whyHiddenGem": "Plus de 25% du réseau routier mondial cartographié mi-2025. Clients : Lyft, Hellobike, fournisseurs ADAS. Modèle économique tangible : revenus B2B en USD redistribués via burns HONEY.",
+      "reliability": {
+        "score": 6.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "OtterSec"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 4,
+        "majorIncidents": "Aucun hack. Volatilité forte du token, dépendant largement aux ventes B2B.",
+        "fundingRaised": "23M$",
+        "backers": [
+          "Multicoin Capital",
+          "Solana Ventures",
+          "Craft Ventures",
+          "Spark Capital"
+        ]
+      },
+      "risks": [
+        "Coût d'entrée matériel (dashcam ~250-550$) limite l'adoption",
+        "Concurrence Google Maps, TomTom, Mapbox",
+        "Marché data cartographique cyclique"
+      ],
+      "useCase": "Cartographie HD pour conduite autonome, navigation, logistique, urbanisme, IA véhicule",
+      "whereToBuy": [
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "KuCoin",
+        "Gate.io"
+      ],
+      "officialUrl": "https://hivemapper.com",
+      "monitoringSignals": [
+        "Km de routes cartographiés par mois",
+        "Revenus B2B (Map Credits vendus)",
+        "Burns de HONEY trimestriels"
+      ]
+    },
+    {
+      "rank": 69,
+      "id": "powerledger",
+      "name": "Powerledger",
+      "symbol": "POWR",
+      "coingeckoId": "power-ledger",
+      "marketCapRange": "50M$ - 300M$",
+      "yearCreated": 2017,
+      "category": "DePIN / Energy Trading",
+      "tagline": "La plateforme blockchain pionnière du peer-to-peer énergétique et des certificats verts",
+      "what": "Powerledger est une plateforme australienne qui utilise blockchain pour permettre l'échange P2P d'énergie renouvelable, le tracking des certificats verts (RECs) et la flexibilité du grid. Migration Solana en 2023 pour scalabilité.",
+      "whyHiddenGem": "Cas d'usage réels : pilotes en Australie, Inde, Japon, Thaïlande, Autriche. Partenariats utilities (TEPCO, BCPG). Pionnier du DePIN énergétique avant que ce narratif ne soit trendy.",
+      "reliability": {
+        "score": 6.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Hacken"
+        ],
+        "lastAuditDate": "2024-06",
+        "yearsActive": 9,
+        "majorIncidents": "Aucun hack. Adoption commerciale plus lente que prévu lors de l'ICO 2017.",
+        "fundingRaised": "34M$ (ICO 2017)",
+        "backers": [
+          "Particuliers (ICO)",
+          "partenariats utilities"
+        ]
+      },
+      "risks": [
+        "Adoption B2B utilities lente (cycles d'achat longs)",
+        "Concurrence Energy Web Token, WePower",
+        "Token utility limitée (peu de demande organique)"
+      ],
+      "useCase": "Trading P2P énergie solaire, certificats verts (RECs/I-RECs), flexibilité grid, comptage smart meters",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "KuCoin"
+      ],
+      "officialUrl": "https://www.powerledger.io",
+      "monitoringSignals": [
+        "MWh tradés sur la plateforme",
+        "Nouveaux pilotes utilities annoncés",
+        "Volume RECs émis on-chain"
+      ]
+    },
+    {
+      "rank": 70,
+      "id": "energy-web-token",
+      "name": "Energy Web Token",
+      "symbol": "EWT",
+      "coingeckoId": "energy-web-token",
+      "marketCapRange": "30M$ - 200M$",
+      "yearCreated": 2019,
+      "category": "DePIN / Energy Infrastructure",
+      "tagline": "L'infrastructure blockchain dédiée à la transition énergétique mondiale",
+      "what": "Energy Web est une fondation suisse qui opère Energy Web Chain (sidechain Ethereum PoA) dédiée au secteur énergétique. Permet aux utilities de tokeniser actifs (panneaux solaires, batteries, EVs) et de gérer flexibilité et certificats verts.",
+      "whyHiddenGem": "Plus de 70 entreprises membres : Shell, EDF, Engie, Vodafone, PG&E. Green Proofs (digital MRV pour énergie verte) adopté par AWS, SP Group. Worker Nodes pour services entreprise.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "ChainSecurity"
+        ],
+        "lastAuditDate": "2024-05",
+        "yearsActive": 7,
+        "majorIncidents": "Aucun hack. Token EWT relativement peu liquide vs autres altcoins.",
+        "fundingRaised": "Financement par membres entreprise",
+        "backers": [
+          "Energy Web Foundation",
+          "Shell",
+          "EDF",
+          "Engie (membres)"
+        ]
+      },
+      "risks": [
+        "Liquidité faible du token, peu d'exchanges Tier-1",
+        "Modèle B2B-only : peu de hype retail",
+        "EWT non disponible sur Coinbase ; restreint sur certains exchanges FR"
+      ],
+      "useCase": "Certificats énergie verte, gestion flexibilité grid, tokenisation actifs énergétiques, traçabilité hydrogène",
+      "whereToBuy": [
+        "Kraken",
+        "KuCoin",
+        "Bitget",
+        "Gate.io",
+        "MEXC"
+      ],
+      "officialUrl": "https://www.energyweb.org",
+      "monitoringSignals": [
+        "Membres entreprise actifs sur Energy Web Chain",
+        "Adoption Green Proofs et certificats émis",
+        "Worker Nodes opérationnels"
+      ]
+    },
+    {
+      "rank": 71,
+      "id": "shiba-inu",
+      "name": "Shiba Inu",
+      "symbol": "SHIB",
+      "coingeckoId": "shiba-inu",
+      "marketCapRange": "5Md$ - 15Md$",
+      "yearCreated": 2020,
+      "category": "Memecoin",
+      "tagline": "Le memecoin chien rival de Dogecoin, sans utilité fondamentale réelle",
+      "what": "Shiba Inu est un memecoin lancé en 2020 sur Ethereum par un anonyme nommé Ryoshi. L'écosystème inclut désormais ShibaSwap (DEX) et Shibarium (L2), mais reste essentiellement porté par la spéculation et la communauté.",
+      "whyHiddenGem": "À considérer comme du jeu d'argent : la valorisation dépend uniquement du sentiment et du marketing. Maximum 1-2% du portefeuille pour une exposition memecoin, jamais d'épargne dessus.",
+      "reliability": {
+        "score": 5,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Certik",
+          "Hacken"
+        ],
+        "lastAuditDate": "2024-03",
+        "yearsActive": 6,
+        "majorIncidents": "Crash -85% depuis ATH 2021, plusieurs faux 'burn' annoncés",
+        "fundingRaised": "Aucun (lancement communautaire)",
+        "backers": [
+          "Communauté",
+          "Vitalik Buterin (a brûlé 50% de l'offre en 2021)"
+        ]
+      },
+      "risks": [
+        "Pas de fondamentaux",
+        "Volatilité extrême (-90% possible en jours)",
+        "Spéculation pure",
+        "Offre énorme (589 trillions de tokens)"
+      ],
+      "useCase": "Memecoin, ShibaSwap DEX, Shibarium L2, NFT collections",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://shibatoken.com",
+      "monitoringSignals": [
+        "Volume sur Shibarium",
+        "Burns de tokens vérifiés",
+        "Sentiment social X / Reddit"
+      ]
+    },
+    {
+      "rank": 72,
+      "id": "pepe",
+      "name": "Pepe",
+      "symbol": "PEPE",
+      "coingeckoId": "pepe",
+      "marketCapRange": "2Md$ - 8Md$",
+      "yearCreated": 2023,
+      "category": "Memecoin",
+      "tagline": "Le memecoin grenouille né du meme Pepe, pure spéculation",
+      "what": "Pepe est un memecoin lancé en avril 2023 sur Ethereum, basé sur le célèbre meme internet 'Pepe the Frog'. Aucune utilité technique : pas de smart contracts, pas de roadmap, juste un token ERC-20 porté par la viralité.",
+      "whyHiddenGem": "Méfiance maximale : le projet ne promet AUCUNE utilité, c'est assumé. À traiter comme un ticket de loterie crypto, jamais comme un investissement. Max 1% du portefeuille total.",
+      "reliability": {
+        "score": 4,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Aucun audit majeur public"
+        ],
+        "lastAuditDate": "2023-04",
+        "yearsActive": 3,
+        "majorIncidents": "Vol de 16M$ par d'anciens devs en août 2024 (multisig compromise)",
+        "fundingRaised": "Aucun",
+        "backers": [
+          "Anonymes"
+        ]
+      },
+      "risks": [
+        "Équipe anonyme et déjà accusée de vol",
+        "Pas de fondamentaux",
+        "Volatilité extrême",
+        "Spéculation pure basée sur le meme"
+      ],
+      "useCase": "Memecoin uniquement, aucune utilité technique",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Bybit",
+        "Bitget",
+        "OKX"
+      ],
+      "officialUrl": "https://www.pepe.vip",
+      "monitoringSignals": [
+        "Volume on-chain",
+        "Wallets whales (top 10)",
+        "Tendances sociales meme"
+      ]
+    },
+    {
+      "rank": 73,
+      "id": "bonk",
+      "name": "Bonk",
+      "symbol": "BONK",
+      "coingeckoId": "bonk",
+      "marketCapRange": "800M$ - 3Md$",
+      "yearCreated": 2022,
+      "category": "Memecoin",
+      "tagline": "Le premier memecoin chien de Solana, intégré dans l'écosystème SOL",
+      "what": "Bonk est un memecoin lancé fin 2022 sur Solana via airdrop massif à la communauté. Il s'est positionné comme le memecoin officieux de l'écosystème Solana et est intégré dans plusieurs apps DeFi/wallets.",
+      "whyHiddenGem": "Plus 'connecté' à un écosystème vivant que SHIB/PEPE, mais reste un memecoin volatile. À considérer comme exposition spéculative à Solana, max 1-2% portefeuille.",
+      "reliability": {
+        "score": 5,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Aucun audit formel"
+        ],
+        "lastAuditDate": "N/A",
+        "yearsActive": 4,
+        "majorIncidents": "Volatilité extrême avec drawdowns -80% récurrents",
+        "fundingRaised": "Aucun (airdrop communautaire)",
+        "backers": [
+          "Communauté Solana"
+        ]
+      },
+      "risks": [
+        "Pas de fondamentaux",
+        "Volatilité extrême (-90% possible en jours)",
+        "Dépend du sentiment Solana",
+        "Offre massive (88 trillions)"
+      ],
+      "useCase": "Memecoin Solana, intégration BonkBot Telegram, gas alternatif sur certaines apps",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://bonkcoin.com",
+      "monitoringSignals": [
+        "Activité réseau Solana",
+        "Volume BonkBot",
+        "Sentiment communauté SOL"
+      ]
+    },
+    {
+      "rank": 74,
+      "id": "dogwifhat",
+      "name": "dogwifhat",
+      "symbol": "WIF",
+      "coingeckoId": "dogwifcoin",
+      "marketCapRange": "500M$ - 4Md$",
+      "yearCreated": 2023,
+      "category": "Memecoin",
+      "tagline": "Le memecoin chien-au-bonnet sur Solana, hype 2024 puis crash",
+      "what": "dogwifhat est un memecoin Solana lancé fin 2023, basé sur l'image d'un Shiba Inu portant un bonnet rose. A connu une hype virale début 2024 (+10000%) puis a perdu 80% en 2025.",
+      "whyHiddenGem": "Cas d'école du memecoin : explose vite, retombe tout aussi vite. À traiter comme jeu d'argent pur. Si tu n'étais pas dedans avant la hype, c'est probablement trop tard.",
+      "reliability": {
+        "score": 4,
+        "teamIdentified": false,
+        "openSource": true,
+        "auditedBy": [
+          "Aucun audit"
+        ],
+        "lastAuditDate": "N/A",
+        "yearsActive": 2,
+        "majorIncidents": "Drawdown -80% depuis ATH mars 2024",
+        "fundingRaised": "Aucun",
+        "backers": [
+          "Anonymes"
+        ]
+      },
+      "risks": [
+        "Pas de fondamentaux",
+        "Volatilité extrême (-90% possible en jours)",
+        "Spéculation pure",
+        "Hype déjà passée"
+      ],
+      "useCase": "Memecoin uniquement",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Coinbase"
+      ],
+      "officialUrl": "https://dogwifcoin.org",
+      "monitoringSignals": [
+        "Volume DEX Solana",
+        "Mentions sociales",
+        "Holders top 100"
+      ]
+    },
+    {
+      "rank": 75,
+      "id": "floki",
+      "name": "Floki",
+      "symbol": "FLOKI",
+      "coingeckoId": "floki",
+      "marketCapRange": "500M$ - 2Md$",
+      "yearCreated": 2021,
+      "category": "Memecoin",
+      "tagline": "Memecoin inspiré du chien d'Elon Musk, avec quelques tentatives d'utilité",
+      "what": "Floki est un memecoin lancé en 2021 sur Ethereum/BSC, nommé d'après le Shiba Inu d'Elon Musk. Le projet a tenté de bâtir un écosystème (Valhalla metaverse, FlokiFi locker, université crypto) mais reste avant tout spéculatif.",
+      "whyHiddenGem": "Tentative honnête d'ajouter de l'utilité, mais l'adoption réelle reste faible. À traiter comme memecoin à risque, max 1-2% portefeuille.",
+      "reliability": {
+        "score": 5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Certik"
+        ],
+        "lastAuditDate": "2023-09",
+        "yearsActive": 5,
+        "majorIncidents": "Sanctions UK 2024 sur publicité (campagnes métro Londres)",
+        "fundingRaised": "Aucune levée traditionnelle",
+        "backers": [
+          "Communauté"
+        ]
+      },
+      "risks": [
+        "Volatilité extrême",
+        "Adoption réelle des produits faible",
+        "Régulateurs vigilants sur le marketing",
+        "Spéculation dominante"
+      ],
+      "useCase": "Memecoin, Valhalla metaverse, FlokiFi (locker), Floki University",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Kraken"
+      ],
+      "officialUrl": "https://floki.com",
+      "monitoringSignals": [
+        "Adoption Valhalla",
+        "TVL FlokiFi",
+        "Sentiment communauté"
+      ]
+    },
+    {
+      "rank": 76,
+      "id": "the-sandbox",
+      "name": "The Sandbox",
+      "symbol": "SAND",
+      "coingeckoId": "the-sandbox",
+      "marketCapRange": "500M$ - 1.5Md$",
+      "yearCreated": 2012,
+      "category": "Gaming / Metaverse",
+      "tagline": "Le metaverse français vétéran, déclin marqué post-hype 2021",
+      "what": "The Sandbox est une plateforme metaverse cofondée par les Français Arthur Madrid et Sébastien Borget, où les joueurs achètent des terrains (LANDs) et créent des expériences. SAND sert de monnaie d'échange.",
+      "whyHiddenGem": "Projet sérieux avec partenariats marques (Adidas, Warner Music) mais l'engagement utilisateur a chuté drastiquement depuis 2022. Pari sur une renaissance du metaverse, encore incertaine.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "CertiK",
+          "Halborn"
+        ],
+        "lastAuditDate": "2023-11",
+        "yearsActive": 14,
+        "majorIncidents": "Effondrement TVL et DAU depuis pic 2022 (-95% utilisateurs actifs)",
+        "fundingRaised": "94M$",
+        "backers": [
+          "SoftBank",
+          "Animoca Brands",
+          "LG Tech Ventures"
+        ]
+      },
+      "risks": [
+        "Décline post-hype 2022 (DAU effondrés)",
+        "Concurrence Roblox / Fortnite massive",
+        "Tokenomics inflationniste",
+        "Pari sur renaissance metaverse"
+      ],
+      "useCase": "Metaverse gaming, achat de LANDs, création d'expériences, marketplace NFT",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.sandbox.game",
+      "monitoringSignals": [
+        "Utilisateurs actifs mensuels",
+        "Volume marketplace LANDs",
+        "Nouveaux partenariats marques"
+      ]
+    },
+    {
+      "rank": 77,
+      "id": "decentraland",
+      "name": "Decentraland",
+      "symbol": "MANA",
+      "coingeckoId": "decentraland",
+      "marketCapRange": "400M$ - 1.2Md$",
+      "yearCreated": 2017,
+      "category": "Gaming / Metaverse",
+      "tagline": "Pionnier du metaverse on-chain, mais utilisateurs en chute libre",
+      "what": "Decentraland est un monde virtuel décentralisé sur Ethereum, lancé en 2020. Les utilisateurs achètent des LANDs (parcelles), créent des contenus et interagissent via avatars. MANA est la monnaie pour acheter biens et terres.",
+      "whyHiddenGem": "L'un des metaverses les plus matures techniquement, gouverné par DAO. Mais souffre d'un nombre d'utilisateurs très faible (souvent <500 DAU pic) malgré une grosse market cap.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Quantstamp",
+          "Certik"
+        ],
+        "lastAuditDate": "2023-06",
+        "yearsActive": 9,
+        "majorIncidents": "DAU médian estimé <1000 malgré valorisation 500M$+",
+        "fundingRaised": "26M$ (ICO 2017)",
+        "backers": [
+          "Digital Currency Group",
+          "FBG Capital",
+          "CoinFund"
+        ]
+      },
+      "risks": [
+        "Décline post-hype 2022 (DAU effondrés)",
+        "Graphismes datés vs concurrents Web2",
+        "Concurrence Roblox / Fortnite",
+        "Pari sur renaissance metaverse"
+      ],
+      "useCase": "Metaverse, achat de LAND, événements virtuels, marketplace NFT, gouvernance DAO",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://decentraland.org",
+      "monitoringSignals": [
+        "Utilisateurs actifs quotidiens",
+        "Volume marketplace MANA",
+        "Activité DAO"
+      ]
+    },
+    {
+      "rank": 78,
+      "id": "axie-infinity",
+      "name": "Axie Infinity",
+      "symbol": "AXS",
+      "coingeckoId": "axie-infinity",
+      "marketCapRange": "300M$ - 1Md$",
+      "yearCreated": 2018,
+      "category": "Gaming / Metaverse",
+      "tagline": "Pionnier du play-to-earn, victime de son propre modèle économique",
+      "what": "Axie Infinity est un jeu blockchain de combat de créatures (Axies) lancé par Sky Mavis. AXS est le token de gouvernance, SLP la monnaie in-game. A explosé en 2021 aux Philippines avec le play-to-earn.",
+      "whyHiddenGem": "Cas d'école : pic 165$ en 2021, aujourd'hui sous 5$. Le modèle play-to-earn s'est effondré. Sky Mavis tente une transition (Origins, Homeland) mais l'âge d'or est passé.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "Certik",
+          "Verichains"
+        ],
+        "lastAuditDate": "2024-02",
+        "yearsActive": 8,
+        "majorIncidents": "Hack Ronin Bridge mars 2022 (-625M$, plus gros hack DeFi de l'histoire)",
+        "fundingRaised": "311M$",
+        "backers": [
+          "a16z",
+          "Paradigm",
+          "Animoca Brands",
+          "Binance"
+        ]
+      },
+      "risks": [
+        "Décline post-hype 2022 (DAU -98% vs pic)",
+        "Modèle play-to-earn cassé",
+        "Hack historique Ronin (-625M$)",
+        "Tokenomics inflationniste"
+      ],
+      "useCase": "Jeu blockchain, élevage NFT Axies, gouvernance AXS, staking",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://axieinfinity.com",
+      "monitoringSignals": [
+        "Utilisateurs actifs quotidiens",
+        "Revenus protocole",
+        "Adoption Axie Origins"
+      ]
+    },
+    {
+      "rank": 79,
+      "id": "gala",
+      "name": "Gala",
+      "symbol": "GALA",
+      "coingeckoId": "gala",
+      "marketCapRange": "400M$ - 1.5Md$",
+      "yearCreated": 2019,
+      "category": "Gaming / Metaverse",
+      "tagline": "Plateforme gaming Web3 avec catalogue de jeux, mais controverses internes",
+      "what": "Gala est un écosystème de gaming blockchain avec sa propre chaîne (GalaChain), publiant plusieurs jeux et nodes opérables par les utilisateurs. GALA est le token utilitaire et de gouvernance.",
+      "whyHiddenGem": "Catalogue diversifié et nodes décentralisés intéressants, mais le projet a connu de graves disputes internes entre cofondateurs (procès Eric Schiermeyer vs Wright Thurston).",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "CertiK"
+        ],
+        "lastAuditDate": "2023-09",
+        "yearsActive": 7,
+        "majorIncidents": "Exploit mai 2024 : 600M$ de GALA mintés par un attaquant interne (récupérés en partie)",
+        "fundingRaised": "Privé non divulgué",
+        "backers": [
+          "Cofondateurs Eric Schiermeyer (ex-Zynga)"
+        ]
+      },
+      "risks": [
+        "Conflits juridiques entre cofondateurs",
+        "Exploit interne 2024 (600M$ GALA mintés)",
+        "Adoption jeux modeste",
+        "Tokenomics dilutive"
+      ],
+      "useCase": "Gaming Web3, nodes Gala, NFT in-game, GalaChain",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Bybit",
+        "Bitget",
+        "OKX"
+      ],
+      "officialUrl": "https://gala.com",
+      "monitoringSignals": [
+        "Joueurs actifs sur jeux Gala",
+        "Nombre de nodes opérationnels",
+        "Issue procès cofondateurs"
+      ]
+    },
+    {
+      "rank": 80,
+      "id": "beam",
+      "name": "Beam",
+      "symbol": "BEAM",
+      "coingeckoId": "beam-2",
+      "marketCapRange": "100M$ - 500M$",
+      "yearCreated": 2023,
+      "category": "Gaming / Metaverse",
+      "tagline": "Subnet gaming d'Avalanche par Merit Circle, infrastructure Web3 dédiée jeux",
+      "what": "Beam est une blockchain dédiée au gaming, lancée fin 2023 comme subnet Avalanche par Merit Circle DAO (rebrandé). Elle vise à fournir l'infrastructure pour studios de jeux Web3 (transactions gratuites, account abstraction).",
+      "whyHiddenGem": "Approche infrastructure plutôt que jeu unique, soutenue par une DAO crédible (ex-Merit Circle). Mais reste très early avec peu de jeux à succès lancés à date.",
+      "reliability": {
+        "score": 6,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Halborn",
+          "ChainSecurity"
+        ],
+        "lastAuditDate": "2024-01",
+        "yearsActive": 3,
+        "majorIncidents": "Aucun incident critique depuis lancement",
+        "fundingRaised": "100M$+ (via Merit Circle treasury)",
+        "backers": [
+          "DWF Labs",
+          "Sfermion",
+          "Maven 11",
+          "Spartan Group"
+        ]
+      },
+      "risks": [
+        "Catégorie gaming Web3 à risque (échecs majeurs)",
+        "Adoption jeux encore faible",
+        "Concurrence Immutable, Ronin",
+        "Volatilité high"
+      ],
+      "useCase": "Subnet gaming Avalanche, infrastructure jeux Web3, account abstraction",
+      "whereToBuy": [
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Gate.io",
+        "MEXC"
+      ],
+      "officialUrl": "https://www.onbeam.com",
+      "monitoringSignals": [
+        "Nombre de jeux déployés sur Beam",
+        "Transactions quotidiennes subnet",
+        "Adoption studios partenaires"
+      ]
+    },
+    {
+      "rank": 81,
+      "id": "tether",
+      "name": "Tether",
+      "symbol": "USDT",
+      "coingeckoId": "tether",
+      "marketCapRange": "140Md$ - 200Md$",
+      "yearCreated": 2014,
+      "category": "Stablecoin",
+      "tagline": "Le stablecoin dominant en volume, transparent en réserves mais controversé",
+      "what": "Tether (USDT) est un stablecoin adossé au dollar US, émis par Tether Limited. C'est le stablecoin le plus utilisé au monde en volume de trading, présent sur la plupart des blockchains (Ethereum, Tron, Solana).",
+      "whyHiddenGem": "Indispensable pour trader, mais NON conforme MiCA en Europe : Binance, Coinbase et Kraken EU le délistent progressivement. Possession OK mais utilisation restreinte sur exchanges régulés EU.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "BDO Italia (attestations trimestrielles, pas full audit)"
+        ],
+        "lastAuditDate": "2025-01",
+        "yearsActive": 12,
+        "majorIncidents": "Amende 41M$ CFTC 2021 pour fausses déclarations sur réserves; controverses récurrentes sur composition réserves",
+        "fundingRaised": "N/A (entreprise privée profitable)",
+        "backers": [
+          "iFinex (groupe Bitfinex)"
+        ]
+      },
+      "risks": [
+        "Non conforme MiCA (délisting EU progressif)",
+        "Attestations BDO mais pas full audit",
+        "Risque réglementaire US/EU",
+        "Concentration émetteur unique"
+      ],
+      "useCase": "Stablecoin trading, transferts internationaux, paiements crypto, refuge volatilité",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://tether.to",
+      "monitoringSignals": [
+        "Rapport trimestriel d'attestation",
+        "Évolution réglementation MiCA",
+        "Capitalisation vs USDC"
+      ]
+    },
+    {
+      "rank": 82,
+      "id": "usd-coin",
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "coingeckoId": "usd-coin",
+      "marketCapRange": "40Md$ - 80Md$",
+      "yearCreated": 2018,
+      "category": "Stablecoin",
+      "tagline": "Le stablecoin régulé US, transparent et conforme MiCA en Europe",
+      "what": "USDC est un stablecoin adossé au dollar US émis par Circle, entreprise américaine régulée. Réserves composées de cash et bons du Trésor US courts, attestés mensuellement par Deloitte.",
+      "whyHiddenGem": "Le stablecoin de référence pour la conformité : agréé MiCA, attestations Deloitte mensuelles, transparence haute. Choix par défaut pour Européens souhaitant un stablecoin sûr.",
+      "reliability": {
+        "score": 9,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Deloitte (attestations mensuelles)"
+        ],
+        "lastAuditDate": "2025-03",
+        "yearsActive": 8,
+        "majorIncidents": "Depeg temporaire mars 2023 à 0.87$ (faillite SVB où Circle avait 3.3Md$, récupérés)",
+        "fundingRaised": "850M$+ (Circle)",
+        "backers": [
+          "Goldman Sachs",
+          "Fidelity",
+          "BlackRock",
+          "Coinbase"
+        ]
+      },
+      "risks": [
+        "Risque ponctuel sur banques dépositaires (cas SVB)",
+        "Centralisation émetteur Circle",
+        "Sensibilité régulation US",
+        "Concentration géographique réserves"
+      ],
+      "useCase": "Stablecoin conforme MiCA, trading, paiements, DeFi, treasury entreprises",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.circle.com/usdc",
+      "monitoringSignals": [
+        "Attestations mensuelles Deloitte",
+        "Capitalisation vs USDT",
+        "Adoption institutionnelle"
+      ]
+    },
+    {
+      "rank": 83,
+      "id": "dai",
+      "name": "Dai",
+      "symbol": "DAI",
+      "coingeckoId": "dai",
+      "marketCapRange": "3Md$ - 6Md$",
+      "yearCreated": 2017,
+      "category": "Stablecoin",
+      "tagline": "Le stablecoin décentralisé pionnier, en transition vers USDS via Sky",
+      "what": "DAI est un stablecoin décentralisé adossé au dollar, émis par MakerDAO (rebaptisé Sky Protocol en 2024). Garanti par sur-collatéralisation crypto (ETH, stETH, USDC). Maintien du peg via mécanismes algorithmiques.",
+      "whyHiddenGem": "Pionnier de la DeFi, gouvernance décentralisée historique. Migration en cours vers USDS (Sky), DAI continue d'exister en parallèle. Modèle hybride avec exposition USDC, ce qui réduit la 'décentralisation' réelle.",
+      "reliability": {
+        "score": 8.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "PeckShield",
+          "Runtime Verification"
+        ],
+        "lastAuditDate": "2024-08",
+        "yearsActive": 9,
+        "majorIncidents": "Black Thursday mars 2020 : enchères collatéral cassées, 8M$ remboursés aux victimes",
+        "fundingRaised": "Levées multiples MakerDAO via tokens MKR",
+        "backers": [
+          "a16z",
+          "Paradigm",
+          "Polychain"
+        ]
+      },
+      "risks": [
+        "Transition vers USDS / Sky en cours",
+        "Dépendance partielle à USDC en collatéral",
+        "Complexité gouvernance Sky",
+        "Risque smart contracts"
+      ],
+      "useCase": "Stablecoin DeFi, garantie prêts, paiements, DAI Savings Rate",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "OKX"
+      ],
+      "officialUrl": "https://makerdao.com",
+      "monitoringSignals": [
+        "Ratio collatéralisation",
+        "Migration vers USDS",
+        "Composition collatéral (% USDC)"
+      ]
+    },
+    {
+      "rank": 84,
+      "id": "okb",
+      "name": "OKB",
+      "symbol": "OKB",
+      "coingeckoId": "okb",
+      "marketCapRange": "1.5Md$ - 4Md$",
+      "yearCreated": 2018,
+      "category": "Exchange Token",
+      "tagline": "Le token utilitaire d'OKX, l'un des plus gros exchanges mondiaux",
+      "what": "OKB est le token utilitaire de l'exchange OKX (anciennement OKEx). Offre des réductions de frais, accès aux launchpads (Jumpstart) et droits sur l'écosystème OKX (X Layer, OKX Wallet).",
+      "whyHiddenGem": "Exposition indirecte au volume d'OKX, exchange majeur. Brûlages réguliers réduisent l'offre. Mais OKX a quitté le marché US et la concurrence avec Binance reste rude.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "Audits Proof of Reserves trimestriels"
+        ],
+        "lastAuditDate": "2025-02",
+        "yearsActive": 8,
+        "majorIncidents": "Sortie du marché US en 2022, amende 505M$ pour licence US 2025",
+        "fundingRaised": "Privé non divulgué (entreprise OKX)",
+        "backers": [
+          "OKX Group"
+        ]
+      },
+      "risks": [
+        "Dépendance à un exchange centralisé unique",
+        "Risques réglementaires (sortie US)",
+        "Concurrence BNB / KCS",
+        "Token centralisé sur OKX"
+      ],
+      "useCase": "Réduction frais OKX, launchpad Jumpstart, gas X Layer, gouvernance",
+      "whereToBuy": [
+        "OKX",
+        "Bitfinex",
+        "Bybit",
+        "Gate.io",
+        "MEXC"
+      ],
+      "officialUrl": "https://www.okx.com/okb",
+      "monitoringSignals": [
+        "Volume trading OKX",
+        "Brûlages trimestriels",
+        "Adoption X Layer"
+      ]
+    },
+    {
+      "rank": 85,
+      "id": "cronos",
+      "name": "Cronos",
+      "symbol": "CRO",
+      "coingeckoId": "crypto-com-chain",
+      "marketCapRange": "2Md$ - 5Md$",
+      "yearCreated": 2018,
+      "category": "Exchange Token / L1",
+      "tagline": "Token écosystème de Crypto.com, sponsor sportif majeur (PSG, Lakers Arena)",
+      "what": "CRO est le token natif de Crypto.com et de sa blockchain Cronos (EVM compatible). Utilisé pour réductions de frais, staking, cashback carte Visa Crypto.com et gas sur Cronos chain.",
+      "whyHiddenGem": "Crypto.com est l'un des exchanges grand public majeurs avec marketing massif (sponsoring sport). Mais a connu une polémique en 2023 (mint de 70Md de tokens supplémentaires) qui a entamé la confiance.",
+      "reliability": {
+        "score": 7,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Mazars (puis arrêt 2022)",
+          "Kudelski Security"
+        ],
+        "lastAuditDate": "2024-12",
+        "yearsActive": 8,
+        "majorIncidents": "Hack 35M$ janvier 2022 (remboursé); polémique re-mint 70Md tokens 2023",
+        "fundingRaised": "Privé non divulgué",
+        "backers": [
+          "Crypto.com / Foris DAX MT"
+        ]
+      },
+      "risks": [
+        "Dépendance Crypto.com (centralisé)",
+        "Polémique re-mint 2023",
+        "Tokenomics ajustables",
+        "Concurrence forte exchanges"
+      ],
+      "useCase": "Cashback carte Visa, staking exchange, gas Cronos chain, DeFi écosystème",
+      "whereToBuy": [
+        "Crypto.com",
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX"
+      ],
+      "officialUrl": "https://crypto.com/cronos",
+      "monitoringSignals": [
+        "TVL Cronos chain",
+        "Volume Crypto.com exchange",
+        "Croissance carte Visa"
+      ]
+    },
+    {
+      "rank": 86,
+      "id": "kucoin-token",
+      "name": "KuCoin Token",
+      "symbol": "KCS",
+      "coingeckoId": "kucoin-shares",
+      "marketCapRange": "800M$ - 2Md$",
+      "yearCreated": 2017,
+      "category": "Exchange Token",
+      "tagline": "Token de l'exchange KuCoin avec partage de revenus, mais risques réglementaires",
+      "what": "KCS est le token natif de l'exchange KuCoin. Offre des réductions sur frais et un partage quotidien de 50% des revenus de l'exchange aux holders qui en stockent 6+ KCS.",
+      "whyHiddenGem": "Modèle de revenue sharing intéressant (rendement passif via dividendes). Mais KuCoin a payé 297M$ d'amende US en 2025 pour absence d'enregistrement, et reste non disponible en France.",
+      "reliability": {
+        "score": 6.5,
+        "teamIdentified": true,
+        "openSource": false,
+        "auditedBy": [
+          "Mazars (Proof of Reserves)"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 9,
+        "majorIncidents": "Hack 281M$ septembre 2020 (récupéré 84%); amende 297M$ US janvier 2025",
+        "fundingRaised": "20M$ Series A",
+        "backers": [
+          "IDG Capital",
+          "Matrix Partners"
+        ]
+      },
+      "risks": [
+        "Risques réglementaires (amendes US)",
+        "Non disponible en France",
+        "Dépendance KuCoin centralisé",
+        "Liquidité concentrée"
+      ],
+      "useCase": "Réductions frais KuCoin, partage revenus quotidiens, gas KCC chain",
+      "whereToBuy": [
+        "KuCoin",
+        "Gate.io",
+        "MEXC",
+        "BingX",
+        "Bitfinex"
+      ],
+      "officialUrl": "https://www.kcs.foundation",
+      "monitoringSignals": [
+        "Volume KuCoin",
+        "Distribution quotidienne dividendes",
+        "Évolution réglementaire"
+      ]
+    },
+    {
+      "rank": 87,
+      "id": "immutable",
+      "name": "Immutable",
+      "symbol": "IMX",
+      "coingeckoId": "immutable-x",
+      "marketCapRange": "800M$ - 3Md$",
+      "yearCreated": 2018,
+      "category": "L2 Gaming",
+      "tagline": "Le L2 Ethereum spécialisé gaming et NFT, partenariats studios majeurs",
+      "what": "Immutable est une plateforme L2 sur Ethereum dédiée au gaming et aux NFT, basée sur StarkEx puis zkEVM. IMX sert au staking, frais protocole et gouvernance.",
+      "whyHiddenGem": "Acteur leader du gaming Web3 avec partenariats studios (Ubisoft, GameStop, Square Enix, Illuvium). Mais le secteur gaming Web3 reste en difficulté côté adoption joueurs réels.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "ConsenSys Diligence",
+          "Trail of Bits"
+        ],
+        "lastAuditDate": "2024-10",
+        "yearsActive": 8,
+        "majorIncidents": "Aucun incident majeur de sécurité",
+        "fundingRaised": "280M$",
+        "backers": [
+          "Temasek",
+          "King River",
+          "Galaxy Digital",
+          "Animoca Brands"
+        ]
+      },
+      "risks": [
+        "Adoption gaming Web3 lente",
+        "Concurrence Ronin / Beam / Polygon",
+        "Tokenomics avec déblocages",
+        "Pari sur succès jeux partenaires"
+      ],
+      "useCase": "L2 gaming Ethereum, marketplace NFT (Immutable zkEVM), staking IMX, infrastructure studios",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.immutable.com",
+      "monitoringSignals": [
+        "Nombre de jeux live sur Immutable",
+        "Volume marketplace NFT",
+        "Joueurs actifs jeux partenaires"
+      ]
+    },
+    {
+      "rank": 88,
+      "id": "starknet",
+      "name": "Starknet",
+      "symbol": "STRK",
+      "coingeckoId": "starknet",
+      "marketCapRange": "300M$ - 1.5Md$",
+      "yearCreated": 2021,
+      "category": "L2 / Rollup ZK",
+      "tagline": "L2 zk-STARK Ethereum par StarkWare, mais déblocages tokens massifs",
+      "what": "Starknet est un L2 zk-rollup sur Ethereum développé par StarkWare, utilisant la technologie zk-STARK. Le langage de smart contracts natif est Cairo. STRK sert pour gas, staking et gouvernance.",
+      "whyHiddenGem": "Technologie zk-STARK avancée (post-quantum), équipe ultra-respectée. MAIS tokenomics critique : déblocages massifs 2024-2027 (50% de l'offre supplémentaire) qui maintiennent la pression vendeuse.",
+      "reliability": {
+        "score": 7.5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Nethermind",
+          "ConsenSys Diligence",
+          "Zellic"
+        ],
+        "lastAuditDate": "2024-11",
+        "yearsActive": 5,
+        "majorIncidents": "Lancement token avril 2024 critiqué pour distribution airdrop confuse",
+        "fundingRaised": "282M$",
+        "backers": [
+          "Paradigm",
+          "Sequoia",
+          "Tiger Global",
+          "Pantera"
+        ]
+      },
+      "risks": [
+        "Tokenomics critique : déblocages massifs 2024-2027",
+        "Adoption Cairo plus lente que Solidity",
+        "Concurrence forte zkSync / Linea",
+        "Pression vendeuse continue"
+      ],
+      "useCase": "L2 zk-rollup Ethereum, gas Starknet, staking, gouvernance protocole",
+      "whereToBuy": [
+        "Binance",
+        "Coinbase",
+        "Kraken",
+        "Bybit",
+        "Bitget"
+      ],
+      "officialUrl": "https://www.starknet.io",
+      "monitoringSignals": [
+        "Calendrier déblocages STRK",
+        "TVL Starknet",
+        "Adoption Cairo (devs actifs)"
+      ]
+    },
+    {
+      "rank": 89,
+      "id": "mantra",
+      "name": "MANTRA",
+      "symbol": "OM",
+      "coingeckoId": "mantra-dao",
+      "marketCapRange": "200M$ - 1Md$",
+      "yearCreated": 2020,
+      "category": "RWA / L1",
+      "tagline": "Chaîne RWA conforme régulation, mais crash flash 90% en avril 2025",
+      "what": "MANTRA est une L1 (basée sur Cosmos SDK) dédiée aux Real World Assets (RWA) tokenisés, avec focus conformité régulatoire (KYC natif, partenariats institutionnels Moyen-Orient). OM est le token utilitaire et de gouvernance.",
+      "whyHiddenGem": "Positionnement RWA crédible avec partenariats VARA Dubaï, mais le crash flash de avril 2025 (-90% en 2h) avec suspicions de manipulation par insiders a sérieusement entamé la confiance. À surveiller avec une extrême prudence.",
+      "reliability": {
+        "score": 5,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Hacken",
+          "BlockSec"
+        ],
+        "lastAuditDate": "2024-12",
+        "yearsActive": 6,
+        "majorIncidents": "Crash flash avril 2025 : -90% en 2h (de 6$ à 0.50$), suspicion manipulation tokenomics et liquidations forcées; accusations sur concentration insiders",
+        "fundingRaised": "151M$",
+        "backers": [
+          "Shorooq Partners",
+          "Laser Digital (Nomura)",
+          "Brevan Howard Digital"
+        ]
+      },
+      "risks": [
+        "CRASH FLASH AVRIL 2025 (-90% en 2h)",
+        "Suspicion manipulation insiders",
+        "Concentration tokens élevée",
+        "Réputation entachée durablement"
+      ],
+      "useCase": "Tokenisation RWA (immobilier, obligations), staking, gouvernance, conformité MiCA / VARA",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "OKX",
+        "Gate.io"
+      ],
+      "officialUrl": "https://www.mantrachain.io",
+      "monitoringSignals": [
+        "Distribution holders (concentration)",
+        "Volume RWA tokenisés réels",
+        "Communication équipe post-crash"
+      ]
+    },
+    {
+      "rank": 90,
+      "id": "polymesh",
+      "name": "Polymesh",
+      "symbol": "POLYX",
+      "coingeckoId": "polymesh",
+      "marketCapRange": "100M$ - 400M$",
+      "yearCreated": 2021,
+      "category": "RWA / L1 Sécurité",
+      "tagline": "Blockchain institutionnelle dédiée aux titres financiers, KYC natif",
+      "what": "Polymesh est une L1 permissionnée spécifiquement conçue pour les titres financiers tokenisés (security tokens). KYC obligatoire au niveau protocole, identité on-chain, conformité native aux régulations sécurités.",
+      "whyHiddenGem": "Très différent des L1 publics : pensé dès l'origine pour les institutions financières régulées. Approche conformité-first qui le distingue, conforme MiCA et adapté RWA institutionnels. Adoption progressive mais réelle.",
+      "reliability": {
+        "score": 8,
+        "teamIdentified": true,
+        "openSource": true,
+        "auditedBy": [
+          "Trail of Bits",
+          "Atredis Partners"
+        ],
+        "lastAuditDate": "2024-09",
+        "yearsActive": 5,
+        "majorIncidents": "Aucun incident critique",
+        "fundingRaised": "13M$ (Polymesh Association)",
+        "backers": [
+          "Polymath",
+          "Tokyo Stock Exchange (partenaire)",
+          "Genesis Block Ventures"
+        ]
+      },
+      "risks": [
+        "Adoption institutionnelle lente par nature",
+        "Marché RWA encore early",
+        "Concurrence Avalanche, ONDO sur RWA",
+        "Permissioned (pas pour usage retail libre)"
+      ],
+      "useCase": "Tokenisation security tokens, fonds, obligations, infrastructure conforme institutionnels, KYC on-chain",
+      "whereToBuy": [
+        "Binance",
+        "Bybit",
+        "Bitget",
+        "Gate.io",
+        "Kraken"
+      ],
+      "officialUrl": "https://polymesh.network",
+      "monitoringSignals": [
+        "Volume titres tokenisés sur réseau",
+        "Partenariats institutionnels nouveaux",
+        "Validators KYC actifs"
       ]
     }
   ]

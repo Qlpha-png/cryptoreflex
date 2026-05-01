@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-26",
+    "purpose": "Roadmap d'événements connus / attendus pour les cryptos majeures. Ne contient que des cryptos avec une roadmap publique crédible.",
+    "schema": "Mapping crypto.id → array d'événements. Status: 'done' | 'in-progress' | 'planned'. Date approximative format YYYY-MM."
+  },
+  "roadmaps": {
+    "bitcoin": [
+      { "date": "2024-04", "status": "done", "title": "Halving #4", "description": "Récompense des blocs passée de 6,25 à 3,125 BTC. Réduction de l'émission de moitié, comme tous les 4 ans depuis 2009." },
+      { "date": "2024-01", "status": "done", "title": "ETF Bitcoin spot approuvés US", "description": "La SEC a autorisé 11 ETF Bitcoin spot (BlackRock IBIT, Fidelity FBTC, etc.). Influx massif de capital institutionnel." },
+      { "date": "2025-12", "status": "done", "title": "Trump pro-crypto inauguré", "description": "Politique américaine désormais favorable : SEC plus souple, projet de réserve stratégique BTC." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "Adoption ETF en Europe", "description": "Plusieurs ETF Bitcoin spot lancés sur Euronext et Xetra depuis 2025. Adoption institutionnelle FR/DE qui s'accélère." },
+      { "date": "2028-04", "status": "planned", "title": "Halving #5", "description": "Récompense passera de 3,125 à 1,5625 BTC. Historiquement, le halving précède un cycle haussier d'environ 12-18 mois." }
+    ],
+    "ethereum": [
+      { "date": "2022-09", "status": "done", "title": "The Merge", "description": "Passage du Proof-of-Work au Proof-of-Stake. Réduction de 99,95% de la consommation énergétique." },
+      { "date": "2024-03", "status": "done", "title": "Dencun (EIP-4844)", "description": "Activation du proto-danksharding via les 'blobs'. Réduction des frais L2 de 10-100x. Boom des rollups." },
+      { "date": "2025-05", "status": "done", "title": "Pectra", "description": "Limite de stake validateur portée à 2048 ETH. Comptes EOA peuvent agir comme smart contracts (EIP-7702). Améliore UX." },
+      { "date": "2026-Q4", "status": "in-progress", "title": "Fusaka", "description": "Augmentation du nombre de blobs par bloc. Encore plus de scaling pour les L2. PeerDAS pour data availability." },
+      { "date": "2027+", "status": "planned", "title": "The Verge / Statelessness", "description": "Verkle Trees → nœuds plus légers. The Purge → suppression de l'historique ancien. Roadmap Vitalik long terme." }
+    ],
+    "xrp": [
+      { "date": "2023-07", "status": "done", "title": "Procès SEC clarifié", "description": "Le juge a tranché : XRP en lui-même n'est PAS un security. Levée d'incertitude réglementaire majeure." },
+      { "date": "2025-Q1", "status": "done", "title": "ETF XRP spot US approuvés", "description": "SEC plus souple sous l'administration Trump : ETF XRP spot autorisés début 2025." },
+      { "date": "2025-Q4", "status": "done", "title": "RLUSD stablecoin Ripple", "description": "Lancement du stablecoin Ripple, conforme NYDFS. Adoption pour règlements institutionnels." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "EVM sidechain mainnet", "description": "Lancement de la sidechain compatible Ethereum (smart contracts via EVM)." }
+    ],
+    "solana": [
+      { "date": "2023-Q4", "status": "done", "title": "Reprise du marché post-FTX", "description": "Récupération spectaculaire après le crash FTX (Solana avait chuté de 95% fin 2022)." },
+      { "date": "2024-Q4", "status": "done", "title": "Memecoin season 2.0", "description": "Lancement de Pump.fun, BONK, WIF — Solana devient la chain memecoin n°1 en volume DEX." },
+      { "date": "2025-Q3", "status": "done", "title": "Firedancer beta", "description": "Validateur alternatif développé par Jump Crypto. Devrait supporter 1M TPS et améliorer la fiabilité du réseau." },
+      { "date": "2026-Q4", "status": "in-progress", "title": "Firedancer mainnet généralisé", "description": "Diversification client validateur : amélioration majeure de la résilience du réseau (fini les outages 2022)." }
+    ],
+    "cardano": [
+      { "date": "2023-09", "status": "done", "title": "CIP-1694 voting on-chain", "description": "Mise en place de la gouvernance décentralisée par les holders d'ADA." },
+      { "date": "2025-Q1", "status": "done", "title": "Hard fork Chang", "description": "Activation de la gouvernance on-chain (DReps, Constitutional Committee)." },
+      { "date": "2026-Q2", "status": "in-progress", "title": "Hydra Heads scaling", "description": "Solution L2 native qui permet des dizaines de milliers de TPS via state channels." },
+      { "date": "2026-Q4", "status": "planned", "title": "Midnight sidechain", "description": "Sidechain ZK-privacy par IOG : confidentialité programmable pour entreprises (KYC, données médicales)." }
+    ],
+    "polkadot": [
+      { "date": "2023-Q3", "status": "done", "title": "JAM (Join-Accumulate Machine) annoncé", "description": "Successeur du Relay Chain proposé par Gavin Wood. Architecture totalement repensée." },
+      { "date": "2025-Q3", "status": "done", "title": "Coretime marketplace", "description": "Marché de cores pour parachains : achat à la demande remplaçant les enchères de slots." },
+      { "date": "2026-Q4", "status": "in-progress", "title": "JAM testnet", "description": "Première phase de test de la nouvelle architecture. Migration progressive prévue 2027-2028." }
+    ],
+    "near-protocol": [
+      { "date": "2024-Q1", "status": "done", "title": "Nightshade 2.0 sharding", "description": "Sharding optimisé : performance multipliée par 4 sans dégrader la sécurité." },
+      { "date": "2024-Q4", "status": "done", "title": "Chain Abstraction", "description": "Lancement de l'abstraction inter-chaînes : signer des transactions Bitcoin/Ethereum depuis NEAR sans bridge." },
+      { "date": "2025-Q3", "status": "done", "title": "Pivot User-Owned AI", "description": "Repositionnement stratégique vers l'IA souveraine. Accord avec NVIDIA pour infra GPU décentralisée." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "Stateless validators", "description": "Validateurs sans historique complet → onboarding plus rapide et meilleure décentralisation." }
+    ],
+    "celestia": [
+      { "date": "2023-10", "status": "done", "title": "Mainnet Genesis", "description": "Lancement du mainnet de la première blockchain modulaire dédiée à la data availability." },
+      { "date": "2024-Q3", "status": "done", "title": "Lemongrass upgrade", "description": "Augmentation de la capacité DA et IBC pour Cosmos." },
+      { "date": "2025-Q2", "status": "done", "title": "Ginger upgrade", "description": "Capacité DA multipliée par 10x. Adoption massive par rollups Manta, Eclipse, Movement." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "Lazybridging", "description": "Bridge natif sans confiance Celestia ↔ Ethereum. Devrait massivement améliorer la composabilité." }
+    ],
+    "arbitrum": [
+      { "date": "2023-03", "status": "done", "title": "Token ARB airdrop", "description": "Distribution de 1.16Md tokens ARB aux utilisateurs early du L2." },
+      { "date": "2024-Q1", "status": "done", "title": "Stylus mainnet", "description": "Smart contracts en Rust/C++/C — première fois sur Ethereum scaling." },
+      { "date": "2024-Q3", "status": "done", "title": "Arbitrum Orbit pour L3s", "description": "Framework permettant à n'importe quel projet de lancer son propre L3 sur Arbitrum." },
+      { "date": "2026-Q4", "status": "in-progress", "title": "Sequencer décentralisé", "description": "Décentralisation progressive du séquenceur (encore opéré par Offchain Labs aujourd'hui)." }
+    ],
+    "avalanche": [
+      { "date": "2024-Q1", "status": "done", "title": "Avalanche9000 + ACP-77", "description": "Subnets renommés 'L1s'. Frais de validation réduits de 99%. Adoption institutionnelle facilitée." },
+      { "date": "2025-Q2", "status": "done", "title": "Avalanche Card", "description": "Carte de paiement crypto émise sur Avalanche, accessible en Europe et US." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "Etna L1 customizable", "description": "Outil no-code pour créer son propre L1 Avalanche en quelques heures." }
+    ],
+    "ondo-finance": [
+      { "date": "2023-Q3", "status": "done", "title": "OUSG (Treasuries tokenisés)", "description": "Premier produit RWA de Ondo : bons du Trésor US tokenisés on-chain. Adopté par BlackRock BUIDL." },
+      { "date": "2024-Q4", "status": "done", "title": "USDY stablecoin yield", "description": "Stablecoin adossé à des Treasuries qui génère un rendement natif (4-5%)." },
+      { "date": "2025-Q4", "status": "done", "title": "Ondo Chain testnet", "description": "L1 dédié au RWA institutionnel, KYC natif, compatible BlackRock et Franklin Templeton." },
+      { "date": "2026-Q3", "status": "in-progress", "title": "Ondo Chain mainnet", "description": "Lancement officiel du L1 RWA. Partenariats déjà signés avec banques européennes pour la tokenisation d'obligations." }
+    ]
+  }
+}

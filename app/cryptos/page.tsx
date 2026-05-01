@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowRight, Gem, Trophy } from "lucide-react";
+import { Search, Filter, ArrowRight, Gem, Trophy, X } from "lucide-react";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 
 type FilterKind = "all" | "top10" | "hidden-gem";
@@ -17,16 +17,73 @@ const FILTERS: Array<{ key: FilterKind; label: string; icon: typeof Trophy }> = 
  * Index /cryptos — liste filtrable + recherche locale.
  *
  * Client Component pour permettre la recherche live + le filter sans round-trip serveur.
- * Les datasets étant statiques (top 10 + hidden gems), tout tient en mémoire (~20 entrées).
+ * 100 entrées : tient en mémoire sans souci, pas besoin de pagination.
+ *
+ * Filtres :
+ *  - Kind (toutes / top10 / hidden gems)
+ *  - Catégorie (Layer 1, DeFi, DePIN, RWA, Memecoin, Stablecoin, etc.)
+ *  - Recherche full-text sur name / symbol / category / tagline
  */
 export default function CryptosIndexPage() {
   const all = useMemo(() => getAllCryptos(), []);
   const [filter, setFilter] = useState<FilterKind>("all");
+  const [category, setCategory] = useState<string>("");
   const [query, setQuery] = useState("");
+
+  // Catégories agrégées dynamiquement depuis les datasets — on regroupe les
+  // catégories proches via une heuristique simple pour ne pas avoir 40 chips.
+  const categoryGroups = useMemo(() => {
+    const groups: Record<string, string[]> = {
+      "Layer 1": [],
+      "Layer 2": [],
+      "DeFi": [],
+      "DePIN / Infra": [],
+      "Memecoin": [],
+      "Stablecoin": [],
+      "Gaming / NFT": [],
+      "Privacy / ZK": [],
+      "RWA": [],
+      "Oracles / Données": [],
+      "Autre": [],
+    };
+    all.forEach((c) => {
+      const cat = c.category.toLowerCase();
+      if (cat.includes("layer 2") || cat.includes("l2")) {
+        groups["Layer 2"].push(c.id);
+      } else if (cat.includes("layer 1") || cat.includes("layer 0") || cat.includes("smart contracts") || cat.includes("plateforme")) {
+        groups["Layer 1"].push(c.id);
+      } else if (cat.includes("defi") || cat.includes("dex") || cat.includes("liquid staking") || cat.includes("lending")) {
+        groups["DeFi"].push(c.id);
+      } else if (cat.includes("depin") || cat.includes("infrastructure") || cat.includes("storage") || cat.includes("compute") || cat.includes("ai") || cat.includes("ia")) {
+        groups["DePIN / Infra"].push(c.id);
+      } else if (cat.includes("meme")) {
+        groups["Memecoin"].push(c.id);
+      } else if (cat.includes("stablecoin")) {
+        groups["Stablecoin"].push(c.id);
+      } else if (cat.includes("gaming") || cat.includes("metaverse") || cat.includes("nft")) {
+        groups["Gaming / NFT"].push(c.id);
+      } else if (cat.includes("privacy") || cat.includes("zk") || cat.includes("zero")) {
+        groups["Privacy / ZK"].push(c.id);
+      } else if (cat.includes("rwa") || cat.includes("real world")) {
+        groups["RWA"].push(c.id);
+      } else if (cat.includes("oracle")) {
+        groups["Oracles / Données"].push(c.id);
+      } else {
+        groups["Autre"].push(c.id);
+      }
+    });
+    return Object.entries(groups)
+      .filter(([, ids]) => ids.length > 0)
+      .map(([name, ids]) => ({ name, count: ids.length, ids: new Set(ids) }));
+  }, [all]);
 
   const filtered = useMemo(() => {
     let list = all;
     if (filter !== "all") list = list.filter((c) => c.kind === filter);
+    if (category) {
+      const group = categoryGroups.find((g) => g.name === category);
+      if (group) list = list.filter((c) => group.ids.has(c.id));
+    }
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter(
@@ -38,7 +95,7 @@ export default function CryptosIndexPage() {
       );
     }
     return list;
-  }, [all, filter, query]);
+  }, [all, filter, category, query, categoryGroups]);
 
   return (
     <div className="py-12 sm:py-16">
@@ -55,16 +112,17 @@ export default function CryptosIndexPage() {
         {/* Header */}
         <header className="mt-6 max-w-3xl">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Toutes nos fiches <span className="gradient-text">crypto</span>
+            100 cryptos <span className="gradient-text">analysées</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            20 fiches détaillées : 10 cryptos majeures expliquées pour les débutants
-            (Top 10 par capitalisation) et 10 "hidden gems" avec score de fiabilité
-            calculé sur méthodologie publique.
+            La plus grande base d&apos;analyse crypto francophone : 10 cryptos majeures
+            expliquées pour les débutants (Top 10 par capitalisation), 90 fiches Hidden Gems
+            avec score de fiabilité calculé sur méthodologie publique. Régulation MiCA, audits,
+            backers, risques — tout est documenté.
           </p>
         </header>
 
-        {/* Filtres + recherche */}
+        {/* Filtres kind + recherche */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 flex-wrap">
             {FILTERS.map(({ key, label, icon: Icon }) => {
@@ -105,13 +163,53 @@ export default function CryptosIndexPage() {
           </div>
         </div>
 
+        {/* Filtre catégorie */}
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] uppercase tracking-wider text-muted">
+            Catégorie
+          </span>
+          {categoryGroups.map((g) => {
+            const active = category === g.name;
+            return (
+              <button
+                key={g.name}
+                onClick={() => setCategory(active ? "" : g.name)}
+                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                  active
+                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
+                    : "border-border bg-surface text-muted hover:text-fg hover:border-amber-400/30"
+                }`}
+                aria-pressed={active}
+              >
+                {g.name}
+                <span className="text-[10px] opacity-70">({g.count})</span>
+              </button>
+            );
+          })}
+          {category && (
+            <button
+              onClick={() => setCategory("")}
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-1 text-[10px] text-muted hover:text-fg"
+              aria-label="Réinitialiser le filtre catégorie"
+            >
+              <X className="h-3 w-3" /> Effacer
+            </button>
+          )}
+        </div>
+
+        {/* Compteur résultats */}
+        <p className="mt-5 text-xs text-muted">
+          <span className="font-semibold text-fg">{filtered.length}</span> crypto{filtered.length > 1 ? "s" : ""} affichée{filtered.length > 1 ? "s" : ""}
+          {filtered.length !== all.length && ` sur ${all.length} au total`}
+        </p>
+
         {/* Grid */}
         {filtered.length === 0 ? (
           <p className="mt-12 text-sm text-muted">
-            Aucune crypto ne correspond à ta recherche.
+            Aucune crypto ne correspond à ta recherche. Essaie un autre mot-clé ou efface les filtres.
           </p>
         ) : (
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((c) => (
               <CryptoCard key={c.id} crypto={c} />
             ))}

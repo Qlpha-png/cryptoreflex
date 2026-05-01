@@ -60,9 +60,13 @@ import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import QuickBuyBox from "@/components/crypto-detail/QuickBuyBox";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
 import TradingViewWidget from "@/components/crypto-detail/TradingViewWidget";
+import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
+import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { getWalletsForCrypto } from "@/lib/crypto-wallets";
+import { getRoadmapFor } from "@/lib/crypto-roadmaps";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -198,6 +202,8 @@ export default async function CryptoPage({ params }: Props) {
   const verdict = buildVerdict(c);
   const faq = buildFaq(c);
   const related = getRelatedCryptos(c.id, 4);
+  const walletGuide = getWalletsForCrypto(c);
+  const roadmapEvents = getRoadmapFor(c.id);
 
   const isGem = c.kind === "hidden-gem";
   const kindLabel = isGem ? "Hidden Gem" : `Top ${c.rank} mondial`;
@@ -449,6 +455,16 @@ export default async function CryptoPage({ params }: Props) {
           <WhereToBuy cryptoName={c.name} platformNames={c.whereToBuy} />
         </div>
 
+        {/* WALLETS RECOMMANDÉS — étape post-achat : sécuriser ses fonds */}
+        <div className="mt-12">
+          <RecommendedWallets
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+            chain={walletGuide.chain}
+            recommendations={walletGuide.recommendations}
+          />
+        </div>
+
         {/* CTA Alertes prix — léger, contextuel */}
         <section
           aria-label={`Alerte prix ${c.name}`}
@@ -482,6 +498,13 @@ export default async function CryptoPage({ params }: Props) {
           </h2>
           <p className="mt-3 text-base text-fg/85 leading-relaxed">{verdict}</p>
         </section>
+
+        {/* ROADMAP — uniquement si on a des données fiables pour cette crypto */}
+        {roadmapEvents && (
+          <div className="mt-12">
+            <CryptoRoadmap cryptoName={c.name} events={roadmapEvents} />
+          </div>
+        )}
 
         {/* CROSS-LINK HALVING (Bitcoin uniquement) */}
         {c.id === "bitcoin" && (
