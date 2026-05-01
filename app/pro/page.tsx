@@ -251,7 +251,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         "Alertes prix 100 par email (vs 3 en Free)",
         "Watchlist 200 cryptos (vs 10 en Free)",
         "IA Q&A par fiche — 20 questions/jour avec Claude Haiku contextualisé",
-        "Annulation 1 clic, sans engagement, garantie commerciale 7 j satisfait-ou-remboursé",
+        "Annulation 1 clic, sans engagement, 14 j remboursé (art. L221-18) + garantie commerciale 7 j satisfait-ou-remboursé en bonus",
         "Tu finances directement le développement et l'hébergement UE",
       ],
       ctaLabel: paymentsEnabled
@@ -282,7 +282,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
         "Tout le plan Soutien Mensuel (mêmes limites étendues)",
         "Économie ~6,89 € / an (vs 2,99 € × 12 = 35,88 €)",
         "Tu permets au projet de tenir 12 mois supplémentaires",
-        "Annulation 1 clic, garantie commerciale 7 j satisfait-ou-remboursé",
+        "Annulation 1 clic, 14 j remboursé (art. L221-18) + garantie commerciale 7 j en bonus",
       ],
       ctaLabel: paymentsEnabled
         ? ANNUAL_HAS_OWN_LINK

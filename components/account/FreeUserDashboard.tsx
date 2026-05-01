@@ -110,7 +110,8 @@ export default function FreeUserDashboard() {
           techniques (portfolio 500, alertes 100, watchlist 200) et débloque l&apos;IA
           Q&amp;A par fiche crypto (20 questions/jour, Claude Haiku contextualisé).
           Il finance directement le projet — dès {MONTHLY_PRICE}/mois, annulation
-          1 clic, garantie commerciale 7&nbsp;j satisfait-ou-remboursé. Pas de
+          1 clic, 14&nbsp;j remboursé (art. L221-18) + garantie commerciale
+          7&nbsp;j satisfait-ou-remboursé en bonus. Pas de
           fausse promesse de support humain ni d&apos;équipe d&apos;experts :
           juste un dev solo en France.
         </p>

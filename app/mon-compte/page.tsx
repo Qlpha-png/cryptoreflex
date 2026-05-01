@@ -159,16 +159,16 @@ export default async function AccountPage() {
               index={2}
               tone="info"
               Icon={Bell}
-              label="Alertes Pro"
-              value="Illimité"
-              subText="vs 3 max en Free"
+              label="Alertes Soutien"
+              value="100"
+              subText="vs 3 en Free"
             />
             <KpiCard
               index={3}
               tone="info"
               Icon={Wallet}
-              label="Portfolio"
-              value="Illimité"
+              label="Portfolio Soutien"
+              value="500"
               subText="vs 10 positions Free"
             />
           </div>
