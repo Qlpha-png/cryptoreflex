@@ -21,6 +21,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
+import PushOptIn from "@/components/PushOptIn";
 
 /**
  * Type minimal des cryptos sélectionnables — dénormalisé côté serveur dans
@@ -508,6 +509,11 @@ export default function AlertsManager({ cryptos }: Props) {
                 </p>
               )}
             </div>
+
+            {/* Après création réussie : CTA douce pour activer les notifs push
+                en complément de l'email (option : ne s'affiche pas si déjà
+                granted ou unsupported). */}
+            {submitState === "success" && <PushOptIn variant="inline" />}
           </div>
         </form>
 

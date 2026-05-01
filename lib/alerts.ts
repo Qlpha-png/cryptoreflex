@@ -31,6 +31,8 @@ import { BRAND } from "@/lib/brand";
 import { COIN_IDS, COIN_NAMES } from "@/lib/historical-prices";
 import { getAllCryptos } from "@/lib/cryptos";
 import { fetchPrices, type CoinId } from "@/lib/coingecko";
+import { sendPushToUser } from "@/lib/web-push";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -577,6 +579,30 @@ export async function evaluateAndFire(
           continue;
         }
 
+        // Push notification en parallèle de l'email (pas bloquant : si l'user
+        // n'a pas activé les push ou si VAPID n'est pas configuré, sendPushToUser
+        // est un no-op silencieux). On garde l'email comme canal de référence.
+        try {
+          const userId = await lookupUserIdByEmail(alert.email);
+          if (userId) {
+            const direction =
+              alert.condition === "above" ? "franchit" : "passe sous";
+            const formattedThreshold = `${alert.threshold} ${alert.currency.toUpperCase()}`;
+            await sendPushToUser(userId, {
+              title: `🚨 Alerte prix ${alert.symbol}`,
+              body: `${cryptoName} ${direction} ${formattedThreshold}`,
+              url: `/cryptos/${detailSlug}`,
+              tag: `alert-${alert.id}`,
+            });
+          }
+        } catch (err) {
+          // Push non bloquant : on log mais on ne fail pas l'alerte.
+          console.warn(
+            `[alerts] push failed for ${alert.id}:`,
+            err instanceof Error ? err.message : String(err),
+          );
+        }
+
         await updateAlert(alert, { status: "triggered", lastTriggered: now });
         report.fired++;
       } catch (err) {
@@ -649,4 +675,32 @@ async function fetchEurPrice(cryptoId: string): Promise<number | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * Map email → user_id Supabase (pour brancher le push notif sur une alerte).
+ *
+ * Les alertes prix sont indexées par EMAIL (KV, pas Supabase) — tout le monde
+ * peut créer une alerte sans compte. Les push notifs sont attachées à un user_id
+ * Supabase (RLS, multi-device). Donc quand une alerte fire, on cherche s'il
+ * existe un user Supabase avec cet email pour push aussi.
+ *
+ * Comportement :
+ *  - Email pas trouvé en DB → return null (l'utilisateur n'a pas de compte,
+ *    juste l'email d'alerte → on n'envoie que l'email, pas de push).
+ *  - Supabase non configuré → return null (no-op).
+ */
+async function lookupUserIdByEmail(email: string): Promise<string | null> {
+  const supabase = createSupabaseServiceRoleClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("users")
+    .select("id")
+    .eq("email", email.trim().toLowerCase())
+    .maybeSingle();
+  if (error) {
+    console.warn("[alerts] lookupUserIdByEmail:", error.message);
+    return null;
+  }
+  return (data?.id as string | undefined) ?? null;
 }

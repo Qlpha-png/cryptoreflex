@@ -1,5 +1,5 @@
 /**
- * Cryptoreflex — Service Worker (PWA basique)
+ * Cryptoreflex — Service Worker (PWA basique + Web Push).
  * ---------------------------------------------------------------------------
  * Stratégie minimale, robuste, sans dépendance externe (pas de Workbox).
  *
@@ -7,6 +7,7 @@
  *  - Assets statiques    : Cache-first (immutable Next.js /_next/static/*)
  *  - Images & icônes     : Cache-first avec mise à jour silencieuse
  *  - Tout le reste       : passthrough (pas de mise en cache)
+ *  - Push notifications  : VAPID (cf. lib/web-push.ts), v2 (02/05/2026)
  *
  * Le SW NE CACHE PAS :
  *  - les requêtes non-GET
@@ -16,7 +17,7 @@
  * Pour invalider le cache après un déploiement : bump CACHE_VERSION.
  */
 
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const STATIC_CACHE = `cryptoreflex-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `cryptoreflex-runtime-${CACHE_VERSION}`;
 
@@ -161,4 +162,60 @@ self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") {
     self.skipWaiting();
   }
+});
+
+// ------------------- Web Push (v2 — 02/05/2026) -------------------
+
+/**
+ * Réception d'une notification push (envoyée par lib/web-push.ts côté serveur).
+ * Le payload est JSON-stringifié : { title, body, icon?, url?, tag? }.
+ *
+ * Defensive : event.data peut être null (notif silencieuse), on fallback sur
+ * des valeurs neutres pour éviter un throw qui empêcherait l'affichage natif.
+ */
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (_) {
+    try {
+      const txt = event.data ? event.data.text() : "";
+      data = { title: "Cryptoreflex", body: txt || "" };
+    } catch (__) {
+      data = {};
+    }
+  }
+
+  const title = data.title || "Cryptoreflex";
+  const options = {
+    body: data.body || "",
+    icon: data.icon || "/icons/icon-192.svg",
+    badge: "/icons/icon-192.svg",
+    tag: data.tag,
+    data: { url: data.url || "/" },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+/**
+ * Click sur une notif → on ouvre/focus l'onglet correspondant à `data.url`.
+ * Si une fenêtre Cryptoreflex est déjà ouverte sur la bonne URL, on la focus
+ * plutôt que d'ouvrir un nouvel onglet (UX moins polluante).
+ */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((list) => {
+        for (const c of list) {
+          if (c.url.includes(url) && "focus" in c) return c.focus();
+        }
+        if (self.clients.openWindow) return self.clients.openWindow(url);
+        return null;
+      })
+  );
 });

@@ -32,6 +32,7 @@ import FreeUserDashboard from "@/components/account/FreeUserDashboard";
 import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 import AskAiQuotaCard from "@/components/account/AskAiQuotaCard";
 import EditableDisplayName from "@/components/account/EditableDisplayName";
+import PushOptIn from "@/components/PushOptIn";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -406,6 +407,11 @@ export default async function AccountPage() {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Notifications push */}
+        <div className="mt-4">
+          <PushOptIn />
         </div>
 
         {/* Sécurité */}
