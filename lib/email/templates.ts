@@ -172,22 +172,22 @@ export function welcomeProEmail(opts: {
   magicLink: string;
 }): EmailContent {
   const planLabel =
-    opts.plan === "pro_annual" ? "Pro Annuel (79,99 €/an)" : "Pro Mensuel (9,99 €/mois)";
+    opts.plan === "pro_annual" ? "Soutien Annuel (28,99 €/an)" : "Soutien Mensuel (2,99 €/mois)";
 
-  const subject = `Bienvenue dans Cryptoreflex Pro`;
-  const preheader = `Ton accès Pro est actif. 4 actions à faire en 60 secondes.`;
+  const subject = `Bienvenue dans Cryptoreflex Soutien`;
+  const preheader = `Ton accès Soutien est actif. 4 actions à faire en 60 secondes.`;
 
   const content = `
 <!-- H1 -->
 <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
-  Bienvenue dans Cryptoreflex&nbsp;<span style="color:${T.colors.primary};">Pro</span>
+  Bienvenue dans Cryptoreflex&nbsp;<span style="color:${T.colors.primary};">Soutien</span>
 </h1>
 
 <p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">Merci. Vraiment.</p>
 
 <p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
-Ton paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Ton accès Pro est actif <em>maintenant</em>. Tu débloques :
-portfolio illimité, alertes prix illimitées, glossaire 250+ termes, brief PRO hebdo et réponse fiscale 48&nbsp;h.
+Ton paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Ton accès Soutien est actif <em>maintenant</em>. Tu débloques :
+portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchlist 200 cryptos (vs 10) et IA Q&amp;A 20 questions/jour avec Claude Haiku contextualisé sur chacune des 100 fiches.
 </p>
 
 <!-- Quick wins -->

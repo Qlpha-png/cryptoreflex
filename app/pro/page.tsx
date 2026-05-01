@@ -66,8 +66,9 @@ const META_ANNUAL_PRICE = process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "28,99 €
  *    actuellement broadcast unique, pas de personnalisation.
  *  - Roadmap V2 avec dates précises (Mai/Juin/Été 2026) → engagements
  *    contractuels qu'on ne peut pas garantir tenir.
- *  - "Pro Mensuel 9,99 €/mois" / "Pro Annuel 79 €/an" → tarif SaaS premium
- *    qui suggère un produit étoffé alors qu'on n'a pas l'équipe pour livrer.
+ *  - "Pro Mensuel 9,99 €/mois" / "Pro Annuel 79 €/an" (anciens tarifs SaaS premium
+ *    qui suggéraient un produit étoffé alors qu'on n'a pas l'équipe pour livrer)
+ *    → repositionnés à 2,99 €/mois et 28,99 €/an depuis avril 2026.
  *
  * APRÈS (modèle « soutien éditeur indépendant » à la Plausible/Buy-Me-a-Coffee) :
  *  - On ne vend QUE des bénéfices techniques 100% automatisables (limites
@@ -157,9 +158,9 @@ export const metadata: Metadata = {
  *   NEXT_PUBLIC_PRO_ANNUAL_STRIPE_LINK    = https://buy.stripe.com/zzz (annuel récurrent)
  *
  * Prix configurables aussi (au cas où l'utilisateur change ses tarifs Stripe) :
- *   NEXT_PUBLIC_PRO_EARLYBIRD_PRICE = "49 €" (défaut)
- *   NEXT_PUBLIC_PRO_MONTHLY_PRICE   = "9 €" (défaut, peut être "9,99 €")
- *   NEXT_PUBLIC_PRO_ANNUAL_PRICE    = "79 €" (défaut, peut être "79,99 €")
+ *   NEXT_PUBLIC_PRO_EARLYBIRD_PRICE = "28,99 €" (défaut, alias annuel pour rétrocompat)
+ *   NEXT_PUBLIC_PRO_MONTHLY_PRICE   = "2,99 €" (défaut runtime)
+ *   NEXT_PUBLIC_PRO_ANNUAL_PRICE    = "28,99 €" (défaut runtime)
  */
 const EARLYBIRD_LINK =
   process.env.NEXT_PUBLIC_PRO_EARLYBIRD_STRIPE_LINK ?? "#waitlist";

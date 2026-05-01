@@ -385,8 +385,8 @@ export default function RadarPage() {
               />
             </Link>
             <p className="mt-3 text-xs text-muted">
-              À partir de 9,99 €/mois · Annulation 1 clic · Garantie 14 j
-              remboursé
+              À partir de 2,99 €/mois · Annulation 1 clic · Garantie commerciale
+              7 j satisfait-ou-remboursé
             </p>
           </div>
         </div>
