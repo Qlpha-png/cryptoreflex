@@ -36,6 +36,47 @@ export interface CoinPrice {
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
+/**
+ * Headers à envoyer à CoinGecko :
+ *  - Si COINGECKO_API_KEY est défini → on utilise le tier Demo (gratuit, 30 req/min,
+ *    bien plus stable que le free tier qui rate-limit à ~5-15 req/min sans clé).
+ *  - Sinon → free tier (instable avec 100 cryptos en parallèle).
+ *
+ * Documentation : https://docs.coingecko.com/reference/setting-up-your-api-key
+ */
+function cgHeaders(): Record<string, string> {
+  const headers: Record<string, string> = { accept: "application/json" };
+  const key = process.env.COINGECKO_API_KEY;
+  if (key) headers["x-cg-demo-api-key"] = key;
+  return headers;
+}
+
+/**
+ * Wrapper fetch avec retry exponentiel sur 429 (rate-limit).
+ * Évite de cacher des null après un seul échec rate-limit.
+ *
+ * Stratégie : 1 retry après 1.5s, puis 1 retry après 4s, puis abandon.
+ * Total max 5.5s — acceptable pour un Server Component qui SSR la page.
+ */
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit & { next?: { revalidate?: number; tags?: string[] } },
+  maxRetries = 2,
+): Promise<Response> {
+  const delays = [1500, 4000];
+  let lastResponse: Response | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetch(url, init);
+    if (res.ok) return res;
+    if (res.status !== 429 && res.status !== 503) return res; // non-recoverable
+    lastResponse = res;
+    if (attempt < maxRetries) {
+      await new Promise((r) => setTimeout(r, delays[attempt] ?? 4000));
+    }
+  }
+  return lastResponse ?? new Response(null, { status: 599 });
+}
+
 const COIN_META: Record<CoinId, { symbol: string; name: string }> = {
   bitcoin: { symbol: "BTC", name: "Bitcoin" },
   ethereum: { symbol: "ETH", name: "Ethereum" },
@@ -328,11 +369,19 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
   // sans payer le coût d'/coins/{id}/market_chart (10 000 datapoints).
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
   try {
-    const res = await fetch(url, {
+    // Fix bug 2026-05-01 user feedback : "toutes les cryptos affichent —"
+    // Cause : free tier CoinGecko (5-15 req/min) hit rate-limit avec 100 cryptos
+    // → fetch retournait null, mis en cache 5 min, page cassée 5 min.
+    // Solution : retry exponentiel sur 429 + headers x-cg-demo-api-key si défini
+    // + bypass cache du `null` (cf. wrapper fetchCoinDetail plus bas).
+    const res = await fetchWithRetry(url, {
       next: { revalidate: 300, tags: [CG_TAGS.market] },
-      headers: { accept: "application/json" },
+      headers: cgHeaders(),
     });
-    if (!res.ok) throw new Error(`CoinGecko detail ${res.status}`);
+    if (!res.ok) {
+      console.warn(`[coingecko] fetchCoinDetail ${coingeckoId} → ${res.status} (after retry)`);
+      throw new Error(`CoinGecko detail ${res.status}`);
+    }
     const json = (await res.json()) as Array<{
       id: string;
       symbol: string;
@@ -382,13 +431,43 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
 
 /**
  * Détail enrichi d'une crypto (prix, sparkline 7j, supply, ATH/ATL).
- * Cache 5 min côté serveur, partagé entre composants via unstable_cache.
+ *
+ * Cache stratégie 2-tiers (fix bug "toutes cryptos affichent —" 2026-05-01) :
+ *  - Si data valide → cache 5 min (revalidate via tags si on touche au contenu)
+ *  - Si null (rate-limit ou erreur API) → on NE CACHE PAS et on re-tente à
+ *    chaque requête. Le retry exponentiel dans `_fetchCoinDetail` aura déjà
+ *    fait 2 tentatives ; si toujours null, on accepte le coût d'un re-fetch
+ *    plutôt que de bloquer 100 fiches pendant 5 min.
+ *
+ * Implémentation : on enveloppe le résultat caché dans un signal de version.
+ * Si version=null on bypass le cache au prochain appel.
  */
-export const fetchCoinDetail = unstable_cache(
-  async (coingeckoId: string) => _fetchCoinDetail(coingeckoId),
-  ["coingecko-coin-detail-v1"],
+const _cachedFetchCoinDetailNonNull = unstable_cache(
+  async (coingeckoId: string) => {
+    const result = await _fetchCoinDetail(coingeckoId);
+    // Si null, on lève pour forcer Next à NE PAS cacher (un throw dans
+    // unstable_cache propage l'erreur et invalide le cache pour cet appel).
+    if (!result) {
+      throw new Error("CG_FETCH_RETURNED_NULL");
+    }
+    return result;
+  },
+  ["coingecko-coin-detail-v2"],
   { revalidate: 300, tags: [CG_TAGS.market] }
 );
+
+export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
+  try {
+    return await _cachedFetchCoinDetailNonNull(coingeckoId);
+  } catch (err) {
+    // Fallback : un dernier appel direct sans cache, pour qu'au moins la page
+    // suivante puisse essayer de re-fetch fresh. Si ça échoue aussi → null.
+    if (err instanceof Error && err.message === "CG_FETCH_RETURNED_NULL") {
+      return null;
+    }
+    return _fetchCoinDetail(coingeckoId);
+  }
+}
 
 /** Format compact pour les supplies (ex: 19.7M, 120B). */
 export function formatCompactNumber(value: number | null | undefined): string {

@@ -44,6 +44,33 @@ export default function CryptoStats({
       })
     : undefined;
 
+  // Si CoinGecko down/rate-limited → afficher un message clair plutôt qu'une
+  // grille de "—" muette (fix UX user feedback 2026-05-01).
+  if (!detail) {
+    return (
+      <section
+        aria-label="Statistiques temporairement indisponibles"
+        className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 sm:p-6"
+      >
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400">
+            ⏱
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-bold text-fg">
+              Données live temporairement indisponibles
+            </h3>
+            <p className="mt-1 text-xs text-fg/75 leading-relaxed">
+              L&apos;API CoinGecko est en cours de mise à jour ou a atteint sa limite
+              gratuite. Les statistiques (capitalisation, volume, supply, ATH/ATL)
+              reviennent automatiquement dans quelques minutes — rafraîchis la page.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       {/* Market cap — animé */}
