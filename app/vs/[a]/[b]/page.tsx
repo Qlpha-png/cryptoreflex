@@ -1,13 +1,17 @@
 /**
- * /comparer/[a]/[b] — Programmatic SEO crypto vs crypto (435 paires top 30).
+ * /vs/[a]/[b] — Programmatic SEO crypto vs crypto (435 paires top 30).
+ *
+ * NOTE 2026-05-02 : route déplacée de /comparer/[a]/[b] → /vs/[a]/[b] pour
+ * éviter le conflit Next.js avec /comparer/[slug] legacy (2 segments
+ * dynamiques au même niveau avec noms différents = build error).
  *
  * Different from :
  *   - /comparer/[slug]      → legacy 105 paires top15 (slug "btc-vs-eth", same data)
  *   - /comparatif/[slug]    → plateformes (Coinbase vs Binance)
  *   - /cryptos/comparer     → comparateur DYNAMIQUE custom (noindex)
  *
- * URL canonique : /comparer/{a}/{b} avec a < b lexicographique.
- * Si l'utilisateur arrive sur /comparer/eth/btc → redirect 301 vers /comparer/btc/eth.
+ * URL canonique : /vs/{a}/{b} avec a < b lexicographique.
+ * Si l'utilisateur arrive sur /vs/eth/btc → redirect 301 vers /vs/btc/eth.
  *
  * Contenu 100 % data-driven (pas de prose hallucinée) :
  * tout est généré depuis getAllCryptos(), getDecentralizationScore(),
@@ -88,11 +92,11 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/comparer/${params.a}/${params.b}` },
+    alternates: { canonical: `${BRAND.url}/vs/${params.a}/${params.b}` },
     openGraph: {
       title,
       description,
-      url: `${BRAND.url}/comparer/${params.a}/${params.b}`,
+      url: `${BRAND.url}/vs/${params.a}/${params.b}`,
       type: "article",
     },
   };
@@ -231,7 +235,7 @@ export default async function CryptoPairPage({ params }: Props) {
   if (!isCanonicalPair(params.a, params.b)) {
     const canon = canonicalizePair(params.a, params.b);
     if (canon.swapped && isCanonicalPair(canon.a, canon.b)) {
-      redirect(`/comparer/${canon.a}/${canon.b}`);
+      redirect(`/vs/${canon.a}/${canon.b}`);
     }
     notFound();
   }
@@ -282,7 +286,7 @@ export default async function CryptoPairPage({ params }: Props) {
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Comparer", url: "/comparer" },
-      { name: `${a.symbol} vs ${b.symbol}`, url: `/comparer/${a.id}/${b.id}` },
+      { name: `${a.symbol} vs ${b.symbol}`, url: `/vs/${a.id}/${b.id}` },
     ]),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.ans }))),
   ]);
@@ -515,7 +519,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 return (
                   <Link
                     key={`a-${other}`}
-                    href={`/comparer/${x}/${y}`}
+                    href={`/vs/${x}/${y}`}
                     className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs text-fg/85 hover:border-primary/40 hover:text-primary-soft"
                   >
                     {a.symbol} vs {other.toUpperCase()}

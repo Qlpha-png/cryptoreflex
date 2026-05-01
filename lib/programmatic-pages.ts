@@ -206,10 +206,17 @@ export interface ProgrammaticPageRoute {
   priority: number;
 }
 
-/** 435 routes /comparer/[a]/[b]. */
+/**
+ * 435 routes /vs/[a]/[b] — comparatifs programmatiques top 30 cryptos.
+ *
+ * NOTE 2026-05-02 : déplacé de /comparer/[a]/[b] vers /vs/[a]/[b] pour
+ * éviter le conflit de routing Next.js avec /comparer/[slug] (legacy 105
+ * comparatifs prédéfinis). Next.js refuse 2 segments dynamiques au même
+ * niveau avec des noms différents ([slug] vs [a]).
+ */
 export function getComparerPairRoutes(): ProgrammaticPageRoute[] {
   return getCryptoPairs().map((p) => ({
-    path: `/comparer/${p.a}/${p.b}`,
+    path: `/vs/${p.a}/${p.b}`,
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
@@ -282,9 +289,12 @@ export function getSimilarCryptosForCompare(
 }
 
 /**
- * Construit l'URL canonique /comparer/[a]/[b] pour une paire (sort lexico).
+ * Construit l'URL canonique /vs/[a]/[b] pour une paire (sort lexico).
+ *
+ * NOTE 2026-05-02 : route déplacée de /comparer/[a]/[b] vers /vs/[a]/[b]
+ * (conflit Next.js avec /comparer/[slug] legacy).
  */
 export function buildComparerPairUrl(a: string, b: string): string {
   const { a: x, b: y } = canonicalizePair(a, b);
-  return `/comparer/${x}/${y}`;
+  return `/vs/${x}/${y}`;
 }
