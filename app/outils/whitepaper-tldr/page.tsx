@@ -22,22 +22,22 @@ const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: "Whitepaper TL;DR — Resume + score BS d'un whitepaper crypto",
+  title: "Whitepaper TL;DR — Résumé + score BS d'un whitepaper crypto",
   description:
-    "Colle un whitepaper crypto et recois en 5 secondes un resume FR structure plus un score BS (0-100) base sur 15+ red flags : tokenomics, equipe, vesting, audits. Gratuit, sans inscription.",
+    "Colle un whitepaper crypto et reçois en 5 secondes un résumé FR structuré plus un score BS (0-100) basé sur 15+ red flags : tokenomics, équipe, vesting, audits. Gratuit, sans inscription.",
   alternates: { canonical: PAGE_URL },
   openGraph: {
     type: "website",
     url: PAGE_URL,
     title: "Whitepaper TL;DR — Score BS instantane",
     description:
-      "Outil gratuit pour decoder un whitepaper crypto : resume structure + score BS sur 100 + verdict Serieux/Mitige/Suspect.",
+      "Outil gratuit pour décoder un whitepaper crypto : résumé structuré + score BS sur 100 + verdict Sérieux/Mitigé/Suspect.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Whitepaper TL;DR — Score BS instantane",
     description:
-      "Decode un whitepaper crypto en 5 secondes. Tokenomics, equipe, vesting, audits — tout est analyse.",
+      "Décode un whitepaper crypto en 5 secondes. Tokenomics, équipe, vesting, audits — tout est analyse.",
   },
 };
 
@@ -45,62 +45,62 @@ const FAQ_ITEMS = [
   {
     question: "Comment fonctionne l'outil Whitepaper TL;DR ?",
     answer:
-      "Tu colles le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une serie d'heuristiques (regex et detection de mots-cles) puis retourne un resume structure FR (probleme, solution, tokenomics, equipe), une liste de red flags detectes, un score BS sur 100 et un verdict (Serieux, Mitige ou Suspect).",
+      "Tu colles le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une série d'heuristiques (regex et détection de mots-clés) puis retourne un résumé structuré FR (problème, solution, tokenomics, équipe), une liste de red flags détectés, un score BS sur 100 et un verdict (Sérieux, Mitigé ou Suspect).",
   },
   {
     question: "Mes donnees sont-elles stockees ?",
     answer:
-      "Non. L'analyse est stateless cote serveur : aucun texte n'est sauvegarde, aucun cookie de tracking n'est pose, aucun email n'est requis. Le calcul s'execute le temps de la requete puis tout est jete.",
+      "Non. L'analyse est stateless côté serveur : aucun texte n'est sauvegarde, aucun cookie de tracking n'est pose, aucun email n'est requis. Le calcul s'exécute le temps de la requête puis tout est jete.",
   },
   {
     question: "L'analyse remplace-t-elle un DYOR complet ?",
     answer:
-      "Non, absolument pas. C'est un outil d'aide a la decision qui sert a reperer rapidement des signaux faibles. Une analyse heuristique ne peut pas remplacer une lecture humaine attentive du whitepaper, une verification on-chain de la repartition des tokens, ni une recherche approfondie sur l'equipe et l'historique du projet.",
+      "Non, absolument pas. C'est un outil d'aide à la décision qui sert a repérer rapidement des signaux faibles. Une analyse heuristique ne peut pas remplacer une lecture humaine attentive du whitepaper, une vérification on-chain de la répartition des tokens, ni une recherche approfondie sur l'équipe et l'historique du projet.",
   },
   {
     question: "Pourquoi un score BS et pas un score qualite ?",
     answer:
-      "Parce qu'il est statistiquement plus utile de detecter ce qui cloche que d'evaluer ce qui va. Un score qualite implique de juger la valeur d'une innovation technique, ce qu'un algorithme ne peut pas faire serieusement. A l'inverse, les red flags des projets douteux (rendement garanti, equipe anonyme, supply absurde) sont reconnaissables a des patterns linguistiques precis.",
+      "Parce qu'il est statistiquement plus utile de détecter ce qui cloche que d'evaluer ce qui va. Un score qualite implique de juger la valeur d'une innovation technique, ce qu'un algorithme ne peut pas faire sérieusement. A l'inverse, les red flags des projets douteux (rendement garanti, équipe anonyme, supply absurde) sont reconnaissables a des patterns linguistiques precis.",
   },
   {
     question: "L'outil supporte-t-il les whitepapers en anglais ?",
     answer:
-      "Oui, et c'est meme le cas d'usage principal puisque la quasi-totalite des whitepapers crypto sont rediges en anglais. La detection des red flags utilise des patterns en EN et en FR. Le resume restitue est en francais.",
+      "Oui, et c'est meme le cas d'usage principal puisque la quasi-totalité des whitepapers crypto sont rédigés en anglais. La détection des red flags utilise des patterns en EN et en FR. Le résumé restitué est en francais.",
   },
   {
     question: "Comment est calcule le score BS ?",
     answer:
-      "Chaque red flag detecte ajoute un nombre de points predefini (de 5 a 30 selon la severite). Le total est plafonne a 100. Score 0-30 = Serieux, 31-60 = Mitige, 61-100 = Suspect. La grille complete des 15 red flags est documentee dans la spec technique de l'outil.",
+      "Chaque red flag detecte ajoute un nombre de points predefini (de 5 a 30 selon la severite). Le total est plafonne a 100. Score 0-30 = Sérieux, 31-60 = Mitigé, 61-100 = Suspect. La grille complete des 15 red flags est documentee dans la spec technique de l'outil.",
   },
   {
     question: "Que faire si le verdict est Suspect ?",
     answer:
-      "Ne rien acheter sans investigation supplementaire. Consultez la liste des red flags listes dans le rapport, verifiez l'equipe sur LinkedIn, cherchez des audits independants (Certik, Hacken), consultez la repartition on-chain des wallets et evaluez la liquidite. Si plusieurs red flags critiques sont presents, considerez le projet comme tres risque.",
+      "Ne rien acheter sans investigation supplémentaire. Consultez la liste des red flags listés dans le rapport, vérifiez l'équipe sur LinkedIn, cherchez des audits indépendants (Certik, Hacken), consultez la répartition on-chain des wallets et évaluez la liquidite. Si plusieurs red flags critiques sont presents, considérez le projet comme tres risque.",
   },
   {
-    question: "Une version IA est-elle prevue ?",
+    question: "Une version IA est-elle prévue ?",
     answer:
-      "Oui. La V1 utilise une analyse heuristique pure (gratuite, instantanee, transparente). La V2 ajoutera une analyse via LLM (Claude Haiku 4.5 via OpenRouter) pour des resumes plus fins et une detection contextuelle plus profonde, sans changer la grille des red flags. La grille restera publique et auditable.",
+      "Oui. La V1 utilise une analyse heuristique pure (gratuite, instantanee, transparente). La V2 ajoutera une analyse via LLM (Claude Haiku 4.5 via OpenRouter) pour des résumés plus fins et une détection contextuelle plus profonde, sans changer la grille des red flags. La grille restera publique et auditable.",
   },
 ];
 
 const HOWTO_STEPS = [
   {
     name: "Recuperer le texte du whitepaper",
-    text: "Ouvrez le whitepaper officiel du projet (sur le site officiel ou GitHub) et copiez l'integralite du texte (Ctrl+A puis Ctrl+C). Si le whitepaper est un PDF, ouvrez-le et copiez le contenu.",
+    text: "Ouvrez le whitepaper officiel du projet (sur le site officiel ou GitHub) et copiez l'intégralite du texte (Ctrl+A puis Ctrl+C). Si le whitepaper est un PDF, ouvrez-le et copiez le contenu.",
   },
   {
     name: "Coller dans la zone d'analyse",
-    text: "Sur cette page, collez le texte dans la zone prevue. Minimum 200 caracteres, maximum 30 000 caracteres. Pour de meilleurs resultats, incluez l'introduction, la solution, la tokenomics et la section equipe.",
+    text: "Sur cette page, collez le texte dans la zone prévue. Minimum 200 caracteres, maximum 30 000 caracteres. Pour de meilleurs resultats, incluez l'introduction, la solution, la tokenomics et la section équipe.",
     url: `${PAGE_URL}#wp-tldr-input`,
   },
   {
     name: "Cliquer sur Analyser",
-    text: "Cliquez sur le bouton Analyser. L'outil retourne en moins de 5 secondes un resume structure, la liste des red flags detectes, un score BS sur 100 et un verdict global (Serieux, Mitige ou Suspect).",
+    text: "Cliquez sur le bouton Analyser. L'outil retourne en moins de 5 secondes un résumé structuré, la liste des red flags détectés, un score BS sur 100 et un verdict global (Sérieux, Mitigé ou Suspect).",
   },
   {
     name: "Lire le rapport et croiser avec d'autres sources",
-    text: "Examinez les red flags un par un, lisez les extraits du whitepaper qui ont declenche chaque alerte, puis croisez avec d'autres sources (audits independants, repartition on-chain, recherche sur l'equipe) avant toute decision d'investissement.",
+    text: "Examinez les red flags un par un, lisez les extraits du whitepaper qui ont déclenché chaque alerte, puis croisez avec d'autres sources (audits indépendants, répartition on-chain, recherche sur l'équipe) avant toute décision d'investissement.",
   },
 ];
 
@@ -117,7 +117,7 @@ export default function WhitepaperTldrPage() {
   const howto = howToSchema({
     name: "Comment analyser un whitepaper crypto avec Cryptoreflex",
     description:
-      "Methode pas-a-pas pour decoder un whitepaper crypto et obtenir un score BS sur 100 grace a l'outil gratuit Whitepaper TL;DR de Cryptoreflex.",
+      "Méthode pas-à-pas pour décoder un whitepaper crypto et obtenir un score BS sur 100 grace a l'outil gratuit Whitepaper TL;DR de Cryptoreflex.",
     totalTime: "PT5M",
     estimatedCost: { currency: "EUR", value: 0 },
     steps: HOWTO_STEPS,
@@ -128,7 +128,7 @@ export default function WhitepaperTldrPage() {
     "@type": "WebApplication",
     name: "Whitepaper TL;DR",
     description:
-      "Outil gratuit pour analyser un whitepaper crypto et obtenir un resume FR structure plus un score BS (0-100) sur la base de red flags.",
+      "Outil gratuit pour analyser un whitepaper crypto et obtenir un résumé FR structure plus un score BS (0-100) sur la base de red flags.",
     url: PAGE_URL,
     applicationCategory: "FinanceApplication",
     operatingSystem: "All (web)",
@@ -145,12 +145,12 @@ export default function WhitepaperTldrPage() {
       url: BRAND.url,
     },
     featureList: [
-      "Resume structure FR (probleme, solution, tokenomics, equipe)",
-      "Detection de 15+ red flags",
+      "Résumé structure FR (problème, solution, tokenomics, équipe)",
+      "Détection de 15+ red flags",
       "Score BS de 0 a 100",
-      "Verdict Serieux / Mitige / Suspect",
+      "Verdict Sérieux / Mitigé / Suspect",
       "100% gratuit, sans inscription",
-      "Stateless : aucune donnee stockee",
+      "Stateless : aucune donnée stockée",
     ],
   };
 
@@ -169,14 +169,14 @@ export default function WhitepaperTldrPage() {
               Outil signature Cryptoreflex
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-              <span className="gradient-text">Whitepaper TL;DR</span> — decode
+              <span className="gradient-text">Whitepaper TL;DR</span> — décode
               un whitepaper en 5 secondes
             </h1>
             <p className="mt-4 text-lg text-white/70 leading-relaxed">
-              Colle le texte d'un whitepaper crypto, recois un resume FR
-              structure (probleme, solution, tokenomics, equipe) et un{" "}
-              <strong>score BS sur 100</strong> base sur 15 red flags. Verdict
-              instantane : <em>Serieux</em>, <em>Mitige</em> ou <em>Suspect</em>.
+              Colle le texte d'un whitepaper crypto, recois un résumé FR
+              structure (problème, solution, tokenomics, équipe) et un{" "}
+              <strong>score BS sur 100</strong> basé sur 15 red flags. Verdict
+              instantane : <em>Sérieux</em>, <em>Mitigé</em> ou <em>Suspect</em>.
             </p>
           </div>
 
@@ -228,7 +228,7 @@ export default function WhitepaperTldrPage() {
             <div className="flex items-center gap-3 mb-6">
               <ListChecks className="h-7 w-7 text-accent-cyan" />
               <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                Les 15 red flags detectes
+                Les 15 red flags détectés
               </h2>
             </div>
             <p className="text-white/70 max-w-3xl">
@@ -265,7 +265,7 @@ export default function WhitepaperTldrPage() {
             <div className="flex items-center gap-3 mb-6">
               <ClipboardList className="h-7 w-7 text-accent-cyan" />
               <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                Questions frequentes
+                Questions fréquentes
               </h2>
             </div>
             <div className="space-y-3">
@@ -335,11 +335,11 @@ const RED_FLAGS_DOCS: Array<{ id: string; label: string; points: number }> = [
   { id: "RF002", label: "Marketing 'to the moon' / 100x / 1000x", points: 15 },
   { id: "RF003", label: "'Passive income' sans cadre risque", points: 10 },
   { id: "RF004", label: "Supply totale > 1 trillion", points: 12 },
-  { id: "RF005", label: "Equipe anonyme ou non identifiable", points: 15 },
+  { id: "RF005", label: "Équipe anonyme ou non identifiable", points: 15 },
   { id: "RF006", label: "Aucun vesting / lock", points: 8 },
   { id: "RF007", label: "Aucun audit smart contract", points: 8 },
   { id: "RF008", label: "Mention 'ponzi' / 'pyramid' / 'MLM'", points: 30 },
-  { id: "RF009", label: "Allocation equipe > 30%", points: 10 },
+  { id: "RF009", label: "Allocation équipe > 30%", points: 10 },
   { id: "RF010", label: "Pas de roadmap ni jalons dates", points: 5 },
   { id: "RF011", label: "Marketing creux 'revolutionary' / 'next bitcoin'", points: 5 },
   { id: "RF012", label: "Aucun contenu technique blockchain", points: 12 },

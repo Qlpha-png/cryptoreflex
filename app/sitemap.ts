@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { BRAND } from "@/lib/brand";
 import { getAllProgrammaticRoutes } from "@/lib/programmatic";
+import { getAllCryptoComparisonSlugs } from "@/lib/crypto-comparisons";
 import { getAllAuthors } from "@/lib/authors";
 import { TOP_PAIRS } from "@/lib/historical-prices";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
@@ -96,6 +97,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // n'a de quiz interactif). Lead magnet ultra-converting → priority 0.85, weekly.
     { url: `${SITE_URL}/quiz/trouve-ton-exchange`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    // Programmatic SEO — /comparer (cryptos vs cryptos, 105 paires top 15)
+    // Différencié de /comparatif (plateformes) et /cryptos/comparer (dynamique).
+    { url: `${SITE_URL}/comparer`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
     { url: `${SITE_URL}/wizard/premier-achat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     // Alertes prix par email — page outil, à indexer (potentiel "alerte prix bitcoin", etc.)
     { url: `${SITE_URL}/alertes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
@@ -177,6 +181,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   /* ----------------------------------------------------------------
+   * 3bis. Programmatic crypto-vs-crypto (105 paires top 15)
+   *      Différencié de /comparatif (plateformes) & /cryptos/comparer (dyn).
+   * ---------------------------------------------------------------- */
+  const cryptoComparisonRoutes: MetadataRoute.Sitemap = getAllCryptoComparisonSlugs().map(
+    (slug) => ({
+      url: `${SITE_URL}/comparer/${slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.65,
+    }),
+  );
+
+  /* ----------------------------------------------------------------
    * 4. Pages convertisseur SEO programmatic (top 30 pairs)
    * ---------------------------------------------------------------- */
   const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) => ({
@@ -234,6 +251,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...articleRoutes,
     ...authorRoutes,
     ...programmaticRoutes,
+    ...cryptoComparisonRoutes,
     ...converterPairRoutes,
     ...newsRoutes,
     ...taRoutes,

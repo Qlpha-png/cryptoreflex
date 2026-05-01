@@ -4,9 +4,9 @@
  * <WhitepaperTldr /> — Composant signature de Cryptoreflex.
  *
  * Permet a un utilisateur de coller le texte d'un whitepaper crypto et
- * d'obtenir une analyse structuree (resume + red flags + score BS).
+ * d'obtenir une analyse structurée (résumé + red flags + score BS).
  *
- * V1 : appelle l'API `/api/analyze-whitepaper` qui execute une analyse
+ * V1 : appelle l'API `/api/analyze-whitepaper` qui exécute une analyse
  * heuristique pure (sans IA). V2 : bascule LLM via OpenRouter.
  */
 
@@ -133,7 +133,7 @@ export default function WhitepaperTldr() {
               id="wp-input-text"
               value={text}
               onChange={(e) => setText(e.target.value.slice(0, MAX_INPUT_LENGTH))}
-              placeholder="Colle ici le texte integral du whitepaper (introduction, problematique, solution, tokenomics, equipe, roadmap...)"
+              placeholder="Colle ici le texte intégral du whitepaper (introduction, problématique, solution, tokenomics, équipe, roadmap...)"
               rows={12}
               className="w-full rounded-xl bg-background border border-border px-4 py-3 text-white text-sm
                          focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20
@@ -217,7 +217,7 @@ export default function WhitepaperTldr() {
           )}
 
           <p className="text-xs text-muted sm:ml-auto">
-            Aucune donnee n'est stockee. Analyse stateless cote serveur.
+            Aucune donnée n'est stockée. Analyse stateless côté serveur.
           </p>
         </div>
 
@@ -236,7 +236,7 @@ export default function WhitepaperTldr() {
           <VerdictCard score={analysis.score} verdict={analysis.verdict} />
 
           <div className="grid md:grid-cols-2 gap-6">
-            <SummaryCard title="Probleme adresse" body={analysis.summary.problem} />
+            <SummaryCard title="Problème adresse" body={analysis.summary.problem} />
             <SummaryCard title="Solution technique" body={analysis.summary.solution} />
           </div>
 
@@ -328,7 +328,7 @@ function VerdictCard({ score, verdict }: { score: number; verdict: Verdict }) {
         />
       </div>
       <div className="mt-1 flex justify-between text-[10px] uppercase tracking-wide text-muted">
-        <span>0 Serieux</span>
+        <span>0 Sérieux</span>
         <span>30</span>
         <span>60</span>
         <span>100 Suspect</span>
@@ -357,12 +357,12 @@ function TokenomicsCard({
       <div className="grid sm:grid-cols-3 gap-4">
         <Stat
           label="Supply totale"
-          value={tokenomics.totalSupply ?? "Non detectee"}
+          value={tokenomics.totalSupply ?? "Non détectée"}
           warn={!tokenomics.totalSupply}
         />
         <Stat
-          label="Allocation equipe"
-          value={tokenomics.teamAllocation ?? "Non detectee"}
+          label="Allocation équipe"
+          value={tokenomics.teamAllocation ?? "Non détectée"}
           warn={!tokenomics.teamAllocation}
         />
         <Stat
@@ -372,7 +372,7 @@ function TokenomicsCard({
           good={tokenomics.hasVesting}
         />
       </div>
-      {tokenomics.raw && tokenomics.raw !== "Section tokenomics non detectee." && (
+      {tokenomics.raw && tokenomics.raw !== "Section tokenomics non détectée." && (
         <details className="mt-4">
           <summary className="cursor-pointer text-xs text-muted hover:text-white/70">
             Voir l'extrait detecte
@@ -391,11 +391,11 @@ function TeamCard({ team }: { team: WhitepaperAnalysis["summary"]["team"] }) {
     <div className="glass rounded-2xl p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-bold text-white mb-2">Equipe</h3>
+          <h3 className="font-bold text-white mb-2">Équipe</h3>
           {team.isAnonymous ? (
             <p className="text-sm text-accent-rose flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
-              Equipe anonyme ou non clairement identifiable (red flag)
+              Équipe anonyme ou non clairement identifiable (red flag)
             </p>
           ) : (
             <p className="text-sm text-accent-green flex items-center gap-2">
@@ -417,7 +417,7 @@ function TeamCard({ team }: { team: WhitepaperAnalysis["summary"]["team"] }) {
           )}
         </div>
       </div>
-      {team.raw && team.raw !== "Section equipe non detectee." && (
+      {team.raw && team.raw !== "Section équipe non détectée." && (
         <details className="mt-4">
           <summary className="cursor-pointer text-xs text-muted hover:text-white/70">
             Voir l'extrait detecte
@@ -435,7 +435,7 @@ function RedFlagsCard({ redFlags }: { redFlags: RedFlag[] }) {
   return (
     <div className="glass rounded-2xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-white">Risques detectes</h3>
+        <h3 className="font-bold text-white">Risques détectés</h3>
         <span className="text-xs text-muted">
           {redFlags.length} red flag{redFlags.length > 1 ? "s" : ""}
         </span>
@@ -448,7 +448,7 @@ function RedFlagsCard({ redFlags }: { redFlags: RedFlag[] }) {
             Aucun red flag majeur detecte par l'analyse heuristique.
           </p>
           <p className="mt-2 text-xs text-white/60">
-            Cela ne signifie pas que le projet est sans risque — l'absence de detection
+            Cela ne signifie pas que le projet est sans risque — l'absence de détection
             ne remplace pas une lecture humaine attentive du whitepaper complet.
           </p>
         </div>
@@ -531,7 +531,7 @@ function Stat({
 
 function verdictConfig(verdict: Verdict) {
   switch (verdict) {
-    case "Serieux":
+    case "Sérieux":
       return {
         icon: ShieldCheck,
         subtitle: "Aucun red flag majeur detecte",
@@ -541,7 +541,7 @@ function verdictConfig(verdict: Verdict) {
         borderClass: "border-accent-green/30",
         bgGauge: "bg-accent-green",
       };
-    case "Mitige":
+    case "Mitigé":
       return {
         icon: ShieldQuestion,
         subtitle: "Quelques signaux a investiguer",

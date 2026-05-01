@@ -623,7 +623,7 @@
         "Bybit",
         "Bitget"
       ],
-      "officialUrl": "https://cosmos.network",
+      "officialUrl": "https://docs.cosmos.network/hub",
       "monitoringSignals": [
         "Volume de transferts IBC mensuels (mapofzones.com)",
         "Nombre de chaines utilisant Interchain Security",
@@ -680,7 +680,7 @@
       "monitoringSignals": [
         "TPS réel sur suiscan.xyz et nombre de transactions quotidiennes",
         "TVL DeFi sur DefiLlama (objectif >1Md$ stable)",
-        "Calendrier de déblocage des tokens insiders (token.unlocks.app)"
+        "Calendrier de déblocage des tokens insiders (tokenomist.ai)"
       ]
     },
     {
@@ -732,7 +732,7 @@
       "officialUrl": "https://aptosfoundation.org",
       "monitoringSignals": [
         "TVL DeFi sur DefiLlama et nombre d'utilisateurs actifs",
-        "Calendrier de déblocage des tokens (token.unlocks.app)",
+        "Calendrier de déblocage des tokens (tokenomist.ai)",
         "Adoption RWA et nombre de partenariats institutionnels concrétisés"
       ]
     },
@@ -1087,7 +1087,7 @@
       "monitoringSignals": [
         "Volume DEX et nombre d'utilisateurs traders actifs",
         "TVL DeFi sur DefiLlama",
-        "Calendrier de déblocage tokens (token.unlocks.app)"
+        "Calendrier de déblocage tokens (tokenomist.ai)"
       ]
     },
     {
@@ -2503,7 +2503,7 @@
         "OKX",
         "Coinbase"
       ],
-      "officialUrl": "https://www.eigenlayer.xyz",
+      "officialUrl": "https://www.eigencloud.xyz/",
       "monitoringSignals": [
         "TVL restaking total et concentration LRT",
         "Nombre d'AVS actifs et leur revenu généré",

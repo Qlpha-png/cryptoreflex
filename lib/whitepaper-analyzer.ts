@@ -18,7 +18,7 @@
 
 export type Severity = "low" | "medium" | "high" | "critical";
 
-export type Verdict = "Serieux" | "Mitige" | "Suspect";
+export type Verdict = "Sérieux" | "Mitigé" | "Suspect";
 
 export type AnalysisEngine =
   | "heuristic-v1"
@@ -474,8 +474,8 @@ const FLAG_DEFS: FlagDef[] = [
 /* -------------------------------------------------------------------------- */
 
 export function verdictFromScore(score: number): Verdict {
-  if (score <= 30) return "Serieux";
-  if (score <= 60) return "Mitige";
+  if (score <= 30) return "Sérieux";
+  if (score <= 60) return "Mitigé";
   return "Suspect";
 }
 

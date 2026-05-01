@@ -64,7 +64,7 @@
         "title": "Unlock ARB mensuel",
         "description": "Déblocage récurrent de tokens ARB (équipe + investisseurs). Pression vendeuse à surveiller.",
         "importance": "medium",
-        "sourceUrl": "https://token.unlocks.app/arbitrum"
+        "sourceUrl": "https://tokenomist.ai/arbitrum"
       }
     ],
     "sui": [
@@ -74,7 +74,7 @@
         "title": "Unlock SUI mensuel",
         "description": "Déblocage mensuel récurrent — environ 1 à 2 % du circulating supply. Impact prix historiquement notable.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/sui"
+        "sourceUrl": "https://tokenomist.ai/sui"
       },
       {
         "date": "2026-08-03",
@@ -82,7 +82,7 @@
         "title": "Unlock SUI — Été 2026",
         "description": "Tranche estivale du calendrier d'unlock SUI. Vérifier la part destinée à la trésorerie vs. distribution marché.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/sui"
+        "sourceUrl": "https://tokenomist.ai/sui"
       }
     ],
     "aptos": [
@@ -92,7 +92,7 @@
         "title": "Unlock APT mensuel",
         "description": "Déblocage mensuel récurrent ~11M APT (équipe, investisseurs, fondation). Suivi obligatoire pour l'analyse court terme.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/aptos"
+        "sourceUrl": "https://tokenomist.ai/aptos"
       },
       {
         "date": "2026-08-12",
@@ -100,7 +100,7 @@
         "title": "Unlock APT — Été 2026",
         "description": "Tranche d'été de l'échéancier APT. Souvent associée à un drawdown court terme.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/aptos"
+        "sourceUrl": "https://tokenomist.ai/aptos"
       }
     ],
     "tether": [
@@ -159,7 +159,7 @@
         "title": "JAM (Join-Accumulate Machine) — testnet",
         "description": "Première version testnet de l'architecture JAM proposée par Gavin Wood, refonte majeure de la Relay Chain.",
         "importance": "high",
-        "sourceUrl": "https://polkadot.network/jam/"
+        "sourceUrl": "https://polkadot.com/jam"
       }
     ],
     "cardano": [
@@ -189,7 +189,7 @@
         "title": "Chain Abstraction — production",
         "description": "Déploiement production de Chain Signatures et Multichain Gas Relayer. NEAR comme couche d'abstraction multi-chain.",
         "importance": "medium",
-        "sourceUrl": "https://near.org/blog"
+        "sourceUrl": "https://pages.near.org/blog/"
       }
     ],
     "celestia": [
@@ -199,7 +199,7 @@
         "title": "Unlock TIA — fin de cliff investisseurs",
         "description": "Sortie progressive du cliff initial des investisseurs early. Surveiller le flow d'unlock dans les exchanges.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/celestia"
+        "sourceUrl": "https://tokenomist.ai/celestia"
       }
     ],
     "starknet": [
@@ -209,7 +209,7 @@
         "title": "Unlock STRK mensuel",
         "description": "Déblocage mensuel important — équipe + early backers. STRK reste sous pression vendeuse depuis le TGE.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/starknet"
+        "sourceUrl": "https://tokenomist.ai/starknet"
       }
     ],
     "ondo-finance": [
@@ -219,7 +219,7 @@
         "title": "Unlock ONDO — première tranche annuelle",
         "description": "Premier déblocage majeur après le cliff de janvier 2025. Volume significatif pour équipe + insiders.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/ondo"
+        "sourceUrl": "https://tokenomist.ai/ondo"
       }
     ],
     "pyth-network": [
@@ -229,7 +229,7 @@
         "title": "Unlock PYTH semestriel",
         "description": "Déblocage semestriel programmé (~2,1 milliards de tokens). Impact systémique sur l'offre circulante.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/pyth-network"
+        "sourceUrl": "https://tokenomist.ai/pyth-network"
       }
     ],
     "eigenlayer": [
@@ -239,7 +239,7 @@
         "title": "Unlock EIGEN — fin du cliff équipe",
         "description": "Premier unlock significatif post-cliff pour la team et les investisseurs. À mettre en regard de l'adoption AVS réelle.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/eigenlayer"
+        "sourceUrl": "https://tokenomist.ai/eigenlayer"
       }
     ],
     "worldcoin": [
@@ -249,7 +249,7 @@
         "title": "Unlock WLD — tranche annuelle",
         "description": "Anniversaire de la mise en circulation. Tranche d'unlock substantielle pour Tools for Humanity et investisseurs.",
         "importance": "high",
-        "sourceUrl": "https://token.unlocks.app/worldcoin"
+        "sourceUrl": "https://tokenomist.ai/worldcoin"
       }
     ],
     "avalanche": [
@@ -299,7 +299,15 @@
       "title": "Token2049 Singapore",
       "description": "Plus grande conférence crypto annuelle d'Asie. Pic d'annonces produits et partenariats.",
       "importance": "high",
-      "appliesTo": ["bitcoin", "ethereum", "solana", "sui", "aptos", "near-protocol", "toncoin"],
+      "appliesTo": [
+        "bitcoin",
+        "ethereum",
+        "solana",
+        "sui",
+        "aptos",
+        "near-protocol",
+        "toncoin"
+      ],
       "sourceUrl": "https://www.token2049.com/"
     },
     {
@@ -308,7 +316,15 @@
       "title": "Devcon 8 — Buenos Aires",
       "description": "Conférence annuelle des développeurs Ethereum. Annonces techniques majeures sur la roadmap Fusaka/Verkle.",
       "importance": "high",
-      "appliesTo": ["ethereum", "arbitrum", "optimism", "polygon", "starknet", "uniswap", "lido-dao"],
+      "appliesTo": [
+        "ethereum",
+        "arbitrum",
+        "optimism",
+        "polygon",
+        "starknet",
+        "uniswap",
+        "lido-dao"
+      ],
       "sourceUrl": "https://devcon.org/"
     },
     {
@@ -317,7 +333,10 @@
       "title": "MiCA Phase 2 — deadline générale",
       "description": "Fin de la période transitoire MiCA pour les CASPs. Tous les exchanges opérant en UE doivent être agréés.",
       "importance": "medium",
-      "appliesTo": ["bitcoin", "ethereum"],
+      "appliesTo": [
+        "bitcoin",
+        "ethereum"
+      ],
       "sourceUrl": "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
     }
   ]
