@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion, useReducedMotion } from "motion/react";
 
 export interface PieSlice {
   /** Identifiant stable (cryptoId) — sert de key React. */
@@ -145,6 +146,8 @@ export default function PortfolioPieChart({
     return `Répartition du portefeuille : ${parts.join(", ")}`;
   }, [displayed, total]);
 
+  const reduce = useReducedMotion();
+
   if (displayed.length === 0) {
     return null;
   }
@@ -164,26 +167,46 @@ export default function PortfolioPieChart({
           width={size}
           height={size}
           aria-hidden="true"
+          style={{ overflow: "visible" }}
         >
-          {arcs.map((arc) =>
+          {arcs.map((arc, idx) =>
             arc.isCircle ? (
-              <circle
+              <motion.circle
                 key={arc.id}
                 cx={size / 2}
                 cy={size / 2}
                 r={size / 2 - 2}
                 fill={arc.color}
+                initial={reduce ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={reduce ? { duration: 0 } : { duration: 0.4 }}
               />
             ) : (
-              <path
+              <motion.path
                 key={arc.id}
                 d={arc.d}
                 fill={arc.color}
                 stroke="rgba(0,0,0,0.25)"
                 strokeWidth={1}
+                initial={reduce ? false : { pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={
+                  reduce
+                    ? { duration: 0 }
+                    : {
+                        pathLength: {
+                          duration: 0.7,
+                          delay: idx * 0.08,
+                          ease: [0.22, 1, 0.36, 1],
+                        },
+                        opacity: { duration: 0.25, delay: idx * 0.08 },
+                      }
+                }
+                whileHover={reduce ? undefined : { scale: 1.02 }}
+                style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
               >
                 <title>{`${arc.label} — ${arc.pct.toFixed(1)}%`}</title>
-              </path>
+              </motion.path>
             )
           )}
           {/* Centre creux pour donut effect (optionnel — discret, garde la lisibilité) */}
@@ -200,12 +223,19 @@ export default function PortfolioPieChart({
 
       {/* Légende */}
       <ul className="flex-1 min-w-0 space-y-1.5 text-sm w-full">
-        {arcs.map((arc) => {
+        {arcs.map((arc, idx) => {
           const pct = arc.pct;
           return (
-            <li
+            <motion.li
               key={arc.id}
               className="flex items-center justify-between gap-3 min-w-0"
+              initial={reduce ? false : { opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={
+                reduce
+                  ? { duration: 0 }
+                  : { duration: 0.3, delay: idx * 0.05 }
+              }
             >
               <span className="flex items-center gap-2 min-w-0">
                 <span
@@ -218,7 +248,7 @@ export default function PortfolioPieChart({
               <span className="font-mono text-xs text-fg/80 shrink-0 tabular-nums">
                 {pct.toFixed(1)}%
               </span>
-            </li>
+            </motion.li>
           );
         })}
       </ul>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight, TrendingUp, TrendingDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type { CoinPrice } from "@/lib/coingecko";
 import { formatUsd, formatPct } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
@@ -200,19 +201,33 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
 function PriceFlash({ price, children }: { price: number; children: React.ReactNode }) {
   const prev = useRef(price);
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
+  // Compteur incrémenté à chaque changement de prix : sert de key au pulse
+  // Motion pour re-déclencher l'animation scale même si la direction est
+  // identique consécutivement.
+  const [pulseKey, setPulseKey] = useState(0);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     if (price === prev.current) return;
     setFlash(price > prev.current ? "up" : "down");
+    setPulseKey((k) => k + 1);
     prev.current = price;
     const t = setTimeout(() => setFlash(null), 600);
     return () => clearTimeout(t);
   }, [price]);
 
+  // Pulse scale [1, 1.05, 1] (~200ms) ON TOP du flash bg CSS — n'agit que
+  // si le prix change réellement (track via useRef ci-dessus).
   return (
-    <span className={flash === "up" ? "flash-up" : flash === "down" ? "flash-down" : ""}>
+    <motion.span
+      key={pulseKey}
+      animate={reduce ? undefined : { scale: pulseKey === 0 ? 1 : [1, 1.05, 1] }}
+      transition={reduce ? { duration: 0 } : { duration: 0.2, ease: "easeOut" }}
+      className={flash === "up" ? "flash-up" : flash === "down" ? "flash-down" : ""}
+      style={{ display: "inline-block" }}
+    >
       {children}
-    </span>
+    </motion.span>
   );
 }
 

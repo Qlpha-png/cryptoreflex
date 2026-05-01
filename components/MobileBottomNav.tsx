@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { Home, Sparkles, Newspaper, Wrench, ShoppingBag } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -75,21 +76,10 @@ export default function MobileBottomNav() {
   const navRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const activeIdx = TABS.findIndex((t) => isActive(pathname, t.href));
-  const [bar, setBar] = useState({ x: 0, w: 32, opacity: 0 });
-
-  useLayoutEffect(() => {
-    if (activeIdx < 0) {
-      setBar((b) => ({ ...b, opacity: 0 }));
-      return;
-    }
-    const el = itemRefs.current[activeIdx];
-    if (!el) return;
-    setBar({
-      x: el.offsetLeft + el.offsetWidth / 2 - 20,
-      w: 40,
-      opacity: 1,
-    });
-  }, [activeIdx]);
+  const reduce = useReducedMotion();
+  const indicatorTransition = reduce
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 500, damping: 35 };
 
   return (
     <nav
@@ -100,18 +90,6 @@ export default function MobileBottomNav() {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul ref={navRef} className="relative flex items-stretch justify-around">
-        {/* Pill indicator GLOW slide — style iOS Safari (gradient fade latéral). */}
-        <span
-          aria-hidden="true"
-          className="absolute top-0 h-[3px] rounded-b-full bg-gradient-to-r from-primary/0 via-primary to-primary/0 shadow-[0_2px_12px_rgba(245,165,36,0.6)]"
-          style={{
-            width: bar.w,
-            opacity: bar.opacity,
-            transform: `translateX(${bar.x}px)`,
-            transition:
-              "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), width 320ms ease, opacity 200ms ease",
-          }}
-        />
         {TABS.map(({ href, label, Icon, revenue }, i) => {
           const active = isActive(pathname, href);
           // Slot revenue (Partenaires) : couleur gold permanente, pas seulement
@@ -123,8 +101,18 @@ export default function MobileBottomNav() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
-              className="flex-1"
+              className="relative flex-1"
             >
+              {/* Pill indicator GLOW slide — Motion layoutId fait la transition spring
+                  entre items quand activeIdx change (route change). */}
+              {active && activeIdx >= 0 && (
+                <motion.span
+                  layoutId="bottomnav-active"
+                  aria-hidden="true"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] w-10 rounded-b-full bg-gradient-to-r from-primary/0 via-primary to-primary/0 shadow-[0_2px_12px_rgba(245,165,36,0.6)]"
+                  transition={indicatorTransition}
+                />
+              )}
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}

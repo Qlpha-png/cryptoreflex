@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { Plus, Search, X, Check } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ALL_CRYPTOS, type CryptoMeta } from "@/lib/programmatic";
 import { addHolding, type Holding } from "@/lib/portfolio";
 import { useUserPlan } from "@/lib/use-user-plan";
@@ -235,29 +236,43 @@ export default function AddHoldingDialog({
     [filtered, activeIdx, onClose, handleSelect]
   );
 
-  if (!open) return null;
+  const reduce = useReducedMotion();
+  const backdropTransition = reduce ? { duration: 0 } : { duration: 0.2 };
+  const panelTransition = reduce
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 400, damping: 30 };
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="add-holding-title"
-      className="fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[8vh] sm:pt-[12vh]"
-      onKeyDown={onKeyDown}
-    >
-      {/* Backdrop */}
-      <button
-        type="button"
-        aria-label="Fermer"
-        onClick={onClose}
-        className="absolute inset-0 bg-black/70 backdrop-blur-md animate-fade-in"
-        tabIndex={-1}
-      />
+    <AnimatePresence>
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-holding-title"
+          className="fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[8vh] sm:pt-[12vh]"
+          onKeyDown={onKeyDown}
+        >
+          {/* Backdrop */}
+          <motion.button
+            type="button"
+            aria-label="Fermer"
+            onClick={onClose}
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            tabIndex={-1}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={backdropTransition}
+          />
 
-      <div
-        ref={dialogRef}
-        className="relative w-full max-w-md rounded-2xl border border-border/60 bg-elevated/95 shadow-2xl shadow-black/50 animate-slide-down overflow-hidden"
-      >
+          <motion.div
+            ref={dialogRef}
+            className="relative w-full max-w-md rounded-2xl border border-border/60 bg-elevated/95 shadow-2xl shadow-black/50 overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={panelTransition}
+          >
         {/* Header */}
         <div className="flex items-center justify-between gap-3 border-b border-border/60 px-5 py-4">
           <h2
@@ -456,7 +471,9 @@ export default function AddHoldingDialog({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }
