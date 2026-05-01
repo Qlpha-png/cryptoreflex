@@ -36,33 +36,27 @@ const MONTHLY_PRICE = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
 const LOCKED_FEATURES = [
   {
     Icon: Wallet,
-    title: "Portfolio illimité",
+    title: "Portfolio étendu à 500 positions",
     free: "10 positions max",
-    pro: "Multi-wallets · P&L live · CSV export sans plafond",
+    pro: "500 positions · Multi-wallets · P&L live · pie chart d'allocation",
   },
   {
     Icon: Bell,
-    title: "Alertes prix illimitées",
+    title: "Alertes prix étendues à 100",
     free: "3 alertes par email",
-    pro: "Toutes cryptos, toutes conditions (above/below, %, crash)",
+    pro: "100 alertes · toutes conditions (above/below, %, crash)",
   },
   {
     Icon: Sparkles,
-    title: "Watchlist illimitée",
+    title: "Watchlist étendue à 200 cryptos",
     free: "10 cryptos max",
-    pro: "Suis l'intégralité du marché qui t'intéresse",
+    pro: "200 cryptos suivies en temps réel",
   },
   {
     Icon: Sparkles,
     title: "IA Q&A par fiche crypto",
-    free: "Aperçu uniquement",
+    free: "—",
     pro: "20 questions/jour avec Claude Haiku, contextualisées sur chaque fiche",
-  },
-  {
-    Icon: FileText,
-    title: "Export CSV portfolio",
-    free: "Disponible",
-    pro: "Disponible (sans cap après gating serveur en cours)",
   },
 ];
 
@@ -112,11 +106,13 @@ export default function FreeUserDashboard() {
           <span className="gradient-text">avec limites Free</span>.
         </h2>
         <p className="mt-3 text-sm sm:text-base text-fg/75 max-w-xl leading-relaxed">
-          Le plan <strong className="text-fg">Soutien</strong> lève les limites
-          techniques (portfolio, alertes, watchlist, glossaire) et finance
-          directement le projet — dès {MONTHLY_PRICE}/mois, annulation 1 clic,
-          14&nbsp;j remboursé. Pas de fausse promesse de support humain ni
-          d&apos;équipe d&apos;experts : juste un dev solo en France.
+          Le plan <strong className="text-fg">Soutien</strong> étend tes limites
+          techniques (portfolio 500, alertes 100, watchlist 200) et débloque l&apos;IA
+          Q&amp;A par fiche crypto (20 questions/jour, Claude Haiku contextualisé).
+          Il finance directement le projet — dès {MONTHLY_PRICE}/mois, annulation
+          1 clic, garantie commerciale 7&nbsp;j satisfait-ou-remboursé. Pas de
+          fausse promesse de support humain ni d&apos;équipe d&apos;experts :
+          juste un dev solo en France.
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
           <Link

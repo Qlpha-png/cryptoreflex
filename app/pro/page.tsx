@@ -101,13 +101,13 @@ export const metadata: Metadata = {
   keywords: [
     "soutenir éditeur crypto français",
     "abonnement crypto indépendant",
-    "portfolio crypto illimité",
+    "portfolio crypto 500 positions",
     "alertes prix bitcoin",
     "Cryptoreflex Soutien",
   ],
   openGraph: {
     title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
-    description: `À partir de ${META_MONTHLY_PRICE}/mois. Portfolio illimité, alertes illimitées, glossaire complet, accès anticipé. Annulation 1 clic, sans engagement.`,
+    description: `À partir de ${META_MONTHLY_PRICE}/mois. Portfolio 500 positions, alertes 100, watchlist 200, IA Q&A 20/jour avec Claude Haiku. Annulation 1 clic, sans engagement.`,
     url: `${BRAND.url}/pro`,
     siteName: BRAND.name,
     locale: "fr_FR",
@@ -124,7 +124,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
-    description: `Portfolio + alertes illimités, glossaire complet, accès anticipé. ${META_MONTHLY_PRICE}/mois — annulation 1 clic.`,
+    description: `Portfolio 500 positions, alertes 100, IA Q&A 20/jour. ${META_MONTHLY_PRICE}/mois — annulation 1 clic.`,
     images: [`${BRAND.url}/og-image.png`],
   },
   robots: {
@@ -214,21 +214,20 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       description:
         "Tous les outils essentiels accessibles sans engagement et sans email demandé.",
       features: [
-        "Tous les calculateurs (fiscalité, ROI, DCA, staking)",
+        "Tous les calculateurs (fiscalité PFU, ROI, DCA, staking)",
         "Portfolio tracker (10 positions)",
         "3 alertes prix par email",
         "Watchlist 10 cryptos",
-        "Glossaire — 100 termes essentiels",
+        "Glossaire crypto complet (gratuit pour tous)",
+        "Comparateur de plateformes MiCA + méthodologie publique",
         "Newsletter quotidienne (opt-in)",
-        "Comparateur MiCA complet, méthodologie publique",
+        "Export CSV portfolio (gratuit pour tous)",
       ],
       excluded: [
-        "Portfolio illimité (vs 10 positions Free)",
-        "Alertes prix illimitées (vs 3 Free)",
-        "Watchlist illimitée (vs 10 Free)",
-        "Glossaire complet 250+ termes (vs 100 Free)",
-        "Export CSV illimité (portfolio, transactions, alertes)",
-        "Accès anticipé aux nouvelles features",
+        "Portfolio 500 positions (vs 10 en Free)",
+        "Alertes prix 100 par email (vs 3 en Free)",
+        "Watchlist 200 cryptos (vs 10 en Free)",
+        "IA Q&A par fiche crypto — 20 questions/jour avec Claude Haiku",
       ],
       ctaLabel: "Commencer gratuitement",
       ctaHref: "/outils",
@@ -247,13 +246,11 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       description:
         "Tu soutiens un éditeur web indépendant français et tu débloques les limites techniques du plan Gratuit.",
       features: [
-        "Portfolio illimité (positions illimitées vs 10 en Free)",
-        "Alertes prix illimitées (toutes cryptos, vs 3 en Free)",
-        "Watchlist illimitée (vs 10 en Free)",
-        "Glossaire complet — 250+ termes (vs 100 en Free)",
-        "Export CSV illimité (portfolio, transactions, alertes)",
-        "Accès anticipé aux nouvelles features (avant les autres)",
-        "Annulation 1 clic, sans engagement, garantie 14 j remboursé",
+        "Portfolio 500 positions (vs 10 en Free)",
+        "Alertes prix 100 par email (vs 3 en Free)",
+        "Watchlist 200 cryptos (vs 10 en Free)",
+        "IA Q&A par fiche — 20 questions/jour avec Claude Haiku contextualisé",
+        "Annulation 1 clic, sans engagement, garantie commerciale 7 j satisfait-ou-remboursé",
         "Tu finances directement le développement et l'hébergement UE",
       ],
       ctaLabel: paymentsEnabled
@@ -281,11 +278,10 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       description:
         "Le plan Mensuel avec ~20 % d'économie. Le moyen le plus simple de soutenir un projet solo et indépendant.",
       features: [
-        "Tout le plan Soutien Mensuel",
+        "Tout le plan Soutien Mensuel (mêmes limites étendues)",
         "Économie ~6,89 € / an (vs 2,99 € × 12 = 35,88 €)",
-        "Accès anticipé étendu (2 semaines avant les autres)",
         "Tu permets au projet de tenir 12 mois supplémentaires",
-        "Annulation 1 clic, garantie 14 j remboursé intégral",
+        "Annulation 1 clic, garantie commerciale 7 j satisfait-ou-remboursé",
       ],
       ctaLabel: paymentsEnabled
         ? ANNUAL_HAS_OWN_LINK
@@ -326,49 +322,34 @@ const TIERS = buildTiers(PAYMENTS_ENABLED);
 const FEATURES = [
   {
     icon: Wallet,
-    kpi: "Illimité",
+    kpi: "500",
     tag: "Portfolio",
-    title: "Portfolio sans limite",
-    text: "Suis autant de positions crypto que tu veux (vs 10 en Free). Multi-wallets, P&L automatique, pie chart d'allocation, export CSV illimité.",
+    title: "Portfolio étendu à 500 positions",
+    text: "Suis jusqu'à 500 positions crypto (vs 10 en Free). Multi-wallets, P&L automatique, pie chart d'allocation. Données stockées sur ton appareil (RGPD by design).",
     href: "/portefeuille",
   },
   {
     icon: Bell,
-    kpi: "∞",
+    kpi: "100",
     tag: "Alertes",
-    title: "Alertes prix illimitées",
-    text: "Crée autant d'alertes email que nécessaire — seuils up/down, % de variation, niveaux clés. La limite de 3 alertes du plan Free saute.",
+    title: "Alertes prix étendues à 100",
+    text: "100 alertes prix actives par email (vs 3 en Free) — seuils up/down, % de variation, niveaux clés. Limite serveur appliquée via lookup Supabase.",
     href: "/alertes",
   },
   {
-    icon: GraduationCap,
-    kpi: "250+ termes",
-    tag: "Lexique",
-    title: "Glossaire complet",
-    text: "Accède aux 250+ définitions du lexique crypto vulgarisé. Au-delà des 100 termes essentiels du Free : DeFi avancé, MEV, restaking, RWA, etc.",
-    href: "/glossaire",
+    icon: Sparkles,
+    kpi: "20/jour",
+    tag: "IA",
+    title: "IA Q&A par fiche crypto",
+    text: "20 questions/jour à notre assistant Claude Haiku, contextualisé sur chacune des 100 fiches Cryptoreflex. Pas de conseil financier — pédagogie pure. Réservé Soutien.",
   },
   {
     icon: ShieldCheck,
-    kpi: "0 pub",
-    tag: "Confort",
-    title: "Watchlist illimitée",
-    text: "Plus de plafond à 10 cryptos. Suis l'intégralité du marché qui t'intéresse depuis ton tableau de bord.",
+    kpi: "200",
+    tag: "Watchlist",
+    title: "Watchlist étendue à 200 cryptos",
+    text: "Suis jusqu'à 200 cryptos (vs 10 en Free) depuis ton tableau de bord. Données stockées sur ton appareil (RGPD by design).",
     href: "/watchlist",
-  },
-  {
-    icon: FileText,
-    kpi: "CSV",
-    tag: "Export",
-    title: "Export CSV illimité",
-    text: "Exporte ton portfolio, tes transactions, tes alertes — autant que tu veux, sans plafond. Pratique pour ton comptable ou ta déclaration.",
-  },
-  {
-    icon: Zap,
-    kpi: "Beta",
-    tag: "Anticipé",
-    title: "Accès anticipé aux nouvelles features",
-    text: "Quand une nouvelle feature est codée, les abonnés Soutien y accèdent en avant-première (≈ 2 semaines avant le grand public).",
   },
   {
     icon: Users,
@@ -467,7 +448,7 @@ const FAQS = [
   },
   {
     q: "Et si je me désabonne, que deviennent mes données ?",
-    a: `Tes données restent accessibles depuis ton compte Free pendant 90 jours (export CSV illimité), puis elles sont anonymisées automatiquement. Tu peux aussi demander la suppression immédiate via ${BRAND.email} (réponse sous 30 jours, garantie RGPD).`,
+    a: `Tes données restent accessibles depuis ton compte Free pendant 90 jours (export CSV disponible), puis elles sont anonymisées automatiquement. Tu peux aussi demander la suppression immédiate via ${BRAND.email} (réponse sous 30 jours, garantie RGPD).`,
   },
   {
     q: "Les « idées futures » listées sur cette page sont-elles garanties ?",
@@ -797,9 +778,9 @@ export default function ProPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-8">
             {[
               { from: "10 positions", to: "500 positions", label: "Portfolio" },
-              { from: "3 alertes", to: "Illimité", label: "Alertes prix" },
-              { from: "10 cryptos", to: "Illimité", label: "Watchlist" },
-              { from: "100 termes", to: "250+ termes", label: "Glossaire" },
+              { from: "3 alertes", to: "100 alertes", label: "Alertes prix" },
+              { from: "10 cryptos", to: "200 cryptos", label: "Watchlist" },
+              { from: "—", to: "20 / jour", label: "IA Q&A" },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <p className="text-xs uppercase tracking-wider text-muted mb-2 font-semibold">
