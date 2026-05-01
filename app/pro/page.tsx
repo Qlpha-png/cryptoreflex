@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   //  - openGraph / twitter complets (Cards Summary Large Image)
   //  - robots avec max-image-preview / max-snippet (Google 2024+)
   title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
-  description: `Soutiens un éditeur web indépendant français. ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio illimité, alertes illimitées, glossaire complet, accès anticipé aux nouvelles features. Annulation 1 clic, 14 j remboursé.`,
+  description: `Soutiens un éditeur web indépendant français. ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio 500 (vs 10 Free), alertes 100 (vs 3), watchlist 200 (vs 10), IA Q&A 20/jour. Annulation 1 clic.`,
   alternates: { canonical: `${BRAND.url}/pro` },
   keywords: [
     "soutenir éditeur crypto français",
@@ -439,7 +439,7 @@ const FAQS = [
   },
   {
     q: "Concrètement, qu'est-ce que je débloque par rapport au Gratuit ?",
-    a: "Portfolio illimité (vs 10 positions), alertes prix illimitées (vs 3), watchlist illimitée (vs 10), glossaire complet 250+ termes (vs 100), export CSV sans plafond et accès anticipé aux nouvelles features. C'est tout — et on s'y tient. Tout le reste (calculateurs, comparateur, méthodologie publique, newsletter) reste gratuit pour tout le monde.",
+    a: "Portfolio étendu à 500 positions (vs 10 Free), alertes prix étendues à 100 (vs 3 Free), watchlist étendue à 200 cryptos (vs 10 Free), IA Q&A 20 questions/jour à notre assistant Claude Haiku contextualisé sur chacune des 100 fiches. C'est tout — et on s'y tient. Tout le reste (calculateurs, comparateur, méthodologie publique, newsletter) reste gratuit pour tout le monde.",
   },
   {
     q: "Comment je m'abonne ?",
@@ -579,7 +579,7 @@ function buildProductSchema(paymentsEnabled: boolean): JsonLd {
     applicationSubCategory: "Cryptocurrency Portfolio Tracker (free + supporter tier)",
     operatingSystem: "Web (any modern browser)",
     description:
-      "Abonnement Soutien pour un éditeur web crypto indépendant français : portfolio illimité, alertes prix illimitées, watchlist illimitée, glossaire complet 250+ termes, export CSV sans plafond et accès anticipé aux nouvelles features. Calculateurs et outils essentiels gratuits pour tous.",
+      "Abonnement Soutien pour un éditeur web crypto indépendant français : portfolio 500 positions (vs 10 Free), alertes 100 (vs 3), watchlist 200 (vs 10), IA Q&A 20 questions/jour avec Claude Haiku. Calculateurs et outils essentiels gratuits pour tous.",
     brand: { "@type": "Brand", name: BRAND.name },
     image: `${BRAND.url}/og-image.png`,
     url: `${BRAND.url}/pro`,
@@ -621,7 +621,7 @@ function buildHowToSchema(): JsonLd {
       },
       {
         name: "Accéder à Pro",
-        text: "Accès immédiat à toutes les fonctionnalités Pro après paiement (portfolio illimité, alertes, glossaire complet, brief). Facture envoyée par email. Annulation 1 clic à tout moment.",
+        text: "Accès immédiat à toutes les fonctionnalités Soutien après paiement (portfolio 500, alertes 100, watchlist 200, IA Q&A 20/jour). Facture envoyée par email. Annulation 1 clic à tout moment.",
         url: "/pro#features-pro",
       },
     ],
@@ -796,7 +796,7 @@ export default function ProPage() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-8">
             {[
-              { from: "10 positions", to: "Illimité", label: "Portfolio" },
+              { from: "10 positions", to: "500 positions", label: "Portfolio" },
               { from: "3 alertes", to: "Illimité", label: "Alertes prix" },
               { from: "10 cryptos", to: "Illimité", label: "Watchlist" },
               { from: "100 termes", to: "250+ termes", label: "Glossaire" },
@@ -843,7 +843,7 @@ export default function ProPage() {
           - Webhook /api/stripe/webhook pour activer le flag `plan: pro_*` en DB
             Supabase (cf. Agent T1 archi : auth + Postgres + RLS)
           - Provisionner les features Pro réellement livrables :
-            alertes illimitées, portfolio illimité, glossaire 250+,
+            alertes 100/email, portfolio 500 positions, IA Q&amp;A,
             réponse fiscale 48h via Crisp, brief PRO Resend audience
         */}
       </section>

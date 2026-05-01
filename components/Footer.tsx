@@ -78,7 +78,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/comparatif", label: "Comparatif plateformes crypto FR" },
       { href: "/quiz/plateforme", label: "Quiz : trouver TA plateforme" },
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
-      { href: "/cryptos", label: "Top 50 cryptomonnaies analysées" },
+      { href: "/cryptos", label: "100 cryptomonnaies analysées" },
       { href: "/marche/heatmap", label: "Heatmap marché crypto" },
     ],
   },

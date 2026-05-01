@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   AlertCircle,
   Lightbulb,
@@ -6,6 +7,7 @@ import {
   TrendingUp,
   ExternalLink,
   FileText,
+  Info,
   type LucideIcon,
 } from "lucide-react";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
@@ -25,11 +27,43 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 /**
  * WhitepaperTldr — synthèse pédagogique en 5 points du whitepaper officiel.
- * Server Component. Render null si pas de TLDR éditorial pour cette crypto.
+ * Server Component.
+ *
+ * Pour les cryptos hors top 30 on rend un placeholder honnête (« pas encore
+ * couvert ») au lieu de silencieusement null — fix audit UX 2026-05-01.
  */
 export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
   const tldr = getWhitepaperTldrFor(cryptoId);
-  if (!tldr) return null;
+  if (!tldr) {
+    return (
+      <section
+        id="whitepaper-tldr"
+        className="scroll-mt-24 rounded-2xl border border-border bg-surface/40 p-5"
+      >
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-elevated text-muted">
+            <Info className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-fg/85">
+              Whitepaper de {cryptoName} — synthèse à venir
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
+              Notre synthèse en 5 points (problème, solution, innovation, limites, impact)
+              est rédigée manuellement pour les 30 cryptos les plus capitalisées. Les autres
+              suivront aux prochains trimestres.{" "}
+              <Link
+                href="/methodologie#whitepaper-tldr"
+                className="text-primary-soft hover:text-primary underline"
+              >
+                Voir la méthodologie →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

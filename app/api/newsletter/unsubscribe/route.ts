@@ -32,7 +32,7 @@ import {
   verifyUnsubscribeToken,
 } from "@/lib/auth-tokens";
 import { unsubscribeFromBeehiiv } from "@/lib/beehiiv";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/client";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { BRAND } from "@/lib/brand";
@@ -220,12 +220,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Envoie l'email de confirmation. On ne fail jamais le response côté client :
   // on retourne ok systématiquement (anti-enum). Erreurs réelles loggées server-side.
+  // Migration 27/04 → lib/email/client : signature requiert `text` ; `tag` et `from`
+  // ne sont plus supportés (FROM_EMAIL centralisé).
+  const confirmText =
+    `Confirme ton désabonnement de ${BRAND.name}\n\n` +
+    `Tu as demandé à te désinscrire pour l'adresse ${email}.\n\n` +
+    `Pour confirmer, ouvre ce lien :\n${confirmUrl}\n\n` +
+    `Si tu n'es pas à l'origine de cette demande, ignore simplement cet email — aucune action n'est nécessaire.\n\n` +
+    `${BRAND.name} — ${BRAND.domain}`;
   const sendResult = await sendEmail({
     to: email,
     subject: `Confirme ton désabonnement de ${BRAND.name}`,
     html: buildConfirmRequestEmail(email, confirmUrl),
-    tag: "unsubscribe",
-    from: process.env.RESEND_FROM_EMAIL ?? `${BRAND.name} <hello@${BRAND.domain}>`,
+    text: confirmText,
   });
 
   if (!sendResult.ok) {

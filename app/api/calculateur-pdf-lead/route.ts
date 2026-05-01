@@ -32,7 +32,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { subscribe, isValidEmail } from "@/lib/newsletter";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/client";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import {
@@ -44,6 +44,7 @@ import {
   calculateurFiscaliteWelcomeHtml,
   calculateurFiscaliteWelcomeSubject,
 } from "@/lib/email-templates";
+import { BRAND } from "@/lib/brand";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -162,12 +163,24 @@ export async function POST(req: NextRequest) {
     exonere: calculationData.result.exonere,
     deficit: calculationData.result.deficit,
   };
+  // Migration 27/04 → lib/email/client : signature requiert `text` ; `tag` et
+  // `from` ne sont plus supportés (FROM_EMAIL centralisé via BRAND_EMAIL).
+  const previewUrl = `${BRAND.url}/outils/calculateur-fiscalite/preview-pdf/${sessionId}`;
+  const emailText =
+    `Ta simulation fiscalité crypto est prête.\n\n` +
+    `Régime : ${summary.regime}\n` +
+    `Plus-value nette : ${summary.plusValueNette.toFixed(2)} €\n` +
+    `Impôt total estimé : ${summary.impotTotal.toFixed(2)} €\n` +
+    `Net après impôt : ${summary.netApresImpot.toFixed(2)} €\n\n` +
+    `Voir et imprimer en PDF : ${previewUrl}\n` +
+    `(lien valable 1 heure)\n\n` +
+    `Tu vas aussi recevoir 5 emails avec nos conseils fiscalité crypto.\n\n` +
+    `${BRAND.name} — ${BRAND.url}`;
   const emailRes = await sendEmail({
     to: email,
     subject: calculateurFiscaliteWelcomeSubject,
     html: calculateurFiscaliteWelcomeHtml({ email, summary, sessionId }),
-    tag: "calc-pdf",
-    from: process.env.RESEND_FROM_EMAIL ?? "Cryptoreflex <hello@cryptoreflex.fr>",
+    text: emailText,
   });
   if (!emailRes.ok) {
     console.warn("[calc-pdf-lead] Resend sendEmail failed", emailRes.error);

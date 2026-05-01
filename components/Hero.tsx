@@ -31,7 +31,7 @@ import type { CoinPrice } from "@/lib/coingecko";
  * - Server component (le seul îlot client = AnimatedNumber + HeroLiveWidget).
  * - Background : dotted grid + halo gold radial animé (breathe + mesh shift).
  * - 1 CTA primary fort + 1 CTA secondaire newsletter.
- * - Stats card 4 KPI en bas (14 plateformes / 20 cryptos / 6 outils / Méthode).
+ * - Stats card 4 KPI en bas (14 plateformes / 100 cryptos / 6 outils / Méthode).
  * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
  */
 
@@ -49,7 +49,8 @@ interface HeroProps {
  *    (11 exchanges/brokers data/platforms.json + 2 hardware wallets data/wallets.json
  *    + 1 SaaS fiscalité Waltio data/partners.ts). Cohérent avec ReassuranceSection
  *    et NewsletterPopup ("14 marques fiables 2026").
- *  - cryptos: 20 = top market fetch CoinGecko (cf. fetchTopMarket(20) dans page.tsx).
+ *  - cryptos: 100 = total fiches éditoriales (10 top-cryptos + 90 hidden-gems).
+ *    Aligné avec la promesse du H1 et getAllCryptos().length.
  *  - tools: 6 = sous-évaluation prudente (réellement 9 dans /outils/) — laissé bas
  *    pour ne jamais surpromettre ; à monter une fois que tous les outils auront
  *    été testés régression-free.

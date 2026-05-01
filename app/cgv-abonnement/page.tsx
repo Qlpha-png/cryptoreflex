@@ -91,13 +91,20 @@ export default function CgvAbonnementPage() {
         site {BRAND.name}, hébergé sur {BRAND.url} :
       </p>
       <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li>Portfolio crypto illimité (vs 10 lignes en gratuit)</li>
-        <li>Alertes prix illimitées par email (vs 3 en gratuit)</li>
-        <li>Watchlist illimitée (vs 10 cryptos en gratuit)</li>
-        <li>Glossaire complet 250+ termes crypto</li>
-        <li>Export CSV de l&apos;historique du portfolio (utile pour la fiscalité)</li>
-        <li>Accès anticipé aux nouvelles fonctionnalités (≈ 2 semaines avant le grand public)</li>
+        <li>Portfolio crypto étendu : 500 positions max (vs 10 en gratuit)</li>
+        <li>Alertes prix étendues : 100 alertes actives (vs 3 en gratuit)</li>
+        <li>Watchlist étendue : 200 cryptos suivies (vs 10 en gratuit)</li>
+        <li>
+          IA Q&amp;A par fiche crypto : 20 questions/jour à notre assistant Claude Haiku
+          contextualisé sur chacune des 100 fiches Cryptoreflex (réservé aux abonnés Soutien)
+        </li>
       </ul>
+      <p className="mt-3 text-xs text-muted leading-relaxed">
+        Note : le glossaire complet et l&apos;export CSV du portfolio sont actuellement
+        accessibles à tous les utilisateurs (gratuits et Soutien) — ils ne constituent pas
+        un avantage Soutien à ce jour. Une fonctionnalité « accès anticipé aux nouvelles
+        features » est étudiée pour 2026 mais n&apos;est pas encore livrée.
+      </p>
       <p className="mt-3 text-sm text-muted leading-relaxed">
         Tous ces services sont 100 % numériques, fournis exclusivement en ligne via
         l&apos;interface web responsive {BRAND.url}.

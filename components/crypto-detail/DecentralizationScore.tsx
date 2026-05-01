@@ -1,4 +1,5 @@
-import { ShieldCheck, Users, Globe, Layers, GitBranch, Code2 } from "lucide-react";
+import Link from "next/link";
+import { ShieldCheck, Users, Globe, Layers, GitBranch, Code2, Info } from "lucide-react";
 import {
   getDecentralizationScore,
   formatDecentralizationVerdict,
@@ -14,11 +15,45 @@ interface Props {
 
 /**
  * DecentralizationScore — score composite 0-10 affiché à côté du Reliability.
- * Server Component (data statique). Render null si pas de score éditorial.
+ * Server Component (data statique).
+ *
+ * Pour les cryptos non encore couvertes (hors top 30) on affiche un placeholder
+ * honnête (« pas encore couvert ») au lieu de rendre null silencieusement —
+ * fix audit UX 2026-05-01 (Karim friction 2/3).
  */
 export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
   const score = getDecentralizationScore(cryptoId);
-  if (!score) return null;
+  if (!score) {
+    return (
+      <section
+        id="decentralization"
+        className="scroll-mt-24 rounded-2xl border border-border bg-surface/40 p-5"
+      >
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-elevated text-muted">
+            <Info className="h-4 w-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-fg/85">
+              Score de décentralisation Cryptoreflex
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
+              Pas encore couvert pour {cryptoName}. Notre score composite (Nakamoto
+              coefficient + validateurs + diversité géo + diversité client + open source)
+              est calculé manuellement pour les 30 cryptos les plus liquides. Les autres
+              suivront aux prochains trimestres.{" "}
+              <Link
+                href="/methodologie#decentralisation"
+                className="text-primary-soft hover:text-primary underline"
+              >
+                Voir la méthodologie →
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const colorClass = decentralizationColor(score.score);
   const verdict = formatDecentralizationVerdict(score.score);

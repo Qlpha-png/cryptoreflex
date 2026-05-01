@@ -23,21 +23,21 @@ import {
 export const metadata: Metadata = {
   title: "Page introuvable",
   description:
-    "Cette page n'existe pas (encore !). Découvre nos comparatifs, le top 10 cryptos et nos outils gratuits.",
+    "Cette page n'existe pas (encore !). Découvre nos 100 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
   robots: { index: false, follow: false },
 };
 
 const SUGGESTIONS = [
   {
     href: "/#marche",
-    title: "Marché",
-    description: "Top 20 cryptos en direct, prix, variations, market cap.",
+    title: "Marché live",
+    description: "Top cryptos en direct, prix, variations, market cap.",
     icon: BarChart3,
   },
   {
-    href: "/#top10",
-    title: "Top 10 cryptos",
-    description: "Notre sélection des 10 cryptos qui comptent vraiment.",
+    href: "/cryptos",
+    title: "100 cryptos analysées",
+    description: "Notre sélection complète : score fiabilité, on-chain, roadmap.",
     icon: Trophy,
   },
   {

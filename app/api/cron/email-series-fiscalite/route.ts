@@ -42,8 +42,8 @@ import {
   updateSubscriberCustomField,
   type BeehiivSubscriber,
 } from "@/lib/beehiiv";
-import { sendEmail } from "@/lib/email";
-import { renderEmailHtml } from "@/lib/email-renderer";
+import { sendEmail } from "@/lib/email/client";
+import { renderEmailHtml, renderEmailText } from "@/lib/email-renderer";
 import { getKv } from "@/lib/kv";
 import { verifyBearer } from "@/lib/auth";
 
@@ -221,21 +221,22 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const { subscriber, email } = decision;
     const unsubscribeUrl = buildUnsubscribeUrl(subscriber.email);
     const html = renderEmailHtml(email, { unsubscribeUrl });
+    const text = renderEmailText(email, { unsubscribeUrl });
 
+    // Migration 27/04 → lib/email/client : sendEmail() ne supporte plus `tag`
+    // ni `from` (FROM_EMAIL est centralisé via RESEND_FROM_EMAIL / BRAND_EMAIL).
+    // Le HTML est déjà wrappé via wrapEmail() dans fiscalite-crypto-series.ts
+    // → pas de double wrap, signature compatible avec opts.html brut.
     const result = await sendEmail({
       to: subscriber.email,
       subject: email.subject,
       html,
-      tag: "fiscalite",
-      from:
-        process.env.RESEND_FROM_FISCALITE ??
-        process.env.RESEND_FROM_EMAIL ??
-        "Cryptoreflex Fiscalité <fiscalite@cryptoreflex.fr>",
+      text,
     });
 
     if (!result.ok) {
       failed++;
-      errors.push({ email: subscriber.email, reason: result.error });
+      errors.push({ email: subscriber.email, reason: result.error ?? "unknown" });
       console.error("[fiscalite-cron] send failed", {
         email: subscriber.email,
         offset: decision.daysSinceSubscribe,
@@ -249,7 +250,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     console.log("[fiscalite-cron] sent", {
       email: subscriber.email,
       offset: decision.daysSinceSubscribe,
-      mocked: "mocked" in result ? result.mocked : false,
+      resendId: result.id,
     });
   }
 

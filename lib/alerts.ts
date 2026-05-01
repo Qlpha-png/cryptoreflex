@@ -25,8 +25,9 @@
  */
 
 import { getKv } from "@/lib/kv";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/client";
 import { priceAlertHtml, priceAlertSubject } from "@/lib/email-templates";
+import { BRAND } from "@/lib/brand";
 import { COIN_IDS, COIN_NAMES } from "@/lib/historical-prices";
 import { getAllCryptos } from "@/lib/cryptos";
 import { fetchPrices, type CoinId } from "@/lib/coingecko";
@@ -541,6 +542,16 @@ export async function evaluateAndFire(
           threshold: alert.threshold,
           currency: alert.currency,
         });
+        // Migration 27/04 → lib/email/client : `text` requis. Version texte minimale.
+        const direction = alert.condition === "above" ? "au-dessus de" : "en-dessous de";
+        const text =
+          `Alerte prix ${cryptoName} déclenchée\n\n` +
+          `${cryptoName} est passé ${direction} ${alert.threshold} ${alert.currency.toUpperCase()}.\n` +
+          `Prix actuel : ${current} ${alert.currency.toUpperCase()}.\n\n` +
+          `Voir sur ${BRAND.name} : ${BRAND.url}/cryptos/${detailSlug}\n` +
+          `Gérer mes alertes : ${BRAND.url}/alertes\n\n` +
+          `Désactiver cette alerte : ${BRAND.url}/api/alerts/${alert.id}?token=${encodeURIComponent(token)}&action=delete\n\n` +
+          `${BRAND.name} — pas un conseil en investissement.`;
 
         // POSE marker AVANT sendEmail (window de re-trigger réduite à ~50ms).
         // Si sendEmail échoue ensuite, on supprime le marker pour permettre retry.
@@ -556,13 +567,13 @@ export async function evaluateAndFire(
           to: alert.email,
           subject,
           html,
-          tag: "alert",
+          text,
         });
 
         if (!mail.ok) {
           // Email échoué → on supprime le marker pour permettre retry au prochain cron.
           await kv.del(firedKey).catch(() => undefined);
-          report.errors.push(`mail ${alert.id} failed: ${mail.error}`);
+          report.errors.push(`mail ${alert.id} failed: ${mail.error ?? "unknown"}`);
           continue;
         }
 

@@ -26,7 +26,6 @@ export default defineConfig({
       exclude: [
         "lib/**/*.d.ts",
         "lib/email-series/**", // templates HTML, pas de logique
-        "lib/email-drip-templates.ts",
       ],
     },
   },

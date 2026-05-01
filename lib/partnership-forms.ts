@@ -18,7 +18,7 @@
 "use server";
 
 import { headers } from "next/headers";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/client";
 import { isValidEmail } from "@/lib/newsletter";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { BRAND } from "@/lib/brand";
@@ -75,6 +75,28 @@ function escapeHtml(s: string): string {
 function clean(input: unknown, maxLen = 2000): string {
   if (typeof input !== "string") return "";
   return input.trim().slice(0, maxLen);
+}
+
+/**
+ * Strip HTML → texte plain pour la version `text` requise par lib/email/client.
+ * Migration 27/04 : la nouvelle signature impose `text` (anti-spam scoring Gmail).
+ * Conversion best-effort : suffisant pour nos emails de notif interne.
+ */
+function htmlToPlainText(html: string): string {
+  return html
+    .replace(/<\/(p|div|li|h[1-6]|tr|br|hr)>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/?(ul|ol)>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "- ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -137,24 +159,23 @@ export async function submitAmbassadeur(
     </p>
   `;
 
+  // Migration 27/04 → lib/email/client : `text` requis ; `tag`/`replyTo`/`from`
+  // ne sont plus exposés (REPLY_TO centralisé via BRAND_EMAIL.supportEmail).
+  // L'email du candidat reste accessible via le corps du message.
   const result = await sendEmail({
     to: BRAND.partnersEmail,
     subject: `[Ambassadeurs] Candidature de ${name}`,
     html,
-    tag: "ambassadeur",
-    replyTo: email,
+    text: htmlToPlainText(html),
   });
 
   if (!result.ok) {
-    return { ok: false, error: result.error };
+    return { ok: false, error: result.error ?? "Envoi email impossible." };
   }
 
   // Confirmation au candidat — best-effort, on n'échoue pas si l'email
   // accusé de réception part en vrac (le partenaire interne a déjà reçu).
-  await sendEmail({
-    to: email,
-    subject: `Ta candidature ambassadeur ${BRAND.name} a bien été reçue`,
-    html: `
+  const confirmHtml = `
       <h2>Merci ${escapeHtml(name)} !</h2>
       <p>On a bien reçu ta candidature au programme ambassadeurs ${BRAND.name}.</p>
       <p>Notre équipe t'écrit sous 5 à 7 jours ouvrés depuis <strong>${BRAND.partnersEmail}</strong>.
@@ -163,12 +184,15 @@ export async function submitAmbassadeur(
       <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(profileUrl)} – ${escapeHtml(channel || "canal non précisé")}</p>
       <hr>
       <p style="color:#888;font-size:12px">${BRAND.name} – ${BRAND.url}</p>
-    `,
-    tag: "ambassadeur",
-    replyTo: BRAND.partnersEmail,
+    `;
+  await sendEmail({
+    to: email,
+    subject: `Ta candidature ambassadeur ${BRAND.name} a bien été reçue`,
+    html: confirmHtml,
+    text: htmlToPlainText(confirmHtml),
   });
 
-  return { ok: true, mocked: "mocked" in result ? result.mocked : false };
+  return { ok: true, mocked: false };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -230,17 +254,13 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
     to: BRAND.partnersEmail,
     subject: `[Sponsoring] Demande de ${company}`,
     html,
-    tag: "sponsoring",
-    replyTo: email,
+    text: htmlToPlainText(html),
   });
 
-  if (!result.ok) return { ok: false, error: result.error };
+  if (!result.ok) return { ok: false, error: result.error ?? "Envoi email impossible." };
 
   // Confirmation au demandeur (best-effort)
-  await sendEmail({
-    to: email,
-    subject: `Ta demande de sponsoring ${BRAND.name} est en file de traitement`,
-    html: `
+  const confirmHtml = `
       <h2>Merci pour ton intérêt</h2>
       <p>${BRAND.name} a bien reçu ta demande au nom de <strong>${escapeHtml(company)}</strong>.</p>
       <p>Notre équipe partenariats te répond <strong>sous 48 h ouvrées</strong> depuis ${BRAND.partnersEmail} avec :
@@ -250,12 +270,15 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
       <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un PSAN ni un CIF.
       Tout contenu sponsorisé est explicitement signalé conformément à l'art. 222-15 du règlement général AMF
       et à la charte ARPP. ${BRAND.url}</p>
-    `,
-    tag: "sponsoring",
-    replyTo: BRAND.partnersEmail,
+    `;
+  await sendEmail({
+    to: email,
+    subject: `Ta demande de sponsoring ${BRAND.name} est en file de traitement`,
+    html: confirmHtml,
+    text: htmlToPlainText(confirmHtml),
   });
 
-  return { ok: true, mocked: "mocked" in result ? result.mocked : false };
+  return { ok: true, mocked: false };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -325,10 +348,9 @@ export async function submitContact(formData: FormData): Promise<FormResult> {
     to: recipient,
     subject: `[${labelMap[type]}] ${subject || "Nouveau message"}`,
     html,
-    tag: "contact",
-    replyTo: email,
+    text: htmlToPlainText(html),
   });
 
-  if (!result.ok) return { ok: false, error: result.error };
-  return { ok: true, mocked: "mocked" in result ? result.mocked : false };
+  if (!result.ok) return { ok: false, error: result.error ?? "Envoi email impossible." };
+  return { ok: true, mocked: false };
 }
