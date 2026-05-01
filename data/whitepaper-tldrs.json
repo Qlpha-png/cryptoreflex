@@ -1,0 +1,345 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-04-26",
+    "purpose": "Synthèses pédagogiques (5 points) des whitepapers / docs techniques officiels des top 30 cryptos par market cap. Pré-générées au build time, factuelles, éditorialement vérifiées. Source de vérité : whitepapers originaux + data/top-cryptos.json + data/hidden-gems.json.",
+    "icons": {
+      "problem": "AlertCircle",
+      "solution": "Lightbulb",
+      "innovation": "Sparkles",
+      "limits": "AlertTriangle",
+      "impact": "TrendingUp"
+    }
+  },
+  "tldrs": {
+    "bitcoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://bitcoin.org/bitcoin.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les paiements en ligne dépendent d'institutions financières comme tiers de confiance, ce qui crée des coûts, exclut les non-bancarisés et concentre le pouvoir monétaire entre quelques acteurs centraux." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un réseau pair-à-pair où les transactions sont validées par preuve de travail (Proof of Work) et regroupées dans une chaîne de blocs horodatés, sans besoin d'autorité centrale." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Résolution du problème de la double-dépense sans tiers de confiance, grâce à la combinaison du minage, des signatures numériques et de la règle de la plus longue chaîne." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Le réseau plafonne à environ 7 transactions par seconde, la consommation énergétique est massive (estimée comparable à un pays moyen), et la confidentialité reste pseudonyme et non anonyme." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Adoption institutionnelle massive via les ETF spot approuvés depuis 2024, premières réserves stratégiques d'États, et reconnaissance comme or numérique avec une capitalisation supérieure à celle de la majorité des entreprises cotées." }
+      ]
+    },
+    "ethereum": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://ethereum.org/en/whitepaper/",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Bitcoin ne permet d'écrire que des règles de paiement très simples : impossible d'y construire des applications financières complexes, des marchés ou des organisations programmables." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une blockchain dotée d'une machine virtuelle Turing-complète (EVM) qui exécute des smart contracts arbitraires, payés en gas pour éviter les boucles infinies." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Le concept de world computer décentralisé, où n'importe qui peut déployer du code immuable qui s'exécute exactement comme programmé, ouvrant la porte à la DeFi, aux NFT et aux DAO." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Le débit reste limité à environ 15 transactions par seconde sur la couche de base, les frais de gas explosent en période de congestion, et la complexité de l'EVM expose à des bugs de smart contracts." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Passage à la Proof of Stake en 2022 (-99,95 % d'énergie), écosystème L2 mature (Arbitrum, Optimism, Base) qui absorbe le scaling, et standard de référence pour la tokenisation d'actifs réels." }
+      ]
+    },
+    "tether": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://tether.to/en/whitepaper/",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "La volatilité extrême du Bitcoin et de l'Ether empêche l'usage des cryptos comme moyen de paiement quotidien ou comme refuge stable pendant les phases de marché baissier." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un token (USDT) émis 1:1 contre des dollars détenus en réserve, transférable sur plusieurs blockchains (TRON, Ethereum, Solana) avec la promesse d'un rachat à parité." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Premier stablecoin à atteindre une adoption mondiale massive, créant un pont liquide entre le système bancaire dollar et les exchanges crypto, indispensable au trading 24/7." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Émetteur centralisé (Tether Limited), historique de manque de transparence sur la composition exacte des réserves, dépendance aux banques partenaires et risques de gel d'adresses." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Plus de 100 milliards de dollars en circulation, moyen d'épargne dollarisée pour des centaines de millions d'utilisateurs en pays émergents, et instrument pivot du marché crypto." }
+      ]
+    },
+    "binancecoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://www.bnbchain.org/en/bnb-whitepaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les utilisateurs d'exchange paient des frais élevés et n'ont aucun mécanisme d'alignement avec la croissance de la plateforme qu'ils utilisent quotidiennement." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un token utilitaire qui réduit les frais de trading sur Binance, alimente la BNB Chain (smart contracts compatibles EVM) et est régulièrement brûlé pour réduire le supply." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Modèle de burn trimestriel basé sur le volume de l'exchange, qui crée un mécanisme déflationniste lié à la performance économique réelle de la plateforme." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Forte centralisation (peu de validateurs sur la BSC), dépendance directe au sort réglementaire de Binance, et tensions historiques avec les régulateurs américains." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Écosystème BNB Chain dans le top 5 des chaînes EVM par TVL, supply réduit progressivement de 200M vers 100M, et token natif d'un des trois plus grands exchanges au monde." }
+      ]
+    },
+    "ripple": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://ripple.com/files/ripple_consensus_whitepaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les transferts internationaux passent par SWIFT, prennent 1 à 5 jours, coûtent 20 à 50 dollars par opération et immobilisent des milliers de milliards en comptes nostro pré-financés." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Le XRP Ledger, un registre décentralisé qui règle les transactions en 3 à 5 secondes pour quelques fractions de centime, avec XRP comme actif-pont entre devises." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Le XRP Ledger Consensus Protocol qui atteint la finalité sans minage ni staking, via un cercle d'unique node lists géré par les validateurs eux-mêmes." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Distribution initiale très centralisée (Ripple Labs détenait 80 % du supply), dépendance à l'adoption bancaire qui reste lente, et image marquée par cinq ans de procès SEC." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Statut juridique clarifié aux États-Unis depuis 2023, intégration dans plusieurs corridors de paiement institutionnels (Asie-Pacifique, MENA), et adoption RippleNet par plus de 300 institutions financières." }
+      ]
+    },
+    "usd-coin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://www.circle.com/en/usdc",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les utilisateurs crypto et les entreprises ont besoin d'un dollar numérique stable, mais Tether souffre d'opacité sur ses réserves et d'incertitudes réglementaires aux États-Unis." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un stablecoin émis par Circle, adossé 1:1 à des dollars et bons du Trésor américains, audité mensuellement par un grand cabinet et conforme aux régulations américaines et européennes (MiCA)." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Standard de transparence avec attestations mensuelles publiques, intégration native dans le système bancaire américain, et émission multi-chaînes (Ethereum, Solana, Base, Arbitrum, Polygon)." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Émetteur centralisé soumis aux ordres judiciaires (gel d'adresses possible), exposition au risque bancaire (épisode SVB en mars 2023 ayant temporairement décroché le peg), et dépendance au cadre réglementaire américain." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Stablecoin de référence pour les institutions et la DeFi régulée, conforme MiCA en Europe, et brique fondatrice des paiements on-chain pour les entreprises Web2 (Stripe, Shopify, Visa)." }
+      ]
+    },
+    "solana": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://solana.com/solana-whitepaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Ethereum et ses concurrents plafonnent à quelques dizaines de transactions par seconde avec des frais explosifs, ce qui empêche les usages grand public à grande échelle (jeux, paiements, NFT)." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une blockchain monolithique optimisée pour la performance via Proof of History (horloge cryptographique), une exécution parallèle des transactions et un matériel validateur exigeant." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Proof of History : un mécanisme qui crée un ordre vérifiable des événements avant le consensus, permettant des dizaines de milliers de transactions par seconde théoriques et une finalité sub-seconde." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Plusieurs pannes complètes du réseau entre 2021 et 2023, exigences matérielles élevées qui réduisent le nombre de validateurs et inflation native de 4-8 % par an au démarrage." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Hub majeur des memecoins, des paiements (Solana Pay, Visa) et du DePIN, avec une activité on-chain souvent supérieure à celle d'Ethereum L1 en transactions par seconde." }
+      ]
+    },
+    "cardano": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://docs.cardano.org/about-cardano/learn/ouroboros-overview",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains de première génération sont peu efficaces énergétiquement et celles de deuxième génération comme Ethereum ont été développées sans rigueur académique formelle, multipliant les bugs." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une blockchain construite par couches (settlement et compute séparés), basée sur Ouroboros, premier protocole Proof of Stake prouvé mathématiquement sécurisé via peer review." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Méthodologie de développement par recherche académique évaluée par les pairs, langage de smart contract Plutus basé sur Haskell pour la vérification formelle, et modèle UTXO étendu (eUTXO)." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Cadence de livraison perçue comme lente par le marché, écosystème dApps modeste comparé à Ethereum/Solana, et complexité du modèle eUTXO pour les développeurs habitués à l'EVM." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Plus de 70 % de l'ADA en staking, partenariats d'identité numérique en Afrique (Éthiopie, Géorgie), et l'une des chaînes les plus économes en énergie au monde." }
+      ]
+    },
+    "dogecoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://github.com/dogecoin/dogecoin/blob/master/README.md",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "En 2013, Bitcoin était trop sérieux et techniciste pour le grand public : il manquait une crypto accessible, ludique et utilisable pour de petits paiements et pourboires." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un fork de Litecoin/Luckycoin avec une mascotte Shiba Inu, des temps de bloc d'1 minute et une émission inflationniste fixe de 5 milliards de DOGE par an pour encourager la dépense." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "L'inflation perpétuelle (sans plafond de supply) pour rester un moyen de paiement plutôt qu'une réserve de valeur, et le merge mining avec Litecoin pour bénéficier de sa sécurité hashrate." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Inflation continue qui dilue mécaniquement les holders, dépendance forte aux signaux de personnalités (Elon Musk), et développement minimal depuis dix ans." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Crypto de référence pour les pourboires en ligne et les micro-paiements, intégrée à plusieurs marchands (Tesla ponctuellement), et symbole culturel de la communauté crypto retail." }
+      ]
+    },
+    "tron": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://tron.network/static/doc/white_paper_v_2_0.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les créateurs de contenu et les utilisateurs de stablecoins paient des frais Ethereum prohibitifs (10 à 100 dollars en pic) pour des transferts qui devraient coûter quelques centimes." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une blockchain Delegated Proof of Stake à 27 super représentants élus, compatible Solidity, avec des frais quasi nuls et un débit élevé pour héberger les transferts USDT." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Modèle économique des ressources (bandwidth et energy) qui permet aux détenteurs de TRX de payer leurs transactions par staking plutôt que par burn, rendant l'usage essentiellement gratuit." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Très forte centralisation autour de Justin Sun et de la Tron Foundation, gouvernance opaque, et controverses récurrentes sur les pratiques commerciales du fondateur." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Réseau dominant pour les transferts USDT (souvent plus de 50 % du volume mondial), adoption massive dans les pays émergents (Afrique, Asie du Sud-Est) pour la dollarisation off-shore." }
+      ]
+    },
+    "toncoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://ton.org/whitepaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains existantes ne peuvent pas servir des centaines de millions d'utilisateurs simultanément sans saturer, ce qui bloque l'adoption mainstream via les super-apps de messagerie." },
+        { "icon": "solution", "title": "Solution proposée", "description": "The Open Network, une architecture de chaînes infiniment shardées (workchains et shardchains) initialement conçue par les frères Durov pour s'intégrer à Telegram." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Le sharding dynamique automatique : la chaîne se divise quand la charge augmente et fusionne quand elle baisse, théoriquement capable de millions de transactions par seconde." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Architecture extrêmement complexe peu adoptée par les développeurs hors écosystème, langage smart contract spécifique (FunC, Tact), et dépendance forte à Telegram pour la distribution." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Intégration native dans Telegram (1 milliard d'utilisateurs), wallet TON intégré, mini-apps gaming virales (Notcoin, Hamster Kombat), et passerelle d'entrée crypto pour des dizaines de millions de nouveaux utilisateurs." }
+      ]
+    },
+    "avalanche-2": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://www.avalabs.org/whitepapers",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains existantes imposent un même environnement (frais, gouvernance, conformité) à toutes les applications, ce qui ne convient ni aux jeux à fort débit ni aux institutions régulées." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une plateforme à trois chaînes natives (X, P, C) et la possibilité pour chaque projet de créer son propre Subnet (renommé L1 en 2024) avec ses propres règles, validateurs et économie." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Le protocole de consensus Avalanche, basé sur l'échantillonnage répété, atteint une finalité sub-seconde tout en restant ouvert à des milliers de validateurs, contrairement aux BFT classiques." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Fragmentation de la liquidité entre Subnets, complexité d'usage (3 types d'adresses), et adoption inférieure à Ethereum/Solana malgré la compatibilité EVM sur la C-Chain." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Adoption institutionnelle solide (Subnets pour JP Morgan, Citi, Franklin Templeton), gaming Web3 actif (MapleStory, Off The Grid), et stratégie tokenisation des actifs réels." }
+      ]
+    },
+    "chainlink": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://chain.link/whitepaper",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les smart contracts sont déterministes et isolés : ils ne peuvent pas accéder nativement à des données externes (prix, météo, identité, événements sportifs) sans casser la sécurité de la blockchain." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un réseau d'oracles décentralisés où plusieurs nœuds indépendants récupèrent et agrègent les données off-chain, signent les résultats et les livrent on-chain de manière vérifiable." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "L'agrégation cryptographique de réponses multiples (OCR — Off-Chain Reporting) qui réduit drastiquement les coûts gas et CCIP, le standard d'interopérabilité cross-chain pour les institutions." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Capture de valeur indirecte par le token LINK, dépendance des contrats DeFi à un nombre limité de feeds, et concentration des opérateurs de nœuds historiques." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Standard incontournable des oracles (plus de 90 % de la TVL DeFi sécurisée), partenariat structurant avec SWIFT pour relier 11 000 banques aux blockchains, et brique clé de la tokenisation RWA." }
+      ]
+    },
+    "polkadot": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://polkadot.network/PolkaDotPaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Chaque blockchain est un silo qui doit reproduire toute sa propre sécurité et ne peut pas communiquer nativement avec les autres, ce qui fragmente la liquidité et la compose." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une Relay Chain centrale qui sécurise un écosystème de parachains spécialisées, communiquant via XCM, conçue par Gavin Wood (co-fondateur d'Ethereum, créateur de Solidity)." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Sécurité partagée et hétérogène : toutes les parachains héritent du jeu de validateurs de la Relay Chain, et le framework Substrate permet de construire une blockchain personnalisée en quelques mois." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Modèle d'enchères de slots parachains complexe et coûteux, écosystème dApps modeste, et narrative qui a perdu en faveur des L2 Ethereum et des modular blockchains." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Pivot vers le modèle Agile Coretime (location de blockspace flexible) en 2024-2025, écosystème Substrate utilisé par Kusama et de nombreuses chaînes spécialisées, et infrastructure technique reconnue dans l'industrie." }
+      ]
+    },
+    "cosmos": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://v1.cosmos.network/resources/whitepaper",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains monolithiques sont lentes, peu personnalisables et ne communiquent pas entre elles, ce qui empêche la spécialisation par cas d'usage." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un internet des blockchains : le Cosmos SDK pour construire sa propre chaîne souveraine, le moteur de consensus Tendermint BFT et le protocole IBC pour communiquer entre chaînes." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "IBC (Inter-Blockchain Communication) : standard de messages inter-chaînes éprouvé en production, sans pont centralisé, qui transfère des actifs et des données entre toutes les chaînes Cosmos compatibles." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Le token ATOM capte mal la valeur de l'écosystème (chaque chaîne souveraine garde sa propre valeur), gouvernance interne mouvementée, et fragmentation des projets phares." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Écosystème IBC qui fait tourner des chaînes majeures (Celestia, dYdX v4, Injective, Osmosis, Sei), standard technique adopté par plus de 100 chaînes, et architecture modulaire devenue mainstream." }
+      ]
+    },
+    "polygon": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://polygon.technology/papers",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Ethereum est sécurisé mais trop cher et trop lent pour l'adoption de masse : pendant les pics, une transaction simple coûte 50 dollars et prend plusieurs minutes." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une suite de solutions de scaling : Polygon PoS (sidechain commit-chain), zkEVM (rollup à preuves zéro-connaissance) et la Polygon CDK pour lancer ses propres L2 zk." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Stratégie ZK-first via Polygon 2.0 et l'Aggregation Layer (AggLayer) qui unifie liquidité et état entre toutes les chaînes Polygon CDK, et migration MATIC → POL pour un staking multichain." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Polygon PoS reste une sidechain avec un comité de validateurs limité, fragmentation de la marque entre PoS, zkEVM et CDK, et concurrence intense des autres L2 Ethereum." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Adopté par des marques mondiales (Starbucks Odyssey, Reddit, Nike, Disney), infrastructure de tokenisation pour Franklin Templeton, et l'une des chaînes EVM les plus utilisées en transactions quotidiennes." }
+      ]
+    },
+    "litecoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://litecoin.org/",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Bitcoin met 10 minutes par bloc et utilise un algorithme (SHA-256) dominé par les ASIC industriels, ce qui rend les paiements quotidiens lents et le minage inaccessible aux particuliers." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un fork de Bitcoin créé en 2011 par Charlie Lee avec des blocs de 2,5 minutes, un supply de 84 millions et l'algorithme Scrypt, présenté comme l'argent face à l'or numérique de Bitcoin." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Premier réseau majeur à activer SegWit et le Lightning Network avant Bitcoin, et adoption précoce de MimbleWimble Extension Blocks (MWEB) pour des transactions confidentielles optionnelles." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Innovation limitée depuis 10 ans, narrative de monnaie de paiement marginalisée par les stablecoins, et perte de positionnement face aux smart contract platforms." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Crypto historique (top 20 depuis 2013), accepté par de nombreux marchands et payment processors (BitPay), et l'un des actifs PoW les plus liquides après Bitcoin." }
+      ]
+    },
+    "bitcoin-cash": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://bitcoincash.org/",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "En 2017, les frais Bitcoin atteignaient 30 à 50 dollars et la file d'attente de transactions explosait, rendant Bitcoin inutilisable pour les paiements quotidiens prônés par le whitepaper de Satoshi." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un hard fork de Bitcoin en août 2017 qui augmente la taille des blocs (de 1 Mo à 32 Mo) pour traiter beaucoup plus de transactions à frais bas, fidèle à la vision peer-to-peer cash." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Smart contracts Bitcoin via CashTokens (2023) et CashScript, qui apportent des capacités programmables tout en gardant le modèle UTXO et la philosophie scaling on-chain." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Fragmentation de la communauté Bitcoin (multiples forks BSV, BCH ABC), perte de la guerre narrative face à BTC, et adoption marchande inférieure aux stablecoins pour les paiements." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Frais constamment inférieurs au centime, intégration dans plusieurs payment processors (BitPay, NOWPayments), et utilisation pour micro-paiements et remittances dans certaines régions." }
+      ]
+    },
+    "near-protocol": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://near.org/papers/the-official-near-white-paper",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains scalables sacrifient soit la décentralisation (peu de validateurs), soit la simplicité d'usage (clés cryptiques, frais en token natif obscurs pour le grand public)." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une blockchain shardée (Nightshade) avec des comptes nommés human-readable (alice.near), des frais ultra-bas et l'abstraction de compte permettant de payer en stablecoins." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Chain Abstraction et Chain Signatures (2024) : un compte NEAR peut signer des transactions sur Bitcoin, Ethereum ou Solana, ouvrant la voie à une UX multi-chain unifiée." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Adoption dApps modeste comparée à Solana ou aux L2 Ethereum, complexité du sharding qui a tardé à se déployer, et concurrence forte sur le créneau scalable." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Pivot AI x Crypto avec NEAR.AI, écosystème BOS (Blockchain Operating System) pour les dApps composables, et adoption dans le DePIN et l'identité décentralisée." }
+      ]
+    },
+    "optimism": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://github.com/ethereum-optimism/specs",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Ethereum L1 sature à 15 transactions par seconde et facture 5 à 50 dollars par transaction, ce qui rend la DeFi inaccessible aux retail et bloque l'innovation." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un Optimistic Rollup compatible EVM qui exécute les transactions hors-chaîne et publie les données sur Ethereum, réduisant les frais de 90 % tout en héritant de la sécurité L1." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "OP Stack open-source qui sert de modèle à des dizaines de chaînes (Base de Coinbase, Worldcoin, Mode, Zora) et Superchain : un écosystème de L2 partageant gouvernance et bridge." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Période de challenge de 7 jours pour les retraits sur L1 (mitigée par les bridges tiers), séquenceur unique centralisé, et fraud proofs complets en cours de déploiement." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Superchain réunissant Optimism, Base et plus de 30 L2, capture significative de l'activité DeFi et social, et collective Optimism qui finance les biens publics via RetroPGF." }
+      ]
+    },
+    "arbitrum": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://docs.arbitrum.io/welcome/get-started",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Ethereum est trop cher pour la DeFi quotidienne et les rollups concurrents (Optimism v1) avaient une compatibilité EVM imparfaite, forçant les développeurs à modifier leur code." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Arbitrum One, un Optimistic Rollup avec compatibilité EVM quasi-parfaite, fraud proofs interactifs et coûts de calldata optimisés via la compression Brotli." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Stylus : machine virtuelle additionnelle qui exécute du Rust, C et C++ aux côtés de l'EVM avec des coûts gas 10 à 100 fois inférieurs, et Arbitrum Orbit pour lancer ses propres L2/L3." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Délai de retrait L1 de 7 jours (workaround via fast bridges), séquenceur encore centralisé sous Offchain Labs, et capture de valeur ARB principalement via la gouvernance." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "L2 Ethereum n°1 par TVL (souvent supérieure à 15 milliards de dollars), hub majeur de la DeFi (GMX, Camelot, Pendle), et standard pour les chaînes Orbit applicatives." }
+      ]
+    },
+    "uniswap": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://uniswap.org/whitepaper-v3.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les exchanges centralisés exigent KYC, custody des fonds et listing payant, ce qui exclut la longue traîne des tokens et concentre le risque sur quelques plateformes (Mt. Gox, FTX)." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un Automated Market Maker (AMM) basé sur la formule x*y=k, où n'importe qui peut fournir de la liquidité ou trader sans permission, sans intermédiaire et sans inscription." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Concentrated Liquidity (v3) qui permet aux LP de cibler une plage de prix pour 100 à 4000x plus d'efficacité capital, et Uniswap v4 avec Hooks pour personnaliser le comportement de chaque pool." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Impermanent loss pour les LP, MEV (sandwich attacks) sur les gros trades, gouvernance UNI sans capture de fees historiquement, et pression réglementaire SEC en 2024-2025." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Plus de 2 trillions de dollars cumulés en volume de trading, déployé sur 20+ chaînes, et standard de référence des AMM copié par tout l'écosystème DeFi." }
+      ]
+    },
+    "aave": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://github.com/aave/aave-v3-core/blob/master/techpaper/Aave_V3_Technical_Paper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les utilisateurs crypto ne peuvent ni emprunter contre leurs actifs sans les vendre (et déclencher l'imposition) ni gagner du rendement sur leurs stablecoins sans confier leurs fonds à un tiers centralisé." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un protocole de prêt non-custodial où les utilisateurs déposent des collatéraux et empruntent d'autres actifs à taux variable ou stable, le tout entièrement on-chain et liquidé automatiquement." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Flash loans (emprunts non collatéralisés remboursés dans la même transaction), GHO stablecoin natif décentralisé, et déploiement multi-chaîne avec un seul pool de gouvernance." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Risque de smart contract (plusieurs exploits dans l'écosystème lending DeFi historiquement), risque oracle, et liquidations brutales en période de volatilité extrême." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Plus grand protocole de lending DeFi avec une TVL de 15-25 milliards de dollars, déployé sur 13+ chaînes, et infrastructure de référence pour le crédit on-chain institutionnel." }
+      ]
+    },
+    "internet-computer": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://internetcomputer.org/whitepaper.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les dApps actuelles dépendent encore massivement d'AWS, Cloudflare et autres clouds centralisés pour leur frontend et leur stockage, ce qui contredit la promesse de décentralisation." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un protocole conçu par Dfinity qui héberge directement des canisters (smart contracts pouvant servir du HTML/JS) à coût et latence comparables au cloud Web2 traditionnel." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Chain-key cryptography qui permet de signer nativement des transactions Bitcoin et Ethereum depuis ICP, et Internet Identity, un système d'authentification anonyme par WebAuthn." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Architecture très complexe et atypique (peu de développeurs maîtrisent Motoko/Rust canisters), narrative perdue après le crash de prix de 2021, et adoption dApps modeste." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Fully on-chain dApps réelles (OpenChat, DSCVR, Bioniq), bridge Bitcoin/Ethereum natif sans wrapper, et positionnement comme World Computer alternatif à Ethereum." }
+      ]
+    },
+    "stellar": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://stellar.org/papers/stellar-consensus-protocol",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Plus de 1,4 milliard d'adultes restent non-bancarisés et les remittances internationales (700 milliards de dollars annuels) coûtent en moyenne 6 % en frais." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un réseau de paiement décentralisé créé par Jed McCaleb (ex-Ripple), avec confirmation en 3-5 secondes et frais à 0,00001 XLM, conçu pour émettre et échanger n'importe quelle devise." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Stellar Consensus Protocol (SCP) basé sur le Federated Byzantine Agreement, et Soroban (2023), une plateforme de smart contracts en Rust ajoutée au réseau payment historique." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Distribution initiale concentrée (Stellar Development Foundation), écosystème dApps embryonnaire face aux EVM, et confusion narrative avec Ripple/XRP." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Partenariats institutionnels majeurs (MoneyGram, Franklin Templeton BENJI, USDC natif), corridor de remittances dans plusieurs régions émergentes, et infrastructure CBDC (Ukraine, Brésil)." }
+      ]
+    },
+    "hedera": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://hedera.com/papers",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains classiques ont des compromis difficiles entre vitesse, équité d'ordonnancement et sécurité, et leur gouvernance ouverte effraie les entreprises soumises à conformité." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Hashgraph, une structure DAG (Directed Acyclic Graph) brevetée par Leemon Baird, avec gouvernance par un conseil de 39 grandes entreprises (Google, IBM, Boeing, LG, Deutsche Telekom)." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Algorithme aBFT (asynchronous Byzantine Fault Tolerance) qui atteint 10 000+ transactions par seconde avec une finalité en 3-5 secondes et un ordonnancement équitable des transactions." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Gouvernance permissionnée (le conseil contrôle les changements de protocole), brevet Hashgraph détenu par Hedera (open source mais pas libre), et écosystème dApps limité." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Adoption enterprise et tokenisation d'actifs réels (Hedera Token Service utilisé pour des millions de NFT et tokens RWA), partenariats Banque centrale et compatibilité EVM via Hedera Smart Contract Service 2.0." }
+      ]
+    },
+    "filecoin": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://filecoin.io/filecoin.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Le stockage cloud est dominé par 3 acteurs (AWS, Azure, GCP) avec des prix élevés, des risques de censure et de panne, et aucune garantie cryptographique d'intégrité des données." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Un marché décentralisé du stockage où des storage providers louent leur disque dur, prouvent qu'ils stockent les données via des preuves cryptographiques, et sont rémunérés en FIL." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Proof-of-Replication et Proof-of-Spacetime : preuves cryptographiques que chaque providers stocke réellement une copie unique des données pendant toute la durée du contrat." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Une grande partie de la capacité réseau reste sous-utilisée (deals réels modestes face à la capacité totale), UX complexe pour les développeurs face à AWS S3, et coûts gas FVM encore élevés." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Plus grand réseau de stockage décentralisé en capacité (exaoctets), partenariat Internet Archive et Lockheed Martin, et émergence des Filecoin Virtual Machine (smart contracts EVM-compatibles)." }
+      ]
+    },
+    "injective": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://injective.com/whitepaper/",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les exchanges décentralisés sur Ethereum sont lents et chers, et les AMM sont mal adaptés aux dérivés, futures et marchés complexes que les traders professionnels recherchent." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une L1 du Cosmos SDK avec un orderbook on-chain natif, une finalité sub-seconde, des frais quasi nuls et un module de dérivés intégré au protocole pour le trading professionnel." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Frequent Batch Auctions qui éliminent le frontrunning et le MEV, mécanisme de burn auction qui détruit régulièrement de l'INJ via les fees, et compatibilité EVM + Wasm + SVM (multi-VM)." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Écosystème encore jeune, dépendance forte à quelques applications phares (Helix, Mito), et concurrence intense des perpetuals on-chain (Hyperliquid, dYdX, GMX)." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Hub des perpetuals et de l'innovation financière sur Cosmos, partenariats avec NVIDIA et Google Cloud pour l'infrastructure, et adoption croissante par les market makers institutionnels." }
+      ]
+    },
+    "sui": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://docs.sui.io/paper/sui.pdf",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains classiques traitent toutes les transactions séquentiellement et utilisent un modèle de comptes qui crée des congestions inutiles entre transactions indépendantes." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une L1 conçue par d'anciens ingénieurs Diem (Meta), basée sur un modèle d'objets et le langage Move, qui permet d'exécuter en parallèle les transactions sans dépendances communes." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Sui Move, un langage centré sur les objets typés et la sécurité des assets, et zkLogin pour s'authentifier via Google/Apple/Facebook sans gérer de seed phrase." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Distribution initiale très concentrée chez Mysten Labs et investisseurs (déblocages progressifs), narrative parfois confondue avec Aptos (autre fork Diem), et écosystème en construction." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Performance technique parmi les meilleures du marché en transactions par seconde et latence, écosystème gaming et social actif (NS, Gachapon), et adoption croissante en Asie." }
+      ]
+    },
+    "aptos": {
+      "lastUpdated": "2026-04-26",
+      "whitepaperUrl": "https://aptos.dev/aptos-white-paper",
+      "points": [
+        { "icon": "problem", "title": "Problème résolu", "description": "Les blockchains existantes ne peuvent pas absorber les besoins d'une adoption mainstream (paiements, gaming, social) sans saturer ou exiger des compromis sur la sécurité." },
+        { "icon": "solution", "title": "Solution proposée", "description": "Une L1 dérivée du projet Diem de Meta, avec consensus AptosBFT, exécution parallèle Block-STM et le langage Move pour des smart contracts plus sûrs que Solidity." },
+        { "icon": "innovation", "title": "Innovation clé", "description": "Block-STM : exécution parallèle optimiste des transactions avec détection automatique des conflits, qui atteint 30 000+ TPS théoriques et l'abstraction de compte complète (keyless accounts)." },
+        { "icon": "limits", "title": "Limites assumées", "description": "Distribution initiale critiquée (forte allocation aux insiders et VCs), écosystème dApps modeste face aux concurrents L1 et Solana, et narrative déclinante depuis le pic 2022-2023." },
+        { "icon": "impact", "title": "Impact réel 2026", "description": "Partenariats stratégiques (Microsoft pour le Web3 enterprise, Mastercard pour les paiements), adoption en Asie du Sud-Est, et intégration dans les wallets Petra et OKX." }
+      ]
+    }
+  }
+}

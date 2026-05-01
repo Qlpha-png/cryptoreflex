@@ -1,0 +1,324 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-05-01",
+    "purpose": "Calendrier des événements concrets datés (court-moyen terme : J-30 à J+180) par crypto. Complémentaire à crypto-roadmaps.json (long terme/historique).",
+    "schema": "Mapping crypto.id -> array d'événements. Types : token-unlock | hard-fork | etf-deadline | conference | governance-vote | halving | mainnet-upgrade. Importance : high | medium | low. Date format YYYY-MM-DD."
+  },
+  "events": {
+    "bitcoin": [
+      {
+        "date": "2026-07-15",
+        "type": "conference",
+        "title": "Bitcoin Conference 2026 — Las Vegas",
+        "description": "Plus grande conférence Bitcoin annuelle, annonces produits et politiques majeures attendues.",
+        "importance": "medium",
+        "sourceUrl": "https://b.tc/conference"
+      },
+      {
+        "date": "2028-04-20",
+        "type": "halving",
+        "title": "Halving Bitcoin #5",
+        "description": "Réduction programmée de la récompense des mineurs : 3,125 BTC -> 1,5625 BTC par bloc. Évènement structurant du cycle BTC.",
+        "importance": "low"
+      }
+    ],
+    "ethereum": [
+      {
+        "date": "2026-11-30",
+        "type": "mainnet-upgrade",
+        "title": "Fusaka — Mise à jour réseau majeure",
+        "description": "Augmentation du nombre de blobs par bloc (PeerDAS). Scaling supplémentaire pour les Layer 2 et baisse attendue des frais.",
+        "importance": "high",
+        "sourceUrl": "https://ethereum.org/roadmap"
+      },
+      {
+        "date": "2026-06-15",
+        "type": "mainnet-upgrade",
+        "title": "Pectra suite — Optimisations EIP-7702",
+        "description": "Itération technique post-Pectra : amélioration de l'UX des comptes EOA agissant en smart contracts.",
+        "importance": "medium"
+      }
+    ],
+    "solana": [
+      {
+        "date": "2026-10-31",
+        "type": "mainnet-upgrade",
+        "title": "Firedancer mainnet généralisé",
+        "description": "Déploiement complet du client validateur Firedancer (Jump Crypto). Augmentation attendue de la résilience et du throughput.",
+        "importance": "high",
+        "sourceUrl": "https://jumpcrypto.com/firedancer/"
+      }
+    ],
+    "arbitrum": [
+      {
+        "date": "2026-09-30",
+        "type": "mainnet-upgrade",
+        "title": "Décentralisation du séquenceur — Phase 1",
+        "description": "Première étape de la roadmap de décentralisation du séquenceur Arbitrum. Étape clé pour le statut Stage 2 rollup.",
+        "importance": "medium",
+        "sourceUrl": "https://docs.arbitrum.io/"
+      },
+      {
+        "date": "2026-06-16",
+        "type": "token-unlock",
+        "title": "Unlock ARB mensuel",
+        "description": "Déblocage récurrent de tokens ARB (équipe + investisseurs). Pression vendeuse à surveiller.",
+        "importance": "medium",
+        "sourceUrl": "https://token.unlocks.app/arbitrum"
+      }
+    ],
+    "sui": [
+      {
+        "date": "2026-05-03",
+        "type": "token-unlock",
+        "title": "Unlock SUI mensuel",
+        "description": "Déblocage mensuel récurrent — environ 1 à 2 % du circulating supply. Impact prix historiquement notable.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/sui"
+      },
+      {
+        "date": "2026-08-03",
+        "type": "token-unlock",
+        "title": "Unlock SUI — Été 2026",
+        "description": "Tranche estivale du calendrier d'unlock SUI. Vérifier la part destinée à la trésorerie vs. distribution marché.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/sui"
+      }
+    ],
+    "aptos": [
+      {
+        "date": "2026-05-12",
+        "type": "token-unlock",
+        "title": "Unlock APT mensuel",
+        "description": "Déblocage mensuel récurrent ~11M APT (équipe, investisseurs, fondation). Suivi obligatoire pour l'analyse court terme.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/aptos"
+      },
+      {
+        "date": "2026-08-12",
+        "type": "token-unlock",
+        "title": "Unlock APT — Été 2026",
+        "description": "Tranche d'été de l'échéancier APT. Souvent associée à un drawdown court terme.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/aptos"
+      }
+    ],
+    "tether": [
+      {
+        "date": "2026-06-30",
+        "type": "etf-deadline",
+        "title": "MiCA Phase 2 — deadline stablecoins",
+        "description": "Fin de la période transitoire MiCA pour les stablecoins. USDT doit être conforme ou voir son accès au marché européen restreint via les exchanges régulés.",
+        "importance": "high",
+        "sourceUrl": "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
+      }
+    ],
+    "usd-coin": [
+      {
+        "date": "2026-06-30",
+        "type": "etf-deadline",
+        "title": "MiCA Phase 2 — conformité USDC",
+        "description": "USDC (Circle) est déjà MiCA-compliant via Circle France. Cette deadline est plutôt favorable au token vs. concurrents non-conformes.",
+        "importance": "high",
+        "sourceUrl": "https://www.circle.com/en/eu-mica"
+      }
+    ],
+    "dai": [
+      {
+        "date": "2026-06-30",
+        "type": "etf-deadline",
+        "title": "MiCA Phase 2 — pression sur stablecoins décentralisés",
+        "description": "DAI n'a pas le statut e-money token : exposition réglementaire en zone euro à surveiller. Sky/Maker prépare USDS comme alternative.",
+        "importance": "high"
+      }
+    ],
+    "uniswap": [
+      {
+        "date": "2026-07-15",
+        "type": "governance-vote",
+        "title": "Vote gouvernance UNI — fee switch",
+        "description": "Reprise potentielle du débat sur l'activation du fee switch (redistribution des frais aux holders UNI). Sujet récurrent à fort impact valorisation.",
+        "importance": "high",
+        "sourceUrl": "https://gov.uniswap.org/"
+      }
+    ],
+    "lido-dao": [
+      {
+        "date": "2026-06-20",
+        "type": "governance-vote",
+        "title": "Vote LDO — distribution staking rewards",
+        "description": "Proposition de partage d'une fraction des rewards staking avec les holders LDO. Dépend du résultat de la consultation forum mai 2026.",
+        "importance": "medium",
+        "sourceUrl": "https://research.lido.fi/"
+      }
+    ],
+    "polkadot": [
+      {
+        "date": "2026-09-15",
+        "type": "mainnet-upgrade",
+        "title": "JAM (Join-Accumulate Machine) — testnet",
+        "description": "Première version testnet de l'architecture JAM proposée par Gavin Wood, refonte majeure de la Relay Chain.",
+        "importance": "high",
+        "sourceUrl": "https://polkadot.network/jam/"
+      }
+    ],
+    "cardano": [
+      {
+        "date": "2026-08-31",
+        "type": "mainnet-upgrade",
+        "title": "Hard fork Voltaire — gouvernance on-chain finalisée",
+        "description": "Activation complète de l'ère Voltaire : DReps, Constitutional Committee, votes on-chain en production.",
+        "importance": "medium",
+        "sourceUrl": "https://roadmap.cardano.org/"
+      }
+    ],
+    "cosmos": [
+      {
+        "date": "2026-07-01",
+        "type": "mainnet-upgrade",
+        "title": "ATOM v22 — Permissionless ICS",
+        "description": "Mise à jour majeure du Hub Cosmos : Interchain Security accessible sans validation de l'AiB. Boost attendu pour l'usage d'ATOM en sécurité partagée.",
+        "importance": "medium",
+        "sourceUrl": "https://hub.cosmos.network/"
+      }
+    ],
+    "near-protocol": [
+      {
+        "date": "2026-06-10",
+        "type": "mainnet-upgrade",
+        "title": "Chain Abstraction — production",
+        "description": "Déploiement production de Chain Signatures et Multichain Gas Relayer. NEAR comme couche d'abstraction multi-chain.",
+        "importance": "medium",
+        "sourceUrl": "https://near.org/blog"
+      }
+    ],
+    "celestia": [
+      {
+        "date": "2026-10-31",
+        "type": "token-unlock",
+        "title": "Unlock TIA — fin de cliff investisseurs",
+        "description": "Sortie progressive du cliff initial des investisseurs early. Surveiller le flow d'unlock dans les exchanges.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/celestia"
+      }
+    ],
+    "starknet": [
+      {
+        "date": "2026-05-15",
+        "type": "token-unlock",
+        "title": "Unlock STRK mensuel",
+        "description": "Déblocage mensuel important — équipe + early backers. STRK reste sous pression vendeuse depuis le TGE.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/starknet"
+      }
+    ],
+    "ondo-finance": [
+      {
+        "date": "2026-07-18",
+        "type": "token-unlock",
+        "title": "Unlock ONDO — première tranche annuelle",
+        "description": "Premier déblocage majeur après le cliff de janvier 2025. Volume significatif pour équipe + insiders.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/ondo"
+      }
+    ],
+    "pyth-network": [
+      {
+        "date": "2026-05-20",
+        "type": "token-unlock",
+        "title": "Unlock PYTH semestriel",
+        "description": "Déblocage semestriel programmé (~2,1 milliards de tokens). Impact systémique sur l'offre circulante.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/pyth-network"
+      }
+    ],
+    "eigenlayer": [
+      {
+        "date": "2026-09-30",
+        "type": "token-unlock",
+        "title": "Unlock EIGEN — fin du cliff équipe",
+        "description": "Premier unlock significatif post-cliff pour la team et les investisseurs. À mettre en regard de l'adoption AVS réelle.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/eigenlayer"
+      }
+    ],
+    "worldcoin": [
+      {
+        "date": "2026-07-24",
+        "type": "token-unlock",
+        "title": "Unlock WLD — tranche annuelle",
+        "description": "Anniversaire de la mise en circulation. Tranche d'unlock substantielle pour Tools for Humanity et investisseurs.",
+        "importance": "high",
+        "sourceUrl": "https://token.unlocks.app/worldcoin"
+      }
+    ],
+    "avalanche": [
+      {
+        "date": "2026-06-25",
+        "type": "mainnet-upgrade",
+        "title": "Avalanche9000 — phase 2",
+        "description": "Deuxième vague d'optimisations Subnet -> L1 souverains. Réduction des coûts validateurs et adoption institutionnelle.",
+        "importance": "medium",
+        "sourceUrl": "https://www.avax.network/blog"
+      }
+    ],
+    "optimism": [
+      {
+        "date": "2026-07-30",
+        "type": "governance-vote",
+        "title": "Vote OP — Season 7 grants",
+        "description": "Allocation de la prochaine saison de grants Optimism Collective. Impact écosystème et flux narratifs.",
+        "importance": "medium",
+        "sourceUrl": "https://gov.optimism.io/"
+      }
+    ],
+    "polygon": [
+      {
+        "date": "2026-09-04",
+        "type": "mainnet-upgrade",
+        "title": "AggLayer v3 — interop unifiée",
+        "description": "Nouvelle version de l'AggLayer Polygon, base de l'écosystème CDK. Tentative de devenir le hub multi-chain de référence.",
+        "importance": "medium",
+        "sourceUrl": "https://polygon.technology/blog"
+      }
+    ],
+    "tron": [
+      {
+        "date": "2026-06-30",
+        "type": "etf-deadline",
+        "title": "MiCA Phase 2 — exposition USDT/TRON",
+        "description": "Le réseau TRON héberge une part majeure de l'USDT. La conformité MiCA d'USDT impacte directement l'usage TRX en Europe.",
+        "importance": "medium"
+      }
+    ]
+  },
+  "globalEvents": [
+    {
+      "date": "2026-09-30",
+      "type": "conference",
+      "title": "Token2049 Singapore",
+      "description": "Plus grande conférence crypto annuelle d'Asie. Pic d'annonces produits et partenariats.",
+      "importance": "high",
+      "appliesTo": ["bitcoin", "ethereum", "solana", "sui", "aptos", "near-protocol", "toncoin"],
+      "sourceUrl": "https://www.token2049.com/"
+    },
+    {
+      "date": "2026-11-17",
+      "type": "conference",
+      "title": "Devcon 8 — Buenos Aires",
+      "description": "Conférence annuelle des développeurs Ethereum. Annonces techniques majeures sur la roadmap Fusaka/Verkle.",
+      "importance": "high",
+      "appliesTo": ["ethereum", "arbitrum", "optimism", "polygon", "starknet", "uniswap", "lido-dao"],
+      "sourceUrl": "https://devcon.org/"
+    },
+    {
+      "date": "2026-06-30",
+      "type": "etf-deadline",
+      "title": "MiCA Phase 2 — deadline générale",
+      "description": "Fin de la période transitoire MiCA pour les CASPs. Tous les exchanges opérant en UE doivent être agréés.",
+      "importance": "medium",
+      "appliesTo": ["bitcoin", "ethereum"],
+      "sourceUrl": "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
+    }
+  ]
+}

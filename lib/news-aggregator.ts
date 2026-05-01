@@ -374,3 +374,253 @@ export async function fetchNewsRaw(opts: FetchNewsRawOpts = {}): Promise<NewsRaw
 /** Réexport types pour confort d'import depuis un seul module. */
 export type { NewsRaw, NewsCategory };
 export { isNewsCategory };
+
+/* ========================================================================== */
+/*  PILIER NEWS PAR CRYPTO — fiche /cryptos/[slug] aggregator                 */
+/* ========================================================================== */
+
+/**
+ * Item de news affiché sur la fiche d'une crypto. Distinct de `NewsRaw` :
+ *  - Sentiment auto (bullish/bearish/neutral) inféré par heuristique mots-clés.
+ *  - Pas de catégorie ni d'image : la card affichée est compacte.
+ *  - id stable basé sur l'URL pour clé React.
+ */
+export interface CryptoNewsItem {
+  id: string;
+  title: string;
+  url: string;
+  source: string;
+  publishedAt: string;
+  snippet: string;
+  sentiment: "bullish" | "bearish" | "neutral";
+}
+
+/** Mots-clés bullish (FR/EN). */
+const BULLISH_KEYWORDS: readonly string[] = [
+  "surge", "rally", "jumps", "soars", "ATH", "all-time high", "bullish",
+  "approval", "approves", "adopts", "milestone",
+  "envolée", "explose", "bondit", "haussier", "adoption", "record",
+];
+
+/** Mots-clés bearish (FR/EN). */
+const BEARISH_KEYWORDS: readonly string[] = [
+  "crash", "plunges", "drops", "tumbles", "ban", "hack", "exploit",
+  "bearish", "rejection", "lawsuit", "investigation", "delisted",
+  "chute", "effondre", "plonge", "baissier", "piratage", "interdit",
+  "enquête", "rejet", "procès",
+];
+
+/**
+ * Heuristique de sentiment — 1er match l'emporte (bullish prioritaire).
+ * Test case-insensitive sur title + snippet.
+ */
+function inferSentiment(text: string): CryptoNewsItem["sentiment"] {
+  const t = text.toLowerCase();
+  for (const kw of BULLISH_KEYWORDS) {
+    if (t.includes(kw.toLowerCase())) return "bullish";
+  }
+  for (const kw of BEARISH_KEYWORDS) {
+    if (t.includes(kw.toLowerCase())) return "bearish";
+  }
+  return "neutral";
+}
+
+/**
+ * Génère un id stable pour un item news (hash léger basé sur l'URL).
+ * Pas de collision attendue à l'échelle de 5 items par crypto.
+ */
+function makeNewsId(url: string): string {
+  let h = 0;
+  for (let i = 0; i < url.length; i++) {
+    h = (h << 5) - h + url.charCodeAt(i);
+    h |= 0;
+  }
+  return `n_${Math.abs(h).toString(36)}`;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Source 1 : CryptoPanic (free tier, sans clé)                              */
+/* -------------------------------------------------------------------------- */
+
+/** Shape minimal de la réponse CryptoPanic free public API. */
+interface CryptoPanicPost {
+  id: number;
+  title: string;
+  url: string;
+  published_at: string;
+  source?: { title?: string; domain?: string };
+  metadata?: { description?: string };
+  domain?: string;
+}
+
+interface CryptoPanicResponse {
+  results?: CryptoPanicPost[];
+}
+
+async function fetchFromCryptoPanic(symbol: string): Promise<CryptoNewsItem[]> {
+  try {
+    const sym = symbol.toUpperCase();
+    const url = `https://cryptopanic.com/api/v1/posts/?currencies=${encodeURIComponent(sym)}&public=true`;
+
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        accept: "application/json",
+        "user-agent": "CryptoreflexBot/1.0 (+https://cryptoreflex.fr)",
+      },
+      cache: "no-store",
+    }).finally(() => clearTimeout(timer));
+
+    if (!res.ok) return [];
+
+    const json = (await res.json()) as CryptoPanicResponse;
+    const posts = json.results ?? [];
+
+    return posts.slice(0, 10).map((p): CryptoNewsItem => {
+      const snippet = (p.metadata?.description ?? "").trim();
+      const source = p.source?.title || p.source?.domain || p.domain || "CryptoPanic";
+      return {
+        id: makeNewsId(p.url),
+        title: (p.title ?? "").trim(),
+        url: p.url,
+        source,
+        publishedAt: p.published_at,
+        snippet,
+        sentiment: inferSentiment(`${p.title} ${snippet}`),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Source 2 : RSS fallback (Decrypt + CoinDesk) filtré par mention           */
+/* -------------------------------------------------------------------------- */
+
+const FALLBACK_RSS: ReadonlyArray<{ name: string; url: string }> = [
+  { name: "Decrypt",  url: "https://decrypt.co/feed" },
+  { name: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/" },
+];
+
+async function fetchFromRssFallback(symbol: string, name: string): Promise<CryptoNewsItem[]> {
+  const sym = symbol.toUpperCase();
+  const nm = name.toLowerCase();
+
+  const fetched = await Promise.all(
+    FALLBACK_RSS.map(async (src) => {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(src.url, {
+          signal: ctrl.signal,
+          headers: {
+            accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.5",
+            "user-agent": "CryptoreflexBot/1.0 (+https://cryptoreflex.fr)",
+          },
+          cache: "no-store",
+        }).finally(() => clearTimeout(timer));
+
+        if (!res.ok) return [] as CryptoNewsItem[];
+
+        // Garde-fou anti-DoS : 5 MB max.
+        const cl = res.headers.get("content-length");
+        if (cl && Number.parseInt(cl, 10) > 5 * 1024 * 1024) return [] as CryptoNewsItem[];
+
+        const xml = await res.text();
+        if (xml.length > 5 * 1024 * 1024) return [] as CryptoNewsItem[];
+
+        const parsed = parseRssXml(xml, src.name, 30);
+
+        return parsed
+          .filter((it) => {
+            const hay = `${it.title} ${it.description}`.toLowerCase();
+            // Match nom complet (mot entier) OU symbole (mot entier).
+            // Symbole : on exige boundaries pour éviter les faux positifs courts (ETH dans "weather").
+            const nameMatch = nm.length >= 4 && hay.includes(nm);
+            const symRe = new RegExp(`\\b${sym.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+            const symMatch = symRe.test(hay);
+            return nameMatch || symMatch;
+          })
+          .map((it): CryptoNewsItem => ({
+            id: makeNewsId(it.link),
+            title: it.title,
+            url: it.link,
+            source: src.name,
+            publishedAt: it.pubDate || new Date().toISOString(),
+            snippet: it.description,
+            sentiment: inferSentiment(`${it.title} ${it.description}`),
+          }));
+      } catch {
+        return [] as CryptoNewsItem[];
+      }
+    }),
+  );
+
+  return fetched.flat();
+}
+
+/* -------------------------------------------------------------------------- */
+/*  API publique : fetchCryptoNews                                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Récupère jusqu'à 5 news pertinentes pour une crypto donnée.
+ *
+ * Stratégie :
+ *  1. Tente CryptoPanic free public (filtre natif par symbol).
+ *  2. Si vide ou erreur → fallback RSS Decrypt + CoinDesk filtré par mention
+ *     du nom complet OU du symbole dans le titre/description.
+ *  3. Si tout fail → retourne `[]` (pas d'exception).
+ *
+ * Tri : publishedAt DESC. Dédoublonnage par URL canonique.
+ */
+async function _fetchCryptoNews(symbol: string, name: string): Promise<CryptoNewsItem[]> {
+  let items = await fetchFromCryptoPanic(symbol);
+
+  if (items.length === 0) {
+    items = await fetchFromRssFallback(symbol, name);
+  }
+
+  if (items.length === 0) return [];
+
+  // Dédoublonnage par URL canonique
+  const seen = new Set<string>();
+  const deduped: CryptoNewsItem[] = [];
+  for (const it of items) {
+    const key = it.url.split("?")[0].replace(/\/$/, "");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(it);
+  }
+
+  // Tri date desc
+  deduped.sort((a, b) => {
+    const ta = a.publishedAt ? Date.parse(a.publishedAt) : 0;
+    const tb = b.publishedAt ? Date.parse(b.publishedAt) : 0;
+    return tb - ta;
+  });
+
+  return deduped.slice(0, 5);
+}
+
+/**
+ * Wrapper cache 30 min (les news bougent vite). Cache par couple (symbol, name)
+ * pour ne pas mélanger deux cryptos qui partagent un symbole (rare mais possible).
+ */
+export function fetchCryptoNews(
+  symbol: string,
+  name: string,
+): Promise<CryptoNewsItem[]> {
+  const sym = (symbol || "").toUpperCase();
+  const nm = (name || "").trim();
+  if (!sym && !nm) return Promise.resolve([]);
+
+  return unstable_cache(
+    async () => _fetchCryptoNews(sym, nm),
+    ["crypto-news", sym, nm],
+    { revalidate: 1800, tags: [NEWS_TAG, `crypto-news:${sym}`] },
+  )();
+}

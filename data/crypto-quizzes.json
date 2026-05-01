@@ -1,0 +1,1052 @@
+{
+  "_meta": {
+    "lastUpdated": "2026-05-01",
+    "purpose": "Quiz par crypto — 8 questions factuelles éducatives par fiche, top 20 par market cap. Pas de question YMYL (\"Faut-il acheter ?\" interdit). Sources : data/top-cryptos.json + data/hidden-gems.json + faits publics vérifiés.",
+    "format": {
+      "questions": "8 par crypto : 3 faciles (Quoi/Qui/Quand) + 3 moyennes (Comment/Pourquoi) + 2 expert",
+      "explanation": "1-2 phrases factuelles, ton pédagogique, jamais condescendant"
+    }
+  },
+  "quizzes": {
+    "bitcoin": {
+      "questions": [
+        {
+          "q": "Qui a créé Bitcoin ?",
+          "choices": ["Vitalik Buterin", "Satoshi Nakamoto", "Charles Hoskinson", "Anatoly Yakovenko"],
+          "correctIdx": 1,
+          "explanation": "Satoshi Nakamoto est l'identité (probablement un pseudonyme) sous laquelle a été publié le whitepaper Bitcoin en 2008. La personne ou le groupe derrière n'a jamais été formellement identifié."
+        },
+        {
+          "q": "En quelle année Bitcoin a-t-il été lancé ?",
+          "choices": ["2007", "2009", "2011", "2013"],
+          "correctIdx": 1,
+          "explanation": "Le bloc genesis de Bitcoin a été miné le 3 janvier 2009, suite à la publication du whitepaper en octobre 2008."
+        },
+        {
+          "q": "Quelle est la quantité maximale de bitcoins qui pourra exister ?",
+          "choices": ["100 millions", "21 millions", "1 milliard", "Illimité"],
+          "correctIdx": 1,
+          "explanation": "Bitcoin a une supply maximale codée en dur à 21 millions d'unités. C'est cette rareté programmée qui lui vaut le surnom d'or numérique."
+        },
+        {
+          "q": "Combien de temps s'écoule en moyenne entre 2 halvings Bitcoin ?",
+          "choices": ["2 ans", "4 ans", "10 ans", "Variable selon le hashrate"],
+          "correctIdx": 1,
+          "explanation": "Un halving survient tous les 210 000 blocs, soit environ 4 ans, et divise par deux la récompense des mineurs."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise Bitcoin ?",
+          "choices": ["Proof of Stake", "Proof of Work", "Proof of Authority", "Proof of History"],
+          "correctIdx": 1,
+          "explanation": "Bitcoin utilise Proof of Work : les mineurs dépensent de l'énergie pour résoudre un puzzle cryptographique et valider les blocs."
+        },
+        {
+          "q": "Quel est le temps de bloc moyen sur Bitcoin ?",
+          "choices": ["10 secondes", "1 minute", "10 minutes", "1 heure"],
+          "correctIdx": 2,
+          "explanation": "Le protocole vise un bloc toutes les 10 minutes en moyenne, grâce à un ajustement automatique de la difficulté toutes les 2016 blocs."
+        },
+        {
+          "q": "Que désigne le 'Lightning Network' ?",
+          "choices": ["Une nouvelle blockchain concurrente", "Une solution de paiement Layer 2 sur Bitcoin", "Un type de wallet hardware", "Un algorithme de minage"],
+          "correctIdx": 1,
+          "explanation": "Lightning est un réseau de paiement Layer 2 construit au-dessus de Bitcoin pour des transactions quasi instantanées et à très faibles frais."
+        },
+        {
+          "q": "Quel évènement a eu lieu en janvier 2024 aux États-Unis concernant Bitcoin ?",
+          "choices": ["L'interdiction du minage", "L'approbation des ETF Bitcoin spot", "Le hard fork Taproot 2", "L'adoption comme monnaie légale"],
+          "correctIdx": 1,
+          "explanation": "La SEC a approuvé en janvier 2024 les premiers ETF Bitcoin spot américains (BlackRock, Fidelity, etc.), ouvrant la classe d'actifs aux investisseurs traditionnels."
+        }
+      ]
+    },
+    "ethereum": {
+      "questions": [
+        {
+          "q": "Qui est le co-fondateur le plus médiatisé d'Ethereum ?",
+          "choices": ["Satoshi Nakamoto", "Vitalik Buterin", "Gavin Wood", "Charles Hoskinson"],
+          "correctIdx": 1,
+          "explanation": "Vitalik Buterin a publié le whitepaper Ethereum en 2013 à 19 ans. Plusieurs co-fondateurs (Gavin Wood, Charles Hoskinson...) ont contribué au lancement de 2015."
+        },
+        {
+          "q": "En quelle année Ethereum a-t-il été lancé ?",
+          "choices": ["2009", "2013", "2015", "2017"],
+          "correctIdx": 2,
+          "explanation": "Le mainnet Ethereum (Frontier) a été lancé le 30 juillet 2015. Le whitepaper datait de fin 2013."
+        },
+        {
+          "q": "Quelle est la principale innovation d'Ethereum par rapport à Bitcoin ?",
+          "choices": ["Plus de bitcoins disponibles", "Les smart contracts programmables", "Un minage plus rapide", "L'absence totale de frais"],
+          "correctIdx": 1,
+          "explanation": "Ethereum est une plateforme de smart contracts : on peut y déployer des programmes (DeFi, NFT, DAO) qui s'exécutent automatiquement, ce que Bitcoin ne permet que de manière très limitée."
+        },
+        {
+          "q": "Quel mécanisme de consensus Ethereum utilise-t-il depuis 2022 ?",
+          "choices": ["Proof of Work", "Proof of Stake", "Proof of Authority", "Proof of History"],
+          "correctIdx": 1,
+          "explanation": "Le 'Merge' de septembre 2022 a fait passer Ethereum du Proof of Work au Proof of Stake, réduisant sa consommation énergétique d'environ 99,95 %."
+        },
+        {
+          "q": "Comment s'appellent les frais de transaction sur Ethereum ?",
+          "choices": ["Mining fees", "Gas fees", "Service fees", "Network tax"],
+          "correctIdx": 1,
+          "explanation": "Les frais sont mesurés en 'gas' : chaque opération a un coût en unités de gas, multiplié par un prix variable selon la congestion du réseau."
+        },
+        {
+          "q": "Que sont les 'Layer 2' d'Ethereum (Arbitrum, Optimism, Base) ?",
+          "choices": ["Des concurrents qui remplacent Ethereum", "Des solutions qui scalent Ethereum hors-chaîne avec moins de frais", "Des wallets hardware", "Des bourses centralisées"],
+          "correctIdx": 1,
+          "explanation": "Les Layer 2 (rollups) traitent les transactions hors de la chaîne principale puis postent une preuve sur Ethereum, divisant les frais par 10 à 100 tout en héritant de la sécurité L1."
+        },
+        {
+          "q": "Que désigne EIP-1559 mis en place en août 2021 ?",
+          "choices": ["L'arrêt complet du minage", "Une réforme des frais avec brûlage d'une partie de l'ETH", "Une augmentation de la supply", "Un nouveau langage de smart contract"],
+          "correctIdx": 1,
+          "explanation": "EIP-1559 a introduit un mécanisme de base fee brûlé à chaque transaction, rendant Ethereum potentiellement déflationniste en période de forte activité."
+        },
+        {
+          "q": "Quel langage est le plus utilisé pour écrire des smart contracts Ethereum ?",
+          "choices": ["Python", "Rust", "Solidity", "JavaScript"],
+          "correctIdx": 2,
+          "explanation": "Solidity est le langage dominant pour les smart contracts Ethereum. Vyper (proche de Python) existe aussi mais reste minoritaire."
+        }
+      ]
+    },
+    "tether": {
+      "questions": [
+        {
+          "q": "Qu'est-ce que l'USDT (Tether) ?",
+          "choices": ["Une cryptomonnaie volatile comme Bitcoin", "Un stablecoin indexé sur le dollar US", "Un token de gouvernance d'exchange", "Une crypto memecoin"],
+          "correctIdx": 1,
+          "explanation": "USDT est un stablecoin qui vise à maintenir une parité 1:1 avec le dollar américain. Chaque token est censé être adossé à des réserves en dollars ou actifs équivalents."
+        },
+        {
+          "q": "En quelle année Tether a-t-il été lancé ?",
+          "choices": ["2009", "2014", "2018", "2021"],
+          "correctIdx": 1,
+          "explanation": "Tether a été lancé en 2014 sous le nom 'Realcoin' avant d'être renommé. C'est le plus ancien et le plus utilisé des stablecoins."
+        },
+        {
+          "q": "Quelle entreprise émet l'USDT ?",
+          "choices": ["Circle", "Binance", "Tether Limited", "Ripple Labs"],
+          "correctIdx": 2,
+          "explanation": "Tether Limited (basée aux îles Vierges britanniques) émet l'USDT. L'entreprise est étroitement liée à l'exchange Bitfinex."
+        },
+        {
+          "q": "À quoi sert principalement un stablecoin comme USDT ?",
+          "choices": ["Spéculer sur la hausse du dollar", "Garder une valeur stable entre deux trades crypto", "Miner du Bitcoin", "Voter dans des DAO"],
+          "correctIdx": 1,
+          "explanation": "Les traders utilisent les stablecoins pour 'sortir' temporairement d'une crypto volatile sans repasser en monnaie fiat, et pour les transferts internationaux rapides."
+        },
+        {
+          "q": "Sur combien de blockchains principales l'USDT est-il émis ?",
+          "choices": ["Une seule (Ethereum)", "Deux (Ethereum et Tron)", "Plus de 10 blockchains", "Aucune, c'est centralisé"],
+          "correctIdx": 2,
+          "explanation": "USDT existe sur Ethereum, Tron, Solana, Avalanche, Polygon, BNB Chain et plus de 10 autres blockchains. Tron et Ethereum concentrent la majorité du volume."
+        },
+        {
+          "q": "Quelle critique récurrente est faite à Tether ?",
+          "choices": ["Sa lenteur de transaction", "Le manque de transparence sur ses réserves", "Son coût d'émission élevé", "Son interdiction en Asie"],
+          "correctIdx": 1,
+          "explanation": "Tether a été critiqué et sanctionné par le CFTC en 2021 pour des déclarations trompeuses sur ses réserves. L'entreprise publie depuis des attestations trimestrielles, mais pas d'audit complet."
+        },
+        {
+          "q": "Quel statut l'USDT a-t-il obtenu en Europe avec la régulation MiCA en 2024-2025 ?",
+          "choices": ["Pleinement conforme MiCA", "Non conforme — délisté de plusieurs exchanges régulés UE", "Reconnu comme monnaie officielle", "Interdit totalement en Europe"],
+          "correctIdx": 1,
+          "explanation": "Tether n'a pas obtenu l'agrément MiCA. Plusieurs plateformes régulées en Europe (Coinbase EU, Crypto.com EU) ont délisté l'USDT pour les utilisateurs européens en 2024-2025."
+        },
+        {
+          "q": "Qu'est-ce qu'un 'depeg' d'un stablecoin ?",
+          "choices": ["Une mise à jour technique", "Une perte temporaire de la parité avec le dollar", "Une migration vers une autre blockchain", "Un nouvel airdrop"],
+          "correctIdx": 1,
+          "explanation": "Un depeg survient quand le prix du stablecoin s'écarte significativement de 1 $. USDT a connu plusieurs depegs courts (2017, 2022) sans conséquence durable."
+        }
+      ]
+    },
+    "usd-coin": {
+      "questions": [
+        {
+          "q": "Qu'est-ce que l'USDC ?",
+          "choices": ["Un memecoin", "Un stablecoin indexé sur le dollar US", "Une blockchain Layer 1", "Un protocole DeFi"],
+          "correctIdx": 1,
+          "explanation": "USDC (USD Coin) est un stablecoin émis par Circle qui vise une parité 1:1 avec le dollar américain, adossé à des réserves en cash et bons du Trésor US."
+        },
+        {
+          "q": "Quelle entreprise émet l'USDC ?",
+          "choices": ["Tether Limited", "Circle", "Coinbase", "PayPal"],
+          "correctIdx": 1,
+          "explanation": "Circle (entreprise américaine) émet l'USDC. Le projet a été initialement co-géré avec Coinbase au sein du consortium Centre, dissous en 2023."
+        },
+        {
+          "q": "En quelle année l'USDC a-t-il été lancé ?",
+          "choices": ["2014", "2018", "2021", "2023"],
+          "correctIdx": 1,
+          "explanation": "USDC a été lancé en septembre 2018 par Circle et Coinbase, en réponse aux critiques sur l'opacité des réserves de Tether."
+        },
+        {
+          "q": "Quel est le principal argument de vente de l'USDC face à l'USDT ?",
+          "choices": ["Frais de transaction plus bas", "Plus grande transparence et conformité réglementaire", "Plus de blockchains supportées", "Une supply limitée"],
+          "correctIdx": 1,
+          "explanation": "Circle publie des attestations mensuelles auditées par Deloitte et a obtenu l'agrément MiCA en Europe. L'USDC est généralement perçu comme plus transparent que l'USDT."
+        },
+        {
+          "q": "Que s'est-il passé en mars 2023 avec l'USDC ?",
+          "choices": ["Un hack massif", "Un bref depeg dû à l'exposition à Silicon Valley Bank", "Son interdiction aux US", "Une augmentation de supply"],
+          "correctIdx": 1,
+          "explanation": "L'USDC est tombé brièvement à 0,87 $ après l'annonce que 3,3 Md$ de réserves étaient bloquées chez SVB. La parité a été retrouvée en quelques jours après l'intervention fédérale."
+        },
+        {
+          "q": "Quel est le statut de l'USDC vis-à-vis de la régulation européenne MiCA ?",
+          "choices": ["Non conforme et interdit", "Conforme MiCA depuis 2024", "En cours de demande", "Sans rapport — c'est un actif américain"],
+          "correctIdx": 1,
+          "explanation": "Circle a obtenu en juillet 2024 l'agrément EMI (Electronic Money Institution) en France, faisant de l'USDC le premier grand stablecoin pleinement conforme MiCA."
+        },
+        {
+          "q": "Quel est l'objectif du Cross-Chain Transfer Protocol (CCTP) de Circle ?",
+          "choices": ["Miner plus vite", "Transférer nativement l'USDC entre blockchains sans bridge tiers", "Augmenter les frais", "Stocker l'USDC offline"],
+          "correctIdx": 1,
+          "explanation": "CCTP permet de brûler de l'USDC sur une blockchain et d'en frapper sur une autre, supprimant les risques liés aux bridges classiques (souvent piratés)."
+        },
+        {
+          "q": "En 2024, l'IPO de Circle (entreprise émettrice de l'USDC) a-t-elle eu lieu ?",
+          "choices": ["Oui, en janvier 2024", "Oui, en juin 2024 sur le NYSE", "Non, elle est prévue plus tard", "Non, l'entreprise reste privée"],
+          "correctIdx": 1,
+          "explanation": "Circle est entrée en bourse au NYSE en juin 2024 sous le ticker CRCL, devenant l'une des premières entreprises crypto pure-play cotées aux États-Unis."
+        }
+      ]
+    },
+    "bnb": {
+      "questions": [
+        {
+          "q": "Qui a créé BNB ?",
+          "choices": ["Vitalik Buterin", "Changpeng Zhao (Binance)", "Brian Armstrong (Coinbase)", "Justin Sun (Tron)"],
+          "correctIdx": 1,
+          "explanation": "BNB a été lancé en 2017 par Binance, exchange fondé par Changpeng Zhao (CZ). C'était à l'origine un token utilitaire pour réduire les frais de trading."
+        },
+        {
+          "q": "En quelle année BNB a-t-il été lancé ?",
+          "choices": ["2014", "2017", "2020", "2022"],
+          "correctIdx": 1,
+          "explanation": "BNB a été lancé en juillet 2017 via une ICO qui a levé environ 15 M$. Il s'appelait alors 'Binance Coin'."
+        },
+        {
+          "q": "À l'origine, sur quelle blockchain BNB était-il émis ?",
+          "choices": ["BNB Chain native", "Ethereum (ERC-20)", "Bitcoin", "Solana"],
+          "correctIdx": 1,
+          "explanation": "BNB a été lancé en token ERC-20 sur Ethereum en 2017, avant de migrer en 2019 vers la Binance Chain (puis BNB Smart Chain)."
+        },
+        {
+          "q": "Quel est le principal usage du BNB ?",
+          "choices": ["Réserve de valeur uniquement", "Réduction des frais de trading sur Binance et carburant de la BSC", "Stablecoin", "Token de jeu"],
+          "correctIdx": 1,
+          "explanation": "BNB sert à payer des frais de trading réduits sur Binance et de gas fee sur la BNB Smart Chain, un écosystème compatible EVM avec des frais bas."
+        },
+        {
+          "q": "Quel mécanisme réduit régulièrement la supply totale de BNB ?",
+          "choices": ["Un airdrop", "Un programme de burn trimestriel", "Un staking obligatoire", "Une dilution annuelle"],
+          "correctIdx": 1,
+          "explanation": "Binance organise des burns trimestriels de BNB ainsi qu'un mécanisme automatique (BEP-95) qui brûle une part des frais de gas. Objectif : passer de 200 M à 100 M de BNB."
+        },
+        {
+          "q": "Que s'est-il passé en novembre 2023 concernant Changpeng Zhao ?",
+          "choices": ["Il a vendu Binance", "Il a plaidé coupable de violations AML aux US et démissionné", "Il a été nommé conseiller de la SEC", "Il a lancé une nouvelle blockchain"],
+          "correctIdx": 1,
+          "explanation": "CZ a plaidé coupable en novembre 2023 dans un dossier de violations BSA/AML aux États-Unis, avec une amende de 4,3 Md$ pour Binance et sa propre démission de CEO."
+        },
+        {
+          "q": "Quel acronyme désigne la blockchain compatible EVM créée par Binance ?",
+          "choices": ["BTC", "BSC (BNB Smart Chain)", "BAYC", "BNX"],
+          "correctIdx": 1,
+          "explanation": "BSC (BNB Smart Chain) est une blockchain EVM-compatible avec des frais très bas. Elle est critiquée pour sa centralisation (peu de validateurs choisis par Binance)."
+        },
+        {
+          "q": "Quel est le principal reproche fait à la BNB Chain en termes de décentralisation ?",
+          "choices": ["Trop de validateurs", "Faible nombre de validateurs largement contrôlés par l'écosystème Binance", "Code fermé", "Pas de smart contracts"],
+          "correctIdx": 1,
+          "explanation": "BNB Smart Chain fonctionne avec environ 21-40 validateurs (vs des milliers sur Ethereum), majoritairement liés à Binance, ce qui interroge sur son niveau de décentralisation réel."
+        }
+      ]
+    },
+    "xrp": {
+      "questions": [
+        {
+          "q": "Quelle entreprise a créé XRP ?",
+          "choices": ["Coinbase", "Ripple Labs", "Binance", "Circle"],
+          "correctIdx": 1,
+          "explanation": "XRP a été créé en 2012 par Chris Larsen et Jed McCaleb, fondateurs de Ripple Labs, pour faciliter les paiements transfrontaliers."
+        },
+        {
+          "q": "Quel est le cas d'usage principal visé par XRP ?",
+          "choices": ["NFT", "Paiements et transferts d'argent transfrontaliers", "Smart contracts complexes", "Memecoins"],
+          "correctIdx": 1,
+          "explanation": "XRP est conçu pour les paiements rapides (3-5 secondes) et peu coûteux entre institutions financières, en particulier les transferts internationaux entre banques."
+        },
+        {
+          "q": "En quelle année XRP a-t-il été lancé ?",
+          "choices": ["2009", "2012", "2015", "2018"],
+          "correctIdx": 1,
+          "explanation": "XRP Ledger a été lancé en 2012, faisant de XRP l'une des plus anciennes cryptomonnaies après Bitcoin et Litecoin."
+        },
+        {
+          "q": "Combien de temps prend en moyenne une transaction XRP ?",
+          "choices": ["Quelques secondes", "10 minutes", "1 heure", "Variable selon le minage"],
+          "correctIdx": 0,
+          "explanation": "Une transaction XRP est confirmée en 3 à 5 secondes, contre ~10 minutes pour Bitcoin. Les frais sont aussi quasi nuls (fraction de centime)."
+        },
+        {
+          "q": "Quelle est la supply maximale de XRP ?",
+          "choices": ["21 millions", "100 milliards", "1 milliard", "Illimitée"],
+          "correctIdx": 1,
+          "explanation": "100 milliards de XRP ont été pré-minés au lancement. Une partie est détenue en escrow par Ripple Labs et libérée progressivement."
+        },
+        {
+          "q": "Quelle institution américaine a poursuivi Ripple en 2020 ?",
+          "choices": ["FED", "SEC", "CFTC", "FBI"],
+          "correctIdx": 1,
+          "explanation": "La SEC a poursuivi Ripple en décembre 2020 en accusant XRP d'être un titre financier non enregistré. Le procès a été en grande partie clarifié en faveur de Ripple en 2023."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise XRP Ledger ?",
+          "choices": ["Proof of Work", "Proof of Stake", "XRP Ledger Consensus Protocol (validateurs sélectionnés)", "Proof of History"],
+          "correctIdx": 2,
+          "explanation": "Le XRPL utilise un consensus fédéré reposant sur une liste de validateurs de confiance (UNL), critiqué comme plus centralisé que les chaînes PoW/PoS classiques."
+        },
+        {
+          "q": "Quelle décision juridique a été rendue concernant XRP en juillet 2023 ?",
+          "choices": ["Interdiction définitive", "Une juge a statué que XRP n'est pas un titre lors des ventes sur exchanges secondaires", "Vente forcée par Ripple", "Conversion obligatoire en USD"],
+          "correctIdx": 1,
+          "explanation": "La juge Analisa Torres a statué en juillet 2023 que les ventes programmatiques de XRP sur exchanges ne constituaient pas des offres de titres, une victoire partielle pour Ripple."
+        }
+      ]
+    },
+    "solana": {
+      "questions": [
+        {
+          "q": "Qui a fondé Solana ?",
+          "choices": ["Vitalik Buterin", "Anatoly Yakovenko", "Charles Hoskinson", "Gavin Wood"],
+          "correctIdx": 1,
+          "explanation": "Anatoly Yakovenko, ex-ingénieur Qualcomm, a publié le whitepaper Solana en 2017 et co-fondé Solana Labs avec Raj Gokal."
+        },
+        {
+          "q": "En quelle année le mainnet Solana a-t-il été lancé ?",
+          "choices": ["2018", "2020", "2022", "2024"],
+          "correctIdx": 1,
+          "explanation": "Le mainnet beta de Solana a été lancé en mars 2020. Le réseau est resté en 'beta' pendant plusieurs années."
+        },
+        {
+          "q": "Quel est l'argument technique principal de Solana ?",
+          "choices": ["Très haute vitesse de transaction (milliers de TPS) à faible coût", "Confidentialité maximale", "Compatibilité Bitcoin", "Décentralisation extrême"],
+          "correctIdx": 0,
+          "explanation": "Solana revendique des milliers de transactions par seconde avec des frais inférieurs à 0,01 $, grâce à son mécanisme Proof of History combiné au PoS."
+        },
+        {
+          "q": "Quel mécanisme original utilise Solana en complément du Proof of Stake ?",
+          "choices": ["Proof of Work", "Proof of History (PoH)", "Proof of Authority", "Delegated Byzantine"],
+          "correctIdx": 1,
+          "explanation": "Proof of History est une horloge cryptographique qui permet d'ordonner les transactions avant consensus, accélérant drastiquement le débit du réseau."
+        },
+        {
+          "q": "Quel est le principal reproche historique fait à Solana ?",
+          "choices": ["Frais trop élevés", "Plusieurs pannes du réseau (downtime) entre 2021 et 2023", "Aucune adoption", "Communauté inexistante"],
+          "correctIdx": 1,
+          "explanation": "Solana a connu plusieurs interruptions de son réseau (parfois plusieurs heures) entre 2021 et 2023, mais la stabilité s'est nettement améliorée depuis 2024."
+        },
+        {
+          "q": "Quel langage est principalement utilisé pour développer sur Solana ?",
+          "choices": ["Solidity", "Python", "Rust", "Go"],
+          "correctIdx": 2,
+          "explanation": "Les programmes (équivalent smart contracts) Solana sont principalement écrits en Rust, avec quelques options en C/C++ et le framework Anchor."
+        },
+        {
+          "q": "Quel scandale a impacté Solana en novembre 2022 ?",
+          "choices": ["Un hack de Solana Labs", "L'effondrement de FTX, gros investisseur de l'écosystème", "Un fork hostile", "Une attaque 51 %"],
+          "correctIdx": 1,
+          "explanation": "FTX et Alameda Research étaient des soutiens majeurs de Solana. Leur faillite en novembre 2022 a fait chuter SOL de plus de 95 % avant un rebond spectaculaire en 2023-2024."
+        },
+        {
+          "q": "Que sont les 'priority fees' sur Solana ?",
+          "choices": ["Une taxe pour les développeurs", "Des frais optionnels pour prioriser sa transaction lors de congestion", "Un abonnement mensuel", "Des frais de minage"],
+          "correctIdx": 1,
+          "explanation": "Lors d'une forte demande (memecoins, mints), les utilisateurs peuvent ajouter des priority fees pour que leur transaction soit traitée en priorité par les validateurs."
+        }
+      ]
+    },
+    "cardano": {
+      "questions": [
+        {
+          "q": "Qui est le co-fondateur le plus connu de Cardano ?",
+          "choices": ["Vitalik Buterin", "Charles Hoskinson", "Gavin Wood", "Anatoly Yakovenko"],
+          "correctIdx": 1,
+          "explanation": "Charles Hoskinson, ex-co-fondateur d'Ethereum, a lancé Cardano via la société IOHK. Il a quitté Ethereum suite à des désaccords sur la gouvernance."
+        },
+        {
+          "q": "En quelle année Cardano a-t-il été lancé ?",
+          "choices": ["2015", "2017", "2019", "2021"],
+          "correctIdx": 1,
+          "explanation": "Le mainnet de Cardano (phase Byron) a été lancé en septembre 2017. Les smart contracts (phase Alonzo) sont arrivés en septembre 2021."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise Cardano ?",
+          "choices": ["Proof of Work", "Ouroboros (Proof of Stake)", "Proof of Authority", "Delegated Proof of Stake"],
+          "correctIdx": 1,
+          "explanation": "Ouroboros est le protocole PoS de Cardano, l'un des premiers à avoir été formellement vérifié par des chercheurs académiques."
+        },
+        {
+          "q": "Qu'est-ce qui distingue particulièrement le développement de Cardano ?",
+          "choices": ["Aucune documentation", "Approche peer-reviewed avec papers académiques", "Développement entièrement anonyme", "Code fermé"],
+          "correctIdx": 1,
+          "explanation": "Cardano se distingue par une approche très académique : chaque évolution majeure fait l'objet de papers de recherche évalués par les pairs avant implémentation."
+        },
+        {
+          "q": "Quel est le ticker du token natif de Cardano ?",
+          "choices": ["CAR", "ADA", "CDO", "ARD"],
+          "correctIdx": 1,
+          "explanation": "Le token s'appelle ADA en hommage à Ada Lovelace, considérée comme la première programmeuse de l'histoire."
+        },
+        {
+          "q": "Quelle est la supply maximale d'ADA ?",
+          "choices": ["21 millions", "100 millions", "45 milliards", "Illimitée"],
+          "correctIdx": 2,
+          "explanation": "La supply maximale d'ADA est plafonnée à 45 milliards. Environ 35 milliards sont déjà en circulation."
+        },
+        {
+          "q": "Que désigne 'Hydra' dans l'écosystème Cardano ?",
+          "choices": ["Un wallet officiel", "Une solution de scaling Layer 2", "Un memecoin", "Un exchange"],
+          "correctIdx": 1,
+          "explanation": "Hydra est la solution Layer 2 de Cardano, basée sur des state channels, visant à augmenter significativement le débit du réseau."
+        },
+        {
+          "q": "Quelle particularité a Cardano par rapport au staking ?",
+          "choices": ["Lockup obligatoire de 3 ans", "Pas de lockup, les ADA stakés restent liquides", "Staking interdit", "Staking centralisé"],
+          "correctIdx": 1,
+          "explanation": "Sur Cardano, les ADA délégués restent dans le wallet du stakeur et peuvent être dépensés à tout moment. C'est un atout par rapport à de nombreuses chaînes PoS."
+        }
+      ]
+    },
+    "dogecoin": {
+      "questions": [
+        {
+          "q": "Quel est l'animal qui sert de mascotte à Dogecoin ?",
+          "choices": ["Un chat", "Un Shiba Inu", "Un loup", "Un hamster"],
+          "correctIdx": 1,
+          "explanation": "La mascotte est un Shiba Inu, basée sur le célèbre meme 'Doge' de la chienne Kabosu, devenu viral en 2013."
+        },
+        {
+          "q": "En quelle année Dogecoin a-t-il été créé ?",
+          "choices": ["2009", "2013", "2017", "2021"],
+          "correctIdx": 1,
+          "explanation": "Dogecoin a été créé en décembre 2013 par Billy Markus et Jackson Palmer, à l'origine comme une parodie des cryptomonnaies sérieuses."
+        },
+        {
+          "q": "Qui sont les créateurs originaux de Dogecoin ?",
+          "choices": ["Satoshi Nakamoto", "Billy Markus et Jackson Palmer", "Vitalik Buterin", "Elon Musk"],
+          "correctIdx": 1,
+          "explanation": "Markus (IBM) et Palmer (Adobe) ont lancé DOGE en quelques heures comme blague. Aucun des deux ne s'attendait à son succès."
+        },
+        {
+          "q": "Quelle célébrité a fortement médiatisé Dogecoin depuis 2020 ?",
+          "choices": ["Mark Zuckerberg", "Elon Musk", "Jeff Bezos", "Bill Gates"],
+          "correctIdx": 1,
+          "explanation": "Elon Musk a régulièrement tweeté sur Dogecoin depuis 2020, contribuant à sa flambée de prix. Il l'a même surnommé 'la crypto du peuple'."
+        },
+        {
+          "q": "Sur quel code Dogecoin est-il basé techniquement ?",
+          "choices": ["Bitcoin", "Litecoin (fork de Bitcoin)", "Ethereum", "Code original"],
+          "correctIdx": 1,
+          "explanation": "Dogecoin est un fork de Luckycoin, lui-même fork de Litecoin. Il utilise donc une variante de l'algorithme Scrypt et le Proof of Work."
+        },
+        {
+          "q": "Quelle est la supply de Dogecoin ?",
+          "choices": ["21 millions (limitée)", "Illimitée avec émission constante", "45 milliards (limitée)", "100 millions"],
+          "correctIdx": 1,
+          "explanation": "Dogecoin n'a pas de supply maximale : 5 milliards de DOGE sont émis chaque année, ce qui en fait un actif inflationniste contrairement à Bitcoin."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise Dogecoin ?",
+          "choices": ["Proof of Stake", "Proof of Work (merged mining avec Litecoin)", "Proof of Authority", "Délégation"],
+          "correctIdx": 1,
+          "explanation": "Dogecoin utilise Proof of Work avec merged mining : les mineurs Litecoin minent simultanément du DOGE sans surcoût énergétique notable."
+        },
+        {
+          "q": "Que désigne 'D.O.G.E.' dans l'actualité politique américaine 2024-2025 ?",
+          "choices": ["Une nouvelle blockchain", "Le 'Department Of Government Efficiency' lancé par l'administration Trump", "Une stablecoin officielle", "Un fork de Dogecoin"],
+          "correctIdx": 1,
+          "explanation": "D.O.G.E. (Department Of Government Efficiency) est une initiative créée fin 2024 sous Trump, dont le nom est un clin d'œil au memecoin promu par Elon Musk."
+        }
+      ]
+    },
+    "tron": {
+      "questions": [
+        {
+          "q": "Qui a créé Tron ?",
+          "choices": ["Vitalik Buterin", "Justin Sun", "Charles Hoskinson", "Anatoly Yakovenko"],
+          "correctIdx": 1,
+          "explanation": "Tron a été fondé en 2017 par Justin Sun, entrepreneur chinois également connu pour avoir racheté Poloniex et BitTorrent."
+        },
+        {
+          "q": "Quelle est la principale utilisation de Tron en 2024-2026 ?",
+          "choices": ["NFT haut de gamme", "Transferts massifs d'USDT à frais quasi nuls", "Memecoins uniquement", "Smart contracts complexes"],
+          "correctIdx": 1,
+          "explanation": "Tron est devenu la blockchain dominante pour les transferts d'USDT, en raison de ses frais extrêmement bas (quelques centimes vs plusieurs dollars sur Ethereum)."
+        },
+        {
+          "q": "En quelle année Tron a-t-il lancé son mainnet ?",
+          "choices": ["2015", "2018", "2020", "2022"],
+          "correctIdx": 1,
+          "explanation": "Le mainnet Tron a été lancé en juin 2018 après une ICO de plus de 70 M$ levée en 2017."
+        },
+        {
+          "q": "Quel mécanisme de consensus Tron utilise-t-il ?",
+          "choices": ["Proof of Work", "Delegated Proof of Stake (DPoS) avec 27 Super Representatives", "Proof of Authority", "Proof of History"],
+          "correctIdx": 1,
+          "explanation": "Tron utilise un DPoS avec 27 Super Representatives élus, ce qui offre un débit élevé mais soulève des questions sur la décentralisation."
+        },
+        {
+          "q": "Quelle entreprise du partage de fichiers a été rachetée par la Tron Foundation en 2018 ?",
+          "choices": ["Napster", "BitTorrent", "uTorrent (uniquement)", "MEGA"],
+          "correctIdx": 1,
+          "explanation": "BitTorrent a été racheté pour environ 140 M$ en 2018. Le token BTT a ensuite été lancé sur Tron pour intégrer la blockchain à l'écosystème de partage."
+        },
+        {
+          "q": "Quel reproche est régulièrement fait à Tron sur le plan technique ?",
+          "choices": ["Trop coûteux", "Une partie significative de son code initial était copiée d'Ethereum", "Aucune équipe", "Pas de smart contracts"],
+          "correctIdx": 1,
+          "explanation": "Aux débuts de Tron, des sections de son whitepaper et de son code ont été démontrées comme largement empruntées à Ethereum et IPFS, ce qui a entaché sa réputation technique."
+        },
+        {
+          "q": "Quelle action en justice la SEC a-t-elle entreprise contre Justin Sun en 2023 ?",
+          "choices": ["Aucune", "Plainte pour vente de titres non enregistrés et manipulation de marché", "Plainte pour fraude bancaire", "Plainte pour évasion fiscale"],
+          "correctIdx": 1,
+          "explanation": "La SEC a poursuivi Justin Sun en mars 2023 pour vente de titres non enregistrés (TRX, BTT) et manipulation de marché via wash trading."
+        },
+        {
+          "q": "Pourquoi Tron est-il très utilisé pour transférer de l'USDT en pratique ?",
+          "choices": ["C'est la seule chaîne supportée", "Frais extrêmement bas et confirmation rapide", "Réglementation stricte", "Compatibilité Bitcoin"],
+          "correctIdx": 1,
+          "explanation": "Les transferts USDT sur Tron coûtent généralement moins d'1 $ et arrivent en quelques secondes, vs souvent plusieurs dollars sur Ethereum, ce qui en fait le rail dominant pour les flux internationaux."
+        }
+      ]
+    },
+    "toncoin": {
+      "questions": [
+        {
+          "q": "Quelle messagerie est étroitement liée à TON (The Open Network) ?",
+          "choices": ["WhatsApp", "Signal", "Telegram", "Discord"],
+          "correctIdx": 2,
+          "explanation": "TON a été initialement conçu par les frères Durov, fondateurs de Telegram. Le projet est aujourd'hui géré par la TON Foundation et intégré nativement à Telegram."
+        },
+        {
+          "q": "Pourquoi Telegram a-t-il dû abandonner officiellement le projet TON en 2020 ?",
+          "choices": ["Manque de financement", "Conflit avec la SEC américaine", "Fork hostile", "Désintérêt des utilisateurs"],
+          "correctIdx": 1,
+          "explanation": "La SEC a obtenu en 2020 l'arrêt du projet, considérant l'ICO de 1,7 Md$ comme une vente de titres non enregistrés. La communauté open-source a pris le relais."
+        },
+        {
+          "q": "Que signifie l'acronyme TON ?",
+          "choices": ["Telegram Open Network", "The Open Network", "Token Of Network", "Total Online Network"],
+          "correctIdx": 1,
+          "explanation": "Originellement 'Telegram Open Network', le projet a été renommé 'The Open Network' après le départ officiel de Telegram pour des raisons réglementaires."
+        },
+        {
+          "q": "Quelle architecture utilise TON pour scaler ?",
+          "choices": ["Un seul shard monolithique", "Sharding dynamique (workchains et shardchains)", "Layer 2 uniquement", "Pas de scaling"],
+          "correctIdx": 1,
+          "explanation": "TON utilise une architecture multi-chaînes avec sharding dynamique, censée pouvoir traiter des millions de transactions par seconde théoriquement."
+        },
+        {
+          "q": "Quel langage est utilisé pour les smart contracts TON ?",
+          "choices": ["Solidity", "FunC / Tact", "Rust", "Go"],
+          "correctIdx": 1,
+          "explanation": "Les smart contracts TON sont écrits en FunC (bas niveau) ou Tact (plus moderne). C'est différent de l'écosystème Ethereum."
+        },
+        {
+          "q": "Quelle adoption notable TON a-t-il connue en 2024 ?",
+          "choices": ["Rachat par Binance", "Intégration de wallet et mini-apps directement dans Telegram", "Interdiction en Europe", "Fork vers Ethereum"],
+          "correctIdx": 1,
+          "explanation": "L'intégration des mini-apps et du wallet TON Space directement dans Telegram (900M+ utilisateurs) a été un catalyseur d'adoption massif en 2024."
+        },
+        {
+          "q": "Quel jeu / clicker viral a propulsé TON en 2024 ?",
+          "choices": ["Axie Infinity", "Notcoin / Hamster Kombat", "CryptoKitties", "StepN"],
+          "correctIdx": 1,
+          "explanation": "Notcoin et Hamster Kombat, des clickers basés sur Telegram, ont attiré des centaines de millions d'utilisateurs et alimenté l'adoption de TON en 2024."
+        },
+        {
+          "q": "Que s'est-il passé concernant Pavel Durov en août 2024 ?",
+          "choices": ["Il a vendu Telegram", "Il a été arrêté en France pour manquements liés à la modération de Telegram", "Il a fondé une nouvelle blockchain", "Il a démissionné de la TON Foundation"],
+          "correctIdx": 1,
+          "explanation": "Pavel Durov a été arrêté à Paris en août 2024 et placé en examen pour des manquements à la modération sur Telegram. L'affaire a temporairement impacté le cours du TON."
+        }
+      ]
+    },
+    "avalanche": {
+      "questions": [
+        {
+          "q": "Qui a fondé Avalanche ?",
+          "choices": ["Vitalik Buterin", "Emin Gün Sirer (Ava Labs)", "Charles Hoskinson", "Anatoly Yakovenko"],
+          "correctIdx": 1,
+          "explanation": "Avalanche a été fondé par Emin Gün Sirer, professeur à Cornell, et son équipe Ava Labs. Le mainnet a été lancé en septembre 2020."
+        },
+        {
+          "q": "Combien de chaînes principales composent l'architecture Avalanche ?",
+          "choices": ["1 (monolithique)", "3 (X-Chain, C-Chain, P-Chain)", "10 chaînes parallèles", "Variable selon la demande"],
+          "correctIdx": 1,
+          "explanation": "Avalanche est composé de 3 chaînes : X-Chain (échanges d'actifs), C-Chain (smart contracts EVM-compatibles) et P-Chain (gestion des validateurs et subnets)."
+        },
+        {
+          "q": "Que sont les 'Subnets' (devenus 'L1s' Avalanche) ?",
+          "choices": ["Des wallets", "Des blockchains personnalisables sécurisées par leurs propres validateurs", "Des memecoins", "Des stablecoins"],
+          "correctIdx": 1,
+          "explanation": "Les Subnets/L1s permettent à des projets de lancer leur propre blockchain souveraine avec ses règles, tout en restant interopérable avec l'écosystème Avalanche."
+        },
+        {
+          "q": "Quel est le ticker du token natif d'Avalanche ?",
+          "choices": ["AVA", "AVAX", "AVL", "ALN"],
+          "correctIdx": 1,
+          "explanation": "Le token natif est AVAX. Il sert au paiement des frais (gas) et à la sécurisation du réseau via le staking."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise Avalanche ?",
+          "choices": ["Proof of Work", "Snowman / Avalanche consensus (variante PoS avec sub-sampling)", "Proof of Authority", "Proof of History"],
+          "correctIdx": 1,
+          "explanation": "Avalanche utilise un consensus innovant basé sur du sous-échantillonnage répété, qui permet une finalité en moins d'une seconde."
+        },
+        {
+          "q": "Que permet la C-Chain d'Avalanche aux développeurs Ethereum ?",
+          "choices": ["Migrer leurs apps Solidity sans modification majeure", "Miner du Bitcoin", "Stocker des NFT gratuitement", "Forker Ethereum"],
+          "correctIdx": 0,
+          "explanation": "La C-Chain est EVM-compatible : un dApp Solidity Ethereum peut être déployé sur Avalanche avec très peu d'adaptations, profitant de frais bas."
+        },
+        {
+          "q": "Quelle adoption institutionnelle Avalanche a-t-il connue avec JPMorgan ?",
+          "choices": ["JPM a banni Avalanche", "JPM a tokenisé des fonds via le Subnet Onyx Digital Assets", "JPM a forké AVAX", "Aucune adoption"],
+          "correctIdx": 1,
+          "explanation": "JPMorgan a utilisé un Subnet Avalanche en 2023 pour tester la tokenisation de parts de fonds (Onyx Digital Assets) avec Apollo Global Management."
+        },
+        {
+          "q": "Que désigne 'Avalanche9000' lancé fin 2024 ?",
+          "choices": ["Un memecoin", "L'upgrade qui a rendu le déploiement de L1s beaucoup moins coûteux", "Un nouveau wallet", "Un fork hostile"],
+          "correctIdx": 1,
+          "explanation": "Avalanche9000 (déc. 2024) a réduit drastiquement les coûts de validateurs de Subnets et introduit un système de frais en AVAX, rebaptisant les Subnets en 'Avalanche L1s'."
+        }
+      ]
+    },
+    "chainlink": {
+      "questions": [
+        {
+          "q": "Quel est le rôle principal de Chainlink ?",
+          "choices": ["Une blockchain Layer 1", "Un réseau d'oracles décentralisés qui apporte des données off-chain aux smart contracts", "Un memecoin", "Un stablecoin"],
+          "correctIdx": 1,
+          "explanation": "Chainlink est le réseau d'oracles dominant : il permet aux smart contracts d'accéder à des données externes (prix, météo, événements sportifs) de manière sécurisée et décentralisée."
+        },
+        {
+          "q": "Qui a co-fondé Chainlink ?",
+          "choices": ["Vitalik Buterin", "Sergey Nazarov", "Justin Sun", "CZ"],
+          "correctIdx": 1,
+          "explanation": "Chainlink a été fondé en 2017 par Sergey Nazarov et Steve Ellis, avec une ICO ayant levé 32 M$."
+        },
+        {
+          "q": "En quelle année Chainlink a-t-il été lancé ?",
+          "choices": ["2014", "2017", "2020", "2022"],
+          "correctIdx": 1,
+          "explanation": "Le projet et le token LINK ont été lancés en 2017. Le mainnet est devenu pleinement opérationnel en 2019."
+        },
+        {
+          "q": "Quel ticker porte le token natif de Chainlink ?",
+          "choices": ["CHN", "LINK", "CHK", "LNK"],
+          "correctIdx": 1,
+          "explanation": "Le token est LINK. Il sert à rémunérer les opérateurs de nœuds qui fournissent les données aux smart contracts."
+        },
+        {
+          "q": "Pourquoi les oracles sont-ils critiques pour la DeFi ?",
+          "choices": ["Pour miner plus vite", "Pour fournir des prix d'actifs fiables aux protocoles de prêt et dérivés", "Pour générer des NFT", "Pour stocker des fichiers"],
+          "correctIdx": 1,
+          "explanation": "Les protocoles DeFi (Aave, Compound, GMX...) dépendent des oracles pour évaluer les collatéraux et déclencher les liquidations. Une oracle défaillant peut causer la perte de millions."
+        },
+        {
+          "q": "Que désigne CCIP (Cross-Chain Interoperability Protocol) ?",
+          "choices": ["Un wallet", "Le protocole de Chainlink pour les transferts cross-chain sécurisés", "Un memecoin", "Un fork de LINK"],
+          "correctIdx": 1,
+          "explanation": "CCIP est la solution de messagerie et transferts inter-blockchains de Chainlink, en concurrence avec LayerZero et Wormhole. Elle est utilisée par Swift et de grandes banques en pilote."
+        },
+        {
+          "q": "Quel partenariat majeur Chainlink a-t-il annoncé avec Swift ?",
+          "choices": ["Aucun", "Pilote de tokenisation d'actifs et messagerie inter-banques via CCIP", "Rachat de Chainlink par Swift", "Création d'un memecoin"],
+          "correctIdx": 1,
+          "explanation": "Chainlink collabore depuis 2022 avec Swift et plusieurs grandes banques (BNP Paribas, BNY Mellon...) pour tester la tokenisation d'actifs et l'interopérabilité cross-chain."
+        },
+        {
+          "q": "Que signifie le terme 'oracle problem' en blockchain ?",
+          "choices": ["Le minage est trop lent", "Les blockchains ne peuvent pas accéder nativement aux données externes de manière fiable", "Les wallets sont vulnérables", "Le code est trop cher"],
+          "correctIdx": 1,
+          "explanation": "Les blockchains sont des systèmes fermés et déterministes : elles ne peuvent pas vérifier seules ce qu'il se passe hors chaîne. C'est ce 'problème de l'oracle' que Chainlink vise à résoudre."
+        }
+      ]
+    },
+    "polkadot": {
+      "questions": [
+        {
+          "q": "Qui est le fondateur principal de Polkadot ?",
+          "choices": ["Vitalik Buterin", "Gavin Wood", "Charles Hoskinson", "Justin Sun"],
+          "correctIdx": 1,
+          "explanation": "Gavin Wood, ex-co-fondateur d'Ethereum et créateur du langage Solidity, a fondé Polkadot via la Web3 Foundation en 2016."
+        },
+        {
+          "q": "Quel est le concept central de l'architecture Polkadot ?",
+          "choices": ["Une seule chaîne monolithique", "Une 'Relay Chain' qui sécurise des chaînes parallèles appelées parachains", "Uniquement des Layer 2", "Pas de smart contracts"],
+          "correctIdx": 1,
+          "explanation": "Polkadot connecte plusieurs blockchains spécialisées (parachains) à une Relay Chain centrale qui assure leur sécurité partagée et leur interopérabilité."
+        },
+        {
+          "q": "Quel est le ticker du token natif de Polkadot ?",
+          "choices": ["PKD", "DOT", "POL", "PLK"],
+          "correctIdx": 1,
+          "explanation": "Le token est DOT. Il sert au staking, à la gouvernance, et au bonding pour obtenir un slot de parachain."
+        },
+        {
+          "q": "Comment s'appelle le framework permettant de construire une blockchain compatible Polkadot ?",
+          "choices": ["Hardhat", "Substrate", "Truffle", "Foundry"],
+          "correctIdx": 1,
+          "explanation": "Substrate est un framework Rust open-source créé par Parity, qui permet de construire une blockchain modulaire pouvant ensuite se connecter à Polkadot ou Kusama."
+        },
+        {
+          "q": "Comment s'appelle le réseau 'cousin' de test grandeur nature de Polkadot ?",
+          "choices": ["Ropsten", "Kusama", "Rinkeby", "Mumbai"],
+          "correctIdx": 1,
+          "explanation": "Kusama est le 'canary network' de Polkadot : un environnement live, plus rapide à upgrader, où les équipes testent leurs parachains avant de migrer."
+        },
+        {
+          "q": "Comment les parachains obtenaient-elles historiquement un slot sur Polkadot ?",
+          "choices": ["Achat direct en stablecoin", "Crowdloan : verrouillage de DOT par la communauté pour gagner une enchère", "Tirage au sort", "Approbation manuelle"],
+          "correctIdx": 1,
+          "explanation": "Les parachains gagnaient un slot via un système d'enchères avec crowdloans : les utilisateurs prêtaient leurs DOT au projet, qui les remboursait en tokens natifs."
+        },
+        {
+          "q": "Que désigne 'Agile Coretime' introduit en 2024 sur Polkadot ?",
+          "choices": ["Un nouveau wallet", "Un système flexible d'achat de bloc-espace remplaçant les enchères de slots", "Un memecoin", "Un fork"],
+          "correctIdx": 1,
+          "explanation": "Agile Coretime permet aux projets d'acheter dynamiquement du temps de calcul (coretime) plutôt que de bloquer un slot pendant 2 ans, rendant l'écosystème plus flexible."
+        },
+        {
+          "q": "Quel langage est principalement utilisé pour développer sur Substrate / Polkadot ?",
+          "choices": ["Solidity", "Python", "Rust", "JavaScript"],
+          "correctIdx": 2,
+          "explanation": "Substrate (et donc le développement de parachains Polkadot) est écrit en Rust. Les smart contracts peuvent être écrits en ink! (basé Rust) ou Solidity sur certaines parachains EVM."
+        }
+      ]
+    },
+    "cosmos": {
+      "questions": [
+        {
+          "q": "Quelle est la vision principale de Cosmos ?",
+          "choices": ["Une seule blockchain pour tout", "Un 'Internet des blockchains' interopérables", "Remplacer Bitcoin", "Un réseau de NFT"],
+          "correctIdx": 1,
+          "explanation": "Cosmos vise à connecter des blockchains souveraines spécialisées via le protocole IBC (Inter-Blockchain Communication), formant un 'Internet des blockchains'."
+        },
+        {
+          "q": "Quel est le nom du token natif du Cosmos Hub ?",
+          "choices": ["COSM", "ATOM", "TIA", "JUNO"],
+          "correctIdx": 1,
+          "explanation": "ATOM est le token du Cosmos Hub, la chaîne centrale de l'écosystème. Il sert au staking et à la gouvernance."
+        },
+        {
+          "q": "Comment s'appelle le SDK utilisé pour construire des blockchains Cosmos ?",
+          "choices": ["Hardhat", "Cosmos SDK", "Substrate", "Anchor"],
+          "correctIdx": 1,
+          "explanation": "Le Cosmos SDK est un framework Go open-source qui a permis de lancer des dizaines de blockchains app-specific (Osmosis, dYdX v4, Celestia, Injective...)."
+        },
+        {
+          "q": "Que désigne IBC dans l'écosystème Cosmos ?",
+          "choices": ["Un wallet", "Inter-Blockchain Communication, le protocole de communication entre chaînes Cosmos", "Un exchange", "Un memecoin"],
+          "correctIdx": 1,
+          "explanation": "IBC est un protocole standard qui permet à deux blockchains Cosmos compatibles de s'échanger des actifs et messages de manière trustless, sans bridge custodial."
+        },
+        {
+          "q": "Qui a co-fondé Cosmos ?",
+          "choices": ["Vitalik Buterin", "Jae Kwon (Tendermint)", "CZ", "Justin Sun"],
+          "correctIdx": 1,
+          "explanation": "Cosmos a été co-fondé par Jae Kwon, créateur du moteur de consensus Tendermint (BFT), socle technique de la plupart des chaînes Cosmos."
+        },
+        {
+          "q": "Quel mécanisme de consensus est utilisé par les chaînes Cosmos ?",
+          "choices": ["Proof of Work", "Tendermint BFT (Proof of Stake byzantin)", "Proof of Authority", "Proof of History"],
+          "correctIdx": 1,
+          "explanation": "Tendermint BFT offre une finalité instantanée (1 bloc = final), idéale pour les blockchains app-specific. C'est le moteur historique de Cosmos."
+        },
+        {
+          "q": "Quel grand projet a quitté Ethereum pour migrer sur sa propre chaîne Cosmos ?",
+          "choices": ["Uniswap", "dYdX (v4)", "Aave", "Curve"],
+          "correctIdx": 1,
+          "explanation": "dYdX a migré sa v4 sur sa propre chaîne Cosmos en 2023, pour gérer son order book on-chain avec un débit impossible sur un Layer 2 Ethereum."
+        },
+        {
+          "q": "Que désigne le 'Hub minimalism' débattu dans Cosmos ?",
+          "choices": ["Un memecoin", "Le débat sur le rôle (étroit vs large) que doit jouer le Cosmos Hub dans l'écosystème", "Un nouveau wallet", "Un type de NFT"],
+          "correctIdx": 1,
+          "explanation": "C'est un débat de gouvernance : le Cosmos Hub (ATOM) doit-il rester minimaliste (sécurité partagée + IBC) ou ajouter des fonctionnalités (DEX, lending, etc.) qui pourraient capter plus de valeur ?"
+        }
+      ]
+    },
+    "polygon": {
+      "questions": [
+        {
+          "q": "Quel était le nom original de Polygon avant son rebrand en 2021 ?",
+          "choices": ["MATIC Network", "Polygon Network", "Plasma Chain", "Side Chain"],
+          "correctIdx": 0,
+          "explanation": "Polygon s'appelait à l'origine MATIC Network. Le projet a été rebrandé Polygon en 2021 pour refléter sa stratégie multi-solutions de scaling Ethereum."
+        },
+        {
+          "q": "Quel est le principal cas d'usage de Polygon PoS ?",
+          "choices": ["Une blockchain Layer 1 indépendante", "Une sidechain Ethereum à frais bas et confirmations rapides", "Un memecoin", "Un wallet"],
+          "correctIdx": 1,
+          "explanation": "Polygon PoS est une sidechain compatible EVM avec des frais d'environ 0,01-0,05 $ par transaction, très utilisée pour le gaming, les NFT et la DeFi à petits tickets."
+        },
+        {
+          "q": "Qui sont les co-fondateurs de Polygon ?",
+          "choices": ["Vitalik Buterin", "Jaynti Kanani, Sandeep Nailwal et Anurag Arjun", "Charles Hoskinson", "Anatoly Yakovenko"],
+          "correctIdx": 1,
+          "explanation": "Polygon a été co-fondé en Inde par Jaynti Kanani, Sandeep Nailwal, Anurag Arjun et Mihailo Bjelic. Le projet a démarré en 2017."
+        },
+        {
+          "q": "Que désigne la migration MATIC → POL initiée en 2024 ?",
+          "choices": ["Un changement de blockchain", "Le remplacement progressif du token MATIC par POL, le nouveau token natif", "Une fusion avec Ethereum", "Un fork hostile"],
+          "correctIdx": 1,
+          "explanation": "POL est le nouveau token natif conçu pour sécuriser tout l'écosystème Polygon 2.0 (Polygon PoS, zkEVM, CDK chains). La migration 1:1 a démarré en 2024."
+        },
+        {
+          "q": "Qu'est-ce que Polygon zkEVM ?",
+          "choices": ["Un memecoin", "Un Layer 2 d'Ethereum utilisant des preuves de connaissance nulle (ZK)", "Un wallet", "Un exchange"],
+          "correctIdx": 1,
+          "explanation": "Polygon zkEVM est un rollup ZK qui permet d'exécuter du Solidity sur Ethereum avec des preuves cryptographiques compactes, héritant pleinement de la sécurité L1."
+        },
+        {
+          "q": "Quelle grande marque a utilisé Polygon pour ses NFT et programmes Web3 ?",
+          "choices": ["Aucune", "Starbucks (Odyssey), Nike, Reddit Avatars", "Google uniquement", "Microsoft uniquement"],
+          "correctIdx": 1,
+          "explanation": "Polygon a séduit de nombreuses marques (Starbucks, Nike, Reddit, Disney, Mastercard...) pour ses programmes NFT et fidélité grâce à ses frais bas et sa compatibilité EVM."
+        },
+        {
+          "q": "Que désigne le Polygon CDK (Chain Development Kit) ?",
+          "choices": ["Un wallet", "Une stack open-source pour lancer ses propres rollups ZK connectés à Polygon", "Un memecoin", "Un type de NFT"],
+          "correctIdx": 1,
+          "explanation": "Le CDK permet à des projets de lancer leur propre L2 ZK personnalisée et de la connecter à l'AggLayer Polygon pour partager liquidité et sécurité."
+        },
+        {
+          "q": "Que vise l''AggLayer' de Polygon ?",
+          "choices": ["Agréger tous les exchanges", "Unifier la liquidité et les utilisateurs entre les différentes chaînes Polygon (et au-delà)", "Remplacer Bitcoin", "Forker Ethereum"],
+          "correctIdx": 1,
+          "explanation": "L'AggLayer est une couche d'agrégation cross-chain qui permet à des chaînes hétérogènes de partager liquidité et messages de manière unifiée, atténuant la fragmentation."
+        }
+      ]
+    },
+    "litecoin": {
+      "questions": [
+        {
+          "q": "Qui a créé Litecoin ?",
+          "choices": ["Satoshi Nakamoto", "Charlie Lee", "Vitalik Buterin", "Roger Ver"],
+          "correctIdx": 1,
+          "explanation": "Litecoin a été créé en octobre 2011 par Charlie Lee, ex-ingénieur Google, comme une variante plus rapide et accessible de Bitcoin."
+        },
+        {
+          "q": "Quel surnom donne-t-on souvent à Litecoin ?",
+          "choices": ["L'or numérique", "L'argent du Bitcoin", "Le Bitcoin du futur", "Le Bitcoin chinois"],
+          "correctIdx": 1,
+          "explanation": "Litecoin est traditionnellement présenté comme 'l'argent face à l'or qu'est Bitcoin' : transactions plus rapides et frais plus bas, mais avec la même philosophie de monnaie peer-to-peer."
+        },
+        {
+          "q": "Quel est le temps de bloc moyen sur Litecoin ?",
+          "choices": ["1 minute", "2,5 minutes", "10 minutes", "1 heure"],
+          "correctIdx": 1,
+          "explanation": "Litecoin a un temps de bloc de 2,5 minutes, soit 4 fois plus rapide que Bitcoin (10 minutes)."
+        },
+        {
+          "q": "Quelle est la supply maximale de Litecoin ?",
+          "choices": ["21 millions", "84 millions", "100 millions", "Illimitée"],
+          "correctIdx": 1,
+          "explanation": "Litecoin a une supply maximale de 84 millions, exactement 4 fois celle de Bitcoin (21 millions). C'est cohérent avec son temps de bloc 4 fois plus rapide."
+        },
+        {
+          "q": "Quel algorithme de minage utilise Litecoin ?",
+          "choices": ["SHA-256", "Scrypt", "Ethash", "RandomX"],
+          "correctIdx": 1,
+          "explanation": "Litecoin utilise Scrypt, choisi à l'origine pour rendre le minage plus accessible aux particuliers (avant que les ASIC Scrypt n'apparaissent)."
+        },
+        {
+          "q": "Quelle technologie d'amélioration de la confidentialité a été activée sur Litecoin en 2022 ?",
+          "choices": ["Zero-Knowledge Proofs", "MimbleWimble Extension Blocks (MWEB)", "RingCT", "zk-SNARKs"],
+          "correctIdx": 1,
+          "explanation": "MWEB (MimbleWimble Extension Blocks) a été activé en mai 2022, ajoutant des fonctionnalités optionnelles de confidentialité au Litecoin."
+        },
+        {
+          "q": "Combien de temps environ entre 2 halvings Litecoin ?",
+          "choices": ["1 an", "2 ans", "4 ans", "10 ans"],
+          "correctIdx": 2,
+          "explanation": "Litecoin halve tous les 840 000 blocs, soit environ 4 ans. Le dernier halving a eu lieu en août 2023, le prochain est attendu en 2027."
+        },
+        {
+          "q": "Pourquoi Charlie Lee a-t-il vendu/donné l'intégralité de ses LTC en 2017 ?",
+          "choices": ["Pour racheter Bitcoin", "Pour éliminer tout conflit d'intérêt entre ses tweets et le cours", "Par obligation légale", "Suite à un hack"],
+          "correctIdx": 1,
+          "explanation": "Charlie Lee a annoncé en décembre 2017 avoir vendu/donné tous ses LTC pour ne plus être en conflit d'intérêt entre ses prises de parole publiques et son intérêt financier personnel."
+        }
+      ]
+    },
+    "bitcoin-cash": {
+      "questions": [
+        {
+          "q": "Comment Bitcoin Cash est-il né ?",
+          "choices": ["Une création originale en 2009", "Un hard fork de Bitcoin en août 2017", "Un fork d'Ethereum", "Un airdrop de Litecoin"],
+          "correctIdx": 1,
+          "explanation": "Bitcoin Cash (BCH) est né le 1er août 2017 d'un hard fork de Bitcoin, motivé par le débat sur la taille des blocs et l'usage de Bitcoin (paiements vs réserve de valeur)."
+        },
+        {
+          "q": "Quel était le principal point de désaccord à l'origine du fork BCH ?",
+          "choices": ["L'algorithme de minage", "La taille des blocs (1 MB sur BTC vs blocs plus grands)", "L'identité de Satoshi", "La couleur du logo"],
+          "correctIdx": 1,
+          "explanation": "Les partisans de BCH voulaient des blocs plus grands (8 MB initialement, jusqu'à 32 MB) pour plus de transactions et privilégier l'usage paiement, vs la voie 'Layer 2 / Lightning' choisie par BTC."
+        },
+        {
+          "q": "Quelle est la supply maximale de Bitcoin Cash ?",
+          "choices": ["21 millions (héritée de BTC)", "42 millions", "84 millions", "Illimitée"],
+          "correctIdx": 0,
+          "explanation": "BCH hérite des règles de Bitcoin : 21 millions d'unités max, halving tous les ~4 ans, même algorithme SHA-256."
+        },
+        {
+          "q": "Qui a été un défenseur historique très médiatique de Bitcoin Cash ?",
+          "choices": ["Charlie Lee", "Roger Ver", "Vitalik Buterin", "Justin Sun"],
+          "correctIdx": 1,
+          "explanation": "Roger Ver, surnommé 'Bitcoin Jesus' pour son rôle dans la promotion de Bitcoin, est devenu un avocat majeur de BCH après le fork de 2017."
+        },
+        {
+          "q": "Bitcoin Cash a lui-même donné lieu à un fork notable en novembre 2018. Lequel ?",
+          "choices": ["Bitcoin Gold", "Bitcoin SV (Satoshi Vision)", "Bitcoin Diamond", "Bitcoin Private"],
+          "correctIdx": 1,
+          "explanation": "BCH s'est lui-même scindé en novembre 2018 entre Bitcoin Cash (BCH/ABC) et Bitcoin SV (BSV), porté par Craig Wright."
+        },
+        {
+          "q": "Quel mécanisme de consensus utilise Bitcoin Cash ?",
+          "choices": ["Proof of Stake", "Proof of Work (SHA-256, comme Bitcoin)", "Proof of Authority", "Tendermint"],
+          "correctIdx": 1,
+          "explanation": "BCH utilise Proof of Work avec SHA-256, identique à Bitcoin. Les mineurs peuvent passer d'une chaîne à l'autre selon la rentabilité."
+        },
+        {
+          "q": "Que désigne 'CashFusion' dans l'écosystème BCH ?",
+          "choices": ["Un exchange", "Un protocole de mixing pour améliorer la confidentialité", "Un wallet hardware", "Un memecoin"],
+          "correctIdx": 1,
+          "explanation": "CashFusion est un protocole de CoinJoin spécifique à BCH, qui mélange les transactions de plusieurs utilisateurs pour rendre le traçage on-chain plus difficile."
+        },
+        {
+          "q": "Quelle taille de bloc maximale BCH supporte-t-il actuellement ?",
+          "choices": ["1 MB", "32 MB", "1 GB", "Illimité"],
+          "correctIdx": 1,
+          "explanation": "BCH supporte actuellement des blocs allant jusqu'à 32 MB, soit 32 fois plus que Bitcoin (1 MB), permettant théoriquement plus de transactions par bloc."
+        }
+      ]
+    },
+    "near-protocol": {
+      "questions": [
+        {
+          "q": "Quel est le type de blockchain NEAR ?",
+          "choices": ["Layer 2 d'Ethereum", "Layer 1 indépendant utilisant le sharding", "Sidechain Bitcoin", "Memecoin"],
+          "correctIdx": 1,
+          "explanation": "NEAR est une blockchain Layer 1 indépendante qui utilise le sharding (Nightshade) pour traiter des milliers de transactions par seconde."
+        },
+        {
+          "q": "Qui est l'un des co-fondateurs notables de NEAR ?",
+          "choices": ["Vitalik Buterin", "Illia Polosukhin (ex-Google, co-auteur du paper Transformer)", "Charles Hoskinson", "CZ"],
+          "correctIdx": 1,
+          "explanation": "Illia Polosukhin, ex-ingénieur Google, est notamment co-auteur du paper 'Attention is All You Need' (2017) à l'origine des Transformers et donc des grands modèles de langage."
+        },
+        {
+          "q": "Quelle particularité ont les noms d'adresse sur NEAR ?",
+          "choices": ["Adresses hexadécimales 40 caractères", "Adresses lisibles type 'alice.near'", "Adresses uniquement numériques", "Pas d'adresses"],
+          "correctIdx": 1,
+          "explanation": "NEAR utilise un système de comptes avec noms lisibles (alice.near, bob.near), inspiré des noms de domaine, ce qui simplifie l'expérience utilisateur."
+        },
+        {
+          "q": "En quelle année NEAR Protocol a-t-il lancé son mainnet ?",
+          "choices": ["2017", "2018", "2020", "2023"],
+          "correctIdx": 2,
+          "explanation": "Le mainnet de NEAR a été lancé en avril 2020 (en mode restreint), avec ouverture progressive aux transferts puis aux smart contracts en septembre 2020."
+        },
+        {
+          "q": "Comment s'appelle le mécanisme de sharding utilisé par NEAR ?",
+          "choices": ["Beacon Chain", "Nightshade", "Hydra", "Lightning"],
+          "correctIdx": 1,
+          "explanation": "Nightshade est l'implémentation propre à NEAR du sharding, qui permet de paralléliser le traitement des transactions sur plusieurs sous-chaînes."
+        },
+        {
+          "q": "Quelle thèse marketing récente NEAR Protocol met-il en avant en 2024-2026 ?",
+          "choices": ["Le memecoin", "User-Owned AI et Chain Abstraction", "Les NFT haut de gamme", "Le minage écologique"],
+          "correctIdx": 1,
+          "explanation": "NEAR se positionne comme la 'blockchain pour l'AI souveraine' (User-Owned AI) et pousse la 'Chain Abstraction' qui permet d'interagir avec Bitcoin/Ethereum sans bridge."
+        },
+        {
+          "q": "Quel est le langage principal des smart contracts NEAR ?",
+          "choices": ["Solidity uniquement", "Rust et AssemblyScript", "Python", "Go"],
+          "correctIdx": 1,
+          "explanation": "Les smart contracts NEAR sont compilés en WebAssembly, principalement écrits en Rust (recommandé) ou JavaScript/TypeScript via AssemblyScript."
+        },
+        {
+          "q": "Quelle entreprise web2 a déployé son SDK pour onboarder ses utilisateurs sur NEAR ?",
+          "choices": ["Aucune", "Plusieurs (ex : Sweat Economy, KAIKAI, Cosmose AI)", "Apple", "Microsoft"],
+          "correctIdx": 1,
+          "explanation": "NEAR vise un onboarding web2-friendly et héberge plusieurs apps grand public à millions d'utilisateurs comme Sweat Economy (move-to-earn) ou Cosmose AI (retail asiatique)."
+        }
+      ]
+    },
+    "arbitrum": {
+      "questions": [
+        {
+          "q": "Quel est le type de blockchain Arbitrum ?",
+          "choices": ["Une Layer 1 indépendante", "Un Layer 2 d'Ethereum (Optimistic Rollup)", "Une sidechain Bitcoin", "Un memecoin"],
+          "correctIdx": 1,
+          "explanation": "Arbitrum est un rollup optimiste : il exécute les transactions hors-chaîne et publie les données sur Ethereum, divisant les frais par 10 à 50 tout en héritant de la sécurité L1."
+        },
+        {
+          "q": "Quelle entreprise développe Arbitrum ?",
+          "choices": ["Consensys", "Offchain Labs", "Polygon Labs", "Optimism Foundation"],
+          "correctIdx": 1,
+          "explanation": "Arbitrum est développé par Offchain Labs, équipe basée à New York fondée par des chercheurs de Princeton."
+        },
+        {
+          "q": "En quelle année le mainnet d'Arbitrum One a-t-il été lancé ?",
+          "choices": ["2019", "2021", "2023", "2025"],
+          "correctIdx": 1,
+          "explanation": "Le mainnet d'Arbitrum One a été ouvert au public en août 2021, suivi par Arbitrum Nova en 2022 et Arbitrum Orbit en 2023."
+        },
+        {
+          "q": "Que désigne précisément un 'Optimistic Rollup' ?",
+          "choices": ["Un rollup qui suppose les transactions valides par défaut, avec une fenêtre de challenge", "Un rollup avec preuves ZK", "Un memecoin", "Un wallet"],
+          "correctIdx": 0,
+          "explanation": "Les Optimistic Rollups assument que les transactions sont valides et permettent à n'importe qui de soumettre une 'fraud proof' pendant 7 jours pour contester un état frauduleux."
+        },
+        {
+          "q": "Comment s'appelle le token de gouvernance d'Arbitrum ?",
+          "choices": ["ARB", "ARBI", "OP", "ETH"],
+          "correctIdx": 0,
+          "explanation": "Le token ARB a été lancé en mars 2023 via un airdrop massif aux utilisateurs early. Il sert à voter dans la DAO, pas à payer le gas (qui se paie en ETH)."
+        },
+        {
+          "q": "Avec quoi paie-t-on les frais de gas sur Arbitrum One ?",
+          "choices": ["ARB", "ETH", "USDC", "MATIC"],
+          "correctIdx": 1,
+          "explanation": "Les frais de gas sur Arbitrum One sont payés en ETH, comme sur Ethereum. Le token ARB sert uniquement à la gouvernance."
+        },
+        {
+          "q": "Que permet Arbitrum Orbit ?",
+          "choices": ["Lancer sa propre chaîne L3 personnalisée settlée sur Arbitrum", "Miner du Bitcoin", "Stocker des NFT", "Trader des actions"],
+          "correctIdx": 0,
+          "explanation": "Orbit est le framework qui permet à des projets de lancer leur propre L3 personnalisée (gas custom, gouvernance, throughput) settlée sur Arbitrum One."
+        },
+        {
+          "q": "Quel airdrop d'ARB a marqué les esprits en mars 2023 ?",
+          "choices": ["Aucun", "Un airdrop d'environ 1,2 milliard d'ARB à plus de 600 000 wallets actifs", "10 USDC à chaque wallet", "Un NFT seulement"],
+          "correctIdx": 1,
+          "explanation": "L'airdrop d'ARB de mars 2023 est l'un des plus médiatisés de l'histoire crypto : ~1,16 milliard d'ARB distribués à plus de 625 000 wallets selon des critères d'activité."
+        }
+      ]
+    }
+  }
+}

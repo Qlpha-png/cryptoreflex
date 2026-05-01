@@ -111,6 +111,24 @@ const TradingViewWidget = dynamic(
 );
 import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
 import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
+import CryptoEventCalendar from "@/components/crypto-detail/CryptoEventCalendar";
+import WhitepaperTldr from "@/components/crypto-detail/WhitepaperTldr";
+import DecentralizationScore from "@/components/crypto-detail/DecentralizationScore";
+// Lazy-load CryptoNewsAggregator (Client + fetch /api/news au mount).
+const CryptoNewsAggregator = dynamic(
+  () => import("@/components/crypto-detail/CryptoNewsAggregator"),
+  { ssr: false },
+);
+// Lazy-load WhaleWatcher (Client + fetch /api/whales, top cryptos seulement).
+const WhaleWatcher = dynamic(
+  () => import("@/components/crypto-detail/WhaleWatcher"),
+  { ssr: false },
+);
+// Lazy-load CryptoQuiz (Client component avec state).
+const CryptoQuiz = dynamic(
+  () => import("@/components/crypto-detail/CryptoQuiz"),
+  { ssr: false },
+);
 // Lazy-load AskAI : Client Component qui fetch /api/me + /api/ask. Pro-only.
 // ssr:false : aucun intérêt à SSR (état dépend du plan user via fetch).
 const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
@@ -133,7 +151,7 @@ import { getRoadmapFor } from "@/lib/crypto-roadmaps";
 /* -------------------------------------------------------------------------- */
 
 export const revalidate = 3600; // 1h — la donnée éditoriale bouge peu, le prix vient de fetchCoinDetail
-// On ne sert QUE les 20 fiches éditoriales (top10 + hidden gems).
+// On ne sert QUE les 100 fiches éditoriales (top10 + 90 hidden gems).
 // Tout autre slug → 404, même si listé dans `lib/programmatic.ts`.
 export const dynamicParams = false;
 
@@ -392,6 +410,15 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
+        {/* WHALE WATCHER — top 8 cryptos seulement, render null sinon */}
+        <div className="mt-8">
+          <WhaleWatcher
+            coingeckoId={c.coingeckoId}
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+          />
+        </div>
+
         {/* MINI-GRAPH 7j / 30j / 1an (P1-2) — Client-fetch /api/historical au mount */}
         <div className="mt-8">
           <PriceChart
@@ -422,6 +449,11 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
+        {/* DECENTRALIZATION SCORE — composite 5 critères, render null si absent */}
+        <div className="mt-12">
+          <DecentralizationScore cryptoId={c.id} cryptoName={c.name} />
+        </div>
+
         {/* DESCRIPTION */}
         <section className="mt-12">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
@@ -438,6 +470,11 @@ export default async function CryptoPage({ params }: Props) {
             </div>
           )}
         </section>
+
+        {/* WHITEPAPER TLDR — synthèse 5 points pour top 30, render null sinon */}
+        <div className="mt-12">
+          <WhitepaperTldr cryptoId={c.id} cryptoName={c.name} />
+        </div>
 
         {/* USE CASE */}
         <section className="mt-12">
@@ -599,12 +636,35 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
+        {/* NEWS AGGREGATOR — 5 dernières news par crypto, fade-up, render null si vide */}
+        <div className="mt-12">
+          <CryptoNewsAggregator
+            coingeckoId={c.coingeckoId}
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+          />
+        </div>
+
         {/* ROADMAP — uniquement si on a des données fiables pour cette crypto */}
         {roadmapEvents && (
           <div className="mt-12">
             <CryptoRoadmap cryptoName={c.name} events={roadmapEvents} />
           </div>
         )}
+
+        {/* CALENDRIER ÉVÉNEMENTS — court-moyen terme (token unlocks, hard forks, ETF) */}
+        <div className="mt-12">
+          <CryptoEventCalendar cryptoId={c.id} cryptoName={c.name} />
+        </div>
+
+        {/* QUIZ — 8 questions par crypto pour top 20, render null sinon */}
+        <div className="mt-12">
+          <CryptoQuiz
+            cryptoId={c.id}
+            cryptoName={c.name}
+            cryptoSymbol={c.symbol}
+          />
+        </div>
 
         {/* CROSS-LINK HALVING (Bitcoin uniquement) */}
         {c.id === "bitcoin" && (

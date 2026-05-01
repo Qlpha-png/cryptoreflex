@@ -1,0 +1,482 @@
+{
+  "lastUpdated": "2026-04-26",
+  "methodology": "Score composite Cryptoreflex sur 5 critères pondérés : Nakamoto coefficient (30%), nb de validateurs/mineurs actifs (25%), diversité géographique des nodes (15%), diversité des clients logiciels (15%), et open source du protocole (15%). Sources publiques : Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub. Vérification trimestrielle.",
+  "scores": {
+    "bitcoin": {
+      "score": 7.4,
+      "breakdown": {
+        "nakamotoCoefficient": 4,
+        "nakamotoScore": 5,
+        "validatorsCount": 18000,
+        "validatorsScore": 9,
+        "geographicDiversity": 95,
+        "geographicScore": 10,
+        "clientDiversity": 3,
+        "clientScore": 7,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Concentration des mining pools (Foundry, AntPool, F2Pool top 3) qui peuvent former >50% du hashrate. Rebalance lent. Les nodes sont en revanche très distribués (~18k atteignables) avec présence dans 100+ pays. Bitcoin Core domine mais Knots et Bcoin existent.",
+      "lastVerified": "2026-04"
+    },
+    "ethereum": {
+      "score": 6.7,
+      "breakdown": {
+        "nakamotoCoefficient": 3,
+        "nakamotoScore": 4,
+        "validatorsCount": 1050000,
+        "validatorsScore": 10,
+        "geographicDiversity": 60,
+        "geographicScore": 9,
+        "clientDiversity": 5,
+        "clientScore": 9,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Fort sur le nb de validateurs (>1M) et la diversité client (Geth, Nethermind, Erigon, Besu, Reth côté EL ; Prysm, Lighthouse, Teku, Nimbus côté CL). Très faible côté Nakamoto staking : Lido + Coinbase + Binance contrôlent ~33% du staked ETH.",
+      "lastVerified": "2026-04"
+    },
+    "bnb": {
+      "score": 3.2,
+      "breakdown": {
+        "nakamotoCoefficient": 7,
+        "nakamotoScore": 6,
+        "validatorsCount": 45,
+        "validatorsScore": 2,
+        "geographicDiversity": 8,
+        "geographicScore": 4,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "BNB Chain (BSC) opère sur ~45 validateurs actifs sélectionnés via PoSA, fortement liés à Binance. Code open-source (fork BSC) mais 1 seul client production. Centralisation gouvernance assumée pour la performance.",
+      "lastVerified": "2026-04"
+    },
+    "xrp": {
+      "score": 3.8,
+      "breakdown": {
+        "nakamotoCoefficient": 6,
+        "nakamotoScore": 5,
+        "validatorsCount": 150,
+        "validatorsScore": 4,
+        "geographicDiversity": 25,
+        "geographicScore": 7,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Le XRP Ledger utilise un consensus UNL (Unique Node List) où Ripple publie une UNL par défaut. ~150 validateurs mais seuls ~35 sont sur l'UNL recommandée. Code open-source (rippled + xrpl-rs) mais le pouvoir éditorial UNL reste critique.",
+      "lastVerified": "2026-04"
+    },
+    "solana": {
+      "score": 6.5,
+      "breakdown": {
+        "nakamotoCoefficient": 20,
+        "nakamotoScore": 8,
+        "validatorsCount": 1500,
+        "validatorsScore": 8,
+        "geographicDiversity": 40,
+        "geographicScore": 8,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Nakamoto coefficient ~20 (au-dessus de BTC et ETH côté validateurs) et 1500+ validateurs actifs. Faiblesse historique : 1 seul client (Solana Labs) jusqu'en 2025 ; arrivée de Firedancer (Jump) améliore la résilience. Coût matériel élevé (filtre l'entrée).",
+      "lastVerified": "2026-04"
+    },
+    "cardano": {
+      "score": 7.2,
+      "breakdown": {
+        "nakamotoCoefficient": 32,
+        "nakamotoScore": 9,
+        "validatorsCount": 3100,
+        "validatorsScore": 8,
+        "geographicDiversity": 50,
+        "geographicScore": 9,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~3100 stake pools actifs, Nakamoto coefficient parmi les meilleurs (~32). Saturation par pool (k-parameter) limite la concentration. Faiblesse : un seul client production (cardano-node) — Amaru en cours de dev pour diversifier.",
+      "lastVerified": "2026-04"
+    },
+    "dogecoin": {
+      "score": 5.8,
+      "breakdown": {
+        "nakamotoCoefficient": 3,
+        "nakamotoScore": 4,
+        "validatorsCount": 1500,
+        "validatorsScore": 6,
+        "geographicDiversity": 40,
+        "geographicScore": 8,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Mining merged avec Litecoin (Scrypt). Concentration forte des pools (top 3 ~ majorité du hashrate). Code Bitcoin-fork maintenu par une petite équipe ; nodes distribués mais un seul client (Dogecoin Core).",
+      "lastVerified": "2026-04"
+    },
+    "tron": {
+      "score": 2.8,
+      "breakdown": {
+        "nakamotoCoefficient": 9,
+        "nakamotoScore": 6,
+        "validatorsCount": 27,
+        "validatorsScore": 1,
+        "geographicDiversity": 5,
+        "geographicScore": 3,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "27 Super Representatives élus, dont une partie historiquement liée à la Tron Foundation. Code open-source (java-tron) mais 1 seul client. Performance privilégiée à la décentralisation.",
+      "lastVerified": "2026-04"
+    },
+    "toncoin": {
+      "score": 4.2,
+      "breakdown": {
+        "nakamotoCoefficient": 8,
+        "nakamotoScore": 6,
+        "validatorsCount": 380,
+        "validatorsScore": 6,
+        "geographicDiversity": 15,
+        "geographicScore": 5,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~380 validateurs actifs sur TON. Stake minimum élevé (300K+ TON) qui limite le pool. 1 seul client production (ton-blockchain). Liens étroits avec l'écosystème Telegram.",
+      "lastVerified": "2026-04"
+    },
+    "avalanche": {
+      "score": 6.8,
+      "breakdown": {
+        "nakamotoCoefficient": 28,
+        "nakamotoScore": 9,
+        "validatorsCount": 1300,
+        "validatorsScore": 7,
+        "geographicDiversity": 35,
+        "geographicScore": 8,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~1300 validateurs sur le P-Chain, stake minimum 2000 AVAX. Nakamoto coefficient ~28 (très bon). Faiblesse : 1 seul client production (AvalancheGo) ; coreth est dérivé.",
+      "lastVerified": "2026-04"
+    },
+    "chainlink": {
+      "score": 5.5,
+      "breakdown": {
+        "nakamotoCoefficient": 5,
+        "nakamotoScore": 5,
+        "validatorsCount": 50,
+        "validatorsScore": 3,
+        "geographicDiversity": 15,
+        "geographicScore": 5,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Réseau d'oracles avec ~50 node operators principaux. Pas de validation au sens consensus L1 — la décentralisation se mesure sur la diversité des oracles d'un feed. CCIP plus centralisé. Code Chainlink core open-source.",
+      "lastVerified": "2026-04"
+    },
+    "polkadot": {
+      "score": 7.6,
+      "breakdown": {
+        "nakamotoCoefficient": 95,
+        "nakamotoScore": 10,
+        "validatorsCount": 600,
+        "validatorsScore": 6,
+        "geographicDiversity": 35,
+        "geographicScore": 8,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~600 validateurs actifs sur le relay chain mais Nakamoto coefficient très élevé (~95) grâce au NPoS qui equalize les nominations. Polkadot-SDK open-source ; Polkadot-JS et Substrate. Gouvernance OpenGov on-chain.",
+      "lastVerified": "2026-04"
+    },
+    "cosmos": {
+      "score": 7.1,
+      "breakdown": {
+        "nakamotoCoefficient": 7,
+        "nakamotoScore": 6,
+        "validatorsCount": 180,
+        "validatorsScore": 6,
+        "geographicDiversity": 30,
+        "geographicScore": 7,
+        "clientDiversity": 3,
+        "clientScore": 7,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Cosmos Hub : 180 validateurs actifs (cap fixe). Nakamoto ~7. Diversité client correcte (cosmos-sdk, gaia, plus quelques forks). Écosystème IBC très ouvert. Concentration top validateurs notable.",
+      "lastVerified": "2026-04"
+    },
+    "polygon": {
+      "score": 4.5,
+      "breakdown": {
+        "nakamotoCoefficient": 4,
+        "nakamotoScore": 5,
+        "validatorsCount": 105,
+        "validatorsScore": 4,
+        "geographicDiversity": 20,
+        "geographicScore": 6,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Polygon PoS : 105 validateurs sur Heimdall/Bor. Top 4 ~33% du stake. Migration vers POL et AggLayer. Sécurité fondamentale héritée d'Ethereum (checkpoints). 1 client client production (heimdall-v2/bor).",
+      "lastVerified": "2026-04"
+    },
+    "litecoin": {
+      "score": 6.5,
+      "breakdown": {
+        "nakamotoCoefficient": 3,
+        "nakamotoScore": 4,
+        "validatorsCount": 1200,
+        "validatorsScore": 6,
+        "geographicDiversity": 50,
+        "geographicScore": 9,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Mineurs Scrypt fortement concentrés (top 3 pools). Nodes distribués (~1200) sur 50+ pays. Litecoin Core dominant, alternative LND/Lit. Code stable depuis 2011.",
+      "lastVerified": "2026-04"
+    },
+    "bitcoin-cash": {
+      "score": 5.6,
+      "breakdown": {
+        "nakamotoCoefficient": 3,
+        "nakamotoScore": 4,
+        "validatorsCount": 800,
+        "validatorsScore": 5,
+        "geographicDiversity": 35,
+        "geographicScore": 8,
+        "clientDiversity": 3,
+        "clientScore": 7,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Hashrate concentré sur quelques pools. ~800 nodes atteignables. 3 implémentations production (Bitcoin Cash Node, BCHD, Knuth). Communauté plus petite que BTC.",
+      "lastVerified": "2026-04"
+    },
+    "near-protocol": {
+      "score": 6.4,
+      "breakdown": {
+        "nakamotoCoefficient": 12,
+        "nakamotoScore": 7,
+        "validatorsCount": 270,
+        "validatorsScore": 6,
+        "geographicDiversity": 25,
+        "geographicScore": 7,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~270 validateurs (cap dynamique via seat price). Nightshade sharding. nearcore comme client principal ; nearcore-rs en dev. Stake minimum élevé filtre l'entrée.",
+      "lastVerified": "2026-04"
+    },
+    "optimism": {
+      "score": 4.0,
+      "breakdown": {
+        "nakamotoCoefficient": 1,
+        "nakamotoScore": 2,
+        "validatorsCount": 1,
+        "validatorsScore": 1,
+        "geographicDiversity": 1,
+        "geographicScore": 2,
+        "clientDiversity": 4,
+        "clientScore": 9,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Sequencer unique opéré par OP Labs (centralisé) — Stage 1 rollup avec sécurité héritée d'Ethereum. Forte diversité côté nodes (op-geth, op-erigon, op-reth, op-nethermind). Roadmap décentralisation des sequencers à venir.",
+      "lastVerified": "2026-04"
+    },
+    "arbitrum": {
+      "score": 4.3,
+      "breakdown": {
+        "nakamotoCoefficient": 1,
+        "nakamotoScore": 2,
+        "validatorsCount": 1,
+        "validatorsScore": 1,
+        "geographicDiversity": 1,
+        "geographicScore": 2,
+        "clientDiversity": 2,
+        "clientScore": 4,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Sequencer unique opéré par Offchain Labs. Stage 1 rollup. BoLD permissionless validation activé en 2025 (validateurs peuvent challenger). Nitro (Geth fork) + Stylus côté client. Sécurité héritée d'Ethereum.",
+      "lastVerified": "2026-04"
+    },
+    "uniswap": {
+      "score": 8.2,
+      "breakdown": {
+        "nakamotoCoefficient": 100,
+        "nakamotoScore": 10,
+        "validatorsCount": 0,
+        "validatorsScore": 8,
+        "geographicDiversity": 80,
+        "geographicScore": 10,
+        "clientDiversity": 1,
+        "clientScore": 5,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Smart contracts Uniswap V2/V3/V4 immutables une fois déployés sur Ethereum — décentralisation héritée d'Ethereum. Front-end et UNI governance plus centralisés (interface gating géographique). Pas de validateur propre.",
+      "lastVerified": "2026-04"
+    },
+    "aave": {
+      "score": 8.0,
+      "breakdown": {
+        "nakamotoCoefficient": 50,
+        "nakamotoScore": 9,
+        "validatorsCount": 0,
+        "validatorsScore": 8,
+        "geographicDiversity": 70,
+        "geographicScore": 10,
+        "clientDiversity": 1,
+        "clientScore": 5,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Protocole sur Ethereum (et déploiements multi-chain). Smart contracts upgradables via gouvernance AAVE on-chain (proposal queue + timelock). Décentralisation héritée des chaînes hôtes.",
+      "lastVerified": "2026-04"
+    },
+    "internet-computer": {
+      "score": 5.5,
+      "breakdown": {
+        "nakamotoCoefficient": 14,
+        "nakamotoScore": 7,
+        "validatorsCount": 130,
+        "validatorsScore": 5,
+        "geographicDiversity": 35,
+        "geographicScore": 8,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "ICP : ~130 node providers vetted par NNS. Subnets de 13-40 nodes. 1 seul client (replica). Forte exigence hardware. Gouvernance via NNS (Network Nervous System).",
+      "lastVerified": "2026-04"
+    },
+    "stellar": {
+      "score": 4.4,
+      "breakdown": {
+        "nakamotoCoefficient": 4,
+        "nakamotoScore": 5,
+        "validatorsCount": 80,
+        "validatorsScore": 4,
+        "geographicDiversity": 20,
+        "geographicScore": 6,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "SCP (Stellar Consensus Protocol) avec ~80 validateurs publics dont quelques quorum slices critiques (SDF, Lobstr, COINQVEST). 1 client (Stellar Core). Moins permissionless que PoW/PoS.",
+      "lastVerified": "2026-04"
+    },
+    "hedera": {
+      "score": 2.5,
+      "breakdown": {
+        "nakamotoCoefficient": 5,
+        "nakamotoScore": 5,
+        "validatorsCount": 32,
+        "validatorsScore": 1,
+        "geographicDiversity": 12,
+        "geographicScore": 5,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": false,
+        "openSourceScore": 0
+      },
+      "notes": "Conseil de gouvernance Hedera : ~32 nodes opérés par membres pré-sélectionnés (Google, IBM, Boeing…). Permissionless layer en cours. Code des nodes principaux pas totalement open-source. Hashgraph breveté.",
+      "lastVerified": "2026-04"
+    },
+    "filecoin": {
+      "score": 7.0,
+      "breakdown": {
+        "nakamotoCoefficient": 18,
+        "nakamotoScore": 8,
+        "validatorsCount": 3700,
+        "validatorsScore": 9,
+        "geographicDiversity": 40,
+        "geographicScore": 8,
+        "clientDiversity": 3,
+        "clientScore": 7,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~3700 storage providers actifs. Diversité client correcte (Lotus, Venus, Forest). Concentration sur quelques régions (Chine, US). Mécanisme PoSt + PoRep filtre l'entrée par capex.",
+      "lastVerified": "2026-04"
+    },
+    "injective": {
+      "score": 5.0,
+      "breakdown": {
+        "nakamotoCoefficient": 7,
+        "nakamotoScore": 6,
+        "validatorsCount": 60,
+        "validatorsScore": 4,
+        "geographicDiversity": 18,
+        "geographicScore": 6,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "Cosmos-SDK chain avec 60 validateurs actifs (cap). Top 7 contrôlent ~33%. Code injective-core open-source mais 1 seul client. Forte présence du team comme bonded.",
+      "lastVerified": "2026-04"
+    },
+    "sui": {
+      "score": 5.4,
+      "breakdown": {
+        "nakamotoCoefficient": 17,
+        "nakamotoScore": 8,
+        "validatorsCount": 110,
+        "validatorsScore": 5,
+        "geographicDiversity": 20,
+        "geographicScore": 6,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~110 validateurs actifs sur Sui (cap dynamique). Nakamoto ~17. 1 seul client production (sui-node). Stake minimum très élevé (30M SUI) filtre fortement l'entrée. Mysten Labs majoritaire sur dev.",
+      "lastVerified": "2026-04"
+    },
+    "aptos": {
+      "score": 5.2,
+      "breakdown": {
+        "nakamotoCoefficient": 15,
+        "nakamotoScore": 7,
+        "validatorsCount": 150,
+        "validatorsScore": 5,
+        "geographicDiversity": 22,
+        "geographicScore": 6,
+        "clientDiversity": 1,
+        "clientScore": 2,
+        "openSource": true,
+        "openSourceScore": 10
+      },
+      "notes": "~150 validateurs actifs. AptosBFT. 1 seul client (aptos-core). Stake minimum élevé (1M APT). Aptos Labs majoritaire sur dev. Tokenomics initiale concentrée chez insiders.",
+      "lastVerified": "2026-04"
+    }
+  }
+}

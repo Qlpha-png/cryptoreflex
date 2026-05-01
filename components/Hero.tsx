@@ -119,30 +119,50 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         <div className="mt-6 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
-            {/* H1 SEO — keyword "comparatif" + "2026" + différenciation
-                "sans te faire avoir" en gradient gold. Audit Block 1 RE-AUDIT
-                (Agents SEO + content + conversion) : H1 actuel sans keyword
-                principal = pénalité ranking vs Hellosafe/Cryptoast. */}
+            {/* H1 — refonte 01/05/2026 : ne se présente plus juste comme un
+                "comparateur plateformes", mais comme la PLATEFORME ÉDITORIALE
+                & TECHNIQUE crypto FR (100 fiches, simulateurs, on-chain live,
+                IA, comparateur, fiscalité, alertes). Garde le keyword "crypto
+                France 2026" pour SEO mais en H1-friendly. */}
             <h1 className="ds-h1 leading-[1.05]">
-              Comparatif des meilleures plateformes crypto en France 2026,
+              Tout pour investir <span className="hero-headline-accent">en crypto</span>
               <br className="hidden lg:inline" />{" "}
-              <span className="hero-headline-accent">
-                sans te faire avoir.
-              </span>
+              <span className="text-fg">en France, sans te faire avoir.</span>
             </h1>
 
-            {/* Sous-titre concret — ≤ 25 mots. Audit Block 1 RE-AUDIT
-                (Agent content) : "5 minutes" remplacé par "2 minutes" pour
-                cohérence avec le CTA primary "Trouver ma plateforme en 2 min".
-                "Conformité MiCA" gardé (différenciateur réglementaire FR 2026). */}
+            {/* Sous-titre — promet l'étendue concrète : analyse + outils +
+                régulation + IA. Pas juste un comparateur. */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              On a sélectionné{" "}
               <strong className="text-fg font-semibold">
-                {STATS.platforms} marques fiables régulées en Europe
+                {STATS.cryptos} cryptos analysées
               </strong>{" "}
-              (exchanges, brokers, hardware wallets, fiscalité) sur ce qui compte vraiment :
-              frais réels, sécurité, support FR, conformité MiCA. Choisis la tienne en 2 minutes.
+              (score fiabilité, on-chain live, roadmap, audits),{" "}
+              <strong className="text-fg font-semibold">{STATS.platforms} plateformes
+              régulées MiCA</strong> comparées sur frais & sécurité,{" "}
+              <strong className="text-fg font-semibold">{STATS.tools}+ outils gratuits</strong>{" "}
+              (fiscalité PFU, simulateur DCA, calculateur ROI, IA Q&A par fiche).
+              Méthodologie publique, sans bullshit.
             </p>
+
+            {/* Bandeau capacités dynamiques — affiche en chips animées les
+                4 promesses concrètes. Donne immédiatement l'impression "outil
+                technique" plutôt que "blog comparateur". */}
+            <ul className="mt-5 flex flex-wrap gap-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
+              {[
+                { label: "Prix live", dot: "bg-accent-green animate-pulse" },
+                { label: "On-chain TVL/holders", dot: "bg-primary" },
+                { label: "Score fiabilité 0-10", dot: "bg-amber-400" },
+                { label: "IA Q&A par fiche", dot: "bg-primary-glow" },
+              ].map((chip) => (
+                <li
+                  key={chip.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-2.5 py-1 text-[11px] font-semibold text-fg/85"
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${chip.dot}`} aria-hidden />
+                  {chip.label}
+                </li>
+              ))}
+            </ul>
 
             {/* CTAs — 1 primary fort + 1 secondaire newsletter.
                 Audit Block 1 RE-AUDIT (5 agents convergents) : ancres `#plateformes`

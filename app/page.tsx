@@ -56,14 +56,14 @@ export const metadata: Metadata = {
   // utilisait le `default` du root layout (« Cryptoreflex — Comparatifs,
   // guides et outils crypto », 51 chars, aucun keyword "France" ni "MiCA").
   // Maintenant : title explicite ciblé sur la requête principale.
-  title: "Comparatif plateformes crypto France 2026 — Cryptoreflex",
+  title: "Crypto France 2026 — 100 cryptos analysées, plateformes MiCA, outils & IA",
   description:
-    "Comparateur crypto FR : Coinbase, Binance, Bitpanda, Kraken… Frais, sécurité, MiCA. Guides débutants, calculateurs gratuits, fiscalité française.",
+    "Plateforme éditoriale et technique crypto FR : 100 cryptos avec score fiabilité, on-chain live et roadmap, comparateur d'exchanges régulés MiCA, simulateurs (DCA, ROI, fiscalité PFU), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique.",
   alternates: { canonical: BRAND.url },
   openGraph: {
     url: BRAND.url,
     description:
-      "Compare les meilleures plateformes crypto régulées MiCA en France. Guides débutants, calculateurs frais/fiscalité, alertes prix gratuites.",
+      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 14 plateformes MiCA comparées, 6+ outils gratuits (DCA, ROI, fiscalité PFU), IA Q&A par fiche. Méthodologie publique.",
   },
 };
 

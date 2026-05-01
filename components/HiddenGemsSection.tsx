@@ -35,14 +35,17 @@ interface HiddenGem {
 }
 
 /**
- * "10 hidden gems" — cryptos moins connues mais avec fondamentaux solides.
+ * Hidden gems — cryptos moins connues mais avec fondamentaux solides.
+ * On affiche les 10 premières (les autres sont sur /cryptos avec filtre).
  *
  * IMPORTANT — disclaimer affiché : ce n'est PAS un conseil en investissement.
  * Chaque carte affiche un score de fiabilité 0-10 calculé sur :
  * équipe identifiée + open source + audits + années d'activité + incidents.
  */
 export default function HiddenGemsSection() {
-  const gems = hiddenGemsData.hiddenGems as HiddenGem[];
+  // 90 hidden gems en JSON, on n'affiche que les 10 premières en home —
+  // le reste est dans /cryptos avec filtre "Hidden Gems" (90 fiches au total).
+  const gems = (hiddenGemsData.hiddenGems as HiddenGem[]).slice(0, 10);
 
   return (
     <section id="hidden-gems" className="py-12 sm:py-20 bg-surface/30">
@@ -53,12 +56,14 @@ export default function HiddenGemsSection() {
             Pépites cachées
           </span>
           <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-            10 cryptos prometteuses, <span className="gradient-text">moins connues</span>
+            10 pépites du moment, <span className="gradient-text">analysées en profondeur</span>
           </h2>
           <p className="mt-2 text-muted text-sm max-w-2xl leading-relaxed">
-            Notre sélection de projets crypto avec fondamentaux solides : équipe identifiée,
+            Sélection de projets crypto avec fondamentaux solides : équipe identifiée,
             audit récent, code open-source, sans scandale majeur. Chaque carte affiche un score
-            de fiabilité calculé selon une méthode publique.
+            de fiabilité 0-10 calculé sur méthodologie publique.{" "}
+            <strong className="text-fg">90 fiches Hidden Gems au total</strong> dans{" "}
+            <a href="/cryptos?filter=hidden-gem" className="text-primary-soft underline hover:text-primary">/cryptos</a>.
           </p>
         </div>
 
