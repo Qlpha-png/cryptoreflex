@@ -155,6 +155,45 @@ const nextConfig = {
         destination: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
         permanent: true,
       },
+      // ────────────────────────────────────────────────────────────────
+      // Audit 404 user 2026-05-02 — chasse aux liens cassés trouvés par
+      // crawl exhaustif des entry points (5 URLs uniques, 21 occurrences
+      // hors footer). On 301 vers la page existante la plus proche pour
+      // préserver le link juice + ne plus casser la navigation visiteur.
+      // ────────────────────────────────────────────────────────────────
+      // /outils/waltio + /outils/koinly — référencés 14× dans les MDX
+      // `acheter-*-france-2026-guide` (template CTA "outil fiscalité"). On
+      // n'a pas de fiche produit dédiée à chaque outil ; on redirige vers
+      // notre comparatif Waltio vs Koinly vs Accointing qui couvre les 2.
+      {
+        source: "/outils/waltio",
+        destination: "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026",
+        permanent: true,
+      },
+      {
+        source: "/outils/koinly",
+        destination: "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026",
+        permanent: true,
+      },
+      // /portefeuille/configurer-cold-wallet — référencé 7× dans les MDX
+      // `acheter-*` mais le guide n'a jamais été publié sous ce slug. On
+      // redirige vers les 2 guides existants qui couvrent le sujet
+      // (sécurisation + 2FA + cold storage). Choix : un seul article
+      // canonique pour ne pas léguer un soft-404 sur la branche cold.
+      {
+        source: "/portefeuille/configurer-cold-wallet",
+        destination: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026",
+        permanent: true,
+      },
+      // /wizard (sans suffixe) — référencé 1× depuis /wizard/premier-achat
+      // (breadcrumb parent). Le wizard n'a qu'un parcours actuellement, on
+      // redirige vers le seul existant.
+      {
+        source: "/wizard",
+        destination: "/wizard/premier-achat",
+        permanent: false, // 307 — si on ajoute d'autres wizards, ce path deviendra un hub
+      },
+
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.

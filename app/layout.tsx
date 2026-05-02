@@ -261,9 +261,13 @@ export default function RootLayout({
     >
       <head>
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
-            preconnect aux 2 CDN tiers utilises above-fold => -100ms LCP.
-            CoinGecko = logos crypto + prix live ; Plausible = analytics. */}
+            preconnect aux CDN tiers utilises above-fold => -100ms LCP.
+            CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)
+            et coin-images.coingecko.com (logos modernes). Plausible = analytics.
+            Audit Perf 2026-05-02 #5 : ajout du 2e CDN CoinGecko (oublie initial,
+            la majorite des logos sont sur coin-images, ~31 imgs sur la home). */}
         <link rel="preconnect" href="https://assets.coingecko.com" crossOrigin="" />
+        <link rel="preconnect" href="https://coin-images.coingecko.com" crossOrigin="" />
         <link rel="preconnect" href="https://plausible.io" crossOrigin="" />
       </head>
       <body className="min-h-screen flex flex-col antialiased font-sans">

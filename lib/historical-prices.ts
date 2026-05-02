@@ -228,7 +228,86 @@ const CG_TO_CC: Record<string, string> = {
   "injective-protocol": "INJ",
   celestia: "TIA",
   starknet: "STRK",
+
+  // FIX 2026-05-02 #3 — extension catalogue éditorial complet (60 nouveaux
+  // coins). Validés via CC `/data/all/coinlist?summary=true` : 36/37
+  // présents, 1 fallback (FXS→FRAX, FXS pas listé sur CC).
+  // L1/L2 supplémentaires
+  kaspa: "KAS",
+  "sei-network": "SEI",
+  "mina-protocol": "MINA",
+  "the-graph": "GRT",
+  "render-token": "RNDR",
+  bittensor: "TAO",
+  arweave: "AR",
+  hyperliquid: "HYPE",
+  "story-2": "IP",
+  "beam-2": "BEAM",
+  // Stablecoins / tokens centralisés
+  dai: "DAI",
+  okb: "OKB",
+  "crypto-com-chain": "CRO",
+  "kucoin-shares": "KCS",
+  // DeFi
+  "compound-governance-token": "COMP",
+  "convex-finance": "CVX",
+  "curve-dao-token": "CRV",
+  "frax-share": "FRAX", // FXS pas listé sur CC, fallback sur le stablecoin parent
+  havven: "SNX", // legacy CG id pour Synthetix
+  pendle: "PENDLE",
+  "rocket-pool": "RPL",
+  "1inch": "1INCH",
+  ethena: "ENA",
+  eigenlayer: "EIGEN",
+  "aerodrome-finance": "AERO",
+  gmx: "GMX",
+  "dydx-chain": "DYDX",
+  raydium: "RAY",
+  "jupiter-exchange-solana": "JUP",
+  // Oracles / Data
+  "pyth-network": "PYTH",
+  "band-protocol": "BAND",
+  api3: "API3",
+  "ondo-finance": "ONDO",
+  // DePIN / Compute / IA
+  "akash-network": "AKT",
+  "io-net": "IO",
+  helium: "HNT",
+  aethir: "ATH",
+  "fetch-ai": "FET",
+  "ocean-protocol": "OCEAN",
+  livepeer: "LPT",
+  storj: "STORJ",
+  hivemapper: "HONEY",
+  grass: "GRASS",
+  "power-ledger": "POWR",
+  "energy-web-token": "EWT",
+  // Privacy / autres
+  zcash: "ZEC",
+  dash: "DASH",
+  secret: "SCRT",
+  "worldcoin-wld": "WLD",
+  "mantra-dao": "OM",
+  polymesh: "POLYX",
+  "virtual-protocol": "VIRTUAL",
+  // Memecoins
+  bonk: "BONK",
+  floki: "FLOKI",
+  // Gaming / Metaverse / NFT
+  "the-sandbox": "SAND",
+  decentraland: "MANA",
+  "axie-infinity": "AXS",
+  gala: "GALA",
+  "theta-token": "THETA",
+  "immutable-x": "IMX",
 };
+
+/**
+ * Set des coingeckoIds servables par CryptoCompare. Exporté pour que la
+ * route `/api/historical` dérive sa whitelist directement depuis ce mapping
+ * (élimine le risque de désynchro entre le mapping et la whitelist).
+ */
+export const HISTORICAL_SUPPORTED_IDS = new Set<string>(Object.keys(CG_TO_CC));
 
 /**
  * Fetch CryptoCompare `histoday` — jusqu'à 2000 jours (5.5 ans) en un seul
@@ -419,13 +498,15 @@ async function _fetchFromCoinGecko(
  *  - v2-cgkey (2026-05-02 #1) : tentait de fixer via clé Demo CoinGecko →
  *    échec, clé Demo plafonne aussi à 365j, datasets restaient amputés.
  *  - v3-cc (2026-05-02 #2) : SWITCH source primaire vers CryptoCompare
- *    (5.5 ans gratuit, validé sur les 41 coins mappés). Bumper la version
- *    INVALIDE toutes les entrées v2 (qui contenaient toujours du 365j max).
- *    Effet : 1ère visite ROISimulator post-deploy = re-fetch CC frais.
+ *    (5.5 ans gratuit, validé sur les 41 coins mappés).
+ *  - v4-mapfix (2026-05-02 #3) : extension du mapping CG_TO_CC à 100 coins
+ *    (vs 41 avant) après audit user "barre cassée sur la moitié des fiches".
+ *    Bump invalide les datasets vides cachés sous v3 quand CC subissait
+ *    rate-limit lors des 1ers fetchs des 8 coins ARB/DOT/ATOM/SUI/etc.
  */
 export const fetchHistoricalPrices = unstable_cache(
   _fetchHistoricalPrices,
-  ["coingecko-historical-v3-cc"],
+  ["coingecko-historical-v4-mapfix"],
   { revalidate: 3600, tags: ["coingecko-historical"] }
 );
 

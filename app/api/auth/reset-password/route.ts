@@ -68,28 +68,28 @@ export async function POST(req: NextRequest) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
 
-  // STEP 1 : verifie si user existe (sinon on repond pareil mais on n'envoie rien)
-  // P1 FIX (audit backend 30/04/2026) — N+1 sur chaque reset, voir login/route.ts.
-  const { data: publicUser } = await admin
-    .from("users")
-    .select("id, email")
-    .ilike("email", email)
-    .maybeSingle();
-  const existingUser = publicUser ? { email: publicUser.email } : null;
+  // FIX 2026-05-02 #BUG-FORGOT-PWD (audit user — collègue ne reçoit pas
+  // l'email) :
+  // ANCIEN comportement : pré-check `public.users` puis no-op si absent.
+  // Problème : les utilisateurs créés directement dans `auth.users` (Supabase
+  // Studio, signup avant la migration trigger, lignes orphelines) n'avaient
+  // PAS de ligne dans `public.users` → `existingUser=null` → email JAMAIS
+  // envoyé alors que le compte EXISTE bel et bien dans Supabase Auth. Le
+  // collègue tombait pile sur ce cas (compte ancien créé avant le trigger
+  // `on_auth_user_created`).
+  // NOUVEAU : on délègue la vérification d'existence à `generateLink` qui
+  // interroge `auth.users` (source de vérité) ; en cas d'erreur "User not
+  // found" on garde la réponse uniforme (anti-enumeration). Bénéfice annexe :
+  // une requête DB en moins par reset (élimine le N+1).
 
-  // Reponse uniforme pour eviter user enumeration
+  // Réponse uniforme anti-enumeration (toujours 200, même message, peu importe
+  // si le compte existe ou non).
   const uniformResponse = NextResponse.json({
     ok: true,
     message: "Si ce compte existe, un email de réinitialisation a été envoyé.",
   });
 
-  if (!existingUser) {
-    // Pas de user → on log mais on repond pareil (anti-enumeration)
-    console.log(`[auth/reset-password] Email inconnu : ${email} (no-op)`);
-    return uniformResponse;
-  }
-
-  // STEP 2 : genere le recovery link → recupere hashed_token (cf /api/auth/login
+  // STEP 1 : genere le recovery link → recupere hashed_token (cf /api/auth/login
   // pour explication : action_link supabase verify utilise hash fragment illisible
   // serveur, donc on construit notre URL avec token_hash + verifyOtp dans le callback)
   const { data: linkData, error: linkError } =
@@ -102,7 +102,21 @@ export async function POST(req: NextRequest) {
     });
 
   if (linkError || !linkData?.properties?.hashed_token) {
-    console.error("[auth/reset-password] generateLink error:", linkError?.message);
+    // Cas "email inconnu" : Supabase renvoie un message du type "User not
+    // found" / "user_not_found" — c'est attendu, on retourne uniforme sans
+    // bruiter les logs. Pour les vraies erreurs (timeout, 500, quota…) on
+    // log pour pouvoir investiguer.
+    const msg = (linkError?.message ?? "").toLowerCase();
+    const isUserNotFound =
+      msg.includes("not found") || msg.includes("user_not_found");
+    if (!isUserNotFound) {
+      console.error(
+        "[auth/reset-password] generateLink error:",
+        linkError?.message,
+      );
+    } else {
+      console.log(`[auth/reset-password] Email inconnu : ${email} (no-op)`);
+    }
     return uniformResponse;
   }
 
