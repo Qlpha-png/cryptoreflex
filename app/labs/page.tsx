@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Sparkles, MousePointer2, Magnet, Layers3, ScrollText, Wand2, Award } from "lucide-react";
+import { Sparkles, MousePointer2, Magnet, Layers3, ScrollText, Wand2, Award, Zap, Info } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import MagneticCta from "@/components/ui/MagneticCta";
 import TiltCard from "@/components/ui/TiltCard";
 import LiveDot from "@/components/ui/LiveDot";
+import PopoverTooltip from "@/components/ui/PopoverTooltip";
 
 /**
  * /labs — Showcase interne des prouesses dynamiques (audit dynamisme
@@ -205,6 +206,84 @@ export default function LabsPage() {
             </p>
             <p className="mt-3 text-sm text-muted">
               Le gradient shift entre #f5a524 et #ffd166 toutes les 8s.
+            </p>
+          </div>
+        </Section>
+
+        {/* 8. Speculation Rules + View Transitions (natif Chrome 121+) */}
+        <Section
+          n={8}
+          icon={Zap}
+          title="Speculation Rules + View Transitions"
+          stack="Chrome 121+ natif (script type=speculationrules) + @view-transition CSS"
+          desc="Le navigateur prerender les hubs principaux ET les liens survolés 200ms (intent-based). Au clic, la nouvelle page apparait INSTANTANÉMENT (~0ms LCP). Combiné avec les View Transitions, transition fade+slide cross-document fluide. Sensation native app."
+        >
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              { href: "/comparatif", title: "Comparatif", body: "30+ plateformes — prerendered" },
+              { href: "/avis", title: "Avis détaillés", body: "34 plateformes auditées" },
+              { href: "/outils", title: "Outils gratuits", body: "26 outils crypto FR" },
+            ].map((c) => (
+              <Link
+                key={c.href}
+                href={c.href}
+                className="hover-lift block rounded-2xl border border-border bg-elevated/40 p-5"
+              >
+                <div className="text-[10px] uppercase tracking-wider text-success font-bold">
+                  Pré-rendu (hover 200ms)
+                </div>
+                <div className="mt-1 text-base font-bold text-fg">{c.title}</div>
+                <div className="mt-1 text-xs text-fg/70">{c.body}</div>
+                <div className="mt-3 text-[10px] text-muted">↑ Clique pour test instantané</div>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-muted text-center">
+            Chrome/Edge 121+ : prerender automatique. Safari/Firefox : fallback navigation classique.
+          </p>
+        </Section>
+
+        {/* 9. Popover API natif */}
+        <Section
+          n={9}
+          icon={Info}
+          title="Popover API natif"
+          stack="HTML popover='auto' + popovertarget (Chrome 114+ / Safari 17+ / Firefox 125+)"
+          desc="Tooltips natifs zéro JS — focus trap, light dismiss, Esc, top-layer gérés par le navigateur. Vire Radix Tooltip = -15kb bundle. a11y impeccable via aria-describedby. Anchor positioning auto si Chrome 125+."
+        >
+          <div className="space-y-4 max-w-2xl">
+            <p className="text-sm text-fg/80 leading-relaxed">
+              Le règlement{" "}
+              <PopoverTooltip
+                label="MiCA"
+                content="Markets in Crypto-Assets : règlement européen entré en vigueur en juin 2024 qui harmonise la régulation des prestataires crypto (PSAN/CASP) à l'échelle UE. Toute plateforme servant l'UE doit obtenir un agrément CASP."
+              >
+                <span className="underline decoration-dotted text-primary-soft cursor-help">
+                  MiCA
+                </span>
+              </PopoverTooltip>{" "}
+              encadre désormais les{" "}
+              <PopoverTooltip
+                label="PSAN"
+                content="Prestataire de Services sur Actifs Numériques — statut français créé par la loi PACTE 2019. Remplacé progressivement par le statut européen CASP en 2026."
+              >
+                <span className="underline decoration-dotted text-primary-soft cursor-help">
+                  PSAN
+                </span>
+              </PopoverTooltip>{" "}
+              et impose un{" "}
+              <PopoverTooltip
+                label="Spread"
+                content="Différence entre le prix d'achat (ask) et le prix de vente (bid) d'un actif. Plus le spread est élevé, plus l'investisseur paie cher pour entrer/sortir d'une position."
+              >
+                <span className="underline decoration-dotted text-primary-soft cursor-help">
+                  spread
+                </span>
+              </PopoverTooltip>{" "}
+              transparent.
+            </p>
+            <p className="text-xs text-muted">
+              ↑ Clique sur les mots soulignés pour voir le tooltip natif. Esc ou click outside pour fermer.
             </p>
           </div>
         </Section>

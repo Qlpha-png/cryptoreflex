@@ -13,6 +13,7 @@ import ClarityScript from "@/components/ClarityScript";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
+import SpeculationRules from "@/components/SpeculationRules";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -273,6 +274,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://assets.coingecko.com" crossOrigin="" />
         <link rel="preconnect" href="https://coin-images.coingecko.com" crossOrigin="" />
         <link rel="preconnect" href="https://plausible.io" crossOrigin="" />
+        {/* INNOVATION 2026 BATCH 12 — Speculation Rules API natif Chrome 121+/
+            Edge 121+. Prerender les hubs principaux + intent-based hover
+            prerender sur tous les liens internes. Combiné avec View
+            Transitions (déjà actif via @view-transition navigation:auto)
+            pour une expérience native-app. Fallback gracieux Safari/Firefox. */}
+        <SpeculationRules />
       </head>
       <body className="min-h-screen flex flex-col antialiased font-sans">
         {/*
