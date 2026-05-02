@@ -4,6 +4,7 @@ import { Briefcase, Lock, ShieldCheck } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import PortfolioView from "@/components/PortfolioView";
 import StructuredData from "@/components/StructuredData";
+import ExchangeConnect from "@/components/ExchangeConnect";
 
 /**
  * /portefeuille — page Client (les positions vivent en localStorage), wrappée
@@ -87,6 +88,13 @@ export default function PortefeuillePage() {
 
         {/* Vue client : positions + prix live + dialogs */}
         <PortfolioView />
+
+        {/* Sync API exchange (étude #4 — V1 Binance read-only) — placé sous
+            la vue principale pour ne pas distraire les users qui veulent juste
+            ajouter une position manuelle. */}
+        <div className="mt-8">
+          <ExchangeConnect />
+        </div>
 
         {/* Aide pédagogique en bas */}
         <footer className="mt-12 border-t border-border/60 pt-6 space-y-3 text-[12px] text-muted leading-relaxed">

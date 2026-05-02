@@ -254,10 +254,22 @@ body {
   /*
    * Texte gradient gold — highlights premium (h1, h2 marketing).
    */
+  /* FIX 2026-05-02 audit user — bug visuel "portefeuille crypto" invisible.
+   * Cause : `bg-clip-text + text-transparent` rendait le texte INVISIBLE sur
+   * certains navigateurs/contextes (extension, dark reader, prefers-contrast,
+   * mobiles low-end) où background-clip:text n'est pas appliqué correctement.
+   * Le texte restait alors transparent sans fallback.
+   * Fix : couleur `--primary` solide systématique en fallback ; le gradient
+   * n'override que si `background-clip: text` est SUPPORTÉ (@supports). */
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary-soft to-primary-glow;
-    background-size: 200% auto;
-    will-change: background-position;
+    color: var(--primary);
+  }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient-gold {
+      @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary-soft to-primary-glow;
+      background-size: 200% auto;
+      will-change: background-position;
+    }
   }
   .text-gradient-gold-animate {
     @apply text-gradient-gold;
