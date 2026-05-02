@@ -103,7 +103,7 @@
     {
       "id": "binance",
       "name": "Binance",
-      "logo": "/logos/binance.svg",
+      "logo": "/logos/binance.png",
       "tagline": "Pour qui c'est : traders cherchant le plus large catalogue crypto au monde",
       "websiteUrl": "https://binance.com",
       "affiliateUrl": "https://www.binance.com/register?ref=CRYPTOREFLEX",
@@ -196,7 +196,7 @@
     {
       "id": "bitpanda",
       "name": "Bitpanda",
-      "logo": "/logos/bitpanda.svg",
+      "logo": "/logos/bitpanda.png",
       "tagline": "Pour qui c'est : Européens cherchant un broker tout-en-un (crypto, actions, métaux)",
       "websiteUrl": "https://bitpanda.com",
       "affiliateUrl": "https://www.bitpanda.com/?ref=146755795768201190",
@@ -476,7 +476,7 @@
     {
       "id": "trade-republic",
       "name": "Trade Republic",
-      "logo": "/logos/trade-republic.svg",
+      "logo": "/logos/trade-republic.png",
       "tagline": "Pour qui c'est : investisseurs long terme voulant crypto + actions + ETF",
       "websiteUrl": "https://traderepublic.com",
       "affiliateUrl": "https://refnocode.trade.re/cc7ffrbj",
@@ -733,7 +733,7 @@
     {
       "id": "swissborg",
       "name": "SwissBorg",
-      "logo": "/logos/swissborg.svg",
+      "logo": "/logos/swissborg.png",
       "tagline": "Pour qui c'est : européens cherchant best execution et yield programs",
       "websiteUrl": "https://swissborg.com",
       "affiliateUrl": "https://swissborg.com?utm_source=cryptoreflex",
@@ -915,7 +915,7 @@
     {
       "id": "revolut",
       "name": "Revolut",
-      "logo": "/logos/revolut.svg",
+      "logo": "/logos/revolut.png",
       "tagline": "Pour qui c'est : utilisateurs de néobanque voulant acheter du crypto en 2 clics dans leur app du quotidien",
       "websiteUrl": "https://www.revolut.com",
       "affiliateUrl": "https://www.revolut.com?utm_source=cryptoreflex",
