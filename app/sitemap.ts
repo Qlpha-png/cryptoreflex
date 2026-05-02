@@ -16,6 +16,7 @@ import { getAllNewsSummaries } from "@/lib/news-mdx";
 import { getAllTASummaries } from "@/lib/ta-mdx";
 import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
+import { getAllPlatforms } from "@/lib/platforms";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -129,6 +130,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // (historique-prix x 240 URLs prebuild, alternative-a x 34 URLs).
     { url: `${SITE_URL}/pro-plus`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${SITE_URL}/pack-declaration-crypto-2026`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    // FIX 2026-05-02 #21+22 (audit 9 experts, BATCH 7+8+9) — innovation features
+    // landings (waitlist) + WOW landings + Conditions Générales d'Utilisation.
+    { url: `${SITE_URL}/outils/whale-radar`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/phishing-checker`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+    { url: `${SITE_URL}/outils/allocator-ia`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+    { url: `${SITE_URL}/outils/gas-tracker-fr`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/export-expert-comptable`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE_URL}/outils/crypto-license`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/succession-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/dca-lab`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/cgu`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car
@@ -237,6 +249,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   /* ----------------------------------------------------------------
+   * 3quater. Programmatic SEO BATCH 7 (audit 9 experts 2026-05-02) :
+   *          /alternative-a/[plateforme]   → 1 URL/plateforme
+   *          /historique-prix/[crypto]/[annee] → top 30 cryptos × 8 années
+   * ---------------------------------------------------------------- */
+  const alternativeRoutes: MetadataRoute.Sitemap = getAllPlatforms().map((p) => ({
+    url: `${SITE_URL}/alternative-a/${p.id}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // 30 cryptos × 8 années = 240 URLs prebuild ; le reste en ISR on-demand.
+  const HIST_TOP_30 = [
+    "bitcoin", "ethereum", "binancecoin", "ripple", "solana",
+    "cardano", "dogecoin", "tron", "avalanche-2", "chainlink",
+    "polkadot", "matic-network", "litecoin", "shiba-inu", "uniswap",
+    "near", "internet-computer", "cosmos", "stellar", "bitcoin-cash",
+    "filecoin", "aptos", "monero", "the-open-network", "tezos",
+    "algorand", "hedera-hashgraph", "ethereum-classic", "aave", "maker",
+  ];
+  const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+  const historiquePrixRoutes: MetadataRoute.Sitemap = HIST_TOP_30.flatMap((crypto) =>
+    HIST_YEARS.map((annee) => ({
+      url: `${SITE_URL}/historique-prix/${crypto}/${annee}`,
+      lastModified: now,
+      changeFrequency: "yearly" as const,
+      priority: 0.55,
+    })),
+  );
+
+  /* ----------------------------------------------------------------
    * 4. Pages convertisseur SEO programmatic (top 30 pairs)
    * ---------------------------------------------------------------- */
   const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) => ({
@@ -297,6 +340,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cryptoComparisonRoutes,
     ...comparerPairRoutes,
     ...acheterRoutes,
+    ...alternativeRoutes,
+    ...historiquePrixRoutes,
     ...converterPairRoutes,
     ...newsRoutes,
     ...taRoutes,
