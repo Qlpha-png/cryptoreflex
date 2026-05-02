@@ -109,6 +109,11 @@ export default function ROISimulator({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"unsupported" | "fetch" | null>(null);
   const [clamped, setClamped] = useState(false);
+  // FIX 2026-05-02 #2 — borne haute du slider date = premier timestamp pour
+  // lequel on a un prix réel. Évite que le user demande "mai 2021" sur un coin
+  // listé en 2024 → simulateur prenait le prix 2024 comme "prix 2021" → ROI
+  // faux. Quand le coin a un historique long (BTC/ETH/...), reste = START_FLOOR.
+  const [firstAvailableTs, setFirstAvailableTs] = useState<number | null>(null);
 
   // Debounce token pour éviter les recalculs lourds à chaque pixel sur slider.
   const [debouncedAmount, setDebouncedAmount] = useState<number>(amount);
@@ -135,10 +140,16 @@ export default function ROISimulator({
         const data = (await r.json()) as {
           points: HistoricalPoint[];
           clamped?: boolean;
+          firstAvailableTimestamp?: number | null;
         };
         if (cancelled) return;
         setPoints(Array.isArray(data.points) ? data.points : []);
         setClamped(Boolean(data.clamped));
+        setFirstAvailableTs(
+          typeof data.firstAvailableTimestamp === "number"
+            ? data.firstAvailableTimestamp
+            : null,
+        );
       })
       .catch(() => {
         if (cancelled) return;
@@ -171,10 +182,23 @@ export default function ROISimulator({
     [],
   );
 
+  // FIX 2026-05-02 #2 — borne basse dynamique. Si le coin a un historique
+  // qui commence après START_FLOOR (ex: STRK listé sept 2023, WIF fév 2024),
+  // on remappe le slider sur [firstAvailableTs, startCeiling] au lieu de
+  // [START_FLOOR, startCeiling]. Sinon le user voyait "janv. 2020" sur le
+  // slider et le simulateur silently truncated à la 1ère date dispo →
+  // ROI calculé en réalité depuis 2024 mais affiché comme "depuis 2020".
+  const effectiveFloor = useMemo(() => {
+    if (firstAvailableTs && firstAvailableTs > START_FLOOR) {
+      return firstAvailableTs;
+    }
+    return START_FLOOR;
+  }, [firstAvailableTs]);
+
   const startTs = useMemo(() => {
     const ratio = debouncedDatePos / DATE_SLIDER_STEPS;
-    return Math.round(START_FLOOR + ratio * (startCeiling - START_FLOOR));
-  }, [debouncedDatePos, startCeiling]);
+    return Math.round(effectiveFloor + ratio * (startCeiling - effectiveFloor));
+  }, [debouncedDatePos, startCeiling, effectiveFloor]);
 
   /* -------- Calcul résultat --------------------------------------------- */
   const result: SimResult | null = useMemo(() => {
@@ -418,7 +442,12 @@ export default function ROISimulator({
             className="mt-2 w-full accent-primary cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
           />
           <div className="mt-1 flex justify-between text-[10px] text-muted/80 font-mono">
-            <span>janv. 2020</span>
+            <span>
+              {new Date(effectiveFloor).toLocaleDateString("fr-FR", {
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
             <span>il y a 30 j</span>
           </div>
         </div>

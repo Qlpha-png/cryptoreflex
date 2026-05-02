@@ -140,26 +140,142 @@ export interface HistoricalPoint {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  FIX P0 audit-fonctionnel-live-final #2                                    */
+/*  FIX 2026-05-02 #2 — bug "ROISimulator évolution fausse depuis > 1 an"     */
 /*                                                                            */
-/*  CoinGecko free tier : `market_chart?days=N` retourne `[]` silencieusement */
-/*  pour N > 365 (et 401 sur certains coins). Pour aller jusqu'à 5 ans (1825j)*/
-/*  on chunk en fenêtres de 90 jours via `market_chart_range` (timestamps     */
-/*  unix from/to en secondes), supporté en free tier.                         */
+/*  Diagnostic : malgré le commit 118db33 (cgHeaders + clé Demo), CoinGecko   */
+/*  Demo tier PLAFONNE l'historique à 365 jours sur `market_chart` ET sur     */
+/*  `market_chart/range`. Test live 2026-05-02 sur /api/historical?coin=tron  */
+/*  &days=1825 → premier point retourné = 2025-05-07 (= J-360), donc le      */
+/*  client ROISimulator prenait 0.2167€ comme "prix au 22 mai 2021" alors    */
+/*  que le vrai prix TRX en mai 2021 = 0.06194€. ROI affiché +29 % au lieu   */
+/*  du vrai +355 % → décrédibilise totalement l'outil.                       */
 /*                                                                            */
-/*  Stratégie :                                                               */
-/*   - Si `days <= 365` → ancien chemin `market_chart?days=N` (1 fetch).      */
-/*   - Si `days > 365`  → multi-fetch 90j via `market_chart_range`,           */
-/*     en parallèle (CoinGecko free tolère ~30 req/min — on reste large       */
-/*     sous la limite : 21 chunks pour 5 ans). Concaténation triée + dedup.   */
+/*  Fix : SWITCH SOURCE PRIMAIRE → CryptoCompare. Le tier free (sans clé)    */
+/*  donne 2000 jours (5.5 ans) sur tous les coins testés (les 41 du mapping  */
+/*  COIN_IDS), avec `tryConversion=true` pour les altcoins sans paire EUR    */
+/*  directe. CoinGecko reste fallback pour les rares coins absents de CC.    */
 /*                                                                            */
-/*  Cache : `unstable_cache` 1 h, tag "coingecko-historical" inchangé.        */
+/*  Architecture :                                                            */
+/*   - _fetchFromCryptoCompare(symbol, days) : `histoday?fsym=X&tsym=EUR`    */
+/*     (point quotidien à 00h UTC, ~1 par jour, propre sans densification    */
+/*     horaire qui faussait la heuristique `clamped` côté API route).         */
+/*   - _fetchFromCoinGecko(coinId, days) : ancien chemin chunked range,      */
+/*     conservé pour fallback uniquement.                                    */
+/*   - _fetchHistoricalPrices() : tente CC en priorité (mapping CG_TO_CC),   */
+/*     fallback CG si symbol absent du mapping ou si CC retourne dataset     */
+/*     vide (ex: maintenance CC).                                            */
+/*                                                                            */
+/*  Cache : bump tag `coingecko-historical-v3-cc` pour invalider toutes les  */
+/*  entrées mises en cache avec données plafonnées 365j sous la v2.           */
 /* -------------------------------------------------------------------------- */
 
 const CHUNK_DAYS = 90;
 const SECONDS_PER_DAY = 86_400;
+const CRYPTOCOMPARE_BASE = "https://min-api.cryptocompare.com/data/v2";
 
-/** Fetch un range arbitraire (timestamps unix secondes). Renvoie [] si erreur. */
+/**
+ * Mapping coingeckoId → symbole CryptoCompare (= ticker uppercase standard).
+ * Couvre les 41 coins de COIN_IDS. Les rebranding (MATIC→POL) ont les deux
+ * entrées car certaines fiches `lib/cryptos.ts` utilisent encore "matic-network".
+ *
+ * Comment ce mapping a été validé :
+ *   node script qui itère sur tous les coingeckoId, query
+ *   `histoday?fsym=<sym>&tsym=EUR&limit=2000&tryConversion=true`, vérifie
+ *   `Data.Data.length > 0 && last.close > 0`. Tous les 41 sont OK.
+ *   Couverture historique varie : 5.5 ans pour BTC/ETH/SOL/etc, 2 ans pour
+ *   les listings récents (POL/WIF/STRK/TIA).
+ */
+const CG_TO_CC: Record<string, string> = {
+  bitcoin: "BTC",
+  ethereum: "ETH",
+  solana: "SOL",
+  binancecoin: "BNB",
+  ripple: "XRP",
+  cardano: "ADA",
+  tether: "USDT",
+  "usd-coin": "USDC",
+  dogecoin: "DOGE",
+  tron: "TRX",
+  "the-open-network": "TON",
+  "matic-network": "MATIC",
+  "polygon-ecosystem-token": "POL",
+  polkadot: "DOT",
+  "avalanche-2": "AVAX",
+  chainlink: "LINK",
+  litecoin: "LTC",
+  "shiba-inu": "SHIB",
+  "bitcoin-cash": "BCH",
+  near: "NEAR",
+  uniswap: "UNI",
+  aptos: "APT",
+  "internet-computer": "ICP",
+  "ethereum-classic": "ETC",
+  cosmos: "ATOM",
+  stellar: "XLM",
+  arbitrum: "ARB",
+  optimism: "OP",
+  sui: "SUI",
+  "hedera-hashgraph": "HBAR",
+  filecoin: "FIL",
+  aave: "AAVE",
+  maker: "MKR",
+  "lido-dao": "LDO",
+  pepe: "PEPE",
+  dogwifcoin: "WIF",
+  monero: "XMR",
+  algorand: "ALGO",
+  tezos: "XTZ",
+  "injective-protocol": "INJ",
+  celestia: "TIA",
+  starknet: "STRK",
+};
+
+/**
+ * Fetch CryptoCompare `histoday` — jusqu'à 2000 jours (5.5 ans) en un seul
+ * call, pas besoin de chunker. Renvoie [] si erreur ou symbol inconnu.
+ *
+ * Champs renvoyés par CC : `time` (sec UNIX), `close`, `open`, `high`, `low`.
+ * On garde uniquement `close` (cohérent avec CoinGecko qui renvoyait le close).
+ *
+ * `tryConversion=true` : si CC n'a pas de paire <SYM>/EUR directe, il route
+ * via USD → EUR. Indispensable pour les altcoins peu tradés en EUR direct.
+ */
+async function _fetchFromCryptoCompare(
+  symbol: string,
+  days: number,
+): Promise<HistoricalPoint[]> {
+  // CC limite `limit` à 2000 ; si l'utilisateur demande plus on cap.
+  const limit = Math.min(days, 2000);
+  const url =
+    `${CRYPTOCOMPARE_BASE}/histoday` +
+    `?fsym=${encodeURIComponent(symbol)}&tsym=EUR&limit=${limit}&tryConversion=true`;
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error(`CryptoCompare ${symbol} ${days}d → HTTP ${res.status}`);
+    }
+    const json = (await res.json()) as {
+      Response?: string;
+      Message?: string;
+      Data?: { Data?: Array<{ time: number; close: number }> };
+    };
+    if (json.Response !== "Success") {
+      throw new Error(`CryptoCompare ${symbol} → ${json.Message ?? "unknown"}`);
+    }
+    const arr = json.Data?.Data ?? [];
+    // CC renvoie parfois des points de seed avec close=0 au tout début (avant
+    // listing du coin). On les filtre pour éviter de fausser le calcul ROI
+    // (division par zéro côté client).
+    return arr
+      .filter((p) => p.close > 0)
+      .map((p) => ({ t: p.time * 1000, price: p.close }));
+  } catch (err) {
+    console.warn(`[historical-prices] CryptoCompare failed (${symbol}):`, err);
+    return [];
+  }
+}
+
+/** Fetch un range arbitraire (timestamps unix secondes) côté CoinGecko. Renvoie [] si erreur. */
 async function _fetchHistoricalRange(
   coinId: string,
   fromSec: number,
@@ -193,14 +309,44 @@ async function _fetchHistoricalRange(
 }
 
 /**
- * Récupère N jours d'historique (close quotidien) en EUR pour un coinId CoinGecko.
- * - `days <= 365` : 1 seul appel `market_chart?days=N`.
- * - `days > 365`  : chunked `market_chart_range` 90j, parallèle.
+ * Récupère N jours d'historique (close quotidien) en EUR.
+ *
+ * Stratégie post-fix 2026-05-02 :
+ *   1. SI `coinId` mappé dans CG_TO_CC → essai CryptoCompare (fonctionne 5.5 ans
+ *      sans clé, contrairement à CG Demo qui plafonne à 365j).
+ *   2. SI CC retourne ≥ 30 points → on garde, on retourne.
+ *   3. SINON → fallback CoinGecko (cas : coin absent CC, ou maintenance CC).
  *
  * Sortie : tableau trié par `t` croissant, dedupliqué (au cas où des chunks
  * se chevauchent par exactement 1 timestamp aux bords).
  */
 async function _fetchHistoricalPrices(
+  coinId: string,
+  days: number,
+): Promise<HistoricalPoint[]> {
+  // ---- Source primaire : CryptoCompare (fix bug 365j) ----
+  const ccSymbol = CG_TO_CC[coinId];
+  if (ccSymbol) {
+    const ccPoints = await _fetchFromCryptoCompare(ccSymbol, days);
+    // Seuil de validité : au moins 30 points utilisables (1 mois de daily).
+    // En dessous on tente CG en backup pour ne pas afficher un graphe vide.
+    if (ccPoints.length >= 30) {
+      return ccPoints;
+    }
+    console.warn(
+      `[historical-prices] CC returned ${ccPoints.length} pts for ${coinId} → fallback CG`,
+    );
+  }
+
+  // ---- Fallback CoinGecko (legacy chunked) ----
+  return _fetchFromCoinGecko(coinId, days);
+}
+
+/**
+ * Ancien chemin CoinGecko, conservé comme fallback. Voir bloc commentaire en
+ * tête de fichier pour la stratégie chunked > 365j.
+ */
+async function _fetchFromCoinGecko(
   coinId: string,
   days: number,
 ): Promise<HistoricalPoint[]> {
@@ -268,18 +414,18 @@ async function _fetchHistoricalPrices(
  * Wrapper caché 1 h — clé = coinId + days.
  * Tag "coingecko-historical" pour invalidation manuelle si besoin.
  *
- * BUMP CACHE KEY 2026-05-02 (audit user "bug encore" sur AAVE) :
- * "coingecko-historical" → "coingecko-historical-v2-cgkey"
- * Pourquoi : sans la clé Demo CoinGecko, les fetches > 365j retournaient []
- * et étaient mises en cache pendant 1h. Même après le fix cgHeaders() commit
- * 118db33, les datasets vides restaient en cache. Bumper la version key
- * INVALIDE TOUTES les entrées existantes au prochain hit (cold start).
- * Effet : 1ère visite ROISimulator post-deploy = re-fetch frais avec la clé
- * Demo, on récupère 5 ans d'historique correctement.
+ * Historique des bumps :
+ *  - v1 (initial)
+ *  - v2-cgkey (2026-05-02 #1) : tentait de fixer via clé Demo CoinGecko →
+ *    échec, clé Demo plafonne aussi à 365j, datasets restaient amputés.
+ *  - v3-cc (2026-05-02 #2) : SWITCH source primaire vers CryptoCompare
+ *    (5.5 ans gratuit, validé sur les 41 coins mappés). Bumper la version
+ *    INVALIDE toutes les entrées v2 (qui contenaient toujours du 365j max).
+ *    Effet : 1ère visite ROISimulator post-deploy = re-fetch CC frais.
  */
 export const fetchHistoricalPrices = unstable_cache(
   _fetchHistoricalPrices,
-  ["coingecko-historical-v2-cgkey"],
+  ["coingecko-historical-v3-cc"],
   { revalidate: 3600, tags: ["coingecko-historical"] }
 );
 

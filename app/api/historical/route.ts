@@ -105,15 +105,24 @@ export async function GET(req: NextRequest) {
 
   const points = await fetchHistoricalPrices(coin, days);
 
-  // FIX P0 audit-fonctionnel-live-final #2 : détecte un dataset "amputé" par
-  // CoinGecko (ex: free tier qui renvoie [] pour days > 365 quand le multi-fetch
-  // chunked a échoué partiellement). On expose un header pour que le client
-  // puisse afficher un disclaimer plutôt que de silently undercount le ROI.
-  //
-  // Heuristique : on attend ~1 point par jour. Si on a < 75 % du nombre attendu,
-  // on considère le dataset clamped/dégradé.
+  // FIX P0 audit-fonctionnel-live-final #2 : détecte un dataset "amputé".
+  // Heuristique : on attend ~1 point par jour. Si on a < 75 % du nombre
+  // attendu, on considère le dataset clamped/dégradé. NB : avec la migration
+  // CryptoCompare (2026-05-02 #2), `clamped` est désormais quasi-toujours
+  // false sauf pour les coins listés depuis < `days` (ex: STRK demandé en
+  // 1825j mais listé en sept 2023 → ~970 pts → clamped=true). Le client
+  // utilisera `firstAvailableTimestamp` pour limiter le slider de date.
   const expected = days;
   const clamped = points.length > 0 && points.length < Math.floor(expected * 0.75);
+
+  // FIX 2026-05-02 #2 — bug "ROI faux pour dates antérieures au listing" :
+  // expose le timestamp du PREMIER point disponible, pour que le client
+  // ROISimulator puisse borner le slider de date (au lieu de laisser
+  // l'utilisateur sélectionner mai 2021 sur un coin listé en 2024 — qui
+  // donnait silencieusement le prix 2024 comme "prix 2021" → ROI faux).
+  const firstAvailableTimestamp = points.length > 0 ? points[0]!.t : null;
+  const lastAvailableTimestamp =
+    points.length > 0 ? points[points.length - 1]!.t : null;
 
   const headers: Record<string, string> = {
     "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=21600",
@@ -125,7 +134,14 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json(
-    { points, coin, days, clamped },
+    {
+      points,
+      coin,
+      days,
+      clamped,
+      firstAvailableTimestamp,
+      lastAvailableTimestamp,
+    },
     { headers },
   );
 }
