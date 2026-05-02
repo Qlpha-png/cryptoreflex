@@ -39,6 +39,10 @@ export default function CryptoNewsAggregator({
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [errored, setErrored] = useState<boolean>(false);
   const [lastFetched, setLastFetched] = useState<number>(0);
+  // BATCH 38 — fix audit a11y P0 WCAG 2.2.2 (Pause Stop Hide) : toggle
+  // utilisateur pour mettre en pause l'auto-refresh news. Persisté
+  // localStorage pour respecter la préférence cross-session.
+  const [autoRefreshPaused, setAutoRefreshPaused] = useState<boolean>(false);
 
   const load = useCallback(
     async (signal?: AbortSignal): Promise<void> => {
@@ -72,19 +76,30 @@ export default function CryptoNewsAggregator({
     return () => controller.abort();
   }, [load]);
 
+  // BATCH 38 — restore préférence pause depuis localStorage au mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = localStorage.getItem("cr:news-auto-refresh-paused");
+      if (saved === "1") setAutoRefreshPaused(true);
+    } catch {
+      /* localStorage indisponible (Safari private) — ignore */
+    }
+  }, []);
+
   // BATCH 30 — auto-refresh toutes les 5 min (user feedback "j'aime les actu
   // personnalisées pour chaque crypto mais je veux ça en automatique").
   // 5 min cohérent avec le SWR API (s-maxage=900 / 15 min CDN). Désactivé
-  // si l'onglet n'est pas visible (Page Visibility API) → 0 fetch parasite
-  // quand le user n'est pas devant son écran.
+  // si l'onglet n'est pas visible (Page Visibility API) → 0 fetch parasite.
+  // BATCH 38 — fix WCAG 2.2.2 : skip si autoRefreshPaused (toggle user).
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (autoRefreshPaused) return; // BATCH 38 : pause user
     const AUTO_REFRESH_MS = 5 * 60 * 1000; // 5 minutes
     let timer: ReturnType<typeof setInterval> | null = null;
     const startTimer = () => {
       if (timer !== null) return;
       timer = setInterval(() => {
-        // Skip si déjà en cours, sinon refresh silencieux (pas de spinner).
         if (!document.hidden) load();
       }, AUTO_REFRESH_MS);
     };
@@ -104,7 +119,20 @@ export default function CryptoNewsAggregator({
       stopTimer();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [load]);
+  }, [load, autoRefreshPaused]);
+
+  // BATCH 38 — toggle pause/resume auto-refresh (WCAG 2.2.2 control)
+  const toggleAutoRefresh = useCallback(() => {
+    setAutoRefreshPaused((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("cr:news-auto-refresh-paused", next ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
 
   const handleRefresh = useCallback(async () => {
     if (refreshing) return;
@@ -160,17 +188,33 @@ export default function CryptoNewsAggregator({
             <span className="gradient-text">{cryptoName}</span>{" "}
             <span className="text-muted font-mono text-xs">({cryptoSymbol.toUpperCase()})</span>
           </h2>
-          {/* BATCH 30 — pulse dot LIVE + auto-MAJ visible. Signal "le site
-              récupère les news automatiquement, pas besoin de toucher au
-              bouton". */}
-          <span
-            className="hidden sm:inline-flex items-center gap-1 rounded-full border border-success-border bg-success-soft px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-success-fg ml-1"
-            aria-label="Mise à jour automatique toutes les 5 minutes"
-            title="Auto-refresh toutes les 5 minutes"
+          {/* BATCH 30 + 38 — badge "● Auto" devenu CLIQUABLE pour respecter
+              WCAG 2.2.2 Pause/Stop/Hide. Click → toggle auto-refresh,
+              persisté localStorage. État pulse vert si actif, gris si pause. */}
+          <button
+            type="button"
+            onClick={toggleAutoRefresh}
+            aria-pressed={!autoRefreshPaused}
+            aria-label={
+              autoRefreshPaused
+                ? "Auto-refresh en pause — cliquer pour reprendre"
+                : "Auto-refresh actif toutes les 5 minutes — cliquer pour mettre en pause"
+            }
+            title={autoRefreshPaused ? "Auto-refresh en pause" : "Auto-refresh actif (cliquer pour pause)"}
+            className={`hidden sm:inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider ml-1 min-h-[24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+              autoRefreshPaused
+                ? "border-border bg-elevated/60 text-muted hover:text-fg"
+                : "border-success-border bg-success-soft text-success-fg hover:bg-success-soft/80"
+            }`}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-success-fg animate-pulse-dot" aria-hidden="true" />
-            Auto
-          </span>
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                autoRefreshPaused ? "bg-muted" : "bg-success-fg animate-pulse-dot"
+              }`}
+              aria-hidden="true"
+            />
+            {autoRefreshPaused ? "Pause" : "Auto"}
+          </button>
         </div>
         <button
           type="button"

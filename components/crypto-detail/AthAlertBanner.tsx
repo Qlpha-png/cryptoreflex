@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Sparkles, TrendingUp } from "lucide-react";
 
 interface Props {
@@ -82,12 +81,9 @@ export default function AthAlertBanner({
           {badge} · prix actuel calculé en USD (CoinGecko)
         </p>
       </div>
-      <Link
-        href={`/cryptos/${symbol.toLowerCase()}/historique`}
-        className="shrink-0 text-[12px] font-semibold underline underline-offset-2 hover:no-underline"
-      >
-        Voir l&apos;historique
-      </Link>
+      {/* BATCH 38 — fix audit Bug Hunter : lien /historique n'existe pas
+          (route inexistante + utilisait symbol.toLowerCase() au lieu du
+          slug coingecko). Retiré jusqu'à création de la page historique. */}
     </aside>
   );
 }

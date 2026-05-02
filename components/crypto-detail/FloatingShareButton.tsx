@@ -148,7 +148,10 @@ export default function FloatingShareButton({
   return (
     <div
       ref={containerRef}
-      className="fixed left-4 bottom-20 sm:bottom-6 z-40 print:hidden"
+      /* BATCH 38 — fix audit Mobile UX P0 : overlap avec MobileStickyCTA
+         (qui prend ~64-80px en bas mobile + safe-area iOS). On utilise le
+         calc CSS pour s'élever au-dessus du sticky CTA. */
+      className="fixed left-4 bottom-[calc(var(--mobile-bar-h,64px)+72px)] sm:bottom-6 z-40 print:hidden"
     >
       {/* Toast "Lien copié" */}
       <div
@@ -201,11 +204,29 @@ export default function FloatingShareButton({
         ))}
       </div>
 
-      {/* Bouton trigger principal */}
+      {/* Bouton trigger principal — BATCH 38 : tente d'abord navigator.share()
+          natif (sheet OS iOS/Android = +200% conversion partage mobile vs menu
+          radial). Fallback graceful sur le menu radial pour desktop ou
+          navigateurs sans share API. */}
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={async () => {
+          if (typeof navigator !== "undefined" && "share" in navigator) {
+            const payload = { title, text: shareText, url };
+            try {
+              if (!navigator.canShare || navigator.canShare(payload)) {
+                await navigator.share(payload);
+                return;
+              }
+            } catch (err) {
+              // user cancel = pas une vraie erreur, on ne fait rien
+              if ((err as DOMException).name === "AbortError") return;
+              // sinon on retombe sur le menu radial
+            }
+          }
+          setOpen((prev) => !prev);
+        }}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={open ? "Fermer le menu de partage" : "Partager cette page"}

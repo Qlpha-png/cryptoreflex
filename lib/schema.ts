@@ -317,7 +317,13 @@ export function articleSchema(
     wordCount?: number;
   }
 ): JsonLd {
-  const url = abs(`/blog/${article.slug}`);
+  // BATCH 38 — fix audit SEO P0 : si le slug commence par "cryptos/" (cas
+  // des fiches /cryptos/[slug]), on utilise directement /{slug} au lieu de
+  // /blog/{slug} qui générait des URLs cassées du genre /blog/cryptos/bitcoin
+  // → Google ignorait l'Article schema sur 100 fiches.
+  const url = article.slug.startsWith("cryptos/")
+    ? abs(`/${article.slug}`)
+    : abs(`/blog/${article.slug}`);
   const image = abs(article.cover ?? "/og-image.png");
   const author = getAuthorByIdOrDefault(article.authorId);
 

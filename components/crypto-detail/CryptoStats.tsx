@@ -58,7 +58,7 @@ export default function CryptoStats({
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-bold text-fg">
-              Données live temporairement indisponibles
+              Données en temps réel temporairement indisponibles
             </h3>
             <p className="mt-1 text-xs text-fg/75 leading-relaxed">
               L&apos;API CoinGecko est en cours de mise à jour ou a atteint sa limite
@@ -104,7 +104,7 @@ export default function CryptoStats({
 
       {/* Supply — animé (le nombre seulement, suffix symbol) */}
       <StatCard
-        label="Supply en circulation"
+        label="Offre en circulation"
         sub={
           detail?.maxSupply
             ? `Sur ${formatCompactNumber(detail.maxSupply)} max`

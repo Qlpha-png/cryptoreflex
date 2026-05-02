@@ -162,7 +162,7 @@ export default function AcheterEnFrancePage({ params }: Props) {
                 Acheter du <span className="gradient-text">{meta.name}</span> en France
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">
-                Comparatif 2026 des plateformes régulées MiCA pour acheter ${meta.symbol},
+                Comparatif 2026 des plateformes régulées MiCA pour acheter {meta.symbol},
                 avec frais réels, méthodes de paiement et fiscalité française. Mise à jour{" "}
                 {new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}.
               </p>

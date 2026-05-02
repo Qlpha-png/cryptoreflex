@@ -135,7 +135,10 @@ export default function CryptoQuickSwitcher({
           aria-autocomplete="list"
           aria-controls="crypto-quick-switcher-list"
           aria-expanded={isOpen}
-          className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-sm text-fg placeholder:text-muted/80 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
+          /* BATCH 38 — fix audit Mobile UX P0 : text-sm (14px) déclenchait
+             le zoom auto iOS Safari au focus. Passé à text-base (16px) sur
+             mobile (sm:text-sm sur desktop pour préserver le design). */
+          className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-base sm:text-sm text-fg placeholder:text-muted/80 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
         />
       </div>
 

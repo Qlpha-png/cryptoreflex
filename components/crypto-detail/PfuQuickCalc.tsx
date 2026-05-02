@@ -190,10 +190,15 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
               hint={fmtPct(result.gainPct)}
               tone={result.gain > 0 ? "success" : result.gain < 0 ? "danger" : "muted"}
             />
+            {/* BATCH 38 — fix audit YMYL fiscal P0 : "moins-value reportable"
+                était FAUX. Les moins-values crypto au régime PFU NE SONT PAS
+                reportables sur les années suivantes (art. 150 VH bis CGI),
+                ni imputables sur d'autres types de plus-values. Correction
+                obligatoire pour crédibilité éditoriale. */}
             <ResultCell
-              label={result.gain > 0 ? "Impôt PFU 30%" : "Aucun impôt"}
+              label={result.gain > 0 ? "Impôt PFU 30 %" : "Aucun impôt"}
               value={fmt(result.tax)}
-              hint={result.gain > 0 ? "à la cession en €" : "moins-value reportable"}
+              hint={result.gain > 0 ? "à la cession en €" : "moins-value (non reportable au PFU)"}
               tone={result.gain > 0 ? "danger" : "success"}
             />
           </div>
