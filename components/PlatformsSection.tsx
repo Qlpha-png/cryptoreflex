@@ -33,10 +33,13 @@ export default function PlatformsSection() {
   const totalAvailable = platforms.length;
 
   return (
+    // BATCH 26 — section orchestrée par <CategoryHeader Comparer les plateformes>
+    // dans app/page.tsx → on dégonfle en H3 (le H2 est déjà fait). Layout pt-4
+    // au lieu de py-20 pour resserrer la respiration entre header et carousel.
     <section
       id="plateformes"
       aria-labelledby="plateformes-title"
-      className="relative py-12 sm:py-20 lg:py-28"
+      className="relative pb-12 sm:pb-20 lg:pb-28 pt-4"
     >
       {/* Schema.org Rich Snippets — Audit SEO P0 GOLD */}
       <StructuredData
@@ -51,17 +54,17 @@ export default function PlatformsSection() {
               <ShieldCheck className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
               {totalAvailable} plateformes vérifiées · MiCA · AMF
             </span>
-            <h2
+            <h3
               id="plateformes-title"
-              className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight"
+              className="mt-4 text-xl sm:text-2xl font-bold tracking-tight"
             >
-              {totalAvailable}{" "}
-              <span className="gradient-text">plateformes crypto en France</span>
-            </h2>
-            <p className="mt-3 text-base sm:text-base text-white/70 leading-relaxed">
-              Sélection éditoriale triée par score global. Glisse pour découvrir
-              les {totalAvailable} options, méthodologie publique, frais réels,
-              conformité MiCA vérifiée.
+              Sélection éditoriale —{" "}
+              <span className="gradient-text">{totalAvailable} options</span>
+            </h3>
+            <p className="mt-3 text-sm text-white/70 leading-relaxed">
+              Triée par score global. Glisse pour découvrir les {totalAvailable}{" "}
+              plateformes (méthodologie publique, frais réels, conformité MiCA
+              vérifiée).
             </p>
           </div>
           <Link

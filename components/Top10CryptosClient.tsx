@@ -321,22 +321,28 @@ export default function Top10CryptosClient({
     : "";
 
   return (
-    <section id="top10" className="py-12 sm:py-20">
+    // BATCH 26 — section orchestrée par <CategoryHeader Apprendre la crypto>
+    // dans app/page.tsx → on n'a plus besoin d'un H2 ici (doublon
+    // sémantique). On dégonfle en H3 + eyebrow plus discret + texte qui
+    // précise "aperçu des 10 premières sur 100 cryptos analysées" pour
+    // éviter la confusion "Top 10 alors qu'il y en a 100".
+    <section id="top10" className="pb-12 sm:pb-20 pt-4">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <span className="badge-info">
             <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
-            Pédagogique
+            Aperçu top {cryptos.length} sur 100
           </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Top {cryptos.length} cryptos <span className="gradient-text">expliquées simplement</span>
-          </h2>
+          <h3 className="mt-3 text-xl sm:text-2xl font-bold tracking-tight text-fg">
+            Les {cryptos.length} cryptos majeures, <span className="gradient-text">expliquées simplement</span>
+          </h3>
           <p className="mt-2 text-muted text-sm max-w-2xl">
-            Les {cryptos.length} plus grosses cryptomonnaies du moment, expliquées en 2 phrases pour qu&apos;un
-            débutant comprenne ce que c&apos;est et à quoi ça sert. Sans jargon.
+            Aperçu pédagogique des {cryptos.length} plus grosses cryptos. La fiche
+            de chaque actif est éditée à la main. Pour les 90 autres (hidden gems
+            avec score de fiabilité), voir <a href="/cryptos" className="text-primary-soft underline hover:text-primary">les 100 fiches</a>.
           </p>
           {/* Audit SEO/CRO (Levier 6) : freshness signal E-E-A-T visible */}
-          <p className="mt-1 text-[11px] text-fg/50">
+          <p className="mt-1 text-[11px] text-fg/55">
             Mis à jour le{" "}
             <time dateTime="2026-04-26">26 avril 2026</time>
             {" · "}Source : CoinGecko + recherche éditoriale Cryptoreflex

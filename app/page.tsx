@@ -21,7 +21,8 @@ import MarketTable from "@/components/MarketTable";
 import BeginnerJourney from "@/components/BeginnerJourney";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
-import PlatformsMarquee from "@/components/PlatformsMarquee";
+// BATCH 26 — PlatformsMarquee retiré de la home (doublon). Composant
+// conservé dans components/ pour réutilisation future ailleurs.
 import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
 // NewsTickerServer retiré le 26/04 (doublon avec NewsBar — feedback user "mal agencé")
@@ -259,11 +260,10 @@ export default async function HomePage() {
           ctaLabel="Comparateur complet"
           anchorId="cat-comparer"
         />
-        {/* INNOVATION BATCH 16 — Marquee 34 logos plateformes auditées qui
-            défilent en boucle. Preuve sociale visuelle (« 34 plateformes
-            auditées »), pause au hover, mask-image fade. Différenciant FR :
-            pattern Stripe / Linear "Trusted by", aucun équivalent crypto FR. */}
-        <PlatformsMarquee />
+        {/* BATCH 26 — PlatformsMarquee retiré de la home (user feedback :
+            doublon avec PlatformsSection qui a déjà un carousel). Le composant
+            reste disponible pour usage ultérieur (footer trust strip, /a-propos).
+            PlatformsSection seul = 1 carousel cohérent au lieu de 2 empilés. */}
         <PlatformsSection />
       </section>
 
@@ -329,11 +329,11 @@ export default async function HomePage() {
           anchorId="cat-outils"
         />
         <ToolsTeaser />
-        {/* QuizPromo : ajout 26/04/2026 — feedback utilisateur "Le quizz et caché
-            dur de le trouver il faut une catégorie". On le place dans la cat
-            "Outils" car c'est un outil interactif d'aide à la décision. */}
+        {/* BATCH 26 — MarketTable retiré de la home (data live déjà dans le
+            PriceTicker en haut + page dédiée /marche pour aller plus loin).
+            Réduction de 1 section (~700px scroll mobile) pour alléger la home
+            qui était jugée trop chargée. */}
         <QuizPromo />
-        <MarketTable limit={10} />
       </section>
 
       <CategoryDivider />

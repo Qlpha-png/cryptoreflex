@@ -247,27 +247,37 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           6s ease-in-out infinite (style Arc.net headline) pour donner vie au
           gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
       <style>{`
+        /* BATCH 26 — shimmer rendu visible (user feedback "trop statique").
+           Avant : 6s ease-in-out subtle peu perceptible. Après : 3.5s linear
+           + gradient 4 stops + amplitude 300% pour un déplacement visible
+           type "lumière qui balaye le mot". Garde l'élégance gold sans aller
+           dans le gimmick (vitesse réduite vs 1-2s qui deviendrait nauséeux). */
         .hero-headline-accent {
           background-image: linear-gradient(
             100deg,
-            #FBBF24 0%,
-            #F5A524 45%,
-            #FCD34D 100%
+            #F5A524 0%,
+            #FBBF24 30%,
+            #FFFFFF 50%,
+            #FBBF24 70%,
+            #F5A524 100%
           );
-          background-size: 200% auto;
+          background-size: 300% auto;
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
           padding-bottom: 0.06em;
           display: inline-block;
-          animation: gold-shimmer 6s ease-in-out infinite;
+          animation: gold-shimmer 3.5s linear infinite;
         }
         @keyframes gold-shimmer {
-          0%, 100% { background-position: 0% 50%; }
-          50%      { background-position: 100% 50%; }
+          0%   { background-position: 200% 50%; }
+          100% { background-position: -100% 50%; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-headline-accent { animation: none !important; }
+          .hero-headline-accent {
+            animation: none !important;
+            background-position: 50% 50% !important;
+          }
         }
       `}</style>
     </section>
