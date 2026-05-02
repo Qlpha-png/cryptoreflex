@@ -50,19 +50,17 @@ export default function HeroHeadline() {
     );
   }
 
-  // BATCH 29D — control réécrit "ton tonton qui a lu MiCA" (ADN Reflexx).
-  // Ancien : "Tout pour investir en crypto en France, sans te faire avoir."
-  //  → générique, "tout pour" mou, frame négatif "sans te faire avoir".
-  // Nouveau : pose l'autorité concrète (847 pages MiCA) + voix tonton +
-  // chiffre rond mémorable. Différenciation forte vs Cointribune ("guides")
-  // ou Hasheur ("maître crypto FR"). Test ABTest existant conservé (variants
-  // social-proof + speed restent en concurrence).
+  // BATCH 33 — fix user feedback "la phrase et pas pro" : on retire "tonton"
+  // (réservé au X persona @ReflexxFr, pas adapté pour un comparateur B2B/B2C
+  // sérieux). On garde le hook fort "847 pages MiCA" qui pose l'autorité
+  // concrète + ajoute "comparateur français" pour signaler la spécialisation.
+  // Tests ABTest préservés (variants social-proof + speed inchangés).
   return (
     <h1 className="ds-h1 leading-[1.05]">
-      Le <span className="hero-headline-accent">tonton</span> qui a lu les{" "}
+      Le comparateur crypto qui a lu les{" "}
       <span className="hero-headline-accent">847 pages de MiCA</span>
       <br className="hidden lg:inline" />{" "}
-      <span className="text-fg">pour toi. Choisis ta crypto sereinement.</span>
+      <span className="text-fg">pour toi. Choisis ta plateforme sereinement.</span>
     </h1>
   );
 }

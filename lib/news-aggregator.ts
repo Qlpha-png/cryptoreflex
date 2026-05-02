@@ -500,9 +500,19 @@ async function fetchFromCryptoPanic(symbol: string): Promise<CryptoNewsItem[]> {
 /*  Source 2 : RSS fallback (Decrypt + CoinDesk) filtré par mention           */
 /* -------------------------------------------------------------------------- */
 
+// BATCH 33 — sources RSS étendues pour fix user feedback "pas les actu de
+// chaque crypto dans les fiches" (CryptoPanic free tier ne renvoie rien
+// pour la plupart des cryptos hors top 10). On ajoute 6 sources solides
+// (mix EN + FR) pour augmenter drastiquement le taux de match par crypto.
 const FALLBACK_RSS: ReadonlyArray<{ name: string; url: string }> = [
-  { name: "Decrypt",  url: "https://decrypt.co/feed" },
-  { name: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/" },
+  { name: "Decrypt",       url: "https://decrypt.co/feed" },
+  { name: "CoinDesk",      url: "https://www.coindesk.com/arc/outboundfeeds/rss/" },
+  { name: "CoinTelegraph", url: "https://cointelegraph.com/rss" },
+  { name: "CryptoSlate",   url: "https://cryptoslate.com/feed/" },
+  { name: "BeInCrypto",    url: "https://beincrypto.com/feed/" },
+  { name: "TheBlock",      url: "https://www.theblock.co/rss.xml" },
+  { name: "Cointribune",   url: "https://www.cointribune.com/feed/" },
+  { name: "Cryptoast",     url: "https://cryptoast.fr/feed/" },
 ];
 
 async function fetchFromRssFallback(symbol: string, name: string): Promise<CryptoNewsItem[]> {

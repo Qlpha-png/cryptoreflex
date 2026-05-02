@@ -88,8 +88,8 @@ export default async function GlobalMetricsBar() {
                 className={`font-mono font-semibold ${fearColor} inline-flex items-center gap-1 rounded hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
                 aria-label={`Fear and Greed Index ${fearGreed.value} sur 100, ${fearGreed.classification}, voir la page détaillée`}
               >
-                <Activity className="h-3 w-3" />
-                {fearGreed.value}/100
+                <Activity className="h-3 w-3 live-pulse" />
+                <span className="live-pulse">{fearGreed.value}/100</span>
                 <span className="text-muted font-normal">· {fearGreed.classification}</span>
                 {/* BATCH 29C — delta vs hier (signal momentum sentiment).
                     Coloration locale au delta (pas à la valeur absolue). */}
