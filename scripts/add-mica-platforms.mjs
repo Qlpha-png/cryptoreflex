@@ -351,7 +351,7 @@ const NEW_PLATFORMS = [
       "Frais retrait crypto variables et parfois élevés",
     ],
     badge: "Best yield stablecoin",
-    category: "earn",
+    category: "broker",
   },
   // === VAGUE 2 — utilisateur "trouve autant que possible autorisé en france" ===
   // PSAN FR confirmés + CASP UE accessibles aux résidents FR (passport MiCA).

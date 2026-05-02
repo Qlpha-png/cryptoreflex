@@ -96,7 +96,17 @@ export default function AvisHubPage() {
     broker: [],
     wallet: [],
   };
-  for (const p of all) byCategory[p.category].push(p);
+  // FIX 2026-05-02 #14 (build error commit 7429696) — defensive check :
+  // si une nouvelle plateforme a une `category` inconnue (ex: "earn" sur
+  // Nexo avant fix), on la pousse en "broker" plutôt que de crash le
+  // prerendering. Le bug initial : `byCategory["earn"].push(p)` sur
+  // undefined → "Cannot read properties of undefined (reading 'push')"
+  // → build prod en ERROR. Ce filet de sécurité empêche toute future
+  // régression similaire (un dev ajoute une catégorie sans toucher au type).
+  for (const p of all) {
+    const bucket = byCategory[p.category] ?? byCategory.broker;
+    bucket.push(p);
+  }
 
   // Schema.org : CollectionPage + ItemList + Breadcrumb (cf. lib/schema.ts).
   const itemListSchema: JsonLd = {
