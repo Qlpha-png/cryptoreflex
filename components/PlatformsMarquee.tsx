@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { getAllPlatforms } from "@/lib/platforms";
 import PlatformLogo from "./PlatformLogo";
+import MarqueePauseButton from "./MarqueePauseButton";
 
 /**
  * PlatformsMarquee — bandeau infini défilant des 34 plateformes auditées.
@@ -34,58 +35,99 @@ export default function PlatformsMarquee({ limit }: PlatformsMarqueeProps) {
   );
   const platforms = limit ? sorted.slice(0, limit) : sorted;
 
-  // Doubler la liste pour le loop CSS infinite scroll
-  const doubled = [...platforms, ...platforms];
-
   return (
     <section
-      aria-label="Plateformes crypto auditées par Cryptoreflex"
+      aria-labelledby="marquee-label"
       className="relative py-8 sm:py-12 overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-success">
+        <div className="text-center mb-6 flex flex-wrap items-center justify-center gap-3">
+          <span
+            id="marquee-label"
+            className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-success"
+          >
             <ShieldCheck className="h-3 w-3" aria-hidden="true" />
             {platforms.length}+ plateformes auditées · MiCA / PSAN
           </span>
+          {/* BATCH 19 a11y WCAG 2.2.2 — bouton pause/lecture explicite pour
+              les utilisateurs clavier qui ne peuvent pas atteindre le track. */}
+          <MarqueePauseButton />
         </div>
 
-        <div className="marquee-wrap" role="list">
-          <div className="marquee-track">
-            {doubled.map((p, i) => (
-              <Link
-                key={`${p.id}-${i}`}
-                href={`/avis/${p.id}`}
-                role="listitem"
-                aria-label={`Voir l'avis détaillé sur ${p.name}`}
-                className="group inline-flex items-center gap-2.5 rounded-xl border border-border bg-elevated/40 px-4 py-2.5 hover:border-primary/40 hover:bg-elevated transition-colors shrink-0"
-                // Avoid hydration mismatch: même contenu pour les 2 copies (loop fluid)
-              >
-                <PlatformLogo
-                  id={p.id}
-                  name={p.name}
-                  size={24}
-                  rounded={false}
-                  className="opacity-90 group-hover:opacity-100 transition-opacity"
-                />
-                <span className="font-semibold text-sm text-fg/85 group-hover:text-fg whitespace-nowrap">
-                  {p.name}
-                </span>
-                {p.mica?.micaCompliant && (
-                  <ShieldCheck
-                    className="h-3 w-3 text-success shrink-0"
-                    aria-label="Conforme MiCA"
-                  />
-                )}
-              </Link>
+        {/* BATCH 19 a11y :
+            - Vrai <ul>/<li> sémantique au lieu de role="list/listitem" sur Link.
+            - aria-hidden="true" sur la 2e moitié dupliquée → SR n'annonce
+              que les 34 vraies plateformes (vs 68 avec doublon).
+            - tabIndex=-1 sur les liens cachés → ne polluent pas le Tab order. */}
+        <div className="marquee-wrap" data-marquee-pause-target>
+          <ul className="marquee-track list-none m-0 p-0">
+            {platforms.map((p) => (
+              <li key={`real-${p.id}`} className="inline-flex">
+                <PlatformLink platform={p} />
+              </li>
             ))}
-          </div>
+            {/* Duplicat pour loop CSS infinite — MASQUÉ aux SR */}
+            {platforms.map((p) => (
+              <li
+                key={`clone-${p.id}`}
+                className="inline-flex"
+                aria-hidden="true"
+              >
+                <PlatformLink platform={p} cloned />
+              </li>
+            ))}
+          </ul>
         </div>
 
         <p className="mt-4 text-center text-[11px] text-muted">
-          Survole pour mettre en pause · Toutes nos plateformes sont régulées MiCA ou PSAN
+          Survole ou utilise le bouton pause · Toutes nos plateformes sont régulées MiCA ou PSAN
         </p>
       </div>
     </section>
+  );
+}
+
+/**
+ * Sous-composant pour éviter la duplication entre real/clone.
+ * Quand `cloned`, le lien est tabIndex={-1} pour ne pas polluer le Tab order
+ * (le clone est purement visuel pour le loop CSS).
+ */
+function PlatformLink({
+  platform: p,
+  cloned = false,
+}: {
+  platform: ReturnType<typeof getAllPlatforms>[number];
+  cloned?: boolean;
+}) {
+  return (
+    <Link
+      href={`/avis/${p.id}`}
+      tabIndex={cloned ? -1 : undefined}
+      aria-hidden={cloned ? "true" : undefined}
+      className="group inline-flex items-center gap-2.5 rounded-xl border border-border bg-elevated/40 px-4 py-2.5 hover:border-primary/40 hover:bg-elevated transition-colors shrink-0"
+    >
+      <PlatformLogo
+        id={p.id}
+        name={p.name}
+        size={24}
+        rounded={false}
+        className="opacity-90 group-hover:opacity-100 transition-opacity"
+        // BATCH 19 — view-transition-name pour morph cross-document logo.
+        // Combiné avec Speculation Rules → hover marquee → prerender →
+        // click → morph 320ms du logo plateforme vers /avis/{id}.
+        // Skip pour le clone : 2 éléments avec le même viewTransitionName
+        // = navigateur ne sait pas lequel morph.
+        viewTransitionId={cloned ? undefined : `platform-logo-${p.id}`}
+      />
+      <span className="font-semibold text-sm text-fg/85 group-hover:text-fg whitespace-nowrap">
+        {p.name}
+      </span>
+      {p.mica?.micaCompliant && (
+        <ShieldCheck
+          className="h-3 w-3 text-success shrink-0"
+          aria-label="Conforme MiCA"
+        />
+      )}
+    </Link>
   );
 }

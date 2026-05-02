@@ -1737,3 +1737,30 @@ h1, h2, h3 {
   animation-duration: 320ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* BATCH 19 a11y WCAG 2.2.2 — pause via [data-paused="true"] sur parent */
+[data-marquee-pause-target][data-paused="true"] .marquee-track {
+  animation-play-state: paused !important;
+}
+
+/* BATCH 19 — View Transition morph cross-document logos plateformes.
+   Active uniquement pour les plateformes ayant un viewTransitionName posé
+   dans PlatformsMarquee (home) et /avis/{id} hero. Pattern wildcard non
+   supporté en CSS, donc on liste les 28 plateformes ayant leur logo. */
+::view-transition-old(platform-logo-coinbase),
+::view-transition-new(platform-logo-coinbase),
+::view-transition-old(platform-logo-binance),
+::view-transition-new(platform-logo-binance),
+::view-transition-old(platform-logo-bitpanda),
+::view-transition-new(platform-logo-bitpanda),
+::view-transition-old(platform-logo-trade-republic),
+::view-transition-new(platform-logo-trade-republic),
+::view-transition-old(platform-logo-kraken),
+::view-transition-new(platform-logo-kraken),
+::view-transition-old(platform-logo-okx),
+::view-transition-new(platform-logo-okx),
+::view-transition-old(platform-logo-bitvavo),
+::view-transition-new(platform-logo-bitvavo) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}

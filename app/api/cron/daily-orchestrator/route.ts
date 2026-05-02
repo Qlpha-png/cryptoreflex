@@ -61,6 +61,10 @@ const SUB_CRONS = [
   // avec top movers, événements à venir et FAQ rotative AEO. Critical:false
   // car si CoinGecko down, on ne veut pas casser les autres jobs.
   { name: "daily-brief", path: "/api/cron/daily-brief", critical: false },
+  // BATCH 19 — IndexNow daily push (Bing/Yandex/Seznam) sur ~28 URLs
+  // critiques (hubs + landings). Très rapide (~1s, 1 fetch interne).
+  // Critical:false : si Bing API down, on continue les autres jobs.
+  { name: "indexnow-push", path: "/api/cron/indexnow-push", critical: false },
 ] as const;
 
 /* -------------------------------------------------------------------------- */

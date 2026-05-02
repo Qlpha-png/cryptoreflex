@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * TiltCard — rotation 3D légère perspective(1000px) suivant la souris.
@@ -30,9 +30,19 @@ export default function TiltCard({
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const rafIdRef = useRef<number | null>(null);
+  // BATCH 19 a11y WCAG 2.3.3 — guard reduced-motion ET pointer:coarse
+  // côté JS (pas seulement CSS) car on pose des styles inline qui
+  // override le CSS reduced-motion.
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setEnabled(supportsHover && !reduced);
+  }, []);
 
   const handleMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!enabled) return;
       if (rafIdRef.current !== null) return;
       const target = ref.current;
       if (!target) return;
@@ -48,7 +58,7 @@ export default function TiltCard({
         rafIdRef.current = null;
       });
     },
-    [maxTilt],
+    [maxTilt, enabled],
   );
 
   const handleLeave = useCallback(() => {

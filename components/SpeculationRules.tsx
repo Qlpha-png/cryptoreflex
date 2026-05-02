@@ -34,11 +34,22 @@
  * Server Component pur — pas d'hydration.
  */
 
+/**
+ * MAJ BATCH 19 (audit perf P0 #2 + Axe 3 user "Fais tout") :
+ * - Suppression de "eagerness: immediate" sur 6 hubs (provoquait 6
+ *   navigations préchargées en parallèle pendant le LCP du visiteur =
+ *   vol de bandwidth/CPU mobile).
+ * - TOUTES les règles sont maintenant en "moderate" (hover 200ms) ou
+ *   "conservative" (hover/focus immédiat, prefetch HTTP only).
+ * - Bonus combo killer : ajout explicite de /avis/* et /cryptos/* en
+ *   moderate pour activer le morph view-transition sur les logos
+ *   plateformes/crypto cross-document (BATCH 14 + 16).
+ */
 const SPECULATION_RULES = {
   prerender: [
     {
-      // Pages les plus susceptibles d'être visitées depuis n'importe quelle
-      // page (Hero CTA, Navbar links, Footer top-nav).
+      // Hubs principaux (Hero CTA, Navbar, Footer) : prerender intent-based
+      // au hover 200ms. Plus économe que immediate.
       urls: [
         "/",
         "/comparatif",
@@ -47,15 +58,19 @@ const SPECULATION_RULES = {
         "/outils",
         "/pro-plus",
       ],
-      // immediate = prerender dès chargement de la page courante.
-      // Coût acceptable car ces 6 URLs sont les hubs principaux.
-      eagerness: "immediate",
+      eagerness: "moderate",
     },
     {
-      // Tous les liens internes : prerender APRÈS hover/focus 200ms (signal
-      // d'intention). Évite de prerender quand l'utilisateur balaye les liens
-      // de l'œil sans intention de cliquer.
-      where: { href_matches: "/*" },
+      // Toutes les fiches /avis/{platform} et /cryptos/{slug} : intent-based.
+      // Combiné avec view-transition-name sur les logos (BATCH 14 + 16),
+      // produit le morph cross-document Linear-tier au click.
+      where: {
+        and: [
+          { href_matches: "/*" },
+          { not: { href_matches: "/api/*" } },
+          { not: { href_matches: "/admin/*" } },
+        ],
+      },
       eagerness: "moderate",
     },
   ],

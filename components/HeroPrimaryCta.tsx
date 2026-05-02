@@ -50,6 +50,14 @@ export default function HeroPrimaryCta({ href, label, ariaLabel }: HeroPrimaryCt
   };
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLAnchorElement>) => {
+    // BATCH 19 a11y — skip si pointer coarse (mobile/tactile, le translate
+    // déplace un touch target = friction tactile) ou prefers-reduced-motion.
+    // Le CSS .magnetic-cta gère déjà le no-op visuel mais le JS continuait
+    // à poser --mag-x/--mag-y inutilement.
+    if (typeof window !== "undefined") {
+      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    }
     if (rafIdRef.current !== null) return;
     const target = ctaRef.current;
     if (!target) return;
@@ -81,7 +89,7 @@ export default function HeroPrimaryCta({ href, label, ariaLabel }: HeroPrimaryCt
       onClick={handleClick}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="btn-primary btn-ripple magnetic-cta text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
+      className="btn-primary btn-ripple magnetic-cta focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
       aria-label={ariaLabel}
     >
       {label}

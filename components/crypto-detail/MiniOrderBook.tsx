@@ -97,13 +97,43 @@ export default function MiniOrderBook({
       }
     };
 
+    const startInterval = () => {
+      if (intervalId !== null) return;
+      intervalId = setInterval(fetchDepth, refreshMs);
+    };
+    const stopInterval = () => {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    // BATCH 19 perf P1 #3 — Page Visibility API : pause TOTAL de l'interval
+    // quand l'onglet devient invisible (vs juste skip dans fetchDepth).
+    // Économie de l'event-loop overhead du setInterval inactif.
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopInterval();
+      } else {
+        // À la reprise de l'onglet : refresh immédiat puis remet l'interval.
+        fetchDepth();
+        startInterval();
+      }
+    };
+
     fetchDepth();
-    intervalId = setInterval(fetchDepth, refreshMs);
+    startInterval();
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibility);
+    }
 
     return () => {
       cancelled = true;
-      if (intervalId !== null) clearInterval(intervalId);
+      stopInterval();
       aborter?.abort();
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibility);
+      }
     };
   }, [symbol, depth, refreshMs]);
 
@@ -111,16 +141,19 @@ export default function MiniOrderBook({
   if (error === "unsupported") return null;
 
   // Skeleton pendant le 1er fetch
+  // BATCH 19 a11y — motion-safe:animate-pulse (au lieu de animate-pulse seul)
+  // pour respecter prefers-reduced-motion (le bloc CSS reduced-motion ne
+  // neutralise pas spécifiquement la classe Tailwind animate-pulse).
   if (bids.length === 0 && asks.length === 0) {
     return (
       <div
         role="region"
         aria-label="Carnet d'ordres en chargement"
-        className="rounded-xl border border-border bg-elevated/40 p-3 h-[112px] animate-pulse"
+        className="rounded-xl border border-border bg-elevated/40 p-3 h-[112px] motion-safe:animate-pulse"
         style={{ minHeight: 112 }}
       >
         <div className="text-[10px] uppercase tracking-wider text-muted font-bold">
-          Carnet d&apos;ordres ·  chargement
+          Carnet d&apos;ordres · chargement
         </div>
       </div>
     );

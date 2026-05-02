@@ -51,18 +51,25 @@ export default function PopoverTooltip({
 
   return (
     <span className="relative inline-block">
-      {/* Trigger : utilise popovertarget (HTML standard 2024) */}
+      {/* Trigger : utilise popovertarget (HTML standard 2024).
+          BATCH 19 a11y fix : suppression du `title` (double annonce SR
+          avec aria-describedby pointant vers le span du popover). Ajout
+          aria-label fallback explicite pour garantir un nom accessible
+          quand `children` est non-textuel (icône). */}
       <button
         type="button"
         // @ts-expect-error - popovertarget est valide HTML, pas encore typé React 18
         popovertarget={popoverId}
         aria-describedby={popoverId}
-        title={label}
+        aria-label={typeof children === "string" ? undefined : label}
         className="cursor-help bg-transparent border-0 p-0 m-0 font-inherit text-inherit"
       >
         {children}
       </button>
-      {/* Popover natif : auto-dismiss sur click outside + Esc */}
+      {/* Popover natif : auto-dismiss sur click outside + Esc.
+          BATCH 19 : suppression du <span> interne qui dupliquait `label`
+          (déjà annoncé via aria-label sur trigger). Le content est seul
+          à apparaître = pas de triple annonce SR. */}
       <span
         id={popoverId}
         // popover est valide HTML 2024 — typage permissif via spread des attrs natifs
@@ -71,9 +78,6 @@ export default function PopoverTooltip({
         className="popover-tooltip rounded-xl border border-primary/30 bg-elevated text-fg p-3 text-xs leading-relaxed shadow-e3"
         style={{ maxWidth: `${maxWidth}px` }}
       >
-        <span className="text-[10px] uppercase tracking-wider text-primary-soft font-bold block mb-1">
-          {label}
-        </span>
         {content}
       </span>
     </span>

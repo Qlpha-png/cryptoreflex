@@ -37,6 +37,7 @@ import {
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import PlatformLogo from "@/components/PlatformLogo";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -286,6 +287,19 @@ export default function ReviewPage({ params }: Props) {
         {/* HEADER */}
         <header className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
           <div>
+            {/* BATCH 19 — Logo Hero avec view-transition-name pour le morph
+                cross-document depuis PlatformsMarquee (home) → fiche avis.
+                Combiné avec Speculation Rules → sensation native-app. */}
+            <div className="mb-4 inline-flex items-center justify-center rounded-2xl bg-elevated/60 border border-border p-3 ring-1 ring-inset ring-white/[0.06]">
+              <PlatformLogo
+                id={p.id}
+                name={p.name}
+                size={64}
+                rounded={false}
+                priority
+                viewTransitionId={`platform-logo-${p.id}`}
+              />
+            </div>
             {p.badge && (
               <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/30 px-3 py-1 text-xs font-semibold text-primary-glow">
                 {p.badge}
