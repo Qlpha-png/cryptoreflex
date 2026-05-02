@@ -34,6 +34,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import {
   breadcrumbSchema,
   graphSchema,
+  howToSchema,
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
@@ -124,6 +125,37 @@ export default function Cerfa2086AutoPage() {
             { name: "Outils", url: "/outils" },
             { name: "Cerfa 2086 auto", url: PAGE_PATH },
           ]),
+          // Étude #9 ETUDE-2026-05-02 : HowTo schema → snippet "Comment
+          // générer son Cerfa 2086" éligible aux rich results recettes/HowTo.
+          howToSchema({
+            name: "Comment générer son Cerfa 2086 crypto en 30 secondes",
+            description:
+              "Procédure officielle pour déclarer ses plus-values crypto via le formulaire 2086 (article 150 VH bis du CGI), à partir d'un export CSV d'exchange.",
+            totalTime: "PT30S",
+            estimatedCost: { currency: "EUR", value: 0 },
+            steps: [
+              {
+                name: "Exporter ton historique de trades",
+                text: "Va dans ton compte Binance / Coinbase / Bitpanda → Export CSV. Sélectionne toute la période fiscale (1er janv → 31 déc).",
+              },
+              {
+                name: "Importer le CSV dans l'outil",
+                text: "Glisse le fichier CSV dans la zone d'upload de cet outil. Le parser détecte automatiquement le format de ton exchange.",
+              },
+              {
+                name: "Vérifier les transactions parsées",
+                text: "L'outil affiche un récap : nombre de cessions, total acquisitions, plus-value brute. Vérifie qu'aucun trade n'est manquant.",
+              },
+              {
+                name: "Générer le PDF Cerfa 2086 + 3916-bis",
+                text: "Click sur Générer. L'outil applique la formule article 150 VH bis (prorata portefeuille), produit le 2086 pré-rempli + un 3916-bis par compte étranger détecté.",
+              },
+              {
+                name: "Reporter sur impots.gouv.fr",
+                text: "Connecte-toi à impots.gouv.fr, vas dans la section Plus-values d'actifs numériques. Reporte les valeurs du PDF dans les cases correspondantes (les références sont annotées dans le PDF généré).",
+              },
+            ],
+          }),
         ])}
       />
 

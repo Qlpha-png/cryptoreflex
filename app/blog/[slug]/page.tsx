@@ -27,6 +27,7 @@ import {
   breadcrumbSchema,
   graphSchema,
   organizationSchema,
+  generateSpeakableSchema,
 } from "@/lib/schema";
 import {
   authorPersonSchema,
@@ -206,22 +207,35 @@ export default async function BlogArticlePage({ params }: Props) {
   const author = getAuthorByIdOrDefault(article.author);
   const related = await getRelatedArticles(article.slug, 3);
 
+  // Étude #9 ETUDE-2026-05-02 : enrichissement schema.org pour ce template.
+  // - Article schema : déjà présent (titre, auteur, date, etc.)
+  // - SpeakableSpecification : NEW. Permet à Google Assistant / Alexa / Siri
+  //   de lire à voix haute le H1 + les paragraphes [data-speakable] (voice search,
+  //   featured snippets vocaux, +10-20% CTR estimé sur les recherches conversationnelles).
+  // - Breadcrumb : déjà présent.
+  // - Pas de FAQPage ici car le frontmatter MDX actuel n'a pas de
+  //   `quickAnswerQuestion` — à réintroduire si on étend le contrat data.
+  const articleJsonLd = articleSchema({
+    slug: article.slug,
+    title: article.title,
+    description: article.description,
+    excerpt: article.description,
+    category: article.category,
+    tags: article.keywords,
+    date: article.date,
+    dateModified: article.lastUpdated,
+    readTime: article.readTime,
+    cover: article.cover,
+    author: author.name,
+  }) as Record<string, unknown>;
+  // Inject speakable directement dans l'objet Article (pattern Google
+  // recommandé : pas un node JSON-LD séparé mais une propriété de l'Article).
+  articleJsonLd.speakable = generateSpeakableSchema();
+
   const schemas = graphSchema([
     organizationSchema(),
     authorPersonSchema(author),
-    articleSchema({
-      slug: article.slug,
-      title: article.title,
-      description: article.description,
-      excerpt: article.description,
-      category: article.category,
-      tags: article.keywords,
-      date: article.date,
-      dateModified: article.lastUpdated,
-      readTime: article.readTime,
-      cover: article.cover,
-      author: author.name,
-    }),
+    articleJsonLd,
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Blog", url: "/blog" },
