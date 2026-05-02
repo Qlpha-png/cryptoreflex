@@ -29,23 +29,38 @@ import { Coins } from "lucide-react";
  *  deblock, plus500, anycoin-direct, just-mining) → fallback icône Coins
  *  gold neutre. Pas d'invention de logo, conformément à la politique brand.
  */
+/**
+ * BATCH 40 — fix bug récurrent user "Kraken/Crypto.com pas le bon logo".
+ *
+ * Cause : ID_EXTENSIONS forçait `.svg` pour 9 brands alors que j'ai
+ * downloadé les vrais logos en `.png` (BATCH 32 + 35a) depuis Google
+ * Favicons API. Le composant servait donc encore les SVG INVENTÉS au
+ * lieu des PNG officiels présents dans /public/logos/.
+ *
+ * Migration : 9 brands passent de `.svg` → `.png` (les .svg inventés
+ * peuvent être supprimés du repo, ils ne sont plus référencés).
+ *
+ * Le bitstack reste en `.svg` (pas de vrai PNG officiel trouvé sur
+ * favicon.app/io ; fichier favicon.app retournait emoji 🔥, pas le
+ * vrai logo). Coinbase reste en `.svg` aussi (vérifier manuellement).
+ */
 const ID_EXTENSIONS: Record<string, "svg" | "png"> = {
-  // SVG officiels (collection initiale)
-  coinbase: "svg",
-  binance: "svg",
-  bitpanda: "svg",
-  "trade-republic": "svg",
-  bitstack: "svg",
-  swissborg: "svg",
-  revolut: "svg",
-  kraken: "svg",
-  bybit: "svg",
-  bitget: "svg",
-  coinhouse: "svg",
+  // PNG officiels confirmés (téléchargés depuis Google Favicons + CMC CDN)
+  coinbase: "svg",        // à vérifier — peut-être inventé aussi
+  binance: "png",         // BATCH 32 : vrai diamant gold officiel
+  bitpanda: "png",        // BATCH 32 : vrai B vert sombre officiel
+  "trade-republic": "png",// BATCH 32 : vrai vague noire officielle
+  bitstack: "svg",        // pas de vrai PNG dispo (favicon.app = emoji)
+  swissborg: "png",       // BATCH 32 : vrai snowflake vert officiel
+  revolut: "png",         // BATCH 32 : vrai R noir officiel
+  kraken: "png",          // BATCH 32 : vrai Tako mascot violet officiel
+  bybit: "png",           // BATCH 32 : vrai BYBIT wordmark officiel
+  bitget: "png",          // BATCH 32 : vrai cyan B officiel
+  coinhouse: "png",       // BATCH 32 : vrai X bleu officiel
   // BATCH 18 — PNG officiels via CoinMarketCap CDN (exchanges centralisés)
   okx: "png",
-  "crypto-com": "png",
-  gemini: "png",
+  "crypto-com": "png",    // BATCH 35a : vrai hexagone navy + C officiel
+  gemini: "png",          // BATCH 35a : vrai G orange/infinity officiel
   bitstamp: "png",
   bitvavo: "png",
   bitfinex: "png",
@@ -138,14 +153,16 @@ export default function PlatformLogo({
   // Trade Republic, etc. dont le viewBox est ~3:1) — sans ça, l'image se
   // ferait écraser dans un carré size×size.
   //
-  // ?v=2 cache-bust : Vercel sert les SVG avec Cache-Control max-age=604800
-  // (7 jours). Quand on remplace un logo (real official vs ancien custom),
-  // les navigateurs gardent le vieux 7 jours. On change ?v=N pour forcer
-  // la requête fraîche immédiatement à tous les visiteurs.
+  // ?v=3 cache-bust : Vercel sert les images avec Cache-Control max-age=604800
+  // (7 jours). BATCH 40 — bump v=2 → v=3 pour invalider les ANCIENS logos
+  // svg inventés (Kraken Tako mal dessiné, Crypto.com=KuCoin, etc.) qui
+  // restaient cachés 7 jours côté navigateur même après remplacement disque.
+  // Bump à v=3 force fetch frais immédiat sur TOUS les logos pour TOUS
+  // les visiteurs.
   const ext = ID_EXTENSIONS[normalized] ?? "svg";
   return (
     <Image
-      src={`/logos/${normalized}.${ext}?v=2`}
+      src={`/logos/${normalized}.${ext}?v=3`}
       alt={`Logo ${name}`}
       width={size}
       height={size}
