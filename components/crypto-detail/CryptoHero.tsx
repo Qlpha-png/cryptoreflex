@@ -44,7 +44,7 @@ export default function CryptoHero({
   const theme = getCategoryTheme(category);
 
   return (
-    <header className="grid gap-8 lg:grid-cols-[1fr_auto] items-start">
+    <header className="grid gap-8 lg:grid-cols-[1fr_auto] items-start min-w-0">
       <div>
         {kindLabel && (
           <span
@@ -144,8 +144,12 @@ export default function CryptoHero({
         </div>
       </div>
 
-      {/* Sparkline 7j */}
-      <div className="rounded-2xl border border-border bg-surface p-4 min-w-[260px]">
+      {/* Sparkline 7j.
+          FIX RESPONSIVE 2026-05-02 #6b — `min-w-[260px]` peut forcer un
+          scroll horizontal sur Galaxy Fold replié (280px). On bascule vers
+          `min-w-0 sm:min-w-[260px] w-full` : pleine largeur en stack mobile,
+          mini-card 260px à partir de sm (640px) où on a la place. */}
+      <div className="rounded-2xl border border-border bg-surface p-4 min-w-0 sm:min-w-[260px] w-full">
         <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
         <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
         <p className="mt-2 text-[11px] text-muted">
