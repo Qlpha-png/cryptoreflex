@@ -14,7 +14,7 @@ import {
 import { fetchTopMarket, type CoinId, type CoinPrice } from "@/lib/coingecko";
 import GlobalMetricsBar from "@/components/GlobalMetricsBar";
 import Hero from "@/components/Hero";
-import PriceTicker from "@/components/PriceTicker";
+// PriceTicker retiré BATCH 35d (user "enlève ça") — doublon avec MarketTable + /marche
 import ReassuranceSection from "@/components/ReassuranceSection";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import MarketTable from "@/components/MarketTable";
@@ -27,7 +27,7 @@ import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
 // NewsTickerServer retiré le 26/04 (doublon avec NewsBar — feedback user "mal agencé")
 import QuizPromo from "@/components/QuizPromo";
-import NewsBar from "@/components/NewsBar";
+// NewsBar retiré BATCH 35d (user "enlève ça") — doublon avec /actualites + CryptoNewsAggregator par fiche
 import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
 import HomeAnchorNav from "@/components/HomeAnchorNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
@@ -200,21 +200,18 @@ export default async function HomePage() {
         updatedAt={updatedAt}
       />
       <ReassuranceSection />
-      {/* FIX HOMEPAGE 2026-05-02 #10 (audit chirurgical problème #4) — les
-          3 bandeaux live (`GlobalMetricsBar`, `NewsBar`, `PriceTicker`)
-          empilés représentaient ~180px de chrome avant la 1ère vraie
-          section. Maintenant unifiés visuellement dans un container
-          `<aside class="live-market-strip">` (1 background + 1 border-y
-          partagés) → ressenti utilisateur : "1 seul bandeau live" au lieu
-          de 3 strates. Économie d'espace mental sans refactor lourd des
-          composants individuels. */}
+      {/* BATCH 35d — user feedback "enlève ça" sur NewsBar + PriceTicker.
+          On garde uniquement GlobalMetricsBar (Market Cap + F&G + dominance)
+          qui apporte de la donnée live unique sans répéter ce qui est déjà
+          ailleurs (le PriceTicker doublonne avec MarketTable + page /marche
+          + le PairConverter sur les fiches crypto ; la NewsBar doublonne
+          avec /actualites + le CryptoNewsAggregator par fiche).
+          Garde la classe live-market-strip pour conserver le scan line gold. */}
       <aside
-        aria-label="Données de marché en temps réel"
-        className="live-market-strip border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent [&_div[role=marquee]]:border-0 [&>*:not(:first-child)]:border-t [&>*:not(:first-child)]:border-border/30"
+        aria-label="Indicateurs de marché crypto"
+        className="live-market-strip border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent"
       >
         <GlobalMetricsBar />
-        <NewsBar />
-        <PriceTicker initial={prices} />
       </aside>
 
       {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
