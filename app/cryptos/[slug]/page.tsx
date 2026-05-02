@@ -95,6 +95,14 @@ const ROISimulator = dynamic(
     ssr: false,
   },
 );
+
+// Audit user 2026-05-02 : barre de recherche compacte pour switcher entre
+// fiches cryptos sans repasser par /cryptos. ssr:false car purement
+// client-side (state, keyboard nav). Lazy = 0 coût SSR/TTFB sur le hero.
+const CryptoQuickSwitcher = dynamic(
+  () => import("@/components/crypto-detail/CryptoQuickSwitcher"),
+  { ssr: false },
+);
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import QuickBuyBox from "@/components/crypto-detail/QuickBuyBox";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
@@ -366,6 +374,14 @@ export default async function CryptoPage({ params }: Props) {
       />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        {/* QUICK SWITCHER (audit user 2026-05-02) — barre de recherche
+            visible juste sous le breadcrumb, permet de naviguer vers une
+            autre fiche crypto sans repasser par /cryptos. Complète la
+            command palette ⌘K (cachée) qui restait peu découvrable. */}
+        <div className="mt-6">
+          <CryptoQuickSwitcher currentSlug={c.id} />
+        </div>
+
         {/* HERO */}
         <div className="mt-6">
           <CryptoHero
