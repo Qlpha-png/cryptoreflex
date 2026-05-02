@@ -337,6 +337,28 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
         ],
       },
+      // FIX SEO 2026-05-02 #17 (audit expert SEO tech) — Cache-Control sur
+      // les sitemaps : avant `must-revalidate` -> Googlebot re-fetch chaque
+      // crawl. `s-maxage=3600 swr=86400` -> -90% bandwidth crawl + même
+      // fraicheur (Google revérifie périodiquement quand même).
+      {
+        source: "/sitemap.xml",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/sitemap-:type.xml",
+        headers: [
+          { key: "Cache-Control", value: "public, s-maxage=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/robots.txt",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
+        ],
+      },
       // 1. Headers /embed/* — DOIT précéder la règle générique pour gagner.
       //    On retire X-Frame-Options (incompatible avec frame-ancestors *)
       //    et on remplace la CSP par la version embed.

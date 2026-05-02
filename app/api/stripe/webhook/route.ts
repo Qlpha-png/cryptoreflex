@@ -262,6 +262,25 @@ async function handleCheckoutCompleted(
     );
   }
 
+  // FIX DATA 2026-05-02 #19 (audit expert data) — server-side Plausible
+  // tracking pour bypass adblockers et capturer 100 % des conversions
+  // payantes. Avant : ~30 % du trafic crypto FR avec adblocker invisible
+  // dans Plausible côté client. Best-effort, jamais bloquant le webhook.
+  try {
+    const { trackServer } = await import("@/lib/analytics-server");
+    const mrr = plan === "pro_monthly" ? 2.99 : 28.99 / 12;
+    await trackServer("Pro Subscribed", {
+      plan,
+      mrr: Number(mrr.toFixed(2)),
+      source: "stripe_webhook",
+    });
+  } catch (err) {
+    console.warn(
+      "[checkout.completed] trackServer Pro Subscribed failed:",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+
   // Envoie l'email de bienvenue avec le magic link
   // (action_link contient le lien de connexion sécurisé Supabase)
   const magicLink =
@@ -334,6 +353,30 @@ async function handleSubscriptionDeleted(
   console.log(
     `[subscription.deleted] Customer ${customerId} a annulé. Accès jusqu'à period end.`
   );
+
+  // FIX DATA 2026-05-02 #19 — server-side tracking churn pour analyse
+  // rétention. `tenureDays` permet de discriminer les churns "trial"
+  // (< 30j) des vrais churns "user fatigue".
+  try {
+    const { trackServer } = await import("@/lib/analytics-server");
+    const createdAt = subscription.created
+      ? new Date(subscription.created * 1000)
+      : null;
+    const tenureDays = createdAt
+      ? Math.round((Date.now() - createdAt.getTime()) / (24 * 3600 * 1000))
+      : 0;
+    await trackServer("Pro Churned", {
+      tenureDays,
+      status: subscription.status,
+      cancelAtPeriodEnd: subscription.cancel_at_period_end ?? false,
+      source: "stripe_webhook",
+    });
+  } catch (err) {
+    console.warn(
+      "[subscription.deleted] trackServer Pro Churned failed:",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
 
   // Si la subscription est immédiatement annulée (status='canceled'), on bascule en free
   if (subscription.status === "canceled") {

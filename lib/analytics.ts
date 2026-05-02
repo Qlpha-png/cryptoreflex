@@ -34,14 +34,50 @@ declare global {
   }
 }
 
-/** Liste des événements custom configurables comme "Goals" dans Plausible. */
+/**
+ * Liste des événements custom configurables comme "Goals" dans Plausible.
+ *
+ * FIX DATA 2026-05-02 #19 (audit expert data) — extension du catalogue
+ * d'EVENTS critiques business non-trackés. Naming standardisé Title Case
+ * (vs ancien chaos kebab-case "calc-fiscal-start"). Bannir les literals
+ * inline dans `track()` — toujours utiliser `EVENTS.X`.
+ */
 export const EVENTS = {
+  // Acquisition / engagement
   AffiliateClick: "Affiliate Click",
   NewsletterSignup: "Newsletter Signup",
   ToolUsage: "Tool Usage",
   ArticleRead: "Article Read",
-  Outbound: "Outbound Link", // fallback générique
+  Outbound: "Outbound Link",
+  // Search & navigation
+  SearchUsed: "Search Used",
+  SearchNoResults: "Search No Results",
+  // Quiz & onboarding
+  QuizStarted: "Quiz Started",
+  QuizCompleted: "Quiz Completed",
+  QuizResultViewed: "Quiz Result Viewed",
+  // Outils
+  RoiSimulatorUsed: "ROI Simulator Used",
+  CalculatorResult: "Calculator Result",
+  LeadMagnetDownloaded: "Lead Magnet Downloaded",
+  // Pro funnel
+  ProPlanViewed: "Pro Plan Viewed",
+  ProCheckoutStarted: "Pro Checkout Started",
+  ProSubscribed: "Pro Subscribed",         // Server-side via webhook Stripe
+  ProChurned: "Pro Churned",                // Server-side via webhook Stripe
+  // Account
+  AccountCreated: "Account Created",
+  WalletConnected: "Wallet Connected",
+  // A/B testing
+  VariantExposed: "Variant Exposed",
+  VariantConversion: "Variant Conversion",
+  // CTA visibility (impression-tracking)
+  CtaVisible: "CTA Visible 50pct",
+  // FAQ pricing (signal d'objection)
+  PricingFaqExpanded: "Pricing FAQ Expanded",
 } as const;
+
+export type EventName = (typeof EVENTS)[keyof typeof EVENTS];
 
 /** Émet un événement Plausible si le script est chargé. No-op sinon. */
 export function track(
