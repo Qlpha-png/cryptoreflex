@@ -35,6 +35,7 @@ import PortfolioPieChart, {
   type PieSlice,
 } from "@/components/PortfolioPieChart";
 import Sparkline from "@/components/Sparkline";
+import { useKeyboardNav } from "@/lib/use-keyboard-nav";
 
 const REFRESH_MS = 120_000; // 2 min — aligné avec le ticker / watchlist
 
@@ -239,6 +240,25 @@ export default function PortfolioView() {
     if (!ok) return;
     clearHoldings();
   }, []);
+
+  /* -------- Raccourcis clavier J/K/X/E/A (étude #6 ETUDE-2026-05-02) ----
+   * Le DnD complet (dnd-kit) reste TODO V3. Pour l'instant on offre la
+   * navigation power-user clavier qui est 80% de la valeur :
+   *   J / ↓  : sélection suivante       K / ↑  : sélection précédente
+   *   X      : delete (avec confirm)    E      : edit (open dialog)
+   *   A      : add (open dialog)        Esc    : clear sélection
+   * Garde-fous via shouldIgnoreEvent : skip si input focus ou cmdk open. */
+  const { selectedId } = useKeyboardNav(holdings, {
+    onDelete: (id) => {
+      const h = holdings.find((x) => x.id === id);
+      if (h) handleRemove(h);
+    },
+    onEdit: (id) => {
+      const h = holdings.find((x) => x.id === id);
+      if (h) setEditTarget(h);
+    },
+    onAdd: () => setAddOpen(true),
+  });
 
   const handleExportCsv = useCallback(() => {
     if (holdings.length === 0) return;
@@ -476,6 +496,7 @@ export default function PortfolioView() {
                 price={pricesById.get(h.cryptoId)}
                 onRemove={handleRemove}
                 onEdit={setEditTarget}
+                selected={h.id === selectedId}
               />
             ))}
           </tbody>
@@ -576,11 +597,14 @@ function HoldingRow({
   price,
   onRemove,
   onEdit,
+  selected = false,
 }: {
   holding: Holding;
   price: LivePrice | undefined;
   onRemove: (h: Holding) => void;
   onEdit: (h: Holding) => void;
+  /** True si la row est sélectionnée via raccourci clavier J/K (étude #6). */
+  selected?: boolean;
 }) {
   const cur = price?.priceEur ?? 0;
   const cost = holding.quantity * holding.avgBuyPriceEur;
@@ -591,7 +615,14 @@ function HoldingRow({
   const hasPrice = cur > 0;
 
   return (
-    <tr className="border-t border-border hover:bg-elevated/50 transition-colors">
+    <tr
+      className={`border-t transition-colors ${
+        selected
+          ? "border-primary/40 bg-primary/5"
+          : "border-border hover:bg-elevated/50"
+      }`}
+      aria-selected={selected || undefined}
+    >
       <td className="px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <CryptoLogo

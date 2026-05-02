@@ -178,6 +178,20 @@ export default function AddHoldingDialog({
         return;
       }
       onAdded?.(created);
+
+      // Étude #16 ETUDE-2026-05-02 — gamification : award XP pour
+      // portfolio_update (10 XP, rate-limit 5×/jour côté serveur).
+      // Best-effort, fire-and-forget. La requête est intentionnellement
+      // non-awaitée pour ne pas bloquer la fermeture du dialog.
+      void fetch("/api/gamification/award", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ action: "portfolio_update" }),
+      }).catch(() => {
+        /* noop : user pas connecté ou rate-limit, silencieux */
+      });
+
       onClose();
     },
     [submitting, selected, quantity, price, onAdded, onClose, maxHoldings, isPro]

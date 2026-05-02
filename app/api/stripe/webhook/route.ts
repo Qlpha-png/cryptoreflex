@@ -247,6 +247,21 @@ async function handleCheckoutCompleted(
 
   console.log(`[checkout.completed] User ${email} mis à jour en plan ${plan}`);
 
+  // Étude #16 ETUDE-2026-05-02 — gamification : award massif "first_pro_subscription"
+  // (100 XP). Idempotent grâce au rate-limit 1×/lifetime côté lib/gamification
+  // (cf. ACTION_LIMITS dans /api/gamification/award/route.ts) — mais on appelle
+  // awardXp() direct ici (bypass rate-limit) pour garantir l'attribution
+  // au premier checkout. Best-effort, jamais bloquant.
+  try {
+    const { awardXp } = await import("@/lib/gamification");
+    await awardXp(userId, "first_pro_subscription");
+  } catch (err) {
+    console.warn(
+      "[checkout.completed] awardXp first_pro_subscription failed:",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+
   // Envoie l'email de bienvenue avec le magic link
   // (action_link contient le lien de connexion sécurisé Supabase)
   const magicLink =
