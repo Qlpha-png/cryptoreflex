@@ -290,7 +290,7 @@
     {
       "id": "kraken",
       "name": "Kraken",
-      "logo": "/logos/kraken.svg",
+      "logo": "/logos/kraken.png",
       "tagline": "Pour qui c'est : utilisateurs expérimentés valorisant sécurité et profondeur de marché",
       "websiteUrl": "https://kraken.com",
       "affiliateUrl": "https://kraken.com?utm_source=cryptoreflex",
@@ -384,7 +384,7 @@
     {
       "id": "bitget",
       "name": "Bitget",
-      "logo": "/logos/bitget.svg",
+      "logo": "/logos/bitget.png",
       "tagline": "Pour qui c'est : traders dérivés et amateurs de copy trading",
       "websiteUrl": "https://bitget.com",
       "affiliateUrl": "https://bitget.com?utm_source=cryptoreflex",
@@ -560,7 +560,7 @@
     {
       "id": "coinhouse",
       "name": "Coinhouse",
-      "logo": "/logos/coinhouse.svg",
+      "logo": "/logos/coinhouse.png",
       "tagline": "Pour qui c'est : Français cherchant un acteur 100% local avec accompagnement humain",
       "websiteUrl": "https://coinhouse.com",
       "affiliateUrl": "https://coinhouse.com?utm_source=cryptoreflex",
@@ -823,7 +823,7 @@
     {
       "id": "bybit",
       "name": "Bybit",
-      "logo": "/logos/bybit.svg",
+      "logo": "/logos/bybit.png",
       "tagline": "Pour qui c'est : traders dérivés cherchant profondeur de carnet et produits perp avancés",
       "websiteUrl": "https://www.bybit.com",
       "affiliateUrl": "https://www.bybit.com?utm_source=cryptoreflex",

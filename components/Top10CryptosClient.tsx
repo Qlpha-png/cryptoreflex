@@ -321,32 +321,33 @@ export default function Top10CryptosClient({
     : "";
 
   return (
-    // BATCH 26 — section orchestrée par <CategoryHeader Apprendre la crypto>
-    // dans app/page.tsx → on n'a plus besoin d'un H2 ici (doublon
-    // sémantique). On dégonfle en H3 + eyebrow plus discret + texte qui
-    // précise "aperçu des 10 premières sur 100 cryptos analysées" pour
-    // éviter la confusion "Top 10 alors qu'il y en a 100".
-    <section id="top10" className="pb-12 sm:pb-20 pt-4">
+    // BATCH 32 — fix doublon (user feedback "j'ai l'impression c'est en
+    // doublon j'aime pas fusionne les 2 ensemble"). CategoryHeader "Apprendre
+    // la crypto" avec son intro "100 cryptos analysées..." en home faisait
+    // doublon avec le H3 + intro de cette section. Solution : on supprime
+    // le H3 + paragraphe + freshness — on garde UNIQUEMENT le badge "Aperçu
+    // top 10 sur 100" comme contexte minimaliste juste au-dessus du toolbar
+    // de filtres. Le user comprend immédiatement : on est dans la section
+    // Apprendre, voici un aperçu des 10 premières cryptos sur 100.
+    <section id="top10" className="pb-12 sm:pb-20 pt-2">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl flex items-center gap-2 flex-wrap">
           <span className="badge-info">
             <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
             Aperçu top {cryptos.length} sur 100
           </span>
-          <h3 className="mt-3 text-xl sm:text-2xl font-bold tracking-tight text-fg">
-            Les {cryptos.length} cryptos majeures, <span className="gradient-text">expliquées simplement</span>
-          </h3>
-          <p className="mt-2 text-muted text-sm max-w-2xl">
-            Aperçu pédagogique des {cryptos.length} plus grosses cryptos. La fiche
-            de chaque actif est éditée à la main. Pour les 90 autres (hidden gems
-            avec score de fiabilité), voir <a href="/cryptos" className="text-primary-soft underline hover:text-primary">les 100 fiches</a>.
-          </p>
-          {/* Audit SEO/CRO (Levier 6) : freshness signal E-E-A-T visible */}
-          <p className="mt-1 text-[11px] text-fg/55">
-            Mis à jour le{" "}
-            <time dateTime="2026-04-26">26 avril 2026</time>
-            {" · "}Source : CoinGecko + recherche éditoriale Cryptoreflex
-          </p>
+          {/* Lien vers les 100 fiches — petit, contextuel, sans paragraphe doublon */}
+          <a
+            href="/cryptos"
+            className="text-[12px] text-muted hover:text-primary inline-flex items-center gap-1"
+          >
+            Voir les 100 fiches
+            <span aria-hidden="true">→</span>
+          </a>
+          {/* E-E-A-T freshness en discret à droite */}
+          <span className="text-[11px] text-fg/45 ml-auto hidden sm:inline">
+            Mis à jour <time dateTime="2026-04-26">26 avril 2026</time>
+          </span>
         </div>
 
         {/* Toolbar : filtres + tri + view toggle */}
