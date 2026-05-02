@@ -53,6 +53,15 @@ interface PlatformLogoProps {
   className?: string;
   /** Charger en priorité (above-the-fold). */
   priority?: boolean;
+  /**
+   * Identifiant unique pour View Transitions API (Chrome 111+/Safari 18+).
+   * Quand activé sur une carte de plateforme dans une liste ET sur le hero
+   * d'une fiche /avis/{platform}, le navigateur morphe le logo entre les
+   * 2 vues. Combiné avec Speculation Rules (BATCH 12) = sensation native-app.
+   *
+   * Convention : `platform-logo-${id}` (ex: "platform-logo-binance").
+   */
+  viewTransitionId?: string;
 }
 
 export default function PlatformLogo({
@@ -62,6 +71,7 @@ export default function PlatformLogo({
   rounded = true,
   className = "",
   priority = false,
+  viewTransitionId,
 }: PlatformLogoProps) {
   const normalized = normalize(id);
   const known = KNOWN_IDS.has(normalized);
@@ -73,7 +83,11 @@ export default function PlatformLogo({
     return (
       <span
         className={`inline-flex items-center justify-center bg-gradient-to-br from-primary-soft to-primary text-background ${baseClass}`}
-        style={{ width: size, height: size }}
+        style={{
+          width: size,
+          height: size,
+          ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
+        }}
         aria-label={name}
         role="img"
       >
@@ -102,7 +116,15 @@ export default function PlatformLogo({
       width={size}
       height={size}
       className={`${baseClass} object-contain`}
-      style={{ width: size, height: size }}
+      style={{
+        width: size,
+        height: size,
+        // BATCH 16 (innovation 2026) : view-transition-name natif Chrome 111+/
+        // Safari 18+ pour morph cross-document. Combiné avec Speculation
+        // Rules (BATCH 12), donne sensation native-app sur la transition
+        // home/comparatif → /avis/{platform}.
+        ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
+      }}
       priority={priority}
       loading={priority ? undefined : "lazy"}
       sizes={`${size}px`}

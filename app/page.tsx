@@ -21,6 +21,7 @@ import MarketTable from "@/components/MarketTable";
 import BeginnerJourney from "@/components/BeginnerJourney";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
+import PlatformsMarquee from "@/components/PlatformsMarquee";
 import BlogPreview from "@/components/BlogPreview";
 import ToolsTeaser from "@/components/ToolsTeaser";
 // NewsTickerServer retiré le 26/04 (doublon avec NewsBar — feedback user "mal agencé")
@@ -257,6 +258,11 @@ export default async function HomePage() {
           ctaLabel="Comparateur complet"
           anchorId="cat-comparer"
         />
+        {/* INNOVATION BATCH 16 — Marquee 34 logos plateformes auditées qui
+            défilent en boucle. Preuve sociale visuelle (« 30+ plateformes
+            auditées »), pause au hover, mask-image fade. Différenciant FR :
+            pattern Stripe / Linear "Trusted by", aucun équivalent crypto FR. */}
+        <PlatformsMarquee />
         <PlatformsSection />
       </section>
 
