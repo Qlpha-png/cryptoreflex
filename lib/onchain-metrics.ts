@@ -18,6 +18,7 @@
  */
 
 import { unstable_cache } from "next/cache";
+import { cgHeaders } from "@/lib/coingecko";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -197,12 +198,12 @@ async function fetchCoinGeckoMetrics(
         )}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=true&sparkline=false`,
         {
           next: { revalidate: 3600, tags: ["onchain"] },
-          headers: { accept: "application/json" },
+          headers: cgHeaders(),
         },
       ),
       fetch("https://api.coingecko.com/api/v3/global", {
         next: { revalidate: 3600, tags: ["onchain"] },
-        headers: { accept: "application/json" },
+        headers: cgHeaders(),
       }),
     ]);
 

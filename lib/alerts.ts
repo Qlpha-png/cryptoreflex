@@ -30,7 +30,7 @@ import { priceAlertHtml, priceAlertSubject } from "@/lib/email-templates";
 import { BRAND } from "@/lib/brand";
 import { COIN_IDS, COIN_NAMES } from "@/lib/historical-prices";
 import { getAllCryptos } from "@/lib/cryptos";
-import { fetchPrices, type CoinId } from "@/lib/coingecko";
+import { fetchPrices, cgHeaders, type CoinId } from "@/lib/coingecko";
 import { sendPushToUser } from "@/lib/web-push";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 
@@ -649,7 +649,7 @@ async function fetchSimplePriceForAlert(
   const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(cryptoId)}&vs_currencies=eur,usd`;
   try {
     const res = await fetch(url, {
-      headers: { accept: "application/json" },
+      headers: cgHeaders(),
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;
@@ -667,7 +667,7 @@ async function fetchEurPrice(cryptoId: string): Promise<number | null> {
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(cryptoId)}&vs_currencies=eur`,
-      { headers: { accept: "application/json" }, next: { revalidate: 60 } },
+      { headers: cgHeaders(), next: { revalidate: 60 } },
     );
     if (!res.ok) return null;
     const json = (await res.json()) as Record<string, { eur?: number }>;

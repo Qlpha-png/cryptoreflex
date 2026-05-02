@@ -63,7 +63,7 @@ const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
  *
  * Documentation : https://docs.coingecko.com/reference/setting-up-your-api-key
  */
-function cgHeaders(): Record<string, string> {
+export function cgHeaders(): Record<string, string> {
   const headers: Record<string, string> = { accept: "application/json" };
   const key = process.env.COINGECKO_API_KEY;
   if (key) headers["x-cg-demo-api-key"] = key;
@@ -126,7 +126,11 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
     const res = await fetch(url, {
       // ISR-style caching: refresh every 60s on the server.
       next: { revalidate: 60, tags: [CG_TAGS.prices] },
-      headers: { accept: "application/json" },
+      // FIX 2026-05-02 audit user — bug ROI/historical : sans cgHeaders(),
+      // free tier CoinGecko rate-limit erratique 5-15 req/min → fetchPrices
+      // pouvait faillir et trigger le fallback graceful. Maintenant la clé
+      // Demo (configurée mai 2026) stabilise à 30 req/min.
+      headers: cgHeaders(),
     });
 
     if (!res.ok) {
@@ -278,7 +282,7 @@ async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
   try {
     const res = await fetch(`${COINGECKO_BASE}/global`, {
       next: { revalidate: 300, tags: [CG_TAGS.global] }, // 5 min
-      headers: { accept: "application/json" },
+      headers: cgHeaders(),
     });
     if (!res.ok) throw new Error(`CoinGecko global ${res.status}`);
     const json = await res.json();
@@ -361,7 +365,7 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   try {
     const res = await fetch(url, {
       next: { revalidate: 120, tags: [CG_TAGS.market] },
-      headers: { accept: "application/json" },
+      headers: cgHeaders(),
     });
     if (!res.ok) throw new Error(`CoinGecko markets ${res.status}`);
     const json = (await res.json()) as Array<{

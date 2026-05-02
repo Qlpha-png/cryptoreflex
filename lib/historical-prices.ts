@@ -10,6 +10,7 @@
  */
 
 import { unstable_cache } from "next/cache";
+import { cgHeaders } from "@/lib/coingecko";
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
@@ -168,8 +169,15 @@ async function _fetchHistoricalRange(
     `${COINGECKO_BASE}/coins/${coinId}/market_chart/range` +
     `?vs_currency=eur&from=${fromSec}&to=${toSec}`;
   try {
+    // FIX 2026-05-02 audit user — bug ROISimulator "evolution fausse sur
+    // toutes les cryptos pour dates > 1 an" : sans la clé Demo CoinGecko,
+    // l'endpoint /market_chart/range est limité à 365j sur free tier (les
+    // chunks 90j > 1 an retournaient [] silencieusement → simulateur prenait
+    // les 365 derniers jours seulement → ROI ~0% au lieu du vrai +200%).
+    // Maintenant : cgHeaders() injecte x-cg-demo-api-key (configurée mai 2026)
+    // qui débloque l'historique complet jusqu'à 5 ans.
     const res = await fetch(url, {
-      headers: { accept: "application/json" },
+      headers: cgHeaders(),
       cache: "no-store",
     });
     if (!res.ok) throw new Error(`CoinGecko range ${coinId} → ${res.status}`);
@@ -200,8 +208,10 @@ async function _fetchHistoricalPrices(
   if (days <= 365) {
     const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=eur&days=${days}&interval=daily`;
     try {
+      // Cf. fix dans _fetchHistoricalRange : cgHeaders() ajoute la clé Demo
+      // CoinGecko qui stabilise le rate-limit (30 req/min vs 5-15 erratique).
       const res = await fetch(url, {
-        headers: { accept: "application/json" },
+        headers: cgHeaders(),
         cache: "no-store",
       });
       if (!res.ok) throw new Error(`CoinGecko ${coinId} ${days}d → ${res.status}`);
@@ -309,7 +319,7 @@ async function _fetchConversionRate(
     )}&vs_currencies=${vs}&include_last_updated_at=true`;
     try {
       const res = await fetch(url, {
-        headers: { accept: "application/json" },
+        headers: cgHeaders(),
         cache: "no-store",
       });
       if (!res.ok) throw new Error(`simple/price ${res.status}`);
