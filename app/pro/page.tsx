@@ -21,6 +21,7 @@ import {
   CreditCard,
   Star,
   Globe,
+  Trophy,
 } from "lucide-react";
 import NewsletterInline from "@/components/NewsletterInline";
 import StructuredData from "@/components/StructuredData";
@@ -380,30 +381,34 @@ const FEATURES = [
  * L'utilisateur sait qu'il paie pour CE QUI EXISTE AUJOURD'HUI, pas pour
  * une promesse future.
  */
+// AUDIT 2026-05-02 — incohérence corrigée :
+// "Export Cerfa 2086 PDF" RETIRÉ de cette liste car la feature EXISTE déjà
+// (cf. /outils/cerfa-2086-auto et lib/cerfa-2086.ts). Marquer un outil
+// existant comme "Idée" trompait les soutiens potentiels.
 const ROADMAP_V2 = [
   {
     icon: FileText,
-    title: "Export Cerfa 2086 PDF",
+    title: "Export Cerfa 3916-bis pré-rempli",
     eta: "Idée",
-    text: "PDF pré-rempli depuis ton portfolio (format DGFiP). À l'étude — sera proposé si la base de soutiens permet d'y consacrer le temps de dev.",
-  },
-  {
-    icon: FileText,
-    title: "Export Cerfa 3916-bis",
-    eta: "Idée",
-    text: "1 PDF par compte crypto étranger pré-rempli. À l'étude. Pour l'instant, le radar 3916-bis liste les comptes à déclarer (gratuit).",
-  },
-  {
-    icon: BookOpen,
-    title: "Analyses on-chain approfondies",
-    eta: "Idée",
-    text: "Articles long-format sur la fiscalité DeFi avancée, MEV, restaking. Dépend du temps disponible — pas de calendrier promis.",
+    text: "1 PDF pré-rempli par compte crypto étranger. À l'étude. Aujourd'hui, le radar 3916-bis liste les comptes à déclarer (gratuit) — il manque juste la génération PDF auto.",
   },
   {
     icon: Zap,
     title: "Sync API exchanges (read-only)",
     eta: "Idée",
-    text: "Auto-sync de tes positions sans CSV. Très demandé techniquement complexe — sera proposé seulement si on peut le faire de façon sécurisée et fiable.",
+    text: "Auto-sync de tes positions sans CSV. Très demandé, techniquement complexe — sera proposé uniquement si on peut le faire de façon sécurisée et fiable.",
+  },
+  {
+    icon: BookOpen,
+    title: "Analyses on-chain DeFi avancées",
+    eta: "Idée",
+    text: "Articles long-format sur MEV, restaking, LST/LRT, fiscalité DeFi avancée. Dépend du temps disponible — pas de calendrier promis.",
+  },
+  {
+    icon: Trophy,
+    title: "Leaderboard gamification anonymisé",
+    eta: "Idée",
+    text: "Top 100 streaks (prénoms anonymisés, opt-in). Compétition douce qui pousse à revenir chaque jour, sans exposer de données perso.",
   },
 ];
 
@@ -463,7 +468,7 @@ const FAQS = [
   },
   {
     q: "Les « idées futures » listées sur cette page sont-elles garanties ?",
-    a: "Non — et c'est volontaire. Les exports Cerfa 2086/3916-bis, articles long-format, sync API exchanges sont des idées qu'on aimerait livrer si la base de soutiens permet d'y passer du temps. Aucune date n'est promise. Tu paies pour ce qui existe AUJOURD'HUI, pas pour une feature future. Si elles sortent, les abonnés Soutien y accèdent en premier sans surcoût.",
+    a: "Non — et c'est volontaire. Le Cerfa 3916-bis pré-rempli, les articles long-format on-chain et la sync API exchanges sont des idées qu'on aimerait livrer si la base de soutiens permet d'y passer du temps. Aucune date n'est promise. Tu paies pour ce qui existe AUJOURD'HUI (Cerfa 2086 PDF auto inclus), pas pour une feature future. Si elles sortent, les abonnés Soutien y accèdent en premier sans surcoût.",
   },
   {
     q: "Y a-t-il une « réponse fiscale perso 48h » comme dans certaines pubs SaaS ?",
