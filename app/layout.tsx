@@ -15,6 +15,7 @@ import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
 import SpeculationRules from "@/components/SpeculationRules";
 import SpotlightDelegate from "@/components/SpotlightDelegate";
+import CursorHalo from "@/components/ui/CursorHalo";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -465,6 +466,11 @@ export default function RootLayout({
             card, scaling infini. Désactivé en pointer:coarse (mobile) et
             prefers-reduced-motion (cf. SpotlightDelegate.tsx). */}
         <SpotlightDelegate />
+        {/* BATCH 29A — CursorHalo : halo gold radial 320px qui suit
+            la souris en lerp. Désactivé sur touch + reduced-motion
+            via CSS. Pattern Linear/Cursor/Arc.net. Aucun re-render
+            React (transform direct sur ref). */}
+        <CursorHalo />
       </body>
     </html>
   );

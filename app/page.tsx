@@ -210,7 +210,7 @@ export default async function HomePage() {
           composants individuels. */}
       <aside
         aria-label="Données de marché en temps réel"
-        className="border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent [&_div[role=marquee]]:border-0 [&>*:not(:first-child)]:border-t [&>*:not(:first-child)]:border-border/30"
+        className="live-market-strip border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent [&_div[role=marquee]]:border-0 [&>*:not(:first-child)]:border-t [&>*:not(:first-child)]:border-border/30"
       >
         <GlobalMetricsBar />
         <NewsBar />

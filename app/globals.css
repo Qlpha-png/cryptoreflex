@@ -529,6 +529,168 @@ body {
   100% { background-position: 100% 50%; }
 }
 
+/* ============================================================
+ * BATCH 29A — Hero visual innovation (user feedback "rien de
+ * dynamique"). 4 agents experts convergent : amplitude trop
+ * faible + animations sub-seuil JND + zéro feedback hover.
+ * ============================================================ */
+
+/* AURORA BEAM — gradient conique gold qui tourne 30s, mix-blend
+   screen pour effet "northern lights". Référence : Vercel hero,
+   Anthropic claude page. Pointer-events:none impératif. */
+.hero-aurora {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg at 30% 40%,
+    transparent 0deg,
+    rgba(245, 165, 36, 0.18) 60deg,
+    rgba(251, 191, 36, 0.10) 120deg,
+    transparent 180deg,
+    transparent 360deg
+  );
+  filter: blur(60px);
+  mix-blend-mode: screen;
+  animation: aurora-rotate 30s linear infinite;
+  z-index: 0;
+}
+@keyframes aurora-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* SCAN LINE — fine ligne gold qui balaye horizontalement le bandeau
+   live-market-strip. Évoque "scanner crypto live" Bloomberg style. */
+.live-market-strip {
+  position: relative;
+  overflow: hidden;
+}
+.live-market-strip::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 165, 36, 0.8), transparent);
+  animation: scan-line 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes scan-line {
+  to { left: 120%; }
+}
+
+/* CARD AURORA BORDER — bordure conic gold qui circule (4s).
+   @property --angle pour anim CSS pure. Fallback : bordure statique
+   via @supports. Référence : Vercel cards hover, Stripe sessions. */
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.card-aurora-border {
+  position: relative;
+}
+.card-aurora-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 70%,
+    rgba(245, 165, 36, 0.65),
+    transparent
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: angle-rotate 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes angle-rotate {
+  to { --angle: 360deg; }
+}
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+  .card-aurora-border::before {
+    background: linear-gradient(135deg, rgba(245, 165, 36, 0.4), transparent);
+  }
+}
+
+/* CURSOR HALO — radial-gradient gold qui suit le curseur via
+   --mx/--my CSS vars (set par JS lerp 12%). Désactivé sur touch
+   (pointer:coarse) et reduced-motion. */
+.cursor-halo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(245, 165, 36, 0.18),
+    transparent 60%
+  );
+  filter: blur(40px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* REVEAL ON SCROLL — opacity + translateY 24px, déclenché via
+   IntersectionObserver. Réutilisable sur toutes les sections. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* MAGNETIC CTA — scale subtle au hover + transform suivi curseur
+   via JS. CSS de base ici. */
+.magnetic {
+  display: inline-block;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.magnetic-inner {
+  display: inline-block;
+  transition: transform 150ms ease-out;
+  will-change: transform;
+}
+
+/* Reduced motion — désactiver toutes les nouvelles anims */
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora,
+  .live-market-strip::before,
+  .card-aurora-border::before {
+    animation: none !important;
+  }
+  .cursor-halo {
+    display: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Touch devices — désactiver curseur halo */
+@media (pointer: coarse) {
+  .cursor-halo {
+    display: none !important;
+  }
+}
+
 /* Live dot — radar pulse (deuxième ring décalé 1s pour effet "ping ping").
    Ajout en plus du ::before existant. */
 .live-dot { position: relative; }

@@ -50,12 +50,19 @@ export default function HeroHeadline() {
     );
   }
 
-  // control : copie identique à l'ancien H1 in-place dans Hero.tsx
+  // BATCH 29D — control réécrit "ton tonton qui a lu MiCA" (ADN Reflexx).
+  // Ancien : "Tout pour investir en crypto en France, sans te faire avoir."
+  //  → générique, "tout pour" mou, frame négatif "sans te faire avoir".
+  // Nouveau : pose l'autorité concrète (847 pages MiCA) + voix tonton +
+  // chiffre rond mémorable. Différenciation forte vs Cointribune ("guides")
+  // ou Hasheur ("maître crypto FR"). Test ABTest existant conservé (variants
+  // social-proof + speed restent en concurrence).
   return (
     <h1 className="ds-h1 leading-[1.05]">
-      Tout pour investir <span className="hero-headline-accent">en crypto</span>
+      Le <span className="hero-headline-accent">tonton</span> qui a lu les{" "}
+      <span className="hero-headline-accent">847 pages de MiCA</span>
       <br className="hidden lg:inline" />{" "}
-      <span className="text-fg">en France, sans te faire avoir.</span>
+      <span className="text-fg">pour toi. Choisis ta crypto sereinement.</span>
     </h1>
   );
 }

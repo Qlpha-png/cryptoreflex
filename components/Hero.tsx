@@ -94,9 +94,13 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       {/* Background layers — pure CSS, zero JS. Audit Block 1 RE-AUDIT
           (Agent dynamism) : .hero-halo embarque maintenant les keyframes
           halo-breathe (6s) + mesh-shift (20s) pour un fond "vivant" type
-          Stripe gradient mesh / Linear ambient. */}
+          Stripe gradient mesh / Linear ambient.
+          BATCH 29A : ajout .hero-aurora (gradient conique 30s) pour
+          transformer la perception immédiate du hero. Référence Vercel/
+          Anthropic. Mix-blend screen + blur 60px = "northern lights" doux. */}
       <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
       <div className="hero-halo" aria-hidden="true" />
+      <div className="hero-aurora" aria-hidden="true" />
       <div className="hero-particles" aria-hidden="true">
         <span className="hero-particle p1" />
         <span className="hero-particle p2" />
@@ -175,10 +179,13 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                   identifiait ça comme problème #2 (friction conversion :
                   l'utilisateur scrolle, perd contexte, abandonne). Le quiz
                   convertit ~3x mieux que le comparatif statique mobile. */}
+              {/* BATCH 29D — CTA réécrit "Décode ma plateforme" (verbe
+                  signature tonton décodeur). Sub-objection killer "Quiz
+                  2 min · Aucun email demandé" ajouté en aria pour SR. */}
               <HeroPrimaryCta
                 href="/quiz/plateforme"
-                label="Trouver ma plateforme en 2 min"
-                ariaLabel="Trouver ma plateforme crypto en 2 minutes (quiz)"
+                label="Décode ma plateforme en 2 min"
+                ariaLabel="Décode ma plateforme crypto en 2 minutes — quiz personnalisé, aucun email demandé"
               />
               <Link
                 href="#cat-informe"
@@ -232,7 +239,10 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
             HeroKpiGrid (client) staggere chaque cellule via Motion (delay = i*0.1s).
             Respect prefers-reduced-motion : voir HeroKpiGrid.tsx. */}
         <div className="mt-10 lg:mt-14 animate-hero-fade-up animate-hero-fade-up-delay-4">
-          <HeroKpiGrid className="card-premium p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
+          {/* BATCH 29A : ajout card-aurora-border (conic gradient gold qui
+              tourne 4s) pour signature visuelle "2026" sur le KPI grid =
+              point focal en bas du hero. */}
+          <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
             <KpiCell value={STATS.platforms} label="Marques fiables" accent />
             <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
             <KpiCell value={STATS.tools} label="Outils gratuits" />
@@ -247,18 +257,17 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           6s ease-in-out infinite (style Arc.net headline) pour donner vie au
           gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
       <style>{`
-        /* BATCH 26 — shimmer rendu visible (user feedback "trop statique").
-           Avant : 6s ease-in-out subtle peu perceptible. Après : 3.5s linear
-           + gradient 4 stops + amplitude 300% pour un déplacement visible
-           type "lumière qui balaye le mot". Garde l'élégance gold sans aller
-           dans le gimmick (vitesse réduite vs 1-2s qui deviendrait nauséeux). */
+        /* BATCH 29A — hero-headline-accent enrichi : combo shimmer (3.5s)
+           + filter hue-rotate breath (8s) pour mouvement non-répétitif
+           (référence Anthropic.com h1). L'œil ne perçoit jamais la même
+           position 2 fois → sensation "vivant" forte. */
         .hero-headline-accent {
           background-image: linear-gradient(
             100deg,
             #F5A524 0%,
-            #FBBF24 30%,
+            #FBBF24 25%,
             #FFFFFF 50%,
-            #FBBF24 70%,
+            #FBBF24 75%,
             #F5A524 100%
           );
           background-size: 300% auto;
@@ -267,16 +276,24 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           color: transparent;
           padding-bottom: 0.06em;
           display: inline-block;
-          animation: gold-shimmer 3.5s linear infinite;
+          animation:
+            gold-shimmer 3.5s linear infinite,
+            gold-hue-breath 8s ease-in-out infinite;
+          will-change: background-position, filter;
         }
         @keyframes gold-shimmer {
           0%   { background-position: 200% 50%; }
           100% { background-position: -100% 50%; }
         }
+        @keyframes gold-hue-breath {
+          0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+          50%      { filter: hue-rotate(-8deg) brightness(1.08); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .hero-headline-accent {
             animation: none !important;
             background-position: 50% 50% !important;
+            filter: none !important;
           }
         }
       `}</style>
