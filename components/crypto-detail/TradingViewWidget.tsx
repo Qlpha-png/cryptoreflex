@@ -6,12 +6,14 @@
  * Choix d'implémentation :
  * - <iframe> simple (lazy-loaded), aucun script TradingView injecté → poids
  *   minimal et meilleur perf que les widgets officiels (qui chargent ~200 KB JS).
- * - URL : https://s.tradingview.com/widgetembed/?symbol=BINANCE:{SYMBOL}EUR&interval=D
- *   Si BINANCE n'a pas la paire EUR, le widget retombe naturellement sur USD.
- * - Fallback : detection passive via `onError` impossible sur iframe cross-origin.
- *   On affiche donc en permanence un petit lien externe "Ouvrir sur TradingView"
- *   sous l'iframe — ce lien fait office de fallback gracieux pour les users dont
- *   l'iframe est bloquée par adblock/privacy extension.
+ *
+ * Mapping symbole (FIX 2026-05-02 audit cohérence) :
+ * AVANT : BINANCE:{SYMBOL}EUR partout. Bug : Binance n'a PAS de paires EUR
+ * pour la plupart des altcoins (AAVE, UNI, MKR, COMP, etc.) → "Ce symbole
+ * n'existe pas" pour des dizaines de fiches crypto.
+ * MAINTENANT : BINANCE:{SYMBOL}USDT par défaut (paire USDT existe sur 100%
+ * des top 100 Binance), avec whitelist EUR pour les majeures où la paire
+ * EUR est plus pertinente (BTCEUR, ETHEUR, BNBEUR, etc.).
  *
  * CSP : `frame-src https://s.tradingview.com https://www.tradingview.com` ajouté
  * dans next.config.js. `frame-ancestors 'none'` reste actif (on ne peut pas être
@@ -37,6 +39,20 @@ interface Props {
 
 const TV_BASE = "https://s.tradingview.com/widgetembed";
 
+/**
+ * Whitelist des cryptos qui ont une paire EUR sur Binance (fiable au 2026-05-02).
+ * Pour toutes les autres → fallback USDT (existe sur 100% des top 100 Binance).
+ */
+const BINANCE_EUR_PAIRS = new Set([
+  "BTC", "ETH", "BNB", "ADA", "XRP", "SOL", "MATIC", "POL",
+  "DOGE", "USDT", "USDC", "LTC", "AVAX", "DOT", "LINK",
+  "TRX", "BCH", "ETC", "FIL", "ATOM", "NEAR", "UNI",
+]);
+
+function pickQuoteCurrency(symbol: string): "EUR" | "USDT" {
+  return BINANCE_EUR_PAIRS.has(symbol.toUpperCase()) ? "EUR" : "USDT";
+}
+
 export default function TradingViewWidget({
   symbol,
   name,
@@ -44,11 +60,13 @@ export default function TradingViewWidget({
   defaultOpen = true,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
-  const tvSymbol = `BINANCE:${symbol.toUpperCase()}EUR`;
+  const symbolUpper = symbol.toUpperCase();
+  const quote = pickQuoteCurrency(symbolUpper);
+  const tvSymbol = `BINANCE:${symbolUpper}${quote}`;
   const src = `${TV_BASE}/?frameElementId=tradingview_${symbol.toLowerCase()}&symbol=${encodeURIComponent(
     tvSymbol
   )}&interval=${interval}&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=rgba(0,0,0,0)&studies=[]&theme=dark&style=1&timezone=Europe%2FParis&withdateranges=1&hideideas=1&hidetrading=1&locale=fr`;
-  const externalUrl = `https://www.tradingview.com/symbols/${symbol.toUpperCase()}EUR/?exchange=BINANCE`;
+  const externalUrl = `https://www.tradingview.com/symbols/${symbolUpper}${quote}/?exchange=BINANCE`;
 
   return (
     <section
