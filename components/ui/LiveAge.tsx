@@ -17,7 +17,20 @@ import { useEffect, useState } from "react";
  * Coût : 1 setInterval, ~3 KB JS chunk client. Acceptable pour un islet leaf.
  */
 export default function LiveAge({ since }: { since: string }) {
-  const [age, setAge] = useState(() => Date.now() - new Date(since).getTime());
+  // BUG FIX 2026-05-03 (BATCH 44e) — `Date.now()` dans useState initializer
+  // s'execute server-side (SSR cache) ET client-side (hydration) avec
+  // VALEURS DIFFERENTES (timestamp server cache vs timestamp client hydrate).
+  // React #425 text-content-mismatch -> #418 hydration crash -> tout le root
+  // bascule en client-rendering MAIS Next.js Link onClick reste casse :
+  // preventDefault appele mais router.push jamais call -> "clic = rien".
+  // Symptome user : aucun lien fonctionne sur la home + fiches crypto
+  // (Hero rendu partout). Reproduction confirmee Chrome MCP 03/05/2026.
+  //
+  // Fix : age=null pendant SSR + 1er render client (placeholder identique
+  // serveur+client = match parfait), puis useEffect client-only fait
+  // setAge() = re-render avec vrai compteur. 1ere frame = "live", apres
+  // ~16ms le compteur prend le relais.
+  const [age, setAge] = useState<number | null>(null);
 
   useEffect(() => {
     const tick = () => setAge(Date.now() - new Date(since).getTime());
@@ -33,6 +46,10 @@ export default function LiveAge({ since }: { since: string }) {
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [since]);
+
+  // SSR + 1er render client : placeholder neutre identique des 2 cotes
+  // -> hydration parfaite, pas de mismatch React #425.
+  if (age === null) return <span>live</span>;
 
   const s = Math.max(0, Math.floor(age / 1000));
   if (s < 60) return <span>{s}s</span>;
