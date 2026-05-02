@@ -102,6 +102,19 @@
 
 ---
 
+## Implémenté ce jour (commits successifs)
+
+| Commit | Tier | Contenu |
+|---|---|---|
+| `89d7177` | TIER 0 + TIER 1 partiel | BackButton fix (1217 émissions 404), 8 redirects MDX, RelatedPagesNav+NextStepsGuide sur 4 templates programmatic, Sentry widenClientFileUpload off, PerfMonitor doublon retiré, middleware matcher étendu, ⌘K mobile, NextStepsGuide fiche crypto |
+| `7fab2df` | TIER 1 SEO + HOMEPAGE | Cluster glossaire prefix-based (1257 pages sortent orphelinat), NextStepsGuide signup/login, ItemList+SoftwareApplication schemas, Hero refactor (sub-titre 16 mots, chips supprimées, CTA quiz, badges sous H1, bandeaux live unifiés, eyebrows thématiques) |
+| `986908e` | TIER 2 + TIER 3 | 3 composants UX systémiques (Tldr, LayerCake, JourneyRail), 5 nouvelles pages : `/outils/yield-stablecoins` (killer SEO), `/outils/tax-loss-harvesting` (killer Q4), `/outils/fiscal-copilot` (idée WOW #2), `/outils/wallet-connect` (innovation #3), `/crypto-wrapped` (idée WOW #1) |
+| `515e4ef` | Linking | 4 nouveaux outils ajoutés à `/outils`, 5 nouvelles pages au sitemap |
+
+**Total : 4 commits, 24 fichiers, ~2700 lignes ajoutées.**
+
+---
+
 ## Mantra final consolidé (3 lignes par les 3 experts UX/Innovation/Homepage)
 
 > 1. **« Aucun terme technique ne sort nu. Aucun chiffre ne sort sans analogie. Aucune liste ne sort sans hiérarchie visuelle. »**
