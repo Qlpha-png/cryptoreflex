@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Coins } from "lucide-react";
 
 /**
  * PlatformLogo — rend le logo officiel d'une plateforme d'après son `id`.
@@ -9,15 +8,15 @@ import { Coins } from "lucide-react";
  *
  * - Mappe l'id (kebab-case, depuis data/platforms.json) sur le fichier
  *   correspondant dans /public/logos/<id>.svg
- * - Fallback gracieux : si l'id n'est pas mappé, affiche un placeholder
- *   Lucide <Coins> dans un cercle gold (cohérent identité Cryptoreflex).
+ * - Fallback enrichi (BATCH 17) : si l'id n'est pas mappé, affiche les
+ *   initiales sur un cercle de la couleur brand connue de la plateforme
+ *   (lookup BRAND_COLORS), beaucoup plus pro qu'une icône Coins générique.
  *
  * Note légale : ces logos sont reproduits dans un usage éditorial /
  * comparatif (fair use). Mention dans /mentions-legales.
  */
 
-/** Map id -> extension. Par défaut .svg ; PNG quand on n'a que la version
- *  raster officielle (CoinMarketCap CDN pour Kraken/Bybit/Bitget/Coinhouse). */
+/** Map id -> extension. SVG officiels reproduits dans /public/logos/. */
 const ID_EXTENSIONS: Record<string, "svg" | "png"> = {
   coinbase: "svg",
   binance: "svg",
@@ -26,13 +25,46 @@ const ID_EXTENSIONS: Record<string, "svg" | "png"> = {
   bitstack: "svg",
   swissborg: "svg",
   revolut: "svg",
-  // PNG officiels CoinMarketCap (pas de SVG public dispo) :
-  kraken: "png",
-  bybit: "png",
-  bitget: "png",
-  coinhouse: "png",
+  kraken: "svg",
+  bybit: "svg",
+  bitget: "svg",
+  coinhouse: "svg",
 };
 const KNOWN_IDS = new Set(Object.keys(ID_EXTENSIONS));
+
+/**
+ * BRAND_COLORS — couleurs brand officielles des 23 plateformes pour
+ * lesquelles on n'a pas (encore) le logo SVG. Permet un fallback enrichi
+ * avec cercle coloré + initiales (vs icône Coins gold générique).
+ *
+ * Source : couleurs brand publiques (sites officiels, CoinMarketCap brand).
+ * Fair use éditorial — pas de droit de reproduction d'une couleur seule.
+ */
+const BRAND_COLORS: Record<string, string> = {
+  okx: "#000000",
+  "crypto-com": "#0F2D6B",
+  gemini: "#00DCFA",
+  bitstamp: "#0FBE4F",
+  bitvavo: "#1A1A1A",
+  etoro: "#13C636",
+  paymium: "#0079A1",
+  deblock: "#FF7A1A",
+  nexo: "#1A4DFF",
+  moonpay: "#7D00FF",
+  "n26-crypto": "#36A18B",
+  "21bitcoin": "#F7931A",
+  wirex: "#1F2937",
+  "young-platform": "#FF6B00",
+  "paypal-crypto": "#003087",
+  bitfinex: "#16B157",
+  bsdex: "#0E8FE0",
+  plus500: "#E1191D",
+  "anycoin-direct": "#0084C7",
+  trading212: "#00B5BC",
+  stackin: "#F7931A",
+  "just-mining": "#5C6AC4",
+  "feel-mining": "#FF8800",
+};
 
 /** Normalise l'id éventuel (Trade_Republic, TradeRepublic → trade-republic). */
 function normalize(id: string): string {
@@ -79,19 +111,60 @@ export default function PlatformLogo({
   const baseClass = `shrink-0 ${rounded ? "rounded-xl" : ""} ${className}`;
 
   if (!known) {
-    // Fallback : pastille gold + icône Lucide générique
+    // FALLBACK ENRICHI BATCH 17 : initiales sur cercle de la couleur brand
+    // de la plateforme (lookup BRAND_COLORS). Bien plus distinctif visuellement
+    // que l'icône Coins générique gold qu'on avait avant pour les 23
+    // plateformes sans logo SVG officiel.
+    const brandColor = BRAND_COLORS[normalized];
+    const initials = name
+      .replace(/[\W_]+/g, " ")
+      .trim()
+      .split(/\s+/)
+      .map((w) => w[0]?.toUpperCase() ?? "")
+      .slice(0, 2)
+      .join("");
+    const fontSize = Math.max(10, Math.round(size * 0.36));
+
+    if (brandColor) {
+      // Plateforme connue mais sans SVG officiel — cercle couleur brand.
+      // Détection lisibilité : si la couleur est très claire, on inverse en texte foncé.
+      const isLight = isLightColor(brandColor);
+      return (
+        <span
+          className={`inline-flex items-center justify-center font-bold font-mono ${baseClass}`}
+          style={{
+            width: size,
+            height: size,
+            background: brandColor,
+            color: isLight ? "#0b0d10" : "#ffffff",
+            fontSize,
+            letterSpacing: "-0.02em",
+            ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
+          }}
+          aria-label={name}
+          role="img"
+        >
+          {initials}
+        </span>
+      );
+    }
+
+    // Fallback ultime (plateforme inconnue, pas même dans BRAND_COLORS) :
+    // pastille gradient gold Cryptoreflex + initiales (cohérent identité brand).
     return (
       <span
-        className={`inline-flex items-center justify-center bg-gradient-to-br from-primary-soft to-primary text-background ${baseClass}`}
+        className={`inline-flex items-center justify-center bg-gradient-to-br from-primary-soft to-primary text-background font-bold font-mono ${baseClass}`}
         style={{
           width: size,
           height: size,
+          fontSize,
+          letterSpacing: "-0.02em",
           ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
         }}
         aria-label={name}
         role="img"
       >
-        <Coins style={{ width: size * 0.55, height: size * 0.55 }} />
+        {initials}
       </span>
     );
   }
@@ -131,4 +204,24 @@ export default function PlatformLogo({
       unoptimized
     />
   );
+}
+
+/**
+ * Détecte si une couleur HEX est "claire" (luminance > 0.5) pour décider
+ * si le texte doit être foncé ou clair par-dessus. Algo W3C luminance
+ * relative simplifié.
+ *
+ * Exemples :
+ *   #00DCFA (Gemini cyan) → clair → texte foncé
+ *   #003087 (PayPal navy)  → foncé → texte blanc
+ */
+function isLightColor(hex: string): boolean {
+  const cleaned = hex.replace("#", "");
+  if (cleaned.length !== 6) return false;
+  const r = parseInt(cleaned.slice(0, 2), 16);
+  const g = parseInt(cleaned.slice(2, 4), 16);
+  const b = parseInt(cleaned.slice(4, 6), 16);
+  // Luminance relative (sans correction sRGB pour rester simple)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6;
 }
