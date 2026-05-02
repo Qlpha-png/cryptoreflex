@@ -54,7 +54,38 @@ const ALLOWED_TAGS = new Set([
   "news-mdx",         // pages /actualites + /actualites/[slug] (Pilier 1)
   "ta-articles",      // analyses techniques /analyses-tech/[slug] (Pilier 2)
   "events",           // calendrier /calendrier (Pilier 4)
+  "community-stats",  // /api/community-stats (LiveCommunityStats Footer + Pro)
+  // Tags CoinGecko (étude #12 2026-05-02) — busts ciblés via cron orchestrator
+  // ou debug admin. Le pattern `coingecko:crypto:<id>` est validé séparément
+  // (whitelist dynamique sur le préfixe + slug whitelist coingeckoId).
+  "coingecko:prices",
+  "coingecko:market",
+  "coingecko:global",
+  "coingecko:portfolio",
 ]);
+
+/**
+ * Préfixes de tags acceptés en plus de la whitelist exacte ALLOWED_TAGS.
+ * Permet le tag granulaire `coingecko:crypto:<id>` sans énumérer les 100 ids.
+ *
+ * Le suffixe est validé contre une regex stricte (slug kebab-case) pour
+ * éviter qu'un attaquant ayant CRON_SECRET ne bust un tag arbitraire via
+ * injection (`coingecko:crypto:../foo`, etc.).
+ */
+const ALLOWED_TAG_PREFIXES: Array<{ prefix: string; suffixRegex: RegExp }> = [
+  { prefix: "coingecko:crypto:", suffixRegex: /^[a-z0-9][a-z0-9-]{0,59}$/ },
+];
+
+function isAllowedTag(tag: string): boolean {
+  if (ALLOWED_TAGS.has(tag)) return true;
+  for (const { prefix, suffixRegex } of ALLOWED_TAG_PREFIXES) {
+    if (tag.startsWith(prefix)) {
+      const suffix = tag.slice(prefix.length);
+      if (suffixRegex.test(suffix)) return true;
+    }
+  }
+  return false;
+}
 
 const PATH_REGEX = /^\/[a-z0-9\-/_\[\]]+$/i;
 const PATH_MAX_LEN = 200;
@@ -91,9 +122,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     if (tag) {
-      if (!ALLOWED_TAGS.has(tag)) {
+      if (!isAllowedTag(tag)) {
         return NextResponse.json(
-          { error: `Tag '${tag}' not in whitelist`, allowed: [...ALLOWED_TAGS] },
+          {
+            error: `Tag '${tag}' not in whitelist`,
+            allowed: [...ALLOWED_TAGS],
+            allowedPrefixes: ALLOWED_TAG_PREFIXES.map((p) => p.prefix + "*"),
+          },
           { status: 400 },
         );
       }

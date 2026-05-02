@@ -17,12 +17,28 @@ export type CoinGeckoId = string;
  * - "coingecko:prices"  → fetchPrices (top 6 ticker)
  * - "coingecko:market"  → fetchTopMarket (top 20 table)
  * - "coingecko:global"  → fetchGlobalMetrics (KPIs)
+ *
+ * Tag granulaire (proposition #12 ETUDE-2026-05-02) :
+ * - `coingecko:crypto:<id>` (ex: "coingecko:crypto:bitcoin") via cgCryptoTag()
+ *   → permet d'invalider UNE fiche détail sans busser tout `coingecko:market`.
+ *   Émis par fetchCoinDetail() + utilisé par /api/revalidate?tag=coingecko:crypto:<id>.
  */
 export const CG_TAGS = {
   prices: "coingecko:prices",
   market: "coingecko:market",
   global: "coingecko:global",
 } as const;
+
+/**
+ * Construit le tag granulaire d'une fiche crypto unique pour revalidation
+ * ciblée via `revalidateTag()` ou `/api/revalidate?tag=...`.
+ *
+ * Format : `coingecko:crypto:<coingeckoId>` (kebab-case, lowercase).
+ * Exemple : `cgCryptoTag("bitcoin")` → `"coingecko:crypto:bitcoin"`.
+ */
+export function cgCryptoTag(coingeckoId: string): string {
+  return `coingecko:crypto:${coingeckoId}`;
+}
 
 export interface CoinPrice {
   id: CoinId;
@@ -440,7 +456,9 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
     // Solution : retry exponentiel sur 429 + headers x-cg-demo-api-key si défini
     // + bypass cache du `null` (cf. wrapper fetchCoinDetail plus bas).
     const res = await fetchWithRetry(url, {
-      next: { revalidate: 300, tags: [CG_TAGS.market] },
+      // Tag granulaire (#12 ETUDE-2026-05-02) : `coingecko:crypto:<id>` permet
+      // de bust UNE fiche sans toucher à tout `coingecko:market` (top 20).
+      next: { revalidate: 300, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
       headers: cgHeaders(),
     });
     if (!res.ok) {
@@ -506,24 +524,45 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
  *
  * Implémentation : on enveloppe le résultat caché dans un signal de version.
  * Si version=null on bypass le cache au prochain appel.
+ *
+ * Tag granulaire (#12 ETUDE-2026-05-02) : on attache un tag par-id
+ * `coingecko:crypto:<id>` au wrapper `unstable_cache` ET au `fetch()` interne
+ * pour que `revalidateTag("coingecko:crypto:bitcoin")` invalide les deux
+ * couches d'un coup. La key cache reste partagée (clé `coingeckoId` en arg)
+ * mais on fabrique un wrapper-par-id à la volée pour pouvoir injecter le tag
+ * granulaire dans `unstable_cache.tags` (qui est statique par déclaration).
  */
-const _cachedFetchCoinDetailNonNull = unstable_cache(
-  async (coingeckoId: string) => {
-    const result = await _fetchCoinDetail(coingeckoId);
-    // Si null, on lève pour forcer Next à NE PAS cacher (un throw dans
-    // unstable_cache propage l'erreur et invalide le cache pour cet appel).
-    if (!result) {
-      throw new Error("CG_FETCH_RETURNED_NULL");
-    }
-    return result;
-  },
-  ["coingecko-coin-detail-v2"],
-  { revalidate: 300, tags: [CG_TAGS.market] }
-);
+const _coinDetailCacheRegistry = new Map<
+  string,
+  (id: string) => Promise<CoinDetail>
+>();
+
+function getCachedCoinDetailFn(
+  coingeckoId: string,
+): (id: string) => Promise<CoinDetail> {
+  const existing = _coinDetailCacheRegistry.get(coingeckoId);
+  if (existing) return existing;
+  const fn = unstable_cache(
+    async (id: string) => {
+      const result = await _fetchCoinDetail(id);
+      // Si null, on lève pour forcer Next à NE PAS cacher (un throw dans
+      // unstable_cache propage l'erreur et invalide le cache pour cet appel).
+      if (!result) {
+        throw new Error("CG_FETCH_RETURNED_NULL");
+      }
+      return result;
+    },
+    ["coingecko-coin-detail-v2", coingeckoId],
+    { revalidate: 300, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
+  );
+  _coinDetailCacheRegistry.set(coingeckoId, fn);
+  return fn;
+}
 
 export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
   try {
-    return await _cachedFetchCoinDetailNonNull(coingeckoId);
+    const cachedFn = getCachedCoinDetailFn(coingeckoId);
+    return await cachedFn(coingeckoId);
   } catch (err) {
     // Fallback : un dernier appel direct sans cache, pour qu'au moins la page
     // suivante puisse essayer de re-fetch fresh. Si ça échoue aussi → null.

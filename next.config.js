@@ -7,9 +7,27 @@ const nextConfig = {
   // diminue la surface d'attaque "fingerprinting".
   poweredByHeader: false,
 
-  // Tree-shaking aggressif pour lucide-react (sinon ~700 KB d'icônes inutiles).
+  // Tree-shaking aggressif (étude #13 ETUDE-2026-05-02).
+  // optimizePackageImports rewrite les `import { X } from "pkg"` en imports
+  // spécifiques chunk-par-chunk → tree-shaking efficace même sur les libs
+  // qui n'ont pas un export propre par fichier.
+  //
+  // Mesure : avant lucide-react seul = ~700 KB. Étendu à motion (~25 KB),
+  // @dnd-kit/* (~30 KB), cmdk (~15 KB) → ~70 KB additionnels économisés
+  // sur les bundles client qui les importent.
+  //
+  // PPR (Partial Prerendering) NON activé : exige Next.js canary, on reste
+  // sur 14.2 stable. À reconsidérer après upgrade Next 15+.
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: [
+      "lucide-react",
+      "motion",
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "cmdk",
+      "fuse.js",
+    ],
   },
 
   // Réécriture des imports `import { X } from "lucide-react"` en imports

@@ -19,6 +19,11 @@ import { partners as affiliatePartners } from "@/data/partners";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
+// ISR sitemap (étude #12 ETUDE-2026-05-02) : régénéré max 1×/heure côté Edge,
+// au lieu d'être généré à chaque hit Googlebot. Avec 1035+ URLs programmatiques,
+// chaque génération coûte ~50-100ms — inutile de payer ça pour chaque crawler.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
