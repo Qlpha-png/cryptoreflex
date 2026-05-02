@@ -370,15 +370,21 @@ export default function Navbar() {
               aria-label="Ouvrir la palette de commandes (Ctrl+K)"
               aria-keyshortcuts="Control+K Meta+K"
               title="Palette ⌘K — recherche & actions"
-              className="hidden lg:inline-flex items-center gap-2 h-9 pl-3 pr-1.5 rounded-lg
+              // FIX UX 2026-05-02 #12 (Chrome verif user) — `whitespace-nowrap`
+              // + `shrink-0` essentiels : sur viewport ~1500px le texte
+              // "Rechercher" wrap sur 2 lignes ("Recherch / er ⌘K") car la
+              // navbar est dense (6 nav-items + Search + UserBadge + Account
+              // + CTA). Sans nowrap, les flex children se compriment et
+              // permettent le wrap intra-button.
+              className="hidden lg:inline-flex shrink-0 items-center gap-2 h-9 pl-3 pr-1.5 rounded-lg
                          border border-border/60 bg-elevated/40 text-muted hover:text-fg hover:border-primary/30 hover:bg-elevated
-                         transition-colors duration-fast
+                         transition-colors duration-fast whitespace-nowrap
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                          focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Search className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-              <span className="text-[12.5px]">Rechercher</span>
-              <kbd className="ml-1 inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted">⌘K</kbd>
+              <span className="text-[12.5px] whitespace-nowrap">Rechercher</span>
+              <kbd className="ml-1 inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted shrink-0">⌘K</kbd>
             </button>
 
             {/* Étude #16 ETUDE-2026-05-02 — gamification badge XP/streak.
@@ -425,14 +431,17 @@ export default function Navbar() {
               href="/connexion"
               aria-label="Mon compte"
               title="Mon compte"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg
+              // FIX UX 2026-05-02 #12 — `shrink-0` + `whitespace-nowrap` :
+              // sur ~1500px le texte "Mon compte" wrap sur 2 lignes ("Mon /
+              // compte"). Idem pour le bouton Search ci-dessus.
+              className="hidden md:inline-flex shrink-0 items-center gap-1.5 h-9 px-2.5 rounded-lg
                          text-muted hover:text-fg hover:bg-elevated/60
-                         transition-colors duration-fast
+                         transition-colors duration-fast whitespace-nowrap
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                          focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <UserCircle2 className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-              <span className="hidden lg:inline text-[12.5px]">Mon compte</span>
+              <span className="hidden lg:inline text-[12.5px] whitespace-nowrap">Mon compte</span>
             </Link>
 
             {/* CTA primary — Audit SEO/CRO : "/quiz/plateforme" (KPI conversion)

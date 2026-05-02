@@ -54,15 +54,18 @@ interface HeroProps {
  *    et NewsletterPopup ("14 marques fiables 2026").
  *  - cryptos: 100 = total fiches éditoriales (10 top-cryptos + 90 hidden-gems).
  *    Aligné avec la promesse du H1 et getAllCryptos().length.
- *  - tools: 6 = sous-évaluation prudente (réellement 9 dans /outils/) — laissé bas
- *    pour ne jamais surpromettre ; à monter une fois que tous les outils auront
- *    été testés régression-free.
+ *  - tools: 18 = audit Chrome live 2026-05-02 (#12 cohérence) :
+ *    14 outils gratuits + 2 features Soutien + 4 nouveaux TIER 3 (yield-
+ *    stablecoins, tax-loss-harvesting, fiscal-copilot, wallet-connect)
+ *    pour un total de 18+ outils dans /outils/. Avant : 6 = trop conservatif
+ *    (sous-promesse). On affiche le vrai chiffre maintenant que tous les
+ *    outils sont testés et live.
  *  - method: "Publique" = qualitatif, pas un chiffre.
  */
 const STATS = {
   platforms: 14,
   cryptos: 100,
-  tools: 6,
+  tools: 18,
   method: "Publique",
 } as const;
 

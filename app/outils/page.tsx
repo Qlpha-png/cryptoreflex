@@ -25,8 +25,12 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
   title: "Outils crypto Cryptoreflex — calculateurs gratuits + IA Q&A + Cerfa 2086 auto",
+  // FIX UX 2026-05-02 #12 (Chrome verif user) — description mise à jour
+  // après l'ajout des 4 nouveaux outils TIER 3 (commit 515e4ef) : yield-
+  // stablecoins, tax-loss-harvesting, fiscal-copilot, wallet-connect.
+  // Total à jour = 20 (vs 16 hardcodés en metadata).
   description:
-    "16 outils crypto français : Cerfa 2086 PDF auto (Pro), IA Q&A par fiche (Pro), Radar 3916-bis, calculateur fiscalité PFU 30 %, simulateur DCA, comparateur cryptos, vérificateur MiCA, glossaire, portfolio tracker. Free et Soutien.",
+    "20 outils crypto français : Cerfa 2086 PDF auto (Pro), Fiscal Copilot IA (Pro), Yield stablecoins, Tax Loss Harvesting, Radar 3916-bis, calculateur fiscalité PFU 30 %, simulateur DCA, vérificateur MiCA, Wallet Connect read-only, glossaire 250+. Free et Soutien.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
 };
 
@@ -48,7 +52,7 @@ interface Tool {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Catalogue (16 outils)                                                     */
+/*  Catalogue (20 outils — 16 historiques + 4 TIER 3 ajoutés 2026-05-02)      */
 /* -------------------------------------------------------------------------- */
 
 const TOOLS: Tool[] = [
