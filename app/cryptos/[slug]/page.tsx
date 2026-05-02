@@ -93,6 +93,14 @@ const PfuQuickCalc = dynamic(
   { ssr: false },
 );
 
+// BATCH 28 — innovation expert agents quick win #4 (BTC-only) : countdown
+// live JJ/HH/MM/SS jusqu'au prochain halving Bitcoin (avril 2028). Composant
+// existant (lib + UI), juste pas branché jusqu'ici sur la fiche BTC.
+const HalvingCountdown = dynamic(
+  () => import("@/components/HalvingCountdown"),
+  { ssr: false },
+);
+
 // Lazy-load ROISimulator : Client Component interactif (sliders + fetch
 // /api/historical) positionné après le verdict pour engager le visiteur
 // avant la roadmap. ssr:false : aucun intérêt à SSR une UI qui dépend
@@ -170,6 +178,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { getWalletsForCrypto } from "@/lib/crypto-wallets";
 import { getRoadmapFor } from "@/lib/crypto-roadmaps";
+import { FUTURE_HALVINGS } from "@/lib/bitcoin-halving-cycles";
 // Programmatic SEO #8 (ETUDE-2026-05-02) : maillage interne vers les pages
 // /comparer/[a]/[b] (435 paires) et /acheter/[crypto]/[pays] (600 guides).
 import {
@@ -466,6 +475,38 @@ export default async function CryptoPage({ params }: Props) {
           <div className="mt-8">
             <PfuQuickCalc symbol={c.symbol} cryptoName={c.name} priceUsd={detail.currentPrice} />
           </div>
+        )}
+
+        {/* HALVING COUNTDOWN — BTC-only (innovation BATCH 28 expert agents
+            quick win #4). Catalyseur narratif majeur : compte à rebours live
+            JJ/HH/MM/SS jusqu'au prochain halving (~avril 2028). Engagement
+            lecteur + retours réguliers sur la fiche. */}
+        {c.id === "bitcoin" && FUTURE_HALVINGS.length > 0 && (
+          <section className="mt-10" aria-labelledby="btc-halving-countdown-title">
+            <header className="mb-4 flex items-baseline justify-between gap-4 flex-wrap">
+              <div>
+                <h3
+                  id="btc-halving-countdown-title"
+                  className="inline-flex items-center gap-2 text-base sm:text-lg font-bold text-fg"
+                >
+                  <span aria-hidden="true">⏳</span>
+                  Prochain halving Bitcoin
+                </h3>
+                <p className="mt-1 text-[12px] text-muted">
+                  Récompense par bloc divisée par 2 → {FUTURE_HALVINGS[0]?.rewardAfter ?? 1.5625} BTC.
+                  Catalyseur historique d&apos;offre.
+                </p>
+              </div>
+              <Link
+                href="/halving-bitcoin"
+                className="text-[12px] font-semibold text-primary hover:text-primary-glow inline-flex items-center gap-1"
+              >
+                Cycle complet & projections
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              </Link>
+            </header>
+            <HalvingCountdown targetDate={new Date(FUTURE_HALVINGS[0].dateIso)} />
+          </section>
         )}
 
         {/* ON-CHAIN METRICS LIVE — TVL DeFiLlama + dominance + FDV + holders.
