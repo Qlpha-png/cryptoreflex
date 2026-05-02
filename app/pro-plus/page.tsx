@@ -43,9 +43,11 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Cryptoreflex Pro+ — IA illimitée + API + exports pour utilisateurs avancés crypto FR",
+  // BATCH 39 — fix audit SEO P0 : title 88 chars tronqué SERP. Réduit
+  // avec prix visible mobile + brand pour reconnaissance.
+  title: "Cryptoreflex Pro+ 9,99€/mois — IA illimitée + API crypto FR",
   description:
-    "Pro+ : 9,99 €/mois (ou 79 €/an, économie 41 €). IA Q&A 100 questions/jour, exports illimités CSV/PDF, accès API personnelle, alertes prix avancées. 100 % automatisé, sans présence humaine.",
+    "Pro+ : 9,99 €/mois (essai 14 j gratuit). IA Q&A 100 questions/jour, exports illimités CSV/PDF, API personnelle. 100 % automatisé.",
   alternates: { canonical: `${BRAND.url}/pro-plus` },
   openGraph: {
     title: "Cryptoreflex Pro+ pour utilisateurs avancés",

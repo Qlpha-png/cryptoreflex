@@ -79,7 +79,11 @@ export default function ProStickyMobileCTA({ enabled, monthlyPrice }: Props) {
     <div
       role="complementary"
       aria-label="Soutenir Cryptoreflex"
-      className="pro-sticky-cta pro-sticky-cta-backdrop fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-elevated/85 border-t border-border px-4 pt-3"
+      /* BATCH 39 — fix audit Mobile UX P0 : safe-area était commenté
+         mais pas appliqué → CTA chevauchait la home indicator iPhone X+.
+         pb-[max(env(safe-area-inset-bottom),12px)] = padding bottom dynamique
+         (notch Apple) avec fallback 12px minimum. */
+      className="pro-sticky-cta pro-sticky-cta-backdrop fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-elevated/85 border-t border-border px-4 pt-3 pb-[max(env(safe-area-inset-bottom),12px)]"
     >
       <a
         href="#plans"

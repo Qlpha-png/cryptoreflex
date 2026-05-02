@@ -97,6 +97,10 @@ export default function UpdatePasswordForm() {
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
             aria-hidden="true"
           />
+          {/* BATCH 39 — fix audit a11y P0 + Mobile UX P0 :
+              - autoCorrect/autoCapitalize off (iOS Safari corrompait pwd révélé)
+              - enterKeyHint pour clavier mobile FR
+              - spellCheck false */}
           <input
             type={showPwd ? "text" : "password"}
             required
@@ -104,15 +108,21 @@ export default function UpdatePasswordForm() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Au moins 8 caractères"
             autoComplete="new-password"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            enterKeyHint="next"
             minLength={8}
             maxLength={72}
-            className="w-full rounded-lg border border-border bg-elevated pl-10 pr-11 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
+            className="w-full rounded-lg border border-border bg-elevated pl-10 pr-12 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
             disabled={loading}
           />
+          {/* Tap target 44×44 WCAG 2.5.5 + aria-pressed pour toggle state */}
           <button
             type="button"
             onClick={() => setShowPwd((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+            aria-pressed={showPwd}
+            className="absolute right-1 top-1/2 -translate-y-1/2 grid place-items-center h-11 w-11 text-muted hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
             aria-label={
               showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
             }
@@ -135,6 +145,7 @@ export default function UpdatePasswordForm() {
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
             aria-hidden="true"
           />
+          {/* BATCH 39 — même hardening que le 1er input + enterKeyHint=done */}
           <input
             type={showPwd ? "text" : "password"}
             required
@@ -142,6 +153,10 @@ export default function UpdatePasswordForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Le même que ci-dessus"
             autoComplete="new-password"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            enterKeyHint="done"
             minLength={8}
             maxLength={72}
             className="w-full rounded-lg border border-border bg-elevated pl-10 pr-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   CheckCircle2,
   Crown,
@@ -9,6 +10,14 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+
+// BATCH 39 — confetti CSS-only (zéro lib) qui se déclenche uniquement
+// quand session_id Stripe est présent (vrai retour paiement, pas un
+// utilisateur qui revient sur la page bookmark).
+const SimpleConfetti = dynamic(
+  () => import("@/components/animations/SimpleConfetti"),
+  { ssr: false },
+);
 
 export const metadata: Metadata = {
   title: "Bienvenue dans Cryptoreflex Pro",
@@ -31,6 +40,10 @@ export default function WelcomePage({ searchParams }: SearchParams) {
       aria-labelledby="welcome-title"
       className="relative overflow-hidden min-h-[80vh] py-16 sm:py-20 isolate"
     >
+      {/* BATCH 39 — Confetti CSS-only déclenché uniquement si session_id
+          Stripe présent (= vrai retour paiement). Évite déclenchement sur
+          user qui revient bookmark. */}
+      {sessionId && <SimpleConfetti />}
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
       <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-primary/15 rounded-full blur-3xl pointer-events-none" />
 

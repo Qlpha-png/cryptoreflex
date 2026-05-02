@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   CheckCircle2,
   Download,
@@ -10,6 +11,13 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+
+// BATCH 39 — confetti CSS-only sur opt-in newsletter (effet "wow tu es dans
+// la tribu"). Léger, 0 lib, désactivé prefers-reduced-motion.
+const SimpleConfetti = dynamic(
+  () => import("@/components/animations/SimpleConfetti"),
+  { ssr: false },
+);
 
 /**
  * /merci — page de remerciement post-inscription newsletter.
@@ -73,6 +81,9 @@ const tools = [
 export default function MerciPage() {
   return (
     <div className="min-h-screen">
+      {/* BATCH 39 — confetti CSS-only sur opt-in newsletter ("wow tu es
+          dans la tribu"). Auto-cleanup 3.5s. */}
+      <SimpleConfetti />
       {/* HERO confirmation */}
       <section className="border-b border-border">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
@@ -85,8 +96,8 @@ export default function MerciPage() {
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-xl mx-auto">
-            Un email de confirmation vient de t'être envoyé. Clique sur le lien à
-            l'intérieur pour activer ton inscription et garantir la réception
+            Un email de confirmation vient de t&apos;être envoyé. Clique sur le lien à
+            l&apos;intérieur pour activer ton inscription et garantir la réception
             quotidienne de la newsletter.
           </p>
 
@@ -117,7 +128,7 @@ export default function MerciPage() {
 
           <p className="mt-6 text-xs text-muted flex items-center justify-center gap-1.5">
             <Mail className="h-3.5 w-3.5" />
-            Pas reçu l'email après 5 min ? Vérifie tes spams ou écris à{" "}
+            Pas reçu l&apos;email après 5&nbsp;min ? Vérifie tes spams ou écris à{" "}
             <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
               {BRAND.email}
             </a>
@@ -129,7 +140,7 @@ export default function MerciPage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-center gap-2 mb-6">
           <BookOpen className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-extrabold text-fg">Pendant que tu attends l'email…</h2>
+          <h2 className="text-2xl font-extrabold text-fg">Pendant que tu attends l&apos;email…</h2>
         </div>
         <p className="text-sm text-fg/70 mb-6">
           Quelques lectures pour démarrer du bon pied.
@@ -147,7 +158,7 @@ export default function MerciPage() {
               </h3>
               <p className="mt-2 text-sm text-fg/70">{a.desc}</p>
               <span className="mt-4 inline-flex items-center gap-1 text-xs text-primary-soft">
-                Lire l'article
+                Lire l&apos;article
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </Link>

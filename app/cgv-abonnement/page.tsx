@@ -117,7 +117,7 @@ export default function CgvAbonnementPage() {
       </h2>
       <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
         <li><strong>Mensuel</strong> : 2,99 € TTC / mois — débité automatiquement chaque mois sur la carte bancaire enregistrée</li>
-        <li><strong>Annuel</strong> : 28,99 € TTC / an — débité une seule fois pour 12 mois (≈ 19 % d&apos;économie vs mensuel)</li>
+        <li><strong>Annuel</strong> : 28,99 € TTC / an — débité une seule fois pour 12 mois (≈ 19 % d&apos;économie par rapport au mensuel)</li>
       </ul>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
         Le paiement est traité par <strong>Stripe Inc.</strong> (PCI-DSS niveau 1).
@@ -317,10 +317,10 @@ export default function CgvAbonnementPage() {
         </p>
         <ul className="mt-3 text-sm text-fg/85 space-y-1">
           <li>
-            <strong>CM2C</strong> — Centre de la Médiation de la Consommation
-            de Conciliateurs de Justice
+            <strong>CM2C</strong> — Centre de Médiation de la Consommation de
+            Conciliateurs de Justice
           </li>
-          <li>14 rue Saint Jean, 75017 Paris</li>
+          <li>14 rue Saint-Jean, 75017 Paris</li>
           <li>
             Site web :{" "}
             <a

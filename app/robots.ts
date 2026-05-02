@@ -46,6 +46,12 @@ export default function robots(): MetadataRoute.Robots {
     "/embed/",
     "/portefeuille",
     "/watchlist",
+    // BATCH 39 — fix audit SEO P0 : pages compte/auth privées doivent
+    // être disallow (fuite PageRank + risque indexation données user).
+    "/mon-compte",
+    "/connexion",
+    "/inscription",
+    "/mot-de-passe-oublie",
     "/outils/calculateur-fiscalite/preview-pdf/",
   ];
 
