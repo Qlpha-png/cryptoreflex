@@ -90,14 +90,14 @@ const POOL: Record<string, Step> = {
   comparator: {
     href: "/comparatif",
     Icon: BarChart3,
-    label: "Compare les 14 plateformes",
+    label: "Compare les 30+ plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
   pdfPlateformes: {
     href: "/lead-magnets/guide-plateformes-crypto-2026.pdf",
     Icon: Download,
     label: "Télécharge le PDF gratuit",
-    desc: "62 pages — étude indépendante des 14 plateformes crypto FR.",
+    desc: "62 pages — étude indépendante des plateformes crypto FR (CASP MiCA + PSAN).",
   },
   pdfFiscalite: {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
@@ -176,12 +176,12 @@ const POOL: Record<string, Step> = {
     href: "#newsletter",
     Icon: Mail,
     label: "Newsletter quotidienne",
-    desc: "1 email matin (3 min) — actu + bonus PDF 14 plateformes.",
+    desc: "1 email matin (3 min) — actu + bonus PDF plateformes crypto FR.",
   },
   outils: {
     href: "/outils",
     Icon: Wrench,
-    label: "11 outils gratuits",
+    label: "20 outils gratuits",
     desc: "Calculateurs, simulateurs, convertisseur, glossaire 250+ termes.",
   },
   topCryptos: {

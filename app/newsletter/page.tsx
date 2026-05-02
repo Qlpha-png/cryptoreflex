@@ -69,7 +69,7 @@ const benefits = [
   {
     icon: Sparkles,
     title: "Bonus inscription",
-    text: "Le guide PDF complet 'Les 14 plateformes crypto à utiliser en France 2026'.",
+    text: "Le guide PDF complet 'Les plateformes crypto régulées MiCA à utiliser en France 2026'.",
   },
 ];
 

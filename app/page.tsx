@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: BRAND.url,
     description:
-      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 14 plateformes MiCA comparées, 6+ outils gratuits (DCA, ROI, fiscalité PFU), IA Q&A par fiche. Méthodologie publique.",
+      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 30+ plateformes MiCA + PSAN comparées, 18+ outils gratuits (DCA, ROI, fiscalité PFU, yield stablecoins, tax loss harvesting), IA Q&A par fiche. Méthodologie publique.",
   },
 };
 

@@ -321,7 +321,7 @@ export default function NewsletterCapture() {
                 <span>
                   <strong className="text-fg">Bonus à l&apos;inscription :</strong> le PDF{" "}
                   <em className="text-primary-soft not-italic font-semibold">
-                    « Les 14 plateformes crypto à utiliser en France 2026 »
+                    « Les plateformes crypto régulées MiCA à utiliser en France 2026 »
                   </em>{" "}
                   (62 pages, étude indépendante avec méthodologie publique 6 critères).
                 </span>

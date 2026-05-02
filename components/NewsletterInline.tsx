@@ -308,7 +308,7 @@ export default function NewsletterInline({
         {leadMagnet && variant === "default" && status === "idle" && (
           <p className="mt-3 text-xs text-muted">
             <span className="text-primary-soft font-medium">Bonus :</span> guide PDF
-            "14 plateformes crypto à utiliser en France 2026" à l'inscription.
+            "Les plateformes crypto régulées MiCA à utiliser en France 2026" à l'inscription.
           </p>
         )}
 

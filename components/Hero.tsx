@@ -34,7 +34,7 @@ import type { CoinPrice } from "@/lib/coingecko";
  * - Server component (le seul îlot client = AnimatedNumber + HeroLiveWidget).
  * - Background : dotted grid + halo gold radial animé (breathe + mesh shift).
  * - 1 CTA primary fort + 1 CTA secondaire newsletter.
- * - Stats card 4 KPI en bas (14 plateformes / 100 cryptos / 6 outils / Méthode).
+ * - Stats card 4 KPI en bas (30+ plateformes / 100 cryptos / 18 outils / Méthode).
  * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
  */
 
@@ -48,22 +48,24 @@ interface HeroProps {
 
 /**
  * STATS exposés en home — chiffres réels uniquement (audit crédibilité 2026-04-26).
- *  - platforms: 14 = total marques sélectionnées et auditées par Cryptoreflex
- *    (11 exchanges/brokers data/platforms.json + 2 hardware wallets data/wallets.json
- *    + 1 SaaS fiscalité Waltio data/partners.ts). Cohérent avec ReassuranceSection
- *    et NewsletterPopup ("14 marques fiables 2026").
+ *  - platforms: 30 = total marques sélectionnées + auditées par Cryptoreflex.
+ *    AUDIT 2026-05-02 user "il en manque trop" : élargissement du catalogue
+ *    de 11 à 34 plateformes via 2 vagues (commit 2026-05-02 #13). Le chiffre
+ *    affiché est conservateur (30 vs 34 réels = buffer pour 4 plateformes
+ *    en transition CASP non encore vérifiées sur ESMA register live).
+ *    Couverture : 11 historiques + 10 vague 1 (OKX, Crypto.com, Gemini,
+ *    Bitstamp, Bitvavo, eToro, Paymium, Deblock, Nexo, MoonPay) +
+ *    13 vague 2 (N26, 21Bitcoin, Wirex, Young Platform, PayPal Crypto,
+ *    Bitfinex, BSDEX, Plus500, AnyCoin Direct, Trading 212, StackinSat,
+ *    Just Mining, Feel Mining).
  *  - cryptos: 100 = total fiches éditoriales (10 top-cryptos + 90 hidden-gems).
- *    Aligné avec la promesse du H1 et getAllCryptos().length.
- *  - tools: 18 = audit Chrome live 2026-05-02 (#12 cohérence) :
- *    14 outils gratuits + 2 features Soutien + 4 nouveaux TIER 3 (yield-
- *    stablecoins, tax-loss-harvesting, fiscal-copilot, wallet-connect)
- *    pour un total de 18+ outils dans /outils/. Avant : 6 = trop conservatif
- *    (sous-promesse). On affiche le vrai chiffre maintenant que tous les
- *    outils sont testés et live.
+ *  - tools: 18 = 14 outils gratuits + 2 features Soutien + 4 TIER 3 (commit
+ *    2026-05-02 #12 yield-stablecoins, tax-loss-harvesting, fiscal-copilot,
+ *    wallet-connect).
  *  - method: "Publique" = qualitatif, pas un chiffre.
  */
 const STATS = {
-  platforms: 14,
+  platforms: 30,
   cryptos: 100,
   tools: 18,
   method: "Publique",
@@ -142,7 +144,7 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 Cryptoreflex (sans bullshit). Impact estimé +20-30% conversion
                 hero. */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              {STATS.platforms} plateformes <strong className="text-fg font-semibold">régulées MiCA</strong> comparées,{" "}
+              {STATS.platforms}+ plateformes <strong className="text-fg font-semibold">régulées MiCA</strong> comparées,{" "}
               {STATS.cryptos} cryptos analysées,{" "}
               <strong className="text-fg font-semibold">méthodologie publique</strong>.
             </p>

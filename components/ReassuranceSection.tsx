@@ -20,12 +20,14 @@ interface ReassuranceItem {
 /**
  * Métriques affichées en bandeau de réassurance.
  *
- * Audit crédibilité 26/04/2026 :
+ * Audit crédibilité 26/04/2026 + extension 02/05/2026 :
  *  - L'ancienne carte "10 000+ visiteurs/mois" a été supprimée (mensonge :
  *    site lancé le 15/04/2026, audience réelle 0-50 visiteurs/jour).
- *  - "14 marques fiables sélectionnées" (chiffre réel) :
- *    11 exchanges/brokers (data/platforms.json) + 2 hardware wallets
- *    (data/wallets.json : Ledger + Trezor) + 1 SaaS fiscalité (Waltio).
+ *  - 2026-05-02 user "il en manque trop" : extension du catalogue de 14 à
+ *    37 marques (34 plateformes platforms.json + 2 hardware wallets +
+ *    1 SaaS fiscalité). On affiche conservativement "30+" pour rester
+ *    honnête vs les 4 entrées en transition CASP non encore vérifiées
+ *    sur ESMA register live (atRiskJuly2026=true sur Bitfinex notamment).
  *  - On garde la 4e carte "Lancement avril 2026" pour transformer la jeunesse
  *    en gage de transparence (+ lien vers /impact pour le dashboard public).
  *  - Toute future remontée d'un chiffre doit s'appuyer sur une donnée
@@ -34,12 +36,14 @@ interface ReassuranceItem {
 const ITEMS: ReassuranceItem[] = [
   {
     Icon: Award,
-    value: "14",
+    value: "30+",
     label: "Marques fiables sélectionnées",
     // Fix audit cohérence 30/04/2026 — "toutes MiCA / régulées" était faux :
     // hardware wallets (Ledger, Trezor) ne sont PAS sous MiCA (matériel,
     // pas service), Waltio est SaaS de fiscalité (pas PSAN). Reformulé.
-    hint: "Exchanges régulés MiCA + wallets matériels + fiscalité SaaS",
+    // 02/05/2026 : on précise CASP UE + PSAN FR pour clarifier les deux
+    // statuts représentés dans le catalogue post-extension.
+    hint: "Exchanges CASP MiCA + PSAN FR + wallets + fiscalité SaaS",
   },
   {
     Icon: Eye,

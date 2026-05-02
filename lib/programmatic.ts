@@ -29,6 +29,7 @@ import { getAllPlatforms, type Platform } from "@/lib/platforms";
  */
 
 export const REVIEW_SLUGS = [
+  // Originaux (11)
   "coinbase",
   "binance",
   "bitpanda",
@@ -38,13 +39,40 @@ export const REVIEW_SLUGS = [
   "coinhouse",
   "bitstack",
   "swissborg",
-  // À ajouter dans platforms.json — listés ici pour le pipeline éditorial
+  "bybit",
+  "revolut",
+  // Hardware wallets (à ajouter dans platforms.json — listés ici pour pipeline)
   "ledger",
   "trezor",
-  "revolut",
-  "n26",
-  "etoro",
+  // FIX 2026-05-02 #13 — extension catalogue (user "trouve autant que possible
+  // autorisé en France"). 13 nouvelles plateformes ajoutées via script (vague
+  // 1+2). REVIEW_SLUGS étendu pour activer la génération sitemap + page
+  // /avis/<slug> automatique. Source de vérité = data/platforms.json.
   "okx",
+  "crypto-com",
+  "gemini",
+  "bitstamp",
+  "bitvavo",
+  "etoro",
+  "paymium",
+  "deblock",
+  "nexo",
+  "moonpay",
+  "n26-crypto",
+  "21bitcoin",
+  "wirex",
+  "young-platform",
+  "paypal-crypto",
+  "bitfinex",
+  "bsdex",
+  "plus500",
+  "anycoin-direct",
+  "trading212",
+  "stackin",
+  "just-mining",
+  "feel-mining",
+  // legacy
+  "n26",
 ] as const;
 
 export type ReviewSlug = (typeof REVIEW_SLUGS)[number];

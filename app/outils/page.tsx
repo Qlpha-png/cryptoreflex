@@ -217,7 +217,7 @@ const TOOLS: Tool[] = [
   // (Yield Stablecoins, Crypto Wrapped) servent à acquérir.
   {
     title: "Yield stablecoins (USDC/USDT/EURC)",
-    desc: "Comparateur APY sur 14 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
+    desc: "Comparateur APY sur 14+ plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
     href: "/outils/yield-stablecoins",
     Icon: Zap,
     tier: "free",
