@@ -278,9 +278,18 @@ export default async function BlogArticlePage({ params }: Props) {
 
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Layout : article principal + sidebar (lg+) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
-            <div className="lg:col-span-2 max-w-3xl mx-auto lg:mx-0">
+          {/* Layout : article principal + sidebar (lg+).
+              FIX RESPONSIVE 2026-05-02 #6 (audit user "moitié des lignes
+              coupées en mobile") : `min-w-0` essentiel sur les 2 niveaux
+              (grid + child). Par défaut `min-width: auto` sur les grid items
+              = `min-content`, donc dès qu'une table MDX large ou un long
+              titre apparait, la cellule explose au-delà de 1fr → article
+              rendu à 605px dans un viewport 390px → contenu coupé à droite.
+              `body { overflow-x: hidden }` masquait juste le bug.
+              Solution : `min-w-0 w-full` force la cellule à respecter le
+              container, le scroll horizontal local des tables se réactive. */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 min-w-0">
+            <div className="lg:col-span-2 max-w-3xl mx-auto lg:mx-0 min-w-0 w-full">
               {/* Retour */}
               <Link
                 href="/blog"

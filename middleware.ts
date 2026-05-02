@@ -94,9 +94,30 @@ export async function middleware(request: NextRequest) {
  *  - /embed/* (widgets iframe destinés à être hostés sur des sites tiers —
  *    le middleware injecte X-Frame-Options: DENY qui bloquerait l'iframing.
  *    Pas d'auth Supabase nécessaire sur les pages embed (pages publiques).)
+ *
+ * FIX 2026-05-02 #4 — quick win scaling (PLAN-OPTIMISATION-SCALING #2/P0).
+ * On exclut aussi les routes SEO programmatic massives qui sont 100 %
+ * read-only (pas d'auth, pas de session) : `/cryptos`, `/blog`, `/comparer`,
+ * `/vs`, `/comparatif`, `/glossaire`, `/avis`, `/staking`, `/acheter`,
+ * `/convertisseur`, `/analyses-techniques`, `/actualites`, `/academie`,
+ * `/marche`, `/outils`. Ces routes représentent ~80 % du trafic SEO et
+ * n'ont JAMAIS besoin du refresh JWT Supabase. Avant : 100 % des req
+ * passaient par `supabase.auth.getUser()` (un round-trip Supabase à chaque
+ * page vue). Après : seules les routes auth-aware (mon-compte, admin, pro,
+ * portefeuille, alertes, etc.) déclenchent le middleware.
+ *
+ * Impact attendu :
+ *  - −60 à −80 % d'invocations Edge facturées sur Vercel
+ *  - Latence p50 −30 à −60 ms sur les pages SEO (élimination du Supabase RTT)
+ *  - Headers de sécurité (HSTS, CSP, etc.) sont déjà gérés via next.config.js
+ *    `headers()` côté CDN — donc pas perdus quand on bypass le middleware.
+ *
+ * NB : si on ajoute une feature auth-aware sur une page SEO listée ici (ex:
+ * watchlist sur /cryptos/[slug]), il faudra retirer `cryptos` du matcher OU
+ * faire le check côté Server Component avec `createSupabaseServerClient()`.
  */
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news|api/whales|api/onchain|api/convert).*)",
   ],
 };

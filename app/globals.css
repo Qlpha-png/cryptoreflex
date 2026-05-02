@@ -52,6 +52,15 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   /* Empêche le scroll horizontal accidentel sur mobile (bug fréquent overflow tableau) */
   overflow-x: hidden;
+  /* FIX RESPONSIVE 2026-05-02 #6 (audit user "moitié des lignes coupées
+     mobile") — overflow-wrap: anywhere casse les chaînes non-cassables
+     (adresses wallet 0xABC..., bc1q..., transaction hashes, URLs nues sans
+     espaces) qui sinon forçaient l'article à dépasser la largeur viewport
+     (et `overflow-x: hidden` ci-dessus masquait juste le contenu coupé
+     plutôt que de le wrap). Filet de sécurité au-delà des fixes ciblés
+     `min-w-0` sur les grid items des templates blog/cryptos. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Padding bottom mobile = laisser de la place pour la sticky bar */

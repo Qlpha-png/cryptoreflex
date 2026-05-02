@@ -209,9 +209,13 @@ const mdxComponents = {
   ),
 
   /* Tableaux GFM ---------------------------------------------------------- */
+  // FIX RESPONSIVE 2026-05-02 #6 — `max-w-full` sur le wrapper le découple
+  // d'un parent qui aurait été gonflé. `min-w-[480px]` rend le scroll
+  // horizontal explicite (au lieu de squeezer des cellules à 60px qui
+  // wraperaient en illisible) sur mobile <480px.
   table: (props: ComponentProps<"table">) => (
-    <div className="my-6 overflow-x-auto rounded-xl border border-border">
-      <table className="w-full border-collapse text-sm" {...props} />
+    <div className="my-6 overflow-x-auto rounded-xl border border-border max-w-full">
+      <table className="w-full min-w-[480px] border-collapse text-sm" {...props} />
     </div>
   ),
   thead: (props: ComponentProps<"thead">) => (
@@ -250,7 +254,11 @@ export default function MdxContent({ source, components }: MdxContentProps) {
   return (
     <div
       className={[
-        "prose prose-invert max-w-none",
+        // FIX RESPONSIVE 2026-05-02 #6 — `min-w-0 w-full break-words` :
+        // ceinture+bretelles si le parent grid perd `min-w-0`. Évite que
+        // les URLs nues longues (0xABC..., bc1q..., transaction hashes)
+        // ou les mots techniques non-cassables fassent déborder l'article.
+        "prose prose-invert max-w-none min-w-0 w-full break-words",
         "prose-headings:font-display prose-headings:tracking-tight",
         "prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline",
         "prose-strong:text-white",
