@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getAlertsByEmail, isValidEmail } from "@/lib/alerts";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,13 +34,6 @@ function rateLimit(key: string): boolean {
   return true;
 }
 
-function getClientIp(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "local"
-  );
-}
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   if (!rateLimit(getClientIp(req))) {

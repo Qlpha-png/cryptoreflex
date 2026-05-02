@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteAlert, getAlertById, verifyUnsubscribeToken } from "@/lib/alerts";
 import { getKv } from "@/lib/kv";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,13 +22,6 @@ interface Ctx {
   params: { id: string };
 }
 
-function getClientIp(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "local"
-  );
-}
 
 const RL_STORE = new Map<string, { count: number; resetAt: number }>();
 const RL_LIMIT = 30;

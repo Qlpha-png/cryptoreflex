@@ -29,7 +29,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
+/**
+ * BATCH 21 — Defense-in-depth CSRF : check Origin/Referer sur les mutations
+ * (POST/PUT/PATCH/DELETE). Cookies Supabase reposent sur SameSite=Lax par
+ * défaut, mais une exfiltration cross-site via `<form>` POST reste
+ * théoriquement possible. Ce check refuse les requêtes mutation venant
+ * d'un Origin qui n'est pas le nôtre.
+ *
+ * Note : on whitelist le wildcard `*` pour /api/embed/* (widgets cross-domain
+ * légitimes). On exclut /api/stripe/webhook (signature HMAC déjà vérifiée).
+ */
+const ALLOWED_ORIGINS = new Set([
+  "https://www.cryptoreflex.fr",
+  "https://cryptoreflex.fr",
+  // Vercel preview deployments
+  "https://cryptoreflex.vercel.app",
+]);
+
+function isCrossSiteMutation(request: NextRequest): boolean {
+  const method = request.method;
+  if (method === "GET" || method === "HEAD" || method === "OPTIONS") return false;
+  const path = request.nextUrl.pathname;
+  // Stripe webhook : vérifié par signature HMAC, pas Origin (bot upstream).
+  if (path.startsWith("/api/stripe/webhook")) return false;
+  // Embed widgets : intentionnellement cross-origin (frame-ancestors *).
+  if (path.startsWith("/api/embed/")) return false;
+
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    // Same-origin POST / fetch SSR : pas d'Origin sent, on accepte.
+    return false;
+  }
+  // Vercel preview : *.vercel.app pour les branches non-prod.
+  if (origin.endsWith(".vercel.app") && origin.includes("cryptoreflex")) {
+    return false;
+  }
+  return !ALLOWED_ORIGINS.has(origin);
+}
+
 export async function middleware(request: NextRequest) {
+  // BATCH 21 — CSRF check avant toute autre logique (early return si mutation
+  // cross-site bloquée).
+  if (isCrossSiteMutation(request)) {
+    return new NextResponse(
+      JSON.stringify({ error: "Cross-site mutation blocked" }),
+      {
+        status: 403,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+        },
+      },
+    );
+  }
+
   // Étape 1 : créer la response initiale qu'on va renvoyer (et potentiellement
   // recréer dans setAll pour propager les cookies refresh).
   let supabaseResponse = NextResponse.next({ request });
