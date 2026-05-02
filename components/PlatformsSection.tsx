@@ -62,7 +62,7 @@ export default function PlatformsSection() {
               <span className="gradient-text">{totalAvailable} options</span>
             </h3>
             <p className="mt-3 text-sm text-white/70 leading-relaxed">
-              Triée par score global. Glisse pour découvrir les {totalAvailable}{" "}
+              Triées par score global. Glisse pour découvrir les {totalAvailable}{" "}
               plateformes (méthodologie publique, frais réels, conformité MiCA
               vérifiée).
             </p>

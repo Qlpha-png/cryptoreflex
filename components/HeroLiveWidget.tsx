@@ -109,12 +109,11 @@ export default function HeroLiveWidget({
         </span>
       </header>
 
-      {/* Liste top 3 avec aria-live polite (annonce changement prix SR). */}
-      <ul
-        className="mt-4 divide-y divide-border/60"
-        aria-live="polite"
-        aria-atomic="false"
-      >
+      {/* BATCH 36 — fix a11y P0 : aria-live="polite" sur ul retiré (audit
+          WCAG : ré-annonçait les 3 lignes complètes toutes les 2.5s = bruit
+          SR insupportable). Liste reste consultable au tab+screen reader,
+          juste sans broadcast continu. */}
+      <ul className="mt-4 divide-y divide-border/60">
         {top3.map((coin) => (
           <CoinRow key={coin.id} coin={coin} />
         ))}

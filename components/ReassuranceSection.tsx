@@ -241,7 +241,7 @@ export default function ReassuranceSection() {
             <p className="mt-2 text-sm text-muted max-w-xl leading-relaxed">
               Chaque plateforme listée est confrontée aux registres officiels.
               Méthodologie publique, sources tracées, aucune autorité prêtée.
-              Si on dit "MiCA-compliant", c&apos;est qu&apos;on l&apos;a vérifié dans le registre.
+              Si on dit «&nbsp;conforme MiCA&nbsp;», c&apos;est qu&apos;on l&apos;a vérifié dans le registre.
             </p>
           </div>
           <div className="flex flex-col gap-1 items-end text-xs text-muted">
@@ -262,14 +262,14 @@ export default function ReassuranceSection() {
             target={34}
             suffix="+"
             label="Plateformes auditées"
-            hint="Exchanges CASP MiCA + PSAN FR + wallets + fiscalité SaaS"
+            hint="Plateformes CASP MiCA + PSAN FR + portefeuilles + outils fiscaux"
             sparkline={SPARK_DATA}
           />
           <KpiCard
             Icon={Database}
             target={12}
             label="Sources publiques consultées"
-            hint="ESMA, AMF, BOFiP, CoinGecko, Trustpilot, on-chain explorers"
+            hint="ESMA, AMF, BOFiP, CoinGecko, Trustpilot, explorateurs blockchain"
           />
           <KpiCard
             Icon={FileCheck}
@@ -288,7 +288,11 @@ export default function ReassuranceSection() {
           />
         </div>
 
-        {/* Chips régulateurs + sources fusionnés (Expert 3 microcopy contextuelle) */}
+        {/* BATCH 36 — fix a11y P0 (audit Expert WCAG 2.2 + Mobile UX) :
+            chips étaient en <span> non focusables avec group-hover only
+            → invisible au clavier + invisible mobile. Migration en
+            <details>/<summary> natif : tap-to-expand sur mobile,
+            keyboard accessible, prefer screen-reader friendly. */}
         <div className="mt-8">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-3">
             Le filtre légal qu&apos;on applique avant vous
@@ -296,22 +300,28 @@ export default function ReassuranceSection() {
           <ul className="flex flex-wrap gap-2">
             {REGULATORS.map(({ short, full, detail }) => (
               <li key={short}>
-                <span
-                  title={`${full} — ${detail}`}
-                  className="group inline-flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 transition cursor-help hover:border-primary/50 hover:bg-elevated"
-                >
-                  <span className="font-mono text-xs font-bold text-fg tracking-wide">
-                    {short}
-                  </span>
-                  <span className="hidden text-[11px] text-muted group-hover:inline max-w-md leading-snug">
-                    · {detail}
-                  </span>
-                </span>
+                <details className="group/reg">
+                  <summary
+                    title={full}
+                    aria-label={`${full} — clique pour voir ce qui change pour toi`}
+                    className="list-none cursor-pointer inline-flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 transition hover:border-primary/50 hover:bg-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-[44px]"
+                  >
+                    <span className="font-mono text-xs font-bold text-fg tracking-wide">
+                      {short}
+                    </span>
+                    <span aria-hidden="true" className="text-[10px] text-muted group-open/reg:rotate-180 transition-transform">
+                      ▾
+                    </span>
+                  </summary>
+                  <p className="mt-1 ml-1 text-[12px] text-muted leading-snug max-w-md">
+                    {detail}
+                  </p>
+                </details>
               </li>
             ))}
           </ul>
           <p className="mt-2 text-[11px] text-muted/70">
-            Survole une étiquette pour voir ce qui change concrètement pour toi.
+            Tape (ou survole) une étiquette pour voir ce qui change concrètement pour toi.
           </p>
         </div>
 

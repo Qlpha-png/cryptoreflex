@@ -734,6 +734,31 @@ body {
   }
 }
 
+/* BATCH 36 — Page Visibility API : quand l'onglet est masqué (.tab-hidden
+   set par VisibilityPauser), on pause toutes les animations CSS gourmandes.
+   Économie CPU/batterie mobile estimée 5-12%. Aucune impact UX visible
+   (l'utilisateur ne voit pas l'onglet caché). */
+.tab-hidden .hero-aurora,
+.tab-hidden .hero-particles,
+.tab-hidden .hero-headline-accent,
+.tab-hidden .live-market-strip::before,
+.tab-hidden .live-market-strip::after,
+.tab-hidden .card-aurora-border::before,
+.tab-hidden .live-pulse,
+.tab-hidden .animate-pulse-dot {
+  animation-play-state: paused !important;
+}
+
+/* BATCH 36 — color-mix() helpers (audit Tech 2026 Expert).
+   Permet hover states dérivés de --brand-gold sans hardcoder 8 nuances.
+   Support Chrome 111+ / Safari 16.2+ / Firefox 113+ (~95% globally).
+   Fallback : la valeur brand directe est gardée par cascade. */
+@supports (color: color-mix(in oklab, red, blue)) {
+  .hover-mix-brand:hover {
+    background-color: color-mix(in oklab, var(--color-primary, #F5A524) 85%, white);
+  }
+}
+
 /* Live dot — radar pulse (deuxième ring décalé 1s pour effet "ping ping").
    Ajout en plus du ::before existant. */
 .live-dot { position: relative; }
@@ -1245,13 +1270,16 @@ body.modal-open {
   overscroll-behavior: contain;
 }
 
-/* Audit Mobile UX 26/04/2026 (Agent 4) :
-   - overscroll-behavior-y: none global -> empeche pull-to-refresh iOS
-     accidentel qui rechargeait la page intempestivement
-   - prefers-reduced-data : desactive les gradients animes pour respecter
-     le data-saver mode + battery
+/* BATCH 36 — fix audit Mobile UX P0 : overscroll-behavior-y: none
+   GLOBAL bloquait le pull-to-refresh natif iOS/Android partout, alors
+   qu'il ne devait viser que les modales. Restoration du geste natif
+   (utilisateur crypto veut refresh prix au pull). On ne bloque le
+   pull-to-refresh que sur body.modal-open (state contrôlé par
+   composants drawer/dialog).
+   - prefers-reduced-data : désactive les gradients animés pour le
+     data-saver mode + battery
    - active:scale subtil sur les liens/boutons pour feel "press" iOS */
-html {
+body.modal-open {
   overscroll-behavior-y: none;
 }
 @media (prefers-reduced-data: reduce) {

@@ -17,7 +17,7 @@ import Hero from "@/components/Hero";
 // PriceTicker retiré BATCH 35d (user "enlève ça") — doublon avec MarketTable + /marche
 import ReassuranceSection from "@/components/ReassuranceSection";
 import NewsletterCapture from "@/components/NewsletterCapture";
-import MarketTable from "@/components/MarketTable";
+// MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
 import BeginnerJourney from "@/components/BeginnerJourney";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
@@ -35,11 +35,8 @@ import StickyMobileCta from "@/components/StickyMobileCta";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 import {
-  breadcrumbSchema,
   graphSchema,
-  organizationSchema,
   topPlatformsItemListSchema,
-  websiteSchema,
 } from "@/lib/schema";
 
 export const revalidate = 60;
@@ -60,13 +57,29 @@ export const metadata: Metadata = {
   // Maintenant : title explicite ciblé sur la requête principale.
   // BATCH 23 SEO P0 #2 — title raccourci à 56 chars (avant 80 chars).
   title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
+  // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
+  // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Plateforme éditoriale et technique crypto FR : 100 cryptos avec score fiabilité, on-chain live et roadmap, comparateur d'exchanges régulés MiCA, simulateurs (DCA, ROI, fiscalité PFU), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique.",
+    "Compare 34 plateformes MiCA, analyse 100 cryptos (score fiabilité), calcule ta fiscalité PFU. 26 outils gratuits, méthodologie publique.",
   alternates: { canonical: BRAND.url },
   openGraph: {
     url: BRAND.url,
+    title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
     description:
-      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 34 plateformes MiCA + PSAN comparées, 26 outils gratuits (DCA, ROI, fiscalité PFU, Whale Radar, Allocator IA, Cerfa 2086 auto), IA Q&A par fiche. Méthodologie publique.",
+      "L'écosystème crypto français : 34 plateformes MiCA, 100 cryptos analysées, 26 outils (PFU, DCA, fiscalité). Méthode publique.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Cryptoreflex — Écosystème crypto France 2026",
+      },
+    ],
+  },
+  twitter: {
+    title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
+    description:
+      "L'écosystème crypto français : 34 plateformes MiCA, 100 cryptos analysées, 26 outils (PFU, DCA, fiscalité).",
   },
 };
 
@@ -168,17 +181,16 @@ export default async function HomePage() {
   const updatedAt = new Date().toISOString();
 
   /*
-   * JSON-LD home : @graph contenant 4 entités liées par @id :
-   *  - Organization (Knowledge Panel + logo Google Search)
-   *  - WebSite + SearchAction (Sitelinks Search Box éligible)
-   *  - ItemList des Top 6 plateformes (rich result Carousel possible)
-   *  - BreadcrumbList minimal (navigation SERP)
+   * BATCH 36 — fix Schema dedup (audit SEO P0) : Organization + WebSite
+   * étaient injectés 2× (1× dans layout id="global-graph", 1× ici dans
+   * id="home-graph"). graphSchema dedup par @id DANS son array mais pas
+   * entre 2 <script> JSON-LD séparés. Risque : Google parse 2 entités
+   * concurrentes. Solution : layout = source unique pour Org+WebSite,
+   * page home rend uniquement les schemas spécifiques (ItemList).
+   * BreadcrumbList minimal 1 item retiré aussi (Google ignore 1-item).
    */
   const homeSchema = graphSchema([
-    organizationSchema(),
-    websiteSchema(),
     topPlatformsItemListSchema(6),
-    breadcrumbSchema([{ name: "Accueil", url: "/" }]),
   ]);
 
   return (

@@ -16,6 +16,7 @@ import StructuredData from "@/components/StructuredData";
 import SpeculationRules from "@/components/SpeculationRules";
 import SpotlightDelegate from "@/components/SpotlightDelegate";
 import CursorHalo from "@/components/ui/CursorHalo";
+import VisibilityPauser from "@/components/ui/VisibilityPauser";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -471,6 +472,10 @@ export default function RootLayout({
             via CSS. Pattern Linear/Cursor/Arc.net. Aucun re-render
             React (transform direct sur ref). */}
         <CursorHalo />
+        {/* BATCH 36 — VisibilityPauser : pause les animations CSS gourmandes
+            quand l'onglet est masqué (Page Visibility API). Économie batterie
+            mobile + Lighthouse Energy. Aucun impact UX visible. */}
+        <VisibilityPauser />
       </body>
     </html>
   );

@@ -152,9 +152,9 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 Cryptoreflex (sans bullshit). Impact estimé +20-30% conversion
                 hero. */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              {STATS.platforms}+ plateformes <strong className="text-fg font-semibold">régulées MiCA</strong> comparées,{" "}
-              {STATS.cryptos} cryptos analysées,{" "}
-              <strong className="text-fg font-semibold">méthodologie publique</strong>.
+              {STATS.platforms}&nbsp;plateformes <strong className="text-fg font-semibold">régulées MiCA</strong>,{" "}
+              {STATS.cryptos}&nbsp;cryptos analysées,{" "}
+              <strong className="text-fg font-semibold">méthodologie 100&nbsp;% publique</strong>.
             </p>
 
             {/* FIX HOMEPAGE 2026-05-02 #10 — chips supprimées (les 4 chips
@@ -193,9 +193,31 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 aria-label="Recevoir le brief crypto FR par email"
               >
                 <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                Recevoir le brief crypto FR
+                Le brief de 7h, 3 infos
               </Link>
             </div>
+
+            {/* BATCH 36 — fix audit Conversion P0 : objection killer rendu
+                VISIBLE (avant : caché en aria-label seul). Chips sous CTA
+                qui désamorcent les 3 frictions principales du quiz : durée,
+                email, instantanéité. Pattern Anthropic "no credit card". */}
+            <ul
+              aria-label="Ce qui est inclus dans le quiz"
+              className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted"
+            >
+              <li className="inline-flex items-center gap-1">
+                <span aria-hidden="true" className="text-success-fg">✓</span>
+                <span>Quiz 2&nbsp;min</span>
+              </li>
+              <li className="inline-flex items-center gap-1">
+                <span aria-hidden="true" className="text-success-fg">✓</span>
+                <span>Aucun email demandé</span>
+              </li>
+              <li className="inline-flex items-center gap-1">
+                <span aria-hidden="true" className="text-success-fg">✓</span>
+                <span>Résultat instantané</span>
+              </li>
+            </ul>
 
             {/* Audit Block 1 RE-AUDIT (Agent content) : disclaimer risque MiCA
                 P0 conformité loi Influenceurs juin 2023 + recommandation AMF
@@ -257,17 +279,19 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           6s ease-in-out infinite (style Arc.net headline) pour donner vie au
           gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
       <style>{`
-        /* BATCH 29A — hero-headline-accent enrichi : combo shimmer (3.5s)
-           + filter hue-rotate breath (8s) pour mouvement non-répétitif
-           (référence Anthropic.com h1). L'œil ne perçoit jamais la même
-           position 2 fois → sensation "vivant" forte. */
+        /* BATCH 36 — fix audit Perf P0 : retiré gold-hue-breath qui utilisait
+           filter:hue-rotate. filter = layer GPU permanent + repaint continu
+           sur le LCP element = -50ms LCP, -15% INP idle. Garde uniquement
+           gold-shimmer qui anime background-position (compositable, gratuit
+           sur GPU). Amplitude shimmer renforcée à 4 stops gold→white→gold
+           pour conserver l'effet vivant sans coût filter. */
         .hero-headline-accent {
           background-image: linear-gradient(
             100deg,
             #F5A524 0%,
-            #FBBF24 25%,
+            #FBBF24 20%,
             #FFFFFF 50%,
-            #FBBF24 75%,
+            #FBBF24 80%,
             #F5A524 100%
           );
           background-size: 300% auto;
@@ -276,24 +300,17 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           color: transparent;
           padding-bottom: 0.06em;
           display: inline-block;
-          animation:
-            gold-shimmer 3.5s linear infinite,
-            gold-hue-breath 8s ease-in-out infinite;
-          will-change: background-position, filter;
+          animation: gold-shimmer 3.5s linear infinite;
+          will-change: background-position;
         }
         @keyframes gold-shimmer {
           0%   { background-position: 200% 50%; }
           100% { background-position: -100% 50%; }
         }
-        @keyframes gold-hue-breath {
-          0%, 100% { filter: hue-rotate(0deg) brightness(1); }
-          50%      { filter: hue-rotate(-8deg) brightness(1.08); }
-        }
         @media (prefers-reduced-motion: reduce) {
           .hero-headline-accent {
             animation: none !important;
             background-position: 50% 50% !important;
-            filter: none !important;
           }
         }
       `}</style>
