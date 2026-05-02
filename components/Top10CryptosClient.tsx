@@ -498,7 +498,7 @@ export default function Top10CryptosClient({
               href="/cryptos"
               className="btn-primary inline-flex items-center justify-center"
             >
-              Explorer les {cryptos.length}+ cryptos analysées
+              Explorer les 100+ cryptos analysées
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link
