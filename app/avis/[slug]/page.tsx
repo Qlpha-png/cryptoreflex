@@ -29,6 +29,10 @@ import {
   faqSchema,
   graphSchema,
   platformReviewSchema,
+  // FIX SEO 2026-05-02 #9 — schéma SoftwareApplication en complément du
+  // Product (un exchange = service multi-types : produit ET app financière).
+  // Permet de surfacer le rich result "App" Google.
+  platformSoftwareApplicationSchema,
 } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -247,6 +251,9 @@ export default function ReviewPage({ params }: Props) {
    */
   const jsonLd = graphSchema([
     platformReviewSchema(p),
+    // FIX SEO 2026-05-02 #9 — SoftwareApplication en plus du Product :
+    // permet rich result "App" Google (icone + categorie FinanceApplication).
+    platformSoftwareApplicationSchema(p),
     faqSchema(faq.map((item) => ({ question: item.q, answer: item.a }))),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },

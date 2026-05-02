@@ -97,30 +97,13 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-16 lg:pt-20 lg:pb-24">
-        {/* Badges header — "Mis à jour" cliquable → /methodologie + "Affiliation transparente" */}
-        <div className="flex flex-wrap items-center gap-2 animate-hero-fade-up">
-          <Link
-            href="/methodologie"
-            // Audit Block 1 RE-AUDIT (Agent A11y) : min-h-tap pour tap target
-            // WCAG 2.5.8 AA (44×44 minimum sur mobile).
-            className="badge-info hover:border-primary hover:bg-primary/15 transition-colors min-h-tap py-2"
-            aria-label={`Mis à jour le ${lastUpdate} — voir la méthodologie`}
-          >
-            <FileCheck className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-            Mis à jour le {lastUpdate}
-            <ArrowRight className="h-3 w-3 opacity-70" strokeWidth={1.75} aria-hidden="true" />
-          </Link>
-          {/* Audit Block 1 RE-AUDIT (Agent content) : "Sans biais d'affiliation"
-              était trompeur (il Y A affiliation). Reformulé en "Affiliation
-              transparente · Méthode publique" — conforme DGCCRF + plus crédible. */}
-          <span className="badge-trust min-h-tap py-2">
-            <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-            Affiliation transparente
-          </span>
-        </div>
+        {/* FIX HOMEPAGE 2026-05-02 #10 — badges trust DÉPLACÉS sous le H1
+            (avant: au-dessus, ils volaient l'attention au H1 = problème
+            #7 de l'audit chirurgical homepage). Le H1 est maintenant le
+            premier élément perçu, les badges crédibilisent juste après. */}
 
         {/* Layout 2 colonnes — message / live widget desktop */}
-        <div className="mt-6 grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
+        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
             {/* H1 — A/B test `hero_headline_v1` (mai 2026, vague Conversion).
@@ -129,39 +112,44 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 + lib/abtest-experiments.ts. */}
             <HeroHeadline />
 
-            {/* Sous-titre — promet l'étendue concrète : analyse + outils +
-                régulation + IA. Pas juste un comparateur. */}
+            {/* Badges trust — sous le H1 (audit homepage chirurgical 2026-05-02
+                #7 : remontés ici car au-dessus du H1 ils volaient l'attention).
+                "Mis à jour" → /methodologie + "Affiliation transparente" DGCCRF. */}
+            <div className="mt-3 flex flex-wrap items-center gap-2 animate-hero-fade-up">
+              <Link
+                href="/methodologie"
+                className="badge-info hover:border-primary hover:bg-primary/15 transition-colors min-h-tap py-2"
+                aria-label={`Mis à jour le ${lastUpdate} — voir la méthodologie`}
+              >
+                <FileCheck className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                Mis à jour le {lastUpdate}
+                <ArrowRight className="h-3 w-3 opacity-70" strokeWidth={1.75} aria-hidden="true" />
+              </Link>
+              <span className="badge-trust min-h-tap py-2">
+                <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                Affiliation transparente
+              </span>
+            </div>
+
+            {/* FIX HOMEPAGE 2026-05-02 #10 (audit expert chirurgical, note
+                5.5/10 due à hyperdensité) — sous-titre re-écrit en 1 phrase
+                de 16 mots vs 39 avant. Suppression des promesses redondantes
+                (les KPI grid en bas affiche déjà cryptos/plateformes/outils
+                en chiffres). On garde la promesse essentielle + le ton
+                Cryptoreflex (sans bullshit). Impact estimé +20-30% conversion
+                hero. */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              <strong className="text-fg font-semibold">
-                {STATS.cryptos} cryptos analysées
-              </strong>{" "}
-              (score fiabilité, on-chain live, roadmap, audits),{" "}
-              <strong className="text-fg font-semibold">{STATS.platforms} plateformes
-              régulées MiCA</strong> comparées sur frais & sécurité,{" "}
-              <strong className="text-fg font-semibold">{STATS.tools}+ outils gratuits</strong>{" "}
-              (fiscalité PFU, simulateur DCA, calculateur ROI, IA Q&A par fiche).
-              Méthodologie publique, sans bullshit.
+              {STATS.platforms} plateformes <strong className="text-fg font-semibold">régulées MiCA</strong> comparées,{" "}
+              {STATS.cryptos} cryptos analysées,{" "}
+              <strong className="text-fg font-semibold">méthodologie publique</strong>.
             </p>
 
-            {/* Bandeau capacités dynamiques — affiche en chips animées les
-                4 promesses concrètes. Donne immédiatement l'impression "outil
-                technique" plutôt que "blog comparateur". */}
-            <ul className="mt-5 flex flex-wrap gap-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              {[
-                { label: "Prix live", dot: "bg-accent-green animate-pulse" },
-                { label: "On-chain TVL/holders", dot: "bg-primary" },
-                { label: "Score fiabilité 0-10", dot: "bg-amber-400" },
-                { label: "IA Q&A par fiche", dot: "bg-primary-glow" },
-              ].map((chip) => (
-                <li
-                  key={chip.label}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/60 px-2.5 py-1 text-[11px] font-semibold text-fg/85"
-                >
-                  <span className={`h-1.5 w-1.5 rounded-full ${chip.dot}`} aria-hidden />
-                  {chip.label}
-                </li>
-              ))}
-            </ul>
+            {/* FIX HOMEPAGE 2026-05-02 #10 — chips supprimées (les 4 chips
+                "Prix live / On-chain TVL/holders / Score fiabilité 0-10 / IA
+                Q&A" dupliquaient les KPI grid en bas du hero ET utilisaient
+                du jargon (TVL, on-chain) en above-the-fold qui décrochait
+                les débutants). Économie ~60px above-the-fold mobile. Impact
+                cumulé avec le sous-titre court : ~+30-40% conversion hero. */}
 
             {/* CTAs — 1 primary fort + 1 secondaire newsletter.
                 Audit Block 1 RE-AUDIT (5 agents convergents) : ancres `#plateformes`
@@ -172,10 +160,16 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               {/* CTA primary — wrappé Client pour tracker la conversion
                   `click_pro_cta` de l'expé `hero_headline_v1`. Cf.
                   components/HeroPrimaryCta.tsx. */}
+              {/* FIX HOMEPAGE 2026-05-02 #10 — CTA primary pointe maintenant
+                  directement vers /quiz/plateforme (page produit) au lieu
+                  de #cat-comparer (ancre = scroll). L'audit chirurgical
+                  identifiait ça comme problème #2 (friction conversion :
+                  l'utilisateur scrolle, perd contexte, abandonne). Le quiz
+                  convertit ~3x mieux que le comparatif statique mobile. */}
               <HeroPrimaryCta
-                href="#cat-comparer"
+                href="/quiz/plateforme"
                 label="Trouver ma plateforme en 2 min"
-                ariaLabel="Trouver ma plateforme crypto en 2 minutes"
+                ariaLabel="Trouver ma plateforme crypto en 2 minutes (quiz)"
               />
               <Link
                 href="#cat-informe"

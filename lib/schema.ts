@@ -619,6 +619,110 @@ export function platformReviewSchema(p: Platform): JsonLd {
   return product;
 }
 
+/**
+ * FIX SEO 2026-05-02 #9 (audit consolidé expert) — un exchange est ASSIMILABLE
+ * à un produit (`Product` ci-dessus) ET à une `SoftwareApplication`. Émettre
+ * les 2 dans @graph permet à Google de surfacer le rich result "App"
+ * (icone + rating étoiles + categorie) en plus du produit standard. Pattern
+ * recommandé Google pour les services SaaS multi-types.
+ *
+ * Distinct de `platformReviewSchema` (Product) : ici on déclare que c'est une
+ * application financière (apps mobiles iOS/Android + version web).
+ */
+export function platformSoftwareApplicationSchema(p: Platform): JsonLd {
+  const productUrl = abs(`/avis/${p.id}`);
+  const ratingValue = clampRating(p.scoring.global);
+  const trustpilotCount = p.ratings.trustpilotCount ?? 0;
+
+  const app: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${productUrl}#software`,
+    name: p.name,
+    image: abs(p.logo),
+    url: productUrl,
+    description: p.tagline,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "iOS, Android, Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      url: p.affiliateUrl,
+    },
+  };
+
+  // Pas d'aggregateRating sans preuve (cf. spam guard de platformReviewSchema).
+  if (trustpilotCount >= 5) {
+    app.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue,
+      bestRating: 5,
+      worstRating: 0,
+      ratingCount: trustpilotCount,
+    };
+  }
+
+  return app;
+}
+
+/**
+ * FIX SEO 2026-05-02 #9 — ItemList schema sur les pages /comparer/[slug]
+ * (435 paires programmatic). Permet à Google de surfacer un rich result
+ * Carousel "X comparé à Y" avec image, ticker, prix.
+ *
+ * Input minimal pour ne pas dépendre du type AnyCrypto (réutilisable depuis
+ * /vs/ aussi).
+ */
+export interface CryptoComparisonForSchema {
+  id: string;
+  name: string;
+  symbol: string;
+}
+export function cryptoComparisonItemListSchema(
+  slug: string,
+  a: CryptoComparisonForSchema,
+  b: CryptoComparisonForSchema,
+): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": abs(`/comparer/${slug}#itemlist`),
+    name: `${a.name} (${a.symbol}) vs ${b.name} (${b.symbol})`,
+    description: `Comparaison Cryptoreflex entre ${a.name} et ${b.name} : prix, utilité, écosystème, où acheter en France.`,
+    numberOfItems: 2,
+    itemListOrder: "https://schema.org/ItemListUnordered",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@type": "FinancialProduct",
+          "@id": abs(`/cryptos/${a.id}#asset`),
+          name: a.name,
+          alternateName: a.symbol,
+          tickerSymbol: a.symbol,
+          url: abs(`/cryptos/${a.id}`),
+          category: "Cryptocurrency",
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@type": "FinancialProduct",
+          "@id": abs(`/cryptos/${b.id}#asset`),
+          name: b.name,
+          alternateName: b.symbol,
+          tickerSymbol: b.symbol,
+          url: abs(`/cryptos/${b.id}`),
+          category: "Cryptocurrency",
+        },
+      },
+    ],
+  };
+}
+
 /** Génère le schéma pour toutes les plateformes (utile en page comparatif). */
 export function allPlatformsReviewSchemas(): JsonLd[] {
   return getAllPlatforms().map(platformReviewSchema);

@@ -4,6 +4,10 @@ import { Mail, ShieldCheck, Lock, ArrowRight } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 import LoginForm from "@/components/auth/LoginForm";
+// FIX UX FLOW 2026-05-02 #9 (audit consolidé) — Avant ce commit la page
+// connexion était un cul-de-sac total. Avec NextStepsGuide context homepage
+// on propose 3 destinations à explorer si le user n'a pas encore de compte.
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
   title: "Connexion — Cryptoreflex",
@@ -83,6 +87,12 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           Connexion chiffrée · Cookies sécurisés · Aucun tracker
         </p>
+      </div>
+
+      {/* FIX UX FLOW 2026-05-02 #9 — fin de cul-de-sac : 3 destinations
+          contextuelles à découvrir (le visiteur sans compte trouve où aller). */}
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 mt-16 w-full">
+        <NextStepsGuide context="homepage" />
       </div>
     </section>
   );

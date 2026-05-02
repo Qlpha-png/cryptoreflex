@@ -32,6 +32,9 @@ import { BRAND } from "@/lib/brand";
 import {
   articleSchema,
   breadcrumbSchema,
+  // FIX SEO 2026-05-02 #9 (audit consolidé) — ItemList sur les 435 paires
+  // /comparer/[slug] = rich result Carousel possible côté Google.
+  cryptoComparisonItemListSchema,
   faqSchema,
   graphSchema,
 } from "@/lib/schema";
@@ -159,6 +162,12 @@ export default function CryptoComparisonPage({ params }: Props) {
       category: "Comparatif",
       tags: [a.name, b.name, a.symbol, b.symbol, "comparatif"],
     }),
+    // FIX SEO 2026-05-02 #9 — ItemList rich result Carousel (a vs b).
+    cryptoComparisonItemListSchema(
+      params.slug,
+      { id: a.id, name: a.name, symbol: a.symbol },
+      { id: b.id, name: b.name, symbol: b.symbol },
+    ),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Comparer", url: "/comparer" },

@@ -197,12 +197,22 @@ export default async function HomePage() {
         updatedAt={updatedAt}
       />
       <ReassuranceSection />
-      {/* Bandeaux live data — sous le Hero, simplifiés (audit user 26/04 :
-          "mal agencé" — avant 4 bandeaux empilés). Maintenant 3 max, et
-          NewsTickerServer retiré (doublon avec NewsBar). */}
-      <GlobalMetricsBar />
-      <NewsBar />
-      <PriceTicker initial={prices} />
+      {/* FIX HOMEPAGE 2026-05-02 #10 (audit chirurgical problème #4) — les
+          3 bandeaux live (`GlobalMetricsBar`, `NewsBar`, `PriceTicker`)
+          empilés représentaient ~180px de chrome avant la 1ère vraie
+          section. Maintenant unifiés visuellement dans un container
+          `<aside class="live-market-strip">` (1 background + 1 border-y
+          partagés) → ressenti utilisateur : "1 seul bandeau live" au lieu
+          de 3 strates. Économie d'espace mental sans refactor lourd des
+          composants individuels. */}
+      <aside
+        aria-label="Données de marché en temps réel"
+        className="border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent [&_div[role=marquee]]:border-0 [&>*:not(:first-child)]:border-t [&>*:not(:first-child)]:border-border/30"
+      >
+        <GlobalMetricsBar />
+        <NewsBar />
+        <PriceTicker initial={prices} />
+      </aside>
 
       {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
           26/04/2026 "des onglets pour faire respirer + pas se perdre".
@@ -216,9 +226,12 @@ export default async function HomePage() {
           intention pour le persona principal (FR débutant post-MiCA).
          ────────────────────────────────────────────────────────────────── */}
       <section aria-labelledby="cat-demarrer">
+        {/* FIX HOMEPAGE 2026-05-02 #10 — eyebrows "Étape 1→6" remplacés par
+            des thèmes (faux funnel : les sections n'étaient pas réellement
+            séquentielles). Audit chirurgical homepage problème #6. */}
         <CategoryHeader
           Icon={Target}
-          eyebrow="Étape 1"
+          eyebrow="Pour démarrer"
           title="Démarrer maintenant"
           intro="Tu n'as jamais acheté de crypto ? Suis le parcours en 4 étapes — comprendre, choisir, sécuriser, acheter."
           anchorId="cat-demarrer"
@@ -237,7 +250,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-comparer">
         <CategoryHeader
           Icon={BarChart3}
-          eyebrow="Étape 2"
+          eyebrow="Notre sélection"
           title="Comparer les plateformes"
           intro="Frais, sécurité, conformité MiCA : sélectionne l'exchange régulé qui correspond à ton profil."
           ctaHref="/comparatif"
@@ -259,7 +272,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-apprendre">
         <CategoryHeader
           Icon={Lightbulb}
-          eyebrow="Étape 3"
+          eyebrow="Apprendre"
           title="Apprendre la crypto"
           intro="100 cryptos analysées en détail (top 10 + 90 hidden gems avec score de fiabilité), expliquées simplement. Plus nos guides pour éviter les erreurs classiques de débutant."
           ctaHref="/cryptos"
@@ -282,7 +295,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-actu">
         <CategoryHeader
           Icon={Newspaper}
-          eyebrow="Étape 4"
+          eyebrow="Live & frais"
           title="Actualités & calendrier"
           intro="Les news crypto qui comptent vraiment + les events à ne pas rater (halvings, FOMC, ETF deadlines)."
           anchorId="cat-actu"
@@ -301,7 +314,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-outils">
         <CategoryHeader
           Icon={Wrench}
-          eyebrow="Étape 5"
+          eyebrow="Outils gratuits"
           title="Outils"
           intro="Calculateurs, simulateurs, convertisseur — tout est gratuit, sans inscription, sans email demandé."
           ctaHref="/outils"
@@ -332,7 +345,7 @@ export default async function HomePage() {
       <section aria-labelledby="cat-informe">
         <CategoryHeader
           Icon={Mail}
-          eyebrow="Étape 6"
+          eyebrow="Newsletter"
           title="Rester informé"
           intro="Le brief crypto FR du matin, en 3 minutes — les actus qui comptent vraiment, sans hype ni shilling."
           anchorId="cat-informe"

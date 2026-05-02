@@ -17,6 +17,11 @@ import {
   type GlossaryDifficulty,
 } from "@/lib/glossary";
 import { BRAND } from "@/lib/brand";
+// FIX SEO 2026-05-02 #9 (audit consolidé) — sortir 252 termes glossaire de
+// l'orphelinat (avant ce commit : 0 maillage interne sur les pages termes,
+// uniquement le hub /outils/glossaire-crypto était dans CLUSTERS).
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 // SSG : pré-générer toutes les pages au build pour SEO maximal.
 export function generateStaticParams() {
@@ -255,6 +260,20 @@ export default function GlossaryTermPage({ params }: PageProps) {
               .
             </p>
           </section>
+
+          {/* FIX SEO 2026-05-02 #9 — maillage interne pour les 252 pages
+              termes glossaire. Cluster `comprendre` matché via le fallback
+              prefix-based ajouté dans lib/internal-link-graph.ts. */}
+          <div className="mt-12">
+            <RelatedPagesNav
+              currentPath={`/glossaire/${params.slug}`}
+              variant="default"
+              limit={5}
+            />
+          </div>
+          <div className="mt-12">
+            <NextStepsGuide context="article" articleCategory="Glossaire" />
+          </div>
         </div>
       </article>
     </>

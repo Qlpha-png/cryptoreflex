@@ -4,6 +4,11 @@ import { UserPlus, ShieldCheck, Lock } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 import SignupForm from "@/components/auth/SignupForm";
+// FIX UX FLOW 2026-05-02 #9 (audit consolidé) — Avant ce commit la page
+// inscription était un cul-de-sac complet : formulaire seul, aucun "et
+// après ?". Avec NextStepsGuide, on propose 3 destinations contextuelles
+// (watchlist, alertes, newsletter) en attendant que le user signe.
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
   title: "Créer un compte — Cryptoreflex",
@@ -59,6 +64,13 @@ export default function InscriptionPage() {
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           Données chiffrées · Conforme RGPD · Désinscription en 1 clic
         </p>
+      </div>
+
+      {/* FIX UX FLOW 2026-05-02 #9 — fin de cul-de-sac : 3 destinations
+          contextuelles à découvrir avant ou après signup (homepage = explore
+          le produit, sans forcer la création de compte). */}
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 mt-16 w-full">
+        <NextStepsGuide context="homepage" />
       </div>
     </section>
   );

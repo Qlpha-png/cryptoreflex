@@ -214,14 +214,51 @@ export const CLUSTERS: Cluster[] = [
 /* -------------------------------------------------------------------------- */
 
 /**
+ * FIX SEO 2026-05-02 #9 (audit consolidé 6 experts) — fallback prefix-based
+ * pour les pages programmatic massives qui ne sont PAS individuellement
+ * listées dans CLUSTERS (ce serait ingérable : 252 termes glossaire, 600
+ * paires acheter, 435 paires comparer, 150 convertisseur). Avant : ces
+ * pages tombaient dans le fallback "page orpheline" qui retournait juste
+ * les 4 hubs principaux — peu pertinent. Maintenant : on map chaque
+ * famille programmatic vers son cluster sémantique parent. Sort 1257+
+ * pages programmatic de l'orphelinat conceptuel.
+ */
+const PROGRAMMATIC_PREFIX_TO_CLUSTER: Array<{ prefix: string; clusterId: string }> = [
+  { prefix: "/glossaire/", clusterId: "comprendre" },
+  { prefix: "/comparer/", clusterId: "marche" }, // crypto-vs-crypto = analyse marché
+  { prefix: "/acheter/", clusterId: "acheter" },
+  { prefix: "/convertisseur/", clusterId: "marche" },
+  { prefix: "/staking/", clusterId: "marche" },
+  { prefix: "/vs/", clusterId: "marche" },
+  { prefix: "/cryptos/", clusterId: "comprendre" },
+  { prefix: "/avis/", clusterId: "mica" }, // les avis exchanges sont MiCA-centric
+  { prefix: "/comparatif/", clusterId: "mica" },
+  { prefix: "/analyses-techniques/", clusterId: "marche" },
+  { prefix: "/actualites/", clusterId: "marche" },
+  { prefix: "/academie/", clusterId: "comprendre" },
+  { prefix: "/wizard/", clusterId: "acheter" },
+  { prefix: "/quiz/", clusterId: "acheter" },
+];
+
+/**
  * Retourne le cluster auquel appartient le path donné.
- * Match exact ou par préfixe (ex : /blog/foo-bar matche un node /blog/foo-bar).
+ * 1. Match exact sur les nodes déclarés dans CLUSTERS
+ * 2. Fallback prefix-based pour les pages programmatic
+ *    (glossaire, comparer, acheter, etc.)
  */
 export function getClusterFor(currentPath: string): Cluster | null {
   const normalized = currentPath.replace(/\/$/, "") || "/";
+  // Étape 1 : match exact dans les nodes
   for (const cluster of CLUSTERS) {
     if (cluster.nodes.some((n) => n.path === normalized)) {
       return cluster;
+    }
+  }
+  // Étape 2 : fallback prefix-based pour pages programmatic massives
+  for (const { prefix, clusterId } of PROGRAMMATIC_PREFIX_TO_CLUSTER) {
+    if (normalized.startsWith(prefix)) {
+      const cluster = CLUSTERS.find((c) => c.id === clusterId);
+      if (cluster) return cluster;
     }
   }
   return null;
