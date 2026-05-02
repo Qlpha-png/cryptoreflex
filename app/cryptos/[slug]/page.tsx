@@ -101,6 +101,14 @@ const HalvingCountdown = dynamic(
   { ssr: false },
 );
 
+// BATCH 31 — généralisation : countdown générique pour TOUTES les cryptos
+// (user feedback "la fiche BTC je veux ça pour toutes les cryptos").
+// Utilise getUpcomingEventsFor() qui fournit le prochain event éditorial.
+const NextEventCountdown = dynamic(
+  () => import("@/components/crypto-detail/NextEventCountdown"),
+  { ssr: false },
+);
+
 // Lazy-load ROISimulator : Client Component interactif (sliders + fetch
 // /api/historical) positionné après le verdict pour engager le visiteur
 // avant la roadmap. ssr:false : aucun intérêt à SSR une UI qui dépend
@@ -182,6 +190,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import { getWalletsForCrypto } from "@/lib/crypto-wallets";
 import { getRoadmapFor } from "@/lib/crypto-roadmaps";
 import { FUTURE_HALVINGS } from "@/lib/bitcoin-halving-cycles";
+import { getUpcomingEventsFor } from "@/lib/crypto-events";
 // Programmatic SEO #8 (ETUDE-2026-05-02) : maillage interne vers les pages
 // /comparer/[a]/[b] (435 paires) et /acheter/[crypto]/[pays] (600 guides).
 import {
@@ -330,6 +339,11 @@ export default async function CryptoPage({ params }: Props) {
   const related = getRelatedCryptos(c.id, 4);
   const walletGuide = getWalletsForCrypto(c);
   const roadmapEvents = getRoadmapFor(c.id);
+  // BATCH 31 — récupère le PROCHAIN événement éditorial pour cette crypto
+  // (sauf BTC qui a son HalvingCountdown dédié). Permet d'afficher un
+  // countdown générique sur toutes les cryptos avec data dans crypto-events.
+  const upcomingEvents = c.id !== "bitcoin" ? getUpcomingEventsFor(c.id, 1) : [];
+  const nextEvent = upcomingEvents[0] ?? null;
 
   const isGem = c.kind === "hidden-gem";
   const kindLabel = isGem ? "Hidden Gem" : `Top ${c.rank} mondial`;
@@ -524,6 +538,24 @@ export default async function CryptoPage({ params }: Props) {
             </header>
             <HalvingCountdown targetDate={new Date(FUTURE_HALVINGS[0].dateIso)} />
           </section>
+        )}
+
+        {/* BATCH 31 — NextEventCountdown générique pour TOUTES les cryptos
+            non-BTC (qui ont déjà HalvingCountdown). User feedback "la fiche
+            BTC je veux ça pour toutes les cryptos j'aime beaucoup". Render
+            null si pas d'event éditorial pour cette crypto. */}
+        {c.id !== "bitcoin" && nextEvent && (
+          <div className="mt-10">
+            <NextEventCountdown
+              cryptoName={c.name}
+              targetDateIso={nextEvent.date}
+              eventTitle={nextEvent.title}
+              eventDescription={nextEvent.description}
+              eventType={nextEvent.type}
+              importance={nextEvent.importance}
+              detailsUrl="/calendrier"
+            />
+          </div>
         )}
 
         {/* ON-CHAIN METRICS LIVE — TVL DeFiLlama + dominance + FDV + holders.
