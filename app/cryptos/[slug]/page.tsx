@@ -151,6 +151,9 @@ const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+// FIX UX FLOW 2026-05-02 #7 — NextStepsGuide en fin de fiche crypto pour
+// éviter le cul-de-sac après 25 sections (audit UX expert).
+import NextStepsGuide from "@/components/NextStepsGuide";
 import { getWalletsForCrypto } from "@/lib/crypto-wallets";
 import { getRoadmapFor } from "@/lib/crypto-roadmaps";
 // Programmatic SEO #8 (ETUDE-2026-05-02) : maillage interne vers les pages
@@ -867,6 +870,18 @@ export default async function CryptoPage({ params }: Props) {
         {/* DISCLAIMER AMF */}
         <div className="mt-12">
           <AmfDisclaimer variant={c.kind === "hidden-gem" ? "speculation" : "educatif"} />
+        </div>
+
+        {/* FIX UX FLOW 2026-05-02 #7 (audit expert UX) — la fiche crypto
+            empile 25 sections, le visiteur ressort sans next step. Ajout
+            d'un NextStepsGuide context="article" + categorie crypto pour
+            proposer 3 destinations contextuelles (quiz, calculateur, académie).
+            Cohérent avec le mantra "chaque page répond à 'Et maintenant ?'". */}
+        <div className="mt-12">
+          <NextStepsGuide
+            context="article"
+            articleCategory="Crypto"
+          />
         </div>
 
         {/* MENTIONS */}

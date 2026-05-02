@@ -24,6 +24,10 @@ const Converter = dynamic(() => import("@/components/Converter"), {
   ssr: false,
 });
 import StructuredData from "@/components/StructuredData";
+// FIX SEO 2026-05-02 #7 (audit interne) — sortir 150+ pages /convertisseur
+// de l'orphelinat (aucun maillage interne avant ce commit).
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import {
   TOP_PAIRS,
@@ -251,6 +255,20 @@ export default async function PairPage({ params }: PageProps) {
                 </details>
               ))}
             </div>
+          </div>
+
+          {/* FIX SEO 2026-05-02 #7 — maillage interne sur les 150+ paires
+              programmatic. Chaque page convertisseur propose maintenant
+              4-6 pages liées + 3 prochaines étapes (toujours via tool). */}
+          <div className="mt-12">
+            <RelatedPagesNav
+              currentPath={`/convertisseur/${params.pair}`}
+              variant="default"
+              limit={4}
+            />
+          </div>
+          <div className="mt-12">
+            <NextStepsGuide context="tool" toolId="convertisseur" />
           </div>
         </div>
       </section>

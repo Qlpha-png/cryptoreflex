@@ -60,7 +60,9 @@ const STEPS: Step[] = [
     title: "Active ta première alerte prix",
     benefit: "Email instantané sur seuil franchi",
     cta: "Créer alerte",
-    href: "/outils/alertes",
+    // FIX 2026-05-02 #7 (audit 404) : la route est /alertes (page hub user),
+    // pas /outils/alertes (qui n'existe pas et causait 1 lien 404).
+    href: "/alertes",
     Icon: Bell,
   },
   {

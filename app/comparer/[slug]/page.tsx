@@ -37,6 +37,12 @@ import {
 } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+// FIX SEO 2026-05-02 #7 (audit interne) — sortir 1300 pages programmatic de
+// l'orphelinat. Ajout du maillage interne sur les 4 templates programmatic
+// (comparer, acheter, convertisseur, staking) qui n'avaient ni
+// RelatedPagesNav ni NextStepsGuide → link juice dispersé sur 70% du sitemap.
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -313,6 +319,20 @@ export default function CryptoComparisonPage({ params }: Props) {
 
         <div className="mt-12">
           <AmfDisclaimer variant="educatif" />
+        </div>
+
+        {/* FIX SEO 2026-05-02 #7 — RelatedPages contextuelles (cluster
+            crypto-comparer) + NextStepsGuide pour ne plus terminer en
+            cul-de-sac. Avant : 435 paires programmatic toutes orphelines. */}
+        <div className="mt-12">
+          <RelatedPagesNav
+            currentPath={`/comparer/${data.slug}`}
+            variant="default"
+            limit={6}
+          />
+        </div>
+        <div className="mt-12">
+          <NextStepsGuide context="comparator" />
         </div>
       </div>
     </article>

@@ -64,8 +64,15 @@ export default function ComparerHubPage() {
               <p className="mt-1 text-xs text-muted">
                 {matches.length} comparatifs
               </p>
-              <ul className="mt-3 space-y-1.5">
-                {matches.slice(0, 5).map((m) => {
+              {/* FIX SEO 2026-05-02 #7 (audit interne) — avant : `slice(0,5)`
+                  cachait 350+ liens internes (5 affichés vs ~15 disponibles
+                  par crypto sur 435 paires). Désormais : tous les matches
+                  visibles, l'utilisateur scrollera dans la card si besoin
+                  (max-h + overflow). Booste maillage interne SEO de manière
+                  drastique : sortie de l'orphelinat de toutes les paires
+                  /comparer/<a>/<b> non reliées. */}
+              <ul className="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-2">
+                {matches.map((m) => {
                   const otherId = m.a === crypto.id ? m.b : m.a;
                   const other = getCryptoBySlug(otherId);
                   if (!other) return null;
@@ -81,11 +88,6 @@ export default function ComparerHubPage() {
                     </li>
                   );
                 })}
-                {matches.length > 5 && (
-                  <li className="text-[11px] text-muted">
-                    + {matches.length - 5} autres…
-                  </li>
-                )}
               </ul>
             </div>
           ))}

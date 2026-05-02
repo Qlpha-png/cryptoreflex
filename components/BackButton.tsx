@@ -27,6 +27,48 @@ import { usePathname, useRouter } from "next/navigation";
 
 const HIDE_PREFIXES = ["/embed", "/api"];
 
+/**
+ * FIX 2026-05-02 #7 (audit 404 ultra-exhaustif) — 94% des 404 du site (1217
+ * émissions de liens cassés) venaient d'ici. Le calcul naïf "strip dernier
+ * segment" générait des URLs inexistantes pour les routes nested-only :
+ *   /acheter/[crypto]/[pays]   → parent calculé /acheter/<crypto>  → 404
+ *   /vs/[a]/[b]                → parent calculé /vs/<a>            → 404
+ *   /convertisseur/[pair]      → parent calculé /convertisseur     → 404
+ *   /auteur/[slug]             → parent calculé /auteur            → 404
+ *
+ * Ces routes intermédiaires n'ont aucun `page.tsx`. Le mapping ci-dessous
+ * redirige vers le hub valide le plus proche au lieu de tomber dans le vide.
+ *
+ * Source unique de vérité — si on ajoute une route nested-only sans page
+ * intermédiaire, AJOUTER ICI la règle, sinon BackButton remettra du 404.
+ */
+const NESTED_ONLY_HUBS: Array<{ pattern: RegExp; hub: string }> = [
+  // /acheter/[crypto]/[pays] → /acheter (hub list pays × crypto)
+  { pattern: /^\/acheter\/[^/]+\/[^/]+$/, hub: "/acheter" },
+  // /vs/[a]/[b] → /comparer (hub comparatifs crypto)
+  { pattern: /^\/vs\/[^/]+\/[^/]+$/, hub: "/comparer" },
+  // /convertisseur/[pair] → /outils/convertisseur (hub outil)
+  { pattern: /^\/convertisseur\/[^/]+$/, hub: "/outils/convertisseur" },
+  // /auteur/[slug] → /a-propos (les auteurs sont listés dans À propos)
+  { pattern: /^\/auteur\/[^/]+$/, hub: "/a-propos" },
+  // /comparer/[a]/[b] → /comparer (au cas où, pattern similaire à /vs)
+  { pattern: /^\/comparer\/[^/]+\/[^/]+$/, hub: "/comparer" },
+];
+
+/**
+ * Calcule le parent path en respectant les routes nested-only.
+ * 1. Tente d'abord un match dans NESTED_ONLY_HUBS (whitelist explicite).
+ * 2. Sinon, fallback "strip dernier segment" classique.
+ * 3. Si on est déjà à la racine d'un segment, parent = "/".
+ */
+function computeParentPath(pathname: string): string {
+  for (const { pattern, hub } of NESTED_ONLY_HUBS) {
+    if (pattern.test(pathname)) return hub;
+  }
+  const segments = pathname.split("/").filter(Boolean);
+  return segments.length > 1 ? "/" + segments.slice(0, -1).join("/") : "/";
+}
+
 export default function BackButton() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
@@ -35,11 +77,7 @@ export default function BackButton() {
   if (pathname === "/") return null;
   if (HIDE_PREFIXES.some((p) => pathname.startsWith(p))) return null;
 
-  // Compute parent path (e.g. /partenaires/ledger → /partenaires).
-  // Si on est déjà à la racine d'un segment (ex: /partenaires), parent = /.
-  const segments = pathname.split("/").filter(Boolean);
-  const parentPath =
-    segments.length > 1 ? "/" + segments.slice(0, -1).join("/") : "/";
+  const parentPath = computeParentPath(pathname);
 
   function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
     // Si l'user est arrivé via un autre lien interne, on utilise router.back()

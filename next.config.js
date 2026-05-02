@@ -194,6 +194,64 @@ const nextConfig = {
         permanent: false, // 307 — si on ajoute d'autres wizards, ce path deviendra un hub
       },
 
+      // ────────────────────────────────────────────────────────────────
+      // FIX 2026-05-02 #7 (audit 404 ultra-exhaustif) — 7 liens MDX
+      // pointant vers des pages inexistantes. Au lieu d'éditer 5 fichiers
+      // MDX (et potentiellement casser le contenu éditorial existant), on
+      // 301 vers l'équivalent le plus pertinent. Les futurs MDX devraient
+      // utiliser ces destinations directement.
+      // ────────────────────────────────────────────────────────────────
+      // /glossaire/<term> manquants (3 termes) → /glossaire (hub liste 252
+      // termes — l'utilisateur trouvera son terme via la recherche locale).
+      {
+        source: "/glossaire/etn",
+        destination: "/glossaire?q=etn",
+        permanent: true,
+      },
+      {
+        source: "/glossaire/pfu",
+        destination: "/glossaire?q=pfu",
+        permanent: true,
+      },
+      {
+        source: "/glossaire/validateur",
+        destination: "/glossaire?q=validateur",
+        permanent: true,
+      },
+      // /charte-editoriale → /methodologie (notre engagement éditorial est
+      // déjà détaillé dans la page méthodologie + on a /a-propos).
+      {
+        source: "/charte-editoriale",
+        destination: "/methodologie",
+        permanent: true,
+      },
+      // /guides/<slug> (3 URLs MDX) — la section /guides n'a jamais existé,
+      // c'est /blog ou /academie qui hébergent les contenus pédagogiques.
+      // On 301 vers les articles equivalents existants (publiés).
+      {
+        source: "/guides/declaration-crypto-impots-2026",
+        destination: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
+        permanent: true,
+      },
+      {
+        source: "/guides/meilleurs-wallets-crypto-france",
+        destination: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026",
+        permanent: true,
+      },
+      {
+        source: "/guides/fiscalite-crypto-france-2026",
+        destination: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
+        permanent: true,
+      },
+      // /outils/cointracking — outil tiers sans page interne (cf. fix
+      // lib/internal-link-graph.ts du même commit). 301 vers le comparatif
+      // qui couvre Waltio/Koinly/Accointing + Cointracking.
+      {
+        source: "/outils/cointracking",
+        destination: "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026",
+        permanent: true,
+      },
+
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.
@@ -338,9 +396,13 @@ const sentryWebpackPluginOptions = {
   silent: true,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  // Source maps : élargit la liste des chunks uploadés pour avoir les
-  // stack traces lisibles côté Sentry (sinon on voit du JS minifié).
-  widenClientFileUpload: true,
+  // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — `widenClientFileUpload`
+  // ajoutait ~30-50KB JS sur TOUS les bundles client en pré-chargeant des
+  // chunks Sentry inutiles pour 99% des sessions (zéro erreur). Désactivé :
+  // les source maps continuent d'être uploadées au build via SENTRY_AUTH_TOKEN
+  // (suffit pour avoir des stack traces lisibles), mais sans pousser les
+  // chunks parsés au runtime. Gain : -30/50KB JS moyen sur bundles publics.
+  widenClientFileUpload: false,
   // Tunnel SDK → /monitoring : bypass des adblockers qui drop les requêtes
   // vers *.ingest.sentry.io. Next.js proxy transparent, zéro latence ajoutée.
   tunnelRoute: "/monitoring",

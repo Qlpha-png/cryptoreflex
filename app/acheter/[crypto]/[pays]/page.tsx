@@ -33,6 +33,10 @@ import {
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+// FIX SEO 2026-05-02 #7 (audit interne) — sortir 600 pages /acheter de
+// l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -393,6 +397,19 @@ export default function AcheterPaysPage({ params }: Props) {
 
         <div className="mt-12">
           <AmfDisclaimer variant="educatif" />
+        </div>
+
+        {/* FIX SEO 2026-05-02 #7 — maillage interne sur les 600 pages
+            programmatic /acheter/[crypto]/[pays]. */}
+        <div className="mt-12">
+          <RelatedPagesNav
+            currentPath={`/acheter/${params.crypto}/${params.pays}`}
+            variant="default"
+            limit={6}
+          />
+        </div>
+        <div className="mt-12">
+          <NextStepsGuide context="article" articleCategory="Acheter" />
         </div>
       </div>
     </article>

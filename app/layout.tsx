@@ -21,12 +21,16 @@ import {
   websiteSchema,
 } from "@/lib/schema";
 
-// Audit Performance 26-04-2026 — PerfMonitor monitore LCP/INP/CLS/FCP/TTFB
-// passivement et envoie à Plausible (custom event "WebVitals"). Lazy-loaded
-// ssr:false pour ne pas bloquer le first paint ni alourdir le bundle initial.
-const PerfMonitor = dynamic(() => import("@/components/PerfMonitor"), {
-  ssr: false,
-});
+// FIX PERF 2026-05-02 #8 (audit expert deep-dive) — `PerfMonitor` faisait
+// doublon avec `WebVitalsReporter` (les 2 montent useReportWebVitals et
+// streament les Web Vitals : PerfMonitor → Plausible custom events,
+// WebVitalsReporter → /api/analytics/vitals KV). 2 hydration boundaries +
+// 2× chunks dynamic + bundle inflation pour rien. `WebVitalsReporter` est
+// la source de vérité (alimente /admin/vitals dashboard p75) ; Plausible
+// reçoit déjà les pageviews + custom events depuis PlausibleScript donc
+// on n'a pas besoin de redoubler la couverture WebVitals via Plausible.
+// Économie : -8KB JS + 1 hydration boundary supprimée + 1 fetch /api/analytics
+// éliminé (le 2nd reporter envoyait à Plausible, pas à notre KV).
 
 // Étude 02/05/2026 — WebVitalsReporter envoie les Core Web Vitals à
 // /api/analytics/vitals (KV) pour alimenter le dashboard /admin/vitals avec
@@ -430,15 +434,13 @@ export default function RootLayout({
         */}
         <ServiceWorkerRegister />
         {/*
-          Audit Perf 26-04 — Web Vitals passifs envoyés à Plausible
-          (event "WebVitals"). Aucun effet sur le rendu, ne bloque pas le
-          first paint (dynamic ssr:false → chunk séparé chargé après hydration).
-        */}
-        <PerfMonitor />
-        {/*
           WebVitalsReporter — POST des Core Web Vitals vers /api/analytics/vitals
-          (KV). Coexiste avec PerfMonitor (qui envoie à Plausible). Le flux KV
-          alimente le dashboard /admin/vitals avec p75 calculé serveur.
+          (KV). Alimente le dashboard /admin/vitals avec p75 calculé serveur.
+          FIX PERF 2026-05-02 #8 : avant on avait aussi `<PerfMonitor />` qui
+          faisait doublon (pushait les mêmes Web Vitals vers Plausible). Le
+          duo coûtait 2 hydration boundaries + ~8KB JS pour 0 valeur ajoutée.
+          Plausible reçoit déjà les pageviews + custom events via PlausibleScript.
+          Source unique conservée : ce reporter KV.
         */}
         <WebVitalsReporter />
         {/* CommandPalette ⌘K — déclenché via window.dispatchEvent('cmdk:open')

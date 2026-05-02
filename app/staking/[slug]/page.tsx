@@ -21,6 +21,10 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+// FIX SEO 2026-05-02 #7 (audit interne) — sortir 21 pages /staking de
+// l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 
 export const revalidate = 86400;
@@ -386,6 +390,19 @@ export default function StakingDetailPage({ params }: Props) {
           </section>
 
           <AmfDisclaimer variant="comparatif" className="mt-12" />
+
+          {/* FIX SEO 2026-05-02 #7 — maillage interne sur les 21 pages
+              /staking/<crypto> (orphelines avant ce commit). */}
+          <div className="mt-12">
+            <RelatedPagesNav
+              currentPath={`/staking/${params.slug}`}
+              variant="default"
+              limit={5}
+            />
+          </div>
+          <div className="mt-12">
+            <NextStepsGuide context="article" articleCategory="Staking" />
+          </div>
         </div>
       </article>
 

@@ -118,6 +118,16 @@ export async function middleware(request: NextRequest) {
  */
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news|api/whales|api/onchain|api/convert).*)",
+    // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
+    // pour couvrir 7 routes oubliées qui restaient soumises au middleware
+    // Supabase alors qu'elles sont 100% read-only public :
+    // /quiz, /calendrier, /halving-bitcoin, /recherche, /transparence,
+    // /sponsoring, /a-propos, /methodologie, /accessibilite, /contact,
+    // /confidentialite, /mentions-legales, /cgv-abonnement, /partenaires,
+    // /merci, /newsletter, /impact, /ambassadeurs, /go (affiliate redirector).
+    // Avant : ces routes faisaient un Supabase JWT round-trip à chaque hit
+    // (TTFB +30 à +60ms inutile). Maintenant : middleware skipped, latence
+    // p50 alignée sur le reste des SEO routes déjà exclues.
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
   ],
 };

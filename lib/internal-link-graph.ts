@@ -444,7 +444,30 @@ export function buildEntityIndex(): Map<string, EntityIndexEntry> {
   }
 
   /* ---------------------------- 3. TOOLS ---------------------------------- */
+  // FIX 2026-05-02 #7 (audit 404) : `getAllFiscalTools()` contient AUSSI les
+  // outils tiers (waltio, koinly, cointracking…) qui n'ont PAS de page
+  // interne — seulement une présentation dans `/outils` ou un comparatif.
+  // Avant : on générait `/outils/${t.id}` pour TOUS, ce qui produisait des
+  // 404 sur cointracking (et potentiellement d'autres). On filtre désormais
+  // sur la whitelist des slugs qui ont vraiment un `app/outils/<slug>/page.tsx`.
+  const TOOLS_WITH_INTERNAL_PAGE = new Set<string>([
+    "calculateur-apy-staking",
+    "calculateur-fiscalite",
+    "calculateur-roi-crypto",
+    "cerfa-2086-auto",
+    "comparateur-personnalise",
+    "convertisseur",
+    "declaration-fiscale-crypto",
+    "glossaire-crypto",
+    "portfolio-tracker",
+    "radar-3916-bis",
+    "simulateur-dca",
+    "simulateur-halving-bitcoin",
+    "verificateur-mica",
+    "whitepaper-tldr",
+  ]);
   for (const t of getAllFiscalTools()) {
+    if (!TOOLS_WITH_INTERNAL_PAGE.has(t.id)) continue;
     const aliases = new Set<string>();
     pushAlias(aliases, t.name);
     // Pas d'alias-slug ici : éviter "waltio-pro" matché en pleine phrase.

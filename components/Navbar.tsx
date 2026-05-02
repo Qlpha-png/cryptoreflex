@@ -447,6 +447,38 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* FIX UX FLOW 2026-05-02 #7 (audit expert UX) — bouton Search
+              mobile à côté du burger. Avant : la palette ⌘K était inaccessible
+              en mobile (uniquement desktop lg+/md). Maintenant : tap sur la
+              loupe ouvre la palette ⌘K (cherche cryptos, articles, outils,
+              plateformes, glossaire — 219 destinations). Pattern Stripe/
+              Linear mobile (search loupe = élément #1 de la nav mobile). */}
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window === "undefined") return;
+              window.dispatchEvent(new CustomEvent("cmdk:open"));
+              if (typeof (window as { plausible?: (e: string, o?: object) => void }).plausible === "function") {
+                (window as { plausible: (e: string, o?: object) => void }).plausible("Search Open", { props: { source: "mobile-navbar" } });
+              }
+              // Fallback /recherche si palette pas encore montée (cf. button desktop).
+              window.setTimeout(() => {
+                if (!document.querySelector('[role="dialog"][aria-label*="Recherche"]')) {
+                  window.location.href = "/recherche";
+                }
+              }, 350);
+            }}
+            aria-label="Rechercher (cryptos, articles, outils)"
+            title="Rechercher"
+            className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-lg
+                       text-fg hover:bg-elevated hover:ring-1 hover:ring-primary/20
+                       active:bg-elevated/80 transition-all duration-fast
+                       focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+                       focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Search className="h-5 w-5" strokeWidth={1.85} aria-hidden="true" />
+          </button>
+
           {/* Burger : tap target 44x44 + morph icon CSS (X↔Menu via rotate) */}
           <button
             ref={triggerRef}
