@@ -1518,9 +1518,164 @@ section[id^="cat-"] {
   .partner-hero-glow,
   .partner-section,
   .partner-stat-pop,
-  .partner-cta-pulse::after {
+  .partner-cta-pulse::after,
+  .conic-border-anim,
+  .marquee-track,
+  .gradient-text-anim,
+  .spotlight-card::before,
+  .magnetic-cta {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+}
+
+/* =========================================================================
+   PROUESSES TECHNIQUES BATCH 10 (audit dynamisme 2026-05-02)
+   --------------------------------------------------------------------------
+   User explicit : "j'aime les prouesse technique [...] chose dynamique qui
+   anime le site et maintient l'interet". Ajout de 6 effets WOW signature,
+   tous 100% CSS-only ou progressifs, motion-safe + reduced-motion respecté.
+   ========================================================================= */
+
+/* 1. SPOTLIGHT cursor-glow — halo gold qui suit la souris sur card.
+ *    Pattern Linear/Vercel signature. Mises à jour --mx/--my via 1 listener.
+ *    Mobile : pointer:coarse → no-op (no hover state). */
+.spotlight-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(245, 165, 36, 0.18),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight-card:hover::before { opacity: 1; }
+}
+/* Garantie : tous les enfants restent au-dessus du halo */
+.spotlight-card > * { position: relative; z-index: 1; }
+
+/* 2. CONIC-GRADIENT BORDER ANIMÉ — bordure dégradée gold qui tourne.
+ *    Signature "premium animé" sur badges PRO / Score 9+ / HIDDEN GEM. */
+@property --conic-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes conic-spin {
+  from { --conic-angle: 0deg; }
+  to   { --conic-angle: 360deg; }
+}
+.conic-border-anim {
+  position: relative;
+  background: var(--surface, #1a1f25);
+  border-radius: 9999px;
+  isolation: isolate;
+}
+.conic-border-anim::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--conic-angle),
+    rgba(245, 165, 36, 1) 0deg,
+    rgba(245, 165, 36, 0.1) 60deg,
+    rgba(245, 165, 36, 0.1) 300deg,
+    rgba(245, 165, 36, 1) 360deg
+  );
+  animation: conic-spin 6s linear infinite;
+}
+
+/* 3. MARQUEE LOGOS — bandeau infini défilant (preuve sociale).
+ *    Le wrapper masque les bords avec mask-image fade. */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-wrap {
+  overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: inline-flex;
+  gap: 2.5rem;
+  animation: marquee-scroll 38s linear infinite;
+  width: max-content;
+  align-items: center;
+}
+.marquee-wrap:hover .marquee-track,
+.marquee-wrap:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* 4. GRADIENT TEXT ANIMÉ — gold qui se déplace lentement de gauche à droite.
+ *    Optimisé pour lisibilité : amplitude faible, easing doux. */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.gradient-text-anim {
+  background: linear-gradient(
+    90deg,
+    #f5a524 0%,
+    #ffd166 25%,
+    #f5a524 50%,
+    #d97706 75%,
+    #f5a524 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+/* 5. MAGNETIC CTA — la classe ne fait que la transition smooth.
+ *    Le translate(--mag-x, --mag-y) est posé via 1 hook React (useMagnetic).
+ *    Mobile : disabled (no hover, no fine pointer). */
+.magnetic-cta {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+  .magnetic-cta {
+    transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+  }
+}
+
+/* 6. TEXT-WRAP BALANCE — meilleure lisibilité titres FR.
+ *    Évite le mot orphelin sur la dernière ligne (Chrome 114+/Safari 17.5+). */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* 7. SCROLL-DRIVEN ANIMATIONS — natif moderne, 0kb runtime.
+ *    Fallback graceful pour Firefox via @supports. */
+@supports (animation-timeline: view()) {
+  .scroll-reveal-native {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: scroll-reveal-frames linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+  @keyframes scroll-reveal-frames {
+    to { opacity: 1; transform: translateY(0); }
   }
 }

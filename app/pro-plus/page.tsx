@@ -43,12 +43,12 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Cryptoreflex Pro+ — IA illimitée + API + exports pour power users crypto FR",
+  title: "Cryptoreflex Pro+ — IA illimitée + API + exports pour utilisateurs avancés crypto FR",
   description:
     "Pro+ : 9,99 €/mois (ou 79 €/an, économie 41 €). IA Q&A 100 questions/jour, exports illimités CSV/PDF, accès API personnelle, alertes prix avancées. 100 % automatisé, sans présence humaine.",
   alternates: { canonical: `${BRAND.url}/pro-plus` },
   openGraph: {
-    title: "Cryptoreflex Pro+ pour power users",
+    title: "Cryptoreflex Pro+ pour utilisateurs avancés",
     description:
       "IA Q&A 100/jour, API perso, exports illimités. 9,99 €/mois.",
     url: `${BRAND.url}/pro-plus`,
@@ -73,7 +73,7 @@ const FEATURES = [
     Icon: Code2,
     title: "Accès API personnel",
     blurb:
-      "Token API permanent pour intégrer Cryptoreflex dans ton workflow (Notion, Sheets, Airtable, scripts perso). 1 000 req/jour.",
+      "Token API permanent pour intégrer Cryptoreflex dans ton flux de travail (Notion, Sheets, Airtable, scripts perso). 1 000 req/jour.",
   },
   {
     Icon: Bell,
@@ -83,7 +83,7 @@ const FEATURES = [
   },
   {
     Icon: Zap,
-    title: "Priorité features beta",
+    title: "Priorité fonctionnalités bêta",
     blurb:
       "Whale Radar FR, Allocator IA, Gas Tracker, Wallet Connect — tu accèdes à toutes les nouvelles features 2-4 semaines avant les autres.",
   },
@@ -99,11 +99,11 @@ export default function ProPlusPage() {
   const faqItems = [
     {
       q: "Quelle différence avec le tier Soutien à 2,99 €/mois ?",
-      a: "Soutien (2,99 €) : tu finances le site + accès gamification + IA Q&A 20 questions/jour. Pro+ (9,99 €) : tout Soutien INCLUS + IA Q&A 100/jour + exports illimités + accès API + alertes avancées + features beta. Soutien reste pour les fans, Pro+ est pour les power users qui utilisent les outils intensivement.",
+      a: "Soutien (2,99 €) : tu finances le site + accès gamification + IA Q&A 20 questions/jour. Pro+ (9,99 €) : tout Soutien INCLUS + IA Q&A 100/jour + exports illimités + accès API + alertes avancées + features beta. Soutien reste pour les fans, Pro+ est pour les utilisateurs avancés qui utilisent les outils intensivement.",
     },
     {
       q: "Pourquoi 9,99 € et pas 4,99 € ou 14,99 € ?",
-      a: "Calcul honnête : Claude Haiku coûte ~0,30 €/100 questions, infra Vercel + Supabase + cache CryptoCompare = ~3 €/utilisateur/mois sur les power users (100 req/jour × 30 jours). 9,99 € = marge raisonnable pour pérenniser le service sans dépendre des affiliations.",
+      a: "Calcul honnête : Claude Haiku coûte ~0,30 €/100 questions, infra Vercel + Supabase + cache CryptoCompare = ~3 €/utilisateur/mois sur les utilisateurs avancés (100 req/jour × 30 jours). 9,99 € = marge raisonnable pour pérenniser le service sans dépendre des affiliations.",
     },
     {
       q: "C'est résiliable n'importe quand ?",
@@ -119,7 +119,7 @@ export default function ProPlusPage() {
     },
     {
       q: "Le service est-il 100 % automatisé ?",
-      a: "Oui. Tout est automatisé : Cerfa généré à partir de ton CSV par algorithme, IA Q&A par Claude Haiku, alertes par cron Vercel, API par tokens RLS Supabase. Aucun support humain réactif (politique éditoriale Cryptoreflex). Pour une question complexe nécessitant un humain, on te redirige vers un expert-comptable agréé.",
+      a: "Oui. Tout est automatisé : Cerfa généré à partir de ton CSV par algorithme, IA Q&A par Claude Haiku, alertes par cron Vercel, API par tokens RLS Supabase. Aucun support humain réactif (politique éditoriale Cryptoreflex). Pour une question complexe nécessitant un humain, on te redirige vers un expert-comptable agréé. Les fonctionnalités bêta sont mises à jour automatiquement (pas de friction utilisateur).",
     },
   ];
 
@@ -127,7 +127,7 @@ export default function ProPlusPage() {
     articleSchema({
       slug: "pro-plus",
       title: "Cryptoreflex Pro+ — IA illimitée + API + exports",
-      description: "Tier Pro+ 9,99€/mois pour power users crypto FR.",
+      description: "Tier Pro+ 9,99€/mois pour utilisateurs avancés crypto FR.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Pricing",
@@ -153,7 +153,7 @@ export default function ProPlusPage() {
 
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Crown className="h-3 w-3" aria-hidden /> Pour power users
+            <Crown className="h-3 w-3" aria-hidden /> Pour utilisateurs avancés
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Cryptoreflex{" "}
@@ -247,7 +247,7 @@ export default function ProPlusPage() {
             <table className="w-full min-w-[640px] border-collapse text-sm">
               <thead className="text-left text-xs uppercase tracking-wider text-muted">
                 <tr className="border-b border-border">
-                  <th className="px-3 py-2 font-semibold">Feature</th>
+                  <th className="px-3 py-2 font-semibold">Fonctionnalité</th>
                   <th className="px-3 py-2 font-semibold">Soutien 2,99 €</th>
                   <th className="px-3 py-2 font-semibold text-primary-soft">Pro+ 9,99 €</th>
                 </tr>

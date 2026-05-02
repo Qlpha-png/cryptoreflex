@@ -48,50 +48,50 @@ const FAQ_ITEMS = [
       "Tu colles le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une série d'heuristiques (regex et détection de mots-clés) puis retourne un résumé structuré FR (problème, solution, tokenomics, équipe), une liste de red flags détectés, un score BS sur 100 et un verdict (Sérieux, Mitigé ou Suspect).",
   },
   {
-    question: "Mes donnees sont-elles stockees ?",
+    question: "Mes données sont-elles stockées ?",
     answer:
-      "Non. L'analyse est stateless côté serveur : aucun texte n'est sauvegarde, aucun cookie de tracking n'est pose, aucun email n'est requis. Le calcul s'exécute le temps de la requête puis tout est jete.",
+      "Non. L'analyse est stateless côté serveur : aucun texte n'est sauvegardé, aucun cookie de tracking n'est posé, aucun email n'est requis. Le calcul s'exécute le temps de la requête puis tout est jeté.",
   },
   {
     question: "L'analyse remplace-t-elle un DYOR complet ?",
     answer:
-      "Non, absolument pas. C'est un outil d'aide à la décision qui sert a repérer rapidement des signaux faibles. Une analyse heuristique ne peut pas remplacer une lecture humaine attentive du whitepaper, une vérification on-chain de la répartition des tokens, ni une recherche approfondie sur l'équipe et l'historique du projet.",
+      "Non, absolument pas. C'est un outil d'aide à la décision qui sert à repérer rapidement des signaux faibles. Une analyse heuristique ne peut pas remplacer une lecture humaine attentive du whitepaper, une vérification on-chain de la répartition des tokens, ni une recherche approfondie sur l'équipe et l'historique du projet.",
   },
   {
-    question: "Pourquoi un score BS et pas un score qualite ?",
+    question: "Pourquoi un score BS et pas un score qualité ?",
     answer:
-      "Parce qu'il est statistiquement plus utile de détecter ce qui cloche que d'evaluer ce qui va. Un score qualite implique de juger la valeur d'une innovation technique, ce qu'un algorithme ne peut pas faire sérieusement. A l'inverse, les red flags des projets douteux (rendement garanti, équipe anonyme, supply absurde) sont reconnaissables a des patterns linguistiques precis.",
+      "Parce qu'il est statistiquement plus utile de détecter ce qui cloche que d'évaluer ce qui va. Un score qualité implique de juger la valeur d'une innovation technique, ce qu'un algorithme ne peut pas faire sérieusement. À l'inverse, les red flags des projets douteux (rendement garanti, équipe anonyme, supply absurde) sont reconnaissables à des patterns linguistiques précis.",
   },
   {
     question: "L'outil supporte-t-il les whitepapers en anglais ?",
     answer:
-      "Oui, et c'est meme le cas d'usage principal puisque la quasi-totalité des whitepapers crypto sont rédigés en anglais. La détection des red flags utilise des patterns en EN et en FR. Le résumé restitué est en francais.",
+      "Oui, et c'est même le cas d'usage principal puisque la quasi-totalité des whitepapers crypto sont rédigés en anglais. La détection des red flags utilise des patterns en EN et en FR. Le résumé restitué est en français.",
   },
   {
-    question: "Comment est calcule le score BS ?",
+    question: "Comment est calculé le score BS ?",
     answer:
-      "Chaque red flag detecte ajoute un nombre de points predefini (de 5 a 30 selon la severite). Le total est plafonne a 100. Score 0-30 = Sérieux, 31-60 = Mitigé, 61-100 = Suspect. La grille complete des 15 red flags est documentee dans la spec technique de l'outil.",
+      "Chaque red flag détecté ajoute un nombre de points prédéfini (de 5 à 30 selon la sévérité). Le total est plafonné à 100. Score 0-30 = Sérieux, 31-60 = Mitigé, 61-100 = Suspect. La grille complète des 15 red flags est documentée dans la spec technique de l'outil.",
   },
   {
     question: "Que faire si le verdict est Suspect ?",
     answer:
-      "Ne rien acheter sans investigation supplémentaire. Consultez la liste des red flags listés dans le rapport, vérifiez l'équipe sur LinkedIn, cherchez des audits indépendants (Certik, Hacken), consultez la répartition on-chain des wallets et évaluez la liquidite. Si plusieurs red flags critiques sont presents, considérez le projet comme tres risque.",
+      "Ne rien acheter sans investigation supplémentaire. Consultez la liste des red flags listés dans le rapport, vérifiez l'équipe sur LinkedIn, cherchez des audits indépendants (Certik, Hacken), consultez la répartition on-chain des wallets et évaluez la liquidité. Si plusieurs red flags critiques sont présents, considérez le projet comme très risqué.",
   },
   {
     question: "Une version IA est-elle prévue ?",
     answer:
-      "Oui. La V1 utilise une analyse heuristique pure (gratuite, instantanee, transparente). La V2 ajoutera une analyse via LLM (Claude Haiku 4.5 via OpenRouter) pour des résumés plus fins et une détection contextuelle plus profonde, sans changer la grille des red flags. La grille restera publique et auditable.",
+      "Oui. La V1 utilise une analyse heuristique pure (gratuite, instantanée, transparente). La V2 ajoutera une analyse via LLM (Claude Haiku 4.5 via OpenRouter) pour des résumés plus fins et une détection contextuelle plus profonde, sans changer la grille des red flags. La grille restera publique et auditable.",
   },
 ];
 
 const HOWTO_STEPS = [
   {
-    name: "Recuperer le texte du whitepaper",
-    text: "Ouvrez le whitepaper officiel du projet (sur le site officiel ou GitHub) et copiez l'intégralite du texte (Ctrl+A puis Ctrl+C). Si le whitepaper est un PDF, ouvrez-le et copiez le contenu.",
+    name: "Récupérer le texte du whitepaper",
+    text: "Ouvrez le whitepaper officiel du projet (sur le site officiel ou GitHub) et copiez l'intégralité du texte (Ctrl+A puis Ctrl+C). Si le whitepaper est un PDF, ouvrez-le et copiez le contenu.",
   },
   {
     name: "Coller dans la zone d'analyse",
-    text: "Sur cette page, collez le texte dans la zone prévue. Minimum 200 caracteres, maximum 30 000 caracteres. Pour de meilleurs resultats, incluez l'introduction, la solution, la tokenomics et la section équipe.",
+    text: "Sur cette page, collez le texte dans la zone prévue. Minimum 200 caractères, maximum 30 000 caractères. Pour de meilleurs résultats, incluez l'introduction, la solution, la tokenomics et la section équipe.",
     url: `${PAGE_URL}#wp-tldr-input`,
   },
   {
