@@ -17,7 +17,11 @@
  * Pour invalider le cache après un déploiement : bump CACHE_VERSION.
  */
 
-const CACHE_VERSION = "v2";
+// BATCH 44d (2026-05-02) — bump v2 → v3 pour invalider TOUS les caches users.
+// Contexte : user signale "aucun lien fonctionne". Reproduction prod KO mais
+// stale chunks JS dans cryptoreflex-static-v2 = suspect #1 (tous les anciens
+// builds restaient indéfiniment). v3 supprime v2 à l'activate (cf. lifecycle).
+const CACHE_VERSION = "v3";
 const STATIC_CACHE = `cryptoreflex-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `cryptoreflex-runtime-${CACHE_VERSION}`;
 
