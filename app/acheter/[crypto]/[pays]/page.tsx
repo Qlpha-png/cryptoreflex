@@ -40,25 +40,43 @@ import {
   howToSchema,
 } from "@/lib/schema";
 
-export const dynamic = "force-static";
-export const revalidate = 86400; // 1 jour
-export const dynamicParams = false;
+// FIX URGENT 2026-05-02 — build Vercel timeout 45min sur 600 URLs.
+// Cause : `dynamic="force-static"` + `dynamicParams=false` force le pre-build
+// de 100 cryptos × 6 pays au build, chacun lit toute la config + plateformes.
+//
+// Fix : ISR à la demande. On garde `revalidate=86400` (1j cache) mais on
+// PASSE en `dynamicParams=true` ET on réduit generateStaticParams à
+// (top 10 cryptos × pays FR) = 10 URLs pre-build (trafic principal France).
+// Les 590 autres URLs sont SSR au 1er hit puis cachées 24h.
+export const revalidate = 86400; // 1 jour ISR
+export const dynamicParams = true;
 
 interface Props {
   params: { crypto: string; pays: string };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  generateStaticParams — 100 × 6 = 600                                      */
+/*  generateStaticParams — TOP 10 cryptos × pays FR = 10 URLs pre-build       */
+/*  Les 590 autres URLs sont SSR à la demande (ISR cache 24h ensuite).        */
 /* -------------------------------------------------------------------------- */
 
+const PRE_BUILD_CRYPTO_SLUGS = [
+  "bitcoin",
+  "ethereum",
+  "tether",
+  "binancecoin",
+  "solana",
+  "ripple",
+  "cardano",
+  "dogecoin",
+  "avalanche-2",
+  "polkadot",
+];
+
 export function generateStaticParams() {
-  const cryptos = getAllCryptos();
   const out: { crypto: string; pays: string }[] = [];
-  for (const c of cryptos) {
-    for (const code of COUNTRY_CODES) {
-      out.push({ crypto: c.id, pays: code });
-    }
+  for (const cryptoId of PRE_BUILD_CRYPTO_SLUGS) {
+    out.push({ crypto: cryptoId, pays: "fr" });
   }
   return out;
 }

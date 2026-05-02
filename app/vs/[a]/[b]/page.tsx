@@ -56,20 +56,45 @@ import {
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 
-export const dynamic = "force-static";
-export const revalidate = 86400; // 1 jour
-export const dynamicParams = false;
+// FIX URGENT 2026-05-02 — build Vercel timeout 45min sur 435 paires.
+// Cause : `dynamic="force-static"` + `dynamicParams=false` force le pre-build
+// de TOUTES les paires AU BUILD, chacune fetchant CoinGecko (sparkline + corrélation).
+// Sur Vercel Hobby (timeout build 45 min), 435 paires × ~6s = 43 min, on dépasse.
+//
+// Fix : ISR à la demande. On garde `revalidate=86400` (1j cache) mais on
+// PASSE en `dynamicParams=true` (=defaut) ET on réduit generateStaticParams
+// au top 8 cryptos = 28 paires pre-build (BTC, ETH, USDT, BNB, SOL, XRP, ADA, DOGE).
+// Les 407 autres paires sont SSR au 1er hit puis cachées 24h. Le crawler
+// Googlebot tape ces pages à son rythme — peu probable que 100 paires soient
+// hit en cold start simultané.
+export const revalidate = 86400; // 1 jour ISR
+export const dynamicParams = true;
 
 interface Props {
   params: { a: string; b: string };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  generateStaticParams — 435 paires canoniques                              */
+/*  generateStaticParams — TOP 8 cryptos × 7 / 2 = 28 paires pre-build       */
+/*  Les autres 407 paires sont SSR à la demande (ISR cache 24h ensuite).      */
 /* -------------------------------------------------------------------------- */
 
+// Whitelist coingeckoId stricte (cf. lib/programmatic-pages.ts TOP_30_CRYPTO_IDS).
+const PRE_BUILD_TOP = [
+  "bitcoin",
+  "ethereum",
+  "tether",
+  "binancecoin",
+  "solana",
+  "ripple",
+  "cardano",
+  "dogecoin",
+];
+
 export function generateStaticParams() {
-  return getCryptoPairs().map((p) => ({ a: p.a, b: p.b }));
+  return getCryptoPairs()
+    .filter((p) => PRE_BUILD_TOP.includes(p.a) && PRE_BUILD_TOP.includes(p.b))
+    .map((p) => ({ a: p.a, b: p.b }));
 }
 
 /* -------------------------------------------------------------------------- */
