@@ -5,6 +5,21 @@ import WatchlistButton from "@/components/WatchlistButton";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import { getCategoryTheme } from "@/lib/category-theme";
 import AnimatedStat from "./AnimatedStat";
+import MiniOrderBook from "./MiniOrderBook";
+
+/**
+ * Whitelist des symbols qui ont une paire SPOT USDT liquide sur Binance
+ * (vérifiée manuellement). Si on tente une paire non listée, le fetch
+ * Binance retournera 400 et MiniOrderBook se cachera silencieusement,
+ * mais autant éviter l'appel inutile pour les ~25 cryptos illiquides.
+ */
+const BINANCE_USDT_LIQUID = new Set([
+  "BTC", "ETH", "SOL", "BNB", "XRP", "ADA", "DOGE", "TRX", "AVAX",
+  "DOT", "MATIC", "LINK", "LTC", "BCH", "NEAR", "UNI", "APT", "ATOM",
+  "XLM", "ETC", "FIL", "AAVE", "MKR", "ARB", "OP", "SUI", "INJ",
+  "TIA", "RUNE", "SEI", "SHIB", "PEPE", "ICP", "HBAR", "ALGO", "TON",
+  "WIF", "BONK", "ORDI",
+]);
 
 interface Props {
   name: string;
@@ -152,12 +167,23 @@ export default function CryptoHero({
           scroll horizontal sur Galaxy Fold replié (280px). On bascule vers
           `min-w-0 sm:min-w-[260px] w-full` : pleine largeur en stack mobile,
           mini-card 260px à partir de sm (640px) où on a la place. */}
-      <div className="rounded-2xl border border-border bg-surface p-4 min-w-0 sm:min-w-[260px] w-full">
-        <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
-        <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
-        <p className="mt-2 text-[11px] text-muted">
-          Données CoinGecko — mises à jour toutes les 5 minutes.
-        </p>
+      <div className="min-w-0 sm:min-w-[260px] w-full space-y-3">
+        <div className="rounded-2xl border border-border bg-surface p-4">
+          <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
+          <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
+          <p className="mt-2 text-[11px] text-muted">
+            Données CoinGecko — mises à jour toutes les 5 minutes.
+          </p>
+        </div>
+        {/* INNOVATION BATCH 15 — Mini Order Book live Binance.
+            Affiché uniquement pour les paires SPOT USDT liquides (top ~40
+            tokens). REST polling 5s avec skeleton 112px → 0 CLS. Désactive
+            quand onglet inactif (Page Visibility API) pour économie batterie.
+            Différenciant vs Cryptoast/JdC : sensation "trading desk" sur
+            chaque fiche crypto majeure. */}
+        {BINANCE_USDT_LIQUID.has(symbol.toUpperCase()) && (
+          <MiniOrderBook symbol={symbol} depth={5} refreshMs={5000} />
+        )}
       </div>
     </header>
   );

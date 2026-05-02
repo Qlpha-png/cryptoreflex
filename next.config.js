@@ -281,7 +281,10 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io https://www.clarity.ms https://*.clarity.ms",
+      // BATCH 15 — ajout api.binance.com pour MiniOrderBook (REST polling
+      // 5s sur /api/v3/depth, paires SPOT USDT). CDN edge-cached côté Binance,
+      // pas de WebSocket donc pas de wss://.
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://api.binance.com https://plausible.io https://www.clarity.ms https://*.clarity.ms",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
