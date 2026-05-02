@@ -91,6 +91,19 @@ export default async function GlobalMetricsBar() {
                 <Activity className="h-3 w-3" />
                 {fearGreed.value}/100
                 <span className="text-muted font-normal">· {fearGreed.classification}</span>
+                {/* BATCH 29C — delta vs hier (signal momentum sentiment).
+                    Coloration locale au delta (pas à la valeur absolue). */}
+                {fearGreed.deltaVsYesterday !== null && fearGreed.deltaVsYesterday !== undefined && fearGreed.deltaVsYesterday !== 0 && (
+                  <span
+                    className={`ml-1 text-[10px] font-mono font-bold ${
+                      fearGreed.deltaVsYesterday > 0 ? "text-accent-green" : "text-accent-rose"
+                    }`}
+                    aria-label={`${fearGreed.deltaVsYesterday > 0 ? "Hausse" : "Baisse"} de ${Math.abs(fearGreed.deltaVsYesterday)} points par rapport à hier`}
+                  >
+                    {fearGreed.deltaVsYesterday > 0 ? "+" : ""}
+                    {fearGreed.deltaVsYesterday} vs hier
+                  </span>
+                )}
                 <span className="text-muted font-normal text-[10px] ml-1">voir détail →</span>
               </Link>
             </Metric>

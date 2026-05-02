@@ -310,6 +310,11 @@ export interface FearGreedData {
   value: number; // 0-100
   classification: string; // "Extreme Fear" | "Fear" | "Neutral" | "Greed" | "Extreme Greed"
   timestamp: string;
+  /**
+   * BATCH 29C — delta vs hier. Permet d'afficher "+3 vs hier" comme signal
+   * de momentum. Null si la valeur d'hier est indisponible.
+   */
+  deltaVsYesterday?: number | null;
 }
 
 const FEAR_GREED_FR: Record<string, string> = {
@@ -322,17 +327,26 @@ const FEAR_GREED_FR: Record<string, string> = {
 
 export async function fetchFearGreed(): Promise<FearGreedData | null> {
   try {
-    const res = await fetch("https://api.alternative.me/fng/?limit=1", {
+    // BATCH 29C — fetch limit=2 pour récupérer aujourd'hui + hier en 1 call.
+    // Permet d'afficher le delta sentiment sans coût supplémentaire.
+    const res = await fetch("https://api.alternative.me/fng/?limit=2", {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     const json = await res.json();
-    const point = json?.data?.[0];
-    if (!point) return null;
+    const today = json?.data?.[0];
+    const yesterday = json?.data?.[1];
+    if (!today) return null;
+    const todayValue = parseInt(today.value, 10);
+    const yesterdayValue = yesterday ? parseInt(yesterday.value, 10) : null;
     return {
-      value: parseInt(point.value, 10),
-      classification: FEAR_GREED_FR[point.value_classification] || point.value_classification,
-      timestamp: new Date(parseInt(point.timestamp, 10) * 1000).toISOString(),
+      value: todayValue,
+      classification: FEAR_GREED_FR[today.value_classification] || today.value_classification,
+      timestamp: new Date(parseInt(today.timestamp, 10) * 1000).toISOString(),
+      deltaVsYesterday:
+        yesterdayValue !== null && Number.isFinite(yesterdayValue)
+          ? todayValue - yesterdayValue
+          : null,
     };
   } catch {
     return null;

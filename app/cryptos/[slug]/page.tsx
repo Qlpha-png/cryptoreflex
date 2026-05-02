@@ -140,6 +140,9 @@ const TradingViewWidget = dynamic(
   },
 );
 import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
+// BATCH 29C — bandeau narratif ATH (render conditionnel : ne s'affiche que
+// si la crypto est ≤ 5% de son sommet historique). Storytelling fort.
+import AthAlertBanner from "@/components/crypto-detail/AthAlertBanner";
 import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
 import CryptoEventCalendar from "@/components/crypto-detail/CryptoEventCalendar";
 import WhitepaperTldr from "@/components/crypto-detail/WhitepaperTldr";
@@ -443,6 +446,20 @@ export default async function CryptoPage({ params }: Props) {
             platformNames={c.whereToBuy}
           />
         </div>
+
+        {/* ATH ALERT BANNER (BATCH 29C) — bandeau narratif si crypto ≤ 5% ATH.
+            Render null sinon. Capte l'attention immédiatement avec un signal
+            "il se passe quelque chose maintenant". */}
+        {detail && detail.currentPrice > 0 && detail.ath > 0 && (
+          <div className="mt-8">
+            <AthAlertBanner
+              cryptoName={c.name}
+              symbol={c.symbol}
+              currentPrice={detail.currentPrice}
+              ath={detail.ath}
+            />
+          </div>
+        )}
 
         {/* QUICK STATS */}
         <div className="mt-10">
