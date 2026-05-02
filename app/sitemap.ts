@@ -117,6 +117,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Les routes /embed/* restent volontairement HORS sitemap (noindex).
     { url: `${SITE_URL}/embeds`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/ressources-libres`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    // FIX 2026-05-02 #11 — TIER 3 features (audit consolidé 6 experts).
+    // 5 nouvelles pages : 4 outils + 1 landing Wrapped.
+    { url: `${SITE_URL}/outils/yield-stablecoins`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE_URL}/outils/tax-loss-harvesting`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
+    { url: `${SITE_URL}/outils/fiscal-copilot`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/outils/wallet-connect`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
+    { url: `${SITE_URL}/crypto-wrapped`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car

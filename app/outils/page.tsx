@@ -205,6 +205,48 @@ const TOOLS: Tool[] = [
     status: "new",
     cat: "ia",
   },
+
+  // FIX 2026-05-02 #11 — TIER 3 features (5 nouvelles pages) du plan
+  // d'audit consolidé 6 experts. Chaque outil a sa propre page avec
+  // landing + maillage + schemas. Les 3 "Pro" (Fiscal Copilot, Tax Loss
+  // Harvesting auto, Wallet Connect) servent à monétiser. Les 2 "Free"
+  // (Yield Stablecoins, Crypto Wrapped) servent à acquérir.
+  {
+    title: "Yield stablecoins (USDC/USDT/EURC)",
+    desc: "Comparateur APY sur 14 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
+    href: "/outils/yield-stablecoins",
+    Icon: Zap,
+    tier: "free",
+    status: "new",
+    cat: "marche",
+  },
+  {
+    title: "Tax Loss Harvesting (FR)",
+    desc: "Réduis ton PFU 30 % en compensant tes plus-values par les moins-values réalisées avant le 31/12.",
+    href: "/outils/tax-loss-harvesting",
+    Icon: TrendingUp,
+    tier: "free",
+    status: "new",
+    cat: "fiscalite",
+  },
+  {
+    title: "Fiscal Copilot IA",
+    desc: "Agent conversationnel qui parse ton CSV exchange et génère ton Cerfa 2086 pré-rempli. Sources légales citées.",
+    href: "/outils/fiscal-copilot",
+    Icon: Sparkles,
+    tier: "pro",
+    status: "soon",
+    cat: "ia",
+  },
+  {
+    title: "Wallet Connect read-only",
+    desc: "MetaMask, Rabby, Ledger, Phantom… Suis ton portfolio DeFi multi-chain en lecture seule.",
+    href: "/outils/wallet-connect",
+    Icon: Wallet,
+    tier: "free",
+    status: "soon",
+    cat: "portfolio",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
