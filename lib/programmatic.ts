@@ -389,7 +389,18 @@ export function getAllProgrammaticRoutes(): ProgrammaticRoute[] {
   }
 
   for (const c of ALL_CRYPTOS) {
-    routes.push({ path: `/cryptos/${c.id}`, changeFrequency: "daily", priority: 0.7 });
+    // FIX 2026-05-02 (audit 404 user) : la fiche `/cryptos/[slug]` est
+    // limitée aux cryptos avec contenu éditorial (top-cryptos.json +
+    // hidden-gems.json). Pour les ADDITIONAL_CRYPTOS sans fiche
+    // (ethereum-classic, fantom, immutable-x, maker, stacks, vechain…),
+    // la route répond `notFound()` → 6×404 dans Search Console depuis
+    // que ces cryptos ont été ajoutées au mapping programmatic. On ne
+    // pousse plus que les slugs editorial dans le sitemap pour cette
+    // route. /cryptos/[slug]/acheter-en-france reste OK pour tous les
+    // ALL_CRYPTOS (page guide d'achat n'a pas besoin de fiche détaillée).
+    if (c.hasEditorial) {
+      routes.push({ path: `/cryptos/${c.id}`, changeFrequency: "daily", priority: 0.7 });
+    }
     routes.push({ path: `/cryptos/${c.id}/acheter-en-france`, changeFrequency: "weekly", priority: 0.7 });
   }
 

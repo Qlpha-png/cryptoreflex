@@ -37,7 +37,12 @@ const ARTICLES_DIR = path.join(REPO_ROOT, "content", "articles");
 const TODAY = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-3.5-sonnet";
+// FIX 2026-05-02 — workflow weekly-blog échouait en 6s avec
+// `anthropic/claude-3.5-sonnet` : modèle DÉPRÉCIÉ sur OpenRouter (vérifié
+// via /api/v1/models, plus dans la liste). Migration vers Claude Sonnet 4.5
+// (équivalent qualité, supporté en priorité par OpenRouter en 2026).
+// `LLM_MODEL` env override toujours possible si on veut tester un autre.
+const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
 const MAX_TOKENS = 8000;          // ~6000 mots français max
 const TEMPERATURE = 0.5;          // Factuel mais pas robotique
 const TIMEOUT_MS = 120_000;       // 2 min (long-form prend du temps)
@@ -47,7 +52,13 @@ const MIN_INTERNAL_LINKS = 2;
 const MIN_WORD_COUNT = 1500;
 const MAX_RETRIES = 1;
 
+// Pricing OpenRouter ($/M tokens). Sonnet 4.5/4.6 alignés sur Anthropic
+// list price (3 in / 15 out). Haiku 4.5 = 1/5. Garde l'historique 3.5
+// (déprécié) pour ne pas crasher l'estimateur si LLM_MODEL=ancien.
 const PRICING = {
+  "anthropic/claude-sonnet-4.5": { input: 3.00, output: 15.00 },
+  "anthropic/claude-sonnet-4.6": { input: 3.00, output: 15.00 },
+  "anthropic/claude-haiku-4.5":  { input: 1.00, output: 5.00 },
   "anthropic/claude-3.5-sonnet": { input: 3.00, output: 15.00 },
   "anthropic/claude-3.5-haiku":  { input: 1.00, output: 5.00 },
   "openai/gpt-4o":               { input: 2.50, output: 10.00 },
