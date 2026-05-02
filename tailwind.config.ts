@@ -166,7 +166,12 @@ const config: Config = {
       },
 
       animation: {
-        "ticker-scroll": "ticker 40s linear infinite",
+        // BATCH 27 — accéléré 40s → 22s (user feedback "c'est statique" :
+        // le ticker bougeait mais 1 cycle par 40s = imperceptible à l'œil
+        // sur quelques secondes de visite). 22s = vitesse confortable
+        // perceptible sans être désagréable. Pause au hover/focus conservée
+        // (cf. PriceTicker.tsx :hover state).
+        "ticker-scroll": "ticker 22s linear infinite",
         "pulse-dot": "pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "fade-in-up": "fade-in-up 600ms cubic-bezier(0, 0, 0.2, 1)",
       },

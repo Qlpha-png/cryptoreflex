@@ -1152,7 +1152,10 @@ section[id^="cat-"] {
   to   { transform: translateX(-50%); }
 }
 .news-ticker-track {
-  animation: news-scroll 60s linear infinite;
+  /* BATCH 27 — accéléré 60s → 35s (user feedback "c'est statique").
+     35s permet de percevoir le mouvement immédiatement. Pause au hover
+     conservée (cf. .news-ticker-scroll:hover). */
+  animation: news-scroll 35s linear infinite;
 }
 /* Pause confortable au hover et au focus dans la zone défilante */
 .news-ticker-scroll:hover .news-ticker-track,
