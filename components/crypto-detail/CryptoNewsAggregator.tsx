@@ -72,6 +72,40 @@ export default function CryptoNewsAggregator({
     return () => controller.abort();
   }, [load]);
 
+  // BATCH 30 — auto-refresh toutes les 5 min (user feedback "j'aime les actu
+  // personnalisées pour chaque crypto mais je veux ça en automatique").
+  // 5 min cohérent avec le SWR API (s-maxage=900 / 15 min CDN). Désactivé
+  // si l'onglet n'est pas visible (Page Visibility API) → 0 fetch parasite
+  // quand le user n'est pas devant son écran.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const AUTO_REFRESH_MS = 5 * 60 * 1000; // 5 minutes
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const startTimer = () => {
+      if (timer !== null) return;
+      timer = setInterval(() => {
+        // Skip si déjà en cours, sinon refresh silencieux (pas de spinner).
+        if (!document.hidden) load();
+      }, AUTO_REFRESH_MS);
+    };
+    const stopTimer = () => {
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+    const onVisibility = () => {
+      if (document.hidden) stopTimer();
+      else startTimer();
+    };
+    if (!document.hidden) startTimer();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stopTimer();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [load]);
+
   const handleRefresh = useCallback(async () => {
     if (refreshing) return;
     setRefreshing(true);
@@ -126,19 +160,30 @@ export default function CryptoNewsAggregator({
             <span className="gradient-text">{cryptoName}</span>{" "}
             <span className="text-muted font-mono text-xs">({cryptoSymbol.toUpperCase()})</span>
           </h2>
+          {/* BATCH 30 — pulse dot LIVE + auto-MAJ visible. Signal "le site
+              récupère les news automatiquement, pas besoin de toucher au
+              bouton". */}
+          <span
+            className="hidden sm:inline-flex items-center gap-1 rounded-full border border-success-border bg-success-soft px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-success-fg ml-1"
+            aria-label="Mise à jour automatique toutes les 5 minutes"
+            title="Auto-refresh toutes les 5 minutes"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-success-fg animate-pulse-dot" aria-hidden="true" />
+            Auto
+          </span>
         </div>
         <button
           type="button"
           onClick={handleRefresh}
           disabled={refreshing}
-          aria-label="Rafraîchir les actualités"
+          aria-label="Rafraîchir les actualités maintenant"
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-elevated/60 px-2.5 py-1.5 text-xs font-semibold text-muted hover:text-fg hover:border-primary/40 transition-colors disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
           <RotateCw
             className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`}
             aria-hidden="true"
           />
-          {refreshing ? "Mise à jour..." : "Rafraîchir"}
+          {refreshing ? "MAJ..." : lastFetched > 0 ? <RelativeTime since={lastFetched} /> : "Rafraîchir"}
         </button>
       </header>
 
@@ -282,4 +327,21 @@ function formatRelativeFr(input: string | number): string {
   if (diffH < 24) return `il y a ${diffH} h`;
   const diffD = Math.round(diffH / 24);
   return `il y a ${diffD} j`;
+}
+
+/**
+ * RelativeTime — petit composant client qui re-render toutes les 30s
+ * pour afficher un timestamp relatif vivant ("il y a 2min", "il y a 4min"...).
+ * Utilisé dans le bouton refresh : signal "le site sait quand il a fetched".
+ *
+ * Pas de useState (re-render naturel via setInterval + force update via
+ * key sur le compteur). Très léger, 0 dépendance externe.
+ */
+function RelativeTime({ since }: { since: number }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, []);
+  return <span className="font-mono">{formatRelativeFr(since)}</span>;
 }
