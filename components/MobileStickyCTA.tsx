@@ -78,11 +78,21 @@ export default function MobileStickyCTA({
   if (!visible) return null;
 
   return (
+    // FIX BATCH 20 — bug régression BATCH 11 : MobileStickyCTA s'empilait
+    // au même niveau que MobileBottomNav (tous deux fixed bottom-0 z-40).
+    // Maintenant : positionné EN DESSUS du MobileBottomNav (--mobile-bar-h)
+    // + z-30 (en-dessous de MobileBottomNav z-40 logique navigation prio).
+    // a11y : div décoratif → pas d'aria-label invalide (le <a> interne
+    // porte déjà son nom accessible).
     <div
-      aria-label="Action d'achat rapide"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/80
+      role="region"
+      aria-label="Achat rapide"
+      className="md:hidden fixed inset-x-0 z-30 border-t border-border/80
                  bg-background/95 backdrop-blur-xl animate-slide-up"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0)" }}
+      style={{
+        bottom: "var(--mobile-bar-h, 64px)",
+        paddingBottom: "env(safe-area-inset-bottom, 0)",
+      }}
     >
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="min-w-0 flex-1">

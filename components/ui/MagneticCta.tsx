@@ -37,6 +37,13 @@ export default function MagneticCta({
 
   const handleMove = useCallback(
     (e: React.PointerEvent<HTMLAnchorElement>) => {
+      // BATCH 20 a11y — guards JS pointer:coarse + prefers-reduced-motion
+      // (le CSS ne couvrait que la branche desktop, le JS continuait à
+      // poser --mag-x/--mag-y sur tactile et reduced-motion).
+      if (typeof window !== "undefined") {
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      }
       if (rafIdRef.current !== null) return;
       const target = ref.current;
       if (!target) return;

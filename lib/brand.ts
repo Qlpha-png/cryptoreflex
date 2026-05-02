@@ -28,7 +28,7 @@ export const BRAND = {
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout pour investir en crypto en France",
   description:
-    "100 cryptos analysées (score fiabilité, on-chain live, roadmap), 30+ plateformes MiCA comparées (CASP UE + PSAN FR), simulateurs (DCA, ROI, fiscalité PFU), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+    "100 cryptos analysées (score fiabilité, on-chain live, roadmap), 34 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 26 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;

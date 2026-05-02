@@ -98,7 +98,11 @@ const NAV_GROUPS: FooterGroup[] = [
     id: "footer-tools-heading",
     title: "Outils & espace",
     links: [
-      { href: "/outils", label: "Outils crypto gratuits" },
+      { href: "/outils", label: "Tous les outils (26)" },
+      { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 30 %" },
+      { href: "/outils/allocator-ia", label: "Allocator IA (nouveau)" },
+      { href: "/outils/whale-radar", label: "Whale Radar FR (nouveau)" },
+      { href: "/outils/dca-lab", label: "DCA Lab multi-stratégies (nouveau)" },
       { href: "/alertes", label: "Alertes prix crypto" },
       { href: "/watchlist", label: "Ma watchlist" },
       { href: "/portefeuille", label: "Mon portefeuille" },

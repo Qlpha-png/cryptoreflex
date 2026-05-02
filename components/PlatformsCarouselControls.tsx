@@ -238,7 +238,7 @@ export default function PlatformsCarouselControls({
           type="button"
           onClick={togglePlayPause}
           aria-label={isPlaying ? "Mettre en pause le défilement automatique" : "Reprendre le défilement automatique"}
-          title={isPlaying ? "Pause auto-play" : "Reprendre auto-play"}
+          aria-pressed={!isPlaying}
           className="inline-flex items-center justify-center h-7 w-7 rounded-full text-muted hover:text-primary hover:bg-elevated/60 transition-colors"
         >
           {isPlaying ? (

@@ -19,18 +19,25 @@ import {
   Wallet,
   Zap,
   Trophy,
+  Eye,
+  ShieldAlert,
+  Brain,
+  FileSpreadsheet,
+  Award,
+  Heart,
+  TestTube2,
   type LucideIcon,
 } from "lucide-react";
 import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
-  title: "Outils crypto Cryptoreflex — calculateurs gratuits + IA Q&A + Cerfa 2086 auto",
-  // FIX UX 2026-05-02 #12 (Chrome verif user) — description mise à jour
-  // après l'ajout des 4 nouveaux outils TIER 3 (commit 515e4ef) : yield-
-  // stablecoins, tax-loss-harvesting, fiscal-copilot, wallet-connect.
-  // Total à jour = 20 (vs 16 hardcodés en metadata).
+  title: "Outils crypto Cryptoreflex — 26 calculateurs + IA + Cerfa 2086 auto",
+  // FIX BATCH 20 — sync metadata avec catalogue actuel (26 outils total :
+  // 16 historiques + 4 TIER 3 + 8 BATCH 7-8 innovation 2026 [whale-radar,
+  // phishing-checker, allocator-ia, gas-tracker-fr, export-expert-comptable,
+  // crypto-license, succession-crypto, dca-lab]).
   description:
-    "20 outils crypto français : Cerfa 2086 PDF auto (Pro), Fiscal Copilot IA (Pro), Yield stablecoins, Tax Loss Harvesting, Radar 3916-bis, calculateur fiscalité PFU 30 %, simulateur DCA, vérificateur MiCA, Wallet Connect read-only, glossaire 250+. Free et Soutien.",
+    "26 outils crypto français : Cerfa 2086 PDF auto (Pro+), Fiscal Copilot IA, Whale Radar FR, Allocator IA, Gas Tracker, Permis Crypto, DCA Lab, Yield stablecoins, calculateur fiscalité PFU 30 %, vérificateur MiCA, glossaire 250+. Free et Pro+.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
 };
 
@@ -250,6 +257,82 @@ const TOOLS: Tool[] = [
     tier: "free",
     status: "soon",
     cat: "portfolio",
+  },
+
+  // FIX BATCH 20 (audit QA expert) — 8 outils BATCH 7-8 étaient orphelins
+  // (pages prod existantes mais pas listées ici → SEO siloing cassé +
+  // hub /outils sous-évalué).
+  {
+    title: "Whale Radar FR",
+    desc: "Surveille les mouvements > 500 BTC / 10 000 ETH en temps réel, contextualisés en français.",
+    href: "/outils/whale-radar",
+    Icon: Eye,
+    tier: "pro",
+    status: "soon",
+    cat: "marche",
+  },
+  {
+    title: "Phishing Checker",
+    desc: "Colle une adresse crypto → score de risque scam/phishing (Chainabuse + ScamSniffer + custom FR).",
+    href: "/outils/phishing-checker",
+    Icon: ShieldAlert,
+    tier: "free",
+    status: "soon",
+    cat: "portfolio",
+  },
+  {
+    title: "Allocator IA Crypto",
+    desc: "5 questions (horizon, risque, conviction BTC, budget, objectif) → allocation %BTC/%ETH/%alts.",
+    href: "/outils/allocator-ia",
+    Icon: Brain,
+    tier: "free",
+    status: "soon",
+    cat: "ia",
+  },
+  {
+    title: "Gas Tracker FR",
+    desc: "Frais de gas Ethereum + Layer 2 (Arbitrum, Optimism, Base…) traduits + alertes gas bas.",
+    href: "/outils/gas-tracker-fr",
+    Icon: Zap,
+    tier: "free",
+    status: "soon",
+    cat: "marche",
+  },
+  {
+    title: "Export Expert-Comptable",
+    desc: "Convertis tes CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). One-shot 49 €.",
+    href: "/outils/export-expert-comptable",
+    Icon: FileSpreadsheet,
+    tier: "pro",
+    status: "soon",
+    cat: "fiscalite",
+  },
+  {
+    title: "Permis Crypto FR",
+    desc: "Quiz 50 questions (technique, régulation, fiscalité, sécurité). Score >70 % → ton Permis Crypto PDF.",
+    href: "/outils/crypto-license",
+    Icon: Award,
+    tier: "free",
+    status: "soon",
+    cat: "pedagogie",
+  },
+  {
+    title: "Succession Crypto",
+    desc: "Guide légal FR + checklist sécurité + générateur lettre d'intention crypto pour ton notaire.",
+    href: "/outils/succession-crypto",
+    Icon: Heart,
+    tier: "free",
+    status: "soon",
+    cat: "portfolio",
+  },
+  {
+    title: "DCA Lab",
+    desc: "Compare 6 stratégies DCA (simple, RSI, Value Averaging, Lump-Sum, 50/50, drawdown) sur 1-7 ans.",
+    href: "/outils/dca-lab",
+    Icon: TestTube2,
+    tier: "free",
+    status: "soon",
+    cat: "marche",
   },
 ];
 

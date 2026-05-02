@@ -73,9 +73,12 @@ export default function MiniOrderBook({
       aborter = new AbortController();
 
       try {
+        // BATCH 20 — passe par notre proxy /api/binance/depth (cache edge
+        // 3s + SWR 15s) au lieu d'attaquer Binance direct. Économise CSP
+        // pollution + rate-limit upstream + 90% cache hit edge.
         const res = await fetch(
-          `https://api.binance.com/api/v3/depth?symbol=${pair}&limit=${depth}`,
-          { signal: aborter.signal, cache: "no-store" },
+          `/api/binance/depth?symbol=${symbol.toUpperCase()}&limit=${depth}`,
+          { signal: aborter.signal },
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: { bids: [string, string][]; asks: [string, string][] } = await res.json();
@@ -197,55 +200,74 @@ export default function MiniOrderBook({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-1">
-        {/* Bids (vert) — gauche */}
-        <div className="space-y-0.5">
-          {bids.map((b, i) => {
-            const widthPct = (b.qty / maxQty) * 100;
+      {/* BATCH 20 a11y WCAG 1.3.1 — vraie structure tabulaire <table>.
+          NVDA/JAWS annoncent désormais "Tableau, ligne 1 de 5" + navigation
+          tableau native (Ctrl+Alt+Flèches). aria-live="off" sur tbody car
+          les bids/asks changent toutes les 5s (trop bruyant pour SR) ; le
+          spread reste annoncé via aria-live="polite" en haut. */}
+      <table
+        className="w-full border-collapse text-[11px] tabular-nums"
+        aria-live="off"
+      >
+        <caption className="sr-only">
+          Top {depth} bids et asks {symbol.toUpperCase()}/USDT, mis à jour
+          toutes les {Math.round(refreshMs / 1000)} secondes
+        </caption>
+        <thead className="sr-only">
+          <tr>
+            <th scope="col">Quantité bid</th>
+            <th scope="col">Prix bid</th>
+            <th scope="col">Prix ask</th>
+            <th scope="col">Quantité ask</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: depth }).map((_, i) => {
+            const b = bids[i];
+            const a = asks[i];
+            const bWidthPct = b ? (b.qty / maxQty) * 100 : 0;
+            const aWidthPct = a ? (a.qty / maxQty) * 100 : 0;
             return (
-              <div key={i} className="relative h-4">
-                <div
-                  className="absolute right-0 top-0 bottom-0 bg-success/15 transition-all duration-500 ease-out"
-                  style={{ width: `${widthPct}%` }}
-                  aria-hidden
-                />
-                <div className="relative flex items-center justify-between px-1 h-full">
-                  <span className="text-success tabular-nums">
-                    {b.qty.toFixed(b.qty < 1 ? 4 : 2)}
+              <tr key={i} className="h-4">
+                {/* Bid qty */}
+                <td className="relative w-[24%] px-1">
+                  <div
+                    className="absolute right-0 top-0 bottom-0 bg-success/15 transition-all duration-500 ease-out"
+                    style={{ width: `${bWidthPct}%` }}
+                    aria-hidden="true"
+                  />
+                  <span className="relative text-success">
+                    {b ? b.qty.toFixed(b.qty < 1 ? 4 : 2) : ""}
                   </span>
-                  <span className="text-success tabular-nums">
-                    {formatPrice(b.price)}
+                </td>
+                {/* Bid price */}
+                <td className="relative w-[26%] px-1 text-right">
+                  <span className="relative text-success">
+                    {b ? formatPrice(b.price) : ""}
                   </span>
-                </div>
-              </div>
+                </td>
+                {/* Ask price */}
+                <td className="relative w-[26%] px-1">
+                  <div
+                    className="absolute left-0 top-0 bottom-0 bg-danger/15 transition-all duration-500 ease-out"
+                    style={{ width: `${aWidthPct}%` }}
+                    aria-hidden="true"
+                  />
+                  <span className="relative text-danger">
+                    {a ? formatPrice(a.price) : ""}
+                  </span>
+                </td>
+                {/* Ask qty */}
+                <td className="relative w-[24%] px-1 text-right">
+                  <span className="relative text-danger">
+                    {a ? a.qty.toFixed(a.qty < 1 ? 4 : 2) : ""}
+                  </span>
+                </td>
+              </tr>
             );
           })}
-        </div>
-
-        {/* Asks (rouge) — droite */}
-        <div className="space-y-0.5">
-          {asks.map((a, i) => {
-            const widthPct = (a.qty / maxQty) * 100;
-            return (
-              <div key={i} className="relative h-4">
-                <div
-                  className="absolute left-0 top-0 bottom-0 bg-danger/15 transition-all duration-500 ease-out"
-                  style={{ width: `${widthPct}%` }}
-                  aria-hidden
-                />
-                <div className="relative flex items-center justify-between px-1 h-full">
-                  <span className="text-danger tabular-nums">
-                    {formatPrice(a.price)}
-                  </span>
-                  <span className="text-danger tabular-nums">
-                    {a.qty.toFixed(a.qty < 1 ? 4 : 2)}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+        </tbody>
+      </table>
 
       {/* Mid-price footer */}
       <div className="mt-2 pt-2 border-t border-border/60 flex items-center justify-between">

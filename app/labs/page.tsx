@@ -33,7 +33,15 @@ export const metadata: Metadata = {
   description:
     "Démos internes des nouveaux composants UI dynamiques avant intégration : spotlight cursor, magnetic CTA, tilt 3D, conic borders, marquee, scroll-driven animations.",
   alternates: { canonical: `${BRAND.url}/labs` },
-  robots: { index: false, follow: false },
+  // BATCH 20 — confirme noindex + nofollow (page interne dev).
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
 };
 
 const PLATFORMS_FAKE = [

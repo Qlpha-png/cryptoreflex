@@ -64,11 +64,21 @@ const SPECULATION_RULES = {
       // Toutes les fiches /avis/{platform} et /cryptos/{slug} : intent-based.
       // Combiné avec view-transition-name sur les logos (BATCH 14 + 16),
       // produit le morph cross-document Linear-tier au click.
+      // BATCH 20 — exclusions élargies : pages auth/account/checkout/portefeuille
+      // sont privées + sensibles, prerender = pollution analytics + bandwidth
+      // gâché. /labs est noindex (page interne dev). /portefeuille = privé.
       where: {
         and: [
           { href_matches: "/*" },
           { not: { href_matches: "/api/*" } },
           { not: { href_matches: "/admin/*" } },
+          { not: { href_matches: "/account/*" } },
+          { not: { href_matches: "/mon-compte/*" } },
+          { not: { href_matches: "/portefeuille/*" } },
+          { not: { href_matches: "/checkout/*" } },
+          { not: { href_matches: "/connexion" } },
+          { not: { href_matches: "/inscription" } },
+          { not: { href_matches: "/labs" } },
         ],
       },
       eagerness: "moderate",
@@ -85,10 +95,17 @@ const SPECULATION_RULES = {
 };
 
 export default function SpeculationRules() {
+  // BATCH 20 — escape `<` dans le JSON inline pour prévenir une éventuelle
+  // injection via un futur dynamic content (defense-in-depth, aujourd'hui
+  // SPECULATION_RULES est statique donc pas de risque réel).
+  const safeJson = JSON.stringify(SPECULATION_RULES).replace(
+    /</g,
+    "\\u003c",
+  );
   return (
     <script
       type="speculationrules"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(SPECULATION_RULES) }}
+      dangerouslySetInnerHTML={{ __html: safeJson }}
     />
   );
 }
