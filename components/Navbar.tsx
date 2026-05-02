@@ -14,6 +14,14 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import Logo from "./Logo";
+import dynamic from "next/dynamic";
+
+// Lazy : le badge fetch /api/gamification/me et n'a aucun intérêt pour les
+// users non-authentifiés (composant return null). Pas la peine d'inclure
+// dans le bundle initial de la Navbar.
+const UserLevelBadge = dynamic(() => import("@/components/UserLevelBadge"), {
+  ssr: false,
+});
 
 /**
  * Navbar — refonte premium 2026.
@@ -372,6 +380,10 @@ export default function Navbar() {
               <span className="text-[12.5px]">Rechercher</span>
               <kbd className="ml-1 inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted">⌘K</kbd>
             </button>
+
+            {/* Étude #16 ETUDE-2026-05-02 — gamification badge XP/streak.
+                Self-hides si user non-auth ou Supabase off (degraded). */}
+            <UserLevelBadge />
 
             {/* Search compact (md only) — icône + kbd compacte ⌘K (étude
                 02/05/2026 — proposition #7 : palette devient cockpit avec

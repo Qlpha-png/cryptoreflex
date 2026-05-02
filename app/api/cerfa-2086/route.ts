@@ -44,6 +44,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser, isPro } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { generateFullCerfa, validateTransactions } from "@/lib/cerfa-2086";
+import { awardXp } from "@/lib/gamification";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -193,6 +194,19 @@ export async function POST(req: NextRequest): Promise<Response> {
           "Erreur lors de la génération du PDF. Réessaie ou contacte le support si le problème persiste.",
       },
       { status: 500 },
+    );
+  }
+
+  /* ---------- 5b) Award XP gamification (étude #16 ETUDE-2026-05-02) ----- */
+  // Big award (50 XP) car le Cerfa 2086 est l'action la plus engageante du
+  // site. Best-effort, jamais bloquant : si le badge fail, le PDF est livré.
+  // Rate-limit 1×/jour côté lib/gamification (cf. ACTION_LIMITS).
+  try {
+    await awardXp(user.id, "cerfa_generated");
+  } catch (err) {
+    console.warn(
+      "[cerfa-2086] awardXp failed:",
+      err instanceof Error ? err.message : String(err),
     );
   }
 

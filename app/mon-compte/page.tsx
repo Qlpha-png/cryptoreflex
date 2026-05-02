@@ -33,6 +33,7 @@ import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 import AskAiQuotaCard from "@/components/account/AskAiQuotaCard";
 import EditableDisplayName from "@/components/account/EditableDisplayName";
 import PushOptIn from "@/components/PushOptIn";
+import GamificationPanel from "@/components/GamificationPanel";
 
 export const metadata: Metadata = {
   title: "Mon compte — Cryptoreflex",
@@ -412,6 +413,11 @@ export default async function AccountPage() {
         {/* Notifications push */}
         <div className="mt-4">
           <PushOptIn />
+        </div>
+
+        {/* Gamification — étude #16 ETUDE-2026-05-02 (XP / streak / badges) */}
+        <div className="mt-4">
+          <GamificationPanel />
         </div>
 
         {/* Sécurité */}

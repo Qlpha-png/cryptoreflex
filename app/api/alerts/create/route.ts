@@ -21,7 +21,8 @@ import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { getLimits } from "@/lib/limits";
-import type { Plan } from "@/lib/auth";
+import { getUser, type Plan } from "@/lib/auth";
+import { awardXp } from "@/lib/gamification";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -144,6 +145,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   );
   if (!result.ok) {
     return NextResponse.json(result, { status: 400 });
+  }
+
+  // Étude #16 ETUDE-2026-05-02 — gamification : award XP si l'user est
+  // authentifié Supabase (les alertes peuvent être créées par anonymes via
+  // email seul — dans ce cas, pas de XP). Best-effort, non bloquant.
+  try {
+    const user = await getUser();
+    if (user) {
+      await awardXp(user.id, "alert_create");
+    }
+  } catch (err) {
+    console.warn(
+      "[alerts/create] awardXp failed:",
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   return NextResponse.json(
