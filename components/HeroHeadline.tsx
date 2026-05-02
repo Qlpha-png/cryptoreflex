@@ -50,17 +50,19 @@ export default function HeroHeadline() {
     );
   }
 
-  // BATCH 33 — fix user feedback "la phrase et pas pro" : on retire "tonton"
-  // (réservé au X persona @ReflexxFr, pas adapté pour un comparateur B2B/B2C
-  // sérieux). On garde le hook fort "847 pages MiCA" qui pose l'autorité
-  // concrète + ajoute "comparateur français" pour signaler la spécialisation.
-  // Tests ABTest préservés (variants social-proof + speed inchangés).
+  // BATCH 34 — fix user feedback "on est pas juste un comparateur on est
+  // tout un ensemble". Cryptoreflex = écosystème complet (100 cryptos + 34
+  // plateformes + 26 outils + fiscalité + méthodologie publique), pas juste
+  // un comparateur. Nouveau headline élargit la promesse + garde le hook
+  // "847 pages MiCA" qui ancre l'autorité concrète.
   return (
     <h1 className="ds-h1 leading-[1.05]">
-      Le comparateur crypto qui a lu les{" "}
+      L&apos;écosystème crypto français qui a lu les{" "}
       <span className="hero-headline-accent">847 pages de MiCA</span>
       <br className="hidden lg:inline" />{" "}
-      <span className="text-fg">pour toi. Choisis ta plateforme sereinement.</span>
+      <span className="text-fg">
+        pour toi. Plateformes, analyses, outils, fiscalité — tout en un.
+      </span>
     </h1>
   );
 }
