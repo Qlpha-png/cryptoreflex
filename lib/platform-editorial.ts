@@ -118,9 +118,9 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
           "Coinbase prélève une commission d'environ 25 à 35 % sur les rewards de staking selon la crypto. Tu recevez donc un rendement net de 2 à 5 % brut annuel. Côté fiscalité française : les rewards sont taxés au moment de leur cession (pas de leur réception) au régime des plus-values sur actifs numériques (article 150 VH bis du CGI), soit 30 % en flat tax pour les particuliers.",
       },
       {
-        question: "Que vaut le bonus de bienvenue Coinbase ?",
+        question: "Coinbase propose-t-elle un programme de parrainage ?",
         answer:
-          "Coinbase offre 10 $ en BTC après le premier achat de 100 € minimum via un lien de parrainage. C'est un bonus modeste mais sans piège : pas de volume de trading minimum à atteindre, pas de blocage des fonds. Comparé à Binance ou Bitget qui offrent jusqu'à plusieurs centaines d'euros sous conditions, c'est limité — mais c'est cohérent avec le positionnement « plateforme régulée » de Coinbase.",
+          "Coinbase propose ponctuellement des programmes de parrainage avec rétribution variable. Les conditions exactes (montant, devise, déblocage) évoluent fréquemment et dépendent de la zone géographique du parrain et du filleul. Pour connaître l'offre en cours, consulte directement la page « Inviter des amis » dans ton espace Coinbase au moment de l'inscription. Les promotions sur services sur actifs numériques sont strictement encadrées en France (loi n° 2023-451 article 4), Cryptoreflex ne communique donc pas de montant chiffré.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -176,9 +176,9 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
           "Fournissez immédiatement les justificatifs demandés (pièce d'identité, justificatif de domicile, source des fonds si > 10 000 €). Le délai de déblocage est généralement de 5 à 15 jours. Évitez de faire des dépôts/retraits multiples pendant le blocage. En dernier recours, contactez le support via ticket prioritaire ou par mail à compliance@binance.com.",
       },
       {
-        question: "Le bonus de bienvenue Binance vaut-il vraiment 100 € ?",
+        question: "Binance propose-t-elle un programme de bienvenue en France ?",
         answer:
-          "Le bonus est progressif et déblocable par paliers : un premier dépôt + un volume de trading minimal (50 € chacun) débloque les premiers vouchers, puis le palier complet à 100 € nécessite environ 500 € de volume de trading cumulé. C'est intéressant pour un utilisateur qui compte trader, sans plus.",
+          "Binance propose des programmes de parrainage avec rétribution conditionnée à un volume de trading minimum. Les conditions exactes (paliers, montant, durée) sont strictement réservées à la consultation directe sur la page promotions Binance. Cryptoreflex ne communique pas de montant chiffré conformément à la loi n° 2023-451 article 4 qui encadre la promotion de services sur actifs numériques en France. Avant tout engagement, lis attentivement les conditions sur Binance.com.",
       },
       {
         question: "Comment déclarer mon compte Binance aux impôts français ?",
@@ -428,9 +428,9 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
           "Acheter du BTC sur Trade Republic tu expose directement au BTC (custodial). Acheter un ETP Bitcoin (par exemple le 21Shares Bitcoin Core ETP) tu expose au BTC via un produit financier coté en Bourse, avec des frais de gestion annuels (généralement 0,2 à 0,3 %). L'ETP a l'avantage d'être éligible au PEA-PME pour certains, l'inconvénient des frais récurrents. Le BTC direct a l'avantage de zéro frais récurrent, l'inconvénient d'être taxé au régime des plus-values sur actifs numériques (flat tax 30 %).",
       },
       {
-        question: "Le bonus de bienvenue Trade Republic vaut-il vraiment 200 € ?",
+        question: "Trade Republic propose-t-elle un programme de parrainage ?",
         answer:
-          "Le bonus est conditionné à un parrainage par un utilisateur existant et à l'ouverture d'un premier dépôt actif. Le montant exact dépend des promotions en cours (parfois 50 €, parfois 200 € sur des opérations spéciales). C'est un bonus en actions ou en crypto, débloquable progressivement.",
+          "Trade Republic propose ponctuellement des opérations de parrainage avec rétribution en actions ou en crypto. Les conditions exactes (montant, déblocage, durée) varient selon la période et la zone géographique. Pour connaître l'offre en cours, consulte directement la section parrainage de l'app Trade Republic. Cryptoreflex ne communique pas de montant chiffré conformément à la loi n° 2023-451 (encadrement des promotions sur services sur actifs numériques en France).",
       },
       {
         question: "Comment déclarer mon compte Trade Republic aux impôts français ?",
@@ -491,9 +491,9 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
           "Bitcoin Patrimoine est un service de DCA programmé sur Bitcoin avec accompagnement personnalisé par un conseiller Coinhouse. Tu définissez un budget mensuel et une stratégie de long terme, Coinhouse exécute les achats automatiquement et tu propose des points d'étape périodiques. C'est positionné comme une alternative crypto à un PEA ou à une assurance-vie, avec un horizon d'investissement minimum de 3 à 5 ans.",
       },
       {
-        question: "Le bonus de 30 € Coinhouse vaut-il le coup ?",
+        question: "Coinhouse propose-t-elle un programme de parrainage ?",
         answer:
-          "30 € en BTC à l'inscription via parrainage, conditionné à un premier achat de 100 € minimum. C'est un bonus modeste mais sans piège. Pour un primo-investisseur qui s'apprête à investir au moins 100 € sur une crypto régulée française, c'est intéressant à prendre. Pour un trader actif qui chercherait à optimiser via Coinhouse, le bonus ne compense en aucun cas l'écart de frais avec les concurrents.",
+          "Coinhouse propose ponctuellement un programme de parrainage avec rétribution. Les conditions exactes (montant, déblocage, montant minimum d'achat) évoluent fréquemment. Consulte directement le programme parrainage Coinhouse au moment de ton inscription. Cryptoreflex ne communique pas de montant chiffré conformément à la loi n° 2023-451 qui encadre la promotion de services sur actifs numériques en France.",
       },
       {
         question: "Comment déclarer mon compte Coinhouse aux impôts français ?",
@@ -617,9 +617,9 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
           "Allez dans Wallet > Retirer, sélectionnez la crypto et le réseau, entrez l'adresse du wallet de destination et le montant, validez avec ton code 2FA. Le retrait est généralement traité en moins d'une heure. Pour les premiers retraits, une vérification supplémentaire peut être demandée. Les frais de retrait sont au coût réseau + une marge fixe.",
       },
       {
-        question: "Le bonus de 100 € SwissBorg est-il vraiment accessible ?",
+        question: "SwissBorg propose-t-elle un programme de parrainage progressif ?",
         answer:
-          "Le bonus est progressif et débloqué par paliers selon le montant déposé. Concrètement, atteindre 100 € de bonus nécessite un dépôt cumulé de plusieurs milliers d'euros sur la plateforme. Les premiers paliers (5 €, 10 €, 25 €) sont accessibles avec des montants raisonnables. Lisez attentivement les conditions avant de viser le palier maximum.",
+          "SwissBorg propose un programme de parrainage à paliers, débloqués selon le volume cumulé déposé sur la plateforme. Les conditions exactes (paliers, montants, durée) sont accessibles uniquement dans la section « Récompenses » de l'app au moment de l'inscription. Cryptoreflex ne communique pas de montant chiffré conformément à la loi n° 2023-451 qui encadre la promotion de services sur actifs numériques en France.",
       },
       {
         question: "Comment déclarer mon compte SwissBorg aux impôts français ?",

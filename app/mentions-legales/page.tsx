@@ -26,7 +26,7 @@ export default function MentionsLegalesPage() {
         <li><strong>Activité principale</strong> : Portails Internet (NAF 63.12Z) — édition de contenus éditoriaux et comparateurs en ligne</li>
         <li><strong>Régime de TVA</strong> : Franchise en base de TVA (article 293 B du CGI) — TVA non applicable</li>
         <li><strong>Date d'immatriculation au RNE (INPI)</strong> : 15 avril 2026</li>
-        <li><strong>Adresse postale</strong> : communiquée sur demande à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> (réponse sous 48h ouvrées). L'adresse complète est consultable sur l'<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/103352621" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Annuaire des Entreprises (data.gouv.fr)</a> via le SIREN ci-dessus.</li>
+        <li><strong>Adresse postale du siège social</strong> : disponible publiquement via l'<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/103352621" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Annuaire des Entreprises (data.gouv.fr)</a> et l'<a href="https://www.infogreffe.fr/" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">extrait Kbis InfoGreffe</a> via le SIREN 103 352 621. Pour toute communication écrite : adresser à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> (réponse sous 48h ouvrées) — un courrier peut être renvoyé sur demande.</li>
         <li><strong>Directeur de la publication</strong> : Kevin VOISIN</li>
         <li><strong>Contact</strong> : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a></li>
       </ul>
@@ -86,6 +86,41 @@ export default function MentionsLegalesPage() {
       <p className="text-fg/85 leading-relaxed">
         Les présentes mentions légales sont régies par le droit français. En cas de litige et après
         une tentative de résolution amiable, les juridictions françaises sont compétentes.
+      </p>
+
+      {/* FIX LEGAL 2026-05-02 #16 (audit expert legal) — désignation du
+          médiateur de la consommation OBLIGATOIRE pour tout pro vendant
+          B2C un service en ligne (Code conso L.616-1, amende 15k€). */}
+      <h2 className="mt-10 text-2xl font-bold text-fg">8. Médiateur de la consommation</h2>
+      <p className="text-fg/85 leading-relaxed">
+        Conformément à l&apos;article L.616-1 du Code de la consommation, en cas de
+        litige concernant un abonnement payant Cryptoreflex Pro et après avoir
+        contacté le service client à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>,
+        vous pouvez recourir gratuitement à un médiateur de la consommation.
+      </p>
+      <p className="text-fg/85 leading-relaxed mt-3">
+        <strong>Médiateur désigné :</strong>{" "}
+        <a
+          href="https://www.cm2c.net/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary-soft hover:underline"
+        >
+          CM2C — Centre de la Médiation de la Consommation de Conciliateurs de Justice
+        </a>{" "}
+        — 14 rue Saint Jean, 75017 Paris.
+      </p>
+      <p className="text-fg/85 leading-relaxed mt-3">
+        Vous pouvez également utiliser la{" "}
+        <a
+          href="https://ec.europa.eu/consumers/odr/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary-soft hover:underline"
+        >
+          plateforme européenne de Règlement en Ligne des Litiges (RLL)
+        </a>
+        .
       </p>
     </article>
   );

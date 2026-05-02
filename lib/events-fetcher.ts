@@ -194,7 +194,13 @@ function mergeEvents(seed: CryptoEvent[], api: CryptoEvent[]): CryptoEvent[] {
  * forcer un refresh complet.
  */
 export async function _fetchEventsRaw(): Promise<CryptoEvent[]> {
-  const apiKey = process.env.NEXT_PUBLIC_COINMARKETCAL_KEY;
+  // FIX SEC 2026-05-02 #15 (audit expert backend - CRITIQUE) :
+  // `NEXT_PUBLIC_COINMARKETCAL_KEY` était embarquée dans le bundle JS client
+  // bien qu'utilisée uniquement côté serveur. Renommée en `COINMARKETCAL_KEY`
+  // (sans préfixe public). Fallback sur l'ancien nom pour la transition
+  // env Vercel — à retirer après bump env vars en prod.
+  const apiKey =
+    process.env.COINMARKETCAL_KEY ?? process.env.NEXT_PUBLIC_COINMARKETCAL_KEY;
   if (!apiKey) {
     return [...EVENTS_SEED].sort((a, b) => a.date.localeCompare(b.date));
   }

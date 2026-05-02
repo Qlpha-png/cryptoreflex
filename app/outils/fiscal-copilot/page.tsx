@@ -20,6 +20,12 @@ import {
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+// FIX LEGAL 2026-05-02 #16 (audit expert legal CRITIQUE) : sans disclaimer
+// AMF, le Fiscal Copilot risque d'être qualifié de conseil personnalisé
+// (CIF non agréé, sanction AMF possible). On charge donc explicitement
+// AmfDisclaimer fiscalité + RegulatoryFooter outil de simulation.
+import AmfDisclaimer from "@/components/AmfDisclaimer";
+import RegulatoryFooter from "@/components/RegulatoryFooter";
 
 /**
  * /outils/fiscal-copilot — Idée WOW #2 (audit innovation expert).
@@ -149,6 +155,14 @@ export default function FiscalCopilotPage() {
           <span className="text-fg/80">Fiscal Copilot</span>
         </nav>
 
+        {/* FIX LEGAL 2026-05-02 #16 — disclaimer AMF fiscalité OBLIGATOIRE en
+            haut : le Fiscal Copilot pourrait être qualifié de conseil
+            personnalisé sans cette mention claire (CIF non agréé, sanction
+            AMF + DGCCRF possible). */}
+        <div className="mt-6">
+          <AmfDisclaimer variant="fiscalite" />
+        </div>
+
         {/* Hero */}
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
@@ -274,6 +288,13 @@ export default function FiscalCopilotPage() {
         </div>
         <div className="mt-12">
           <NextStepsGuide context="tool" toolId="fiscal-copilot" />
+        </div>
+
+        {/* FIX LEGAL 2026-05-02 #16 — RegulatoryFooter en bas : rappel que
+            ceci est un outil de simulation, pas un conseil en investissement
+            personnalisé (frontière CIF AMF). */}
+        <div className="mt-12">
+          <RegulatoryFooter context="outil de simulation fiscale, pas un conseil personnalisé" />
         </div>
       </div>
     </article>

@@ -64,7 +64,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_COINMARKETCAL_KEY;
+  // FIX SEC 2026-05-02 #15 — env var renommée pour ne plus exposer au client.
+  const apiKey =
+    process.env.COINMARKETCAL_KEY ?? process.env.NEXT_PUBLIC_COINMARKETCAL_KEY;
   const mode: "api" | "seed-only" = apiKey ? "api" : "seed-only";
 
   console.info(

@@ -63,13 +63,10 @@ const ADMIN_LINKS_GROUPS: Array<{
   {
     label: "🚨 Outils prioritaires",
     links: [
-      {
-        href: "/api/admin/debug-auth",
-        title: "Debug auth Supabase",
-        description: "Voir la session Supabase courante (cookies, user, plan)",
-        Icon: ShieldCheck,
-        variant: "primary",
-      },
+      // FIX SEC 2026-05-02 #15 (audit expert backend) — `/api/admin/debug-auth`
+      // SUPPRIMÉ : leakait des prefixes d'env vars en prod même protégé par
+      // x-admin-secret (verbose dans les logs Vercel). Pour debug auth en
+      // local, utiliser `npx supabase status` ou les Supabase logs directement.
       {
         href: "/api/cron/daily-orchestrator",
         title: "Lancer le cron orchestrator",

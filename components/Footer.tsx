@@ -151,9 +151,14 @@ export default async function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Trust badges cluster (Audit Visual + SEO E-E-A-T) */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
+          {/* FIX LEGAL 2026-05-02 #16 — "MiCA-aligned" pouvait laisser
+              entendre un agrément (pratique commerciale trompeuse L.121-2
+              conso). Reformulé en "MiCA · info publique" qui décrit
+              factuellement notre rôle d'éditeur (pas régulé directement,
+              mais traite de la régulation MiCA). */}
           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
             <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-            MiCA-aligned
+            MiCA · info publique
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
             <Lock className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />

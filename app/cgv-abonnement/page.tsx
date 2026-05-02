@@ -301,6 +301,51 @@ export default function CgvAbonnementPage() {
           Politique de confidentialité
         </Link>
       </div>
+
+      {/* FIX LEGAL 2026-05-02 #16 — Médiateur de la consommation
+          obligatoire (Code conso L.616-1) — référencé aussi dans
+          /mentions-legales pour double-couverture. */}
+      <section className="mt-12 rounded-2xl border border-border bg-surface/50 p-6">
+        <h2 className="text-lg font-bold text-fg">
+          Médiateur de la consommation
+        </h2>
+        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+          En cas de litige concernant ton abonnement Cryptoreflex Pro et après
+          avoir contacté notre service client (<a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft hover:underline">contact@cryptoreflex.fr</a>)
+          sans solution amiable trouvée sous 30 jours, tu peux saisir
+          gratuitement le médiateur de la consommation que nous avons désigné :
+        </p>
+        <ul className="mt-3 text-sm text-fg/85 space-y-1">
+          <li>
+            <strong>CM2C</strong> — Centre de la Médiation de la Consommation
+            de Conciliateurs de Justice
+          </li>
+          <li>14 rue Saint Jean, 75017 Paris</li>
+          <li>
+            Site web :{" "}
+            <a
+              href="https://www.cm2c.net/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-soft hover:underline"
+            >
+              www.cm2c.net
+            </a>
+          </li>
+        </ul>
+        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+          Tu peux également utiliser la{" "}
+          <a
+            href="https://ec.europa.eu/consumers/odr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-soft hover:underline"
+          >
+            plateforme européenne de Règlement en Ligne des Litiges (RLL)
+          </a>
+          .
+        </p>
+      </section>
     </article>
   );
 }

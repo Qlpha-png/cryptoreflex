@@ -20,6 +20,9 @@ import {
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+// FIX LEGAL 2026-05-02 #16 (audit expert legal) — AmfDisclaimer educatif
+// obligatoire sur les outils ROI : frontière conseil personnalisé sinon floue.
+import AmfDisclaimer from "@/components/AmfDisclaimer";
 
 /* ISR : recalcul tous les 24 h (la page est essentiellement statique). */
 export const revalidate = 86400;
@@ -310,6 +313,13 @@ export default function CalculateurROIPage() {
             expert-comptable agréé crypto-actifs pour toute déclaration
             officielle.
           </p>
+
+          {/* FIX LEGAL 2026-05-02 #16 — AmfDisclaimer educatif : ce
+              calculateur est un outil de simulation, pas un conseil
+              personnalisé. Frontière CIF AMF clarifiée. */}
+          <div className="my-10">
+            <AmfDisclaimer variant="educatif" />
+          </div>
 
           {/* Maillage interne — graphe sémantique cross-clusters */}
           <RelatedPagesNav
