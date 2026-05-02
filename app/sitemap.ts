@@ -124,6 +124,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/outils/fiscal-copilot`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/outils/wallet-connect`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
     { url: `${SITE_URL}/crypto-wrapped`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    // FIX 2026-05-02 #20 — TIER 1+2 nouvelles pages (audit 9 experts).
+    // Pro+ landing + Pack Déclaration one-shot + 2 patterns SEO programmatic
+    // (historique-prix x 240 URLs prebuild, alternative-a x 34 URLs).
+    { url: `${SITE_URL}/pro-plus`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${SITE_URL}/pack-declaration-crypto-2026`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car
