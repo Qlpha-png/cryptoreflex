@@ -734,6 +734,85 @@ body {
   }
 }
 
+/* ============================================================
+ * BATCH 41b — Mesh gradient body drift (signature 2026)
+ *
+ * Référence : Stripe.com 2025+, Phantom.app, Anthropic.com.
+ * 2 radial-gradients très subtils (3-4% opacity) qui dérivent lentement
+ * en alternance sur 60s. Pattern "le fond du site respire" sans gimmick.
+ *
+ * Performance : 1 pseudo-element fixe, transform composé GPU = 0 cost.
+ * Pause auto via .tab-hidden (VisibilityPauser) + reduced-motion.
+ *
+ * z-index 0 + pointer-events:none = ne perturbe rien.
+ * ============================================================ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(245, 165, 36, 0.04), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.03), transparent 40%);
+  animation: mesh-drift 60s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+@keyframes mesh-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-3%, 2%) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+}
+.tab-hidden body::before { animation-play-state: paused !important; }
+
+/* ============================================================
+ * BATCH 41b — Marquee trust strip
+ * Bandeau régulateurs/sources qui défilent lentement.
+ * Pattern Stripe Press / Vercel customers.
+ * ============================================================ */
+.marquee-trust {
+  position: relative;
+  overflow: hidden;
+  border-block: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(22, 25, 31, 0.3);
+  padding: 1rem 0;
+}
+.marquee-trust-track {
+  display: flex;
+  gap: 3rem;
+  white-space: nowrap;
+  animation: marquee-trust-scroll 40s linear infinite;
+  will-change: transform;
+}
+.marquee-trust:hover .marquee-trust-track,
+.marquee-trust:focus-within .marquee-trust-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-trust-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============================================================
+ * BATCH 41b — Digit flip Apple Stocks / Robinhood iOS
+ * Chaque chiffre qui change flip individuellement.
+ * Performance : compositor only, no re-layout.
+ * ============================================================ */
+@keyframes digit-flip-in {
+  0%   { transform: translateY(-30%); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .digit-flip-cell { animation: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-trust-track { animation: none !important; }
+}
+.tab-hidden .marquee-trust-track { animation-play-state: paused !important; }
+
 /* BATCH 36 — Page Visibility API : quand l'onglet est masqué (.tab-hidden
    set par VisibilityPauser), on pause toutes les animations CSS gourmandes.
    Économie CPU/batterie mobile estimée 5-12%. Aucune impact UX visible

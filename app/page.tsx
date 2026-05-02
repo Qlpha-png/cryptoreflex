@@ -20,6 +20,9 @@ import ReassuranceSection from "@/components/ReassuranceSection";
 // existait mais jamais utilisé). Pattern Anthropic/Linear : sections
 // apparaissent en fade-up quand 15% visible viewport.
 import Reveal from "@/components/ui/Reveal";
+// BATCH 41b — bandeau régulateurs/sources qui défilent (Stripe Press
+// pattern). Comble la zone morte entre Hero et Reassurance.
+import TrustMarquee from "@/components/TrustMarquee";
 import NewsletterCapture from "@/components/NewsletterCapture";
 // MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
 import BeginnerJourney from "@/components/BeginnerJourney";
@@ -215,6 +218,10 @@ export default async function HomePage() {
         sparklines={heroSparklines}
         updatedAt={updatedAt}
       />
+      {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
+          slowly entre Hero et Reassurance. Comble la zone morte narrative
+          + signal "ces 8 sources nous surveillent". Pause au hover. */}
+      <TrustMarquee />
       {/* BATCH 41a — Reveal scroll fade-up sur ReassuranceSection (et
           toutes les sections suivantes via Reveal wrapper). Anim subtle :
           opacity 0→1 + translate Y 24px→0, easing emphasized 700ms,
