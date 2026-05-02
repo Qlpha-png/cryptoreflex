@@ -42,7 +42,7 @@ import RegulatoryFooter from "@/components/RegulatoryFooter";
  *   1. Parser CSV multi-format (Binance, Coinbase, Kraken, Bitpanda...)
  *   2. Réutilisation de l'infra IA Q&A existante (`lib/ai-qa`)
  *   3. Connexion à `lib/cerfa-2086.ts` pour générer le PDF final
- *   4. Statut Pro 9.99€/mois (justifié par l'expertise legalement sourcée)
+ *   4. Statut Pro+ 9,99€/mois (justifié par l'expertise legalement sourcée)
  *
  * Aujourd'hui : page éditoriale teasing + CTA Pro (capture d'audience).
  */
@@ -118,7 +118,7 @@ export default function FiscalCopilotPage() {
     },
     {
       q: "Combien ça coûte ?",
-      a: "Inclus dans Cryptoreflex Pro (9,99 €/mois ou 28,99 €/an). Essai gratuit 14 jours. Sans abonnement, l'agent IA fiscal classique reste disponible avec questions limitées.",
+      a: "Inclus dans Cryptoreflex Pro+ (9,99 €/mois ou 79 €/an, 14 jours d'essai). À ne pas confondre avec le tier Soutien à 2,99 €/mois (sans IA fiscale avancée). Sans abonnement, l'agent IA fiscal classique reste disponible avec questions limitées.",
     },
   ];
 
@@ -166,7 +166,7 @@ export default function FiscalCopilotPage() {
         {/* Hero */}
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Inclus dans Cryptoreflex Pro
+            <Sparkles className="h-3 w-3" aria-hidden /> Inclus dans Cryptoreflex Pro+
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Le copilot IA qui parle{" "}
@@ -235,8 +235,8 @@ export default function FiscalCopilotPage() {
             Essaye le Fiscal Copilot gratuitement
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Inclus dans Cryptoreflex Pro à <strong>9,99 €/mois</strong> ou{" "}
-            <strong>28,99 €/an</strong>. Essai gratuit 14 jours, résiliable en 1 clic.
+            Inclus dans Cryptoreflex <strong>Pro+</strong> à <strong>9,99 €/mois</strong> ou{" "}
+            <strong>79 €/an</strong>. Essai gratuit 14 jours, résiliable en 1 clic.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link

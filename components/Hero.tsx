@@ -59,15 +59,19 @@ interface HeroProps {
  *    Bitfinex, BSDEX, Plus500, AnyCoin Direct, Trading 212, StackinSat,
  *    Just Mining, Feel Mining).
  *  - cryptos: 100 = total fiches éditoriales (10 top-cryptos + 90 hidden-gems).
- *  - tools: 18 = 14 outils gratuits + 2 features Soutien + 4 TIER 3 (commit
- *    2026-05-02 #12 yield-stablecoins, tax-loss-harvesting, fiscal-copilot,
- *    wallet-connect).
+ *  - tools: 26 = comptage actuel app/outils/<slug>/page.tsx (incl. BATCH 7-8 :
+ *    whale-radar, phishing-checker, allocator-ia, gas-tracker-fr,
+ *    export-expert-comptable, crypto-license, succession-crypto, dca-lab).
  *  - method: "Publique" = qualitatif, pas un chiffre.
+ *
+ * MAJ 2026-05-02 (audit cohérence) : la valeur 30 plateformes / 18 outils
+ * était sous-évaluée vs catalogue réel. Sync avec data/platforms.json (34)
+ * + ls app/outils (26 sous-pages tooling, hors page.tsx + loading.tsx).
  */
 const STATS = {
-  platforms: 30,
+  platforms: 34,
   cryptos: 100,
-  tools: 18,
+  tools: 26,
   method: "Publique",
 } as const;
 

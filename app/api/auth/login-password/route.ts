@@ -7,8 +7,11 @@
  *     via applyCookies() (FIX cookies non propagés en Next 14 Route Handler)
  *  3. Réponse 200 ok → client redirect vers /mon-compte
  *
- * SÉCURITÉ :
- *  - Rate limit anti-brute force : 30 tentatives / 15 min / IP
+ * SÉCURITÉ (durci 2026-05-02 audit expert sécurité) :
+ *  - Rate limit anti-brute force IP : 10 tentatives / 15 min / IP
+ *    (avant : 30/15min — trop permissif, ~120 essais/h via rotation IP)
+ *  - Rate limit per-email (anti-credential stuffing distribué) :
+ *    5 tentatives / 15 min / email — bloque même si l'attaquant tourne ses IPs
  *  - Erreur uniformisée pour éviter user enumeration
  */
 
@@ -19,10 +22,16 @@ import { createRateLimiter } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const limiter = createRateLimiter({
-  limit: 30,
+const ipLimiter = createRateLimiter({
+  limit: 10,
   windowMs: 15 * 60 * 1000,
-  key: "auth-login-password-v2",
+  key: "auth-login-password-ip-v3",
+});
+
+const emailLimiter = createRateLimiter({
+  limit: 5,
+  windowMs: 15 * 60 * 1000,
+  key: "auth-login-password-email-v1",
 });
 
 function getClientIp(req: NextRequest): string {
@@ -33,11 +42,11 @@ function getClientIp(req: NextRequest): string {
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  const rl = await limiter(ip);
-  if (!rl.ok) {
+  const rlIp = await ipLimiter(ip);
+  if (!rlIp.ok) {
     return NextResponse.json(
       { error: "Trop de tentatives. Réessaye dans 15 minutes." },
-      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+      { status: 429, headers: { "Retry-After": String(rlIp.retryAfter) } }
     );
   }
 
@@ -64,6 +73,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: "Email et mot de passe requis" },
       { status: 400 }
+    );
+  }
+
+  // 2e couche : rate limit par email (anti-credential-stuffing distribué).
+  // Si l'attaquant tourne 1000 IPs mais cible 1 email, le 2e limiter le bloque.
+  const rlEmail = await emailLimiter(`email:${email}`);
+  if (!rlEmail.ok) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessaye dans 15 minutes." },
+      { status: 429, headers: { "Retry-After": String(rlEmail.retryAfter) } }
     );
   }
 

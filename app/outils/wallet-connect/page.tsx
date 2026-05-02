@@ -102,7 +102,7 @@ export default function WalletConnectPage() {
     },
     {
       q: "C'est gratuit ou Pro ?",
-      a: "Connexion + lecture des balances = GRATUIT (5 wallets max, refresh manuel). Auto-sync hebdo + alertes mouvement + import tx pour fiscal = Pro 9,99 €/mois.",
+      a: "Connexion + lecture des balances = GRATUIT (5 wallets max, refresh manuel). Auto-sync hebdo + alertes mouvement + import tx pour fiscal = Pro+ 9,99 €/mois (à ne pas confondre avec le tier Soutien à 2,99 €).",
     },
     {
       q: "Comment c'est différent de Zerion / DeBank ?",
