@@ -30,6 +30,7 @@ import {
   NEWS_CATEGORY_LABELS,
 } from "@/lib/news-types";
 import { inferCategory, slugify } from "@/lib/news-aggregator";
+import { translateNewsArticle, type TranslatedNews } from "@/lib/news-llm-translator";
 
 /* -------------------------------------------------------------------------- */
 /*  Mapping catégorie → liens internes "Pour aller plus loin"                 */
@@ -327,7 +328,9 @@ export interface RewriteNewsResult {
 }
 
 /**
- * Réécrit un item RSS brut en MDX Cryptoreflex.
+ * Réécrit un item RSS brut en MDX Cryptoreflex (version DÉTERMINISTE,
+ * boilerplate FR sans appel LLM). Conservée pour fallback si l'API
+ * Anthropic échoue, et pour les tests.
  *
  * Pure function — pas d'I/O, pas d'effets de bord. La sérialisation sur disque
  * est de la responsabilité du caller (typiquement le cron).
@@ -366,6 +369,119 @@ export function rewriteNews(raw: NewsRaw): RewriteNewsResult {
 
   // 6) Body
   const body = composeBody(raw, category, title);
+
+  return {
+    slug,
+    frontmatter: serializeFrontmatter(meta),
+    body,
+    meta,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/*  BATCH 35b — version async qui utilise Claude pour traduire l'article.    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Compose le body MDX à partir d'une traduction Claude (TranslatedNews).
+ * Beaucoup plus riche que le boilerplate déterministe : titre traduit,
+ * chapeau, analyse 3-4 paragraphes français, faits clés réels, impact FR.
+ */
+function composeBodyFromTranslation(
+  raw: NewsRaw,
+  category: NewsCategory,
+  translation: TranslatedNews,
+): string {
+  const links = pickInternalLinks(raw, category);
+
+  const factsBlock = translation.keyFacts.map((f) => `- ${f}`).join("\n");
+
+  const linksBlock = links
+    .map((l) => `- [${l.label}](/blog/${l.slug})`)
+    .join("\n");
+
+  const citation = `> **Source originale** : [${raw.source}](${raw.link}) — analyse Cryptoreflex traduite et réécrite en français pour les investisseurs francophones.`;
+
+  const disclaimer = `<Callout type="warning" title="Avertissement">
+Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital. Vérifie toujours auprès d'un conseiller financier agréé avant de prendre une décision.
+</Callout>`;
+
+  return [
+    `## ${translation.translatedTitle}`,
+    "",
+    `_${translation.summary}_`,
+    "",
+    translation.analysis,
+    "",
+    "## Les faits clés",
+    "",
+    factsBlock,
+    "",
+    "## Pourquoi ça concerne la France",
+    "",
+    translation.frImpact,
+    "",
+    "## Pour aller plus loin",
+    "",
+    linksBlock,
+    "",
+    "---",
+    "",
+    citation,
+    "",
+    disclaimer,
+    "",
+  ].join("\n");
+}
+
+/**
+ * Version ASYNC de rewriteNews qui utilise Claude Haiku 4.5 pour traduire
+ * réellement l'article en français (vs boilerplate déterministe).
+ *
+ * Si la traduction LLM échoue (clé absente, rate-limit, JSON malformé) →
+ * fallback automatique sur `rewriteNews` (déterministe).
+ *
+ * Coût : ~$0.01 par article (Haiku ~500 in / 1000 out tokens).
+ */
+export async function rewriteNewsWithLLM(
+  raw: NewsRaw,
+): Promise<RewriteNewsResult> {
+  const translation = await translateNewsArticle(raw);
+  if (!translation) {
+    // Fallback gracieux : on retombe sur la version déterministe.
+    return rewriteNews(raw);
+  }
+
+  const category: NewsCategory =
+    raw.category ?? inferCategory(`${raw.title} ${raw.description}`);
+
+  // Le titre Cryptoreflex utilise la traduction Claude (plus naturel)
+  // mais on conserve le suffixe " — analyse Cryptoreflex" pour la cohérence
+  // SEO/marque avec le rewriter déterministe.
+  const baseTitle = translation.translatedTitle.replace(/\s+—\s*analyse\s+Cryptoreflex\s*$/i, "").trim();
+  const title = `${baseTitle} — analyse Cryptoreflex`;
+
+  const dateIso = raw.pubDate
+    ? new Date(raw.pubDate).toISOString().slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
+  const titleForSlug = baseTitle;
+  const slug = `${dateIso}-${slugify(titleForSlug)}`.slice(0, 110);
+
+  const meta: NewsFrontmatter = {
+    title,
+    description: translation.summary.slice(0, 160),
+    date: dateIso,
+    category,
+    source: raw.source,
+    sourceUrl: raw.link,
+    originalTitle: raw.title,
+    image: raw.image,
+    author: "Cryptoreflex",
+    keywords: raw.matchedKeywords?.slice(0, 8) ?? [],
+  };
+
+  const body = composeBodyFromTranslation(raw, category, translation);
 
   return {
     slug,
