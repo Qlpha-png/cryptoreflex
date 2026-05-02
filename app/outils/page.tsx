@@ -31,13 +31,12 @@ import {
 import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
-  title: "Outils crypto Cryptoreflex — 26 calculateurs + IA + Cerfa 2086 auto",
-  // FIX BATCH 20 — sync metadata avec catalogue actuel (26 outils total :
-  // 16 historiques + 4 TIER 3 + 8 BATCH 7-8 innovation 2026 [whale-radar,
-  // phishing-checker, allocator-ia, gas-tracker-fr, export-expert-comptable,
-  // crypto-license, succession-crypto, dca-lab]).
+  // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand + alignement
+  // chiffres (26 outils dédiés /outils/* + 2 cross-links comparateur/cryptos
+  // = 28 entries TOOLS array, on annonce 26 = chiffre conservateur honnête).
+  title: "Outils crypto FR 2026 — 26 calculateurs gratuits + IA | Cryptoreflex",
   description:
-    "26 outils crypto français : Cerfa 2086 PDF auto (Pro+), Fiscal Copilot IA, Whale Radar FR, Allocator IA, Gas Tracker, Permis Crypto, DCA Lab, Yield stablecoins, calculateur fiscalité PFU 30 %, vérificateur MiCA, glossaire 250+. Free et Pro+.",
+    "26 outils crypto FR gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
 };
 

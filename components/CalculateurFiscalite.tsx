@@ -43,6 +43,7 @@ import {
   type TmiRate,
 } from "@/lib/fiscalite";
 import { track, trackAffiliateClick } from "@/lib/analytics";
+import CountUp from "@/components/animations/CountUp";
 import PdfModal from "@/components/calculateur-fiscalite/PdfModal";
 
 /* -------------------------------------------------------------------------- */
@@ -849,7 +850,16 @@ function ResultPanel({
         </p>
         <h3 className="mt-1 font-display text-lg sm:text-2xl font-bold text-white">
           Impôt total estimé :{" "}
-          <span className="text-primary-soft">{formatEuro(result.impotTotal)}</span>
+          {/* BATCH 37 — animation count-up sur le résultat principal (audit
+              Motion Expert) : effet "machine à sous" qui crée anticipation +
+              signal "résultat prêt". 0 dépendance externe. */}
+          <span className="text-primary-soft">
+            <CountUp
+              value={result.impotTotal}
+              duration={900}
+              format={(n) => formatEuro(Math.round(n))}
+            />
+          </span>
         </h3>
         <p className="mt-1 text-sm text-muted">
           Taux effectif global : {formatPercent(result.tauxEffectif)}.

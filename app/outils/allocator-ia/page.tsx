@@ -39,15 +39,15 @@ export default function AllocatorIaPage() {
     },
     {
       q: "Quel est le moteur derrière l'« IA » ?",
-      a: "Phase 1 : moteur déterministe rule-based (5 critères → matrice de scoring → allocation parmi 12 profils types). Pas de LLM coûteux ni de boîte noire. Phase 2 (2027) : optionnellement, fine-tuning d'un modèle léger sur historiques 2018-2026 pour affiner les pondérations.",
+      a: "Phase 1 : moteur déterministe à règles (5 critères → matrice de notation → allocation parmi 12 profils types). Pas de LLM coûteux ni de boîte noire. Phase 2 (2027) : optionnellement, ajustement d'un modèle léger sur historiques 2018-2026 pour affiner les pondérations.",
     },
     {
       q: "Pourquoi limiter aux cryptos suivies par Cryptoreflex ?",
-      a: "Pour deux raisons. (1) On ne recommande que des actifs qu'on a fact-checkés (score fiabilité > 60/100, équipe identifiée, métriques on-chain vérifiables). (2) Pour rester honnête : si on t'envoyait sur une shitcoin random, ça serait du marketing déguisé.",
+      a: "Pour deux raisons. (1) On ne recommande que des actifs qu'on a vérifiés (score fiabilité > 60/100, équipe identifiée, métriques on-chain vérifiables). (2) Pour rester honnête : si on t'envoyait sur la première shitcoin venue, ce serait du marketing déguisé — pas notre genre.",
     },
     {
       q: "C'est gratuit ou Pro ?",
-      a: "V1 freemium : 1 allocation gratuite par mois (sans login). Pro/Pro+ : allocations illimitées + comparaison side-by-side avec rééquilibrage suggéré tous les 3 mois + export CSV/PDF.",
+      a: "Version gratuite : 1 allocation par mois (sans compte). Pro/Pro+ : allocations illimitées + comparaison côte à côte avec rééquilibrage suggéré tous les 3 mois + export CSV/PDF.",
     },
   ];
 

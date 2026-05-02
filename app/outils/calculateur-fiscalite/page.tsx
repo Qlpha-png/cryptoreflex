@@ -170,7 +170,7 @@ const FAQ_ITEMS = [
     question:
       "Que se passe-t-il si j'ai un compte sur une plateforme étrangère ?",
     answer:
-      "Tu dois remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 750 € par compte si solde sous 50 000 €, 1 500 € au-dessus. Applicable sur 4 à 6 ans.",
+      "Tu dois remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 1 500 € par compte si solde sous 50 000 €, 10 000 € au-dessus (article 1736 IV bis CGI). Applicable sur 4 à 6 ans.",
   },
   {
     question:
@@ -690,7 +690,7 @@ export default function CalculateurFiscalitePage() {
               imposables ligne par ligne. Le <strong>Cerfa 3916-bis</strong>{" "}
               déclare tes comptes ouverts sur des plateformes étrangères
               (Binance, Kraken Irlande, Bitget, Coinbase Irlande, Bitpanda
-              Autriche). L'oubli du 3916-bis coûte 750 euros à 1 500 euros par
+              Autriche). L'oubli du 3916-bis coûte 1 500 euros à 10 000 euros par
               compte.
             </p>
 
@@ -771,8 +771,8 @@ export default function CalculateurFiscalitePage() {
               Pour <strong>chaque compte ouvert sur une plateforme étrangère</strong>{" "}
               en 2025 (même inactif), tu dois déposer un Cerfa 3916-bis :
               identité du compte, plateforme, pays, numéro de compte (UID
-              Binance), date d'ouverture/clôture. Sanction d'oubli : 750 euros
-              par compte si solde inférieur à 50 000 euros, 1 500 euros au-dessus.
+              Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 IV bis CGI) :
+              1 500 euros par compte si solde inférieur à 50 000 euros, 10 000 euros au-dessus.
               Applicable rétroactivement sur 4 à 6 ans. Tutoriel :{" "}
               <Link
                 href="/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
@@ -852,8 +852,8 @@ export default function CalculateurFiscalitePage() {
               </div>
               <p className="mt-3 text-sm text-white/70">
                 Déclaration des comptes crypto à l'étranger (Binance, Kraken,
-                Coinbase…). Obligatoire même sans vente. 750 € d'amende par
-                compte oublié.
+                Coinbase…). Obligatoire même sans vente. 1 500 € d'amende par
+                compte oublié (10 000 € si solde &gt; 50 000 €).
               </p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary-soft group-hover:gap-2 transition-all">
                 Lire le guide{" "}

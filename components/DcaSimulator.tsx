@@ -199,17 +199,23 @@ export default function DcaSimulator() {
             icon={<Coins className="h-4 w-4" />}
           />
 
-          <div>
-            <span className="text-xs font-medium text-muted uppercase tracking-wide">
+          {/* BATCH 37 — fix audit a11y P0 : groupes de boutons radio-like
+              wrappés en <fieldset>+<legend> + role="radiogroup". AT annonce
+              maintenant "groupe de 3 cryptos, BTC sélectionné". min-h-[44px]
+              pour WCAG 2.5.5 target size. */}
+          <fieldset>
+            <legend className="text-xs font-medium text-muted uppercase tracking-wide">
               Crypto
-            </span>
-            <div className="mt-2 grid grid-cols-3 gap-2">
+            </legend>
+            <div className="mt-2 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Choisir la crypto">
               {COIN_OPTIONS.map((opt) => (
                 <button
                   key={opt.id}
                   type="button"
+                  role="radio"
+                  aria-checked={coin === opt.id}
                   onClick={() => setCoin(opt.id)}
-                  className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                  className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     coin === opt.id
                       ? "border-primary bg-primary/10 text-primary-soft"
                       : "border-border bg-background text-white/70 hover:border-primary/50"
@@ -219,14 +225,14 @@ export default function DcaSimulator() {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <span className="text-xs font-medium text-muted uppercase tracking-wide">
+          <fieldset>
+            <legend className="text-xs font-medium text-muted uppercase tracking-wide">
               <Calendar className="inline h-3.5 w-3.5 mr-1" />
               Durée
-            </span>
-            <div className="mt-2 grid grid-cols-2 gap-2">
+            </legend>
+            <div className="mt-2 grid grid-cols-2 gap-2" role="radiogroup" aria-label="Choisir la durée">
               {DURATION_OPTIONS.map((opt) => {
                 // FIX P0 audit-fonctionnel-live-final #2 : si CoinGecko a renvoyé
                 // moins de données que demandé, on désactive les durées trop longues.
@@ -235,6 +241,9 @@ export default function DcaSimulator() {
                   <button
                     key={opt.months}
                     type="button"
+                    role="radio"
+                    aria-checked={months === opt.months}
+                    aria-disabled={disabled || undefined}
                     onClick={() => !disabled && setMonths(opt.months)}
                     disabled={disabled}
                     title={
@@ -242,7 +251,7 @@ export default function DcaSimulator() {
                         ? "Données limitées à 1 an (CoinGecko free tier)"
                         : undefined
                     }
-                    className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                    className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       months === opt.months
                         ? "border-primary bg-primary/10 text-primary-soft"
                         : "border-border bg-background text-white/70 hover:border-primary/50"
@@ -253,7 +262,7 @@ export default function DcaSimulator() {
                 );
               })}
             </div>
-          </div>
+          </fieldset>
 
           {/* FIX P0 audit-fonctionnel-live-final #2 : disclaimer visible quand
               le dataset est dégradé (free tier CoinGecko qui silencieusement
@@ -407,14 +416,20 @@ function Field({
         {icon && <span className="inline-block mr-1">{icon}</span>}
         {label}
       </span>
+      {/* BATCH 37 — fix audit Mobile UX P0 : ajout inputMode="decimal" pour
+          déclencher le clavier numérique iOS/Android (avant : clavier alpha,
+          friction massive). enterKeyHint="done" + autoComplete="off". */}
       <input
         type="number"
+        inputMode="decimal"
+        enterKeyHint="done"
+        autoComplete="off"
         value={value}
         step={step}
         min={0}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-        className="mt-1 w-full rounded-lg bg-background border border-border px-3 py-2.5 font-mono text-white
-                   focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+        className="mt-1 w-full rounded-lg bg-background border border-border px-3 py-2.5 font-mono text-white min-h-[44px]
+                   focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
       />
     </label>
   );

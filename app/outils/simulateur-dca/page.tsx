@@ -22,12 +22,13 @@ import { getPlatformById } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 
 export const metadata: Metadata = {
-  title: "Simulateur DCA crypto gratuit — backtest 5 ans (BTC, ETH, SOL)",
+  // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand
+  title: "Simulateur DCA crypto FR 2026 — backtest BTC/ETH/SOL 5 ans | Cryptoreflex",
   description:
-    "Calcule la performance d'un Dollar Cost Averaging sur Bitcoin, Ethereum ou Solana. Backtest réel sur 5 ans, comparaison avec un achat unique, prix moyen d'achat et ROI.",
+    "Backtest DCA réel : combien aurais-tu en investissant 100€/mois en BTC, ETH ou SOL depuis 2020 ? Comparaison achat unique vs étalé. Gratuit.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils/simulateur-dca" },
   openGraph: {
-    title: "Simulateur DCA crypto — backtest 5 ans gratuit",
+    title: "Simulateur DCA crypto FR 2026 — backtest 5 ans gratuit",
     description:
       "Investis un montant fixe chaque mois en BTC, ETH ou SOL et visualise la performance réelle sur 1 à 5 ans.",
     url: "https://www.cryptoreflex.fr/outils/simulateur-dca",
@@ -166,10 +167,10 @@ export default function SimulateurDcaPage() {
                   de démarrer.
                 </p>
                 <Link
-                  href="/blog"
+                  href="/blog/trader-vs-dca-vs-hodl"
                   className="mt-3 inline-flex items-center gap-1 text-primary-soft hover:text-primary-glow text-sm font-semibold"
                 >
-                  Lire le guide DCA débutants
+                  Lire le guide DCA vs Trading vs HODL
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

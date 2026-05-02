@@ -30,7 +30,7 @@ interface Props {
  * sur la PLUS-VALUE CUMULÉE ANNUELLE et impose la formule prorata du Cerfa
  * 2086 (formule complexe : prix de cession - prix d'acquisition × valeur globale
  * portefeuille / valeur globale après cession). Pour le calcul exact, on
- * redirige vers /outils/calculateur-fiscalite-crypto.
+ * redirige vers /outils/calculateur-fiscalite.
  *
  * Disclaimer obligatoire : "indicatif, pas un conseil fiscal".
  *
@@ -209,7 +209,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
           (formule prorata Cerfa 2086). Pour le calcul exact (multi-opérations + déclaration),
           utilise notre{" "}
           <Link
-            href="/outils/calculateur-fiscalite-crypto"
+            href="/outils/calculateur-fiscalite"
             className="inline-flex items-center gap-1 text-primary hover:text-primary-glow underline underline-offset-2 font-semibold"
           >
             calculateur fiscal complet
