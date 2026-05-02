@@ -86,8 +86,14 @@ export default function MobileBottomNav() {
       aria-label="Navigation principale mobile"
       // Audit Perf : opaque (sans backdrop-blur) car aucun contenu coloré
       // derrière. Gain ~3-5ms/frame scroll Android mid-range.
+      // BATCH 22 — height = var(--mobile-bar-h, 64px) pour cohérence avec
+      // CompareDrawer + StickyMobileCta + MobileStickyCTA qui consomment
+      // cette même variable pour leur positioning bottom calc().
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      style={{
+        height: "var(--mobile-bar-h, 64px)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+      }}
     >
       <ul ref={navRef} className="relative flex items-stretch justify-around">
         {TABS.map(({ href, label, Icon, revenue }, i) => {

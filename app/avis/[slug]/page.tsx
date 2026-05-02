@@ -289,8 +289,11 @@ export default function ReviewPage({ params }: Props) {
           <div>
             {/* BATCH 19 — Logo Hero avec view-transition-name pour le morph
                 cross-document depuis PlatformsMarquee (home) → fiche avis.
-                Combiné avec Speculation Rules → sensation native-app. */}
-            <div className="mb-4 inline-flex items-center justify-center rounded-2xl bg-elevated/60 border border-border p-3 ring-1 ring-inset ring-white/[0.06]">
+                Combiné avec Speculation Rules → sensation native-app.
+                BATCH 22 a11y — wrappé dans <figure> avec figcaption sr-only
+                pour structure sémantique (logo officiel + caption invisible
+                lisible par screen readers). */}
+            <figure className="mb-4 inline-flex items-center justify-center rounded-2xl bg-elevated/60 border border-border p-3 ring-1 ring-inset ring-white/[0.06]">
               <PlatformLogo
                 id={p.id}
                 name={p.name}
@@ -299,7 +302,8 @@ export default function ReviewPage({ params }: Props) {
                 priority
                 viewTransitionId={`platform-logo-${p.id}`}
               />
-            </div>
+              <figcaption className="sr-only">Logo officiel de {p.name}</figcaption>
+            </figure>
             {p.badge && (
               <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/30 px-3 py-1 text-xs font-semibold text-primary-glow">
                 {p.badge}

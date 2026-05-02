@@ -1764,3 +1764,17 @@ h1, h2, h3 {
   animation-duration: 320ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* BATCH 22 a11y WCAG 2.4.11 Focus Not Obscured (Minimum) AA NEW —
+   scroll-padding-bottom global pour empêcher MobileBottomNav (z-40, ~64px)
+   et MobileStickyCTA (z-30, ~80px) de cacher le focus en bas du viewport
+   quand l'utilisateur Tab sur un lien proche du bas de page. */
+html {
+  scroll-padding-bottom: calc(var(--mobile-bar-h, 64px) + 80px + var(--safe-bottom, 0px));
+}
+@media (min-width: 768px) {
+  html {
+    /* Sur desktop, pas de mobile bar : juste un confort de 80px. */
+    scroll-padding-bottom: 80px;
+  }
+}

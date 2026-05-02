@@ -102,7 +102,9 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
               required
               autoComplete="email"
               maxLength={200}
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-invalid={result?.ok === false}
+              aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
               placeholder="contact@exemple.fr"
             />
           </div>
@@ -132,7 +134,9 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             required
             rows={6}
             maxLength={4000}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-invalid={result?.ok === false}
+            aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
             placeholder="Détaille ta demande, on te répond dans les 48h ouvrées."
           />
         </div>
@@ -158,6 +162,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
 
         {result && !result.ok && (
           <div
+            id="ct-form-error"
             role="alert"
             aria-live="assertive"
             className="flex items-start gap-2 rounded-lg border border-danger/40 bg-danger/10 p-3 text-sm text-danger-fg"

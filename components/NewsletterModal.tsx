@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   X,
   Download,
@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { track } from "@/lib/analytics";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 /**
  * NewsletterModal — version contrôlée du NewsletterPopup.
@@ -48,12 +49,16 @@ export default function NewsletterModal({
   const [errorMsg, setErrorMsg] = useState("");
   // FIX P0 audit-fonctionnel-live-final #3 : flag mocked renvoyé par l'API.
   const [mocked, setMocked] = useState(false);
-  const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Focus trap minimal + Escape pour fermer.
+  // BATCH 22 a11y WCAG 2.4.3 + 2.1.2 — focus trap réel via hook centralisé
+  // (avant : juste dialogRef.focus() sans cycle Tab → focus échappait à
+  // la modale). useFocusTrap gère : focus initial 1er focusable + cycle
+  // Tab/Shift+Tab + restauration focus précédent au unmount.
+  const dialogRef = useFocusTrap<HTMLDivElement>(open);
+
+  // Escape pour fermer (logique séparée du focus trap)
   useEffect(() => {
     if (!open) return;
-    dialogRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -132,6 +137,7 @@ export default function NewsletterModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="nl-modal-title"
+        aria-describedby="nl-modal-desc"
         tabIndex={-1}
         className="relative max-w-lg w-full glass rounded-2xl p-6 sm:p-8 outline-none"
       >
@@ -157,9 +163,12 @@ export default function NewsletterModal({
               Reçois le <span className="gradient-text">guide PDF gratuit</span>
             </h2>
 
-            <p className="mt-2 text-sm text-fg/80">
-              <strong className="text-fg">"Les plateformes crypto régulées MiCA à utiliser
-              en France 2026"</strong> — comparatif complet, frais réels, statut MiCA, fiabilité.
+            <p
+              id="nl-modal-desc"
+              className="mt-2 text-sm text-fg/80"
+            >
+              <strong className="text-fg">&quot;Les plateformes crypto régulées MiCA à utiliser
+              en France 2026&quot;</strong> — comparatif complet, frais réels, statut MiCA, fiabilité.
               Envoyé après inscription à la newsletter (3 min/jour).
             </p>
 

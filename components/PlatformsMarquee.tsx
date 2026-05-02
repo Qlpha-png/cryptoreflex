@@ -99,33 +99,43 @@ function PlatformLink({
   platform: ReturnType<typeof getAllPlatforms>[number];
   cloned?: boolean;
 }) {
+  // BATCH 22 a11y — Link porte le aria-label complet (vs avant :
+  // accumulation "Logo Binance + Binance + Conforme MiCA" = triple annonce).
+  // PlatformLogo + span + ShieldCheck deviennent décoratifs (aria-hidden).
+  const ariaLabel = cloned
+    ? undefined
+    : `${p.name}${p.mica?.micaCompliant ? " — conforme MiCA" : ""}`;
   return (
     <Link
       href={`/avis/${p.id}`}
       tabIndex={cloned ? -1 : undefined}
       aria-hidden={cloned ? "true" : undefined}
+      aria-label={ariaLabel}
       className="group inline-flex items-center gap-2.5 rounded-xl border border-border bg-elevated/40 px-4 py-2.5 hover:border-primary/40 hover:bg-elevated transition-colors shrink-0"
     >
-      <PlatformLogo
-        id={p.id}
-        name={p.name}
-        size={24}
-        rounded={false}
-        className="opacity-90 group-hover:opacity-100 transition-opacity"
-        // BATCH 19 — view-transition-name pour morph cross-document logo.
-        // Combiné avec Speculation Rules → hover marquee → prerender →
-        // click → morph 320ms du logo plateforme vers /avis/{id}.
-        // Skip pour le clone : 2 éléments avec le même viewTransitionName
-        // = navigateur ne sait pas lequel morph.
-        viewTransitionId={cloned ? undefined : `platform-logo-${p.id}`}
-      />
-      <span className="font-semibold text-sm text-fg/85 group-hover:text-fg whitespace-nowrap">
+      <span aria-hidden="true">
+        <PlatformLogo
+          id={p.id}
+          name={p.name}
+          size={24}
+          rounded={false}
+          className="opacity-90 group-hover:opacity-100 transition-opacity"
+          // BATCH 19 — view-transition-name pour morph cross-document logo.
+          // Skip pour le clone : 2 éléments avec le même viewTransitionName
+          // = navigateur ne sait pas lequel morph.
+          viewTransitionId={cloned ? undefined : `platform-logo-${p.id}`}
+        />
+      </span>
+      <span
+        aria-hidden="true"
+        className="font-semibold text-sm text-fg/85 group-hover:text-fg whitespace-nowrap"
+      >
         {p.name}
       </span>
       {p.mica?.micaCompliant && (
         <ShieldCheck
           className="h-3 w-3 text-success shrink-0"
-          aria-label="Conforme MiCA"
+          aria-hidden="true"
         />
       )}
     </Link>

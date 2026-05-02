@@ -156,6 +156,10 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
           coingeckoId={coin.id}
           imageUrl={coin.image}
           size={28}
+          // BATCH 22 perf P2 #8 — promu en priority sur les 3 premiers logos
+          // (LCP candidate above-the-fold sur desktop). Le Hero affiche les
+          // top crypto en colonne droite, ce sont les 1ers <img> visibles.
+          priority
         />
         <div className="min-w-0">
           <div className="text-sm font-semibold text-fg truncate leading-tight">

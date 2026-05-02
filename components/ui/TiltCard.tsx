@@ -67,17 +67,25 @@ export default function TiltCard({
     target.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
   }, []);
 
+  // BATCH 22 a11y WCAG 2.3.3 — styles inline conditionnels sur `enabled`.
+  // Avant : transformStyle preserve-3d + willChange transform créaient un
+  // stacking context permanent même reduced-motion. Maintenant : style undefined
+  // si pas de hover+fine ou prefers-reduced-motion → no GPU layer inutile.
   return (
     <div
       ref={ref}
-      onPointerMove={handleMove}
-      onPointerLeave={handleLeave}
+      onPointerMove={enabled ? handleMove : undefined}
+      onPointerLeave={enabled ? handleLeave : undefined}
       className={className}
-      style={{
-        transition: "transform 200ms cubic-bezier(0.22, 1, 0.36, 1)",
-        willChange: "transform",
-        transformStyle: "preserve-3d",
-      }}
+      style={
+        enabled
+          ? {
+              transition: "transform 200ms cubic-bezier(0.22, 1, 0.36, 1)",
+              willChange: "transform",
+              transformStyle: "preserve-3d",
+            }
+          : undefined
+      }
     >
       {children}
     </div>
