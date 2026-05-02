@@ -1719,3 +1719,21 @@ h1, h2, h3 {
     transform: none !important;
   }
 }
+
+/* =========================================================================
+   INNOVATION BATCH 14 — View Transition Names sur logos crypto
+   --------------------------------------------------------------------------
+   Combiné avec Speculation Rules (BATCH 12) : quand l'utilisateur clique
+   sur un logo crypto dans une liste (top 10, comparateur, market table),
+   le navigateur prerender la fiche (intent hover) puis morphe le logo
+   d'une vue à l'autre. Sensation native-app.
+   ========================================================================= */
+::view-transition-old(crypto-logo-btc),
+::view-transition-new(crypto-logo-btc),
+::view-transition-old(crypto-logo-eth),
+::view-transition-new(crypto-logo-eth),
+::view-transition-old(crypto-logo-sol),
+::view-transition-new(crypto-logo-sol) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}

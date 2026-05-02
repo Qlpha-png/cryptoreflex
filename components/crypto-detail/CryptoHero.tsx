@@ -74,6 +74,9 @@ export default function CryptoHero({
             className="ring-1 ring-border"
             alt={`Logo ${name}`}
             priority
+            // BATCH 14 — view-transition-name pour morph cross-document
+            // depuis une vue liste (ex: /cryptos avec CryptoLogo viewTransitionId=`crypto-logo-${symbolLower}`).
+            viewTransitionId={`crypto-logo-${symbol.toLowerCase()}`}
           />
           <div>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight flex items-center gap-3 flex-wrap">

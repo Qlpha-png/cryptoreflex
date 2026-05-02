@@ -40,6 +40,15 @@ export interface CryptoLogoProps {
   priority?: boolean;
   /** Forme du logo (rounded-full = cercle, rounded-xl = carré arrondi). Default rounded-full. */
   shape?: "circle" | "rounded";
+  /**
+   * Identifiant unique pour View Transitions API (Chrome 111+/Safari 18+).
+   * Quand le même identifiant existe sur 2 pages (ex: /cryptos liste + /cryptos/btc fiche),
+   * le navigateur fait un MORPH du logo entre les 2 vues lors d'une navigation.
+   * Combiné avec Speculation Rules (BATCH 12), donne une sensation native-app.
+   *
+   * Convention : `crypto-logo-${symbolLower}` (ex: "crypto-logo-btc").
+   */
+  viewTransitionId?: string;
 }
 
 export default function CryptoLogo({
@@ -51,6 +60,7 @@ export default function CryptoLogo({
   alt,
   priority = false,
   shape = "circle",
+  viewTransitionId,
 }: CryptoLogoProps) {
   const resolved = resolveCryptoLogo({
     imageUrl,
@@ -81,7 +91,16 @@ export default function CryptoLogo({
         width={size}
         height={size}
         className={baseClass}
-        style={{ width: size, height: size, objectFit: "cover" }}
+        style={{
+          width: size,
+          height: size,
+          objectFit: "cover",
+          // BATCH 14 (innovation 2026) : view-transition-name natif Chrome
+          // 111+/Safari 18+ pour morpher le logo entre liste et fiche au
+          // changement de page. Combiné avec Speculation Rules (prerender
+          // hover-based) = sensation native-app cross-document.
+          ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
+        }}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         {...(priority ? { fetchPriority: "high" as const } : {})}
@@ -98,7 +117,12 @@ export default function CryptoLogo({
   return (
     <span
       className={`inline-flex items-center justify-center bg-gradient-to-br from-primary-soft to-primary text-background font-bold font-mono ${baseClass}`}
-      style={{ width: size, height: size, fontSize }}
+      style={{
+        width: size,
+        height: size,
+        fontSize,
+        ...(viewTransitionId ? { viewTransitionName: viewTransitionId } : {}),
+      }}
       role="img"
       aria-label={altText}
     >

@@ -88,7 +88,10 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
       // Audit Visual : .card-premium remplace .glass .glow-border (gradient
       // + shadow stack 3 couches + hover glow gold). Audit Mobile : hover
       // translate-y restreint à md+ via @media hover.
-      className="card-premium group relative rounded-2xl p-5 sm:p-6 flex flex-col h-full
+      // BATCH 14 (innovation 2026) : ajout .spotlight-card → halo gold qui
+      // suit la souris (pattern Linear/Vercel). Géré par SpotlightDelegate
+      // en event delegation depuis layout.tsx (0 surcoût Server Component).
+      className="card-premium spotlight-card group relative rounded-2xl p-5 sm:p-6 flex flex-col h-full
                  md:hover:translate-y-[-4px] md:transition-transform md:focus-within:translate-y-0
                  motion-reduce:md:hover:translate-y-0"
       style={{ ["--i" as string]: index }}

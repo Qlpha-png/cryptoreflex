@@ -14,6 +14,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
 import SpeculationRules from "@/components/SpeculationRules";
+import SpotlightDelegate from "@/components/SpotlightDelegate";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -458,6 +459,12 @@ export default function RootLayout({
             Z-index 95 = au-dessus du MobileBottomNav (z-90), sous les
             modales (z-100+). */}
         <CompareDrawer />
+        {/* SpotlightDelegate — listener pointermove unique au document qui
+            hydrate les CSS vars --mx/--my sur tout élément `.spotlight-card`
+            survolé. Pattern event delegation : 0 hydration boundary par
+            card, scaling infini. Désactivé en pointer:coarse (mobile) et
+            prefers-reduced-motion (cf. SpotlightDelegate.tsx). */}
+        <SpotlightDelegate />
       </body>
     </html>
   );
