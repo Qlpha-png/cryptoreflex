@@ -248,7 +248,12 @@ export default function PlatformsCarouselControls({
           )}
         </button>
 
-        {/* Dots avec progress fill anime sur le dot actif (seulement si auto-play actif) */}
+        {/* Dots avec progress fill anime sur le dot actif (seulement si auto-play actif).
+            BATCH 25 a11y WCAG 2.5.8 (AA NEW 2.2 — Target Size Min 24×24) :
+            avant le `<button>` était h-2 w-2 (8×8px) → bien sous le seuil
+            minimum. Maintenant : wrapper `<button>` à 24×24px avec hit-area
+            transparente, et le dot visuel est un `<span aria-hidden>` à
+            l'intérieur. Conserve l'apparence visuelle 8px/28px exactement. */}
         {Array.from({ length: totalItems }).map((_, i) => {
           const active = i === activeIdx;
           const showProgress =
@@ -259,28 +264,33 @@ export default function PlatformsCarouselControls({
               type="button"
               onClick={() => onDotClick(i)}
               aria-label={`Aller à la plateforme ${i + 1}`}
-              className={`relative overflow-hidden transition-all duration-300 rounded-full ${
-                active
-                  ? "h-2 w-7 bg-fg/15"
-                  : "h-2 w-2 bg-fg/20 hover:bg-fg/40"
-              }`}
+              aria-current={active ? "true" : undefined}
+              className="relative inline-flex items-center justify-center h-6 w-6 rounded-full"
             >
-              {active && (
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-0 bg-primary rounded-full"
-                  style={{
-                    width: showProgress ? "100%" : "100%",
-                    transition: showProgress
-                      ? `width ${autoplayMs}ms linear`
-                      : "width 200ms ease",
-                    // Restart animation by toggling key via activeIdx + autoplay state
-                    animation: showProgress
-                      ? `dot-progress ${autoplayMs}ms linear infinite`
-                      : "none",
-                  }}
-                />
-              )}
+              <span
+                aria-hidden="true"
+                className={`relative overflow-hidden transition-all duration-300 rounded-full ${
+                  active
+                    ? "h-2 w-7 bg-fg/15"
+                    : "h-2 w-2 bg-fg/20 group-hover:bg-fg/40"
+                }`}
+              >
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 bg-primary rounded-full"
+                    style={{
+                      width: showProgress ? "100%" : "100%",
+                      transition: showProgress
+                        ? `width ${autoplayMs}ms linear`
+                        : "width 200ms ease",
+                      animation: showProgress
+                        ? `dot-progress ${autoplayMs}ms linear infinite`
+                        : "none",
+                    }}
+                  />
+                )}
+              </span>
             </button>
           );
         })}

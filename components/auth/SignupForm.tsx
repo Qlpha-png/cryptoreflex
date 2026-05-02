@@ -137,6 +137,8 @@ export default function SignupForm() {
           <input
             type={showPwd ? "text" : "password"}
             required
+            aria-required="true"
+            aria-describedby={password.length > 0 ? "signup-pwd-rules" : undefined}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Au moins 8 caractères"
@@ -148,11 +150,18 @@ export default function SignupForm() {
           />
           <button
             type="button"
-            onClick={() => setShowPwd((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+            // BATCH 25 a11y — stopPropagation pour éviter que le click bubble
+            // jusqu'au <label> parent et toggle le focus de l'input par
+            // accident. aria-pressed pour annoncer l'état toggle au SR.
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowPwd((v) => !v);
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-6 w-6 text-muted hover:text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none rounded"
             aria-label={
               showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
             }
+            aria-pressed={showPwd}
           >
             {showPwd ? (
               <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -162,9 +171,10 @@ export default function SignupForm() {
           </button>
         </div>
 
-        {/* Live validation */}
+        {/* Live validation — BATCH 25 a11y : id="signup-pwd-rules" lié à
+            l'input via aria-describedby, le SR annonce les règles vivantes. */}
         {password.length > 0 && (
-          <div className="mt-2 space-y-1">
+          <div id="signup-pwd-rules" className="mt-2 space-y-1">
             <PwdCheck ok={pwdChecks.length} label="8 caractères minimum" />
             <PwdCheck
               ok={pwdChecks.mix}

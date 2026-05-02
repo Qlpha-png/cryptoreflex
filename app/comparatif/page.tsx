@@ -25,6 +25,7 @@ import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import {
   breadcrumbSchema,
+  faqSchema,
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
@@ -179,7 +180,38 @@ export default function ComparatifHubPage() {
     { name: "Comparatifs", url: PAGE_PATH },
   ]);
 
-  const schema = graphSchema([itemListSchema, breadcrumbs]);
+  // BATCH 25 SEO P1 — FAQPage Schema sur /comparatif. Éligibilité People
+  // Also Ask + +15% impressions estimé (audit SEO BATCH 20). Q/R alignées
+  // avec la pillar page comparateur de plateformes crypto FR.
+  const faqs = faqSchema([
+    {
+      question:
+        "Comment Cryptoreflex compare les plateformes crypto en France ?",
+      answer:
+        "Notre méthodologie publique évalue chaque plateforme sur 6 critères pondérés : frais réels (achat/vente/retrait), sécurité (custody, audits, historique de hack), conformité MiCA / agrément AMF PSAN, qualité du support FR, ergonomie de la plateforme et catalogue d'actifs disponibles. Score global sur 5 étoiles, détails par critère sur chaque fiche /avis.",
+    },
+    {
+      question: "Qu'est-ce que MiCA et pourquoi c'est important ?",
+      answer:
+        "MiCA (Markets in Crypto-Assets) est le règlement européen entré en vigueur en juin 2024 qui harmonise la régulation des plateformes crypto à l'échelle UE. Toute plateforme servant les résidents UE doit obtenir un agrément CASP (Crypto-Asset Service Provider). En France, ce statut remplace progressivement le PSAN historique. Une plateforme MiCA-compliant offre des garanties sur la séparation des fonds, l'audit des réserves et la transparence des frais.",
+    },
+    {
+      question: "Combien de plateformes sont comparées sur Cryptoreflex ?",
+      answer: `À ce jour, ${getAllPlatforms().length} plateformes crypto régulées ou présentes en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Binance, Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic, Plus500), wallets (Ledger, Trezor) et services spécialisés (StackinSat, Just Mining, Feel Mining). Liste complète sur /avis.`,
+    },
+    {
+      question: "Cryptoreflex perçoit-il des commissions sur les comparatifs ?",
+      answer:
+        "Oui, Cryptoreflex est rémunéré par affiliation lorsqu'un visiteur s'inscrit sur une plateforme via nos liens (signalés par la mention « Publicité » et l'attribut rel=\"sponsored\"). Ces partenariats financent la gratuité du contenu et N'INFLUENCENT PAS le classement : la méthodologie est publique et les rémunérations détaillées sur /transparence.",
+    },
+    {
+      question: "Comment choisir entre Coinbase, Binance et Kraken ?",
+      answer:
+        "Coinbase = pour les débutants en France (interface simple, support FR, MiCA Irlande). Binance = catalogue le plus large + frais bas pour traders actifs (CASP Malta). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur) mais interface moins ergonomique. Comparatif détaillé sur /comparatif/coinbase-vs-binance et /comparatif/kraken-vs-binance.",
+    },
+  ]);
+
+  const schema = graphSchema([itemListSchema, breadcrumbs, faqs]);
 
   return (
     <>
