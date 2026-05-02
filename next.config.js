@@ -7,6 +7,16 @@ const nextConfig = {
   // diminue la surface d'attaque "fingerprinting".
   poweredByHeader: false,
 
+  // BATCH 24 perf — drop console.log/info/debug en prod (préserve error+warn
+  // pour les logs Vercel). Économie ~5-10 KB JS sur les bundles avec console.
+  // Audit perf P3 BATCH 24.
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
+  },
+
   // Tree-shaking aggressif (étude #13 ETUDE-2026-05-02).
   // optimizePackageImports rewrite les `import { X } from "pkg"` en imports
   // spécifiques chunk-par-chunk → tree-shaking efficace même sur les libs

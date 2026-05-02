@@ -103,7 +103,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       { bids: data.bids ?? [], asks: data.asks ?? [] },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=3, stale-while-revalidate=15",
+          // BATCH 24 — Cache-Control explicit max-age=0 + s-maxage=3 +
+          // SWR=15 (avant : juste public, ambigu pour navigateurs vs CDN).
+          // max-age=0 = navigateur ne cache pas (chaque tab fait sa req →
+          // CDN edge cache 90% des hits via s-maxage=3, SWR=15).
+          "Cache-Control": "public, max-age=0, s-maxage=3, stale-while-revalidate=15",
           "X-Source": "binance-depth-proxy",
         },
       },

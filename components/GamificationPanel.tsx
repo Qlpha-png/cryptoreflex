@@ -244,7 +244,7 @@ export default function GamificationPanel() {
                     className={`grid place-items-center h-7 w-7 rounded-lg ${
                       b.unlocked
                         ? "bg-amber-500/15 text-amber-400"
-                        : "bg-elevated/60 text-fg/40"
+                        : "bg-elevated/60 text-fg/60"
                     }`}
                   >
                     {b.unlocked ? (

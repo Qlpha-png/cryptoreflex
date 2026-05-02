@@ -36,9 +36,12 @@ export default function PlatformsMarquee({ limit }: PlatformsMarqueeProps) {
   const platforms = limit ? sorted.slice(0, limit) : sorted;
 
   return (
+    // BATCH 24 perf P1 #4 — min-height réservé pour éviter CLS pendant
+    // l'hydratation client de MarqueePauseButton (qui n'apparait qu'après
+    // hydration et pousse le contenu de ~30px sans cette réservation).
     <section
       aria-labelledby="marquee-label"
-      className="relative py-8 sm:py-12 overflow-hidden"
+      className="relative py-8 sm:py-12 overflow-hidden min-h-[180px] sm:min-h-[200px]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 flex flex-wrap items-center justify-center gap-3">

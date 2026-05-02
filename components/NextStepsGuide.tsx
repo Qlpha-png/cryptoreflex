@@ -90,7 +90,7 @@ const POOL: Record<string, Step> = {
   comparator: {
     href: "/comparatif",
     Icon: BarChart3,
-    label: "Compare les 30+ plateformes",
+    label: "Compare les 34 plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
   pdfPlateformes: {
@@ -181,7 +181,7 @@ const POOL: Record<string, Step> = {
   outils: {
     href: "/outils",
     Icon: Wrench,
-    label: "20 outils gratuits",
+    label: "26 outils gratuits",
     desc: "Calculateurs, simulateurs, convertisseur, glossaire 250+ termes.",
   },
   topCryptos: {

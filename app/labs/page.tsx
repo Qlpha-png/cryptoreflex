@@ -51,8 +51,12 @@ const PLATFORMS_FAKE = [
 ];
 
 export default function LabsPage() {
+  // BATCH 24 a11y WCAG 1.3.1 — <main> est déjà fourni par app/layout.tsx
+  // (id="main" tabIndex={-1}). Avoir un 2e <main> ici crée un doublon
+  // landmark "main" → NVDA annonce 2 régions principales = ambiguïté.
+  // Fix : <div> simple, le wrapper <main> root suffit.
   return (
-    <main className="py-12 sm:py-16">
+    <div className="py-12 sm:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <header className="text-center">
@@ -119,7 +123,7 @@ export default function LabsPage() {
               intensity={0.4}
               className="btn-ghost inline-flex"
             >
-              Comparer 30+ plateformes
+              Comparer 34 plateformes
             </MagneticCta>
             <MagneticCta href="/outils" intensity={0.15} className="btn-ghost inline-flex">
               Outils gratuits
@@ -184,7 +188,7 @@ export default function LabsPage() {
           icon={ScrollText}
           title="Marquee logos plateformes"
           stack="CSS keyframes translateX + mask-image fade"
-          desc="Bandeau infini défilant (38s). Pause au hover/focus. Mask-image gradient sur les bords pour le fade-in/out. Preuve sociale visuelle (« 30+ plateformes auditées »)."
+          desc="Bandeau infini défilant (38s). Pause au hover/focus. Mask-image gradient sur les bords pour le fade-in/out. Preuve sociale visuelle (« 34 plateformes auditées »)."
         >
           <div className="marquee-wrap py-6 border-y border-border">
             <div className="marquee-track text-fg/70 font-display text-2xl font-bold">
@@ -228,7 +232,7 @@ export default function LabsPage() {
         >
           <div className="grid gap-4 sm:grid-cols-3">
             {[
-              { href: "/comparatif", title: "Comparatif", body: "30+ plateformes — prerendered" },
+              { href: "/comparatif", title: "Comparatif", body: "34 plateformes — prerendered" },
               { href: "/avis", title: "Avis détaillés", body: "34 plateformes auditées" },
               { href: "/outils", title: "Outils gratuits", body: "26 outils crypto FR" },
             ].map((c) => (
@@ -365,7 +369,7 @@ export default function LabsPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

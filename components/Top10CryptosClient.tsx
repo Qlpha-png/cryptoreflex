@@ -377,7 +377,7 @@ export default function Top10CryptosClient({
                     active
                       ? "border-primary bg-primary/15 text-primary-glow"
                       : isDisabled
-                        ? "border-border/40 bg-surface/50 text-fg/35 opacity-60"
+                        ? "border-border/40 bg-surface/50 text-fg/55 opacity-60"
                         : "border-border bg-surface text-fg/75 hover:border-primary/40 hover:text-fg",
                   ].join(" ")}
                 >

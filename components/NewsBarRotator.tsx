@@ -85,7 +85,7 @@ export default function NewsBarRotator({ news }: Props) {
       </div>
       {/* Indicateur position discret (X de Y) */}
       <span
-        className="hidden md:inline-block ml-3 shrink-0 text-[10px] text-fg/40 font-mono tabular-nums"
+        className="hidden md:inline-block ml-3 shrink-0 text-[10px] text-fg/60 font-mono tabular-nums"
         aria-hidden="true"
       >
         {idx + 1}/{news.length}

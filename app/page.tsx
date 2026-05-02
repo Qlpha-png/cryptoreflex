@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: BRAND.url,
     description:
-      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 30+ plateformes MiCA + PSAN comparées, 18+ outils gratuits (DCA, ROI, fiscalité PFU, yield stablecoins, tax loss harvesting), IA Q&A par fiche. Méthodologie publique.",
+      "100 cryptos analysées (score fiabilité, on-chain TVL, roadmap), 34 plateformes MiCA + PSAN comparées, 26 outils gratuits (DCA, ROI, fiscalité PFU, Whale Radar, Allocator IA, Cerfa 2086 auto), IA Q&A par fiche. Méthodologie publique.",
   },
 };
 
@@ -260,7 +260,7 @@ export default async function HomePage() {
           anchorId="cat-comparer"
         />
         {/* INNOVATION BATCH 16 — Marquee 34 logos plateformes auditées qui
-            défilent en boucle. Preuve sociale visuelle (« 30+ plateformes
+            défilent en boucle. Preuve sociale visuelle (« 34 plateformes
             auditées »), pause au hover, mask-image fade. Différenciant FR :
             pattern Stripe / Linear "Trusted by", aucun équivalent crypto FR. */}
         <PlatformsMarquee />

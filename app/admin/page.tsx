@@ -213,7 +213,7 @@ const ADMIN_LINKS_GROUPS: Array<{
       {
         href: "/outils",
         title: "Tous les outils",
-        description: "16 outils Cryptoreflex",
+        description: "26 outils Cryptoreflex",
         Icon: Settings,
       },
     ],
