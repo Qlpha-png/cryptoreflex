@@ -79,6 +79,20 @@ const OnChainMetricsLive = dynamic(
   { ssr: false },
 );
 
+// BATCH 28 — innovation expert agents quick win #2 : convertisseur live
+// crypto ⇄ EUR/USD avec presets retail. Client-only (state input).
+const PairConverter = dynamic(
+  () => import("@/components/crypto-detail/PairConverter"),
+  { ssr: false },
+);
+
+// BATCH 28 — innovation expert agents quick win #3 (différenciation FR
+// maximum) : calculateur PFU 30% inline (sans plus-value cumulée annuelle).
+const PfuQuickCalc = dynamic(
+  () => import("@/components/crypto-detail/PfuQuickCalc"),
+  { ssr: false },
+);
+
 // Lazy-load ROISimulator : Client Component interactif (sliders + fetch
 // /api/historical) positionné après le verdict pour engager le visiteur
 // avant la roadmap. ssr:false : aucun intérêt à SSR une UI qui dépend
@@ -429,6 +443,30 @@ export default async function CryptoPage({ params }: Props) {
             fallbackMaxSupply={c.kind === "top10" ? c.maxSupply : c.marketCapRange}
           />
         </div>
+
+        {/* PAIR CONVERTER — innovation BATCH 28 (expert agents quick win #2).
+            Convertisseur live {symbol} ⇄ EUR/USD avec presets 50/100/500/1000€.
+            Sub-LCP, lazy, render null si pas de prix. Cas d'usage retail FR
+            ultra-fréquent : "combien ça vaut 0,05 BTC en € ?". */}
+        {detail && detail.currentPrice > 0 && (
+          <div className="mt-8">
+            <PairConverter
+              symbol={c.symbol}
+              name={c.name}
+              priceUsd={detail.currentPrice}
+            />
+          </div>
+        )}
+
+        {/* PFU QUICK CALC — innovation BATCH 28 (expert agents quick win #3,
+            différenciation FR maximum). Mini-calculateur PFU 30% inline pour
+            simuler la note fiscale d'une plus-value crypto. Lien vers le
+            calculateur complet pour calcul cumulé annuel + Cerfa 2086. */}
+        {detail && detail.currentPrice > 0 && (
+          <div className="mt-8">
+            <PfuQuickCalc symbol={c.symbol} cryptoName={c.name} priceUsd={detail.currentPrice} />
+          </div>
+        )}
 
         {/* ON-CHAIN METRICS LIVE — TVL DeFiLlama + dominance + FDV + holders.
             Lazy-loaded, fetch côté client, rend null si la donnée est indispo

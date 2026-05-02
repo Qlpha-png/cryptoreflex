@@ -123,26 +123,135 @@ export default function CryptoStats({
         )}
       </StatCard>
 
-      {/* ATH — pas animé (date contextuelle, valeur "froide") */}
-      <StatCard label="ATH (sommet historique)" sub={athDate}>
+      {/* ATH — distance % depuis le sommet (BATCH 28 — innovation expert agents
+          quick win #1). On enrichit le label avec un badge "à -X% du sommet"
+          immédiatement perceptible : signal contexte ROI > simple valeur USD.
+          Color tokens sémantiques (success/warning/danger) selon la distance. */}
+      <StatCard
+        label="ATH (sommet historique)"
+        sub={athDate}
+        badge={
+          detail && detail.ath > 0 ? (
+            <DistanceBadge
+              current={detail.currentPrice}
+              reference={detail.ath}
+              kind="ath"
+            />
+          ) : undefined
+        }
+      >
         {detail ? formatUsd(detail.ath) : "—"}
       </StatCard>
 
-      {/* ATL — pas animé */}
-      <StatCard label="ATL (plus bas historique)" sub={atlDate}>
+      {/* ATL — multiplicateur depuis le plancher (innovation : "x47 depuis ATL"
+          beaucoup plus parlant que "+4700%" pour un retail français). */}
+      <StatCard
+        label="ATL (plus bas historique)"
+        sub={atlDate}
+        badge={
+          detail && detail.atl > 0 ? (
+            <DistanceBadge
+              current={detail.currentPrice}
+              reference={detail.atl}
+              kind="atl"
+            />
+          ) : undefined
+        }
+      >
         {detail ? formatUsd(detail.atl) : "—"}
       </StatCard>
     </section>
   );
 }
 
+/**
+ * DistanceBadge — innovation BATCH 28 (quick win expert agents).
+ * Affiche en un coup d'œil la distance du prix actuel vs ATH ou ATL.
+ *
+ * Logique :
+ *  - kind="ath" : current < ath (typique). Badge "à -X%" warning/danger selon
+ *    profondeur (ex: -5% green, -25% amber, -67% red). Si current ≥ ath (rare,
+ *    pump en cours), badge "🚀 Nouveau sommet" success.
+ *  - kind="atl" : current > atl (typique). Badge "x47" ou "+450%" success ;
+ *    multiplicateur si > 10x, % sinon (lisibilité retail).
+ */
+function DistanceBadge({
+  current,
+  reference,
+  kind,
+}: {
+  current: number;
+  reference: number;
+  kind: "ath" | "atl";
+}) {
+  if (!Number.isFinite(current) || !Number.isFinite(reference) || reference <= 0) {
+    return null;
+  }
+
+  if (kind === "ath") {
+    const distance = ((current - reference) / reference) * 100;
+    // Cas pump : current ≥ ATH (à epsilon près) → badge "Nouveau sommet"
+    if (distance >= -0.5) {
+      return (
+        <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg">
+          <span aria-hidden="true">▲</span>
+          Au sommet
+        </span>
+      );
+    }
+    const abs = Math.abs(distance);
+    // Threshold UX : <10% green, 10-40% warning, >40% danger
+    const palette =
+      abs < 10
+        ? "bg-success-soft border-success-border text-success-fg"
+        : abs < 40
+          ? "bg-warning-soft border-warning-border text-warning-fg"
+          : "bg-danger-soft border-danger-border text-danger-fg";
+    return (
+      <span
+        className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
+        title={`Le prix actuel est à ${distance.toFixed(1)}% de son sommet historique`}
+      >
+        <span aria-hidden="true">▼</span>
+        {distance.toFixed(1)}%
+      </span>
+    );
+  }
+
+  // kind === "atl"
+  const ratio = current / reference;
+  const distance = (ratio - 1) * 100;
+  if (distance <= 0.5) {
+    // Cas crash extrême : current ≤ ATL (à epsilon près)
+    return (
+      <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-danger-soft border border-danger-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-danger-fg">
+        <span aria-hidden="true">▼</span>
+        Au plancher
+      </span>
+    );
+  }
+  // Multiplicateur si > 10x (plus lisible que "+10000%"), % sinon
+  const display = ratio >= 10 ? `×${ratio.toFixed(1)}` : `+${distance.toFixed(0)}%`;
+  return (
+    <span
+      className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg"
+      title={`Le prix actuel est ${ratio.toFixed(1)}× supérieur à son plancher historique`}
+    >
+      <span aria-hidden="true">▲</span>
+      {display}
+    </span>
+  );
+}
+
 function StatCard({
   label,
   sub,
+  badge,
   children,
 }: {
   label: string;
   sub?: string;
+  badge?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -156,6 +265,7 @@ function StatCard({
       {sub && (
         <div className="mt-0.5 text-[11px] text-muted truncate">{sub}</div>
       )}
+      {badge}
     </div>
   );
 }
