@@ -16,6 +16,7 @@
  */
 
 import { ArrowRight } from "lucide-react";
+import { useCallback, useRef } from "react";
 import { getVariant, trackVariantConversion } from "@/lib/abtest";
 
 interface HeroPrimaryCtaProps {
@@ -26,7 +27,19 @@ interface HeroPrimaryCtaProps {
 
 const EXPERIMENT_ID = "hero_headline_v1";
 
+/**
+ * MAJ BATCH 12 (innovation 2026) : ajout effet « magnetic CTA » signature
+ * Awwwards. Le bouton attire la souris dans son rayon ~80px (intensity 0.25).
+ * Désactivé en pointer:coarse (mobile) via .magnetic-cta CSS no-op +
+ * prefers-reduced-motion respecté. Un seul listener pointermove + rAF
+ * throttle = 0 surcharge.
+ */
+const MAGNETIC_INTENSITY = 0.25;
+
 export default function HeroPrimaryCta({ href, label, ariaLabel }: HeroPrimaryCtaProps) {
+  const ctaRef = useRef<HTMLAnchorElement>(null);
+  const rafIdRef = useRef<number | null>(null);
+
   const handleClick = () => {
     // Lecture cookie sans réémettre une exposure — le variant a déjà été assigné
     // par HeroHeadline au mount. Si pas de cookie (cas rare : JS désactivé puis
@@ -36,11 +49,39 @@ export default function HeroPrimaryCta({ href, label, ariaLabel }: HeroPrimaryCt
     trackVariantConversion(EXPERIMENT_ID, variant, "click_pro_cta");
   };
 
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLAnchorElement>) => {
+    if (rafIdRef.current !== null) return;
+    const target = ctaRef.current;
+    if (!target) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    rafIdRef.current = requestAnimationFrame(() => {
+      const rect = target.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (x - cx) * MAGNETIC_INTENSITY;
+      const dy = (y - cy) * MAGNETIC_INTENSITY;
+      target.style.setProperty("--mag-x", `${dx}px`);
+      target.style.setProperty("--mag-y", `${dy}px`);
+      rafIdRef.current = null;
+    });
+  }, []);
+
+  const handlePointerLeave = useCallback(() => {
+    const target = ctaRef.current;
+    if (!target) return;
+    target.style.setProperty("--mag-x", "0px");
+    target.style.setProperty("--mag-y", "0px");
+  }, []);
+
   return (
     <a
+      ref={ctaRef}
       href={href}
       onClick={handleClick}
-      className="btn-primary btn-ripple text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="btn-primary btn-ripple magnetic-cta text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto group/cta"
       aria-label={ariaLabel}
     >
       {label}
