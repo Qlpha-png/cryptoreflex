@@ -267,10 +267,19 @@ async function _fetchHistoricalPrices(
 /**
  * Wrapper caché 1 h — clé = coinId + days.
  * Tag "coingecko-historical" pour invalidation manuelle si besoin.
+ *
+ * BUMP CACHE KEY 2026-05-02 (audit user "bug encore" sur AAVE) :
+ * "coingecko-historical" → "coingecko-historical-v2-cgkey"
+ * Pourquoi : sans la clé Demo CoinGecko, les fetches > 365j retournaient []
+ * et étaient mises en cache pendant 1h. Même après le fix cgHeaders() commit
+ * 118db33, les datasets vides restaient en cache. Bumper la version key
+ * INVALIDE TOUTES les entrées existantes au prochain hit (cold start).
+ * Effet : 1ère visite ROISimulator post-deploy = re-fetch frais avec la clé
+ * Demo, on récupère 5 ans d'historique correctement.
  */
 export const fetchHistoricalPrices = unstable_cache(
   _fetchHistoricalPrices,
-  ["coingecko-historical"],
+  ["coingecko-historical-v2-cgkey"],
   { revalidate: 3600, tags: ["coingecko-historical"] }
 );
 
