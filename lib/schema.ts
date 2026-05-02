@@ -845,14 +845,26 @@ export function newsArticleSchema(article: ArticleFrontmatter): JsonLd {
 /* -------------------------------------------------------------------------- */
 
 export function graphSchema(schemas: JsonLd[]): JsonLd {
+  // BATCH 23 SEO P0 #1 — déduplication par @id pour éviter les doublons
+  // Organization sur les pages où layout.tsx ET la page elle-même injectent
+  // organizationSchema(). Avant : 4× Organization sur home (1 layout + 3
+  // dans articleSchema/breadcrumbSchema imports). Maintenant : 1 seule
+  // occurrence par @id, le 1er gagne. Google parse le graphe propre.
+  const seen = new Set<string>();
+  const dedup: Array<Omit<JsonLd, "@context">> = [];
+  for (const s of schemas) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { "@context": _ctx, ...rest } = s;
+    const id = (rest as { "@id"?: string })["@id"];
+    if (id) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+    }
+    dedup.push(rest);
+  }
   return {
     "@context": "https://schema.org",
-    "@graph": schemas.map((s) => {
-      // retire le @context pour éviter les doublons dans @graph
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { "@context": _ctx, ...rest } = s;
-      return rest;
-    }),
+    "@graph": dedup,
   };
 }
 

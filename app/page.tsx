@@ -57,7 +57,8 @@ export const metadata: Metadata = {
   // utilisait le `default` du root layout (« Cryptoreflex — Comparatifs,
   // guides et outils crypto », 51 chars, aucun keyword "France" ni "MiCA").
   // Maintenant : title explicite ciblé sur la requête principale.
-  title: "Crypto France 2026 — 100 cryptos analysées, plateformes MiCA, outils & IA",
+  // BATCH 23 SEO P0 #2 — title raccourci à 56 chars (avant 80 chars).
+  title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
   description:
     "Plateforme éditoriale et technique crypto FR : 100 cryptos avec score fiabilité, on-chain live et roadmap, comparateur d'exchanges régulés MiCA, simulateurs (DCA, ROI, fiscalité PFU), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique.",
   alternates: { canonical: BRAND.url },

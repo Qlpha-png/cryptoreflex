@@ -47,8 +47,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE =
-  "Comparatifs plateformes crypto 2026 — Coinbase vs Binance, Kraken vs Bitpanda…";
+// BATCH 23 SEO P0 #2 — title raccourci à 53 chars (avant : 97 chars
+// tronqués SERP). Garde le keyword principal "comparatif crypto MiCA".
+const TITLE = "Comparatif plateformes crypto MiCA 2026 — Cryptoreflex";
 const DESCRIPTION =
   "Tous nos comparatifs binaires des plateformes crypto disponibles en France : Coinbase vs Binance, Ledger vs Trezor, Bitpanda vs Trade Republic, OKX vs Binance, et 30+ autres duels. Frais, sécurité, MiCA, verdict.";
 

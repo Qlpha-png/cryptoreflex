@@ -186,9 +186,12 @@ export function generateMetadata({ params }: Props): Metadata {
   const c = getCryptoBySlug(params.slug);
   if (!c) return {};
   const isGem = c.kind === "hidden-gem";
+  // BATCH 23 SEO P0 #2 — titles raccourcis pour rester < 60 chars (avant
+  // certains > 80 chars tronqués SERP). Le pattern "${c.name} ${c.symbol} :
+  // prix, où acheter en France" tient pour les noms < 25 chars.
   const title = isGem
-    ? `${c.name} (${c.symbol}) — Hidden Gem 2026 : prix, fiabilité, où acheter`
-    : `${c.name} (${c.symbol}) — Prix, explication & où acheter en France 2026`;
+    ? `${c.name} (${c.symbol}) — Hidden Gem 2026 | Cryptoreflex`
+    : `${c.name} (${c.symbol}) : prix, où acheter en France 2026`;
   const description = isGem
     ? `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, score de fiabilité, risques, plateformes régulées MiCA pour acheter en France. Analyse Cryptoreflex.`
     : `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, ce que c'est, à quoi ça sert, forces/faiblesses et où acheter en France sur des plateformes régulées MiCA.`;
