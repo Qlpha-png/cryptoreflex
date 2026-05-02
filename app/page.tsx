@@ -16,6 +16,10 @@ import GlobalMetricsBar from "@/components/GlobalMetricsBar";
 import Hero from "@/components/Hero";
 // PriceTicker retiré BATCH 35d (user "enlève ça") — doublon avec MarketTable + /marche
 import ReassuranceSection from "@/components/ReassuranceSection";
+// BATCH 41a — wire Reveal scroll fade-up sur sections home (composant
+// existait mais jamais utilisé). Pattern Anthropic/Linear : sections
+// apparaissent en fade-up quand 15% visible viewport.
+import Reveal from "@/components/ui/Reveal";
 import NewsletterCapture from "@/components/NewsletterCapture";
 // MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
 import BeginnerJourney from "@/components/BeginnerJourney";
@@ -211,7 +215,14 @@ export default async function HomePage() {
         sparklines={heroSparklines}
         updatedAt={updatedAt}
       />
-      <ReassuranceSection />
+      {/* BATCH 41a — Reveal scroll fade-up sur ReassuranceSection (et
+          toutes les sections suivantes via Reveal wrapper). Anim subtle :
+          opacity 0→1 + translate Y 24px→0, easing emphasized 700ms,
+          déclenchée à 15% viewport. prefers-reduced-motion bypass via
+          CSS .reveal class (cf. Reveal.tsx + globals.css). */}
+      <Reveal>
+        <ReassuranceSection />
+      </Reveal>
       {/* BATCH 35d — user feedback "enlève ça" sur NewsBar + PriceTicker.
           On garde uniquement GlobalMetricsBar (Market Cap + F&G + dominance)
           qui apporte de la donnée live unique sans répéter ce qui est déjà
@@ -248,7 +259,9 @@ export default async function HomePage() {
           intro="Tu n'as jamais acheté de crypto ? Suis le parcours en 4 étapes — comprendre, choisir, sécuriser, acheter."
           anchorId="cat-demarrer"
         />
-        <BeginnerJourney />
+        <Reveal>
+          <BeginnerJourney />
+        </Reveal>
       </section>
 
       <CategoryDivider />
@@ -273,7 +286,9 @@ export default async function HomePage() {
             doublon avec PlatformsSection qui a déjà un carousel). Le composant
             reste disponible pour usage ultérieur (footer trust strip, /a-propos).
             PlatformsSection seul = 1 carousel cohérent au lieu de 2 empilés. */}
-        <PlatformsSection />
+        <Reveal>
+          <PlatformsSection />
+        </Reveal>
       </section>
 
       <CategoryDivider />
@@ -295,8 +310,12 @@ export default async function HomePage() {
           ctaLabel="100 cryptos analysées →"
           anchorId="cat-apprendre"
         />
-        <Top10CryptosSection />
-        <BlogPreview />
+        <Reveal>
+          <Top10CryptosSection />
+        </Reveal>
+        <Reveal delay={120}>
+          <BlogPreview />
+        </Reveal>
       </section>
 
       <CategoryDivider />
@@ -337,12 +356,16 @@ export default async function HomePage() {
           ctaLabel="Tous les outils"
           anchorId="cat-outils"
         />
-        <ToolsTeaser />
+        <Reveal>
+          <ToolsTeaser />
+        </Reveal>
         {/* BATCH 26 — MarketTable retiré de la home (data live déjà dans le
             PriceTicker en haut + page dédiée /marche pour aller plus loin).
             Réduction de 1 section (~700px scroll mobile) pour alléger la home
             qui était jugée trop chargée. */}
-        <QuizPromo />
+        <Reveal delay={120}>
+          <QuizPromo />
+        </Reveal>
       </section>
 
       <CategoryDivider />
@@ -366,7 +389,9 @@ export default async function HomePage() {
           intro="Le brief crypto FR du matin, en 3 minutes — les actus qui comptent vraiment, sans hype ni shilling."
           anchorId="cat-informe"
         />
-        <NewsletterCapture />
+        <Reveal>
+          <NewsletterCapture />
+        </Reveal>
       </section>
 
       {/* Guide "main tenue" — feedback utilisateur 26/04/2026 :

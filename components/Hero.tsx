@@ -12,6 +12,10 @@ import HeroHeadline from "@/components/HeroHeadline";
 import HeroPrimaryCta from "@/components/HeroPrimaryCta";
 import HeroKpiGrid from "@/components/HeroKpiGrid";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
+// BATCH 41a — wire les composants WOW créés en BATCH 29-36 mais jamais
+// branchés (Tilt3D 3D parallax + Reveal scroll fade-up). Magnetic est
+// déjà câblé en interne dans HeroPrimaryCta.
+import Tilt3D from "@/components/ui/Tilt3D";
 import type { CoinPrice } from "@/lib/coingecko";
 
 /**
@@ -237,11 +241,16 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               pour 60-70% du trafic FR (mobile). Solution : 2 widgets (compact
               mobile + complet desktop) au lieu d'un seul caché. */}
           <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
-            <HeroLiveWidget
-              prices={prices}
-              sparklines={sparklines}
-              updatedAt={updatedAt}
-            />
+            {/* BATCH 41a — Tilt3D 6° parallax au mouvement souris.
+                Pattern Linear/Cursor.com. Désactivé sur touch + reduced-motion
+                (cf. Tilt3D.tsx). Le widget devient "objet physique" suivable. */}
+            <Tilt3D max={5}>
+              <HeroLiveWidget
+                prices={prices}
+                sparklines={sparklines}
+                updatedAt={updatedAt}
+              />
+            </Tilt3D>
           </div>
         </div>
 
@@ -261,15 +270,18 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
             HeroKpiGrid (client) staggere chaque cellule via Motion (delay = i*0.1s).
             Respect prefers-reduced-motion : voir HeroKpiGrid.tsx. */}
         <div className="mt-10 lg:mt-14 animate-hero-fade-up animate-hero-fade-up-delay-4">
-          {/* BATCH 29A : ajout card-aurora-border (conic gradient gold qui
-              tourne 4s) pour signature visuelle "2026" sur le KPI grid =
-              point focal en bas du hero. */}
-          <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
-            <KpiCell value={STATS.platforms} label="Marques fiables" accent />
-            <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
-            <KpiCell value={STATS.tools} label="Outils gratuits" />
-            <KpiCell text={STATS.method} label="Méthode" />
-          </HeroKpiGrid>
+          {/* BATCH 29A + 41a : card-aurora-border (conic gradient gold rotation
+              4s) + Tilt3D 4° subtle pour signature visuelle "2026". Tilt amplitude
+              4° (vs 5° HeroLiveWidget) car KPI grid est plus large = même angle
+              visuel à l'œil. */}
+          <Tilt3D max={4}>
+            <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
+              <KpiCell value={STATS.platforms} label="Marques fiables" accent />
+              <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
+              <KpiCell value={STATS.tools} label="Outils gratuits" />
+              <KpiCell text={STATS.method} label="Méthode" />
+            </HeroKpiGrid>
+          </Tilt3D>
         </div>
       </div>
 
