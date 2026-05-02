@@ -121,6 +121,12 @@ const MOBILE_EXTRA = [
   { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
   { href: "/calendrier", label: "Calendrier", desc: "Halvings, FOMC, ETF, conférences" },
   { href: "/#cat-apprendre", label: "Top 10 cryptos", desc: "Bitcoin, Ethereum, Solana…" },
+  // BATCH 44a — exposition hubs programmatic orphelins (audit SEO maillage)
+  { href: "/marche", label: "Marché crypto live", desc: "Prix temps réel, dominance, F&G" },
+  { href: "/comparer", label: "Comparer 2 cryptos", desc: "435 duels BTC vs ETH, SOL vs ADA…" },
+  { href: "/historique-prix", label: "Historique prix", desc: "Évolution annuelle des cryptos majeures" },
+  { href: "/alternative-a", label: "Alternatives plateformes", desc: "Migration post-MiCA simplifiée" },
+  { href: "/convertisseur", label: "Convertisseur crypto", desc: "BTC, ETH, SOL en EUR/USD live" },
   { href: "/watchlist", label: "Ma watchlist", desc: "Tes cryptos favorites (10 en Free, illimité en Soutien)" },
   { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi de tes positions (10 en Free, illimité en Soutien)" },
   { href: "/a-propos", label: "À propos", desc: "Qui est derrière Cryptoreflex" },

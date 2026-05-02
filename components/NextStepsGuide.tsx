@@ -173,7 +173,11 @@ const POOL: Record<string, Step> = {
     desc: "Halvings, FOMC, ETF deadlines, conférences — tout au même endroit.",
   },
   newsletter: {
-    href: "#newsletter",
+    // BATCH 44a — fix audit maillage interne : `#newsletter` ne fonctionnait
+    // QUE sur la home (où NewsletterCapture rend l'id). Sur les ~1300 autres
+    // pages où NextStepsGuide est monté, l'ancre cassée provoquait un scroll
+    // no-op. Fix : pointer vers la page dédiée /newsletter (existe).
+    href: "/newsletter",
     Icon: Mail,
     label: "Newsletter quotidienne",
     desc: "1 email matin (3 min) — actu + bonus PDF plateformes crypto FR.",

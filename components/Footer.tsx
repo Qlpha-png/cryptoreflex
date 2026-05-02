@@ -80,6 +80,9 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/quiz/plateforme", label: "Quiz : trouver TA plateforme" },
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
       { href: "/cryptos", label: "100 cryptomonnaies analysées" },
+      // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)
+      { href: "/comparer", label: "Comparer 2 cryptos (435 duels)" },
+      { href: "/marche", label: "Marché crypto en direct" },
       { href: "/marche/heatmap", label: "Heatmap marché crypto" },
     ],
   },
@@ -92,6 +95,8 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/actualites", label: "Actualités crypto FR" },
       { href: "/calendrier", label: "Calendrier crypto (halvings, ETF, FOMC)" },
       { href: "/quiz/crypto", label: "Quiz : quelle crypto pour toi ?" },
+      // BATCH 44a — historique programmatic 240 URLs orphelines
+      { href: "/historique-prix", label: "Historique prix crypto par année" },
     ],
   },
   {
@@ -103,6 +108,9 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/outils/allocator-ia", label: "Allocator IA (nouveau)" },
       { href: "/outils/whale-radar", label: "Whale Radar FR (nouveau)" },
       { href: "/outils/dca-lab", label: "DCA Lab multi-stratégies (nouveau)" },
+      // BATCH 44a — convertisseur + alternative-a programmatic orphelins
+      { href: "/convertisseur", label: "Convertisseur crypto temps réel" },
+      { href: "/alternative-a", label: "Alternatives plateformes (post-MiCA)" },
       { href: "/alertes", label: "Alertes prix crypto" },
       { href: "/watchlist", label: "Ma watchlist" },
       { href: "/portefeuille", label: "Mon portefeuille" },
