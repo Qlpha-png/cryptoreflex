@@ -43,15 +43,37 @@ if (DSN) {
     //  - "AbortError" générique = nos AbortController (cmdk close, AskAI stop,
     //    streamRef abort au unmount). Comportement intentionnel.
     //  - "Failed to fetch" générique = perte connexion mid-fetch. Pas un bug code.
+    // FIX 2026-05-02 audit user (run #2) — l'event Sentry remontait encore
+    // "Failed to fetch (www.cryptoreflex.fr)" malgré le filtre `/^Failed to fetch$/`
+    // car ce regex exige le match EXACT et n'attrapait pas les variantes avec
+    // domaine entre parenthèses. Sentry compare ignoreErrors en substring si
+    // string fournie, en regex test() si regex fournie.
+    // → On utilise des STRINGS (substring) pour les messages "Failed to fetch"
+    // et "AbortError" qui sont systématiquement transient et jamais un vrai
+    // bug code (nos fetches sont tous dans try/catch + cleanup AbortController).
     ignoreErrors: [
       "ResizeObserver loop",
       "Non-Error promise rejection captured",
-      /^Network Error$/,
-      /^AbortError/,
-      /^Failed to fetch$/,
+      "Network Error",
+      "AbortError",
+      "Failed to fetch", // substring : attrape "Failed to fetch", "Failed to fetch (host)", etc.
       "Transition was skipped",
       "Load failed", // Safari équivalent de "Failed to fetch"
       "NetworkError when attempting to fetch",
+      "cancelled", // iOS Safari fetch cancel
+      "The user aborted a request",
+    ],
+
+    // denyUrls : drop les events qui viennent de scripts tiers (extensions
+    // browser, scrapers anti-bot, scripts injectés). Ces errors ne sont JAMAIS
+    // un bug de notre code et polluent Sentry.
+    denyUrls: [
+      /chrome-extension:\/\//i,
+      /moz-extension:\/\//i,
+      /safari-extension:\/\//i,
+      /safari-web-extension:\/\//i,
+      /^app:\/\/\/frame_ant\//i, // anti-bot scanner observé en prod
+      /^app:\/\/\/[^/]*ant[^/]*\.js/i, // variantes
     ],
 
     beforeSend(event) {
