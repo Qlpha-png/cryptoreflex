@@ -124,12 +124,13 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
 
   try {
     const res = await fetch(url, {
-      // ISR-style caching: refresh every 60s on the server.
-      next: { revalidate: 60, tags: [CG_TAGS.prices] },
-      // FIX 2026-05-02 audit user — bug ROI/historical : sans cgHeaders(),
-      // free tier CoinGecko rate-limit erratique 5-15 req/min → fetchPrices
-      // pouvait faillir et trigger le fallback graceful. Maintenant la clé
-      // Demo (configurée mai 2026) stabilise à 30 req/min.
+      // BATCH 50 (2026-05-03) URGENT — CoinGecko free plan EPUISE
+      // (10K req/mois quota atteint). Bumpe revalidate 60s -> 300s
+      // (5 min) pour reduire consumption x5. UX impact minimal :
+      // utilisateurs voient des prix "vieux" de 5min max au lieu de
+      // 1min. Acceptable pour un site educatif crypto FR (pas du
+      // trading high-freq).
+      next: { revalidate: 300, tags: [CG_TAGS.prices] },
       headers: cgHeaders(),
     });
 
@@ -179,7 +180,8 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
 export const fetchPrices = unstable_cache(
   async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
   ["coingecko-prices-v1"],
-  { revalidate: 60, tags: [CG_TAGS.prices] }
+  // BATCH 50 — 60s -> 300s (5 min). Cohence avec le revalidate fetch interne.
+  { revalidate: 300, tags: [CG_TAGS.prices] }
 );
 
 /**
@@ -199,7 +201,9 @@ async function _fetchPricesWithSparkline(
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=true&price_change_percentage=24h`;
   try {
     const res = await fetchWithRetry(url, {
-      next: { revalidate: 60, tags: [CG_TAGS.prices] },
+      // BATCH 50 — 60s -> 600s (10 min). Sparkline 7d = 168 pts, payload
+      // ~1KB/coin, peut etre cache plus longtemps que les prix simples.
+      next: { revalidate: 600, tags: [CG_TAGS.prices] },
       headers: cgHeaders(),
     });
     if (!res.ok) throw new Error(`CoinGecko prices+spk ${res.status}`);
@@ -241,7 +245,8 @@ async function _fetchPricesWithSparkline(
 export const fetchPricesWithSparkline = unstable_cache(
   async (ids: string[]) => _fetchPricesWithSparkline(ids),
   ["coingecko-prices-sparkline-v1"],
-  { revalidate: 60, tags: [CG_TAGS.prices] }
+  // BATCH 50 — 60s -> 600s (10 min)
+  { revalidate: 600, tags: [CG_TAGS.prices] }
 );
 
 export function formatUsd(value: number): string {
@@ -281,7 +286,9 @@ export interface GlobalMetrics {
 async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
   try {
     const res = await fetch(`${COINGECKO_BASE}/global`, {
-      next: { revalidate: 300, tags: [CG_TAGS.global] }, // 5 min
+      // BATCH 50 — 300s -> 1800s (30 min). Global metrics (market cap
+      // total, BTC dominance) ne bougent quasi pas en 30min, OK.
+      next: { revalidate: 1800, tags: [CG_TAGS.global] },
       headers: cgHeaders(),
     });
     if (!res.ok) throw new Error(`CoinGecko global ${res.status}`);
@@ -303,7 +310,8 @@ async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
 export const fetchGlobalMetrics = unstable_cache(
   _fetchGlobalMetrics,
   ["coingecko-global-v1"],
-  { revalidate: 300, tags: [CG_TAGS.global] }
+  // BATCH 50 — 300s -> 1800s (30 min)
+  { revalidate: 1800, tags: [CG_TAGS.global] }
 );
 
 export interface FearGreedData {
@@ -378,7 +386,10 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
   try {
     const res = await fetch(url, {
-      next: { revalidate: 120, tags: [CG_TAGS.market] },
+      // BATCH 50 — 120s -> 600s (10 min). Top market table = donnees
+      // riches (sparkline 7d, 1h/24h/7d changes), payload lourd, OK
+      // pour cache 10 min sur un site educatif.
+      next: { revalidate: 600, tags: [CG_TAGS.market] },
       headers: cgHeaders(),
     });
     if (!res.ok) throw new Error(`CoinGecko markets ${res.status}`);
@@ -431,7 +442,8 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
 const _cachedFetchTopMarket = unstable_cache(
   async (limit = 20) => _fetchTopMarket(limit),
   ["coingecko-top-market-v2"],
-  { revalidate: 120, tags: [CG_TAGS.market] }
+  // BATCH 50 — 120s -> 600s (10 min). Reduction x5 consumption.
+  { revalidate: 600, tags: [CG_TAGS.market] }
 );
 
 export async function fetchTopMarket(limit = 20): Promise<MarketCoin[]> {
@@ -601,9 +613,10 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
     // Solution : retry exponentiel sur 429 + headers x-cg-demo-api-key si défini
     // + bypass cache du `null` (cf. wrapper fetchCoinDetail plus bas).
     const res = await fetchWithRetry(url, {
-      // Tag granulaire (#12 ETUDE-2026-05-02) : `coingecko:crypto:<id>` permet
-      // de bust UNE fiche sans toucher à tout `coingecko:market` (top 20).
-      next: { revalidate: 300, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
+      // BATCH 50 — 300s -> 1800s (30 min). Avec 100 fiches /cryptos/[slug]
+      // sur free plan = consumption insoutenable. 30min reste acceptable
+      // pour des donnees enrichies (ATH, supply) qui bougent rarement.
+      next: { revalidate: 1800, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
       headers: cgHeaders(),
     });
     if (!res.ok) {
@@ -698,7 +711,8 @@ function getCachedCoinDetailFn(
       return result;
     },
     ["coingecko-coin-detail-v2", coingeckoId],
-    { revalidate: 300, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
+    // BATCH 50 — 300s -> 1800s (30 min)
+    { revalidate: 1800, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
   );
   _coinDetailCacheRegistry.set(coingeckoId, fn);
   return fn;
