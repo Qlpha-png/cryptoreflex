@@ -40,6 +40,8 @@ import {
   useState,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
+// BATCH 53 — wallet-aware safe navigation (cf. bug clic eth/sol/sui/aptos/dot)
+import { safeNavigate } from "@/lib/safe-navigate";
 import { Command } from "cmdk";
 import Fuse from "fuse.js";
 import {
@@ -311,7 +313,9 @@ export default function CommandPalette() {
   const goSearch = useCallback(
     (item: SearchItem) => {
       close();
-      router.push(item.url);
+      // BATCH 53 — bypass router.push si wallet extension detectee
+      // (silent fail sur fiches /cryptos/[eth|sol|sui|aptos|polkadot])
+      safeNavigate(router, item.url);
     },
     [router, close]
   );
@@ -472,8 +476,10 @@ export default function CommandPalette() {
                   type="button"
                   onClick={() => {
                     close();
-                    router.push(
-                      `/recherche?q=${encodeURIComponent(query.trim())}`
+                    // BATCH 53 — wallet-aware safe nav
+                    safeNavigate(
+                      router,
+                      `/recherche?q=${encodeURIComponent(query.trim())}`,
                     );
                   }}
                   className="mt-3 inline-flex items-center gap-1.5 text-sm text-amber-300 hover:text-amber-200 underline-offset-4 hover:underline"

@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { safeNavigate } from "@/lib/safe-navigate";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle } from "lucide-react";
 import type { Lesson, TrackId } from "@/lib/academy-tracks";
 import {
@@ -65,10 +66,11 @@ export default function LessonNavigator({
       setIsComplete(true);
     }
     if (next) {
-      router.push(`/academie/${trackId}/${next.articleSlug}`);
+      // BATCH 53 — wallet-aware safe nav (cf. lib/safe-navigate.ts)
+      safeNavigate(router, `/academie/${trackId}/${next.articleSlug}`);
     } else {
       // Dernière leçon → renvoie vers le quiz
-      router.push(`/academie/${trackId}/quiz`);
+      safeNavigate(router, `/academie/${trackId}/quiz`);
     }
   }
 

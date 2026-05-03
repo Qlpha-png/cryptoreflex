@@ -2,6 +2,7 @@
 
 import { useState, useTransition, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { safeNavigate } from "@/lib/safe-navigate";
 import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { submitAmbassadeur, type FormResult } from "@/lib/partnership-forms";
@@ -46,7 +47,8 @@ export default function AmbassadeurForm() {
         form.reset();
         // Redirect vers la page merci pour faciliter le tracking conversion
         // (analytics event "ambassadeur_apply_submit" déclenché côté merci).
-        router.push("/ambassadeurs/merci");
+        // BATCH 53 — wallet-aware safe nav
+        safeNavigate(router, "/ambassadeurs/merci");
       }
     });
   }
