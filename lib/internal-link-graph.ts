@@ -238,6 +238,16 @@ const PROGRAMMATIC_PREFIX_TO_CLUSTER: Array<{ prefix: string; clusterId: string 
   { prefix: "/academie/", clusterId: "comprendre" },
   { prefix: "/wizard/", clusterId: "acheter" },
   { prefix: "/quiz/", clusterId: "acheter" },
+  // BATCH 44c (2026-05-03) — extension pour les 4 hubs creates en BATCH 44b
+  // qui exposent 700+ URLs orphelines. Sans ces entries, les pages
+  // /historique-prix/[crypto]/[annee], /alternative-a/[plateforme],
+  // /vs/[a]/[b] tombaient dans le fallback "page orpheline" qui ne
+  // retournait que les hubs principaux. Maintenant : RelatedPagesNav
+  // recommande les pages du cluster semantique parent (marche pour
+  // historique/prix/vs, mica pour alternative car migration MiCA Phase 2).
+  { prefix: "/historique-prix/", clusterId: "marche" }, // 240 URLs annuelles
+  { prefix: "/alternative-a/", clusterId: "mica" },     // 34 plateformes alternatives MiCA
+  // /vs/ deja present plus haut (couvre /vs/[a]/[b] = 435 URLs)
 ];
 
 /**

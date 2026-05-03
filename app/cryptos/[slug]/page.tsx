@@ -6,6 +6,7 @@ import {
   XCircle,
   AlertTriangle,
   Activity,
+  ArrowRight,
   ExternalLink,
   ShieldCheck,
   Sparkles,
@@ -938,6 +939,35 @@ export default async function CryptoPage({ params }: Props) {
             </section>
           );
         })()}
+
+        {/* BATCH 48c (audit /cryptos punch list) — cross-link explicite
+            CTA "Guide acheter en France" vers la sous-route dediee
+            /cryptos/{slug}/acheter-en-france (3 etapes + plateformes +
+            paiement + fiscalite). Avant : juste linke en sitemap, mid-
+            funnel transactionnel sous-utilise. Maintenant : CTA bouton
+            visible avant la grille des 6 pays. View Transition + magnetic
+            ring pulse pour conversion-critical. */}
+        <section className="mt-12 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background p-5 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-xl font-bold text-fg flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+                Tu veux acheter {c.name} en France ?
+              </h2>
+              <p className="mt-1 text-sm text-muted">
+                Guide complet : 3 étapes, plateformes régulées MiCA, moyens de paiement, fiscalité PFU 30 %.
+              </p>
+            </div>
+            <Link
+              href={`/cryptos/${c.id}/acheter-en-france`}
+              className="partner-cta-pulse btn-primary-shine inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-background hover:bg-primary/90 transition-colors shrink-0"
+              aria-label={`Lire le guide complet pour acheter ${c.name} en France`}
+            >
+              Lire le guide
+              <ArrowRight className="h-4 w-4 arrow-spring" aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
 
         {/* ACHETER DANS TON PAYS (Programmatic SEO #8) — 6 liens vers
             /acheter/{slug}/{country} pour chaque pays FR-speaking. */}

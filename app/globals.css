@@ -894,6 +894,72 @@ body {
 }
 
 /* ============================================================
+ * BATCH 48b — @starting-style sur tous les <details> du site
+ * (FAQ, accordions, drawers natifs).
+ *
+ * Avant : <details open> apparait en SNAP brutal (display block
+ * instant). UX cheap/old.
+ *
+ * Maintenant : opening anime un fade+slide-down 240ms cubic-bezier
+ * emphasized. Closing anime aussi. Geres via @starting-style +
+ * interpolate-size: allow-keywords (Chrome 129+) pour transition
+ * sur height: auto.
+ *
+ * Fallback : navigateurs anciens (Safari < 17.5, Firefox < 129)
+ * ignorent et gardent le snap natif. Aucune regression.
+ *
+ * Selecteur : .faq-smooth pour opt-in (evite collisions avec les
+ * <details> sans transition desiree, ex: dans un widget tiers).
+ * Applique automatiquement aux details globaux du domain de marque
+ * via attribute selector ou opt-in class.
+ * ============================================================ */
+/* GLOBAL — applique a tous les <details> du site sauf opt-out via
+   .no-smooth. Strategy : fallback gracieux par defaut (snap natif),
+   transition smooth uniquement si interpolate-size supporte (Chrome
+   129+). 40+ fichiers utilisent <details>, on evite refactor manuel. */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details:not(.no-smooth) > *:not(summary) {
+    interpolate-size: allow-keywords;
+    overflow: hidden;
+    height: auto;
+    transition: height 240ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 200ms ease,
+                content-visibility 240ms allow-discrete;
+  }
+  details:not(.no-smooth):not([open]) > *:not(summary) {
+    height: 0;
+    opacity: 0;
+  }
+  @starting-style {
+    details:not(.no-smooth)[open] > *:not(summary) {
+      height: 0;
+      opacity: 0;
+    }
+  }
+}
+/* Fallback : fade-in pur sur l'ouverture (Safari/Firefox sans
+   interpolate-size). Le snap height reste natif mais le contenu
+   fade in 200ms = transition perceptible. */
+@supports not (interpolate-size: allow-keywords) {
+  details:not(.no-smooth)[open] > *:not(summary) {
+    animation: faq-fade-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes faq-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  details > *:not(summary) {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============================================================
  * BATCH 41d — Tech 2026 layer final
  * Container queries + :has() + color-mix() + text-wrap + Popover
  * Toutes ces APIs ont @supports guard pour fallback graceful.
@@ -2219,6 +2285,36 @@ h1, h2, h3 {
   }
   @keyframes scroll-reveal-frames {
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* BATCH 48b — count-up scroll-driven natif via @property + view().
+     Avant : AnimatedStat.tsx fait un IntersectionObserver + setInterval
+     pour animer un compteur de 0 à N (~2KB JS, 60 fps mais main thread).
+     Maintenant : count-up purement CSS, GPU-accelerated, 0 JS, 60fps natif.
+     Usage : <span className="count-up-native" style={{'--n': 100}}>100</span>
+     Le compteur va de 0 à --n quand l'element entre dans le viewport. */
+  @property --count-num {
+    syntax: "<integer>";
+    inherits: false;
+    initial-value: 0;
+  }
+  .count-up-native {
+    counter-reset: count-up var(--count-num, 0);
+    animation: count-up-anim linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 35%;
+  }
+  .count-up-native::after {
+    content: counter(count-up);
+  }
+  @keyframes count-up-anim {
+    to { --count-num: var(--n, 100); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .count-up-native {
+    animation: none !important;
+    --count-num: var(--n, 100) !important;
   }
 }
 
