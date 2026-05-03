@@ -68,7 +68,7 @@ export default function NewsCard({ news }: Props) {
           Cohérent avec ce que voient les users qui partagent l'article (meme image). */}
       <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
         <img
-          src={`/actualites/${news.slug}/opengraph-image`}
+          src={`/actualites/${news.slug}/opengraph-image?v=${news.date}`}
           alt={`Cover : ${news.title}`}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
           loading="lazy"

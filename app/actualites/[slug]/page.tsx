@@ -236,7 +236,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
           <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-elevated aspect-[1200/630]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={news.image || `/actualites/${news.slug}/opengraph-image`}
+              src={news.image || `/actualites/${news.slug}/opengraph-image?v=${news.date}`}
               alt={`Cover : ${news.title}`}
               loading="eager"
               fetchPriority="high"

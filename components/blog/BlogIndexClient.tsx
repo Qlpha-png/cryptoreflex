@@ -262,7 +262,7 @@ export default function BlogIndexClient({ articles, categories }: Props) {
                   + loading="eager" pour les premiers visibles + lazy pour le reste. */}
               <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
                 <img
-                  src={`/blog/${a.slug}/opengraph-image`}
+                  src={`/blog/${a.slug}/opengraph-image?v=${a.lastUpdated || a.date}`}
                   alt={`Cover : ${a.title}`}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
                   loading="lazy"

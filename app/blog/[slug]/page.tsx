@@ -333,7 +333,7 @@ export default async function BlogArticlePage({ params }: Props) {
                     placeholder CSS, coherent avec preview cards (BATCH 56#11). */}
                 <div className="mt-8 rounded-2xl overflow-hidden bg-elevated aspect-[1200/630]">
                   <img
-                    src={`/blog/${article.slug}/opengraph-image`}
+                    src={`/blog/${article.slug}/opengraph-image?v=${article.lastUpdated || article.date}`}
                     alt={`Cover : ${article.title}`}
                     className="w-full h-full object-cover"
                     loading="eager"

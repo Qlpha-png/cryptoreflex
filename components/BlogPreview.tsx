@@ -195,7 +195,7 @@ export default async function BlogPreview() {
                         HTTP 200 OK confirme + Cache 1 an immutable. */}
                     <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
                       <img
-                        src={`/blog/${article.slug}/opengraph-image`}
+                        src={`/blog/${article.slug}/opengraph-image?v=${article.lastUpdated || article.date}`}
                         alt={`Cover : ${article.title}`}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
                         loading="lazy"
