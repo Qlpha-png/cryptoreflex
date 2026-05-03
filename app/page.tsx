@@ -334,7 +334,11 @@ export default async function HomePage() {
           intro="Les news crypto qui comptent vraiment + les events à ne pas rater (halvings, FOMC, ETF deadlines)."
           anchorId="cat-actu"
         />
-        <TodaysNewsAndEvents />
+        {/* BATCH 56 BISECTION TEMP — desactive TodaysNewsAndEvents pour
+            isoler la cause du React #425 home. Si le bug disparait, c'est
+            que NewsRelativeTime/EventCountdown sentinel patches BATCH 55
+            insuffisants. Sinon, le composant fautif est ailleurs. */}
+        {/* <TodaysNewsAndEvents /> */}
       </section>
 
       <CategoryDivider />
