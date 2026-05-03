@@ -23,8 +23,12 @@ import { unstable_cache } from "next/cache";
 
 export interface ArticleFrontmatter {
   title: string;
+  /** Title optimise pour SERP (<60 chars). Fallback : title si absent. */
+  metaTitle?: string;
   slug: string;
   description: string;
+  /** Description optimisee pour SERP (<155 chars). Fallback : description. */
+  metaDescription?: string;
   category: string;
   date: string;            // ISO "2026-04-25"
   lastUpdated: string;     // ISO — fallback = date
@@ -145,8 +149,10 @@ function normalizeFrontmatter(
 
   return {
     title: String(raw.title ?? slug),
+    metaTitle: raw.metaTitle ? String(raw.metaTitle) : undefined,
     slug,
     description: String(description),
+    metaDescription: raw.metaDescription ? String(raw.metaDescription) : undefined,
     category: String(raw.category ?? "Crypto"),
     date,
     lastUpdated,

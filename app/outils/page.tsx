@@ -40,20 +40,18 @@ import Tilt3D from "@/components/ui/Tilt3D";
 // Ne refactor pas le hub server : agit sur le DOM via data-* attributs.
 import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 
+// AUDIT 2026-05-03 — chiffres outils alignes au reel (28 = TOOLS.length actuel).
+// Avant : 26 hardcoded en title/desc/og/twitter alors que TOOLS array = 28 entries
+// (23 free + 5 pro). Le badge "28 outils" / stat "23 + 5 = 28" etait incoherent
+// avec le SEO meta "26". Maintenant : 28 partout. Layout root applique deja
+// '%s | Cryptoreflex' donc le suffix manuel est retire (evite doublon).
 export const metadata: Metadata = {
-  // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand + alignement
-  // chiffres (26 outils dédiés /outils/* + 2 cross-links comparateur/cryptos
-  // = 28 entries TOOLS array, on annonce 26 = chiffre conservateur honnête).
-  title: "Outils crypto FR 2026 — 26 calculateurs gratuits + IA | Cryptoreflex",
+  title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
   description:
-    "26 outils crypto FR gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
+    "28 outils crypto FR : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
-  // BATCH 45a (audit /outils P0 SEO) — ajout openGraph + twitter pour
-  // partage Discord/Twitter/LinkedIn avec preview riche. Reuse l'image OG
-  // generee dynamiquement par app/opengraph-image.tsx (root) qui supporte
-  // template fallback. Pour customiser, creer app/outils/opengraph-image.tsx.
   openGraph: {
-    title: "26 outils crypto FR gratuits — Cryptoreflex",
+    title: "28 outils crypto FR gratuits — Cryptoreflex",
     description:
       "Calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
     url: "https://www.cryptoreflex.fr/outils",
@@ -61,7 +59,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "26 outils crypto FR gratuits — Cryptoreflex",
+    title: "28 outils crypto FR gratuits — Cryptoreflex",
     description:
       "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
   },

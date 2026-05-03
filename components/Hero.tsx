@@ -100,7 +100,7 @@ interface HeroProps {
 const STATS = {
   platforms: 34,
   cryptos: 100,
-  tools: 26,
+  tools: 28,
   method: "Publique",
 } as const;
 

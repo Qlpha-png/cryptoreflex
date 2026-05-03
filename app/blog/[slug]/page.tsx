@@ -53,29 +53,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `${BRAND.url}/blog/${article.slug}`;
   const author = getAuthorByIdOrDefault(article.author);
 
+  // AUDIT 2026-05-03 — preference metaTitle/metaDescription pour SERP (<60/<155
+  // chars) avec fallback titre/description complet pour le rendu page.
+  const seoTitle = article.metaTitle || article.title;
+  const seoDescription = article.metaDescription || article.description;
+  // og:image fallback sur l'OG image dynamique generee par Next.js
+  // (/blog/[slug]/opengraph-image) si pas de cover MDX explicite.
+  const ogImageUrl = article.cover || `${url}/opengraph-image`;
+
   return {
-    title: article.title,
-    description: article.description,
+    title: seoTitle,
+    description: seoDescription,
     keywords: article.keywords,
     alternates: { canonical: url },
     authors: [{ name: author.name, url: `/auteur/${author.id}` }],
     openGraph: {
       type: "article",
       url,
-      title: article.title,
-      description: article.description,
+      title: seoTitle,
+      description: seoDescription,
       publishedTime: article.date,
       modifiedTime: article.lastUpdated,
       authors: [`/auteur/${author.id}`],
       tags: article.keywords,
       siteName: BRAND.name,
       locale: "fr_FR",
-      images: article.cover ? [{ url: article.cover }] : undefined,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: article.title }],
     },
     twitter: {
       card: "summary_large_image",
-      title: article.title,
-      description: article.description,
+      title: seoTitle,
+      description: seoDescription,
+      images: [ogImageUrl],
     },
   };
 }

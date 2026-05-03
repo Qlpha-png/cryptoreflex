@@ -225,21 +225,34 @@ export function generateMetadata({ params }: Props): Metadata {
   // BATCH 23 SEO P0 #2 — titles raccourcis pour rester < 60 chars (avant
   // certains > 80 chars tronqués SERP). Le pattern "${c.name} ${c.symbol} :
   // prix, où acheter en France" tient pour les noms < 25 chars.
+  // AUDIT 2026-05-03 — fix doublon "| Cryptoreflex" sur les hidden gems
+  // (root layout applique deja template). Et ajout twitter card explicite
+  // pour eviter le fallback global generique (les 100 fiches /cryptos
+  // affichaient le tweet "Cryptoreflex — Tout pour investir..." au lieu
+  // du contenu specifique a la crypto).
   const title = isGem
-    ? `${c.name} (${c.symbol}) — Hidden Gem 2026 | Cryptoreflex`
+    ? `${c.name} (${c.symbol}) — Hidden Gem 2026`
     : `${c.name} (${c.symbol}) : prix, où acheter en France 2026`;
   const description = isGem
     ? `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, score de fiabilité, risques, plateformes régulées MiCA pour acheter en France. Analyse Cryptoreflex.`
     : `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, ce que c'est, à quoi ça sert, forces/faiblesses et où acheter en France sur des plateformes régulées MiCA.`;
+  const url = `${BRAND.url}/cryptos/${c.id}`;
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/cryptos/${c.id}` },
+    alternates: { canonical: url },
     openGraph: {
       title,
       description,
-      url: `${BRAND.url}/cryptos/${c.id}`,
+      url,
       type: "article",
+      images: [{ url: `${url}/opengraph-image`, width: 1200, height: 630, alt: `${c.name} (${c.symbol})` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${url}/opengraph-image`],
     },
   };
 }
