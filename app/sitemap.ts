@@ -214,17 +214,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   /* ----------------------------------------------------------------
-   * 3bis. Programmatic crypto-vs-crypto (105 paires top 15)
-   *      Différencié de /comparatif (plateformes) & /cryptos/comparer (dyn).
+   * 3bis. /comparer/[slug] LEGACY — BATCH 59 redirect 301 vers /vs/[a]/[b]
+   *
+   * Avant : 105 URLs /comparer/{a}-vs-{b} indexees independamment.
+   * Maintenant : ces URLs redirigent (canonical /vs/), donc on RETIRE du
+   * sitemap pour ne pas faire crawler des redirects par Google. Les vrais
+   * URLs canoniques /vs/[a]/[b] sont listees plus bas (4950 entries).
+   *
+   * Note : on garde getAllCryptoComparisonSlugs() referencee dans le code
+   * pour generateStaticParams (105 paires pre-build = 105 redirect cache).
    * ---------------------------------------------------------------- */
-  const cryptoComparisonRoutes: MetadataRoute.Sitemap = getAllCryptoComparisonSlugs().map(
-    (slug) => ({
-      url: `${SITE_URL}/comparer/${slug}`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.65,
-    }),
-  );
+  const cryptoComparisonRoutes: MetadataRoute.Sitemap = [];
 
   /* ----------------------------------------------------------------
    * 3ter. Programmatic SEO massif (BATCH 58 — etendu top 30 -> top 100) :

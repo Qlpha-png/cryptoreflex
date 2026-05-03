@@ -7,12 +7,20 @@ import {
 } from "@/lib/crypto-comparisons";
 import { getCryptoBySlug } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
+
+// BATCH 59 — extension hub /comparer pour refleter 4950 duels (vs 105 avant).
+// Chiffres calcules dynamiquement depuis getAllCryptoComparisons() pour eviter
+// une fois de plus le drift (cf. P0 #5 audit BATCH 57).
+const TOTAL_DUELS = (() => {
+  const n = COMPARABLE_CRYPTO_IDS.length;
+  return (n * (n - 1)) / 2;
+})();
 
 export const metadata: Metadata = {
-  title: "Comparer 2 cryptos — 105 duels analysés (Bitcoin vs Ethereum, Solana vs Cardano…)",
-  description:
-    "105 comparatifs crypto-vs-crypto entre les top 15 (BTC, ETH, BNB, XRP, SOL, ADA, DOGE, TRX, AVAX, LINK, DOT, ATOM, MATIC, LTC, NEAR). Tableau side-by-side, cas d'usage, où acheter en France.",
-  alternates: { canonical: `${BRAND.url}/comparer` },
+  title: `Comparer 2 cryptos — ${TOTAL_DUELS} duels analyses (BTC vs ETH, SOL vs ADA, etc.)`,
+  description: `${TOTAL_DUELS} comparatifs crypto-vs-crypto entre 100 cryptos analysees (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, methodologie publique Cryptoreflex.`,
+  alternates: withHreflang(`${BRAND.url}/comparer`),
   robots: { index: true, follow: true },
 };
 
@@ -40,9 +48,9 @@ export default function ComparerHubPage() {
             Comparer <span className="gradient-text">2 cryptos</span> face à face
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{all.length} duels</strong> entre les 15 cryptos les plus
-            recherchées en France. Tableau side-by-side : ancienneté, cas d&apos;usage, type,
-            disponibilité MiCA, FAQ. Pas de prix targets — méthodologie publique Cryptoreflex.
+            <strong className="text-fg">{all.length} duels</strong> entre les 100 cryptos analysees
+            (10 top + 90 hidden gems). Tableau side-by-side : ancienneté, cas d&apos;usage, type,
+            disponibilité MiCA, FAQ contextuelle, verdict par profil. Méthodologie publique Cryptoreflex.
           </p>
         </header>
 
@@ -54,7 +62,10 @@ export default function ComparerHubPage() {
           .
         </p>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* BATCH 59 — vu 100 cryptos => 100 cards, on resserre la grille a 4 colonnes
+            sur xl pour tenir dans le viewport. Chaque card a une scrollable list
+            interne (max-h-72) pour les 99 autres comparatifs. */}
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {grouped.map(({ crypto, matches }) => (
             <div key={crypto.id} className="rounded-2xl border border-border bg-surface p-5">
               <h2 className="text-base font-bold text-fg flex items-center gap-2">
@@ -64,22 +75,19 @@ export default function ComparerHubPage() {
               <p className="mt-1 text-xs text-muted">
                 {matches.length} comparatifs
               </p>
-              {/* FIX SEO 2026-05-02 #7 (audit interne) — avant : `slice(0,5)`
-                  cachait 350+ liens internes (5 affichés vs ~15 disponibles
-                  par crypto sur 435 paires). Désormais : tous les matches
-                  visibles, l'utilisateur scrollera dans la card si besoin
-                  (max-h + overflow). Booste maillage interne SEO de manière
-                  drastique : sortie de l'orphelinat de toutes les paires
-                  /comparer/<a>/<b> non reliées. */}
-              <ul className="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-2">
+              <ul className="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-2 scrollbar-thin">
                 {matches.map((m) => {
                   const otherId = m.a === crypto.id ? m.b : m.a;
                   const other = getCryptoBySlug(otherId);
                   if (!other) return null;
+                  // BATCH 59 — links pointent vers /vs/[a]/[b] (canonical URL)
+                  // au lieu de /comparer/[slug] (legacy redirect 301).
+                  // Evite chaine de redirects pour les visiteurs + crawlers.
+                  const [vsA, vsB] = [m.a, m.b].sort();
                   return (
                     <li key={m.slug}>
                       <Link
-                        href={`/comparer/${m.slug}`}
+                        href={`/vs/${vsA}/${vsB}`}
                         className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
                       >
                         vs {other.name}

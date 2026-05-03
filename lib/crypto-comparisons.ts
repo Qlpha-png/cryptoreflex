@@ -4,40 +4,30 @@
  * COMPLÉMENTAIRE (pas doublon) à :
  *   - /comparatif/[slug]     = duels PLATEFORMES (Coinbase vs Binance, etc.)
  *   - /cryptos/comparer?ids= = comparateur DYNAMIQUE custom 2-4 cryptos (noindex)
+ *   - /vs/[a]/[b]            = path-based version (BATCH 58 — 4950 paires)
  *
- * Ce module crée /comparer/[a-vs-b] pour les CRYPTOS (BTC vs ETH, etc.).
- * Top 15 cryptos sélectionnées → 15×14/2 = 105 URLs max (gérable, pas thin).
+ * Ce module cree /comparer/[a-vs-b] pour les CRYPTOS (BTC vs ETH, etc.).
+ * BATCH 59 (2026-05-03) — etendu de 15 (105 duels) a 100 cryptos (4950 duels)
+ * pour profiter du SEO programmatic massif demande par l'utilisateur.
  *
- * Slug canonique : `${a}-vs-${b}` avec a < b alphabétiquement.
- * Si l'utilisateur arrive sur l'inverse → middleware peut redirect (out of scope).
+ * Slug canonique : `${a}-vs-${b}` avec a < b alphabetiquement.
+ * Si l'utilisateur arrive sur l'inverse -> middleware peut redirect.
  */
 
 import { getCryptoBySlug, getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 
 /**
- * Top 15 cryptos par notoriété FR + intent commercial fort sur "X vs Y".
- * Liste éditoriale (pas auto-générée depuis les 100) pour garantir la qualité
- * du contenu : ces 15 sont les plus recherchées en France sur des comparatifs.
+ * BATCH 59 — etendu de 15 a 100 cryptos = 4950 duels uniques.
+ * IDs derives dynamiquement de getAllCryptos() (top10 + 90 hidden gems).
+ *
+ * Source unique de verite : data/top-cryptos.json + data/hidden-gems.json.
+ * Pour exclure une crypto specifique des comparaisons, retirer du JSON.
  */
-export const COMPARABLE_CRYPTO_IDS = [
-  "bitcoin",
-  "ethereum",
-  "bnb",
-  "xrp",
-  "solana",
-  "cardano",
-  "dogecoin",
-  "tron",
-  "avalanche",
-  "chainlink",
-  "polkadot",
-  "cosmos",
-  "polygon",
-  "litecoin",
-  "near-protocol",
-] as const;
+export const COMPARABLE_CRYPTO_IDS: readonly string[] = (() => {
+  return getAllCryptos().slice(0, 100).map((c) => c.id);
+})();
 
-export type ComparableCryptoId = (typeof COMPARABLE_CRYPTO_IDS)[number];
+export type ComparableCryptoId = string;
 
 export interface CryptoComparison {
   slug: string;
@@ -67,7 +57,7 @@ export function parseCryptoComparisonSlug(slug: string): { a: string; b: string 
  * Génère TOUTES les paires uniques depuis COMPARABLE_CRYPTO_IDS.
  * Utilisé par generateStaticParams + sitemap.
  *
- * Math : C(15,2) = 105 paires.
+ * BATCH 59 — Math : C(100,2) = 4950 paires (vs 105 a 15 cryptos).
  */
 export function getAllCryptoComparisons(): CryptoComparison[] {
   const result: CryptoComparison[] = [];
