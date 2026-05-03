@@ -266,6 +266,16 @@ export default function RootLayout({
     <html
       lang="fr"
       className={`${inter.variable} ${mono.variable} ${display.variable}`}
+      // BATCH 44f (2026-05-03) — fix bug clic mort sur fiches crypto dont le
+      // nom matche une wallet extension (ETH=MetaMask, SOL=Phantom). L'extension
+      // injecte un <script> dans <html>/<body> pendant l'hydration React, ce
+      // qui provoque un mismatch DOM -> React abort hydration -> tous les
+      // <Link> Next.js perdent leur onClick router.push (preventDefault appele
+      // mais nav silencieusement avortee). Reproduction Chrome MCP confirmee :
+      // /cryptos/ethereum + /cryptos/solana KO, /cryptos/bitcoin + /xrp OK.
+      // suppressHydrationWarning ici + sur <body> = React tolere les attrs
+      // injectees par extensions, hydration completee = onClick fonctionne.
+      suppressHydrationWarning
     >
       <head>
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
@@ -284,7 +294,12 @@ export default function RootLayout({
             pour une expérience native-app. Fallback gracieux Safari/Firefox. */}
         <SpeculationRules />
       </head>
-      <body className="min-h-screen flex flex-col antialiased font-sans">
+      <body
+        className="min-h-screen flex flex-col antialiased font-sans"
+        // BATCH 44f — voir commentaire <html suppressHydrationWarning>. Same
+        // raison : MetaMask/Phantom injectent dans <body> directement.
+        suppressHydrationWarning
+      >
         {/*
           JSON-LD global — Organization (Knowledge Panel) + WebSite (sitelinks
           search box). Injecté DANS body en premier élément pour être détecté
