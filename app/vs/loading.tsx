@@ -1,5 +1,5 @@
 /**
- * BATCH 53 — Suspense skeleton pour /vs (435 duels crypto-vs-crypto).
+ * BATCH 53 — Suspense skeleton pour /vs (4950 duels crypto-vs-crypto).
  */
 export default function VsLoading() {
   return (

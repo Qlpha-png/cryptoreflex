@@ -19,7 +19,7 @@ import { getCryptoPairs } from "@/lib/programmatic-pages";
 
 const PAGE_TITLE = "Duels crypto-vs-crypto — 435 paires comparées | Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Compare 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). 435 duels possibles.";
+  "Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Compare 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). 4950 duels possibles.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

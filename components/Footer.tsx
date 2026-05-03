@@ -81,7 +81,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
       { href: "/cryptos", label: "100 cryptomonnaies analysées" },
       // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)
-      { href: "/comparer", label: "Comparer 2 cryptos (435 duels)" },
+      { href: "/comparer", label: "Comparer 2 cryptos (4950 duels)" },
       { href: "/marche", label: "Marché crypto en direct" },
       { href: "/marche/heatmap", label: "Heatmap marché crypto" },
     ],
