@@ -37,6 +37,38 @@
 
 import { unstable_cache } from "next/cache";
 import { COINGECKO_TO_BINANCE } from "@/lib/binance-mapping";
+import { getKv } from "@/lib/kv";
+
+/* -------------------------------------------------------------------------- */
+/*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
+/* -------------------------------------------------------------------------- */
+
+interface KvStaticSnapshot {
+  snapshot: Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }>;
+  updatedAt: string;
+  sourceCount: number;
+}
+
+/**
+ * Lecture du snapshot KV mis a jour par le cron. Permet au static fallback
+ * d'avoir des prix recents (5min vs hardcode obsolete). Cache 5min cote
+ * Vercel pour eviter de hitter KV a chaque getPriceSnapshot.
+ */
+const _readKvSnapshot = unstable_cache(
+  async (): Promise<Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> | null> => {
+    try {
+      const kv = getKv();
+      const raw = await kv.get<string>("price-source:top-snapshot");
+      if (!raw) return null;
+      const parsed = typeof raw === "string" ? (JSON.parse(raw) as KvStaticSnapshot) : (raw as unknown as KvStaticSnapshot);
+      return parsed?.snapshot ?? null;
+    } catch {
+      return null;
+    }
+  },
+  ["price-source-kv-snapshot-v1"],
+  { revalidate: 300 },
+);
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -343,8 +375,12 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
     };
   }
 
-  // Source #3 : Static fallback ultime
-  const stat = STATIC_FALLBACK[coingeckoId];
+  // Source #3 : Static fallback — KV snapshot frais (cron 5min) prioritaire
+  // sur le hardcode. Si le cron n'a pas tourne / KV mocked, fallback hardcode.
+  // BATCH 53 #5 — auto-update via /api/cron/update-static-prices.
+  const kvSnapshot = await _readKvSnapshot();
+  const kvEntry = kvSnapshot?.[coingeckoId];
+  const stat = kvEntry ?? STATIC_FALLBACK[coingeckoId];
   return {
     id: coingeckoId,
     symbol: meta.symbol,
