@@ -47,6 +47,7 @@ import {
 import { fetchCoinDetail, formatCompactNumber } from "@/lib/coingecko";
 import type { AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import {
   breadcrumbSchema,
   cryptoFinancialProductSchema,
@@ -115,18 +116,26 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!pair) return { robots: { index: false, follow: false } };
   const { a, b } = pair;
 
-  const title = `${a.name} vs ${b.name} : comparatif crypto complet 2026 — ${BRAND.name}`;
+  // BATCH 58 — retire '— Cryptoreflex' suffix manuel : layout root applique
+  // deja template '%s | Cryptoreflex' -> sans ca on aurait '...Cryptoreflex | Cryptoreflex'.
+  const title = `${a.name} vs ${b.name} : comparatif crypto complet 2026`;
   const description = `${a.name} (${a.symbol}) et ${b.name} (${b.symbol}) en face-à-face : market cap, supply, sécurité, plateformes FR. ${a.tagline} face à ${b.tagline.toLowerCase()}.`;
 
+  const url = `${BRAND.url}/vs/${params.a}/${params.b}`;
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/vs/${params.a}/${params.b}` },
+    alternates: withHreflang(url),
     openGraph: {
       title,
       description,
-      url: `${BRAND.url}/vs/${params.a}/${params.b}`,
+      url,
       type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
