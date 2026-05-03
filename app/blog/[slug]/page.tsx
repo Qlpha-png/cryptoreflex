@@ -19,7 +19,6 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import RelatedEntities from "@/components/RelatedEntities";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import ArticleHero from "@/components/ui/ArticleHero";
 import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import {
