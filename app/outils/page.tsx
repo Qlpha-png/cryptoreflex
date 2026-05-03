@@ -29,6 +29,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import StructuredData from "@/components/StructuredData";
+import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand + alignement
@@ -38,6 +41,23 @@ export const metadata: Metadata = {
   description:
     "26 outils crypto FR gratuits : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
+  // BATCH 45a (audit /outils P0 SEO) — ajout openGraph + twitter pour
+  // partage Discord/Twitter/LinkedIn avec preview riche. Reuse l'image OG
+  // generee dynamiquement par app/opengraph-image.tsx (root) qui supporte
+  // template fallback. Pour customiser, creer app/outils/opengraph-image.tsx.
+  openGraph: {
+    title: "26 outils crypto FR gratuits — Cryptoreflex",
+    description:
+      "Calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
+    url: "https://www.cryptoreflex.fr/outils",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "26 outils crypto FR gratuits — Cryptoreflex",
+    description:
+      "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
+  },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -392,8 +412,33 @@ export default function OutilsPage() {
   const proTools = TOOLS.filter((t) => t.tier === "pro").length;
   const freeTools = totalTools - proTools;
 
+  // BATCH 45a SEO P0 (audit) — JSON-LD ItemList eligible Rich Results
+  // "Tools" sur Google + signal hub structure fort pour le crawler.
+  // BreadcrumbList ajoute aussi (Accueil > Outils) pour SERP enriched.
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${totalTools} outils crypto français Cryptoreflex`,
+    description:
+      "Catalogue d'outils gratuits et Soutien : fiscalité PFU, simulateur DCA, vérificateur MiCA, convertisseur live, Cerfa 2086, glossaire 250+ termes.",
+    numberOfItems: totalTools,
+    itemListElement: TOOLS.map((t, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      url: t.href.startsWith("http") ? t.href : `${BRAND.url}${t.href}`,
+      name: t.title,
+      description: t.desc,
+    })),
+  };
+  const breadcrumb = breadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Outils", url: "/outils" },
+  ]);
+  const hubGraph = graphSchema([itemListSchema, breadcrumb]);
+
   return (
     <article className="py-12 sm:py-16">
+      <StructuredData id="outils-hub-graph" data={hubGraph} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
@@ -536,9 +581,14 @@ function CategorySection({
 function ToolCard({ tool }: { tool: Tool }) {
   const Icon = tool.Icon;
   const isPro = tool.tier === "pro";
+  // BATCH 45a a11y : aria-label explicite consolide titre + tier + status,
+  // sinon NVDA lit "Soutien Nouveau {titre}" dans cet ordre desordonne
+  // (badges absolute top-right/top-left lus en premier en source order).
+  const ariaLabel = `${tool.title}${isPro ? " — outil Soutien" : " — gratuit"}${tool.status === "new" ? " (nouveau)" : tool.status === "soon" ? " (bientôt disponible)" : ""}`;
   return (
     <Link
       href={tool.href}
+      aria-label={ariaLabel}
       className="group relative flex flex-col rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] hover:-translate-y-0.5"
     >
       <span
@@ -553,8 +603,12 @@ function ToolCard({ tool }: { tool: Tool }) {
       </span>
 
       {tool.status === "new" && (
-        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background animate-pulse">
-          ✨ Nouveau
+        // BATCH 45a : motion-safe pulse + Sparkles icone Lucide (vs emoji ✨
+        // qui pixellise sur certains OS). animate-pulse remplace par variante
+        // motion-safe qui respecte prefers-reduced-motion automatiquement.
+        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
+          <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+          Nouveau
         </span>
       )}
 

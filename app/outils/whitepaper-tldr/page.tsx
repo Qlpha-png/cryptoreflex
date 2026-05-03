@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
+  ChevronDown,
   ClipboardList,
   ListChecks,
   Sparkles,
@@ -276,9 +277,13 @@ export default function WhitepaperTldrPage() {
                 >
                   <summary className="cursor-pointer font-semibold text-white list-none flex items-start justify-between gap-4">
                     <span>{item.question}</span>
-                    <span className="text-primary transition group-open:rotate-180">
-                      v
-                    </span>
+                    {/* BATCH 45a fix visuel : ASCII 'v' remplace par icone
+                        Lucide ChevronDown smooth (rotate 180 quand open via
+                        :group-open). Coherent avec le reste du DS. */}
+                    <ChevronDown
+                      className="h-4 w-4 shrink-0 mt-1 text-primary transition-transform duration-300 group-open:rotate-180"
+                      aria-hidden="true"
+                    />
                   </summary>
                   <p className="mt-3 text-sm text-white/75 leading-relaxed">
                     {item.answer}

@@ -569,13 +569,18 @@ export default function CalculateurFiscalitePage() {
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
+                  {/* BATCH 45a a11y P1 (audit /outils) — scope='col' sur tous
+                      les <th> de header, sinon les lecteurs d'ecran (NVDA,
+                      JAWS, VoiceOver) ne peuvent pas associer chaque cellule
+                      data a son header lors de la navigation cellule par
+                      cellule (tableau de comparaison fiscal = critique). */}
                   <tr className="border-b border-border/60">
-                    <th className="px-3 py-2 text-left text-white">TMI</th>
-                    <th className="px-3 py-2 text-left text-white">PFU 30 %</th>
-                    <th className="px-3 py-2 text-left text-white">
+                    <th scope="col" className="px-3 py-2 text-left text-white">TMI</th>
+                    <th scope="col" className="px-3 py-2 text-left text-white">PFU 30 %</th>
+                    <th scope="col" className="px-3 py-2 text-left text-white">
                       Barème + PS
                     </th>
-                    <th className="px-3 py-2 text-left text-white">
+                    <th scope="col" className="px-3 py-2 text-left text-white">
                       Régime gagnant
                     </th>
                   </tr>
