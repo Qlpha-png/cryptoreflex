@@ -342,7 +342,12 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
       fetchedAt,
       marketCapRank: parseInt(c.rank, 10),
       // Logo : on utilise CoinCap CDN (gratuit)
-      image: `https://assets.coincap.io/assets/icons/${c.symbol.toLowerCase()}@2x.png`,
+      // BUG FIX 2026-05-03 — NE PAS hardcoder URL CoinCap CDN : couvre
+      // mal les coins exotiques (404 -> broken image icon visible). On
+      // laisse vide -> CryptoLogo composant fera le lookup intelligent
+      // via lib/crypto-logos.ts (CoinGecko CDN cache, fonctionne pour
+      // 100% du top 100 + fallback initiales gold pour le reste).
+      image: "",
     }));
   }
   // Fallback ultime : derive du STATIC_FALLBACK

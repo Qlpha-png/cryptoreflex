@@ -136,7 +136,11 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
         price: s.priceUsd,
         change24h: s.change24h,
         marketCap: s.marketCap,
-        image: `https://assets.coincap.io/assets/icons/${s.symbol.toLowerCase()}@2x.png`,
+        // BUG FIX 2026-05-03 — image vide car CryptoLogo composant fait
+        // un lookup intelligent via lib/crypto-logos.ts (CoinGecko CDN
+        // cache hardcode + fallback initiales). URL CoinCap CDN 404 sur
+        // les coins exotiques = broken image icon visible.
+        image: "",
       }));
     }
     // Sinon, on tente CoinGecko en fallback (peut succeeder pour les coins
@@ -704,7 +708,8 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         id: snap.id,
         symbol: snap.symbol,
         name: snap.name,
-        image: `https://assets.coincap.io/assets/icons/${snap.symbol.toLowerCase()}@2x.png`,
+        // BUG FIX 2026-05-03 — image vide (CryptoLogo lookup local)
+        image: "",
         currentPrice: snap.priceUsd,
         priceChange24h: snap.change24h,
         priceChange7d: snap.change7d,
