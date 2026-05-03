@@ -683,26 +683,33 @@ function ToolCard({ tool }: { tool: Tool }) {
       data-search-text={`${tool.title} ${tool.desc} ${tool.cat}`}
       className="spotlight-card group relative flex flex-col h-full rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)]"
     >
-      <span
-        className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-          isPro
-            ? "border border-primary/40 bg-primary/15 text-primary"
-            : "border border-accent-green/30 bg-accent-green/10 text-accent-green"
-        }`}
-      >
-        {isPro ? <Crown className="h-2.5 w-2.5" /> : <Sparkles className="h-2.5 w-2.5" />}
-        {isPro ? "Soutien" : "Gratuit"}
-      </span>
-
-      {tool.status === "new" && (
-        // BATCH 45a : motion-safe pulse + Sparkles icone Lucide (vs emoji ✨
-        // qui pixellise sur certains OS). animate-pulse remplace par variante
-        // motion-safe qui respecte prefers-reduced-motion automatiquement.
-        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
-          <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-          Nouveau
+      {/* BATCH 56#6 (2026-05-03) — refacto badges : avant `absolute top-3
+          right-3` + `-top-2 left-4` empietaient sur le titre h3 sur cards
+          a titre long ou viewport intermediaire (user screenshot). Maintenant
+          en HEADER flow flex justify-between -> jamais de superposition,
+          align baseline parfaitement, lecture screen reader naturelle. */}
+      <div className="flex items-center justify-between gap-2 mb-3 min-h-[24px]">
+        {/* Left : badge NOUVEAU si status=new, sinon spacer invisible */}
+        {tool.status === "new" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
+            <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+            Nouveau
+          </span>
+        ) : (
+          <span aria-hidden="true" />
+        )}
+        {/* Right : badge Soutien / Gratuit */}
+        <span
+          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+            isPro
+              ? "border border-primary/40 bg-primary/15 text-primary"
+              : "border border-accent-green/30 bg-accent-green/10 text-accent-green"
+          }`}
+        >
+          {isPro ? <Crown className="h-2.5 w-2.5" /> : <Sparkles className="h-2.5 w-2.5" />}
+          {isPro ? "Soutien" : "Gratuit"}
         </span>
-      )}
+      </div>
 
       <div className="flex items-start gap-3">
         {/* BATCH 45b — view-transition-name unique par outil. Quand l'user
@@ -721,7 +728,7 @@ function ToolCard({ tool }: { tool: Tool }) {
           <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-fg leading-snug pr-12">{tool.title}</h3>
+          <h3 className="font-bold text-fg leading-snug">{tool.title}</h3>
         </div>
       </div>
 
