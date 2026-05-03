@@ -50,25 +50,97 @@ interface KvStaticSnapshot {
 }
 
 /**
- * Lecture du snapshot KV mis a jour par le cron. Permet au static fallback
- * d'avoir des prix recents (5min vs hardcode obsolete). Cache 5min cote
- * Vercel pour eviter de hitter KV a chaque getPriceSnapshot.
+ * Lecture du snapshot KV. Plus lazy refresh fire-and-forget si stale.
+ * Avantage : 0 dependance cron externe, le snapshot s'auto-rafraichit
+ * naturellement quand un user atteint la fonction.
  */
-const _readKvSnapshot = unstable_cache(
-  async (): Promise<Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> | null> => {
-    try {
-      const kv = getKv();
-      const raw = await kv.get<string>("price-source:top-snapshot");
-      if (!raw) return null;
-      const parsed = typeof raw === "string" ? (JSON.parse(raw) as KvStaticSnapshot) : (raw as unknown as KvStaticSnapshot);
-      return parsed?.snapshot ?? null;
-    } catch {
+const KV_SNAPSHOT_KEY = "price-source:top-snapshot";
+const KV_REFRESH_LOCK_KEY = "price-source:refresh-lock";
+const KV_STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 min
+
+/**
+ * Lit le snapshot KV. Si >5min stale, lance un refresh background
+ * (fire-and-forget, ne bloque pas le caller). Lock pour eviter que
+ * 100 users simultanes lancent 100 refreshs en parallele.
+ */
+async function _readKvSnapshot(): Promise<Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> | null> {
+  try {
+    const kv = getKv();
+    const raw = await kv.get<string>(KV_SNAPSHOT_KEY);
+    if (!raw) {
+      // Snapshot inexistant -> fire refresh background (sans await)
+      void _refreshKvSnapshotIfNotLocked();
       return null;
     }
-  },
-  ["price-source-kv-snapshot-v1"],
-  { revalidate: 300 },
-);
+    const parsed = typeof raw === "string" ? (JSON.parse(raw) as KvStaticSnapshot) : (raw as unknown as KvStaticSnapshot);
+    if (!parsed?.snapshot) return null;
+
+    // Check staleness
+    const updatedAt = parsed.updatedAt ? new Date(parsed.updatedAt).getTime() : 0;
+    const age = Date.now() - updatedAt;
+    if (age > KV_STALE_THRESHOLD_MS) {
+      // Stale -> trigger refresh background, mais on retourne quand meme
+      // le snapshot stale au caller pour eviter latency
+      void _refreshKvSnapshotIfNotLocked();
+    }
+    return parsed.snapshot;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Refresh le snapshot KV via getTopMarket (Binance + CoinCap aggregator).
+ * Lock 60s pour eviter le thundering herd (100 users -> 100 fetchs).
+ * Appele en fire-and-forget depuis _readKvSnapshot quand stale.
+ */
+async function _refreshKvSnapshotIfNotLocked(): Promise<void> {
+  try {
+    const kv = getKv();
+    // Acquire lock (set + ex 60s + nx serait ideal mais l'API kv basique
+    // ne fait pas nx — on simule en check-then-set rudimentaire).
+    const existingLock = await kv.get<string>(KV_REFRESH_LOCK_KEY);
+    if (existingLock) return; // refresh deja en cours
+    await kv.set(KV_REFRESH_LOCK_KEY, "1", { ex: 60 });
+
+    // Fetch top 50 (separated cache key + flow direct)
+    const top = await _getTopMarket(50);
+    if (top.length < 10) {
+      await kv.del(KV_REFRESH_LOCK_KEY);
+      return;
+    }
+
+    const snapshot: Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> = {};
+    for (const c of top) {
+      snapshot[c.id] = {
+        priceUsd: c.priceUsd,
+        change24h: c.change24h,
+        marketCap: c.marketCap,
+        volume24h: c.volume24h,
+      };
+    }
+
+    await kv.set(
+      KV_SNAPSHOT_KEY,
+      JSON.stringify({
+        snapshot,
+        updatedAt: new Date().toISOString(),
+        sourceCount: top.length,
+      }),
+      { ex: 24 * 3600 }, // TTL 24h max
+    );
+
+    await kv.del(KV_REFRESH_LOCK_KEY);
+  } catch {
+    // Best effort, on ignore les erreurs (le hardcode fallback prend le relais)
+    try {
+      const kv = getKv();
+      await kv.del(KV_REFRESH_LOCK_KEY);
+    } catch {
+      /* noop */
+    }
+  }
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
