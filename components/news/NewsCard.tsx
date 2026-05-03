@@ -3,7 +3,6 @@ import { ArrowUpRight } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
 import { NEWS_CATEGORY_LABELS, NEWS_CATEGORY_SLUGS } from "@/lib/news-types";
 import { formatRelativeFr } from "@/lib/news-aggregator";
-import ArticleHero from "@/components/ui/ArticleHero";
 
 /**
  * NewsCard (pilier news MDX) — carte d'une news Cryptoreflex réécrite.
@@ -50,7 +49,10 @@ const CATEGORY_GRADIENT: Record<string, string> = {
 
 export default function NewsCard({ news }: Props) {
   const badgeClasses = CATEGORY_BADGE[news.category] ?? "bg-muted/15 text-muted ring-border";
-  const gradient = CATEGORY_GRADIENT[news.category] ?? "from-amber-500/40 to-orange-600/40";
+  // CATEGORY_GRADIENT plus utilise depuis BATCH 56#12 (OG image dynamique au
+  // lieu de gradient fallback). Garde la constante au cas ou on voudrait
+  // refaire un fallback CSS si l'OG echoue.
+  void CATEGORY_GRADIENT;
   const relDate = formatRelativeFr(news.date);
   const catLabel = NEWS_CATEGORY_LABELS[news.category];
 
@@ -59,21 +61,21 @@ export default function NewsCard({ news }: Props) {
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-elevated
                  transition-all duration-fast hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2"
     >
-      {/* Cover CSS-only via ArticleHero (Audit user 26/04 : "trouve une vraie solution").
-          Bug confirmé : route OG retourne 200 OK en curl mais <img loading=lazy>
-          ne charge pas côté client (IntersectionObserver foireux).
-          Solution radicale : ArticleHero 100% CSS — gradient + icon + watermark,
-          ZÉRO requête réseau, ZÉRO risque image cassée, affichage instantané.
-          L'OG dynamique reste pour Twitter/LinkedIn metadata. */}
-      <div className="relative aspect-[16/9] overflow-hidden">
-        <div className="absolute inset-0 transition-transform duration-slow group-hover:scale-[1.03]">
-          <ArticleHero
-            category={catLabel ?? news.category}
-            title={news.title}
-            gradient={gradient}
-            height="h-full"
-          />
-        </div>
+      {/* BATCH 56#12 (2026-05-03) — User feedback "vraies images" : utilise
+          l'OG image dynamique de chaque article a /actualites/[slug]/opengraph-image
+          comme cover de la card. HTTP 200 OK confirme + Cache-Control 1 an.
+          Plus engageant que le placeholder ArticleHero (gradient + icon).
+          Cohérent avec ce que voient les users qui partagent l'article (meme image). */}
+      <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
+        <img
+          src={`/actualites/${news.slug}/opengraph-image`}
+          alt={`Cover : ${news.title}`}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={630}
+        />
         <span
           className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
