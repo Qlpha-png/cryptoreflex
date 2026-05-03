@@ -8,6 +8,10 @@ import { useCompareList } from "@/lib/use-compare-list";
 // BATCH 46b — innovations tech 2026 paroxysme : Tilt3D parallax + Reveal
 // scroll fade-up + spotlight-card halo gold sur les 100 cards crypto.
 import Tilt3D from "@/components/ui/Tilt3D";
+// BATCH 48a — afficher logo crypto dans card + view-transition-name pour
+// morph cross-document hub -> fiche (Hero CryptoHero.tsx l.94 a deja
+// viewTransitionId="crypto-logo-${symbolLower}", on ferme la boucle ici).
+import CryptoLogo from "@/components/ui/CryptoLogo";
 
 type FilterKind = "all" | "top10" | "hidden-gem";
 
@@ -339,24 +343,39 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
       className="spotlight-card group h-full rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-              isGem
-                ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
-                : "border border-primary/30 bg-primary/10 text-primary-soft"
-            }`}
-          >
-            {isGem ? <Gem className="h-3 w-3" /> : <Trophy className="h-3 w-3" />}
-            {isGem ? "Hidden Gem" : `Top ${crypto.rank}`}
-          </span>
-          <h2 className="mt-2 text-lg font-bold text-fg truncate">
-            {crypto.name}{" "}
-            <span className="font-mono text-sm text-muted">{crypto.symbol}</span>
-          </h2>
-          <p className="text-xs text-muted truncate">
-            {crypto.category} · {crypto.yearCreated}
-          </p>
+        <div className="flex items-start gap-3 min-w-0 flex-1">
+          {/* BATCH 48a — logo crypto avec view-transition-name. Quand l'user
+              clique sur la card, Chrome 111+/Safari 18+ morphe ce logo vers
+              le Hero de la fiche (CryptoHero.tsx l.94 expose le meme
+              viewTransitionId="crypto-logo-${symbol.toLowerCase()}"). 0ms
+              perçu, sensation native-app Linear/Vercel. */}
+          <CryptoLogo
+            symbol={crypto.symbol}
+            coingeckoId={crypto.id}
+            size={40}
+            shape="rounded"
+            className="ring-1 ring-border shrink-0"
+            viewTransitionId={`crypto-logo-${crypto.symbol.toLowerCase()}`}
+          />
+          <div className="min-w-0">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                isGem
+                  ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
+                  : "border border-primary/30 bg-primary/10 text-primary-soft"
+              }`}
+            >
+              {isGem ? <Gem className="h-3 w-3" /> : <Trophy className="h-3 w-3" />}
+              {isGem ? "Hidden Gem" : `Top ${crypto.rank}`}
+            </span>
+            <h2 className="mt-1 text-lg font-bold text-fg truncate">
+              {crypto.name}{" "}
+              <span className="font-mono text-sm text-muted">{crypto.symbol}</span>
+            </h2>
+            <p className="text-xs text-muted truncate">
+              {crypto.category} · {crypto.yearCreated}
+            </p>
+          </div>
         </div>
         {isGem && (
           <div className="shrink-0 rounded-lg border border-border bg-elevated px-2 py-1 text-center">
