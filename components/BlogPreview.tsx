@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, FileText, Sparkles } from "lucide-react";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import EmptyState from "@/components/ui/EmptyState";
-import ArticleHero from "@/components/ui/ArticleHero";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 
@@ -189,31 +188,22 @@ export default async function BlogPreview() {
                     itemProp="url"
                     className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    {/*
-                      Cover CSS-only via ArticleHero (Audit user 26/04 :
-                      "trouve une vraie solution" pour le bug image qui revient).
-                      Avant : <img src="/blog/{slug}/opengraph-image" loading="lazy">
-                      bug confirmé : route OG retourne 200 OK en curl mais l'img
-                      tag ne charge pas côté client (loading=lazy IntersectionObserver
-                      foireux, même bug que crypto logos commit b1bb58b).
-                      Solution radicale : ArticleHero 100% CSS — gradient + icon
-                      + watermark, ZÉRO requête réseau, ZÉRO risque de bug image,
-                      affichage instantané. L'OG dynamique reste pour Twitter/LinkedIn
-                      via metadata.openGraph.images (où elle est requise).
-                      transition-transform group-hover:scale-105 conservée pour Ken Burns.
-                    */}
-                    <div className="relative aspect-[16/9] overflow-hidden">
-                      <div
-                        className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
+                    {/* BATCH 56#13 (2026-05-03) — User feedback "vraies images" :
+                        utilise OG image dynamique /blog/[slug]/opengraph-image
+                        comme cover (1 image unique par article, identique a
+                        ce que voient les users qui partagent sur Twitter/LinkedIn).
+                        HTTP 200 OK confirme + Cache 1 an immutable. */}
+                    <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
+                      <img
+                        src={`/blog/${article.slug}/opengraph-image`}
+                        alt={`Cover : ${article.title}`}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
+                        loading="lazy"
+                        decoding="async"
+                        width={1200}
+                        height={630}
                         itemProp="image"
-                      >
-                        <ArticleHero
-                          category={article.category}
-                          title={article.title}
-                          gradient={article.gradient}
-                          height="h-full"
-                        />
-                      </div>
+                      />
                       {/* Gradient overlay subtle pour lisibilité badge */}
                       <div className="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
 
