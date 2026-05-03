@@ -233,7 +233,7 @@ export const getAllArticles = unstable_cache(
   async (): Promise<Article[]> => {
     return readArticlesFromDisk();
   },
-  ["mdx:all-articles"],
+  ["mdx:all-articles-v2"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -246,7 +246,7 @@ export const getAllArticleSummaries = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.map(({ content: _content, ...rest }) => rest);
   },
-  ["mdx:all-summaries"],
+  ["mdx:all-summaries-v2"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -256,7 +256,7 @@ export const getArticleBySlug = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.find((a) => a.slug === slug) ?? null;
   },
-  ["mdx:article-by-slug"],
+  ["mdx:article-by-slug-v2"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
