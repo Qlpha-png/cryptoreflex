@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Newspaper, Info, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import {
   getAllNewsSummaries,
   getNewsCountsByCategory,
@@ -55,10 +56,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: {
-    canonical: PAGE_URL,
-    languages: { "fr-FR": PAGE_URL, "x-default": PAGE_URL },
-  },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

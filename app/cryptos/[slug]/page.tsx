@@ -28,6 +28,7 @@ import {
 } from "@/lib/cryptos";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import {
   articleSchema,
   breadcrumbSchema,
@@ -240,7 +241,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     openGraph: {
       title,
       description,

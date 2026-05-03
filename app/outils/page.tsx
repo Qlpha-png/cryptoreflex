@@ -32,6 +32,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 // BATCH 45b — innovation tech 2026 paroxysme. Wire Reveal scroll fade-up
 // sur sections + Tilt3D sur cards hub. Composants existants, juste branches.
 import Reveal from "@/components/ui/Reveal";
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
   title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
   description:
     "28 outils crypto FR : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
-  alternates: { canonical: "https://www.cryptoreflex.fr/outils" },
+  alternates: withHreflang("https://www.cryptoreflex.fr/outils"),
   openGraph: {
     title: "28 outils crypto FR gratuits — Cryptoreflex",
     description:

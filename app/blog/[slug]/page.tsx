@@ -21,6 +21,7 @@ import MobileStickyCTA from "@/components/MobileStickyCTA";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import {
   articleSchema,
   breadcrumbSchema,
@@ -65,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: seoTitle,
     description: seoDescription,
     keywords: article.keywords,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     authors: [{ name: author.name, url: `/auteur/${author.id}` }],
     openGraph: {
       type: "article",

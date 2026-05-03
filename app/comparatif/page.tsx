@@ -20,6 +20,7 @@ import {
   type ComparisonSpec,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import NextStepsGuide from "@/components/NextStepsGuide";
@@ -59,7 +60,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

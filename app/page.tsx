@@ -41,6 +41,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import StickyMobileCta from "@/components/StickyMobileCta";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import {
   graphSchema,
   topPlatformsItemListSchema,
@@ -68,7 +69,7 @@ export const metadata: Metadata = {
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
     "Compare 34 plateformes MiCA, analyse 100 cryptos (score fiabilité), calcule ta fiscalité PFU. 26 outils gratuits, méthodologie publique.",
-  alternates: { canonical: BRAND.url },
+  alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
     title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
