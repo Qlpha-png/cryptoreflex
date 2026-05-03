@@ -1,37 +1,50 @@
 /**
  * lib/programmatic-pages.ts — Sources de vérité pour les routes
- * /comparer/[a]/[b] et /acheter/[crypto]/[pays].
+ * /vs/[a]/[b] et /acheter/[crypto]/[pays].
  *
  * Distinct de :
  *   - lib/programmatic.ts          → routes existantes (avis, comparatif platforms…)
  *   - lib/crypto-comparisons.ts    → /comparer/[slug] legacy (15 cryptos × 14 / 2 = 105)
  *
  * Ce module ajoute :
- *   - TOP_30_CRYPTO_IDS    : 30 cryptos sélectionnées (priorité market cap)
- *   - getCryptoPairs()     : 30 × 29 / 2 = 435 paires canoniques (a < b)
+ *   - TOP_100_CRYPTO_IDS   : 100 cryptos (10 top + 90 hidden gems)
+ *   - getCryptoPairs()     : 100 × 99 / 2 = 4950 paires canoniques (a < b)
  *   - COUNTRIES            : 6 pays FR-speaking (FR, BE, CH, LU, MC, CA-FR)
  *   - getAcheterRoutes()   : 100 cryptos × 6 pays = 600 routes
+ *
+ * BATCH 58 (2026-05-03) — Extension TOP 30 → TOP 100 (4950 paires).
+ * User feedback : "completer cette partie par les 100 crypto qu'on a sur
+ * le site pour les comparaison ? surtout pour faire les url interne pour
+ * le seo ça peux etre super non ?". Strategy : ISR a la demande deja en
+ * place, donc 4950 paires generees au 1er hit + cachees 24h. Pre-build
+ * top 15 (=105 paires) au build pour les paires les plus search FR.
  */
 
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 
 /* =====================================================================
- * 1. TOP 30 — sélection pour la matrice de comparatifs cryptos
+ * 1. TOP 100 — toutes les cryptos disponibles pour la matrice vs
  * =====================================================================
  *
- * On reprend les 30 PREMIÈRES entrées de getAllCryptos() qui couvrent :
- *   - les 10 du top10 (BTC, ETH, XRP, BNB, SOL, DOGE, ADA, TRX, AVAX, LINK)
- *   - les 20 premières hidden-gems (NEAR, TIA, GRT, RNDR, ONDO, ARB…)
+ * BATCH 58 — 100 cryptos (10 top10 + 90 hidden gems). Auparavant limite
+ * a 30 pour eviter des build timeouts mais l'ISR a la demande gere
+ * maintenant les 4950 paires sans pre-build.
  *
- * Ordre d'apparition dans hiddenGems = priorité éditoriale (cap décroissante).
- * Si on veut changer la sélection, on tape ici (et nulle part ailleurs).
+ * Ordre d'apparition dans data/* = priorite editoriale (cap decroissante).
  */
-const TOP_30_LIMIT = 30;
+const TOP_LIMIT = 100;
 
-export const TOP_30_CRYPTO_IDS: string[] = (() => {
+export const TOP_100_CRYPTO_IDS: string[] = (() => {
   const all = getAllCryptos();
-  return all.slice(0, TOP_30_LIMIT).map((c) => c.id);
+  return all.slice(0, TOP_LIMIT).map((c) => c.id);
 })();
+
+/**
+ * Alias retro-compat : ancien nom TOP_30_CRYPTO_IDS toujours utilise par
+ * /vs/[a]/[b]/page.tsx pour les cross-links et generateStaticParams. Pointe
+ * vers le nouveau TOP_100. Evite de patcher tous les call sites en un coup.
+ */
+export const TOP_30_CRYPTO_IDS = TOP_100_CRYPTO_IDS;
 
 export interface CryptoPair {
   /** id canonique (a < b lexicographique) */
@@ -40,7 +53,8 @@ export interface CryptoPair {
 }
 
 /**
- * 30 × 29 / 2 = 435 paires uniques (a < b lexicographique pour canonical).
+ * 100 × 99 / 2 = 4950 paires uniques (a < b lexicographique pour canonical).
+ * BATCH 58 — etendu de 30 (=435) a 100 (=4950) pour SEO programmatic.
  */
 export function getCryptoPairs(): CryptoPair[] {
   // Trie d'abord la liste pour garantir un ordre canonique stable peu importe
@@ -207,7 +221,8 @@ export interface ProgrammaticPageRoute {
 }
 
 /**
- * 435 routes /vs/[a]/[b] — comparatifs programmatiques top 30 cryptos.
+ * 4950 routes /vs/[a]/[b] — comparatifs programmatiques top 100 cryptos.
+ * BATCH 58 — etendu de 435 (top 30) a 4950 (top 100) pour SEO programmatic.
  *
  * NOTE 2026-05-02 : déplacé de /comparer/[a]/[b] vers /vs/[a]/[b] pour
  * éviter le conflit de routing Next.js avec /comparer/[slug] (legacy 105

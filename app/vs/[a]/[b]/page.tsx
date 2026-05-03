@@ -56,17 +56,11 @@ import {
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 
-// FIX URGENT 2026-05-02 — build Vercel timeout 45min sur 435 paires.
-// Cause : `dynamic="force-static"` + `dynamicParams=false` force le pre-build
-// de TOUTES les paires AU BUILD, chacune fetchant CoinGecko (sparkline + corrélation).
-// Sur Vercel Hobby (timeout build 45 min), 435 paires × ~6s = 43 min, on dépasse.
-//
-// Fix : ISR à la demande. On garde `revalidate=86400` (1j cache) mais on
-// PASSE en `dynamicParams=true` (=defaut) ET on réduit generateStaticParams
-// au top 8 cryptos = 28 paires pre-build (BTC, ETH, USDT, BNB, SOL, XRP, ADA, DOGE).
-// Les 407 autres paires sont SSR au 1er hit puis cachées 24h. Le crawler
-// Googlebot tape ces pages à son rythme — peu probable que 100 paires soient
-// hit en cold start simultané.
+// BATCH 58 (2026-05-03) — Extension TOP 30 -> TOP 100 (4950 paires).
+// Strategy : pre-build top 15 cryptos = 105 paires (les plus search FR), les
+// 4845 autres SSR a la demande (ISR cache 24h). Vercel Hobby timeout 45min
+// supporte sans probleme : 105 paires × 6s = 10.5min de build, large marge.
+// Crawler Google tape progressivement les 4845 autres a son rythme.
 export const revalidate = 86400; // 1 jour ISR
 export const dynamicParams = true;
 
@@ -79,16 +73,26 @@ interface Props {
 /*  Les autres 407 paires sont SSR à la demande (ISR cache 24h ensuite).      */
 /* -------------------------------------------------------------------------- */
 
-// Whitelist coingeckoId stricte (cf. lib/programmatic-pages.ts TOP_30_CRYPTO_IDS).
+// BATCH 58 — TOP 15 pre-build (= 105 paires) au build time. Couvre les paires
+// les plus recherchees en FR (BTC vs ETH, BTC vs SOL, ETH vs SOL, etc.).
+// Les 4845 autres paires sont SSR au 1er hit + cachees 24h ISR.
+// IDs internes (slug) cf. data/top-cryptos.json + data/hidden-gems.json.
 const PRE_BUILD_TOP = [
   "bitcoin",
   "ethereum",
-  "tether",
-  "binancecoin",
+  "xrp",
+  "bnb",
   "solana",
-  "ripple",
-  "cardano",
   "dogecoin",
+  "cardano",
+  "tron",
+  "avalanche",
+  "chainlink",
+  "near-protocol",
+  "celestia",
+  "the-graph",
+  "render",
+  "arbitrum",
 ];
 
 export function generateStaticParams() {
@@ -215,6 +219,87 @@ function buildKeyDifferences(a: AnyCrypto, b: AnyCrypto): string[] {
 }
 
 /**
+ * BATCH 58 — Verdict editorial unique par paire, base sur les attributs
+ * concrets des 2 cryptos. Pas de prose generique, 100% data-driven.
+ *
+ * Logique :
+ *  - Compare l'anciennete (anti-fragility = age sur le marche)
+ *  - Compare le risque (qui pour quel profil)
+ *  - Compare la categorie (concurrents / complementaires)
+ *  - Genere une recommandation explicite "Pour X, Y est preferable car..."
+ */
+function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
+  conclusion: string;
+  beginnerChoice: { winner: AnyCrypto; reason: string };
+  experimentedChoice: { winner: AnyCrypto; reason: string };
+  longTermChoice: { winner: AnyCrypto; reason: string };
+} {
+  const sameCategory = a.category === b.category;
+  const ageGap = Math.abs(a.yearCreated - b.yearCreated);
+  const elder = a.yearCreated < b.yearCreated ? a : b;
+  const younger = a.yearCreated < b.yearCreated ? b : a;
+  const riskA = riskOf(a);
+  const riskB = riskOf(b);
+
+  // 1. Conclusion
+  let conclusion: string;
+  if (sameCategory) {
+    conclusion = `${a.name} et ${b.name} sont des concurrents directs sur le créneau "${a.category}". L'arbitrage se fait sur 3 axes : maturité (${elder.name} a ${ageGap} an${ageGap > 1 ? "s" : ""} d'avance), niveau de risque (${riskA} pour ${a.name}, ${riskB} pour ${b.name}) et disponibilité plateformes en France (${a.whereToBuy.length} vs ${b.whereToBuy.length}).`;
+  } else {
+    conclusion = `${a.name} et ${b.name} sont sur des créneaux différents : ${a.name} cible "${a.category}" tandis que ${b.name} se positionne sur "${b.category}". Ce ne sont pas des concurrents directs — ils peuvent coexister dans un portefeuille diversifié si les use cases t'intéressent les deux.`;
+  }
+
+  // 2. Choix débutant : le moins risqué + le plus ancien
+  const riskOrder: Record<string, number> = {
+    "Très faible": 0, "Faible": 1, "Modéré": 2, "Élevé": 3, "Très élevé": 4,
+  };
+  const safer = (riskOrder[riskA] ?? 4) <= (riskOrder[riskB] ?? 4) ? a : b;
+  const beginnerScoreA = a.kind === "top10" ? a.beginnerFriendly : 0;
+  const beginnerScoreB = b.kind === "top10" ? b.beginnerFriendly : 0;
+  const beginnerWinner = beginnerScoreA > beginnerScoreB ? a : beginnerScoreB > beginnerScoreA ? b : safer;
+  const beginnerReason =
+    beginnerWinner === safer
+      ? `Niveau de risque ${riskOf(beginnerWinner)} (vs ${riskOf(beginnerWinner === a ? b : a)} pour l'autre). Plus accessible quand on débute.`
+      : `Score beginner-friendly ${beginnerWinner.kind === "top10" ? `${beginnerWinner.beginnerFriendly}/5` : "n/a"} et ${beginnerWinner.whereToBuy.length} plateformes FR.`;
+
+  // 3. Choix expérimenté : volatilité + use case sophistiqué
+  const riskier = (riskOrder[riskA] ?? 0) >= (riskOrder[riskB] ?? 0) ? a : b;
+  const expReason = `Risque ${riskOf(riskier)} = volatilité supérieure mais potentiel de gains/pertes asymétrique. Cas d'usage "${riskier.tagline.toLowerCase()}" demande de comprendre la thèse avant d'investir.`;
+
+  // 4. Long terme : ancienneté = anti-fragilité (Lindy effect)
+  const longTermReason = `${elder.name} a ${elder.yearCreated} ans d'historique vs ${younger.yearCreated} pour ${younger.name}. Effet Lindy : plus une crypto survit, plus son espérance de survie future augmente. ${riskOf(elder)} de risque actuel.`;
+
+  return {
+    conclusion,
+    beginnerChoice: { winner: beginnerWinner, reason: beginnerReason },
+    experimentedChoice: { winner: riskier, reason: expReason },
+    longTermChoice: { winner: elder, reason: longTermReason },
+  };
+}
+
+/**
+ * BATCH 58 — Forces uniques de chaque crypto (3 points par crypto).
+ * Genere depuis les data MDX (top10 ou hidden-gems).
+ */
+function buildStrengths(c: AnyCrypto): string[] {
+  if (c.kind === "top10") {
+    return c.strengths.slice(0, 3);
+  }
+  // Hidden gem : derive depuis tagline + reliability + use case
+  const out: string[] = [];
+  if (c.reliability.score >= 8) {
+    out.push(`Score fiabilité ${c.reliability.score.toFixed(1)}/10 (équipe identifiée + audits).`);
+  } else if (c.reliability.score >= 7) {
+    out.push(`Score fiabilité correct ${c.reliability.score.toFixed(1)}/10 — ${c.reliability.yearsActive} années d'activité.`);
+  }
+  if (c.reliability.auditedBy && c.reliability.auditedBy.length > 0) {
+    out.push(`Audits par ${c.reliability.auditedBy.slice(0, 2).join(" et ")}.`);
+  }
+  out.push(c.tagline);
+  return out.slice(0, 3);
+}
+
+/**
  * 4 questions FAQ avec réponses 100 % dérivées des data des 2 cryptos.
  */
 function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
@@ -283,9 +368,12 @@ export default async function CryptoPairPage({ params }: Props) {
   // 4. Plateformes communes (intersection brute des labels whereToBuy).
   const commonPlatforms = a.whereToBuy.filter((p) => b.whereToBuy.includes(p));
 
-  // 5. Différences + FAQ
+  // 5. Différences + FAQ + verdict editorial unique
   const keyDiffs = buildKeyDifferences(a, b);
   const faq = buildFaq(a, b);
+  const verdict = buildVerdict(a, b);
+  const strengthsA = buildStrengths(a);
+  const strengthsB = buildStrengths(b);
 
   // 6. Schemas
   const slug = `${a.id}/${b.id}`;
@@ -458,23 +546,87 @@ export default async function CryptoPairPage({ params }: Props) {
           )}
         </section>
 
-        {/* Sur quoi investir ? */}
+        {/* BATCH 58 — Verdict editorial unique par paire (data-driven) */}
         <section className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6">
           <h2 className="text-2xl font-bold text-fg flex items-center gap-2">
             <Trophy className="h-6 w-6 text-primary" />
-            Sur quoi investir ?
+            {a.name} ou {b.name} : sur quoi investir ?
           </h2>
           <p className="mt-3 text-base text-fg/85 leading-relaxed">
-            Cryptoreflex ne donne aucun signal d'achat — ce comparatif n'est pas un conseil
-            en investissement. Ces données sont factuelles (CoinGecko + méthodologie
-            publique en 6 critères). Le bon arbitrage dépend de ton horizon, de ta
-            tolérance au risque, et de ta capacité à tenir une position en cas de
-            drawdown -50 %. Voir notre{" "}
-            <Link href="/methodologie" className="underline font-semibold hover:text-primary">
-              méthodologie complète
-            </Link>{" "}
-            pour comprendre comment nous notons.
+            {verdict.conclusion}
           </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-surface p-4">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+                Profil débutant
+              </div>
+              <div className="mt-1 text-lg font-bold text-fg">
+                → {verdict.beginnerChoice.winner.name}
+              </div>
+              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
+                {verdict.beginnerChoice.reason}
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-surface p-4">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+                Profil expérimenté
+              </div>
+              <div className="mt-1 text-lg font-bold text-fg">
+                → {verdict.experimentedChoice.winner.name}
+              </div>
+              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
+                {verdict.experimentedChoice.reason}
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-surface p-4">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+                Long terme (5-10 ans)
+              </div>
+              <div className="mt-1 text-lg font-bold text-fg">
+                → {verdict.longTermChoice.winner.name}
+              </div>
+              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
+                {verdict.longTermChoice.reason}
+              </p>
+            </div>
+          </div>
+          <p className="mt-5 text-xs text-fg/60 leading-relaxed">
+            ⚠️ Ces recommandations sont DÉRIVÉES des données factuelles (risque, ancienneté,
+            disponibilité). Ce n'est PAS un conseil en investissement individualisé. Voir notre{" "}
+            <Link href="/methodologie" className="underline font-semibold hover:text-primary-soft">
+              méthodologie complète
+            </Link>.
+          </p>
+        </section>
+
+        {/* BATCH 58 — Forces uniques côte à côte (data MDX) */}
+        <section className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border border-accent-green/30 bg-accent-green/5 p-6">
+            <h3 className="text-lg font-bold text-fg">
+              Pourquoi choisir {a.name} ?
+            </h3>
+            <ul className="mt-4 space-y-2.5">
+              {strengthsA.map((s, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm text-fg/85">
+                  <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-accent-green" />
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-accent-cyan/30 bg-accent-cyan/5 p-6">
+            <h3 className="text-lg font-bold text-fg">
+              Pourquoi choisir {b.name} ?
+            </h3>
+            <ul className="mt-4 space-y-2.5">
+              {strengthsB.map((s, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm text-fg/85">
+                  <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-accent-cyan" />
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* Corrélation 90j (en pratique : 7j sparkline horaire CoinGecko) */}

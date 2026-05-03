@@ -227,13 +227,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   /* ----------------------------------------------------------------
-   * 3ter. Programmatic SEO massif (proposition #8 ETUDE-2026-05-02) :
-   *       /comparer/[a]/[b]      → 435 paires top 30 cryptos
+   * 3ter. Programmatic SEO massif (BATCH 58 — etendu top 30 -> top 100) :
+   *       /vs/[a]/[b]            → 4950 paires top 100 cryptos (au lieu de 435)
    *       /acheter/[crypto]/[pays] → 600 (100 cryptos × 6 pays FR-speaking)
    *       Source : lib/programmatic-pages.ts.
    *
-   *       Volume total ajouté : ~1035 URLs. Le sitemap reste largement sous
-   *       la limite Google (50k URLs) — pas besoin de splitter en sous-sitemaps.
+   *       Volume total ajoute : ~5550 URLs (au lieu de ~1035). Sitemap reste
+   *       largement sous la limite Google (50k URLs) — pas besoin de splitter.
+   *       Strategy : ISR a la demande (105 paires pre-build au build, 4845
+   *       autres SSR au 1er hit puis cachees 24h).
    * ---------------------------------------------------------------- */
   const comparerPairRoutes: MetadataRoute.Sitemap = getComparerPairRoutes().map((r) => ({
     url: `${SITE_URL}${r.path}`,
