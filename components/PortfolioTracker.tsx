@@ -61,26 +61,31 @@ interface LivePrice {
   fetchedAt: number;
 }
 
-/** Fetch live prices EUR pour un set d'IDs CoinGecko. */
+/** Fetch live prices EUR pour un set d'IDs.
+ *  BATCH 51e — Migration : passe par notre endpoint /api/portfolio-prices
+ *  (lui-meme migre vers price-source aggregator gratuit illimite) au lieu
+ *  d'appeler CoinGecko directement depuis le browser. Avantages :
+ *  - Plus de hit CoinGecko depuis le client (consume IP rate limit user)
+ *  - Cache server partage entre tous les users
+ *  - Notre fallback Binance/CoinCap automatique
+ *  - Coherence : un seul point de sortie prix dans toute l'app
+ */
 async function fetchLivePrices(
   ids: string[]
 ): Promise<Record<string, LivePrice>> {
   if (ids.length === 0) return {};
   try {
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${COINGECKO_VS}&ids=${ids.join(",")}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=false&price_change_percentage=24h`;
-    const res = await fetch(url, { headers: { accept: "application/json" } });
-    if (!res.ok) throw new Error(`coingecko ${res.status}`);
-    const json = (await res.json()) as Array<{
-      id: string;
-      current_price: number;
-      price_change_percentage_24h: number;
-    }>;
+    const res = await fetch(`/api/portfolio-prices?ids=${ids.join(",")}`, {
+      headers: { accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(`portfolio-prices ${res.status}`);
+    const json = (await res.json()) as { prices: Array<{ id: string; priceEur: number; change24hPct: number }> };
     const out: Record<string, LivePrice> = {};
     const now = Date.now();
-    for (const c of json) {
+    for (const c of json.prices) {
       out[c.id] = {
-        price: c.current_price,
-        change24h: c.price_change_percentage_24h ?? 0,
+        price: c.priceEur,
+        change24h: c.change24hPct,
         fetchedAt: now,
       };
     }

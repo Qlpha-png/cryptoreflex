@@ -46,17 +46,17 @@ async function fetchTop100(vsCurrency: string): Promise<CoinSuggestion[]> {
     return CACHED_TOP100;
   }
   try {
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${vsCurrency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`;
-    const res = await fetch(url, { headers: { accept: "application/json" } });
-    if (!res.ok) throw new Error(`coingecko ${res.status}`);
-    const json = (await res.json()) as Array<{
-      id: string;
-      symbol: string;
-      name: string;
-      image: string;
-      current_price: number;
-    }>;
-    CACHED_TOP100 = json.map((c) => ({
+    // BATCH 51e — Migration : appel notre endpoint /api/coins/top qui
+    // passe par price-source aggregator (Binance + CoinCap gratuit
+    // illimite). Avant : fetch CoinGecko direct depuis le browser
+    // (consume rate limit IP user). Maintenant : 1 point de sortie
+    // serveur, cache partage 10min entre tous les users.
+    const res = await fetch(`/api/coins/top?limit=100&vs=${vsCurrency}`, {
+      headers: { accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(`coins/top ${res.status}`);
+    const json = (await res.json()) as { coins: Array<{ id: string; symbol: string; name: string; image: string; current_price: number }> };
+    CACHED_TOP100 = json.coins.map((c) => ({
       id: c.id,
       symbol: c.symbol.toUpperCase(),
       name: c.name,
