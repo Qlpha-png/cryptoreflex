@@ -32,6 +32,10 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+// BATCH 45b — innovation tech 2026 paroxysme. Wire Reveal scroll fade-up
+// sur sections + Tilt3D sur cards hub. Composants existants, juste branches.
+import Reveal from "@/components/ui/Reveal";
+import Tilt3D from "@/components/ui/Tilt3D";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand + alignement
@@ -436,9 +440,38 @@ export default function OutilsPage() {
   ]);
   const hubGraph = graphSchema([itemListSchema, breadcrumb]);
 
+  // BATCH 45b — Speculation Rules ciblees sur les 5 outils les plus
+  // cliques depuis le hub. Combine avec hover prefetch global (deja
+  // dans layout SpeculationRules.tsx) = nav vers ces outils = ~0ms LCP.
+  // Top 5 d'apres Plausible 30 jours : fiscalite, dca, convertisseur,
+  // glossaire, mica. Chrome 121+/Edge 121+. Fallback gracieux Safari/FF.
+  const hubSpeculationRules = {
+    prerender: [
+      {
+        urls: [
+          "/outils/calculateur-fiscalite",
+          "/outils/simulateur-dca",
+          "/outils/convertisseur",
+          "/outils/glossaire-crypto",
+          "/outils/verificateur-mica",
+        ],
+        eagerness: "moderate", // hover 200ms = signal d'intention
+      },
+    ],
+  };
+
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="outils-hub-graph" data={hubGraph} />
+      {/* BATCH 45b — script speculationrules inline pour cibler les 5 outils
+          top du hub. Browser parse le JSON, prerender en background quand
+          l'user hover 200ms. Click = navigation instant. */}
+      <script
+        type="speculationrules"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(hubSpeculationRules).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
@@ -460,18 +493,29 @@ export default function OutilsPage() {
           </p>
         </header>
 
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard label="Outils gratuits" value={String(freeTools)} accent="emerald" />
-          <StatCard label="Outils Soutien" value={String(proTools)} accent="primary" />
-          <StatCard label="Catégories" value={String(CATEGORIES.length)} accent="purple" />
-          <StatCard label="Méthodologie" value="Publique" accent="amber" />
-        </div>
+        {/* BATCH 45b — Reveal scroll fade-up + delay stagger sur StatCards
+            (24px / 700ms cubic-bezier emphasized). Effet Linear/Vercel. */}
+        <Reveal>
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <StatCard label="Outils gratuits" value={String(freeTools)} accent="emerald" />
+            <StatCard label="Outils Soutien" value={String(proTools)} accent="primary" />
+            <StatCard label="Catégories" value={String(CATEGORIES.length)} accent="purple" />
+            <StatCard label="Méthodologie" value="Publique" accent="amber" />
+          </div>
+        </Reveal>
 
+        {/* BATCH 45b — Reveal stagger sur chaque CategorySection (delay
+            cumulatif 0/120/240/360/480ms = sensation de cascade de blocs
+            qui apparaissent au scroll, pattern Anthropic.com sections). */}
         <div className="mt-12 space-y-12">
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES.map((cat, idx) => {
             const tools = TOOLS.filter((t) => t.cat === cat.id);
             if (tools.length === 0) return null;
-            return <CategorySection key={cat.id} category={cat} tools={tools} />;
+            return (
+              <Reveal key={cat.id} delay={Math.min(idx * 120, 480)}>
+                <CategorySection category={cat} tools={tools} />
+              </Reveal>
+            );
           })}
         </div>
 
@@ -489,12 +533,17 @@ export default function OutilsPage() {
                 Claude Haiku contextualisé). 2,99 €/mois ou 28,99 €/an. Annulation 1 clic, garantie
                 14 j remboursé + 7 j commercial bonus.
               </p>
+              {/* BATCH 45b — CTA Soutien : btn-primary-shine (shimmer gold
+                  qui balaye au hover, classe globals.css existante) +
+                  partner-cta-pulse (anneau gold qui pulse en boucle 2.5s,
+                  signature buy-now). Pattern Linear/Vercel pour les CTAs
+                  conversion-critical. Auto-disable reduced-motion. */}
               <Link
                 href="/pro"
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-background hover:bg-primary/90 transition-colors"
+                className="partner-cta-pulse btn-primary-shine mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-background hover:bg-primary/90 transition-colors"
               >
-                Devenir Soutien
-                <ArrowRight className="h-4 w-4" />
+                Devenir un Soutien
+                <ArrowRight className="h-4 w-4 arrow-spring" aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -571,7 +620,12 @@ function CategorySection({
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((t) => (
-          <ToolCard key={t.href} tool={t} />
+          /* BATCH 45b — Tilt3D parallax 4° max sur chaque card (subtle
+             premium, desactive pointer:coarse + reduced-motion via le
+             composant). Cards = "objets physiques" sans toucher au DOM. */
+          <Tilt3D key={t.href} max={4}>
+            <ToolCard tool={t} />
+          </Tilt3D>
         ))}
       </div>
     </section>
@@ -589,7 +643,14 @@ function ToolCard({ tool }: { tool: Tool }) {
     <Link
       href={tool.href}
       aria-label={ariaLabel}
-      className="group relative flex flex-col rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] hover:-translate-y-0.5"
+      // BATCH 45b — spotlight-card : halo gold radial qui suit le curseur
+      // via CSS vars --mx/--my hydratees par SpotlightDelegate (deja monte
+      // dans layout.tsx). 0 hydration boundary, 0 React re-render.
+      // Pattern Linear/Vercel/Anthropic signature.
+      // h-full pour que toutes les cards de la grille aient meme hauteur
+      // (grid auto-rows-fr est implicite avec la prop sur le wrapper Tilt3D
+      // mais on force ici aussi pour Tilt3D qui transform toute la card).
+      className="spotlight-card group relative flex flex-col h-full rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)]"
     >
       <span
         className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
@@ -613,7 +674,13 @@ function ToolCard({ tool }: { tool: Tool }) {
       )}
 
       <div className="flex items-start gap-3">
+        {/* BATCH 45b — view-transition-name unique par outil. Quand l'user
+            clique sur la card, Chrome 111+/Safari 18+ morphe l'icone du
+            hub vers le hero de la page outil (si l'autre cote pose le meme
+            view-transition-name). Combine avec Speculation Rules prerender
+            = sensation native-app. Slug derive de href pour stabilite. */}
         <div
+          style={{ viewTransitionName: `tool-icon-${tool.href.replace(/\W+/g, "-")}` }}
           className={`shrink-0 grid place-items-center h-10 w-10 rounded-xl ${
             isPro
               ? "bg-primary/15 text-primary group-hover:bg-primary/25"

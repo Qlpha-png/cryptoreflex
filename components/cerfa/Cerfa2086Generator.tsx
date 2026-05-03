@@ -535,10 +535,10 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               <Link
                 href="/pro"
                 className="btn-primary"
-                aria-label="Devenir Soutien pour débloquer la génération auto Cerfa 2086"
+                aria-label="Devenir un Soutien pour débloquer la génération auto Cerfa 2086"
               >
                 <Crown className="h-4 w-4" aria-hidden="true" />
-                Devenir Soutien — {monthlyPriceLabel}/mois
+                Devenir un Soutien — {monthlyPriceLabel}/mois
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               {!isAuthenticated && (

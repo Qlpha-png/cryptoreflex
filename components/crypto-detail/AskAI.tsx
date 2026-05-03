@@ -66,7 +66,7 @@ const SUGGESTED_QUESTIONS = (name: string, symbol: string) => [
  *  - Cleanup auto au démontage (useEffect return)
  */
 /* A/B `askai_cta_v1` — 3 variants pour le CTA Soutien sur lock AskAI :
- *  - control  : "Devenir Soutien — 2,99 € / mois"          → /pro#plans
+ *  - control  : "Devenir un Soutien — 2,99 € / mois"        → /pro#plans
  *  - discount : "Débloquer pour 2,99 € — sans engagement"   → /pro#plans
  *  - trial    : "Essayer gratuitement 7j"                   → /pro?trial=1
  *
@@ -300,7 +300,7 @@ export default function AskAI({ cryptoId, cryptoName, cryptoSymbol }: Props) {
                     ? "Débloquer pour 2,99 € — sans engagement"
                     : askAiVariant === "trial"
                       ? "Essayer gratuitement 7j"
-                      : "Devenir Soutien — 2,99 € / mois"}
+                      : "Devenir un Soutien — 2,99 € / mois"}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
