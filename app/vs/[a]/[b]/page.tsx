@@ -276,7 +276,9 @@ function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
   const expReason = `Risque ${riskOf(riskier)} = volatilité supérieure mais potentiel de gains/pertes asymétrique. Cas d'usage "${riskier.tagline.toLowerCase()}" demande de comprendre la thèse avant d'investir.`;
 
   // 4. Long terme : ancienneté = anti-fragilité (Lindy effect)
-  const longTermReason = `${elder.name} a ${elder.yearCreated} ans d'historique vs ${younger.yearCreated} pour ${younger.name}. Effet Lindy : plus une crypto survit, plus son espérance de survie future augmente. ${riskOf(elder)} de risque actuel.`;
+  const elderAge = new Date().getFullYear() - elder.yearCreated;
+  const youngerAge = new Date().getFullYear() - younger.yearCreated;
+  const longTermReason = `${elder.name} a ${elderAge} ans d'historique (lance en ${elder.yearCreated}) vs ${youngerAge} an${youngerAge > 1 ? "s" : ""} pour ${younger.name} (${younger.yearCreated}). Effet Lindy : plus une crypto survit, plus son esperance de survie future augmente. Niveau de risque ${riskOf(elder)} actuel.`;
 
   return {
     conclusion,
