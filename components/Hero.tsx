@@ -265,10 +265,10 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               Visual + Mobile) : `hidden lg:block` cachait le signal "live data"
               pour 60-70% du trafic FR (mobile). Solution : 2 widgets (compact
               mobile + complet desktop) au lieu d'un seul caché. */}
-          <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
-            {/* BATCH 41a — Tilt3D 6° parallax au mouvement souris.
-                Pattern Linear/Cursor.com. Désactivé sur touch + reduced-motion
-                (cf. Tilt3D.tsx). Le widget devient "objet physique" suivable. */}
+          {/* BATCH 56#7 BISECTION - desactive HeroLiveWidget(Mobile) skeletons
+              dynamic ssr:false pour confirmer s'ils causent React #425.
+              BATCH 56#5 (HeroKpiGrid fix) n'a pas suffi, bug persiste. */}
+          {/* <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
             <Tilt3D max={5}>
               <HeroLiveWidget
                 prices={prices}
@@ -276,20 +276,17 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 updatedAt={updatedAt}
               />
             </Tilt3D>
-          </div>
+          </div> */}
         </div>
 
-        {/* Widget MOBILE compact (visible <lg) — cards scroll-snap horizontal
-            BTC/ETH/SOL, edge-to-edge bleed (-mx-4). Pattern Linear/Phantom.
-            Audit Mobile UX 26/04/2026 (Agent mobile) : le pouce vit en bas, la
-            sensation "live" doit être perçue mobile (cible #1 du site crypto FR). */}
-        <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
+        {/* BATCH 56#7 BISECTION - desactive HeroLiveWidgetMobile aussi */}
+        {/* <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
           <HeroLiveWidgetMobile
             prices={prices}
             sparklines={sparklines}
             updatedAt={updatedAt}
           />
-        </div>
+        </div> */}
 
         {/* Stats card en bas — premium depth (multi-shadow + ring gold subtil).
             HeroKpiGrid (client) staggere chaque cellule via Motion (delay = i*0.1s).
