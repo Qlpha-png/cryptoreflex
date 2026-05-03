@@ -135,7 +135,10 @@ export default function NotFound() {
                 <Link
                   key={s.href}
                   href={s.href}
-                  className="group glass rounded-2xl p-5 hover:border-primary/40 hover:translate-y-[-2px] transition-all"
+                  // BATCH 49b — spotlight-card halo gold cursor pour
+                  // coherence visuelle avec /outils + /cryptos. Page 404
+                  // doit garder le visual signature meme dans l'erreur.
+                  className="spotlight-card group glass rounded-2xl p-5 hover:border-primary/40 hover:translate-y-[-2px] transition-all"
                 >
                   <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary-soft border border-primary/20">
                     <Icon className="h-5 w-5" aria-hidden="true" />

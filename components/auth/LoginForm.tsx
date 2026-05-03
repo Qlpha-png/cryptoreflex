@@ -123,7 +123,13 @@ export default function LoginForm() {
 
   return (
     <div className="glass rounded-2xl p-6 space-y-5">
-      {/* Toggle mode */}
+      {/* Toggle mode.
+          BATCH 49b a11y P1 (audit /compte) — ajout aria-controls + id sur
+          les tabs + role="tabpanel" + aria-labelledby sur les forms pour
+          que NVDA/JAWS/VoiceOver puisse annoncer correctement le panneau
+          actif quand l'user navigue Tab keyboard. Sans ces liens, le
+          screen reader prononçait juste "Mot de passe / Lien magique"
+          sans contexte de quel form etait visible. */}
       <div
         role="tablist"
         aria-label="Méthode de connexion"
@@ -132,12 +138,15 @@ export default function LoginForm() {
         <button
           role="tab"
           type="button"
+          id="login-tab-password"
+          aria-controls="login-panel-password"
           aria-selected={mode === "password"}
+          tabIndex={mode === "password" ? 0 : -1}
           onClick={() => {
             setMode("password");
             setError(null);
           }}
-          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition ${
+          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition min-h-[44px] ${
             mode === "password"
               ? "bg-primary text-bg shadow-sm"
               : "text-fg/70 hover:text-fg"
@@ -149,12 +158,15 @@ export default function LoginForm() {
         <button
           role="tab"
           type="button"
+          id="login-tab-magic"
+          aria-controls="login-panel-magic"
           aria-selected={mode === "magic"}
+          tabIndex={mode === "magic" ? 0 : -1}
           onClick={() => {
             setMode("magic");
             setError(null);
           }}
-          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition ${
+          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold transition min-h-[44px] ${
             mode === "magic"
               ? "bg-primary text-bg shadow-sm"
               : "text-fg/70 hover:text-fg"
@@ -167,7 +179,13 @@ export default function LoginForm() {
 
       {/* PASSWORD MODE */}
       {mode === "password" && (
-        <form onSubmit={handlePasswordSubmit} className="space-y-4">
+        <form
+          onSubmit={handlePasswordSubmit}
+          className="space-y-4"
+          role="tabpanel"
+          id="login-panel-password"
+          aria-labelledby="login-tab-password"
+        >
           <label className="block">
             <span className="block text-sm font-semibold text-fg mb-2">
               Email
@@ -278,7 +296,13 @@ export default function LoginForm() {
 
       {/* MAGIC LINK MODE */}
       {mode === "magic" && (
-        <form onSubmit={handleMagicSubmit} className="space-y-4">
+        <form
+          onSubmit={handleMagicSubmit}
+          className="space-y-4"
+          role="tabpanel"
+          id="login-panel-magic"
+          aria-labelledby="login-tab-magic"
+        >
           <label className="block">
             <span className="block text-sm font-semibold text-fg mb-2">
               Ton email

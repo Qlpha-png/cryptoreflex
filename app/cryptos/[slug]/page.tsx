@@ -406,7 +406,7 @@ export default async function CryptoPage({ params }: Props) {
   ]);
 
   return (
-    <article className="py-12 sm:py-16">
+    <article className="py-12 sm:py-16 auto-reveal-sections">
       <StructuredData data={schemas} id={`crypto-${c.id}`} />
 
       {/* Polish UX 01/05/2026 — barre de progression de lecture sticky top */}
