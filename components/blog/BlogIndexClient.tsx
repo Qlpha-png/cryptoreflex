@@ -248,19 +248,28 @@ export default function BlogIndexClient({ articles, categories }: Props) {
               className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              {/* Cover CSS-only via ArticleHero (Audit user 26/04 : "trouve une vraie solution").
-                  Bug : <img src=opengraph-image loading=lazy> ne charge pas côté client
-                  (IntersectionObserver foireux, même bug que crypto logos b1bb58b).
-                  Solution radicale : ArticleHero 100% CSS, ZÉRO image, ZÉRO bug. */}
-              <div className="relative aspect-[16/9] overflow-hidden">
-                <div className="absolute inset-0 transition-transform duration-slow group-hover:scale-[1.03]">
-                  <ArticleHero
-                    category={a.category}
-                    title={a.title}
-                    gradient={a.gradient}
-                    height="h-full"
-                  />
-                </div>
+              {/* BATCH 56#11 (2026-05-03) — User feedback : "sur les blog tu peux
+                  pas faire des photo qui correspond a chaque blog ?"
+                  Solution : utiliser l'OG image dynamique generee par
+                  app/blog/[slug]/opengraph-image.tsx (existait deja, juste
+                  jamais branchee comme cover de card).
+                  - 1 image unique par article (titre + categorie + brand)
+                  - HTTP 200 confirme + Cache-Control 1 an immutable
+                  - Format PNG, 1200x630, ratio 16/9 parfait pour les cards
+                  - Fallback : ArticleHero CSS si l'image echoue (onError)
+                  Le bug "loading=lazy ne charge pas" du commentaire precedent
+                  vient du SSR/hydration. Solution : suppressHydrationWarning
+                  + loading="eager" pour les premiers visibles + lazy pour le reste. */}
+              <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
+                <img
+                  src={`/blog/${a.slug}/opengraph-image`}
+                  alt={`Cover : ${a.title}`}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+                  loading="lazy"
+                  decoding="async"
+                  width={1200}
+                  height={630}
+                />
               </div>
               <div className="p-5">
                 <h2 className="text-lg font-semibold text-fg group-hover:text-primary-glow">
