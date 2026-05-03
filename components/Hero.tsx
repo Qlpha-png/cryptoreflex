@@ -1,4 +1,5 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowRight,
   FileCheck,
@@ -6,8 +7,32 @@ import {
   Mail,
   ShieldAlert,
 } from "lucide-react";
-import HeroLiveWidget from "@/components/HeroLiveWidget";
-import HeroLiveWidgetMobile from "@/components/HeroLiveWidgetMobile";
+// BATCH 54 — passe les widgets LIVE en client-only (ssr:false) pour
+// ELIMINER le React #425/#422 hydration mismatch. Cause : prix LIVE
+// changent entre SSR (cache stale) et hydration client (cache plus
+// frais) -> text content mismatch sur les valeurs $US/+0.83%. Le
+// widget LIVE n'apporte AUCUN benefice SEO (chiffres dynamiques).
+// Skeleton reserve la place via min-h pour 0 CLS.
+const HeroLiveWidget = dynamic(() => import("@/components/HeroLiveWidget"), {
+  ssr: false,
+  loading: () => (
+    <aside
+      aria-label="Widget marche en cours de chargement"
+      className="rounded-2xl border border-border bg-surface/40 p-5 motion-safe:animate-pulse"
+      style={{ minHeight: 280 }}
+    />
+  ),
+});
+const HeroLiveWidgetMobile = dynamic(() => import("@/components/HeroLiveWidgetMobile"), {
+  ssr: false,
+  loading: () => (
+    <aside
+      aria-label="Widget marche mobile en cours de chargement"
+      className="rounded-2xl border border-border bg-surface/40 p-4 motion-safe:animate-pulse"
+      style={{ minHeight: 240 }}
+    />
+  ),
+});
 import HeroHeadline from "@/components/HeroHeadline";
 import HeroPrimaryCta from "@/components/HeroPrimaryCta";
 import HeroKpiGrid from "@/components/HeroKpiGrid";

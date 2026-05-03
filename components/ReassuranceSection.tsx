@@ -110,12 +110,19 @@ function useInView<T extends HTMLElement>() {
   return { ref, seen };
 }
 
-/** Timestamp relatif "il y a Xh" — refresh client toutes les 60s. */
-function useRelativeTime(baseDate: Date) {
-  const [label, setLabel] = useState("à l'instant");
+/** Timestamp relatif "il y a Xh" — refresh client toutes les 60s.
+ *  BATCH 54 — useRef(new Date()) cause mismatch SSR vs client (timestamp
+ *  initial different). Maintenant : pas de baseDate prop, on calcule
+ *  directement Date.now() - 4h dans useEffect (client only). Initial
+ *  state "il y a 4h" stable des 2 cotes.
+ */
+function useRelativeTime() {
+  const [label, setLabel] = useState("il y a 4 h");
   useEffect(() => {
+    // Reset baseDate au mount client (4h dans le passé)
+    const baseTime = Date.now() - 4 * 60 * 60 * 1000;
     const compute = () => {
-      const diffMin = Math.floor((Date.now() - baseDate.getTime()) / 60000);
+      const diffMin = Math.floor((Date.now() - baseTime) / 60000);
       if (diffMin < 1) setLabel("à l'instant");
       else if (diffMin < 60) setLabel(`il y a ${diffMin} min`);
       else if (diffMin < 1440) setLabel(`il y a ${Math.floor(diffMin / 60)} h`);
@@ -124,7 +131,7 @@ function useRelativeTime(baseDate: Date) {
     compute();
     const id = setInterval(compute, 60_000);
     return () => clearInterval(id);
-  }, [baseDate]);
+  }, []);
   return label;
 }
 
@@ -222,9 +229,10 @@ function KpiCard({
 }
 
 export default function ReassuranceSection() {
-  // Base = "il y a 4h" pour rendu honnête au mount (recalculé client toutes les 60s).
-  const baseDate = useRef(new Date(Date.now() - 4 * 60 * 60 * 1000)).current;
-  const relTime = useRelativeTime(baseDate);
+  // BATCH 54 — useRelativeTime ne prend plus de baseDate prop. La logique
+  // est interne au hook qui utilise useEffect (client only) pour eviter
+  // le mismatch SSR vs client (avant : useRef(new Date()) different).
+  const relTime = useRelativeTime();
   const micaDays = useMicaCountdown();
 
   return (
