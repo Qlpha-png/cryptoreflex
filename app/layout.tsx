@@ -17,6 +17,7 @@ import SpeculationRules from "@/components/SpeculationRules";
 import SpotlightDelegate from "@/components/SpotlightDelegate";
 import CursorHalo from "@/components/ui/CursorHalo";
 import VisibilityPauser from "@/components/ui/VisibilityPauser";
+import ClickFallback from "@/components/ClickFallback";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -491,6 +492,12 @@ export default function RootLayout({
             quand l'onglet est masqué (Page Visibility API). Économie batterie
             mobile + Lighthouse Energy. Aucun impact UX visible. */}
         <VisibilityPauser />
+        {/* BATCH 44g (2026-05-03) — SAFETY NET clic. Si Next.js Link router.push
+            echoue silencieusement (cf. /cryptos/ethereum bug ou wallet
+            extensions cassent l'hydration), fallback hard reload apres 350ms.
+            Garantit que tous les clics sur <Link> aboutissent toujours, meme
+            si la navigation SPA est cassee. Cf. components/ClickFallback.tsx */}
+        <ClickFallback />
       </body>
     </html>
   );
