@@ -118,18 +118,40 @@ export const DEFAULT_COINS: CoinId[] = [
  * Implementation interne de fetchPrices — wrappée par unstable_cache plus bas.
  */
 async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
+  // BATCH 51 (2026-05-03) URGENT — Migration CoinGecko -> aggregator
+  // maison (Binance + CoinCap + static). User feedback : "fais ce que
+  // fais coingecko pour nous meme tout simplement". On essaie d'abord
+  // notre price-source.ts (gratuit illimite). Fallback CoinGecko apres.
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
+    // Si toutes les sources ont retourne du non-static (= reussite Binance/
+    // CoinCap), on retourne sans toucher a CoinGecko.
+    const allFresh = snapshots.every((s) => s.source !== "static");
+    if (allFresh) {
+      return snapshots.map((s) => ({
+        id: s.id as CoinId,
+        symbol: s.symbol,
+        name: s.name,
+        price: s.priceUsd,
+        change24h: s.change24h,
+        marketCap: s.marketCap,
+        image: `https://assets.coincap.io/assets/icons/${s.symbol.toLowerCase()}@2x.png`,
+      }));
+    }
+    // Sinon, on tente CoinGecko en fallback (peut succeeder pour les coins
+    // que Binance n'a pas et que CoinCap a mal).
+  } catch {
+    // price-source unavailable → fallback CoinGecko ci-dessous
+  }
+
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
     ","
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=false&price_change_percentage=24h`;
 
   try {
     const res = await fetch(url, {
-      // BATCH 50 (2026-05-03) URGENT — CoinGecko free plan EPUISE
-      // (10K req/mois quota atteint). Bumpe revalidate 60s -> 300s
-      // (5 min) pour reduire consumption x5. UX impact minimal :
-      // utilisateurs voient des prix "vieux" de 5min max au lieu de
-      // 1min. Acceptable pour un site educatif crypto FR (pas du
-      // trading high-freq).
+      // Cache long (free plan epuise) — n'est plus la source primaire
       next: { revalidate: 300, tags: [CG_TAGS.prices] },
       headers: cgHeaders(),
     });
@@ -284,10 +306,39 @@ export interface GlobalMetrics {
 }
 
 async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
+  // BATCH 51 — Migration : on derive les metriques globales depuis le top
+  // 200 CoinCap (gratuit illimite) au lieu de CoinGecko /global. Total
+  // market cap = somme des market caps. BTC dominance = btc.marketCap /
+  // total. Approximation : le top 200 represente >97% de la capitalisation
+  // totale (longue queue negligeable). Fallback CoinGecko ci-dessous.
+  try {
+    const { getTopMarket } = await import("@/lib/price-source");
+    const top200 = await getTopMarket(200);
+    if (top200.length >= 50) {
+      const totalMarketCap = top200.reduce((sum, c) => sum + (c.marketCap || 0), 0);
+      const totalVolume = top200.reduce((sum, c) => sum + (c.volume24h || 0), 0);
+      const btc = top200.find((c) => c.symbol === "BTC");
+      const eth = top200.find((c) => c.symbol === "ETH");
+      // change24h pondere = somme(change × marketCap) / totalMarketCap
+      const weightedChange =
+        totalMarketCap > 0
+          ? top200.reduce((sum, c) => sum + (c.change24h || 0) * (c.marketCap || 0), 0) / totalMarketCap
+          : 0;
+      return {
+        totalMarketCapUsd: totalMarketCap,
+        totalVolume24hUsd: totalVolume,
+        btcDominance: btc && totalMarketCap > 0 ? (btc.marketCap / totalMarketCap) * 100 : 0,
+        ethDominance: eth && totalMarketCap > 0 ? (eth.marketCap / totalMarketCap) * 100 : 0,
+        marketCapChange24h: weightedChange,
+        activeCryptos: top200.length, // approximation — on a 1500+ via CoinCap mais on tronque
+      };
+    }
+  } catch {
+    // Fallback CoinGecko
+  }
+
   try {
     const res = await fetch(`${COINGECKO_BASE}/global`, {
-      // BATCH 50 — 300s -> 1800s (30 min). Global metrics (market cap
-      // total, BTC dominance) ne bougent quasi pas en 30min, OK.
       next: { revalidate: 1800, tags: [CG_TAGS.global] },
       headers: cgHeaders(),
     });
@@ -383,12 +434,46 @@ export interface MarketCoin {
 }
 
 async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
+  // BATCH 51 — Migration aggregator maison. CoinCap retourne deja le top
+  // par market cap, on l'utilise en priorite. Fallback CoinGecko si vide.
+  try {
+    const { getTopMarket } = await import("@/lib/price-source");
+    const top = await getTopMarket(limit);
+    if (top.length >= Math.min(limit, 10)) {
+      // CoinCap n'expose pas sparkline 7d ni change 1h. On enrichit
+      // optionnellement avec Binance klines (en parallele, best-effort).
+      const { getPriceSnapshot } = await import("@/lib/price-source");
+      const enriched = await Promise.all(
+        top.map(async (c) => {
+          const snap = await getPriceSnapshot(c.id).catch(() => null);
+          return {
+            id: c.id,
+            symbol: c.symbol,
+            name: c.name,
+            image: c.image,
+            currentPrice: c.priceUsd,
+            marketCap: c.marketCap,
+            marketCapRank: c.marketCapRank,
+            totalVolume: c.volume24h,
+            priceChange1h: null, // pas dispo via price-source pour l'instant
+            priceChange24h: c.change24h,
+            priceChange7d: snap?.change7d ?? null,
+            sparkline7d: snap?.sparkline7d ?? [],
+            circulatingSupply: c.marketCap > 0 && c.priceUsd > 0 ? c.marketCap / c.priceUsd : 0,
+            ath: 0, // approximation : nous n'avons pas l'ATH historique
+          };
+        }),
+      );
+      return enriched;
+    }
+  } catch {
+    // price-source unavailable, fallback CoinGecko
+  }
+
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
   try {
     const res = await fetch(url, {
-      // BATCH 50 — 120s -> 600s (10 min). Top market table = donnees
-      // riches (sparkline 7d, 1h/24h/7d changes), payload lourd, OK
-      // pour cache 10 min sur un site educatif.
+      // Fallback ultime CoinGecko — cache long (free plan epuise)
       next: { revalidate: 600, tags: [CG_TAGS.market] },
       headers: cgHeaders(),
     });
@@ -603,6 +688,45 @@ export interface CoinDetail {
 }
 
 async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
+  // BATCH 51 — Migration price-source pour les 100 fiches /cryptos/[slug].
+  // Avant : appel CoinGecko coins/markets pour CHAQUE fiche = 100+ calls
+  // par jour minimum. Maintenant : Binance ticker + klines (gratuit
+  // illimite). Fallback CoinGecko uniquement pour les coins absents
+  // de Binance (rare pour le top 100 traite par notre site).
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const snap = await getPriceSnapshot(coingeckoId);
+    if (snap.source !== "static" && snap.priceUsd > 0) {
+      // Donnees fraiches Binance ou CoinCap. On manque ATH/ATL et
+      // marketCapRank — on les laisse a 0/null. La fiche affichera
+      // les donnees principales correctement.
+      return {
+        id: snap.id,
+        symbol: snap.symbol,
+        name: snap.name,
+        image: `https://assets.coincap.io/assets/icons/${snap.symbol.toLowerCase()}@2x.png`,
+        currentPrice: snap.priceUsd,
+        priceChange24h: snap.change24h,
+        priceChange7d: snap.change7d,
+        marketCap: snap.marketCap,
+        marketCapRank: 0, // approximation — non critique sur fiche detail
+        totalVolume: snap.volume24h,
+        circulatingSupply: snap.marketCap > 0 && snap.priceUsd > 0 ? snap.marketCap / snap.priceUsd : 0,
+        totalSupply: null,
+        maxSupply: null,
+        ath: 0,
+        athDate: null,
+        atl: 0,
+        atlDate: null,
+        sparkline7d: snap.sparkline7d,
+      };
+    }
+    // Sinon (source=static = Binance + CoinCap ont fail), on tente
+    // CoinGecko en fallback ultime.
+  } catch {
+    // Aggregator indisponible, fallback CoinGecko
+  }
+
   // Endpoint /coins/markets en single-id : permet d'obtenir sparkline 7d + variations
   // sans payer le coût d'/coins/{id}/market_chart (10 000 datapoints).
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
