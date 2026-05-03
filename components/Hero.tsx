@@ -105,9 +105,15 @@ const STATS = {
 } as const;
 
 export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
-  // BATCH 56#9 BISECTION : hardcode lastUpdate pour eliminer
-  // toLocaleDateString comme cause du React #425.
-  const lastUpdate = "03/05/2026";
+  // Audit Block 1 RE-AUDIT 26/04/2026 (Agents back+SEO) : la date doit refléter
+  // la prop `updatedAt` propagée par le serveur (ISO du fetch CoinGecko réel),
+  // pas un `new Date()` au render qui retourne l'instant du build.
+  const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
+  const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   return (
     <section
@@ -142,16 +148,11 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
         <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
           {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
           <div className="max-w-2xl">
-            {/* BATCH 56#8 BISECTION : HeroHeadline + HeroPrimaryCta + HeroKpiGrid
-                + AnimatedNumber remplaces par statique pour finir bisection */}
-            <h1 className="ds-h1 leading-[1.05]">
-              L&apos;écosystème crypto français qui a lu les{" "}
-              <span className="hero-headline-accent">847 pages de MiCA</span>
-              <br className="hidden lg:inline" />{" "}
-              <span className="text-fg">
-                pour toi. Plateformes, analyses, outils, fiscalité — tout en un.
-              </span>
-            </h1>
+            {/* H1 — A/B test `hero_headline_v1` (mai 2026, vague Conversion).
+                Variants : control (copie SEO actuelle) / social-proof / speed.
+                SSR rend "control" puis Client réassigne. Cf. components/HeroHeadline.tsx
+                + lib/abtest-experiments.ts. */}
+            <HeroHeadline />
 
             {/* Badges trust — sous le H1 (audit homepage chirurgical 2026-05-02
                 #7 : remontés ici car au-dessus du H1 ils volaient l'attention).
@@ -210,15 +211,11 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               {/* BATCH 29D — CTA réécrit "Décode ma plateforme" (verbe
                   signature tonton décodeur). Sub-objection killer "Quiz
                   2 min · Aucun email demandé" ajouté en aria pour SR. */}
-              {/* BATCH 56#8 BISECTION : HeroPrimaryCta remplace par <a> static */}
-              <a
+              <HeroPrimaryCta
                 href="/quiz/plateforme"
-                className="btn-primary text-body px-6 py-3.5 shadow-glow-gold w-full sm:w-auto"
-                aria-label="Décode ma plateforme crypto en 2 minutes — quiz personnalisé, aucun email demandé"
-              >
-                Décode ma plateforme en 2 min
-                <ArrowRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-              </a>
+                label="Décode ma plateforme en 2 min"
+                ariaLabel="Décode ma plateforme crypto en 2 minutes — quiz personnalisé, aucun email demandé"
+              />
               <Link
                 href="#cat-informe"
                 className="btn-ghost text-base w-full sm:w-auto"
@@ -268,10 +265,8 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               Visual + Mobile) : `hidden lg:block` cachait le signal "live data"
               pour 60-70% du trafic FR (mobile). Solution : 2 widgets (compact
               mobile + complet desktop) au lieu d'un seul caché. */}
-          {/* BATCH 56#7 BISECTION - desactive HeroLiveWidget(Mobile) skeletons
-              dynamic ssr:false pour confirmer s'ils causent React #425.
-              BATCH 56#5 (HeroKpiGrid fix) n'a pas suffi, bug persiste. */}
-          {/* <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
+          {/* Colonne droite — live widget DESKTOP (>=lg). */}
+          <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
             <Tilt3D max={5}>
               <HeroLiveWidget
                 prices={prices}
@@ -279,17 +274,17 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 updatedAt={updatedAt}
               />
             </Tilt3D>
-          </div> */}
+          </div>
         </div>
 
-        {/* BATCH 56#7 BISECTION - desactive HeroLiveWidgetMobile aussi */}
-        {/* <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
+        {/* Widget MOBILE compact (visible <lg) */}
+        <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
           <HeroLiveWidgetMobile
             prices={prices}
             sparklines={sparklines}
             updatedAt={updatedAt}
           />
-        </div> */}
+        </div>
 
         {/* Stats card en bas — premium depth (multi-shadow + ring gold subtil).
             HeroKpiGrid (client) staggere chaque cellule via Motion (delay = i*0.1s).
@@ -299,13 +294,14 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               4s) + Tilt3D 4° subtle pour signature visuelle "2026". Tilt amplitude
               4° (vs 5° HeroLiveWidget) car KPI grid est plus large = même angle
               visuel à l'œil. */}
-          {/* BATCH 56#8 BISECTION : Tilt3D + HeroKpiGrid remplaces par div static */}
-          <div className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
-            <KpiCell value={STATS.platforms} label="Marques fiables" accent />
-            <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
-            <KpiCell value={STATS.tools} label="Outils gratuits" />
-            <KpiCell text={STATS.method} label="Méthode" />
-          </div>
+          <Tilt3D max={4}>
+            <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
+              <KpiCell value={STATS.platforms} label="Marques fiables" accent />
+              <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
+              <KpiCell value={STATS.tools} label="Outils gratuits" />
+              <KpiCell text={STATS.method} label="Méthode" />
+            </HeroKpiGrid>
+          </Tilt3D>
         </div>
       </div>
 
@@ -377,8 +373,7 @@ function KpiCell({
           accent ? "text-primary-soft" : "text-fg"
         }`}
       >
-        {/* BATCH 56#8 BISECTION : AnimatedNumber remplace par span static */}
-        {isNum ? <span className="tabular-nums">{value}</span> : text}
+        {isNum ? <AnimatedNumber value={value!} duration={900} /> : text}
       </div>
       <div className="mt-1.5 text-caption sm:text-xs text-muted uppercase tracking-wide font-medium">
         {label}
