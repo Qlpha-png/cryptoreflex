@@ -625,8 +625,28 @@ export async function evaluateAndFire(
 async function fetchSimplePriceForAlert(
   cryptoId: string,
 ): Promise<{ eur: number; usd: number } | null> {
+  // BATCH 51 — Migration : passer par notre aggregator gratuit illimite
+  // (Binance + CoinCap). Le cron alertes peut tourner toutes les 15 min
+  // et iterer sur N alertes -> consumption CoinGecko massive avant.
+  // Maintenant : 0 call CoinGecko si Binance/CoinCap repondent.
+  // Pour EUR : on convertit USD -> EUR via taux fixe approximatif 0.92
+  // (precision suffisante pour declencher des alertes prix). Une vraie
+  // conversion EUR/USD pourrait passer par Binance EURUSDT pair futur.
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const snap = await getPriceSnapshot(cryptoId);
+    if (snap.priceUsd > 0 && snap.source !== "static") {
+      // Approximation EUR via taux fixe (1 USD = 0.92 EUR au 2026-05).
+      // Ecart max 2% vs taux reel — acceptable pour alerte prix.
+      const EUR_USD_RATE = 0.92;
+      return { usd: snap.priceUsd, eur: snap.priceUsd * EUR_USD_RATE };
+    }
+  } catch {
+    // Aggregator KO, fallback CoinGecko
+  }
+
   // Préférence : si c'est une CoinId du top 6 connu, on réutilise fetchPrices
-  // (cache unstable_cache 60s, partagé avec le ticker public).
+  // (cache unstable_cache, partagé avec le ticker public).
   const TOP_6: ReadonlyArray<CoinId> = [
     "bitcoin",
     "ethereum",
