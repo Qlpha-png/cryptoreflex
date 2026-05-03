@@ -129,7 +129,7 @@ export default function HeroLiveWidget({
           Voir tout le marché
           <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
-        <span className="text-[11px] text-muted">100 cryptos analysées</span>
+        <span className="text-[11px] text-muted">Marché crypto</span>
       </div>
     </aside>
   );
