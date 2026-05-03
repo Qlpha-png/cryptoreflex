@@ -45,25 +45,15 @@ export default async function OgImage({ params }: Props) {
           justifyContent: "space-between",
           padding: 80,
           backgroundColor: "#0B0D10",
-          // BATCH 56#16 : palette gold/dark coherente avec le site (vs cyan/purple precedent).
-          // Multi-gradient pour profondeur premium (Linear/Vercel pattern).
+          // BATCH 56#17 FIX : Satori (next/og) ne supporte qu'UN SEUL gradient
+          // par element. BATCH 56#16 utilisait 3 gradients separes par virgule
+          // -> Satori crash -> HTTP 500. Fix : 1 seul radial-gradient gold.
           backgroundImage:
-            "radial-gradient(ellipse 1200px 800px at 0% 0%, rgba(245, 165, 36, 0.25) 0%, transparent 50%), radial-gradient(ellipse 800px 600px at 100% 100%, rgba(252, 211, 77, 0.15) 0%, transparent 50%), linear-gradient(180deg, #0B0D10 0%, #14171C 100%)",
+            "radial-gradient(ellipse 1200px 800px at 0% 0%, rgba(245, 165, 36, 0.25) 0%, transparent 60%)",
           color: "white",
           position: "relative",
         }}
       >
-        {/* Subtle dotted grid background */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            display: "flex",
-          }}
-        />
 
         {/* Header */}
         <div
