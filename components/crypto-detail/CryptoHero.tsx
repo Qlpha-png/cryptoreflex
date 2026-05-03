@@ -168,7 +168,10 @@ export default function CryptoHero({
           `min-w-0 sm:min-w-[260px] w-full` : pleine largeur en stack mobile,
           mini-card 260px à partir de sm (640px) où on a la place. */}
       <div className="min-w-0 sm:min-w-[260px] w-full space-y-3">
-        <div className="rounded-2xl border border-border bg-surface p-4">
+        {/* BATCH 48d glassmorphism : backdrop-blur + bg semi-transparent +
+            ring inset subtil = trading-terminal Linear/Vercel feel. Le
+            spotlight-card ajoute le halo gold qui suit la souris. */}
+        <div className="spotlight-card rounded-2xl border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
           <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
           <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
           <p className="mt-2 text-[11px] text-muted">

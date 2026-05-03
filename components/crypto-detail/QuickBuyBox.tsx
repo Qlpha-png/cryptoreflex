@@ -143,6 +143,11 @@ function QuickBuyRow({
         </div>
       </div>
 
+      {/* BATCH 48d — CTA Acheter sur X = conversion-critical bottom-funnel.
+          Le CTA principal (isTop=true) recoit btn-primary-shine (shimmer
+          gold hover) + partner-cta-pulse (anneau gold qui pulse 2.5s,
+          signature buy-now). Le 2eme CTA garde un style sobre car il y a
+          deja une hierarchie #1 vs alternative. */}
       <a
         href={platform.affiliateUrl}
         target="_blank"
@@ -150,12 +155,12 @@ function QuickBuyRow({
         data-analytics-cta={`quickbuy-${platform.id}`}
         className={`mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
           isTop
-            ? "bg-primary text-background hover:bg-primary-glow"
+            ? "btn-primary-shine partner-cta-pulse bg-primary text-background hover:bg-primary-glow"
             : "border border-border bg-elevated/60 text-fg hover:border-primary/50"
         }`}
       >
         Acheter sur {platform.name}
-        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        <ExternalLink className="h-3.5 w-3.5 arrow-spring" aria-hidden="true" />
       </a>
       <Link
         href={`/avis/${platform.id}`}
