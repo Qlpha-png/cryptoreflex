@@ -567,10 +567,35 @@ async function _fetchConversionRate(
   };
 
   try {
+    // BATCH 51d — Migration price-source pour le convertisseur live.
+    // Avant : CoinGecko simple/price 2-3 calls par conversion. Le
+    // convertisseur est un outil hot-path tres consommateur (chaque
+    // user qui change un input = 1 fetch). Maintenant : Binance +
+    // CoinCap gratuit illimite via getPriceSnapshot.
+    // Conversion fiat via taux fixes : USD/EUR=0.92, GBP/EUR=1.17,
+    // CHF/EUR=1.05 (mai 2026, ecart <2% pour outil convertisseur
+    // educatif non-trading).
+    const FIAT_TO_USD: Record<string, number> = {
+      usd: 1,
+      eur: 1 / 0.92,    // 1 EUR = 1.087 USD
+      gbp: 1 / 0.79,    // 1 GBP = 1.266 USD (1 USD = 0.79 GBP)
+      chf: 1 / 0.88,    // 1 CHF = 1.136 USD
+    };
+
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const now = new Date().toISOString();
+
     // Crypto → Fiat
     if (!isFiat(fromLower) && isFiat(toLower)) {
       const id = COIN_IDS[fromLower];
       if (!id) return null;
+      const snap = await getPriceSnapshot(id);
+      if (snap.priceUsd > 0 && snap.source !== "static") {
+        // priceUsd / FIAT_TO_USD[toLower] = combien de fiat pour 1 crypto
+        const rate = snap.priceUsd / FIAT_TO_USD[toLower];
+        return { rate, lastUpdated: snap.fetchedAt };
+      }
+      // Fallback CoinGecko (cas rare)
       const json = await fetchSimple([id], toLower);
       const point = json?.[id];
       if (!point) return null;
@@ -580,10 +605,16 @@ async function _fetchConversionRate(
       };
     }
 
-    // Fiat → Crypto (inverse du précédent)
+    // Fiat → Crypto (inverse)
     if (isFiat(fromLower) && !isFiat(toLower)) {
       const id = COIN_IDS[toLower];
       if (!id) return null;
+      const snap = await getPriceSnapshot(id);
+      if (snap.priceUsd > 0 && snap.source !== "static") {
+        // 1 / (priceUsd / FIAT_TO_USD[fromLower]) = combien de crypto pour 1 fiat
+        const fiatRate = snap.priceUsd / FIAT_TO_USD[fromLower];
+        return { rate: 1 / fiatRate, lastUpdated: snap.fetchedAt };
+      }
       const json = await fetchSimple([id], fromLower);
       const point = json?.[id];
       if (!point || !point[fromLower]) return null;
@@ -593,23 +624,34 @@ async function _fetchConversionRate(
       };
     }
 
-    // Cross-crypto → on passe par EUR
+    // Cross-crypto → on passe par USD via aggregator
     if (!isFiat(fromLower) && !isFiat(toLower)) {
       const idFrom = COIN_IDS[fromLower];
       const idTo = COIN_IDS[toLower];
       if (!idFrom || !idTo) return null;
+      const [a, b] = await Promise.all([
+        getPriceSnapshot(idFrom),
+        getPriceSnapshot(idTo),
+      ]);
+      if (a.priceUsd > 0 && b.priceUsd > 0 && a.source !== "static" && b.source !== "static") {
+        return {
+          rate: a.priceUsd / b.priceUsd,
+          lastUpdated: now,
+        };
+      }
+      // Fallback CoinGecko
       const json = await fetchSimple([idFrom, idTo], "eur");
-      const a = json?.[idFrom];
-      const b = json?.[idTo];
-      if (!a || !b || !b.eur) return null;
-      const ts = Math.max(a.last_updated_at ?? 0, b.last_updated_at ?? 0) || Date.now() / 1000;
+      const ax = json?.[idFrom];
+      const bx = json?.[idTo];
+      if (!ax || !bx || !bx.eur) return null;
+      const ts = Math.max(ax.last_updated_at ?? 0, bx.last_updated_at ?? 0) || Date.now() / 1000;
       return {
-        rate: a.eur / b.eur,
+        rate: ax.eur / bx.eur,
         lastUpdated: new Date(ts * 1000).toISOString(),
       };
     }
 
-    // Fiat → Fiat (rare ; on renvoie null pour forcer EUR/USD via API dédiée éventuelle)
+    // Fiat → Fiat
     return { rate: 1, lastUpdated: new Date().toISOString() };
   } catch (err) {
     console.warn("[historical-prices] rate failed:", err);
