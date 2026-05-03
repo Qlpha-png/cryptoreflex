@@ -213,19 +213,23 @@ export default async function HomePage() {
           Les bandeaux (metrics / news / ticker) viennent APRÈS le Hero, comme
           ressources contextuelles. Réduit -300ms LCP p75 mobile estimé.
          ────────────────────────────────────────────────────────────────── */}
-      {/* BATCH 56#4 BISECTION - desactive Hero pour isoler React #425.
-          Si bug disparait -> coupable est dans Hero (HeroHeadline /
-          HeroPrimaryCta / HeroKpiGrid / AnimatedNumber / Tilt3D /
-          HeroLiveWidget). Si persiste -> GlobalMetricsBar ou HomeAnchorNav. */}
-      {/* <Hero
+      <Hero
         prices={prices}
         sparklines={heroSparklines}
         updatedAt={updatedAt}
-      /> */}
-      {/* <TrustMarquee /> */}
-      {/* <Reveal>
+      />
+      {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
+          slowly entre Hero et Reassurance. Comble la zone morte narrative
+          + signal "ces 8 sources nous surveillent". Pause au hover. */}
+      <TrustMarquee />
+      {/* BATCH 41a — Reveal scroll fade-up sur ReassuranceSection (et
+          toutes les sections suivantes via Reveal wrapper). Anim subtle :
+          opacity 0→1 + translate Y 24px→0, easing emphasized 700ms,
+          déclenchée à 15% viewport. prefers-reduced-motion bypass via
+          CSS .reveal class (cf. Reveal.tsx + globals.css). */}
+      <Reveal>
         <ReassuranceSection />
-      </Reveal> */}
+      </Reveal>
       {/* BATCH 35d — user feedback "enlève ça" sur NewsBar + PriceTicker.
           On garde uniquement GlobalMetricsBar (Market Cap + F&G + dominance)
           qui apporte de la donnée live unique sans répéter ce qui est déjà
@@ -245,12 +249,6 @@ export default async function HomePage() {
           Permet au visiteur de scroll-to-section direct vs scroller 5 viewports. */}
       <HomeAnchorNav />
 
-      {/* BATCH 56#3 BISECTION — desactive TOUT apres HomeAnchorNav
-          pour isoler React #425. Si bug disparait -> coupable est dans
-          BeginnerJourney/PlatformsSection/Top10/BlogPreview/ToolsTeaser/
-          QuizPromo/NewsletterCapture/NextStepsGuide/StickyMobileCta.
-          Si bug persiste -> coupable est dans Hero/GlobalMetricsBar/HomeAnchorNav. */}
-      {false && (<>
       {/* ──────────────────────────────────────────────────────────────────
           CATÉGORIE 1 — DÉMARRER MAINTENANT
           Pour qui n'a jamais acheté de crypto. On ramène le parcours
@@ -336,11 +334,7 @@ export default async function HomePage() {
           intro="Les news crypto qui comptent vraiment + les events à ne pas rater (halvings, FOMC, ETF deadlines)."
           anchorId="cat-actu"
         />
-        {/* BATCH 56 BISECTION TEMP — desactive TodaysNewsAndEvents pour
-            isoler la cause du React #425 home. Si le bug disparait, c'est
-            que NewsRelativeTime/EventCountdown sentinel patches BATCH 55
-            insuffisants. Sinon, le composant fautif est ailleurs. */}
-        {/* <TodaysNewsAndEvents /> */}
+        <TodaysNewsAndEvents />
       </section>
 
       <CategoryDivider />
@@ -410,7 +404,6 @@ export default async function HomePage() {
           <lg uniquement, après scroll>400px, disparaît quand on entre dans
           #cat-comparer pour éviter doublon. Dismissible (sessionStorage). */}
       <StickyMobileCta />
-      </>)}
     </>
   );
 }
