@@ -125,10 +125,12 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
-    // Si toutes les sources ont retourne du non-static (= reussite Binance/
-    // CoinCap), on retourne sans toucher a CoinGecko.
-    const allFresh = snapshots.every((s) => s.source !== "static");
-    if (allFresh) {
+    // BUG FIX 2026-05-03 — accept ALL snapshots avec priceUsd>0 (y compris
+    // static fallback). Avant on tombait sur CoinGecko (epuise) si un seul
+    // snapshot etait static -> tout revient en null/vide. Maintenant on
+    // se contente du dataset static plutot qu'un null.
+    const allWithPrice = snapshots.every((s) => s.priceUsd > 0);
+    if (allWithPrice) {
       return snapshots.map((s) => ({
         id: s.id as CoinId,
         symbol: s.symbol,
@@ -700,10 +702,12 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snap = await getPriceSnapshot(coingeckoId);
-    if (snap.source !== "static" && snap.priceUsd > 0) {
-      // Donnees fraiches Binance ou CoinCap. On manque ATH/ATL et
-      // marketCapRank — on les laisse a 0/null. La fiche affichera
-      // les donnees principales correctement.
+    // BUG FIX 2026-05-03 audit live — accept TOUTE source avec priceUsd>0,
+    // y compris static fallback. Avant : on skippait static et tombait sur
+    // CoinGecko (epuise) -> "—" affiche sur la fiche. Le static fallback
+    // contient des prix recents (snapshot manuel top 10), bien meilleur
+    // qu'un null. Si CoinGecko aussi vide -> seulement la on retourne null.
+    if (snap.priceUsd > 0) {
       return {
         id: snap.id,
         symbol: snap.symbol,

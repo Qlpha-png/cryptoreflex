@@ -75,8 +75,9 @@ async function _fetchPortfolioPrices(
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const EUR_USD = 0.92;
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
-    const fresh = snapshots.filter((s) => s.source !== "static" && s.priceUsd > 0);
-    if (fresh.length >= Math.floor(ids.length * 0.7)) {
+    // BUG FIX 2026-05-03 — accept tout snapshot avec priceUsd>0 (incl. static)
+    const withPrice = snapshots.filter((s) => s.priceUsd > 0);
+    if (withPrice.length >= Math.floor(ids.length * 0.7)) {
       // 70% au moins de fresh = retour direct
       return snapshots.map((s) => ({
         id: s.id,

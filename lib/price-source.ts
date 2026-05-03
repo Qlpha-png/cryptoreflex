@@ -194,6 +194,10 @@ async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
  * V1 future : remplacer par un fetch Vercel KV qui contient le dernier
  * snapshot reussi (auto-update via cron).
  */
+// Snapshot statique mai 2026 — prix moyens lisses derniere semaine. Etendu
+// aux 30 cryptos les plus visitees du site pour eviter "—" sur les fiches
+// si Binance + CoinCap echouent (cas Vercel Edge IP block, freeze, etc.).
+// MAJ trimestrielle ou via cron (a faire BATCH 52 : auto-update via KV).
 const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24h" | "marketCap" | "volume24h">> = {
   bitcoin:    { priceUsd: 78500, change24h: 0,  marketCap: 1550000000000, volume24h: 35000000000 },
   ethereum:   { priceUsd: 2320,  change24h: 0,  marketCap:  280000000000, volume24h: 18000000000 },
@@ -205,6 +209,31 @@ const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24
   tron:       { priceUsd: 0.16,  change24h: 0,  marketCap:   14000000000, volume24h:   500000000 },
   "avalanche-2": { priceUsd: 30, change24h: 0,  marketCap:   12000000000, volume24h:   400000000 },
   chainlink:  { priceUsd: 14,    change24h: 0,  marketCap:    8000000000, volume24h:   400000000 },
+  polkadot:   { priceUsd: 4.2,   change24h: 0,  marketCap:    6500000000, volume24h:   180000000 },
+  "matic-network": { priceUsd: 0.42, change24h: 0, marketCap: 4200000000, volume24h:  150000000 },
+  "the-open-network": { priceUsd: 4.8, change24h: 0, marketCap: 12000000000, volume24h: 200000000 },
+  "shiba-inu": { priceUsd: 0.000017, change24h: 0, marketCap: 10000000000, volume24h: 350000000 },
+  litecoin:   { priceUsd: 80,    change24h: 0,  marketCap:    6000000000, volume24h:   300000000 },
+  "bitcoin-cash": { priceUsd: 380, change24h: 0, marketCap:   7500000000, volume24h:   250000000 },
+  near:       { priceUsd: 4.5,   change24h: 0,  marketCap:    5000000000, volume24h:   180000000 },
+  uniswap:    { priceUsd: 8,     change24h: 0,  marketCap:    4800000000, volume24h:   120000000 },
+  aptos:      { priceUsd: 8.5,   change24h: 0,  marketCap:    4500000000, volume24h:   150000000 },
+  "internet-computer": { priceUsd: 9, change24h: 0, marketCap: 4200000000, volume24h: 100000000 },
+  "ethereum-classic": { priceUsd: 22, change24h: 0, marketCap: 3300000000, volume24h: 110000000 },
+  cosmos:     { priceUsd: 7,     change24h: 0,  marketCap:    2700000000, volume24h:    80000000 },
+  stellar:    { priceUsd: 0.10,  change24h: 0,  marketCap:    3000000000, volume24h:    90000000 },
+  filecoin:   { priceUsd: 4.5,   change24h: 0,  marketCap:    2700000000, volume24h:    90000000 },
+  monero:     { priceUsd: 165,   change24h: 0,  marketCap:    3000000000, volume24h:    50000000 },
+  algorand:   { priceUsd: 0.18,  change24h: 0,  marketCap:    1500000000, volume24h:    40000000 },
+  tezos:      { priceUsd: 0.85,  change24h: 0,  marketCap:    850000000,  volume24h:    20000000 },
+  "hedera-hashgraph": { priceUsd: 0.06, change24h: 0, marketCap: 2200000000, volume24h: 70000000 },
+  aave:       { priceUsd: 145,   change24h: 0,  marketCap:    2200000000, volume24h:    80000000 },
+  maker:      { priceUsd: 1450,  change24h: 0,  marketCap:    1300000000, volume24h:    40000000 },
+  sui:        { priceUsd: 1.5,   change24h: 0,  marketCap:    4500000000, volume24h:   180000000 },
+  arbitrum:   { priceUsd: 0.85,  change24h: 0,  marketCap:    3500000000, volume24h:   120000000 },
+  optimism:   { priceUsd: 1.6,   change24h: 0,  marketCap:    1800000000, volume24h:    60000000 },
+  tether:     { priceUsd: 1,     change24h: 0,  marketCap:  120000000000, volume24h: 50000000000 },
+  "usd-coin": { priceUsd: 1,     change24h: 0,  marketCap:   33000000000, volume24h:  6000000000 },
 };
 
 const COIN_META: Record<string, { symbol: string; name: string }> = {
@@ -218,6 +247,31 @@ const COIN_META: Record<string, { symbol: string; name: string }> = {
   tron:       { symbol: "TRX", name: "TRON" },
   "avalanche-2": { symbol: "AVAX", name: "Avalanche" },
   chainlink:  { symbol: "LINK",name: "Chainlink" },
+  polkadot:   { symbol: "DOT", name: "Polkadot" },
+  "matic-network": { symbol: "MATIC", name: "Polygon" },
+  "the-open-network": { symbol: "TON", name: "Toncoin" },
+  "shiba-inu": { symbol: "SHIB", name: "Shiba Inu" },
+  litecoin:   { symbol: "LTC", name: "Litecoin" },
+  "bitcoin-cash": { symbol: "BCH", name: "Bitcoin Cash" },
+  near:       { symbol: "NEAR", name: "NEAR" },
+  uniswap:    { symbol: "UNI", name: "Uniswap" },
+  aptos:      { symbol: "APT", name: "Aptos" },
+  "internet-computer": { symbol: "ICP", name: "Internet Computer" },
+  "ethereum-classic": { symbol: "ETC", name: "Ethereum Classic" },
+  cosmos:     { symbol: "ATOM",name: "Cosmos" },
+  stellar:    { symbol: "XLM", name: "Stellar" },
+  filecoin:   { symbol: "FIL", name: "Filecoin" },
+  monero:     { symbol: "XMR", name: "Monero" },
+  algorand:   { symbol: "ALGO",name: "Algorand" },
+  tezos:      { symbol: "XTZ", name: "Tezos" },
+  "hedera-hashgraph": { symbol: "HBAR", name: "Hedera" },
+  aave:       { symbol: "AAVE",name: "Aave" },
+  maker:      { symbol: "MKR", name: "Maker" },
+  sui:        { symbol: "SUI", name: "Sui" },
+  arbitrum:   { symbol: "ARB", name: "Arbitrum" },
+  optimism:   { symbol: "OP",  name: "Optimism" },
+  tether:     { symbol: "USDT",name: "Tether" },
+  "usd-coin": { symbol: "USDC",name: "USD Coin" },
 };
 
 /* -------------------------------------------------------------------------- */
