@@ -117,7 +117,11 @@ export default async function AccountPage() {
               </Link>
             )}
             {isPro && (
-              <span className="badge badge-trust">
+              // BATCH 47b — conic-border-anim : conic gradient gold qui tourne
+              // 6s autour du badge. Signature "premium animé" Linear/Vercel.
+              // Auto-disable reduced-motion via globals.css. Le pulse-strong
+              // ajoute un halo discret qui tape l'oeil au mount post-upgrade.
+              <span className="badge badge-trust conic-border-anim">
                 <Crown className="h-3.5 w-3.5" aria-hidden="true" />
                 {user.isAdmin
                   ? "Admin (accès Pro)"
@@ -216,18 +220,26 @@ export default async function AccountPage() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3">
-              {/* Cerfa 2086 — feature flagship */}
+              {/* Cerfa 2086 — feature flagship.
+                  BATCH 47b — spotlight-card halo gold qui suit la souris
+                  via SpotlightDelegate global (deja monte dans layout).
+                  Innovation Linear/Vercel sans Tilt3D wrapper (les Link
+                  sont en grid sm:grid-cols-2 et un Tilt3D pousserait
+                  width:auto qui casse le layout). */}
               <Link
                 href="/outils/cerfa-2086-auto"
-                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
               >
                 <div className="flex items-start gap-3">
                   <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25 transition-colors">
                     <FileText className="h-4 w-4" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
+                    {/* BATCH 47b — emoji ✨ remplace par Sparkles Lucide
+                        (pixellise sur certains OS, accessibilite). */}
                     <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-400">
-                      ✨ Nouveau
+                      <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                      Nouveau
                     </span>
                     <h3 className="mt-1 font-bold text-fg text-sm">
                       Cerfa 2086 + 3916-bis auto
@@ -246,15 +258,17 @@ export default async function AccountPage() {
               {/* IA Q&A par fiche */}
               <Link
                 href="/cryptos"
-                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
               >
                 <div className="flex items-start gap-3">
                   <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-primary/15 text-primary group-hover:bg-primary/25 transition-colors">
                     <Sparkles className="h-4 w-4" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
+                    {/* BATCH 47b — emoji ✨ remplace par Sparkles Lucide. */}
                     <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-primary">
-                      ✨ Nouveau
+                      <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                      Nouveau
                     </span>
                     <h3 className="mt-1 font-bold text-fg text-sm">
                       IA Q&amp;A par fiche
@@ -273,7 +287,7 @@ export default async function AccountPage() {
               {/* Portfolio étendu 500 */}
               <Link
                 href="/portefeuille"
-                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
               >
                 <div className="flex items-start gap-3">
                   <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
@@ -295,7 +309,7 @@ export default async function AccountPage() {
               {/* Alertes 100 */}
               <Link
                 href="/alertes"
-                className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
               >
                 <div className="flex items-start gap-3">
                   <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-blue-500/15 text-blue-400 group-hover:bg-blue-500/25 transition-colors">
