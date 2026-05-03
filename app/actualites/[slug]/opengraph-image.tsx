@@ -90,19 +90,20 @@ export default async function NewsOgImage({ params }: Props) {
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 13,
-                background: "linear-gradient(135deg, #FCD34D 0%, #B45309 100%)",
+                width: 56,
+                height: 56,
+                borderRadius: 14,
+                background: "linear-gradient(135deg, #FCD34D 0%, #F5A524 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 800,
+                fontSize: 32,
+                fontWeight: 900,
                 color: "#0B0D10",
+                boxShadow: "0 8px 24px -8px rgba(245, 165, 36, 0.6)",
               }}
             >
-              B
+              C
             </div>
             <div
               style={{

@@ -44,42 +44,61 @@ export default async function OgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          backgroundColor: "#05060A",
+          backgroundColor: "#0B0D10",
+          // BATCH 56#16 : palette gold/dark coherente avec le site (vs cyan/purple precedent).
+          // Multi-gradient pour profondeur premium (Linear/Vercel pattern).
           backgroundImage:
-            "radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 60%)",
+            "radial-gradient(ellipse 1200px 800px at 0% 0%, rgba(245, 165, 36, 0.25) 0%, transparent 50%), radial-gradient(ellipse 800px 600px at 100% 100%, rgba(252, 211, 77, 0.15) 0%, transparent 50%), linear-gradient(180deg, #0B0D10 0%, #14171C 100%)",
           color: "white",
+          position: "relative",
         }}
       >
+        {/* Subtle dotted grid background */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+            display: "flex",
+          }}
+        />
+
         {/* Header */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            position: "relative",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 13,
-                background: "linear-gradient(135deg, #22d3ee 0%, #6366f1 100%)",
+                width: 56,
+                height: 56,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(135deg, #FCD34D 0%, #F5A524 100%)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 800,
+                fontSize: 32,
+                fontWeight: 900,
+                color: "#0B0D10",
+                boxShadow: "0 8px 24px -8px rgba(245, 165, 36, 0.6)",
               }}
             >
-              B
+              C
             </div>
             <div
               style={{
-                fontSize: 28,
-                fontWeight: 700,
+                fontSize: 30,
+                fontWeight: 800,
                 letterSpacing: "-0.02em",
-                color: "rgba(255, 255, 255, 0.85)",
+                color: "rgba(255, 255, 255, 0.92)",
                 display: "flex",
               }}
             >
@@ -88,15 +107,15 @@ export default async function OgImage({ params }: Props) {
           </div>
           <div
             style={{
-              padding: "8px 16px",
+              padding: "10px 20px",
               borderRadius: 999,
-              border: "1px solid rgba(34, 211, 238, 0.5)",
-              background: "rgba(34, 211, 238, 0.15)",
-              color: "#22d3ee",
+              border: "1.5px solid rgba(245, 165, 36, 0.6)",
+              background: "rgba(245, 165, 36, 0.12)",
+              color: "#FCD34D",
               fontSize: 16,
               fontWeight: 700,
               textTransform: "uppercase",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.1em",
               display: "flex",
             }}
           >
@@ -105,15 +124,23 @@ export default async function OgImage({ params }: Props) {
         </div>
 
         {/* Title */}
-        <div style={{ display: "flex", flexDirection: "column", maxWidth: 1040 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: 1040,
+            position: "relative",
+          }}
+        >
           <div
             style={{
-              fontSize: title.length > 70 ? 56 : 68,
+              fontSize: title.length > 70 ? 60 : 72,
               fontWeight: 800,
               letterSpacing: "-0.03em",
-              lineHeight: 1.1,
+              lineHeight: 1.05,
               display: "flex",
               flexWrap: "wrap",
+              color: "rgba(255, 255, 255, 0.96)",
             }}
           >
             {title}
@@ -126,16 +153,27 @@ export default async function OgImage({ params }: Props) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontSize: 20,
-            color: "rgba(255, 255, 255, 0.6)",
+            fontSize: 22,
+            color: "rgba(255, 255, 255, 0.7)",
+            position: "relative",
           }}
         >
           <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
-            <span style={{ display: "flex" }}>Par {author}</span>
-            <span style={{ display: "flex", color: "#22d3ee" }}>•</span>
+            <span style={{ display: "flex", fontWeight: 600 }}>
+              Par {author}
+            </span>
+            <span style={{ display: "flex", color: "#FCD34D" }}>•</span>
             <span style={{ display: "flex" }}>{readTime} de lecture</span>
           </div>
-          <div style={{ display: "flex" }}>{BRAND.domain}</div>
+          <div
+            style={{
+              display: "flex",
+              fontWeight: 600,
+              color: "rgba(252, 211, 77, 0.85)",
+            }}
+          >
+            {BRAND.domain}
+          </div>
         </div>
       </div>
     ),
