@@ -218,18 +218,13 @@ export default async function HomePage() {
         sparklines={heroSparklines}
         updatedAt={updatedAt}
       />
-      {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
-          slowly entre Hero et Reassurance. Comble la zone morte narrative
-          + signal "ces 8 sources nous surveillent". Pause au hover. */}
-      <TrustMarquee />
-      {/* BATCH 41a — Reveal scroll fade-up sur ReassuranceSection (et
-          toutes les sections suivantes via Reveal wrapper). Anim subtle :
-          opacity 0→1 + translate Y 24px→0, easing emphasized 700ms,
-          déclenchée à 15% viewport. prefers-reduced-motion bypass via
-          CSS .reveal class (cf. Reveal.tsx + globals.css). */}
-      <Reveal>
+      {/* BATCH 56 BISECTION 2 — desactive TrustMarquee + ReassuranceSection
+          + Reveal pour isoler React #425 home (apres BATCH 56#1 a confirme
+          que ce n'est pas TodaysNewsAndEvents). */}
+      {/* <TrustMarquee /> */}
+      {/* <Reveal>
         <ReassuranceSection />
-      </Reveal>
+      </Reveal> */}
       {/* BATCH 35d — user feedback "enlève ça" sur NewsBar + PriceTicker.
           On garde uniquement GlobalMetricsBar (Market Cap + F&G + dominance)
           qui apporte de la donnée live unique sans répéter ce qui est déjà
