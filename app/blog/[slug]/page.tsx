@@ -328,17 +328,20 @@ export default async function BlogArticlePage({ params }: Props) {
 
                 <p className="mt-4 text-lg text-fg/70">{article.description}</p>
 
-                {/* Hero header CSS-only — robuste, jamais cassé.
-                    Avant on chargeait `/blog/[slug]/opengraph-image` qui
-                    retourne HTTP 500 en prod (fs MDX en serverless), l'article
-                    affichait un cadre vide. ArticleHero rend gradient +
-                    icône catégorie + watermark, immédiat. */}
-                <div className="mt-8 rounded-2xl overflow-hidden">
-                  <ArticleHero
-                    category={article.category}
-                    title={article.title}
-                    gradient={article.gradient}
-                    height="h-48 sm:h-64"
+                {/* BATCH 56#14 (2026-05-03) — Hero article : utilise OG image
+                    dynamique (bug 'HTTP 500 fs serverless' corrige depuis,
+                    HTTP 200 OK confirme + Cache 1 an). Plus engageant qu'un
+                    placeholder CSS, coherent avec preview cards (BATCH 56#11). */}
+                <div className="mt-8 rounded-2xl overflow-hidden bg-elevated aspect-[1200/630]">
+                  <img
+                    src={`/blog/${article.slug}/opengraph-image`}
+                    alt={`Cover : ${article.title}`}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    width={1200}
+                    height={630}
                   />
                 </div>
 

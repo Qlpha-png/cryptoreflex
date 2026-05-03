@@ -228,19 +228,24 @@ export default async function NewsDetailPage({ params }: PageProps) {
             {news.description}
           </p>
 
-          {/* Cover image si fournie */}
-          {news.image && (
-            <div className="mt-6 overflow-hidden rounded-2xl border border-border">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={news.image}
-                alt=""
-                loading="eager"
-                decoding="async"
-                className="h-auto w-full object-cover"
-              />
-            </div>
-          )}
+          {/* BATCH 56#14 (2026-05-03) — Cover image : preference a news.image
+              du MDX frontmatter (si l'auteur en fournit une), fallback sur
+              l'OG image dynamique generee. Garantit qu'il y a toujours une
+              cover sur les news (avant : si frontmatter sans image, pas de
+              cover du tout). */}
+          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-elevated aspect-[1200/630]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={news.image || `/actualites/${news.slug}/opengraph-image`}
+              alt={`Cover : ${news.title}`}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="w-full h-full object-cover"
+              width={1200}
+              height={630}
+            />
+          </div>
         </header>
 
         {/* BODY MDX */}
