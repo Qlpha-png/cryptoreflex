@@ -530,7 +530,11 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
         source: "static" as const,
         fetchedAt,
         marketCapRank: idx + 1,
-        image: `https://assets.coincap.io/assets/icons/${meta.symbol.toLowerCase()}@2x.png`,
+        // BUG FIX 2026-05-03 - oubli de la ligne 533 lors du 1er bug fix
+        // logos. CoinCap CDN 404 sur coins exotiques + retour string vide
+        // laisse CryptoLogo composant faire son lookup intelligent
+        // (lib/crypto-logos.ts CoinGecko CDN cache hardcode pour top 100).
+        image: "",
       };
     });
 }
