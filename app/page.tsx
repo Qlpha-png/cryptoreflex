@@ -213,14 +213,15 @@ export default async function HomePage() {
           Les bandeaux (metrics / news / ticker) viennent APRÈS le Hero, comme
           ressources contextuelles. Réduit -300ms LCP p75 mobile estimé.
          ────────────────────────────────────────────────────────────────── */}
-      <Hero
+      {/* BATCH 56#4 BISECTION - desactive Hero pour isoler React #425.
+          Si bug disparait -> coupable est dans Hero (HeroHeadline /
+          HeroPrimaryCta / HeroKpiGrid / AnimatedNumber / Tilt3D /
+          HeroLiveWidget). Si persiste -> GlobalMetricsBar ou HomeAnchorNav. */}
+      {/* <Hero
         prices={prices}
         sparklines={heroSparklines}
         updatedAt={updatedAt}
-      />
-      {/* BATCH 56 BISECTION 2 — desactive TrustMarquee + ReassuranceSection
-          + Reveal pour isoler React #425 home (apres BATCH 56#1 a confirme
-          que ce n'est pas TodaysNewsAndEvents). */}
+      /> */}
       {/* <TrustMarquee /> */}
       {/* <Reveal>
         <ReassuranceSection />
