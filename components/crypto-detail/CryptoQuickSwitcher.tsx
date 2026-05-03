@@ -86,6 +86,37 @@ export default function CryptoQuickSwitcher({
     return () => document.removeEventListener("mousedown", onClick);
   }, [isOpen]);
 
+  /**
+   * BATCH 46a (root cause fix wallet extension) — quand l'user appuie Enter
+   * dans la searchbar, on faisait `router.push()` programmatique. Sur les
+   * 5 fiches /cryptos/[slug] avec wallet extension qui injecte window.{chain}
+   * (eth=MetaMask, sol=Phantom, sui=SuiWallet, aptos=Petra, polkadot=
+   * Polkadot.js), router.push silencieusement avorte. ClickFallback v2
+   * intercepte les <a href> mais PAS les router.push programmatiques.
+   *
+   * Fix : detecte wallet extension presence, bypass router.push avec
+   * window.location.assign() = navigation native fiable. Pour les 95+
+   * users sans extension, router.push reste (SPA instant). Aucun cout.
+   */
+  function navigateToTool(targetUrl: string) {
+    if (typeof window !== "undefined") {
+      const w = window as unknown as Record<string, unknown>;
+      const hasWalletExtension = !!(
+        w.ethereum ||
+        w.solana ||
+        w.suiWallet ||
+        w.aptos ||
+        w.injectedWeb3
+      );
+      if (hasWalletExtension) {
+        // Hard nav fiable : evite le router.push silent fail
+        window.location.assign(targetUrl);
+        return;
+      }
+    }
+    router.push(targetUrl);
+  }
+
   function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -98,7 +129,7 @@ export default function CryptoQuickSwitcher({
       const target = filtered[highlightedIndex];
       if (target) {
         e.preventDefault();
-        router.push(`/cryptos/${target.id}`);
+        navigateToTool(`/cryptos/${target.id}`);
         setIsOpen(false);
         setQuery("");
       }
