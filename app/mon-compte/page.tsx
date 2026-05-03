@@ -177,21 +177,28 @@ export default async function AccountPage() {
                 subText="sur 12 mois"
               />
             )}
+            {/* BATCH 48d (audit /mon-compte P0) — KPI cards qui annoncent
+                "100" / "500" sont LES PLAFONDS de l'abonnement Soutien (pas
+                la consommation actuelle de l'user). On clarifie le label
+                pour eviter le faux-dynamisme : ce sont des limites, pas
+                des metriques user. Tant qu'on n'a pas la vraie API
+                /api/account/usage, on garde les plafonds visibles avec
+                label clair "Plafond" pour ne pas tromper. */}
             <KpiCard
               index={2}
               tone="info"
               Icon={Bell}
-              label="Alertes Soutien"
+              label="Plafond alertes"
               value="100"
-              subText="vs 3 en Free"
+              subText="alertes prix actives (vs 3 en Free)"
             />
             <KpiCard
               index={3}
               tone="info"
               Icon={Wallet}
-              label="Portfolio Soutien"
+              label="Plafond portfolio"
               value="500"
-              subText="vs 10 positions Free"
+              subText="positions trackables (vs 10 Free)"
             />
           </div>
         )}
