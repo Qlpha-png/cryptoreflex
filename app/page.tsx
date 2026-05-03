@@ -244,6 +244,12 @@ export default async function HomePage() {
           Permet au visiteur de scroll-to-section direct vs scroller 5 viewports. */}
       <HomeAnchorNav />
 
+      {/* BATCH 56#3 BISECTION — desactive TOUT apres HomeAnchorNav
+          pour isoler React #425. Si bug disparait -> coupable est dans
+          BeginnerJourney/PlatformsSection/Top10/BlogPreview/ToolsTeaser/
+          QuizPromo/NewsletterCapture/NextStepsGuide/StickyMobileCta.
+          Si bug persiste -> coupable est dans Hero/GlobalMetricsBar/HomeAnchorNav. */}
+      {false && (<>
       {/* ──────────────────────────────────────────────────────────────────
           CATÉGORIE 1 — DÉMARRER MAINTENANT
           Pour qui n'a jamais acheté de crypto. On ramène le parcours
@@ -403,6 +409,7 @@ export default async function HomePage() {
           <lg uniquement, après scroll>400px, disparaît quand on entre dans
           #cat-comparer pour éviter doublon. Dismissible (sessionStorage). */}
       <StickyMobileCta />
+      </>)}
     </>
   );
 }
