@@ -190,21 +190,34 @@ async function fetchCoinGeckoMetrics(
   coingeckoId: string,
 ): Promise<Partial<OnChainMetrics>> {
   try {
-    // /coins/{id} en parallèle de /global pour calculer la dominance.
-    const [coinRes, globalRes] = await Promise.all([
+    // BATCH 51 — FDV + githubCommits30d sont des metadonnees enrichies
+    // que ni Binance ni CoinCap n'exposent. On garde l'appel CoinGecko
+    // ici mais le cache passe de 1h -> 12h (43200s) : les metadata
+    // changent peu jour-en-jour. La dominance est calculee via
+    // notre price-source (CoinCap top 200) plutot que /global CoinGecko.
+    const [coinRes, dominanceData] = await Promise.all([
       fetch(
         `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
           coingeckoId,
         )}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=true&sparkline=false`,
         {
-          next: { revalidate: 3600, tags: ["onchain"] },
+          // 12h cache (rare metadata refresh)
+          next: { revalidate: 43200, tags: ["onchain"] },
           headers: cgHeaders(),
         },
       ),
-      fetch("https://api.coingecko.com/api/v3/global", {
-        next: { revalidate: 3600, tags: ["onchain"] },
-        headers: cgHeaders(),
-      }),
+      // Calcul dominance via notre aggregator (top 200 CoinCap, gratuit)
+      (async () => {
+        try {
+          const { getTopMarket } = await import("@/lib/price-source");
+          const top200 = await getTopMarket(200);
+          const totalMcap = top200.reduce((sum, c) => sum + (c.marketCap || 0), 0);
+          const me = top200.find((c) => c.id === coingeckoId);
+          return { totalMcap, myMcap: me?.marketCap ?? 0 };
+        } catch {
+          return null;
+        }
+      })(),
     ]);
 
     const out: Partial<OnChainMetrics> = {};
@@ -220,14 +233,11 @@ async function fetchCoinGeckoMetrics(
         out.githubCommits30d = commits;
       }
 
-      // Dominance = market_cap / total_market_cap_usd × 100.
-      const mcap = coin.market_data?.market_cap?.usd;
-      if (typeof mcap === "number" && Number.isFinite(mcap) && mcap > 0 && globalRes.ok) {
-        const globalJson = (await globalRes.json()) as CoinGeckoGlobal;
-        const totalMcap = globalJson.data?.total_market_cap?.usd;
-        if (typeof totalMcap === "number" && totalMcap > 0) {
-          out.marketCapDominance = (mcap / totalMcap) * 100;
-        }
+      // BATCH 51 — Dominance calculee via notre aggregator (CoinCap top
+      // 200) plutot que CoinGecko /global. 0 cout supplementaire vs
+      // 1 call CoinGecko economise.
+      if (dominanceData && dominanceData.totalMcap > 0 && dominanceData.myMcap > 0) {
+        out.marketCapDominance = (dominanceData.myMcap / dominanceData.totalMcap) * 100;
       }
     }
 

@@ -65,6 +65,33 @@ async function _fetchPortfolioPrices(
 ): Promise<PortfolioPrice[]> {
   if (ids.length === 0) return [];
 
+  // BATCH 51 — Migration : on passe par notre aggregator gratuit illimite
+  // (Binance + CoinCap). Critique car le portfolio user peut tracker
+  // jusqu'a 50 cryptos (= 50 calls par poll). Cron 2min cote client +
+  // 100 users actifs = quota CoinGecko free epuise en heures.
+  // Conversion EUR via taux fixe USD/EUR 0.92 (ecart <2% acceptable
+  // pour affichage portfolio non-trading critique).
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const EUR_USD = 0.92;
+    const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
+    const fresh = snapshots.filter((s) => s.source !== "static" && s.priceUsd > 0);
+    if (fresh.length >= Math.floor(ids.length * 0.7)) {
+      // 70% au moins de fresh = retour direct
+      return snapshots.map((s) => ({
+        id: s.id,
+        priceEur: s.priceUsd * EUR_USD,
+        change24hPct: s.change24h,
+        symbol: s.symbol,
+        name: s.name,
+        image: `https://assets.coincap.io/assets/icons/${s.symbol.toLowerCase()}@2x.png`,
+        ...(withSparkline ? { sparkline7d: s.sparkline7d } : {}),
+      }));
+    }
+  } catch {
+    // Aggregator KO, fallback CoinGecko ci-dessous
+  }
+
   const sparklineFlag = withSparkline ? "true" : "false";
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=eur&ids=${ids.join(
     ","
