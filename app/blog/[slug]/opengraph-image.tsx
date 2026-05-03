@@ -38,7 +38,16 @@ export default async function OgImage({ params }: Props) {
   const title = article?.title ?? "Article Cryptoreflex";
   const category = article?.category ?? "Crypto";
   const readTime = article?.readTime ?? "—";
-  const author = article?.author ?? BRAND.name;
+  // BATCH 56#19 (2026-05-03) — fix '[object Object]' dans l'OG image.
+  // Certains articles ont author = { name: "Kevin Voisin", ... } au lieu
+  // d'une string -> Satori rendait '[object Object]'. Normaliser en string.
+  const rawAuthor = article?.author;
+  const author =
+    typeof rawAuthor === "string"
+      ? rawAuthor
+      : rawAuthor && typeof rawAuthor === "object" && "name" in rawAuthor
+        ? String((rawAuthor as { name: unknown }).name)
+        : BRAND.name;
 
   const fonts = await loadOgFonts();
 
