@@ -11,6 +11,7 @@ import {
   HelpCircle,
   ArrowRight,
 } from "lucide-react";
+import { isSupportedWhaleSymbol } from "@/lib/whale-watcher";
 
 /**
  * WhaleWatcher — Client Component qui affiche les 5 dernières grosses
@@ -63,6 +64,14 @@ export default function WhaleWatcher({
   const load = useCallback(
     async (signal?: AbortSignal): Promise<void> => {
       try {
+        // BATCH 60 audit loop iter 1 : pre-check whitelist client-side avant
+        // fetch pour eviter le 404 logge dans Vercel runtime (cardano, polkadot,
+        // etc. ne sont pas dans la whitelist Whale Alert : BTC/ETH/USDT/USDC/SOL/BNB/XRP/TRX).
+        if (!isSupportedWhaleSymbol(cryptoSymbol)) {
+          setErrored(true);
+          setWhales([]);
+          return;
+        }
         const res = await fetch(
           `/api/whales/${encodeURIComponent(coingeckoId)}`,
           { signal, cache: "no-store" },
@@ -83,7 +92,7 @@ export default function WhaleWatcher({
         setWhales([]);
       }
     },
-    [coingeckoId],
+    [coingeckoId, cryptoSymbol],
   );
 
   useEffect(() => {
