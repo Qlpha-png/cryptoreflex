@@ -87,6 +87,24 @@ function estimateReadTime(content: string): string {
   return `${minutes} min`;
 }
 
+/**
+ * BATCH 56#21 (2026-05-03) — Normalise le champ `author` du frontmatter MDX.
+ *
+ * Avant : `String(raw.author)` qui renvoyait '[object Object]' quand author
+ * etait un objet AuthorObject (visible sur OG image Bitcoin).
+ *
+ * Maintenant : extrait .name si objet avec .name, sinon string directe,
+ * sinon fallback "Cryptoreflex".
+ */
+function normalizeAuthor(raw: unknown): string {
+  if (typeof raw === "string") return raw;
+  if (raw && typeof raw === "object" && "name" in raw) {
+    const name = (raw as { name: unknown }).name;
+    if (typeof name === "string") return name;
+  }
+  return "Cryptoreflex";
+}
+
 /** Normalise le frontmatter brut (yml) vers notre schéma stable. */
 function normalizeFrontmatter(
   raw: Record<string, unknown>,
@@ -133,7 +151,10 @@ function normalizeFrontmatter(
     date,
     lastUpdated,
     readTime: String(raw.readTime ?? estimateReadTime(rawContent)),
-    author: String(raw.author ?? "Cryptoreflex"),
+    // BATCH 56#21 (2026-05-03) — Fix '[object Object]' dans OG images.
+    // Certains articles ont author = { name, role, url } object au lieu d'une
+    // string simple. String(obj) -> '[object Object]'. Normalize via .name.
+    author: normalizeAuthor(raw.author),
     keywords,
     gradient,
     cover: typeof raw.cover === "string" ? raw.cover : undefined,
