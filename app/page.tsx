@@ -279,20 +279,12 @@ export default async function HomePage() {
           (cards complètes) + un teaser MarketTable plus bas pour ne pas
           surcharger le scroll mobile.
          ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-comparer">
-        <CategoryHeader
-          Icon={BarChart3}
-          eyebrow="Notre sélection"
-          title="Comparer les plateformes"
-          intro="Frais, sécurité, conformité MiCA : sélectionne l'exchange régulé qui correspond à ton profil."
-          ctaHref="/comparatif"
-          ctaLabel="Comparateur complet"
-          anchorId="cat-comparer"
-        />
-        {/* BATCH 26 — PlatformsMarquee retiré de la home (user feedback :
-            doublon avec PlatformsSection qui a déjà un carousel). Le composant
-            reste disponible pour usage ultérieur (footer trust strip, /a-propos).
-            PlatformsSection seul = 1 carousel cohérent au lieu de 2 empilés. */}
+      {/* User feedback 2026-05-03 : retire le CategoryHeader "Comparer les
+          plateformes" (eyebrow + h2 + intro + cta "Comparateur complet")
+          juge redondant avec PlatformsSection qui a deja son propre header
+          interne + CTAs. On garde le wrapper section + anchor pour
+          HomeAnchorNav + PlatformsSection wrapped Reveal. */}
+      <section id="cat-comparer" aria-label="Comparer les plateformes crypto régulées MiCA">
         <Reveal>
           <PlatformsSection />
         </Reveal>
