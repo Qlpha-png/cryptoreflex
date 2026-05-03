@@ -36,6 +36,9 @@ import { BRAND } from "@/lib/brand";
 // sur sections + Tilt3D sur cards hub. Composants existants, juste branches.
 import Reveal from "@/components/ui/Reveal";
 import Tilt3D from "@/components/ui/Tilt3D";
+// BATCH 45c — barre de recherche + tabs Tous/Gratuit/Soutien client.
+// Ne refactor pas le hub server : agit sur le DOM via data-* attributs.
+import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand + alignement
@@ -504,6 +507,12 @@ export default function OutilsPage() {
           </div>
         </Reveal>
 
+        {/* BATCH 45c — barre recherche + tabs Tous/Gratuits/Soutien.
+            Filtre live le DOM via data-tool-card / data-category-section
+            poses plus bas. 0 refactor server, 0 store, pure progressive
+            enhancement. Si JS off : grille complete reste accessible. */}
+        <OutilsSearchFilter />
+
         {/* BATCH 45b — Reveal stagger sur chaque CategorySection (delay
             cumulatif 0/120/240/360/480ms = sensation de cascade de blocs
             qui apparaissent au scroll, pattern Anthropic.com sections). */}
@@ -601,6 +610,7 @@ function CategorySection({
   return (
     <section
       aria-labelledby={`cat-${category.id}`}
+      data-category-section={category.id}
       className={`relative rounded-3xl border border-border bg-gradient-to-br ${category.accent} via-background to-background p-6 sm:p-8`}
     >
       <div className="flex items-start gap-3 mb-6">
@@ -618,14 +628,19 @@ function CategorySection({
         </div>
       </div>
 
+      {/* BATCH 45b — Tilt3D parallax 4° max sur chaque card (subtle
+          premium, desactive pointer:coarse + reduced-motion via le
+          composant). Cards = "objets physiques" sans toucher au DOM.
+          BATCH 45c — data-tool-wrapper sur le Tilt3D wrapper pour que
+          OutilsSearchFilter cache la card complete (avec son tilt) en
+          une seule operation DOM display:none. */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((t) => (
-          /* BATCH 45b — Tilt3D parallax 4° max sur chaque card (subtle
-             premium, desactive pointer:coarse + reduced-motion via le
-             composant). Cards = "objets physiques" sans toucher au DOM. */
-          <Tilt3D key={t.href} max={4}>
-            <ToolCard tool={t} />
-          </Tilt3D>
+          <div key={t.href} data-tool-wrapper>
+            <Tilt3D max={4}>
+              <ToolCard tool={t} />
+            </Tilt3D>
+          </div>
         ))}
       </div>
     </section>
@@ -646,10 +661,12 @@ function ToolCard({ tool }: { tool: Tool }) {
       // BATCH 45b — spotlight-card : halo gold radial qui suit le curseur
       // via CSS vars --mx/--my hydratees par SpotlightDelegate (deja monte
       // dans layout.tsx). 0 hydration boundary, 0 React re-render.
-      // Pattern Linear/Vercel/Anthropic signature.
-      // h-full pour que toutes les cards de la grille aient meme hauteur
-      // (grid auto-rows-fr est implicite avec la prop sur le wrapper Tilt3D
-      // mais on force ici aussi pour Tilt3D qui transform toute la card).
+      // BATCH 45c — data-tool-card + data-tier + data-search-text expose
+      // a OutilsSearchFilter pour le filtre live (recherche full-text sur
+      // titre + description + categorie, plus filtre tier).
+      data-tool-card
+      data-tier={isPro ? "pro" : "free"}
+      data-search-text={`${tool.title} ${tool.desc} ${tool.cat}`}
       className="spotlight-card group relative flex flex-col h-full rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)]"
     >
       <span
