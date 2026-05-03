@@ -233,7 +233,11 @@ export const getAllArticles = unstable_cache(
   async (): Promise<Article[]> => {
     return readArticlesFromDisk();
   },
-  ["mdx:all-articles-v2"],
+  // BATCH 60#2 (2026-05-04) — bump v2 -> v3 pour forcer regeneration ISR
+  // suite suppression `cover:` field dans 13 MDX (BATCH 60#1). Sinon le cache
+  // garde l'ancien article avec `cover` defini -> og:image pointe encore vers
+  // /covers/*.jpg qui sont 404.
+  ["mdx:all-articles-v3"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -246,7 +250,7 @@ export const getAllArticleSummaries = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.map(({ content: _content, ...rest }) => rest);
   },
-  ["mdx:all-summaries-v2"],
+  ["mdx:all-summaries-v3"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -256,7 +260,7 @@ export const getArticleBySlug = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.find((a) => a.slug === slug) ?? null;
   },
-  ["mdx:article-by-slug-v2"],
+  ["mdx:article-by-slug-v3"],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
