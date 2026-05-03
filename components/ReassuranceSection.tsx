@@ -128,13 +128,23 @@ function useRelativeTime(baseDate: Date) {
   return label;
 }
 
-/** Countdown MiCA Phase 2 — refresh 60s. */
+/** Countdown MiCA Phase 2 — refresh 60s.
+ *  BATCH 53 #1 — Fix React #425 home (audit 2026-05-03). Avant :
+ *  useState(MICA_PHASE2_DEADLINE - Date.now()) appele Date.now() au
+ *  render initial = SSR != client = hydration mismatch. Sentinel
+ *  null pendant SSR + 1er render -> placeholder identique des 2
+ *  cotes. Le composant qui utilise micaDays affiche "—" tant que
+ *  null (1 frame avant useEffect tick).
+ */
 function useMicaCountdown() {
-  const [diff, setDiff] = useState(MICA_PHASE2_DEADLINE - Date.now());
+  const [diff, setDiff] = useState<number | null>(null);
   useEffect(() => {
-    const id = setInterval(() => setDiff(MICA_PHASE2_DEADLINE - Date.now()), 60_000);
+    const compute = () => setDiff(MICA_PHASE2_DEADLINE - Date.now());
+    compute();
+    const id = setInterval(compute, 60_000);
     return () => clearInterval(id);
   }, []);
+  if (diff === null) return null;
   return Math.max(0, Math.floor(diff / 86_400_000));
 }
 
@@ -278,10 +288,14 @@ export default function ReassuranceSection() {
             label="Vérifications de fiches"
             hint="Statut MiCA, frais, garde des fonds, KYC re-checkés mensuellement"
           />
-          {/* Countdown MiCA Phase 2 — innovation Expert régulatoire */}
+          {/* Countdown MiCA Phase 2 — innovation Expert régulatoire.
+              BATCH 53 #1 — fallback 60 (~jours jusqu'au 1er juillet 2026
+              depuis mai 2026) si micaDays === null (sentinel SSR/hydration).
+              Apres 1er useEffect tick (instant), valeur reelle prend le
+              relais. Evite NaN ou crash sur target obligatoire number. */}
           <KpiCard
             Icon={Clock}
-            target={micaDays}
+            target={micaDays ?? 60}
             prefix="J-"
             label="Fin transition PSAN → CASP"
             hint="MiCA Phase 2 — 1er juillet 2026. Plateformes en transition surveillées."

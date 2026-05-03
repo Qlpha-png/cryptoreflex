@@ -185,13 +185,17 @@ function PriceFlash({ price, children }: { price: number; children: React.ReactN
 /* -------------------------------------------------------------------------- */
 
 function LiveAge({ since }: { since: string }) {
-  const [age, setAge] = useState(() => Date.now() - new Date(since).getTime());
+  // BATCH 53 #1 — Fix React #425 home (audit 2026-05-03). MEME bug que
+  // LiveAge.tsx fixe en BATCH 44e mais OUBLIE sur cette version mobile.
+  // Date.now() dans useState initializer = valeur SSR != valeur client
+  // = hydration mismatch. Sentinel age=null pendant SSR + 1er render
+  // client -> placeholder identique des 2 cotes -> match parfait.
+  const [age, setAge] = useState<number | null>(null);
 
   useEffect(() => {
     const tick = () => setAge(Date.now() - new Date(since).getTime());
     tick();
     const i = setInterval(tick, 1000);
-    // Pause quand l'onglet n'est pas visible (économie batterie + cache).
     const onVis = () => {
       if (document.visibilityState === "visible") tick();
     };
@@ -201,6 +205,9 @@ function LiveAge({ since }: { since: string }) {
       document.removeEventListener("visibilitychange", onVis);
     };
   }, [since]);
+
+  // Sentinel : SSR + 1er render client = "live" identique
+  if (age === null) return <span>live</span>;
 
   const s = Math.max(0, Math.floor(age / 1000));
   if (s < 60) return <span>{s}s</span>;

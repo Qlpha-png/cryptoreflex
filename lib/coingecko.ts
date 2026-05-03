@@ -224,13 +224,36 @@ export const fetchPrices = unstable_cache(
 async function _fetchPricesWithSparkline(
   ids: string[]
 ): Promise<CoinPrice[]> {
+  // BATCH 53 #3 — Migration vers price-source aggregator. Le sparkline 7d
+  // est genere par Binance klines 1h × 168 (deja code dans _binanceKlines).
+  // Avantage : 0 cout CoinGecko sur Portfolio/Watchlist, sparklines fresh
+  // sans rate limit.
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
+    const allWithPrice = snapshots.every((s) => s.priceUsd > 0);
+    if (allWithPrice) {
+      return snapshots.map((s) => ({
+        id: s.id as CoinId,
+        symbol: s.symbol,
+        name: s.name,
+        price: s.priceUsd,
+        change24h: s.change24h,
+        marketCap: s.marketCap,
+        image: "",
+        sparkline7d: s.sparkline7d, // 168 pts via Binance klines (vide si static)
+      }));
+    }
+  } catch {
+    // Aggregator KO -> fallback CoinGecko ci-dessous
+  }
+
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
     ","
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=true&price_change_percentage=24h`;
   try {
     const res = await fetchWithRetry(url, {
-      // BATCH 50 — 60s -> 600s (10 min). Sparkline 7d = 168 pts, payload
-      // ~1KB/coin, peut etre cache plus longtemps que les prix simples.
+      // Cache long (free plan epuise) — fallback ultime
       next: { revalidate: 600, tags: [CG_TAGS.prices] },
       headers: cgHeaders(),
     });
