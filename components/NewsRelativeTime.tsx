@@ -6,18 +6,27 @@ import { formatRelativeFr } from "@/lib/news-aggregator";
 /**
  * NewsRelativeTime — affiche "il y a 12 min" et auto-refresh toutes les 30s.
  *
- * Audit Block 6 RE-AUDIT 26/04/2026 (Agent dynamism + Front #2) :
- *  - Avant : `formatRelativeFr(date)` exécuté côté SSR → label figé pour
- *    toujours, risque hydration mismatch ("il y a 1h" vs "il y a 2h").
- *  - Après : SSR rend l'initial label, client refresh chaque 30s.
- *  - Pause via Page Visibility API (économie batterie mobile).
- *  - prefers-reduced-motion ne désactive pas (juste un texte qui change).
+ * BATCH 55 (2026-05-03) — FIX React #425 home (audit live post-BATCH 54).
  *
- * Coût : ~1.5 KB JS (chunk séparé via dynamic possible si besoin), 0 IO,
- * 1 setInterval throttled. Acceptable pour un composant info.
+ * Bug : useState(() => formatRelativeFr(date)) calcule Date.now() au render
+ * initial. SSR cache (revalidate 60s) -> label "il y a 5min". Hydration
+ * client X secondes plus tard -> label "il y a 6min". React detecte text
+ * mismatch -> #425 -> #422.
+ *
+ * Pattern sentinel (deja applique a LiveAge / useMicaCountdown / useRelativeTime
+ * dans BATCH 53 + 54) : label initial "" garanti identique SSR + 1er render
+ * client. useEffect tick() remplit la valeur reelle apres montage.
+ *
+ * Tradeoff UX : flash vide ~16ms a l'hydration. Acceptable car :
+ * - Le composant rend dans <time> qui reserve l'espace (tabular-nums)
+ * - Pas de CLS car le wrapper a une largeur stable
+ * - Mieux qu'une console pleine d'erreurs React
+ *
+ * Coût : ~1.5 KB JS, 1 setInterval throttled.
  */
 export default function NewsRelativeTime({ date }: { date: string }) {
-  const [label, setLabel] = useState(() => formatRelativeFr(date) ?? "");
+  // Sentinel : "" garanti identique SSR + 1er render client = no mismatch.
+  const [label, setLabel] = useState<string>("");
 
   useEffect(() => {
     const tick = () => setLabel(formatRelativeFr(date) ?? "");

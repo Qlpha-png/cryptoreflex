@@ -33,12 +33,18 @@ function computeRemainingMs(date: string): number {
 }
 
 export default function EventCountdown({ date, isApproximate, fallbackLabel }: Props) {
-  const [remaining, setRemaining] = useState<number>(() => computeRemainingMs(date));
+  // BATCH 55 (2026-05-03) — FIX React #425 home (audit live post-BATCH 54).
+  // Avant : useState(() => computeRemainingMs(date)) -> Date.now() au render
+  // initial. SSR cache vs hydration client = remaining different -> #425.
+  // Maintenant : sentinel null garantit rendu identique SSR + 1er render
+  // client. useEffect tick() apres montage.
+  const [remaining, setRemaining] = useState<number | null>(null);
 
-  // Délai en jours pour décider du tick.
-  const days = Math.floor(remaining / 86_400_000);
-  const isUrgent = !isApproximate && days <= 7 && remaining > 0;
-  const isVeryUrgent = !isApproximate && days < 1 && remaining > 0;
+  // Délai en jours pour décider du tick (utilise 0 si pas encore hydrate).
+  const remainingForCalc = remaining ?? 0;
+  const days = Math.floor(remainingForCalc / 86_400_000);
+  const isUrgent = !isApproximate && days <= 7 && remainingForCalc > 0;
+  const isVeryUrgent = !isApproximate && days < 1 && remainingForCalc > 0;
   const isStatic = isApproximate || days > 7;
 
   useEffect(() => {
@@ -56,6 +62,12 @@ export default function EventCountdown({ date, isApproximate, fallbackLabel }: P
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [date, isStatic, isVeryUrgent]);
+
+  // Sentinel : pendant SSR + 1er render client, on rend le fallback statique
+  // (identique des 2 cotes). Apres useEffect, le countdown live prend le relai.
+  if (remaining === null) {
+    return <span className="font-mono">{fallbackLabel}</span>;
+  }
 
   // Format adaptatif.
   if (isStatic) {
