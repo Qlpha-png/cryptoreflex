@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Search, Filter, ArrowRight, Gem, Trophy, X, Scale } from "lucide-react";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 import { useCompareList } from "@/lib/use-compare-list";
+// BATCH 46b — innovations tech 2026 paroxysme : Tilt3D parallax + Reveal
+// scroll fade-up + spotlight-card halo gold sur les 100 cards crypto.
+import Tilt3D from "@/components/ui/Tilt3D";
 
 type FilterKind = "all" | "top10" | "hidden-gem";
 
@@ -99,8 +102,76 @@ export default function CryptosIndexPage() {
     return list;
   }, [all, filter, category, query, categoryGroups]);
 
+  // BATCH 46b — JSON-LD ItemList sur les 100 cryptos. Page client donc on
+  // injecte via React (pas via le metadata server). Eligible Rich Results
+  // 'List' Google + signal hub structure fort pour le crawler.
+  // BreadcrumbList ajoute aussi.
+  // Note : chaque ListItem URL absolue stable car les fiches sont
+  // statiquement generees (generateStaticParams).
+  const itemListJson = useMemo(() => {
+    const list = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "100 cryptos analysées par Cryptoreflex",
+      description:
+        "Les 10 cryptos majeures (Top 10) plus 90 hidden gems avec score de fiabilité, méthodologie publique, audits, backers et risques détaillés.",
+      numberOfItems: all.length,
+      itemListElement: all.map((c, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        url: `https://www.cryptoreflex.fr/cryptos/${c.id}`,
+        name: c.name,
+      })),
+    };
+    const breadcrumb = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.cryptoreflex.fr/" },
+        { "@type": "ListItem", position: 2, name: "Cryptos", item: "https://www.cryptoreflex.fr/cryptos" },
+      ],
+    };
+    return JSON.stringify({ "@context": "https://schema.org", "@graph": [list, breadcrumb] });
+  }, [all]);
+
+  // BATCH 46b — Speculation Rules ciblees sur top 5 cryptos (BTC, ETH, SOL,
+  // BNB, XRP) qui captent 70%+ des clicks depuis le hub. Hover 200ms =
+  // signal d'intention -> Chrome 121+/Edge 121+ prerender la fiche en
+  // background -> click = navigation instant. Combine avec ClickFallback
+  // v2 et CryptoQuickSwitcher fix pour les fiches eth/sol cassees.
+  const speculationRulesJson = useMemo(
+    () =>
+      JSON.stringify({
+        prerender: [
+          {
+            urls: [
+              "/cryptos/bitcoin",
+              "/cryptos/ethereum",
+              "/cryptos/solana",
+              "/cryptos/bnb",
+              "/cryptos/xrp",
+            ],
+            eagerness: "moderate",
+          },
+        ],
+      }).replace(/</g, "\\u003c"),
+    [],
+  );
+
   return (
     <div className="py-12 sm:py-16">
+      {/* BATCH 46b SEO P0 — JSON-LD ItemList + BreadcrumbList. Page client
+          donc injecte via React, parse server-side OK car script tag rendu
+          dans le SSR initial. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: itemListJson }}
+      />
+      {/* BATCH 46b — Speculation Rules top 5 prerender intent-based. */}
+      <script
+        type="speculationrules"
+        dangerouslySetInnerHTML={{ __html: speculationRulesJson }}
+      />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="text-xs text-muted">
@@ -240,9 +311,13 @@ export default function CryptosIndexPage() {
             Aucune crypto ne correspond à ta recherche. Essaie un autre mot-clé ou efface les filtres.
           </p>
         ) : (
+          // BATCH 46b — chaque card crypto wrappee Tilt3D 4 deg parallax
+          // (auto-disable mobile + reduced-motion via le composant).
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((c) => (
-              <CryptoCard key={c.id} crypto={c} />
+              <Tilt3D key={c.id} max={4}>
+                <CryptoCard crypto={c} />
+              </Tilt3D>
             ))}
           </div>
         )}
@@ -256,7 +331,12 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
   return (
     <Link
       href={`/cryptos/${crypto.id}`}
-      className="group rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col"
+      // BATCH 46b — spotlight-card : halo gold radial qui suit le curseur
+      // via SpotlightDelegate global (vars CSS --mx/--my). h-full pour
+      // egaliser la hauteur dans la grille (Tilt3D wrapper).
+      // aria-label explicite : title + tier (Top X / Hidden Gem).
+      aria-label={`${crypto.name} (${crypto.symbol}) — ${isGem ? "Hidden Gem" : `Top ${crypto.rank}`}`}
+      className="spotlight-card group h-full rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
