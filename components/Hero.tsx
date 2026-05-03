@@ -105,15 +105,9 @@ const STATS = {
 } as const;
 
 export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
-  // Audit Block 1 RE-AUDIT 26/04/2026 (Agents back+SEO) : la date doit refléter
-  // la prop `updatedAt` propagée par le serveur (ISO du fetch CoinGecko réel),
-  // pas un `new Date()` au render qui retourne l'instant du build.
-  const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
-  const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  // BATCH 56#9 BISECTION : hardcode lastUpdate pour eliminer
+  // toLocaleDateString comme cause du React #425.
+  const lastUpdate = "03/05/2026";
 
   return (
     <section
