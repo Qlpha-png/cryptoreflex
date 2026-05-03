@@ -269,9 +269,13 @@ export default function CryptosIndexPage() {
           </div>
         </div>
 
-        {/* Filtre catégorie */}
-        <div className="mt-3 flex items-center gap-2 flex-wrap">
-          <span className="text-[11px] uppercase tracking-wider text-muted">
+        {/* Filtre catégorie.
+            BATCH 48d a11y P1 (audit /cryptos) — chips passes de
+            text-[11px] py-1 (~22px tap target = WCAG fail) a min-h-[36px]
+            px-3 py-1.5 + scroll-x snap mobile pour eviter le wrap qui
+            encombre 11+ catégories sur viewport <375px. */}
+        <div className="mt-3 flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-thin">
+          <span className="text-[11px] uppercase tracking-wider text-muted shrink-0">
             Catégorie
           </span>
           {categoryGroups.map((g) => {
@@ -280,7 +284,7 @@ export default function CryptosIndexPage() {
               <button
                 key={g.name}
                 onClick={() => setCategory(active ? "" : g.name)}
-                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors min-h-[36px] shrink-0 snap-start ${
                   active
                     ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
                     : "border-border bg-surface text-muted hover:text-fg hover:border-amber-400/30"
@@ -295,7 +299,7 @@ export default function CryptosIndexPage() {
           {category && (
             <button
               onClick={() => setCategory("")}
-              className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-1 text-[10px] text-muted hover:text-fg"
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted hover:text-fg min-h-[36px] shrink-0"
               aria-label="Réinitialiser le filtre catégorie"
             >
               <X className="h-3 w-3" /> Effacer
