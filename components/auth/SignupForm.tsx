@@ -157,7 +157,9 @@ export default function SignupForm() {
               e.stopPropagation();
               setShowPwd((v) => !v);
             }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-6 w-6 text-muted hover:text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none rounded"
+            // BATCH 47a a11y P0 — tap target 44x44 (h-9 w-9 dans un input
+            // h-12 = ne depasse pas, OK). Avant : 24px = WCAG 2.5.5 fail.
+            className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 text-muted hover:text-fg hover:bg-elevated focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none rounded-md transition-colors"
             aria-label={
               showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
             }

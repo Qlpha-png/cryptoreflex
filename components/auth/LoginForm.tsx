@@ -217,13 +217,19 @@ export default function LoginForm() {
                 className="w-full rounded-lg border border-border bg-elevated pl-10 pr-11 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
                 disabled={loading}
               />
+              {/* BATCH 47a a11y P0 : tap target 44x44px (avant: 16px = WCAG
+                  2.5.5 fail). aria-pressed pour annoncer l'etat current
+                  aux lecteurs d'ecran. Position absolute mais bord interieur
+                  inset-y-1 + right-1 + h-9 w-9 dans un input h-12 = ne
+                  depasse pas le perimetre input. */}
               <button
                 type="button"
                 onClick={() => setShowPwd((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+                className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-md text-muted hover:text-fg hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors"
                 aria-label={
                   showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
                 }
+                aria-pressed={showPwd}
               >
                 {showPwd ? (
                   <EyeOff className="h-4 w-4" aria-hidden="true" />
