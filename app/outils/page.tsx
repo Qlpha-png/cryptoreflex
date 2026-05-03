@@ -589,11 +589,25 @@ function StatCard({
     purple: "text-purple-400",
     amber: "text-amber-400",
   }[accent];
+  // BATCH 49d — count-up scroll-driven sur valeurs numeriques. Si la value
+  // est un nombre, on injecte le compteur natif CSS (BATCH 48b classes
+  // count-up-native + --n custom property). Le compteur va de 0 a N quand
+  // la card entre dans le viewport. 0 JS, GPU-accelerated. Fallback : si
+  // value n'est pas numerique (ex: "Publique"), on rend juste le span.
+  const numericValue = /^\d+$/.test(value) ? Number(value) : null;
   return (
     <div className={`rounded-2xl border border-border bg-gradient-to-br ${bg} to-transparent p-4`}>
       <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
       <div className={`mt-1 text-2xl sm:text-3xl font-extrabold tabular-nums ${text}`}>
-        {value}
+        {numericValue !== null ? (
+          <span
+            className="count-up-native"
+            style={{ ["--n" as string]: numericValue }}
+            aria-label={value}
+          />
+        ) : (
+          value
+        )}
       </div>
     </div>
   );
