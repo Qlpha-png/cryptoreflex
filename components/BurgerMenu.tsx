@@ -87,6 +87,8 @@ const SECTIONS: MenuSection[] = [
     intro: "Comparer & choisir où acheter",
     items: [
       { href: "/comparatif", label: "Comparatif plateformes", desc: "30+ plateformes notées MiCA" },
+      { href: "/comparatif/frais", label: "Frais : ranking 2026", desc: "Maker, taker, spread, SEPA", badge: "NEW" },
+      { href: "/comparatif/securite", label: "Sécurité : audit complet", desc: "Cold storage, hack, MiCA", badge: "NEW" },
       { href: "/avis", label: "Avis détaillés", desc: "Tests réels de chaque plateforme" },
       { href: "/alternative-a", label: "Alternatives plateformes", desc: "Migration post-MiCA simplifiée" },
       { href: "/partenaires", label: "Partenaires recommandés", desc: "Ledger, Trezor, Waltio, Koinly..." },
