@@ -142,6 +142,7 @@ const SECTIONS: MenuSection[] = [
     items: [
       { href: "/blog", label: "Blog & guides crypto", desc: "100+ articles" },
       { href: "/academie", label: "Académie Cryptoreflex", desc: "Parcours structurés débutant → expert" },
+      { href: "/faq-crypto", label: "FAQ crypto FR", desc: "20+ questions claires (fisc, sécurité, MiCA)", badge: "NEW" },
       { href: "/glossaire", label: "Glossaire crypto", desc: "250+ termes expliqués" },
       { href: "/blog/comment-declarer-crypto-impots-2026-guide-complet", label: "Déclarer ses crypto impôts 2026", desc: "Guide officiel mis à jour" },
       { href: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026", label: "Cold vs Hot wallet", desc: "Comment sécuriser ses cryptos" },
