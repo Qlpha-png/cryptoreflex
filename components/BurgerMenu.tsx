@@ -104,6 +104,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/comparer", label: "Comparer 2 cryptos", desc: "Hub des 100 cryptos", badge: "MASSIF" },
       { href: "/vs", label: "Tous les duels crypto", desc: "4950 paires analysées (BTC vs ETH, etc.)" },
       { href: "/cryptos/comparer", label: "Comparateur dynamique", desc: "Compare 3-4 cryptos avec prix live" },
+      { href: "/airdrops", label: "Airdrops 2026", desc: "Linea, Monad, Morpho, EigenLayer...", badge: "NEW" },
       { href: "/historique-prix", label: "Historique des prix", desc: "30 cryptos × 8 années (240 pages)" },
       { href: "/convertisseur", label: "Convertisseur live", desc: "BTC, ETH, SOL → EUR/USD" },
       { href: "/halving-bitcoin", label: "Halving Bitcoin", desc: "Countdown + analyse cycles" },
