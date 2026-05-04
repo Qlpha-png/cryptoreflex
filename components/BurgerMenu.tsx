@@ -159,6 +159,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/marche/heatmap", label: "Heatmap coins", desc: "Variations 24h en couleur" },
       { href: "/marche/fear-greed", label: "Fear & Greed Index", desc: "Sentiment du marché" },
       { href: "/marche/gainers-losers", label: "Top gainers / losers", desc: "Mouvements 24h" },
+      { href: "/marche/whales", label: "Whale Watcher", desc: "Top 30 transactions ≥ 1M$ live", badge: "NEW" },
       { href: "/actualites", label: "Actualités crypto", desc: "News quotidiennes FR" },
       { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
       { href: "/calendrier", label: "Calendrier crypto", desc: "Halvings, FOMC, ETF deadlines" },
