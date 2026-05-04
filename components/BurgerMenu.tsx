@@ -72,9 +72,12 @@ const SECTIONS: MenuSection[] = [
       { href: "/", label: "Accueil", desc: "100 cryptos · 26 outils · 34 plateformes" },
       { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouve ta plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
+      { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
       { href: "/methodologie", label: "Notre méthodologie", desc: "6 critères publics, 0 bullshit" },
       { href: "/transparence", label: "Transparence affiliation", desc: "Qui paie, comment, combien" },
+      { href: "/impact", label: "Notre impact", desc: "Mission Cryptoreflex en chiffres" },
       { href: "/a-propos", label: "À propos", desc: "L'équipe Cryptoreflex" },
+      { href: "/contact", label: "Contact", desc: "Une question ? On répond sous 48h" },
     ],
   },
   {
