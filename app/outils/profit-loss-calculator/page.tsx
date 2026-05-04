@@ -45,11 +45,14 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: PAGE_URL,
     type: "website",
+    // BLOCs 0-7 audit FRONT P0-2 (2026-05-04) — fallback sur OG image global.
+    images: [{ url: `${BRAND.url}/opengraph-image`, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
+    images: [`${BRAND.url}/opengraph-image`],
   },
   keywords: [
     "calculer plus value crypto",

@@ -89,6 +89,13 @@ export const metadata: Metadata = {
     url: "/impact",
     type: "website",
   },
+  // BLOCs 0-7 audit FRONT P0-3 (2026-05-04) — twitter card specifique
+  // (avant : fallback global "Cryptoreflex — Tout pour investir...").
+  twitter: {
+    card: "summary_large_image",
+    title: "L'impact Cryptoreflex en chiffres",
+    description: `${IMPACT_STATS.accountsOpened} comptes ouverts, ${IMPACT_STATS.totalSavingsEur}€ économisés, ${IMPACT_STATS.newsletterSubscribers} abonnés newsletter.`,
+  },
 };
 
 /* -------------------------------------------------------------------------- */

@@ -43,6 +43,14 @@ export const metadata: Metadata = {
     url: `${BRAND.url}/contact`,
     type: "website",
   },
+  // BLOCs 0-7 audit FRONT P0-3 (2026-05-04) — twitter card specifique
+  // (avant : fallback global "Cryptoreflex — Tout pour investir...").
+  twitter: {
+    card: "summary_large_image",
+    title: "Contacter Cryptoreflex",
+    description:
+      "2 canaux : général et partenariats B2B. Réponse personnelle sous 5 jours ouvrés.",
+  },
   robots: { index: true, follow: true },
 };
 

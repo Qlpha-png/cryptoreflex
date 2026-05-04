@@ -26,9 +26,9 @@ import { BRAND } from "@/lib/brand";
  */
 
 export const metadata: Metadata = {
-  title: "Newsletter quotidienne crypto FR — 3 min/jour, sans bullshit",
+  title: "Newsletter quotidienne crypto FR — 3 min/jour",
   description:
-    "Reçois chaque matin à 7h les 3 infos crypto qui comptent vraiment pour un investisseur français. Statut MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
+    "Reçois chaque matin à 7h les 3 infos crypto qui comptent pour un investisseur FR. MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
   alternates: { canonical: `${BRAND.url}/newsletter` },
   openGraph: {
     title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
@@ -36,6 +36,14 @@ export const metadata: Metadata = {
       "La newsletter quotidienne crypto en français. 3 minutes le matin. Sans hype, sans pub.",
     url: `${BRAND.url}/newsletter`,
     type: "website",
+  },
+  // BLOCs 0-7 audit FRONT P0-3 (2026-05-04) — twitter card specifique
+  // (avant : fallback global "Cryptoreflex — Tout pour investir...").
+  twitter: {
+    card: "summary_large_image",
+    title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
+    description:
+      "La newsletter quotidienne crypto en français. 3 minutes le matin. Sans hype, sans pub.",
   },
   robots: { index: true, follow: true },
 };

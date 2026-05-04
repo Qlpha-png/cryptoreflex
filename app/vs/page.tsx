@@ -17,7 +17,12 @@ import { getCryptoPairs } from "@/lib/programmatic-pages";
  * pour les 385 autres.
  */
 
-const PAGE_TITLE = "Duels crypto-vs-crypto — 435 paires comparées | Cryptoreflex";
+// BLOCs 0-7 audit FRONT P0-1 (2026-05-04) — retire suffix "| Cryptoreflex"
+// du title : layout root applique deja template '%s | Cryptoreflex'.
+// Avant : "Duels crypto-vs-crypto — 4950 paires comparees | Cryptoreflex | Cryptoreflex"
+// (doublon visible onglet + SERP). Egalement fix "435 paires" -> "4950 paires"
+// (BATCH 58 a etendu top 30 -> top 100 = 4950 paires).
+const PAGE_TITLE = "Duels crypto-vs-crypto : 4950 paires comparées (BTC vs ETH, etc.)";
 const PAGE_DESCRIPTION =
   "Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Compare 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). 4950 duels possibles.";
 
@@ -30,6 +35,13 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
     url: `${BRAND.url}/vs`,
     type: "website",
+  },
+  // BLOCs 0-7 audit FRONT P0-3 (2026-05-04) — twitter card specifique pour
+  // eviter le fallback global "Cryptoreflex — Tout pour investir...".
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
   },
 };
 

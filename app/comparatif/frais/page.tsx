@@ -54,11 +54,16 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: PAGE_URL,
     type: "website",
+    // BLOCs 0-7 audit FRONT P0-2 (2026-05-04) — Next.js ne reference pas
+    // automatiquement opengraph-image.tsx du parent dans le <head>. On
+    // pointe explicitement vers l'URL OG generee (route handler edge).
+    images: [{ url: `${PAGE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
+    images: [`${PAGE_URL}/opengraph-image`],
   },
   keywords: [
     "frais plateforme crypto",
