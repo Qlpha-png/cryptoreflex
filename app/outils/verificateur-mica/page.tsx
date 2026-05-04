@@ -346,7 +346,7 @@ const FAQ = [
   },
   {
     q: "Et MiCA, c'est quoi la différence ?",
-    a: "MiCA (Markets in Crypto-Assets, Règlement UE 2023/1114) est le cadre européen harmonisé. Depuis le 30 décembre 2024, les Crypto-Asset Service Providers (CASP) doivent obtenir un agrément MiCA dans un État membre, qui se passeporte automatiquement dans toute l'UE. MiCA remplace progressivement les régimes nationaux comme le PSAN. La période transitoire pour les acteurs PSAN expire le 30 juin 2026.",
+    a: "MiCA (\"Markets in Crypto-Assets\") est le cadre crypto européen harmonisé, adopté par l'UE en 2023 et entré en application progressivement depuis le 30 décembre 2024. Concrètement : toutes les plateformes crypto qui veulent servir des clients européens doivent obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'un régulateur national (AMF en France, BaFin en Allemagne, etc.). Cet agrément est ensuite valable dans toute l'UE — c'est le « passeport européen ». MiCA remplace progressivement les régimes nationaux comme le PSAN français. La période transitoire pour les acteurs PSAN s'achève le 30 juin 2026 ; à partir du 1er juillet 2026, plus aucune plateforme ne peut opérer dans l'UE sans agrément CASP. (Référence juridique : Règlement UE 2023/1114.)",
   },
   {
     q: "Que se passe-t-il pour les plateformes non conformes après le 1er juillet 2026 ?",

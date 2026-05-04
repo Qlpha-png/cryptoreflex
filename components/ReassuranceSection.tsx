@@ -49,7 +49,7 @@ const REGULATORS = [
   },
   {
     short: "MiCA",
-    full: "Markets in Crypto-Assets — règlement UE 2023/1114",
+    full: "Markets in Crypto-Assets — règlement crypto européen (adopté en 2023)",
     detail: "On distingue PSAN historique, agrément MiCA, et passeport européen.",
   },
   {

@@ -293,7 +293,7 @@ export default function TransparencePage() {
             <EngagementCard
               Icon={ShieldCheck}
               title="Filtre MiCA-only"
-              body="Nous ne recommandons que des plateformes agréées CASP au sens du règlement MiCA (UE) 2023/1114. Les acteurs en attente d'agrément sont signalés explicitement comme « à risque juillet 2026 »."
+              body="Nous ne recommandons que des plateformes agréées CASP au sens du règlement MiCA (cadre crypto européen, en application depuis fin 2024). Les acteurs en attente d'agrément sont signalés explicitement comme « à risque juillet 2026 »."
               cta={{ label: "Vérificateur MiCA", href: "/outils/verificateur-mica" }}
             />
             <EngagementCard

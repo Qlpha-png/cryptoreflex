@@ -9,7 +9,9 @@ import {
 
 /**
  * MicaCountdown — compte à rebours visuel jusqu'au 1er juillet 2026,
- * date d'entrée en application de MiCA Phase 2 (règlement UE 2023/1114).
+ * date d'entrée en application complète de MiCA Phase 2 (règlement crypto
+ * européen 2023/1114, fin de la période transitoire de 18 mois ouverte
+ * par l'art. 143 du règlement).
  *
  * Server Component pur — aucun state client. Le rendu est déterministe
  * pour une même heure (resolution = jour entier). On compte sur l'ISR
