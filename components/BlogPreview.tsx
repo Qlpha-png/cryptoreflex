@@ -208,13 +208,13 @@ export default async function BlogPreview() {
                       <div className="absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
 
                       {/* Badge "Nouveau" pulse-strong gold si <7j.
-                          Fix UI 01/05/2026 : positionne en top-right (z-20) pour
-                          ne PAS se superposer au badge catégorie d'ArticleHero
-                          (qui occupe top-3 left-3 avec z-10). Avant, le badge
-                          NOUVEAU cachait partiellement "Débutants" → affichait
-                          "ants". Maintenant les 2 badges coexistent visuellement. */}
+                          User feedback 2026-05-04 (screenshot) : "le nouveau
+                          cache une ecriture". Cause : l'OG image a son badge
+                          categorie en top-right, et le badge NOUVEAU etait
+                          aussi en top-right -> overlap. Fix : bottom-3 right-3
+                          (les 2 badges coexistent verticalement). */}
                       {isNew && (
-                        <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-20 whitespace-nowrap">
+                        <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-20 whitespace-nowrap">
                           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
                           Nouveau
                         </span>
