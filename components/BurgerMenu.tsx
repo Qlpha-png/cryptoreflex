@@ -69,7 +69,7 @@ const SECTIONS: MenuSection[] = [
     Icon: Compass,
     intro: "Démarrer avec Cryptoreflex",
     items: [
-      { href: "/", label: "Accueil", desc: "100 cryptos · 26 outils · 34 plateformes" },
+      { href: "/", label: "Accueil", desc: "100 cryptos · 28 outils · 34 plateformes" },
       { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouve ta plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
       { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
@@ -115,9 +115,9 @@ const SECTIONS: MenuSection[] = [
     id: "outils",
     title: "Outils",
     Icon: Wrench,
-    intro: "26 calculateurs gratuits + IA",
+    intro: "28 calculateurs gratuits + IA",
     items: [
-      { href: "/outils", label: "Tous les outils (26)", desc: "Vue complète" },
+      { href: "/outils", label: "Tous les outils (28)", desc: "Vue complète" },
       { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU", desc: "Impôt crypto en 2 min" },
       { href: "/outils/cerfa-2086-auto", label: "Cerfa 2086 + 3916-bis auto", desc: "PDF pré-rempli en 30s", badge: "SOUTIEN" },
       { href: "/outils/radar-3916-bis", label: "Radar 3916-bis", desc: "Détecte amendes potentielles" },
