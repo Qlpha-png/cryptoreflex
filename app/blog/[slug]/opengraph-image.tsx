@@ -39,160 +39,207 @@ interface Props {
 /*  Theme detection                                                           */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * 3 modes d'affichage du symbole central :
+ *  - kind: "crypto"  -> logoCoingeckoId resolu via CRYPTO_LOGOS (vrai logo PNG)
+ *  - kind: "icon"    -> SVG inline Lucide-style (icone vectorielle)
+ *  - kind: "text"    -> texte ASCII (BTC, EU, etc.) - fallback si rien d'autre
+ *
+ * BLOCs 0-7 v5 (2026-05-04) — User feedback : "pour celle qui on pas de logo
+ * universel trouve un beau truc". Solution : icone SVG vectorielle (Lucide
+ * style) au lieu de texte. 100% supporte par Satori, look pro.
+ */
+type SymbolKind =
+  | { kind: "crypto"; logoCoingeckoId: string }
+  | { kind: "icon"; iconPath: string; viewBox?: string }
+  | { kind: "text"; text: string };
+
 interface TopicTheme {
-  /** Si null : utilise textSymbol. Sinon : <img src=logoUrl>. */
-  logoCoingeckoId: string | null;
-  /** Fallback texte si logo absent (themes non-crypto). */
-  textSymbol: string | null;
+  symbol: SymbolKind;
   baseRgb: string;
   accentColor: string;
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Lucide-style SVG paths inline (les paths sont copies depuis lucide.dev)   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Chaque icone est un string `<path d="..." />` inline.
+ * Optimise pour rendu Satori : stroke-width=2, stroke-linecap="round",
+ * stroke-linejoin="round" applique au container <svg>.
+ */
+const ICONS = {
+  // Receipt (TAX/fiscalite) - facture
+  receipt:
+    '<path d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L14 22l2-1.5L18 22l2-1.5V2l-2 1.5L18 2l-2 1.5L14 2l-2 1.5L10 2 8 3.5 6 2 4 3.5"/><path d="M16 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/>',
+  // ShieldCheck (EU/MiCA) - protection regulation
+  shieldCheck:
+    '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  // Lock (SEC/securite/wallet) - protection
+  lock:
+    '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  // Layers (DeFi) - empilement protocoles
+  layers:
+    '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  // Percent (STAKE/staking) - rendement
+  percent:
+    '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+  // Gem (NFT) - collection / unique
+  gem:
+    '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+  // Gift (AIRDROP) - cadeau / claim
+  gift:
+    '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
+  // TrendingUp (TRD/trading) - growth / chart up
+  trendingUp:
+    '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+} as const;
+
 const DEFAULT_THEME: TopicTheme = {
-  logoCoingeckoId: "bitcoin",
-  textSymbol: null,
+  symbol: { kind: "crypto", logoCoingeckoId: "bitcoin" },
   baseRgb: "245, 165, 36",
   accentColor: "#FCD34D",
 };
 
 const TOPIC_THEMES: Array<{ keywords: string[]; theme: TopicTheme }> = [
-  // === CRYPTOS avec logos reels ===
+  // === CRYPTOS avec logos reels (CoinGecko CDN) ===
   {
     keywords: ["bitcoin", " btc ", "satoshi", "halving", "lightning"],
-    theme: { logoCoingeckoId: "bitcoin", textSymbol: null, baseRgb: "247, 147, 26", accentColor: "#F7931A" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "bitcoin" }, baseRgb: "247, 147, 26", accentColor: "#F7931A" },
   },
   {
     keywords: ["ethereum", " eth ", "smart contract", "evm", "vitalik", "merge"],
-    theme: { logoCoingeckoId: "ethereum", textSymbol: null, baseRgb: "98, 126, 234", accentColor: "#627EEA" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "ethereum" }, baseRgb: "98, 126, 234", accentColor: "#627EEA" },
   },
   {
     keywords: ["solana", " sol "],
-    theme: { logoCoingeckoId: "solana", textSymbol: null, baseRgb: "153, 69, 255", accentColor: "#9945FF" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "solana" }, baseRgb: "153, 69, 255", accentColor: "#9945FF" },
   },
   {
     keywords: ["bnb", "binance coin", "binance smart"],
-    theme: { logoCoingeckoId: "binancecoin", textSymbol: null, baseRgb: "243, 186, 47", accentColor: "#F3BA2F" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "binancecoin" }, baseRgb: "243, 186, 47", accentColor: "#F3BA2F" },
   },
   {
     keywords: [" xrp", "ripple"],
-    theme: { logoCoingeckoId: "ripple", textSymbol: null, baseRgb: "0, 168, 230", accentColor: "#00A8E6" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "ripple" }, baseRgb: "0, 168, 230", accentColor: "#00A8E6" },
   },
   {
     keywords: ["cardano", " ada"],
-    theme: { logoCoingeckoId: "cardano", textSymbol: null, baseRgb: "0, 113, 188", accentColor: "#0071BC" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "cardano" }, baseRgb: "0, 113, 188", accentColor: "#0071BC" },
   },
   {
     keywords: ["dogecoin", " doge"],
-    theme: { logoCoingeckoId: "dogecoin", textSymbol: null, baseRgb: "194, 162, 67", accentColor: "#C2A243" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "dogecoin" }, baseRgb: "194, 162, 67", accentColor: "#C2A243" },
   },
   {
     keywords: ["avalanche", " avax"],
-    theme: { logoCoingeckoId: "avalanche-2", textSymbol: null, baseRgb: "232, 65, 66", accentColor: "#E84142" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "avalanche-2" }, baseRgb: "232, 65, 66", accentColor: "#E84142" },
   },
   {
     keywords: ["chainlink", " link "],
-    theme: { logoCoingeckoId: "chainlink", textSymbol: null, baseRgb: "55, 91, 210", accentColor: "#375BD2" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "chainlink" }, baseRgb: "55, 91, 210", accentColor: "#375BD2" },
   },
   {
     keywords: ["polkadot", " dot "],
-    theme: { logoCoingeckoId: "polkadot", textSymbol: null, baseRgb: "230, 0, 122", accentColor: "#E6007A" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "polkadot" }, baseRgb: "230, 0, 122", accentColor: "#E6007A" },
   },
   {
     keywords: ["polygon", "matic", "polygon-network"],
-    theme: { logoCoingeckoId: "matic-network", textSymbol: null, baseRgb: "139, 92, 246", accentColor: "#8B5CF6" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "matic-network" }, baseRgb: "139, 92, 246", accentColor: "#8B5CF6" },
   },
   {
     keywords: ["tron", " trx "],
-    theme: { logoCoingeckoId: "tron", textSymbol: null, baseRgb: "239, 68, 68", accentColor: "#EF4444" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "tron" }, baseRgb: "239, 68, 68", accentColor: "#EF4444" },
   },
   {
     keywords: ["litecoin", " ltc "],
-    theme: { logoCoingeckoId: "litecoin", textSymbol: null, baseRgb: "163, 163, 163", accentColor: "#A3A3A3" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "litecoin" }, baseRgb: "163, 163, 163", accentColor: "#A3A3A3" },
   },
   {
     keywords: ["pepe coin", " pepe "],
-    theme: { logoCoingeckoId: "pepe", textSymbol: null, baseRgb: "55, 178, 77", accentColor: "#37B24D" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "pepe" }, baseRgb: "55, 178, 77", accentColor: "#37B24D" },
   },
   {
     keywords: ["shiba", " shib "],
-    theme: { logoCoingeckoId: "shiba-inu", textSymbol: null, baseRgb: "236, 95, 8", accentColor: "#EC5F08" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "shiba-inu" }, baseRgb: "236, 95, 8", accentColor: "#EC5F08" },
   },
   {
     keywords: ["tether", "usdt"],
-    theme: { logoCoingeckoId: "tether", textSymbol: null, baseRgb: "38, 161, 123", accentColor: "#26A17B" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "tether" }, baseRgb: "38, 161, 123", accentColor: "#26A17B" },
   },
   {
     keywords: ["usdc", "usd coin"],
-    theme: { logoCoingeckoId: "usd-coin", textSymbol: null, baseRgb: "39, 117, 202", accentColor: "#2775CA" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "usd-coin" }, baseRgb: "39, 117, 202", accentColor: "#2775CA" },
   },
   {
     keywords: [" sui ", "sui network"],
-    theme: { logoCoingeckoId: "sui", textSymbol: null, baseRgb: "75, 158, 219", accentColor: "#4B9EDB" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "sui" }, baseRgb: "75, 158, 219", accentColor: "#4B9EDB" },
   },
   {
     keywords: ["aptos", " apt "],
-    theme: { logoCoingeckoId: "aptos", textSymbol: null, baseRgb: "0, 0, 0", accentColor: "#A6A6A6" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "aptos" }, baseRgb: "0, 0, 0", accentColor: "#A6A6A6" },
   },
   {
     keywords: ["near protocol", "near-protocol"],
-    theme: { logoCoingeckoId: "near", textSymbol: null, baseRgb: "0, 196, 180", accentColor: "#00C4B4" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "near" }, baseRgb: "0, 196, 180", accentColor: "#00C4B4" },
   },
   {
     keywords: ["arbitrum", " arb "],
-    theme: { logoCoingeckoId: "arbitrum", textSymbol: null, baseRgb: "40, 160, 240", accentColor: "#28A0F0" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "arbitrum" }, baseRgb: "40, 160, 240", accentColor: "#28A0F0" },
   },
   {
     keywords: ["optimism", " op "],
-    theme: { logoCoingeckoId: "optimism", textSymbol: null, baseRgb: "255, 4, 32", accentColor: "#FF0420" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "optimism" }, baseRgb: "255, 4, 32", accentColor: "#FF0420" },
   },
   {
     keywords: ["filecoin", " fil "],
-    theme: { logoCoingeckoId: "filecoin", textSymbol: null, baseRgb: "0, 144, 255", accentColor: "#0090FF" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "filecoin" }, baseRgb: "0, 144, 255", accentColor: "#0090FF" },
   },
   {
     keywords: ["render", " rndr "],
-    theme: { logoCoingeckoId: "render-token", textSymbol: null, baseRgb: "207, 28, 76", accentColor: "#CF1C4C" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "render-token" }, baseRgb: "207, 28, 76", accentColor: "#CF1C4C" },
   },
   {
     keywords: ["aave"],
-    theme: { logoCoingeckoId: "aave", textSymbol: null, baseRgb: "176, 89, 161", accentColor: "#B059A1" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "aave" }, baseRgb: "176, 89, 161", accentColor: "#B059A1" },
   },
   {
     keywords: ["uniswap", " uni "],
-    theme: { logoCoingeckoId: "uniswap", textSymbol: null, baseRgb: "255, 0, 122", accentColor: "#FF007A" },
+    theme: { symbol: { kind: "crypto", logoCoingeckoId: "uniswap" }, baseRgb: "255, 0, 122", accentColor: "#FF007A" },
   },
-  // === THEMES non-crypto (text fallback) ===
+  // === THEMES non-crypto avec icones SVG Lucide-style ===
   {
     keywords: ["fiscalite", "fiscal", "impot", "pfu", "bofip", "declarat", "cerfa", "2086", "3916"],
-    theme: { logoCoingeckoId: null, textSymbol: "TAX", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.receipt }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
   {
     keywords: ["mica", "amf", "casp", "psan", "regulat"],
-    theme: { logoCoingeckoId: null, textSymbol: "EU", baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.shieldCheck }, baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
   },
   {
     keywords: ["securite", "sécurité", "seed", "phishing", "wallet", "ledger", "trezor", "cold", "hot", "hack", "scam"],
-    theme: { logoCoingeckoId: null, textSymbol: "SEC", baseRgb: "239, 68, 68", accentColor: "#EF4444" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.lock }, baseRgb: "239, 68, 68", accentColor: "#EF4444" },
   },
   {
     keywords: ["defi", "dex", "lending", "yield", "liquidity", "curve"],
-    theme: { logoCoingeckoId: null, textSymbol: "DeFi", baseRgb: "168, 85, 247", accentColor: "#A855F7" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.layers }, baseRgb: "168, 85, 247", accentColor: "#A855F7" },
   },
   {
     keywords: ["staking", "validator", "consensus", "proof of stake"],
-    theme: { logoCoingeckoId: null, textSymbol: "STAKE", baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.percent }, baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
   },
   {
     keywords: ["nft", "opensea", "blur", "magic eden"],
-    theme: { logoCoingeckoId: null, textSymbol: "NFT", baseRgb: "244, 114, 182", accentColor: "#F472B6" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.gem }, baseRgb: "244, 114, 182", accentColor: "#F472B6" },
   },
   {
     keywords: ["airdrop", "claim", "snapshot"],
-    theme: { logoCoingeckoId: null, textSymbol: "AIR", baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.gift }, baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
   },
   {
     keywords: ["trading", "dca", "long terme", "swing", "hodl", "portfolio", "rebalanc"],
-    theme: { logoCoingeckoId: null, textSymbol: "TRD", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: { kind: "icon", iconPath: ICONS.trendingUp }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
 ];
 
@@ -227,13 +274,15 @@ export default async function OgImage({ params }: Props) {
 
   const fonts = await loadOgFonts();
 
-  // Resolve logo URL for crypto themes
-  const logoUrl = theme.logoCoingeckoId ? CRYPTO_LOGOS[theme.logoCoingeckoId] : null;
-
-  // Text symbol fontSize si pas de logo
-  const textSym = theme.textSymbol ?? "";
+  // Resolve la couche centrale du symbole selon le kind du theme.
+  // Pour kind=crypto : fetch via CRYPTO_LOGOS, fallback sur Bitcoin si missing.
+  const sym = theme.symbol;
+  const logoUrl =
+    sym.kind === "crypto" ? CRYPTO_LOGOS[sym.logoCoingeckoId] ?? null : null;
+  const textSym = sym.kind === "text" ? sym.text : "";
   const textSymFontSize =
     textSym.length <= 2 ? 240 : textSym.length === 3 ? 180 : textSym.length === 4 ? 140 : 110;
+  const iconSvgPath = sym.kind === "icon" ? sym.iconPath : null;
 
   return new ImageResponse(
     (
@@ -273,9 +322,28 @@ export default async function OgImage({ params }: Props) {
               style={{
                 marginLeft: -40,
                 objectFit: "contain",
-                // Drop shadow visuel via filter (Satori supporte le drop-shadow basique)
                 filter: `drop-shadow(0 0 30px rgba(${theme.baseRgb}, 0.5))`,
               }}
+            />
+          ) : iconSvgPath ? (
+            // BLOCs 0-7 v5 (2026-05-04) — User feedback : "pour celle qui on
+            // pas de logo universel trouve un beau truc". Solution : icone
+            // SVG Lucide-style inline. Satori parse le innerHTML SVG via
+            // dangerouslySetInnerHTML sur un <svg> avec viewBox 24x24 standard.
+            <svg
+              width={280}
+              height={280}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={theme.accentColor}
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{
+                marginLeft: -40,
+                filter: `drop-shadow(0 0 30px rgba(${theme.baseRgb}, 0.5))`,
+              }}
+              dangerouslySetInnerHTML={{ __html: iconSvgPath }}
             />
           ) : (
             <div
