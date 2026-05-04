@@ -143,6 +143,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/cgu`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
     { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    // BLOCs 0-7 (2026-05-04) — 6 nouvelles pages SEO + 2 pages newsletter/airdrops
+    // ajoutees lors de la session "fais tout par bloc". User feedback :
+    // "tu as audit tout front et back ?" → audit BACK a revele que ces 6
+    // routes etaient ABSENTES du sitemap (P0 SEO). Fix : declaration explicite.
+    // /comparatif/frais : ranking maker spot 30+ plateformes (BLOC 2)
+    { url: `${SITE_URL}/comparatif/frais`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    // /comparatif/securite : audit cold storage / hack / MiCA (BLOC 2)
+    { url: `${SITE_URL}/comparatif/securite`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    // /airdrops : 12 airdrops curated (live/upcoming/claimed) (BLOC 3)
+    { url: `${SITE_URL}/airdrops`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    // /outils/profit-loss-calculator : calc PnL net apres frais + PFU 30% (BLOC 4)
+    { url: `${SITE_URL}/outils/profit-loss-calculator`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    // /faq-crypto : 20 Q&A en 6 categories + JSON-LD FAQPage (BLOC 5)
+    // Priority 0.85 (Featured Snippets long-tail majeur).
+    { url: `${SITE_URL}/faq-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    // /marche/whales : hub Whale Watcher unifie 8 cryptos (BLOC 6)
+    { url: `${SITE_URL}/marche/whales`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
+    // /newsletter (orphelin expose BLOC 1) — lead magnet majeur
+    { url: `${SITE_URL}/newsletter`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car
     // disallow dans robots.txt (cohérence stricte : disallow > sitemap pour
     // Google, mais une URL sitemap ignorée envoie un signal de pollution).
