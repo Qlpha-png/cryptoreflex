@@ -48,68 +48,73 @@ interface TopicTheme {
   accentColor: string; // hex pour badge categorie
 }
 
+// IMPORTANT — Inter font (chargee par loadOgFonts) ne supporte PAS les
+// symboles crypto type ₿ (U+20BF), Ξ (U+039E Greek Xi), ◎ (U+25CE), etc.
+// Resultat : Satori rend "NO GLYPH" placeholder (verifie en prod 2026-05-04).
+// Solution : utiliser EXCLUSIVEMENT des lettres ASCII / chiffres /
+// symboles latins de base (€, %, +) qui sont garantis dans Inter.
 const DEFAULT_THEME: TopicTheme = {
-  symbol: "₿",
+  symbol: "BTC",
   baseRgb: "245, 165, 36",
   accentColor: "#FCD34D",
 };
 
 const TOPIC_THEMES: Array<{ keywords: string[]; theme: TopicTheme }> = [
   {
-    keywords: ["bitcoin", "btc", "satoshi", "halving", "lightning"],
-    theme: { symbol: "₿", baseRgb: "247, 147, 26", accentColor: "#F7931A" },
+    keywords: ["bitcoin", " btc ", "satoshi", "halving", "lightning"],
+    theme: { symbol: "BTC", baseRgb: "247, 147, 26", accentColor: "#F7931A" },
   },
   {
-    keywords: ["ethereum", "eth", "smart contract", "evm", "vitalik", "merge"],
-    theme: { symbol: "Ξ", baseRgb: "98, 126, 234", accentColor: "#627EEA" },
+    keywords: ["ethereum", " eth ", "smart contract", "evm", "vitalik", "merge"],
+    theme: { symbol: "ETH", baseRgb: "98, 126, 234", accentColor: "#627EEA" },
   },
   {
-    keywords: ["solana", "sol "],
-    theme: { symbol: "◎", baseRgb: "153, 69, 255", accentColor: "#9945FF" },
+    keywords: ["solana", " sol "],
+    theme: { symbol: "SOL", baseRgb: "153, 69, 255", accentColor: "#9945FF" },
   },
   {
     keywords: ["bnb", "binance coin", "binance smart"],
     theme: { symbol: "BNB", baseRgb: "243, 186, 47", accentColor: "#F3BA2F" },
   },
   {
-    keywords: ["xrp", "ripple"],
+    keywords: [" xrp", "ripple"],
     theme: { symbol: "XRP", baseRgb: "0, 168, 230", accentColor: "#00A8E6" },
   },
   {
-    keywords: ["cardano", "ada"],
+    keywords: ["cardano", " ada"],
     theme: { symbol: "ADA", baseRgb: "0, 113, 188", accentColor: "#0071BC" },
   },
   {
     keywords: ["fiscalite", "fiscal", "impot", "pfu", "bofip", "declarat", "cerfa", "2086", "3916"],
-    theme: { symbol: "€", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: "TAX", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
   {
     keywords: ["mica", "amf", "casp", "psan", "regulat"],
-    theme: { symbol: "§", baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
+    theme: { symbol: "EU", baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
   },
   {
     keywords: ["securite", "sécurité", "seed", "phishing", "wallet", "ledger", "trezor", "cold", "hot", "hack", "scam"],
-    theme: { symbol: "🔒", baseRgb: "239, 68, 68", accentColor: "#EF4444" },
+    theme: { symbol: "SEC", baseRgb: "239, 68, 68", accentColor: "#EF4444" },
   },
   {
     keywords: ["defi", "dex", "lending", "yield", "liquidity", "uniswap", "aave", "curve"],
-    theme: { symbol: "Ð", baseRgb: "168, 85, 247", accentColor: "#A855F7" },
+    theme: { symbol: "DeFi", baseRgb: "168, 85, 247", accentColor: "#A855F7" },
   },
   {
     keywords: ["staking", "validator", "consensus", "proof of stake"],
-    theme: { symbol: "%", baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
+    theme: { symbol: "STAKE", baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
   },
   {
     keywords: ["nft", "opensea", "blur", "magic eden"],
-    theme: { symbol: "◈", baseRgb: "244, 114, 182", accentColor: "#F472B6" },
+    theme: { symbol: "NFT", baseRgb: "244, 114, 182", accentColor: "#F472B6" },
   },
   {
     keywords: ["airdrop", "claim", "snapshot"],
-    theme: { symbol: "✦", baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
+    theme: { symbol: "AIR", baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
   },
   {
     keywords: ["trading", "dca", "long terme", "swing", "hodl", "portfolio", "rebalanc"],
-    theme: { symbol: "↗", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: "TRD", baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
 ];
 
@@ -144,9 +149,12 @@ export default async function OgImage({ params }: Props) {
 
   const fonts = await loadOgFonts();
 
-  // Symbol fontSize : "BNB"/"XRP"/"ADA" = 3 chars donc plus petit que ₿/Ξ.
+  // Symbol fontSize : adapt selon longueur (toutes lettres maintenant).
+  // 2 chars (EU) = grand. 3 chars (BTC/ETH/SOL/BNB/XRP/ADA/TAX/SEC/NFT/AIR/TRD)
+  // = moyen. 4 chars (DeFi) = plus petit. 5 chars (STAKE) = plus petit encore.
   const symbolLen = theme.symbol.length;
-  const symbolFontSize = symbolLen >= 3 ? 180 : 320;
+  const symbolFontSize =
+    symbolLen <= 2 ? 240 : symbolLen === 3 ? 180 : symbolLen === 4 ? 140 : 110;
 
   return new ImageResponse(
     (
