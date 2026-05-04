@@ -127,9 +127,9 @@ export const QUICK_COMBOS: QuickCombo[] = [
   // === THEMES TRADING ===
   {
     id: "top-4-stablecoins",
-    title: "Top 3 stablecoins + Frax",
-    subtitle: "USDT, USDC, DAI, FRAX : les piliers de la liquidite crypto.",
-    slugs: ["tether", "usd-coin", "dai", "frax-share"],
+    title: "Stablecoins vs Bitcoin",
+    subtitle: "USDT, USDC, DAI face a BTC : compare la stabilite a l'actif de reference.",
+    slugs: ["tether", "usd-coin", "dai", "bitcoin"],
     category: "themes-trade",
     icon: "DollarSign",
   },

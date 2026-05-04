@@ -95,9 +95,12 @@ export default function QuickCombosGrid() {
 function ComboCard({ combo }: { combo: QuickCombo }) {
   // Resout les noms des cryptos via dataset (filtre les slugs invalides
   // silencieusement -- ne devrait pas arriver, mais defensif).
+  // BATCH 61 audit fix : getCryptoBySlug retourne AnyCrypto | undefined
+  // (pas null). L'ancien filter `c !== null` laissait passer undefined
+  // -> crash au c.id ligne ci-dessous. Fix : utiliser Boolean(c).
   const resolved = combo.slugs
     .map((slug) => getCryptoBySlug(slug))
-    .filter((c): c is NonNullable<typeof c> => c !== null);
+    .filter((c): c is NonNullable<typeof c> => Boolean(c));
 
   if (resolved.length < 2) return null;
 

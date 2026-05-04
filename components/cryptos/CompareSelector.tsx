@@ -44,12 +44,14 @@ interface Props {
   catalog: CryptoOption[];
 }
 
-/** Normalise pour matching insensible casse + accents. */
+/** Normalise pour matching insensible casse + accents.
+ * BATCH 61 audit fix : utiliser \u0300-\u036f escape au lieu du literal
+ * Unicode pour eviter qu'un re-encoding (cp1252, etc.) casse le regex. */
 function normalize(s: string): string {
   return s
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 export default function CompareSelector({ selected, catalog }: Props) {
@@ -83,12 +85,15 @@ export default function CompareSelector({ selected, catalog }: Props) {
   }, [catalog, selectedIds, query]);
 
   // Update URL ?ids=... + sync localStorage.
+  // BATCH 61 audit fix : ne PAS rediriger vers /cryptos quand on clear.
+  // L'utilisateur perdrait son contexte. On reste sur /cryptos/comparer
+  // (la page affiche l'ecran d'accueil avec combos + surprise quand <2 ids).
   const updateIds = useCallback(
     (newIds: string[]): void => {
       const params = new URLSearchParams(searchParams.toString());
       if (newIds.length === 0) {
         params.delete("ids");
-        router.replace(`/cryptos`);
+        router.replace(`/cryptos/comparer`);
       } else {
         params.set("ids", newIds.join(","));
         router.replace(`/cryptos/comparer?${params.toString()}`);
@@ -102,6 +107,8 @@ export default function CompareSelector({ selected, catalog }: Props) {
       if (selectedIds.has(id)) return;
       if (selected.length >= MAX_COMPARE) return;
       const newIds = [...selected.map((c) => c.id), id];
+      // BATCH 61 audit fix : guard double-click rapide pre-rerender.
+      if (newIds.length > MAX_COMPARE) return;
       add(id);
       setQuery("");
       setOpen(false);
