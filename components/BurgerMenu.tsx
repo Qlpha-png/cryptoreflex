@@ -172,6 +172,7 @@ const SECTIONS: MenuSection[] = [
     intro: "Pro, portefeuille, alertes",
     items: [
       { href: "/pro", label: "Devenir Soutien Cryptoreflex", desc: "2,99€/mois · 5 outils Pro débloqués", badge: "PRO" },
+      { href: "/pro-plus", label: "Pro+ : pack premium", desc: "9,99€/mois · IA Q&A illimité, exports", badge: "NEW" },
       { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi positions live" },
       { href: "/watchlist", label: "Ma watchlist", desc: "Cryptos favorites avec alertes" },
       { href: "/alertes", label: "Alertes prix", desc: "Notifications custom par crypto" },
