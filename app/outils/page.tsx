@@ -156,7 +156,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Vérificateur MiCA / CASP",
-    desc: "Ta plateforme crypto est-elle conforme MiCA et autorisée en France après juillet 2026 ?",
+    desc: "Ta plateforme crypto est-elle conforme MiCA et autorisée en France à partir du 1er juillet 2026 ?",
     href: "/outils/verificateur-mica",
     Icon: ShieldCheck,
     tier: "free",

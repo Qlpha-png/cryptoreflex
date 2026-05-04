@@ -228,7 +228,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <MethodCard
               icon={AlertTriangle}
               title="Critère « à risque juillet 2026 »"
-              text="Attribué à toute plateforme qui n'a ni agrément MiCA en vigueur, ni dossier CASP déposé en France à la date du dernier audit. La période transitoire MiCA expire le 30 juin 2026."
+              text="Attribué à toute plateforme qui n'a ni agrément MiCA en vigueur, ni dossier CASP déposé en France à la date du dernier audit. La période transitoire MiCA s'achève le 30 juin 2026 ; l'application pleine de MiCA Phase 2 prend effet le 1er juillet 2026."
             />
           </div>
 
@@ -263,8 +263,8 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
                 </span>
                 <span>
                   Plateforme sans agrément MiCA ni enregistrement PSAN dans un
-                  État membre. Risque de blocage d'accès aux résidents UE après
-                  le 30 juin 2026.
+                  État membre. Risque de blocage d'accès aux résidents UE à
+                  partir du 1er juillet 2026.
                 </span>
               </li>
               <li className="flex gap-3">

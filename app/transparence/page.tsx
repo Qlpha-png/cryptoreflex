@@ -191,7 +191,7 @@ const FALLBACK_PARTNERS: Record<string, PartnerRowMinimal> = {
     category: "fiscalité crypto",
     mica: {
       status: "Hors périmètre MiCA (SaaS fiscalité, pas un PSAN/CASP)",
-      lastVerified: "2026-04-26",
+      lastVerified: "2026-05-04",
       amfRegistration: null,
     },
   },

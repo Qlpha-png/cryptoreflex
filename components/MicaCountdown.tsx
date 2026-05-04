@@ -44,6 +44,19 @@ interface Props {
 
 const DEFAULT_HREF = "/blog/mica-juillet-2026-checklist-survie";
 
+/**
+ * Format date FR avec ordinal correct pour le 1er du mois.
+ * `toLocaleDateString("fr-FR", { day: "numeric" })` rend "1" au lieu de "1er".
+ * Ici on remet le "er" pour le jour 1 (regle typographique francaise).
+ */
+function formatDateWithOrdinal(date: Date): string {
+  const day = date.getDate();
+  const dayStr = day === 1 ? "1er" : String(day);
+  const monthStr = date.toLocaleDateString("fr-FR", { month: "long" });
+  const yearStr = date.getFullYear();
+  return `${dayStr} ${monthStr} ${yearStr}`;
+}
+
 export default function MicaCountdown({
   variant = "card",
   now,
@@ -53,11 +66,13 @@ export default function MicaCountdown({
   const days = daysUntilMicaPhase2(now);
   const active = isMicaPhase2Active(now);
 
-  const dateFr = MICA_PHASE2_DATE.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  // BATCH 60#3 (2026-05-04) — fix orthographe FR : toLocaleDateString rend
+  // "1 juillet 2026" sans le "er" ordinal. Le reste du site dit partout
+  // "1er juillet 2026" (forme correcte FR pour le 1er du mois). Resultat :
+  // sur la home, le countdown disait "1 juillet 2026" et la card a cote
+  // "1er juillet 2026" -> incoherent + faute typo visible.
+  // Fix : formatage manuel avec gestion de l'ordinal "er" sur jour 1.
+  const dateFr = formatDateWithOrdinal(MICA_PHASE2_DATE);
 
   /* ------------------------------------------------------------------ */
   /*  Variant "badge" — pastille compacte                                */

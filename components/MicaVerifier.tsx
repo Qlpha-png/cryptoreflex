@@ -419,7 +419,7 @@ function ResultCard({
           </div>
           <p className="mt-0.5 text-white/75">
             {platform.atRiskJuly2026
-              ? "Cette plateforme n'a pas (encore) d'agrément MiCA pleinement opposable. Son accès aux résidents UE pourrait être restreint après la fin de la période transitoire (30 juin 2026)."
+              ? "Cette plateforme n'a pas (encore) d'agrément MiCA pleinement opposable. Son accès aux résidents UE pourrait être restreint à compter du 1er juillet 2026 (fin de la période transitoire le 30 juin 2026)."
               : "Cette plateforme dispose d'un cadre réglementaire MiCA conforme ou est hors champ d'application — pas de risque identifié à la fin de la période transitoire."}
           </p>
         </div>

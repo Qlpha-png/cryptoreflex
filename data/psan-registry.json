@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-25",
+    "lastUpdated": "2026-05-04",
     "nextReviewDate": "2026-05-25",
     "updateFrequency": "monthly",
     "source": "Compilation Cryptoreflex à partir des registres officiels AMF (PSAN), ESMA (MiCA CASP), BaFin, CNMV, MFSA, CSSF, Bank of Lithuania, Central Bank of Ireland, et publications Wikipedia / sites officiels des plateformes.",
@@ -10,7 +10,7 @@
       "bafin": "https://www.bafin.de/EN/Aufsicht/FinTech/Kryptowerte/kryptowerte_node_en.html",
       "regulation": "Règlement (UE) 2023/1114 (MiCA) - applicable aux CASP depuis le 30 décembre 2024"
     },
-    "disclaimer": "Données vérifiées avril 2026, mise à jour mensuelle. Information fournie à titre indicatif — consultez toujours le registre AMF/ESMA officiel avant toute décision. Cryptoreflex ne fournit pas de conseil en investissement.",
+    "disclaimer": "Données vérifiées mai 2026, mise à jour mensuelle. Information fournie à titre indicatif — consultez toujours le registre AMF/ESMA officiel avant toute décision. Cryptoreflex ne fournit pas de conseil en investissement.",
     "schemaVersion": "1.0"
   },
   "platforms": [
