@@ -525,21 +525,34 @@ export default function BurgerMenu({ open, onClose }: Props) {
         </div>
       </div>
 
-      {/* Animations CSS scoped au drawer */}
+      {/* Animations CSS scoped au drawer.
+         BATCH 61#2 FIX BUG MOBILE : avant, .burger-item avait
+         `opacity: 0; transform: translateY(8px)` DIRECTEMENT dans la regle
+         CSS + `animation: ... forwards`. Sur mobile (Android Chrome surtout),
+         quand le browser re-evalue les styles apres un scroll (memory
+         optimization off-screen DOM), il re-applique `opacity: 0` au lieu
+         de respecter le state final de l'animation. Resultat user-visible :
+         apres avoir scrolle dans le burger puis remonte, les items
+         disparaissent (invisibles).
+         Fix : retirer opacity/transform de la regle CSS de base, mettre
+         l'etat initial UNIQUEMENT dans le keyframe `from`, utiliser
+         `animation-fill-mode: both` pour que :
+           - DURANT le delay : le state du keyframe `from` (0%) s'applique
+           - APRES animation : le state du keyframe `to` (100%) s'applique
+         La regle CSS de base reste donc `opacity: 1` par defaut, donc
+         meme si le browser re-evalue, les items restent visibles. */}
       <style>{`
         .burger-overlay {
-          animation: burger-fade-in 200ms ease-out forwards;
+          animation: burger-fade-in 200ms ease-out both;
         }
         .burger-backdrop {
-          animation: burger-fade-in 240ms ease-out forwards;
+          animation: burger-fade-in 240ms ease-out both;
         }
         .burger-drawer {
-          animation: burger-slide-in 320ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+          animation: burger-slide-in 320ms cubic-bezier(0.32, 0.72, 0, 1) both;
         }
         .burger-item {
-          opacity: 0;
-          transform: translateY(8px);
-          animation: burger-item-in 320ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+          animation: burger-item-in 320ms cubic-bezier(0.32, 0.72, 0, 1) both;
           animation-delay: calc(60ms + var(--burger-i, 0) * 30ms);
         }
         @keyframes burger-fade-in {
@@ -556,7 +569,7 @@ export default function BurgerMenu({ open, onClose }: Props) {
         }
         @media (prefers-reduced-motion: reduce) {
           .burger-overlay, .burger-backdrop, .burger-drawer, .burger-item {
-            animation: burger-fade-in 120ms ease-out forwards !important;
+            animation: burger-fade-in 120ms ease-out both !important;
             animation-delay: 0ms !important;
             transform: none !important;
           }
