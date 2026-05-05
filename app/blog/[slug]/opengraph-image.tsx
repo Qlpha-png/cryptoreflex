@@ -65,135 +65,125 @@ interface TopicTheme {
 /* -------------------------------------------------------------------------- */
 
 /**
- * 8 icones SVG vectorielles inline pour les themes non-crypto.
+ * 8 icones SVG vectorielles pour themes non-crypto.
  *
- * BLOC v6 fix critique (2026-05-04) : Satori ne supporte PAS
- * `dangerouslySetInnerHTML` (verifie : crash 500 sur articles MiCA/wallet/
- * Ledger qui matchaient les themes SEC/EU). Solution : composants React
- * qui renvoient des elements <path> valides JSX (supportes par Satori).
+ * BLOC v7 fix (2026-05-04) : Satori ne rendait PAS les paths a l'interieur
+ * d'un fragment React <>...</> retourne par un composant child de <svg>
+ * (verifie : drop-shadow visible mais paths invisibles sur articles
+ * Ledger/MiCA/wallet en v6).
  *
- * Type IconComponent : (props: { stroke: string }) => React node.
+ * Solution v7 : chaque Icon renvoie un <svg> COMPLET avec ses paths
+ * INLINE directement (pas de fragment, pas de child component). Satori
+ * gere bien les <svg> top-level.
  */
-type IconComponent = (props: { stroke: string }) => React.ReactNode;
+type IconComponent = (props: {
+  size: number;
+  stroke: string;
+  glow: string;
+}) => React.ReactNode;
+
+const COMMON_ICON_PROPS = {
+  fill: "none",
+  strokeWidth: 1.5,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
 
 const Icons: Record<string, IconComponent> = {
-  receipt: ({ stroke }) => (
-    <>
-      <path
-        d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L14 22l2-1.5L18 22l2-1.5V2l-2 1.5L18 2l-2 1.5L14 2l-2 1.5L10 2 8 3.5 6 2 4 3.5"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path d="M16 8H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M16 12H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M13 16H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </>
+  receipt: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <path d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L14 22l2-1.5L18 22l2-1.5V2l-2 1.5L18 2l-2 1.5L14 2l-2 1.5L10 2 8 3.5 6 2 4 3.5" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M16 8H8" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M16 12H8" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M13 16H8" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  shieldCheck: ({ stroke }) => (
-    <>
-      <path
-        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path d="m9 12 2 2 4-4" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </>
+  shieldCheck: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="m9 12 2 2 4-4" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  lock: ({ stroke }) => (
-    <>
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke={stroke} strokeWidth="1.5" fill="none" />
-      <path
-        d="M7 11V7a5 5 0 0 1 10 0v4"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </>
+  lock: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  layers: ({ stroke }) => (
-    <>
-      <path
-        d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </>
+  layers: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  percent: ({ stroke }) => (
-    <>
+  percent: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
       <line x1="19" y1="5" x2="5" y2="19" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="6.5" cy="6.5" r="2.5" stroke={stroke} strokeWidth="1.5" fill="none" />
-      <circle cx="17.5" cy="17.5" r="2.5" stroke={stroke} strokeWidth="1.5" fill="none" />
-    </>
+      <circle cx="6.5" cy="6.5" r="2.5" stroke={stroke} fill="none" strokeWidth="1.5" />
+      <circle cx="17.5" cy="17.5" r="2.5" stroke={stroke} fill="none" strokeWidth="1.5" />
+    </svg>
   ),
-  gem: ({ stroke }) => (
-    <>
-      <path d="M6 3h12l4 6-10 13L2 9Z" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M11 3 8 9l4 13 4-13-3-6" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M2 9h20" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </>
+  gem: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <path d="M6 3h12l4 6-10 13L2 9Z" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M11 3 8 9l4 13 4-13-3-6" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M2 9h20" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  gift: ({ stroke }) => (
-    <>
-      <rect x="3" y="8" width="18" height="4" rx="1" stroke={stroke} strokeWidth="1.5" fill="none" />
-      <path d="M12 8v13" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path
-        d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </>
+  gift: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <rect x="3" y="8" width="18" height="4" rx="1" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M12 8v13" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
-  trendingUp: ({ stroke }) => (
-    <>
-      <polyline
-        points="22 7 13.5 15.5 8.5 10.5 2 17"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <polyline points="16 7 22 7 22 13" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </>
+  trendingUp: ({ size, stroke, glow }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ filter: `drop-shadow(0 0 40px ${glow})` }}
+    >
+      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" stroke={stroke} {...COMMON_ICON_PROPS} />
+      <polyline points="16 7 22 7 22 13" stroke={stroke} {...COMMON_ICON_PROPS} />
+    </svg>
   ),
 };
 
@@ -426,20 +416,15 @@ export default async function OgImage({ params }: Props) {
               }}
             />
           ) : IconComp ? (
-            // v6 fix critique : remplace dangerouslySetInnerHTML (Satori NE
-            // SUPPORTE PAS, crash 500) par composant React JSX qui retourne
-            // des elements <path> valides. Verifie sur articles MiCA/wallet/
-            // Ledger qui crashaient en HTTP 500 sur v5.
-            <svg
-              width={300}
-              height={300}
-              viewBox="0 0 24 24"
-              style={{
-                filter: `drop-shadow(0 0 40px rgba(${theme.baseRgb}, 0.6))`,
-              }}
-            >
-              <IconComp stroke={theme.accentColor} />
-            </svg>
+            // v7 fix : chaque Icon retourne un <svg> COMPLET avec ses paths
+            // INLINE. Avant (v6) on utilisait React fragment <>...</> pour
+            // retourner les paths -> Satori les ignorait silencieusement
+            // (drop-shadow visible mais paths invisibles).
+            IconComp({
+              size: 300,
+              stroke: theme.accentColor,
+              glow: `rgba(${theme.baseRgb}, 0.6)`,
+            })
           ) : (
             <div
               style={{
