@@ -51,7 +51,7 @@ interface Props {
  */
 type SymbolKind =
   | { kind: "crypto"; logoCoingeckoId: string }
-  | { kind: "icon"; iconPath: string; viewBox?: string }
+  | { kind: "icon"; iconName: keyof typeof Icons }
   | { kind: "text"; text: string };
 
 interface TopicTheme {
@@ -65,36 +65,137 @@ interface TopicTheme {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Chaque icone est un string `<path d="..." />` inline.
- * Optimise pour rendu Satori : stroke-width=2, stroke-linecap="round",
- * stroke-linejoin="round" applique au container <svg>.
+ * 8 icones SVG vectorielles inline pour les themes non-crypto.
+ *
+ * BLOC v6 fix critique (2026-05-04) : Satori ne supporte PAS
+ * `dangerouslySetInnerHTML` (verifie : crash 500 sur articles MiCA/wallet/
+ * Ledger qui matchaient les themes SEC/EU). Solution : composants React
+ * qui renvoient des elements <path> valides JSX (supportes par Satori).
+ *
+ * Type IconComponent : (props: { stroke: string }) => React node.
  */
-const ICONS = {
-  // Receipt (TAX/fiscalite) - facture
-  receipt:
-    '<path d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L14 22l2-1.5L18 22l2-1.5V2l-2 1.5L18 2l-2 1.5L14 2l-2 1.5L10 2 8 3.5 6 2 4 3.5"/><path d="M16 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/>',
-  // ShieldCheck (EU/MiCA) - protection regulation
-  shieldCheck:
-    '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
-  // Lock (SEC/securite/wallet) - protection
-  lock:
-    '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
-  // Layers (DeFi) - empilement protocoles
-  layers:
-    '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
-  // Percent (STAKE/staking) - rendement
-  percent:
-    '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
-  // Gem (NFT) - collection / unique
-  gem:
-    '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
-  // Gift (AIRDROP) - cadeau / claim
-  gift:
-    '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
-  // TrendingUp (TRD/trading) - growth / chart up
-  trendingUp:
-    '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
-} as const;
+type IconComponent = (props: { stroke: string }) => React.ReactNode;
+
+const Icons: Record<string, IconComponent> = {
+  receipt: ({ stroke }) => (
+    <>
+      <path
+        d="M4 2v20l2-1.5L8 22l2-1.5L12 22l2-1.5L14 22l2-1.5L18 22l2-1.5V2l-2 1.5L18 2l-2 1.5L14 2l-2 1.5L10 2 8 3.5 6 2 4 3.5"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="M16 8H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M16 12H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M13 16H8" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </>
+  ),
+  shieldCheck: ({ stroke }) => (
+    <>
+      <path
+        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="m9 12 2 2 4-4" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </>
+  ),
+  lock: ({ stroke }) => (
+    <>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke={stroke} strokeWidth="1.5" fill="none" />
+      <path
+        d="M7 11V7a5 5 0 0 1 10 0v4"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </>
+  ),
+  layers: ({ stroke }) => (
+    <>
+      <path
+        d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </>
+  ),
+  percent: ({ stroke }) => (
+    <>
+      <line x1="19" y1="5" x2="5" y2="19" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="6.5" cy="6.5" r="2.5" stroke={stroke} strokeWidth="1.5" fill="none" />
+      <circle cx="17.5" cy="17.5" r="2.5" stroke={stroke} strokeWidth="1.5" fill="none" />
+    </>
+  ),
+  gem: ({ stroke }) => (
+    <>
+      <path d="M6 3h12l4 6-10 13L2 9Z" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M11 3 8 9l4 13 4-13-3-6" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M2 9h20" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </>
+  ),
+  gift: ({ stroke }) => (
+    <>
+      <rect x="3" y="8" width="18" height="4" rx="1" stroke={stroke} strokeWidth="1.5" fill="none" />
+      <path d="M12 8v13" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path
+        d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 4.8 0 0 1 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </>
+  ),
+  trendingUp: ({ stroke }) => (
+    <>
+      <polyline
+        points="22 7 13.5 15.5 8.5 10.5 2 17"
+        stroke={stroke}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <polyline points="16 7 22 7 22 13" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </>
+  ),
+};
 
 const DEFAULT_THEME: TopicTheme = {
   symbol: { kind: "crypto", logoCoingeckoId: "bitcoin" },
@@ -211,35 +312,35 @@ const TOPIC_THEMES: Array<{ keywords: string[]; theme: TopicTheme }> = [
   // === THEMES non-crypto avec icones SVG Lucide-style ===
   {
     keywords: ["fiscalite", "fiscal", "impot", "pfu", "bofip", "declarat", "cerfa", "2086", "3916"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.receipt }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: { kind: "icon", iconName: "receipt" }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
   {
     keywords: ["mica", "amf", "casp", "psan", "regulat"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.shieldCheck }, baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
+    theme: { symbol: { kind: "icon", iconName: "shieldCheck" }, baseRgb: "96, 165, 250", accentColor: "#60A5FA" },
   },
   {
     keywords: ["securite", "sécurité", "seed", "phishing", "wallet", "ledger", "trezor", "cold", "hot", "hack", "scam"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.lock }, baseRgb: "239, 68, 68", accentColor: "#EF4444" },
+    theme: { symbol: { kind: "icon", iconName: "lock" }, baseRgb: "239, 68, 68", accentColor: "#EF4444" },
   },
   {
     keywords: ["defi", "dex", "lending", "yield", "liquidity", "curve"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.layers }, baseRgb: "168, 85, 247", accentColor: "#A855F7" },
+    theme: { symbol: { kind: "icon", iconName: "layers" }, baseRgb: "168, 85, 247", accentColor: "#A855F7" },
   },
   {
     keywords: ["staking", "validator", "consensus", "proof of stake"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.percent }, baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
+    theme: { symbol: { kind: "icon", iconName: "percent" }, baseRgb: "20, 184, 166", accentColor: "#14B8A6" },
   },
   {
     keywords: ["nft", "opensea", "blur", "magic eden"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.gem }, baseRgb: "244, 114, 182", accentColor: "#F472B6" },
+    theme: { symbol: { kind: "icon", iconName: "gem" }, baseRgb: "244, 114, 182", accentColor: "#F472B6" },
   },
   {
     keywords: ["airdrop", "claim", "snapshot"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.gift }, baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
+    theme: { symbol: { kind: "icon", iconName: "gift" }, baseRgb: "252, 211, 77", accentColor: "#FCD34D" },
   },
   {
     keywords: ["trading", "dca", "long terme", "swing", "hodl", "portfolio", "rebalanc"],
-    theme: { symbol: { kind: "icon", iconPath: ICONS.trendingUp }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
+    theme: { symbol: { kind: "icon", iconName: "trendingUp" }, baseRgb: "34, 197, 94", accentColor: "#22C55E" },
   },
 ];
 
@@ -275,14 +376,13 @@ export default async function OgImage({ params }: Props) {
   const fonts = await loadOgFonts();
 
   // Resolve la couche centrale du symbole selon le kind du theme.
-  // Pour kind=crypto : fetch via CRYPTO_LOGOS, fallback sur Bitcoin si missing.
   const sym = theme.symbol;
   const logoUrl =
     sym.kind === "crypto" ? CRYPTO_LOGOS[sym.logoCoingeckoId] ?? null : null;
   const textSym = sym.kind === "text" ? sym.text : "";
   const textSymFontSize =
     textSym.length <= 2 ? 240 : textSym.length === 3 ? 180 : textSym.length === 4 ? 140 : 110;
-  const iconSvgPath = sym.kind === "icon" ? sym.iconPath : null;
+  const IconComp = sym.kind === "icon" ? Icons[sym.iconName] : null;
 
   return new ImageResponse(
     (
@@ -297,17 +397,18 @@ export default async function OgImage({ params }: Props) {
           position: "relative",
         }}
       >
-        {/* Halo circulaire colore + logo OU texte symbole */}
+        {/* BLOC v6 (2026-05-04) — User feedback : "enleve les cercle jaune
+            que tu avais rajouter". Le halo circulaire avec border etait
+            trop visuel / type "logo en cocarde". Maintenant : symbole
+            simplement positionne right-center sans cadre, garde juste le
+            drop-shadow lumineux assorti pour ancrage visuel. */}
         <div
           style={{
             position: "absolute",
-            top: 95,
-            right: -80,
-            width: 440,
-            height: 440,
-            borderRadius: 9999,
-            background: `rgba(${theme.baseRgb}, 0.18)`,
-            border: `2px solid rgba(${theme.baseRgb}, 0.4)`,
+            top: 145,
+            right: 50,
+            width: 320,
+            height: 320,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -316,35 +417,29 @@ export default async function OgImage({ params }: Props) {
           {logoUrl ? (
             <img
               src={logoUrl}
-              width={280}
-              height={280}
+              width={300}
+              height={300}
               alt=""
               style={{
-                marginLeft: -40,
                 objectFit: "contain",
-                filter: `drop-shadow(0 0 30px rgba(${theme.baseRgb}, 0.5))`,
+                filter: `drop-shadow(0 0 40px rgba(${theme.baseRgb}, 0.6))`,
               }}
             />
-          ) : iconSvgPath ? (
-            // BLOCs 0-7 v5 (2026-05-04) — User feedback : "pour celle qui on
-            // pas de logo universel trouve un beau truc". Solution : icone
-            // SVG Lucide-style inline. Satori parse le innerHTML SVG via
-            // dangerouslySetInnerHTML sur un <svg> avec viewBox 24x24 standard.
+          ) : IconComp ? (
+            // v6 fix critique : remplace dangerouslySetInnerHTML (Satori NE
+            // SUPPORTE PAS, crash 500) par composant React JSX qui retourne
+            // des elements <path> valides. Verifie sur articles MiCA/wallet/
+            // Ledger qui crashaient en HTTP 500 sur v5.
             <svg
-              width={280}
-              height={280}
+              width={300}
+              height={300}
               viewBox="0 0 24 24"
-              fill="none"
-              stroke={theme.accentColor}
-              strokeWidth={1.5}
-              strokeLinecap="round"
-              strokeLinejoin="round"
               style={{
-                marginLeft: -40,
-                filter: `drop-shadow(0 0 30px rgba(${theme.baseRgb}, 0.5))`,
+                filter: `drop-shadow(0 0 40px rgba(${theme.baseRgb}, 0.6))`,
               }}
-              dangerouslySetInnerHTML={{ __html: iconSvgPath }}
-            />
+            >
+              <IconComp stroke={theme.accentColor} />
+            </svg>
           ) : (
             <div
               style={{
@@ -354,7 +449,6 @@ export default async function OgImage({ params }: Props) {
                 lineHeight: 1,
                 display: "flex",
                 letterSpacing: "-0.04em",
-                marginLeft: -40,
               }}
             >
               {textSym}
