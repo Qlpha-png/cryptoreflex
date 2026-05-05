@@ -41,9 +41,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif/frais";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Frais plateformes crypto 2026 : ranking complet (Coinbase, Binance, Kraken...)";
+const TITLE = "Frais plateformes crypto 2026 : classement complet (Coinbase, Binance, Kraken...)";
 const DESCRIPTION =
-  "Comparatif detaille des frais sur 30+ plateformes crypto en France : maker, taker, depot SEPA, retrait, spread. Trie du moins cher au plus cher avec methodologie publique Cryptoreflex.";
+  "Comparatif détaillé des frais sur 30+ plateformes crypto en France : maker, taker, dépôt SEPA, retrait, spread. Trié du moins cher au plus cher avec méthodologie publique Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,

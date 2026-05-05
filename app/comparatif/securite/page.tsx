@@ -41,9 +41,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif/securite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Securite plateformes crypto 2026 : ranking et audit";
+const TITLE = "Sécurité plateformes crypto 2026 : classement et audit";
 const DESCRIPTION =
-  "Comparatif securite de 30+ plateformes crypto en France : cold storage, assurance, 2FA, hack history, conformite MiCA. Audit transparent Cryptoreflex.";
+  "Comparatif sécurité de 30+ plateformes crypto en France : cold storage, assurance, 2FA, historique hack, conformité MiCA. Audit transparent Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -49,9 +49,9 @@ export const revalidate = 3600;
 
 const PAGE_PATH = "/airdrops";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Airdrops crypto 2026 : agenda + criteres d'eligibilite (live et a venir)";
+const TITLE = "Airdrops crypto 2026 : agenda + critères d'éligibilité (live et à venir)";
 const DESCRIPTION =
-  "Tous les airdrops crypto importants en 2026 : Linea, Morpho, Monad, MegaETH, EigenLayer... Status live/cloture/a venir, criteres d'eligibilite verifiables, lien officiel, niveau de risque. Source Cryptoreflex.";
+  "Tous les airdrops crypto importants en 2026 : Linea, Morpho, Monad, MegaETH, EigenLayer... Statut live/clôturé/à venir, critères d'éligibilité vérifiables, lien officiel, niveau de risque. Source Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,

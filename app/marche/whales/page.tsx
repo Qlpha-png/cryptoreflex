@@ -49,7 +49,7 @@ const PAGE_PATH = "/marche/whales";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Whale Watcher : grosses transactions crypto en direct";
 const DESCRIPTION =
-  "Suivi en direct des transactions on-chain massives (>= 1 M$) sur 8 cryptos majeures : Bitcoin, Ethereum, USDT, USDC, Solana, BNB, XRP, TRX. Source Whale Alert, cache 5 min.";
+  "Suivi en direct des transactions on-chain massives (≥ 1 M$) sur 8 cryptos majeures : Bitcoin, Ethereum, USDT, USDC, Solana, BNB, XRP, TRX. Source Whale Alert, cache 5 min.";
 
 export const metadata: Metadata = {
   title: TITLE,

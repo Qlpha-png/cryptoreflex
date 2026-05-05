@@ -55,8 +55,8 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/faq-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = `FAQ crypto FR : ${QUESTIONS.length} questions claires (debutant, fiscalite, securite)`;
-const DESCRIPTION = `${QUESTIONS.length} questions / reponses sur les cryptos en France : comment debuter, fiscalite PFU 30%, MiCA juillet 2026, securite seed phrase, DeFi, staking. Reponses honnetes, sources officielles, mises a jour 2026.`;
+const TITLE = `FAQ crypto FR : ${QUESTIONS.length} questions claires (débutant, fiscalité, sécurité)`;
+const DESCRIPTION = `${QUESTIONS.length} questions / réponses sur les cryptos en France : comment débuter, fiscalité PFU 30%, MiCA juillet 2026, sécurité seed phrase, DeFi, staking. Réponses honnêtes, sources officielles, mises à jour 2026.`;
 
 export const metadata: Metadata = {
   title: TITLE,

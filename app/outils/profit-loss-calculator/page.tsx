@@ -32,9 +32,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/outils/profit-loss-calculator";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Calculateur profit/perte crypto : PnL net apres frais et fiscalite";
+const TITLE = "Calculateur profit/perte crypto : PnL net après frais et fiscalité";
 const DESCRIPTION =
-  "Calcule ton profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Decompose le PnL brut, net apres frais, et apres impot PFU 30% France. Outil gratuit Cryptoreflex.";
+  "Calcule ton profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 30% France. Outil gratuit Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,
