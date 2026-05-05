@@ -51,7 +51,14 @@ let _fontsCache: OgFont[] | null = null;
 export async function loadOgFonts(): Promise<OgFont[]> {
   if (_fontsCache) return _fontsCache;
 
-  const base = BRAND.url; // https://www.cryptoreflex.fr
+  // Deploy-portable : on prefere NEXT_PUBLIC_SITE_URL si dispo, sinon
+  // fallback sur BRAND.url. Permet a l'app de fonctionner pendant une
+  // migration de domaine (staging.cryptoreflex.fr, sslip.io preview, etc.)
+  // sans que le BRAND.url hardcode bloque le fetch des fonts.
+  // Si BRAND.url pointe vers un domaine inaccessible (ex: prod down),
+  // Satori recoit la page d'erreur a la place du WOFF binary et plante
+  // avec "Unsupported OpenType signature ...".
+  const base = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
   const [regularData, boldData, extraBoldData] = await Promise.all([
     fetch(`${base}/fonts/Inter-Regular.woff`).then((r) => r.arrayBuffer()),
     fetch(`${base}/fonts/Inter-Bold.woff`).then((r) => r.arrayBuffer()),
