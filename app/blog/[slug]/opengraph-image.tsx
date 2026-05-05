@@ -382,16 +382,22 @@ export default async function OgImage({ params }: Props) {
           height: "100%",
           display: "flex",
           backgroundColor: "#0B0D10",
-          backgroundImage: `radial-gradient(ellipse at 100% 50%, rgba(${theme.baseRgb}, 0.32) 0%, rgba(${theme.baseRgb}, 0.08) 35%, transparent 60%)`,
+          // v8 (2026-05-04) — User feedback : "enleve les cercle jaune
+          // que tu avais rajouter". Reduit le radial-gradient (subtler)
+          // pour eviter qu'il ne forme un "second cercle" autour du logo.
+          // Avant : 0.32/0.08/transparent => glow visible. Apres : 0.18/
+          // 0.04/transparent => background presence sans halo distinct.
+          backgroundImage: `radial-gradient(ellipse at 100% 50%, rgba(${theme.baseRgb}, 0.18) 0%, rgba(${theme.baseRgb}, 0.04) 30%, transparent 55%)`,
           color: "white",
           position: "relative",
         }}
       >
-        {/* BLOC v6 (2026-05-04) — User feedback : "enleve les cercle jaune
-            que tu avais rajouter". Le halo circulaire avec border etait
-            trop visuel / type "logo en cocarde". Maintenant : symbole
-            simplement positionne right-center sans cadre, garde juste le
-            drop-shadow lumineux assorti pour ancrage visuel. */}
+        {/* v8 (2026-05-04) — drop-shadow reduit drastiquement (40px -> 0px)
+            pour les LOGOS crypto qui sont deja circulaires par design
+            (CoinGecko CDN). Le drop-shadow large faisait apparaitre comme
+            un "second cercle" autour du logo (ce que le user voit). Pour
+            les ICONES SVG vectorielles (theme non-crypto), on garde un
+            drop-shadow leger pour l'ancrage visuel. */}
         <div
           style={{
             position: "absolute",
@@ -412,18 +418,19 @@ export default async function OgImage({ params }: Props) {
               alt=""
               style={{
                 objectFit: "contain",
-                filter: `drop-shadow(0 0 40px rgba(${theme.baseRgb}, 0.6))`,
+                // Pas de drop-shadow pour les logos crypto (deja circulaires)
+                // -> evite l'effet "double cercle" sur Bitcoin, BNB, etc.
               }}
             />
           ) : IconComp ? (
             // v7 fix : chaque Icon retourne un <svg> COMPLET avec ses paths
             // INLINE. Avant (v6) on utilisait React fragment <>...</> pour
-            // retourner les paths -> Satori les ignorait silencieusement
-            // (drop-shadow visible mais paths invisibles).
+            // retourner les paths -> Satori les ignorait silencieusement.
+            // v8 : reduit le glow a 25px (au lieu de 40) pour rester subtle.
             IconComp({
               size: 300,
               stroke: theme.accentColor,
-              glow: `rgba(${theme.baseRgb}, 0.6)`,
+              glow: `rgba(${theme.baseRgb}, 0.4)`,
             })
           ) : (
             <div
