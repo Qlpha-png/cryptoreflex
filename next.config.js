@@ -274,6 +274,23 @@ const nextConfig = {
     ];
   },
 
+  // FIX 2026-05-05 — Le `app/icon.tsx` (Next.js auto-gen PNG 32x32 via Satori)
+  // se sert via /icon mais les browsers (Safari iOS legacy, Chrome cache, certains
+  // crawlers SEO) cherchent /favicon.ico explicitement. Sans ça → 404 visible
+  // dans logs et dans la console DevTools des visiteurs. Rewrite (pas redirect)
+  // pour servir le PNG directement comme si c'était un /favicon.ico — le browser
+  // est content, on a 0 404, et le contenu est exactement le même (notre icon
+  // dynamique). Pas de cache CF spécifique nécessaire (icon.tsx est edge-runtime
+  // et déjà cache-controllé par Next.js).
+  async rewrites() {
+    return [
+      {
+        source: "/favicon.ico",
+        destination: "/icon",
+      },
+    ];
+  },
+
   // Headers de sécurité — gain Lighthouse "Best Practices" + protection prod.
   // Note CSP : 'unsafe-inline' nécessaire pour JSON-LD inline (StructuredData.tsx)
   // et Tailwind/Next CSS critique. Plausible whitelisté pour analytics.
