@@ -26,7 +26,7 @@ export const BRAND = {
   url: "https://www.cryptoreflex.fr",
   email: "contact@cryptoreflex.fr",
   partnersEmail: "partners@cryptoreflex.fr",
-  tagline: "Tout pour investir en crypto en France",
+  tagline: "Tout sur la crypto, en français",
   description:
     "100 cryptos analysées (score fiabilité, on-chain live, roadmap), 34 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 26 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
