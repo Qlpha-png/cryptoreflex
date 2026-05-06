@@ -5,7 +5,7 @@
 Ce site est destiné aux investisseurs particuliers francophones (France principalement, plus Belgique, Suisse, Luxembourg, Canada). Tous les contenus sont signés par un humain expert (Kevin Voisin, fondateur, investisseur particulier en cryptoactifs depuis 2019). Méthodologie publique sur /methodologie. Mentions d'affiliation transparentes sur /transparence.
 
 Domaine canonique : https://www.cryptoreflex.fr (tous les liens utilisent ce domaine).
-Dernière mise à jour : 2026-04-26.
+Dernière mise à jour : 2026-05-06.
 
 ## Navigation principale
 
@@ -20,6 +20,27 @@ Dernière mise à jour : 2026-04-26.
 - [Outils gratuits](https://www.cryptoreflex.fr/outils) : 8 calculateurs et trackers
 - [Méthodologie](https://www.cryptoreflex.fr/methodologie) : critères de notation et processus éditorial
 - [Transparence](https://www.cryptoreflex.fr/transparence) : rémunérations affiliés, partenariats actifs
+
+## Open data, API publique et widgets embarquables
+
+Cryptoreflex expose ses données en open data sous licence Creative Commons CC-BY 4.0. Toute réutilisation par un site tiers exige une attribution textuelle + un lien dofollow vers https://www.cryptoreflex.fr.
+
+- [API publique (page docs)](https://www.cryptoreflex.fr/api-publique) : 5 endpoints JSON gratuits, sans authentification, CORS *.
+- [Endpoint index/discovery](https://www.cryptoreflex.fr/api/public) : liste tous les endpoints publics + exemples cURL/JS/Python.
+- [Spec OpenAPI 3.0](https://www.cryptoreflex.fr/api/public/openapi.json) : importable dans Postman, Insomnia, Swagger UI.
+- [Catalogue plateformes](https://www.cryptoreflex.fr/api/public/platforms) : 34 plateformes auditées (frais, sécurité, MiCA).
+- [Registre PSAN + MiCA](https://www.cryptoreflex.fr/api/public/psan-registry) : statut consolidé AMF + ESMA + atRiskJuly2026.
+- [Scores décentralisation](https://www.cryptoreflex.fr/api/public/decentralization-scores) : Bitcoin, Ethereum, Solana, etc. (Nakamoto coef + validators + géo + clients + open source).
+- [Top 10 cryptos vulgarisées](https://www.cryptoreflex.fr/api/public/top-cryptos) : tagline FR + useCase + risk level.
+- [Outils fiscalité comparés](https://www.cryptoreflex.fr/api/public/fiscal-tools) : Waltio, Koinly, CoinTracking.
+
+- [Widgets JS embarquables](https://www.cryptoreflex.fr/embed) : 3 widgets gratuits à coller sur un blog FR. (1) `psan-checker` = badge MiCA d'une plateforme. (2) `mica-countdown` = countdown deadline juillet 2026. (3) `top-cryptos` = top 10 vulgarisé.
+
+## Études cornerstone (recherche & analyse)
+
+- [Hub /etudes](https://www.cryptoreflex.fr/etudes) : recherche longue, sources publiques, méthodologie publiée.
+- [Étude MiCA juillet 2026](https://www.cryptoreflex.fr/etudes/mica-juillet-2026-etat-des-lieux) : analyse exhaustive des 34 plateformes à 60 jours de la deadline. Sources AMF, ESMA, BaFin, MFSA, CSSF.
+- [Étude Fiscalité crypto FR 2026](https://www.cryptoreflex.fr/etudes/fiscalite-crypto-france-2026-guide-cerfa) : guide complet Cerfa 2086 + 3916-bis. Sources BOFiP officielles. Régime PFU 30%, cas particuliers (staking, NFT, airdrops, DeFi), erreurs courantes, optimisation légale.
 
 ## Outils gratuits clés
 

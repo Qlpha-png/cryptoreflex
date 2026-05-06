@@ -82,6 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // backlinks presse + chercheurs). Mise à jour mensuelle des datasets.
     { url: `${SITE_URL}/etudes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/etudes/mica-juillet-2026-etat-des-lieux`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${SITE_URL}/etudes/fiscalite-crypto-france-2026-guide-cerfa`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     // /embed — page de docs des widgets JS embarquables (stratégie viral
     // backlinks : chaque install d'un widget par un blog FR = 1 backlink dofollow).
     { url: `${SITE_URL}/embed`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
