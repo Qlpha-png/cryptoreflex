@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { track } from "@/lib/analytics";
+import { trackAdsConversion } from "@/lib/ads-conversion";
 import StructuredData from "@/components/StructuredData";
 import { BRAND } from "@/lib/brand";
 
@@ -135,6 +136,9 @@ export default function NewsletterCapture() {
         } catch {
           /* SSR-safe */
         }
+        // Plan E — fire conversion vers tous les pixels publicitaires
+        // installés (Reddit + X + Google Ads). Best-effort, jamais bloquant.
+        trackAdsConversion("subscribe_newsletter");
       }
     } catch {
       setStatus("error");

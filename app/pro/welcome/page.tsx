@@ -19,6 +19,13 @@ const SimpleConfetti = dynamic(
   { ssr: false },
 );
 
+// Plan E (mai 2026) — pixel de conversion publicitaire (Reddit/X/Google Ads)
+// fired UNIQUEMENT si session_id Stripe est présent (= retour paiement).
+const PurchaseConversionFire = dynamic(
+  () => import("@/components/PurchaseConversionFire"),
+  { ssr: false },
+);
+
 export const metadata: Metadata = {
   title: "Bienvenue dans Cryptoreflex Pro",
   description:
@@ -44,6 +51,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
           Stripe présent (= vrai retour paiement). Évite déclenchement sur
           user qui revient bookmark. */}
       {sessionId && <SimpleConfetti />}
+      {sessionId && <PurchaseConversionFire sessionId={sessionId} />}
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
       <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-primary/15 rounded-full blur-3xl pointer-events-none" />
 

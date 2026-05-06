@@ -10,6 +10,7 @@ import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
 import PlausibleScript from "@/components/PlausibleScript";
 import ClarityScript from "@/components/ClarityScript";
+import AdsPixels from "@/components/AdsPixels";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
@@ -454,6 +455,14 @@ export default function RootLayout({
           Cf. components/ClarityScript.tsx pour la procédure de setup.
         */}
         <ClarityScript projectId={CLARITY_PROJECT_ID} />
+        {/*
+          AdsPixels — pixels de conversion Reddit + X + Google Ads (Plan E
+          tracking). Gated par 3 env vars (NEXT_PUBLIC_REDDIT_PIXEL_ID,
+          NEXT_PUBLIC_X_PIXEL_ID, NEXT_PUBLIC_GOOGLE_ADS_ID). Si aucune n'est
+          configurée, le composant ne rend rien (zéro impact perf/RGPD).
+          Cf. components/AdsPixels.tsx pour activation.
+        */}
+        <AdsPixels />
         {/*
           Service worker PWA — enregistre /sw.js côté client (uniquement en prod).
           Active le mode offline minimal + cache des assets statiques.
