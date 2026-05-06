@@ -83,7 +83,7 @@ const COMMON_HEADERS: Record<string, string> = {
   // License signalee a 3 niveaux : header custom, header Link RFC 5988, payload.
   "X-License": "CC-BY-4.0",
   "X-Attribution":
-    "Donnees Cryptoreflex (https://cryptoreflex.fr) — Reutilisation conditionnee a un lien dofollow.",
+    "Donnees Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
   // Cache CDN agressif (24h) car le dataset est statique.
   "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
