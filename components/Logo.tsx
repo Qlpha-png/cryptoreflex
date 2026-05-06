@@ -1,28 +1,42 @@
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * Logo Cryptoreflex — composant unique avec 3 variantes.
  *
- * - `full`  : logomark cairn + wordmark "Cryptoreflex" (header/footer desktop)
- * - `mark`  : logomark seul (favicon en gros, mobile)
- * - `mono`  : version monochrome qui hérite de `currentColor`
- *             (utile pour fond blanc/print/email où le gradient ne passe pas)
+ * Refonte complète 2026-05-06 : nouveau branding bleu Klein + crème os
+ * + drapeau FR désaturé. Wordmark "Cryptoreflex" avec X stylisé en
+ * gradient bleu Klein → bleu marine. Identité radicalement
+ * différenciante du marché crypto FR (aucun concurrent n'utilise
+ * cette palette).
  *
- * Wrappé dans <Link href="/"> par défaut. Désactiver via `asLink={false}`
- * (ex. en footer où le wrap link est déjà géré).
+ * Variants :
+ *  - `full`  : wordmark complet "Cryptoreflex" + tagline + drapeau FR
+ *              (header / footer / OG / signatures email)
+ *  - `mark`  : version carrée logo+tagline (favicon en gros, app icon,
+ *              social avatars, Google Ads logo slot)
+ *  - `mono`  : version SVG monochrome qui hérite de `currentColor`
+ *              (impression, email plain, fond clair)
+ *
+ * Wrappé dans <Link href="/"> par défaut. Désactiver via `asLink={false}`.
+ *
+ * Assets sources : /public/branding/logo-{horizontal,square,vertical}.png
+ * Générés à la main (ChatGPT 4o image) sur design custom validé.
  */
 
 export type LogoVariant = "full" | "mark" | "mono";
 
 interface LogoProps {
   variant?: LogoVariant;
-  /** Hauteur en px. Largeur calculée auto via viewBox. */
+  /** Hauteur en px. Largeur calculée auto via aspect ratio. */
   height?: number;
   className?: string;
   /** Si true (défaut), wrappe dans un Link vers "/". */
   asLink?: boolean;
   /** Pour aria-label / SEO si pas wrappé en link. */
   title?: string;
+  /** Priority loading pour LCP (header, hero). Défaut: false. */
+  priority?: boolean;
 }
 
 export default function Logo({
@@ -31,26 +45,21 @@ export default function Logo({
   className = "",
   asLink = true,
   title = "Cryptoreflex — Accueil",
+  priority = false,
 }: LogoProps) {
-  // Quand le SVG est ENVELOPPÉ par un container accessible (Link asLink=true ou
-  // span asLink=false avec aria-label), le SVG lui-même devient décoratif :
-  // sinon les lecteurs d'écran annoncent "Cryptoreflex Cryptoreflex Accueil".
-  const svg =
-    variant === "mark" ? <Mark height={height} decorative /> :
-    variant === "mono" ? <Mono height={height} decorative /> :
-    <Full height={height} decorative />;
+  const inner =
+    variant === "mark" ? <Mark height={height} priority={priority} /> :
+    variant === "mono" ? <Mono height={height} /> :
+    <Full height={height} priority={priority} />;
 
   if (!asLink) {
-    // Span purement présentationnel : on a déjà la marque dans la wave de
-    // navigation (Navbar / Footer nav). Pas besoin d'un 4e "Cryptoreflex"
-    // exposé aux lecteurs d'écran.
     return (
       <span
         className={`inline-flex items-center ${className}`}
         aria-hidden="true"
         data-logo={title}
       >
-        {svg}
+        {inner}
       </span>
     );
   }
@@ -61,120 +70,87 @@ export default function Logo({
       aria-label={title}
       className={`inline-flex items-center group ${className}`}
     >
-      {svg}
+      {inner}
     </Link>
   );
 }
 
-/* ─────────────────── Sub-renderers (inline SVG, zero network) ─────────────────── */
+/* ─────────────────── Sub-renderers ─────────────────── */
 
-function Full({ height, decorative }: { height: number; decorative?: boolean }) {
-  // viewBox 320x80 → ratio 4
-  const width = (height * 320) / 80;
-  const a11y = decorative
-    ? { "aria-hidden": true as const, focusable: false as const }
-    : { role: "img" as const, "aria-label": "Cryptoreflex" };
+/**
+ * Full — version horizontale 1920×600 (ratio ~3.2). Utilisée
+ * partout où on a la largeur (header desktop, footer, OG image).
+ *
+ * Source PNG haute résolution (2243×701) servie par /public/branding/.
+ * Next.js Image optimise automatiquement (WebP, dimensions, lazy-load).
+ */
+function Full({ height, priority }: { height: number; priority?: boolean }) {
+  // Aspect ratio source : 2243 / 701 = 3.2
+  const width = Math.round(height * 3.2);
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 320 80"
+    <Image
+      src="/branding/logo-horizontal.png"
+      alt="Cryptoreflex — Tout sur la crypto, en français"
       width={width}
       height={height}
-      {...a11y}
+      priority={priority}
       className="select-none transition-transform group-hover:scale-[1.02]"
-    >
-      <defs>
-        <linearGradient id="logo-full-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"  stopColor="#FCD34D" />
-          <stop offset="55%" stopColor="#F5A524" />
-          <stop offset="100%" stopColor="#B45309" />
-        </linearGradient>
-        <linearGradient id="logo-full-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"  stopColor="#FBBF24" />
-          <stop offset="100%" stopColor="#D97706" />
-        </linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <circle cx="32" cy="50" r="14" fill="url(#logo-full-gold)" />
-        <circle cx="32" cy="28" r="10" fill="url(#logo-full-gold-soft)" />
-        <circle cx="32" cy="11" r="7"  fill="#FCD34D" />
-      </g>
-      <text
-        x="84"
-        y="52"
-        fontFamily="var(--font-display), 'Space Grotesk', system-ui, sans-serif"
-        fontWeight={700}
-        fontSize={30}
-        letterSpacing="-0.5"
-        fill="#F4F5F7"
-      >
-        Crypto<tspan fill="url(#logo-full-gold)">reflex</tspan>
-      </text>
-    </svg>
+    />
   );
 }
 
-function Mark({ height, decorative }: { height: number; decorative?: boolean }) {
-  const a11y = decorative
-    ? { "aria-hidden": true as const, focusable: false as const }
-    : { role: "img" as const, "aria-label": "Cryptoreflex" };
-  // viewBox 64x64 → carré
+/**
+ * Mark — version carrée 1080×1080. Utilisée pour favicon en gros,
+ * app icon iOS/Android, social avatars (X, LinkedIn), Google Ads
+ * logo slot, packaging.
+ */
+function Mark({ height, priority }: { height: number; priority?: boolean }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 64 64"
+    <Image
+      src="/branding/logo-square.png"
+      alt="Cryptoreflex"
       width={height}
       height={height}
-      {...a11y}
+      priority={priority}
       className="select-none transition-transform group-hover:scale-[1.05]"
-    >
-      <defs>
-        <linearGradient id="logo-mark-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"  stopColor="#FCD34D" />
-          <stop offset="55%" stopColor="#F5A524" />
-          <stop offset="100%" stopColor="#B45309" />
-        </linearGradient>
-        <linearGradient id="logo-mark-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%"  stopColor="#FBBF24" />
-          <stop offset="100%" stopColor="#D97706" />
-        </linearGradient>
-      </defs>
-      <circle cx="32" cy="50" r="12" fill="url(#logo-mark-gold)" />
-      <circle cx="32" cy="29" r="9"  fill="url(#logo-mark-gold-soft)" />
-      <circle cx="32" cy="13" r="6"  fill="#FCD34D" />
-    </svg>
+    />
   );
 }
 
-function Mono({ height, decorative }: { height: number; decorative?: boolean }) {
-  const width = (height * 320) / 80;
-  const a11y = decorative
-    ? { "aria-hidden": true as const, focusable: false as const }
-    : { role: "img" as const, "aria-label": "Cryptoreflex" };
+/**
+ * Mono — version SVG monochrome qui hérite de `currentColor`.
+ * Utile pour : impression N&B, email plain text, fond clair où
+ * le PNG bleu Klein ne contrasterait pas.
+ *
+ * Code SVG inline (pas de PNG) parce que `currentColor` doit cascader
+ * depuis le contexte CSS parent.
+ */
+function Mono({ height }: { height: number }) {
+  // Ratio approximatif du wordmark seul (sans tagline ni drapeau)
+  const width = Math.round(height * 4.5);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 320 80"
+      viewBox="0 0 360 80"
       width={width}
       height={height}
-      {...a11y}
+      role="img"
+      aria-label="Cryptoreflex"
       className="select-none transition-transform group-hover:scale-[1.02]"
     >
-      <g transform="translate(8 8)" fill="currentColor">
-        <circle cx="32" cy="50" r="14" />
-        <circle cx="32" cy="28" r="10" />
-        <circle cx="32" cy="11" r="7" />
-      </g>
       <text
-        x="84"
-        y="52"
-        fontFamily="var(--font-display), 'Space Grotesk', system-ui, sans-serif"
+        x="0"
+        y="56"
+        fontFamily="Inter, system-ui, sans-serif"
         fontWeight={700}
-        fontSize={30}
-        letterSpacing="-0.5"
+        fontSize={48}
+        letterSpacing="-1"
         fill="currentColor"
       >
-        Cryptoreflex
+        Cryptorefle
+        <tspan dx="2" fontStyle="italic" fontWeight={800}>
+          x
+        </tspan>
       </text>
     </svg>
   );

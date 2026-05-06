@@ -3,21 +3,18 @@ import { ImageResponse } from "next/og";
 /**
  * Favicon dynamique — Next.js convention `app/icon.{tsx,png,svg}`.
  *
- * Pourquoi remplacer `app/icon.svg` (qui existait déjà) par ce handler ?
- *  - Google Search affiche le favicon à côté du résultat, mais privilégie
- *    PNG/ICO (le support SVG existe mais est moins fiable, surtout sur les
- *    SERP mobiles)
- *  - Permet d'avoir un dessin cohérent avec /logo.png (même cairn, même
- *    palette) — un seul fichier source
- *  - Génère un PNG 32×32 optimisé via Satori
+ * Refonte 2026-05-06 : nouveau branding bleu Klein. Le favicon doit être
+ * lisible en 16×16 et 32×32 (browser tabs, SERP Google), donc on simplifie :
+ * juste un "X" stylisé sur fond noir profond. Le X est l'élément signature
+ * du wordmark complet (Cryptorefle**X** où le X est en bleu Klein).
  *
- * Le SVG existant `app/icon.svg` reste en place : Next.js détecte les deux
- * et préfère cette version JSX/PNG (priorité dans l'algo de génération).
+ * En 16×16 le wordmark complet "Cryptoreflex" serait illisible — d'où le
+ * choix d'un mark abstrait (le X) qui devient l'identité réduite de la
+ * marque. Reconnaissable + différenciant.
  */
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
-// Edge runtime pour bénéficier du cache CDN agressif Vercel.
 export const runtime = "edge";
 
 export default function Icon() {
@@ -30,42 +27,47 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0B0D10",
+          background: "#0A0E1A", // Noir profond
           borderRadius: 6,
-          position: "relative",
         }}
       >
-        {/* Cairn micro — 3 cercles ramassés pour 32×32 (lisibilité prio) */}
+        {/* X stylisé : 2 traits diagonaux qui se croisent.
+            Bleu Klein #002FA7 → bleu marine #001D6B (gradient).
+            Construits via 2 div absolument positionnées en rotation. */}
         <div
           style={{
-            position: "absolute",
-            top: 18,
-            width: 14,
-            height: 14,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #FCD34D, #B45309)",
+            position: "relative",
+            width: 22,
+            height: 22,
           }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 9,
-            width: 10,
-            height: 10,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #FBBF24, #D97706)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 2,
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: "#FCD34D",
-          }}
-        />
+        >
+          {/* Trait diagonal "\" (du haut-gauche au bas-droite) */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 28,
+              height: 5,
+              background: "linear-gradient(90deg, #002FA7, #001D6B)",
+              transform: "translate(-50%, -50%) rotate(45deg)",
+              borderRadius: 1,
+            }}
+          />
+          {/* Trait diagonal "/" (du bas-gauche au haut-droite) */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 28,
+              height: 5,
+              background: "linear-gradient(90deg, #001D6B, #002FA7)",
+              transform: "translate(-50%, -50%) rotate(-45deg)",
+              borderRadius: 1,
+            }}
+          />
+        </div>
       </div>
     ),
     { ...size },
