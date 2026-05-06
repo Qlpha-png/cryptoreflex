@@ -9,6 +9,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import NewsletterInline from "@/components/NewsletterInline";
 
 /**
  * /lp/mica-2026 — landing DÉDIÉE aux campagnes payantes "MiCA juillet 2026".
@@ -259,6 +260,20 @@ export default function MicaLandingPage() {
               </details>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter fallback — récupère les non-clickers */}
+      <section className="relative px-4 py-12 sm:px-6 lg:px-8 border-t border-white/5">
+        <div className="mx-auto max-w-2xl">
+          <NewsletterInline
+            source="inline"
+            context="regulation"
+            variant="default"
+            title="Suis l'évolution MiCA en temps réel"
+            subtitle="Newsletter mensuelle qui suit les agréments CASP UE, les délistages et les recommandations de plateformes. 1 envoi par mois, 0 spam."
+            ctaLabel="M'abonner à la veille MiCA"
+          />
         </div>
       </section>
 

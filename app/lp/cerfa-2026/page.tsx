@@ -9,6 +9,7 @@ import {
   Lock,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import NewsletterInline from "@/components/NewsletterInline";
 
 /**
  * /lp/cerfa-2026 — landing page DÉDIÉE aux campagnes payantes Cerfa 2086.
@@ -227,6 +228,20 @@ export default function CerfaLandingPage() {
               </details>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter fallback — récupère les non-clickers */}
+      <section className="relative px-4 py-12 sm:px-6 lg:px-8 border-t border-white/5">
+        <div className="mx-auto max-w-2xl">
+          <NewsletterInline
+            source="inline"
+            context="fiscalite"
+            variant="default"
+            title="Pas prêt à utiliser l'outil tout de suite ?"
+            subtitle="Reçois nos analyses fiscalité crypto FR 2026 par email. 1 envoi par semaine, 0 spam, désinscription en 1 clic."
+            ctaLabel="Recevoir le guide fiscal"
+          />
         </div>
       </section>
 
