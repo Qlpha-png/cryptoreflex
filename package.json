@@ -26,7 +26,6 @@
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.1",
     "@types/web-push": "^3.6.4",
-    "@web3icons/react": "^4.1.17",
     "cmdk": "^1.1.1",
     "fuse.js": "^7.3.0",
     "gray-matter": "^4.0.3",

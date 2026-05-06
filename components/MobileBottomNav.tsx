@@ -2,10 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { Home, Sparkles, Newspaper, Wrench, ShoppingBag } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+
+/**
+ * FIX BUNDLE 2026-05-06 — Suppression de `motion/react` (~25KB JS dans le
+ * bundle global). On utilise un CSS transform transition sur un indicator
+ * unique positionné absolument. Visuellement équivalent au layoutId spring,
+ * sans le coût d'hydration framework-motion sur 100% des pageviews mobile.
+ *
+ * Les utilisateurs `prefers-reduced-motion` sont gérés par CSS via
+ * `@media (prefers-reduced-motion: reduce) { transition: none }` dans
+ * globals.css (déjà actif au niveau du body).
+ */
 
 /**
  * MobileBottomNav — barre de navigation persistante mobile.
@@ -73,13 +82,14 @@ function isActive(pathname: string, href: string): boolean {
 
 export default function MobileBottomNav() {
   const pathname = usePathname() ?? "/";
-  const navRef = useRef<HTMLUListElement>(null);
-  const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const activeIdx = TABS.findIndex((t) => isActive(pathname, t.href));
-  const reduce = useReducedMotion();
-  const indicatorTransition = reduce
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 500, damping: 35 };
+
+  // Indicator positionné en pourcentage (5 tabs = 20% chacune, centré).
+  // CSS transition cubic-bezier ≈ spring visuel sans framer-motion.
+  const tabsCount = TABS.length;
+  const indicatorLeft = activeIdx >= 0
+    ? `${(activeIdx + 0.5) * (100 / tabsCount)}%`
+    : "-100%"; // hors champ si aucun match (rare, fallback safe)
 
   return (
     <nav
@@ -95,8 +105,15 @@ export default function MobileBottomNav() {
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <ul ref={navRef} className="relative flex items-stretch justify-around">
-        {TABS.map(({ href, label, Icon, revenue }, i) => {
+      {/* Indicator unique, positionné absolu dans le <nav>. Slide entre items
+          via CSS transition (left + transform). Remplace motion.span layoutId. */}
+      <span
+        aria-hidden="true"
+        className="absolute top-0 h-[3px] w-10 -translate-x-1/2 rounded-b-full bg-gradient-to-r from-primary/0 via-primary to-primary/0 shadow-[0_2px_12px_rgba(245,165,36,0.6)] transition-[left] duration-300 ease-out motion-reduce:transition-none"
+        style={{ left: indicatorLeft }}
+      />
+      <ul className="relative flex items-stretch justify-around">
+        {TABS.map(({ href, label, Icon, revenue }) => {
           const active = isActive(pathname, href);
           // Slot revenue (Partenaires) : couleur gold permanente, pas seulement
           // au hover/active → signal CTA constant "ici tu peux acheter".
@@ -104,21 +121,8 @@ export default function MobileBottomNav() {
           return (
             <li
               key={href}
-              ref={(el) => {
-                itemRefs.current[i] = el;
-              }}
               className="relative flex-1"
             >
-              {/* Pill indicator GLOW slide — Motion layoutId fait la transition spring
-                  entre items quand activeIdx change (route change). */}
-              {active && activeIdx >= 0 && (
-                <motion.span
-                  layoutId="bottomnav-active"
-                  aria-hidden="true"
-                  className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] w-10 rounded-b-full bg-gradient-to-r from-primary/0 via-primary to-primary/0 shadow-[0_2px_12px_rgba(245,165,36,0.6)]"
-                  transition={indicatorTransition}
-                />
-              )}
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}

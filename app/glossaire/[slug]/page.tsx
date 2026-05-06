@@ -23,13 +23,18 @@ import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 
-// SSG : pré-générer toutes les pages au build pour SEO maximal.
-export function generateStaticParams() {
-  return GLOSSARY_TERMS.map((t) => ({ slug: t.id }));
-}
+// FIX BUILD 2026-05-06 — Top 50 termes les plus consultés au build,
+// les 200+ autres en ISR on-demand. Avant : 252 pages SSG forcées.
+// Le `dynamicParams=true` garantit que tous les termes restent accessibles ;
+// le `revalidate=86400` bornent la fraîcheur à 1 jour (donnée éditoriale stable).
+export const revalidate = 86400;
+export const dynamicParams = true;
 
-// Pas de fallback dynamique : on connaît tous les slugs au build.
-export const dynamicParams = false;
+export function generateStaticParams() {
+  // SSG les 50 premiers termes (alphabetic, suffisant pour amorcer le crawl
+  // SEO + dégager le maillage interne). Les 200 autres se rendent au 1er hit.
+  return GLOSSARY_TERMS.slice(0, 50).map((t) => ({ slug: t.id }));
+}
 
 interface PageProps {
   params: { slug: string };

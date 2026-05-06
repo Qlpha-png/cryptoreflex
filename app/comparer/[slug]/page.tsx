@@ -27,7 +27,10 @@ import {
 } from "@/lib/crypto-comparisons";
 import { BRAND } from "@/lib/brand";
 
-export const revalidate = 3600;
+// FIX 2026-05-06 — revalidate aligné sur les autres pages éditoriales
+// stables (86400s = 1 jour). 3600s = 24× plus de regen pour rien sur du
+// contenu qui ne change que via redéploiement.
+export const revalidate = 86400;
 export const dynamicParams = true;
 
 interface Props {

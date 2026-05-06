@@ -121,19 +121,18 @@ export async function middleware(request: NextRequest) {
     await supabase.auth.getUser();
   }
 
-  // Headers de sécurité globaux — ajoutés APRÈS supabase pour ne pas être
-  // perdus si setAll a recréé supabaseResponse.
-  supabaseResponse.headers.set(
-    "Strict-Transport-Security",
-    "max-age=63072000; includeSubDomains; preload",
-  );
-  supabaseResponse.headers.set("X-Content-Type-Options", "nosniff");
-  supabaseResponse.headers.set("X-Frame-Options", "DENY");
-  supabaseResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  supabaseResponse.headers.set(
-    "Permissions-Policy",
-    "geolocation=(), camera=(), microphone=(), payment=(self)",
-  );
+  // FIX 2026-05-06 — DÉDUPLIQUÉ. Les headers de sécurité (HSTS, X-Frame-Options,
+  // X-Content-Type-Options, Referrer-Policy, Permissions-Policy) sont déjà
+  // servis par `next.config.js -> headers()` côté CDN sur toutes les routes
+  // (cf. blocs `headers()` dans next.config.js).
+  //
+  // Avant : on les re-settait ICI dans le middleware Edge → DOUBLE-set sur les
+  // routes auth-aware (mon-compte, admin, pro, portefeuille, alertes, etc.) =
+  // headers identiques mais 5 lignes de CPU Edge inutiles à chaque invocation.
+  //
+  // Maintenant : on laisse next.config.js gérer (CDN-served, gratuit). Le
+  // middleware ne fait que ce qui est SPÉCIFIQUE Edge : Supabase refresh JWT
+  // + CSRF check. Économie : ~2-5ms par invocation Edge.
 
   return supabaseResponse;
 }

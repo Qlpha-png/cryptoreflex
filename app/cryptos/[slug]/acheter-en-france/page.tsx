@@ -21,15 +21,18 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 
+// FIX BUILD 2026-05-06 — `dynamicParams=true` + SSG limité aux 10 cryptos top.
+// Avant : 100 pages SSG forcées au build. Maintenant : 10 SSG + 90 ISR.
+// Le `notFound()` dans la page (via `getCrypto`) garde la sécurité.
 export const revalidate = 86400;
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 interface Props {
   params: { slug: string };
 }
 
 export function generateStaticParams() {
-  return ALL_CRYPTOS.map((c) => ({ slug: c.id }));
+  return ALL_CRYPTOS.slice(0, 10).map((c) => ({ slug: c.id }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {

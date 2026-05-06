@@ -37,6 +37,10 @@ const nextConfig = {
       "@dnd-kit/utilities",
       "cmdk",
       "fuse.js",
+      // FIX BUNDLE 2026-05-06 — Supabase SSR/JS pas tree-shake-friendly par
+      // défaut (gain ~5-15KB côté client sur les pages auth-aware).
+      "@supabase/ssr",
+      "@supabase/supabase-js",
     ],
   },
 

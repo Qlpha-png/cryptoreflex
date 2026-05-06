@@ -67,6 +67,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const pair = `${symbol}USDT`;
 
   try {
+    // FIX 2026-05-06 — timeout 2.5s sur fetch upstream (avant : aucun).
+    // Sans ça, si Binance hang, l'Edge worker tient 60s avant timeout
+    // implicite Vercel = consume 60× le quota CPU pour 1 request bloqué.
     const upstream = await fetch(
       `https://api.binance.com/api/v3/depth?symbol=${pair}&limit=${limit}`,
       {
@@ -74,6 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // refresh client 5s → 90% des hits servent du cache.
         next: { revalidate: 3 },
         headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(2500),
       },
     );
 

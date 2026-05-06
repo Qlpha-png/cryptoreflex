@@ -31,6 +31,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
 import { BRAND } from "@/lib/brand";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,6 +46,16 @@ const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
 
 const MAX_URLS_PER_CALL = 10_000;
 
+// FIX 2026-05-06 — defense-in-depth rate limit après auth Bearer.
+// Si CRON_SECRET fuite (log oubli, GitHub history), l'attaquant pourrait
+// brûler notre quota IndexNow (10k URL/jour) en quelques secondes. 10
+// requêtes par heure par IP suffit largement à nos crons légitimes.
+const limiter = createRateLimiter({
+  limit: 10,
+  windowMs: 3600_000,
+  key: "indexnow-push",
+});
+
 interface IndexNowBody {
   /** Liste d'URLs absolues à pusher. Doivent être sur le host configuré. */
   urls?: string[];
@@ -53,6 +65,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!verifyBearer(req, process.env.CRON_SECRET)) {
     // 404 stealth pour ne pas révéler l'endpoint à un scanner.
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // FIX 2026-05-06 — defense-in-depth après auth (cf. const limiter en haut).
+  const ip = getClientIp(req);
+  const rl = await limiter(ip);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
+    );
   }
 
   let body: IndexNowBody;

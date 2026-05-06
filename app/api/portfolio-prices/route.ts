@@ -99,9 +99,12 @@ async function _fetchPortfolioPrices(
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=${sparklineFlag}&price_change_percentage=24h`;
 
   try {
+    // FIX 2026-05-06 — timeout 4s sur fetch CoinGecko (avant : aucun).
+    // Si CoinGecko hang, le request bloquait jusqu'au timeout Vercel (60s).
     const res = await fetch(url, {
       next: { revalidate: 60, tags: ["coingecko:portfolio"] },
       headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) throw new Error(`CoinGecko portfolio prices ${res.status}`);
     const json = (await res.json()) as CoinGeckoMarket[];

@@ -4,7 +4,6 @@ import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import NewsletterStickyBar from "@/components/NewsletterStickyBar";
 import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
@@ -16,9 +15,7 @@ import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
 import SpeculationRules from "@/components/SpeculationRules";
 import SpotlightDelegate from "@/components/SpotlightDelegate";
-import CursorHalo from "@/components/ui/CursorHalo";
 import VisibilityPauser from "@/components/ui/VisibilityPauser";
-import ClickFallback from "@/components/ClickFallback";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
 import {
@@ -52,6 +49,31 @@ const WebVitalsReporter = dynamic(
 // l'event 'cmdk:open' dans le vide. Fix : monté en dynamic ssr:false (chargé
 // après LCP, ne bloque pas le first paint).
 const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
+  ssr: false,
+});
+
+// FIX BUNDLE 2026-05-06 — NewsletterStickyBar n'apparait qu'après 30s OU
+// 50% scroll → aucun besoin SSR. Lazy-load ssr:false économise 1 hydration
+// boundary + ~5KB initial sur 100% des pageviews.
+const NewsletterStickyBar = dynamic(
+  () => import("@/components/NewsletterStickyBar"),
+  { ssr: false }
+);
+
+// FIX BUNDLE 2026-05-06 — CursorHalo désactivé sur touch + reduced-motion
+// (CSS no-op sur 70% des sessions mobile). Lazy-load ssr:false évite de
+// charger le JS sur ces sessions où il ne fait rien.
+const CursorHalo = dynamic(() => import("@/components/ui/CursorHalo"), {
+  ssr: false,
+});
+
+// FIX BUNDLE 2026-05-06 — ClickFallback ne sert que pour 5 slugs crypto
+// (ethereum/solana/sui/aptos/polkadot — wallet extensions cassent
+// l'hydration). Auparavant chargé global sur 100% des pages. Lazy-load
+// ssr:false évite l'hydration sur 95% des pageviews.
+// TODO post-validation : déplacer dans app/cryptos/[slug]/layout.tsx
+// pour ne le charger QUE sur les fiches crypto concernées.
+const ClickFallback = dynamic(() => import("@/components/ClickFallback"), {
   ssr: false,
 });
 

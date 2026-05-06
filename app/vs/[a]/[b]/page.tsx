@@ -74,26 +74,19 @@ interface Props {
 /*  Les autres 407 paires sont SSR à la demande (ISR cache 24h ensuite).      */
 /* -------------------------------------------------------------------------- */
 
-// BATCH 58 — TOP 15 pre-build (= 105 paires) au build time. Couvre les paires
-// les plus recherchees en FR (BTC vs ETH, BTC vs SOL, ETH vs SOL, etc.).
-// Les 4845 autres paires sont SSR au 1er hit + cachees 24h ISR.
-// IDs internes (slug) cf. data/top-cryptos.json + data/hidden-gems.json.
+// FIX BUILD 2026-05-06 — Réduit TOP 15 → TOP 5 (105 paires → 10).
+// Avant : 105 paires × fetchCoinDetail × 2 = 210 appels CoinGecko au build,
+// dont la majorité sur des coins exotiques (the-graph, render, celestia,
+// near-protocol) absents de price-source.ts → rate-limit 429.
+// Maintenant : seules les 5 paires de réputation max (BTC/ETH/SOL/BNB/XRP),
+// toutes couvertes par price-source.ts (Binance + CoinCap, gratuit
+// illimité). Les 4940 autres paires sont SSR au 1er hit + cache 24h ISR.
 const PRE_BUILD_TOP = [
   "bitcoin",
   "ethereum",
-  "xrp",
-  "bnb",
   "solana",
-  "dogecoin",
-  "cardano",
-  "tron",
-  "avalanche",
-  "chainlink",
-  "near-protocol",
-  "celestia",
-  "the-graph",
-  "render",
-  "arbitrum",
+  "bnb",
+  "xrp",
 ];
 
 export function generateStaticParams() {

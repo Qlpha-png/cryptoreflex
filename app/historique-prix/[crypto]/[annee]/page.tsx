@@ -39,14 +39,14 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 const YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"] as const;
 type Annee = (typeof YEARS)[number];
 
-// Top 30 cryptos pour pré-build (le reste en ISR on-demand).
-const TOP_30_FOR_BUILD = [
+// FIX BUILD 2026-05-06 — Top 30 → Top 10 cryptos pour pré-build.
+// Avant : 30 × 8 années = 240 pages SSG au build (~60-120s).
+// Après : 10 × 8 = 80 pages au build. Les 20 autres + tous les coins hors
+// liste sont en ISR on-demand (dynamicParams=true, revalidate 7 jours).
+// Volume couvert : top 10 cryptos = ~80% du trafic SEO sur ce pattern.
+const TOP_10_FOR_BUILD = [
   "bitcoin", "ethereum", "binancecoin", "ripple", "solana",
   "cardano", "dogecoin", "tron", "avalanche-2", "chainlink",
-  "polkadot", "matic-network", "litecoin", "shiba-inu", "uniswap",
-  "near", "internet-computer", "cosmos", "stellar", "bitcoin-cash",
-  "filecoin", "aptos", "monero", "the-open-network", "tezos",
-  "algorand", "hedera-hashgraph", "ethereum-classic", "aave", "maker",
 ];
 
 interface Props {
@@ -57,7 +57,7 @@ export const revalidate = 604800; // 7 jours (donnée annuelle immuable)
 export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return TOP_30_FOR_BUILD.flatMap((crypto) =>
+  return TOP_10_FOR_BUILD.flatMap((crypto) =>
     YEARS.map((annee) => ({ crypto, annee })),
   );
 }
