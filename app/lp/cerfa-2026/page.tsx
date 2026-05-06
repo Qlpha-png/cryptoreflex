@@ -231,6 +231,26 @@ export default function CerfaLandingPage() {
         </div>
       </section>
 
+      {/* Cross-link checklist actionnable */}
+      <section className="relative px-4 py-12 sm:px-6 lg:px-8 border-t border-white/5">
+        <div className="mx-auto max-w-3xl rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6 text-center">
+          <h2 className="text-xl font-bold tracking-tight">
+            Tu préfères suivre une checklist papier ?
+          </h2>
+          <p className="mt-2 max-w-2xl mx-auto text-sm text-slate-300">
+            Notre checklist 8 étapes est imprimable et te guide pas-à-pas
+            avant la deadline du 31 mai 2026.
+          </p>
+          <Link
+            href="/guides/declaration-crypto-2026-checklist"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 hover:bg-emerald-500/20"
+          >
+            Voir la checklist
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Newsletter fallback — récupère les non-clickers */}
       <section className="relative px-4 py-12 sm:px-6 lg:px-8 border-t border-white/5">
         <div className="mx-auto max-w-2xl">

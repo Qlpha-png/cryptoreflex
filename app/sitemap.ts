@@ -83,6 +83,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/etudes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/etudes/mica-juillet-2026-etat-des-lieux`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${SITE_URL}/etudes/fiscalite-crypto-france-2026-guide-cerfa`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    // /guides — hub des guides pratiques actionnables (HowTo schema, rich snippets SERP).
+    { url: `${SITE_URL}/guides`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/guides/declaration-crypto-2026-checklist`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     // /embed — page de docs des widgets JS embarquables (stratégie viral
     // backlinks : chaque install d'un widget par un blog FR = 1 backlink dofollow).
     { url: `${SITE_URL}/embed`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
