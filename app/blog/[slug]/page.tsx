@@ -47,6 +47,16 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
+// FIX SEO 2026-05-05 — Bloquer les slugs hors generateStaticParams au niveau
+// routing. Avant : `/blog/article-qui-existe-pas` retournait HTTP 200 +
+// page "Article introuvable" (mauvais pour SEO + UX). Cause : avec
+// dynamicParams=true par défaut + ISR, notFound() est rendu mais Next.js
+// servait souvent en 200 au lieu de 404. dynamicParams=false force un vrai
+// 404 native pour tout slug hors la liste pré-générée → meilleur signal Google
+// (canonical pages vs pages d'erreur), nettoie la Search Console, et améliore
+// l'expérience utilisateur.
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticleBySlug(params.slug);
   if (!article) return { title: "Article introuvable" };
