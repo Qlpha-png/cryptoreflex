@@ -52,6 +52,7 @@ export function generateMetadata({ params }: Props): Metadata {
     description,
     alternates: withHreflang(`${BRAND.url}/comparatif/${params.slug}`),
     openGraph: { title, description, url: `${BRAND.url}/comparatif/${params.slug}`, type: "article" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

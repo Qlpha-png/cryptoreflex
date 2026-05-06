@@ -591,14 +591,19 @@ export async function fetchTopMarket(limit = 20): Promise<MarketCoin[]> {
 }
 
 /**
- * Snapshot statique des top 6 cryptos (BTC/ETH/USDT/BNB/SOL/XRP) — utilisé
- * uniquement quand CoinGecko est down ou rate-limited. Les prix sont des
- * estimations marché 2026 ; c'est un FILET DE SÉCURITÉ pour ne JAMAIS
- * afficher de hero vide. Le client SSE écrase tout de suite avec du live.
+ * Snapshot statique des top 6 cryptos — fallback ULTIME quand CoinGecko ET
+ * notre aggregator (Binance + CoinCap) sont tous down/rate-limited.
  *
- * Mis à jour manuellement chaque trimestre. Si on doit retoucher en urgence :
- * c'est juste un fallback visuel, l'erreur sous-jacente (rate-limit, API down)
- * doit être tracée par les logs.
+ * FIX P2 2026-05-06 — DÉDUP avec lib/price-source.ts STATIC_FALLBACK.
+ * Avant : 6 coins dupliqués avec prix obsolètes (BTC=95000) incohérents
+ * avec price-source.ts (BTC=78500). 2 sources de vérité = bugs visuels
+ * possibles si l'utilisateur voit BTC=95k sur le hero et BTC=78.5k sur
+ * sa fiche bitcoin (les 2 fallbacks ne s'aligneront jamais).
+ *
+ * Maintenant : prix alignés sur price-source.ts (mai 2026). Idéalement,
+ * on devrait dériver ce fallback runtime depuis price-source.STATIC_FALLBACK
+ * (single source of truth) ; à faire dans BATCH 52 (auto-update via KV
+ * snapshot du dernier fetch réussi). Pour l'instant : alignement manuel.
  */
 const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
   {
@@ -606,13 +611,13 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "BTC",
     name: "Bitcoin",
     image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-    currentPrice: 95000,
-    marketCap: 1900000000000,
+    currentPrice: 78500,
+    marketCap: 1550000000000,
     marketCapRank: 1,
-    totalVolume: 50000000000,
-    priceChange1h: 0.1,
-    priceChange24h: 0.5,
-    priceChange7d: 2.3,
+    totalVolume: 35000000000,
+    priceChange1h: 0,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
     circulatingSupply: 19800000,
     ath: 108786,
@@ -622,13 +627,13 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "ETH",
     name: "Ethereum",
     image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-    currentPrice: 2300,
+    currentPrice: 2320,
     marketCap: 280000000000,
     marketCapRank: 2,
-    totalVolume: 25000000000,
-    priceChange1h: 0.2,
-    priceChange24h: 0.8,
-    priceChange7d: 3.1,
+    totalVolume: 18000000000,
+    priceChange1h: 0,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
     circulatingSupply: 121000000,
     ath: 4878,
@@ -639,14 +644,14 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     name: "Tether",
     image: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
     currentPrice: 1.0,
-    marketCap: 140000000000,
+    marketCap: 120000000000,
     marketCapRank: 3,
-    totalVolume: 60000000000,
+    totalVolume: 50000000000,
     priceChange1h: 0,
-    priceChange24h: 0.01,
-    priceChange7d: -0.02,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
-    circulatingSupply: 140000000000,
+    circulatingSupply: 120000000000,
     ath: 1.32,
   },
   {
@@ -654,13 +659,13 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "BNB",
     name: "BNB",
     image: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
-    currentPrice: 620,
+    currentPrice: 600,
     marketCap: 90000000000,
     marketCapRank: 4,
-    totalVolume: 1500000000,
-    priceChange1h: 0.05,
-    priceChange24h: 0.4,
-    priceChange7d: 1.8,
+    totalVolume: 1800000000,
+    priceChange1h: 0,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
     circulatingSupply: 145000000,
     ath: 788,
@@ -670,13 +675,13 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "SOL",
     name: "Solana",
     image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-    currentPrice: 200,
-    marketCap: 95000000000,
+    currentPrice: 145,
+    marketCap: 68000000000,
     marketCapRank: 5,
     totalVolume: 3000000000,
-    priceChange1h: 0.3,
-    priceChange24h: 1.2,
-    priceChange7d: 4.5,
+    priceChange1h: 0,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
     circulatingSupply: 470000000,
     ath: 295,
@@ -686,13 +691,13 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "XRP",
     name: "XRP",
     image: "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png",
-    currentPrice: 1.4,
-    marketCap: 80000000000,
+    currentPrice: 0.62,
+    marketCap: 34000000000,
     marketCapRank: 6,
-    totalVolume: 2000000000,
-    priceChange1h: 0.1,
-    priceChange24h: 0.6,
-    priceChange7d: 2.9,
+    totalVolume: 2500000000,
+    priceChange1h: 0,
+    priceChange24h: 0,
+    priceChange7d: 0,
     sparkline7d: [],
     circulatingSupply: 57000000000,
     ath: 3.84,

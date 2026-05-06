@@ -50,6 +50,11 @@ export function generateMetadata({ params }: Props): Metadata {
       url: `${BRAND.url}/top/${l.slug}`,
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: l.title,
+      description: l.description,
+    },
   };
 }
 

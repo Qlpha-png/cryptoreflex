@@ -108,6 +108,11 @@ export function generateMetadata({ params }: Props): Metadata {
       url: `${BRAND.url}/acheter/${c.id}/${country.code}`,
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
