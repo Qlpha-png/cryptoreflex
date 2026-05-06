@@ -22,13 +22,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # On a besoin du contenu actuel sur main : depth 1 suffit.
           fetch-depth: 1
 
       - name: Setup Node 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Open GitHub issue on stale content
         if: steps.freshness.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const date = new Date().toISOString().slice(0, 10);
