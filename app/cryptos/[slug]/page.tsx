@@ -22,6 +22,7 @@ import {
   getCryptoBySlug,
   getCryptoSlugs,
   getRelatedCryptos,
+  getTopCryptos,
   type AnyCrypto,
   type HiddenGem,
   type TopCrypto,
@@ -207,16 +208,32 @@ import {
 /* -------------------------------------------------------------------------- */
 
 export const revalidate = 3600; // 1h — la donnée éditoriale bouge peu, le prix vient de fetchCoinDetail
-// On ne sert QUE les 100 fiches éditoriales (top10 + 90 hidden gems).
-// Tout autre slug → 404, même si listé dans `lib/programmatic.ts`.
-export const dynamicParams = false;
+// FIX BUILD PERF 2026-05-06 — `dynamicParams = true` + SSG limité au top 10.
+//
+// Avant : SSG des 100 fiches au build → 13 min de build à cause du rate-limit
+// CoinGecko sur les 90 hidden gems exotiques (render-token, the-graph, etc.
+// qui ne sont pas dans price-source.ts donc fallback CoinGecko free tier).
+//
+// Maintenant : seules les 10 fiches top (BTC, ETH, SOL, BNB, XRP, ADA, DOGE,
+// MATIC, DOT, AVAX) sont SSG-prerenderées au build. Les 90 hidden gems sont
+// rendues on-demand au premier visiteur (ISR), puis cachées 1h. Coût UX :
+// ~1.5s sur le 1er hit cold d'une gem ; toutes les visites suivantes
+// instantanées. Coût build : 30s au lieu de 13 min.
+//
+// `getCryptoSlugs()` reste utilisé pour valider que le slug est dans notre
+// liste éditoriale (top10 + 90 gems) → tout autre slug = 404 via notFound()
+// dans la page elle-même.
+export const dynamicParams = true;
 
 interface Props {
   params: { slug: string };
 }
 
 export function generateStaticParams() {
-  return getCryptoSlugs().map((slug) => ({ slug }));
+  // SSG uniquement les top 10 (haut trafic + tous couverts par price-source.ts
+  // donc zéro appel CoinGecko au build → build rapide). Les 90 hidden gems
+  // se rendent on-demand au 1er visiteur (ISR cache 1h via `revalidate`).
+  return getTopCryptos().map((c) => ({ slug: c.id }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
