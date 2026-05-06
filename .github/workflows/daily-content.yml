@@ -64,6 +64,7 @@ jobs:
           fi
 
       - name: Commit + push (with rebase loop anti-race)
+        id: commit_push
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config user.name "Cryptoreflex Bot"
@@ -110,15 +111,23 @@ jobs:
         run: |
           echo "## Cryptoreflex daily-content run" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.changes.outputs.has_changes }}" = "true" ]; then
-            echo "✅ **${{ steps.changes.outputs.files_count }} nouveaux fichiers committés**" >> $GITHUB_STEP_SUMMARY
-            echo "→ Vercel redeploy déclenché automatiquement (~90s)" >> $GITHUB_STEP_SUMMARY
+          # Fix audit 2026-05-06 : on lit la conclusion REELLE du step
+          # commit_push, pas seulement has_changes. Avant : le summary
+          # affichait \"X fichiers committes\" meme quand le push echouait
+          # (run 25435215740) - source de confusion en debug.
+          if [ "${{ steps.changes.outputs.has_changes }}" = "false" ]; then
+            echo "ℹ️  Aucun nouveau contenu (fichiers déjà à jour ou sources RSS down)." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.commit_push.conclusion }}" = "success" ]; then
+            echo "✅ **${{ steps.changes.outputs.files_count }} nouveaux fichiers committés et pushés**" >> $GITHUB_STEP_SUMMARY
+            echo "→ Coolify/Vercel redeploy déclenché automatiquement (~90s)" >> $GITHUB_STEP_SUMMARY
             echo "→ Google + Bing pingés via /sitemap-news.xml" >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️  Aucun nouveau contenu (fichiers déjà à jour ou sources RSS down)." >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Push échoué** (${{ steps.changes.outputs.files_count }} fichiers générés localement mais non pushés)." >> $GITHUB_STEP_SUMMARY
+            echo "→ Voir le log du step \`Commit + push\` pour la cause exacte." >> $GITHUB_STEP_SUMMARY
+            echo "→ Causes typiques : non-fast-forward (race), token expiré, branch protection." >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[Vercel Dashboard](https://vercel.com/dashboard) — [Sitemap News](https://www.cryptoreflex.fr/sitemap-news.xml)" >> $GITHUB_STEP_SUMMARY
+          echo "[Site](https://www.cryptoreflex.fr) — [Sitemap News](https://www.cryptoreflex.fr/sitemap-news.xml)" >> $GITHUB_STEP_SUMMARY
 
       # ----------------------------------------------------------------------
       # Notification automatique en cas d'échec : ouvre une issue GitHub avec

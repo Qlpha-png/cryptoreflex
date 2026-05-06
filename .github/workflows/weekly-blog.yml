@@ -65,6 +65,7 @@ jobs:
           fi
 
       - name: Commit + push (with rebase loop anti-race)
+        id: commit_push
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config user.name "Cryptoreflex Bot"
@@ -103,17 +104,22 @@ jobs:
         run: |
           echo "## Cryptoreflex weekly-blog run" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.changes.outputs.has_changes }}" = "true" ]; then
-            echo "Nouvel article publié : **${{ steps.changes.outputs.slug }}**" >> $GITHUB_STEP_SUMMARY
+          # Fix audit 2026-05-06 : on lit la conclusion REELLE du step
+          # commit_push, pas seulement has_changes (cf. daily-content.yml).
+          if [ "${{ steps.changes.outputs.has_changes }}" = "false" ]; then
+            echo "ℹ️ Aucun nouvel article (validation LLM en échec, OPENROUTER_API_KEY absente, ou catalogue épuisé)." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.commit_push.conclusion }}" = "success" ]; then
+            echo "✅ Nouvel article publié : **${{ steps.changes.outputs.slug }}**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "- Vercel redeploy déclenché automatiquement (~90s)" >> $GITHUB_STEP_SUMMARY
+            echo "- Coolify/Vercel redeploy déclenché automatiquement (~90s)" >> $GITHUB_STEP_SUMMARY
             echo "- Google + Bing pingés via /sitemap-news.xml" >> $GITHUB_STEP_SUMMARY
             echo "- URL : https://www.cryptoreflex.fr/blog/${{ steps.changes.outputs.slug }}" >> $GITHUB_STEP_SUMMARY
           else
-            echo "Aucun nouvel article (validation LLM en échec, OPENROUTER_API_KEY absente, ou catalogue épuisé)." >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Push échoué** (article \`${{ steps.changes.outputs.slug }}\` généré localement mais non pushé)." >> $GITHUB_STEP_SUMMARY
+            echo "→ Voir le log du step \`Commit + push\` pour la cause exacte." >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[Vercel Dashboard](https://vercel.com/dashboard) — [Sitemap News](https://www.cryptoreflex.fr/sitemap-news.xml)" >> $GITHUB_STEP_SUMMARY
+          echo "[Site](https://www.cryptoreflex.fr) — [Sitemap News](https://www.cryptoreflex.fr/sitemap-news.xml)" >> $GITHUB_STEP_SUMMARY
 
       - name: Notify on failure (open GitHub issue)
         if: failure()
