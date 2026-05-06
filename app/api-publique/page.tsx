@@ -151,7 +151,109 @@ const breadcrumb = breadcrumbSchema([
 
 const faq = faqSchema(FAQ.map((f) => ({ question: f.question, answer: f.answer })));
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, faq]);
+/**
+ * JSON-LD Dataset schema (Google Dataset Search) — fait apparaître /api-publique
+ * dans https://datasetsearch.research.google.com/ et signale à Google que
+ * cette URL expose un vrai dataset open data CC-BY 4.0 (et pas juste de la
+ * doc marketing). Standard schema.org/Dataset.
+ *
+ * Référence : https://developers.google.com/search/docs/appearance/structured-data/dataset
+ *
+ * Pourquoi : être indexé comme Dataset = trafic SEO pour "open data crypto FR",
+ * "PSAN dataset", "MiCA registry CSV", etc. + signal d'autorité auprès des
+ * journalistes/chercheurs qui cherchent des sources.
+ */
+const datasetSchema = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "Cryptoreflex — Open Data Crypto FR",
+  alternateName: "Cryptoreflex Public API",
+  description:
+    "Dataset open data CC-BY 4.0 sur le marché crypto français : 34 plateformes auditées (frais, sécurité, MiCA, PSAN), registre PSAN+MiCA consolidé, scores de décentralisation pour 10+ blockchains, top 10 cryptos vulgarisées, comparatif outils fiscalité crypto. Compilation à partir des registres officiels AMF, ESMA, BaFin, CNMV, MFSA, CSSF + sources publiques (Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub).",
+  url: baseUrl + "/api-publique",
+  sameAs: [baseUrl + "/api/public"],
+  keywords: [
+    "crypto",
+    "bitcoin",
+    "ethereum",
+    "PSAN",
+    "MiCA",
+    "AMF",
+    "ESMA",
+    "blockchain",
+    "fiscalité crypto",
+    "France",
+    "open data",
+    "CC-BY 4.0",
+    "Cerfa 2086",
+    "déclaration crypto",
+  ],
+  inLanguage: "fr-FR",
+  isAccessibleForFree: true,
+  license: "https://creativecommons.org/licenses/by/4.0/",
+  creator: {
+    "@type": "Organization",
+    name: "Cryptoreflex",
+    url: baseUrl,
+    email: BRAND.partnersEmail,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Cryptoreflex",
+    url: baseUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: baseUrl + "/icon",
+    },
+  },
+  spatialCoverage: {
+    "@type": "Place",
+    name: "France / Union Européenne",
+  },
+  temporalCoverage: "2024-01-01/..",
+  variableMeasured: [
+    "Frais maker / taker / SEPA / retrait par plateforme",
+    "Score de sécurité par plateforme",
+    "Statut PSAN AMF + agrément CASP MiCA UE",
+    "Score de décentralisation composite (Nakamoto coef, validators, géo, clients, open source)",
+    "Notation des outils fiscalité crypto (tarifs, fonctionnalités, support FR)",
+  ],
+  distribution: [
+    {
+      "@type": "DataDownload",
+      encodingFormat: "application/json",
+      contentUrl: baseUrl + "/api/public/platforms",
+      name: "Catalogue plateformes",
+    },
+    {
+      "@type": "DataDownload",
+      encodingFormat: "application/json",
+      contentUrl: baseUrl + "/api/public/psan-registry",
+      name: "Registre PSAN + MiCA",
+    },
+    {
+      "@type": "DataDownload",
+      encodingFormat: "application/json",
+      contentUrl: baseUrl + "/api/public/decentralization-scores",
+      name: "Scores de décentralisation",
+    },
+    {
+      "@type": "DataDownload",
+      encodingFormat: "application/json",
+      contentUrl: baseUrl + "/api/public/top-cryptos",
+      name: "Top 10 cryptos vulgarisées",
+    },
+    {
+      "@type": "DataDownload",
+      encodingFormat: "application/json",
+      contentUrl: baseUrl + "/api/public/fiscal-tools",
+      name: "Outils fiscalité crypto",
+    },
+  ],
+  citation: `Cryptoreflex (2026). Open Data Crypto FR. ${baseUrl}/api-publique. Licence CC-BY 4.0.`,
+};
+
+const jsonLd: JsonLd = graphSchema([breadcrumb, faq, datasetSchema]);
 
 export default function ApiPubliquePage() {
   return (
@@ -269,6 +371,39 @@ export default function ApiPubliquePage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* OpenAPI / Postman / Swagger */}
+      <section className="border-y border-white/5 bg-white/[0.02]">
+        <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 p-6 sm:p-8">
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
+                  Spec OpenAPI 3.0 disponible
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm text-slate-300">
+                  Importez directement dans Postman / Insomnia / Swagger UI.
+                  Schémas de réponse complets, exemples de requêtes, types des
+                  champs documentés.
+                </p>
+              </div>
+              <a
+                href="/api/public/openapi.json"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 hover:bg-cyan-500/20"
+              >
+                openapi.json
+              </a>
+            </div>
+            <div className="mt-4 rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-xs">
+              <span className="text-slate-400">curl -s </span>
+              <span className="text-cyan-300">{baseUrl}/api/public/openapi.json</span>
+              <span className="text-slate-400"> {">"} cryptoreflex-openapi.json</span>
+            </div>
+          </div>
         </div>
       </section>
 

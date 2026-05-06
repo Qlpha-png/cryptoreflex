@@ -78,6 +78,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // /api-publique — page de docs des endpoints CC-BY 4.0 (stratégie backlinks
     // organiques : devs, journalistes, étudiants qui réutilisent le dataset).
     { url: `${SITE_URL}/api-publique`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    // /etudes — hub des études cornerstone (rapports longs sourcés, magnet
+    // backlinks presse + chercheurs). Mise à jour mensuelle des datasets.
+    { url: `${SITE_URL}/etudes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/etudes/mica-juillet-2026-etat-des-lieux`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/methodologie`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
