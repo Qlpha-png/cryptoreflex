@@ -717,6 +717,21 @@ export interface CoinDetail {
 }
 
 async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
+  // FIX 2026-05-06 BUILD PERF — Skip CoinGecko fallback au build-time.
+  // Symptôme : `next build` SSG 100 fiches /cryptos/[slug] en parallèle ;
+  // les coins absents de notre price-source (render-token, the-graph, etc.)
+  // tombent sur CoinGecko free tier qui rate-limit après ~15 req/min.
+  // Le retry exponentiel boucle 5.5s × 100 coins = build qui prend 13 min
+  // avec des centaines de "429 (after retry)" dans les logs.
+  //
+  // Solution : au build (NEXT_PHASE === 'phase-production-build'), on
+  // retourne null immédiatement pour les coins non couverts par
+  // price-source. La page rendra avec les meta statiques (lib/crypto-static.ts)
+  // et ISR hydratera les données dynamiques au premier request user. Côut
+  // user : aucun (les fiches sont déjà cached à la 2e visite). Gain CI :
+  // build 13 min → ~3 min.
+  const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+
   // BATCH 51 — Migration price-source pour les 100 fiches /cryptos/[slug].
   // Avant : appel CoinGecko coins/markets pour CHAQUE fiche = 100+ calls
   // par jour minimum. Maintenant : Binance ticker + klines (gratuit
@@ -758,6 +773,9 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
   } catch {
     // Aggregator indisponible, fallback CoinGecko
   }
+
+  // FIX 2026-05-06 — au build, on skip CoinGecko fallback. ISR hydratera.
+  if (isBuildPhase) return null;
 
   // Endpoint /coins/markets en single-id : permet d'obtenir sparkline 7d + variations
   // sans payer le coût d'/coins/{id}/market_chart (10 000 datapoints).
