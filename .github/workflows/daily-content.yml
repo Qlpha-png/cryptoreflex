@@ -63,7 +63,7 @@ jobs:
             echo "files_count=$count" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit + push
+      - name: Commit + push (with rebase loop anti-race)
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config user.name "Cryptoreflex Bot"
@@ -74,7 +74,27 @@ jobs:
             -m "Files added: ${{ steps.changes.outputs.files_count }}" \
             -m "" \
             -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
-          git push origin main
+
+          # Anti-race-condition : si main a bougé pendant la generation
+          # (push humain en parallele), on rebase + retry up to 3x.
+          # Documente : la race s'est produite le 2026-05-06 (run 25435215740)
+          # quand 4 commits humains ont ete pousses pendant la generation.
+          for i in 1 2 3; do
+            if git push origin main; then
+              echo "Push reussi (tentative $i)"
+              exit 0
+            fi
+            echo "Push rejete, rebase + retry (tentative $i / 3)..."
+            git fetch origin main
+            git rebase origin/main || {
+              echo "Rebase a echoue (conflit) - abort"
+              git rebase --abort
+              exit 1
+            }
+            sleep 2
+          done
+          echo "Push echoue apres 3 tentatives - probablement conflit persistant"
+          exit 1
 
       - name: Wait for Vercel deploy (90s)
         if: steps.changes.outputs.has_changes == 'true'

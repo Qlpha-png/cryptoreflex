@@ -64,7 +64,7 @@ jobs:
             echo "slug=$SLUG" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit + push
+      - name: Commit + push (with rebase loop anti-race)
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config user.name "Cryptoreflex Bot"
@@ -75,7 +75,19 @@ jobs:
             -m "Files added: ${{ steps.changes.outputs.files_count }}" \
             -m "" \
             -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
-          git push origin main
+
+          # Anti-race-condition cf. daily-content.yml (race observee 2026-05-06).
+          for i in 1 2 3; do
+            if git push origin main; then
+              echo "Push reussi (tentative $i)"
+              exit 0
+            fi
+            echo "Push rejete, rebase + retry (tentative $i / 3)..."
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep 2
+          done
+          exit 1
 
       - name: Wait for Vercel deploy (90s)
         if: steps.changes.outputs.has_changes == 'true'
