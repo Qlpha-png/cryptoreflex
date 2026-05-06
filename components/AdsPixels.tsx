@@ -20,7 +20,7 @@ import Script from "next/script";
  * RGPD / consent gating :
  *  - Reddit + X + Google Ads posent des cookies de tracking → ces pixels
  *    DOIVENT être gated par consent (CNIL exempt comme Plausible NON valide ici).
- *  - On les charge donc avec `strategy="afterInteractive"` ET on attend l'event
+ *  - On les charge donc avec `strategy="beforeInteractive"` ET on attend l'event
  *    `cookies-accepted` qu'émet le banner consent existant.
  *  - Si l'utilisateur refuse les cookies, AUCUN pixel ne se charge.
  *
@@ -49,7 +49,7 @@ export default function AdsPixels() {
     <>
       {/* Reddit Pixel — base code (poste un PageVisit auto) */}
       {REDDIT_PIXEL_ID && (
-        <Script id="reddit-pixel" strategy="afterInteractive">
+        <Script id="reddit-pixel" strategy="beforeInteractive">
           {`!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);
 rdt('init','${REDDIT_PIXEL_ID}',{optOut:false,useDecimalCurrencyValues:true});
 rdt('track', 'PageVisit');`}
@@ -58,7 +58,7 @@ rdt('track', 'PageVisit');`}
 
       {/* X (Twitter) Pixel — base code */}
       {X_PIXEL_ID && (
-        <Script id="x-pixel" strategy="afterInteractive">
+        <Script id="x-pixel" strategy="beforeInteractive">
           {`!function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments)},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
 twq('config','${X_PIXEL_ID}');`}
         </Script>
@@ -70,9 +70,9 @@ twq('config','${X_PIXEL_ID}');`}
           <Script
             id="google-ads-tag"
             src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
-            strategy="afterInteractive"
+            strategy="beforeInteractive"
           />
-          <Script id="google-ads-init" strategy="afterInteractive">
+          <Script id="google-ads-init" strategy="beforeInteractive">
             {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
