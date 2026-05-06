@@ -304,7 +304,7 @@ const nextConfig = {
     // pose un pixel image (img-src) et envoie les events via XHR (connect-src).
     const cspDefault = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.io https://www.clarity.ms https://*.clarity.ms",
+      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms",
       "font-src 'self' data:",
@@ -312,7 +312,7 @@ const nextConfig = {
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
       // 3s + SWR 15s) au lieu d'attaquer Binance direct côté client. Réduction
       // de la surface d'attaque CSP + 90% cache hit edge.
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io https://www.clarity.ms https://*.clarity.ms",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
@@ -332,11 +332,11 @@ const nextConfig = {
     // pas vocation à tracker les sessions des sites tiers qui nous embarquent.
     const cspEmbed = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.io",
+      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.io",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr",
       "frame-src https://s.tradingview.com https://www.tradingview.com",
       // Autorise n'importe quel parent → embed cross-origin OK.
       "frame-ancestors *",
