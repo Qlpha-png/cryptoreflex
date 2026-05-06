@@ -39,6 +39,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  MOCK DATA — éditer ici pour mise à jour mensuelle                         */
@@ -82,7 +83,7 @@ const FORMATTED_AS_OF = "26 avril 2026";
 export const metadata: Metadata = {
   title: "L'impact Cryptoreflex en chiffres — Dashboard public",
   description: `Mesurer ce que la communauté ${BRAND.name} a construit ensemble : ${IMPACT_STATS.accountsOpened} comptes ouverts, ${IMPACT_STATS.totalSavingsEur}€ d'économies cumulées, ${IMPACT_STATS.newsletterSubscribers} abonnés newsletter. Mis à jour mensuellement.`,
-  alternates: { canonical: "/impact" },
+  alternates: withHreflang("/impact"),
   openGraph: {
     title: "L'impact Cryptoreflex en chiffres",
     description: `${IMPACT_STATS.accountsOpened} comptes ouverts, ${IMPACT_STATS.totalSavingsEur}€ économisés, ${IMPACT_STATS.newsletterSubscribers} abonnés newsletter — la transparence Cryptoreflex.`,

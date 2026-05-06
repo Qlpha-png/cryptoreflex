@@ -60,6 +60,7 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import StickyPartnerCta from "./StickyPartnerCta";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400; // 24h
 
@@ -86,7 +87,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/partenaires/${partner.slug}` },
+    alternates: withHreflang(`${BRAND.url}/partenaires/${partner.slug}`),
     openGraph: {
       title,
       description,

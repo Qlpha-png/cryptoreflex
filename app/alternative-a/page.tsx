@@ -6,6 +6,7 @@ import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getAllPlatforms } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /alternative-a — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -26,7 +27,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/alternative-a` },
+  alternates: withHreflang(`${BRAND.url}/alternative-a`),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

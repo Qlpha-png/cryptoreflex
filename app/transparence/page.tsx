@@ -28,6 +28,7 @@ import {
   INFLUENCER_LAW_DISCLAIMER,
   MICA_TRANSITION_NOTICE,
 } from "@/lib/legal-disclaimers";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata SEO                                                              */
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   title: `Transparence et partenariats — ${BRAND.name}`,
   description:
     "Liste exhaustive de nos partenariats d'affiliation, statut MiCA/CASP de chaque plateforme, type de rémunération perçue et engagement éditorial. Conformité loi Influenceurs juin 2023.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: `Transparence et partenariats — ${BRAND.name}`,
     description:

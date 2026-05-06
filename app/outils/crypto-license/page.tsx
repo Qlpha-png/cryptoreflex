@@ -9,6 +9,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/crypto-license — Permis Crypto Cryptoreflex (BATCH 8 WOW).
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   title: "Permis Crypto FR — Teste tes connaissances + obtiens ton badge",
   description:
     "Quiz gratuit 50 questions sur la crypto en France (régulation MiCA, fiscalité PFU, sécurité wallet, écosystème). Score >70 % → ton Permis Crypto Cryptoreflex en PDF. Bientôt.",
-  alternates: { canonical: `${BRAND.url}/outils/crypto-license` },
+  alternates: withHreflang(`${BRAND.url}/outils/crypto-license`),
 };
 
 export default function CryptoLicensePage() {

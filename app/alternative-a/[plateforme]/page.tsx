@@ -15,6 +15,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /alternative-a/[plateforme] — Programmatic SEO intent transactionnel pur.
@@ -51,7 +52,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/alternative-a/${target.id}` },
+    alternates: withHreflang(`${BRAND.url}/alternative-a/${target.id}`),
     openGraph: {
       title,
       description,

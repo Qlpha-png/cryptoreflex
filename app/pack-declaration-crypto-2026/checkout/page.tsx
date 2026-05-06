@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Mail, ShieldCheck } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /pack-declaration-crypto-2026/checkout — page transitionnelle.
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   title: "Paiement Pack Déclaration Crypto 2026 — En cours de mise en ligne",
   description:
     "Le checkout du Pack Déclaration Crypto 49 € est en cours de finalisation. Inscris-toi pour réserver ton accès early-bird à 39 €.",
-  alternates: { canonical: `${BRAND.url}/pack-declaration-crypto-2026/checkout` },
+  alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026/checkout`),
   robots: { index: false, follow: true },
 };
 

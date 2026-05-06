@@ -10,6 +10,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/whale-radar — Whale Radar FR (idée innovation #1).
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   title: "Whale Radar FR — Surveillance temps réel des mouvements crypto majeurs",
   description:
     "Bientôt : flux live des transactions > 500 BTC / 10 000 ETH / dépôts-retraits exchanges majeurs, commentés en français. Premier service de surveillance whale francisé.",
-  alternates: { canonical: `${BRAND.url}/outils/whale-radar` },
+  alternates: withHreflang(`${BRAND.url}/outils/whale-radar`),
 };
 
 export default function WhaleRadarPage() {

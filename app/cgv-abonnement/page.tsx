@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, AlertTriangle, ShieldCheck, RotateCcw, CreditCard, FileText } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "CGV abonnement Soutien — Cryptoreflex",
   description:
     "Conditions Générales de Vente de l'abonnement Soutien Cryptoreflex (Mensuel 2,99 € / Annuel 28,99 €) : services inclus, paiement Stripe, droit de rétractation L221-18, exécution immédiate, annulation et remboursement.",
-  alternates: { canonical: `${BRAND.url}/cgv-abonnement` },
+  alternates: withHreflang(`${BRAND.url}/cgv-abonnement`),
   robots: { index: true, follow: true },
 };
 

@@ -10,6 +10,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/succession-crypto — Guide Succession Crypto (BATCH 8 WOW).
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   title: "Succession Crypto FR — Guide + checklist + lettre d'intention",
   description:
     "Comment transmettre tes crypto-actifs à tes proches sans perte ? Guide légal FR, checklist sécurité (seed phrase, multisig, héritage), générateur de lettre d'intention. Bientôt.",
-  alternates: { canonical: `${BRAND.url}/outils/succession-crypto` },
+  alternates: withHreflang(`${BRAND.url}/outils/succession-crypto`),
 };
 
 export default function SuccessionCryptoPage() {

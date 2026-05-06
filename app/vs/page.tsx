@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getCryptoPairs } from "@/lib/programmatic-pages";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /vs — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -29,7 +30,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/vs` },
+  alternates: withHreflang(`${BRAND.url}/vs`),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

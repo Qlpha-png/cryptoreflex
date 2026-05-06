@@ -39,12 +39,13 @@ import {
 } from "lucide-react";
 import LeadMagnetCard from "@/components/lead-magnet/LeadMagnetCard";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "Ressources gratuites Cryptoreflex — PDFs, outils et guides crypto",
   description:
     "3 lead magnets PDF (Bible Fiscalité 2026, Checklist déclaration, Glossaire fiscal), 8 outils gratuits (calculateur fiscalité, simulateur DCA, vérificateur MiCA…) et accès au blog éditorial.",
-  alternates: { canonical: BRAND.url + "/ressources" },
+  alternates: withHreflang(BRAND.url + "/ressources"),
   openGraph: {
     title: "Ressources gratuites Cryptoreflex",
     description:

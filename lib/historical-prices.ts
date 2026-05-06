@@ -329,7 +329,11 @@ async function _fetchFromCryptoCompare(
     `${CRYPTOCOMPARE_BASE}/histoday` +
     `?fsym=${encodeURIComponent(symbol)}&tsym=EUR&limit=${limit}&tryConversion=true`;
   try {
-    const res = await fetch(url, { cache: "no-store" });
+    // FIX P0 2026-05-06 — timeout 8s
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(8000),
+    });
     if (!res.ok) {
       throw new Error(`CryptoCompare ${symbol} ${days}d → HTTP ${res.status}`);
     }
@@ -371,9 +375,11 @@ async function _fetchHistoricalRange(
     // les 365 derniers jours seulement → ROI ~0% au lieu du vrai +200%).
     // Maintenant : cgHeaders() injecte x-cg-demo-api-key (configurée mai 2026)
     // qui débloque l'historique complet jusqu'à 5 ans.
+    // FIX P0 2026-05-06 — timeout 10s (range queries plus lourdes)
     const res = await fetch(url, {
       headers: cgHeaders(),
       cache: "no-store",
+      signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) throw new Error(`CoinGecko range ${coinId} → ${res.status}`);
     const json = (await res.json()) as { prices?: [number, number][] };
@@ -435,9 +441,11 @@ async function _fetchFromCoinGecko(
     try {
       // Cf. fix dans _fetchHistoricalRange : cgHeaders() ajoute la clé Demo
       // CoinGecko qui stabilise le rate-limit (30 req/min vs 5-15 erratique).
+      // FIX P0 2026-05-06 — timeout 8s
       const res = await fetch(url, {
         headers: cgHeaders(),
         cache: "no-store",
+        signal: AbortSignal.timeout(8000),
       });
       if (!res.ok) throw new Error(`CoinGecko ${coinId} ${days}d → ${res.status}`);
       const json = (await res.json()) as { prices: [number, number][] };
@@ -554,9 +562,11 @@ async function _fetchConversionRate(
       ","
     )}&vs_currencies=${vs}&include_last_updated_at=true`;
     try {
+      // FIX P0 2026-05-06 — timeout 6s (simple/price endpoint léger)
       const res = await fetch(url, {
         headers: cgHeaders(),
         cache: "no-store",
+        signal: AbortSignal.timeout(6000),
       });
       if (!res.ok) throw new Error(`simple/price ${res.status}`);
       return (await res.json()) as any;

@@ -43,6 +43,7 @@ import {
   graphSchema,
   howToSchema,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // FIX URGENT 2026-05-02 — build Vercel timeout 45min sur 600 URLs.
 // Cause : `dynamic="force-static"` + `dynamicParams=false` force le pre-build
@@ -100,9 +101,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: {
-      canonical: `${BRAND.url}/acheter/${c.id}/${country.code}`,
-    },
+    alternates: withHreflang(`${BRAND.url}/acheter/${c.id}/${country.code}`),
     openGraph: {
       title,
       description,

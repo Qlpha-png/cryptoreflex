@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import NewsletterInline from "@/components/NewsletterInline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /lp/mica-2026 — landing DÉDIÉE aux campagnes payantes "MiCA juillet 2026".
@@ -30,7 +31,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/lp/mica-2026` },
+  alternates: withHreflang(`${BRAND.url}/lp/mica-2026`),
   openGraph: {
     title: "MiCA juillet 2026 — quelle plateforme crypto choisir avant la deadline",
     description: DESCRIPTION,

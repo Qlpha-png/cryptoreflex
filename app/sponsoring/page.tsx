@@ -22,6 +22,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     "Sponsoring & placements B2B Cryptoreflex — articles, comparateur, newsletter",
   description:
     "PSAN, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
-  alternates: { canonical: `${BRAND.url}/sponsoring` },
+  alternates: withHreflang(`${BRAND.url}/sponsoring`),
   openGraph: {
     title: "Sponsoriser un placement Cryptoreflex",
     description:

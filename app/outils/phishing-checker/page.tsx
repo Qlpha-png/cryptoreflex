@@ -8,6 +8,7 @@ import { articleSchema, breadcrumbSchema, faqSchema, graphSchema } from "@/lib/s
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/phishing-checker — Wallet Phishing Checker (idée innovation #2).
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   title: "Wallet Phishing Checker — Vérifie si une adresse crypto est scam",
   description:
     "Colle une adresse crypto (BTC, ETH, SOL) → score de risque scam/phishing en 2 sec. Bases Chainabuse, ScamSniffer + custom FR. Gratuit, anonyme, 100 % automatisé.",
-  alternates: { canonical: `${BRAND.url}/outils/phishing-checker` },
+  alternates: withHreflang(`${BRAND.url}/outils/phishing-checker`),
 };
 
 export default function PhishingCheckerPage() {

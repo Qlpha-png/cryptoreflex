@@ -37,6 +37,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes pricing (read once via env, hoisted pour metadata)             */
@@ -100,7 +101,7 @@ export const metadata: Metadata = {
   //  - robots avec max-image-preview / max-snippet (Google 2024+)
   title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
   description: `Soutiens un éditeur web indépendant français. ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio 500 (vs 10 Free), alertes 100 (vs 3), watchlist 200 (vs 10), IA Q&A 20/jour. Annulation 1 clic.`,
-  alternates: { canonical: `${BRAND.url}/pro` },
+  alternates: withHreflang(`${BRAND.url}/pro`),
   keywords: [
     "soutenir éditeur crypto français",
     "abonnement crypto indépendant",

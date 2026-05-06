@@ -46,6 +46,7 @@ import {
   generateFiscaliteSchema,
   getRelatedFiscaliteArticles,
 } from "@/lib/seo-fiscalite-helpers";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  SEO meta — H1 et meta alignées sur la cible "calculateur fiscalité crypto */
@@ -85,7 +86,7 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   keywords: PAGE_KEYWORDS,
-  alternates: { canonical: PAGE_PATH },
+  alternates: withHreflang(PAGE_PATH),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

@@ -27,6 +27,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  ISR — revalidation 1x / jour (les tarifs des outils bougent rarement)     */
@@ -48,7 +49,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: PAGE_PATH },
+  alternates: withHreflang(PAGE_PATH),
   keywords: [
     "déclaration crypto",
     "outil déclaration crypto",

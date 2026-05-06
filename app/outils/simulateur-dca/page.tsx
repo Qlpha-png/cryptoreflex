@@ -20,13 +20,14 @@ import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { getPlatformById } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand
   title: "Simulateur DCA crypto FR 2026 — backtest BTC/ETH/SOL 5 ans | Cryptoreflex",
   description:
     "Backtest DCA réel : combien aurais-tu en investissant 100€/mois en BTC, ETH ou SOL depuis 2020 ? Comparaison achat unique vs étalé. Gratuit.",
-  alternates: { canonical: "https://www.cryptoreflex.fr/outils/simulateur-dca" },
+  alternates: withHreflang("https://www.cryptoreflex.fr/outils/simulateur-dca"),
   openGraph: {
     title: "Simulateur DCA crypto FR 2026 — backtest 5 ans gratuit",
     description:

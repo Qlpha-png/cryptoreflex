@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import NewsletterInline from "@/components/NewsletterInline";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /newsletter — landing page dédiée d'inscription.
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   title: "Newsletter quotidienne crypto FR — 3 min/jour",
   description:
     "Reçois chaque matin à 7h les 3 infos crypto qui comptent pour un investisseur FR. MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
-  alternates: { canonical: `${BRAND.url}/newsletter` },
+  alternates: withHreflang(`${BRAND.url}/newsletter`),
   openGraph: {
     title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
     description:

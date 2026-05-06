@@ -85,10 +85,23 @@ async function fetchWithRetry(
   const delays = [1500, 4000];
   let lastResponse: Response | null = null;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    const res = await fetch(url, init);
-    if (res.ok) return res;
-    if (res.status !== 429 && res.status !== 503) return res; // non-recoverable
-    lastResponse = res;
+    try {
+      // FIX P0 2026-05-06 — timeout 8s NEUF par tentative (AbortSignal.timeout
+      // est consumé après le 1er fire, donc impératif de le recréer à chaque
+      // attempt sinon retries échoueraient avec AbortError). Sans timeout, un
+      // fetch hang bloquait jusqu'au timeout Vercel (60s) en consommant un slot
+      // d'invocation Edge entier.
+      const res = await fetch(url, {
+        ...init,
+        signal: init.signal ?? AbortSignal.timeout(8000),
+      });
+      if (res.ok) return res;
+      if (res.status !== 429 && res.status !== 503) return res; // non-recoverable
+      lastResponse = res;
+    } catch {
+      // Timeout/network error → on traite comme retryable
+      lastResponse = new Response(null, { status: 599 });
+    }
     if (attempt < maxRetries) {
       await new Promise((r) => setTimeout(r, delays[attempt] ?? 4000));
     }
@@ -156,10 +169,12 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=false&price_change_percentage=24h`;
 
   try {
+    // FIX P0 2026-05-06 — timeout 8s sur fetch CoinGecko (avant : aucun).
     const res = await fetch(url, {
       // Cache long (free plan epuise) — n'est plus la source primaire
       next: { revalidate: 300, tags: [CG_TAGS.prices] },
       headers: cgHeaders(),
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {
@@ -367,9 +382,11 @@ async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
   }
 
   try {
+    // FIX P0 2026-05-06 — timeout 8s
     const res = await fetch(`${COINGECKO_BASE}/global`, {
       next: { revalidate: 1800, tags: [CG_TAGS.global] },
       headers: cgHeaders(),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) throw new Error(`CoinGecko global ${res.status}`);
     const json = await res.json();
@@ -417,8 +434,10 @@ export async function fetchFearGreed(): Promise<FearGreedData | null> {
   try {
     // BATCH 29C — fetch limit=2 pour récupérer aujourd'hui + hier en 1 call.
     // Permet d'afficher le delta sentiment sans coût supplémentaire.
+    // FIX P0 2026-05-06 — timeout 4s (alternative.me souvent rapide).
     const res = await fetch("https://api.alternative.me/fng/?limit=2", {
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -501,10 +520,12 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
 
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
   try {
+    // FIX P0 2026-05-06 — timeout 8s
     const res = await fetch(url, {
       // Fallback ultime CoinGecko — cache long (free plan epuise)
       next: { revalidate: 600, tags: [CG_TAGS.market] },
       headers: cgHeaders(),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) throw new Error(`CoinGecko markets ${res.status}`);
     const json = (await res.json()) as Array<{

@@ -22,6 +22,7 @@ import { BRAND } from "@/lib/brand";
 // uniquement le hub /outils/glossaire-crypto était dans CLUSTERS).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // FIX BUILD 2026-05-06 — Top 50 termes les plus consultés au build,
 // les 200+ autres en ISR on-demand. Avant : 252 pages SSG forcées.
@@ -63,7 +64,7 @@ export function generateMetadata({ params }: PageProps): Metadata {
       `c'est quoi ${term.term.toLowerCase()}`,
       ...term.synonyms,
     ],
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     openGraph: {
       title: `${term.term} — Glossaire ${BRAND.name}`,
       description,

@@ -4,6 +4,7 @@ import { Database, Code2, Globe2, Sparkles, ShieldCheck, Mail } from "lucide-rea
 import StructuredData from "@/components/StructuredData";
 import { faqSchema, breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /api-publique — page de documentation des endpoints publics CC-BY 4.0.
@@ -30,7 +31,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/api-publique` },
+  alternates: withHreflang(`${BRAND.url}/api-publique`),
   openGraph: {
     title: "API publique Cryptoreflex — open data crypto FR",
     description:

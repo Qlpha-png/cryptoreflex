@@ -25,6 +25,7 @@ import {
   organizationSchema,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 interface Props {
   params: { slug: string };
@@ -48,7 +49,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${author.name} — ${author.role}`,
     description: author.shortBio,
-    alternates: { canonical: `/auteur/${author.id}` },
+    alternates: withHreflang(`/auteur/${author.id}`),
     openGraph: {
       type: "profile",
       title: `${author.name} — ${author.role} de ${BRAND.name}`,

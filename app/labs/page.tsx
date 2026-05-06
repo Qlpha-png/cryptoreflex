@@ -8,6 +8,7 @@ import MagneticCta from "@/components/ui/MagneticCta";
 import TiltCard from "@/components/ui/TiltCard";
 import LiveDot from "@/components/ui/LiveDot";
 import PopoverTooltip from "@/components/ui/PopoverTooltip";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /labs — Showcase interne des prouesses dynamiques (audit dynamisme
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   title: "Labs — Showcase des prouesses dynamiques Cryptoreflex",
   description:
     "Démos internes des nouveaux composants UI dynamiques avant intégration : spotlight cursor, magnetic CTA, tilt 3D, conic borders, marquee, scroll-driven animations.",
-  alternates: { canonical: `${BRAND.url}/labs` },
+  alternates: withHreflang(`${BRAND.url}/labs`),
   // BATCH 20 — confirme noindex + nofollow (page interne dev).
   robots: {
     index: false,

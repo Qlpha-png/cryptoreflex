@@ -26,6 +26,7 @@ import {
   getAllCryptoComparisonSlugs,
 } from "@/lib/crypto-comparisons";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // FIX 2026-05-06 — revalidate aligné sur les autres pages éditoriales
 // stables (86400s = 1 jour). 3600s = 24× plus de regen pour rien sur du
@@ -64,7 +65,7 @@ export function generateMetadata({ params }: Props): Metadata {
   // a Google que c'est l'URL preferee (au cas ou un crawler ignore le 301).
   return {
     robots: { index: false, follow: true },
-    alternates: { canonical: `${BRAND.url}/vs/${vsA}/${vsB}` },
+    alternates: withHreflang(`${BRAND.url}/vs/${vsA}/${vsB}`),
   };
 }
 

@@ -9,6 +9,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/export-expert-comptable — Export Expert-Comptable (innovation #5).
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   title: "Export Expert-Comptable Crypto — Format ECF Sage / Cegid / EBP",
   description:
     "Convertis tes transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. 49 € one-shot, automatisé.",
-  alternates: { canonical: `${BRAND.url}/outils/export-expert-comptable` },
+  alternates: withHreflang(`${BRAND.url}/outils/export-expert-comptable`),
 };
 
 export default function ExportExpertComptablePage() {

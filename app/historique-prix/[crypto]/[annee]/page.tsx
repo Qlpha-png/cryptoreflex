@@ -15,6 +15,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
@@ -70,7 +71,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/historique-prix/${c.id}/${params.annee}` },
+    alternates: withHreflang(`${BRAND.url}/historique-prix/${c.id}/${params.annee}`),
     openGraph: {
       title,
       description,

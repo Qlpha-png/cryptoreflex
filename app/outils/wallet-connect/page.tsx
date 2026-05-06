@@ -21,6 +21,7 @@ import {
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/wallet-connect — Wallet Connect read-only (idée innovation #3).
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
   title: "Wallet Connect read-only — Suis tes wallets DeFi sur Cryptoreflex",
   description:
     "Bientôt : connecte ton wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement ton portfolio DeFi. Lecture seule, jamais de private key requise.",
-  alternates: { canonical: `${BRAND.url}/outils/wallet-connect` },
+  alternates: withHreflang(`${BRAND.url}/outils/wallet-connect`),
   openGraph: {
     title: "Wallet Connect Cryptoreflex — Suivi DeFi sans risque",
     description:

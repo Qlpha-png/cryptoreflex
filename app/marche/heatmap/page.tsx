@@ -14,6 +14,7 @@ import {
 import dynamic from "next/dynamic";
 import StructuredData from "@/components/StructuredData";
 import HeatmapEmpty from "./HeatmapEmpty";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // Lazy-load Heatmap : Client lourd (~15 KB, grille 100 coins + retry logic).
 // Below-the-fold sous breadcrumb + header. HeatmapEmpty fallback couvre le
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   title: "Heatmap crypto temps réel — Top 100 marché 2026",
   description:
     "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, mise à jour toutes les 2 minutes via CoinGecko. 100 % gratuit.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Heatmap crypto temps réel — Top 100",
     description:

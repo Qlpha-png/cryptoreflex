@@ -20,12 +20,13 @@ import {
   graphSchema,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "Radar 3916-bis — détecte tes amendes crypto en 2 min (gratuit)",
   description:
     "Outil gratuit Cryptoreflex : identifie tes comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffre l'amende potentielle 1 500 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
-  alternates: { canonical: `${BRAND.url}/outils/radar-3916-bis` },
+  alternates: withHreflang(`${BRAND.url}/outils/radar-3916-bis`),
   keywords: [
     "3916-bis crypto",
     "déclaration compte crypto étranger",

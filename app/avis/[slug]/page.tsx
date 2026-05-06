@@ -38,6 +38,7 @@ import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400; // 24h — la donnée bouge à la marge
 
@@ -67,7 +68,7 @@ export function generateMetadata({ params }: Props): Metadata {
       `${p.name} MiCA`,
       `avis ${p.name}`,
     ],
-    alternates: { canonical: `${BRAND.url}/avis/${p.id}` },
+    alternates: withHreflang(`${BRAND.url}/avis/${p.id}`),
     openGraph: {
       title,
       description,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, Mail, ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /ambassadeurs/merci — page de remerciement post-soumission.
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   title: "Candidature ambassadeur reçue — Cryptoreflex",
   description:
     "Merci pour ta candidature au programme ambassadeurs Cryptoreflex. Réponse manuelle sous 7 jours ouvrés.",
-  alternates: { canonical: `${BRAND.url}/ambassadeurs/merci` },
+  alternates: withHreflang(`${BRAND.url}/ambassadeurs/merci`),
   robots: { index: false, follow: true },
 };
 

@@ -26,6 +26,7 @@ import Tldr from "@/components/ui/Tldr";
 // AmfDisclaimer fiscalité + RegulatoryFooter outil de simulation.
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import RegulatoryFooter from "@/components/RegulatoryFooter";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/fiscal-copilot — Idée WOW #2 (audit innovation expert).
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   title: "Fiscal Copilot crypto — Agent IA pour ta déclaration française 2026",
   description:
     "Agent IA conversationnel qui répond à tes questions fiscales crypto, parse ton CSV exchange, et génère ton Cerfa 2086 pré-rempli. Sources BOFiP / CGI citées.",
-  alternates: { canonical: `${BRAND.url}/outils/fiscal-copilot` },
+  alternates: withHreflang(`${BRAND.url}/outils/fiscal-copilot`),
   openGraph: {
     title: "Fiscal Copilot crypto FR — Cryptoreflex",
     description:

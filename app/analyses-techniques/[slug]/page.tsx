@@ -20,6 +20,7 @@ import IndicatorsTable from "@/components/ta/IndicatorsTable";
 import SupportResistanceList from "@/components/ta/SupportResistanceList";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // PriceChart : Client Component (fetch /api/historical au mount).
 // Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
@@ -58,9 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: article.title,
     description: article.description,
-    alternates: {
-      canonical: `${BRAND.url}/analyses-techniques/${article.slug}`,
-    },
+    alternates: withHreflang(`${BRAND.url}/analyses-techniques/${article.slug}`),
     openGraph: {
       title: article.title,
       description: article.description,

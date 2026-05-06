@@ -18,6 +18,7 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   title: "Whitepaper TL;DR — Résumé + score BS d'un whitepaper crypto",
   description:
     "Colle un whitepaper crypto et reçois en 5 secondes un résumé FR structuré plus un score BS (0-100) basé sur 15+ red flags : tokenomics, équipe, vesting, audits. Gratuit, sans inscription.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",
     url: PAGE_URL,

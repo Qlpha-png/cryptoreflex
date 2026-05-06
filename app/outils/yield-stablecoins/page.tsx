@@ -25,6 +25,7 @@ import {
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/yield-stablecoins — Comparateur APY stablecoins.
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
   title: "Comparateur APY stablecoins 2026 — où placer USDC, USDT, EURC en France",
   description:
     "Comparatif des rendements (APY) des stablecoins USDC, USDT, EURC sur les plateformes régulées MiCA en France. Données vérifiées, transparence totale.",
-  alternates: { canonical: `${BRAND.url}/outils/yield-stablecoins` },
+  alternates: withHreflang(`${BRAND.url}/outils/yield-stablecoins`),
   openGraph: {
     title: "Comparateur yield stablecoins — Cryptoreflex",
     description:

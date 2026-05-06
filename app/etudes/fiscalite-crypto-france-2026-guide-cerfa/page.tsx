@@ -22,6 +22,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /etudes/fiscalite-crypto-france-2026-guide-cerfa
@@ -51,9 +52,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: {
-    canonical: `${BRAND.url}/etudes/fiscalite-crypto-france-2026-guide-cerfa`,
-  },
+  alternates: withHreflang(`${BRAND.url}/etudes/fiscalite-crypto-france-2026-guide-cerfa`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

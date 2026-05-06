@@ -9,6 +9,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const PUBLISHED_DATE = "2026-04-25";
 const LAST_UPDATED = "2026-05-06";
@@ -16,7 +17,7 @@ const LAST_UPDATED = "2026-05-06";
 export const metadata: Metadata = {
   title: "Notre méthodologie",
   description: `Comment ${BRAND.name} évalue les plateformes crypto : critères, pondérations et processus de mise à jour. Données réutilisables sous licence CC-BY 4.0.`,
-  alternates: { canonical: `${BRAND.url}/methodologie` },
+  alternates: withHreflang(`${BRAND.url}/methodologie`),
   openGraph: {
     title: "Méthodologie publique Cryptoreflex",
     description:

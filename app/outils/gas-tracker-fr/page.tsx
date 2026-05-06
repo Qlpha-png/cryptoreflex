@@ -9,6 +9,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/gas-tracker-fr — Gas Tracker FR (idée innovation #4).
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   title: "Gas Tracker FR — Frais Ethereum + L2 en temps réel",
   description:
     "Frais de gas Ethereum + L2 (Arbitrum, Optimism, Base, zkSync, Polygon) en temps réel, traduits en français + meilleure heure pour swap + alerte gas < X gwei. Gratuit.",
-  alternates: { canonical: `${BRAND.url}/outils/gas-tracker-fr` },
+  alternates: withHreflang(`${BRAND.url}/outils/gas-tracker-fr`),
 };
 
 export default function GasTrackerFrPage() {

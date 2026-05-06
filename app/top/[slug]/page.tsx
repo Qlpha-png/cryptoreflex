@@ -24,6 +24,7 @@ import {
   faqSchema,
   graphSchema,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -42,7 +43,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: l.title,
     description: l.description,
-    alternates: { canonical: `${BRAND.url}/top/${l.slug}` },
+    alternates: withHreflang(`${BRAND.url}/top/${l.slug}`),
     openGraph: {
       title: l.title,
       description: l.description,

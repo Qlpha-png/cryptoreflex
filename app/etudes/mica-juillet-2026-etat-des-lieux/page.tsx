@@ -22,6 +22,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /etudes/mica-juillet-2026-etat-des-lieux — etude cornerstone backlinks magnet.
@@ -49,9 +50,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: {
-    canonical: `${BRAND.url}/etudes/mica-juillet-2026-etat-des-lieux`,
-  },
+  alternates: withHreflang(`${BRAND.url}/etudes/mica-juillet-2026-etat-des-lieux`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

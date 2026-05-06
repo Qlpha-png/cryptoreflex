@@ -7,6 +7,7 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import CryptoQuiz from "@/components/CryptoQuiz";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -19,7 +20,7 @@ const PATH = "/quiz/crypto";
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}${PATH}` },
+  alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

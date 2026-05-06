@@ -11,6 +11,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // BATCH 39 — confetti CSS-only sur opt-in newsletter (effet "wow tu es dans
 // la tribu"). Léger, 0 lib, désactivé prefers-reduced-motion.
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
   title: "Merci — vérifie ta boîte mail",
   description:
     "Inscription confirmée. Télécharge ton guide PDF crypto et continue d'explorer Cryptoreflex.",
-  alternates: { canonical: `${BRAND.url}/merci` },
+  alternates: withHreflang(`${BRAND.url}/merci`),
   // CRITIQUE : page de conversion -> hors index
   robots: { index: false, follow: true, nocache: true },
 };

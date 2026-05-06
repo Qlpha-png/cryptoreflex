@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import NewsletterInline from "@/components/NewsletterInline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /lp/cerfa-2026 — landing page DÉDIÉE aux campagnes payantes Cerfa 2086.
@@ -38,7 +39,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/lp/cerfa-2026` },
+  alternates: withHreflang(`${BRAND.url}/lp/cerfa-2026`),
   openGraph: {
     title: "Déclare tes cryptos en 2 min — Cerfa 2086 gratuit",
     description: DESCRIPTION,

@@ -6,6 +6,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const SimulateurHalvingBitcoin = dynamic(
   () => import("@/components/SimulateurHalvingBitcoin"),
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   title: "Simulateur halving Bitcoin 2028 — projection DCA jusqu'en 2036",
   description:
     "Simule ton DCA Bitcoin jusqu'aux halvings 2028, 2032, 2036. 3 scénarios (conservateur, moyen, bullish), graphique recharts, basé sur les cycles historiques BTC.",
-  alternates: { canonical: "https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin" },
+  alternates: withHreflang("https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin"),
   openGraph: {
     title: "Simulateur halving Bitcoin 2028 — projection DCA",
     description:

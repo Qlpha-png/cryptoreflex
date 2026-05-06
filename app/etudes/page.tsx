@@ -4,6 +4,7 @@ import { ArrowRight, FileText, Calendar, BookOpen } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /etudes — hub des etudes cornerstone Cryptoreflex.
@@ -30,7 +31,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/etudes` },
+  alternates: withHreflang(`${BRAND.url}/etudes`),
   openGraph: {
     title: "Études Cryptoreflex",
     description: DESCRIPTION,

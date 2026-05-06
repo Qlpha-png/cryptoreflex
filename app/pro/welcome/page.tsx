@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // BATCH 39 — confetti CSS-only (zéro lib) qui se déclenche uniquement
 // quand session_id Stripe est présent (vrai retour paiement, pas un
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   title: "Bienvenue dans Cryptoreflex Pro",
   description:
     "Ton paiement est confirmé. Voici comment accéder à ton compte Pro et débloquer tes premières features.",
-  alternates: { canonical: `${BRAND.url}/pro/welcome` },
+  alternates: withHreflang(`${BRAND.url}/pro/welcome`),
   robots: { index: false, follow: true }, // page post-paiement, pas indexable
 };
 

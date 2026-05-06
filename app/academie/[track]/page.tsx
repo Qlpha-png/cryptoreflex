@@ -24,6 +24,7 @@ import { TRACKS, getTrack } from "@/lib/academy-tracks";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 interface Props {
   params: { track: string };
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     openGraph: {
       title,
       description,

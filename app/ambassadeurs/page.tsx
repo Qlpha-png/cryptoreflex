@@ -27,6 +27,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /ambassadeurs — programme de revenue-share pour créateurs FR crypto.
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     "Programme ambassadeurs Cryptoreflex — 50 % de commission pendant 12 mois",
   description:
     "Créateur YouTube, TikTok, podcast ou newsletter crypto FR ? Envoie tes leads sur Cryptoreflex, on convertit, on reverse 50 % de la commission affilié pendant 12 mois. Paiement mensuel.",
-  alternates: { canonical: `${BRAND.url}/ambassadeurs` },
+  alternates: withHreflang(`${BRAND.url}/ambassadeurs`),
   openGraph: {
     title: "Devenir ambassadeur Cryptoreflex",
     description:

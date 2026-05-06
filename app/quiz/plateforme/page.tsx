@@ -8,6 +8,7 @@ import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -21,7 +22,7 @@ const PATH = "/quiz/plateforme";
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}${PATH}` },
+  alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

@@ -21,6 +21,7 @@ import {
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /crypto-wrapped — Idée WOW #1 (audit innovation expert).
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
   title: "Crypto Wrapped 2026 — Ton année crypto en 60 secondes",
   description:
     "Bientôt : ton récap crypto personnalisé style Spotify Wrapped — meilleure perf, biais détectés, badges, partageable en 1 clic. Laisse ton email pour le lancement.",
-  alternates: { canonical: `${BRAND.url}/crypto-wrapped` },
+  alternates: withHreflang(`${BRAND.url}/crypto-wrapped`),
   openGraph: {
     title: "Crypto Wrapped 2026 — Ton année crypto en 60 secondes",
     description:

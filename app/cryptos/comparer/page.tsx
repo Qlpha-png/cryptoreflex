@@ -75,6 +75,7 @@ import QuickCombosGrid from "@/components/cryptos/QuickCombosGrid";
 import CompareSurpriseMe from "@/components/cryptos/CompareSurpriseMe";
 import CompareVerdict from "@/components/cryptos/CompareVerdict";
 import CompareSparkline from "@/components/cryptos/CompareSparkline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                                */
@@ -166,11 +167,9 @@ export function generateMetadata({ searchParams }: Props): Metadata {
     // URL paramétrée → on N'INDEXE PAS (combinatoire infinie + risque duplicate).
     // On garde follow pour permettre à Google de suivre les liens vers les fiches.
     robots: { index: false, follow: true },
-    alternates: {
-      canonical: `${BRAND.url}/cryptos/comparer?ids=${cryptos
+    alternates: withHreflang(`${BRAND.url}/cryptos/comparer?ids=${cryptos
         .map((c) => c.id)
-        .join(",")}`,
-    },
+        .join(",")}`),
     openGraph: {
       title: `${names} — Comparatif crypto`,
       description: `Compare ${symbols} en un coup d'œil sur ${BRAND.name}.`,

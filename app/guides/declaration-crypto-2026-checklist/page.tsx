@@ -18,6 +18,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /guides/declaration-crypto-2026-checklist
@@ -44,9 +45,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: {
-    canonical: `${BRAND.url}/guides/declaration-crypto-2026-checklist`,
-  },
+  alternates: withHreflang(`${BRAND.url}/guides/declaration-crypto-2026-checklist`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

@@ -6,6 +6,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const ComparateurPersonnalise = dynamic(
   () => import("@/components/ComparateurPersonnalise"),
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   title: "Quelle plateforme crypto choisir 2026 ? Quiz personnalisé en 60 sec",
   description:
     "Réponds à 5 questions et reçois ton top 3 personnalisé parmi Bitstack, Bitpanda, Binance, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur ton profil.",
-  alternates: { canonical: "https://www.cryptoreflex.fr/outils/comparateur-personnalise" },
+  alternates: withHreflang("https://www.cryptoreflex.fr/outils/comparateur-personnalise"),
   openGraph: {
     title: "Quelle plateforme crypto choisir ? Quiz personnalisé 2026",
     description:

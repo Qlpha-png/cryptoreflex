@@ -126,9 +126,11 @@ async function fetchDefiLlama(coingeckoId: string): Promise<Partial<OnChainMetri
   if (!slug) return {};
 
   try {
+    // FIX P0 2026-05-06 — timeout 7s (DeFiLlama protocol endpoint peut être lourd)
     const res = await fetch(`https://api.llama.fi/protocol/${slug}`, {
       next: { revalidate: 3600, tags: ["onchain"] },
       headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(7000),
     });
     if (!res.ok) return {};
     const json = (await res.json()) as DefiLlamaProtocol;
@@ -196,6 +198,7 @@ async function fetchCoinGeckoMetrics(
     // changent peu jour-en-jour. La dominance est calculee via
     // notre price-source (CoinCap top 200) plutot que /global CoinGecko.
     const [coinRes, dominanceData] = await Promise.all([
+      // FIX P0 2026-05-06 — timeout 8s
       fetch(
         `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
           coingeckoId,
@@ -204,6 +207,7 @@ async function fetchCoinGeckoMetrics(
           // 12h cache (rare metadata refresh)
           next: { revalidate: 43200, tags: ["onchain"] },
           headers: cgHeaders(),
+          signal: AbortSignal.timeout(8000),
         },
       ),
       // Calcul dominance via notre aggregator (top 200 CoinCap, gratuit)

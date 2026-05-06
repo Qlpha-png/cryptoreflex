@@ -17,6 +17,7 @@ import {
 } from "@/lib/mica";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const PAGE_URL = `${BRAND.url}/outils/verificateur-mica`;
 
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   title: "Vérificateur PSAN AMF & MiCA — exchange crypto régulé en France ?",
   description:
     "Vérifiez en 3 secondes si une plateforme crypto est enregistrée PSAN AMF et agréée MiCA. Statut, juridiction, restrictions, risque juillet 2026 — sources officielles.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",
     url: PAGE_URL,

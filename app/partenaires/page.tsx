@@ -18,12 +18,13 @@ import {
   type PartnerProduct,
 } from "@/data/partners";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
   description:
     "Notre sélection curée de partenaires crypto : Ledger, Trezor, Waltio. Avis indépendants après 4 à 8 ans d'usage réel, transparence totale sur les commissions affiliées.",
-  alternates: { canonical: `${BRAND.url}/partenaires` },
+  alternates: withHreflang(`${BRAND.url}/partenaires`),
   openGraph: {
     title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
     description:

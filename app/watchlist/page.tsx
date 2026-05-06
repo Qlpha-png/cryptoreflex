@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Briefcase, Star } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import WatchlistView from "@/components/WatchlistView";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /watchlist — page Client (la donnée vit en localStorage), wrappée dans
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   title: "Ma watchlist crypto",
   description:
     "Ta watchlist crypto Cryptoreflex — jusqu'à 10 cryptos suivies en temps réel, stockées localement sur ton appareil (zéro compte requis).",
-  alternates: { canonical: `${BRAND.url}/watchlist` },
+  alternates: withHreflang(`${BRAND.url}/watchlist`),
   robots: { index: false, follow: true },
 };
 

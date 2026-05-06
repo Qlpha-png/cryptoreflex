@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /convertisseur — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -23,7 +24,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/convertisseur` },
+  alternates: withHreflang(`${BRAND.url}/convertisseur`),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

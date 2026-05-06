@@ -20,6 +20,7 @@ import {
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/tax-loss-harvesting — Killer feature fiscalité Q4 (audit
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   title: "Tax Loss Harvesting crypto FR — Optimise ton impôt 2026",
   description:
     "Comment réduire légalement ton impôt crypto en vendant tes positions perdantes avant le 31 décembre. Stratégie tax-loss harvesting expliquée + simulateur.",
-  alternates: { canonical: `${BRAND.url}/outils/tax-loss-harvesting` },
+  alternates: withHreflang(`${BRAND.url}/outils/tax-loss-harvesting`),
   openGraph: {
     title: "Tax Loss Harvesting crypto en France — Cryptoreflex",
     description:

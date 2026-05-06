@@ -7,6 +7,7 @@ import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // BATCH 37 — fix audit Perf P0 : Converter lazy-loadé (cohérence avec les
 // 3 autres calc fiscalité/DCA/Portfolio). Bundle initial allégé ~80 KB.
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   title: "Convertisseur crypto FR 2026 — BTC/ETH/SOL en EUR live | Cryptoreflex",
   description:
     "Convertisseur crypto temps réel : BTC, ETH, SOL et 12 autres en EUR/USD. Taux CoinGecko live, gratuit, sans inscription. 100 % FR.",
-  alternates: { canonical: "https://www.cryptoreflex.fr/outils/convertisseur" },
+  alternates: withHreflang("https://www.cryptoreflex.fr/outils/convertisseur"),
   openGraph: {
     title: "Convertisseur crypto temps réel — Cryptoreflex",
     description:

@@ -22,6 +22,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /pack-declaration-crypto-2026 — Bundle one-shot 49 € pour la déclaration
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   title: "Pack Déclaration Crypto 2026 — Cerfa 2086 + 3916-bis pré-remplis 49 €",
   description:
     "Déclaration crypto 2026 simplifiée : importe ton CSV, génère ton Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 49 € one-shot, 100 % automatisé. Économise 5 h de saisie manuelle.",
-  alternates: { canonical: `${BRAND.url}/pack-declaration-crypto-2026` },
+  alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026`),
   openGraph: {
     title: "Pack Déclaration Crypto 2026 — Cryptoreflex",
     description: "Cerfa 2086 + 3916-bis pré-remplis pour 49 €. 100 % automatisé.",

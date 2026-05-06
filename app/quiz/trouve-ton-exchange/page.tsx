@@ -13,6 +13,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /quiz/trouve-ton-exchange — Quiz "Trouve ton exchange en 60 sec".
@@ -37,7 +38,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: `${TITLE} — ${BRAND.name}`,
     description: DESCRIPTION,

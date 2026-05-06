@@ -10,6 +10,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/dca-lab — DCA Lab Multi-Stratégies (BATCH 8 WOW).
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   title: "DCA Lab — Compare 6 stratégies DCA sur n'importe quelle crypto",
   description:
     "Simulateur avancé : DCA simple, DCA-X RSI, Value Averaging, Lump-Sum, 50/50, DCA-Out drawdown. Backtest sur 1-7 ans, toutes cryptos top 100. Vérifie quelle stratégie aurait gagné. Bientôt.",
-  alternates: { canonical: `${BRAND.url}/outils/dca-lab` },
+  alternates: withHreflang(`${BRAND.url}/outils/dca-lab`),
 };
 
 export default function DcaLabPage() {

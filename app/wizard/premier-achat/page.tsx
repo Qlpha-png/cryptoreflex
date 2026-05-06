@@ -11,6 +11,7 @@ import {
   graphSchema,
   howToSchema,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -23,7 +24,7 @@ const PATH = "/wizard/premier-achat";
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}${PATH}` },
+  alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

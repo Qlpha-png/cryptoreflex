@@ -5,6 +5,7 @@ import { getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AnalysesIndexClient from "@/components/ta/AnalysesIndexClient";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /analyses-techniques — index des analyses TA quotidiennes BTC/ETH/SOL/XRP/ADA.
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   title: "Analyses techniques crypto BTC, ETH, SOL — Cryptoreflex",
   description:
     "Analyses techniques quotidiennes des principales cryptos : RSI, MACD, moyennes mobiles, supports/résistances, scénarios. Mises à jour automatiques sur Cryptoreflex.",
-  alternates: { canonical: "/analyses-techniques" },
+  alternates: withHreflang("/analyses-techniques"),
   openGraph: {
     title: "Analyses techniques crypto quotidiennes",
     description:

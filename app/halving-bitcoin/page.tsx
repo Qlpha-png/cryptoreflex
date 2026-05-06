@@ -11,6 +11,7 @@ import {
 } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import HalvingCountdown from "@/components/HalvingCountdown";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /halving-bitcoin — Page evergreen avec compte à rebours et contenu pédagogique.
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   title: "Halving Bitcoin 2028 — Compte à rebours, date, impact prix",
   description:
     "Prochain halving Bitcoin : compte à rebours en direct jusqu'au block 1 050 000 (~avril 2028). Historique des halvings, impact sur le prix BTC, FAQ.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Halving Bitcoin 2028 — Compte à rebours et impact",
     description:

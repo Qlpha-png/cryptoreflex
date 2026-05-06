@@ -14,6 +14,7 @@ import {
 import StructuredData from "@/components/StructuredData";
 import GainerLoserList from "@/components/GainerLoserList";
 import EmptyState from "@/components/ui/EmptyState";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /marche/gainers-losers — Top gainers / losers du marché crypto sur 24h.
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
   title: "Top Gainers & Losers crypto 24h — Qui monte, qui chute aujourd'hui",
   description:
     "Top 10 cryptos qui montent et top 10 qui chutent sur 24h. Données CoinGecko mises à jour toutes les 5 minutes. Identifie les mouvements forts du marché en un coup d'œil.",
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Top Gainers & Losers crypto — 24h",
     description:

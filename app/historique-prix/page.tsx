@@ -4,6 +4,7 @@ import { ArrowRight, TrendingUp, Calendar } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /historique-prix — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -64,7 +65,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/historique-prix` },
+  alternates: withHreflang(`${BRAND.url}/historique-prix`),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

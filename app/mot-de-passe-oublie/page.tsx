@@ -4,12 +4,13 @@ import { KeyRound, ShieldCheck, Lock, ArrowLeft } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublié — Cryptoreflex",
   description:
     "Réinitialise ton mot de passe Cryptoreflex en quelques clics via un lien sécurisé reçu par email.",
-  alternates: { canonical: `${BRAND.url}/mot-de-passe-oublie` },
+  alternates: withHreflang(`${BRAND.url}/mot-de-passe-oublie`),
   robots: { index: false, follow: true },
 };
 

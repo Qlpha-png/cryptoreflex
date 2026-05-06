@@ -5,12 +5,13 @@ import { Search } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import SearchClient from "@/components/SearchClient";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title: "Recherche",
   description:
     "Recherche dans tous les contenus Cryptoreflex : articles, plateformes notées, fiches crypto, comparatifs, outils, glossaire.",
-  alternates: { canonical: `${BRAND.url}/recherche` },
+  alternates: withHreflang(`${BRAND.url}/recherche`),
   // Page utilitaire — pas de valeur SEO (résultats dynamiques par query).
   robots: { index: false, follow: true },
 };

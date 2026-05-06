@@ -14,6 +14,7 @@ import { BRAND } from "@/lib/brand";
 import { TRACKS, getTrack } from "@/lib/academy-tracks";
 import { getQuizForTrack } from "@/lib/academy-quizzes";
 import TrackQuiz from "@/components/academy/TrackQuiz";
+import { withHreflang } from "@/lib/seo-alternates";
 
 interface Props {
   params: { track: string };
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     // Pas d'OG image custom — on garde simple.
     openGraph: {
       title,

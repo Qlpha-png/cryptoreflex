@@ -16,6 +16,7 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /marche — Hub Marché (P0-5 audit-back-live-final).
@@ -38,7 +39,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,

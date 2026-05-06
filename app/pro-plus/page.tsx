@@ -24,6 +24,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /pro-plus — Tier "Pro+" 9,99€/mois ou 79€/an.
@@ -76,7 +77,7 @@ export const metadata: Metadata = {
   title: "Cryptoreflex Pro+ 9,99€/mois — IA illimitée + API crypto FR",
   description:
     "Pro+ : 9,99 €/mois (essai 14 j gratuit). IA Q&A 100 questions/jour, exports illimités CSV/PDF, API personnelle. 100 % automatisé.",
-  alternates: { canonical: `${BRAND.url}/pro-plus` },
+  alternates: withHreflang(`${BRAND.url}/pro-plus`),
   openGraph: {
     title: "Cryptoreflex Pro+ pour utilisateurs avancés",
     description:

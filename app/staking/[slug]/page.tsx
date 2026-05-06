@@ -26,6 +26,7 @@ import MobileStickyCTA from "@/components/MobileStickyCTA";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -46,7 +47,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/staking/${pair.cryptoId}` },
+    alternates: withHreflang(`${BRAND.url}/staking/${pair.cryptoId}`),
     openGraph: {
       title,
       description,

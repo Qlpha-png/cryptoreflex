@@ -41,6 +41,7 @@ import StructuredData from "@/components/StructuredData";
 import CalendarPageClient from "@/components/calendar/CalendarPageClient";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import type { CryptoEvent } from "@/lib/events-types";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 3600;
 
@@ -53,7 +54,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: PAGE_URL },
+  alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

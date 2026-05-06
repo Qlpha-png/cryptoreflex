@@ -26,6 +26,7 @@ import {
 } from "@/lib/schema-tools";
 import { GLOSSARY } from "@/lib/glossary";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /ressources-libres — page recensant tout ce qui est gratuit/open/réutilisable
@@ -53,7 +54,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: PAGE_PATH },
+  alternates: withHreflang(PAGE_PATH),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

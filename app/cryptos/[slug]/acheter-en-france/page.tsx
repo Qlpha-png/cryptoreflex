@@ -20,6 +20,7 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 // FIX BUILD 2026-05-06 — `dynamicParams=true` + SSG limité aux 10 cryptos top.
 // Avant : 100 pages SSG forcées au build. Maintenant : 10 SSG + 90 ISR.
@@ -43,7 +44,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/cryptos/${meta.id}/acheter-en-france` },
+    alternates: withHreflang(`${BRAND.url}/cryptos/${meta.id}/acheter-en-france`),
     openGraph: {
       title,
       description,

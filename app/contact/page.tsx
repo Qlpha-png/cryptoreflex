@@ -15,6 +15,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /contact — page contact (2 voies : général / partenariats B2B).
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
   title: "Contacter Cryptoreflex — questions et partenariats",
   description:
     "Une question, un retour ou une opportunité de partenariat B2B ? Réponse personnelle de Kevin sous 5 jours ouvrés.",
-  alternates: { canonical: `${BRAND.url}/contact` },
+  alternates: withHreflang(`${BRAND.url}/contact`),
   openGraph: {
     title: "Contacter Cryptoreflex",
     description:

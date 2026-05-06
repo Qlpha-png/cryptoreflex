@@ -36,6 +36,7 @@ import {
   FIAT_CODES,
   fetchConversionRate,
 } from "@/lib/historical-prices";
+import { withHreflang } from "@/lib/seo-alternates";
 
 interface PageProps {
   params: { pair: string };
@@ -87,7 +88,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `Convertir ${fromUp} en ${toUp} — ${fromName} ${toName} en temps réel`,
     description: `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, taux CoinGecko mis à jour toutes les minutes.`,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     openGraph: {
       title: `${fromUp} en ${toUp} — Convertisseur temps réel`,
       description: `Convertir ${fromName} en ${toName} avec le taux marché actuel.`,

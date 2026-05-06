@@ -198,8 +198,10 @@ interface BinanceTicker24h {
  */
 async function _binanceTicker(binanceSymbol: string): Promise<BinanceTicker24h | null> {
   try {
+    // FIX P0 2026-05-06 — timeout 4s (Binance API très rapide normalement).
     const res = await fetch(`${BINANCE_BASE}/ticker/24hr?symbol=${binanceSymbol}`, {
       next: { revalidate: 300 }, // 5 min
+      signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
     return (await res.json()) as BinanceTicker24h;
@@ -215,9 +217,13 @@ async function _binanceTicker(binanceSymbol: string): Promise<BinanceTicker24h |
 async function _binanceKlines(binanceSymbol: string): Promise<number[]> {
   try {
     // 1h interval × 168 candles = 7 jours
+    // FIX P0 2026-05-06 — timeout 5s (klines = 168 points = ~10KB, devrait être rapide).
     const res = await fetch(
       `${BINANCE_BASE}/klines?symbol=${binanceSymbol}&interval=1h&limit=168`,
-      { next: { revalidate: 1800 } }, // 30 min (sparkline change peu en 30min)
+      {
+        next: { revalidate: 1800 }, // 30 min (sparkline change peu en 30min)
+        signal: AbortSignal.timeout(5000),
+      },
     );
     if (!res.ok) return [];
     const json = (await res.json()) as Array<[number, string, string, string, string, ...unknown[]]>;
@@ -262,8 +268,10 @@ async function _coincapAsset(coingeckoId: string): Promise<CoinCapAsset | null> 
   // "bnb" = "binance-coin"). Pour l'instant on assume coingeckoId =
   // coincapId pour les communs. Si bug, on pourra ajouter un mapping.
   try {
+    // FIX P0 2026-05-06 — timeout 5s
     const res = await fetch(`${COINCAP_BASE}/assets/${coingeckoId}`, {
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(5000),
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -275,8 +283,10 @@ async function _coincapAsset(coingeckoId: string): Promise<CoinCapAsset | null> 
 
 async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
   try {
+    // FIX P0 2026-05-06 — timeout 6s (top list peut être plus lourd)
     const res = await fetch(`${COINCAP_BASE}/assets?limit=${limit}`, {
       next: { revalidate: 600 }, // 10 min
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) return [];
     const json = await res.json();

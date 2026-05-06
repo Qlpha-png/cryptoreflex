@@ -4,6 +4,7 @@ import { ArrowRight, Trophy } from "lucide-react";
 
 import { ALL_LISTICLES } from "@/lib/listicles";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   title: "Tous les classements crypto Cryptoreflex 2026",
   description:
     "Tous nos classements et tops crypto 2026 : meilleures plateformes, hidden gems, exchanges les moins chers, plateformes pour débuter, etc.",
-  alternates: { canonical: `${BRAND.url}/top` },
+  alternates: withHreflang(`${BRAND.url}/top`),
 };
 
 export default function TopIndexPage() {

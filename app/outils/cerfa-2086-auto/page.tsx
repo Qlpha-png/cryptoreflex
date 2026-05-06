@@ -38,6 +38,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 const Cerfa2086Generator = dynamic(
   () => import("@/components/cerfa/Cerfa2086Generator"),
@@ -65,7 +66,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: PAGE_PATH },
+  alternates: withHreflang(PAGE_PATH),
   keywords: [
     "Cerfa 2086 automatique",
     "génération Cerfa 2086 crypto",

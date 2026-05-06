@@ -10,6 +10,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import LiveDot from "@/components/ui/LiveDot";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /outils/allocator-ia — Allocator IA Crypto FR (idée innovation #3).
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   title: "Allocator IA Crypto — Allocation portefeuille personnalisée FR",
   description:
     "Réponds à 5 questions (horizon, risque, conviction BTC, budget, objectif) → tu reçois une allocation crypto adaptée (%BTC, %ETH, %alts), justifiée par notre méthodologie et reliée aux fiches Cryptoreflex.",
-  alternates: { canonical: `${BRAND.url}/outils/allocator-ia` },
+  alternates: withHreflang(`${BRAND.url}/outils/allocator-ia`),
 };
 
 export default function AllocatorIaPage() {

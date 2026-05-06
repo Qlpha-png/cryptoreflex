@@ -92,6 +92,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/methodologie`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    // FIX SEO 2026-05-06 — Pages hubs et landing pages absentes du sitemap.
+    // Audit triple-passe a relevé que ces routes étaient indexables (robots:
+    // index/follow + metadata complète) mais jamais soumises à Googlebot.
+    // Impact estimé : ~3-5% trafic SEO long-tail récupéré.
+    { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${SITE_URL}/avis`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/comparatif`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${SITE_URL}/alternative-a`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/historique-prix`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/vs`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
+    // Landing pages dédiées campagnes (MiCA, déclaration CERFA) — meilleurs
+    // taux de conversion newsletter, justifient priority haute.
+    { url: `${SITE_URL}/lp/mica-2026`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${SITE_URL}/lp/cerfa-2026`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     // Dashboard public d'impact (audit Trust 26-04 "idée killer") — V1 statique,
     // V2 juin 2026 = compteurs live via webhook Beehiiv + partenaires affil.
     { url: `${SITE_URL}/impact`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },

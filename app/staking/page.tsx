@@ -5,6 +5,7 @@ import { STAKING_PAIRS } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import StakingComparator from "@/components/StakingComparator";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   title: "Staking crypto en France 2026 — APY, plateformes MiCA, risques",
   description:
     "Comparateur staking 2026 pour 20 cryptos : filtres APY, lock-up, risque et plateforme. Plateformes régulées MiCA (Coinbase, Kraken, Bitpanda, Binance…) pour trouver le meilleur staking en France.",
-  alternates: { canonical: `${BRAND.url}/staking` },
+  alternates: withHreflang(`${BRAND.url}/staking`),
 };
 
 export default function StakingIndexPage() {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /cgu — Conditions Générales d'Utilisation du SITE Cryptoreflex.
@@ -17,7 +18,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Conditions Générales d'Utilisation",
   description: `CGU du site ${BRAND.name} — règles d'utilisation, propriété intellectuelle, responsabilité éditoriale, modération.`,
-  alternates: { canonical: `${BRAND.url}/cgu` },
+  alternates: withHreflang(`${BRAND.url}/cgu`),
   robots: { index: true, follow: true },
 };
 

@@ -4,6 +4,7 @@ import { ArrowRight, BookOpenCheck, Calendar, Clock } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /guides — hub des guides pratiques actionnables.
@@ -25,7 +26,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `${BRAND.url}/guides` },
+  alternates: withHreflang(`${BRAND.url}/guides`),
   openGraph: {
     title: "Guides pratiques Cryptoreflex",
     description: DESCRIPTION,

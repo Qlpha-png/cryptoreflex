@@ -27,6 +27,7 @@ import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import { breadcrumbSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
@@ -49,7 +50,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: `${BRAND.url}/comparatif/${params.slug}` },
+    alternates: withHreflang(`${BRAND.url}/comparatif/${params.slug}`),
     openGraph: { title, description, url: `${BRAND.url}/comparatif/${params.slug}`, type: "article" },
   };
 }

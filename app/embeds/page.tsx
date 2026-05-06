@@ -24,6 +24,7 @@ import {
   generateCollectionPageSchema,
 } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /embeds — landing page qui présente les 4 widgets embeddables aux autres
@@ -49,7 +50,7 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
-  alternates: { canonical: PAGE_PATH },
+  alternates: withHreflang(PAGE_PATH),
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
