@@ -63,6 +63,26 @@ export const PRO_LIMITS = {
   watchlist: 200,
 } as const;
 
+/**
+ * Limites Pro+ — tier premium (9,99 €/mois ou 79 €/an).
+ *
+ * Ces limites doivent rester cohérentes avec la copy de /pro-plus qui promet
+ * "alertes prix multi-conditions illimitées" et "exports illimités".
+ *
+ * Les valeurs sont relevées au-delà de Pro V1 pour différencier le tier :
+ *  - portfolio : 2000 (vs 500 Pro V1) — Pro+ cible des power-users multi-comptes
+ *  - alerts : 500 (vs 100) — alertes complexes, watch trading actif
+ *  - watchlist : 1000 (vs 200)
+ *
+ * ⚠️ Si tu modifies ces valeurs, mets aussi à jour la grille tarifaire dans
+ * /pro-plus/page.tsx (sinon la promesse marketing diverge du runtime gate).
+ */
+export const PRO_PLUS_LIMITS = {
+  portfolio: 2000,
+  alerts: 500,
+  watchlist: 1000,
+} as const;
+
 export interface FeatureLimits {
   portfolio: number;
   alerts: number;
@@ -75,6 +95,9 @@ export interface FeatureLimits {
  * @param plan Plan actif de l'utilisateur (`free` par défaut si null/undefined).
  */
 export function getLimits(plan: Plan | null | undefined): FeatureLimits {
+  if (plan === "pro_plus_monthly" || plan === "pro_plus_annual") {
+    return { ...PRO_PLUS_LIMITS };
+  }
   if (plan === "pro_monthly" || plan === "pro_annual") {
     return { ...PRO_LIMITS };
   }

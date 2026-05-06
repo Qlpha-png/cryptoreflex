@@ -34,11 +34,39 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
  *
  * Contrainte user : 100% automatisé, aucune présence humaine.
  *
- * Phase actuelle : LANDING + capture d'intérêt (waitlist newsletter). La
- * V1 fonctionnelle nécessite création d'un nouveau price_id Stripe + checkout
- * + maj /api/stripe/webhook pour reconnaître pro_plus_monthly / pro_plus_annual
- * + mise à jour des limites IA Q&A dans /api/ask.
+ * V1.1 (mai 2026) — checkout actif si STRIPE_PRICE_PRO_PLUS_* + Payment Link
+ * NEXT_PUBLIC_PRO_PLUS_*_STRIPE_LINK sont configurés en env. Sinon, fallback
+ * vers la waitlist newsletter (/newsletter#pro-plus). Le webhook Stripe
+ * reconnaît déjà pro_plus_monthly / pro_plus_annual via priceIdToPlan(), et
+ * /api/ask applique le quota 100/jour aux tiers Pro+.
+ *
+ * Activation production :
+ *  1. Stripe Dashboard > Products > nouveau produit "Cryptoreflex Pro+" avec
+ *     2 prix récurrents (9,99 €/mois, 79 €/an).
+ *  2. Coolify env vars (production scope) :
+ *       STRIPE_PRICE_PRO_PLUS_MONTHLY = price_xxx  (price ID mensuel)
+ *       STRIPE_PRICE_PRO_PLUS_ANNUAL  = price_yyy  (price ID annuel)
+ *       NEXT_PUBLIC_PRO_PLUS_MONTHLY_STRIPE_LINK = https://buy.stripe.com/...
+ *       NEXT_PUBLIC_PRO_PLUS_ANNUAL_STRIPE_LINK  = https://buy.stripe.com/...
+ *  3. Redeploy : les CTA "Démarrer l'essai 14 j" / "Choisir l'annuel" passent
+ *     auto en mode payant.
  */
+
+const PLUS_MONTHLY_LINK = process.env.NEXT_PUBLIC_PRO_PLUS_MONTHLY_STRIPE_LINK ?? "";
+const PLUS_ANNUAL_LINK = process.env.NEXT_PUBLIC_PRO_PLUS_ANNUAL_STRIPE_LINK ?? "";
+const PLUS_PAYMENTS_ENABLED =
+  PLUS_MONTHLY_LINK.startsWith("http") || PLUS_ANNUAL_LINK.startsWith("http");
+
+/** Fallback waitlist (newsletter ancrée) tant que le Payment Link n'est pas
+ *  configuré. Cohérent avec /pro qui pointe vers #waitlist. */
+const PLUS_WAITLIST_HREF = "/newsletter#pro-plus";
+
+const PLUS_MONTHLY_HREF = PLUS_MONTHLY_LINK.startsWith("http")
+  ? PLUS_MONTHLY_LINK
+  : PLUS_WAITLIST_HREF;
+const PLUS_ANNUAL_HREF = PLUS_ANNUAL_LINK.startsWith("http")
+  ? PLUS_ANNUAL_LINK
+  : PLUS_WAITLIST_HREF;
 
 export const revalidate = 86400;
 
@@ -197,10 +225,13 @@ export default function ProPlusPage() {
               Essai gratuit 14 jours, résiliable en 1 clic.
             </p>
             <Link
-              href="/pro?tier=plus_monthly"
+              href={PLUS_MONTHLY_HREF}
               className="mt-5 btn-primary w-full justify-center"
+              prefetch={false}
             >
-              Démarrer l&apos;essai 14 j
+              {PLUS_PAYMENTS_ENABLED
+                ? "Démarrer l’essai 14 j"
+                : "Rejoindre la liste d’attente"}
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
@@ -220,10 +251,13 @@ export default function ProPlusPage() {
               Soit 6,58 €/mois équivalent. Économie 41 € vs mensuel.
             </p>
             <Link
-              href="/pro?tier=plus_annual"
+              href={PLUS_ANNUAL_HREF}
               className="mt-5 btn-primary btn-primary-shine w-full justify-center"
+              prefetch={false}
             >
-              Choisir l&apos;annuel
+              {PLUS_PAYMENTS_ENABLED
+                ? "Choisir l’annuel"
+                : "Rejoindre la liste d’attente"}
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>

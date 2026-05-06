@@ -64,11 +64,19 @@ const ALLOWED_IDS = new Set<string>(getAllCryptos().map((c) => c.id));
 /*  Rate limiters (3 niveaux : quotidien user, horaire user, horaire IP)      */
 /* -------------------------------------------------------------------------- */
 
-// 20 questions / jour / user (anti-abus quotidien)
+// 20 questions / jour / user Pro V1 (anti-abus quotidien)
 const dailyLimiter = createRateLimiter({
   limit: 20,
   windowMs: 24 * 60 * 60 * 1000,
   key: "ask-daily",
+});
+
+// 100 questions / jour / user Pro+ — quota distinct, namespace dédié pour ne
+// pas partager le compteur avec Pro V1 (qui resterait à 20). Patch V1.1.
+const dailyLimiterPlus = createRateLimiter({
+  limit: 100,
+  windowMs: 24 * 60 * 60 * 1000,
+  key: "ask-daily-plus",
 });
 
 // 5 questions / heure / user (anti-burst : un humain n'envoie pas 6 questions
@@ -246,7 +254,14 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
       { status: 401 }
     );
   }
-  const isPro = user.plan === "pro_monthly" || user.plan === "pro_annual";
+  // Patch Pro+ V1.1 (mai 2026) : tous les tiers payants Pro V1 et Pro+ ont
+  // accès à l'IA Q&A. La différenciation se fait via le quota journalier
+  // (cf. /api/me/ask-quota qui retourne 30/jour Pro V1, 100/jour Pro+).
+  const isPro =
+    user.plan === "pro_monthly" ||
+    user.plan === "pro_annual" ||
+    user.plan === "pro_plus_monthly" ||
+    user.plan === "pro_plus_annual";
   if (!isPro) {
     return NextResponse.json(
       { error: "Fonctionnalité réservée aux abonnés Soutien.", needsPro: true },
@@ -353,11 +368,17 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
     );
   }
 
-  const dailyRl = await dailyLimiter(user.id);
+  // Patch Pro+ V1.1 — quota journalier différencié par tier (20 Pro V1 / 100 Pro+).
+  const isProPlusTier =
+    user.plan === "pro_plus_monthly" || user.plan === "pro_plus_annual";
+  const dailyLimitForUser = isProPlusTier ? 100 : 20;
+  const dailyRl = isProPlusTier
+    ? await dailyLimiterPlus(user.id)
+    : await dailyLimiter(user.id);
   if (!dailyRl.ok) {
     return NextResponse.json(
       {
-        error: `Limite quotidienne atteinte (20 questions/jour). Reset dans ${Math.ceil(dailyRl.retryAfter / 3600)}h.`,
+        error: `Limite quotidienne atteinte (${dailyLimitForUser} questions/jour). Reset dans ${Math.ceil(dailyRl.retryAfter / 3600)}h.`,
         rateLimited: true,
       },
       { status: 429, headers: { "Retry-After": String(dailyRl.retryAfter) } }

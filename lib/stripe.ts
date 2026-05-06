@@ -64,12 +64,21 @@ export function priceIdToPlan(priceId: string, productId?: string): Plan {
   // Lookup Price ID
   const monthlyEnv = process.env.STRIPE_PRICE_PRO_MONTHLY;
   const annualEnv = process.env.STRIPE_PRICE_PRO_ANNUAL;
+  const plusMonthlyEnv = process.env.STRIPE_PRICE_PRO_PLUS_MONTHLY;
+  const plusAnnualEnv = process.env.STRIPE_PRICE_PRO_PLUS_ANNUAL;
 
+  // Priorité Pro+ avant Pro V1 — un compte qui upgrade ne doit pas être
+  // recategorisé en Pro V1 par accident (le webhook lit `subscription.items[0].price.id`
+  // qui est unique par tier).
+  if (plusMonthlyEnv && priceId === plusMonthlyEnv) return "pro_plus_monthly";
+  if (plusAnnualEnv && priceId === plusAnnualEnv) return "pro_plus_annual";
   if (monthlyEnv && priceId === monthlyEnv) return "pro_monthly";
   if (annualEnv && priceId === annualEnv) return "pro_annual";
 
   // Fallback Product ID (si l'utilisateur a configuré des Product IDs au lieu de Price IDs)
   if (productId) {
+    if (plusMonthlyEnv && productId === plusMonthlyEnv) return "pro_plus_monthly";
+    if (plusAnnualEnv && productId === plusAnnualEnv) return "pro_plus_annual";
     if (monthlyEnv && productId === monthlyEnv) return "pro_monthly";
     if (annualEnv && productId === annualEnv) return "pro_annual";
   }
@@ -84,6 +93,7 @@ export function priceIdToPlan(priceId: string, productId?: string): Plan {
  */
 export function planToExpirationDate(plan: Plan, fromTimestamp?: number): Date {
   const now = fromTimestamp ?? Date.now();
-  const days = plan === "pro_annual" ? 366 : 31;
+  const isAnnual = plan === "pro_annual" || plan === "pro_plus_annual";
+  const days = isAnnual ? 366 : 31;
   return new Date(now + days * 24 * 60 * 60 * 1000);
 }

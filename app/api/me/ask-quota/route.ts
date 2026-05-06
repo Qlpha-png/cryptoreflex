@@ -23,7 +23,9 @@ import { getKv } from "@/lib/kv";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DAILY_LIMIT = 20;
+// Limites par tier (cohérent avec /api/ask/[cryptoId]/route.ts).
+const DAILY_LIMIT_PRO_V1 = 20;
+const DAILY_LIMIT_PRO_PLUS = 100;
 const WINDOW_SECONDS = 24 * 60 * 60;
 
 interface QuotaResponse {
@@ -52,7 +54,10 @@ export async function GET(): Promise<NextResponse<QuotaResponse>> {
     );
   }
 
-  const isPro = user.plan === "pro_monthly" || user.plan === "pro_annual";
+  const isProV1 = user.plan === "pro_monthly" || user.plan === "pro_annual";
+  const isProPlus =
+    user.plan === "pro_plus_monthly" || user.plan === "pro_plus_annual";
+  const isPro = isProV1 || isProPlus;
   if (!isPro) {
     return NextResponse.json(
       {
@@ -67,9 +72,12 @@ export async function GET(): Promise<NextResponse<QuotaResponse>> {
     );
   }
 
-  // Lit le compteur quotidien IA Q&A (même clé namespace que /api/ask)
+  // Lit le compteur quotidien IA Q&A. Namespace distinct par tier — Pro+ a son
+  // propre namespace `ask-daily-plus` (cohérent avec /api/ask qui utilise
+  // dailyLimiterPlus pour Pro+).
   const kv = getKv();
-  const key = `rl:ask-daily:${user.id}`;
+  const namespace = isProPlus ? "ask-daily-plus" : "ask-daily";
+  const key = `rl:${namespace}:${user.id}`;
   let used = 0;
   try {
     const raw = await kv.get<number>(key);
@@ -79,12 +87,13 @@ export async function GET(): Promise<NextResponse<QuotaResponse>> {
     used = 0;
   }
 
-  const remaining = Math.max(0, DAILY_LIMIT - used);
+  const dailyLimit = isProPlus ? DAILY_LIMIT_PRO_PLUS : DAILY_LIMIT_PRO_V1;
+  const remaining = Math.max(0, dailyLimit - used);
 
   return NextResponse.json(
     {
       plan: user.plan,
-      dailyLimit: DAILY_LIMIT,
+      dailyLimit,
       used,
       remaining,
       // On ne connaît pas le TTL exact via le wrapper KV → on renvoie la

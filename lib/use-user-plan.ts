@@ -26,6 +26,9 @@ import { FREE_LIMITS, type FeatureLimits } from "@/lib/limits";
 interface UserPlanState {
   plan: Plan;
   isPro: boolean;
+  /** True si tier Pro+ (9,99€/mois ou 79€/an) — pour gater alertes
+   *  multi-conditions, exports illimités, API personnel. */
+  isProPlus: boolean;
   isAuthenticated: boolean;
   email: string | null;
   limits: FeatureLimits;
@@ -35,6 +38,7 @@ interface UserPlanState {
 interface MeResponse {
   plan: Plan;
   isPro: boolean;
+  isProPlus?: boolean;
   isAuthenticated: boolean;
   email: string | null;
   limits: FeatureLimits;
@@ -69,6 +73,11 @@ async function fetchMe(): Promise<MeResponse> {
     .then(async (r) => {
       if (!r.ok) throw new Error(`/api/me ${r.status}`);
       const data = (await r.json()) as MeResponse;
+      // Backfill `isProPlus` si l'API n'a pas encore été redéployée.
+      if (typeof data.isProPlus !== "boolean") {
+        data.isProPlus =
+          data.plan === "pro_plus_monthly" || data.plan === "pro_plus_annual";
+      }
       cachedState = data;
       cachedAt = Date.now();
       return data;
@@ -78,6 +87,7 @@ async function fetchMe(): Promise<MeResponse> {
       const fallback: MeResponse = {
         plan: "free",
         isPro: false,
+        isProPlus: false,
         isAuthenticated: false,
         email: null,
         limits: { ...FREE_LIMITS },
@@ -102,11 +112,16 @@ async function fetchMe(): Promise<MeResponse> {
 export function useUserPlan(): UserPlanState {
   const [state, setState] = useState<UserPlanState>(() => {
     if (isCacheFresh() && cachedState) {
-      return { ...cachedState, loading: false };
+      return {
+        ...cachedState,
+        isProPlus: cachedState.isProPlus ?? false,
+        loading: false,
+      };
     }
     return {
       plan: "free",
       isPro: false,
+      isProPlus: false,
       isAuthenticated: false,
       email: null,
       limits: { ...FREE_LIMITS },
@@ -118,7 +133,11 @@ export function useUserPlan(): UserPlanState {
     let cancelled = false;
     fetchMe().then((data) => {
       if (cancelled) return;
-      setState({ ...data, loading: false });
+      setState({
+        ...data,
+        isProPlus: data.isProPlus ?? false,
+        loading: false,
+      });
     });
     return () => {
       cancelled = true;

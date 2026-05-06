@@ -150,7 +150,12 @@ async function handleCheckoutCompleted(
   // Plus tolérant aux changements de tarif (mensuel/annuel/coupon) que la
   // résolution par montant total.
   const stripeClient = getStripeClient();
-  let plan: "pro_monthly" | "pro_annual" = "pro_monthly";
+  type ActivePlan =
+    | "pro_monthly"
+    | "pro_annual"
+    | "pro_plus_monthly"
+    | "pro_plus_annual";
+  let plan: ActivePlan = "pro_monthly";
   if (stripeClient && session.id) {
     try {
       const expanded = await stripeClient.checkout.sessions.retrieve(session.id, {
@@ -163,24 +168,36 @@ async function handleCheckoutCompleted(
           ? lineItem.price.product
           : lineItem?.price?.product?.id;
       const resolved = priceIdToPlan(priceId, productId);
-      if (resolved === "pro_monthly" || resolved === "pro_annual") {
+      if (
+        resolved === "pro_monthly" ||
+        resolved === "pro_annual" ||
+        resolved === "pro_plus_monthly" ||
+        resolved === "pro_plus_annual"
+      ) {
         plan = resolved;
       } else {
         // Fix audit code review 01/05/2026 — on lit l'interval de récurrence
         // (year vs month) depuis le price expanded, AU LIEU d'un seuil cents
-        // qui devient obsolète à chaque refonte de pricing (avant : 1500
-        // cents qui assignait pro_monthly à un coupon -50% sur l'annuel).
+        // qui devient obsolète à chaque refonte de pricing.
+        // Patch Pro+ V1.1 (mai 2026) — on heuristique aussi le tier
+        // (V1 vs V+) via amount_total : seuil 600 cents (entre 2,99 € et
+        // 9,99 €). Au-delà = Pro+ probable, sinon Pro V1.
         const interval = lineItem?.price?.recurring?.interval;
+        const isPlusByAmount = (session.amount_total ?? 0) >= 600;
         if (interval === "year") {
-          plan = "pro_annual";
+          plan = isPlusByAmount ? "pro_plus_annual" : "pro_annual";
         } else if (interval === "month") {
-          plan = "pro_monthly";
+          plan = isPlusByAmount ? "pro_plus_monthly" : "pro_monthly";
         } else {
-          // Vraiment aucun signal → fallback amount_total mais avec un seuil
-          // calculé dynamiquement (3 × prix mensuel cents = transition).
-          // Avec pricing 2,99 €/mois = 299 cents, seuil = 897 → tout >= 897
-          // = annuel probable. Pas parfait mais documenté.
-          plan = (session.amount_total ?? 0) >= 897 ? "pro_annual" : "pro_monthly";
+          // Vraiment aucun signal → fallback amount_total. Seuil 897 cents
+          // (3 × 299 cents) reste la frontière monthly vs annual. Plus on
+          // vérifie ensuite si c'est un tier Pro+ (>= 600 cents = Pro+).
+          const isAnnual = (session.amount_total ?? 0) >= 897;
+          if (isAnnual) {
+            plan = isPlusByAmount ? "pro_plus_annual" : "pro_annual";
+          } else {
+            plan = isPlusByAmount ? "pro_plus_monthly" : "pro_monthly";
+          }
         }
       }
     } catch (err) {
@@ -188,7 +205,13 @@ async function handleCheckoutCompleted(
         "[checkout.completed] Impossible de récupérer line_items, fallback heuristique:",
         err
       );
-      plan = (session.amount_total ?? 0) >= 897 ? "pro_annual" : "pro_monthly";
+      const isAnnual = (session.amount_total ?? 0) >= 897;
+      const isPlus = (session.amount_total ?? 0) >= 600;
+      if (isAnnual) {
+        plan = isPlus ? "pro_plus_annual" : "pro_annual";
+      } else {
+        plan = isPlus ? "pro_plus_monthly" : "pro_monthly";
+      }
     }
   }
   const expiresAt = planToExpirationDate(plan);
@@ -268,7 +291,15 @@ async function handleCheckoutCompleted(
   // dans Plausible côté client. Best-effort, jamais bloquant le webhook.
   try {
     const { trackServer } = await import("@/lib/analytics-server");
-    const mrr = plan === "pro_monthly" ? 2.99 : 28.99 / 12;
+    // MRR par tier : Pro 2,99 €/mois (28,99 €/an) ; Pro+ 9,99 €/mois (79 €/an).
+    const mrr =
+      plan === "pro_monthly"
+        ? 2.99
+        : plan === "pro_annual"
+          ? 28.99 / 12
+          : plan === "pro_plus_monthly"
+            ? 9.99
+            : 79 / 12; // pro_plus_annual
     await trackServer("Pro Subscribed", {
       plan,
       mrr: Number(mrr.toFixed(2)),

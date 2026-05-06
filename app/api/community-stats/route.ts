@@ -104,14 +104,14 @@ async function fetchStatsFromSupabase(): Promise<CommunityStats | null> {
   const proCountReq = supabase
     .from("users")
     .select("id", { count: "exact", head: true })
-    .in("plan", ["pro_monthly", "pro_annual"])
+    .in("plan", ["pro_monthly", "pro_annual", "pro_plus_monthly", "pro_plus_annual"])
     .or(`plan_expires_at.is.null,plan_expires_at.gt.${nowIso}`);
 
   // 2) newProThisMonth : Pro inscrits ce mois-ci.
   const newProReq = supabase
     .from("users")
     .select("id", { count: "exact", head: true })
-    .in("plan", ["pro_monthly", "pro_annual"])
+    .in("plan", ["pro_monthly", "pro_annual", "pro_plus_monthly", "pro_plus_annual"])
     .gte("created_at", startOfMonthIso);
 
   const [proRes, newRes, alerts7d] = await Promise.all([

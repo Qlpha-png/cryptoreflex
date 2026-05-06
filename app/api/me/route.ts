@@ -57,13 +57,24 @@ export async function GET() {
     );
   }
 
-  const isPro = user.plan === "pro_monthly" || user.plan === "pro_annual";
+  // Patch Pro+ V1.1 — `isPro` reste true pour tous les tiers payants ;
+  // `isProPlus` est exposé séparément pour les UI qui veulent gater
+  // les features Pro+ uniquement (alertes multi-conditions, exports
+  // illimités, API personnel).
+  const isPro =
+    user.plan === "pro_monthly" ||
+    user.plan === "pro_annual" ||
+    user.plan === "pro_plus_monthly" ||
+    user.plan === "pro_plus_annual";
+  const isProPlus =
+    user.plan === "pro_plus_monthly" || user.plan === "pro_plus_annual";
   const limits = getLimits(user.plan);
 
   return NextResponse.json(
     {
       plan: user.plan,
       isPro,
+      isProPlus,
       isAuthenticated: true,
       email: user.email,
       limits,

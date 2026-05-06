@@ -168,11 +168,18 @@ ${SITE_URL}/confidentialite`,
 
 export function welcomeProEmail(opts: {
   email: string;
-  plan: "pro_monthly" | "pro_annual";
+  plan: "pro_monthly" | "pro_annual" | "pro_plus_monthly" | "pro_plus_annual";
   magicLink: string;
 }): EmailContent {
+  // Patch Pro+ V1.1 — labels par tier (Pro V1 vs Pro+).
   const planLabel =
-    opts.plan === "pro_annual" ? "Soutien Annuel (28,99 €/an)" : "Soutien Mensuel (2,99 €/mois)";
+    opts.plan === "pro_plus_annual"
+      ? "Pro+ Annuel (79 €/an)"
+      : opts.plan === "pro_plus_monthly"
+        ? "Pro+ Mensuel (9,99 €/mois)"
+        : opts.plan === "pro_annual"
+          ? "Soutien Annuel (28,99 €/an)"
+          : "Soutien Mensuel (2,99 €/mois)";
 
   const subject = `Bienvenue dans Cryptoreflex Soutien`;
   const preheader = `Ton accès Soutien est actif. 4 actions à faire en 60 secondes.`;

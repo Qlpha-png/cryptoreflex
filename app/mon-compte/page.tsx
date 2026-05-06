@@ -54,7 +54,11 @@ export default async function AccountPage() {
     redirect("/connexion?next=/mon-compte");
   }
 
-  const isPro = user.plan === "pro_monthly" || user.plan === "pro_annual";
+  const isPro =
+    user.plan === "pro_monthly" ||
+    user.plan === "pro_annual" ||
+    user.plan === "pro_plus_monthly" ||
+    user.plan === "pro_plus_annual";
 
   // Calcul KPI dynamiques (data-driven, ZERO invention)
   const daysLeftPro =

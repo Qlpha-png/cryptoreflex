@@ -82,7 +82,24 @@ export function verifyBearer(req: Request, secret: string | undefined): boolean 
  * que crasher.
  */
 
-export type Plan = "free" | "pro_monthly" | "pro_annual";
+/**
+ * Plans Cryptoreflex.
+ *
+ * - free : compte gratuit (lecture, alertes basiques)
+ * - pro_monthly / pro_annual : 2,99€/mois ou 29€/an (Pro V1) — déjà actif
+ * - pro_plus_monthly / pro_plus_annual : 9,99€/mois ou 79€/an (Pro+ tier) —
+ *   ajouté V1.1 mai 2026, gating IA Q&A illimité, exports illimités, alertes
+ *   multi-conditions, accès API personnel.
+ *
+ * Hiérarchie d'accès : pro_plus_* ⊃ pro_* ⊃ free. Les helpers `isPro` /
+ * `isProPlus` sont définis en bas de fichier.
+ */
+export type Plan =
+  | "free"
+  | "pro_monthly"
+  | "pro_annual"
+  | "pro_plus_monthly"
+  | "pro_plus_annual";
 
 export interface CryptoreflexUser {
   id: string;
@@ -165,7 +182,7 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
     return {
       id: authUser.id,
       email,
-      plan: admin ? "pro_annual" : "free",
+      plan: admin ? "pro_plus_annual" : "free",
       planExpiresAt: admin ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : null,
       stripeCustomerId: null,
       displayName,
@@ -185,7 +202,7 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   // Si admin → on FORCE plan pro_annual, peu importe ce qui est en DB
   // (équivalent "free trial à vie" pour les admins de la plateforme).
   const finalPlan: Plan = admin
-    ? "pro_annual"
+    ? "pro_plus_annual"
     : isExpired
       ? "free"
       : (profile.plan as Plan);
@@ -204,10 +221,22 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   };
 }
 
-/** Check rapide : l'utilisateur est-il Pro actif ? */
+/** Check rapide : l'utilisateur est-il Pro actif (Pro V1 OU Pro+) ? */
 export function isPro(user: CryptoreflexUser | null): boolean {
   if (!user) return false;
-  return user.plan === "pro_monthly" || user.plan === "pro_annual";
+  return (
+    user.plan === "pro_monthly" ||
+    user.plan === "pro_annual" ||
+    user.plan === "pro_plus_monthly" ||
+    user.plan === "pro_plus_annual"
+  );
+}
+
+/** Check rapide : l'utilisateur a-t-il le tier Pro+ (features avancées : IA
+ *  illimitée, exports illimités, alertes multi-conditions, API personnel) ? */
+export function isProPlus(user: CryptoreflexUser | null): boolean {
+  if (!user) return false;
+  return user.plan === "pro_plus_monthly" || user.plan === "pro_plus_annual";
 }
 
 /** Server Component / Route Handler guard : redirect vers /pro si pas Pro. */
