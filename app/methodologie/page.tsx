@@ -1,11 +1,59 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BRAND } from "@/lib/brand";
-import { ListChecks, Scale, RefreshCw } from "lucide-react";
+import { ListChecks, Scale, RefreshCw, Database, ArrowRight } from "lucide-react";
+import StructuredData from "@/components/StructuredData";
+import {
+  articleSchema,
+  breadcrumbSchema,
+  graphSchema,
+  type JsonLd,
+} from "@/lib/schema";
+
+const PUBLISHED_DATE = "2026-04-25";
+const LAST_UPDATED = "2026-05-06";
 
 export const metadata: Metadata = {
   title: "Notre méthodologie",
-  description: `Comment ${BRAND.name} évalue les plateformes crypto : critères, pondérations et processus de mise à jour.`,
+  description: `Comment ${BRAND.name} évalue les plateformes crypto : critères, pondérations et processus de mise à jour. Données réutilisables sous licence CC-BY 4.0.`,
+  alternates: { canonical: `${BRAND.url}/methodologie` },
+  openGraph: {
+    title: "Méthodologie publique Cryptoreflex",
+    description:
+      "6 critères pondérés, mise à jour mensuelle, sources publiques. Tout est réutilisable sous licence CC-BY 4.0 via /api-publique.",
+    url: `${BRAND.url}/methodologie`,
+    type: "article",
+  },
 };
+
+const baseUrl = BRAND.url;
+
+const breadcrumb = breadcrumbSchema([
+  { name: "Accueil", url: baseUrl + "/" },
+  { name: "Méthodologie", url: baseUrl + "/methodologie" },
+]);
+
+const article = articleSchema({
+  slug: "methodologie",
+  title: "Notre méthodologie publique",
+  description:
+    "6 critères pondérés (frais 20 %, sécurité 25 %, MiCA 20 %, UX 15 %, support FR 10 %, catalogue 10 %), mise à jour mensuelle, sources publiques. Données réutilisables sous licence CC-BY 4.0.",
+  date: PUBLISHED_DATE,
+  dateModified: LAST_UPDATED,
+  category: "Transparence éditoriale",
+  tags: [
+    "méthodologie",
+    "scoring",
+    "critères",
+    "transparence",
+    "open data",
+    "CC-BY 4.0",
+  ],
+  readTime: "6 min",
+  author: "Kevin Voisin",
+});
+
+const jsonLd: JsonLd = graphSchema([breadcrumb, article]);
 
 const CRITERIA = [
   { name: "Frais réels", weight: 20, what: "Frais maker/taker spot, achat instantané, retrait fiat SEPA, retrait crypto, spread typique. Calcul d'un coût total par transaction type pour 1000€." },
@@ -19,9 +67,16 @@ const CRITERIA = [
 export default function MethodologiePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <StructuredData id="methodologie-jsonld" data={jsonLd} />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Notre méthodologie</h1>
       <p className="text-sm text-muted">
-        Comment {BRAND.name} évalue les plateformes crypto. Mise à jour : 25 avril 2026.
+        Comment {BRAND.name} évalue les plateformes crypto. Mise à jour :{" "}
+        {new Date(LAST_UPDATED).toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+        .
       </p>
 
       <p className="mt-8 text-fg/85 leading-relaxed">
@@ -108,6 +163,97 @@ export default function MethodologiePage() {
         <li>Profitabilité du staking (taux fluctuants, dépend de la crypto choisie)</li>
         <li>Service client en langues autres que le français</li>
       </ul>
+
+      <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
+        <Database className="h-6 w-6" />
+        Toutes les données sont réutilisables (CC-BY 4.0)
+      </h2>
+      <p className="text-fg/85 leading-relaxed">
+        La méthodologie est plus qu&apos;un document de transparence : tous
+        les datasets sous-jacents (catalogue plateformes, registre PSAN+MiCA,
+        scores de décentralisation, comparatif outils fiscaux) sont exposés
+        en <strong>open data</strong> sous licence{" "}
+        <a
+          href="https://creativecommons.org/licenses/by/4.0/deed.fr"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-primary-soft hover:underline"
+        >
+          Creative Commons BY 4.0
+        </a>
+        .
+      </p>
+      <p className="text-fg/85 leading-relaxed">
+        Toute personne — journaliste, blogueur, chercheur, développeur — peut
+        librement réutiliser ces données, à condition de citer la source avec
+        un lien vers <code className="text-primary-soft">cryptoreflex.fr</code>.
+      </p>
+      <div className="not-prose mt-6 grid gap-3 sm:grid-cols-2">
+        <Link
+          href="/api-publique"
+          className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4 hover:border-primary/40 hover:bg-primary/[0.08] transition group"
+        >
+          <div className="font-semibold text-fg group-hover:text-primary-soft">
+            API publique
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            5 endpoints JSON sans authentification, CORS *, cache CDN 24h.
+            Spec OpenAPI 3.0 importable Postman/Insomnia.
+          </p>
+          <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">
+            Voir la doc
+            <ArrowRight className="h-3.5 w-3.5" />
+          </div>
+        </Link>
+        <Link
+          href="/embed"
+          className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4 hover:border-primary/40 hover:bg-primary/[0.08] transition group"
+        >
+          <div className="font-semibold text-fg group-hover:text-primary-soft">
+            Widgets embed
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            3 widgets JavaScript prêts à coller (badge MiCA, countdown,
+            top cryptos). Vanilla JS, &lt; 5 Ko gzippé.
+          </p>
+          <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">
+            Voir les widgets
+            <ArrowRight className="h-3.5 w-3.5" />
+          </div>
+        </Link>
+        <Link
+          href="/etudes"
+          className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4 hover:border-primary/40 hover:bg-primary/[0.08] transition group"
+        >
+          <div className="font-semibold text-fg group-hover:text-primary-soft">
+            Études cornerstone
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            Recherche longue sourcée publiquement : MiCA juillet 2026,
+            fiscalité crypto FR 2026 (Cerfa 2086 + 3916-bis).
+          </p>
+          <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">
+            Lire les études
+            <ArrowRight className="h-3.5 w-3.5" />
+          </div>
+        </Link>
+        <Link
+          href="/guides"
+          className="rounded-xl border border-primary/20 bg-primary/[0.04] p-4 hover:border-primary/40 hover:bg-primary/[0.08] transition group"
+        >
+          <div className="font-semibold text-fg group-hover:text-primary-soft">
+            Guides pratiques
+          </div>
+          <p className="mt-1 text-sm text-muted">
+            Pas-à-pas actionnables, format checklist imprimable. Schema HowTo
+            (rich snippets SERP).
+          </p>
+          <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">
+            Voir les guides
+            <ArrowRight className="h-3.5 w-3.5" />
+          </div>
+        </Link>
+      </div>
 
       <h2 className="mt-12 text-2xl font-bold text-fg">Tu penses qu'on a fait une erreur ?</h2>
       <p className="text-fg/85 leading-relaxed">

@@ -92,6 +92,10 @@ const NAV_GROUPS: FooterGroup[] = [
     links: [
       { href: "/academie", label: "Académie crypto débutants" },
       { href: "/blog", label: "Guides crypto pédagogiques" },
+      // Études cornerstone (recherche longue, sources publiques) — ajout 2026-05-06
+      { href: "/etudes", label: "Études cornerstone (MiCA, fiscalité)" },
+      // Guides actionnables (HowTo, checklist imprimable) — ajout 2026-05-06
+      { href: "/guides", label: "Guides pratiques actionnables" },
       { href: "/actualites", label: "Actualités crypto FR" },
       { href: "/calendrier", label: "Calendrier crypto (halvings, ETF, FOMC)" },
       { href: "/quiz/crypto", label: "Quiz : quelle crypto pour toi ?" },
@@ -133,6 +137,9 @@ const NAV_GROUPS: FooterGroup[] = [
     links: [
       { href: "/methodologie", label: "Méthodologie publique" },
       { href: "/transparence", label: "Affiliation transparente" },
+      // Open data CC-BY 4.0 — ajout 2026-05-06 (signal d'autorité fort)
+      { href: "/api-publique", label: "API publique CC-BY 4.0" },
+      { href: "/embed", label: "Widgets embed (gratuit)" },
       { href: "/confidentialite", label: "Confidentialité (RGPD)" },
       { href: "/mentions-legales", label: "Mentions légales" },
       { href: "/cgv-abonnement", label: "CGV abonnement" },
