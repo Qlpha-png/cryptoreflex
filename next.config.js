@@ -302,17 +302,29 @@ const nextConfig = {
     // (heatmaps + session replay). Clarity charge des scripts depuis
     // www.clarity.ms (loader) et des sub-domaines régionaux *.clarity.ms,
     // pose un pixel image (img-src) et envoie les events via XHR (connect-src).
+    // FIX 2026-05-06 — Whitelist Ads pixels (Reddit + X + Google Ads) dans la CSP.
+    // Sans ces hôtes, les <Script> en <head> sont injectés mais BLOQUÉS au runtime
+    // par le navigateur (CSP violation). C'est exactement le bug qui empêchait
+    // Google Ads de détecter notre tag G-H8P4P5R3GQ malgré 5 itérations de
+    // strategies (lazyOnload → afterInteractive → beforeInteractive). La CSP
+    // était la cause racine.
+    //
+    // Hôtes ajoutés :
+    //  - Google Ads/Analytics : googletagmanager.com (loader), google-analytics.com
+    //    (beacons), googleadservices.com + google.com (conversion linker)
+    //  - Reddit Pixel : redditstatic.com (loader), alb.reddit.com (events)
+    //  - X (Twitter) Pixel : static.ads-twitter.com (loader), analytics.twitter.com (events)
     const cspDefault = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms",
+      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://www.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co",
       "font-src 'self' data:",
       // BATCH 20 — retiré api.binance.com du connect-src côté CSP : MiniOrderBook
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
       // 3s + SWR 15s) au lieu d'attaquer Binance direct côté client. Réduction
       // de la surface d'attaque CSP + 90% cache hit edge.
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://alb.reddit.com https://analytics.twitter.com",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
