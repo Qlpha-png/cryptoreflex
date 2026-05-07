@@ -122,42 +122,97 @@ export default function ComparerHubClient({ cryptos }: Props) {
       ) : (
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((crypto) => (
-            <div
+            <CryptoCard
               key={crypto.id}
-              className="rounded-2xl border border-border bg-surface p-5"
-            >
-              <h2 className="text-base font-bold text-fg flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-primary" />
-                {crypto.name} ({crypto.symbol})
-              </h2>
-              <p className="mt-1 text-xs text-muted">
-                {comparisonsPerCrypto} comparatifs
-              </p>
-              <ul className="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-2 scrollbar-thin">
-                {/* Les "autres" cryptos = toutes sauf la courante.
-                    On reconstruit le slug canonique [a, b].sort() pour pointer
-                    vers la version unique de la paire (anti doublon SEO). */}
-                {cryptos
-                  .filter((other) => other.id !== crypto.id)
-                  .map((other) => {
-                    const [vsA, vsB] = [crypto.id, other.id].sort();
-                    return (
-                      <li key={other.id}>
-                        <Link
-                          href={`/vs/${vsA}/${vsB}`}
-                          className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
-                        >
-                          vs {other.name}
-                          <ArrowRight className="h-3 w-3" />
-                        </Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
+              current={crypto}
+              cryptos={cryptos}
+              comparisonsPerCrypto={comparisonsPerCrypto}
+            />
           ))}
         </div>
       )}
     </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Sous-composant : 1 card crypto avec liens lazy-rendered                   */
+/*                                                                            */
+/*  PERF FIX 2026-05-07 — limiter le poids HTML initial.                      */
+/*  Avant : on rendait 99 <a> par card × 100 cards = 9 900 anchors dans le    */
+/*  DOM serveur, ce qui faisait gonfler le HTML à 4,5 MB malgré le refactor   */
+/*  des props (qui réduisait juste la sérialisation `__next_data__`).         */
+/*  Maintenant : on render 12 paires top-affichées + bouton "+ 87 autres"    */
+/*  qui expand on-demand côté client (les 87 restants n'existent pas dans    */
+/*  le DOM tant que pas demandés).                                           */
+/*  Gain attendu : 9 900 → 1 200 anchors initiaux = 8× plus petit.            */
+/* -------------------------------------------------------------------------- */
+
+const INITIAL_VISIBLE = 12;
+
+function CryptoCard({
+  current,
+  cryptos,
+  comparisonsPerCrypto,
+}: {
+  current: CryptoLite;
+  cryptos: CryptoLite[];
+  comparisonsPerCrypto: number;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Les "autres" cryptos = toutes sauf la courante (= n-1 entries).
+  const others = useMemo(
+    () => cryptos.filter((other) => other.id !== current.id),
+    [cryptos, current.id],
+  );
+
+  const visible = expanded ? others : others.slice(0, INITIAL_VISIBLE);
+  const remaining = others.length - INITIAL_VISIBLE;
+
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-5">
+      <h2 className="text-base font-bold text-fg flex items-center gap-2">
+        <Trophy className="h-4 w-4 text-primary" />
+        {current.name} ({current.symbol})
+      </h2>
+      <p className="mt-1 text-xs text-muted">{comparisonsPerCrypto} comparatifs</p>
+      <ul className="mt-3 space-y-1.5">
+        {visible.map((other) => {
+          const [vsA, vsB] = [current.id, other.id].sort();
+          return (
+            <li key={other.id}>
+              <Link
+                href={`/vs/${vsA}/${vsB}`}
+                className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
+              >
+                vs {other.name}
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      {!expanded && remaining > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft hover:text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+          aria-label={`Afficher les ${remaining} autres comparatifs de ${current.name}`}
+        >
+          + {remaining} autres comparatifs
+        </button>
+      )}
+      {expanded && remaining > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded(false)}
+          className="mt-3 inline-flex items-center gap-1 text-xs text-muted hover:text-fg"
+          aria-label={`Réduire la liste des comparatifs de ${current.name}`}
+        >
+          Réduire
+        </button>
+      )}
+    </div>
   );
 }
