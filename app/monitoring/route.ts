@@ -69,17 +69,42 @@ export async function POST(request: Request): Promise<Response> {
 
     const upstreamUrl = `https://${SENTRY_HOST}/api/${projectId}/envelope/`;
 
-    // Forward to Sentry. On ne fait PAS d'await sur la réponse upstream
-    // pour ne pas bloquer le client — Sentry n'a pas besoin que le SDK
-    // attende sa confirmation.
-    await fetch(upstreamUrl, {
+    // FIX 2026-05-08 — l'`await fetch()` (qui contredisait son commentaire
+    // "on ne fait PAS d'await") faisait timeout cote Coolify reverse-proxy
+    // → 503 reçu cote SDK → events Sentry perdus. Cause root cause
+    // observee aujourd'hui via Chrome MCP : POST /monitoring retournait
+    // systematiquement 503 alors que Sentry ingest etait sain.
+    //
+    // Fix : fire-and-forget (pas d'await) + waitUntil pour garantir que
+    // l'edge runtime ne kille pas la promise avant qu'elle parte.
+    // Headers minimaux : pas de cookie, pas d'authorization.
+    const upstream = fetch(upstreamUrl, {
       method: "POST",
       body: envelope,
-      // Headers minimaux : pas de cookie, pas d'authorization.
       headers: { "Content-Type": "application/x-sentry-envelope" },
+      // keepalive aide a garantir l'envoi meme si le worker termine.
+      keepalive: true,
+    }).catch((err) => {
+      // Log without body (PII risk).
+      console.warn(
+        "[monitoring tunnel] upstream fetch failed:",
+        err instanceof Error ? err.message : "unknown",
+      );
     });
 
-    // Réponse vide 200 — Sentry SDK n'attend rien de spécifique.
+    // Si on est dans Vercel / Cloudflare Workers, on peut attendre la fin
+    // sans bloquer la response via waitUntil. Sinon (Node serveur classique
+    // Coolify), la promise survie a la response (Node garde le process up
+    // jusqu'au flush du fetch).
+    const reqExt = request as unknown as {
+      waitUntil?: (p: Promise<unknown>) => void;
+    };
+    if (typeof reqExt.waitUntil === "function") reqExt.waitUntil(upstream);
+    // upstream is intentionally referenced via reqExt.waitUntil OR allowed
+    // to drift — we deliberately don't await to avoid Coolify proxy timeout.
+    void upstream;
+
+    // Réponse vide 200 IMMEDIATE — Sentry SDK n'attend rien de spécifique.
     return new Response(null, { status: 200 });
   } catch (err) {
     // Log sans exposer le body (peut contenir PII).
