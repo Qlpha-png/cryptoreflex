@@ -246,10 +246,17 @@ function _calcChange7d(sparkline: number[]): number | null {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Source #2 — CoinCap.io v2 (gratuit, top 1500)                             */
+/*  Source #2 — CoinGecko (gratuit Demo, ~30 req/min sans cle)                */
 /* -------------------------------------------------------------------------- */
-
-const COINCAP_BASE = "https://api.coincap.io/v2";
+/* FIX 2026-05-08 — CoinCap.io v2 a ete arrete (DNS not resolved, dig         */
+/* api.coincap.io renvoie NXDOMAIN). v3 demande une API key. On bascule       */
+/* sur CoinGecko free Demo qui retourne le meme dataset (price, change24h,    */
+/* market cap, volume) avec un endpoint batch /simple/price tres leger.       */
+/* Cache Next.js 5min via unstable_cache → ~20 req/min meme sur 100 cryptos.  */
+/* Quota Binance reste prioritaire (Source #1) tant qu'il marche, donc en    */
+/* pratique CoinGecko ne kicke que pour les ~10 cryptos hors Binance OU       */
+/* quand Hetzner DE est rate-limite par Binance (HTTP 429). Surveiller via    */
+/* Sentry les `[price-source] coingecko fetch failed`.                        */
 
 interface CoinCapAsset {
   id: string;
@@ -263,34 +270,90 @@ interface CoinCapAsset {
   changePercent24Hr: string;
 }
 
+interface CoingeckoSimplePrice {
+  usd?: number;
+  usd_market_cap?: number;
+  usd_24h_vol?: number;
+  usd_24h_change?: number;
+}
+
+/**
+ * Fetch un seul coin via /simple/price (1 hop, ~50 KB par batch). On garde
+ * la signature `_coincapAsset → CoinCapAsset | null` pour minimiser le diff
+ * dans la cascade en aval.
+ */
 async function _coincapAsset(coingeckoId: string): Promise<CoinCapAsset | null> {
-  // CoinCap utilise des IDs differents (ex: "bitcoin" = "bitcoin", mais
-  // "bnb" = "binance-coin"). Pour l'instant on assume coingeckoId =
-  // coincapId pour les communs. Si bug, on pourra ajouter un mapping.
   try {
-    // FIX P0 2026-05-06 — timeout 5s
-    const res = await fetch(`${COINCAP_BASE}/assets/${coingeckoId}`, {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(coingeckoId)}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`;
+    const res = await fetch(url, {
       next: { revalidate: 300 },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(6000),
+      headers: { Accept: "application/json" },
     });
     if (!res.ok) return null;
-    const json = await res.json();
-    return json?.data ?? null;
+    const data = (await res.json()) as Record<string, CoingeckoSimplePrice | undefined>;
+    const entry = data[coingeckoId];
+    if (!entry || typeof entry.usd !== "number" || entry.usd <= 0) return null;
+    const meta = COIN_META[coingeckoId] ?? {
+      symbol: coingeckoId.toUpperCase().slice(0, 6),
+      name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
+    };
+    // Adaptation au shape CoinCapAsset pour ne rien casser en aval. Les
+    // champs absents (rank, supply) sont reutilises du fallback statique
+    // ou laisses vides — non critiques pour l'affichage prix/change/cap.
+    return {
+      id: coingeckoId,
+      rank: "0",
+      symbol: meta.symbol,
+      name: meta.name,
+      supply: "0",
+      marketCapUsd: String(entry.usd_market_cap ?? 0),
+      volumeUsd24Hr: String(entry.usd_24h_vol ?? 0),
+      priceUsd: String(entry.usd),
+      changePercent24Hr: String(entry.usd_24h_change ?? 0),
+    };
   } catch {
     return null;
   }
 }
 
+/**
+ * Fetch le top N par market cap via /coins/markets (1 hop pour 250 max).
+ * Ordre par market_cap_desc identique a CoinCap top.
+ */
 async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
   try {
-    // FIX P0 2026-05-06 — timeout 6s (top list peut être plus lourd)
-    const res = await fetch(`${COINCAP_BASE}/assets?limit=${limit}`, {
-      next: { revalidate: 600 }, // 10 min
-      signal: AbortSignal.timeout(6000),
+    const cap = Math.min(Math.max(1, limit), 250);
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${cap}&page=1&sparkline=false&price_change_percentage=24h`;
+    const res = await fetch(url, {
+      next: { revalidate: 600 },
+      signal: AbortSignal.timeout(7000),
+      headers: { Accept: "application/json" },
     });
     if (!res.ok) return [];
-    const json = await res.json();
-    return Array.isArray(json?.data) ? (json.data as CoinCapAsset[]) : [];
+    const data = (await res.json()) as Array<{
+      id: string;
+      symbol: string;
+      name: string;
+      current_price?: number;
+      market_cap?: number;
+      total_volume?: number;
+      price_change_percentage_24h?: number;
+      circulating_supply?: number;
+      market_cap_rank?: number;
+    }>;
+    if (!Array.isArray(data)) return [];
+    return data.map((c, idx) => ({
+      id: c.id,
+      rank: String(c.market_cap_rank ?? idx + 1),
+      symbol: (c.symbol ?? "").toUpperCase(),
+      name: c.name ?? c.id,
+      supply: String(c.circulating_supply ?? 0),
+      marketCapUsd: String(c.market_cap ?? 0),
+      volumeUsd24Hr: String(c.total_volume ?? 0),
+      priceUsd: String(c.current_price ?? 0),
+      changePercent24Hr: String(c.price_change_percentage_24h ?? 0),
+    }));
   } catch {
     return [];
   }
@@ -439,7 +502,10 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
     }
   }
 
-  // Source #2 : CoinCap fallback
+  // Source #2 : CoinGecko (re-implementation _coincapAsset, voir commentaire
+  // au-dessus de la fn). source: "coincap" garde le label legacy pour ne pas
+  // casser les requetes Sentry / dashboards qui filtrent dessus — c'est en
+  // realite CoinGecko qui repond depuis 2026-05-08.
   const cc = await _coincapAsset(coingeckoId);
   if (cc && parseFloat(cc.priceUsd) > 0) {
     return {
@@ -448,7 +514,7 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
       name: cc.name,
       priceUsd: parseFloat(cc.priceUsd),
       change24h: parseFloat(cc.changePercent24Hr),
-      change7d: null, // CoinCap n'expose pas 7d direct
+      change7d: null, // CoinGecko /simple/price n'expose pas 7d direct
       volume24h: parseFloat(cc.volumeUsd24Hr),
       marketCap: parseFloat(cc.marketCapUsd),
       sparkline7d: [],
