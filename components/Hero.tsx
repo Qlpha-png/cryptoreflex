@@ -310,13 +310,22 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           Audit Block 1 RE-AUDIT (Agent dynamism) : ajout d'un shimmer subtil
           6s ease-in-out infinite (style Arc.net headline) pour donner vie au
           gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
-      <style>{`
-        /* BATCH 36 — fix audit Perf P0 : retiré gold-hue-breath qui utilisait
-           filter:hue-rotate. filter = layer GPU permanent + repaint continu
-           sur le LCP element = -50ms LCP, -15% INP idle. Garde uniquement
-           gold-shimmer qui anime background-position (compositable, gratuit
-           sur GPU). Amplitude shimmer renforcée à 4 stops gold→white→gold
-           pour conserver l'effet vivant sans coût filter. */
+      {/*
+        FIX 2026-05-08 — repro local Chrome MCP a revele que ce <style>
+        provoquait React #422 + #425 sur home + bitcoin (prod). Cause :
+        l'apostrophe francaise dans `l'effet vivant` etait HTML-encodee
+        cote serveur (`l&#x27;effet`) mais brute cote client → mismatch.
+        Solution : `dangerouslySetInnerHTML` shortcircuit l'encoding HTML
+        (pattern React recommande pour CSS inline avec caracteres speciaux).
+        BATCH 36 — fix audit Perf P0 : retire gold-hue-breath qui utilisait
+        filter:hue-rotate. filter = layer GPU permanent + repaint continu
+        sur le LCP element = -50ms LCP, -15% INP idle. Garde uniquement
+        gold-shimmer qui anime background-position (compositable, gratuit
+        sur GPU).
+      */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .hero-headline-accent {
           background-image: linear-gradient(
             100deg,
@@ -345,7 +354,9 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
             background-position: 50% 50% !important;
           }
         }
-      `}</style>
+      `,
+        }}
+      />
     </section>
   );
 }

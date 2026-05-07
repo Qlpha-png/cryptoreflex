@@ -299,6 +299,13 @@ const nextConfig = {
   // Note CSP : 'unsafe-inline' nécessaire pour JSON-LD inline (StructuredData.tsx)
   // et Tailwind/Next CSS critique. Plausible whitelisté pour analytics.
   async headers() {
+    // FIX 2026-05-08 dev-only — React Refresh utilise `eval()` en mode dev,
+    // bloque par 'unsafe-eval' absent. En prod ce flag reste interdit (durcit
+    // la CSP), en dev on le whitelist sinon le hot reload + l'overlay
+    // d'erreur Next.js sont casses (impossible de voir les hydration mismatch).
+    const cspExtraDev =
+      process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
+
     // CSP pour l'ensemble du site — frame-ancestors 'none' = personne ne peut
     // nous embarquer (anti-clickjacking).
     //
@@ -329,7 +336,7 @@ const nextConfig = {
     //  - X (Twitter) Pixel : static.ads-twitter.com (loader), analytics.twitter.com (events)
     const cspDefault = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com",
+      `script-src 'self' 'unsafe-inline'${cspExtraDev} https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co https://*.reddit.com",
       "font-src 'self' data:",
@@ -357,7 +364,7 @@ const nextConfig = {
     // pas vocation à tracker les sessions des sites tiers qui nous embarquent.
     const cspEmbed = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr",
+      `script-src 'self' 'unsafe-inline'${cspExtraDev} https://plausible.cryptoreflex.fr`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
       "font-src 'self' data:",
