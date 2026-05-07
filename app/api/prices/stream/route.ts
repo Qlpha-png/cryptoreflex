@@ -1,72 +1,79 @@
 /**
  * GET /api/prices/stream
  *
- * ENDPOINT DESACTIVE — INCIDENT VERCEL 2026-05-04
+ * ENDPOINT DESACTIVE — INCIDENT VERCEL 2026-05-04 (puis migration Hetzner/Coolify)
  *
- * == Contexte ==
+ * == Contexte historique ==
  *
  * Ce SSE etait initialement un stream temps-reel des prix Binance pour
  * la home (HeroLiveWidget), heatmap (LiveHeatmap), et tickers
  * (PriceTicker). Pattern : Edge Runtime, poll Binance REST toutes les
  * 2.5s, push SSE aux clients.
  *
- * Probleme : SSE garde la connexion ouverte = consomme du Active CPU
- * EN CONTINU tant que le tab visiteur est ouvert. Sur Vercel Hobby
- * (4h Active CPU/mois = 14400 s) :
+ * Probleme initial (Vercel Hobby) : SSE garde la connexion ouverte =
+ * consomme Active CPU en continu. Quota 4h CPU/mois explose des 25
+ * visiteurs × 30 min. Resultat : suspension Vercel.
  *
- *   1 visiteur × 1h tab ouvert = 3600 s = 25 % du quota mensuel
- *   25 visiteurs × 30 min     = 45000 s = 312 % du quota
+ * Migration Hetzner/Coolify (2026-05) : on n'a plus de quota Vercel
+ * mais l'endpoint reste desactive — la decision de reactiver SSE doit
+ * etre prise consciemment (charge CPU continue sur le VPS).
  *
- * Resultat : suspension Vercel pour depassement 300% Fluid Active CPU.
+ * == Comportement actuel (FIX 2026-05-08) ==
  *
- * == Fix ==
+ * Avant : on retournait status 503 + JSON. Le browser logguait cela
+ * comme "Failed to load resource: 503" → 3 console errors par audit
+ * Lighthouse (le hook useLivePrices retry 3x avant fallback). BP
+ * score plombe a 73/100.
  *
- * On retourne 503 immediatement sans ouvrir aucun stream. Le hook
- * `useLivePrices` cote client a deja un fallback automatique :
+ * Maintenant : on retourne 200 OK + un stream SSE qui envoie un
+ * unique event `{"disabled":true}` puis ferme. EventSource interprete
+ * ca comme "stream termine proprement" → 0 console error, et le hook
+ * detecte le payload `disabled` et bascule directement en fallback
+ * REST polling sans retry inutile.
  *
- *   - Tente SSE → 503 → retry exponentiel 2s/5s/15s
- *   - Apres 3 echecs → bascule "fallback" mode : poll /api/prices REST
- *     toutes les 30s (cache 60s)
- *
- * Impact UX :
- *   - Prix updates 30s au lieu de 2.5s
- *   - Acceptable pour site editorial / affiliate (pas trading)
- *   - Aucun changement visuel
+ * Impact UX : identique (poll REST 30s au lieu de SSE 2.5s).
  *
  * == Reactivation possible ==
  *
- * Option A : passer Vercel Pro (1000h CPU/mois = 250x Hobby) - 20$/mois.
+ * Option A : restaurer l'ancien handler depuis git history. Surveiller
+ *            la conso CPU sur Hetzner (top + Sentry performance traces).
  * Option B : Upstash Redis Pub/Sub mutualisation cross-client.
  * Option C : webhooks Binance + KV cache + 1 polling serveur partage.
- *
- * Pour reactiver : restaurer l'ancien handler depuis git history (commit
- * antecedent a celui qui a desactive) + redeployer.
- *
- * == Historique git ==
- *
- * - Avant : SSE Binance 2.5s + heartbeat 25s + cleanup proper
- * - 2026-05-04 : DESACTIVE pour incident quota
  */
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<Response> {
-  return new Response(
-    JSON.stringify({
-      error:
-        "SSE prices stream temporarily disabled (Vercel quota incident 2026-05-04). Use REST endpoint /api/prices?ids=... with polling.",
-      fallback: "/api/prices",
-    }),
-    {
-      status: 503,
-      headers: {
-        "content-type": "application/json",
-        // Cache 5 min pour que l'erreur ne soit pas regeneree a chaque
-        // retry SSE (sinon le hook useLivePrices fait 3 retries en 2s+5s+15s
-        // = 3 hits a la function pour rien).
-        "cache-control": "public, max-age=300",
-      },
+  // Stream SSE qui envoie un unique event `disabled:true` puis se ferme.
+  // EventSource cote client voit un 200 OK + 1 message + fin de stream.
+  // Le hook useLivePrices detecte le payload et bascule en REST polling
+  // sans retry (cf onmessage handler dans lib/hooks/useLivePrices.ts).
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    start(controller) {
+      // Format SSE : "event: type\ndata: payload\n\n"
+      controller.enqueue(
+        encoder.encode(
+          `event: disabled\ndata: ${JSON.stringify({
+            disabled: true,
+            reason: "SSE stream desactive — utiliser REST /api/prices avec polling",
+            fallback: "/api/prices",
+          })}\n\n`,
+        ),
+      );
+      controller.close();
     },
-  );
+  });
+
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      "content-type": "text/event-stream",
+      // Cache 5 min — la decision de desactivation est stable, le browser
+      // peut servir cette reponse depuis son cache pour les retries.
+      "cache-control": "public, max-age=300",
+      "x-stream-status": "disabled",
+    },
+  });
 }

@@ -210,13 +210,33 @@ export function useLivePrices(ids: string[]): UseLivePricesResult {
         setStatus("live");
       };
 
+      // FIX 2026-05-08 — la route /api/prices/stream renvoie un event
+      // `disabled` (200 OK + immediate close) quand le SSE est volontairement
+      // off. On le detecte pour basculer DIRECT en REST polling sans retry
+      // (sinon 3 console errors par audit Lighthouse).
+      es.addEventListener("disabled", () => {
+        if (cancelledRef.current) return;
+        closeEventSource();
+        startFallbackPolling();
+      });
+
       es.onmessage = (ev) => {
         if (cancelledRef.current) return;
         if (!ev.data || typeof ev.data !== "string") return;
         try {
-          const payload = JSON.parse(ev.data) as SSEPayload;
-          if (payload && typeof payload.id === "string" && typeof payload.price === "number") {
-            applyUpdate(payload);
+          const payload = JSON.parse(ev.data);
+          // Cas serveur SSE off : payload `{disabled: true}` → fallback direct.
+          if (payload && payload.disabled === true) {
+            closeEventSource();
+            startFallbackPolling();
+            return;
+          }
+          if (
+            payload &&
+            typeof payload.id === "string" &&
+            typeof payload.price === "number"
+          ) {
+            applyUpdate(payload as SSEPayload);
           }
         } catch {
           /* ignore malformed event */

@@ -2,11 +2,22 @@
  * GET /api/gamification/me — état progression du user courant.
  *
  * Comportement :
- *  - Auth obligatoire (sinon 401)
+ *  - Auth recommandee mais OPTIONNELLE (pas de 401 → 200 + ok:false)
  *  - Ping daily visit (incrémente streak + 5 XP si first hit du jour)
  *  - Retourne progress complet (xp, level, streak, badges, derived metrics)
  *
  * Cache : aucun (private user-specific). Le client peut re-fetch au visibilitychange.
+ *
+ * FIX 2026-05-08 — audit Lighthouse : retourner 401 pour visiteur anonyme
+ * generait 1 console error/page (`Failed to load resource: 401`) qui plombait
+ * le BP score. Le composant <UserLevelBadge> ne fait DEJA rien quand l'API
+ * dit "pas connecte", donc on retourne 200 + {ok:false, anonymous:true}
+ * pour signaler l'absence d'auth sans declencher d'erreur reseau.
+ *
+ * Status 401 reste l'idiome HTTP correct pour "auth requise" mais ici
+ * la consultation de son propre profil n'est PAS techniquement requise —
+ * c'est un fetch d'enrichissement UI. 200 + body discriminant est plus
+ * pragmatique pour cet usage specifique.
  */
 
 import { NextResponse } from "next/server";
@@ -25,9 +36,11 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const user = await getUser();
   if (!user) {
+    // FIX 2026-05-08 : 200 + body discriminant pour eviter console error.
+    // Le client (UserLevelBadge) test deja `ok === false` → render null.
     return NextResponse.json(
-      { ok: false, error: "Connexion requise.", needsAuth: true },
-      { status: 401, headers: { "Cache-Control": "private, no-store" } },
+      { ok: false, anonymous: true, error: "Connexion requise.", needsAuth: true },
+      { status: 200, headers: { "Cache-Control": "private, no-store" } },
     );
   }
 
