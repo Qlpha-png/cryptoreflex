@@ -313,22 +313,31 @@ const nextConfig = {
     // strategies (lazyOnload → afterInteractive → beforeInteractive). La CSP
     // était la cause racine.
     //
+    // FIX 2026-05-07 — audit Lighthouse : `pixel-config.reddit.com` (config
+    // endpoint Reddit) et `region1.google-analytics.com` (endpoint regional
+    // GA4 EU) etaient bloques par CSP malgre la whitelist 2026-05-06 — les
+    // sub-hosts ne sont PAS implicitement couverts par www.* ou alb.*. On
+    // passe a un wildcard `https://*.reddit.com` + `https://*.google-analytics.com`
+    // pour couvrir tous les sub-hosts (region1, region2, ssl, www, alb, etc.).
+    // Le wildcard est ciblé : seuls ces 2 domaines de tracking, pas une
+    // ouverture generale de la CSP.
+    //
     // Hôtes ajoutés :
-    //  - Google Ads/Analytics : googletagmanager.com (loader), google-analytics.com
-    //    (beacons), googleadservices.com + google.com (conversion linker)
-    //  - Reddit Pixel : redditstatic.com (loader), alb.reddit.com (events)
+    //  - Google Ads/Analytics : googletagmanager.com (loader), *.google-analytics.com
+    //    (beacons + regional endpoints), googleadservices.com + google.com (conversion linker)
+    //  - Reddit Pixel : redditstatic.com (loader), *.reddit.com (events + pixel-config)
     //  - X (Twitter) Pixel : static.ads-twitter.com (loader), analytics.twitter.com (events)
     const cspDefault = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com",
+      "script-src 'self' 'unsafe-inline' https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://www.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co https://*.reddit.com",
       "font-src 'self' data:",
       // BATCH 20 — retiré api.binance.com du connect-src côté CSP : MiniOrderBook
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
       // 3s + SWR 15s) au lieu d'attaquer Binance direct côté client. Réduction
       // de la surface d'attaque CSP + 90% cache hit edge.
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://www.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://alb.reddit.com https://analytics.twitter.com",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://plausible.cryptoreflex.fr https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://*.reddit.com https://analytics.twitter.com",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
