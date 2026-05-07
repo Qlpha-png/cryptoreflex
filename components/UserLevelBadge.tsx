@@ -38,12 +38,22 @@ export default function UserLevelBadge() {
           credentials: "include",
         });
         if (!res.ok) {
-          // 401 anonyme — on n'affiche rien
+          // Erreur reseau / 5xx — on n'affiche rien
           if (!cancelled) setProgress(null);
           return;
         }
         const data = await res.json();
         if (cancelled) return;
+        // FIX 2026-05-08 : depuis le commit 5ff0220, l'API retourne 200 +
+        // {ok:false, anonymous:true} pour les visiteurs anonymes (au lieu
+        // de 401, pour eviter les console errors). On doit donc reset
+        // explicitement le state ici, sinon en cas de logout pendant que
+        // le composant est monte le badge resterait visible jusqu'au
+        // prochain fetch reussi.
+        if (data?.ok === false) {
+          setProgress(null);
+          return;
+        }
         if (data?.degraded) {
           setDegraded(true);
           return;
