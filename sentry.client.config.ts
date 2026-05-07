@@ -22,6 +22,19 @@ if (DSN) {
     environment: process.env.NODE_ENV,
     release: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
 
+    // FIX 2026-05-08 — audit Lighthouse a revele des `Minified React error
+    // #422/#425` (hydration mismatch) qui apparaissent UNIQUEMENT via
+    // console.error natif (et seulement en prod reelle, pas en build prod
+    // local — donc lie au cache ISR Coolify ou Cloudflare).
+    //
+    // Sentry par defaut NE capture PAS console.error. Pour eviter de polluer
+    // (3rd party libs spamment beaucoup), on filtre AVANT capture pour ne
+    // garder QUE les `Minified React error` qui sont notre vraie cible.
+    // Le filtre `ignoreErrors` (plus bas) continue de nettoyer le reste.
+    integrations: [
+      Sentry.captureConsoleIntegration({ levels: ["error"] }),
+    ],
+
     // Performance — 10% des transactions (assez pour repérer les regressions
     // sans cramer le quota free tier 50k transactions/mois).
     tracesSampleRate: 0.1,
@@ -81,6 +94,27 @@ if (DSN) {
       if (process.env.NODE_ENV !== "production") {
         return null;
       }
+
+      // FIX 2026-05-08 — filtrage des events captures via console.error :
+      // captureConsoleIntegration ajoute le breadcrumb logger:"console". On
+      // veut UNIQUEMENT capturer les Minified React errors (#422/#425/etc.)
+      // pas tout le bruit (libs externes, warnings benins).
+      const isFromConsole =
+        event.logger === "console" ||
+        event.tags?.logger === "console" ||
+        event.breadcrumbs?.some((b) => b.category === "console" && b.level === "error");
+      if (isFromConsole) {
+        const msg =
+          event.message ||
+          event.exception?.values?.[0]?.value ||
+          "";
+        // On garde SEULEMENT les Minified React errors. Tout autre console.error
+        // est ignore (Plausible noise, Reddit pixel CSP block, etc.).
+        if (typeof msg !== "string" || !msg.includes("Minified React error")) {
+          return null;
+        }
+      }
+
       // Filtrage par stack : si l'erreur vient du prefetch/router-reducer
       // Next.js (transient), on drop. C'est jamais un vrai bug code.
       try {
