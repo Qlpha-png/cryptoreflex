@@ -253,12 +253,17 @@ export default function Navbar() {
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
+            {/* PERF 2026-05-07 — `priority={true}` sur le logo header car
+                il est above-the-fold sur 141 pages du site. Next.js le préload
+                avec `<link rel="preload">` au lieu de lazy-loading par défaut.
+                Gain LCP estimé : -100 à -300 ms. Aucun risque visuel/UX. */}
             <Logo
               variant="full"
               height={scrolled ? 28 : 36}
               className="hidden sm:inline-flex transition-[height] duration-300"
               asLink={false}
               title="Cryptoreflex"
+              priority
             />
             <Logo
               variant="mark"
@@ -266,6 +271,7 @@ export default function Navbar() {
               className="sm:hidden transition-[height] duration-300"
               asLink={false}
               title="Cryptoreflex"
+              priority
             />
           </Link>
 
