@@ -785,7 +785,10 @@ export default async function CryptoPage({ params }: Props) {
           </div>
           <Link
             href={`/alertes?cryptoId=${c.id}`}
-            className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            // FIX 2026-05-07 — audit Lighthouse a11y : `text-white` sur `bg-primary`
+            // (or #f5a524) = contraste 2.04:1 (echec WCAG AA 4.5:1). Aligne sur le
+            // pattern .btn-primary du design system (text-background = 14:1).
+            className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-background hover:bg-primary-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Créer une alerte {c.symbol}
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
