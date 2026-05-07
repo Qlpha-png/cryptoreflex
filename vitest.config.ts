@@ -19,6 +19,18 @@ export default defineConfig({
     globals: true,
     environment: "node",
     include: ["tests/**/*.test.ts", "tests/**/*.spec.ts"],
+    // FIX 2026-05-07 — séparer Vitest (unit) de Playwright (E2E).
+    // Sans cet exclude, Vitest tentait de runner les 6 fichiers
+    // tests/e2e/*.spec.ts qui utilisent l'API @playwright/test
+    // (test.describe(), test()) → 6 erreurs systématiques en CI alors
+    // que les 50 tests unit passaient. Maintenant Vitest = unit only,
+    // Playwright = E2E only (lancé via `npm run test:e2e`).
+    exclude: [
+      "tests/e2e/**",
+      "node_modules/**",
+      ".next/**",
+      "dist/**",
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
