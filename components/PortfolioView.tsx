@@ -395,7 +395,8 @@ export default function PortfolioView() {
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary text-white font-semibold text-xs px-3 py-1.5 hover:bg-primary-glow transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-0"
+            // FIX 2026-05-08 — a11y batch : text-background sur bg-primary (14:1).
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary text-background font-bold text-xs px-3 py-1.5 hover:bg-primary-glow transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-0"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             Ajouter

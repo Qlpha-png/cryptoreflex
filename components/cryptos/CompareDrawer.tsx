@@ -148,7 +148,8 @@ export default function CompareDrawer() {
             href={href}
             className={`shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
               canCompare
-                ? "bg-primary text-white hover:bg-primary/90 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                // FIX a11y 2026-05-08 : text-background sur bg-primary (14:1 ratio).
+                ? "bg-primary text-background font-bold hover:bg-primary-glow hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 : "bg-surface text-muted border border-border cursor-help"
             }`}
             aria-disabled={!canCompare}

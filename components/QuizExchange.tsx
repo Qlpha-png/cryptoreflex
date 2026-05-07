@@ -370,7 +370,7 @@ export default function QuizExchange({ platforms }: Props) {
                       className={`shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg font-mono text-xs font-bold
                                   ${
                                     isSelected
-                                      ? "bg-primary text-white"
+                                      ? "bg-primary text-background" /* a11y 2026-05-08 : 14:1 */
                                       : "bg-elevated text-muted group-hover:text-primary-soft"
                                   }`}
                     >
@@ -591,7 +591,7 @@ function PlatformCard({
           className={`shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl font-extrabold text-lg
                       ${
                         isTop
-                          ? "bg-primary text-white"
+                          ? "bg-primary text-background" /* a11y 2026-05-08 : 14:1 */
                           : "bg-elevated text-fg/80 border border-border"
                       }`}
         >

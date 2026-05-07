@@ -498,9 +498,12 @@ export default function AlertsManager({ cryptos }: Props) {
             <button
               type="submit"
               disabled={submitState === "loading" || !fillIndicator}
+              // FIX 2026-05-08 — a11y batch (regle des 3 audit Lighthouse) :
+              // text-white sur bg-primary = contraste 2.04:1 (echec WCAG AA).
+              // Aligne sur .btn-primary (text-background = 14:1 ratio).
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl
-                         bg-primary px-5 py-2.5 text-sm font-semibold text-white
-                         hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed
+                         bg-primary px-5 py-2.5 text-sm font-bold text-background
+                         hover:bg-primary-glow disabled:opacity-60 disabled:cursor-not-allowed
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                          focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >

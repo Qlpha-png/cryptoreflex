@@ -280,7 +280,7 @@ function TabButton({
       disabled={disabled}
       className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition
                   ${active
-                    ? "bg-primary text-white"
+                    ? "bg-primary text-background font-bold" /* a11y 2026-05-08 : 14:1 */
                     : "text-white/70 hover:text-white"}
                   ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >

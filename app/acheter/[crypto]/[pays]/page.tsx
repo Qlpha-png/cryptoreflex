@@ -312,7 +312,8 @@ export default function AcheterPaysPage({ params }: Props) {
                 className="rounded-2xl border border-border bg-surface p-5"
               >
                 <div className="flex items-start gap-4">
-                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                  {/* FIX a11y 2026-05-08 : text-background sur or = 14:1 (text-white = 2.04) */}
+                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-background">
                     {idx + 1}
                   </span>
                   <div>

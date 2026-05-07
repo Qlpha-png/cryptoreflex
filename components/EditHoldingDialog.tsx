@@ -227,7 +227,9 @@ export default function EditHoldingDialog({
             </button>
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-white font-semibold text-sm px-4 py-2 min-h-[40px] hover:bg-primary-glow transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-elevated"
+              // FIX 2026-05-08 — a11y batch : text-white sur bg-primary = 2.04:1.
+              // Aligne sur .btn-primary du DS (text-background = 14:1 WCAG AA).
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-background font-bold text-sm px-4 py-2 min-h-[40px] hover:bg-primary-glow transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-elevated"
             >
               <Check className="h-4 w-4" aria-hidden="true" />
               Enregistrer

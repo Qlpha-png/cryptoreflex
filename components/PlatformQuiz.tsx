@@ -574,7 +574,7 @@ export default function PlatformQuiz({ platforms }: Props) {
                       className={`shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-lg font-mono text-xs font-bold
                                   ${
                                     isSelected
-                                      ? "bg-primary text-white"
+                                      ? "bg-primary text-background" /* a11y 2026-05-08 : 14:1 */
                                       : "bg-elevated text-muted group-hover:text-primary-soft"
                                   }`}
                     >

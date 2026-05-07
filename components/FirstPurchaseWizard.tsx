@@ -195,7 +195,7 @@ export default function FirstPurchaseWizard({ platforms }: Props) {
                 className={`shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs sm:text-sm font-bold border transition-colors
                             ${
                               isDone
-                                ? "bg-primary border-primary text-white"
+                                ? "bg-primary border-primary text-background" /* a11y 2026-05-08 : 14:1 vs text-white 2.04:1 */
                                 : isCurrent
                                 ? "bg-primary/15 border-primary text-primary-soft"
                                 : "bg-elevated border-border text-muted"

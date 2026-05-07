@@ -220,7 +220,8 @@ export default function PushOptIn({
                 type="button"
                 onClick={handleEnable}
                 disabled={status === "asking"}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
+                // FIX 2026-05-08 — a11y batch : text-background sur bg-primary (14:1).
+                className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-background hover:bg-primary-glow disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {status === "asking" ? (
                   <>
@@ -277,7 +278,8 @@ export default function PushOptIn({
           type="button"
           onClick={handleEnable}
           disabled={status === "asking" || status === "loading"}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
+          // FIX 2026-05-08 — a11y batch : text-background sur bg-primary (14:1).
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-background hover:bg-primary-glow disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {status === "asking" ? (
             <>
