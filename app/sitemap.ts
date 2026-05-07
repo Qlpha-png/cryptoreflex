@@ -91,6 +91,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/embed`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/methodologie`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    // Charte éthique éditoriale — ajout 2026-05-07 (signal E-E-A-T).
+    { url: `${SITE_URL}/charte`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
     { url: `${SITE_URL}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     // FIX SEO 2026-05-06 — Pages hubs et landing pages absentes du sitemap.
     // Audit triple-passe a relevé que ces routes étaient indexables (robots:

@@ -135,6 +135,9 @@ const NAV_GROUPS: FooterGroup[] = [
     id: "footer-legal-heading",
     title: "Légal & transparence",
     links: [
+      // Charte éthique — ajout 2026-05-07. En tête car c'est l'engagement
+      // moral le plus important + signal E-E-A-T fort pour Google.
+      { href: "/charte", label: "Charte éthique éditoriale" },
       { href: "/methodologie", label: "Méthodologie publique" },
       { href: "/transparence", label: "Affiliation transparente" },
       // Open data CC-BY 4.0 — ajout 2026-05-06 (signal d'autorité fort)
