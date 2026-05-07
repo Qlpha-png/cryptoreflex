@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  getAllCryptoComparisons,
-  COMPARABLE_CRYPTO_IDS,
-} from "@/lib/crypto-comparisons";
+import { COMPARABLE_CRYPTO_IDS } from "@/lib/crypto-comparisons";
 import { getCryptoBySlug } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -25,24 +22,31 @@ export const metadata: Metadata = {
 };
 
 export default function ComparerHubPage() {
-  const all = getAllCryptoComparisons();
+  // FIX PERF 2026-05-07 — audit user "5.5MB / 2s sur /comparer".
+  //
+  // Avant : on sérialisait dans le HTML `groupedData` = pour chaque des 100
+  // cryptos, la liste de TOUS ses 99 duels (`{slug, a, b}` × 9900 entries
+  // après symétrie). Le HTML résultant pesait 5.5 MB (vs 215 KB pour les
+  // autres pages). Bandwidth coûteux + LCP > 2s + score Lighthouse dégradé.
+  //
+  // Maintenant : on passe juste la LISTE des 100 cryptos (avec id/name/
+  // symbol uniquement — ~5 KB). Le client génère les paires à la volée
+  // via `cryptos.filter(c => c.id !== current.id)` et reconstruit le slug
+  // canonique via `[a, b].sort().join("-vs-")`. Calcul O(n²) côté client
+  // mais n=100 donc 10 000 ops triviales en <1 ms.
+  //
+  // totalDuels = formule combinatoire C(n, 2) = n × (n-1) / 2.
+  // Identique à `getAllCryptoComparisons().length` mais sans générer
+  // les 4950 objets en mémoire pour rien (gain RAM côté serveur).
+  const totalDuels = TOTAL_DUELS;
 
-  // Group par crypto + serialize les data minimales pour le client.
-  const groupedData = COMPARABLE_CRYPTO_IDS.map((id) => {
+  // Liste minimale : 100 cryptos avec uniquement les 3 champs UI nécessaires.
+  // ~50 octets/crypto × 100 = 5 KB au lieu de 5 MB.
+  const cryptos = COMPARABLE_CRYPTO_IDS.map((id) => {
     const c = getCryptoBySlug(id);
     if (!c) return null;
-    const matches = all
-      .filter((cmp) => cmp.a === id || cmp.b === id)
-      .map((cmp) => ({ slug: cmp.slug, a: cmp.a, b: cmp.b }));
-    return { crypto: c, matches };
+    return { id: c.id, name: c.name, symbol: c.symbol };
   }).filter((x): x is NonNullable<typeof x> => x !== null);
-
-  // Lookup pour le client (eviter de re-importer getCryptoBySlug cote client).
-  const cryptoLookup: Record<string, { id: string; name: string; symbol: string }> = {};
-  for (const id of COMPARABLE_CRYPTO_IDS) {
-    const c = getCryptoBySlug(id);
-    if (c) cryptoLookup[id] = { id: c.id, name: c.name, symbol: c.symbol };
-  }
 
   return (
     <article className="py-12 sm:py-16">
@@ -60,7 +64,7 @@ export default function ComparerHubPage() {
             Comparer <span className="gradient-text">2 cryptos</span> face à face
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{all.length} duels</strong> entre les 100 cryptos analysees
+            <strong className="text-fg">{totalDuels} duels</strong> entre les 100 cryptos analysees
             (10 top + 90 hidden gems). Tableau side-by-side : ancienneté, cas d&apos;usage, type,
             disponibilité MiCA, FAQ contextuelle, verdict par profil. Méthodologie publique Cryptoreflex.
           </p>
@@ -79,7 +83,7 @@ export default function ComparerHubPage() {
 
         {/* BATCH 59#3 — barre de recherche client + grid filtrable.
             User : "quand il y a beaucoup de choix mets une barre de recherche". */}
-        <ComparerHubClient groupedData={groupedData} cryptoLookup={cryptoLookup} />
+        <ComparerHubClient cryptos={cryptos} />
       </div>
     </article>
   );

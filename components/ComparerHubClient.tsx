@@ -7,6 +7,12 @@
  * mets une barre de recherche toujours". Avec 100 cryptos cards et 99 liens
  * par card, la navigation devient impraticable sans recherche.
  *
+ * REFACTO PERF 2026-05-07 — audit user "5.5 MB / 2s sur /comparer" :
+ * le serveur passait `groupedData` = 9900 paires sérialisées dans le HTML.
+ * Maintenant il passe juste `cryptos` (100 entries). Le client génère les
+ * paires à la volée via `cryptos.filter(c => c.id !== current.id)` + sort
+ * pour reconstruire le slug `/vs/{a}/{b}`. n²=10 000 ops triviales <1 ms.
+ *
  * Pattern : input controle + filter sur name/symbol/id. Match insensible
  * accents (Cosmos -> "cosmos", Bitcoin -> "bitcoin"). Affiche un compteur
  * "X cryptos affichees" pour orienter l'utilisateur.
@@ -18,22 +24,16 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Search, Trophy, X } from "lucide-react";
-import type { AnyCrypto } from "@/lib/cryptos";
 
-interface CryptoComparison {
-  slug: string;
-  a: string;
-  b: string;
-}
-
-interface CryptoCardData {
-  crypto: AnyCrypto;
-  matches: CryptoComparison[];
+interface CryptoLite {
+  id: string;
+  name: string;
+  symbol: string;
 }
 
 interface Props {
-  groupedData: CryptoCardData[];
-  cryptoLookup: Record<string, { id: string; name: string; symbol: string }>;
+  /** Liste de 100 cryptos (id+name+symbol seulement, ~5 KB total). */
+  cryptos: CryptoLite[];
 }
 
 /** Normalise une chaine pour matching insensible casse + accents. */
@@ -44,17 +44,21 @@ function normalize(s: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-export default function ComparerHubClient({ groupedData, cryptoLookup }: Props) {
+export default function ComparerHubClient({ cryptos }: Props) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = normalize(query.trim());
-    if (!q) return groupedData;
-    return groupedData.filter(({ crypto }) => {
-      const haystack = normalize(`${crypto.name} ${crypto.symbol} ${crypto.id}`);
+    if (!q) return cryptos;
+    return cryptos.filter((c) => {
+      const haystack = normalize(`${c.name} ${c.symbol} ${c.id}`);
       return haystack.includes(q);
     });
-  }, [groupedData, query]);
+  }, [cryptos, query]);
+
+  // Le nombre de comparatifs par crypto est constant : (n - 1).
+  // Pas besoin de stocker un `matches.length` par card.
+  const comparisonsPerCrypto = cryptos.length - 1;
 
   return (
     <>
@@ -89,11 +93,11 @@ export default function ComparerHubClient({ groupedData, cryptoLookup }: Props) 
               <>
                 <strong className="text-fg">{filtered.length}</strong>{" "}
                 crypto{filtered.length > 1 ? "s" : ""} sur{" "}
-                <strong className="text-fg">{groupedData.length}</strong>
+                <strong className="text-fg">{cryptos.length}</strong>
               </>
             ) : (
               <>
-                <strong className="text-fg">{groupedData.length}</strong> cryptos analysees
+                <strong className="text-fg">{cryptos.length}</strong> cryptos analysees
                 — tape un nom pour filtrer
               </>
             )}
@@ -117,7 +121,7 @@ export default function ComparerHubClient({ groupedData, cryptoLookup }: Props) 
         </div>
       ) : (
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map(({ crypto, matches }) => (
+          {filtered.map((crypto) => (
             <div
               key={crypto.id}
               className="rounded-2xl border border-border bg-surface p-5"
@@ -126,25 +130,29 @@ export default function ComparerHubClient({ groupedData, cryptoLookup }: Props) 
                 <Trophy className="h-4 w-4 text-primary" />
                 {crypto.name} ({crypto.symbol})
               </h2>
-              <p className="mt-1 text-xs text-muted">{matches.length} comparatifs</p>
+              <p className="mt-1 text-xs text-muted">
+                {comparisonsPerCrypto} comparatifs
+              </p>
               <ul className="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-2 scrollbar-thin">
-                {matches.map((m) => {
-                  const otherId = m.a === crypto.id ? m.b : m.a;
-                  const other = cryptoLookup[otherId];
-                  if (!other) return null;
-                  const [vsA, vsB] = [m.a, m.b].sort();
-                  return (
-                    <li key={m.slug}>
-                      <Link
-                        href={`/vs/${vsA}/${vsB}`}
-                        className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
-                      >
-                        vs {other.name}
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </li>
-                  );
-                })}
+                {/* Les "autres" cryptos = toutes sauf la courante.
+                    On reconstruit le slug canonique [a, b].sort() pour pointer
+                    vers la version unique de la paire (anti doublon SEO). */}
+                {cryptos
+                  .filter((other) => other.id !== crypto.id)
+                  .map((other) => {
+                    const [vsA, vsB] = [crypto.id, other.id].sort();
+                    return (
+                      <li key={other.id}>
+                        <Link
+                          href={`/vs/${vsA}/${vsB}`}
+                          className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
+                        >
+                          vs {other.name}
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           ))}
