@@ -59,7 +59,14 @@ export default function WhaleWatcher({
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [errored, setErrored] = useState<boolean>(false);
-  const [lastUpdate, setLastUpdate] = useState<string>(new Date().toISOString());
+  // FIX 2026-05-08 — repro local Chrome MCP a revele que `useState(new Date()...)`
+  // dans l'initializer = hydration mismatch (React #422 + #425) sur /cryptos/[slug].
+  // SSR genere `new Date()` au timestamp T1 (cache ISR 60s), client first render
+  // genere `new Date()` au T2 → `formatRelativeFr` produit "il y a 0s" cote SSR
+  // mais "il y a 60s" cote client = mismatch sur le texte rendu ligne 188.
+  // Pattern correct (cf BATCH 53/54/55 sur LiveAge, EventCountdown, NewsRelativeTime) :
+  // sentinel `null` initial, vraie valeur set dans useEffect post-mount.
+  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
 
   const load = useCallback(
     async (signal?: AbortSignal): Promise<void> => {
@@ -185,7 +192,10 @@ export default function WhaleWatcher({
       </ul>
 
       <p className="mt-4 text-[11px] text-muted">
-        Source : Whale Alert · maj {formatRelativeFr(lastUpdate)}
+        {/* SSR + 1er render client : `lastUpdate === null` → texte "—" identique
+            des 2 cotes (zero mismatch). Apres mount + 1er fetch reussi,
+            useEffect set la vraie valeur et le composant re-render. */}
+        Source : Whale Alert · maj {lastUpdate ? formatRelativeFr(lastUpdate) : "—"}
       </p>
     </section>
   );
