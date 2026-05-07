@@ -307,10 +307,16 @@ export default function RootLayout({
             CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)
             et coin-images.coingecko.com (logos modernes). Plausible = analytics.
             Audit Perf 2026-05-02 #5 : ajout du 2e CDN CoinGecko (oublie initial,
-            la majorite des logos sont sur coin-images, ~31 imgs sur la home). */}
+            la majorite des logos sont sur coin-images, ~31 imgs sur la home).
+            FIX 2026-05-07 — preconnect Plausible mis a jour vers le sous-
+            domaine self-host (plausible.cryptoreflex.fr) au lieu de
+            plausible.io. Migration self-host BATCH 60. Le preconnect pointait
+            vers le mauvais domaine -> connexion TCP/TLS gachee, pas de gain
+            reel. Maintenant aligne avec le src reel du script (gain ~30-50ms
+            sur first-paint analytics). */}
         <link rel="preconnect" href="https://assets.coingecko.com" crossOrigin="" />
         <link rel="preconnect" href="https://coin-images.coingecko.com" crossOrigin="" />
-        <link rel="preconnect" href="https://plausible.io" crossOrigin="" />
+        <link rel="preconnect" href="https://plausible.cryptoreflex.fr" crossOrigin="" />
         {/* INNOVATION 2026 BATCH 12 — Speculation Rules API natif Chrome 121+/
             Edge 121+. Prerender les hubs principaux + intent-based hover
             prerender sur tous les liens internes. Combiné avec View
