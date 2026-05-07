@@ -42,3 +42,4 @@ next-env.d.ts
 tmp-lh/
 tmp-a11y/
 tmp-*/
+.lh-audits/
