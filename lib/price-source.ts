@@ -42,6 +42,7 @@ import { getCryptoComparePriceByCoingeckoId } from "@/lib/cryptocompare";
 import { getKrakenPrice } from "@/lib/kraken";
 import { getCoinbasePrice } from "@/lib/coinbase";
 import { getKuCoinPrice } from "@/lib/kucoin";
+import { getDexScreenerPrice } from "@/lib/dexscreener";
 import { applySymbolOverride } from "@/lib/symbol-overrides";
 
 // Data JSON editoriales (top-cryptos + hidden-gems) — single source of truth
@@ -183,6 +184,7 @@ export type PriceSource =
   | "kraken"
   | "coinbase"
   | "kucoin"
+  | "dexscreener"
   | "cryptocompare"
   | "coincap"
   | "static";
@@ -697,7 +699,37 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
     };
   }
 
-  // Source #5 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
+  // Source #5 : DexScreener (DEX aggregator universel, couvre 500K+ tokens
+  // y compris ceux delisted des CEX). Diag /api/diag-dex 2026-05-08 confirme
+  // que l'API repond depuis Hetzner DE en ~15ms. Match strict par symbol +
+  // tri par liquidity USD desc = pair le plus representatif du marche.
+  // Cas d'usage : OM/MANTRA delisted Bybit/Gate/MEXC/OKX → DexScreener
+  // retourne le pair ETH/Mantra Chain le plus liquide.
+  const dexPrice = await getDexScreenerPrice(exchangeSymbol);
+  if (dexPrice && dexPrice.priceUsd > 0) {
+    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
+    const supply =
+      fallbackMarketCap > 0
+        ? fallbackMarketCap /
+          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? dexPrice.priceUsd)
+        : 0;
+    const marketCap = supply > 0 ? supply * dexPrice.priceUsd : 0;
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: dexPrice.priceUsd,
+      change24h: dexPrice.change24h,
+      change7d: null,
+      volume24h: dexPrice.volume24h,
+      marketCap,
+      sparkline7d: [],
+      source: "dexscreener",
+      fetchedAt,
+    };
+  }
+
+  // Source #6 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
   const ccPrice = await getCryptoComparePriceByCoingeckoId(coingeckoId);
   if (ccPrice && ccPrice.priceUsd > 0) {
     return {
@@ -762,9 +794,10 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v8 : ajout OM/mantra-dao dans STATIC_FALLBACK (delisted
-  // des CEX majeurs, fallback sur valeur CoinGecko recente $0.008).
-  ["price-source-snapshot-v8"],
+  // FIX 2026-05-08 — v9 : ajout DexScreener Source #5 (DEX aggregator
+  // universel pour les tokens delisted CEX type OM/MANTRA). Bump cache
+  // pour invalider l'ancien snapshot OM=$0.008 static.
+  ["price-source-snapshot-v9"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
