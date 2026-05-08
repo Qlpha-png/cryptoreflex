@@ -88,6 +88,7 @@ export async function GET(req: Request): Promise<Response> {
       request_id,
       license: "b2b",
       headers,
+      tier: key.tier,
       cacheControl: "private, max-age=60, s-maxage=300, stale-while-revalidate=600",
     },
   );

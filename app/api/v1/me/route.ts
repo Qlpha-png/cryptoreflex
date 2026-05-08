@@ -89,6 +89,7 @@ export async function GET(req: Request): Promise<Response> {
       request_id,
       license: "b2b",
       headers,
+      tier: key.tier,
     },
   );
 }

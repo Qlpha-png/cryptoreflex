@@ -22,7 +22,7 @@ interface FiscalRaw {
 export async function GET(req: Request): Promise<Response> {
   const auth = await requireApiKey(req, ["public:read"]);
   if (!auth.ok) return auth.response;
-  const { request_id, headers } = auth;
+  const { key, request_id, headers } = auth;
 
   const url = new URL(req.url);
   const countryRaw = url.searchParams.get("country");
@@ -55,6 +55,7 @@ export async function GET(req: Request): Promise<Response> {
       request_id,
       license: "b2b",
       headers,
+      tier: key.tier,
       cacheControl: "private, max-age=60, s-maxage=300, stale-while-revalidate=600",
     },
   );

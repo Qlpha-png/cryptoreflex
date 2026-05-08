@@ -85,6 +85,7 @@ function errorResponse(
       license: META_LICENSE_DEFAULT,
       source: META_SOURCE,
       request_id,
+      tier: "anonymous",
     },
   };
   return new Response(JSON.stringify(body), {

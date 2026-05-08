@@ -95,6 +95,10 @@ export interface ApiErrorBody {
     license: string;
     source: string;
     request_id: string;
+    /** Tier B2B effectif au moment de l'appel ('sandbox' / 'b2b_starter' / etc.).
+     *  Utile pour les clients qui veulent loger / différencier les requêtes B2B
+     *  vs publiques (alias `/api/b2b/*` pointe vers `/api/v1/*`). */
+    tier?: ApiKeyTier | "anonymous";
   };
 }
 
@@ -106,6 +110,7 @@ export interface ApiSuccessBody<T> {
     license: string;
     source: string;
     request_id: string;
+    tier?: ApiKeyTier | "anonymous";
     pagination?: {
       page: number;
       per_page: number;

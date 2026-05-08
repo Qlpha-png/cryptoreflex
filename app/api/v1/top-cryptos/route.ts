@@ -27,7 +27,7 @@ interface TopRaw {
 export async function GET(req: Request): Promise<Response> {
   const auth = await requireApiKey(req, ["public:read"]);
   if (!auth.ok) return auth.response;
-  const { request_id, headers } = auth;
+  const { key, request_id, headers } = auth;
 
   const url = new URL(req.url);
   const limitRaw = url.searchParams.get("limit");
@@ -60,6 +60,7 @@ export async function GET(req: Request): Promise<Response> {
       request_id,
       license: "b2b",
       headers,
+      tier: key.tier,
       pagination: {
         page: 1,
         per_page: list.length,

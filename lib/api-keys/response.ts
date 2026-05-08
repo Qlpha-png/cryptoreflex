@@ -13,7 +13,7 @@
  */
 
 import { guardOutput } from "./output-guard";
-import type { ApiErrorBody, ApiSuccessBody } from "./types";
+import type { ApiErrorBody, ApiKeyTier, ApiSuccessBody } from "./types";
 
 const META_LICENSE_PUBLIC = "CC-BY-4.0";
 const META_LICENSE_B2B = "Cryptoreflex B2B API Subscription";
@@ -31,6 +31,8 @@ interface SuccessOptions {
   cacheControl?: string;
   /** HTTP status, default 200. */
   status?: number;
+  /** Tier B2B effectif (extrait de la clé authentifiée). */
+  tier?: ApiKeyTier | "anonymous";
 }
 
 export function successResponse<T>(
@@ -56,6 +58,7 @@ export function successResponse<T>(
       license: opts.license === "public" ? META_LICENSE_PUBLIC : META_LICENSE_B2B,
       source: META_SOURCE,
       request_id: opts.request_id,
+      tier: opts.tier,
       pagination: opts.pagination,
     },
   };
@@ -82,6 +85,7 @@ export function applicationError(
   request_id: string,
   hint?: string,
   extraHeaders?: Record<string, string>,
+  tier?: ApiKeyTier | "anonymous",
 ): Response {
   const body: ApiErrorBody = {
     ok: false,
@@ -90,6 +94,7 @@ export function applicationError(
       license: META_LICENSE_B2B,
       source: META_SOURCE,
       request_id,
+      tier,
     },
   };
   return new Response(JSON.stringify(body), {

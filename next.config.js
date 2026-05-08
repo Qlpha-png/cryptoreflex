@@ -292,6 +292,13 @@ const nextConfig = {
         source: "/favicon.ico",
         destination: "/icon",
       },
+      // Alias B2B → /api/v1/* (compat avec clients existants qui appellent
+      // /api/b2b/{path}). Rewrite côté serveur, transparent pour le caller :
+      // même auth, même rate limit, même réponse. Voir docs/b2b-api/.
+      {
+        source: "/api/b2b/:path*",
+        destination: "/api/v1/:path*",
+      },
     ];
   },
 
