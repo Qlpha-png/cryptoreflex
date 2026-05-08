@@ -228,61 +228,13 @@ export interface TopMarketCoin extends PriceSnapshot {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Source #1 — Binance public REST (gratuit illimite)                        */
+/*  Helpers actifs                                                            */
 /* -------------------------------------------------------------------------- */
-
-const BINANCE_BASE = "https://api.binance.com/api/v3";
-
-interface BinanceTicker24h {
-  symbol: string;
-  lastPrice: string;
-  priceChangePercent: string;
-  volume: string;
-  quoteVolume: string;
-  openPrice: string;
-}
-
-/**
- * Fetch ticker 24h pour une paire Binance (ex: BTCUSDT).
- * Retourne null si pair pas listee ou erreur.
- */
-async function _binanceTicker(binanceSymbol: string): Promise<BinanceTicker24h | null> {
-  try {
-    // FIX P0 2026-05-06 — timeout 4s (Binance API très rapide normalement).
-    const res = await fetch(`${BINANCE_BASE}/ticker/24hr?symbol=${binanceSymbol}`, {
-      next: { revalidate: 300 }, // 5 min
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as BinanceTicker24h;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Fetch klines (OHLC) Binance pour construire un sparkline 7d.
- * 168 points horaires = 7 jours.
- */
-async function _binanceKlines(binanceSymbol: string): Promise<number[]> {
-  try {
-    // 1h interval × 168 candles = 7 jours
-    // FIX P0 2026-05-06 — timeout 5s (klines = 168 points = ~10KB, devrait être rapide).
-    const res = await fetch(
-      `${BINANCE_BASE}/klines?symbol=${binanceSymbol}&interval=1h&limit=168`,
-      {
-        next: { revalidate: 1800 }, // 30 min (sparkline change peu en 30min)
-        signal: AbortSignal.timeout(5000),
-      },
-    );
-    if (!res.ok) return [];
-    const json = (await res.json()) as Array<[number, string, string, string, string, ...unknown[]]>;
-    // Index 4 = close price
-    return json.map((k) => parseFloat(k[4]));
-  } catch {
-    return [];
-  }
-}
+/* Phase 2 cleanup (cycle 8) : _binanceTicker + _binanceKlines + interface    */
+/* BinanceTicker24h ont ete supprimes — la logique Binance est maintenant     */
+/* dans lib/price-providers/binance.ts. Seul _calcChange7d reste utilise par  */
+/* _getPriceSnapshotInner pour deriver le change7d des sparkline retournes    */
+/* par binanceProvider.                                                       */
 
 /**
  * Calcul change7d a partir des klines : (close[end] - close[start]) / close[start] × 100
@@ -320,52 +272,10 @@ interface CoinCapAsset {
   changePercent24Hr: string;
 }
 
-interface CoingeckoSimplePrice {
-  usd?: number;
-  usd_market_cap?: number;
-  usd_24h_vol?: number;
-  usd_24h_change?: number;
-}
-
-/**
- * Fetch un seul coin via /simple/price (1 hop, ~50 KB par batch). On garde
- * la signature `_coincapAsset → CoinCapAsset | null` pour minimiser le diff
- * dans la cascade en aval.
- */
-async function _coincapAsset(coingeckoId: string): Promise<CoinCapAsset | null> {
-  try {
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(coingeckoId)}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`;
-    const res = await fetch(url, {
-      next: { revalidate: 300 },
-      signal: AbortSignal.timeout(6000),
-      headers: { Accept: "application/json" },
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as Record<string, CoingeckoSimplePrice | undefined>;
-    const entry = data[coingeckoId];
-    if (!entry || typeof entry.usd !== "number" || entry.usd <= 0) return null;
-    const meta = COIN_META[coingeckoId] ?? {
-      symbol: coingeckoId.toUpperCase().slice(0, 6),
-      name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
-    };
-    // Adaptation au shape CoinCapAsset pour ne rien casser en aval. Les
-    // champs absents (rank, supply) sont reutilises du fallback statique
-    // ou laisses vides — non critiques pour l'affichage prix/change/cap.
-    return {
-      id: coingeckoId,
-      rank: "0",
-      symbol: meta.symbol,
-      name: meta.name,
-      supply: "0",
-      marketCapUsd: String(entry.usd_market_cap ?? 0),
-      volumeUsd24Hr: String(entry.usd_24h_vol ?? 0),
-      priceUsd: String(entry.usd),
-      changePercent24Hr: String(entry.usd_24h_change ?? 0),
-    };
-  } catch {
-    return null;
-  }
-}
+/* Phase 2 cleanup (cycle 8) : interface CoingeckoSimplePrice + _coincapAsset
+ * supprimes — la logique CoinGecko /simple/price est maintenant dans
+ * lib/price-providers/coingecko.ts. _coincapTop reste utilise par
+ * _getTopMarket (different endpoint /coins/markets, top par market cap). */
 
 /**
  * Fetch le top N par market cap via /coins/markets (1 hop pour 250 max).
