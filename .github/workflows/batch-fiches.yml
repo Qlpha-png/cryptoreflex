@@ -65,6 +65,16 @@ on:
         required: false
         default: ""
         type: string
+      scan_window:
+        description: "[Mode rerank] Fenêtre de scan top market_cap (ex: 5000 = top 5000 cryptos). 0 = mode classique."
+        required: false
+        default: "0"
+        type: string
+      top_quality:
+        description: "[Mode rerank] Garde les N cryptos avec le plus haut quality_score après scan. Ex: 1000."
+        required: false
+        default: "0"
+        type: string
 
 permissions:
   contents: read
@@ -116,6 +126,10 @@ jobs:
           # Cycle 24 : regen ciblée — si coingecko_ids fourni, override les autres filtres.
           if [ -n "${{ inputs.coingecko_ids }}" ]; then
             ARGS="$ARGS --coingecko-ids=${{ inputs.coingecko_ids }}"
+          fi
+          # Cycle 25 : mode rerank par quality_score sur fenêtre élargie.
+          if [ "${{ inputs.scan_window }}" != "0" ] && [ -n "${{ inputs.scan_window }}" ]; then
+            ARGS="$ARGS --scan-window=${{ inputs.scan_window }} --top-quality=${{ inputs.top_quality }}"
           fi
           MODEL="${{ inputs.model }}"
           echo "Model: $MODEL"

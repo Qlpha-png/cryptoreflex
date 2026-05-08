@@ -64,6 +64,20 @@ const COINGECKO_IDS_RAW = getArg("coingecko-ids", "");
 const COINGECKO_IDS = (typeof COINGECKO_IDS_RAW === "string" && COINGECKO_IDS_RAW.length > 0)
   ? COINGECKO_IDS_RAW.split(",").map((s) => s.trim()).filter(Boolean)
   : [];
+// Cycle 25 : mode "scan + rerank par quality_score" — fetch un large range
+// (ex 5000 cryptos), calcule quality_score pour TOUTES, trie desc, garde les
+// top N. Aligné sur le brief "1000 meilleurs et fiables" : le rank market_cap
+// seul ne suffit pas (cryptos rank 351-1000 ont quality très variable).
+//
+//   --scan-window=N : fetch les N cryptos top market_cap depuis CoinGecko
+//                     (default 0 = mode classique start_rank+count).
+//   --top-quality=M : après scan, garde les M cryptos avec le plus haut
+//                     quality_score (et passe l'audit min_quality si fourni).
+//
+// Quand actif, START_RANK et COUNT sont ignorés. SKIP_EXISTING reste actif
+// (par défaut). Le scan utilise CoinGecko /coins/markets paginé (250 perPage).
+const SCAN_WINDOW = parseInt(getArg("scan-window", "0"), 10);
+const TOP_QUALITY = parseInt(getArg("top-quality", "0"), 10);
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
@@ -856,12 +870,10 @@ async function main() {
   }
   const sb = !DRY_RUN ? createClient(supaUrl, supaKey, { auth: { persistSession: false } }) : null;
 
-  // Step 1 : fetch top cryptos OU liste explicite (regen ciblée)
+  // Step 1 : fetch top cryptos OU liste explicite (regen ciblée) OU scan window
   let topCryptos;
   if (COINGECKO_IDS.length > 0) {
     console.log(`[1/3] Targeted regen of ${COINGECKO_IDS.length} coingecko_ids (skip rank/quality filters)...`);
-    // On charge minimal data pour chaque id depuis CoinGecko /coins/markets
-    // (un seul appel par batch de 250 ids).
     topCryptos = [];
     for (let i = 0; i < COINGECKO_IDS.length; i += 250) {
       const chunk = COINGECKO_IDS.slice(i, i + 250);
@@ -876,15 +888,64 @@ async function main() {
       await new Promise((r) => setTimeout(r, 1500));
     }
     console.log(`  ✓ ${topCryptos.length}/${COINGECKO_IDS.length} cryptos found via CoinGecko`);
+  } else if (SCAN_WINDOW > 0 && TOP_QUALITY > 0) {
+    // Cycle 25 : mode scan + rerank par quality_score
+    // Étape 1a : fetch SCAN_WINDOW cryptos (paginé via fetchTopCryptos)
+    console.log(`[1/3] Scan window ${SCAN_WINDOW} cryptos → rerank by quality_score → keep top ${TOP_QUALITY}...`);
+    topCryptos = await fetchTopCryptos(SCAN_WINDOW, 1);
+    console.log(`  ✓ ${topCryptos.length} cryptos fetched`);
+    // Étape 1b : skip celles déjà en DB (early skip — économise les fetch overview)
+    if (sb && SKIP_EXISTING) {
+      const ids = topCryptos.map((c) => c.id);
+      // Chunked SELECT (Supabase limite ~1000 ids par .in())
+      const existingIds = new Set();
+      for (let i = 0; i < ids.length; i += 500) {
+        const chunk = ids.slice(i, i + 500);
+        const { data: existing } = await sb.from("cryptos").select("coingecko_id").in("coingecko_id", chunk);
+        for (const r of existing ?? []) existingIds.add(r.coingecko_id);
+      }
+      const before = topCryptos.length;
+      topCryptos = topCryptos.filter((c) => !existingIds.has(c.id));
+      console.log(`  ✓ ${existingIds.size} déjà en DB skipped, ${topCryptos.length}/${before} candidats restants`);
+    }
+    // Étape 1c : compute quality_score pour CHAQUE crypto (fetch overview minimal)
+    console.log(`  ⏳ Scoring quality des ${topCryptos.length} candidats (peut prendre quelques minutes)...`);
+    const scored = [];
+    for (let i = 0; i < topCryptos.length; i++) {
+      const c = topCryptos[i];
+      try {
+        const cg = await fetchCoinGeckoOverview(c.id);
+        if (!cg) continue;
+        const llama = await fetchDefiLlama(c.id, cg.name);
+        const rawData = compactRawData(c.id, cg, llama);
+        await fetchAdditional(rawData);
+        const score = rawData.qualityScore?.score ?? 0;
+        scored.push({ c, rawData, score });
+        if ((i + 1) % 25 === 0) console.log(`    [scoring ${i+1}/${topCryptos.length}] avg quality so far: ${(scored.reduce((s,x) => s+x.score, 0)/scored.length).toFixed(1)}`);
+      } catch (e) {
+        console.warn(`    ⚠️ ${c.id} scoring fail: ${e.message?.slice(0, 80)}`);
+      }
+      // Rate limit doux pour le scan : 1.5s entre chaque (CoinGecko free tier 30 r/min)
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+    // Étape 1d : trier desc par score, prendre top TOP_QUALITY
+    scored.sort((a, b) => b.score - a.score);
+    const top = scored.slice(0, TOP_QUALITY);
+    console.log(`  ✓ scoring fini, top ${top.length} sélectionnés (score min: ${top[top.length-1]?.score}, max: ${top[0]?.score})`);
+    // Replace topCryptos par les coingecko-list AVEC rawData pré-calculé pour skip ré-fetch
+    topCryptos = top.map((x) => ({ ...x.c, _preloadedRawData: x.rawData }));
   } else {
     console.log("[1/3] Fetching top cryptos from CoinGecko...");
     topCryptos = await fetchTopCryptos(COUNT, START_RANK);
     console.log(`  ✓ ${topCryptos.length} cryptos in target range`);
   }
 
-  // Step 2 : filter existing (sauf en mode regen ciblée — on veut overwrite)
+  // Step 2 : filter existing
+  // - regen ciblée (COINGECKO_IDS) : skip (on veut overwrite)
+  // - scan-window : déjà fait en step 1b, skip
+  // - mode classique : filter existing
   let toProcess = topCryptos;
-  if (sb && SKIP_EXISTING && COINGECKO_IDS.length === 0) {
+  if (sb && SKIP_EXISTING && COINGECKO_IDS.length === 0 && !(SCAN_WINDOW > 0 && TOP_QUALITY > 0)) {
     const ids = topCryptos.map((c) => c.id);
     const { data: existing } = await sb.from("cryptos").select("coingecko_id").in("coingecko_id", ids);
     const existingSet = new Set((existing ?? []).map((r) => r.coingecko_id));
@@ -911,17 +972,24 @@ async function main() {
     const c = toProcess[i];
     const startTs = Date.now();
     try {
-      const cg = await fetchCoinGeckoOverview(c.id);
-      if (!cg) {
-        failed++;
-        errors.push({ id: c.id, error: "coingecko fetch failed" });
-        console.log(`  [${i + 1}/${toProcess.length}] ❌ ${c.id} — coingecko fetch failed`);
-        continue;
+      let rawData;
+      // Cycle 25 : en mode scan-window, rawData est déjà calculé pendant le
+      // scoring (étape 1c). On évite un re-fetch inutile.
+      if (c._preloadedRawData) {
+        rawData = c._preloadedRawData;
+      } else {
+        const cg = await fetchCoinGeckoOverview(c.id);
+        if (!cg) {
+          failed++;
+          errors.push({ id: c.id, error: "coingecko fetch failed" });
+          console.log(`  [${i + 1}/${toProcess.length}] ❌ ${c.id} — coingecko fetch failed`);
+          continue;
+        }
+        const llama = await fetchDefiLlama(c.id, cg.name);
+        rawData = compactRawData(c.id, cg, llama);
+        // Cycles 16+19 : enrichissement vraies recherches + quality_score
+        await fetchAdditional(rawData);
       }
-      const llama = await fetchDefiLlama(c.id, cg.name);
-      const rawData = compactRawData(c.id, cg, llama);
-      // Cycles 16+19 : enrichissement vraies recherches + quality_score
-      await fetchAdditional(rawData);
 
       // Cycle 23 : skip cryptos sous quality threshold (1000 meilleurs filter).
       // Cycle 24 : en mode regen ciblée, on bypass ce filter — l'utilisateur a
