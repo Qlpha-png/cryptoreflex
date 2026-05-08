@@ -451,6 +451,35 @@ async function callLLM(rawData) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Normalization (LLM tolerance)                                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Normalise les champs qui DOIVENT etre des arrays mais que le LLM peut
+ * parfois retourner comme objets (`{a: {...}, b: {...}}` au lieu de `[...]`).
+ * Convertit via Object.values() le cas echeant. Idempotent.
+ */
+function normalizeParsed(parsed) {
+  if (!parsed || typeof parsed !== "object") return parsed;
+  for (const key of ["competitors", "moats", "risks", "furtherReading"]) {
+    const v = parsed[key];
+    if (v && !Array.isArray(v) && typeof v === "object") {
+      parsed[key] = Object.values(v);
+    }
+  }
+  // metrics.keyFigures aussi
+  if (
+    parsed.metrics &&
+    parsed.metrics.keyFigures &&
+    !Array.isArray(parsed.metrics.keyFigures) &&
+    typeof parsed.metrics.keyFigures === "object"
+  ) {
+    parsed.metrics.keyFigures = Object.values(parsed.metrics.keyFigures);
+  }
+  return parsed;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -541,6 +570,17 @@ async function writeFiche(coingeckoId, rawData, parsed, llmInfo) {
   return { jsonPath, mdPath };
 }
 
+/**
+ * Coerce vers array. Si l'input est deja un array, retourne tel quel.
+ * Si c'est un objet (le LLM peut retourner {key1: {...}, key2: {...}} au lieu
+ * d'array), Object.values() pour le convertir. Sinon retourne [].
+ */
+function asArray(v) {
+  if (Array.isArray(v)) return v;
+  if (v && typeof v === "object") return Object.values(v);
+  return [];
+}
+
 function renderPreviewMarkdown(fiche) {
   const c = fiche.llmContent ?? {};
   const lines = [
@@ -571,23 +611,23 @@ function renderPreviewMarkdown(fiche) {
     ),
     ``,
     `## ⚔️ Concurrents directs`,
-    ...((c.competitors ?? []).map(
-      (cc) => `- **${cc.name}** (${cc.coingeckoId}) — ${cc.differentiator}`,
-    ) ?? []),
+    ...asArray(c.competitors).map(
+      (cc) => `- **${cc?.name ?? "?"}** (${cc?.coingeckoId ?? "?"}) — ${cc?.differentiator ?? ""}`,
+    ),
     ``,
     `## 🛡️ Moats`,
-    ...((c.moats ?? []).map((m) => `- **[${m.type}]** ${m.description}`) ?? []),
+    ...asArray(c.moats).map((m) => `- **[${m?.type ?? "?"}]** ${m?.description ?? ""}`),
     ``,
     `## ⚠️ Risques`,
-    ...((c.risks ?? []).map(
-      (r) => `- **[${r.category} / ${r.severity}]** ${r.description}`,
-    ) ?? []),
+    ...asArray(c.risks).map(
+      (r) => `- **[${r?.category ?? "?"} / ${r?.severity ?? "?"}]** ${r?.description ?? ""}`,
+    ),
     ``,
     `## 🇫🇷 Statut FR/EU`,
     c.frEuStatus ?? "(missing)",
     ``,
     `## 🎓 Pour aller plus loin`,
-    ...((c.furtherReading ?? []).map((r) => `- [${r.title}](${r.url_or_slug})`) ?? []),
+    ...asArray(c.furtherReading).map((r) => `- [${r?.title ?? "?"}](${r?.url_or_slug ?? "#"})`),
     ``,
     `## 📰 Actu récente`,
     c.recentNews ?? "(missing)",
@@ -657,8 +697,9 @@ async function main() {
   console.log("[3/4] Calling LLM (this may take 30-90s)...");
   const llmInfo = await callLLM(rawData);
 
-  // Step 4 — validate + write
-  console.log("[4/4] Validating + writing output...");
+  // Step 4 — normalize + validate + write
+  console.log("[4/4] Normalizing + validating + writing output...");
+  normalizeParsed(llmInfo.parsed);
   const v = validate(llmInfo.parsed);
   if (!v.ok) {
     console.warn(`⚠️  Validation issues (will still write for review):`);
