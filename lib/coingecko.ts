@@ -222,9 +222,9 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
  */
 export const fetchPrices = unstable_cache(
   async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
-  // FIX 2026-05-08 — bump cache key v1 -> v2 (idem price-source-snapshot-v2)
-  // pour invalider les caches contenant l'ancien static fallback BTC=78500.
-  ["coingecko-prices-v2"],
+  // FIX 2026-05-08 — bump v2 -> v3 (idem price-source-snapshot-v3) pour
+  // beneficier de la nouvelle cascade Binance -> CryptoCompare BATCH.
+  ["coingecko-prices-v3"],
   // BATCH 50 — 60s -> 300s (5 min). Cohence avec le revalidate fetch interne.
   { revalidate: 300, tags: [CG_TAGS.prices] }
 );

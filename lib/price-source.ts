@@ -38,6 +38,7 @@
 import { unstable_cache } from "next/cache";
 import { COINGECKO_TO_BINANCE } from "@/lib/binance-mapping";
 import { getKv } from "@/lib/kv";
+import { getCryptoComparePriceByCoingeckoId } from "@/lib/cryptocompare";
 
 /* -------------------------------------------------------------------------- */
 /*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
@@ -146,7 +147,7 @@ async function _refreshKvSnapshotIfNotLocked(): Promise<void> {
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type PriceSource = "binance" | "coincap" | "static";
+export type PriceSource = "binance" | "cryptocompare" | "coincap" | "static";
 
 export interface PriceSnapshot {
   /** Notre slug interne (= coingeckoId pour compatibilite). */
@@ -508,10 +509,36 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
     }
   }
 
-  // Source #2 : CoinGecko (re-implementation _coincapAsset, voir commentaire
-  // au-dessus de la fn). source: "coincap" garde le label legacy pour ne pas
-  // casser les requetes Sentry / dashboards qui filtrent dessus — c'est en
-  // realite CoinGecko qui repond depuis 2026-05-08.
+  // Source #2 : CryptoCompare BATCH (couvre 99/100 cryptos du site).
+  // FIX 2026-05-08 — audit complet des 100 cryptos via .lh-audits/audit-batch.mjs
+  // a montre :
+  //   - Binance couvre 38/100 (geo-OK depuis Hetzner)
+  //   - CoinGecko 429 rate-limited en free tier sans cle (~3/100 reussit)
+  //   - CryptoCompare BATCH 99/100 (gratuit 100K calls/mois sans cle)
+  // Le batch fait 2 fetchs (chunks de 60) et est cached 5 min, donc
+  // ~290 calls/mois total (largement sous le quota).
+  // Seul "frax-share" (FXS) n'est pas indexe par CryptoCompare, et tombera
+  // sur le static fallback (#3) en attendant une vraie source alternative.
+  const ccPrice = await getCryptoComparePriceByCoingeckoId(coingeckoId);
+  if (ccPrice && ccPrice.priceUsd > 0) {
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: ccPrice.priceUsd,
+      change24h: ccPrice.change24h,
+      change7d: null, // CryptoCompare /pricemultifull n'expose pas 7d direct
+      volume24h: ccPrice.volume24h,
+      marketCap: ccPrice.marketCap,
+      sparkline7d: [],
+      source: "cryptocompare",
+      fetchedAt,
+    };
+  }
+
+  // Source #2.5 (legacy fallback) : CoinGecko via _coincapAsset (rate-limit
+  // observe en prod 2026-05-08). Reste comme filet entre CryptoCompare et
+  // static — utile si CryptoCompare a un downtime exceptionnel.
   const cc = await _coincapAsset(coingeckoId);
   if (cc && parseFloat(cc.priceUsd) > 0) {
     return {
@@ -520,7 +547,7 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
       name: cc.name,
       priceUsd: parseFloat(cc.priceUsd),
       change24h: parseFloat(cc.changePercent24Hr),
-      change7d: null, // CoinGecko /simple/price n'expose pas 7d direct
+      change7d: null,
       volume24h: parseFloat(cc.volumeUsd24Hr),
       marketCap: parseFloat(cc.marketCapUsd),
       sparkline7d: [],
@@ -556,11 +583,10 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — bump cache key v1 -> v2 pour invalider les snapshots
-  // STATIC_FALLBACK persistents qui survivaient au switch CoinCap -> CoinGecko.
-  // (Une cle stable = unstable_cache reutilise les valeurs cached du build
-  // precedent meme apres un nouveau deploy.)
-  ["price-source-snapshot-v2"],
+  // FIX 2026-05-08 — v3 : ajout CryptoCompare comme Source #2 dominante.
+  // Bumps successifs : v1 (CoinCap) -> v2 (CoinGecko swap, rate-limit) ->
+  // v3 (CryptoCompare BATCH, 99/100 cryptos couvertes, ~290 calls/mois).
+  ["price-source-snapshot-v3"],
   { revalidate: 300, tags: ["price-source"] },
 );
 

@@ -490,16 +490,7 @@ const sentryWebpackPluginOptions = {
   widenClientFileUpload: false,
   // Tunnel SDK → /monitoring : bypass des adblockers qui drop les requêtes
   // vers *.ingest.sentry.io. Next.js proxy transparent, zéro latence ajoutée.
-  // FIX 2026-05-08 — TEMPORAIREMENT DESACTIVE : la route custom /monitoring
-  // (app/monitoring/route.ts) retourne systematiquement 503 cote browser
-  // bien qu'elle reponde 200 en curl direct. Cause exacte non identifiee
-  // (possiblement : payload Sentry replay ~200KB + Coolify reverse-proxy
-  // timeout ou body limit). Desactive pour que les events Sentry partent
-  // direct vers ingest.de.sentry.io et qu'on puisse enfin debugger les
-  // React #418/#422 (objet du sprint actuel). A reactiver une fois la
-  // root cause /monitoring elucidee — perte temporaire ~10-15% events
-  // (visiteurs avec adblocker uBlock/Brave/AdGuard).
-  // tunnelRoute: "/monitoring",
+  tunnelRoute: "/monitoring",
   // Désactive le logger Sentry runtime pour économiser ~5KB sur le bundle
   // client (les warnings de la lib elle-même).
   disableLogger: true,
