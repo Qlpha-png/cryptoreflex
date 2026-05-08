@@ -1,0 +1,118 @@
+name: Batch generate fiches T3 (manual)
+
+# Workflow manuel pour generer en lot des fiches crypto T3 (Phase 1 scaling).
+# Trigger via GitHub UI > Actions > "Batch generate fiches T3" > Run workflow.
+#
+# Resumable : skip les coingeckoIds deja en DB par defaut (--skip-existing).
+# Cout estime : ~$0.09/fiche (Sonnet 4.5).
+#
+# Recommandations volumes :
+#  - 50    : ~5 min, $4.5  (smoke test)
+#  - 200   : ~25 min, $18  (validation 200 top)
+#  - 1000  : ~3h, $90      (Phase 1 complete top 1000)
+#  - 5000  : ~16h, $450    (top 5K — overnight long run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: "Nb cryptos a traiter"
+        required: true
+        default: "50"
+        type: string
+      start_rank:
+        description: "Rank market cap de depart (1 = top crypto)"
+        required: false
+        default: "1"
+        type: string
+      rate_limit_ms:
+        description: "Delay entre cryptos (ms) — 6000 = 1 toutes 6s, conservatif"
+        required: false
+        default: "6000"
+        type: string
+      skip_existing:
+        description: "Skip coingeckoIds deja en DB"
+        required: false
+        default: true
+        type: boolean
+      model:
+        description: "LLM model"
+        required: false
+        default: "anthropic/claude-sonnet-4.5"
+        type: choice
+        options:
+          - anthropic/claude-sonnet-4.5
+          - anthropic/claude-sonnet-4.6
+          - anthropic/claude-haiku-4.5
+      dry_run:
+        description: "Dry run (gratuit, pas de LLM call)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+# 1 batch a la fois pour eviter race condition sur DB upsert.
+concurrency:
+  group: batch-fiches
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    # Timeout proportionnel : ~10s/fiche × count + buffer.
+    # Hardcode 6h (max GitHub Actions free tier = 6h).
+    timeout-minutes: 350
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Install Supabase JS
+        run: |
+          npm install --no-save @supabase/supabase-js@^2.104.1
+          echo "✓ Dependencies installed"
+
+      - name: Generate batch
+        id: gen
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          LLM_MODEL: ${{ inputs.model }}
+        run: |
+          ARGS="--count=${{ inputs.count }} --start-rank=${{ inputs.start_rank }} --rate-limit-ms=${{ inputs.rate_limit_ms }}"
+          if [ "${{ inputs.skip_existing }}" = "false" ]; then
+            ARGS="$ARGS --no-skip-existing"
+          fi
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          echo "Running: node scripts/batch-generate-fiches.mjs $ARGS"
+          if [ -z "$OPENROUTER_API_KEY" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
+            echo "❌ OPENROUTER_API_KEY required (or use dry_run=true)"; exit 1
+          fi
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
+            echo "⚠️ Supabase env missing — set SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in GitHub Secrets"
+          fi
+          node scripts/batch-generate-fiches.mjs $ARGS
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Batch fiches T3" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Count** : ${{ inputs.count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Start rank** : ${{ inputs.start_rank }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Model** : ${{ inputs.model }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Skip existing** : ${{ inputs.skip_existing }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry run** : ${{ inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status** : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
