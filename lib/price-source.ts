@@ -45,6 +45,21 @@ import { getKuCoinPrice } from "@/lib/kucoin";
 import { getDexScreenerPrice } from "@/lib/dexscreener";
 import { applySymbolOverride } from "@/lib/symbol-overrides";
 
+/**
+ * FIX 2026-05-08 cycle 6 — coingeckoIds qui doivent skip DexScreener
+ * car le symbol matche aussi un ancien token mort (ambiguity DEX).
+ * Pour ces tokens, on tombe sur CoinGecko `_coincapAsset` qui sait
+ * distinguer les coingeckoIds canoniques.
+ *
+ * Cas connus :
+ *  - "mantra" : NEW $OM Mantra Chain Cosmos (\$0.0104). Sans skip,
+ *    DexScreener trouve l'OLD MANTRA DAO ERC-20 (\$0.0076, mort).
+ *
+ * A etendre quand on detecte un nouveau cas. Audit periodique conseille
+ * sur les tokens avec rebrand/rename connu (LUNA->LUNC, FTT, etc.).
+ */
+const SKIP_DEXSCREENER: ReadonlySet<string> = new Set(["mantra"]);
+
 // Data JSON editoriales (top-cryptos + hidden-gems) — single source of truth
 // pour le mapping coingeckoId -> {symbol, name}. Importe statiquement pour
 // que le lookup soit synchrone au boot et bundle correctement par Next.js.
@@ -703,7 +718,17 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   // tri par liquidity USD desc = pair le plus representatif du marche.
   // Cas d'usage : OM/MANTRA delisted Bybit/Gate/MEXC/OKX → DexScreener
   // retourne le pair ETH/Mantra Chain le plus liquide.
-  const dexPrice = await getDexScreenerPrice(exchangeSymbol);
+  //
+  // FIX 2026-05-08 cycle 6 — SKIP_DEXSCREENER pour tokens dont le symbol
+  // matche AUSSI un ancien token mort (ambiguity). Audit OM/MANTRA :
+  //   - "mantra" (NEW $OM Mantra Chain Cosmos) → DexScreener trouve pair
+  //     OLD MANTRA DAO ERC-20 ($0.007634, mort post-crash) car symbol="OM"
+  //     est ambigu. CoinGecko `mantra` distingue ($0.0104 reel).
+  // Pour ces tokens on skip DexScreener et la cascade tombe sur CoinGecko
+  // via _coincapAsset (Source #6). A etendre si on rencontre d'autres cas.
+  const dexPrice = SKIP_DEXSCREENER.has(coingeckoId)
+    ? null
+    : await getDexScreenerPrice(exchangeSymbol);
   if (dexPrice && dexPrice.priceUsd > 0) {
     const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
     const supply =
@@ -792,10 +817,10 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v11 : DexScreener anti-fake filter (rejette les pairs
-  // wash-traded type Solana MANTRA $5.9B liq sur mcap $52M reel). Bump
-  // cache pour invalider les snapshots ayant le faux $0.6083 sur mantra.
-  ["price-source-snapshot-v11"],
+  // FIX 2026-05-08 — v12 : SKIP_DEXSCREENER set pour `mantra` (NEW OM
+  // Mantra Chain). Sans skip, DS trouve l'OLD MANTRA DAO ERC-20 mort
+  // car symbol="OM" est ambigu. Cache invalide ancien snapshot $0.0076.
+  ["price-source-snapshot-v12"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
