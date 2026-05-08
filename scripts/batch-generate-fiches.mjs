@@ -365,9 +365,41 @@ function auditRegleDes3(parsed, rawData) {
   if (tuCount < 5) issues.push(`tutoiement insuffisant (${tuCount}/5)`);
   if (vousCount > 2) issues.push(`vouvoiement (${vousCount})`);
 
-  const nameSymbolMentions =
-    countMatches(corpus, new RegExp(`\\b${symbol}\\b`, "gi")) +
-    countMatches(corpus, new RegExp(`\\b${name}\\b`, "gi"));
+  // Bug fix 2026-05-08 : escape regex special chars dans name/symbol pour
+  // gérer correctement les noms type "币安人生 (BinanceLife)" ou
+  // "Tradable NA Rent Financing Platform SSTN" (acronyme + chars CJK +
+  // parenthèses). Avant : regex invalide → 0 match silencieux → faux
+  // negative "name mentions (0/3)". Après : escape avec \W+ entre tokens
+  // pour tolérer les variations de ponctuation/espace.
+  const escapeRe = (s) => String(s || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Pour les noms multi-mots (>3 mots), on tolère 2 mots significatifs au lieu
+  // du nom complet (ex: "Tradable NA Rent Financing Platform SSTN" → cherche
+  // "Tradable" OU "SSTN" qui apparaît partout).
+  // Pour les noms CJK avec translittération latine entre parenthèses
+  // (ex: "币安人生 (BinanceLife)") → on split aussi sur la ponctuation pour
+  // extraire le nom latin qui apparaîtra dans le corpus français.
+  const nameTokens = String(name || "")
+    .split(/[\s()[\],\/\-]+/) // split sur whitespace + ponctuation usuelle
+    .filter((t) => t.length >= 4)
+    .map(escapeRe);
+  const nameRegexes = [];
+  if (nameTokens.length > 0) {
+    // Premier token : le name "principal"
+    nameRegexes.push(new RegExp(`\\b${nameTokens[0]}\\b`, "gi"));
+    // Si nom long, ajouter le dernier token (souvent l'acronyme/symbol-like)
+    if (nameTokens.length > 1 && nameTokens[nameTokens.length - 1] !== nameTokens[0]) {
+      nameRegexes.push(new RegExp(`\\b${nameTokens[nameTokens.length - 1]}\\b`, "gi"));
+    }
+  }
+  const symbolEsc = escapeRe(symbol);
+  const symbolMatches = symbolEsc
+    ? countMatches(corpus, new RegExp(`\\b${symbolEsc}\\b`, "gi"))
+    : 0;
+  const nameMatches = nameRegexes.reduce(
+    (acc, re) => acc + countMatches(corpus, re),
+    0,
+  );
+  const nameSymbolMentions = symbolMatches + nameMatches;
   const numberMentions = countMatches(
     corpus,
     /\$[\d.,]+\s?(?:[BKMbillionsmillemilliers]+)?|\d+[.,]?\d*\s?%|\d+[.,]?\d*\s?(?:M|B|k|TPS|tx)/g,
@@ -490,9 +522,9 @@ REGLES STRICTES :
 OUTPUT FORMAT JSON STRICT (toutes les listes doivent etre des arrays []) :
 {
   "tldr": "3 phrases ultra-concises",
-  "thesis": "200-400 mots OBLIGATOIRE (min 200 mots reels). Utilise 'tu' au moins 1x.",
-  "howItWorks": "300-500 mots OBLIGATOIRE (min 300 mots). Utilise 'tu' au moins 1x.",
-  "tokenomics": "300-500 mots OBLIGATOIRE (min 300 mots). Utilise 'tu' au moins 1x ('si tu detiens', 'tes tokens').",
+  "thesis": "220-400 mots OBLIGATOIRE (min 220 mots reels — sinon REJET). Utilise 'tu' au moins 2x.",
+  "howItWorks": "350-500 mots OBLIGATOIRE (min 350 mots — sinon REJET). Utilise 'tu' au moins 2x. Decris l'architecture technique, le consensus, les acteurs.",
+  "tokenomics": "350-500 mots OBLIGATOIRE (min 350 mots — sinon REJET). Utilise 'tu' au moins 2x ('si tu detiens', 'tes tokens'). Supply totale, distribution, vesting, burn, staking yield si applicable.",
   "metrics": { "narrative": "150-250 mots", "keyFigures": [{"label":"...","value":"..."}] },
   "scores": {
     "decentralization": {"score": 0-100, "rationale": "..."},
