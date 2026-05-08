@@ -44,6 +44,33 @@ import { getCoinbasePrice } from "@/lib/coinbase";
 import { getKuCoinPrice } from "@/lib/kucoin";
 import { applySymbolOverride } from "@/lib/symbol-overrides";
 
+// Data JSON editoriales (top-cryptos + hidden-gems) — single source of truth
+// pour le mapping coingeckoId -> {symbol, name}. Importe statiquement pour
+// que le lookup soit synchrone au boot et bundle correctement par Next.js.
+import topCryptosData from "@/data/top-cryptos.json";
+import hiddenGemsData from "@/data/hidden-gems.json";
+
+interface DataEntry {
+  id?: string;
+  coingeckoId: string;
+  symbol: string;
+  name: string;
+}
+
+const DATA_META_LOOKUP: Record<string, { symbol: string; name: string }> = (() => {
+  const all: DataEntry[] = [
+    ...((topCryptosData as { topCryptos?: DataEntry[] }).topCryptos ?? []),
+    ...((hiddenGemsData as { hiddenGems?: DataEntry[] }).hiddenGems ?? []),
+  ];
+  const map: Record<string, { symbol: string; name: string }> = {};
+  for (const e of all) {
+    if (e.coingeckoId && e.symbol && e.name) {
+      map[e.coingeckoId] = { symbol: e.symbol.toUpperCase(), name: e.name };
+    }
+  }
+  return map;
+})();
+
 /* -------------------------------------------------------------------------- */
 /*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
 /* -------------------------------------------------------------------------- */
@@ -513,10 +540,29 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
 }
 
 async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapshot> {
-  const meta = COIN_META[coingeckoId] ?? {
-    symbol: coingeckoId.toUpperCase().slice(0, 6),
-    name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
-  };
+  // FIX 2026-05-08 (audit regle des 3) — single source of truth pour le
+  // mapping coingeckoId -> {symbol, name} : on utilise les data JSON
+  // editoriales (top-cryptos + hidden-gems) en priorite, COIN_META legacy
+  // en fallback, et derive intelligent en dernier recours.
+  //
+  // L'ancien code faisait `coingeckoId.toUpperCase().slice(0, 6)` qui
+  // produisait des symbols brises pour les ids contenant un tiret :
+  //   "theta-token"   -> "THETA-"   (au lieu de "THETA")
+  //   "kucoin-shares" -> "KUCOIN"   (au lieu de "KCS")
+  //   "polymesh"      -> "POLYME"   (au lieu de "POLYX")
+  // Resultat : Kraken/Coinbase/KuCoin recevaient ces faux symbols et ne
+  // matchaient aucune paire -> on tombait sur static fallback inutilement.
+  const meta =
+    DATA_META_LOOKUP[coingeckoId] ??
+    COIN_META[coingeckoId] ?? {
+      // Last-resort fallback : extrait le 1er segment avant tiret + uppercase.
+      // Pour "render-token" (sans override) -> "RENDER" (au lieu de "RENDER" tronque).
+      // Pour "theta-token" -> "THETA". Pour "polkadot" -> "POLKAD" (mais POLKADOT
+      // est dans COIN_META). Mieux que slice(0,6) systematique.
+      symbol: coingeckoId.split("-")[0].toUpperCase().slice(0, 8),
+      name:
+        coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1).replace(/-/g, " "),
+    };
   const fetchedAt = new Date().toISOString();
 
   // Source #1 : Binance (couvre 90% du top 100)
@@ -709,12 +755,11 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v6 : audit regle des 3 fixes :
-  //   - Risk #1 : revalidate Kraken/Coinbase 300->60s (cache stuck null)
-  //   - Risk #2 : symbol-overrides RNDR->RENDER (rename 2024)
-  //   - Risk #3 : ajout KuCoin (Source #4) pour THETA/KCS/POLYX
-  // Bump v5 -> v6 force regeneration immediate de tous les snapshots.
-  ["price-source-snapshot-v6"],
+  // FIX 2026-05-08 — v7 : meta lookup depuis data JSON editoriales (bug
+  // critique decouvert : "theta-token" -> "THETA-" via slice(0,6) brisait
+  // les fetchers exchange). Bump v6 -> v7 force regeneration de tous les
+  // snapshots avec le bon symbol.
+  ["price-source-snapshot-v7"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
