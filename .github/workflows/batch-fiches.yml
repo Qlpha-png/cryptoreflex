@@ -36,11 +36,14 @@ on:
         default: true
         type: boolean
       model:
-        description: "LLM model (defaut llama-3.3-70b GRATUIT pour scaling)"
+        description: "LLM model (Gemini 2.5 Flash gratuit + stable recommande)"
         required: false
-        default: "meta-llama/llama-3.3-70b-instruct:free"
+        default: "google/gemini-2.5-flash"
         type: choice
         options:
+          - google/gemini-2.5-flash
+          - google/gemini-1.5-flash
+          - google/gemini-1.5-pro
           - meta-llama/llama-3.3-70b-instruct:free
           - qwen/qwen3-next-80b-a3b-instruct:free
           - z-ai/glm-4.5-air:free
@@ -88,6 +91,7 @@ jobs:
         id: gen
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           LLM_MODEL: ${{ inputs.model }}
@@ -99,12 +103,22 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
+          MODEL="${{ inputs.model }}"
+          echo "Model: $MODEL"
           echo "Running: node scripts/batch-generate-fiches.mjs $ARGS"
-          if [ -z "$OPENROUTER_API_KEY" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
-            echo "❌ OPENROUTER_API_KEY required (or use dry_run=true)"; exit 1
-          fi
-          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] && [ "${{ inputs.dry_run }}" != "true" ]; then
-            echo "⚠️ Supabase env missing — set SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in GitHub Secrets"
+          if [ "${{ inputs.dry_run }}" != "true" ]; then
+            if [[ "$MODEL" == google/gemini-* ]]; then
+              if [ -z "$GEMINI_API_KEY" ]; then
+                echo "❌ GEMINI_API_KEY required for Gemini models"; exit 1
+              fi
+            else
+              if [ -z "$OPENROUTER_API_KEY" ]; then
+                echo "❌ OPENROUTER_API_KEY required for non-Gemini models"; exit 1
+              fi
+            fi
+            if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+              echo "❌ SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY required"; exit 1
+            fi
           fi
           node scripts/batch-generate-fiches.mjs $ARGS
 

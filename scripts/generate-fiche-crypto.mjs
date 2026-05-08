@@ -43,17 +43,31 @@ const MAX_TOKENS = 8000;
 const TEMPERATURE = 0.4; // Plus factuel que weekly-article (0.5)
 const TIMEOUT_MS = 180_000; // 3 min — fiche profonde > article hebdo
 
-// Pricing aligne sur generate-weekly-article.mjs + modeles :free OpenRouter.
+// Pricing aligne sur generate-weekly-article.mjs + modeles :free OpenRouter
+// + Gemini API direct (Google AI Studio, 1500 req/jour gratuites Flash).
 const PRICING = {
   "anthropic/claude-sonnet-4.5": { input: 3.0, output: 15.0 },
   "anthropic/claude-sonnet-4.6": { input: 3.0, output: 15.0 },
   "anthropic/claude-haiku-4.5": { input: 1.0, output: 5.0 },
-  // Modeles gratuits OpenRouter (priority pour scaling massif gratuit).
+  // Modeles :free OpenRouter (souvent rate-limited upstream — non fiables)
   "meta-llama/llama-3.3-70b-instruct:free": { input: 0, output: 0 },
   "qwen/qwen3-next-80b-a3b-instruct:free": { input: 0, output: 0 },
   "z-ai/glm-4.5-air:free": { input: 0, output: 0 },
   "deepseek/deepseek-r1:free": { input: 0, output: 0 },
+  // Gemini API direct (Google AI Studio) — 1500 req/jour Flash gratuit, stable.
+  // Format : "google/gemini-..." pour distinguer du provider.
+  "google/gemini-2.5-flash": { input: 0, output: 0 },
+  "google/gemini-1.5-flash": { input: 0, output: 0 },
+  "google/gemini-1.5-pro": { input: 0, output: 0 }, // 50 req/jour gratuit
 };
+
+/**
+ * Detecte si le model est Gemini (route via Google AI Studio API direct au
+ * lieu d'OpenRouter). Gemini API key = GEMINI_API_KEY env var.
+ */
+function isGeminiModel(model) {
+  return typeof model === "string" && model.startsWith("google/gemini-");
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Fetchers raw data                                                         */
@@ -400,11 +414,80 @@ function estimateCost(model, usage) {
   return inputCost + outputCost;
 }
 
+/**
+ * Call Gemini API directement (Google AI Studio).
+ * Endpoint : POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+ * Format Google native (system_instruction + contents + generationConfig).
+ */
+async function callGeminiAPI(rawData, modelName) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
+
+  // "google/gemini-2.5-flash" -> "gemini-2.5-flash"
+  const geminiModelId = modelName.replace(/^google\//, "");
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModelId}:generateContent?key=${apiKey}`;
+
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+
+  let res;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: "user", parts: [{ text: buildUserPrompt(rawData) }] }],
+        generationConfig: {
+          temperature: TEMPERATURE,
+          maxOutputTokens: MAX_TOKENS,
+          responseMimeType: "application/json",
+        },
+      }),
+    });
+  } finally {
+    clearTimeout(tid);
+  }
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "(no body)");
+    throw new Error(`Gemini ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = await res.json();
+  const candidate = data?.candidates?.[0];
+  const content = candidate?.content?.parts?.[0]?.text;
+  if (!content) {
+    throw new Error(
+      `Gemini empty response (finishReason=${candidate?.finishReason ?? "?"})`,
+    );
+  }
+
+  const parsed = extractJson(content);
+  const usage = data.usageMetadata || {};
+  const promptTokens = usage.promptTokenCount || 0;
+  const completionTokens = usage.candidatesTokenCount || 0;
+  const totalTokens = promptTokens + completionTokens;
+  const cost = 0; // Gemini Free Tier
+
+  console.log(
+    `[llm] gemini tokens=${totalTokens} (in=${promptTokens} out=${completionTokens}) cost=$0 model=${geminiModelId}`,
+  );
+
+  return { parsed, model: modelName, tokens: totalTokens, cost };
+}
+
 async function callLLM(rawData) {
+  const model = DEFAULT_MODEL;
+
+  // Dispatch selon provider : Gemini direct OU OpenRouter
+  if (isGeminiModel(model)) {
+    return callGeminiAPI(rawData, model);
+  }
+
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error("OPENROUTER_API_KEY not set");
-
-  const model = DEFAULT_MODEL;
   const ctrl = new AbortController();
   const tid = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
 

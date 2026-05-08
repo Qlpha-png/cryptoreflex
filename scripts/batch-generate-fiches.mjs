@@ -60,12 +60,20 @@ const PRICING = {
   "anthropic/claude-sonnet-4.5": { input: 3.0, output: 15.0 },
   "anthropic/claude-sonnet-4.6": { input: 3.0, output: 15.0 },
   "anthropic/claude-haiku-4.5": { input: 1.0, output: 5.0 },
-  // Modeles :free OpenRouter — scaling 0$
+  // Modeles :free OpenRouter (souvent rate-limited upstream — non fiables)
   "meta-llama/llama-3.3-70b-instruct:free": { input: 0, output: 0 },
   "qwen/qwen3-next-80b-a3b-instruct:free": { input: 0, output: 0 },
   "z-ai/glm-4.5-air:free": { input: 0, output: 0 },
   "deepseek/deepseek-r1:free": { input: 0, output: 0 },
+  // Gemini API direct (Google AI Studio) — 1500 req/jour Flash gratuit, stable.
+  "google/gemini-2.5-flash": { input: 0, output: 0 },
+  "google/gemini-1.5-flash": { input: 0, output: 0 },
+  "google/gemini-1.5-pro": { input: 0, output: 0 },
 };
+
+function isGeminiModel(model) {
+  return typeof model === "string" && model.startsWith("google/gemini-");
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Reuse helpers from generate-fiche-crypto.mjs (inlined for portability)    */
@@ -313,7 +321,48 @@ function estimateCost(model, usage) {
   return ((usage.prompt_tokens || 0) / 1_000_000) * p.input + ((usage.completion_tokens || 0) / 1_000_000) * p.output;
 }
 
+async function callGeminiAPI(rawData) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
+  const geminiModelId = DEFAULT_MODEL.replace(/^google\//, "");
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModelId}:generateContent?key=${apiKey}`;
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), 180_000);
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: "user", parts: [{ text: buildUserPrompt(rawData) }] }],
+        generationConfig: {
+          temperature: 0.4,
+          maxOutputTokens: 8000,
+          responseMimeType: "application/json",
+        },
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "(no body)");
+      throw new Error(`Gemini ${res.status}: ${errText.slice(0, 300)}`);
+    }
+    const data = await res.json();
+    const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) throw new Error(`Gemini empty content (finishReason=${data?.candidates?.[0]?.finishReason ?? "?"})`);
+    const parsed = extractJson(content);
+    const usage = data.usageMetadata || {};
+    const tokensTotal = (usage.promptTokenCount || 0) + (usage.candidatesTokenCount || 0);
+    return { parsed, tokensTotal, cost: 0 }; // Gemini Free Tier
+  } finally {
+    clearTimeout(tid);
+  }
+}
+
 async function callLLM(rawData) {
+  if (isGeminiModel(DEFAULT_MODEL)) {
+    return callGeminiAPI(rawData);
+  }
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error("OPENROUTER_API_KEY not set");
   const ctrl = new AbortController();

@@ -15,11 +15,14 @@ on:
         default: "solana"
         type: string
       model:
-        description: "LLM model (gratuit :free recommande pour scaling)"
+        description: "LLM model (Gemini Flash gratuit + stable recommande)"
         required: false
-        default: "meta-llama/llama-3.3-70b-instruct:free"
+        default: "google/gemini-2.5-flash"
         type: choice
         options:
+          - google/gemini-2.5-flash
+          - google/gemini-1.5-flash
+          - google/gemini-1.5-pro
           - meta-llama/llama-3.3-70b-instruct:free
           - qwen/qwen3-next-80b-a3b-instruct:free
           - z-ai/glm-4.5-air:free
@@ -54,14 +57,21 @@ jobs:
         id: gen
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           LLM_MODEL: ${{ inputs.model }}
         run: |
-          if [ -z "$OPENROUTER_API_KEY" ]; then
-            echo "❌ OPENROUTER_API_KEY secret missing — configure in GitHub Settings > Secrets"
-            exit 1
-          fi
+          MODEL="${{ inputs.model }}"
           echo "Pipeline target: ${{ inputs.coingeckoId }}"
-          echo "Model: ${{ inputs.model }}"
+          echo "Model: $MODEL"
+          if [[ "$MODEL" == google/gemini-* ]]; then
+            if [ -z "$GEMINI_API_KEY" ]; then
+              echo "❌ GEMINI_API_KEY secret missing (required for Gemini models)"; exit 1
+            fi
+          else
+            if [ -z "$OPENROUTER_API_KEY" ]; then
+              echo "❌ OPENROUTER_API_KEY secret missing (required for non-Gemini models)"; exit 1
+            fi
+          fi
           node scripts/generate-fiche-crypto.mjs "${{ inputs.coingeckoId }}"
 
       - name: List output
