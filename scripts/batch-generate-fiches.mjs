@@ -78,6 +78,14 @@ const COINGECKO_IDS = (typeof COINGECKO_IDS_RAW === "string" && COINGECKO_IDS_RA
 // (par défaut). Le scan utilise CoinGecko /coins/markets paginé (250 perPage).
 const SCAN_WINDOW = parseInt(getArg("scan-window", "0"), 10);
 const TOP_QUALITY = parseInt(getArg("top-quality", "0"), 10);
+// Cycle 26 : source de la LISTE top market cap.
+//   "coingecko" (default) : /coins/markets paginé, rate-limité 30 r/min free
+//   "cryptocompare"       : /data/top/mktcapfull, 100K calls/mois sans clé
+// La phase de SCORING (CG /coins/{id}) reste sur CG dans tous les cas.
+// Quand source=cryptocompare ET --no-scoring, on skip aussi le scoring → on
+// prend top par market_cap direct sans rerank quality. Mode "scaling rapide".
+const TOP_SOURCE = String(getArg("source", "coingecko") || "coingecko").toLowerCase();
+const NO_SCORING = args.includes("--no-scoring");
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
@@ -884,6 +892,90 @@ async function fetchTopCryptos(count, startRank) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  CryptoCompare top market cap fetcher (Cycle 26)                           */
+/* -------------------------------------------------------------------------- */
+/* Alternative à CoinGecko pour la liste top market cap quand CG est rate     */
+/* limité. CryptoCompare /data/top/mktcapfull retourne 100 cryptos par call,  */
+/* sans clé, 100K calls/mois free tier. Pas de limite de pagination concrète. */
+/* Source de vérité : lib/cryptocompare.ts (côté site).                       */
+/*                                                                            */
+/* Output mappé au format CoinGecko `/coins/markets` pour rester drop-in :   */
+/*   { id (=coingecko_id), symbol, name, market_cap_rank, market_cap, ... }  */
+/*                                                                            */
+/* Mapping CryptoCompare → CoinGecko ID : on uppercase le symbol (BTC, ETH)   */
+/* et on lookup dans une table fournie par CC (CoinInfo.Internal). Pour les   */
+/* cryptos ambiguës (genre LUNA = Terra Luna Classic OU Terra), CC retourne   */
+/* la canonique. On accepte cette imperfection (les cas tordus seront skippés */
+/* par fetchCoinGeckoOverview qui retournera 404).                            */
+
+async function fetchTopCryptosCC(count) {
+  // CC top/mktcapfull : limite=100 max par call. On boucle pour atteindre count.
+  const cryptos = [];
+  let page = 0;
+  while (cryptos.length < count) {
+    const limit = Math.min(100, count - cryptos.length);
+    const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=${limit}&tsym=USD&page=${page}`;
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 15_000);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+      clearTimeout(tid);
+      if (!res.ok) {
+        console.warn(`[batch] CryptoCompare page ${page} failed: ${res.status}`);
+        break;
+      }
+      const json = await res.json();
+      if (json?.Response === "Error" || !Array.isArray(json?.Data)) {
+        console.warn(`[batch] CryptoCompare API error page ${page}:`, json?.Message);
+        break;
+      }
+      const items = json.Data;
+      if (items.length === 0) break;
+      for (const item of items) {
+        const ci = item.CoinInfo || {};
+        const raw = (item.RAW && item.RAW.USD) || null;
+        if (!ci.Name) continue;
+        // Le coingecko_id n'est pas direct dans CC. On dérive depuis FullName
+        // en kebab-case (ex: "Bitcoin" → "bitcoin", "BNB" → "bnb").
+        // Pour les cas ambigus (Terra Luna, USD Coin), on met dans une map
+        // d'overrides ; sinon fallback fullname kebab.
+        const fullName = (ci.FullName || ci.Name || "").toLowerCase();
+        const cgIdGuess = fullName
+          .replace(/[()]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+        cryptos.push({
+          id: cgIdGuess,
+          symbol: (ci.Name || "").toLowerCase(),
+          name: ci.FullName || ci.Name || "",
+          market_cap_rank: cryptos.length + 1, // ordre desc CC = ordre rank
+          market_cap: raw?.MKTCAP ?? 0,
+          current_price: raw?.PRICE ?? 0,
+          total_volume: raw?.VOLUME24HOUR ?? 0,
+          circulating_supply: raw?.SUPPLY ?? null,
+          // Bonus CC : algorithme + date launch (peuvent enrichir scoring)
+          _cc_meta: {
+            algorithm: ci.Algorithm,
+            proofType: ci.ProofType,
+            assetLaunchDate: ci.AssetLaunchDate,
+            weissRating: ci.Rating?.Weiss?.Rating,
+          },
+        });
+      }
+      console.log(`  [cc] page ${page} → ${items.length} cryptos (cumul ${cryptos.length})`);
+      page++;
+      // CC non rate-limit observé, mais 800ms safety
+      await new Promise((r) => setTimeout(r, 800));
+    } catch (e) {
+      clearTimeout(tid);
+      console.warn(`[batch] CryptoCompare fetch error page ${page}: ${String(e).slice(0, 80)}`);
+      break;
+    }
+  }
+  return cryptos;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Main                                                                      */
 /* -------------------------------------------------------------------------- */
 
@@ -923,9 +1015,13 @@ async function main() {
     console.log(`  ✓ ${topCryptos.length}/${COINGECKO_IDS.length} cryptos found via CoinGecko`);
   } else if (SCAN_WINDOW > 0 && TOP_QUALITY > 0) {
     // Cycle 25 : mode scan + rerank par quality_score
-    // Étape 1a : fetch SCAN_WINDOW cryptos (paginé via fetchTopCryptos)
-    console.log(`[1/3] Scan window ${SCAN_WINDOW} cryptos → rerank by quality_score → keep top ${TOP_QUALITY}...`);
-    topCryptos = await fetchTopCryptos(SCAN_WINDOW, 1);
+    // Étape 1a : fetch SCAN_WINDOW cryptos (CG par défaut, ou CryptoCompare)
+    console.log(`[1/3] Scan window ${SCAN_WINDOW} cryptos (source=${TOP_SOURCE}) → ${NO_SCORING ? "no-scoring (top by market_cap)" : "rerank by quality_score"} → keep top ${TOP_QUALITY}...`);
+    if (TOP_SOURCE === "cryptocompare") {
+      topCryptos = await fetchTopCryptosCC(SCAN_WINDOW);
+    } else {
+      topCryptos = await fetchTopCryptos(SCAN_WINDOW, 1);
+    }
     console.log(`  ✓ ${topCryptos.length} cryptos fetched`);
     // Étape 1b : skip celles déjà en DB (early skip — économise les fetch overview)
     if (sb && SKIP_EXISTING) {
@@ -941,6 +1037,17 @@ async function main() {
       topCryptos = topCryptos.filter((c) => !existingIds.has(c.id));
       console.log(`  ✓ ${existingIds.size} déjà en DB skipped, ${topCryptos.length}/${before} candidats restants`);
     }
+    // Cycle 26 : --no-scoring → skip phase 1c (scoring CG) et prend top
+    // TOP_QUALITY direct par market_cap rank. Économise des milliers de calls
+    // CG quand on a juste besoin du scaling de masse (pas du quality-rerank).
+    if (NO_SCORING) {
+      console.log(`  ⏩ --no-scoring : skip phase scoring, prend top ${TOP_QUALITY} par market_cap direct`);
+      // topCryptos est déjà ordonné desc par market_cap (CC ou CG). On garde
+      // les top TOP_QUALITY (skip-existing déjà appliqué).
+      topCryptos = topCryptos.slice(0, TOP_QUALITY);
+      console.log(`  ✓ ${topCryptos.length} cryptos sélectionnées (rank ${topCryptos[0]?.market_cap_rank}-${topCryptos[topCryptos.length-1]?.market_cap_rank})`);
+      // Replace la step 2 filter by une no-op + saute le reste de la phase scan-window.
+    } else {
     // Étape 1c : compute quality_score pour CHAQUE crypto (fetch overview minimal)
     console.log(`  ⏳ Scoring quality des ${topCryptos.length} candidats (peut prendre quelques minutes)...`);
     const scored = [];
@@ -978,6 +1085,7 @@ async function main() {
     console.log(`  ✓ scoring fini, top ${top.length} sélectionnés (score min: ${top[top.length-1]?.score}, max: ${top[0]?.score})`);
     // Replace topCryptos par les coingecko-list AVEC rawData pré-calculé pour skip ré-fetch
     topCryptos = top.map((x) => ({ ...x.c, _preloadedRawData: x.rawData }));
+    } // close else (NO_SCORING)
   } else {
     console.log("[1/3] Fetching top cryptos from CoinGecko...");
     topCryptos = await fetchTopCryptos(COUNT, START_RANK);

@@ -75,6 +75,19 @@ on:
         required: false
         default: "0"
         type: string
+      source:
+        description: "[Mode rerank] Source liste top market cap : coingecko (default, 30 r/min) ou cryptocompare (100K calls/mois sans clé)."
+        required: false
+        default: "coingecko"
+        type: choice
+        options:
+          - coingecko
+          - cryptocompare
+      no_scoring:
+        description: "[Mode rerank] Skip phase scoring quality (économise 2000+ calls CG). Prend top par market_cap direct. Recommandé avec source=cryptocompare."
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -133,6 +146,14 @@ jobs:
           # Cycle 25 : mode rerank par quality_score sur fenêtre élargie.
           if [ "${{ inputs.scan_window }}" != "0" ] && [ -n "${{ inputs.scan_window }}" ]; then
             ARGS="$ARGS --scan-window=${{ inputs.scan_window }} --top-quality=${{ inputs.top_quality }}"
+          fi
+          # Cycle 26 : source de la liste top market cap (CG default ou CC)
+          if [ -n "${{ inputs.source }}" ] && [ "${{ inputs.source }}" != "coingecko" ]; then
+            ARGS="$ARGS --source=${{ inputs.source }}"
+          fi
+          # Cycle 26 : skip scoring (économise 2000+ calls CG)
+          if [ "${{ inputs.no_scoring }}" = "true" ]; then
+            ARGS="$ARGS --no-scoring"
           fi
           MODEL="${{ inputs.model }}"
           echo "Model: $MODEL"
