@@ -617,10 +617,11 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v3 : ajout CryptoCompare comme Source #2 dominante.
-  // Bumps successifs : v1 (CoinCap) -> v2 (CoinGecko swap, rate-limit) ->
-  // v3 (CryptoCompare BATCH, 99/100 cryptos couvertes, ~290 calls/mois).
-  ["price-source-snapshot-v3"],
+  // FIX 2026-05-08 — v4 : invalide le cache contenant les snapshots cached
+  // pendant la fenetre ou _fetchBatch retournait 59/100 (avant fix retry
+  // 2b92b35). Sans bump, ces ~40 cryptos restaient figees a price=0 pour
+  // 5 min apres le deploy.
+  ["price-source-snapshot-v4"],
   { revalidate: 300, tags: ["price-source"] },
 );
 

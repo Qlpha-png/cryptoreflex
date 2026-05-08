@@ -234,9 +234,9 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
  */
 export const fetchPrices = unstable_cache(
   async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
-  // FIX 2026-05-08 — bump v2 -> v3 (idem price-source-snapshot-v3) pour
-  // beneficier de la nouvelle cascade Binance -> CryptoCompare BATCH.
-  ["coingecko-prices-v3"],
+  // FIX 2026-05-08 — bump v3 -> v4 (idem price-source-snapshot-v4) pour
+  // invalider les snapshots cached pendant la fenetre _fetchBatch 59/100.
+  ["coingecko-prices-v4"],
   // BATCH 50 — 60s -> 300s (5 min). Cohence avec le revalidate fetch interne.
   { revalidate: 300, tags: [CG_TAGS.prices] }
 );
