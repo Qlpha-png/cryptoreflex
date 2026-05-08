@@ -39,6 +39,8 @@ import { unstable_cache } from "next/cache";
 import { COINGECKO_TO_BINANCE } from "@/lib/binance-mapping";
 import { getKv } from "@/lib/kv";
 import { getCryptoComparePriceByCoingeckoId } from "@/lib/cryptocompare";
+import { getKrakenPrice } from "@/lib/kraken";
+import { getCoinbasePrice } from "@/lib/coinbase";
 
 /* -------------------------------------------------------------------------- */
 /*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
@@ -147,7 +149,13 @@ async function _refreshKvSnapshotIfNotLocked(): Promise<void> {
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type PriceSource = "binance" | "cryptocompare" | "coincap" | "static";
+export type PriceSource =
+  | "binance"
+  | "kraken"
+  | "coinbase"
+  | "cryptocompare"
+  | "coincap"
+  | "static";
 
 export interface PriceSnapshot {
   /** Notre slug interne (= coingeckoId pour compatibilite). */
@@ -543,16 +551,66 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
     }
   }
 
-  // Source #2 : CryptoCompare BATCH (couvre 99/100 cryptos du site).
-  // FIX 2026-05-08 — audit complet des 100 cryptos via .lh-audits/audit-batch.mjs
-  // a montre :
-  //   - Binance couvre 38/100 (geo-OK depuis Hetzner)
-  //   - CoinGecko 429 rate-limited en free tier sans cle (~3/100 reussit)
-  //   - CryptoCompare BATCH 99/100 (gratuit 100K calls/mois sans cle)
-  // Le batch fait 2 fetchs (chunks de 60) et est cached 5 min, donc
-  // ~290 calls/mois total (largement sous le quota).
-  // Seul "frax-share" (FXS) n'est pas indexe par CryptoCompare, et tombera
-  // sur le static fallback (#3) en attendant une vraie source alternative.
+  // ========================================================================
+  // FIX 2026-05-08 (Niveau C Multi-Source) — cascade resiliente sans
+  // dependance unique. Audit complet via .lh-audits :
+  //   Binance       38/100 (Hetzner DE peut etre rate-limited 429)
+  //   Kraken        93/100 (gratuit, no key, EU-friendly, fiable)
+  //   Coinbase      79/100 (gratuit, no key, US/UE)
+  //   CryptoCompare 99/100 mais REQUIRES API KEY desormais — degrade
+  // Strategie : 1ere source qui repond avec prix > 0 = wins.
+  // ========================================================================
+
+  // Source #2 : Kraken (couvre 93/100, gratuit illimite)
+  const krakenPrice = await getKrakenPrice(coingeckoId, meta.symbol);
+  if (krakenPrice && krakenPrice.priceUsd > 0) {
+    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
+    const supply =
+      fallbackMarketCap > 0
+        ? fallbackMarketCap / (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? krakenPrice.priceUsd)
+        : 0;
+    const marketCap = supply > 0 ? supply * krakenPrice.priceUsd : 0;
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: krakenPrice.priceUsd,
+      change24h: krakenPrice.change24h,
+      change7d: null,
+      volume24h: krakenPrice.volume24h,
+      marketCap,
+      sparkline7d: [],
+      source: "kraken",
+      fetchedAt,
+    };
+  }
+
+  // Source #3 : Coinbase (couvre 79/100, gratuit illimite)
+  const coinbasePrice = await getCoinbasePrice(meta.symbol);
+  if (coinbasePrice && coinbasePrice.priceUsd > 0) {
+    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
+    const supply =
+      fallbackMarketCap > 0
+        ? fallbackMarketCap /
+          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? coinbasePrice.priceUsd)
+        : 0;
+    const marketCap = supply > 0 ? supply * coinbasePrice.priceUsd : 0;
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: coinbasePrice.priceUsd,
+      change24h: coinbasePrice.change24h,
+      change7d: null,
+      volume24h: coinbasePrice.volume24h,
+      marketCap,
+      sparkline7d: [],
+      source: "coinbase",
+      fetchedAt,
+    };
+  }
+
+  // Source #4 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
   const ccPrice = await getCryptoComparePriceByCoingeckoId(coingeckoId);
   if (ccPrice && ccPrice.priceUsd > 0) {
     return {
@@ -617,11 +675,10 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v4 : invalide le cache contenant les snapshots cached
-  // pendant la fenetre ou _fetchBatch retournait 59/100 (avant fix retry
-  // 2b92b35). Sans bump, ces ~40 cryptos restaient figees a price=0 pour
-  // 5 min apres le deploy.
-  ["price-source-snapshot-v4"],
+  // FIX 2026-05-08 — v5 : nouveau Niveau C Multi-Source (Kraken + Coinbase
+  // ajoutees comme sources #2 + #3 dominantes, CryptoCompare relegue #4).
+  // Bump v4 -> v5 force regeneration immediate de tous les snapshots.
+  ["price-source-snapshot-v5"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
