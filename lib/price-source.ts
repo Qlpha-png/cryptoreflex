@@ -468,6 +468,40 @@ const COIN_META: Record<string, { symbol: string; name: string }> = {
  * si tout echoue. Garantit que le site ne casse jamais.
  */
 async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
+  try {
+    return await _getPriceSnapshotInner(coingeckoId);
+  } catch (err) {
+    // FIX 2026-05-08 — guard global : peu importe l'erreur (timeout, parse,
+    // import.meta crash, etc.), on retourne TOUJOURS un PriceSnapshot
+    // valide pour ne pas faire crasher la chaine d'appel (notamment
+    // /api/prices qui retournait 500 a cause de exceptions remontees ici).
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[price-source] _getPriceSnapshot fatal error for "${coingeckoId}":`,
+      err instanceof Error ? err.message : "unknown",
+    );
+    const meta = COIN_META[coingeckoId] ?? {
+      symbol: coingeckoId.toUpperCase().slice(0, 6),
+      name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
+    };
+    const stat = STATIC_FALLBACK[coingeckoId];
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: stat?.priceUsd ?? 0,
+      change24h: stat?.change24h ?? 0,
+      change7d: null,
+      volume24h: stat?.volume24h ?? 0,
+      marketCap: stat?.marketCap ?? 0,
+      sparkline7d: [],
+      source: "static",
+      fetchedAt: new Date().toISOString(),
+    };
+  }
+}
+
+async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapshot> {
   const meta = COIN_META[coingeckoId] ?? {
     symbol: coingeckoId.toUpperCase().slice(0, 6),
     name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
