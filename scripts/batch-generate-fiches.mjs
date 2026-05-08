@@ -56,6 +56,14 @@ const RATE_LIMIT_MS = parseInt(getArg("rate-limit-ms", "6000"), 10);
 // Si --min-quality=N, skip les cryptos avec qualityScore < N.
 // Default 0 = pas de filtre (backward compat).
 const MIN_QUALITY = parseInt(getArg("min-quality", "0"), 10);
+// Cycle 24 : regen ciblée — bypass start-rank + count + skip-existing pour
+// régénérer une liste précise de coingeckoIds (audit règle des 3 sub-100%).
+// Format : --coingecko-ids=bitcoin,ethereum,solana (CSV).
+// Quand actif : MIN_QUALITY ignoré, SKIP_EXISTING ignoré (force overwrite).
+const COINGECKO_IDS_RAW = getArg("coingecko-ids", "");
+const COINGECKO_IDS = (typeof COINGECKO_IDS_RAW === "string" && COINGECKO_IDS_RAW.length > 0)
+  ? COINGECKO_IDS_RAW.split(",").map((s) => s.trim()).filter(Boolean)
+  : [];
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
@@ -818,19 +826,42 @@ async function main() {
   }
   const sb = !DRY_RUN ? createClient(supaUrl, supaKey, { auth: { persistSession: false } }) : null;
 
-  // Step 1 : fetch top cryptos
-  console.log("[1/3] Fetching top cryptos from CoinGecko...");
-  const topCryptos = await fetchTopCryptos(COUNT, START_RANK);
-  console.log(`  ✓ ${topCryptos.length} cryptos in target range`);
+  // Step 1 : fetch top cryptos OU liste explicite (regen ciblée)
+  let topCryptos;
+  if (COINGECKO_IDS.length > 0) {
+    console.log(`[1/3] Targeted regen of ${COINGECKO_IDS.length} coingecko_ids (skip rank/quality filters)...`);
+    // On charge minimal data pour chaque id depuis CoinGecko /coins/markets
+    // (un seul appel par batch de 250 ids).
+    topCryptos = [];
+    for (let i = 0; i < COINGECKO_IDS.length; i += 250) {
+      const chunk = COINGECKO_IDS.slice(i, i + 250);
+      const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${chunk.join(",")}&per_page=250&page=1&sparkline=false`;
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!res.ok) {
+        console.warn(`  ⚠️ CoinGecko fetch failed for chunk ${i}-${i+chunk.length}: ${res.status}`);
+        continue;
+      }
+      const data = await res.json();
+      topCryptos.push(...data);
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+    console.log(`  ✓ ${topCryptos.length}/${COINGECKO_IDS.length} cryptos found via CoinGecko`);
+  } else {
+    console.log("[1/3] Fetching top cryptos from CoinGecko...");
+    topCryptos = await fetchTopCryptos(COUNT, START_RANK);
+    console.log(`  ✓ ${topCryptos.length} cryptos in target range`);
+  }
 
-  // Step 2 : filter existing
+  // Step 2 : filter existing (sauf en mode regen ciblée — on veut overwrite)
   let toProcess = topCryptos;
-  if (sb && SKIP_EXISTING) {
+  if (sb && SKIP_EXISTING && COINGECKO_IDS.length === 0) {
     const ids = topCryptos.map((c) => c.id);
     const { data: existing } = await sb.from("cryptos").select("coingecko_id").in("coingecko_id", ids);
     const existingSet = new Set((existing ?? []).map((r) => r.coingecko_id));
     toProcess = topCryptos.filter((c) => !existingSet.has(c.id));
     console.log(`  ✓ ${existingSet.size} skipped (already in DB), ${toProcess.length} to process`);
+  } else if (COINGECKO_IDS.length > 0) {
+    console.log(`  ✓ regen ciblée : ${toProcess.length} fiches à overwriter (upsert)`);
   }
 
   if (toProcess.length === 0) {
@@ -862,8 +893,14 @@ async function main() {
       // Cycles 16+19 : enrichissement vraies recherches + quality_score
       await fetchAdditional(rawData);
 
-      // Cycle 23 : skip cryptos sous quality threshold (1000 meilleurs filter)
-      if (MIN_QUALITY > 0 && (rawData.qualityScore?.score ?? 0) < MIN_QUALITY) {
+      // Cycle 23 : skip cryptos sous quality threshold (1000 meilleurs filter).
+      // Cycle 24 : en mode regen ciblée, on bypass ce filter — l'utilisateur a
+      // explicitement demandé ces ids (ex: pour fixer les fiches sub-100%).
+      if (
+        COINGECKO_IDS.length === 0 &&
+        MIN_QUALITY > 0 &&
+        (rawData.qualityScore?.score ?? 0) < MIN_QUALITY
+      ) {
         console.log(`  [${i + 1}/${toProcess.length}] ⊘ ${c.id} skipped (quality=${rawData.qualityScore?.score}/100 < min ${MIN_QUALITY})`);
         continue;
       }
