@@ -222,7 +222,9 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
  */
 export const fetchPrices = unstable_cache(
   async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
-  ["coingecko-prices-v1"],
+  // FIX 2026-05-08 — bump cache key v1 -> v2 (idem price-source-snapshot-v2)
+  // pour invalider les caches contenant l'ancien static fallback BTC=78500.
+  ["coingecko-prices-v2"],
   // BATCH 50 — 60s -> 300s (5 min). Cohence avec le revalidate fetch interne.
   { revalidate: 300, tags: [CG_TAGS.prices] }
 );
@@ -310,7 +312,7 @@ async function _fetchPricesWithSparkline(
 
 export const fetchPricesWithSparkline = unstable_cache(
   async (ids: string[]) => _fetchPricesWithSparkline(ids),
-  ["coingecko-prices-sparkline-v1"],
+  ["coingecko-prices-sparkline-v2"],
   // BATCH 50 — 60s -> 600s (10 min)
   { revalidate: 600, tags: [CG_TAGS.prices] }
 );

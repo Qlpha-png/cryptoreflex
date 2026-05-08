@@ -550,7 +550,11 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  ["price-source-snapshot-v1"],
+  // FIX 2026-05-08 — bump cache key v1 -> v2 pour invalider les snapshots
+  // STATIC_FALLBACK persistents qui survivaient au switch CoinCap -> CoinGecko.
+  // (Une cle stable = unstable_cache reutilise les valeurs cached du build
+  // precedent meme apres un nouveau deploy.)
+  ["price-source-snapshot-v2"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
@@ -617,6 +621,6 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
 
 export const getTopMarket = unstable_cache(
   _getTopMarket,
-  ["price-source-top-market-v1"],
+  ["price-source-top-market-v2"],
   { revalidate: 600, tags: ["price-source"] },
 );
