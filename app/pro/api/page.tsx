@@ -24,6 +24,15 @@ export const metadata: Metadata = {
   alternates: { canonical: `${BRAND.url}/pro/api` },
 };
 
+// Stripe Payment Links — créés en LIVE le 2026-05-08, lus depuis env pour
+// pouvoir les régénérer (rotation, A/B testing) sans toucher au code.
+const STARTER_STRIPE_LINK =
+  process.env.NEXT_PUBLIC_B2B_STARTER_STRIPE_LINK ??
+  "/mon-compte/dev?upgrade=b2b_starter";
+const PRO_STRIPE_LINK =
+  process.env.NEXT_PUBLIC_B2B_PRO_STRIPE_LINK ??
+  "/mon-compte/dev?upgrade=b2b_pro";
+
 const TIERS = [
   {
     id: "sandbox",
@@ -49,7 +58,7 @@ const TIERS = [
     period: "/ mois",
     description:
       "Pour les devs solo, projets perso, intégrations simples.",
-    cta: { label: "S'abonner Starter", href: "/mon-compte/dev?upgrade=b2b_starter" },
+    cta: { label: "S'abonner Starter", href: STARTER_STRIPE_LINK },
     highlight: true,
     features: [
       { ok: true, label: "500 requêtes / seconde (burst 1 000)" },
@@ -67,7 +76,7 @@ const TIERS = [
     period: "/ mois",
     description:
       "Pour les équipes, plateformes, expert-comptables crypto.",
-    cta: { label: "S'abonner Pro", href: "/mon-compte/dev?upgrade=b2b_pro" },
+    cta: { label: "S'abonner Pro", href: PRO_STRIPE_LINK },
     highlight: false,
     features: [
       { ok: true, label: "5 000 requêtes / seconde (burst 10 000)" },
