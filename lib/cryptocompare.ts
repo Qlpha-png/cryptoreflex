@@ -145,7 +145,10 @@ async function _fetchBatch(): Promise<Record<string, CryptoComparePriceData>> {
  */
 const getBatch = unstable_cache(
   _fetchBatch,
-  ["cryptocompare-batch-v1"],
+  // FIX 2026-05-08 — v1 -> v2 : invalide le cache contenant le partial
+  // 59-symbols batch (avant le retry fix 2b92b35). Le cache key v1
+  // restait stale 5 min meme apres le code update.
+  ["cryptocompare-batch-v2"],
   { revalidate: 300, tags: ["price-source", "cryptocompare-batch"] },
 );
 
