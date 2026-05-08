@@ -185,6 +185,139 @@ async function fetchGitHubStats(repoUrl) {
 }
 
 /**
+ * Fetch CoinGecko status updates (annonces officielles) — vraie recherche
+ * d'événements et communications du projet (last 30-90j). Sert au LLM pour
+ * écrire un recentNews vraiment factuel.
+ */
+async function fetchCoinGeckoStatusUpdates(coingeckoId) {
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8_000);
+    const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/status_updates?per_page=10`;
+    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const updates = (data.status_updates ?? [])
+      .slice(0, 10)
+      .map((u) => ({
+        date: u.created_at?.slice(0, 10),
+        category: u.category,
+        title: (u.description ?? "").slice(0, 200),
+      }));
+    return updates.length > 0 ? updates : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch DefiLlama protocol details enrichi (audits, hacks, methodology).
+ * Pour les chains, cherche aussi /v2/historicalChainTvl.
+ */
+async function fetchDefiLlamaProtocolDetails(slug) {
+  if (!slug) return null;
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8_000);
+    const res = await fetch(`https://api.llama.fi/protocol/${slug}`, {
+      signal: ctrl.signal,
+      headers: { Accept: "application/json" },
+    });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return {
+      audits: data.audits, // String : "0" / "1" / "2" (count tier)
+      audit_links: data.audit_links ?? [],
+      audit_note: data.audit_note,
+      hacks: Array.isArray(data.hacks) ? data.hacks.map((h) => ({
+        date: h.date,
+        amount: h.amount,
+        techniques: h.techniques,
+      })) : [],
+      methodology: (data.methodology ?? "").slice(0, 300),
+      governanceID: data.governanceID,
+      twitter: data.twitter,
+      mcap: data.mcap,
+      currentChainTvls: data.currentChainTvls,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Calcule un quality_score 0-100 pour filtrage pre-LLM.
+ * Sert à sélectionner les "1000 meilleurs et fiables" en évitant memecoins
+ * éphémères, ghost coins, scams.
+ *
+ * Composantes :
+ *   - age_score (max 15) : >5 ans = 15, >2 ans = 10, >1 an = 5
+ *   - liquidity_score (max 15) : volume24h > $10M = 15, >$1M = 10, >$100K = 5
+ *   - github_active (max 15) : last_push <30j = 15, <90j = 10, <365j = 5
+ *   - audits_score (max 20) : DefiLlama audits "2" = 20, "1" = 12, audit_links present = 8
+ *   - cex_listing_proxy (max 15) : top exchanges via CoinGecko tickers count
+ *   - decentralization_proxy (max 10) : PoW/PoS/L1 categories
+ *   - established_score (max 10) : market_cap_rank ≤ 100 = 10, ≤500 = 5
+ */
+function computeQualityScore(rawData) {
+  let score = 0;
+  const reasons = [];
+
+  // Age score
+  const genesis = rawData.genesisDate;
+  if (genesis) {
+    const ageYears = (Date.now() - new Date(genesis).getTime()) / (365.25 * 24 * 3600 * 1000);
+    if (ageYears >= 5) { score += 15; reasons.push(`age=${ageYears.toFixed(1)}y(+15)`); }
+    else if (ageYears >= 2) { score += 10; reasons.push(`age=${ageYears.toFixed(1)}y(+10)`); }
+    else if (ageYears >= 1) { score += 5; reasons.push(`age=${ageYears.toFixed(1)}y(+5)`); }
+  }
+
+  // Liquidity score
+  const vol24 = rawData.market?.volume24hUsd ?? 0;
+  if (vol24 >= 10_000_000) { score += 15; reasons.push("vol24>$10M(+15)"); }
+  else if (vol24 >= 1_000_000) { score += 10; reasons.push("vol24>$1M(+10)"); }
+  else if (vol24 >= 100_000) { score += 5; reasons.push("vol24>$100K(+5)"); }
+
+  // GitHub active
+  const ghPush = rawData.githubStats?.pushedAt;
+  if (ghPush) {
+    const daysSince = (Date.now() - new Date(ghPush).getTime()) / (24 * 3600 * 1000);
+    if (daysSince <= 30) { score += 15; reasons.push("gh_active30d(+15)"); }
+    else if (daysSince <= 90) { score += 10; reasons.push("gh_active90d(+10)"); }
+    else if (daysSince <= 365) { score += 5; reasons.push("gh_active1y(+5)"); }
+  }
+
+  // Audits (DefiLlama)
+  const auditTier = rawData.defiLlamaDetails?.audits;
+  const auditLinks = rawData.defiLlamaDetails?.audit_links?.length ?? 0;
+  if (auditTier === "2") { score += 20; reasons.push("audit_tier2(+20)"); }
+  else if (auditTier === "1") { score += 12; reasons.push("audit_tier1(+12)"); }
+  else if (auditLinks > 0) { score += 8; reasons.push(`audit_links×${auditLinks}(+8)`); }
+
+  // CEX listing proxy : utilise rawData.market?.fdvUsd / mcap ratio (proxy maturité)
+  // OU si rank <=100 (déjà sur exchanges majeurs)
+  const rank = rawData.rank;
+  if (rank && rank <= 100) { score += 15; reasons.push(`rank<=100(+15)`); }
+  else if (rank && rank <= 300) { score += 8; reasons.push(`rank<=300(+8)`); }
+
+  // Decentralization proxy via categories
+  const categories = (rawData.categories ?? []).join("|").toLowerCase();
+  if (categories.includes("layer 1") || categories.includes("proof of work")) {
+    score += 10; reasons.push("L1/PoW(+10)");
+  } else if (categories.includes("layer 2") || categories.includes("proof of stake")) {
+    score += 7; reasons.push("L2/PoS(+7)");
+  }
+
+  // Established (top market cap)
+  if (rank && rank <= 50) { score += 10; reasons.push(`top50(+10)`); }
+  else if (rank && rank <= 200) { score += 5; reasons.push(`top200(+5)`); }
+
+  return { score: Math.min(100, score), reasons };
+}
+
+/**
  * Fetch DefiLlama TVL (chain L1/L2 OU protocol DeFi). Best-effort.
  * Pour Solana/ETH/etc → endpoint /chains retourne TVL totale de la chain.
  * Pour Aave/Uniswap → endpoint /protocol/{slug}.
@@ -334,12 +467,20 @@ function compactRawData(coingeckoId, cg, llama) {
  */
 async function fetchAdditional(rawData) {
   const repoUrl = rawData.repos?.[0];
-  const [marketChart, github] = await Promise.all([
+  const llamaSlug = rawData.defiLlama?.slug ?? rawData.coingeckoId;
+  // Cycle 19 : enrichissement profond (Promise.all parallele pour latence min)
+  const [marketChart, github, statusUpdates, llamaDetails] = await Promise.all([
     fetchCoinGeckoMarketChart(rawData.coingeckoId),
     repoUrl ? fetchGitHubStats(repoUrl) : Promise.resolve(null),
+    fetchCoinGeckoStatusUpdates(rawData.coingeckoId),
+    fetchDefiLlamaProtocolDetails(llamaSlug),
   ]);
   rawData.marketChart90d = marketChart;
   rawData.githubStats = github;
+  rawData.statusUpdates = statusUpdates;
+  rawData.defiLlamaDetails = llamaDetails;
+  // Cycle 20 : score qualite pre-LLM
+  rawData.qualityScore = computeQualityScore(rawData);
   return rawData;
 }
 
@@ -498,6 +639,35 @@ ${
     : "- (donnees market chart 90j non disponibles)"
 }
 
+# Annonces officielles recentes (CoinGecko status_updates)
+${
+  rawData.statusUpdates && rawData.statusUpdates.length > 0
+    ? rawData.statusUpdates
+        .slice(0, 8)
+        .map((u) => `- ${u.date} [${u.category ?? "?"}] : ${u.title}`)
+        .join("\n")
+    : "- (aucune annonce officielle recente disponible)"
+}
+
+# DefiLlama details enrichis (audits / hacks / methodology)
+${
+  rawData.defiLlamaDetails
+    ? `- Audit tier : ${rawData.defiLlamaDetails.audits ?? "?"} (${rawData.defiLlamaDetails.audit_links?.length ?? 0} audit reports)
+- Audit note : ${rawData.defiLlamaDetails.audit_note ?? "(aucune)"}
+- Hacks history : ${
+        rawData.defiLlamaDetails.hacks?.length
+          ? rawData.defiLlamaDetails.hacks.map((h) => `${h.date} (~$${h.amount?.toLocaleString() ?? "?"}, ${h.techniques ?? "?"})`).join("; ")
+          : "(aucun hack repertorie)"
+      }
+- Methodology : ${rawData.defiLlamaDetails.methodology?.slice(0, 200) ?? "(non documentee)"}
+- Twitter handle : @${rawData.defiLlamaDetails.twitter ?? "?"}`
+    : "- (DefiLlama details indisponibles)"
+}
+
+# Quality score Cryptoreflex (pre-LLM, audit fiabilite)
+- Score : ${rawData.qualityScore?.score ?? "?"}/100
+- Reasons : ${(rawData.qualityScore?.reasons ?? []).join(", ") || "(aucun)"}
+
 # Stats GitHub (premier repo officiel)
 ${
   rawData.githubStats
@@ -518,18 +688,35 @@ ${
     : "- (stats GitHub indisponibles ou pas de repo officiel)"
 }
 
-# Mission — fiche personnalisee avec vraies recherches
-Genere la fiche complete en JSON strict. Exigences (audit regle des 3 par fiche) :
-1. **Personnalisation** : utilise les chiffres SPECIFIQUES de cette crypto (genesis date, ATH date, drawdown 90j, releases recentes, etc.). PROSCRIRE les phrases generiques copiables d'une fiche a l'autre.
-2. **Factualite** : tous les chiffres dans "metrics.keyFigures" doivent matcher les data ci-dessus. Pas d'arrondi excessif (\$88.65 pas \$88).
-3. **Profondeur** :
-   - thesis = pourquoi CETTE crypto specifiquement existe (pas "cryptos en general")
-   - howItWorks = mention le consensus, le hardware specifique, les innovations propres
-   - tokenomics = chiffres reels du supply, distribution, vesting si connu
-   - risks = au moins 3 categories distinctes ET specifiques (pas "marche volatile" generique)
-4. **Si manque de data** : ecris "a verifier sur sources externes" plutot qu'inventer.
-5. **frEuStatus** = PSAN exchanges, MiCA, Cerfa 2086, particularites FR. Concret.
-6. **factCheckNotes** = liste les claims qui necessitent verification humaine.
+# Mission — fiche PREMIUM personnalisee avec vraies recherches approfondies
+Genere la fiche complete en JSON strict. Exigences (audit regle des 3 v3) :
+
+1. **Personnalisation EXTREME**
+   - Utilise les chiffres SPECIFIQUES de cette crypto : genesis date exact, ATH date, drawdown 90j, releases version tags, big moves dates
+   - Si annonces officielles disponibles : cite au moins 2 dans recentNews
+   - Si hacks history disponibles : MENTIONNE-LES specifiquement dans risks (date, amount, technique)
+   - Si audit firms disponibles : NOMME-LES dans technicalMaturity rationale
+
+2. **Factualite STRICTE**
+   - keyFigures matchent EXACTEMENT les chiffres data ci-dessus (\$88.65 pas \$88)
+   - JAMAIS inventer de date, montant, partnership non present dans data
+   - "a verifier sur sources externes" si pas certain
+
+3. **Profondeur EDITORIALE PRO**
+   - thesis : 250-400 mots. Pas "cryptos en general". CETTE crypto specifiquement, ses 3 piliers de valeur, ses cas d'usage concrets
+   - howItWorks : 350-500 mots. Consensus exact, mecanisme propres (PoH, BFT, etc.), hardware requis, innovations breve, comparaison technique vs ETH/BTC
+   - tokenomics : 350-500 mots. Supply detaille, distribution founders/investors/community, vesting schedule, mecanismes inflation/burn/staking, utility multi-cas
+   - frEuStatus : 250-350 mots. Exchanges PSAN concrets nommes (Coinhouse, Coinbase France, etc.), statut MiCA, fiscalite Cerfa 2086 + 3916bis, staking imposable BNC, airdrops imposables a reception
+   - risks : MINIMUM 5 risques avec categories distinctes (technical, regulatory, market, team, adoption). Hacks passes = risk technique specifique avec date.
+
+4. **Tutoiement OBLIGATOIRE PARTOUT**
+   - Min 8 occurrences "tu/te/toi/ton/tes" dans le corps
+   - Chaque section longue doit avoir au moins 1 "tu" (thesis, howItWorks, tokenomics, frEuStatus, disclaimer)
+   - Exemples : "Si tu detiens", "Pour staker tes tokens", "Tu dois declarer", "Si tu es resident FR"
+
+5. **Quality score >= 50** (cf. rawData.qualityScore) : si <50, le LLM peut ajouter des disclaimers supplementaires sur fiabilite
+
+6. **factCheckNotes** = liste 5-10 claims qui necessitent verification humaine
 
 Reponds UNIQUEMENT avec le JSON strict. Aucun texte avant ou apres.`;
 }

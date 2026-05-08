@@ -35,6 +35,11 @@ on:
         required: false
         default: true
         type: boolean
+      min_quality:
+        description: "Min quality_score 0-100 (50 = filtre 1000 meilleurs, 0 = pas de filtre)"
+        required: false
+        default: "50"
+        type: string
       model:
         description: "LLM model (Haiku 4.5 default — qualite premium personnalisee ~\\$0.03/fiche)"
         required: false
@@ -96,7 +101,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           LLM_MODEL: ${{ inputs.model }}
         run: |
-          ARGS="--count=${{ inputs.count }} --start-rank=${{ inputs.start_rank }} --rate-limit-ms=${{ inputs.rate_limit_ms }}"
+          ARGS="--count=${{ inputs.count }} --start-rank=${{ inputs.start_rank }} --rate-limit-ms=${{ inputs.rate_limit_ms }} --min-quality=${{ inputs.min_quality }}"
           if [ "${{ inputs.skip_existing }}" = "false" ]; then
             ARGS="$ARGS --no-skip-existing"
           fi

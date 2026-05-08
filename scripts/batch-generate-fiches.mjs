@@ -52,6 +52,10 @@ const START_RANK = parseInt(getArg("start-rank", "1"), 10);
 const SKIP_EXISTING = !args.includes("--no-skip-existing");
 const DRY_RUN = args.includes("--dry-run");
 const RATE_LIMIT_MS = parseInt(getArg("rate-limit-ms", "6000"), 10);
+// Cycle 23 : filtre quality score (1000 meilleurs et fiables).
+// Si --min-quality=N, skip les cryptos avec qualityScore < N.
+// Default 0 = pas de filtre (backward compat).
+const MIN_QUALITY = parseInt(getArg("min-quality", "0"), 10);
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
@@ -170,14 +174,110 @@ async function fetchGitHubStats(repoUrl) {
   }
 }
 
+async function fetchCoinGeckoStatusUpdates(coingeckoId) {
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8_000);
+    const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/status_updates?per_page=10`;
+    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const updates = (data.status_updates ?? []).slice(0, 10).map((u) => ({
+      date: u.created_at?.slice(0, 10),
+      category: u.category,
+      title: (u.description ?? "").slice(0, 200),
+    }));
+    return updates.length > 0 ? updates : null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchDefiLlamaProtocolDetails(slug) {
+  if (!slug) return null;
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 8_000);
+    const res = await fetch(`https://api.llama.fi/protocol/${slug}`, {
+      signal: ctrl.signal,
+      headers: { Accept: "application/json" },
+    });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return {
+      audits: data.audits,
+      audit_links: data.audit_links ?? [],
+      audit_note: data.audit_note,
+      hacks: Array.isArray(data.hacks) ? data.hacks.map((h) => ({
+        date: h.date,
+        amount: h.amount,
+        techniques: h.techniques,
+      })) : [],
+      methodology: (data.methodology ?? "").slice(0, 300),
+      twitter: data.twitter,
+      mcap: data.mcap,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function computeQualityScore(rawData) {
+  let score = 0;
+  const reasons = [];
+  const genesis = rawData.genesisDate;
+  if (genesis) {
+    const ageYears = (Date.now() - new Date(genesis).getTime()) / (365.25 * 24 * 3600 * 1000);
+    if (ageYears >= 5) { score += 15; reasons.push(`age=${ageYears.toFixed(1)}y(+15)`); }
+    else if (ageYears >= 2) { score += 10; reasons.push(`age=${ageYears.toFixed(1)}y(+10)`); }
+    else if (ageYears >= 1) { score += 5; reasons.push(`age=${ageYears.toFixed(1)}y(+5)`); }
+  }
+  const vol24 = rawData.market?.volume24hUsd ?? 0;
+  if (vol24 >= 10_000_000) { score += 15; reasons.push("vol24>$10M(+15)"); }
+  else if (vol24 >= 1_000_000) { score += 10; reasons.push("vol24>$1M(+10)"); }
+  else if (vol24 >= 100_000) { score += 5; reasons.push("vol24>$100K(+5)"); }
+  const ghPush = rawData.githubStats?.pushedAt;
+  if (ghPush) {
+    const daysSince = (Date.now() - new Date(ghPush).getTime()) / (24 * 3600 * 1000);
+    if (daysSince <= 30) { score += 15; reasons.push("gh_active30d(+15)"); }
+    else if (daysSince <= 90) { score += 10; reasons.push("gh_active90d(+10)"); }
+    else if (daysSince <= 365) { score += 5; reasons.push("gh_active1y(+5)"); }
+  }
+  const auditTier = rawData.defiLlamaDetails?.audits;
+  const auditLinks = rawData.defiLlamaDetails?.audit_links?.length ?? 0;
+  if (auditTier === "2") { score += 20; reasons.push("audit_tier2(+20)"); }
+  else if (auditTier === "1") { score += 12; reasons.push("audit_tier1(+12)"); }
+  else if (auditLinks > 0) { score += 8; reasons.push(`audit_links×${auditLinks}(+8)`); }
+  const rank = rawData.rank;
+  if (rank && rank <= 100) { score += 15; reasons.push(`rank<=100(+15)`); }
+  else if (rank && rank <= 300) { score += 8; reasons.push(`rank<=300(+8)`); }
+  const categories = (rawData.categories ?? []).join("|").toLowerCase();
+  if (categories.includes("layer 1") || categories.includes("proof of work")) {
+    score += 10; reasons.push("L1/PoW(+10)");
+  } else if (categories.includes("layer 2") || categories.includes("proof of stake")) {
+    score += 7; reasons.push("L2/PoS(+7)");
+  }
+  if (rank && rank <= 50) { score += 10; reasons.push(`top50(+10)`); }
+  else if (rank && rank <= 200) { score += 5; reasons.push(`top200(+5)`); }
+  return { score: Math.min(100, score), reasons };
+}
+
 async function fetchAdditional(rawData) {
   const repoUrl = rawData.repos?.[0];
-  const [marketChart, github] = await Promise.all([
+  const llamaSlug = rawData.defiLlama?.slug ?? rawData.coingeckoId;
+  const [marketChart, github, statusUpdates, llamaDetails] = await Promise.all([
     fetchCoinGeckoMarketChart(rawData.coingeckoId),
     repoUrl ? fetchGitHubStats(repoUrl) : Promise.resolve(null),
+    fetchCoinGeckoStatusUpdates(rawData.coingeckoId),
+    fetchDefiLlamaProtocolDetails(llamaSlug),
   ]);
   rawData.marketChart90d = marketChart;
   rawData.githubStats = github;
+  rawData.statusUpdates = statusUpdates;
+  rawData.defiLlamaDetails = llamaDetails;
+  rawData.qualityScore = computeQualityScore(rawData);
   return rawData;
 }
 
@@ -479,6 +579,33 @@ ${
     : "- (chart 90j indisponible)"
 }
 
+# Annonces officielles recentes (CoinGecko status_updates)
+${
+  rawData.statusUpdates && rawData.statusUpdates.length > 0
+    ? rawData.statusUpdates
+        .slice(0, 8)
+        .map((u) => `- ${u.date} [${u.category ?? "?"}] : ${u.title}`)
+        .join("\n")
+    : "- (aucune annonce officielle recente disponible)"
+}
+
+# DefiLlama details (audits / hacks history)
+${
+  rawData.defiLlamaDetails
+    ? `- Audit tier : ${rawData.defiLlamaDetails.audits ?? "?"} (${rawData.defiLlamaDetails.audit_links?.length ?? 0} reports)
+- Audit note : ${rawData.defiLlamaDetails.audit_note ?? "(aucune)"}
+- Hacks : ${
+        rawData.defiLlamaDetails.hacks?.length
+          ? rawData.defiLlamaDetails.hacks.map((h) => `${h.date} (~$${h.amount?.toLocaleString() ?? "?"})`).join("; ")
+          : "(aucun)"
+      }`
+    : "- (DefiLlama details indisponibles)"
+}
+
+# Quality score Cryptoreflex (audit fiabilite pre-LLM)
+- Score : ${rawData.qualityScore?.score ?? "?"}/100
+- Reasons : ${(rawData.qualityScore?.reasons ?? []).join(", ") || "(aucun)"}
+
 # Stats GitHub (vraies recherches)
 ${
   rawData.githubStats
@@ -700,11 +827,17 @@ async function main() {
       }
       const llama = await fetchDefiLlama(c.id, cg.name);
       const rawData = compactRawData(c.id, cg, llama);
-      // Cycle 16 propage : enrichissement via vraies recherches (market chart + GitHub)
+      // Cycles 16+19 : enrichissement vraies recherches + quality_score
       await fetchAdditional(rawData);
 
+      // Cycle 23 : skip cryptos sous quality threshold (1000 meilleurs filter)
+      if (MIN_QUALITY > 0 && (rawData.qualityScore?.score ?? 0) < MIN_QUALITY) {
+        console.log(`  [${i + 1}/${toProcess.length}] ⊘ ${c.id} skipped (quality=${rawData.qualityScore?.score}/100 < min ${MIN_QUALITY})`);
+        continue;
+      }
+
       if (DRY_RUN) {
-        console.log(`  [${i + 1}/${toProcess.length}] DRY ${c.id} (${rawData.symbol}) — ${rawData.market?.priceUsd}`);
+        console.log(`  [${i + 1}/${toProcess.length}] DRY ${c.id} (${rawData.symbol}) — quality=${rawData.qualityScore?.score}/100, price=${rawData.market?.priceUsd}`);
         await new Promise((r) => setTimeout(r, 200));
         continue;
       }
