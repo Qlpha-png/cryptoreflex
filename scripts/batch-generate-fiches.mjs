@@ -97,6 +97,90 @@ async function fetchCoinGeckoOverview(coingeckoId) {
   }
 }
 
+async function fetchCoinGeckoMarketChart(coingeckoId) {
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 10_000);
+    const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=90&interval=daily`;
+    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const prices = (data.prices ?? []).map((p) => p[1]);
+    if (prices.length < 7) return null;
+    const max = Math.max(...prices);
+    const min = Math.min(...prices);
+    const last = prices[prices.length - 1];
+    const drawdown = max > 0 ? ((max - min) / max) * 100 : 0;
+    const recoverFromMin = min > 0 ? ((last - min) / min) * 100 : 0;
+    const bigMoves = [];
+    for (let i = 1; i < prices.length; i++) {
+      const change = ((prices[i] - prices[i - 1]) / prices[i - 1]) * 100;
+      if (Math.abs(change) >= 10) {
+        const ts = data.prices[i][0];
+        bigMoves.push({ date: new Date(ts).toISOString().slice(0, 10), changePct: change.toFixed(1) });
+      }
+    }
+    return {
+      max90d: max,
+      min90d: min,
+      drawdown90dPct: drawdown.toFixed(1),
+      recoveryFromMin90dPct: recoverFromMin.toFixed(1),
+      bigMoves90d: bigMoves.slice(0, 5),
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function fetchGitHubStats(repoUrl) {
+  if (!repoUrl || !repoUrl.includes("github.com")) return null;
+  const match = repoUrl.match(/github\.com\/([^/]+)\/([^/?#]+)/);
+  if (!match) return null;
+  const [, owner, repo] = match;
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 10_000);
+    const headers = { Accept: "application/vnd.github+json", "User-Agent": "cryptoreflex-fiche/1.0" };
+    const [repoRes, releasesRes] = await Promise.all([
+      fetch(`https://api.github.com/repos/${owner}/${repo}`, { signal: ctrl.signal, headers }),
+      fetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=5`, { signal: ctrl.signal, headers }),
+    ]);
+    clearTimeout(tid);
+    const repoData = repoRes.ok ? await repoRes.json() : null;
+    const releases = releasesRes.ok ? await releasesRes.json() : [];
+    return {
+      defaultBranch: repoData?.default_branch,
+      pushedAt: repoData?.pushed_at,
+      openIssues: repoData?.open_issues_count,
+      license: repoData?.license?.spdx_id,
+      latestRelease: Array.isArray(releases) && releases[0]
+        ? {
+            tag: releases[0].tag_name,
+            publishedAt: releases[0].published_at,
+            isPrerelease: releases[0].prerelease,
+          }
+        : null,
+      recentReleases: Array.isArray(releases)
+        ? releases.slice(0, 5).map((r) => ({ tag: r.tag_name, date: r.published_at?.slice(0, 10) }))
+        : [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function fetchAdditional(rawData) {
+  const repoUrl = rawData.repos?.[0];
+  const [marketChart, github] = await Promise.all([
+    fetchCoinGeckoMarketChart(rawData.coingeckoId),
+    repoUrl ? fetchGitHubStats(repoUrl) : Promise.resolve(null),
+  ]);
+  rawData.marketChart90d = marketChart;
+  rawData.githubStats = github;
+  return rawData;
+}
+
 async function fetchDefiLlama(coingeckoId, name) {
   try {
     const ctrl = new AbortController();
@@ -149,6 +233,84 @@ async function fetchDefiLlama(coingeckoId, name) {
     }
   }
   return null;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Audit règle des 3 (cycle 17 propagé du single fiche script)              */
+/* -------------------------------------------------------------------------- */
+
+function countMatches(text, regex) {
+  if (!text || typeof text !== "string") return 0;
+  const matches = text.match(regex);
+  return matches ? matches.length : 0;
+}
+
+function auditRegleDes3(parsed, rawData) {
+  const issues = [];
+  const c = parsed ?? {};
+  const name = rawData?.name ?? "";
+  const symbol = rawData?.symbol ?? "";
+  const corpus = [
+    c.tldr ?? "",
+    c.thesis ?? "",
+    c.howItWorks ?? "",
+    c.tokenomics ?? "",
+    c.metrics?.narrative ?? "",
+    c.frEuStatus ?? "",
+  ].join("\n\n");
+
+  const tuCount = countMatches(corpus, /\b(tu|te|toi|ton|tes|t')\b/gi);
+  const vousCount = countMatches(corpus, /\b(vous|votre|vos)\b/gi);
+  const tutoiementScore = Math.min(100, Math.max(0, tuCount * 5 - vousCount * 10));
+  if (tuCount < 5) issues.push(`tutoiement insuffisant (${tuCount}/5)`);
+  if (vousCount > 2) issues.push(`vouvoiement (${vousCount})`);
+
+  const nameSymbolMentions =
+    countMatches(corpus, new RegExp(`\\b${symbol}\\b`, "gi")) +
+    countMatches(corpus, new RegExp(`\\b${name}\\b`, "gi"));
+  const numberMentions = countMatches(
+    corpus,
+    /\$[\d.,]+\s?(?:[BKMbillionsmillemilliers]+)?|\d+[.,]?\d*\s?%|\d+[.,]?\d*\s?(?:M|B|k|TPS|tx)/g,
+  );
+  const personalizationScore = Math.min(
+    100,
+    Math.round((nameSymbolMentions / 3) * 30 + (numberMentions / 10) * 70),
+  );
+  if (nameSymbolMentions < 3) issues.push(`name mentions (${nameSymbolMentions}/3)`);
+  if (numberMentions < 5) issues.push(`chiffres specifiques (${numberMentions}/5)`);
+
+  const wordCount = (s) => (s ? s.split(/\s+/).filter(Boolean).length : 0);
+  const wThesis = wordCount(c.thesis);
+  const wHow = wordCount(c.howItWorks);
+  const wTok = wordCount(c.tokenomics);
+  const wFR = wordCount(c.frEuStatus);
+  const risksCategories = new Set(
+    (Array.isArray(c.risks) ? c.risks : []).map((r) => r?.category).filter(Boolean),
+  ).size;
+  const competitorsCount = Array.isArray(c.competitors) ? c.competitors.length : 0;
+  let depthChecks = 0;
+  const depthTotal = 6;
+  if (wThesis >= 150) depthChecks++;
+  else issues.push(`thesis (${wThesis}/150)`);
+  if (wHow >= 200) depthChecks++;
+  else issues.push(`howItWorks (${wHow}/200)`);
+  if (wTok >= 200) depthChecks++;
+  else issues.push(`tokenomics (${wTok}/200)`);
+  if (wFR >= 150) depthChecks++;
+  else issues.push(`frEuStatus (${wFR}/150)`);
+  if (risksCategories >= 3) depthChecks++;
+  else issues.push(`risks categs (${risksCategories}/3)`);
+  if (competitorsCount >= 3) depthChecks++;
+  else issues.push(`competitors (${competitorsCount}/3)`);
+  const depthScore = Math.round((depthChecks / depthTotal) * 100);
+
+  const overall = Math.round(
+    tutoiementScore * 0.3 + personalizationScore * 0.35 + depthScore * 0.35,
+  );
+  const passed =
+    overall >= 70 && tutoiementScore >= 50 && personalizationScore >= 60 && depthScore >= 70;
+
+  return { overall, passed, breakdown: { tutoiementScore, personalizationScore, depthScore, tuCount, nameSymbolMentions, numberMentions, wThesis, wHow, wTok, wFR }, issues };
 }
 
 function compactRawData(coingeckoId, cg, llama) {
@@ -218,7 +380,7 @@ Mission : rediger une fiche d'analyse complete et structuree d'une crypto, quali
 
 REGLES STRICTES :
 - 100% francais, accents corrects (a e e e c o u i)
-- TUTOIEMENT OBLIGATOIRE : utilise toujours "tu/te/toi/ton/tes" pour t'adresser au lecteur. JAMAIS "vous" ni "on" impersonnel. Exemples : "tu peux acheter", "ton portefeuille".
+- TUTOIEMENT OBLIGATOIRE PARTOUT : utilise "tu/te/toi/ton/tes" dans CHAQUE section longue (thesis, howItWorks, tokenomics, frEuStatus, disclaimer). JAMAIS "vous" ni "on" impersonnel. Minimum 5 occurrences "tu/te/toi/ton/tes" dans le corps de la fiche. Exemples : "Si tu detiens du SOL...", "Pour staker tes tokens...", "Tu dois etre conscient que...", "Si tu es resident fiscal francais...".
 - Aucun jargon non explique
 - Factuel, neutre, pedagogique. Aucune promesse d'enrichissement, aucun FOMO
 - Si donnee manquante : dis-le explicitement plutot qu'inventer
@@ -228,9 +390,9 @@ REGLES STRICTES :
 OUTPUT FORMAT JSON STRICT (toutes les listes doivent etre des arrays []) :
 {
   "tldr": "3 phrases ultra-concises",
-  "thesis": "200-400 mots",
-  "howItWorks": "300-500 mots",
-  "tokenomics": "300-500 mots",
+  "thesis": "200-400 mots OBLIGATOIRE (min 200 mots reels). Utilise 'tu' au moins 1x.",
+  "howItWorks": "300-500 mots OBLIGATOIRE (min 300 mots). Utilise 'tu' au moins 1x.",
+  "tokenomics": "300-500 mots OBLIGATOIRE (min 300 mots). Utilise 'tu' au moins 1x ('si tu detiens', 'tes tokens').",
   "metrics": { "narrative": "150-250 mots", "keyFigures": [{"label":"...","value":"..."}] },
   "scores": {
     "decentralization": {"score": 0-100, "rationale": "..."},
@@ -242,7 +404,7 @@ OUTPUT FORMAT JSON STRICT (toutes les listes doivent etre des arrays []) :
   "competitors": [{"coingeckoId":"...","name":"...","differentiator":"..."}],
   "moats": [{"type":"network_effect|tech_edge|team|brand|other","description":"..."}],
   "risks": [{"category":"technical|regulatory|market|team|adoption","severity":"low|medium|high|critical","description":"..."}],
-  "frEuStatus": "200-300 mots — PSAN, MiCA, fiscalite",
+  "frEuStatus": "200-300 mots OBLIGATOIRE (min 200 mots). Utilise 'tu' systematiquement ('si tu es resident', 'tu peux acheter', 'tu dois declarer'). PSAN, MiCA, Cerfa 2086.",
   "furtherReading": [{"type":"academy|external","title":"...","url_or_slug":"..."}],
   "recentNews": "100-200 mots",
   "disclaimer": "Avertissement YMYL standard",
@@ -303,7 +465,41 @@ ${
     : "- (non-DeFi ou non-indexe)"
 }
 
-Genere la fiche JSON complete. Utilise "a verifier" pour donnees incertaines.`;
+# Historique 90 jours (vraies donnees market chart)
+${
+  rawData.marketChart90d
+    ? `- Max 90j : $${rawData.marketChart90d.max90d?.toFixed(4)} / Min 90j : $${rawData.marketChart90d.min90d?.toFixed(4)}
+- Drawdown max : -${rawData.marketChart90d.drawdown90dPct}% (max → min)
+- Recovery from min : +${rawData.marketChart90d.recoveryFromMin90dPct}%
+- Mouvements > 10% sur 1 jour : ${
+        rawData.marketChart90d.bigMoves90d?.length
+          ? rawData.marketChart90d.bigMoves90d.map((m) => `${m.date} (${m.changePct}%)`).join(", ")
+          : "(aucun)"
+      }`
+    : "- (chart 90j indisponible)"
+}
+
+# Stats GitHub (vraies recherches)
+${
+  rawData.githubStats
+    ? `- Last push : ${rawData.githubStats.pushedAt?.slice(0, 10) ?? "?"} / License : ${rawData.githubStats.license ?? "?"}
+- Open issues : ${rawData.githubStats.openIssues ?? "?"}
+- Latest release : ${
+        rawData.githubStats.latestRelease
+          ? `${rawData.githubStats.latestRelease.tag} (${rawData.githubStats.latestRelease.publishedAt?.slice(0, 10)})`
+          : "(aucune)"
+      }
+- Recent releases : ${
+        rawData.githubStats.recentReleases?.length
+          ? rawData.githubStats.recentReleases.map((r) => `${r.tag} (${r.date})`).join(", ")
+          : "(aucune)"
+      }`
+    : "- (GitHub indisponible)"
+}
+
+Genere la fiche JSON complete et PERSONNALISEE avec ces donnees specifiques.
+Audit regle des 3 strict : tutoiement min 5x dans le corps, chiffres specifiques de cette crypto, sections completes (thesis 200+, howItWorks 300+, tokenomics 300+, frEuStatus 200+).
+Utilise "a verifier" pour donnees incertaines plutot qu'inventer.`;
 }
 
 function extractJson(raw) {
@@ -504,6 +700,8 @@ async function main() {
       }
       const llama = await fetchDefiLlama(c.id, cg.name);
       const rawData = compactRawData(c.id, cg, llama);
+      // Cycle 16 propage : enrichissement via vraies recherches (market chart + GitHub)
+      await fetchAdditional(rawData);
 
       if (DRY_RUN) {
         console.log(`  [${i + 1}/${toProcess.length}] DRY ${c.id} (${rawData.symbol}) — ${rawData.market?.priceUsd}`);
@@ -513,8 +711,13 @@ async function main() {
 
       const llmResult = await callLLM(rawData);
       normalizeParsed(llmResult.parsed);
+      // Cycle 17 propage : audit regle des 3 par fiche
+      const audit = auditRegleDes3(llmResult.parsed, rawData);
       totalCost += llmResult.cost;
       totalTokens += llmResult.tokensTotal;
+
+      // Embed audit dans llm_content sub-key pour pas casser schema
+      const llmContentWithAudit = { ...llmResult.parsed, _audit: audit };
 
       // Map vers DB row
       const row = {
@@ -530,7 +733,7 @@ async function main() {
         twitter_handle: rawData.twitter || null,
         chains: rawData.contracts || {},
         raw_data_snapshot: rawData,
-        llm_content: llmResult.parsed,
+        llm_content: llmContentWithAudit,
         market_cap_rank: cg.market_cap_rank ?? null,
         market_cap_usd: rawData.market?.marketCapUsd ?? null,
         price_usd: rawData.market?.priceUsd ?? null,
@@ -539,6 +742,8 @@ async function main() {
         score_technical_maturity: llmResult.parsed?.scores?.technicalMaturity?.score ?? null,
         score_community_health: llmResult.parsed?.scores?.communityHealth?.score ?? null,
         score_overall: llmResult.parsed?.scores?.overall?.score ?? null,
+        // fact_check_score recoit l'audit qualite editorial overall (0-100)
+        fact_check_score: audit.overall,
         quality_tier: "T3",
         llm_model: DEFAULT_MODEL,
         llm_tokens_total: llmResult.tokensTotal,
@@ -547,7 +752,8 @@ async function main() {
         is_published: true,
         published_at: new Date().toISOString(),
         last_refreshed_at: new Date().toISOString(),
-        needs_review: false,
+        // needs_review = true si audit FAIL → flag pour review humaine
+        needs_review: !audit.passed,
       };
 
       const { error } = await sb.from("cryptos").upsert(row, { onConflict: "coingecko_id" });
@@ -558,8 +764,9 @@ async function main() {
       } else {
         success++;
         const elapsed = Math.round((Date.now() - startTs) / 1000);
+        const auditMark = audit.passed ? "✓" : "⚠";
         console.log(
-          `  [${i + 1}/${toProcess.length}] ✓ ${c.id} (${rawData.symbol}) — ${elapsed}s, $${llmResult.cost.toFixed(4)}, score=${row.score_overall ?? "?"}`,
+          `  [${i + 1}/${toProcess.length}] ✓ ${c.id} (${rawData.symbol}) — ${elapsed}s, $${llmResult.cost.toFixed(4)}, score=${row.score_overall ?? "?"}, audit=${audit.overall}/100 ${auditMark}`,
         );
       }
     } catch (err) {
