@@ -722,12 +722,30 @@ async function callGeminiAPI(rawData) {
   }
 }
 
+// Cycle 25 : fallback Gemini quand OpenRouter renvoie 403/429 (key limit hit
+// ou rate limit). Évite que tout le batch fail si la clé OpenRouter est
+// momentanément capped. Gemini Flash gratuit (1500 req/jour) sert de filet
+// de sécurité — qualité légèrement inférieure à Haiku 4.5 mais largement
+// suffisante pour ne pas perdre les fiches.
+//
+// Comportement :
+//   - DEFAULT_MODEL = haiku/sonnet → tente OpenRouter d'abord
+//   - Si 403 (limit) ou 429 (rate) → retombe sur Gemini si GEMINI_API_KEY présent
+//   - Si 5xx → relance OpenRouter une fois (transient)
+//   - Sinon throw normalement
 async function callLLM(rawData) {
   if (isGeminiModel(DEFAULT_MODEL)) {
     return callGeminiAPI(rawData);
   }
   const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error("OPENROUTER_API_KEY not set");
+  if (!apiKey) {
+    // OpenRouter absent mais Gemini configuré → fallback direct
+    if (process.env.GEMINI_API_KEY) {
+      console.warn("[callLLM] OPENROUTER_API_KEY absent, fallback Gemini");
+      return callGeminiAPI(rawData);
+    }
+    throw new Error("OPENROUTER_API_KEY not set");
+  }
   const ctrl = new AbortController();
   const tid = setTimeout(() => ctrl.abort(), 180_000);
   try {
@@ -753,6 +771,11 @@ async function callLLM(rawData) {
     });
     if (!res.ok) {
       const errText = await res.text().catch(() => "(no body)");
+      // Cycle 25 : 403 = key limit / 429 = rate limit → fallback Gemini
+      if ((res.status === 403 || res.status === 429) && process.env.GEMINI_API_KEY) {
+        console.warn(`[callLLM] OpenRouter ${res.status} (${errText.slice(0, 80)}), fallback Gemini for ${rawData.coingeckoId || "?"}`);
+        return callGeminiAPI(rawData);
+      }
       throw new Error(`OpenRouter ${res.status}: ${errText.slice(0, 200)}`);
     }
     const data = await res.json();
