@@ -36,20 +36,20 @@ on:
         default: true
         type: boolean
       model:
-        description: "LLM model (Gemini 2.5 Flash gratuit + stable recommande)"
+        description: "LLM model (Haiku 4.5 default — qualite premium personnalisee ~\\$0.03/fiche)"
         required: false
-        default: "google/gemini-2.5-flash"
+        default: "anthropic/claude-haiku-4.5"
         type: choice
         options:
+          - anthropic/claude-haiku-4.5
+          - anthropic/claude-sonnet-4.5
+          - anthropic/claude-sonnet-4.6
           - google/gemini-2.5-flash
           - google/gemini-1.5-flash
           - google/gemini-1.5-pro
           - meta-llama/llama-3.3-70b-instruct:free
           - qwen/qwen3-next-80b-a3b-instruct:free
           - z-ai/glm-4.5-air:free
-          - anthropic/claude-sonnet-4.5
-          - anthropic/claude-sonnet-4.6
-          - anthropic/claude-haiku-4.5
       dry_run:
         description: "Dry run (gratuit, pas de LLM call)"
         required: false

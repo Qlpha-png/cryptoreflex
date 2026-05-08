@@ -100,6 +100,91 @@ async function fetchCoinGeckoOverview(coingeckoId) {
 }
 
 /**
+ * Fetch CoinGecko market chart (90j) — vraie recherche : volatility, drawdowns,
+ * vrais events historiques (crashes, pumps). Sert pour donner contexte LLM.
+ */
+async function fetchCoinGeckoMarketChart(coingeckoId) {
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 10_000);
+    const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=90&interval=daily`;
+    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+    clearTimeout(tid);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const prices = (data.prices ?? []).map((p) => p[1]);
+    if (prices.length < 7) return null;
+    // Stats extraites pour le prompt : volatility, max/min 90d, big move events
+    const max = Math.max(...prices);
+    const min = Math.min(...prices);
+    const last = prices[prices.length - 1];
+    const drawdown = max > 0 ? ((max - min) / max) * 100 : 0;
+    const recoverFromMin = min > 0 ? ((last - min) / min) * 100 : 0;
+    // Detect big moves : days avec |change| > 10%
+    const bigMoves = [];
+    for (let i = 1; i < prices.length; i++) {
+      const change = ((prices[i] - prices[i - 1]) / prices[i - 1]) * 100;
+      if (Math.abs(change) >= 10) {
+        const ts = data.prices[i][0];
+        bigMoves.push({ date: new Date(ts).toISOString().slice(0, 10), changePct: change.toFixed(1) });
+      }
+    }
+    return {
+      max90d: max,
+      min90d: min,
+      drawdown90dPct: drawdown.toFixed(1),
+      recoveryFromMin90dPct: recoverFromMin.toFixed(1),
+      bigMoves90d: bigMoves.slice(0, 5), // top 5 gros mouvements
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch GitHub repo stats (1er repo de la liste) — vraie recherche : releases
+ * recentes, derniers commits, contributors. Sert a evaluer dev activity reelle.
+ */
+async function fetchGitHubStats(repoUrl) {
+  if (!repoUrl || !repoUrl.includes("github.com")) return null;
+  // Extract owner/repo from URL
+  const match = repoUrl.match(/github\.com\/([^/]+)\/([^/?#]+)/);
+  if (!match) return null;
+  const [, owner, repo] = match;
+  try {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 10_000);
+    // GitHub public API (no auth — 60 req/h limit, OK pour pipeline)
+    const headers = { Accept: "application/vnd.github+json", "User-Agent": "cryptoreflex-fiche/1.0" };
+    const [repoRes, releasesRes] = await Promise.all([
+      fetch(`https://api.github.com/repos/${owner}/${repo}`, { signal: ctrl.signal, headers }),
+      fetch(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=5`, { signal: ctrl.signal, headers }),
+    ]);
+    clearTimeout(tid);
+    const repoData = repoRes.ok ? await repoRes.json() : null;
+    const releases = releasesRes.ok ? await releasesRes.json() : [];
+    return {
+      defaultBranch: repoData?.default_branch,
+      pushedAt: repoData?.pushed_at,
+      openIssues: repoData?.open_issues_count,
+      license: repoData?.license?.spdx_id,
+      latestRelease: Array.isArray(releases) && releases[0]
+        ? {
+            tag: releases[0].tag_name,
+            publishedAt: releases[0].published_at,
+            isPrerelease: releases[0].prerelease,
+          }
+        : null,
+      recentReleases: Array.isArray(releases)
+        ? releases.slice(0, 5).map((r) => ({ tag: r.tag_name, date: r.published_at?.slice(0, 10) }))
+        : [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetch DefiLlama TVL (chain L1/L2 OU protocol DeFi). Best-effort.
  * Pour Solana/ETH/etc → endpoint /chains retourne TVL totale de la chain.
  * Pour Aave/Uniswap → endpoint /protocol/{slug}.
@@ -237,7 +322,25 @@ function compactRawData(coingeckoId, cg, llama) {
     },
     contracts: cg.platforms ?? {},
     defiLlama: llama,
+    // Phase enrichissement : ajoutes par fetchAdditional() apres compactRawData
+    marketChart90d: null,
+    githubStats: null,
   };
+}
+
+/**
+ * Enrichit rawData avec les vraies recherches externes (vrai contenu personnalise).
+ * Lance en parallele pour minimiser la latence.
+ */
+async function fetchAdditional(rawData) {
+  const repoUrl = rawData.repos?.[0];
+  const [marketChart, github] = await Promise.all([
+    fetchCoinGeckoMarketChart(rawData.coingeckoId),
+    repoUrl ? fetchGitHubStats(repoUrl) : Promise.resolve(null),
+  ]);
+  rawData.marketChart90d = marketChart;
+  rawData.githubStats = github;
+  return rawData;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -373,14 +476,53 @@ ${
     : "- (pas de presence DefiLlama detectee — token non-DeFi ou non-indexe)"
 }
 
-# Mission
-Genere la fiche complete en JSON strict. Exigences :
-1. Toutes les sections du schema sont remplies (utilise "a verifier" pour les sections incertaines, ne PAS inventer)
-2. Les chiffres dans "metrics.keyFigures" sont issus des donnees ci-dessus formatees joliment ($1.5B, 12.5M tokens, etc.)
-3. Les scores ont chacun une rationale courte basee sur des criteres objectifs
-4. Les concurrents listes existent reellement (utilise des coingeckoId connus)
-5. Les risques couvrent au moins 3 categories distinctes
-6. Le frEuStatus est specifique et concret (PSAN exchanges, MiCA, fiscalite FR)
+# Historique 90 jours (donnees CoinGecko market chart)
+${
+  rawData.marketChart90d
+    ? `- Max 90j : $${rawData.marketChart90d.max90d?.toFixed(4)}
+- Min 90j : $${rawData.marketChart90d.min90d?.toFixed(4)}
+- Drawdown max : -${rawData.marketChart90d.drawdown90dPct}% (max → min)
+- Recovery from min : +${rawData.marketChart90d.recoveryFromMin90dPct}%
+- Mouvements > 10% sur 1 jour (top 5) : ${
+        rawData.marketChart90d.bigMoves90d?.length
+          ? rawData.marketChart90d.bigMoves90d.map((m) => `${m.date} (${m.changePct}%)`).join(", ")
+          : "(aucun)"
+      }`
+    : "- (donnees market chart 90j non disponibles)"
+}
+
+# Stats GitHub (premier repo officiel)
+${
+  rawData.githubStats
+    ? `- Default branch : ${rawData.githubStats.defaultBranch ?? "?"}
+- License : ${rawData.githubStats.license ?? "?"}
+- Issues ouverts : ${rawData.githubStats.openIssues ?? "?"}
+- Dernier push : ${rawData.githubStats.pushedAt?.slice(0, 10) ?? "?"}
+- Derniere release : ${
+        rawData.githubStats.latestRelease
+          ? `${rawData.githubStats.latestRelease.tag} (${rawData.githubStats.latestRelease.publishedAt?.slice(0, 10)}, prerelease=${rawData.githubStats.latestRelease.isPrerelease})`
+          : "(aucune)"
+      }
+- Recent releases : ${
+        rawData.githubStats.recentReleases?.length
+          ? rawData.githubStats.recentReleases.map((r) => `${r.tag} (${r.date})`).join(", ")
+          : "(aucune)"
+      }`
+    : "- (stats GitHub indisponibles ou pas de repo officiel)"
+}
+
+# Mission — fiche personnalisee avec vraies recherches
+Genere la fiche complete en JSON strict. Exigences (audit regle des 3 par fiche) :
+1. **Personnalisation** : utilise les chiffres SPECIFIQUES de cette crypto (genesis date, ATH date, drawdown 90j, releases recentes, etc.). PROSCRIRE les phrases generiques copiables d'une fiche a l'autre.
+2. **Factualite** : tous les chiffres dans "metrics.keyFigures" doivent matcher les data ci-dessus. Pas d'arrondi excessif (\$88.65 pas \$88).
+3. **Profondeur** :
+   - thesis = pourquoi CETTE crypto specifiquement existe (pas "cryptos en general")
+   - howItWorks = mention le consensus, le hardware specifique, les innovations propres
+   - tokenomics = chiffres reels du supply, distribution, vesting si connu
+   - risks = au moins 3 categories distinctes ET specifiques (pas "marche volatile" generique)
+4. **Si manque de data** : ecris "a verifier sur sources externes" plutot qu'inventer.
+5. **frEuStatus** = PSAN exchanges, MiCA, Cerfa 2086, particularites FR. Concret.
+6. **factCheckNotes** = liste les claims qui necessitent verification humaine.
 
 Reponds UNIQUEMENT avec le JSON strict. Aucun texte avant ou apres.`;
 }
@@ -768,6 +910,19 @@ async function main() {
   );
 
   const rawData = compactRawData(coingeckoId, cg, llama);
+
+  console.log("[2.5/4] Enrichissement (vraies recherches : market chart 90j + GitHub stats)...");
+  await fetchAdditional(rawData);
+  console.log(
+    rawData.marketChart90d
+      ? `  ✓ Market chart 90j : drawdown ${rawData.marketChart90d.drawdown90dPct}%, ${rawData.marketChart90d.bigMoves90d?.length ?? 0} gros mouvements`
+      : "  ⊘ market chart 90j indisponible",
+  );
+  console.log(
+    rawData.githubStats
+      ? `  ✓ GitHub : last push ${rawData.githubStats.pushedAt?.slice(0, 10)}, latest release ${rawData.githubStats.latestRelease?.tag ?? "(aucune)"}`
+      : "  ⊘ GitHub stats indisponibles",
+  );
 
   if (dryRun) {
     console.log("\n[DRY RUN] Skipping LLM call. Prompt preview:\n");
