@@ -1,0 +1,65 @@
+name: Audit B2B schema (manual)
+
+# Inventaire one-shot des tables Supabase pour cadrer l'API B2B Cryptoreflex.
+# Trigger via GitHub UI > Actions > "Audit B2B schema" > Run workflow.
+#
+# Sortie : artifact `b2b-schema-report` contenant audits/b2b-schema-report.json.
+# Aucune modif DB — read-only via service_role.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-b2b-schema
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install Supabase JS
+        run: npm install --no-save @supabase/supabase-js@^2.104.1
+
+      - name: Run audit
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/audit-b2b-schema.mjs
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: b2b-schema-report-${{ github.run_id }}
+          path: audits/b2b-schema-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Audit B2B schema" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f audits/b2b-schema-report.json ]; then
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            jq '.summary' audits/b2b-schema-report.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Tables existantes par domaine :**" >> $GITHUB_STEP_SUMMARY
+            jq -r '.domains | to_entries[] | "- **\(.key)** : " + ([.value[] | select(.exists == true) | .table] | join(", "))' \
+              audits/b2b-schema-report.json >> $GITHUB_STEP_SUMMARY
+          fi

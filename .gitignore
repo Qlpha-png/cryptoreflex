@@ -28,6 +28,12 @@ yarn-error.log*
 
 # local env files
 .env*.local
+# Vercel CLI env pull outputs — peuvent contenir des tokens OIDC + secrets
+.env.supabase
+.env.b2b-audit
+.env.production
+.env.preview
+.env.development
 
 # vercel
 .vercel

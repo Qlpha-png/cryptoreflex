@@ -88,9 +88,23 @@ export async function POST(req: NextRequest) {
   // Dispatch event handlers
   try {
     switch (event.type) {
-      case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, supabase);
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        // Branche B2B : si la session porte `metadata.api_key_id` (upgrade
+        // d'une clé sandbox existante) ou `metadata.tier` qui démarre par
+        // `b2b_`, on délègue à un handler dédié et on ne touche PAS à
+        // `users.plan` (le tier humain reste indépendant — Q3 PO).
+        const meta = session.metadata ?? {};
+        const isB2b =
+          (typeof meta.tier === "string" && meta.tier.startsWith("b2b_")) ||
+          typeof meta.api_key_id === "string";
+        if (isB2b) {
+          await handleB2bCheckoutCompleted(session);
+        } else {
+          await handleCheckoutCompleted(session, supabase);
+        }
         break;
+      }
 
       case "customer.subscription.created":
       case "customer.subscription.updated":
@@ -458,4 +472,105 @@ async function handlePaymentFailed(
     html: failed.html,
     text: failed.text,
   });
+}
+
+/* -------------------------------------------------------------------------- */
+/*  B2B API key handler — checkout d'upgrade Sandbox → Starter / Pro          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Branchement B2B : la session Stripe porte des metadata identifiant la clé
+ * et le tier cible :
+ *
+ *   metadata.api_key_id  : UUID de la clé existante à upgrader
+ *   metadata.tier        : 'b2b_starter' | 'b2b_pro' | 'b2b_enterprise'
+ *
+ * Action :
+ *   - UPDATE api_keys SET tier=<tier>, scopes=<defaults>, stripe_subscription_id=<id>
+ *   - log audit `b2b.api_key.upgraded`
+ *   - On NE touche PAS `users.plan` (Q3 PO : tier B2B isolé sur api_keys)
+ */
+async function handleB2bCheckoutCompleted(
+  session: Stripe.Checkout.Session,
+): Promise<void> {
+  const meta = session.metadata ?? {};
+  const apiKeyId = typeof meta.api_key_id === "string" ? meta.api_key_id : null;
+  const tierRaw = typeof meta.tier === "string" ? meta.tier : null;
+  const subId =
+    typeof session.subscription === "string" ? session.subscription : null;
+
+  if (!apiKeyId) {
+    console.warn(
+      "[stripe-webhook][b2b] checkout.completed sans api_key_id en metadata — skip",
+    );
+    return;
+  }
+
+  if (
+    tierRaw !== "b2b_starter" &&
+    tierRaw !== "b2b_pro" &&
+    tierRaw !== "b2b_enterprise"
+  ) {
+    console.warn(
+      `[stripe-webhook][b2b] tier invalide en metadata : ${tierRaw} — skip`,
+    );
+    return;
+  }
+
+  // Import lazy pour éviter de polluer le bundle Stripe webhook avec les libs
+  // api-keys quand l'event n'est pas B2B.
+  const { DEFAULT_SCOPES_BY_TIER, sanitizeScopes } = await import(
+    "@/lib/api-keys/scopes"
+  );
+  const { logAudit } = await import("@/lib/api-keys/audit");
+  const { createSupabaseServiceRoleClient } = await import(
+    "@/lib/supabase/server"
+  );
+
+  const sb = createSupabaseServiceRoleClient();
+  if (!sb) {
+    console.error("[stripe-webhook][b2b] Supabase service-role indisponible");
+    return;
+  }
+
+  const newScopes = sanitizeScopes(DEFAULT_SCOPES_BY_TIER[tierRaw], tierRaw);
+
+  const { data: updated, error } = await sb
+    .from("api_keys")
+    .update({
+      tier: tierRaw,
+      scopes: newScopes,
+      stripe_subscription_id: subId,
+      // Pas d'expires_at quand upgrade vers paid (subscription pilote la
+      // durée). Le webhook subscription.deleted révoquera si annulation.
+      expires_at: null,
+      status: "active",
+    })
+    .eq("id", apiKeyId)
+    .select("user_id, tier")
+    .single();
+
+  if (error || !updated) {
+    console.error(
+      "[stripe-webhook][b2b] UPDATE api_keys échoué",
+      apiKeyId,
+      error?.message,
+    );
+    return;
+  }
+
+  await logAudit({
+    user_id: updated.user_id,
+    event: "b2b.api_key.upgraded",
+    metadata: {
+      api_key_id: apiKeyId,
+      new_tier: tierRaw,
+      stripe_subscription_id: subId,
+      via: "stripe_webhook",
+    },
+  });
+
+  console.log(
+    `[stripe-webhook][b2b] clé ${apiKeyId} upgrade → ${tierRaw} (sub=${subId})`,
+  );
 }
