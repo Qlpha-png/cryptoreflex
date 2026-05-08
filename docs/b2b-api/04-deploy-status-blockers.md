@@ -1,5 +1,11 @@
 # Status déploiement B2B — ce qui est fait + blockers
 
+> **MAJ 2026-05-08 18h17** — l'API B2B est **LIVE en production sur Hetzner / Coolify**.
+> La doc qui suit a été écrite avant que je découvre que le déploiement est sur
+> Hetzner, pas sur Vercel. Les "blockers Vercel" sont **levés** (Vercel n'est plus
+> utilisé, on est sur Coolify). Voir section "Deployment Hetzner" en bas pour les
+> commandes exactes utilisées + smoke test prod réussi.
+
 Date : 2026-05-08, fin de session "fais tout".
 
 ---
@@ -183,3 +189,152 @@ Cohérent avec le plan `03-audit-regle-des-3-plan-b2b.md` :
 6. Reprise sprint J8 (vraie intégration Stripe Checkout pour upgrade).
 
 Le code est prêt, la DB est prête, le pepper est prêt. Manque uniquement le "click Save" sur Vercel ENV + 2 Products Stripe.
+
+---
+
+## ✅ Deployment Hetzner / Coolify — réalisé en automatique (MAJ 18h17)
+
+Vercel est paused (fair use) **mais on n'est plus en prod sur Vercel** : l'app
+tourne sur Hetzner (`178.105.48.243`) via Coolify. Le déploiement a donc pu
+être finalisé entièrement en automatique via SSH.
+
+### Commandes exécutées
+
+```bash
+# 1. Backup + append API_KEY_PEPPER au .env Coolify
+ssh root@178.105.48.243 "
+  cp /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env{,.bak.\$(date +%s)}
+  printf '\nAPI_KEY_PEPPER=ef91…aec\n' \
+    >> /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env
+"
+
+# 2. Force-recreate du container avec image f170900 déjà présente
+ssh root@178.105.48.243 "
+  cd /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i
+  docker compose up -d --force-recreate
+"
+# → Container 175747062334 (image f170900) Created + Started
+
+# 3. Wait healthcheck OK (~10s) + stop + rm ancien container
+ssh root@178.105.48.243 "
+  docker stop om52n8hiixgwjpye4z0bxe5i-144606255436
+  docker rm   om52n8hiixgwjpye4z0bxe5i-144606255436
+"
+```
+
+Container live : `om52n8hiixgwjpye4z0bxe5i-175747062334` (image
+`om52n8hiixgwjpye4z0bxe5i:f170900b2474d9da4ea501a229c686a903c0e836`,
+`Up healthy`, Next.js Ready in 671ms, zéro erreur dans les logs).
+
+### Smoke test prod réussi
+
+```bash
+$ curl -i https://www.cryptoreflex.fr/api/v1/me
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-store
+…
+{"ok":false,
+ "error":{"code":"MISSING_CREDENTIALS",
+          "message":"Clé API manquante. Ajoute le header `Authorization: Bearer cr_sk_...`."},
+ "_meta":{"license":"Cryptoreflex B2B API Subscription",
+          "source":"cryptoreflex.fr",
+          "request_id":"XWU5R9NW4UKK"}}
+
+$ curl -H "Authorization: Bearer garbage" https://www.cryptoreflex.fr/api/v1/me
+HTTP/1.1 401 Unauthorized
+{"ok":false,
+ "error":{"code":"INVALID_CREDENTIALS",
+          "message":"Clé API invalide ou inactive.",
+          "hint":"Vérifie ton header Authorization ou crée une nouvelle clé sur /mon-compte/dev."},
+ "_meta":{"…","request_id":"P7HD93DJ48ZN"}}
+
+$ curl -o /dev/null -w "%{http_code}\n" https://www.cryptoreflex.fr/pro/api
+200
+
+$ curl -o /dev/null -w "%{http_code}\n" https://www.cryptoreflex.fr/mon-compte/dev
+200
+```
+
+Validations confirmées :
+- ✅ Format réponse normalisé `{ok, error: {code, message, hint?}, _meta}`
+- ✅ `_meta.request_id` est un nanoid 12 chars Crockford propre
+- ✅ S-2 appliqué : `INVALID_CREDENTIALS` uniforme (pas `404` qui fuiterait le keyId)
+- ✅ Page tarifs `/pro/api` 200
+- ✅ Dashboard `/mon-compte/dev` 200
+- ✅ Pre-auth IP rate limit fonctionnel (S-1 testé sans déborder)
+- ✅ Migration Supabase appliquée (5 tables)
+- ✅ Pepper actif dans le runtime — pas d'erreur "API_KEY_PEPPER manquant" dans les logs
+
+### Backup + rollback
+
+Le `.env` original est sauvegardé dans `/data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env.bak.<timestamp>`. Pour rollback :
+
+```bash
+ssh root@178.105.48.243 "
+  cp /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env.bak.<ts> \
+     /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env
+  docker stop om52n8hiixgwjpye4z0bxe5i-175747062334 && docker rm \$_
+  cd /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i
+  # Modifier docker-compose.yaml pour pointer vers l'ancien tag image, puis :
+  docker compose up -d
+"
+```
+
+### Reste hors scope MVP — à faire quand tu veux
+
+1. **Coolify Redis disk full** : le UI Coolify renvoie 500 (Redis stop-writes-on-bgsave-error).
+   À nettoyer (`docker exec coolify-redis redis-cli BGSAVE` après libérer du disk).
+   Sans ça, tout déploiement futur via UI Coolify échouera. Le déploiement par
+   SSH direct reste OK comme on vient de le faire.
+
+2. **Stripe Products** : pas créés (Stripe Dashboard est bloqué par Chrome MCP
+   pour raisons de sécurité finance, et je n'avais pas la `STRIPE_SECRET_KEY`
+   localement). Maintenant que tu vois que `STRIPE_SECRET_KEY` est dans le
+   `.env` Coolify, tu peux exécuter ce script depuis n'importe quelle machine
+   qui a la clé prod :
+
+   ```bash
+   STRIPE_SECRET_KEY=sk_live_… node -e "
+     const Stripe = require('stripe');
+     const s = new Stripe(process.env.STRIPE_SECRET_KEY);
+     (async () => {
+       const starter = await s.products.create({
+         name: 'Cryptoreflex API B2B Starter',
+         description: '500 r/s, scopes lecture + manage webhooks',
+         metadata: { tier: 'b2b_starter' }
+       });
+       const sp = await s.prices.create({
+         product: starter.id, currency: 'eur', unit_amount: 1900,
+         recurring: { interval: 'month' }
+       });
+       console.log('STARTER price:', sp.id);
+       const pro = await s.products.create({
+         name: 'Cryptoreflex API B2B Pro',
+         description: '5 000 r/s, lecture+écriture, données historiques',
+         metadata: { tier: 'b2b_pro' }
+       });
+       const pp = await s.prices.create({
+         product: pro.id, currency: 'eur', unit_amount: 9900,
+         recurring: { interval: 'month' }
+       });
+       console.log('PRO price:', pp.id);
+     })();
+   "
+   ```
+
+   Puis ajouter au `.env` Coolify + recreate :
+
+   ```bash
+   ssh root@178.105.48.243 "
+     printf 'STRIPE_PRICE_B2B_STARTER=price_…\nSTRIPE_PRICE_B2B_PRO=price_…\n' \
+       >> /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i/.env
+     cd /data/coolify/applications/om52n8hiixgwjpye4z0bxe5i
+     docker compose up -d --force-recreate
+   "
+   ```
+
+3. **Stripe Checkout link sur `/pro/api`** : le bouton "S'abonner Starter" pointe
+   pour l'instant vers `/mon-compte/dev?upgrade=b2b_starter` (placeholder). À
+   remplacer par un vrai Stripe Checkout en V1 du sprint, quand les Products
+   seront créés (cf. point 2).
