@@ -34,25 +34,10 @@ export interface CryptoComparePriceData {
   fetchedAt: string;
 }
 
-// Liste canonique des symbols a fetcher dans le batch. Genere depuis
-// data/top-cryptos.json + data/hidden-gems.json (cf .lh-audits/audit-batch.mjs).
-// On garde cette liste statique pour eviter un coupling import sur le data
-// JSON dans un environnement Edge runtime. A regenerer si on ajoute une crypto.
-const SUPPORTED_SYMBOLS = [
-  // Top 10
-  "BTC", "ETH", "SOL", "BNB", "XRP", "ADA", "DOGE", "TRX", "AVAX", "LINK",
-  // Hidden gems 1-50
-  "DOT", "POL", "ARB", "OP", "SUI", "TON", "HBAR", "FIL", "AAVE", "MKR",
-  "LDO", "PEPE", "WIF", "XMR", "LTC", "BCH", "ZEC", "DASH", "SCRT", "QUICK",
-  "ATOM", "NEAR", "INJ", "ICP", "TIA", "STRK", "GRT", "ONDO", "PYTH", "MINA",
-  "XTZ", "ALGO", "SEI", "KAS", "ETC", "UNI", "SAND", "MANA", "AXS", "GALA",
-  "BEAM", "USDT", "USDC", "DAI", "OKB", "CRO", "KCS", "IMX", "OM", "POLYX",
-  // Hidden gems 51-100
-  "CVX", "RPL", "FXS", "ETHFI", "ENA", "AERO", "JUP", "RAY", "HYPE", "DYDX",
-  "1INCH", "CRV", "COMP", "SNX", "PENDLE", "GMX", "HNT", "AKT", "IO", "THETA",
-  "TAO", "FET", "WLD", "AR", "STORJ", "BAND", "API3", "VIRTUAL", "OCEAN",
-  "ATH", "LPT", "IP", "GRASS", "HONEY", "POWR", "EWT", "BONK", "FLOKI",
-];
+// SUPPORTED_SYMBOLS est genere DYNAMIQUEMENT depuis les data JSON (top-cryptos +
+// hidden-gems) — voir bloc d'init plus bas. Pas de hardcode pour eviter les
+// drifts entre la liste editorale et la liste des symbols a fetcher.
+let SUPPORTED_SYMBOLS: string[] = [];
 
 interface CryptoCompareRawResponse {
   RAW?: Record<string, { USD?: { PRICE: number; CHANGEPCT24HOUR: number; MKTCAP: number; TOTALVOLUME24HTO: number } }>;
@@ -175,6 +160,11 @@ for (const e of ALL_ENTRIES) {
     COINGECKO_TO_SYMBOL[e.coingeckoId] = e.symbol.toUpperCase();
   }
 }
+
+// Auto-populate SUPPORTED_SYMBOLS depuis le mapping data — assure 1:1
+// avec les cryptos editoriales du site. Si on ajoute une crypto au catalogue,
+// elle est automatiquement fetched par le batch CryptoCompare.
+SUPPORTED_SYMBOLS = Array.from(new Set(Object.values(COINGECKO_TO_SYMBOL))).sort();
 
 /**
  * Get price by coingeckoId (translates to symbol via data JSON lookup,
