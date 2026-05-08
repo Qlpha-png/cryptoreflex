@@ -687,7 +687,14 @@ function estimateCost(model, usage) {
 async function callGeminiAPI(rawData) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not set");
-  const geminiModelId = DEFAULT_MODEL.replace(/^google\//, "");
+  // Cycle 25 fix : si DEFAULT_MODEL n'est pas un modèle Gemini (cas du
+  // fallback Haiku→Gemini), on force `gemini-2.5-flash` (gratuit, qualité
+  // décente). Avant : DEFAULT_MODEL.replace(/^google\//, "") laissait
+  // `anthropic/claude-haiku-4.5` intact → URL Gemini /models/anthropic/...
+  // → 404. Le fallback ne servait à rien.
+  const geminiModelId = isGeminiModel(DEFAULT_MODEL)
+    ? DEFAULT_MODEL.replace(/^google\//, "")
+    : "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModelId}:generateContent?key=${apiKey}`;
   const ctrl = new AbortController();
   const tid = setTimeout(() => ctrl.abort(), 180_000);
