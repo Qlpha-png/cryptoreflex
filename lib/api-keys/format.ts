@@ -54,6 +54,10 @@ function encodeCrockford(buf: Buffer, length: number): string {
 export function generateApiKeyPair(env: ApiKeyEnv = "live"): {
   public_key: string;
   secret_raw: string;
+  /** Partie secrète (48 chars Crockford) — c'est CETTE valeur qui doit être
+   *  hashée avec `hashSecret`, pas `secret_raw` (qui contient le préfixe public).
+   *  À la vérification, `parseSecretKey().secret` retourne cette même valeur. */
+  secret: string;
   secret_prefix: string;
   key_id: string;
 } {
@@ -66,7 +70,7 @@ export function generateApiKeyPair(env: ApiKeyEnv = "live"): {
   const secret_raw = `cr_sk_${envSlug}_${keyId}_${secret}`;
   // Préfixe affiché en UI après affichage initial : `cr_sk_live_a3f9k2…`
   const secret_prefix = `cr_sk_${envSlug}_${keyId.slice(0, 6)}…`;
-  return { public_key, secret_raw, secret_prefix, key_id: keyId };
+  return { public_key, secret_raw, secret, secret_prefix, key_id: keyId };
 }
 
 /**

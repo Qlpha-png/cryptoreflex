@@ -37,6 +37,20 @@ describe("generateApiKeyPair", () => {
     expect(parsed!.env).toBe("live");
   });
 
+  it("`pair.secret` matche `parseSecretKey(pair.secret_raw).secret` (anti-régression bug 2026-05-08)", () => {
+    // Bug critique : à la création on doit hasher `pair.secret`, pas `pair.secret_raw`.
+    // À la vérification, `parseSecretKey(rawHeader).secret` retourne EXACTEMENT
+    // les 48 chars Crockford. Si on hash autre chose à la création, mismatch
+    // silencieux → toute clé créée via dashboard échoue à l'auth.
+    for (let i = 0; i < 20; i++) {
+      const pair = generateApiKeyPair("live");
+      const parsed = parseSecretKey(pair.secret_raw);
+      expect(parsed).not.toBeNull();
+      expect(parsed!.secret).toBe(pair.secret);
+      expect(pair.secret).toHaveLength(48);
+    }
+  });
+
   it("génère des clés différentes à chaque appel (entropie)", () => {
     const a = generateApiKeyPair("live");
     const b = generateApiKeyPair("live");

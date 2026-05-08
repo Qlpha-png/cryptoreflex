@@ -48,7 +48,12 @@ export async function createSandboxKey(formData: FormData): Promise<void> {
   const scopes = sanitizeScopes(DEFAULT_SCOPES_BY_TIER[tier], tier);
 
   const pair = generateApiKeyPair("sandbox");
-  const secret_hash = await hashSecret(pair.secret_raw);
+  // Bug fix 2026-05-08 : hasher uniquement `pair.secret` (48 chars Crockford),
+  // pas `pair.secret_raw` (token complet incluant le préfixe public).
+  // Le middleware auth fait `verifySecret(parsed.secret, hash)` avec parsed.secret
+  // = la partie 48 chars. Hasher le token complet à la création produit un
+  // mismatch silencieux qui invalide la clé immédiatement.
+  const secret_hash = await hashSecret(pair.secret);
 
   // Sandbox expire à J+14 (D-1).
   const expires_at = new Date(
