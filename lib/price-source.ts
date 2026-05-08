@@ -450,6 +450,13 @@ const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24
   optimism:   { priceUsd: 1.6,   change24h: 0,  marketCap:    1800000000, volume24h:    60000000 },
   tether:     { priceUsd: 1,     change24h: 0,  marketCap:  120000000000, volume24h: 50000000000 },
   "usd-coin": { priceUsd: 1,     change24h: 0,  marketCap:   33000000000, volume24h:  6000000000 },
+  // FIX 2026-05-08 (audit regle des 3 cycle 3) — derniere crypto stuck a 0
+  // sur verify-batch (99/100 OK). OM/MANTRA est delisted des CEX majeurs
+  // (Bybit/Gate.io/MEXC/OKX confirment "delisted"). Encore trade sur DEX
+  // donc CoinGecko a un prix mais Hetzner DE est rate-limited dessus.
+  // Static fallback avec valeur recente (CoinGecko 2026-05-08 : $0.00763).
+  // A re-verifier trimestriellement.
+  "mantra-dao": { priceUsd: 0.008, change24h: 0, marketCap: 8000000, volume24h: 500000 },
 };
 
 const COIN_META: Record<string, { symbol: string; name: string }> = {
@@ -755,11 +762,9 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v7 : meta lookup depuis data JSON editoriales (bug
-  // critique decouvert : "theta-token" -> "THETA-" via slice(0,6) brisait
-  // les fetchers exchange). Bump v6 -> v7 force regeneration de tous les
-  // snapshots avec le bon symbol.
-  ["price-source-snapshot-v7"],
+  // FIX 2026-05-08 — v8 : ajout OM/mantra-dao dans STATIC_FALLBACK (delisted
+  // des CEX majeurs, fallback sur valeur CoinGecko recente $0.008).
+  ["price-source-snapshot-v8"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
