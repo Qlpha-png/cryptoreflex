@@ -287,7 +287,10 @@ const CG_TO_CC: Record<string, string> = {
   dash: "DASH",
   secret: "SCRT",
   "worldcoin-wld": "WLD",
-  "mantra-dao": "OM",
+  // FIX 2026-05-08 — coingeckoId "mantra-dao" est l'ANCIEN MANTRA DAO ERC-20
+  // (mort post-crash, $0.0076). Le NEW $OM Mantra Chain (RWA L1 Cosmos)
+  // que decrit notre data = coingeckoId "mantra" ($0.01+).
+  mantra: "OM",
   polymesh: "POLYX",
   "virtual-protocol": "VIRTUAL",
   // Memecoins

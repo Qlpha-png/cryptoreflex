@@ -452,13 +452,11 @@ const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24
   optimism:   { priceUsd: 1.6,   change24h: 0,  marketCap:    1800000000, volume24h:    60000000 },
   tether:     { priceUsd: 1,     change24h: 0,  marketCap:  120000000000, volume24h: 50000000000 },
   "usd-coin": { priceUsd: 1,     change24h: 0,  marketCap:   33000000000, volume24h:  6000000000 },
-  // FIX 2026-05-08 (audit regle des 3 cycle 3) — derniere crypto stuck a 0
-  // sur verify-batch (99/100 OK). OM/MANTRA est delisted des CEX majeurs
-  // (Bybit/Gate.io/MEXC/OKX confirment "delisted"). Encore trade sur DEX
-  // donc CoinGecko a un prix mais Hetzner DE est rate-limited dessus.
-  // Static fallback avec valeur recente (CoinGecko 2026-05-08 : $0.00763).
-  // A re-verifier trimestriellement.
-  "mantra-dao": { priceUsd: 0.008, change24h: 0, marketCap: 8000000, volume24h: 500000 },
+  // FIX 2026-05-08 cycle 4 — coingeckoId corrige : "mantra" (NEW $OM
+  // Mantra Chain RWA L1 Cosmos) au lieu de "mantra-dao" (ANCIEN ERC-20
+  // mort). Notre data/hidden-gems.json decrit le NEW. Static fallback
+  // basé sur CoinGecko 2026-05-08 : $0.0103, mcap $52M.
+  mantra: { priceUsd: 0.0103, change24h: 0, marketCap: 52000000, volume24h: 4500000 },
 };
 
 const COIN_META: Record<string, { symbol: string; name: string }> = {
@@ -794,10 +792,10 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v9 : ajout DexScreener Source #5 (DEX aggregator
-  // universel pour les tokens delisted CEX type OM/MANTRA). Bump cache
-  // pour invalider l'ancien snapshot OM=$0.008 static.
-  ["price-source-snapshot-v9"],
+  // FIX 2026-05-08 — v10 : coingeckoId "mantra-dao" -> "mantra" pour le
+  // NEW OM Mantra Chain (data decrit le RWA L1 Cosmos, pas l'ERC-20 mort).
+  // Bump cache pour invalider l'ancien snapshot pointant sur "mantra-dao".
+  ["price-source-snapshot-v10"],
   { revalidate: 300, tags: ["price-source"] },
 );
 
