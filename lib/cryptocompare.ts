@@ -48,56 +48,94 @@ interface CryptoCompareRawResponse {
 /**
  * Fetch batch raw — toutes les cryptos en 1-2 calls (max 60 symbols / call).
  * Cached 5min via unstable_cache.
+ *
+ * FIX 2026-05-08 — bug observe via /api/diag-cc : un chunk timeout/fail
+ * → `continue` silencieux → cache contient partial result (59/100 sur 2
+ * chunks). Pour 5 min on servait du static fallback aux 41 autres.
+ *
+ * Strategie revue :
+ *  - Retry 1x par chunk (500ms backoff) avant d'abandonner
+ *  - Si un chunk echoue malgre retry : THROW pour eviter que
+ *    unstable_cache memoize un resultat partiel. La prochaine invocation
+ *    re-tentera. Mieux qu'un cache stale qui dure 5 min.
+ *  - Timeout par fetch passe de 8s a 12s (CryptoCompare peut etre lent
+ *    sur des batchs de 60 symbols avec replay/sparkline)
  */
+async function _fetchOneChunk(chunk: string[], fetchedAt: string): Promise<Record<string, CryptoComparePriceData>> {
+  const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${chunk.join(",")}&tsyms=USD`;
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(12000),
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status} for ${chunk.length} symbols`);
+  }
+  const data = (await res.json()) as CryptoCompareRawResponse;
+  if (data.Response === "Error") {
+    throw new Error(`API error: ${data.Message}`);
+  }
+  if (!data.RAW) {
+    throw new Error("Missing RAW in response");
+  }
+  const out: Record<string, CryptoComparePriceData> = {};
+  for (const sym of chunk) {
+    const usd = data.RAW[sym]?.USD;
+    if (usd && typeof usd.PRICE === "number" && usd.PRICE > 0) {
+      out[sym] = {
+        priceUsd: usd.PRICE,
+        change24h: usd.CHANGEPCT24HOUR ?? 0,
+        marketCap: usd.MKTCAP ?? 0,
+        volume24h: usd.TOTALVOLUME24HTO ?? 0,
+        fetchedAt,
+      };
+    }
+  }
+  return out;
+}
+
 async function _fetchBatch(): Promise<Record<string, CryptoComparePriceData>> {
   const fetchedAt = new Date().toISOString();
   const result: Record<string, CryptoComparePriceData> = {};
 
-  // Split en chunks de 60 (max CryptoCompare per request)
   const chunks: string[][] = [];
   for (let i = 0; i < SUPPORTED_SYMBOLS.length; i += 60) {
     chunks.push(SUPPORTED_SYMBOLS.slice(i, i + 60));
   }
 
+  let failedChunks = 0;
   for (const chunk of chunks) {
+    let chunkResult: Record<string, CryptoComparePriceData> | null = null;
     try {
-      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${chunk.join(",")}&tsyms=USD`;
-      const res = await fetch(url, {
-        // Pas de revalidate ici — c'est unstable_cache qui gere (5min)
-        signal: AbortSignal.timeout(8000),
-        headers: { Accept: "application/json" },
-      });
-      if (!res.ok) {
-        // eslint-disable-next-line no-console
-        console.warn(`[cryptocompare] batch HTTP ${res.status} for ${chunk.length} symbols`);
-        continue;
-      }
-      const data = (await res.json()) as CryptoCompareRawResponse;
-      if (data.Response === "Error") {
-        // eslint-disable-next-line no-console
-        console.warn(`[cryptocompare] batch error: ${data.Message}`);
-        continue;
-      }
-      if (!data.RAW) continue;
-      for (const sym of chunk) {
-        const usd = data.RAW[sym]?.USD;
-        if (usd && typeof usd.PRICE === "number" && usd.PRICE > 0) {
-          result[sym] = {
-            priceUsd: usd.PRICE,
-            change24h: usd.CHANGEPCT24HOUR ?? 0,
-            marketCap: usd.MKTCAP ?? 0,
-            volume24h: usd.TOTALVOLUME24HTO ?? 0,
-            fetchedAt,
-          };
-        }
-      }
-    } catch (err) {
+      chunkResult = await _fetchOneChunk(chunk, fetchedAt);
+    } catch (err1) {
+      // Retry 1x apres 500ms.
       // eslint-disable-next-line no-console
       console.warn(
-        `[cryptocompare] batch fetch failed:`,
-        err instanceof Error ? err.message : "unknown",
+        `[cryptocompare] chunk fetch attempt 1 failed (${chunk.length} symbols):`,
+        err1 instanceof Error ? err1.message : "unknown",
       );
+      await new Promise((r) => setTimeout(r, 500));
+      try {
+        chunkResult = await _fetchOneChunk(chunk, fetchedAt);
+      } catch (err2) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[cryptocompare] chunk fetch attempt 2 failed:`,
+          err2 instanceof Error ? err2.message : "unknown",
+        );
+        failedChunks++;
+      }
     }
+    if (chunkResult) {
+      Object.assign(result, chunkResult);
+    }
+  }
+
+  // Si TOUS les chunks ont echoue → throw pour invalider unstable_cache et
+  // re-tenter la prochaine fois. Si la moitie a marche, on garde le partial
+  // (mieux que rien, et next revalidate (5min) re-tentera tout).
+  if (failedChunks === chunks.length && chunks.length > 0) {
+    throw new Error("All CryptoCompare chunks failed — bypassing cache");
   }
   return result;
 }
