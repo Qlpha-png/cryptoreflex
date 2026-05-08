@@ -1,0 +1,88 @@
+name: Test fiche LLM pipeline (manual)
+
+# Workflow manuel pour tester le pipeline de generation auto de fiches crypto
+# (Phase 3 POC). Trigger via GitHub UI > Actions > "Test fiche LLM pipeline" > Run workflow.
+#
+# L'output est uploade en artifact telechargeable (JSON + preview Markdown).
+# Permet d'evaluer la qualite editoriale sans configurer OPENROUTER_API_KEY localement.
+
+on:
+  workflow_dispatch:
+    inputs:
+      coingeckoId:
+        description: "coingeckoId a tester (ex: solana, aave, mantra, dogecoin)"
+        required: true
+        default: "solana"
+        type: string
+      model:
+        description: "LLM model (defaut Sonnet 4.5)"
+        required: false
+        default: "anthropic/claude-sonnet-4.5"
+        type: choice
+        options:
+          - anthropic/claude-sonnet-4.5
+          - anthropic/claude-sonnet-4.6
+          - anthropic/claude-haiku-4.5
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-fiche-pipeline
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Generate fiche
+        id: gen
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          LLM_MODEL: ${{ inputs.model }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "❌ OPENROUTER_API_KEY secret missing — configure in GitHub Settings > Secrets"
+            exit 1
+          fi
+          echo "Pipeline target: ${{ inputs.coingeckoId }}"
+          echo "Model: ${{ inputs.model }}"
+          node scripts/generate-fiche-crypto.mjs "${{ inputs.coingeckoId }}"
+
+      - name: List output
+        run: |
+          ls -la content/cryptos-fiches/ || echo "(no JSON output)"
+          ls -la content/cryptos-fiches/preview/ || echo "(no preview output)"
+
+      - name: Upload fiche artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fiche-${{ inputs.coingeckoId }}-${{ github.run_id }}
+          path: |
+            content/cryptos-fiches/${{ inputs.coingeckoId }}.json
+            content/cryptos-fiches/preview/${{ inputs.coingeckoId }}.md
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Test fiche pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Crypto** : \`${{ inputs.coingeckoId }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Model** : \`${{ inputs.model }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status** : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Telecharge l'artifact \`fiche-${{ inputs.coingeckoId }}-${{ github.run_id }}\` ci-dessous pour voir le preview Markdown." >> $GITHUB_STEP_SUMMARY
