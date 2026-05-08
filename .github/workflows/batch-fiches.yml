@@ -36,11 +36,14 @@ on:
         default: true
         type: boolean
       model:
-        description: "LLM model"
+        description: "LLM model (defaut llama-3.3-70b GRATUIT pour scaling)"
         required: false
-        default: "anthropic/claude-sonnet-4.5"
+        default: "meta-llama/llama-3.3-70b-instruct:free"
         type: choice
         options:
+          - meta-llama/llama-3.3-70b-instruct:free
+          - qwen/qwen3-next-80b-a3b-instruct:free
+          - z-ai/glm-4.5-air:free
           - anthropic/claude-sonnet-4.5
           - anthropic/claude-sonnet-4.6
           - anthropic/claude-haiku-4.5

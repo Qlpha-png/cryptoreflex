@@ -60,6 +60,11 @@ const PRICING = {
   "anthropic/claude-sonnet-4.5": { input: 3.0, output: 15.0 },
   "anthropic/claude-sonnet-4.6": { input: 3.0, output: 15.0 },
   "anthropic/claude-haiku-4.5": { input: 1.0, output: 5.0 },
+  // Modeles :free OpenRouter — scaling 0$
+  "meta-llama/llama-3.3-70b-instruct:free": { input: 0, output: 0 },
+  "qwen/qwen3-next-80b-a3b-instruct:free": { input: 0, output: 0 },
+  "z-ai/glm-4.5-air:free": { input: 0, output: 0 },
+  "deepseek/deepseek-r1:free": { input: 0, output: 0 },
 };
 
 /* -------------------------------------------------------------------------- */
