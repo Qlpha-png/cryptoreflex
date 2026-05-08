@@ -112,6 +112,9 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Cycle 25 : COINGECKO_API_KEY (Demo) double le rate limit
+          # (~100 r/min vs 30 free) — critique pour scan-window > 750.
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           LLM_MODEL: ${{ inputs.model }}

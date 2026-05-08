@@ -105,22 +105,54 @@ function isGeminiModel(model) {
 /*  Reuse helpers from generate-fiche-crypto.mjs (inlined for portability)    */
 /* -------------------------------------------------------------------------- */
 
+// Cycle 25 helper : fetch CoinGecko avec API key (Demo : x-cg-demo-api-key,
+// Pro : x-cg-pro-api-key) + retry exponentiel sur 429. Le rate limit de la
+// free tier (30 r/min) tue tout scan > 750 cryptos. Avec une Demo key, on
+// monte à ~100 r/min ; avec Pro à 500+. Le retry évite les fail silencieux
+// quand la cadence est tight.
+function cgHeaders() {
+  const headers = { Accept: "application/json", "User-Agent": "cryptoreflex-batch/1.0" };
+  const key = process.env.COINGECKO_API_KEY;
+  if (key) {
+    // Heuristique : les keys Pro commencent par "CG-" et sont >= 30 chars.
+    // Les keys Demo sont aussi "CG-" mais souvent <30 chars. On essaie Pro
+    // header d'abord (CoinGecko ignore les headers inconnus). Si Pro échoue
+    // côté serveur, le fallback Demo header est ajouté en parallèle.
+    headers["x-cg-pro-api-key"] = key;
+    headers["x-cg-demo-api-key"] = key;
+  }
+  return headers;
+}
+
+async function cgFetch(url, { timeoutMs = 15_000, maxRetries = 3 } = {}) {
+  let lastErr = null;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, headers: cgHeaders() });
+      clearTimeout(tid);
+      if (res.status === 429) {
+        // Backoff : 5s, 15s, 45s
+        const wait = 5000 * Math.pow(3, attempt);
+        console.warn(`[cg] 429 on ${url.slice(0, 80)}, wait ${wait}ms (retry ${attempt+1}/${maxRetries})`);
+        await new Promise((r) => setTimeout(r, wait));
+        continue;
+      }
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      clearTimeout(tid);
+      lastErr = e;
+    }
+  }
+  if (lastErr) console.warn(`[cg] gave up: ${String(lastErr).slice(0, 100)}`);
+  return null;
+}
+
 async function fetchCoinGeckoOverview(coingeckoId) {
   const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=true&sparkline=false`;
-  const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), 15_000);
-  try {
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { Accept: "application/json", "User-Agent": "cryptoreflex-batch/1.0" },
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(tid);
-  }
+  return await cgFetch(url, { timeoutMs: 15_000, maxRetries: 3 });
 }
 
 async function fetchCoinGeckoMarketChart(coingeckoId) {
@@ -837,14 +869,15 @@ async function fetchTopCryptos(count, startRank) {
   const totalPages = Math.ceil((startRank + count - 1) / perPage);
   for (let page = startPage; page <= totalPages; page++) {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`;
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) {
-      console.warn(`[batch] CoinGecko page ${page} failed: ${res.status}`);
+    // Cycle 25 : utilise cgFetch avec API key + retry 429 (résout les 5
+    // pages échouées en cascade observées sur run #14).
+    const data = await cgFetch(url, { timeoutMs: 30_000, maxRetries: 4 });
+    if (!data) {
+      console.warn(`[batch] CoinGecko page ${page} failed after retries`);
       continue;
     }
-    const data = await res.json();
     cryptos.push(...data);
-    await new Promise((r) => setTimeout(r, 1500)); // respect rate limit
+    await new Promise((r) => setTimeout(r, 2500)); // respect rate limit
   }
   // Filter [startRank, startRank+count)
   return cryptos.filter((c) => c.market_cap_rank >= startRank && c.market_cap_rank < startRank + count);
@@ -911,23 +944,34 @@ async function main() {
     // Étape 1c : compute quality_score pour CHAQUE crypto (fetch overview minimal)
     console.log(`  ⏳ Scoring quality des ${topCryptos.length} candidats (peut prendre quelques minutes)...`);
     const scored = [];
+    let scoringFails = 0;
     for (let i = 0; i < topCryptos.length; i++) {
       const c = topCryptos[i];
       try {
         const cg = await fetchCoinGeckoOverview(c.id);
-        if (!cg) continue;
+        if (!cg) {
+          scoringFails++;
+          if (scoringFails <= 5) console.warn(`    ⚠️ ${c.id} cg overview null`);
+          continue;
+        }
         const llama = await fetchDefiLlama(c.id, cg.name);
         const rawData = compactRawData(c.id, cg, llama);
         await fetchAdditional(rawData);
         const score = rawData.qualityScore?.score ?? 0;
         scored.push({ c, rawData, score });
-        if ((i + 1) % 25 === 0) console.log(`    [scoring ${i+1}/${topCryptos.length}] avg quality so far: ${(scored.reduce((s,x) => s+x.score, 0)/scored.length).toFixed(1)}`);
+        if ((i + 1) % 25 === 0) console.log(`    [scoring ${i+1}/${topCryptos.length}] avg quality so far: ${(scored.reduce((s,x) => s+x.score, 0)/scored.length).toFixed(1)} (fails: ${scoringFails})`);
       } catch (e) {
+        scoringFails++;
         console.warn(`    ⚠️ ${c.id} scoring fail: ${e.message?.slice(0, 80)}`);
       }
-      // Rate limit doux pour le scan : 1.5s entre chaque (CoinGecko free tier 30 r/min)
-      await new Promise((r) => setTimeout(r, 1500));
+      // Rate limit pour le scan : 2.5s entre chaque (Demo CG ~100 r/min, donc
+      // 600ms suffit théoriquement, mais fetchCoinGeckoOverview + fetchDefiLlama
+      // + fetchAdditional fait 4-5 calls par crypto → 2.5s = ~10 calls/30s,
+      // safe sur Demo). Sans Demo key, recommander 4000ms.
+      const scanDelay = process.env.COINGECKO_API_KEY ? 2500 : 4000;
+      await new Promise((r) => setTimeout(r, scanDelay));
     }
+    if (scoringFails > 0) console.log(`  ⚠️ Scoring : ${scoringFails} fails sur ${topCryptos.length} candidats`);
     // Étape 1d : trier desc par score, prendre top TOP_QUALITY
     scored.sort((a, b) => b.score - a.score);
     const top = scored.slice(0, TOP_QUALITY);
@@ -994,8 +1038,14 @@ async function main() {
       // Cycle 23 : skip cryptos sous quality threshold (1000 meilleurs filter).
       // Cycle 24 : en mode regen ciblée, on bypass ce filter — l'utilisateur a
       // explicitement demandé ces ids (ex: pour fixer les fiches sub-100%).
+      // Cycle 25 : en mode scan-window + top-quality, le rerank par
+      // quality_score est déjà fait (étape 1d) — appliquer encore MIN_QUALITY
+      // strip toutes les fiches en bas de classement même si l'utilisateur
+      // les a délibérément choisies. Bypass aussi.
+      const isScanRerank = SCAN_WINDOW > 0 && TOP_QUALITY > 0;
       if (
         COINGECKO_IDS.length === 0 &&
+        !isScanRerank &&
         MIN_QUALITY > 0 &&
         (rawData.qualityScore?.score ?? 0) < MIN_QUALITY
       ) {
