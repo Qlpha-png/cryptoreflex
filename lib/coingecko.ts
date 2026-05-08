@@ -227,19 +227,27 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
 }
 
 /**
- * Fetch live prices from CoinGecko, dédupliquées via unstable_cache
- * (Data Cache + Request Memoization). Sur Vercel, plusieurs composants
- * de la même requête partagent un seul appel ; entre requêtes, le cache
- * dure 60 s. Revalidation ciblée : `revalidateTag("coingecko:prices")`.
+ * Fetch live prices via la cascade price-source.ts.
+ *
+ * FIX 2026-05-08 — DOUBLE CACHE RACE FIXED : auparavant cette fonction etait
+ * wrappee dans unstable_cache(fetchPrices, [...]) avec cache key derive des
+ * `ids` array. Resultat : un meme `/api/prices?ids=BTC,ETH,...,BITTENSOR`
+ * (50 ids) avait une cache key differente d'un `/api/prices?ids=BITTENSOR`
+ * (1 id), donc 2 reponses divergentes pour la meme crypto pendant 5 min
+ * apres une fenetre d'erreur.
+ *
+ * Solution : supprimer le top-level cache. La fonction _fetchPrices appelle
+ * deja `getPriceSnapshot(id)` qui est cached PER-CRYPTO via unstable_cache
+ * dans price-source.ts. Donc la deduplication marche au niveau atomique
+ * (1 fetch par crypto / 5min) sans creer de cache key compose qui peut
+ * etre stale.
+ *
+ * Trade-off : Request Memoization (1 call par requete pour le meme set
+ * d'ids) est perdu, mais on garde la deduplication serveur globale via
+ * getPriceSnapshot cache. Latence supplementaire ~0ms (cache hit en
+ * memoire process).
  */
-export const fetchPrices = unstable_cache(
-  async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids),
-  // FIX 2026-05-08 — bump v3 -> v4 (idem price-source-snapshot-v4) pour
-  // invalider les snapshots cached pendant la fenetre _fetchBatch 59/100.
-  ["coingecko-prices-v4"],
-  // BATCH 50 — 60s -> 300s (5 min). Cohence avec le revalidate fetch interne.
-  { revalidate: 300, tags: [CG_TAGS.prices] }
-);
+export const fetchPrices = async (ids: CoinId[] = DEFAULT_COINS) => _fetchPrices(ids);
 
 /**
  * Variante de `_fetchPrices` qui inclut sparkline7d (168 points horaires).
