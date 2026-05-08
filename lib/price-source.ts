@@ -474,9 +474,15 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
   const fetchedAt = new Date().toISOString();
 
   // Source #1 : Binance (couvre 90% du top 100)
+  // FIX 2026-05-08 — BUG LATENT : COINGECKO_TO_BINANCE retourne deja la paire
+  // complete (ex: "BTCUSDT"), pas le symbole nu. L'ancien code faisait
+  // `${binanceSymbol}USDT` => "BTCUSDTUSDT" qui n'existe pas → ticker null
+  // → fallback CoinCap (mort) → CoinGecko (rate-limit) → static fallback
+  // (BTC=78500 fige). Confirme via /api/diag-prices : Binance 200 OK depuis
+  // Hetzner, mais notre lib ne tombait jamais sur les valeurs reelles.
   const binanceSymbol = COINGECKO_TO_BINANCE[coingeckoId];
   if (binanceSymbol) {
-    const pair = `${binanceSymbol}USDT`;
+    const pair = binanceSymbol; // deja format complet "BTCUSDT"
     const ticker = await _binanceTicker(pair);
     if (ticker && parseFloat(ticker.lastPrice) > 0) {
       const sparkline = await _binanceKlines(pair);
