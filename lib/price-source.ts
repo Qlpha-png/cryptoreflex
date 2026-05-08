@@ -41,6 +41,8 @@ import { getKv } from "@/lib/kv";
 import { getCryptoComparePriceByCoingeckoId } from "@/lib/cryptocompare";
 import { getKrakenPrice } from "@/lib/kraken";
 import { getCoinbasePrice } from "@/lib/coinbase";
+import { getKuCoinPrice } from "@/lib/kucoin";
+import { applySymbolOverride } from "@/lib/symbol-overrides";
 
 /* -------------------------------------------------------------------------- */
 /*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
@@ -153,6 +155,7 @@ export type PriceSource =
   | "binance"
   | "kraken"
   | "coinbase"
+  | "kucoin"
   | "cryptocompare"
   | "coincap"
   | "static";
@@ -561,8 +564,13 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   // Strategie : 1ere source qui repond avec prix > 0 = wins.
   // ========================================================================
 
+  // FIX 2026-05-08 (audit regle des 3) : applique les overrides de symbol
+  // pour les tokens renames (RNDR -> RENDER, etc.). Sans ca, Kraken/Coinbase/
+  // KuCoin ne trouvent pas la paire et on tombe sur static fallback inutilement.
+  const exchangeSymbol = applySymbolOverride(coingeckoId, meta.symbol);
+
   // Source #2 : Kraken (couvre 93/100, gratuit illimite)
-  const krakenPrice = await getKrakenPrice(coingeckoId, meta.symbol);
+  const krakenPrice = await getKrakenPrice(coingeckoId, exchangeSymbol);
   if (krakenPrice && krakenPrice.priceUsd > 0) {
     const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
     const supply =
@@ -586,7 +594,7 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   }
 
   // Source #3 : Coinbase (couvre 79/100, gratuit illimite)
-  const coinbasePrice = await getCoinbasePrice(meta.symbol);
+  const coinbasePrice = await getCoinbasePrice(exchangeSymbol);
   if (coinbasePrice && coinbasePrice.priceUsd > 0) {
     const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
     const supply =
@@ -610,7 +618,33 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
     };
   }
 
-  // Source #4 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
+  // Source #4 : KuCoin (couvre les cryptos asiatiques/exotiques mal couvertes
+  // par Kraken/Coinbase : THETA, KCS native, POLYX, etc.). Audit 2026-05-08.
+  const kucoinPrice = await getKuCoinPrice(exchangeSymbol);
+  if (kucoinPrice && kucoinPrice.priceUsd > 0) {
+    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
+    const supply =
+      fallbackMarketCap > 0
+        ? fallbackMarketCap /
+          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? kucoinPrice.priceUsd)
+        : 0;
+    const marketCap = supply > 0 ? supply * kucoinPrice.priceUsd : 0;
+    return {
+      id: coingeckoId,
+      symbol: meta.symbol,
+      name: meta.name,
+      priceUsd: kucoinPrice.priceUsd,
+      change24h: kucoinPrice.change24h,
+      change7d: null,
+      volume24h: kucoinPrice.volume24h,
+      marketCap,
+      sparkline7d: [],
+      source: "kucoin",
+      fetchedAt,
+    };
+  }
+
+  // Source #5 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
   const ccPrice = await getCryptoComparePriceByCoingeckoId(coingeckoId);
   if (ccPrice && ccPrice.priceUsd > 0) {
     return {
@@ -675,10 +709,12 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v5 : nouveau Niveau C Multi-Source (Kraken + Coinbase
-  // ajoutees comme sources #2 + #3 dominantes, CryptoCompare relegue #4).
-  // Bump v4 -> v5 force regeneration immediate de tous les snapshots.
-  ["price-source-snapshot-v5"],
+  // FIX 2026-05-08 — v6 : audit regle des 3 fixes :
+  //   - Risk #1 : revalidate Kraken/Coinbase 300->60s (cache stuck null)
+  //   - Risk #2 : symbol-overrides RNDR->RENDER (rename 2024)
+  //   - Risk #3 : ajout KuCoin (Source #4) pour THETA/KCS/POLYX
+  // Bump v5 -> v6 force regeneration immediate de tous les snapshots.
+  ["price-source-snapshot-v6"],
   { revalidate: 300, tags: ["price-source"] },
 );
 

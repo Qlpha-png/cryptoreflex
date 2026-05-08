@@ -75,8 +75,9 @@ async function _fetchCoinbasePrice(symbol: string): Promise<CoinbasePriceData | 
   return null;
 }
 
+// RISK MITIGATION (audit regle des 3 2026-05-08) — cf commentaire kraken.ts.
 export const getCoinbasePrice = unstable_cache(
   async (symbol: string) => _fetchCoinbasePrice(symbol),
   ["coinbase-price-v1"],
-  { revalidate: 300, tags: ["price-source", "coinbase"] },
+  { revalidate: 60, tags: ["price-source", "coinbase"] },
 );

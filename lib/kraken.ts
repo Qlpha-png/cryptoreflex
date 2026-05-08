@@ -95,11 +95,19 @@ async function _fetchKrakenPrice(
 }
 
 /**
- * Cached per-crypto (5 min). Cache key atomique = pas de race condition
+ * Cached per-crypto. Cache key atomique = pas de race condition
  * possible entre callers avec different sets d'ids.
+ *
+ * RISK MITIGATION (audit regle des 3 2026-05-08) :
+ *  - revalidate: 60 (et non 300) pour reduire la fenetre stuck si le 1er
+ *    hit cold-start retourne null. unstable_cache cache les `null` returns,
+ *    donc 5 min etait trop long. 60s = bon trade-off entre re-fetch load et
+ *    fenetre d'erreur.
+ *  - Le caller (price-source cascade) tente Coinbase si Kraken null, donc
+ *    une crypto stuck cote Kraken peut quand meme etre live via Coinbase.
  */
 export const getKrakenPrice = unstable_cache(
   async (coingeckoId: string, symbol: string) => _fetchKrakenPrice(coingeckoId, symbol),
   ["kraken-price-v1"],
-  { revalidate: 300, tags: ["price-source", "kraken"] },
+  { revalidate: 60, tags: ["price-source", "kraken"] },
 );
