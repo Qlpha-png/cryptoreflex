@@ -352,9 +352,16 @@ Mission : rediger une fiche d'analyse complete et structuree d'une crypto, quali
 
 REGLES STRICTES :
 - 100% francais, accents corrects (a e e e c o u i)
-- TUTOIEMENT OBLIGATOIRE : utilise toujours "tu/te/toi/ton/tes" pour t'adresser au lecteur.
-  JAMAIS "vous" ni "on" impersonnel. C'est la voix Cryptoreflex.
-  Exemples : "tu peux acheter SOL", "ton portefeuille", "ce que tu dois savoir".
+- TUTOIEMENT OBLIGATOIRE PARTOUT : utilise "tu/te/toi/ton/tes" dans CHAQUE section
+  (thesis, howItWorks, tokenomics, metrics narrative, risks, frEuStatus, disclaimer).
+  JAMAIS "vous" ni "on" impersonnel. JAMAIS "les utilisateurs", privilégie "tu" / "les détenteurs comme toi".
+  Minimum 5 occurrences "tu/te/toi/ton/tes" dans le corps de la fiche.
+  Exemples obligatoires :
+    - "Si tu détiens du SOL..." (pas "Les détenteurs de SOL...")
+    - "Tu dois être conscient que..." (pas "Il faut être conscient...")
+    - "Pour staker tes SOL, tu peux utiliser..."
+    - "Voici ce que tu dois savoir sur les frais..."
+    - "Si tu es résident fiscal français..."
 - Aucun jargon non explique (definir les termes techniques en parentheses)
 - Factuel, neutre, pedagogique. Aucune promesse d'enrichissement, aucun FOMO
 - Disclaimer YMYL en fin (champ "disclaimer" du JSON)
@@ -374,9 +381,9 @@ REGLES STRICTES :
 OUTPUT FORMAT JSON STRICT :
 {
   "tldr": "3 phrases ultra-concises (max 280 caracteres total) — l'essentiel pour comprendre le projet en 30s",
-  "thesis": "200-400 mots — Pourquoi ce projet existe, qu'est-ce qu'il resout, sa proposition de valeur unique. Pedagogique, sans jargon.",
-  "howItWorks": "300-500 mots — Comment ca marche techniquement, accessible debutant. Consensus, architecture, innovations cles.",
-  "tokenomics": "300-500 mots — Supply, distribution, vesting, utilite du token, mecanismes inflation/burn. Cite les chiffres factuels.",
+  "thesis": "200-400 mots OBLIGATOIRE (minimum 200 mots reels — n'envoie pas de thesis plus courte). Pourquoi ce projet existe, qu'est-ce qu'il resout, sa proposition de valeur unique. Pedagogique, sans jargon. Utilise 'tu' au moins 1x pour parler au lecteur.",
+  "howItWorks": "300-500 mots OBLIGATOIRE (minimum 300 mots). Comment ca marche techniquement, accessible debutant. Consensus, architecture, innovations cles. Utilise 'tu' au moins 1x.",
+  "tokenomics": "300-500 mots OBLIGATOIRE (minimum 300 mots). Supply, distribution, vesting, utilite du token, mecanismes inflation/burn. Cite les chiffres factuels. Utilise 'tu' au moins 1x ('si tu detiens', 'tes tokens').",
   "metrics": {
     "narrative": "150-250 mots — Lecture commentee des metriques live (prix, mcap, ATH/ATL, evolution 24h/7d/30d/1y). Met en perspective sans speculation.",
     "keyFigures": [
@@ -403,7 +410,7 @@ OUTPUT FORMAT JSON STRICT :
   "risks": [
     {"category": "technical|regulatory|market|team|adoption", "severity": "low|medium|high|critical", "description": "40-80 mots"}
   ],
-  "frEuStatus": "200-300 mots — Statut FR/EU specifique : disponible sur quels exchanges PSAN ? Conformite MiCA ? Implications fiscales (Cerfa 2086) ? Particularites legales pour residents FR.",
+  "frEuStatus": "200-300 mots OBLIGATOIRE (minimum 200 mots). Statut FR/EU specifique. Utilise 'tu' systematiquement ('si tu es resident fiscal', 'tu peux acheter', 'tu dois declarer'). Mentionne PSAN exchanges, MiCA, Cerfa 2086, particularites legales FR.",
   "furtherReading": [
     {"type": "academy|external", "title": "Titre", "url_or_slug": "/academy/slug ou https://..."}
   ],
@@ -710,6 +717,137 @@ function normalizeParsed(parsed) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Audit règle des 3 — validator qualité par fiche (cycle 17)                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Compte les occurrences case-insensitive d'un pattern regex dans un texte.
+ */
+function countMatches(text, regex) {
+  if (!text || typeof text !== "string") return 0;
+  const matches = text.match(regex);
+  return matches ? matches.length : 0;
+}
+
+/**
+ * Audit règle des 3 sur une fiche LLM-générée.
+ * Retourne un score 0-100 + flags des problèmes détectés.
+ *
+ * Critère 1 — TUTOIEMENT (voix Cryptoreflex)
+ *   - Compte tu/te/toi/ton/tes/tien dans le corps
+ *   - Pénalise "vous/votre" (impersonnel)
+ *   - Min 5 occurrences tu pour pass
+ *
+ * Critère 2 — PERSONNALISATION (pas de générique)
+ *   - Mentions name/symbol ≥3 dans thesis+howItWorks+tokenomics
+ *   - Présence de chiffres spécifiques ($X, X%, XM, XB)
+ *   - Mentions de chiffres uniques (drawdown, release tag, etc.)
+ *
+ * Critère 3 — PROFONDEUR (volume + structure)
+ *   - thesis ≥150 mots
+ *   - howItWorks ≥200 mots
+ *   - tokenomics ≥200 mots
+ *   - frEuStatus ≥150 mots
+ *   - risks ≥3 catégories distinctes
+ *   - competitors ≥3
+ */
+function auditRegleDes3(parsed, rawData) {
+  const issues = [];
+  const c = parsed ?? {};
+  const name = rawData?.name ?? "";
+  const symbol = rawData?.symbol ?? "";
+
+  // Concat des sections texte pour analyses globales
+  const corpus = [
+    c.tldr ?? "",
+    c.thesis ?? "",
+    c.howItWorks ?? "",
+    c.tokenomics ?? "",
+    c.metrics?.narrative ?? "",
+    c.frEuStatus ?? "",
+  ].join("\n\n");
+
+  // === Critère 1 : Tutoiement ===
+  // Match standalone tu/te/toi/ton/tes/t' (avec word boundaries)
+  const tuCount = countMatches(corpus, /\b(tu|te|toi|ton|tes|t')\b/gi);
+  const vousCount = countMatches(corpus, /\b(vous|votre|vos)\b/gi);
+  const tutoiementScore = Math.min(
+    100,
+    Math.max(0, tuCount * 5 - vousCount * 10),
+  );
+  if (tuCount < 5) issues.push(`tutoiement insuffisant (${tuCount} occurrences, min 5)`);
+  if (vousCount > 2) issues.push(`vouvoiement détecté (${vousCount} occurrences)`);
+
+  // === Critère 2 : Personnalisation ===
+  const nameSymbolMentions =
+    countMatches(corpus, new RegExp(`\\b${symbol}\\b`, "gi")) +
+    countMatches(corpus, new RegExp(`\\b${name}\\b`, "gi"));
+  const numberMentions = countMatches(
+    corpus,
+    /\$[\d.,]+\s?(?:[BKMbillionsmillemilliers]+)?|\d+[.,]?\d*\s?%|\d+[.,]?\d*\s?(?:M|B|k|TPS|tx)/g,
+  );
+  const personalizationScore = Math.min(
+    100,
+    Math.round((nameSymbolMentions / 3) * 30 + (numberMentions / 10) * 70),
+  );
+  if (nameSymbolMentions < 3)
+    issues.push(`nom/symbol pas assez mentionnés (${nameSymbolMentions}, min 3)`);
+  if (numberMentions < 5)
+    issues.push(`chiffres spécifiques insuffisants (${numberMentions}, min 5)`);
+
+  // === Critère 3 : Profondeur ===
+  const wordCount = (s) => (s ? s.split(/\s+/).filter(Boolean).length : 0);
+  const wThesis = wordCount(c.thesis);
+  const wHow = wordCount(c.howItWorks);
+  const wTok = wordCount(c.tokenomics);
+  const wFR = wordCount(c.frEuStatus);
+  const risksCategories = new Set(
+    (Array.isArray(c.risks) ? c.risks : []).map((r) => r?.category).filter(Boolean),
+  ).size;
+  const competitorsCount = Array.isArray(c.competitors) ? c.competitors.length : 0;
+  let depthChecks = 0;
+  let depthTotal = 6;
+  if (wThesis >= 150) depthChecks++;
+  else issues.push(`thesis trop court (${wThesis} mots, min 150)`);
+  if (wHow >= 200) depthChecks++;
+  else issues.push(`howItWorks trop court (${wHow} mots, min 200)`);
+  if (wTok >= 200) depthChecks++;
+  else issues.push(`tokenomics trop court (${wTok} mots, min 200)`);
+  if (wFR >= 150) depthChecks++;
+  else issues.push(`frEuStatus trop court (${wFR} mots, min 150)`);
+  if (risksCategories >= 3) depthChecks++;
+  else issues.push(`risks insuffisamment catégorisés (${risksCategories} catégories, min 3)`);
+  if (competitorsCount >= 3) depthChecks++;
+  else issues.push(`competitors insuffisants (${competitorsCount}, min 3)`);
+  const depthScore = Math.round((depthChecks / depthTotal) * 100);
+
+  // === Composite (pondération équilibrée) ===
+  const overall = Math.round(
+    tutoiementScore * 0.3 + personalizationScore * 0.35 + depthScore * 0.35,
+  );
+  const passed = overall >= 70 && tutoiementScore >= 50 && personalizationScore >= 60 && depthScore >= 70;
+
+  return {
+    overall,
+    passed,
+    breakdown: {
+      tutoiement: { score: tutoiementScore, tuCount, vousCount },
+      personalization: { score: personalizationScore, nameSymbolMentions, numberMentions },
+      depth: {
+        score: depthScore,
+        wThesis,
+        wHowItWorks: wHow,
+        wTokenomics: wTok,
+        wFrEuStatus: wFR,
+        risksCategories,
+        competitorsCount,
+      },
+    },
+    issues,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -787,6 +925,7 @@ async function writeFiche(coingeckoId, rawData, parsed, llmInfo) {
       tokensTotal: llmInfo?.tokens ?? 0,
       costUsd: llmInfo?.cost ?? 0,
     },
+    audit: llmInfo?.audit ?? null,
   };
 
   const jsonPath = path.join(OUTPUT_DIR, `${coingeckoId}.json`);
@@ -940,10 +1079,23 @@ async function main() {
   console.log("[3/4] Calling LLM (this may take 30-90s)...");
   const llmInfo = await callLLM(rawData);
 
-  // Step 4 — normalize + validate + write
-  console.log("[4/4] Normalizing + validating + writing output...");
+  // Step 4 — normalize + validate + audit règle des 3 + write
+  console.log("[4/4] Normalize + validate + audit règle des 3 + write...");
   normalizeParsed(llmInfo.parsed);
   const v = validate(llmInfo.parsed);
+  const audit = auditRegleDes3(llmInfo.parsed, rawData);
+  console.log(`  audit: overall=${audit.overall}/100 (${audit.passed ? "PASS" : "FAIL"})`);
+  console.log(
+    `    tutoiement=${audit.breakdown.tutoiement.score} (${audit.breakdown.tutoiement.tuCount} tu, ${audit.breakdown.tutoiement.vousCount} vous)`,
+  );
+  console.log(
+    `    personnalisation=${audit.breakdown.personalization.score} (name×${audit.breakdown.personalization.nameSymbolMentions}, chiffres×${audit.breakdown.personalization.numberMentions})`,
+  );
+  console.log(`    profondeur=${audit.breakdown.depth.score}`);
+  if (audit.issues.length > 0) {
+    console.log(`    issues: ${audit.issues.slice(0, 3).join(" | ")}`);
+  }
+  llmInfo.audit = audit;
   if (!v.ok) {
     console.warn(`⚠️  Validation issues (will still write for review):`);
     v.errors.forEach((e) => console.warn(`  - ${e}`));
