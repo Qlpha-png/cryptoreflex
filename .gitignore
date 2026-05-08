@@ -43,3 +43,7 @@ tmp-lh/
 tmp-a11y/
 tmp-*/
 .lh-audits/
+
+# Phase 3 POC — fiches crypto generees auto (output)
+content/cryptos-fiches/
+!content/cryptos-fiches/.gitkeep
