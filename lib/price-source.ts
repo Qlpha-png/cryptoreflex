@@ -792,10 +792,10 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v10 : coingeckoId "mantra-dao" -> "mantra" pour le
-  // NEW OM Mantra Chain (data decrit le RWA L1 Cosmos, pas l'ERC-20 mort).
-  // Bump cache pour invalider l'ancien snapshot pointant sur "mantra-dao".
-  ["price-source-snapshot-v10"],
+  // FIX 2026-05-08 — v11 : DexScreener anti-fake filter (rejette les pairs
+  // wash-traded type Solana MANTRA $5.9B liq sur mcap $52M reel). Bump
+  // cache pour invalider les snapshots ayant le faux $0.6083 sur mantra.
+  ["price-source-snapshot-v11"],
   { revalidate: 300, tags: ["price-source"] },
 );
 

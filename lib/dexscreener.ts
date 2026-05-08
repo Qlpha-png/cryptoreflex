@@ -48,6 +48,49 @@ interface DexScreenerPair {
   volume?: { h24?: number };
   priceChange?: { h24?: number };
   liquidity?: { usd?: number };
+  /** Market cap calcule par DexScreener (priceUsd * circulating supply). */
+  marketCap?: number;
+  /** Fully diluted valuation = priceUsd * total supply. */
+  fdv?: number;
+}
+
+/**
+ * FIX 2026-05-08 cycle 5 — heuristic anti-fake pair (wash trading,
+ * liquidity gonflee artificiellement). Audit OM/MANTRA a montre que
+ * DexScreener tri par liquidity desc tombe sur des pairs Solana avec
+ * "liquidity $5.9B" alors que le mcap total = $52M. Ces pairs sont :
+ *  - Soit du wash trading (volume artificiel)
+ *  - Soit des pairs avec tokens locked (liquidity factice non tradee)
+ *
+ * Trois signaux convergents = pair fake :
+ *  1. liquidity > marketCap × 2  (un pair ne peut pas avoir > 2x le mcap)
+ *  2. volume24h < liquidity / 1000 (locked, pas de trading reel)
+ *  3. liquidity > $100M ET volume < $100k (cap absolu)
+ *
+ * Si UN des 3 critere est viole → pair rejetee. Approche conservatrice :
+ * mieux vaut perdre un pair legit que retourner un prix fake.
+ */
+function _isPairTrustworthy(pair: DexScreenerPair): boolean {
+  const liq = pair.liquidity?.usd ?? 0;
+  const vol24 = pair.volume?.h24 ?? 0;
+  const mcap = pair.marketCap ?? pair.fdv ?? 0;
+
+  // Critere #1 : liquidity vs marketCap (le plus fort signal anti-fake)
+  if (mcap > 0 && liq > mcap * 2) {
+    return false;
+  }
+
+  // Critere #2 : ratio volume / liquidity (pair locked sans trading)
+  if (liq > 10_000 && vol24 < liq / 1000) {
+    return false;
+  }
+
+  // Critere #3 : cap absolu liquidity sans volume proportionnel
+  if (liq > 100_000_000 && vol24 < 100_000) {
+    return false;
+  }
+
+  return true;
 }
 
 interface DexScreenerSearchResponse {
@@ -88,11 +131,15 @@ async function _fetchDexScreenerPrice(
 
     // FILTRAGE STRICT — baseToken.symbol matche exactement le symbol
     // recherche. Sans ca on chope des "MANTRADAO", "MAN", "OMG", etc.
+    // Ajout cycle 5 : _isPairTrustworthy rejette les pairs wash-traded
+    // (audit OM/MANTRA : pairs Solana $5.9B liquidity sur mcap $52M).
     const matching = data.pairs.filter((p) => {
       const baseSym = p.baseToken?.symbol?.toUpperCase().trim();
       const price = parseFloat(p.priceUsd ?? "0");
       const liq = p.liquidity?.usd ?? 0;
-      return baseSym === sym && price > 0 && liq >= 1000;
+      return (
+        baseSym === sym && price > 0 && liq >= 1000 && _isPairTrustworthy(p)
+      );
     });
 
     if (matching.length === 0) return null;
@@ -144,14 +191,21 @@ async function _fetchDexScreenerByContract(
     const data = (await res.json()) as DexScreenerSearchResponse;
     if (!data.pairs || data.pairs.length === 0) return null;
 
-    // Filtre par chain demande + liquidity >= 1000.
+    // Filtre par chain demande + liquidity >= 1000 + anti-fake.
     const onChain = data.pairs.filter(
       (p) =>
         p.chainId === chain &&
         parseFloat(p.priceUsd ?? "0") > 0 &&
-        (p.liquidity?.usd ?? 0) >= 1000,
+        (p.liquidity?.usd ?? 0) >= 1000 &&
+        _isPairTrustworthy(p),
     );
-    const fallback = onChain.length > 0 ? onChain : data.pairs.filter((p) => parseFloat(p.priceUsd ?? "0") > 0);
+    const fallback =
+      onChain.length > 0
+        ? onChain
+        : data.pairs.filter(
+            (p) =>
+              parseFloat(p.priceUsd ?? "0") > 0 && _isPairTrustworthy(p),
+          );
     if (fallback.length === 0) return null;
     fallback.sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0));
     const best = fallback[0];
