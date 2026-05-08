@@ -36,29 +36,19 @@
  */
 
 import { unstable_cache } from "next/cache";
-import { COINGECKO_TO_BINANCE } from "@/lib/binance-mapping";
 import { getKv } from "@/lib/kv";
-import { getCryptoComparePriceByCoingeckoId } from "@/lib/cryptocompare";
-import { getKrakenPrice } from "@/lib/kraken";
-import { getCoinbasePrice } from "@/lib/coinbase";
-import { getKuCoinPrice } from "@/lib/kucoin";
-import { getDexScreenerPrice } from "@/lib/dexscreener";
 import { applySymbolOverride } from "@/lib/symbol-overrides";
 
-/**
- * FIX 2026-05-08 cycle 6 — coingeckoIds qui doivent skip DexScreener
- * car le symbol matche aussi un ancien token mort (ambiguity DEX).
- * Pour ces tokens, on tombe sur CoinGecko `_coincapAsset` qui sait
- * distinguer les coingeckoIds canoniques.
- *
- * Cas connus :
- *  - "mantra" : NEW $OM Mantra Chain Cosmos (\$0.0104). Sans skip,
- *    DexScreener trouve l'OLD MANTRA DAO ERC-20 (\$0.0076, mort).
- *
- * A etendre quand on detecte un nouveau cas. Audit periodique conseille
- * sur les tokens avec rebrand/rename connu (LUNA->LUNC, FTT, etc.).
- */
-const SKIP_DEXSCREENER: ReadonlySet<string> = new Set(["mantra"]);
+// PHASE 2 — Provider Pattern registry. La cascade live (Binance, Kraken,
+// Coinbase, KuCoin, DexScreener, CryptoCompare, CoinGecko, Static) est
+// maintenant orchestrate via lib/price-providers/. SKIP_DEXSCREENER set
+// (ambiguity OM/MANTRA) est encapsule dans dexscreenerProvider.canHandle().
+// Anciens imports directs supprimes (deplaces dans les providers individuels).
+import {
+  fetchPriceCascade,
+  estimateMarketCap,
+  type CryptoMeta,
+} from "@/lib/price-providers";
 
 // Data JSON editoriales (top-cryptos + hidden-gems) — single source of truth
 // pour le mapping coingeckoId -> {symbol, name}. Importe statiquement pour
@@ -201,6 +191,10 @@ export type PriceSource =
   | "kucoin"
   | "dexscreener"
   | "cryptocompare"
+  | "coingecko"
+  // "coincap" : legacy alias kept for backward-compat (snapshot caches
+  // pre-refactor stockaient "coincap" alors que la source etait deja
+  // CoinGecko). Nouveau nom canonique = "coingecko".
   | "coincap"
   | "static";
 
@@ -562,254 +556,100 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
 }
 
 async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapshot> {
-  // FIX 2026-05-08 (audit regle des 3) — single source of truth pour le
-  // mapping coingeckoId -> {symbol, name} : on utilise les data JSON
-  // editoriales (top-cryptos + hidden-gems) en priorite, COIN_META legacy
-  // en fallback, et derive intelligent en dernier recours.
+  // PHASE 2 PROVIDER PATTERN (cycle 7) — la cascade resiliente est
+  // maintenant dans lib/price-providers/index.ts. Chaque source = 1 fichier
+  // qui implemente PriceProvider. Ajout d'une nouvelle source = 1 ligne
+  // dans PROVIDERS array. Architecture pensee scalabilite "toutes les
+  // cryptos existantes" un jour.
   //
-  // L'ancien code faisait `coingeckoId.toUpperCase().slice(0, 6)` qui
-  // produisait des symbols brises pour les ids contenant un tiret :
-  //   "theta-token"   -> "THETA-"   (au lieu de "THETA")
-  //   "kucoin-shares" -> "KUCOIN"   (au lieu de "KCS")
-  //   "polymesh"      -> "POLYME"   (au lieu de "POLYX")
-  // Resultat : Kraken/Coinbase/KuCoin recevaient ces faux symbols et ne
-  // matchaient aucune paire -> on tombait sur static fallback inutilement.
-  const meta =
+  // Le code historique inline (Binance + Kraken + Coinbase + KuCoin +
+  // DexScreener + CryptoCompare + CoinGecko + Static, ~250 lignes
+  // dupliquees pour estimation marketCap) a ete remplace par un seul
+  // appel a fetchPriceCascade(meta) qui itere les providers tries par
+  // priority croissante.
+  //
+  // FIX 2026-05-08 (audit regle des 3) — single source of truth pour le
+  // mapping coingeckoId -> {symbol, name} : data JSON editoriales en
+  // priorite, COIN_META legacy en fallback, derive intelligent en
+  // dernier recours.
+  const dataMeta =
     DATA_META_LOOKUP[coingeckoId] ??
     COIN_META[coingeckoId] ?? {
-      // Last-resort fallback : extrait le 1er segment avant tiret + uppercase.
-      // Pour "render-token" (sans override) -> "RENDER" (au lieu de "RENDER" tronque).
-      // Pour "theta-token" -> "THETA". Pour "polkadot" -> "POLKAD" (mais POLKADOT
-      // est dans COIN_META). Mieux que slice(0,6) systematique.
       symbol: coingeckoId.split("-")[0].toUpperCase().slice(0, 8),
       name:
         coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1).replace(/-/g, " "),
     };
+  // Symbol overrides (ex: render-token -> RENDER apres rename 2024).
+  // Applique avant l'iteration des providers pour que tous recoivent le
+  // bon symbol exchange.
+  const exchangeSymbol = applySymbolOverride(coingeckoId, dataMeta.symbol);
   const fetchedAt = new Date().toISOString();
+  const cryptoMeta: CryptoMeta = {
+    coingeckoId,
+    symbol: exchangeSymbol,
+    name: dataMeta.name,
+    // Phase 3 hook : `chains` mapping injecte ici quand data JSON sera
+    // enrichi avec les contracts onchain (ETH/SOL/BSC/...). Pour l'instant
+    // undefined → DexScreenerProvider tombe sur le search par symbol.
+  };
 
-  // Source #1 : Binance (couvre 90% du top 100)
-  // FIX 2026-05-08 — BUG LATENT : COINGECKO_TO_BINANCE retourne deja la paire
-  // complete (ex: "BTCUSDT"), pas le symbole nu. L'ancien code faisait
-  // `${binanceSymbol}USDT` => "BTCUSDTUSDT" qui n'existe pas → ticker null
-  // → fallback CoinCap (mort) → CoinGecko (rate-limit) → static fallback
-  // (BTC=78500 fige). Confirme via /api/diag-prices : Binance 200 OK depuis
-  // Hetzner, mais notre lib ne tombait jamais sur les valeurs reelles.
-  const binanceSymbol = COINGECKO_TO_BINANCE[coingeckoId];
-  if (binanceSymbol) {
-    const pair = binanceSymbol; // deja format complet "BTCUSDT"
-    const ticker = await _binanceTicker(pair);
-    if (ticker && parseFloat(ticker.lastPrice) > 0) {
-      const sparkline = await _binanceKlines(pair);
-      const priceUsd = parseFloat(ticker.lastPrice);
-      // Binance ne donne pas le market cap. On estime via static fallback
-      // supply (les supplies sont quasi-stables). Mieux que 0.
-      const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
-      const supply = fallbackMarketCap > 0 ? fallbackMarketCap / (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? priceUsd) : 0;
-      const marketCap = supply > 0 ? supply * priceUsd : 0;
-      return {
-        id: coingeckoId,
-        symbol: meta.symbol,
-        name: meta.name,
-        priceUsd,
-        change24h: parseFloat(ticker.priceChangePercent),
-        change7d: _calcChange7d(sparkline),
-        volume24h: parseFloat(ticker.quoteVolume),
-        marketCap,
-        sparkline7d: sparkline,
-        source: "binance",
-        fetchedAt,
-      };
-    }
-  }
-
-  // ========================================================================
-  // FIX 2026-05-08 (Niveau C Multi-Source) — cascade resiliente sans
-  // dependance unique. Audit complet via .lh-audits :
-  //   Binance       38/100 (Hetzner DE peut etre rate-limited 429)
-  //   Kraken        93/100 (gratuit, no key, EU-friendly, fiable)
-  //   Coinbase      79/100 (gratuit, no key, US/UE)
-  //   CryptoCompare 99/100 mais REQUIRES API KEY desormais — degrade
-  // Strategie : 1ere source qui repond avec prix > 0 = wins.
-  // ========================================================================
-
-  // FIX 2026-05-08 (audit regle des 3) : applique les overrides de symbol
-  // pour les tokens renames (RNDR -> RENDER, etc.). Sans ca, Kraken/Coinbase/
-  // KuCoin ne trouvent pas la paire et on tombe sur static fallback inutilement.
-  const exchangeSymbol = applySymbolOverride(coingeckoId, meta.symbol);
-
-  // Source #2 : Kraken (couvre 93/100, gratuit illimite)
-  const krakenPrice = await getKrakenPrice(coingeckoId, exchangeSymbol);
-  if (krakenPrice && krakenPrice.priceUsd > 0) {
-    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
-    const supply =
-      fallbackMarketCap > 0
-        ? fallbackMarketCap / (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? krakenPrice.priceUsd)
-        : 0;
-    const marketCap = supply > 0 ? supply * krakenPrice.priceUsd : 0;
+  const cascadeResult = await fetchPriceCascade(cryptoMeta);
+  if (cascadeResult) {
+    const { data, source } = cascadeResult;
+    const sparkline = data.sparkline7d ?? [];
+    const marketCap = data.marketCap ?? estimateMarketCap(coingeckoId, data.priceUsd);
     return {
       id: coingeckoId,
-      symbol: meta.symbol,
-      name: meta.name,
-      priceUsd: krakenPrice.priceUsd,
-      change24h: krakenPrice.change24h,
-      change7d: null,
-      volume24h: krakenPrice.volume24h,
+      symbol: dataMeta.symbol,
+      name: dataMeta.name,
+      priceUsd: data.priceUsd,
+      change24h: data.change24h,
+      change7d: sparkline.length > 1 ? _calcChange7d(sparkline) : null,
+      volume24h: data.volume24h,
       marketCap,
-      sparkline7d: [],
-      source: "kraken",
+      sparkline7d: sparkline,
+      source,
       fetchedAt,
     };
   }
 
-  // Source #3 : Coinbase (couvre 79/100, gratuit illimite)
-  const coinbasePrice = await getCoinbasePrice(exchangeSymbol);
-  if (coinbasePrice && coinbasePrice.priceUsd > 0) {
-    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
-    const supply =
-      fallbackMarketCap > 0
-        ? fallbackMarketCap /
-          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? coinbasePrice.priceUsd)
-        : 0;
-    const marketCap = supply > 0 ? supply * coinbasePrice.priceUsd : 0;
-    return {
-      id: coingeckoId,
-      symbol: meta.symbol,
-      name: meta.name,
-      priceUsd: coinbasePrice.priceUsd,
-      change24h: coinbasePrice.change24h,
-      change7d: null,
-      volume24h: coinbasePrice.volume24h,
-      marketCap,
-      sparkline7d: [],
-      source: "coinbase",
-      fetchedAt,
-    };
-  }
-
-  // Source #4 : KuCoin (couvre les cryptos asiatiques/exotiques mal couvertes
-  // par Kraken/Coinbase : THETA, KCS native, POLYX, etc.). Audit 2026-05-08.
-  const kucoinPrice = await getKuCoinPrice(exchangeSymbol);
-  if (kucoinPrice && kucoinPrice.priceUsd > 0) {
-    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
-    const supply =
-      fallbackMarketCap > 0
-        ? fallbackMarketCap /
-          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? kucoinPrice.priceUsd)
-        : 0;
-    const marketCap = supply > 0 ? supply * kucoinPrice.priceUsd : 0;
-    return {
-      id: coingeckoId,
-      symbol: meta.symbol,
-      name: meta.name,
-      priceUsd: kucoinPrice.priceUsd,
-      change24h: kucoinPrice.change24h,
-      change7d: null,
-      volume24h: kucoinPrice.volume24h,
-      marketCap,
-      sparkline7d: [],
-      source: "kucoin",
-      fetchedAt,
-    };
-  }
-
-  // Source #5 : DexScreener (DEX aggregator universel, couvre 500K+ tokens
-  // y compris ceux delisted des CEX). Diag /api/diag-dex 2026-05-08 confirme
-  // que l'API repond depuis Hetzner DE en ~15ms. Match strict par symbol +
-  // tri par liquidity USD desc = pair le plus representatif du marche.
-  // Cas d'usage : OM/MANTRA delisted Bybit/Gate/MEXC/OKX → DexScreener
-  // retourne le pair ETH/Mantra Chain le plus liquide.
-  //
-  // FIX 2026-05-08 cycle 6 — SKIP_DEXSCREENER pour tokens dont le symbol
-  // matche AUSSI un ancien token mort (ambiguity). Audit OM/MANTRA :
-  //   - "mantra" (NEW $OM Mantra Chain Cosmos) → DexScreener trouve pair
-  //     OLD MANTRA DAO ERC-20 ($0.007634, mort post-crash) car symbol="OM"
-  //     est ambigu. CoinGecko `mantra` distingue ($0.0104 reel).
-  // Pour ces tokens on skip DexScreener et la cascade tombe sur CoinGecko
-  // via _coincapAsset (Source #6). A etendre si on rencontre d'autres cas.
-  const dexPrice = SKIP_DEXSCREENER.has(coingeckoId)
-    ? null
-    : await getDexScreenerPrice(exchangeSymbol);
-  if (dexPrice && dexPrice.priceUsd > 0) {
-    const fallbackMarketCap = STATIC_FALLBACK[coingeckoId]?.marketCap ?? 0;
-    const supply =
-      fallbackMarketCap > 0
-        ? fallbackMarketCap /
-          (STATIC_FALLBACK[coingeckoId]?.priceUsd ?? dexPrice.priceUsd)
-        : 0;
-    const marketCap = supply > 0 ? supply * dexPrice.priceUsd : 0;
-    return {
-      id: coingeckoId,
-      symbol: meta.symbol,
-      name: meta.name,
-      priceUsd: dexPrice.priceUsd,
-      change24h: dexPrice.change24h,
-      change7d: null,
-      volume24h: dexPrice.volume24h,
-      marketCap,
-      sparkline7d: [],
-      source: "dexscreener",
-      fetchedAt,
-    };
-  }
-
-  // Source #6 : CryptoCompare (rate-limited en prod sans cle, garde si cle ajoutee)
-  const ccPrice = await getCryptoComparePriceByCoingeckoId(coingeckoId);
-  if (ccPrice && ccPrice.priceUsd > 0) {
-    return {
-      id: coingeckoId,
-      symbol: meta.symbol,
-      name: meta.name,
-      priceUsd: ccPrice.priceUsd,
-      change24h: ccPrice.change24h,
-      change7d: null, // CryptoCompare /pricemultifull n'expose pas 7d direct
-      volume24h: ccPrice.volume24h,
-      marketCap: ccPrice.marketCap,
-      sparkline7d: [],
-      source: "cryptocompare",
-      fetchedAt,
-    };
-  }
-
-  // Source #2.5 (legacy fallback) : CoinGecko via _coincapAsset (rate-limit
-  // observe en prod 2026-05-08). Reste comme filet entre CryptoCompare et
-  // static — utile si CryptoCompare a un downtime exceptionnel.
-  const cc = await _coincapAsset(coingeckoId);
-  if (cc && parseFloat(cc.priceUsd) > 0) {
-    return {
-      id: coingeckoId,
-      symbol: cc.symbol.toUpperCase(),
-      name: cc.name,
-      priceUsd: parseFloat(cc.priceUsd),
-      change24h: parseFloat(cc.changePercent24Hr),
-      change7d: null,
-      volume24h: parseFloat(cc.volumeUsd24Hr),
-      marketCap: parseFloat(cc.marketCapUsd),
-      sparkline7d: [],
-      source: "coincap",
-      fetchedAt,
-    };
-  }
-
-  // Source #3 : Static fallback — KV snapshot frais (cron 5min) prioritaire
-  // sur le hardcode. Si le cron n'a pas tourne / KV mocked, fallback hardcode.
-  // BATCH 53 #5 — auto-update via /api/cron/update-static-prices.
+  // Cascade exhausted (coingeckoId pas dans STATIC_FALLBACK ni couvert
+  // par aucune source live). On essaie le KV snapshot (auto-update via
+  // cron) avant de retourner un snapshot degrade priceUsd=0.
   const kvSnapshot = await _readKvSnapshot();
   const kvEntry = kvSnapshot?.[coingeckoId];
-  const stat = kvEntry ?? STATIC_FALLBACK[coingeckoId];
+  if (kvEntry) {
+    return {
+      id: coingeckoId,
+      symbol: dataMeta.symbol,
+      name: dataMeta.name,
+      priceUsd: kvEntry.priceUsd,
+      change24h: kvEntry.change24h,
+      change7d: null,
+      volume24h: kvEntry.volume24h,
+      marketCap: kvEntry.marketCap,
+      sparkline7d: [],
+      source: "static",
+      fetchedAt,
+    };
+  }
+
+  // Snapshot ultime degrade : priceUsd=0 (frontend affiche "—").
   return {
     id: coingeckoId,
-    symbol: meta.symbol,
-    name: meta.name,
-    priceUsd: stat?.priceUsd ?? 0,
-    change24h: stat?.change24h ?? 0,
+    symbol: dataMeta.symbol,
+    name: dataMeta.name,
+    priceUsd: 0,
+    change24h: 0,
     change7d: null,
-    volume24h: stat?.volume24h ?? 0,
-    marketCap: stat?.marketCap ?? 0,
+    volume24h: 0,
+    marketCap: 0,
     sparkline7d: [],
     source: "static",
     fetchedAt,
   };
 }
+
 
 /**
  * Wrappe avec unstable_cache Next pour deduplication request memoization +
@@ -817,10 +657,11 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
  */
 export const getPriceSnapshot = unstable_cache(
   _getPriceSnapshot,
-  // FIX 2026-05-08 — v12 : SKIP_DEXSCREENER set pour `mantra` (NEW OM
-  // Mantra Chain). Sans skip, DS trouve l'OLD MANTRA DAO ERC-20 mort
-  // car symbol="OM" est ambigu. Cache invalide ancien snapshot $0.0076.
-  ["price-source-snapshot-v12"],
+  // FIX 2026-05-08 — v13 : Phase 2 Provider Pattern. La cascade live
+  // est orchestrate via lib/price-providers/. Architecture extensible
+  // pour scaler vers "toutes les cryptos existantes" un jour. Bump
+  // cache pour invalider tous les snapshots pre-refactor.
+  ["price-source-snapshot-v13"],
   { revalidate: 300, tags: ["price-source"] },
 );
 

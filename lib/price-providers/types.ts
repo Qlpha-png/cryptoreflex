@@ -51,6 +51,12 @@ export interface ProviderPriceData {
   change24h: number;
   /** Volume 24h USD. 0 si non dispo. */
   volume24h: number;
+  /**
+   * Market cap USD si le provider l'expose nativement (CryptoCompare,
+   * CoinGecko, Static). Si absent, l'orchestrator l'estime via
+   * STATIC_FALLBACK supply (constant) × priceUsd_live.
+   */
+  marketCap?: number;
   /** Sparkline 7d horaire — uniquement Binance. Vide ailleurs. */
   sparkline7d?: number[];
   /** Source-specific metadata (debug, audit). */
