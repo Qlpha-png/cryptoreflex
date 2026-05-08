@@ -60,6 +60,11 @@ on:
         required: false
         default: false
         type: boolean
+      coingecko_ids:
+        description: "Liste CSV de coingecko_ids à régen (bypass count/start_rank/min_quality/skip_existing). Ex: bitcoin,ethereum,solana"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -107,6 +112,10 @@ jobs:
           fi
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             ARGS="$ARGS --dry-run"
+          fi
+          # Cycle 24 : regen ciblée — si coingecko_ids fourni, override les autres filtres.
+          if [ -n "${{ inputs.coingecko_ids }}" ]; then
+            ARGS="$ARGS --coingecko-ids=${{ inputs.coingecko_ids }}"
           fi
           MODEL="${{ inputs.model }}"
           echo "Model: $MODEL"
