@@ -138,30 +138,34 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
-    // BUG FIX 2026-05-03 — accept ALL snapshots avec priceUsd>0 (y compris
-    // static fallback). Avant on tombait sur CoinGecko (epuise) si un seul
-    // snapshot etait static -> tout revient en null/vide. Maintenant on
-    // se contente du dataset static plutot qu'un null.
-    const allWithPrice = snapshots.every((s) => s.priceUsd > 0);
-    if (allWithPrice) {
-      return snapshots.map((s) => ({
-        id: s.id as CoinId,
-        symbol: s.symbol,
-        name: s.name,
-        price: s.priceUsd,
-        change24h: s.change24h,
-        marketCap: s.marketCap,
-        // BUG FIX 2026-05-03 — image vide car CryptoLogo composant fait
-        // un lookup intelligent via lib/crypto-logos.ts (CoinGecko CDN
-        // cache hardcode + fallback initiales). URL CoinCap CDN 404 sur
-        // les coins exotiques = broken image icon visible.
-        image: "",
-      }));
-    }
-    // Sinon, on tente CoinGecko en fallback (peut succeeder pour les coins
-    // que Binance n'a pas et que CoinCap a mal).
+    // FIX 2026-05-08 — REGRESSION : "allWithPrice" tombait sur le fallback
+    // CoinGecko (qui 429 + crashait sur COIN_META[id].symbol) si UNE SEULE
+    // crypto avait priceUsd=0 (ex: frax-share absent de toutes les sources).
+    // Resultat : /api/prices?ids=hivemapper,bittensor,... → 500 sur 8/10 chunks
+    // de l'audit verify-100-prices-prod.mjs.
+    //
+    // Strategie revue : on retourne TOUJOURS les snapshots de price-source
+    // (qui inclut deja le static fallback en dernier recours dans la cascade),
+    // meme si un coin a priceUsd=0. C'est mieux que CoinGecko 429.
+    // Affichage UI : prix 0 affiche "—" via CryptoLogo / formatUsd helpers,
+    // donc degradation gracieuse plutot que crash 500.
+    return snapshots.map((s) => ({
+      id: s.id as CoinId,
+      symbol: s.symbol,
+      name: s.name,
+      price: s.priceUsd,
+      change24h: s.change24h,
+      marketCap: s.marketCap,
+      // BUG FIX 2026-05-03 — image vide car CryptoLogo composant fait
+      // un lookup intelligent via lib/crypto-logos.ts (CoinGecko CDN
+      // cache hardcode + fallback initiales). URL CoinCap CDN 404 sur
+      // les coins exotiques = broken image icon visible.
+      image: "",
+    }));
   } catch {
-    // price-source unavailable → fallback CoinGecko ci-dessous
+    // price-source unavailable (cas extreme : import.meta crash, KV down) →
+    // fallback CoinGecko ci-dessous. Comme CoinGecko est lui-meme 429,
+    // on tombera dans le catch final qui retourne ids.map() avec price=0.
   }
 
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
@@ -202,15 +206,23 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
     }));
   } catch {
     // Graceful fallback so the site still renders if the API is rate-limited.
-    return ids.map((id) => ({
-      id,
-      symbol: COIN_META[id].symbol,
-      name: COIN_META[id].name,
-      price: 0,
-      change24h: 0,
-      marketCap: 0,
-      image: "",
-    }));
+    // FIX 2026-05-08 — BUG production : COIN_META[id] est undefined pour
+    // les ~60 cryptos hidden-gems qui ne sont pas dans le mapping legacy
+    // (limite au top 30). Resultat : `COIN_META[id].symbol` crashait avec
+    // TypeError → /api/prices 500 sur 80% des chunks dans verify-100-prices.
+    // Fallback derivé de l'id si meta absente (suffit pour rendu degrade).
+    return ids.map((id) => {
+      const meta = COIN_META[id];
+      return {
+        id,
+        symbol: meta?.symbol ?? id.toUpperCase().slice(0, 6),
+        name: meta?.name ?? id.charAt(0).toUpperCase() + id.slice(1),
+        price: 0,
+        change24h: 0,
+        marketCap: 0,
+        image: "",
+      };
+    });
   }
 }
 
