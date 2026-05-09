@@ -39,8 +39,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sessionId = crypto.randomUUID();
 
   if (!verifyBearer(req, secret)) {
-    // 404 délibérément (security through obscurity, faible mais utile contre les scrapers).
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Renvoie 401 explicite (cohérent avec /api/cron/update-static-prices) — le
+    // monitoring distingue ainsi "route absente" (404) de "auth échouée" (401),
+    // ce qui simplifie le diagnostic. Le gain "security through obscurity" du
+    // 404 était négligeable (les scanners testent les deux statuts).
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   if (!secret) {
     // Mode dev / preview : on log clairement.

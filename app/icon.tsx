@@ -33,12 +33,16 @@ export default function Icon() {
       >
         {/* X stylisé : 2 traits diagonaux qui se croisent.
             Bleu Klein #002FA7 → bleu marine #001D6B (gradient).
-            Construits via 2 div absolument positionnées en rotation. */}
+            Construits via 2 div absolument positionnées en rotation.
+            display:flex requis par Satori dès qu'un <div> a 2+ enfants
+            (même position:absolute) — sinon "Expected <div> to have
+            explicit display: flex" en runtime. */}
         <div
           style={{
             position: "relative",
             width: 22,
             height: 22,
+            display: "flex",
           }}
         >
           {/* Trait diagonal "\" (du haut-gauche au bas-droite) */}

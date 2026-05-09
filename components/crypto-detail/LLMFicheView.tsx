@@ -5,7 +5,12 @@ import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
-import { breadcrumbSchema } from "@/lib/schema";
+import {
+  articleSchema,
+  breadcrumbSchema,
+  cryptoFinancialProductSchema,
+  graphSchema,
+} from "@/lib/schema";
 
 /**
  * LLMFicheView — render minimaliste mais complet d'une fiche T3 LLM-generated
@@ -63,6 +68,48 @@ const SCORE_LABELS: Record<string, string> = {
 export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
   const llm = (fiche.llm_content || {}) as LLMContent;
   const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
+
+  // BUG G fix (2026-05-09) — homogénéise le JSON-LD avec les fiches
+  // éditoriales /cryptos/[slug] (Bitcoin & co.) qui exposent
+  // Article + FinancialProduct + Breadcrumb. Avant : seulement
+  // Organization + WebSite (layout) + Breadcrumb → Google ne pouvait pas
+  // surfacer de rich snippet "cryptoactif" sur les ~680 fiches LLM.
+  const description =
+    llm.tldr?.slice(0, 200) ||
+    `Analyse Cryptoreflex de ${fiche.name} (${fiche.symbol}) : tokenomics, scores, risques, statut FR/UE.`;
+  const yearCreated = fiche.genesis_date
+    ? new Date(fiche.genesis_date).getFullYear()
+    : undefined;
+  const externalSameAs: string[] = [
+    `https://www.coingecko.com/en/coins/${fiche.coingecko_id}`,
+    ...(fiche.homepage_url ? [fiche.homepage_url] : []),
+  ];
+  const schemas = graphSchema([
+    articleSchema({
+      slug: `cryptos/${fiche.coingecko_id}`,
+      title: `${fiche.name} (${fiche.symbol}) — fiche complète Cryptoreflex`,
+      description,
+      date: fiche.published_at ?? fiche.last_refreshed_at,
+      dateModified: fiche.last_refreshed_at,
+      category: fiche.categories?.[0] ?? "Crypto",
+      tags: [fiche.name, fiche.symbol, "crypto", ...(fiche.categories ?? [])],
+      cover: `/cryptos/${fiche.coingecko_id}/opengraph-image`,
+    }),
+    cryptoFinancialProductSchema({
+      slug: fiche.coingecko_id,
+      name: fiche.name,
+      symbol: fiche.symbol,
+      description,
+      category: fiche.categories?.[0] ?? "Cryptocurrency",
+      yearCreated,
+      sameAs: externalSameAs,
+    }),
+    breadcrumbSchema([
+      { name: "Accueil", url: BRAND.url },
+      { name: "Cryptos", url: `${BRAND.url}/cryptos` },
+      { name: fiche.name, url: pageUrl },
+    ]),
+  ]);
 
   return (
     <article className="container mx-auto max-w-4xl px-4 py-8">
@@ -316,14 +363,8 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
         <AmfDisclaimer variant="speculation" />
       </div>
 
-      {/* Structured data */}
-      <StructuredData
-        data={breadcrumbSchema([
-          { name: "Accueil", url: BRAND.url },
-          { name: "Cryptos", url: `${BRAND.url}/cryptos` },
-          { name: fiche.name, url: pageUrl },
-        ])}
-      />
+      {/* Structured data — Article + FinancialProduct + Breadcrumb (BUG G fix) */}
+      <StructuredData data={schemas} id={`crypto-llm-${fiche.coingecko_id}`} />
     </article>
   );
 }

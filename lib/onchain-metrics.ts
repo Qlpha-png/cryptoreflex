@@ -209,8 +209,19 @@ async function fetchCoinGeckoMetrics(
           headers: cgHeaders(),
           signal: AbortSignal.timeout(8000),
         },
-      ),
-      // Calcul dominance via notre aggregator (top 200 CoinCap, gratuit)
+      ).catch((err) => {
+        // Network/timeout error — log puis bubble up via res.ok=false sentinel.
+        console.warn(
+          `[onchain] CoinGecko fetch threw for ${coingeckoId}:`,
+          err instanceof Error ? err.message : String(err),
+        );
+        return null;
+      }),
+      // Calcul dominance via notre aggregator (top 200 CoinCap, gratuit) —
+      // Volontairement INDEPENDANT de l'appel CoinGecko : pour les top cryptos
+      // (BTC, ETH, SOL, BNB, XRP, ADA, ...), si CoinGecko fail (rate limit /
+      // plan demo expire), on conserve au moins la dominance qui ne depend
+      // d'aucune cle API.
       (async () => {
         try {
           const { getTopMarket } = await import("@/lib/price-source");
@@ -218,7 +229,11 @@ async function fetchCoinGeckoMetrics(
           const totalMcap = top200.reduce((sum, c) => sum + (c.marketCap || 0), 0);
           const me = top200.find((c) => c.id === coingeckoId);
           return { totalMcap, myMcap: me?.marketCap ?? 0 };
-        } catch {
+        } catch (err) {
+          console.warn(
+            `[onchain] dominance source failed for ${coingeckoId}:`,
+            err instanceof Error ? err.message : String(err),
+          );
           return null;
         }
       })(),
@@ -226,7 +241,15 @@ async function fetchCoinGeckoMetrics(
 
     const out: Partial<OnChainMetrics> = {};
 
-    if (coinRes.ok) {
+    // BATCH 51 — Dominance calculee via notre aggregator (CoinCap top
+    // 200) plutot que CoinGecko /global. 0 cout supplementaire vs
+    // 1 call CoinGecko economise. Calcul fait AVANT l'analyse de coinRes
+    // pour garantir le fallback meme si CoinGecko fail.
+    if (dominanceData && dominanceData.totalMcap > 0 && dominanceData.myMcap > 0) {
+      out.marketCapDominance = (dominanceData.myMcap / dominanceData.totalMcap) * 100;
+    }
+
+    if (coinRes && coinRes.ok) {
       const coin = (await coinRes.json()) as CoinGeckoCoin;
       const fdv = coin.market_data?.fully_diluted_valuation?.usd;
       if (typeof fdv === "number" && Number.isFinite(fdv) && fdv > 0) {
@@ -236,18 +259,20 @@ async function fetchCoinGeckoMetrics(
       if (typeof commits === "number" && Number.isFinite(commits) && commits >= 0) {
         out.githubCommits30d = commits;
       }
-
-      // BATCH 51 — Dominance calculee via notre aggregator (CoinCap top
-      // 200) plutot que CoinGecko /global. 0 cout supplementaire vs
-      // 1 call CoinGecko economise.
-      if (dominanceData && dominanceData.totalMcap > 0 && dominanceData.myMcap > 0) {
-        out.marketCapDominance = (dominanceData.myMcap / dominanceData.totalMcap) * 100;
-      }
+    } else if (coinRes) {
+      // HTTP non-2xx — log explicitement pour comprendre pourquoi (429,
+      // 401 plan expire, 404 id inconnu). Avant on swallowed silencieusement.
+      console.warn(
+        `[onchain] CoinGecko failed for ${coingeckoId}: ${coinRes.status} ${coinRes.statusText}`,
+      );
     }
 
     return out;
   } catch (err) {
-    console.error("[onchain-metrics] CoinGecko error:", err);
+    console.warn(
+      `[onchain] CoinGecko unexpected error for ${coingeckoId}:`,
+      err instanceof Error ? err.message : String(err),
+    );
     return {};
   }
 }

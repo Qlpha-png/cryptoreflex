@@ -38,7 +38,8 @@ interface AtRiskRow {
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   if (!verifyBearer(req, process.env.CRON_SECRET)) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // 401 explicite (cohérence cron, voir evaluate-alerts).
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
   const supabase = createSupabaseServiceRoleClient();

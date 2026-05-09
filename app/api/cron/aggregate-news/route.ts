@@ -84,8 +84,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const secret = process.env.CRON_SECRET;
   if (!verifyBearer(req, secret)) {
-    // 404 délibéré (security through obscurity).
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // 401 explicite (cohérence cron, voir evaluate-alerts).
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   if (!secret) {
     console.warn(

@@ -28,12 +28,16 @@ export default function AppleIcon() {
           borderRadius: 36,
         }}
       >
-        {/* X stylisé en bleu Klein, version grande pour 180×180 */}
+        {/* X stylisé en bleu Klein, version grande pour 180×180.
+            display:flex requis par Satori dès qu'un <div> a 2+ enfants
+            (même position:absolute) — sinon "Expected <div> to have
+            explicit display: flex" en runtime. */}
         <div
           style={{
             position: "relative",
             width: 110,
             height: 110,
+            display: "flex",
           }}
         >
           <div

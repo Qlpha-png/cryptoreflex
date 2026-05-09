@@ -304,11 +304,11 @@ interface BriefResponse {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse<BriefResponse>> {
-  // Auth Bearer (cron Vercel)
+  // Auth Bearer (cron Vercel) — 401 explicite, cohérent avec les autres crons.
   if (!verifyBearer(req, process.env.CRON_SECRET)) {
     return NextResponse.json(
-      { ok: false, date: "", error: "Not found" },
-      { status: 404 },
+      { ok: false, date: "", error: "unauthorized" },
+      { status: 401 },
     );
   }
 

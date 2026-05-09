@@ -164,9 +164,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const startedAt = new Date(start).toISOString();
   const secret = process.env.CRON_SECRET;
 
-  // Auth Bearer (404 plutôt que 401 : security through obscurity)
+  // Auth Bearer — 401 explicite (cohérence cron, voir evaluate-alerts).
   if (!verifyBearer(req, secret)) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   if (!secret) {
     console.warn("[fiscalite-cron] CRON_SECRET absent — endpoint ouvert (mode dev).");

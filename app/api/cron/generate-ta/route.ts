@@ -85,8 +85,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
 
   if (!verifyBearer(req, secret)) {
-    // 404 délibéré (security through obscurity).
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // 401 explicite (cohérent avec les autres crons) — voir evaluate-alerts pour
+    // la justification du switch 404 → 401.
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
   if (!secret) {
     console.warn("[ta-cron-warn] CRON_SECRET absent — endpoint ouvert (mode dev).");

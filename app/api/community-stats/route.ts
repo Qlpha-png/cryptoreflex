@@ -129,9 +129,20 @@ async function fetchStatsFromSupabase(): Promise<CommunityStats | null> {
     return null;
   }
 
+  const proCount = proRes.count ?? 0;
+  const newProThisMonth = newRes.count ?? 0;
+
+  // Si TOUS les compteurs sont à zéro, on considère que la base est "vide"
+  // (DB fraîche, RLS qui filtre tout, ou simplement pas encore de Pro).
+  // Retourner null laisse `getCachedStats` tomber sur le FALLBACK hardcodé,
+  // ce qui évite d'afficher un site "mort" (cf. commentaire d'en-tête).
+  if (proCount === 0 && newProThisMonth === 0 && alerts7d === 0) {
+    return null;
+  }
+
   return {
-    proCount: proRes.count ?? 0,
-    newProThisMonth: newRes.count ?? 0,
+    proCount,
+    newProThisMonth,
     alertsTriggered7d: alerts7d,
     generatedAt: nowIso,
     fallback: false,

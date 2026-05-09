@@ -235,8 +235,13 @@ const mdxComponents = {
   ),
 
   img: (props: ComponentProps<"img">) => (
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    <img className="my-6 rounded-xl border border-border" loading="lazy" {...props} />
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className="my-6 rounded-xl border border-border"
+      loading="lazy"
+      {...props}
+      alt={props.alt ?? ""}
+    />
   ),
 };
 
