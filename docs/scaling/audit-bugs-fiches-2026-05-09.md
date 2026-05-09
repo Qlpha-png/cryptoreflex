@@ -127,27 +127,50 @@ plateformes FR PSAN qu'on recommande). Options :
 Recommandation : **option A** — pas de valeur SEO claire pour ce contenu
 de niche, garde focus sur les 100 cryptos top trafic.
 
-### ⏳ BUG #6 — `/cryptos/[slug-LLM]/opengraph-image` image générique
+### ✅ BUG #6 — `/cryptos/[slug-LLM]/opengraph-image` image générique
 
-**Symptôme** : `/cryptos/chain-2/opengraph-image` retourne PNG 1200x630
-(124 KB), mais probablement template par défaut sans le nom Onyxcoin/symbol XCN.
+**Symptôme** : `/cryptos/chain-2/opengraph-image` retournait PNG 1200x630
+mais avec template par défaut (ticker `—`, nom "Crypto", tagline générique).
+680 fiches LLM partageaient la même OG card sur Twitter/Telegram.
 
-**Root cause** : `app/cryptos/[slug]/opengraph-image.tsx` utilise
-`getCryptoBySlug()` (statique). Pour les LLM, fall-back sur image générique.
+**Root cause** : `app/cryptos/[slug]/opengraph-image.tsx` utilisait
+uniquement `getCryptoBySlug()` (100 fiches statiques). Pour les LLM,
+fall-back sur image générique faute de données.
 
-**Test manuel à faire** : ouvrir l'URL dans le navigateur pour vérifier
-visuellement.
+**Fix** : commit `b86bc53`. Ajout d'un fall-back DB via
+`getCryptoFicheBySlug()` + 3e variante visuelle "Fiche analyse" (badge
+violet) distincte de "Top 10" (cyan) et "Hidden Gem" (ambre).
 
-**Fix** : modifier `opengraph-image.tsx` pour fall-back DB comme la page
-principale. Effort : ~30 min.
+```typescript
+async function resolveViewModel(slug: string): Promise<OgViewModel> {
+  const crypto = getCryptoBySlug(slug);
+  if (crypto) return { /* legacy top10/gem */ };
+
+  const fiche = await getCryptoFicheBySlug(slug); // DB lookup
+  if (fiche) {
+    return {
+      name: fiche.name,
+      symbol: fiche.symbol.toUpperCase(),
+      tagline: truncate(fiche.llm_content.tldr, 180),
+      category: fiche.categories?.[0] ?? "Cryptomonnaie",
+      variant: "llm", // theme violet
+    };
+  }
+  return { /* fallback générique */ };
+}
+```
+
+**Note** : runtime switch `"edge"` → `"nodejs"` pour fiabiliser la
+lecture Supabase (cohérent avec `page.tsx`). Coût : ~50ms cold start
+amorti par cache CDN des OG.
 
 ## Bilan
 
 ```
 Bugs trouvés : 6
-Fixés        : 2 (BUG #1, #3)
+Fixés        : 3 (BUG #1, #3, #6)
 Acceptés     : 1 (BUG #2, mineur)
-À décider    : 3 (BUG #4, #5, #6 — UX/produit)
+À décider    : 2 (BUG #4, #5 — UX/produit)
 ```
 
 **Impact business** :
@@ -164,6 +187,7 @@ Acceptés     : 1 (BUG #2, mineur)
 e2e60ab  fix(fiches): 680 fiches LLM enfin accessibles via /cryptos/[slug]
 f4f481e  fix(fiches): cryptos-db.ts utilise service-role (pas server-client cookies)
 2523157  feat(seo): sitemap inclut les 680 fiches LLM DB-backed
+b86bc53  fix(fiches): OG image fall-back DB — 680 fiches LLM ont leur image perso
 ```
 
 ## Lessons learned
