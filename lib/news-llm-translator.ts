@@ -8,19 +8,21 @@
  * Architecture :
  *  - Input : NewsRaw (titre + extrait + URL source)
  *  - Output : { translatedTitle, summary, analysis, keyFacts[], frImpact }
- *  - LLM : Claude Haiku 4.5 (~$0.01/article, latence <2s)
+ *  - LLM : Claude Haiku 4.5 via OpenRouter (~$0.01/article, latence <2s)
  *  - Compliance : on n'incite PAS Claude à reproduire > 15 mots du source.
  *    On lui demande explicitement une SYNTHÈSE en français.
- *  - Fallback : si ANTHROPIC_API_KEY absent ou erreur API → null,
+ *  - Fallback : si OPENROUTER_API_KEY absent ou erreur API → null,
  *    le caller utilisera le rewriter déterministe legacy.
  *
  * Coût estimé : 50 news/jour × $0.01 = $15/mois (acceptable pour un MVP).
  *
  * Le résultat est consommé par `news-rewriter.ts` qui injecte ces blocs
  * dans le MDX final à la place du boilerplate générique actuel.
+ *
+ * BACKEND IA (mai 2026) : OpenRouter (proxy Claude) au lieu du SDK Anthropic
+ * direct. Format OpenAI-compatible chat completions, non-streaming.
  */
 
-import Anthropic from "@anthropic-ai/sdk";
 import type { NewsRaw } from "@/lib/news-types";
 
 export interface TranslatedNews {
@@ -61,16 +63,14 @@ Schema JSON de sortie :
 }`;
 
 /**
- * Traduit + analyse un article via Claude Haiku 4.5.
+ * Traduit + analyse un article via Claude Haiku 4.5 (OpenRouter).
  * Retourne null si API key absent ou erreur (fallback rewriter déterministe).
  */
 export async function translateNewsArticle(
   raw: NewsRaw,
 ): Promise<TranslatedNews | null> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return null;
-
-  const client = new Anthropic({ apiKey });
 
   const userMessage = `Voici une news crypto à traiter pour les lecteurs français :
 
@@ -84,19 +84,43 @@ ${raw.description}
 Génère le JSON de sortie en suivant le schema strict.`;
 
   try {
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 1500,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
-    });
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://www.cryptoreflex.fr",
+          "X-Title": "Cryptoreflex",
+        },
+        body: JSON.stringify({
+          model: "anthropic/claude-haiku-4.5",
+          max_tokens: 1500,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
+        }),
+      },
+    );
 
-    // Extract text from the response (Claude returns content blocks).
-    const textBlock = response.content.find((b) => b.type === "text");
-    if (!textBlock || textBlock.type !== "text") return null;
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error(
+        `[news-llm-translator] OpenRouter HTTP ${response.status}: ${errText.slice(0, 200)}`,
+      );
+      return null;
+    }
+
+    const json = (await response.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+    const rawText = json.choices?.[0]?.message?.content;
+    if (!rawText) return null;
 
     // Strip markdown code fences if Claude wrapped the JSON.
-    const text = textBlock.text
+    const text = rawText
       .replace(/^```json\s*/i, "")
       .replace(/^```\s*/, "")
       .replace(/\s*```\s*$/, "")

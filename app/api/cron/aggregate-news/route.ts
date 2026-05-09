@@ -149,13 +149,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       }
 
       try {
-        // BATCH 35b — bascule sur rewriteNewsWithLLM (Claude Haiku 4.5)
-        // si ANTHROPIC_API_KEY défini. User feedback "dans les news ya
-        // rien juste une redirection vers l'article j'aimerais qu'on
-        // traduise l'article en français direct ici". Coût ~$0.01/article.
-        // Fallback automatique sur rewriteNews déterministe si l'API
-        // échoue (rate-limit, JSON malformé, key absente).
-        const useLlm = Boolean(process.env.ANTHROPIC_API_KEY);
+        // BATCH 35b — bascule sur rewriteNewsWithLLM (Claude Haiku 4.5
+        // via OpenRouter) si OPENROUTER_API_KEY défini. User feedback
+        // "dans les news ya rien juste une redirection vers l'article
+        // j'aimerais qu'on traduise l'article en français direct ici".
+        // Coût ~$0.01/article. Fallback automatique sur rewriteNews
+        // déterministe si l'API échoue (rate-limit, JSON malformé, key absente).
+        const useLlm = Boolean(process.env.OPENROUTER_API_KEY);
         const { slug, frontmatter, body } = useLlm
           ? await rewriteNewsWithLLM(item)
           : rewriteNews(item);

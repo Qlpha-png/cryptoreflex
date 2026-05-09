@@ -46,7 +46,9 @@ const nextConfig = {
       // client (via shared modules entre RSC + Client Components). Gains
       // additionnels mesurés : ~10-25 KB selon la page, surtout sur les
       // routes API + pages dynamic auth-aware.
-      "@anthropic-ai/sdk", // Claude SDK (utilisé via /api/ask) ~30 KB
+      // "@anthropic-ai/sdk" supprimé mai 2026 — bascule sur fetch OpenRouter
+      // direct (cf. /api/ask + lib/news-llm-translator). Le pkg peut être
+      // retiré de package.json (npm uninstall @anthropic-ai/sdk).
       "next-mdx-remote",   // MDX runtime (utilisé sur /blog, /actualites) ~15 KB
       "@sentry/nextjs",    // Sentry hooks/exports — gain ~5-10 KB bundle client
     ],

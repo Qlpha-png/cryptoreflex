@@ -44,11 +44,13 @@
  * SYSTEM PROMPT renforcé : refus explicite hors-topic même si filtre côté
  * code laisse passer.
  *
- * Fail gracieux : si ANTHROPIC_API_KEY pas défini → 503 + message clair.
+ * Fail gracieux : si OPENROUTER_API_KEY pas défini → 503 + message clair.
+ *
+ * BACKEND IA (mai 2026) : OpenRouter (proxy Claude) au lieu du SDK Anthropic
+ * direct. Élimine le besoin d'un compte Anthropic séparé. Format OpenAI-compat.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import * as Sentry from "@sentry/nextjs";
 import { getUser } from "@/lib/auth";
 import { getCryptoBySlug, getAllCryptos } from "@/lib/cryptos";
@@ -270,8 +272,8 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
     );
   }
 
-  // 3. Vérifier ANTHROPIC_API_KEY
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  // 3. Vérifier OPENROUTER_API_KEY
+  const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: "Service IA temporairement indisponible. Réessaie plus tard." },
@@ -423,14 +425,16 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
   }
   context += `\n**Où acheter en France :** ${c.whereToBuy.join(", ")}\n`;
 
-  // 10. Appelle Claude Haiku en STREAMING SSE
-  // Toutes les vérifications passent → on ouvre le stream. Si Anthropic
-  // plante au moment du connect (auth, etc.), on propage en HTTP 502 avant
-  // d'ouvrir le ReadableStream. Si plante en cours de stream, on émet un
-  // event "error" puis on close proprement.
+  // 10. Appelle Claude Haiku via OpenRouter en STREAMING SSE
+  // Toutes les vérifications passent → on ouvre le stream. OpenRouter retourne
+  // du SSE format OpenAI (chat.completion.chunk). On parse les chunks et on
+  // les ré-émet au format SSE Cryptoreflex (events meta/text/done/error).
   const userPrompt = `Voici la fiche complète de ${c.name} (${c.symbol}) sur Cryptoreflex :\n\n${context}\n\n---\n\nQuestion de l'utilisateur : ${question}`;
   const systemPrompt = SYSTEM_PROMPT.replace(/\{nom de la crypto\}/g, c.name);
+  // Modèle OpenRouter (slug "anthropic/claude-haiku-4.5"). Côté UX on garde
+  // le label "claude-haiku-4-5" pour cohérence avec l'historique.
   const MODEL = "claude-haiku-4-5";
+  const OPENROUTER_MODEL = "anthropic/claude-haiku-4.5";
 
   const encoder = new TextEncoder();
   const cryptoMeta = { id: c.id, name: c.name, symbol: c.symbol };
@@ -450,34 +454,102 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
         // 1) Event meta initial — débloque le state "connected" côté client
         send({ type: "meta", crypto: cryptoMeta, model: MODEL });
 
-        const client = new Anthropic({ apiKey });
-        const anthropicStream = client.messages.stream({
-          model: MODEL,
-          max_tokens: 600,
-          system: systemPrompt,
-          messages: [{ role: "user", content: userPrompt }],
-        });
+        // 2) Appel OpenRouter (OpenAI-compatible chat completions, streaming)
+        const openrouterRes = await fetch(
+          "https://openrouter.ai/api/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+              "HTTP-Referer": "https://www.cryptoreflex.fr",
+              "X-Title": "Cryptoreflex",
+            },
+            body: JSON.stringify({
+              model: OPENROUTER_MODEL,
+              max_tokens: 600,
+              stream: true,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt },
+              ],
+            }),
+          },
+        );
 
-        // 2) Stream les deltas de texte
-        anthropicStream.on("text", (textDelta: string) => {
-          if (textDelta) send({ type: "text", text: textDelta });
-        });
+        if (!openrouterRes.ok || !openrouterRes.body) {
+          const errText = await openrouterRes.text().catch(() => "");
+          throw new Error(
+            `OpenRouter HTTP ${openrouterRes.status}: ${errText.slice(0, 200)}`,
+          );
+        }
 
-        // 3) Attend la fin pour récupérer les usage tokens
-        const finalMessage = await anthropicStream.finalMessage();
-        send({
-          type: "done",
-          inputTokens: finalMessage.usage?.input_tokens ?? 0,
-          outputTokens: finalMessage.usage?.output_tokens ?? 0,
-        });
+        // 3) Parse les chunks SSE OpenAI (delta.content) et ré-émet au format
+        //    Cryptoreflex (event "text"). Compteurs usage récupérés sur le
+        //    dernier chunk OpenRouter (qui inclut un champ `usage`).
+        let inputTokens = 0;
+        let outputTokens = 0;
+
+        const reader = openrouterRes.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        // Pump : lit les chunks, accumule, splitte sur "\n\n" (séparateur SSE)
+        // pour traiter chaque event JSON.
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          // Process complete SSE events (séparés par \n\n)
+          let sepIndex: number;
+          while ((sepIndex = buffer.indexOf("\n\n")) !== -1) {
+            const rawEvent = buffer.slice(0, sepIndex);
+            buffer = buffer.slice(sepIndex + 2);
+
+            // Chaque event SSE OpenRouter = "data: {...}" (potentiellement
+            // multi-ligne, on ne supporte que le cas simple ici).
+            for (const line of rawEvent.split("\n")) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
+              const data = trimmed.slice(5).trim();
+              if (!data) continue;
+              if (data === "[DONE]") {
+                // Fin du stream OpenRouter — on sort.
+                continue;
+              }
+              try {
+                const json = JSON.parse(data) as {
+                  choices?: Array<{
+                    delta?: { content?: string };
+                  }>;
+                  usage?: {
+                    prompt_tokens?: number;
+                    completion_tokens?: number;
+                  };
+                };
+                const delta = json.choices?.[0]?.delta?.content;
+                if (delta) send({ type: "text", text: delta });
+                if (json.usage) {
+                  inputTokens = json.usage.prompt_tokens ?? inputTokens;
+                  outputTokens = json.usage.completion_tokens ?? outputTokens;
+                }
+              } catch {
+                // Chunk non-JSON (ex: commentaire SSE OpenRouter ":") — skip.
+              }
+            }
+          }
+        }
+
+        send({ type: "done", inputTokens, outputTokens });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "unknown";
         Sentry.captureException(err, {
-          tags: { route: "ask/cryptoId", stage: "anthropicStream" },
+          tags: { route: "ask/cryptoId", stage: "openrouterStream" },
           extra: { cryptoId, userId: user.id, plan: user.plan },
           level: "error",
         });
-        console.error("[ask/route] Anthropic stream error:", msg);
+        console.error("[ask/route] OpenRouter stream error:", msg);
         send({
           type: "error",
           message: "Erreur du service IA. Réessaie dans un instant.",
@@ -493,7 +565,7 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
     cancel() {
       // Client a abort (AbortController) — rien à faire ici, le finally du
       // start() ferme le controller, ce qui propage l'annulation au stream
-      // Anthropic via le runtime fetch sous-jacent.
+      // OpenRouter via le runtime fetch sous-jacent.
     },
   });
 
