@@ -173,6 +173,107 @@ const CHUNK_DAYS = 90;
 const SECONDS_PER_DAY = 86_400;
 const CRYPTOCOMPARE_BASE = "https://min-api.cryptocompare.com/data/v2";
 
+// FIX 2026-05-09 : nouvelle source primaire Binance Public API.
+// Avantages vs CG Demo (30/min) et CC free (rate-limited minute) :
+//  - 1200 req/min (40× plus rapide que CG Demo)
+//  - Aucune clé API requise
+//  - Couverture massive : 99% des cryptos liquides ont une pair USDT
+//  - Endpoint klines stable : /api/v3/klines?symbol=XXXUSDT&interval=1d
+// Limitations :
+//  - Prix en USDT (≈ USD) → convertis en EUR via ratio EUR/USD
+//  - Stablecoins peg USD (USDT, USDC, DAI) → hardcodés à 1.0 USD
+const BINANCE_BASE = "https://api.binance.com/api/v3";
+
+// Override pour les coingeckoIds dont la pair Binance ne suit pas le pattern
+// "<CC_SYMBOL>USDT". Stablecoins peg USD = pas de pair (price = 1 USD).
+const BINANCE_PAIR_OVERRIDE: Record<string, string | "__USD_1__"> = {
+  tether: "__USD_1__", // USDT/USDT n'existe pas
+  "usd-coin": "__USD_1__", // USDC peg 1:1
+  dai: "__USD_1__", // DAI peg 1:1
+  // Cryptos non-listées Binance → null (force fallback)
+  // (laissé vide pour l'instant, fallback CC/CG prendra le relais)
+};
+
+// Cache du ratio EUR/USD (1h) pour ne pas multiplier les appels.
+let _eurUsdCache: { rate: number; ts: number } | null = null;
+const EUR_USD_CACHE_MS = 60 * 60 * 1000;
+
+async function _getEurUsdRate(): Promise<number> {
+  if (_eurUsdCache && Date.now() - _eurUsdCache.ts < EUR_USD_CACHE_MS) {
+    return _eurUsdCache.rate;
+  }
+  try {
+    const res = await fetch(`${BINANCE_BASE}/ticker/price?symbol=EURUSDT`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) throw new Error(`EUR/USDT → ${res.status}`);
+    const json = (await res.json()) as { price: string };
+    const eurInUsd = parseFloat(json.price); // 1 EUR = X USDT
+    if (!Number.isFinite(eurInUsd) || eurInUsd <= 0) throw new Error("invalid rate");
+    // 1 USD = 1 / eurInUsd EUR
+    const rate = 1 / eurInUsd;
+    _eurUsdCache = { rate, ts: Date.now() };
+    return rate;
+  } catch (err) {
+    console.warn(`[historical-prices] EUR/USD fetch failed:`, err);
+    // Fallback : 1 USD ≈ 0.92 EUR (moyenne 2026, suffisant pour TA scale-invariant)
+    return 0.92;
+  }
+}
+
+/**
+ * Source primaire : Binance Public API (klines).
+ * Renvoie [] si la crypto n'est pas listée sur Binance ou en cas d'erreur.
+ */
+async function _fetchFromBinance(
+  coinId: string,
+  days: number,
+): Promise<HistoricalPoint[]> {
+  // Stablecoins peg USD : génère une série constante (= 1 USD en EUR).
+  const override = BINANCE_PAIR_OVERRIDE[coinId];
+  if (override === "__USD_1__") {
+    const usdToEur = await _getEurUsdRate();
+    const now = Date.now();
+    return Array.from({ length: Math.min(days, 1000) }, (_, i) => ({
+      t: now - (days - 1 - i) * SECONDS_PER_DAY * 1000,
+      price: usdToEur, // 1 USD en EUR
+    }));
+  }
+  // Pair par défaut : <CC_SYMBOL>USDT (XRPUSDT, AVAXUSDT, etc.)
+  const ccSymbol = CG_TO_CC[coinId];
+  if (!ccSymbol) return [];
+  const pair = override ?? `${ccSymbol}USDT`;
+  const limit = Math.min(days, 1000); // Binance cap = 1000 points
+
+  try {
+    const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=1d&limit=${limit}`;
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      // 400 = pair invalide (crypto pas listée) → return [], laisse fallback prendre
+      throw new Error(`Binance ${pair} → ${res.status}`);
+    }
+    const klines = (await res.json()) as Array<
+      [number, string, string, string, string, ...unknown[]]
+    >;
+    if (!Array.isArray(klines) || klines.length === 0) return [];
+
+    // klines format : [openTime, open, high, low, close, volume, ...]
+    // On garde t = openTime (ms) et price = close converti en EUR.
+    const usdToEur = await _getEurUsdRate();
+    return klines.map((k) => ({
+      t: k[0],
+      price: parseFloat(k[4]) * usdToEur,
+    }));
+  } catch (err) {
+    console.warn(`[historical-prices] Binance failed (${pair}):`, err);
+    return [];
+  }
+}
+
 /**
  * Mapping coingeckoId → symbole CryptoCompare (= ticker uppercase standard).
  * Couvre les 41 coins de COIN_IDS. Les rebranding (MATIC→POL) ont les deux
@@ -399,25 +500,34 @@ async function _fetchHistoricalRange(
 /**
  * Récupère N jours d'historique (close quotidien) en EUR.
  *
- * Stratégie post-fix 2026-05-02 :
- *   1. SI `coinId` mappé dans CG_TO_CC → essai CryptoCompare (fonctionne 5.5 ans
- *      sans clé, contrairement à CG Demo qui plafonne à 365j).
- *   2. SI CC retourne ≥ 30 points → on garde, on retourne.
- *   3. SINON → fallback CoinGecko (cas : coin absent CC, ou maintenance CC).
+ * Stratégie post-fix 2026-05-09 (chaîne 3 sources) :
+ *   1. Binance Public API : 1200 req/min, gratuit, sans clé, 99% des cryptos
+ *      liquides via pair USDT. Source primaire pour stabilité.
+ *   2. CryptoCompare : fonctionne 5.5 ans sans clé pour les cryptos non-Binance.
+ *   3. CoinGecko : fallback final (rate-limited mais couvre les exotiques).
  *
- * Sortie : tableau trié par `t` croissant, dedupliqué (au cas où des chunks
- * se chevauchent par exactement 1 timestamp aux bords).
+ * Seuil de validité : 30 points utilisables (1 mois de daily) avant de passer
+ * au fallback suivant. Sortie triée par `t` croissant.
  */
 async function _fetchHistoricalPrices(
   coinId: string,
   days: number,
 ): Promise<HistoricalPoint[]> {
-  // ---- Source primaire : CryptoCompare (fix bug 365j) ----
+  // ---- Source 1 : Binance (1200/min, 40× CG Demo) ----
+  const binancePoints = await _fetchFromBinance(coinId, days);
+  if (binancePoints.length >= 30) {
+    return binancePoints;
+  }
+  if (binancePoints.length > 0) {
+    console.warn(
+      `[historical-prices] Binance returned ${binancePoints.length} pts for ${coinId} → fallback CC`,
+    );
+  }
+
+  // ---- Source 2 : CryptoCompare (5+ ans sans clé) ----
   const ccSymbol = CG_TO_CC[coinId];
   if (ccSymbol) {
     const ccPoints = await _fetchFromCryptoCompare(ccSymbol, days);
-    // Seuil de validité : au moins 30 points utilisables (1 mois de daily).
-    // En dessous on tente CG en backup pour ne pas afficher un graphe vide.
     if (ccPoints.length >= 30) {
       return ccPoints;
     }
@@ -426,7 +536,7 @@ async function _fetchHistoricalPrices(
     );
   }
 
-  // ---- Fallback CoinGecko (legacy chunked) ----
+  // ---- Source 3 : CoinGecko (fallback final) ----
   return _fetchFromCoinGecko(coinId, days);
 }
 
