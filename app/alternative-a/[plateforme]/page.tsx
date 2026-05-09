@@ -38,15 +38,34 @@ interface Props {
 }
 
 export const revalidate = 86400;
-export const dynamicParams = true;
+/**
+ * BUG FIX 2026-05-09 — `dynamicParams=true` autorisait n'importe quel slug
+ * (`/alternative-a/bitcoin`, `/alternative-a/n-importe-quoi`) à rendre la
+ * page générique au lieu d'une vraie 404. On force `false` : seuls les
+ * slugs de la whitelist `generateStaticParams()` sont valides, le reste
+ * remonte à `notFound()` proprement (HTTP 404 + boundary).
+ */
+export const dynamicParams = false;
 
+/**
+ * Whitelist des plateformes éligibles à `/alternative-a/[plateforme]`.
+ *
+ * On filtre `getAllPlatforms()` :
+ *  - On garde tous les exchanges/brokers (catégorie ≠ "wallet").
+ *  - On exclut explicitement les hardware wallets : "alternative à Ledger"
+ *    n'a pas de sens dans cette taxonomie (le user cherche un exchange).
+ *
+ * Conséquence : `bitcoin` (et tout slug crypto/non-plateforme) → 404 propre.
+ */
 export function generateStaticParams() {
-  return getAllPlatforms().map((p) => ({ plateforme: p.id }));
+  return getAllPlatforms()
+    .filter((p) => p.category !== "wallet")
+    .map((p) => ({ plateforme: p.id }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
   const target = getPlatformById(params.plateforme);
-  if (!target) return {};
+  if (!target || target.category === "wallet") return {};
   const title = `5 alternatives à ${target.name} en 2026 — comparatif crypto FR`;
   const description = `Tu cherches à remplacer ${target.name} ? Voici 5 plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
   return {
@@ -90,7 +109,9 @@ function findAlternatives(target: Platform, limit = 5): Platform[] {
 
 export default function AlternativePage({ params }: Props) {
   const target = getPlatformById(params.plateforme);
-  if (!target) notFound();
+  // Cohérence avec generateStaticParams : on refuse aussi les wallets ici
+  // (defense in depth — au cas où dynamicParams serait remis à true).
+  if (!target || target.category === "wallet") notFound();
 
   const alternatives = findAlternatives(target, 5);
 

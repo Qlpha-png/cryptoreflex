@@ -42,7 +42,15 @@ const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 // via /api/v1/models, plus dans la liste). Migration vers Claude Sonnet 4.5
 // (équivalent qualité, supporté en priorité par OpenRouter en 2026).
 // `LLM_MODEL` env override toujours possible si on veut tester un autre.
-const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-4.5";
+//
+// FIX 2026-05-09 — `anthropic/claude-sonnet-4.5` N'EXISTE PAS non plus sur
+// OpenRouter (verifie via /api/v1/models : seuls les routers `~anthropic/
+// claude-sonnet-latest` + versions Opus pinnees sont expose). Resultat :
+// 2 runs failed en 6-9s avec HTTP 400 model_not_found (#1 2026-05-02,
+// #2 2026-05-09). Migration vers le router alias `anthropic/claude-sonnet-
+// latest` qui suit toujours la derniere Sonnet stable supportee. Pricing
+// PRICING garde l'entree historique pour eviter NaN sur l'estimateur.
+const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-latest";
 const MAX_TOKENS = 8000;          // ~6000 mots français max
 const TEMPERATURE = 0.5;          // Factuel mais pas robotique
 const TIMEOUT_MS = 120_000;       // 2 min (long-form prend du temps)
@@ -56,6 +64,11 @@ const MAX_RETRIES = 1;
 // list price (3 in / 15 out). Haiku 4.5 = 1/5. Garde l'historique 3.5
 // (déprécié) pour ne pas crasher l'estimateur si LLM_MODEL=ancien.
 const PRICING = {
+  // Routers OpenRouter (FIX 2026-05-09) : pricing aligne sur la Sonnet/Haiku
+  // courante. Si OpenRouter passe a un Sonnet 5 plus cher, remplacer ici.
+  "anthropic/claude-sonnet-latest": { input: 3.00, output: 15.00 },
+  "anthropic/claude-haiku-latest":  { input: 1.00, output: 5.00 },
+  "anthropic/claude-opus-latest":   { input: 15.00, output: 75.00 },
   "anthropic/claude-sonnet-4.5": { input: 3.00, output: 15.00 },
   "anthropic/claude-sonnet-4.6": { input: 3.00, output: 15.00 },
   "anthropic/claude-haiku-4.5":  { input: 1.00, output: 5.00 },

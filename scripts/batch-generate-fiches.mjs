@@ -1211,7 +1211,33 @@ async function main() {
         score_community_health: llmResult.parsed?.scores?.communityHealth?.score ?? null,
         score_overall: llmResult.parsed?.scores?.overall?.score ?? null,
         // fact_check_score recoit l'audit qualite editorial overall (0-100)
+        // TODO 2026-05-09 (audit) : score sature a 100 sur 94% des 680 fiches
+        // LLM => peu informatif. Cause : `auditRegleDes3()` plafonne tres vite
+        // car pondere uniquement (a) tutoiement (3+ "tu" => 100), (b) name
+        // mentions (3+ => 30 + numbers >=10 => 100), (c) profondeur 6 checks
+        // wordCount/risks/competitors. Une fois ces 3 axes OK, overall=100.
+        // Recalibrage propose (a faire avant prochain batch, pas maintenant
+        // pour eviter $$ regen) :
+        //   1. Ajouter fact-check reel : verifier presence de >=2 URLs sources
+        //      (whitepaper, github, defillama, audit) dans `c.sources` ou
+        //      `c.references` => baisse le score si absent
+        //   2. Verifier coherence chiffree : marketCap declarees vs rawData
+        //      (penalite si ecart > 20%)
+        //   3. Renommer ce champ en `editorial_quality_score` car le nom
+        //      "fact_check" est trompeur (c'est plutot un score editorial).
         fact_check_score: audit.overall,
+        // TODO 2026-05-09 (audit) : quality_tier hardcode a "T3" pour les 680
+        // fiches => audit a remonte 0% T1/T2. La logique tier n'a jamais ete
+        // implementee. Recalibrage propose (sans regen) :
+        //   T1 (premium) : audit.passed && score_overall >= 75
+        //                  && rank <= 100 && fact_check_score >= 85
+        //   T2 (standard) : audit.passed && score_overall >= 60
+        //                   && fact_check_score >= 70
+        //   T3 (long-tail) : tout le reste (cas par defaut actuel)
+        // Implementer en remplacant la ligne ci-dessous par un helper
+        // `computeQualityTier(audit, llmResult.parsed?.scores, rawData)`.
+        // Pour l'instant on garde T3 en defaut conservateur : pas de regen
+        // necessaire, juste un UPDATE SQL en bulk au moment du recalibrage.
         quality_tier: "T3",
         llm_model: DEFAULT_MODEL,
         llm_tokens_total: llmResult.tokensTotal,

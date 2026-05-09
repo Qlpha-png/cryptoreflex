@@ -74,6 +74,20 @@ export const CRYPTO_LOGOS: Record<string, string> = {
   "worldcoin-wld": "https://assets.coingecko.com/coins/images/31069/large/worldcoin.jpeg",
   "dydx-chain": "https://assets.coingecko.com/coins/images/32594/large/dydx.png",
   "mantle": "https://assets.coingecko.com/coins/images/30980/large/Mantle-Logo-mark.png",
+  // Audit 2026-05-09 — entries ajoutées pour couvrir 100% des coingeckoId
+  // référencés dans lib/ta-types.ts (TA_CRYPTOS), qui pointaient sur des
+  // /logos/*.svg manquants dans public/logos/.
+  "wrapped-bitcoin": "https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png",
+  dai: "https://assets.coingecko.com/coins/images/9956/large/Badge_Dai.png",
+  "crypto-com-chain": "https://assets.coingecko.com/coins/images/7310/large/cro_token_logo.png",
+  okb: "https://assets.coingecko.com/coins/images/4463/large/WeChat_Image_20220118095654.png",
+  "quant-network": "https://assets.coingecko.com/coins/images/3370/large/5ZOu7brX_400x400.jpg",
+  stacks: "https://assets.coingecko.com/coins/images/2069/large/Stacks_logo_full.png",
+  "lido-dao": "https://assets.coingecko.com/coins/images/13573/large/Lido_DAO.png",
+  "the-sandbox": "https://assets.coingecko.com/coins/images/12129/large/sandbox_logo.jpg",
+  "axie-infinity": "https://assets.coingecko.com/coins/images/13029/large/axie_infinity_logo.png",
+  flow: "https://assets.coingecko.com/coins/images/13446/large/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.png",
+  thorchain: "https://assets.coingecko.com/coins/images/6595/large/Rune200x200.png",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -158,8 +172,16 @@ export function getCryptoLogoFromSymbol(symbol: string): string | undefined {
 /**
  * Helper polymorphe : essaie successivement
  *   1. URL explicite (passée par l'appelant — typiquement depuis CoinGecko API)
+ *      MAIS : si l'URL est un path local `/logos/*` ET qu'on a un mapping CDN
+ *      pour la crypto, on PRÉFÈRE le CDN. Raison : audit 2026-05-09 — 50+
+ *      logos référencés dans `lib/ta-types.ts` (ex: `/logos/solana.svg`) ne
+ *      sont pas physiquement présents dans `public/logos/`, ce qui produit
+ *      des 404 en masse. Le CDN CoinGecko est notre source de vérité fiable.
  *   2. coingeckoId mappé (ex: "cardano" → assets.coingecko.com/...)
  *   3. symbol mappé (ex: "ADA" → coingeckoId → URL)
+ *   4. Si aucun CDN ne matche mais une URL `/logos/*` a été fournie, on la
+ *      retourne quand même (best effort — peut être un asset existant pas
+ *      mappé dans CRYPTO_LOGOS, ex: `/logos/binance.svg`).
  * Retourne `undefined` si aucune source ne donne quoi que ce soit (le composant
  * fera alors un fallback initiales).
  */
@@ -168,7 +190,14 @@ export function resolveCryptoLogo(opts: {
   coingeckoId?: string | null;
   symbol?: string | null;
 }): string | undefined {
-  if (opts.imageUrl) return opts.imageUrl;
+  const isLocalLogosPath =
+    typeof opts.imageUrl === "string" && opts.imageUrl.startsWith("/logos/");
+
+  // Cas 1a : URL explicite externe (http/https) → priorité absolue.
+  if (opts.imageUrl && !isLocalLogosPath) return opts.imageUrl;
+
+  // Cas 1b : URL locale `/logos/*` → on tente d'abord le CDN (anti-404 audit
+  // 2026-05-09), et on retombe sur l'URL locale si aucun mapping CDN n'existe.
   if (opts.coingeckoId) {
     const fromId = getCryptoLogo(opts.coingeckoId);
     if (fromId) return fromId;
@@ -177,5 +206,9 @@ export function resolveCryptoLogo(opts: {
     const fromSym = getCryptoLogoFromSymbol(opts.symbol);
     if (fromSym) return fromSym;
   }
+
+  // Pas de CDN mappé : si on avait une URL locale, on la sert quand même
+  // (peut exister sur disque, ex: `/logos/binance.svg`).
+  if (opts.imageUrl) return opts.imageUrl;
   return undefined;
 }
