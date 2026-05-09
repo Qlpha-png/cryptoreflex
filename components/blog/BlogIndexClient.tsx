@@ -36,11 +36,8 @@ interface Props {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  // FIX B cohérence dates (2026-05-09) — uniformisation DD/MM/YYYY.
+  return new Date(iso).toLocaleDateString("fr-FR");
 }
 
 /** Strip diacritics + lowercase pour matching tolérant accents/casse.

@@ -126,7 +126,8 @@ export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
         <span className="text-muted">
-          Synthèse pédagogique Cryptoreflex · MAJ {tldr.lastUpdated}
+          {/* FIX B cohérence dates (2026-05-09) — DD/MM/YYYY au lieu de YYYY-MM-DD brut. */}
+          Synthèse pédagogique Cryptoreflex · MAJ {new Date(tldr.lastUpdated).toLocaleDateString("fr-FR")}
         </span>
       </div>
     </section>

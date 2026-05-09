@@ -27,6 +27,7 @@ import {
 } from "@/lib/coingecko";
 import { COIN_IDS } from "@/lib/historical-prices";
 import { getAllCryptos } from "@/lib/cryptos";
+import { resolveCryptoLogo } from "@/lib/crypto-logos";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
@@ -115,9 +116,25 @@ export async function GET(request: Request) {
     .map((s) => s.trim().toLowerCase())
     .includes("sparkline");
 
-  const prices = includeSparkline
+  const rawPrices = includeSparkline
     ? await fetchPricesWithSparkline(ids)
     : await fetchPrices(ids);
+
+  // BUG FIX 2026-05-09 — `image: ""` leak.
+  // `_fetchPrices` (price-source aggregator path) returns an empty `image`
+  // by design : internal `<CryptoLogo>` does its own resolveCryptoLogo()
+  // lookup with a gradient-initials fallback. But the JSON contract was
+  // leaking `image: ""` to any external/future API consumer who can't
+  // re-do that lookup. Fix : resolve server-side here so the wire format
+  // always has a usable URL (CoinGecko CDN hardcoded mapping for the ~135
+  // mapped coins, original API URL preserved when present).
+  const prices = rawPrices.map((p) => ({
+    ...p,
+    image:
+      p.image ||
+      resolveCryptoLogo({ coingeckoId: p.id, symbol: p.symbol }) ||
+      "",
+  }));
 
   return NextResponse.json(
     { prices, updatedAt: new Date().toISOString() },

@@ -52,11 +52,8 @@ export default async function BlogPreview() {
   const totalArticles = allArticles.length;
 
   // Date formatter factorized (was recreated 3× per render).
-  const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  // FIX B cohérence dates (2026-05-09) — uniformisation DD/MM/YYYY.
+  const dateFormatter = new Intl.DateTimeFormat("fr-FR");
 
   if (articles.length === 0) {
     return (

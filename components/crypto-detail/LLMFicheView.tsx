@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+// FIX C cohérence (2026-05-09) — remplace les emojis 📊/💰/🗓️ par les icônes
+// Lucide pour aligner les fiches LLM sur le design system du reste du site
+// (les fiches statiques /cryptos/* utilisent déjà BarChart3/Coins/Calendar).
+import { ExternalLink, BarChart3, Coins, Calendar } from "lucide-react";
 
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
+import { resolveCoingeckoId } from "@/lib/crypto-aliases";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import {
@@ -142,18 +146,21 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
         ) : null}
         <div className="mt-4 flex flex-wrap gap-3 text-sm">
           {fiche.market_cap_usd ? (
-            <span>
-              📊 Market cap : <strong>{formatNumber(fiche.market_cap_usd)}</strong>
+            <span className="inline-flex items-center gap-1.5">
+              <BarChart3 className="size-4" aria-hidden="true" />
+              Market cap : <strong>{formatNumber(fiche.market_cap_usd)}</strong>
             </span>
           ) : null}
           {fiche.price_usd ? (
-            <span>
-              💰 Prix : <strong>{formatNumber(fiche.price_usd)}</strong>
+            <span className="inline-flex items-center gap-1.5">
+              <Coins className="size-4" aria-hidden="true" />
+              Prix : <strong>{formatNumber(fiche.price_usd)}</strong>
             </span>
           ) : null}
           {fiche.genesis_date ? (
-            <span>
-              🗓️ Né en : <strong>{new Date(fiche.genesis_date).getFullYear()}</strong>
+            <span className="inline-flex items-center gap-1.5">
+              <Calendar className="size-4" aria-hidden="true" />
+              Né en : <strong>{new Date(fiche.genesis_date).getFullYear()}</strong>
             </span>
           ) : null}
         </div>
@@ -254,23 +261,31 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">Concurrents directs</h2>
           <ul className="space-y-2">
-            {llm.competitors.map((cp, i) => (
-              <li key={i} className="rounded-xl border bg-card p-4">
-                <div className="font-medium">
-                  {cp.coingeckoId ? (
-                    <Link
-                      href={`/cryptos/${cp.coingeckoId}`}
-                      className="hover:underline"
-                    >
-                      {cp.name}
-                    </Link>
-                  ) : (
-                    cp.name
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">{cp.differentiator}</p>
-              </li>
-            ))}
+            {llm.competitors.map((cp, i) => {
+              // Fix audit 2026-05-09 : 62% des coingeckoId LLM-generated étaient
+              // hallucinés (404). On résout via aliases + blacklist (cf.
+              // lib/crypto-aliases.ts) ; si null → on rend juste le name en
+              // span pour ne JAMAIS produire de lien mort côté SEO/UX.
+              const resolvedId = resolveCoingeckoId(cp.coingeckoId);
+              const isLinkable = resolvedId !== null;
+              return (
+                <li key={i} className="rounded-xl border bg-card p-4">
+                  <div className="font-medium">
+                    {isLinkable ? (
+                      <Link
+                        href={`/cryptos/${resolvedId}`}
+                        className="hover:underline"
+                      >
+                        {cp.name}
+                      </Link>
+                    ) : (
+                      <span>{cp.name}</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">{cp.differentiator}</p>
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}

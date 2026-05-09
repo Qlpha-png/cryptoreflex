@@ -185,8 +185,10 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
         </summary>
         <p className="mt-3 leading-relaxed">{DECENTRALIZATION_METHODOLOGY}</p>
         <p className="mt-2 text-xs text-muted">
-          Vérification : {score.lastVerified} · Dernière MAJ globale :{" "}
-          {DECENTRALIZATION_LAST_UPDATED}.
+          {/* FIX B cohérence dates (2026-05-09) — uniformise sur DD/MM/YYYY
+              avec .toLocaleDateString("fr-FR"). Avant : YYYY-MM-DD brut. */}
+          Vérification : {new Date(score.lastVerified).toLocaleDateString("fr-FR")} · Dernière MAJ globale :{" "}
+          {new Date(DECENTRALIZATION_LAST_UPDATED).toLocaleDateString("fr-FR")}.
         </p>
       </details>
 

@@ -169,7 +169,8 @@ export default function SideBySideTable({ a, b }: Props) {
         </table>
       </div>
       <div className="border-t border-border bg-surface/40 px-4 py-3 text-[11px] text-muted">
-        Lecture : les cellules en vert indiquent le critère gagné par la plateforme. Données vérifiées le {a.mica.lastVerified} (sources publiques officielles).
+        {/* FIX B cohérence dates (2026-05-09) — DD/MM/YYYY au lieu de YYYY-MM-DD brut. */}
+        Lecture : les cellules en vert indiquent le critère gagné par la plateforme. Données vérifiées le {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")} (sources publiques officielles).
       </div>
     </div>
   );

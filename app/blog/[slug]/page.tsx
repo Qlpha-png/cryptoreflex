@@ -105,11 +105,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /* -------------------------------------------------------------------------- */
 
 function formatFrenchDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  // FIX B cohérence dates (2026-05-09) — uniformisation DD/MM/YYYY sur tout
+  // le site (avant : "DD mois YYYY" en français long, incohérent avec les
+  // fiches crypto et le calculateur).
+  return new Date(iso).toLocaleDateString("fr-FR");
 }
 
 /**
