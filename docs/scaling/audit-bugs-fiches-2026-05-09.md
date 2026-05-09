@@ -188,7 +188,85 @@ e2e60ab  fix(fiches): 680 fiches LLM enfin accessibles via /cryptos/[slug]
 f4f481e  fix(fiches): cryptos-db.ts utilise service-role (pas server-client cookies)
 2523157  feat(seo): sitemap inclut les 680 fiches LLM DB-backed
 b86bc53  fix(fiches): OG image fall-back DB — 680 fiches LLM ont leur image perso
+43357c7  fix(fiches): OG image — utilise getCryptoFiche (coingecko_id) avec fall-back par slug
 ```
+
+Container actuel en prod : `om52n8hi...:43357c70c64474da...` (déployé
+2026-05-09 14:54 Paris après nettoyage queue Coolify bloquée).
+
+## Saga Coolify — la queue de deploy bloquée 19h
+
+Découvert pendant la vérification post-fix de BUG #6 : le commit `b86bc53`
+était pushé mais l'image OG continuait de servir la version générique.
+
+**Diagnostic via SSH `root@178.105.48.243`** :
+
+```bash
+docker exec coolify php artisan tinker --execute='
+  $statuses = \App\Models\ApplicationDeploymentQueue
+    ::where("application_id", 1)->groupBy("status")
+    ->selectRaw("status, count(*) c")->get();
+  foreach ($statuses as $s) echo $s->status." → ".$s->c.PHP_EOL;
+'
+# Output:
+#   cancelled-by-user → 2
+#   failed → 17
+#   finished → 87
+#   in_progress → 1   ← 1 deploy bloqué depuis 19h !
+#   queued → 25       ← 25 deploys en file d'attente, jamais traités
+```
+
+**Root cause** : deploy id=107 (commit `f170900`, démarré 2026-05-08
+17:57 UTC) a complété l'étape `Building docker image completed` puis
+s'est freezé sur `Creating .env file with runtime variables`. Le helper
+container `m13yqesgt1l70mwcar9vzlr1` est resté `Up 19 hours` orphelin,
+bloquant tout le pipeline de build subséquent.
+
+**Conséquence cachée** : tous les commits fiches LLM (e2e60ab, f4f481e,
+2523157, b86bc53, 6265bc6, 43357c7) étaient `queued` mais jamais build.
+La prod tournait sur le BUILD_ID `2026-05-09 12:13` (≈ commit 2523157)
+parce qu'un build précédent avait fini juste avant le freeze, mais aucun
+nouveau commit ne pouvait atteindre la prod.
+
+**Fix manuel** :
+
+```bash
+# 1. Tuer le helper orphelin
+docker stop m13yqesgt1l70mwcar9vzlr1
+docker rm   m13yqesgt1l70mwcar9vzlr1
+
+# 2. Marquer deploy 107 failed + cancel les 25 queued
+php artisan tinker --execute='
+  ApplicationDeploymentQueue::find(107)->update([
+    "status" => "failed", "finished_at" => now()
+  ]);
+  ApplicationDeploymentQueue::where("application_id", 1)
+    ->where("status", "queued")
+    ->update(["status" => "cancelled-by-user", "finished_at" => now()]);
+'
+
+# 3. Dispatch un fresh deploy
+ApplicationDeploymentJob::dispatch(application_deployment_queue_id: $newId);
+```
+
+Deploy 165 a échoué (exit 255 transient pendant `next build`),
+deploy 166 a passé : 8min (build Next.js + 1060 static pages + image +
+container swap). Image finale : `om52n8hi...:43357c70c64474da...`.
+
+**Vérification post-deploy** (visuel via téléchargement PNG + Read tool) :
+- `/cryptos/chain-2/opengraph-image` → XCN/Onyxcoin/SMART CONTRACT PLATFORM,
+  badge violet **FICHE ANALYSE**, tagline = LLM tldr ✓
+- `/cryptos/figure-heloc/opengraph-image` → FIGR_HELOC/Figure Heloc/RWA,
+  badge violet, tagline distincte ✓
+- `/cryptos/bitcoin/opengraph-image` → BTC/Bitcoin/RÉSERVE DE VALEUR,
+  badge cyan **TOP 10** inchangé (md5 byte-identique au pré-deploy) ✓
+
+**Lessons supplémentaires** :
+4. **Coolify queue peut se bloquer silencieusement** : aucune notification,
+   les pushes git semblent réussir mais ne déploient pas. Surveiller via
+   `tinker` ou Coolify UI au moindre doute (`status` distribution rapide).
+5. **`finished_at` = NULL + `status` = `in_progress` > 5min** = deploy
+   stuck. Ajouter un cron de healthcheck Coolify ?
 
 ## Lessons learned
 
