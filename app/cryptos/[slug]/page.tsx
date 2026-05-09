@@ -231,10 +231,17 @@ interface Props {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  // SSG uniquement les top 10 (haut trafic + tous couverts par price-source.ts
-  // donc zéro appel CoinGecko au build → build rapide). Les 90 hidden gems
-  // se rendent on-demand au 1er visiteur (ISR cache 1h via `revalidate`).
+export async function generateStaticParams() {
+  // SSG uniquement les top 10 statiques (haut trafic + tous couverts par
+  // price-source.ts donc zéro appel CoinGecko au build → build rapide).
+  // Les 90 hidden gems et 680 fiches LLM se rendent on-demand au 1er
+  // visiteur (ISR cache 1h via `revalidate`).
+  //
+  // Note 2026-05-09 : on a tenté d'inclure les coingecko_id DB ici pour
+  // forcer SSG complet et avoir le statut HTTP 404 propre, mais le build
+  // explose à 700+ pages (timeout GH Actions, mémoire). On accepte le
+  // statut 200 sur les vraies 404 (mineur SEO, Google détecte le contenu
+  // 404 quand même via meta robots noindex sur not-found.tsx).
   return getTopCryptos().map((c) => ({ slug: c.id }));
 }
 

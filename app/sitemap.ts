@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { BRAND } from "@/lib/brand";
 import { getAllProgrammaticRoutes } from "@/lib/programmatic";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { getAllCryptoComparisonSlugs } from "@/lib/crypto-comparisons";
 import {
   getComparerPairRoutes,
@@ -263,6 +264,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   /* ----------------------------------------------------------------
+   * 3.b. Fiches LLM scaling Phase 1 (DB-backed)
+   *      ~680 fiches T3 générées par batch-generate-fiches.mjs.
+   *      Distinct de getAllProgrammaticRoutes (qui couvre top 100 statiques
+   *      via top-cryptos.json + hidden-gems.json + ALL_CRYPTOS mapping).
+   *      Best-effort : si la DB est down, on retourne [] silencieusement
+   *      (le sitemap reste valide avec les autres routes).
+   * ---------------------------------------------------------------- */
+  const dbFichesRoutes: MetadataRoute.Sitemap = await (async () => {
+    try {
+      const sb = createSupabaseServiceRoleClient();
+      if (!sb) return [];
+      const { data, error } = await sb
+        .from("cryptos")
+        .select("coingecko_id, updated_at, market_cap_rank")
+        .eq("source", "llm-pipeline")
+        .eq("is_published", true)
+        .order("market_cap_rank", { ascending: true, nullsFirst: false })
+        .limit(2000);
+      if (error || !data) return [];
+      return data.map((r: { coingecko_id: string; updated_at: string; market_cap_rank: number | null }) => ({
+        url: `${SITE_URL}/cryptos/${r.coingecko_id}`,
+        lastModified: r.updated_at ? new Date(r.updated_at) : now,
+        // Priorité dégressive selon market_cap_rank : top 100 = 0.7,
+        // 100-300 = 0.6, 300-700 = 0.5, 700+ = 0.4.
+        priority: r.market_cap_rank == null
+          ? 0.4
+          : r.market_cap_rank < 100 ? 0.7
+          : r.market_cap_rank < 300 ? 0.6
+          : r.market_cap_rank < 700 ? 0.5
+          : 0.4,
+        changeFrequency: "weekly" as const,
+      }));
+    } catch (err) {
+      console.warn("[sitemap] DB fiches fetch failed:", err);
+      return [];
+    }
+  })();
+
+  /* ----------------------------------------------------------------
    * 3bis. /comparer/[slug] LEGACY — BATCH 59 redirect 301 vers /vs/[a]/[b]
    *
    * Avant : 105 URLs /comparer/{a}-vs-{b} indexees independamment.
@@ -388,6 +428,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...articleRoutes,
     ...authorRoutes,
     ...programmaticRoutes,
+    ...dbFichesRoutes,
     ...cryptoComparisonRoutes,
     ...comparerPairRoutes,
     ...acheterRoutes,
