@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { fetchCryptoNews, type CryptoNewsItem } from "@/lib/news-aggregator";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
@@ -26,16 +26,24 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Index coingeckoId → { symbol, name } construit UNE fois au boot du module.
- * On évite ainsi un getAllCryptos().find() à chaque requête.
+ * Index coingeckoId → { symbol, name }.
+ *
+ * Bug fix critique 2026-05-09 : on alimente desormais avec les 780 cryptos
+ * (100 statiques + 680 LLM) via getAllCryptosUnified() au lieu de seulement
+ * 100. Construction lazy + memoization au premier appel (le helper unified
+ * fait deja un cache 1h cote unstable_cache, donc 1 hit Supabase / heure max).
  */
-const CRYPTO_INDEX: ReadonlyMap<string, { symbol: string; name: string }> =
-  new Map(
-    getAllCryptos().map((c) => [
-      c.coingeckoId,
-      { symbol: c.symbol, name: c.name },
-    ]),
+let cryptoIndexCache: ReadonlyMap<string, { symbol: string; name: string }> | null = null;
+async function getCryptoIndex(): Promise<
+  ReadonlyMap<string, { symbol: string; name: string }>
+> {
+  if (cryptoIndexCache) return cryptoIndexCache;
+  const all = await getAllCryptosUnified();
+  cryptoIndexCache = new Map(
+    all.map((c) => [c.coingeckoId, { symbol: c.symbol, name: c.name }]),
   );
+  return cryptoIndexCache;
+}
 
 const limiter = createRateLimiter({ limit: 30, windowMs: 60_000, key: "news" });
 
@@ -64,7 +72,8 @@ export async function GET(req: NextRequest, ctx: RouteContext) {
   }
 
   const id = ctx.params.coingeckoId;
-  const meta = id ? CRYPTO_INDEX.get(id) : undefined;
+  const cryptoIndex = await getCryptoIndex();
+  const meta = id ? cryptoIndex.get(id) : undefined;
   if (!meta) {
     return NextResponse.json({ error: "coin not supported" }, { status: 404 });
   }

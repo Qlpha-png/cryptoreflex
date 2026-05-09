@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import { getUser } from "@/lib/auth";
 import { BRAND } from "@/lib/brand";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { getAllArticleSummaries } from "@/lib/mdx";
 
 export const metadata: Metadata = {
@@ -230,8 +230,10 @@ export default async function AdminDashboard() {
     notFound();
   }
 
-  // Stats rapides (calculées au render, pas de DB queries lourdes)
-  const cryptosCount = getAllCryptos().length;
+  // Stats rapides (calculées au render, pas de DB queries lourdes).
+  // Bug fix 2026-05-09 : count = 780 (100 statiques + 680 LLM) — alignement
+  // avec le hub /cryptos qui annonce deja 780 fiches publiees.
+  const cryptosCount = (await getAllCryptosUnified()).length;
   const articles = await getAllArticleSummaries();
   const articlesCount = articles.length;
 

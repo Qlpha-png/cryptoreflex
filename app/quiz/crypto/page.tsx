@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import CryptoQuiz from "@/components/CryptoQuiz";
@@ -34,8 +35,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function QuizCryptoPage() {
+export default async function QuizCryptoPage() {
+  // SCORING : on garde les 100 fiches editoriales (top10 + hidden-gems).
+  // Les fields specifiques (riskLevel, reliability, kind, tagline...) sont
+  // requis par scoreCrypto() qui differencie la matrice par type de fiche.
+  // Compat issue (bug fix critique 2026-05-09) : les 680 fiches LLM-pipeline
+  // ne possedent pas ces fields editoriaux donc ne peuvent pas etre scorees
+  // sans degrader la qualite de la reco. Future evolution : enrichir les
+  // fiches LLM avec un mini-scoring (riskTier, beginnerLevel) cote pipeline.
   const cryptos = getAllCryptos();
+  // DISPLAY : on compte les 780 cryptos visibles cote site dans le hero.
+  const unifiedCount = (await getAllCryptosUnified()).length;
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
@@ -92,7 +102,7 @@ export default function QuizCryptoPage() {
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
               Réponds à 6 questions courtes — risque accepté, horizon, type de
               projet, familiarité tech, capital, stratégie — on te recommande la
-              crypto la plus adaptée parmi {cryptos.length} fiches analysées.
+              crypto la plus adaptée parmi {unifiedCount} fiches analysées.
             </p>
           </header>
 

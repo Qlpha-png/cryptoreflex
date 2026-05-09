@@ -53,15 +53,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { getUser } from "@/lib/auth";
-import { getCryptoBySlug, getAllCryptos } from "@/lib/cryptos";
+import { getCryptoBySlug } from "@/lib/cryptos";
+import { getCryptoFiche } from "@/lib/cryptos-db";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Whitelist des cryptoIds = les 100 slugs analysés
-const ALLOWED_IDS = new Set<string>(getAllCryptos().map((c) => c.id));
+// Whitelist des cryptoIds = TOUTES les cryptos (100 statiques + ~680 LLM).
+// Bug fix critique 2026-05-09 : avant, seulement 100 ids, donc le chat IA
+// renvoyait 404 pour les 680 fiches LLM affichees ailleurs sur le site.
+// Lazy : await au premier hit (cache 1h via unstable_cache cote helper).
+async function getAllowedIds(): Promise<Set<string>> {
+  const all = await getAllCryptosUnified();
+  // On accepte le slug `id` (URL pretty) ET le coingeckoId brut, pour
+  // tolerer les deux conventions cote client. Dans la pratique le client
+  // appelle avec `c.id` (= slug pretty pour static, = coingecko_id pour LLM).
+  return new Set<string>([
+    ...all.map((c) => c.id),
+    ...all.map((c) => c.coingeckoId),
+  ]);
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Rate limiters (3 niveaux : quotidien user, horaire user, horaire IP)      */
@@ -243,9 +257,10 @@ function sseEncode(event: AskStreamEvent): string {
 /* -------------------------------------------------------------------------- */
 
 export async function POST(req: NextRequest, { params }: { params: { cryptoId: string } }) {
-  // 1. Whitelist crypto
+  // 1. Whitelist crypto (async — couvre 780 cryptos statiques + LLM)
   const cryptoId = params.cryptoId;
-  if (!ALLOWED_IDS.has(cryptoId)) {
+  const allowedIds = await getAllowedIds();
+  if (!allowedIds.has(cryptoId)) {
     return NextResponse.json({ error: "Crypto inconnue." }, { status: 404 });
   }
 
@@ -388,56 +403,99 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
     );
   }
 
-  // 9. Construit le contexte crypto
-  const c = getCryptoBySlug(cryptoId);
-  if (!c) {
-    return NextResponse.json({ error: "Crypto introuvable." }, { status: 404 });
-  }
+  // 9. Construit le contexte crypto.
+  // Tente d'abord la fiche editoriale statique (top10 + hidden gem) — riche
+  // en metadata. Sinon fallback sur la fiche LLM DB (~680 cryptos pipeline).
+  const staticCrypto = getCryptoBySlug(cryptoId);
+  // Resout l'identite (name/symbol/coingeckoId) pour la meta SSE
+  let cryptoIdentity: { id: string; name: string; symbol: string };
+  let context = "";
 
-  let context = `# ${c.name} (${c.symbol})\n\n`;
-  context += `**Catégorie :** ${c.category}\n`;
-  context += `**Année de création :** ${c.yearCreated}\n`;
-  context += `**Tagline :** ${c.tagline}\n\n`;
-  context += `**Description :**\n${c.what}\n\n`;
-  if (c.kind === "hidden-gem") {
-    context += `**Pourquoi suivre :**\n${c.whyHiddenGem}\n\n`;
-    context += `**Score de fiabilité Cryptoreflex :** ${c.reliability.score}/10\n`;
-    context += `**Équipe identifiée :** ${c.reliability.teamIdentified ? "Oui" : "Non (anonyme)"}\n`;
-    context += `**Open source :** ${c.reliability.openSource ? "Oui" : "Non"}\n`;
-    context += `**Audits :** ${c.reliability.auditedBy.join(", ") || "Aucun audit majeur"}\n`;
-    context += `**Années d'activité :** ${c.reliability.yearsActive}\n`;
-    context += `**Incidents majeurs :** ${c.reliability.majorIncidents}\n`;
-    context += `**Levée de fonds :** ${c.reliability.fundingRaised}\n`;
-    context += `**Backers :** ${c.reliability.backers.join(", ")}\n\n`;
-    context += `**Risques principaux :**\n${c.risks.map((r) => `- ${r}`).join("\n")}\n\n`;
-    context += `**Cas d'usage :** ${c.useCase}\n\n`;
-    context += `**Signaux à surveiller :**\n${c.monitoringSignals.map((s) => `- ${s}`).join("\n")}\n`;
+  if (staticCrypto) {
+    const c = staticCrypto;
+    cryptoIdentity = { id: c.id, name: c.name, symbol: c.symbol };
+    context = `# ${c.name} (${c.symbol})\n\n`;
+    context += `**Catégorie :** ${c.category}\n`;
+    context += `**Année de création :** ${c.yearCreated}\n`;
+    context += `**Tagline :** ${c.tagline}\n\n`;
+    context += `**Description :**\n${c.what}\n\n`;
+    if (c.kind === "hidden-gem") {
+      context += `**Pourquoi suivre :**\n${c.whyHiddenGem}\n\n`;
+      context += `**Score de fiabilité Cryptoreflex :** ${c.reliability.score}/10\n`;
+      context += `**Équipe identifiée :** ${c.reliability.teamIdentified ? "Oui" : "Non (anonyme)"}\n`;
+      context += `**Open source :** ${c.reliability.openSource ? "Oui" : "Non"}\n`;
+      context += `**Audits :** ${c.reliability.auditedBy.join(", ") || "Aucun audit majeur"}\n`;
+      context += `**Années d'activité :** ${c.reliability.yearsActive}\n`;
+      context += `**Incidents majeurs :** ${c.reliability.majorIncidents}\n`;
+      context += `**Levée de fonds :** ${c.reliability.fundingRaised}\n`;
+      context += `**Backers :** ${c.reliability.backers.join(", ")}\n\n`;
+      context += `**Risques principaux :**\n${c.risks.map((r) => `- ${r}`).join("\n")}\n\n`;
+      context += `**Cas d'usage :** ${c.useCase}\n\n`;
+      context += `**Signaux à surveiller :**\n${c.monitoringSignals.map((s) => `- ${s}`).join("\n")}\n`;
+    } else {
+      context += `**Créé par :** ${c.createdBy}\n`;
+      context += `**Consensus :** ${c.consensus}\n`;
+      context += `**Block time :** ${c.blockTime}\n`;
+      context += `**Supply max :** ${c.maxSupply}\n`;
+      context += `**Niveau de risque :** ${c.riskLevel}\n`;
+      context += `**Beginner-friendly :** ${c.beginnerFriendly}/5\n\n`;
+      context += `**Forces :**\n${c.strengths.map((s) => `- ${s}`).join("\n")}\n\n`;
+      context += `**Faiblesses :**\n${c.weaknesses.map((w) => `- ${w}`).join("\n")}\n\n`;
+      context += `**Cas d'usage :** ${c.useCase}\n`;
+    }
+    context += `\n**Où acheter en France :** ${c.whereToBuy.join(", ")}\n`;
   } else {
-    context += `**Créé par :** ${c.createdBy}\n`;
-    context += `**Consensus :** ${c.consensus}\n`;
-    context += `**Block time :** ${c.blockTime}\n`;
-    context += `**Supply max :** ${c.maxSupply}\n`;
-    context += `**Niveau de risque :** ${c.riskLevel}\n`;
-    context += `**Beginner-friendly :** ${c.beginnerFriendly}/5\n\n`;
-    context += `**Forces :**\n${c.strengths.map((s) => `- ${s}`).join("\n")}\n\n`;
-    context += `**Faiblesses :**\n${c.weaknesses.map((w) => `- ${w}`).join("\n")}\n\n`;
-    context += `**Cas d'usage :** ${c.useCase}\n`;
+    // Fallback DB : fiche LLM-pipeline (ex: les 680 fiches non-editoriales).
+    const fiche = await getCryptoFiche(cryptoId);
+    if (!fiche) {
+      return NextResponse.json({ error: "Crypto introuvable." }, { status: 404 });
+    }
+    cryptoIdentity = {
+      id: fiche.slug ?? fiche.coingecko_id,
+      name: fiche.name,
+      symbol: fiche.symbol,
+    };
+    context = `# ${fiche.name} (${fiche.symbol})\n\n`;
+    if (fiche.categories?.length) {
+      context += `**Catégories :** ${fiche.categories.join(", ")}\n`;
+    }
+    if (fiche.market_cap_rank) {
+      context += `**Rang market cap :** #${fiche.market_cap_rank}\n`;
+    }
+    if (fiche.genesis_date) {
+      context += `**Genèse :** ${fiche.genesis_date}\n`;
+    }
+    if (fiche.homepage_url) context += `**Site :** ${fiche.homepage_url}\n`;
+    if (fiche.whitepaper_url) context += `**Whitepaper :** ${fiche.whitepaper_url}\n`;
+    if (fiche.score_overall != null) {
+      context += `**Score global Cryptoreflex :** ${fiche.score_overall}/10\n`;
+    }
+    if (fiche.quality_tier) {
+      context += `**Qualité fiche :** ${fiche.quality_tier} (LLM-pipeline)\n`;
+    }
+    // llm_content peut contenir un JSON riche (intro, what, useCase...).
+    // On serialise en best-effort sans casser si la structure varie.
+    const llmContent = fiche.llm_content ?? {};
+    for (const [key, value] of Object.entries(llmContent)) {
+      if (typeof value === "string" && value.length > 0 && value.length < 2000) {
+        context += `\n**${key} :**\n${value}\n`;
+      }
+    }
   }
-  context += `\n**Où acheter en France :** ${c.whereToBuy.join(", ")}\n`;
 
   // 10. Appelle Claude Haiku via OpenRouter en STREAMING SSE
   // Toutes les vérifications passent → on ouvre le stream. OpenRouter retourne
   // du SSE format OpenAI (chat.completion.chunk). On parse les chunks et on
   // les ré-émet au format SSE Cryptoreflex (events meta/text/done/error).
-  const userPrompt = `Voici la fiche complète de ${c.name} (${c.symbol}) sur Cryptoreflex :\n\n${context}\n\n---\n\nQuestion de l'utilisateur : ${question}`;
-  const systemPrompt = SYSTEM_PROMPT.replace(/\{nom de la crypto\}/g, c.name);
+  const userPrompt = `Voici la fiche complète de ${cryptoIdentity.name} (${cryptoIdentity.symbol}) sur Cryptoreflex :\n\n${context}\n\n---\n\nQuestion de l'utilisateur : ${question}`;
+  const systemPrompt = SYSTEM_PROMPT.replace(/\{nom de la crypto\}/g, cryptoIdentity.name);
   // Modèle OpenRouter (slug "anthropic/claude-haiku-4.5"). Côté UX on garde
   // le label "claude-haiku-4-5" pour cohérence avec l'historique.
   const MODEL = "claude-haiku-4-5";
   const OPENROUTER_MODEL = "anthropic/claude-haiku-4.5";
 
   const encoder = new TextEncoder();
-  const cryptoMeta = { id: c.id, name: c.name, symbol: c.symbol };
+  const cryptoMeta = cryptoIdentity;
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {

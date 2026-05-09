@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -97,10 +97,14 @@ const FAQ: { q: string; a: string }[] = [
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default function AlertesPage() {
-  // Source crypto unifiée (top10 + hidden gems éditoriaux). On dénormalise
-  // au strict nécessaire pour le composant Client (économie de bytes hydrate).
-  const cryptos: AlertCryptoOption[] = getAllCryptos().map((c) => ({
+export default async function AlertesPage() {
+  // Source crypto UNIFIEE — bug fix critique 2026-05-09 : on inclut desormais
+  // les 780 cryptos (100 statiques + 680 LLM) au lieu de seulement 100,
+  // pour aligner l'autocomplete avec les fiches /cryptos/[slug] existantes.
+  // On dénormalise au strict nécessaire pour le composant Client (économie
+  // de bytes hydrate — le payload reste autour de 60-80 KB pour 780 entries).
+  const all = await getAllCryptosUnified();
+  const cryptos: AlertCryptoOption[] = all.map((c) => ({
     id: c.id,
     coingeckoId: c.coingeckoId,
     name: c.name,

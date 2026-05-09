@@ -26,7 +26,7 @@ import {
   type CoinId,
 } from "@/lib/coingecko";
 import { COIN_IDS } from "@/lib/historical-prices";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { resolveCryptoLogo } from "@/lib/crypto-logos";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
@@ -41,12 +41,22 @@ const MAX_IDS = 50;
 // Whitelist construite à partir de :
 //  - DEFAULT_COINS / CoinId (ticker home) — 6 ids exacts servis par fetchPrices
 //  - COIN_IDS (lib/historical-prices) — 40 cryptos usuelles
-//  - getAllCryptos().coingeckoId — fiches éditoriales (top 10 + hidden gems)
-const ALLOWED_IDS = new Set<string>([
-  ...DEFAULT_COINS,
-  ...Object.values(COIN_IDS),
-  ...getAllCryptos().map((c) => c.coingeckoId),
-]);
+//  - getAllCryptosUnified() — 780 fiches (100 statiques + 680 LLM)
+//
+// Bug fix critique 2026-05-09 : avant on n'incluait que les 100 statiques,
+// donc /api/prices?ids=<llm-id> renvoyait 400 alors que la fiche existait
+// en DB. Lazy memoization (le helper unified cache 1h via unstable_cache).
+let allowedIdsCache: Set<string> | null = null;
+async function getAllowedIds(): Promise<Set<string>> {
+  if (allowedIdsCache) return allowedIdsCache;
+  const all = await getAllCryptosUnified();
+  allowedIdsCache = new Set<string>([
+    ...DEFAULT_COINS,
+    ...Object.values(COIN_IDS),
+    ...all.map((c) => c.coingeckoId),
+  ]);
+  return allowedIdsCache;
+}
 
 // FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
 const limiter = createRateLimiter({ limit: 60, windowMs: 60_000, key: "prices" });
@@ -97,7 +107,8 @@ export async function GET(request: Request) {
 
     // Drop silencieux des ids hors whitelist (philosophie : tolérant aux typos
     // côté client, mais on coupe court si rien ne reste).
-    const valid = raw.filter((id) => ALLOWED_IDS.has(id));
+    const allowedIds = await getAllowedIds();
+    const valid = raw.filter((id) => allowedIds.has(id));
     if (valid.length === 0) {
       return NextResponse.json(
         { error: "Aucun identifiant valide." },

@@ -19,17 +19,22 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { fetchOnChainMetrics } from "@/lib/onchain-metrics";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Whitelist construite UNE fois au boot du module (les datasets sont statiques).
-const ALLOWED_IDS: ReadonlySet<string> = new Set(
-  getAllCryptos().map((c) => c.coingeckoId),
-);
+// Whitelist 780 cryptos (100 statiques + ~680 LLM) — bug fix critique 2026-05-09.
+// Lazy memoization, le helper unified cache 1h via unstable_cache.
+let allowedIdsCache: ReadonlySet<string> | null = null;
+async function getAllowedIds(): Promise<ReadonlySet<string>> {
+  if (allowedIdsCache) return allowedIdsCache;
+  const all = await getAllCryptosUnified();
+  allowedIdsCache = new Set(all.map((c) => c.coingeckoId));
+  return allowedIdsCache;
+}
 
 const limiter = createRateLimiter({ limit: 30, windowMs: 60_000, key: "onchain" });
 
@@ -54,7 +59,8 @@ export async function GET(req: NextRequest, ctx: RouteContext) {
   }
 
   const id = ctx.params.coingeckoId;
-  if (!id || !ALLOWED_IDS.has(id)) {
+  const allowedIds = await getAllowedIds();
+  if (!id || !allowedIds.has(id)) {
     return NextResponse.json({ error: "coin not supported" }, { status: 404 });
   }
 
