@@ -16,7 +16,7 @@ const TOTAL_DUELS = (() => {
 
 export const metadata: Metadata = {
   title: `Comparer 2 cryptos — ${TOTAL_DUELS} duels analyses (BTC vs ETH, SOL vs ADA, etc.)`,
-  description: `${TOTAL_DUELS} comparatifs crypto-vs-crypto entre 100 cryptos analysees (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, methodologie publique Cryptoreflex.`,
+  description: `${TOTAL_DUELS} comparatifs crypto-vs-crypto entre les 100 fiches editoriales premium (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, methodologie publique Cryptoreflex.`,
   alternates: withHreflang(`${BRAND.url}/comparer`),
   robots: { index: true, follow: true },
 };
@@ -64,7 +64,7 @@ export default function ComparerHubPage() {
             Comparer <span className="gradient-text">2 cryptos</span> face à face
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{totalDuels} duels</strong> entre les 100 cryptos analysees
+            <strong className="text-fg">{totalDuels} duels</strong> entre les 100 fiches editoriales premium
             (10 top + 90 hidden gems). Tableau side-by-side : ancienneté, cas d&apos;usage, type,
             disponibilité MiCA, FAQ contextuelle, verdict par profil. Méthodologie publique Cryptoreflex.
           </p>

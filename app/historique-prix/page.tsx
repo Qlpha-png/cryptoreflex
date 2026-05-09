@@ -165,7 +165,7 @@ export default function HistoriquePrixHub() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-ghost text-sm">
-              Les 100 fiches crypto
+              Les 780 fiches crypto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/comparer" className="btn-ghost text-sm">

@@ -302,7 +302,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                     href="/cryptos"
                     className="text-primary-soft hover:underline"
                   >
-                    Voir les 100 fiches
+                    Voir les 780 fiches
                   </Link>
                 </div>
               </div>

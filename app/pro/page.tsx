@@ -356,7 +356,7 @@ const FEATURES = [
     kpi: "20/jour",
     tag: "IA",
     title: "IA Q&A par fiche crypto",
-    text: "20 questions/jour à notre assistant Claude Haiku, contextualisé sur chacune des 100 fiches Cryptoreflex. Pas de conseil financier — pédagogie pure. Réservé Soutien.",
+    text: "20 questions/jour à notre assistant Claude Haiku, contextualisé sur chacune des 100 fiches éditoriales premium Cryptoreflex. Pas de conseil financier — pédagogie pure. Réservé Soutien.",
   },
   {
     icon: ShieldCheck,
@@ -439,7 +439,7 @@ const FAQS = [
   },
   {
     q: "Concrètement, qu'est-ce que je débloque par rapport au Gratuit ?",
-    a: "Portfolio étendu à 500 positions (vs 10 Free), alertes prix étendues à 100 (vs 3 Free), watchlist étendue à 200 cryptos (vs 10 Free), IA Q&A 20 questions/jour à notre assistant Claude Haiku contextualisé sur chacune des 100 fiches. C'est tout — et on s'y tient. Tout le reste (calculateurs, comparateur, méthodologie publique, newsletter) reste gratuit pour tout le monde.",
+    a: "Portfolio étendu à 500 positions (vs 10 Free), alertes prix étendues à 100 (vs 3 Free), watchlist étendue à 200 cryptos (vs 10 Free), IA Q&A 20 questions/jour à notre assistant Claude Haiku contextualisé sur chacune des 100 fiches éditoriales premium. C'est tout — et on s'y tient. Tout le reste (calculateurs, comparateur, méthodologie publique, newsletter) reste gratuit pour tout le monde.",
   },
   {
     q: "Comment je m'abonne ?",

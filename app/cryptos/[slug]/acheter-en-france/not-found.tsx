@@ -11,7 +11,7 @@ import { ArrowLeft, Search, Trophy, ShieldCheck } from "lucide-react";
 export const metadata: Metadata = {
   title: "Crypto introuvable — Cryptoreflex",
   description:
-    "Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvre nos 100 cryptos analysées sur des plateformes régulées MiCA.",
+    "Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvre nos 780 cryptos analysées sur des plateformes régulées MiCA.",
   robots: { index: false, follow: false },
 };
 
@@ -70,7 +70,7 @@ export default function AcheterEnFranceNotFound() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-primary text-base">
               <Trophy className="h-4 w-4" />
-              Les 100 cryptos analysées
+              Les 780 cryptos analysées
             </Link>
             <Link
               href="/"

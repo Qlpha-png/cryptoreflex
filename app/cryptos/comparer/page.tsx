@@ -153,9 +153,9 @@ export function generateMetadata({ searchParams }: Props): Metadata {
   const cryptos = parseIds(searchParams.ids);
   if (cryptos.length < 2) {
     return {
-      title: "Comparateur de cryptomonnaies — 100 cryptos disponibles",
+      title: "Comparateur de cryptomonnaies — 100 fiches éditoriales premium",
       description:
-        "Compare jusqu'à 4 cryptos côte à côte parmi les 100 fiches Cryptoreflex : prix temps réel, fiabilité, forces/faiblesses, plateformes régulées MiCA. 10 combos populaires pré-construits.",
+        "Compare jusqu'à 4 cryptos côte à côte parmi nos 100 fiches éditoriales premium Cryptoreflex (top 10 + 90 hidden gems sur 780 cryptos au total) : prix temps réel, fiabilité, forces/faiblesses, plateformes régulées MiCA. 10 combos populaires pré-construits.",
       robots: { index: false, follow: true },
     };
   }
@@ -228,8 +228,8 @@ export default async function CryptoComparePage({ searchParams }: Props) {
               côte à côte
             </h1>
             <p className="mt-3 text-sm sm:text-base text-muted">
-              Choisis parmi nos <strong className="text-fg">100 fiches</strong>{" "}
-              (top 10 + 90 hidden gems). Prix CoinGecko temps réel, données
+              Choisis parmi nos <strong className="text-fg">100 fiches éditoriales</strong>{" "}
+              (top 10 + 90 hidden gems, sur 780 cryptos au total). Prix CoinGecko temps réel, données
               éditoriales vérifiées par {BRAND.name}.
             </p>
           </header>
@@ -329,7 +329,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
           </h1>
           <p className="mt-3 text-sm sm:text-base text-muted">
             Comparatif côte à côte de {cryptos.length} cryptos issues de notre
-            base de 100 fiches. Prix CoinGecko (cache 5 min), données
+            base de 100 fiches éditoriales premium. Prix CoinGecko (cache 5 min), données
             éditoriales vérifiées par {BRAND.name}.
           </p>
         </header>

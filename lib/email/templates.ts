@@ -194,7 +194,7 @@ export function welcomeProEmail(opts: {
 
 <p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
 Ton paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Ton accès Soutien est actif <em>maintenant</em>. Tu débloques :
-portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchlist 200 cryptos (vs 10) et IA Q&amp;A 20 questions/jour avec Claude Haiku contextualisé sur chacune des 100 fiches.
+portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchlist 200 cryptos (vs 10) et IA Q&amp;A 20 questions/jour avec Claude Haiku contextualisé sur chacune des 100 fiches éditoriales premium.
 </p>
 
 <!-- Quick wins -->

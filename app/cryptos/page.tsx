@@ -116,9 +116,9 @@ export default function CryptosIndexPage() {
     const list = {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: "100 cryptos analysées par Cryptoreflex",
+      name: "780 cryptos analysées par Cryptoreflex (100 fiches éditoriales + 680 fiches LLM)",
       description:
-        "Les 10 cryptos majeures (Top 10) plus 90 hidden gems avec score de fiabilité, méthodologie publique, audits, backers et risques détaillés.",
+        "100 fiches éditoriales premium (Top 10 + 90 hidden gems) avec score de fiabilité, méthodologie publique, audits, backers et risques détaillés. Plus 680 fiches LLM exploratoires accessibles depuis la recherche du site.",
       numberOfItems: all.length,
       itemListElement: all.map((c, idx) => ({
         "@type": "ListItem",
@@ -189,13 +189,13 @@ export default function CryptosIndexPage() {
         {/* Header */}
         <header className="mt-6 max-w-3xl">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            100 cryptos <span className="gradient-text">analysées</span>
+            780 cryptos <span className="gradient-text">analysées</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            La plus grande base d&apos;analyse crypto francophone : 10 cryptos majeures
-            expliquées pour les débutants (Top 10 par capitalisation), 90 fiches Hidden Gems
-            avec score de fiabilité calculé sur méthodologie publique. Régulation MiCA, audits,
-            backers, risques — tout est documenté.
+            La plus grande base d&apos;analyse crypto francophone : 100 fiches éditoriales premium
+            (10 cryptos majeures Top 10 + 90 Hidden Gems avec score de fiabilité calculé sur
+            méthodologie publique) listées ci-dessous, plus 680 fiches LLM exploratoires
+            accessibles via la recherche. Régulation MiCA, audits, backers, risques — tout est documenté.
           </p>
         </header>
 

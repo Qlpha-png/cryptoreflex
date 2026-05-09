@@ -24,7 +24,7 @@ import { ArrowLeft, Search, Trophy, BarChart3 } from "lucide-react";
 export const metadata: Metadata = {
   title: "Cette crypto n'existe pas — Cryptoreflex",
   description:
-    "Cette fiche crypto n'existe pas (encore !). Découvre nos 100 cryptos analysées : top 10 + 90 hidden gems.",
+    "Cette fiche crypto n'existe pas (encore !). Découvre nos 780 cryptos analysées (100 fiches éditoriales premium + 680 fiches LLM).",
   robots: { index: false, follow: false },
 };
 
@@ -49,8 +49,9 @@ export default function CryptoNotFound() {
           </h2>
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
-            Cryptoreflex couvre 100 cryptos analysées : top 10 marketcap + 90
-            hidden gems. Si tu cherches un projet plus exotique, dis-le-nous —
+            Cryptoreflex couvre 780 cryptos analysées : 100 fiches éditoriales
+            premium (top 10 marketcap + 90 hidden gems) plus 680 fiches LLM
+            exploratoires. Si tu cherches un projet plus exotique, dis-le-nous —
             on l'ajoutera peut-être au prochain batch.
           </p>
 
@@ -84,7 +85,7 @@ export default function CryptoNotFound() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-primary text-base">
               <Trophy className="h-4 w-4" />
-              Les 100 cryptos analysées
+              Les 780 cryptos analysées
             </Link>
             <Link
               href="/"

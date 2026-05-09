@@ -101,7 +101,7 @@ export default function AskAiQuotaCard() {
 
           <p className="mt-2 text-[11px] text-muted">
             Reset automatique 24h après ta première question. Modèle Claude Haiku
-            contextualisé sur chacune des 100 fiches crypto.
+            contextualisé sur chacune des 100 fiches éditoriales premium.
           </p>
 
           {isExhausted ? (

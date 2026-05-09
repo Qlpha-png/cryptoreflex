@@ -11,7 +11,7 @@
  */
 export default function CryptosLoading() {
   return (
-    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement des 100 cryptos analysées">
+    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement des 780 cryptos analysées">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb skeleton */}
         <div className="h-3 w-32 rounded bg-elevated mb-6" />

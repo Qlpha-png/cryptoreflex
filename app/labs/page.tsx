@@ -236,7 +236,7 @@ export default function LabsPage() {
             {[
               { href: "/comparatif", title: "Comparatif", body: "34 plateformes — prerendered" },
               { href: "/avis", title: "Avis détaillés", body: "34 plateformes auditées" },
-              { href: "/outils", title: "Outils gratuits", body: "26 outils crypto FR" },
+              { href: "/outils", title: "Outils gratuits", body: "28 outils crypto FR" },
             ].map((c) => (
               <Link
                 key={c.href}

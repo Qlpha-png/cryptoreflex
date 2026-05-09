@@ -97,7 +97,7 @@ export default function CgvAbonnementPage() {
         <li>Watchlist étendue : 200 cryptos suivies (vs 10 en gratuit)</li>
         <li>
           IA Q&amp;A par fiche crypto : 20 questions/jour à notre assistant Claude Haiku
-          contextualisé sur chacune des 100 fiches Cryptoreflex (réservé aux abonnés Soutien)
+          contextualisé sur chacune des 100 fiches éditoriales premium Cryptoreflex (réservé aux abonnés Soutien)
         </li>
       </ul>
       <p className="mt-3 text-xs text-muted leading-relaxed">

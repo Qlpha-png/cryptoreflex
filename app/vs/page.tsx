@@ -148,7 +148,7 @@ export default function VsHub() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/cryptos" className="btn-ghost text-sm">
-              Voir les 100 fiches crypto
+              Voir les 780 fiches crypto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

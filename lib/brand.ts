@@ -28,7 +28,7 @@ export const BRAND = {
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout sur la crypto, en français",
   description:
-    "100 cryptos analysées (score fiabilité, on-chain live, roadmap), 34 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 26 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+    "780 cryptos analysées (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;
@@ -59,15 +59,17 @@ export const STATS = {
    */
   platforms: 34,
   /**
-   * Nombre de fiches crypto éditoriales (data/top-cryptos.json + hidden-gems).
-   * = 10 top + 90 hidden = 100.
+   * Nombre TOTAL de fiches crypto disponibles sur le site.
+   * = 100 fiches éditoriales statiques (10 top + 90 hidden gems) + 680 fiches
+   *   LLM exploratoires en DB (Supabase) = 780.
+   * Pour le sous-total éditorial uniquement, voir `cryptosCurated`.
    */
-  cryptos: 100,
+  cryptos: 780,
+  /** Sous-total des fiches crypto éditoriales (data/top-cryptos.json + hidden-gems). */
+  cryptosCurated: 100,
   /**
    * Nombre d'outils dans app/outils/<slug>/page.tsx.
-   * Comptage manuel : 14 historiques + 4 TIER 3 (BATCH 11) + 8 BATCH 7-8
-   * (whale-radar, phishing-checker, allocator-ia, gas-tracker-fr,
-   * export-expert-comptable, crypto-license, succession-crypto, dca-lab) = 26.
+   * = 23 free + 5 pro = 28 (cf. app/outils/page.tsx).
    */
-  tools: 26,
+  tools: 28,
 } as const;

@@ -334,14 +334,14 @@ export default function Top10CryptosClient({
         <div className="max-w-3xl flex items-center gap-2 flex-wrap">
           <span className="badge-info">
             <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" focusable="false" />
-            Aperçu top {cryptos.length} sur 100
+            Aperçu top {cryptos.length} sur 780
           </span>
           {/* Lien vers les 100 fiches — petit, contextuel, sans paragraphe doublon */}
           <a
             href="/cryptos"
             className="text-[12px] text-muted hover:text-primary inline-flex items-center gap-1"
           >
-            Voir les 100 fiches
+            Voir les 780 fiches
             <span aria-hidden="true">→</span>
           </a>
           {/* E-E-A-T freshness en discret à droite */}
@@ -505,7 +505,7 @@ export default function Top10CryptosClient({
               href="/cryptos"
               className="btn-primary inline-flex items-center justify-center"
             >
-              Explorer les 100+ cryptos analysées
+              Explorer les 780 cryptos analysées
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link

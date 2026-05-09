@@ -246,7 +246,7 @@ export default function CryptoQuickSwitcher({
               onClick={() => setIsOpen(false)}
               className="font-semibold text-primary-soft hover:text-primary"
             >
-              Voir les 100 fiches →
+              Voir les 780 fiches →
             </Link>
           </div>
         </div>

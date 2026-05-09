@@ -90,17 +90,17 @@ export const metadata: Metadata = {
   // guides et outils crypto », 51 chars, aucun keyword "France" ni "MiCA").
   // Maintenant : title explicite ciblé sur la requête principale.
   // BATCH 23 SEO P0 #2 — title raccourci à 56 chars (avant 80 chars).
-  title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
+  title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
   // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Compare 34 plateformes MiCA, analyse 100 cryptos (score fiabilité), calcule ta fiscalité PFU. 26 outils gratuits, méthodologie publique.",
+    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calcule ta fiscalité PFU. 28 outils gratuits, méthodologie publique.",
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
-    title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
+    title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 34 plateformes MiCA, 100 cryptos analysées, 26 outils (PFU, DCA, fiscalité). Méthode publique.",
+      "L'écosystème crypto français : 34 plateformes MiCA, 780 cryptos analysées, 28 outils (PFU, DCA, fiscalité). Méthode publique.",
     images: [
       {
         url: "/opengraph-image",
@@ -111,9 +111,9 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: "Crypto France 2026 — 100 cryptos, MiCA, outils IA",
+    title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 34 plateformes MiCA, 100 cryptos analysées, 26 outils (PFU, DCA, fiscalité).",
+      "L'écosystème crypto français : 34 plateformes MiCA, 780 cryptos analysées, 28 outils (PFU, DCA, fiscalité).",
   },
 };
 
@@ -331,9 +331,9 @@ export default async function HomePage() {
           Icon={Lightbulb}
           eyebrow="Apprendre"
           title="Apprendre la crypto"
-          intro="100 cryptos analysées en détail (top 10 + 90 hidden gems avec score de fiabilité), expliquées simplement. Plus nos guides pour éviter les erreurs classiques de débutant."
+          intro="780 cryptos analysées sur le site (100 fiches éditoriales premium top 10 + 90 hidden gems avec score de fiabilité, plus 680 fiches LLM exploratoires), expliquées simplement. Plus nos guides pour éviter les erreurs classiques de débutant."
           ctaHref="/cryptos"
-          ctaLabel="100 cryptos analysées →"
+          ctaLabel="780 cryptos analysées →"
           anchorId="cat-apprendre"
         />
         <Reveal>

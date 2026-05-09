@@ -185,7 +185,7 @@ const POOL: Record<string, Step> = {
   outils: {
     href: "/outils",
     Icon: Wrench,
-    label: "26 outils gratuits",
+    label: "28 outils gratuits",
     desc: "Calculateurs, simulateurs, convertisseur, glossaire 250+ termes.",
   },
   topCryptos: {

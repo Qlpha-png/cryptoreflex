@@ -196,14 +196,14 @@ const ADMIN_LINKS_GROUPS: Array<{
     links: [
       {
         href: "/cryptos",
-        title: "100 fiches crypto",
-        description: "Hub /cryptos",
+        title: "780 fiches crypto",
+        description: "Hub /cryptos (100 éditoriales + 680 LLM)",
         Icon: FileText,
       },
       {
         href: "/comparer",
-        title: "105 comparatifs crypto",
-        description: "Hub /comparer",
+        title: "4 950 comparatifs crypto",
+        description: "Hub /comparer (entre les 100 fiches éditoriales)",
         Icon: FileText,
       },
       {
@@ -215,7 +215,7 @@ const ADMIN_LINKS_GROUPS: Array<{
       {
         href: "/outils",
         title: "Tous les outils",
-        description: "26 outils Cryptoreflex",
+        description: "28 outils Cryptoreflex",
         Icon: Settings,
       },
     ],

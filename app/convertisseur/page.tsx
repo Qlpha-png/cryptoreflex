@@ -129,7 +129,7 @@ export default function ConvertisseurHub() {
             Tu cherches plus que de la conversion ?
           </h2>
           <p className="text-sm text-muted mb-4 max-w-xl mx-auto">
-            On a 26 outils crypto gratuits : calculateur fiscalité PFU, simulateur
+            On a 28 outils crypto gratuits : calculateur fiscalité PFU, simulateur
             DCA backtest 5 ans, glossaire 250+ termes.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">

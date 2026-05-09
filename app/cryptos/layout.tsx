@@ -21,9 +21,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 const PAGE_URL = `${BRAND.url}/cryptos`;
-const PAGE_TITLE = "100 cryptos analysees : top 10 + 90 hidden gems 2026";
+const PAGE_TITLE = "780 cryptos analysees : top 10, 90 hidden gems + 680 fiches LLM 2026";
 const PAGE_DESCRIPTION =
-  "Toutes les fiches crypto Cryptoreflex : top 10 (BTC, ETH, SOL, BNB, XRP, ADA, AVAX, DOT, DOGE, TRX) + 90 hidden gems analysees (DePIN, RWA, Layer 2, gaming). Filtres categorie + recherche live + comparateur side-by-side.";
+  "Toutes les fiches crypto Cryptoreflex : 100 fiches editoriales premium (top 10 + 90 hidden gems DePIN, RWA, Layer 2, gaming) + 680 fiches LLM exploratoires. Filtres categorie + recherche live + comparateur side-by-side.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -43,7 +43,8 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
   },
   keywords: [
-    "100 cryptos",
+    "780 cryptos",
+    "100 fiches crypto",
     "fiches crypto FR",
     "top 10 crypto 2026",
     "hidden gems crypto",

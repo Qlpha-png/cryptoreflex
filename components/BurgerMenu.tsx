@@ -69,7 +69,7 @@ const SECTIONS: MenuSection[] = [
     Icon: Compass,
     intro: "Démarrer avec Cryptoreflex",
     items: [
-      { href: "/", label: "Accueil", desc: "100 cryptos · 28 outils · 34 plateformes" },
+      { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 34 plateformes" },
       { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouve ta plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
       { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
@@ -86,7 +86,7 @@ const SECTIONS: MenuSection[] = [
     Icon: DollarSign,
     intro: "Comparer & choisir où acheter",
     items: [
-      { href: "/comparatif", label: "Comparatif plateformes", desc: "30+ plateformes notées MiCA" },
+      { href: "/comparatif", label: "Comparatif plateformes", desc: "34 plateformes notées MiCA" },
       { href: "/comparatif/frais", label: "Frais : ranking 2026", desc: "Maker, taker, spread, SEPA", badge: "NEW" },
       { href: "/comparatif/securite", label: "Sécurité : audit complet", desc: "Cold storage, hack, MiCA", badge: "NEW" },
       { href: "/avis", label: "Avis détaillés", desc: "Tests réels de chaque plateforme" },
@@ -98,10 +98,10 @@ const SECTIONS: MenuSection[] = [
     id: "cryptos",
     title: "Cryptos",
     Icon: Sparkles,
-    intro: "100 fiches + 4950 comparatifs",
+    intro: "780 fiches + 4950 comparatifs",
     items: [
-      { href: "/cryptos", label: "100 cryptos analysées", desc: "Top 10 + 90 hidden gems" },
-      { href: "/comparer", label: "Comparer 2 cryptos", desc: "Hub des 100 cryptos", badge: "MASSIF" },
+      { href: "/cryptos", label: "780 cryptos analysées", desc: "100 fiches premium + 680 LLM" },
+      { href: "/comparer", label: "Comparer 2 cryptos", desc: "Hub des 100 fiches éditoriales", badge: "MASSIF" },
       { href: "/vs", label: "Tous les duels crypto", desc: "4950 paires analysées (BTC vs ETH, etc.)" },
       { href: "/cryptos/comparer", label: "Comparateur dynamique", desc: "Compare 3-4 cryptos avec prix live" },
       { href: "/airdrops", label: "Airdrops 2026", desc: "Linea, Monad, Morpho, EigenLayer...", badge: "NEW" },

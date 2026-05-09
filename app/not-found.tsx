@@ -23,7 +23,7 @@ import {
 export const metadata: Metadata = {
   title: "Page introuvable",
   description:
-    "Cette page n'existe pas (encore !). Découvre nos 100 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
+    "Cette page n'existe pas (encore !). Découvre nos 780 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
   robots: { index: false, follow: false },
 };
 
@@ -36,7 +36,7 @@ const SUGGESTIONS = [
   },
   {
     href: "/cryptos",
-    title: "100 cryptos analysées",
+    title: "780 cryptos analysées",
     description: "Notre sélection complète : score fiabilité, on-chain, roadmap.",
     icon: Trophy,
   },

@@ -138,7 +138,7 @@ const TOOLS: Tool[] = [
   // ─── MARCHÉ ───
   {
     title: "Convertisseur crypto live",
-    desc: "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos, taux CoinGecko 60s.",
+    desc: "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos majeures, taux CoinGecko 60s.",
     href: "/outils/convertisseur",
     Icon: ArrowDownUp,
     tier: "free",
@@ -214,7 +214,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Comparer 2 cryptos",
-    desc: "105 duels prêts entre top 15 cryptos (BTC vs ETH, SOL vs ADA…) + tableau side-by-side.",
+    desc: "4 950 duels prêts entre top 100 cryptos éditoriales (BTC vs ETH, SOL vs ADA…) + tableau side-by-side.",
     href: "/comparer",
     Icon: Trophy,
     tier: "free",
@@ -234,7 +234,7 @@ const TOOLS: Tool[] = [
   // ─── IA SOUTIEN ───
   {
     title: "IA Q&A par fiche crypto",
-    desc: "20 questions/jour à Claude Haiku contextualisé sur chacune des 100 fiches Cryptoreflex.",
+    desc: "20 questions/jour à Claude Haiku contextualisé sur chacune des 100 fiches éditoriales premium Cryptoreflex.",
     href: "/cryptos",
     Icon: Bot,
     tier: "pro",
@@ -249,7 +249,7 @@ const TOOLS: Tool[] = [
   // (Yield Stablecoins, Crypto Wrapped) servent à acquérir.
   {
     title: "Yield stablecoins (USDC/USDT/EURC)",
-    desc: "Comparateur APY sur 14+ plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
+    desc: "Comparateur APY sur 34 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
     href: "/outils/yield-stablecoins",
     Icon: Zap,
     tier: "free",

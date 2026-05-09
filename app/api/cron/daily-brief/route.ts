@@ -276,8 +276,8 @@ ${data.faq.answer}
 
 ## ⚡ Outils Cryptoreflex
 
-- [📊 100 fiches crypto analysées](/cryptos) — score fiabilité, on-chain live, roadmap
-- [⚖️ Comparer 2 cryptos face à face](/comparer) — 105 duels prêts
+- [📊 780 fiches crypto analysées](/cryptos) — 100 fiches premium + 680 LLM, score fiabilité, on-chain live, roadmap
+- [⚖️ Comparer 2 cryptos face à face](/comparer) — 4 950 duels prêts
 - [🧮 Calculateur fiscalité PFU 30%](/outils/calculateur-fiscalite) — gratuit
 - [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte tes amendes potentielles
 
