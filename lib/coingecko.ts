@@ -794,6 +794,73 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
     // contient des prix recents (snapshot manuel top 10), bien meilleur
     // qu'un null. Si CoinGecko aussi vide -> seulement la on retourne null.
     if (snap.priceUsd > 0) {
+      // FIX 2026-05-10 P0 — Hydration CoinGecko pour snapshots de providers
+      // non-CoinGecko (Binance/Kraken/Coinbase/KuCoin/DexScreener) qui ne
+      // renvoient QUE price + volume (pas marketCap, supply, ATH, ATL,
+      // sparkline). Sans hydration : 15 fiches affichent marketCap=0,
+      // 100% des fiches ATH/ATL="—", 65 fiches sparkline vide.
+      // Cache 30min sur l'hydrate, try/catch silencieux : si CG fail, on
+      // retombe sur le snapshot bare (pas pire qu'avant).
+      const needsHydration =
+        snap.source !== "coingecko" &&
+        snap.source !== "coincap" &&
+        snap.source !== "static" &&
+        snap.marketCap <= 0 &&
+        !isBuildPhase;
+      if (needsHydration) {
+        try {
+          const cgUrl = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
+          const r = await fetchWithRetry(cgUrl, {
+            next: { revalidate: 1800, tags: [cgCryptoTag(coingeckoId)] },
+            headers: cgHeaders(),
+          });
+          if (r.ok) {
+            const j = (await r.json()) as Array<{
+              id: string;
+              symbol: string;
+              name: string;
+              image: string;
+              market_cap: number | null;
+              market_cap_rank: number | null;
+              circulating_supply: number | null;
+              total_supply: number | null;
+              max_supply: number | null;
+              ath: number | null;
+              ath_date: string | null;
+              atl: number | null;
+              atl_date: string | null;
+              sparkline_in_7d?: { price: number[] };
+            }>;
+            const c = j?.[0];
+            if (c) {
+              return {
+                id: c.id,
+                symbol: c.symbol.toUpperCase(),
+                name: c.name,
+                image: c.image,
+                currentPrice: snap.priceUsd, // garde le live du provider rapide
+                priceChange24h: snap.change24h,
+                priceChange7d: snap.change7d,
+                marketCap: c.market_cap ?? 0,
+                marketCapRank: c.market_cap_rank ?? 0,
+                totalVolume: snap.volume24h,
+                circulatingSupply: c.circulating_supply ?? 0,
+                totalSupply: c.total_supply,
+                maxSupply: c.max_supply,
+                ath: c.ath ?? 0,
+                athDate: c.ath_date,
+                atl: c.atl ?? 0,
+                atlDate: c.atl_date,
+                sparkline7d: snap.sparkline7d?.length
+                  ? snap.sparkline7d
+                  : (c.sparkline_in_7d?.price ?? []),
+              };
+            }
+          }
+        } catch {
+          /* fall-through to bare snapshot below */
+        }
+      }
       return {
         id: snap.id,
         symbol: snap.symbol,

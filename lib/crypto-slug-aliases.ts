@@ -46,6 +46,17 @@ export const SLUG_ALIASES: Record<string, string> = {
 
   // Cryptos avec suffixe `-4`
   cash: "cash-4",
+
+  // FIX 2026-05-10 P0 — aliases courts -> coingecko_id canonique
+  // (audit fiches statiques avec marketCap=0 / sparkline vide).
+  // NEAR Protocol : coingecko_id canonique = "near" (pas "near-protocol").
+  "near-protocol": "near",
+  // Lido DAO Token : coingecko_id canonique = "lido-dao".
+  lido: "lido-dao",
+  // Aerodrome Finance : coingecko_id canonique = "aerodrome-finance".
+  aerodrome: "aerodrome-finance",
+  // Akash Network : coingecko_id canonique = "akash-network".
+  akash: "akash-network",
 };
 
 /**

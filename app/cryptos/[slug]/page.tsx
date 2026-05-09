@@ -512,21 +512,10 @@ export default async function CryptoPage({ params }: Props) {
       />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* FIX A cohérence (2026-05-09) — breadcrumb fil complet "Accueil ›
-            Cryptos › {name}" pour aligner les fiches statiques (top 10 +
-            hidden gems) sur le pattern des fiches LLM (LLMFicheView).
-            Avant : juste un BackButton "Retour" global sans contexte. */}
-        <nav className="mt-6 text-sm text-muted">
-          <Link href="/" className="hover:underline">
-            Accueil
-          </Link>
-          {" › "}
-          <Link href="/cryptos" className="hover:underline">
-            Cryptos
-          </Link>
-          {" › "}
-          <span>{c.name}</span>
-        </nav>
+        {/* BUG FIX 2026-05-10 — breadcrumb fil complet RETIRÉ car déjà
+            rendu par StickyBreadcrumb au-dessus. Mon ajout wave 1 était
+            redondant et créait un doublon visuel "Accueil / Cryptos / X"
+            répété 2× sur les fiches statiques. */}
 
         {/* QUICK SWITCHER (audit user 2026-05-02) — barre de recherche
             visible juste sous le breadcrumb, permet de naviguer vers une
