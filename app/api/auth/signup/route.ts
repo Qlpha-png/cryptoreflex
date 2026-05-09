@@ -21,6 +21,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
@@ -112,6 +113,14 @@ export async function POST(req: NextRequest) {
     });
 
   if (createError) {
+    // Skip "user déjà existant" (cas attendu, pas une erreur infrastructure).
+    if (!isUserExistsError(createError.message)) {
+      Sentry.captureException(createError, {
+        tags: { route: "auth/signup", stage: "createUser" },
+        extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+        level: "error",
+      });
+    }
     console.error("[auth/signup] createUser error:", createError.message);
 
     if (isUserExistsError(createError.message)) {
@@ -156,6 +165,11 @@ export async function POST(req: NextRequest) {
   });
 
   if (signInError) {
+    Sentry.captureException(signInError, {
+      tags: { route: "auth/signup", stage: "signInAfterCreate" },
+      extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+      level: "error",
+    });
     console.error("[auth/signup] signInWithPassword after create:", signInError.message);
     return NextResponse.json({
       ok: true,

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RotateCcw, Home, Mail } from "lucide-react";
+import * as Sentry from "@sentry/nextjs";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -27,8 +28,12 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Remontée systématique à Sentry (en prod ET preview). Tag `digest` pour
+    // matcher l'erreur affichée à l'utilisateur avec l'event Sentry.
+    Sentry.captureException(error, {
+      tags: { scope: "app-error-boundary", digest: error.digest ?? "none" },
+    });
     if (process.env.NODE_ENV === "production") {
-      // TODO: Sentry.captureException(error, { tags: { digest: error.digest } });
       // En prod on log quand même un payload structuré, exploitable par
       // n'importe quel collector (Vercel logs, Logtail, Datadog…).
       console.error("[Cryptoreflex] Runtime error", {

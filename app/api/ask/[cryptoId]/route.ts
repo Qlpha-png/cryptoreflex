@@ -49,6 +49,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import * as Sentry from "@sentry/nextjs";
 import { getUser } from "@/lib/auth";
 import { getCryptoBySlug, getAllCryptos } from "@/lib/cryptos";
 import { createRateLimiter } from "@/lib/rate-limit";
@@ -471,6 +472,11 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
         });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "unknown";
+        Sentry.captureException(err, {
+          tags: { route: "ask/cryptoId", stage: "anthropicStream" },
+          extra: { cryptoId, userId: user.id, plan: user.plan },
+          level: "error",
+        });
         console.error("[ask/route] Anthropic stream error:", msg);
         send({
           type: "error",

@@ -28,6 +28,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -166,6 +167,15 @@ async function invokeSubCron(
           ? `timeout after ${PER_JOB_TIMEOUT_MS}ms`
           : err.message
         : "unknown error";
+    Sentry.captureException(err, {
+      tags: {
+        route: "cron/daily-orchestrator",
+        job: cron.name,
+        critical: cron.critical ? "true" : "false",
+      },
+      extra: { sessionId, durationMs, url },
+      level: cron.critical ? "error" : "warning",
+    });
     console.error(
       `[orchestrator-job-error] session=${sessionId} job=${cron.name} ms=${durationMs} error=${message}`,
     );
@@ -200,6 +210,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       "[orchestrator] CRON_SECRET absent — endpoint ouvert (mode dev).",
     );
   }
+
+  Sentry.addBreadcrumb({
+    category: "cron",
+    message: "starting daily orchestrator",
+    level: "info",
+    data: { sessionId, jobs: SUB_CRONS.length },
+  });
 
   console.log(
     `[orchestrator-start] session=${sessionId} jobs=${SUB_CRONS.length} ts=${new Date().toISOString()}`,
@@ -249,6 +266,29 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   console.log(
     `[orchestrator-end] session=${sessionId} ok=${ok} successes=${successes} failures=${failures} ms=${totalDurationMs}`,
   );
+
+  // Si au moins un job critique a échoué, on remonte un message agrégé pour
+  // que le monitoring soit alerté même si les errors per-job ont déjà été
+  // capturées (utile pour grouper côté Sentry).
+  if (failures > 0) {
+    const criticalFailures = jobs.filter(
+      (j) => !j.ok && SUB_CRONS.find((c) => c.name === j.name)?.critical,
+    );
+    if (criticalFailures.length > 0) {
+      Sentry.captureMessage(
+        `[orchestrator] ${criticalFailures.length} critical job(s) failed`,
+        {
+          tags: { route: "cron/daily-orchestrator" },
+          extra: {
+            sessionId,
+            failedJobs: criticalFailures.map((j) => j.name),
+            totalDurationMs,
+          },
+          level: "error",
+        },
+      );
+    }
+  }
 
   return NextResponse.json(report, { status: ok ? 200 : 207 });
 }

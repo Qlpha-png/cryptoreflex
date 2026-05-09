@@ -21,6 +21,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { evaluateAndFire } from "@/lib/alerts";
 import { verifyBearer } from "@/lib/auth";
 
@@ -56,6 +57,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), CRON_DEADLINE_MS);
 
+  Sentry.addBreadcrumb({
+    category: "cron",
+    message: "starting evaluate-alerts",
+    level: "info",
+    data: { sessionId },
+  });
+
   console.info(
     `[cron-eval-start] session=${sessionId} ts=${new Date().toISOString()} deadlineMs=${CRON_DEADLINE_MS}`,
   );
@@ -72,6 +80,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const aborted = controller.signal.aborted;
+    Sentry.captureException(err, {
+      tags: { route: "cron/evaluate-alerts", stage: "evaluateAndFire" },
+      extra: { sessionId, aborted },
+      level: "error",
+    });
     console.error(
       `[cron-eval-error] session=${sessionId} aborted=${aborted} message=${message}`,
     );

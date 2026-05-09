@@ -31,6 +31,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { revalidateTag } from "next/cache";
+import * as Sentry from "@sentry/nextjs";
 
 import { TA_CRYPTOS } from "@/lib/ta-types";
 import {
@@ -113,6 +114,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
   const targetDir = path.join(process.cwd(), "content", "analyses-tech");
 
+  Sentry.addBreadcrumb({
+    category: "cron",
+    message: "starting generate-ta",
+    level: "info",
+    data: { sessionId, date: today, cryptos: TA_CRYPTOS.length },
+  });
+
   console.info(
     `[ta-cron-start] session=${sessionId} date=${today} cryptos=${TA_CRYPTOS.length}`,
   );
@@ -121,6 +129,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     await fs.mkdir(targetDir, { recursive: true });
   } catch (err) {
+    Sentry.captureException(err, {
+      tags: { route: "cron/generate-ta", stage: "mkdir" },
+      extra: { sessionId, targetDir },
+      level: "error",
+    });
     console.error(`[ta-cron-error] mkdir failed: ${(err as Error).message}`);
     return NextResponse.json(
       { ok: false, sessionId, error: "Cannot create target directory" },
@@ -201,6 +214,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       errors.push({ symbol: crypto.symbol, message });
+      Sentry.captureException(err, {
+        tags: { route: "cron/generate-ta", stage: "perCrypto", symbol: crypto.symbol },
+        extra: { sessionId, slug },
+        level: "warning",
+      });
       console.error(
         `[ta-cron-error] symbol=${crypto.symbol} message=${message}`,
       );

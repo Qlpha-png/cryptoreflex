@@ -37,6 +37,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { revalidateTag } from "next/cache";
+import * as Sentry from "@sentry/nextjs";
 
 import { fetchNewsRaw } from "@/lib/news-aggregator";
 import { rewriteNews, rewriteNewsWithLLM } from "@/lib/news-rewriter";
@@ -109,6 +110,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }, { status: 200 });
   }
 
+  Sentry.addBreadcrumb({
+    category: "cron",
+    message: "starting aggregate-news",
+    level: "info",
+    data: { sessionId },
+  });
+
   console.info(
     `[news-cron-start] session=${sessionId} ts=${startedAt} deadlineMs=${CRON_DEADLINE_MS}`
   );
@@ -165,6 +173,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         errors++;
         const message = err instanceof Error ? err.message : String(err);
         errorDetails.push({ message });
+        Sentry.captureException(err, {
+          tags: { route: "cron/aggregate-news", stage: "rewriteItem" },
+          extra: { sessionId, itemTitle: item.title.slice(0, 80) },
+          level: "warning",
+        });
         console.error(
           `[news-cron-error] session=${sessionId} item="${item.title.slice(0, 80)}" message=${message}`
         );
@@ -208,6 +221,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const message = err instanceof Error ? err.message : String(err);
     const aborted = controller.signal.aborted;
     const durationMs = Date.now() - t0;
+    Sentry.captureException(err, {
+      tags: { route: "cron/aggregate-news", stage: "topLevel" },
+      extra: { sessionId, aborted, durationMs, processed, created, skipped },
+      level: "error",
+    });
     console.error(
       `[news-cron-error] session=${sessionId} aborted=${aborted} message=${message} durationMs=${durationMs}`
     );

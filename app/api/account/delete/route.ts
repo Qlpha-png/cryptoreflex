@@ -28,6 +28,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import {
   createSupabaseServerClient,
   createSupabaseServiceRoleClient,
@@ -119,6 +120,13 @@ export async function POST(req: NextRequest) {
         await stripe.customers.del(stripeCustomerId);
       } catch (err) {
         // Pas bloquant — l'objectif principal est de supprimer côté Supabase.
+        // On remonte quand même : un échec de cleanup Stripe = subscription
+        // active orpheline → facturation continue après suppression compte.
+        Sentry.captureException(err, {
+          tags: { route: "account/delete", stage: "stripeCleanup" },
+          extra: { userId: authUser.id, stripeCustomerId },
+          level: "warning",
+        });
         console.warn("[account/delete] Stripe cleanup partiel:", err);
       }
     }
@@ -130,6 +138,11 @@ export async function POST(req: NextRequest) {
   const { error: deleteError } = await admin.auth.admin.deleteUser(authUser.id);
 
   if (deleteError) {
+    Sentry.captureException(deleteError, {
+      tags: { route: "account/delete", stage: "deleteUser" },
+      extra: { userId: authUser.id },
+      level: "error",
+    });
     console.error("[account/delete] Suppression échoue:", deleteError);
     return NextResponse.json(
       { error: "Deletion failed — contact support@cryptoreflex.fr" },

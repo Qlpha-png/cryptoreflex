@@ -28,6 +28,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import * as Sentry from "@sentry/nextjs";
 import { getStripeClient, priceIdToPlan, planToExpirationDate } from "@/lib/stripe";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
@@ -64,6 +65,10 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
+    Sentry.captureException(err, {
+      tags: { route: "stripe/webhook", stage: "signature-verification" },
+      level: "error",
+    });
     console.error("[stripe-webhook] Signature verification failed:", message);
     return NextResponse.json(
       { error: `Webhook signature verification failed: ${message}` },
@@ -84,6 +89,14 @@ export async function POST(req: NextRequest) {
     console.log(`[stripe-webhook] Event ${event.id} déjà traité, skip`);
     return NextResponse.json({ received: true, idempotent: true });
   }
+
+  // Breadcrumb pour corréler les errors aux événements Stripe traités.
+  Sentry.addBreadcrumb({
+    category: "stripe",
+    message: `Dispatching event ${event.type}`,
+    level: "info",
+    data: { eventId: event.id, type: event.type },
+  });
 
   // Dispatch event handlers
   try {
@@ -126,6 +139,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
+    Sentry.captureException(err, {
+      tags: {
+        route: "stripe/webhook",
+        stage: "handler",
+        eventType: event.type,
+      },
+      extra: { eventId: event.id },
+      level: "error",
+    });
     console.error(`[stripe-webhook] Handler error for ${event.type}:`, message);
     return NextResponse.json(
       { error: "Internal handler error" },
@@ -215,6 +237,11 @@ async function handleCheckoutCompleted(
         }
       }
     } catch (err) {
+      Sentry.captureException(err, {
+        tags: { route: "stripe/webhook", stage: "checkout.completed.lineItems" },
+        extra: { sessionId: session.id },
+        level: "warning",
+      });
       console.error(
         "[checkout.completed] Impossible de récupérer line_items, fallback heuristique:",
         err
@@ -243,6 +270,11 @@ async function handleCheckoutCompleted(
     });
 
   if (linkError) {
+    Sentry.captureException(linkError, {
+      tags: { route: "stripe/webhook", stage: "checkout.completed.generateLink" },
+      extra: { email },
+      level: "error",
+    });
     console.error("[checkout.completed] generateLink échoué:", linkError);
     // On continue quand même pour upsert le user — il pourra se reconnecter
     // via /connexion plus tard
@@ -260,6 +292,14 @@ async function handleCheckoutCompleted(
   }
 
   if (!userId) {
+    Sentry.captureMessage(
+      "[checkout.completed] Impossible de récupérer l'user ID",
+      {
+        tags: { route: "stripe/webhook", stage: "checkout.completed.resolveUserId" },
+        extra: { email },
+        level: "error",
+      },
+    );
     console.error("[checkout.completed] Impossible de récupérer l'user ID");
     return;
   }
@@ -278,6 +318,11 @@ async function handleCheckoutCompleted(
   );
 
   if (upsertError) {
+    Sentry.captureException(upsertError, {
+      tags: { route: "stripe/webhook", stage: "checkout.completed.upsertUser" },
+      extra: { userId, email, plan },
+      level: "error",
+    });
     console.error("[checkout.completed] Upsert user échoué:", upsertError);
     return;
   }
@@ -342,6 +387,14 @@ async function handleCheckoutCompleted(
   });
 
   if (!emailResult.ok) {
+    Sentry.captureMessage(
+      `[checkout.completed] Email welcome non envoyé à ${email}`,
+      {
+        tags: { route: "stripe/webhook", stage: "checkout.completed.welcomeEmail" },
+        extra: { email, error: emailResult.error },
+        level: "error",
+      },
+    );
     console.error(`[checkout.completed] Email welcome non envoyé à ${email}:`, emailResult.error);
   } else {
     console.log(`[checkout.completed] Email welcome envoyé à ${email}`);
@@ -384,6 +437,11 @@ async function handleSubscriptionUpdate(
     .eq("stripe_customer_id", customerId);
 
   if (error) {
+    Sentry.captureException(error, {
+      tags: { route: "stripe/webhook", stage: "subscription.update" },
+      extra: { customerId, plan, status },
+      level: "error",
+    });
     console.error("[subscription.update] Update échoué:", error);
   }
 }
@@ -551,6 +609,11 @@ async function handleB2bCheckoutCompleted(
     .single();
 
   if (error || !updated) {
+    Sentry.captureException(error ?? new Error("UPDATE api_keys returned no data"), {
+      tags: { route: "stripe/webhook", stage: "b2b.upgradeApiKey" },
+      extra: { apiKeyId, tier: tierRaw, subId },
+      level: "error",
+    });
     console.error(
       "[stripe-webhook][b2b] UPDATE api_keys échoué",
       apiKeyId,

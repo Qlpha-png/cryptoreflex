@@ -21,6 +21,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
 import { magicLinkEmail } from "@/lib/email/templates";
@@ -91,6 +92,11 @@ export async function POST(req: NextRequest) {
       email_confirm: true,
     });
     if (createError && !createError.message.toLowerCase().includes("already")) {
+      Sentry.captureException(createError, {
+        tags: { route: "auth/login", stage: "createUser" },
+        extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+        level: "warning",
+      });
       console.error("[auth/login] createUser error:", createError.message);
       // On continue quand meme — peut-etre erreur transitoire, generateLink essaiera
     }
@@ -110,6 +116,14 @@ export async function POST(req: NextRequest) {
     });
 
   if (linkError || !linkData?.properties?.hashed_token) {
+    Sentry.captureException(
+      linkError ?? new Error("generateLink returned no hashed_token"),
+      {
+        tags: { route: "auth/login", stage: "generateLink" },
+        extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+        level: "error",
+      },
+    );
     console.error("[auth/login] generateLink error:", linkError?.message);
     return NextResponse.json({
       ok: true,
@@ -133,6 +147,11 @@ export async function POST(req: NextRequest) {
   });
 
   if (!result.ok) {
+    Sentry.captureMessage("[auth/login] sendEmail failed (Resend)", {
+      tags: { route: "auth/login", stage: "sendEmail" },
+      extra: { emailDomain: email.split("@")[1] ?? "unknown", error: result.error },
+      level: "error",
+    });
     console.error("[auth/login] sendEmail error:", result.error);
     return NextResponse.json(
       { error: "Erreur d'envoi du lien. Réessaye dans quelques instants." },
