@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
 import { getCryptoBySlug } from "@/lib/cryptos";
-import { getCryptoFicheBySlug } from "@/lib/cryptos-db";
+import { getCryptoFiche, getCryptoFicheBySlug } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -60,8 +60,12 @@ async function resolveViewModel(slug: string): Promise<OgViewModel> {
   }
 
   // 2. Fall-back DB (680 fiches LLM scaling)
+  // On essaie d'abord par coingecko_id (= params.slug pour les fiches LLM,
+  // cf. page.tsx qui utilise getCryptoFiche(params.slug)). Si null, on
+  // essaie par colonne `slug` (sécurité pour les futurs slugs custom).
   try {
-    const fiche = await getCryptoFicheBySlug(slug);
+    const fiche =
+      (await getCryptoFiche(slug)) ?? (await getCryptoFicheBySlug(slug));
     if (fiche) {
       const llm = (fiche.llm_content || {}) as { tldr?: string };
       const tagline = llm.tldr
