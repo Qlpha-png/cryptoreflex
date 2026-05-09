@@ -902,11 +902,18 @@ async function fetchTopCryptos(count, startRank) {
 /* Output mappé au format CoinGecko `/coins/markets` pour rester drop-in :   */
 /*   { id (=coingecko_id), symbol, name, market_cap_rank, market_cap, ... }  */
 /*                                                                            */
-/* Mapping CryptoCompare → CoinGecko ID : on uppercase le symbol (BTC, ETH)   */
-/* et on lookup dans une table fournie par CC (CoinInfo.Internal). Pour les   */
-/* cryptos ambiguës (genre LUNA = Terra Luna Classic OU Terra), CC retourne   */
-/* la canonique. On accepte cette imperfection (les cas tordus seront skippés */
-/* par fetchCoinGeckoOverview qui retournera 404).                            */
+/* ⚠️ BUG CONNU 2026-05-09 (run #16) : le `coingecko_id` est dérivé via       */
+/* kebab(FullName) — fail pour ~50% des cryptos :                             */
+/*   - "BNB" → "bnb"   mais CG = "binancecoin"                                */
+/*   - "USDC" → "usdc" mais CG = "usd-coin"                                   */
+/*   - "Tether USDt" → "tether-usdt" mais CG = "tether"                       */
+/*   - "XRP" → "xrp"   mais CG = "ripple"                                     */
+/* Conséquence : phase 2 (LLM) → fetchCoinGeckoOverview retourne null →       */
+/* 0 fiche insérée. Run #16 a tenté 32 fiches, 0 success.                     */
+/*                                                                            */
+/* TODO Cycle 27 : pré-charger un mapping symbol→coingecko_id via             */
+/*   /coins/list (1 call CG, ~17K cryptos) au début. Lookup O(1) ensuite.    */
+/* En attendant, préférer source=coingecko + --no-scoring (run #17+).         */
 
 async function fetchTopCryptosCC(count) {
   // CC top/mktcapfull : limite=100 max par call. On boucle pour atteindre count.
