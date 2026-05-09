@@ -58,9 +58,108 @@ import { getCryptoFiche } from "@/lib/cryptos-db";
 import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { getKv } from "@/lib/kv";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/* -------------------------------------------------------------------------- */
+/*  Cost-control protections (kill switch + global cap + monthly budget)      */
+/*                                                                            */
+/*  Ajout 2026-05-09 — protections d'urgence anti-explosion budget OpenRouter */
+/*  1) Kill switch via env var AI_DISABLED=true                               */
+/*  2) Cap GLOBAL daily : 200 questions/jour TOUS USERS confondus             */
+/*  3) Budget tracker mensuel : hard cap $20/mois (~6000 questions Haiku 4.5) */
+/*  4) Alertes Sentry à 50% / 80% / 100% du budget                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Hard cap mensuel en USD. À ajuster selon le budget allocable.
+ * À ~$0.0033/question (Haiku 4.5, ~500 in + 400 out) → $20/mois ≈ 6000 questions.
+ */
+const MONTHLY_BUDGET_USD = 20;
+
+/**
+ * Pricing OpenRouter / Claude Haiku 4.5 (mai 2026).
+ * Source : https://openrouter.ai/anthropic/claude-haiku-4.5
+ * → $1 / 1M tokens input, $5 / 1M tokens output.
+ * Si la tarification change, mettre à jour ces constantes.
+ */
+const HAIKU_INPUT_USD_PER_MTOK = 1;
+const HAIKU_OUTPUT_USD_PER_MTOK = 5;
+
+/** Cap GLOBAL daily — 200 questions/jour TOUS USERS CONFONDUS (anti-abus systémique). */
+const globalDailyLimiter = createRateLimiter({
+  limit: 200,
+  windowMs: 24 * 60 * 60 * 1000,
+  key: "ask-global-daily",
+});
+
+/** Clé KV mensuelle : "ai-cost:YYYY-MM". TTL 35j pour couvrir le mois suivant. */
+function monthlyCostKey(): string {
+  return `ai-cost:${new Date().toISOString().slice(0, 7)}`;
+}
+
+/** Lit le coût cumulé du mois (USD). 0 si KV vide / mocked sans données. */
+async function getMonthlyCost(): Promise<number> {
+  const kv = getKv();
+  const raw = await kv.get<number | string>(monthlyCostKey());
+  if (raw == null) return 0;
+  const n = typeof raw === "number" ? raw : parseFloat(raw);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * Incrémente le coût cumulé du mois. Read-modify-write (pas atomique mais
+ * acceptable : un coût perdu = quelques cents, pas critique).
+ * TTL renouvelé à 35j à chaque écriture pour garantir l'expiry du mois N-1.
+ */
+async function addMonthlyCost(costUsd: number): Promise<void> {
+  if (!Number.isFinite(costUsd) || costUsd <= 0) return;
+  const kv = getKv();
+  const key = monthlyCostKey();
+  try {
+    const prev = await getMonthlyCost();
+    const next = prev + costUsd;
+    await kv.set(key, next, { ex: 60 * 60 * 24 * 35 });
+  } catch (err) {
+    // Fail-open : on log, on ne bloque pas la réponse au user.
+    console.warn("[ask] addMonthlyCost KV error:", err);
+  }
+}
+
+/**
+ * Vérifie les seuils 50% / 80% / 100% et déclenche une alerte Sentry une seule
+ * fois par seuil franchi (idempotent via clés KV "ai-cost-alert:YYYY-MM:THRESHOLD").
+ */
+async function maybeFireBudgetAlert(currentCost: number): Promise<void> {
+  const usage = currentCost / MONTHLY_BUDGET_USD;
+  const thresholds: Array<{ pct: number; level: "info" | "warning" | "error"; tag: string }> = [
+    { pct: 0.5, level: "info", tag: "50" },
+    { pct: 0.8, level: "warning", tag: "80" },
+    { pct: 1.0, level: "error", tag: "100" },
+  ];
+  const kv = getKv();
+  for (const t of thresholds) {
+    if (usage < t.pct) continue;
+    const alertKey = `ai-cost-alert:${new Date().toISOString().slice(0, 7)}:${t.tag}`;
+    try {
+      const already = await kv.get<number | string>(alertKey);
+      if (already) continue;
+      Sentry.captureMessage(
+        `Chat IA budget at ${Math.round(usage * 100)}% (${currentCost.toFixed(4)}/${MONTHLY_BUDGET_USD} USD)`,
+        {
+          level: t.level,
+          tags: { route: "ask", cap: "monthly-budget", threshold: t.tag },
+          extra: { currentCost, limit: MONTHLY_BUDGET_USD, usage },
+        },
+      );
+      await kv.set(alertKey, 1, { ex: 60 * 60 * 24 * 35 });
+    } catch (err) {
+      console.warn("[ask] maybeFireBudgetAlert KV error:", err);
+    }
+  }
+}
 
 // Whitelist des cryptoIds = TOUTES les cryptos (100 statiques + ~680 LLM).
 // Bug fix critique 2026-05-09 : avant, seulement 100 ids, donc le chat IA
@@ -264,6 +363,15 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
     return NextResponse.json({ error: "Crypto inconnue." }, { status: 404 });
   }
 
+  // 1.5 KILL SWITCH d'urgence : env var AI_DISABLED=true → coupe instant le service
+  // Permet au sysadmin de désactiver le chat IA en cas d'abus massif sans déployer.
+  if (process.env.AI_DISABLED === "true") {
+    return NextResponse.json(
+      { error: "Service IA temporairement désactivé." },
+      { status: 503 },
+    );
+  }
+
   // 2. Auth + plan Pro
   const user = await getUser();
   if (!user) {
@@ -402,6 +510,40 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
       { status: 429, headers: { "Retry-After": String(dailyRl.retryAfter) } }
     );
   }
+
+  // 8.5 Cap GLOBAL daily : 200 questions/jour TOUS USERS confondus (anti-abus
+  // systémique en cas de fuite credentials Pro ou attaque distribuée).
+  const globalRl = await globalDailyLimiter("global");
+  if (!globalRl.ok) {
+    Sentry.captureMessage("Chat IA global daily cap reached", {
+      level: "warning",
+      tags: { route: "ask", cap: "global-daily" },
+    });
+    return NextResponse.json(
+      { error: "Service IA saturé pour aujourd'hui. Reset minuit UTC." },
+      { status: 429, headers: { "Retry-After": String(globalRl.retryAfter) } },
+    );
+  }
+
+  // 8.6 Budget mensuel : hard cap $20/mois. Si dépassé → 503 jusqu'au mois prochain.
+  const currentCost = await getMonthlyCost();
+  if (currentCost >= MONTHLY_BUDGET_USD) {
+    Sentry.captureMessage("Chat IA monthly budget exceeded", {
+      level: "error",
+      tags: { route: "ask", cap: "monthly-budget" },
+      extra: { currentCost, limit: MONTHLY_BUDGET_USD },
+    });
+    return NextResponse.json(
+      {
+        error:
+          "Budget IA mensuel atteint. Service reprend début du mois prochain.",
+      },
+      { status: 503 },
+    );
+  }
+  // Alertes Sentry à 50% / 80% (idempotent via clé KV par seuil/mois). Ne bloque pas.
+  // Le 100% sera capturé par le check ci-dessus via le path "monthly budget exceeded".
+  await maybeFireBudgetAlert(currentCost);
 
   // 9. Construit le contexte crypto.
   // Tente d'abord la fiche editoriale statique (top10 + hidden gem) — riche
@@ -600,6 +742,20 @@ export async function POST(req: NextRequest, { params }: { params: { cryptoId: s
         }
 
         send({ type: "done", inputTokens, outputTokens });
+
+        // Track le coût de la réponse dans le compteur mensuel KV.
+        // Pricing Haiku 4.5 : $1/Mtok input + $5/Mtok output.
+        // Si OpenRouter n'a pas renvoyé d'usage (rare), on skippe — pas de cost
+        // double-comptage, on accepte une légère sous-estimation.
+        if (inputTokens > 0 || outputTokens > 0) {
+          const costUsd =
+            (inputTokens * HAIKU_INPUT_USD_PER_MTOK +
+              outputTokens * HAIKU_OUTPUT_USD_PER_MTOK) /
+            1_000_000;
+          // Fire-and-forget : on ne `await` pas pour ne pas retenir le close
+          // du stream. Les erreurs sont swallowées dans addMonthlyCost.
+          void addMonthlyCost(costUsd);
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : "unknown";
         Sentry.captureException(err, {
