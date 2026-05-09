@@ -1,0 +1,187 @@
+name: Coolify cron triggers (daily-orchestrator + streak-reminders)
+
+# Le site est hébergé sur Coolify (Hetzner), pas Vercel — donc les `crons:` du
+# vercel.json (mort) ne sont JAMAIS déclenchés. Ce workflow remplace cette
+# fonctionnalité en pingant les routes /api/cron/* du site depuis GitHub
+# Actions, avec le Bearer CRON_SECRET (vérifié par lib/auth.verifyBearer).
+#
+# IMPORTANT — Configuration manuelle requise :
+#   Settings → Secrets and variables → Actions → New repository secret
+#     Name : CRON_SECRET
+#     Value: <même valeur que la variable CRON_SECRET dans Coolify>
+#
+# Sans ce secret le workflow renvoie 401 (verifyBearer refuse en prod).
+#
+# Schedule (UTC) :
+#   - daily-orchestrator : 7h UTC = 9h Paris été / 8h Paris hiver
+#   - streak-reminders   : 19h UTC = 21h Paris été / 20h Paris hiver
+#
+# La route GET /api/cron/daily-orchestrator chaîne en série :
+#   evaluate-alerts → email-series-fiscalite → aggregate-news → generate-ta
+#   → refresh-events → daily-brief → indexnow-push
+#
+# Le step curl utilise GET (pas POST) — c'est ce qu'attendent les routes Next
+# (route.ts exporte `GET`, pas `POST`).
+
+on:
+  schedule:
+    # daily-orchestrator @ 7h UTC
+    - cron: "0 7 * * *"
+    # streak-reminders @ 19h UTC
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Quel cron déclencher (manuel) ?"
+        required: true
+        default: "daily-orchestrator"
+        type: choice
+        options:
+          - daily-orchestrator
+          - streak-reminders
+          - both
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  # Un cron à la fois pour éviter doublons sur fail/retry GitHub Actions.
+  group: coolify-crons-${{ github.event.schedule || github.event.inputs.job }}
+  cancel-in-progress: false
+
+jobs:
+  daily-orchestrator:
+    # Tourne sur le cron 7h UTC OU si workflow_dispatch demande explicitement
+    # daily-orchestrator OR both.
+    if: >-
+      github.event.schedule == '0 7 * * *' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.job == 'daily-orchestrator' || github.event.inputs.job == 'both'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Trigger /api/cron/daily-orchestrator
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -u
+          if [ -z "${CRON_SECRET}" ]; then
+            echo "::error title=CRON_SECRET missing::Configurer le secret 'CRON_SECRET' dans Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          URL="https://www.cryptoreflex.fr/api/cron/daily-orchestrator"
+          TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[${TS}] GET ${URL}"
+
+          # -s silent | -S show error sur fail | -L follow redirects
+          # -w écrit le HTTP status sur la dernière ligne pour parsing.
+          # Body écrit dans /tmp/body.json, status code récupéré séparément.
+          # --max-time 540 = 9 min (sub-jobs prennent jusqu'à 7-8 min cumulés).
+          HTTP_CODE=$(curl -sS -L \
+            --max-time 540 \
+            -o /tmp/body.json \
+            -w "%{http_code}" \
+            -X GET "${URL}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
+            -H "Accept: application/json" || echo "000")
+
+          BODY_SIZE=$(wc -c < /tmp/body.json 2>/dev/null || echo 0)
+          echo "HTTP status : ${HTTP_CODE}"
+          echo "Body size   : ${BODY_SIZE} bytes"
+
+          # 200 = full success, 207 = multi-status (au moins 1 sub-job en fail
+          # mais l'orchestrateur a fini sa course — on ne fail PAS le workflow).
+          if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "207" ]; then
+            echo "[${TS}] OK (status=${HTTP_CODE})"
+            # Affiche un résumé compact (premières 2000 chars du body).
+            echo "--- response body (truncated) ---"
+            head -c 2000 /tmp/body.json
+            echo ""
+            exit 0
+          fi
+
+          echo "::error title=daily-orchestrator FAIL::HTTP ${HTTP_CODE} at ${TS}"
+          echo "--- full response body ---"
+          cat /tmp/body.json
+          exit 1
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## daily-orchestrator run" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- URL    : \`https://www.cryptoreflex.fr/api/cron/daily-orchestrator\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Cron   : \`0 7 * * *\` (7h UTC = 9h Paris été)" >> $GITHUB_STEP_SUMMARY
+          echo "- Status : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Sub-jobs chaînés : evaluate-alerts → email-series-fiscalite → aggregate-news → generate-ta → refresh-events → daily-brief → indexnow-push" >> $GITHUB_STEP_SUMMARY
+
+  streak-reminders:
+    if: >-
+      github.event.schedule == '0 19 * * *' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.job == 'streak-reminders' || github.event.inputs.job == 'both'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Trigger /api/cron/streak-reminders
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -u
+          if [ -z "${CRON_SECRET}" ]; then
+            echo "::error title=CRON_SECRET missing::Configurer le secret 'CRON_SECRET' dans Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          URL="https://www.cryptoreflex.fr/api/cron/streak-reminders"
+          TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "[${TS}] GET ${URL}"
+
+          HTTP_CODE=$(curl -sS -L \
+            --max-time 540 \
+            -o /tmp/body.json \
+            -w "%{http_code}" \
+            -X GET "${URL}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
+            -H "Accept: application/json" || echo "000")
+
+          BODY_SIZE=$(wc -c < /tmp/body.json 2>/dev/null || echo 0)
+          echo "HTTP status : ${HTTP_CODE}"
+          echo "Body size   : ${BODY_SIZE} bytes"
+
+          # 200 = success. 503 = Supabase pas configuré (skip volontaire) — on
+          # log mais ne fail PAS le workflow (cohérent avec le code de la route).
+          if [ "${HTTP_CODE}" = "200" ]; then
+            echo "[${TS}] OK (status=${HTTP_CODE})"
+            head -c 2000 /tmp/body.json
+            echo ""
+            exit 0
+          fi
+
+          if [ "${HTTP_CODE}" = "503" ]; then
+            echo "[${TS}] SKIPPED (status=503 — Supabase pas configuré, comportement attendu)"
+            head -c 2000 /tmp/body.json
+            echo ""
+            exit 0
+          fi
+
+          echo "::error title=streak-reminders FAIL::HTTP ${HTTP_CODE} at ${TS}"
+          echo "--- full response body ---"
+          cat /tmp/body.json
+          exit 1
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## streak-reminders run" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- URL    : \`https://www.cryptoreflex.fr/api/cron/streak-reminders\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Cron   : \`0 19 * * *\` (19h UTC = 21h Paris été)" >> $GITHUB_STEP_SUMMARY
+          echo "- Status : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY

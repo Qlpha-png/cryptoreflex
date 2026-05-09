@@ -20,14 +20,13 @@ import {
 
 import {
   getCryptoBySlug,
-  getCryptoSlugs,
   getRelatedCryptos,
   getTopCryptos,
   type AnyCrypto,
   type HiddenGem,
   type TopCrypto,
 } from "@/lib/cryptos";
-import { getCryptoFiche, type CryptoFicheRow } from "@/lib/cryptos-db";
+import { getCryptoFiche } from "@/lib/cryptos-db";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";

@@ -147,7 +147,3 @@ export async function verifySecret(
   }
   return { ok: false };
 }
-
-/** Webhook secrets — même schéma. */
-export const hashWebhookSecret = hashSecret;
-export const verifyWebhookSecret = verifySecret;

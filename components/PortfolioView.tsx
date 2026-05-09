@@ -75,7 +75,7 @@ export default function PortfolioView() {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [prices, setPrices] = useState<LivePrice[]>([]);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [hydrated, setHydrated] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Holding | null>(null);
