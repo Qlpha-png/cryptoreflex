@@ -30,7 +30,8 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title: "Labs — Showcase des prouesses dynamiques Cryptoreflex",
+  // FIX 2026-05-09 : retiré "Cryptoreflex" du title (template root l'ajoute).
+  title: "Labs — Showcase des prouesses dynamiques",
   description:
     "Démos internes des nouveaux composants UI dynamiques avant intégration : spotlight cursor, magnetic CTA, tilt 3D, conic borders, marquee, scroll-driven animations.",
   alternates: withHreflang(`${BRAND.url}/labs`),
