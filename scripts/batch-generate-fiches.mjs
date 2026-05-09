@@ -1199,7 +1199,10 @@ async function main() {
         chains: rawData.contracts || {},
         raw_data_snapshot: rawData,
         llm_content: llmContentWithAudit,
-        market_cap_rank: cg.market_cap_rank ?? null,
+        // Cycle 26 fix : utilise rawData.rank au lieu de cg.market_cap_rank
+        // car cg est out-of-scope quand _preloadedRawData est utilisé.
+        // Fallback c.market_cap_rank (vient de la liste topCryptos).
+        market_cap_rank: rawData.rank ?? c.market_cap_rank ?? null,
         market_cap_usd: rawData.market?.marketCapUsd ?? null,
         price_usd: rawData.market?.priceUsd ?? null,
         score_decentralization: llmResult.parsed?.scores?.decentralization?.score ?? null,
