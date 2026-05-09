@@ -156,12 +156,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   let created = 0;
   let skipped = 0;
 
-  // FIX 2026-05-09 : rate limit CoinGecko Demo = 30 req/min. Avec 50 cryptos
-  // en boucle séquentielle sans pause, on dépasse → 22/50 timeout en 429.
-  // Sleep 2.2s entre fetches NON-CACHÉS = max ~27 req/min, sous le quota.
-  // Les skips (file exists) ne pausent pas pour rester rapide.
-  const SLEEP_BETWEEN_FETCHES_MS = 2200;
-  let firstFetch = true;
+  // FIX 2026-05-09 v2 : throttle 2.2s SUPPRIMÉ depuis migration Binance API
+  // (commit 201318c). Binance free = 1200 req/min → 50 cryptos en séquentiel
+  // sans pause = ~3-5s total (largement sous le quota). Le throttle de 2.2s
+  // était un fallback pour l'ancien code CoinGecko Demo (30 req/min)
+  // qui était insuffisant. Maintenant : seq sans pause, fail-fast vers
+  // CC/CG fallback si Binance miss (CRO, MNT). Total attendu ~30-60s.
 
   for (const crypto of TA_CRYPTOS) {
     const slug = `${today}-${crypto.symbol.toLowerCase()}-analyse-technique`;
@@ -176,13 +176,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     } catch {
       // file not found → on génère
     }
-
-    // Throttle : sleep entre chaque fetch non-caché pour respecter
-    // le rate limit CoinGecko Demo (30 req/min).
-    if (!firstFetch) {
-      await new Promise((resolve) => setTimeout(resolve, SLEEP_BETWEEN_FETCHES_MS));
-    }
-    firstFetch = false;
 
     try {
       // 1. Fetch 200j de prix historiques (close quotidien EUR — on convertit
