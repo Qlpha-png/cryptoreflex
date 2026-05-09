@@ -17,7 +17,11 @@ import { withHreflang } from "@/lib/seo-alternates";
  * Différent de /outils/convertisseur (calculateur multi-cryptos générique).
  */
 
-const PAGE_TITLE = "Convertisseur crypto temps réel — toutes les paires | Cryptoreflex";
+// FIX 2026-05-09 : split title pour éviter doublon "| Cryptoreflex".
+// PAGE_TITLE = sans brand (root layout applique template `%s | Cryptoreflex`).
+// OG_TITLE = avec brand explicite (openGraph.title n'a pas le template).
+const PAGE_TITLE = "Convertisseur crypto temps réel — toutes les paires";
+const OG_TITLE = "Convertisseur crypto temps réel — Cryptoreflex";
 const PAGE_DESCRIPTION =
   "Convertis BTC, ETH, SOL, USDT et 12 autres cryptos vers EUR/USD avec les taux CoinGecko temps réel. Toutes les paires populaires en un clic.";
 
@@ -26,7 +30,7 @@ export const metadata: Metadata = {
   description: PAGE_DESCRIPTION,
   alternates: withHreflang(`${BRAND.url}/convertisseur`),
   openGraph: {
-    title: PAGE_TITLE,
+    title: OG_TITLE,
     description: PAGE_DESCRIPTION,
     url: `${BRAND.url}/convertisseur`,
     type: "website",

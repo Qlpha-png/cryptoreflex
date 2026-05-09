@@ -23,7 +23,9 @@ import { BRAND } from "@/lib/brand";
 export const revalidate = 120;
 
 export const metadata: Metadata = {
-  title: "Heatmap crypto live — Cryptoreflex (embed)",
+  // FIX 2026-05-09 : title.absolute pour embed widgets (noindex de toute façon, mais évite doublon dans logs/scrapers).
+
+  title: { absolute: "Heatmap crypto live — Cryptoreflex (embed)" },
   description:
     "Heatmap crypto live (top 20 par market cap) — couleurs animées tick-by-tick via SSE Binance. Version embeddable.",
   robots: { index: false, follow: true },

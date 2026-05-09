@@ -10,7 +10,9 @@ import EmbedFooter from "@/components/embeds/EmbedFooter";
  */
 
 export const metadata: Metadata = {
-  title: "Simulateur DCA crypto — Cryptoreflex (embed)",
+  // FIX 2026-05-09 : title.absolute pour embed widgets (noindex de toute façon, mais évite doublon dans logs/scrapers).
+
+  title: { absolute: "Simulateur DCA crypto — Cryptoreflex (embed)" },
   description:
     "Backtest DCA Bitcoin / Ethereum / Solana sur 5 ans — version embeddable.",
   robots: { index: false, follow: true },

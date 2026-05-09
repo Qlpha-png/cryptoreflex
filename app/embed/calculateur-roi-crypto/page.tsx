@@ -10,7 +10,9 @@ import EmbedFooter from "@/components/embeds/EmbedFooter";
  */
 
 export const metadata: Metadata = {
-  title: "Calculateur ROI crypto — Cryptoreflex (embed)",
+  // FIX 2026-05-09 : title.absolute pour embed widgets (noindex de toute façon, mais évite doublon dans logs/scrapers).
+
+  title: { absolute: "Calculateur ROI crypto — Cryptoreflex (embed)" },
   description:
     "Calcule ROI net, plus-value et impôt PFU 30 % en 5 secondes — version embeddable.",
   robots: { index: false, follow: true },

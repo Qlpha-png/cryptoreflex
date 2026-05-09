@@ -33,7 +33,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title: "Contacter Cryptoreflex — questions et partenariats",
+  // FIX 2026-05-09 : title.absolute car "Contacter Cryptoreflex" est
+  // grammaticalement nécessaire — bypass template root `%s | Cryptoreflex`.
+  title: { absolute: "Contacter Cryptoreflex — questions et partenariats" },
   description:
     "Une question, un retour ou une opportunité de partenariat B2B ? Réponse personnelle de Kevin sous 5 jours ouvrés.",
   alternates: withHreflang(`${BRAND.url}/contact`),

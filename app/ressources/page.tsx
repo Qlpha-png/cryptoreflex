@@ -42,7 +42,8 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "Ressources gratuites Cryptoreflex — PDFs, outils et guides crypto",
+  // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
+  title: "Ressources gratuites — PDFs, outils et guides crypto",
   description:
     "3 lead magnets PDF (Bible Fiscalité 2026, Checklist déclaration, Glossaire fiscal), 8 outils gratuits (calculateur fiscalité, simulateur DCA, vérificateur MiCA…) et accès au blog éditorial.",
   alternates: withHreflang(BRAND.url + "/ressources"),

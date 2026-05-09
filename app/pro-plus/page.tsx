@@ -74,7 +74,10 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   // BATCH 39 — fix audit SEO P0 : title 88 chars tronqué SERP. Réduit
   // avec prix visible mobile + brand pour reconnaissance.
-  title: "Cryptoreflex Pro+ 9,99€/mois — IA illimitée + API crypto FR",
+  // FIX 2026-05-09 : title.absolute pour bypass le template root
+  // `%s | Cryptoreflex` car "Cryptoreflex Pro+" est le nom littéral
+  // du produit → sinon 2× Cryptoreflex en SERP.
+  title: { absolute: "Cryptoreflex Pro+ 9,99€/mois — IA illimitée + API crypto FR" },
   description:
     "Pro+ : 9,99 €/mois (essai 14 j gratuit). IA Q&A 100 questions/jour, exports illimités CSV/PDF, API personnelle. 100 % automatisé.",
   alternates: withHreflang(`${BRAND.url}/pro-plus`),

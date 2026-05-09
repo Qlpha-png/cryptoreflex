@@ -40,7 +40,9 @@ import { getAllCryptos } from "@/lib/cryptos";
 import { getAllArticleSummaries } from "@/lib/mdx";
 
 export const metadata: Metadata = {
-  title: "Admin Cryptoreflex — Dashboard interne",
+  // FIX 2026-05-09 : retiré "Cryptoreflex" du title pour éviter doublon
+  // avec le template root `%s | Cryptoreflex`. Page noindex de toute façon.
+  title: "Admin — Dashboard interne",
   description: "Espace administrateur Cryptoreflex (réservé éditeur).",
   robots: { index: false, follow: false },
 };

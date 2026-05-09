@@ -22,7 +22,9 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "À propos de Cryptoreflex — qui sommes-nous ?",
+  // FIX 2026-05-09 : title.absolute car "À propos de Cryptoreflex" inclut
+  // grammaticalement la marque → bypass template root `%s | Cryptoreflex`.
+  title: { absolute: "À propos de Cryptoreflex — qui sommes-nous ?" },
   description: `Découvrez la mission de ${BRAND.name}, la méthodologie de scoring et le fondateur Kevin Voisin. Site indépendant, financé uniquement par l'affiliation transparente.`,
   alternates: withHreflang("/a-propos"),
   openGraph: {

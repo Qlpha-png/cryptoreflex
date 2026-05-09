@@ -99,7 +99,9 @@ export const metadata: Metadata = {
   //  - Description 150-155 char optimale, USP + prix + garantie
   //  - openGraph / twitter complets (Cards Summary Large Image)
   //  - robots avec max-image-preview / max-snippet (Google 2024+)
-  title: "Soutenir Cryptoreflex — éditeur crypto indépendant FR",
+  // FIX 2026-05-09 : title.absolute car "Soutenir Cryptoreflex" inclut
+  // grammaticalement la marque → bypass template root layout.
+  title: { absolute: "Soutenir Cryptoreflex — éditeur crypto indépendant FR" },
   description: `Soutiens un éditeur web indépendant français. ${META_MONTHLY_PRICE}/mois ou ${META_ANNUAL_PRICE}/an : portfolio 500 (vs 10 Free), alertes 100 (vs 3), watchlist 200 (vs 10), IA Q&A 20/jour. Annulation 1 clic.`,
   alternates: withHreflang(`${BRAND.url}/pro`),
   keywords: [

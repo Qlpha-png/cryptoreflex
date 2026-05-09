@@ -43,7 +43,10 @@ const PUBLISHED_DATE = "2026-05-07";
 const LAST_UPDATED = "2026-05-07";
 
 export const metadata: Metadata = {
-  title: `Charte éthique éditoriale — ${BRAND.name}`,
+  // FIX 2026-05-09 : retiré "— Cryptoreflex" de metadata.title pour
+  // éviter doublon avec le template root layout `%s | Cryptoreflex`.
+  // openGraph.title garde la marque (pas de template appliqué).
+  title: "Charte éthique éditoriale",
   description: `Les engagements concrets de ${BRAND.name} : ce qu'on fait, ce qu'on ne fait JAMAIS, notre statut juridique, notre processus de correction. Mise à jour annuelle minimum.`,
   alternates: withHreflang(PAGE_URL),
   openGraph: {

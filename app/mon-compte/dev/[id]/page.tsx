@@ -29,7 +29,8 @@ import {
 import type { ApiKeyScope } from "@/lib/api-keys/types";
 
 export const metadata: Metadata = {
-  title: "Détail clé API — Cryptoreflex",
+  // FIX 2026-05-09 : retiré "— Cryptoreflex" pour éviter doublon template.
+  title: "Détail clé API",
   alternates: { canonical: `${BRAND.url}/mon-compte/dev` },
   robots: { index: false, follow: false },
 };

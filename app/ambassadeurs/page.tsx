@@ -49,8 +49,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title:
-    "Programme ambassadeurs Cryptoreflex — 50 % de commission pendant 12 mois",
+  // FIX 2026-05-09 : retiré "Cryptoreflex" du title pour éviter doublon
+  // avec le template root layout `%s | Cryptoreflex` → 2× Cryptoreflex en SERP.
+  title: "Programme ambassadeurs — 50 % de commission pendant 12 mois",
   description:
     "Créateur YouTube, TikTok, podcast ou newsletter crypto FR ? Envoie tes leads sur Cryptoreflex, on convertit, on reverse 50 % de la commission affilié pendant 12 mois. Paiement mensuel.",
   alternates: withHreflang(`${BRAND.url}/ambassadeurs`),

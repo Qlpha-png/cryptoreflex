@@ -10,7 +10,9 @@ import EmbedFooter from "@/components/embeds/EmbedFooter";
  */
 
 export const metadata: Metadata = {
-  title: "Convertisseur crypto temps réel — Cryptoreflex (embed)",
+  // FIX 2026-05-09 : title.absolute pour embed widgets (noindex de toute façon, mais évite doublon dans logs/scrapers).
+
+  title: { absolute: "Convertisseur crypto temps réel — Cryptoreflex (embed)" },
   description:
     "Convertisseur BTC, ETH, SOL en EUR/USD avec taux CoinGecko temps réel — version embeddable.",
   robots: { index: false, follow: true },
