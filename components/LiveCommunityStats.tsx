@@ -62,15 +62,17 @@ async function getCommunityStats(): Promise<CommunityStats> {
     if (!res.ok) throw new Error(`[community-stats] HTTP ${res.status}`);
     return (await res.json()) as CommunityStats;
   } catch (err) {
-    // Fallback ultime côté composant : si l'endpoint lui-même est down,
-    // on n'affiche pas un "0 / 0 / 0" qui ferait fuir les visiteurs.
+    // Fallback ultime : si l'endpoint lui-même est down, on retourne 0/0/0
+    // + earlyAccess:true et le composant affichera le bandeau "Communauté
+    // en construction" — pas de chiffres fake (cf. Charte Éthique).
     console.warn("[LiveCommunityStats] fallback:", err);
     return {
-      proCount: 42,
-      newProThisMonth: 7,
-      alertsTriggered7d: 38,
+      proCount: 0,
+      newProThisMonth: 0,
+      alertsTriggered7d: 0,
       generatedAt: new Date().toISOString(),
       fallback: true,
+      earlyAccess: true,
     };
   }
 }
@@ -89,6 +91,26 @@ function formatStat(n: number): string {
 /* -------------------------------------------------------------------------- */
 
 function CompactView({ stats }: { stats: CommunityStats }) {
+  // FIX 2026-05-09 — état "early access" élégant quand toutes les stats sont
+  // à 0 (DB fraîche, pas encore d'abonnés Pro). On évite ainsi d'afficher
+  // "0 abonnés Soutien Pro · +0 ce mois · 0 alertes 7j" qui sentirait
+  // l'abandon, sans pour autant mentir avec un fallback fake (charte éthique).
+  if (stats.earlyAccess) {
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[12px] text-fg/75">
+        <Sparkles
+          className="h-3.5 w-3.5 text-primary-soft"
+          strokeWidth={2}
+          aria-hidden="true"
+        />
+        <span>
+          Communauté en construction —{" "}
+          <span className="text-fg/90 font-semibold">deviens l&apos;un·e des premier·es</span>{" "}
+          à soutenir l&apos;indépendance éditoriale.
+        </span>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[12px] text-fg/75">
       <span className="inline-flex items-center gap-1.5">
@@ -176,6 +198,32 @@ function KpiCard({
 }
 
 function FullView({ stats }: { stats: CommunityStats }) {
+  // FIX 2026-05-09 — bandeau "early access" honnête plutôt qu'une grille
+  // de 3 zéros bruts (charte éthique : transparence sur les chiffres).
+  if (stats.earlyAccess) {
+    return (
+      <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 sm:p-6 flex items-start gap-4">
+        <div
+          className="inline-flex items-center justify-center h-10 w-10 shrink-0 rounded-lg bg-elevated border border-primary/40 text-primary"
+          aria-hidden="true"
+        >
+          <Sparkles className="h-5 w-5" strokeWidth={2} />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-fg">
+            Communauté en construction
+          </p>
+          <p className="mt-1 text-[13px] text-fg/75 leading-relaxed">
+            Cryptoreflex est en early access depuis 2026. Les premiers
+            abonnés Soutien financent l&apos;indépendance éditoriale du site
+            (zéro pub display, méthodologie 100 % publique). Les statistiques
+            communauté seront affichées ici dès qu&apos;elles seront
+            statistiquement parlantes.
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <KpiCard

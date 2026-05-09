@@ -11,7 +11,7 @@ import { BRAND } from "@/lib/brand";
  * convention doit être un module autonome qui exporte son propre `default`.
  *
  * Ce fichier duplique donc la logique de `opengraph-image.tsx`. Si on veut différencier
- * (ex: handle @cryptoreflex visible), modifier seulement ici.
+ * (ex: ajouter un handle X visible quand le compte sera créé), modifier seulement ici.
  *
  * Format Twitter summary_large_image : 1200x630 (identique OG).
  */

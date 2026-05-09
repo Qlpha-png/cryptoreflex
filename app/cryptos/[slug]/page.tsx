@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -27,6 +27,7 @@ import {
   type TopCrypto,
 } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
+import { resolveSlugAlias } from "@/lib/crypto-slug-aliases";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -245,14 +246,19 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const c = getCryptoBySlug(params.slug);
+  // FIX A 2026-05-09 — résolution alias slug awkward (chain-2, sonic-3…) :
+  // si l'URL est un alias friendly (ex: /cryptos/onyxcoin), on génère la
+  // metadata pour le slug CANONIQUE (chain-2) pour rester cohérent. Le
+  // redirect 308 lui-même se fait dans CryptoPage().
+  const { canonical } = resolveSlugAlias(params.slug);
+  const c = getCryptoBySlug(canonical);
   // Fall-back DB pour les fiches LLM (Phase 1 scaling).
   // params.slug = coingecko_id (= slug DB column).
   if (!c) {
-    const fiche = await getCryptoFiche(params.slug);
+    const fiche = await getCryptoFiche(canonical);
     if (fiche) {
       const llm = fiche.llm_content as { tldr?: string };
-      const url = `${BRAND.url}/cryptos/${params.slug}`;
+      const url = `${BRAND.url}/cryptos/${canonical}`;
       return {
         title: `${fiche.name} (${fiche.symbol}) — fiche complète`,
         description:
@@ -399,13 +405,22 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 /* -------------------------------------------------------------------------- */
 
 export default async function CryptoPage({ params }: Props) {
-  const c = getCryptoBySlug(params.slug);
+  // FIX A 2026-05-09 — slug aliases (`/cryptos/onyxcoin` → `/cryptos/chain-2`).
+  // On vérifie EN PREMIER si le slug d'URL est un alias friendly. Si oui,
+  // on émet un 308 Permanent Redirect via `permanentRedirect()` (signal SEO
+  // "URL définitivement déplacée", canonique vers le coingecko_id officiel).
+  const { canonical, isAlias } = resolveSlugAlias(params.slug);
+  if (isAlias) {
+    permanentRedirect(`/cryptos/${canonical}`);
+  }
+
+  const c = getCryptoBySlug(canonical);
 
   // Phase 1 scaling : fall-back DB pour les ~680 fiches LLM générées qui ne
   // sont pas dans top-cryptos.json + hidden-gems.json. Render inline minimaliste
   // en utilisant llm_content + raw_data_snapshot. Si ni JSON ni DB → 404.
   if (!c) {
-    const fiche = await getCryptoFiche(params.slug);
+    const fiche = await getCryptoFiche(canonical);
     if (!fiche) notFound();
     return <LLMFicheView fiche={fiche} />;
   }

@@ -13,16 +13,17 @@
  *  - Header `Cache-Control: public, s-maxage=300, stale-while-revalidate=600`
  *    pour aussi cacher au niveau du CDN Vercel.
  *
- * Graceful degradation :
- *  - Si Supabase n'est pas configuré → fallback hardcodé crédible (pas de "0 user")
- *    pour éviter d'afficher un site "mort" au tout début.
- *  - Si la table `users` n'existe pas / RLS refuse → mêmes fallbacks.
- *  - Le compteur d'alertes est best-effort : la KV ne stocke que les markers
- *    `alerts:fired:*` à TTL 24h (cf. lib/alerts.ts), donc on ne peut pas
- *    récupérer le triggered sur 7j fiablement. On log un warn et on retourne
- *    une estimation = `firedAujourdhui * 7` arrondie à la dizaine, capée à
- *    9999 pour éviter les chiffres farfelus. C'est explicitement une heuristique
- *    documentée — TODO V2 : table `alerts_history` (cf. AUDIT-TECHNIQUE).
+ * Honnêteté éditoriale (FIX 2026-05-09) :
+ *  - On affichait avant un FALLBACK hardcodé (42 / 7 / 38) quand la base
+ *    était à 0 (DB vide en early access). Trompeur car le site annonçait
+ *    "42 abonnés Soutien" alors qu'il n'y en avait aucun → contraire à la
+ *    Charte Éthique commit récente ("transparence sur les chiffres").
+ *  - Maintenant : on retourne les VRAIS chiffres (0 inclus). Le frontend
+ *    sait afficher un état "early access" élégant grâce au flag `earlyAccess`
+ *    quand proCount === 0.
+ *  - Le flag `fallback:true` reste sur les vraies pannes (Supabase indispo,
+ *    RLS denied, table missing) car là on ne peut PAS afficher les vrais
+ *    chiffres — mais on retourne 0/0/0, plus 42/7/38.
  *
  * Anti-PII : aucun champ user n'est exposé, juste des COUNT(*).
  */
@@ -46,19 +47,25 @@ export interface CommunityStats {
   newProThisMonth: number;
   alertsTriggered7d: number;
   generatedAt: string;
-  /** True si certaines valeurs sont des fallbacks (Supabase indispo, etc.). */
+  /** True si la donnée n'a PAS pu être récupérée (Supabase indispo, RLS, etc.). */
   fallback: boolean;
+  /**
+   * True si les chiffres sont des vrais zéros (early access, pas encore
+   * d'abonnés Pro). Le frontend doit afficher un message "early access"
+   * élégant plutôt qu'un "0 abonnés" brutal.
+   */
+  earlyAccess: boolean;
 }
 
 /**
- * Fallbacks "raisonnables" — utilisés si Supabase est indisponible.
- * Volontairement modestes pour rester crédibles au début du projet
- * (pas de "1 234 abonnés Pro" qui sentirait le fake).
+ * Plus de FALLBACK hardcodé (42/7/38). Si Supabase est down on retourne
+ * 0/0/0 + `fallback:true`, le composant gère l'affichage propre
+ * (cf. <LiveCommunityStats /> qui rend un bandeau "early access").
  */
-const FALLBACK: Omit<CommunityStats, "generatedAt" | "fallback"> = {
-  proCount: 42,
-  newProThisMonth: 7,
-  alertsTriggered7d: 38,
+const ZERO: Omit<CommunityStats, "generatedAt" | "fallback" | "earlyAccess"> = {
+  proCount: 0,
+  newProThisMonth: 0,
+  alertsTriggered7d: 0,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -132,13 +139,10 @@ async function fetchStatsFromSupabase(): Promise<CommunityStats | null> {
   const proCount = proRes.count ?? 0;
   const newProThisMonth = newRes.count ?? 0;
 
-  // Si TOUS les compteurs sont à zéro, on considère que la base est "vide"
-  // (DB fraîche, RLS qui filtre tout, ou simplement pas encore de Pro).
-  // Retourner null laisse `getCachedStats` tomber sur le FALLBACK hardcodé,
-  // ce qui évite d'afficher un site "mort" (cf. commentaire d'en-tête).
-  if (proCount === 0 && newProThisMonth === 0 && alerts7d === 0) {
-    return null;
-  }
+  // FIX 2026-05-09 — on ne masque PLUS les vrais zéros derrière un fallback
+  // fake (42/7/38). On retourne les vraies données + un flag earlyAccess que
+  // le frontend utilise pour afficher un état "no data yet" propre.
+  const earlyAccess = proCount === 0 && newProThisMonth === 0 && alerts7d === 0;
 
   return {
     proCount,
@@ -146,6 +150,7 @@ async function fetchStatsFromSupabase(): Promise<CommunityStats | null> {
     alertsTriggered7d: alerts7d,
     generatedAt: nowIso,
     fallback: false,
+    earlyAccess,
   };
 }
 
@@ -160,13 +165,17 @@ const getCachedStats = unstable_cache(
       return null;
     });
     if (stats) return stats;
+    // Supabase indispo : on retourne 0/0/0 + fallback:true + earlyAccess:true.
+    // Le frontend affiche le bandeau "Communauté en construction" plutôt que
+    // de mentir avec des chiffres fake.
     return {
-      ...FALLBACK,
+      ...ZERO,
       generatedAt: new Date().toISOString(),
       fallback: true,
+      earlyAccess: true,
     };
   },
-  ["community-stats-v1"],
+  ["community-stats-v2"],
   { revalidate: 300, tags: ["community-stats"] }
 );
 
