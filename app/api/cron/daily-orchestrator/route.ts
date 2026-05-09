@@ -44,10 +44,10 @@ export const dynamic = "force-dynamic";
 /** Deadline globale : 290s (laisse 10s de marge au flush HTTP, total 5min). */
 const ORCHESTRATOR_DEADLINE_MS = 290_000;
 
-/** Timeout par sous-cron : 60s par défaut. generate-ta peut prendre 30-60s
- *  pour les 50 cryptos en séquentiel via Binance (sans throttle). Augmenté
- *  de 12s à 60s suite au commit 201318c (Binance source primaire 1200/min). */
-const PER_JOB_TIMEOUT_MS = 60_000;
+/** Timeout par sous-cron : 90s. generate-ta peut prendre 30-60s pour 50
+ *  cryptos via Binance, et aggregate-news peut traduire 10-15 articles
+ *  via OpenRouter (~5s × 13 = ~65s). Bump 60→90s pour couvrir les 2. */
+const PER_JOB_TIMEOUT_MS = 90_000;
 
 /**
  * Liste des sous-crons à orchestrer.
