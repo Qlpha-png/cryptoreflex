@@ -74,9 +74,16 @@ export interface CryptoFicheRow {
 
 /**
  * Fetch une fiche par coingeckoId. Retourne null si absente ou DB indispo.
+ *
+ * IMPORTANT (Bug fix 2026-05-09) : utilise le client service-role (pas
+ * server-with-cookies) pour rester SSG-compatible. `createSupabaseServerClient()`
+ * lit les cookies via `next/headers cookies()`, ce qui force Next.js à
+ * passer la page en dynamic au runtime → 500 sur les pages /cryptos/[slug]
+ * configurées en SSG/ISR. Comme on lit uniquement des fiches publiques
+ * (is_published=true), pas besoin de session — service-role va bien.
  */
 export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return null;
   try {
     const { data, error } = await sb
@@ -104,7 +111,7 @@ export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRo
  * "mantra-dao" coingeckoId historique — desormais alignes).
  */
 export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow | null> {
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return null;
   try {
     const { data, error } = await sb
@@ -132,7 +139,7 @@ export async function getFeaturedCryptos(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],
 ): Promise<CryptoFicheRow[]> {
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -161,7 +168,7 @@ export async function searchCryptos(
   limit = 20,
 ): Promise<CryptoFicheRow[]> {
   if (!query || query.trim().length < 2) return [];
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return [];
   try {
     // Approche simple : ilike sur name/symbol pour latence faible.
@@ -192,7 +199,7 @@ export async function getCryptosByCategory(
   category: string,
   limit = 50,
 ): Promise<CryptoFicheRow[]> {
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -218,7 +225,7 @@ export async function getCryptosByCategory(
  * + ISR on-demand revalidation).
  */
 export async function getPublishedCryptoSlugs(limit = 1000): Promise<string[]> {
-  const sb = createSupabaseServerClient();
+  const sb = createSupabaseServiceRoleClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
