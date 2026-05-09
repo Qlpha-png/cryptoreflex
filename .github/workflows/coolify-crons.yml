@@ -17,8 +17,8 @@ name: Coolify cron triggers (daily-orchestrator + streak-reminders)
 #   - streak-reminders   : 19h UTC = 21h Paris été / 20h Paris hiver
 #
 # La route GET /api/cron/daily-orchestrator chaîne en série :
-#   evaluate-alerts → email-series-fiscalite → aggregate-news → generate-ta
-#   → refresh-events → daily-brief → indexnow-push
+#   refresh-prices → evaluate-alerts → email-series-fiscalite → aggregate-news
+#   → generate-ta → refresh-events → daily-brief → indexnow-push
 #
 # Le step curl utilise GET (pas POST) — c'est ce qu'attendent les routes Next
 # (route.ts exporte `GET`, pas `POST`).
@@ -118,7 +118,7 @@ jobs:
           echo "- Cron   : \`0 7 * * *\` (7h UTC = 9h Paris été)" >> $GITHUB_STEP_SUMMARY
           echo "- Status : ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Sub-jobs chaînés : evaluate-alerts → email-series-fiscalite → aggregate-news → generate-ta → refresh-events → daily-brief → indexnow-push" >> $GITHUB_STEP_SUMMARY
+          echo "Sub-jobs chaînés : refresh-prices → evaluate-alerts → email-series-fiscalite → aggregate-news → generate-ta → refresh-events → daily-brief → indexnow-push" >> $GITHUB_STEP_SUMMARY
 
   streak-reminders:
     if: >-

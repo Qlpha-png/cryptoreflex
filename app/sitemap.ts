@@ -24,6 +24,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 // ISR sitemap (étude #12 ETUDE-2026-05-02) : régénéré max 1×/heure côté Edge,
 // au lieu d'être généré à chaque hit Googlebot. Avec 1035+ URLs programmatiques,
 // chaque génération coûte ~50-100ms — inutile de payer ça pour chaque crawler.
+//
+// FIX perf 2026-05-09 — `dynamic = "force-static"` ajouté pour aligner avec
+// les autres routes sitemap-*.xml (cf. app/sitemap-index.xml/route.ts) et
+// supprimer le doublon Cache-Control. Sans ce flag, MetadataRoute traitait la
+// route en dynamique (à cause des `await` Supabase), ce qui faisait émettre
+// par le framework `Cache-Control: public, max-age=0, must-revalidate` EN PLUS
+// du header `s-maxage=3600` défini dans next.config.js -> 2 headers Cache-Control
+// contradictoires renvoyés au CDN/navigateur.
+export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

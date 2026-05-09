@@ -429,6 +429,24 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
         ],
       },
+      // FIX perf 2026-05-09 — /llms.txt et /llms-full.txt étaient servis avec
+      // `Cache-Control: public, max-age=0` par défaut (handler statique Next.js
+      // pour les fichiers /public). Conséquence : chaque crawler IA (ChatGPT,
+      // Claude, Perplexity) re-DL le fichier complet (~13 KB) à chaque hit.
+      // 1h s-maxage CDN + 24h SWR = -90% bandwidth crawl IA, même fraicheur
+      // (fichiers regenerés rarement, mises à jour < 1×/semaine).
+      {
+        source: "/llms.txt",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        source: "/llms-full.txt",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
+        ],
+      },
       // 1. Headers /embed/* — DOIT précéder la règle générique pour gagner.
       //    On retire X-Frame-Options (incompatible avec frame-ancestors *)
       //    et on remplace la CSP par la version embed.

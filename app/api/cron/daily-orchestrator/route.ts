@@ -4,6 +4,9 @@
  * Cron unique de Cryptoreflex (Vercel Hobby = 1 cron/jour max).
  * Orchestre en série tous les jobs quotidiens du site :
  *
+ *   0. /api/cron/refresh-prices       — refresh price_usd / market_cap des 780 cryptos DB
+ *                                        (FIRST : aggregate-news + daily-brief lisent
+ *                                         ensuite des prix frais).
  *   1. /api/cron/evaluate-alerts      — déclenche les alertes prix
  *   2. /api/cron/aggregate-news       — réécrit 5-10 news/jour en MDX
  *   3. /api/cron/generate-ta          — génère 5 analyses techniques (BTC/ETH/SOL/XRP/ADA)
@@ -46,9 +49,16 @@ const PER_JOB_TIMEOUT_MS = 12_000;
 
 /**
  * Liste des sous-crons à orchestrer.
- * Ordre = priorité d'exécution (alerts en premier car critique pour les abonnés).
+ * Ordre = priorité d'exécution.
+ *
+ * refresh-prices EN PREMIER : il met à jour price_usd / market_cap des 780
+ * cryptos en DB. Tous les jobs suivants (aggregate-news, daily-brief, generate-ta)
+ * lisent ces prix pour leur génération de contenu — il faut donc les avoir
+ * frais avant. Critical:false car si CoinGecko down, les autres jobs continuent
+ * de tourner avec les prix de la veille (graceful degradation).
  */
 const SUB_CRONS = [
+  { name: "refresh-prices", path: "/api/cron/refresh-prices", critical: false },
   { name: "evaluate-alerts", path: "/api/cron/evaluate-alerts", critical: true },
   // Fix audit backend 30/04/2026 — cron email-series-fiscalite n'était JAMAIS
   // déclenché en prod (manquait dans vercel.json ET ici). Conséquence : les

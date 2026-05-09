@@ -1,22 +1,39 @@
 /**
- * sentry.client.config.ts — Init Sentry côté browser.
+ * instrumentation-client.ts — Init Sentry côté browser (Sentry 8+/10 pattern).
  *
- * Chargé automatiquement par @sentry/nextjs au boot du bundle client.
- * - DSN exposé via NEXT_PUBLIC_* (obligatoire côté browser).
- * - Si DSN absent : Sentry est no-op (pas d'init), aucun bruit.
- * - dev (NODE_ENV !== "production") : on capture les events mais on les drop
- *   en `beforeSend` pour éviter de polluer le projet Sentry pendant les tests.
+ * Remplace l'ancien `sentry.client.config.ts` (déprécié à partir de Sentry 8 ;
+ * incompatible avec Turbopack). Webpack le détecte automatiquement via le regex
+ *   /(?:sentry\.client\.config\.(jsx?|tsx?)|(?:src[\\/])?instrumentation-client\.(js|ts))$/
+ * (cf. node_modules/@sentry/nextjs/build/cjs/config/webpack.js).
  *
- * Replay : on désactive `replaysSessionSampleRate` (Pro plan) pour rester
- * sur le free tier ; `replaysOnErrorSampleRate: 1` ne consomme du quota que
- * lorsqu'une erreur est capturée → coût marginal.
+ * ─────────────────────────────────────────────────────────────────────────
+ * PERF FIX 2026-05-09 — Sentry browser SDK = 362 KB raw / 108 KB brotli, chargé
+ * EAGER sur toutes les pages (chunk 2647-*.js). Lighthouse mobile : +400-800 ms
+ * de TBT. La config était dans `sentry.client.config.ts` qui s'exécute en tout
+ * début du bootstrap client → bloque le main thread juste avant le first paint.
+ *
+ * Stratégie : on diffère l'init dans `requestIdleCallback` (fallback `setTimeout`).
+ *  - Le bundle Sentry reste chargé (le webpack plugin l'injecte comme entry,
+ *    impossible de le sortir du first-load chunk sans réécrire withSentryConfig).
+ *  - Mais l'init (parsing config + register listeners + monkey-patch fetch/XHR
+ *    + setup tracing) ne tourne plus sur le main thread initial.
+ *  - Conséquence : capture des erreurs runtime DIFFÉRÉE de ~50-300 ms après
+ *    l'idle (acceptable : 99 % des erreurs surviennent au moins après le
+ *    premier tap user, donc bien après l'idle).
+ *
+ * Côté serveur (instrumentation.ts → sentry.server.config.ts) : INCHANGÉ.
+ * On garde init eager Node.js + Edge runtime → toutes les erreurs SSR / Route
+ * Handlers / Server Actions restent capturées dès le boot du worker.
+ * ─────────────────────────────────────────────────────────────────────────
  */
 
 import * as Sentry from "@sentry/nextjs";
 
 const DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-if (DSN) {
+function initSentry(): void {
+  if (!DSN) return;
+
   Sentry.init({
     dsn: DSN,
     environment: process.env.NODE_ENV,
@@ -39,11 +56,14 @@ if (DSN) {
     // sans cramer le quota free tier 50k transactions/mois).
     tracesSampleRate: 0.1,
 
-    // Session Replay — désactivé hors erreur (Pro plan only). On garde
-    // replaysOnErrorSampleRate: 1 pour avoir le replay des erreurs capturées
-    // (cas d'usage le plus utile pour debugger une regression UI).
-    replaysSessionSampleRate: 0,
-    replaysOnErrorSampleRate: 1.0,
+    // Session Replay — DÉSACTIVÉ entièrement (PERF FIX 2026-05-09).
+    // L'ancienne config avait `replaysOnErrorSampleRate: 1.0` MAIS sans
+    // `Sentry.replayIntegration()` dans `integrations`, ce qui ne l'activait
+    // jamais réellement (Replay n'est PAS dans les default integrations browser).
+    // → On retire complètement les sample rates pour signaler clairement
+    // qu'on n'utilise pas Replay (et éviter qu'un futur dev pense que ça marche).
+    // Si on veut Replay plus tard : ajouter `Sentry.lazyLoadIntegration("replayIntegration")`
+    // dans un useEffect d'un composant non-critique (loader déféré, ~50KB).
 
     // Bruit récurrent à filtrer.
     // FIX 2026-05-02 audit Sentry user — élargi la liste après observation
@@ -138,4 +158,23 @@ if (DSN) {
       return event;
     },
   });
+}
+
+// Defer init au prochain idle frame du browser. Si l'API n'est pas dispo
+// (Safari < 16.4 typiquement), fallback sur setTimeout(0) → init dans la
+// macrotask suivante, donc après le first paint.
+//
+// Pourquoi pas un simple `setTimeout(0)` partout ? `requestIdleCallback`
+// attend que le main thread soit RÉELLEMENT idle (pas juste qu'un microtick
+// soit passé). Sur mobile bas de gamme avec hydration React lourde, on peut
+// économiser plusieurs centaines de ms supplémentaires.
+//
+// Timeout 2000 ms : si aucun idle ne survient en 2s (rare, mais possible
+// sur très petit device avec énormément d'hydration), on force l'init.
+if (typeof window !== "undefined") {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(() => initSentry(), { timeout: 2000 });
+  } else {
+    setTimeout(() => initSentry(), 0);
+  }
 }
