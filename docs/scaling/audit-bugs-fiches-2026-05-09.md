@@ -164,13 +164,118 @@ async function resolveViewModel(slug: string): Promise<OgViewModel> {
 lecture Supabase (cohérent avec `page.tsx`). Coût : ~50ms cold start
 amorti par cache CDN des OG.
 
-## Bilan
+## Itération 2 — Audit en boucle (post BUG #6, demandé "audit en boucle puis corrige back")
+
+Après le fix BUG #6, le user a demandé de continuer l'audit du front et
+de corriger systématiquement les bugs back trouvés. Cette itération a
+trouvé 4 nouveaux bugs sérieux, tous fixés et déployés via deploy 168
+(commit `b6f571f`).
+
+### ✅ BUG #5 (re-classifié + fixé) — `/cryptos/[llm-slug]/acheter-en-france`
+
+**Avant** : HTTP 200 + page contenant /cryptos hub (héritage layout) +
+`<title>` = "100 cryptos analysees..." + 2 meta robots conflictuels
+(`index, follow` ET `noindex`). Anti-SEO + UX confusante.
+
+**Fix** (commit b6f571f) : `app/cryptos/[slug]/acheter-en-france/page.tsx`
+async + `getCryptoFiche()` fall-back avec `redirect()` vers la fiche
+principale. `generateMetadata()` retourne `noindex` + `canonical` vers
+`/cryptos/[slug]`.
+
+```typescript
+export default async function AcheterEnFrancePage({ params }: Props) {
+  const meta = getCrypto(params.slug);
+  if (!meta) {
+    const fiche = await getCryptoFiche(params.slug);
+    if (fiche) redirect(`/cryptos/${fiche.coingecko_id}`);
+    notFound();
+  }
+  // ... legacy code top 100
+}
+```
+
+**Vérification** : RSC delivery (HTTP 200 avec `NEXT_REDIRECT;307;`
+sérialisé dans le payload + `noindex` meta + `canonical` correct). User
+final est redirigé client-side, Google ne l'indexe pas.
+
+### ✅ BUG #6-bis — Mojibake double-encodé sur `/academie` + `/a-propos`
+
+**Symptôme** : `<title>AcadÃ©mie crypto gratuite â€" formation structurÃ©e
+Cryptoreflex</title>` au lieu de "Académie ... formation structurée".
+178 caractères accentués cassés au total.
+
+**Root cause** : fichiers `app/academie/page.tsx` + `app/a-propos/page.tsx`
+sauvés en UTF-8 mais avec un double-encodage Latin-1→UTF-8. Un
+caractère `é` (`0xC3 0xA9`) interprété en Latin-1 puis re-encodé en
+UTF-8 devient `Ã©` (`0xC3 0x83 0xC2 0xA9`).
+
+**Fix** : recovery via `data.decode('utf-8').encode('cp1252').decode('utf-8')`
+sur les 2 fichiers concernés. `Ã€`→`À`, `Ã©`→`é`, `â€`→`—`, etc.
+
+### ✅ BUG #7 — `/api/search` aveugle aux 680 fiches LLM
+
+**Symptôme** : `/api/search?q=onyxcoin` → 0 résultat alors que
+`/cryptos/chain-2` (Onyxcoin) existe en prod et a 8 sections rendues.
+Search "chain-2" renvoyait un article blog blockchain (faux positif).
+
+**Root cause** : `lib/search.ts` `getSearchIndex()` agrégeait uniquement
+les 100 fiches statiques (`getAllCryptos()` from `lib/cryptos.ts`).
+Les 680 LLM DB-backed n'étaient pas dans l'index — même problème de
+strangler fig pattern incomplet que BUG #1 et BUG #3.
+
+**Fix** (commit b6f571f) : ajout de `buildLLMFicheItems()` qui pull
+`getFeaturedCryptos(1000, ["T1","T2","T3"])`, dédup vs static, snippet
+= `llm.tldr` tronqué 160 chars. Cache `unstable_cache` 1h conservé.
+
+```typescript
+const [articles, platforms, cryptos, llmFiches] = await Promise.all([
+  getAllArticleSummaries(),
+  Promise.resolve(getAllPlatforms()),
+  Promise.resolve(getAllCryptos()),
+  getFeaturedCryptos(1000, ["T1", "T2", "T3"]), // ← NEW
+]);
+
+const staticIds = new Set(cryptos.map((c) => c.coingeckoId));
+const llmFichesUnique = llmFiches.filter((f) => !staticIds.has(f.coingecko_id));
+```
+
+**Vérification** : `/api/search?q=onyxcoin` →
+`{"id":"crypto:chain-2","title":"Onyxcoin (XCN)","url":"/cryptos/chain-2"...}`
+
+### ✅ BUG #8 — 14 pages avec doublon "| Cryptoreflex" en title
+
+**Symptôme** : titres SERP doublés genre `"Connexion — Cryptoreflex |
+Cryptoreflex"`. Le root layout (`app/layout.tsx` ligne 157) applique
+le template `\`%s | ${BRAND.name}\`` à toute `metadata.title`. Mais
+14 pages avaient déjà `— Cryptoreflex` ou `| Cryptoreflex` hardcodé
+dans leur title → doublon en SERP.
+
+**Pages affectées** : /connexion, /inscription, /mon-compte, /mon-compte/dev,
+/cgv-abonnement, /mot-de-passe-oublie, /analyses-techniques,
+/actualites/[slug], /ambassadeurs/merci, /outils/convertisseur,
+/outils/simulateur-dca, /pro/api, /avis/[slug] (template "par
+Cryptoreflex"), /partenaires/[slug] (idem).
+
+**Fix** (commit b6f571f) : script Python avec tracking de profondeur
+de dict pour ne PAS modifier `openGraph.title` ni `twitter.title`
+(qui n'ont pas le template root layout). 14 fixes appliqués.
+
+```python
+# Track openGraph: { ... } et twitter: { ... } depth
+# Skip si dans ces blocs ; sinon strip suffixe " | Cryptoreflex" ou " — Cryptoreflex"
+```
+
+**Vérification** : `/connexion` → "Connexion | Cryptoreflex" (1x au lieu
+de 2x). `/avis/binance` → "Binance avis 2026 — test complet & indépendant
+| Cryptoreflex" (1x).
+
+## Bilan global (itération 1 + 2)
 
 ```
-Bugs trouvés : 6
-Fixés        : 3 (BUG #1, #3, #6)
+Bugs trouvés : 10 (6 it1 + 4 it2)
+Fixés        : 7 (BUG #1, #3, #5, #6, #6-bis, #7, #8)
 Acceptés     : 1 (BUG #2, mineur)
-À décider    : 2 (BUG #4, #5 — UX/produit)
+À décider    : 1 (BUG #4 — UX/produit hub liste)
 ```
 
 **Impact business** :
@@ -189,10 +294,11 @@ f4f481e  fix(fiches): cryptos-db.ts utilise service-role (pas server-client cook
 2523157  feat(seo): sitemap inclut les 680 fiches LLM DB-backed
 b86bc53  fix(fiches): OG image fall-back DB — 680 fiches LLM ont leur image perso
 43357c7  fix(fiches): OG image — utilise getCryptoFiche (coingecko_id) avec fall-back par slug
+b6f571f  fix(audit): boucle audit front - 6 bugs corrigés sur 17 fichiers (BUG #5/6-bis/7/8)
 ```
 
-Container actuel en prod : `om52n8hi...:43357c70c64474da...` (déployé
-2026-05-09 14:54 Paris après nettoyage queue Coolify bloquée).
+Container actuel en prod : `om52n8hi...:b6f571feacae...` (déployé
+2026-05-09 16:02 Paris, deploy Coolify id=168).
 
 ## Saga Coolify — la queue de deploy bloquée 19h
 
