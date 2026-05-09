@@ -45,17 +45,17 @@ const MAX_IDS = 50;
 //
 // Bug fix critique 2026-05-09 : avant on n'incluait que les 100 statiques,
 // donc /api/prices?ids=<llm-id> renvoyait 400 alors que la fiche existait
-// en DB. Lazy memoization (le helper unified cache 1h via unstable_cache).
-let allowedIdsCache: Set<string> | null = null;
+// en DB. Pas de cache module-level : `getAllCryptosUnified()` cache deja
+// 1h en interne via `unstable_cache` (cf. lib/cryptos-extended.ts), donc
+// un Set local serait redondant et risquerait de cumuler 2 strates de
+// cache divergentes lors d'un revalidateTag().
 async function getAllowedIds(): Promise<Set<string>> {
-  if (allowedIdsCache) return allowedIdsCache;
   const all = await getAllCryptosUnified();
-  allowedIdsCache = new Set<string>([
+  return new Set<string>([
     ...DEFAULT_COINS,
     ...Object.values(COIN_IDS),
     ...all.map((c) => c.coingeckoId),
   ]);
-  return allowedIdsCache;
 }
 
 // FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
@@ -134,18 +134,26 @@ export async function GET(request: Request) {
   // BUG FIX 2026-05-09 — `image: ""` leak.
   // `_fetchPrices` (price-source aggregator path) returns an empty `image`
   // by design : internal `<CryptoLogo>` does its own resolveCryptoLogo()
-  // lookup with a gradient-initials fallback. But the JSON contract was
-  // leaking `image: ""` to any external/future API consumer who can't
-  // re-do that lookup. Fix : resolve server-side here so the wire format
-  // always has a usable URL (CoinGecko CDN hardcoded mapping for the ~135
-  // mapped coins, original API URL preserved when present).
-  const prices = rawPrices.map((p) => ({
-    ...p,
-    image:
-      p.image ||
-      resolveCryptoLogo({ coingeckoId: p.id, symbol: p.symbol }) ||
-      "",
-  }));
+  // lookup avec gradient-initials fallback. Mais le contrat JSON externe
+  // leakait `image: ""` aux future API consumers qui n'ont pas la table
+  // CRYPTO_LOGOS hardcoded.
+  //
+  // Cleanup 2026-05-09 final : on resolve server-side via resolveCryptoLogo
+  // (CoinGecko CDN hardcode pour les ~135 coins du top + hidden gems). Pour
+  // les ~680 fiches LLM (chain-2, figure-heloc, etc.) non mappees,
+  // resolveCryptoLogo retourne undefined → on emet `image: null` plutot que
+  // `""`, contrat semantique clair = "pas de logo connu, le client doit
+  // afficher un fallback initiales". Évite `""` qui ressemble a un bug
+  // d'integration. À terme : enrichir raw_data_snapshot.image dans le LLM
+  // pipeline pour servir les bons logos CoinGecko aux 680 fiches.
+  const prices = rawPrices.map((p) => {
+    const fromExisting = p.image && p.image.length > 0 ? p.image : null;
+    const fromMap = fromExisting
+      ? null
+      : resolveCryptoLogo({ coingeckoId: p.id, symbol: p.symbol });
+    const image: string | null = fromExisting ?? fromMap ?? null;
+    return { ...p, image };
+  });
 
   return NextResponse.json(
     { prices, updatedAt: new Date().toISOString() },
