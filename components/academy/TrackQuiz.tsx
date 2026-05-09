@@ -340,7 +340,7 @@ export default function TrackQuiz({
                 placeholder="Ton nom ou pseudo"
                 maxLength={60}
                 aria-label="Nom à inscrire sur le certificat"
-                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-fg placeholder:text-muted focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-fg placeholder:text-muted focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               />
             </label>
             <button

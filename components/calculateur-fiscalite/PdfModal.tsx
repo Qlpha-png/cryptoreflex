@@ -239,6 +239,7 @@ export default function PdfModal({
                 id="pdf-modal-email"
                 type="email"
                 required
+                aria-required="true"
                 autoComplete="email"
                 placeholder="ton@email.com"
                 value={email}

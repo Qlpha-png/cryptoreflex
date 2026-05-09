@@ -701,7 +701,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         </label>
         <label className="block">
           <span className="text-sm font-semibold text-fg">
-            Nom du contribuable <span className="text-fg/50 font-normal">(optionnel)</span>
+            Nom du contribuable <span className="text-fg/65 font-normal">(optionnel)</span>
           </span>
           <input
             type="text"
@@ -826,7 +826,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             <div className="text-xs text-fg/65">
               <strong className="text-fg/80">Exchanges détectés :</strong>{" "}
               {preview.exchanges.join(", ")}
-              <span className="ml-2 text-fg/50">
+              <span className="ml-2 text-fg/65">
                 (un 3916-bis sera généré pour chaque compte étranger)
               </span>
             </div>

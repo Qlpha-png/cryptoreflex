@@ -277,6 +277,7 @@ export default function NewsletterInline({
             id={`nl-inline-${source}`}
             type="email"
             required
+            aria-required="true"
             autoComplete="email"
             inputMode="email"
             value={email}

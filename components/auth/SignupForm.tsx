@@ -115,6 +115,7 @@ export default function SignupForm() {
           <input
             type="email"
             required
+            aria-required="true"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ton@email.com"

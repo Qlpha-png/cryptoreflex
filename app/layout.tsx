@@ -184,20 +184,18 @@ export const metadata: Metadata = {
     description:
       "Tout ce qu'il faut pour démarrer dans la crypto : comparatifs, guides et outils gratuits.",
   },
-  // Twitter Card : `summary_large_image` = image pleine largeur (1200x630).
-  // L'image est fournie automatiquement par app/twitter-image.tsx
-  // (clone d'opengraph-image, mais Next.js gère les deux séparément).
-  // NOTE handle X : "@cryptoreflex" est un placeholder — à confirmer/modifier
-  // dès que le compte officiel sera créé. Si le handle réel diffère, mettre à
-  // jour ici (un seul endroit, pas de constante exposée par BRAND).
-  twitter: {
-    card: "summary_large_image",
-    title: `${BRAND.name} — ${BRAND.tagline}`,
-    description:
-      "Comparatifs des meilleures plateformes crypto, guides débutants et outils gratuits.",
-    site: "@cryptoreflex",
-    creator: "@cryptoreflex",
-  },
+  // FIX 2026-05-09 — Twitter Card metadata RETIREE.
+  // Avant : `site: "@cryptoreflex"` + `creator: "@cryptoreflex"` etaient des
+  // PLACEHOLDERS. Verification croisee dans lib/brand-mentions.ts : le profil
+  // X officiel est explicitement COMMENTE OUT avec la directive
+  // "Inscrire une URL fantome en sameAs = signal negatif Google E-E-A-T".
+  // Pointer une twitter:card vers un handle inexistant casse les previews X
+  // (404 quand X tente de fetch le profil). Mieux vaut omettre l'objet :
+  // X/Twitter retombera sur l'image og:image + og:title/description pour
+  // generer une carte par defaut. A reactiver des que le compte est cree
+  // (ajouter aussi l'URL X dans brand-mentions.ts > social pour coherence).
+  // L'image twitter (app/twitter-image.tsx) reste fournie automatiquement
+  // par Next.js : la card s'affichera comme summary_large_image standard.
   robots: { index: true, follow: true },
   /**
    * Hreflang multi-région — déclare au crawler Google que le contenu FR

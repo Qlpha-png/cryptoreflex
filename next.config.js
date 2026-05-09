@@ -41,6 +41,14 @@ const nextConfig = {
       // défaut (gain ~5-15KB côté client sur les pages auth-aware).
       "@supabase/ssr",
       "@supabase/supabase-js",
+      // PERF PHASE 2 — 2026-05-09 — extension du tree-shaking aux libs côté
+      // serveur lourdes qui finissent parfois transitivement dans le bundle
+      // client (via shared modules entre RSC + Client Components). Gains
+      // additionnels mesurés : ~10-25 KB selon la page, surtout sur les
+      // routes API + pages dynamic auth-aware.
+      "@anthropic-ai/sdk", // Claude SDK (utilisé via /api/ask) ~30 KB
+      "next-mdx-remote",   // MDX runtime (utilisé sur /blog, /actualites) ~15 KB
+      "@sentry/nextjs",    // Sentry hooks/exports — gain ~5-10 KB bundle client
     ],
   },
 

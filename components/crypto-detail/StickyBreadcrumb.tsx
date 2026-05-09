@@ -79,7 +79,7 @@ export default function StickyBreadcrumb({
             sticky ? "h-12 flex items-center" : "py-0",
           ].join(" ")}
         >
-          <nav className="text-xs text-muted flex items-center gap-2 min-w-0 w-full">
+          <nav aria-label="Fil d'Ariane" className="text-xs text-muted flex items-center gap-2 min-w-0 w-full">
             <Link href="/" className="hover:text-fg shrink-0">
               Accueil
             </Link>

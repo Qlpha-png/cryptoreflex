@@ -20,11 +20,11 @@ import { withHreflang } from "@/lib/seo-alternates";
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
  *
- * Audit expert SEO programmatic 2026-05-02 : 80 cryptos × 8 années (2018-2025)
- * = 640 URLs à fort volume FR (25-50k/mois cumulé : "prix bitcoin 2017",
+ * Audit expert SEO programmatic 2026-05-02 : 80 cryptos × 9 années (2018-2026)
+ * = 720 URLs à fort volume FR (25-50k/mois cumulé : "prix bitcoin 2017",
  * "prix ethereum 2021"). Featured snippet potentiel.
  *
- * Phase actuelle : génération statique top 30 cryptos × 8 années = 240 URLs
+ * Phase actuelle : génération statique top 10 cryptos × 9 années = 90 URLs
  * pre-build, le reste en ISR à la demande (dynamicParams=true).
  *
  * Architecture data : récupère les prix annuels via CoinGecko historical
@@ -37,7 +37,10 @@ import { withHreflang } from "@/lib/seo-alternates";
  * arrivera dans une 2e itération via Suspense.
  */
 
-const YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"] as const;
+// FIX 2026-05-09 — Ajout 2026 (annee courante en cours, mai 2026).
+// Couvre les recherches "prix bitcoin 2026" deja actives. L'annee 2025
+// reste la plus pertinente fiscalement (declaration faite en mai 2026).
+const YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"] as const;
 type Annee = (typeof YEARS)[number];
 
 // FIX BUILD 2026-05-06 — Top 30 → Top 10 cryptos pour pré-build.
@@ -91,6 +94,7 @@ const MACRO_EVENTS: Record<Annee, string[]> = {
   "2023": ["Reprise lente", "ETF Bitcoin spot soumissions SEC", "MiCA voté UE"],
   "2024": ["Approbation ETF BTC spot janvier", "Halving Bitcoin avril", "BTC ATH 108 000 $", "Trump pro-crypto élu novembre"],
   "2025": ["MiCA Phase 2 juillet", "Adoption institutionnelle massive", "ETF Ethereum spot", "Année BTC stabilisée 70-110 k$"],
+  "2026": ["MiCA Phase 2 enforcement (ESMA, Q2)", "Cycle post-halving en cours", "Tokenisation RWA accélérée (Ondo, BlackRock BUIDL)", "Année partielle — données mises à jour mensuellement"],
 };
 
 export default function HistoriquePrixPage({ params }: Props) {
@@ -124,7 +128,7 @@ export default function HistoriquePrixPage({ params }: Props) {
       <StructuredData id="historique-prix" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
           <span className="mx-2">/</span>
           <Link href={`/cryptos/${c.id}`} className="hover:text-fg">{c.name}</Link>

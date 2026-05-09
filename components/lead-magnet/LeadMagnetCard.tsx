@@ -163,6 +163,7 @@ export default function LeadMagnetCard({
             id={"lm-email-" + id}
             type="email"
             required
+            aria-required="true"
             autoComplete="email"
             placeholder="ton@email.com"
             value={email}

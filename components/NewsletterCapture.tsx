@@ -238,6 +238,7 @@ export default function NewsletterCapture() {
                     id="newsletter-email"
                     type="email"
                     required
+                    aria-required="true"
                     autoComplete="email"
                     inputMode="email"
                     enterKeyHint="send"
@@ -251,7 +252,7 @@ export default function NewsletterCapture() {
                     aria-describedby={status === "error" ? "newsletter-error" : "newsletter-hint"}
                     disabled={status === "loading"}
                     className={`w-full rounded-xl bg-background border px-4 py-3 pr-10 text-fg
-                                placeholder:text-fg/40 focus:outline-none
+                                placeholder:text-fg/60 focus:outline-none
                                 focus:ring-2 focus:ring-primary/30 disabled:opacity-50
                                 ${
                                   emailValid === true

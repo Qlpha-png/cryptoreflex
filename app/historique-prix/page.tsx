@@ -23,7 +23,12 @@ import { withHreflang } from "@/lib/seo-alternates";
  * BreadcrumbList schema, ItemList implicite via les liens H3.
  */
 
-const YEARS = ["2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"] as const;
+// FIX 2026-05-09 — Ajout 2026 (annee courante en cours). Le primary link
+// reste 2025 (annee fiscale complete + declaration impots faite en mai 2026,
+// donc forte intention de recherche "prix bitcoin 2025" pour la 2086).
+// 2026 apparait dans les chips secondaires : couvre les recherches
+// "prix bitcoin 2026" deja actives mi-annee.
+const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"] as const;
 
 const CRYPTOS_HIST: Array<{ slug: string; name: string; symbol: string; tagline: string }> = [
   { slug: "bitcoin", name: "Bitcoin", symbol: "BTC", tagline: "L'actif crypto historique, réserve de valeur numérique" },
@@ -58,7 +63,7 @@ const CRYPTOS_HIST: Array<{ slug: string; name: string; symbol: string; tagline:
   { slug: "maker", name: "MakerDAO", symbol: "MKR", tagline: "Émetteur DAI, gouvernance protocole RWA" },
 ];
 
-const PAGE_TITLE = "Historique prix crypto par année (2018-2025) — Cryptoreflex";
+const PAGE_TITLE = "Historique prix crypto par année (2018-2026) — Cryptoreflex";
 const PAGE_DESCRIPTION =
   "Évolution annuelle des 30 principales cryptomonnaies : Bitcoin, Ethereum, Solana, BNB et plus. Prix d'ouverture, ATH, ATL, performance % par année.";
 
@@ -99,7 +104,7 @@ export default function HistoriquePrixHub() {
             <span className="gradient-text">par année</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
-            30 cryptomonnaies analysées × 8 années (2018-2025).
+            30 cryptomonnaies analysées × 9 années (2018-2026).
             Prix d&apos;ouverture, ATH, ATL, performance % et événements marquants.
           </p>
         </header>
@@ -130,9 +135,9 @@ export default function HistoriquePrixHub() {
                   Historique 2025
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
-                {/* Liens années secondaires */}
+                {/* Liens années secondaires (toutes sauf 2025 qui est le primary) */}
                 <ul className="flex flex-wrap gap-1.5">
-                  {YEARS.slice(1).map((year) => (
+                  {YEARS.filter((y) => y !== "2025").map((year) => (
                     <li key={year}>
                       <Link
                         href={`/historique-prix/${c.slug}/${year}`}

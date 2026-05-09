@@ -81,7 +81,7 @@ export default function DcaLabPage() {
       <StructuredData id="dca-lab" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
           <span className="mx-2">/</span>
           <Link href="/outils" className="hover:text-fg">Outils</Link>

@@ -88,6 +88,7 @@ export default function SponsoringForm() {
               name="company"
               type="text"
               required
+              aria-required="true"
               autoComplete="organization"
               maxLength={120}
               className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -119,6 +120,7 @@ export default function SponsoringForm() {
             name="email"
             type="email"
             required
+            aria-required="true"
             autoComplete="email"
             maxLength={200}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -189,6 +191,7 @@ export default function SponsoringForm() {
             name="consent"
             type="checkbox"
             required
+            aria-required="true"
             className="mt-1 h-4 w-4 rounded border-border bg-elevated/60 text-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
           <label htmlFor="sp-consent" className="text-xs text-white/70 leading-relaxed">

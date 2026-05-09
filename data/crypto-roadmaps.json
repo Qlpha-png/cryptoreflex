@@ -1,9 +1,10 @@
 {
   "_meta": {
     "schemaVersion": "2.0",
-    "lastUpdated": "2026-05-01",
+    "lastUpdated": "2026-05-09",
     "purpose": "Roadmap d'événements connus / attendus pour les cryptos majeures. Ne contient que des cryptos avec une roadmap publique crédible.",
-    "schema": "Mapping crypto.id → array d'événements. Status: 'done' | 'in-progress' | 'planned'. Date approximative format YYYY-MM ou YYYY-Qn. Champs optionnels: sourceUrl (URL primaire), sourceVerifiedAt (YYYY-MM de la dernière vérif manuelle)."
+    "schema": "Mapping crypto.id → array d'événements. Status: 'done' | 'in-progress' | 'planned'. Date approximative format YYYY-MM ou YYYY-Qn. Champs optionnels: sourceUrl (URL primaire), sourceVerifiedAt (YYYY-MM de la dernière vérif manuelle).",
+    "lastAuditNote": "Audit 2026-05-09 — Verifie que toutes les milestones 2024 + 2025 + 2026-Q1 sont status:done (semaine du 9 mai 2026, Q2 en cours). Les milestones 2026-Q2/Q3/Q4 + 2027+ + 2028 restent en in-progress / planned conformement a la roadmap publique."
   },
   "roadmaps": {
     "bitcoin": [

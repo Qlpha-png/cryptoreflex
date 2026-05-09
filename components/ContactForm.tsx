@@ -100,6 +100,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
               name="email"
               type="email"
               required
+              aria-required="true"
               autoComplete="email"
               maxLength={200}
               aria-invalid={result?.ok === false}
@@ -132,6 +133,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             id="ct-message"
             name="message"
             required
+            aria-required="true"
             rows={6}
             maxLength={4000}
             aria-invalid={result?.ok === false}
@@ -147,6 +149,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             name="consent"
             type="checkbox"
             required
+            aria-required="true"
             className="mt-1 h-4 w-4 rounded border-border bg-elevated/60 text-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
           <label htmlFor="ct-consent" className="text-xs text-white/70 leading-relaxed">

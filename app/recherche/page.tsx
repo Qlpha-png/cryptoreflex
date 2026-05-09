@@ -7,14 +7,34 @@ import { BRAND } from "@/lib/brand";
 import SearchClient from "@/components/SearchClient";
 import { withHreflang } from "@/lib/seo-alternates";
 
-export const metadata: Metadata = {
-  title: "Recherche",
-  description:
-    "Recherche dans tous les contenus Cryptoreflex : articles, plateformes notées, fiches crypto, comparatifs, outils, glossaire.",
-  alternates: withHreflang(`${BRAND.url}/recherche`),
-  // Page utilitaire — pas de valeur SEO (résultats dynamiques par query).
-  robots: { index: false, follow: true },
-};
+/**
+ * FIX 2026-05-09 — Title dynamique injectant la query de recherche.
+ *
+ * Avant : title statique "Recherche" pour TOUTES les URLs `?q=*`. L'onglet
+ * navigateur, le partage de lien et l'historique ne reflétaient pas la
+ * recherche en cours. Mauvais UX (utilisateur ne sait pas dans quel onglet
+ * il est) + pas d'utilité SEO.
+ *
+ * Après : `Recherche : "bitcoin"` quand q est présent. Reste `noindex,follow`
+ * pour ne pas polluer l'index Google avec des pages dynamiques sans valeur
+ * SEO propre (Google considère les pages search comme thin content + risque
+ * de "soft 404" sur queries vides).
+ */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}): Promise<Metadata> {
+  const q = searchParams.q?.trim();
+  return {
+    title: q ? `Recherche : "${q}"` : "Recherche",
+    description:
+      "Recherche dans tous les contenus Cryptoreflex : articles, plateformes notées, fiches crypto, comparatifs, outils, glossaire.",
+    alternates: withHreflang(`${BRAND.url}/recherche`),
+    // Page utilitaire — pas de valeur SEO (résultats dynamiques par query).
+    robots: { index: false, follow: true },
+  };
+}
 
 /**
  * Page recherche transverse — alimentée par `/api/search` (fuzzy index).

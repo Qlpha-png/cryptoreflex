@@ -162,7 +162,7 @@ export default async function AdminVitalsPage() {
     <article className="py-12 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
           <span className="mx-2">/</span>
           <Link href="/admin" className="hover:text-fg">Admin</Link>
@@ -231,12 +231,12 @@ export default async function AdminVitalsPage() {
                         <div>
                           <div className="font-mono">
                             {fmt(lastSample.value, row.unit)} ·{" "}
-                            <span className="text-fg/50">{lastSample.rating}</span>
+                            <span className="text-fg/65">{lastSample.rating}</span>
                           </div>
-                          <div className="mt-0.5 text-fg/50 truncate max-w-[200px]" title={lastSample.url}>
+                          <div className="mt-0.5 text-fg/65 truncate max-w-[200px]" title={lastSample.url}>
                             {lastSample.url}
                           </div>
-                          <div className="mt-0.5 text-fg/40">{relativeTime(lastSample.ts)}</div>
+                          <div className="mt-0.5 text-fg/60">{relativeTime(lastSample.ts)}</div>
                         </div>
                       ) : (
                         <span className="text-muted">aucun sample</span>

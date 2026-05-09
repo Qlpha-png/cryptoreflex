@@ -361,7 +361,8 @@ export default function AlertsManager({ cryptos }: Props) {
                 }}
                 className="w-full rounded-xl bg-background border border-border pl-9 pr-4 py-2.5 text-sm text-fg
                            placeholder:text-muted focus:outline-none focus:border-primary/60
-                           focus:ring-2 focus:ring-primary/30"
+                           focus:ring-2 focus:ring-primary/30
+                           focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               />
               {showSuggestions && filteredCryptos.length > 0 && (
                 <ul
@@ -481,6 +482,7 @@ export default function AlertsManager({ cryptos }: Props) {
               type="email"
               autoComplete="email"
               required
+              aria-required="true"
               placeholder="prenom@email.com"
               value={email}
               onChange={(e) => {
@@ -489,7 +491,8 @@ export default function AlertsManager({ cryptos }: Props) {
               }}
               className="w-full rounded-xl bg-background border border-border px-3 py-2.5 text-sm text-fg
                          placeholder:text-muted focus:outline-none focus:border-primary/60
-                         focus:ring-2 focus:ring-primary/30"
+                         focus:ring-2 focus:ring-primary/30
+                         focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             />
           </div>
 

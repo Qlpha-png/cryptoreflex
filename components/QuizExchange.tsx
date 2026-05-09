@@ -788,6 +788,7 @@ function LeadMagnetForm({
               id="quiz-email"
               type="email"
               required
+              aria-required="true"
               autoComplete="email"
               inputMode="email"
               value={email}

@@ -104,6 +104,7 @@ export default function UpdatePasswordForm() {
           <input
             type={showPwd ? "text" : "password"}
             required
+            aria-required="true"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Au moins 8 caractères"
@@ -149,6 +150,7 @@ export default function UpdatePasswordForm() {
           <input
             type={showPwd ? "text" : "password"}
             required
+            aria-required="true"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Le même que ci-dessus"

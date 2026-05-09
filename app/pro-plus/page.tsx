@@ -179,7 +179,7 @@ export default function ProPlusPage() {
       <StructuredData id="pro-plus" data={schemas} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
           <span className="mx-2">/</span>
           <span className="text-fg/80">Pro+</span>

@@ -116,7 +116,7 @@ export default function AlternativePage({ params }: Props) {
       <StructuredData id="alternative-a" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
           <span className="mx-2">/</span>
           <Link href="/comparatif" className="hover:text-fg">Comparatif</Link>

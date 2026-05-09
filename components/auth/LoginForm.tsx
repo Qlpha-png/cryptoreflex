@@ -198,6 +198,7 @@ export default function LoginForm() {
               <input
                 type="email"
                 required
+                aria-required="true"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ton@email.com"
@@ -228,6 +229,7 @@ export default function LoginForm() {
               <input
                 type={showPwd ? "text" : "password"}
                 required
+                aria-required="true"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Ton mot de passe"
@@ -315,6 +317,7 @@ export default function LoginForm() {
               <input
                 type="email"
                 required
+                aria-required="true"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ton@email.com"

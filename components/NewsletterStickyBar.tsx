@@ -198,6 +198,7 @@ export default function NewsletterStickyBar() {
               inputMode="email"
               autoComplete="email"
               required
+              aria-required="true"
               disabled={status === "loading"}
               value={email}
               onChange={(e) => {

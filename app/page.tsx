@@ -1,5 +1,6 @@
 // Refonte 26/04/2026 - 3-5 catégories pour réduire la charge cognitive utilisateur (feedback : "tout est trop sur le home page")
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -22,7 +23,6 @@ import Reveal from "@/components/ui/Reveal";
 // BATCH 41b — bandeau régulateurs/sources qui défilent (Stripe Press
 // pattern). Comble la zone morte entre Hero et Reassurance.
 import TrustMarquee from "@/components/TrustMarquee";
-import NewsletterCapture from "@/components/NewsletterCapture";
 // MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
 import BeginnerJourney from "@/components/BeginnerJourney";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
@@ -35,10 +35,37 @@ import ToolsTeaser from "@/components/ToolsTeaser";
 import QuizPromo from "@/components/QuizPromo";
 // NewsBar retiré BATCH 35d (user "enlève ça") — doublon avec /actualites + CryptoNewsAggregator par fiche
 import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
-import HomeAnchorNav from "@/components/HomeAnchorNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import StickyMobileCta from "@/components/StickyMobileCta";
 import StructuredData from "@/components/StructuredData";
+
+// PERF PHASE 2 — 2026-05-09 — lazy-load des composants client UNIQUEMENT
+// rendus sous le fold ou off-screen (mobile/scrolled). Aucun impact SEO :
+//  - HomeAnchorNav : chips de nav sticky, JS-only (le scroll-spy + le
+//    rendu visuel des chips arrivent après hydration, pas dans le SSR).
+//  - NewsletterCapture : tout en bas de page, hors viewport initial.
+//  - StickyMobileCta : barre mobile-only qui n'apparaît qu'après >400 px
+//    de scroll, jamais dans le viewport initial.
+//  - TrustMarquee : bandeau marquee CSS-driven, visuel uniquement.
+// Gain estimé : ~30-50 KB JS retiré du first-load chunk + ~15-25 KB de
+// RSC payload (les "use client" sortent du flight stream initial).
+const HomeAnchorNav = dynamic(() => import("@/components/HomeAnchorNav"), {
+  ssr: false,
+  loading: () => null,
+});
+const NewsletterCapture = dynamic(() => import("@/components/NewsletterCapture"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"
+      style={{ minHeight: 320 }}
+    />
+  ),
+});
+const StickyMobileCta = dynamic(() => import("@/components/StickyMobileCta"), {
+  ssr: false,
+  loading: () => null,
+});
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import {

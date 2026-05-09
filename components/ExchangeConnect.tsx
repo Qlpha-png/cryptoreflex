@@ -453,6 +453,7 @@ export default function ExchangeConnect() {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   required
+                  aria-required="true"
                   minLength={32}
                   maxLength={256}
                   autoComplete="off"
@@ -475,6 +476,7 @@ export default function ExchangeConnect() {
                     value={apiSecret}
                     onChange={(e) => setApiSecret(e.target.value)}
                     required
+                    aria-required="true"
                     minLength={32}
                     maxLength={256}
                     autoComplete="new-password"

@@ -148,7 +148,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
             <span className="ml-1 text-[13px] font-bold tabular-nums text-white/90" aria-hidden="true">
               {ratingFr}
             </span>
-            <span className="text-[11px] text-white/40 font-normal" aria-hidden="true">/5</span>
+            <span className="text-[11px] text-white/60 font-normal" aria-hidden="true">/5</span>
             {social && social.count != null && social.count > 0 && (
               <span className="ml-1.5 text-[10px] text-white/50" aria-hidden="true">
                 · {social.count.toLocaleString("fr-FR")} avis {social.label}

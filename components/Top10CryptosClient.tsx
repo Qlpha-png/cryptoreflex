@@ -579,7 +579,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
             <div className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${catVisual.color}`}>
               <CatIcon className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
               {crypto.category}
-              <span className="text-fg/50 font-normal normal-case">· {crypto.yearCreated}</span>
+              <span className="text-fg/65 font-normal normal-case">· {crypto.yearCreated}</span>
             </div>
           </div>
         </div>

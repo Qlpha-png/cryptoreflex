@@ -360,7 +360,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // 30 cryptos × 8 années = 240 URLs prebuild ; le reste en ISR on-demand.
+  // 30 cryptos × 9 années = 270 URLs prebuild ; le reste en ISR on-demand.
+  // FIX 2026-05-09 — Ajout 2026 (annee courante en cours) au sitemap.
   const HIST_TOP_30 = [
     "bitcoin", "ethereum", "binancecoin", "ripple", "solana",
     "cardano", "dogecoin", "tron", "avalanche-2", "chainlink",
@@ -369,7 +370,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "filecoin", "aptos", "monero", "the-open-network", "tezos",
     "algorand", "hedera-hashgraph", "ethereum-classic", "aave", "maker",
   ];
-  const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+  const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
   const historiquePrixRoutes: MetadataRoute.Sitemap = HIST_TOP_30.flatMap((crypto) =>
     HIST_YEARS.map((annee) => ({
       url: `${SITE_URL}/historique-prix/${crypto}/${annee}`,

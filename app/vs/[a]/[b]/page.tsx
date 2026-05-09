@@ -413,7 +413,7 @@ export default async function CryptoPairPage({ params }: Props) {
       <StructuredData data={schemas} id={`comparer-pair-${slug.replace("/", "-")}`} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav className="text-xs text-muted">
+        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">
             Accueil
           </Link>

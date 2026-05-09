@@ -16,7 +16,7 @@ export default function CgvAbonnementPage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
       {/* Breadcrumb */}
-      <nav className="text-xs text-muted">
+      <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
         <Link href="/" className="hover:text-fg">Accueil</Link>
         <span className="mx-2">/</span>
         <Link href="/pro" className="hover:text-fg">Pro</Link>

@@ -314,7 +314,7 @@ function VerdictCard({ score, verdict }: { score: number; verdict: Verdict }) {
           <p className="text-sm uppercase tracking-wide text-muted">Score BS</p>
           <p className={`font-mono font-extrabold text-5xl ${config.textClass}`}>
             {score}
-            <span className="text-2xl text-white/40">/100</span>
+            <span className="text-2xl text-white/60">/100</span>
           </p>
         </div>
       </div>

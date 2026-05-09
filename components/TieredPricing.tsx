@@ -173,7 +173,7 @@ export default function TieredPricing({
                 {tier.excluded?.map((f) => (
                   <li
                     key={f}
-                    className="flex items-start gap-2 text-white/40 line-through"
+                    className="flex items-start gap-2 text-white/60 line-through"
                   >
                     <span
                       className="mt-1.5 h-1.5 w-1.5 rounded-full bg-white/30 shrink-0"

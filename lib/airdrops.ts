@@ -9,14 +9,16 @@ import data from "@/data/airdrops.json";
  * Statuts :
  *  - "upcoming" : programme annonce mais snapshot/claim pas encore actifs
  *  - "live"     : claim actuellement ouvert (action user possible)
- *  - "claimed"  : periode de claim cloturee (historique educatif)
+ *  - "claimed"  : claim ouvert recemment (distribution faite, fenetre encore active)
+ *  - "expired"  : claim window cloturee (FIX 2026-05-09 — valeur historique
+ *                 conservee mais signal clair que l'utilisateur ne peut plus claim).
  *
  * NB : on ne stocke JAMAIS d'instructions step-by-step "fais X pour gagner Y"
  * pour rester en compliance AMF DOC-2024-01 (pas de promesse engageante).
  * Uniquement des FAITS verifiables avec lien officiel + risque indique.
  */
 
-export type AirdropStatus = "upcoming" | "live" | "claimed";
+export type AirdropStatus = "upcoming" | "live" | "claimed" | "expired";
 
 export interface Airdrop {
   id: string;
@@ -55,9 +57,12 @@ const FILE = data as AirdropsFile;
 export const AIRDROPS_LAST_UPDATED = FILE._meta.lastUpdated;
 export const AIRDROPS_DISCLAIMER = FILE._meta.disclaimer;
 
-/** Ordre de tri : live > upcoming > claimed (chaque groupe trie par claimStart desc). */
+/** Ordre de tri : live > upcoming > claimed > expired (chaque groupe trie par claimStart desc). */
 function statusOrder(s: AirdropStatus): number {
-  return s === "live" ? 0 : s === "upcoming" ? 1 : 2;
+  if (s === "live") return 0;
+  if (s === "upcoming") return 1;
+  if (s === "claimed") return 2;
+  return 3; // expired
 }
 
 export function getAllAirdrops(): Airdrop[] {
@@ -115,6 +120,11 @@ export function statusMeta(status: AirdropStatus): {
     return {
       label: "A venir",
       color: "border-amber-400/40 bg-amber-400/10 text-amber-300",
+    };
+  if (status === "expired")
+    return {
+      label: "Expire",
+      color: "border-red-400/30 bg-red-400/5 text-red-300/80",
     };
   return {
     label: "Cloture",
