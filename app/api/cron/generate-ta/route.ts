@@ -53,6 +53,10 @@ import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// FIX 2026-05-09 : avec throttling 2.2s × 50 cryptos max = ~110s.
+// Le default Vercel Lambda est 10s/60s, sur Coolify Node serverless c'est
+// libre mais l'orchestrator peut couper à ~30s. Cap à 300s (5min) suffisant.
+export const maxDuration = 300;
 
 /** Mapping symbole UPPERCASE → CoinId pour `fetchPrices`. */
 const SYMBOL_TO_COIN_ID: Record<string, CoinId> = {
@@ -152,6 +156,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   let created = 0;
   let skipped = 0;
 
+  // FIX 2026-05-09 : rate limit CoinGecko Demo = 30 req/min. Avec 50 cryptos
+  // en boucle séquentielle sans pause, on dépasse → 22/50 timeout en 429.
+  // Sleep 2.2s entre fetches NON-CACHÉS = max ~27 req/min, sous le quota.
+  // Les skips (file exists) ne pausent pas pour rester rapide.
+  const SLEEP_BETWEEN_FETCHES_MS = 2200;
+  let firstFetch = true;
+
   for (const crypto of TA_CRYPTOS) {
     const slug = `${today}-${crypto.symbol.toLowerCase()}-analyse-technique`;
     const filePath = path.join(targetDir, `${slug}.mdx`);
@@ -165,6 +176,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     } catch {
       // file not found → on génère
     }
+
+    // Throttle : sleep entre chaque fetch non-caché pour respecter
+    // le rate limit CoinGecko Demo (30 req/min).
+    if (!firstFetch) {
+      await new Promise((resolve) => setTimeout(resolve, SLEEP_BETWEEN_FETCHES_MS));
+    }
+    firstFetch = false;
 
     try {
       // 1. Fetch 200j de prix historiques (close quotidien EUR — on convertit
