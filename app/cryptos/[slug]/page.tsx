@@ -27,6 +27,7 @@ import {
   type HiddenGem,
   type TopCrypto,
 } from "@/lib/cryptos";
+import { getCryptoFiche, type CryptoFicheRow } from "@/lib/cryptos-db";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -41,6 +42,7 @@ import {
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
+import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import dynamic from "next/dynamic";
@@ -236,9 +238,38 @@ export function generateStaticParams() {
   return getTopCryptos().map((c) => ({ slug: c.id }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = getCryptoBySlug(params.slug);
-  if (!c) return {};
+  // Fall-back DB pour les fiches LLM (Phase 1 scaling).
+  // params.slug = coingecko_id (= slug DB column).
+  if (!c) {
+    const fiche = await getCryptoFiche(params.slug);
+    if (fiche) {
+      const llm = fiche.llm_content as { tldr?: string };
+      const url = `${BRAND.url}/cryptos/${params.slug}`;
+      return {
+        title: `${fiche.name} (${fiche.symbol}) — fiche complète`,
+        description:
+          llm?.tldr?.slice(0, 155) ||
+          `Tout sur ${fiche.name} : analyse, tokenomics, statut FR/UE, scores Cryptoreflex.`,
+        alternates: withHreflang(url),
+        openGraph: {
+          title: `${fiche.name} (${fiche.symbol}) — analyse Cryptoreflex`,
+          description: llm?.tldr?.slice(0, 200) || "",
+          url,
+          type: "article",
+          locale: "fr_FR",
+          siteName: BRAND.name,
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: `${fiche.name} (${fiche.symbol}) — Cryptoreflex`,
+          description: llm?.tldr?.slice(0, 200) || "",
+        },
+      };
+    }
+    return {};
+  }
   const isGem = c.kind === "hidden-gem";
   // BATCH 23 SEO P0 #2 — titles raccourcis pour rester < 60 chars (avant
   // certains > 80 chars tronqués SERP). Le pattern "${c.name} ${c.symbol} :
@@ -363,7 +394,15 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 
 export default async function CryptoPage({ params }: Props) {
   const c = getCryptoBySlug(params.slug);
-  if (!c) notFound();
+
+  // Phase 1 scaling : fall-back DB pour les ~680 fiches LLM générées qui ne
+  // sont pas dans top-cryptos.json + hidden-gems.json. Render inline minimaliste
+  // en utilisant llm_content + raw_data_snapshot. Si ni JSON ni DB → 404.
+  if (!c) {
+    const fiche = await getCryptoFiche(params.slug);
+    if (!fiche) notFound();
+    return <LLMFicheView fiche={fiche} />;
+  }
 
   const detail = await fetchCoinDetail(c.coingeckoId);
   const verdict = buildVerdict(c);
