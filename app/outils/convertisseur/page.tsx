@@ -23,7 +23,7 @@ const Converter = dynamic(() => import("@/components/Converter"), {
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi avec FR 2026 + brand
-  title: "Convertisseur crypto FR 2026 — BTC/ETH/SOL en EUR live | Cryptoreflex",
+  title: "Convertisseur crypto FR 2026 — BTC/ETH/SOL en EUR live",
   description:
     "Convertisseur crypto temps réel : BTC, ETH, SOL et 12 autres en EUR/USD. Taux CoinGecko live, gratuit, sans inscription. 100 % FR.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/convertisseur"),

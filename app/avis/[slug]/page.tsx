@@ -55,7 +55,9 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!p) return {};
   // SEO long-tail "[plateforme] avis 2026" : keyword exact en première position,
   // marque en suffixe auto-ajouté par root layout. Title <60c, description <155c.
-  const title = `${p.name} avis 2026 — Test complet par Cryptoreflex`;
+  // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec le
+  // template root `%s | Cryptoreflex` qui doublait la marque.
+  const title = `${p.name} avis 2026 — test complet & indépendant`;
   const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${p.scoring.global}/5) basé sur 30 jours de test.`;
   return {
     title,

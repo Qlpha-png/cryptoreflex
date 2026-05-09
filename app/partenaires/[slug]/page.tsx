@@ -81,7 +81,9 @@ export function generateMetadata({ params }: Props): Metadata {
   const review = getPartnerReview(params.slug);
   if (!partner || !review) return {};
 
-  const title = `${partner.name} avis 2026 — Test ${review.testDuration} par Cryptoreflex`;
+  // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec
+  // le template root layout `%s | Cryptoreflex`.
+  const title = `${partner.name} avis 2026 — test ${review.testDuration} indépendant`;
   const description = `${partner.tagline} Note ${review.rating}/5 après ${review.testDuration} d'usage réel. Avantages, prix, FAQ et guide complet.`;
 
   return {

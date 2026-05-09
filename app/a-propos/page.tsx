@@ -22,13 +22,13 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "Ã€ propos de Cryptoreflex â€” qui sommes-nous ?",
-  description: `DÃ©couvrez la mission de ${BRAND.name}, la mÃ©thodologie de scoring et le fondateur Kevin Voisin. Site indÃ©pendant, financÃ© uniquement par l'affiliation transparente.`,
+  title: "À propos de Cryptoreflex — qui sommes-nous ?",
+  description: `Découvrez la mission de ${BRAND.name}, la méthodologie de scoring et le fondateur Kevin Voisin. Site indépendant, financé uniquement par l'affiliation transparente.`,
   alternates: withHreflang("/a-propos"),
   openGraph: {
-    title: "Ã€ propos de Cryptoreflex",
+    title: "À propos de Cryptoreflex",
     description:
-      "Le comparateur crypto indÃ©pendant franÃ§ais. MÃ©thodologie publique, tests rÃ©els, transparence sur les liens d'affiliation.",
+      "Le comparateur crypto indépendant français. Méthodologie publique, tests réels, transparence sur les liens d'affiliation.",
     url: "/a-propos",
     type: "profile",
   },
@@ -54,7 +54,7 @@ export default function AProposPage() {
           authorPersonSchema(founder),
           breadcrumbSchema([
             { name: "Accueil", url: "/" },
-            { name: "Ã€ propos", url: "/a-propos" },
+            { name: "À propos", url: "/a-propos" },
           ]),
         ])}
       />
@@ -65,15 +65,15 @@ export default function AProposPage() {
           <header className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">
               <Sparkles className="h-3.5 w-3.5" />
-              Ã€ propos
+              À propos
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
               Le comparateur crypto FR{" "}
-              <span className="gradient-text">indÃ©pendant</span>
+              <span className="gradient-text">indépendant</span>
             </h1>
             <p className="mt-4 text-lg text-fg/75 max-w-2xl mx-auto">
-              {BRAND.name} est un comparateur indÃ©pendant des plateformes crypto
-              accessibles aux rÃ©sidents franÃ§ais. MÃ©thodologie publique, tests rÃ©els,
+              {BRAND.name} est un comparateur indépendant des plateformes crypto
+              accessibles aux résidents français. Méthodologie publique, tests réels,
               transparence sur les liens d'affiliation.
             </p>
           </header>
@@ -183,80 +183,80 @@ export default function AProposPage() {
             </h2>
             <div className="mt-4 space-y-4 text-fg/85 leading-relaxed">
               <p>
-                Aider les particuliers franÃ§ais Ã  <strong>choisir une plateforme
-                crypto fiable</strong>, comprendre la <strong>fiscalitÃ© franÃ§aise</strong>{" "}
-                (flat tax 30%, formulaire 2086, dÃ©claration des comptes Ã©trangers) et
-                Ã©viter les piÃ¨ges du marchÃ© â€” sans jargon, sans hype, sans Â«&nbsp;100x
-                garanti&nbsp;Â».
+                Aider les particuliers français à <strong>choisir une plateforme
+                crypto fiable</strong>, comprendre la <strong>fiscalité française</strong>{" "}
+                (flat tax 30%, formulaire 2086, déclaration des comptes étrangers) et
+                éviter les pièges du marché — sans jargon, sans hype, sans «&nbsp;100x
+                garanti&nbsp;».
               </p>
               <p>
                 Nous croyons qu'un comparateur crypto utile doit&nbsp;:
               </p>
               <ul className="list-disc pl-5 space-y-1.5">
-                <li>tester rÃ©ellement les plateformes (ouverture de compte, achat, retrait)&nbsp;;</li>
-                <li>vÃ©rifier le statut <strong>PSAN AMF</strong> et l'agrÃ©ment <strong>MiCA</strong> chaque mois&nbsp;;</li>
-                <li>publier sa mÃ©thodologie de notation, Ã  l'avance, identique pour toutes&nbsp;;</li>
-                <li>signaler clairement les liens d'affiliation et leur impact (zÃ©ro) sur les notes.</li>
+                <li>tester réellement les plateformes (ouverture de compte, achat, retrait)&nbsp;;</li>
+                <li>vérifier le statut <strong>PSAN AMF</strong> et l'agrément <strong>MiCA</strong> chaque mois&nbsp;;</li>
+                <li>publier sa méthodologie de notation, à l'avance, identique pour toutes&nbsp;;</li>
+                <li>signaler clairement les liens d'affiliation et leur impact (zéro) sur les notes.</li>
               </ul>
             </div>
           </section>
 
-          {/* MÃ©thodologie rÃ©sumÃ©e */}
+          {/* Méthodologie résumée */}
           <section className="mt-16">
             <h2 className="flex items-center gap-2 text-2xl font-bold text-fg">
               <Scale className="h-6 w-6 text-primary-soft" />
-              MÃ©thodologie en 30 secondes
+              Méthodologie en 30 secondes
             </h2>
             <p className="mt-4 text-fg/85 leading-relaxed">
-              Chaque plateforme est notÃ©e sur <strong>6 critÃ¨res pondÃ©rÃ©s</strong> :
-              frais rÃ©els (20%), sÃ©curitÃ© (25%), conformitÃ© MiCA/PSAN (20%),
-              expÃ©rience utilisateur (15%), support FR (10%), catalogue & services (10%).
-              Les notes sont mises Ã  jour Ã  frÃ©quence fixe (statut MiCA mensuel, frais
-              trimestriels, refonte annuelle complÃ¨te).
+              Chaque plateforme est notée sur <strong>6 critères pondérés</strong> :
+              frais réels (20%), sécurité (25%), conformité MiCA/PSAN (20%),
+              expérience utilisateur (15%), support FR (10%), catalogue & services (10%).
+              Les notes sont mises à jour à fréquence fixe (statut MiCA mensuel, frais
+              trimestriels, refonte annuelle complète).
             </p>
             <Link
               href="/methodologie"
               className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-soft hover:underline"
             >
-              Voir la mÃ©thodologie complÃ¨te
+              Voir la méthodologie complète
               <ArrowRight className="h-4 w-4" />
             </Link>
           </section>
 
-          {/* IndÃ©pendance */}
+          {/* Indépendance */}
           <section className="mt-16">
             <h2 className="flex items-center gap-2 text-2xl font-bold text-fg">
               <Compass className="h-6 w-6 text-primary-soft" />
-              Pourquoi indÃ©pendant&nbsp;?
+              Pourquoi indépendant&nbsp;?
             </h2>
             <div className="mt-4 space-y-4 text-fg/85 leading-relaxed">
               <p>
-                {BRAND.name} <strong>n'appartient Ã  aucune plateforme crypto</strong>,
-                aucun fonds d'investissement et aucun groupe mÃ©dia. Le site est financÃ©
+                {BRAND.name} <strong>n'appartient à aucune plateforme crypto</strong>,
+                aucun fonds d'investissement et aucun groupe média. Le site est financé
                 <strong> uniquement par l'affiliation</strong> : si tu ouvres un
-                compte via un de nos liens, la plateforme nous reverse une commission â€”{" "}
-                <strong>sans surcoÃ»t pour toi</strong>.
+                compte via un de nos liens, la plateforme nous reverse une commission —{" "}
+                <strong>sans surcoût pour toi</strong>.
               </p>
               <p>
                 Cette commission <strong>n'influence pas les notes</strong>. Plusieurs
-                plateformes mieux classÃ©es que nos partenaires affiliÃ©s en tÃ©moignent
+                plateformes mieux classées que nos partenaires affiliés en témoignent
                 (cf.{" "}
                 <Link href="/methodologie" className="text-primary-soft hover:underline">
-                  notre mÃ©thodologie
+                  notre méthodologie
                 </Link>
-                ). Quand un partenariat existe, il est signalÃ© en clair sur la fiche, et
-                le dÃ©tail de notre rÃ©munÃ©ration est publiÃ© sur la page{" "}
+                ). Quand un partenariat existe, il est signalé en clair sur la fiche, et
+                le détail de notre rémunération est publié sur la page{" "}
                 <Link href="/transparence" className="text-primary-soft hover:underline">
                   Transparence et partenariats
                 </Link>
                 .
               </p>
               <p className="text-sm text-muted border-l-2 border-primary/40 pl-4">
-                {BRAND.name} a une vocation purement informative et pÃ©dagogique. Les
+                {BRAND.name} a une vocation purement informative et pédagogique. Les
                 contenus du site ne constituent pas un conseil en investissement au sens
-                de l'article L.321-1 du Code monÃ©taire et financier. Pour toute dÃ©cision
+                de l'article L.321-1 du Code monétaire et financier. Pour toute décision
                 patrimoniale significative, consultez un conseiller en investissements
-                financiers (CIF) enregistrÃ© ORIAS.
+                financiers (CIF) enregistré ORIAS.
               </p>
             </div>
           </section>
@@ -265,8 +265,8 @@ export default function AProposPage() {
           <section className="mt-16 rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8 text-center">
             <h2 className="text-xl font-bold text-fg">Une question, une correction&nbsp;?</h2>
             <p className="mt-2 text-fg/80">
-              Une donnÃ©e obsolÃ¨te, une note injustifiÃ©e, une plateforme qui manque&nbsp;?
-              Ã‰crivez-nous, on corrige sous 7 jours.
+              Une donnée obsolète, une note injustifiée, une plateforme qui manque&nbsp;?
+              Écrivez-nous, on corrige sous 7 jours.
             </p>
             <Link
               href={`mailto:${BRAND.email}`}

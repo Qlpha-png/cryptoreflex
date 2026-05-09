@@ -18,7 +18,7 @@ import { BRAND } from "@/lib/brand";
 import { Check, X, Code2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "API B2B — Cryptoreflex",
+  title: "API B2B",
   description:
     "Branche tes outils sur les données Cryptoreflex (PSAN, MiCA, top cryptos, scores de décentralisation). Sandbox 14 jours gratuits, puis 19 € ou 99 €/mois.",
   alternates: { canonical: `${BRAND.url}/pro/api` },

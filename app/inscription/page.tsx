@@ -11,7 +11,7 @@ import SignupForm from "@/components/auth/SignupForm";
 import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
-  title: "Créer un compte — Cryptoreflex",
+  title: "Créer un compte",
   description:
     "Crée ton compte Cryptoreflex en 30 secondes avec ton email et un mot de passe. Gratuit, sans engagement.",
   alternates: { canonical: `${BRAND.url}/inscription` },

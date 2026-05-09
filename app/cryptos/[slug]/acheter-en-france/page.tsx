@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -14,6 +14,7 @@ import {
 
 import { ALL_CRYPTOS, getCrypto } from "@/lib/programmatic";
 import { getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
+import { getCryptoFiche } from "@/lib/cryptos-db";
 import { getAllPlatforms, getPlatformById, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
@@ -36,9 +37,21 @@ export function generateStaticParams() {
   return ALL_CRYPTOS.slice(0, 10).map((c) => ({ slug: c.id }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const meta = getCrypto(params.slug);
-  if (!meta) return {};
+  if (!meta) {
+    // Fall-back DB : si fiche LLM, métadata pointe vers la fiche principale
+    // (le render redirige 308 → la canonical doit être /cryptos/[slug]).
+    const fiche = await getCryptoFiche(params.slug);
+    if (fiche) {
+      return {
+        title: `${fiche.name} (${fiche.symbol}) — fiche complète`,
+        alternates: { canonical: `${BRAND.url}/cryptos/${fiche.coingecko_id}` },
+        robots: { index: false, follow: true },
+      };
+    }
+    return {};
+  }
   const title = `Acheter ${meta.name} (${meta.symbol}) en France 2026 — guide pas-à-pas`;
   const description = `Comment acheter du ${meta.name} (${meta.symbol}) en France en 2026 : meilleures plateformes MiCA, frais réels, méthodes de paiement (CB, virement SEPA), fiscalité PFU 30%. Guide Cryptoreflex.`;
   return {
@@ -86,9 +99,18 @@ function feesEstimate(p: Platform, amount: number): { instant: number; spot: num
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
-export default function AcheterEnFrancePage({ params }: Props) {
+export default async function AcheterEnFrancePage({ params }: Props) {
   const meta = getCrypto(params.slug);
-  if (!meta) notFound();
+  if (!meta) {
+    // Fall-back BUG #5 (2026-05-09) : si le slug n'est pas dans les 100
+    // fiches éditoriales mais EXISTE dans la DB (LLM fiche), on n'a pas
+    // de mapping plateformes_FR pour cette crypto exotique. Plutôt que
+    // notFound() (HTTP 200 + page 404 — anti-SEO), on redirige 308 vers
+    // la fiche principale qui, elle, existe et a du contenu utile.
+    const fiche = await getCryptoFiche(params.slug);
+    if (fiche) redirect(`/cryptos/${fiche.coingecko_id}`);
+    notFound();
+  }
 
   // Fiche éditoriale (top10 / hidden gem) si disponible
   const editorial: AnyCrypto | undefined = getCryptoBySlug(meta.id);

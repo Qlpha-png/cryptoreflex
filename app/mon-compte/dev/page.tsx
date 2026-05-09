@@ -18,7 +18,7 @@ import { createSandboxKey } from "./actions";
 import { Code2, KeyRound, ShieldCheck, Plus, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Clés API développeur — Cryptoreflex",
+  title: "Clés API développeur",
   description:
     "Crée et gère tes clés API B2B Cryptoreflex (sandbox 14j gratuits ou abonnement Starter / Pro).",
   alternates: { canonical: `${BRAND.url}/mon-compte/dev` },

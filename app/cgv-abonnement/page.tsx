@@ -5,7 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "CGV abonnement Soutien — Cryptoreflex",
+  title: "CGV abonnement Soutien",
   description:
     "Conditions Générales de Vente de l'abonnement Soutien Cryptoreflex (Mensuel 2,99 € / Annuel 28,99 €) : services inclus, paiement Stripe, droit de rétractation L221-18, exécution immédiate, annulation et remboursement.",
   alternates: withHreflang(`${BRAND.url}/cgv-abonnement`),

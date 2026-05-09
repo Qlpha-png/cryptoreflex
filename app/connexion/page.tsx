@@ -10,7 +10,7 @@ import LoginForm from "@/components/auth/LoginForm";
 import NextStepsGuide from "@/components/NextStepsGuide";
 
 export const metadata: Metadata = {
-  title: "Connexion — Cryptoreflex",
+  title: "Connexion",
   description:
     "Connecte-toi à ton compte Cryptoreflex avec ton email et ton mot de passe, ou via un lien magique. Sécurisé, rapide.",
   alternates: { canonical: `${BRAND.url}/connexion` },

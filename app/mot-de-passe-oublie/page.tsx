@@ -7,7 +7,7 @@ import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "Mot de passe oublié — Cryptoreflex",
+  title: "Mot de passe oublié",
   description:
     "Réinitialise ton mot de passe Cryptoreflex en quelques clics via un lien sécurisé reçu par email.",
   alternates: withHreflang(`${BRAND.url}/mot-de-passe-oublie`),

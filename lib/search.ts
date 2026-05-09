@@ -39,6 +39,7 @@ import { unstable_cache } from "next/cache";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { getAllPlatforms, type Platform } from "@/lib/platforms";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
+import { getFeaturedCryptos, type CryptoFicheRow } from "@/lib/cryptos-db";
 import { getPublishableComparisons } from "@/lib/programmatic";
 import type { SearchItem } from "@/lib/search-client";
 
@@ -242,6 +243,39 @@ function buildCryptoItems(cryptos: AnyCrypto[]): SearchItem[] {
   }));
 }
 
+/**
+ * BUG #7 fix (2026-05-09) — couvre les 680 fiches LLM scaling rank 50-790.
+ * Avant : `searchIndex` ne connaissait que les 100 fiches statiques. Une
+ * recherche "onyxcoin" ne renvoyait rien alors que la fiche /cryptos/chain-2
+ * existe en prod.
+ *
+ * On limite à 1000 (cap supabase + cap pratique pour l'index in-memory).
+ * snippet = tldr LLM tronqué à 160 chars (cohérent avec articles MDX).
+ */
+function buildLLMFicheItems(fiches: CryptoFicheRow[]): SearchItem[] {
+  return fiches.map((f) => {
+    const llm = (f.llm_content || {}) as { tldr?: string };
+    const snippet = llm.tldr
+      ? llm.tldr.slice(0, 160)
+      : `${f.name} — fiche complète, métriques, scores et risques.`;
+    return {
+      id: `crypto:${f.coingecko_id}`,
+      title: `${f.name} (${f.symbol.toUpperCase()})`,
+      type: "crypto" as const,
+      url: `/cryptos/${f.coingecko_id}`,
+      snippet,
+      keywords: [
+        f.symbol,
+        f.symbol.toLowerCase(),
+        f.symbol.toUpperCase(),
+        ...(f.categories || []),
+        "fiche analyse",
+        "llm",
+      ].filter(Boolean) as string[],
+    };
+  });
+}
+
 function buildComparatifItems(platforms: Platform[]): SearchItem[] {
   const byId = new Map(platforms.map((p) => [p.id, p.name]));
   // On ne génère un item que si les DEUX plateformes ont une fiche publiée.
@@ -292,16 +326,28 @@ function buildGlossaryItems(): SearchItem[] {
  */
 export const getSearchIndex = unstable_cache(
   async (): Promise<SearchItem[]> => {
-    const [articles, platforms, cryptos] = await Promise.all([
+    const [articles, platforms, cryptos, llmFiches] = await Promise.all([
       getAllArticleSummaries(),
       Promise.resolve(getAllPlatforms()),
       Promise.resolve(getAllCryptos()),
+      // BUG #7 fix : ajout des 680 fiches LLM (rank 50-790).
+      // tiers T1+T2+T3 pour couverture exhaustive (vs default T1+T2 only).
+      // Limit 1000 = cap pratique (au-delà l'index in-memory devient lourd).
+      // En cas d'indispo Supabase → tableau vide (graceful degradation).
+      getFeaturedCryptos(1000, ["T1", "T2", "T3"]),
     ]);
+
+    // Dédup : une fiche LLM peut avoir le même coingecko_id qu'un top 10
+    // statique (ex: bitcoin présent dans les 2). On garde le statique
+    // (snippet curé éditorialement) et on filtre les LLM doublons.
+    const staticIds = new Set(cryptos.map((c) => c.coingeckoId));
+    const llmFichesUnique = llmFiches.filter((f) => !staticIds.has(f.coingecko_id));
 
     return [
       ...buildArticleItems(articles),
       ...buildPlatformItems(platforms),
       ...buildCryptoItems(cryptos),
+      ...buildLLMFicheItems(llmFichesUnique),
       ...buildComparatifItems(platforms),
       ...buildToolItems(),
       ...buildGlossaryItems(),

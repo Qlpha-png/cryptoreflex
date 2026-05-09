@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const news = await getNewsBySlug(params.slug);
   if (!news) {
     return {
-      title: "Actualité introuvable — Cryptoreflex",
+      title: "Actualité introuvable",
       robots: { index: false, follow: false },
     };
   }

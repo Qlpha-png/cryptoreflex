@@ -13,7 +13,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title: "Candidature ambassadeur reçue — Cryptoreflex",
+  title: "Candidature ambassadeur reçue",
   description:
     "Merci pour ta candidature au programme ambassadeurs Cryptoreflex. Réponse manuelle sous 7 jours ouvrés.",
   alternates: withHreflang(`${BRAND.url}/ambassadeurs/merci`),

@@ -36,7 +36,7 @@ import PushOptIn from "@/components/PushOptIn";
 import GamificationPanel from "@/components/GamificationPanel";
 
 export const metadata: Metadata = {
-  title: "Mon compte — Cryptoreflex",
+  title: "Mon compte",
   description:
     "Gère ton abonnement Cryptoreflex Pro, télécharge tes factures, mets à jour ta carte et accède à toutes tes fonctionnalités premium.",
   alternates: { canonical: `${BRAND.url}/mon-compte` },
