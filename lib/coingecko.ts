@@ -840,6 +840,92 @@ export interface CoinDetail {
   sparkline7d: number[];
 }
 
+/**
+ * Shape interne CG /coins/markets (pour batch + per-id fallback).
+ */
+interface CGMarketsRow {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  market_cap: number | null;
+  market_cap_rank: number | null;
+  circulating_supply: number | null;
+  total_supply: number | null;
+  max_supply: number | null;
+  ath: number | null;
+  ath_date: string | null;
+  atl: number | null;
+  atl_date: string | null;
+  sparkline_in_7d?: { price: number[] };
+}
+
+/**
+ * BATCHED HYDRATE (FIX 2026-05-10 v7) — fetch 1 fois /coins/markets pour
+ * les 100 IDs statiques en lot, cached 30min via unstable_cache.
+ *
+ * Pourquoi : les versions précédentes (v3-v6) faisaient 1 fetch CG par
+ * crypto, ce qui saturait CG free 50/min lors de cold-start (100 fiches
+ * crawlées simultanément). Résultat audit v6 : 0/100 ATH, 0/100 ATL.
+ *
+ * Nouvelle approche : 1 fetch CG /coins/markets?ids=ID1,ID2,...,ID100&per_page=100
+ * couvre TOUS les détails statiques en 1 round-trip atomique. Cache 30min
+ * → 2 fetch CG/heure au lieu de 100+. Sous le 50/min CG free trivialement.
+ *
+ * Ne couvre PAS les fiches LLM (~680) — celles-ci ont leur propre fallback
+ * per-id dans _fetchCoinDetail (cache no-store + unstable_cache 30min).
+ */
+async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
+  // Lazy import pour éviter cycle de dépendance avec lib/cryptos.ts
+  const [topData, gemsData] = await Promise.all([
+    import("@/data/top-cryptos.json"),
+    import("@/data/hidden-gems.json"),
+  ]);
+  const ids: string[] = [
+    ...((topData as { default?: { topCryptos?: Array<{ coingeckoId: string }> } }).default?.topCryptos ?? []),
+    ...((gemsData as { default?: { hiddenGems?: Array<{ coingeckoId: string }> } }).default?.hiddenGems ?? []),
+  ]
+    .map((c) => c.coingeckoId)
+    .filter(Boolean);
+
+  if (ids.length === 0) return new Map();
+
+  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
+    ",",
+  )}&order=market_cap_desc&per_page=${Math.min(ids.length, 250)}&page=1&sparkline=true&price_change_percentage=24h,7d`;
+
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) {
+      console.warn(`[coingecko] hydrate batch returned ${res.status}`);
+      return new Map();
+    }
+    const json = (await res.json()) as CGMarketsRow[];
+    const map = new Map<string, CGMarketsRow>();
+    for (const c of json) {
+      if (c?.id) map.set(c.id, c);
+    }
+    return map;
+  } catch (err) {
+    console.warn(
+      `[coingecko] hydrate batch failed:`,
+      err instanceof Error ? err.message : "unknown",
+    );
+    return new Map();
+  }
+}
+
+const _hydrateStaticDetailsBatch = unstable_cache(
+  _fetchStaticDetailsBatch,
+  ["cg-hydrate-static-details-batch-v1"],
+  // 30min cache. Si batch fail (CG down), on retente dans 30min — entre-temps
+  // le fallback per-id kick in pour chaque crypto demandée.
+  { revalidate: 1800, tags: [CG_TAGS.market] },
+);
+
 async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
   // FIX 2026-05-06 BUILD PERF — Skip CoinGecko fallback au build-time.
   // Symptôme : `next build` SSG 100 fiches /cryptos/[slug] en parallèle ;
@@ -893,56 +979,14 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
       // moyenne pour 100 fiches simultanées (sous CG free 50/min limit).
       const needsHydration = snap.source !== "static" && !isBuildPhase;
       if (needsHydration) {
-        // FIX 2026-05-10 v2 — CoinGecko Demo key SATURÉE (10K/mois atteint).
-        // Cascade hydration : tente d'abord SANS clé Demo (50/min sans cap
-        // mensuel), fallback sur CoinPaprika (free 25K/mois sans key) si fail.
-        //
-        // FIX 2026-05-10 v6 (BUG SAVAGE) — Audit étendu post-v5 montrait
-        // 76/100 fiches sans ATH/ATL malgré hydrate "TOUJOURS". Cause :
-        // `next: { revalidate: 86400 }` cachait les responses 429 CG
-        // pendant 24h. Une fois CG saturé pendant le crawl initial, tous
-        // les retries lisaient le 429 cached → null permanent.
-        //
-        // Solution : `cache: "no-store"` sur les fetches internes. Le
-        // résultat est de toute façon mis en cache 30min via le wrapper
-        // unstable_cache(_fetchCoinDetail) en aval, donc pas de surcout :
-        // 1 hydrate par crypto par 30min max, mais sans empoisonnement
-        // par les 429 transients.
-        const tryFetch = async (
-          url: string,
-          headers?: Record<string, string>,
-        ): Promise<unknown> => {
-          try {
-            const r = await fetchWithRetry(url, {
-              cache: "no-store",
-              ...(headers ? { headers } : {}),
-            });
-            return r.ok ? await r.json() : null;
-          } catch {
-            return null;
-          }
-        };
-
-        // 1. CoinGecko free (NO Demo key) — 50/min sans cap mensuel.
-        const cgUrl = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
-        let cgData = (await tryFetch(cgUrl)) as Array<{
-          id: string;
-          symbol: string;
-          name: string;
-          image: string;
-          market_cap: number | null;
-          market_cap_rank: number | null;
-          circulating_supply: number | null;
-          total_supply: number | null;
-          max_supply: number | null;
-          ath: number | null;
-          ath_date: string | null;
-          atl: number | null;
-          atl_date: string | null;
-          sparkline_in_7d?: { price: number[] };
-        }> | null;
-
-        const c = cgData?.[0];
+        // FIX 2026-05-10 v7 (BATCHED HYDRATE) — Audit v5 montrait 24/100 ATH OK,
+        // v6 (cache:no-store) a chuté à 0/100 (race condition saturation CG).
+        // Vraie solution : 1 SEUL fetch CG /coins/markets pour les 100 IDs
+        // statiques d'un coup, cached 30min via unstable_cache externe.
+        // Bénéfices : 2 fetch CG/heure au lieu de 100+, couverture 100%
+        // atomique, zéro race condition, sous le 50/min CG free trivialement.
+        const batchDetails = await _hydrateStaticDetailsBatch();
+        const c = batchDetails.get(coingeckoId);
         if (c) {
           return {
             id: c.id,
@@ -965,6 +1009,68 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
             sparkline7d: snap.sparkline7d?.length
               ? snap.sparkline7d
               : (c.sparkline_in_7d?.price ?? []),
+          };
+        }
+
+        // Fallback per-id pour les IDs LLM (pas dans le batch statique).
+        // Cache no-store ici car unstable_cache extérieur (_fetchCoinDetail)
+        // gère le cache résultat — évite empoisonnement 429 dans fetch cache.
+        const tryFetch = async (
+          url: string,
+          headers?: Record<string, string>,
+        ): Promise<unknown> => {
+          try {
+            const r = await fetchWithRetry(url, {
+              cache: "no-store",
+              ...(headers ? { headers } : {}),
+            });
+            return r.ok ? await r.json() : null;
+          } catch {
+            return null;
+          }
+        };
+
+        const cgUrl = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
+        const cgData = (await tryFetch(cgUrl)) as Array<{
+          id: string;
+          symbol: string;
+          name: string;
+          image: string;
+          market_cap: number | null;
+          market_cap_rank: number | null;
+          circulating_supply: number | null;
+          total_supply: number | null;
+          max_supply: number | null;
+          ath: number | null;
+          ath_date: string | null;
+          atl: number | null;
+          atl_date: string | null;
+          sparkline_in_7d?: { price: number[] };
+        }> | null;
+
+        const cFb = cgData?.[0];
+        if (cFb) {
+          return {
+            id: cFb.id,
+            symbol: cFb.symbol.toUpperCase(),
+            name: cFb.name,
+            image: cFb.image,
+            currentPrice: snap.priceUsd,
+            priceChange24h: snap.change24h,
+            priceChange7d: snap.change7d,
+            marketCap: cFb.market_cap ?? 0,
+            marketCapRank: cFb.market_cap_rank ?? 0,
+            totalVolume: snap.volume24h,
+            circulatingSupply: cFb.circulating_supply ?? 0,
+            totalSupply: cFb.total_supply,
+            maxSupply: cFb.max_supply,
+            ath: cFb.ath ?? 0,
+            athDate: cFb.ath_date,
+            atl: cFb.atl ?? 0,
+            atlDate: cFb.atl_date,
+            sparkline7d: snap.sparkline7d?.length
+              ? snap.sparkline7d
+              : (cFb.sparkline_in_7d?.price ?? []),
           };
         }
 
