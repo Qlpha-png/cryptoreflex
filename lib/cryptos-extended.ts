@@ -101,5 +101,7 @@ export const getAllCryptosUnified = unstable_cache(
     ];
   },
   ["cryptos-unified"],
-  { tags: ["cryptos", "cryptos-llm"], revalidate: 3600 },
+  // OPTIM 2026-05-10 — 1h → 6h. Liste de cryptos change rarement
+  // (1×/jour via cron LLM-pipeline). Cache 6h évite spam Supabase.
+  { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
 );

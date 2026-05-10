@@ -107,9 +107,12 @@ async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFiche
 }
 
 /**
- * OPTIM 2026-05-10 — cache unstable_cache 1h pour réduire bandwidth Supabase.
- * Avant : 1 query DB par visite /cryptos/[slug] LLM (~2 KB row).
- * Après : 1 query DB par crypto par heure max → -95% Supabase bandwidth.
+ * OPTIM 2026-05-10 — cache unstable_cache pour réduire bandwidth Supabase.
+ * Avant : 1 query DB par visite /cryptos/[slug] LLM (~18 KB row mesurée).
+ * Après : 1 query DB par crypto par 6h max → -99% Supabase bandwidth.
+ *
+ * TTL 6h : raw_data_snapshot rafraîchi par cron LLM-pipeline 1×/jour,
+ * donc 6h de stale = négligeable pour l'UX.
  *
  * Cache key inclut coingeckoId. Tag granulaire pour invalidation ciblée
  * via revalidateTag(`crypto-fiche:${id}`) si raw_data_snapshot mis à jour.
@@ -118,7 +121,7 @@ export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRo
   const cached = unstable_cache(
     () => _getCryptoFicheUncached(coingeckoId),
     [`crypto-fiche-v1`, coingeckoId],
-    { revalidate: 3600, tags: [`crypto-fiche:${coingeckoId}`] },
+    { revalidate: 21600, tags: [`crypto-fiche:${coingeckoId}`] },
   );
   return cached();
 }
@@ -152,7 +155,8 @@ export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow
   const cached = unstable_cache(
     () => _getCryptoFicheBySlugUncached(slug),
     [`crypto-fiche-by-slug-v1`, slug],
-    { revalidate: 3600, tags: [`crypto-fiche-slug:${slug}`] },
+    // OPTIM 2026-05-10 — 1h → 6h (idem getCryptoFiche)
+    { revalidate: 21600, tags: [`crypto-fiche-slug:${slug}`] },
   );
   return cached();
 }
@@ -266,20 +270,20 @@ export async function getFeaturedCryptos(
  * Recherche FTS sur name + symbol + slug.
  * Index : idx_cryptos_search_fts (gin tsvector).
  */
-export async function searchCryptos(
+async function _searchCryptosUncached(
   query: string,
   limit = 20,
-): Promise<CryptoFicheRow[]> {
+): Promise<CryptoFicheLight[]> {
   if (!query || query.trim().length < 2) return [];
   const sb = createSupabaseServiceRoleClient();
   if (!sb) return [];
   try {
-    // Approche simple : ilike sur name/symbol pour latence faible.
-    // FTS via .textSearch() possible si besoin de stemming/multilingue.
+    // OPTIM 2026-05-10 — select light (5 fields vs *) = -90% bandwidth.
+    // Search ne consomme JAMAIS raw_data_snapshot ou llm_content (autocomplete UI).
     const term = `%${query.trim()}%`;
     const { data, error } = await sb
       .from("cryptos")
-      .select("*")
+      .select("coingecko_id, name, symbol, categories, market_cap_rank")
       .eq("is_published", true)
       .or(`name.ilike.${term},symbol.ilike.${term},slug.ilike.${term}`)
       .order("market_cap_rank", { ascending: true, nullsFirst: false })
@@ -288,10 +292,24 @@ export async function searchCryptos(
       console.warn(`[cryptos-db] searchCryptos error:`, error.message);
       return [];
     }
-    return (data as CryptoFicheRow[]) ?? [];
+    return (data as CryptoFicheLight[]) ?? [];
   } catch {
     return [];
   }
+}
+
+export async function searchCryptos(
+  query: string,
+  limit = 20,
+): Promise<CryptoFicheLight[]> {
+  // OPTIM 2026-05-10 — cache 1h pour éviter spam Supabase si user tape
+  // beaucoup dans la search box (autocomplete avec debounce).
+  const cached = unstable_cache(
+    () => _searchCryptosUncached(query, limit),
+    [`crypto-search-v1`, query.trim().toLowerCase(), String(limit)],
+    { revalidate: 3600, tags: ["crypto-search"] },
+  );
+  return cached();
 }
 
 /**
