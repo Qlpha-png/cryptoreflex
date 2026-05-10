@@ -47,15 +47,18 @@ export const SLUG_ALIASES: Record<string, string> = {
   // Cryptos avec suffixe `-4`
   cash: "cash-4",
 
-  // FIX 2026-05-10 P0 — aliases courts -> coingecko_id canonique
-  // (audit fiches statiques avec marketCap=0 / sparkline vide).
-  // NEAR Protocol : coingecko_id canonique = "near" (pas "near-protocol").
-  "near-protocol": "near",
-  // Lido DAO Token : coingecko_id canonique = "lido-dao".
+  // FIX 2026-05-10 P0 — aliases courts -> slug canonique JSON statique.
+  // CORRECTION 2026-05-10 v2 (audit 99/100 OK, 1 BAD = near-protocol) :
+  // l'alias `near-protocol → near` redirigeait la fiche statique
+  // /cryptos/near-protocol vers /cryptos/near (sans fiche statique →
+  // tombait sur LLMFicheView avec marketCap=0). Sens correct : `near`
+  // (URL courte SEO) → `near-protocol` (slug JSON, fiche complète).
+  near: "near-protocol",
+  // Lido DAO Token : slug JSON statique = "lido-dao".
   lido: "lido-dao",
-  // Aerodrome Finance : coingecko_id canonique = "aerodrome-finance".
+  // Aerodrome Finance : slug JSON statique = "aerodrome-finance".
   aerodrome: "aerodrome-finance",
-  // Akash Network : coingecko_id canonique = "akash-network".
+  // Akash Network : slug JSON statique = "akash-network".
   akash: "akash-network",
 };
 
