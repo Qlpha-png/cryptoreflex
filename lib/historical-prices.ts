@@ -204,7 +204,7 @@ async function _getEurUsdRate(): Promise<number> {
   }
   try {
     const res = await fetch(`${BINANCE_BASE}/ticker/price?symbol=EURUSDT`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(3000),
     });
     if (!res.ok) throw new Error(`EUR/USDT → ${res.status}`);
@@ -249,7 +249,7 @@ async function _fetchFromBinance(
   try {
     const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=1d&limit=${limit}`;
     const res = await fetch(url, {
-      cache: "no-store",
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
@@ -445,7 +445,7 @@ async function _fetchFromCryptoCompare(
   try {
     // FIX P0 2026-05-06 — timeout 8s
     const res = await fetch(url, {
-      cache: "no-store",
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
@@ -492,7 +492,10 @@ async function _fetchHistoricalRange(
     // FIX P0 2026-05-06 — timeout 10s (range queries plus lourdes)
     const res = await fetch(url, {
       headers: cgHeaders(),
-      cache: "no-store",
+      // OPTIM 2026-05-10 — `cache: "no-store"` casse SSG /convertisseur
+      // (DYNAMIC_SERVER_USAGE error). Utilise `next.revalidate` pour
+      // permettre le SSG tout en gardant des données fraîches.
+      next: { revalidate: 1800, tags: ["historical-prices"] },
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) throw new Error(`CoinGecko range ${coinId} → ${res.status}`);
@@ -567,7 +570,7 @@ async function _fetchFromCoinGecko(
       // FIX P0 2026-05-06 — timeout 8s
       const res = await fetch(url, {
         headers: cgHeaders(),
-        cache: "no-store",
+        next: { revalidate: 60 },
         signal: AbortSignal.timeout(8000),
       });
       if (!res.ok) throw new Error(`CoinGecko ${coinId} ${days}d → ${res.status}`);
@@ -688,7 +691,7 @@ async function _fetchConversionRate(
       // FIX P0 2026-05-06 — timeout 6s (simple/price endpoint léger)
       const res = await fetch(url, {
         headers: cgHeaders(),
-        cache: "no-store",
+        next: { revalidate: 60 },
         signal: AbortSignal.timeout(6000),
       });
       if (!res.ok) throw new Error(`simple/price ${res.status}`);
