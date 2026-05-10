@@ -895,15 +895,30 @@ async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>>
   // cron `refresh-static-details` pré-charge KV à fréquence basse
   // (4×/jour suffit pour ATH/ATL qui bougent peu). Lecture KV → cache
   // mémoire 30min → 0 fetch CG live nécessaire dans 99% des cas.
+  //
+  // FIX 2026-05-10 v16 — INLINE KV fetch SANS `cache: "no-store"` car
+  // lib/kv.ts utilise no-store qui force la page SSG à devenir dynamic
+  // (erreur "Page changed from static to dynamic at runtime"). Inline
+  // sans option cache : Next utilise default caching (acceptable car
+  // KV peut servir données fraîches depuis cron 4×/jour, pas critique).
   try {
-    const { getKv } = await import("@/lib/kv");
-    const kv = getKv();
-    if (!kv.mocked) {
-      const cached = await kv.get<Record<string, CGMarketsRow>>(
-        KV_STATIC_DETAILS_KEY,
-      );
-      if (cached && Object.keys(cached).length > 0) {
-        return cached;
+    const kvUrl = process.env.KV_REST_API_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN;
+    if (kvUrl && kvToken) {
+      const url = `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent(KV_STATIC_DETAILS_KEY)}`;
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${kvToken}`, accept: "application/json" },
+        signal: AbortSignal.timeout(5000),
+        next: { revalidate: 60, tags: ["kv-static-details"] },
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { result?: string | null };
+        if (typeof data.result === "string" && data.result.length > 0) {
+          const parsed = JSON.parse(data.result) as Record<string, CGMarketsRow>;
+          if (parsed && Object.keys(parsed).length > 0) {
+            return parsed;
+          }
+        }
       }
     }
   } catch {
