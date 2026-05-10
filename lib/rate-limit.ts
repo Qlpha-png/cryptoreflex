@@ -195,9 +195,18 @@ export function createRateLimiter(
   const namespace = opts.key ?? "default";
 
   return async function rateLimit(ip: string): Promise<RateLimitResult> {
+    // OPTIM 2026-05-11 — FORCE IN-MEMORY pour économiser 2K-10K KV commands/jour
+    // (chaque rate-limit hit = 1 GET + 1 SET KV). On n'a qu'un seul container
+    // Coolify, donc pas besoin de partage distribué entre instances.
+    // Trade-off : compteurs perdus au restart container, acceptable pour
+    // anti-burst (vs DDoS mitigation, qui devrait être Cloudflare).
+    //
+    // Pour réactiver KV (multi-container distribué) : set env RATE_LIMIT_USE_KV=true
+    if (process.env.RATE_LIMIT_USE_KV !== "true") {
+      return memoryRateLimit(namespace, ip, limit, windowMs);
+    }
     const kv = getKv();
     if (kv.mocked) {
-      // KV non configuré → fallback legacy in-memory (par namespace).
       return memoryRateLimit(namespace, ip, limit, windowMs);
     }
     return kvRateLimit(namespace, ip, limit, windowMs);
