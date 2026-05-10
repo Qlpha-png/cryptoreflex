@@ -896,14 +896,25 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         // FIX 2026-05-10 v2 — CoinGecko Demo key SATURÉE (10K/mois atteint).
         // Cascade hydration : tente d'abord SANS clé Demo (50/min sans cap
         // mensuel), fallback sur CoinPaprika (free 25K/mois sans key) si fail.
-        // Cache 24h pour minimiser les calls (vs 30min avant).
+        //
+        // FIX 2026-05-10 v6 (BUG SAVAGE) — Audit étendu post-v5 montrait
+        // 76/100 fiches sans ATH/ATL malgré hydrate "TOUJOURS". Cause :
+        // `next: { revalidate: 86400 }` cachait les responses 429 CG
+        // pendant 24h. Une fois CG saturé pendant le crawl initial, tous
+        // les retries lisaient le 429 cached → null permanent.
+        //
+        // Solution : `cache: "no-store"` sur les fetches internes. Le
+        // résultat est de toute façon mis en cache 30min via le wrapper
+        // unstable_cache(_fetchCoinDetail) en aval, donc pas de surcout :
+        // 1 hydrate par crypto par 30min max, mais sans empoisonnement
+        // par les 429 transients.
         const tryFetch = async (
           url: string,
           headers?: Record<string, string>,
         ): Promise<unknown> => {
           try {
             const r = await fetchWithRetry(url, {
-              next: { revalidate: 86400, tags: [cgCryptoTag(coingeckoId)] },
+              cache: "no-store",
               ...(headers ? { headers } : {}),
             });
             return r.ok ? await r.json() : null;
