@@ -31,7 +31,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-export const KV_TICKER_PRICES_KEY = "cg-ticker-prices:v1";
+// Doit matcher la même key dans lib/coingecko.ts:_fetchPrices KV read.
+const KV_TICKER_PRICES_KEY = "cg-ticker-prices:v1";
 const KV_TTL_SECONDS = 360; // 6 min (1 min de marge si cron skip)
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
