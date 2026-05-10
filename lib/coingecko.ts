@@ -128,6 +128,52 @@ export const DEFAULT_COINS: CoinId[] = [
 ];
 
 /**
+ * Hydration batchée market_cap manquant via CoinGecko free.
+ *
+ * Pourquoi : `getPriceSnapshot()` cascade Binance/Kraken/Coinbase/KuCoin
+ * qui ne renvoient QUE price + volume24h, pas marketCap. Résultat sans
+ * hydrate : ticker home + autocomplete affichent marketCap=0 pour les
+ * cryptos non-CoinGecko (havven=Synthetix, dai, kaspa, ethena, gala...).
+ *
+ * Strategie : 1 seul appel groupé `/coins/markets?ids=a,b,c` à CG free
+ * (50/min sans cap mensuel) pour TOUS les ids manquants. Cache 1h via
+ * unstable_cache pour éviter de bombarder CG si plusieurs callers
+ * passent les mêmes ids dans la fenêtre.
+ *
+ * Trade-off : +1 fetch CG par minute max (cache 1h + ticker poll 30s).
+ * Acceptable vs marketCap=0 visible sur ~33 fiches du ticker.
+ */
+const _hydrateMarketCapsBatch = unstable_cache(
+  async (missingIds: string[]): Promise<Record<string, { marketCap: number; image: string }>> => {
+    if (missingIds.length === 0) return {};
+    try {
+      const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${missingIds.join(
+        ","
+      )}&order=market_cap_desc&per_page=${missingIds.length}&page=1&sparkline=false`;
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(8000),
+        next: { revalidate: 3600, tags: [CG_TAGS.prices] },
+      });
+      if (!res.ok) return {};
+      const json = (await res.json()) as Array<{
+        id: string;
+        market_cap: number | null;
+        image: string | null;
+      }>;
+      const out: Record<string, { marketCap: number; image: string }> = {};
+      for (const c of json) {
+        out[c.id] = { marketCap: c.market_cap ?? 0, image: c.image ?? "" };
+      }
+      return out;
+    } catch {
+      return {};
+    }
+  },
+  ["cg-hydrate-marketcaps-v1"],
+  { revalidate: 3600, tags: [CG_TAGS.prices] },
+);
+
+/**
  * Implementation interne de fetchPrices — wrappée par unstable_cache plus bas.
  */
 async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
@@ -138,6 +184,19 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
+
+    // FIX 2026-05-10 — Hydratation marketCap manquant pour ticker home +
+    // autocomplete. Sans ça, les cryptos servies par Binance/Kraken (qui
+    // n'ont pas marketCap) renvoyaient marketCap=0 dans /api/prices.
+    // On collecte les ids missing et on fait 1 seul fetch groupé CG free.
+    const missingMcap = snapshots
+      .filter((s) => s.priceUsd > 0 && s.marketCap <= 0 && s.source !== "static")
+      .map((s) => s.id);
+    const hydrate =
+      missingMcap.length > 0
+        ? await _hydrateMarketCapsBatch(missingMcap)
+        : {};
+
     // FIX 2026-05-08 — REGRESSION : "allWithPrice" tombait sur le fallback
     // CoinGecko (qui 429 + crashait sur COIN_META[id].symbol) si UNE SEULE
     // crypto avait priceUsd=0 (ex: frax-share absent de toutes les sources).
@@ -149,19 +208,23 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
     // meme si un coin a priceUsd=0. C'est mieux que CoinGecko 429.
     // Affichage UI : prix 0 affiche "—" via CryptoLogo / formatUsd helpers,
     // donc degradation gracieuse plutot que crash 500.
-    return snapshots.map((s) => ({
-      id: s.id as CoinId,
-      symbol: s.symbol,
-      name: s.name,
-      price: s.priceUsd,
-      change24h: s.change24h,
-      marketCap: s.marketCap,
-      // BUG FIX 2026-05-03 — image vide car CryptoLogo composant fait
-      // un lookup intelligent via lib/crypto-logos.ts (CoinGecko CDN
-      // cache hardcode + fallback initiales). URL CoinCap CDN 404 sur
-      // les coins exotiques = broken image icon visible.
-      image: "",
-    }));
+    return snapshots.map((s) => {
+      const h = hydrate[s.id];
+      return {
+        id: s.id as CoinId,
+        symbol: s.symbol,
+        name: s.name,
+        price: s.priceUsd,
+        change24h: s.change24h,
+        marketCap: s.marketCap > 0 ? s.marketCap : h?.marketCap ?? 0,
+        // BUG FIX 2026-05-03 — image vide car CryptoLogo composant fait
+        // un lookup intelligent via lib/crypto-logos.ts (CoinGecko CDN
+        // cache hardcode + fallback initiales). URL CoinCap CDN 404 sur
+        // les coins exotiques = broken image icon visible.
+        // FIX 2026-05-10 — si on a hydraté via CG, on garde son image CDN.
+        image: h?.image ?? "",
+      };
+    });
   } catch {
     // price-source unavailable (cas extreme : import.meta crash, KV down) →
     // fallback CoinGecko ci-dessous. Comme CoinGecko est lui-meme 429,
@@ -270,16 +333,29 @@ async function _fetchPricesWithSparkline(
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
     const allWithPrice = snapshots.every((s) => s.priceUsd > 0);
     if (allWithPrice) {
-      return snapshots.map((s) => ({
-        id: s.id as CoinId,
-        symbol: s.symbol,
-        name: s.name,
-        price: s.priceUsd,
-        change24h: s.change24h,
-        marketCap: s.marketCap,
-        image: "",
-        sparkline7d: s.sparkline7d, // 168 pts via Binance klines (vide si static)
-      }));
+      // FIX 2026-05-10 — Hydratation marketCap (idem _fetchPrices) pour
+      // Portfolio/Watchlist qui affichaient marketCap=0 sur les coins
+      // servis par Binance/Kraken sans marketCap.
+      const missingMcap = snapshots
+        .filter((s) => s.marketCap <= 0 && s.source !== "static")
+        .map((s) => s.id);
+      const hydrate =
+        missingMcap.length > 0
+          ? await _hydrateMarketCapsBatch(missingMcap)
+          : {};
+      return snapshots.map((s) => {
+        const h = hydrate[s.id];
+        return {
+          id: s.id as CoinId,
+          symbol: s.symbol,
+          name: s.name,
+          price: s.priceUsd,
+          change24h: s.change24h,
+          marketCap: s.marketCap > 0 ? s.marketCap : h?.marketCap ?? 0,
+          image: h?.image ?? "",
+          sparkline7d: s.sparkline7d, // 168 pts via Binance klines (vide si static)
+        };
+      });
     }
   } catch {
     // Aggregator KO -> fallback CoinGecko ci-dessous
