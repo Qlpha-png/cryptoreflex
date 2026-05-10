@@ -895,8 +895,12 @@ async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
   )}&order=market_cap_desc&per_page=${Math.min(ids.length, 250)}&page=1&sparkline=true&price_change_percentage=24h,7d`;
 
   try {
+    // FIX 2026-05-10 v8 — pas d'option `cache` ici : Next.js interdit
+    // `cache: "no-store"` à l'intérieur d'un `unstable_cache` wrapper
+    // (erreur "Dynamic server usage"). Le wrapper externe gère le cache
+    // 30min, et Next ne cache que les responses 200 OK par défaut donc
+    // les 429 transients ne sont pas empoisonnants.
     const res = await fetch(url, {
-      cache: "no-store",
       signal: AbortSignal.timeout(15000),
     });
     if (!res.ok) {
@@ -1013,15 +1017,15 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         }
 
         // Fallback per-id pour les IDs LLM (pas dans le batch statique).
-        // Cache no-store ici car unstable_cache extérieur (_fetchCoinDetail)
-        // gère le cache résultat — évite empoisonnement 429 dans fetch cache.
+        // FIX v8 — pas d'option cache ici : Next.js interdit cache:"no-store"
+        // dans unstable_cache wrapper (erreur Dynamic server usage). Le
+        // wrapper extérieur (getCachedCoinDetailFn 30min) gère le cache.
         const tryFetch = async (
           url: string,
           headers?: Record<string, string>,
         ): Promise<unknown> => {
           try {
             const r = await fetchWithRetry(url, {
-              cache: "no-store",
               ...(headers ? { headers } : {}),
             });
             return r.ok ? await r.json() : null;
