@@ -31,7 +31,7 @@
 
 import { unstable_cache } from "next/cache";
 import { getAllCryptos as getAllStaticCryptos } from "@/lib/cryptos";
-import { getFeaturedCryptos } from "@/lib/cryptos-db";
+import { getFeaturedCryptosLight } from "@/lib/cryptos-db";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -68,9 +68,12 @@ export interface UnifiedCrypto {
  */
 export const getAllCryptosUnified = unstable_cache(
   async (): Promise<UnifiedCrypto[]> => {
+    // OPTIM 2026-05-10 — getFeaturedCryptosLight au lieu de getFeaturedCryptos.
+    // 200 bytes/row vs 2127 bytes/row = -90% Supabase bandwidth.
+    // Pour 1000 rows : 2 MB → 200 KB par cache miss (1×/heure).
     const [statics, llm] = await Promise.all([
       Promise.resolve(getAllStaticCryptos()),
-      getFeaturedCryptos(1000, ["T1", "T2", "T3"]),
+      getFeaturedCryptosLight(1000, ["T1", "T2", "T3"]),
     ]);
 
     // Set des coingeckoIds statiques pour eviter doublons LLM (BTC, ETH...).

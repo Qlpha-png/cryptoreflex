@@ -198,6 +198,46 @@ export async function getPublishedCoingeckoIds(
   }
 }
 
+/**
+ * OPTIM 2026-05-10 — version LIGHT pour les cas qui n'ont pas besoin de
+ * raw_data_snapshot + llm_content (qui font 90% de la taille des rows).
+ * Champs : juste coingecko_id, name, symbol, categories, market_cap_rank.
+ *
+ * Bandwidth : ~200 bytes/row vs 2127 bytes/row = -90%.
+ * Utilisé par getAllCryptosUnified (cache 1h × 1000 rows × 2 MB → 200 KB).
+ */
+export interface CryptoFicheLight {
+  coingecko_id: string;
+  name: string;
+  symbol: string;
+  categories: string[];
+  market_cap_rank: number | null;
+}
+
+export async function getFeaturedCryptosLight(
+  limit = 50,
+  tiers: QualityTier[] = ["T1", "T2"],
+): Promise<CryptoFicheLight[]> {
+  const sb = createSupabaseServiceRoleClient();
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb
+      .from("cryptos")
+      .select("coingecko_id, name, symbol, categories, market_cap_rank")
+      .eq("is_published", true)
+      .in("quality_tier", tiers)
+      .order("market_cap_rank", { ascending: true, nullsFirst: false })
+      .limit(limit);
+    if (error) {
+      console.warn(`[cryptos-db] getFeaturedCryptosLight error:`, error.message);
+      return [];
+    }
+    return (data as CryptoFicheLight[]) ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getFeaturedCryptos(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],
