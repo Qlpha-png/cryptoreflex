@@ -86,12 +86,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     .map((c) => c.coingeckoId)
     .filter(Boolean);
 
-  // OPTIM 2026-05-10 — top 50 LLM (par market_cap_rank) → ajoutés au batch.
-  // Total ~150 ids dans 1 fetch CG /coins/markets (max 250 ids/fetch).
-  // Couvre les fiches LLM les plus visitées (T1+T2 par mcap).
+  // OPTIM 2026-05-10 v2 — TOUTES les fiches LLM (T1+T2+T3 published) ajoutées
+  // au batch. Total ~780 ids splittés en chunks de 250 (max CG /coins/markets).
+  // ~4 fetches CG par run = couvre 100% des fiches du site avec ATH/ATL/sparkline.
+  // Économie majeure : plus aucun fallback CG live nécessaire pour les LLM.
   let llmIds: string[] = [];
   try {
-    const llmFiches = await getFeaturedCryptos(50, ["T1", "T2"]);
+    // 1000 = limite haute safe (le site a ~680 LLM en mai 2026, marge si croissance)
+    const llmFiches = await getFeaturedCryptos(1000, ["T1", "T2", "T3"]);
     llmIds = llmFiches
       .map((f) => f.coingecko_id)
       .filter((id) => id && !staticIds.includes(id));
@@ -108,44 +110,58 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
-    ",",
-  )}&order=market_cap_desc&per_page=${Math.min(ids.length, 250)}&page=1&sparkline=true&price_change_percentage=24h,7d`;
-
-  let json: CGMarketsRow[] = [];
-  try {
-    const res = await fetch(url, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(20000),
-    });
-    if (!res.ok) {
-      const errMsg = `CG /coins/markets returned ${res.status}`;
-      Sentry.captureMessage(errMsg, "warning");
-      return NextResponse.json(
-        {
-          ok: false,
-          error: errMsg,
-          durationMs: Date.now() - startedAt,
-          hint: "CG free rate-limited from this IP. Will retry next cron cycle.",
-        },
-        { status: 502 },
-      );
-    }
-    json = (await res.json()) as CGMarketsRow[];
-  } catch (err) {
-    const errMsg = err instanceof Error ? err.message : "unknown";
-    Sentry.captureException(err);
-    return NextResponse.json(
-      { ok: false, error: `CG fetch failed: ${errMsg}`, durationMs: Date.now() - startedAt },
-      { status: 502 },
-    );
+  // Split en chunks de 250 (max CG /coins/markets per_page).
+  // 780 ids → 4 chunks (250+250+250+30). Sleep 1.5s entre chunks pour
+  // rester sous CG free 50/min (40/min effectif = très safe).
+  const CHUNK_SIZE = 250;
+  const SLEEP_BETWEEN_CHUNKS_MS = 1500;
+  const chunks: string[][] = [];
+  for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
+    chunks.push(ids.slice(i, i + CHUNK_SIZE));
   }
 
-  // Build Record<string, CGMarketsRow> for KV storage (JSON-serializable).
   const record: Record<string, CGMarketsRow> = {};
-  for (const c of json) {
-    if (c?.id) record[c.id] = c;
+  let chunkErrors = 0;
+
+  for (let chunkIdx = 0; chunkIdx < chunks.length; chunkIdx++) {
+    const chunk = chunks[chunkIdx];
+    const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${chunk.join(
+      ",",
+    )}&order=market_cap_desc&per_page=${chunk.length}&page=1&sparkline=true&price_change_percentage=24h,7d`;
+
+    try {
+      const res = await fetch(url, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!res.ok) {
+        chunkErrors++;
+        Sentry.addBreadcrumb({
+          category: "cron",
+          message: `refresh-static-details chunk ${chunkIdx + 1}/${chunks.length} returned ${res.status}`,
+          level: "warning",
+        });
+        continue; // on passe au chunk suivant, on garde ce qu'on a déjà
+      }
+      const json = (await res.json()) as CGMarketsRow[];
+      for (const c of json) {
+        if (c?.id) record[c.id] = c;
+      }
+    } catch (err) {
+      chunkErrors++;
+      Sentry.addBreadcrumb({
+        category: "cron",
+        message: `refresh-static-details chunk ${chunkIdx + 1} failed: ${err instanceof Error ? err.message : "unknown"}`,
+        level: "warning",
+      });
+    }
+
+    // Sleep entre chunks pour ne pas saturer CG free (40/min effectif)
+    if (chunkIdx < chunks.length - 1) {
+      await new Promise((r) => setTimeout(r, SLEEP_BETWEEN_CHUNKS_MS));
+    }
   }
+
   const fetched = Object.keys(record).length;
 
   if (fetched === 0) {
@@ -198,6 +214,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     requestedIds: ids.length,
     staticIds: staticIds.length,
     llmIds: llmIds.length,
+    chunks: chunks.length,
+    chunkErrors,
     coverage: `${fetched}/${ids.length}`,
     durationMs,
     ttlSeconds: KV_TTL_SECONDS,
