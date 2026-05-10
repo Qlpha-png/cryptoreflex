@@ -1042,7 +1042,15 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
       // STATIC_FALLBACK les couvre → snap.source="static" → skip hydrate.
       // Le batch KV contient ATH/ATL pour ces 10 aussi (peuplé par cron),
       // donc on hydrate quand même, ATH/ATL meilleur que rien.
-      const needsHydration = !isBuildPhase;
+      //
+      // FIX 2026-05-10 v18 — retire aussi `!isBuildPhase`. Top 10 est
+      // pré-rendered SSG via generateStaticParams → au build time avec
+      // isBuildPhase=true, le hydrate était skip → HTML pre-rendered
+      // contient ATH=— et persiste jusqu'au prochain bust (rare). Le
+      // KV read est ultra-rapide (~50ms × 10 builds = 500ms total),
+      // surcoût build négligeable et garantit ATH/ATL au build comme
+      // au runtime.
+      const needsHydration = true;
       if (needsHydration) {
         // FIX 2026-05-10 v7 (BATCHED HYDRATE) — Audit v5 montrait 24/100 ATH OK,
         // v6 (cache:no-store) a chuté à 0/100 (race condition saturation CG).
