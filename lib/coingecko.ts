@@ -808,52 +808,109 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         snap.marketCap <= 0 &&
         !isBuildPhase;
       if (needsHydration) {
+        // FIX 2026-05-10 v2 — CoinGecko Demo key SATURÉE (10K/mois atteint).
+        // Cascade hydration : tente d'abord SANS clé Demo (50/min sans cap
+        // mensuel), fallback sur CoinPaprika (free 25K/mois sans key) si fail.
+        // Cache 24h pour minimiser les calls (vs 30min avant).
+        const tryFetch = async (
+          url: string,
+          headers?: Record<string, string>,
+        ): Promise<unknown> => {
+          try {
+            const r = await fetchWithRetry(url, {
+              next: { revalidate: 86400, tags: [cgCryptoTag(coingeckoId)] },
+              ...(headers ? { headers } : {}),
+            });
+            return r.ok ? await r.json() : null;
+          } catch {
+            return null;
+          }
+        };
+
+        // 1. CoinGecko free (NO Demo key) — 50/min sans cap mensuel.
+        const cgUrl = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
+        let cgData = (await tryFetch(cgUrl)) as Array<{
+          id: string;
+          symbol: string;
+          name: string;
+          image: string;
+          market_cap: number | null;
+          market_cap_rank: number | null;
+          circulating_supply: number | null;
+          total_supply: number | null;
+          max_supply: number | null;
+          ath: number | null;
+          ath_date: string | null;
+          atl: number | null;
+          atl_date: string | null;
+          sparkline_in_7d?: { price: number[] };
+        }> | null;
+
+        const c = cgData?.[0];
+        if (c) {
+          return {
+            id: c.id,
+            symbol: c.symbol.toUpperCase(),
+            name: c.name,
+            image: c.image,
+            currentPrice: snap.priceUsd, // garde le live du provider rapide
+            priceChange24h: snap.change24h,
+            priceChange7d: snap.change7d,
+            marketCap: c.market_cap ?? 0,
+            marketCapRank: c.market_cap_rank ?? 0,
+            totalVolume: snap.volume24h,
+            circulatingSupply: c.circulating_supply ?? 0,
+            totalSupply: c.total_supply,
+            maxSupply: c.max_supply,
+            ath: c.ath ?? 0,
+            athDate: c.ath_date,
+            atl: c.atl ?? 0,
+            atlDate: c.atl_date,
+            sparkline7d: snap.sparkline7d?.length
+              ? snap.sparkline7d
+              : (c.sparkline_in_7d?.price ?? []),
+          };
+        }
+
+        // 2. Fallback CoinPaprika — free 25K/mois sans key, sans rate limit minute.
+        // Endpoint : /tickers/{coin_id} mais leurs IDs sont différents (ex: snx-synthetix).
+        // On utilise /search?q={coingeckoId} d'abord pour trouver le coin_id.
+        // Pragmatique : on récupère juste market_cap + supply + ATH/ATL.
         try {
-          const cgUrl = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${coingeckoId}&order=market_cap_desc&per_page=1&page=1&sparkline=true&price_change_percentage=24h,7d`;
-          const r = await fetchWithRetry(cgUrl, {
-            next: { revalidate: 1800, tags: [cgCryptoTag(coingeckoId)] },
-            headers: cgHeaders(),
-          });
-          if (r.ok) {
-            const j = (await r.json()) as Array<{
-              id: string;
-              symbol: string;
-              name: string;
-              image: string;
-              market_cap: number | null;
-              market_cap_rank: number | null;
-              circulating_supply: number | null;
-              total_supply: number | null;
-              max_supply: number | null;
-              ath: number | null;
-              ath_date: string | null;
-              atl: number | null;
-              atl_date: string | null;
-              sparkline_in_7d?: { price: number[] };
-            }>;
-            const c = j?.[0];
-            if (c) {
+          const search = (await tryFetch(
+            `https://api.coinpaprika.com/v1/search?q=${snap.symbol}&c=currencies&limit=1`,
+          )) as { currencies?: Array<{ id: string }> } | null;
+          const cpId = search?.currencies?.[0]?.id;
+          if (cpId) {
+            const ticker = (await tryFetch(
+              `https://api.coinpaprika.com/v1/tickers/${cpId}`,
+            )) as {
+              quotes?: { USD?: { market_cap?: number; ath_price?: number } };
+              circulating_supply?: number;
+              total_supply?: number;
+              max_supply?: number;
+              rank?: number;
+            } | null;
+            if (ticker?.quotes?.USD?.market_cap) {
               return {
-                id: c.id,
-                symbol: c.symbol.toUpperCase(),
-                name: c.name,
-                image: c.image,
-                currentPrice: snap.priceUsd, // garde le live du provider rapide
+                id: coingeckoId,
+                symbol: snap.symbol,
+                name: snap.name,
+                image: "",
+                currentPrice: snap.priceUsd,
                 priceChange24h: snap.change24h,
                 priceChange7d: snap.change7d,
-                marketCap: c.market_cap ?? 0,
-                marketCapRank: c.market_cap_rank ?? 0,
+                marketCap: ticker.quotes.USD.market_cap,
+                marketCapRank: ticker.rank ?? 0,
                 totalVolume: snap.volume24h,
-                circulatingSupply: c.circulating_supply ?? 0,
-                totalSupply: c.total_supply,
-                maxSupply: c.max_supply,
-                ath: c.ath ?? 0,
-                athDate: c.ath_date,
-                atl: c.atl ?? 0,
-                atlDate: c.atl_date,
-                sparkline7d: snap.sparkline7d?.length
-                  ? snap.sparkline7d
-                  : (c.sparkline_in_7d?.price ?? []),
+                circulatingSupply: ticker.circulating_supply ?? 0,
+                totalSupply: ticker.total_supply ?? null,
+                maxSupply: ticker.max_supply ?? null,
+                ath: ticker.quotes.USD.ath_price ?? 0,
+                athDate: null,
+                atl: 0,
+                atlDate: null,
+                sparkline7d: snap.sparkline7d ?? [],
               };
             }
           }
