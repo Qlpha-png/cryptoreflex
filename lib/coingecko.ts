@@ -958,13 +958,18 @@ async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>>
   return record;
 }
 
-const _hydrateStaticDetailsBatch = unstable_cache(
-  _fetchStaticDetailsBatch,
-  ["cg-hydrate-static-details-batch-v1"],
-  // 30min cache. Si batch fail (CG down), on retente dans 30min — entre-temps
-  // le fallback per-id kick in pour chaque crypto demandée.
-  { revalidate: 1800, tags: [CG_TAGS.market] },
-);
+// FIX 2026-05-10 v12 — RETIRE unstable_cache wrapper.
+// Symptôme : audit v11 montrait ath=63/100 alors que KV était bien
+// peuplé (99/100 entries). Cause : `_fetchStaticDetailsBatch` THROW
+// quand KV vide ET CG 429 (cas du cold start initial). `unstable_cache`
+// cache aussi les throws pendant 30min → batch toujours vide même
+// après peuplement KV.
+//
+// Solution : appel direct sans wrapper. Le KV read est ultra-rapide
+// (~50ms via Upstash REST), pas besoin de cache mémoire process.
+// Bénéfices : zéro empoisonnement cache, lecture KV à chaque request
+// = données toujours fraîches dès le 1er hit après cron passage.
+const _hydrateStaticDetailsBatch = _fetchStaticDetailsBatch;
 
 async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
   // FIX 2026-05-06 BUILD PERF — Skip CoinGecko fallback au build-time.
