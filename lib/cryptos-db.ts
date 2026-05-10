@@ -19,6 +19,7 @@
  *  - Permet de deploy le code AVANT la migration sans casser le site
  */
 
+import { unstable_cache } from "next/cache";
 import { createSupabaseServerClient, createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 
 /* -------------------------------------------------------------------------- */
@@ -82,7 +83,7 @@ export interface CryptoFicheRow {
  * configurées en SSG/ISR. Comme on lit uniquement des fiches publiques
  * (is_published=true), pas besoin de session — service-role va bien.
  */
-export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
+async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFicheRow | null> {
   const sb = createSupabaseServiceRoleClient();
   if (!sb) return null;
   try {
@@ -106,11 +107,28 @@ export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRo
 }
 
 /**
+ * OPTIM 2026-05-10 — cache unstable_cache 1h pour réduire bandwidth Supabase.
+ * Avant : 1 query DB par visite /cryptos/[slug] LLM (~2 KB row).
+ * Après : 1 query DB par crypto par heure max → -95% Supabase bandwidth.
+ *
+ * Cache key inclut coingeckoId. Tag granulaire pour invalidation ciblée
+ * via revalidateTag(`crypto-fiche:${id}`) si raw_data_snapshot mis à jour.
+ */
+export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
+  const cached = unstable_cache(
+    () => _getCryptoFicheUncached(coingeckoId),
+    [`crypto-fiche-v1`, coingeckoId],
+    { revalidate: 3600, tags: [`crypto-fiche:${coingeckoId}`] },
+  );
+  return cached();
+}
+
+/**
  * Fetch fiche par slug (URL parameter). Equivalent semantique au lookup
  * coingeckoId mais separe car le slug peut differer (ex: "mantra" slug vs
  * "mantra-dao" coingeckoId historique — desormais alignes).
  */
-export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow | null> {
+async function _getCryptoFicheBySlugUncached(slug: string): Promise<CryptoFicheRow | null> {
   const sb = createSupabaseServiceRoleClient();
   if (!sb) return null;
   try {
@@ -130,11 +148,56 @@ export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow
   }
 }
 
+export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow | null> {
+  const cached = unstable_cache(
+    () => _getCryptoFicheBySlugUncached(slug),
+    [`crypto-fiche-by-slug-v1`, slug],
+    { revalidate: 3600, tags: [`crypto-fiche-slug:${slug}`] },
+  );
+  return cached();
+}
+
 /**
  * Top fiches par market cap. Filtre par quality_tier optionnel
  * (par defaut T1+T2 pour qualite verifiee — utilise sur pages "vedettes").
  * Pour scaler la liste exhaustive (10K), passer tiers=["T1","T2","T3"].
  */
+/**
+ * Light helper : retourne UNIQUEMENT les coingecko_id des fiches publiées.
+ *
+ * Pourquoi : pour les crons KV qui ont besoin juste de la liste d'ids
+ * (refresh-static-details, etc.), `select("*")` rapatrie ~2 KB par row
+ * incl. raw_data_snapshot + llm_content lourds. `select("coingecko_id")`
+ * = ~30 bytes/row → 70× moins de Supabase bandwidth.
+ *
+ * Pour 680 LLM × 1×/jour : 30 KB/jour vs 1.4 MB/jour (-98%).
+ */
+export async function getPublishedCoingeckoIds(
+  limit = 1000,
+  tiers: QualityTier[] = ["T1", "T2", "T3"],
+): Promise<string[]> {
+  const sb = createSupabaseServiceRoleClient();
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb
+      .from("cryptos")
+      .select("coingecko_id")
+      .eq("is_published", true)
+      .in("quality_tier", tiers)
+      .order("market_cap_rank", { ascending: true, nullsFirst: false })
+      .limit(limit);
+    if (error) {
+      console.warn(`[cryptos-db] getPublishedCoingeckoIds error:`, error.message);
+      return [];
+    }
+    return ((data as Array<{ coingecko_id: string }>) ?? [])
+      .map((r) => r.coingecko_id)
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export async function getFeaturedCryptos(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],

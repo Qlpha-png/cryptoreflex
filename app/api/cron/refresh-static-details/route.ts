@@ -33,7 +33,7 @@ import { getKv } from "@/lib/kv";
 import topCryptosData from "@/data/top-cryptos.json";
 import hiddenGemsData from "@/data/hidden-gems.json";
 import { KV_STATIC_DETAILS_KEY } from "@/lib/coingecko";
-import { getFeaturedCryptos } from "@/lib/cryptos-db";
+import { getPublishedCoingeckoIds } from "@/lib/cryptos-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -90,13 +90,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // au batch. Total ~780 ids splittés en chunks de 250 (max CG /coins/markets).
   // ~4 fetches CG par run = couvre 100% des fiches du site avec ATH/ATL/sparkline.
   // Économie majeure : plus aucun fallback CG live nécessaire pour les LLM.
+  //
+  // OPTIM 2026-05-10 v3 — getPublishedCoingeckoIds (light) au lieu de
+  // getFeaturedCryptos (lourd). Bandwidth Supabase 70× moindre :
+  // 30 bytes/row vs 2127 bytes/row (n'inclut que coingecko_id, pas
+  // raw_data_snapshot + llm_content).
   let llmIds: string[] = [];
   try {
-    // 1000 = limite haute safe (le site a ~680 LLM en mai 2026, marge si croissance)
-    const llmFiches = await getFeaturedCryptos(1000, ["T1", "T2", "T3"]);
-    llmIds = llmFiches
-      .map((f) => f.coingecko_id)
-      .filter((id) => id && !staticIds.includes(id));
+    const ids = await getPublishedCoingeckoIds(1000, ["T1", "T2", "T3"]);
+    llmIds = ids.filter((id) => id && !staticIds.includes(id));
   } catch {
     // DB indispo — on continue avec les statiques seulement
   }
@@ -114,7 +116,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // 780 ids → 4 chunks (250+250+250+30). Sleep 1.5s entre chunks pour
   // rester sous CG free 50/min (40/min effectif = très safe).
   const CHUNK_SIZE = 250;
-  const SLEEP_BETWEEN_CHUNKS_MS = 1500;
+  // OPTIM 2026-05-10 v3 — sleep 1.5s → 5s. Audit montrait que le 4e chunk
+  // failait systématiquement à cause de CG free 50/min limit (3 chunks ×
+  // 250 = 750 ids fetched en quelques secondes = trop rapide). 5s entre
+  // chunks = 12/min effectif = très safe sous CG limit.
+  const SLEEP_BETWEEN_CHUNKS_MS = 5000;
   const chunks: string[][] = [];
   for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
     chunks.push(ids.slice(i, i + CHUNK_SIZE));
