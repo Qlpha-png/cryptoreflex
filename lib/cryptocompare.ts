@@ -152,7 +152,11 @@ const getBatch = unstable_cache(
   // OPTIM 2026-05-10 — TTL 5min → 15min. Marche pour cap (bouge peu)
   // et price (10s d'écart vs Binance acceptable, on a le live cascade
   // pour les requêtes critiques). Économie : 288 → 96 fetches CC/jour.
-  { revalidate: 900, tags: ["price-source", "cryptocompare-batch"] },
+  // OPTIM 2026-05-11 — 15min → 1h. CryptoCompare dépassait 172% du quota
+  // free 250K/mois (96 × 5 chunks/jour = 14.4K/jour = 432K/mois).
+  // Avec 1h cache : 24 × 5 chunks = 120 fetches/jour = 3.6K/mois ✓ (1.4%).
+  // CC sert le marketCap fallback (non critique car KV le couvre déjà).
+  { revalidate: 3600, tags: ["price-source", "cryptocompare-batch"] },
 );
 
 /**
