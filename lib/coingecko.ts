@@ -1314,7 +1314,9 @@ function getCachedCoinDetailFn(
       }
       return result;
     },
-    ["coingecko-coin-detail-v2", coingeckoId],
+    // BUMP v2 → v3 — invalide tous les caches CoinDetail empoisonnés par
+    // les itérations v3-v11 qui retournaient bare snapshots avec ATH=0.
+    ["coingecko-coin-detail-v3", coingeckoId],
     // BATCH 50 — 300s -> 1800s (30 min)
     { revalidate: 1800, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
   );
