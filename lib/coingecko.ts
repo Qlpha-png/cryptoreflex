@@ -882,10 +882,16 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
       // /simple/price renvoie source=coingecko SANS marketCap (33 fiches
       // affectées : dai, ethena, gala, kaspa, io-net, immutable, ...).
       // Static fallback exclu car marketCap dérivé localement (déjà bon).
-      const needsHydration =
-        snap.source !== "static" &&
-        snap.marketCap <= 0 &&
-        !isBuildPhase;
+      //
+      // FIX 2026-05-10 v5 (USER FEEDBACK Bonk avec ATH/ATL/sparkline manquants) —
+      // suppression de la condition `snap.marketCap <= 0`. Raison : depuis
+      // commit f2ba1d0 (hydrate L2 CryptoCompare batch dans price-source.ts),
+      // le snap a marketCap > 0 grâce au batch CC, donc cette condition
+      // n'était plus jamais vraie → 100/100 fiches sans ATH/ATL/sparkline7d
+      // hydrate. Solution : hydrate TOUJOURS (sauf static/build), le cache
+      // unstable_cache 30min limite à 1 fetch CG/crypto/30min = ~3.3/min en
+      // moyenne pour 100 fiches simultanées (sous CG free 50/min limit).
+      const needsHydration = snap.source !== "static" && !isBuildPhase;
       if (needsHydration) {
         // FIX 2026-05-10 v2 — CoinGecko Demo key SATURÉE (10K/mois atteint).
         // Cascade hydration : tente d'abord SANS clé Demo (50/min sans cap
