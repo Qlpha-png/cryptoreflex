@@ -1,0 +1,34 @@
+name: Refresh ticker prices KV (every 10 min)
+
+# Pré-charge top 50 cryptos en KV via cron CG /coins/markets — découple
+# /api/prices du rate limit CG live. KV TTL 6min, donc 10min cron = 4min
+# de marge si retry GH Actions slow.
+#
+# Coût GH Actions : ~144 runs/jour × ~15s = ~36 min/jour = 1080 min/mois.
+# Sous le free tier 2000 min/mois (32% utilisation).
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-ticker-prices
+  cancel-in-progress: true
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Trigger /api/cron/refresh-ticker-prices
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --max-time 60 \
+            "https://www.cryptoreflex.fr/api/cron/refresh-ticker-prices" \
+            -o /tmp/response.json
+          cat /tmp/response.json

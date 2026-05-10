@@ -149,7 +149,10 @@ const getBatch = unstable_cache(
   // 59-symbols batch (avant le retry fix 2b92b35). Le cache key v1
   // restait stale 5 min meme apres le code update.
   ["cryptocompare-batch-v2"],
-  { revalidate: 300, tags: ["price-source", "cryptocompare-batch"] },
+  // OPTIM 2026-05-10 — TTL 5min → 15min. Marche pour cap (bouge peu)
+  // et price (10s d'écart vs Binance acceptable, on a le live cascade
+  // pour les requêtes critiques). Économie : 288 → 96 fetches CC/jour.
+  { revalidate: 900, tags: ["price-source", "cryptocompare-batch"] },
 );
 
 /**

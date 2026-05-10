@@ -52,7 +52,11 @@ const REFRESH_DEADLINE_MS = 55_000;
 const COINGECKO_PAGE_SIZE = 250;
 
 /** Nombre max de pages à fetch (4 × 250 = 1000 cryptos). 780 < 1000 ⇒ couverture totale. */
-const COINGECKO_MAX_PAGES = 4;
+// OPTIM 2026-05-10 — 4 → 2 pages. 2 × 250 = 500 cryptos par run = couvre top
+// 100 statiques + ~400 LLM les plus populaires (les long-tail LLM ont leur
+// propre raw_data_snapshot DB qui se rafraîchit via cron LLM-pipeline).
+// Économie : 4 → 2 fetches CG par run × 2 runs/jour = 4 fetches/jour vs 8.
+const COINGECKO_MAX_PAGES = 2;
 
 /** Taille des chunks pour les UPDATE Supabase (évite payload trop gros + transaction longue). */
 const SUPABASE_UPSERT_CHUNK = 100;

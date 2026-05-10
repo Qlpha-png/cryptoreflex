@@ -67,6 +67,10 @@ const SUB_CRONS = [
   // Découple les pages user du rate-limit CG live (serveur Coolify
   // régulièrement IP-banni par CG free).
   { name: "refresh-static-details", path: "/api/cron/refresh-static-details", critical: false },
+  // OPTIM 2026-05-10 — pré-charge top 50 ticker prices en KV (TTL 6min).
+  // Ticker home + autocomplete + portfolio lisent KV → 0 cascade live.
+  // 2 fetches CG/jour ici (vs ~100/jour avant via cascade live miss).
+  { name: "refresh-ticker-prices", path: "/api/cron/refresh-ticker-prices", critical: false },
   { name: "evaluate-alerts", path: "/api/cron/evaluate-alerts", critical: true },
   // Fix audit backend 30/04/2026 — cron email-series-fiscalite n'était JAMAIS
   // déclenché en prod (manquait dans vercel.json ET ici). Conséquence : les
