@@ -1037,7 +1037,12 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
       // hydrate. Solution : hydrate TOUJOURS (sauf static/build), le cache
       // unstable_cache 30min limite à 1 fetch CG/crypto/30min = ~3.3/min en
       // moyenne pour 100 fiches simultanées (sous CG free 50/min limit).
-      const needsHydration = snap.source !== "static" && !isBuildPhase;
+      // FIX 2026-05-10 v17 — retire condition `source !== "static"`. Audit
+      // v16 : top 10 (bitcoin, eth, bnb, cardano, ...) tous BAD ATH car
+      // STATIC_FALLBACK les couvre → snap.source="static" → skip hydrate.
+      // Le batch KV contient ATH/ATL pour ces 10 aussi (peuplé par cron),
+      // donc on hydrate quand même, ATH/ATL meilleur que rien.
+      const needsHydration = !isBuildPhase;
       if (needsHydration) {
         // FIX 2026-05-10 v7 (BATCHED HYDRATE) — Audit v5 montrait 24/100 ATH OK,
         // v6 (cache:no-store) a chuté à 0/100 (race condition saturation CG).
