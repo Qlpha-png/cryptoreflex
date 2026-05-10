@@ -801,9 +801,12 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
       // 100% des fiches ATH/ATL="—", 65 fiches sparkline vide.
       // Cache 30min sur l'hydrate, try/catch silencieux : si CG fail, on
       // retombe sur le snapshot bare (pas pire qu'avant).
+      // FIX 2026-05-10 v3 — hydrate dès que marketCap manquant, peu importe
+      // la source. Avant : on skippait si source === "coingecko" mais
+      // /simple/price renvoie source=coingecko SANS marketCap (33 fiches
+      // affectées : dai, ethena, gala, kaspa, io-net, immutable, ...).
+      // Static fallback exclu car marketCap dérivé localement (déjà bon).
       const needsHydration =
-        snap.source !== "coingecko" &&
-        snap.source !== "coincap" &&
         snap.source !== "static" &&
         snap.marketCap <= 0 &&
         !isBuildPhase;
