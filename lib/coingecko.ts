@@ -894,32 +894,34 @@ async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
     ",",
   )}&order=market_cap_desc&per_page=${Math.min(ids.length, 250)}&page=1&sparkline=true&price_change_percentage=24h,7d`;
 
-  try {
-    // FIX 2026-05-10 v8 — pas d'option `cache` ici : Next.js interdit
-    // `cache: "no-store"` à l'intérieur d'un `unstable_cache` wrapper
-    // (erreur "Dynamic server usage"). Le wrapper externe gère le cache
-    // 30min, et Next ne cache que les responses 200 OK par défaut donc
-    // les 429 transients ne sont pas empoisonnants.
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!res.ok) {
-      console.warn(`[coingecko] hydrate batch returned ${res.status}`);
-      return new Map();
-    }
-    const json = (await res.json()) as CGMarketsRow[];
-    const map = new Map<string, CGMarketsRow>();
-    for (const c of json) {
-      if (c?.id) map.set(c.id, c);
-    }
-    return map;
-  } catch (err) {
-    console.warn(
-      `[coingecko] hydrate batch failed:`,
-      err instanceof Error ? err.message : "unknown",
-    );
-    return new Map();
+  // FIX 2026-05-10 v8 — pas d'option `cache` ici : Next.js interdit
+  // `cache: "no-store"` à l'intérieur d'un `unstable_cache` wrapper
+  // (erreur "Dynamic server usage"). Le wrapper externe gère le cache
+  // 30min, et Next ne cache que les responses 200 OK par défaut donc
+  // les 429 transients ne sont pas empoisonnants.
+  //
+  // FIX 2026-05-10 v9 — THROW sur échec au lieu de return empty Map.
+  // Audit v8 montrait ath=40/100 alors que CG était dispo : la map vide
+  // était cachée 30min par unstable_cache, donc toutes les fiches
+  // tombaient sur fallback per-id pendant 30min → spam CG → 429.
+  // Solution : throw pour bypass cache, le caller catch et fallback.
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) {
+    throw new Error(`CG_BATCH_${res.status}`);
   }
+  const json = (await res.json()) as CGMarketsRow[];
+  const map = new Map<string, CGMarketsRow>();
+  for (const c of json) {
+    if (c?.id) map.set(c.id, c);
+  }
+  if (map.size === 0) {
+    // Empty result = CG returned 200 but no data (rare). Throw to avoid
+    // caching an empty map, which would force fallback per-id for 30min.
+    throw new Error("CG_BATCH_EMPTY");
+  }
+  return map;
 }
 
 const _hydrateStaticDetailsBatch = unstable_cache(
@@ -989,7 +991,16 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         // statiques d'un coup, cached 30min via unstable_cache externe.
         // Bénéfices : 2 fetch CG/heure au lieu de 100+, couverture 100%
         // atomique, zéro race condition, sous le 50/min CG free trivialement.
-        const batchDetails = await _hydrateStaticDetailsBatch();
+        //
+        // FIX v9 : try/catch car _fetchStaticDetailsBatch throw maintenant
+        // sur échec (bypass cache empty map). Si throw → batchDetails reste
+        // empty → fallback per-id en aval comme avant.
+        let batchDetails = new Map<string, CGMarketsRow>();
+        try {
+          batchDetails = await _hydrateStaticDetailsBatch();
+        } catch {
+          // CG batch failed — fallback per-id below
+        }
         const c = batchDetails.get(coingeckoId);
         if (c) {
           return {
