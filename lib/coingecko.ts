@@ -1325,7 +1325,7 @@ function getCachedCoinDetailFn(
 }
 
 export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
-  // FIX 2026-05-10 v14 — bypass getCachedCoinDetailFn (unstable_cache 30min).
+  // FIX 2026-05-10 v14/v15 — bypass getCachedCoinDetailFn (unstable_cache 30min).
   // Symptômes :
   //   - audit étendu v9-v13 : ATH=14-63/100 alors que KV peuplé 99/100
   //   - /api/diag-detail?id=gmx via fetchCoinDetail retourne ath=91.07 OK
@@ -1338,7 +1338,16 @@ export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail |
   // hydrate lit KV (~50ms via Upstash REST), surcoût négligeable. La
   // page elle-même garde son ISR 1h via `export const revalidate = 3600`,
   // donc on ne hit pas KV à chaque request user (juste au revalidate).
-  return _fetchCoinDetail(coingeckoId);
+  //
+  // FIX v15 — wrap in try/catch : sans wrapper unstable_cache, les throws
+  // de `_fetchStaticDetailsBatch` (CG_BATCH_429) propageaient jusqu'à
+  // la page → 500 Internal Server Error. catch + return null = page
+  // affiche fallback "Données indisponibles" au lieu de crasher.
+  try {
+    return await _fetchCoinDetail(coingeckoId);
+  } catch {
+    return null;
+  }
 }
 
 /** Format compact pour les supplies (ex: 19.7M, 120B). */
