@@ -875,6 +875,13 @@ interface CGMarketsRow {
  * Ne couvre PAS les fiches LLM (~680) — celles-ci ont leur propre fallback
  * per-id dans _fetchCoinDetail (cache no-store + unstable_cache 30min).
  */
+/**
+ * KV key où le cron /api/cron/refresh-static-details stocke le batch
+ * des 100 fiches statiques. Lu en priorité par _fetchCoinDetail avant
+ * tout fallback CG live (qui est rate-limited en pratique).
+ */
+export const KV_STATIC_DETAILS_KEY = "cg-static-details:v1";
+
 async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>> {
   // FIX 2026-05-10 v10 — RETURN RECORD AU LIEU DE MAP : `unstable_cache`
   // sérialise via JSON, et Map devient `{}` à la lecture (audit v9 :
@@ -882,6 +889,27 @@ async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>>
   // la Map en mémoire vivante, les 99 suivantes lisaient le cache JSON
   // qui était un objet vide). Record<string, ...> est nativement JSON.
   //
+  // FIX 2026-05-10 v11 — TENTATIVE KV EN PREMIER. Le serveur Coolify
+  // est régulièrement IP-banni par CG free (autres workloads spam CG
+  // au point qu'on hit 429 sur curl direct depuis le container). Le
+  // cron `refresh-static-details` pré-charge KV à fréquence basse
+  // (4×/jour suffit pour ATH/ATL qui bougent peu). Lecture KV → cache
+  // mémoire 30min → 0 fetch CG live nécessaire dans 99% des cas.
+  try {
+    const { getKv } = await import("@/lib/kv");
+    const kv = getKv();
+    if (!kv.mocked) {
+      const cached = await kv.get<Record<string, CGMarketsRow>>(
+        KV_STATIC_DETAILS_KEY,
+      );
+      if (cached && Object.keys(cached).length > 0) {
+        return cached;
+      }
+    }
+  } catch {
+    // KV indispo → fallback CG live ci-dessous
+  }
+
   // Lazy import pour éviter cycle de dépendance avec lib/cryptos.ts
   const [topData, gemsData] = await Promise.all([
     import("@/data/top-cryptos.json"),
