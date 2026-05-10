@@ -2665,7 +2665,7 @@
       "id": "io-net",
       "name": "io.net",
       "symbol": "IO",
-      "coingeckoId": "io-net",
+      "coingeckoId": "io",
       "marketCapRange": "200M$ - 800M$",
       "yearCreated": 2023,
       "category": "DePIN / GPU Compute for AI",

@@ -61,6 +61,12 @@ const PER_JOB_TIMEOUT_MS = 90_000;
  */
 const SUB_CRONS = [
   { name: "refresh-prices", path: "/api/cron/refresh-prices", critical: false },
+  // FIX 2026-05-10 v11+ — pré-charge ATH/ATL/sparkline/supply en KV pour
+  // les 100 fiches éditoriales statiques. 1 fetch CG /coins/markets en
+  // batch couvre les 100 IDs d'un coup (TTL 8h, refresh 1×/jour suffit).
+  // Découple les pages user du rate-limit CG live (serveur Coolify
+  // régulièrement IP-banni par CG free).
+  { name: "refresh-static-details", path: "/api/cron/refresh-static-details", critical: false },
   { name: "evaluate-alerts", path: "/api/cron/evaluate-alerts", critical: true },
   // Fix audit backend 30/04/2026 — cron email-series-fiscalite n'était JAMAIS
   // déclenché en prod (manquait dans vercel.json ET ici). Conséquence : les
