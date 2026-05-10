@@ -507,7 +507,35 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   if (cascadeResult) {
     const { data, source } = cascadeResult;
     const sparkline = data.sparkline7d ?? [];
-    const marketCap = data.marketCap ?? estimateMarketCap(coingeckoId, data.priceUsd);
+    let marketCap = data.marketCap ?? estimateMarketCap(coingeckoId, data.priceUsd);
+
+    // FIX 2026-05-10 — Hydratation marketCap depuis CryptoCompare batch
+    // quand la cascade live (Binance/Kraken/Coinbase/KuCoin/DexScreener)
+    // n'a pas fourni de marketCap ET STATIC_FALLBACK ne contient pas ce
+    // coin (~80 fiches statiques + 680 LLM affectées avant ce fix).
+    //
+    // Le batch CryptoCompare est cached 5min via unstable_cache et couvre
+    // les 100 cryptos editoriales en 1-2 fetch — donc 0 cout supplementaire
+    // sur cet appel (cache hit dans 99% des cas).
+    //
+    // Pourquoi pas reordonner la cascade pour mettre CryptoCompare avant
+    // Binance : (1) Binance est plus rapide (~150ms vs 600ms CC), (2) CC
+    // peut etre rate-limited sans cle, (3) Binance fournit sparkline 7d
+    // natif via klines. Cette approche garde le best-of-both : prix live
+    // depuis exchanges rapides + marketCap depuis CryptoCompare batch.
+    if (marketCap <= 0 && source !== "static" && source !== "cryptocompare") {
+      try {
+        const { getCryptoComparePriceByCoingeckoId } = await import(
+          "@/lib/cryptocompare"
+        );
+        const cc = await getCryptoComparePriceByCoingeckoId(coingeckoId);
+        if (cc && cc.marketCap > 0) marketCap = cc.marketCap;
+      } catch {
+        // CryptoCompare indispo → marketCap reste 0 (UI affiche "—").
+        // Pas critique : meme degradation gracieuse qu'avant ce fix.
+      }
+    }
+
     return {
       id: coingeckoId,
       symbol: dataMeta.symbol,
