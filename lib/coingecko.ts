@@ -1263,56 +1263,11 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
           /* fall-through to bare snapshot below */
         }
       }
-      // FIX 2026-05-10 v19 — Fallback DB raw_data_snapshot pour les fiches LLM
-      // non couvertes par KV ni CG (ex: 31 fiches long-tail au market_cap_rank
-      // élevé que CG ne reconnaît pas). raw_data_snapshot contient les ATH/ATL/
-      // supply au moment de la génération LLM (refreshed via cron LLM-pipeline).
-      // Évite "—" sur les fiches long-tail. 1 query DB seulement si fall-through
-      // (rare), donc négligeable pour Supabase bandwidth.
-      try {
-        const { getCryptoFiche } = await import("@/lib/cryptos-db");
-        const fiche = await getCryptoFiche(coingeckoId);
-        const raw = fiche?.raw_data_snapshot as
-          | {
-              market_data?: {
-                ath?: { usd?: number };
-                ath_date?: { usd?: string };
-                atl?: { usd?: number };
-                atl_date?: { usd?: string };
-                circulating_supply?: number;
-                total_supply?: number;
-                max_supply?: number;
-                market_cap_rank?: number;
-              };
-              image?: { large?: string; small?: string };
-            }
-          | undefined;
-        if (raw?.market_data) {
-          const md = raw.market_data;
-          return {
-            id: snap.id,
-            symbol: snap.symbol,
-            name: snap.name,
-            image: raw.image?.large ?? raw.image?.small ?? "",
-            currentPrice: snap.priceUsd,
-            priceChange24h: snap.change24h,
-            priceChange7d: snap.change7d,
-            marketCap: snap.marketCap,
-            marketCapRank: md.market_cap_rank ?? 0,
-            totalVolume: snap.volume24h,
-            circulatingSupply: md.circulating_supply ?? 0,
-            totalSupply: md.total_supply ?? null,
-            maxSupply: md.max_supply ?? null,
-            ath: md.ath?.usd ?? 0,
-            athDate: md.ath_date?.usd ?? null,
-            atl: md.atl?.usd ?? 0,
-            atlDate: md.atl_date?.usd ?? null,
-            sparkline7d: snap.sparkline7d,
-          };
-        }
-      } catch {
-        // DB indispo — bare snapshot ci-dessous
-      }
+      // NOTE 2026-05-10 v19 reverted : fallback DB raw_data_snapshot
+      // créait un import cycle (Heatmap client → coingecko → cryptos-db
+      // → supabase/server → next/headers). Build webpack failed.
+      // Les 31 fiches non-couvertes par KV ni CG retomberont sur bare
+      // snapshot (acceptable, dégradation gracieuse pour long-tail).
 
       return {
         id: snap.id,
