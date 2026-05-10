@@ -635,7 +635,12 @@ async function fetchSimplePriceForAlert(
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snap = await getPriceSnapshot(cryptoId);
-    if (snap.priceUsd > 0 && snap.source !== "static") {
+    // OPTIM 2026-05-10 — accepte snap.source="static" aussi (au lieu de
+    // tomber sur CG simple/price). STATIC_FALLBACK contient des prix
+    // récents (cron refresh-prices update DB), suffisant pour évaluer
+    // une alerte (à ±5% près acceptable). Évite le spam CG par alerte
+    // quand la cascade live tombe sur static (rate-limit Binance, etc).
+    if (snap.priceUsd > 0) {
       // Approximation EUR via taux fixe (1 USD = 0.92 EUR au 2026-05).
       // Ecart max 2% vs taux reel — acceptable pour alerte prix.
       const EUR_USD_RATE = 0.92;
@@ -666,11 +671,15 @@ async function fetchSimplePriceForAlert(
   }
 
   // Fallback générique : double appel simple/price
+  // OPTIM 2026-05-10 — cache 60s → 600s (10min). Une alerte évaluée
+  // toutes les 10min vs 1min est suffisant (un user qui passe au-dessus
+  // de son seuil reçoit l'alerte en moins de 10min). Économise ~10×
+  // moins de hits CG quand cascade live KO (cas dégradé fréquent).
   const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(cryptoId)}&vs_currencies=eur,usd`;
   try {
     const res = await fetch(url, {
       headers: cgHeaders(),
-      next: { revalidate: 60 },
+      next: { revalidate: 600 },
     });
     if (!res.ok) return null;
     const json = (await res.json()) as Record<string, { eur?: number; usd?: number }>;
@@ -687,7 +696,8 @@ async function fetchEurPrice(cryptoId: string): Promise<number | null> {
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(cryptoId)}&vs_currencies=eur`,
-      { headers: cgHeaders(), next: { revalidate: 60 } },
+      // OPTIM 2026-05-10 — cache 60s → 600s (10min, idem fetchSimplePrice).
+      { headers: cgHeaders(), next: { revalidate: 600 } },
     );
     if (!res.ok) return null;
     const json = (await res.json()) as Record<string, { eur?: number }>;
