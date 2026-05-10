@@ -875,7 +875,13 @@ interface CGMarketsRow {
  * Ne couvre PAS les fiches LLM (~680) — celles-ci ont leur propre fallback
  * per-id dans _fetchCoinDetail (cache no-store + unstable_cache 30min).
  */
-async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
+async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>> {
+  // FIX 2026-05-10 v10 — RETURN RECORD AU LIEU DE MAP : `unstable_cache`
+  // sérialise via JSON, et Map devient `{}` à la lecture (audit v9 :
+  // ath=14/100 alors que warmup Synthetix marchait — la 1re call avait
+  // la Map en mémoire vivante, les 99 suivantes lisaient le cache JSON
+  // qui était un objet vide). Record<string, ...> est nativement JSON.
+  //
   // Lazy import pour éviter cycle de dépendance avec lib/cryptos.ts
   const [topData, gemsData] = await Promise.all([
     import("@/data/top-cryptos.json"),
@@ -888,7 +894,7 @@ async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
     .map((c) => c.coingeckoId)
     .filter(Boolean);
 
-  if (ids.length === 0) return new Map();
+  if (ids.length === 0) throw new Error("CG_BATCH_NO_IDS");
 
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
     ",",
@@ -912,16 +918,16 @@ async function _fetchStaticDetailsBatch(): Promise<Map<string, CGMarketsRow>> {
     throw new Error(`CG_BATCH_${res.status}`);
   }
   const json = (await res.json()) as CGMarketsRow[];
-  const map = new Map<string, CGMarketsRow>();
+  const record: Record<string, CGMarketsRow> = {};
   for (const c of json) {
-    if (c?.id) map.set(c.id, c);
+    if (c?.id) record[c.id] = c;
   }
-  if (map.size === 0) {
+  if (Object.keys(record).length === 0) {
     // Empty result = CG returned 200 but no data (rare). Throw to avoid
-    // caching an empty map, which would force fallback per-id for 30min.
+    // caching an empty record, which would force fallback per-id for 30min.
     throw new Error("CG_BATCH_EMPTY");
   }
-  return map;
+  return record;
 }
 
 const _hydrateStaticDetailsBatch = unstable_cache(
@@ -993,15 +999,17 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
         // atomique, zéro race condition, sous le 50/min CG free trivialement.
         //
         // FIX v9 : try/catch car _fetchStaticDetailsBatch throw maintenant
-        // sur échec (bypass cache empty map). Si throw → batchDetails reste
+        // sur échec (bypass cache empty). Si throw → batchDetails reste
         // empty → fallback per-id en aval comme avant.
-        let batchDetails = new Map<string, CGMarketsRow>();
+        // FIX v10 : Record au lieu de Map (Map non-JSON-sérialisable
+        // casse le cache unstable_cache).
+        let batchDetails: Record<string, CGMarketsRow> = {};
         try {
           batchDetails = await _hydrateStaticDetailsBatch();
         } catch {
           // CG batch failed — fallback per-id below
         }
-        const c = batchDetails.get(coingeckoId);
+        const c = batchDetails[coingeckoId];
         if (c) {
           return {
             id: c.id,
