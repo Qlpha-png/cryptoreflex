@@ -1325,17 +1325,20 @@ function getCachedCoinDetailFn(
 }
 
 export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
-  try {
-    const cachedFn = getCachedCoinDetailFn(coingeckoId);
-    return await cachedFn(coingeckoId);
-  } catch (err) {
-    // Fallback : un dernier appel direct sans cache, pour qu'au moins la page
-    // suivante puisse essayer de re-fetch fresh. Si ça échoue aussi → null.
-    if (err instanceof Error && err.message === "CG_FETCH_RETURNED_NULL") {
-      return null;
-    }
-    return _fetchCoinDetail(coingeckoId);
-  }
+  // FIX 2026-05-10 v14 — bypass getCachedCoinDetailFn (unstable_cache 30min).
+  // Symptômes :
+  //   - audit étendu v9-v13 : ATH=14-63/100 alors que KV peuplé 99/100
+  //   - /api/diag-detail?id=gmx via fetchCoinDetail retourne ath=91.07 OK
+  //   - /cryptos/gmx (page SSG) rend ATH=— même après bust path + tag market
+  // Cause : le `unstable_cache` cached un OLD bare snapshot (ath=0) au build
+  // time (isBuildPhase=true → skip hydrate), et le bust ne propage pas
+  // toujours correctement à la page rendue.
+  //
+  // Solution : appel direct _fetchCoinDetail() sans cache wrapper. Le batch
+  // hydrate lit KV (~50ms via Upstash REST), surcoût négligeable. La
+  // page elle-même garde son ISR 1h via `export const revalidate = 3600`,
+  // donc on ne hit pas KV à chaque request user (juste au revalidate).
+  return _fetchCoinDetail(coingeckoId);
 }
 
 /** Format compact pour les supplies (ex: 19.7M, 120B). */
