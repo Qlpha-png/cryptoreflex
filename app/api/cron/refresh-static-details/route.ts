@@ -33,6 +33,7 @@ import { getKv } from "@/lib/kv";
 import topCryptosData from "@/data/top-cryptos.json";
 import hiddenGemsData from "@/data/hidden-gems.json";
 import { KV_STATIC_DETAILS_KEY } from "@/lib/coingecko";
+import { getFeaturedCryptos } from "@/lib/cryptos-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -78,12 +79,27 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   });
 
   // Collect 100 static coingecko_ids from JSON datasets (single source of truth).
-  const ids = [
+  const staticIds = [
     ...((topCryptosData as { topCryptos?: CryptoEntry[] }).topCryptos ?? []),
     ...((hiddenGemsData as { hiddenGems?: CryptoEntry[] }).hiddenGems ?? []),
   ]
     .map((c) => c.coingeckoId)
     .filter(Boolean);
+
+  // OPTIM 2026-05-10 — top 50 LLM (par market_cap_rank) → ajoutés au batch.
+  // Total ~150 ids dans 1 fetch CG /coins/markets (max 250 ids/fetch).
+  // Couvre les fiches LLM les plus visitées (T1+T2 par mcap).
+  let llmIds: string[] = [];
+  try {
+    const llmFiches = await getFeaturedCryptos(50, ["T1", "T2"]);
+    llmIds = llmFiches
+      .map((f) => f.coingecko_id)
+      .filter((id) => id && !staticIds.includes(id));
+  } catch {
+    // DB indispo — on continue avec les statiques seulement
+  }
+
+  const ids = Array.from(new Set([...staticIds, ...llmIds]));
 
   if (ids.length === 0) {
     return NextResponse.json(
@@ -180,6 +196,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     fetched,
     stored,
     requestedIds: ids.length,
+    staticIds: staticIds.length,
+    llmIds: llmIds.length,
     coverage: `${fetched}/${ids.length}`,
     durationMs,
     ttlSeconds: KV_TTL_SECONDS,
