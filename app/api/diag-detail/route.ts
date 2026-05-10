@@ -9,7 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getKv } from "@/lib/kv";
-import { KV_STATIC_DETAILS_KEY } from "@/lib/coingecko";
+import { KV_STATIC_DETAILS_KEY, fetchCoinDetail } from "@/lib/coingecko";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +50,29 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     steps.push({
       step: "kv.get",
+      error: err instanceof Error ? err.message : "unknown",
+    });
+  }
+
+  // Step 4 : full fetchCoinDetail
+  try {
+    const detail = await fetchCoinDetail(id);
+    if (!detail) {
+      steps.push({ step: "fetchCoinDetail", result: "null" });
+    } else {
+      steps.push({
+        step: "fetchCoinDetail",
+        ath: detail.ath,
+        atl: detail.atl,
+        marketCap: detail.marketCap,
+        currentPrice: detail.currentPrice,
+        sparkline7dLength: detail.sparkline7d?.length ?? 0,
+        symbol: detail.symbol,
+      });
+    }
+  } catch (err) {
+    steps.push({
+      step: "fetchCoinDetail",
       error: err instanceof Error ? err.message : "unknown",
     });
   }
