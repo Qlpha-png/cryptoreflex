@@ -32,6 +32,7 @@ import * as Sentry from "@sentry/nextjs";
 
 import { verifyBearer } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { getKv } from "@/lib/kv";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,6 +45,24 @@ const SLEEP_BETWEEN_CHUNKS_MS = 5000;
 const RANK_SHIFT_THRESHOLD_PCT = 0.5;
 /** Stale si raw_data_snapshot >30j (ms) */
 const STALE_AGE_MS = 30 * 24 * 3600 * 1000;
+
+/**
+ * MULTI-STADE SAFETY 2026-05-11 — Au lieu d'unpublish dès le 1er run où CG
+ * ne retourne pas l'ID, on tracke en KV depuis combien de runs l'ID est
+ * absent. Stades de progression :
+ *   - Stade 1 (run 1)  : KV.set(missing_since=now). Aucune action DB.
+ *   - Stade 2 (run 3)  : Sentry alert "suspect since 2 runs". Aucune action.
+ *   - Stade 3 (run 7)  : Flag needs_review=true. Encore visible.
+ *   - Stade 4 (run 14) : Sentry CRITICAL "candidate unpublish". JAMAIS auto-unpublish.
+ *
+ * Chaque review nécessite une action MANUELLE (admin UI ou SQL direct).
+ * Garantit zéro mass-unpublish accidentel comme l'incident 2026-05-11.
+ *
+ * Reset auto : si CG retourne l'ID à un run, KV.del(missing_since) → reset.
+ */
+const KV_PREFIX_MISSING = "audit:missing:";
+const STAGE_3_FLAG_RUNS = 7;       // après 7 runs absent → needs_review
+const STAGE_4_ALERT_RUNS = 14;     // après 14 runs absent → Sentry critical
 
 interface CGRow {
   id: string;
@@ -200,29 +219,77 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     .filter((c) => !dbIdSet.has(c.id))
     .map((c) => c.id);
 
-  // 5. Apply auto-flags (DB writes)
-  let unpublished = 0;
-  let flagged = 0;
+  // 5. MULTI-STADE PROCESSING (NO AUTO-UNPUBLISH 2026-05-11)
+  const kv = getKv();
+  let stage1Count = 0; // first miss
+  let stage2Count = 0; // 2-6 runs missing
+  let stage3Count = 0; // 7-13 runs → flag needs_review
+  let stage4Count = 0; // 14+ runs → critical alert
+  const stage4Ids: string[] = [];
+  const stage3Ids: string[] = [];
 
-  // 5a. Unpublish delisted (par chunks de 50)
-  if (delisted.length > 0) {
-    for (let i = 0; i < delisted.length; i += 50) {
-      const chunk = delisted.slice(i, i + 50);
+  for (const id of delisted) {
+    const kvKey = `${KV_PREFIX_MISSING}${id}`;
+    const tracking = (await kv.get<{ missingSince: string; runCount: number }>(kvKey)) ?? null;
+    const newRunCount = (tracking?.runCount ?? 0) + 1;
+    const missingSince = tracking?.missingSince ?? new Date().toISOString();
+
+    // Persist updated tracking (TTL 30j auto-cleanup)
+    await kv.set(kvKey, { missingSince, runCount: newRunCount }, { ex: 30 * 86400 });
+
+    if (newRunCount === 1) stage1Count++;
+    else if (newRunCount < STAGE_3_FLAG_RUNS) stage2Count++;
+    else if (newRunCount < STAGE_4_ALERT_RUNS) {
+      stage3Count++;
+      stage3Ids.push(id);
+    } else {
+      stage4Count++;
+      stage4Ids.push(id);
+    }
+  }
+
+  // Reset KV pour les IDs qui sont revenus en CG (cleanup)
+  let resetCount = 0;
+  // (cleanup paresseux : on ne lit pas tout le KV ici, on attend que les
+  // entrées TTL 30j expirent naturellement OU qu'un autre run les retrouve)
+  // Pour reset explicite, parcourir kv.keys(prefix) — surcoût KV élevé,
+  // pas critique car TTL 30j fait le job. On reset juste si on a déjà
+  // tracking ET que cgIds.has(id) maintenant (= ID revenu).
+  for (const id of dbIds) {
+    if (cgIds.has(id)) {
+      const kvKey = `${KV_PREFIX_MISSING}${id}`;
+      const tracking = await kv.get(kvKey);
+      if (tracking) {
+        await kv.del(kvKey);
+        resetCount++;
+      }
+    }
+  }
+
+  // 5b. Flag stage 3 (7+ runs missing) → needs_review (mais reste publié)
+  let flagged = 0;
+  if (stage3Ids.length > 0) {
+    for (let i = 0; i < stage3Ids.length; i += 50) {
+      const chunk = stage3Ids.slice(i, i + 50);
       const { error } = await sb
         .from("cryptos")
-        .update({ is_published: false })
+        .update({ needs_review: true })
         .in("coingecko_id", chunk);
-      if (!error) unpublished += chunk.length;
+      if (!error) flagged += chunk.length;
     }
+  }
+
+  // 5c. Stage 4 → Sentry CRITICAL (14+ runs = vrai delisting probable)
+  if (stage4Ids.length > 0) {
     Sentry.captureMessage(
-      `audit-cryptos: unpublished ${unpublished} delisted ids`,
-      "warning",
+      `audit-cryptos CRITICAL: ${stage4Ids.length} ids missing CG for 14+ runs (likely delisted, MANUAL REVIEW REQUIRED): ${stage4Ids.slice(0, 10).join(", ")}`,
+      "error",
     );
   }
 
-  // 5b. Flag rank shifts + stale → needs_review
+  // 5d. Flag rank shifts + stale → needs_review (cumulé avec stage3)
   const toFlag = Array.from(
-    new Set([...rankShifts.map((r) => r.id), ...stale]),
+    new Set([...rankShifts.map((r) => r.id), ...stale, ...stage3Ids]),
   );
   if (toFlag.length > 0) {
     for (let i = 0; i < toFlag.length; i += 50) {
@@ -234,6 +301,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       if (!error) flagged += chunk.length;
     }
   }
+
+  // unpublished = 0 GARANTI (jamais d'auto-unpublish dans ce cron)
+  const unpublished = 0;
 
   // 5c. New tops → log Sentry pour suggestion (pas d'auto-create)
   if (newTops.length > 0) {
@@ -249,15 +319,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     dbCount: db.length,
     cgFetched: cgRows.length,
     cgTopFetched: cgTop100.length,
-    delisted: delisted.slice(0, 20),
-    delistedCount: delisted.length,
+    // Multi-stage breakdown (non-destructive):
+    missingTotal: delisted.length,
+    stage1_firstMiss: stage1Count,
+    stage2_warming: stage2Count,
+    stage3_flagged: stage3Count,
+    stage4_critical_pending_manual_review: stage4Count,
+    stage4Ids: stage4Ids.slice(0, 20),
+    resetMissing: resetCount,
     rankShifts: rankShifts.slice(0, 10),
     rankShiftsCount: rankShifts.length,
     newTops: newTops.slice(0, 10),
     newTopsCount: newTops.length,
     stale: stale.slice(0, 10),
     staleCount: stale.length,
-    unpublished,
+    unpublished, // = 0 GARANTI (multi-stade safety)
     flagged,
     durationMs,
   });
