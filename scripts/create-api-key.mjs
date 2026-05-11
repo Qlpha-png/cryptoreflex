@@ -42,26 +42,35 @@ if (!userId) {
   process.exit(1);
 }
 
-// Generate keys
-function genId(prefix, len = 12) {
-  // Cohérent avec le format observé : cr_pk_test_NMHW0D8K72A2 (12 chars majuscules+chiffres)
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let s = prefix;
-  const buf = randomBytes(len);
-  for (let i = 0; i < len; i++) s += chars[buf[i] % chars.length];
-  return s;
+// Generate keys (FORMAT OFFICIEL : cohérent avec lib/api-keys/format.ts)
+const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+function encodeCrockford(buf, length) {
+  const bits = [];
+  for (const byte of buf) for (let i = 7; i >= 0; i--) bits.push((byte >> i) & 1);
+  let out = "";
+  for (let i = 0; i < bits.length; i += 5) {
+    const slice = bits.slice(i, i + 5);
+    if (slice.length < 5) break;
+    let v = 0;
+    for (const b of slice) v = (v << 1) | b;
+    out += CROCKFORD[v];
+    if (out.length === length) break;
+  }
+  return out;
 }
 
-const tierPrefix = tier === "production" ? "live" : "test";
-const publicKey = genId(`cr_pk_${tierPrefix}_`, 12);
-const secretToken = genId(`cr_sk_${tierPrefix}_`, 32);
-const secretPrefix = secretToken.slice(0, 18) + "…";
+const envSlug = tier === "production" ? "live" : "test";
+const keyId = encodeCrockford(randomBytes(8), 12);   // 12 chars Crockford
+const secret = encodeCrockford(randomBytes(32), 48); // 48 chars Crockford
+const publicKey = `cr_pk_${envSlug}_${keyId}`;
+const secretToken = `cr_sk_${envSlug}_${keyId}_${secret}`; // FORMAT 4 segments !
+const secretPrefix = `cr_sk_${envSlug}_${keyId.slice(0, 6)}…`;
 
-// Hash secret with scrypt + pepper (1ère pepper de la liste = current)
+// Hash secret avec PEPPER AVANT SECRET (cohérent avec lib/api-keys/hash.ts:hashSecret)
 const peppers = API_KEY_PEPPER.split(",").map((s) => s.trim()).filter(Boolean);
 const pepper = peppers[0];
 const salt = randomBytes(16);
-const derived = await scrypt(`${secretToken}${pepper}`, salt, 64, {
+const derived = await scrypt(`${pepper}${secret}`, salt, 64, { // PEPPER FIRST
   N: 16384,
   r: 8,
   p: 1,
