@@ -71,6 +71,12 @@ const SUB_CRONS = [
   // Ticker home + autocomplete + portfolio lisent KV → 0 cascade live.
   // 2 fetches CG/jour ici (vs ~100/jour avant via cascade live miss).
   { name: "refresh-ticker-prices", path: "/api/cron/refresh-ticker-prices", critical: false },
+  // NEW 2026-05-11 — Health-check automatique des 780 fiches crypto :
+  // détecte delisting (CG ne retourne plus l'ID), rebrand (rank shift >50%),
+  // nouvelles tops (top 100 CG absents DB), stale (raw_data_snapshot >30j).
+  // Auto-actions : unpublish delisted, flag needs_review pour rest.
+  // Critical:false car job long (~30s) mais non bloquant.
+  { name: "audit-cryptos-health", path: "/api/cron/audit-cryptos-health", critical: false },
   { name: "evaluate-alerts", path: "/api/cron/evaluate-alerts", critical: true },
   // Fix audit backend 30/04/2026 — cron email-series-fiscalite n'était JAMAIS
   // déclenché en prod (manquait dans vercel.json ET ici). Conséquence : les
