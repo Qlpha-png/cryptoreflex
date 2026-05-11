@@ -279,12 +279,27 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  // 5c. Stage 4 → Sentry CRITICAL (14+ runs = vrai delisting probable)
+  // 5c. Stage 4 → Sentry CRITICAL + EMAIL ADMIN (14+ runs = vrai delisting probable)
   if (stage4Ids.length > 0) {
     Sentry.captureMessage(
       `audit-cryptos CRITICAL: ${stage4Ids.length} ids missing CG for 14+ runs (likely delisted, MANUAL REVIEW REQUIRED): ${stage4Ids.slice(0, 10).join(", ")}`,
       "error",
     );
+    // EMAIL ADMIN — alerte directe (Sentry parfois ignoré, email sur le tel = visible)
+    try {
+      const { sendEmail } = await import("@/lib/email/client");
+      const adminEmail = process.env.ADMIN_ALERT_EMAIL || "kevinvoisin2016@gmail.com";
+      const list = stage4Ids.map((id) => `  • ${id}`).join("\n");
+      await sendEmail({
+        to: adminEmail,
+        subject: `[Cryptoreflex] ⚠️ ${stage4Ids.length} crypto(s) à reviewer (delisting probable)`,
+        text: `${stage4Ids.length} crypto(s) absentes de CoinGecko depuis 14+ runs.\n\nLISTE :\n${list}\n\nAction requise : review manuelle dans Supabase Dashboard.\nQuery SQL :\n  SELECT coingecko_id, name, market_cap_rank FROM cryptos\n  WHERE coingecko_id IN ('${stage4Ids.join("','")}');\n\nSi vraiment delisted : UPDATE cryptos SET is_published=false WHERE coingecko_id IN (...);\nSi rebrand : update coingecko_id avec le nouveau ID CG.\n\nDashboard : https://supabase.com/dashboard/project/ovolnnnmsugfhsckhivh/editor`,
+        html: `<h2>⚠️ ${stage4Ids.length} crypto(s) à reviewer</h2><p>Absentes de CoinGecko depuis <strong>14+ runs</strong> du cron audit-cryptos-health (= ~14 jours).</p><p><strong>Liste :</strong></p><ul>${stage4Ids.map((id) => `<li><code>${id}</code></li>`).join("")}</ul><p><strong>Action :</strong> review manuelle dans Supabase Dashboard.</p><pre style="background:#f4f4f4;padding:10px;border-radius:4px">SELECT coingecko_id, name, market_cap_rank FROM cryptos\nWHERE coingecko_id IN ('${stage4Ids.join("','")}');</pre><p>Si vraiment delisted : <code>UPDATE cryptos SET is_published=false WHERE coingecko_id IN (...);</code></p><p>Si rebrand : update <code>coingecko_id</code> avec le nouveau ID CoinGecko.</p>`,
+      });
+    } catch (err) {
+      // email fail = pas critique, Sentry a déjà l'info
+      Sentry.captureException(err);
+    }
   }
 
   // 5d. Flag rank shifts + stale → needs_review (cumulé avec stage3)
