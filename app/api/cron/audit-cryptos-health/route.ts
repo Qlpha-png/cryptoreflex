@@ -142,6 +142,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // skip new-tops detection if CG fail
   }
 
+  // CRITICAL SAFETY CHECK 2026-05-11 — Si CG a fail (rate-limit, ban),
+  // cgRows peut être très partiel ou vide. Sans ce check, on unpublish
+  // TOUTES les 780 fiches (bug catastrophique observé en run #1).
+  // Règle : si cgFetched < 80% du dbCount, abort sans modifs DB.
+  const COVERAGE_MIN_PCT = 0.8;
+  if (cgRows.length < db.length * COVERAGE_MIN_PCT) {
+    Sentry.captureMessage(
+      `audit-cryptos-health ABORTED: CG coverage too low (${cgRows.length}/${db.length})`,
+      "warning",
+    );
+    return NextResponse.json({
+      ok: false,
+      aborted: true,
+      reason: `CG coverage ${cgRows.length}/${db.length} < ${COVERAGE_MIN_PCT * 100}% — likely CG rate-limited, abort to avoid mass unpublish`,
+      durationMs: Date.now() - startedAt,
+    }, { status: 200 });
+  }
+
   // 4. Analyse : delisted, rank shifts, new tops, stale
   const cgById = new Map(cgRows.map((r) => [r.id, r]));
   const cgIds = new Set(cgRows.map((r) => r.id));
