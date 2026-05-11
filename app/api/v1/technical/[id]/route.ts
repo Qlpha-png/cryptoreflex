@@ -108,7 +108,7 @@ export async function GET(
         ema26: indicators.ema26,
         macd: indicators.macd
           ? {
-              line: indicators.macd.line,
+              line: indicators.macd.macd,
               trigger: indicators.macd.signal,
               histogram: indicators.macd.histogram,
             }

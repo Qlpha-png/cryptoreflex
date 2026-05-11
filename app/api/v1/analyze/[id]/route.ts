@@ -205,7 +205,7 @@ export async function GET(
             // Rename MACD.signal → trigger pour PSAN compliance
             macd: indicators.macd
               ? {
-                  line: indicators.macd.line,
+                  line: indicators.macd.macd,
                   trigger: indicators.macd.signal,
                   histogram: indicators.macd.histogram,
                 }
