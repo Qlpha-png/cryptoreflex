@@ -202,7 +202,14 @@ export async function GET(
             rsi: indicators.rsi,
             ma50: indicators.ma50,
             ma200: indicators.ma200,
-            macd: indicators.macd,
+            // Rename MACD.signal → trigger pour PSAN compliance
+            macd: indicators.macd
+              ? {
+                  line: indicators.macd.line,
+                  trigger: indicators.macd.signal,
+                  histogram: indicators.macd.histogram,
+                }
+              : null,
             bollinger: indicators.bollinger,
             volatility_pct: volatility,
             support,

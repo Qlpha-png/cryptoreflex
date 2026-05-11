@@ -80,12 +80,12 @@ export async function GET(
   const resistance = levels.resistances[0] ?? null;
   const current = prices[prices.length - 1] ?? row.current_price ?? 0;
 
-  // Signaux interprétés (lisible pour IA)
-  const rsiSignal =
+  // Indicateurs interprétés (lisible pour IA)
+  const rsiZone =
     indicators.rsi < 30 ? "oversold" : indicators.rsi > 70 ? "overbought" : "neutral";
-  const macdSignal =
+  const macdBias =
     indicators.macd && indicators.macd.histogram > 0 ? "bullish" : "bearish";
-  const trendSignal = trend; // "bullish" | "bearish" | "neutral"
+  const trendBias = trend; // "bullish" | "bearish" | "neutral"
   const bollingerPosition = indicators.bollinger
     ? current >= indicators.bollinger.upper
       ? "above_upper"
@@ -106,7 +106,13 @@ export async function GET(
         ma200: indicators.ma200,
         ema12: indicators.ema12,
         ema26: indicators.ema26,
-        macd: indicators.macd,
+        macd: indicators.macd
+          ? {
+              line: indicators.macd.line,
+              trigger: indicators.macd.signal,
+              histogram: indicators.macd.histogram,
+            }
+          : null,
         bollinger: indicators.bollinger,
         volatility_pct: volatility,
         support,
@@ -114,10 +120,10 @@ export async function GET(
         all_supports: levels.supports,
         all_resistances: levels.resistances,
       },
-      signals: {
-        trend: trendSignal,
-        rsi: rsiSignal,
-        macd: macdSignal,
+      analytics: {
+        trend: trendBias,
+        rsi_zone: rsiZone,
+        macd_bias: macdBias,
         bollinger_position: bollingerPosition,
         price_vs_ma50: indicators.ma50 && current > indicators.ma50 ? "above" : "below",
         price_vs_ma200:
