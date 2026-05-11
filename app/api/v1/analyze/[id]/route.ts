@@ -156,8 +156,10 @@ export async function GET(
     row.total_volume > 0 ? Math.round(row.total_volume / 5000) : null;
   const volumeMcapRatio = row.market_cap ? row.total_volume / row.market_cap : null;
 
-  // 6. SIGNAUX ADAPTÉS AU PROFIL
-  const signals = buildProfileSignals(profile, {
+  // 6. SYNTHÈSE TECHNIQUE ADAPTÉE AU PROFIL (champ "synthesis" pour
+  // PSAN-compliance : pas de "recommendation/signal/advice" — l'IA en aval
+  // doit interpréter les indicateurs techniques bruts).
+  const synthesis = buildProfileSynthesis(profile, {
     indicators,
     volatility,
     trend,
@@ -215,8 +217,10 @@ export async function GET(
           }
         : null,
       events_upcoming: events,
-      signals,
+      synthesis,
       computed_at: new Date().toISOString(),
+      disclaimer:
+        "Ces données sont des indicateurs techniques bruts. Aucune recommandation d'investissement. Le site n'est pas CIF (Conseil en Investissements Financiers).",
     },
     {
       request_id,
@@ -228,7 +232,7 @@ export async function GET(
   );
 }
 
-function buildProfileSignals(
+function buildProfileSynthesis(
   profile: Profile,
   ctx: {
     indicators: ReturnType<typeof calcAllIndicators> | null;
@@ -244,14 +248,16 @@ function buildProfileSignals(
     volumeMcapRatio: number | null;
   },
 ): {
-  recommendation: "buy" | "accumulate" | "hold" | "reduce" | "sell" | "wait";
+  bias: "bullish" | "neutral_bullish" | "neutral" | "neutral_bearish" | "bearish" | "undetermined";
   confidence: "low" | "medium" | "high";
-  reasoning: string[];
-  risk_level: "low" | "medium" | "high" | "very_high";
+  observations: string[];
+  technical_score_bullish: number;
+  technical_score_bearish: number;
+  risk_profile: "low" | "medium" | "high" | "very_high";
   time_horizon_days: number;
 } {
   const { indicators, volatility, trend, current, row, fearGreed, distanceFromAthPct, volumeMcapRatio } = ctx;
-  const reasoning: string[] = [];
+  const observations: string[] = [];
   let bullishScore = 0;
   let bearishScore = 0;
 
@@ -260,23 +266,23 @@ function buildProfileSignals(
     if (indicators?.rsi != null) {
       if (indicators.rsi < 30) {
         bullishScore += 3;
-        reasoning.push(`RSI ${indicators.rsi.toFixed(1)} → survente extrême (achat short-term)`);
+        observations.push(`RSI ${indicators.rsi.toFixed(1)} → survente extrême (achat short-term)`);
       } else if (indicators.rsi > 70) {
         bearishScore += 3;
-        reasoning.push(`RSI ${indicators.rsi.toFixed(1)} → surachat (vente short-term)`);
+        observations.push(`RSI ${indicators.rsi.toFixed(1)} → surachat (vente short-term)`);
       }
     }
     if (volumeMcapRatio != null && volumeMcapRatio > 0.3) {
       bullishScore += 1;
-      reasoning.push(`Volume/Mcap ${(volumeMcapRatio * 100).toFixed(1)}% → forte activité`);
+      observations.push(`Volume/Mcap ${(volumeMcapRatio * 100).toFixed(1)}% → forte activité`);
     }
     if (indicators?.macd?.histogram) {
       if (indicators.macd.histogram > 0) {
         bullishScore += 1;
-        reasoning.push("MACD bullish (momentum positif court terme)");
+        observations.push("MACD bullish (momentum positif court terme)");
       } else {
         bearishScore += 1;
-        reasoning.push("MACD bearish (momentum négatif court terme)");
+        observations.push("MACD bearish (momentum négatif court terme)");
       }
     }
   }
@@ -285,27 +291,27 @@ function buildProfileSignals(
   if (profile === "swing") {
     if (indicators?.ma50 && current > indicators.ma50) {
       bullishScore += 2;
-      reasoning.push(`Prix > MA50 → trend haussier swing`);
+      observations.push(`Prix > MA50 → trend haussier swing`);
     } else if (indicators?.ma50) {
       bearishScore += 2;
-      reasoning.push(`Prix < MA50 → trend baissier swing`);
+      observations.push(`Prix < MA50 → trend baissier swing`);
     }
     if (row.price_change_percentage_7d_in_currency != null) {
       const c7d = row.price_change_percentage_7d_in_currency;
       if (c7d > 15) {
         bearishScore += 1;
-        reasoning.push(`+${c7d.toFixed(1)}% sur 7j → pump probable, prudence reverse`);
+        observations.push(`+${c7d.toFixed(1)}% sur 7j → pump probable, prudence reverse`);
       } else if (c7d < -15) {
         bullishScore += 1;
-        reasoning.push(`${c7d.toFixed(1)}% sur 7j → opportunité contrarian si fondamentaux ok`);
+        observations.push(`${c7d.toFixed(1)}% sur 7j → opportunité contrarian si fondamentaux ok`);
       }
     }
     if (trend === "bullish") {
       bullishScore += 1;
-      reasoning.push("Trend macro 7j haussier");
+      observations.push("Trend macro 7j haussier");
     } else if (trend === "bearish") {
       bearishScore += 1;
-      reasoning.push("Trend macro 7j baissier");
+      observations.push("Trend macro 7j baissier");
     }
   }
 
@@ -314,26 +320,26 @@ function buildProfileSignals(
     if (distanceFromAthPct != null) {
       if (distanceFromAthPct < -70) {
         bullishScore += 3;
-        reasoning.push(
+        observations.push(
           `${distanceFromAthPct.toFixed(0)}% sous ATH → zone d'accumulation long terme`,
         );
       } else if (distanceFromAthPct > -20) {
         bearishScore += 2;
-        reasoning.push(
+        observations.push(
           `Seulement ${distanceFromAthPct.toFixed(0)}% sous ATH → risque de top`,
         );
       }
     }
     if (indicators?.ma200 && current > indicators.ma200) {
       bullishScore += 2;
-      reasoning.push("Prix > MA200 → bull market long terme");
+      observations.push("Prix > MA200 → bull market long terme");
     } else if (indicators?.ma200) {
       bearishScore += 1;
-      reasoning.push("Prix < MA200 → bear market long terme");
+      observations.push("Prix < MA200 → bear market long terme");
     }
     if (row.market_cap_rank && row.market_cap_rank <= 20) {
       bullishScore += 1;
-      reasoning.push(`Top 20 Mcap (#${row.market_cap_rank}) → projet établi`);
+      observations.push(`Top 20 Mcap (#${row.market_cap_rank}) → projet établi`);
     }
   }
 
@@ -341,10 +347,10 @@ function buildProfileSignals(
   if (fearGreed) {
     if (fearGreed.value <= 25) {
       bullishScore += 1;
-      reasoning.push(`Fear & Greed ${fearGreed.value} (${fearGreed.label}) → opportunité contrarian`);
+      observations.push(`Fear & Greed ${fearGreed.value} (${fearGreed.label}) → opportunité contrarian`);
     } else if (fearGreed.value >= 75) {
       bearishScore += 1;
-      reasoning.push(`Fear & Greed ${fearGreed.value} (${fearGreed.label}) → euphorie, prudence`);
+      observations.push(`Fear & Greed ${fearGreed.value} (${fearGreed.label}) → euphorie, prudence`);
     }
   }
 
@@ -355,40 +361,49 @@ function buildProfileSignals(
     const daysUntil = (eventDate - Date.now()) / (1000 * 3600 * 24);
     if (daysUntil < 7 && nextEvent.impact === "high") {
       bearishScore += 1;
-      reasoning.push(
+      observations.push(
         `Event high-impact dans ${Math.ceil(daysUntil)}j : ${nextEvent.title}`,
       );
     }
   }
 
-  // Verdict
+  // Bias technique neutre (champ "bias" PSAN-compliant : description
+  // factuelle des indicateurs, l'IA en aval interprète pour décision).
   const delta = bullishScore - bearishScore;
-  let recommendation: "buy" | "accumulate" | "hold" | "reduce" | "sell" | "wait" = "hold";
-  if (delta >= 4) recommendation = "buy";
-  else if (delta >= 2) recommendation = "accumulate";
-  else if (delta <= -4) recommendation = "sell";
-  else if (delta <= -2) recommendation = "reduce";
-  else if (bullishScore === 0 && bearishScore === 0) recommendation = "wait";
+  let bias:
+    | "bullish"
+    | "neutral_bullish"
+    | "neutral"
+    | "neutral_bearish"
+    | "bearish"
+    | "undetermined" = "neutral";
+  if (delta >= 4) bias = "bullish";
+  else if (delta >= 2) bias = "neutral_bullish";
+  else if (delta <= -4) bias = "bearish";
+  else if (delta <= -2) bias = "neutral_bearish";
+  else if (bullishScore === 0 && bearishScore === 0) bias = "undetermined";
 
-  const totalSignals = bullishScore + bearishScore;
+  const totalIndicators = bullishScore + bearishScore;
   const confidence: "low" | "medium" | "high" =
-    totalSignals >= 5 ? "high" : totalSignals >= 3 ? "medium" : "low";
+    totalIndicators >= 5 ? "high" : totalIndicators >= 3 ? "medium" : "low";
 
-  // Risk level basé sur volatilité + rank
-  let risk: "low" | "medium" | "high" | "very_high" = "medium";
-  if (row.market_cap_rank && row.market_cap_rank <= 10) risk = "low";
-  else if (row.market_cap_rank && row.market_cap_rank > 100) risk = "high";
+  // Risk profile basé sur volatilité + mcap rank
+  let riskProfile: "low" | "medium" | "high" | "very_high" = "medium";
+  if (row.market_cap_rank && row.market_cap_rank <= 10) riskProfile = "low";
+  else if (row.market_cap_rank && row.market_cap_rank > 100) riskProfile = "high";
   if (volatility != null && volatility > 8) {
-    risk = risk === "low" ? "medium" : risk === "medium" ? "high" : "very_high";
+    riskProfile = riskProfile === "low" ? "medium" : riskProfile === "medium" ? "high" : "very_high";
   }
 
   const timeHorizon = profile === "daytrader" ? 1 : profile === "swing" ? 14 : 365;
 
   return {
-    recommendation,
+    bias,
     confidence,
-    reasoning,
-    risk_level: risk,
+    observations,
+    technical_score_bullish: bullishScore,
+    technical_score_bearish: bearishScore,
+    risk_profile: riskProfile,
     time_horizon_days: timeHorizon,
   };
 }
