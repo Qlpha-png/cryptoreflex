@@ -73,39 +73,51 @@ jobs:
           fi
 
           URL="https://www.cryptoreflex.fr/api/cron/daily-orchestrator"
-          TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          echo "[${TS}] GET ${URL}"
 
-          # -s silent | -S show error sur fail | -L follow redirects
-          # -w écrit le HTTP status sur la dernière ligne pour parsing.
-          # Body écrit dans /tmp/body.json, status code récupéré séparément.
-          # --max-time 540 = 9 min (sub-jobs prennent jusqu'à 7-8 min cumulés).
-          HTTP_CODE=$(curl -sS -L \
-            --max-time 540 \
-            -o /tmp/body.json \
-            -w "%{http_code}" \
-            -X GET "${URL}" \
-            -H "Authorization: Bearer ${CRON_SECRET}" \
-            -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
-            -H "Accept: application/json" || echo "000")
+          # FIX 2026-05-12 — Retry tolérant aux 502 transients (Cloudflare
+          # gateway pendant restart container Coolify, ou CG ban court).
+          # 3 tentatives avec backoff 30s/60s/120s. Si tout fail → exit 1
+          # (vraie alerte) sinon exit 0 dès qu'un retry réussit.
+          for attempt in 1 2 3; do
+            TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            echo "[${TS}] Attempt ${attempt}: GET ${URL}"
 
-          BODY_SIZE=$(wc -c < /tmp/body.json 2>/dev/null || echo 0)
-          echo "HTTP status : ${HTTP_CODE}"
-          echo "Body size   : ${BODY_SIZE} bytes"
+            HTTP_CODE=$(curl -sS -L \
+              --max-time 540 \
+              -o /tmp/body.json \
+              -w "%{http_code}" \
+              -X GET "${URL}" \
+              -H "Authorization: Bearer ${CRON_SECRET}" \
+              -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
+              -H "Accept: application/json" || echo "000")
 
-          # 200 = full success, 207 = multi-status (au moins 1 sub-job en fail
-          # mais l'orchestrateur a fini sa course — on ne fail PAS le workflow).
-          if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "207" ]; then
-            echo "[${TS}] OK (status=${HTTP_CODE})"
-            # Affiche un résumé compact (premières 2000 chars du body).
-            echo "--- response body (truncated) ---"
-            head -c 2000 /tmp/body.json
+            BODY_SIZE=$(wc -c < /tmp/body.json 2>/dev/null || echo 0)
+            echo "HTTP status : ${HTTP_CODE}"
+            echo "Body size   : ${BODY_SIZE} bytes"
+
+            # 200 = full success, 207 = multi-status (au moins 1 sub-job en fail
+            # mais l'orchestrateur a fini sa course — on ne fail PAS le workflow).
+            if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "207" ]; then
+              echo "[${TS}] ✅ OK (status=${HTTP_CODE}) after ${attempt} attempt(s)"
+              echo "--- response body (truncated) ---"
+              head -c 2000 /tmp/body.json
+              echo ""
+              exit 0
+            fi
+
+            echo "⚠️ Attempt ${attempt} failed (HTTP ${HTTP_CODE})"
+            head -c 500 /tmp/body.json
             echo ""
-            exit 0
-          fi
 
-          echo "::error title=daily-orchestrator FAIL::HTTP ${HTTP_CODE} at ${TS}"
-          echo "--- full response body ---"
+            if [ "${attempt}" -lt 3 ]; then
+              SLEEP=$((attempt * 30))
+              echo "⏳ Retry in ${SLEEP}s..."
+              sleep ${SLEEP}
+            fi
+          done
+
+          echo "::error title=daily-orchestrator FAIL after 3 retries::HTTP ${HTTP_CODE}"
+          echo "--- full response body (last attempt) ---"
           cat /tmp/body.json
           exit 1
 
@@ -140,40 +152,42 @@ jobs:
           fi
 
           URL="https://www.cryptoreflex.fr/api/cron/streak-reminders"
-          TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          echo "[${TS}] GET ${URL}"
 
-          HTTP_CODE=$(curl -sS -L \
-            --max-time 540 \
-            -o /tmp/body.json \
-            -w "%{http_code}" \
-            -X GET "${URL}" \
-            -H "Authorization: Bearer ${CRON_SECRET}" \
-            -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
-            -H "Accept: application/json" || echo "000")
+          # Retry tolérant aux 502 transients (idem daily-orchestrator).
+          for attempt in 1 2 3; do
+            TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+            echo "[${TS}] Attempt ${attempt}: GET ${URL}"
 
-          BODY_SIZE=$(wc -c < /tmp/body.json 2>/dev/null || echo 0)
-          echo "HTTP status : ${HTTP_CODE}"
-          echo "Body size   : ${BODY_SIZE} bytes"
+            HTTP_CODE=$(curl -sS -L \
+              --max-time 540 \
+              -o /tmp/body.json \
+              -w "%{http_code}" \
+              -X GET "${URL}" \
+              -H "Authorization: Bearer ${CRON_SECRET}" \
+              -H "User-Agent: coolify-cron/1.0 (+github-actions)" \
+              -H "Accept: application/json" || echo "000")
 
-          # 200 = success. 503 = Supabase pas configuré (skip volontaire) — on
-          # log mais ne fail PAS le workflow (cohérent avec le code de la route).
-          if [ "${HTTP_CODE}" = "200" ]; then
-            echo "[${TS}] OK (status=${HTTP_CODE})"
-            head -c 2000 /tmp/body.json
-            echo ""
-            exit 0
-          fi
+            echo "HTTP status : ${HTTP_CODE}"
 
-          if [ "${HTTP_CODE}" = "503" ]; then
-            echo "[${TS}] SKIPPED (status=503 — Supabase pas configuré, comportement attendu)"
-            head -c 2000 /tmp/body.json
-            echo ""
-            exit 0
-          fi
+            if [ "${HTTP_CODE}" = "200" ]; then
+              echo "[${TS}] ✅ OK after ${attempt} attempt(s)"
+              head -c 2000 /tmp/body.json
+              echo ""
+              exit 0
+            fi
 
-          echo "::error title=streak-reminders FAIL::HTTP ${HTTP_CODE} at ${TS}"
-          echo "--- full response body ---"
+            if [ "${HTTP_CODE}" = "503" ]; then
+              echo "[${TS}] SKIPPED (503 = Supabase non configuré, attendu)"
+              exit 0
+            fi
+
+            echo "⚠️ Attempt ${attempt} failed (HTTP ${HTTP_CODE})"
+            if [ "${attempt}" -lt 3 ]; then
+              sleep $((attempt * 30))
+            fi
+          done
+
+          echo "::error title=streak-reminders FAIL after 3 retries::HTTP ${HTTP_CODE}"
           cat /tmp/body.json
           exit 1
 
