@@ -1,0 +1,53 @@
+name: Refresh prices DB (3×/jour, dédié)
+
+# Sync DB price_usd / market_cap_usd / market_cap_rank pour 780 fiches.
+# Indépendant du daily-orchestrator (qui peut fail à cause d'autres sub-jobs).
+#
+# RÉSOUT (audit 2026-05-12) : DB stale 24h+ → classement Bitcoin/NEAR
+# tous deux rank=1, recherche admin/UI affichant données fantômes.
+#
+# Schedule : 3×/jour (8h, 14h, 20h UTC) — soft refresh, rank évolue peu.
+
+on:
+  schedule:
+    - cron: "0 8,14,20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-prices-db
+  cancel-in-progress: true
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger /api/cron/refresh-prices (retry tolérant)
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          URL="https://www.cryptoreflex.fr/api/cron/refresh-prices"
+          for attempt in 1 2 3; do
+            echo "Attempt $attempt: GET $URL"
+            HTTP=$(curl -sS \
+              -H "Authorization: Bearer $CRON_SECRET" \
+              --max-time 120 \
+              -w "%{http_code}" \
+              -o /tmp/body.json \
+              "$URL" || echo "000")
+            echo "HTTP $HTTP"
+            cat /tmp/body.json | head -c 500
+            echo
+            if [ "$HTTP" = "200" ]; then
+              echo "✅ Success"
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 30))
+            fi
+          done
+          echo "::error::refresh-prices fail after 3 retries"
+          exit 0  # Pas critique — KV ticker continue de servir prices frais
