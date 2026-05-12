@@ -159,23 +159,37 @@ async function bulkUpdatePrices(
   const errors: Array<{ stage: string; message: string }> = [];
   let updated = 0;
 
-  for (let i = 0; i < updates.length; i += SUPABASE_UPSERT_CHUNK) {
-    const chunk = updates.slice(i, i + SUPABASE_UPSERT_CHUNK);
+  // FIX 2026-05-12 — `upsert` fail systématiquement avec :
+  //   "null value in column slug violates not-null constraint"
+  // Cause : Supabase upsert essaie INSERT en cas de PK manquant, mais
+  // nos updates ne contiennent que coingecko_id + price/mcap/rank
+  // (pas slug/name/symbol). Or `slug` est NOT NULL en schéma.
+  //
+  // Les rows EXISTENT TOUJOURS (créées par cron LLM-pipeline ou seed).
+  // Donc on fait des UPDATE par row, pas des upsert. Pas idéal pour les
+  // perf (N queries vs 1) mais 780 updates × 30ms = 23s = acceptable
+  // pour 1 run/jour. Et pas de violation contraint.
+  for (const u of updates) {
     try {
       const { error } = await sb
         .from("cryptos")
-        .upsert(chunk, { onConflict: "coingecko_id", ignoreDuplicates: false });
+        .update({
+          price_usd: u.price_usd,
+          market_cap_usd: u.market_cap_usd,
+          market_cap_rank: u.market_cap_rank,
+        })
+        .eq("coingecko_id", u.coingecko_id);
       if (error) {
         errors.push({
-          stage: `upsert-chunk-${i / SUPABASE_UPSERT_CHUNK}`,
+          stage: `update-${u.coingecko_id}`,
           message: error.message,
         });
       } else {
-        updated += chunk.length;
+        updated++;
       }
     } catch (err) {
       errors.push({
-        stage: `upsert-chunk-${i / SUPABASE_UPSERT_CHUNK}`,
+        stage: `update-${u.coingecko_id}`,
         message: err instanceof Error ? err.message : "unknown",
       });
     }
