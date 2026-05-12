@@ -22,13 +22,35 @@ concurrency:
 jobs:
   trigger:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 3
     steps:
-      - name: Trigger /api/cron/refresh-ticker-prices
+      - name: Trigger /api/cron/refresh-ticker-prices (tolère CG ban transient)
         run: |
-          curl -fsS \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            --max-time 60 \
-            "https://www.cryptoreflex.fr/api/cron/refresh-ticker-prices" \
-            -o /tmp/response.json
-          cat /tmp/response.json
+          # Retry 3 fois avec backoff 30s/60s/120s — pour absorber les bans CG transients.
+          # Ne PAS utiliser -f (qui fail si HTTP non-2xx). On accepte 502 (= CG temporairement
+          # banni) car KV reste peuplé entretemps et le cron du daily-orchestrator
+          # le repopule de toute façon 1×/jour.
+          for attempt in 1 2 3; do
+            HTTP_CODE=$(curl -sS \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              --max-time 60 \
+              -w "%{http_code}" \
+              -o /tmp/response.json \
+              "https://www.cryptoreflex.fr/api/cron/refresh-ticker-prices" || echo "000")
+            echo "Attempt $attempt: HTTP $HTTP_CODE"
+            cat /tmp/response.json 2>/dev/null || true
+            echo
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Success on attempt $attempt"
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "⏳ Retry in $((attempt * 30))s..."
+              sleep $((attempt * 30))
+            fi
+          done
+          # 3 fois fail = CG bani sérieusement. On log mais on ne fail PAS le workflow
+          # (sinon notif GitHub spam pour un problème externe transient).
+          echo "⚠️ CG ban persistant après 3 tentatives — KV non rafraîchi cette fois."
+          echo "Pas critique car KV cg-static-details:v1 reste peuplé (TTL 8h) + daily cron."
+          exit 0
