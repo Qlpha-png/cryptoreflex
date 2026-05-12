@@ -1,0 +1,54 @@
+name: Refresh static-details KV (4×/jour, depuis GH IP)
+
+# Pré-charge en KV cg-static-details:v1 les 780 fiches crypto (ATH, ATL,
+# supply, sparkline 7d) depuis l'IP GitHub Actions — qui n'est PAS bannie
+# par CoinGecko (contrairement au serveur Coolify).
+#
+# RÉSOUT : KV vide intermittent qui obligeait à run le script manuel
+# `populate-all-cryptos-kv.mjs` depuis ma machine locale.
+#
+# Schedule : 4×/jour = 06h, 12h, 18h, 00h UTC (TTL KV 8h → 1h marge).
+#
+# Coût : ~120 runs/mois × ~30s = ~60 min/mois sous le free tier (illim. public).
+
+on:
+  schedule:
+    # Toutes les 6h pile (TTL KV = 8h → 2h marge si run rate)
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-static-details-kv
+  cancel-in-progress: true
+
+jobs:
+  populate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run populate-all-cryptos-kv
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node scripts/populate-all-cryptos-kv.mjs
+
+      - name: Verify KV coverage
+        run: |
+          curl -s --max-time 10 \
+            "https://www.cryptoreflex.fr/api/diag/api-usage" \
+            | head -c 500
+          echo
