@@ -23,32 +23,38 @@ import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
- * /outils/tax-loss-harvesting — Killer feature fiscalité Q4 (audit
- * innovation expert).
+ * /outils/tax-loss-harvesting — Page pédagogique fiscalité Q4.
  *
- * Suggestions automatiques basées sur le portefeuille user : "tu peux
- * vendre 0.3 ETH avant 31/12 pour réduire ton impôt 2026 de X €".
+ * Présente la mécanique légale du tax-loss harvesting (article 150 VH bis
+ * CGI) avec un scénario chiffré pédagogique. L'outil n'émet pas de
+ * recommandation de cession personnalisée et redirige toute décision
+ * vers un professionnel agréé (expert-comptable, avocat fiscaliste).
  *
  * UNIQUEMENT pertinent en France/UE, et SEULEMENT pour les pertes
  * REALISEES (pas les latentes — la fiscalité crypto FR ne reconnaît pas
  * la perte latente, contrairement aux US).
  *
- * Phase actuelle : LANDING + simulateur statique (calcul manuel "avant/
- * après vente"). V1 dynamique exigera intégration Portfolio Sync (cron
- * mensuel + alerte Q4).
+ * Phase actuelle : page informationnelle + scénario statique illustratif.
+ * Toute version dynamique future doit conserver le cadre informationnel
+ * et ne pas verbaliser de recommandation de cession personnalisée.
+ *
+ * Refonte wording compliance 2026-05-14 — approche 1er juillet 2026 (fin
+ * transitoire PSAN) → suppression de toute formulation incitative
+ * ("Réduis ton PFU", "Vends tes positions", "Économie") au profit
+ * d'une lecture pédagogique de scénarios (art. 150 VH bis CGI).
  */
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Tax Loss Harvesting crypto FR — Optimise ton impôt 2026",
+  title: "Tax-loss harvesting crypto FR — Comprendre la stratégie 2026",
   description:
-    "Comment réduire légalement ton impôt crypto en vendant tes positions perdantes avant le 31 décembre. Stratégie tax-loss harvesting expliquée + simulateur.",
+    "Comprendre le mécanisme légal du tax-loss harvesting crypto : compensation intra-annuelle des moins-values, art. 150 VH bis CGI, exemple pédagogique. Outil informationnel, ne remplace pas un conseil fiscal.",
   alternates: withHreflang(`${BRAND.url}/outils/tax-loss-harvesting`),
   openGraph: {
-    title: "Tax Loss Harvesting crypto en France — Cryptoreflex",
+    title: "Tax-loss harvesting crypto en France — Cryptoreflex",
     description:
-      "Réduire ton PFU 30 % en compensant les plus-values par les moins-values réalisées. Tutoriel + simulateur.",
+      "Comment fonctionne la compensation des plus-values par les moins-values réalisées (art. 150 VH bis CGI). Tutoriel pédagogique.",
     url: `${BRAND.url}/outils/tax-loss-harvesting`,
     type: "website",
   },
@@ -81,13 +87,13 @@ export default function TaxLossHarvestingPage() {
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/tax-loss-harvesting",
-      title: "Tax Loss Harvesting crypto FR — Optimise ton impôt 2026",
+      title: "Tax-loss harvesting crypto FR — Comprendre la stratégie 2026",
       description:
-        "Réduire le PFU 30 % en compensant les plus-values crypto par les moins-values.",
+        "Comprendre la compensation des plus-values crypto par les moins-values réalisées (art. 150 VH bis CGI). Outil informationnel pédagogique.",
       date: "2026-05-02",
-      dateModified: "2026-05-02",
+      dateModified: "2026-05-14",
       category: "Outil",
-      tags: ["tax loss harvesting", "fiscalité", "PFU", "moins-value", "optimisation"],
+      tags: ["tax loss harvesting", "fiscalité", "PFU", "moins-value", "pédagogie"],
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
@@ -115,26 +121,46 @@ export default function TaxLossHarvestingPage() {
             <Calendar className="h-3 w-3" aria-hidden /> Optimal mi-décembre
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Réduis ton{" "}
-            <span className="gradient-text">PFU 30 %</span>{" "}
-            avant le 31 décembre.
+            Comprendre le{" "}
+            <span className="gradient-text">tax-loss harvesting</span>{" "}
+            crypto avant le 31 décembre.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Le tax-loss harvesting consiste à vendre tes positions perdantes
-            avant la fin de l&apos;année pour compenser tes plus-values. 100 %
-            légal en France (article 150 VH bis CGI), et plus simple qu&apos;aux
-            États-Unis (pas de wash sale rule).
+            Le tax-loss harvesting est une stratégie pédagogique qui consiste
+            à comprendre comment les moins-values réalisées peuvent compenser
+            les plus-values dans l&apos;année fiscale en cours (article 150 VH
+            bis CGI). Cet outil aide à identifier les éléments à vérifier
+            avant toute décision fiscale, sans recommander d&apos;action
+            particulière.
           </p>
         </header>
 
+        {/* Avertissement réglementaire (compliance 2026-05-14) — affiché
+            en haut pour ne pas être manqué. Approche 1er juillet 2026
+            (fin transitoire PSAN) → sensibilité accrue sur wording fiscal. */}
+        <aside className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/[0.04] p-5 flex items-start gap-3 text-sm text-fg/85">
+          <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" aria-hidden />
+          <div className="leading-relaxed">
+            <strong className="block mb-1 text-amber-200">
+              Avertissement réglementaire
+            </strong>
+            Cet outil fournit une lecture pédagogique de scénarios possibles
+            basée sur l&apos;article 150 VH bis du CGI. Il ne constitue pas
+            un conseil fiscal, ne recommande aucune cession et ne remplace
+            pas l&apos;administration fiscale ni un professionnel agréé.
+            Toute décision de cession doit être prise par vous-même, après
+            vérification avec un expert-comptable ou un avocat fiscaliste.
+          </div>
+        </aside>
+
         <div className="mt-8">
           <Tldr
-            headline="Si tu as réalisé des plus-values crypto cette année, vends tes positions en perte avant le 31/12 pour neutraliser l'impôt PFU 30 %."
+            headline="Si vous avez réalisé des plus-values crypto cette année, la matérialisation de moins-values existantes avant le 31/12 peut, sous conditions, neutraliser tout ou partie de l'impôt PFU 30 %. À analyser avec un fiscaliste."
             bullets={[
-              { emoji: "⚖️", text: "100 % légal — article 150 VH bis CGI, compensation intra-annuelle" },
-              { emoji: "🔄", text: "Tu peux racheter immédiatement (pas de wash sale rule France)" },
-              { emoji: "📅", text: "Timing optimal : 15 → 31 décembre" },
-              { emoji: "♻️", text: "Excédent de moins-values = reportable 10 ans" },
+              { emoji: "⚖️", text: "Cadre légal : article 150 VH bis CGI, compensation intra-annuelle" },
+              { emoji: "🔄", text: "Pas de wash sale rule en France (contrairement aux US) — vérifier le cas particulier avec un professionnel" },
+              { emoji: "📅", text: "Fenêtre temporelle pertinente : 15 → 31 décembre" },
+              { emoji: "♻️", text: "Excédent de moins-values reportable 10 ans selon CGI" },
             ]}
             readingTime="6 min"
             level="Intermédiaire"
@@ -152,7 +178,7 @@ export default function TaxLossHarvestingPage() {
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-background/50 p-5">
               <div className="text-[11px] uppercase tracking-wider text-muted">
-                ❌ Sans tax loss harvesting
+                Scénario A — sans compensation
               </div>
               <ul className="mt-3 space-y-1 text-sm text-fg/85">
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
@@ -164,42 +190,53 @@ export default function TaxLossHarvestingPage() {
             </div>
             <div className="rounded-xl border border-success/30 bg-success/5 p-5">
               <div className="text-[11px] uppercase tracking-wider text-success">
-                ✅ Avec tax loss harvesting
+                Scénario B — avec compensation
               </div>
               <ul className="mt-3 space-y-1 text-sm text-fg/85">
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
                 <li>Moins-values réalisées (vente le 28/12) : <strong className="text-danger">−4 000 €</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 30 % sur 1 000 € : <strong className="text-success">300 €</strong>
+                  Impôt PFU 30 % sur 1 000 € : <strong className="text-fg">300 €</strong>
                 </li>
               </ul>
-              <p className="mt-3 text-xs font-semibold text-success">
-                Économie : 1 200 € → tu rachètes ta position le 02/01 si tu veux toujours l&apos;exposer.
+              <p className="mt-3 text-xs text-fg/70 leading-relaxed">
+                Différence pédagogique : 1 200 €. Cette estimation théorique
+                dépend de votre situation fiscale globale et doit être validée
+                avec un professionnel avant toute décision.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Disclaimer */}
+        {/* Disclaimer renforcé (compliance 2026-05-14) — rappel après la
+            section chiffrée pour limiter toute interprétation prescriptive
+            du scénario présenté. */}
         <div className="mt-10 rounded-xl border border-warning/30 bg-warning/5 p-4 flex items-start gap-3 text-sm text-fg/85">
           <AlertTriangle className="h-4 w-4 text-warning-fg mt-0.5 shrink-0" aria-hidden />
           <p className="leading-relaxed">
-            <strong>Pas un conseil fiscal personnalisé.</strong> Cet outil
-            t&apos;explique la stratégie générale. Pour une situation
-            spécifique (DeFi, NFT, BIC pro, comptes étrangers multiples),
-            consulte un expert-comptable ou un avocat fiscaliste.
+            <strong>Information pédagogique, pas un conseil fiscal
+            personnalisé.</strong> Le scénario chiffré ci-dessus est une
+            illustration théorique de la mécanique légale et ne tient pas
+            compte de votre situation fiscale globale, de votre régime fiscal
+            (BIC pro, particulier), de vos comptes étrangers, ni d&apos;autres
+            cas particuliers (DeFi, NFT, staking). Toute décision de cession
+            doit être validée avec un expert-comptable ou un avocat fiscaliste.
           </p>
         </div>
 
-        {/* CTA Pro */}
+        {/* CTA Pro (compliance 2026-05-14) — wording reformulé pour rester
+            informationnel : l'outil identifie des scénarios à examiner, ne
+            recommande pas de cession. Toute décision reste à valider avec
+            un professionnel. */}
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">
-            Détection automatique avec Cryptoreflex Pro
+            Analyse de scénarios avec Cryptoreflex Pro
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Pro analyse ton portefeuille mi-décembre et te suggère{" "}
-            <strong>quelles positions vendre, à quel prix, pour économiser
-            combien</strong>. Alerte email + push.
+            Pro analyse votre portefeuille mi-décembre et identifie les
+            positions en moins-value latente ainsi que l&apos;impact théorique
+            de leur matérialisation sur votre plus-value annuelle. Toute
+            décision de cession reste à valider avec un professionnel.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link href="/pro" className="btn-primary btn-primary-shine">
