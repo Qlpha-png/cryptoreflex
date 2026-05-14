@@ -426,6 +426,13 @@ export default async function CryptoPage({ params }: Props) {
   }
 
   const detail = await fetchCoinDetail(c.coingeckoId);
+  // FIX 2026-05-14 — Lecture du cache ticker pour exposer le timestamp de
+  // dernière mise à jour des prix à <CryptoHero>. Le composant client
+  // <PriceFreshnessBadge> calcule l'âge et affiche un badge si stale (>12 min).
+  // Évite de présenter un prix vieux de plusieurs heures comme "temps réel".
+  const { fetchedAt: tickerFetchedAt } = await (
+    await import("@/lib/kv-ticker")
+  ).readTickerCache();
   const verdict = buildVerdict(c);
   const faq = buildFaq(c);
   const related = getRelatedCryptos(c.id, 4);
@@ -535,6 +542,7 @@ export default async function CryptoPage({ params }: Props) {
             yearCreated={c.yearCreated}
             detail={detail}
             kindLabel={kindLabel}
+            tickerFetchedAt={tickerFetchedAt}
             // CoinGecko id = clé canonique de la watchlist (alignée avec MarketCoin.id).
             cryptoId={c.coingeckoId}
           />

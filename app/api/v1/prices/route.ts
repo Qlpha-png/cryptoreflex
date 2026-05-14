@@ -102,11 +102,17 @@ export async function GET(req: Request): Promise<Response> {
   // 1. Tente KV ticker (top 50). FIX 2026-05-14 — pattern live + stale via
   //    lib/kv-ticker : live TTL 12 min, fallback stale TTL 6 h pour couvrir
   //    les gaps GH Actions cron observés (65-246 min entre runs).
+  //    Expose `meta.is_stale` + `meta.fetched_at` pour que les consommateurs
+  //    IA / dashboard puissent afficher un badge de fraîcheur.
   let tickerRecord: Record<string, TickerEntry> = {};
+  let tickerIsStale = false;
+  let tickerFetchedAt: string | null = null;
   try {
     const { readTickerCache } = await import("@/lib/kv-ticker");
-    const { record } = await readTickerCache();
-    tickerRecord = record as Record<string, TickerEntry>;
+    const cached = await readTickerCache();
+    tickerRecord = cached.record as Record<string, TickerEntry>;
+    tickerIsStale = cached.isStale;
+    tickerFetchedAt = cached.fetchedAt;
   } catch {
     // KV indispo, on tente static-details ci-dessous
   }
@@ -193,6 +199,13 @@ export async function GET(req: Request): Promise<Response> {
       requested: ids.length,
       found: prices.filter((p) => p.source !== "missing").length,
       updated_at: new Date().toISOString(),
+      // Meta de fraîcheur du cache ticker (audit 2026-05-14) — permet au
+      // consommateur de gérer l'affichage "données indicatives" si stale.
+      meta: {
+        ticker_source: tickerIsStale ? "stale" : "live",
+        ticker_is_stale: tickerIsStale,
+        ticker_fetched_at: tickerFetchedAt,
+      },
     },
     {
       request_id,

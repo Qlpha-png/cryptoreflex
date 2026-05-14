@@ -6,6 +6,7 @@ import CryptoLogo from "@/components/ui/CryptoLogo";
 import { getCategoryTheme } from "@/lib/category-theme";
 import AnimatedStat from "./AnimatedStat";
 import MiniOrderBook from "./MiniOrderBook";
+import PriceFreshnessBadge from "@/components/ui/PriceFreshnessBadge";
 
 /**
  * Whitelist des symbols qui ont une paire SPOT USDT liquide sur Binance
@@ -35,6 +36,12 @@ interface Props {
    * le bouton watchlist n'est pas rendu (ex: route preview / canary).
    */
   cryptoId?: string;
+  /**
+   * ISO 8601 timestamp de la dernière fetch du ticker KV. Permet à
+   * <PriceFreshnessBadge> d'afficher un badge "Prix indicatif" si stale.
+   * Null si le cache KV est froid ou ancien format sans wrap fetchedAt.
+   */
+  tickerFetchedAt?: string | null;
 }
 
 /**
@@ -51,6 +58,7 @@ export default function CryptoHero({
   detail,
   kindLabel,
   cryptoId,
+  tickerFetchedAt = null,
 }: Props) {
   const price = detail?.currentPrice ?? 0;
   const change24h = detail?.priceChange24h ?? 0;
@@ -126,7 +134,13 @@ export default function CryptoHero({
         {/* Prix temps réel */}
         <div className="mt-6 flex flex-wrap items-end gap-x-6 gap-y-3">
           <div>
-            <div className="text-xs uppercase tracking-wider text-muted">Prix actuel</div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted">
+              <span>Prix actuel</span>
+              {/* Badge fraîcheur prix (FIX 2026-05-14) — affiché seulement
+                  si stale (>12 min) pour éviter présenter prix retardé
+                  comme "temps réel". Calcul d'âge côté client. */}
+              <PriceFreshnessBadge fetchedAt={tickerFetchedAt} />
+            </div>
             <div className="mt-1 font-mono text-3xl sm:text-4xl font-bold text-fg tabular-nums">
               {price > 0 ? (
                 <AnimatedStat

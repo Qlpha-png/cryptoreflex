@@ -58,6 +58,8 @@ export async function GET(): Promise<NextResponse> {
   // 3. Vérif KV static-details + ticker live + ticker stale
   // FIX 2026-05-14 (Phase 2) — `kvTickerPricesStale` ajouté pour observer
   // le fallback 6h utilisé quand le cron GH Actions skip (gaps 65-246 min).
+  // FIX 2026-05-14 (Phase 3) — extrait `fetchedAt` du wrapper pour observer
+  // l'âge réel des données ticker (utile pour debug stale UX).
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (kvUrl && kvToken) {
@@ -78,10 +80,26 @@ export async function GET(): Promise<NextResponse> {
           const data = (await r.json()) as { result?: string | null };
           if (typeof data.result === "string" && data.result.length > 0) {
             const parsed = JSON.parse(data.result) as Record<string, unknown>;
+            // Détection nouveau format wrapper `{ prices, fetchedAt }` vs
+            // legacy direct `Record<id, entry>` (cf. lib/kv-ticker.ts).
+            const wrapped =
+              parsed &&
+              "prices" in parsed &&
+              typeof (parsed as { prices?: unknown }).prices === "object";
+            const inner = wrapped
+              ? ((parsed as { prices: Record<string, unknown> }).prices ?? {})
+              : parsed;
+            const fetchedAt = wrapped
+              ? ((parsed as { fetchedAt?: string }).fetchedAt ?? null)
+              : null;
+            const keysCount = Object.keys(inner).length;
+            const ageMs = fetchedAt ? Math.max(0, Date.now() - Date.parse(fetchedAt)) : null;
             checks[name] = {
-              keysCount: Object.keys(parsed).length,
-              sampleIds: Object.keys(parsed).slice(0, 5),
+              keysCount,
+              sampleIds: Object.keys(inner).slice(0, 5),
               sizeKB: Math.round(data.result.length / 1024),
+              ...(fetchedAt ? { fetchedAt } : {}),
+              ...(ageMs !== null ? { ageSeconds: Math.round(ageMs / 1000) } : {}),
             };
           } else {
             checks[name] = { empty: true };

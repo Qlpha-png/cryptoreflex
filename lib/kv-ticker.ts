@@ -47,6 +47,23 @@ export interface TickerEntry {
 
 export type TickerRecord = Record<string, TickerEntry>;
 
+/**
+ * Format de payload stocké en KV (depuis 2026-05-14 wrap fetchedAt).
+ *
+ * Le wrapper ajoute `fetchedAt` ISO 8601 pour que l'UI puisse afficher
+ * un badge "Prix indicatif — mise à jour à HH:MM" quand les données sont
+ * stale (cf. `lib/kv-ticker.readTickerCache().isStale`).
+ *
+ * Backward compat : si KV contient l'ancien format `Record<string, TickerEntry>`
+ * direct (sans wrapper), `readTickerCache()` le détecte et retourne
+ * `fetchedAt: null`. Le cron écrit toujours le nouveau format wrap.
+ */
+export interface TickerCachePayload {
+  prices: TickerRecord;
+  /** ISO 8601 timestamp de la dernière fetch CoinGecko. */
+  fetchedAt: string;
+}
+
 export interface TickerCacheReadResult {
   /** Empty record si pas de cache disponible (live ni stale). */
   record: TickerRecord;
@@ -54,10 +71,42 @@ export interface TickerCacheReadResult {
   source: "live" | "stale" | "none";
   /** True si le résultat vient du fallback stale (peut afficher badge "non temps réel" côté UI si pertinent). */
   isStale: boolean;
+  /** ISO 8601 timestamp de la dernière fetch CG. Null si ancien format KV ou source "none". */
+  fetchedAt: string | null;
 }
 
 interface UpstashGetResponse {
   result?: string | null;
+}
+
+/**
+ * Normalise un payload KV potentiellement legacy (Record direct) ou nouveau
+ * (TickerCachePayload wrap). Retourne `{ prices, fetchedAt }`.
+ */
+function normalizePayload(
+  raw: unknown,
+): { prices: TickerRecord; fetchedAt: string | null } | null {
+  if (!raw || typeof raw !== "object") return null;
+
+  // Nouveau format : { prices: {...}, fetchedAt: "..." }
+  if ("prices" in raw && typeof (raw as { prices?: unknown }).prices === "object") {
+    const payload = raw as Partial<TickerCachePayload>;
+    if (payload.prices && Object.keys(payload.prices).length > 0) {
+      return {
+        prices: payload.prices,
+        fetchedAt: typeof payload.fetchedAt === "string" ? payload.fetchedAt : null,
+      };
+    }
+    return null;
+  }
+
+  // Ancien format : Record<string, TickerEntry> direct (sans wrapper)
+  const direct = raw as TickerRecord;
+  if (Object.keys(direct).length > 0) {
+    return { prices: direct, fetchedAt: null };
+  }
+
+  return null;
 }
 
 /**
@@ -73,7 +122,7 @@ export async function readTickerCache(): Promise<TickerCacheReadResult> {
   const kvToken = process.env.KV_REST_API_TOKEN;
 
   if (!kvUrl || !kvToken) {
-    return { record: {}, source: "none", isStale: false };
+    return { record: {}, source: "none", isStale: false, fetchedAt: null };
   }
 
   const baseUrl = kvUrl.replace(/\/$/, "");
@@ -95,9 +144,14 @@ export async function readTickerCache(): Promise<TickerCacheReadResult> {
     if (liveRes.ok) {
       const data = (await liveRes.json()) as UpstashGetResponse;
       if (typeof data.result === "string" && data.result.length > 0) {
-        const parsed = JSON.parse(data.result) as TickerRecord;
-        if (Object.keys(parsed).length > 0) {
-          return { record: parsed, source: "live", isStale: false };
+        const normalized = normalizePayload(JSON.parse(data.result));
+        if (normalized) {
+          return {
+            record: normalized.prices,
+            source: "live",
+            isStale: false,
+            fetchedAt: normalized.fetchedAt,
+          };
         }
       }
     }
@@ -118,9 +172,14 @@ export async function readTickerCache(): Promise<TickerCacheReadResult> {
     if (staleRes.ok) {
       const data = (await staleRes.json()) as UpstashGetResponse;
       if (typeof data.result === "string" && data.result.length > 0) {
-        const parsed = JSON.parse(data.result) as TickerRecord;
-        if (Object.keys(parsed).length > 0) {
-          return { record: parsed, source: "stale", isStale: true };
+        const normalized = normalizePayload(JSON.parse(data.result));
+        if (normalized) {
+          return {
+            record: normalized.prices,
+            source: "stale",
+            isStale: true,
+            fetchedAt: normalized.fetchedAt,
+          };
         }
       }
     }
@@ -128,7 +187,7 @@ export async function readTickerCache(): Promise<TickerCacheReadResult> {
     // Continue vers source "none"
   }
 
-  return { record: {}, source: "none", isStale: false };
+  return { record: {}, source: "none", isStale: false, fetchedAt: null };
 }
 
 interface UpstashSetResult {
@@ -146,12 +205,13 @@ interface UpstashSetResult {
  */
 export async function writeTickerCacheBoth(
   record: TickerRecord,
-): Promise<UpstashSetResult & { live: boolean; stale: boolean }> {
+): Promise<UpstashSetResult & { live: boolean; stale: boolean; fetchedAt: string }> {
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
+  const fetchedAt = new Date().toISOString();
 
   if (!kvUrl || !kvToken) {
-    return { ok: false, live: false, stale: false };
+    return { ok: false, live: false, stale: false, fetchedAt };
   }
 
   const baseUrl = kvUrl.replace(/\/$/, "");
@@ -160,7 +220,9 @@ export async function writeTickerCacheBoth(
     "Content-Type": "application/json",
   };
 
-  const body = JSON.stringify(record);
+  // Wrap dans TickerCachePayload pour stocker fetchedAt + permettre UI badge stale.
+  const payload: TickerCachePayload = { prices: record, fetchedAt };
+  const body = JSON.stringify(payload);
 
   const writeOne = async (key: string, ttl: number): Promise<boolean> => {
     try {
@@ -186,5 +248,36 @@ export async function writeTickerCacheBoth(
     writeOne(KV_TICKER_STALE_KEY, KV_TICKER_STALE_TTL_SECONDS),
   ]);
 
-  return { ok: liveOk && staleOk, live: liveOk, stale: staleOk };
+  return { ok: liveOk && staleOk, live: liveOk, stale: staleOk, fetchedAt };
+}
+
+/**
+ * Calcule l'âge des données ticker en millisecondes.
+ * Retourne `null` si `fetchedAt` est absent (ancien format KV ou source "none").
+ */
+export function getTickerAgeMs(fetchedAt: string | null): number | null {
+  if (!fetchedAt) return null;
+  const parsed = Date.parse(fetchedAt);
+  if (Number.isNaN(parsed)) return null;
+  return Math.max(0, Date.now() - parsed);
+}
+
+/**
+ * Catégorise le niveau de fraîcheur pour décider du badge UI affiché.
+ *
+ * - "fresh" : < 12 min (couvert par TTL live, données récentes du cron)
+ * - "indicative" : 12 min - 2 h (stale mais raisonnable, badge discret)
+ * - "delayed" : 2 h - 6 h (stale long, badge explicite "données retardées")
+ * - "unknown" : pas de fetchedAt (ancien format KV ou source "none")
+ */
+export type TickerFreshness = "fresh" | "indicative" | "delayed" | "unknown";
+
+export function classifyTickerFreshness(
+  fetchedAt: string | null,
+): TickerFreshness {
+  const age = getTickerAgeMs(fetchedAt);
+  if (age === null) return "unknown";
+  if (age < 12 * 60 * 1000) return "fresh";
+  if (age < 2 * 60 * 60 * 1000) return "indicative";
+  return "delayed";
 }
