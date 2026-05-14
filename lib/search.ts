@@ -39,7 +39,10 @@ import { unstable_cache } from "next/cache";
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { getAllPlatforms, type Platform } from "@/lib/platforms";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
-import { getFeaturedCryptos, type CryptoFicheRow } from "@/lib/cryptos-db";
+import {
+  getFeaturedCryptosLight,
+  type CryptoFicheLight,
+} from "@/lib/cryptos-db";
 import { getPublishableComparisons } from "@/lib/programmatic";
 import type { SearchItem } from "@/lib/search-client";
 
@@ -252,12 +255,20 @@ function buildCryptoItems(cryptos: AnyCrypto[]): SearchItem[] {
  * On limite à 1000 (cap supabase + cap pratique pour l'index in-memory).
  * snippet = tldr LLM tronqué à 160 chars (cohérent avec articles MDX).
  */
-function buildLLMFicheItems(fiches: CryptoFicheRow[]): SearchItem[] {
+// FIX 2026-05-14 — Egress leak prevention.
+// Auparavant : getFeaturedCryptos(1000) faisait `select("*")` → lisait
+// raw_data_snapshot + llm_content lourds (~5-15 KB/row × 780 = ~10 MB par
+// cache miss). Maintenant : getFeaturedCryptosLight (5 colonnes, ~200 B/row
+// = ~150 KB total = -98 % bandwidth).
+// Trade-off : snippet `tldr` LLM-pipeline n'est plus dispo → fallback
+// générique « fiche complète, métriques, scores et risques ». Acceptable
+// car le snippet n'est qu'un teaser dans l'autocomplete ; titre + type
+// portent l'essentiel de l'info pour l'utilisateur.
+// IMPORTANT: search index must stay light. Do not fetch
+// llm_content/raw_data_snapshot here.
+function buildLLMFicheItems(fiches: CryptoFicheLight[]): SearchItem[] {
   return fiches.map((f) => {
-    const llm = (f.llm_content || {}) as { tldr?: string };
-    const snippet = llm.tldr
-      ? llm.tldr.slice(0, 160)
-      : `${f.name} — fiche complète, métriques, scores et risques.`;
+    const snippet = `${f.name} — fiche complète, métriques, scores et risques.`;
     return {
       id: `crypto:${f.coingecko_id}`,
       title: `${f.name} (${f.symbol.toUpperCase()})`,
@@ -334,7 +345,13 @@ export const getSearchIndex = unstable_cache(
       // tiers T1+T2+T3 pour couverture exhaustive (vs default T1+T2 only).
       // Limit 1000 = cap pratique (au-delà l'index in-memory devient lourd).
       // En cas d'indispo Supabase → tableau vide (graceful degradation).
-      getFeaturedCryptos(1000, ["T1", "T2", "T3"]),
+      //
+      // FIX EGRESS 2026-05-14 — getFeaturedCryptosLight (5 colonnes) au lieu
+      // de getFeaturedCryptos (select * lourd). Évite la lecture inutile de
+      // raw_data_snapshot + llm_content pour l'index de recherche.
+      // IMPORTANT: search index must stay light. Do not fetch
+      // llm_content/raw_data_snapshot here.
+      getFeaturedCryptosLight(1000, ["T1", "T2", "T3"]),
     ]);
 
     // Dédup : une fiche LLM peut avoir le même coingecko_id qu'un top 10
