@@ -276,6 +276,88 @@ const nextConfig = {
         permanent: true,
       },
 
+      // ────────────────────────────────────────────────────────────────
+      // Audit GSC 404 2026-05-14 — 11 URLs indexées historiquement par
+      // Google retournent désormais 404. Toutes ont une page canonique
+      // équivalente qui retourne 200 prod (vérifié 14/05/2026). 308
+      // permanent vers la cible canonique pour récupérer le link juice
+      // et éviter que le compteur "Introuvable (404)" GSC ne pèse sur
+      // la santé d'indexation globale du site.
+      //
+      // Voir : audit-output/2026-05-14/GSC-404-LIST-AND-REDIRECTS.md
+      //
+      // Pas de pattern regex large (ex. /blog/cryptos/:slug → /cryptos/:slug)
+      // car /blog/cryptos/ contient AUSSI des articles long-form légitimes
+      // qu'on ne veut PAS rediriger. 11 entrées explicites > 1 pattern flou.
+      // ────────────────────────────────────────────────────────────────
+      // /historique-prix/{crypto} → /cryptos/{crypto}
+      {
+        source: "/historique-prix/tron",
+        destination: "/cryptos/tron",
+        permanent: true,
+      },
+      {
+        source: "/historique-prix/litecoin",
+        destination: "/cryptos/litecoin",
+        permanent: true,
+      },
+      {
+        source: "/historique-prix/uniswap",
+        destination: "/cryptos/uniswap",
+        permanent: true,
+      },
+      // /blog/cryptos/{crypto} → /cryptos/{crypto}
+      // Note : ces 3 slugs ont été crawlés par Google sous /blog/cryptos/* mais
+      // existent désormais (et seulement) sous /cryptos/*.
+      {
+        source: "/blog/cryptos/compound",
+        destination: "/cryptos/compound",
+        permanent: true,
+      },
+      {
+        source: "/blog/cryptos/curve-dao",
+        destination: "/cryptos/curve-dao",
+        permanent: true,
+      },
+      {
+        source: "/blog/cryptos/jupiter",
+        destination: "/cryptos/jupiter",
+        permanent: true,
+      },
+      // /blog/historique-prix/{crypto}/{year} → /cryptos/{crypto}
+      // Anciens articles "rétro prix" supprimés post-refonte 2026. La fiche
+      // crypto canonique contient désormais le tracker historique intégré.
+      {
+        source: "/blog/historique-prix/stellar/2022",
+        destination: "/cryptos/stellar",
+        permanent: true,
+      },
+      {
+        source: "/blog/historique-prix/algorand/2021",
+        destination: "/cryptos/algorand",
+        permanent: true,
+      },
+      {
+        source: "/blog/historique-prix/tezos/2021",
+        destination: "/cryptos/tezos",
+        permanent: true,
+      },
+      // /blog/alternative-a/{plateforme} → /alternative-a/{plateforme}
+      // Le hub /alternative-a a été déplacé hors du sous-arbre /blog (séparation
+      // contenu éditorial vs intent transactionnel programmatic SEO).
+      {
+        source: "/blog/alternative-a/revolut",
+        destination: "/alternative-a/revolut",
+        permanent: true,
+      },
+      // /blog/outils/{slug} → /outils/{slug}
+      // Idem refactor : la section /outils a été extraite de /blog.
+      {
+        source: "/blog/outils/export-expert-comptable",
+        destination: "/outils/export-expert-comptable",
+        permanent: true,
+      },
+
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
       // requêtes qui arrivent sur le domaine apex.
