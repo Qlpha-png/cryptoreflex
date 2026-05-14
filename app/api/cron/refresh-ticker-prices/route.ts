@@ -33,7 +33,12 @@ export const maxDuration = 30;
 
 // Doit matcher la même key dans lib/coingecko.ts:_fetchPrices KV read.
 const KV_TICKER_PRICES_KEY = "cg-ticker-prices:v1";
-const KV_TTL_SECONDS = 360; // 6 min (1 min de marge si cron skip)
+// FIX 2026-05-14 — TTL aligné avec workflow GH cron `*/10 * * * *` :
+// cron tourne toutes les 10 min → TTL 12 min donne 2 min de marge si skip.
+// Avant : TTL 360s (6 min) < intervalle 10 min = clé vide 40 % du temps,
+// déclenchant cascade live (Binance/Kraken/Coinbase/...) sur /api/prices.
+// Diag confirmé via /api/diag/api-usage : `kvTickerPrices.empty: true` chronique.
+const KV_TTL_SECONDS = 720; // 12 min (cron 10 min + 2 min marge)
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
