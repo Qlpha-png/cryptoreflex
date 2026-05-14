@@ -63,11 +63,55 @@ export function generateStaticParams() {
     .map((p) => ({ plateforme: p.id }));
 }
 
+/**
+ * Override metadata + alternatives count par plateforme.
+ *
+ * Audit GSC 2026-05-14 : `/alternative-a/crypto-com` et `/alternative-a/binance`
+ * apparaissent en page 1 SERP (positions 7.1 et 6.5) avec 33-40 impressions
+ * sur 28 jours mais **0 clic**. CTR à 0 % → snippet (title + description)
+ * insuffisamment incitatif pour générer des clics.
+ *
+ * Patch : title + description spécifiques pour ces deux plateformes très
+ * recherchées + augmentation du nombre d'alternatives affichées (cohérence
+ * content/snippet pour éviter pénalité Google "title doesn't match content").
+ *
+ * Pour les autres plateformes, le pattern générique "5 alternatives" reste.
+ * Wording validé ChatGPT 2026-05-14 :
+ *   - comparatif/pédagogique (pas recommandation personnalisée)
+ *   - pas de "meilleure plateforme pour vous"
+ *   - pas de promesse de gain
+ *   - pas de conseil financier
+ */
+const METADATA_OVERRIDES: Record<
+  string,
+  { title: string; description: string; altCount: number }
+> = {
+  "crypto-com": {
+    title: "Alternatives à Crypto.com en France (2026) : 12 plateformes comparées",
+    description:
+      "Frais, sécurité, MiCA, support FR : comparez 12 alternatives à Crypto.com en France avec une méthode transparente et pédagogique.",
+    altCount: 12,
+  },
+  binance: {
+    title: "Alternatives à Binance en France (2026) : 10 plateformes à comparer",
+    description:
+      "Comparez 10 alternatives à Binance en France : frais, sécurité, conformité MiCA, support client et limites à connaître avant de choisir une plateforme.",
+    altCount: 10,
+  },
+};
+
+const DEFAULT_ALT_COUNT = 5;
+
 export function generateMetadata({ params }: Props): Metadata {
   const target = getPlatformById(params.plateforme);
   if (!target || target.category === "wallet") return {};
-  const title = `5 alternatives à ${target.name} en 2026 — comparatif crypto FR`;
-  const description = `Tu cherches à remplacer ${target.name} ? Voici 5 plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
+  const override = METADATA_OVERRIDES[target.id];
+  const title =
+    override?.title ??
+    `${DEFAULT_ALT_COUNT} alternatives à ${target.name} en 2026 — comparatif crypto FR`;
+  const description =
+    override?.description ??
+    `Tu cherches à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
   return {
     title,
     description,
@@ -113,12 +157,16 @@ export default function AlternativePage({ params }: Props) {
   // (defense in depth — au cas où dynamicParams serait remis à true).
   if (!target || target.category === "wallet") notFound();
 
-  const alternatives = findAlternatives(target, 5);
+  // FIX SEO 2026-05-14 — count alternatives dynamique pour matcher le
+  // snippet annoncé (crypto-com=12, binance=10, autres=5). Évite pénalité
+  // Google "title doesn't match content".
+  const altCount = METADATA_OVERRIDES[target.id]?.altCount ?? DEFAULT_ALT_COUNT;
+  const alternatives = findAlternatives(target, altCount);
 
   const schemas = graphSchema([
     articleSchema({
       slug: `alternative-a/${target.id}`,
-      title: `5 alternatives à ${target.name} en 2026`,
+      title: `${altCount} alternatives à ${target.name} en 2026`,
       description: `Comparatif des plateformes crypto FR équivalentes ou meilleures que ${target.name}.`,
       date: "2026-05-02",
       dateModified: "2026-05-02",
@@ -147,14 +195,16 @@ export default function AlternativePage({ params }: Props) {
 
         <header className="mt-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            5 alternatives à{" "}
+            {altCount} alternatives à{" "}
             <span className="gradient-text">{target.name}</span>{" "}
             en 2026
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Tu utilises {target.name} mais tu veux comparer avec d&apos;autres
-            plateformes crypto régulées en France ? Voici 5 alternatives
-            crédibles classées par notre scoring (frais, sécurité, MiCA, support FR).
+            Vous utilisez {target.name} mais souhaitez comparer avec d&apos;autres
+            plateformes crypto régulées en France ? Voici {altCount} alternatives
+            classées par notre scoring transparent (frais, sécurité, conformité
+            MiCA, support FR). Comparatif informationnel, sans recommandation
+            personnalisée.
           </p>
         </header>
 
