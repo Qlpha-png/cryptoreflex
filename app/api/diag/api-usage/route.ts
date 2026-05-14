@@ -55,13 +55,16 @@ export async function GET(): Promise<NextResponse> {
     };
   }
 
-  // 3. Vérif KV static-details
+  // 3. Vérif KV static-details + ticker live + ticker stale
+  // FIX 2026-05-14 (Phase 2) — `kvTickerPricesStale` ajouté pour observer
+  // le fallback 6h utilisé quand le cron GH Actions skip (gaps 65-246 min).
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (kvUrl && kvToken) {
     for (const [name, key] of [
       ["kvStaticDetails", "cg-static-details:v1"],
       ["kvTickerPrices", "cg-ticker-prices:v1"],
+      ["kvTickerPricesStale", "cg-ticker-prices:stale:v1"],
     ] as const) {
       try {
         const r = await fetch(

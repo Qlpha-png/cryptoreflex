@@ -99,27 +99,16 @@ export async function GET(req: Request): Promise<Response> {
   const kvToken = process.env.KV_REST_API_TOKEN;
   const result: Record<string, unknown> = {};
 
-  // 1. Tente KV ticker (top 50, frais 10min)
+  // 1. Tente KV ticker (top 50). FIX 2026-05-14 — pattern live + stale via
+  //    lib/kv-ticker : live TTL 12 min, fallback stale TTL 6 h pour couvrir
+  //    les gaps GH Actions cron observés (65-246 min entre runs).
   let tickerRecord: Record<string, TickerEntry> = {};
-  if (kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-ticker-prices:v1")}`,
-        {
-          headers: { Authorization: `Bearer ${kvToken}` },
-          signal: AbortSignal.timeout(3000),
-          next: { revalidate: 60 },
-        },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string | null };
-        if (typeof data.result === "string") {
-          tickerRecord = JSON.parse(data.result);
-        }
-      }
-    } catch {
-      // KV indispo
-    }
+  try {
+    const { readTickerCache } = await import("@/lib/kv-ticker");
+    const { record } = await readTickerCache();
+    tickerRecord = record as Record<string, TickerEntry>;
+  } catch {
+    // KV indispo, on tente static-details ci-dessous
   }
 
   // 2. Fallback KV static-details (777 fiches, frais 6h)

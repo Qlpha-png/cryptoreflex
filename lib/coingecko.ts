@@ -174,60 +174,37 @@ const _hydrateMarketCapsBatch = unstable_cache(
 );
 
 /**
- * KV key partagée avec /api/cron/refresh-ticker-prices.
- */
-const KV_TICKER_PRICES_KEY = "cg-ticker-prices:v1";
-
-/**
  * Implementation interne de fetchPrices — wrappée par unstable_cache plus bas.
  */
 async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   // OPTIM 2026-05-10 — KV-back pour ticker home + autocomplete + portfolio.
-  // Le cron refresh-ticker-prices stocke top 50 en KV toutes les 5 min.
+  // Le cron refresh-ticker-prices stocke top 50 en KV toutes les 10 min.
   // Si tous les ids demandés sont en KV → 0 fetch live, ~50ms via Upstash.
   // Couvre 99% des hits ticker home (DEFAULT_COINS = top 6).
+  //
+  // FIX 2026-05-14 (Phase 2) — Pattern live + stale via lib/kv-ticker.
+  // GH Actions cron `*/10 * * * *` ignore largement la fréquence (gaps
+  // observés 65-246 min), donc fallback `cg-ticker-prices:stale:v1`
+  // (TTL 6 h) couvre les périodes où le live est expiré.
   try {
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
-    if (kvUrl && kvToken) {
-      const url = `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent(KV_TICKER_PRICES_KEY)}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${kvToken}`, accept: "application/json" },
-        signal: AbortSignal.timeout(3000),
-        next: { revalidate: 60, tags: ["kv-ticker-prices"] },
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { result?: string | null };
-        if (typeof data.result === "string" && data.result.length > 0) {
-          const cached = JSON.parse(data.result) as Record<
-            string,
-            {
-              id: string;
-              symbol: string;
-              name: string;
-              image: string;
-              price: number;
-              change24h: number;
-              marketCap: number;
-            }
-          >;
-          // Vérif : tous les ids demandés sont en KV
-          const allCached = ids.every((id) => cached[id]);
-          if (allCached) {
-            return ids.map((id) => {
-              const c = cached[id];
-              return {
-                id: c.id as CoinId,
-                symbol: c.symbol,
-                name: c.name,
-                price: c.price,
-                change24h: c.change24h,
-                marketCap: c.marketCap,
-                image: c.image,
-              };
-            });
-          }
-        }
+    const { readTickerCache } = await import("@/lib/kv-ticker");
+    const { record: cached } = await readTickerCache();
+    if (Object.keys(cached).length > 0) {
+      // Vérif : tous les ids demandés sont en KV (live ou stale)
+      const allCached = ids.every((id) => cached[id]);
+      if (allCached) {
+        return ids.map((id) => {
+          const c = cached[id];
+          return {
+            id: c.id as CoinId,
+            symbol: c.symbol,
+            name: c.name,
+            price: c.price,
+            change24h: c.change24h,
+            marketCap: c.marketCap,
+            image: c.image,
+          };
+        });
       }
     }
   } catch {

@@ -468,51 +468,30 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
 async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapshot> {
   // OPTIM 2026-05-10 — KV ticker (top 50) read en PRIORITÉ avant cascade.
   // Évite hits Binance/Kraken/etc pour les top 50 cryptos (90% du trafic).
-  // Le cron refresh-ticker-prices stocke top 50 toutes les 10 min.
-  // Économie : ~99% des hits exchanges éliminés sur les top 50.
+  //
+  // FIX 2026-05-14 (Phase 2) — Pattern live + stale via lib/kv-ticker.
+  // GH Actions cron `*/10 * * * *` ignore largement la fréquence ; le
+  // fallback stale (TTL 6 h) couvre les gaps. Le flag `isStale` n'est
+  // pas exposé dans PriceSnapshot pour ne pas casser le contrat existant,
+  // mais source reste "static" pour signaler que ce n'est pas un live exchange.
   try {
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
-    if (kvUrl && kvToken) {
-      const url = `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-ticker-prices:v1")}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${kvToken}`, accept: "application/json" },
-        signal: AbortSignal.timeout(2500),
-        next: { revalidate: 30, tags: ["kv-ticker-prices"] },
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { result?: string | null };
-        if (typeof data.result === "string" && data.result.length > 0) {
-          const cached = JSON.parse(data.result) as Record<
-            string,
-            {
-              id: string;
-              symbol: string;
-              name: string;
-              image: string;
-              price: number;
-              change24h: number;
-              marketCap: number;
-            }
-          >;
-          const entry = cached[coingeckoId];
-          if (entry && entry.price > 0) {
-            return {
-              id: coingeckoId,
-              symbol: entry.symbol,
-              name: entry.name,
-              priceUsd: entry.price,
-              change24h: entry.change24h,
-              change7d: null,
-              volume24h: 0, // KV ticker n'a pas le volume24h, acceptable
-              marketCap: entry.marketCap,
-              sparkline7d: [],
-              source: "static", // marqué static car cache KV (pas live)
-              fetchedAt: new Date().toISOString(),
-            };
-          }
-        }
-      }
+    const { readTickerCache } = await import("@/lib/kv-ticker");
+    const { record: cached } = await readTickerCache();
+    const entry = cached[coingeckoId];
+    if (entry && entry.price > 0) {
+      return {
+        id: coingeckoId,
+        symbol: entry.symbol,
+        name: entry.name,
+        priceUsd: entry.price,
+        change24h: entry.change24h,
+        change7d: null,
+        volume24h: 0, // KV ticker n'a pas le volume24h, acceptable
+        marketCap: entry.marketCap,
+        sparkline7d: [],
+        source: "static", // marqué static car cache KV (pas live exchange)
+        fetchedAt: new Date().toISOString(),
+      };
     }
   } catch {
     // KV indispo → fallback cascade live ci-dessous

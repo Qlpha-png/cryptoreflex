@@ -25,20 +25,23 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 
 import { verifyBearer } from "@/lib/auth";
-import { getKv } from "@/lib/kv";
+import {
+  KV_TICKER_LIVE_TTL_SECONDS,
+  KV_TICKER_STALE_TTL_SECONDS,
+  type TickerEntry,
+  writeTickerCacheBoth,
+} from "@/lib/kv-ticker";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-// Doit matcher la même key dans lib/coingecko.ts:_fetchPrices KV read.
-const KV_TICKER_PRICES_KEY = "cg-ticker-prices:v1";
-// FIX 2026-05-14 — TTL aligné avec workflow GH cron `*/10 * * * *` :
-// cron tourne toutes les 10 min → TTL 12 min donne 2 min de marge si skip.
-// Avant : TTL 360s (6 min) < intervalle 10 min = clé vide 40 % du temps,
-// déclenchant cascade live (Binance/Kraken/Coinbase/...) sur /api/prices.
-// Diag confirmé via /api/diag/api-usage : `kvTickerPrices.empty: true` chronique.
-const KV_TTL_SECONDS = 720; // 12 min (cron 10 min + 2 min marge)
+// FIX 2026-05-14 (Phase 2) — Pattern live + stale via lib/kv-ticker.
+// Audit `gh run list` confirme que GH Actions cron `*/10 * * * *` ne tourne
+// PAS toutes les 10 min : gaps observés 65-246 min entre runs réelles.
+// Avec une seule clé TTL court (12 min), KV vide >90 % du temps.
+// Solution : écrire 2 clés simultanément (live TTL 12 min + stale TTL 6 h).
+// Les readers tentent live → stale → cascade. UX garanti même cron skipped.
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
@@ -91,19 +94,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // Build Record<id, priceData> for KV.
-  const record: Record<
-    string,
-    {
-      id: string;
-      symbol: string;
-      name: string;
-      image: string;
-      price: number;
-      change24h: number;
-      marketCap: number;
-    }
-  > = {};
+  // Build Record<id, TickerEntry> for KV.
+  const record: Record<string, TickerEntry> = {};
   for (const c of json) {
     if (!c?.id) continue;
     record[c.id] = {
@@ -125,22 +117,26 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  let stored = 0;
-  try {
-    const kv = getKv();
-    await kv.set(KV_TICKER_PRICES_KEY, record, { ex: KV_TTL_SECONDS });
-    stored = fetched;
-  } catch (err) {
-    Sentry.captureException(err);
+  // Écrit live (TTL 12 min) + stale (TTL 6 h) en parallèle. Si l'une échoue
+  // mais l'autre passe, le fallback partiel reste fonctionnel.
+  const writeResult = await writeTickerCacheBoth(record);
+  if (!writeResult.live && !writeResult.stale) {
+    Sentry.captureMessage("refresh-ticker-prices KV write failed (both keys)", "error");
     return NextResponse.json(
       {
         ok: false,
         fetched,
         stored: 0,
-        error: `KV set failed: ${err instanceof Error ? err.message : "unknown"}`,
+        error: "KV set failed for both live and stale keys",
         durationMs: Date.now() - startedAt,
       },
       { status: 500 },
+    );
+  }
+  if (!writeResult.live || !writeResult.stale) {
+    Sentry.captureMessage(
+      `refresh-ticker-prices partial KV write: live=${writeResult.live} stale=${writeResult.stale}`,
+      "warning",
     );
   }
 
@@ -148,8 +144,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   return NextResponse.json({
     ok: true,
     fetched,
-    stored,
+    storedLive: writeResult.live ? fetched : 0,
+    storedStale: writeResult.stale ? fetched : 0,
     durationMs,
-    ttlSeconds: KV_TTL_SECONDS,
+    liveTtlSeconds: KV_TICKER_LIVE_TTL_SECONDS,
+    staleTtlSeconds: KV_TICKER_STALE_TTL_SECONDS,
   });
 }
