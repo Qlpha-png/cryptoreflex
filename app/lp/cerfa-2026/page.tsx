@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import NewsletterInline from "@/components/NewsletterInline";
+import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -249,6 +250,13 @@ export default function CerfaLandingPage() {
             Voir la checklist
             <ArrowRight className="h-4 w-4" />
           </Link>
+        </div>
+      </section>
+
+      {/* Pack CTA — option payante pour visiteurs Reddit/Google Ads (audit 2026-05-14) */}
+      <section className="relative px-4 py-4 sm:px-6 lg:px-8 border-t border-white/5">
+        <div className="mx-auto max-w-3xl">
+          <PackCTABlock fromPage="lp-cerfa-2026" variant="compact" />
         </div>
       </section>
 

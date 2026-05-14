@@ -18,6 +18,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
+import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -353,6 +354,13 @@ export default function ChecklistPage() {
             subtitle="On envoie un rappel personnalisé en mars 2027 + nos analyses fiscales mises à jour BOFiP. 1 envoi par trimestre, 0 spam."
             ctaLabel="M'abonner à la veille fiscale"
           />
+        </div>
+      </section>
+
+      {/* Pack CTA — maillage interne pack 49€ (audit 2026-05-14) */}
+      <section className="no-print">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <PackCTABlock fromPage="guide-checklist-2026" />
         </div>
       </section>
 

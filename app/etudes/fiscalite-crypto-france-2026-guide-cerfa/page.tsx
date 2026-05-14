@@ -22,6 +22,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
+import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -1009,6 +1010,13 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
         </section>
       </article>
+
+      {/* Pack CTA — maillage interne pack 49€ (audit 2026-05-14) */}
+      <section className="border-t border-white/5">
+        <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6 lg:px-8">
+          <PackCTABlock fromPage="etude-fiscalite-cerfa" />
+        </div>
+      </section>
 
       {/* Newsletter capture */}
       <section className="border-t border-white/5 bg-white/[0.02]">
