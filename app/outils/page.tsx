@@ -28,6 +28,7 @@ import {
   TestTube2,
   type LucideIcon,
 } from "lucide-react";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
@@ -525,6 +526,12 @@ export default function OutilsPage() {
               </Reveal>
             );
           })}
+        </div>
+
+        {/* Étude pilier fiscalité (maillage SEO 2026-05-14) — placé avant
+            le CTA Pro pour conserver le contexte éditorial avant la conversion. */}
+        <div className="mt-16">
+          <FiscalCornerstoneCard fromPage="outils-hub" />
         </div>
 
         <section className="mt-16 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background p-6 sm:p-8">

@@ -34,6 +34,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import StickyWaltioCta from "@/components/fiscal-tools/StickyWaltioCta";
 import WaltioPromoBanner from "@/components/fiscal-tools/WaltioPromoBanner";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -992,10 +993,11 @@ export default function CalculateurFiscalitePage() {
         </div>
       </section>
 
-      {/* Pack CTA — maillage interne pack 49€ (audit 2026-05-14) */}
+      {/* Pack CTA + étude pilier — maillage interne (audit 2026-05-14) */}
       <section className="border-t border-border/60">
         <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6 lg:px-8">
           <PackCTABlock fromPage="calculateur-fiscalite" />
+          <FiscalCornerstoneCard fromPage="calculateur-fiscalite" />
         </div>
       </section>
 

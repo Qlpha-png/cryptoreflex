@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import {
   breadcrumbSchema,
   graphSchema,
@@ -277,6 +278,9 @@ export default function Cerfa2086AutoPage() {
               limit={4}
               variant="default"
             />
+
+            {/* Étude pilier fiscalité (maillage SEO 2026-05-14) */}
+            <FiscalCornerstoneCard fromPage="outils-cerfa-2086-auto" />
           </div>
         </section>
 

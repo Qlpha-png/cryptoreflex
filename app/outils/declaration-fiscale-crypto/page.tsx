@@ -16,6 +16,7 @@ import FiscalToolCard from "@/components/fiscal-tools/FiscalToolCard";
 import FiscalToolComparisonTable from "@/components/fiscal-tools/FiscalToolComparisonTable";
 import WaltioPromoCard from "@/components/fiscal-tools/WaltioPromoCard";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import {
   getAllFiscalTools,
   getRecommendedFiscalTool,
@@ -540,6 +541,9 @@ export default function DeclarationFiscaleCryptoPage() {
             limit={4}
             variant="default"
           />
+
+          {/* Étude pilier fiscalité (maillage SEO 2026-05-14) */}
+          <FiscalCornerstoneCard fromPage="outils-declaration-fiscale-crypto" />
         </div>
       </section>
     </>

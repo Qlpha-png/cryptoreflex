@@ -11,6 +11,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -253,10 +254,11 @@ export default function CerfaLandingPage() {
         </div>
       </section>
 
-      {/* Pack CTA — option payante pour visiteurs Reddit/Google Ads (audit 2026-05-14) */}
+      {/* Pack CTA + étude pilier — maillage interne (audit 2026-05-14) */}
       <section className="relative px-4 py-4 sm:px-6 lg:px-8 border-t border-white/5">
         <div className="mx-auto max-w-3xl">
           <PackCTABlock fromPage="lp-cerfa-2026" variant="compact" />
+          <FiscalCornerstoneCard fromPage="lp-cerfa-2026" variant="compact" />
         </div>
       </section>
 

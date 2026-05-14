@@ -19,6 +19,7 @@ import {
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
+import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -357,10 +358,11 @@ export default function ChecklistPage() {
         </div>
       </section>
 
-      {/* Pack CTA — maillage interne pack 49€ (audit 2026-05-14) */}
+      {/* Pack CTA + étude pilier — maillage interne (audit 2026-05-14) */}
       <section className="no-print">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <PackCTABlock fromPage="guide-checklist-2026" />
+          <FiscalCornerstoneCard fromPage="guide-checklist-2026" variant="compact" />
         </div>
       </section>
 
