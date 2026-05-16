@@ -116,6 +116,16 @@ jobs:
             fi
           done
 
+          # v5.45 PATCH 3 (Kevin) : si on est en scheduled run et que c'est 500
+          # (vrai bug serveur Coolify connu, en investigation), on warn sans
+          # déclencher un email failure. Exit 1 reste actif en workflow_dispatch
+          # (debug manuel) et pour les autres codes (timeout 000, 404, 401, etc.).
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${HTTP_CODE}" = "500" ]; then
+            echo "::warning title=daily-orchestrator transient 500::HTTP 500 after 3 retries, scheduled run treated as soft-skip (server-side bug in investigation)."
+            cat /tmp/body.json
+            exit 0
+          fi
+
           echo "::error title=daily-orchestrator FAIL after 3 retries::HTTP ${HTTP_CODE}"
           echo "--- full response body (last attempt) ---"
           cat /tmp/body.json
@@ -186,6 +196,13 @@ jobs:
               sleep $((attempt * 30))
             fi
           done
+
+          # v5.45 PATCH 3 (Kevin) : si scheduled + 500, warn sans email.
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${HTTP_CODE}" = "500" ]; then
+            echo "::warning title=streak-reminders transient 500::HTTP 500 after 3 retries, scheduled run treated as soft-skip (server-side bug in investigation)."
+            cat /tmp/body.json
+            exit 0
+          fi
 
           echo "::error title=streak-reminders FAIL after 3 retries::HTTP ${HTTP_CODE}"
           cat /tmp/body.json
