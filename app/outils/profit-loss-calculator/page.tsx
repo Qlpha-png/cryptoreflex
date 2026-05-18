@@ -34,7 +34,7 @@ const PAGE_PATH = "/outils/profit-loss-calculator";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Calculateur profit/perte crypto : PnL net après frais et fiscalité";
 const DESCRIPTION =
-  "Calcule ton profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 30% France. Outil gratuit Cryptoreflex.";
+  "Calculez votre profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 30% France. Outil gratuit Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -92,12 +92,12 @@ export default function ProfitLossCalculatorPage() {
       {
         question: "Cet outil remplace-t-il un comptable / Waltio ?",
         answer:
-          "Non. Cet outil est une simulation pedagogique pour UN trade. Pour ta declaration annuelle (formulaire 2086 + 3916-bis), il faut agreger TOUS tes trades + cessions taxables vs non-taxables (token-to-token = non taxable en FR depuis 2019, seuls les flux vers fiat/biens le sont). Utilise notre /outils/cerfa-2086-auto ou un service comme Waltio/Koinly pour l'export.",
+          "Non. Cet outil est une simulation pedagogique pour UN trade. Pour votre declaration annuelle (formulaire 2086 + 3916-bis), il faut agreger TOUS vos trades + cessions taxables vs non-taxables (token-to-token = non taxable en FR depuis 2019, seuls les flux vers fiat/biens le sont). Utilisez notre /outils/cerfa-2086-auto ou un service comme Waltio/Koinly pour l'export.",
       },
       {
         question: "Comment minimiser legalement l'impot sur ma plus-value ?",
         answer:
-          "Strategies legales : (1) Etaler les ventes sur plusieurs annees fiscales (utiliser le seuil 305€/an en dessous duquel tu n'es pas imposable), (2) Compenser les plus-values avec les pertes (carry-forward 10 ans), (3) Faire des dons crypto a association reconnue d'utilite publique (deductible 66%), (4) Si tu es en plus-value latente importante, attendre 1 an pour eventuels changements legislatifs. JAMAIS d'optimisation fiscale agressive (\"PEL crypto\", offshore non declare) = risque TRACFIN + redressement.",
+          "Strategies legales : (1) Etaler les ventes sur plusieurs annees fiscales (utiliser le seuil 305€/an en dessous duquel vous n'etes pas imposable), (2) Compenser les plus-values avec les pertes (carry-forward 10 ans), (3) Faire des dons crypto a association reconnue d'utilite publique (deductible 66%), (4) Si vous etes en plus-value latente importante, attendre 1 an pour eventuels changements legislatifs. JAMAIS d'optimisation fiscale agressive (\"PEL crypto\", offshore non declare) = risque TRACFIN + redressement.",
       },
     ]),
   ]);
@@ -127,8 +127,8 @@ export default function ProfitLossCalculatorPage() {
             <span className="gradient-text">calcul net en 30s</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            Renseigne ton prix d&apos;achat, prix de vente, quantite et
-            frais. On calcule ton{" "}
+            Renseignez votre prix d&apos;achat, prix de vente, quantite et
+            frais. On calcule votre{" "}
             <strong className="text-fg">PnL brut, net apres frais, et apres impot PFU 30%</strong>{" "}
             (France). Pure simulation educative — pas un conseil fiscal.
           </p>
@@ -149,7 +149,7 @@ export default function ProfitLossCalculatorPage() {
             </li>
             <li>
               <strong className="text-fg">PnL net frais</strong> = PnL brut -
-              frais_achat - frais_vente (en valeur absolue selon ton type
+              frais_achat - frais_vente (en valeur absolue selon votre type
               d&apos;ordre : maker/taker/spread)
             </li>
             <li>
@@ -174,7 +174,7 @@ export default function ProfitLossCalculatorPage() {
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
-              Detaille tes obligations annuelles complete (cessions, pertes
+              Detaille vos obligations annuelles complete (cessions, pertes
               reportables, declaration 2086).
             </div>
           </Link>
@@ -190,7 +190,7 @@ export default function ProfitLossCalculatorPage() {
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
-              Genere ton PDF declaratif pre-rempli en 30 secondes.
+              Generez votre PDF declaratif pre-rempli en 30 secondes.
             </div>
           </Link>
         </section>
@@ -204,7 +204,7 @@ export default function ProfitLossCalculatorPage() {
           Cet outil ne remplace pas un comptable ni un conseiller fiscal. Le
           PFU 30% s&apos;applique sur les{" "}
           <strong className="text-fg">cessions taxables</strong> uniquement
-          (vers fiat ou biens/services, pas token-to-token). Pour ta
+          (vers fiat ou biens/services, pas token-to-token). Pour votre
           declaration annuelle, voir notre{" "}
           <Link
             href="/blog/comment-declarer-crypto-impots-2026-guide-complet"

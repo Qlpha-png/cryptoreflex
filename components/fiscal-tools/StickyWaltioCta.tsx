@@ -78,7 +78,7 @@ export default function StickyWaltioCta() {
   }, []);
 
   const handleClick = useCallback(() => {
-    trackAffiliateClick("waltio", "sticky", "Économise 40h sur ta déclaration");
+    trackAffiliateClick("waltio", "sticky", "Économisez 40h sur votre déclaration");
   }, []);
 
   if (dismissed || !visible) return null;
@@ -86,7 +86,7 @@ export default function StickyWaltioCta() {
   return (
     <div
       role="complementary"
-      aria-label="Promotion Waltio — économise du temps sur ta déclaration crypto"
+      aria-label="Promotion Waltio — économisez du temps sur votre déclaration crypto"
       className="fixed inset-x-0 bottom-0 z-40 px-3 pb-3 sm:px-6 sm:pb-5 pointer-events-none"
     >
       <div className="mx-auto max-w-5xl pointer-events-auto">
@@ -99,10 +99,10 @@ export default function StickyWaltioCta() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white truncate">
-              Économise 40h sur ta déclaration crypto
+              Économisez 40h sur votre déclaration crypto
             </p>
             <p className="hidden sm:block text-xs text-white/70 truncate">
-              Waltio (FR) génère ton Cerfa 2086 + 3916-bis automatiquement —
+              Waltio (FR) génère votre Cerfa 2086 + 3916-bis automatiquement —
               <span className="text-primary-soft font-semibold">
                 {" "}
                 -30 % via Cryptoreflex

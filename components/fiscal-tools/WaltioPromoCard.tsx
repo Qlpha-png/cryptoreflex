@@ -43,10 +43,10 @@ export default function WaltioPromoCard({
   const waltio = getRecommendedFiscalTool();
   const finalHeadline =
     headline ??
-    "Génère ton Cerfa 3916-bis automatiquement avec Waltio";
+    "Générez votre Cerfa 3916-bis automatiquement avec Waltio";
   const finalDescription =
     description ??
-    "Pour des centaines de transactions, le formulaire 2086 et le 3916-bis manuels deviennent ingérables. Waltio (édité en France) connecte tes exchanges, calcule tes plus-values et pré-remplit les formulaires fiscaux français — 30 % de réduction via Cryptoreflex.";
+    "Pour des centaines de transactions, le formulaire 2086 et le 3916-bis manuels deviennent ingérables. Waltio (édité en France) connecte vos exchanges, calcule vos plus-values et pré-remplit les formulaires fiscaux français — 30 % de réduction via Cryptoreflex.";
 
   if (variant === "compact") {
     return (
@@ -56,7 +56,7 @@ export default function WaltioPromoCard({
           aria-hidden="true"
         />
         <span>
-          Pour générer ton Cerfa automatiquement,{" "}
+          Pour générer votre Cerfa automatiquement,{" "}
           <AffiliateLink
             href={waltio.affiliateUrl}
             platform={waltio.id}

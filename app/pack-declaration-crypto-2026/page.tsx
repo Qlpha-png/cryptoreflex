@@ -44,7 +44,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Pack Déclaration Crypto 2026 — Cerfa 2086 + 3916-bis pré-remplis 49 €",
   description:
-    "Déclaration crypto 2026 simplifiée : importe ton CSV, génère ton Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 49 € one-shot, 100 % automatisé. Économise 5 h de saisie manuelle.",
+    "Déclaration crypto 2026 simplifiée : importez votre CSV, générez votre Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 49 € one-shot, 100 % automatisé. Économisez 5 h de saisie manuelle.",
   alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026`),
   openGraph: {
     title: "Pack Déclaration Crypto 2026 — Cryptoreflex",
@@ -71,13 +71,13 @@ const FEATURES = [
     Icon: Calendar,
     title: "Économie 5 h+ de saisie",
     blurb:
-      "Au lieu de calculer manuellement 150 VH bis ligne par ligne, tu obtiens le résultat en 5 minutes. Multi-exchange supporté.",
+      "Au lieu de calculer manuellement 150 VH bis ligne par ligne, vous obtenez le résultat en 5 minutes. Multi-exchange supporté.",
   },
   {
     Icon: ShieldCheck,
     title: "Sources légales citées",
     blurb:
-      "Chaque calcul est accompagné de la référence CGI / BOFiP / décision CE applicable. Audit-ready pour ton expert-comptable.",
+      "Chaque calcul est accompagné de la référence CGI / BOFiP / décision CE applicable. Audit-ready pour votre expert-comptable.",
   },
 ];
 
@@ -85,31 +85,31 @@ export default function PackDeclarationPage() {
   const faqItems = [
     {
       q: "Quelle différence avec le calculateur fiscalité gratuit ?",
-      a: "Le calculateur gratuit estime ton impôt PFU à partir d'inputs manuels (montant investi, montant vendu). Le Pack 49 € parse ton VRAI historique CSV (Binance, Coinbase, Kraken, Bitpanda…), calcule les plus-values selon l'article 150 VH bis (prix moyen pondéré agrégé), génère le Cerfa 2086 PDF officiel + Annexe 3916-bis si applicable. Tu peux directement remettre le PDF à ton service d'impôts.",
+      a: "Le calculateur gratuit estime votre impôt PFU à partir d'inputs manuels (montant investi, montant vendu). Le Pack 49 € parse votre VRAI historique CSV (Binance, Coinbase, Kraken, Bitpanda…), calcule les plus-values selon l'article 150 VH bis (prix moyen pondéré agrégé), génère le Cerfa 2086 PDF officiel + Annexe 3916-bis si applicable. Vous pouvez directement remettre le PDF à votre service d'impôts.",
     },
     {
       q: "Quelles plateformes / exchanges sont supportées ?",
-      a: "V1 mai 2026 : Binance, Coinbase, Kraken, Bitpanda, OKX, KuCoin, Bitget, Crypto.com, Trade Republic. Format d'import : CSV téléchargé depuis ton compte exchange (jamais d'API key requise). On couvre 95 % du volume des Français.",
+      a: "V1 mai 2026 : Binance, Coinbase, Kraken, Bitpanda, OKX, KuCoin, Bitget, Crypto.com, Trade Republic. Format d'import : CSV téléchargé depuis votre compte exchange (jamais d'API key requise). On couvre 95 % du volume des Français.",
     },
     {
       q: "C'est vraiment 100 % automatisé ? Pas de support humain ?",
-      a: "Oui. Tout est généré par algorithme déterministe (parser CSV + 150 VH bis pas-à-pas + PDF generator). Si tu as une question sur une situation très complexe (DeFi exotique, NFT créateurs, mining BIC, BNC), on te redirige vers un expert-comptable agréé crypto-actifs (liste fournie). Cryptoreflex ne donne pas de conseil personnalisé.",
+      a: "Oui. Tout est généré par algorithme déterministe (parser CSV + 150 VH bis pas-à-pas + PDF generator). Si vous avez une question sur une situation très complexe (DeFi exotique, NFT créateurs, mining BIC, BNC), on vous redirige vers un expert-comptable agréé crypto-actifs (liste fournie). Cryptoreflex ne donne pas de conseil personnalisé.",
     },
     {
       q: "C'est fiable pour ma déclaration officielle ?",
-      a: "Le Cerfa 2086 généré suit STRICTEMENT la méthodologie CGI 150 VH bis (prix moyen pondéré du portefeuille global, plus-values nettes après moins-values intra-année). Précision ≥ 99 % sur des trades simples (achat/vente/swap). Pour le DeFi avancé, fais relire par un expert-comptable. Cryptoreflex décline toute responsabilité fiscale.",
+      a: "Le Cerfa 2086 généré suit STRICTEMENT la méthodologie CGI 150 VH bis (prix moyen pondéré du portefeuille global, plus-values nettes après moins-values intra-année). Précision ≥ 99 % sur des trades simples (achat/vente/swap). Pour le DeFi avancé, faites relire par un expert-comptable. Cryptoreflex décline toute responsabilité fiscale.",
     },
     {
       q: "49 €, c'est combien remboursé ?",
-      a: "Si tu déclares correctement, ZÉRO frais d'impôt évité — c'est juste l'impôt légal dû. MAIS tu évites une amende potentielle de 1 500 €/compte non déclaré (Annexe 3916-bis) + redressement fiscal sur les plus-values mal calculées. ROI moyen estimé : 30-200x (selon volume de trades).",
+      a: "Si vous déclarez correctement, ZÉRO frais d'impôt évité — c'est juste l'impôt légal dû. MAIS vous évitez une amende potentielle de 1 500 €/compte non déclaré (Annexe 3916-bis) + redressement fiscal sur les plus-values mal calculées. ROI moyen estimé : 30-200x (selon volume de trades).",
     },
     {
       q: "C'est un service récurrent ou one-shot ?",
-      a: "ONE-SHOT 49 € : tu payes une fois, tu reçois ton Cerfa pour la déclaration de l'année en cours (revenus 2025 → déclaration 2026). L'année suivante (revenus 2026 → déclaration 2027), c'est un nouveau Pack 49 €. Aucun abonnement caché. (Alternative : Pro+ 79 €/an = exports illimités multi-années).",
+      a: "ONE-SHOT 49 € : vous payez une fois, vous recevez votre Cerfa pour la déclaration de l'année en cours (revenus 2025 → déclaration 2026). L'année suivante (revenus 2026 → déclaration 2027), c'est un nouveau Pack 49 €. Aucun abonnement caché. (Alternative : Pro+ 79 €/an = exports illimités multi-années).",
     },
     {
       q: "Quand est la date limite de déclaration ?",
-      a: "Mi-mai 2026 (date variable selon zone géographique : zone 1 mi-mai, zone 2 fin mai, zone 3 début juin). Tu as accès au Pack jusqu'à la dernière date limite de ta zone. Le Cerfa est conservé dans ton compte 5 ans (durée de prescription fiscale).",
+      a: "Mi-mai 2026 (date variable selon zone géographique : zone 1 mi-mai, zone 2 fin mai, zone 3 début juin). Vous avez accès au Pack jusqu'à la dernière date limite de votre zone. Le Cerfa est conservé dans votre compte 5 ans (durée de prescription fiscale).",
     },
   ];
 
@@ -150,21 +150,21 @@ export default function PackDeclarationPage() {
             <span className="gradient-text">5 minutes</span>.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Importe ton CSV exchange. Récupère ton Cerfa 2086 + Annexe 3916-bis
-            pré-remplis. <strong>49 € one-shot</strong>, 100 % automatisé,
-            aucune présence humaine.
+            Importez votre CSV exchange. Récupérez votre Cerfa 2086 + Annexe
+            3916-bis pré-remplis. <strong>49 € one-shot</strong>, 100 %
+            automatisé, aucune présence humaine.
           </p>
         </header>
 
         <div className="mt-8">
           <Tldr
-            headline="49 € pour générer ton Cerfa 2086 officiel à partir de ton CSV exchange en 5 minutes au lieu de 5 heures."
+            headline="49 € pour générer votre Cerfa 2086 officiel à partir de votre CSV exchange en 5 minutes au lieu de 5 heures."
             bullets={[
               { emoji: "📋", text: "Cerfa 2086 + Annexe 3916-bis PDF pré-remplis" },
               { emoji: "💸", text: "Calcul 150 VH bis pas-à-pas avec sources CGI/BOFiP citées" },
               { emoji: "⏱️", text: "5 min vs 5 h de saisie manuelle (gain temps massif)" },
               { emoji: "✅", text: "ROI 30-200x (évite amendes 1 500 €/compte 3916-bis)" },
-              { emoji: "🤖", text: "100 % automatisé. Aucun support humain. Audit-ready pour ton expert-comptable." },
+              { emoji: "🤖", text: "100 % automatisé. Aucun support humain. Audit-ready pour votre expert-comptable." },
             ]}
             readingTime="4 min"
             level="Tous niveaux"
@@ -180,7 +180,7 @@ export default function PackDeclarationPage() {
             <span className="gradient-text">49 €</span>
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Tu payes une fois pour la déclaration 2026. Cerfa généré
+            Vous payez une fois pour la déclaration 2026. Cerfa généré
             instantanément, archivé 5 ans. Pas d&apos;abonnement caché.
           </p>
           <Link
@@ -215,18 +215,18 @@ export default function PackDeclarationPage() {
             {[
               {
                 n: "1",
-                title: "Importe ton CSV",
-                desc: "Télécharge ton historique depuis Binance / Coinbase / Kraken / Bitpanda / OKX / KuCoin / Bitget / Crypto.com / Trade Republic et glisse-dépose dans le wizard.",
+                title: "Importez votre CSV",
+                desc: "Téléchargez votre historique depuis Binance / Coinbase / Kraken / Bitpanda / OKX / KuCoin / Bitget / Crypto.com / Trade Republic et glissez-déposez dans le wizard.",
               },
               {
                 n: "2",
-                title: "Vérifie le calcul",
-                desc: "L'algorithme parse ton historique, calcule plus-values selon 150 VH bis (PMP global), détecte les comptes étrangers à déclarer en 3916-bis. Tu peux ajuster manuellement avant export.",
+                title: "Vérifiez le calcul",
+                desc: "L'algorithme parse votre historique, calcule plus-values selon 150 VH bis (PMP global), détecte les comptes étrangers à déclarer en 3916-bis. Vous pouvez ajuster manuellement avant export.",
               },
               {
                 n: "3",
-                title: "Télécharge tes PDF",
-                desc: "Cerfa 2086 + Annexe 3916-bis (si applicable) prêts à signer. Format conforme impots.gouv.fr 2026. Archivés 5 ans dans ton espace Cryptoreflex.",
+                title: "Téléchargez vos PDF",
+                desc: "Cerfa 2086 + Annexe 3916-bis (si applicable) prêts à signer. Format conforme impots.gouv.fr 2026. Archivés 5 ans dans votre espace Cryptoreflex.",
               },
             ].map((step) => (
               <li key={step.n} className="flex items-start gap-4 hover-lift rounded-2xl border border-border bg-surface p-5">

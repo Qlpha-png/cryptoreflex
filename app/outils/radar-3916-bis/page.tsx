@@ -23,9 +23,9 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
-  title: "Radar 3916-bis — détecte tes amendes crypto en 2 min (gratuit)",
+  title: "Radar 3916-bis — détectez vos amendes crypto en 2 min (gratuit)",
   description:
-    "Outil gratuit Cryptoreflex : identifie tes comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffre l'amende potentielle 1 500 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
+    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle 1 500 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
   alternates: withHreflang(`${BRAND.url}/outils/radar-3916-bis`),
   keywords: [
     "3916-bis crypto",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     "BOI-CF-CPF-30-20",
   ],
   openGraph: {
-    title: "Radar 3916-bis — chiffre l'amende crypto qui t'attend",
+    title: "Radar 3916-bis — chiffrez l'amende crypto qui vous attend",
     description:
-      "Détecte en 2 min les comptes crypto étrangers que tu dois déclarer (Binance, Kraken, MEXC…). Amende 1 500 à 10 000 € par compte oublié.",
+      "Détectez en 2 min les comptes crypto étrangers que vous devez déclarer (Binance, Kraken, MEXC…). Amende 1 500 à 10 000 € par compte oublié.",
     url: `${BRAND.url}/outils/radar-3916-bis`,
     type: "website",
     locale: "fr_FR",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Radar 3916-bis crypto",
     description:
-      "Combien risques-tu d'amende sur tes comptes Binance/Kraken/MEXC oubliés ? Check en 2 min.",
+      "Combien risquez-vous d'amende sur vos comptes Binance/Kraken/MEXC oubliés ? Vérifiez en 2 min.",
   },
   robots: {
     index: true,
@@ -89,41 +89,41 @@ const FAQS = [
   },
   {
     q: "Cryptoreflex peut-il déclarer pour moi ?",
-    a: "Non. Cryptoreflex est un éditeur web indépendant, pas un expert-comptable ni un mandataire fiscal. L'outil est une aide à la préparation de ta déclaration. Tu restes responsable de la déclaration finale sur impots.gouv.fr. Si tu as un dossier complexe, consulte un expert-comptable spécialisé crypto.",
+    a: "Non. Cryptoreflex est un éditeur web indépendant, pas un expert-comptable ni un mandataire fiscal. L'outil est une aide à la préparation de votre déclaration. Vous restez responsable de la déclaration finale sur impots.gouv.fr. Si vous avez un dossier complexe, consultez un expert-comptable spécialisé crypto.",
   },
   {
     q: "Mes données sont-elles enregistrées ?",
-    a: "Non. Tout reste dans ton navigateur. Aucune donnée n'est envoyée sur nos serveurs, aucune sauvegarde, aucun cookie tiers. Tu peux fermer la fenêtre, rien n'est conservé. Le seul artefact possible est l'impression / sauvegarde PDF que tu déclencheras toi-même.",
+    a: "Non. Tout reste dans votre navigateur. Aucune donnée n'est envoyée sur nos serveurs, aucune sauvegarde, aucun cookie tiers. Vous pouvez fermer la fenêtre, rien n'est conservé. Le seul artefact possible est l'impression / sauvegarde PDF que vous déclencherez vous-même.",
   },
   {
     q: "J'ai oublié de déclarer les années précédentes — que faire ?",
-    a: "La régularisation spontanée auprès de la DGFiP est généralement traitée plus favorablement qu'un redressement (réduction des pénalités possible). Tu peux déclarer les comptes oubliés via le formulaire 3916-bis pour les années non prescrites (6 ans pour pays coopératif, 10 ans pour pays non-coopératif). Pour les gros enjeux, consulte un avocat fiscaliste.",
+    a: "La régularisation spontanée auprès de la DGFiP est généralement traitée plus favorablement qu'un redressement (réduction des pénalités possible). Vous pouvez déclarer les comptes oubliés via le formulaire 3916-bis pour les années non prescrites (6 ans pour pays coopératif, 10 ans pour pays non-coopératif). Pour les gros enjeux, consultez un avocat fiscaliste.",
   },
   {
     q: "Quelle est la deadline de déclaration ?",
-    a: "Le 3916-bis est joint à ta déclaration de revenus annuelle. La deadline 2026 dépend de ton département (typiquement entre fin mai et début juin). Vérifie sur impots.gouv.fr ta date limite exacte.",
+    a: "Le 3916-bis est joint à votre déclaration de revenus annuelle. La deadline 2026 dépend de votre département (typiquement entre fin mai et début juin). Vérifiez sur impots.gouv.fr votre date limite exacte.",
   },
 ];
 
 const HOW_TO_STEPS = [
   {
-    name: "Sélectionne tes exchanges",
-    text: "Coche tous les exchanges crypto où tu as eu un compte (même fermé, même vide). Le Radar liste les 15 plateformes utilisées par les Français : Binance, Coinbase, Kraken, Crypto.com, Bybit, MEXC, KuCoin, OKX, Bitget, Bitvavo, Gemini, Bitstamp, Bitpanda, Bitfinex, BingX.",
+    name: "Sélectionnez vos exchanges",
+    text: "Cochez tous les exchanges crypto où vous avez eu un compte (même fermé, même vide). Le Radar liste les 15 plateformes utilisées par les Français : Binance, Coinbase, Kraken, Crypto.com, Bybit, MEXC, KuCoin, OKX, Bitget, Bitvavo, Gemini, Bitstamp, Bitpanda, Bitfinex, BingX.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
     name: "Confirme l'entité contractante",
-    text: "Pour chaque exchange, indique l'entité légale qui te sert (ex: Binance France SAS vs Binance Holdings Cayman) et l'année d'ouverture du compte. Le Radar t'aide en pointant vers les Mentions Légales officielles.",
+    text: "Pour chaque exchange, indiquez l'entité légale qui vous sert (ex: Binance France SAS vs Binance Holdings Cayman) et l'année d'ouverture du compte. Le Radar vous aide en pointant vers les Mentions Légales officielles.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
-    name: "Découvre ton exposition financière",
-    text: "Le Radar calcule en € la somme exacte des amendes que tu risques si tu ne déclares pas. Comptes en pays non-coopératif (Seychelles, BVI…) = 10 000 €/compte. Comptes en pays coopératif = 1 500 €/compte.",
+    name: "Découvrez votre exposition financière",
+    text: "Le Radar calcule en € la somme exacte des amendes que vous risquez si vous ne déclarez pas. Comptes en pays non-coopératif (Seychelles, BVI…) = 10 000 €/compte. Comptes en pays coopératif = 1 500 €/compte.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
-    name: "Déclare sur impots.gouv.fr",
-    text: "Le Radar te donne les instructions exactes pour remplir un formulaire 3916-bis par compte sur impots.gouv.fr (case 8UU + remplissage des champs entité, adresse, dates). Tu peux imprimer / sauvegarder en PDF ton récapitulatif pour t'aider.",
+    name: "Déclarez sur impots.gouv.fr",
+    text: "Le Radar vous donne les instructions exactes pour remplir un formulaire 3916-bis par compte sur impots.gouv.fr (case 8UU + remplissage des champs entité, adresse, dates). Vous pouvez imprimer / sauvegarder en PDF votre récapitulatif pour vous aider.",
     url: "https://www.impots.gouv.fr/accueil",
   },
 ];
@@ -168,7 +168,7 @@ export default function RadarPage() {
               id="hero-title"
               className="mt-6 text-[28px] sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.05] tracking-tight max-w-3xl"
             >
-              Combien risques-tu{" "}
+              Combien risquez-vous{" "}
               <span className="text-gradient-gold-animate">
                 d&apos;amende crypto
               </span>{" "}
@@ -176,12 +176,12 @@ export default function RadarPage() {
             </h1>
 
             <p className="mt-6 text-base sm:text-lg text-fg/80 max-w-2xl leading-relaxed">
-              Si tu as un compte sur Binance, Kraken, MEXC, Bybit, KuCoin… et
-              que tu ne l&apos;as pas déclaré sur le 3916-bis, l&apos;amende est
-              de{" "}
+              Si vous avez un compte sur Binance, Kraken, MEXC, Bybit, KuCoin…
+              et que vous ne l&apos;avez pas déclaré sur le 3916-bis,
+              l&apos;amende est de{" "}
               <strong className="text-warning">1 500 €</strong> à{" "}
               <strong className="text-danger">10 000 € PAR COMPTE</strong>.
-              Check ton exposition en 2 min.
+              Vérifiez votre exposition en 2 min.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
@@ -335,7 +335,7 @@ export default function RadarPage() {
               <span className="gradient-text">Cryptoreflex Pro</span>
             </h2>
             <p className="mt-3 text-sm text-fg/70 max-w-2xl mx-auto">
-              Le Radar gratuit te donne le diagnostic. Pro ajoute les
+              Le Radar gratuit vous donne le diagnostic. Pro ajoute les
               fonctionnalités pratiques pour ne plus jamais oublier une
               déclaration.
             </p>
@@ -345,7 +345,7 @@ export default function RadarPage() {
             {[
               {
                 title: "Mémo PDF personnalisé",
-                text: "Récapitulatif complet pré-rempli (nom + adresse exchange + tes années) à imprimer pour t'accompagner devant impots.gouv.fr.",
+                text: "Récapitulatif complet pré-rempli (nom + adresse exchange + vos années) à imprimer pour vous accompagner devant impots.gouv.fr.",
               },
               {
                 title: "Rappel pré-deadline",
@@ -353,7 +353,7 @@ export default function RadarPage() {
               },
               {
                 title: "Suivi pluri-annuel",
-                text: "Garde la trace de tes déclarations 3916-bis année par année (utile en cas de contrôle DGFiP).",
+                text: "Gardez la trace de vos déclarations 3916-bis année par année (utile en cas de contrôle DGFiP).",
               },
             ].map((item) => (
               <div
@@ -459,11 +459,12 @@ export default function RadarPage() {
                 <strong className="text-fg">Disclaimer fiscal —</strong> Le
                 Radar 3916-bis est un outil pédagogique d&apos;aide à la
                 préparation de la déclaration. Il ne constitue ni un conseil
-                fiscal personnalisé, ni un mandat de déclaration. Tu restes
-                seul responsable de ta déclaration finale auprès de la DGFiP.
-                Les informations sur les exchanges sont basées sur les Mentions
-                Légales publiquement consultables — vérifie sur ton compte
-                personnel l&apos;entité contractante exacte avant déclaration.
+                fiscal personnalisé, ni un mandat de déclaration. Vous restez
+                seul responsable de votre déclaration finale auprès de la
+                DGFiP. Les informations sur les exchanges sont basées sur les
+                Mentions Légales publiquement consultables — vérifiez sur
+                votre compte personnel l&apos;entité contractante exacte avant
+                déclaration.
               </span>
             </p>
             <p className="flex items-start gap-2">
@@ -473,10 +474,10 @@ export default function RadarPage() {
               />
               <span>
                 <strong className="text-fg">Vie privée —</strong> Aucune donnée
-                que tu saisis dans le Radar n&apos;est envoyée sur internet.
-                Tout reste dans ton navigateur (zéro cookie tiers, zéro
-                tracking). Le seul artefact persistant est l&apos;impression /
-                sauvegarde PDF que tu déclencheras toi-même via le bouton
+                que vous saisissez dans le Radar n&apos;est envoyée sur
+                internet. Tout reste dans votre navigateur (zéro cookie tiers,
+                zéro tracking). Le seul artefact persistant est l&apos;impression
+                / sauvegarde PDF que vous déclencherez vous-même via le bouton
                 dédié.
               </span>
             </p>

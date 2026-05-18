@@ -34,26 +34,26 @@ interface FormState {
 const STEPS: StepConfig[] = [
   {
     id: "acquisitionsTotales",
-    label: "Combien as-tu investi au total ?",
-    hint: "Somme de tous tes achats crypto, en euros, depuis le début (frais d'achat inclus).",
+    label: "Combien avez-vous investi au total ?",
+    hint: "Somme de tous vos achats crypto, en euros, depuis le début (frais d'achat inclus).",
     placeholder: "Ex. 5000",
   },
   {
     id: "valeurPortefeuilleActuelle",
-    label: "Valeur actuelle de ton portefeuille ?",
-    hint: "Valorisation totale de toutes tes cryptos au prix du jour.",
+    label: "Valeur actuelle de votre portefeuille ?",
+    hint: "Valorisation totale de toutes vos cryptos au prix du jour.",
     placeholder: "Ex. 12000",
   },
   {
     id: "totalCessionsAnnee",
-    label: "Combien as-tu vendu cette année ?",
+    label: "Combien avez-vous vendu cette année ?",
     hint: "Total des cessions vers euros (€) ou monnaie ayant cours légal en 2026. Les conversions crypto ↔ crypto ne comptent pas.",
     placeholder: "Ex. 4000",
   },
   {
     id: "valeurPortefeuilleAuMomentVente",
     label: "Valeur du portefeuille au moment de la vente ?",
-    hint: "Valorisation totale de ton portefeuille (incluant la part vendue) juste avant la cession.",
+    hint: "Valorisation totale de votre portefeuille (incluant la part vendue) juste avant la cession.",
     placeholder: "Ex. 10000",
   },
 ];
@@ -415,8 +415,8 @@ export default function TaxCalculator() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-border/60 pt-6">
             <p className="text-xs text-muted">
-              Tu peux modifier tes réponses à tout moment, tes données restent
-              sur ton appareil.
+              Vous pouvez modifier vos réponses à tout moment, vos données restent
+              sur votre appareil.
             </p>
             <div className="flex gap-3">
               <button
@@ -480,7 +480,7 @@ function ProjectionPanel({
             id="projection-title"
             className="mt-1 text-lg sm:text-xl font-bold text-white"
           >
-            Et si tu cèdes chaque année à PFU 30 % ?
+            Et si vous cédez chaque année à PFU 30 % ?
           </h3>
         </div>
 
@@ -520,7 +520,7 @@ function ProjectionPanel({
       {!valid ? (
         <p className="mt-4 text-sm text-fg/70 flex items-start gap-2">
           <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary-soft" aria-hidden="true" />
-          Renseigne ta valeur de portefeuille actuelle (étape 2) pour activer la
+          Renseignez votre valeur de portefeuille actuelle (étape 2) pour activer la
           projection.
         </p>
       ) : (
@@ -594,9 +594,9 @@ function ProjectionPanel({
           <p className="mt-5 text-[11px] text-muted leading-relaxed">
             <Info className="inline h-3 w-3 -mt-0.5" aria-hidden="true" />{" "}
             Estimation à titre indicatif — taux PFU 2026 (30 %), fiscalité peut
-            évoluer. Hypothèse : tu cèdes chaque année tes gains pour réaliser
+            évoluer. Hypothèse : vous cédez chaque année vos gains pour réaliser
             l'imposition. En buy &amp; hold pur (aucune cession), aucun impôt
-            n'est dû tant que tu ne convertis pas en euros — la projection
+            n'est dû tant que vous ne convertissez pas en euros — la projection
             ci-dessus est donc volontairement pessimiste.
           </p>
         </>

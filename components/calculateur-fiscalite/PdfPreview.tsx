@@ -167,7 +167,7 @@ export default function PdfPreview({
         {/* ====================== INPUTS SAISIS ======================== */}
         <section className="pdf-section mt-5 rounded-lg border border-slate-200 p-4">
           <h2 className="text-[12pt] font-bold text-slate-900">
-            1. Tes données saisies
+            1. Vos données saisies
           </h2>
           <table className="mt-2 w-full text-[10pt]">
             <tbody className="divide-y divide-slate-200">
@@ -235,7 +235,7 @@ export default function PdfPreview({
         {/* =================== SCHEMA DECLARATION 2086 + 3916-bis =================== */}
         <section className="pdf-section mt-4 rounded-lg border border-slate-200 p-4 page-break-inside-avoid">
           <h2 className="text-[12pt] font-bold text-slate-900">
-            3. Où reporter ces montants dans ta déclaration
+            3. Où reporter ces montants dans votre déclaration
           </h2>
           <p className="mt-1 text-[9pt] text-slate-500">
             Schéma simplifié — voir le guide Cryptoreflex pour le pas-à-pas.
@@ -287,8 +287,8 @@ export default function PdfPreview({
           <div className="mt-3 rounded bg-slate-100 p-3 text-[9.5pt] text-slate-700">
             <strong>Report sur la 2042-C :</strong> ligne <span className="font-mono">3AN</span>{" "}
             (plus-values) ou <span className="font-mono">3BN</span> (moins-values
-            reportables). Coche la case <span className="font-mono">2OP</span> si
-            tu optes pour le barème progressif.
+            reportables). Cochez la case <span className="font-mono">2OP</span> si
+            vous optez pour le barème progressif.
           </div>
         </section>
 
@@ -310,7 +310,7 @@ export default function PdfPreview({
                 (DeFi, staking, NFT inclus), Waltio génère automatiquement le
                 Cerfa 2086 + récap fiscal officiel. Connexion API à 50+
                 plateformes. <strong>Promo Cryptoreflex :</strong> -10 % sur
-                ton premier abonnement.
+                votre premier abonnement.
               </p>
               <div className="mt-2 inline-block rounded border border-amber-500 bg-amber-50 px-3 py-1 text-[9.5pt] font-mono text-amber-800">
                 cryptoreflex.fr/go/waltio

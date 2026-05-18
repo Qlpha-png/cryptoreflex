@@ -29,7 +29,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Succession Crypto FR — Guide + checklist + lettre d'intention",
   description:
-    "Comment transmettre tes crypto-actifs à tes proches sans perte ? Guide légal FR, checklist sécurité (seed phrase, multisig, héritage), générateur de lettre d'intention. Bientôt.",
+    "Comment transmettre vos crypto-actifs à vos proches sans perte ? Guide légal FR, checklist sécurité (seed phrase, multisig, héritage), générateur de lettre d'intention. Bientôt.",
   alternates: withHreflang(`${BRAND.url}/outils/succession-crypto`),
 };
 
@@ -37,15 +37,15 @@ export default function SuccessionCryptoPage() {
   const faqItems = [
     {
       q: "Que se passe-t-il si je décède sans avoir transmis mes accès crypto ?",
-      a: "Tes crypto sont perdues à vie. Aucun exchange (sauf preuve de propriété compliquée) ni notaire ne peut récupérer une seed phrase oubliée. Estimation : 20-30 % des bitcoins existants sont déjà perdus à cause de cela. Pour tes héritiers, c'est une perte sèche du capital + une dette fiscale potentielle (taxation succession sur la valeur DC).",
+      a: "Vos crypto sont perdues à vie. Aucun exchange (sauf preuve de propriété compliquée) ni notaire ne peut récupérer une seed phrase oubliée. Estimation : 20-30 % des bitcoins existants sont déjà perdus à cause de cela. Pour vos héritiers, c'est une perte sèche du capital + une dette fiscale potentielle (taxation succession sur la valeur DC).",
     },
     {
       q: "Faut-il rédiger un testament spécifique aux crypto ?",
-      a: "Non, le testament de droit commun couvre les crypto comme tout actif numérique. Ce qu'il manque, c'est l'aspect technique : ton notaire ne peut pas accéder à un Ledger sans la seed. Notre outil génère une lettre d'intention complémentaire (où sont les wallets, comment y accéder en lien avec un coffre-fort ou un exécuteur testamentaire) qui se range avec ton testament.",
+      a: "Non, le testament de droit commun couvre les crypto comme tout actif numérique. Ce qu'il manque, c'est l'aspect technique : votre notaire ne peut pas accéder à un Ledger sans la seed. Notre outil génère une lettre d'intention complémentaire (où sont les wallets, comment y accéder en lien avec un coffre-fort ou un exécuteur testamentaire) qui se range avec votre testament.",
     },
     {
       q: "C'est légal de partager sa seed phrase à un héritier ?",
-      a: "Oui, c'est ton actif. Mais ce n'est pas recommandé d'en donner une copie en clair de ton vivant (perte de souveraineté). Solutions : (1) testament olographe + lettre d'intention scellée chez le notaire ; (2) Shamir's Secret Sharing (outil avancé pour découper la seed en N parts) ; (3) multisig 2-of-3 avec un proche ou un coffre-fort de banque.",
+      a: "Oui, c'est votre actif. Mais ce n'est pas recommandé d'en donner une copie en clair de votre vivant (perte de souveraineté). Solutions : (1) testament olographe + lettre d'intention scellée chez le notaire ; (2) Shamir's Secret Sharing (outil avancé pour découper la seed en N parts) ; (3) multisig 2-of-3 avec un proche ou un coffre-fort de banque.",
     },
     {
       q: "Et la fiscalité succession des crypto ?",
@@ -61,7 +61,7 @@ export default function SuccessionCryptoPage() {
     articleSchema({
       slug: "outils/succession-crypto",
       title: "Succession Crypto FR — Guide + checklist + lettre d'intention",
-      description: "Outil complet pour planifier la transmission de tes crypto-actifs.",
+      description: "Outil complet pour planifier la transmission de vos crypto-actifs.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Outil",
@@ -96,9 +96,9 @@ export default function SuccessionCryptoPage() {
             <span className="gradient-text">Succession Crypto</span> FR
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Comment transmettre tes crypto-actifs à tes proches sans qu&apos;ils
+            Comment transmettre vos crypto-actifs à vos proches sans qu&apos;ils
             soient perdus à jamais ? Guide légal français, checklist sécurité,
-            générateur de lettre d&apos;intention crypto à joindre à ton
+            générateur de lettre d&apos;intention crypto à joindre à votre
             testament.
           </p>
           <div className="mt-3">
@@ -108,7 +108,7 @@ export default function SuccessionCryptoPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Un sujet tabou mais critique : si tu disparais demain, tes proches récupèrent-ils tes crypto ? On t'aide à mettre les choses en ordre."
+            headline="Un sujet tabou mais critique : si vous disparaissez demain, vos proches récupèrent-ils vos crypto ? On vous aide à mettre les choses en ordre."
             bullets={[
               { emoji: "📜", text: "Guide légal FR : testament, lettre d'intention, mandat posthume" },
               { emoji: "🔐", text: "Checklist sécurité : seed phrase, multisig, Shamir, coffre-fort" },
@@ -122,9 +122,9 @@ export default function SuccessionCryptoPage() {
 
         <section className="mt-12 grid gap-4 sm:grid-cols-3">
           {[
-            { num: "1", title: "Inventaire", body: "Liste tous tes wallets (CEX, hardware, soft, DeFi) + valeur estimée + accès." },
+            { num: "1", title: "Inventaire", body: "Listez tous vos wallets (CEX, hardware, soft, DeFi) + valeur estimée + accès." },
             { num: "2", title: "Plan d'accès", body: "Choix de méthode : testament + seed scellée / multisig / Shamir / coffre-fort de banque." },
-            { num: "3", title: "Documentation", body: "Lettre d'intention claire pour ton notaire / exécuteur testamentaire (sans révéler la seed en clair)." },
+            { num: "3", title: "Documentation", body: "Lettre d'intention claire pour votre notaire / exécuteur testamentaire (sans révéler la seed en clair)." },
           ].map((s) => (
             <div key={s.num} className="rounded-2xl border border-border bg-elevated/40 p-5">
               <div className="text-xs uppercase tracking-wider text-primary-soft font-bold">
@@ -141,7 +141,7 @@ export default function SuccessionCryptoPage() {
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Reçois le guide complet (PDF gratuit)</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
             32 pages, mis à jour 2026, validé par un notaire FR. Inclut la
-            checklist + les modèles de lettre d&apos;intention. Inscris-toi
+            checklist + les modèles de lettre d&apos;intention. Inscrivez-vous
             à la newsletter pour le recevoir au lancement.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

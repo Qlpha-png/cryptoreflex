@@ -60,7 +60,7 @@ const Cerfa2086Generator = dynamic(
 
 const PAGE_TITLE = "Génération auto Cerfa 2086 crypto 2026 — Pro";
 const PAGE_DESCRIPTION =
-  "Importe ton CSV Binance/Coinbase/Bitpanda et génère un Cerfa 2086 + 3916-bis pré-rempli en 30 secondes. Calcul officiel article 150 VH bis. Réservé aux abonnés Soutien Cryptoreflex.";
+  "Importez votre CSV Binance/Coinbase/Bitpanda et générez un Cerfa 2086 + 3916-bis pré-rempli en 30 secondes. Calcul officiel article 150 VH bis. Réservé aux abonnés Soutien Cryptoreflex.";
 const PAGE_PATH = "/outils/cerfa-2086-auto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -137,24 +137,24 @@ export default function Cerfa2086AutoPage() {
             estimatedCost: { currency: "EUR", value: 0 },
             steps: [
               {
-                name: "Exporter ton historique de trades",
-                text: "Va dans ton compte Binance / Coinbase / Bitpanda → Export CSV. Sélectionne toute la période fiscale (1er janv → 31 déc).",
+                name: "Exporter votre historique de trades",
+                text: "Allez dans votre compte Binance / Coinbase / Bitpanda → Export CSV. Sélectionnez toute la période fiscale (1er janv → 31 déc).",
               },
               {
                 name: "Importer le CSV dans l'outil",
-                text: "Glisse le fichier CSV dans la zone d'upload de cet outil. Le parser détecte automatiquement le format de ton exchange.",
+                text: "Glissez le fichier CSV dans la zone d'upload de cet outil. Le parser détecte automatiquement le format de votre exchange.",
               },
               {
                 name: "Vérifier les transactions parsées",
-                text: "L'outil affiche un récap : nombre de cessions, total acquisitions, plus-value brute. Vérifie qu'aucun trade n'est manquant.",
+                text: "L'outil affiche un récap : nombre de cessions, total acquisitions, plus-value brute. Vérifiez qu'aucun trade n'est manquant.",
               },
               {
                 name: "Générer le PDF Cerfa 2086 + 3916-bis",
-                text: "Click sur Générer. L'outil applique la formule article 150 VH bis (prorata portefeuille), produit le 2086 pré-rempli + un 3916-bis par compte étranger détecté.",
+                text: "Cliquez sur Générer. L'outil applique la formule article 150 VH bis (prorata portefeuille), produit le 2086 pré-rempli + un 3916-bis par compte étranger détecté.",
               },
               {
                 name: "Reporter sur impots.gouv.fr",
-                text: "Connecte-toi à impots.gouv.fr, vas dans la section Plus-values d'actifs numériques. Reporte les valeurs du PDF dans les cases correspondantes (les références sont annotées dans le PDF généré).",
+                text: "Connectez-vous à impots.gouv.fr, allez dans la section Plus-values d'actifs numériques. Reportez les valeurs du PDF dans les cases correspondantes (les références sont annotées dans le PDF généré).",
               },
             ],
           }),
@@ -171,18 +171,18 @@ export default function Cerfa2086AutoPage() {
             </span>
 
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
-              Génère ton{" "}
+              Générez votre{" "}
               <span className="gradient-text">Cerfa 2086 + 3916-bis</span>{" "}
               en 30 secondes
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg text-fg/80 leading-relaxed">
-              Importe le CSV de tes exchanges (Binance, Coinbase, Bitpanda) ou ton
-              export JSON Waltio. Notre moteur applique la formule officielle
-              <strong> article 150 VH bis du CGI </strong> (prorata portefeuille) et
-              te livre un PDF récapitulatif prêt à accompagner ta déclaration sur
-              impots.gouv.fr — avec un 3916-bis automatique pour chaque compte
-              étranger détecté.
+              Importez le CSV de vos exchanges (Binance, Coinbase, Bitpanda) ou
+              votre export JSON Waltio. Notre moteur applique la formule officielle
+              <strong> article 150 VH bis du CGI </strong> (prorata portefeuille)
+              et vous livre un PDF récapitulatif prêt à accompagner votre
+              déclaration sur impots.gouv.fr — avec un 3916-bis automatique pour
+              chaque compte étranger détecté.
             </p>
 
             <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
@@ -211,9 +211,9 @@ export default function Cerfa2086AutoPage() {
               <p>
                 <strong className="text-warning-fg">Aide à la déclaration — pas un conseil fiscal :</strong>{" "}
                 ce PDF est un document récapitulatif généré automatiquement.
-                Vérifie chaque chiffre et fais valider ta déclaration par un
-                fiscaliste ou expert-comptable spécialisé crypto avant tout dépôt
-                officiel sur impots.gouv.fr. La fiscalité crypto évolue
+                Vérifiez chaque chiffre et faites valider votre déclaration par
+                un fiscaliste ou expert-comptable spécialisé crypto avant tout
+                dépôt officiel sur impots.gouv.fr. La fiscalité crypto évolue
                 régulièrement (LF, doctrine BOFiP).
               </p>
             </div>
@@ -254,12 +254,12 @@ export default function Cerfa2086AutoPage() {
               <CrossLink
                 href="/outils/calculateur-fiscalite"
                 title="Calculateur fiscalité crypto (gratuit)"
-                description="Estime ton impôt PFU 30 % en 2 minutes, sans import de fichier."
+                description="Estimez votre impôt PFU 30 % en 2 minutes, sans import de fichier."
               />
               <CrossLink
                 href="/outils/declaration-fiscale-crypto"
                 title="Comparatif outils déclaration crypto"
-                description="Waltio vs Koinly vs CoinTracking — choisis l'outil adapté à ton volume."
+                description="Waltio vs Koinly vs CoinTracking — choisissez l'outil adapté à votre volume."
               />
               <CrossLink
                 href="/articles/declaration-crypto-cerfa-2086-tutoriel-2026"
@@ -291,10 +291,10 @@ export default function Cerfa2086AutoPage() {
               <strong className="text-fg/85">Disclaimer YMYL.</strong>{" "}
               Cryptoreflex n'est ni Conseiller en Investissements Financiers (CIF),
               ni expert-comptable, ni avocat fiscaliste. Cet outil produit un
-              récapitulatif algorithmique à partir des données que tu importes.
+              récapitulatif algorithmique à partir des données que vous importez.
               Le PDF généré ne se substitue pas à un dépôt officiel ni à l'avis
               d'un professionnel agréé. L'administration fiscale française dispose
-              d'un droit de reprise jusqu'à 6 ans : conserve tes archives.{" "}
+              d'un droit de reprise jusqu'à 6 ans : conservez vos archives.{" "}
               <Link href="/transparence" className="underline hover:text-primary-soft">
                 Notre transparence
               </Link>{" "}

@@ -88,27 +88,27 @@ const FAQ_ITEMS = [
   {
     question: "Waltio vs Koinly : lequel choisir ?",
     answer:
-      "Waltio si tu es contribuable en France et veux une déclaration clé-en-main : interface FR, support FR, export Cerfa 2086 + 3916-bis prêt à téléverser sur impots.gouv.fr. Koinly si tu es expatrié, multi-pays ou que tu veux un free tier généreux (10 000 transactions visibles) avant d'acheter un export. Côté tarif palier d'entrée, Waltio est à 79 €/an et Koinly à environ 49 €/an (45 USD).",
+      "Waltio si vous êtes contribuable en France et voulez une déclaration clé-en-main : interface FR, support FR, export Cerfa 2086 + 3916-bis prêt à téléverser sur impots.gouv.fr. Koinly si vous êtes expatrié, multi-pays ou que vous voulez un free tier généreux (10 000 transactions visibles) avant d'acheter un export. Côté tarif palier d'entrée, Waltio est à 79 €/an et Koinly à environ 49 €/an (45 USD).",
   },
   {
     question: "Pourquoi ne pas faire la déclaration crypto manuellement ?",
     answer:
-      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, conversions crypto-crypto neutres, gestion du seuil de 305 €, méthode FIFO… Une erreur sur la valeur globale du portefeuille au moment de chaque cession peut multiplier ton imposition par 2. Un outil automatisé évite ces erreurs et fournit le détail ligne par ligne en cas de contrôle.",
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, conversions crypto-crypto neutres, gestion du seuil de 305 €, méthode FIFO… Une erreur sur la valeur globale du portefeuille au moment de chaque cession peut multiplier votre imposition par 2. Un outil automatisé évite ces erreurs et fournit le détail ligne par ligne en cas de contrôle.",
   },
   {
     question: "Combien coûte Waltio pour 500 transactions ?",
     answer:
-      "Le plan Hodler de Waltio (jusqu'à 500 transactions par an) coûte 79 € pour la déclaration de l'année. C'est un achat ponctuel annuel : tu ne paies que les années où tu déclares. Avec le code Cryptoreflex, tu bénéficies de 30 % de réduction sur ton premier paiement.",
+      "Le plan Hodler de Waltio (jusqu'à 500 transactions par an) coûte 79 € pour la déclaration de l'année. C'est un achat ponctuel annuel : vous ne payez que les années où vous déclarez. Avec le code Cryptoreflex, vous bénéficiez de 30 % de réduction sur votre premier paiement.",
   },
   {
     question: "Ces outils peuvent-ils générer le formulaire 3916-bis (comptes étrangers) ?",
     answer:
-      "Seul Waltio le pré-remplit complètement (avec le code BIC/SWIFT et l'adresse de chaque exchange étranger). Koinly et CoinTracking exportent une liste de tes comptes mais sans la mise en forme attendue par l'administration française. Rappel : oublier de déclarer un compte étranger crypto coûte 750 € d'amende par compte (1 500 € si valeur > 50 000 €).",
+      "Seul Waltio le pré-remplit complètement (avec le code BIC/SWIFT et l'adresse de chaque exchange étranger). Koinly et CoinTracking exportent une liste de vos comptes mais sans la mise en forme attendue par l'administration française. Rappel : oublier de déclarer un compte étranger crypto coûte 750 € d'amende par compte (1 500 € si valeur > 50 000 €).",
   },
   {
     question: "Que se passe-t-il si je change d'outil l'année suivante ?",
     answer:
-      "Tu peux importer ton historique CSV depuis n'importe lequel de ces 3 outils vers les 2 autres — c'est même conseillé pour comparer les calculs avant de valider ta déclaration. Waltio accepte directement les exports Koinly et CoinTracking. Conserve toujours tes archives fiscales 6 ans (durée du droit de reprise de l'administration).",
+      "Vous pouvez importer votre historique CSV depuis n'importe lequel de ces 3 outils vers les 2 autres — c'est même conseillé pour comparer les calculs avant de valider votre déclaration. Waltio accepte directement les exports Koinly et CoinTracking. Conservez toujours vos archives fiscales 6 ans (durée du droit de reprise de l'administration).",
   },
   {
     question: "Ces outils sont-ils conformes à la fiscalité crypto 2026 ?",
@@ -118,7 +118,7 @@ const FAQ_ITEMS = [
   {
     question: "Faut-il un expert-comptable en plus de l'outil ?",
     answer:
-      "Pour un particulier en gestion non professionnelle (PFU 30 %), l'outil seul suffit dans 95 % des cas. En revanche, si tu es au régime BIC, en activité de mining/staking professionnel, ou si tu fais de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement tes données.",
+      "Pour un particulier en gestion non professionnelle (PFU 30 %), l'outil seul suffit dans 95 % des cas. En revanche, si vous êtes au régime BIC, en activité de mining/staking professionnel, ou si vous faites de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement vos données.",
   },
 ];
 
@@ -236,7 +236,7 @@ export default function DeclarationFiscaleCryptoPage() {
             </h1>
             <p className="mt-4 text-lg text-fg/80">
               Waltio vs Koinly vs CoinTracking : quel logiciel choisir pour
-              déclarer tes plus-values crypto aux impôts en France ? Comparatif
+              déclarer vos plus-values crypto aux impôts en France ? Comparatif
               tarifs, formulaires Cerfa 2086 / 3916-bis, support FR, intégrations.
             </p>
 
@@ -270,7 +270,7 @@ export default function DeclarationFiscaleCryptoPage() {
               </strong>{" "}
               Cet article ne constitue pas un conseil fiscal personnalisé. Les
               tarifs et fonctionnalités sont à recouper sur les sites officiels
-              avant souscription. Consulte un expert-comptable agréé pour les
+              avant souscription. Consultez un expert-comptable agréé pour les
               situations complexes (BIC, mining, DeFi avancé). Voir notre{" "}
               <Link
                 href="/transparence"
@@ -318,8 +318,8 @@ export default function DeclarationFiscaleCryptoPage() {
             <WaltioPromoCard
               placement="declaration-page-banner"
               variant="banner"
-              headline="Génère ton Cerfa 2086 + 3916-bis en 10 minutes avec Waltio"
-              description="Connecte tes exchanges (Binance, Kraken, Coinbase, Ledger…), Waltio calcule automatiquement tes plus-values selon la fiscalité française et te livre les formulaires prêts à téléverser sur impots.gouv.fr. 30 % de réduction via Cryptoreflex."
+              headline="Générez votre Cerfa 2086 + 3916-bis en 10 minutes avec Waltio"
+              description="Connectez vos exchanges (Binance, Kraken, Coinbase, Ledger…), Waltio calcule automatiquement vos plus-values selon la fiscalité française et vous livre les formulaires prêts à téléverser sur impots.gouv.fr. 30 % de réduction via Cryptoreflex."
             />
           </div>
 
@@ -335,11 +335,11 @@ export default function DeclarationFiscaleCryptoPage() {
                   Soutien Cryptoreflex
                 </span>
                 <h3 className="mt-2 font-display font-bold text-lg text-fg">
-                  Tu veux le PDF Cerfa 2086 sans payer Waltio ? Outil Pro
+                  Vous voulez le PDF Cerfa 2086 sans payer Waltio ? Outil Pro
                 </h3>
                 <p className="mt-1 text-sm text-fg/70">
                   Notre outil Soutien (2,99 €/mois) génère un Cerfa 2086 +
-                  3916-bis pré-rempli depuis ton CSV. Idéal pour les profils
+                  3916-bis pré-rempli depuis votre CSV. Idéal pour les profils
                   &lt; 200 transactions / an.
                 </p>
               </div>
@@ -368,7 +368,7 @@ export default function DeclarationFiscaleCryptoPage() {
             </h2>
             <p className="mt-3 text-fg/75">
               Tarification, support FR, exports Cerfa, intégrations, DeFi, NFT…
-              Tous les critères qui comptent pour bien choisir ton outil de
+              Tous les critères qui comptent pour bien choisir votre outil de
               déclaration fiscale crypto en 2026.
             </p>
           </div>
@@ -410,8 +410,8 @@ export default function DeclarationFiscaleCryptoPage() {
                     >
                       calculateur fiscalité gratuit
                     </Link>{" "}
-                    te donne le résultat en 2 minutes. Plus la checklist Cerfa
-                    2086 + 2042-C par email pour ne rien oublier.
+                    vous donne le résultat en 2 minutes. Plus la checklist
+                    Cerfa 2086 + 2042-C par email pour ne rien oublier.
                   </p>
                 </div>
               </div>
@@ -428,12 +428,12 @@ export default function DeclarationFiscaleCryptoPage() {
                     Outil dédié : entre 30 et 5 000 transactions par an
                   </h3>
                   <p className="mt-2 text-sm text-fg/75">
-                    Dès que tu trades sur plusieurs plateformes, fais du staking,
-                    de l'airdrop ou du swap entre tokens, le calcul manuel
-                    devient piégeux. La méthode du prix d'acquisition moyen
-                    pondéré exige une rigueur que seul un outil peut tenir.
-                    Waltio (plan Hodler à 79 €) ou Koinly Newbie (49 €) couvrent
-                    99 % des profils particuliers.
+                    Dès que vous tradez sur plusieurs plateformes, faites du
+                    staking, de l'airdrop ou du swap entre tokens, le calcul
+                    manuel devient piégeux. La méthode du prix d'acquisition
+                    moyen pondéré exige une rigueur que seul un outil peut
+                    tenir. Waltio (plan Hodler à 79 €) ou Koinly Newbie (49 €)
+                    couvrent 99 % des profils particuliers.
                   </p>
                 </div>
               </div>
@@ -454,7 +454,7 @@ export default function DeclarationFiscaleCryptoPage() {
                     (yield farming, prêts, LP tokens), structures juridiques
                     spécifiques (EURL, SASU)… Là, l'outil ne suffit plus :
                     Waltio Pro (549 €/an, mode expert-comptable inclus) +
-                    cabinet spécialisé crypto deviennent obligatoires. Demande
+                    cabinet spécialisé crypto deviennent obligatoires. Demandez
                     un devis avant le 1er trimestre pour anticiper la haute
                     saison fiscale (avril-juin).
                   </p>
@@ -505,8 +505,8 @@ export default function DeclarationFiscaleCryptoPage() {
               informations présentées sont de nature pédagogique et ne
               constituent ni un conseil fiscal, ni un conseil en investissement.
               La fiscalité crypto évolue régulièrement (LF, doctrine BOFiP) ;
-              vérifie toujours sur impots.gouv.fr ou auprès d'un expert-comptable
-              agréé avant de remplir ta déclaration. Voir notre{" "}
+              vérifiez toujours sur impots.gouv.fr ou auprès d'un expert-comptable
+              agréé avant de remplir votre déclaration. Voir notre{" "}
               <Link
                 href="/methodologie"
                 className="underline hover:text-primary-soft"

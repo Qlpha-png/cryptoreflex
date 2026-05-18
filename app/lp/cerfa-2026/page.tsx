@@ -34,16 +34,16 @@ import { withHreflang } from "@/lib/seo-alternates";
  * useState, pas de hydration JS lourd → LCP < 1s.
  */
 
-const TITLE = "Cerfa 2086 gratuit : déclare tes cryptos en 2 min — 2026";
+const TITLE = "Cerfa 2086 gratuit : déclarez vos cryptos en 2 min — 2026";
 const DESCRIPTION =
-  "Outil gratuit qui génère ton Cerfa 2086 + 3916-bis depuis ton CSV exchange (Binance, Kraken, Coinbase). Sans inscription, méthodologie publique, conforme BOFiP.";
+  "Outil gratuit qui génère votre Cerfa 2086 + 3916-bis depuis votre CSV exchange (Binance, Kraken, Coinbase). Sans inscription, méthodologie publique, conforme BOFiP.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: withHreflang(`${BRAND.url}/lp/cerfa-2026`),
   openGraph: {
-    title: "Déclare tes cryptos en 2 min — Cerfa 2086 gratuit",
+    title: "Déclarez vos cryptos en 2 min — Cerfa 2086 gratuit",
     description: DESCRIPTION,
     url: `${BRAND.url}/lp/cerfa-2026`,
     type: "website",
@@ -78,41 +78,41 @@ const TRUST_BADGES = [
 const STEPS = [
   {
     n: "1",
-    title: "Exporte ton CSV",
+    title: "Exportez votre CSV",
     text: "Sur Binance, Kraken, Coinbase, Bitstack, Coinhouse… Tous les exchanges français + UE supportés.",
   },
   {
     n: "2",
-    title: "Importe dans l’outil",
+    title: "Importez dans l’outil",
     text: "Drag & drop. Détection automatique du format, validation locale (rien n’est envoyé sur nos serveurs).",
   },
   {
     n: "3",
-    title: "Récupère le PDF",
-    text: "Cerfa 2086 + Annexe 3916-bis pré-remplis. Compatible expert-comptable. Imprime ou joins à ta télédéclaration.",
+    title: "Récupérez le PDF",
+    text: "Cerfa 2086 + Annexe 3916-bis pré-remplis. Compatible expert-comptable. Imprimez ou joignez à votre télédéclaration.",
   },
 ];
 
 const FAQ = [
   {
     q: "C’est vraiment gratuit ? Quel est le piège ?",
-    a: "Oui, totalement gratuit, sans inscription. Le « piège » assumé : si tu trouves l’outil utile, on espère que tu nous suivras sur la newsletter ou que tu utiliseras nos comparateurs de plateformes (qui contiennent des liens d’affiliation transparents, sourcés sur /transparence). Mais l’outil reste 100 % accessible sans aucune contrepartie.",
+    a: "Oui, totalement gratuit, sans inscription. Le « piège » assumé : si vous trouvez l’outil utile, on espère que vous nous suivrez sur la newsletter ou que vous utiliserez nos comparateurs de plateformes (qui contiennent des liens d’affiliation transparents, sourcés sur /transparence). Mais l’outil reste 100 % accessible sans aucune contrepartie.",
   },
   {
     q: "Mes données fiscales restent-elles confidentielles ?",
-    a: "Oui. Le CSV est traité localement dans ton navigateur (zero-trust). Seul le PDF généré transite par notre serveur pour la mise en page, et il est immédiatement supprimé après téléchargement (pas de logs, pas de backup, pas d’indexation).",
+    a: "Oui. Le CSV est traité localement dans votre navigateur (zero-trust). Seul le PDF généré transite par notre serveur pour la mise en page, et il est immédiatement supprimé après téléchargement (pas de logs, pas de backup, pas d’indexation).",
   },
   {
     q: "Quels exchanges sont supportés ?",
-    a: "Format générique compatible avec Binance, Kraken, Coinbase, Bitstack, Coinhouse, Bitpanda, Trade Republic, Bit2Me, Pocket Bitcoin, Bitvavo, Crypto.com, Revolut, et tous les exchanges qui exportent au format CSV standard. Si ton exchange n’est pas reconnu, on accepte aussi un mapping manuel.",
+    a: "Format générique compatible avec Binance, Kraken, Coinbase, Bitstack, Coinhouse, Bitpanda, Trade Republic, Bit2Me, Pocket Bitcoin, Bitvavo, Crypto.com, Revolut, et tous les exchanges qui exportent au format CSV standard. Si votre exchange n’est pas reconnu, on accepte aussi un mapping manuel.",
   },
   {
     q: "Et si j’ai du staking, des airdrops, des NFT ?",
     a: "L’outil gère les cessions taxables (token-to-fiat) qui sont la règle du Cerfa 2086. Pour le staking, les airdrops et les NFT, on a des outils dédiés sur /outils/staking-fiscal et /outils/nft-fiscal. La méthodologie suit BOFiP RPPM-PVBMC-30-30 (token-to-token non taxable depuis 2019).",
   },
   {
-    q: "Qui es-tu et pourquoi je devrais te faire confiance ?",
-    a: "Cryptoreflex est édité en solo par Kevin Voisin, basé en France. Toute la méthodologie est publiée sur /methodologie avec sources BOFiP + AMF. Si tu trouves une erreur dans nos calculs, on corrige sous 24h. Pour les gros patrimoines (>50k€), on recommande TOUJOURS de valider avec un expert-comptable agréé.",
+    q: "Qui êtes-vous et pourquoi je devrais vous faire confiance ?",
+    a: "Cryptoreflex est édité en solo par Kevin Voisin, basé en France. Toute la méthodologie est publiée sur /methodologie avec sources BOFiP + AMF. Si vous trouvez une erreur dans nos calculs, on corrige sous 24h. Pour les gros patrimoines (>50k€), on recommande TOUJOURS de valider avec un expert-comptable agréé.",
   },
 ];
 
@@ -136,14 +136,14 @@ export default function CerfaLandingPage() {
           </span>
 
           <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-            Déclare tes cryptos en{" "}
+            Déclarez vos cryptos en{" "}
             <span className="bg-gradient-to-r from-cyan-300 via-cyan-400 to-indigo-400 bg-clip-text text-transparent">
               2 minutes
             </span>
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Génère ton <strong>Cerfa 2086</strong> + Annexe <strong>3916-bis</strong> pré-remplis depuis ton CSV
+            Générez votre <strong>Cerfa 2086</strong> + Annexe <strong>3916-bis</strong> pré-remplis depuis votre CSV
             d’exchange. Gratuit, sans inscription, méthodologie publiée.
           </p>
 
@@ -238,10 +238,10 @@ export default function CerfaLandingPage() {
       <section className="relative px-4 py-12 sm:px-6 lg:px-8 border-t border-white/5">
         <div className="mx-auto max-w-3xl rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6 text-center">
           <h2 className="text-xl font-bold tracking-tight">
-            Tu préfères suivre une checklist papier ?
+            Vous préférez suivre une checklist papier ?
           </h2>
           <p className="mt-2 max-w-2xl mx-auto text-sm text-slate-300">
-            Notre checklist 8 étapes est imprimable et te guide pas-à-pas
+            Notre checklist 8 étapes est imprimable et vous guide pas-à-pas
             avant la deadline du 31 mai 2026.
           </p>
           <Link
@@ -270,7 +270,7 @@ export default function CerfaLandingPage() {
             context="fiscalite"
             variant="default"
             title="Pas prêt à utiliser l'outil tout de suite ?"
-            subtitle="Reçois nos analyses fiscalité crypto FR 2026 par email. 1 envoi par semaine, 0 spam, désinscription en 1 clic."
+            subtitle="Recevez nos analyses fiscalité crypto FR 2026 par email. 1 envoi par semaine, 0 spam, désinscription en 1 clic."
             ctaLabel="Recevoir le guide fiscal"
           />
         </div>
@@ -296,9 +296,9 @@ export default function CerfaLandingPage() {
         </div>
 
         <p className="mt-8 text-center text-xs text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Cryptoreflex ne fournit pas de conseil fiscal. L’outil restitue tes
+          Cryptoreflex ne fournit pas de conseil fiscal. L’outil restitue vos
           plus-values selon BOFiP RPPM-PVBMC-30-30. Pour les patrimoines
-          complexes (&gt;50&nbsp;k€), valide avec un expert-comptable agréé.
+          complexes (&gt;50&nbsp;k€), validez avec un expert-comptable agréé.
         </p>
       </section>
     </main>

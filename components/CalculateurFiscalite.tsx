@@ -224,7 +224,7 @@ export default function CalculateurFiscalite() {
       }
       setEmailState("success");
       setEmailMsg(
-        "C'est noté ! La checklist Cerfa 2086 + 2042-C arrive dans ta boîte mail.",
+        "C'est noté ! La checklist Cerfa 2086 + 2042-C arrive dans votre boîte mail.",
       );
       // Plausible : conversion email
       track("Calculator Email Signup", {
@@ -260,10 +260,10 @@ export default function CalculateurFiscalite() {
             id="calc-fiscalite-title"
             className="font-display font-bold text-xl text-white"
           >
-            Calcule ton impôt crypto 2026
+            Calculez votre impôt crypto 2026
           </h2>
           <p className="text-sm text-muted">
-            Renseigne tes totaux de l'année et choisis ton régime fiscal.
+            Renseignez vos totaux de l'année et choisissez votre régime fiscal.
           </p>
         </div>
         <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">
@@ -278,7 +278,7 @@ export default function CalculateurFiscalite() {
         <NumericField
           id="totalCessions"
           label="Total des cessions de l'année (€)"
-          hint="Somme de toutes tes ventes crypto vers euros (ou achats de biens/services). Exclut les conversions crypto ↔ crypto."
+          hint="Somme de toutes vos ventes crypto vers euros (ou achats de biens/services). Exclut les conversions crypto ↔ crypto."
           value={form.totalCessions}
           onChange={(v) => update("totalCessions", v)}
           error={errors.totalCessions}
@@ -300,7 +300,7 @@ export default function CalculateurFiscalite() {
         <NumericField
           id="fraisCourtage"
           label="Frais de courtage cumulés (€)"
-          hint="Total des frais payés à tes plateformes (achat, vente, retrait, conversion)."
+          hint="Total des frais payés à vos plateformes (achat, vente, retrait, conversion)."
           value={form.fraisCourtage}
           onChange={(v) => update("fraisCourtage", v)}
           error={errors.fraisCourtage}
@@ -347,8 +347,8 @@ export default function CalculateurFiscalite() {
               Tranche marginale d'imposition (TMI)
             </label>
             <p className="mt-1 text-sm text-muted">
-              Ta tranche maximale d'IR. Si tu hésites, garde 30 % (cas le plus
-              fréquent).
+              Votre tranche maximale d'IR. Si vous hésitez, gardez 30 % (cas le
+              plus fréquent).
             </p>
             <select
               id="tmi-select"
@@ -493,7 +493,7 @@ function WaltioPostResultCta({
     trackAffiliateClick(
       "waltio",
       "post-result",
-      "Économise 40h sur ta déclaration crypto",
+      "Économisez 40h sur votre déclaration crypto",
     );
   }
 
@@ -512,23 +512,23 @@ function WaltioPostResultCta({
   let headline: string;
   let pitch: string;
   if (isExonere) {
-    headline = "Tu es exonéré — mais le 3916-bis reste obligatoire";
+    headline = "Vous êtes exonéré — mais le 3916-bis reste obligatoire";
     pitch =
-      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 1 500 € d'amende par compte oublié. Waltio le pré-remplit automatiquement à partir de tes connexions API.";
+      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 1 500 € d'amende par compte oublié. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
   } else if (regime === "bic") {
-    headline = "BIC professionnel : ton expert-comptable va t'aimer";
+    headline = "BIC professionnel : votre expert-comptable va vous aimer";
     pitch =
-      "Au régime BIC, ton expert-comptable facture 600 € à 5 000 € selon le volume. Waltio Pro (549 €/an) fournit un dossier propre avec accès partagé : tu divises sa facture par 2 ou 3 et tu gardes un audit-trail complet en cas de contrôle.";
+      "Au régime BIC, votre expert-comptable facture 600 € à 5 000 € selon le volume. Waltio Pro (549 €/an) fournit un dossier propre avec accès partagé : vous divisez sa facture par 2 ou 3 et vous gardez un audit-trail complet en cas de contrôle.";
   } else if (taxAmount >= 1000) {
     headline = `Économise potentiellement des centaines d'€ sur ces ${formatEuro(
       taxAmount,
     )}`;
     pitch =
-      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit te coûtent cher. Waltio retrouve automatiquement tes moins-values reportables (10 ans), tous tes frais de cession et te calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
+      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values reportables (10 ans), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
   } else {
-    headline = "Économise 40 h sur ta déclaration crypto";
+    headline = "Économisez 40 h sur votre déclaration crypto";
     pitch =
-      "Notre calculateur te donne le montant. Waltio (édité en France) connecte tes exchanges, calcule chaque cession au prorata article 150 VH bis et génère le Cerfa 2086 + 3916-bis prêts à téléverser sur impots.gouv.fr en 30 minutes au lieu d'un week-end entier.";
+      "Notre calculateur vous donne le montant. Waltio (édité en France) connecte vos exchanges, calcule chaque cession au prorata article 150 VH bis et génère le Cerfa 2086 + 3916-bis prêts à téléverser sur impots.gouv.fr en 30 minutes au lieu d'un week-end entier.";
   }
 
   return (
@@ -777,7 +777,7 @@ function ResultPanel({
     return (
       <div className="space-y-6">
         <h3 className="font-display text-lg sm:text-xl font-bold text-white">
-          Tu es exonéré d'impôt sur tes plus-values crypto
+          Vous êtes exonéré d'impôt sur vos plus-values crypto
         </h3>
         <div className="rounded-xl border border-success/40 bg-success/10 p-5 text-sm text-white/90 flex gap-3">
           <CheckCircle2
@@ -785,9 +785,9 @@ function ResultPanel({
             aria-hidden="true"
           />
           <p>
-            Le total de tes cessions de l'année est inférieur ou égal au seuil
+            Le total de vos cessions de l'année est inférieur ou égal au seuil
             d'exonération de <strong>305 €</strong>. Aucun impôt n'est dû sur
-            tes plus-values crypto pour 2026. Pense malgré tout à déclarer tes
+            vos plus-values crypto pour 2026. Pensez malgré tout à déclarer vos
             comptes étrangers (formulaire <strong>3916-bis</strong>).
           </p>
         </div>
@@ -807,7 +807,7 @@ function ResultPanel({
     return (
       <div className="space-y-6">
         <h3 className="font-display text-lg sm:text-xl font-bold text-white">
-          Tu es en moins-value cette année
+          Vous êtes en moins-value cette année
         </h3>
         <div className="rounded-xl border border-info/40 bg-info/10 p-5 text-sm text-white/90 flex gap-3">
           <Info
@@ -815,7 +815,7 @@ function ResultPanel({
             aria-hidden="true"
           />
           <p>
-            Ta plus-value nette est de <strong>{formatEuro(result.plusValueNette)}</strong>{" "}
+            Votre plus-value nette est de <strong>{formatEuro(result.plusValueNette)}</strong>{" "}
             (déficit). Aucun impôt n'est dû. Pour un particulier au régime
             PFU/Barème, cette moins-value n'est <strong>pas reportable</strong>{" "}
             sur les années suivantes — elle ne s'impute que sur les plus-values
@@ -899,7 +899,7 @@ function ResultPanel({
           <p>
             En BIC, on a estimé en plus{" "}
             <strong>{formatEuro(result.cotisationsSociales)}</strong> de
-            cotisations sociales URSSAF (~22 %). À affiner avec ton expert-comptable
+            cotisations sociales URSSAF (~22 %). À affiner avec votre expert-comptable
             (micro-BIC, TNS classique, abattement forfaitaire).
           </p>
         </div>
@@ -1093,7 +1093,7 @@ function EmailCapture({
             Reçois la checklist Cerfa 2086 + déclaration 2042-C
           </h4>
           <p className="mt-1 text-sm text-white/75">
-            Pas-à-pas pour reporter tes cessions sur les bons formulaires, avec
+            Pas-à-pas pour reporter vos cessions sur les bons formulaires, avec
             les pièges à éviter. Gratuit, désinscription en 1 clic.
           </p>
           <form
@@ -1149,8 +1149,8 @@ function EmailCapture({
             </p>
           )}
           <p className="mt-3 text-[11px] text-muted">
-            En t'inscrivant, tu reçois aussi notre newsletter hebdo crypto FR.
-            Tes données ne sont jamais revendues.
+            En vous inscrivant, vous recevez aussi notre newsletter hebdo crypto FR.
+            Vos données ne sont jamais revendues.
           </p>
         </div>
       </div>

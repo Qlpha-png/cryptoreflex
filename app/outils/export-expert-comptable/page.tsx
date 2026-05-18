@@ -28,7 +28,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Export Expert-Comptable Crypto — Format ECF Sage / Cegid / EBP",
   description:
-    "Convertis tes transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. 49 € one-shot, automatisé.",
+    "Convertissez vos transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. 49 € one-shot, automatisé.",
   alternates: withHreflang(`${BRAND.url}/outils/export-expert-comptable`),
 };
 
@@ -36,7 +36,7 @@ export default function ExportExpertComptablePage() {
   const faqItems = [
     {
       q: "À qui s'adresse cet outil ?",
-      a: "Aux indépendants, EI, SAS, SARL qui détiennent des crypto en actif d'exploitation (mining, staking récurrent, trésorerie d'entreprise, paiement client en BTC). Si tu déclares en BNC ou BIC plutôt qu'en plus-values privées (PFU 30 %), tu as besoin d'un export comptable structuré pour ton EC.",
+      a: "Aux indépendants, EI, SAS, SARL qui détiennent des crypto en actif d'exploitation (mining, staking récurrent, trésorerie d'entreprise, paiement client en BTC). Si vous déclarez en BNC ou BIC plutôt qu'en plus-values privées (PFU 30 %), vous avez besoin d'un export comptable structuré pour votre EC.",
     },
     {
       q: "Quels logiciels comptables sont supportés ?",
@@ -44,15 +44,15 @@ export default function ExportExpertComptablePage() {
     },
     {
       q: "C'est un service ou un outil ?",
-      a: "C'est un outil 100 % automatisé. Tu uploades ton CSV (Coinbase, Binance, Kraken, Ledger Live), l'algo mappe chaque transaction vers les comptes du PCG (47/47x pour les comptes financiers, 76 pour les revenus, 67 pour les pertes). Le PDF + ECF généré est prêt à transmettre à ton EC. Aucune intervention humaine côté Cryptoreflex.",
+      a: "C'est un outil 100 % automatisé. Vous uploadez votre CSV (Coinbase, Binance, Kraken, Ledger Live), l'algo mappe chaque transaction vers les comptes du PCG (47/47x pour les comptes financiers, 76 pour les revenus, 67 pour les pertes). Le PDF + ECF généré est prêt à transmettre à votre EC. Aucune intervention humaine côté Cryptoreflex.",
     },
     {
       q: "Pourquoi 49 € one-shot et pas un abonnement ?",
-      a: "Parce que la plupart des indés/sociétés font 1 export par exercice fiscal (annuel). Pas de raison de payer un abo mensuel. Si tu veux faire plusieurs exports/an (TVA mensuelle par ex.), regarde notre offre Pro+ qui inclut les exports illimités.",
+      a: "Parce que la plupart des indés/sociétés font 1 export par exercice fiscal (annuel). Pas de raison de payer un abo mensuel. Si vous voulez faire plusieurs exports/an (TVA mensuelle par ex.), regardez notre offre Pro+ qui inclut les exports illimités.",
     },
     {
       q: "L'outil donne-t-il un avis fiscal ?",
-      a: "Non. Cryptoreflex ne fournit aucun conseil fiscal. L'outil mappe mécaniquement tes transactions vers le PCG selon les règles standards. C'est ton expert-comptable qui valide le traitement final (qualification BNC/BIC, amortissements, provisions). On te facilite la vie, on ne remplace pas ton EC.",
+      a: "Non. Cryptoreflex ne fournit aucun conseil fiscal. L'outil mappe mécaniquement vos transactions vers le PCG selon les règles standards. C'est votre expert-comptable qui valide le traitement final (qualification BNC/BIC, amortissements, provisions). On vous facilite la vie, on ne remplace pas votre EC.",
     },
   ];
 
@@ -95,15 +95,15 @@ export default function ExportExpertComptablePage() {
             Export <span className="gradient-text">Expert-Comptable</span> Crypto
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Indépendant ou société qui détient des crypto-actifs ? Convertis
-            tes CSV exchanges en écritures comptables prêtes à intégrer dans
+            Indépendant ou société qui détient des crypto-actifs ? Convertissez
+            vos CSV exchanges en écritures comptables prêtes à intégrer dans
             Sage, Cegid, EBP, Quadratus ou Coala. Format ECF normalisé.
           </p>
         </header>
 
         <div className="mt-8">
           <Tldr
-            headline="Tu uploades, on mappe vers le PCG, ton EC intègre — 49 € pour un exercice fiscal complet."
+            headline="Vous uploadez, on mappe vers le PCG, votre EC intègre — 49 € pour un exercice fiscal complet."
             bullets={[
               { emoji: "📊", text: "Mapping automatique vers PCG (47x, 76, 67) selon nature opération" },
               { emoji: "🇫🇷", text: "Format ECF normalisé compatible Sage / Cegid / EBP / Quadratus" },
@@ -119,8 +119,8 @@ export default function ExportExpertComptablePage() {
           <FileSpreadsheet className="mx-auto h-10 w-10 text-success" aria-hidden />
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">49 € — Exercice fiscal complet</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            One-shot, pas d&apos;abonnement. Inclut tous les CSV de tes
-            exchanges + un fichier ECF prêt à transmettre à ton EC. Garantie
+            One-shot, pas d&apos;abonnement. Inclut tous les CSV de vos
+            exchanges + un fichier ECF prêt à transmettre à votre EC. Garantie
             satisfait ou remboursé 7 jours.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">
@@ -134,9 +134,9 @@ export default function ExportExpertComptablePage() {
 
         <section className="mt-12 grid gap-4 sm:grid-cols-3">
           {[
-            { step: "1. Upload", body: "Tu glisses tes CSV (Coinbase, Binance, Kraken, Ledger Live, etc.). Multi-fichier supporté." },
+            { step: "1. Upload", body: "Vous glissez vos CSV (Coinbase, Binance, Kraken, Ledger Live, etc.). Multi-fichier supporté." },
             { step: "2. Mapping", body: "L'algo qualifie chaque ligne (achat, vente, frais, mining, staking) et mappe vers le bon compte PCG." },
-            { step: "3. Export", body: "Tu télécharges 3 fichiers : PDF récap, ECF (txt) intégrable, Excel pivot pour vérif." },
+            { step: "3. Export", body: "Vous téléchargez 3 fichiers : PDF récap, ECF (txt) intégrable, Excel pivot pour vérif." },
           ].map((s) => (
             <div key={s.step} className="rounded-2xl border border-border bg-elevated/40 p-5">
               <div className="text-xs uppercase tracking-wider text-primary-soft font-bold">

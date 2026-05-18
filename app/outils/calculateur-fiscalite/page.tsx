@@ -60,7 +60,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 30%, Cerfa";
 // 158 caractères, optimisé Google SERP
 const PAGE_DESCRIPTION =
-  "Calcule ton impôt crypto 2026 en 2 min : PFU 30%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";
+  "Calculez votre impôt crypto 2026 en 2 min : PFU 30%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";
 const PAGE_PATH = "/outils/calculateur-fiscalite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -123,27 +123,27 @@ const FAQ_ITEMS = [
     question:
       "Quel régime fiscal s'applique aux plus-values crypto en France en 2026 ?",
     answer:
-      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de prélèvements sociaux. Tu peux aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si tu trades de manière habituelle, l'administration peut requalifier ton activité en BIC professionnel.",
+      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de prélèvements sociaux. Vous pouvez aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si vous tradez de manière habituelle, l'administration peut requalifier votre activité en BIC professionnel.",
   },
   {
     question: "À partir de quel montant dois-je déclarer mes plus-values crypto ?",
     answer:
-      "Le seuil d'exonération 2026 est de 305 € par an. Si le total de tes cessions (ventes vers euros) reste inférieur ou égal à 305 €, tu es exonéré d'impôt. Au-delà, tu dois remplir le formulaire 2086 et reporter le total sur le 2042-C, même si la plus-value finale est faible.",
+      "Le seuil d'exonération 2026 est de 305 € par an. Si le total de vos cessions (ventes vers euros) reste inférieur ou égal à 305 €, vous êtes exonéré d'impôt. Au-delà, vous devez remplir le formulaire 2086 et reporter le total sur le 2042-C, même si la plus-value finale est faible.",
   },
   {
     question: "PFU ou barème progressif : que choisir ?",
     answer:
-      "Le PFU à 30 % est avantageux dès que ta TMI dépasse 12,8 %. Le barème devient intéressant si ta TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — compare le résultat avant de cocher l'option case 2OP du Cerfa 2042 dans ta déclaration.",
+      "Le PFU à 30 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 2OP du Cerfa 2042 dans votre déclaration.",
   },
   {
     question: "Quand bascule-t-on en BIC professionnel ?",
     answer:
-      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à ta TMI + 17,2 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
+      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à votre TMI + 17,2 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
   },
   {
     question: "Cet outil prend-il en compte le staking, le DeFi et les NFT ?",
     answer:
-      "Non, pas directement. Les revenus de staking et lending sont assimilés à des BNC (bénéfices non commerciaux), avec un régime spécifique. Les NFT et les opérations DeFi (yield farming, prêts, airdrops) relèvent de cas qui dépassent le cadre de cet outil. Pour ces situations, consulte un expert-comptable spécialisé.",
+      "Non, pas directement. Les revenus de staking et lending sont assimilés à des BNC (bénéfices non commerciaux), avec un régime spécifique. Les NFT et les opérations DeFi (yield farming, prêts, airdrops) relèvent de cas qui dépassent le cadre de cet outil. Pour ces situations, consultez un expert-comptable spécialisé.",
   },
   {
     question:
@@ -155,7 +155,7 @@ const FAQ_ITEMS = [
     question:
       "Les swaps crypto contre crypto (BTC vers ETH) sont-ils imposables ?",
     answer:
-      "Non. Les conversions entre cryptoactifs sont fiscalement neutres depuis 2019 (BOFiP BOI-RPPM-PVBMC-30-30). Seul le passage en monnaie ayant cours légal (EUR, USD) ou l'achat d'un bien/service avec une crypto déclenche l'imposition. Mets simplement à jour ton PRU pour la nouvelle crypto.",
+      "Non. Les conversions entre cryptoactifs sont fiscalement neutres depuis 2019 (BOFiP BOI-RPPM-PVBMC-30-30). Seul le passage en monnaie ayant cours légal (EUR, USD) ou l'achat d'un bien/service avec une crypto déclenche l'imposition. Mettez simplement à jour votre PRU pour la nouvelle crypto.",
   },
   {
     question:
@@ -173,37 +173,37 @@ const FAQ_ITEMS = [
     question:
       "Que se passe-t-il si j'ai un compte sur une plateforme étrangère ?",
     answer:
-      "Tu dois remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 1 500 € par compte si solde sous 50 000 €, 10 000 € au-dessus (article 1736 IV bis CGI). Applicable sur 4 à 6 ans.",
+      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 1 500 € par compte si solde sous 50 000 €, 10 000 € au-dessus (article 1736 IV bis CGI). Applicable sur 4 à 6 ans.",
   },
   {
     question:
       "Quel est le calendrier de la déclaration crypto 2026 ?",
     answer:
-      "La déclaration en ligne ouvre le 10 avril 2026. Date limite selon ton département : 22 mai 2026 (départements 1-19 + non-résidents UE), 29 mai 2026 (20-54), 5 juin 2026 (55-95 + outre-mer). Tu peux modifier ta déclaration en ligne jusqu'au 4 décembre 2026 sans pénalité.",
+      "La déclaration en ligne ouvre le 10 avril 2026. Date limite selon votre département : 22 mai 2026 (départements 1-19 + non-résidents UE), 29 mai 2026 (20-54), 5 juin 2026 (55-95 + outre-mer). Vous pouvez modifier votre déclaration en ligne jusqu'au 4 décembre 2026 sans pénalité.",
   },
   {
     question:
       "L'outil envoie-t-il mes données à un serveur externe ?",
     answer:
-      "Non. Le calcul se fait 100 % localement dans ton navigateur. Aucune donnée (montant des cessions, plus-value, identité) n'est transmise à Cryptoreflex ou à un tiers. Tu peux fermer la page : rien n'est conservé. Aide Cerfa par email uniquement si tu donnes ton email volontairement.",
+      "Non. Le calcul se fait 100 % localement dans votre navigateur. Aucune donnée (montant des cessions, plus-value, identité) n'est transmise à Cryptoreflex ou à un tiers. Vous pouvez fermer la page : rien n'est conservé. Aide Cerfa par email uniquement si vous donnez votre email volontairement.",
   },
   /* ----- 3 questions ciblées Waltio (audit CRO 26-04) ----- */
   {
     question:
       "Pourquoi utiliser Waltio plutôt que de tout faire à la main ?",
     answer:
-      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte tes exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Compte 30 minutes au total au lieu d'un week-end. 30 % de réduction via Cryptoreflex sur le plan Hodler (79 €).",
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte vos exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Comptez 30 minutes au total au lieu d'un week-end. 30 % de réduction via Cryptoreflex sur le plan Hodler (79 €).",
   },
   {
     question:
       "Combien me coûte Waltio par rapport à un expert-comptable crypto ?",
     answer:
-      "Waltio plan Hodler 79 €/an (jusqu'à 500 transactions) ou Trader 199 €/an (jusqu'à 5 000 + DeFi/NFT). Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, garde l'expert-comptable mais utilise Waltio Pro (549 €/an, mode partagé inclus) pour livrer un dossier propre et baisser ses honoraires.",
+      "Waltio plan Hodler 79 €/an (jusqu'à 500 transactions) ou Trader 199 €/an (jusqu'à 5 000 + DeFi/NFT). Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable mais utilisez Waltio Pro (549 €/an, mode partagé inclus) pour livrer un dossier propre et baisser ses honoraires.",
   },
   {
     question: "Waltio prend-il en compte le DeFi, le staking et les NFT ?",
     answer:
-      "Oui — sur les plans Trader (199 €) et Pro (549 €). Le moteur Waltio gère DeFi multi-chain (Ethereum, BNB Chain, Polygon, Arbitrum, Solana), pools de liquidité (LP tokens), staking (Cosmos, Tezos, Polkadot, Lido), airdrops automatiques et NFT (OpenSea, Blur, LooksRare). Notre calculateur ne couvre que la plus-value classique : pour ces cas, Waltio est indispensable. Plan Découverte gratuit pour visualiser ton portefeuille avant d'acheter un export Cerfa.",
+      "Oui — sur les plans Trader (199 €) et Pro (549 €). Le moteur Waltio gère DeFi multi-chain (Ethereum, BNB Chain, Polygon, Arbitrum, Solana), pools de liquidité (LP tokens), staking (Cosmos, Tezos, Polkadot, Lido), airdrops automatiques et NFT (OpenSea, Blur, LooksRare). Notre calculateur ne couvre que la plus-value classique : pour ces cas, Waltio est indispensable. Plan Découverte gratuit pour visualiser votre portefeuille avant d'acheter un export Cerfa.",
   },
 ];
 
@@ -338,7 +338,7 @@ export default function CalculateurFiscalitePage() {
               {/* Phase 3 / A3 — annonce de la nouvelle fonctionnalité PDF */}
               <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">
                 <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-                Télécharge ta simulation en PDF
+                Téléchargez votre simulation en PDF
               </span>
             </div>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
@@ -348,7 +348,7 @@ export default function CalculateurFiscalitePage() {
               </span>
             </h1>
             <p className="mt-4 text-lg text-white/80">
-              Estime ton impôt sur les plus-values crypto en 2 min selon le
+              Estimez votre impôt sur les plus-values crypto en 2 min selon le
               régime fiscal applicable : <strong>PFU 30 %</strong>,{" "}
               <strong>barème progressif IR</strong> ou{" "}
               <strong>BIC professionnel</strong>. Calcul officiel article{" "}
@@ -386,9 +386,9 @@ export default function CalculateurFiscalitePage() {
               <strong className="text-warning-fg">
                 Estimation à titre indicatif.
               </strong>{" "}
-              Cet outil ne remplace pas un conseil fiscal personnalisé. Consulte
-              ton expert-comptable pour les cas complexes (DeFi, staking, NFT,
-              mining).
+              Cet outil ne remplace pas un conseil fiscal personnalisé.
+              Consultez votre expert-comptable pour les cas complexes (DeFi,
+              staking, NFT, mining).
             </p>
           </div>
 
@@ -416,10 +416,10 @@ export default function CalculateurFiscalitePage() {
               BOI-RPPM-PVBMC-30-30. Pour un particulier en gestion occasionnelle,
               le régime par défaut est le <strong>Prélèvement Forfaitaire Unique
               (PFU)</strong> à 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de
-              prélèvements sociaux. Tu peux aussi opter pour le barème
-              progressif (TMI 11/30/41/45 %) via la case 2OP du Cerfa 2042 si ta
-              tranche d'IR est basse — l'option est globale et annuelle, elle
-              s'applique à l'ensemble de tes revenus de capitaux mobiliers
+              prélèvements sociaux. Vous pouvez aussi opter pour le barème
+              progressif (TMI 11/30/41/45 %) via la case 2OP du Cerfa 2042 si
+              votre tranche d'IR est basse — l'option est globale et annuelle,
+              elle s'applique à l'ensemble de vos revenus de capitaux mobiliers
               (dividendes, intérêts, plus-values mobilières).
             </p>
 
@@ -433,11 +433,11 @@ export default function CalculateurFiscalitePage() {
                 prix de cession / valeur globale du portefeuille au jour de
                 cession) − frais de cession
               </em>
-              . C'est un calcul de fraction : tu n'imputes au prix de cession
+              . C'est un calcul de fraction : vous n'imputez au prix de cession
               que la part du prix d'acquisition correspondant au pourcentage de
-              portefeuille effectivement cédé. Si tu vends 1 BTC sur un
-              portefeuille total de 75 000 euros valant 50 000 euros, tu
-              n'imputes que 67 % de ton prix d'acquisition cumulé.
+              portefeuille effectivement cédé. Si vous vendez 1 BTC sur un
+              portefeuille total de 75 000 euros valant 50 000 euros, vous
+              n'imputez que 67 % de votre prix d'acquisition cumulé.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -451,7 +451,7 @@ export default function CalculateurFiscalitePage() {
               45 000 euros. Plus-value = 44 955 − (30 000 × 44 955 / 45 000) =
               44 955 − 29 970 = <strong>14 985 euros</strong>. PFU 30 % :
               4 495,50 euros d'impôt. Pour 5 exemples chiffrés détaillés (DCA,
-              swap, gros gain, micro montant), consulte notre guide{" "}
+              swap, gros gain, micro montant), consultez notre guide{" "}
               <Link
                 href="/blog/calcul-pfu-30-crypto-exemple-chiffre"
                 className="text-primary-soft underline"
@@ -465,12 +465,12 @@ export default function CalculateurFiscalitePage() {
               Le seuil 305 € — exonération totale
             </h3>
             <p>
-              Si le <strong>total cumulé de tes cessions</strong> sur l'année
-              reste inférieur ou égal à <strong>305 euros</strong>, tu es{" "}
-              <strong>totalement exonéré</strong> d'impôt sur tes plus-values
+              Si le <strong>total cumulé de vos cessions</strong> sur l'année
+              reste inférieur ou égal à <strong>305 euros</strong>, vous êtes{" "}
+              <strong>totalement exonéré</strong> d'impôt sur vos plus-values
               crypto. Attention : le seuil porte sur le total des prix de vente
-              vers EUR, pas sur la plus-value. Dès que tu dépasses 305 euros sur
-              l'année (cumul), <strong>toute</strong> la plus-value devient
+              vers EUR, pas sur la plus-value. Dès que vous dépassez 305 euros
+              sur l'année (cumul), <strong>toute</strong> la plus-value devient
               imposable, pas seulement la fraction au-dessus du seuil.
             </p>
 
@@ -482,8 +482,8 @@ export default function CalculateurFiscalitePage() {
               ETH, USDC vers SOL, swap sur Uniswap) sont{" "}
               <strong>fiscalement neutres</strong> depuis le BOFiP de septembre
               2019. Aucune ligne sur le Cerfa 2086, aucun calcul de plus-value à
-              déclarer. Tu mets simplement à jour ton PRU pour la nouvelle
-              crypto reçue, et conserves l'historique du swap (export CSV) en
+              déclarer. Vous mettez simplement à jour votre PRU pour la nouvelle
+              crypto reçue, et conservez l'historique du swap (export CSV) en
               cas de contrôle. Seul le passage en monnaie ayant cours légal
               (EUR, USD) ou l'achat d'un bien/service en crypto déclenche
               l'imposition.
@@ -513,12 +513,12 @@ export default function CalculateurFiscalitePage() {
               Et si j'ai des moins-values ?
             </h3>
             <p>
-              Tes moins-values crypto se compensent avec tes plus-values crypto
+              Vos moins-values crypto se compensent avec vos plus-values crypto
               de la même année (compensation automatique). Si le solde annuel
               est négatif, l'excédent est{" "}
               <strong>reportable pendant 10 ans</strong> sur les plus-values
               crypto futures uniquement (article 150 VH bis I 4° du CGI). Ce
-              mécanisme est crucial pour optimiser ta fiscalité sur un cycle
+              mécanisme est crucial pour optimiser votre fiscalité sur un cycle
               complet — méthode dans{" "}
               <Link
                 href="/blog/deduire-pertes-crypto-impot-2026"
@@ -533,12 +533,12 @@ export default function CalculateurFiscalitePage() {
               BIC professionnel — quand bascule-t-on ?
             </h3>
             <p>
-              Si tu trades de manière habituelle, organisée et avec des outils
-              avancés (bots, levier, arbitrage), l'administration peut
-              requalifier ton activité en <strong>BIC professionnel</strong>.
-              Le bénéfice net est alors imposé à ta TMI + 17,2 % PS +
+              Si vous tradez de manière habituelle, organisée et avec des
+              outils avancés (bots, levier, arbitrage), l'administration peut
+              requalifier votre activité en <strong>BIC professionnel</strong>.
+              Le bénéfice net est alors imposé à votre TMI + 17,2 % PS +
               cotisations sociales URSSAF (~22 %). Le calculateur intègre cette
-              option pour t'aider à comparer les trois régimes. Pas de seuil
+              option pour vous aider à comparer les trois régimes. Pas de seuil
               chiffré officiel — c'est une appréciation faisceau d'indices par
               le service vérificateur.
             </p>
@@ -558,8 +558,8 @@ export default function CalculateurFiscalitePage() {
           </h2>
           <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
             <p>
-              Par défaut, tes plus-values crypto sont imposées au PFU 30 %
-              (12,8 % d'IR + 17,2 % de prélèvements sociaux). Mais tu peux{" "}
+              Par défaut, vos plus-values crypto sont imposées au PFU 30 %
+              (12,8 % d'IR + 17,2 % de prélèvements sociaux). Mais vous pouvez{" "}
               <strong>opter pour le barème progressif</strong> de l'impôt sur le
               revenu via la <strong>case 2OP du Cerfa 2042</strong>. Pour
               certains profils (TMI 0 ou 11 %), cette option divise l'impôt par
@@ -635,11 +635,11 @@ export default function CalculateurFiscalitePage() {
 
             <h3 className="text-xl font-bold text-white mt-8">Règle pratique</h3>
             <p>
-              Le PFU est avantageux dès que ta TMI dépasse{" "}
+              Le PFU est avantageux dès que votre TMI dépasse{" "}
               <strong>12,8 %</strong>, c'est-à-dire à partir de la tranche 30 %
               (revenu fiscal au-dessus de 29 315 euros pour une part). En
               tranche 11 % et 0 %, le barème est gagnant. Notre calculateur
-              affiche les deux scénarios côte à côte selon ta TMI déclarée.
+              affiche les deux scénarios côte à côte selon votre TMI déclarée.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -647,12 +647,12 @@ export default function CalculateurFiscalitePage() {
             </h3>
             <p>
               L'option case 2OP est <strong>annuelle et globale</strong> : elle
-              s'applique à <em>tous</em> tes revenus de capitaux mobiliers de
+              s'applique à <em>tous</em> vos revenus de capitaux mobiliers de
               l'année (dividendes, intérêts, plus-values crypto, plus-values
-              mobilières). Avant de cocher, simule l'impact sur l'ensemble de
-              tes revenus, pas seulement ta crypto. Un dividende de 5 000 euros
-              peut transformer une bonne idée en mauvaise affaire si tu es
-              proche d'une frontière de tranche TMI.
+              mobilières). Avant de cocher, simulez l'impact sur l'ensemble de
+              vos revenus, pas seulement votre crypto. Un dividende de
+              5 000 euros peut transformer une bonne idée en mauvaise affaire si
+              vous êtes proche d'une frontière de tranche TMI.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -692,47 +692,47 @@ export default function CalculateurFiscalitePage() {
           </h2>
           <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
             <p>
-              Une fois ton calcul effectué, deux formulaires obligatoires à
-              déposer avec ta déclaration de revenus 2026 (sur les revenus
-              2025). Le <strong>Cerfa 2086</strong> détaille tes cessions
+              Une fois votre calcul effectué, deux formulaires obligatoires à
+              déposer avec votre déclaration de revenus 2026 (sur les revenus
+              2025). Le <strong>Cerfa 2086</strong> détaille vos cessions
               imposables ligne par ligne. Le <strong>Cerfa 3916-bis</strong>{" "}
-              déclare tes comptes ouverts sur des plateformes étrangères
+              déclare vos comptes ouverts sur des plateformes étrangères
               (Binance, Kraken Irlande, Bitget, Coinbase Irlande, Bitpanda
-              Autriche). L'oubli du 3916-bis coûte 1 500 euros à 10 000 euros par
-              compte.
+              Autriche). L'oubli du 3916-bis coûte 1 500 euros à 10 000 euros
+              par compte.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 1 — Récupère tes données
+              Étape 1 — Récupérez vos données
             </h3>
             <p>
-              Connecte-toi à chaque plateforme et exporte le CSV complet de
+              Connectez-vous à chaque plateforme et exportez le CSV complet de
               l'année 2025 (généralement section "Historique" ou "Tax report").
-              Tu auras besoin : date de chaque cession, prix de cession en
+              Vous aurez besoin : date de chaque cession, prix de cession en
               euros, frais payés, prix d'acquisition cumulé. Pour les wallets
               DeFi (MetaMask, Phantom), un explorateur blockchain (Etherscan,
-              Solscan) reconstitue ton historique.
+              Solscan) reconstitue votre historique.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 2 — Calcule ta plus-value avec notre outil
+              Étape 2 — Calculez votre plus-value avec notre outil
             </h3>
             <p>
-              Saisis tes cessions, achats, valeur globale du portefeuille et
-              frais dans notre calculateur ci-dessus. Il applique automatiquement
-              la formule article 150 VH bis (avec le prorata) et te donne le
-              total plus-value à reporter, sous PFU 30 % et sous barème
-              progressif. Calcul 100 % local, aucune donnée envoyée.
+              Saisissez vos cessions, achats, valeur globale du portefeuille et
+              frais dans notre calculateur ci-dessus. Il applique
+              automatiquement la formule article 150 VH bis (avec le prorata)
+              et vous donne le total plus-value à reporter, sous PFU 30 % et
+              sous barème progressif. Calcul 100 % local, aucune donnée envoyée.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 3 — Connecte-toi sur impots.gouv.fr
+              Étape 3 — Connectez-vous sur impots.gouv.fr
             </h3>
             <p>
-              Sur impots.gouv.fr, clique sur "Déclarer mes revenus", coche la
+              Sur impots.gouv.fr, cliquez sur "Déclarer mes revenus", cochez la
               rubrique <strong>"Plus-values et gains divers"</strong> (rubrique
-              3). Continue jusqu'à l'écran "Plus-values sur actifs numériques",
-              clique sur <strong>"Annexe 2086"</strong>. Le formulaire dynamique
+              3). Continuez jusqu'à l'écran "Plus-values sur actifs numériques",
+              cliquez sur <strong>"Annexe 2086"</strong>. Le formulaire dynamique
               s'ouvre avec ses 8 colonnes : date cession (211), prix cession
               (212), frais (213), prix cession net (214), valeur globale
               portefeuille (215), prix total acquisition (216), fraction
@@ -740,16 +740,16 @@ export default function CalculateurFiscalitePage() {
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 4 — Remplis le Cerfa 2086 ligne par ligne
+              Étape 4 — Remplissez le Cerfa 2086 ligne par ligne
             </h3>
             <p>
-              Une ligne par cession (ou agrégation par crypto/mois si tu as plus
-              de 30 cessions). Saisis le prix de cession brut (col. 212), les
-              frais de cession (col. 213), le prix net (col. 214 = auto), la
-              valeur globale de TON portefeuille au jour de cession (col. 215 —
-              tous wallets confondus), le prix total d'acquisition (col. 216),
-              la fraction imputée (col. 217 = auto), et la plus-value (col. 218
-              = auto). Tutoriel complet :{" "}
+              Une ligne par cession (ou agrégation par crypto/mois si vous avez
+              plus de 30 cessions). Saisissez le prix de cession brut
+              (col. 212), les frais de cession (col. 213), le prix net (col.
+              214 = auto), la valeur globale de VOTRE portefeuille au jour de
+              cession (col. 215 — tous wallets confondus), le prix total
+              d'acquisition (col. 216), la fraction imputée (col. 217 = auto),
+              et la plus-value (col. 218 = auto). Tutoriel complet :{" "}
               <Link
                 href="/blog/declaration-crypto-cerfa-2086-tutoriel-2026"
                 className="text-primary-soft underline"
@@ -760,24 +760,24 @@ export default function CalculateurFiscalitePage() {
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 5 — Reporte le total sur le 2042-C
+              Étape 5 — Reportez le total sur le 2042-C
             </h3>
             <p>
               Le total annuel des plus-values du Cerfa 2086 se reporte
               automatiquement en <strong>case 3AN</strong> du Cerfa 2042-C
               (déclaration complémentaire). Pour les moins-values, c'est la
-              <strong> case 3BN</strong>. Si tu as des stocks de moins-values
-              antérieures à imputer, utilise la <strong>case 3SG</strong>. Si tu
-              veux opter pour le barème progressif, coche aussi la{" "}
-              <strong>case 2OP</strong>.
+              <strong> case 3BN</strong>. Si vous avez des stocks de
+              moins-values antérieures à imputer, utilisez la
+              <strong> case 3SG</strong>. Si vous voulez opter pour le barème
+              progressif, cochez aussi la <strong>case 2OP</strong>.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Étape 6 — N'oublie pas le Cerfa 3916-bis
+              Étape 6 — N'oubliez pas le Cerfa 3916-bis
             </h3>
             <p>
               Pour <strong>chaque compte ouvert sur une plateforme étrangère</strong>{" "}
-              en 2025 (même inactif), tu dois déposer un Cerfa 3916-bis :
+              en 2025 (même inactif), vous devez déposer un Cerfa 3916-bis :
               identité du compte, plateforme, pays, numéro de compte (UID
               Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 IV bis CGI) :
               1 500 euros par compte si solde inférieur à 50 000 euros, 10 000 euros au-dessus.
@@ -797,11 +797,11 @@ export default function CalculateurFiscalitePage() {
             <p>
               La déclaration en ligne ouvre le 10 avril 2026. Date limite : 22
               mai 2026 (départements 1-19), 29 mai 2026 (20-54), 5 juin 2026
-              (55-95 + outre-mer + non-résidents hors UE). Tu peux modifier ta
-              déclaration en ligne <strong>jusqu'au 4 décembre 2026</strong>{" "}
-              sans pénalité, ce qui est une bonne sécurité si tu réalises avoir
-              oublié une cession ou un compte. Avis d'impôt envoyé entre juillet
-              et septembre 2026, paiement solde au 15 septembre 2026.
+              (55-95 + outre-mer + non-résidents hors UE). Vous pouvez modifier
+              votre déclaration en ligne <strong>jusqu'au 4 décembre 2026</strong>{" "}
+              sans pénalité, ce qui est une bonne sécurité si vous réalisez
+              avoir oublié une cession ou un compte. Avis d'impôt envoyé entre
+              juillet et septembre 2026, paiement solde au 15 septembre 2026.
             </p>
           </div>
         </div>
@@ -813,11 +813,11 @@ export default function CalculateurFiscalitePage() {
           <div className="max-w-3xl">
             <span className="badge-info">Déclaration</span>
             <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-              Aide pour remplir tes formulaires
+              Aide pour remplir vos formulaires
             </h2>
             <p className="mt-3 text-white/70">
-              Une fois le calcul effectué, deux formulaires à déposer avec ta
-              déclaration de revenus.
+              Une fois le calcul effectué, deux formulaires à déposer avec
+              votre déclaration de revenus.
             </p>
           </div>
 
@@ -884,7 +884,7 @@ export default function CalculateurFiscalitePage() {
               Au-delà de 30 transactions, automatise avec un logiciel dédié
             </h2>
             <p className="mt-3 text-white/75">
-              Notre calculateur gratuit te donne le montant d'impôt en 2 min,
+              Notre calculateur gratuit vous donne le montant d'impôt en 2 min,
               mais ne génère pas les formulaires Cerfa pré-remplis. Pour ça, on
               recommande <strong>Waltio</strong> (édité en France, 30 % de
               réduction Cryptoreflex). Comparatif complet Waltio vs Koinly vs
@@ -904,11 +904,11 @@ export default function CalculateurFiscalitePage() {
                   Soutien Pro
                 </span>
                 <h3 className="mt-2 font-display font-bold text-lg text-white">
-                  Tu veux le PDF Cerfa 2086 pré-rempli ? Outil Pro
+                  Vous voulez le PDF Cerfa 2086 pré-rempli ? Outil Pro
                 </h3>
                 <p className="mt-1 text-sm text-white/70">
-                  Importe ton CSV Binance/Coinbase et reçois un Cerfa 2086 +
-                  3916-bis auto en 30 s. Réservé aux abonnés Soutien.
+                  Importez votre CSV Binance/Coinbase et recevez un Cerfa 2086
+                  + 3916-bis auto en 30 s. Réservé aux abonnés Soutien.
                 </p>
               </div>
             </div>
@@ -987,7 +987,7 @@ export default function CalculateurFiscalitePage() {
               <strong className="text-warning-fg">Rappel :</strong> Cet outil
               ne remplace pas un expert-comptable agréé. Pour des situations
               complexes (staking, lending, NFT, mining, activité habituelle),
-              fais-toi accompagner par un professionnel.
+              faites-vous accompagner par un professionnel.
             </p>
           </div>
         </div>
@@ -1014,8 +1014,8 @@ export default function CalculateurFiscalitePage() {
             </h2>
             <p className="mt-3 text-white/70">
               Le calculateur ci-dessus s'appuie sur 10 guides détaillés
-              (5 satellites long-tail + 5 piliers du silo). Approfondis chaque
-              cas spécifique selon ta situation fiscale.
+              (5 satellites long-tail + 5 piliers du silo). Approfondissez
+              chaque cas spécifique selon votre situation fiscale.
             </p>
           </div>
 

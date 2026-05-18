@@ -75,7 +75,7 @@ interface UserAccount {
   declaredBefore: boolean;
 }
 
-const STEPS = ["Tes exchanges", "Détails comptes", "Récapitulatif", "Déclarer"] as const;
+const STEPS = ["Vos exchanges", "Détails comptes", "Récapitulatif", "Déclarer"] as const;
 
 /* -------------------------------------------------------------------------- */
 /*  Composant                                                                 */
@@ -202,7 +202,7 @@ export default function Radar3916Bis() {
                 Radar 3916-bis
               </h2>
               <p className="text-xs text-muted">
-                Détecte tes amendes potentielles en 2 minutes
+                Détectez vos amendes potentielles en 2 minutes
               </p>
             </div>
           </div>
@@ -338,10 +338,10 @@ function Step1Exchanges({
   return (
     <div>
       <h3 className="text-base font-bold text-fg mb-1">
-        Sur quels exchanges as-tu eu un compte ?
+        Sur quels exchanges avez-vous eu un compte ?
       </h3>
       <p className="text-sm text-fg/70 mb-5">
-        Sélectionne <strong>tous les exchanges</strong> où tu as ouvert un compte
+        Sélectionnez <strong>tous les exchanges</strong> où vous avez ouvert un compte
         (même fermé, même vide). Le 3916-bis doit être déclaré pour chacun.
       </p>
 
@@ -386,8 +386,8 @@ function Step1Exchanges({
 
       <p className="mt-5 text-xs text-muted flex items-start gap-1.5">
         <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" aria-hidden="true" />
-        Aucune donnée n&apos;est envoyée sur internet — tout reste dans ton
-        navigateur. Tu peux fermer la fenêtre, rien n&apos;est sauvegardé.
+        Aucune donnée n&apos;est envoyée sur internet — tout reste dans votre
+        navigateur. Vous pouvez fermer la fenêtre, rien n&apos;est sauvegardé.
       </p>
     </div>
   );
@@ -409,11 +409,11 @@ function Step2Details({
   return (
     <div>
       <h3 className="text-base font-bold text-fg mb-1">
-        Précise tes comptes
+        Précisez vos comptes
       </h3>
       <p className="text-sm text-fg/70 mb-5">
-        Pour chaque exchange, sélectionne l&apos;entité contractante (regarde
-        sur tes anciens emails de bienvenue ou tes Mentions Légales) et
+        Pour chaque exchange, sélectionnez l&apos;entité contractante (regardez
+        sur vos anciens emails de bienvenue ou vos Mentions Légales) et
         l&apos;année d&apos;ouverture.
       </p>
 
@@ -562,7 +562,7 @@ function Step3Recap({
         </p>
         <p className="mt-2 text-sm text-fg/80">
           {exposure.total === 0
-            ? "Aucune amende potentielle — bravo, tu es à jour."
+            ? "Aucune amende potentielle — bravo, vous êtes à jour."
             : `Amende potentielle si ${exposure.countCooperative + exposure.countNonCooperative} compte(s) restent non déclaré(s).`}
         </p>
 
@@ -664,8 +664,8 @@ function Step3Recap({
       <p className="mt-4 text-xs text-muted leading-relaxed">
         <strong className="text-fg">Source légale :</strong>{" "}
         {psanData.legal.boi} · {psanData.legal.cgi}. Le calcul d&apos;exposition
-        est indicatif et basé sur les informations publiquement disponibles. Tu
-        restes responsable de ta déclaration finale.
+        est indicatif et basé sur les informations publiquement disponibles. Vous
+        restez responsable de votre déclaration finale.
       </p>
     </div>
   );
@@ -693,11 +693,11 @@ function Step4Declare({
           <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
         </div>
         <h3 className="text-xl font-extrabold text-fg mb-2">
-          Tu es à jour !
+          Vous êtes à jour !
         </h3>
         <p className="text-sm text-fg/70 max-w-md mx-auto">
-          Tous tes comptes ont déjà été déclarés les années précédentes.
-          N&apos;oublie pas de les redéclarer chaque année tant qu&apos;ils sont
+          Tous vos comptes ont déjà été déclarés les années précédentes.
+          N&apos;oubliez pas de les redéclarer chaque année tant qu&apos;ils sont
           ouverts (même vides).
         </p>
       </div>
@@ -718,26 +718,26 @@ function Step4Declare({
       <ol className="space-y-3">
         {[
           {
-            title: "Connecte-toi à impots.gouv.fr",
-            text: "Avec ton numéro fiscal et mot de passe (ou FranceConnect).",
+            title: "Connectez-vous à impots.gouv.fr",
+            text: "Avec votre numéro fiscal et mot de passe (ou FranceConnect).",
             link: "https://www.impots.gouv.fr/accueil",
             linkLabel: "Ouvrir impots.gouv.fr",
           },
           {
-            title: "Accède à ta déclaration de revenus",
-            text: "Onglet « Déclarer mes revenus ». Sur la 1ère page de la déclaration, coche la case « Comptes ouverts, détenus, utilisés ou clos à l'étranger » (case 8UU).",
+            title: "Accédez à votre déclaration de revenus",
+            text: "Onglet « Déclarer mes revenus ». Sur la 1ère page de la déclaration, cochez la case « Comptes ouverts, détenus, utilisés ou clos à l'étranger » (case 8UU).",
           },
           {
-            title: "Remplis un formulaire 3916-bis par compte",
-            text: `Pour chacun de tes ${undeclared.length} compte(s), tu remplis un formulaire séparé avec : nom de l'établissement, adresse, n° d'identification, date d'ouverture, date de clôture (si applicable).`,
+            title: "Remplissez un formulaire 3916-bis par compte",
+            text: `Pour chacun de vos ${undeclared.length} compte(s), vous remplissez un formulaire séparé avec : nom de l'établissement, adresse, n° d'identification, date d'ouverture, date de clôture (si applicable).`,
           },
           {
-            title: "Reporte les infos depuis ton récap Cryptoreflex",
-            text: "Utilise le récapitulatif que tu viens de générer (étape précédente) — il contient toutes les infos nécessaires.",
+            title: "Reportez les infos depuis votre récap Cryptoreflex",
+            text: "Utilisez le récapitulatif que vous venez de générer (étape précédente) — il contient toutes les infos nécessaires.",
           },
           {
-            title: "Valide et imprime ton accusé de réception",
-            text: "Après validation, télécharge l'accusé de réception PDF. Garde-le 6 ans (durée de prescription fiscale).",
+            title: "Validez et imprimez votre accusé de réception",
+            text: "Après validation, téléchargez l'accusé de réception PDF. Gardez-le 6 ans (durée de prescription fiscale).",
           },
         ].map((s, idx) => (
           <li
@@ -783,7 +783,7 @@ function Step4Declare({
             <strong>Rappel légal :</strong> l&apos;obligation de déclarer
             s&apos;applique chaque année tant que le compte est ouvert, même
             sans mouvement. La prescription fiscale est de 6 ans (10 ans pour
-            les comptes en pays non-coopératif). Si tu as oublié de déclarer
+            les comptes en pays non-coopératif). Si vous avez oublié de déclarer
             sur les années passées, une régularisation spontanée auprès de la
             DGFiP est généralement traitée plus favorablement qu&apos;un
             redressement.

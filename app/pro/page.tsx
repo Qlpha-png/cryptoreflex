@@ -250,14 +250,14 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       price: paymentsEnabled ? MONTHLY_PRICE : "Bientôt",
       priceUnit: paymentsEnabled ? "/ mois" : "tarif indicatif à venir",
       description:
-        "Tu soutiens un éditeur web indépendant français et tu débloques les limites techniques du plan Gratuit.",
+        "Vous soutenez un éditeur web indépendant français et vous débloquez les limites techniques du plan Gratuit.",
       features: [
         "Portfolio 500 positions (vs 10 en Free)",
         "Alertes prix 100 par email (vs 3 en Free)",
         "Watchlist 200 cryptos (vs 10 en Free)",
         "IA Q&A par fiche — 20 questions/jour avec Claude Haiku contextualisé",
         "Annulation 1 clic, sans engagement, 14 j remboursé (art. L221-18) + garantie commerciale 7 j satisfait-ou-remboursé en bonus",
-        "Tu finances directement le développement et l'hébergement UE",
+        "Vous financez directement le développement et l'hébergement UE",
       ],
       ctaLabel: paymentsEnabled
         ? MONTHLY_HAS_OWN_LINK
@@ -295,7 +295,7 @@ function buildTiers(paymentsEnabled: boolean): PricingTier[] {
       features: [
         "Tout le plan Soutien Mensuel (mêmes limites étendues)",
         "Économie ~6,89 € / an (vs 2,99 € × 12 = 35,88 €)",
-        "Tu permets au projet de tenir 12 mois supplémentaires",
+        "Vous permettez au projet de tenir 12 mois supplémentaires",
         "Annulation 1 clic, 14 j remboursé (art. L221-18) + garantie commerciale 7 j en bonus",
       ],
       ctaLabel: paymentsEnabled
@@ -340,7 +340,7 @@ const FEATURES = [
     kpi: "500",
     tag: "Portfolio",
     title: "Portfolio étendu à 500 positions",
-    text: "Suis jusqu'à 500 positions crypto (vs 10 en Free). Multi-wallets, P&L automatique, pie chart d'allocation. Données stockées sur ton appareil (RGPD by design).",
+    text: "Suivez jusqu'à 500 positions crypto (vs 10 en Free). Multi-wallets, P&L automatique, pie chart d'allocation. Données stockées sur votre appareil (RGPD by design).",
     href: "/portefeuille",
   },
   {
@@ -363,15 +363,15 @@ const FEATURES = [
     kpi: "200",
     tag: "Watchlist",
     title: "Watchlist étendue à 200 cryptos",
-    text: "Suis jusqu'à 200 cryptos (vs 10 en Free) depuis ton tableau de bord. Données stockées sur ton appareil (RGPD by design).",
+    text: "Suivez jusqu'à 200 cryptos (vs 10 en Free) depuis votre tableau de bord. Données stockées sur votre appareil (RGPD by design).",
     href: "/watchlist",
   },
   {
     icon: Users,
     kpi: "Indé",
     tag: "Mission",
-    title: "Tu finances un éditeur indépendant",
-    text: "Pas de levée de fonds, pas d'investisseur, pas de PSAN. Ton soutien finance directement le développement, l'hébergement UE et les outils gratuits.",
+    title: "Vous financez un éditeur indépendant",
+    text: "Pas de levée de fonds, pas d'investisseur, pas de PSAN. Votre soutien finance directement le développement, l'hébergement UE et les outils gratuits.",
   },
 ];
 
@@ -399,7 +399,7 @@ const ROADMAP_V2 = [
     icon: Zap,
     title: "Sync API exchanges (read-only)",
     eta: "Idée",
-    text: "Auto-sync de tes positions sans CSV. Très demandé, techniquement complexe — sera proposé uniquement si on peut le faire de façon sécurisée et fiable.",
+    text: "Auto-sync de vos positions sans CSV. Très demandé, techniquement complexe — sera proposé uniquement si on peut le faire de façon sécurisée et fiable.",
   },
   {
     icon: BookOpen,
@@ -435,7 +435,7 @@ const ROADMAP_V2 = [
 const FAQS = [
   {
     q: "Pourquoi un abonnement « Soutien » et pas « Pro premium » ?",
-    a: `Parce qu'on est solo et sans budget. Promettre du support 48h, des briefs hebdo écrits par des "experts" ou des audits perso annuels reviendrait à mentir — on n'a ni l'équipe ni le temps pour le tenir. À la place, on vend uniquement ce que la machine peut livrer seule (limites relevées, glossaire complet, accès anticipé). Si tu cherches un cabinet de conseil fiscal, ce n'est pas nous — et on préfère le dire.`,
+    a: `Parce qu'on est solo et sans budget. Promettre du support 48h, des briefs hebdo écrits par des "experts" ou des audits perso annuels reviendrait à mentir — on n'a ni l'équipe ni le temps pour le tenir. À la place, on vend uniquement ce que la machine peut livrer seule (limites relevées, glossaire complet, accès anticipé). Si vous cherchez un cabinet de conseil fiscal, ce n'est pas nous — et on préfère le dire.`,
   },
   {
     q: "Concrètement, qu'est-ce que je débloque par rapport au Gratuit ?",
@@ -443,11 +443,11 @@ const FAQS = [
   },
   {
     q: "Comment je m'abonne ?",
-    a: `Tu choisis Mensuel (${MONTHLY_PRICE}/mois) ou Annuel (${ANNUAL_PRICE}/an), tu cliques "Soutenir". Tu es redirigé vers une page de paiement Stripe sécurisée — carte bancaire, Apple Pay, Google Pay ou SEPA. Accès activé immédiatement après paiement, facture envoyée par email.`,
+    a: `Vous choisissez Mensuel (${MONTHLY_PRICE}/mois) ou Annuel (${ANNUAL_PRICE}/an), vous cliquez "Soutenir". Vous êtes redirigé vers une page de paiement Stripe sécurisée — carte bancaire, Apple Pay, Google Pay ou SEPA. Accès activé immédiatement après paiement, facture envoyée par email.`,
   },
   {
     q: "Quelle est la différence entre Mensuel et Annuel ?",
-    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 19 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12 = 35,88 €). Tu paies en une fois, tu n'y penses plus pendant 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
+    a: `L'Annuel (${ANNUAL_PRICE}/an) revient à environ ${(parseFloat(ANNUAL_PRICE.replace(/[^\d,.]/g, "").replace(",", ".")) / 12).toFixed(2)} €/mois — soit environ 19 % d'économie versus le Mensuel (${MONTHLY_PRICE}/mois × 12 = 35,88 €). Vous payez en une fois, vous n'y pensez plus pendant 12 mois. Le Mensuel reste flexible : annulation 1 clic à tout moment.`,
   },
   {
     q: "Quels moyens de paiement sont acceptés ?",
@@ -455,7 +455,7 @@ const FAQS = [
   },
   {
     q: "Comment annuler mon abonnement ?",
-    a: "En 1 clic depuis ton espace « Abonnement » (style Amazon Prime — pas de questionnaire, pas de friction). L'accès Soutien reste actif jusqu'à la fin de la période payée, puis tu repasses automatiquement en plan Gratuit. Conforme décret 2022-34 (résiliation 3 clics max — on en fait 1).",
+    a: "En 1 clic depuis votre espace « Abonnement » (style Amazon Prime — pas de questionnaire, pas de friction). L'accès Soutien reste actif jusqu'à la fin de la période payée, puis vous repassez automatiquement en plan Gratuit. Conforme décret 2022-34 (résiliation 3 clics max — on en fait 1).",
   },
   {
     q: "Y a-t-il une garantie satisfait ou remboursé ?",
@@ -463,19 +463,19 @@ const FAQS = [
   },
   {
     q: "Mes données portfolio restent-elles privées ?",
-    a: "Oui. Les données sont stockées chiffrées sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Tu peux exporter ou supprimer toutes tes données depuis ton espace personnel à tout moment (RGPD art. 17 & 20).",
+    a: "Oui. Les données sont stockées chiffrées sur des serveurs UE (Vercel Frankfurt + Supabase Paris). Aucune revente, aucun partage tiers. Vous pouvez exporter ou supprimer toutes vos données depuis votre espace personnel à tout moment (RGPD art. 17 & 20).",
   },
   {
     q: "Et si je me désabonne, que deviennent mes données ?",
-    a: `Tes données restent accessibles depuis ton compte Free pendant 90 jours (export CSV disponible), puis elles sont anonymisées automatiquement. Tu peux aussi demander la suppression immédiate via ${BRAND.email} (réponse sous 30 jours, garantie RGPD).`,
+    a: `Vos données restent accessibles depuis votre compte Free pendant 90 jours (export CSV disponible), puis elles sont anonymisées automatiquement. Vous pouvez aussi demander la suppression immédiate via ${BRAND.email} (réponse sous 30 jours, garantie RGPD).`,
   },
   {
     q: "Les « idées futures » listées sur cette page sont-elles garanties ?",
-    a: "Non — et c'est volontaire. Le Cerfa 3916-bis pré-rempli, les articles long-format on-chain et la sync API exchanges sont des idées qu'on aimerait livrer si la base de soutiens permet d'y passer du temps. Aucune date n'est promise. Tu paies pour ce qui existe AUJOURD'HUI (Cerfa 2086 PDF auto inclus), pas pour une feature future. Si elles sortent, les abonnés Soutien y accèdent en premier sans surcoût.",
+    a: "Non — et c'est volontaire. Le Cerfa 3916-bis pré-rempli, les articles long-format on-chain et la sync API exchanges sont des idées qu'on aimerait livrer si la base de soutiens permet d'y passer du temps. Aucune date n'est promise. Vous payez pour ce qui existe AUJOURD'HUI (Cerfa 2086 PDF auto inclus), pas pour une feature future. Si elles sortent, les abonnés Soutien y accèdent en premier sans surcoût.",
   },
   {
     q: "Y a-t-il une « réponse fiscale perso 48h » comme dans certaines pubs SaaS ?",
-    a: `Non, et on tient à le préciser. On n'a pas d'équipe d'experts fiscaux et on n'est pas un CIF (Conseiller en Investissements Financiers) immatriculé ORIAS. Pour une question fiscale précise, on te recommande un expert-comptable ou un CIF — on peut t'orienter vers les calculs et la doctrine BOFiP via nos outils gratuits, mais pas remplacer un professionnel réglementé.`,
+    a: `Non, et on tient à le préciser. On n'a pas d'équipe d'experts fiscaux et on n'est pas un CIF (Conseiller en Investissements Financiers) immatriculé ORIAS. Pour une question fiscale précise, on vous recommande un expert-comptable ou un CIF — on peut vous orienter vers les calculs et la doctrine BOFiP via nos outils gratuits, mais pas remplacer un professionnel réglementé.`,
   },
   {
     q: "Qui est derrière Cryptoreflex ?",
@@ -611,12 +611,12 @@ function buildHowToSchema(): JsonLd {
     steps: [
       {
         name: "Choisir son plan",
-        text: `Compare les plans Mensuel (${META_MONTHLY_PRICE}/mois) et Annuel (${META_ANNUAL_PRICE}/an, économie 19 %) sur la page /pro. Sélectionne celui qui correspond à ton usage.`,
+        text: `Comparez les plans Mensuel (${META_MONTHLY_PRICE}/mois) et Annuel (${META_ANNUAL_PRICE}/an, économie 19 %) sur la page /pro. Sélectionnez celui qui correspond à votre usage.`,
         url: "/pro#plans",
       },
       {
         name: "Payer via Stripe",
-        text: "Clique sur « S'abonner » et tu es redirigé vers une page de paiement Stripe sécurisée. Carte bancaire, Apple Pay, Google Pay ou SEPA. Aucune donnée carte stockée chez nous.",
+        text: "Cliquez sur « S'abonner » et vous êtes redirigé vers une page de paiement Stripe sécurisée. Carte bancaire, Apple Pay, Google Pay ou SEPA. Aucune donnée carte stockée chez nous.",
         url: "/pro#plans",
       },
       {
@@ -696,12 +696,12 @@ export default function ProPage() {
               id="hero-title"
               className="mt-6 text-[28px] sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.05] tracking-tight max-w-3xl"
             >
-              Soutiens un projet crypto FR
+              Soutenez un projet crypto FR
               <br className="hidden sm:block" />{" "}
               <span className="text-gradient-gold-animate">100&nbsp;% indépendant.</span>
             </h1>
 
-            {/* Lead transparent : ce que tu débloques, sans promesse humaine */}
+            {/* Lead transparent : ce que vous débloquez, sans promesse humaine */}
             <p className="mt-6 text-base sm:text-lg text-fg/80 max-w-2xl leading-relaxed">
               Tous les outils essentiels restent gratuits. Le plan Soutien lève les
               limites techniques (portfolio, alertes, glossaire) et finance directement
@@ -833,7 +833,7 @@ export default function ProPage() {
             id="community-stats-title"
             className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg"
           >
-            Tu rejoins un groupe qui grandit chaque mois
+            Vous rejoignez un groupe qui grandit chaque mois
           </h2>
         </div>
         <LiveCommunityStats variant="full" />
@@ -848,7 +848,7 @@ export default function ProPage() {
       >
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Choisis ton mode de soutien
+            Choisissez votre mode de soutien
           </h2>
           <p className="mt-2 text-fg/70 max-w-2xl mx-auto">
             Le plan Gratuit reste généreux pour tout le monde. Le plan Soutien lève les
@@ -936,11 +936,11 @@ export default function ProPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-6">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Pas encore prêt ? Rejoins la waitlist
+              Pas encore prêt ? Rejoignez la waitlist
             </h2>
             <p className="mt-2 text-fg/70 max-w-xl mx-auto">
-              On te tient informé des nouvelles features Pro et des codes promo
-              exceptionnels réservés aux abonnés newsletter.
+              On vous tient informé des nouvelles features Pro et des codes
+              promo exceptionnels réservés aux abonnés newsletter.
             </p>
           </div>
 
@@ -948,7 +948,7 @@ export default function ProPage() {
             source="pro-waitlist"
             variant="default"
             title="Notify me — Cryptoreflex Pro"
-            subtitle="Tu reçois un email dès l'ouverture officielle."
+            subtitle="Vous recevez un email dès l'ouverture officielle."
             ctaLabel="Notify me"
             leadMagnet={false}
           />
@@ -969,7 +969,7 @@ export default function ProPage() {
         </div>
       </section>
 
-      {/* CE QUE TU DÉBLOQUES — id="features-pro" pour l'ancre du hero CTA */}
+      {/* CE QUE VOUS DÉBLOQUEZ — id="features-pro" pour l'ancre du hero CTA */}
       <section
         id="features-pro"
         className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20 scroll-mt-24"
@@ -979,12 +979,12 @@ export default function ProPage() {
             BÉNÉFICES 100&nbsp;% TECHNIQUES
           </span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg">
-            Ce que tu débloques <span className="gradient-text">en soutenant le projet</span>
+            Ce que vous débloquez <span className="gradient-text">en soutenant le projet</span>
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
             Aucune promesse de support humain ni d&apos;équipe d&apos;experts. Uniquement
             des bénéfices techniques que la machine livre seule, immédiatement
-            après ton paiement.
+            après votre paiement.
           </p>
         </div>
 
@@ -1073,10 +1073,10 @@ export default function ProPage() {
               <span className="gradient-text">si on en a le temps</span>
             </h2>
             <p className="mt-3 text-sm text-fg/70 max-w-2xl mx-auto leading-relaxed">
-              On préfère lister sans date promise que de t&apos;engager sur un
-              calendrier qu&apos;on ne pourrait pas tenir solo. Tu paies pour ce
-              qui existe AUJOURD&apos;HUI — si l&apos;une de ces idées sort,
-              tu y accèdes en avant-première sans surcoût.
+              On préfère lister sans date promise que de vous engager sur un
+              calendrier qu&apos;on ne pourrait pas tenir solo. Vous payez pour
+              ce qui existe AUJOURD&apos;HUI — si l&apos;une de ces idées sort,
+              vous y accédez en avant-première sans surcoût.
             </p>
           </div>
 
@@ -1116,7 +1116,7 @@ export default function ProPage() {
             Aucune de ces idées n&apos;est garantie ni facturée tant
             qu&apos;elle n&apos;est pas livrée. Les abonnements Soutien en
             bénéficient automatiquement à la sortie, sans surcoût. Si rien ne
-            sort, tu gardes le bénéfice immédiat de ton plan (limites
+            sort, vous gardez le bénéfice immédiat de votre plan (limites
             techniques levées).
           </p>
         </div>
@@ -1143,7 +1143,7 @@ export default function ProPage() {
             id="faq-title"
             className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg"
           >
-            Tout ce que tu te demandes{" "}
+            Tout ce que vous vous demandez{" "}
             <span className="gradient-text">avant de soutenir</span>
           </h2>
           <p className="mt-3 text-sm text-fg/70 max-w-xl mx-auto">
@@ -1190,7 +1190,7 @@ export default function ProPage() {
             href={`mailto:${BRAND.email}?subject=Question%20Cryptoreflex%20Pro`}
             className="text-primary-soft underline hover:text-primary font-semibold"
           >
-            Écris-nous directement
+            Écrivez-nous directement
           </a>{" "}
           — réponse sous 24 h ouvrées.
         </p>
@@ -1290,8 +1290,8 @@ export default function ProPage() {
                 tracker, alertes) sont conçus à but pédagogique et
                 d&apos;assistance à la déclaration fiscale. Ils ne constituent
                 <strong> pas un conseil d&apos;investissement personnalisé </strong>
-                ni un conseil fiscal réglementé. En cas de doute sur ta
-                déclaration, consulte un expert-comptable ou un CGP.
+                ni un conseil fiscal réglementé. En cas de doute sur votre
+                déclaration, consultez un expert-comptable ou un CGP.
               </span>
             </p>
             <p className="flex items-start gap-2">
@@ -1315,10 +1315,10 @@ export default function ProPage() {
                 aria-hidden="true"
               />
               <span>
-                <strong className="text-fg">Mention RGPD —</strong> En
-                t&apos;inscrivant à la waitlist ou en t&apos;abonnant Pro, ton
-                email est traité par {BRAND.name} (responsable de traitement)
-                et stocké chez Beehiiv (newsletter) ou Stripe (paiement) en
+                <strong className="text-fg">Mention RGPD —</strong> En vous
+                inscrivant à la waitlist ou en vous abonnant Pro, votre email
+                est traité par {BRAND.name} (responsable de traitement) et
+                stocké chez Beehiiv (newsletter) ou Stripe (paiement) en
                 tant que sous-traitants RGPD. Base légale : exécution du contrat
                 + consentement. Conservation 24 mois après dernière interaction.
                 Droits d&apos;accès, rectification, suppression et portabilité
@@ -1340,11 +1340,11 @@ export default function ProPage() {
               <span>
                 <strong className="text-fg">Droit de rétractation —</strong>{" "}
                 Conformément à l&apos;article L221-18 du Code de la
-                consommation, tu disposes de 14 jours pour te rétracter sans
-                motif. Demande à {BRAND.email} ou via ton espace personnel —
-                remboursement intégral sous 14 j. Pour les services numériques
-                déjà exécutés, le remboursement est total dans les 14 premiers
-                jours quel que soit l&apos;usage.
+                consommation, vous disposez de 14 jours pour vous rétracter
+                sans motif. Demandez à {BRAND.email} ou via votre espace
+                personnel — remboursement intégral sous 14 j. Pour les services
+                numériques déjà exécutés, le remboursement est total dans les
+                14 premiers jours quel que soit l&apos;usage.
               </span>
             </p>
           </div>

@@ -335,7 +335,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
 
         if (txs.length > 1000) {
           setErrorMsg(
-            `Trop de transactions (${txs.length}, max 1000 par PDF). Découpe ton fichier par année.`,
+            `Trop de transactions (${txs.length}, max 1000 par PDF). Découpez votre fichier par année.`,
           );
           setState("error");
           setTransactions([]);
@@ -421,7 +421,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
       });
 
       if (res.status === 401) {
-        setErrorMsg("Tu dois te reconnecter pour générer le PDF.");
+        setErrorMsg("Vous devez vous reconnecter pour générer le PDF.");
         setState("error");
         return;
       }
@@ -432,7 +432,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
       }
       if (res.status === 429) {
         setErrorMsg(
-          "Tu as atteint la limite de 5 PDFs par jour. Réessaie demain.",
+          "Vous avez atteint la limite de 5 PDFs par jour. Réessayez demain.",
         );
         setState("error");
         return;
@@ -486,7 +486,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         aria-live="polite"
       >
         <Loader2 className="h-6 w-6 animate-spin text-primary-soft" aria-hidden="true" />
-        <span className="ml-3 text-sm text-fg/70">Vérification de ton plan…</span>
+        <span className="ml-3 text-sm text-fg/70">Vérification de votre plan…</span>
       </div>
     );
   }
@@ -505,13 +505,13 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               Réservé aux abonnés Soutien
             </span>
             <h2 className="mt-3 font-display text-2xl font-extrabold text-fg">
-              Génère ton Cerfa 2086 + 3916-bis pré-rempli en 30 secondes
+              Générez votre Cerfa 2086 + 3916-bis pré-rempli en 30 secondes
             </h2>
             <p className="mt-2 text-sm text-fg/75 leading-relaxed">
-              Importe tes exports Binance, Coinbase ou Bitpanda — le calcul
+              Importez vos exports Binance, Coinbase ou Bitpanda — le calcul
               officiel <span className="font-semibold">article 150 VH bis du CGI</span>{" "}
-              est appliqué automatiquement, et tu reçois un PDF prêt à
-              accompagner ta déclaration sur impots.gouv.fr.
+              est appliqué automatiquement, et vous recevez un PDF prêt à
+              accompagner votre déclaration sur impots.gouv.fr.
             </p>
 
             <ul className="mt-4 space-y-2 text-sm text-fg/80">
@@ -519,7 +519,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
                 "Annexe Cerfa 2086 récapitulative (cessions ligne par ligne)",
                 "Annexe 3916-bis automatique pour chaque exchange étranger",
                 "Calcul prorata portefeuille (formule 150 VH bis)",
-                "5 PDF/jour inclus — couvre toute ta préparation déclarative",
+                "5 PDF/jour inclus — couvre toute votre préparation déclarative",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <CheckCircle2
@@ -583,7 +583,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         {[
           {
             n: "1",
-            title: "Exporte ton CSV",
+            title: "Exportez votre CSV",
             desc: "Sur Binance/Coinbase/Bitpanda : Compte → Historique → Exporter en CSV.",
             done: transactions.length > 0,
           },
@@ -595,8 +595,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           },
           {
             n: "3",
-            title: "Télécharge ton PDF",
-            desc: "Vérifie l'aperçu, clique « Télécharger ». Cerfa 2086 + 3916-bis prêts.",
+            title: "Téléchargez votre PDF",
+            desc: "Vérifiez l'aperçu, cliquez « Télécharger ». Cerfa 2086 + 3916-bis prêts.",
             done: state === "success",
           },
         ].map((step) => (
@@ -638,7 +638,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             {
               name: "Binance",
               steps: [
-                "Connecte-toi sur binance.com",
+                "Connectez-vous sur binance.com",
                 "Compte (icône en haut à droite) → Historique de transactions",
                 "Sélectionne la période (toute l'année fiscale)",
                 "Clique « Exporter rapport CSV » — délai 24-48h, email envoyé",
@@ -647,7 +647,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             {
               name: "Coinbase",
               steps: [
-                "Connecte-toi sur coinbase.com",
+                "Connectez-vous sur coinbase.com",
                 "Profil → Rapports → Générer un rapport",
                 "Période : année fiscale complète",
                 "Format CSV → Télécharger",
@@ -656,7 +656,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             {
               name: "Bitpanda",
               steps: [
-                "Connecte-toi sur bitpanda.com",
+                "Connectez-vous sur bitpanda.com",
                 "Mon profil → Historique → Exporter",
                 "Type : Toutes les transactions",
                 "Format CSV → Télécharger",
@@ -674,7 +674,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           ))}
         </div>
         <p className="mt-3 text-[11px] text-fg/55">
-          Tu utilises un autre exchange ? Importe ton export Waltio (JSON) — c&apos;est
+          Vous utilisez un autre exchange ? Importez votre export Waltio (JSON) — c&apos;est
           le format pivot universel pour les déclarants crypto FR.
         </p>
       </details>
@@ -748,7 +748,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           aria-hidden="true"
         />
         <p className="mt-3 font-semibold text-fg">
-          Dépose ton CSV (Binance, Coinbase, Bitpanda) ou JSON Waltio
+          Déposez votre CSV (Binance, Coinbase, Bitpanda) ou JSON Waltio
         </p>
         <p className="mt-1 text-xs text-fg/60">
           ou clique pour parcourir — max 5 MB, 1000 lignes
@@ -903,7 +903,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           />
           <div>
             <strong className="text-success">PDF généré et téléchargé !</strong>{" "}
-            Vérifie chaque ligne avec ton fiscaliste avant de déposer ta
+            Vérifiez chaque ligne avec votre fiscaliste avant de déposer votre
             déclaration sur impots.gouv.fr.
             <button
               type="button"

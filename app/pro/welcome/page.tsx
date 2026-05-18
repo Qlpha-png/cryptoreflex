@@ -30,7 +30,7 @@ const PurchaseConversionFire = dynamic(
 export const metadata: Metadata = {
   title: "Bienvenue dans Cryptoreflex Pro",
   description:
-    "Ton paiement est confirmé. Voici comment accéder à ton compte Pro et débloquer tes premières features.",
+    "Votre paiement est confirmé. Voici comment accéder à votre compte Pro et débloquer vos premières features.",
   alternates: withHreflang(`${BRAND.url}/pro/welcome`),
   robots: { index: false, follow: true }, // page post-paiement, pas indexable
 };
@@ -69,12 +69,12 @@ export default function WelcomePage({ searchParams }: SearchParams) {
             id="welcome-title"
             className="mt-4 text-3xl sm:text-5xl font-extrabold text-fg leading-tight"
           >
-            Ton paiement est{" "}
+            Votre paiement est{" "}
             <span className="text-gradient-gold-animate">confirmé.</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-xl mx-auto leading-relaxed">
-            Merci de ta confiance. Ton accès Pro est actif. Voici comment te
-            connecter à ton espace personnel.
+            Merci de votre confiance. Votre accès Pro est actif. Voici comment
+            vous connecter à votre espace personnel.
           </p>
         </div>
 
@@ -89,15 +89,16 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Étape 1 — Email envoyé
               </p>
               <h2 className="font-bold text-fg text-lg">
-                Vérifie ta boîte mail
+                Vérifiez votre boîte mail
               </h2>
               <p className="mt-2 text-sm text-fg/70 leading-relaxed">
                 Un lien magique de connexion vient d&apos;être envoyé à
-                l&apos;email utilisé pour ton paiement Stripe. Clique dessus
-                pour activer ton accès — pas de mot de passe à retenir.
+                l&apos;email utilisé pour votre paiement Stripe. Cliquez
+                dessus pour activer votre accès — pas de mot de passe à
+                retenir.
               </p>
               <p className="mt-2 text-xs text-muted">
-                Pense à vérifier tes spams. Le lien expire dans 1 heure.
+                Pensez à vérifier vos spams. Le lien expire dans 1 heure.
               </p>
             </div>
           </div>
@@ -114,9 +115,9 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Pas reçu d&apos;email ?
               </p>
               <p className="mt-1 text-sm text-fg/70 leading-relaxed">
-                Tu peux demander un nouveau lien sur la page connexion en
-                renseignant ton email de paiement. Si rien ne fonctionne,
-                écris-nous à{" "}
+                Vous pouvez demander un nouveau lien sur la page connexion en
+                renseignant votre email de paiement. Si rien ne fonctionne,
+                écrivez-nous à{" "}
                 <a
                   href={`mailto:${BRAND.email}?subject=Probl%C3%A8me%20activation%20Pro`}
                   className="text-primary-soft underline hover:text-primary font-semibold"
@@ -162,7 +163,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Radar 3916-bis
               </h3>
               <p className="mt-1 text-xs text-fg/70">
-                Détecte tes amendes crypto avant mai 2026
+                Détectez vos amendes crypto avant mai 2026
               </p>
             </Link>
             <Link
@@ -173,7 +174,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Portfolio Tracker
               </h3>
               <p className="mt-1 text-xs text-fg/70">
-                Suis tes positions en temps réel
+                Suivez vos positions en temps réel
               </p>
             </Link>
             <Link
@@ -184,7 +185,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Calculateur fiscalité
               </h3>
               <p className="mt-1 text-xs text-fg/70">
-                Estime ton impôt PFU 30 %
+                Estimez votre impôt PFU 30 %
               </p>
             </Link>
           </div>

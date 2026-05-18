@@ -51,14 +51,14 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Fiscal Copilot crypto — Agent IA pour ta déclaration française 2026",
+  title: "Fiscal Copilot crypto — Agent IA pour votre déclaration française 2026",
   description:
-    "Agent IA conversationnel qui répond à tes questions fiscales crypto, parse ton CSV exchange, et génère ton Cerfa 2086 pré-rempli. Sources BOFiP / CGI citées.",
+    "Agent IA conversationnel qui répond à vos questions fiscales crypto, parse votre CSV exchange, et génère votre Cerfa 2086 pré-rempli. Sources BOFiP / CGI citées.",
   alternates: withHreflang(`${BRAND.url}/outils/fiscal-copilot`),
   openGraph: {
     title: "Fiscal Copilot crypto FR — Cryptoreflex",
     description:
-      "Le copilot IA qui parle français fiscal couramment. Pose ta question, importe ton CSV, génère ton Cerfa.",
+      "Le copilot IA qui parle français fiscal couramment. Posez votre question, importez votre CSV, générez votre Cerfa.",
     url: `${BRAND.url}/outils/fiscal-copilot`,
     type: "website",
   },
@@ -69,17 +69,17 @@ const FEATURES = [
     Icon: MessagesSquare,
     title: "Conversationnel",
     blurb:
-      "Pose ta question en langage naturel. Réponse en français, sourcée BOFiP/CGI/AMF.",
+      "Posez votre question en langage naturel. Réponse en français, sourcée BOFiP/CGI/AMF.",
   },
   {
     Icon: Calculator,
-    title: "Parse ton CSV",
+    title: "Parse votre CSV",
     blurb:
-      "Importe ton historique Binance/Coinbase/Kraken/Bitpanda. Le copilot calcule plus-values, swap-events, prix moyen pondéré.",
+      "Importez votre historique Binance/Coinbase/Kraken/Bitpanda. Le copilot calcule plus-values, swap-events, prix moyen pondéré.",
   },
   {
     Icon: FileText,
-    title: "Génère ton Cerfa",
+    title: "Générez votre Cerfa",
     blurb:
       "Cerfa 2086 pré-rempli (toutes lignes, tous calculs), Annexe 3916-bis si comptes étrangers détectés. PDF prêt à signer.",
   },
@@ -103,15 +103,15 @@ export default function FiscalCopilotPage() {
   const faqItems = [
     {
       q: "Le Fiscal Copilot remplace-t-il un expert-comptable ?",
-      a: "Non. Il automatise la collecte + le calcul + la génération du Cerfa, mais pour les situations complexes (DeFi avancé, NFT créateurs, BIC pro) un expert-comptable reste recommandé. Le copilot t'aidera à lui transmettre un dossier propre.",
+      a: "Non. Il automatise la collecte + le calcul + la génération du Cerfa, mais pour les situations complexes (DeFi avancé, NFT créateurs, BIC pro) un expert-comptable reste recommandé. Le copilot vous aidera à lui transmettre un dossier propre.",
     },
     {
       q: "Quelles plateformes sont supportées pour l'import CSV ?",
-      a: "À la V1 : Binance, Coinbase, Kraken, Bitpanda, OKX, KuCoin. Roadmap V2 : Bitget, Bitstamp, Crypto.com, BingX. L'import se fait par CSV téléchargé depuis ton compte exchange (jamais d'API key requise).",
+      a: "À la V1 : Binance, Coinbase, Kraken, Bitpanda, OKX, KuCoin. Roadmap V2 : Bitget, Bitstamp, Crypto.com, BingX. L'import se fait par CSV téléchargé depuis votre compte exchange (jamais d'API key requise).",
     },
     {
       q: "Mes données sont-elles stockées ?",
-      a: "Le CSV est traité en mémoire serveur le temps du calcul, puis purgé. Les agrégats (totaux par année, par crypto) peuvent être stockés si tu actives la sauvegarde Pro pour comparer entre années. Tu peux tout supprimer en 1 clic.",
+      a: "Le CSV est traité en mémoire serveur le temps du calcul, puis purgé. Les agrégats (totaux par année, par crypto) peuvent être stockés si vous activez la sauvegarde Pro pour comparer entre années. Vous pouvez tout supprimer en 1 clic.",
     },
     {
       q: "Quelle est la précision des calculs vs un cabinet ?",
@@ -128,7 +128,7 @@ export default function FiscalCopilotPage() {
       slug: "outils/fiscal-copilot",
       title: "Fiscal Copilot crypto FR — Agent IA déclaration 2026",
       description:
-        "Agent IA spécialisé fiscalité crypto française. Parse ton CSV, calcule, génère ton Cerfa 2086.",
+        "Agent IA spécialisé fiscalité crypto française. Parse votre CSV, calcule, génère votre Cerfa 2086.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Outil",
@@ -175,19 +175,19 @@ export default function FiscalCopilotPage() {
             couramment.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Pose ta question. Importe ton CSV exchange. Récupère ton Cerfa 2086
-            pré-rempli en 30 secondes. Sources légales (BOFiP / CGI / AMF) citées
-            sur chaque réponse.
+            Posez votre question. Importez votre CSV exchange. Récupérez votre
+            Cerfa 2086 pré-rempli en 30 secondes. Sources légales (BOFiP / CGI
+            / AMF) citées sur chaque réponse.
           </p>
         </header>
 
         {/* TLDR */}
         <div className="mt-8">
           <Tldr
-            headline="Un agent IA spécialisé dans la fiscalité crypto française. Tu poses, il calcule, il génère le Cerfa."
+            headline="Un agent IA spécialisé dans la fiscalité crypto française. Vous posez, il calcule, il génère le Cerfa."
             bullets={[
               { emoji: "🤖", text: "Conversation naturelle en français, pas de formulaire à remplir" },
-              { emoji: "📋", text: "Parse ton CSV (Binance, Coinbase, Kraken, Bitpanda…) en 5 sec" },
+              { emoji: "📋", text: "Parse votre CSV (Binance, Coinbase, Kraken, Bitpanda…) en 5 sec" },
               { emoji: "📜", text: "Sources légales citées : article 150 VH bis, BOFiP RPPM, AMF" },
               { emoji: "✅", text: "Cerfa 2086 + Annexe 3916-bis générés en PDF prêt à signer" },
             ]}
@@ -216,7 +216,7 @@ export default function FiscalCopilotPage() {
         <section className="mt-12">
           <h2 className="text-2xl font-bold">Exemples de questions</h2>
           <p className="mt-2 text-sm text-muted">
-            Ce que tu peux demander au copilot.
+            Ce que vous pouvez demander au copilot.
           </p>
           <ul className="mt-5 grid gap-3">
             {SAMPLE_QUESTIONS.map((q) => (

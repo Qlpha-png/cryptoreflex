@@ -41,7 +41,7 @@ export default function CgvAbonnementPage() {
             <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
             <span>
               <strong>Renonciation au droit de rétractation 14 jours :</strong> en cochant la
-              case obligatoire avant le paiement, tu renonces expressément à ton droit de
+              case obligatoire avant le paiement, vous renoncez expressément à votre droit de
               rétractation de 14 jours pour bénéficier immédiatement des services numériques
               (art. L221-28 12° Code de la consommation) — pratique standard chez Netflix,
               Spotify, Notion, etc.
@@ -50,17 +50,17 @@ export default function CgvAbonnementPage() {
           <li className="flex items-start gap-2">
             <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
             <span>
-              <strong>Annulation 1 clic à tout moment</strong> depuis ton portail Stripe (lien
-              dans /mon-compte). Ton accès reste actif jusqu&apos;à la fin de la période déjà
+              <strong>Annulation 1 clic à tout moment</strong> depuis votre portail Stripe (lien
+              dans /mon-compte). Votre accès reste actif jusqu&apos;à la fin de la période déjà
               payée — aucune facture future émise.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
             <span>
-              <strong>Garantie commerciale 7 jours :</strong> même si tu as renoncé au droit
-              légal de rétractation, on s&apos;engage volontairement à te rembourser dans les
-              7 jours suivant ton premier paiement si la plateforme ne te convient pas — sur
+              <strong>Garantie commerciale 7 jours :</strong> même si vous avez renoncé au droit
+              légal de rétractation, on s&apos;engage volontairement à vous rembourser dans les
+              7 jours suivant votre premier paiement si la plateforme ne vous convient pas — sur
               simple demande à <a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft underline">contact@cryptoreflex.fr</a>,
               sans justification.
             </span>
@@ -78,7 +78,7 @@ export default function CgvAbonnementPage() {
       <p className="mt-8 text-sm text-fg/80 leading-relaxed">
         Les présentes Conditions Générales de Vente (« CGV ») régissent la souscription à
         l&apos;abonnement « Soutien » proposé par {BRAND.name}, édité par Kevin VOISIN
-        (Entrepreneur Individuel, SIREN 103 352 621). En souscrivant, tu acceptes
+        (Entrepreneur Individuel, SIREN 103 352 621). En souscrivant, vous acceptez
         l&apos;intégralité des présentes CGV.
       </p>
 
@@ -157,13 +157,13 @@ export default function CgvAbonnementPage() {
         <p className="mt-3 text-sm text-fg/90 leading-relaxed">
           L&apos;abonnement Soutien donne accès à des <strong>contenus numériques fournis
           immédiatement après paiement</strong> (en quelques secondes : portfolio illimité,
-          alertes, glossaire, etc.). Pour pouvoir te livrer ce service immédiatement, nous
-          devons obtenir ton <strong>accord exprès préalable et ta renonciation
-          expresse à ton droit de rétractation</strong>.
+          alertes, glossaire, etc.). Pour pouvoir vous livrer ce service immédiatement, nous
+          devons obtenir votre <strong>accord exprès préalable et votre renonciation
+          expresse à votre droit de rétractation</strong>.
         </p>
         <p className="mt-3 text-sm text-fg/90 leading-relaxed">
           C&apos;est pourquoi, <strong>avant de pouvoir cliquer sur « Soutenir »</strong>,
-          tu dois cocher une case dans laquelle tu déclares :
+          vous devez cocher une case dans laquelle vous déclarez :
         </p>
         <blockquote className="mt-3 ml-2 border-l-4 border-amber-400 pl-4 py-1 text-sm italic text-fg/95">
           « Je renonce expressément à mon droit de rétractation de 14 jours et je demande à
@@ -181,17 +181,17 @@ export default function CgvAbonnementPage() {
       <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
         <li>
           <strong>Sans cocher la case → impossible de payer.</strong> Le bouton de paiement
-          est techniquement bloqué tant que tu n&apos;as pas exprimé ton accord exprès.
+          est techniquement bloqué tant que vous n&apos;avez pas exprimé votre accord exprès.
         </li>
         <li>
-          <strong>En cochant la case → renonciation valable.</strong> Ton paiement Stripe
-          est immédiat et tes services Pro sont activés en quelques secondes. Aucun
+          <strong>En cochant la case → renonciation valable.</strong> Votre paiement Stripe
+          est immédiat et vos services Pro sont activés en quelques secondes. Aucun
           remboursement légal au titre du droit de rétractation ne pourra ensuite être
           réclamé.
         </li>
         <li>
-          <strong>Annulation à tout moment :</strong> tu peux toujours annuler ton abonnement
-          en 1 clic depuis ton portail Stripe (cf. § 4). Aucune facture future ne sera
+          <strong>Annulation à tout moment :</strong> vous pouvez toujours annuler votre abonnement
+          en 1 clic depuis votre portail Stripe (cf. § 4). Aucune facture future ne sera
           émise. Cette annulation n&apos;est pas un remboursement de la période en cours.
         </li>
       </ul>
@@ -202,17 +202,17 @@ export default function CgvAbonnementPage() {
       <div className="mt-3 rounded-xl border border-accent-green/30 bg-accent-green/5 p-5">
         <p className="text-sm text-fg/90 leading-relaxed">
           <strong className="text-accent-green">Engagement Cryptoreflex au-delà de la loi :</strong>{" "}
-          même si tu as juridiquement renoncé à ton droit de rétractation, on s&apos;engage
-          volontairement à te <strong>rembourser intégralement</strong> ton premier paiement
-          si tu nous le demandes <strong>dans les 7 jours suivant la souscription</strong>,
+          même si vous avez juridiquement renoncé à votre droit de rétractation, on s&apos;engage
+          volontairement à vous <strong>rembourser intégralement</strong> votre premier paiement
+          si vous nous le demandez <strong>dans les 7 jours suivant la souscription</strong>,
           sans avoir à fournir de justification.
         </p>
         <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          Pour activer cette garantie, envoie un email à{" "}
+          Pour activer cette garantie, envoyez un email à{" "}
           <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline font-semibold">
             {BRAND.email}
           </a>{" "}
-          avec l&apos;objet « Satisfait ou remboursé » et ton email Stripe. Réponse et
+          avec l&apos;objet « Satisfait ou remboursé » et votre email Stripe. Réponse et
           remboursement sous 5 jours ouvrés.
         </p>
         <p className="mt-3 text-xs text-muted leading-relaxed">
@@ -229,19 +229,19 @@ export default function CgvAbonnementPage() {
         4. Résiliation et fin d&apos;abonnement
       </h2>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Tu peux annuler ton abonnement <strong>à tout moment, sans frais ni justification</strong>,
-        en 1 clic depuis ton portail Stripe (lien d&apos;accès dans la page <Link href="/mon-compte" className="text-primary-soft hover:underline">/mon-compte</Link>).
+        Vous pouvez annuler votre abonnement <strong>à tout moment, sans frais ni justification</strong>,
+        en 1 clic depuis votre portail Stripe (lien d&apos;accès dans la page <Link href="/mon-compte" className="text-primary-soft hover:underline">/mon-compte</Link>).
       </p>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Après annulation : ton accès aux fonctionnalités Soutien <strong>reste actif
+        Après annulation : votre accès aux fonctionnalités Soutien <strong>reste actif
         jusqu&apos;à la fin de la période déjà payée</strong> (jusqu&apos;à la fin du
         mois pour le mensuel, jusqu&apos;à la fin de l&apos;année pour l&apos;annuel).
         Aucune nouvelle facture ne sera émise.
       </p>
       <p className="mt-3 text-sm text-muted leading-relaxed">
-        À l&apos;issue de la période payée, ton compte revient automatiquement au plan
-        gratuit : tes données restent conservées (portfolio, alertes au-dessus du
-        seuil 10 sont désactivées mais non supprimées) — tu peux te réabonner à tout
+        À l&apos;issue de la période payée, votre compte revient automatiquement au plan
+        gratuit : vos données restent conservées (portfolio, alertes au-dessus du
+        seuil 10 sont désactivées mais non supprimées) — vous pouvez vous réabonner à tout
         moment et tout retrouver intact.
       </p>
 
@@ -250,8 +250,8 @@ export default function CgvAbonnementPage() {
         5. Données personnelles (RGPD)
       </h2>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Le traitement de tes données personnelles est régi par notre <Link href="/confidentialite" className="text-primary-soft hover:underline">Politique de confidentialité</Link>.
-        Tu peux à tout moment exercer tes droits d&apos;accès, rectification, portabilité
+        Le traitement de vos données personnelles est régi par notre <Link href="/confidentialite" className="text-primary-soft hover:underline">Politique de confidentialité</Link>.
+        Vous pouvez à tout moment exercer vos droits d&apos;accès, rectification, portabilité
         et suppression depuis <Link href="/mon-compte" className="text-primary-soft hover:underline">/mon-compte</Link> (bouton « Supprimer mon compte » =
         endpoint conforme art. 17 RGPD, suppression effective sous 30 jours).
       </p>
@@ -261,8 +261,8 @@ export default function CgvAbonnementPage() {
         6. Loi applicable et règlement des litiges
       </h2>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Les présentes CGV sont régies par le droit français. En cas de litige, tu
-        disposes d&apos;un droit de recours auprès du Médiateur de la consommation
+        Les présentes CGV sont régies par le droit français. En cas de litige, vous
+        disposez d&apos;un droit de recours auprès du Médiateur de la consommation
         (CMAP — <a href="https://www.cmap.fr" className="text-primary-soft hover:underline" target="_blank" rel="noopener noreferrer">cmap.fr</a>) conformément à l&apos;article L612-1 du Code de la consommation,
         avant toute saisine des tribunaux français.
       </p>
@@ -276,7 +276,7 @@ export default function CgvAbonnementPage() {
         7. Contact
       </h2>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Pour toute question relative aux présentes CGV ou à ton abonnement, contacte
+        Pour toute question relative aux présentes CGV ou à votre abonnement, contactez
         le service client à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
         Réponse sous 48 heures ouvrées.
       </p>
@@ -311,9 +311,9 @@ export default function CgvAbonnementPage() {
           Médiateur de la consommation
         </h2>
         <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          En cas de litige concernant ton abonnement Cryptoreflex Pro et après
+          En cas de litige concernant votre abonnement Cryptoreflex Pro et après
           avoir contacté notre service client (<a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft hover:underline">contact@cryptoreflex.fr</a>)
-          sans solution amiable trouvée sous 30 jours, tu peux saisir
+          sans solution amiable trouvée sous 30 jours, vous pouvez saisir
           gratuitement le médiateur de la consommation que nous avons désigné :
         </p>
         <ul className="mt-3 text-sm text-fg/85 space-y-1">
@@ -335,7 +335,7 @@ export default function CgvAbonnementPage() {
           </li>
         </ul>
         <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          Tu peux également utiliser la{" "}
+          Vous pouvez également utiliser la{" "}
           <a
             href="https://ec.europa.eu/consumers/odr/"
             target="_blank"

@@ -42,7 +42,7 @@ const PUBLISHED_DATE = "2026-05-06";
 const TITLE =
   "Checklist déclaration crypto 2026 : 8 étapes avant le 31 mai";
 const DESCRIPTION =
-  "Checklist pas-à-pas pour déclarer correctement tes cryptomonnaies en 2026. 8 étapes à cocher, imprimable, couvre Cerfa 2086 + 3916-bis. Pour t'organiser avant la deadline.";
+  "Checklist pas-à-pas pour déclarer correctement vos cryptomonnaies en 2026. 8 étapes à cocher, imprimable, couvre Cerfa 2086 + 3916-bis. Pour vous organiser avant la deadline.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -69,52 +69,52 @@ interface Step {
 const STEPS: Step[] = [
   {
     n: 1,
-    title: "Liste tous les exchanges utilisés en 2025",
+    title: "Listez tous les exchanges utilisés en 2025",
     detail:
-      "Note les exchanges (Binance, Kraken, Coinbase, Bitstack, Coinhouse, etc.) où tu as eu un compte ouvert au moins 1 jour en 2025, MÊME sans transaction. Vérifie tes emails (notifications de connexion) et ton gestionnaire de mots de passe.",
+      "Notez les exchanges (Binance, Kraken, Coinbase, Bitstack, Coinhouse, etc.) où vous avez eu un compte ouvert au moins 1 jour en 2025, MÊME sans transaction. Vérifiez vos emails (notifications de connexion) et votre gestionnaire de mots de passe.",
     why: "Tout compte ouvert chez un exchange étranger doit être déclaré sur l'annexe 3916-bis, même sans transaction. Oubli = amende 1 500 € par compte.",
   },
   {
     n: 2,
-    title: "Exporte les CSV de transactions de chaque exchange",
+    title: "Exportez les CSV de transactions de chaque exchange",
     detail:
-      "Connecte-toi à chaque exchange et télécharge l'historique complet 2025 au format CSV. Sur Binance : Wallet → Transaction History → Export. Sur Coinbase : Settings → Statements → Generate. Sur Kraken : History → Export.",
+      "Connectez-vous à chaque exchange et téléchargez l'historique complet 2025 au format CSV. Sur Binance : Wallet → Transaction History → Export. Sur Coinbase : Settings → Statements → Generate. Sur Kraken : History → Export.",
     why: "Le CSV est la source officielle pour calculer les plus-values. Sans CSV propre, impossible de remplir le Cerfa 2086 correctement.",
     link: { href: "/blog/exporter-csv-binance-kraken-coinbase", label: "Tutoriel export CSV par exchange" },
   },
   {
     n: 3,
-    title: "Calcule tes plus-values avec la formule BOFiP",
+    title: "Calculez vos plus-values avec la formule BOFiP",
     detail:
-      "Pour chaque cession crypto-vers-fiat, applique la formule §70 : PV = Prix_cession − (Prix_acq_total × Prix_cession / Valeur_globale_portefeuille). Les swaps token-to-token ne sont PAS taxables (loi PACTE 2019).",
+      "Pour chaque cession crypto-vers-fiat, appliquez la formule §70 : PV = Prix_cession − (Prix_acq_total × Prix_cession / Valeur_globale_portefeuille). Les swaps token-to-token ne sont PAS taxables (loi PACTE 2019).",
     why: "Calcul manuel = risque d'erreur élevé. Un outil qui suit BOFiP à la lettre fait gagner ~3h et évite les redressements pour erreur de calcul.",
     link: { href: "/outils/cerfa-2086-auto", label: "Outil gratuit Cerfa 2086 auto" },
   },
   {
     n: 4,
-    title: "Vérifie le seuil d'exonération de 305 €",
+    title: "Vérifiez le seuil d'exonération de 305 €",
     detail:
-      "Si la SOMME de tes cessions crypto-fiat 2025 est < 305 €, tu es exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-dessus de 305 €, l'intégralité de la plus-value est imposable au PFU 30 %.",
-    why: "Ce seuil est une exonération mais pas une dispense de déclaration. Si tu as des cryptos à l'étranger, tu dois quand même remplir le 3916-bis (qui est indépendant du 2086).",
+      "Si la SOMME de vos cessions crypto-fiat 2025 est < 305 €, vous êtes exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-dessus de 305 €, l'intégralité de la plus-value est imposable au PFU 30 %.",
+    why: "Ce seuil est une exonération mais pas une dispense de déclaration. Si vous avez des cryptos à l'étranger, vous devez quand même remplir le 3916-bis (qui est indépendant du 2086).",
   },
   {
     n: 5,
-    title: "Identifie les cas particuliers : staking, airdrops, NFT, DeFi",
+    title: "Identifiez les cas particuliers : staking, airdrops, NFT, DeFi",
     detail:
-      "Si tu as eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retiens les principes : token-to-token neutre, cession contre euro = imposable au PFU 30 %, prix d'acquisition zéro pour les rewards reçus gratuitement.",
+      "Si vous avez eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retenez les principes : token-to-token neutre, cession contre euro = imposable au PFU 30 %, prix d'acquisition zéro pour les rewards reçus gratuitement.",
     why: "Les cas particuliers sont la cause #1 d'erreurs de déclaration. Pour les patrimoines > 50 000 € avec staking ou DeFi, consulter un expert-comptable.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cas-speciaux", label: "Détail des cas particuliers" },
   },
   {
     n: 6,
-    title: "Remplis le formulaire 2086 (Cerfa plus-values)",
+    title: "Remplissez le formulaire 2086 (Cerfa plus-values)",
     detail:
-      "Sur impots.gouv.fr, déclaration en ligne → section « Plus-values » → coche « Cessions d'actifs numériques ». Saisis chaque cession (date, prix de cession, frais, prix d'acquisition retenu, plus-value). Le total se reporte automatiquement sur la ligne 3AN du formulaire 2042-C.",
-    why: "C'est le formulaire principal. Si tu utilises un outil qui génère le PDF pré-rempli, recopie les valeurs dans la grille en ligne. Sinon télé-déclare directement.",
+      "Sur impots.gouv.fr, déclaration en ligne → section « Plus-values » → cochez « Cessions d'actifs numériques ». Saisissez chaque cession (date, prix de cession, frais, prix d'acquisition retenu, plus-value). Le total se reporte automatiquement sur la ligne 3AN du formulaire 2042-C.",
+    why: "C'est le formulaire principal. Si vous utilisez un outil qui génère le PDF pré-rempli, recopiez les valeurs dans la grille en ligne. Sinon télé-déclarez directement.",
   },
   {
     n: 7,
-    title: "Remplis l'annexe 3916-bis (comptes étrangers)",
+    title: "Remplissez l'annexe 3916-bis (comptes étrangers)",
     detail:
       "Pour chaque exchange étranger (Binance, Kraken Irlande, Coinbase Europe, Bitpanda Autriche, etc.) : 1 ligne sur 3916-bis avec le nom de l'établissement, adresse, numéro de compte, date d'ouverture (et éventuellement de clôture).",
     why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 1 500 €/compte (10 000 € si État non coopératif). À déclarer même sans transaction dans l'année.",
@@ -122,10 +122,10 @@ const STEPS: Step[] = [
   },
   {
     n: 8,
-    title: "Déclare avant la deadline de ton département",
+    title: "Déclarez avant la deadline de votre département",
     detail:
       "Dates 2026 (à confirmer par DGFiP en mars) : 25 mai pour départements 1-19 + non-résidents, 1er juin pour 20-54, 8 juin pour 55-976. Déclaration papier : 20 mai 2026 maximum. En cas de retard : majoration 10 % minimum.",
-    why: "Le retard de déclaration est le 2ème motif de pénalité après l'oubli. Mieux vaut déclarer un peu approximatif dans les délais qu'attendre la perfection en retard (tu peux toujours faire une déclaration rectificative ensuite).",
+    why: "Le retard de déclaration est le 2ème motif de pénalité après l'oubli. Mieux vaut déclarer un peu approximatif dans les délais qu'attendre la perfection en retard (vous pouvez toujours faire une déclaration rectificative ensuite).",
   },
 ];
 
@@ -230,15 +230,15 @@ export default function ChecklistPage() {
           </div>
 
           <p className="mt-6 text-lg text-slate-300 leading-relaxed print-muted">
-            Tu as déjà compris la fiscalité crypto FR (sinon, lis l'
+            Vous avez déjà compris la fiscalité crypto FR (sinon, lisez l'
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
               className="text-cyan-300 hover:underline"
             >
               étude complète
             </Link>
-            ). Passe à l'action avec cette checklist en 8 étapes. Coche au fur
-            et à mesure, imprime si tu préfères travailler sur papier.
+            ). Passez à l'action avec cette checklist en 8 étapes. Cochez au fur
+            et à mesure, imprimez si vous préférez travailler sur papier.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 no-print">
@@ -327,11 +327,11 @@ export default function ChecklistPage() {
         {/* CTA primaire */}
         <div className="mt-12 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 p-8 text-center no-print">
           <h2 className="text-2xl font-bold tracking-tight">
-            Tu veux automatiser les étapes 2 et 3 ?
+            Vous voulez automatiser les étapes 2 et 3 ?
           </h2>
           <p className="mt-2 max-w-xl mx-auto text-slate-300">
-            L'outil Cryptoreflex prend ton CSV exchange, calcule la
-            plus-value selon BOFiP §70, et te sort le PDF Cerfa 2086 +
+            L'outil Cryptoreflex prend votre CSV exchange, calcule la
+            plus-value selon BOFiP §70, et vous sort le PDF Cerfa 2086 +
             3916-bis pré-remplis en 2 min. Gratuit, sans inscription.
           </p>
           <Link
