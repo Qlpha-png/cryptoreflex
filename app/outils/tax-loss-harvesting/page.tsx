@@ -68,19 +68,19 @@ export default function TaxLossHarvestingPage() {
     },
     {
       q: "Puis-je racheter la même crypto immédiatement après la vente perte ?",
-      a: "En France OUI (contrairement aux US où la wash sale rule de 30 jours s'applique sur les actions/options). Tu peux vendre 1 ETH à perte le 28/12 et racheter 1 ETH le 29/12 sans perdre le bénéfice fiscal de la moins-value. Source : CE 26/04/2018 + BOFiP RPPM-PVBMC-30-30-20.",
+      a: "En France OUI (contrairement aux US où la wash sale rule de 30 jours s'applique sur les actions/options). Vous pouvez vendre 1 ETH à perte le 28/12 et racheter 1 ETH le 29/12 sans perdre le bénéfice fiscal de la moins-value. Source : CE 26/04/2018 + BOFiP RPPM-PVBMC-30-30-20.",
     },
     {
       q: "Les pertes latentes (non vendues) comptent-elles ?",
-      a: "Non. La fiscalité crypto FR ne reconnaît QUE les opérations réalisées (vente, swap, dépense). Tant que tu n'as pas vendu, ta perte n'existe pas pour l'administration fiscale.",
+      a: "Non. La fiscalité crypto FR ne reconnaît QUE les opérations réalisées (vente, swap, dépense). Tant que vous n'avez pas vendu, votre perte n'existe pas pour l'administration fiscale.",
     },
     {
       q: "Que se passe-t-il si mes moins-values dépassent mes plus-values ?",
-      a: "Le solde net négatif est REPORTABLE sur les 10 années suivantes (article 150 VH bis IV). Tu pourras donc l'utiliser sur les plus-values 2027, 2028… jusqu'en 2036.",
+      a: "Le solde net négatif est REPORTABLE sur les 10 années suivantes (article 150 VH bis IV). Vous pourrez donc l'utiliser sur les plus-values 2027, 2028… jusqu'en 2036.",
     },
     {
       q: "Quel timing optimal pour le tax-loss harvesting ?",
-      a: "Mi-décembre. Tu as visibilité sur tes plus-values réalisées de l'année (cession crypto-fiat) et il te reste 2 semaines pour vendre les positions perdantes avant le 31/12. Pas trop tôt (les marchés peuvent encore se retourner), pas trop tard (volume baisse fin décembre).",
+      a: "Mi-décembre. Vous avez visibilité sur vos plus-values réalisées de l'année (cession crypto-fiat) et il vous reste 2 semaines pour vendre les positions perdantes avant le 31/12. Pas trop tôt (les marchés peuvent encore se retourner), pas trop tard (volume baisse fin décembre).",
     },
   ];
 

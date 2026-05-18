@@ -111,7 +111,7 @@ export function generateMetadata({ params }: Props): Metadata {
     `${DEFAULT_ALT_COUNT} alternatives à ${target.name} en 2026 — comparatif crypto FR`;
   const description =
     override?.description ??
-    `Tu cherches à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
+    `Vous cherchez à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
   return {
     title,
     description,
@@ -293,11 +293,11 @@ export default function AlternativePage({ params }: Props) {
             Pourquoi changer de plateforme ?
           </h2>
           <ul className="mt-3 space-y-2 text-sm text-fg/85 leading-relaxed">
-            <li>• <strong>Frais trop élevés</strong> : si tu trades plus de 1000 €/mois, comparer les makers/takers fait économiser 50-200 €/an.</li>
-            <li>• <strong>Conformité MiCA</strong> : certaines plateformes vont voir leur statut évoluer en juillet 2026 (Phase 2). Anticipe.</li>
-            <li>• <strong>Catalogue limité</strong> : si tu cherches une crypto spécifique non listée chez {target.name}, il faut élargir.</li>
+            <li>• <strong>Frais trop élevés</strong> : si vous tradez plus de 1000 €/mois, comparer les makers/takers fait économiser 50-200 €/an.</li>
+            <li>• <strong>Conformité MiCA</strong> : certaines plateformes vont voir leur statut évoluer en juillet 2026 (Phase 2). Anticipez.</li>
+            <li>• <strong>Catalogue limité</strong> : si vous cherchez une crypto spécifique non listée chez {target.name}, il faut élargir.</li>
             <li>• <strong>Support FR</strong> : si {target.name} n&apos;a pas de support en français, c&apos;est un facteur de friction réel.</li>
-            <li>• <strong>Diversification du risque plateforme</strong> : ne mets pas tous tes œufs dans le même exchange (cf. FTX 2022).</li>
+            <li>• <strong>Diversification du risque plateforme</strong> : ne mettez pas tous vos œufs dans le même exchange (cf. FTX 2022).</li>
           </ul>
         </section>
 

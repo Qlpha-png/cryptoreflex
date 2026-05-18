@@ -22,7 +22,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 const PAGE_TITLE = "Alternatives aux plateformes crypto en 2026 — Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "Tu veux migrer de Binance, Bitstack, Coinhouse ou autre ? Découvre les meilleures alternatives crypto régulées MiCA en France pour chaque plateforme.";
+  "Vous voulez migrer de Binance, Bitstack, Coinhouse ou autre ? Découvrez les meilleures alternatives crypto régulées MiCA en France pour chaque plateforme.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -64,7 +64,7 @@ export default function AlternativeAHub() {
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
             MiCA Phase 2 oblige certaines plateformes à fermer ou restreindre
-            leur offre FR. Trouve une alternative régulée en 30 secondes.
+            leur offre FR. Trouvez une alternative régulée en 30 secondes.
           </p>
         </header>
 
@@ -109,8 +109,8 @@ export default function AlternativeAHub() {
                 Pas sûr de quelle alternative choisir ?
               </h2>
               <p className="mt-1 text-sm text-muted leading-relaxed">
-                Notre quiz personnalisé te recommande la meilleure plateforme
-                MiCA en 30 secondes, basé sur ton profil (débutant, investisseur
+                Notre quiz personnalisé vous recommande la meilleure plateforme
+                MiCA en 30 secondes, basé sur votre profil (débutant, investisseur
                 régulier, trader actif).
               </p>
             </div>
