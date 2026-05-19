@@ -95,7 +95,8 @@ interface HeroProps {
  *
  * MAJ 2026-05-02 (audit cohérence BATCH 11+20) : la valeur 30 plateformes
  * / 18 outils était sous-évaluée vs catalogue réel. Sync avec
- * data/platforms.json (34) + app/outils (26 outils).
+ * data/platforms.json (34) + app/outils TOOLS.length (28 outils).
+ * Audit 19/05/2026 — chiffre 28 confirmé (était mentionné "26" en commentaire).
  */
 const STATS = {
   platforms: 34,

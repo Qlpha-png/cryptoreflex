@@ -51,10 +51,12 @@ export default function HeroHeadline() {
   }
 
   // BATCH 34 — fix user feedback "on est pas juste un comparateur on est
-  // tout un ensemble". Cryptoreflex = écosystème complet (100 cryptos + 34
-  // plateformes + 26 outils + fiscalité + méthodologie publique), pas juste
+  // tout un ensemble". Cryptoreflex = écosystème complet (780 cryptos + 34
+  // plateformes + 28 outils + fiscalité + méthodologie publique), pas juste
   // un comparateur. Nouveau headline élargit la promesse + garde le hook
   // "847 pages MiCA" qui ancre l'autorité concrète.
+  // Audit 19/05/2026 : compteurs sync sur source canonique (lib/brand.ts +
+  // TOOLS.length=28 dans app/outils/page.tsx).
   return (
     <h1 className="ds-h1 leading-[1.05]">
       L&apos;écosystème crypto français qui a lu les{" "}

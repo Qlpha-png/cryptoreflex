@@ -107,7 +107,7 @@ const NAV_GROUPS: FooterGroup[] = [
     id: "footer-tools-heading",
     title: "Outils & espace",
     links: [
-      { href: "/outils", label: "Tous les outils (26)" },
+      { href: "/outils", label: "Tous les outils (28)" },
       { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 30 %" },
       { href: "/outils/allocator-ia", label: "Allocator IA (nouveau)" },
       { href: "/outils/whale-radar", label: "Whale Radar FR (nouveau)" },
