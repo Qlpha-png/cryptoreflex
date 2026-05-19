@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     "Bientôt : connecte ton wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement ton portfolio DeFi. Lecture seule, jamais de private key requise.",
   alternates: withHreflang(`${BRAND.url}/outils/wallet-connect`),
   openGraph: {
-    title: "Wallet Connect Cryptoreflex — Suivi DeFi sans risque",
+    title: "Wallet Connect Cryptoreflex — Suivi DeFi read-only (lecture seule)",
     description:
-      "Read-only : on lit ton solde, pas tes clés. Comme Zerion, mais avec la fiscalité française intégrée.",
+      "Read-only : on lit ton solde public on-chain, pas tes clés. Comme Zerion, mais avec la fiscalité française intégrée.",
     url: `${BRAND.url}/outils/wallet-connect`,
     type: "website",
   },

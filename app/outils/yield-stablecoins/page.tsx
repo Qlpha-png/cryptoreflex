@@ -130,7 +130,7 @@ export default function YieldStablecoinsPage() {
         {/* TLDR */}
         <div className="mt-8">
           <Tldr
-            headline="Tu peux toucher 4 à 5 % par an sur ton USDC sans risque de change, sur des plateformes régulées en France."
+            headline="Sur USDC, plusieurs plateformes régulées en France affichent 4 à 5 % d'APY (donnée publique des opérateurs). Pas de risque de change, mais risque plateforme et risque de dépeg réels — à lire avant tout dépôt."
             bullets={[
               {
                 emoji: "💎",

@@ -130,14 +130,14 @@ export default async function AcheterEnFrancePage({ params }: Props) {
 
   const faqs = [
     {
-      question: `Quelle est la meilleure plateforme pour acheter du ${meta.name} en France ?`,
+      question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
-        ? `Notre recommandation est ${best.name} (note ${best.scoring.global}/5) pour la combinaison frais + sécurité + statut MiCA. ${best.tagline} En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Vérifie aussi notre comparatif complet pour les alternatives.`
-        : `Pour acheter du ${meta.name} en France, privilégie les plateformes enregistrées AMF / MiCA-compliant : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Compare les frais d'achat instantané (souvent ~1-2%) et les frais spot (~0.1-0.5%).`,
+        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${best.scoring.global}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Compare avec les autres options du comparatif selon ton profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
+        : `En France, plusieurs plateformes enregistrées AMF / MiCA-compliant proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Compare les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon ton usage.`,
     },
     {
       question: `Quel montant minimum pour acheter du ${meta.symbol} ?`,
-      answer: `La plupart des plateformes régulées en France acceptent des achats à partir de 10 € (Bitstack, Bitpanda) à 25 € (Coinhouse, Trade Republic). Tu peux acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Idéal pour démarrer en DCA (Dollar Cost Averaging) sans risque.`,
+      answer: `La plupart des plateformes régulées en France acceptent des achats à partir de 10 € (Bitstack, Bitpanda) à 25 € (Coinhouse, Trade Republic). Tu peux acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Bon point d'entrée pour expérimenter le DCA (Dollar Cost Averaging) avec des montants raisonnables, sans jouer "ton épargne" (la crypto reste un actif volatil, perte en capital possible).`,
     },
     {
       question: `Faut-il déclarer l'achat de ${meta.name} aux impôts ?`,

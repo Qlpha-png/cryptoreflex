@@ -113,7 +113,7 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            Recommandation personnalisée selon ton profil — Coinbase, Binance, Bitpanda…
+            Compare les plateformes MiCA selon ton profil — Coinbase, Binance, Bitpanda…
           </div>
         </div>
 

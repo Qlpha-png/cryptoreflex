@@ -72,7 +72,7 @@ export default function ComparateurPersonnalisePage() {
             slug: "comparateur-personnalise",
             name: "Comparateur plateformes crypto personnalisé Cryptoreflex",
             description:
-              "Quiz interactif 5 questions qui recommande les 3 meilleures plateformes crypto selon ton profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading).",
+              "Quiz interactif 5 questions qui présente 3 plateformes crypto pertinentes selon ton profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading). Outil pédagogique, sans recommandation personnalisée.",
             featureList: [
               "5 questions, résultat en 60 secondes",
               "Score personnalisé sur 9 axes par plateforme",

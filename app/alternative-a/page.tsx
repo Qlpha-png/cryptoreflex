@@ -109,9 +109,10 @@ export default function AlternativeAHub() {
                 Pas sûr de quelle alternative choisir ?
               </h2>
               <p className="mt-1 text-sm text-muted leading-relaxed">
-                Notre quiz personnalisé vous recommande la meilleure plateforme
-                MiCA en 30 secondes, basé sur votre profil (débutant, investisseur
-                régulier, trader actif).
+                Notre quiz pédagogique vous présente les plateformes MiCA
+                pertinentes en 30 secondes, selon votre profil (débutant,
+                investisseur régulier, trader actif). Outil informatif, sans
+                conseil personnalisé — le choix final vous appartient.
               </p>
             </div>
           </div>

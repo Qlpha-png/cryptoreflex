@@ -33,7 +33,7 @@ const PAGE_PATH = "/quiz/trouve-ton-exchange";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Quiz : Trouve ton exchange crypto idéal en 60 sec";
 const DESCRIPTION =
-  "Réponds à 6 questions et reçois la recommandation personnalisée de la meilleure plateforme crypto pour ton profil. 100 % gratuit, sans inscription.";
+  "Réponds à 6 questions et compare les plateformes crypto selon ton profil (budget, fréquence, support FR, conformité MiCA). Outil pédagogique, sans recommandation personnalisée. 100 % gratuit, sans inscription.";
 
 export const metadata: Metadata = {
   title: TITLE,

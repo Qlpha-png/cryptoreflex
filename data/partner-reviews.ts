@@ -78,7 +78,9 @@ export interface PartnerReview {
   setupSteps: { title: string; description: string }[];
   /** FAQ (Schema.org FAQPage) */
   faq: ReviewFAQ[];
-  /** Pourquoi acheter MAINTENANT — argument sales sans comparaison entre nos partenaires */
+  /** Raisons concrètes (faits + bénéfices vérifiables) — pas du marketing,
+   * pas de signal d'achat. Le nom whyBuyNow est legacy interne ; affichage
+   * publique : "{count} raisons concrètes — pas du marketing". */
   whyBuyNow: { reason: string; description: string }[];
   /** Témoignages / preuves sociales (chiffres vérifiables uniquement) */
   socialProof: { stat: string; source: string }[];
