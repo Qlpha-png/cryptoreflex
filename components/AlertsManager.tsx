@@ -273,7 +273,7 @@ export default function AlertsManager({ cryptos }: Props) {
         return;
       }
       setSubmitState("success");
-      setSubmitMsg("Alerte créée. Tu recevras un email quand le seuil sera atteint.");
+      setSubmitMsg("Alerte créée. Vous recevrez un email quand le seuil sera atteint.");
       setThreshold("");
       // Refresh la liste
       fetchAlerts(trimmedEmail);
@@ -475,7 +475,7 @@ export default function AlertsManager({ cryptos }: Props) {
           {/* Email */}
           <div>
             <label htmlFor="alert-email" className="block text-sm font-medium text-fg/85 mb-1.5">
-              Ton adresse email
+              Votre adresse email
             </label>
             <input
               id="alert-email"
@@ -546,7 +546,7 @@ export default function AlertsManager({ cryptos }: Props) {
         </form>
 
         <p className="mt-4 text-xs text-muted">
-          En créant une alerte, tu acceptes que ton email soit conservé uniquement pour
+          En créant une alerte, vous acceptez que votre email soit conservé uniquement pour
           l'envoi de cette notification. <a href="/confidentialite" className="underline">Voir la politique de confidentialité</a>.
         </p>
       </section>
@@ -573,7 +573,7 @@ export default function AlertsManager({ cryptos }: Props) {
           </div>
         ) : !email || !EMAIL_REGEX.test(email) ? (
           <p className="mt-6 text-sm text-muted">
-            Saisis ton email dans le formulaire pour voir tes alertes.
+            Saisissez votre email dans le formulaire pour voir vos alertes.
           </p>
         ) : listState === "loading" ? (
           <div className="mt-6">
@@ -585,14 +585,14 @@ export default function AlertsManager({ cryptos }: Props) {
             className="mt-6 inline-flex items-center gap-2 text-sm text-accent-rose"
           >
             <AlertCircle className="h-4 w-4" aria-hidden="true" />
-            Impossible de charger tes alertes ({listError}).
+            Impossible de charger vos alertes ({listError}).
           </p>
         ) : alerts.length === 0 ? (
           <div className="mt-6">
             <EmptyState
               compact
               title="Aucune alerte pour cet email"
-              description="Crée ta première alerte avec le formulaire à gauche."
+              description="Créez votre première alerte avec le formulaire à gauche."
               icon={<Bell className="h-5 w-5" aria-hidden="true" />}
             />
           </div>
