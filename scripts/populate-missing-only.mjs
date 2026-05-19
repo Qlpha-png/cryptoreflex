@@ -22,7 +22,7 @@ const SLEEP_MS = 8000;
 
 // Read existing KV
 const kvRes = await fetch(`${KV_REST_API_URL.replace(/\/$/, "")}/get/${encodeURIComponent(KV_KEY)}`, {
-  headers: { Authorization: `Bearer ${KV_TOKEN || KV_REST_API_TOKEN}` },
+  headers: { Authorization: `Bearer ${KV_REST_API_TOKEN}` },
   signal: AbortSignal.timeout(5000),
 });
 const kvData = await kvRes.json();
