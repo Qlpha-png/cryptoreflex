@@ -368,22 +368,33 @@ function hasAnyDisplayableField(m: OnChainMetrics): boolean {
   );
 }
 
+// Fix 19/05/2026 — Intl notation:"compact" produit "Bn" pour 1e12 (ambigu FR).
+// On utilise k/M/Md/T explicite, aligné avec lib/coingecko.ts.
+function _frNum(n: number, digits = 1): string {
+  return n.toLocaleString("fr-FR", {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0,
+  });
+}
+
 function formatCompactUsd(value: number): string {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `${_frNum(value / 1e12, 2)} T $`;
+  if (abs >= 1e9) return `${_frNum(value / 1e9)} Md $`;
+  if (abs >= 1e6) return `${_frNum(value / 1e6)} M $`;
+  if (abs >= 1e3) return `${_frNum(value / 1e3)} k $`;
+  return `${_frNum(value, 0)} $`;
 }
 
 function formatCompactNumber(value: number): string {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `${_frNum(value / 1e12, 2)} T`;
+  if (abs >= 1e9) return `${_frNum(value / 1e9)} Md`;
+  if (abs >= 1e6) return `${_frNum(value / 1e6)} M`;
+  if (abs >= 1e3) return `${_frNum(value / 1e3)} k`;
+  return _frNum(value, 0);
 }
 
 function formatRelativeFr(iso: string): string {

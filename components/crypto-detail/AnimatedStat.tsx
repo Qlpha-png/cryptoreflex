@@ -47,15 +47,39 @@ interface AnimatedStatProps {
   once?: boolean;
 }
 
+/**
+ * Fix 19/05/2026 : Intl.NumberFormat fr-FR notation:"compact" produit "1,5 Bn $US"
+ * pour 1.5e12 — confusion x1000 avec les lecteurs FR qui lisent "Bn" = billion =
+ * milliard. On utilise un format custom explicite ("k / M / Md / T") aligné avec
+ * lib/coingecko.ts:formatCompactUsd. Cohérence visuelle sur tout le site.
+ */
+function formatFrNum(n: number, digits = 1): string {
+  return n.toLocaleString("fr-FR", {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0,
+  });
+}
+
+function formatCompactUsdFr(n: number): string {
+  if (n >= 1e12) return `${formatFrNum(n / 1e12, 2)} T $`;
+  if (n >= 1e9) return `${formatFrNum(n / 1e9)} Md $`;
+  if (n >= 1e6) return `${formatFrNum(n / 1e6)} M $`;
+  if (n >= 1e3) return `${formatFrNum(n / 1e3)} k $`;
+  return `${formatFrNum(n, 0)} $`;
+}
+
+function formatCompactNumberFr(n: number): string {
+  if (n >= 1e12) return `${formatFrNum(n / 1e12, 2)} T`;
+  if (n >= 1e9) return `${formatFrNum(n / 1e9)} Md`;
+  if (n >= 1e6) return `${formatFrNum(n / 1e6)} M`;
+  if (n >= 1e3) return `${formatFrNum(n / 1e3)} k`;
+  return formatFrNum(n, 0);
+}
+
 function formatValue(n: number, type: FormatType): string {
   switch (type) {
     case "compact-usd":
-      return new Intl.NumberFormat("fr-FR", {
-        style: "currency",
-        currency: "USD",
-        notation: "compact",
-        maximumFractionDigits: 1,
-      }).format(n);
+      return formatCompactUsdFr(n);
     case "usd":
       return new Intl.NumberFormat("fr-FR", {
         style: "currency",
@@ -63,10 +87,7 @@ function formatValue(n: number, type: FormatType): string {
         maximumFractionDigits: 2,
       }).format(n);
     case "compact-number":
-      return new Intl.NumberFormat("en-US", {
-        notation: "compact",
-        maximumFractionDigits: 2,
-      }).format(n);
+      return formatCompactNumberFr(n);
     case "number":
       return new Intl.NumberFormat("fr-FR", {
         maximumFractionDigits: 2,

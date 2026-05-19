@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { type CoinPrice, formatPct, formatUsd } from "@/lib/coingecko";
+import { type CoinPrice, formatCompactUsd, formatPct, formatUsd } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 
 interface Props {
@@ -60,7 +60,7 @@ export default function PriceCards({ prices }: Props) {
                 {formatPct(coin.change24h)}
               </span>
               <span className="text-[11px] text-muted whitespace-nowrap">
-                MC {compactUsd(coin.marketCap)}
+                MC {formatCompactUsd(coin.marketCap)}
               </span>
             </div>
           </div>
@@ -70,12 +70,5 @@ export default function PriceCards({ prices }: Props) {
   );
 }
 
-function compactUsd(value: number): string {
-  if (!value) return "—";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+// compactUsd local supprimé 19/05/2026 — utilisation de formatCompactUsd de
+// lib/coingecko.ts pour cohérence format "k / M / Md / T $" (audit FR).

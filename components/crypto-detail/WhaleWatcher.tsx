@@ -365,25 +365,35 @@ function shortenHash(hash: string): string {
   return `${hash.slice(0, 6)}…${hash.slice(-4)}`;
 }
 
+// Fix 19/05/2026 — Intl notation:"compact" produit "Bn" pour 1e12 (ambigu FR).
+// On utilise k/M/Md/T explicite, aligné avec lib/coingecko.ts.
+function _frNum(n: number, digits = 1): string {
+  return n.toLocaleString("fr-FR", {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0,
+  });
+}
+
 function formatCompactUsd(value: number): string {
   if (!Number.isFinite(value)) return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+  const abs = Math.abs(value);
+  if (abs >= 1e12) return `${_frNum(value / 1e12, 2)} T $`;
+  if (abs >= 1e9) return `${_frNum(value / 1e9)} Md $`;
+  if (abs >= 1e6) return `${_frNum(value / 1e6)} M $`;
+  if (abs >= 1e3) return `${_frNum(value / 1e3)} k $`;
+  return `${_frNum(value, 0)} $`;
 }
 
 function formatCryptoAmount(value: number): string {
   if (!Number.isFinite(value)) return "—";
-  // Pour les très grosses quantités on passe en compact (ex: "1,2 K"),
+  // Pour les très grosses quantités on passe en compact (ex: "1,2 k"),
   // sinon on garde 2 décimales max pour BTC/ETH.
   if (value >= 10_000) {
-    return new Intl.NumberFormat("fr-FR", {
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
+    const abs = Math.abs(value);
+    if (abs >= 1e12) return `${_frNum(value / 1e12, 2)} T`;
+    if (abs >= 1e9) return `${_frNum(value / 1e9)} Md`;
+    if (abs >= 1e6) return `${_frNum(value / 1e6)} M`;
+    return `${_frNum(value / 1e3)} k`;
   }
   return new Intl.NumberFormat("fr-FR", {
     maximumFractionDigits: 2,

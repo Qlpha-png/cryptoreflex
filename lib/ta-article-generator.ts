@@ -366,13 +366,23 @@ function volatilityBucket(v: number): string {
   return "Faible";
 }
 
-/** Format compact USD : 1.2B, 850M, 12.3K. */
+/**
+ * Format compact USD français : 1,2 Md $, 850 M $, 12,3 k $, 2 T $.
+ *
+ * Fix 19/05/2026 : on n'utilise plus en-US (qui produit "1.2B" — confondu avec
+ * billion FR = mille milliards). Format aligné avec lib/coingecko.ts pour
+ * cohérence éditoriale sur tout le site.
+ */
 function formatCompact(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+  const abs = Math.abs(value);
+  const fmt = (n: number, digits = 1) =>
+    n.toLocaleString("fr-FR", { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+  if (abs >= 1e12) return `${fmt(value / 1e12, 2)} T $`;
+  if (abs >= 1e9) return `${fmt(value / 1e9)} Md $`;
+  if (abs >= 1e6) return `${fmt(value / 1e6)} M $`;
+  if (abs >= 1e3) return `${fmt(value / 1e3)} k $`;
+  return `${fmt(value, 0)} $`;
 }
 
 /* -------------------------------------------------------------------------- */

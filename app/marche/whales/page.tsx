@@ -337,9 +337,11 @@ function WhaleRow({ tx, index }: { tx: WhaleWithSymbol; index: number }) {
 
 function fmtCompactUsd(n: number): string {
   if (!Number.isFinite(n) || n <= 0) return "—";
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}Md$`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(0)}M$`;
-  return `${(n / 1e3).toFixed(0)}k$`;
+  if (n >= 1e12) return `${(n / 1e12).toFixed(2)} T $`;
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} Md $`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(0)} M $`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(0)} k $`;
+  return `${n.toFixed(0)} $`;
 }
 
 function formatCryptoAmount(n: number): string {

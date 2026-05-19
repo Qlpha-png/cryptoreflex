@@ -838,17 +838,30 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
   },
 ];
 
-export function formatCompactUsd(value: number): string {
-  if (!value) return "—";
-  // Audit Block 1 26/04/2026 (Agent copy + GlobalMetricsBar) : audience FR,
-  // donc formatage FR ("3,2 Bn $" au lieu de "$3.2T") + virgule décimale.
-  // Le suffixe Bn (milliards) est plus parlant que T (trillion en US).
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+export function formatCompactUsd(value: number | null | undefined): string {
+  // Donnée manquante / nulle / invalide → fallback explicite (pas de "0,0 $US" trompeur)
+  if (value == null || !Number.isFinite(value) || value <= 0) return "—";
+
+  // Audit Block 1 26/04/2026 puis fix 19/05/2026 :
+  // Intl.NumberFormat fr-FR notation:"compact" produit "1,5 Bn $US" pour 1.5e12.
+  // Problème : "Bn" se lit "billion" (= milliard) par 95 % des lecteurs FR,
+  // alors qu'ici Intl utilise "Bn" pour 1e12 (échelle longue). Confusion x1000.
+  //
+  // Fix : formatage custom explicite avec unités françaises sans ambiguïté :
+  //   - "k $" pour milliers
+  //   - "M $" pour millions
+  //   - "Md $" pour milliards (1e9)
+  //   - "T $" pour mille milliards / trillions (1e12)
+  //
+  // Audience FR comprend immédiatement "Md $" = milliards et "T $" = trillions.
+  const formatNum = (n: number, digits = 1): string =>
+    n.toLocaleString("fr-FR", { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+
+  if (value >= 1e12) return `${formatNum(value / 1e12, 2)} T $`;
+  if (value >= 1e9) return `${formatNum(value / 1e9)} Md $`;
+  if (value >= 1e6) return `${formatNum(value / 1e6)} M $`;
+  if (value >= 1e3) return `${formatNum(value / 1e3)} k $`;
+  return `${formatNum(value, 0)} $`;
 }
 
 /* ============================================================
@@ -1423,11 +1436,23 @@ export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail |
   }
 }
 
-/** Format compact pour les supplies (ex: 19.7M, 120B). */
+/**
+ * Format compact pour les supplies (ex: 19,7 M, 120 Md, 1,5 T).
+ *
+ * Fix 19/05/2026 : aligné sur formatCompactUsd, on n'utilise plus en-US (qui
+ * produit "B" pour milliard — ambigu en FR où "B" se lit aussi billion =
+ * mille milliards). On utilise les unités françaises explicites k/M/Md/T.
+ */
 export function formatCompactNumber(value: number | null | undefined): string {
-  if (!value && value !== 0) return "—";
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 2,
-  }).format(value);
+  if (value == null || !Number.isFinite(value)) return "—";
+  if (value === 0) return "0";
+  const abs = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  const fmt = (n: number, digits = 1) =>
+    n.toLocaleString("fr-FR", { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+  if (abs >= 1e12) return `${sign}${fmt(abs / 1e12, 2)} T`;
+  if (abs >= 1e9) return `${sign}${fmt(abs / 1e9)} Md`;
+  if (abs >= 1e6) return `${sign}${fmt(abs / 1e6)} M`;
+  if (abs >= 1e3) return `${sign}${fmt(abs / 1e3)} k`;
+  return `${sign}${fmt(abs, 0)}`;
 }

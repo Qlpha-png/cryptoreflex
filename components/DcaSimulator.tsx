@@ -601,10 +601,17 @@ function fmtEur(v: number): string {
   });
 }
 
+// Fix 19/05/2026 — Intl notation:"compact" produit "Bn" pour 1e12 (ambigu FR).
+// DCA projections sur 30+ ans peuvent dépasser le trillion en scénario bull
+// extrême. On utilise k/M/Md/T explicite pour éviter toute confusion.
 function compactEur(v: number): string {
   if (v === 0) return "0 €";
-  return new Intl.NumberFormat("fr-FR", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(v) + " €";
+  const abs = Math.abs(v);
+  const fmt = (n: number, digits = 1) =>
+    n.toLocaleString("fr-FR", { maximumFractionDigits: digits, minimumFractionDigits: 0 });
+  if (abs >= 1e12) return `${fmt(v / 1e12, 2)} T €`;
+  if (abs >= 1e9) return `${fmt(v / 1e9)} Md €`;
+  if (abs >= 1e6) return `${fmt(v / 1e6)} M €`;
+  if (abs >= 1e3) return `${fmt(v / 1e3)} k €`;
+  return `${fmt(v, 0)} €`;
 }

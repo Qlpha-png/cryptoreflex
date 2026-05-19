@@ -89,9 +89,10 @@ export default function CryptoStats({
         )}
       </StatCard>
 
-      {/* Volume 24h — animé */}
+      {/* Volume 24h — animé (fallback "—" si donnée absente ou 0 pour éviter
+          d'afficher "0,0 $US" qui donne l'impression d'une crypto morte) */}
       <StatCard label="Volume 24h">
-        {detail ? (
+        {detail && detail.totalVolume > 0 ? (
           <AnimatedStat
             value={detail.totalVolume}
             format="compact-usd"
