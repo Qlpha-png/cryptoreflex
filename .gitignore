@@ -53,3 +53,13 @@ tmp-*/
 # Phase 3 POC — fiches crypto generees auto (output)
 content/cryptos-fiches/
 !content/cryptos-fiches/.gitkeep
+
+# Local-only audit & backup artefacts (audit Kev 19/05/2026).
+# audit-output/ contient des rapports markdown internes parfois lourds
+# (30 MB+) et stratégiques — pas user-facing, jamais à pousser sur main.
+# backup/ contient des snapshots locaux (DNS, sitemap prod, etc.).
+# *.bak* : rune Kev systématique avant édition prod (cf. CLAUDE.md).
+audit-output/
+backup/
+*.bak
+*.bak-*
