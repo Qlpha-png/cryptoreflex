@@ -77,7 +77,7 @@ const NAV_GROUPS: FooterGroup[] = [
     title: "Découvrir",
     links: [
       { href: "/comparatif", label: "Comparatif plateformes crypto FR" },
-      { href: "/quiz/plateforme", label: "Quiz : trouver TA plateforme" },
+      { href: "/quiz/plateforme", label: "Quiz : comparer les plateformes" },
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
       { href: "/cryptos", label: "100 cryptomonnaies analysées" },
       // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)

@@ -172,16 +172,19 @@ export default function PlatformsSection() {
           />
         </div>
 
-        {/* CTA "Quiz plateforme" — Audit UX guidance "main tenue" : segmente l'indécis */}
+        {/* CTA "Quiz plateforme" — Audit UX guidance "main tenue" : segmente l'indécis.
+            Audit 19/05/2026 : reformulé pédagogique (pas de "MA plateforme idéale"
+            qui suggère une recommandation personnalisée — risque PSAN/MiCA). */}
         <div className="mt-10 rounded-2xl border border-primary/20 bg-primary/5 p-6 text-center">
           <p className="text-base font-semibold text-fg">
-            Pas sûr·e laquelle choisir ?
+            Pas sûr·e par où commencer ?
           </p>
           <p className="mt-1 text-sm text-fg/70">
-            Réponds à 5 questions, on te dit laquelle est faite pour toi (30 secondes).
+            Quiz pédagogique en 5 questions — il te présente les plateformes pertinentes
+            selon ton profil (30 secondes). Le choix final t&apos;appartient.
           </p>
           <Link href="/quiz/plateforme" className="btn-primary mt-4 inline-flex">
-            Trouver MA plateforme idéale
+            Faire le quiz pédagogique
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

@@ -77,10 +77,21 @@ const REGULATORS = [
 /** Sparkline SVG inline — 12 dernières semaines, plateformes auditées cumulées. */
 const SPARK_DATA = [22, 24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 34];
 
+/**
+ * useCountUp — anime un compteur de 0 → target.
+ *
+ * Fix audit Kev 19/05/2026 : avant, useState(0) au render initial → si
+ * IntersectionObserver pas encore déclenché (JS lent, SSR, prefers-reduced-motion,
+ * scroll non atteint), l'utilisateur voyait "0+" / "0× /mois" trompeur ("0+
+ * plateformes auditées" = pas crédible). Maintenant : useState(target) →
+ * SSR + 1er paint affichent le vrai chiffre. L'animation client part de 0
+ * uniquement quand `start=true` (viewport in view). Aucun "0" public possible.
+ */
 function useCountUp(target: number, durationMs = 1400, start = false) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(target);
   useEffect(() => {
     if (!start) return;
+    setValue(0);
     const t0 = performance.now();
     let raf = 0;
     const tick = (t: number) => {
@@ -183,6 +194,16 @@ function Sparkline({ data }: { data: number[] }) {
   );
 }
 
+/**
+ * KpiCard — carte KPI compliance.
+ *
+ * Deux modes (audit 19/05/2026) :
+ *  - `target` fourni : carte avec compteur animé (chiffres vérifiables comme
+ *    nombre de plateformes, J-X countdown MiCA).
+ *  - `target` omis : carte qualitative (titre + badge sobre) pour les notions
+ *    non chiffrables (« sources officielles », « vérification mensuelle »).
+ *    Évite les compteurs trompeurs « 0+ / 0× /mois » au render initial.
+ */
 function KpiCard({
   Icon,
   target,
@@ -191,17 +212,20 @@ function KpiCard({
   label,
   hint,
   sparkline,
+  pillLabel,
 }: {
   Icon: typeof Activity;
-  target: number;
+  target?: number;
   suffix?: string;
   prefix?: string;
   label: string;
   hint: string;
   sparkline?: number[];
+  pillLabel?: string;
 }) {
   const { ref, seen } = useInView<HTMLDivElement>();
-  const value = useCountUp(target, 1400, seen);
+  // Si pas de target, on n'instancie pas le compteur (mode qualitatif).
+  const value = useCountUp(target ?? 0, 1400, target !== undefined && seen);
   return (
     <div
       ref={ref}
@@ -211,17 +235,27 @@ function KpiCard({
         <Icon className="h-5 w-5 text-primary-soft" strokeWidth={1.75} />
         {sparkline && <Sparkline data={sparkline} />}
       </div>
-      <div className="flex items-baseline gap-1">
-        {prefix && (
-          <span className="text-lg font-bold text-primary-soft">{prefix}</span>
-        )}
-        <span className="text-3xl font-extrabold tracking-tight text-fg tabular-nums">
-          {value}
-        </span>
-        {suffix && (
-          <span className="text-lg font-bold text-primary-soft">{suffix}</span>
-        )}
-      </div>
+      {target !== undefined ? (
+        <div className="flex items-baseline gap-1">
+          {prefix && (
+            <span className="text-lg font-bold text-primary-soft">{prefix}</span>
+          )}
+          <span className="text-3xl font-extrabold tracking-tight text-fg tabular-nums">
+            {value}
+          </span>
+          {suffix && (
+            <span className="text-lg font-bold text-primary-soft">{suffix}</span>
+          )}
+        </div>
+      ) : (
+        <div className="inline-flex items-center gap-1.5 self-start rounded-md border border-primary/30 bg-primary/5 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-soft opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary-soft" />
+          </span>
+          {pillLabel ?? "Actif"}
+        </div>
+      )}
       <div className="text-sm font-semibold text-fg">{label}</div>
       <div className="text-xs text-muted leading-snug">{hint}</div>
     </div>
@@ -273,39 +307,43 @@ export default function ReassuranceSection() {
           </div>
         </div>
 
-        {/* 4 KPI live (3 + 1 countdown MiCA) */}
+        {/* 4 KPI live — audit 19/05/2026 :
+            (1) Plateformes suivies — chiffre vérifiable (data/platforms.json).
+            (2) Sources officielles — qualitatif, plus crédible que "12" arbitraire.
+            (3) Vérification mensuelle — qualitatif, plus crédible que "32× /mois".
+            (4) Countdown MiCA Phase 2 — chiffre dynamique calculé.
+            La règle : si un chiffre n'est pas trivialement vérifiable par le user,
+            on bascule en libellé qualitatif premium pour éviter le 0+ trompeur. */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
             Icon={ShieldCheck}
             target={34}
             suffix="+"
-            label="Plateformes auditées"
-            hint="Plateformes CASP MiCA + PSAN FR + portefeuilles + outils fiscaux"
+            label="Plateformes suivies"
+            hint="CASP MiCA + PSAN FR + portefeuilles + outils fiscaux — comparées et re-checkées"
             sparkline={SPARK_DATA}
           />
           <KpiCard
             Icon={Database}
-            target={12}
-            label="Sources publiques consultées"
-            hint="ESMA, AMF, BOFiP, CoinGecko, Trustpilot, explorateurs blockchain"
+            label="Sources officielles"
+            hint="ESMA · AMF · BOFiP · CoinGecko · Trustpilot · explorateurs blockchain"
+            pillLabel="Tracées"
           />
           <KpiCard
             Icon={FileCheck}
-            target={32}
-            suffix="× /mois"
-            label="Vérifications de fiches"
-            hint="Statut MiCA, frais, garde des fonds, KYC re-checkés mensuellement"
+            label="Vérification mensuelle"
+            hint="Statut MiCA, frais, garde des fonds, KYC re-checkés chaque mois"
+            pillLabel="En continu"
           />
-          {/* Countdown MiCA Phase 2 — innovation Expert régulatoire.
-              BATCH 53 #1 — fallback 60 (~jours jusqu'au 1er juillet 2026
-              depuis mai 2026) si micaDays === null (sentinel SSR/hydration).
-              Apres 1er useEffect tick (instant), valeur reelle prend le
-              relais. Evite NaN ou crash sur target obligatoire number. */}
+          {/* Countdown MiCA Phase 2 — chiffre dynamique calculé. Fallback 60
+              (~jours jusqu'au 1er juillet 2026 depuis mai 2026) si micaDays
+              === null (sentinel SSR/hydration). Après 1er useEffect tick,
+              valeur réelle. Évite NaN ou crash. */}
           <KpiCard
             Icon={Clock}
             target={micaDays ?? 60}
             prefix="J-"
-            label="Fin transition PSAN → CASP"
+            label="Transition MiCA suivie"
             hint="MiCA Phase 2 — 1er juillet 2026. Plateformes en transition surveillées."
           />
         </div>

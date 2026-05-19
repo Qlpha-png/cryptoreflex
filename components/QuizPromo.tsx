@@ -18,9 +18,9 @@ export default function QuizPromo() {
   const quizSchema = {
     "@context": "https://schema.org",
     "@type": "Quiz",
-    name: "Quiz : Trouve ta plateforme crypto idéale",
+    name: "Quiz pédagogique : compare les plateformes crypto MiCA",
     description:
-      "5 questions courtes pour identifier la plateforme crypto la plus adaptée à ton profil (budget, fréquence d'achat, support FR, conformité MiCA).",
+      "5 questions courtes pour comparer les plateformes crypto MiCA selon ton profil (budget, fréquence d'achat, support FR, conformité). Outil pédagogique, sans recommandation personnalisée.",
     educationalAlignment: {
       "@type": "AlignmentObject",
       alignmentType: "educationalSubject",

@@ -83,8 +83,8 @@ const POOL: Record<string, Step> = {
   quiz: {
     href: "/quiz/plateforme",
     Icon: HelpCircle,
-    label: "Trouve TA plateforme en 30 secondes",
-    desc: "6 questions ciblées → Top 3 plateformes adaptées à ton profil exact.",
+    label: "Comparer les plateformes en 30 secondes",
+    desc: "6 questions → Top 3 plateformes adaptées à ton profil. Outil pédagogique, le choix final t'appartient.",
     primary: true,
   },
   comparator: {

@@ -209,13 +209,14 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                   identifiait ça comme problème #2 (friction conversion :
                   l'utilisateur scrolle, perd contexte, abandonne). Le quiz
                   convertit ~3x mieux que le comparatif statique mobile. */}
-              {/* BATCH 29D — CTA réécrit "Décode ma plateforme" (verbe
-                  signature tonton décodeur). Sub-objection killer "Quiz
-                  2 min · Aucun email demandé" ajouté en aria pour SR. */}
+              {/* BATCH 29D + audit 19/05/2026 — CTA reformulé pédagogique :
+                  "Décode ma plateforme" suggérait une recommandation perso
+                  (risque MiCA/PSAN). On garde le verbe d'action mais cadre
+                  l'outil comme un comparateur pédagogique, pas un conseil. */}
               <HeroPrimaryCta
                 href="/quiz/plateforme"
-                label="Décode ma plateforme en 2 min"
-                ariaLabel="Décode ma plateforme crypto en 2 minutes — quiz personnalisé, aucun email demandé"
+                label="Comparer les plateformes en 2 min"
+                ariaLabel="Comparer les plateformes crypto en 2 minutes — quiz pédagogique, aucun email demandé"
               />
               <Link
                 href="#cat-informe"

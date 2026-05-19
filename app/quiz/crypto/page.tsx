@@ -129,11 +129,12 @@ export default async function QuizCryptoPage() {
           <aside className="mt-12 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-fg">
-                Quand tu sais quelle crypto, choisis ta plateforme
+                Tu sais quelle crypto ? Compare les plateformes MiCA
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                6 questions pour trouver l'exchange régulé MiCA le plus adapté à
-                ton budget, ta fréquence d'achat et ton support préféré.
+                Quiz pédagogique en 6 questions — il présente les exchanges régulés
+                MiCA pertinents selon ton budget, ta fréquence d&apos;achat et ton
+                support préféré. Le choix final t&apos;appartient.
               </p>
             </div>
             <Link href="/quiz/plateforme" className="btn-primary shrink-0">

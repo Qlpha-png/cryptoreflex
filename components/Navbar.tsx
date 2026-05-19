@@ -68,8 +68,10 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
  *  - Search ⌘K (palette pédagogue avec PersonaCards)
  *  - Mega-menus (à venir Phase 2 : Marché → Actualités/Analyses/Calendrier ;
  *    Apprendre → Académie/Quiz/Wizard)
- *  - Quiz garde son CTA primary "Trouver ma plateforme" (un seul lien vers
- *    /quiz/plateforme au lieu de 2 cannibalisés gold).
+ *  - Quiz garde son CTA primary "Comparer les plateformes" (un seul lien vers
+ *    /quiz/plateforme au lieu de 2 cannibalisés gold). Audit 19/05/2026 :
+ *    "Trouver ma plateforme" reformulé en "Comparer les plateformes" pour
+ *    éviter le sens "recommandation personnalisée" (risque PSAN/MiCA).
  */
 /**
  * NAV — 5 items dont 1 monétisation explicite "Pro".
@@ -381,7 +383,7 @@ export default function Navbar() {
               className="btn-primary text-sm py-2 whitespace-nowrap shrink-0 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Sparkles className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-              Trouver ma plateforme
+              Comparer les plateformes
             </Link>
           </div>
 
