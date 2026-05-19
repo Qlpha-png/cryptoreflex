@@ -45,6 +45,9 @@ import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
+import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
+import CryptoSources from "@/components/crypto-detail/CryptoSources";
+import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
 import dynamic from "next/dynamic";
 import { SkeletonChart } from "@/components/ui/Skeleton";
 
@@ -319,6 +322,80 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Constantes éditoriales                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Date de dernière vérification éditoriale des fiches statiques
+ * (top10 + hidden-gems). Sert au LastReviewedBadge en tête de fiche +
+ * dateModified du JSON-LD Article + mention en bas de page.
+ *
+ * Bumper cette constante seulement après une revue éditoriale réelle des
+ * fiches (Kev / Cryptoreflex). Ne PAS l'auto-incrémenter en build (Google
+ * détecte les "fake updates" → signal de "churning" suspect).
+ *
+ * Standard fiche crypto premium (audit phase 3 — 19/05/2026).
+ */
+const FICHE_REVIEWED_DATE = "2026-04-25";
+
+/**
+ * Construit la liste de sources d'une fiche crypto pour <CryptoSources>.
+ *
+ * Combine :
+ *  - le whitepaper (si disponible dans data/whitepaper-tldrs.json)
+ *  - le site officiel (pour les hidden-gems, qui stockent officialUrl)
+ *  - la fiche CoinGecko (toujours)
+ *  - notre méthodologie publique (toujours)
+ */
+function buildCryptoSources(c: AnyCrypto): Array<{
+  type: "whitepaper" | "official" | "explorer" | "market" | "methodology" | "research";
+  label: string;
+  url: string;
+  note?: string;
+}> {
+  const sources: ReturnType<typeof buildCryptoSources> = [];
+
+  const tldr = getWhitepaperTldrFor(c.id);
+  if (tldr?.whitepaperUrl) {
+    sources.push({
+      type: "whitepaper",
+      label: `Whitepaper officiel ${c.name}`,
+      url: tldr.whitepaperUrl,
+      note: `Document fondateur · synthèse Cryptoreflex mise à jour ${new Date(
+        tldr.lastUpdated,
+      ).toLocaleDateString("fr-FR", { month: "short", year: "numeric" })}`,
+    });
+  }
+
+  if (c.kind === "hidden-gem" && c.officialUrl) {
+    sources.push({
+      type: "official",
+      label: `Site officiel ${c.name}`,
+      url: c.officialUrl,
+      note: "Documentation projet, équipe, roadmap",
+    });
+  }
+
+  sources.push({
+    type: "market",
+    label: `CoinGecko · ${c.symbol}`,
+    url: `https://www.coingecko.com/en/coins/${c.coingeckoId}`,
+    note: "Prix temps réel, capitalisation, supply, volume 24h",
+  });
+
+  sources.push({
+    type: "methodology",
+    label: "Méthodologie publique Cryptoreflex",
+    url: "/methodologie",
+    note: `Score, scoring sources, vérification le ${new Date(
+      FICHE_REVIEWED_DATE,
+    ).toLocaleDateString("fr-FR")}`,
+  });
+
+  return sources;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Verdict & FAQ — générés contextuellement (rédactionnel unique par crypto) */
 /* -------------------------------------------------------------------------- */
 
@@ -475,12 +552,13 @@ export default async function CryptoPage({ params }: Props) {
       slug: `cryptos/${c.id}`,
       title: `${c.name} (${c.symbol}) — fiche complète Cryptoreflex`,
       description: c.what,
-      date: "2026-04-25",
+      date: FICHE_REVIEWED_DATE,
       // BLOCK 11 fix (Agent /cryptos audit P2) : dateModified=today sur
       // toutes les fiches = signal de "churning" suspect pour Google. Sans
       // édit éditorial réel, on garde la date de publication. Quand on
-      // mettra à jour une fiche, on bumpera le frontmatter.
-      dateModified: "2026-04-25",
+      // mettra à jour une fiche, on bumpera FICHE_REVIEWED_DATE (cohérent
+      // avec le LastReviewedBadge affiché en tête de fiche).
+      dateModified: FICHE_REVIEWED_DATE,
       category: c.category,
       tags: [c.name, c.symbol, "crypto", c.category],
     }),
@@ -548,11 +626,18 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
-        {/* ACTION : ajouter au comparateur multi-cryptos. Subtile, sous le
-            Hero, au-dessus du QuickBuyBox pour rester accessible sans gêner
-            la conversion. Le drawer global remontera ensuite la sélection. */}
-        <div className="mt-4">
+        {/* ACTION : ajouter au comparateur multi-cryptos + badge "vérifié
+            éditorialement". Subtile, sous le Hero, au-dessus du QuickBuyBox
+            pour rester accessible sans gêner la conversion. Le drawer global
+            remontera ensuite la sélection.
+
+            LastReviewedBadge (audit phase 3 — 19/05/2026) signale au
+            visiteur ET à Google la date de revue éditoriale humaine. E-E-A-T
+            direct, sans tricher (la date est stable, on ne fake pas un
+            "MAJ aujourd'hui"). */}
+        <div className="mt-4 flex flex-wrap items-center gap-3">
           <AddToCompareButton slug={c.id} cryptoName={c.name} />
+          <LastReviewedBadge dateIso={FICHE_REVIEWED_DATE} variant="compact" />
         </div>
 
         {/* QUICK BUY BOX (FIX #1 audit conversion 2026-04-26) — encart d'achat
@@ -956,33 +1041,43 @@ export default async function CryptoPage({ params }: Props) {
           </section>
         )}
 
-        {/* CROSS-LINK ACADÉMIE (Bitcoin uniquement — porte d'entrée pour
-            les débutants qui atterrissent souvent sur la fiche BTC) */}
-        {c.id === "bitcoin" && (
-          <section
-            aria-label="Académie crypto Cryptoreflex"
-            className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6"
-          >
-            <h2 className="text-lg font-bold text-fg flex items-center gap-2">
-              <GraduationCap
-                className="h-5 w-5 text-emerald-300"
-                aria-hidden="true"
-              />
-              Débutant ? Commence par notre académie
-            </h2>
-            <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-              On a structuré 15 leçons gratuites en 3 niveaux pour partir de
-              zéro et progresser à votre rythme. Bitcoin est juste la première
-              brique — il y a beaucoup à découvrir.{" "}
-              <Link
-                href="/academie"
-                className="underline font-semibold hover:text-emerald-200"
-              >
-                Voir l&apos;Académie crypto →
-              </Link>
-            </p>
-          </section>
-        )}
+        {/* CROSS-LINK ACADÉMIE (audit phase 3 — étendu aux top10 + hidden-gems,
+            avant : Bitcoin only). Porte d'entrée Académie pour TOUTES les
+            fiches : un visiteur qui découvre une crypto majeure a souvent
+            besoin de cadrer les bases (blockchain, sécurisation, fiscalité)
+            AVANT d'investir. Le cross-link aide l'utilisateur autant qu'il
+            renforce le maillage interne SEO. */}
+        <section
+          aria-label="Académie crypto Cryptoreflex"
+          className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6"
+        >
+          <h2 className="text-lg font-bold text-fg flex items-center gap-2">
+            <GraduationCap
+              className="h-5 w-5 text-emerald-300"
+              aria-hidden="true"
+            />
+            Débutant ? Commence par notre académie
+          </h2>
+          <p className="mt-2 text-sm text-fg/85 leading-relaxed">
+            On a structuré des parcours gratuits en 3 niveaux (Débutant /
+            Intermédiaire / Avancé) pour partir de zéro et progresser à ton
+            rythme : blockchain, choix de plateforme, sécurisation, fiscalité
+            FR. {c.name} est juste une brique — il y a beaucoup à découvrir.{" "}
+            <Link
+              href="/academie"
+              className="underline font-semibold hover:text-emerald-200"
+            >
+              Voir l&apos;Académie crypto →
+            </Link>
+          </p>
+        </section>
+
+        {/* SOURCES (audit phase 3 — 19/05/2026) — E-E-A-T explicite avant la
+            FAQ. Le visiteur peut vérifier toutes les sources externes (whitepaper,
+            site officiel, CoinGecko) et la méthodologie publique Cryptoreflex. */}
+        <div className="mt-12">
+          <CryptoSources cryptoName={c.name} sources={buildCryptoSources(c)} />
+        </div>
 
         {/* FAQ */}
         <section className="mt-12">
@@ -1152,12 +1247,17 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
-        {/* MENTIONS */}
+        {/* MENTIONS (audit phase 3) — date de vérification synchronisée avec
+            FICHE_REVIEWED_DATE / LastReviewedBadge / JSON-LD dateModified.
+            "recommandées" → "présentées" pour alignement wording compliance
+            (phase 2 — pas de signal d'achat personnalisé). */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
-          Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées le 25/04/2026
-          par le fondateur {BRAND.name} (Kevin Voisin). Cette page contient des liens d'affiliation :
-          Cryptoreflex perçoit une commission si vous ouvrez un compte chez l'une des plateformes recommandées,
-          sans surcoût pour vous et sans impact sur le classement. Pour le détail, voir notre{" "}
+          Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées
+          le {new Date(FICHE_REVIEWED_DATE).toLocaleDateString("fr-FR")} par le
+          fondateur {BRAND.name} (Kevin Voisin). Cette page contient des liens
+          d&apos;affiliation : Cryptoreflex perçoit une commission si vous ouvrez
+          un compte chez l&apos;une des plateformes présentées, sans surcoût pour
+          vous et sans impact sur le classement. Pour le détail, voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>{" "}
           et notre <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.
         </p>
