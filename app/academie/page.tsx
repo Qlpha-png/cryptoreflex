@@ -254,6 +254,82 @@ export default function AcademiePage() {
           </div>
         </section>
 
+        {/* CROSS-LINK PRATIQUE (audit phase 3 — 19/05/2026) — pont entre la
+            théorie (parcours) et la pratique (fiches + outils + comparatif).
+            Pas une refonte : juste 3 portes de sortie sobres pour les
+            visiteurs prêts à passer à l'action concrète sans paywall. */}
+        <section
+          aria-labelledby="academie-cross-link"
+          className="mb-16 rounded-2xl border border-border bg-surface/40 p-6 sm:p-8"
+        >
+          <header className="mb-5">
+            <h2
+              id="academie-cross-link"
+              className="text-2xl font-bold tracking-tight text-fg sm:text-3xl"
+            >
+              Mettre en pratique pendant l&apos;apprentissage
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              L&apos;Académie te donne le cadre. Voici 3 ressources pratiques
+              pour ancrer la théorie tout de suite — sans inscription, sans
+              paywall, sans conseil personnalisé.
+            </p>
+          </header>
+          <ul className="grid gap-3 sm:grid-cols-3">
+            <li>
+              <Link
+                href="/cryptos/bitcoin"
+                className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                  Lire une fiche
+                </div>
+                <div className="mt-1 text-sm font-bold text-fg">
+                  Fiche Bitcoin (référence)
+                </div>
+                <div className="mt-1 text-xs text-muted leading-snug">
+                  La fiche la plus complète du site : structure, whitepaper,
+                  sources, risques, tokenomics. Modèle pour toutes les autres.
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/comparatif"
+                className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                  Comparer
+                </div>
+                <div className="mt-1 text-sm font-bold text-fg">
+                  Plateformes crypto régulées MiCA
+                </div>
+                <div className="mt-1 text-xs text-muted leading-snug">
+                  34 plateformes : frais réels, sécurité, support FR, statut MiCA.
+                  Méthodologie publique, pas de classement payé.
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/outils"
+                className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
+              >
+                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                  Utiliser un outil
+                </div>
+                <div className="mt-1 text-sm font-bold text-fg">
+                  28 calculateurs gratuits
+                </div>
+                <div className="mt-1 text-xs text-muted leading-snug">
+                  Fiscalité PFU 30 %, simulateur DCA, Cerfa 2086, vérificateur
+                  MiCA, glossaire 250+ termes.
+                </div>
+              </Link>
+            </li>
+          </ul>
+        </section>
+
         {/* FAQ */}
         <section aria-labelledby="faq" className="mb-16">
           <FAQ items={FAQ_ITEMS} title="Questions fréquentes" />
