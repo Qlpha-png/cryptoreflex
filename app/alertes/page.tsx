@@ -38,14 +38,14 @@ const PAGE_URL = `${BRAND.url}/alertes`;
 export const metadata: Metadata = {
   title: "Alertes prix crypto par email — gratuites, sans compte",
   description:
-    "Crée tes alertes prix crypto en 30 secondes. Reçois un email dès que Bitcoin, Ethereum ou n'importe quelle crypto franchit ton seuil — gratuit, sans pub, désinscription en 1 clic.",
+    "Créez vos alertes prix crypto en 30 secondes. Recevez un email dès que Bitcoin, Ethereum ou n'importe quelle crypto franchit votre seuil — gratuit, sans pub, désinscription en 1 clic.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",
     url: PAGE_URL,
     title: "Alertes prix crypto par email — gratuites",
     description:
-      "Sois prévenu·e par email dès qu'une crypto franchit ton seuil. Gratuit, sans compte, RGPD-friendly.",
+      "Soyez prévenu·e par email dès qu'une crypto franchit votre seuil. Gratuit, sans compte, RGPD-friendly.",
   },
   keywords: [
     "alerte prix bitcoin",
@@ -65,11 +65,11 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Comment fonctionnent les alertes prix Cryptoreflex ?",
-    a: "Tu choisis une crypto, un seuil (par exemple Bitcoin > 50 000 €), tu indiques ton email, et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
+    a: "Vous choisissez une crypto, un seuil (par exemple Bitcoin > 50 000 €), vous indiquez votre email, et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
   },
   {
     q: "Faut-il créer un compte ?",
-    a: "Non. Aucun mot de passe, aucun compte. Ton email est l'unique identifiant de tes alertes. Tu peux les retrouver à tout moment en saisissant ton email sur cette page.",
+    a: "Non. Aucun mot de passe, aucun compte. Votre email est l'unique identifiant de vos alertes. Vous pouvez les retrouver à tout moment en saisissant votre email sur cette page.",
   },
   {
     q: "Combien d'alertes puis-je créer ?",
@@ -77,7 +77,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Comment me désinscrire ?",
-    a: "Chaque email d'alerte contient un lien direct \"désactiver cette alerte\" — un clic suffit. Tu peux aussi supprimer toutes tes alertes depuis cette page, sans email de confirmation.",
+    a: "Chaque email d'alerte contient un lien direct \"désactiver cette alerte\" — un clic suffit. Vous pouvez aussi supprimer toutes vos alertes depuis cette page, sans email de confirmation.",
   },
   {
     q: "Cryptoreflex stocke-t-il mon email ?",
@@ -160,7 +160,7 @@ export default async function AlertesPage() {
             <br className="hidden sm:block" /> par email.
           </h1>
           <p className="mt-4 text-lg text-fg/80 max-w-3xl">
-            Reçois un message dès qu'une crypto franchit ton seuil — Bitcoin
+            Recevez un message dès qu'une crypto franchit votre seuil — Bitcoin
             au-dessus de 80 000 €, Ethereum sous 2 500 $, peu importe.
             Vérification quotidienne, désinscription en 1 clic.
           </p>
@@ -214,7 +214,7 @@ export default async function AlertesPage() {
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary font-bold">
                   2
                 </span>
-                <h3 className="text-base font-semibold text-fg">Définis ton seuil</h3>
+                <h3 className="text-base font-semibold text-fg">Définissez votre seuil</h3>
               </div>
               <p className="mt-3 text-sm text-fg/75 leading-relaxed">
                 "Au-dessus de 80 000 €" ou "en-dessous de 50 000 $". Au choix EUR ou USD.
@@ -244,19 +244,19 @@ export default async function AlertesPage() {
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 text-sm text-fg/85">
             <li className="flex items-start gap-2">
               <ArrowRight className="h-4 w-4 mt-0.5 text-primary shrink-0" aria-hidden="true" />
-              <span><strong>DCA opportunistes</strong> : tu veux accélérer ton DCA Bitcoin si la chute dépasse -20 %.</span>
+              <span><strong>DCA opportunistes</strong> : vous voulez accélérer votre DCA Bitcoin si la chute dépasse -20 %.</span>
             </li>
             <li className="flex items-start gap-2">
               <ArrowRight className="h-4 w-4 mt-0.5 text-primary shrink-0" aria-hidden="true" />
-              <span><strong>Take profit patient</strong> : ton plan dit "je vends 10 % d'ETH si on touche 5 000 $". L'alerte te le rappelle.</span>
+              <span><strong>Take profit patient</strong> : votre plan dit "je vends 10 % d'ETH si on touche 5 000 $". L'alerte vous le rappelle.</span>
             </li>
             <li className="flex items-start gap-2">
               <ArrowRight className="h-4 w-4 mt-0.5 text-primary shrink-0" aria-hidden="true" />
-              <span><strong>Veille passive</strong> : tu suis une hidden gem mais tu ne veux pas regarder le prix tous les jours.</span>
+              <span><strong>Veille passive</strong> : vous suivez une hidden gem mais vous ne voulez pas regarder le prix tous les jours.</span>
             </li>
             <li className="flex items-start gap-2">
               <ArrowRight className="h-4 w-4 mt-0.5 text-primary shrink-0" aria-hidden="true" />
-              <span><strong>Stop-loss mental</strong> : être prévenu si un signal technique cassait, sans laisser un ordre live sur ton exchange.</span>
+              <span><strong>Stop-loss mental</strong> : être prévenu si un signal technique cassait, sans laisser un ordre live sur votre exchange.</span>
             </li>
           </ul>
         </section>

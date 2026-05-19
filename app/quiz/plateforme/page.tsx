@@ -16,7 +16,7 @@ export const revalidate = 86400;
 // title de app/layout.tsx — on l'omet ici pour éviter la duplication.
 const TITLE = `Quiz : quelle plateforme crypto pour toi ?`;
 const DESCRIPTION =
-  "6 questions courtes pour trouver la plateforme crypto la plus adaptée à ton profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
+  "6 questions courtes pour trouver la plateforme crypto la plus adaptée à votre profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/plateforme";
 
 export const metadata: Metadata = {
@@ -97,8 +97,8 @@ export default function QuizPlateformePage() {
               <span className="gradient-text">pour toi&nbsp;?</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
-              Réponds à 6 questions courtes — budget, fréquence d'achat, support
-              français, conformité MiCA — on te recommande la plateforme la plus
+              Répondez à 6 questions courtes — budget, fréquence d'achat, support
+              français, conformité MiCA — on vous recommande la plateforme la plus
               adaptée parmi {platforms.length} options analysées.
             </p>
           </header>
@@ -118,7 +118,7 @@ export default function QuizPlateformePage() {
             />
             <Method
               title="Reco neutre"
-              description="Si rien ne matche tes contraintes, on te le dit — pas de reco forcée."
+              description="Si rien ne matche vos contraintes, on vous le dit — pas de reco forcée."
             />
           </section>
 
@@ -126,10 +126,10 @@ export default function QuizPlateformePage() {
           <aside className="mt-12 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-fg">
-                Tu hésites encore ? Lance l'assistant "premier achat"
+                Vous hésitez encore ? Lancez l'assistant "premier achat"
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                5 étapes guidées pour faire ton premier achat sans te tromper —
+                5 étapes guidées pour faire votre premier achat sans vous tromper —
                 montant, crypto, plateforme, méthode de paiement.
               </p>
             </div>

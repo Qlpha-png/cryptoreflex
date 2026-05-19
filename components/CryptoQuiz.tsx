@@ -59,7 +59,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     key: "risk",
-    title: "Quel niveau de risque tu acceptes ?",
+    title: "Quel niveau de risque acceptez-vous ?",
     subtitle:
       "Plus le risque accepté est élevé, plus on peut s'orienter vers des cryptos petites ou émergentes.",
     options: [
@@ -71,7 +71,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "horizon",
-    title: "Tu investis sur quel horizon ?",
+    title: "Vous investissez sur quel horizon ?",
     subtitle: "L'horizon temporel oriente la priorité entre stabilité et upside.",
     options: [
       { value: "lt_1y", label: "Moins d'1 an", hint: "Court terme, trading" },
@@ -93,7 +93,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "techFamiliarity",
-    title: "Tu connais bien la blockchain ?",
+    title: "Vous connaissez bien la blockchain ?",
     subtitle:
       "Plus la familiarité est faible, plus on recommande des cryptos majeures, faciles à acheter et stocker.",
     options: [
@@ -105,7 +105,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "capital",
-    title: "Combien tu peux mettre au début ?",
+    title: "Combien pouvez-vous mettre au début ?",
     subtitle: "Pour calibrer la pertinence (gros wallets = privilégier la sécurité).",
     options: [
       { value: "tiny", label: "Moins de 100 €", hint: "Tester le marché" },
@@ -116,7 +116,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "strategy",
-    title: "Tu préfères diversifier ou concentrer ?",
+    title: "Vous préférez diversifier ou concentrer ?",
     subtitle: "Concentration = conviction forte sur 1-2 actifs. Diversification = répartir le risque.",
     options: [
       { value: "diversify", label: "Diversifier", hint: "Mix Top 10 + petites caps" },
@@ -431,7 +431,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
   return (
     <section
       role="form"
-      aria-label="Quiz crypto pour ton profil"
+      aria-label="Quiz crypto pour votre profil"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -625,7 +625,7 @@ function ResultView({
     <div>
       <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
         <Trophy className="h-4 w-4" aria-hidden="true" />
-        Notre recommandation pour ton profil
+        Notre recommandation pour votre profil
       </div>
 
       {/* Top crypto */}
@@ -709,9 +709,9 @@ function ResultView({
       )}
 
       {/* Récap des réponses */}
-      <section className="mt-8" aria-label="Récap de tes réponses">
+      <section className="mt-8" aria-label="Récap de vos réponses">
         <h4 className="text-sm font-semibold text-fg/85 uppercase tracking-wider">
-          Tes réponses
+          Vos réponses
         </h4>
         <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {QUESTIONS.map((q, idx) => {
@@ -756,7 +756,7 @@ function ResultView({
             Étape suivante
           </div>
           <div className="mt-1 font-bold text-fg">
-            Maintenant choisis ta plateforme
+            Maintenant choisissez votre plateforme
           </div>
           <div className="mt-1 text-xs text-muted">
             6 questions pour trouver l'exchange régulé MiCA adapté.
@@ -775,7 +775,7 @@ function ResultView({
           </div>
           <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
-            Compare la reco selon ton profil.
+            Comparez la reco selon votre profil.
           </div>
         </button>
       </div>
@@ -790,8 +790,8 @@ function NoResultView({ onRestart }: { onRestart: () => void }) {
         Aucune crypto ne matche ce profil
       </h3>
       <p className="mt-2 text-fg/70 max-w-md mx-auto">
-        Tes contraintes sont peut-être trop strictes (ex : tolérance très faible
-        + horizon &lt; 1 an + memecoins). Assouplis une réponse et réessaie.
+        Vos contraintes sont peut-être trop strictes (ex : tolérance très faible
+        + horizon &lt; 1 an + memecoins). Assouplissez une réponse et réessayez.
       </p>
       <button type="button" onClick={onRestart} className="mt-6 btn-primary">
         <RefreshCcw className="h-4 w-4" aria-hidden="true" />

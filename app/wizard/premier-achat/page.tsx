@@ -18,7 +18,7 @@ export const revalidate = 86400;
 // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
 const TITLE = `Mon premier achat crypto — Wizard pas-à-pas`;
 const DESCRIPTION =
-  "Assistant interactif 5 étapes pour faire ton premier achat crypto en toute sécurité : budget, choix de la crypto, plateforme MiCA débutant FR, méthode de paiement, lancement.";
+  "Assistant interactif 5 étapes pour faire votre premier achat crypto en toute sécurité : budget, choix de la crypto, plateforme MiCA débutant FR, méthode de paiement, lancement.";
 const PATH = "/wizard/premier-achat";
 
 export const metadata: Metadata = {
@@ -59,8 +59,8 @@ export default function WizardPremierAchatPage() {
     tools: [{ name: "Smartphone ou ordinateur avec navigateur récent" }],
     steps: [
       {
-        name: "Définir le montant que tu peux te permettre de perdre",
-        text: "Avant tout, calibre un budget — pas combien tu peux investir mais combien tu peux perdre sans changer ton mode de vie. La crypto est un actif spéculatif non couvert par le FGDR.",
+        name: "Définir le montant que vous pouvez vous permettre de perdre",
+        text: "Avant tout, calibrez un budget — pas combien vous pouvez investir mais combien vous pouvez perdre sans changer votre mode de vie. La crypto est un actif spéculatif non couvert par le FGDR.",
       },
       {
         name: "Choisir la crypto pour démarrer",
@@ -76,7 +76,7 @@ export default function WizardPremierAchatPage() {
       },
       {
         name: "Valider l'achat",
-        text: "Pour ton tout premier achat, fais 25-50 € de BTC pour valider le flow complet (KYC, dépôt, ordre) à coût minimal. Active la 2FA dès l'inscription.",
+        text: "Pour votre tout premier achat, faites 25-50 € de BTC pour valider le flow complet (KYC, dépôt, ordre) à coût minimal. Activez la 2FA dès l'inscription.",
       },
     ],
   });
@@ -108,7 +108,7 @@ export default function WizardPremierAchatPage() {
               Mon premier achat <span className="gradient-text">crypto</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
-              Assistant pas-à-pas pour faire ton premier achat sereinement.
+              Assistant pas-à-pas pour faire votre premier achat sereinement.
               Budget, choix de la crypto, plateforme MiCA débutant, méthode de
               paiement — on cadre tout en 5 étapes courtes.
             </p>
@@ -137,7 +137,7 @@ export default function WizardPremierAchatPage() {
             </aside>
             <aside className="glass rounded-2xl p-6">
               <h2 className="text-lg font-bold text-fg">
-                Approfondir avant de te lancer
+                Approfondir avant de vous lancer
               </h2>
               <p className="mt-1 text-sm text-fg/70">
                 Notre méthodologie de notation, le comparatif complet et la

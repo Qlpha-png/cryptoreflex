@@ -12,7 +12,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 export const metadata: Metadata = {
   title: "Connexion",
   description:
-    "Connecte-toi à ton compte Cryptoreflex avec ton email et ton mot de passe, ou via un lien magique. Sécurisé, rapide.",
+    "Connectez-vous à votre compte Cryptoreflex avec votre email et votre mot de passe, ou via un lien magique. Sécurisé, rapide.",
   alternates: { canonical: `${BRAND.url}/connexion` },
   robots: { index: false, follow: true }, // pas indexable
 };
@@ -43,11 +43,11 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
             <Mail className="h-6 w-6" aria-hidden="true" />
           </span>
           <h1 className="text-3xl font-extrabold text-fg">
-            Connexion à <span className="gradient-text">ton compte</span>
+            Connexion à <span className="gradient-text">votre compte</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
-            Avec ton email et ton mot de passe — ou un lien magique si tu
-            préfères.
+            Avec votre email et votre mot de passe — ou un lien magique si vous
+            préférez.
           </p>
         </div>
 
@@ -70,7 +70,7 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
             </h2>
             <p className="text-sm text-fg/70 mb-4 leading-relaxed">
               L&apos;espace personnel sera ouvert dans les prochains jours. En
-              attendant, tu peux découvrir Cryptoreflex Pro et rejoindre la
+              attendant, vous pouvez découvrir Cryptoreflex Pro et rejoindre la
               waitlist.
             </p>
             <Link

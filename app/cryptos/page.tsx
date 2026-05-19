@@ -211,7 +211,7 @@ export default function CryptosIndexPage() {
               <div>
                 <div className="text-sm font-semibold text-fg">
                   {compareList.length} crypto
-                  {compareList.length > 1 ? "s" : ""} dans ton comparateur
+                  {compareList.length > 1 ? "s" : ""} dans votre comparateur
                 </div>
                 <div className="text-xs text-muted">
                   Visualise-les côte à côte sur une seule page.
@@ -316,7 +316,7 @@ export default function CryptosIndexPage() {
         {/* Grid */}
         {filtered.length === 0 ? (
           <p className="mt-12 text-sm text-muted">
-            Aucune crypto ne correspond à ta recherche. Essaie un autre mot-clé ou efface les filtres.
+            Aucune crypto ne correspond à votre recherche. Essayez un autre mot-clé ou effacez les filtres.
           </p>
         ) : (
           // BATCH 46b — chaque card crypto wrappee Tilt3D 4 deg parallax

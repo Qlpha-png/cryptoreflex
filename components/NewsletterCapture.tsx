@@ -349,22 +349,22 @@ export default function NewsletterCapture() {
                 tabIndex={-1}
                 className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight focus:outline-none"
               >
-                {mocked ? "Email bien noté" : "Bienvenue ! Vérifie ta boîte mail."}
+                {mocked ? "Email bien noté" : "Bienvenue ! Vérifiez votre boîte mail."}
               </h2>
 
               <p className="mt-3 text-fg/85 max-w-2xl">
                 {mocked ? (
                   <>
-                    Newsletter en cours de configuration — ton email{" "}
+                    Newsletter en cours de configuration — votre email{" "}
                     <strong className="text-fg">{email}</strong> a été noté côté
-                    Cryptoreflex, on te recontactera dès que c&apos;est prêt. En
-                    attendant, télécharge ton guide&nbsp;:
+                    Cryptoreflex, on vous recontactera dès que c&apos;est prêt. En
+                    attendant, téléchargez votre guide&nbsp;:
                   </>
                 ) : (
                   <>
                     Un email de confirmation vient de t&apos;être envoyé à{" "}
-                    <strong className="text-fg">{email}</strong>. Clique sur le
-                    lien pour activer ton inscription et recevoir ton guide PDF.
+                    <strong className="text-fg">{email}</strong>. Cliquez sur le
+                    lien pour activer votre inscription et recevoir votre guide PDF.
                   </>
                 )}
               </p>
@@ -386,7 +386,7 @@ export default function NewsletterCapture() {
 
               {/* Tap target 44px (Audit Mobile) */}
               <p className="mt-5 text-xs text-fg/65">
-                Pas reçu l&apos;email après 5 min ? Vérifie tes spams ou{" "}
+                Pas reçu l&apos;email après 5 min ? Vérifiez vos spams ou{" "}
                 <button
                   type="button"
                   onClick={() => {

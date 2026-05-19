@@ -240,7 +240,7 @@ export default function ComparatifHubPage() {
               Comparatifs <span className="gradient-text">plateformes crypto</span>
             </h1>
             <p className="mt-3 text-lg text-fg/70">
-              Tu hésites entre deux plateformes ? Choisis ton duel. Chaque
+              Vous hésitez entre deux plateformes ? Choisissez votre duel. Chaque
               comparatif détaille frais, sécurité, support FR, conformité MiCA
               et bonus, avec un verdict tranché à la fin.
             </p>
@@ -257,7 +257,7 @@ export default function ComparatifHubPage() {
               </div>
               <div className="min-w-0">
                 <div className="text-base sm:text-lg font-bold text-fg">
-                  Tu hésites entre 3 plateformes ? Fais le quiz en 30s
+                  Vous hésitez entre 3 plateformes ? Faites le quiz en 30s
                 </div>
                 <div className="mt-0.5 text-xs sm:text-sm text-fg/70">
                   6 questions · résultat personnalisé · aucune inscription requise
@@ -281,7 +281,7 @@ export default function ComparatifHubPage() {
                   Top plateformes agréées MiCA
                 </h2>
                 <p className="text-sm text-fg/70 mt-0.5">
-                  Filtre par profil pour voir celles qui te correspondent.
+                  Filtrez par profil pour voir celles qui vous correspondent.
                 </p>
               </div>
             </header>
@@ -386,7 +386,7 @@ export default function ComparatifHubPage() {
                 Toujours pas décidé ?
               </div>
               <p className="mt-1 text-sm text-fg/70 max-w-xl">
-                Notre quiz croise tes priorités (frais, sécurité, support FR, niveau) avec les data 2026 et te sort 1 plateforme principale + 2 alternatives.
+                Notre quiz croise vos priorités (frais, sécurité, support FR, niveau) avec les data 2026 et vous sort 1 plateforme principale + 2 alternatives.
               </p>
             </div>
             <Link
@@ -435,10 +435,10 @@ export default function ComparatifHubPage() {
           {/* CTA bas de page — répétition (CRO best practice) */}
           <section className="mt-16 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary-glow/10 p-6 sm:p-8 text-center">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Trouve ta plateforme en 30 secondes
+              Trouvez votre plateforme en 30 secondes
             </h2>
             <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
-              Plus rapide que de comparer {getAllPlatforms().length} fiches plateformes une par une : le quiz pose 6 questions et te sort la plateforme calibrée pour ton profil — débutant, intermédiaire ou avancé.
+              Plus rapide que de comparer {getAllPlatforms().length} fiches plateformes une par une : le quiz pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
             </p>
             <Link
               href="/quiz/trouve-ton-exchange"
@@ -452,7 +452,7 @@ export default function ComparatifHubPage() {
 
           {/* Disclaimer AMF + affiliation */}
           <p className="mt-10 text-xs text-muted leading-relaxed max-w-3xl">
-            Cryptoreflex est un média éditorial indépendant. Nous percevons une commission via les liens d&apos;affiliation, sans surcoût pour toi et sans biais sur les notes attribuées (méthodologie publique sur <Link href="/methodologie" className="underline hover:text-fg">/methodologie</Link>). Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
+            Cryptoreflex est un média éditorial indépendant. Nous percevons une commission via les liens d&apos;affiliation, sans surcoût pour vous et sans biais sur les notes attribuées (méthodologie publique sur <Link href="/methodologie" className="underline hover:text-fg">/methodologie</Link>). Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
           </p>
         </div>
       </section>

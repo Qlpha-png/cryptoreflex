@@ -31,9 +31,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/quiz";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Quiz crypto — trouve ta plateforme et ta première crypto";
+const TITLE = "Quiz crypto — trouvez votre plateforme et votre première crypto";
 const DESCRIPTION =
-  "Deux quiz courts et neutres pour t'aider à démarrer dans la crypto : quelle plateforme pour ton profil (6 questions) et quelle crypto pour ton premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
+  "Deux quiz courts et neutres pour vous aider à démarrer dans la crypto : quelle plateforme pour votre profil (6 questions) et quelle crypto pour votre premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -75,7 +75,7 @@ const QUIZZES: QuizCard[] = [
     href: "/quiz/plateforme",
     title: "Quel exchange crypto pour toi ?",
     description:
-      "Six questions courtes pour matcher ton profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi nos 9 plateformes notées.",
+      "Six questions courtes pour matcher votre profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi nos 9 plateformes notées.",
     questionCount: "6 questions",
     estimatedTime: "~2 minutes",
     highlights: [
@@ -88,9 +88,9 @@ const QUIZZES: QuizCard[] = [
   },
   {
     href: "/quiz/crypto",
-    title: "Quelle crypto pour ton premier achat ?",
+    title: "Quelle crypto pour votre premier achat ?",
     description:
-      "Cinq questions sur ton horizon, ta tolérance au risque et ce que tu cherches (réserve de valeur, smart contracts, hidden gems). Recommandation parmi notre top 10 et nos hidden gems.",
+      "Cinq questions sur votre horizon, votre tolérance au risque et ce que vous cherchez (réserve de valeur, smart contracts, hidden gems). Recommandation parmi notre top 10 et nos hidden gems.",
     questionCount: "5 questions",
     estimatedTime: "~2 minutes",
     highlights: [
@@ -160,7 +160,7 @@ export default function QuizHubPage() {
               Deux quiz courts, neutres et pédagogiques pour démarrer sans
               prendre de mauvaise décision : choisir sa plateforme, choisir sa
               première crypto. Aucune réponse n'est "fausse" — on adapte la
-              recommandation à ton profil.
+              recommandation à votre profil.
             </p>
           </header>
 
@@ -223,13 +223,13 @@ export default function QuizHubPage() {
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
                     <span>
-                      Te poser les bonnes questions pour cadrer ton besoin réel.
+                      Vous poser les bonnes questions pour cadrer votre besoin réel.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
                     <span>
-                      Te recommander en sortie une option neutre (pas la plus
+                      Vous recommander en sortie une option neutre (pas la plus
                       rémunératrice pour nous).
                     </span>
                   </li>
@@ -250,7 +250,7 @@ export default function QuizHubPage() {
                   <li>De la prédiction de cours.</li>
                   <li>
                     De la "garantie" — la crypto reste un actif risqué, à ne
-                    jamais investir au-delà de ce que tu peux perdre.
+                    jamais investir au-delà de ce que vous pouvez perdre.
                   </li>
                 </ul>
               </div>

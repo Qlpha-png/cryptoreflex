@@ -74,7 +74,7 @@ const CRYPTOS: { value: CryptoChoice; name: string; pitch: string; for: string }
     value: "ETH",
     name: "Ethereum",
     pitch: "La blockchain qui fait tourner DeFi, NFT, stablecoins. Plus volatile.",
-    for: "Idéal si tu veux exposer au reste de l'écosystème.",
+    for: "Idéal si vous voulez exposer au reste de l'écosystème.",
   },
   {
     value: "SOL",
@@ -404,11 +404,11 @@ function Step1Why({
 
       <fieldset className="mt-8">
         <legend className="text-base font-semibold text-fg">
-          Combien tu peux te permettre de perdre&nbsp;?
+          Combien pouvez-vous vous permettre de perdre&nbsp;?
         </legend>
         <p className="mt-1 text-xs text-muted">
-          Pas combien tu peux <em>investir</em> — combien tu peux perdre sans
-          changer ton mode de vie. C'est la seule règle qui compte.
+          Pas combien vous pouvez <em>investir</em> — combien vous pouvez perdre sans
+          changer votre mode de vie. C'est la seule règle qui compte.
         </p>
         <div role="radiogroup" className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-2">
           {AMOUNT_OPTIONS.map((opt) => {
@@ -443,7 +443,7 @@ function Step1Why({
       >
         <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
         <p className="leading-relaxed">
-          <strong className="text-amber-200">Investis seulement ce que tu peux perdre.</strong>{" "}
+          <strong className="text-amber-200">Investissez seulement ce que vous pouvez perdre.</strong>{" "}
           La crypto reste un actif spéculatif — pas un livret d'épargne.
         </p>
       </div>
@@ -477,8 +477,8 @@ function Step2Crypto({
         title="Bitcoin, Ethereum ou Solana ?"
         subtitle={
           amount <= 100
-            ? "Pour ton premier achat, on recommande Bitcoin — la référence, la plus sûre, la plus régulée."
-            : "Tu peux mixer 80 % BTC / 20 % ETH pour rester équilibré. Solana = pour les profils plus tolérants au risque."
+            ? "Pour votre premier achat, on recommande Bitcoin — la référence, la plus sûre, la plus régulée."
+            : "Vous pouvez mixer 80 % BTC / 20 % ETH pour rester équilibré. Solana = pour les profils plus tolérants au risque."
         }
       />
 
@@ -617,7 +617,7 @@ function Step3Platform({
         <div className="flex items-start gap-3 flex-wrap">
           <div className="min-w-0 flex-1">
             <h3 className="text-sm font-semibold text-fg">
-              Tu hésites entre les trois&nbsp;?
+              Vous hésitez entre les trois&nbsp;?
             </h3>
             <p className="mt-1 text-xs text-fg/75">
               Lance le quiz "quelle plateforme pour toi" — 6 questions courtes
@@ -663,7 +663,7 @@ function Step4Payment({
         subtitle={
           recommendSepa
             ? `Pour un montant de ${amount} €, on recommande le virement SEPA — l'écart de frais devient significatif au-delà de 200 €.`
-            : "Pour un petit montant, l'écart de frais est faible. Choisis selon ta préférence vitesse / coût."
+            : "Pour un petit montant, l'écart de frais est faible. Choisissez selon votre préférence vitesse / coût."
         }
       />
 
@@ -804,8 +804,8 @@ function Step5Recap({
       <StepHeader
         titleRef={titleRef}
         eyebrow="Étape 5 — Récap + lancement"
-        title="Tout est prêt — voici ton plan"
-        subtitle="Tu peux modifier n'importe quel choix en cliquant sur la ligne correspondante."
+        title="Tout est prêt — voici votre plan"
+        subtitle="Vous pouvez modifier n'importe quel choix en cliquant sur la ligne correspondante."
       />
 
       <ul className="mt-6 space-y-2">
@@ -827,12 +827,12 @@ function Step5Recap({
         <div className="mt-8 rounded-2xl border border-primary/30 bg-primary/5 p-6">
           <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
             <Rocket className="h-4 w-4" aria-hidden="true" />
-            Tu es prêt
+            Vous êtes prêt
           </div>
           <p className="mt-2 text-fg/85 text-sm">
-            Pour te familiariser sans stress, fais d'abord un achat de{" "}
+            Pour vous familiariser sans stress, faites d'abord un achat de{" "}
             <strong className="text-fg">{startSmall} € de {cryptoLabel}</strong> sur{" "}
-            <strong className="text-fg">{platform.name}</strong>. Tu valideras le
+            <strong className="text-fg">{platform.name}</strong>. Vous validerez le
             flow complet (KYC, dépôt, ordre) à coût minimal.
           </p>
 

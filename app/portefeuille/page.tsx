@@ -17,7 +17,7 @@ import ExchangeConnect from "@/components/ExchangeConnect";
 export const metadata: Metadata = {
   title: "Tracker portefeuille crypto — gratuit, 100% local",
   description:
-    "Suis ton portefeuille crypto Cryptoreflex (10 positions en gratuit, jusqu'à 500 en Pro, valeur live en EUR, gain/perte, allocation). Données stockées uniquement sur ton appareil — aucun compte, aucun envoi serveur.",
+    "Suivez votre portefeuille crypto Cryptoreflex (10 positions en gratuit, jusqu'à 500 en Pro, valeur live en EUR, gain/perte, allocation). Données stockées uniquement sur votre appareil — aucun compte, aucun envoi serveur.",
   alternates: { canonical: `${BRAND.url}/portefeuille` },
   robots: { index: false, follow: true },
 };
@@ -67,8 +67,8 @@ export default function PortefeuillePage() {
             <span className="text-gradient-gold">portefeuille crypto</span>
           </h1>
           <p className="mt-3 ds-lead max-w-2xl">
-            Suis la valeur live de tes positions, ton gain/perte global et
-            l&apos;allocation de ton portefeuille. Jusqu&apos;à 10 cryptos en gratuit
+            Suivez la valeur live de vos positions, votre gain/perte global et
+            l&apos;allocation de votre portefeuille. Jusqu&apos;à 10 cryptos en gratuit
             (500 en Soutien), prix actualisés toutes les 2 minutes.
           </p>
 
@@ -77,7 +77,7 @@ export default function PortefeuillePage() {
           <div className="mt-5 flex flex-wrap items-center gap-2 text-xs">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1.5 text-emerald-200">
               <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-              Tes données restent dans <strong>TON</strong> navigateur
+              Vos données restent dans <strong>VOTRE</strong> navigateur
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/5 px-3 py-1.5 text-cyan-200">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
@@ -100,21 +100,21 @@ export default function PortefeuillePage() {
         <footer className="mt-12 border-t border-border/60 pt-6 space-y-3 text-[12px] text-muted leading-relaxed">
           <p>
             Le portefeuille est conservé dans le <strong>localStorage</strong>{" "}
-            de ton navigateur. Si tu vides le cache, changes de navigateur ou
-            utilises la navigation privée, tes positions ne seront pas
-            synchronisées. Pense à exporter ton CSV régulièrement si tu y
-            tiens.
+            de votre navigateur. Si vous videz le cache, changez de navigateur ou
+            utilisez la navigation privée, vos positions ne seront pas
+            synchronisées. Pensez à exporter votre CSV régulièrement si vous y
+            tenez.
           </p>
           <p>
             Les prix sont fournis par CoinGecko (API publique), libellés en
             euros et rafraîchis toutes les deux minutes lorsque l&apos;onglet
             est actif. Les valeurs affichées sont indicatives — le prix
-            d&apos;exécution réel sur ton exchange peut varier (spread, frais).
+            d&apos;exécution réel sur votre exchange peut varier (spread, frais).
             Ce tracker n&apos;exécute aucune transaction.
           </p>
           <p className="text-fg/70">
-            Tu cherches plutôt à suivre des cryptos sans saisir de positions ?
-            Utilise plutôt notre{" "}
+            Vous cherchez plutôt à suivre des cryptos sans saisir de positions ?
+            Utilisez plutôt notre{" "}
             <Link
               href="/watchlist"
               className="underline hover:text-fg rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"

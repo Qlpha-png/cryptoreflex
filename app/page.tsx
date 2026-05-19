@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calcule ta fiscalité PFU. 28 outils gratuits, méthodologie publique.",
+    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils gratuits, méthodologie publique.",
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
@@ -290,7 +290,7 @@ export default async function HomePage() {
           Icon={Target}
           eyebrow="Pour démarrer"
           title="Démarrer maintenant"
-          intro="Tu n'as jamais acheté de crypto ? Suis le parcours en 4 étapes — comprendre, choisir, sécuriser, acheter."
+          intro="Vous n'avez jamais acheté de crypto ? Suivez le parcours en 4 étapes — comprendre, choisir, sécuriser, acheter."
           anchorId="cat-demarrer"
         />
         <Reveal>

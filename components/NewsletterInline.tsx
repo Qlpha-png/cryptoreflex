@@ -68,8 +68,8 @@ const COPY_DEFAULTS: Record<
   { title: string; subtitle: string; ctaLabel: string }
 > = {
   "bottom-article": {
-    title: "Tu as aime cet article ?",
-    subtitle: "Recois 3 infos crypto FR comme celle-ci, chaque matin a 7h.",
+    title: "Vous avez aime cet article ?",
+    subtitle: "Recevez 3 infos crypto FR comme celle-ci, chaque matin a 7h.",
     ctaLabel: "Recevoir la newsletter",
   },
   sidebar: {
@@ -99,7 +99,7 @@ const CONTEXT_COPY: Record<
   { title: string; subtitle: string; ctaLabel: string }
 > = {
   fiscalite: {
-    title: "Optimise ta fisca crypto 2026",
+    title: "Optimisez votre fisca crypto 2026",
     subtitle:
       "Chaque mardi : un point fisca FR (PFU, Cerfa 2086, BNC pro) + alertes deadlines.",
     ctaLabel: "Recevoir les analyses fisca",
@@ -117,7 +117,7 @@ const CONTEXT_COPY: Record<
     ctaLabel: "Recevoir le récap trading",
   },
   debutant: {
-    title: "Démarre la crypto sans te faire avoir",
+    title: "Démarrez la crypto sans vous faire avoir",
     subtitle:
       "1 leçon claire chaque jour pendant 7 jours, puis 3 actus crypto FR/jour.",
     ctaLabel: "Démarrer la formation",
@@ -137,7 +137,7 @@ const CONTEXT_COPY: Record<
   regulation: {
     title: "MiCA & AMF : tout comprendre",
     subtitle:
-      "Suivi des décisions régulateurs FR/UE et impact concret sur ton portefeuille.",
+      "Suivi des décisions régulateurs FR/UE et impact concret sur votre portefeuille.",
     ctaLabel: "Suivre la régulation",
   },
 };
@@ -356,7 +356,7 @@ export default function NewsletterInline({
             <CheckCircle2 className="h-3.5 w-3.5" />
             {mocked
               ? "Email noté — newsletter en cours de configuration."
-              : "Inscription confirmée — vérifie ta boîte mail."}
+              : "Inscription confirmée — vérifiez votre boîte mail."}
           </p>
         )}
       </div>
@@ -399,15 +399,15 @@ export default function NewsletterInline({
             <p className="mt-2 text-sm text-fg/75">
               {mocked ? (
                 <>
-                  Newsletter en cours de configuration — ton email{" "}
-                  <strong>{email}</strong> a été noté côté Cryptoreflex, on te
-                  recontactera dès que c&apos;est prêt. En attendant, télécharge
-                  ton guide :
+                  Newsletter en cours de configuration — votre email{" "}
+                  <strong>{email}</strong> a été noté côté Cryptoreflex, on vous
+                  recontactera dès que c&apos;est prêt. En attendant, téléchargez
+                  votre guide :
                 </>
               ) : (
                 <>
                   Un email de confirmation est en route vers <strong>{email}</strong>.
-                  Pendant ce temps, télécharge ton guide PDF :
+                  Pendant ce temps, téléchargez votre guide PDF :
                 </>
               )}
             </p>
@@ -426,7 +426,7 @@ export default function NewsletterInline({
             </a>
 
             <p className="mt-3 text-xs text-muted text-center">
-              Pas reçu l'email après 5 min ? Vérifie tes spams.
+              Pas reçu l'email après 5 min ? Vérifiez vos spams.
             </p>
           </div>
         </div>

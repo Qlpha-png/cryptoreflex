@@ -183,7 +183,7 @@ export default function NewsletterModal({
               </li>
               <li className="flex gap-2">
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-                Méthode pas-à-pas pour ta première crypto
+                Méthode pas-à-pas pour votre première crypto
               </li>
             </ul>
 
@@ -240,19 +240,19 @@ export default function NewsletterModal({
             </span>
             {/* FIX P0 audit-fonctionnel-live-final #3 : message honnête en mode mocked. */}
             <h2 className="mt-4 text-xl sm:text-2xl font-extrabold text-fg">
-              {mocked ? "Email bien noté" : "Parfait ! Voici ton guide."}
+              {mocked ? "Email bien noté" : "Parfait ! Voici votre guide."}
             </h2>
             <p className="mt-2 text-sm text-fg/80">
               {mocked ? (
                 <>
-                  Newsletter en cours de configuration — ton email{" "}
-                  <strong>{email}</strong> a été noté côté Cryptoreflex, on te
-                  recontactera dès que c&apos;est prêt. En attendant, télécharge
-                  ton guide :
+                  Newsletter en cours de configuration — votre email{" "}
+                  <strong>{email}</strong> a été noté côté Cryptoreflex, on vous
+                  recontactera dès que c&apos;est prêt. En attendant, téléchargez
+                  votre guide :
                 </>
               ) : (
                 <>
-                  Confirmation envoyée à <strong>{email}</strong>. Tu peux
+                  Confirmation envoyée à <strong>{email}</strong>. Vous pouvez
                   télécharger le PDF tout de suite :
                 </>
               )}

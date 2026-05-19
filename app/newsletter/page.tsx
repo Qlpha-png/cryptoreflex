@@ -58,7 +58,7 @@ const benefits = [
   {
     icon: ShieldCheck,
     title: "Alertes plateformes",
-    text: "Statut MiCA/AMF, retrait de licence, hack, downtime — tu le sais avant Twitter.",
+    text: "Statut MiCA/AMF, retrait de licence, hack, downtime — vous le savez avant Twitter.",
   },
   {
     icon: TrendingUp,
@@ -68,7 +68,7 @@ const benefits = [
   {
     icon: Calculator,
     title: "Fiscalité FR",
-    text: "Mises à jour PFU 30%, BOFiP, formulaire 2086. Tu ne te fais pas surprendre en avril.",
+    text: "Mises à jour PFU 30%, BOFiP, formulaire 2086. Vous ne vous faites pas surprendre en avril.",
   },
   {
     icon: AlertTriangle,
@@ -106,7 +106,7 @@ const testimonials = [
 const faqs = [
   {
     q: "C'est vraiment gratuit ?",
-    a: "Oui, 100% gratuit. La newsletter est financée par les commissions d'affiliation que touche Cryptoreflex quand un lecteur ouvre un compte sur une plateforme partenaire (Coinbase, Bitpanda, etc.). Tu ne paies rien.",
+    a: "Oui, 100% gratuit. La newsletter est financée par les commissions d'affiliation que touche Cryptoreflex quand un lecteur ouvre un compte sur une plateforme partenaire (Coinbase, Bitpanda, etc.). Vous ne payez rien.",
   },
   {
     q: "À quelle fréquence j'écris ?",
@@ -117,12 +117,12 @@ const faqs = [
     a: "Un lien de désinscription en 1 clic est présent en bas de chaque email. Pas de friction, pas de confirmation, pas de formulaire à rallonge.",
   },
   {
-    q: "Tu donnes des conseils d'investissement ?",
+    q: "Donnez-vous des conseils d'investissement ?",
     a: "Non. Cryptoreflex n'est pas un PSAN ni un conseiller financier. La newsletter délivre de l'information factuelle sur le marché crypto, pas des recommandations d'achat ou de vente.",
   },
   {
     q: "Mes données sont-elles partagées ?",
-    a: "Jamais. Ton email reste hébergé chez Beehiiv (notre fournisseur d'envoi), conforme RGPD, et n'est jamais revendu, partagé ou loué à des tiers. Voir notre politique de confidentialité.",
+    a: "Jamais. Votre email reste hébergé chez Beehiiv (notre fournisseur d'envoi), conforme RGPD, et n'est jamais revendu, partagé ou loué à des tiers. Voir notre politique de confidentialité.",
   },
   {
     q: "Je peux suggérer un sujet ?",
@@ -175,10 +175,10 @@ export default function NewsletterPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Ce que tu reçois (et ce que tu <span className="text-accent-rose">ne reçois pas</span>)
+            Ce que vous recevez (et ce que vous <span className="text-accent-rose">ne recevez pas</span>)
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
-            Une newsletter qui respecte ton temps : 3 min, factuel, actionnable.
+            Une newsletter qui respecte votre temps : 3 min, factuel, actionnable.
           </p>
         </div>
 
@@ -228,7 +228,7 @@ export default function NewsletterPage() {
           source="newsletter-page"
           variant="default"
           title="Prêt à recevoir la prochaine édition ?"
-          subtitle="Demain matin à 7h, dans ta boîte."
+          subtitle="Demain matin à 7h, dans votre boîte."
           ctaLabel="S'abonner"
           leadMagnet
         />
@@ -259,12 +259,12 @@ export default function NewsletterPage() {
           <p className="flex items-start gap-2">
             <ShieldCheck className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
             <span>
-              <strong className="text-fg">Mention RGPD —</strong> En t'inscrivant, tu acceptes
-              de recevoir la newsletter Cryptoreflex à l'adresse email indiquée. Tes données
-              sont traitées par Beehiiv Inc. (sous-traitant) sur la base de ton consentement
+              <strong className="text-fg">Mention RGPD —</strong> En vous inscrivant, vous acceptez
+              de recevoir la newsletter Cryptoreflex à l'adresse email indiquée. Vos données
+              sont traitées par Beehiiv Inc. (sous-traitant) sur la base de votre consentement
               explicite, conformément au RGPD (UE 2016/679). Aucune cession à des tiers.
-              Tu disposes d'un droit d'accès, de rectification, d'effacement et d'opposition
-              que tu peux exercer à tout moment via le lien de désinscription en pied de chaque
+              Vous disposez d'un droit d'accès, de rectification, d'effacement et d'opposition
+              que vous pouvez exercer à tout moment via le lien de désinscription en pied de chaque
               email, ou en écrivant à <span className="text-fg">{BRAND.email}</span>. Voir notre{" "}
               <Link href="/confidentialite" className="text-primary-soft underline hover:text-primary">
                 politique de confidentialité

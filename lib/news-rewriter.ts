@@ -230,7 +230,7 @@ function composeBody(raw: NewsRaw, category: NewsCategory, title: string): strin
   const intro = [
     `Une nouvelle information vient d'émerger côté ${catLabel.toLowerCase()} crypto, et nous l'avons décryptée pour les investisseurs français.`,
     `D'après ${raw.source}, le sujet mérite quelques minutes de lecture : il touche à des notions que nous suivons régulièrement chez Cryptoreflex (régulation MiCA, conformité plateformes, fiscalité, choix d'exchange).`,
-    `Voici les éléments clés à retenir, ce que cela change concrètement pour toi en France, et où aller chercher plus de contexte sur le site.`,
+    `Voici les éléments clés à retenir, ce que cela change concrètement pour vous en France, et où aller chercher plus de contexte sur le site.`,
   ].join(" ");
 
   const factsBlock = facts.map((f) => `- ${f}`).join("\n");
@@ -246,7 +246,7 @@ function composeBody(raw: NewsRaw, category: NewsCategory, title: string): strin
 
   // Disclaimer YMYL — Callout custom Cryptoreflex
   const disclaimer = `<Callout type="warning" title="Avertissement">
-Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital. Vérifie toujours auprès d'un conseiller financier agréé avant de prendre une décision.
+Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : vous pouvez perdre tout ou partie de votre capital. Vérifiez toujours auprès d'un conseiller financier agréé avant de prendre une décision.
 </Callout>`;
 
   return [
@@ -260,9 +260,9 @@ Cet article est une synthèse à but informatif. Il ne constitue **pas un consei
     "",
     "## Ce que ça change pour les investisseurs français",
     "",
-    `Cryptoreflex couvre cette thématique sous l'angle pédagogique et conformité française. Si tu débutes ou si tu utilises une plateforme étrangère, l'impact peut être direct sur tes choix d'exchange (notamment dans le contexte ${catLabel === "Régulation" ? "MiCA Phase 2" : "post-MiCA"}), sur la fiscalité de tes gains, ou sur ta stratégie d'investissement.`,
+    `Cryptoreflex couvre cette thématique sous l'angle pédagogique et conformité française. Si vous débutez ou si vous utilisez une plateforme étrangère, l'impact peut être direct sur vos choix d'exchange (notamment dans le contexte ${catLabel === "Régulation" ? "MiCA Phase 2" : "post-MiCA"}), sur la fiscalité de vos gains, ou sur votre stratégie d'investissement.`,
     "",
-    `Notre recommandation par défaut : ne jamais réagir à chaud à une actualité de marché. Garde ton plan d'épargne (DCA), vérifie le statut MiCA de ta plateforme, et confirme l'information sur plusieurs sources avant de bouger.`,
+    `Notre recommandation par défaut : ne jamais réagir à chaud à une actualité de marché. Gardez votre plan d'épargne (DCA), vérifiez le statut MiCA de votre plateforme, et confirmez l'information sur plusieurs sources avant de bouger.`,
     "",
     "## Pour aller plus loin",
     "",
@@ -403,7 +403,7 @@ function composeBodyFromTranslation(
   const citation = `> **Source originale** : [${raw.source}](${raw.link}) — analyse Cryptoreflex traduite et réécrite en français pour les investisseurs francophones.`;
 
   const disclaimer = `<Callout type="warning" title="Avertissement">
-Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital. Vérifie toujours auprès d'un conseiller financier agréé avant de prendre une décision.
+Cet article est une synthèse à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : vous pouvez perdre tout ou partie de votre capital. Vérifiez toujours auprès d'un conseiller financier agréé avant de prendre une décision.
 </Callout>`;
 
   return [

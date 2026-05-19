@@ -77,7 +77,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     key: "amount",
-    title: "Combien comptes-tu investir au démarrage ?",
+    title: "Combien comptez-vous investir au démarrage ?",
     subtitle:
       "Cela influence la pertinence des dépôts minimums et la priorité sécurité.",
     options: [
@@ -89,7 +89,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "frequency",
-    title: "À quelle fréquence comptes-tu acheter / vendre ?",
+    title: "À quelle fréquence comptez-vous acheter / vendre ?",
     subtitle:
       "Le coût total dépend autant des frais que de leur fréquence d'application.",
     options: [
@@ -101,7 +101,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "level",
-    title: "Quel est ton niveau actuel en crypto ?",
+    title: "Quel est votre niveau actuel en crypto ?",
     subtitle: "On va calibrer la complexité de l'interface recommandée.",
     options: [
       { value: "beginner", label: "Total débutant", hint: "Jamais acheté" },
@@ -123,7 +123,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "staking",
-    title: "Veux-tu faire du staking (rendements passifs) ?",
+    title: "Voulez-vous faire du staking (rendements passifs) ?",
     subtitle: "Le staking permet de gagner des intérêts sur certaines crypto bloquées.",
     options: [
       { value: "yes", label: "Oui, c'est important", hint: "Rendements passifs prioritaires" },
@@ -134,9 +134,9 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "withdrawal",
-    title: "Tu veux retirer tes crypto vers ton wallet personnel ?",
+    title: "Vous voulez retirer vos crypto vers votre wallet personnel ?",
     subtitle:
-      "Auto-custody = tu détiens tes clés privées (Ledger, Trezor) plutôt que la plateforme.",
+      "Auto-custody = vous détenez vos clés privées (Ledger, Trezor) plutôt que la plateforme.",
     options: [
       { value: "must", label: "Oui obligatoire", hint: "Auto-custody priority" },
       { value: "optional", label: "Optionnel, parfois", hint: "Selon les montants" },
@@ -277,7 +277,7 @@ export default function QuizExchange({ platforms }: Props) {
   return (
     <section
       role="form"
-      aria-label="Quiz Trouve ton exchange en 60 sec"
+      aria-label="Quiz Trouvez votre exchange en 60 sec"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -463,7 +463,7 @@ function ResultView({
         <div className="relative">
           <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
             <Trophy className="h-4 w-4" aria-hidden="true" />
-            Ton profil
+            Votre profil
           </div>
           <h3 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">
             <span className="gradient-text">{profile.label}</span>
@@ -476,14 +476,14 @@ function ResultView({
       <section className="mt-8" aria-label="Plateformes recommandées">
         <h4 className="text-sm font-semibold text-fg/85 uppercase tracking-wider flex items-center gap-2">
           <Sparkles className="h-3.5 w-3.5 text-primary-soft" aria-hidden="true" />
-          Top 3 pour ton profil
+          Top 3 pour votre profil
         </h4>
 
         <ol className="mt-4 grid grid-cols-1 gap-3">
           {top3.length === 0 && (
             <li className="rounded-2xl border border-border bg-elevated/40 p-6 text-center text-fg/70">
-              Aucune plateforme ne matche ce profil — tes contraintes sont
-              peut-être trop strictes. Refais le quiz en assouplissant une
+              Aucune plateforme ne matche ce profil — vos contraintes sont
+              peut-être trop strictes. Refaites le quiz en assouplissant une
               réponse.
             </li>
           )}
@@ -549,7 +549,7 @@ function ResultView({
           </div>
           <div className="mt-1 font-bold text-fg">Tester d&apos;autres réponses</div>
           <div className="mt-1 text-xs text-muted">
-            Compare la reco selon ton profil.
+            Comparez la reco selon votre profil.
           </div>
         </button>
         <ShareButton profile={profile.label} />
@@ -767,11 +767,11 @@ function LeadMagnetForm({
             id="quiz-leadmagnet-title"
             className="text-xl sm:text-2xl font-extrabold text-fg leading-tight"
           >
-            Reçois ta recommandation perso{" "}
+            Recevez votre recommandation perso{" "}
             <span className="gradient-text">+ guide PDF</span> par email.
           </h4>
           <p className="mt-2 text-sm text-fg/75 max-w-2xl">
-            On t&apos;envoie ton résultat détaillé + le PDF &laquo;&nbsp;Acheter sa
+            On vous envoie votre résultat détaillé + le PDF &laquo;&nbsp;Acheter sa
             première crypto en France 2026&nbsp;&raquo; (12 pages, méthode
             pas-à-pas).
           </p>
@@ -822,7 +822,7 @@ function LeadMagnetForm({
             id="quiz-email-hint"
             className="mt-3 text-xs text-muted"
           >
-            Ton email est uniquement utilisé pour t&apos;envoyer le résultat et la
+            Votre email est uniquement utilisé pour vous envoyer le résultat et la
             newsletter quotidienne (3 min/jour).
           </p>
 
@@ -849,19 +849,19 @@ function LeadMagnetForm({
             </span>
           </div>
           <h4 className="text-xl sm:text-2xl font-extrabold text-fg">
-            {mocked ? "Email bien noté" : "Bienvenue ! Vérifie ta boîte mail."}
+            {mocked ? "Email bien noté" : "Bienvenue ! Vérifiez votre boîte mail."}
           </h4>
           <p className="mt-2 text-sm text-fg/75 max-w-2xl">
             {mocked ? (
               <>
-                Newsletter en cours de configuration — on te recontactera dès
-                que c&apos;est prêt. En attendant, télécharge ton guide&nbsp;:
+                Newsletter en cours de configuration — on vous recontactera dès
+                que c&apos;est prêt. En attendant, téléchargez votre guide&nbsp;:
               </>
             ) : (
               <>
                 Un email de confirmation vient de t&apos;être envoyé à{" "}
-                <strong className="text-fg">{email}</strong>. Clique sur le lien
-                pour activer ton inscription et recevoir le guide PDF.
+                <strong className="text-fg">{email}</strong>. Cliquez sur le lien
+                pour activer votre inscription et recevoir le guide PDF.
               </>
             )}
           </p>
@@ -902,7 +902,7 @@ function ShareButton({ profile }: { profile: string }) {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
-          title: "Quiz : Trouve ton exchange crypto idéal",
+          title: "Quiz : Trouvez votre exchange crypto idéal",
           text,
           url,
         });
@@ -940,7 +940,7 @@ function ShareButton({ profile }: { profile: string }) {
         {shared ? "Lien copié dans le presse-papier" : "Partager le quiz"}
       </div>
       <div className="mt-1 text-xs text-muted">
-        Aide tes proches à trouver leur exchange.
+        Aidez vos proches à trouver leur exchange.
       </div>
     </button>
   );

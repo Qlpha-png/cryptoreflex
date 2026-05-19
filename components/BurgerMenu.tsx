@@ -70,7 +70,7 @@ const SECTIONS: MenuSection[] = [
     intro: "Démarrer avec Cryptoreflex",
     items: [
       { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 34 plateformes" },
-      { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouve ta plateforme en 5 questions", badge: "POPULAIRE" },
+      { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouvez votre plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
       { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
       { href: "/methodologie", label: "Notre méthodologie", desc: "6 critères publics, 0 bullshit" },
@@ -126,7 +126,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/outils/whale-radar", label: "Whale Radar", desc: "Mouvements > 1M$ en direct" },
       { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut PSAN/CASP en 1 clic" },
       { href: "/outils/phishing-checker", label: "Phishing checker", desc: "URL crypto suspecte ?" },
-      { href: "/outils/wallet-connect", label: "Wallet Connect", desc: "Connecte ton wallet en sécurité" },
+      { href: "/outils/wallet-connect", label: "Wallet Connect", desc: "Connectez votre wallet en sécurité" },
       { href: "/outils/yield-stablecoins", label: "Yield stablecoins", desc: "USDC/USDT à 5%+ APR" },
       { href: "/outils/allocator-ia", label: "Allocator IA", desc: "Portfolio personnalisé" },
       { href: "/outils/portfolio-tracker", label: "Portfolio tracker", desc: "Suivi P&L en direct" },
@@ -146,7 +146,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/glossaire", label: "Glossaire crypto", desc: "250+ termes expliqués" },
       { href: "/blog/comment-declarer-crypto-impots-2026-guide-complet", label: "Déclarer ses crypto impôts 2026", desc: "Guide officiel mis à jour" },
       { href: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026", label: "Cold vs Hot wallet", desc: "Comment sécuriser ses cryptos" },
-      { href: "/quiz", label: "Tous les quiz", desc: "Teste tes connaissances" },
+      { href: "/quiz", label: "Tous les quiz", desc: "Testez vos connaissances" },
     ],
   },
   {
@@ -184,7 +184,7 @@ const SECTIONS: MenuSection[] = [
 
 /** 3 highlights revenus en haut du drawer (KPI conversion). */
 const HIGHLIGHTS: { href: string; label: string; sub: string; Icon: LucideIcon; tone: "primary" | "accent" }[] = [
-  { href: "/quiz/plateforme", label: "Décode ta plateforme", sub: "Quiz 2 min · sans email", Icon: Target, tone: "primary" },
+  { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Quiz 2 min · sans email", Icon: Target, tone: "primary" },
   { href: "/pro", label: "Devenir Soutien", sub: "5 outils Pro · 2,99€/mois", Icon: Crown, tone: "primary" },
   { href: "/partenaires", label: "Offres partenaires", sub: "Ledger, Trezor, Waltio…", Icon: Gift, tone: "accent" },
 ];

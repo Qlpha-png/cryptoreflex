@@ -87,7 +87,7 @@ const QUESTIONS: Question[] = [
   {
     key: "profile",
     type: "single",
-    title: "Tu débutes ou tu as déjà investi en crypto ?",
+    title: "Vous débutez ou vous avez déjà investi en crypto ?",
     subtitle:
       "On va calibrer la complexité de l'interface et le niveau de support requis.",
     options: [
@@ -99,7 +99,7 @@ const QUESTIONS: Question[] = [
   {
     key: "amount",
     type: "single",
-    title: "Combien comptes-tu investir au début ?",
+    title: "Combien comptez-vous investir au début ?",
     subtitle: "Cela influence la pertinence des dépôts minimums et la sécurité.",
     options: [
       { value: "tiny", label: "< 100 €", hint: "Tester sans engagement" },
@@ -112,9 +112,9 @@ const QUESTIONS: Question[] = [
     key: "frequency",
     type: "multi",
     maxSelections: 2,
-    title: "Comment tu vas acheter (plusieurs réponses possibles) ?",
+    title: "Comment allez-vous acheter (plusieurs réponses possibles) ?",
     subtitle:
-      "Tu peux combiner — ex : DCA mensuel + quelques trades opportunistes.",
+      "Vous pouvez combiner — ex : DCA mensuel + quelques trades opportunistes.",
     options: [
       { value: "once", label: "Achat unique", hint: "Buy & hold long terme" },
       { value: "dca", label: "DCA mensuel", hint: "Achat récurrent automatique" },
@@ -139,7 +139,7 @@ const QUESTIONS: Question[] = [
     key: "deposit",
     type: "multi",
     maxSelections: 2,
-    title: "Comment tu veux déposer (CB et SEPA cumulables) ?",
+    title: "Comment voulez-vous déposer (CB et SEPA cumulables) ?",
     subtitle: "CB = instantané mais 1.5-3 % de frais. SEPA = quasi gratuit, 1-24 h.",
     options: [
       { value: "card", label: "Carte bancaire", hint: "Instantané, frais 1.5-3 %" },
@@ -150,7 +150,7 @@ const QUESTIONS: Question[] = [
   {
     key: "mica",
     type: "single",
-    title: "Tu veux uniquement des plateformes 100 % MiCA-compliant ?",
+    title: "Vous voulez uniquement des plateformes 100 % MiCA-compliant ?",
     subtitle:
       "MiCA = règlement européen sur les crypto-actifs. Obligatoire en France juillet 2026.",
     options: [
@@ -601,7 +601,7 @@ export default function PlatformQuiz({ platforms }: Props) {
             <p className="mt-3 text-xs text-muted">
               {getAnswer(answers, currentQuestion.key).length} / {currentQuestion.maxSelections ?? currentQuestion.options.length} sélectionné(s)
               {currentQuestion.maxSelections ? ` (max ${currentQuestion.maxSelections})` : ""}
-              {" — "}clique sur "Suivant" quand tu as fini.
+              {" — "}cliquez sur "Suivant" quand vous avez fini.
             </p>
           )}
 
@@ -697,8 +697,8 @@ function ResultView({
         Tes 3 plateformes recommandées
       </div>
       <p className="mt-1 text-xs text-muted max-w-2xl">
-        Classement basé sur tes réponses + notre méthodologie publique. Compare,
-        choisis selon tes préférences perso.
+        Classement basé sur vos réponses + notre méthodologie publique. Comparez,
+        choisissez selon vos préférences perso.
       </p>
 
       {/* Top 3 grille (1 carte par rang) */}
@@ -709,9 +709,9 @@ function ResultView({
       </div>
 
       {/* Récap des réponses */}
-      <section className="mt-8" aria-label="Récap de tes réponses">
+      <section className="mt-8" aria-label="Récap de vos réponses">
         <h4 className="text-sm font-semibold text-fg/85 uppercase tracking-wider">
-          Tes réponses
+          Vos réponses
         </h4>
         <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {QUESTIONS.map((q, idx) => {
@@ -765,7 +765,7 @@ function ResultView({
           </div>
           <div className="mt-1 font-bold text-fg">Lancer l'assistant "premier achat"</div>
           <div className="mt-1 text-xs text-muted">
-            5 étapes pour faire ton premier achat sereinement.
+            5 étapes pour faire votre premier achat sereinement.
           </div>
         </Link>
         <button
@@ -781,7 +781,7 @@ function ResultView({
           </div>
           <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
-            Compare la reco selon ton profil.
+            Comparez la reco selon votre profil.
           </div>
         </button>
       </div>
@@ -796,8 +796,8 @@ function NoResultView({ onRestart }: { onRestart: () => void }) {
         Aucune plateforme ne matche ce profil
       </h3>
       <p className="mt-2 text-fg/70 max-w-md mx-auto">
-        Tes contraintes sont peut-être trop strictes (ex : MiCA obligatoire +
-        dépôt min très bas). Assouplis une réponse et réessaie.
+        Vos contraintes sont peut-être trop strictes (ex : MiCA obligatoire +
+        dépôt min très bas). Assouplissez une réponse et réessayez.
       </p>
       <button
         type="button"
