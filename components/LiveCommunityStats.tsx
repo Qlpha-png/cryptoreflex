@@ -1,26 +1,23 @@
 /**
  * <LiveCommunityStats /> — preuve sociale "live" (Étude 02/05/2026 prop #18).
  *
- * 3 KPI mis à jour toutes les 5 min (cache `unstable_cache` côté API) :
+ * 3 KPI mis à jour toutes les 5 min (cache mémoire Next.js Data Cache via
+ * `unstable_cache` côté lib) :
  *   1. Abonnés Soutien Pro actifs
  *   2. Nouveaux Pro ce mois-ci
  *   3. Alertes prix triggered (7 derniers jours, best-effort)
  *
- * Server Component : on appelle `fetch()` sur notre propre endpoint
- * `/api/community-stats` avec `next: { revalidate: 300, tags: [...] }`.
+ * Audit Kev Phase 4 (19/05/2026) — REFACTOR :
+ *   Avant : Server Component qui faisait `fetch("$SITE_URL/api/community-stats")`
+ *   à chaque render → ce Footer étant rendu sur ~1191 pages SSG, c'était 1191
+ *   appels HTTP internes pendant le build + chacun frappait Supabase →
+ *   cause directe du build fail Phase 3 (Supabase rate-limit + OOM Hetzner).
  *
- * Pourquoi pas un appel direct à la lib (sans HTTP) ?
- *  - L'endpoint exporte aussi un Cache-Control CDN (s-maxage=300) qui ne
- *    sert pas en server-fetch, mais le bénéfice principal est qu'on
- *    centralise la logique d'agrégation dans 1 seul endroit (l'endpoint),
- *    permettant aussi à un client externe (futur widget embed) de la
- *    consommer sans dupliquer la logique côté composant.
- *  - Le coût supplémentaire d'un fetch interne est marginal (~5ms en cold,
- *    ~0ms après le cache Next.js).
+ *   Maintenant : appel direct `getCommunityStatsSafe()` (lib in-process), avec
+ *   timeout 5 s + fallback `earlyAccess` garanti. Plus aucun fetch HTTP, plus
+ *   aucune chance de bloquer un build, plus aucun spam Supabase.
  *
- * Anti-PII :
- *  - Aucun champ user n'est consommé, juste 3 chiffres agrégés.
- *  - Pas d'IP, pas de prénom, pas d'email — sûr en cas de scrape.
+ * Anti-PII : aucun champ user n'est consommé, juste 3 chiffres agrégés.
  *
  * 2 variants :
  *   - "compact" : 3 chiffres en ligne, pour Footer / barres légères
@@ -28,7 +25,10 @@
  */
 
 import { Users, Sparkles, Bell } from "lucide-react";
-import type { CommunityStats } from "@/app/api/community-stats/route";
+import {
+  getCommunityStatsSafe,
+  type CommunityStats,
+} from "@/lib/community-stats";
 
 interface LiveCommunityStatsProps {
   /** "compact" (Footer) | "full" (page Pro). Défaut : "compact". */
@@ -37,45 +37,8 @@ interface LiveCommunityStatsProps {
   className?: string;
 }
 
-/**
- * Récupère les stats côté serveur via fetch interne. Server-only.
- *
- * `next: { revalidate: 300 }` : Next.js mémoise la réponse 5 min entre
- * les renders SSR (cache mémoire data, pas le cache HTTP). Tag explicite
- * pour permettre `revalidateTag("community-stats")` après un upgrade Stripe.
- */
-async function getCommunityStats(): Promise<CommunityStats> {
-  // En SSR pur (Server Component), `fetch` accepte les URLs absolues OU
-  // relatives — mais Next exige absolues côté serveur. On déduit l'origin
-  // depuis VERCEL_URL (preview/prod) ou NEXT_PUBLIC_SITE_URL (custom domain).
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-  try {
-    const res = await fetch(`${baseUrl}/api/community-stats`, {
-      // Important : on s'aligne sur le TTL du endpoint (5 min) pour bénéficier
-      // du cache Next.js Data Cache et éviter de re-frapper le handler à chaque
-      // render. Le tag est dispo pour invalidation manuelle.
-      next: { revalidate: 300, tags: ["community-stats"] },
-    });
-    if (!res.ok) throw new Error(`[community-stats] HTTP ${res.status}`);
-    return (await res.json()) as CommunityStats;
-  } catch (err) {
-    // Fallback ultime : si l'endpoint lui-même est down, on retourne 0/0/0
-    // + earlyAccess:true et le composant affichera le bandeau "Communauté
-    // en construction" — pas de chiffres fake (cf. Charte Éthique).
-    console.warn("[LiveCommunityStats] fallback:", err);
-    return {
-      proCount: 0,
-      newProThisMonth: 0,
-      alertsTriggered7d: 0,
-      generatedAt: new Date().toISOString(),
-      fallback: true,
-      earlyAccess: true,
-    };
-  }
-}
+// La récupération des stats est désormais déléguée à `getCommunityStatsSafe`
+// (lib in-process). Ce composant n'a plus de logique d'agrégation propre.
 
 /** Format compact "1.2k" si > 999, sinon le chiffre brut. */
 function formatStat(n: number): string {
@@ -260,7 +223,14 @@ export default async function LiveCommunityStats({
   variant = "compact",
   className = "",
 }: LiveCommunityStatsProps) {
-  const stats = await getCommunityStats();
+  // Appel direct lib in-process. Garanties :
+  //   - jamais ne throw (try/catch global dans la lib)
+  //   - timeout 5 s (Promise.race) → impossible de bloquer un render
+  //   - fallback `earlyAccess:true` si Supabase down → bandeau honnête.
+  // Aucun fetch HTTP : aucune chance de spammer Supabase ni de bloquer le
+  // build SSG, quel que soit le nombre de pages dans lesquelles ce Footer
+  // se retrouve.
+  const stats: CommunityStats = await getCommunityStatsSafe();
 
   // Wrapper sémantique : <section> avec aria-label pour lecteurs d'écran.
   // En variant compact (Footer), pas de title visible — le label SR suffit.
