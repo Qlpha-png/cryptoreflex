@@ -63,3 +63,4 @@ audit-output/
 backup/
 *.bak
 *.bak-*
+.env.vercel-current

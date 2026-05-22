@@ -7,7 +7,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
-import PlausibleScript from "@/components/PlausibleScript";
+import { Analytics } from "@vercel/analytics/next";
 import ClarityScript from "@/components/ClarityScript";
 import AdsPixels from "@/components/AdsPixels";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -30,7 +30,7 @@ import {
 // WebVitalsReporter → /api/analytics/vitals KV). 2 hydration boundaries +
 // 2× chunks dynamic + bundle inflation pour rien. `WebVitalsReporter` est
 // la source de vérité (alimente /admin/vitals dashboard p75) ; Plausible
-// reçoit déjà les pageviews + custom events depuis PlausibleScript donc
+// reçoit déjà les pageviews + custom events depuis Vercel Analytics donc
 // on n'a pas besoin de redoubler la couverture WebVitals via Plausible.
 // Économie : -8KB JS + 1 hydration boundary supprimée + 1 fetch /api/analytics
 // éliminé (le 2nd reporter envoyait à Plausible, pas à notre KV).
@@ -120,17 +120,23 @@ const display = Space_Grotesk({
 });
 
 /**
- * Configuration Plausible.
- *  - V2 (Engagement Goals, recommandé) : set `NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL`
- *    avec l'URL complète fournie par Plausible (ex: https://plausible.io/js/pa-XXXX.js).
- *  - Legacy (data-domain) : set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (ex: cryptoreflex.fr).
- *    Fallback : domaine de la marque (cryptoreflex.fr).
+ * Analytics — migration 2026-05-21 :
+ * Plausible (self-host Hetzner) → Vercel Web Analytics natif.
  *
- * Le composant <PlausibleScript /> détecte le mode automatiquement.
+ * Plausible self-host est mort avec la suppression du serveur Hetzner. Vercel
+ * Web Analytics est gratuit (2 500 events/mois sur plan Hobby, illimité sur
+ * Pro Trial actuel), respecte RGPD (pas de cookies, pas de fingerprinting,
+ * IP non-stockée) → exempt CNIL au même titre que Plausible.
+ *
+ * Custom events `track()` de lib/analytics.ts deviennent no-op safe en
+ * l'absence de `window.plausible` (déjà gardé en typeof check). Pour
+ * re-router les events vers Vercel Analytics, remplacer l'implémentation
+ * de `track()` par `import { track } from "@vercel/analytics"`.
+ *
+ * Le composant <Analytics /> Vercel doit être présent dans body (cf. JSX
+ * plus bas) et le projet doit avoir Web Analytics activé côté dashboard
+ * (Project → Analytics → Enable).
  */
-const PLAUSIBLE_DOMAIN =
-  process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || BRAND.domain;
-const PLAUSIBLE_SCRIPT_URL = process.env.NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL;
 
 /**
  * Project ID Microsoft Clarity (heatmaps + session recording).
@@ -303,18 +309,16 @@ export default function RootLayout({
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
             preconnect aux CDN tiers utilises above-fold => -100ms LCP.
             CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)
-            et coin-images.coingecko.com (logos modernes). Plausible = analytics.
+            et coin-images.coingecko.com (logos modernes).
             Audit Perf 2026-05-02 #5 : ajout du 2e CDN CoinGecko (oublie initial,
             la majorite des logos sont sur coin-images, ~31 imgs sur la home).
-            FIX 2026-05-07 — preconnect Plausible mis a jour vers le sous-
-            domaine self-host (plausible.cryptoreflex.fr) au lieu de
-            plausible.io. Migration self-host BATCH 60. Le preconnect pointait
-            vers le mauvais domaine -> connexion TCP/TLS gachee, pas de gain
-            reel. Maintenant aligne avec le src reel du script (gain ~30-50ms
-            sur first-paint analytics). */}
+            MIGRATION 2026-05-21 — preconnect Plausible (plausible.cryptoreflex.fr
+            self-host Hetzner) RETIRE. Vercel Web Analytics charge depuis
+            va.vercel-scripts.com qui est preconnect par Next.js automatiquement
+            via le composant <Analytics /> (cf. body). Pas besoin de preconnect
+            manuel ici. */}
         <link rel="preconnect" href="https://assets.coingecko.com" crossOrigin="" />
         <link rel="preconnect" href="https://coin-images.coingecko.com" crossOrigin="" />
-        <link rel="preconnect" href="https://plausible.cryptoreflex.fr" crossOrigin="" />
         {/* INNOVATION 2026 BATCH 12 — Speculation Rules API natif Chrome 121+/
             Edge 121+. Prerender les hubs principaux + intent-based hover
             prerender sur tous les liens internes. Combiné avec View
@@ -389,7 +393,7 @@ export default function RootLayout({
               lineHeight: 1.5,
             }}
           >
-            Ce site utilise des outils de mesure d'audience (Plausible, sans cookies tiers).
+            Ce site utilise des outils de mesure d'audience (Vercel Web Analytics, sans cookies tiers).
             JavaScript étant désactivé, tu peux consulter notre{" "}
             <a href="/confidentialite" style={{ color: "#FCD34D", textDecoration: "underline" }}>
               politique de confidentialité
@@ -467,12 +471,15 @@ export default function RootLayout({
         <NewsletterStickyBar />
         <CookieBanner />
         {/*
-          Plausible Analytics — chargé uniquement si l'utilisateur a accepté
-          la catégorie "Mesure d'audience" dans le bandeau cookies.
-          Si NEXT_PUBLIC_PLAUSIBLE_DOMAIN n'est pas défini, on fallback sur
-          le domaine de prod (cryptoreflex.fr).
+          Vercel Web Analytics — pageviews + custom events natifs.
+          Chargé inconditionnellement : Vercel Analytics est exempt de consent
+          CNIL au même titre que Plausible (pas de cookies, IP anonymisée,
+          pas de fingerprinting). Cf. https://vercel.com/docs/analytics/privacy.
+          Le projet doit avoir Web Analytics activé côté dashboard Vercel.
+          MIGRATION 2026-05-21 : remplace <PlausibleScript /> qui chargeait
+          depuis plausible.cryptoreflex.fr (self-host Hetzner mort).
         */}
-        <PlausibleScript domain={PLAUSIBLE_DOMAIN} scriptUrl={PLAUSIBLE_SCRIPT_URL} />
+        <Analytics />
         {/*
           Microsoft Clarity — heatmaps + session recording (gratuit, illimité).
           Chargé uniquement si :
@@ -498,9 +505,9 @@ export default function RootLayout({
           WebVitalsReporter — POST des Core Web Vitals vers /api/analytics/vitals
           (KV). Alimente le dashboard /admin/vitals avec p75 calculé serveur.
           FIX PERF 2026-05-02 #8 : avant on avait aussi `<PerfMonitor />` qui
-          faisait doublon (pushait les mêmes Web Vitals vers Plausible). Le
+          faisait doublon (pushait les mêmes Web Vitals vers l'analytics). Le
           duo coûtait 2 hydration boundaries + ~8KB JS pour 0 valeur ajoutée.
-          Plausible reçoit déjà les pageviews + custom events via PlausibleScript.
+          Vercel Analytics reçoit déjà les pageviews via <Analytics />.
           Source unique conservée : ce reporter KV.
         */}
         <WebVitalsReporter />
