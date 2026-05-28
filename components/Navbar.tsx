@@ -107,6 +107,7 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
  */
 const NAV = [
   { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
+  { href: "/actualites", label: "Actu", desc: "Le brief quotidien + l'actualité crypto FR décryptée" },
   { href: "/academie", label: "Apprendre", desc: "Académie + Wizard 1er achat + Quiz" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", hideOnMd: true as const },

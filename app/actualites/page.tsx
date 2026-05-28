@@ -24,6 +24,7 @@ import {
 import StructuredData from "@/components/StructuredData";
 import NewsCard from "@/components/news/NewsCard";
 import NewsFilters from "@/components/news/NewsFilters";
+import BriefHero from "@/components/news/BriefHero";
 
 /**
  * /actualites — Hub d'actualités crypto FR (news Cryptoreflex réécrites).
@@ -134,12 +135,19 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
     ? all.filter((n) => n.category === activeCategory)
     : all;
 
-  // 3) Pagination
+  // 2bis) Brief du jour mis en "une" (page 1, sans filtre catégorie).
+  const brief = all.find((n) => n.isBrief) ?? null;
   const page = parsePage(searchParams?.page);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const showBrief = !activeCategory && page === 1 && brief !== null;
+
+  // 3) Pagination — la grille exclut le brief quand il est affiché en une
+  // (évite le doublon). Sur les pages 2+ ou en filtre, il reste listé.
+  const listSource =
+    showBrief && brief ? filtered.filter((n) => n.slug !== brief.slug) : filtered;
+  const totalPages = Math.max(1, Math.ceil(listSource.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const start = (safePage - 1) * PAGE_SIZE;
-  const visible = filtered.slice(start, start + PAGE_SIZE);
+  const visible = listSource.slice(start, start + PAGE_SIZE);
 
   // 4) JSON-LD
   const breadcrumb = breadcrumbSchema([
@@ -194,7 +202,7 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
         <header className="mt-6 mb-8 max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
             <Newspaper className="h-3.5 w-3.5" aria-hidden="true" />
-            Actualités Cryptoreflex
+            Le Journal Cryptoreflex · édition quotidienne
           </span>
           <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
             Actualités crypto françaises{headingSuffix && (
@@ -223,6 +231,13 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
             </span>
           </p>
         </header>
+
+        {/* LA UNE — brief crypto du jour mis en vedette */}
+        {showBrief && brief && (
+          <div className="mb-10">
+            <BriefHero brief={brief} />
+          </div>
+        )}
 
         {/* FILTRES CATÉGORIES */}
         <div className="mt-2 mb-8">

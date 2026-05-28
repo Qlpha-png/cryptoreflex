@@ -251,32 +251,64 @@ export default async function NewsDetailPage({ params }: PageProps) {
         {/* BODY MDX */}
         <MdxContent source={news.content} />
 
-        {/* SOURCE CITÉE */}
-        <aside
-          aria-labelledby="source-heading"
-          className="mt-10 rounded-2xl border border-border bg-elevated/40 p-5"
-        >
-          <h2
-            id="source-heading"
-            className="text-sm font-semibold text-fg/85"
+        {/* SOURCES */}
+        {news.isBrief && news.sources && news.sources.length > 0 ? (
+          <aside
+            aria-labelledby="sources-heading"
+            className="mt-10 rounded-2xl border border-border bg-elevated/40 p-5"
           >
-            Source originale
-          </h2>
-          <p className="mt-2 text-sm text-muted leading-relaxed">
-            Cette analyse s'appuie sur une publication de{" "}
-            <strong className="text-fg/85">{news.source}</strong>. Pour lire
-            l'article complet (anglais ou français selon le média) :
-          </p>
-          <a
-            href={news.sourceUrl}
-            target="_blank"
-            rel="noopener nofollow"
-            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline break-all"
+            <h2 id="sources-heading" className="text-sm font-semibold text-fg/85">
+              Sources de ce brief
+            </h2>
+            <p className="mt-2 text-sm text-muted leading-relaxed">
+              Cette synthèse Cryptoreflex s'appuie sur les publications suivantes
+              (analyse originale, pas de reproduction du contenu) :
+            </p>
+            <ul className="mt-3 space-y-2">
+              {news.sources.map((s, i) => {
+                const sep = s.split(/\s+—\s+/);
+                const name = sep[0] ?? s;
+                const url = sep[1];
+                return (
+                  <li key={i}>
+                    <a
+                      href={url ?? "#"}
+                      target="_blank"
+                      rel="noopener nofollow"
+                      className="inline-flex items-start gap-1.5 text-sm font-semibold text-primary-glow hover:underline break-all"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5" aria-hidden="true" />
+                      <span>{name}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </aside>
+        ) : (
+          <aside
+            aria-labelledby="source-heading"
+            className="mt-10 rounded-2xl border border-border bg-elevated/40 p-5"
           >
-            <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            {news.sourceUrl}
-          </a>
-        </aside>
+            <h2 id="source-heading" className="text-sm font-semibold text-fg/85">
+              Source originale
+            </h2>
+            <p className="mt-2 text-sm text-muted leading-relaxed">
+              Cette analyse s'appuie sur une publication de{" "}
+              <strong className="text-fg/85">{news.source}</strong>. Pour lire
+              l'article complet (anglais ou français selon le média) :
+            </p>
+            <a
+              href={news.sourceUrl}
+              target="_blank"
+              rel="noopener nofollow"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline break-all"
+            >
+              <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              {news.sourceUrl}
+            </a>
+          </aside>
+        )}
 
         {/* Encart auteur E-E-A-T (P0-#11) — éditorialement responsable
             de la sélection / réécriture de cette news. Le frontmatter peut

@@ -154,6 +154,10 @@ export interface NewsFrontmatter {
   keywords?: string[];
   /** Auteur — par défaut "Cryptoreflex" pour les news auto. */
   author?: string;
+  /** True si c'est LE brief quotidien (synthèse éditoriale → mis en "une"). */
+  isBrief?: boolean;
+  /** Sources multiples créditées (le brief synthétise plusieurs articles). */
+  sources?: string[];
 }
 
 /**

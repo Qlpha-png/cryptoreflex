@@ -90,6 +90,8 @@ function normalizeNewsFrontmatter(
     image: typeof raw.image === "string" ? raw.image : undefined,
     keywords,
     author: String(raw.author ?? "Cryptoreflex"),
+    isBrief: raw.isBrief === true,
+    sources: Array.isArray(raw.sources) ? raw.sources.map(String) : undefined,
   };
 }
 
