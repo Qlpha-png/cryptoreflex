@@ -1,10 +1,10 @@
 /**
  * /academie — landing académie crypto Cryptoreflex (v2 structurée).
  *
- * Server Component. Présente les 3 parcours (Débutant / Intermédiaire /
- * Avancé), met en avant la valeur (gratuit, pédagogique, MiCA-aware), montre
- * 3 témoignages-placeholder, une FAQ et expose un schema.org Course par track
- * pour les rich snippets éducation Google.
+ * Server Component. Présente les parcours de l'académie (3 par niveau —
+ * Débutant / Intermédiaire / Avancé — + parcours thématiques), met en avant
+ * la valeur (gratuit, pédagogique, MiCA-aware), des témoignages, une FAQ et
+ * expose un schema.org Course par track pour les rich snippets Google.
  *
  * NOTE : on ne mappe PAS la progression localStorage ici — la landing reste
  * 100% statique pour les performances et le SEO. Les pages /academie/[track]
@@ -33,9 +33,10 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400; // 1 jour — contenu très stable
 
+const TRACK_COUNT = TRACKS.length;
+
 const TITLE = "Académie crypto gratuite — formation structurée Cryptoreflex";
-const DESCRIPTION =
-  "Académie crypto Cryptoreflex : 3 parcours pédagogiques gratuits (Débutant, Intermédiaire, Avancé) pour apprendre à investir crypto en France. Progression suivie, quiz de validation, certificat téléchargeable.";
+const DESCRIPTION = `Académie crypto Cryptoreflex : ${TRACK_COUNT} parcours pédagogiques gratuits (niveaux Débutant à Avancé + thématiques sécurité, fiscalité, plateformes) pour apprendre à investir crypto en France. Progression suivie, quiz de validation, certificat téléchargeable.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -78,9 +79,9 @@ const FAQ_ITEMS = [
       "Non — c'est un document pédagogique de réussite émis par Cryptoreflex, pas une certification professionnelle reconnue par l'État ou un régulateur. Il atteste simplement que tu as suivi le parcours et validé le quiz, ce qui peut être utile pour ton portfolio personnel ou ton équipe.",
   },
   {
-    question: "Pourquoi 3 parcours et pas un seul long parcours ?",
+    question: "Comment sont organisés les parcours ?",
     answer:
-      "Les besoins ne sont pas les mêmes selon où tu en es. Un débutant qui n'a jamais acheté de crypto se noie face à un parcours unique de 30 leçons. On t'oriente vers le bon point d'entrée, et tu peux enchaîner les parcours dans l'ordre si tu veux le cursus complet.",
+      "Trois parcours par niveau (Débutant, Intermédiaire, Avancé) forment le cursus principal, à suivre dans l'ordre si tu pars de zéro. S'y ajoutent des parcours thématiques (sécurité de tes cryptos, fiscalité française, choix de plateforme) que tu peux suivre indépendamment selon ton besoin du moment. Chaque parcours est auto-suffisant.",
   },
 ];
 
@@ -153,7 +154,7 @@ export default function AcademiePage() {
             <span className="text-gradient-gold">l&apos;Académie Cryptoreflex</span>
           </h1>
           <p className="mt-4 ds-lead">
-            3 parcours pédagogiques structurés, {totalLessons} leçons, {Math.round(totalMinutes / 60)}h de
+            {TRACK_COUNT} parcours pédagogiques structurés, {totalLessons} leçons, {Math.round(totalMinutes / 60)}h de
             contenu. Progression suivie, quiz de validation, certificat
             téléchargeable. Aucun paiement, aucune carte bancaire.
           </p>
@@ -167,7 +168,7 @@ export default function AcademiePage() {
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
             <Link href="#parcours" className="btn-ghost text-sm py-2.5">
-              Voir les 3 parcours
+              Voir les {TRACK_COUNT} parcours
             </Link>
           </div>
         </header>
@@ -197,7 +198,7 @@ export default function AcademiePage() {
           />
         </section>
 
-        {/* Cards des 3 parcours */}
+        {/* Cards des parcours */}
         <section id="parcours" aria-labelledby="parcours-h" className="mb-16">
           <header className="mb-8">
             <h2
@@ -207,9 +208,9 @@ export default function AcademiePage() {
               Choisis ton parcours
             </h2>
             <p className="mt-2 text-sm text-fg/70 max-w-2xl">
-              Tu peux suivre les 3 dans l&apos;ordre, ou aller directement au
-              niveau qui correspond à où tu en es. Chaque parcours est
-              auto-suffisant.
+              Suis les 3 niveaux dans l&apos;ordre pour le cursus complet, ou va
+              directement au parcours — niveau ou thématique — qui correspond à
+              ton besoin. Chaque parcours est auto-suffisant.
             </p>
           </header>
 

@@ -243,19 +243,86 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   },
 ];
 
-const QUIZZES: Record<TrackId, QuizQuestion[]> = {
+const QUIZ_SECURITE: QuizQuestion[] = [
+  {
+    id: "sec-q1-seed",
+    question:
+      "Que représentent les 12 ou 24 mots de ta seed phrase ?",
+    choices: [
+      "Un mot de passe que tu peux changer quand tu veux.",
+      "La clé maîtresse qui régénère TOUTES les clés privées de ton wallet — qui la détient possède tes fonds.",
+      "Un code de récupération fourni et conservé par l'exchange.",
+      "Le numéro de série de ton Ledger.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La seed (standard BIP39) dérive l'intégralité des clés privées du wallet. Quiconque la connaît contrôle tous les fonds, sans limite. Elle ne se change pas : si elle fuite, il faut transférer les fonds vers un nouveau wallet généré à partir d'une nouvelle seed.",
+  },
+  {
+    id: "sec-q2-phishing",
+    question:
+      "Tu reçois un email « Ledger » te demandant de saisir ta seed phrase pour « sécuriser ton compte ». Que fais-tu ?",
+    choices: [
+      "Je la saisis, c'est le support officiel.",
+      "Je la tape sur le site lié dans l'email pour vérifier.",
+      "Je ne saisis JAMAIS ma seed : aucun service légitime ne la demande. Je supprime l'email.",
+      "Je réponds à l'email avec ma seed pour confirmer mon identité.",
+    ],
+    correctIndex: 2,
+    explanation:
+      "Aucun fabricant, exchange ou support ne demandera jamais ta seed phrase. Toute demande de seed est une arnaque (phishing). La seed ne se saisit QUE directement sur l'appareil hardware lui-même, lors d'une restauration — jamais sur un site web, une app ou un email.",
+  },
+  {
+    id: "sec-q3-cold-hot",
+    question:
+      "Quelle est la différence fondamentale entre un cold wallet et un hot wallet ?",
+    choices: [
+      "Le cold wallet est simplement plus rapide pour trader.",
+      "Le cold wallet garde les clés privées hors-ligne (jamais exposées à Internet) ; le hot wallet est connecté.",
+      "Le hot wallet est gratuit alors que le cold est payant, sinon c'est identique.",
+      "Aucune, c'est du pur marketing.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Un cold wallet (hardware type Ledger/Trezor) n'expose jamais la clé privée à un appareil connecté : il signe les transactions en interne. Un hot wallet (app mobile, extension navigateur) garde la clé sur un appareil en ligne, donc exposé aux malwares et au phishing.",
+  },
+  {
+    id: "sec-q4-passphrase",
+    question:
+      "À quoi sert une passphrase BIP39 (le « 25e mot ») ?",
+    choices: [
+      "À remplacer purement et simplement la seed phrase.",
+      "À accélérer la validation des transactions.",
+      "À créer un wallet caché supplémentaire, protégé même si la seed de 24 mots est découverte.",
+      "À récupérer un mot de passe d'exchange oublié.",
+    ],
+    correctIndex: 2,
+    explanation:
+      "La passphrase (25e mot) est une chaîne secrète qui s'ajoute à la seed pour dériver un wallet entièrement distinct. Même si quelqu'un trouve tes 24 mots, sans la passphrase il n'accède qu'à un wallet « leurre ». Revers de la médaille : la passphrase n'est stockée nulle part — la perdre, c'est perdre l'accès.",
+  },
+  {
+    id: "sec-q5-multisig",
+    question:
+      "Qu'est-ce qu'un wallet multi-signature (multi-sig) en configuration 2-sur-3 ?",
+    choices: [
+      "Un wallet qui exige 3 mots de passe successifs.",
+      "Un wallet où au moins 2 des 3 clés sont nécessaires pour autoriser une transaction.",
+      "Un wallet répliqué automatiquement sur 3 exchanges.",
+      "Un wallet qui signe les transactions tout seul.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "En 2-sur-3, trois clés existent mais deux suffisent pour signer une transaction. Avantage : la perte ou le vol d'une seule clé ne compromet pas les fonds, et tu conserves l'accès. C'est un standard pour sécuriser un patrimoine important ou une trésorerie partagée.",
+  },
+];
+
+const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   debutant: QUIZ_DEBUTANT,
   intermediaire: QUIZ_INTERMEDIAIRE,
   avance: QUIZ_AVANCE,
+  securite: QUIZ_SECURITE,
 };
 
 export function getQuizForTrack(trackId: string): QuizQuestion[] | null {
-  if (
-    trackId === "debutant" ||
-    trackId === "intermediaire" ||
-    trackId === "avance"
-  ) {
-    return QUIZZES[trackId];
-  }
-  return null;
+  return QUIZZES[trackId as TrackId] ?? null;
 }

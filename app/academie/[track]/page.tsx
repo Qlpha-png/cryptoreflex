@@ -21,6 +21,7 @@ import {
 
 import { BRAND } from "@/lib/brand";
 import { TRACKS, getTrack } from "@/lib/academy-tracks";
+import { getQuizForTrack } from "@/lib/academy-quizzes";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -64,6 +65,7 @@ export default function TrackPage({ params }: Props) {
   const track = getTrack(params.track);
   if (!track) notFound();
 
+  const hasQuiz = getQuizForTrack(track.id) !== null;
   const totalMin = track.lessons.reduce((acc, l) => acc + l.durationMin, 0);
 
   const schema = {
@@ -161,38 +163,40 @@ export default function TrackPage({ params }: Props) {
               ))}
             </ol>
 
-            {/* Quiz CTA — accessible mais visuellement "lock" si pas terminé */}
-            <section
-              aria-labelledby="quiz-h"
-              className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-6"
-            >
-              <div className="flex items-start gap-4">
-                <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary-glow">
-                  <Lock className="h-5 w-5" aria-hidden="true" />
+            {/* Quiz CTA — affiché uniquement si le parcours a un quiz publié */}
+            {hasQuiz && (
+              <section
+                aria-labelledby="quiz-h"
+                className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-6"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary-glow">
+                    <Lock className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 id="quiz-h" className="text-lg font-bold text-fg">
+                      Quiz de validation — débloque ton certificat
+                    </h2>
+                    <p className="mt-1 text-sm text-fg/80">
+                      5 questions, 4 bonnes réponses minimum pour valider. Une
+                      fois validé, tu peux télécharger un certificat personnalisé
+                      avec ton nom.
+                    </p>
+                    <Link
+                      href={`/academie/${track.id}/quiz`}
+                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition-colors hover:bg-primary-glow"
+                    >
+                      Passer le quiz maintenant
+                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    </Link>
+                    <p className="mt-2 text-[11px] text-muted">
+                      Recommandé : termine d&apos;abord toutes les leçons. Le
+                      quiz couvre tout le parcours.
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h2 id="quiz-h" className="text-lg font-bold text-fg">
-                    Quiz de validation — débloque ton certificat
-                  </h2>
-                  <p className="mt-1 text-sm text-fg/80">
-                    5 questions, 4 bonnes réponses minimum pour valider. Une
-                    fois validé, tu peux télécharger un certificat personnalisé
-                    avec ton nom.
-                  </p>
-                  <Link
-                    href={`/academie/${track.id}/quiz`}
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition-colors hover:bg-primary-glow"
-                  >
-                    Passer le quiz maintenant
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </Link>
-                  <p className="mt-2 text-[11px] text-muted">
-                    Recommandé : termine d&apos;abord toutes les leçons. Le
-                    quiz couvre tout le parcours.
-                  </p>
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
           </section>
 
           {/* Sidebar progression */}

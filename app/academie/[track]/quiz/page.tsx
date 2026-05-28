@@ -23,7 +23,9 @@ interface Props {
 export const revalidate = 86400;
 
 export async function generateStaticParams() {
-  return TRACKS.map((t) => ({ track: t.id }));
+  return TRACKS.filter((t) => getQuizForTrack(t.id) !== null).map((t) => ({
+    track: t.id,
+  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

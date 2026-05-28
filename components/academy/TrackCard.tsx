@@ -8,14 +8,33 @@
  */
 
 import Link from "next/link";
-import { ArrowRight, Clock, BookOpen, Sprout, Target, Rocket } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  BookOpen,
+  Sprout,
+  Target,
+  Rocket,
+  Shield,
+  Landmark,
+  Scale,
+} from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
 const ICONS = {
   sprout: Sprout,
   target: Target,
   rocket: Rocket,
+  shield: Shield,
+  landmark: Landmark,
+  scale: Scale,
 } as const;
+
+const LEVEL_LABELS: Record<Track["level"], string> = {
+  Beginner: "Débutant",
+  Intermediate: "Intermédiaire",
+  Advanced: "Avancé",
+};
 
 interface TrackCardProps {
   track: Track;
@@ -63,7 +82,7 @@ export default function TrackCard({ track }: TrackCardProps) {
             Niveau
           </dt>
           <dd className="mt-0.5 text-sm font-semibold text-fg">
-            {track.title}
+            {LEVEL_LABELS[track.level]}
           </dd>
         </div>
       </dl>
