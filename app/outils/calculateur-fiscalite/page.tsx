@@ -173,7 +173,7 @@ const FAQ_ITEMS = [
     question:
       "Que se passe-t-il si j'ai un compte sur une plateforme étrangère ?",
     answer:
-      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 1 500 € par compte si solde sous 50 000 €, 10 000 € au-dessus (article 1736 IV bis CGI). Applicable sur 4 à 6 ans.",
+      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 750 € par compte si solde sous 50 000 €, 1 500 € au-dessus (article 1736 X CGI, propre aux comptes d'actifs numériques). Applicable sur 4 à 6 ans.",
   },
   {
     question:
@@ -698,8 +698,8 @@ export default function CalculateurFiscalitePage() {
               imposables ligne par ligne. Le <strong>Cerfa 3916-bis</strong>{" "}
               déclare vos comptes ouverts sur des plateformes étrangères
               (Binance, Kraken Irlande, Bitget, Coinbase Irlande, Bitpanda
-              Autriche). L'oubli du 3916-bis coûte 1 500 euros à 10 000 euros
-              par compte.
+              Autriche). L'oubli du 3916-bis coûte 750 à 1 500 euros
+              par compte (art. 1736 X CGI).
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
