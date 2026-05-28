@@ -3,8 +3,8 @@
  *
  * Server Component. Présente les parcours de l'académie (3 par niveau —
  * Débutant / Intermédiaire / Avancé — + parcours thématiques), met en avant
- * la valeur (gratuit, pédagogique, MiCA-aware), des témoignages, une FAQ et
- * expose un schema.org Course par track pour les rich snippets Google.
+ * la valeur (gratuit, pédagogique, MiCA-aware), une FAQ et expose un
+ * schema.org Course par track pour les rich snippets Google.
  *
  * NOTE : on ne mappe PAS la progression localStorage ici — la landing reste
  * 100% statique pour les performances et le SEO. Les pages /academie/[track]
@@ -21,7 +21,6 @@ import {
   Scale,
   ShieldCheck,
   Sparkles,
-  UserCircle2,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { TRACKS } from "@/lib/academy-tracks";
@@ -221,40 +220,6 @@ export default function AcademiePage() {
           </div>
         </section>
 
-        {/* Témoignages placeholder */}
-        <section
-          aria-labelledby="testimonials"
-          className="mb-16 rounded-2xl border border-border bg-surface p-6 sm:p-8"
-        >
-          <h2
-            id="testimonials"
-            className="text-2xl font-bold tracking-tight text-fg sm:text-3xl"
-          >
-            Ils ont suivi l&apos;académie
-          </h2>
-          <p className="mt-1 text-sm text-muted">
-            Témoignages issus de notre communauté newsletter — premières lettres
-            uniquement par souci de confidentialité.
-          </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Testimonial
-              author="Émilie M."
-              role="Fonctionnaire, 34 ans"
-              text="J'avais peur de me lancer en crypto. Le parcours Débutant m'a donné le cadre clair que je cherchais : pas de hype, juste des étapes concrètes. Premier achat fait sereinement."
-            />
-            <Testimonial
-              author="Karim T."
-              role="Indépendant, 41 ans"
-              text="Le parcours Avancé sur la fiscalité DeFi m'a évité une bêtise sur ma déclaration. La distinction BIC/BNC est enfin claire dans ma tête."
-            />
-            <Testimonial
-              author="Pierre-Louis G."
-              role="Étudiant, 22 ans"
-              text="Quiz fun, contenu sourcé MiCA, et le certificat fait stylé sur mon LinkedIn. Et tout ça gratuitement, jamais vu ailleurs."
-            />
-          </div>
-        </section>
-
         {/* CROSS-LINK PRATIQUE (audit phase 3 — 19/05/2026) — pont entre la
             théorie (parcours) et la pratique (fiches + outils + comparatif).
             Pas une refonte : juste 3 portes de sortie sobres pour les
@@ -393,30 +358,5 @@ function ValueCard({
       <h3 className="mt-3 text-lg font-bold text-fg">{title}</h3>
       <p className="mt-1.5 text-sm leading-relaxed text-fg/80">{text}</p>
     </article>
-  );
-}
-
-function Testimonial({
-  author,
-  role,
-  text,
-}: {
-  author: string;
-  role: string;
-  text: string;
-}) {
-  return (
-    <figure className="rounded-xl border border-border bg-elevated/40 p-5">
-      <blockquote className="text-sm leading-relaxed text-fg/85">
-        &ldquo;{text}&rdquo;
-      </blockquote>
-      <figcaption className="mt-4 flex items-center gap-2.5">
-        <UserCircle2 className="h-7 w-7 text-muted" aria-hidden="true" />
-        <div>
-          <div className="text-sm font-semibold text-fg">{author}</div>
-          <div className="text-[11px] text-muted">{role}</div>
-        </div>
-      </figcaption>
-    </figure>
   );
 }

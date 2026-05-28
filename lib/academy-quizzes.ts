@@ -73,13 +73,13 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
       "Quel est le taux du Prélèvement Forfaitaire Unique (PFU) sur les plus-values crypto pour un particulier en France en 2026 ?",
     choices: [
       "0 % si tu ne vends pas en euros.",
-      "12,8 % d'IR + 17,2 % de prélèvements sociaux = 30 %.",
+      "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 %.",
       "45 % automatique.",
       "Seulement 17,2 % de prélèvements sociaux.",
     ],
     correctIndex: 1,
     explanation:
-      "Le PFU (flat tax) est de 30 % toutes-taxes-comprises : 12,8 % d'IR + 17,2 % de prélèvements sociaux. Une option pour le barème progressif (case 2OP) peut être plus avantageuse selon ta TMI.",
+      "Depuis le 1er janvier 2026, le PFU (flat tax) est de 31,4 % : 12,8 % d'IR + 18,6 % de prélèvements sociaux (la CSG est passée de 9,2 % à 10,6 %). Il était de 30 % jusqu'aux gains réalisés en 2025. Une option pour le barème progressif (case 2OP) peut être plus avantageuse si ta TMI est faible.",
   },
   {
     id: "deb-q5-cold-vs-hot",
@@ -197,7 +197,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Tout compte sur plateforme crypto étrangère doit être déclaré chaque année via le 3916-bis. Sanction : 1 500 € par compte oublié (jusqu'à 10 000 € si compte dans un État non coopératif).",
+      "Tout compte sur plateforme crypto étrangère doit être déclaré chaque année via le 3916-bis. Sanction (art. 1736, X du CGI) : 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année.",
   },
   {
     id: "adv-q3-staking-fait-generateur",
@@ -216,16 +216,16 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q4-pfu-bareme",
     question:
-      "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU 30% sur tes plus-values crypto ?",
+      "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU sur tes plus-values crypto ?",
     choices: [
       "Toujours.",
-      "Quand ta TMI est à 0% ou 11% : le total avec PS reste sous 30%.",
+      "Quand ta TMI est à 0% ou 11% : le total avec PS reste sous 31,4%.",
       "Quand tu es en TMI 45%.",
       "Jamais.",
     ],
     correctIndex: 1,
     explanation:
-      "À TMI 0% : 0% IR + 17,2% PS = 17,2% (vs 30%). À TMI 11% : 11% + 17,2% = 28,2% (vs 30%). Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. Attention : l'option engage TOUS tes revenus mobiliers de l'année.",
+      "Depuis 2026 le PFU est à 31,4% (PS à 18,6%). À TMI 0% : 0% IR + 18,6% PS = 18,6%. À TMI 11% : 11% + 18,6% = 29,6%. Les deux restent sous 31,4%. Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. Attention : l'option 2OP engage TOUS tes revenus mobiliers de l'année.",
   },
   {
     id: "adv-q5-mica-risque",
@@ -316,11 +316,159 @@ const QUIZ_SECURITE: QuizQuestion[] = [
   },
 ];
 
+const QUIZ_FISCALITE: QuizQuestion[] = [
+  {
+    id: "fis-q1-pfu-2026",
+    question:
+      "En 2026, quel est le taux du PFU (flat tax) sur tes plus-values crypto, et comment se décompose-t-il ?",
+    choices: [
+      "12,8 % d'IR + 17,2 % de prélèvements sociaux = 30 % (taux inchangé).",
+      "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 % (hausse de la CSG au 1er janvier 2026).",
+      "Un taux unique de 19 % sur la plus-value.",
+      "0 % tant que tu ne convertis pas en euros.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le PFU = impôt sur le revenu (12,8 %) + prélèvements sociaux. La LFSS 2026 a relevé la CSG de 9,2 % à 10,6 %, portant les prélèvements sociaux à 18,6 % et la flat tax à 31,4 % sur les gains réalisés à partir de 2026. Pour tes gains réalisés jusqu'en 2025 (déclarés au printemps 2026), c'était encore 30 %.",
+  },
+  {
+    id: "fis-q2-seuil-305",
+    question:
+      "À partir de quel montant es-tu obligé de déclarer tes cessions crypto (et potentiellement imposé) ?",
+    choices: [
+      "Dès le premier euro de plus-value.",
+      "À partir de 305 € de cessions cumulées dans l'année (montant des ventes, pas de la plus-value).",
+      "À partir de 5 000 € de plus-value nette.",
+      "Jamais, tant que les fonds restent sur la plateforme.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le seuil de 305 € porte sur le total des CESSIONS imposables (ventes vers euro, achats de biens/services) sur l'année, pas sur la plus-value. En dessous, les plus-values sont exonérées ; au-dessus, tout est imposable. Les échanges crypto-crypto bénéficient d'un sursis et ne comptent pas comme cession imposable.",
+  },
+  {
+    id: "fis-q3-2086-3916",
+    question:
+      "Tu as un compte sur une plateforme étrangère et tu as vendu pour 2 000 € de crypto en euros. Quelles obligations déclaratives ?",
+    choices: [
+      "Aucune, la plateforme déclare tout au fisc français.",
+      "Le formulaire 2086 (calcul des plus-values) ET le 3916-bis (déclaration du compte étranger).",
+      "Seulement un courrier à ton centre des impôts.",
+      "Rien tant que tu ne dépasses pas 10 000 €.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Deux obligations distinctes : le Cerfa 2086 détaille le calcul de tes plus-values (reporté ensuite sur la 2042 C), et le Cerfa 3916-bis déclare chaque compte d'actifs numériques ouvert sur une plateforme étrangère. Oublier le 3916-bis coûte 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année (art. 1736, X du CGI).",
+  },
+  {
+    id: "fis-q4-bareme-vs-pfu",
+    question:
+      "Quand l'option pour le barème progressif (case 2OP) est-elle plus avantageuse que le PFU sur tes plus-values crypto ?",
+    choices: [
+      "Toujours.",
+      "Quand ta tranche marginale d'imposition (TMI) est faible : 0 % ou 11 %.",
+      "Quand tu es dans la tranche à 45 %.",
+      "Jamais, le PFU est toujours meilleur.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Au barème, ta TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. Attention : l'option 2OP s'applique à TOUS tes revenus de capitaux mobiliers de l'année, pas seulement la crypto.",
+  },
+  {
+    id: "fis-q5-defi-bic-bnc",
+    question:
+      "Tu fais du staking et du yield farming réguliers. Comment ces revenus sont-ils généralement qualifiés en France ?",
+    choices: [
+      "Exonérés — la DeFi n'est pas fiscalisée.",
+      "En BNC le plus souvent, voire en BIC si l'activité devient quasi-professionnelle.",
+      "En traitements et salaires.",
+      "En revenus fonciers.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Les revenus récurrents de staking/DeFi (au-delà de la simple plus-value de cession) sont généralement imposés en BNC tant que l'activité reste non professionnelle, et peuvent basculer en BIC si elle devient habituelle et organisée. La DeFi N'EST PAS défiscalisée : la revente ultérieure des tokens reçus génère en plus une plus-value distincte.",
+  },
+];
+
+const QUIZ_PLATEFORMES: QuizQuestion[] = [
+  {
+    id: "pla-q1-mica-deadline",
+    question:
+      "À partir de quelle date une plateforme doit-elle être agréée CASP-MiCA pour servir légalement les clients français ?",
+    choices: [
+      "1er janvier 2025.",
+      "1er juillet 2026 — fin de la période transitoire PSAN.",
+      "Il n'y a aucune date limite.",
+      "1er juillet 2028.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "L'AMF a confirmé que la période transitoire permettant aux PSAN d'opérer sans agrément MiCA prend fin le 1er juillet 2026. Après cette date, seuls les prestataires agréés CASP (en France, ou passeportés depuis un autre État de l'UE) peuvent fournir des services crypto en France. Opérer sans agrément expose à 2 ans de prison et 30 000 € d'amende.",
+  },
+  {
+    id: "pla-q2-critere-principal",
+    question:
+      "Quel est le critère le PLUS important pour choisir une plateforme crypto en France en 2026 ?",
+    choices: [
+      "Le nombre de cryptos exotiques listées.",
+      "La régulation : agrément CASP-MiCA (ou PSAN en transition).",
+      "Le montant des bonus de parrainage.",
+      "Le design de l'application mobile.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La régulation prime : une plateforme agréée CASP-MiCA est soumise à des obligations de ségrégation des fonds clients, de transparence et de lutte anti-blanchiment. Frais réels, sécurité (2FA, cold storage), support FR et export fiscal (pour le 2086) viennent ensuite. Un bonus ne doit jamais être le critère principal.",
+  },
+  {
+    id: "pla-q3-stablecoin-mica",
+    question:
+      "En 2026, quel stablecoin est le plus clairement conforme à MiCA pour les utilisateurs européens ?",
+    choices: [
+      "USDT (Tether).",
+      "USDC (Circle, qui a obtenu l'agrément monnaie électronique dans l'UE).",
+      "Aucun stablecoin n'est autorisé en Europe.",
+      "Tous les stablecoins sont automatiquement conformes.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "MiCA impose aux émetteurs de stablecoins (jetons de monnaie électronique) un agrément EMI dans l'UE. Circle l'a obtenu pour l'USDC. Tether (USDT) n'a pas la même conformité, ce qui a conduit plusieurs plateformes à restreindre l'USDT pour les utilisateurs européens.",
+  },
+  {
+    id: "pla-q4-migration-non-agreee",
+    question:
+      "Ta plateforme annonce qu'elle n'aura pas l'agrément CASP-MiCA à temps. Quelle est la bonne réaction ?",
+    choices: [
+      "Ne rien faire, ça va s'arranger.",
+      "Migrer tes avoirs vers une plateforme agréée CASP, en conservant l'historique des prix d'acquisition.",
+      "Tout convertir en USDT dans la panique.",
+      "Attendre le dernier jour pour décider.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Une plateforme sans agrément doit organiser la cessation ordonnée de ses services. Migre tes avoirs vers un prestataire agréé CASP en gardant tes historiques (prix et dates d'acquisition) — indispensables pour calculer correctement tes plus-values futures sur le Cerfa 2086 et éviter une sur-imposition.",
+  },
+  {
+    id: "pla-q5-cout-reel",
+    question:
+      "Pour comparer le coût réel de deux plateformes, sur quoi faut-il regarder en priorité ?",
+    choices: [
+      "Uniquement les frais de trading affichés (maker/taker).",
+      "L'ensemble : frais de trading, spread, frais de dépôt/retrait (SEPA, crypto) et de conversion.",
+      "Seulement les frais de retrait crypto.",
+      "Le cours de l'action de la société mère.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le coût réel ne se limite pas aux frais de trading affichés. Le spread (écart achat/vente), les frais de dépôt/retrait SEPA, les frais de retrait crypto (réseau) et les frais de conversion cachés peuvent peser plus lourd que la commission affichée — surtout sur de petits montants ou du trading fréquent.",
+  },
+];
+
 const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   debutant: QUIZ_DEBUTANT,
   intermediaire: QUIZ_INTERMEDIAIRE,
   avance: QUIZ_AVANCE,
   securite: QUIZ_SECURITE,
+  fiscalite: QUIZ_FISCALITE,
+  plateformes: QUIZ_PLATEFORMES,
 };
 
 export function getQuizForTrack(trackId: string): QuizQuestion[] | null {

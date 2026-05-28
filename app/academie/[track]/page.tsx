@@ -31,9 +31,9 @@ interface Props {
   params: { track: string };
 }
 
-export const revalidate = 86400;
-// Le set de parcours est fixe (compilé). Refuser tout id hors generateStaticParams
-// => vrai 404 (évite le soft-404 où notFound() renvoyait un 200 en rendu on-demand).
+// Parcours = set fixe compilé (aucune donnée externe) → 100% statique, pas d'ISR.
+// dynamicParams=false + génération statique complète : tout id inconnu => vrai 404
+// servi par Vercel (le rendu on-demand ISR renvoyait un soft-404 en HTTP 200).
 export const dynamicParams = false;
 
 export async function generateStaticParams() {

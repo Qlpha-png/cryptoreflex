@@ -34,9 +34,9 @@ interface Props {
   params: { track: string; lesson: string };
 }
 
-export const revalidate = 86400;
-// Combos (track × leçon) figés à la compilation. Tout couple hors liste
-// => vrai 404 (le notFound() seul renvoyait un 200 en rendu on-demand).
+// Combos (track × leçon) figés à la compilation (MDX lu au build) → 100% statique.
+// dynamicParams=false : tout couple hors generateStaticParams => vrai 404 servi
+// par Vercel (l'ISR on-demand renvoyait un soft-404 en HTTP 200).
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
