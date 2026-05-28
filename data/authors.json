@@ -24,6 +24,28 @@
         "email": "kevin@cryptoreflex.fr"
       },
       "image": "/authors/kevin-voisin.svg"
+    },
+    {
+      "id": "redaction-cryptoreflex",
+      "name": "La rédaction Cryptoreflex",
+      "role": "Rédaction & veille éditoriale",
+      "shortBio": "L'équipe éditoriale de Cryptoreflex : actualité crypto, analyses de marché et veille réglementaire (MiCA, fiscalité française), sous la supervision de Kevin Voisin.",
+      "bio": "La rédaction Cryptoreflex regroupe le travail éditorial du site : brèves d'actualité, analyses techniques quotidiennes et synthèses de marché. Les contenus de données de marché sont assistés par automatisation puis relus selon la charte éditoriale Cryptoreflex (sourcing, neutralité, vérification des chiffres). La supervision éditoriale est assurée par Kevin Voisin, fondateur du site.",
+      "expertise": [
+        "Actualité crypto France",
+        "Analyse technique de marché",
+        "Veille réglementaire MiCA",
+        "Fiscalité crypto France"
+      ],
+      "yearsExperience": 1,
+      "credentials": [
+        "Charte éditoriale publique (sourcing, vérification des chiffres)",
+        "Supervision éditoriale : Kevin Voisin"
+      ],
+      "social": {
+        "email": "contact@cryptoreflex.fr"
+      },
+      "image": "/authors/redaction-cryptoreflex.svg"
     }
   ]
 }

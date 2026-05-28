@@ -61,9 +61,39 @@ export function getAuthorById(id: string): Author | undefined {
   return data.authors.find((a) => a.id === id);
 }
 
-export function getAuthorByIdOrDefault(id?: string): Author {
-  const found = id ? getAuthorById(id) : undefined;
-  return found ?? (getAuthorById(DEFAULT_AUTHOR_ID) as Author);
+/**
+ * Alias de bylines historiques → id canonique. Les frontmatters d'articles
+ * stockent un NOM d'affichage ("Kevin Voisin", "Cryptoreflex", "Rédaction"…)
+ * et non un id : cette table les rattache à un auteur réel de la registry,
+ * pour éviter le fallback silencieux vers l'auteur par défaut.
+ */
+const AUTHOR_ALIASES: Record<string, string> = {
+  "kevin voisin": "kevin-voisin",
+  cryptoreflex: "redaction-cryptoreflex",
+  rédaction: "redaction-cryptoreflex",
+  "rédaction cryptoreflex": "redaction-cryptoreflex",
+  "la rédaction cryptoreflex": "redaction-cryptoreflex",
+  "équipe éditoriale": "redaction-cryptoreflex",
+};
+
+/** Résout un id OU un nom d'affichage OU un alias vers un id canonique. */
+export function resolveAuthorId(idOrName?: unknown): string {
+  // Défensif : le frontmatter MDX peut fournir un objet { name, role } ou rien.
+  if (typeof idOrName === "object" && idOrName !== null) {
+    const name = (idOrName as { name?: unknown }).name;
+    return typeof name === "string" ? resolveAuthorId(name) : DEFAULT_AUTHOR_ID;
+  }
+  if (typeof idOrName !== "string" || !idOrName.trim()) return DEFAULT_AUTHOR_ID;
+  const raw = idOrName.trim();
+  if (getAuthorById(raw)) return raw; // déjà un id valide
+  const key = raw.toLowerCase();
+  if (AUTHOR_ALIASES[key]) return AUTHOR_ALIASES[key];
+  const byName = data.authors.find((a) => a.name.toLowerCase() === key);
+  return byName ? byName.id : DEFAULT_AUTHOR_ID;
+}
+
+export function getAuthorByIdOrDefault(id?: unknown): Author {
+  return getAuthorById(resolveAuthorId(id)) as Author;
 }
 
 /* -------------------------------------------------------------------------- */
