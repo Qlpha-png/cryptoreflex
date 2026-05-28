@@ -52,15 +52,15 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  SEO meta — H1 et meta alignées sur la cible "calculateur fiscalité crypto */
-/*  France 2026" + variantes longues (PFU 30 %, barème, BIC).                 */
+/*  France 2026" + variantes longues (PFU 31,4 %, barème, BIC).                 */
 /* -------------------------------------------------------------------------- */
 
 // Audit SEO 26-04 — title raccourci de 75 → 50 chars (≤ 60 cible Google SERP).
 // On garde le mot-clé principal "Calculateur fiscalité crypto 2026" intact.
-const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 30%, Cerfa";
+const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 31,4%, Cerfa";
 // 158 caractères, optimisé Google SERP
 const PAGE_DESCRIPTION =
-  "Calculez votre impôt crypto 2026 en 2 min : PFU 30%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";
+  "Calculez votre impôt crypto 2026 en 2 min : PFU 31,4%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";
 const PAGE_PATH = "/outils/calculateur-fiscalite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -123,7 +123,7 @@ const FAQ_ITEMS = [
     question:
       "Quel régime fiscal s'applique aux plus-values crypto en France en 2026 ?",
     answer:
-      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de prélèvements sociaux. Vous pouvez aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si vous tradez de manière habituelle, l'administration peut requalifier votre activité en BIC professionnel.",
+      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux. Vous pouvez aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si vous tradez de manière habituelle, l'administration peut requalifier votre activité en BIC professionnel.",
   },
   {
     question: "À partir de quel montant dois-je déclarer mes plus-values crypto ?",
@@ -133,12 +133,12 @@ const FAQ_ITEMS = [
   {
     question: "PFU ou barème progressif : que choisir ?",
     answer:
-      "Le PFU à 30 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 2OP du Cerfa 2042 dans votre déclaration.",
+      "Le PFU à 31,4 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 2OP du Cerfa 2042 dans votre déclaration.",
   },
   {
     question: "Quand bascule-t-on en BIC professionnel ?",
     answer:
-      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à votre TMI + 17,2 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
+      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à votre TMI + 18,6 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
   },
   {
     question: "Cet outil prend-il en compte le staking, le DeFi et les NFT ?",
@@ -179,7 +179,7 @@ const FAQ_ITEMS = [
     question:
       "Quel est le calendrier de la déclaration crypto 2026 ?",
     answer:
-      "La déclaration en ligne ouvre le 10 avril 2026. Date limite selon votre département : 22 mai 2026 (départements 1-19 + non-résidents UE), 29 mai 2026 (20-54), 5 juin 2026 (55-95 + outre-mer). Vous pouvez modifier votre déclaration en ligne jusqu'au 4 décembre 2026 sans pénalité.",
+      "La déclaration en ligne ouvre le 9 avril 2026. Date limite selon votre département : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai 2026 (20-54), 4 juin 2026 (55-974 + 976 + outre-mer). La déclaration papier doit être déposée au plus tard le 19 mai 2026. Source : calendrier officiel impots.gouv.fr.",
   },
   {
     question:
@@ -228,7 +228,7 @@ const webAppSchema: JsonLd = generateWebApplicationSchema({
   name: "Calculateur fiscalité crypto France 2026",
   description: PAGE_DESCRIPTION,
   featureList: [
-    "PFU 30 % (12,8 % IR + 17,2 % PS)",
+    "PFU 31,4 % (12,8 % IR + 18,6 % PS)",
     "Barème progressif IR (TMI 11/30/41/45 %)",
     "BIC professionnel (TMI + PS + URSSAF)",
     "Seuil exonération 305 € / an pris en compte",
@@ -344,12 +344,12 @@ export default function CalculateurFiscalitePage() {
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
               Calculateur fiscalité crypto 2026 —{" "}
               <span className="gradient-text">
-                PFU 30 %, Barème, Cerfa 2086 / 3916-bis
+                PFU 31,4 %, Barème, Cerfa 2086 / 3916-bis
               </span>
             </h1>
             <p className="mt-4 text-lg text-white/80">
               Estimez votre impôt sur les plus-values crypto en 2 min selon le
-              régime fiscal applicable : <strong>PFU 30 %</strong>,{" "}
+              régime fiscal applicable : <strong>PFU 31,4 %</strong>,{" "}
               <strong>barème progressif IR</strong> ou{" "}
               <strong>BIC professionnel</strong>. Calcul officiel article{" "}
               <strong>150 VH bis</strong>, 100 % local, aucune donnée envoyée.
@@ -415,7 +415,7 @@ export default function CalculateurFiscalitePage() {
               <strong>article 150 VH bis du CGI</strong>, complété par le BOFiP
               BOI-RPPM-PVBMC-30-30. Pour un particulier en gestion occasionnelle,
               le régime par défaut est le <strong>Prélèvement Forfaitaire Unique
-              (PFU)</strong> à 30 % : 12,8 % d'impôt sur le revenu et 17,2 % de
+              (PFU)</strong> à 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de
               prélèvements sociaux. Vous pouvez aussi opter pour le barème
               progressif (TMI 11/30/41/45 %) via la case 2OP du Cerfa 2042 si
               votre tranche d'IR est basse — l'option est globale et annuelle,
@@ -449,14 +449,14 @@ export default function CalculateurFiscalitePage() {
               Pas d'autre crypto en portefeuille. Calcul : prix de cession net =
               44 955 euros. Prix d'acquisition = 30 000 euros. Valeur globale =
               45 000 euros. Plus-value = 44 955 − (30 000 × 44 955 / 45 000) =
-              44 955 − 29 970 = <strong>14 985 euros</strong>. PFU 30 % :
-              4 495,50 euros d'impôt. Pour 5 exemples chiffrés détaillés (DCA,
+              44 955 − 29 970 = <strong>14 985 euros</strong>. PFU 31,4 % :
+              4 705,29 euros d'impôt. Pour 5 exemples chiffrés détaillés (DCA,
               swap, gros gain, micro montant), consultez notre guide{" "}
               <Link
                 href="/blog/calcul-pfu-30-crypto-exemple-chiffre"
                 className="text-primary-soft underline"
               >
-                Calcul PFU 30 % crypto — 5 exemples concrets
+                Calcul PFU 31,4 % crypto — 5 exemples concrets
               </Link>
               .
             </p>
@@ -536,7 +536,7 @@ export default function CalculateurFiscalitePage() {
               Si vous tradez de manière habituelle, organisée et avec des
               outils avancés (bots, levier, arbitrage), l'administration peut
               requalifier votre activité en <strong>BIC professionnel</strong>.
-              Le bénéfice net est alors imposé à votre TMI + 17,2 % PS +
+              Le bénéfice net est alors imposé à votre TMI + 18,6 % PS +
               cotisations sociales URSSAF (~22 %). Le calculateur intègre cette
               option pour vous aider à comparer les trois régimes. Pas de seuil
               chiffré officiel — c'est une appréciation faisceau d'indices par
@@ -554,12 +554,12 @@ export default function CalculateurFiscalitePage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">Comparatif</span>
           <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Différence PFU 30 % vs barème progressif : que choisir ?
+            Différence PFU 31,4 % vs barème progressif : que choisir ?
           </h2>
           <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
             <p>
-              Par défaut, vos plus-values crypto sont imposées au PFU 30 %
-              (12,8 % d'IR + 17,2 % de prélèvements sociaux). Mais vous pouvez{" "}
+              Par défaut, vos plus-values crypto sont imposées au PFU 31,4 %
+              (12,8 % d'IR + 18,6 % de prélèvements sociaux). Mais vous pouvez{" "}
               <strong>opter pour le barème progressif</strong> de l'impôt sur le
               revenu via la <strong>case 2OP du Cerfa 2042</strong>. Pour
               certains profils (TMI 0 ou 11 %), cette option divise l'impôt par
@@ -579,7 +579,7 @@ export default function CalculateurFiscalitePage() {
                       cellule (tableau de comparaison fiscal = critique). */}
                   <tr className="border-b border-border/60">
                     <th scope="col" className="px-3 py-2 text-left text-white">TMI</th>
-                    <th scope="col" className="px-3 py-2 text-left text-white">PFU 30 %</th>
+                    <th scope="col" className="px-3 py-2 text-left text-white">PFU 31,4 %</th>
                     <th scope="col" className="px-3 py-2 text-left text-white">
                       Barème + PS
                     </th>
@@ -591,40 +591,40 @@ export default function CalculateurFiscalitePage() {
                 <tbody className="text-white/80">
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">0 %</td>
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">17,2 %</td>
+                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="px-3 py-2">18,6 %</td>
                     <td className="px-3 py-2 text-success font-semibold">
                       Barème (−12,8 pts)
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">11 %</td>
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">28,2 %</td>
+                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="px-3 py-2">29,6 %</td>
                     <td className="px-3 py-2 text-success font-semibold">
                       Barème (−1,8 pt)
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">47,2 %</td>
+                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="px-3 py-2">48,6 %</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+17,2 pts)
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">41 %</td>
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">58,2 %</td>
+                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="px-3 py-2">59,6 %</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+28,2 pts)
                     </td>
                   </tr>
                   <tr>
                     <td className="px-3 py-2">45 %</td>
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">62,2 %</td>
+                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="px-3 py-2">63,6 %</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+32,2 pts)
                     </td>
@@ -665,14 +665,14 @@ export default function CalculateurFiscalitePage() {
                 href="/blog/bareme-progressif-vs-pfu-crypto-2026"
                 className="text-primary-soft underline"
               >
-                Barème progressif ou PFU 30 % crypto — lequel choisir en 2026
+                Barème progressif ou PFU 31,4 % crypto — lequel choisir en 2026
               </Link>{" "}
               et{" "}
               <Link
                 href="/blog/eviter-pfu-30-crypto-bareme-progressif-legalement-2026"
                 className="text-primary-soft underline"
               >
-                Comment éviter le PFU 30 % crypto légalement
+                Comment éviter le PFU 31,4 % crypto légalement
               </Link>
               .
             </p>
@@ -721,7 +721,7 @@ export default function CalculateurFiscalitePage() {
               Saisissez vos cessions, achats, valeur globale du portefeuille et
               frais dans notre calculateur ci-dessus. Il applique
               automatiquement la formule article 150 VH bis (avec le prorata)
-              et vous donne le total plus-value à reporter, sous PFU 30 % et
+              et vous donne le total plus-value à reporter, sous PFU 31,4 % et
               sous barème progressif. Calcul 100 % local, aucune donnée envoyée.
             </p>
 
