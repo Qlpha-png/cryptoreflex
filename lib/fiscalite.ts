@@ -10,10 +10,10 @@
  * choix de régime (PFU / Barème / BIC).
  *
  * Régimes couverts :
- *   - PFU 30 % (par défaut, particulier occasionnel)
- *       12,8 % IR + 17,2 % prélèvements sociaux
- *   - Barème progressif IR (option) : TMI utilisateur + 17,2 % PS
- *   - BIC professionnel (trading habituel) : TMI + 17,2 % PS + cotisations
+ *   - PFU 31,4 % (par défaut, particulier occasionnel)
+ *       12,8 % IR + 18,6 % prélèvements sociaux
+ *   - Barème progressif IR (option) : TMI utilisateur + 18,6 % PS
+ *   - BIC professionnel (trading habituel) : TMI + 18,6 % PS + cotisations
  *     URSSAF (~22 % du bénéfice net) — estimation simplifiée.
  *
  * Seuil d'exonération 2026 : si total des cessions ≤ 305 €/an, pas d'impôt.
@@ -33,11 +33,16 @@ export const SEUIL_EXONERATION_EUR = 305;
 /** Taux IR forfaitaire (PFU). */
 export const TAUX_IR_PFU = 0.128;
 
-/** Taux des prélèvements sociaux (CSG/CRDS) — applicable PFU et Barème. */
-export const TAUX_PS = 0.172;
+/**
+ * Taux des prélèvements sociaux (CSG/CRDS) — applicable PFU et Barème.
+ * 18,6 % depuis le 1er janvier 2026 : la LFSS 2026 a relevé la CSG sur les
+ * revenus du capital de 9,2 % à 10,6 % (+1,4 pt). Était 18,6 % jusqu'aux
+ * gains réalisés en 2025. Source : impots.gouv.fr (nouveautés revenus 2025).
+ */
+export const TAUX_PS = 0.186;
 
-/** Taux global PFU (flat tax). */
-export const TAUX_PFU = TAUX_IR_PFU + TAUX_PS; // 0.30
+/** Taux global PFU (flat tax) = 31,4 % depuis 2026. */
+export const TAUX_PFU = TAUX_IR_PFU + TAUX_PS; // 0.314
 
 /** Taux estimé des cotisations sociales TNS (URSSAF) en BIC. */
 export const TAUX_COTISATIONS_BIC = 0.22;
@@ -89,7 +94,7 @@ export interface FiscaliteResult {
   deficit: boolean;
   /** Part IR (impôt sur le revenu). */
   montantIR: number;
-  /** Part prélèvements sociaux (17,2 %). */
+  /** Part prélèvements sociaux (18,6 %). */
   montantPS: number;
   /** Cotisations sociales URSSAF (BIC uniquement). */
   cotisationsSociales: number;
@@ -174,8 +179,8 @@ function emptyResult(
 /* -------------------------------------------------------------------------- */
 
 /**
- * PFU 30 % (flat tax) — régime par défaut du particulier en gestion non
- * professionnelle. 12,8 % IR + 17,2 % PS appliqués à la PV nette.
+ * PFU 31,4 % (flat tax) — régime par défaut du particulier en gestion non
+ * professionnelle. 12,8 % IR + 18,6 % PS appliqués à la PV nette.
  *
  *   Si total cessions ≤ 305 € : exonération totale.
  *   Si PV nette ≤ 0 : pas d'impôt (moins-value, déficit).
@@ -216,7 +221,7 @@ export function computeTaxPFU(input: FiscaliteInput): FiscaliteResult {
 
 /**
  * Barème progressif IR (option globale annuelle). TMI fournie par l'utilisateur
- * (11/30/41/45 %) + 17,2 % PS sur la totalité de la PV.
+ * (11/30/41/45 %) + 18,6 % PS sur la totalité de la PV.
  *
  * Hypothèse simplificatrice : on applique la TMI directement à la PV (pas de
  * recalcul du barème complet par tranche, qui nécessiterait le revenu global
@@ -265,7 +270,7 @@ export function computeTaxBareme(
  *
  * On considère le bénéfice net (= PV nette) comme un revenu professionnel :
  *   - imposé à la TMI du foyer (IR au barème)
- *   - + 17,2 % PS
+ *   - + 18,6 % PS
  *   - + ~22 % cotisations sociales TNS (URSSAF micro-BIC ou TNS classique)
  *
  * Le seuil 305 € ne s'applique PAS au BIC (régime pro). On garde la possibilité
@@ -355,7 +360,7 @@ export function formatPercent(value: number, decimals = 1): string {
 export function regimeLabel(regime: Regime): string {
   switch (regime) {
     case "pfu":
-      return "PFU 30 % (flat tax)";
+      return "PFU 31,4 % (flat tax)";
     case "bareme":
       return "Barème progressif IR";
     case "bic":

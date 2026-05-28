@@ -2,9 +2,9 @@
  * Fiscalité crypto France — calculs officiels 2026
  * ---------------------------------------------------
  * Référence : article 150 VH bis du CGI (Code Général des Impôts).
- * Régime PFU ("flat tax") = 30 % au total :
+ * Régime PFU ("flat tax") = 31,4 % au total :
  *   - 12,8 % au titre de l'impôt sur le revenu (IR)
- *   - 17,2 % au titre des prélèvements sociaux (PS)
+ *   - 18,6 % au titre des prélèvements sociaux (PS)
  *
  * Périmètre : cessions à titre onéreux d'actifs numériques par un particulier
  * dans le cadre d'une gestion non professionnelle (occasionnel).
@@ -29,11 +29,15 @@ export const SEUIL_EXONERATION_EUR = 305;
 /** Taux de l'impôt sur le revenu (PFU). */
 export const TAUX_IR = 0.128;
 
-/** Taux des prélèvements sociaux. */
-export const TAUX_PS = 0.172;
+/**
+ * Taux des prélèvements sociaux. 18,6 % depuis le 1er janvier 2026 (CSG
+ * relevée de 9,2 % à 10,6 % par la LFSS 2026, +1,4 pt sur les revenus du
+ * capital). Était 18,6 % jusqu'aux gains réalisés en 2025.
+ */
+export const TAUX_PS = 0.186;
 
-/** Taux global de la flat tax (PFU). */
-export const TAUX_FLAT_TAX = TAUX_IR + TAUX_PS; // 0.30
+/** Taux global de la flat tax (PFU) = 31,4 % depuis 2026. */
+export const TAUX_FLAT_TAX = TAUX_IR + TAUX_PS; // 0.314
 
 export interface PlusValueInput {
   /** Montant de la cession (vente) en euros. */
@@ -66,9 +70,9 @@ export interface FlatTaxResult {
   baseImposable: number;
   /** Part IR (12,8 %). */
   montantIR: number;
-  /** Part prélèvements sociaux (17,2 %). */
+  /** Part prélèvements sociaux (18,6 %). */
   montantPS: number;
-  /** Total flat tax (30 %). */
+  /** Total flat tax (31,4 %). */
   totalFlatTax: number;
   /** Net après impôt = plus-value - flat tax. */
   netApresImpot: number;
@@ -128,7 +132,7 @@ export function calculatePlusValue(input: PlusValueInput): PlusValueResult {
 }
 
 /**
- * Calcule la flat tax (PFU 30 %) sur une plus-value.
+ * Calcule la flat tax (PFU 31,4 %) sur une plus-value.
  * Si la plus-value est négative ou nulle, retourne 0 d'impôt.
  */
 export function calculateFlatTax(plusValue: number): FlatTaxResult {
@@ -219,7 +223,7 @@ describe("calculatePlusValue", () => {
 });
 
 describe("calculateFlatTax", () => {
-  it("applique 30 % sur une plus-value positive", () => {
+  it("applique 31,4 % sur une plus-value positive", () => {
     const r = calculateFlatTax(1000);
     expect(r.montantIR).toBeCloseTo(128);
     expect(r.montantPS).toBeCloseTo(172);
@@ -244,7 +248,7 @@ describe("formatEur", () => {
 });
 
 describe("constantes", () => {
-  it("PFU = 30 %", () => {
+  it("PFU = 31,4 %", () => {
     expect(TAUX_FLAT_TAX).toBeCloseTo(0.30);
   });
   it("seuil exonération = 305 €", () => {

@@ -48,6 +48,7 @@ export interface ROIResult {
 export const ROI_TAX_CONSTANTS = {
   /** Seuil annuel d'exonération sur les cessions (Cerfa 2086). */
   TAX_FREE_THRESHOLD_EUR: 305,
-  /** PFU = 12,8 % IR + 17,2 % prélèvements sociaux = 30 %. */
-  PFU_RATE: 0.3,
+  /** PFU = 12,8 % IR + 18,6 % prélèvements sociaux = 31,4 % depuis 2026
+   *  (CSG relevée de 9,2 % à 10,6 % par la LFSS 2026). Était 30 % jusqu'en 2025. */
+  PFU_RATE: 0.314,
 } as const;

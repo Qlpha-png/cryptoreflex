@@ -796,7 +796,7 @@ export async function generateCerfaPdf(
       { highlight: COLORS.success },
     );
   }
-  drawKeyValue(ctx, "Impot PFU 30 % estime", formatEur(summary.impotPfuEur), {
+  drawKeyValue(ctx, "Impot PFU 31,4 % estime", formatEur(summary.impotPfuEur), {
     highlight: COLORS.gold,
   });
   drawKeyValue(ctx, "Net apres impot estime", formatEur(summary.netApresImpotEur));

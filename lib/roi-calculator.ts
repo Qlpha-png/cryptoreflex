@@ -34,7 +34,7 @@ import {
  * @example
  * calculateROI({ buyPrice: 100, sellPrice: 200, quantity: 5, buyFeeRate: 0.5, sellFeeRate: 0.5 })
  * // → invest: 500, valueFinal: 1000, profitGross: 500, totalFees: 7.5,
- * //   profitNet: 492.5, roi: 98.5 %, taxFr: 147.75 € (492.5 × 0.3)
+ * //   profitNet: 492.5, roi: 98.5 %, taxFr: 154.65 € (492.5 × 0.314)
  */
 export function calculateROI(input: ROIInput): ROIResult {
   const { buyPrice, sellPrice, quantity, buyFeeRate, sellFeeRate } = input;

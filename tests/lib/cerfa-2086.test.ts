@@ -200,20 +200,20 @@ describe("buildSummary", () => {
     expect(s.impotPfuEur).toBe(0);
   });
 
-  it("calcule l'impôt PFU 30 % sur la plus-value nette", () => {
+  it("calcule l'impôt PFU 31,4 % sur la plus-value nette", () => {
     const txs: CerfaTransaction[] = [
       { date: "2024-01-01", type: "buy", asset: "BTC", quantity: 1, priceEur: 5000, fees: 0 },
       // valeur portefeuille = 1 × 10 000 = 10 000
       // prix cession = 0.4 × 10 000 = 4000
       // prix_acq_impute = 5000 × 4000 / 10000 = 2000
       // PV = 2000
-      // impot = 2000 × 0.30 = 600
+      // impot = 2000 × 0.314 = 628 (PFU 31,4 % depuis 2026)
       { date: "2024-06-01", type: "sell", asset: "BTC", quantity: 0.4, priceEur: 10000, fees: 0 },
     ];
     const cessions = computeCessions(txs, 2024);
     const s = buildSummary(cessions, txs, 2024);
     expect(s.exonere).toBe(false);
-    expect(s.impotPfuEur).toBeCloseTo(600);
+    expect(s.impotPfuEur).toBeCloseTo(628);
   });
 
   it("détecte les exchanges étrangers pour 3916-bis", () => {
