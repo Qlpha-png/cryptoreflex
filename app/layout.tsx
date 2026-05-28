@@ -60,13 +60,6 @@ const NewsletterStickyBar = dynamic(
   { ssr: false }
 );
 
-// FIX BUNDLE 2026-05-06 — CursorHalo désactivé sur touch + reduced-motion
-// (CSS no-op sur 70% des sessions mobile). Lazy-load ssr:false évite de
-// charger le JS sur ces sessions où il ne fait rien.
-const CursorHalo = dynamic(() => import("@/components/ui/CursorHalo"), {
-  ssr: false,
-});
-
 // FIX BUNDLE 2026-05-06 — ClickFallback ne sert que pour 5 slugs crypto
 // (ethereum/solana/sui/aptos/polkadot — wallet extensions cassent
 // l'hydration). Auparavant chargé global sur 100% des pages. Lazy-load
@@ -525,11 +518,6 @@ export default function RootLayout({
             card, scaling infini. Désactivé en pointer:coarse (mobile) et
             prefers-reduced-motion (cf. SpotlightDelegate.tsx). */}
         <SpotlightDelegate />
-        {/* BATCH 29A — CursorHalo : halo gold radial 320px qui suit
-            la souris en lerp. Désactivé sur touch + reduced-motion
-            via CSS. Pattern Linear/Cursor/Arc.net. Aucun re-render
-            React (transform direct sur ref). */}
-        <CursorHalo />
         {/* BATCH 36 — VisibilityPauser : pause les animations CSS gourmandes
             quand l'onglet est masqué (Page Visibility API). Économie batterie
             mobile + Lighthouse Energy. Aucun impact UX visible. */}

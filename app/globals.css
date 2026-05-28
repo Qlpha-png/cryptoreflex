@@ -670,28 +670,6 @@ body {
   }
 }
 
-/* CURSOR HALO — radial-gradient gold qui suit le curseur via
-   --mx/--my CSS vars (set par JS lerp 12%). Désactivé sur touch
-   (pointer:coarse) et reduced-motion. */
-.cursor-halo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(245, 165, 36, 0.18),
-    transparent 60%
-  );
-  filter: blur(40px);
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: 1;
-  will-change: transform;
-}
-
 /* REVEAL ON SCROLL — opacity + translateY 24px, déclenché via
    IntersectionObserver. Réutilisable sur toutes les sections. */
 .reveal {
@@ -727,19 +705,9 @@ body {
   .live-pulse {
     animation: none !important;
   }
-  .cursor-halo {
-    display: none !important;
-  }
   .reveal {
     opacity: 1 !important;
     transform: none !important;
-  }
-}
-
-/* Touch devices — désactiver curseur halo */
-@media (pointer: coarse) {
-  .cursor-halo {
-    display: none !important;
   }
 }
 
