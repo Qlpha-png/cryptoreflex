@@ -21,6 +21,9 @@ interface Props {
 }
 
 export const revalidate = 86400;
+// Seuls les parcours avec quiz publié existent ; tout autre id => vrai 404
+// (ex: /academie/fiscalite/quiz tant que le quiz Fiscalité n'est pas écrit).
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return TRACKS.filter((t) => getQuizForTrack(t.id) !== null).map((t) => ({

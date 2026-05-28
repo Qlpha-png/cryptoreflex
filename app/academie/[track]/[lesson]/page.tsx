@@ -35,6 +35,9 @@ interface Props {
 }
 
 export const revalidate = 86400;
+// Combos (track × leçon) figés à la compilation. Tout couple hors liste
+// => vrai 404 (le notFound() seul renvoyait un 200 en rendu on-demand).
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   // Cartesien track × lesson, avec déduplication implicite (chaque combo unique).

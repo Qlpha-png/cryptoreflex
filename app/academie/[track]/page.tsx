@@ -32,6 +32,9 @@ interface Props {
 }
 
 export const revalidate = 86400;
+// Le set de parcours est fixe (compilé). Refuser tout id hors generateStaticParams
+// => vrai 404 (évite le soft-404 où notFound() renvoyait un 200 en rendu on-demand).
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return TRACKS.map((t) => ({ track: t.id }));
