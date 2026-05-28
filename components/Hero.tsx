@@ -13,13 +13,18 @@ import {
 // frais) -> text content mismatch sur les valeurs $US/+0.83%. Le
 // widget LIVE n'apporte AUCUN benefice SEO (chiffres dynamiques).
 // Skeleton reserve la place via min-h pour 0 CLS.
-const HeroLiveWidget = dynamic(() => import("@/components/HeroLiveWidget"), {
+// BATCH 55 — colonne droite desktop : grand graphique de prix premium
+// (HeroPriceChart) sur données réelles (sparkline 7j + live SSE). Remplace
+// l'ancienne liste compacte pour donner un point focal visuel "dynamique +
+// technique + beau". Client-only (ssr:false) → 0 mismatch d'hydration ;
+// skeleton min-h pour 0 CLS.
+const HeroPriceChart = dynamic(() => import("@/components/HeroPriceChart"), {
   ssr: false,
   loading: () => (
     <aside
-      aria-label="Widget marche en cours de chargement"
+      aria-label="Graphique de marche en cours de chargement"
       className="rounded-2xl border border-border bg-surface/40 p-5 motion-safe:animate-pulse"
-      style={{ minHeight: 280 }}
+      style={{ minHeight: 320 }}
     />
   ),
 });
@@ -269,13 +274,11 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
               mobile + complet desktop) au lieu d'un seul caché. */}
           {/* Colonne droite — live widget DESKTOP (>=lg). */}
           <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
-            <Tilt3D max={5}>
-              <HeroLiveWidget
-                prices={prices}
-                sparklines={sparklines}
-                updatedAt={updatedAt}
-              />
-            </Tilt3D>
+            <HeroPriceChart
+              prices={prices}
+              sparklines={sparklines}
+              updatedAt={updatedAt}
+            />
           </div>
         </div>
 
