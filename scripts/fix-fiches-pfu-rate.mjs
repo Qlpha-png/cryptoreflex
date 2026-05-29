@@ -29,7 +29,30 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+
+// Charge .env.local / .env de façon robuste (gère CRLF + BOM, ne remplace pas
+// une variable déjà définie). Évite la fragilité de `node --env-file=`.
+function loadEnvFile(file) {
+  try {
+    const txt = readFileSync(file, "utf8").replace(/^﻿/, "");
+    for (const line of txt.split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/i);
+      if (!m) continue;
+      let v = m[2].trim();
+      if (
+        (v.startsWith('"') && v.endsWith('"')) ||
+        (v.startsWith("'") && v.endsWith("'"))
+      )
+        v = v.slice(1, -1);
+      if (process.env[m[1]] === undefined) process.env[m[1]] = v;
+    }
+  } catch {
+    /* fichier absent : on ignore */
+  }
+}
+loadEnvFile(".env.local");
+loadEnvFile(".env");
 
 const APPLY = process.argv.includes("--apply");
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
