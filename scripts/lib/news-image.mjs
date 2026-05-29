@@ -12,7 +12,13 @@
  *    (auteur + licence + lien) → stockée et affichée côté rendu.
  *
  * Retourne { url, credit, creditUrl, query } ou null.
+ *
+ * IMPORTANT : la CSP du site (img-src) n'autorise PAS les hôtes externes
+ * (Flickr, etc.) → on TÉLÉCHARGE la photo en local (/public/news-covers) et
+ * on sert depuis 'self'. `fetchAndStorePhoto` fait fetch + download + renvoie
+ * un chemin local prêt à mettre dans `image:`.
  */
+import { writeFileSync, mkdirSync } from "node:fs";
 
 const COIN_TERMS = [
   { re: /bitcoin|btc|halving|satoshi/i, term: "bitcoin" },
@@ -104,4 +110,39 @@ export async function fetchNewsPhoto(article) {
     }
   }
   return null;
+}
+
+/** Télécharge une image distante en local (/public/news-covers) → chemin servi
+ *  depuis 'self' (compatible CSP). Renvoie le chemin relatif. */
+export async function downloadPhoto(url, slug, publicDir = "public/news-covers") {
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(20000),
+    headers: { "User-Agent": "Cryptoreflex/1.0 (contact@cryptoreflex.fr)" },
+  });
+  if (!res.ok) throw new Error(`download HTTP ${res.status}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.startsWith("image/")) throw new Error(`pas une image (${ct})`);
+  const ext = ct.includes("png") ? "png" : ct.includes("webp") ? "webp" : ct.includes("gif") ? "gif" : "jpg";
+  const buf = Buffer.from(await res.arrayBuffer());
+  if (buf.length < 1500) throw new Error(`image trop petite (${buf.length} o)`);
+  mkdirSync(publicDir, { recursive: true });
+  const safe = String(slug).replace(/[^a-z0-9-]/gi, "-").slice(0, 80);
+  writeFileSync(`${publicDir}/${safe}.${ext}`, buf);
+  return `/news-covers/${safe}.${ext}`;
+}
+
+/** fetch + download → photo locale prête pour `image:`. null si rien/échec. */
+export async function fetchAndStorePhoto(article) {
+  const photo = await fetchNewsPhoto(article);
+  if (!photo) return null;
+  const slug =
+    article.slug ||
+    String(article.title || "news").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 60);
+  try {
+    const local = await downloadPhoto(photo.url, slug);
+    return { ...photo, url: local };
+  } catch (e) {
+    console.warn(`[photo] download KO (${e.message}) → pas d'image (repli cover OG)`);
+    return null;
+  }
 }

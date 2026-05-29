@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" role="img" aria-labelledby="title desc">
+  <title id="title">Fiat-backed stablecoin price around par</title>
+  <desc id="desc">Simplified chart based on IMF Departmental Paper No. 25/09, Understanding Stablecoins. The chart shows a fiat-backed stablecoin market price moving above and below par, with minting at par when the market price is above par and redemption at par when the market price is below par.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .axis { stroke: #72777d; stroke-width: 3; }
+      .grid { stroke: #eaecf0; stroke-width: 2.5; }
+      .peg { stroke: #14866d; stroke-width: 5.5; stroke-dasharray: 14 10; }
+      .price { fill: none; stroke: #3366cc; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+      .arrow-orange { stroke: #b35c00; stroke-width: 5; fill: none; marker-end: url(#arrowOrange); }
+      .arrow-green { stroke: #14866d; stroke-width: 5; fill: none; marker-end: url(#arrowGreen); }
+      .box-orange { fill: #fff0df; stroke: #b35c00; stroke-width: 3; rx: 22; }
+      .box-green { fill: #e6f4ef; stroke: #14866d; stroke-width: 3; rx: 22; }
+      .label { font: 700 34px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #202122; }
+      .text { font: 500 29px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #54595d; }
+      .axisText { font: 700 25px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #54595d; letter-spacing: .02em; }
+      .tickText { font: 500 27px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #54595d; }
+      .pegLabel { font: 700 31px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #202122; }
+    </style>
+
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9.2" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9.2,5 L1,9 Z" fill="#b35c00"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9.2" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9.2,5 L1,9 Z" fill="#14866d"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1400" height="780"/>
+
+  <!-- Chart area -->
+  <line class="grid" x1="145" y1="150" x2="1320" y2="150"/>
+  <line class="grid" x1="145" y1="365" x2="1320" y2="365"/>
+  <line class="grid" x1="145" y1="580" x2="1320" y2="580"/>
+  <line class="axis" x1="145" y1="695" x2="1320" y2="695"/>
+  <line class="axis" x1="145" y1="70" x2="145" y2="695"/>
+
+  <!-- Axis labels -->
+  <text class="axisText" x="50" y="50">market price</text>
+  <text class="tickText" x="48" y="159">$1.05</text>
+  <text class="tickText" x="48" y="374">$1.00</text>
+  <text class="tickText" x="48" y="589">$0.95</text>
+  <text class="axisText" x="165" y="745">time</text>
+
+  <!-- Par line -->
+  <line class="peg" x1="145" y1="365" x2="1320" y2="365"/>
+  <text class="pegLabel" x="1140" y="335">$1.00 par</text>
+
+  <!-- Price curve -->
+  <path class="price" d="M148 365
+    C225 363, 300 345, 370 290
+    C440 235, 510 165, 600 190
+    C688 215, 752 335, 832 450
+    C905 552, 1002 580, 1088 480
+    C1178 377, 1220 360, 1320 365"/>
+
+  <!-- Above-par explanation -->
+  <rect class="box-orange" x="760" y="75" width="490" height="135" rx="22"/>
+  <text class="label" x="800" y="125">Market price above par</text>
+  <text class="text" x="800" y="170">Issuers mint stablecoins at par</text>
+  <path class="arrow-orange" d="M760 172 C690 130, 625 142, 585 185"/>
+
+  <!-- Below-par explanation -->
+  <rect class="box-green" x="160" y="455" width="590" height="135" rx="22"/>
+  <text class="label" x="200" y="505">Market price below par</text>
+  <text class="text" x="200" y="550">Arbitrageurs redeem stablecoins at par</text>
+  <path class="arrow-green" d="M750 526 C820 568, 900 568, 970 543"/>
+</svg>

@@ -29,7 +29,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { callLLMRewriter } from "./lib/llm-rewriter.mjs";
-import { fetchNewsPhoto } from "./lib/news-image.mjs";
+import { fetchAndStorePhoto } from "./lib/news-image.mjs";
 
 /* -------------------------------------------------------------------------- */
 /*  Configuration                                                             */
@@ -438,7 +438,7 @@ async function rewriteNewsWithLLM(raw) {
 
   // Vraie photo pertinente (recherche pro). Non bloquant : si KO, la cover OG
   // dynamique sert de repli au rendu.
-  const photo = await fetchNewsPhoto({
+  const photo = await fetchAndStorePhoto({
     title: llmOut.title,
     category: llmOut.category,
     keywords: raw.matchedKeywords,
