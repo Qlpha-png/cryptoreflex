@@ -31,7 +31,7 @@
 
 import { unstable_cache } from "next/cache";
 import { getAllCryptos as getAllStaticCryptos } from "@/lib/cryptos";
-import { getFeaturedCryptosLight, getAllPublishedLlmCryptosLight } from "@/lib/cryptos-db";
+import { getAllPublishedLlmCryptosLight } from "@/lib/cryptos-db";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -68,12 +68,14 @@ export interface UnifiedCrypto {
  */
 export const getAllCryptosUnified = unstable_cache(
   async (): Promise<UnifiedCrypto[]> => {
-    // OPTIM 2026-05-10 — getFeaturedCryptosLight au lieu de getFeaturedCryptos.
-    // 200 bytes/row vs 2127 bytes/row = -90% Supabase bandwidth.
-    // Pour 1000 rows : 2 MB → 200 KB par cache miss (1×/heure).
+    // FIX 2026-05-30 — getAllPublishedLlmCryptosLight (SANS filtre quality_tier)
+    // au lieu de getFeaturedCryptosLight (limité T1/T2/T3) : la plupart des ~680
+    // fiches LLM ont un tier null → elles étaient exclues de TOUTES les surfaces
+    // consommant cette liste (hub /cryptos, /alertes autocomplete, whitelists
+    // /api/onchain & /api/news, /admin). On inclut désormais les 780 partout.
     const [statics, llm] = await Promise.all([
       Promise.resolve(getAllStaticCryptos()),
-      getFeaturedCryptosLight(1000, ["T1", "T2", "T3"]),
+      getAllPublishedLlmCryptosLight(2000),
     ]);
 
     // Set des coingeckoIds statiques pour eviter doublons LLM (BTC, ETH...).
@@ -100,51 +102,17 @@ export const getAllCryptosUnified = unstable_cache(
       })),
     ];
   },
-  ["cryptos-unified"],
-  // OPTIM 2026-05-10 — 1h → 6h. Liste de cryptos change rarement
-  // (1×/jour via cron LLM-pipeline). Cache 6h évite spam Supabase.
+  // v2 : nouvelle clé pour repartir propre (l'ancienne "cryptos-unified" pouvait
+  // être figée à ~100, peuplée pendant un build sans accès Supabase + filtre tier).
+  ["cryptos-unified-v2"],
+  // Cache 6h : la liste change rarement (1×/jour via cron LLM-pipeline).
   { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
 );
 
 /**
- * Variante COMPLETE pour le hub /cryptos (navigation des 780).
- *
- * Différence clé avec getAllCryptosUnified : utilise getAllPublishedLlmCryptosLight
- * (toutes les fiches LLM publiées, SANS filtre quality_tier) au lieu de
- * getFeaturedCryptosLight (limité à T1/T2/T3). Beaucoup de fiches LLM ont un
- * tier null/hors-liste → elles étaient absentes du hub alors qu'elles ont une
- * page et figurent au sitemap. Clé de cache distincte ("cryptos-browsable-all")
- * pour ne pas dépendre du cache "cryptos-unified" (qui peut être figé à 100 si
- * peuplé pendant un build sans accès Supabase).
+ * Alias utilisé par le hub /cryptos. Depuis le fix du filtre quality_tier,
+ * getAllCryptosUnified renvoie déjà les 780 (100 statiques + toutes les fiches
+ * LLM publiées) → on pointe simplement dessus : une seule source de vérité,
+ * un seul cache, partout (hub, /alertes, /api).
  */
-export const getAllCryptosBrowsable = unstable_cache(
-  async (): Promise<UnifiedCrypto[]> => {
-    const [statics, llm] = await Promise.all([
-      Promise.resolve(getAllStaticCryptos()),
-      getAllPublishedLlmCryptosLight(2000),
-    ]);
-    const staticIds = new Set(statics.map((c) => c.coingeckoId));
-    const llmFiltered = llm.filter((f) => !staticIds.has(f.coingecko_id));
-    return [
-      ...statics.map((c) => ({
-        id: c.id,
-        coingeckoId: c.coingeckoId,
-        name: c.name,
-        symbol: c.symbol,
-        category: c.category,
-        source: "static" as const,
-      })),
-      ...llmFiltered.map((f) => ({
-        id: f.coingecko_id,
-        coingeckoId: f.coingecko_id,
-        name: f.name,
-        symbol: f.symbol,
-        category: f.categories?.[0],
-        source: "llm-pipeline" as const,
-        marketCapRank: f.market_cap_rank,
-      })),
-    ];
-  },
-  ["cryptos-browsable-all-v1"],
-  { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
-);
+export const getAllCryptosBrowsable = getAllCryptosUnified;
