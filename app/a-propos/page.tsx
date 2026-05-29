@@ -168,7 +168,7 @@ export default function AProposPage() {
               <p>
                 Aider les particuliers français à <strong>choisir une plateforme
                 crypto fiable</strong>, comprendre la <strong>fiscalité française</strong>{" "}
-                (flat tax 30%, formulaire 2086, déclaration des comptes étrangers) et
+                (flat tax 31,4%, formulaire 2086, déclaration des comptes étrangers) et
                 éviter les pièges du marché — sans jargon, sans hype, sans «&nbsp;100x
                 garanti&nbsp;».
               </p>

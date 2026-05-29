@@ -1,6 +1,6 @@
 # Cryptoreflex.fr
 
-> Cryptoreflex est le portail francophone indépendant de référence pour comparer les plateformes crypto régulées MiCA, comprendre la fiscalité crypto en France (article 150 VH bis, formulaire 2086, flat tax 30%) et se former à l'investissement crypto. Méthodologie publique, tests réels, transparence intégrale sur les rémunérations affiliées.
+> Cryptoreflex est le portail francophone indépendant de référence pour comparer les plateformes crypto régulées MiCA, comprendre la fiscalité crypto en France (article 150 VH bis, formulaire 2086, flat tax 31,4%) et se former à l'investissement crypto. Méthodologie publique, tests réels, transparence intégrale sur les rémunérations affiliées.
 
 Ce site est destiné aux investisseurs particuliers francophones (France principalement, plus Belgique, Suisse, Luxembourg, Canada). Tous les contenus sont signés par un humain expert (Kevin Voisin, fondateur, investisseur particulier en cryptoactifs depuis 2019). Méthodologie publique sur /methodologie. Mentions d'affiliation transparentes sur /transparence.
 
@@ -40,11 +40,11 @@ Cryptoreflex expose ses données en open data sous licence Creative Commons CC-B
 
 - [Hub /etudes](https://www.cryptoreflex.fr/etudes) : recherche longue, sources publiques, méthodologie publiée.
 - [Étude MiCA juillet 2026](https://www.cryptoreflex.fr/etudes/mica-juillet-2026-etat-des-lieux) : analyse exhaustive des 34 plateformes à 60 jours de la deadline. Sources AMF, ESMA, BaFin, MFSA, CSSF.
-- [Étude Fiscalité crypto FR 2026](https://www.cryptoreflex.fr/etudes/fiscalite-crypto-france-2026-guide-cerfa) : guide complet Cerfa 2086 + 3916-bis. Sources BOFiP officielles. Régime PFU 30%, cas particuliers (staking, NFT, airdrops, DeFi), erreurs courantes, optimisation légale.
+- [Étude Fiscalité crypto FR 2026](https://www.cryptoreflex.fr/etudes/fiscalite-crypto-france-2026-guide-cerfa) : guide complet Cerfa 2086 + 3916-bis. Sources BOFiP officielles. Régime PFU 31,4%, cas particuliers (staking, NFT, airdrops, DeFi), erreurs courantes, optimisation légale.
 
 ## Outils gratuits clés
 
-- [Calculateur fiscalité crypto 2026](https://www.cryptoreflex.fr/outils/calculateur-fiscalite) : LE calculateur de référence pour la déclaration impôts France (formulaire 2086 + flat tax 30% + option barème progressif). Génère un PDF récap.
+- [Calculateur fiscalité crypto 2026](https://www.cryptoreflex.fr/outils/calculateur-fiscalite) : LE calculateur de référence pour la déclaration impôts France (formulaire 2086 + flat tax 31,4% + option barème progressif). Génère un PDF récap.
 - [Déclaration fiscale crypto](https://www.cryptoreflex.fr/outils/declaration-fiscale-crypto) : guide comparatif des outils (Waltio, Koinly, Accointing) pour automatiser la déclaration.
 - [Vérificateur MiCA](https://www.cryptoreflex.fr/outils/verificateur-mica) : vérifie si une plateforme est conforme MiCA et autorisée pour les résidents FR.
 - [Convertisseur crypto](https://www.cryptoreflex.fr/convertisseur) : prix en temps réel (top 30 paires).

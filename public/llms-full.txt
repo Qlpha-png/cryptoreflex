@@ -14,7 +14,7 @@
 Cryptoreflex.fr est un média indépendant spécialisé dans l'écosystème crypto francophone, lancé le 15 avril 2026 par Kevin Voisin (entrepreneur individuel français, SIREN 103352621). Le site couvre cinq verticales :
 
 1. **Comparateur plateformes** : avis indépendants, méthodologie publique en 6 critères pondérés (frais, sécurité, UX, conformité MiCA, support FR, fonctionnalités).
-2. **Fiscalité crypto France** : guides et calculateur sur l'article 150 VH bis, formulaire 2086, flat tax 30%, déclaration comptes étrangers (3916-bis).
+2. **Fiscalité crypto France** : guides et calculateur sur l'article 150 VH bis, formulaire 2086, flat tax 31,4%, déclaration comptes étrangers (3916-bis).
 3. **Académie certifiante** : 3 parcours de formation (Fondamentaux, Investisseur, Fiscalité-Conformité).
 4. **Actualités + Analyses techniques** : news quotidiennes catégorisées (Marche / Regulation / Technologie / Plateformes) + analyses TA quotidiennes sur le top 10 cryptos.
 5. **Outils gratuits** : 8 calculateurs et trackers (fiscalité, DCA, ROI, portfolio, conversion, glossaire, whitepaper, vérificateur MiCA).

@@ -69,25 +69,29 @@ const sb = createClient(URL, KEY, { auth: { persistSession: false } });
 
 // « 30 % » précédé (≤ 25 caractères, même clause) d'un marqueur fiscal.
 const FISCAL_30 =
-  /((?:flat\s*tax|PFU|prélèvement forfaitaire(?:\s*unique)?)[^.\n]{0,25}?)\b30\s?%/gi;
+  /((?:flat\s*tax|PFU|(?:prélèvement|taux) forfaitaire(?:\s*unique)?)[^.\n]{0,30}?)\b30\s?%/gi;
 
 function fixText(s) {
-  if (typeof s !== "string") return { text: s, n: 0 };
+  if (typeof s !== "string") return { text: s, n: 0, samples: [] };
   let n = 0;
+  const samples = [];
   const text = s.replace(FISCAL_30, (full) => {
     n++;
+    samples.push(full.replace(/\s+/g, " ").trim());
     return full.replace(/\b30\s?%/, "31,4 %");
   });
-  return { text, n };
+  return { text, n, samples };
 }
 
 /** Parcourt récursivement le JSON llm_content et corrige toutes les strings. */
 function deepFix(value) {
   let count = 0;
+  const samples = [];
   const walk = (v) => {
     if (typeof v === "string") {
-      const { text, n } = fixText(v);
+      const { text, n, samples: sm } = fixText(v);
       count += n;
+      samples.push(...sm);
       return text;
     }
     if (Array.isArray(v)) return v.map(walk);
@@ -98,7 +102,8 @@ function deepFix(value) {
     }
     return v;
   };
-  return { fixed: walk(value), count };
+  const fixed = walk(value);
+  return { fixed, count, samples };
 }
 
 const { data, error } = await sb
@@ -115,20 +120,33 @@ if (error) {
 let touched = 0;
 let totalRepl = 0;
 const backups = [];
+const misses = [];
 
 for (const row of data || []) {
-  const { fixed, count } = deepFix(row.llm_content || {});
+  const { fixed, count, samples } = deepFix(row.llm_content || {});
   if (count > 0) {
     touched++;
     totalRepl += count;
     backups.push({ coingecko_id: row.coingecko_id, before: row.llm_content });
-    console.log(`${APPLY ? "FIX " : "DRY "}${row.coingecko_id} — ${count} remplacement(s)`);
+    console.log(
+      `${APPLY ? "FIX " : "DRY "}${row.coingecko_id} — ${count} : ${samples.join(" | ").slice(0, 150)}`
+    );
     if (APPLY) {
       const { error: upErr } = await sb
         .from("cryptos")
         .update({ llm_content: fixed })
         .eq("coingecko_id", row.coingecko_id);
       if (upErr) console.error(`  ! update KO ${row.coingecko_id}: ${upErr.message}`);
+    }
+  } else {
+    // Détection des MISS : "30 %" en contexte fiscal mais non capté par le regex
+    // ciblé (phrasing différent) → à examiner manuellement, ne pas corriger en aveugle.
+    const raw = JSON.stringify(row.llm_content || {});
+    if (
+      /\b30\s?%/.test(raw) &&
+      /flat ?tax|PFU|prélèvement forfaitaire|plus-value|imposable|impôt/i.test(raw)
+    ) {
+      misses.push(row.coingecko_id);
     }
   }
 }
@@ -144,6 +162,11 @@ if (APPLY && backups.length) {
 console.log(
   `\n${APPLY ? "APPLIQUÉ" : "DRY-RUN"} : ${touched} fiches concernées, ${totalRepl} occurrences « PFU 30 % » → « 31,4 % ».`
 );
+if (misses.length) {
+  console.log(
+    `⚠️ MISS : ${misses.length} fiche(s) ont un « 30 % » en contexte fiscal NON capté par le regex (phrasing different) — a examiner : ${misses.slice(0, 20).join(", ")}${misses.length > 20 ? " …" : ""}`
+  );
+}
 console.log(
   APPLY
     ? "Terminé. Pense à purger le cache (revalidateTag 'cryptos' / 'crypto-fiche:*' ou redeploy)."

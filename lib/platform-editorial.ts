@@ -425,7 +425,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Quelle différence entre acheter du BTC sur Trade Republic vs un ETP Bitcoin ?",
         answer:
-          "Acheter du BTC sur Trade Republic tu expose directement au BTC (custodial). Acheter un ETP Bitcoin (par exemple le 21Shares Bitcoin Core ETP) tu expose au BTC via un produit financier coté en Bourse, avec des frais de gestion annuels (généralement 0,2 à 0,3 %). L'ETP a l'avantage d'être éligible au PEA-PME pour certains, l'inconvénient des frais récurrents. Le BTC direct a l'avantage de zéro frais récurrent, l'inconvénient d'être taxé au régime des plus-values sur actifs numériques (flat tax 30 %).",
+          "Acheter du BTC sur Trade Republic tu expose directement au BTC (custodial). Acheter un ETP Bitcoin (par exemple le 21Shares Bitcoin Core ETP) tu expose au BTC via un produit financier coté en Bourse, avec des frais de gestion annuels (généralement 0,2 à 0,3 %). L'ETP a l'avantage d'être éligible au PEA-PME pour certains, l'inconvénient des frais récurrents. Le BTC direct a l'avantage de zéro frais récurrent, l'inconvénient d'être taxé au régime des plus-values sur actifs numériques (flat tax 31,4 %).",
       },
       {
         question: "Trade Republic propose-t-elle un programme de parrainage ?",
@@ -435,7 +435,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer mon compte Trade Republic aux impôts français ?",
         answer:
-          "Trade Republic Bank GmbH étant domiciliée en Allemagne, le compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values crypto sont à reporter sur le formulaire 2086 (flat tax 30 %). Trade Republic fournit un récapitulatif fiscal annuel téléchargeable depuis l'application, qui facilite la déclaration mais ne se substitue pas à la déclaration française obligatoire.",
+          "Trade Republic Bank GmbH étant domiciliée en Allemagne, le compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values crypto sont à reporter sur le formulaire 2086 (flat tax 31,4 %). Trade Republic fournit un récapitulatif fiscal annuel téléchargeable depuis l'application, qui facilite la déclaration mais ne se substitue pas à la déclaration française obligatoire.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -561,7 +561,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer mon compte Bitstack aux impôts français ?",
         answer:
-          "Bitstack étant une société française basée à Bordeaux, ton compte n'a pas à être déclaré au formulaire 3916-bis. Les plus-values de cession crypto restent à déclarer sur le formulaire 2086 (flat tax 30 %). Bitstack fournit un récapitulatif fiscal annuel téléchargeable depuis l'application, particulièrement adapté à la fiscalité française.",
+          "Bitstack étant une société française basée à Bordeaux, ton compte n'a pas à être déclaré au formulaire 3916-bis. Les plus-values de cession crypto restent à déclarer sur le formulaire 2086 (flat tax 31,4 %). Bitstack fournit un récapitulatif fiscal annuel téléchargeable depuis l'application, particulièrement adapté à la fiscalité française.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -624,7 +624,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer mon compte SwissBorg aux impôts français ?",
         answer:
-          "L'entité SwissBorg utilisée par les Français étant principalement domiciliée à l'étranger (Suisse / Estonie selon les services), ton compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values crypto sont à reporter sur le formulaire 2086 (flat tax 30 %). SwissBorg fournit un récapitulatif fiscal annuel téléchargeable.",
+          "L'entité SwissBorg utilisée par les Français étant principalement domiciliée à l'étranger (Suisse / Estonie selon les services), ton compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values crypto sont à reporter sur le formulaire 2086 (flat tax 31,4 %). SwissBorg fournit un récapitulatif fiscal annuel téléchargeable.",
       },
     ],
     related: RELATED_DEFAULT,

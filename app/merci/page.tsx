@@ -60,7 +60,7 @@ const suggestedArticles = [
   {
     title: "Fiscalité crypto en France : tout comprendre",
     href: "/blog",
-    desc: "PFU 30%, formulaire 2086, plus-values : ce qu'il faut déclarer en 2026.",
+    desc: "PFU 31,4%, formulaire 2086, plus-values : ce qu'il faut déclarer en 2026.",
   },
 ];
 
@@ -69,7 +69,7 @@ const tools = [
     icon: Calculator,
     title: "Calculateur de plus-values crypto",
     href: "/outils",
-    desc: "Estime ton imposition crypto en France (flat tax 30%) en quelques clics.",
+    desc: "Estime ton imposition crypto en France (flat tax 31,4%) en quelques clics.",
   },
   {
     icon: TrendingUp,

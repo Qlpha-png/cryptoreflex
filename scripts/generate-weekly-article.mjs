@@ -161,6 +161,7 @@ RÈGLES STRICTES :
 - Aucun jargon non expliqué (toujours définir les termes techniques en parenthèses ou via une mini-définition)
 - Disclaimer YMYL OBLIGATOIRE en fin d'article : <Callout type="warning" title="Avertissement">Cet article est purement informatif. Il ne constitue pas un conseil...</Callout>
 - Sources légales/officielles citées si applicable (BOFiP, AMF, ESMA, règlement UE 2023/1114, articles du CGI)
+- EXACTITUDE FISCALE OBLIGATOIRE : le PFU / flat tax sur les plus-values crypto = 31,4 % depuis le 1er janvier 2026 (12,8 % d'IR + 18,6 % de prélèvements sociaux). N'écris JAMAIS « 30 % » ni « 17,2 % » comme taux courants (ce sont les anciens taux, valables jusqu'aux gains 2025). En cas de doute sur un chiffre fiscal, reste général.
 - Internal links naturels vers articles existants : utilise les slugs fournis sous forme [Texte ancre](/blog/slug-exact)
 - Structure :
   - Intro 100 mots (hook + promesse claire)
