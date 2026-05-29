@@ -79,7 +79,14 @@ async function fetchOpenverse(query, slug) {
     signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) throw new Error(`Openverse ${res.status}`);
-  const results = ((await res.json()).results || []).filter((x) => x.url && /^https:\/\//.test(x.url));
+  const results = ((await res.json()).results || []).filter(
+    (x) =>
+      x.url &&
+      /^https:\/\//.test(x.url) &&
+      x.filetype !== "svg" &&
+      !/\.svg($|\?)/i.test(x.url) &&
+      (x.width || 0) >= 600
+  );
   if (!results.length) return null;
   const r = results[pickIndex(slug, results.length)];
   const lic = (r.license || "cc").toUpperCase();
@@ -122,9 +129,15 @@ export async function downloadPhoto(url, slug, publicDir = "public/news-covers")
   if (!res.ok) throw new Error(`download HTTP ${res.status}`);
   const ct = res.headers.get("content-type") || "";
   if (!ct.startsWith("image/")) throw new Error(`pas une image (${ct})`);
+  if (ct.includes("svg")) throw new Error("SVG non supporté (pas une photo raster)");
   const ext = ct.includes("png") ? "png" : ct.includes("webp") ? "webp" : ct.includes("gif") ? "gif" : "jpg";
   const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.length < 1500) throw new Error(`image trop petite (${buf.length} o)`);
+  // En-tête magique : rejette SVG/HTML déguisé en image (cas Openverse .jpg = SVG).
+  const head = buf.subarray(0, 5).toString("latin1").toLowerCase();
+  if (head.startsWith("<?xml") || head.startsWith("<svg") || head.startsWith("<!doc") || head.startsWith("<html")) {
+    throw new Error("contenu SVG/HTML, pas une vraie image");
+  }
+  if (buf.length < 6000) throw new Error(`image trop petite (${buf.length} o)`);
   mkdirSync(publicDir, { recursive: true });
   const safe = String(slug).replace(/[^a-z0-9-]/gi, "-").slice(0, 80);
   writeFileSync(`${publicDir}/${safe}.${ext}`, buf);
