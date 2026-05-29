@@ -44,9 +44,10 @@ jobs:
         run: node scripts/generate-daily-content.mjs
         env:
           NODE_ENV: production
-          # Optionnel : key OpenRouter pour rewriter LLM (qualité éditoriale +50%).
-          # Si absent, fallback sur rewriter déterministe.
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # REQUISE : clé API Anthropic pour le rewriter journaliste (Sonnet).
+          # Si absente/KO, l'article est SAUTÉ (politique « que du pro » — plus
+          # jamais de coquille vide publiée).
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Detect changes
         id: changes
@@ -158,7 +159,7 @@ jobs:
                 ``,
                 `### À faire`,
                 `1. Ouvrir le run et lire les logs étape par étape`,
-                `2. Si rewriter HS : check \`OPENROUTER_API_KEY\` quota`,
+                `2. Si rewriter HS : check \`ANTHROPIC_API_KEY\` (secret + quota)`,
                 `3. Re-run manuellement (workflow_dispatch) après fix`,
                 ``,
                 `_Issue créée automatiquement par \`.github/workflows/daily-content.yml\`_`,

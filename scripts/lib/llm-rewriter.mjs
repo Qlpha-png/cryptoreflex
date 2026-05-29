@@ -1,67 +1,66 @@
 /**
  * scripts/lib/llm-rewriter.mjs
  *
- * Wrapper LLM optionnel pour réécrire les news crypto en articles éditoriaux
- * de qualité (800-1200 mots, FR, sourcés, structurés).
+ * Wrapper LLM pour réécrire les news crypto en articles éditoriaux de
+ * qualité journaliste (700-1100 mots, FR, sourcés, structurés).
  *
- * - Fournisseur : OpenRouter (https://openrouter.ai/api/v1/chat/completions)
- * - Modèle par défaut : anthropic/claude-3-haiku (rapide, ~0.001$/news)
+ * - Fournisseur : API Anthropic directe (https://api.anthropic.com/v1/messages)
+ * - Modèle par défaut : claude-sonnet-4-6 (qualité éditoriale)
  * - Fallback : si l'appel échoue (timeout, JSON malformé, quota), throw → le
  *   caller redescend sur le rewriter déterministe (fallback transparent).
  *
- * Activation : définir OPENROUTER_API_KEY en env.
- * Override modèle : LLM_MODEL=openai/gpt-4o-mini (par exemple).
+ * Activation : définir ANTHROPIC_API_KEY en env.
+ * Override modèle : LLM_MODEL=claude-haiku-4-5 (par exemple).
  *
- * Coût mensuel estimé : 10 news/jour × 30 jours × ~0.001$/news ≈ 0.30 $/mois.
+ * Coût indicatif : 1 article/jour Sonnet ≈ 0,02-0,03 $/article.
  */
 
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-3-haiku";
-const MAX_TOKENS = 1500;
-const TEMPERATURE = 0.4;
-const TIMEOUT_MS = 30_000;
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_VERSION = "2023-06-01";
+const DEFAULT_MODEL = process.env.LLM_MODEL || "claude-sonnet-4-6";
+const MAX_TOKENS = 3500;
+const TEMPERATURE = 0.5;
+const TIMEOUT_MS = 60_000;
 
 /**
- * Tarification OpenRouter (USD / 1M tokens) — chiffres indicatifs avril 2026.
+ * Tarification Anthropic (USD / 1M tokens) — indicatif 2026.
  * Sert uniquement au log de coût ; n'impacte pas le comportement.
  */
 const PRICING = {
-  "anthropic/claude-3-haiku":   { input: 0.25, output: 1.25 },
-  "anthropic/claude-3.5-haiku": { input: 1.00, output: 5.00 },
-  "openai/gpt-4o-mini":         { input: 0.15, output: 0.60 },
-  "openai/gpt-4o":              { input: 2.50, output: 10.00 },
-  "google/gemini-flash-1.5":    { input: 0.075, output: 0.30 },
+  "claude-sonnet-4-6": { input: 3.0, output: 15.0 },
+  "claude-haiku-4-5": { input: 1.0, output: 5.0 },
 };
 
-const SYSTEM_PROMPT = `Tu es journaliste crypto français, expert MiCA et fiscalité. Tu rédiges pour Cryptoreflex.fr (audience FR débutants/intermédiaires).
+const SYSTEM_PROMPT = `Tu es journaliste crypto pour Cryptoreflex.fr — un média français indépendant et sérieux, spécialisé crypto, dans l'esprit des Échos ou de Décrypte. Audience : investisseurs particuliers français, débutants à intermédiaires.
 
-RÈGLES :
-- 100% français (accents corrects, tutoiement)
-- Style pédagogique sans jargon non expliqué
-- Pas de promesse d'enrichissement, pas de "gain garanti"
-- Disclaimer YMYL OBLIGATOIRE en fin
-- Source citée avec lien
-- 800-1200 mots, structure H2/H3 logique
-- SEO long-tail (réutilise mots-clés du sujet original)
+LIGNE ÉDITORIALE (non négociable) :
+- 100 % français impeccable. Typographie française : espace insécable avant : ; ! ? et %, guillemets « », tiret cadratin — pour les incises, montants « 12 000 € ». Tutoiement.
+- Journalisme factuel : tu rapportes, tu expliques, tu mets en perspective. Aucune hype, aucune promesse de gain, JAMAIS de conseil en investissement.
+- Angle français systématique : qu'est-ce que ça change pour un investisseur en France ? (régulation MiCA, fiscalité, AMF, DGFiP).
+- Neutralité : tu exposes les faits et les points de vue sans prendre parti.
 
-FORMAT OUTPUT JSON STRICT :
+INTERDITS ABSOLUS :
+- Plagiat : tu paraphrases et analyses, tu ne recopies jamais la source.
+- Inventer un chiffre, une citation ou une date absents de la source : si l'info n'est pas dans la source, reste qualitatif.
+- Taux fiscal : le PFU / flat tax 2026 est 31,4 % (12,8 % IR + 18,6 % prélèvements sociaux). N'écris JAMAIS « 30 % ».
+
+FORMAT OUTPUT — JSON STRICT (rien autour, pas de balises code) :
 {
-  "title": "Titre Cryptoreflex (≤90 chars)",
-  "description": "Meta SEO (≤160 chars)",
+  "title": "Titre journalistique, accrocheur mais factuel (≤ 90 caractères)",
+  "description": "Chapô / meta SEO (≤ 160 caractères)",
   "category": "Marché|Régulation|Technologie|Plateformes",
-  "body": "Body MDX avec H2/H3, callouts, internal links"
+  "body": "Corps MDX"
 }
 
-Le champ "body" doit :
-- Commencer directement par un H2 (## Titre)
-- Inclure 3 à 5 sections H2/H3 logiquement enchaînées
-- Citer la source originale avec lien Markdown
-- Inclure 2-3 liens internes vers /blog/... (ex: /blog/mica-phase-2-juillet-2026-ce-qui-change)
-- Terminer par un <Callout type="warning" title="Avertissement">...</Callout> avec disclaimer YMYL
-- NE PAS inclure de frontmatter YAML (le script s'en charge)
-- NE PAS inclure de H1 (## c'est la racine)
+Le "body" doit :
+- Faire 700 à 1100 mots, commencer DIRECTEMENT par un chapô (1 paragraphe d'accroche qui résume l'essentiel), puis 3 à 5 sections ## (H2).
+- Suivre la pyramide inversée : l'essentiel d'abord (quoi / qui / quand), puis le contexte, puis l'analyse « ce que ça change concrètement pour toi ».
+- Citer la source originale avec un lien Markdown.
+- Inclure 2-3 liens internes pertinents (parmi la liste fournie dans le message).
+- Se TERMINER par : <Callout type="warning" title="Avertissement">…</Callout> rappelant que ce n'est pas un conseil en investissement (volatilité, risque de perte en capital).
+- NE PAS inclure de frontmatter YAML (le script s'en charge), NE PAS inclure de titre H1.
 
-Réponds UNIQUEMENT avec un objet JSON valide, sans texte autour, sans \`\`\`json wrapper.`;
+Réponds UNIQUEMENT avec l'objet JSON valide, sans aucun texte autour.`;
 
 /**
  * Liste des slugs internes pertinents que le LLM peut citer en internal links.
@@ -161,8 +160,8 @@ function validateLLMOutput(parsed) {
 function estimateCost(model, usage) {
   const p = PRICING[model];
   if (!p || !usage) return 0;
-  const inputCost = ((usage.prompt_tokens || 0) / 1_000_000) * p.input;
-  const outputCost = ((usage.completion_tokens || 0) / 1_000_000) * p.output;
+  const inputCost = ((usage.input_tokens || 0) / 1_000_000) * p.input;
+  const outputCost = ((usage.output_tokens || 0) / 1_000_000) * p.output;
   return inputCost + outputCost;
 }
 
@@ -175,8 +174,8 @@ function estimateCost(model, usage) {
  * @returns {Promise<{ title, description, category, body, _llm: { model, tokens, cost } }>}
  */
 export async function callLLMRewriter(raw, opts = {}) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error("OPENROUTER_API_KEY not set");
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY not set");
 
   const model = opts.model || DEFAULT_MODEL;
   const slug = opts.slug || "(unknown)";
@@ -186,26 +185,20 @@ export async function callLLMRewriter(raw, opts = {}) {
 
   let res;
   try {
-    res = await fetch(OPENROUTER_URL, {
+    res = await fetch(ANTHROPIC_URL, {
       method: "POST",
       signal: ctrl.signal,
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://www.cryptoreflex.fr",
-        "X-Title": "Cryptoreflex Daily Content",
+        "x-api-key": apiKey,
+        "anthropic-version": ANTHROPIC_VERSION,
+        "content-type": "application/json",
       },
       body: JSON.stringify({
         model,
         max_tokens: MAX_TOKENS,
         temperature: TEMPERATURE,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: buildUserPrompt(raw) },
-        ],
-        // Force JSON output sur les modèles qui supportent (OpenAI, Anthropic récents).
-        // Si le modèle ne supporte pas, OpenRouter ignore silencieusement.
-        response_format: { type: "json_object" },
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: buildUserPrompt(raw) }],
       }),
     });
   } finally {
@@ -214,29 +207,31 @@ export async function callLLMRewriter(raw, opts = {}) {
 
   if (!res.ok) {
     const errText = await res.text().catch(() => "(no body)");
-    throw new Error(`OpenRouter ${res.status}: ${errText.slice(0, 200)}`);
+    throw new Error(`Anthropic ${res.status}: ${errText.slice(0, 200)}`);
   }
 
   const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content) throw new Error("OpenRouter response has no content");
+  const content = Array.isArray(data?.content)
+    ? data.content.filter((b) => b.type === "text").map((b) => b.text).join("")
+    : null;
+  if (!content) throw new Error("Anthropic response has no text content");
 
   const parsed = validateLLMOutput(extractJson(content));
 
   const usage = data.usage || {};
-  const totalTokens = (usage.prompt_tokens || 0) + (usage.completion_tokens || 0);
+  const totalTokens = (usage.input_tokens || 0) + (usage.output_tokens || 0);
   const cost = estimateCost(model, usage);
 
   console.log(
-    `[rewrite-llm] tokens=${totalTokens} cost=$${cost.toFixed(4)} model=${model.split("/")[1] || model} slug=${slug}`
+    `[rewrite-llm] tokens=${totalTokens} cost=$${cost.toFixed(4)} model=${model} slug=${slug}`
   );
 
   parsed._llm = {
     model,
     tokens: totalTokens,
     cost,
-    promptTokens: usage.prompt_tokens || 0,
-    completionTokens: usage.completion_tokens || 0,
+    promptTokens: usage.input_tokens || 0,
+    completionTokens: usage.output_tokens || 0,
   };
   return parsed;
 }

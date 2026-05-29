@@ -60,7 +60,7 @@ const NEWS_KEYWORDS = [
   "binance", "coinbase", "kraken", "bitpanda", "ledger",
 ];
 
-const MAX_NEWS_PER_RUN = 10;
+const MAX_NEWS_PER_RUN = 3;
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers                                                                   */
@@ -349,7 +349,7 @@ source: "${yamlString(raw.source)}"
 sourceUrl: "${yamlString(raw.sourceUrl)}"
 originalTitle: "${yamlString(raw.title)}"
 image: "/og-default.png"
-author: "Cryptoreflex"
+author: "La rédaction Cryptoreflex"
 keywords:
 ${raw.matchedKeywords.slice(0, 5).map((k) => `  - "${k}"`).join("\n")}
 ---`;
@@ -439,19 +439,16 @@ async function rewriteNewsWithLLM(raw) {
 }
 
 /**
- * Dispatcher principal. Si OPENROUTER_API_KEY est défini, tente le LLM ;
- * sinon (ou en cas d'erreur LLM), fallback transparent sur le déterministe.
+ * Dispatcher principal — politique « que du pro » : on ne publie QUE des
+ * articles rédigés par le LLM (Anthropic Sonnet). En cas d'échec (clé absente,
+ * quota, JSON KO), on LÈVE → la boucle d'appel saute l'article au lieu
+ * d'écrire une coquille vide. Plus jamais de stub déterministe publié.
  */
 async function rewriteNews(raw) {
-  if (process.env.OPENROUTER_API_KEY) {
-    try {
-      return await rewriteNewsWithLLM(raw);
-    } catch (err) {
-      console.warn(`[rewrite-llm-fail] ${err.message} — fallback déterministe`);
-      return rewriteNewsDeterministic(raw);
-    }
+  if (!process.env.ANTHROPIC_API_KEY) {
+    throw new Error("ANTHROPIC_API_KEY absente — génération LLM requise (pas de stub)");
   }
-  return rewriteNewsDeterministic(raw);
+  return await rewriteNewsWithLLM(raw);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -592,7 +589,7 @@ trend: "${trend}"
 rsi: ${rsi}
 change24h: ${change24h.toFixed(2)}
 image: "/og-default.png"
-author: "Cryptoreflex"
+author: "La rédaction Cryptoreflex"
 ---`;
 
   const body = `## Situation actuelle
