@@ -12,10 +12,16 @@ import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
  * seules les cartes de la page courante sont montées dans le DOM.
  *
  * Coût : aucune génération LLM (fiches déjà en base), ~1 lecture Supabase / 6h
- * (unstable_cache), 1 rendu ISR / 6h. Dégradation gracieuse : si Supabase n'est
- * pas configuré (build local), seules les 100 statiques sont retournées.
+ * (unstable_cache). Dégradation gracieuse : si Supabase n'est pas configuré
+ * (build local), seules les 100 statiques sont retournées.
+ *
+ * RENDU DYNAMIQUE (runtime) — IMPORTANT : au BUILD/SSG, le fetch Supabase des
+ * 680 fiches LLM revient vide (clé service-role indispo au build Vercel) → la
+ * page serait figée à 100. Au runtime, getAllCryptosUnified renvoie bien les
+ * 780 (vérifié : /alertes, /admin, /api/*). On force donc le rendu runtime ;
+ * la data restant cachée 6h (unstable_cache), le coût DB reste borné.
  */
-export const revalidate = 21600; // 6h, aligné sur le cache de getAllCryptosUnified
+export const dynamic = "force-dynamic";
 
 const SITE = "https://www.cryptoreflex.fr";
 
