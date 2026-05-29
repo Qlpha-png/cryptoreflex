@@ -131,6 +131,15 @@ async function listExistingSlugs() {
 async function pickNextTopic() {
   const existing = await listExistingSlugs();
   const sorted = sortTopicsByPriority(SEO_TOPICS.filter((t) => !t.disabled));
+  // Génération ciblée locale : `node generate-weekly-article.mjs <slug>` force ce
+  // topic précis (utile pour combler des trous choisis à la main, hors rotation
+  // auto du cron). Sans argv → comportement cron inchangé (auto-pick prioritaire).
+  const wanted = process.argv.slice(2).find((a) => a && !a.startsWith("-"));
+  if (wanted) {
+    const t = SEO_TOPICS.find((x) => x.slug === wanted && !x.disabled);
+    if (t) return t;
+    console.warn(`[warn] slug "${wanted}" absent du catalogue SEO_TOPICS — fallback auto-pick.`);
+  }
   for (const topic of sorted) {
     if (!existing.has(topic.slug)) {
       return topic;
@@ -376,7 +385,6 @@ lastUpdated: "${TODAY}"
 category: "${frenchCategoryLabel(topic.category)}"
 cluster: "${topic.cluster}"
 author: "La rédaction Cryptoreflex"
-image: "/og-default.png"
 readTime: "${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))} min"
 readingTime: ${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))}
 wordCount: ${parsed._actualWordCount || parsed.wordCount || 1800}
