@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getAllCryptosUnified } from "@/lib/cryptos-extended";
+import { getAllCryptosBrowsable } from "@/lib/cryptos-extended";
 import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
 
 /**
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CryptosIndexPage() {
-  const items = await getAllCryptosUnified();
+  const items = await getAllCryptosBrowsable();
 
   // JSON-LD ItemList — limité aux 100 premières (premium en tête) pour garder
   // le HTML léger ; la découverte des 780 est déjà assurée par le sitemap.

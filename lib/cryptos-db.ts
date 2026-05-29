@@ -242,6 +242,35 @@ export async function getFeaturedCryptosLight(
   }
 }
 
+/**
+ * Liste LIGHT de TOUTES les fiches LLM publiées (source=llm-pipeline), SANS
+ * filtre quality_tier — contrairement à getFeaturedCryptosLight qui se limite
+ * aux tiers T1/T2/T3. Beaucoup de fiches LLM ont un quality_tier null/hors-liste
+ * et étaient donc invisibles dans le hub /cryptos (alors qu'elles figurent au
+ * sitemap et ont une page). Miroir exact de la requête du sitemap (app/sitemap.ts)
+ * qui liste bien les ~680. Champs minimaux pour les cartes du hub.
+ */
+export async function getAllPublishedLlmCryptosLight(limit = 2000): Promise<CryptoFicheLight[]> {
+  const sb = createSupabaseServiceRoleClient();
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb
+      .from("cryptos")
+      .select("coingecko_id, name, symbol, categories, market_cap_rank")
+      .eq("source", "llm-pipeline")
+      .eq("is_published", true)
+      .order("market_cap_rank", { ascending: true, nullsFirst: false })
+      .limit(limit);
+    if (error) {
+      console.warn(`[cryptos-db] getAllPublishedLlmCryptosLight error:`, error.message);
+      return [];
+    }
+    return (data as CryptoFicheLight[]) ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getFeaturedCryptos(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],

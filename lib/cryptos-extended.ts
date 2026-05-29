@@ -31,7 +31,7 @@
 
 import { unstable_cache } from "next/cache";
 import { getAllCryptos as getAllStaticCryptos } from "@/lib/cryptos";
-import { getFeaturedCryptosLight } from "@/lib/cryptos-db";
+import { getFeaturedCryptosLight, getAllPublishedLlmCryptosLight } from "@/lib/cryptos-db";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -103,5 +103,48 @@ export const getAllCryptosUnified = unstable_cache(
   ["cryptos-unified"],
   // OPTIM 2026-05-10 — 1h → 6h. Liste de cryptos change rarement
   // (1×/jour via cron LLM-pipeline). Cache 6h évite spam Supabase.
+  { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
+);
+
+/**
+ * Variante COMPLETE pour le hub /cryptos (navigation des 780).
+ *
+ * Différence clé avec getAllCryptosUnified : utilise getAllPublishedLlmCryptosLight
+ * (toutes les fiches LLM publiées, SANS filtre quality_tier) au lieu de
+ * getFeaturedCryptosLight (limité à T1/T2/T3). Beaucoup de fiches LLM ont un
+ * tier null/hors-liste → elles étaient absentes du hub alors qu'elles ont une
+ * page et figurent au sitemap. Clé de cache distincte ("cryptos-browsable-all")
+ * pour ne pas dépendre du cache "cryptos-unified" (qui peut être figé à 100 si
+ * peuplé pendant un build sans accès Supabase).
+ */
+export const getAllCryptosBrowsable = unstable_cache(
+  async (): Promise<UnifiedCrypto[]> => {
+    const [statics, llm] = await Promise.all([
+      Promise.resolve(getAllStaticCryptos()),
+      getAllPublishedLlmCryptosLight(2000),
+    ]);
+    const staticIds = new Set(statics.map((c) => c.coingeckoId));
+    const llmFiltered = llm.filter((f) => !staticIds.has(f.coingecko_id));
+    return [
+      ...statics.map((c) => ({
+        id: c.id,
+        coingeckoId: c.coingeckoId,
+        name: c.name,
+        symbol: c.symbol,
+        category: c.category,
+        source: "static" as const,
+      })),
+      ...llmFiltered.map((f) => ({
+        id: f.coingecko_id,
+        coingeckoId: f.coingecko_id,
+        name: f.name,
+        symbol: f.symbol,
+        category: f.categories?.[0],
+        source: "llm-pipeline" as const,
+        marketCapRank: f.market_cap_rank,
+      })),
+    ];
+  },
+  ["cryptos-browsable-all-v1"],
   { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
 );
