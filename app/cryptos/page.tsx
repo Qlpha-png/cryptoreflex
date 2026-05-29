@@ -1,181 +1,90 @@
-"use client";
-
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowRight, Gem, Trophy, X, Scale } from "lucide-react";
-import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
-import { useCompareList } from "@/lib/use-compare-list";
-// BATCH 46b — innovations tech 2026 paroxysme : Tilt3D parallax + Reveal
-// scroll fade-up + spotlight-card halo gold sur les 100 cards crypto.
-import Tilt3D from "@/components/ui/Tilt3D";
-// BATCH 48a — afficher logo crypto dans card + view-transition-name pour
-// morph cross-document hub -> fiche (Hero CryptoHero.tsx l.94 a deja
-// viewTransitionId="crypto-logo-${symbolLower}", on ferme la boucle ici).
-import CryptoLogo from "@/components/ui/CryptoLogo";
-
-type FilterKind = "all" | "top10" | "hidden-gem";
-
-const FILTERS: Array<{ key: FilterKind; label: string; icon: typeof Trophy }> = [
-  { key: "all", label: "Toutes", icon: Filter },
-  { key: "top10", label: "Top 10", icon: Trophy },
-  { key: "hidden-gem", label: "Hidden Gems", icon: Gem },
-];
+import type { Metadata } from "next";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
+import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
 
 /**
- * Index /cryptos — liste filtrable + recherche locale.
+ * Index /cryptos — Server Component.
  *
- * Client Component pour permettre la recherche live + le filter sans round-trip serveur.
- * 100 entrées : tient en mémoire sans souci, pas besoin de pagination.
+ * Fetch la liste UNIFIEE (100 fiches premium statiques + ~680 fiches LLM en
+ * base, dédoublonnées, cache 6h via getAllCryptosUnified). Passe le tout au
+ * client `CryptosBrowser` qui gère recherche/filtres + PAGINATION (48/page) :
+ * seules les cartes de la page courante sont montées dans le DOM.
  *
- * Filtres :
- *  - Kind (toutes / top10 / hidden gems)
- *  - Catégorie (Layer 1, DeFi, DePIN, RWA, Memecoin, Stablecoin, etc.)
- *  - Recherche full-text sur name / symbol / category / tagline
+ * Coût : aucune génération LLM (fiches déjà en base), ~1 lecture Supabase / 6h
+ * (unstable_cache), 1 rendu ISR / 6h. Dégradation gracieuse : si Supabase n'est
+ * pas configuré (build local), seules les 100 statiques sont retournées.
  */
-export default function CryptosIndexPage() {
-  const all = useMemo(() => getAllCryptos(), []);
-  const [filter, setFilter] = useState<FilterKind>("all");
-  const [category, setCategory] = useState<string>("");
-  const [query, setQuery] = useState("");
-  const { list: compareList, hydrated: compareHydrated } = useCompareList();
+export const revalidate = 21600; // 6h, aligné sur le cache de getAllCryptosUnified
 
-  // Catégories agrégées dynamiquement depuis les datasets — on regroupe les
-  // catégories proches via une heuristique simple pour ne pas avoir 40 chips.
-  const categoryGroups = useMemo(() => {
-    const groups: Record<string, string[]> = {
-      "Layer 1": [],
-      "Layer 2": [],
-      "DeFi": [],
-      "DePIN / Infra": [],
-      "Memecoin": [],
-      "Stablecoin": [],
-      "Gaming / NFT": [],
-      "Privacy / ZK": [],
-      "RWA": [],
-      "Oracles / Données": [],
-      "Autre": [],
-    };
-    all.forEach((c) => {
-      const cat = c.category.toLowerCase();
-      if (cat.includes("layer 2") || cat.includes("l2")) {
-        groups["Layer 2"].push(c.id);
-      } else if (cat.includes("layer 1") || cat.includes("layer 0") || cat.includes("smart contracts") || cat.includes("plateforme")) {
-        groups["Layer 1"].push(c.id);
-      } else if (cat.includes("defi") || cat.includes("dex") || cat.includes("liquid staking") || cat.includes("lending")) {
-        groups["DeFi"].push(c.id);
-      } else if (cat.includes("depin") || cat.includes("infrastructure") || cat.includes("storage") || cat.includes("compute") || cat.includes("ai") || cat.includes("ia")) {
-        groups["DePIN / Infra"].push(c.id);
-      } else if (cat.includes("meme")) {
-        groups["Memecoin"].push(c.id);
-      } else if (cat.includes("stablecoin")) {
-        groups["Stablecoin"].push(c.id);
-      } else if (cat.includes("gaming") || cat.includes("metaverse") || cat.includes("nft")) {
-        groups["Gaming / NFT"].push(c.id);
-      } else if (cat.includes("privacy") || cat.includes("zk") || cat.includes("zero")) {
-        groups["Privacy / ZK"].push(c.id);
-      } else if (cat.includes("rwa") || cat.includes("real world")) {
-        groups["RWA"].push(c.id);
-      } else if (cat.includes("oracle")) {
-        groups["Oracles / Données"].push(c.id);
-      } else {
-        groups["Autre"].push(c.id);
-      }
-    });
-    return Object.entries(groups)
-      .filter(([, ids]) => ids.length > 0)
-      .map(([name, ids]) => ({ name, count: ids.length, ids: new Set(ids) }));
-  }, [all]);
+const SITE = "https://www.cryptoreflex.fr";
 
-  const filtered = useMemo(() => {
-    let list = all;
-    if (filter !== "all") list = list.filter((c) => c.kind === filter);
-    if (category) {
-      const group = categoryGroups.find((g) => g.name === category);
-      if (group) list = list.filter((c) => group.ids.has(c.id));
-    }
-    if (query.trim()) {
-      const q = query.toLowerCase();
-      list = list.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.symbol.toLowerCase().includes(q) ||
-          c.category.toLowerCase().includes(q) ||
-          c.tagline.toLowerCase().includes(q)
-      );
-    }
-    return list;
-  }, [all, filter, category, query, categoryGroups]);
+export const metadata: Metadata = {
+  title: "Cryptos analysées : fiches, scores de fiabilité & risques | Cryptoreflex",
+  description:
+    "La plus grande base d'analyse crypto francophone : fiches détaillées avec score de fiabilité, statut MiCA, audits et risques. Recherche, filtres et navigation par pages.",
+  alternates: { canonical: `${SITE}/cryptos` },
+  openGraph: {
+    title: "Cryptos analysées — Cryptoreflex",
+    description:
+      "Fiches crypto détaillées : score de fiabilité, statut MiCA/PSAN, risques. Recherche et filtres.",
+    url: `${SITE}/cryptos`,
+    type: "website",
+  },
+};
 
-  // BATCH 46b — JSON-LD ItemList sur les 100 cryptos. Page client donc on
-  // injecte via React (pas via le metadata server). Eligible Rich Results
-  // 'List' Google + signal hub structure fort pour le crawler.
-  // BreadcrumbList ajoute aussi.
-  // Note : chaque ListItem URL absolue stable car les fiches sont
-  // statiquement generees (generateStaticParams).
-  const itemListJson = useMemo(() => {
-    const list = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "780 cryptos analysées par Cryptoreflex (100 fiches éditoriales + 680 fiches LLM)",
-      description:
-        "100 fiches éditoriales premium (Top 10 + 90 hidden gems) avec score de fiabilité, méthodologie publique, audits, backers et risques détaillés. Plus 680 fiches LLM exploratoires accessibles depuis la recherche du site.",
-      numberOfItems: all.length,
-      itemListElement: all.map((c, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        url: `https://www.cryptoreflex.fr/cryptos/${c.id}`,
-        name: c.name,
-      })),
-    };
-    const breadcrumb = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.cryptoreflex.fr/" },
-        { "@type": "ListItem", position: 2, name: "Cryptos", item: "https://www.cryptoreflex.fr/cryptos" },
-      ],
-    };
-    return JSON.stringify({ "@context": "https://schema.org", "@graph": [list, breadcrumb] });
-  }, [all]);
+export default async function CryptosIndexPage() {
+  const items = await getAllCryptosUnified();
 
-  // BATCH 46b — Speculation Rules ciblees sur top 5 cryptos (BTC, ETH, SOL,
-  // BNB, XRP) qui captent 70%+ des clicks depuis le hub. Hover 200ms =
-  // signal d'intention -> Chrome 121+/Edge 121+ prerender la fiche en
-  // background -> click = navigation instant. Combine avec ClickFallback
-  // v2 et CryptoQuickSwitcher fix pour les fiches eth/sol cassees.
-  const speculationRulesJson = useMemo(
-    () =>
-      JSON.stringify({
-        prerender: [
-          {
-            urls: [
-              "/cryptos/bitcoin",
-              "/cryptos/ethereum",
-              "/cryptos/solana",
-              "/cryptos/bnb",
-              "/cryptos/xrp",
-            ],
-            eagerness: "moderate",
-          },
+  // JSON-LD ItemList — limité aux 100 premières (premium en tête) pour garder
+  // le HTML léger ; la découverte des 780 est déjà assurée par le sitemap.
+  const itemListJson = JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ItemList",
+        name: `${items.length} cryptos analysées par Cryptoreflex`,
+        description:
+          "Fiches crypto avec score de fiabilité, statut MiCA, audits, backers et risques détaillés. 100 fiches éditoriales premium + analyses complémentaires.",
+        numberOfItems: items.length,
+        itemListElement: items.slice(0, 100).map((c, idx) => ({
+          "@type": "ListItem",
+          position: idx + 1,
+          url: `${SITE}/cryptos/${c.id}`,
+          name: c.name,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE}/` },
+          { "@type": "ListItem", position: 2, name: "Cryptos", item: `${SITE}/cryptos` },
         ],
-      }).replace(/</g, "\\u003c"),
-    [],
-  );
+      },
+    ],
+  });
+
+  // Speculation Rules — prerender intent-based des top 5 (70%+ des clics).
+  const speculationRulesJson = JSON.stringify({
+    prerender: [
+      {
+        urls: [
+          "/cryptos/bitcoin",
+          "/cryptos/ethereum",
+          "/cryptos/solana",
+          "/cryptos/bnb",
+          "/cryptos/xrp",
+        ],
+        eagerness: "moderate",
+      },
+    ],
+  }).replace(/</g, "\\u003c");
 
   return (
     <div className="py-12 sm:py-16">
-      {/* BATCH 46b SEO P0 — JSON-LD ItemList + BreadcrumbList. Page client
-          donc injecte via React, parse server-side OK car script tag rendu
-          dans le SSR initial. */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: itemListJson }}
-      />
-      {/* BATCH 46b — Speculation Rules top 5 prerender intent-based. */}
-      <script
-        type="speculationrules"
-        dangerouslySetInnerHTML={{ __html: speculationRulesJson }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: itemListJson }} />
+      <script type="speculationrules" dangerouslySetInnerHTML={{ __html: speculationRulesJson }} />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
@@ -189,217 +98,19 @@ export default function CryptosIndexPage() {
         {/* Header */}
         <header className="mt-6 max-w-3xl">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            780 cryptos <span className="gradient-text">analysées</span>
+            {items.length} cryptos <span className="gradient-text">analysées</span>
           </h1>
           <p className="mt-3 text-base text-muted">
             La plus grande base d&apos;analyse crypto francophone : 100 fiches éditoriales premium
-            (10 cryptos majeures Top 10 + 90 Hidden Gems avec score de fiabilité calculé sur
-            méthodologie publique) listées ci-dessous, plus 680 fiches LLM exploratoires
-            accessibles via la recherche. Régulation MiCA, audits, backers, risques — tout est documenté.
+            (score de fiabilité calculé sur méthodologie publique, audits, backers, risques) plus
+            des centaines d&apos;analyses complémentaires (tokenomics, statut FR/UE, scores).
+            Recherche, filtres et navigation par pages ci-dessous.
           </p>
         </header>
 
-        {/* CTA Comparer — visible quand l'utilisateur a déjà sélectionné 2+
-            cryptos via les boutons "+ Comparer" sur les fiches. Permet de
-            sauter directement au comparatif sans re-cliquer dans le drawer. */}
-        {compareHydrated && compareList.length >= 2 && (
-          <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/15">
-                <Scale className="h-4 w-4 text-primary" aria-hidden="true" />
-              </span>
-              <div>
-                <div className="text-sm font-semibold text-fg">
-                  {compareList.length} crypto
-                  {compareList.length > 1 ? "s" : ""} dans votre comparateur
-                </div>
-                <div className="text-xs text-muted">
-                  Visualise-les côte à côte sur une seule page.
-                </div>
-              </div>
-            </div>
-            <Link
-              href={`/cryptos/comparer?ids=${compareList.join(",")}`}
-              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              Ouvrir le comparatif
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
-        )}
-
-        {/* Filtres kind + recherche */}
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 flex-wrap">
-            {FILTERS.map(({ key, label, icon: Icon }) => {
-              const active = filter === key;
-              const count =
-                key === "all"
-                  ? all.length
-                  : all.filter((c) => c.kind === key).length;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setFilter(key)}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    active
-                      ? "border-primary/50 bg-primary/15 text-primary-soft"
-                      : "border-border bg-surface text-muted hover:text-fg hover:border-primary/30"
-                  }`}
-                  aria-pressed={active}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {label}
-                  <span className="text-[10px] opacity-70">({count})</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="relative sm:max-w-xs sm:w-72">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher (nom, symbole, catégorie…)"
-              className="w-full rounded-full border border-border bg-surface pl-9 pr-4 py-2 text-sm text-fg placeholder:text-muted focus:border-primary/50 focus:outline-none"
-              aria-label="Rechercher une crypto"
-            />
-          </div>
-        </div>
-
-        {/* Filtre catégorie.
-            BATCH 48d a11y P1 (audit /cryptos) — chips passes de
-            text-[11px] py-1 (~22px tap target = WCAG fail) a min-h-[36px]
-            px-3 py-1.5 + scroll-x snap mobile pour eviter le wrap qui
-            encombre 11+ catégories sur viewport <375px. */}
-        <div className="mt-3 flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-thin">
-          <span className="text-[11px] uppercase tracking-wider text-muted shrink-0">
-            Catégorie
-          </span>
-          {categoryGroups.map((g) => {
-            const active = category === g.name;
-            return (
-              <button
-                key={g.name}
-                onClick={() => setCategory(active ? "" : g.name)}
-                className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors min-h-[36px] shrink-0 snap-start ${
-                  active
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
-                    : "border-border bg-surface text-muted hover:text-fg hover:border-amber-400/30"
-                }`}
-                aria-pressed={active}
-              >
-                {g.name}
-                <span className="text-[10px] opacity-70">({g.count})</span>
-              </button>
-            );
-          })}
-          {category && (
-            <button
-              onClick={() => setCategory("")}
-              className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted hover:text-fg min-h-[36px] shrink-0"
-              aria-label="Réinitialiser le filtre catégorie"
-            >
-              <X className="h-3 w-3" /> Effacer
-            </button>
-          )}
-        </div>
-
-        {/* Compteur résultats */}
-        <p className="mt-5 text-xs text-muted">
-          <span className="font-semibold text-fg">{filtered.length}</span> crypto{filtered.length > 1 ? "s" : ""} affichée{filtered.length > 1 ? "s" : ""}
-          {filtered.length !== all.length && ` sur ${all.length} au total`}
-        </p>
-
-        {/* Grid */}
-        {filtered.length === 0 ? (
-          <p className="mt-12 text-sm text-muted">
-            Aucune crypto ne correspond à votre recherche. Essayez un autre mot-clé ou effacez les filtres.
-          </p>
-        ) : (
-          // BATCH 46b — chaque card crypto wrappee Tilt3D 4 deg parallax
-          // (auto-disable mobile + reduced-motion via le composant).
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((c) => (
-              <Tilt3D key={c.id} max={4}>
-                <CryptoCard crypto={c} />
-              </Tilt3D>
-            ))}
-          </div>
-        )}
+        {/* Recherche + filtres + grille paginée (client) */}
+        <CryptosBrowser items={items} />
       </div>
     </div>
-  );
-}
-
-function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
-  const isGem = crypto.kind === "hidden-gem";
-  return (
-    <Link
-      href={`/cryptos/${crypto.id}`}
-      // BATCH 46b — spotlight-card : halo gold radial qui suit le curseur
-      // via SpotlightDelegate global (vars CSS --mx/--my). h-full pour
-      // egaliser la hauteur dans la grille (Tilt3D wrapper).
-      // aria-label explicite : title + tier (Top X / Hidden Gem).
-      aria-label={`${crypto.name} (${crypto.symbol}) — ${isGem ? "Hidden Gem" : `Top ${crypto.rank}`}`}
-      className="spotlight-card group h-full rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0 flex-1">
-          {/* BATCH 48a — logo crypto avec view-transition-name. Quand l'user
-              clique sur la card, Chrome 111+/Safari 18+ morphe ce logo vers
-              le Hero de la fiche (CryptoHero.tsx l.94 expose le meme
-              viewTransitionId="crypto-logo-${symbol.toLowerCase()}"). 0ms
-              perçu, sensation native-app Linear/Vercel. */}
-          <CryptoLogo
-            symbol={crypto.symbol}
-            coingeckoId={crypto.id}
-            size={40}
-            shape="rounded"
-            className="ring-1 ring-border shrink-0"
-            viewTransitionId={`crypto-logo-${crypto.symbol.toLowerCase()}`}
-          />
-          <div className="min-w-0">
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                isGem
-                  ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
-                  : "border border-primary/30 bg-primary/10 text-primary-soft"
-              }`}
-            >
-              {isGem ? <Gem className="h-3 w-3" /> : <Trophy className="h-3 w-3" />}
-              {isGem ? "Hidden Gem" : `Top ${crypto.rank}`}
-            </span>
-            <h2 className="mt-1 text-lg font-bold text-fg truncate">
-              {crypto.name}{" "}
-              <span className="font-mono text-sm text-muted">{crypto.symbol}</span>
-            </h2>
-            <p className="text-xs text-muted truncate">
-              {crypto.category} · {crypto.yearCreated}
-            </p>
-          </div>
-        </div>
-        {isGem && (
-          <div className="shrink-0 rounded-lg border border-border bg-elevated px-2 py-1 text-center">
-            <div className="text-[9px] uppercase tracking-wider text-muted">Fiabilité</div>
-            <div className="font-mono text-sm font-bold text-fg">
-              {crypto.reliability.score.toFixed(1)}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <p className="mt-3 text-sm italic text-primary-soft line-clamp-2">{crypto.tagline}</p>
-      <p className="mt-2 text-xs text-fg/70 line-clamp-3 leading-relaxed flex-1">
-        {crypto.what}
-      </p>
-
-      <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft group-hover:text-primary">
-        Lire la fiche
-        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-      </div>
-    </Link>
   );
 }
