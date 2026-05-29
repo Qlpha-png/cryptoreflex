@@ -435,7 +435,7 @@ const nextConfig = {
     //  - X (Twitter) Pixel : static.ads-twitter.com (loader), analytics.twitter.com (events)
     const cspDefault = [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${cspExtraDev} https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com`,
+      `script-src 'self' 'unsafe-inline'${cspExtraDev} https://va.vercel-scripts.com https://plausible.io https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co https://*.reddit.com",
       "font-src 'self' data:",
@@ -443,7 +443,7 @@ const nextConfig = {
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
       // 3s + SWR 15s) au lieu d'attaquer Binance direct côté client. Réduction
       // de la surface d'attaque CSP + 90% cache hit edge.
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://*.reddit.com https://analytics.twitter.com",
+      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com https://plausible.io https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://*.reddit.com https://analytics.twitter.com",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",

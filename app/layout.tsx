@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import ClarityScript from "@/components/ClarityScript";
 import AdsPixels from "@/components/AdsPixels";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -318,6 +319,15 @@ export default function RootLayout({
             Transitions (déjà actif via @view-transition navigation:auto)
             pour une expérience native-app. Fallback gracieux Safari/Firefox. */}
         <SpeculationRules />
+        {/* Plausible Analytics (Cloud) — privacy-first, sans cookie (RGPD OK).
+            Données visibles sur plausible.io une fois le domaine cryptoreflex.fr
+            ajouté au compte Plausible. Coexiste avec Vercel Web Analytics. */}
+        <Script
+          defer
+          data-domain="cryptoreflex.fr"
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
       </head>
       <body
         className="min-h-screen flex flex-col antialiased font-sans"
