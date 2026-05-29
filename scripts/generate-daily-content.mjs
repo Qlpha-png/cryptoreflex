@@ -353,7 +353,6 @@ category: "${category}"
 source: "${yamlString(raw.source)}"
 sourceUrl: "${yamlString(raw.sourceUrl)}"
 originalTitle: "${yamlString(raw.title)}"
-image: "/og-default.png"
 author: "La rédaction Cryptoreflex"
 keywords:
 ${raw.matchedKeywords.slice(0, 5).map((k) => `  - "${k}"`).join("\n")}

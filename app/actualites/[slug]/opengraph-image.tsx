@@ -55,6 +55,22 @@ const CATEGORY_ACCENT: Record<string, string> = {
   "Plateformes": "#c084fc",
 };
 
+// Détection du crypto-actif principal depuis le titre → watermark ticker en
+// fond de la cover (identité visuelle par article, sans dépendance externe).
+const COIN_TICKERS: { re: RegExp; label: string }[] = [
+  { re: /bitcoin|btc|halving|satoshi/i, label: "BTC" },
+  { re: /ethereum|ether|\beth\b/i, label: "ETH" },
+  { re: /solana|\bsol\b/i, label: "SOL" },
+  { re: /cardano|\bada\b/i, label: "ADA" },
+  { re: /\bxrp\b|ripple/i, label: "XRP" },
+  { re: /\bbnb\b|binance coin/i, label: "BNB" },
+  { re: /stablecoin|usdc|usdt|tether|circle/i, label: "USD" },
+];
+function detectCoinTicker(text: string): string | null {
+  for (const c of COIN_TICKERS) if (c.re.test(text)) return c.label;
+  return null;
+}
+
 export default async function NewsOgImage({ params }: Props) {
   const news = await getNewsBySlug(params.slug);
 
@@ -67,6 +83,7 @@ export default async function NewsOgImage({ params }: Props) {
     : "";
   const bg = CATEGORY_GRADIENTS[categoryKey] ?? CATEGORY_GRADIENTS["Marché"];
   const accent = CATEGORY_ACCENT[categoryKey] ?? "#fbbf24";
+  const coinTicker = detectCoinTicker(title);
 
   const fonts = await loadOgFonts();
 
@@ -76,6 +93,8 @@ export default async function NewsOgImage({ params }: Props) {
         style={{
           width: "100%",
           height: "100%",
+          position: "relative",
+          overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -85,6 +104,25 @@ export default async function NewsOgImage({ params }: Props) {
           color: "white",
         }}
       >
+        {/* Watermark ticker crypto en fond (identité visuelle par article) */}
+        {coinTicker && (
+          <div
+            style={{
+              position: "absolute",
+              right: -20,
+              bottom: -90,
+              fontSize: 340,
+              fontWeight: 900,
+              letterSpacing: "-0.04em",
+              color: accent,
+              opacity: 0.1,
+              display: "flex",
+            }}
+          >
+            {coinTicker}
+          </div>
+        )}
+
         {/* Header : logo + badge catégorie */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>

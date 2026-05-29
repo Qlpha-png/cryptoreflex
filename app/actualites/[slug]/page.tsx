@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const url = `${BRAND.url}/actualites/${news.slug}`;
-  const ogImage = news.image ?? `${BRAND.url}/og-image.png`;
+  const ogImage = news.image ?? `${BRAND.url}/actualites/${news.slug}/opengraph-image`;
 
   return {
     title: news.title,
@@ -117,7 +117,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
   // JSON-LD
   const canonicalUrl = `${BRAND.url}/actualites/${news.slug}`;
-  const ogImage = news.image ?? `${BRAND.url}/og-image.png`;
+  const ogImage = news.image ?? `${BRAND.url}/actualites/${news.slug}/opengraph-image`;
 
   const breadcrumb = breadcrumbSchema([
     { name: "Accueil", url: "/" },
@@ -236,8 +236,8 @@ export default async function NewsDetailPage({ params }: PageProps) {
           <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-elevated aspect-[1200/630]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={news.image || `/actualites/${news.slug}/opengraph-image?v=${news.date}`}
-              alt={`Cover : ${news.title}`}
+              src={`/actualites/${news.slug}/opengraph-image?v=${news.date}`}
+              alt={`Couverture — ${news.title}`}
               loading="eager"
               fetchPriority="high"
               decoding="async"
