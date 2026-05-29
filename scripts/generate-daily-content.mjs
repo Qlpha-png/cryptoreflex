@@ -29,6 +29,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { callLLMRewriter } from "./lib/llm-rewriter.mjs";
+import { fetchNewsPhoto } from "./lib/news-image.mjs";
 
 /* -------------------------------------------------------------------------- */
 /*  Configuration                                                             */
@@ -344,7 +345,10 @@ function rewriteTitle(rawTitle, raw, category) {
  * Construit le frontmatter MDX commun (utilisé par les 2 rewriters).
  * Centralisé ici pour garantir un format identique LLM ↔ déterministe.
  */
-function buildFrontmatter({ title, description, category, raw }) {
+function buildFrontmatter({ title, description, category, raw, photo }) {
+  const imageLines = photo
+    ? `\nimage: "${yamlString(photo.url)}"\nimageCredit: "${yamlString(photo.credit)}"\nimageCreditUrl: "${yamlString(photo.creditUrl)}"`
+    : "";
   return `---
 title: "${yamlString(title)}"
 description: "${yamlString(description)}"
@@ -353,7 +357,7 @@ category: "${category}"
 source: "${yamlString(raw.source)}"
 sourceUrl: "${yamlString(raw.sourceUrl)}"
 originalTitle: "${yamlString(raw.title)}"
-author: "La rédaction Cryptoreflex"
+author: "La rédaction Cryptoreflex"${imageLines}
 keywords:
 ${raw.matchedKeywords.slice(0, 5).map((k) => `  - "${k}"`).join("\n")}
 ---`;
@@ -432,11 +436,21 @@ async function rewriteNewsWithLLM(raw) {
 
   const llmOut = await callLLMRewriter(raw, { slug });
 
+  // Vraie photo pertinente (recherche pro). Non bloquant : si KO, la cover OG
+  // dynamique sert de repli au rendu.
+  const photo = await fetchNewsPhoto({
+    title: llmOut.title,
+    category: llmOut.category,
+    keywords: raw.matchedKeywords,
+    slug,
+  }).catch(() => null);
+
   const frontmatter = buildFrontmatter({
     title: llmOut.title,
     description: llmOut.description,
     category: llmOut.category,
     raw,
+    photo,
   });
 
   return { slug, frontmatter, body: llmOut.body };

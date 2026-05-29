@@ -236,7 +236,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
           <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-elevated aspect-[1200/630]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/actualites/${news.slug}/opengraph-image?v=${news.date}`}
+              src={news.image || `/actualites/${news.slug}/opengraph-image?v=${news.date}`}
               alt={`Couverture — ${news.title}`}
               loading="eager"
               fetchPriority="high"
@@ -246,6 +246,23 @@ export default async function NewsDetailPage({ params }: PageProps) {
               height={630}
             />
           </div>
+          {news.image && news.imageCredit && (
+            <p className="mt-2 text-[11px] text-muted">
+              Photo :{" "}
+              {news.imageCreditUrl ? (
+                <a
+                  href={news.imageCreditUrl}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  className="underline hover:text-fg"
+                >
+                  {news.imageCredit}
+                </a>
+              ) : (
+                news.imageCredit
+              )}
+            </p>
+          )}
         </header>
 
         {/* BODY MDX */}

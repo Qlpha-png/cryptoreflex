@@ -437,8 +437,8 @@ function FeaturedNews({ news }: { news: NewsSummary }) {
     >
       <div className="relative aspect-[16/9] overflow-hidden lg:aspect-auto lg:h-full lg:min-h-[300px]">
         <img
-          src={`/actualites/${news.slug}/opengraph-image?v=${news.date}`}
-          alt={`Cover : ${news.title}`}
+          src={news.image || `/actualites/${news.slug}/opengraph-image?v=${news.date}`}
+          alt={`Couverture — ${news.title}`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
           loading="eager"
           decoding="async"

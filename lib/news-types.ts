@@ -148,8 +148,12 @@ export interface NewsFrontmatter {
   sourceUrl: string;         // URL article source
   /** Titre original conservé pour traçabilité (jamais affiché tel quel). */
   originalTitle?: string;
-  /** URL absolue d'une image (cover OG/Twitter). Optionnelle. */
+  /** URL d'une vraie photo de cover (Pexels/Openverse). Optionnelle. */
   image?: string;
+  /** Crédit photo (auteur + licence) — obligatoire à afficher si image CC. */
+  imageCredit?: string;
+  /** Lien vers la page source de la photo (attribution). */
+  imageCreditUrl?: string;
   /** Tags/keywords pour le SEO et les liens internes. */
   keywords?: string[];
   /** Auteur — par défaut "Cryptoreflex" pour les news auto. */

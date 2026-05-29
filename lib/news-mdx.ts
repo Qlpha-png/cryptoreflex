@@ -88,6 +88,8 @@ function normalizeNewsFrontmatter(
     sourceUrl: String(raw.sourceUrl ?? "#"),
     originalTitle: typeof raw.originalTitle === "string" ? raw.originalTitle : undefined,
     image: typeof raw.image === "string" ? raw.image : undefined,
+    imageCredit: typeof raw.imageCredit === "string" ? raw.imageCredit : undefined,
+    imageCreditUrl: typeof raw.imageCreditUrl === "string" ? raw.imageCreditUrl : undefined,
     keywords,
     author: String(raw.author ?? "Cryptoreflex"),
     isBrief: raw.isBrief === true,
