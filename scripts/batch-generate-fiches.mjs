@@ -579,6 +579,7 @@ REGLES STRICTES :
 - Factuel, neutre, pedagogique. Aucune promesse d'enrichissement, aucun FOMO
 - Si donnee manquante : dis-le explicitement plutot qu'inventer
 - DATE CUTOFF : base TOUTES tes affirmations factuelles UNIQUEMENT sur les data fournies. N'invente AUCUNE actualite. Si pas d'info : "a verifier sur sources externes".
+- EXACTITUDE FISCALE OBLIGATOIRE : le PFU / flat tax sur les plus-values crypto est de 31,4 % depuis le 1er janvier 2026 (12,8 % IR + 18,6 % prelevements sociaux). N'ecris JAMAIS "30 %" comme taux courant (c'etait l'ancien taux, gains jusqu'a 2025). N'invente aucun autre chiffre fiscal.
 - LIENS academy/ : privilegie type="external" (whitepaper, docs, github, explorers). Max 1 lien type="academy" generique (ex: /academy/fiscalite-crypto-france) si pertinent.
 
 OUTPUT FORMAT JSON STRICT (toutes les listes doivent etre des arrays []) :
@@ -598,7 +599,7 @@ OUTPUT FORMAT JSON STRICT (toutes les listes doivent etre des arrays []) :
   "competitors": [{"coingeckoId":"...","name":"...","differentiator":"..."}],
   "moats": [{"type":"network_effect|tech_edge|team|brand|other","description":"..."}],
   "risks": [{"category":"technical|regulatory|market|team|adoption","severity":"low|medium|high|critical","description":"..."}],
-  "frEuStatus": "200-300 mots OBLIGATOIRE (min 200 mots). Utilise 'tu' systematiquement ('si tu es resident', 'tu peux acheter', 'tu dois declarer'). PSAN, MiCA, Cerfa 2086.",
+  "frEuStatus": "200-300 mots OBLIGATOIRE (min 200 mots). Utilise 'tu' systematiquement ('si tu es resident', 'tu peux acheter', 'tu dois declarer'). PSAN, MiCA, Cerfa 2086. PFU / flat tax 31,4 % sur les plus-values depuis le 1er janvier 2026 (12,8 % IR + 18,6 % prelevements sociaux) — JAMAIS '30 %' comme taux courant.",
   "furtherReading": [{"type":"academy|external","title":"...","url_or_slug":"..."}],
   "recentNews": "100-200 mots",
   "disclaimer": "Avertissement YMYL standard",

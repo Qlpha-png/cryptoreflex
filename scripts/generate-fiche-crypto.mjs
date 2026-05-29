@@ -706,7 +706,7 @@ Genere la fiche complete en JSON strict. Exigences (audit regle des 3 v3) :
    - thesis : 250-400 mots. Pas "cryptos en general". CETTE crypto specifiquement, ses 3 piliers de valeur, ses cas d'usage concrets
    - howItWorks : 350-500 mots. Consensus exact, mecanisme propres (PoH, BFT, etc.), hardware requis, innovations breve, comparaison technique vs ETH/BTC
    - tokenomics : 350-500 mots. Supply detaille, distribution founders/investors/community, vesting schedule, mecanismes inflation/burn/staking, utility multi-cas
-   - frEuStatus : 250-350 mots. Exchanges PSAN concrets nommes (Coinhouse, Coinbase France, etc.), statut MiCA, fiscalite Cerfa 2086 + 3916bis, staking imposable BNC, airdrops imposables a reception
+   - frEuStatus : 250-350 mots. Exchanges PSAN concrets nommes (Coinhouse, Coinbase France, etc.), statut MiCA, fiscalite Cerfa 2086 + 3916bis, PFU / flat tax 31,4 % sur les plus-values depuis le 1er janvier 2026 (12,8 % IR + 18,6 % prelevements sociaux) — n'ecris JAMAIS "30 %" comme taux courant, staking imposable BNC, airdrops imposables a reception
    - risks : MINIMUM 5 risques avec categories distinctes (technical, regulatory, market, team, adoption). Hacks passes = risk technique specifique avec date.
 
 4. **Tutoiement OBLIGATOIRE PARTOUT**
