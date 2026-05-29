@@ -9,15 +9,15 @@
  *  2. Trie : compétition low first → searchVolume desc.
  *  3. Skip les topics dont le slug existe déjà dans `content/articles/`.
  *  4. Pick le 1er topic restant.
- *  5. Appelle OpenRouter (modèle anthropic/claude-3.5-sonnet par défaut).
+ *  5. Appelle l'API Anthropic (claude-sonnet-4-6 par défaut).
  *  6. Valide le JSON retourné (≥ 5 H2, callout YMYL, ≥ 2 internal links, wordCount ≥ 1500).
  *  7. Si validation fail, retry 1 fois avec prompt enrichi.
  *  8. Si succès, écrit `content/articles/{slug}.mdx` avec frontmatter complet.
  *
- * Pré-requis : OPENROUTER_API_KEY en env. Si absent → exit 0 sans rien faire.
+ * Pré-requis : ANTHROPIC_API_KEY en env. Si absent → exit 0 sans rien faire.
  *
  * Usage local :
- *   OPENROUTER_API_KEY=sk-or-... node scripts/generate-weekly-article.mjs
+ *   ANTHROPIC_API_KEY=sk-ant-... node scripts/generate-weekly-article.mjs
  *
  * Usage CI : voir `.github/workflows/weekly-blog.yml` (cron samedi 8h UTC).
  *
@@ -36,21 +36,11 @@ const REPO_ROOT = path.resolve(process.cwd());
 const ARTICLES_DIR = path.join(REPO_ROOT, "content", "articles");
 const TODAY = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-// FIX 2026-05-02 — workflow weekly-blog échouait en 6s avec
-// `anthropic/claude-3.5-sonnet` : modèle DÉPRÉCIÉ sur OpenRouter (vérifié
-// via /api/v1/models, plus dans la liste). Migration vers Claude Sonnet 4.5
-// (équivalent qualité, supporté en priorité par OpenRouter en 2026).
-// `LLM_MODEL` env override toujours possible si on veut tester un autre.
-//
-// FIX 2026-05-09 — `anthropic/claude-sonnet-4.5` N'EXISTE PAS non plus sur
-// OpenRouter (verifie via /api/v1/models : seuls les routers `~anthropic/
-// claude-sonnet-latest` + versions Opus pinnees sont expose). Resultat :
-// 2 runs failed en 6-9s avec HTTP 400 model_not_found (#1 2026-05-02,
-// #2 2026-05-09). Migration vers le router alias `anthropic/claude-sonnet-
-// latest` qui suit toujours la derniere Sonnet stable supportee. Pricing
-// PRICING garde l'entree historique pour eviter NaN sur l'estimateur.
-const DEFAULT_MODEL = process.env.LLM_MODEL || "anthropic/claude-sonnet-latest";
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_VERSION = "2023-06-01";
+// API Anthropic DIRECTE (fini OpenRouter et ses modèles routés instables —
+// historique de runs cassés sur model_not_found). Clé : ANTHROPIC_API_KEY.
+const DEFAULT_MODEL = process.env.LLM_MODEL || "claude-sonnet-4-6";
 const MAX_TOKENS = 8000;          // ~6000 mots français max
 const TEMPERATURE = 0.5;          // Factuel mais pas robotique
 const TIMEOUT_MS = 120_000;       // 2 min (long-form prend du temps)
@@ -60,22 +50,11 @@ const MIN_INTERNAL_LINKS = 2;
 const MIN_WORD_COUNT = 1500;
 const MAX_RETRIES = 1;
 
-// Pricing OpenRouter ($/M tokens). Sonnet 4.5/4.6 alignés sur Anthropic
-// list price (3 in / 15 out). Haiku 4.5 = 1/5. Garde l'historique 3.5
-// (déprécié) pour ne pas crasher l'estimateur si LLM_MODEL=ancien.
+// Pricing Anthropic ($/M tokens) — indicatif 2026 (log de coût uniquement).
 const PRICING = {
-  // Routers OpenRouter (FIX 2026-05-09) : pricing aligne sur la Sonnet/Haiku
-  // courante. Si OpenRouter passe a un Sonnet 5 plus cher, remplacer ici.
-  "anthropic/claude-sonnet-latest": { input: 3.00, output: 15.00 },
-  "anthropic/claude-haiku-latest":  { input: 1.00, output: 5.00 },
-  "anthropic/claude-opus-latest":   { input: 15.00, output: 75.00 },
-  "anthropic/claude-sonnet-4.5": { input: 3.00, output: 15.00 },
-  "anthropic/claude-sonnet-4.6": { input: 3.00, output: 15.00 },
-  "anthropic/claude-haiku-4.5":  { input: 1.00, output: 5.00 },
-  "anthropic/claude-3.5-sonnet": { input: 3.00, output: 15.00 },
-  "anthropic/claude-3.5-haiku":  { input: 1.00, output: 5.00 },
-  "openai/gpt-4o":               { input: 2.50, output: 10.00 },
-  "openai/gpt-4o-mini":          { input: 0.15, output: 0.60 },
+  "claude-sonnet-4-6": { input: 3.0, output: 15.0 },
+  "claude-haiku-4-5": { input: 1.0, output: 5.0 },
+  "claude-opus-4-7": { input: 15.0, output: 75.0 },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -259,14 +238,14 @@ function extractJson(raw) {
 function estimateCost(model, usage) {
   const p = PRICING[model];
   if (!p || !usage) return 0;
-  const inputCost = ((usage.prompt_tokens || 0) / 1_000_000) * p.input;
-  const outputCost = ((usage.completion_tokens || 0) / 1_000_000) * p.output;
+  const inputCost = ((usage.input_tokens || 0) / 1_000_000) * p.input;
+  const outputCost = ((usage.output_tokens || 0) / 1_000_000) * p.output;
   return inputCost + outputCost;
 }
 
 async function callLLM(topic, retryHint = null) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error("OPENROUTER_API_KEY not set");
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY not set");
 
   const model = DEFAULT_MODEL;
   const ctrl = new AbortController();
@@ -274,24 +253,22 @@ async function callLLM(topic, retryHint = null) {
 
   let res;
   try {
-    res = await fetch(OPENROUTER_URL, {
+    res = await fetch(ANTHROPIC_URL, {
       method: "POST",
       signal: ctrl.signal,
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://www.cryptoreflex.fr",
-        "X-Title": "Cryptoreflex Weekly Long-form",
+        "x-api-key": apiKey,
+        "anthropic-version": ANTHROPIC_VERSION,
+        "content-type": "application/json",
       },
       body: JSON.stringify({
         model,
         max_tokens: MAX_TOKENS,
         temperature: TEMPERATURE,
+        system: SYSTEM_PROMPT,
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: buildUserPrompt(topic, retryHint) },
         ],
-        response_format: { type: "json_object" },
       }),
     });
   } finally {
@@ -300,20 +277,22 @@ async function callLLM(topic, retryHint = null) {
 
   if (!res.ok) {
     const errText = await res.text().catch(() => "(no body)");
-    throw new Error(`OpenRouter ${res.status}: ${errText.slice(0, 200)}`);
+    throw new Error(`Anthropic ${res.status}: ${errText.slice(0, 200)}`);
   }
 
   const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content) throw new Error("OpenRouter response has no content");
+  const content = Array.isArray(data?.content)
+    ? data.content.filter((b) => b.type === "text").map((b) => b.text).join("")
+    : null;
+  if (!content) throw new Error("Anthropic response has no text content");
 
   const parsed = extractJson(content);
   const usage = data.usage || {};
-  const totalTokens = (usage.prompt_tokens || 0) + (usage.completion_tokens || 0);
+  const totalTokens = (usage.input_tokens || 0) + (usage.output_tokens || 0);
   const cost = estimateCost(model, usage);
 
   console.log(
-    `[llm] tokens=${totalTokens} (in=${usage.prompt_tokens || 0} out=${usage.completion_tokens || 0}) cost=$${cost.toFixed(4)} model=${model.split("/").pop()}`
+    `[llm] tokens=${totalTokens} (in=${usage.input_tokens || 0} out=${usage.output_tokens || 0}) cost=$${cost.toFixed(4)} model=${model}`
   );
 
   return { parsed, model, tokens: totalTokens, cost };
@@ -396,7 +375,7 @@ updatedAt: "${TODAY}"
 lastUpdated: "${TODAY}"
 category: "${frenchCategoryLabel(topic.category)}"
 cluster: "${topic.cluster}"
-author: "Cryptoreflex"
+author: "La rédaction Cryptoreflex"
 image: "/og-default.png"
 readTime: "${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))} min"
 readingTime: ${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))}
@@ -431,8 +410,8 @@ async function writeArticle(topic, parsed) {
   console.log(`  Date: ${TODAY}`);
   console.log(`========================================\n`);
 
-  if (!process.env.OPENROUTER_API_KEY) {
-    console.warn("[skip] OPENROUTER_API_KEY required for weekly blog generation. Exiting cleanly.");
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.warn("[skip] ANTHROPIC_API_KEY required for weekly blog generation. Exiting cleanly.");
     process.exit(0);
   }
 

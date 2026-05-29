@@ -41,8 +41,8 @@ jobs:
         run: node scripts/generate-weekly-article.mjs
         env:
           NODE_ENV: production
-          # OPENROUTER_API_KEY OBLIGATOIRE — sinon le script exit 0 sans rien faire.
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # ANTHROPIC_API_KEY OBLIGATOIRE — sinon le script exit 0 sans rien faire.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           # Override du modèle si besoin (default : anthropic/claude-3.5-sonnet)
           # LLM_MODEL: openai/gpt-4o
 
@@ -107,7 +107,7 @@ jobs:
           # Fix audit 2026-05-06 : on lit la conclusion REELLE du step
           # commit_push, pas seulement has_changes (cf. daily-content.yml).
           if [ "${{ steps.changes.outputs.has_changes }}" = "false" ]; then
-            echo "ℹ️ Aucun nouvel article (validation LLM en échec, OPENROUTER_API_KEY absente, ou catalogue épuisé)." >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ Aucun nouvel article (validation LLM en échec, ANTHROPIC_API_KEY absente, ou catalogue épuisé)." >> $GITHUB_STEP_SUMMARY
           elif [ "${{ steps.commit_push.conclusion }}" = "success" ]; then
             echo "✅ Nouvel article publié : **${{ steps.changes.outputs.slug }}**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
