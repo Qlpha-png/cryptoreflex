@@ -1,9 +1,16 @@
 name: Daily content generator (news + TA)
 
-# Cron 7h UTC = 8-9h Paris (selon DST). Manuel via "Run workflow" possible.
+# Actu du jour, TOUS LES JOURS à heure fixe.
+# Cron 05:30 UTC = 07h30 Paris (été) / 06h30 (hiver).
+# Pourquoi ce créneau : à 5h30 UTC toute la nuit US (clôture Wall Street) +
+# la session asiatique sont passées → info du jour complète et fraîche ; et
+# l'article est publié AVANT le pic de lecture matinal FR (7-9h), bon pour le
+# SEO « freshness ». Minute décalée (30) pour éviter la congestion GitHub
+# Actions du top d'heure (qui retarde les runs). Déploiement Vercel ~10 min
+# après le push. Déclenchement manuel possible via "Run workflow".
 on:
   schedule:
-    - cron: "0 7 * * *"
+    - cron: "30 5 * * *"
   workflow_dispatch:
 
 # Permissions write requise pour commit + push automatique sur main.
