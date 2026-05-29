@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Newspaper, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import { Newspaper, Info, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { formatRelativeFr } from "@/lib/news-aggregator";
 import {
   getAllNewsSummaries,
   getNewsCountsByCategory,
@@ -149,6 +150,12 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
   const start = (safePage - 1) * PAGE_SIZE;
   const visible = listSource.slice(start, start + PAGE_SIZE);
 
+  // "À la une" : la dernière analyse mise en vedette (grand format), affichée
+  // seulement page 1 sans filtre. Le reste passe dans la grille "Dernières
+  // analyses". Sur les pages 2+ ou en filtre, tout reste en grille.
+  const featured = !activeCategory && safePage === 1 && visible.length > 0 ? visible[0] : null;
+  const gridItems = featured ? visible.slice(1) : visible;
+
   // 4) JSON-LD
   const breadcrumb = breadcrumbSchema([
     { name: "Accueil", url: "/" },
@@ -232,15 +239,29 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
           </p>
         </header>
 
-        {/* LA UNE — brief crypto du jour mis en vedette */}
+        {/* LA UNE — brief crypto du jour (édito) */}
         {showBrief && brief && (
           <div className="mb-10">
             <BriefHero brief={brief} />
           </div>
         )}
 
+        {/* À LA UNE — dernière analyse en vedette (grand format magazine) */}
+        {featured && (
+          <section aria-labelledby="featured-h" className="mb-12">
+            <h2
+              id="featured-h"
+              className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-primary-soft"
+            >
+              <span className="h-px w-6 bg-primary/50" aria-hidden="true" />
+              À la une
+            </h2>
+            <FeaturedNews news={featured} />
+          </section>
+        )}
+
         {/* FILTRES CATÉGORIES */}
-        <div className="mt-2 mb-8">
+        <div className="mt-2 mb-6">
           <NewsFilters
             active={activeCategory}
             counts={counts}
@@ -249,12 +270,15 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
           />
         </div>
 
-        {/* GRID */}
-        {visible.length === 0 ? (
+        {/* GRID — dernières analyses */}
+        <h2 className="mb-5 text-lg font-bold tracking-tight text-fg sm:text-xl">
+          {activeCategory ? NEWS_CATEGORY_LABELS[activeCategory] : "Dernières analyses"}
+        </h2>
+        {gridItems.length === 0 ? (
           <div className="rounded-2xl border border-border bg-surface p-10 text-center">
             <Newspaper className="mx-auto mb-3 h-8 w-8 text-muted" aria-hidden="true" />
             <p className="text-fg/70">
-              Aucune actualité disponible{activeCategory ? ` dans la catégorie ${NEWS_CATEGORY_LABELS[activeCategory]}` : ""}{" "}
+              Aucune autre actualité disponible{activeCategory ? ` dans la catégorie ${NEWS_CATEGORY_LABELS[activeCategory]}` : ""}{" "}
               pour le moment.
             </p>
             <Link
@@ -269,7 +293,7 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
             role="list"
             className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {visible.map((news) => (
+            {gridItems.map((news) => (
               <li key={news.slug} className="list-none">
                 <NewsCard news={news} />
               </li>
@@ -383,5 +407,76 @@ function Pagination({
         )}
       </div>
     </nav>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* À la une — carte vedette grand format (magazine)                           */
+/* -------------------------------------------------------------------------- */
+
+const FEATURED_BADGE: Record<string, string> = {
+  "Marché": "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+  "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
+  Technologie: "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
+  Plateformes: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
+};
+
+function FeaturedNews({ news }: { news: NewsSummary }) {
+  const relDate = formatRelativeFr(news.date);
+  const catLabel = NEWS_CATEGORY_LABELS[news.category];
+  const badge = FEATURED_BADGE[news.category] ?? "bg-muted/15 text-muted ring-border";
+
+  return (
+    <Link
+      href={`/actualites/${news.slug}`}
+      aria-label={`Lire l'analyse à la une : ${news.title}`}
+      className="group relative grid overflow-hidden rounded-3xl border border-border bg-elevated transition-all
+                 duration-normal hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-e2 focus:outline-none
+                 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                 focus-visible:ring-offset-background lg:grid-cols-2"
+    >
+      <div className="relative aspect-[16/9] overflow-hidden lg:aspect-auto lg:h-full lg:min-h-[300px]">
+        <img
+          src={`/actualites/${news.slug}/opengraph-image?v=${news.date}`}
+          alt={`Cover : ${news.title}`}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+          loading="eager"
+          decoding="async"
+          width={1200}
+          height={630}
+        />
+        <span
+          className={`absolute left-4 top-4 z-10 inline-flex items-center rounded-full px-3 py-1 text-[11px]
+                      font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badge}`}
+        >
+          {catLabel}
+        </span>
+      </div>
+      <div className="flex flex-col justify-center gap-4 p-6 sm:p-8 lg:p-10">
+        <div className="flex items-center gap-2 text-xs text-muted">
+          <span className="font-semibold text-fg/80">{news.source}</span>
+          {relDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <time dateTime={news.date} className="font-mono">
+                {relDate}
+              </time>
+            </>
+          )}
+        </div>
+        <h3 className="font-display text-2xl leading-tight text-fg transition-colors group-hover:text-primary-glow sm:text-3xl">
+          {news.title}
+        </h3>
+        {news.description && (
+          <p className="line-clamp-3 text-sm leading-relaxed text-fg/70 sm:text-base">
+            {news.description}
+          </p>
+        )}
+        <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft transition-all group-hover:gap-2.5">
+          Lire l'analyse
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </span>
+      </div>
+    </Link>
   );
 }

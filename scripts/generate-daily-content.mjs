@@ -47,10 +47,15 @@ const TA_CRYPTOS = [
   { symbol: "ADA", name: "Cardano", coingeckoId: "cardano", slug: "cardano" },
 ];
 
+// Flux RSS sources. fr.cointelegraph (410) et cryptoslate (403) sont morts —
+// remplacés par des feeds fiables (le rewriter Sonnet traduit l'EN en FR).
+// Le moteur skip proprement toute source qui échoue (log [fetch-rss-fail]).
 const RSS_SOURCES = [
-  { name: "CoinTelegraph FR", url: "https://fr.cointelegraph.com/rss" },
   { name: "Decrypt", url: "https://decrypt.co/feed" },
-  { name: "CryptoSlate", url: "https://cryptoslate.com/feed/" },
+  { name: "Cointelegraph", url: "https://cointelegraph.com/rss" },
+  { name: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/" },
+  { name: "Cryptoast", url: "https://cryptoast.fr/feed/" },
+  { name: "Journal du Coin", url: "https://www.journalducoin.com/feed/" },
 ];
 
 const NEWS_KEYWORDS = [
