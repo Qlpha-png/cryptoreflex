@@ -115,7 +115,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Le staking sur Coinbase est-il rentable et fiscalement traité ?",
         answer:
-          "Coinbase prélève une commission d'environ 25 à 35 % sur les rewards de staking selon la crypto. Tu recevez donc un rendement net de 2 à 5 % brut annuel. Côté fiscalité française : les rewards sont taxés au moment de leur cession (pas de leur réception) au régime des plus-values sur actifs numériques (article 150 VH bis du CGI), soit 30 % en flat tax pour les particuliers.",
+          "Coinbase prélève une commission d'environ 25 à 35 % sur les rewards de staking selon la crypto. Tu recevez donc un rendement net de 2 à 5 % brut annuel. Côté fiscalité française : les rewards sont taxés au moment de leur cession (pas de leur réception) au régime des plus-values sur actifs numériques (article 150 VH bis du CGI), soit 31,4 % en flat tax pour les particuliers.",
       },
       {
         question: "Coinbase propose-t-elle un programme de parrainage ?",
@@ -183,7 +183,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer mon compte Binance aux impôts français ?",
         answer:
-          "Binance France étant immatriculée en France, le compte n'a théoriquement pas à être déclaré au formulaire 3916-bis. En pratique, par prudence, déclarez tout compte sur lequel tu détiens des cryptos. Les plus-values de cession sont à reporter sur le formulaire 2086, taxées à 30 % flat tax.",
+          "Binance France étant immatriculée en France, le compte n'a théoriquement pas à être déclaré au formulaire 3916-bis. En pratique, par prudence, déclarez tout compte sur lequel tu détiens des cryptos. Les plus-values de cession sont à reporter sur le formulaire 2086, taxées à 31,4 % flat tax.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -246,7 +246,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer Bitpanda aux impôts français ?",
         answer:
-          "Bitpanda étant domiciliée en Autriche, le compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values de cession crypto sont à reporter sur le formulaire 2086, taxées à 30 % flat tax. Bitpanda fournit un récapitulatif fiscal téléchargeable depuis ton espace personnel pour faciliter la déclaration.",
+          "Bitpanda étant domiciliée en Autriche, le compte doit être déclaré chaque année via le formulaire 3916-bis (compte à l'étranger). Les plus-values de cession crypto sont à reporter sur le formulaire 2086, taxées à 31,4 % flat tax. Bitpanda fournit un récapitulatif fiscal téléchargeable depuis ton espace personnel pour faciliter la déclaration.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -498,7 +498,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment déclarer mon compte Coinhouse aux impôts français ?",
         answer:
-          "Coinhouse étant une société française basée à Paris, ton compte n'a pas à être déclaré au formulaire 3916-bis (réservé aux comptes à l'étranger). Les plus-values de cession crypto restent à déclarer sur le formulaire 2086, taxées à 30 % flat tax. Coinhouse fournit un récapitulatif fiscal annuel téléchargeable, particulièrement bien fait pour faciliter la déclaration française.",
+          "Coinhouse étant une société française basée à Paris, ton compte n'a pas à être déclaré au formulaire 3916-bis (réservé aux comptes à l'étranger). Les plus-values de cession crypto restent à déclarer sur le formulaire 2086, taxées à 31,4 % flat tax. Coinhouse fournit un récapitulatif fiscal annuel téléchargeable, particulièrement bien fait pour faciliter la déclaration française.",
       },
     ],
     related: RELATED_DEFAULT,

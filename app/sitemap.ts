@@ -109,8 +109,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // index/follow + metadata complète) mais jamais soumises à Googlebot.
     // Impact estimé : ~3-5% trafic SEO long-tail récupéré.
     { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/avis`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/comparatif`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${SITE_URL}/alternative-a`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/historique-prix`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/vs`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
@@ -146,7 +144,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Quiz "Trouve ton exchange en 60 sec" (P0-différenciation : aucun concurrent FR
     // n'a de quiz interactif). Lead magnet ultra-converting → priority 0.85, weekly.
     { url: `${SITE_URL}/quiz/trouve-ton-exchange`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     // Programmatic SEO — /comparer (cryptos vs cryptos, 105 paires top 15)
     // Différencié de /comparatif (plateformes) et /cryptos/comparer (dynamique).
     { url: `${SITE_URL}/comparer`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },

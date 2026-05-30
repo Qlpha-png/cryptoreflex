@@ -72,7 +72,7 @@ export function calculateROI(input: ROIInput): ROIResult {
   const roiPercent =
     investmentInitial > 0 ? (profitNet / investmentInitial) * 100 : 0;
 
-  // ---- 3. Impôt français (PFU 30 %, seuil 305 €) ----
+  // ---- 3. Impôt français (PFU 31,4 %, seuil 305 €) ----
   const { TAX_FREE_THRESHOLD_EUR, PFU_RATE } = ROI_TAX_CONSTANTS;
   const taxFr =
     profitNet > TAX_FREE_THRESHOLD_EUR ? profitNet * PFU_RATE : 0;

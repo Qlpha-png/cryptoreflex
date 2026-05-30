@@ -134,7 +134,7 @@ const GLOSSARY: Array<{
   {
     term: "Flat tax",
     definition:
-      "PFU 30 % (12,8 % IR + 17,2 % PS) sur les plus-values crypto en France pour les particuliers.",
+      "PFU 31,4 % (12,8 % IR + 18,6 % PS) sur les plus-values crypto en France pour les particuliers.",
     url: "/outils/calculateur-fiscalite",
     keywords: ["fiscalite", "impot", "pfu", "30", "plus-value"],
   },
@@ -176,7 +176,7 @@ const TOOLS: Array<{
     id: "calculateur-fiscalite",
     title: "Calculateur fiscalité crypto FR",
     url: "/outils/calculateur-fiscalite",
-    snippet: "Calcule tes plus-values et l'impôt à payer (PFU 30 %).",
+    snippet: "Calcule tes plus-values et l'impôt à payer (PFU 31,4 %).",
     keywords: ["impot", "fiscalite", "pfu", "plus-value", "declaration", "france"],
   },
   {

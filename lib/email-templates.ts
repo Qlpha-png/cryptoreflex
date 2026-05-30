@@ -258,7 +258,7 @@ function formatEuroEmail(value: number): string {
 
 /** Libellé humain pour le régime (cohérent avec lib/fiscalite.ts:regimeLabel). */
 function regimeLabelEmail(regime: string): string {
-  if (regime === "pfu") return "PFU 30 % (flat tax)";
+  if (regime === "pfu") return "PFU 31,4 % (flat tax)";
   if (regime === "bareme") return "Barème progressif IR";
   if (regime === "bic") return "BIC professionnel";
   return regime;

@@ -255,7 +255,7 @@ export const EMBEDDABLE_TOOLS: Array<{
     name: "Calculateur fiscalité crypto France 2026",
     shortName: "Calculateur fiscalité",
     description:
-      "Estime l'impôt PFU 30 %, barème progressif ou BIC en 2 minutes — Cerfa 2086 inclus.",
+      "Estime l'impôt PFU 31,4 %, barème progressif ou BIC en 2 minutes — Cerfa 2086 inclus.",
     height: 900,
     emoji: "📊",
   },
@@ -282,7 +282,7 @@ export const EMBEDDABLE_TOOLS: Array<{
     name: "Calculateur ROI crypto",
     shortName: "Calculateur ROI",
     description:
-      "ROI net, plus-value et impôt PFU 30 % en 5 secondes — frais inclus.",
+      "ROI net, plus-value et impôt PFU 31,4 % en 5 secondes — frais inclus.",
     height: 700,
     emoji: "💰",
   },

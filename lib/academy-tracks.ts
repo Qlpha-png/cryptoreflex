@@ -328,7 +328,7 @@ const TRACK_AVANCE: Track = {
     {
       order: 9,
       articleSlug: "eviter-pfu-30-crypto-bareme-progressif-legalement-2026",
-      title: "Éviter le PFU 30% : option barème progressif",
+      title: "Éviter le PFU 31,4% : option barème progressif",
       durationMin: 16,
       prereqs: ["comment-declarer-crypto-impots-2026-guide-complet"],
     },
@@ -487,7 +487,7 @@ const TRACK_FISCALITE: Track = {
     {
       order: 3,
       articleSlug: "calcul-pfu-30-crypto-exemple-chiffre",
-      title: "Calculer le PFU 30 % : exemple chiffré",
+      title: "Calculer le PFU 31,4 % : exemple chiffré",
       durationMin: 12,
       prereqs: [],
     },

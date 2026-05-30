@@ -547,7 +547,7 @@ function GroupHeading({
       {icon}
       <span>{label}</span>
       {typeof count === "number" && (
-        <span className="text-muted/50 font-normal">({count})</span>
+        <span className="text-muted/70 font-normal">({count})</span>
       )}
     </div>
   );

@@ -99,7 +99,7 @@ export const CLUSTERS: Cluster[] = [
     nodes: [
       { path: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité", weight: 3 },
       { path: "/outils/declaration-fiscale-crypto", label: "Outils déclaration (Waltio vs Koinly)", weight: 3 },
-      { path: "/blog/calcul-pfu-30-crypto-exemple-chiffre", label: "Calcul PFU 30 % : 5 exemples chiffrés", weight: 2 },
+      { path: "/blog/calcul-pfu-30-crypto-exemple-chiffre", label: "Calcul PFU 31,4 % : 5 exemples chiffrés", weight: 2 },
       { path: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026", label: "Cerfa 2086 : tutoriel complet", weight: 2 },
       { path: "/blog/bareme-progressif-vs-pfu-crypto-2026", label: "Barème progressif vs PFU", weight: 2 },
       { path: "/blog/deduire-pertes-crypto-impot-2026", label: "Déduire ses pertes crypto", weight: 2 },

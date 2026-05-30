@@ -137,7 +137,7 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
     regulator: "AMF",
     regulatorUrl: "https://www.amf-france.org",
     taxNote:
-      "Plus-values crypto imposées au PFU 30 % (12,8 % IR + 17,2 % PS) lors de la conversion en euros. Déclaration via formulaire Cerfa 2086.",
+      "Plus-values crypto imposées au PFU 31,4 % (12,8 % IR + 18,6 % PS) lors de la conversion en euros. Déclaration via formulaire Cerfa 2086.",
     language: "fr",
     isoCode: "FR",
   },

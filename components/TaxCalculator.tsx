@@ -97,7 +97,7 @@ function buildProjection(initial: number, perfPct: number): ProjectionRow[] {
     const capitalBrut = prev * (1 + rate);
     const plusValueAnnuelle = capitalBrut - prev;
     // PFU 31,4 % sur le gain annuel (positif uniquement)
-    const impotAnnuel = plusValueAnnuelle > 0 ? plusValueAnnuelle * 0.3 : 0;
+    const impotAnnuel = plusValueAnnuelle > 0 ? plusValueAnnuelle * 0.314 : 0;
     impotCumule += impotAnnuel;
     const capitalNet = capitalBrut - impotCumule;
     rows.push({

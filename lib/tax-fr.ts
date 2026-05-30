@@ -32,7 +32,7 @@ export const TAUX_IR = 0.128;
 /**
  * Taux des prélèvements sociaux. 18,6 % depuis le 1er janvier 2026 (CSG
  * relevée de 9,2 % à 10,6 % par la LFSS 2026, +1,4 pt sur les revenus du
- * capital). Était 18,6 % jusqu'aux gains réalisés en 2025.
+ * capital). Était 17,2 % jusqu'aux gains réalisés en 2025.
  */
 export const TAUX_PS = 0.186;
 
@@ -249,7 +249,7 @@ describe("formatEur", () => {
 
 describe("constantes", () => {
   it("PFU = 31,4 %", () => {
-    expect(TAUX_FLAT_TAX).toBeCloseTo(0.30);
+    expect(TAUX_FLAT_TAX).toBeCloseTo(0.314);
   });
   it("seuil exonération = 305 €", () => {
     expect(SEUIL_EXONERATION_EUR).toBe(305);

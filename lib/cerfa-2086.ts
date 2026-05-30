@@ -96,7 +96,7 @@ export interface CerfaSummary {
   plusValueNetteEur: number;
   /** Vrai si total cessions ≤ 305 € (exonération). */
   exonere: boolean;
-  /** Impôt PFU 30 % estimé (0 si exonéré ou déficit). */
+  /** Impôt PFU 31,4 % estimé (0 si exonéré ou déficit). */
   impotPfuEur: number;
   /** Net après impôt (plusValueNette - impotPfu). */
   netApresImpotEur: number;

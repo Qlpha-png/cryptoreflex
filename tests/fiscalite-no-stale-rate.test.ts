@@ -21,7 +21,7 @@ import { join, extname } from "node:path";
  * Gratuit, sans clé API, tourne dans `npm test` / la CI → garde le site à jour.
  */
 
-const ROOTS = ["components", "app", "data", "public", "content/lead-magnets"];
+const ROOTS = ["components", "app", "lib", "data", "public", "content/lead-magnets"];
 const EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".json", ".txt", ".md", ".mdx"]);
 
 // Taux PFU/flat tax obsolète présenté comme courant (marqueur fiscal ± 30 %),
@@ -46,6 +46,9 @@ function walk(dir: string, acc: string[]): void {
       if (/node_modules|\.next|\.git/.test(p)) continue;
       walk(p, acc);
     } else if (EXT.has(extname(e.name))) {
+      // academy-quizzes.ts contient des MAUVAISES réponses « 30 % » volontaires
+      // (leurres de QCM) + leur explication correcte à 31,4 % → exclu du garde-fou.
+      if (e.name === "academy-quizzes.ts") continue;
       acc.push(p);
     }
   }

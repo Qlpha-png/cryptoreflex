@@ -49,9 +49,9 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
   },
   {
     slug: "eviter-pfu-30-crypto-bareme-progressif-legalement-2026",
-    title: "Eviter le PFU 30 % crypto — option barème progressif 2026",
+    title: "Eviter le PFU 31,4 % crypto — option barème progressif 2026",
     description:
-      "PFU 30 % ou barème progressif sur tes plus-values 2026 ? Comparatif chiffré par TMI, mécanisme case 2OP et piège de l'engagement annuel global.",
+      "PFU 31,4 % ou barème progressif sur tes plus-values 2026 ? Comparatif chiffré par TMI, mécanisme case 2OP et piège de l'engagement annuel global.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -84,9 +84,9 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
 export const FISCALITE_SATELLITES: FiscaliteRelatedArticle[] = [
   {
     slug: "calcul-pfu-30-crypto-exemple-chiffre",
-    title: "Calcul PFU 30 % crypto — 5 exemples chiffrés concrets (2026)",
+    title: "Calcul PFU 31,4 % crypto — 5 exemples chiffrés concrets (2026)",
     description:
-      "Comment calculer concrètement le PFU 30 % sur tes plus-values crypto en 2026 : 5 cas chiffrés (DCA, swap, perte, gros gain, micro), formules, pièges.",
+      "Comment calculer concrètement le PFU 31,4 % sur tes plus-values crypto en 2026 : 5 cas chiffrés (DCA, swap, perte, gros gain, micro), formules, pièges.",
     category: "Fiscalité",
     cluster: "satellite",
   },
@@ -100,7 +100,7 @@ export const FISCALITE_SATELLITES: FiscaliteRelatedArticle[] = [
   },
   {
     slug: "bareme-progressif-vs-pfu-crypto-2026",
-    title: "Barème progressif ou PFU 30 % crypto — lequel choisir en 2026 ?",
+    title: "Barème progressif ou PFU 31,4 % crypto — lequel choisir en 2026 ?",
     description:
       "Tableau comparatif chiffré : à partir de quelle TMI le PFU est plus avantageux ? Cas étudiants, retraités, cadres, traders. Méthode case 2OP.",
     category: "Fiscalité",
@@ -182,7 +182,7 @@ function calculatorSoftwareSchema(description: string): JsonLd {
     isAccessibleForFree: true,
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
     featureList: [
-      "Calcul PFU 30 % (12,8 % IR + 17,2 % PS)",
+      "Calcul PFU 31,4 % (12,8 % IR + 18,6 % PS)",
       "Option barème progressif IR",
       "Régime BIC professionnel",
       "Seuil exonération 305 € pris en compte",
@@ -236,7 +236,7 @@ export function generateFiscaliteSchema(
   const howTo = howToSchema({
     name: "Comment calculer son impôt crypto en France en 2026",
     description:
-      "Méthode pas-à-pas pour estimer l'impôt sur les plus-values crypto 2026 (PFU 30 % ou barème progressif), du calcul de la plus-value nette au report sur le Cerfa 2086.",
+      "Méthode pas-à-pas pour estimer l'impôt sur les plus-values crypto 2026 (PFU 31,4 % ou barème progressif), du calcul de la plus-value nette au report sur le Cerfa 2086.",
     totalTime: "PT5M",
     estimatedCost: { currency: "EUR", value: 0 },
     tools: [
@@ -265,8 +265,8 @@ export function generateFiscaliteSchema(
         url: "/outils/calculateur-fiscalite",
       },
       {
-        name: "Choisir entre PFU 30 % et barème progressif",
-        text: "Le PFU à 30 % (12,8 % IR + 17,2 % PS) est avantageux dès que ta TMI dépasse 12,8 %. Si ta TMI est à 0 ou 11 %, opte pour le barème progressif via la case 2OP du Cerfa 2042. Le calculateur affiche les deux scénarios côte à côte.",
+        name: "Choisir entre PFU 31,4 % et barème progressif",
+        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que ta TMI dépasse 12,8 %. Si ta TMI est à 0 ou 11 %, opte pour le barème progressif via la case 2OP du Cerfa 2042. Le calculateur affiche les deux scénarios côte à côte.",
         url: "/blog/bareme-progressif-vs-pfu-crypto-2026",
       },
       {

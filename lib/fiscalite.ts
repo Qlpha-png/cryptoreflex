@@ -36,7 +36,7 @@ export const TAUX_IR_PFU = 0.128;
 /**
  * Taux des prélèvements sociaux (CSG/CRDS) — applicable PFU et Barème.
  * 18,6 % depuis le 1er janvier 2026 : la LFSS 2026 a relevé la CSG sur les
- * revenus du capital de 9,2 % à 10,6 % (+1,4 pt). Était 18,6 % jusqu'aux
+ * revenus du capital de 9,2 % à 10,6 % (+1,4 pt). Était 17,2 % jusqu'aux
  * gains réalisés en 2025. Source : impots.gouv.fr (nouveautés revenus 2025).
  */
 export const TAUX_PS = 0.186;

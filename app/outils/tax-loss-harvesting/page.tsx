@@ -184,7 +184,7 @@ export default function TaxLossHarvestingPage() {
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
                 <li>Moins-values latentes (non vendues) : <strong className="text-muted">non comptées</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 31,4 % : <strong className="text-danger">1 500 €</strong>
+                  Impôt PFU 31,4 % : <strong className="text-danger">1 570 €</strong>
                 </li>
               </ul>
             </div>
@@ -196,11 +196,11 @@ export default function TaxLossHarvestingPage() {
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
                 <li>Moins-values réalisées (vente le 28/12) : <strong className="text-danger">−4 000 €</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 31,4 % sur 1 000 € : <strong className="text-fg">300 €</strong>
+                  Impôt PFU 31,4 % sur 1 000 € : <strong className="text-fg">314 €</strong>
                 </li>
               </ul>
               <p className="mt-3 text-xs text-fg/70 leading-relaxed">
-                Différence pédagogique : 1 200 €. Cette estimation théorique
+                Différence pédagogique : 1 256 €. Cette estimation théorique
                 dépend de votre situation fiscale globale et doit être validée
                 avec un professionnel avant toute décision.
               </p>

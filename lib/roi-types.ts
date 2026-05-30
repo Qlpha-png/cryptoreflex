@@ -33,7 +33,7 @@ export interface ROIResult {
   /** Total des frais payés (achat + vente). */
   totalFees: number;
   /**
-   * Impôt français estimé (PFU 30 %) sur la plus-value nette.
+   * Impôt français estimé (PFU 31,4 %) sur la plus-value nette.
    * 0 si plus-value <= seuil 305 € OU si plus-value <= 0.
    * Ne tient pas compte du barème progressif ni des situations BIC.
    */

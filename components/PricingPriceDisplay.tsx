@@ -76,7 +76,7 @@ export default function PricingPriceDisplay({
         <p className="mt-1 text-xs text-white/55">
           soit <span className="font-semibold text-white/75">{equivMonthly}</span> / mois
           {" "}
-          <span className="text-white/45">(au lieu de {monthlyPrice})</span>
+          <span className="text-white/60">(au lieu de {monthlyPrice})</span>
         </p>
       </div>
     );

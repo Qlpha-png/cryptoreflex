@@ -1104,7 +1104,7 @@ export default function ProPage() {
                 </div>
                 <span
                   aria-hidden="true"
-                  className="text-xs font-mono tabular-nums text-muted/50 shrink-0"
+                  className="text-xs font-mono tabular-nums text-muted/70 shrink-0"
                 >
                   0{idx + 1}
                 </span>

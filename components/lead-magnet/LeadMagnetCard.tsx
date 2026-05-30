@@ -168,7 +168,7 @@ export default function LeadMagnetCard({
             placeholder="ton@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted/60 focus:border-primary focus:outline-none"
+            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted focus:border-primary focus:outline-none"
             disabled={status === "loading"}
           />
           <button

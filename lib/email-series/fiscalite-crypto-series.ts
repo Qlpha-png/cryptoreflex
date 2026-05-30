@@ -247,7 +247,7 @@ const J0_CONTENT_HTML =
   "<li><strong>Récupère tous tes historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer ta plus-value selon la formule officielle 150 VH bis.</li>" +
   "<li><strong>Identifie tes plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
   "<li><strong>Compte tes cessions, pas tes achats</strong>. Si tu as moins de 305 € de cessions sur l'année, tu es <strong>exonéré·e</strong>.</li>" +
-  "<li><strong>Choisis ton régime</strong> : PFU 30 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
+  "<li><strong>Choisis ton régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
   "<li><strong>N'oublie pas tes pertes</strong> : elles peuvent compenser tes gains. On creuse au mail 4.</li>" +
   "</ol>" +
   '<p style="margin-top:24px;">Pour automatiser tout ça (import des exchanges, calcul plus-value, génération Cerfa), nous recommandons <strong>Waltio</strong> — outil français, agréé expert-comptable, pré-remplissage 2086 + 3916-bis automatique.</p>';
@@ -276,7 +276,7 @@ const J0: EmailInSequence = {
     "1. Récupère tous tes historiques (CSV ou API).\n" +
     "2. Identifie tes plateformes étrangères et déclare-les via le 3916-bis.\n" +
     "3. Si tu as moins de 305 EUR de cessions sur l'année, tu es exonéré·e.\n" +
-    "4. Choisis ton régime : PFU 30 % ou barème progressif.\n" +
+    "4. Choisis ton régime : PFU 31,4 % ou barème progressif.\n" +
     "5. N'oublie pas tes pertes — elles compensent tes gains.\n\n" +
     "Outil recommandé : Waltio (lien d'affiliation publicitaire).\n" +
     waltioUrl(0, "j0-bienvenue") +
@@ -356,15 +356,15 @@ const J2: EmailInSequence = {
 /* -------------------------------------------------------------------------- */
 
 const J5_CONTENT_HTML =
-  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">PFU 30 % ou barème progressif ? Le piège qui coûte cher</h1>' +
-  "<p>La majorité des contribuables crypto laissent par défaut le PFU 30 %. Et pour 70 % d'entre eux, c'est en effet le bon choix.</p>" +
+  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">PFU 31,4 % ou barème progressif ? Le piège qui coûte cher</h1>' +
+  "<p>La majorité des contribuables crypto laissent par défaut le PFU 31,4 %. Et pour 70 % d'entre eux, c'est en effet le bon choix.</p>" +
   "<p>Mais pour <strong>30 % des cas</strong>, opter pour le barème progressif fait économiser des centaines (parfois milliers) d'euros.</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">La règle simple</h2>' +
   '<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;background:#1F2937;border-radius:8px;margin:12px 0;">' +
   '<tr><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Ta TMI</td><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Choix optimal</td></tr>' +
-  "<tr><td>0 % (non imposable)</td><td>Barème (tu ne paies que les 17,2 % de PS)</td></tr>" +
+  "<tr><td>0 % (non imposable)</td><td>Barème (tu ne paies que les 18,6 % de PS)</td></tr>" +
   "<tr><td>11 %</td><td>Barème (28,2 % au lieu de 30 %)</td></tr>" +
-  "<tr><td>30 %</td><td>Indifférent (47,2 % vs 30 % — PFU gagne)</td></tr>" +
+  "<tr><td>30 %</td><td>Indifférent (47,2 % vs 31,4 % — PFU gagne)</td></tr>" +
   "<tr><td>41 / 45 %</td><td>PFU (économie large)</td></tr>" +
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Exemple chiffré (PV crypto = 5 000 €)</h2>' +
@@ -378,7 +378,7 @@ const J5_CONTENT_HTML =
 const J5: EmailInSequence = {
   id: "fiscalite-j5-pfu-vs-bareme",
   dayOffset: 5,
-  subject: "PFU 30 % ou barème ? Le piège qui coûte cher",
+  subject: "PFU 31,4 % ou barème ? Le piège qui coûte cher",
   preheader: "30 % des contribuables crypto choisissent le mauvais régime. Calcule en 2 clics.",
   htmlBody: wrapEmail({
     preheader: "30 % des contribuables crypto choisissent le mauvais régime. Calcule en 2 clics.",
@@ -394,10 +394,10 @@ const J5: EmailInSequence = {
     },
   }),
   textBody:
-    "PFU 30 % ou barème progressif ?\n\n" +
+    "PFU 31,4 % ou barème progressif ?\n\n" +
     "Règle simple :\n" +
     "- TMI 0 % ou 11 % → barème (tu paies moins).\n" +
-    "- TMI 30 % et plus → PFU (tu paies moins).\n\n" +
+    "- TMI 31,4 % et plus → PFU (tu paies moins).\n\n" +
     "Exemple PV 5 000 EUR :\n" +
     "- TMI 0 % → 860 EUR au barème vs 1 500 EUR au PFU (-640 EUR)\n" +
     "- TMI 11 % → 1 410 EUR vs 1 500 EUR (-90 EUR)\n" +
@@ -437,7 +437,7 @@ const J9_CONTENT_HTML =
   "<tr><td>+ 8 000 € PV sur BTC vendu en avril</td><td align=\"right\">+ 8 000 €</td></tr>" +
   "<tr><td>- 3 000 € MV sur Luna vendu en mai (poussière restante)</td><td align=\"right\">- 3 000 €</td></tr>" +
   '<tr><td style="font-weight:700;color:#F5A524;">PV nette imposable</td><td align="right" style="font-weight:700;color:#F5A524;">5 000 €</td></tr>' +
-  "<tr><td>Économie d'impôt (PFU 30 %)</td><td align=\"right\"><strong>900 €</strong></td></tr>" +
+  "<tr><td>Économie d'impôt (PFU 31,4 %)</td><td align=\"right\"><strong>900 €</strong></td></tr>" +
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le piège à éviter</h2>' +
   "<p>Si tes tokens sont stuck sur un exchange en faillite (FTX, Celsius), tu ne peux <strong>pas</strong> les déduire tant qu'ils ne sont pas \"officiellement perdus\" (jugement, liquidation). Conserve les preuves d'irrécouvrabilité.</p>" +
@@ -466,7 +466,7 @@ const J9: EmailInSequence = {
     "Règle : les MV crypto compensent les PV crypto de la MÊME année.\n" +
     "Pas de report sur années suivantes pour les particuliers.\n\n" +
     "Exemple : PV BTC +8 000 EUR - MV Luna 3 000 EUR = PV nette 5 000 EUR\n" +
-    "Économie : 900 EUR (au PFU 30 %).\n\n" +
+    "Économie : 900 EUR (au PFU 31,4 %).\n\n" +
     "Piège : tokens stuck sur exchange en faillite ne sont pas déductibles tant que pas de jugement.\n\n" +
     "Importer mes données dans Waltio (lien d'affiliation publicitaire) : " +
     waltioUrl(9, "j9-pertes") +
@@ -499,7 +499,7 @@ const J14_CONTENT_HTML =
   "<li>Vérifie que ton total de cessions dépasse 305 € (sinon exonération).</li>" +
   "<li>Liste les comptes étrangers → un <strong>3916-bis par compte</strong>.</li>" +
   "<li>Calcule la plus-value via la formule 150 VH bis (prorata du portefeuille).</li>" +
-  "<li>Compare PFU 30 % vs barème progressif selon ta TMI.</li>" +
+  "<li>Compare PFU 31,4 % vs barème progressif selon ta TMI.</li>" +
   "<li>Identifie les pertes 2025 réalisées (vente effective requise).</li>" +
   "<li>Remplis le <strong>Cerfa 2086</strong> (détail des cessions) + <strong>2042-C</strong> (synthèse).</li>" +
   "<li>Joins les 3916-bis et garde les exports CSV en backup pendant 6 ans.</li>" +
