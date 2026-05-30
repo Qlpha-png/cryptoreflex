@@ -211,13 +211,40 @@ export function getNextLessonIndex(
 
 const QUIZ_PREFIX = "cr.academy.quiz.";
 
-/** Enregistre la réussite du quiz d'un parcours (score, timestamp). */
-export function markQuizPassed(trackId: string, score: number): void {
+/** Une notion ratée lors d'un quiz (pour la ressortir au tableau de bord). */
+export interface QuizMiss {
+  id: string;
+  q: string;
+}
+
+/**
+ * Enregistre le résultat d'une tentative de quiz (réussie OU non), avec les
+ * notions ratées de cette tentative. La réussite est « collante » : une fois
+ * le quiz validé, un échec ultérieur (entraînement) ne retire pas le certificat.
+ */
+export function recordQuizAttempt(
+  trackId: string,
+  score: number,
+  passed: boolean,
+  wrong: QuizMiss[]
+): void {
   if (!hasStorage()) return;
   try {
+    let prevPassed = false;
+    try {
+      const raw = window.localStorage.getItem(`${QUIZ_PREFIX}${trackId}`);
+      if (raw) prevPassed = (JSON.parse(raw) as { passed?: boolean })?.passed === true;
+    } catch {
+      /* ignore */
+    }
     window.localStorage.setItem(
       `${QUIZ_PREFIX}${trackId}`,
-      JSON.stringify({ passed: true, score, at: Date.now() })
+      JSON.stringify({
+        passed: passed || prevPassed,
+        score,
+        at: Date.now(),
+        wrong: Array.isArray(wrong) ? wrong.slice(0, 10) : [],
+      })
     );
   } catch {
     /* quota/off → noop */
@@ -237,10 +264,10 @@ export function isQuizPassed(trackId: string): boolean {
   }
 }
 
-/** Infos de quiz (passed, score, timestamp ms) — null si jamais passé. */
+/** Infos de quiz (passed, score, timestamp, notions ratées) — null si jamais passé. */
 export function getQuizInfo(
   trackId: string
-): { passed: boolean; score: number; at: number } | null {
+): { passed: boolean; score: number; at: number; wrong: QuizMiss[] } | null {
   if (!hasStorage()) return null;
   try {
     const raw = window.localStorage.getItem(`${QUIZ_PREFIX}${trackId}`);
@@ -249,11 +276,18 @@ export function getQuizInfo(
       passed?: boolean;
       score?: number;
       at?: number;
+      wrong?: QuizMiss[];
     };
     return {
       passed: obj?.passed === true,
       score: typeof obj?.score === "number" ? obj.score : 0,
       at: typeof obj?.at === "number" ? obj.at : 0,
+      wrong: Array.isArray(obj?.wrong)
+        ? obj.wrong.filter(
+            (m): m is QuizMiss =>
+              !!m && typeof m.id === "string" && typeof m.q === "string"
+          )
+        : [],
     };
   } catch {
     return null;

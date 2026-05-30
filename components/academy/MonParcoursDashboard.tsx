@@ -96,15 +96,22 @@ export default function MonParcoursDashboard() {
 
   const rows = ordered.map((track) => {
     const pct = hydrated ? calculateProgress(track.id, track.lessons) : 0;
-    const certified = hydrated ? isQuizPassed(track.id) : false;
-    const quizAt = hydrated ? getQuizInfo(track.id)?.at ?? 0 : 0;
+    const qi = hydrated ? getQuizInfo(track.id) : null;
+    const certified = qi?.passed ?? false;
+    const quizAt = qi?.at ?? 0;
+    const quizWrong = qi?.wrong ?? [];
     const doneCount = hydrated
       ? getProgress(track.id).completedLessons.filter((s) =>
           track.lessons.some((l) => l.articleSlug === s)
         ).length
       : 0;
-    return { track, pct, certified, quizAt, doneCount };
+    return { track, pct, certified, quizAt, quizWrong, doneCount };
   });
+
+  // Notions ratées à la dernière tentative de quiz (toutes parcours confondus).
+  const reviewNotions = hydrated
+    ? rows.filter((r) => r.quizWrong.length > 0)
+    : [];
 
   // Révision espacée (courbe de l'oubli) : parcours validés depuis 7j+ à revoir.
   const reviewItems = hydrated
@@ -280,6 +287,53 @@ export default function MonParcoursDashboard() {
                     validé il y a {days} j
                   </span>
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Notions à revoir — d'après les dernières réponses au quiz */}
+      {reviewNotions.length > 0 && (
+        <section
+          aria-labelledby="notions-h"
+          className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 sm:p-6"
+        >
+          <h2
+            id="notions-h"
+            className="flex items-center gap-2 text-base font-bold text-fg"
+          >
+            <Target className="h-4 w-4 text-amber-300" aria-hidden="true" />
+            Notions à revoir
+          </h2>
+          <p className="mt-1 text-xs text-muted">
+            Repérées d&apos;après tes dernières réponses au quiz. Relis la leçon
+            concernée, puis retente.
+          </p>
+          <ul role="list" className="mt-4 space-y-4">
+            {reviewNotions.map(({ track, quizWrong }) => (
+              <li key={track.id}>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-fg">
+                    {track.title}
+                  </span>
+                  <Link
+                    href={`/academie/${track.id}/quiz`}
+                    className="shrink-0 text-xs font-medium text-primary-glow hover:underline"
+                  >
+                    Retenter le quiz
+                  </Link>
+                </div>
+                <ul role="list" className="mt-1.5 space-y-1">
+                  {quizWrong.map((m) => (
+                    <li key={m.id} className="flex gap-2 text-xs text-fg/70">
+                      <span className="text-amber-300" aria-hidden="true">
+                        •
+                      </span>
+                      <span>{m.q}</span>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>

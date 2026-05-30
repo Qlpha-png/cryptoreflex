@@ -21,7 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { getNextTrack, type TrackId } from "@/lib/academy-tracks";
-import { markQuizPassed } from "@/lib/academy-progress";
+import { recordQuizAttempt } from "@/lib/academy-progress";
 import {
   PASSING_SCORE,
   type QuizQuestion,
@@ -92,11 +92,16 @@ export default function TrackQuiz({
   const passed = score >= PASSING_SCORE;
   const nextTrack = getNextTrack(trackId);
 
-  // Persiste la réussite (localStorage) dès l'affichage des résultats validés —
-  // sert au tableau de bord /academie/mon-parcours pour le badge « certifié ».
+  // Persiste le résultat (localStorage) à l'affichage des résultats — réussi
+  // OU non : sert au dashboard pour le badge « certifié » ET pour ressortir les
+  // notions ratées (« à revoir »).
   useEffect(() => {
-    if (phase === "results" && passed) markQuizPassed(trackId, score);
-  }, [phase, passed, trackId, score]);
+    if (phase !== "results") return;
+    const wrong = questions
+      .filter((qq, i) => answers[i] !== qq.correctIndex)
+      .map((qq) => ({ id: qq.id, q: qq.question }));
+    recordQuizAttempt(trackId, score, passed, wrong);
+  }, [phase, passed, trackId, score, questions, answers]);
 
   function selectAnswer(choiceIdx: number) {
     setAnswers((prev) => {
