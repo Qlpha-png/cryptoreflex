@@ -23,6 +23,7 @@ import {
   Landmark,
   Scale,
   Coins,
+  ShieldAlert,
   BadgeCheck,
   ListChecks,
   Save,
@@ -38,6 +39,7 @@ const ICONS = {
   landmark: Landmark,
   scale: Scale,
   coins: Coins,
+  alert: ShieldAlert,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

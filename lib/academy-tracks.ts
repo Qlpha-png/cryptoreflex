@@ -28,7 +28,8 @@ export type TrackId =
   | "securite"
   | "fiscalite"
   | "plateformes"
-  | "defi";
+  | "defi"
+  | "arnaques";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -63,7 +64,8 @@ export interface Track {
     | "shield"
     | "landmark"
     | "scale"
-    | "coins";
+    | "coins"
+    | "alert";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -743,6 +745,80 @@ const TRACK_DEFI: Track = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Repérer les arnaques (v2 académie, 30/05/2026)        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Arnaques — 7 leçons, ~1h30.
+ * Cible : tout le monde. Les arnaques crypto (rug pull, Ponzi, faux support,
+ * pump and dump, drainers, pig butchering) sont la première cause de perte de
+ * capital du retail. Parcours d'autodéfense : reconnaître chaque schéma avant
+ * de se faire avoir. Réutilise l'article phishing (parcours Sécurité) + 6
+ * articles dédiés rédigés et fact-checkés pour ce parcours.
+ */
+const TRACK_ARNAQUES: Track = {
+  id: "arnaques",
+  title: "Repérer les arnaques",
+  description:
+    "Rug pull, Ponzi, faux support, pump and dump, wallet drainers, pig butchering : apprends à identifier les arnaques crypto les plus courantes et à protéger ton capital — avant de te faire avoir.",
+  level: "Beginner",
+  estimatedHours: 1.5,
+  accentClass: "from-red-500/30 to-rose-600/20 border-red-500/40",
+  iconKey: "alert",
+  lessons: [
+    {
+      order: 1,
+      articleSlug: "phishing-crypto-2026-eviter-arnaques-courantes",
+      title: "Phishing crypto : la porte d'entrée de toutes les arnaques",
+      durationMin: 10,
+      prereqs: [],
+    },
+    {
+      order: 2,
+      articleSlug: "faux-support-sim-swap-crypto-arnaque-2026",
+      title: "Faux support et SIM-swap : le vol de comptes",
+      durationMin: 8,
+      prereqs: ["phishing-crypto-2026-eviter-arnaques-courantes"],
+    },
+    {
+      order: 3,
+      articleSlug: "faux-airdrops-wallet-drainers-crypto-2026",
+      title: "Faux airdrops et wallet drainers : l'arnaque à la signature",
+      durationMin: 8,
+      prereqs: [],
+    },
+    {
+      order: 4,
+      articleSlug: "rug-pull-crypto-reconnaitre-eviter-2026",
+      title: "Rug pull : l'arnaque à la liquidité",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 5,
+      articleSlug: "pump-and-dump-crypto-comprendre-eviter-2026",
+      title: "Pump and dump : la manipulation de marché",
+      durationMin: 8,
+      prereqs: [],
+    },
+    {
+      order: 6,
+      articleSlug: "ponzi-hyip-crypto-schemas-pyramidaux-2026",
+      title: "Ponzi, HYIP et schémas pyramidaux",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 7,
+      articleSlug: "pig-butchering-arnaque-romance-crypto-2026",
+      title: "Pig butchering : l'arnaque sentimentale longue durée",
+      durationMin: 9,
+      prereqs: [],
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -754,6 +830,7 @@ export const TRACKS: Track[] = [
   TRACK_SECURITE,
   TRACK_FISCALITE,
   TRACK_PLATEFORMES,
+  TRACK_ARNAQUES,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -765,6 +842,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   securite: TRACK_SECURITE,
   fiscalite: TRACK_FISCALITE,
   plateformes: TRACK_PLATEFORMES,
+  arnaques: TRACK_ARNAQUES,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */

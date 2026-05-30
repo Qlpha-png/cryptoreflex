@@ -1,0 +1,180 @@
+---
+title: "Rug pull crypto : reconnaître et éviter l'arnaque à la liquidité (2026)"
+slug: "rug-pull-crypto-reconnaitre-eviter-2026"
+description: "Rug pull crypto : comprendre les 3 mécanismes (honeypot, mint, retrait de liquidité), reconnaître les red flags et protéger ton capital avant d'investir."
+date: "2026-05-30"
+publishedAt: "2026-05-30"
+updatedAt: "2026-05-30"
+lastUpdated: "2026-05-30"
+category: "Sécurité crypto"
+cluster: "arnaques-crypto"
+author: "La rédaction Cryptoreflex"
+readTime: "9 min"
+readingTime: 9
+wordCount: 1950
+tags:
+  - "rug pull"
+  - "arnaque crypto"
+  - "DeFi sécurité"
+  - "honeypot"
+  - "smart contract"
+  - "liquidité"
+keywords:
+  - "rug pull crypto comment reconnaître"
+  - "arnaque liquidité DEX 2026"
+  - "honeypot crypto éviter"
+  - "smart contract non audité risque"
+  - "red flags token DeFi"
+  - "rug pull exemples réels"
+type: "guide"
+status: "published"
+generatedBy: "academy-phase3"
+---
+
+Le prix monte en flèche. Le Discord est en feu. Les influenceurs postent des captures d'écran de profits. Puis, en quelques secondes, le graphique s'effondre à zéro. Les créateurs ont disparu avec la caisse. C'est un **rug pull** — l'une des arnaques les plus dévastatrices de l'écosystème crypto, et l'une des plus faciles à anticiper quand tu sais quoi regarder.
+
+Ce guide t'explique exactement comment ça fonctionne, les signaux d'alerte concrets, et les vérifications à faire avant de toucher à un token inconnu.
+
+## Ce qu'est vraiment un rug pull
+
+Un **rug pull** (littéralement "tirer le tapis") désigne la manœuvre par laquelle l'équipe d'un projet retire la valeur accumulée et disparaît, laissant les acheteurs avec un token sans valeur réelle.
+
+Le mécanisme de base : des créateurs lancent un token sur un **DEX** (exchange décentralisé, plateforme d'échange sans intermédiaire comme Uniswap ou PancakeSwap). Ils créent un pool de **liquidité** (LP — Liquidity Pool : réserve de fonds permettant aux utilisateurs d'acheter et vendre le token). Ils font monter le prix par du marketing agressif. Puis ils exécutent leur sortie.
+
+Ce n'est pas un seul mécanisme. Il en existe trois variantes principales, et chacune fonctionne différemment.
+
+### Hard rug : la sortie brutale
+
+Le hard rug est le type le plus violent. L'équipe agit en quelques minutes, parfois en quelques secondes. Il prend trois formes :
+
+**1. Retrait de liquidité** : les créateurs retirent d'un coup la totalité des fonds du pool de liquidité. Sans liquidité, personne ne peut vendre. Le prix s'effondre à zéro. Le token existe encore techniquement, mais il ne vaut plus rien.
+
+**2. Fonction mint cachée** : le smart contract (contrat auto-exécutable enregistré sur la blockchain) contient une fonction **mint** (création de nouveaux tokens) que seuls les créateurs peuvent activer. Ils créent des millions de tokens supplémentaires en secret, diluent le supply à l'extrême, et vendent massivement. Le prix s'effondre.
+
+**3. Honeypot** : le contrat est programmé pour empêcher techniquement la revente. Tu peux acheter le token, mais jamais le revendre. L'équipe est la seule à pouvoir vendre. Tu ne t'en rends compte qu'au moment où tu essaies de sortir — et tu ne peux pas.
+
+### Soft rug : l'abandon progressif
+
+Le soft rug est plus difficile à détecter car il ressemble à un projet qui échoue normalement. L'équipe continue d'exister, mais :
+
+- Elle cesse de livrer les fonctionnalités promises dans la roadmap
+- Elle dump (vend massivement) ses propres tokens en plusieurs fois
+- Elle devient progressivement absente sur les réseaux sociaux
+- Le projet meurt lentement pendant que les fondateurs encaissent
+
+La distinction avec un simple échec de projet est parfois floue. La clé est dans l'intention et dans le profil de vente des wallets fondateurs.
+
+<Callout type="info" title="Hard rug vs soft rug">
+Hard rug = sortie en quelques secondes à quelques heures, prémédité dès le départ. Soft rug = abandon progressif avec dump discret des tokens de l'équipe sur plusieurs semaines ou mois. Les deux font perdre la mise, mais le hard rug est total et immédiat.
+</Callout>
+
+## Deux exemples réels qui font froid dans le dos
+
+### SQUID : le honeypot qui a fait le tour du monde
+
+Le token SQUID, lancé en octobre 2021 sur une vague de popularité liée à la série Squid Game, est l'exemple le plus médiatisé d'un honeypot à grande échelle.
+
+Le contrat était conçu pour bloquer toute revente par les détenteurs ordinaires. Seuls les créateurs pouvaient vendre. Pendant des jours, le prix a grimpé de façon spectaculaire — ce qui était mécaniquement possible puisque personne d'autre ne pouvait vendre pour faire baisser le cours.
+
+Le 1er novembre 2021, les créateurs ont drainé environ 3,38 millions de dollars du pool de liquidité. Le prix s'est effondré de près de 2 861 dollars à quasi zéro en quelques minutes. Des milliers d'acheteurs n'ont jamais pu récupérer un centime. (Sources : CBS News, Washington Post, Euronews.)
+
+### AnubisDAO : 60 millions en 20 heures
+
+AnubisDAO a été lancé le 28 octobre 2021. Le projet a levé environ 13 556 ETH — soit l'équivalent d'environ 60 millions de dollars à l'époque — en quelques heures, surfant sur la popularité du modèle OHM fork (protocoles de trésorerie décentralisée).
+
+Vingt heures après le lancement, la totalité des fonds a été déplacée hors du contrat vers des adresses inconnues. Les fonds n'ont jamais été récupérés. (Sources : Decrypt, Cointelegraph.)
+
+<Callout type="warning" title="Pas uniquement en DeFi">
+Les rug pulls ne touchent pas que la finance décentralisée. Thodex, un exchange centralisé turc, a constitué un exit scam en avril 2021 : le fondateur a pris la fuite avec environ 2,6 milliards de dollars de fonds clients. La menace existe aussi sur les plateformes centralisées non régulées. C'est une raison supplémentaire d'utiliser uniquement des exchanges [disposant du statut PSAN ou MiCA en France](/blog/psan-vs-casp-statut-mica-plateformes-crypto).
+</Callout>
+
+## Les red flags : ce que tu dois vérifier avant d'acheter
+
+Les rug pulls figurent chaque année parmi les fraudes les plus coûteuses pour les investisseurs particuliers en crypto. La bonne nouvelle : la majorité d'entre eux sont détectables avant d'investir. Voici la checklist à appliquer systématiquement.
+
+| Signal d'alerte | Ce que ça signifie concrètement | Risque associé |
+|---|---|---|
+| Équipe 100 % anonyme sans historique | Aucune responsabilité possible en cas de fuite | Très élevé |
+| Smart contract non audité | Aucun tiers n'a vérifié le code pour détecter les fonctions cachées | Très élevé |
+| Liquidité non verrouillée (LP unlocked) | L'équipe peut retirer les fonds à tout moment | Très élevé |
+| Part de tokens de l'équipe supérieure à 20 % du supply | Dump massif possible en un seul mouvement | Élevé |
+| Aucune utilité claire du token | Valeur 100 % spéculative, susceptible de s'effondrer | Élevé |
+| Hype créée artificiellement | Bots sur Telegram/Discord, faux followers, influenceurs payés | Moyen à élevé |
+| Pression à acheter vite ("dernier call", "listing imminent") | Tactique FOMO classique pour empêcher la réflexion | Moyen |
+| Promesses de rendement fixe élevé | Caractéristique commune aux schémas de Ponzi et rug pulls | Élevé |
+
+### Les outils concrets pour vérifier
+
+**Token Sniffer** (tokensniffer.com) et **Honeypot.is** permettent d'analyser automatiquement un smart contract pour détecter les fonctions suspectes, notamment les honeypots. Tu colles l'adresse du contrat, le site fait le scan en quelques secondes.
+
+**DEXTools** et **DEXScreener** affichent la profondeur de liquidité d'un pool et, surtout, indiquent si la liquidité est verrouillée (LP locked) ou non. Une liquidité verrouillée signifie que les fonds sont bloqués dans un contrat de timelock et ne peuvent pas être retirés avant une date définie.
+
+**Etherscan** ou **BscScan** permettent de consulter les **tokenomics** (distribution de l'ensemble des tokens : qui détient quoi) directement sur la blockchain. Si quelques wallets concentrent la majorité du supply, c'est un signal d'alarme.
+
+<Callout type="info" title="Vérifie le verrou de liquidité">
+Un projet sérieux verrouille sa liquidité pendant au moins 6 à 12 mois via un service comme Team.Finance ou Unicrypt. Si la liquidité n'est pas verrouillée, ou verrouillée pour seulement quelques jours, considère que le retrait est possible à tout moment.
+</Callout>
+
+## Les 5 vérifications rapides avant d'investir
+
+Tu peux faire ces cinq vérifications en moins de 10 minutes pour n'importe quel token DeFi inconnu.
+
+**1. Scan du contrat** : colle l'adresse du contrat sur Honeypot.is et Token Sniffer. Si le résultat indique "honeypot detected" ou "high risk", stop.
+
+**2. Vérification de la liquidité verrouillée** : ouvre DEXTools ou DEXScreener. Cherche "LP locked" dans les informations du pool. S'il n'y a pas de verrou ou si la durée est inférieure à quelques semaines, c'est un red flag immédiat.
+
+**3. Analyse de la distribution du supply** : cherche le contrat sur Etherscan ou BscScan, onglet "Holders". Si les 10 premiers wallets concentrent plus de 50 % du supply hors contrat de liquidité, le risque de dump est réel.
+
+**4. Vérification de l'audit** : cherche sur le site officiel du projet un rapport d'audit signé par un cabinet reconnu (CertiK, Hacken, Trail of Bits). Un audit absent ou uniquement mentionné sans lien vers le rapport complet ne compte pas.
+
+**5. Recoupement de l'équipe** : les membres de l'équipe ont-ils un profil LinkedIn vérifiable, un historique de projets connus, des contributions GitHub publiques ? Une équipe entièrement anonyme n'est pas systématiquement frauduleuse, mais le risque est structurellement plus élevé.
+
+<Callout type="success" title="Règle des 10 minutes">
+Si tu ne peux pas compléter ces 5 vérifications en moins de 10 minutes parce que les informations sont introuvables ou cachées, traite cette absence de transparence comme une réponse en elle-même. Un projet sérieux rend ces informations accessibles sans effort.
+</Callout>
+
+## Ce que ça change pour ta fiscalité en France
+
+Si tu es victime d'un rug pull, la question de la déclaration se pose. En France, les plus-values sur actifs numériques sont soumises au **PFU à 31,4 %** (prélèvement forfaitaire unique, hausse CSG incluse depuis la LFSS 2026 — et non 30 % comme avant).
+
+La perte sèche liée à un rug pull est en théorie une moins-value qui peut venir en déduction de tes plus-values de la même année. Mais attention : si le token perd 99 % de sa valeur mais n'est pas officiellement en défaut et reste techniquement échangeable (même à 0,001 €), la moins-value ne peut être constatée qu'à la cession effective. Tant que tu n'as pas vendu — même pour une valeur symbolique — la perte n'est pas fiscalement matérialisée.
+
+Pour la déclaration de tes actifs numériques et comprendre comment naviguer dans ces situations, consulte notre article sur les [meilleures plateformes crypto pour débutants en France](/blog/meilleure-plateforme-crypto-debutant-france-2026) et notre comparatif des [outils de suivi fiscal crypto](/comparatif).
+
+Pour aller plus loin sur les autres types d'arnaques qui ciblent les investisseurs particuliers, lis notre guide sur les [schémas de Ponzi et HYIP en crypto](/blog/ponzi-hyip-crypto-schemas-pyramidaux-2026) et celui sur les [faux airdrops et wallet drainers](/blog/faux-airdrops-wallet-drainers-crypto-2026).
+
+## Conclusion
+
+Un rug pull n'est pas une fatalité. C'est une arnaque prévisible dans la grande majorité des cas. Le hard rug — retrait de liquidité, mint caché, honeypot — laisse des traces visibles dans le code et dans la structure du projet avant même que tu achètes. Le soft rug se détecte à travers la transparence de l'équipe et le comportement de ses wallets.
+
+La règle de base : si tu ne peux pas vérifier la liquidité verrouillée, le contrat audité et la distribution du supply en moins de 10 minutes, l'information est probablement cachée volontairement. Et un projet qui cache ces informations n'a aucune raison de les cacher si elles sont favorables.
+
+Les outils existent, ils sont gratuits, et ils prennent moins de temps que de lire un thread Twitter promotionnel. Utilise-les systématiquement. Pour chaque token. Sans exception.
+
+Retrouve l'ensemble de nos ressources sur la sécurité crypto et la protection de ton capital dans notre [Académie](/academie).
+
+<Callout type="warning" title="Avertissement">
+Cet article est purement informatif. Il ne constitue pas un conseil en investissement, une recommandation d'achat ou de vente d'actifs numériques, ni un conseil financier ou fiscal. Les cryptomonnaies sont des actifs hautement volatils et spéculatifs. Vous pouvez perdre tout ou partie du capital investi. Avant toute décision d'investissement, consultez un conseiller financier agréé. Cryptoreflex.fr ne saurait être tenu responsable des décisions prises sur la base des informations contenues dans cet article.
+</Callout>
+
+## FAQ
+
+### Qu'est-ce qu'un rug pull en crypto exactement ?
+
+Un rug pull désigne la manœuvre par laquelle les créateurs d'un projet crypto retirent la valeur accumulée — généralement en vidant le pool de liquidité d'un DEX — et disparaissent, laissant les investisseurs avec des tokens sans valeur. Le terme désigne à la fois l'acte (retirer le tapis sous les pieds des acheteurs) et la catégorie de fraude. Il existe plusieurs variantes : retrait de liquidité brutal, fonction mint cachée, et honeypot (contrat qui bloque techniquement la revente).
+
+### Comment savoir si un token est un honeypot avant d'acheter ?
+
+Le moyen le plus rapide est d'utiliser Honeypot.is : tu colles l'adresse du contrat du token et l'outil simule un achat et une vente pour détecter si la revente est techniquement bloquée. Token Sniffer effectue une analyse similaire et signale les fonctions suspectes dans le code du smart contract. Ces deux outils sont gratuits et accessibles sans compte.
+
+### La liquidité verrouillée garantit-elle qu'un projet est fiable ?
+
+Non. La liquidité verrouillée élimine le risque de retrait brutal de fonds pendant la période de verrou, ce qui est un signal positif. Mais elle ne protège pas contre un honeypot (le contrat peut bloquer la revente indépendamment du verrou), contre un soft rug (l'équipe peut dumper ses propres tokens), ni contre un projet simplement mal conçu ou promis à l'échec. C'est une condition nécessaire, pas suffisante.
+
+### Est-ce qu'un rug pull peut arriver sur un exchange centralisé comme Binance ou Coinbase ?
+
+Un rug pull au sens strict — retrait de liquidité d'un DEX — est spécifique à la finance décentralisée. Mais la logique de fraude équivalente sur un exchange centralisé s'appelle un exit scam : les dirigeants de la plateforme disparaissent avec les fonds des clients. L'affaire Thodex en est un exemple documenté. Le risque est drastiquement réduit sur des plateformes régulées disposant du statut PSAN en France ou de l'agrément MiCA en Europe, qui sont soumises à des obligations de ségrégation des fonds et de contrôle.
+
+### Que faire si j'ai été victime d'un rug pull ?
+
+Documente immédiatement les transactions : adresse du contrat, hash de tes transactions, montants, dates. Dépose une plainte auprès de la police ou de la gendarmerie (une plainte en ligne est possible via le portail officiel) en incluant tous les éléments techniques. Signale également l'arnaque à l'AMF (Autorité des marchés financiers) via sa plateforme Épargne Info Service. Dans la réalité, les chances de récupérer les fonds sont très faibles — les créateurs utilisent généralement des techniques de brouillage comme des mixeurs de transactions — mais le signalement contribue aux enquêtes collectives.
