@@ -669,6 +669,347 @@ const QUIZ_CHOISIR: QuizQuestion[] = [
   },
 ];
 
+const QUIZ_DEFI: QuizQuestion[] = [
+  {
+    id: "defi-q1-definition",
+    question: "Qu'est-ce que la DeFi (finance décentralisée) ?",
+    choices: [
+      "Une banque crypto agréée par l'État.",
+      "Un ensemble de services financiers (échange, prêt, rendement) fournis par des smart contracts, sans intermédiaire bancaire.",
+      "Une seule cryptomonnaie.",
+      "Le nom d'un exchange centralisé.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La DeFi reproduit des services financiers (prêt, échange, épargne) directement via des programmes (smart contracts) sur la blockchain, sans banque ni intermédiaire de confiance. C'est puissant, mais le code peut comporter des failles.",
+  },
+  {
+    id: "defi-q2-layer2",
+    question: "À quoi sert un Layer 2 comme Arbitrum, Optimism ou Base ?",
+    choices: [
+      "À créer une nouvelle cryptomonnaie indépendante.",
+      "À traiter des transactions plus vite et moins cher hors de la chaîne principale, tout en héritant de la sécurité de la couche 1 (Ethereum).",
+      "À remplacer définitivement Ethereum.",
+      "À miner du Bitcoin plus rapidement.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Un Layer 2 exécute les transactions en dehors de la couche principale (Layer 1) pour réduire frais et congestion, puis ancre leur sécurité sur la L1. Arbitrum, Optimism et Base sont des Layer 2 d'Ethereum.",
+  },
+  {
+    id: "defi-q3-lightning",
+    question: "Qu'est-ce que le Lightning Network ?",
+    choices: [
+      "Un nouveau Bitcoin concurrent.",
+      "Une couche de paiement bâtie sur Bitcoin, pour des transactions quasi instantanées et à très faibles frais.",
+      "Un logiciel de minage.",
+      "Une plateforme d'échange centralisée.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le Lightning Network est une solution de seconde couche sur Bitcoin : il permet d'envoyer de petits montants quasi instantanément et à coût très faible, en réglant sur la blockchain principale en fin de parcours.",
+  },
+  {
+    id: "defi-q4-risque",
+    question: "Quel est un risque MAJEUR propre à la DeFi ?",
+    choices: [
+      "Aucun risque, puisque tout est décentralisé.",
+      "Le bug ou l'exploit d'un smart contract, qui peut vider un protocole — en plus de la volatilité des actifs.",
+      "Le risque que ta banque bloque le protocole.",
+      "Le risque que la DeFi ferme à 17h.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "En DeFi, ton risque principal est technique : une faille dans le code d'un smart contract peut entraîner la perte des fonds déposés, même sur un protocole audité. La décentralisation ne supprime pas le risque.",
+  },
+  {
+    id: "defi-q5-fiscalite",
+    question: "En France, les revenus récurrents tirés de la DeFi (staking, yield) sont-ils défiscalisés ?",
+    choices: [
+      "Oui, la DeFi échappe totalement à l'impôt.",
+      "Non : ces revenus sont généralement imposables (souvent en BNC, voire BIC si l'activité devient habituelle), et la revente ultérieure des jetons génère en plus une plus-value.",
+      "Non, mais seulement au-delà d'un million d'euros.",
+      "Cela dépend de la météo.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La DeFi n'est pas une zone hors impôt : les revenus récurrents sont généralement imposés (BNC, ou BIC si l'activité est habituelle et organisée), et revendre plus tard les jetons reçus génère une plus-value distincte. Voir le parcours Fiscalité.",
+  },
+];
+
+const QUIZ_ARNAQUES: QuizQuestion[] = [
+  {
+    id: "arn-q1-rugpull",
+    question: "Qu'est-ce qu'un « rug pull » ?",
+    choices: [
+      "Une mise à jour technique d'un protocole.",
+      "Les créateurs d'un projet retirent soudainement la liquidité (ou les fonds) et disparaissent, laissant les investisseurs avec des jetons sans valeur.",
+      "Une taxe sur les retraits.",
+      "Un type de portefeuille matériel.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le rug pull (« tirer le tapis ») : l'équipe d'un projet vide la liquidité ou s'enfuit avec les fonds. Les jetons deviennent invendables. Méfie-toi des projets à équipe anonyme et à liquidité non verrouillée.",
+  },
+  {
+    id: "arn-q2-support",
+    question:
+      "Le « support » de ton exchange te contacte et te demande ta seed phrase (phrase de récupération) pour « sécuriser ton compte ». Que fais-tu ?",
+    choices: [
+      "Tu la donnes, c'est le support officiel.",
+      "Tu refuses : un vrai support ne demande JAMAIS ta seed phrase ni tes codes 2FA. C'est une arnaque.",
+      "Tu la donnes seulement par téléphone.",
+      "Tu envoies juste la moitié des mots.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Personne de légitime ne demandera jamais ta seed phrase ou tes codes 2FA — ni le support, ni un « agent ». Quiconque la possède peut vider ton wallet. Ne la partage jamais, sous aucun prétexte.",
+  },
+  {
+    id: "arn-q3-simswap",
+    question: "Qu'est-ce qu'une attaque par « SIM-swap » ?",
+    choices: [
+      "Un échange de cryptos entre deux personnes.",
+      "Un attaquant prend le contrôle de ton numéro de téléphone pour intercepter tes SMS (dont les codes 2FA par SMS).",
+      "Le remplacement de ta carte bancaire.",
+      "Une mise à jour de ton forfait mobile.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le SIM-swap consiste à détourner ton numéro (via ton opérateur) pour recevoir tes SMS, dont les codes 2FA. C'est pourquoi la 2FA par application ou clé physique est bien plus sûre que la 2FA par SMS.",
+  },
+  {
+    id: "arn-q4-pigbutchering",
+    question: "En quoi consiste l'arnaque dite « pig butchering » ?",
+    choices: [
+      "Un bug d'affichage des prix.",
+      "Un escroc bâtit une relation de confiance (souvent sentimentale) sur plusieurs semaines, puis pousse la victime à investir sur une fausse plateforme.",
+      "Une technique de trading avancée.",
+      "Une promotion sur les frais.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le « pig butchering » mise sur la durée : l'escroc gagne ta confiance (amitié, romance) avant de t'orienter vers une plateforme bidon qui affiche de faux gains. Quand tu veux retirer, tout disparaît.",
+  },
+  {
+    id: "arn-q5-rendement",
+    question: "Quel est le signal d'alerte le plus fiable d'une arnaque de type Ponzi/HYIP ?",
+    choices: [
+      "Un site avec un design soigné.",
+      "Une promesse de rendement élevé « garanti » et « sans risque ».",
+      "La présence d'une FAQ.",
+      "Un compte sur les réseaux sociaux.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Aucun rendement élevé n'est garanti ni sans risque. La promesse de gains fixes et juteux « sans risque » est la marque des montages Ponzi : les premiers sont payés avec l'argent des suivants, jusqu'à l'effondrement.",
+  },
+];
+
+const QUIZ_MARCHE: QuizQuestion[] = [
+  {
+    id: "mar-q1-marketcap",
+    question: "Comment se calcule la capitalisation (market cap) d'une crypto ?",
+    choices: [
+      "Prix × offre en circulation.",
+      "Le prix unitaire seul.",
+      "Le volume échangé sur 24 heures.",
+      "Le nombre de détenteurs.",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Market cap = prix × offre en circulation. Un prix unitaire bas ne signifie pas « pas cher » : une crypto à 0,01 € avec une offre énorme peut peser plus qu'une crypto à 100 € avec une offre réduite.",
+  },
+  {
+    id: "mar-q2-halving",
+    question: "Qu'est-ce que le « halving » du Bitcoin ?",
+    choices: [
+      "Le doublement du nombre de bitcoins.",
+      "La division par deux de la récompense versée aux mineurs, environ tous les quatre ans, qui ralentit l'émission de nouveaux BTC (offre plafonnée à 21 millions).",
+      "Une taxe sur les transactions.",
+      "Un changement de logo du réseau.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Tous les 210 000 blocs (environ quatre ans), la récompense de minage est divisée par deux. Ce mécanisme réduit progressivement l'émission de nouveaux bitcoins jusqu'au plafond de 21 millions.",
+  },
+  {
+    id: "mar-q3-feargreed",
+    question: "À quoi sert le Fear & Greed Index (indice peur/avidité) ?",
+    choices: [
+      "À prédire le prix avec certitude.",
+      "À donner un repère sur le sentiment du marché (de la peur extrême à l'avidité extrême) — un indicateur de contexte, pas un signal d'achat/vente automatique.",
+      "À calculer tes impôts.",
+      "À mesurer la consommation d'énergie du réseau.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le Fear & Greed Index agrège plusieurs données pour situer l'humeur du marché. C'est un repère utile (l'avidité extrême invite à la prudence, la peur extrême peut signaler des excès), mais jamais une boule de cristal.",
+  },
+  {
+    id: "mar-q4-liquidite",
+    question: "Pourquoi la liquidité d'un actif est-elle importante ?",
+    choices: [
+      "Elle n'a aucune importance.",
+      "Une faible liquidité entraîne un spread élevé et du slippage : tu déplaces le prix dès que tu achètes ou vends une somme un peu importante.",
+      "Elle garantit que le prix montera.",
+      "Elle remplace la nécessité de sécuriser ses cryptos.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Sur un marché peu liquide, l'écart entre prix d'achat et de vente (spread) est large et tes ordres font bouger le cours (slippage). La liquidité conditionne ta capacité à entrer et sortir sans dégrader ton prix.",
+  },
+  {
+    id: "mar-q5-cycles",
+    question: "Que dire des cycles de marché (bull/bear) en crypto ?",
+    choices: [
+      "Ils sont parfaitement prévisibles à la journée près.",
+      "Le marché alterne des phases haussières (bull) et baissières (bear), mais personne ne sait timer précisément le sommet ou le creux.",
+      "Le marché ne monte jamais.",
+      "Les cycles n'existent pas en crypto.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Les marchés alternent euphorie (bull) et déprime (bear). Comprendre ces cycles aide à garder son sang-froid, mais vouloir acheter au plus bas et vendre au plus haut de façon répétée est statistiquement perdant.",
+  },
+];
+
+const QUIZ_TRADING: QuizQuestion[] = [
+  {
+    id: "trd-q1-chandelier",
+    question: "Que représente une bougie (chandelier japonais) sur un graphique ?",
+    choices: [
+      "Uniquement le prix de clôture.",
+      "L'ouverture, la clôture, le plus haut et le plus bas du prix sur une période donnée.",
+      "Le volume uniquement.",
+      "Le nombre d'acheteurs.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Une bougie résume quatre informations sur une période : prix d'ouverture, de clôture, plus haut et plus bas. Le corps relie ouverture et clôture ; les mèches indiquent les extrêmes atteints.",
+  },
+  {
+    id: "trd-q2-support",
+    question: "Que sont un « support » et une « résistance » ?",
+    choices: [
+      "Des types de portefeuilles.",
+      "Un support est un niveau de prix où la baisse tend à s'arrêter ; une résistance, un niveau où la hausse tend à buter.",
+      "Des taxes sur les gains.",
+      "Des noms de cryptomonnaies.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le support est une zone où les acheteurs reprennent souvent la main (la baisse ralentit) ; la résistance, une zone où les vendeurs reprennent la main (la hausse bute). Ces niveaux ne sont pas garantis, juste observés.",
+  },
+  {
+    id: "trd-q3-rsi",
+    question: "Que mesure l'indicateur RSI et comment se lisent ses seuils classiques ?",
+    choices: [
+      "Le volume ; au-dessus de 50, on achète.",
+      "La force/vitesse du mouvement de prix : au-dessus de 70 souvent jugé « suracheté », en dessous de 30 « survendu » — des repères, pas des certitudes.",
+      "La capitalisation du marché.",
+      "Le nombre de transactions par seconde.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le RSI (popularisé par J. Welles Wilder) mesure l'ampleur des hausses récentes par rapport aux baisses. Au-dessus de 70 = potentiellement suracheté, en dessous de 30 = potentiellement survendu. Ce sont des repères à croiser, pas des ordres d'achat/vente.",
+  },
+  {
+    id: "trd-q4-ordres",
+    question: "Quelle différence entre un ordre « au marché » et un ordre « limite » ?",
+    choices: [
+      "Aucune, c'est la même chose.",
+      "L'ordre au marché s'exécute immédiatement au meilleur prix disponible ; l'ordre limite ne s'exécute qu'au prix (ou mieux) que tu as fixé.",
+      "L'ordre limite est toujours gratuit.",
+      "L'ordre au marché est réservé aux professionnels.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Ordre au marché = exécution immédiate au prix courant (simple, mais tu subis le spread). Ordre limite = tu fixes ton prix et l'ordre attend d'être atteint (tu contrôles le prix, mais l'exécution n'est pas garantie).",
+  },
+  {
+    id: "trd-q5-risque",
+    question: "Quelle est une règle de base de gestion du risque en trading ?",
+    choices: [
+      "Mettre tout son capital sur une seule position.",
+      "Ne risquer qu'une petite fraction de son capital par position, définir un seuil de sortie (stop) et éviter de décider sous le coup de l'émotion (FOMO, panique).",
+      "Trader uniquement avec de l'argent emprunté.",
+      "Augmenter sa mise après chaque perte pour « se refaire ».",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La gestion du risque prime sur la recherche du gain : on limite l'exposition par position, on prévoit où sortir si on se trompe, et on tient son plan plutôt que de réagir à la peur ou à l'euphorie.",
+  },
+];
+
+const QUIZ_NFT_WEB3: QuizQuestion[] = [
+  {
+    id: "nft-q1-definition",
+    question: "Que signifie « NFT » et qu'est-ce que ça implique ?",
+    choices: [
+      "Un jeton fongible identique à tous les autres, comme 1 euro.",
+      "Un jeton non fongible : chaque unité est unique et non interchangeable, contrairement à une monnaie.",
+      "Une nouvelle blockchain.",
+      "Un type de portefeuille matériel.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "NFT = Non-Fungible Token (jeton non fongible). Chaque NFT possède un identifiant unique : il n'est pas interchangeable à l'unité, contrairement à 1 bitcoin = 1 bitcoin. C'est ce qui permet de représenter une pièce « unique ».",
+  },
+  {
+    id: "nft-q2-standard",
+    question: "Quel standard technique est le plus associé aux NFT sur Ethereum ?",
+    choices: [
+      "ERC-20 (jetons fongibles).",
+      "ERC-721 (et ERC-1155 pour le semi-fongible).",
+      "HTTP.",
+      "SHA-256.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "L'ERC-721 est le standard de référence des NFT sur Ethereum ; l'ERC-1155 gère des collections mêlant unités uniques et quantités. L'ERC-20, lui, sert aux jetons fongibles (comme les stablecoins).",
+  },
+  {
+    id: "nft-q3-web3",
+    question: "Que désigne le terme « Web3 » ?",
+    choices: [
+      "La troisième version du navigateur Chrome.",
+      "Une vision d'un web décentralisé où l'utilisateur contrôle ses données et ses actifs via la blockchain et son wallet.",
+      "Un langage de programmation.",
+      "Un réseau social précis.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le Web3 décrit un internet où la propriété (données, actifs) revient à l'utilisateur via la blockchain et les wallets, par opposition au Web2 dominé par quelques plateformes centralisées. C'est une vision en construction, pas une révolution achevée.",
+  },
+  {
+    id: "nft-q4-wallet",
+    question: "Qu'implique l'utilisation d'un wallet non-custodial (comme MetaMask) ?",
+    choices: [
+      "Une société détient tes clés et peut récupérer tes fonds si tu oublies ton mot de passe.",
+      "Tu détiens toi-même tes clés privées : personne d'autre ne peut bouger tes fonds, mais tu es seul responsable de ta seed phrase.",
+      "Tes cryptos sont garanties par l'État.",
+      "Tu ne peux pas recevoir de NFT.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Avec un wallet non-custodial, tu es ta propre banque : tu contrôles tes clés. L'avers de la médaille, c'est qu'il n'y a aucun « mot de passe oublié » — si tu perds ta seed phrase, personne ne peut récupérer tes fonds.",
+  },
+  {
+    id: "nft-q5-dao",
+    question: "Qu'est-ce qu'une DAO ?",
+    choices: [
+      "Une autorité de régulation européenne.",
+      "Une organisation autonome décentralisée, où les décisions sont prises par les détenteurs de jetons via des votes inscrits sur la blockchain.",
+      "Un type de stablecoin.",
+      "Une bourse centralisée.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Une DAO (Decentralized Autonomous Organization) est gouvernée par sa communauté : les détenteurs de jetons de gouvernance votent les décisions, exécutées par des smart contracts. La qualité de gouvernance varie énormément d'une DAO à l'autre.",
+  },
+];
+
 const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   debutant: QUIZ_DEBUTANT,
   intermediaire: QUIZ_INTERMEDIAIRE,
@@ -679,6 +1020,11 @@ const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   stablecoins: QUIZ_STABLECOINS,
   staking: QUIZ_STAKING,
   choisir: QUIZ_CHOISIR,
+  defi: QUIZ_DEFI,
+  arnaques: QUIZ_ARNAQUES,
+  marche: QUIZ_MARCHE,
+  trading: QUIZ_TRADING,
+  "nft-web3": QUIZ_NFT_WEB3,
 };
 
 export function getQuizForTrack(trackId: string): QuizQuestion[] | null {

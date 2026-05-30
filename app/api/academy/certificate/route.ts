@@ -358,10 +358,23 @@ function buildHtml(name: string, trackId: TrackId, trackTitle: string): string {
 </html>`;
 }
 
+// Tous les parcours certifiables (= ceux qui ont un quiz de validation).
+// À garder synchronisé avec QUIZZES dans lib/academy-quizzes.ts.
 const VALID_TRACKS: ReadonlySet<TrackId> = new Set([
   "debutant",
   "intermediaire",
   "avance",
+  "securite",
+  "fiscalite",
+  "plateformes",
+  "defi",
+  "arnaques",
+  "marche",
+  "trading",
+  "nft-web3",
+  "stablecoins",
+  "staking",
+  "choisir",
 ]);
 
 export async function POST(req: Request) {
