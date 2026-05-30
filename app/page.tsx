@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   ArrowRight,
-  Lightbulb,
+  Coins,
+  GraduationCap,
   Mail,
   Newspaper,
   Target,
@@ -24,7 +25,10 @@ import Reveal from "@/components/ui/Reveal";
 // pattern). Comble la zone morte entre Hero et Reassurance.
 import TrustMarquee from "@/components/TrustMarquee";
 // MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
-import BeginnerJourney from "@/components/BeginnerJourney";
+// BeginnerJourney retiré 30/05/2026 (feedback Kev « range la home ») — doublon
+// du parcours « Débutant » de l'Académie. Remplacé par AcademyHomeTeaser, qui
+// pointe vers /academie. Composant conservé dans components/ pour réutilisation.
+import AcademyHomeTeaser from "@/components/AcademyHomeTeaser";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
 // BATCH 26 — PlatformsMarquee retiré de la home (doublon). Composant
@@ -277,24 +281,26 @@ export default async function HomePage() {
       <HomeAnchorNav />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 1 — DÉMARRER MAINTENANT
-          Pour qui n'a jamais acheté de crypto. On ramène le parcours
-          débutant juste après le Hero : c'est le chemin de plus haute
-          intention pour le persona principal (FR débutant post-MiCA).
+          CATÉGORIE 1 — ACADÉMIE (apprentissage structuré)
+          Refonte 30/05/2026 (feedback Kev « range la home, les doublons sont
+          inutiles ») : l'ancien BeginnerJourney (parcours débutant en 4
+          étapes) doublonnait le parcours « Débutant » de l'Académie. On le
+          remplace par une porte d'entrée propre vers /academie — l'académie
+          devient LE lieu unique de l'apprentissage, la home n'en garde qu'un
+          teaser (stats + 4 parcours phares + CTA).
          ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-demarrer">
-        {/* FIX HOMEPAGE 2026-05-02 #10 — eyebrows "Étape 1→6" remplacés par
-            des thèmes (faux funnel : les sections n'étaient pas réellement
-            séquentielles). Audit chirurgical homepage problème #6. */}
+      <section aria-labelledby="cat-academie">
         <CategoryHeader
-          Icon={Target}
-          eyebrow="Pour démarrer"
-          title="Démarrer maintenant"
-          intro="Vous n'avez jamais acheté de crypto ? Suivez le parcours en 4 étapes — comprendre, choisir, sécuriser, acheter."
-          anchorId="cat-demarrer"
+          Icon={GraduationCap}
+          eyebrow="Académie · 100% gratuit"
+          title="Apprends la crypto, de zéro à autonome"
+          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation et certificat. Progression sauvegardée, sans compte ni paywall."
+          ctaHref="/academie"
+          ctaLabel="Découvrir l'académie"
+          anchorId="cat-academie"
         />
         <Reveal>
-          <BeginnerJourney />
+          <AcademyHomeTeaser />
         </Reveal>
       </section>
 
@@ -320,21 +326,21 @@ export default async function HomePage() {
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 3 — APPRENDRE
-          Top cryptos expliquées + 3 derniers articles blog. Le composant
-          Top10 reste le même (filtres internes), mais on le positionne
-          comme "ressource d'apprentissage" et plus comme un classement
-          standalone — meilleure cohérence narrative.
+          CATÉGORIE 3 — EXPLORER (catalogue cryptos + derniers guides)
+          Refonte 30/05/2026 : le cadrage « Apprendre » doublonnait l'Académie
+          (CAT 1). Cette section redevient ce qu'elle est vraiment — un
+          catalogue (780 fiches cryptos) + les derniers guides du blog. La
+          pédagogie structurée vit désormais dans /academie.
          ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-apprendre">
+      <section aria-labelledby="cat-cryptos">
         <CategoryHeader
-          Icon={Lightbulb}
-          eyebrow="Apprendre"
-          title="Apprendre la crypto"
-          intro="780 cryptos analysées sur le site (100 fiches éditoriales premium top 10 + 90 hidden gems avec score de fiabilité, plus 680 fiches LLM exploratoires), expliquées simplement. Plus nos guides pour éviter les erreurs classiques de débutant."
+          Icon={Coins}
+          eyebrow="Explorer"
+          title="780 cryptos analysées"
+          intro="Le top 10 expliqué simplement, 90 hidden gems avec score de fiabilité et 680 fiches exploratoires. Chaque fiche : à quoi ça sert, les risques, les sources — sans hype."
           ctaHref="/cryptos"
-          ctaLabel="780 cryptos analysées →"
-          anchorId="cat-apprendre"
+          ctaLabel="Voir les 780 cryptos"
+          anchorId="cat-cryptos"
         />
         <Reveal>
           <Top10CryptosSection />

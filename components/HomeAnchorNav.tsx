@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  Target,
+  GraduationCap,
   BarChart3,
-  Lightbulb,
+  Coins,
   Newspaper,
   Wrench,
   Mail,
@@ -34,8 +34,9 @@ import type { LucideIcon } from "lucide-react";
  *  - cubic-bezier(0.34, 1.32, 0.64, 1) = easeOutBack, sentiment iOS.
  *
  * VAGUE 4 — Funnel (Agent SEO/CRO) :
- *  - Réordonner : Démarrer → Apprendre → Comparer → Outils → Actu → Newsletter.
- *  - Apprendre AVANT Comparer = préchauffage cognitif débutant.
+ *  - Ordre DOM : Académie → Comparer → Cryptos → Actu → Outils → Newsletter.
+ *  - Refonte 30/05/2026 : « Démarrer » (BeginnerJourney) remplacé par
+ *    « Académie » (/academie) ; « Apprendre » recadré en « Cryptos » (catalogue).
  *
  * VAGUE 5 — Performance (Agent perf) :
  *  - rootMargin élargi pour mobile (-140px 0px -40% 0px) — fix bug "aucune chip
@@ -50,13 +51,13 @@ interface ChipDef {
   Icon: LucideIcon;
 }
 
-// Audit SEO/CRO : Apprendre AVANT Comparer pour persona débutant (70% trafic).
+// Ordre aligné sur le DOM de la home (cf. app/page.tsx) — chips = quick-nav.
 const CHIPS: ChipDef[] = [
-  { href: "#cat-demarrer", label: "Démarrer", Icon: Target },
-  { href: "#cat-apprendre", label: "Apprendre", Icon: Lightbulb },
+  { href: "#cat-academie", label: "Académie", Icon: GraduationCap },
   { href: "#cat-comparer", label: "Comparer", Icon: BarChart3 },
-  { href: "#cat-outils", label: "Outils", Icon: Wrench },
+  { href: "#cat-cryptos", label: "Cryptos", Icon: Coins },
   { href: "#cat-actu", label: "Actualités", Icon: Newspaper },
+  { href: "#cat-outils", label: "Outils", Icon: Wrench },
   { href: "#cat-informe", label: "Newsletter", Icon: Mail },
 ];
 

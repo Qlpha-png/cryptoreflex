@@ -139,8 +139,8 @@ export default async function BlogPreview() {
               id="blog-preview-heading"
               className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl"
             >
-              Apprenez la crypto,{" "}
-              <span className="gradient-text">étape par étape</span>
+              Nos derniers{" "}
+              <span className="gradient-text">guides</span>
             </h2>
           </div>
           {/* Audit SEO : anchor riche en KW + count dynamique */}
