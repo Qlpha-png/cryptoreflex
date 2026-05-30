@@ -29,6 +29,7 @@ import CTABox from "@/components/mdx/CTABox";
 import ComparisonTable from "@/components/mdx/ComparisonTable";
 import TableOfContents from "@/components/mdx/TableOfContents";
 import KeyTakeaways from "@/components/mdx/KeyTakeaways";
+import LessonTool from "@/components/academy/LessonTool";
 import FAQ from "@/components/mdx/FAQ";
 import HowToSchema from "@/components/mdx/HowToSchema";
 import { getAllPlatforms } from "@/lib/platforms";
@@ -127,6 +128,7 @@ const mdxComponents = {
   ComparisonTable,
   TableOfContents,
   KeyTakeaways,
+  LessonTool,
   FAQ,
   HowToSchema,
 
