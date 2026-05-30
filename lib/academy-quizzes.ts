@@ -464,549 +464,562 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
 
 const QUIZ_STABLECOINS: QuizQuestion[] = [
   {
-    id: "stb-q1-definition",
-    question: "Qu'est-ce qu'un stablecoin ?",
+    id: "stb-q1-faux",
+    question: "Parmi ces affirmations sur les stablecoins, laquelle est FAUSSE ?",
     choices: [
-      "Une crypto conçue pour garder une valeur stable, le plus souvent indexée sur une monnaie comme le dollar ou l'euro.",
-      "Une crypto dont le cours ne peut jamais baisser.",
-      "Une action d'une société cotée en bourse.",
-      "Un compte d'épargne rémunéré garanti par l'État.",
+      "Un stablecoin adossé détient des réserves censées couvrir les jetons émis.",
+      "Un stablecoin garantit une valeur parfaitement fixe, sans aucun risque de perte.",
+      "Un stablecoin algorithmique tient son ancrage par un mécanisme, sans réserves équivalentes.",
+      "Un dépeg peut survenir en cas de panique ou de réserves de mauvaise qualité.",
     ],
-    correctIndex: 0,
+    correctIndex: 1,
     explanation:
-      "Un stablecoin vise à maintenir un prix stable (souvent 1 dollar ou 1 euro) grâce à des réserves ou à un mécanisme. Ce n'est ni une garantie d'absence de baisse, ni une action, ni un produit bancaire garanti.",
+      "Aucun stablecoin n'est sans risque : l'ancrage repose sur des réserves ou un mécanisme qui peuvent défaillir (dépeg). Les trois autres affirmations sont exactes — c'est la promesse de « valeur fixe garantie sans risque » qui est fausse.",
   },
   {
-    id: "stb-q2-types",
+    id: "stb-q2-mecanisme",
     question:
-      "Quelle différence entre un stablecoin adossé à des réserves (USDT, USDC) et un stablecoin algorithmique (comme l'UST de Terra) ?",
+      "Deux stablecoins décrochent. L'un (algorithmique) ne retrouve jamais son ancrage, l'autre (adossé à des réserves) le retrouve en quelques jours. Qu'est-ce qui explique le mieux cette différence ?",
     choices: [
-      "Aucune, ils fonctionnent exactement pareil.",
-      "Le premier est couvert par des actifs réels en réserve ; le second tient son ancrage par un mécanisme — historiquement bien plus risqué (l'UST s'est effondré en 2022).",
-      "L'algorithmique est plus sûr car automatisé.",
-      "Le premier est interdit en Europe.",
+      "Le hasard du marché.",
+      "L'un repose sur un mécanisme de marché qui peut s'emballer en spirale (cas de l'UST), l'autre est couvert par des réserves réelles récupérables (cas de l'USDC en mars 2023).",
+      "La taille de l'équipe derrière le projet.",
+      "Le réseau blockchain utilisé.",
     ],
     correctIndex: 1,
     explanation:
-      "Les stablecoins adossés détiennent des réserves (cash, bons du Trésor) censées couvrir les jetons émis. Les algorithmiques tentent de tenir l'ancrage par un mécanisme de marché — l'effondrement de l'UST/Terra en 2022 a montré leur fragilité.",
+      "Un stablecoin adossé peut se rétablir car de vraies réserves le couvrent (l'USDC est revenu à 1 $ après l'épisode SVB). Un algorithmique mal conçu peut entrer en spirale de défiance irréversible, comme l'UST/Terra en 2022.",
   },
   {
-    id: "stb-q3-risque",
-    question: "Quel est le principal risque d'un stablecoin ?",
-    choices: [
-      "Il n'a aucun risque, c'est tout l'intérêt.",
-      "Le dépeg : la perte de son ancrage (réserves insuffisantes ou opaques, panique, faillite d'un partenaire).",
-      "Sa valeur double sans prévenir.",
-      "Il est toujours bloqué pendant cinq ans.",
-    ],
-    correctIndex: 1,
-    explanation:
-      "Un stablecoin peut perdre son ancrage (dépeg) si ses réserves sont insuffisantes ou en cas de panique. L'USDC est par exemple tombé sous un dollar en mars 2023 à cause de fonds bloqués dans une banque en faillite, avant de se rétablir.",
-  },
-  {
-    id: "stb-q4-fiscalite",
+    id: "stb-q3-fiscalite",
     question:
-      "En France, que se passe-t-il fiscalement quand tu convertis du Bitcoin en stablecoin, sans repasser en euros ?",
+      "Tu vends 1 ETH contre de l'USDC, puis tu conserves cet USDC. Quel est l'impact fiscal en France ?",
     choices: [
-      "C'est immédiatement imposé comme une vente.",
-      "C'est une opération crypto-crypto en sursis d'imposition : pas d'impôt tant que tu ne sors pas en euros (ou n'achètes pas un bien).",
-      "C'est totalement défiscalisé pour toujours.",
-      "C'est interdit par la loi.",
+      "Plus-value imposable immédiatement, car tu as « vendu » ton ETH.",
+      "Aucun impôt à ce stade : c'est un échange crypto-crypto en sursis ; l'imposition viendra quand tu convertiras en euros.",
+      "Imposable seulement si le gain latent dépasse 305 €.",
+      "Exonéré définitivement puisque l'USDC est stable.",
     ],
     correctIndex: 1,
     explanation:
-      "Un échange crypto contre crypto (y compris vers un stablecoin) bénéficie du sursis d'imposition (art. 150 VH bis du CGI). L'impôt se déclenche seulement à la conversion en euros ou à l'achat d'un bien : le passage en stablecoin reporte l'imposition, il ne l'efface pas.",
+      "Échanger un actif numérique contre un autre (y compris un stablecoin) relève du sursis d'imposition (art. 150 VH bis). Le seuil de 305 € porte sur le total des cessions en euros sur l'année, pas sur un gain latent : il ne s'applique pas ici.",
   },
   {
-    id: "stb-q5-mica",
-    question: "Sous le règlement MiCA, tous les stablecoins sont-ils traités de la même façon en Europe ?",
+    id: "stb-q4-mica",
+    question: "Pourquoi plusieurs plateformes de l'UE ont-elles restreint l'USDT pour leurs clients européens ?",
     choices: [
-      "Oui, tous sont automatiquement autorisés.",
-      "Non : les émetteurs doivent être agréés. L'USDC (Circle) s'est mis en conformité, tandis que l'USDT (Tether) a été restreint sur plusieurs plateformes européennes.",
-      "Non : tous les stablecoins sont interdits.",
-      "MiCA ne concerne pas du tout les stablecoins.",
+      "Parce que l'USDT a été interdit dans le monde entier.",
+      "Parce que son émetteur n'a pas l'agrément exigé par MiCA pour les stablecoins, contrairement à Circle (USDC).",
+      "Parce que l'USDT a définitivement perdu son ancrage.",
+      "Parce qu'il est trop décentralisé pour être régulé.",
     ],
     correctIndex: 1,
     explanation:
-      "MiCA encadre spécifiquement les émetteurs de stablecoins, qui doivent obtenir un agrément. Circle (USDC, EURC) s'y est conformé ; Tether (USDT) ne l'a pas fait dans les mêmes conditions, ce qui a conduit des plateformes de l'UE à le restreindre.",
+      "MiCA impose un agrément aux émetteurs de stablecoins servant le marché UE. Circle (USDC) s'y est conformé ; Tether (USDT) non dans les mêmes conditions, ce qui a poussé des plateformes européennes à le restreindre — sans qu'il soit « interdit partout ».",
+  },
+  {
+    id: "stb-q5-usage",
+    question: "Quel usage des stablecoins est le PLUS pertinent et le mieux compris ?",
+    choices: [
+      "Spéculer sur la hausse de leur prix.",
+      "Se mettre temporairement à l'abri de la volatilité ou transférer de la valeur, en gardant en tête le risque de dépeg et de contrepartie.",
+      "Les traiter comme un livret d'épargne garanti par l'État.",
+      "Les utiliser pour effacer définitivement son impôt sur les plus-values.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Un stablecoin sert surtout à sortir de la volatilité ou à transférer de la valeur — pas à spéculer (il est stable), ni à « épargner sans risque » (il n'est pas garanti), ni à échapper à l'impôt (l'imposition est seulement reportée).",
   },
 ];
 
 const QUIZ_STAKING: QuizQuestion[] = [
   {
-    id: "stk-q1-pos",
-    question: "Le staking concerne quel type de blockchain ?",
+    id: "stk-q1-rendement-nuance",
+    question: "Parmi ces affirmations sur le rendement du staking, laquelle est la PLUS exacte ?",
     choices: [
-      "Les blockchains en Proof of Work, comme Bitcoin.",
-      "Les blockchains en Proof of Stake (Ethereum, Solana, Cardano…) — Bitcoin ne se stake pas nativement.",
-      "Uniquement les blockchains privées d'entreprise.",
-      "Toutes les blockchains sans exception.",
+      "Le staking garantit un gain net, quelle que soit l'évolution du cours.",
+      "Les récompenses sont versées dans l'actif staké : un rendement positif en jetons peut se solder par une perte en euros si le cours baisse.",
+      "Le staking ne comporte aucun risque puisqu'on ne vend pas.",
+      "Toutes les blockchains, y compris Bitcoin, permettent le staking natif.",
     ],
     correctIndex: 1,
     explanation:
-      "Le staking est le mécanisme des blockchains en Proof of Stake : on immobilise des jetons pour aider à valider le réseau. Bitcoin fonctionne en Proof of Work (minage) et ne propose pas de staking natif.",
+      "Le piège classique : un APR « positif » est exprimé dans le jeton staké. Si ce jeton perd 40 % en euros, ton rendement nominal ne compense pas la baisse. Le staking n'est donc pas « sans risque », et Bitcoin (Proof of Work) ne se stake pas nativement.",
   },
   {
-    id: "stk-q2-recompenses",
-    question: "D'où viennent les récompenses de staking ?",
+    id: "stk-q2-slashing-cas",
+    question: "Dans quel cas un validateur subit-il un slashing ?",
     choices: [
-      "D'une banque centrale.",
-      "De l'émission de nouveaux jetons par le protocole et d'une part des frais de transaction.",
-      "Des dépôts des nouveaux entrants, comme dans un système pyramidal.",
-      "De la publicité affichée sur la blockchain.",
+      "Quand le cours de l'actif baisse fortement.",
+      "Quand il enfreint les règles du protocole (ex. double-signature) ou, selon les réseaux, en cas d'indisponibilité prolongée.",
+      "Quand il décide de retirer ses fonds normalement.",
+      "Jamais : le slashing est purement théorique.",
     ],
     correctIndex: 1,
     explanation:
-      "Les récompenses proviennent de l'émission programmée de nouveaux jetons et d'une part des frais payés par les utilisateurs du réseau — pas d'une banque, ni des dépôts des nouveaux venus.",
+      "Le slashing sanctionne un comportement fautif (double-signature surtout) ou, selon les réseaux, un downtime prolongé. Ni la baisse du cours, ni un retrait normal ne déclenchent un slashing — mais le risque est bien réel, pas théorique.",
   },
   {
-    id: "stk-q3-slashing",
-    question: "Qu'est-ce que le « slashing » ?",
+    id: "stk-q3-liquid-arbitrage",
+    question: "Quel est le bon arbitrage du liquid staking (ex. stETH) par rapport au staking direct ?",
     choices: [
-      "Une réduction de frais offerte aux gros staker.",
-      "Une pénalité on-chain qui retire une partie des jetons d'un validateur fautif (double-signature, indisponibilité).",
-      "Le nom donné au rendement annuel.",
-      "Une taxe prélevée par l'État sur les récompenses.",
+      "Il supprime tout risque tout en rapportant plus.",
+      "Il apporte de la liquidité (jeton réutilisable en DeFi) mais ajoute un risque de smart contract et un possible écart (dépeg) entre le jeton liquide et le sous-jacent.",
+      "Il garantit un rendement supérieur au staking solo.",
+      "Il permet d'échapper à l'impôt sur les récompenses.",
     ],
     correctIndex: 1,
     explanation:
-      "Le slashing est une sanction inscrite dans le protocole : un validateur qui se comporte mal (ou reste hors-ligne, selon les réseaux) perd une partie de son stake. C'est l'un des mécanismes qui sécurisent le réseau.",
+      "Le liquid staking échange de l'illiquidité contre des risques supplémentaires : ton ETH staké devient un jeton (stETH) utilisable ailleurs, mais tu t'exposes au bug du contrat et à un possible dépeg. Plus de souplesse, plus de surface de risque — pas un repas gratuit.",
   },
   {
-    id: "stk-q4-custodial",
-    question: "Quel est le principal risque du staking via une plateforme d'échange (custodial) ?",
+    id: "stk-q4-controle-scenario",
+    question:
+      "Tu veux staker de l'ETH en gardant un contrôle MAXIMAL sur tes clés, quitte à assumer la complexité technique. Quelle voie ?",
     choices: [
-      "Aucun, c'est garanti par l'État.",
-      "Tu confies tes clés à la plateforme : en cas de faillite, de piratage ou de gel, tes fonds en dépendent.",
-      "Tu ne peux jamais récupérer tes jetons.",
-      "Le rendement est forcément nul.",
+      "Le staking sur une plateforme d'échange (custodial).",
+      "Le validateur solo : tu contrôles tes clés et ton nœud, mais avec des exigences techniques et de capital.",
+      "Le liquid staking via un protocole centralisé.",
+      "Ne pas staker du tout, c'est la seule option sûre.",
     ],
     correctIndex: 1,
     explanation:
-      "Staker sur un exchange est simple mais custodial : tes jetons sont détenus par la plateforme. Tu hérites de son risque de contrepartie (faillite, piratage, blocage). « Not your keys, not your coins » s'applique.",
+      "Le validateur solo offre le contrôle maximal (tes clés, ton nœud) au prix de la complexité (exigences matérielles, capital, exploitation). L'exchange est simple mais custodial ; le liquid staking centralisé ajoute un intermédiaire. Le compromis dépend de ton profil.",
   },
   {
-    id: "stk-q5-liquid",
-    question: "Le « liquid staking » (par exemple le stETH) ajoute quel risque spécifique ?",
+    id: "stk-q5-faux",
+    question: "Parmi ces affirmations sur le staking, laquelle est FAUSSE ?",
     choices: [
-      "Aucun, c'est strictement identique au staking classique.",
-      "Le risque de bug du smart contract et un possible dépeg du jeton liquide par rapport à l'actif sous-jacent.",
-      "Le risque que ton ordinateur surchauffe.",
-      "Le risque de payer deux fois l'impôt.",
+      "Le staking concerne les blockchains en Proof of Stake.",
+      "Le staking sur une plateforme d'échange est non-custodial : tu gardes le contrôle de tes clés.",
+      "Une période de déblocage (unbonding) peut immobiliser tes fonds un certain temps.",
+      "Les récompenses proviennent de l'émission de jetons et des frais du réseau.",
     ],
     correctIndex: 1,
     explanation:
-      "Le liquid staking émet un jeton (ex. stETH) représentant ta position stakée. Tu ajoutes le risque de bug du smart contract et celui que ce jeton se négocie en dessous de l'actif sous-jacent (dépeg), comme observé en 2022.",
+      "Le staking sur exchange est au contraire CUSTODIAL : la plateforme détient tes clés. Les trois autres affirmations sont exactes. Confondre « pratique » et « non-custodial » est une erreur de débutant qui expose au risque de contrepartie.",
   },
 ];
 
 const QUIZ_CHOISIR: QuizQuestion[] = [
   {
-    id: "chx-q1-marketcap",
-    question: "Comment se calcule la capitalisation (market cap) d'une crypto ?",
-    choices: [
-      "Prix × offre en circulation.",
-      "Prix × offre maximale possible.",
-      "Le prix unitaire, tout simplement.",
-      "Le volume échangé sur 24 heures.",
-    ],
-    correctIndex: 0,
-    explanation:
-      "Market cap = prix × offre en circulation. Elle reflète la valeur de marché des jetons réellement en circulation : un prix unitaire bas ne veut pas dire « pas cher » sans regarder l'offre.",
-  },
-  {
-    id: "chx-q2-fdv",
+    id: "chx-q1-fdv-scenario",
     question:
-      "Que mesure la valorisation totalement diluée (FDV), et que signale un grand écart avec la market cap ?",
+      "Un token a une petite capitalisation, mais une FDV (valorisation totalement diluée) 10 fois supérieure. Qu'est-ce que ça t'apprend ?",
     choices: [
-      "FDV = prix × offre maximale ; un grand écart signale une forte dilution future (beaucoup de jetons encore à émettre).",
-      "FDV = le bénéfice de l'entreprise ; l'écart signale une fraude.",
-      "FDV = la market cap d'hier ; l'écart mesure la volatilité.",
-      "FDV n'a aucun rapport avec l'offre de jetons.",
+      "Le token est sous-évalué : c'est une bonne affaire.",
+      "Une grande partie de l'offre n'est pas encore en circulation : de futurs déblocages risquent de diluer les détenteurs et de peser sur le prix.",
+      "Le projet a dix fois plus d'utilisateurs que la moyenne.",
+      "Cet écart n'apprend rien d'utile.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "FDV = prix × offre maximale. Un écart FDV/market cap énorme signale que beaucoup de jetons restent à émettre. Leur arrivée progressive (unlocks) crée une pression vendeuse potentielle : un écart important est un signal de vigilance, pas une « bonne affaire ».",
+  },
+  {
+    id: "chx-q2-duediligence",
+    question:
+      "Tu découvres un projet inconnu qui monte fort. Quelle démarche est la plus solide AVANT d'investir ?",
+    choices: [
+      "Suivre la recommandation d'un influenceur populaire qui en parle.",
+      "Croiser plusieurs sources : équipe, whitepaper, activité réelle du code, répartition des jetons, liquidité et audits.",
+      "Acheter un petit montant tout de suite, puis se renseigner.",
+      "Regarder seulement si le prix monte depuis une semaine.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "La due diligence consiste à enquêter avant de mettre un euro : qui est derrière, quel problème est résolu, le code est-il actif, comment les jetons sont-ils répartis, la liquidité est-elle suffisante. Un influenceur ou un graphique qui monte ne remplacent pas cette vérification.",
+  },
+  {
+    id: "chx-q3-redflag-combo",
+    question: "Quelle combinaison constitue le plus fort signal d'alerte sur un projet ?",
+    choices: [
+      "Code open-source, audit par un cabinet reconnu, équipe publique.",
+      "Équipe anonyme sans raison, rendement « garanti », liquidité non verrouillée et aucun audit.",
+      "Feuille de route claire et communauté de développeurs active.",
+      "Documentation technique détaillée et tokenomics transparente.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Aucun de ces éléments pris isolément ne suffit, mais leur cumul (anonymat injustifié + promesse de gain + liquidité libre + pas d'audit) est le profil typique d'un projet à très haut risque, voire d'une arnaque en préparation.",
+  },
+  {
+    id: "chx-q4-concentration",
+    question:
+      "L'analyse on-chain montre que 5 adresses détiennent 70 % de l'offre d'un token. Comment l'interpréter ?",
+    choices: [
+      "C'est sans importance pour un investisseur.",
+      "Risque de manipulation et de dump : ces « baleines » peuvent faire chuter le prix en vendant, et orienter le marché.",
+      "C'est la garantie que le prix va monter.",
+      "Cela rend automatiquement le projet conforme à MiCA.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Une offre très concentrée met ton capital à la merci de quelques gros détenteurs : s'ils vendent, le prix s'effondre. Une répartition large est généralement plus saine. L'analyse on-chain (répartition des holders) est justement là pour repérer ça.",
+  },
+  {
+    id: "chx-q5-faux",
+    question: "Lorsqu'on évalue un projet crypto, laquelle de ces affirmations est FAUSSE ?",
+    choices: [
+      "Un prix unitaire bas signifie toujours que le token est « pas cher ».",
+      "Une faible liquidité rend la sortie difficile sans dégrader le prix.",
+      "Un code public et audité réduit le risque technique, sans l'annuler totalement.",
+      "Une forte concentration des jetons est un facteur de risque.",
     ],
     correctIndex: 0,
     explanation:
-      "FDV = prix × offre maximale (ou totale). Si la FDV dépasse largement la market cap, beaucoup de jetons restent à émettre : leur arrivée (unlocks) peut diluer les détenteurs actuels et peser sur le prix.",
-  },
-  {
-    id: "chx-q3-redflag",
-    question: "Lequel de ces éléments est un signal d'alerte (red flag) sur un projet crypto ?",
-    choices: [
-      "Un code source public et des audits réalisés par des cabinets reconnus.",
-      "Une équipe totalement anonyme sans raison, des promesses de rendement garanti et aucun audit.",
-      "Une communauté active et une feuille de route claire.",
-      "Une documentation technique détaillée.",
-    ],
-    correctIndex: 1,
-    explanation:
-      "Anonymat injustifié, rendement « garanti » et absence d'audit sont des signaux d'alerte classiques. À l'inverse, code public, audits et roadmap claire sont plutôt rassurants — sans jamais être une garantie absolue.",
-  },
-  {
-    id: "chx-q4-duediligence",
-    question: "En quoi consiste la « due diligence » avant d'investir ?",
-    choices: [
-      "Acheter d'abord, se renseigner ensuite.",
-      "Suivre l'avis d'un influenceur sans rien vérifier.",
-      "Rechercher méthodiquement l'équipe, le whitepaper, l'activité de développement, la tokenomics et la liquidité AVANT d'investir.",
-      "Regarder uniquement le prix du jour.",
-    ],
-    correctIndex: 2,
-    explanation:
-      "La due diligence, c'est enquêter avant de mettre un euro : qui est derrière le projet, quel problème il résout, le code est-il actif, comment les jetons sont-ils répartis, la liquidité est-elle suffisante. Pas l'inverse.",
-  },
-  {
-    id: "chx-q5-concentration",
-    question: "Pourquoi une forte concentration des jetons sur quelques portefeuilles est-elle risquée ?",
-    choices: [
-      "Ça n'a aucune importance.",
-      "Quelques gros détenteurs peuvent vendre massivement (dump) et faire chuter le prix, voire manipuler le marché.",
-      "Ça garantit que le prix montera.",
-      "Ça rend le projet automatiquement conforme à MiCA.",
-    ],
-    correctIndex: 1,
-    explanation:
-      "Si peu d'adresses détiennent une grande part de l'offre, leur décision de vendre peut faire s'effondrer le prix et faciliter la manipulation. Une répartition large de l'offre est généralement plus saine.",
+      "Le prix unitaire ne veut rien dire sans l'offre : c'est la capitalisation (prix × offre en circulation) qui compte. Un token à 0,001 € avec une offre colossale peut être « plus gros » et plus cher qu'un token à 100 €. Les trois autres affirmations sont exactes.",
   },
 ];
 
 const QUIZ_DEFI: QuizQuestion[] = [
   {
-    id: "defi-q1-definition",
-    question: "Qu'est-ce que la DeFi (finance décentralisée) ?",
+    id: "defi-q1-exacte",
+    question: "Parmi ces affirmations sur la DeFi, laquelle est la PLUS exacte ?",
     choices: [
-      "Une banque crypto agréée par l'État.",
-      "Un ensemble de services financiers (échange, prêt, rendement) fournis par des smart contracts, sans intermédiaire bancaire.",
-      "Une seule cryptomonnaie.",
-      "Le nom d'un exchange centralisé.",
+      "La décentralisation supprime le risque de perte de fonds.",
+      "Le risque principal est technique (faille de smart contract), même sur un protocole audité : un audit réduit le risque sans l'annuler.",
+      "Les dépôts en DeFi sont couverts par un fonds de garantie comme à la banque.",
+      "La DeFi est entièrement défiscalisée en France.",
     ],
     correctIndex: 1,
     explanation:
-      "La DeFi reproduit des services financiers (prêt, échange, épargne) directement via des programmes (smart contracts) sur la blockchain, sans banque ni intermédiaire de confiance. C'est puissant, mais le code peut comporter des failles.",
+      "En DeFi, ton argent est entre les mains d'un code : un bug ou un exploit peut vider un protocole, même audité (l'audit réduit le risque, ne l'élimine pas). Pas de fonds de garantie, et la fiscalité s'applique. La décentralisation ne « supprime » pas le risque, elle le déplace.",
   },
   {
-    id: "defi-q2-layer2",
-    question: "À quoi sert un Layer 2 comme Arbitrum, Optimism ou Base ?",
+    id: "defi-q2-rollup",
+    question: "Qu'est-ce qui caractérise correctement un rollup Layer 2 (Arbitrum, Optimism, Base) ?",
     choices: [
-      "À créer une nouvelle cryptomonnaie indépendante.",
-      "À traiter des transactions plus vite et moins cher hors de la chaîne principale, tout en héritant de la sécurité de la couche 1 (Ethereum).",
-      "À remplacer définitivement Ethereum.",
-      "À miner du Bitcoin plus rapidement.",
+      "Une blockchain totalement indépendante, sans aucun lien avec Ethereum.",
+      "Il exécute les transactions hors de la couche de base et publie des données/preuves sur Ethereum (L1) pour en hériter la sécurité.",
+      "Un service centralisé géré par une banque.",
+      "Un protocole de minage concurrent de Bitcoin.",
     ],
     correctIndex: 1,
     explanation:
-      "Un Layer 2 exécute les transactions en dehors de la couche principale (Layer 1) pour réduire frais et congestion, puis ancre leur sécurité sur la L1. Arbitrum, Optimism et Base sont des Layer 2 d'Ethereum.",
+      "Un rollup traite les transactions hors-chaîne (frais réduits) puis ancre leurs données/preuves sur Ethereum, dont il hérite la sécurité. Ce n'est ni une chaîne indépendante, ni un service centralisé : c'est une couche d'extension d'Ethereum.",
   },
   {
-    id: "defi-q3-lightning",
-    question: "Qu'est-ce que le Lightning Network ?",
+    id: "defi-q3-l2-commun",
+    question: "Qu'ont en commun le Lightning Network (Bitcoin) et les Layer 2 d'Ethereum ?",
     choices: [
-      "Un nouveau Bitcoin concurrent.",
-      "Une couche de paiement bâtie sur Bitcoin, pour des transactions quasi instantanées et à très faibles frais.",
-      "Un logiciel de minage.",
-      "Une plateforme d'échange centralisée.",
+      "Ils remplacent la blockchain principale par une autre.",
+      "Ils déportent des transactions hors de la couche de base pour gagner en vitesse et en coût, en s'appuyant sur la sécurité de la L1.",
+      "Ils créent de nouvelles cryptomonnaies concurrentes de BTC et ETH.",
+      "Ils suppriment définitivement tous les frais.",
     ],
     correctIndex: 1,
     explanation:
-      "Le Lightning Network est une solution de seconde couche sur Bitcoin : il permet d'envoyer de petits montants quasi instantanément et à coût très faible, en réglant sur la blockchain principale en fin de parcours.",
+      "Lightning (sur Bitcoin) et les L2 (sur Ethereum) partagent la même logique : traiter les transactions hors de la couche de base pour la vitesse et le coût, tout en s'appuyant sur la sécurité de la chaîne principale pour le règlement final. Ils ne la remplacent pas.",
   },
   {
-    id: "defi-q4-risque",
-    question: "Quel est un risque MAJEUR propre à la DeFi ?",
+    id: "defi-q4-fiscalite",
+    question:
+      "Tu fais du yield farming régulier en DeFi en France. Comment c'est généralement traité fiscalement ?",
     choices: [
-      "Aucun risque, puisque tout est décentralisé.",
-      "Le bug ou l'exploit d'un smart contract, qui peut vider un protocole — en plus de la volatilité des actifs.",
-      "Le risque que ta banque bloque le protocole.",
-      "Le risque que la DeFi ferme à 17h.",
+      "Totalement défiscalisé tant que tu ne sors pas en euros.",
+      "Revenus généralement imposables (BNC, voire BIC si l'activité est habituelle/organisée), ET la revente ultérieure des jetons reçus génère une plus-value distincte.",
+      "Seule la plus-value finale compte ; les revenus reçus ne sont jamais imposables.",
+      "Imposé uniquement au-delà d'un million d'euros de gains.",
     ],
     correctIndex: 1,
     explanation:
-      "En DeFi, ton risque principal est technique : une faille dans le code d'un smart contract peut entraîner la perte des fonds déposés, même sur un protocole audité. La décentralisation ne supprime pas le risque.",
+      "La DeFi n'est pas hors impôt : les revenus récurrents sont généralement imposés (BNC, ou BIC si habituel/organisé), et revendre plus tard les jetons reçus crée une plus-value distincte. C'est un cumul de deux faits générateurs, pas une zone franche.",
   },
   {
-    id: "defi-q5-fiscalite",
-    question: "En France, les revenus récurrents tirés de la DeFi (staking, yield) sont-ils défiscalisés ?",
+    id: "defi-q5-faux",
+    question: "Parmi ces affirmations, laquelle est FAUSSE ?",
     choices: [
-      "Oui, la DeFi échappe totalement à l'impôt.",
-      "Non : ces revenus sont généralement imposables (souvent en BNC, voire BIC si l'activité devient habituelle), et la revente ultérieure des jetons génère en plus une plus-value.",
-      "Non, mais seulement au-delà d'un million d'euros.",
-      "Cela dépend de la météo.",
+      "Un Layer 2 vise à réduire les frais et la congestion de la couche de base.",
+      "Un protocole une fois audité ne peut plus jamais être piraté.",
+      "Le risque de smart contract est bien réel en DeFi.",
+      "Le Lightning Network sert les paiements rapides et peu coûteux sur Bitcoin.",
     ],
     correctIndex: 1,
     explanation:
-      "La DeFi n'est pas une zone hors impôt : les revenus récurrents sont généralement imposés (BNC, ou BIC si l'activité est habituelle et organisée), et revendre plus tard les jetons reçus génère une plus-value distincte. Voir le parcours Fiscalité.",
+      "Un audit réduit le risque mais ne le supprime jamais : des protocoles audités se font régulièrement exploiter. Les trois autres affirmations sont exactes. Se croire « en sécurité car audité » est une erreur dangereuse.",
   },
 ];
 
 const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
-    id: "arn-q1-rugpull",
-    question: "Qu'est-ce qu'un « rug pull » ?",
-    choices: [
-      "Une mise à jour technique d'un protocole.",
-      "Les créateurs d'un projet retirent soudainement la liquidité (ou les fonds) et disparaissent, laissant les investisseurs avec des jetons sans valeur.",
-      "Une taxe sur les retraits.",
-      "Un type de portefeuille matériel.",
-    ],
-    correctIndex: 1,
-    explanation:
-      "Le rug pull (« tirer le tapis ») : l'équipe d'un projet vide la liquidité ou s'enfuit avec les fonds. Les jetons deviennent invendables. Méfie-toi des projets à équipe anonyme et à liquidité non verrouillée.",
-  },
-  {
-    id: "arn-q2-support",
+    id: "arn-q1-ponzi-scenario",
     question:
-      "Le « support » de ton exchange te contacte et te demande ta seed phrase (phrase de récupération) pour « sécuriser ton compte ». Que fais-tu ?",
+      "Un proche te montre une plateforme qui promet +2 % par JOUR « garantis », avec un bonus si tu parraines des amis. Quel est le bon réflexe ?",
     choices: [
-      "Tu la donnes, c'est le support officiel.",
-      "Tu refuses : un vrai support ne demande JAMAIS ta seed phrase ni tes codes 2FA. C'est une arnaque.",
-      "Tu la donnes seulement par téléphone.",
-      "Tu envoies juste la moitié des mots.",
+      "Investir vite, avant que l'opportunité ne disparaisse.",
+      "Reconnaître les marqueurs d'un Ponzi (rendement fixe élevé « garanti » + parrainage) et refuser.",
+      "Investir un petit montant pour « tester » sans risque.",
+      "Attendre que ton proche ait retiré ses gains, puis te lancer.",
     ],
     correctIndex: 1,
     explanation:
-      "Personne de légitime ne demandera jamais ta seed phrase ou tes codes 2FA — ni le support, ni un « agent ». Quiconque la possède peut vider ton wallet. Ne la partage jamais, sous aucun prétexte.",
+      "+2 %/jour « garanti » + parrainage = signature d'un Ponzi. « Tester avec un petit montant » ou « attendre que l'autre retire » sont justement les pièges qui te font entrer : au début les retraits marchent (payés par l'argent des nouveaux), jusqu'à l'effondrement.",
   },
   {
-    id: "arn-q3-simswap",
-    question: "Qu'est-ce qu'une attaque par « SIM-swap » ?",
+    id: "arn-q2-phishing-scenario",
+    question:
+      "Tu reçois un SMS : « Coinbase : connexion suspecte détectée, sécurisez votre compte ici : [lien] ». Que fais-tu ?",
     choices: [
-      "Un échange de cryptos entre deux personnes.",
-      "Un attaquant prend le contrôle de ton numéro de téléphone pour intercepter tes SMS (dont les codes 2FA par SMS).",
-      "Le remplacement de ta carte bancaire.",
-      "Une mise à jour de ton forfait mobile.",
+      "Tu cliques vite sur le lien pour sécuriser ton compte.",
+      "Tu ne cliques pas : tu ouvres l'appli ou le site toi-même (via ton favori) pour vérifier.",
+      "Tu réponds au SMS pour demander plus de détails.",
+      "Tu transfères tes fonds via le lien, par précaution.",
     ],
     correctIndex: 1,
     explanation:
-      "Le SIM-swap consiste à détourner ton numéro (via ton opérateur) pour recevoir tes SMS, dont les codes 2FA. C'est pourquoi la 2FA par application ou clé physique est bien plus sûre que la 2FA par SMS.",
+      "Le phishing joue sur l'urgence. Ne clique jamais sur un lien reçu par SMS ou email : accède au service par tes propres moyens (favori, appli officielle). Un vrai problème de sécurité se règle depuis ton compte, pas depuis un lien qu'on t'envoie.",
   },
   {
-    id: "arn-q4-pigbutchering",
-    question: "En quoi consiste l'arnaque dite « pig butchering » ?",
+    id: "arn-q3-rugpull-signes",
+    question: "Quel ensemble de signes évoque le plus un futur « rug pull » ?",
     choices: [
-      "Un bug d'affichage des prix.",
-      "Un escroc bâtit une relation de confiance (souvent sentimentale) sur plusieurs semaines, puis pousse la victime à investir sur une fausse plateforme.",
-      "Une technique de trading avancée.",
-      "Une promotion sur les frais.",
+      "Équipe publique, contrat audité, liquidité verrouillée.",
+      "Équipe anonyme, liquidité non verrouillée, hype soudaine et promesses de x100.",
+      "Token disponible sur une grande plateforme régulée.",
+      "Whitepaper détaillé et code source public.",
     ],
     correctIndex: 1,
     explanation:
-      "Le « pig butchering » mise sur la durée : l'escroc gagne ta confiance (amitié, romance) avant de t'orienter vers une plateforme bidon qui affiche de faux gains. Quand tu veux retirer, tout disparaît.",
+      "Le rug pull, c'est quand l'équipe retire la liquidité et disparaît. Les ingrédients typiques : anonymat, liquidité libre de retrait, et hype « x100 » pour attirer vite. À l'inverse, équipe publique, audit et liquidité verrouillée réduisent ce risque (sans l'annuler).",
   },
   {
-    id: "arn-q5-rendement",
-    question: "Quel est le signal d'alerte le plus fiable d'une arnaque de type Ponzi/HYIP ?",
+    id: "arn-q4-seed-scenario",
+    question:
+      "Un « agent du support » te demande ta phrase de récupération (12-24 mots) pour « débloquer » un retrait bloqué. Que fais-tu ?",
     choices: [
-      "Un site avec un design soigné.",
-      "Une promesse de rendement élevé « garanti » et « sans risque ».",
-      "La présence d'une FAQ.",
-      "Un compte sur les réseaux sociaux.",
+      "Tu la donnes, puisque c'est pour débloquer TON propre argent.",
+      "Tu refuses : personne de légitime ne demande jamais ta seed phrase — c'est toujours une tentative de vol.",
+      "Tu ne donnes que les 12 premiers mots, par prudence.",
+      "Tu la communiques par téléphone plutôt que par écrit.",
     ],
     correctIndex: 1,
     explanation:
-      "Aucun rendement élevé n'est garanti ni sans risque. La promesse de gains fixes et juteux « sans risque » est la marque des montages Ponzi : les premiers sont payés avec l'argent des suivants, jusqu'à l'effondrement.",
+      "Ta seed phrase = l'accès total à tes fonds. Aucun support, agent ou « déblocage » légitime ne la demandera jamais. La donner, même « à moitié » ou « par téléphone », revient à remettre les clés de ton coffre à un voleur.",
+  },
+  {
+    id: "arn-q5-pigbutchering-scenario",
+    question:
+      "Une personne rencontrée en ligne, très attentionnée depuis des semaines, te conseille une plateforme où « elle gagne très bien ». Quel est le signal ?",
+    choices: [
+      "C'est une bonne opportunité, partagée par quelqu'un de confiance.",
+      "C'est le schéma classique du « pig butchering » : confiance construite dans le temps, puis fausse plateforme — tu refuses.",
+      "Tu investis un petit montant pour ne pas la vexer.",
+      "Tu suis, car elle t'a montré des captures d'écran de ses gains.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le « pig butchering » mise sur la relation (amitié, romance) bâtie sur des semaines avant de t'orienter vers une plateforme bidon aux faux gains. Les « preuves » de gains et la peur de vexer sont précisément les leviers de l'arnaque.",
   },
 ];
 
 const QUIZ_MARCHE: QuizQuestion[] = [
   {
-    id: "mar-q1-marketcap",
-    question: "Comment se calcule la capitalisation (market cap) d'une crypto ?",
+    id: "mar-q1-marketcap-calc",
+    question:
+      "La crypto A vaut 2 € (1 milliard de jetons en circulation). La crypto B vaut 0,01 € (500 milliards en circulation). Laquelle a la plus grosse capitalisation ?",
     choices: [
-      "Prix × offre en circulation.",
-      "Le prix unitaire seul.",
-      "Le volume échangé sur 24 heures.",
-      "Le nombre de détenteurs.",
+      "A, parce que son prix unitaire est plus élevé.",
+      "B : 0,01 € × 500 milliards = 5 milliards €, contre 2 milliards € pour A.",
+      "Impossible à dire sans connaître le volume.",
+      "Elles ont la même capitalisation.",
     ],
-    correctIndex: 0,
+    correctIndex: 1,
     explanation:
-      "Market cap = prix × offre en circulation. Un prix unitaire bas ne signifie pas « pas cher » : une crypto à 0,01 € avec une offre énorme peut peser plus qu'une crypto à 100 € avec une offre réduite.",
+      "Market cap = prix × offre en circulation. Ici B (5 Md€) pèse plus que A (2 Md€) malgré un prix unitaire minuscule. C'est l'erreur classique du débutant : juger « cher » ou « pas cher » au prix unitaire plutôt qu'à la capitalisation.",
   },
   {
     id: "mar-q2-halving",
-    question: "Qu'est-ce que le « halving » du Bitcoin ?",
+    question: "Quel est l'effet DIRECT d'un halving du Bitcoin ?",
     choices: [
-      "Le doublement du nombre de bitcoins.",
-      "La division par deux de la récompense versée aux mineurs, environ tous les quatre ans, qui ralentit l'émission de nouveaux BTC (offre plafonnée à 21 millions).",
-      "Une taxe sur les transactions.",
-      "Un changement de logo du réseau.",
+      "Le prix du Bitcoin double automatiquement le jour du halving.",
+      "La récompense versée aux mineurs est divisée par deux, ce qui ralentit l'émission de nouveaux BTC.",
+      "Le nombre total de bitcoins passe de 21 à 42 millions.",
+      "Les frais de transaction tombent à zéro.",
     ],
     correctIndex: 1,
     explanation:
-      "Tous les 210 000 blocs (environ quatre ans), la récompense de minage est divisée par deux. Ce mécanisme réduit progressivement l'émission de nouveaux bitcoins jusqu'au plafond de 21 millions.",
+      "L'effet direct et certain d'un halving (tous les 210 000 blocs, ~4 ans) est la division par deux de la récompense de minage, donc un ralentissement de l'émission. L'impact sur le prix, lui, est indirect, différé et jamais garanti — pas un « doublement automatique ».",
   },
   {
     id: "mar-q3-feargreed",
-    question: "À quoi sert le Fear & Greed Index (indice peur/avidité) ?",
+    question:
+      "Le Fear & Greed Index affiche « avidité extrême ». Quelle est l'interprétation la plus juste ?",
     choices: [
-      "À prédire le prix avec certitude.",
-      "À donner un repère sur le sentiment du marché (de la peur extrême à l'avidité extrême) — un indicateur de contexte, pas un signal d'achat/vente automatique.",
-      "À calculer tes impôts.",
-      "À mesurer la consommation d'énergie du réseau.",
+      "C'est un signal d'achat immédiat.",
+      "Le marché est euphorique : cela invite à la prudence, sans pour autant constituer un ordre de vente automatique.",
+      "Le prix va forcément continuer de monter.",
+      "Cela mesure la sécurité technique du réseau.",
     ],
     correctIndex: 1,
     explanation:
-      "Le Fear & Greed Index agrège plusieurs données pour situer l'humeur du marché. C'est un repère utile (l'avidité extrême invite à la prudence, la peur extrême peut signaler des excès), mais jamais une boule de cristal.",
+      "L'indice situe l'humeur du marché. L'avidité extrême signale souvent un excès d'optimisme (prudence), la peur extrême un possible excès de pessimisme. C'est un repère de contexte à croiser avec d'autres éléments, jamais un signal d'achat/vente à lui seul.",
   },
   {
-    id: "mar-q4-liquidite",
-    question: "Pourquoi la liquidité d'un actif est-elle importante ?",
+    id: "mar-q4-liquidite-faux",
+    question: "Parmi ces affirmations sur la liquidité, laquelle est FAUSSE ?",
     choices: [
-      "Elle n'a aucune importance.",
-      "Une faible liquidité entraîne un spread élevé et du slippage : tu déplaces le prix dès que tu achètes ou vends une somme un peu importante.",
-      "Elle garantit que le prix montera.",
-      "Elle remplace la nécessité de sécuriser ses cryptos.",
+      "Une faible liquidité augmente le spread (écart achat/vente).",
+      "Sur un marché peu liquide, un gros ordre fait à peine bouger le prix.",
+      "La liquidité conditionne ta capacité à sortir au prix voulu.",
+      "Les petites capitalisations sont souvent moins liquides.",
     ],
     correctIndex: 1,
     explanation:
-      "Sur un marché peu liquide, l'écart entre prix d'achat et de vente (spread) est large et tes ordres font bouger le cours (slippage). La liquidité conditionne ta capacité à entrer et sortir sans dégrader ton prix.",
+      "C'est l'inverse : sur un marché peu liquide, un gros ordre fait FORTEMENT bouger le prix (slippage). Les trois autres affirmations sont exactes. La liquidité est un critère clé, surtout sur les petites capitalisations.",
   },
   {
     id: "mar-q5-cycles",
-    question: "Que dire des cycles de marché (bull/bear) en crypto ?",
+    question: "Que peut-on raisonnablement conclure des cycles de marché (bull/bear) ?",
     choices: [
-      "Ils sont parfaitement prévisibles à la journée près.",
-      "Le marché alterne des phases haussières (bull) et baissières (bear), mais personne ne sait timer précisément le sommet ou le creux.",
-      "Le marché ne monte jamais.",
+      "On peut systématiquement acheter le creux et vendre le sommet.",
+      "Ils existent, mais le timing précis est imprévisible ; une stratégie comme le DCA limite le risque de mal tomber.",
+      "Après un sommet historique, le bear market ne revient jamais.",
       "Les cycles n'existent pas en crypto.",
     ],
     correctIndex: 1,
     explanation:
-      "Les marchés alternent euphorie (bull) et déprime (bear). Comprendre ces cycles aide à garder son sang-froid, mais vouloir acheter au plus bas et vendre au plus haut de façon répétée est statistiquement perdant.",
+      "Les marchés alternent euphorie et déprime, mais personne ne timer le haut/bas de façon répétée. C'est pourquoi lisser ses achats (DCA) et garder son sang-froid battent statistiquement la tentative de « timer le marché ».",
   },
 ];
 
 const QUIZ_TRADING: QuizQuestion[] = [
   {
-    id: "trd-q1-chandelier",
-    question: "Que représente une bougie (chandelier japonais) sur un graphique ?",
+    id: "trd-q1-bougie-verte",
+    question: "Sur une bougie verte (haussière), où se situent l'ouverture et la clôture ?",
     choices: [
-      "Uniquement le prix de clôture.",
-      "L'ouverture, la clôture, le plus haut et le plus bas du prix sur une période donnée.",
-      "Le volume uniquement.",
-      "Le nombre d'acheteurs.",
+      "L'ouverture en haut du corps, la clôture en bas.",
+      "L'ouverture en bas du corps, la clôture en haut : le prix a monté sur la période.",
+      "Aux extrémités des mèches uniquement.",
+      "Toujours exactement au même niveau.",
     ],
     correctIndex: 1,
     explanation:
-      "Une bougie résume quatre informations sur une période : prix d'ouverture, de clôture, plus haut et plus bas. Le corps relie ouverture et clôture ; les mèches indiquent les extrêmes atteints.",
+      "Une bougie résume ouverture, clôture, plus haut et plus bas. Sur une bougie haussière (souvent verte), la clôture est au-dessus de l'ouverture (le prix a monté) ; le corps relie les deux, les mèches marquent les extrêmes atteints.",
   },
   {
-    id: "trd-q2-support",
-    question: "Que sont un « support » et une « résistance » ?",
+    id: "trd-q2-polarite",
+    question:
+      "Un support important est cassé à la baisse, puis le prix y revient par en dessous. Qu'observe-t-on souvent ?",
     choices: [
-      "Des types de portefeuilles.",
-      "Un support est un niveau de prix où la baisse tend à s'arrêter ; une résistance, un niveau où la hausse tend à buter.",
-      "Des taxes sur les gains.",
-      "Des noms de cryptomonnaies.",
+      "Rien de particulier, le niveau n'a plus aucun rôle.",
+      "L'ancien support peut désormais agir comme une résistance (principe de polarité).",
+      "Le support redevient automatiquement un plancher infranchissable.",
+      "Le prix repart forcément à la hausse ensuite.",
     ],
     correctIndex: 1,
     explanation:
-      "Le support est une zone où les acheteurs reprennent souvent la main (la baisse ralentit) ; la résistance, une zone où les vendeurs reprennent la main (la hausse bute). Ces niveaux ne sont pas garantis, juste observés.",
+      "C'est le principe de polarité : un support cassé devient souvent une résistance (et inversement). Ces niveaux ne sont pas des garanties, mais des zones où le rapport de force acheteurs/vendeurs a tendance à s'inverser.",
   },
   {
-    id: "trd-q3-rsi",
-    question: "Que mesure l'indicateur RSI et comment se lisent ses seuils classiques ?",
+    id: "trd-q3-rsi-nuance",
+    question:
+      "Le RSI d'un actif reste à 80 depuis plusieurs jours, en plein rallye haussier. Quelle lecture est la plus juste ?",
     choices: [
-      "Le volume ; au-dessus de 50, on achète.",
-      "La force/vitesse du mouvement de prix : au-dessus de 70 souvent jugé « suracheté », en dessous de 30 « survendu » — des repères, pas des certitudes.",
-      "La capitalisation du marché.",
-      "Le nombre de transactions par seconde.",
+      "Vendre immédiatement : au-dessus de 70, c'est suracheté.",
+      "« Suracheté » n'est pas un signal de vente automatique : en tendance forte, le RSI peut rester élevé longtemps — à croiser avec d'autres éléments.",
+      "Un RSI à 80 garantit une baisse imminente.",
+      "Le RSI mesure le volume échangé.",
     ],
     correctIndex: 1,
     explanation:
-      "Le RSI (popularisé par J. Welles Wilder) mesure l'ampleur des hausses récentes par rapport aux baisses. Au-dessus de 70 = potentiellement suracheté, en dessous de 30 = potentiellement survendu. Ce sont des repères à croiser, pas des ordres d'achat/vente.",
+      "Erreur classique : prendre « RSI supérieur à 70 » pour un ordre de vente. Dans une tendance puissante, le RSI peut rester en zone de surachat des semaines. C'est un repère de momentum à confirmer, pas un déclencheur isolé.",
   },
   {
-    id: "trd-q4-ordres",
-    question: "Quelle différence entre un ordre « au marché » et un ordre « limite » ?",
+    id: "trd-q4-ordre-scenario",
+    question:
+      "Tu veux acheter SEULEMENT si le prix redescend à un niveau précis, sans rester devant l'écran. Quel ordre utiliser ?",
     choices: [
-      "Aucune, c'est la même chose.",
-      "L'ordre au marché s'exécute immédiatement au meilleur prix disponible ; l'ordre limite ne s'exécute qu'au prix (ou mieux) que tu as fixé.",
-      "L'ordre limite est toujours gratuit.",
-      "L'ordre au marché est réservé aux professionnels.",
+      "Un ordre au marché.",
+      "Un ordre limite d'achat, placé au prix que tu vises.",
+      "Aucun ordre ne permet cela.",
+      "Un ordre au marché avec effet de levier.",
     ],
     correctIndex: 1,
     explanation:
-      "Ordre au marché = exécution immédiate au prix courant (simple, mais tu subis le spread). Ordre limite = tu fixes ton prix et l'ordre attend d'être atteint (tu contrôles le prix, mais l'exécution n'est pas garantie).",
+      "L'ordre limite te laisse fixer ton prix : il ne s'exécute qu'à ce niveau (ou mieux), sans surveillance. L'ordre au marché, lui, s'exécuterait tout de suite au prix courant — l'inverse de ce que tu veux ici.",
   },
   {
-    id: "trd-q5-risque",
-    question: "Quelle est une règle de base de gestion du risque en trading ?",
+    id: "trd-q5-gestion-risque",
+    question: "Laquelle de ces pratiques relève d'une SAINE gestion du risque ?",
     choices: [
-      "Mettre tout son capital sur une seule position.",
-      "Ne risquer qu'une petite fraction de son capital par position, définir un seuil de sortie (stop) et éviter de décider sous le coup de l'émotion (FOMO, panique).",
-      "Trader uniquement avec de l'argent emprunté.",
-      "Augmenter sa mise après chaque perte pour « se refaire ».",
+      "Augmenter sa mise après chaque perte pour « se refaire » (martingale).",
+      "Définir à l'avance une taille de position limitée et un seuil de sortie (stop), et s'y tenir.",
+      "Tout miser d'un coup sur sa conviction la plus forte.",
+      "Trader avec de l'argent dont on a besoin à court terme.",
     ],
     correctIndex: 1,
     explanation:
-      "La gestion du risque prime sur la recherche du gain : on limite l'exposition par position, on prévoit où sortir si on se trompe, et on tient son plan plutôt que de réagir à la peur ou à l'euphorie.",
+      "La gestion du risque, c'est limiter l'exposition par position et savoir où sortir si on se trompe — puis tenir son plan. La martingale, le « tout sur une idée » et l'argent vital sont les meilleurs moyens de se ruiner, même avec de bonnes analyses.",
   },
 ];
 
 const QUIZ_NFT_WEB3: QuizQuestion[] = [
   {
-    id: "nft-q1-definition",
-    question: "Que signifie « NFT » et qu'est-ce que ça implique ?",
+    id: "nft-q1-faux",
+    question: "Parmi ces affirmations sur les NFT, laquelle est FAUSSE ?",
     choices: [
-      "Un jeton fongible identique à tous les autres, comme 1 euro.",
-      "Un jeton non fongible : chaque unité est unique et non interchangeable, contrairement à une monnaie.",
-      "Une nouvelle blockchain.",
-      "Un type de portefeuille matériel.",
+      "Un NFT prouve une entrée unique et identifiable sur la blockchain.",
+      "Acheter un NFT te transfère automatiquement les droits d'auteur de l'œuvre associée.",
+      "La grande majorité des NFT du pic 2021 ont perdu l'essentiel de leur valeur.",
+      "Le standard le plus courant des NFT sur Ethereum est l'ERC-721.",
     ],
     correctIndex: 1,
     explanation:
-      "NFT = Non-Fungible Token (jeton non fongible). Chaque NFT possède un identifiant unique : il n'est pas interchangeable à l'unité, contrairement à 1 bitcoin = 1 bitcoin. C'est ce qui permet de représenter une pièce « unique ».",
+      "Posséder un NFT ne te donne PAS les droits d'auteur par défaut : sauf licence explicite, tu détiens un jeton de propriété/authenticité, pas la propriété intellectuelle de l'œuvre. C'est un malentendu très répandu. Les trois autres affirmations sont exactes.",
   },
   {
-    id: "nft-q2-standard",
-    question: "Quel standard technique est le plus associé aux NFT sur Ethereum ?",
+    id: "nft-q2-standards",
+    question: "Quelle est la bonne distinction entre les standards de jetons Ethereum ?",
     choices: [
-      "ERC-20 (jetons fongibles).",
-      "ERC-721 (et ERC-1155 pour le semi-fongible).",
-      "HTTP.",
-      "SHA-256.",
+      "Ce sont tous des synonymes du même standard.",
+      "ERC-20 = jetons fongibles ; ERC-721 = non fongibles (NFT) ; ERC-1155 = semi-fongible (gère les deux dans un même contrat).",
+      "ERC-721 sert à émettre des stablecoins.",
+      "ERC-1155 est un mécanisme de consensus comme le Proof of Stake.",
     ],
     correctIndex: 1,
     explanation:
-      "L'ERC-721 est le standard de référence des NFT sur Ethereum ; l'ERC-1155 gère des collections mêlant unités uniques et quantités. L'ERC-20, lui, sert aux jetons fongibles (comme les stablecoins).",
+      "L'ERC-20 régit les jetons fongibles (stablecoins, tokens de gouvernance) ; l'ERC-721 les NFT uniques ; l'ERC-1155 permet à un seul contrat de gérer des unités uniques ET fongibles (pratique pour les jeux).",
   },
   {
     id: "nft-q3-web3",
-    question: "Que désigne le terme « Web3 » ?",
+    question: "Qu'est-ce qui distingue le mieux le « Web3 » du Web2 actuel ?",
     choices: [
-      "La troisième version du navigateur Chrome.",
-      "Une vision d'un web décentralisé où l'utilisateur contrôle ses données et ses actifs via la blockchain et son wallet.",
-      "Un langage de programmation.",
-      "Un réseau social précis.",
+      "Le Web3 est simplement une nouvelle version d'un navigateur.",
+      "Dans le Web3, l'utilisateur détient ses données et ses actifs via son wallet, au lieu d'en confier le contrôle à une plateforme centrale.",
+      "Le Web3 supprime tous les intermédiaires de la vie quotidienne.",
+      "Le Web3 garantit des gains financiers à ses utilisateurs.",
     ],
     correctIndex: 1,
     explanation:
-      "Le Web3 décrit un internet où la propriété (données, actifs) revient à l'utilisateur via la blockchain et les wallets, par opposition au Web2 dominé par quelques plateformes centralisées. C'est une vision en construction, pas une révolution achevée.",
+      "Le Web3 vise un internet où la propriété revient à l'utilisateur via la blockchain et les wallets, par opposition au Web2 dominé par quelques plateformes. C'est une vision en construction, pas une promesse de gains ni une révolution déjà achevée.",
   },
   {
-    id: "nft-q4-wallet",
-    question: "Qu'implique l'utilisation d'un wallet non-custodial (comme MetaMask) ?",
+    id: "nft-q4-wallet-scenario",
+    question:
+      "Tu utilises MetaMask (wallet non-custodial) et tu perds ta seed phrase. Que se passe-t-il ?",
     choices: [
-      "Une société détient tes clés et peut récupérer tes fonds si tu oublies ton mot de passe.",
-      "Tu détiens toi-même tes clés privées : personne d'autre ne peut bouger tes fonds, mais tu es seul responsable de ta seed phrase.",
-      "Tes cryptos sont garanties par l'État.",
-      "Tu ne peux pas recevoir de NFT.",
+      "Tu cliques sur « mot de passe oublié » pour la régénérer.",
+      "Personne ne peut récupérer l'accès : en self-custody, la seed phrase est l'unique clé de tes fonds.",
+      "MetaMask te la renvoie par email après vérification d'identité.",
+      "Tu contactes le support pour réinitialiser ton compte.",
     ],
     correctIndex: 1,
     explanation:
-      "Avec un wallet non-custodial, tu es ta propre banque : tu contrôles tes clés. L'avers de la médaille, c'est qu'il n'y a aucun « mot de passe oublié » — si tu perds ta seed phrase, personne ne peut récupérer tes fonds.",
+      "Un wallet non-custodial fait de toi ta propre banque : aucun « mot de passe oublié », aucun support qui réinitialise. Perdre la seed phrase = perdre l'accès définitivement. D'où l'importance d'un backup hors-ligne soigné.",
   },
   {
     id: "nft-q5-dao",
-    question: "Qu'est-ce qu'une DAO ?",
+    question: "Comment fonctionne la gouvernance d'une DAO ?",
     choices: [
-      "Une autorité de régulation européenne.",
-      "Une organisation autonome décentralisée, où les décisions sont prises par les détenteurs de jetons via des votes inscrits sur la blockchain.",
-      "Un type de stablecoin.",
-      "Une bourse centralisée.",
+      "Un PDG prend toutes les décisions seul.",
+      "Les détenteurs de jetons de gouvernance votent les décisions, exécutées on-chain via des smart contracts.",
+      "C'est une autorité de régulation publique européenne.",
+      "Les décisions sont prises par la plateforme d'échange qui héberge le jeton.",
     ],
     correctIndex: 1,
     explanation:
-      "Une DAO (Decentralized Autonomous Organization) est gouvernée par sa communauté : les détenteurs de jetons de gouvernance votent les décisions, exécutées par des smart contracts. La qualité de gouvernance varie énormément d'une DAO à l'autre.",
+      "Une DAO (Decentralized Autonomous Organization) est gouvernée par sa communauté : les détenteurs de jetons votent (Snapshot, Tally…) et les décisions s'exécutent on-chain. Attention : la qualité réelle de gouvernance varie énormément d'une DAO à l'autre.",
   },
 ];
 

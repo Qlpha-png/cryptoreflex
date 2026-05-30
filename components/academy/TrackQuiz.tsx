@@ -35,6 +35,33 @@ interface TrackQuizProps {
 
 type Phase = "playing" | "results";
 
+/**
+ * Ordre d'affichage des réponses, mélangé de façon DÉTERMINISTE à partir de
+ * l'id de la question (PRNG mulberry32 seedé par un hash FNV-1a de l'id).
+ * Déterministe = identique côté serveur et client (aucun mismatch d'hydratation),
+ * mais varié d'une question à l'autre : la bonne réponse n'est jamais toujours
+ * à la même position. Le scoring continue d'utiliser l'index ORIGINAL.
+ */
+function seededOrder(id: string, n: number): number[] {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const rand = () => {
+    h = (h + 0x6d2b79f5) | 0;
+    let t = Math.imul(h ^ (h >>> 15), 1 | h);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const arr = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export default function TrackQuiz({
   trackId,
   trackTitle,
@@ -56,6 +83,11 @@ export default function TrackQuiz({
         0
       ),
     [answers, questions]
+  );
+  // Ordre mélangé (déterministe) des réponses, par question.
+  const orders = useMemo(
+    () => questions.map((qq) => seededOrder(qq.id, qq.choices.length)),
+    [questions]
   );
   const passed = score >= PASSING_SCORE;
   const nextTrack = getNextTrack(trackId);
@@ -167,11 +199,12 @@ export default function TrackQuiz({
 
         <fieldset className="mt-5 space-y-3">
           <legend className="sr-only">Choix de réponse pour : {q.question}</legend>
-          {q.choices.map((choice, idx) => {
-            const isSelected = userAnswer === idx;
+          {orders[currentIdx].map((origIdx, pos) => {
+            const choice = q.choices[origIdx];
+            const isSelected = userAnswer === origIdx;
             return (
               <label
-                key={idx}
+                key={origIdx}
                 className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm transition-colors ${
                   isSelected
                     ? "border-primary/60 bg-primary/10"
@@ -181,11 +214,11 @@ export default function TrackQuiz({
                 <input
                   type="radio"
                   name={q.id}
-                  value={idx}
+                  value={origIdx}
                   checked={isSelected}
-                  onChange={() => selectAnswer(idx)}
+                  onChange={() => selectAnswer(origIdx)}
                   className="mt-0.5 h-4 w-4 cursor-pointer accent-primary"
-                  aria-label={`Choix ${idx + 1} : ${choice}`}
+                  aria-label={`Choix ${pos + 1} : ${choice}`}
                 />
                 <span className="flex-1 text-fg/90">{choice}</span>
               </label>
@@ -304,9 +337,10 @@ export default function TrackQuiz({
                   {/* Toutes les options, color-codées : l'apprenti voit
                       exactement où il a juste et où il s'est trompé. */}
                   <ul className="mt-3 space-y-1.5" aria-label="Correction des choix">
-                    {q.choices.map((choice, idx) => {
-                      const isCorrectChoice = idx === q.correctIndex;
-                      const isUserChoice = idx === userAns;
+                    {orders[i].map((origIdx) => {
+                      const choice = q.choices[origIdx];
+                      const isCorrectChoice = origIdx === q.correctIndex;
+                      const isUserChoice = origIdx === userAns;
                       const cls = isCorrectChoice
                         ? "border-success-fg/50 bg-success-fg/10 text-fg"
                         : isUserChoice
@@ -314,7 +348,7 @@ export default function TrackQuiz({
                           : "border-border bg-background/30 text-fg/55";
                       return (
                         <li
-                          key={idx}
+                          key={origIdx}
                           className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${cls}`}
                         >
                           {isCorrectChoice ? (
