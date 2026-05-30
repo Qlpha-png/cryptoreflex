@@ -407,7 +407,7 @@
         "openSource": false,
         "openSourceScore": 0
       },
-      "notes": "Conseil de gouvernance Hedera : ~32 nodes opérés par membres pré-sélectionnés (Google, IBM, Boeing…). Permissionless layer en cours. Code des nodes principaux pas totalement open-source. Hashgraph breveté.",
+      "notes": "Conseil de gouvernance Hedera : jusqu'à 39 membres pré-sélectionnés opérant les nodes (Google, IBM, Boeing…), ~32 actifs à ce jour. Permissionless layer en cours. Code des nodes principaux pas totalement open-source. Hashgraph breveté.",
       "lastVerified": "2026-04"
     },
     "filecoin": {

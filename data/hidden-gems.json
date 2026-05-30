@@ -745,8 +745,8 @@
       "marketCapRange": "5Md$ - 12Md$",
       "yearCreated": 2019,
       "category": "Layer 1 / DLT enterprise",
-      "tagline": "La DLT enterprise gouvernée par Google, IBM, Boeing et 30+ multinationales",
-      "what": "Hedera n'est pas une blockchain classique mais un DLT (Distributed Ledger) base sur l'algorithme Hashgraph (consensus aBFT). Elle est gouvernée par un Conseil de 39 membres (Google, IBM, Boeing, LG, Standard Bank, Deutsche Telekom...) qui gèrent les nœuds.",
+      "tagline": "La DLT enterprise gouvernée par Google, IBM, Boeing et jusqu'à 39 multinationales",
+      "what": "Hedera n'est pas une blockchain classique mais un DLT (Distributed Ledger) base sur l'algorithme Hashgraph (consensus aBFT). Elle est gouvernée par un Conseil pouvant compter jusqu'à 39 membres (Google, IBM, Boeing, LG, Standard Bank, Deutsche Telekom...) qui gèrent les nœuds.",
       "whyHiddenGem": "Adoption enterprise réelle (tokenisation par Standard Bank, identité par Avery Dennison). Frais ultra-bas (0.0001$). Fait partie des rares blockchains conformes a la réglementation US et MiCA. Carbon negative officiellement.",
       "reliability": {
         "score": 8,
@@ -765,7 +765,7 @@
         ]
       },
       "risks": [
-        "Modèle permissionné : seuls 39 membres du Council gèrent les nœuds (décentralisation limitée)",
+        "Modèle permissionné : jusqu'à 39 membres du Council gèrent les nœuds (décentralisation limitée)",
         "Brevets historiques sur Hashgraph détenus par Hedera (perception 'pas vraiment ouvert')",
         "Concurrence des chains permissionnées (Quorum, Corda) côté enterprise"
       ],

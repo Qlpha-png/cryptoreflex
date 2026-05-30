@@ -84,10 +84,22 @@ export async function POST(req: NextRequest) {
       type: event.type,
     });
 
-  if (insertError && insertError.code === "23505") {
-    // Duplicate key = event déjà traité
-    console.log(`[stripe-webhook] Event ${event.id} déjà traité, skip`);
-    return NextResponse.json({ received: true, idempotent: true });
+  if (insertError) {
+    if (insertError.code === "23505") {
+      // Duplicate key = event déjà traité avec succès → skip idempotent.
+      console.log(`[stripe-webhook] Event ${event.id} déjà traité, skip`);
+      return NextResponse.json({ received: true, idempotent: true });
+    }
+    // FIX 2026-05-30 — toute AUTRE erreur d'INSERT (DB down, table absente) :
+    // on NE traite PAS sans garantie d'idempotence. 500 → Stripe re-livre quand
+    // la DB est rétablie (sinon risque de double traitement au retry).
+    Sentry.captureException(insertError, {
+      tags: { route: "stripe/webhook", stage: "idempotency-insert" },
+      extra: { eventId: event.id, code: insertError.code },
+      level: "error",
+    });
+    console.error("[stripe-webhook] Idempotency store error:", insertError.message);
+    return NextResponse.json({ error: "Idempotency store unavailable" }, { status: 500 });
   }
 
   // Breadcrumb pour corréler les errors aux événements Stripe traités.
@@ -149,6 +161,14 @@ export async function POST(req: NextRequest) {
       level: "error",
     });
     console.error(`[stripe-webhook] Handler error for ${event.type}:`, message);
+    // FIX 2026-05-30 (bug P0 paiement) — le handler a échoué APRÈS avoir posé le
+    // verrou d'idempotence. On RETIRE le verrou pour que le retry Stripe (déclenché
+    // par ce 500) re-traite l'event — sinon l'utilisateur peut PAYER sans jamais
+    // être upgradé en Pro.
+    await supabase
+      .from("stripe_webhook_events")
+      .delete()
+      .eq("event_id", event.id);
     return NextResponse.json(
       { error: "Internal handler error" },
       { status: 500 }
