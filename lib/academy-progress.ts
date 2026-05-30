@@ -236,3 +236,34 @@ export function isQuizPassed(trackId: string): boolean {
     return false;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Niveau auto-déclaré — guide (SOFT) le point de départ du cursus           */
+/*  Ne cache/verrouille RIEN : sert juste à recommander un parcours d'entrée. */
+/* -------------------------------------------------------------------------- */
+
+export type AcademyLevel = "debutant" | "intermediaire" | "avance";
+const LEVEL_KEY = "cr.academy.level";
+
+/** Niveau choisi par l'utilisateur (null si non renseigné). */
+export function getAcademyLevel(): AcademyLevel | null {
+  if (!hasStorage()) return null;
+  try {
+    const v = window.localStorage.getItem(LEVEL_KEY);
+    return v === "debutant" || v === "intermediaire" || v === "avance"
+      ? v
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Mémorise le niveau auto-déclaré (localStorage). */
+export function setAcademyLevel(level: AcademyLevel): void {
+  if (!hasStorage()) return;
+  try {
+    window.localStorage.setItem(LEVEL_KEY, level);
+  } catch {
+    /* noop */
+  }
+}

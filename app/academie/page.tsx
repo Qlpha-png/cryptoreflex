@@ -25,6 +25,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import { TRACKS } from "@/lib/academy-tracks";
 import TrackCard from "@/components/academy/TrackCard";
+import AcademyLevelGuide from "@/components/academy/AcademyLevelGuide";
 import StructuredData from "@/components/StructuredData";
 import FAQ from "@/components/mdx/FAQ";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -200,6 +201,11 @@ export default function AcademiePage() {
             text="Tout le contenu intègre la régulation MiCA Phase 2 et la fiscalité française 2026 (PFU, 2086, 3916-bis, BIC/BNC)."
           />
         </section>
+
+        {/* Sélecteur de niveau (soft gating) — guide le point de départ sans rien cacher */}
+        <div className="mb-16">
+          <AcademyLevelGuide />
+        </div>
 
         {/* Cards des parcours */}
         <section id="parcours" aria-labelledby="parcours-h" className="mb-16">
