@@ -62,7 +62,7 @@ Comprendre le déroulé complet permet de repérer à quel moment exactement la 
 **Étape 4 — Le drainage automatique.** Le kit wallet drainer récupère ta signature, la soumet au smart contract malveillant, et déclenche immédiatement le transfert de tes actifs vers l'adresse de l'attaquant. L'ensemble du processus prend quelques secondes. Les tokens sont ensuite dispersés via des services de mixage ou des bridges cross-chain pour brouiller les pistes.
 
 <Callout type="info" title="Inferno Drainer : l'arnaque industrialisée">
-Inferno Drainer est l'un des kits de wallet drainer les plus documentés. Actif depuis novembre 2022, il fonctionne sur un modèle de **scam-as-a-service** (arnaque clé en main louée à des affiliés) : n'importe qui peut louer le kit et lancer sa propre campagne de faux airdrops, moyennant une commission d'environ 20 % sur les fonds volés reversée aux développeurs du kit. Selon ses propres opérateurs (données relayées par Check Point Research et Decrypt en mai 2024), le kit aurait permis de voler plus de 250 millions de dollars au total. Ce chiffre illustre l'ampleur industrielle du phénomène — ce ne sont pas des arnaques artisanales, ce sont des opérations structurées.
+Inferno Drainer est l'un des kits de wallet drainer les plus documentés. Actif depuis novembre 2022, il fonctionne sur un modèle de **scam-as-a-service** (arnaque clé en main louée à des affiliés) : n'importe qui peut louer le kit et lancer sa propre campagne de faux airdrops, les développeurs du kit prélevant environ 20 % des fonds volés et l'affilié qui lance l'attaque conservant les 80 % restants. Selon ses propres opérateurs (données relayées par Check Point Research et Decrypt en mai 2024), le kit aurait permis de voler plus de 250 millions de dollars au total. Ce chiffre illustre l'ampleur industrielle du phénomène — ce ne sont pas des arnaques artisanales, ce sont des opérations structurées.
 </Callout>
 
 ## Pourquoi les signatures Permit sont particulièrement piégeuses
@@ -72,7 +72,7 @@ Les **signatures Permit** (également appelées EIP-2612) méritent une attentio
 Contrairement à une approbation classique, une signature Permit :
 - Ne génère **pas de transaction on-chain** au moment de la signature (donc pas de frais de gas, pas d'alerte visuelle dans l'explorateur)
 - Apparaît dans ton wallet comme un simple "message à signer", sans indicateur visuel de danger
-- Peut autoriser un contrat à déplacer **tous tes tokens d'un type donné**, pas seulement une quantité définie
+- Autorise un contrat à déplacer le montant signé d'un token — et les escrocs forgent ce montant à la valeur maximale possible, ce qui revient à vider tout ton solde de ce token
 - N'est pas réversible une fois soumise au contrat malveillant
 
 Selon les données 2024 de Group-IB, les signatures de type Permit et les approbations malveillantes sont impliquées dans environ 56,7 % des cas de grosses pertes liées aux wallet drainers. C'est le vecteur dominant — pas le vol de seed phrase.
@@ -80,7 +80,7 @@ Selon les données 2024 de Group-IB, les signatures de type Permit et les approb
 | Type d'autorisation | Transaction on-chain requise | Frais de gas visibles | Révocable avant exécution |
 |---|---|---|---|
 | Token approval classique | Oui | Oui | Oui (via revoke.cash) |
-| Signature Permit (EIP-2612) | Non | Non | Non une fois soumise |
+| Signature Permit (EIP-2612) | Non | Non | Non (après soumission on-chain) |
 | Signature de message ordinaire | Non | Non | Sans objet (pas de transfert) |
 
 La signature Permit est d'autant plus dangereuse qu'elle ressemble à une signature de message ordinaire — inoffensive en apparence. La distinction est dans le contenu exact du message. C'est pourquoi **lire ce que tu signes** n'est pas optionnel.

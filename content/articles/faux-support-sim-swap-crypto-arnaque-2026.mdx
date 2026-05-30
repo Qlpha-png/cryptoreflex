@@ -104,7 +104,7 @@ Le tableau ci-dessous compare les trois niveaux de protection disponibles pour s
 
 Le **TOTP** (Time-based One-Time Password : code à usage unique basé sur l'heure, généré par une application) élimine le risque SIM-swap car le code est calculé sur ton appareil, pas envoyé via réseau mobile. Une application comme **Aegis** (Android, open source) ou Google Authenticator génère un code valable 30 secondes à partir d'une clé partagée au moment de l'activation. Personne ne peut intercepter un SMS parce qu'il n'y a pas de SMS.
 
-La clé physique (type **YubiKey**) va plus loin : elle est liée physiquement au domaine du site. Même si tu es sur un faux site qui ressemble à Binance, la clé détecte que le domaine ne correspond pas et refuse l'authentification. C'est la seule méthode résistante au phishing de façon structurelle.
+La clé physique (type **YubiKey**) va plus loin : l'authentification est liée cryptographiquement au domaine officiel (protocole FIDO2/WebAuthn). Sur un faux site qui ressemble à Binance, la signature générée n'est jamais valide pour le vrai site — le phishing est neutralisé par construction. C'est la seule méthode résistante au phishing de façon structurelle.
 
 <Callout type="success" title="Migration TOTP : moins de 10 minutes">
 Prends n'importe quel compte exchange que tu utilises. Va dans les paramètres de sécurité, désactive le 2FA par SMS, active le 2FA par application, scanne le QR code avec Aegis ou Google Authenticator. Note les codes de secours sur papier, range-les physiquement. C'est fait. Cette action seule élimine le risque SIM-swap sur ce compte.
