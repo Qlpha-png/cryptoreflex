@@ -355,7 +355,7 @@ export default function RootLayout({
             "@context": "https://schema.org",
             "@type": "SiteNavigationElement",
             name: [
-              "Comparer", "Actualités", "Apprendre", "Outils", "Quiz", "Marché",
+              "Comparer", "Actualités", "Académie", "Outils", "Quiz", "Marché",
             ],
             url: [
               `${BRAND.url}/comparatif`,
