@@ -18,6 +18,7 @@ import {
   Shield,
   Landmark,
   Scale,
+  Coins,
 } from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
@@ -28,6 +29,7 @@ const ICONS = {
   shield: Shield,
   landmark: Landmark,
   scale: Scale,
+  coins: Coins,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

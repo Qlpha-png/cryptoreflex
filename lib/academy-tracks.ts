@@ -27,7 +27,8 @@ export type TrackId =
   | "avance"
   | "securite"
   | "fiscalite"
-  | "plateformes";
+  | "plateformes"
+  | "defi";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -61,7 +62,8 @@ export interface Track {
     | "rocket"
     | "shield"
     | "landmark"
-    | "scale";
+    | "scale"
+    | "coins";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -149,6 +151,20 @@ const TRACK_DEBUTANT: Track = {
       title: "MiCA expliqué simplement",
       durationMin: 8,
       prereqs: [],
+    },
+    {
+      order: 10,
+      articleSlug: "bitcoin-guide-complet-debutant-2026",
+      title: "Bitcoin : le guide complet du débutant",
+      durationMin: 20,
+      prereqs: ["qu-est-ce-que-la-blockchain-guide-ultra-simple-2026"],
+    },
+    {
+      order: 11,
+      articleSlug: "acheter-bitcoin-100-euros-france-2026",
+      title: "Acheter du Bitcoin avec 100 € (budget débutant)",
+      durationMin: 12,
+      prereqs: ["comment-acheter-bitcoin-france-2026-guide-debutant"],
     },
   ],
 };
@@ -247,6 +263,34 @@ const TRACK_INTERMEDIAIRE: Track = {
       title: "MiCA juillet 2026 : checklist de survie",
       durationMin: 11,
       prereqs: ["mica-regulation-europe-2026"],
+    },
+    {
+      order: 12,
+      articleSlug: "acheter-bnb-france-2026-guide",
+      title: "Acheter du BNB en France",
+      durationMin: 13,
+      prereqs: ["meilleure-plateforme-crypto-debutant-france-2026"],
+    },
+    {
+      order: 13,
+      articleSlug: "acheter-cardano-ada-france-2026-guide",
+      title: "Acheter du Cardano (ADA) en France",
+      durationMin: 13,
+      prereqs: [],
+    },
+    {
+      order: 14,
+      articleSlug: "acheter-xrp-france-2026-guide",
+      title: "Acheter du XRP en France",
+      durationMin: 13,
+      prereqs: [],
+    },
+    {
+      order: 15,
+      articleSlug: "bitcoin-dominance-comprendre-utiliser-2026",
+      title: "Bitcoin dominance : lire le marché",
+      durationMin: 11,
+      prereqs: [],
     },
   ],
 };
@@ -352,6 +396,13 @@ const TRACK_AVANCE: Track = {
       title: "Plateformes à risque MiCA : alternatives",
       durationMin: 14,
       prereqs: ["mica-juillet-2026-checklist-survie"],
+    },
+    {
+      order: 13,
+      articleSlug: "qu-est-ce-qu-une-dao-fonctionnement-exemples-2026",
+      title: "DAO : gouvernance décentralisée expliquée",
+      durationMin: 14,
+      prereqs: [],
     },
   ],
 };
@@ -664,6 +715,34 @@ const TRACK_PLATEFORMES: Track = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Parcours thématique — DeFi en profondeur (v2 académie)                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track DeFi en profondeur — 6 leçons, ~1h30.
+ * Cible : tu as les bases, tu veux comprendre la finance décentralisée et les
+ * usages on-chain avancés (Layer 2, Lightning, staking) + leur fiscalité.
+ */
+const TRACK_DEFI: Track = {
+  id: "defi",
+  title: "DeFi en profondeur",
+  description:
+    "Comprendre la finance décentralisée et les usages on-chain avancés : Layer 2, Lightning, staking — et leur fiscalité française. Pour passer de simple détenteur à utilisateur averti.",
+  level: "Advanced",
+  estimatedHours: 1.5,
+  accentClass: "from-teal-500/30 to-emerald-600/20 border-teal-500/40",
+  iconKey: "coins",
+  lessons: [
+    { order: 1, articleSlug: "defi-pour-debutants-savoir-avant-commencer-2026", title: "DeFi : ce qu'il faut savoir avant de commencer", durationMin: 13, prereqs: [] },
+    { order: 2, articleSlug: "arbitrum-optimism-base-comparatif-layer-2-2026", title: "Layer 2 comparés : Arbitrum, Optimism, Base", durationMin: 14, prereqs: [] },
+    { order: 3, articleSlug: "lightning-network-bitcoin-comprendre-utiliser-2026", title: "Lightning Network : Bitcoin instantané", durationMin: 15, prereqs: [] },
+    { order: 4, articleSlug: "staking-eth-vs-sol-vs-ada-2026", title: "Staking comparé : ETH vs SOL vs ADA", durationMin: 13, prereqs: [] },
+    { order: 5, articleSlug: "fiscalite-staking-eth-sol-ada-france-2026-guide-complet", title: "Fiscalité du staking en France", durationMin: 17, prereqs: ["staking-eth-vs-sol-vs-ada-2026"] },
+    { order: 6, articleSlug: "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique", title: "Fiscalité DeFi : BIC ou BNC ?", durationMin: 18, prereqs: ["defi-pour-debutants-savoir-avant-commencer-2026"] },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -671,6 +750,7 @@ export const TRACKS: Track[] = [
   TRACK_DEBUTANT,
   TRACK_INTERMEDIAIRE,
   TRACK_AVANCE,
+  TRACK_DEFI,
   TRACK_SECURITE,
   TRACK_FISCALITE,
   TRACK_PLATEFORMES,
@@ -681,6 +761,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   debutant: TRACK_DEBUTANT,
   intermediaire: TRACK_INTERMEDIAIRE,
   avance: TRACK_AVANCE,
+  defi: TRACK_DEFI,
   securite: TRACK_SECURITE,
   fiscalite: TRACK_FISCALITE,
   plateformes: TRACK_PLATEFORMES,
