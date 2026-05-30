@@ -32,7 +32,8 @@ export type TrackId =
   | "arnaques"
   | "marche"
   | "trading"
-  | "nft-web3";
+  | "nft-web3"
+  | "stablecoins";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -71,7 +72,8 @@ export interface Track {
     | "alert"
     | "chart"
     | "candlestick"
-    | "palette";
+    | "palette"
+    | "banknote";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -1034,6 +1036,36 @@ const TRACK_NFT_WEB3: Track = {
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Stablecoins (v2 académie, 30/05/2026)               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Stablecoins — 5 leçons, ~1h30.
+ * Cible : tout détenteur. Le pont entre crypto et euro : définition et familles
+ * (USDT/USDC/DAI), comment en acheter, le cadre MiCA/euro, les risques (dépeg,
+ * réserves, contrepartie) et les usages concrets + la fiscalité française.
+ * Réutilise 2 articles existants (acheter USDC/USDT, comparatif euro MiCA) + 3
+ * articles dédiés rédigés et fact-checkés pour ce parcours.
+ */
+const TRACK_STABLECOINS: Track = {
+  id: "stablecoins",
+  title: "Stablecoins",
+  description:
+    "Le pont entre la crypto et l'euro. Comprendre les stablecoins (USDT, USDC, DAI), comment en acheter, le cadre MiCA, leurs vrais risques (dépeg, réserves) et comment les utiliser — fiscalité française incluse.",
+  level: "Intermediate",
+  estimatedHours: 1.5,
+  accentClass: "from-sky-500/30 to-blue-600/20 border-sky-500/40",
+  iconKey: "banknote",
+  lessons: [
+    { order: 1, articleSlug: "qu-est-ce-qu-un-stablecoin-guide-debutant-2026", title: "Qu'est-ce qu'un stablecoin ?", durationMin: 9, prereqs: [] },
+    { order: 2, articleSlug: "acheter-usdc-usdt-france-2026-stablecoins", title: "Acheter des stablecoins (USDC, USDT)", durationMin: 11, prereqs: ["qu-est-ce-qu-un-stablecoin-guide-debutant-2026"] },
+    { order: 3, articleSlug: "stablecoins-euro-mica-compliant-comparatif-2026", title: "Stablecoins euro & MiCA : le comparatif", durationMin: 12, prereqs: [] },
+    { order: 4, articleSlug: "risques-stablecoins-depeg-reserves-2026", title: "Les risques : dépeg, réserves, contrepartie", durationMin: 9, prereqs: ["qu-est-ce-qu-un-stablecoin-guide-debutant-2026"] },
+    { order: 5, articleSlug: "utiliser-stablecoins-strategie-2026", title: "Utiliser les stablecoins (et la fiscalité)", durationMin: 10, prereqs: ["risques-stablecoins-depeg-reserves-2026"] },
+  ],
+};
+
 export const TRACKS: Track[] = [
   TRACK_DEBUTANT,
   TRACK_INTERMEDIAIRE,
@@ -1046,6 +1078,7 @@ export const TRACKS: Track[] = [
   TRACK_MARCHE,
   TRACK_TRADING,
   TRACK_NFT_WEB3,
+  TRACK_STABLECOINS,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -1061,6 +1094,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   marche: TRACK_MARCHE,
   trading: TRACK_TRADING,
   "nft-web3": TRACK_NFT_WEB3,
+  stablecoins: TRACK_STABLECOINS,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */
@@ -1115,6 +1149,7 @@ export const CURSUS_ORDER: TrackId[] = [
   "arnaques",
   "plateformes",
   "fiscalite",
+  "stablecoins",
   "marche",
   "trading",
   "defi",
@@ -1184,8 +1219,8 @@ export const TRACK_GROUPS: TrackGroup[] = [
     id: "investir",
     title: "Choisir & déclarer",
     subtitle:
-      "Sélectionner une plateforme régulée MiCA et déclarer correctement en France.",
-    trackIds: ["plateformes", "fiscalite"],
+      "Plateforme régulée MiCA, stablecoins et fiscalité française : gérer concrètement tes avoirs.",
+    trackIds: ["plateformes", "fiscalite", "stablecoins"],
   },
   {
     id: "web3",

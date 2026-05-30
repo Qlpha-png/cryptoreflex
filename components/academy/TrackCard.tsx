@@ -23,6 +23,7 @@ import {
   BarChart3,
   CandlestickChart,
   Palette,
+  Banknote,
 } from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
@@ -38,6 +39,7 @@ const ICONS = {
   chart: BarChart3,
   candlestick: CandlestickChart,
   palette: Palette,
+  banknote: Banknote,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

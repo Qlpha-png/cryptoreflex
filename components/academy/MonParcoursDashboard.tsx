@@ -33,6 +33,7 @@ import {
   BarChart3,
   CandlestickChart,
   Palette,
+  Banknote,
   RefreshCw,
 } from "lucide-react";
 import {
@@ -64,6 +65,7 @@ const ICONS = {
   chart: BarChart3,
   candlestick: CandlestickChart,
   palette: Palette,
+  banknote: Banknote,
 } as const;
 
 const LEVEL_LABELS = {
