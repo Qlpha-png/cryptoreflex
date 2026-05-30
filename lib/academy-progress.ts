@@ -425,6 +425,47 @@ export function exportAcademyData(): string {
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Partage de certificats — lien encodé, 0 backend, 0 PII obligatoire        */
+/*  Payload : { v:1, t: trackIds[], n?: prénom optionnel saisi par l'user }   */
+/* -------------------------------------------------------------------------- */
+
+export interface CertSharePayload {
+  v: 1;
+  t: string[];
+  n?: string;
+}
+
+/** Encode la liste des parcours validés (+ prénom optionnel) en code base64. */
+export function encodeCertShare(trackIds: string[], name?: string): string {
+  const clean = trackIds.filter((x) => typeof x === "string" && x.length > 0);
+  const payload: CertSharePayload = { v: 1, t: clean };
+  const trimmed = name?.trim();
+  if (trimmed) payload.n = trimmed.slice(0, 40);
+  try {
+    // encodeURIComponent + unescape : btoa() ne gère pas l'UTF-8 (accents) seul.
+    return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  } catch {
+    return "";
+  }
+}
+
+/** Décode un code de partage. Renvoie null si invalide. */
+export function decodeCertShare(code: string): CertSharePayload | null {
+  try {
+    const json = decodeURIComponent(escape(atob(code.trim())));
+    const obj = JSON.parse(json) as CertSharePayload;
+    if (!obj || !Array.isArray(obj.t)) return null;
+    return {
+      v: 1,
+      t: obj.t.filter((x) => typeof x === "string"),
+      n: typeof obj.n === "string" ? obj.n.slice(0, 40) : undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** Restaure la progression depuis un code exporté. Renvoie true si au moins une clé restaurée. */
 export function importAcademyData(code: string): boolean {
   if (!hasStorage()) return false;

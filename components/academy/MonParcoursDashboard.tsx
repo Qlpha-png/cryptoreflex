@@ -50,6 +50,7 @@ import {
   touchStreak,
 } from "@/lib/academy-progress";
 import ProgressBackupCard from "@/components/academy/ProgressBackupCard";
+import CertificateShareButton from "@/components/academy/CertificateShareButton";
 
 const ICONS = {
   sprout: Sprout,
@@ -387,6 +388,11 @@ export default function MonParcoursDashboard() {
                 </li>
               ))}
           </ul>
+
+          {/* Partage (lien encodé, sans PII imposée) */}
+          <CertificateShareButton
+            certifiedTrackIds={rows.filter((r) => r.certified).map((r) => r.track.id)}
+          />
         </section>
       )}
 
