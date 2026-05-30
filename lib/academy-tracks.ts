@@ -33,7 +33,8 @@ export type TrackId =
   | "marche"
   | "trading"
   | "nft-web3"
-  | "stablecoins";
+  | "stablecoins"
+  | "staking";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -1066,6 +1067,36 @@ const TRACK_STABLECOINS: Track = {
   ],
 };
 
+/* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Staking & rendement (v2 académie, 30/05/2026)        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Staking & rendement — 5 leçons, ~1h30.
+ * Cible : détenteur qui veut faire travailler ses cryptos. Comprendre le
+ * staking (Proof of Stake), comparer les réseaux, mesurer les VRAIS risques
+ * (slashing, blocage, liquid staking, custodial) et choisir sa méthode —
+ * fiscalité française incluse. 3 articles dédiés fact-checkés + 2 existants
+ * (comparatif réseaux, fiscalité du staking).
+ */
+const TRACK_STAKING: Track = {
+  id: "staking",
+  title: "Staking & rendement",
+  description:
+    "Faire travailler ses cryptos sans se faire avoir. Comprendre le staking (Proof of Stake), comparer les réseaux, mesurer les vrais risques (slashing, blocage, liquid staking) et choisir sa méthode — fiscalité française incluse.",
+  level: "Advanced",
+  estimatedHours: 1.5,
+  accentClass: "from-violet-500/30 to-purple-600/20 border-violet-500/40",
+  iconKey: "coins",
+  lessons: [
+    { order: 1, articleSlug: "qu-est-ce-que-le-staking-guide-debutant-2026", title: "Qu'est-ce que le staking ?", durationMin: 10, prereqs: [] },
+    { order: 2, articleSlug: "staking-eth-vs-sol-vs-ada-2026", title: "Staking comparé : ETH vs SOL vs ADA", durationMin: 13, prereqs: ["qu-est-ce-que-le-staking-guide-debutant-2026"] },
+    { order: 3, articleSlug: "risques-staking-slashing-liquidite-2026", title: "Les risques : slashing, blocage, liquid staking", durationMin: 10, prereqs: ["qu-est-ce-que-le-staking-guide-debutant-2026"] },
+    { order: 4, articleSlug: "staking-comment-commencer-exchange-vs-solo-2026", title: "Commencer : exchange, liquid staking ou solo ?", durationMin: 11, prereqs: ["risques-staking-slashing-liquidite-2026"] },
+    { order: 5, articleSlug: "fiscalite-staking-eth-sol-ada-france-2026-guide-complet", title: "Fiscalité du staking en France", durationMin: 17, prereqs: ["qu-est-ce-que-le-staking-guide-debutant-2026"] },
+  ],
+};
+
 export const TRACKS: Track[] = [
   TRACK_DEBUTANT,
   TRACK_INTERMEDIAIRE,
@@ -1079,6 +1110,7 @@ export const TRACKS: Track[] = [
   TRACK_TRADING,
   TRACK_NFT_WEB3,
   TRACK_STABLECOINS,
+  TRACK_STAKING,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -1095,6 +1127,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   trading: TRACK_TRADING,
   "nft-web3": TRACK_NFT_WEB3,
   stablecoins: TRACK_STABLECOINS,
+  staking: TRACK_STAKING,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */
@@ -1153,6 +1186,7 @@ export const CURSUS_ORDER: TrackId[] = [
   "marche",
   "trading",
   "defi",
+  "staking",
   "nft-web3",
 ];
 
@@ -1226,8 +1260,8 @@ export const TRACK_GROUPS: TrackGroup[] = [
     id: "web3",
     title: "Aller plus loin — Web3",
     subtitle:
-      "DeFi, NFT et applications décentralisées : les usages avancés, sans bullshit.",
-    trackIds: ["defi", "nft-web3"],
+      "DeFi, staking, NFT et applications décentralisées : les usages avancés, sans bullshit.",
+    trackIds: ["defi", "staking", "nft-web3"],
   },
 ];
 
