@@ -230,3 +230,12 @@ La passphrase BIP39 est une fonctionnalité de sécurité avancée. **Une passph
 - [NIST — PBKDF2 spécification](https://csrc.nist.gov/publications/detail/sp/800-132/final)
 
 La passphrase BIP39 est probablement la **meilleure feature gratuite** des hardware wallets. Elle ajoute une couche de sécurité quasi-incassable contre les attaques physiques, sans coût financier. Mais elle exige rigueur opérationnelle : test, sauvegarde, et pleine conscience du risque "passphrase perdue = fonds perdus". Si tu es à l'aise avec ces contraintes, active-la. Si tu doutes, reste sur les 24 mots seuls bien sécurisés — c'est déjà excellent.
+
+
+<KeyTakeaways>
+- La passphrase se combine à tes mots de récupération pour générer un wallet caché totalement séparé du wallet visible.
+- Son intérêt majeur est la négation plausible face au wrench attack : tu peux exposer un wallet leurre crédible et garder l'essentiel invisible.
+- Retiens le risque mortel : une passphrase oubliée ou mal orthographiée entraîne la perte définitive des fonds, même avec tes mots intacts.
+- Sauvegarde ta passphrase sur un support séparé de ta seed, et teste la récupération avant d'y transférer un montant important.
+- Garde un peu de fonds crédibles sur le wallet leurre : complètement vide, il alerte immédiatement un attaquant.
+</KeyTakeaways>

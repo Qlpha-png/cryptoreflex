@@ -236,3 +236,12 @@ Le Shamir Backup est une technique avancée de sauvegarde. **Une mauvaise config
 - [iancoleman.io/shamir39 — Outil Shamir39 BIP39](https://iancoleman.io/shamir39/)
 
 Le Shamir Backup n'est pas pour tout le monde. C'est une **solution élégante** à un problème spécifique : la dispersion géographique, l'héritage, ou la sécurité face aux sinistres physiques. Si ces use cases te concernent et que tu acceptes de passer sur Trezor Model T pour bénéficier du support natif, c'est un excellent investissement. Sinon, un setup Ledger + plaque acier + passphrase couvre la majorité des situations avec moins de complexité.
+
+
+<KeyTakeaways>
+- Comprends le principe : le Shamir Backup (SLIP-39) découpe ta seed en plusieurs parts dont seule une majorité suffit à reconstruire le wallet, tandis qu'une part seule ne révèle rien.
+- Disperse géographiquement chaque part : ne stocke jamais deux parts au même endroit, sinon tu annules tout l'avantage du procédé.
+- Choisis ton standard une bonne fois : SLIP-39 natif sur Trezor, ou seed BIP39 classique avec passphrase si tu restes sur Ledger, car les deux ne sont pas interchangeables.
+- Teste la reconstruction sur un montant négligeable avant de t'engager, et ne confonds pas Shamir avec le multi-sig.
+- Réserve cette technique aux patrimoines conséquents, aux situations d'héritage et à la dispersion anti-sinistre.
+</KeyTakeaways>
