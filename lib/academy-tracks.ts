@@ -34,7 +34,8 @@ export type TrackId =
   | "trading"
   | "nft-web3"
   | "stablecoins"
-  | "staking";
+  | "staking"
+  | "choisir";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -1097,6 +1098,35 @@ const TRACK_STAKING: Track = {
   ],
 };
 
+/* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Bien choisir ses cryptos (v2 académie, 30/05/2026)   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Bien choisir ses cryptos — 5 leçons, ~1h.
+ * Cible : investisseur qui veut arrêter de suivre la hype et décider avec
+ * méthode. Évaluation d'un projet (due diligence), lecture de la tokenomics et
+ * des métriques de marché, données on-chain, et repérage des signaux d'alerte.
+ * 3 articles dédiés fact-checkés + 2 existants (capitalisation/volume, on-chain).
+ */
+const TRACK_CHOISIR: Track = {
+  id: "choisir",
+  title: "Bien choisir ses cryptos",
+  description:
+    "Arrêter de suivre la hype et décider avec méthode. Évaluer un projet (due diligence), lire sa tokenomics et ses métriques de marché, exploiter les données on-chain et repérer les signaux d'alerte avant d'investir un euro.",
+  level: "Intermediate",
+  estimatedHours: 1,
+  accentClass: "from-fuchsia-500/30 to-pink-600/20 border-fuchsia-500/40",
+  iconKey: "target",
+  lessons: [
+    { order: 1, articleSlug: "evaluer-projet-crypto-due-diligence-2026", title: "Évaluer un projet : la due diligence", durationMin: 9, prereqs: [] },
+    { order: 2, articleSlug: "tokenomics-comprendre-offre-inflation-2026", title: "Tokenomics : offre, inflation, valeur", durationMin: 10, prereqs: [] },
+    { order: 3, articleSlug: "capitalisation-volume-liquidite-crypto-2026", title: "Capitalisation, volume, liquidité", durationMin: 11, prereqs: ["tokenomics-comprendre-offre-inflation-2026"] },
+    { order: 4, articleSlug: "analyse-on-chain-debutant-2026", title: "Lire les données on-chain", durationMin: 12, prereqs: [] },
+    { order: 5, articleSlug: "red-flags-projet-crypto-avant-investir-2026", title: "Repérer les signaux d'alerte", durationMin: 10, prereqs: ["evaluer-projet-crypto-due-diligence-2026"] },
+  ],
+};
+
 export const TRACKS: Track[] = [
   TRACK_DEBUTANT,
   TRACK_INTERMEDIAIRE,
@@ -1111,6 +1141,7 @@ export const TRACKS: Track[] = [
   TRACK_NFT_WEB3,
   TRACK_STABLECOINS,
   TRACK_STAKING,
+  TRACK_CHOISIR,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -1128,6 +1159,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   "nft-web3": TRACK_NFT_WEB3,
   stablecoins: TRACK_STABLECOINS,
   staking: TRACK_STAKING,
+  choisir: TRACK_CHOISIR,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */
@@ -1185,6 +1217,7 @@ export const CURSUS_ORDER: TrackId[] = [
   "stablecoins",
   "marche",
   "trading",
+  "choisir",
   "defi",
   "staking",
   "nft-web3",
@@ -1246,8 +1279,8 @@ export const TRACK_GROUPS: TrackGroup[] = [
     id: "marche",
     title: "Comprendre le marché",
     subtitle:
-      "Lire les cycles, les graphiques et les indicateurs pour décider avec méthode.",
-    trackIds: ["marche", "trading"],
+      "Lire les cycles, les graphiques et les indicateurs, et choisir ses cryptos avec méthode.",
+    trackIds: ["marche", "trading", "choisir"],
   },
   {
     id: "investir",
