@@ -68,18 +68,28 @@ if (!URL || !KEY) {
 const sb = createClient(URL, KEY, { auth: { persistSession: false } });
 
 // « 30 % » précédé (≤ 25 caractères, même clause) d'un marqueur fiscal.
-const FISCAL_30 =
-  /((?:flat\s*tax|PFU|(?:prélèvement|taux) forfaitaire(?:\s*unique)?)[^.\n]{0,30}?)\b30\s?%/gi;
+const FISCAL_PATTERNS = [
+  // marqueur fiscal AVANT le 30 %
+  /(?:flat\s*tax|PFU|(?:prélèvement|taux) forfaitaire(?:\s*unique)?)[^.\n]{0,30}?\b30\s?%/gi,
+  // marqueur fiscal APRÈS le 30 % (« 30 % flat (PFU) », « 30 % (PFU) »)
+  /\b30\s?%[^.\n]{0,18}?(?:flat\s*tax|\bPFU\b|forfaitaire)/gi,
+  // sans « PFU » adjacent (« plus-values … 30 % », « imposition à 30 % »)
+  /(?:plus-value|imposition|impos[ée]|impôt)[^.\n]{0,24}?\b30\s?%/gi,
+];
 
 function fixText(s) {
   if (typeof s !== "string") return { text: s, n: 0, samples: [] };
   let n = 0;
   const samples = [];
-  const text = s.replace(FISCAL_30, (full) => {
-    n++;
-    samples.push(full.replace(/\s+/g, " ").trim());
-    return full.replace(/\b30\s?%/, "31,4 %");
-  });
+  let text = s;
+  for (const re of FISCAL_PATTERNS) {
+    text = text.replace(re, (full) => {
+      if (/31,4/.test(full) || !/\b30\s?%/.test(full)) return full;
+      n++;
+      samples.push(full.replace(/\s+/g, " ").trim());
+      return full.replace(/\b30\s?%/, "31,4 %");
+    });
+  }
   return { text, n, samples };
 }
 
