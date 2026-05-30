@@ -1099,3 +1099,45 @@ export function getAllAcademyArticleSlugs(): string[] {
   for (const t of TRACKS) for (const l of t.lessons) set.add(l.articleSlug);
   return Array.from(set);
 }
+
+/**
+ * Ordre pédagogique recommandé des parcours (cursus guidé « bout en bout »).
+ * Le socle (Débutant → Intermédiaire → Avancé) est strict ; viennent ensuite la
+ * protection (Sécurité, Arnaques), la pratique (Plateformes, Fiscalité) puis les
+ * approfondissements (Marché, Trading, DeFi, NFT). L'ordre reste RECOMMANDÉ, pas
+ * imposé — chaque parcours est auto-suffisant.
+ */
+export const CURSUS_ORDER: TrackId[] = [
+  "debutant",
+  "intermediaire",
+  "avance",
+  "securite",
+  "arnaques",
+  "plateformes",
+  "fiscalite",
+  "marche",
+  "trading",
+  "defi",
+  "nft-web3",
+];
+
+/** Parcours suivant recommandé après `trackId` ; `null` si dernier ou inconnu. */
+export function getNextTrack(trackId: string): Track | null {
+  const i = CURSUS_ORDER.indexOf(trackId as TrackId);
+  if (i === -1 || i >= CURSUS_ORDER.length - 1) return null;
+  return getTrack(CURSUS_ORDER[i + 1]);
+}
+
+/**
+ * Retrouve une leçon par son `articleSlug` à travers TOUS les parcours
+ * (1re occurrence) — sert à résoudre les prérequis en titre lisible.
+ */
+export function findLessonBySlug(
+  slug: string
+): { trackId: TrackId; lesson: Lesson } | null {
+  for (const t of TRACKS) {
+    const lesson = t.lessons.find((l) => l.articleSlug === slug);
+    if (lesson) return { trackId: t.id, lesson };
+  }
+  return null;
+}

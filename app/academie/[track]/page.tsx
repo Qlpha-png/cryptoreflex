@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
-import { TRACKS, getTrack } from "@/lib/academy-tracks";
+import { TRACKS, getTrack, getNextTrack, findLessonBySlug } from "@/lib/academy-tracks";
 import { getQuizForTrack } from "@/lib/academy-quizzes";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
@@ -69,6 +69,7 @@ export default function TrackPage({ params }: Props) {
   if (!track) notFound();
 
   const hasQuiz = getQuizForTrack(track.id) !== null;
+  const nextTrack = getNextTrack(track.id);
   const totalMin = track.lessons.reduce((acc, l) => acc + l.durationMin, 0);
 
   const schema = {
@@ -200,6 +201,42 @@ export default function TrackPage({ params }: Props) {
                 </div>
               </section>
             )}
+
+            {/* Et après ce parcours ? — fil du cursus guidé */}
+            <section
+              aria-labelledby="next-h"
+              className="mt-8 rounded-2xl border border-border bg-surface/40 p-6"
+            >
+              <h2 id="next-h" className="text-lg font-bold text-fg">
+                Et après ce parcours ?
+              </h2>
+              {nextTrack ? (
+                <>
+                  <p className="mt-1 text-sm text-muted">
+                    Une fois les leçons terminées et le quiz validé, enchaîne avec
+                    le parcours recommandé :
+                  </p>
+                  <Link
+                    href={`/academie/${nextTrack.id}`}
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-glow transition-colors hover:bg-primary/25"
+                  >
+                    Parcours {nextTrack.title}
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                </>
+              ) : (
+                <p className="mt-1 text-sm text-muted">
+                  🎓 Tu as parcouru tout le cursus de l&apos;académie.{" "}
+                  <Link
+                    href="/academie"
+                    className="text-primary-soft underline underline-offset-2 hover:text-primary"
+                  >
+                    Revoir tous les parcours
+                  </Link>{" "}
+                  ou approfondis selon tes besoins.
+                </p>
+              )}
+            </section>
           </section>
 
           {/* Sidebar progression */}
@@ -239,8 +276,19 @@ function LessonRow({
   lesson,
 }: {
   trackId: string;
-  lesson: { order: number; articleSlug: string; title: string; durationMin: number };
+  lesson: {
+    order: number;
+    articleSlug: string;
+    title: string;
+    durationMin: number;
+    prereqs: string[];
+  };
 }) {
+  // Résout les prérequis (slugs) en titres lisibles — texte seul (la row est
+  // déjà un <Link>, donc pas de sous-lien pour éviter une ancre imbriquée).
+  const prereqTitles = lesson.prereqs
+    .map((s) => findLessonBySlug(s)?.lesson.title ?? null)
+    .filter((t): t is string => t !== null);
   return (
     <Link
       href={`/academie/${trackId}/${lesson.articleSlug}`}
@@ -260,6 +308,11 @@ function LessonRow({
           <BookOpen className="h-3 w-3" aria-hidden="true" />
           Article guidé
         </p>
+        {prereqTitles.length > 0 && (
+          <p className="mt-1 text-[11px] text-amber-300/90">
+            Recommandé avant : {prereqTitles.join(" · ")}
+          </p>
+        )}
       </div>
       <PlayCircle
         className="h-5 w-5 text-muted group-hover:text-primary-glow transition-colors"
