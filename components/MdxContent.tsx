@@ -295,9 +295,11 @@ export default function MdxContent({ source, components }: MdxContentProps) {
             remarkPlugins: [
               remarkGfm,
               // Auto-linking entity-driven (cryptos, platforms, tools, glossary).
-              // Plafond 12 liens auto par article ; 1 lien max par entité.
-              // Skip code/pre/headings/links existants — cf. lib/remark-auto-link-entities.ts.
-              [remarkAutoLinkEntities, { maxLinks: 12 }],
+              // Plafond 18 liens auto par article ; 1 lien max par entité.
+              // 18 (vs 12) : nos leçons académie font 2 000-3 000 mots, soit
+              // ~1 lien interne / 150 mots — densité naturelle, sous le seuil
+              // de sur-optimisation. Skip code/pre/headings/links existants.
+              [remarkAutoLinkEntities, { maxLinks: 18 }],
             ],
             rehypePlugins: [rehypeSlug],
           },

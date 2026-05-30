@@ -25,6 +25,7 @@ import LessonToc from "@/components/academy/LessonToc";
 import LessonNotes from "@/components/academy/LessonNotes";
 import StructuredData from "@/components/StructuredData";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import RelatedEntities from "@/components/RelatedEntities";
 
 import { BRAND } from "@/lib/brand";
 import { getArticleBySlug } from "@/lib/mdx";
@@ -196,6 +197,10 @@ export default async function LessonPage({ params }: Props) {
               position={lesson.order}
               total={track.lessons.length}
             />
+
+            {/* Maillage interne entité-driven : fiches crypto, plateformes,
+                outils et termes glossaire mentionnés dans la leçon. */}
+            <RelatedEntities text={article.content} limit={6} />
 
             {/* Maillage interne — cluster sémantique du graphe */}
             <RelatedPagesNav
