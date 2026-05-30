@@ -31,7 +31,8 @@ export type TrackId =
   | "defi"
   | "arnaques"
   | "marche"
-  | "trading";
+  | "trading"
+  | "nft-web3";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -69,7 +70,8 @@ export interface Track {
     | "coins"
     | "alert"
     | "chart"
-    | "candlestick";
+    | "candlestick"
+    | "palette";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -963,6 +965,72 @@ const TRACK_TRADING: Track = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Parcours thématique — NFT & Web3 (v2 académie, 30/05/2026)                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track NFT & Web3 — 6 leçons, ~2h.
+ * Cible : comprendre les NFT, le Web3 et l'auto-conservation Web3 (wallet) sans
+ * se faire avoir. C'est quoi un NFT, le Web3 expliqué, le wallet MetaMask,
+ * acheter/vendre un NFT, la fiscalité NFT et les DAO. Cadrage prudent : marché
+ * NFT très spéculatif, Web3 partiellement décentralisé, sécurité des signatures.
+ */
+const TRACK_NFT_WEB3: Track = {
+  id: "nft-web3",
+  title: "NFT & Web3",
+  description:
+    "Comprendre les NFT, le Web3 et le wallet self-custody (MetaMask) sans se faire avoir : c'est quoi un NFT, le Web3 expliqué, acheter/vendre, la fiscalité NFT et les DAO.",
+  level: "Intermediate",
+  estimatedHours: 2,
+  accentClass: "from-pink-500/30 to-purple-600/20 border-pink-500/40",
+  iconKey: "palette",
+  lessons: [
+    {
+      order: 1,
+      articleSlug: "qu-est-ce-qu-un-nft-guide-debutant-2026",
+      title: "Qu'est-ce qu'un NFT ?",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 2,
+      articleSlug: "web3-explique-simplement-2026",
+      title: "Web3 expliqué simplement",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 3,
+      articleSlug: "wallet-web3-metamask-guide-debutant-2026",
+      title: "Wallet Web3 (MetaMask) : bien démarrer",
+      durationMin: 9,
+      prereqs: ["web3-explique-simplement-2026"],
+    },
+    {
+      order: 4,
+      articleSlug: "acheter-vendre-nft-france-2026-guide",
+      title: "Acheter et vendre un NFT (pas-à-pas)",
+      durationMin: 9,
+      prereqs: ["wallet-web3-metamask-guide-debutant-2026"],
+    },
+    {
+      order: 5,
+      articleSlug: "fiscalite-nft-france-2026-guide-complet-creation-achat-vente",
+      title: "Fiscalité des NFT en France",
+      durationMin: 16,
+      prereqs: [],
+    },
+    {
+      order: 6,
+      articleSlug: "qu-est-ce-qu-une-dao-fonctionnement-exemples-2026",
+      title: "DAO : la gouvernance décentralisée",
+      durationMin: 14,
+      prereqs: [],
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -977,6 +1045,7 @@ export const TRACKS: Track[] = [
   TRACK_ARNAQUES,
   TRACK_MARCHE,
   TRACK_TRADING,
+  TRACK_NFT_WEB3,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -991,6 +1060,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   arnaques: TRACK_ARNAQUES,
   marche: TRACK_MARCHE,
   trading: TRACK_TRADING,
+  "nft-web3": TRACK_NFT_WEB3,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */

@@ -22,6 +22,7 @@ import {
   ShieldAlert,
   BarChart3,
   CandlestickChart,
+  Palette,
 } from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
@@ -36,6 +37,7 @@ const ICONS = {
   alert: ShieldAlert,
   chart: BarChart3,
   candlestick: CandlestickChart,
+  palette: Palette,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

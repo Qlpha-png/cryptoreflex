@@ -26,6 +26,7 @@ import {
   ShieldAlert,
   BarChart3,
   CandlestickChart,
+  Palette,
   BadgeCheck,
   ListChecks,
   Save,
@@ -44,6 +45,7 @@ const ICONS = {
   alert: ShieldAlert,
   chart: BarChart3,
   candlestick: CandlestickChart,
+  palette: Palette,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {
