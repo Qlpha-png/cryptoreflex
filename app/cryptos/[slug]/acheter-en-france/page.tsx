@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {};
   }
   const title = `Acheter ${meta.name} (${meta.symbol}) en France 2026 — guide pas-à-pas`;
-  const description = `Comment acheter du ${meta.name} (${meta.symbol}) en France en 2026 : meilleures plateformes MiCA, frais réels, méthodes de paiement (CB, virement SEPA), fiscalité PFU 30%. Guide Cryptoreflex.`;
+  const description = `Comment acheter du ${meta.name} (${meta.symbol}) en France en 2026 : meilleures plateformes MiCA, frais réels, méthodes de paiement (CB, virement SEPA), fiscalité PFU 31,4%. Guide Cryptoreflex.`;
   return {
     title,
     description,
@@ -141,7 +141,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     },
     {
       question: `Faut-il déclarer l'achat de ${meta.name} aux impôts ?`,
-      answer: `Non, l'achat seul n'est pas un événement fiscal. Tu dois déclarer uniquement quand tu vends contre euros (cession imposable, PFU 30 % en 2026) ou quand tu utilises ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
+      answer: `Non, l'achat seul n'est pas un événement fiscal. Tu dois déclarer uniquement quand tu vends contre euros (cession imposable, PFU 31,4 % en 2026) ou quand tu utilises ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
     },
     {
       question: `Achat instantané (CB) ou virement SEPA pour ${meta.symbol} ?`,
@@ -350,7 +350,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
                   <strong>À la cession (vente vs euros) :</strong> Prélèvement Forfaitaire
-                  Unique (PFU) de 30 % sur la plus-value. Option pour le barème progressif
+                  Unique (PFU) de 31,4 % sur la plus-value. Option pour le barème progressif
                   possible si plus avantageuse.
                 </span>
               </li>

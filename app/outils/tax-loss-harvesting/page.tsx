@@ -155,7 +155,7 @@ export default function TaxLossHarvestingPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Si vous avez réalisé des plus-values crypto cette année, la matérialisation de moins-values existantes avant le 31/12 peut, sous conditions, neutraliser tout ou partie de l'impôt PFU 30 %. À analyser avec un fiscaliste."
+            headline="Si vous avez réalisé des plus-values crypto cette année, la matérialisation de moins-values existantes avant le 31/12 peut, sous conditions, neutraliser tout ou partie de l'impôt PFU 31,4 %. À analyser avec un fiscaliste."
             bullets={[
               { emoji: "⚖️", text: "Cadre légal : article 150 VH bis CGI, compensation intra-annuelle" },
               { emoji: "🔄", text: "Pas de wash sale rule en France (contrairement aux US) — vérifier le cas particulier avec un professionnel" },
@@ -184,7 +184,7 @@ export default function TaxLossHarvestingPage() {
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
                 <li>Moins-values latentes (non vendues) : <strong className="text-muted">non comptées</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 30 % : <strong className="text-danger">1 500 €</strong>
+                  Impôt PFU 31,4 % : <strong className="text-danger">1 500 €</strong>
                 </li>
               </ul>
             </div>
@@ -196,7 +196,7 @@ export default function TaxLossHarvestingPage() {
                 <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
                 <li>Moins-values réalisées (vente le 28/12) : <strong className="text-danger">−4 000 €</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 30 % sur 1 000 € : <strong className="text-fg">300 €</strong>
+                  Impôt PFU 31,4 % sur 1 000 € : <strong className="text-fg">300 €</strong>
                 </li>
               </ul>
               <p className="mt-3 text-xs text-fg/70 leading-relaxed">

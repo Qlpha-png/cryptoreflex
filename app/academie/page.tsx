@@ -288,7 +288,7 @@ export default function AcademiePage() {
                   28 calculateurs gratuits
                 </div>
                 <div className="mt-1 text-xs text-muted leading-snug">
-                  Fiscalité PFU 30 %, simulateur DCA, Cerfa 2086, vérificateur
+                  Fiscalité PFU 31,4 %, simulateur DCA, Cerfa 2086, vérificateur
                   MiCA, glossaire 250+ termes.
                 </div>
               </Link>

@@ -60,7 +60,7 @@ const REGULATORS = [
   {
     short: "BOFiP",
     full: "Bulletin Officiel des Finances Publiques",
-    detail: "Doctrine fiscale FR appliquée pour le calculateur PFU 30%.",
+    detail: "Doctrine fiscale FR appliquée pour le calculateur PFU 31,4%.",
   },
   {
     short: "CoinGecko",

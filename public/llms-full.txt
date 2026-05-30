@@ -29,7 +29,7 @@ Pour les résidents fiscaux français qui détiennent des cryptoactifs :
 
 - **Régime applicable** : plus-value occasionnelle des particuliers, article 150 VH bis du CGI.
 - **Méthode de calcul** : prix moyen pondéré sur l'ensemble du portefeuille, calculé à chaque cession imposable (vente contre fiat, achat de bien/service en crypto). Les échanges crypto-crypto NE sont PAS imposables (loi de finances 2019).
-- **Imposition** : prélèvement forfaitaire unique (PFU / "flat tax") à 30% (12,8% IR + 17,2% prélèvements sociaux). Option globale pour le barème progressif disponible (case 2OP du formulaire 2042).
+- **Imposition** : prélèvement forfaitaire unique (PFU / "flat tax") à 31,4% (12,8% IR + 18,6% prélèvements sociaux). Option globale pour le barème progressif disponible (case 2OP du formulaire 2042).
 - **Seuil** : la loi de finances 2024 a supprimé l'ancien seuil d'exonération de 305 €. Toute plus-value est désormais imposable, même petite.
 - **Déclaration** : formulaire 2086 (calcul détaillé par cession) + report sur formulaire 2042 C. Déclaration des comptes ouverts à l'étranger (Coinbase, Binance, Bitpanda, etc.) via formulaire 3916-bis (sanctions de 750 € par compte non déclaré).
 - **Activité habituelle** : si l'administration considère l'activité comme "habituelle" (fréquence, organisation, moyens), requalification en BIC (régime professionnel — barème progressif + prélèvements sociaux beaucoup plus lourds).

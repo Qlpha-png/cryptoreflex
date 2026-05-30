@@ -33,7 +33,7 @@ disclaimer: "Document indicatif. Pour situation complexe (DeFi, BIC, NFT > 50k�
 
 - [ ] **11.** Connecte-toi sur **impots.gouv.fr** (espace particulier) pendant la fenêtre de déclaration (avril-juin 2026).
 - [ ] **12.** Sélectionne la **2042-C** (déclaration complémentaire de revenus). Section **3 — Plus-values**.
-- [ ] **13.** Coche la **case 3AN** pour PFU 30 % (régime par défaut) OU la **case 2OP** si tu opts pour le barème progressif.
+- [ ] **13.** Coche la **case 3AN** pour PFU 31,4 % (régime par défaut) OU la **case 2OP** si tu opts pour le barème progressif.
 - [ ] **14.** Joins l'**annexe Cerfa 2086** (détail des cessions) — une ligne par cession dans l'année. Utilise la formule 150 VH bis.
 - [ ] **15.** Vérifie que la **plus-value totale** sur 2086 correspond bien au montant reporté en 3AN (ou en 2042 si option barème).
 - [ ] **16.** Pour chaque compte étranger, remplis un **formulaire 3916-bis** (PDF téléchargeable depuis impots.gouv ou pré-rempli par Waltio).

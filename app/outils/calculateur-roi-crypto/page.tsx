@@ -45,9 +45,9 @@ const CalculateurROIClient = dynamic(
 /*  SEO meta                                                                   */
 /* -------------------------------------------------------------------------- */
 const PAGE_TITLE =
-  "Calculateur ROI crypto gratuit — plus-value & impôts (PFU 30 %)";
+  "Calculateur ROI crypto gratuit — plus-value & impôts (PFU 31,4 %)";
 const PAGE_DESCRIPTION =
-  "Calcule ton ROI crypto + plus-value nette + impôt français estimé en 5 secondes. Frais d'achat/vente inclus, PFU 30 %, seuil 305 €. 100 % gratuit, sans inscription.";
+  "Calcule ton ROI crypto + plus-value nette + impôt français estimé en 5 secondes. Frais d'achat/vente inclus, PFU 31,4 %, seuil 305 €. 100 % gratuit, sans inscription.";
 const PAGE_PATH = "/outils/calculateur-roi-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -84,7 +84,7 @@ const FAQ_ITEMS = [
   {
     question: "Quel impôt est appliqué sur les plus-values crypto en France ?",
     answer:
-      "Par défaut, les particuliers en gestion non professionnelle sont soumis au Prélèvement Forfaitaire Unique (PFU) de 30 % : 12,8 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. L'option pour le barème progressif reste possible et peut être plus avantageuse si la TMI est de 0 ou 11 %. Notre outil affiche l'estimation PFU par défaut.",
+      "Par défaut, les particuliers en gestion non professionnelle sont soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux. L'option pour le barème progressif reste possible et peut être plus avantageuse si la TMI est de 0 ou 11 %. Notre outil affiche l'estimation PFU par défaut.",
   },
   {
     question: "À partir de quel montant les plus-values crypto sont-elles imposables ?",
@@ -121,7 +121,7 @@ export default function CalculateurROIPage() {
         "Calcul ROI net en pourcentage",
         "Plus-value brute et nette en euros",
         "Frais d'achat et de vente personnalisables",
-        "Estimation impôt français PFU 30 %",
+        "Estimation impôt français PFU 31,4 %",
         "Seuil d'exonération 305 €",
         "Copier les résultats en un clic",
       ],
@@ -161,7 +161,7 @@ export default function CalculateurROIPage() {
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               <span className="gradient-text">Calculateur ROI crypto</span>
               <br />
-              gratuit (PFU 30 %)
+              gratuit (PFU 31,4 %)
             </h1>
             <p className="mt-4 text-lg text-muted leading-relaxed">
               Calcule ton ROI net, ta plus-value et l'impôt français estimé en
@@ -204,16 +204,16 @@ export default function CalculateurROIPage() {
               />
               <PedagogyCard
                 Icon={Receipt}
-                title="2. La fiscalité PFU 30 %"
+                title="2. La fiscalité PFU 31,4 %"
                 body={
                   <>
                     <p className="text-sm text-muted leading-relaxed">
                       En France, les plus-values crypto d'un particulier sont
-                      taxées à 30 % flat (PFU) :
+                      taxées à 31,4 % flat (PFU) :
                     </p>
                     <ul className="mt-3 space-y-1 text-sm text-muted">
                       <li>• 12,8 % d'impôt sur le revenu</li>
-                      <li>• 17,2 % de prélèvements sociaux</li>
+                      <li>• 18,6 % de prélèvements sociaux</li>
                     </ul>
                     <p className="mt-3 text-sm text-muted leading-relaxed">
                       Exonération si total des cessions annuelles ≤ 305 €.
@@ -306,7 +306,7 @@ export default function CalculateurROIPage() {
           <p className="mt-12 text-xs text-muted leading-relaxed">
             <strong className="text-fg">Avertissement :</strong> ce calculateur
             est à but pédagogique et ne constitue pas un conseil fiscal ou en
-            investissement. Le PFU à 30 % s'applique aux particuliers en
+            investissement. Le PFU à 31,4 % s'applique aux particuliers en
             gestion non professionnelle ; les situations BIC pro, les
             moins-values reportables et les régimes spécifiques (staking, NFT,
             DeFi) ne sont pas couverts par cet outil. Consultez un

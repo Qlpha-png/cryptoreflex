@@ -142,7 +142,7 @@ export default function StakingDetailPage({ params }: Props) {
     },
     {
       question: `Le staking ${pair.name} est-il imposé en France ?`,
-      answer: `Oui. En 2026, les rendements du staking restent traités comme des plus-values lors de leur cession contre euros (PFU 30%). Si tu réinvestis ou accumules, l'événement fiscal n'a lieu qu'à la conversion en monnaie fiat. Voir notre guide fiscalité crypto pour le détail de la déclaration annexe 2086.`,
+      answer: `Oui. En 2026, les rendements du staking restent traités comme des plus-values lors de leur cession contre euros (PFU 31,4%). Si tu réinvestis ou accumules, l'événement fiscal n'a lieu qu'à la conversion en monnaie fiat. Voir notre guide fiscalité crypto pour le détail de la déclaration annexe 2086.`,
     },
     {
       question: `Quel est le risque de slashing sur ${pair.name} ?`,
@@ -304,7 +304,7 @@ export default function StakingDetailPage({ params }: Props) {
               />
             </div>
             <p className="mt-3 text-xs text-muted">
-              Estimation indicative. APY variable selon validateurs et demande. Hors fiscalité (PFU 30% à la cession).
+              Estimation indicative. APY variable selon validateurs et demande. Hors fiscalité (PFU 31,4% à la cession).
             </p>
             <Link
               href="/outils#calculateur"

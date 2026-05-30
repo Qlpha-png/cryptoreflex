@@ -113,12 +113,12 @@ const FAQ_ITEMS = [
   {
     question: "Ces outils sont-ils conformes à la fiscalité crypto 2026 ?",
     answer:
-      "Waltio met à jour son moteur de calcul à chaque évolution réglementaire française (LF 2024, ajustements DeFi, traitement des airdrops). Koinly et CoinTracking suivent la fiscalité internationale mais pas les spécificités françaises (formulaire 2086, abattement 305 €, neutralité crypto-crypto). Pour 2026, les 3 intègrent bien le régime PFU 30 % par défaut.",
+      "Waltio met à jour son moteur de calcul à chaque évolution réglementaire française (LF 2024, ajustements DeFi, traitement des airdrops). Koinly et CoinTracking suivent la fiscalité internationale mais pas les spécificités françaises (formulaire 2086, abattement 305 €, neutralité crypto-crypto). Pour 2026, les 3 intègrent bien le régime PFU 31,4 % par défaut.",
   },
   {
     question: "Faut-il un expert-comptable en plus de l'outil ?",
     answer:
-      "Pour un particulier en gestion non professionnelle (PFU 30 %), l'outil seul suffit dans 95 % des cas. En revanche, si vous êtes au régime BIC, en activité de mining/staking professionnel, ou si vous faites de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement vos données.",
+      "Pour un particulier en gestion non professionnelle (PFU 31,4 %), l'outil seul suffit dans 95 % des cas. En revanche, si vous êtes au régime BIC, en activité de mining/staking professionnel, ou si vous faites de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement vos données.",
   },
 ];
 

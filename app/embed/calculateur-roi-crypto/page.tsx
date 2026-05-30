@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
   title: { absolute: "Calculateur ROI crypto — Cryptoreflex (embed)" },
   description:
-    "Calcule ROI net, plus-value et impôt PFU 30 % en 5 secondes — version embeddable.",
+    "Calcule ROI net, plus-value et impôt PFU 31,4 % en 5 secondes — version embeddable.",
   robots: { index: false, follow: true },
 };
 
@@ -50,7 +50,7 @@ export default function EmbedCalculateurROIPage() {
           lineHeight: 1.2,
         }}
       >
-        Calculateur ROI crypto (PFU 30 %)
+        Calculateur ROI crypto (PFU 31,4 %)
       </h1>
       <p
         style={{

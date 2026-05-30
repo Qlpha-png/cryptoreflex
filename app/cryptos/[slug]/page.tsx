@@ -95,7 +95,7 @@ const PairConverter = dynamic(
 );
 
 // BATCH 28 — innovation expert agents quick win #3 (différenciation FR
-// maximum) : calculateur PFU 30% inline (sans plus-value cumulée annuelle).
+// maximum) : calculateur PFU 31,4% inline (sans plus-value cumulée annuelle).
 const PfuQuickCalc = dynamic(
   () => import("@/components/crypto-detail/PfuQuickCalc"),
   { ssr: false },
@@ -471,7 +471,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 
   faq.push({
     q: `Quelle fiscalité s'applique aux gains sur ${c.name} en France ?`,
-    a: `En 2026, les plus-values crypto pour un particulier sont imposées au PFU (Prélèvement Forfaitaire Unique) de 30 % par défaut (12,8 % d'impôt + 17,2 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que vous restez en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite-crypto pour simuler votre note fiscale.`,
+    a: `En 2026, les plus-values crypto pour un particulier sont imposées au PFU (Prélèvement Forfaitaire Unique) de 31,4 % par défaut (12,8 % d'impôt + 18,6 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que vous restez en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite-crypto pour simuler votre note fiscale.`,
   });
 
   return faq;
@@ -689,7 +689,7 @@ export default async function CryptoPage({ params }: Props) {
         )}
 
         {/* PFU QUICK CALC — innovation BATCH 28 (expert agents quick win #3,
-            différenciation FR maximum). Mini-calculateur PFU 30% inline pour
+            différenciation FR maximum). Mini-calculateur PFU 31,4% inline pour
             simuler la note fiscale d'une plus-value crypto. Lien vers le
             calculateur complet pour calcul cumulé annuel + Cerfa 2086. */}
         {detail && detail.currentPrice > 0 && (
@@ -1157,7 +1157,7 @@ export default async function CryptoPage({ params }: Props) {
                 Vous voulez acheter {c.name} en France ?
               </h2>
               <p className="mt-1 text-sm text-muted">
-                Guide complet : 3 étapes, plateformes régulées MiCA, moyens de paiement, fiscalité PFU 30 %.
+                Guide complet : 3 étapes, plateformes régulées MiCA, moyens de paiement, fiscalité PFU 31,4 %.
               </p>
             </div>
             <Link

@@ -20,7 +20,7 @@ Ce document est à vocation pédagogique. La fiscalité crypto évolue réguliè
 
 1. [Introduction — Pourquoi ce guide en 2026](#chapitre-1)
 2. [Cadre légal : article 150 VH bis et BOI-RPPM-PVBMC-30-30](#chapitre-2)
-3. [Régime PFU 30 % vs barème progressif](#chapitre-3)
+3. [Régime PFU 31,4 % vs barème progressif](#chapitre-3)
 4. [Le formulaire Cerfa 2086 — détail des cessions](#chapitre-4)
 5. [Le formulaire 3916-bis — comptes étrangers](#chapitre-5)
 6. [Fiscalité du staking, lending et DeFi](#chapitre-6)
@@ -80,11 +80,11 @@ C'est le bulletin officiel des finances publiques (BOFIP) qui interprète le 150
 
 ---
 
-## Chapitre 3 — Régime PFU 30 % vs barème progressif {#chapitre-3}
+## Chapitre 3 — Régime PFU 31,4 % vs barème progressif {#chapitre-3}
 
-### Le PFU par défaut : 30 % flat
+### Le PFU par défaut : 31,4 % flat
 
-Sans démarche de ta part, tu es soumis au **Prélèvement Forfaitaire Unique (PFU)** de 30 %, décomposé en :
+Sans démarche de ta part, tu es soumis au **Prélèvement Forfaitaire Unique (PFU)** de 31,4 %, décomposé en :
 
 - **12,8 % au titre de l'impôt sur le revenu**
 - **17,2 % au titre des prélèvements sociaux** (CSG, CRDS, prélèvement de solidarité)
@@ -97,11 +97,11 @@ Tu peux **opter** (case 2OP de la déclaration) pour intégrer tes plus-values c
 
 | TMI du foyer | Choix optimal | Pourquoi |
 |---|---|---|
-| 0 % | Barème | Tu ne paies que les 17,2 % de PS (vs 30 % au PFU) |
+| 0 % | Barème | Tu ne paies que les 17,2 % de PS (vs 31,4 % au PFU) |
 | 11 % | Barème | 28,2 % au lieu de 30 % |
-| 30 % | PFU | 47,2 % au barème vs 30 % — PFU largement gagnant |
-| 41 % | PFU | 58,2 % au barème vs 30 % — PFU dominant |
-| 45 % | PFU | 62,2 % au barème vs 30 % — PFU obligatoire |
+| 31,4 % | PFU | 47,2 % au barème vs 31,4 % — PFU largement gagnant |
+| 41 % | PFU | 58,2 % au barème vs 31,4 % — PFU dominant |
+| 45 % | PFU | 62,2 % au barème vs 31,4 % — PFU obligatoire |
 
 ### Cas particulier : abattement pour durée de détention
 
@@ -258,7 +258,7 @@ Pas de seuil chiffré, mais en pratique : > 200 transactions/an + revenus crypto
 
 ### Conséquences fiscales
 
-Au lieu du PFU 30 %, tu passes en **BIC professionnel** :
+Au lieu du PFU 31,4 %, tu passes en **BIC professionnel** :
 - Imposition à la TMI sur les bénéfices nets
 - 17,2 % de PS
 - Cotisations sociales TNS (~ 22 % du bénéfice net en SSI/URSSAF)

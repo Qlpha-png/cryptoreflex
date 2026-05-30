@@ -39,7 +39,7 @@ export default function CryptoLicensePage() {
     },
     {
       q: "Quelles thématiques sont couvertes ?",
-      a: "5 chapitres × 10 questions : (1) Bases techniques (blockchain, wallet, clé privée) ; (2) Régulation FR/UE (MiCA, PSAN, AMF, loi influenceurs) ; (3) Fiscalité (PFU 30 %, Cerfa 2086, BIC vs BNC) ; (4) Sécurité (phishing, scam, hardware wallet) ; (5) Écosystème (DeFi, L2, stablecoins, on-chain).",
+      a: "5 chapitres × 10 questions : (1) Bases techniques (blockchain, wallet, clé privée) ; (2) Régulation FR/UE (MiCA, PSAN, AMF, loi influenceurs) ; (3) Fiscalité (PFU 31,4 %, Cerfa 2086, BIC vs BNC) ; (4) Sécurité (phishing, scam, hardware wallet) ; (5) Écosystème (DeFi, L2, stablecoins, on-chain).",
     },
     {
       q: "Combien de temps prend le quiz ?",
@@ -121,7 +121,7 @@ export default function CryptoLicensePage() {
           {[
             { num: "01", title: "Bases techniques", body: "Blockchain, wallet, clé privée, mnémonique, fork, halving." },
             { num: "02", title: "Régulation FR/UE", body: "MiCA, PSAN, AMF, loi influenceurs 2023-451." },
-            { num: "03", title: "Fiscalité", body: "PFU 30 %, Cerfa 2086, BIC vs BNC, déclaration comptes étrangers." },
+            { num: "03", title: "Fiscalité", body: "PFU 31,4 %, Cerfa 2086, BIC vs BNC, déclaration comptes étrangers." },
             { num: "04", title: "Sécurité", body: "Phishing, seed phrase, hardware wallet, multi-sig." },
             { num: "05", title: "Écosystème", body: "DeFi, L2, stablecoins, oracles, MEV, on-chain." },
           ].map((c) => (

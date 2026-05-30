@@ -103,13 +103,13 @@ const POOL: Record<string, Step> = {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
     Icon: Download,
     label: "Bible Fiscalité Crypto 2026",
-    desc: "13 pages — comprendre PFU 30 %, formulaire 2086, 3916-bis.",
+    desc: "13 pages — comprendre PFU 31,4 %, formulaire 2086, 3916-bis.",
   },
   calculateurFiscalite: {
     href: "/outils/calculateur-fiscalite",
     Icon: Calculator,
     label: "Calculateur impôt crypto",
-    desc: "PFU 30 % automatique + export prêt pour la déclaration 2086.",
+    desc: "PFU 31,4 % automatique + export prêt pour la déclaration 2086.",
   },
   calculateurROI: {
     href: "/outils/calculateur-roi-crypto",

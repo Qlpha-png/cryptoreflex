@@ -108,7 +108,7 @@ const NAV_GROUPS: FooterGroup[] = [
     title: "Outils & espace",
     links: [
       { href: "/outils", label: "Tous les outils (28)" },
-      { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 30 %" },
+      { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 31,4 %" },
       { href: "/outils/allocator-ia", label: "Allocator IA (nouveau)" },
       { href: "/outils/whale-radar", label: "Whale Radar FR (nouveau)" },
       { href: "/outils/dca-lab", label: "DCA Lab multi-stratégies (nouveau)" },

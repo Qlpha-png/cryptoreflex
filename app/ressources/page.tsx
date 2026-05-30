@@ -103,7 +103,7 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Calculateur Fiscalité",
     description:
-      "Estime ton impôt crypto français (PFU 30 % vs barème) et génère un export prêt pour la 2086.",
+      "Estime ton impôt crypto français (PFU 31,4 % vs barème) et génère un export prêt pour la 2086.",
     href: "/outils/calculateur-fiscalite",
     Icon: Receipt,
     badge: "Top",

@@ -121,7 +121,7 @@ export default function PackDeclarationPage() {
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Service fiscal",
-      tags: ["Cerfa 2086", "déclaration crypto", "fiscalité", "PFU 30%", "150 VH bis"],
+      tags: ["Cerfa 2086", "déclaration crypto", "fiscalité", "PFU 31,4%", "150 VH bis"],
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },

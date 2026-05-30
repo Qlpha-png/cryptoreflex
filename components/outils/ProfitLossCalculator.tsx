@@ -6,12 +6,12 @@
  * Pure client-side, 0 dependance externe. Calcule en temps reel :
  *  - PnL brut (prix_vente - prix_achat) × quantite
  *  - PnL net apres frais (achat + vente)
- *  - PnL net apres impot PFU 30% France (sur cession taxable uniquement)
+ *  - PnL net apres impot PFU 31,4% France (sur cession taxable uniquement)
  *
  * Pattern : controlled inputs + useMemo pour le calc, color-coded
  * (vert si gain, rose si perte). Rendu instantane (pas de submit).
  *
- * NB compliance AMF : "PFU 30%" affiche comme estimation educative
+ * NB compliance AMF : "PFU 31,4%" affiche comme estimation educative
  * uniquement. Pas un conseil fiscal personnalise.
  */
 
@@ -49,7 +49,7 @@ function compute(
   const pnlGross = amountReceived - amountInvested;
   const pnlNetFees = pnlGross - feesTotal;
   const pfuApplied = pnlNetFees > 0;
-  const pnlNetTax = pfuApplied ? pnlNetFees * 0.7 : pnlNetFees;
+  const pnlNetTax = pfuApplied ? pnlNetFees * (1 - 0.314) : pnlNetFees; // net après PFU 31,4 %
   const pnlPctNetFees =
     amountInvested > 0 ? (pnlNetFees / amountInvested) * 100 : 0;
   return {
@@ -226,7 +226,7 @@ export default function ProfitLossCalculator() {
             <Row
               label={
                 result.pfuApplied
-                  ? "Impot PFU 30% (estime)"
+                  ? "Impot PFU 31,4% (estime)"
                   : "Impot PFU (perte = non applicable)"
               }
               value={
@@ -252,7 +252,7 @@ export default function ProfitLossCalculator() {
             <AlertCircle className="h-4 w-4 text-amber-300 shrink-0 mt-0.5" />
             <p>
               <strong className="text-amber-200">Estimation educative.</strong>{" "}
-              Le PFU 30% ne s&apos;applique qu&apos;aux{" "}
+              Le PFU 31,4% ne s&apos;applique qu&apos;aux{" "}
               <strong className="text-amber-200">cessions taxables</strong>{" "}
               (vers fiat/biens). Token-to-token = non taxable en FR depuis
               2019. Pour la declaration reelle, voir{" "}

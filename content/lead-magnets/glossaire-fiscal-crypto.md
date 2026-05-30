@@ -15,7 +15,7 @@ disclaimer: "Document à valeur informative. Définitions issues de la doctrine 
 ## A
 
 ### 150 VH bis (article 150 VH bis CGI)
-Article du Code Général des Impôts qui régit la fiscalité des cessions de crypto-actifs par les particuliers depuis la loi de finances 2019. Pose les principes de la PFU 30 %, de la formule de calcul au prorata du portefeuille, et du seuil d'exonération à 305 €/an.
+Article du Code Général des Impôts qui régit la fiscalité des cessions de crypto-actifs par les particuliers depuis la loi de finances 2019. Pose les principes de la PFU 31,4 %, de la formule de calcul au prorata du portefeuille, et du seuil d'exonération à 305 €/an.
 
 ### Abattement durée de détention
 **N'existe PAS pour les crypto-actifs**. Contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements jusqu'à 65 % selon la durée, le crypto est imposé identique que tu détiennes 5 jours ou 5 ans. Ne pas confondre avec le régime mobilier classique.
@@ -35,7 +35,7 @@ Formulaire Cerfa à joindre à la déclaration 2042-C qui détaille **chaque ces
 ## B
 
 ### Barème progressif
-Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 17,2 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
+Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
 
 ### BIC (Bénéfices Industriels et Commerciaux)
 Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 17,2 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
@@ -130,7 +130,7 @@ Token unique représentant un actif (œuvre digitale, item de jeu, certificat). 
 ## P
 
 ### PFU (Prélèvement Forfaitaire Unique)
-Régime par défaut des plus-values crypto particulier : **30 % flat** (12,8 % IR + 17,2 % PS) sur la PV nette annuelle. Pas de calcul à faire — taux unique.
+Régime par défaut des plus-values crypto particulier : **31,4 % flat** (12,8 % IR + 18,6 % PS) sur la PV nette annuelle. Pas de calcul à faire — taux unique.
 
 ### Plus-value (PV)
 Gain réalisé à la cession d'un crypto-actif. Calculée selon la formule 150 VH bis pour les particuliers.

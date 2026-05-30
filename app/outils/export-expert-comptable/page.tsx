@@ -36,7 +36,7 @@ export default function ExportExpertComptablePage() {
   const faqItems = [
     {
       q: "À qui s'adresse cet outil ?",
-      a: "Aux indépendants, EI, SAS, SARL qui détiennent des crypto en actif d'exploitation (mining, staking récurrent, trésorerie d'entreprise, paiement client en BTC). Si vous déclarez en BNC ou BIC plutôt qu'en plus-values privées (PFU 30 %), vous avez besoin d'un export comptable structuré pour votre EC.",
+      a: "Aux indépendants, EI, SAS, SARL qui détiennent des crypto en actif d'exploitation (mining, staking récurrent, trésorerie d'entreprise, paiement client en BTC). Si vous déclarez en BNC ou BIC plutôt qu'en plus-values privées (PFU 31,4 %), vous avez besoin d'un export comptable structuré pour votre EC.",
     },
     {
       q: "Quels logiciels comptables sont supportés ?",

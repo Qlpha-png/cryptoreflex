@@ -66,7 +66,7 @@ export default function YieldStablecoinsPage() {
     },
     {
       q: "Quelle est la fiscalité du yield stablecoin en France ?",
-      a: "Les intérêts perçus sont imposables au PFU 30 % (ou barème progressif sur option), comme tout revenu du capital. Si tu reçois des intérêts en crypto (ex: USDC paye en USDC), c'est un swap imposable côté CGI 150 VH bis.",
+      a: "Les intérêts perçus sont imposables au PFU 31,4 % (ou barème progressif sur option), comme tout revenu du capital. Si tu reçois des intérêts en crypto (ex: USDC paye en USDC), c'est un swap imposable côté CGI 150 VH bis.",
     },
     {
       q: "Pourquoi pas de DeFi (Aave, Compound) sur ta liste prioritaire ?",

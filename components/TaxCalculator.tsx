@@ -73,7 +73,7 @@ interface ProjectionRow {
   year: number;
   capitalBrut: number; // valeur du portefeuille brut année N
   plusValueAnnuelle: number; // gain de l'année (capital N - capital N-1)
-  impotAnnuel: number; // PFU 30 % sur le gain de l'année (si réalisé)
+  impotAnnuel: number; // PFU 31,4 % sur le gain de l'année (si réalisé)
   impotCumule: number; // somme des impôts années 1..N
   capitalNet: number; // capital brut - impôts cumulés
 }
@@ -96,7 +96,7 @@ function buildProjection(initial: number, perfPct: number): ProjectionRow[] {
   for (let y = 1; y <= 5; y++) {
     const capitalBrut = prev * (1 + rate);
     const plusValueAnnuelle = capitalBrut - prev;
-    // PFU 30 % sur le gain annuel (positif uniquement)
+    // PFU 31,4 % sur le gain annuel (positif uniquement)
     const impotAnnuel = plusValueAnnuelle > 0 ? plusValueAnnuelle * 0.3 : 0;
     impotCumule += impotAnnuel;
     const capitalNet = capitalBrut - impotCumule;
@@ -480,7 +480,7 @@ function ProjectionPanel({
             id="projection-title"
             className="mt-1 text-lg sm:text-xl font-bold text-white"
           >
-            Et si vous cédez chaque année à PFU 30 % ?
+            Et si vous cédez chaque année à PFU 31,4 % ?
           </h3>
         </div>
 
@@ -593,7 +593,7 @@ function ProjectionPanel({
 
           <p className="mt-5 text-[11px] text-muted leading-relaxed">
             <Info className="inline h-3 w-3 -mt-0.5" aria-hidden="true" />{" "}
-            Estimation à titre indicatif — taux PFU 2026 (30 %), fiscalité peut
+            Estimation à titre indicatif — taux PFU 2026 (31,4 %), fiscalité peut
             évoluer. Hypothèse : vous cédez chaque année vos gains pour réaliser
             l'imposition. En buy &amp; hold pur (aucune cession), aucun impôt
             n'est dû tant que vous ne convertissez pas en euros — la projection

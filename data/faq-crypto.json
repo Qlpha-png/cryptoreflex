@@ -13,7 +13,7 @@
     {
       "id": "fiscalite",
       "title": "Fiscalite & declaration FR",
-      "intro": "Tout sur le PFU 30%, formulaire 2086, 3916-bis, BOFiP."
+      "intro": "Tout sur le PFU 31,4%, formulaire 2086, 3916-bis, BOFiP."
     },
     {
       "id": "securite",
@@ -83,7 +83,7 @@
       "id": "fiscalite-crypto-france-2026",
       "category": "fiscalite",
       "question": "Comment sont taxees les cryptos en France en 2026 ?",
-      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 30% sur les plus-values realisees : 12.8% impot sur le revenu + 17.2% prelevements sociaux. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), vers bien/service (achat avec crypto), vers stablecoin SI tu es professionnel. NON taxable : token-to-token (BTC vers ETH par exemple, depuis 2019). Seuil : sous 305€ de plus-values annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
+      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 31,4% sur les plus-values realisees : 12.8% impot sur le revenu + 17.2% prelevements sociaux. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), vers bien/service (achat avec crypto), vers stablecoin SI tu es professionnel. NON taxable : token-to-token (BTC vers ETH par exemple, depuis 2019). Seuil : sous 305€ de plus-values annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
     },
     {
       "id": "declarer-crypto-impots",
@@ -101,7 +101,7 @@
       "id": "airdrop-imposable",
       "category": "fiscalite",
       "question": "Un airdrop est-il imposable ?",
-      "answer": "Cas debattu, doctrine BOFiP 2024 : les airdrops recus passivement (sans contrepartie active) sont imposes au moment de la CESSION (vente vers fiat) au PFU 30%, valeur d'acquisition = 0. Les airdrops recus avec contrepartie active (faire telle action sur la plateforme) peuvent etre requalifies en BNC (Benefices Non Commerciaux) au moment de la reception, valorises au cours du jour. En pratique : conserver les preuves (date, valeur a la reception, mode d'attribution), declarer au pire en BNC pour eviter le redressement. Voir notre guide /blog/fiscalite-airdrops-crypto-france-2026."
+      "answer": "Cas debattu, doctrine BOFiP 2024 : les airdrops recus passivement (sans contrepartie active) sont imposes au moment de la CESSION (vente vers fiat) au PFU 31,4%, valeur d'acquisition = 0. Les airdrops recus avec contrepartie active (faire telle action sur la plateforme) peuvent etre requalifies en BNC (Benefices Non Commerciaux) au moment de la reception, valorises au cours du jour. En pratique : conserver les preuves (date, valeur a la reception, mode d'attribution), declarer au pire en BNC pour eviter le redressement. Voir notre guide /blog/fiscalite-airdrops-crypto-france-2026."
     },
     {
       "id": "mica-quoi-cest",
@@ -137,7 +137,7 @@
       "id": "rebalancing-portfolio",
       "category": "trading",
       "question": "Faut-il rebalancer son portefeuille crypto ?",
-      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si tu vises 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC tu as 70/20/10, tu vends du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si tu as enormement bouge). Attention : chaque vente est une CESSION TAXABLE en France (PFU 30%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
+      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si tu vises 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC tu as 70/20/10, tu vends du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si tu as enormement bouge). Attention : chaque vente est une CESSION TAXABLE en France (PFU 31,4%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
     },
     {
       "id": "staking-cest-sur",

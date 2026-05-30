@@ -94,14 +94,14 @@ const STEPS: Step[] = [
     n: 4,
     title: "Vérifiez le seuil d'exonération de 305 €",
     detail:
-      "Si la SOMME de vos cessions crypto-fiat 2025 est < 305 €, vous êtes exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-dessus de 305 €, l'intégralité de la plus-value est imposable au PFU 30 %.",
+      "Si la SOMME de vos cessions crypto-fiat 2025 est < 305 €, vous êtes exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-dessus de 305 €, l'intégralité de la plus-value est imposable au PFU 31,4 %.",
     why: "Ce seuil est une exonération mais pas une dispense de déclaration. Si vous avez des cryptos à l'étranger, vous devez quand même remplir le 3916-bis (qui est indépendant du 2086).",
   },
   {
     n: 5,
     title: "Identifiez les cas particuliers : staking, airdrops, NFT, DeFi",
     detail:
-      "Si vous avez eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retenez les principes : token-to-token neutre, cession contre euro = imposable au PFU 30 %, prix d'acquisition zéro pour les rewards reçus gratuitement.",
+      "Si vous avez eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retenez les principes : token-to-token neutre, cession contre euro = imposable au PFU 31,4 %, prix d'acquisition zéro pour les rewards reçus gratuitement.",
     why: "Les cas particuliers sont la cause #1 d'erreurs de déclaration. Pour les patrimoines > 50 000 € avec staking ou DeFi, consulter un expert-comptable.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cas-speciaux", label: "Détail des cas particuliers" },
   },

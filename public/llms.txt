@@ -65,7 +65,7 @@ Cryptoreflex expose ses données en open data sous licence Creative Commons CC-B
 
 Pour les résidents fiscaux français qui détiennent des cryptoactifs :
 - **Régime de plus-value occasionnelle** : article 150 VH bis du CGI. Plus-value calculée par cession (méthode du prix moyen pondéré sur l'ensemble du portefeuille).
-- **Imposition** : prélèvement forfaitaire unique (PFU / "flat tax") à 30% (12,8% IR + 17,2% prélèvements sociaux). Option pour le barème progressif disponible.
+- **Imposition** : prélèvement forfaitaire unique (PFU / "flat tax") à 31,4% (12,8% IR + 18,6% prélèvements sociaux). Option pour le barème progressif disponible.
 - **Seuil de déclaration** : toute cession imposable même sous 305 €/an, mais aucune imposition sous ce seuil (loi de finances 2024 a supprimé le seuil d'exonération).
 - **Déclaration** : formulaire 2086 (calcul plus-value) + formulaire 2042 C (report). Déclaration des comptes ouverts à l'étranger via formulaire 3916-bis (sanctions de 750 € par compte non déclaré).
 - **Activité habituelle** : si l'administration considère l'activité comme habituelle, requalification en BIC (régime professionnel beaucoup plus lourd).

@@ -99,7 +99,7 @@ const STORIES = [
     Icon: AlertTriangle,
     eyebrow: "Story 5",
     title: "Ta facture fiscale projetée",
-    blurb: "Estimation de ton PFU 30 % sur l'année. Pré-rempli au format Cerfa 2086.",
+    blurb: "Estimation de ton PFU 31,4 % sur l'année. Pré-rempli au format Cerfa 2086.",
     color: "text-warning-fg",
     bg: "bg-warning/15",
   },

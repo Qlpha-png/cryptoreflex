@@ -120,7 +120,7 @@ export default function AirdropsPage() {
       {
         question: "Les airdrops sont-ils imposables en France ?",
         answer:
-          "Oui. La doctrine BOFiP BOI-RPPM-PVBMC-30-30 considere les airdrops comme des plus-values imposables (PFU 30% au moment de la cession, pas de la reception). Mais a la reception, si tokens listables sur exchange = il faut les declarer en revenu (BNC) sur leur valeur a la date d'attribution. Les regles evoluent — voir notre guide dedie /blog/fiscalite-airdrops-crypto-france-2026.",
+          "Oui. La doctrine BOFiP BOI-RPPM-PVBMC-30-30 considere les airdrops comme des plus-values imposables (PFU 31,4% au moment de la cession, pas de la reception). Mais a la reception, si tokens listables sur exchange = il faut les declarer en revenu (BNC) sur leur valeur a la date d'attribution. Les regles evoluent — voir notre guide dedie /blog/fiscalite-airdrops-crypto-france-2026.",
       },
       {
         question: "Comment se proteger des fake airdrops ?",

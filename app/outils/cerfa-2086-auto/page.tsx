@@ -254,7 +254,7 @@ export default function Cerfa2086AutoPage() {
               <CrossLink
                 href="/outils/calculateur-fiscalite"
                 title="Calculateur fiscalité crypto (gratuit)"
-                description="Estimez votre impôt PFU 30 % en 2 minutes, sans import de fichier."
+                description="Estimez votre impôt PFU 31,4 % en 2 minutes, sans import de fichier."
               />
               <CrossLink
                 href="/outils/declaration-fiscale-crypto"

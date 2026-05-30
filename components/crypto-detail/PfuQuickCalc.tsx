@@ -14,7 +14,7 @@ interface Props {
 /**
  * PfuQuickCalc — innovation BATCH 28, différenciation FR maximum.
  *
- * Mini-calculateur PFU 30% (Prélèvement Forfaitaire Unique, art. 150 VH bis CGI)
+ * Mini-calculateur PFU 31,4% (Prélèvement Forfaitaire Unique, art. 150 VH bis CGI)
  * pour simuler la note fiscale française sur une plus-value crypto au moment
  * de la conversion en euros. Cas d'usage retail FR ultra-fréquent et NICHE
  * (aucun comparateur crypto FR ne propose ça inline sur la fiche).
@@ -23,7 +23,7 @@ interface Props {
  *  - User entre prix d'achat moyen (€) + quantité possédée
  *  - On utilise le prix actuel (CoinGecko) pour estimer la valeur courante
  *  - Plus-value brute = (valeur courante − coût d'acquisition)
- *  - Note fiscale = plus-value × 30% (PFU)
+ *  - Note fiscale = plus-value × 31,4% (PFU)
  *  - Si plus-value < 0 → moins-value (no tax, on prévient le user)
  *
  * IMPORTANT : c'est un calcul INDICATIF par opération. Le PFU réel est calculé
@@ -52,7 +52,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
     const acquisitionCost = buy * qty;
     const currentValue = priceEur * qty;
     const gain = currentValue - acquisitionCost;
-    const tax = gain > 0 ? gain * 0.3 : 0;
+    const tax = gain > 0 ? gain * 0.314 : 0; // PFU 31,4 % (cf. lib/fiscalite TAUX_PFU)
     const net = gain > 0 ? currentValue - tax : currentValue;
     return {
       acquisitionCost,
@@ -98,7 +98,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
             Combien d&apos;impôt sur ta plus-value {symbol} ?
           </h3>
           <p className="mt-1 text-[12px] text-muted">
-            Simulation PFU 30% (article 150 VH bis CGI) — calcul indicatif par opération.
+            Simulation PFU 31,4% (article 150 VH bis CGI) — calcul indicatif par opération.
           </p>
         </div>
         <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
@@ -196,7 +196,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
                 ni imputables sur d'autres types de plus-values. Correction
                 obligatoire pour crédibilité éditoriale. */}
             <ResultCell
-              label={result.gain > 0 ? "Impôt PFU 30 %" : "Aucun impôt"}
+              label={result.gain > 0 ? "Impôt PFU 31,4 %" : "Aucun impôt"}
               value={fmt(result.tax)}
               hint={result.gain > 0 ? "à la cession en €" : "moins-value (non reportable au PFU)"}
               tone={result.gain > 0 ? "danger" : "success"}

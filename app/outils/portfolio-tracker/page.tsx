@@ -180,7 +180,7 @@ export default function PortfolioTrackerPage() {
             <CrossLink
               href="/outils/calculateur-roi-crypto"
               title="Calculateur ROI crypto"
-              description="Calculer plus-value et impôt PFU 30 % sur une opération."
+              description="Calculer plus-value et impôt PFU 31,4 % sur une opération."
             />
             <CrossLink
               href="/outils/calculateur-fiscalite"

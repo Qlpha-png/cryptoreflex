@@ -3,7 +3,7 @@ import { loadOgFonts } from "@/lib/og-fonts";
 import { BRAND } from "@/lib/brand";
 
 export const runtime = "edge";
-export const alt = "Calculateur ROI crypto — plus-value et impôt PFU 30 %";
+export const alt = "Calculateur ROI crypto — plus-value et impôt PFU 31,4 %";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -113,7 +113,7 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            Plus-value nette • Frais inclus • PFU 30 % • Seuil 305 €
+            Plus-value nette • Frais inclus • PFU 31,4 % • Seuil 305 €
           </div>
         </div>
 

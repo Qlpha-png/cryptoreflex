@@ -66,7 +66,7 @@ export default function EmbedCalculateurFiscalitePage() {
           lineHeight: 1.4,
         }}
       >
-        Estime ton impôt PFU 30 % / barème / BIC en 2 minutes — calcul 100 %
+        Estime ton impôt PFU 31,4 % / barème / BIC en 2 minutes — calcul 100 %
         local.
       </p>
 

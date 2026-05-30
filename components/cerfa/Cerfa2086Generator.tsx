@@ -222,10 +222,10 @@ function computePreview(txs: CerfaTransaction[], taxYear: number): PreviewSummar
   }
 
   const plusValueNette = pv - mv;
-  // Impôt PFU 30 % sur base imposable positive (si total > 305 €)
+  // Impôt PFU 31,4 % sur base imposable positive (si total > 305 €)
   const exonere = totalCessions <= 305;
   const impotEstime =
-    !exonere && plusValueNette > 0 ? plusValueNette * 0.30 : 0;
+    !exonere && plusValueNette > 0 ? plusValueNette * 0.314 : 0; // PFU 31,4 % (cf. lib/fiscalite TAUX_PFU)
 
   return {
     nbCessions: nb,
@@ -815,7 +815,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               strong
             />
             <PreviewRow
-              label="Impôt PFU 30 % estimé"
+              label="Impôt PFU 31,4 % estimé"
               value={fmtEur(preview.impotEstime)}
               tone="primary"
               strong

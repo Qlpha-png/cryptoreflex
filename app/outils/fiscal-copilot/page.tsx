@@ -115,7 +115,7 @@ export default function FiscalCopilotPage() {
     },
     {
       q: "Quelle est la précision des calculs vs un cabinet ?",
-      a: "Pour la flat tax PFU 30 % sur des trades simples (achat/vente/swap), précision ≥ 99 %. Le copilot suit l'article 150 VH bis pas-à-pas (méthode du prix moyen pondéré, agrégation tous comptes). Pour le DeFi exotique, la marge augmente.",
+      a: "Pour la flat tax PFU 31,4 % sur des trades simples (achat/vente/swap), précision ≥ 99 %. Le copilot suit l'article 150 VH bis pas-à-pas (méthode du prix moyen pondéré, agrégation tous comptes). Pour le DeFi exotique, la marge augmente.",
     },
     {
       q: "Combien ça coûte ?",

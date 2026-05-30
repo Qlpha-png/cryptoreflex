@@ -56,7 +56,7 @@ const STUDIES: StudyCard[] = [
     slug: "fiscalite-crypto-france-2026-guide-cerfa",
     title: "Fiscalité crypto France 2026 : guide complet Cerfa 2086 + 3916-bis",
     subtitle:
-      "Tout sur la déclaration des cryptos en 2026 : régime PFU 30%, Cerfa 2086 ligne par ligne, annexe 3916-bis (comptes étrangers), cas particuliers (staking, NFT, airdrops). Sources BOFiP officielles.",
+      "Tout sur la déclaration des cryptos en 2026 : régime PFU 31,4%, Cerfa 2086 ligne par ligne, annexe 3916-bis (comptes étrangers), cas particuliers (staking, NFT, airdrops). Sources BOFiP officielles.",
     date: "2026-05-06",
     readingTime: "22 min",
     topic: "fiscal",

@@ -316,7 +316,7 @@ export default function CalculateurFiscalite() {
             <RegimeOption
               value="pfu"
               current={form.regime}
-              title="PFU 30 %"
+              title="PFU 31,4 %"
               subtitle="Par défaut (occasionnel)"
               onChange={(v) => update("regime", v)}
             />
@@ -988,7 +988,7 @@ function BreakdownTable({
           />
           <Row label="Impôt sur le revenu" value={result.montantIR} negative />
           <Row
-            label="Prélèvements sociaux 17,2 %"
+            label="Prélèvements sociaux 18,6 %"
             value={result.montantPS}
             negative
           />

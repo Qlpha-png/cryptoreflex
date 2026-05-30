@@ -193,7 +193,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/comparatif/securite`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     // /airdrops : 12 airdrops curated (live/upcoming/claimed) (BLOC 3)
     { url: `${SITE_URL}/airdrops`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // /outils/profit-loss-calculator : calc PnL net apres frais + PFU 30% (BLOC 4)
+    // /outils/profit-loss-calculator : calc PnL net apres frais + PFU 31,4% (BLOC 4)
     { url: `${SITE_URL}/outils/profit-loss-calculator`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     // /faq-crypto : 20 Q&A en 6 categories + JSON-LD FAQPage (BLOC 5)
     // Priority 0.85 (Featured Snippets long-tail majeur).

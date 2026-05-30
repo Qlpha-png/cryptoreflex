@@ -39,7 +39,7 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Quelle est la fiscalité crypto en France en 2026 ?",
     answer:
-      "Pour un particulier, les plus-values crypto sont imposées au PFU (Prélèvement Forfaitaire Unique) de 30 % par défaut (12,8 % d'impôt + 17,2 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que tu restes en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite pour simuler ta note fiscale.",
+      "Pour un particulier, les plus-values crypto sont imposées au PFU (Prélèvement Forfaitaire Unique) de 31,4 % par défaut (12,8 % d'impôt + 18,6 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que tu restes en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite pour simuler ta note fiscale.",
   },
   {
     question: "MiCA Phase 2 : qu'est-ce qui change le 30 juin 2026 ?",
@@ -278,7 +278,7 @@ ${data.faq.answer}
 
 - [📊 780 fiches crypto analysées](/cryptos) — 100 fiches premium + 680 LLM, score fiabilité, on-chain live, roadmap
 - [⚖️ Comparer 2 cryptos face à face](/comparer) — 4 950 duels prêts
-- [🧮 Calculateur fiscalité PFU 30%](/outils/calculateur-fiscalite) — gratuit
+- [🧮 Calculateur fiscalité PFU 31,4%](/outils/calculateur-fiscalite) — gratuit
 - [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte tes amendes potentielles
 
 <Callout type="warning" title="Pas un conseil financier">

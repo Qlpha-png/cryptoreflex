@@ -729,7 +729,7 @@ Définitions concises des termes clés utilisés dans ce guide et dans l'écosys
 
 **MFA / 2FA (Multi-Factor Authentication / Two-Factor Authentication)** : mécanisme de sécurité qui exige une seconde preuve d'identité en plus du mot de passe (code SMS, application Authenticator, clé physique U2F). Indispensable sur toute plateforme crypto. Active-le systématiquement.
 
-**PFU 30 % (Prélèvement Forfaitaire Unique)** : taux d'imposition flat applicable par défaut aux plus-values sur cessions de crypto-actifs par des particuliers français (article 150 VH bis CGI). Composé de 12,8 % d'impôt sur le revenu + 17,2 % de prélèvements sociaux. Option barème progressif possible si ton taux marginal d'imposition est inférieur.
+**PFU 31,4 % (Prélèvement Forfaitaire Unique)** : taux d'imposition flat applicable par défaut aux plus-values sur cessions de crypto-actifs par des particuliers français (article 150 VH bis CGI). Composé de 12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux. Option barème progressif possible si ton taux marginal d'imposition est inférieur.
 
 **Plus-value** : différence positive entre le prix de vente et le coût d'acquisition d'un actif. Pour les crypto-actifs détenus par des particuliers en France, elle est calculée via la formule du 150 VH bis (qui tient compte de la valeur globale du portefeuille, pas seulement de l'actif vendu).
 

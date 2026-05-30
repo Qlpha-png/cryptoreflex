@@ -185,7 +185,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Calculateur fiscalité
               </h3>
               <p className="mt-1 text-xs text-fg/70">
-                Estimez votre impôt PFU 30 %
+                Estimez votre impôt PFU 31,4 %
               </p>
             </Link>
           </div>

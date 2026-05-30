@@ -37,7 +37,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  *  - Outil /outils/cerfa-2086-auto (CTA principal)
  *
  * SEO target : "fiscalite crypto 2026", "comment declarer crypto impots",
- * "Cerfa 2086 explication", "BOI-RPPM-PVBMC-30-30", "PFU 30%".
+ * "Cerfa 2086 explication", "BOI-RPPM-PVBMC-30-30", "PFU 31,4%".
  *
  * 4 schemas JSON-LD : Article + ResearchProject + FAQPage + BreadcrumbList.
  */
@@ -48,7 +48,7 @@ const LAST_UPDATED = "2026-05-06";
 const TITLE =
   "Fiscalité crypto France 2026 : guide complet Cerfa 2086 + 3916-bis";
 const DESCRIPTION =
-  "Tout sur la déclaration des cryptos en 2026 : régime PFU 30%, Cerfa 2086 ligne par ligne, annexe 3916-bis (comptes étrangers), cas particuliers (staking, NFT, airdrops). Sources BOFiP officielles.";
+  "Tout sur la déclaration des cryptos en 2026 : régime PFU 31,4%, Cerfa 2086 ligne par ligne, annexe 3916-bis (comptes étrangers), cas particuliers (staking, NFT, airdrops). Sources BOFiP officielles.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -105,7 +105,7 @@ const TOC = [
 const FAQ = [
   {
     q: "À partir de quel montant suis-je obligé de déclarer mes cessions crypto ?",
-    a: "À partir de 305 € de cessions cumulées dans l’année. En dessous de ce seuil, vous êtes exonéré de l’impôt sur la plus-value. Au-dessus, l’ensemble de la plus-value (et non l’excédent au-delà de 305 €) est imposable au PFU 30 %. Attention : le seuil de 305 € s’applique au montant des CESSIONS (vente vers euro), pas au montant de la plus-value elle-même.",
+    a: "À partir de 305 € de cessions cumulées dans l’année. En dessous de ce seuil, vous êtes exonéré de l’impôt sur la plus-value. Au-dessus, l’ensemble de la plus-value (et non l’excédent au-delà de 305 €) est imposable au PFU 31,4 %. Attention : le seuil de 305 € s’applique au montant des CESSIONS (vente vers euro), pas au montant de la plus-value elle-même.",
   },
   {
     q: "Le change crypto-vers-crypto (token-to-token) est-il imposable ?",
@@ -129,7 +129,7 @@ const FAQ = [
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
-    a: "Pour les NFT : régime spécifique non encore stabilisé. La doctrine actuelle (BOFiP en cours de rédaction) tend à appliquer le régime des cessions d’œuvres d’art (régime forfaitaire 6,5 %) lorsque le NFT a une dimension artistique, sinon le régime PFU 30 % crypto. Les memecoins (DOGE, SHIB, etc.) suivent strictement le régime crypto classique : PFU 30 % à la cession contre euro.",
+    a: "Pour les NFT : régime spécifique non encore stabilisé. La doctrine actuelle (BOFiP en cours de rédaction) tend à appliquer le régime des cessions d’œuvres d’art (régime forfaitaire 6,5 %) lorsque le NFT a une dimension artistique, sinon le régime PFU 31,4 % crypto. Les memecoins (DOGE, SHIB, etc.) suivent strictement le régime crypto classique : PFU 31,4 % à la cession contre euro.",
   },
   {
     q: "Si j’utilise un exchange français (Coinhouse, Bitstack), dois-je quand même remplir le 3916-bis ?",
@@ -225,7 +225,7 @@ const researchProject = {
     "BOI-RPPM-PVBMC-30-30",
     "Cerfa 2086",
     "Cerfa 3916-bis",
-    "PFU 30 % (Prélèvement Forfaitaire Unique)",
+    "PFU 31,4 % (Prélèvement Forfaitaire Unique)",
     "Article 150 VH bis du Code général des impôts",
   ],
 };
@@ -294,7 +294,7 @@ export default function FiscaliteCryptoStudyPage() {
 
           <p className="mt-6 text-lg text-slate-300 leading-relaxed">
             Tout ce qu’il faut savoir pour déclarer ses cryptomonnaies en
-            France en 2026 : régime PFU 30 %, Cerfa 2086 ligne par ligne,
+            France en 2026 : régime PFU 31,4 %, Cerfa 2086 ligne par ligne,
             annexe 3916-bis (comptes étrangers), cas particuliers (staking,
             NFT, airdrops, hard forks). Sources BOFiP officielles. Méthodologie
             publique. <strong>Aucun conseil fiscal personnalisé</strong> —
@@ -361,8 +361,8 @@ export default function FiscaliteCryptoStudyPage() {
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
               <span>
-                <strong>PFU 30 %</strong> applicable aux plus-values
-                crypto-fiat (12,8 % IR + 17,2 % CSG/CRDS). Régime obligatoire
+                <strong>PFU 31,4 %</strong> applicable aux plus-values
+                crypto-fiat (12,8 % IR + 18,6 % CSG/CRDS). Régime obligatoire
                 par défaut depuis 2023, sauf option pour le barème progressif.
               </span>
             </li>
@@ -486,7 +486,7 @@ export default function FiscaliteCryptoStudyPage() {
         {/* 2. Régime */}
         <section id="regime" className="mt-12">
           <h2>2. Régime fiscal applicable</h2>
-          <h3>2.1. Le PFU 30 %</h3>
+          <h3>2.1. Le PFU 31,4 %</h3>
           <p>
             Les plus-values de cession d’actifs numériques par les particuliers
             relèvent du <strong>Prélèvement Forfaitaire Unique (PFU)</strong>{" "}
@@ -525,7 +525,7 @@ export default function FiscaliteCryptoStudyPage() {
             <strong>Exemple chiffré.</strong> Vous achetez 1 BTC à 30 000 € en
             2024. Vous le vendez 32 000 € en 2025. La plus-value est de
             2 000 €, MAIS le montant de la cession est de 32 000 € — bien
-            au-dessus de 305 €. La plus-value est donc imposable au PFU 30 % =
+            au-dessus de 305 €. La plus-value est donc imposable au PFU 31,4 % =
             600 €.
           </p>
           <p>
@@ -625,7 +625,7 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Le résultat de la ligne 235 est ensuite reporté sur la ligne{" "}
             <strong>3AN</strong> de la déclaration 2042-C (cessions d’actifs
-            numériques) et imposé au PFU 30 %.
+            numériques) et imposé au PFU 31,4 %.
           </p>
           <h3>3.4. Saisie en ligne sur impots.gouv.fr</h3>
           <p>
@@ -738,13 +738,13 @@ export default function FiscaliteCryptoStudyPage() {
             </li>
             <li>
               les NFT « utilitaires » (PFP collection, in-game, gaming
-              assets) — régime PFU 30 % crypto classique.
+              assets) — régime PFU 31,4 % crypto classique.
             </li>
           </ul>
           <p>
             Cette distinction crée une zone grise : la plupart des
             contribuables et conseillers appliquent par sécurité le régime
-            crypto PFU 30 % à tous les NFT.
+            crypto PFU 31,4 % à tous les NFT.
           </p>
           <h3>5.4. DeFi (Aave, Uniswap, Compound, etc.)</h3>
           <p>
@@ -929,7 +929,7 @@ export default function FiscaliteCryptoStudyPage() {
                       /outils/calculateur-fiscalite
                     </strong>
                     <p className="mt-1 text-sm text-slate-300">
-                      Simulateur de l’imposition PFU 30 % vs barème
+                      Simulateur de l’imposition PFU 31,4 % vs barème
                       progressif. Calcule le gain fiscal de chaque option en
                       fonction de votre TMI.
                     </p>

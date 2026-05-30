@@ -80,7 +80,7 @@ export default function CalculateurROI() {
       `Plus-value brute : ${formatEur(result.profitGross)}`,
       `Plus-value nette : ${formatEur(result.profitNet)}`,
       `ROI : ${formatPctSigned(result.roiPercent)}`,
-      `Impôt FR estimé (PFU 30 %) : ${formatEur(result.taxFr)}`,
+      `Impôt FR estimé (PFU 31,4 %) : ${formatEur(result.taxFr)}`,
     ].join("\n");
     try {
       await navigator.clipboard.writeText(lines);
@@ -205,7 +205,7 @@ export default function CalculateurROI() {
                     <span className="text-warning-fg font-bold tabular-nums">
                       {formatEur(result.taxFr)}
                     </span>{" "}
-                    d'impôts français (PFU 30 % : 12,8 % IR + 17,2 %
+                    d'impôts français (PFU 31,4 % : 12,8 % IR + 18,6 %
                     prélèvements sociaux).
                   </p>
                 </>
@@ -261,7 +261,7 @@ export default function CalculateurROI() {
       {/* YMYL disclaimer */}
       <p className="mt-6 text-xs text-muted leading-relaxed">
         Cet outil est purement pédagogique et ne constitue pas un conseil
-        fiscal ou en investissement. L'impôt affiché applique le PFU à 30 %
+        fiscal ou en investissement. L'impôt affiché applique le PFU à 31,4 %
         sans tenir compte du barème progressif, de l'option BIC ni des
         moins-values reportables. Pour une déclaration officielle, consultez
         un expert-comptable agréé crypto-actifs.

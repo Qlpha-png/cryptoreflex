@@ -123,7 +123,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
           mono
         />
         <Tile
-          label="Prélèvements sociaux (17,2 %)"
+          label="Prélèvements sociaux (18,6 %)"
           value={formatEur(flat.montantPS)}
           tone="muted"
           mono
@@ -134,7 +134,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-wide text-primary-soft font-semibold">
-              Flat tax due (PFU 30 %)
+              Flat tax due (PFU 31,4 %)
             </p>
             <p className="mt-1 font-mono font-bold text-3xl text-white">
               {formatEur(flat.totalFlatTax)}

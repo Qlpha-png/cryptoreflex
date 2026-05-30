@@ -68,7 +68,7 @@ const benefits = [
   {
     icon: Calculator,
     title: "Fiscalité FR",
-    text: "Mises à jour PFU 30%, BOFiP, formulaire 2086. Vous ne vous faites pas surprendre en avril.",
+    text: "Mises à jour PFU 31,4%, BOFiP, formulaire 2086. Vous ne vous faites pas surprendre en avril.",
   },
   {
     icon: AlertTriangle,

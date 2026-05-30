@@ -50,12 +50,12 @@ import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 export const metadata: Metadata = {
   title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
   description:
-    "28 outils crypto FR : calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
+    "28 outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils"),
   openGraph: {
     title: "28 outils crypto FR gratuits — Cryptoreflex",
     description:
-      "Calculateur fiscalité PFU 30 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
+      "Calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
     url: "https://www.cryptoreflex.fr/outils",
     type: "website",
   },
@@ -109,7 +109,7 @@ const TOOLS: Tool[] = [
     cat: "fiscalite",
   },
   {
-    title: "Calculateur fiscalité PFU 30 %",
+    title: "Calculateur fiscalité PFU 31,4 %",
     desc: "Simule ton impôt crypto en 2 min. Régime PFU ou barème, prorata portefeuille intégré.",
     href: "/outils/calculateur-fiscalite",
     Icon: Calculator,
@@ -259,7 +259,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Tax Loss Harvesting (FR)",
-    desc: "Réduis ton PFU 30 % en compensant tes plus-values par les moins-values réalisées avant le 31/12.",
+    desc: "Réduis ton PFU 31,4 % en compensant tes plus-values par les moins-values réalisées avant le 31/12.",
     href: "/outils/tax-loss-harvesting",
     Icon: TrendingUp,
     tier: "free",
@@ -377,7 +377,7 @@ const CATEGORIES: Array<{
     id: "fiscalite",
     label: "Fiscalité crypto FR",
     icon: FileText,
-    desc: "Cerfa 2086, 3916-bis, PFU 30 %, déclaration impots.gouv.fr",
+    desc: "Cerfa 2086, 3916-bis, PFU 31,4 %, déclaration impots.gouv.fr",
     accent: "from-amber-500/20",
   },
   {

@@ -55,7 +55,7 @@ const FAQ_ITEMS = [
   {
     question: "Comment sont taxés mes récompenses de staking en France ?",
     answer:
-      "Selon le BOFiP (BOI-RPPM-PVBMC-30-30 du 02/09/2024), les récompenses de staking sont imposées en BNC (bénéfices non commerciaux) à leur valeur EUR au moment de la perception. Puis, lors de la vente, le gain est traité comme une plus-value crypto (PFU 30 %). Si tu stakes en volume professionnel, tu peux basculer en BIC. Conseille-toi auprès d'un expert-comptable.",
+      "Selon le BOFiP (BOI-RPPM-PVBMC-30-30 du 02/09/2024), les récompenses de staking sont imposées en BNC (bénéfices non commerciaux) à leur valeur EUR au moment de la perception. Puis, lors de la vente, le gain est traité comme une plus-value crypto (PFU 31,4 %). Si tu stakes en volume professionnel, tu peux basculer en BIC. Conseille-toi auprès d'un expert-comptable.",
   },
   {
     question: "Le staking est-il sans risque ?",

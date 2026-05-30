@@ -34,7 +34,7 @@ const PAGE_PATH = "/outils/profit-loss-calculator";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Calculateur profit/perte crypto : PnL net après frais et fiscalité";
 const DESCRIPTION =
-  "Calculez votre profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 30% France. Outil gratuit Cryptoreflex.";
+  "Calculez votre profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 31,4% France. Outil gratuit Cryptoreflex.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -77,7 +77,7 @@ export default function ProfitLossCalculatorPage() {
       {
         question: "Comment calcule-t-on le profit d'une crypto ?",
         answer:
-          "Profit brut = (prix_vente - prix_achat) × quantite. Profit net = profit_brut - frais_achat - frais_vente. En France, sur les plus-values realisees (cessions vers fiat ou achat de bien/service), s'applique le PFU (Prelevement Forfaitaire Unique) de 30% : 12.8% impot + 17.2% prelevements sociaux. Donc Net apres impot = Net × 0.7 (si plus-value).",
+          "Profit brut = (prix_vente - prix_achat) × quantite. Profit net = profit_brut - frais_achat - frais_vente. En France, sur les plus-values realisees (cessions vers fiat ou achat de bien/service), s'applique le PFU (Prelevement Forfaitaire Unique) de 31,4% : 12.8% impot + 17.2% prelevements sociaux. Donc Net apres impot = Net × 0.7 (si plus-value).",
       },
       {
         question: "Les frais de plateforme (maker, taker, spread) sont-ils deductibles ?",
@@ -129,7 +129,7 @@ export default function ProfitLossCalculatorPage() {
           <p className="mt-3 text-base text-muted">
             Renseignez votre prix d&apos;achat, prix de vente, quantite et
             frais. On calcule votre{" "}
-            <strong className="text-fg">PnL brut, net apres frais, et apres impot PFU 30%</strong>{" "}
+            <strong className="text-fg">PnL brut, net apres frais, et apres impot PFU 31,4%</strong>{" "}
             (France). Pure simulation educative — pas un conseil fiscal.
           </p>
         </header>
@@ -170,7 +170,7 @@ export default function ProfitLossCalculatorPage() {
               Outil complementaire
             </div>
             <div className="mt-2 text-base font-bold text-fg flex items-center gap-2">
-              Calculateur fiscalite PFU 30%
+              Calculateur fiscalite PFU 31,4%
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
@@ -202,7 +202,7 @@ export default function ProfitLossCalculatorPage() {
 
         <p className="mt-6 text-[11px] text-muted leading-relaxed">
           Cet outil ne remplace pas un comptable ni un conseiller fiscal. Le
-          PFU 30% s&apos;applique sur les{" "}
+          PFU 31,4% s&apos;applique sur les{" "}
           <strong className="text-fg">cessions taxables</strong> uniquement
           (vers fiat ou biens/services, pas token-to-token). Pour votre
           declaration annuelle, voir notre{" "}
