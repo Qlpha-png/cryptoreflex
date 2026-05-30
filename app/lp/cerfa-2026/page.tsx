@@ -242,7 +242,7 @@ export default function CerfaLandingPage() {
           </h2>
           <p className="mt-2 max-w-2xl mx-auto text-sm text-slate-300">
             Notre checklist 8 étapes est imprimable et vous guide pas-à-pas
-            avant la deadline du 31 mai 2026.
+            avant la deadline (21 mai au 4 juin 2026 selon votre département).
           </p>
           <Link
             href="/guides/declaration-crypto-2026-checklist"
@@ -284,7 +284,7 @@ export default function CerfaLandingPage() {
           </h2>
           <p className="mt-3 text-slate-300 max-w-xl mx-auto">
             Gratuit, sans inscription, sans pub. La saison fiscale est ouverte
-            jusqu’au <strong>31 mai 2026</strong>.
+            jusqu’au <strong>4 juin 2026</strong> (selon votre département).
           </p>
           <a
             href={target}

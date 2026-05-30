@@ -271,7 +271,7 @@ export function generateFiscaliteSchema(
       },
       {
         name: "Reporter sur le Cerfa 2086 puis 2042-C",
-        text: "Remplis le formulaire 2086 ligne par ligne (une ligne par cession), reporte le total plus-value en case 3AN du 2042-C, et déclare tes comptes étrangers en 3916-bis. Date limite 22 mai à 5 juin 2026 selon ton département.",
+        text: "Remplis le formulaire 2086 ligne par ligne (une ligne par cession), reporte le total plus-value en case 3AN du 2042-C, et déclare tes comptes étrangers en 3916-bis. Date limite 21 mai au 4 juin 2026 en ligne (19 mai pour la déclaration papier) selon ton département.",
         url: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026",
       },
     ],

@@ -72,7 +72,7 @@ const STEPS: Step[] = [
     title: "Listez tous les exchanges utilisés en 2025",
     detail:
       "Notez les exchanges (Binance, Kraken, Coinbase, Bitstack, Coinhouse, etc.) où vous avez eu un compte ouvert au moins 1 jour en 2025, MÊME sans transaction. Vérifiez vos emails (notifications de connexion) et votre gestionnaire de mots de passe.",
-    why: "Tout compte ouvert chez un exchange étranger doit être déclaré sur l'annexe 3916-bis, même sans transaction. Oubli = amende 1 500 € par compte.",
+    why: "Tout compte ouvert chez un exchange étranger doit être déclaré sur l'annexe 3916-bis, même sans transaction. Oubli = amende 750 € par compte (1 500 € si solde > 50 000 €).",
   },
   {
     n: 2,
@@ -117,14 +117,14 @@ const STEPS: Step[] = [
     title: "Remplissez l'annexe 3916-bis (comptes étrangers)",
     detail:
       "Pour chaque exchange étranger (Binance, Kraken Irlande, Coinbase Europe, Bitpanda Autriche, etc.) : 1 ligne sur 3916-bis avec le nom de l'établissement, adresse, numéro de compte, date d'ouverture (et éventuellement de clôture).",
-    why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 1 500 €/compte (10 000 € si État non coopératif). À déclarer même sans transaction dans l'année.",
+    why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 750 €/compte (1 500 € si solde > 50 000 €, 10 000 € si État non coopératif). À déclarer même sans transaction dans l'année.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cerfa-3916", label: "Détail 3916-bis" },
   },
   {
     n: 8,
     title: "Déclarez avant la deadline de votre département",
     detail:
-      "Dates 2026 (à confirmer par DGFiP en mars) : 25 mai pour départements 1-19 + non-résidents, 1er juin pour 20-54, 8 juin pour 55-976. Déclaration papier : 20 mai 2026 maximum. En cas de retard : majoration 10 % minimum.",
+      "Dates 2026 : 21 mai pour départements 1-19 + non-résidents, 28 mai pour 20-54, 4 juin pour 55-976. Déclaration papier : 19 mai 2026 maximum. En cas de retard : majoration 10 % minimum.",
     why: "Le retard de déclaration est le 2ème motif de pénalité après l'oubli. Mieux vaut déclarer un peu approximatif dans les délais qu'attendre la perfection en retard (vous pouvez toujours faire une déclaration rectificative ensuite).",
   },
 ];

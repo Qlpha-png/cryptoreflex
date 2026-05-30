@@ -486,7 +486,7 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Déclarer ses cryptos en France, c'est un piège technique",
-        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré case 8UU du formulaire 3916-bis — sous peine de 1 500 € à 10 000 € d'amende PAR compte oublié (art. 1736 IV bis CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
+        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré case 8UU du formulaire 3916-bis — sous peine de 750 € à 10 000 € d'amende PAR compte oublié (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
         stat: "10 000 €",
       },
       solution: {
@@ -505,7 +505,7 @@ export const partnerReviews: PartnerReview[] = [
       },
       roi: {
         title: "Le ROI sale et défendable, en chiffres",
-        body: "Plan Investisseur : 199 €/an. Tu gagnes 12 heures de saisie chaque mai (× 30 €/h de ton temps facturé = 360 € de valeur récupérée dès la 1ère année). Tu évites 1 500 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon ton profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
+        body: "Plan Investisseur : 199 €/an. Tu gagnes 12 heures de saisie chaque mai (× 30 €/h de ton temps facturé = 360 € de valeur récupérée dès la 1ère année). Tu évites 750 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon ton profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
         stat: "ROI 1.8x–250x",
       },
     },
@@ -513,7 +513,7 @@ export const partnerReviews: PartnerReview[] = [
       beforeTitle: "Sans Waltio en mai",
       beforeItems: [
         "14 heures de Excel multi-onglets pour calculer tes plus-values en PMP manuellement",
-        "Risque réel d'amende 1 500 € à 10 000 € par compte étranger oublié au 3916-bis",
+        "Risque réel d'amende 750 € à 10 000 € par compte étranger oublié au 3916-bis",
         "Stress fiscal jusqu'au dépôt — tu doutes de chaque calcul, tu refais 3 fois",
         "Pas de traçabilité : si Bercy t'audite, tu n'as pas de méthode défendable",
       ],
@@ -615,7 +615,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Évite jusqu'à 10 000 € d'amende par compte 3916-bis non déclaré",
         description:
-          "Article 1736 IV bis CGI : 1 500 € d'amende par compte étranger non déclaré (10 000 € si pays non-coopératif). Waltio te liste exhaustivement chaque exchange étranger à déclarer. Sur 5 exchanges oubliés, c'est 7 500 € à 50 000 € d'amende potentielle évitée.",
+          "Article 1736 X CGI : 750 € d'amende par compte étranger non déclaré (1 500 € si solde > 50 000 €, jusqu'à 10 000 € si pays non-coopératif). Waltio te liste exhaustivement chaque exchange étranger à déclarer. Sur 5 exchanges oubliés, c'est 3 750 € à 50 000 € d'amende potentielle évitée.",
       },
       {
         reason: "Gagne 12 à 14 heures de saisie chaque mai",
@@ -634,7 +634,7 @@ export const partnerReviews: PartnerReview[] = [
       { stat: "2018", source: "Première solution fiscalité crypto SAS française (depuis 7 ans)" },
     ],
     risksAvoided: [
-      "Amende 1 500 € à 10 000 € par compte étranger crypto non déclaré (3916-bis, art. 1736 CGI)",
+      "Amende 750 € à 10 000 € par compte étranger crypto non déclaré (3916-bis, art. 1736 CGI)",
       "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de PMP)",
       "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables au jour de réception)",
       "Erreur déclaration aboutissant à intérêts de retard 0,2%/mois + majoration 10-80%",

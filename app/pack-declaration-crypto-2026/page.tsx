@@ -101,7 +101,7 @@ export default function PackDeclarationPage() {
     },
     {
       q: "49 €, c'est combien remboursé ?",
-      a: "Si vous déclarez correctement, ZÉRO frais d'impôt évité — c'est juste l'impôt légal dû. MAIS vous évitez une amende potentielle de 1 500 €/compte non déclaré (Annexe 3916-bis) + redressement fiscal sur les plus-values mal calculées. ROI moyen estimé : 30-200x (selon volume de trades).",
+      a: "Si vous déclarez correctement, ZÉRO frais d'impôt évité — c'est juste l'impôt légal dû. MAIS vous évitez une amende potentielle de 750 €/compte non déclaré (Annexe 3916-bis) + redressement fiscal sur les plus-values mal calculées. ROI moyen estimé : 30-200x (selon volume de trades).",
     },
     {
       q: "C'est un service récurrent ou one-shot ?",
@@ -163,7 +163,7 @@ export default function PackDeclarationPage() {
               { emoji: "📋", text: "Cerfa 2086 + Annexe 3916-bis PDF pré-remplis" },
               { emoji: "💸", text: "Calcul 150 VH bis pas-à-pas avec sources CGI/BOFiP citées" },
               { emoji: "⏱️", text: "5 min vs 5 h de saisie manuelle (gain temps massif)" },
-              { emoji: "✅", text: "ROI 30-200x (évite amendes 1 500 €/compte 3916-bis)" },
+              { emoji: "✅", text: "ROI 30-200x (évite amendes 750 €/compte 3916-bis)" },
               { emoji: "🤖", text: "100 % automatisé. Aucun support humain. Audit-ready pour votre expert-comptable." },
             ]}
             readingTime="4 min"

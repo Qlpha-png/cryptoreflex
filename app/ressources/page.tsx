@@ -79,7 +79,7 @@ const LEAD_MAGNETS: LeadMagnetMeta[] = [
     id: "checklist",
     title: "Checklist Déclaration 2026",
     description:
-      "30 actions concrètes en 1 page A4. Imprime et coche au fur et à mesure. Aucune case ne doit rester vide avant le 22 mai 2026.",
+      "30 actions concrètes en 1 page A4. Imprime et coche au fur et à mesure. Aucune case ne doit rester vide avant le 19 mai 2026.",
     pages: 1,
   },
   {

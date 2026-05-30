@@ -101,7 +101,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Radar 3916-bis",
-    desc: "Détecte tes amendes potentielles (1 500 € à 10 000 €/compte) sur tes comptes crypto étrangers en 2 min.",
+    desc: "Détecte tes amendes potentielles (750 € à 10 000 €/compte) sur tes comptes crypto étrangers en 2 min.",
     href: "/outils/radar-3916-bis",
     Icon: Radar,
     tier: "free",

@@ -4,7 +4,7 @@
   "disclaimer": "Données basées sur informations publiques (Mentions Légales officielles, registres AMF/MFSA/ESMA, BOI-CF-CPF-30-20). Pour chaque exchange, le champ 'verifiedFields' liste ce qui est confirmé. Les champs marqués 'À vérifier' demandent une consultation directe des Mentions Légales officielles avant déclaration. Le user reste juridiquement responsable de ses déclarations.",
   "legal": {
     "boi": "BOI-CF-CPF-30-20 (Comptes ouverts à l'étranger - obligation déclarative)",
-    "cgi": "Article 1736 IV bis du Code Général des Impôts",
+    "cgi": "Article 1736 X du Code Général des Impôts",
     "amendeStandard": 1500,
     "amendeNonCooperatif": 10000,
     "perCount": true,
@@ -113,7 +113,7 @@
       "name": "Bybit",
       "logo": "bybit",
       "verifiedFields": ["name"],
-      "warning": "ATTENTION : Bybit a 2 entités. L'historique Bybit Fintech Limited (BVI = pays NON-coopératif) génère une amende de 10 000 € si non déclaré. Bybit EU GmbH (Autriche) génère 1 500 €.",
+      "warning": "ATTENTION : Bybit a 2 entités. L'historique Bybit Fintech Limited (BVI = pays NON-coopératif) génère une amende de 10 000 € si non déclaré. Bybit EU GmbH (Autriche) génère 750 €.",
       "entities": [
         {
           "label": "Bybit EU GmbH (depuis 2025)",

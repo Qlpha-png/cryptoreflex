@@ -91,7 +91,7 @@ Méthodes de calcul du prix d'acquisition utilisées dans certains pays (USA, Al
 Plus-value = Prix de cession − (Prix total d'acquisition × Prix de cession ÷ Valeur globale du portefeuille à la date de cession). Aussi appelée "calcul au prorata" ou "méthode du portefeuille global".
 
 ### Formulaire 3916-bis
-Déclaration obligatoire pour chaque compte crypto détenu hors France (Binance, Kraken, Bybit, KuCoin, etc.). Une déclaration par compte. Sanction omission : 1 500 € par compte (10 000 € si État sans accord d'assistance avec la France).
+Déclaration obligatoire pour chaque compte crypto détenu hors France (Binance, Kraken, Bybit, KuCoin, etc.). Une déclaration par compte. Sanction omission : 750 € par compte non déclaré (1 500 € si le compte dépasse 50 000 €) ; 10 000 € si État sans accord d'assistance avec la France.
 
 ## G
 

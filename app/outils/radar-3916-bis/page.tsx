@@ -25,7 +25,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Radar 3916-bis — détectez vos amendes crypto en 2 min (gratuit)",
   description:
-    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle 1 500 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
+    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle 750 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
   alternates: withHreflang(`${BRAND.url}/outils/radar-3916-bis`),
   keywords: [
     "3916-bis crypto",
@@ -73,11 +73,11 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "Qu'est-ce que le formulaire 3916-bis ?",
-    a: "Le 3916-bis est une déclaration annuelle obligatoire pour toute personne physique fiscalement domiciliée en France ayant ouvert, détenu, utilisé ou clôturé au moins un compte d'actifs numériques (crypto-monnaies) auprès d'un exchange établi à l'étranger. Référence : BOI-CF-CPF-30-20 et article 1736 IV bis du CGI.",
+    a: "Le 3916-bis est une déclaration annuelle obligatoire pour toute personne physique fiscalement domiciliée en France ayant ouvert, détenu, utilisé ou clôturé au moins un compte d'actifs numériques (crypto-monnaies) auprès d'un exchange établi à l'étranger. Référence : BOI-CF-CPF-30-20 et article 1736 X du CGI.",
   },
   {
     q: "Quelle est l'amende si je ne déclare pas ?",
-    a: "1 500 € par compte non déclaré pour les exchanges situés en pays coopératif (UE, UK, US…). 10 000 € par compte si l'exchange est situé en pays non-coopératif (liste FR : Seychelles, Iles Vierges britanniques, Bahamas, Panama, Vanuatu…). MEXC, KuCoin, Bitget, Bitfinex sont concernés par le tarif majoré.",
+    a: "750 € par compte non déclaré pour les exchanges situés en pays coopératif (UE, UK, US…), porté à 1 500 € par compte si le solde dépasse 50 000 € à un moment de l'année. 10 000 € par compte si l'exchange est situé en pays non-coopératif (liste FR : Seychelles, Iles Vierges britanniques, Bahamas, Panama, Vanuatu…). MEXC, KuCoin, Bitget, Bitfinex sont concernés par le tarif majoré.",
   },
   {
     q: "Mon compte est vide / fermé, dois-je quand même le déclarer ?",
@@ -118,7 +118,7 @@ const HOW_TO_STEPS = [
   },
   {
     name: "Découvrez votre exposition financière",
-    text: "Le Radar calcule en € la somme exacte des amendes que vous risquez si vous ne déclarez pas. Comptes en pays non-coopératif (Seychelles, BVI…) = 10 000 €/compte. Comptes en pays coopératif = 1 500 €/compte.",
+    text: "Le Radar calcule en € la somme exacte des amendes que vous risquez si vous ne déclarez pas. Comptes en pays non-coopératif (Seychelles, BVI…) = 10 000 €/compte. Comptes en pays coopératif = 750 € à 750 €/compte.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
@@ -133,7 +133,7 @@ export default function RadarPage() {
     howToSchema({
       name: "Comment déclarer ses comptes crypto étrangers (3916-bis)",
       description:
-        "Procédure complète pour déclarer ses comptes crypto étrangers (Binance, Kraken, MEXC…) sur impots.gouv.fr et éviter l'amende de 1 500 € à 10 000 € par compte oublié.",
+        "Procédure complète pour déclarer ses comptes crypto étrangers (Binance, Kraken, MEXC…) sur impots.gouv.fr et éviter l'amende de 750 € à 10 000 € par compte oublié.",
       totalTime: "PT15M",
       steps: HOW_TO_STEPS,
     }),
@@ -179,7 +179,7 @@ export default function RadarPage() {
               Si vous avez un compte sur Binance, Kraken, MEXC, Bybit, KuCoin…
               et que vous ne l&apos;avez pas déclaré sur le 3916-bis,
               l&apos;amende est de{" "}
-              <strong className="text-warning">1 500 €</strong> à{" "}
+              <strong className="text-warning">750 €</strong> à{" "}
               <strong className="text-danger">10 000 € PAR COMPTE</strong>.
               Vérifiez votre exposition en 2 min.
             </p>
@@ -243,8 +243,8 @@ export default function RadarPage() {
               {
                 icon: AlertTriangle,
                 color: "warning",
-                title: "1 500 € par compte coopératif",
-                text: "Pour Binance France, Coinbase Europe, Kraken Ireland, Crypto.com Malte, Bitvavo NL — non-déclaration = 1 500 € par compte oublié.",
+                title: "750 € à 1 500 € par compte coopératif",
+                text: "Pour Binance France, Coinbase Europe, Kraken Ireland, Crypto.com Malte, Bitvavo NL — non-déclaration = 750 € par compte oublié (1 500 € si solde > 50 000 €).",
               },
               {
                 icon: AlertTriangle,
@@ -294,7 +294,7 @@ export default function RadarPage() {
             >
               BOI-CF-CPF-30-20
             </a>{" "}
-            · Article 1736 IV bis du{" "}
+            · Article 1736 X du{" "}
             <a
               href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045163049"
               target="_blank"

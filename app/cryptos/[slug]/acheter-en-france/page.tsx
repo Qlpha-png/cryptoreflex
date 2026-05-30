@@ -366,7 +366,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
                   <strong>Compte étranger :</strong> si tu utilises Binance, Coinbase ou Kraken,
-                  déclaration du compte sur formulaire 3916-bis (oubli = 1 500 € d'amende).
+                  déclaration du compte sur formulaire 3916-bis (oubli = 750 € d'amende par compte, 1 500 € si solde &gt; 50 000 €).
                 </span>
               </li>
             </ul>

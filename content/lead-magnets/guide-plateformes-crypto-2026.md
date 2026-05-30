@@ -1247,7 +1247,7 @@ Comment t'en prémunir : dès que ton portefeuille crypto dépasse 5 000 €, tr
 
 ### Piège 5 — Oublier le formulaire 3916-bis pour les comptes sur plateformes étrangères
 
-Depuis la loi de finances 2020, tout compte ouvert sur une plateforme de crypto-actifs étrangère (y compris dans l'UE) doit être déclaré chaque année à la DGFiP via le formulaire Cerfa 3916-bis (joints à la déclaration de revenus 2042). La sanction pour non-déclaration est de 1 500 € par compte non déclaré (montant doublé si le compte est dans un pays non coopératif au sens fiscal).
+Depuis la loi de finances 2020, tout compte ouvert sur une plateforme de crypto-actifs étrangère (y compris dans l'UE) doit être déclaré chaque année à la DGFiP via le formulaire Cerfa 3916-bis (joints à la déclaration de revenus 2042). La sanction pour non-déclaration est de 750 € par compte non déclaré (portée à 1 500 € si la valeur du compte dépasse 50 000 €, et à 10 000 € si le compte est dans un pays non coopératif au sens fiscal).
 
 Ce que beaucoup ignorent : l'obligation de déclaration existe même si tu n'as effectué aucune transaction dans l'année, et même si le solde est nul. Du moment que le compte existe, il doit être déclaré.
 

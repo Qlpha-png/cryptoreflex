@@ -1,6 +1,6 @@
 ---
 title: "Checklist Déclaration Crypto 2026 — 30 actions concrètes"
-subtitle: "Imprime cette page A4 et coche au fur et à mesure. Aucune action ne doit rester décochée avant le 22 mai 2026."
+subtitle: "Imprime cette page A4 et coche au fur et à mesure. Aucune action ne doit rester décochée avant le 19 mai 2026."
 author: "Cryptoreflex"
 date: "2026-04-26"
 version: "1.0"
@@ -10,7 +10,7 @@ disclaimer: "Document indicatif. Pour situation complexe (DeFi, BIC, NFT > 50k�
 
 # Checklist Déclaration Crypto France 2026
 
-> Imprime cette page A4 et coche au fur et à mesure. Aucune case ne doit rester vide avant la date limite de ton département (22 mai, 29 mai ou 5 juin 2026 selon ton numéro de département).
+> Imprime cette page A4 et coche au fur et à mesure. Aucune case ne doit rester vide avant la date limite de ton département (21 mai, 28 mai ou 4 juin 2026 selon ton numéro de département).
 
 ---
 

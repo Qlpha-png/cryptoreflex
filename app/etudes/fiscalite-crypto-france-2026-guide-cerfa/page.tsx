@@ -31,7 +31,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  * Cornerstone #2 : guide complet fiscalite crypto FR 2026.
  *
  * Aligne avec :
- *  - Saison fiscale active (mai 2026, deadline declaration revenus 31 mai)
+ *  - Saison fiscale active (mai 2026, deadline declaration revenus 19 mai)
  *  - LP /lp/cerfa-2026 (pre-conversion)
  *  - CP #2 fiscalite (Affidavit Press)
  *  - Outil /outils/cerfa-2086-auto (CTA principal)
@@ -77,7 +77,7 @@ const STATS = [
     color: "text-emerald-400",
   },
   {
-    value: "31 mai",
+    value: "21 mai",
     label: "Deadline déclaration revenus 2026",
     color: "text-amber-400",
   },
@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     q: "Dois-je déclarer mes cryptos même si je n’ai rien vendu ?",
-    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction. Oubli = amende 1 500 € par compte non déclaré (ou 10 000 € si compte dans un État non coopératif).",
+    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction. Oubli = amende 750 € par compte non déclaré (1 500 € si solde supérieur à 50 000 €, ou 10 000 € si compte dans un État non coopératif).",
   },
   {
     q: "Que se passe-t-il en cas de moins-value (perte) ?",
@@ -387,15 +387,15 @@ export default function FiscaliteCryptoStudyPage() {
               <span>
                 <strong>Annexe 3916-bis obligatoire</strong> pour tout compte
                 ouvert chez un exchange étranger (Binance, Kraken, Coinbase,
-                etc.). Oubli = amende 1 500 €/compte (10 000 € en cas d’État
-                non coopératif).
+                etc.). Oubli = amende 750 €/compte (1 500 € si solde &gt; 50 000 €,
+                10 000 € en cas d’État non coopératif).
               </span>
             </li>
             <li className="flex items-start gap-2">
               <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
               <span>
                 <strong>Deadline 2026</strong> : déclaration des revenus 2025
-                avant le <strong>31 mai 2026</strong> (départements 1-19 et
+                avant le <strong>21 mai 2026</strong> (départements 1-19 et
                 non-résidents) ou <strong>début juin</strong> selon le
                 département.
               </span>
@@ -433,7 +433,7 @@ export default function FiscaliteCryptoStudyPage() {
                 </tr>
                 <tr>
                   <td className="py-3 pr-4 font-mono text-amber-300">
-                    20 mai 2026
+                    19 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
                     Date limite déclaration papier
@@ -442,7 +442,7 @@ export default function FiscaliteCryptoStudyPage() {
                 </tr>
                 <tr>
                   <td className="py-3 pr-4 font-mono text-amber-300">
-                    25 mai 2026
+                    21 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
                     Limite — départements 1 à 19 + non-résidents
@@ -451,7 +451,7 @@ export default function FiscaliteCryptoStudyPage() {
                 </tr>
                 <tr>
                   <td className="py-3 pr-4 font-mono text-amber-300">
-                    1er juin 2026
+                    28 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
                     Limite — départements 20 à 54
@@ -460,7 +460,7 @@ export default function FiscaliteCryptoStudyPage() {
                 </tr>
                 <tr>
                   <td className="py-3 pr-4 font-mono text-amber-300">
-                    8 juin 2026
+                    4 juin 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
                     Limite — départements 55 à 976
@@ -471,7 +471,7 @@ export default function FiscaliteCryptoStudyPage() {
             </table>
           </div>
           <p className="text-sm">
-            Les dates exactes 2026 sont publiées par la DGFiP en mars sur{" "}
+            Les dates officielles 2026 sont publiées par la DGFiP sur{" "}
             <a
               href="https://www.impots.gouv.fr"
               target="_blank"
@@ -479,7 +479,7 @@ export default function FiscaliteCryptoStudyPage() {
             >
               impots.gouv.fr
             </a>
-            . Cette étude sera mise à jour dès la publication officielle.
+            .
           </p>
         </section>
 
@@ -671,8 +671,9 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <ul>
             <li>
-              <strong>1 500 € par compte non déclaré</strong> (régime de droit
-              commun) ;
+              <strong>750 € par compte non déclaré</strong> (régime de droit
+              commun), porté à <strong>1 500 €</strong> si le solde du compte
+              dépasse 50 000 € à un moment de l’année ;
             </li>
             <li>
               <strong>10 000 € par compte non déclaré</strong> si l’État

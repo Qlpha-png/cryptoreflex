@@ -779,8 +779,9 @@ export default function CalculateurFiscalitePage() {
               Pour <strong>chaque compte ouvert sur une plateforme étrangère</strong>{" "}
               en 2025 (même inactif), vous devez déposer un Cerfa 3916-bis :
               identité du compte, plateforme, pays, numéro de compte (UID
-              Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 IV bis CGI) :
-              1 500 euros par compte si solde inférieur à 50 000 euros, 10 000 euros au-dessus.
+              Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 X CGI) :
+              750 euros par compte, portée à 1 500 euros si le solde dépasse 50 000 euros,
+              et jusqu'à 10 000 euros pour un compte dans un État non coopératif.
               Applicable rétroactivement sur 4 à 6 ans. Tutoriel :{" "}
               <Link
                 href="/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
@@ -795,9 +796,10 @@ export default function CalculateurFiscalitePage() {
               Étape 7 — Calendrier et derniers contrôles
             </h3>
             <p>
-              La déclaration en ligne ouvre le 10 avril 2026. Date limite : 22
-              mai 2026 (départements 1-19), 29 mai 2026 (20-54), 5 juin 2026
-              (55-95 + outre-mer + non-résidents hors UE). Vous pouvez modifier
+              La déclaration en ligne ouvre le 9 avril 2026. Date limite en
+              ligne : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai
+              2026 (20-54), 4 juin 2026 (55-976 + outre-mer). La déclaration
+              papier doit être déposée pour le 19 mai 2026. Vous pouvez modifier
               votre déclaration en ligne <strong>jusqu'au 4 décembre 2026</strong>{" "}
               sans pénalité, ce qui est une bonne sécurité si vous réalisez
               avoir oublié une cession ou un compte. Avis d'impôt envoyé entre
@@ -860,8 +862,9 @@ export default function CalculateurFiscalitePage() {
               </div>
               <p className="mt-3 text-sm text-white/70">
                 Déclaration des comptes crypto à l'étranger (Binance, Kraken,
-                Coinbase…). Obligatoire même sans vente. 1 500 € d'amende par
-                compte oublié (10 000 € si solde &gt; 50 000 €).
+                Coinbase…). Obligatoire même sans vente. 750 € d'amende par
+                compte oublié (1 500 € si solde &gt; 50 000 €, 10 000 € si pays
+                non coopératif).
               </p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary-soft group-hover:gap-2 transition-all">
                 Lire le guide{" "}

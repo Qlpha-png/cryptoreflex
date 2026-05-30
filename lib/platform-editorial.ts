@@ -110,7 +110,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Faut-il déclarer son compte Coinbase aux impôts français ?",
         answer:
-          "Oui, obligatoirement. Tout compte ouvert à l'étranger (Coinbase Europe est domiciliée en Irlande) doit être déclaré chaque année via le formulaire 3916-bis joint à ta déclaration de revenus. L'oubli est sanctionné par une amende forfaitaire de 1 500 € par compte non déclaré.",
+          "Oui, obligatoirement. Tout compte ouvert à l'étranger (Coinbase Europe est domiciliée en Irlande) doit être déclaré chaque année via le formulaire 3916-bis joint à ta déclaration de revenus. L'oubli est sanctionné par une amende forfaitaire de 750 € par compte non déclaré (1 500 € si solde > 50 000 €).",
       },
       {
         question: "Le staking sur Coinbase est-il rentable et fiscalement traité ?",

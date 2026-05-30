@@ -83,7 +83,7 @@
       "id": "fiscalite-crypto-france-2026",
       "category": "fiscalite",
       "question": "Comment sont taxees les cryptos en France en 2026 ?",
-      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 31,4% sur les plus-values realisees : 12.8% impot sur le revenu + 17.2% prelevements sociaux. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), vers bien/service (achat avec crypto), vers stablecoin SI tu es professionnel. NON taxable : token-to-token (BTC vers ETH par exemple, depuis 2019). Seuil : sous 305€ de plus-values annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
+      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 31,4% sur les plus-values realisees : 12,8% IR + 18,6% PS. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), vers bien/service (achat avec crypto), vers stablecoin SI tu es professionnel. NON taxable : token-to-token (BTC vers ETH par exemple, depuis 2019). Seuil : sous 305€ de plus-values annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
     },
     {
       "id": "declarer-crypto-impots",

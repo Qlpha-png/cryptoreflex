@@ -9,8 +9,8 @@
  *  3. Récapitulatif : exposition financière (somme amendes potentielles)
  *  4. Instructions exactes pour déclarer sur impots.gouv.fr (rubrique 3916-bis)
  *
- * Conformité légale (BOI-CF-CPF-30-20 + CGI art. 1736 IV bis) :
- *  - Amende 1 500 € par compte non déclaré (pays coopératif)
+ * Conformité légale (BOI-CF-CPF-30-20 + CGI art. 1736 X) :
+ *  - Amende 750 € par compte non déclaré (pays coopératif, 1 500 € si solde > 50 000 €)
  *  - Amende 10 000 € par compte non déclaré (pays non-coopératif : Seychelles, BVI, etc.)
  *  - Toute personne physique fiscalement domiciliée en France doit déclarer même si compte vide
  *

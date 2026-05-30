@@ -161,7 +161,7 @@ Tu reportes 8 566 € sur la 2042-C ligne 3AN (régime PFU) ou 2OP cochée si op
 
 ### Sanctions en cas d'oubli
 
-- **1 500 € d'amende par compte non déclaré** (article 1736 IV CGI)
+- **750 € d'amende par compte non déclaré** (1 500 € si le compte dépasse 50 000 €) — article 1736 X CGI
 - **10 000 €** si l'État du siège n'a pas signé d'accord d'assistance avec la France (rare en 2026)
 - **Délai de prescription porté de 3 à 10 ans**
 - **Présomption de fraude** : la DGFiP peut requalifier les sommes non justifiées en revenu imposable
@@ -280,20 +280,21 @@ Si tu fais > 100 transactions/mois, consulte un expert-comptable. Le passage en 
 
 ## Chapitre 10 — Calendrier 2026 et erreurs fréquentes {#chapitre-10}
 
-### Dates clés (estimatives — confirmées en mars 2026 par DGFiP)
+### Dates clés
 
 | Date | Événement |
 |---|---|
 | Avril 2026 | Ouverture du service de déclaration en ligne |
-| 22 mai 2026 | Date limite départements 01-19 et non-résidents |
-| 29 mai 2026 | Date limite départements 20-54 |
-| 5 juin 2026 | Date limite départements 55-976 |
+| 19 mai 2026 | Date limite déclaration papier |
+| 21 mai 2026 | Date limite départements 01-19 et non-résidents |
+| 28 mai 2026 | Date limite départements 20-54 |
+| 4 juin 2026 | Date limite départements 55-976 |
 | Septembre 2026 | Avis d'imposition reçus |
 | Octobre 2026 | Solde à payer si dépassement |
 
 ### Top 10 des erreurs fréquentes
 
-1. **Oublier le 3916-bis** sur Binance/Kraken/Bybit (1 500 €/compte)
+1. **Oublier le 3916-bis** sur Binance/Kraken/Bybit (750 €/compte, 1 500 € si > 50 000 €)
 2. **Ne pas déclarer les swaps** crypto-crypto (BTC → ETH)
 3. **Confondre cessions et plus-value** pour le seuil 305 €
 4. **Reporter une MV crypto** sur les années suivantes (impossible pour particuliers)

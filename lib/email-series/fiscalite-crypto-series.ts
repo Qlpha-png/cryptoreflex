@@ -245,7 +245,7 @@ const J0_CONTENT_HTML =
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Tes 5 conseils pour démarrer la déclaration 2026</h2>' +
   '<ol style="padding-left:20px;">' +
   "<li><strong>Récupère tous tes historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer ta plus-value selon la formule officielle 150 VH bis.</li>" +
-  "<li><strong>Identifie tes plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 1 500 € par compte.</li>" +
+  "<li><strong>Identifie tes plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
   "<li><strong>Compte tes cessions, pas tes achats</strong>. Si tu as moins de 305 € de cessions sur l'année, tu es <strong>exonéré·e</strong>.</li>" +
   "<li><strong>Choisis ton régime</strong> : PFU 30 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
   "<li><strong>N'oublie pas tes pertes</strong> : elles peuvent compenser tes gains. On creuse au mail 4.</li>" +
@@ -305,7 +305,7 @@ const J2_CONTENT_HTML =
   "<p>Une simple déclaration des comptes étrangers que tu détiens, à joindre à ta déclaration de revenus. Un formulaire par compte. Pas de calcul, juste de l'identification (nom de l'exchange, n° de compte, adresse).</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Combien ça coûte si tu oublies ?</h2>' +
   '<ul style="padding-left:20px;">' +
-  "<li><strong>1 500 € par compte non déclaré</strong> (article 1736 IV du CGI)</li>" +
+  "<li><strong>750 € par compte non déclaré</strong> (1 500 € si solde &gt; 50 000 €, article 1736 X du CGI)</li>" +
   "<li><strong>10 000 €</strong> si l'État du compte n'a pas signé d'accord d'assistance avec la France</li>" +
   "<li>Délai de prescription porté à <strong>10 ans</strong> au lieu de 3</li>" +
   "</ul>" +
@@ -316,9 +316,9 @@ const J2: EmailInSequence = {
   id: "fiscalite-j2-3916bis",
   dayOffset: 2,
   subject: "L'erreur n°1 que font 80 % des Français : le 3916-bis",
-  preheader: "Oublier ce formulaire = amende 1 500 € par compte. Voici comment l'éviter.",
+  preheader: "Oublier ce formulaire = amende 750 € par compte. Voici comment l'éviter.",
   htmlBody: wrapEmail({
-    preheader: "Oublier ce formulaire = amende 1 500 € par compte. Voici comment l'éviter.",
+    preheader: "Oublier ce formulaire = amende 750 € par compte. Voici comment l'éviter.",
     contentHtml: J2_CONTENT_HTML,
     ctaPrimary: {
       label: "Générer ton 3916-bis avec Waltio",
@@ -333,7 +333,7 @@ const J2: EmailInSequence = {
   textBody:
     "L'erreur n°1 : oublier le formulaire 3916-bis.\n\n" +
     "Si tu as un compte sur Binance, Kraken, Bybit ou tout autre exchange étranger, tu dois le déclarer.\n\n" +
-    "Sanction : 1 500 EUR par compte oublié (art. 1736 IV CGI).\n\n" +
+    "Sanction : 750 EUR par compte oublié, 1 500 EUR si solde > 50 000 EUR (art. 1736 X CGI).\n\n" +
     "Waltio pré-remplit le 3916-bis automatiquement (lien d'affiliation publicitaire) :\n" +
     waltioUrl(2, "j2-3916bis") +
     "\n\nGuide détaillé : " +
@@ -508,9 +508,10 @@ const J14_CONTENT_HTML =
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Dates clés 2026 à retenir</h2>' +
   '<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;background:#1F2937;border-radius:8px;margin:12px 0;">' +
   "<tr><td><strong>Avril 2026</strong></td><td>Ouverture du service de déclaration en ligne</td></tr>" +
-  "<tr><td><strong>22 mai 2026</strong></td><td>Date limite départements 01-19 + non-résidents (estimation)</td></tr>" +
-  "<tr><td><strong>29 mai 2026</strong></td><td>Date limite départements 20-54 (estimation)</td></tr>" +
-  "<tr><td><strong>5 juin 2026</strong></td><td>Date limite départements 55-976 (estimation)</td></tr>" +
+  "<tr><td><strong>19 mai 2026</strong></td><td>Date limite déclaration papier</td></tr>" +
+  "<tr><td><strong>21 mai 2026</strong></td><td>Date limite en ligne départements 01-19 + non-résidents</td></tr>" +
+  "<tr><td><strong>28 mai 2026</strong></td><td>Date limite en ligne départements 20-54</td></tr>" +
+  "<tr><td><strong>4 juin 2026</strong></td><td>Date limite en ligne départements 55-976</td></tr>" +
   "</table>" +
   '<p style="font-style:italic;color:#9CA3AF;font-size:13px;">Dates indicatives selon le calendrier 2025 — les dates 2026 seront confirmées par la DGFiP en mars 2026.</p>' +
   '<p style="margin-top:16px;">Pour avoir tout sous la main, télécharge notre <strong>Bible Fiscalité Crypto 2026</strong> (30 pages, gratuit). Et si tu veux gagner 10h de paperasse, Waltio reste l\'outil le plus complet du marché FR.</p>';

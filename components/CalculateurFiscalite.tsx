@@ -514,7 +514,7 @@ function WaltioPostResultCta({
   if (isExonere) {
     headline = "Vous êtes exonéré — mais le 3916-bis reste obligatoire";
     pitch =
-      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 1 500 € d'amende par compte oublié. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
+      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 750 € d’amende par compte oublié. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
   } else if (regime === "bic") {
     headline = "BIC professionnel : votre expert-comptable va vous aimer";
     pitch =
