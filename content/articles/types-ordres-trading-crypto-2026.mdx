@@ -1,0 +1,192 @@
+---
+title: "Ordre market, limit, stop-loss : les types d'ordres crypto expliqués (2026)"
+description: "Ordre au marché, limite, stop-loss, take-profit, trailing stop : comprends chaque type d'ordre crypto, évite le slippage et protège tes positions dès aujourd'hui."
+slug: "types-ordres-trading-crypto-2026"
+date: "2026-05-30"
+publishedAt: "2026-05-30"
+updatedAt: "2026-05-30"
+lastUpdated: "2026-05-30"
+category: "Trading"
+cluster: "trading-analyse"
+author: "La rédaction Cryptoreflex"
+readTime: "8 min"
+readingTime: 8
+wordCount: 1850
+tags:
+  - "types d'ordres"
+  - "stop-loss"
+  - "ordre limite"
+  - "trading crypto"
+  - "gestion du risque"
+  - "carnet d'ordres"
+keywords:
+  - "types d'ordres trading crypto"
+  - "ordre au marché vs ordre limite"
+  - "stop-loss crypto"
+  - "trailing stop"
+  - "maker taker frais"
+  - "slippage crypto"
+type: "guide"
+status: "published"
+generatedBy: "academy-phase3"
+---
+
+Tu passes ton premier ordre sur une plateforme crypto et tu te retrouves face à cinq options différentes : market, limit, stop, stop-limit, trailing stop. Si tu cliques sur le mauvais, tu peux acheter bien au-dessus du prix affiché ou rater complètement ton entrée. Voilà exactement ce qu'on va régler ici : comprendre chaque type d'ordre, savoir lequel utiliser selon la situation, et éviter les erreurs qui coûtent cher.
+
+## Le carnet d'ordres : la base de tout
+
+Avant de parler des ordres eux-mêmes, comprends ce qu'est un **carnet d'ordres** (_order book_) : c'est la liste en temps réel de tous les ordres d'achat et de vente en attente sur une plateforme. D'un côté les acheteurs, de l'autre les vendeurs. Quand les deux se rejoignent, une transaction a lieu.
+
+La différence entre le meilleur prix d'achat (_bid_) et le meilleur prix de vente (_ask_) s'appelle le **spread**. Plus le spread est large, plus le marché est illiquide — et plus tu risques de payer cher pour entrer ou sortir.
+
+C'est là qu'intervient la notion de **maker/taker** :
+
+- **Taker** : ton ordre consomme de la liquidité existante (tu acceptes un prix déjà dans le carnet). Frais généralement plus élevés.
+- **Maker** : ton ordre ajoute de la liquidité (tu poses un prix que personne n'a encore accepté). Frais souvent réduits, parfois nuls.
+
+La plupart des plateformes comme Binance, Kraken ou Bitget appliquent ce système. Un ordre limite non exécuté immédiatement est un ordre maker. Un ordre au marché est toujours taker.
+
+## Ordre au marché (market order) : rapidité avant tout
+
+L'**ordre au marché** (_market order_) est le plus simple. Tu dis à la plateforme : "Achète (ou vends) maintenant, au meilleur prix disponible."
+
+L'exécution est quasi instantanée. Mais le prix n'est pas garanti.
+
+C'est là qu'intervient le **slippage** : l'écart entre le prix affiché au moment où tu passes l'ordre et le prix auquel il est réellement exécuté. Sur un actif très liquide comme le Bitcoin ou l'Ether, le slippage est généralement négligeable (quelques dixièmes de pourcent). Sur un altcoin peu liquide avec 50 000 euros de volume journalier, tu peux facilement subir 2 à 5 % d'écart sans t'en rendre compte.
+
+**Quand l'utiliser :** tu veux entrer ou sortir vite sur un marché liquide. Tu n'as pas de prix cible précis. Une nouvelle tombe et tu dois réagir dans la seconde.
+
+**Quand l'éviter :** tu trades un altcoin peu liquide. Tu as un prix d'entrée précis en tête. Tu veux maîtriser tes frais (tu paies toujours les frais taker).
+
+## Ordre limite (limit order) : le contrôle du prix
+
+L'**ordre limite** (_limit order_) te permet de fixer le prix exact auquel tu veux acheter ou vendre.
+
+- À l'achat : tu fixes le prix maximum que tu es prêt à payer. L'ordre n'est exécuté que si le marché descend jusqu'à ce niveau.
+- À la vente : tu fixes le prix minimum auquel tu acceptes de vendre. L'ordre attend que le marché remonte.
+
+Zéro slippage. Mais zéro garantie d'exécution : si le prix n'atteint jamais ton niveau, l'ordre reste en attente indéfiniment (ou jusqu'à son annulation).
+
+Imagine que l'ETH cote à 2 500 euros. Tu penses qu'il peut corriger à 2 350 euros avant de repartir. Tu poses un ordre limite d'achat à 2 350 euros. Soit le marché descend et tu es servi au prix que tu voulais, soit le marché repart directement à la hausse et tu rates l'entrée — mais tu n'achètes pas à n'importe quel prix.
+
+**Quand l'utiliser :** tu as identifié un niveau technique précis (support, résistance). Tu veux maîtriser ton prix d'entrée. Tu n'es pas pressé.
+
+**Quand l'éviter :** le marché évolue vite et tu risques de rater complètement le mouvement. Tu veux une exécution certaine.
+
+<Callout type="info" title="Ordre limite = ordre maker">
+Un ordre limite qui n'est pas exécuté immédiatement ajoute de la liquidité au carnet. Il est donc classé comme ordre maker et bénéficie généralement de frais inférieurs aux ordres au marché (taker). Sur certaines plateformes, les frais maker sont à zéro.
+</Callout>
+
+## Stop-loss : l'outil de survie
+
+Le **stop-loss** est probablement l'ordre le plus important de cette liste. Pas pour gagner — pour ne pas tout perdre.
+
+Il fonctionne comme ça : tu définis un seuil de déclenchement (_stop price_). Si le prix descend jusqu'à ce seuil, l'ordre se déclenche automatiquement et vend ta position (ou en ouvre une courte si tu trades à effet de levier).
+
+Exemple concret : tu achètes du BTC à 90 000 euros. Tu places un stop-loss à 85 000 euros. Si le BTC chute à 85 000 euros, l'ordre se déclenche et te sort de la position automatiquement. Tu encaisses une perte de 5 000 euros sur une position de 90 000 — mais tu évites de rester bloqué si le BTC continue à 60 000.
+
+C'est de la **gestion du risque**. Pas de l'échec. Ne pas avoir de stop-loss, c'est conduire sans ceinture.
+
+**À noter :** un stop-loss standard déclenche un ordre au marché une fois le seuil atteint. En période de forte volatilité ou de liquidité réduite, l'exécution peut se faire avec un slippage significatif, en dessous du prix stop.
+
+## Take-profit : sécuriser le gain
+
+Le **take-profit** est le miroir du stop-loss. Tu définis un seuil à la hausse : si le prix atteint ce niveau, la position est clôturée automatiquement pour sécuriser ton gain.
+
+Même logique, même utilité : tu définis ton objectif à l'avance et tu laisses le marché faire son travail sans avoir à surveiller ton écran 24h/24.
+
+La combinaison stop-loss + take-profit sur une même position, c'est la base d'un trade structuré. Tu sais avant d'entrer combien tu perds au pire, combien tu gagnes au mieux.
+
+<Callout type="success" title="Règle des 2 %">
+Beaucoup de traders fixent leur stop-loss pour ne jamais risquer plus de 1 à 2 % de leur capital total sur un seul trade. Si ton capital est de 5 000 euros, tu ne risques pas plus de 100 euros par position. C'est un garde-fou simple mais efficace. Pour aller plus loin sur ce sujet, consulte notre guide sur la [psychologie et gestion du risque en trading crypto](/blog/psychologie-gestion-risque-trading-crypto-2026).
+</Callout>
+
+## Stop-limit : contrôle renforcé, risque de non-exécution
+
+L'**ordre stop-limit** combine deux mécanismes :
+
+1. Un prix de déclenchement (_stop price_) : quand ce seuil est atteint, l'ordre s'active.
+2. Un prix limite (_limit price_) : une fois activé, l'ordre ne s'exécute pas à n'importe quel prix — uniquement à ton prix limite ou mieux.
+
+Avantage : tu évites d'être exécuté à un prix catastrophique lors d'un flash crash (chute ultra-rapide du marché en quelques secondes).
+
+Inconvénient : si le prix dépasse immédiatement ton limit price lors de la chute, l'ordre ne se déclenche pas. Tu restes en position alors que le marché continue de s'effondrer.
+
+**Quand l'utiliser :** tu veux éviter absolument le slippage sur ton stop. Tu acceptes le risque de non-exécution en échange d'un meilleur contrôle du prix.
+
+**Quand l'éviter :** le marché est très volatil et les mouvements peuvent être brutaux. Dans ce cas, un stop-loss standard donne plus de certitude d'exécution.
+
+## Trailing stop : protéger les gains en mouvement
+
+Le **trailing stop** (_stop suiveur_) est une version dynamique du stop-loss. Au lieu d'être fixe, il suit le prix à une distance définie — exprimée en pourcentage ou en valeur absolue.
+
+Exemple : tu entres sur l'ETH à 2 000 euros avec un trailing stop à 10 %. Ton stop se positionne initialement à 1 800 euros. Si l'ETH monte à 2 500 euros, ton stop remonte automatiquement à 2 250 euros. Si l'ETH redescend ensuite à 2 250 euros, tu es sorti. Tu as capturé une partie du mouvement haussier sans avoir à déplacer manuellement ton stop.
+
+C'est l'outil idéal pour laisser courir un trade gagnant tout en protégeant les gains accumulés.
+
+<Callout type="warning" title="Attention aux gaps et à la volatilité nocturne">
+Le trailing stop ne protège pas contre les gaps de prix (sauts brusques sans transactions intermédiaires). Si une mauvaise nouvelle tombe la nuit et que le prix ouvre directement 15 % en dessous de ton trailing stop, l'exécution se fera au prix d'ouverture, pas à ton stop. Sur les marchés crypto qui fonctionnent 24h/24, ce risque est permanent.
+</Callout>
+
+## Tableau comparatif des types d'ordres
+
+| Type d'ordre | Exécution garantie | Prix garanti | Idéal pour | Risque principal |
+|---|---|---|---|---|
+| **Market** | Oui | Non | Entrée/sortie rapide sur actif liquide | Slippage |
+| **Limit** | Non | Oui | Entrée à un niveau technique précis | Non-exécution |
+| **Stop-loss** | Oui (déclenché) | Non | Couper une perte automatiquement | Slippage au déclenchement |
+| **Take-profit** | Oui (déclenché) | Non | Sécuriser un gain à un objectif | Fermeture avant continuation |
+| **Stop-limit** | Non | Oui | Stop sans slippage | Non-exécution si gap |
+| **Trailing stop** | Oui (déclenché) | Non | Protéger des gains sur tendance | Gap nocturne, volatilité |
+
+## Quel ordre choisir selon la situation ?
+
+Quelques scénarios concrets pour ancrer tout ça :
+
+**Tu débutes et veux acheter du BTC sans te compliquer la vie** : ordre au marché sur une plateforme liquide. Accepte le léger slippage, c'est le prix de la simplicité.
+
+**Tu analyses les graphiques et identifies un support à 88 000 euros sur le BTC** : ordre limite à 88 000 euros. Tu laisses le marché venir à toi. Pour comprendre comment identifier ces niveaux, consulte notre guide sur les [supports, résistances et tendances crypto](/blog/support-resistance-tendances-crypto-2026).
+
+**Tu es en position et tu pars en vacances deux semaines** : stop-loss obligatoire. Take-profit recommandé. Tu ne peux pas surveiller le marché — laisse les ordres travailler à ta place.
+
+**Tu es sur un altcoin en fort momentum haussier** : trailing stop pour capturer le mouvement sans te forcer à vendre trop tôt.
+
+**Tu veux minimiser tes frais sur le long terme** : privilégie les ordres limites (maker) aux ordres au marché (taker). Sur 100 trades, la différence de frais s'accumule vite.
+
+Pour choisir la bonne plateforme qui propose tous ces types d'ordres avec des interfaces claires, consulte notre [comparatif des meilleures plateformes crypto pour débutants en France](/blog/meilleure-plateforme-crypto-debutant-france-2026).
+
+<Callout type="info" title="Erreur classique du débutant">
+Placer un stop-loss trop serré. Si tu mets ton stop à 1 % du prix d'entrée sur un actif qui bouge naturellement de 3 à 5 % par jour, tu vas te faire sortir en permanence même quand le trade est dans le bon sens. Adapte la distance de ton stop à la volatilité réelle de l'actif.
+</Callout>
+
+## Conclusion
+
+Les types d'ordres ne sont pas une complexité inutile. Ce sont des outils de précision. Un ordre au marché pour agir vite. Un ordre limite pour contrôler ton prix. Un stop-loss pour survivre aux mauvais trades. Un trailing stop pour maximiser les bons. Comprendre la différence entre ces six outils te met déjà au-dessus de la majorité des traders débutants qui cliquent "buy" sans réfléchir.
+
+La prochaine étape : intègre systématiquement un stop-loss sur chaque position. Pas parce que tu penses perdre — mais parce que tu ne sais jamais. Explore notre [comparatif des plateformes](/comparatif) et notre [boîte à outils](/outils) pour trouver les interfaces qui rendent tout ça simple à mettre en place.
+
+<Callout type="warning" title="Avertissement">
+Cet article est purement informatif. Il ne constitue pas un conseil en investissement, une recommandation d'achat ou de vente d'actifs numériques, ni un conseil financier ou fiscal. Les cryptomonnaies sont des actifs hautement volatils et spéculatifs. Vous pouvez perdre tout ou partie du capital investi. Avant toute décision d'investissement, consultez un conseiller financier agréé. Cryptoreflex.fr ne saurait être tenu responsable des décisions prises sur la base des informations contenues dans cet article.
+</Callout>
+
+## FAQ
+
+### Quelle est la différence entre un ordre au marché et un ordre limite ?
+
+Un ordre au marché s'exécute immédiatement au meilleur prix disponible : tu es certain d'être servi, mais pas au prix exact affiché (risque de slippage). Un ordre limite fixe le prix que tu acceptes : pas de slippage possible, mais l'ordre peut rester en attente indéfiniment si le marché n'atteint jamais ton niveau.
+
+### Un stop-loss peut-il être contourné ?
+
+Oui, dans deux cas. Un gap de prix (le marché saute directement sous ton seuil sans transaction intermédiaire) exécutera ton ordre en dessous du stop. Une panne technique ou une déconnexion de la plateforme peut aussi empêcher le déclenchement. Ce n'est pas fréquent, mais ça arrive. C'est pourquoi certains traders utilisent un stop-limit pour éviter l'exécution à n'importe quel prix, au prix du risque de non-exécution.
+
+### Qu'est-ce que le slippage et comment le minimiser ?
+
+Le slippage est l'écart entre le prix auquel tu pensais acheter (ou vendre) et le prix réellement exécuté. Il est causé par un manque de liquidité ou une vitesse d'exécution insuffisante. Pour le minimiser : utilise des ordres limites plutôt que des ordres au marché, évite de trader sur des altcoins peu liquides avec des positions importantes, et trades pendant les heures de fort volume.
+
+### Qu'est-ce que le maker/taker et pourquoi ça compte ?
+
+Les frais maker s'appliquent quand ton ordre ajoute de la liquidité au carnet (ordre limite non exécuté immédiatement). Les frais taker s'appliquent quand ton ordre retire de la liquidité (ordre au marché). Sur la plupart des plateformes, les frais taker sont plus élevés que les frais maker — parfois du simple au double. Sur du trading fréquent, préférer les ordres limites peut réduire significativement tes coûts totaux.
+
+### Vaut-il mieux un stop-loss ou un stop-limit ?
+
+Ça dépend de ta priorité. Si tu veux l'assurance d'être sorti quoi qu'il arrive (quitte à accepter un léger slippage), choisis le stop-loss classique. Si tu veux éviter d'être exécuté à un prix catastrophique lors d'un flash crash, choisis le stop-limit — mais accepte que dans un mouvement très brutal, tu puisses ne pas être exécuté du tout et rester en position.

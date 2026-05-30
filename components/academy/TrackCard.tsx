@@ -21,6 +21,7 @@ import {
   Coins,
   ShieldAlert,
   BarChart3,
+  CandlestickChart,
 } from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
@@ -34,6 +35,7 @@ const ICONS = {
   coins: Coins,
   alert: ShieldAlert,
   chart: BarChart3,
+  candlestick: CandlestickChart,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

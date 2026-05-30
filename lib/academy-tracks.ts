@@ -30,7 +30,8 @@ export type TrackId =
   | "plateformes"
   | "defi"
   | "arnaques"
-  | "marche";
+  | "marche"
+  | "trading";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -67,7 +68,8 @@ export interface Track {
     | "scale"
     | "coins"
     | "alert"
-    | "chart";
+    | "chart"
+    | "candlestick";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -894,6 +896,73 @@ const TRACK_MARCHE: Track = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Trading & analyse technique (v2 académie, 30/05/2026) */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Trading & analyse technique — 6 leçons, ~2h.
+ * Cible : ceux qui veulent comprendre l'analyse technique (lecture de graphiques)
+ * et le passage d'ordres — en gardant la tête froide. Chandeliers, support/
+ * résistance, indicateurs (RSI/MACD/MM), types d'ordres, psychologie & gestion
+ * du risque. Cadrage prudent : l'AT est probabiliste, le trading actif est
+ * risqué, et pour la plupart le DCA/HODL reste plus adapté.
+ */
+const TRACK_TRADING: Track = {
+  id: "trading",
+  title: "Trading & analyse technique",
+  description:
+    "Lire un graphique crypto sans se mentir : chandeliers japonais, supports/résistances, indicateurs (RSI, MACD, moyennes mobiles), types d'ordres et — surtout — psychologie et gestion du risque.",
+  level: "Advanced",
+  estimatedHours: 2,
+  accentClass: "from-indigo-500/30 to-violet-600/20 border-indigo-500/40",
+  iconKey: "candlestick",
+  lessons: [
+    {
+      order: 1,
+      articleSlug: "lire-graphique-crypto-chandeliers-japonais-2026",
+      title: "Lire un graphique : les chandeliers japonais",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 2,
+      articleSlug: "support-resistance-tendances-crypto-2026",
+      title: "Support, résistance et tendances",
+      durationMin: 8,
+      prereqs: ["lire-graphique-crypto-chandeliers-japonais-2026"],
+    },
+    {
+      order: 3,
+      articleSlug: "indicateurs-techniques-rsi-macd-moyennes-mobiles-2026",
+      title: "RSI, MACD et moyennes mobiles",
+      durationMin: 10,
+      prereqs: ["support-resistance-tendances-crypto-2026"],
+    },
+    {
+      order: 4,
+      articleSlug: "types-ordres-trading-crypto-2026",
+      title: "Ordres market, limit, stop-loss",
+      durationMin: 8,
+      prereqs: [],
+    },
+    {
+      order: 5,
+      articleSlug: "psychologie-gestion-risque-trading-crypto-2026",
+      title: "Psychologie et gestion du risque",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 6,
+      articleSlug: "trader-vs-dca-vs-hodl",
+      title: "Trader, DCA ou HODL : quelle approche ?",
+      durationMin: 8,
+      prereqs: [],
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -907,6 +976,7 @@ export const TRACKS: Track[] = [
   TRACK_PLATEFORMES,
   TRACK_ARNAQUES,
   TRACK_MARCHE,
+  TRACK_TRADING,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -920,6 +990,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   plateformes: TRACK_PLATEFORMES,
   arnaques: TRACK_ARNAQUES,
   marche: TRACK_MARCHE,
+  trading: TRACK_TRADING,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */
