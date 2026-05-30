@@ -20,6 +20,7 @@ import {
   Scale,
   Coins,
   ShieldAlert,
+  BarChart3,
 } from "lucide-react";
 import type { Track } from "@/lib/academy-tracks";
 
@@ -32,6 +33,7 @@ const ICONS = {
   scale: Scale,
   coins: Coins,
   alert: ShieldAlert,
+  chart: BarChart3,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {

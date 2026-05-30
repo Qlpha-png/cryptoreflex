@@ -29,7 +29,8 @@ export type TrackId =
   | "fiscalite"
   | "plateformes"
   | "defi"
-  | "arnaques";
+  | "arnaques"
+  | "marche";
 
 export interface Lesson {
   /** Position 1-indexed dans le track (sert d'ordre d'affichage et de clé). */
@@ -65,7 +66,8 @@ export interface Track {
     | "landmark"
     | "scale"
     | "coins"
-    | "alert";
+    | "alert"
+    | "chart";
   /** Liste ordonnée des leçons. */
   lessons: Lesson[];
 }
@@ -834,6 +836,64 @@ const TRACK_ARNAQUES: Track = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  Parcours thématique — Comprendre le marché (v2 académie, 30/05/2026)       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Track Comprendre le marché — 5 leçons, ~1h30.
+ * Cible : débutants qui veulent lire le marché sans se noyer dans les termes.
+ * Cycles bull/bear, halving, market cap/volume/liquidité, Fear & Greed Index,
+ * analyse on-chain — le kit de lecture de base du marché crypto.
+ */
+const TRACK_MARCHE: Track = {
+  id: "marche",
+  title: "Comprendre le marché",
+  description:
+    "Bull market, bear market, halving, capitalisation, liquidité, Fear & Greed, on-chain : les concepts clés pour lire le marché crypto sans se perdre dans le jargon.",
+  level: "Intermediate",
+  estimatedHours: 1.5,
+  accentClass: "from-cyan-500/30 to-blue-600/20 border-cyan-500/40",
+  iconKey: "chart",
+  lessons: [
+    {
+      order: 1,
+      articleSlug: "cycles-marche-crypto-bull-bear-2026",
+      title: "Cycles bull/bear : les 4 phases à connaître",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 2,
+      articleSlug: "bitcoin-halving-impact-prix-2026",
+      title: "Bitcoin halving : mécanisme et impact prix",
+      durationMin: 9,
+      prereqs: ["cycles-marche-crypto-bull-bear-2026"],
+    },
+    {
+      order: 3,
+      articleSlug: "capitalisation-volume-liquidite-crypto-2026",
+      title: "Capitalisation, volume, liquidité : lire les chiffres clés",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 4,
+      articleSlug: "fear-greed-index-crypto-comprendre-2026",
+      title: "Fear and Greed Index : lire le sentiment du marché",
+      durationMin: 8,
+      prereqs: ["cycles-marche-crypto-bull-bear-2026"],
+    },
+    {
+      order: 5,
+      articleSlug: "analyse-on-chain-debutant-2026",
+      title: "Analyse on-chain : lire la blockchain comme un pro",
+      durationMin: 9,
+      prereqs: [],
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Export                                                                     */
 /* -------------------------------------------------------------------------- */
 
@@ -846,6 +906,7 @@ export const TRACKS: Track[] = [
   TRACK_FISCALITE,
   TRACK_PLATEFORMES,
   TRACK_ARNAQUES,
+  TRACK_MARCHE,
 ];
 
 /** Index O(1) par id — évite les `find()` répétés. */
@@ -858,6 +919,7 @@ const TRACK_INDEX: Record<TrackId, Track> = {
   fiscalite: TRACK_FISCALITE,
   plateformes: TRACK_PLATEFORMES,
   arnaques: TRACK_ARNAQUES,
+  marche: TRACK_MARCHE,
 };
 
 /** Récupère un track par son id ; renvoie `null` si inconnu. */

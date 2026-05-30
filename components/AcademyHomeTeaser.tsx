@@ -24,6 +24,7 @@ import {
   Scale,
   Coins,
   ShieldAlert,
+  BarChart3,
   BadgeCheck,
   ListChecks,
   Save,
@@ -40,6 +41,7 @@ const ICONS = {
   scale: Scale,
   coins: Coins,
   alert: ShieldAlert,
+  chart: BarChart3,
 } as const;
 
 const LEVEL_LABELS: Record<Track["level"], string> = {
