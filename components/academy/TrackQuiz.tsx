@@ -261,8 +261,13 @@ export default function TrackQuiz({
 
       {/* Détail des réponses — aria-live polite pour le feedback question par
           question (annonce le détail après le score global, dans l'ordre). */}
+      <p className="mt-8 text-center text-xs text-muted">
+        Comprends ta note : pour chaque question,{" "}
+        <span className="font-medium text-success-fg">en vert la bonne réponse</span>,{" "}
+        <span className="font-medium text-danger-fg">en rouge ton erreur</span> s&apos;il y en a une, et le « pourquoi » juste en dessous.
+      </p>
       <ol
-        className="mt-8 space-y-3"
+        className="mt-4 space-y-3"
         aria-label="Détail des réponses"
         aria-live="polite"
       >
@@ -291,18 +296,58 @@ export default function TrackQuiz({
                   />
                 )}
                 <div className="flex-1">
-                  <p className="font-semibold text-fg">{q.question}</p>
-                  <p className="mt-1.5 text-fg/80">
-                    <span className="text-muted">Ta réponse : </span>
-                    {userAns >= 0 ? q.choices[userAns] : "Aucune"}
+                  <p className="font-semibold text-fg">
+                    <span className="mr-1 font-mono text-muted">Q{i + 1}.</span>
+                    {q.question}
                   </p>
-                  {!correct && (
-                    <p className="mt-1 text-fg/80">
-                      <span className="text-muted">Bonne réponse : </span>
-                      {q.choices[q.correctIndex]}
+
+                  {/* Toutes les options, color-codées : l'apprenti voit
+                      exactement où il a juste et où il s'est trompé. */}
+                  <ul className="mt-3 space-y-1.5" aria-label="Correction des choix">
+                    {q.choices.map((choice, idx) => {
+                      const isCorrectChoice = idx === q.correctIndex;
+                      const isUserChoice = idx === userAns;
+                      const cls = isCorrectChoice
+                        ? "border-success-fg/50 bg-success-fg/10 text-fg"
+                        : isUserChoice
+                          ? "border-danger-fg/50 bg-danger-fg/10 text-fg"
+                          : "border-border bg-background/30 text-fg/55";
+                      return (
+                        <li
+                          key={idx}
+                          className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${cls}`}
+                        >
+                          {isCorrectChoice ? (
+                            <CheckCircle2 className="h-4 w-4 shrink-0 text-success-fg" aria-label="Bonne réponse" />
+                          ) : isUserChoice ? (
+                            <XCircle className="h-4 w-4 shrink-0 text-danger-fg" aria-label="Ton choix, incorrect" />
+                          ) : (
+                            <span className="h-4 w-4 shrink-0" aria-hidden="true" />
+                          )}
+                          <span className="flex-1">{choice}</span>
+                          {isCorrectChoice && (
+                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-success-fg">
+                              Bonne réponse
+                            </span>
+                          )}
+                          {isUserChoice && !isCorrectChoice && (
+                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-danger-fg">
+                              Ton choix
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {userAns < 0 && (
+                    <p className="mt-2 text-xs font-medium text-warning-fg">
+                      Tu n&apos;as pas répondu à cette question.
                     </p>
                   )}
-                  <p className="mt-2 text-xs italic text-fg/70">
+
+                  <p className="mt-2 rounded-lg bg-background/40 px-3 py-2 text-xs text-fg/75">
+                    <span className="font-semibold text-primary-soft">Pourquoi : </span>
                     {q.explanation}
                   </p>
                 </div>
