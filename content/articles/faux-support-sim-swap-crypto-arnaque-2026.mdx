@@ -100,7 +100,7 @@ Le tableau ci-dessous compare les trois niveaux de protection disponibles pour s
 |---|---|---|---|---|---|
 | SMS | Code envoyé par SMS | Non | Partiel | Gratuit | A éviter pour les comptes sensibles |
 | App TOTP | Code généré localement (Google Authenticator, Aegis) | Oui | Partiel | Gratuit | Minimum requis pour tout compte crypto |
-| Clé physique FIDO/U2F | Authentification liée au matériel (YubiKey) | Oui | Oui | 50-70 € | Recommandé pour les gros montants |
+| Clé physique FIDO/U2F | Authentification liée au matériel (YubiKey) | Oui | Oui | env. 70 € | Recommandé pour les gros montants |
 
 Le **TOTP** (Time-based One-Time Password : code à usage unique basé sur l'heure, généré par une application) élimine le risque SIM-swap car le code est calculé sur ton appareil, pas envoyé via réseau mobile. Une application comme **Aegis** (Android, open source) ou Google Authenticator génère un code valable 30 secondes à partir d'une clé partagée au moment de l'activation. Personne ne peut intercepter un SMS parce qu'il n'y a pas de SMS.
 
