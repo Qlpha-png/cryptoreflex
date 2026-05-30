@@ -237,6 +237,29 @@ export function isQuizPassed(trackId: string): boolean {
   }
 }
 
+/** Infos de quiz (passed, score, timestamp ms) — null si jamais passé. */
+export function getQuizInfo(
+  trackId: string
+): { passed: boolean; score: number; at: number } | null {
+  if (!hasStorage()) return null;
+  try {
+    const raw = window.localStorage.getItem(`${QUIZ_PREFIX}${trackId}`);
+    if (!raw) return null;
+    const obj = JSON.parse(raw) as {
+      passed?: boolean;
+      score?: number;
+      at?: number;
+    };
+    return {
+      passed: obj?.passed === true,
+      score: typeof obj?.score === "number" ? obj.score : 0,
+      at: typeof obj?.at === "number" ? obj.at : 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Niveau auto-déclaré — guide (SOFT) le point de départ du cursus           */
 /*  Ne cache/verrouille RIEN : sert juste à recommander un parcours d'entrée. */
@@ -342,13 +365,45 @@ export function touchStreak(todayISO: string): StreakData {
 /*  de la récupérer après un vidage de cache.                                 */
 /* -------------------------------------------------------------------------- */
 
-/** True si la clé localStorage appartient à l'académie (progress/quiz/niveau/streak). */
+/* -------------------------------------------------------------------------- */
+/*  Notes personnelles par leçon — carnet privé (localStorage, jamais envoyé) */
+/*  Clé : "cr.academy.notes.<slug>"                                           */
+/* -------------------------------------------------------------------------- */
+
+const NOTES_PREFIX = "cr.academy.notes.";
+
+/** Lit la note personnelle d'une leçon (chaîne vide si aucune). */
+export function getLessonNote(slug: string): string {
+  if (!hasStorage()) return "";
+  try {
+    return window.localStorage.getItem(`${NOTES_PREFIX}${slug}`) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Enregistre (ou efface si vide) la note personnelle d'une leçon. */
+export function setLessonNote(slug: string, text: string): void {
+  if (!hasStorage()) return;
+  try {
+    if (text.trim().length === 0) {
+      window.localStorage.removeItem(`${NOTES_PREFIX}${slug}`);
+    } else {
+      window.localStorage.setItem(`${NOTES_PREFIX}${slug}`, text);
+    }
+  } catch {
+    /* quota/off → noop */
+  }
+}
+
+/** True si la clé localStorage appartient à l'académie (progress/quiz/niveau/streak/notes). */
 function isAcademyKey(k: string): boolean {
   return (
     k.startsWith(STORAGE_PREFIX) ||
     k.startsWith(QUIZ_PREFIX) ||
     k === LEVEL_KEY ||
-    k === STREAK_KEY
+    k === STREAK_KEY ||
+    k.startsWith(NOTES_PREFIX)
   );
 }
 

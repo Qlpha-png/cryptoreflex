@@ -21,6 +21,8 @@ import MdxContent from "@/components/MdxContent";
 import AuthorCard from "@/components/AuthorCard";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import LessonNavigator from "@/components/academy/LessonNavigator";
+import LessonToc from "@/components/academy/LessonToc";
+import LessonNotes from "@/components/academy/LessonNotes";
 import StructuredData from "@/components/StructuredData";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 
@@ -177,6 +179,9 @@ export default async function LessonPage({ params }: Props) {
 
             <MdxContent source={article.content} />
 
+            {/* Carnet de notes personnel (localStorage, privé) */}
+            <LessonNotes slug={lesson.articleSlug} />
+
             {/* Encart auteur E-E-A-T (P0-#11) — pédagogue responsable
                 de la leçon. Reprend l'auteur de l'article MDX sous-jacent. */}
             <AuthorCard authorId={article.author} variant="full" />
@@ -200,11 +205,13 @@ export default async function LessonPage({ params }: Props) {
             />
           </article>
 
-          <aside className="lg:sticky lg:top-24 self-start">
+          <aside className="lg:sticky lg:top-24 self-start space-y-6">
             <ProgressTracker
               track={track}
               currentSlug={lesson.articleSlug}
             />
+            {/* Sommaire flottant auto-généré (titres H2/H3 de la leçon) */}
+            <LessonToc />
           </aside>
         </div>
       </div>

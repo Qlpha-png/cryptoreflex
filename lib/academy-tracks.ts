@@ -1141,3 +1141,75 @@ export function findLessonBySlug(
   }
   return null;
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Regroupement thématique — « ranger » les parcours pour ne pas perdre      */
+/*  le lecteur. Une grille plate de 11 parcours noie ; 5 sections claires     */
+/*  guident le regard (Fondations → Protection → Marché → Investir → Web3).   */
+/* -------------------------------------------------------------------------- */
+
+export interface TrackGroup {
+  id: string;
+  /** Titre de section affiché sur la landing. */
+  title: string;
+  /** Sous-titre court qui situe la section. */
+  subtitle: string;
+  /** Parcours de la section, dans l'ordre d'affichage. */
+  trackIds: TrackId[];
+}
+
+export const TRACK_GROUPS: TrackGroup[] = [
+  {
+    id: "fondations",
+    title: "Les fondations",
+    subtitle:
+      "Commence ici. Du tout premier achat à l'autonomie complète — le socle à suivre dans l'ordre.",
+    trackIds: ["debutant", "intermediaire", "avance"],
+  },
+  {
+    id: "protection",
+    title: "Te protéger",
+    subtitle:
+      "Sécuriser tes cryptos et reconnaître les arnaques avant qu'il soit trop tard.",
+    trackIds: ["securite", "arnaques"],
+  },
+  {
+    id: "marche",
+    title: "Comprendre le marché",
+    subtitle:
+      "Lire les cycles, les graphiques et les indicateurs pour décider avec méthode.",
+    trackIds: ["marche", "trading"],
+  },
+  {
+    id: "investir",
+    title: "Choisir & déclarer",
+    subtitle:
+      "Sélectionner une plateforme régulée MiCA et déclarer correctement en France.",
+    trackIds: ["plateformes", "fiscalite"],
+  },
+  {
+    id: "web3",
+    title: "Aller plus loin — Web3",
+    subtitle:
+      "DeFi, NFT et applications décentralisées : les usages avancés, sans bullshit.",
+    trackIds: ["defi", "nft-web3"],
+  },
+];
+
+/**
+ * Garde-fou : à l'import, on vérifie que TOUS les parcours sont rangés dans
+ * exactement un groupe (aucun orphelin, aucun doublon). En cas d'oubli après
+ * l'ajout d'un parcours, on lève à la compilation/au boot plutôt que d'avoir
+ * un parcours invisible sur la landing.
+ */
+const _groupedIds = TRACK_GROUPS.flatMap((g) => g.trackIds);
+if (_groupedIds.length !== new Set(_groupedIds).size) {
+  throw new Error("[academy-tracks] TRACK_GROUPS contient un parcours en double.");
+}
+for (const t of TRACKS) {
+  if (!_groupedIds.includes(t.id)) {
+    throw new Error(
+      `[academy-tracks] Le parcours "${t.id}" n'est rangé dans aucun groupe (TRACK_GROUPS).`
+    );
+  }
+}

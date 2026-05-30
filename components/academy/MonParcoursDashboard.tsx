@@ -33,6 +33,7 @@ import {
   BarChart3,
   CandlestickChart,
   Palette,
+  RefreshCw,
 } from "lucide-react";
 import {
   TRACKS,
@@ -44,6 +45,7 @@ import {
   calculateProgress,
   getProgress,
   isQuizPassed,
+  getQuizInfo,
   getStreak,
   touchStreak,
 } from "@/lib/academy-progress";
@@ -92,13 +94,26 @@ export default function MonParcoursDashboard() {
   const rows = ordered.map((track) => {
     const pct = hydrated ? calculateProgress(track.id, track.lessons) : 0;
     const certified = hydrated ? isQuizPassed(track.id) : false;
+    const quizAt = hydrated ? getQuizInfo(track.id)?.at ?? 0 : 0;
     const doneCount = hydrated
       ? getProgress(track.id).completedLessons.filter((s) =>
           track.lessons.some((l) => l.articleSlug === s)
         ).length
       : 0;
-    return { track, pct, certified, doneCount };
+    return { track, pct, certified, quizAt, doneCount };
   });
+
+  // Révision espacée (courbe de l'oubli) : parcours validés depuis 7j+ à revoir.
+  const reviewItems = hydrated
+    ? rows
+        .filter((r) => r.certified && r.quizAt > 0)
+        .map((r) => {
+          const days = Math.floor((Date.now() - r.quizAt) / 86_400_000);
+          return { track: r.track, days };
+        })
+        .filter((r) => r.days >= 7)
+        .sort((a, b) => b.days - a.days)
+    : [];
 
   const totalLessons = ordered.reduce((a, t) => a + t.lessons.length, 0);
   const lessonsDone = rows.reduce((a, r) => a + r.doneCount, 0);
@@ -231,6 +246,41 @@ export default function MonParcoursDashboard() {
           </span>
           <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
         </Link>
+      )}
+
+      {/* À réviser — courbe de l'oubli (Ebbinghaus) */}
+      {reviewItems.length > 0 && (
+        <section
+          aria-labelledby="review-h"
+          className="mt-6 rounded-2xl border border-sky-400/30 bg-sky-400/5 p-5 sm:p-6"
+        >
+          <h2
+            id="review-h"
+            className="flex items-center gap-2 text-base font-bold text-fg"
+          >
+            <RefreshCw className="h-4 w-4 text-sky-300" aria-hidden="true" />
+            À réviser
+          </h2>
+          <p className="mt-1 text-xs text-muted">
+            On oublie ~70 % d&apos;un cours en une semaine sans révision. Une
+            relecture rapide ancre durablement.
+          </p>
+          <ul role="list" className="mt-4 grid gap-2 sm:grid-cols-2">
+            {reviewItems.map(({ track, days }) => (
+              <li key={track.id}>
+                <Link
+                  href={`/academie/${track.id}`}
+                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-sky-400/40"
+                >
+                  <span>{track.title}</span>
+                  <span className="shrink-0 text-[11px] font-medium text-sky-300">
+                    validé il y a {days} j
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {/* Grille des parcours */}

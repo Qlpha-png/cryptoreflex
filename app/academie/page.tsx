@@ -23,7 +23,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { TRACKS } from "@/lib/academy-tracks";
+import { TRACKS, TRACK_GROUPS, getTrack, type Track } from "@/lib/academy-tracks";
 import TrackCard from "@/components/academy/TrackCard";
 import AcademyLevelGuide from "@/components/academy/AcademyLevelGuide";
 import StructuredData from "@/components/StructuredData";
@@ -217,16 +217,39 @@ export default function AcademiePage() {
               Choisis ton parcours
             </h2>
             <p className="mt-2 text-sm text-fg/70 max-w-2xl">
-              Suis les 3 niveaux dans l&apos;ordre pour le cursus complet, ou va
-              directement au parcours — niveau ou thématique — qui correspond à
-              ton besoin. Chaque parcours est auto-suffisant.
+              Les parcours sont rangés en {TRACK_GROUPS.length} étapes logiques :
+              commence par les fondations, puis avance vers la protection, le
+              marché, l&apos;investissement et le Web3. Chaque parcours reste
+              auto-suffisant — tu peux aussi aller directement à ton besoin.
             </p>
           </header>
 
-          <div className="grid gap-5 md:grid-cols-3">
-            {TRACKS.map((track) => (
-              <TrackCard key={track.id} track={track} />
-            ))}
+          {/* Parcours rangés par section thématique (IA : ne pas noyer le lecteur) */}
+          <div className="space-y-12">
+            {TRACK_GROUPS.map((group, idx) => {
+              const groupTracks = group.trackIds
+                .map((id) => getTrack(id))
+                .filter((t): t is Track => t !== null);
+              if (groupTracks.length === 0) return null;
+              return (
+                <div key={group.id}>
+                  <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-2.5">
+                    <h3 className="flex items-baseline gap-2 text-xl font-bold tracking-tight text-fg">
+                      <span className="font-mono text-sm text-primary-soft">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      {group.title}
+                    </h3>
+                    <p className="text-xs text-muted">{group.subtitle}</p>
+                  </div>
+                  <div className="grid gap-5 md:grid-cols-3">
+                    {groupTracks.map((track) => (
+                      <TrackCard key={track.id} track={track} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
