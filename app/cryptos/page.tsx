@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllCryptosBrowsable } from "@/lib/cryptos-extended";
 import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
+import AcademyCrossLink from "@/components/AcademyCrossLink";
 
 /**
  * Index /cryptos — Server Component.
@@ -116,6 +117,16 @@ export default async function CryptosIndexPage() {
 
         {/* Recherche + filtres + grille paginée (client) */}
         <CryptosBrowser items={items} />
+
+        <div className="mt-12">
+          <AcademyCrossLink
+            title="Tu débutes ? Apprends avant d'investir"
+            links={[
+              { href: "/academie/debutant", label: "Parcours Débutant" },
+              { href: "/academie/choisir", label: "Bien choisir ses cryptos" },
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import AcademyCrossLink from "@/components/AcademyCrossLink";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -457,6 +458,15 @@ export default function ComparatifHubPage() {
         </div>
       </section>
       <NextStepsGuide context="comparator" />
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-16">
+        <AcademyCrossLink
+          title="Bien choisir sa plateforme, ça s'apprend"
+          links={[
+            { href: "/academie/plateformes", label: "Choisir sa plateforme" },
+            { href: "/academie/securite", label: "Sécuriser ses cryptos" },
+          ]}
+        />
+      </section>
     </>
   );
 }

@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import AcademyCrossLink from "@/components/AcademyCrossLink";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
@@ -565,6 +566,16 @@ export default function OutilsPage() {
         </section>
 
         <NextStepsGuide context="tool" />
+
+        <div className="mt-12">
+          <AcademyCrossLink
+            title="Comprendre avant d'utiliser les outils"
+            links={[
+              { href: "/academie/fiscalite", label: "Fiscalité crypto" },
+              { href: "/academie/debutant", label: "Parcours Débutant" },
+            ]}
+          />
+        </div>
       </div>
     </article>
   );
