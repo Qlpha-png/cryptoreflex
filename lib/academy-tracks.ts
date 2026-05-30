@@ -749,69 +749,84 @@ const TRACK_DEFI: Track = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Track Arnaques — 7 leçons, ~1h30.
- * Cible : tout le monde. Les arnaques crypto (rug pull, Ponzi, faux support,
- * pump and dump, drainers, pig butchering) sont la première cause de perte de
- * capital du retail. Parcours d'autodéfense : reconnaître chaque schéma avant
- * de se faire avoir. Réutilise l'article phishing (parcours Sécurité) + 6
- * articles dédiés rédigés et fact-checkés pour ce parcours.
+ * Track Arnaques & erreurs — 9 leçons, ~2h.
+ * Cible : tout le monde. Parcours d'autodéfense complet : (1) les réflexes
+ * anti-arnaque universels, (2) les 6 grandes arnaques crypto (phishing, faux
+ * support/SIM-swap, drainers, rug pull, pump & dump, Ponzi, pig butchering) et
+ * (3) les erreurs qu'on s'inflige soi-même. Objectif : NE PAS se faire avoir,
+ * et éviter les pertes auto-infligées. Réutilise phishing (parcours Sécurité)
+ * + 8 articles dédiés rédigés et fact-checkés pour ce parcours.
  */
 const TRACK_ARNAQUES: Track = {
   id: "arnaques",
-  title: "Repérer les arnaques",
+  title: "Arnaques & erreurs : se protéger",
   description:
-    "Rug pull, Ponzi, faux support, pump and dump, wallet drainers, pig butchering : apprends à identifier les arnaques crypto les plus courantes et à protéger ton capital — avant de te faire avoir.",
+    "Le parcours d'autodéfense crypto : les réflexes anti-arnaque universels, les grandes arnaques (rug pull, Ponzi, faux support, pump and dump, drainers, pig butchering) et les erreurs qu'on s'inflige soi-même. Pour protéger ton capital avant de te faire avoir.",
   level: "Beginner",
-  estimatedHours: 1.5,
+  estimatedHours: 2,
   accentClass: "from-red-500/30 to-rose-600/20 border-red-500/40",
   iconKey: "alert",
   lessons: [
     {
       order: 1,
-      articleSlug: "phishing-crypto-2026-eviter-arnaques-courantes",
-      title: "Phishing crypto : la porte d'entrée de toutes les arnaques",
-      durationMin: 10,
+      articleSlug: "checklist-anti-arnaque-crypto-reflexes-2026",
+      title: "La checklist anti-arnaque : tes réflexes universels",
+      durationMin: 9,
       prereqs: [],
     },
     {
       order: 2,
+      articleSlug: "phishing-crypto-2026-eviter-arnaques-courantes",
+      title: "Phishing crypto : la porte d'entrée de toutes les arnaques",
+      durationMin: 10,
+      prereqs: ["checklist-anti-arnaque-crypto-reflexes-2026"],
+    },
+    {
+      order: 3,
       articleSlug: "faux-support-sim-swap-crypto-arnaque-2026",
       title: "Faux support et SIM-swap : le vol de comptes",
       durationMin: 8,
       prereqs: ["phishing-crypto-2026-eviter-arnaques-courantes"],
     },
     {
-      order: 3,
+      order: 4,
       articleSlug: "faux-airdrops-wallet-drainers-crypto-2026",
       title: "Faux airdrops et wallet drainers : l'arnaque à la signature",
       durationMin: 8,
       prereqs: [],
     },
     {
-      order: 4,
+      order: 5,
       articleSlug: "rug-pull-crypto-reconnaitre-eviter-2026",
       title: "Rug pull : l'arnaque à la liquidité",
       durationMin: 9,
       prereqs: [],
     },
     {
-      order: 5,
+      order: 6,
       articleSlug: "pump-and-dump-crypto-comprendre-eviter-2026",
       title: "Pump and dump : la manipulation de marché",
       durationMin: 8,
       prereqs: [],
     },
     {
-      order: 6,
+      order: 7,
       articleSlug: "ponzi-hyip-crypto-schemas-pyramidaux-2026",
       title: "Ponzi, HYIP et schémas pyramidaux",
       durationMin: 9,
       prereqs: [],
     },
     {
-      order: 7,
+      order: 8,
       articleSlug: "pig-butchering-arnaque-romance-crypto-2026",
       title: "Pig butchering : l'arnaque sentimentale longue durée",
+      durationMin: 9,
+      prereqs: [],
+    },
+    {
+      order: 9,
+      articleSlug: "erreurs-debutant-crypto-eviter-2026",
+      title: "Les 10 erreurs de débutant (et comment les éviter)",
       durationMin: 9,
       prereqs: [],
     },
