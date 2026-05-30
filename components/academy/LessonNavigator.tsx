@@ -17,6 +17,7 @@ import type { Lesson, TrackId } from "@/lib/academy-tracks";
 import {
   getProgress,
   markLessonComplete,
+  touchStreak,
   unmarkLessonComplete,
 } from "@/lib/academy-progress";
 
@@ -57,6 +58,8 @@ export default function LessonNavigator({
     } else {
       markLessonComplete(trackId, current.articleSlug);
       setIsComplete(true);
+      // Mise à jour du streak (jour courant côté client uniquement)
+      touchStreak(new Date().toISOString().slice(0, 10));
     }
   }
 

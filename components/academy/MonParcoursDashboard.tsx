@@ -19,6 +19,7 @@ import {
   Award,
   BookOpenCheck,
   CheckCircle2,
+  Flame,
   GraduationCap,
   Trophy,
   Sprout,
@@ -43,7 +44,10 @@ import {
   calculateProgress,
   getProgress,
   isQuizPassed,
+  getStreak,
+  touchStreak,
 } from "@/lib/academy-progress";
+import ProgressBackupCard from "@/components/academy/ProgressBackupCard";
 
 const ICONS = {
   sprout: Sprout,
@@ -70,7 +74,15 @@ const RING_C = 2 * Math.PI * RING_R;
 
 export default function MonParcoursDashboard() {
   const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
+  const [streak, setStreak] = useState({ current: 0, best: 0 });
+
+  useEffect(() => {
+    setHydrated(true);
+    // Mise à jour du streak si au moins 1 leçon déjà complétée
+    const today = new Date().toISOString().slice(0, 10);
+    const s = touchStreak(today);
+    setStreak({ current: s.current, best: s.best });
+  }, []);
 
   // Parcours dans l'ordre pédagogique du cursus.
   const ordered = CURSUS_ORDER.map((id) => getTrack(id)).filter(
@@ -179,7 +191,7 @@ export default function MonParcoursDashboard() {
         </div>
 
         {/* Tuiles de stats */}
-        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatTile
             icon={<Trophy className="h-5 w-5" aria-hidden="true" />}
             value={`${tracksDone}/${ordered.length}`}
@@ -194,6 +206,16 @@ export default function MonParcoursDashboard() {
             icon={<BookOpenCheck className="h-5 w-5" aria-hidden="true" />}
             value={`${lessonsDone}/${totalLessons}`}
             label="Leçons terminées"
+          />
+          <StatTile
+            icon={
+              <Flame
+                className={`h-5 w-5 ${hydrated && streak.current >= 3 ? "text-orange-400" : ""}`}
+                aria-hidden="true"
+              />
+            }
+            value={hydrated ? `${streak.current}j` : "0j"}
+            label={`Série (record ${hydrated ? streak.best : 0}j)`}
           />
         </dl>
       </section>
@@ -317,6 +339,9 @@ export default function MonParcoursDashboard() {
           </ul>
         </section>
       )}
+
+      {/* Sauvegarde / restauration */}
+      <ProgressBackupCard />
 
       {/* Note + lien retour */}
       <p className="mt-8 text-center text-xs text-muted">

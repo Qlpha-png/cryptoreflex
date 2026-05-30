@@ -267,3 +267,128 @@ export function setAcademyLevel(level: AcademyLevel): void {
     /* noop */
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Streak — compteur de jours consécutifs d'activité (gamification légère)   */
+/*  Clé localStorage : "cr.academy.streak"                                    */
+/*  { current: number; best: number; lastActiveDate: string (YYYY-MM-DD) }    */
+/* -------------------------------------------------------------------------- */
+
+const STREAK_KEY = "cr.academy.streak";
+
+interface StreakData {
+  current: number;
+  best: number;
+  lastActiveDate: string; // "YYYY-MM-DD"
+}
+
+/** Lit le streak actuel (0 si jamais initié). */
+export function getStreak(): StreakData {
+  if (!hasStorage()) return { current: 0, best: 0, lastActiveDate: "" };
+  try {
+    const raw = window.localStorage.getItem(STREAK_KEY);
+    if (!raw) return { current: 0, best: 0, lastActiveDate: "" };
+    const obj = JSON.parse(raw) as Partial<StreakData>;
+    return {
+      current: typeof obj.current === "number" ? obj.current : 0,
+      best: typeof obj.best === "number" ? obj.best : 0,
+      lastActiveDate: typeof obj.lastActiveDate === "string" ? obj.lastActiveDate : "",
+    };
+  } catch {
+    return { current: 0, best: 0, lastActiveDate: "" };
+  }
+}
+
+/**
+ * À appeler quand l'utilisateur accomplit une action (leçon complétée, quiz…).
+ * Met à jour le streak selon la date du jour passée en paramètre (format
+ * YYYY-MM-DD). On passe la date en argument pour éviter Date.now() dans un
+ * contexte potentiellement SSR.
+ */
+export function touchStreak(todayISO: string): StreakData {
+  if (!hasStorage()) return { current: 0, best: 0, lastActiveDate: "" };
+  const prev = getStreak();
+
+  if (prev.lastActiveDate === todayISO) {
+    // Déjà actif aujourd'hui — pas de changement
+    return prev;
+  }
+
+  // Vérifie si hier était le dernier jour actif
+  const prevDate = prev.lastActiveDate ? new Date(prev.lastActiveDate) : null;
+  const today = new Date(todayISO);
+  const diff = prevDate
+    ? Math.round((today.getTime() - prevDate.getTime()) / 86_400_000)
+    : 0;
+
+  const newCurrent = diff === 1 ? prev.current + 1 : 1;
+  const newBest = Math.max(newCurrent, prev.best);
+  const updated: StreakData = {
+    current: newCurrent,
+    best: newBest,
+    lastActiveDate: todayISO,
+  };
+  try {
+    window.localStorage.setItem(STREAK_KEY, JSON.stringify(updated));
+  } catch {
+    /* noop */
+  }
+  return updated;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Sauvegarde / restauration — anti-perte, sans compte (code à copier)       */
+/*  Permet de transférer sa progression vers un autre appareil/navigateur ou  */
+/*  de la récupérer après un vidage de cache.                                 */
+/* -------------------------------------------------------------------------- */
+
+/** True si la clé localStorage appartient à l'académie (progress/quiz/niveau/streak). */
+function isAcademyKey(k: string): boolean {
+  return (
+    k.startsWith(STORAGE_PREFIX) ||
+    k.startsWith(QUIZ_PREFIX) ||
+    k === LEVEL_KEY ||
+    k === STREAK_KEY
+  );
+}
+
+/** Exporte toute la progression académie en un code (base64) à copier/sauver. */
+export function exportAcademyData(): string {
+  if (!hasStorage()) return "";
+  try {
+    const data: Record<string, string> = {};
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const k = window.localStorage.key(i);
+      if (k && isAcademyKey(k)) {
+        const val = window.localStorage.getItem(k);
+        if (val != null) data[k] = val;
+      }
+    }
+    return btoa(JSON.stringify({ v: 1, data }));
+  } catch {
+    return "";
+  }
+}
+
+/** Restaure la progression depuis un code exporté. Renvoie true si au moins une clé restaurée. */
+export function importAcademyData(code: string): boolean {
+  if (!hasStorage()) return false;
+  try {
+    const parsed = JSON.parse(atob(code.trim())) as {
+      data?: Record<string, string>;
+    };
+    if (!parsed || typeof parsed.data !== "object" || parsed.data === null) {
+      return false;
+    }
+    let restored = 0;
+    for (const [k, val] of Object.entries(parsed.data)) {
+      if (typeof val === "string" && isAcademyKey(k)) {
+        window.localStorage.setItem(k, val);
+        restored++;
+      }
+    }
+    return restored > 0;
+  } catch {
+    return false;
+  }
+}
