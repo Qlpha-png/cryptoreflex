@@ -204,14 +204,14 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     question:
       "Quel est le fait générateur de l'imposition des récompenses de staking en France ?",
     choices: [
-      "Le moment de l'achat initial du token.",
-      "Le moment où la récompense est revendue contre euros.",
-      "Le moment où la récompense est créditée sur ton wallet (selon doctrine BOFIP / qualification BNC).",
-      "Jamais, c'est exonéré.",
+      "Le moment de l'achat initial du token staké.",
+      "Jamais : les récompenses de staking sont exonérées en France.",
+      "À la réception : selon l'interprétation BNC dominante (par analogie au minage), les récompenses sont imposables à leur valeur en euros au jour où elles sont créditées.",
+      "Uniquement au-delà de 305 € de récompenses dans l'année.",
     ],
     correctIndex: 2,
     explanation:
-      "Pour le staking qualifié BNC, les récompenses sont imposables à leur valeur en € au jour de l'attribution. La revente ultérieure peut générer une plus-value distincte si le cours a varié.",
+      "Il n'existe pas de doctrine BOFiP dédiée au staking : le sujet reste débattu. L'interprétation la plus répandue (et la plus prudente) est l'imposition en BNC à la valeur en euros au moment de la réception, par analogie au minage — la revente ultérieure générant ensuite une plus-value distincte. En cas de doute, consulte un professionnel.",
   },
   {
     id: "adv-q4-pfu-bareme",

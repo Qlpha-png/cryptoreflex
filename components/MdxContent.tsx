@@ -32,7 +32,9 @@ import KeyTakeaways from "@/components/mdx/KeyTakeaways";
 import LessonTool from "@/components/academy/LessonTool";
 import FAQ from "@/components/mdx/FAQ";
 import HowToSchema from "@/components/mdx/HowToSchema";
+import GlossaryLink from "@/components/mdx/GlossaryLink";
 import { getAllPlatforms } from "@/lib/platforms";
+import { getGlossaryEntry } from "@/lib/glossary";
 
 /* -------------------------------------------------------------------------- */
 /*  Components mappés → markdown HTML                                         */
@@ -88,6 +90,23 @@ function isAffiliateUrl(href: string): boolean {
  */
 function MdxLink({ href, children, ...rest }: ComponentProps<"a">) {
   if (!href) return <a {...rest}>{children}</a>;
+
+  // Lien vers le glossaire → infobulle de définition (sans quitter la leçon).
+  const glossaryMatch = /^\/outils\/glossaire-crypto#(.+)$/.exec(href);
+  if (glossaryMatch) {
+    const entry = getGlossaryEntry(glossaryMatch[1]);
+    if (entry) {
+      const def =
+        entry.definition.length > 180
+          ? `${entry.definition.slice(0, 180).trimEnd()}…`
+          : entry.definition;
+      return (
+        <GlossaryLink href={href} term={entry.term} definition={def}>
+          {children}
+        </GlossaryLink>
+      );
+    }
+  }
 
   const isExternal = /^https?:\/\//i.test(href);
   if (isExternal) {

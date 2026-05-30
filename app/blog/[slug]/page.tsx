@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Clock, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, Calendar, GraduationCap } from "lucide-react";
 
 import {
   getArticleBySlug,
@@ -10,6 +10,7 @@ import {
 } from "@/lib/mdx";
 import MdxContent from "@/components/MdxContent";
 import AuthorCard from "@/components/AuthorCard";
+import { findLessonBySlug, getTrack } from "@/lib/academy-tracks";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import StructuredData from "@/components/StructuredData";
 import NewsletterInline from "@/components/NewsletterInline";
@@ -225,6 +226,11 @@ export default async function BlogArticlePage({ params }: Props) {
   const author = getAuthorByIdOrDefault(article.author);
   const related = await getRelatedArticles(article.slug, 3);
 
+  // Maillage bidirectionnel : si cet article est une leçon de l'académie, on
+  // renvoie vers le parcours complet (le parcours, lui, pointe déjà vers les fiches).
+  const academyLesson = findLessonBySlug(article.slug);
+  const academyTrack = academyLesson ? getTrack(academyLesson.trackId) : null;
+
   // Étude #9 ETUDE-2026-05-02 : enrichissement schema.org pour ce template.
   // - Article schema : déjà présent (titre, auteur, date, etc.)
   // - SpeakableSpecification : NEW. Permet à Google Assistant / Alexa / Siri
@@ -378,6 +384,28 @@ export default async function BlogArticlePage({ params }: Props) {
               <div className="mt-8">
                 <AmfDisclaimer variant="educatif" compact />
               </div>
+
+              {/* Maillage académie : cet article est une leçon d'un parcours */}
+              {academyTrack && (
+                <div className="mt-6 flex flex-col gap-2 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-fg/85">
+                    <GraduationCap
+                      className="mr-1.5 inline h-4 w-4 text-primary-glow"
+                      aria-hidden="true"
+                    />
+                    Cet article est une leçon du parcours{" "}
+                    <strong className="text-fg">{academyTrack.title}</strong> de
+                    l&apos;académie — progression suivie, quiz et certificat.
+                  </p>
+                  <Link
+                    href={`/academie/${academyTrack.id}`}
+                    className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary-glow hover:underline"
+                  >
+                    Suivre le parcours
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                </div>
+              )}
 
               {/* Contenu MDX — split ~60% pour insérer la NewsletterInline */}
               <div className="mt-10">

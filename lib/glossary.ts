@@ -453,3 +453,17 @@ export function buildFlatDefinedTermSetSchema(siteUrl: string) {
     })),
   };
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Lookup rapide par slug — infobulles glossaire dans les articles            */
+/* -------------------------------------------------------------------------- */
+
+let _glossaryBySlug: Map<string, GlossaryTermFlat> | null = null;
+
+/** Terme du glossaire par slug (null si inconnu). Mémoïsé. */
+export function getGlossaryEntry(slug: string): GlossaryTermFlat | null {
+  if (_glossaryBySlug === null) {
+    _glossaryBySlug = new Map(GLOSSARY.map((t) => [t.slug, t]));
+  }
+  return _glossaryBySlug.get(slug) ?? null;
+}
