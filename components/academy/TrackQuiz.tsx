@@ -10,16 +10,18 @@
  *  - L'utilisateur peut retenter le quiz autant de fois qu'il veut.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
+  ArrowRight,
   Award,
   CheckCircle2,
   Download,
   RefreshCw,
   XCircle,
 } from "lucide-react";
-import type { TrackId } from "@/lib/academy-tracks";
+import { getNextTrack, type TrackId } from "@/lib/academy-tracks";
+import { markQuizPassed } from "@/lib/academy-progress";
 import {
   PASSING_SCORE,
   type QuizQuestion,
@@ -56,6 +58,13 @@ export default function TrackQuiz({
     [answers, questions]
   );
   const passed = score >= PASSING_SCORE;
+  const nextTrack = getNextTrack(trackId);
+
+  // Persiste la réussite (localStorage) dès l'affichage des résultats validés —
+  // sert au tableau de bord /academie/mon-parcours pour le badge « certifié ».
+  useEffect(() => {
+    if (phase === "results" && passed) markQuizPassed(trackId, score);
+  }, [phase, passed, trackId, score]);
 
   function selectAnswer(choiceIdx: number) {
     setAnswers((prev) => {
@@ -363,6 +372,26 @@ export default function TrackQuiz({
             P puis &quot;Enregistrer en PDF&quot;.
           </p>
         </div>
+      )}
+
+      {/* Fil du cursus : où aller après ce quiz validé */}
+      {passed && nextTrack && (
+        <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
+          <p className="text-sm text-muted">Prêt pour la suite ?</p>
+          <Link
+            href={`/academie/${nextTrack.id}`}
+            className="mt-2 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition-colors hover:bg-primary-glow"
+          >
+            Parcours suivant : {nextTrack.title}
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+      )}
+
+      {passed && !nextTrack && (
+        <p className="mt-6 text-center text-sm font-semibold text-primary-glow">
+          🎓 Tu as validé tout le cursus de l&apos;académie. Bravo !
+        </p>
       )}
     </section>
   );

@@ -169,6 +169,10 @@ export default function AcademiePage() {
             <Link href="#parcours" className="btn-ghost text-sm py-2.5">
               Voir les {TRACK_COUNT} parcours
             </Link>
+            <Link href="/academie/mon-parcours" className="btn-ghost text-sm py-2.5">
+              <GraduationCap className="h-4 w-4" aria-hidden="true" />
+              Mon parcours
+            </Link>
           </div>
         </header>
 

@@ -204,3 +204,35 @@ export function getNextLessonIndex(
   const done = new Set(progress.completedLessons);
   return lessons.findIndex((l) => !done.has(l.articleSlug));
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Quiz / certificat — persistance légère (localStorage, aucune PII)         */
+/* -------------------------------------------------------------------------- */
+
+const QUIZ_PREFIX = "cr.academy.quiz.";
+
+/** Enregistre la réussite du quiz d'un parcours (score, timestamp). */
+export function markQuizPassed(trackId: string, score: number): void {
+  if (!hasStorage()) return;
+  try {
+    window.localStorage.setItem(
+      `${QUIZ_PREFIX}${trackId}`,
+      JSON.stringify({ passed: true, score, at: Date.now() })
+    );
+  } catch {
+    /* quota/off → noop */
+  }
+}
+
+/** True si le quiz du parcours a déjà été validé sur cet appareil. */
+export function isQuizPassed(trackId: string): boolean {
+  if (!hasStorage()) return false;
+  try {
+    const raw = window.localStorage.getItem(`${QUIZ_PREFIX}${trackId}`);
+    if (!raw) return false;
+    const obj = JSON.parse(raw) as { passed?: boolean };
+    return obj?.passed === true;
+  } catch {
+    return false;
+  }
+}
