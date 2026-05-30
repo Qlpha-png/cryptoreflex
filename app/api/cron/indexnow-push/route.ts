@@ -34,6 +34,9 @@ const CRITICAL_URLS = [
   "/marche",
   "/quiz",
   "/academie",
+  "/academie/stablecoins",
+  "/academie/staking",
+  "/academie/choisir",
   "/blog",
   // Pricing & monétisation
   "/pro",
