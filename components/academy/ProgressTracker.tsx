@@ -25,6 +25,7 @@ import {
   getProgress,
   resetProgress,
 } from "@/lib/academy-progress";
+import { getQuizForTrack } from "@/lib/academy-quizzes";
 
 interface ProgressTrackerProps {
   track: Track;
@@ -50,6 +51,10 @@ export default function ProgressTracker({
   const progressPct = isHydrated
     ? calculateProgress(track.id, track.lessons)
     : 0;
+
+  // Le quiz n'existe pas pour tous les parcours — on n'affiche le lien que s'il
+  // existe (sinon le CTA mènerait à une page 404).
+  const hasQuiz = getQuizForTrack(track.id) !== null;
 
   const nextIdx = isHydrated ? getNextLessonIndex(track.id, track.lessons) : 0;
   const nextLesson: Lesson | null =
@@ -120,13 +125,19 @@ export default function ProgressTracker({
         </Link>
       )}
 
-      {isHydrated && progressPct === 100 && (
+      {isHydrated && progressPct === 100 && hasQuiz && (
         <Link
           href={`/academie/${track.id}/quiz`}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-background transition-colors hover:bg-primary-glow"
         >
           Passer le quiz final
         </Link>
+      )}
+
+      {isHydrated && progressPct === 100 && !hasQuiz && (
+        <p className="mt-4 rounded-lg border border-success-fg/30 bg-success-fg/5 px-3 py-2 text-center text-sm font-semibold text-success-fg">
+          Parcours terminé ✓
+        </p>
       )}
 
       {/* Liste des leçons — version compacte si demandée */}

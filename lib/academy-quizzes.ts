@@ -462,6 +462,213 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
   },
 ];
 
+const QUIZ_STABLECOINS: QuizQuestion[] = [
+  {
+    id: "stb-q1-definition",
+    question: "Qu'est-ce qu'un stablecoin ?",
+    choices: [
+      "Une crypto conçue pour garder une valeur stable, le plus souvent indexée sur une monnaie comme le dollar ou l'euro.",
+      "Une crypto dont le cours ne peut jamais baisser.",
+      "Une action d'une société cotée en bourse.",
+      "Un compte d'épargne rémunéré garanti par l'État.",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Un stablecoin vise à maintenir un prix stable (souvent 1 dollar ou 1 euro) grâce à des réserves ou à un mécanisme. Ce n'est ni une garantie d'absence de baisse, ni une action, ni un produit bancaire garanti.",
+  },
+  {
+    id: "stb-q2-types",
+    question:
+      "Quelle différence entre un stablecoin adossé à des réserves (USDT, USDC) et un stablecoin algorithmique (comme l'UST de Terra) ?",
+    choices: [
+      "Aucune, ils fonctionnent exactement pareil.",
+      "Le premier est couvert par des actifs réels en réserve ; le second tient son ancrage par un mécanisme — historiquement bien plus risqué (l'UST s'est effondré en 2022).",
+      "L'algorithmique est plus sûr car automatisé.",
+      "Le premier est interdit en Europe.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Les stablecoins adossés détiennent des réserves (cash, bons du Trésor) censées couvrir les jetons émis. Les algorithmiques tentent de tenir l'ancrage par un mécanisme de marché — l'effondrement de l'UST/Terra en 2022 a montré leur fragilité.",
+  },
+  {
+    id: "stb-q3-risque",
+    question: "Quel est le principal risque d'un stablecoin ?",
+    choices: [
+      "Il n'a aucun risque, c'est tout l'intérêt.",
+      "Le dépeg : la perte de son ancrage (réserves insuffisantes ou opaques, panique, faillite d'un partenaire).",
+      "Sa valeur double sans prévenir.",
+      "Il est toujours bloqué pendant cinq ans.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Un stablecoin peut perdre son ancrage (dépeg) si ses réserves sont insuffisantes ou en cas de panique. L'USDC est par exemple tombé sous un dollar en mars 2023 à cause de fonds bloqués dans une banque en faillite, avant de se rétablir.",
+  },
+  {
+    id: "stb-q4-fiscalite",
+    question:
+      "En France, que se passe-t-il fiscalement quand tu convertis du Bitcoin en stablecoin, sans repasser en euros ?",
+    choices: [
+      "C'est immédiatement imposé comme une vente.",
+      "C'est une opération crypto-crypto en sursis d'imposition : pas d'impôt tant que tu ne sors pas en euros (ou n'achètes pas un bien).",
+      "C'est totalement défiscalisé pour toujours.",
+      "C'est interdit par la loi.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Un échange crypto contre crypto (y compris vers un stablecoin) bénéficie du sursis d'imposition (art. 150 VH bis du CGI). L'impôt se déclenche seulement à la conversion en euros ou à l'achat d'un bien : le passage en stablecoin reporte l'imposition, il ne l'efface pas.",
+  },
+  {
+    id: "stb-q5-mica",
+    question: "Sous le règlement MiCA, tous les stablecoins sont-ils traités de la même façon en Europe ?",
+    choices: [
+      "Oui, tous sont automatiquement autorisés.",
+      "Non : les émetteurs doivent être agréés. L'USDC (Circle) s'est mis en conformité, tandis que l'USDT (Tether) a été restreint sur plusieurs plateformes européennes.",
+      "Non : tous les stablecoins sont interdits.",
+      "MiCA ne concerne pas du tout les stablecoins.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "MiCA encadre spécifiquement les émetteurs de stablecoins, qui doivent obtenir un agrément. Circle (USDC, EURC) s'y est conformé ; Tether (USDT) ne l'a pas fait dans les mêmes conditions, ce qui a conduit des plateformes de l'UE à le restreindre.",
+  },
+];
+
+const QUIZ_STAKING: QuizQuestion[] = [
+  {
+    id: "stk-q1-pos",
+    question: "Le staking concerne quel type de blockchain ?",
+    choices: [
+      "Les blockchains en Proof of Work, comme Bitcoin.",
+      "Les blockchains en Proof of Stake (Ethereum, Solana, Cardano…) — Bitcoin ne se stake pas nativement.",
+      "Uniquement les blockchains privées d'entreprise.",
+      "Toutes les blockchains sans exception.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le staking est le mécanisme des blockchains en Proof of Stake : on immobilise des jetons pour aider à valider le réseau. Bitcoin fonctionne en Proof of Work (minage) et ne propose pas de staking natif.",
+  },
+  {
+    id: "stk-q2-recompenses",
+    question: "D'où viennent les récompenses de staking ?",
+    choices: [
+      "D'une banque centrale.",
+      "De l'émission de nouveaux jetons par le protocole et d'une part des frais de transaction.",
+      "Des dépôts des nouveaux entrants, comme dans un système pyramidal.",
+      "De la publicité affichée sur la blockchain.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Les récompenses proviennent de l'émission programmée de nouveaux jetons et d'une part des frais payés par les utilisateurs du réseau — pas d'une banque, ni des dépôts des nouveaux venus.",
+  },
+  {
+    id: "stk-q3-slashing",
+    question: "Qu'est-ce que le « slashing » ?",
+    choices: [
+      "Une réduction de frais offerte aux gros staker.",
+      "Une pénalité on-chain qui retire une partie des jetons d'un validateur fautif (double-signature, indisponibilité).",
+      "Le nom donné au rendement annuel.",
+      "Une taxe prélevée par l'État sur les récompenses.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le slashing est une sanction inscrite dans le protocole : un validateur qui se comporte mal (ou reste hors-ligne, selon les réseaux) perd une partie de son stake. C'est l'un des mécanismes qui sécurisent le réseau.",
+  },
+  {
+    id: "stk-q4-custodial",
+    question: "Quel est le principal risque du staking via une plateforme d'échange (custodial) ?",
+    choices: [
+      "Aucun, c'est garanti par l'État.",
+      "Tu confies tes clés à la plateforme : en cas de faillite, de piratage ou de gel, tes fonds en dépendent.",
+      "Tu ne peux jamais récupérer tes jetons.",
+      "Le rendement est forcément nul.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Staker sur un exchange est simple mais custodial : tes jetons sont détenus par la plateforme. Tu hérites de son risque de contrepartie (faillite, piratage, blocage). « Not your keys, not your coins » s'applique.",
+  },
+  {
+    id: "stk-q5-liquid",
+    question: "Le « liquid staking » (par exemple le stETH) ajoute quel risque spécifique ?",
+    choices: [
+      "Aucun, c'est strictement identique au staking classique.",
+      "Le risque de bug du smart contract et un possible dépeg du jeton liquide par rapport à l'actif sous-jacent.",
+      "Le risque que ton ordinateur surchauffe.",
+      "Le risque de payer deux fois l'impôt.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Le liquid staking émet un jeton (ex. stETH) représentant ta position stakée. Tu ajoutes le risque de bug du smart contract et celui que ce jeton se négocie en dessous de l'actif sous-jacent (dépeg), comme observé en 2022.",
+  },
+];
+
+const QUIZ_CHOISIR: QuizQuestion[] = [
+  {
+    id: "chx-q1-marketcap",
+    question: "Comment se calcule la capitalisation (market cap) d'une crypto ?",
+    choices: [
+      "Prix × offre en circulation.",
+      "Prix × offre maximale possible.",
+      "Le prix unitaire, tout simplement.",
+      "Le volume échangé sur 24 heures.",
+    ],
+    correctIndex: 0,
+    explanation:
+      "Market cap = prix × offre en circulation. Elle reflète la valeur de marché des jetons réellement en circulation : un prix unitaire bas ne veut pas dire « pas cher » sans regarder l'offre.",
+  },
+  {
+    id: "chx-q2-fdv",
+    question:
+      "Que mesure la valorisation totalement diluée (FDV), et que signale un grand écart avec la market cap ?",
+    choices: [
+      "FDV = prix × offre maximale ; un grand écart signale une forte dilution future (beaucoup de jetons encore à émettre).",
+      "FDV = le bénéfice de l'entreprise ; l'écart signale une fraude.",
+      "FDV = la market cap d'hier ; l'écart mesure la volatilité.",
+      "FDV n'a aucun rapport avec l'offre de jetons.",
+    ],
+    correctIndex: 0,
+    explanation:
+      "FDV = prix × offre maximale (ou totale). Si la FDV dépasse largement la market cap, beaucoup de jetons restent à émettre : leur arrivée (unlocks) peut diluer les détenteurs actuels et peser sur le prix.",
+  },
+  {
+    id: "chx-q3-redflag",
+    question: "Lequel de ces éléments est un signal d'alerte (red flag) sur un projet crypto ?",
+    choices: [
+      "Un code source public et des audits réalisés par des cabinets reconnus.",
+      "Une équipe totalement anonyme sans raison, des promesses de rendement garanti et aucun audit.",
+      "Une communauté active et une feuille de route claire.",
+      "Une documentation technique détaillée.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Anonymat injustifié, rendement « garanti » et absence d'audit sont des signaux d'alerte classiques. À l'inverse, code public, audits et roadmap claire sont plutôt rassurants — sans jamais être une garantie absolue.",
+  },
+  {
+    id: "chx-q4-duediligence",
+    question: "En quoi consiste la « due diligence » avant d'investir ?",
+    choices: [
+      "Acheter d'abord, se renseigner ensuite.",
+      "Suivre l'avis d'un influenceur sans rien vérifier.",
+      "Rechercher méthodiquement l'équipe, le whitepaper, l'activité de développement, la tokenomics et la liquidité AVANT d'investir.",
+      "Regarder uniquement le prix du jour.",
+    ],
+    correctIndex: 2,
+    explanation:
+      "La due diligence, c'est enquêter avant de mettre un euro : qui est derrière le projet, quel problème il résout, le code est-il actif, comment les jetons sont-ils répartis, la liquidité est-elle suffisante. Pas l'inverse.",
+  },
+  {
+    id: "chx-q5-concentration",
+    question: "Pourquoi une forte concentration des jetons sur quelques portefeuilles est-elle risquée ?",
+    choices: [
+      "Ça n'a aucune importance.",
+      "Quelques gros détenteurs peuvent vendre massivement (dump) et faire chuter le prix, voire manipuler le marché.",
+      "Ça garantit que le prix montera.",
+      "Ça rend le projet automatiquement conforme à MiCA.",
+    ],
+    correctIndex: 1,
+    explanation:
+      "Si peu d'adresses détiennent une grande part de l'offre, leur décision de vendre peut faire s'effondrer le prix et faciliter la manipulation. Une répartition large de l'offre est généralement plus saine.",
+  },
+];
+
 const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   debutant: QUIZ_DEBUTANT,
   intermediaire: QUIZ_INTERMEDIAIRE,
@@ -469,6 +676,9 @@ const QUIZZES: Partial<Record<TrackId, QuizQuestion[]>> = {
   securite: QUIZ_SECURITE,
   fiscalite: QUIZ_FISCALITE,
   plateformes: QUIZ_PLATEFORMES,
+  stablecoins: QUIZ_STABLECOINS,
+  staking: QUIZ_STAKING,
+  choisir: QUIZ_CHOISIR,
 };
 
 export function getQuizForTrack(trackId: string): QuizQuestion[] | null {
