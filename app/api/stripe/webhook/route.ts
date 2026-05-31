@@ -440,9 +440,14 @@ async function handleSubscriptionUpdate(
   if (!priceId) return;
 
   const plan = status === "active" ? priceIdToPlan(priceId, productId) : "free";
-  // Dans l'API Stripe 2026-04 (dahlia), `current_period_end` est sur l'item
-  // de subscription, pas sur la subscription elle-même.
-  const periodEnd = item?.current_period_end;
+  // Robustesse multi-versions API Stripe (audit 2026-05-31) : `current_period_end`
+  // est au niveau de l'ITEM dans les versions récentes (2025+/clover/dahlia) MAIS
+  // au niveau de la SUBSCRIPTION dans les versions plus anciennes — l'endpoint
+  // webhook prod est en 2024-10-28.acacia → on lit les DEUX pour une expiration
+  // exacte quelle que soit la version (sinon on retombe sur l'approximation).
+  const periodEnd =
+    item?.current_period_end ??
+    (subscription as unknown as { current_period_end?: number }).current_period_end;
   const expiresAt = periodEnd
     ? new Date(periodEnd * 1000)
     : planToExpirationDate(plan);
