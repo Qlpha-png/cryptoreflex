@@ -80,7 +80,7 @@ export default function PlatformsSection() {
         <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-muted">
           <Star className="h-3 w-3 text-primary-soft" strokeWidth={2} aria-hidden="true" />
           <span>
-            Liens partenaires rémunérés.{" "}
+            Certains liens sont des liens partenaires rémunérés (signalés).{" "}
             <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">
               Pourquoi ?
             </Link>

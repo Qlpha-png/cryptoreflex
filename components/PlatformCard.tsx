@@ -3,6 +3,7 @@ import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "./PlatformLogo";
 import PlatformCardSubCta from "./PlatformCardSubCta";
 import { type Platform, pickSocialProof, buildMicaLabel } from "@/lib/platforms";
+import { getAffiliationKind } from "@/lib/partnerships";
 
 /**
  * PlatformCard — carte de plateforme crypto pour la home (block conversion N°1).
@@ -68,6 +69,10 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
   } = platform;
 
   const rating = scoring.global;
+  // Audit F (2026-05-31) — lien réellement rémunéré (affiliation ou parrainage) ?
+  // Conditionne la mention « Publicité » du CTA (ne pas la mettre sur les
+  // plateformes sans aucune relation commerciale). Source : lib/partnerships.ts.
+  const isAffiliated = getAffiliationKind(id) !== null;
   const ctaText = `S'inscrire sur ${name}`;
   const cardId = `platform-card-${id}`;
   const titleId = `${cardId}-title`;
@@ -221,7 +226,11 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
                    focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {ctaText}
-        <span className="sr-only"> · Publicité, lien d&apos;affiliation. Ouvre un nouvel onglet.</span>
+        <span className="sr-only">
+          {isAffiliated
+            ? " · Publicité, lien rémunéré. Ouvre un nouvel onglet."
+            : " · Lien externe. Ouvre un nouvel onglet."}
+        </span>
         <ArrowRight className="arrow-spring h-4 w-4" strokeWidth={2} aria-hidden="true" />
         <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
       </AffiliateLink>

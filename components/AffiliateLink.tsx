@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { trackAffiliateClick } from "@/lib/analytics";
+import { getAffiliationKind } from "@/lib/partnerships";
 
 /**
  * AffiliateLink — wrapper standardisé pour TOUS les liens d'affiliation.
@@ -117,7 +118,17 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     //  - PAS de `noreferrer` : casse l'attribution affiliation chez certains
     //    partenaires (Binance, Kraken). Le tabnabbing reste prévenu par `noopener`.
     //  - ugc (optionnel) : contenu utilisateur
-    const relParts = ["sponsored", "nofollow"];
+    // Audit F (2026-05-31) — "sponsored" UNIQUEMENT si la plateforme est
+    // RÉELLEMENT rémunérée (affiliation éditeur OU code parrainage perso de
+    // Kevin). Pour toutes les autres (aucune relation), on ne revendique rien :
+    // "nofollow noopener" sans "sponsored" (lien externe neutre). Empêche de
+    // présenter Coinbase/Kraken/… comme des liens affiliés alors qu'ils ne le
+    // sont pas. Source de vérité : lib/partnerships.ts.
+    const affiliationKind = getAffiliationKind(platform);
+    const isPaidLink = affiliationKind !== null;
+    const relParts: string[] = [];
+    if (isPaidLink) relParts.push("sponsored");
+    relParts.push("nofollow");
     if (target === "_blank") relParts.push("noopener");
     if (ugc) relParts.push("ugc");
     const rel = relParts.join(" ");
@@ -158,13 +169,17 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
         >
           {children}
         </a>
-        {showCaption && (
+        {/* Mention légale UNIQUEMENT sur les liens réellement rémunérés (audit F).
+            Wording exact selon le type : commission éditeur vs parrainage perso. */}
+        {showCaption && isPaidLink && (
           <Link
             href="/transparence"
             className="mt-1 block text-xs text-muted hover:text-fg underline underline-offset-2"
-            aria-label="En savoir plus sur nos liens d'affiliation et nos partenariats"
+            aria-label="En savoir plus sur nos liens rémunérés et nos partenariats"
           >
-            Publicité — Cryptoreflex perçoit une commission
+            {affiliationKind === "affiliate"
+              ? "Publicité — Cryptoreflex perçoit une commission"
+              : "Publicité — lien de parrainage personnel"}
           </Link>
         )}
       </>

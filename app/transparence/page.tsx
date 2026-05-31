@@ -16,6 +16,7 @@ import {
 
 import { BRAND } from "@/lib/brand";
 import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import { PARTNERSHIPS, type PartnershipMeta } from "@/lib/partnerships";
 import StructuredData from "@/components/StructuredData";
 import MicaCountdown from "@/components/MicaCountdown";
 import {
@@ -86,70 +87,11 @@ export const metadata: Metadata = {
 /*      faire dans une page de divulgation légale.                            */
 /* -------------------------------------------------------------------------- */
 
-type PartnershipStatus = "live" | "review";
-
-interface PartnershipMeta {
-  revenue: string;
-  since: string;
-  status: PartnershipStatus;
-  /** Type juridique : programme d'affiliation commercial OU code parrainage personnel. */
-  kind: "affiliate" | "referral";
-}
-
-const PARTNERSHIPS: Record<string, PartnershipMeta> = {
-  // === 3 VRAIS PROGRAMMES D'AFFILIATION ===
-  // Contrats commerciaux signés via plateformes pro (Impact.com / Cellxpert /
-  // programmes maison). Cryptoreflex est référencé comme éditeur affilié,
-  // perçoit une commission tracée sur conversion.
-  ledger: {
-    revenue: "10 % commission sur hardware (Nano S+, Nano X, Stax) via Impact.com",
-    since: "2026-04-26",
-    status: "live",
-    kind: "affiliate",
-  },
-  trezor: {
-    revenue: "12-15 % commission sur hardware (Safe 3, Safe 5, Model T) via Cellxpert",
-    since: "2026-04-26",
-    status: "live",
-    kind: "affiliate",
-  },
-  waltio: {
-    revenue: "Commission sur souscription au logiciel de fiscalité crypto",
-    since: "2026-04-26",
-    status: "live",
-    kind: "affiliate",
-  },
-
-  // === CODES DE PARRAINAGE PERSONNELS ===
-  // PAS un partenariat commercial avec Cryptoreflex. Ce sont les codes
-  // parrainage que TOUT utilisateur peut générer depuis son compte, partagés
-  // ici par Kevin Voisin en tant que client particulier des plateformes.
-  // La rémunération éventuelle (10€/filleul Bitpanda, 15€/filleul Trade
-  // Republic) est versée à Kevin Voisin en tant que filleul historique, pas
-  // à Cryptoreflex en tant qu'éditeur. Inscrits ici par souci de
-  // transparence loyale (loi Influenceurs).
-  bitpanda: {
-    revenue:
-      "Code parrainage personnel — Tell-a-Friend Bitpanda (10 € au parrain et au filleul)",
-    since: "2026-04-25",
-    status: "live",
-    kind: "referral",
-  },
-  "trade-republic": {
-    revenue:
-      "Code parrainage personnel — Programme in-app Trade Republic (15 € au parrain + 200 € d'actions au filleul)",
-    since: "2026-04-25",
-    status: "live",
-    kind: "referral",
-  },
-  binance: {
-    revenue:
-      "Code parrainage personnel — Programme referral Binance (réduction de frais et bonus filleul)",
-    since: "2026-04-25",
-    status: "live",
-    kind: "referral",
-  },
-};
+// PartnershipStatus / PartnershipMeta / PARTNERSHIPS ont été extraits dans
+// lib/partnerships.ts (audit F, 2026-05-31) pour devenir la source de vérité
+// UNIQUE, réutilisée par AffiliateLink + PlatformCard (afficher rel="sponsored"
+// + la mention « Publicité » UNIQUEMENT sur les plateformes réellement
+// rémunérées). Cette page importe désormais PARTNERSHIPS depuis la lib.
 
 const PAGE_LAST_UPDATED = "2026-04-30";
 
