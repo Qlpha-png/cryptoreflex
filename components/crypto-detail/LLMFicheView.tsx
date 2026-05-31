@@ -2,7 +2,7 @@ import Link from "next/link";
 // FIX C cohérence (2026-05-09) — remplace les emojis 📊/💰/🗓️ par les icônes
 // Lucide pour aligner les fiches LLM sur le design system du reste du site
 // (les fiches statiques /cryptos/* utilisent déjà BarChart3/Coins/Calendar).
-import { ExternalLink, BarChart3, Coins, Calendar } from "lucide-react";
+import { ExternalLink, BarChart3, Coins, Calendar, Bot } from "lucide-react";
 
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
@@ -164,6 +164,24 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
             </span>
           ) : null}
         </div>
+
+        {/* Audit B (2026-05-31) — Transparence E-E-A-T : ces ~680 fiches sont
+            générées automatiquement (sources publiques) et NON vérifiées une à
+            une. On le signale clairement (à l'origine, 62 % des coingeckoId
+            LLM étaient hallucinés) pour ne jamais tromper le lecteur. */}
+        <p className="mt-5 flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs leading-relaxed text-amber-100/90">
+          <Bot className="size-4 shrink-0 mt-0.5" aria-hidden="true" />
+          <span>
+            <strong>Fiche générée automatiquement</strong> à partir de sources publiques,
+            non vérifiée éditorialement une à une. Des chiffres ou faits peuvent être inexacts —
+            recoupe toujours avec les sources officielles (site du projet, CoinGecko) avant toute
+            décision. Nos{" "}
+            <Link href="/cryptos" className="underline hover:text-white">
+              fiches premium (top 100)
+            </Link>{" "}
+            sont, elles, vérifiées à la main.
+          </span>
+        </p>
       </header>
 
       {/* Thesis */}
