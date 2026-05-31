@@ -283,7 +283,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
       };
     }
-    return {};
+    return { robots: { index: false, follow: false } };
   }
   const isGem = c.kind === "hidden-gem";
   // BATCH 23 SEO P0 #2 — titles raccourcis pour rester < 60 chars (avant

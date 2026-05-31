@@ -61,13 +61,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticleBySlug(lesson.articleSlug);
   if (!article) return { title: lesson.title };
 
-  const title = `${lesson.title} — Parcours ${track.title} | Académie Cryptoreflex`;
+  const title = `${lesson.title} — Parcours ${track.title}`;
   const url = `${BRAND.url}/academie/${track.id}/${lesson.articleSlug}`;
+  // Canonical = la version /blog du MÊME article : le même MDX est servi sur
+  // /blog/<slug> ET /academie/<track>/<slug> → on consolide vers le blog pour
+  // éviter le duplicate content (la leçon reste accessible et utilisable).
+  const canonicalUrl = `${BRAND.url}/blog/${lesson.articleSlug}`;
 
   return {
     title,
     description: article.description,
-    alternates: withHreflang(url),
+    alternates: withHreflang(canonicalUrl),
     openGraph: {
       title,
       description: article.description,

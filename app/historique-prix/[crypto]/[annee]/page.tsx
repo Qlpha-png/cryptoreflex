@@ -68,7 +68,8 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const c = getCryptoBySlug(params.crypto);
-  if (!c || !YEARS.includes(params.annee as Annee)) return {};
+  if (!c || !YEARS.includes(params.annee as Annee))
+    return { robots: { index: false, follow: false } };
   const title = `Prix ${c.name} (${c.symbol}) en ${params.annee} — historique annuel`;
   const description = `Évolution du prix ${c.name} en ${params.annee} : ouverture, clôture, plus haut, plus bas, événements majeurs. Données vérifiées Cryptoreflex.`;
   return {
