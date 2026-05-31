@@ -76,7 +76,12 @@ const MAX_NEWS_PER_RUN = 3;
  * Slugify FR : ASCII kebab-case sans accent, < 80 chars.
  */
 function slugify(input) {
-  return input
+  return String(input)
+    // Anti-réputation : retire les entités HTML (&#39; → « 39 » dans l'URL) et
+    // la vulgarité éventuelle du titre source RSS, pour ne JAMAIS publier un slug
+    // grossier (cas vu le 2026-05-31 : « ...full-of-shit... » dans l'URL).
+    .replace(/&#?[a-z0-9]+;/gi, " ")
+    .replace(/\b(?:shit|fuck|bitch|cunt|asshole|bastard|dick|slut|whore)\b/gi, " ")
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
