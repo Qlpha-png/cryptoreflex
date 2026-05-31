@@ -9,8 +9,10 @@ name: Daily content generator (news + TA)
 # Actions du top d'heure (qui retarde les runs). Déploiement Vercel ~10 min
 # après le push. Déclenchement manuel possible via "Run workflow".
 on:
-  schedule:
-    - cron: "30 5 * * *"
+  # 2026-05-31 : 'schedule' natif GitHub retiré (il partait avec 2-5 h de retard,
+  # publication vers 10-13h Paris au lieu du matin). Déclenchement désormais PRÉCIS
+  # via cron-job.org → API workflow_dispatch, tous les jours à 06:30 Europe/Paris.
+  # Si cron-job.org tombe, les monitors freshness-check + health-check alertent.
   workflow_dispatch:
 
 # Permissions write requise pour commit + push automatique sur main.
