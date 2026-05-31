@@ -38,7 +38,7 @@ Formulaire Cerfa à joindre à la déclaration 2042-C qui détaille **chaque ces
 Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
 
 ### BIC (Bénéfices Industriels et Commerciaux)
-Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 17,2 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
+Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 18,6 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
 
 ### BNC (Bénéfices Non Commerciaux)
 Régime fiscal des revenus de staking, lending, airdrops et mining (à la perception). Régime micro-BNC si CA < 77 700 €/an (abattement forfaitaire 34 %), ou régime de la déclaration contrôlée pour les volumes supérieurs.
@@ -58,10 +58,10 @@ Tout transfert à titre onéreux d'un crypto-actif : vente contre euros, **swap 
 Texte légal de référence pour toute la fiscalité française. L'article 150 VH bis CGI = base juridique du régime crypto particuliers.
 
 ### CSG (Contribution Sociale Généralisée)
-Composante des prélèvements sociaux (9,2 % sur les revenus du capital). Comprise dans les 17,2 % de PS qui s'ajoutent au PFU ou au barème.
+Composante des prélèvements sociaux (10,6 % sur les revenus du capital depuis la LFSS 2026). Comprise dans les 18,6 % de PS qui s'ajoutent au PFU ou au barème.
 
 ### CRDS (Contribution au Remboursement de la Dette Sociale)
-Prélèvement social de 0,5 %, intégré aux 17,2 % de PS.
+Prélèvement social de 0,5 %, intégré aux 18,6 % de PS.
 
 ## D
 
@@ -139,7 +139,7 @@ Gain réalisé à la cession d'un crypto-actif. Calculée selon la formule 150 V
 **Somme des valeurs de marché de TOUS les crypto-actifs détenus** par le contribuable au moment d'une cession. Inclut tous les wallets, exchanges, DeFi, NFT. Base de calcul de la formule 150 VH bis.
 
 ### Prélèvements sociaux (PS)
-17,2 % au total : 9,2 % CSG + 0,5 % CRDS + 7,5 % prélèvement de solidarité. S'appliquent à la PV crypto, que tu choisisses PFU ou barème.
+18,6 % au total : 10,6 % CSG + 0,5 % CRDS + 7,5 % prélèvement de solidarité. S'appliquent à la PV crypto, que tu choisisses PFU ou barème.
 
 ### PSAN (Prestataire de Services sur Actifs Numériques)
 Régime français d'enregistrement obligatoire (AMF) pour les exchanges, custodians et conseillers crypto. **Remplacé progressivement par le statut CASP MiCA** depuis juillet 2026. Les anciens PSAN bénéficient d'une période transitoire pour basculer.

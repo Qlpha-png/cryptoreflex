@@ -24,13 +24,21 @@ import { join, extname } from "node:path";
 const ROOTS = ["components", "app", "lib", "data", "public", "content/lead-magnets"];
 const EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".json", ".txt", ".md", ".mdx"]);
 
-// Taux PFU/flat tax obsolète présenté comme courant (marqueur fiscal ± 30 %),
-// dans les deux ordres + le taux de prélèvements sociaux obsolète.
+// Taux PFU/flat tax obsolète présenté comme courant.
+// NB : on ne teste PAS « 30 % …PFU » à l'envers car « TMI 30 % | PFU » dans une
+// table de tranches est LÉGITIME (30 % est une vraie tranche d'IR). En revanche
+// le PS à 17,2 % (virgule OU point) n'a AUCUN usage courant légitime depuis 2026
+// → c'est le signal le plus fiable. On couvre aussi « 30 % flat » et « PFU … 30 % ».
 const FORBIDDEN: RegExp[] = [
-  /(?:flat\s*tax|PFU|forfaitaire)[^\n.]{0,16}?\b30\s?%/i,
-  /\b30\s?%[^\n.]{0,14}?(?:flat\s*tax|\bPFU\b|forfaitaire)/i,
-  /17,2\s?%\s*de\s*pr[ée]l[èe]vements?\s*sociaux/i,
-  /pr[ée]l[èe]vements?\s*sociaux[^\n]{0,4}17,2\s?%/i,
+  // PFU / flat tax dont le TOTAL serait resté à 30 %
+  /(?:flat\s*tax|\bPFU\b|forfaitaire\s*unique)[^\n.]{0,28}?\b30\s?%/i,
+  /\b30\s?%\s*flat\b/i,
+  // Prélèvements sociaux figés à l'ancien 17,2 % (virgule OU point décimal)
+  /17[.,]2\s?%\s*(?:de\s*)?(?:pr[ée]l[èe]vements?\s*sociaux|PS\b)/i,
+  /(?:pr[ée]l[èe]vements?\s*sociaux|\bPS\b)[^\n]{0,10}?17[.,]2\s?%/i,
+  /17[.,]2\s?%\s*au\s*total/i,
+  // CSG figée à l'ancien 9,2 % en contexte prélèvements sociaux courant
+  /9,2\s?%[^\n.]{0,18}?(?:CSG|pr[ée]l[èe]vements?\s*sociaux)/i,
 ];
 
 function walk(dir: string, acc: string[]): void {

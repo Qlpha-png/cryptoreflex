@@ -72,7 +72,7 @@ const STATS = [
     color: "text-cyan-400",
   },
   {
-    value: "30 %",
+    value: "31,4 %",
     label: "PFU sur plus-values crypto",
     color: "text-emerald-400",
   },
@@ -491,15 +491,15 @@ export default function FiscaliteCryptoStudyPage() {
             Les plus-values de cession d’actifs numériques par les particuliers
             relèvent du <strong>Prélèvement Forfaitaire Unique (PFU)</strong>{" "}
             défini à l’article 200 A du Code général des impôts (CGI). Le taux
-            est de <strong>30 %</strong>, qui se décompose en :
+            est de <strong>31,4 %</strong>, qui se décompose en :
           </p>
           <ul>
             <li>
               <strong>12,8 %</strong> au titre de l’impôt sur le revenu (IR) ;
             </li>
             <li>
-              <strong>17,2 %</strong> au titre des prélèvements sociaux (CSG +
-              CRDS).
+              <strong>18,6 %</strong> au titre des prélèvements sociaux (CSG
+              10,6 % + CRDS + prélèvement de solidarité).
             </li>
           </ul>
           <p>
@@ -526,7 +526,7 @@ export default function FiscaliteCryptoStudyPage() {
             2024. Vous le vendez 32 000 € en 2025. La plus-value est de
             2 000 €, MAIS le montant de la cession est de 32 000 € — bien
             au-dessus de 305 €. La plus-value est donc imposable au PFU 31,4 % =
-            600 €.
+            628 €.
           </p>
           <p>
             <strong>Exemple inverse.</strong> Vous vendez 50 € de Bitcoin pour

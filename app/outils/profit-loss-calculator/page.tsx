@@ -77,7 +77,7 @@ export default function ProfitLossCalculatorPage() {
       {
         question: "Comment calcule-t-on le profit d'une crypto ?",
         answer:
-          "Profit brut = (prix_vente - prix_achat) × quantite. Profit net = profit_brut - frais_achat - frais_vente. En France, sur les plus-values realisees (cessions vers fiat ou achat de bien/service), s'applique le PFU (Prelevement Forfaitaire Unique) de 31,4% : 12.8% impot + 17.2% prelevements sociaux. Donc Net apres impot = Net × 0.7 (si plus-value).",
+          "Profit brut = (prix_vente - prix_achat) × quantite. Profit net = profit_brut - frais_achat - frais_vente. En France, sur les plus-values realisees (cessions vers fiat ou achat de bien/service), s'applique le PFU (Prelevement Forfaitaire Unique) de 31,4% : 12.8% impot + 18.6% prelevements sociaux. Donc Net apres impot = Net × 0.686 (si plus-value).",
       },
       {
         question: "Les frais de plateforme (maker, taker, spread) sont-ils deductibles ?",

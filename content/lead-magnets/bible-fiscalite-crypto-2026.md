@@ -87,9 +87,9 @@ C'est le bulletin officiel des finances publiques (BOFIP) qui interprète le 150
 Sans démarche de ta part, tu es soumis au **Prélèvement Forfaitaire Unique (PFU)** de 31,4 %, décomposé en :
 
 - **12,8 % au titre de l'impôt sur le revenu**
-- **17,2 % au titre des prélèvements sociaux** (CSG, CRDS, prélèvement de solidarité)
+- **18,6 % au titre des prélèvements sociaux** (CSG 10,6 %, CRDS, prélèvement de solidarité)
 
-Ces 30 % s'appliquent à la **plus-value nette** (gains − pertes de l'année).
+Ces 31,4 % s'appliquent à la **plus-value nette** (gains − pertes de l'année).
 
 ### L'option barème progressif : pour qui ?
 
@@ -97,10 +97,10 @@ Tu peux **opter** (case 2OP de la déclaration) pour intégrer tes plus-values c
 
 | TMI du foyer | Choix optimal | Pourquoi |
 |---|---|---|
-| 0 % | Barème | Tu ne paies que les 17,2 % de PS (vs 31,4 % au PFU) |
-| 11 % | Barème | 28,2 % au lieu de 30 % |
-| 31,4 % | PFU | 47,2 % au barème vs 31,4 % — PFU largement gagnant |
-| 41 % | PFU | 58,2 % au barème vs 31,4 % — PFU dominant |
+| 0 % | Barème | Tu ne paies que les 18,6 % de PS (vs 31,4 % au PFU) |
+| 11 % | Barème | 29,6 % au lieu de 31,4 % |
+| 30 % | PFU | 48,6 % au barème vs 31,4 % — PFU largement gagnant |
+| 41 % | PFU | 59,6 % au barème vs 31,4 % — PFU dominant |
 | 45 % | PFU | 62,2 % au barème vs 31,4 % — PFU obligatoire |
 
 ### Cas particulier : abattement pour durée de détention
@@ -260,7 +260,7 @@ Pas de seuil chiffré, mais en pratique : > 200 transactions/an + revenus crypto
 
 Au lieu du PFU 31,4 %, tu passes en **BIC professionnel** :
 - Imposition à la TMI sur les bénéfices nets
-- 17,2 % de PS
+- 18,6 % de PS
 - Cotisations sociales TNS (~ 22 % du bénéfice net en SSI/URSSAF)
 - TVA possible à partir de 36 800 € de CA (régime micro-BIC dépassé)
 
