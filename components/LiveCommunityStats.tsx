@@ -24,11 +24,25 @@
  *   - "full"    : 3 cards riches avec icônes + libellés, pour /pro et /transparence
  */
 
+import { unstable_cache } from "next/cache";
 import { Users, Sparkles, Bell } from "lucide-react";
 import {
   getCommunityStatsSafe,
   type CommunityStats,
 } from "@/lib/community-stats";
+
+// Audit H (2026-05-31) — Ce composant vit dans le Footer, rendu sur 1000+ pages.
+// getCommunityStatsSafe() interroge Supabase à CHAQUE render → spam Supabase +
+// CPU Vercel (dépassement Hobby). On met en cache via unstable_cache : 1 lecture
+// Supabase / 5 min max, partagée par toutes les pages. Tag "community-stats" pour
+// invalidation on-demand (revalidateTag) ex. à l'arrivée d'un nouvel abonné Pro.
+// NB : la lib reste inchangée (13 tests + param timeout en dépendent) — on cache
+// uniquement le chemin composant ; la route /api a déjà son propre unstable_cache.
+const getCommunityStatsCached = unstable_cache(
+  async (): Promise<CommunityStats> => getCommunityStatsSafe(),
+  ["community-stats-footer-v1"],
+  { revalidate: 300, tags: ["community-stats"] },
+);
 
 interface LiveCommunityStatsProps {
   /** "compact" (Footer) | "full" (page Pro). Défaut : "compact". */
@@ -230,7 +244,7 @@ export default async function LiveCommunityStats({
   // Aucun fetch HTTP : aucune chance de spammer Supabase ni de bloquer le
   // build SSG, quel que soit le nombre de pages dans lesquelles ce Footer
   // se retrouve.
-  const stats: CommunityStats = await getCommunityStatsSafe();
+  const stats: CommunityStats = await getCommunityStatsCached();
 
   // Wrapper sémantique : <section> avec aria-label pour lecteurs d'écran.
   // En variant compact (Footer), pas de title visible — le label SR suffit.
