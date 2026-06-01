@@ -29,6 +29,7 @@ import TrustMarquee from "@/components/TrustMarquee";
 // du parcours « Débutant » de l'Académie. Remplacé par AcademyHomeTeaser, qui
 // pointe vers /academie. Composant conservé dans components/ pour réutilisation.
 import AcademyHomeTeaser from "@/components/AcademyHomeTeaser";
+import StartHere from "@/components/StartHere";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
 // BATCH 26 — PlatformsMarquee retiré de la home (doublon). Composant
@@ -98,7 +99,7 @@ export const metadata: Metadata = {
   // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils gratuits, méthodologie publique.",
+    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils crypto, méthodologie publique.",
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
@@ -141,6 +142,7 @@ function CategoryHeader({
   ctaHref,
   ctaLabel,
   anchorId,
+  variant = "primary",
 }: {
   Icon: typeof Target;
   eyebrow: string;
@@ -150,9 +152,21 @@ function CategoryHeader({
   ctaLabel?: string;
   /** ID porté par le H2 visible (sert d'ancre pour HomeAnchorNav + aria-labelledby). */
   anchorId: string;
+  /**
+   * Hiérarchie visuelle (audit home 2026-06) :
+   *  - "primary"   : section forte (Comparer / Explorer) — H2 large.
+   *  - "secondary" : section d'appui (Académie / Outils / Actu / Newsletter) —
+   *    H2 plus discret + intro atténuée. Crée 2 niveaux sans refonte graphique.
+   */
+  variant?: "primary" | "secondary";
 }) {
+  const isSecondary = variant === "secondary";
   return (
-    <header className="mx-auto max-w-7xl px-4 pb-2 pt-16 sm:px-6 sm:pt-20 lg:px-8">
+    <header
+      className={`mx-auto max-w-7xl px-4 pb-2 sm:px-6 lg:px-8 ${
+        isSecondary ? "pt-12 sm:pt-14" : "pt-16 sm:pt-20"
+      }`}
+    >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
@@ -161,11 +175,23 @@ function CategoryHeader({
           </span>
           <h2
             id={anchorId}
-            className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl"
+            className={`mt-4 font-extrabold tracking-tight ${
+              isSecondary
+                ? "text-2xl text-fg/90 sm:text-3xl"
+                : "text-3xl sm:text-4xl"
+            }`}
           >
             {title}
           </h2>
-          <p className="mt-3 text-base text-fg/70 sm:text-lg">{intro}</p>
+          <p
+            className={`mt-3 ${
+              isSecondary
+                ? "text-sm text-fg/60 sm:text-base"
+                : "text-base text-fg/70 sm:text-lg"
+            }`}
+          >
+            {intro}
+          </p>
         </div>
         {ctaHref && ctaLabel ? (
           <Link href={ctaHref} className="btn-ghost self-start py-2.5 text-sm">
@@ -281,42 +307,21 @@ export default async function HomePage() {
       <HomeAnchorNav />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 1 — ACADÉMIE (apprentissage structuré)
-          Refonte 30/05/2026 (feedback Kev « range la home, les doublons sont
-          inutiles ») : l'ancien BeginnerJourney (parcours débutant en 4
-          étapes) doublonnait le parcours « Débutant » de l'Académie. On le
-          remplace par une porte d'entrée propre vers /academie — l'académie
-          devient LE lieu unique de l'apprentissage, la home n'en garde qu'un
-          teaser (stats + 4 parcours phares + CTA).
+          ROUTEUR D'INTENTION — « Par où commencer ? » (audit home 2026-06)
+          Diagnostic : hiérarchie plate (toutes les sections au même poids).
+          Fix : 3 portes (apprendre / comparer / comprendre) EN TÊTE, puis
+          hiérarchie à 2 niveaux — Comparer + Explorer en PRIMAIRE, le reste
+          (Académie / Outils / Actu / Newsletter) en SECONDAIRE. Server
+          Component pur (0 JS) pour protéger le LCP.
          ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-academie">
-        <CategoryHeader
-          Icon={GraduationCap}
-          eyebrow="Académie · 100% gratuit"
-          title="Apprends la crypto, de zéro à autonome"
-          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation. Progression sauvegardée, sans compte ni paywall."
-          ctaHref="/academie"
-          ctaLabel="Découvrir l'académie"
-          anchorId="cat-academie"
-        />
-        <Reveal>
-          <AcademyHomeTeaser />
-        </Reveal>
-      </section>
+      <StartHere />
 
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 2 — COMPARER LES PLATEFORMES
-          Cible principale de conversion affiliation. On garde Platforms
-          (cards complètes) + un teaser MarketTable plus bas pour ne pas
-          surcharger le scroll mobile.
-         ────────────────────────────────────────────────────────────────── */}
-      {/* User feedback 2026-05-03 : retire le CategoryHeader "Comparer les
-          plateformes" (eyebrow + h2 + intro + cta "Comparateur complet")
-          juge redondant avec PlatformsSection qui a deja son propre header
-          interne + CTAs. On garde le wrapper section + anchor pour
-          HomeAnchorNav + PlatformsSection wrapped Reveal. */}
+          CATÉGORIE 1 (PRIMAIRE) — COMPARER LES PLATEFORMES
+          Cible principale de conversion affiliation. PlatformsSection a déjà
+          son propre header interne + CTAs (pas de CategoryHeader ici). */}
       <section id="cat-comparer" aria-label="Comparer les plateformes crypto régulées MiCA">
         <Reveal>
           <PlatformsSection />
@@ -326,14 +331,11 @@ export default async function HomePage() {
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 3 — EXPLORER (catalogue cryptos + derniers guides)
-          Refonte 30/05/2026 : le cadrage « Apprendre » doublonnait l'Académie
-          (CAT 1). Cette section redevient ce qu'elle est vraiment — un
-          catalogue (780 fiches cryptos) + les derniers guides du blog. La
-          pédagogie structurée vit désormais dans /academie.
+          CATÉGORIE 2 (PRIMAIRE) — EXPLORER (catalogue cryptos + derniers guides)
          ────────────────────────────────────────────────────────────────── */}
       <section aria-labelledby="cat-cryptos">
         <CategoryHeader
+          variant="primary"
           Icon={Coins}
           eyebrow="Explorer"
           title="780 cryptos analysées"
@@ -353,14 +355,58 @@ export default async function HomePage() {
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 4 — ACTUALITÉS & CALENDRIER (ajout 26/04/2026)
-          Feedback utilisateur "les gens sont pas assez mis au courant des
-          news journalières / événements calendrier". On expose les 3 news
-          du jour + 3 events à venir, avec pulse rouge "À la une" + compteur
-          "X publiées cette semaine" pour donner du dynamisme.
+          CATÉGORIE 3 (SECONDAIRE) — ACADÉMIE (teaser uniquement, pas un chantier)
+          L'Académie vit dans /academie ; la home n'en garde qu'un teaser + CTA.
+         ────────────────────────────────────────────────────────────────── */}
+      <section aria-labelledby="cat-academie">
+        <CategoryHeader
+          variant="secondary"
+          Icon={GraduationCap}
+          eyebrow="Académie · 100% gratuit"
+          title="Apprends la crypto, de zéro à autonome"
+          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation. Progression sauvegardée, sans compte ni paywall."
+          ctaHref="/academie"
+          ctaLabel="Découvrir l'académie"
+          anchorId="cat-academie"
+        />
+        <Reveal>
+          <AcademyHomeTeaser />
+        </Reveal>
+      </section>
+
+      <CategoryDivider />
+
+      {/* ──────────────────────────────────────────────────────────────────
+          CATÉGORIE 4 (SECONDAIRE) — OUTILS
+         ────────────────────────────────────────────────────────────────── */}
+      <section aria-labelledby="cat-outils">
+        <CategoryHeader
+          variant="secondary"
+          Icon={Wrench}
+          eyebrow="Outils crypto"
+          title="Outils"
+          intro="Calculateurs, simulateurs, convertisseur — gratuits, sans inscription ni email demandé."
+          ctaHref="/outils"
+          ctaLabel="Tous les outils"
+          anchorId="cat-outils"
+        />
+        <Reveal>
+          <ToolsTeaser />
+        </Reveal>
+        <Reveal delay={120}>
+          <QuizPromo />
+        </Reveal>
+      </section>
+
+      <CategoryDivider />
+
+      {/* ──────────────────────────────────────────────────────────────────
+          CATÉGORIE 5 (SECONDAIRE) — ACTUALITÉS & CALENDRIER (déplacée plus bas :
+          secondaire pour un 1er visiteur, vit en page dédiée /actualites).
          ────────────────────────────────────────────────────────────────── */}
       <section aria-labelledby="cat-actu">
         <CategoryHeader
+          variant="secondary"
           Icon={Newspaper}
           eyebrow="Live & frais"
           title="Actualités & calendrier"
@@ -373,48 +419,11 @@ export default async function HomePage() {
       <CategoryDivider />
 
       {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 5 — OUTILS & MARCHÉ
-          Tableau de marché + outils gratuits regroupés. Le marché live
-          est désormais positionné en "ressource pratique" (et non comme
-          un mur de données en milieu de page).
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-outils">
-        <CategoryHeader
-          Icon={Wrench}
-          eyebrow="Outils gratuits"
-          title="Outils"
-          intro="Calculateurs, simulateurs, convertisseur — tout est gratuit, sans inscription, sans email demandé."
-          ctaHref="/outils"
-          ctaLabel="Tous les outils"
-          anchorId="cat-outils"
-        />
-        <Reveal>
-          <ToolsTeaser />
-        </Reveal>
-        {/* BATCH 26 — MarketTable retiré de la home (data live déjà dans le
-            PriceTicker en haut + page dédiée /marche pour aller plus loin).
-            Réduction de 1 section (~700px scroll mobile) pour alléger la home
-            qui était jugée trop chargée. */}
-        <Reveal delay={120}>
-          <QuizPromo />
-        </Reveal>
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 5 — RESTER INFORMÉ
-          Newsletter + rappel actualités. Ferme la page par un CTA
-          d'engagement long-terme plutôt que par une accumulation de
-          contenu — meilleure conversion newsletter en bas de funnel.
-
-          Note 26/04/2026 : HiddenGemsSection retirée de la home (jugée
-          trop bruyante pour un débutant). Reste accessible via /cryptos.
-          WhyTrustUs retiré de la home également : redondant avec
-          ReassuranceSection juste après le Hero.
+          CATÉGORIE 6 (SECONDAIRE) — RESTER INFORMÉ (clôture engagement)
          ────────────────────────────────────────────────────────────────── */}
       <section aria-labelledby="cat-informe">
         <CategoryHeader
+          variant="secondary"
           Icon={Mail}
           eyebrow="Newsletter"
           title="Rester informé"
@@ -426,10 +435,15 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Guide "main tenue" — feedback utilisateur 26/04/2026 :
-          "guider le trafic comme un enfant qu'on tient la main pour
-          qu'il visite tout le site". 3 next steps contextuels. */}
-      <NextStepsGuide context="homepage" />
+      {/* Ressources finales — rôle DISTINCT du routeur d'intention en tête :
+          StartHere route par persona (apprendre/comparer/comprendre) ; ici on
+          ne re-route pas, on propose les ressources à emporter (PDF, calculateur,
+          newsletter). Cf. selectSteps() case "homepage" dans NextStepsGuide. */}
+      <NextStepsGuide
+        context="homepage"
+        title="Avant de partir, garde ça sous la main"
+        intro="Les ressources les plus utiles pour aller plus loin — à ton rythme."
+      />
 
       {/* StickyMobileCta — barre CTA flottante mobile au-dessus de
           MobileBottomNav. Audit Block 1 RE-AUDIT (Conversion + Mobile P1) :

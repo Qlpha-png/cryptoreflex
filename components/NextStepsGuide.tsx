@@ -185,7 +185,7 @@ const POOL: Record<string, Step> = {
   outils: {
     href: "/outils",
     Icon: Wrench,
-    label: "28 outils gratuits",
+    label: "28 outils crypto",
     desc: "Calculateurs, simulateurs, convertisseur, glossaire 250+ termes.",
   },
   topCryptos: {
@@ -205,8 +205,11 @@ function selectSteps(props: Props): Step[] {
 
   switch (props.context) {
     case "homepage":
-      // Visiteur sur la home → l'inviter à 3 actions concrètes (pas vers la home)
-      return [POOL.quiz, POOL.comparator, POOL.pdfPlateformes];
+      // Audit home 2026-06 : le routage par intention (apprendre / comparer /
+      // comprendre) est désormais porté par <StartHere/> EN TÊTE de home. Ce
+      // bloc de bas de page se re-spécialise en « ressources à emporter » pour
+      // NE PAS dupliquer le routage : PDF plateformes, calculateur, newsletter.
+      return [POOL.pdfPlateformes, POOL.calculateurFiscalite, POOL.newsletter];
 
     case "article":
       // Article blog → suggérer outils + autres articles selon la catégorie

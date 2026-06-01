@@ -52,12 +52,15 @@ interface ChipDef {
 }
 
 // Ordre aligné sur le DOM de la home (cf. app/page.tsx) — chips = quick-nav.
+// Ordre 2026-06 (audit home) aligné sur le nouveau DOM : Comparer → Cryptos →
+// Académie → Outils → Actualités → Newsletter. Les ancres #cat-* sont
+// inchangées (les sections existent toujours), seul l'ordre des chips suit.
 const CHIPS: ChipDef[] = [
-  { href: "#cat-academie", label: "Académie", Icon: GraduationCap },
   { href: "#cat-comparer", label: "Comparer", Icon: BarChart3 },
   { href: "#cat-cryptos", label: "Cryptos", Icon: Coins },
-  { href: "#cat-actu", label: "Actualités", Icon: Newspaper },
+  { href: "#cat-academie", label: "Académie", Icon: GraduationCap },
   { href: "#cat-outils", label: "Outils", Icon: Wrench },
+  { href: "#cat-actu", label: "Actualités", Icon: Newspaper },
   { href: "#cat-informe", label: "Newsletter", Icon: Mail },
 ];
 

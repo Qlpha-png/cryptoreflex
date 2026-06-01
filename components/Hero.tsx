@@ -188,7 +188,7 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
                 hero. */}
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
               {STATS.platforms}&nbsp;plateformes <strong className="text-fg font-semibold">régulées MiCA</strong>,{" "}
-              {STATS.cryptos}&nbsp;cryptos analysées,{" "}
+              {STATS.cryptos}&nbsp;fiches crypto,{" "}
               <strong className="text-fg font-semibold">méthodologie 100&nbsp;% publique</strong>.
             </p>
 
@@ -302,8 +302,8 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
           <Tilt3D max={4}>
             <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
               <KpiCell value={STATS.platforms} label="Marques fiables" accent />
-              <KpiCell value={STATS.cryptos} label="Cryptos analysées" />
-              <KpiCell value={STATS.tools} label="Outils gratuits" />
+              <KpiCell value={STATS.cryptos} label="Fiches crypto" />
+              <KpiCell value={STATS.tools} label="Outils crypto" />
               <KpiCell text={STATS.method} label="Méthode" />
             </HeroKpiGrid>
           </Tilt3D>
