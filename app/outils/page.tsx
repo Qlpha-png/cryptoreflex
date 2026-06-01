@@ -419,6 +419,10 @@ export default function OutilsPage() {
   const totalTools = TOOLS.length;
   const proTools = TOOLS.filter((t) => t.tier === "pro").length;
   const freeTools = totalTools - proTools;
+  // Audit honnêteté (juin 2026) : distinguer les outils RÉELLEMENT disponibles
+  // des fonctionnalités « à venir » (status:"soon") pour ne pas survendre « 28 outils ».
+  const soonTools = TOOLS.filter((t) => t.status === "soon").length;
+  const liveTools = totalTools - soonTools;
 
   // BATCH 45a SEO P0 (audit) — JSON-LD ItemList eligible Rich Results
   // "Tools" sur Google + signal hub structure fort pour le crawler.
@@ -491,9 +495,9 @@ export default function OutilsPage() {
             Tous les outils <span className="gradient-text">Cryptoreflex</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{freeTools} outils gratuits</strong> (sans inscription) +{" "}
-            <strong className="text-fg">{proTools} features Soutien</strong> (Cerfa 2086 auto, IA
-            Q&amp;A par fiche). Méthodologie publique. Aucune donnée bancaire stockée.
+            <strong className="text-fg">{liveTools} disponibles maintenant</strong>, {soonTools} en
+            préparation. {freeTools} gratuits (sans inscription) + {proTools} réservés au Soutien
+            (Cerfa 2086 auto, IA Q&amp;A par fiche). Méthodologie publique, aucune donnée bancaire stockée.
           </p>
         </header>
 
@@ -501,10 +505,10 @@ export default function OutilsPage() {
             (24px / 700ms cubic-bezier emphasized). Effet Linear/Vercel. */}
         <Reveal>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatCard label="Outils gratuits" value={String(freeTools)} accent="emerald" />
-            <StatCard label="Outils Soutien" value={String(proTools)} accent="primary" />
-            <StatCard label="Catégories" value={String(CATEGORIES.length)} accent="purple" />
-            <StatCard label="Méthodologie" value="Publique" accent="amber" />
+            <StatCard label="Disponibles" value={String(liveTools)} accent="emerald" />
+            <StatCard label="Bientôt" value={String(soonTools)} accent="amber" />
+            <StatCard label="Gratuits" value={String(freeTools)} accent="purple" />
+            <StatCard label="Soutien" value={String(proTools)} accent="primary" />
           </div>
         </Reveal>
 
@@ -519,7 +523,11 @@ export default function OutilsPage() {
             qui apparaissent au scroll, pattern Anthropic.com sections). */}
         <div className="mt-12 space-y-12">
           {CATEGORIES.map((cat, idx) => {
-            const tools = TOOLS.filter((t) => t.cat === cat.id);
+            // Audit : outils "à venir" triés EN DERNIER dans chaque catégorie
+            // (les outils réellement utilisables en tête).
+            const tools = TOOLS.filter((t) => t.cat === cat.id).sort(
+              (a, b) => (a.status === "soon" ? 1 : 0) - (b.status === "soon" ? 1 : 0),
+            );
             if (tools.length === 0) return null;
             return (
               <Reveal key={cat.id} delay={Math.min(idx * 120, 480)}>
@@ -681,6 +689,7 @@ function CategorySection({
 function ToolCard({ tool }: { tool: Tool }) {
   const Icon = tool.Icon;
   const isPro = tool.tier === "pro";
+  const isSoon = tool.status === "soon";
   // BATCH 45a a11y : aria-label explicite consolide titre + tier + status,
   // sinon NVDA lit "Soutien Nouveau {titre}" dans cet ordre desordonne
   // (badges absolute top-right/top-left lus en premier en source order).
@@ -698,7 +707,9 @@ function ToolCard({ tool }: { tool: Tool }) {
       data-tool-card
       data-tier={isPro ? "pro" : "free"}
       data-search-text={`${tool.title} ${tool.desc} ${tool.cat}`}
-      className="spotlight-card group relative flex flex-col h-full rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)]"
+      className={`spotlight-card group relative flex h-full flex-col rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] ${
+        isSoon ? "opacity-70" : ""
+      }`}
     >
       {/* BATCH 56#6 (2026-05-03) — refacto badges : avant `absolute top-3
           right-3` + `-top-2 left-4` empietaient sur le titre h3 sur cards
@@ -706,11 +717,15 @@ function ToolCard({ tool }: { tool: Tool }) {
           en HEADER flow flex justify-between -> jamais de superposition,
           align baseline parfaitement, lecture screen reader naturelle. */}
       <div className="flex items-center justify-between gap-2 mb-3 min-h-[24px]">
-        {/* Left : badge NOUVEAU si status=new, sinon spacer invisible */}
+        {/* Left : badge NOUVEAU (new) ou BIENTÔT (soon), sinon spacer invisible */}
         {tool.status === "new" ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
             <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
             Nouveau
+          </span>
+        ) : isSoon ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-elevated px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted">
+            Bientôt
           </span>
         ) : (
           <span aria-hidden="true" />
@@ -751,9 +766,15 @@ function ToolCard({ tool }: { tool: Tool }) {
 
       <p className="mt-3 text-xs text-fg/70 leading-relaxed flex-1">{tool.desc}</p>
 
-      <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft group-hover:text-primary transition-colors">
-        {isPro ? "Voir l'outil Soutien" : "Utiliser gratuitement"}
-        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+      <div
+        className={`mt-4 inline-flex items-center gap-1 text-xs font-semibold transition-colors ${
+          isSoon ? "text-muted" : "text-primary-soft group-hover:text-primary"
+        }`}
+      >
+        {isSoon ? "Bientôt disponible" : isPro ? "Voir l'outil Soutien" : "Utiliser gratuitement"}
+        {!isSoon && (
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        )}
       </div>
     </Link>
   );

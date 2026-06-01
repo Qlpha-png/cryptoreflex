@@ -106,7 +106,7 @@ export const metadata: Metadata = {
     url: BRAND.url,
     title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 34 plateformes MiCA, 780 cryptos analysées, 28 outils (PFU, DCA, fiscalité). Méthode publique.",
+      "L'écosystème crypto français : 34 plateformes MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité). Méthode publique.",
     images: [
       {
         url: "/opengraph-image",
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 34 plateformes MiCA, 780 cryptos analysées, 28 outils (PFU, DCA, fiscalité).",
+      "L'écosystème crypto français : 34 plateformes MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité).",
   },
 };
 
