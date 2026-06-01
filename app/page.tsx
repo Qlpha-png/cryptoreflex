@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   ArrowRight,
+  BarChart3,
   Coins,
   GraduationCap,
   Mail,
@@ -275,6 +276,13 @@ export default async function HomePage() {
         sparklines={heroSparklines}
         updatedAt={updatedAt}
       />
+      {/* ──────────────────────────────────────────────────────────────────
+          ROUTEUR D'INTENTION — « Par où commencer ? » (audit Codex 2026-06)
+          REMONTÉ juste après le Hero (avant TrustMarquee / Reassurance / Metrics
+          / AnchorNav) : il arrivait ~2,5 écrans desktop trop bas. Le Hero reste
+          PREMIER (protège H1 + LCP) ; StartHere donne immédiatement les 3 portes
+          d'intention. Server Component pur (0 JS client). */}
+      <StartHere />
       {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
           slowly entre Hero et Reassurance. Comble la zone morte narrative
           + signal "ces 8 sources nous surveillent". Pause au hover. */}
@@ -307,22 +315,24 @@ export default async function HomePage() {
       <HomeAnchorNav />
 
       {/* ──────────────────────────────────────────────────────────────────
-          ROUTEUR D'INTENTION — « Par où commencer ? » (audit home 2026-06)
-          Diagnostic : hiérarchie plate (toutes les sections au même poids).
-          Fix : 3 portes (apprendre / comparer / comprendre) EN TÊTE, puis
-          hiérarchie à 2 niveaux — Comparer + Explorer en PRIMAIRE, le reste
-          (Académie / Outils / Actu / Newsletter) en SECONDAIRE. Server
-          Component pur (0 JS) pour protéger le LCP.
-         ────────────────────────────────────────────────────────────────── */}
-      <StartHere />
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
           CATÉGORIE 1 (PRIMAIRE) — COMPARER LES PLATEFORMES
-          Cible principale de conversion affiliation. PlatformsSection a déjà
-          son propre header interne + CTAs (pas de CategoryHeader ici). */}
-      <section id="cat-comparer" aria-label="Comparer les plateformes crypto régulées MiCA">
+          Audit Codex : H2 parent RESTAURÉ. PlatformsSection est conçu pour
+          vivre SOUS un CategoryHeader (son titre interne reste un H3 :
+          « Sélection éditoriale — N options » → pas de doublon avec ce H2).
+          Pas de CTA ici pour éviter le doublon avec le « Voir les comparatifs »
+          interne de PlatformsSection. anchorId="cat-comparer" porte l'id sur le
+          H2 (cohérent avec les autres sections ; HomeAnchorNav + StickyMobileCta
+          retrouvent l'élément via getElementById, même position en haut de section).
+         ────────────────────────────────────────────────────────────────── */}
+      <section aria-labelledby="cat-comparer">
+        <CategoryHeader
+          variant="primary"
+          Icon={BarChart3}
+          eyebrow="Comparer"
+          title="Comparer les plateformes"
+          intro="Frais réels, sécurité, conformité MiCA, support FR — méthodologie publique, verdict tranché."
+          anchorId="cat-comparer"
+        />
         <Reveal>
           <PlatformsSection />
         </Reveal>
@@ -338,10 +348,10 @@ export default async function HomePage() {
           variant="primary"
           Icon={Coins}
           eyebrow="Explorer"
-          title="780 cryptos analysées"
+          title="780 fiches crypto"
           intro="Le top 10 expliqué simplement, 90 hidden gems avec score de fiabilité et 680 fiches exploratoires. Chaque fiche : à quoi ça sert, les risques, les sources — sans hype."
           ctaHref="/cryptos"
-          ctaLabel="Voir les 780 cryptos"
+          ctaLabel="Voir les 780 fiches"
           anchorId="cat-cryptos"
         />
         <Reveal>
