@@ -39,7 +39,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const l = getListicle(params.slug);
-  if (!l) return {};
+  if (!l) return { robots: { index: false, follow: false } };
   return {
     title: l.title,
     description: l.description,

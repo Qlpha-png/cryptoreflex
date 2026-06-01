@@ -52,7 +52,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const p = getPlatformById(params.slug);
-  if (!p) return {};
+  if (!p) return { robots: { index: false, follow: false } };
   // SEO long-tail "[plateforme] avis 2026" : keyword exact en première position,
   // marque en suffixe auto-ajouté par root layout. Title <60c, description <155c.
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec le

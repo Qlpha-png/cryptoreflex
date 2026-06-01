@@ -79,7 +79,8 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const partner = getPartner(params.slug);
   const review = getPartnerReview(params.slug);
-  if (!partner || !review) return {};
+  if (!partner || !review)
+    return { robots: { index: false, follow: false } };
 
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec
   // le template root layout `%s | Cryptoreflex`.

@@ -104,7 +104,8 @@ const DEFAULT_ALT_COUNT = 5;
 
 export function generateMetadata({ params }: Props): Metadata {
   const target = getPlatformById(params.plateforme);
-  if (!target || target.category === "wallet") return {};
+  if (!target || target.category === "wallet")
+    return { robots: { index: false, follow: false } };
   const override = METADATA_OVERRIDES[target.id];
   const title =
     override?.title ??

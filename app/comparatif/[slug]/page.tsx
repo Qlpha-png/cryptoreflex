@@ -41,10 +41,10 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const parsed = parseComparisonSlug(params.slug);
-  if (!parsed) return {};
+  if (!parsed) return { robots: { index: false, follow: false } };
   const a = getPlatformById(parsed.a);
   const b = getPlatformById(parsed.b);
-  if (!a || !b) return {};
+  if (!a || !b) return { robots: { index: false, follow: false } };
   const title = `${a.name} vs ${b.name} 2026 : comparatif frais, sécurité, MiCA`;
   const description = `${a.name} ou ${b.name} ? Comparatif détaillé : frais (spot, instant, retrait), sécurité, agrément MiCA, support FR, bonus. Verdict Cryptoreflex.`;
   return {

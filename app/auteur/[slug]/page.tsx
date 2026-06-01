@@ -45,7 +45,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const author = getAuthorById(params.slug);
-  if (!author) return {};
+  if (!author) return { robots: { index: false, follow: false } };
   return {
     title: `${author.name} — ${author.role}`,
     description: author.shortBio,

@@ -55,7 +55,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getTAArticleBySlug(params.slug);
-  if (!article) return {};
+  if (!article) return { robots: { index: false, follow: false } };
   return {
     title: article.title,
     description: article.description,

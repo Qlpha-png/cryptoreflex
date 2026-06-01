@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         robots: { index: false, follow: true },
       };
     }
-    return {};
+    return { robots: { index: false, follow: false } };
   }
   const title = `Acheter ${meta.name} (${meta.symbol}) en France 2026 — guide pas-à-pas`;
   const description = `Comment acheter du ${meta.name} (${meta.symbol}) en France en 2026 : meilleures plateformes MiCA, frais réels, méthodes de paiement (CB, virement SEPA), fiscalité PFU 31,4%. Guide Cryptoreflex.`;

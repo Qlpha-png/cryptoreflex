@@ -41,7 +41,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const pair = getStakingPair(params.slug);
-  if (!pair) return {};
+  if (!pair) return { robots: { index: false, follow: false } };
   const title = `Staking ${pair.name} (${pair.symbol}) 2026 — APY, plateformes MiCA, risques`;
   const description = `Comment staker ${pair.name} en France en 2026 : APY ${pair.apyMin}% – ${pair.apyMax}%, ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract). Guide Cryptoreflex.`;
   return {
