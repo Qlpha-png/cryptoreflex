@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!track) return { title: "Quiz introuvable" };
 
   const title = `Quiz final — Parcours ${track.title} | Académie Cryptoreflex`;
-  const description = `Quiz de validation du parcours ${track.title} : 5 questions, 4 bonnes réponses minimum pour valider et débloquer le certificat.`;
+  const description = `Quiz de validation du parcours ${track.title} : 5 questions, 4 bonnes réponses minimum pour valider le parcours.`;
   const url = `${BRAND.url}/academie/${track.id}/quiz`;
 
   return {
@@ -98,7 +98,7 @@ export default function QuizPage({ params }: Props) {
           </h1>
           <p className="mt-3 ds-lead">
             5 questions tirées des leçons que tu viens de suivre. Avec 4 bonnes
-            réponses minimum, tu débloques ton certificat personnalisé téléchargeable.
+            réponses minimum, ton parcours est marqué « quiz validé ».
           </p>
         </header>
 

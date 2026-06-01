@@ -12,7 +12,7 @@ import MonParcoursDashboard from "@/components/academy/MonParcoursDashboard";
 
 const TITLE = "Mon parcours — Académie crypto Cryptoreflex";
 const DESCRIPTION =
-  "Ton tableau de bord de l'académie crypto Cryptoreflex : progression, parcours terminés et certificats — suivi localement, sans compte.";
+  "Ton tableau de bord de l'académie crypto Cryptoreflex : progression, parcours terminés et quiz validés — suivi localement, sans compte.";
 
 export const metadata: Metadata = {
   title: TITLE,

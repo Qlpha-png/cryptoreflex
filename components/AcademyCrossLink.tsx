@@ -27,7 +27,7 @@ interface AcademyCrossLinkProps {
 
 export default function AcademyCrossLink({
   title = "Nouveau en crypto ? Forme-toi gratuitement",
-  subtitle = "14 parcours pédagogiques, quiz et certificat — sans paiement, sans carte bancaire.",
+  subtitle = "14 parcours pédagogiques avec quiz de validation — sans paiement, sans carte bancaire.",
   links,
   className = "",
 }: AcademyCrossLinkProps) {

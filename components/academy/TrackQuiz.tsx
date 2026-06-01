@@ -5,8 +5,8 @@
  *
  *  - Affiche les 5 questions une par une (UX progressive, pas overwhelming).
  *  - Score final affiché à la fin avec feedback question par question.
- *  - Si score >= PASSING_SCORE, débloque la section certificat (input nom +
- *    bouton télécharger). Le téléchargement appelle /api/academy/certificate.
+ *  - Si score >= PASSING_SCORE, le parcours est marqué « quiz validé »
+ *    (persisté en localStorage via recordQuizAttempt).
  *  - L'utilisateur peut retenter le quiz autant de fois qu'il veut.
  */
 
@@ -16,7 +16,6 @@ import {
   ArrowRight,
   Award,
   CheckCircle2,
-  Download,
   RefreshCw,
   XCircle,
 } from "lucide-react";
@@ -72,10 +71,6 @@ export default function TrackQuiz({
   const [answers, setAnswers] = useState<number[]>(() =>
     new Array(questions.length).fill(-1)
   );
-  const [name, setName] = useState("");
-  const [downloading, setDownloading] = useState(false);
-  const [downloadError, setDownloadError] = useState<string | null>(null);
-
   const score = useMemo(
     () =>
       answers.reduce(
@@ -93,7 +88,7 @@ export default function TrackQuiz({
   const nextTrack = getNextTrack(trackId);
 
   // Persiste le résultat (localStorage) à l'affichage des résultats — réussi
-  // OU non : sert au dashboard pour le badge « certifié » ET pour ressortir les
+  // OU non : sert au dashboard pour le badge « quiz validé » ET pour ressortir les
   // notions ratées (« à revoir »).
   useEffect(() => {
     if (phase !== "results") return;
@@ -123,43 +118,6 @@ export default function TrackQuiz({
     setAnswers(new Array(questions.length).fill(-1));
     setCurrentIdx(0);
     setPhase("playing");
-    setDownloadError(null);
-  }
-
-  async function downloadCertificate() {
-    if (!name.trim() || name.trim().length < 2) {
-      setDownloadError("Merci de renseigner un nom (2 caractères min).");
-      return;
-    }
-    setDownloading(true);
-    setDownloadError(null);
-    try {
-      const res = await fetch("/api/academy/certificate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trackId, name: name.trim() }),
-      });
-      if (!res.ok) {
-        throw new Error(`Erreur serveur (${res.status})`);
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `certificat-cryptoreflex-${trackId}.html`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      setDownloadError(
-        err instanceof Error
-          ? err.message
-          : "Impossible de générer le certificat. Réessaye."
-      );
-    } finally {
-      setDownloading(false);
-    }
   }
 
   /* -------------------------- Phase: Playing -------------------------- */
@@ -292,7 +250,7 @@ export default function TrackQuiz({
           Ton score : <strong className="text-primary-glow">{score}</strong> /{" "}
           {questions.length}{" "}
           {passed
-            ? "— tu peux télécharger ton certificat ci-dessous."
+            ? "— parcours validé, bravo !"
             : `— il te faut ${PASSING_SCORE} bonnes réponses pour valider.`}
         </p>
       </header>
@@ -412,51 +370,6 @@ export default function TrackQuiz({
           ← Retour au parcours
         </Link>
       </div>
-
-      {/* Certificate section — visible only if passed */}
-      {passed && (
-        <div className="mt-10 rounded-2xl border border-primary/40 bg-primary/5 p-6">
-          <h3 className="text-lg font-bold text-fg">
-            Télécharger ton certificat
-          </h3>
-          <p className="mt-1 text-sm text-fg/80">
-            Personnalise ton certificat avec ton nom (ou pseudo). Aucune donnée
-            n&apos;est stockée côté serveur.
-          </p>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-stretch">
-            <label className="flex-1">
-              <span className="sr-only">Nom à inscrire sur le certificat</span>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ton nom ou pseudo"
-                maxLength={60}
-                aria-label="Nom à inscrire sur le certificat"
-                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-fg placeholder:text-muted focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={downloadCertificate}
-              disabled={downloading}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-primary-glow disabled:opacity-60"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              {downloading ? "Génération…" : "Télécharger"}
-            </button>
-          </div>
-          {downloadError && (
-            <p className="mt-2 text-xs text-danger-fg" role="alert">
-              {downloadError}
-            </p>
-          )}
-          <p className="mt-3 text-[11px] text-muted">
-            Le fichier généré est une page HTML A4 imprimable — fais Ctrl/Cmd +
-            P puis &quot;Enregistrer en PDF&quot;.
-          </p>
-        </div>
-      )}
 
       {/* Fil du cursus : où aller après ce quiz validé */}
       {passed && nextTrack && (

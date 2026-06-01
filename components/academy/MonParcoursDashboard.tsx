@@ -5,7 +5,7 @@
  *
  * Agrège la progression locale (localStorage) sur TOUS les parcours :
  * anneau de progression global, tuiles de stats, grille des parcours avec
- * barre + statut, section certificats. Aucune donnée envoyée à un serveur,
+ * barre + statut, section quiz validés. Aucune donnée envoyée à un serveur,
  * aucune PII — tout vit dans le navigateur.
  *
  * Hydratation safe : valeurs neutres (0) au SSR/1er rendu, puis lecture réelle
@@ -51,7 +51,6 @@ import {
   touchStreak,
 } from "@/lib/academy-progress";
 import ProgressBackupCard from "@/components/academy/ProgressBackupCard";
-import CertificateShareButton from "@/components/academy/CertificateShareButton";
 
 const ICONS = {
   sprout: Sprout,
@@ -225,7 +224,7 @@ export default function MonParcoursDashboard() {
           <StatTile
             icon={<Award className="h-5 w-5" aria-hidden="true" />}
             value={String(certifiedCount)}
-            label="Certificats validés"
+            label="Quiz validés"
           />
           <StatTile
             icon={<BookOpenCheck className="h-5 w-5" aria-hidden="true" />}
@@ -352,7 +351,7 @@ export default function MonParcoursDashboard() {
           {rows.map(({ track, pct, certified, doneCount }) => {
             const Icon = ICONS[track.iconKey];
             const status = certified
-              ? { label: "Certifié", cls: "text-amber-300 border-amber-400/40 bg-amber-400/10" }
+              ? { label: "Quiz validé", cls: "text-amber-300 border-amber-400/40 bg-amber-400/10" }
               : pct === 100
                 ? { label: "Terminé", cls: "text-emerald-300 border-emerald-400/40 bg-emerald-400/10" }
                 : pct > 0
@@ -416,7 +415,7 @@ export default function MonParcoursDashboard() {
         </ul>
       </section>
 
-      {/* Certificats obtenus */}
+      {/* Quiz validés */}
       {certifiedCount > 0 && (
         <section
           aria-labelledby="certs-h"
@@ -427,7 +426,7 @@ export default function MonParcoursDashboard() {
             className="flex items-center gap-2 text-lg font-bold text-fg"
           >
             <Award className="h-5 w-5 text-amber-300" aria-hidden="true" />
-            Tes certificats ({certifiedCount})
+            Tes quiz validés ({certifiedCount})
           </h2>
           <ul role="list" className="mt-4 grid gap-2 sm:grid-cols-2">
             {rows
@@ -438,17 +437,12 @@ export default function MonParcoursDashboard() {
                     href={`/academie/${track.id}/quiz`}
                     className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-amber-400/40"
                   >
-                    <span>Certificat — {track.title}</span>
+                    <span>{track.title}</span>
                     <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden="true" />
                   </Link>
                 </li>
               ))}
           </ul>
-
-          {/* Partage (lien encodé, sans PII imposée) */}
-          <CertificateShareButton
-            certifiedTrackIds={rows.filter((r) => r.certified).map((r) => r.track.id)}
-          />
         </section>
       )}
 

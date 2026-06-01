@@ -10,7 +10,7 @@
  * Server Component pur (0 KB JS shippé). Le titre + l'intro + le CTA principal
  * vers /academie sont portés par le <CategoryHeader /> de la home ; ce
  * composant ne rend que le contenu : stats globales, 4 parcours phares, et la
- * réassurance pédagogique (quiz, progression, certificat).
+ * réassurance pédagogique (quiz, progression).
  */
 
 import Link from "next/link";
@@ -149,7 +149,7 @@ export default function AcademyHomeTeaser() {
         </li>
         <li className="inline-flex items-center gap-2">
           <BadgeCheck className="h-4 w-4 text-primary-soft" aria-hidden="true" />
-          Certificat téléchargeable
+          Notions à revoir ciblées
         </li>
       </ul>
     </div>

@@ -179,12 +179,12 @@ export default function TrackPage({ params }: Props) {
                   </div>
                   <div className="flex-1">
                     <h2 id="quiz-h" className="text-lg font-bold text-fg">
-                      Quiz de validation — débloque ton certificat
+                      Quiz de validation du parcours
                     </h2>
                     <p className="mt-1 text-sm text-fg/80">
                       5 questions, 4 bonnes réponses minimum pour valider. Une
-                      fois validé, tu peux télécharger un certificat personnalisé
-                      avec ton nom.
+                      fois réussi, ton parcours est marqué « quiz validé » dans
+                      ton tableau de bord.
                     </p>
                     <Link
                       href={`/academie/${track.id}/quiz`}

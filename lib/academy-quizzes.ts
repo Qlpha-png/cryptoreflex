@@ -3,7 +3,7 @@
  *
  * Hardcodé volontairement (pas de CMS) pour que le contenu pédagogique reste
  * versionné dans Git et auditable. Chaque quiz est validé si l'utilisateur
- * a >= 4/5 bonnes réponses, ce qui débloque le certificat téléchargeable.
+ * a >= 4/5 bonnes réponses, ce qui valide le parcours.
  */
 
 import type { TrackId } from "./academy-tracks";

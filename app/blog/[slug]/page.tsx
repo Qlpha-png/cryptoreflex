@@ -395,7 +395,7 @@ export default async function BlogArticlePage({ params }: Props) {
                     />
                     Cet article est une leçon du parcours{" "}
                     <strong className="text-fg">{academyTrack.title}</strong> de
-                    l&apos;académie — progression suivie, quiz et certificat.
+                    l&apos;académie — progression suivie et quiz de validation.
                   </p>
                   <Link
                     href={`/academie/${academyTrack.id}`}

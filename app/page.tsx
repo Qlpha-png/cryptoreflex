@@ -294,7 +294,7 @@ export default async function HomePage() {
           Icon={GraduationCap}
           eyebrow="Académie · 100% gratuit"
           title="Apprends la crypto, de zéro à autonome"
-          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation et certificat. Progression sauvegardée, sans compte ni paywall."
+          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation. Progression sauvegardée, sans compte ni paywall."
           ctaHref="/academie"
           ctaLabel="Découvrir l'académie"
           anchorId="cat-academie"

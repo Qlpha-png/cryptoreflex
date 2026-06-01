@@ -36,7 +36,7 @@ export const revalidate = 86400; // 1 jour — contenu très stable
 const TRACK_COUNT = TRACKS.length;
 
 const TITLE = "Académie crypto gratuite — formation structurée Cryptoreflex";
-const DESCRIPTION = `Académie crypto Cryptoreflex : ${TRACK_COUNT} parcours pédagogiques gratuits (niveaux Débutant à Avancé + thématiques sécurité, fiscalité, plateformes) pour apprendre à investir crypto en France. Progression suivie, quiz de validation, certificat téléchargeable.`;
+const DESCRIPTION = `Académie crypto Cryptoreflex : ${TRACK_COUNT} parcours pédagogiques gratuits (niveaux Débutant à Avancé + thématiques sécurité, fiscalité, plateformes) pour apprendre à investir crypto en France. Progression suivie, quiz de validation.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -61,7 +61,7 @@ const FAQ_ITEMS = [
   {
     question: "L'académie est-elle vraiment 100% gratuite ?",
     answer:
-      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Tu peux tout consulter, valider les quiz et télécharger ton certificat sans rien payer.",
+      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Tu peux tout consulter et valider les quiz sans rien payer.",
   },
   {
     question: "Combien de temps faut-il pour terminer un parcours ?",
@@ -71,12 +71,7 @@ const FAQ_ITEMS = [
   {
     question: "Mes données et ma progression sont-elles envoyées à un serveur ?",
     answer:
-      "Non. Ta progression (leçons cochées, score quiz) reste dans ton navigateur via localStorage. Aucune donnée personnelle (PII) n'est envoyée à Cryptoreflex pour suivre ta lecture. Le certificat est généré à la demande à partir du nom que tu saisis dans le formulaire — sans stockage.",
-  },
-  {
-    question: "Le certificat a-t-il une valeur officielle ?",
-    answer:
-      "Non — c'est un document pédagogique de réussite émis par Cryptoreflex, pas une certification professionnelle reconnue par l'État ou un régulateur. Il atteste simplement que tu as suivi le parcours et validé le quiz, ce qui peut être utile pour ton portfolio personnel ou ton équipe.",
+      "Non. Ta progression (leçons cochées, score quiz) reste dans ton navigateur via localStorage. Aucune donnée personnelle (PII) n'est envoyée à Cryptoreflex pour suivre ta lecture.",
   },
   {
     question: "Comment sont organisés les parcours ?",
@@ -155,8 +150,8 @@ export default function AcademiePage() {
           </h1>
           <p className="mt-4 ds-lead">
             {TRACK_COUNT} parcours pédagogiques structurés, {totalLessons} leçons, {Math.round(totalMinutes / 60)}h de
-            contenu. Progression suivie, quiz de validation, certificat
-            téléchargeable. Aucun paiement, aucune carte bancaire.
+            contenu. Progression suivie, quiz de validation. Aucun paiement,
+            aucune carte bancaire.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
@@ -188,7 +183,7 @@ export default function AcademiePage() {
           <ValueCard
             icon={<ShieldCheck className="h-5 w-5" aria-hidden="true" />}
             title="100% gratuit"
-            text="Pas d'abonnement, pas de paywall. Tout le contenu est librement consultable, y compris quiz et certificat."
+            text="Pas d'abonnement, pas de paywall. Tout le contenu est librement consultable, y compris les quiz."
           />
           <ValueCard
             icon={<Compass className="h-5 w-5" aria-hidden="true" />}

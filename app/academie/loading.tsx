@@ -1,5 +1,5 @@
 /**
- * BATCH 53 — Suspense skeleton pour /academie (académie certifiante).
+ * BATCH 53 — Suspense skeleton pour /academie.
  */
 export default function AcademieLoading() {
   return (

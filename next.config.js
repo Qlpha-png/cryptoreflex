@@ -98,6 +98,15 @@ const nextConfig = {
   // ────────────────────────────────────────────────────────────────────
   async redirects() {
     return [
+      // 01/06/2026 — La feature « certificat » de l'Académie a été retirée
+      // (page de partage public + document téléchargeable). On 301 les anciens
+      // liens partagés /academie/certificat?d=… vers le hub académie pour ne
+      // pas servir de 404 aux visiteurs qui ont un lien en circulation.
+      {
+        source: "/academie/certificat",
+        destination: "/academie",
+        permanent: true,
+      },
       // Audit crawl 26/04/2026 (Agent 3) : 14 liens hardcodés dans 6 MDX
       // pointent vers /articles/<slug> mais les pages existent sous /blog/<slug>
       // (legacy folder rename jamais migré dans le contenu). 301 catch-all
