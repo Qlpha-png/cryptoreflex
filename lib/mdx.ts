@@ -228,6 +228,16 @@ async function readArticlesFromDisk(): Promise<Article[]> {
  */
 const ARTICLES_CACHE_TTL_SEC = 60;
 
+/**
+ * Version des clés de cache MDX. À BUMPER dès qu'on modifie le contenu/format
+ * d'un article et qu'on veut forcer une régénération — sinon le build (et le
+ * Data Cache Vercel persistant entre deploys) peut resservir l'ancien HTML
+ * malgré la modification du fichier source.
+ * Historique : v2 -> v3 (BATCH 60, suppression `cover:`). v3 -> v4 (2026-06,
+ * refresh du hub MiCA particuliers — l'ancien HTML restait en cache).
+ */
+const MDX_CACHE_VERSION = "v4";
+
 /** Retourne tous les articles (avec leur contenu MDX), triés par date desc. */
 export const getAllArticles = unstable_cache(
   async (): Promise<Article[]> => {
@@ -237,7 +247,7 @@ export const getAllArticles = unstable_cache(
   // suite suppression `cover:` field dans 13 MDX (BATCH 60#1). Sinon le cache
   // garde l'ancien article avec `cover` defini -> og:image pointe encore vers
   // /covers/*.jpg qui sont 404.
-  ["mdx:all-articles-v3"],
+  [`mdx:all-articles-${MDX_CACHE_VERSION}`],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -250,7 +260,7 @@ export const getAllArticleSummaries = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.map(({ content: _content, ...rest }) => rest);
   },
-  ["mdx:all-summaries-v3"],
+  [`mdx:all-summaries-${MDX_CACHE_VERSION}`],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -260,7 +270,7 @@ export const getArticleBySlug = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.find((a) => a.slug === slug) ?? null;
   },
-  ["mdx:article-by-slug-v3"],
+  [`mdx:article-by-slug-${MDX_CACHE_VERSION}`],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -270,7 +280,7 @@ export const getArticleSlugs = unstable_cache(
     const all = await readArticlesFromDisk();
     return all.map((a) => a.slug);
   },
-  ["mdx:article-slugs"],
+  [`mdx:article-slugs-${MDX_CACHE_VERSION}`],
   { tags: ["articles"], revalidate: ARTICLES_CACHE_TTL_SEC }
 );
 
@@ -281,7 +291,7 @@ export const getAllCategories = unstable_cache(
     const set = new Set(all.map((a) => a.category));
     return Array.from(set).sort((a, b) => a.localeCompare(b, "fr"));
   },
-  ["mdx:all-categories"],
+  [`mdx:all-categories-${MDX_CACHE_VERSION}`],
   { tags: ["articles"], revalidate: 3600 }
 );
 
