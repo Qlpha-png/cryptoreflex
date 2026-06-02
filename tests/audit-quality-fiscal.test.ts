@@ -100,6 +100,27 @@ describe("audit:quality — anti-régression fiscale (fiscal-*)", () => {
     );
   });
 
+  it("FLAG : fausse doctrine dans un GUIDE fiscal dédié (whitelist retiré — audit Codex)", () => {
+    const findings = (
+      lintText as (s: string, p: string, o?: { onlyBroad?: boolean }) => Array<{ rule: string }>
+    )(
+      "Un swap crypto vers crypto est une cession imposable.",
+      "content/articles/fiscalite-staking-eth-sol-ada-france-2026-guide-complet.mdx",
+      { onlyBroad: true },
+    );
+    expect(findings.map((f) => f.rule)).toContain("fiscal-swap-cession-sans-nuance");
+  });
+
+  it("OK : formulation pédagogique qui RÉFUTE la fausse doctrine (ne pas flaguer — audit Codex)", () => {
+    expect(lint("Ne dites pas que le swap crypto vers crypto est une cession imposable.")).toHaveLength(0);
+    expect(
+      lint("Il est faux de dire qu'une conversion crypto vers stablecoin est une cession taxable."),
+    ).toHaveLength(0);
+    expect(
+      lint("Contrairement à une idée reçue, un swap crypto vers crypto n'est pas une cession imposable."),
+    ).toHaveLength(0);
+  });
+
   it("OK : contenu neutre sans doctrine fiscale", () => {
     expect(lint("Bitcoin est une cryptomonnaie. Le staking permet un rendement passif.")).toHaveLength(
       0,

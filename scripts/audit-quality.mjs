@@ -67,16 +67,11 @@ const IGNORE_PATHS = [
 const SOURCE_EXTS = [".ts", ".tsx", ".mdx", ".md"];
 const FISCAL_EXTS = [...SOURCE_EXTS, ".json"]; // glossary.json / faq-crypto.json
 
-// Guides fiscaux dédiés : exposent légitimement le débat (occasionnel vs pro,
-// position majoritaire vs prudente) avec des caveats au niveau du document.
-// On les whitelist pour les règles de FORMULATION (swap/staking), pas pour les
-// fausses dates ni les seuils inventés (qui ne doivent apparaître nulle part).
-const FISCAL_GUIDES = [
-  "content/articles/fiscalite-staking-eth-sol-ada-france-2026-guide-complet.mdx",
-  "content/articles/fiscalite-airdrops-crypto-france-2026.mdx",
-  "content/articles/fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique.mdx",
-  "content/articles/fiscalite-nft-france-2026-guide-complet-creation-achat-vente.mdx",
-];
+// IMPORTANT (audit Codex juin 2026) : les guides fiscaux dédiés ne sont PAS
+// whitelistés — une régression doctrinale y serait la plus grave. Ils sont
+// soumis aux règles fiscales comme le reste du contenu ; leur contenu légitime
+// (débat occasionnel/pro) passe via les nuances (non tranché / position
+// majoritaire-prudente / sursis / sans soulte / régime occasionnel / etc.).
 
 /* -------------------------------------------------------------------------- */
 /*  Nuances fiscales autorisées (présence sur la même ligne = formulation OK) */
@@ -88,11 +83,17 @@ const FISCAL_NUANCE =
   "sans soulte|sursis|150[\\s ]?VH[\\s ]?bis|\\bpas[\\s*_]{0,3}(?:imposabl|taxabl|un fait)|" +
   "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
   "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
-  "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente)|" +
+  "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente|BNC|plus-value)|" +
   // cession LÉGITIMEment imposable (contre euro/fiat/devise) — ne pas flaguer
   "contre (?:un[e]? |des )?euro|en euros|contre fiat|contre devise|cours légal|\\bfiat\\b|vers (?:le )?fiat|" +
   "bien\\/service|états?[- ]?unis|aux us\\b|professionnel|mining|actifs? numériques?|" +
-  "report d['’]imposition|intercalaire|" +
+  "report d['’]imposition|intercalaire|régime occasionnel|qualifié[es]?|activité (?:régulière|habituelle)|" +
+  // débat documenté : framing conditionnel / absence de doctrine dédiée (ne pas flaguer)
+  "ne (?:traite|contient|précise|fixe|mentionne) pas|pas explicitement|si imposé|\\bsinon\\b|" +
+  "PRU\\s*=?\\s*0|prix d['’]acquisition (?:nul|0|= 0|à 0)|" +
+  // formulations PÉDAGOGIQUES qui réfutent la fausse doctrine (ne pas flaguer)
+  "ne dites pas|ne dis pas|ne pas (?:dire|écrire|croire)|il est faux|faux de (?:dire|croire|penser)|" +
+  "contrairement à|erreur fréquente|\\bà tort\\b|idée reçue|\\bmythe\\b|on (?:croit|entend|lit) (?:souvent|parfois|à tort)|" +
   // une ligne interrogative (FAQ : « X est-il imposable ? ») n'est pas une affirmation
   "\\?";
 
@@ -177,7 +178,6 @@ const RULES = [
     severity: "error",
     broadScan: true,
     allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
-    allowPaths: FISCAL_GUIDES,
     suggestion:
       "Un échange SANS SOULTE entre actifs numériques (crypto↔crypto, crypto↔stablecoin) = SURSIS d'imposition (art. 150 VH bis CGI) : pas un fait générateur. Imposable seulement à la cession contre euro/bien/service ou avec soulte. Ajouter la nuance ou corriger.",
   },
@@ -190,7 +190,6 @@ const RULES = [
     severity: "error",
     broadScan: true,
     allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
-    allowPaths: FISCAL_GUIDES,
     suggestion:
       "Le moment/régime d'imposition du staking/airdrop n'est PAS tranché par une doctrine officielle dédiée. Reformuler en prudent : « imposable, mais moment exact (réception ou cession) non tranché — à vérifier selon la situation » (et non BNC/réception affirmé).",
   },
@@ -202,7 +201,6 @@ const RULES = [
       /(?:>|<|plus de|moins de|au[- ]?del[àa] de|supérieur[e]? à|environ|~)\s*10\s*swaps|10\+?\s*swaps?\s*\/?\s*an|(?:5[\s ]?000|5000|5\s?k)\s*€\s*\/\s*an|(?:5[\s ]?000|5000)\s*€[^.\n]{0,35}(?:seuil|requalif|professionnel|activité (?:habituelle|pro)|par an)/gi,
     severity: "error",
     broadScan: true,
-    allowPaths: FISCAL_GUIDES,
     suggestion:
       "Supprimer le seuil chiffré inventé : AUCUN seuil officiel ne distingue particulier/professionnel. La qualification (habituel/pro → BIC/BNC) s'apprécie au cas par cas (faisceau d'indices), sans seuil chiffré.",
   },
