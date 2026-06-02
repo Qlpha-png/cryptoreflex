@@ -202,16 +202,16 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q3-staking-fait-generateur",
     question:
-      "Quel est le fait générateur de l'imposition des récompenses de staking en France ?",
+      "Que peut-on dire du moment d'imposition des récompenses de staking en France ?",
     choices: [
-      "Le moment de l'achat initial du token staké.",
-      "Jamais : les récompenses de staking sont exonérées en France.",
-      "À la réception : selon l'interprétation BNC dominante (par analogie au minage), les récompenses sont imposables à leur valeur en euros au jour où elles sont créditées.",
-      "Uniquement au-delà de 305 € de récompenses dans l'année.",
+      "C'est strictement fixé : imposition à la réception, sans débat possible.",
+      "Les récompenses de staking sont totalement exonérées en France.",
+      "Il n'existe pas de doctrine officielle dédiée : le moment exact (réception ou cession) n'est pas tranché et dépend de la situation — à vérifier.",
+      "Elles ne sont imposables qu'au-delà de 305 € de récompenses dans l'année.",
     ],
     correctIndex: 2,
     explanation:
-      "Il n'existe pas de doctrine BOFiP dédiée au staking : le sujet reste débattu. L'interprétation la plus répandue (et la plus prudente) est l'imposition en BNC à la valeur en euros au moment de la réception, par analogie au minage — la revente ultérieure générant ensuite une plus-value distincte. En cas de doute, consulte un professionnel.",
+      "Il n'existe pas de doctrine BOFiP dédiée au staking : le sujet n'est pas tranché. Deux approches coexistent (revenu à la réception, par analogie au minage ; ou plus-value à la cession en gestion occasionnelle). Le moment et le régime dépendent de ta situation — vérifie la doctrine à jour et, pour des montants significatifs, consulte un professionnel.",
   },
   {
     id: "adv-q4-pfu-bareme",

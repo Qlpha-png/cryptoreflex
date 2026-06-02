@@ -83,7 +83,7 @@
       "id": "fiscalite-crypto-france-2026",
       "category": "fiscalite",
       "question": "Comment sont taxees les cryptos en France en 2026 ?",
-      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 31,4% sur les plus-values realisees : 12,8% IR + 18,6% PS. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), vers bien/service (achat avec crypto), vers stablecoin SI tu es professionnel. NON taxable : token-to-token (BTC vers ETH par exemple, depuis 2019). Seuil : sous 305€ de plus-values annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
+      "answer": "Regime PFU (Prelevement Forfaitaire Unique) 31,4% sur les plus-values realisees : 12,8% IR + 18,6% PS. S'applique uniquement sur les CESSIONS taxables : vers fiat (EUR, USD), ou vers un bien/service (achat avec crypto). NON taxable : les echanges entre actifs numeriques sans soulte (token-to-token comme BTC vers ETH, ET crypto vers stablecoin) beneficient d'un sursis d'imposition (art. 150 VH bis, depuis 2019). Seuil : sous 305€ de cessions annuelles, exoneration totale. Au-dessus, declaration obligatoire via formulaires 2086 (operations) + 3916-bis (comptes etrangers). Source : BOFiP BOI-RPPM-PVBMC-30-30."
     },
     {
       "id": "declarer-crypto-impots",
@@ -137,7 +137,7 @@
       "id": "rebalancing-portfolio",
       "category": "trading",
       "question": "Faut-il rebalancer son portefeuille crypto ?",
-      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si tu vises 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC tu as 70/20/10, tu vends du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si tu as enormement bouge). Attention : chaque vente est une CESSION TAXABLE en France (PFU 31,4%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
+      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si tu vises 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC tu as 70/20/10, tu vends du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si tu as enormement bouge). Attention fiscale : un rebalancing crypto vers crypto sans soulte (BTC vers ETH) n'est pas imposable (sursis, art. 150 VH bis) ; seule une cession contre euro (ou un bien/service) declenche l'impot (PFU 31,4%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
     },
     {
       "id": "staking-cest-sur",

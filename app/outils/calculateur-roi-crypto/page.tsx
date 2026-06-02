@@ -94,7 +94,7 @@ const FAQ_ITEMS = [
   {
     question: "Faut-il déclarer même si on n'a pas vendu en euros ?",
     answer:
-      "Oui. Les conversions crypto-vers-stablecoin (USDC, USDT, DAI) sont assimilées à des cessions taxables par l'administration fiscale française. En revanche, les conversions crypto-vers-crypto pures sont exonérées tant qu'on ne touche pas à un stablecoin ou à un FIAT. Pour un calcul exhaustif, utilise notre calculateur fiscalité complet.",
+      "Les stablecoins (USDC, USDT, DAI) sont des actifs numériques : une conversion crypto → stablecoin sans soulte n’est pas un fait générateur (sursis, art. 150 VH bis CGI), au même titre qu’un swap crypto → crypto. Tu n’es imposé qu’à la cession contre euro (FIAT), un bien/service, ou en présence d’une soulte. Pour un calcul exhaustif, utilise notre calculateur fiscalité complet.",
   },
   {
     question: "Cet outil est-il fiable pour préparer ma déclaration ?",
