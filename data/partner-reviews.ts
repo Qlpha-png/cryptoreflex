@@ -534,12 +534,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "Ce qu'on a confirmé en 4 campagnes fiscales",
         content:
-          "**Connexion 220+ plateformes en API.** Binance, Bitpanda, Coinhouse, Kraken, Bitget, Coinbase Pro, Crypto.com — tu colles tes clés API read-only et l'historique se reconstitue automatiquement. On a importé 4 ans d'historique multi-exchanges en moins de 30 minutes. Quand un exchange change son format API (Binance l'a fait 3 fois en 2024), Waltio patche en quelques jours.\n\n**Cerfa 2086 + 3916-bis pré-remplis.** Sans Waltio, on a passé 14h sur Excel pour la déclaration 2022. Avec Waltio, 1h30 en 2023, 45 min en 2024. Chaque année devient incrémentale.\n\n**Support FR sous 24h en période fiscale (avril-juin).** Quand on a eu un cas tordu (airdrop à valoriser au cours du jour de réception), réponse argumentée par leur équipe en 18h, avec citation de la doctrine BOFiP. Pour un user FR qui galère avec un cas particulier, c'est de l'or.\n\n**Prix défendable.** Plan Investisseur 199 €/an pour 5 000 transactions max = environ 1h de travail d'un expert-comptable spécialisé crypto (200-300 €/h). Tu gagnes 12-13h chaque mai. ROI évident dès la première utilisation.",
+          "**Connexion 220+ plateformes en API.** Binance, Bitpanda, Coinhouse, Kraken, Bitget, Coinbase Pro, Crypto.com — tu colles tes clés API read-only et l'historique se reconstitue automatiquement. On a importé 4 ans d'historique multi-exchanges en moins de 30 minutes. Quand un exchange change son format API (Binance l'a fait 3 fois en 2024), Waltio patche en quelques jours.\n\n**Cerfa 2086 + 3916-bis pré-remplis.** Sans Waltio, on a passé 14h sur Excel pour la déclaration 2022. Avec Waltio, 1h30 en 2023, 45 min en 2024. Chaque année devient incrémentale.\n\n**Support FR sous 24h en période fiscale (avril-juin).** Quand on a eu un cas tordu (un airdrop à valoriser fiscalement), réponse argumentée par leur équipe en 18h, avec citation de la doctrine BOFiP. Pour un user FR qui galère avec un cas particulier, c'est de l'or.\n\n**Prix défendable.** Plan Investisseur 199 €/an pour 5 000 transactions max = environ 1h de travail d'un expert-comptable spécialisé crypto (200-300 €/h). Tu gagnes 12-13h chaque mai. ROI évident dès la première utilisation.",
       },
       {
         title: "Pourquoi Waltio est devenu la référence FR depuis 2018",
         content:
-          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Tes clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Ton patrimoine reste chez toi, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops avec valorisation au jour de réception, NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand Bercy publie une nouvelle interprétation (ex : régime des airdrops 2023), Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
+          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Tes clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Ton patrimoine reste chez toi, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand Bercy publie une nouvelle interprétation (ex : régime des airdrops 2023), Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
       },
     ],
     specs: [
@@ -598,7 +598,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Est-ce que Waltio gère le staking, les airdrops, les NFT ?",
         answer:
-          "Oui : staking (revenus du jour de mise à disposition, BNC professionnel ou particulier selon volume), airdrops (revenus à la valeur du jour de réception), NFT (régime des biens meubles incorporels par défaut, ou œuvre d'art si applicable). Le module DeFi gère les LP Uniswap, lending Aave, etc.",
+          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon ton profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifie la doctrine à jour ou consulte un professionnel.",
       },
       {
         question: "Combien de temps pour finir ma déclaration avec Waltio ?",
@@ -636,7 +636,7 @@ export const partnerReviews: PartnerReview[] = [
     risksAvoided: [
       "Amende 750 € à 10 000 € par compte étranger crypto non déclaré (3916-bis, art. 1736 CGI)",
       "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de PMP)",
-      "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables au jour de réception)",
+      "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables — moment exact non tranché officiellement, à vérifier)",
       "Erreur déclaration aboutissant à intérêts de retard 0,2%/mois + majoration 10-80%",
     ],
   },

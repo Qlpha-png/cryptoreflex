@@ -194,7 +194,7 @@ function buildFaq(
         crypto.kind === "top10"
           ? `${crypto.name} fonctionne en ${crypto.consensus} : le staking ${crypto.consensus.toLowerCase().includes("proof of stake") || crypto.consensus.toLowerCase().includes("pos") ? "est techniquement possible" : "n'est pas applicable au protocole de base"}.`
           : `Vérifier le mécanisme de consensus du projet (PoS = staking possible, PoW = pas de staking).`
-      } Côté ${country.name}, attention à la fiscalité spécifique des rewards (souvent imposés à la valeur de marché au jour de réception).`,
+      } Côté ${country.name}, attention à la fiscalité des rewards : ils sont imposables, mais le moment exact (réception ou cession) n'est pas tranché par une source officielle citable — vérifie la doctrine à jour.`,
     },
   ];
 }

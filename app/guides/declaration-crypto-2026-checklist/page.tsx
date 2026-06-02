@@ -101,7 +101,7 @@ const STEPS: Step[] = [
     n: 5,
     title: "Identifiez les cas particuliers : staking, airdrops, NFT, DeFi",
     detail:
-      "Si vous avez eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retenez les principes : token-to-token neutre, cession contre euro = imposable au PFU 31,4 %, prix d'acquisition zéro pour les rewards reçus gratuitement.",
+      "Si vous avez eu des rewards staking, des airdrops gratuits, des NFT achetés/vendus, ou des positions DeFi (Aave, Uniswap, etc.), retenez les principes : échange token-to-token sans soulte = neutre (sursis, art. 150 VH bis), cession contre euro = imposable au PFU 31,4 %. Le traitement des rewards/airdrops (moment d'imposition, régime, prix d'acquisition) n'est pas tranché officiellement — à vérifier au cas par cas.",
     why: "Les cas particuliers sont la cause #1 d'erreurs de déclaration. Pour les patrimoines > 50 000 € avec staking ou DeFi, consulter un expert-comptable.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cas-speciaux", label: "Détail des cas particuliers" },
   },

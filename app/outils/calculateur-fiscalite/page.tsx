@@ -143,7 +143,7 @@ const FAQ_ITEMS = [
   {
     question: "Cet outil prend-il en compte le staking, le DeFi et les NFT ?",
     answer:
-      "Non, pas directement. Les revenus de staking et lending sont assimilés à des BNC (bénéfices non commerciaux), avec un régime spécifique. Les NFT et les opérations DeFi (yield farming, prêts, airdrops) relèvent de cas qui dépassent le cadre de cet outil. Pour ces situations, consultez un expert-comptable spécialisé.",
+      "Non, pas directement. Le régime et le moment d'imposition des revenus de staking et de lending ne sont pas tranchés par une source officielle citable (selon le profil : plus-value en gestion occasionnelle, ou BIC/BNC en activité habituelle/professionnelle). Les NFT et les opérations DeFi (yield farming, prêts, airdrops) dépassent aussi le cadre de cet outil. Pour ces situations, consultez un expert-comptable spécialisé.",
   },
   {
     question:
