@@ -115,7 +115,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Le staking sur Coinbase est-il rentable et fiscalement traité ?",
         answer:
-          "Coinbase prélève une commission d'environ 25 à 35 % sur les rewards de staking selon la crypto. Tu recevez donc un rendement net de 2 à 5 % brut annuel. Côté fiscalité française : les rewards sont taxés au moment de leur cession (pas de leur réception) au régime des plus-values sur actifs numériques (article 150 VH bis du CGI), soit 31,4 % en flat tax pour les particuliers.",
+          "Coinbase prélève une commission d'environ 25 à 35 % sur les rewards de staking selon la crypto. Tu reçois donc un rendement net de 2 à 5 % brut annuel. Côté fiscalité française : les rewards de staking sont imposables, mais le moment et le régime exacts (réception ou cession ; plus-value ou BIC/BNC) ne sont pas tranchés par une source officielle dédiée — à vérifier selon ta situation. Une cession contre euro relève du régime des plus-values sur actifs numériques (article 150 VH bis du CGI, 31,4 % en flat tax pour les particuliers).",
       },
       {
         question: "Coinbase propose-t-elle un programme de parrainage ?",

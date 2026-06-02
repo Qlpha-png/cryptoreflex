@@ -73,10 +73,10 @@ Cette formule signifie que si tu as déjà fait des +3x sur ton portefeuille, ve
 
 C'est le bulletin officiel des finances publiques (BOFIP) qui interprète le 150 VH bis. À jour 2026, il précise :
 
-- Les **swaps crypto-vers-crypto sont des cessions imposables** (BTC → ETH = vente BTC + achat ETH).
+- Les **swaps crypto → crypto sans soulte ne sont PAS imposables** (sursis d'imposition, art. 150 VH bis CGI) : seule la cession contre euro, un bien/service (ou une soulte) déclenche l'impôt.
 - Les **transferts entre wallets perso ne sont pas imposables** (idem fait générateur : cession à un tiers requise).
 - Le **paiement d'un bien/service en crypto** est une cession (au prix du bien acheté).
-- L'**airdrop** est imposé à la valeur du token le jour de réception (revenu) puis cession plus tard (PV).
+- L'**airdrop** est imposable, mais le traitement n'est pas tranché officiellement (position majoritaire : plus-value à la cession, prix d'acquisition 0 ; position prudente : revenu à la réception). Voir le chapitre dédié.
 
 ---
 
@@ -134,7 +134,7 @@ Tu reportes 8 566 € sur la 2042-C ligne 3AN (régime PFU) ou 2OP cochée si op
 
 ### Les 3 erreurs fatales sur le 2086
 
-1. **Oublier les swaps** (BTC → ETH = cession imposable, pas un "non-événement")
+1. **Croire que les swaps crypto → crypto sont imposables** (BTC → ETH sans soulte = NON imposable, sursis art. 150 VH bis ; garde quand même le suivi du PMP pour la future cession en euro)
 2. **Mal calculer le portefeuille global** (= somme des valeurs de marché de TOUS les crypto-actifs détenus à la date de cession)
 3. **Ne pas inclure les frais d'achat dans le prix d'acquisition** (les frais réduisent la PV)
 

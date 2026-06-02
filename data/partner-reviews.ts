@@ -539,7 +539,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "Pourquoi Waltio est devenu la référence FR depuis 2018",
         content:
-          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Tes clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Ton patrimoine reste chez toi, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand Bercy publie une nouvelle interprétation (ex : régime des airdrops 2023), Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
+          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Tes clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Ton patrimoine reste chez toi, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand l'administration fait évoluer sa doctrine, Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
       },
     ],
     specs: [

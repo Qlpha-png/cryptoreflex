@@ -362,7 +362,8 @@ export function computeCessions(
     if (tx.type === "buy" || tx.type === "reward") {
       const cur = holdings.get(tx.asset) ?? { qty: 0, totalAcquisEur: 0 };
       cur.qty += tx.quantity;
-      // Pour les rewards, prix d'acquisition = prix au moment de la réception
+      // Hypothèse retenue (modèle "réception", non tranché officiellement) : reward valorisé au prix du jour de réception.
+      // En gestion occasionnelle, un prix d'acquisition de 0 € peut s'appliquer (résultat différent) — cf. note méthodologique.
       cur.totalAcquisEur += tx.quantity * tx.priceEur;
       holdings.set(tx.asset, cur);
     } else if (tx.type === "sell") {
@@ -853,7 +854,7 @@ export async function generateCerfaPdf(
   const notes = [
     "Calcul realise selon la formule officielle 150 VH bis : prix d'acquisition impute = (acquisitions totales x prix de cession) / valeur du portefeuille.",
     "Les cessions crypto-crypto (swap) sont neutres fiscalement et ne sont pas comptabilisees.",
-    "Les recompenses (staking, airdrop) sont integrees au prix d'acquisition au prix du jour de la reception.",
+    "Le traitement fiscal des recompenses (staking, airdrop) n'est pas tranche par une doctrine officielle dediee : cet outil retient une hypothese (prix d'acquisition = valeur a la reception). En gestion occasionnelle, un prix d'acquisition de 0 EUR peut s'appliquer (resultat different) ; verifie selon la doctrine a jour ou un professionnel.",
     "L'estimation de la valeur globale du portefeuille utilise les derniers prix EUR connus a partir des transactions importees.",
     "Cet outil ne se substitue pas a un expert-comptable ; verifiez les chiffres avant depot officiel.",
   ];

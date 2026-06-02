@@ -163,13 +163,13 @@ Régime simplifié pour les BNC : si CA < 77 700 €, abattement forfaitaire 34 
 ## S
 
 ### Stablecoin
-Crypto-actif dont la valeur est ancrée à une devise (USDC, USDT, EURC). Fiscalité identique aux autres crypto-actifs : un swap BTC → USDC est une cession imposable (souvent oubliée car l'utilisateur "ne sort pas du crypto").
+Crypto-actif dont la valeur est ancrée à une devise (USDC, USDT, EURC). Fiscalité identique aux autres actifs numériques : un swap BTC → USDC (échange **sans soulte**) **n'est pas imposable** (sursis d'imposition, art. 150 VH bis CGI). L'imposition n'intervient qu'à la conversion en euro (ou un bien/service).
 
 ### Staking
 Verrouillage de tokens pour participer à la sécurisation d'une blockchain Proof-of-Stake en échange de rewards. Les rewards sont imposables, mais le moment et le régime exacts (réception ou cession ; plus-value ou BIC/BNC) ne sont pas tranchés par une doctrine officielle dédiée. Cession ultérieure des tokens = plus-value classique.
 
 ### Swap
-Échange direct d'un crypto-actif contre un autre (ETH → BTC, ou via DEX). **Toujours une cession imposable** côté français — fait générateur de PV/MV.
+Échange direct d'un crypto-actif contre un autre (ETH → BTC, ou via DEX). Un échange **sans soulte** entre actifs numériques **n'est pas imposable** (sursis d'imposition, art. 150 VH bis CGI) : le fait générateur n'intervient qu'à la cession contre euro, un bien/service, ou en présence d'une soulte.
 
 ## T
 
