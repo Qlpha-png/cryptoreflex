@@ -42,7 +42,7 @@ schema:
 
 <AuthorBox author="Kevin Voisin" publishedAt="25 avril 2026" updatedAt="25 avril 2026" readingTime="13 min" methodology="/methodologie" />
 
-Le staking, c'est devenu **le rendement passif par défaut** de l'écosystème crypto. Mais 2026 a trois nouveautés majeures depuis nos premiers comparatifs en 2023 : (1) MiCA encadre désormais les programmes earn proposés par les exchanges, (2) la France a clarifié sa position fiscale sur les récompenses de staking (BoFiP août 2025), (3) les APY se sont stabilisés à des niveaux **bien inférieurs** au pic de 2021.
+Le staking, c'est devenu **le rendement passif par défaut** de l'écosystème crypto. Mais 2026 a trois nouveautés majeures depuis nos premiers comparatifs en 2023 : (1) MiCA encadre désormais les programmes earn proposés par les exchanges, (2) la fiscalité des récompenses de staking reste un point à surveiller (le moment d'imposition n'est pas tranché par une source officielle citable), (3) les APY se sont stabilisés à des niveaux **bien inférieurs** au pic de 2021.
 
 Cet article tranche entre les trois choix les plus posés par les lecteurs Cryptoreflex : **Ethereum (ETH), Solana (SOL), Cardano (ADA)**. On regarde ce qui compte vraiment — pas le « 7 % brut affiché en home » de certaines plateformes — mais l'**APY net après frais**, le **lock-up réel**, le **slashing**, la **fiscalité française**, et **où le faire en 2026** depuis une plateforme MiCA-compliant.
 
@@ -122,19 +122,20 @@ Cardano a fait un choix de design unique : **pas de slashing du tout**, parce qu
 
 ## 4. Fiscalité staking en France (le point qui fâche)
 
-C'est ici que ça devient intéressant. La doctrine fiscale française a été clarifiée par la **mise à jour du BoFiP du 14 août 2025** :
+C'est le point le plus délicat : le **moment d'imposition** des récompenses de staking n'est **pas tranché de façon uniforme par une source officielle (BOFiP) que nous puissions citer** à ce jour. Voici comment cadrer le sujet prudemment :
 
-- **Récompenses de staking** = **revenus de capitaux mobiliers** au moment de la perception (BNC pour les opérations habituelles, BIC pour les pros).
-- **Pour un particulier** : le rendement staking est taxé à **31,4 % flat tax** (12,8 % IR + 18,6 % PS) **au moment où il est inscrit en compte**, indépendamment de la vente du token sous-jacent.
-- **À la revente** ultérieure : on calcule la plus-value classique selon la méthode prix moyen pondéré (PMP), avec **un nouveau prix de revient** intégrant les rewards déjà fiscalisés.
+- **Les revenus de staking sont imposables** — cela fait consensus. Ce qui n'est **pas tranché par une source officielle citable**, c'est le **moment exact** : à la réception (comme un revenu, à la valeur du jour) ou à la cession contre euro.
+- **Hypothèse « imposition à la réception »** : le reward serait taxé à sa valeur du jour, puis une éventuelle plus-value à la revente se calculerait au prix moyen pondéré (PMP), avec un prix de revient intégrant les rewards déjà fiscalisés.
+- **Hypothèse « imposition à la cession »** : le reward ne serait taxé qu'au moment de sa vente contre euro/bien/service.
+- **À retenir** : tant que la doctrine n'est pas clarifiée, vérifie ce point sur la source officielle à jour et, pour des montants significatifs (ou des montages atypiques type liquid staking/restaking), fais valider ta situation par un expert-comptable.
 
-**Concrètement** : si tu reçois 0,1 ETH de rewards à 3 000 € l'unité = 300 € de revenu imposable cette année-là. Tu paies 94,20 € (31,4 % de 300 €). Quand tu revends ce 0,1 ETH plus tard à 4 000 €, tu paies sur la plus-value de 100 € seulement (1 000 € prix actuel - 300 € prix de revient déjà taxé / 0,1 ETH).
+**Exemple (hypothèse « réception », à confirmer)** : si tu reçois 0,1 ETH de rewards valorisés 300 €, cela représenterait 300 € de base imposable l'année de réception (≈ 94,20 € à 31,4 %), puis une plus-value calculée à la revente sur la base d'un prix de revient de 300 €. Cet exemple n'a qu'une valeur illustrative : le moment d'imposition n'est pas tranché par une source officielle citable.
 
 <Callout type="warning" title="Plateformes étrangères : comptes à déclarer">
 Si tu fais ton staking sur Bitpanda (Autriche) ou Bitget (Lituanie), tu dois déclarer ces comptes via le formulaire **3916-bis** chaque année. Oubli = 750 € à 750 € d’amende par compte. Le détail dans notre guide [déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet).
 </Callout>
 
-**ADA est plus simple fiscalement** : la plupart des plateformes versent les rewards directement en ADA mensuellement, ce qui produit un événement fiscal mensuel facile à tracker. ETH et SOL accumulent les rewards en quasi-temps réel, ce qui complique le suivi — il faut prendre la **valeur EUR au jour de chaque payout** pour la déclaration. Logiciels comme Koinly ou Cointracker automatisent.
+**ADA est plus simple à suivre** : la plupart des plateformes versent les rewards directement en ADA mensuellement, ce qui facilite le tracking de leur valeur. ETH et SOL accumulent les rewards en quasi-temps réel, ce qui complique le suivi — note la **valeur EUR au jour de chaque payout** pour ta déclaration, quel que soit le moment d'imposition finalement retenu. Des logiciels comme Koinly ou Cointracker automatisent.
 
 ---
 
@@ -219,7 +220,7 @@ Pour l'analyse détaillée de chaque plateforme : [Coinbase staking](/staking/et
   },
   {
     question: "Quelle est la fiscalité d'un staking liquide (Lido stETH) en France ?",
-    answer: "Doctrine BoFiP août 2025 : la conversion ETH → stETH est neutre fiscalement (pas de cession). Les rewards perçus en stETH sont imposables au PFU 31,4 % au moment de leur inscription en compte. La conversion stETH → ETH est aussi neutre. Mais le statut MiCA des protocoles staking liquide reste ambigu en France — préfère le staking exchange MiCA en 2026."
+    answer: "Les conversions ETH → stETH puis stETH → ETH sont des échanges sans soulte entre actifs numériques : elles bénéficient d'un sursis d'imposition (art. 150 VH bis CGI), ce ne sont pas des faits générateurs. Les rewards perçus sont imposables, mais le moment exact (réception ou cession) n'est pas tranché par une source officielle que nous puissions citer — à confirmer sur la doctrine à jour. Par ailleurs, le statut MiCA des protocoles de staking liquide reste ambigu en France : en 2026, le staking via exchange MiCA reste plus simple."
   },
   {
     question: "Combien d'ETH faut-il minimum pour staker sur Kraken ou Coinbase ?",

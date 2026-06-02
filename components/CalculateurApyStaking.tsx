@@ -296,10 +296,11 @@ export default function CalculateurApyStaking() {
           <Info className="h-4 w-4 shrink-0 text-amber-300" />
           <p>
             <strong className="text-amber-200">Fiscalité staking en France :</strong>{" "}
-            les récompenses de staking sont imposées comme des BNC (bénéfices non
-            commerciaux) au moment de leur perception (BOI-RPPM-PVBMC-30-30 du 02/09/2024),
-            puis comme une plus-value au moment de la vente. Si tu stakes à titre
-            professionnel (volume conséquent, automatisation), tu peux basculer en BIC.
+            les récompenses de staking sont imposables, mais le moment exact (à
+            la perception comme un revenu, ou à la cession contre euro) n’est pas
+            tranché par une source officielle que nous puissions citer à ce jour —
+            l’administration n’a pas publié de doctrine dédiée. Si tu stakes à
+            titre professionnel (volume conséquent, automatisation), tu peux relever du BIC.
             Cet outil produit une <strong>estimation</strong> — pas un conseil
             d'investissement ni fiscal. Consulte un expert-comptable pour ton cas.
           </p>

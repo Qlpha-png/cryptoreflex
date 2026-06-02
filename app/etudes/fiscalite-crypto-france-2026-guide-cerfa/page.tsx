@@ -109,7 +109,7 @@ const FAQ = [
   },
   {
     q: "Le change crypto-vers-crypto (token-to-token) est-il imposable ?",
-    a: "Non. Depuis la loi PACTE de 2019 (art. 41) et confirmé par BOFiP RPPM-PVBMC-30-30 §10, les opérations d’échange entre actifs numériques sont fiscalement neutres : ni gain ni perte n’est constaté à l’occasion de l’échange. Seule la cession contre devise ayant cours légal (euro, dollar, etc.) ou contre un bien/service déclenche un événement imposable.",
+    a: "Non. Les échanges sans soulte entre actifs numériques bénéficient d’un sursis d’imposition (article 150 VH bis, II-A du CGI ; BOFiP BOI-RPPM-PVBMC-30-30) : l’échange n’est pas un fait générateur, aucun gain ni perte n’est constaté à cette occasion, et aucune obligation déclarative n’en découle. Seule la cession contre une devise ayant cours légal (euro, dollar, etc.) ou contre un bien/service déclenche un événement imposable.",
   },
   {
     q: "Comment calcule-t-on la plus-value ?",
@@ -159,8 +159,8 @@ const SOURCES = [
     url: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038612084/",
   },
   {
-    name: "Loi PACTE 2019-486 (art. 41 — neutralité fiscale token-to-token)",
-    url: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000038496102/",
+    name: "Article 150 VH bis CGI (II) — sursis d’imposition des échanges sans soulte (loi de finances pour 2019)",
+    url: "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038612084/",
   },
   {
     name: "DGFiP — Notice Cerfa 2086 (déclaration plus-values numériques)",
@@ -377,9 +377,11 @@ export default function FiscaliteCryptoStudyPage() {
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
               <span>
-                <strong>Token-to-token non taxable</strong> depuis la loi
-                PACTE 2019. Seule la cession token-to-fiat (ou token-to-bien)
-                déclenche un événement imposable.
+                <strong>Token-to-token non taxable</strong> : un échange sans
+                soulte entre actifs numériques bénéficie d’un sursis
+                d’imposition (art. 150 VH bis du CGI). Seule la cession
+                token-to-fiat (ou token-to-bien/service) déclenche un événement
+                imposable.
               </span>
             </li>
             <li className="flex items-start gap-2">

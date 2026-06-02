@@ -86,7 +86,7 @@ const STEPS: Step[] = [
     n: 3,
     title: "Calculez vos plus-values avec la formule BOFiP",
     detail:
-      "Pour chaque cession crypto-vers-fiat, appliquez la formule §70 : PV = Prix_cession − (Prix_acq_total × Prix_cession / Valeur_globale_portefeuille). Les swaps token-to-token ne sont PAS taxables (loi PACTE 2019).",
+      "Pour chaque cession crypto-vers-fiat, appliquez la formule §70 : PV = Prix_cession − (Prix_acq_total × Prix_cession / Valeur_globale_portefeuille). Les swaps token-to-token sans soulte ne sont PAS taxables (sursis d’imposition, art. 150 VH bis CGI).",
     why: "Calcul manuel = risque d'erreur élevé. Un outil qui suit BOFiP à la lettre fait gagner ~3h et évite les redressements pour erreur de calcul.",
     link: { href: "/outils/cerfa-2086-auto", label: "Outil gratuit Cerfa 2086 auto" },
   },
