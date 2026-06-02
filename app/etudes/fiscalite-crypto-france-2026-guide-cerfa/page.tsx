@@ -125,7 +125,7 @@ const FAQ = [
   },
   {
     q: "Le staking et les rewards Proof-of-Stake sont-ils imposables ?",
-    a: "Oui, mais le MOMENT de l’imposition (à la réception du reward, ou à sa cession contre euro) n’est pas tranché de façon uniforme et fait l’objet d’évolutions doctrinales. Selon l’analyse retenue et la doctrine applicable à votre situation, l’imposition peut intervenir à la réception (revenu) ou à la cession. En l’absence de position officielle pleinement stabilisée, ce point est à vérifier au cas par cas sur une source officielle à jour, et pour des montants significatifs avec un expert-comptable.",
+    a: "Oui. Depuis la doctrine BOFiP du 14 août 2025, les rewards de staking sont imposables à leur RÉCEPTION (pas à la revente) : ce sont des revenus de capitaux mobiliers, retenus à leur valeur en euros au jour du versement, imposés au PFU 31,4 % et déclarés en case 2DC. Attendre la revente expose à un redressement. Pour des montages atypiques (liquid staking, restaking) ou de gros montants, faites valider votre situation par un expert-comptable.",
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
@@ -702,27 +702,30 @@ export default function FiscaliteCryptoStudyPage() {
           <h2>5. Cas particuliers</h2>
           <h3>5.1. Staking et rewards Proof-of-Stake</h3>
           <p>
-            Le moment de l’imposition des rewards de staking n’est pas tranché
-            de façon uniforme et fait l’objet d’évolutions doctrinales : selon
-            l’analyse retenue, l’imposition peut être considérée à la réception
-            du reward (revenu) ou à sa cession contre euro. Le prix
-            d’acquisition retenu, ainsi que d’éventuels frais (par exemple
-            d’exploitation d’un validateur), dépendent de la lecture appliquée.
+            Depuis la doctrine BOFiP du 14 août 2025, les rewards de staking
+            sont imposables <strong>à leur réception</strong> (et non à la
+            revente) : ils constituent un revenu de capitaux mobiliers, retenu
+            pour leur valeur en euros au jour du versement, imposé au PFU
+            31,4 % et déclaré en case 2DC. Une éventuelle plus-value ultérieure
+            (entre la réception et la revente contre euro) relève, elle, du
+            régime des cessions d’actifs numériques.
           </p>
           <p>
-            Ce point n’est pas encore pleinement stabilisé par un BOFiP dédié.
-            Il est donc à vérifier au cas par cas sur une source officielle à
-            jour ; pour des montants significatifs (&gt; 5 000 €/an de rewards),
-            consulter un expert-comptable.
+            Attendre la revente pour déclarer est une erreur fréquente qui
+            expose à un redressement (avec intérêts de retard). Pour des
+            montages atypiques (liquid staking, restaking…) ou des montants
+            significatifs, faites valider votre situation par un
+            expert-comptable.
           </p>
           <h3>5.2. Airdrops et hard forks</h3>
           <p>
-            Le traitement des tokens reçus gratuitement (airdrop, hard fork)
-            suit la même incertitude que le staking : selon l’analyse retenue,
-            l’imposition peut intervenir à la réception (revenu, à sa valeur du
-            jour) ou à la cession contre euro. Ce point n’est pas pleinement
-            stabilisé et doit être vérifié au cas par cas ; pour des montants
-            significatifs, consulter un professionnel.
+            Les tokens reçus gratuitement (airdrop, hard fork) sont
+            généralement imposés comme un revenu <strong>à la réception</strong>
+            (valeur en euros au jour de l’attribution, case 2DC), dans la même
+            logique que les rewards de staking précisée par le BOFiP du
+            14 août 2025. Le détail peut varier selon les cas (notamment si
+            aucune action n’est requise pour recevoir le token) ; en cas de
+            doute ou de montants significatifs, faites valider votre situation.
           </p>
           <h3>5.3. NFT (Non-Fungible Tokens)</h3>
           <p>

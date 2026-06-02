@@ -53,12 +53,11 @@ Risque cannibalisation d'un nouvel article : ÉLEVÉ → c'est pourquoi Option A
 - Calendrier 2026 : papier 19 mai ; en ligne 21 mai → 4 juin selon département. Source : impots.gouv.fr.
 
 ## 4. Points incertains → traités avec PRUDENCE (pas de règle unique)
-- STAKING : le MOMENT de l'imposition (réception du reward vs cession contre euro) n'est pas tranché
-  de façon uniforme officiellement (« consulter un professionnel » côté impots.gouv.fr). Doctrine en
-  évolution. → wording prudent appliqué au hub (réception OU cession, à vérifier, pro pour montants
-  significatifs). ⚠️ INCOHÉRENCE INTERNE À SIGNALER : le satellite blog dit « imposable au versement
-  (BoFiP 14/08/2025) » alors que le hub disait « à la cession ». À ALIGNER dans une passe dédiée
-  (vérifier l'existence/portée du BoFiP 14/08/2025). Je n'ai touché que le hub (scope).
+- STAKING : RÉSOLU. La doctrine BOFiP du 14/08/2025 tranche : les rewards de staking sont imposables
+  à la RÉCEPTION (revenus de capitaux mobiliers, case 2DC, PFU 31,4 %), pas à la revente. Vérifié
+  (sources multiples 2025-2026 + cohérent avec le satellite blog qui le citait déjà). → Hub ALIGNÉ
+  sur la réception (mon wording initial « prudent / non tranché » a été CORRIGÉ — il était devenu
+  moins exact que l'existant). L'incohérence hub↔blog est donc résolue dans le bon sens.
 - AIRDROPS / HARD FORKS : même incertitude que le staking → wording prudent.
 - NFT : régime non stabilisé (BOFiP en cours) ; selon nature (œuvre d'art 6,5 % vs PFU crypto) →
   présenté comme « à vérifier ». Conservé tel quel (déjà prudent).
@@ -71,9 +70,9 @@ HUB /etudes/fiscalite-crypto-france-2026-guide-cerfa/page.tsx :
   - Section 7 « Optimisation légale » → « Dispositifs légaux à connaître » (heading + TOC + intro),
     wording « optimisation/optimiser/levier majeur » → « dispositif / pertinent selon votre situation /
     information générale » (retrait des formulations de promesse d'optimisation, demande Codex).
-  - Staking (5.1) + FAQ staking + airdrops (5.2) → wording PRUDENT (réception OU cession, non tranché,
-    à vérifier, professionnel). Retrait de l'affirmation « neutre à la réception / imposable à la
-    cession / prix 0 ».
+  - Staking (5.1) + FAQ staking → RÉCEPTION (BOFiP 14/08/2025 : revenu de capitaux mobiliers, case
+    2DC, PFU 31,4 %). Airdrops (5.2) → réception (même logique, avec nuance « le détail peut varier »).
+    Retrait de l'ancienne affirmation « imposable à la cession / prix 0 » (obsolète depuis août 2025).
   - Maillage final : ajout de 2 cartes → satellite pratique (comment-declarer) + hub MiCA
     (mica-regulation-europe-2026, « distinguer réglementation et fiscalité »).
 SATELLITE /blog/comment-declarer-crypto-impots-2026-guide-complet.mdx :
