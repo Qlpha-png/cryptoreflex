@@ -189,7 +189,7 @@ function wrapEmail(opts: {
     '<p style="margin:24px 0 0 0;padding:12px;background:#1F2937;border-left:3px solid #F5A524;font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#D1D5DB;">' +
     "<strong>Information importante :</strong> les exemples chiffrés et les conseils de cet email sont fournis " +
     "à titre indicatif et ne constituent pas un conseil fiscal personnalisé. La fiscalité crypto évolue " +
-    "régulièrement (cf. art. 150 VH bis CGI). Pour une situation complexe (DeFi, staking, BIC pro), " +
+    "régulièrement (cf. art. 150 VH bis CGI). Pour une situation complexe (DeFi, staking, activité habituelle/professionnelle), " +
     "consulte un expert-comptable agréé." +
     "</p>";
 

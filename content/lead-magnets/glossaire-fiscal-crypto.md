@@ -24,7 +24,7 @@ Article du Code Général des Impôts qui régit la fiscalité des cessions de c
 Somme totale dépensée pour acquérir un crypto-actif, frais d'achat inclus. Important : on parle du prix d'acquisition **du portefeuille global**, pas d'un token spécifique. Utilisé dans la formule 150 VH bis.
 
 ### Airdrop
-Distribution gratuite de tokens à une communauté (souvent en remerciement d'une activité on-chain). Fiscalement traité comme **revenu BNC à la perception** (à la valeur du token le jour de réception), puis cession ultérieure soumise à PV.
+Distribution gratuite de tokens à une communauté (souvent en remerciement d'une activité on-chain). Fiscalement : cas non tranché par une doctrine officielle dédiée — position majoritaire = plus-value à la cession (prix d'acquisition 0), position prudente = revenu (BNC) à la réception. À vérifier au cas par cas.
 
 ### AMF (Autorité des Marchés Financiers)
 Régulateur français des marchés financiers. Compétente pour les PSAN (Prestataires de Services sur Actifs Numériques) jusqu'à fin 2025, remplacée progressivement par le régime MiCA européen depuis juillet 2026.
@@ -41,7 +41,7 @@ Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent 
 Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 18,6 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
 
 ### BNC (Bénéfices Non Commerciaux)
-Régime fiscal des revenus de staking, lending, airdrops et mining (à la perception). Régime micro-BNC si CA < 77 700 €/an (abattement forfaitaire 34 %), ou régime de la déclaration contrôlée pour les volumes supérieurs.
+Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 77 700 €/an (abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
 
 ### BOFIP (Bulletin Officiel des Finances Publiques)
 Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La doctrine BOI-RPPM-PVBMC-30-30 régit la fiscalité crypto. **Opposable à l'administration** : si tu as suivi le BOFIP, tu es protégé d'un redressement même si la jurisprudence évolue.
@@ -166,7 +166,7 @@ Régime simplifié pour les BNC : si CA < 77 700 €, abattement forfaitaire 34 
 Crypto-actif dont la valeur est ancrée à une devise (USDC, USDT, EURC). Fiscalité identique aux autres crypto-actifs : un swap BTC → USDC est une cession imposable (souvent oubliée car l'utilisateur "ne sort pas du crypto").
 
 ### Staking
-Verrouillage de tokens pour participer à la sécurisation d'un blockchain Proof-of-Stake en échange de rewards. Rewards = revenus **BNC à la perception**. Cession ultérieure des tokens stakés = PV classique.
+Verrouillage de tokens pour participer à la sécurisation d'une blockchain Proof-of-Stake en échange de rewards. Les rewards sont imposables, mais le moment et le régime exacts (réception ou cession ; plus-value ou BIC/BNC) ne sont pas tranchés par une doctrine officielle dédiée. Cession ultérieure des tokens = plus-value classique.
 
 ### Swap
 Échange direct d'un crypto-actif contre un autre (ETH → BTC, ou via DEX). **Toujours une cession imposable** côté français — fait générateur de PV/MV.

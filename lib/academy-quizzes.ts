@@ -183,7 +183,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Pour des opérations DeFi régulières et organisées sans achat-revente d'actifs, le BNC (non pro) est la qualification la plus défendable. Si l'activité devient quasi-professionnelle, le BIC peut être imposé. La DeFi N'EST PAS défiscalisée.",
+      "Pour des opérations DeFi régulières et organisées sans achat-revente d'actifs, le BNC (non pro) est la qualification la plus souvent retenue (aucune doctrine BOFiP dédiée ne tranche le sujet). Si l'activité devient quasi-professionnelle, le BIC peut être imposé. La DeFi N'EST PAS défiscalisée.",
   },
   {
     id: "adv-q2-3916",
@@ -385,7 +385,7 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Les revenus récurrents de staking/DeFi (au-delà de la simple plus-value de cession) sont généralement imposés en BNC tant que l'activité reste non professionnelle, et peuvent basculer en BIC si elle devient habituelle et organisée. La DeFi N'EST PAS défiscalisée : la revente ultérieure des tokens reçus génère en plus une plus-value distincte.",
+      "Les revenus récurrents de staking/DeFi (au-delà de la simple plus-value de cession) sont, selon l'interprétation répandue (aucune doctrine BOFiP dédiée), imposés en BNC tant que l'activité reste non professionnelle, et peuvent basculer en BIC si elle devient habituelle et organisée. La DeFi N'EST PAS défiscalisée : la revente ultérieure des tokens reçus génère en plus une plus-value distincte.",
   },
 ];
 
@@ -724,7 +724,7 @@ const QUIZ_DEFI: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "La DeFi n'est pas hors impôt : les revenus récurrents sont généralement imposés (BNC, ou BIC si habituel/organisé), et revendre plus tard les jetons reçus crée une plus-value distincte. C'est un cumul de deux faits générateurs, pas une zone franche.",
+      "La DeFi n'est pas hors impôt : les revenus récurrents sont, selon l'interprétation répandue (aucune doctrine BOFiP dédiée), imposés (BNC, ou BIC si habituel/organisé), et revendre plus tard les jetons reçus crée une plus-value distincte. C'est un cumul de deux faits générateurs, pas une zone franche.",
   },
   {
     id: "defi-q5-faux",

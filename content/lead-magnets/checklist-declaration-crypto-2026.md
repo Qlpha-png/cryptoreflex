@@ -24,7 +24,7 @@ disclaimer: "Document indicatif. Pour situation complexe (DeFi, BIC, NFT > 50k�
 - [ ] **6.** Identifie tes **comptes étrangers** : Binance, Kraken, Bybit, KuCoin, Coinbase Inc. (USA), Crypto.com Singapour, Bitfinex. Un 3916-bis par compte.
 - [ ] **7.** Sauvegarde les **CSV exports** dans un dossier "Fiscal-Crypto-2025" — durée de conservation 6 ans (durée de prescription DGFiP).
 - [ ] **8.** Note ta **TMI 2025 estimée** (Tranche Marginale d'Imposition : 0%, 11%, 30%, 41% ou 45%). Détermine si tu as intérêt à opter barème vs PFU.
-- [ ] **9.** Identifie les événements particuliers : **staking, airdrops, NFT, mining, DeFi, lending**. Chacun a un régime fiscal spécifique (BNC à la perception).
+- [ ] **9.** Identifie les événements particuliers : **staking, airdrops, NFT, mining, DeFi, lending**. Leur régime fiscal varie et, pour le staking/airdrops, n'est pas tranché par une doctrine officielle dédiée (à vérifier au cas par cas).
 - [ ] **10.** Prépare la liste de tes **moins-values 2025** réalisées (vente effective requise pour matérialiser une perte sur token rugged ou stuck).
 
 ---
@@ -38,7 +38,7 @@ disclaimer: "Document indicatif. Pour situation complexe (DeFi, BIC, NFT > 50k�
 - [ ] **15.** Vérifie que la **plus-value totale** sur 2086 correspond bien au montant reporté en 3AN (ou en 2042 si option barème).
 - [ ] **16.** Pour chaque compte étranger, remplis un **formulaire 3916-bis** (PDF téléchargeable depuis impots.gouv ou pré-rempli par Waltio).
 - [ ] **17.** Joins les **3916-bis en PJ numérique** ou imprime-les si déclaration papier.
-- [ ] **18.** Si tu as des **revenus de staking, lending, airdrops** : déclare-les en **BNC** (régime micro-BNC < 77 700 €, ou réel) — case 5HQ ou 5JQ selon le profil.
+- [ ] **18.** Si tu as des **revenus de staking, lending, airdrops** : leur régime (plus-value vs BNC/BIC) et leur moment d'imposition ne sont pas tranchés officiellement — vérifie la doctrine à jour et, en cas de doute, consulte un professionnel (le cas échéant, déclaration BNC case 5HQ/5JQ).
 - [ ] **19.** Si tu es en **trading professionnel** (BIC) : déclaration séparée 2031 (BIC). Consulte un expert-comptable — c'est complexe.
 - [ ] **20.** Vérifie le **récapitulatif** avant validation : montant total imposable, prélèvements, solde à payer estimé.
 

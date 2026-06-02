@@ -176,15 +176,16 @@ Waltio (et concurrents) pré-remplissent automatiquement les 3916-bis à partir 
 
 ### Staking centralisé (Coinbase, Kraken, Binance Earn)
 
-**Doctrine BOFIP 2024 mise à jour** : les rewards de staking sont imposés **en BNC (bénéfices non commerciaux)** à la perception, à la valeur du token le jour de la réception. Puis, lors de la cession ultérieure, application du 150 VH bis classique.
+**Point non tranché officiellement** : il n'existe pas de doctrine BOFiP dédiée au staking. L'interprétation la plus répandue (par analogie au minage) est l'imposition des rewards **en BNC à la réception** (valeur du jour), avec ensuite une plus-value à la cession (150 VH bis). Une approche « imposition à la cession uniquement » est toutefois aussi défendue. À confirmer selon la doctrine à jour et ton profil.
 
-**Exemple** : tu reçois 0,1 ETH de staking le 15 mars (valeur ce jour : 300 €).
-- Tu déclares 300 € en BNC (régime micro-BNC si < 77 700 € : abattement 34 %, ou régime réel).
-- Quand tu vends ces 0,1 ETH plus tard à 350 €, ta PV brute est 50 € (pas 350 €).
+**Exemple (hypothèse « imposition à la réception », à confirmer)** : tu reçois 0,1 ETH de staking le 15 mars (valeur ce jour : 300 €).
+- Dans cette hypothèse, tu déclarerais 300 € en BNC (micro-BNC si < 77 700 € : abattement 34 %, ou régime réel).
+- Quand tu vends ces 0,1 ETH plus tard à 350 €, ta PV brute serait 50 € (pas 350 €).
+- Dans l'hypothèse « imposition à la cession », rien n'est dû à la réception ; toute la valeur de cession suit le régime des plus-values.
 
 ### Staking décentralisé (Lido, Rocket Pool, validateurs solo)
 
-Position similaire — rewards = BNC à la perception. **Mais zone grise** sur les liquid staking tokens (stETH, rETH) qui accumulent la valeur sans "perception" explicite. Position prudente : déclarer les rewards perçus, ne pas déclarer la simple appréciation du LST. **Consulter un expert si volume > 10 000 €.**
+Même incertitude (pas de doctrine dédiée). **Zone grise** accrue sur les liquid staking tokens (stETH, rETH) qui accumulent la valeur sans "perception" explicite. Approche prudente : tracer les rewards perçus, ne pas déclarer la simple appréciation du LST, et **faire valider ta situation par un expert** — surtout pour des montants significatifs.
 
 ### Lending (Aave, Compound, Yearn)
 
@@ -196,8 +197,8 @@ Très complexe. Chaque opération (deposit, withdraw, claim rewards, swap au sei
 
 ### Airdrops
 
-- **À la réception** : revenu imposable BNC à la valeur du token ce jour (sauf si valeur de marché objective impossible à établir — cas des airdrops "surprise" sans cotation).
-- **À la cession** : PV ou MV calculée par rapport à cette valeur de réception.
+- **Cas non tranché officiellement** : position majoritaire = plus-value à la cession (prix d'acquisition 0) ; position prudente = revenu (BNC) à la réception, à la valeur du jour (sauf si valeur de marché impossible à établir — airdrops "surprise" sans cotation). À vérifier selon ton profil.
+- **À la cession** : plus-value ou moins-value, calculée selon la position retenue (prix d'acquisition 0 € en position majoritaire).
 
 ---
 
@@ -205,7 +206,7 @@ Très complexe. Chaque opération (deposit, withdraw, claim rewards, swap au sei
 
 ### Régime applicable
 
-Le BOFIP 2024 a clarifié : les NFT relèvent du **régime des actifs numériques** (donc 150 VH bis), à condition que le NFT représente un crypto-actif (token rattaché à un blockchain). Si le NFT est un objet d'art digital sans utilité on-chain, il peut basculer dans le **régime des biens meubles** (article 150 UA du CGI).
+Le régime des NFT n'est pas stabilisé par une doctrine officielle claire : selon la nature du NFT (crypto-actif rattaché à une blockchain, ou objet d'art digital sans utilité on-chain), plusieurs régimes sont évoqués — actifs numériques (150 VH bis) ou biens meubles (article 150 UA du CGI). À vérifier au cas par cas.
 
 En pratique 2026 : la plupart des NFT (PFP, gaming, utility tokens) sont traités comme des crypto-actifs.
 
@@ -213,7 +214,7 @@ En pratique 2026 : la plupart des NFT (PFP, gaming, utility tokens) sont traité
 
 - **Mint** : prix payé = acquisition (à intégrer dans le portefeuille global).
 - **Vente sur marketplace** : cession imposable, frais de marketplace déductibles.
-- **Royalties créateur** : revenus BNC à la perception (pour le créateur).
+- **Royalties créateur** : pour un créateur, revenus généralement imposables (souvent en BNC) ; régime à confirmer selon la nature de l'activité.
 - **Achat de NFT en ETH** : double événement (cession ETH + acquisition NFT).
 
 ### Pertes sur NFT illiquides
@@ -298,9 +299,9 @@ Si tu fais > 100 transactions/mois, consulte un expert-comptable. Le passage en 
 2. **Ne pas déclarer les swaps** crypto-crypto (BTC → ETH)
 3. **Confondre cessions et plus-value** pour le seuil 305 €
 4. **Reporter une MV crypto** sur les années suivantes (impossible pour particuliers)
-5. **Oublier les rewards staking** comme revenus BNC à la perception
+5. **Oublier de déclarer les rewards staking** (revenus imposables ; régime et moment à vérifier, non tranchés officiellement)
 6. **Mal calculer le portefeuille global** (oublier les wallets DeFi/NFT)
-7. **Ne pas déclarer les airdrops reçus** comme BNC
+7. **Ne pas déclarer les airdrops reçus** (revenus imposables ; régime à vérifier — voir ci-dessus)
 8. **Cocher 2OP sans calculer** (option barème globale = peut taxer plus tes dividendes)
 9. **Conserver les preuves moins de 6 ans** (durée de prescription DGFiP)
 10. **Faire confiance à un seul exchange** pour le calcul de PV — toujours croiser avec un outil agrégateur

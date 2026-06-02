@@ -79,7 +79,7 @@ export default function CalculateurApyStakingPage() {
               "Comparatif staking direct vs liquid staking vs CEX",
               "Calcul net après frais provider",
               "Lock-up et risques affichés par plateforme",
-              "Disclaimer fiscalité staking BOFiP 2024",
+              "Fiscalité staking : doctrine officielle à vérifier",
               "Aucune inscription requise",
             ],
             keywords: [

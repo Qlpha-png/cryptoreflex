@@ -95,13 +95,13 @@
       "id": "perte-crypto-deductible",
       "category": "fiscalite",
       "question": "Mes pertes crypto sont-elles deductibles ?",
-      "answer": "Oui mais sous conditions : les moins-values crypto sont reportables sur 10 ANNEES suivantes pour compenser de futures plus-values crypto (uniquement). Tu ne peux PAS les deduire de tes salaires ou autres revenus. Important : les pertes doivent etre REALISEES (cession effectuee), pas latentes. Un BTC achete 60k€ et vendu 30k€ = -30k€ de moins-value reportable. Un BTC achete 60k€ qui vaut 30k€ mais que tu hold = 0 de moins-value (latente). En cas de hack/vol/disparition de plateforme (FTX, Celsius), document precisement avec depot de plainte, ca peut justifier une moins-value (BOFiP 2024-08)."
+      "answer": "Oui mais sous conditions : pour un particulier (regime 150 VH bis), les moins-values crypto s'imputent uniquement sur les plus-values crypto de la MEME annee et ne sont pas reportables sur les annees suivantes. Tu ne peux PAS les deduire de tes salaires ou autres revenus. Important : les pertes doivent etre REALISEES (cession effectuee), pas latentes. Un BTC achete 60k€ et vendu 30k€ = -30k€ de moins-value imputable sur tes plus-values crypto de l'annee. Un BTC achete 60k€ qui vaut 30k€ mais que tu hold = 0 de moins-value (latente). En cas de hack/vol/disparition de plateforme (FTX, Celsius), le traitement d'une eventuelle moins-value est a verifier sur la doctrine officielle a jour (conserve un depot de plainte et les justificatifs)."
     },
     {
       "id": "airdrop-imposable",
       "category": "fiscalite",
       "question": "Un airdrop est-il imposable ?",
-      "answer": "Cas debattu, doctrine BOFiP 2024 : les airdrops recus passivement (sans contrepartie active) sont imposes au moment de la CESSION (vente vers fiat) au PFU 31,4%, valeur d'acquisition = 0. Les airdrops recus avec contrepartie active (faire telle action sur la plateforme) peuvent etre requalifies en BNC (Benefices Non Commerciaux) au moment de la reception, valorises au cours du jour. En pratique : conserver les preuves (date, valeur a la reception, mode d'attribution), declarer au pire en BNC pour eviter le redressement. Voir notre guide /blog/fiscalite-airdrops-crypto-france-2026."
+      "answer": "Cas debattu, non tranche par une doctrine officielle dediee. Interpretation repandue : les airdrops recus passivement (sans contrepartie active) sont imposes au moment de la CESSION (vente vers fiat) au PFU 31,4%, valeur d'acquisition = 0 ; les airdrops recus avec contrepartie active (faire telle action sur la plateforme) peuvent etre requalifies en BNC au moment de la reception, valorises au cours du jour. En pratique : conserver les preuves (date, valeur a la reception, mode d'attribution) et, en cas de doute ou de montants significatifs, consulter un professionnel. Voir notre guide /blog/fiscalite-airdrops-crypto-france-2026."
     },
     {
       "id": "mica-quoi-cest",
