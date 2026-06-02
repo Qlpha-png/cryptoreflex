@@ -814,8 +814,8 @@ export default function MicaStudyPage() {
             personnel) est <strong>non taxable</strong> en France selon le BOFiP
             RPPM-PVBMC-30-30, car il s’agit d’un transfert entre comptes
             personnels et non d’une cession. En revanche, la conversion d’un
-            stablecoin USDT vers USDC <em>est</em> une cession token-to-token,
-            non taxable depuis 2019 (PACTE), mais à déclarer comme événement
+            stablecoin USDT vers USDC est un échange entre actifs numériques sans soulte (token-to-token),
+            non imposable (sursis, art. 150 VH bis CGI), mais à déclarer comme événement
             dans son suivi fiscal.
           </p>
           <p>

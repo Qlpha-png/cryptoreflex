@@ -6,44 +6,54 @@
  * compliance posées dans les phases 1-4 ne dérivent pas dans le temps.
  *
  * Règles checkées :
- *
- *   1. AUCUNE chaîne "Bn " (Intl notation:"compact" ambigu FR) dans le code
- *      source — on doit utiliser exclusivement "k / M / Md / T".
- *
- *   2. AUCUN compteur "0+" affiché brut dans les Server Components
- *      (anti-pattern feedback Kev — voir useCountUp avec init target).
- *
- *   3. AUCUN CTA directif "recommandation personnalisée" / "Acheter
- *      maintenant" / "meilleur pour toi" sur des contenus visibles.
- *      Tolère les disclaimers ("pas un signal d'achat") et code comments.
- *
- *   4. Pas de wording "MA plateforme idéale" / "TROUVER ma plateforme"
- *      qui suggèrent une reco perso.
- *
- *   5. Pas de fetch HTTP interne dans un Server Component async qui serait
- *      rendu en SSG (pattern qui a causé le crash Phase 3).
+ *   1. Aucun "Bn " ambigu FR (utiliser k / M / Md / T).
+ *   2. Aucun compteur "0+" brut en init useState.
+ *   3. Aucun CTA directif "recommandation perso" / "Acheter maintenant" / "signal d'achat".
+ *   4. Pas de fetch HTTP interne dans un Server Component async (crash Phase 3).
+ *   5. ANTI-RÉGRESSION FISCALE (famille `fiscal-*`, juin 2026) — empêche le retour des
+ *      doctrines fiscales fausses purgées sur 6 rounds d'audit :
+ *        a. fausses dates BOFiP ("14 août 2025", "BOFIP 2024", "02/09/2024"…) ;
+ *        b. swap crypto→crypto / crypto→stablecoin présenté comme cession imposable
+ *           SANS nuance (sursis / sans soulte / 150 VH bis) ;
+ *        c. staking / airdrop présenté comme "BNC à la réception" comme règle acquise
+ *           SANS nuance (non tranché / à vérifier / source officielle) ;
+ *        d. seuils inventés (">10 swaps/an", "5 000 €/an") distinguant particulier/pro.
+ *      Base officielle : art. 150 VH bis CGI + BOFiP BOI-RPPM-PVBMC-30-30 (échange sans
+ *      soulte entre actifs numériques = sursis, pas de fait générateur ; imposition
+ *      seulement à la cession contre euro/bien/service ou avec soulte). Le timing du
+ *      staking/airdrop n'est PAS tranché par une doctrine officielle dédiée.
+ *      Scan ÉLARGI (broadScan) : + content/news (bot daily), content/lead-magnets, data (+ .json).
+ *      Les 4 guides fiscaux dédiés sont whitelistés (ils exposent le débat avec caveats).
  *
  * Usage :
  *   node scripts/audit-quality.mjs              # check tout, exit 1 si erreur
  *   node scripts/audit-quality.mjs --strict     # warnings deviennent erreurs
  *   node scripts/audit-quality.mjs --json       # output JSON pour CI
  *
- * Exit code :
- *   0 = OK
- *   1 = erreur(s) bloquante(s)
+ * Exit code : 0 = OK · 1 = erreur(s) bloquante(s)
+ * Export : { lintText, RULES } pour les tests unitaires (tests/audit-quality-fiscal.test.ts).
  *
- * Aucune lib externe : fs.readdirSync + regex.
+ * Aucune lib externe : fs + regex.
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = resolve(process.argv[1], "..", "..");
+const ROOT = resolve(process.argv[1] || ".", "..", "..");
 const argv = process.argv.slice(2);
 const STRICT = argv.includes("--strict");
 const JSON_OUT = argv.includes("--json");
 
+// Scan de base (règles historiques).
 const SCAN_DIRS = ["app", "components", "lib", "content/articles"];
+// Scan élargi pour les règles fiscales anti-régression (broadScan).
+const FISCAL_SCAN_DIRS = [
+  ...SCAN_DIRS,
+  "content/news",
+  "content/lead-magnets",
+  "data",
+];
 const IGNORE_PATHS = [
   "node_modules",
   ".next",
@@ -52,22 +62,50 @@ const IGNORE_PATHS = [
   ".git",
   "audit-output",
   "backup",
-  "docs", // les docs d'audit citent les mauvais patterns volontairement
+  "docs", // les docs/registres d'audit citent les mauvais patterns volontairement
 ];
 const SOURCE_EXTS = [".ts", ".tsx", ".mdx", ".md"];
+const FISCAL_EXTS = [...SOURCE_EXTS, ".json"]; // glossary.json / faq-crypto.json
+
+// Guides fiscaux dédiés : exposent légitimement le débat (occasionnel vs pro,
+// position majoritaire vs prudente) avec des caveats au niveau du document.
+// On les whitelist pour les règles de FORMULATION (swap/staking), pas pour les
+// fausses dates ni les seuils inventés (qui ne doivent apparaître nulle part).
+const FISCAL_GUIDES = [
+  "content/articles/fiscalite-staking-eth-sol-ada-france-2026-guide-complet.mdx",
+  "content/articles/fiscalite-airdrops-crypto-france-2026.mdx",
+  "content/articles/fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique.mdx",
+  "content/articles/fiscalite-nft-france-2026-guide-complet-creation-achat-vente.mdx",
+];
 
 /* -------------------------------------------------------------------------- */
-/*  Règles : { pattern, message, severity, allowComments?, allowPaths? }     */
+/*  Nuances fiscales autorisées (présence sur la même ligne = formulation OK) */
+/* -------------------------------------------------------------------------- */
+// Marqueurs qui rendent une mention "imposable/cession" acceptable parce que la
+// phrase est correcte ou prudente.
+const FISCAL_NUANCE =
+  // négation imposable/taxable, tolérante au markdown (**pas** imposable)
+  "sans soulte|sursis|150[\\s ]?VH[\\s ]?bis|\\bpas[\\s*_]{0,3}(?:imposabl|taxabl|un fait)|" +
+  "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
+  "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
+  "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente)|" +
+  // cession LÉGITIMEment imposable (contre euro/fiat/devise) — ne pas flaguer
+  "contre (?:un[e]? |des )?euro|en euros|contre fiat|contre devise|cours légal|\\bfiat\\b|vers (?:le )?fiat|" +
+  "bien\\/service|états?[- ]?unis|aux us\\b|professionnel|mining|actifs? numériques?|" +
+  "report d['’]imposition|intercalaire|" +
+  // une ligne interrogative (FAQ : « X est-il imposable ? ») n'est pas une affirmation
+  "\\?";
+
+/* -------------------------------------------------------------------------- */
+/*  Règles                                                                     */
 /* -------------------------------------------------------------------------- */
 
 const RULES = [
   {
     id: "no-bn-unit",
-    label: "Aucun \"Bn \" résiduel (audit Phase 1 anti-confusion FR)",
+    label: 'Aucun "Bn " résiduel (audit Phase 1 anti-confusion FR)',
     pattern: /(?<![A-Za-z])Bn[ $€]/g,
     severity: "error",
-    // Les fichiers de format custom citent eux-mêmes "Bn" dans leurs
-    // commentaires pour expliquer le fix. On les whitelist explicitement.
     allowPaths: [
       "lib/coingecko.ts",
       "lib/ta-article-generator.ts",
@@ -81,21 +119,17 @@ const RULES = [
   },
   {
     id: "no-recommandation-perso",
-    label: "Aucune \"recommandation personnalisée\" hors disclaimer",
+    label: 'Aucune "recommandation personnalisée" hors disclaimer',
     pattern: /recommandation personnalisée/gi,
     severity: "error",
-    // Acceptable seulement si phrase explicite "PAS de / AUCUNE / sans" devant
-    // ou si la mention est dans un disclaimer AMF/CMF qui cite la formule
-    // légale "ni un conseil en investissement, ni une recommandation personnalisée".
     allowContextRegex:
       /(?:pas|aucune|sans|ne (?:donne|fait|s'agit)|ne constitue|ni un conseil)[\s\S]{0,80}recommandation personnalisée|recommandation personnalisée[\s\S]{0,80}?(?:ni|sans|n'est|pas)/i,
   },
   {
     id: "no-acheter-maintenant",
-    label: "Aucun CTA \"Acheter maintenant\" / \"Achète maintenant\"",
+    label: 'Aucun CTA "Acheter maintenant" / "Achète maintenant"',
     pattern: /\b(Acheter|Achetez|Achète) maintenant\b/g,
     severity: "error",
-    // Le code comment "pas Acheter maintenant" est volontaire, on le whitelist
     allowContextRegex: /(?:pas|aucun|sans|jamais) ['"]?(?:Acheter|Achetez|Achète) maintenant/i,
   },
   {
@@ -105,16 +139,12 @@ const RULES = [
     severity: "error",
     allowContextRegex:
       /(?:pas|aucun|sans|jamais|interdit|ne donne|ne fait) (?:de |un )?signal d'achat|signal d'achat[a-zà-ÿ ',]*?(?:n'est|pas|jamais)/i,
-    // Les glossaires/lib crypto contiennent par essence des définitions de
-    // termes d'analyse technique où "signal d'achat" est un terme métier
-    // standard (MACD, RSI, breakout résistance). Cryptoreflex ne donne PAS
-    // un signal d'achat — on définit ce que ça veut dire pour le lecteur.
     allowPaths: ["lib/crypto-glossary.ts", "lib/glossary.ts"],
   },
   {
     id: "no-zero-plus-counter",
     label:
-      "Aucun compteur \"0+\" / \"0×\" en initialiseur de useState (anti-pattern Phase 2)",
+      'Aucun compteur "0+" / "0×" en initialiseur de useState (anti-pattern Phase 2)',
     pattern: /useState\(0\).*?suffix=["']\+/g,
     severity: "warning",
   },
@@ -122,18 +152,67 @@ const RULES = [
     id: "no-fetch-internal-in-server-async",
     label:
       "Pas de fetch(`$SITE_URL/api/...`) dans un Server Component async (Phase 4 lesson)",
-    // Match fetch interne via template literal contenant SITE_URL ou BRAND.url
     pattern: /fetch\(\s*`\$\{[^}]*(?:SITE_URL|BRAND\.url|VERCEL_URL)\b/g,
     severity: "warning",
-    // /api/community-stats a déjà été fixé — ce pattern restera comme garde-fou.
+  },
+
+  /* ---------------- FAMILLE FISCALE ANTI-RÉGRESSION (broadScan) ------------- */
+  {
+    id: "fiscal-fake-bofip-date",
+    label: "Fausse date / référence BOFiP fabriquée (doctrine inexistante)",
+    // Dates fabriquées récurrentes + "BOFIP/BoFiP 2024/2025" / "août 2025" comme source.
+    pattern:
+      /14 ?ao[ûu]t 2025|14\/08\/2025|02[\/-]09[\/-]2024|2 septembre 2024|(?:BO?FiP|BOFIP)\s*(?:d['’]\s*)?(?:ao[ûu]t\s*)?202[45]/gi,
+    severity: "error",
+    broadScan: true,
+    suggestion:
+      "Supprimer la date BOFiP fabriquée. Référence officielle réelle = art. 150 VH bis CGI + BOFiP BOI-RPPM-PVBMC-30-30 (sans date inventée). Le timing staking/airdrop n'est pas tranché par une doctrine dédiée.",
+  },
+  {
+    id: "fiscal-swap-cession-sans-nuance",
+    label:
+      "Swap crypto→crypto / crypto→stablecoin présenté comme cession imposable sans nuance (sursis 150 VH bis)",
+    pattern:
+      /(?:swap|échange|conversion|arbitrage|token[- ]?to[- ]?token|crypto[- ]?(?:→|->|vers|contre|à)[- ]?(?:crypto|stablecoin|token)|crypto[- ]crypto|stablecoin)[^.\n]{0,75}(?:cession (?:taxable|imposable)|fait g[ée]n[ée]rateur(?: fiscal)?|(?:est|sont|constitue|considéré[es]*? comme|assimilé[es]*? à)[^.\n]{0,22}(?:taxable|imposable|une cession))/gi,
+    severity: "error",
+    broadScan: true,
+    allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
+    allowPaths: FISCAL_GUIDES,
+    suggestion:
+      "Un échange SANS SOULTE entre actifs numériques (crypto↔crypto, crypto↔stablecoin) = SURSIS d'imposition (art. 150 VH bis CGI) : pas un fait générateur. Imposable seulement à la cession contre euro/bien/service ou avec soulte. Ajouter la nuance ou corriger.",
+  },
+  {
+    id: "fiscal-staking-reception-sans-nuance",
+    label:
+      "Staking / airdrop présenté comme imposable à la réception / BNC comme règle acquise (non tranché officiellement)",
+    pattern:
+      /(?:staking|airdrop|rewards?|récompenses?)[^.\n]{0,75}(?:(?:imposé|imposabl|taxé|taxabl)[^.\n]{0,22}(?:à la |de |dès (?:la |leur )?|au moment de (?:la |leur )?)?(?:réception|perception|encaissement)|(?:=|est|sont|relèvent?|en|qualifié[es]*? (?:de|en))[^.\n]{0,10}BNC\b)|\bBNC\b[^.\n]{0,30}(?:à la |dès (?:la |leur )?|au moment de (?:la |leur )?)?(?:réception|perception)/gi,
+    severity: "error",
+    broadScan: true,
+    allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
+    allowPaths: FISCAL_GUIDES,
+    suggestion:
+      "Le moment/régime d'imposition du staking/airdrop n'est PAS tranché par une doctrine officielle dédiée. Reformuler en prudent : « imposable, mais moment exact (réception ou cession) non tranché — à vérifier selon la situation » (et non BNC/réception affirmé).",
+  },
+  {
+    id: "fiscal-invented-threshold",
+    label:
+      "Seuil fiscal chiffré inventé (>10 swaps/an, 5 000 €/an) distinguant particulier/pro",
+    pattern:
+      /(?:>|<|plus de|moins de|au[- ]?del[àa] de|supérieur[e]? à|environ|~)\s*10\s*swaps|10\+?\s*swaps?\s*\/?\s*an|(?:5[\s ]?000|5000|5\s?k)\s*€\s*\/\s*an|(?:5[\s ]?000|5000)\s*€[^.\n]{0,35}(?:seuil|requalif|professionnel|activité (?:habituelle|pro)|par an)/gi,
+    severity: "error",
+    broadScan: true,
+    allowPaths: FISCAL_GUIDES,
+    suggestion:
+      "Supprimer le seuil chiffré inventé : AUCUN seuil officiel ne distingue particulier/professionnel. La qualification (habituel/pro → BIC/BNC) s'apprécie au cas par cas (faisceau d'indices), sans seuil chiffré.",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Walk files                                                                */
+/*  Helpers                                                                    */
 /* -------------------------------------------------------------------------- */
 
-const walk = (dir, out = []) => {
+const walk = (dir, out = [], exts = SOURCE_EXTS) => {
   let entries;
   try {
     entries = readdirSync(dir, { withFileTypes: true });
@@ -143,119 +222,176 @@ const walk = (dir, out = []) => {
   for (const e of entries) {
     if (IGNORE_PATHS.some((p) => e.name === p)) continue;
     const full = join(dir, e.name);
-    if (e.isDirectory()) walk(full, out);
-    else if (SOURCE_EXTS.some((ext) => e.name.endsWith(ext))) out.push(full);
+    if (e.isDirectory()) walk(full, out, exts);
+    else if (exts.some((ext) => e.name.endsWith(ext))) out.push(full);
   }
   return out;
 };
 
 const stripComments = (src, ext) => {
-  // On enlève approximativement les blocs /* ... */ + // pour éviter les
-  // faux positifs sur les commentaires qui CITENT les patterns interdits.
-  // Approximatif (pas un vrai parser TS) mais suffisant pour audit grep.
-  if (ext === ".mdx" || ext === ".md") return src; // pas de commentaires // /* dans MDX
+  // Pas de commentaires // /* à retirer dans MDX/MD/JSON.
+  if (ext === ".mdx" || ext === ".md" || ext === ".json") return src;
   return src
-    .replace(/\/\*[\s\S]*?\*\//g, "") // block comments
-    .replace(/^\s*\/\/.*$/gm, ""); // line comments (simple, suffit pour audit)
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 };
 
 /* -------------------------------------------------------------------------- */
-/*  Apply rules                                                               */
+/*  Cœur : lintText(text, relPath, opts) → findings[]  (exporté pour tests)   */
+/* -------------------------------------------------------------------------- */
+
+export function lintText(src, relPath, { onlyBroad = false } = {}) {
+  const out = [];
+  const ext = relPath.slice(relPath.lastIndexOf("."));
+  const target = stripComments(src, ext);
+  const lines = target.split(/\n/);
+
+  for (const rule of RULES) {
+    const isBroad = !!rule.broadScan;
+    // Deux passes disjointes : base (règles historiques) vs fiscal élargi.
+    if (onlyBroad && !isBroad) continue;
+    if (!onlyBroad && isBroad) continue;
+    if (rule.allowPaths?.some((p) => relPath.endsWith(p) || relPath === p)) continue;
+
+    if (!rule.allowContextRegex) {
+      // Règle simple : match global, comptage + (si dispo) lignes pour le report.
+      rule.pattern.lastIndex = 0;
+      const matches = target.match(rule.pattern);
+      if (!matches) continue;
+      const detail = [];
+      if (rule.suggestion) {
+        for (let i = 0; i < lines.length && detail.length < 5; i++) {
+          rule.pattern.lastIndex = 0;
+          if (rule.pattern.test(lines[i]))
+            detail.push({ line: i + 1, snippet: lines[i].trim().slice(0, 160) });
+        }
+      }
+      out.push({
+        rule: rule.id,
+        label: rule.label,
+        severity: rule.severity,
+        path: relPath,
+        count: matches.length,
+        detail,
+        suggestion: rule.suggestion,
+      });
+      continue;
+    }
+
+    // Règle contextuelle : ligne par ligne, suspecte si match SANS nuance sur la ligne.
+    let count = 0;
+    const detail = [];
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      rule.pattern.lastIndex = 0;
+      if (!rule.pattern.test(line)) continue;
+      rule.pattern.lastIndex = 0;
+      if (rule.allowContextRegex.test(line)) continue; // nuance présente → OK
+      count++;
+      if (detail.length < 5)
+        detail.push({ line: i + 1, snippet: line.trim().slice(0, 160) });
+    }
+    if (count > 0) {
+      out.push({
+        rule: rule.id,
+        label: rule.label,
+        severity: rule.severity,
+        path: relPath,
+        count,
+        detail,
+        suggestion: rule.suggestion,
+      });
+    }
+  }
+  return out;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Main (scan disque)                                                         */
 /* -------------------------------------------------------------------------- */
 
 const findings = [];
 
-const checkFile = (path) => {
+const checkFile = (path, opts) => {
   let src;
   try {
     src = readFileSync(path, "utf8");
   } catch {
     return;
   }
-  const ext = path.slice(path.lastIndexOf("."));
   const relPath = relative(ROOT, path).replace(/\\/g, "/");
-  for (const rule of RULES) {
-    if (rule.allowPaths?.some((p) => relPath.endsWith(p) || relPath === p)) continue;
-    const target = rule.allowContextRegex
-      ? stripComments(src, ext)
-      : stripComments(src, ext);
-    const matches = target.match(rule.pattern);
-    if (!matches) continue;
-    // Si une regex de contexte explicite est définie, on vérifie ligne par ligne
-    // qu'au moins une occurrence est HORS de ce contexte de disclaimer.
-    if (rule.allowContextRegex) {
-      const lines = target.split(/\n/);
-      let suspicious = false;
-      for (const line of lines) {
-        if (!rule.pattern.test(line)) {
-          rule.pattern.lastIndex = 0;
-          continue;
-        }
-        rule.pattern.lastIndex = 0;
-        if (!rule.allowContextRegex.test(line)) {
-          suspicious = true;
-          break;
-        }
-      }
-      if (!suspicious) continue;
-    }
-    findings.push({
-      rule: rule.id,
-      label: rule.label,
-      severity: rule.severity,
-      path: relPath,
-      count: matches.length,
-    });
-  }
+  findings.push(...lintText(src, relPath, opts));
 };
 
-/* -------------------------------------------------------------------------- */
-/*  Main                                                                      */
-/* -------------------------------------------------------------------------- */
-
 const main = () => {
-  if (!JSON_OUT) console.log(`audit-quality — scan ${SCAN_DIRS.join(", ")}`);
-  const files = SCAN_DIRS.flatMap((d) => walk(resolve(ROOT, d)));
-  if (!JSON_OUT) console.log(`  ${files.length} fichier(s) source scannés`);
-  for (const f of files) checkFile(f);
+  if (!JSON_OUT) console.log(`audit-quality — scan ${SCAN_DIRS.join(", ")} (+ fiscal élargi)`);
+
+  // Passe 1 : règles historiques sur le scan de base.
+  const baseFiles = SCAN_DIRS.flatMap((d) => walk(resolve(ROOT, d)));
+  for (const f of baseFiles) checkFile(f, { onlyBroad: false });
+
+  // Passe 2 : règles fiscales (broadScan) sur le scan élargi (+ .json).
+  const fiscalFiles = FISCAL_SCAN_DIRS.flatMap((d) =>
+    walk(resolve(ROOT, d), [], FISCAL_EXTS),
+  );
+  for (const f of fiscalFiles) checkFile(f, { onlyBroad: true });
+
+  if (!JSON_OUT)
+    console.log(
+      `  ${baseFiles.length} fichier(s) base + ${fiscalFiles.length} fichier(s) scan fiscal`,
+    );
 
   const errors = findings.filter(
     (f) => f.severity === "error" || (STRICT && f.severity === "warning"),
   );
-  const warnings = findings.filter(
-    (f) => f.severity === "warning" && !STRICT,
-  );
+  const warnings = findings.filter((f) => f.severity === "warning" && !STRICT);
 
   if (JSON_OUT) {
     console.log(
-      JSON.stringify({ errors, warnings, totalFiles: files.length }, null, 2),
+      JSON.stringify({ errors, warnings, totalFiles: baseFiles.length + fiscalFiles.length }, null, 2),
     );
     process.exit(errors.length > 0 ? 1 : 0);
   }
 
+  const printFinding = (f) => {
+    console.log(`  [${f.rule}] ${f.path} (${f.count}× : ${f.label})`);
+    if (f.detail?.length) {
+      for (const d of f.detail) console.log(`      L${d.line}: ${d.snippet}`);
+    }
+    if (f.suggestion) console.log(`      → Correction : ${f.suggestion}`);
+  };
+
   if (warnings.length > 0) {
     console.log(`\n⚠  ${warnings.length} warning(s) :`);
-    for (const w of warnings) {
-      console.log(`  [${w.rule}] ${w.path} (${w.count}× : ${w.label})`);
-    }
+    warnings.forEach(printFinding);
   }
 
   if (errors.length > 0) {
+    const fiscalErrors = errors.filter((e) => e.rule.startsWith("fiscal-"));
     console.log(`\n✗ ${errors.length} erreur(s) bloquante(s) :`);
-    for (const e of errors) {
-      console.log(`  [${e.rule}] ${e.path} (${e.count}× : ${e.label})`);
+    errors.forEach(printFinding);
+    if (fiscalErrors.length > 0) {
+      console.log(
+        `\n⚠ ${fiscalErrors.length} concerne(nt) la doctrine FISCALE (anti-régression) — ` +
+          "voir la correction suggérée sous chaque ligne.",
+      );
     }
     console.log(
       "\nCorrige les patterns ci-dessus puis re-lance.\n" +
-        "(Si une occurrence est un disclaimer légitime, ajuste allowContextRegex dans audit-quality.mjs.)",
+        "(Disclaimer/nuance légitime : ajuste allowContextRegex/allowPaths dans audit-quality.mjs.)",
     );
     process.exit(1);
   }
 
   console.log(
-    `\n✓ audit-quality OK — aucune violation sur ${files.length} fichier(s) source`,
+    `\n✓ audit-quality OK — aucune violation sur ${baseFiles.length + fiscalFiles.length} fichier(s) source`,
   );
   process.exit(0);
 };
 
-main();
+const isDirectRun =
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isDirectRun) main();
+
+export { RULES };
