@@ -43,7 +43,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 const PUBLISHED_DATE = "2026-05-06";
-const LAST_UPDATED = "2026-05-06";
+const LAST_UPDATED = "2026-06-02";
 
 const TITLE =
   "Fiscalité crypto France 2026 : guide complet Cerfa 2086 + 3916-bis";
@@ -96,7 +96,7 @@ const TOC = [
   { id: "cerfa-3916", label: "4. Annexe 3916-bis" },
   { id: "cas-speciaux", label: "5. Cas particuliers" },
   { id: "erreurs", label: "6. Erreurs courantes & redressements" },
-  { id: "optimisation", label: "7. Optimisation légale" },
+  { id: "optimisation", label: "7. Dispositifs légaux" },
   { id: "outils", label: "8. Outils gratuits" },
   { id: "faq", label: "9. FAQ" },
   { id: "sources", label: "10. Sources & méthodologie" },
@@ -125,7 +125,7 @@ const FAQ = [
   },
   {
     q: "Le staking et les rewards Proof-of-Stake sont-ils imposables ?",
-    a: "Oui, mais le régime n’est pas encore parfaitement stabilisé. La doctrine actuelle (publication BOFiP attendue 2026) considère que les rewards de staking sont imposables au moment de la cession (vente contre euro), pas au moment de leur réception. Le prix d’acquisition retenu est généralement zéro (gain en capital intégral), sauf si le contribuable peut démontrer un autre prix de revient. Pour les patrimoines élevés, consulter un expert-comptable.",
+    a: "Oui, mais le MOMENT de l’imposition (à la réception du reward, ou à sa cession contre euro) n’est pas tranché de façon uniforme et fait l’objet d’évolutions doctrinales. Selon l’analyse retenue et la doctrine applicable à votre situation, l’imposition peut intervenir à la réception (revenu) ou à la cession. En l’absence de position officielle pleinement stabilisée, ce point est à vérifier au cas par cas sur une source officielle à jour, et pour des montants significatifs avec un expert-comptable.",
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
@@ -702,28 +702,27 @@ export default function FiscaliteCryptoStudyPage() {
           <h2>5. Cas particuliers</h2>
           <h3>5.1. Staking et rewards Proof-of-Stake</h3>
           <p>
-            La doctrine fiscale française considère que les rewards de staking
-            sont fiscalement neutres au moment de leur réception (pas
-            d’imposition) et imposables au moment de leur cession contre euro.
-            Le prix d’acquisition retenu est généralement zéro (gain en
-            capital intégral), sauf si le contribuable peut démontrer un autre
-            prix de revient (par exemple, des frais d’exploitation d’un
-            validator).
+            Le moment de l’imposition des rewards de staking n’est pas tranché
+            de façon uniforme et fait l’objet d’évolutions doctrinales : selon
+            l’analyse retenue, l’imposition peut être considérée à la réception
+            du reward (revenu) ou à sa cession contre euro. Le prix
+            d’acquisition retenu, ainsi que d’éventuels frais (par exemple
+            d’exploitation d’un validateur), dépendent de la lecture appliquée.
           </p>
           <p>
-            Cette doctrine n’est pas encore stabilisée par un BOFiP dédié
-            (publication attendue 2026). Pour les patrimoines stakés
-            significatifs (&gt; 5 000 €/an de rewards), consulter un
-            expert-comptable.
+            Ce point n’est pas encore pleinement stabilisé par un BOFiP dédié.
+            Il est donc à vérifier au cas par cas sur une source officielle à
+            jour ; pour des montants significatifs (&gt; 5 000 €/an de rewards),
+            consulter un expert-comptable.
           </p>
           <h3>5.2. Airdrops et hard forks</h3>
           <p>
-            Les tokens reçus gratuitement par airdrop ou suite à un hard fork
-            sont, comme le staking, fiscalement neutres au moment de leur
-            réception et imposables à la cession. Prix d’acquisition retenu :
-            zéro (sauf si le contribuable a participé activement, par exemple
-            en payant des frais de gas, auquel cas ces frais peuvent être
-            imputés).
+            Le traitement des tokens reçus gratuitement (airdrop, hard fork)
+            suit la même incertitude que le staking : selon l’analyse retenue,
+            l’imposition peut intervenir à la réception (revenu, à sa valeur du
+            jour) ou à la cession contre euro. Ce point n’est pas pleinement
+            stabilisé et doit être vérifié au cas par cas ; pour des montants
+            significatifs, consulter un professionnel.
           </p>
           <h3>5.3. NFT (Non-Fungible Tokens)</h3>
           <p>
@@ -816,23 +815,26 @@ export default function FiscaliteCryptoStudyPage() {
 
         {/* 7. Optimisation */}
         <section id="optimisation" className="mt-12">
-          <h2>7. Optimisation légale</h2>
+          <h2>7. Dispositifs légaux à connaître</h2>
           <p>
-            La fiscalité crypto FR offre quelques leviers d’optimisation
-            légaux. Aucun de ces leviers n’est un schéma d’évasion fiscale —
-            tous sont prévus par le code général des impôts.
+            Le code général des impôts prévoit plusieurs dispositifs qui
+            peuvent s’appliquer selon votre situation. Aucun n’est un schéma
+            d’évasion fiscale — ce sont des règles de droit commun. Ce qui suit
+            est une information générale, pas un conseil personnalisé : la
+            pertinence de chaque dispositif dépend de votre situation et,
+            au-delà des cas simples, doit être validée avec un professionnel.
           </p>
           <h3>7.1. Étalement des cessions sur plusieurs années</h3>
           <p>
             Si votre patrimoine crypto contient des plus-values latentes
             importantes, étaler les cessions sur 2 ou 3 années fiscales peut
-            optimiser. L’avantage est moindre depuis 2018 (PFU à taux fixe),
-            mais l’étalement permet de :
+            être pertinent selon votre situation. L’avantage est moindre depuis
+            2018 (PFU à taux fixe), mais l’étalement permet de :
           </p>
           <ul>
             <li>profiter du seuil d’exonération 305 €/an plusieurs fois ;</li>
             <li>
-              optimiser le couplage avec d’autres revenus (option barème
+              ajuster le couplage avec d’autres revenus (option barème
               progressif si revenus globaux faibles l’année N) ;
             </li>
             <li>
@@ -842,7 +844,7 @@ export default function FiscaliteCryptoStudyPage() {
           <h3>7.2. Compensation moins-values / plus-values intra-annuelle</h3>
           <p>
             Les moins-values crypto ne sont pas reportables d’une année sur
-            l’autre. Pour les optimiser, il faut les compenser{" "}
+            l’autre. Pour les utiliser, il faut les compenser{" "}
             <strong>la même année</strong> avec des plus-values crypto. Si
             votre portefeuille contient des positions perdantes que vous
             comptez liquider, le faire avant le 31 décembre permet de
@@ -862,9 +864,9 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Le don purge la plus-value latente : le donataire reçoit les
             cryptos avec une nouvelle base de coût (la valeur au jour du don).
-            Pour les patrimoines crypto familiaux importants, c’est un levier
-            majeur — à valider par notaire pour les valeurs au-dessus des
-            abattements.
+            Pour les patrimoines crypto familiaux importants, c’est un
+            dispositif prévu par le CGI — à valider par notaire pour les valeurs
+            au-dessus des abattements.
           </p>
           <h3>7.4. Option barème progressif si TMI faible</h3>
           <p>
@@ -878,12 +880,12 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Pour les patrimoines crypto importants (&gt; 500 000 €), le
             démembrement (donation de la nue-propriété en gardant l’usufruit)
-            permet d’optimiser la transmission. Schéma à valider impérativement
+            permet d’alléger la transmission. Schéma à valider impérativement
             avec un notaire.
           </p>
           <p className="text-sm">
             <strong>Rappel.</strong> Cryptoreflex ne fournit pas de conseil
-            fiscal personnalisé. Pour toute optimisation au-delà des cas
+            fiscal personnalisé. Pour toute situation au-delà des cas
             standards (cessions courantes), consulter un expert-comptable
             spécialisé en fiscalité numérique ou un conseiller en gestion de
             patrimoine (CGP).
@@ -1069,6 +1071,38 @@ export default function FiscaliteCryptoStudyPage() {
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-amber-300">
                 Lire l’étude
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              </div>
+            </Link>
+            <Link
+              href="/blog/comment-declarer-crypto-impots-2026-guide-complet"
+              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+            >
+              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
+                Guide pratique : déclarer pas-à-pas
+              </h3>
+              <p className="mt-2 text-sm text-slate-300">
+                Le guide pratique de la déclaration crypto 2026, étape par étape
+                (Cerfa 2086, cases, calendrier).
+              </p>
+              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
+                Lire le guide pratique
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              </div>
+            </Link>
+            <Link
+              href="/blog/mica-regulation-europe-2026"
+              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-emerald-500/30 transition"
+            >
+              <h3 className="text-lg font-bold text-white group-hover:text-emerald-300">
+                MiCA expliqué aux particuliers
+              </h3>
+              <p className="mt-2 text-sm text-slate-300">
+                La régulation (MiCA) et la fiscalité sont deux sujets distincts.
+                Comprends ce que MiCA change — sans le confondre avec la fiscalité.
+              </p>
+              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300">
+                Comprendre MiCA
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>
             </Link>
