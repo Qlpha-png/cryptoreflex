@@ -53,11 +53,12 @@ Risque cannibalisation d'un nouvel article : ÉLEVÉ → c'est pourquoi Option A
 - Calendrier 2026 : papier 19 mai ; en ligne 21 mai → 4 juin selon département. Source : impots.gouv.fr.
 
 ## 4. Points incertains → traités avec PRUDENCE (pas de règle unique)
-- STAKING : RÉSOLU. La doctrine BOFiP du 14/08/2025 tranche : les rewards de staking sont imposables
-  à la RÉCEPTION (revenus de capitaux mobiliers, case 2DC, PFU 31,4 %), pas à la revente. Vérifié
-  (sources multiples 2025-2026 + cohérent avec le satellite blog qui le citait déjà). → Hub ALIGNÉ
-  sur la réception (mon wording initial « prudent / non tranché » a été CORRIGÉ — il était devenu
-  moins exact que l'existant). L'incohérence hub↔blog est donc résolue dans le bon sens.
+- STAKING : NON VÉRIFIABLE OFFICIELLEMENT → PRUDENCE. La « doctrine BOFiP du 14/08/2025 » (staking
+  imposable à la RÉCEPTION, case 2DC) n'a PAS été retrouvée sur bofip.impots.gouv.fr (audit Codex).
+  BOI-RPPM-PVBMC-30-30 ne contient ni « staking », ni « 14 août 2025 », ni « 2DC ». Sources secondaires
+  uniquement (presse/cabinets) = jamais primaire. → Hub + blog repassés en PRUDENT : « le moment exact
+  (réception vs cession) n'est pas tranché par une source officielle citable ; à confirmer ». Mon
+  premier instinct prudent était le bon ; la « correction réception » était une SUR-CORRECTION fautive.
 - AIRDROPS / HARD FORKS : même incertitude que le staking → wording prudent.
 - NFT : régime non stabilisé (BOFiP en cours) ; selon nature (œuvre d'art 6,5 % vs PFU crypto) →
   présenté comme « à vérifier ». Conservé tel quel (déjà prudent).
@@ -70,9 +71,9 @@ HUB /etudes/fiscalite-crypto-france-2026-guide-cerfa/page.tsx :
   - Section 7 « Optimisation légale » → « Dispositifs légaux à connaître » (heading + TOC + intro),
     wording « optimisation/optimiser/levier majeur » → « dispositif / pertinent selon votre situation /
     information générale » (retrait des formulations de promesse d'optimisation, demande Codex).
-  - Staking (5.1) + FAQ staking → RÉCEPTION (BOFiP 14/08/2025 : revenu de capitaux mobiliers, case
-    2DC, PFU 31,4 %). Airdrops (5.2) → réception (même logique, avec nuance « le détail peut varier »).
-    Retrait de l'ancienne affirmation « imposable à la cession / prix 0 » (obsolète depuis août 2025).
+  - Staking (5.1) + FAQ staking → PRUDENT (moment d'imposition non tranché par source officielle
+    citable ; suppression de « BOFiP 14/08/2025 / réception / case 2DC »). Airdrops (5.2) → PRUDENT
+    (même logique). Crypto→crypto sans soulte = SURSIS (art. 150 VH bis) confirmé et renforcé partout.
   - Maillage final : ajout de 2 cartes → satellite pratique (comment-declarer) + hub MiCA
     (mica-regulation-europe-2026, « distinguer réglementation et fiscalité »).
 SATELLITE /blog/comment-declarer-crypto-impots-2026-guide-complet.mdx :
@@ -90,3 +91,17 @@ expert-comptable / avocat fiscaliste »). Aucun seuil inventé. Aucune règle «
 impots.gouv.fr (actifs numériques, formulaire 2086, calendrier 2026) ; BOFiP BOI-RPPM-PVBMC-30-30
 (+ 30-10/30-20) ; service-public.fr (PFU 31,4 %, 3916-bis) ; LFSS 2026 (loi 2025-1403) ; Legifrance
 (art. 150 VH bis CGI). Presse/cabinets = jamais source primaire.
+
+## 8. ANOMALIE SITE-WIDE découverte (grep exhaustif, hors scope Pilier 3) → décision Kev requise
+Le grep exhaustif (14 août 2025 / case 2DC / >10 swaps/an) révèle que la même affirmation non
+vérifiable + le seuil inventé vivent dans 3 AUTRES articles (hors scope du patch Pilier 3) :
+- content/articles/acheter-ethereum-eth-france-2026-guide.mdx (l.105-107) : Callout « Le swap
+  crypto-crypto est imposable depuis août 2025 » + « BoFiP 14 août 2025 » + « ~10+ swaps/an » +
+  « < 10 swaps/an, tolérance possible ». → FAUX (sursis art. 150 VH bis) + seuil inventé. PRIORITÉ 1.
+- content/articles/staking-eth-vs-sol-vs-ada-2026.mdx (l.123-131) : section fiscalité staking bâtie
+  sur « BoFiP 14 août 2025 » + « imposable à la perception / inscription en compte » + exemple chiffré.
+- content/articles/defi-pour-debutants-savoir-avant-commencer-2026.mdx (l.278, 282) : « validées par
+  la mise à jour BoFiP du 14 août 2025 » + staking « imposable à la perception ». (NB : l.283 swap
+  crypto→crypto « neutre » est CORRECT, à conserver.)
+Ces 3 fichiers ne sont PAS corrigés (respect règle Kev « +3 fichiers / route prod = plan + go »).
+Recommandation : même correction prudente + suppression du seuil inventé. En attente du GO de Kev.

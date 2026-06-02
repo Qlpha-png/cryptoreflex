@@ -125,7 +125,7 @@ const FAQ = [
   },
   {
     q: "Le staking et les rewards Proof-of-Stake sont-ils imposables ?",
-    a: "Oui. Depuis la doctrine BOFiP du 14 août 2025, les rewards de staking sont imposables à leur RÉCEPTION (pas à la revente) : ce sont des revenus de capitaux mobiliers, retenus à leur valeur en euros au jour du versement, imposés au PFU 31,4 % et déclarés en case 2DC. Attendre la revente expose à un redressement. Pour des montages atypiques (liquid staking, restaking) ou de gros montants, faites valider votre situation par un expert-comptable.",
+    a: "Oui, les revenus de staking sont imposables. En revanche, le MOMENT exact de l’imposition (à la réception comme un revenu, ou à la cession contre euro) n’est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour. Tant que la doctrine n’est pas clarifiée, vérifie ce point sur la source officielle à jour et, pour des montants significatifs ou des montages atypiques (liquid staking, restaking), fais valider ta situation par un expert-comptable.",
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
@@ -702,30 +702,29 @@ export default function FiscaliteCryptoStudyPage() {
           <h2>5. Cas particuliers</h2>
           <h3>5.1. Staking et rewards Proof-of-Stake</h3>
           <p>
-            Depuis la doctrine BOFiP du 14 août 2025, les rewards de staking
-            sont imposables <strong>à leur réception</strong> (et non à la
-            revente) : ils constituent un revenu de capitaux mobiliers, retenu
-            pour leur valeur en euros au jour du versement, imposé au PFU
-            31,4 % et déclaré en case 2DC. Une éventuelle plus-value ultérieure
-            (entre la réception et la revente contre euro) relève, elle, du
-            régime des cessions d’actifs numériques.
+            Les revenus de staking sont imposables ; en revanche, le moment
+            exact de l’imposition — à leur réception (comme un revenu), ou à
+            leur cession contre euro — n’est pas tranché par une source
+            officielle (BOFiP) que nous puissions citer à ce jour. Selon
+            l’analyse retenue, l’imposition peut intervenir à l’un ou l’autre
+            moment, et le prix d’acquisition associé en dépend.
           </p>
           <p>
-            Attendre la revente pour déclarer est une erreur fréquente qui
-            expose à un redressement (avec intérêts de retard). Pour des
-            montages atypiques (liquid staking, restaking…) ou des montants
+            Tant que ce point n’est pas clarifié par une doctrine officielle,
+            vérifiez-le au cas par cas sur la source officielle à jour ; pour
+            des montages atypiques (liquid staking, restaking…) ou des montants
             significatifs, faites valider votre situation par un
             expert-comptable.
           </p>
           <h3>5.2. Airdrops et hard forks</h3>
           <p>
-            Les tokens reçus gratuitement (airdrop, hard fork) sont
-            généralement imposés comme un revenu <strong>à la réception</strong>
-            (valeur en euros au jour de l’attribution, case 2DC), dans la même
-            logique que les rewards de staking précisée par le BOFiP du
-            14 août 2025. Le détail peut varier selon les cas (notamment si
-            aucune action n’est requise pour recevoir le token) ; en cas de
-            doute ou de montants significatifs, faites valider votre situation.
+            Le traitement des tokens reçus gratuitement (airdrop, hard fork)
+            n’est pas tranché de façon uniforme par une source officielle que
+            nous puissions citer : selon les cas et l’analyse retenue,
+            l’imposition peut être considérée à la réception (revenu, à sa
+            valeur du jour) ou à la cession contre euro. En cas de doute ou de
+            montants significatifs, faites valider votre situation auprès d’un
+            professionnel et de la doctrine officielle à jour.
           </p>
           <h3>5.3. NFT (Non-Fungible Tokens)</h3>
           <p>

@@ -236,7 +236,7 @@ const ARTICLES_CACHE_TTL_SEC = 60;
  * Historique : v2 -> v3 (BATCH 60, suppression `cover:`). v3 -> v4 (2026-06,
  * refresh du hub MiCA particuliers — l'ancien HTML restait en cache).
  */
-const MDX_CACHE_VERSION = "v4";
+const MDX_CACHE_VERSION = "v5";
 
 /** Retourne tous les articles (avec leur contenu MDX), triés par date desc. */
 export const getAllArticles = unstable_cache(
