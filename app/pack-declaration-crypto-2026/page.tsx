@@ -6,7 +6,6 @@ import {
   Calendar,
   ShieldCheck,
   ArrowRight,
-  Check,
   Sparkles,
 } from "lucide-react";
 
@@ -25,30 +24,26 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
- * /pack-declaration-crypto-2026 — Bundle one-shot 49 € pour la déclaration
+ * /pack-declaration-crypto-2026 — Ressource GRATUITE pour la déclaration
  * crypto 2026 (déclaration mai 2026 sur les revenus 2025).
  *
- * Audit expert business 2026-05-02 : "Killer offer one-shot 49 € avec
- * urgence réelle (mai 2026) sur audience captive du calculateur fiscalité.
- * 100 % automatisé : Cerfa généré par algorithme, aucune présence humaine."
- *
- * Phase actuelle : LANDING + capture d'intérêt (waitlist newsletter pour
- * notification ouverture du paiement). V1 fonctionnelle exigera :
- * - Création price_id Stripe one-shot 49 €
- * - Wizard import CSV → parse multi-format → calcul 150 VH bis → Cerfa PDF
- * - Email transactionnel avec PDF attaché + lien d'archivage 5 ans
+ * DÉMONÉTISATION juin 2026 : ce qui était auparavant un bundle payant (49 €)
+ * est désormais 100 % gratuit, comme le reste du site. On conserve tout le
+ * contenu SEO fiscal utile (méthodologie 150 VH bis, Cerfa 2086, 3916-bis) et
+ * on oriente vers les outils fiscaux gratuits (Cerfa 2086 auto, calculateur
+ * de fiscalité). Plus aucun prix, aucun lien Stripe, aucun checkout.
  */
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Pack Déclaration Crypto 2026 — Cerfa 2086 + 3916-bis pré-remplis 49 €",
+  title: "Pack Déclaration Crypto 2026 — Cerfa 2086 + 3916-bis pré-remplis (gratuit)",
   description:
-    "Déclaration crypto 2026 simplifiée : importez votre CSV, générez votre Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 49 € one-shot, 100 % automatisé. Économisez 5 h de saisie manuelle.",
+    "Déclaration crypto 2026 simplifiée : importez votre CSV, générez votre Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 100 % gratuit et automatisé. Économisez 5 h de saisie manuelle.",
   alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026`),
   openGraph: {
     title: "Pack Déclaration Crypto 2026 — Cryptoreflex",
-    description: "Cerfa 2086 + 3916-bis pré-remplis pour 49 €. 100 % automatisé.",
+    description: "Cerfa 2086 + 3916-bis pré-remplis, gratuit. 100 % automatisé.",
     url: `${BRAND.url}/pack-declaration-crypto-2026`,
     type: "website",
   },
@@ -85,7 +80,7 @@ export default function PackDeclarationPage() {
   const faqItems = [
     {
       q: "Quelle différence avec le calculateur fiscalité gratuit ?",
-      a: "Le calculateur gratuit estime votre impôt PFU à partir d'inputs manuels (montant investi, montant vendu). Le Pack 49 € parse votre VRAI historique CSV (Binance, Coinbase, Kraken, Bitpanda…), calcule les plus-values selon l'article 150 VH bis (prix moyen pondéré agrégé), génère le Cerfa 2086 PDF officiel + Annexe 3916-bis si applicable. Vous pouvez directement remettre le PDF à votre service d'impôts.",
+      a: "Le calculateur estime votre impôt PFU à partir d'inputs manuels (montant investi, montant vendu). Le Pack Déclaration parse votre VRAI historique CSV (Binance, Coinbase, Kraken, Bitpanda…), calcule les plus-values selon l'article 150 VH bis (prix moyen pondéré agrégé), génère le Cerfa 2086 PDF officiel + Annexe 3916-bis si applicable. Vous pouvez directement remettre le PDF à votre service d'impôts. Les deux sont gratuits.",
     },
     {
       q: "Quelles plateformes / exchanges sont supportées ?",
@@ -100,12 +95,12 @@ export default function PackDeclarationPage() {
       a: "Le Cerfa 2086 généré suit STRICTEMENT la méthodologie CGI 150 VH bis (prix moyen pondéré du portefeuille global, plus-values nettes après moins-values intra-année). Précision ≥ 99 % sur des trades simples (achat/vente/swap). Pour le DeFi avancé, faites relire par un expert-comptable. Cryptoreflex décline toute responsabilité fiscale.",
     },
     {
-      q: "49 €, c'est combien remboursé ?",
-      a: "Si vous déclarez correctement, ZÉRO frais d'impôt évité — c'est juste l'impôt légal dû. MAIS vous évitez une amende potentielle de 750 €/compte non déclaré (Annexe 3916-bis) + redressement fiscal sur les plus-values mal calculées. ROI moyen estimé : 30-200x (selon volume de trades).",
+      q: "Pourquoi déclarer correctement, ça vaut le coup ?",
+      a: "Déclarer correctement n'évite pas l'impôt légal dû, mais vous évite une amende potentielle de 750 €/compte non déclaré (Annexe 3916-bis) + un redressement fiscal sur des plus-values mal calculées. Le Pack est gratuit : aucune raison de s'en priver.",
     },
     {
-      q: "C'est un service récurrent ou one-shot ?",
-      a: "ONE-SHOT 49 € : vous payez une fois, vous recevez votre Cerfa pour la déclaration de l'année en cours (revenus 2025 → déclaration 2026). L'année suivante (revenus 2026 → déclaration 2027), c'est un nouveau Pack 49 €. Aucun abonnement caché. (Alternative : Pro+ 79 €/an = exports illimités multi-années).",
+      q: "C'est à refaire chaque année ?",
+      a: "Le Pack couvre la déclaration de l'année en cours (revenus 2025 → déclaration 2026). L'année suivante (revenus 2026 → déclaration 2027), vous régénérez simplement votre Cerfa. C'est gratuit et sans abonnement.",
     },
     {
       q: "Quand est la date limite de déclaration ?",
@@ -116,7 +111,7 @@ export default function PackDeclarationPage() {
   const schemas = graphSchema([
     articleSchema({
       slug: "pack-declaration-crypto-2026",
-      title: "Pack Déclaration Crypto 2026 — Cerfa 2086 auto 49 €",
+      title: "Pack Déclaration Crypto 2026 — Cerfa 2086 auto (gratuit)",
       description: "Cerfa 2086 + Annexe 3916-bis pré-remplis automatiquement.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
@@ -151,48 +146,54 @@ export default function PackDeclarationPage() {
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
             Importez votre CSV exchange. Récupérez votre Cerfa 2086 + Annexe
-            3916-bis pré-remplis. <strong>49 € one-shot</strong>, 100 %
-            automatisé, aucune présence humaine.
+            3916-bis pré-remplis. <strong>100 % gratuit</strong> et automatisé,
+            aucune présence humaine.
           </p>
         </header>
 
         <div className="mt-8">
           <Tldr
-            headline="49 € pour générer votre Cerfa 2086 officiel à partir de votre CSV exchange en 5 minutes au lieu de 5 heures."
+            headline="Générez gratuitement votre Cerfa 2086 officiel à partir de votre CSV exchange en 5 minutes au lieu de 5 heures."
             bullets={[
               { emoji: "📋", text: "Cerfa 2086 + Annexe 3916-bis PDF pré-remplis" },
               { emoji: "💸", text: "Calcul 150 VH bis pas-à-pas avec sources CGI/BOFiP citées" },
               { emoji: "⏱️", text: "5 min vs 5 h de saisie manuelle (gain temps massif)" },
-              { emoji: "✅", text: "ROI 30-200x (évite amendes 750 €/compte 3916-bis)" },
-              { emoji: "🤖", text: "100 % automatisé. Aucun support humain. Audit-ready pour votre expert-comptable." },
+              { emoji: "✅", text: "Évite les amendes 750 €/compte non déclaré (3916-bis)" },
+              { emoji: "🤖", text: "100 % gratuit et automatisé. Audit-ready pour votre expert-comptable." },
             ]}
             readingTime="4 min"
             level="Tous niveaux"
           />
         </div>
 
-        {/* CTA + pricing */}
+        {/* CTA — ressource gratuite */}
         <section className="mt-12 rounded-3xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <div className="inline-flex items-center gap-1 rounded-full bg-primary/20 border border-primary/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" /> One-shot · pas d&apos;abonnement
+            <Sparkles className="h-3 w-3" /> 100 % gratuit · sans abonnement
           </div>
           <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold">
-            <span className="gradient-text">49 €</span>
+            <span className="gradient-text">Gratuit</span>
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Vous payez une fois pour la déclaration 2026. Cerfa généré
-            instantanément, archivé 5 ans. Pas d&apos;abonnement caché.
+            Générez votre Cerfa 2086 et détectez vos comptes 3916-bis sans
+            payer. Tous les outils fiscaux Cryptoreflex sont ouverts à tout le
+            monde.
           </p>
-          <Link
-            href="/pack-declaration-crypto-2026/checkout"
-            className="mt-5 btn-primary btn-primary-shine inline-flex"
-          >
-            Acheter le Pack 49 €
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
-          <p className="mt-3 text-[11px] text-muted">
-            Garantie satisfait ou remboursé 14 jours · Paiement sécurisé Stripe
-          </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/outils/cerfa-2086-auto"
+              className="btn-primary btn-primary-shine inline-flex"
+            >
+              Générer mon Cerfa 2086
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+            <Link
+              href="/outils/calculateur-fiscalite"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface px-5 py-3 text-sm font-semibold text-fg hover:border-primary/40"
+            >
+              Calculateur de fiscalité
+            </Link>
+          </div>
         </section>
 
         {/* 4 features */}

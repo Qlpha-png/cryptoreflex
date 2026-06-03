@@ -44,8 +44,8 @@ export default function WhaleRadarPage() {
       a: "Whale Alert (EN) lance des tweets en anglais sans contexte. Whale Radar FR ajoute : traduction française + contextualisation (« cette baleine a accumulé +5000 BTC depuis 2020 »), filtrage par crypto, et alertes email/push intégrées au compte Cryptoreflex.",
     },
     {
-      q: "C'est gratuit ou Pro ?",
-      a: "V1 freemium : 5 dernières alertes whale gratuites, refresh manuel. Pro+ (9,99 €/mois) : refresh live, alertes push/email custom (« prévenir si > X BTC entre dans Binance »), historique 90 jours.",
+      q: "C'est gratuit ?",
+      a: "Oui, 100 % gratuit. Au lancement : alertes whale en temps réel, alertes push/email custom (« prévenir si > X BTC entre dans Binance »), historique 90 jours — sans abonnement.",
     },
   ];
 
@@ -104,7 +104,7 @@ export default function WhaleRadarPage() {
             bullets={[
               { emoji: "🐋", text: "Flux live > 500 BTC / 10k ETH / mouvements exchanges majeurs" },
               { emoji: "🇫🇷", text: "Commentaires français + historique whale connu" },
-              { emoji: "🔔", text: "Alertes push/email custom (Pro+)" },
+              { emoji: "🔔", text: "Alertes push/email custom (gratuit)" },
               { emoji: "📊", text: "Dashboard inflows/outflows Binance, Coinbase, Kraken" },
             ]}
             readingTime="3 min"

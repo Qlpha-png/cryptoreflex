@@ -52,8 +52,8 @@ export default function SuccessionCryptoPage() {
       a: "Mêmes droits que pour tout actif (0-60 % selon lien de parenté + abattement 100 000 € entre parent/enfant tous les 15 ans). Valorisation au cours du jour du décès (cours moyen plusieurs sources). Notre guide détaille comment éviter la sur-imposition (ex : étalement, donation graduelle).",
     },
     {
-      q: "C'est gratuit ou payant ?",
-      a: "Le guide complet + checklist PDF sont gratuits (newsletter requise). Le générateur de lettre d'intention personnalisée + la consultation des cas particuliers sont en Pro+ (9,99 €/mois). 100 % automatisé, aucune intervention humaine de Cryptoreflex.",
+      q: "C'est gratuit ?",
+      a: "Oui, 100 % gratuit : le guide complet, la checklist PDF, le générateur de lettre d'intention personnalisée et la consultation des cas particuliers. Aucun abonnement. 100 % automatisé, aucune intervention humaine de Cryptoreflex.",
     },
   ];
 
@@ -113,7 +113,7 @@ export default function SuccessionCryptoPage() {
               { emoji: "📜", text: "Guide légal FR : testament, lettre d'intention, mandat posthume" },
               { emoji: "🔐", text: "Checklist sécurité : seed phrase, multisig, Shamir, coffre-fort" },
               { emoji: "💰", text: "Fiscalité succession crypto : abattements, valorisation, étalement" },
-              { emoji: "📄", text: "Générateur de lettre d'intention crypto à joindre au testament (Pro+)" },
+              { emoji: "📄", text: "Générateur de lettre d'intention crypto à joindre au testament (gratuit)" },
             ]}
             readingTime="6 min"
             level="Tous niveaux"

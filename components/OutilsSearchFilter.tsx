@@ -37,7 +37,7 @@ type Tier = "all" | "free" | "pro";
 const TIER_LABELS: Record<Tier, string> = {
   all: "Tous",
   free: "Gratuits",
-  pro: "Soutien",
+  pro: "Avancés",
 };
 
 export default function OutilsSearchFilter() {

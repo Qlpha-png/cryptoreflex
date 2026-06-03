@@ -98,6 +98,15 @@ const nextConfig = {
   // ────────────────────────────────────────────────────────────────────
   async redirects() {
     return [
+      // DÉMONÉTISATION (juin 2026) — le funnel de paiement du Pack Déclaration
+      // est supprimé (site 100 % gratuit). Vraie redirection serveur (307,
+      // évaluée AVANT le routing fichier) vers la ressource gratuite. La page
+      // app/pack-declaration-crypto-2026/checkout/page.tsx reste un fallback noindex.
+      {
+        source: "/pack-declaration-crypto-2026/checkout",
+        destination: "/pack-declaration-crypto-2026",
+        permanent: false,
+      },
       // 01/06/2026 — La feature « certificat » de l'Académie a été retirée
       // (page de partage public + document téléchargeable). On 301 les anciens
       // liens partagés /academie/certificat?d=… vers le hub académie pour ne

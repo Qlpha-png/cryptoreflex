@@ -70,14 +70,14 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
             </h2>
             <p className="text-sm text-fg/70 mb-4 leading-relaxed">
               L&apos;espace personnel sera ouvert dans les prochains jours. En
-              attendant, vous pouvez découvrir Cryptoreflex Pro et rejoindre la
-              waitlist.
+              attendant, vous pouvez explorer tous les outils gratuits de
+              Cryptoreflex.
             </p>
             <Link
-              href="/pro"
+              href="/outils"
               className="btn-primary btn-primary-shine min-h-[44px] inline-flex"
             >
-              Découvrir Pro
+              Explorer les outils gratuits
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>

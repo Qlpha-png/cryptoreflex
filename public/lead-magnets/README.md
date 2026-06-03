@@ -1,6 +1,6 @@
 # Lead Magnets — Cryptoreflex
 
-Ce dossier contient les PDF offerts en échange d'une inscription newsletter.
+Ce dossier contient les PDF accessibles directement et gratuitement (email facultatif, jamais obligatoire).
 
 ## Fichiers actuels
 

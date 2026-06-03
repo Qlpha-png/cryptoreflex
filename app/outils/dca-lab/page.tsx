@@ -54,7 +54,7 @@ export default function DcaLabPage() {
     },
     {
       q: "C'est gratuit ?",
-      a: "V1 freemium : 3 backtests gratuits par mois (sans login), comparaison de 2 stratégies max. Pro/Pro+ : illimité, comparaison des 6 stratégies, export CSV, share-link.",
+      a: "Oui, 100 % gratuit : backtests illimités, comparaison des 6 stratégies, export CSV et share-link. Aucun login obligatoire, aucun abonnement.",
     },
   ];
 
@@ -114,7 +114,7 @@ export default function DcaLabPage() {
               { emoji: "🧪", text: "6 stratégies testées en parallèle sur la même période" },
               { emoji: "📈", text: "Top 100 cryptos, historique depuis 2018" },
               { emoji: "🎯", text: "Fréquence flexible : quotidien / hebdo / mensuel" },
-              { emoji: "🔗", text: "Share-link pour partager ton backtest (Pro)" },
+              { emoji: "🔗", text: "Share-link pour partager ton backtest (gratuit)" },
             ]}
             readingTime="4 min"
             level="Intermédiaire"

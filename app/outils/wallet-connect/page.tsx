@@ -37,7 +37,8 @@ import { withHreflang } from "@/lib/seo-alternates";
  *   - Aucune private key jamais demandée — read-only strict (signature
  *     pour prouver propriété de l'adresse, mais pas d'autorisation tx)
  *
- * Aujourd'hui : page éditoriale + capture d'audience Pro.
+ * Aujourd'hui : page éditoriale + capture d'audience. Outil 100 % gratuit
+ * (démonétisation juin 2026).
  */
 
 export const revalidate = 86400;
@@ -83,7 +84,7 @@ const SECURITY = [
     Icon: Lock,
     title: "Adresse stockée chiffrée",
     blurb:
-      "Si tu actives la sauvegarde Pro (sync hebdo), ton adresse est stockée hashée + chiffrée AES-256-GCM côté Supabase. Tu peux supprimer en 1 clic.",
+      "Si tu actives la sauvegarde (sync hebdo), ton adresse est stockée hashée + chiffrée AES-256-GCM côté Supabase. Tu peux supprimer en 1 clic.",
   },
 ];
 
@@ -99,11 +100,11 @@ export default function WalletConnectPage() {
     },
     {
       q: "Quelles blockchains seront supportées au lancement ?",
-      a: "V1 (Q3 2026) : Ethereum, Polygon, Arbitrum, Optimism, BSC, Base, Solana, Bitcoin, Tron. V2 : ajout de Avalanche, Cosmos hub, Sui, NEAR. Roadmap full sur la page Pro.",
+      a: "V1 (Q3 2026) : Ethereum, Polygon, Arbitrum, Optimism, BSC, Base, Solana, Bitcoin, Tron. V2 : ajout de Avalanche, Cosmos hub, Sui, NEAR.",
     },
     {
-      q: "C'est gratuit ou Pro ?",
-      a: "Connexion + lecture des balances = GRATUIT (5 wallets max, refresh manuel). Auto-sync hebdo + alertes mouvement + import tx pour fiscal = Pro+ 9,99 €/mois (à ne pas confondre avec le tier Soutien à 2,99 €).",
+      q: "C'est gratuit ?",
+      a: "Oui, 100 % gratuit. Connexion + lecture des balances, auto-sync hebdo, alertes mouvement et import tx pour la fiscalité : tout est inclus, sans abonnement.",
     },
     {
       q: "Comment c'est différent de Zerion / DeBank ?",

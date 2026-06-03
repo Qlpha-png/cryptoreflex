@@ -100,14 +100,9 @@ export default function DeleteAccountButton() {
               Elle déclenche :
             </p>
             <ul className="mt-2 space-y-1 text-sm text-fg/75 list-disc pl-5">
-              <li>Annulation immédiate de toutes tes souscriptions Stripe</li>
               <li>Suppression de ton profil utilisateur</li>
               <li>
                 Anonymisation de tes données associées (alertes, etc.)
-              </li>
-              <li>
-                Conservation des factures Stripe 10 ans (obligation comptable
-                art. L123-22 Code de commerce)
               </li>
             </ul>
             <p className="mt-4 text-sm text-fg/80">

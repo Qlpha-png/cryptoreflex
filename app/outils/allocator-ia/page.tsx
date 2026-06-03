@@ -47,8 +47,8 @@ export default function AllocatorIaPage() {
       a: "Pour deux raisons. (1) On ne recommande que des actifs qu'on a vérifiés (score fiabilité > 60/100, équipe identifiée, métriques on-chain vérifiables). (2) Pour rester honnête : si on t'envoyait sur la première shitcoin venue, ce serait du marketing déguisé — pas notre genre.",
     },
     {
-      q: "C'est gratuit ou Pro ?",
-      a: "Version gratuite : 1 allocation par mois (sans compte). Pro/Pro+ : allocations illimitées + comparaison côte à côte avec rééquilibrage suggéré tous les 3 mois + export CSV/PDF.",
+      q: "C'est gratuit ?",
+      a: "Oui, 100 % gratuit : allocations illimitées, comparaison côte à côte avec rééquilibrage suggéré tous les 3 mois et export CSV/PDF. Aucun abonnement.",
     },
   ];
 

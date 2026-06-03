@@ -66,7 +66,7 @@ export default function AddHoldingDialog({
 
   // Limite portfolio selon plan (Free 10, Pro 500). Si /api/me en cours,
   // on applique Free par sécurité (jamais Pro par défaut sans confirmation).
-  const { limits, isPro } = useUserPlan();
+  const { limits } = useUserPlan();
   const maxHoldings = limits.portfolio;
   const isFull = currentCount >= maxHoldings;
 
@@ -169,12 +169,7 @@ export default function AddHoldingDialog({
       setSubmitting(false);
 
       if (!created) {
-        const upgradeHint = isPro
-          ? ""
-          : " — passe Soutien sur /pro pour étendre la limite.";
-        setError(
-          `Impossible d'ajouter (limite ${maxHoldings} positions atteinte).${upgradeHint}`
-        );
+        setError(`Limite de ${maxHoldings} positions atteinte.`);
         return;
       }
       onAdded?.(created);
@@ -194,7 +189,7 @@ export default function AddHoldingDialog({
 
       onClose();
     },
-    [submitting, selected, quantity, price, onAdded, onClose, maxHoldings, isPro]
+    [submitting, selected, quantity, price, onAdded, onClose, maxHoldings]
   );
 
   /* -------- Keyboard global (focus trap + escape + flèches combobox) --- */

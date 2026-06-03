@@ -68,8 +68,8 @@ export default function PortefeuillePage() {
           </h1>
           <p className="mt-3 ds-lead max-w-2xl">
             Suivez la valeur live de vos positions, votre gain/perte global et
-            l&apos;allocation de votre portefeuille. Jusqu&apos;à 10 cryptos en gratuit
-            (500 en Soutien), prix actualisés toutes les 2 minutes.
+            l&apos;allocation de votre portefeuille. Jusqu&apos;à 500 positions
+            gratuit pour tout le monde, prix actualisés toutes les 2 minutes.
           </p>
 
           {/* Bandeau réassurance RGPD — important AVANT que l'user saisisse

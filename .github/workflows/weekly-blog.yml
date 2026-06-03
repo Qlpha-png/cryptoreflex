@@ -2,8 +2,10 @@ name: Weekly long-form blog generator
 
 # Cron samedi 8h UTC = 9h-10h Paris (selon DST). Manuel via "Run workflow" possible.
 on:
-  schedule:
-    - cron: "0 8 * * 6"
+  # DÉMONÉTISATION (juin 2026) — génération hebdo IA STOPPÉE (zéro coût IA auto).
+  # Schedule désactivé : plus aucun article auto le samedi. Réactiver = décommenter.
+  # schedule:
+  #   - cron: "0 8 * * 6"
   workflow_dispatch:
 
 # Permissions write requise pour commit + push automatique sur main.
@@ -19,6 +21,9 @@ concurrency:
 
 jobs:
   generate:
+    # DÉMONÉTISATION (juin 2026) : job désactivé (bot IA hebdo stoppé, zéro coût).
+    # Réactiver = repasser `if` à ${{ true }} (ou supprimer la ligne) + décommenter le schedule.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 

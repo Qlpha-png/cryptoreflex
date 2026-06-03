@@ -1,13 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, AlertTriangle, ShieldCheck, RotateCcw, CreditCard, FileText } from "lucide-react";
+import { Info, ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
+/**
+ * /cgv-abonnement — CGV d'abonnement OBSOLÈTES (démonétisation juin 2026).
+ *
+ * Cryptoreflex ne vend plus aucun abonnement payant : le service est désormais
+ * 100 % gratuit. Ces Conditions Générales de Vente n'ont donc plus d'objet.
+ *
+ * On conserve la route (pas de 404, préserve les liens entrants éventuels) et
+ * on affiche une notice courte renvoyant vers les CGU, qui régissent l'usage
+ * gratuit du site. Aucune mention légale essentielle n'est supprimée ailleurs
+ * (mentions légales, confidentialité, médiateur restent sur leurs pages
+ * dédiées).
+ */
+
 export const metadata: Metadata = {
-  title: "CGV abonnement Soutien",
+  title: "CGV abonnement — service désormais gratuit",
   description:
-    "Conditions Générales de Vente de l'abonnement Soutien Cryptoreflex (Mensuel 2,99 € / Annuel 28,99 €) : services inclus, paiement Stripe, droit de rétractation L221-18, exécution immédiate, annulation et remboursement.",
+    "Les abonnements payants Cryptoreflex ont été supprimés : le service est désormais 100 % gratuit. L'usage du site est régi par les CGU.",
   alternates: withHreflang(`${BRAND.url}/cgv-abonnement`),
   robots: { index: true, follow: true },
 };
@@ -19,275 +32,57 @@ export default function CgvAbonnementPage() {
       <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
         <Link href="/" className="hover:text-fg">Accueil</Link>
         <span className="mx-2">/</span>
-        <Link href="/pro" className="hover:text-fg">Pro</Link>
-        <span className="mx-2">/</span>
         <span className="text-fg/80">CGV abonnement</span>
       </nav>
 
       <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-fg">
-        Conditions Générales de Vente — Abonnement Soutien
+        Conditions Générales de Vente — Abonnement
       </h1>
-      <p className="mt-2 text-sm text-muted">
-        Dernière mise à jour : 1<sup>er</sup> mai 2026
-      </p>
+      <p className="mt-2 text-sm text-muted">Mise à jour : juin 2026</p>
 
-      {/* Summary box — TL;DR juridique en 30 secondes */}
       <div className="mt-8 rounded-2xl border border-primary/30 bg-primary/5 p-6">
         <h2 className="text-lg font-bold flex items-center gap-2 text-fg">
-          <FileText className="h-5 w-5 text-primary" /> En résumé (TL;DR)
+          <Info className="h-5 w-5 text-primary" /> Les abonnements payants ont
+          été supprimés
         </h2>
-        <ul className="mt-4 space-y-2 text-sm text-fg/85 leading-relaxed">
-          <li className="flex items-start gap-2">
-            <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-            <span>
-              <strong>Renonciation au droit de rétractation 14 jours :</strong> en cochant la
-              case obligatoire avant le paiement, vous renoncez expressément à votre droit de
-              rétractation de 14 jours pour bénéficier immédiatement des services numériques
-              (art. L221-28 12° Code de la consommation) — pratique standard chez Netflix,
-              Spotify, Notion, etc.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span>
-              <strong>Annulation 1 clic à tout moment</strong> depuis votre portail Stripe (lien
-              dans /mon-compte). Votre accès reste actif jusqu&apos;à la fin de la période déjà
-              payée — aucune facture future émise.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span>
-              <strong>Garantie commerciale 7 jours :</strong> même si vous avez renoncé au droit
-              légal de rétractation, on s&apos;engage volontairement à vous rembourser dans les
-              7 jours suivant votre premier paiement si la plateforme ne vous convient pas — sur
-              simple demande à <a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft underline">contact@cryptoreflex.fr</a>,
-              sans justification.
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
-            <span>
-              <strong>Paiement 100 % sécurisé Stripe</strong> (PCI-DSS niveau 1). Aucune donnée
-              bancaire stockée sur nos serveurs.
-            </span>
-          </li>
-        </ul>
+        <p className="mt-4 text-sm text-fg/85 leading-relaxed">
+          {BRAND.name} est désormais <strong>100 % gratuit</strong>. Il
+          n&apos;existe plus d&apos;abonnement payant, ni de paiement en ligne :
+          ces Conditions Générales de Vente n&apos;ont donc plus d&apos;objet et
+          ne sont conservées que pour information.
+        </p>
+        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+          L&apos;utilisation du site et de ses outils est régie par nos
+          Conditions Générales d&apos;Utilisation.
+        </p>
+        <Link
+          href="/cgu"
+          className="mt-5 btn-primary inline-flex items-center gap-1.5"
+        >
+          Lire les CGU
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </div>
 
       <p className="mt-8 text-sm text-fg/80 leading-relaxed">
-        Les présentes Conditions Générales de Vente (« CGV ») régissent la souscription à
-        l&apos;abonnement « Soutien » proposé par {BRAND.name}, édité par Kevin VOISIN
-        (Entrepreneur Individuel, SIREN 103 352 621). En souscrivant, vous acceptez
-        l&apos;intégralité des présentes CGV.
+        Site édité par Kevin Voisin (Entrepreneur Individuel). Pour toute
+        question, contactez{" "}
+        <a
+          href={`mailto:${BRAND.email}`}
+          className="text-primary-soft hover:underline"
+        >
+          {BRAND.email}
+        </a>
+        .
       </p>
 
-      {/* 1. Services inclus */}
-      <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
-        <ShieldCheck className="h-6 w-6 text-primary" />
-        1. Services inclus dans l&apos;abonnement Soutien
-      </h2>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        L&apos;abonnement Soutien donne accès aux fonctionnalités numériques suivantes du
-        site {BRAND.name}, hébergé sur {BRAND.url} :
-      </p>
-      <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li>Portfolio crypto étendu : 500 positions max (vs 10 en gratuit)</li>
-        <li>Alertes prix étendues : 100 alertes actives (vs 3 en gratuit)</li>
-        <li>Watchlist étendue : 200 cryptos suivies (vs 10 en gratuit)</li>
-        <li>
-          IA Q&amp;A par fiche crypto : 20 questions/jour à notre assistant Claude Haiku
-          contextualisé sur chacune des 100 fiches éditoriales premium Cryptoreflex (réservé aux abonnés Soutien)
-        </li>
-      </ul>
-      <p className="mt-3 text-xs text-muted leading-relaxed">
-        Note : le glossaire complet et l&apos;export CSV du portfolio sont actuellement
-        accessibles à tous les utilisateurs (gratuits et Soutien) — ils ne constituent pas
-        un avantage Soutien à ce jour. Une fonctionnalité « accès anticipé aux nouvelles
-        features » est étudiée pour 2026 mais n&apos;est pas encore livrée.
-      </p>
-      <p className="mt-3 text-sm text-muted leading-relaxed">
-        Tous ces services sont 100 % numériques, fournis exclusivement en ligne via
-        l&apos;interface web responsive {BRAND.url}.
-      </p>
-
-      {/* 2. Tarifs */}
-      <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
-        <CreditCard className="h-6 w-6 text-primary" />
-        2. Tarifs et modalités de paiement
-      </h2>
-      <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li><strong>Mensuel</strong> : 2,99 € TTC / mois — débité automatiquement chaque mois sur la carte bancaire enregistrée</li>
-        <li><strong>Annuel</strong> : 28,99 € TTC / an — débité une seule fois pour 12 mois (≈ 19 % d&apos;économie par rapport au mensuel)</li>
-      </ul>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Le paiement est traité par <strong>Stripe Inc.</strong> (PCI-DSS niveau 1).
-        Moyens acceptés : carte bancaire (Visa, Mastercard, American Express), Apple Pay,
-        Google Pay, virement SEPA. {BRAND.name} ne stocke <strong>aucune donnée bancaire</strong>
-        sur ses serveurs : seul un identifiant client Stripe opaque est conservé pour la
-        gestion de l&apos;abonnement.
-      </p>
-      <p className="mt-3 text-sm text-muted leading-relaxed">
-        Les prix sont exprimés en euros TTC. {BRAND.name} bénéficie de la franchise en
-        base de TVA (article 293 B du CGI) — mention « TVA non applicable, art. 293 B
-        du CGI » figurant sur les factures Stripe.
-      </p>
-
-      {/* 3. Renonciation au droit de rétractation */}
-      <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
-        <RotateCcw className="h-6 w-6 text-primary" />
-        3. Renonciation expresse au droit de rétractation
-      </h2>
-
-      <h3 className="mt-6 text-lg font-bold text-fg">3.1 Le principe légal</h3>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        L&apos;<strong>article L221-18 du Code de la consommation</strong> prévoit un délai
-        de 14 jours calendaires pour se rétracter d&apos;un contrat à distance, sans avoir à
-        motiver sa décision. Ce délai court à compter de la date de conclusion du contrat
-        (premier paiement).
-      </p>
-
-      <h3 className="mt-6 text-lg font-bold text-fg">
-        3.2 La renonciation expresse à ce droit (case à cocher obligatoire)
-      </h3>
-      <div className="mt-3 rounded-xl border-2 border-amber-500/50 bg-amber-500/10 p-5">
-        <p className="text-sm text-fg leading-relaxed">
-          <strong className="text-amber-300">⚠ Important — comme sur Netflix, Spotify ou Notion :</strong>
-        </p>
-        <p className="mt-3 text-sm text-fg/90 leading-relaxed">
-          L&apos;abonnement Soutien donne accès à des <strong>contenus numériques fournis
-          immédiatement après paiement</strong> (en quelques secondes : portfolio illimité,
-          alertes, glossaire, etc.). Pour pouvoir vous livrer ce service immédiatement, nous
-          devons obtenir votre <strong>accord exprès préalable et votre renonciation
-          expresse à votre droit de rétractation</strong>.
-        </p>
-        <p className="mt-3 text-sm text-fg/90 leading-relaxed">
-          C&apos;est pourquoi, <strong>avant de pouvoir cliquer sur « Soutenir »</strong>,
-          vous devez cocher une case dans laquelle vous déclarez :
-        </p>
-        <blockquote className="mt-3 ml-2 border-l-4 border-amber-400 pl-4 py-1 text-sm italic text-fg/95">
-          « Je renonce expressément à mon droit de rétractation de 14 jours et je demande à
-          bénéficier immédiatement des services numériques de l&apos;abonnement Soutien
-          (art. L221-28 12° Code de la consommation). »
-        </blockquote>
-        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          Cette renonciation est conforme à l&apos;<strong>article L221-28 12°</strong> du
-          Code de la consommation, qui prévoit explicitement cette exception pour les
-          contenus numériques non fournis sur support matériel.
-        </p>
-      </div>
-
-      <h3 className="mt-6 text-lg font-bold text-fg">3.3 Conséquences pratiques</h3>
-      <ul className="mt-3 space-y-2 text-sm text-fg/85 list-disc list-inside leading-relaxed">
-        <li>
-          <strong>Sans cocher la case → impossible de payer.</strong> Le bouton de paiement
-          est techniquement bloqué tant que vous n&apos;avez pas exprimé votre accord exprès.
-        </li>
-        <li>
-          <strong>En cochant la case → renonciation valable.</strong> Votre paiement Stripe
-          est immédiat et vos services Pro sont activés en quelques secondes. Aucun
-          remboursement légal au titre du droit de rétractation ne pourra ensuite être
-          réclamé.
-        </li>
-        <li>
-          <strong>Annulation à tout moment :</strong> vous pouvez toujours annuler votre abonnement
-          en 1 clic depuis votre portail Stripe (cf. § 4). Aucune facture future ne sera
-          émise. Cette annulation n&apos;est pas un remboursement de la période en cours.
-        </li>
-      </ul>
-
-      <h3 className="mt-6 text-lg font-bold text-fg">
-        3.4 Garantie commerciale satisfait-ou-remboursé 7 jours (volontaire)
-      </h3>
-      <div className="mt-3 rounded-xl border border-accent-green/30 bg-accent-green/5 p-5">
-        <p className="text-sm text-fg/90 leading-relaxed">
-          <strong className="text-accent-green">Engagement Cryptoreflex au-delà de la loi :</strong>{" "}
-          même si vous avez juridiquement renoncé à votre droit de rétractation, on s&apos;engage
-          volontairement à vous <strong>rembourser intégralement</strong> votre premier paiement
-          si vous nous le demandez <strong>dans les 7 jours suivant la souscription</strong>,
-          sans avoir à fournir de justification.
-        </p>
-        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          Pour activer cette garantie, envoyez un email à{" "}
-          <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline font-semibold">
-            {BRAND.email}
-          </a>{" "}
-          avec l&apos;objet « Satisfait ou remboursé » et votre email Stripe. Réponse et
-          remboursement sous 5 jours ouvrés.
-        </p>
-        <p className="mt-3 text-xs text-muted leading-relaxed">
-          Cette garantie est un engagement contractuel volontaire de Cryptoreflex au-delà
-          du cadre légal. Elle n&apos;est applicable qu&apos;une seule fois par compte
-          Stripe. En cas d&apos;abus manifeste (exports CSV massifs, scraping, etc.), on se
-          réserve le droit de la refuser.
-        </p>
-      </div>
-
-      {/* 4. Résiliation */}
-      <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
-        <RotateCcw className="h-6 w-6 text-primary" />
-        4. Résiliation et fin d&apos;abonnement
-      </h2>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Vous pouvez annuler votre abonnement <strong>à tout moment, sans frais ni justification</strong>,
-        en 1 clic depuis votre portail Stripe (lien d&apos;accès dans la page <Link href="/mon-compte" className="text-primary-soft hover:underline">/mon-compte</Link>).
-      </p>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Après annulation : votre accès aux fonctionnalités Soutien <strong>reste actif
-        jusqu&apos;à la fin de la période déjà payée</strong> (jusqu&apos;à la fin du
-        mois pour le mensuel, jusqu&apos;à la fin de l&apos;année pour l&apos;annuel).
-        Aucune nouvelle facture ne sera émise.
-      </p>
-      <p className="mt-3 text-sm text-muted leading-relaxed">
-        À l&apos;issue de la période payée, votre compte revient automatiquement au plan
-        gratuit : vos données restent conservées (portfolio, alertes au-dessus du
-        seuil 10 sont désactivées mais non supprimées) — vous pouvez vous réabonner à tout
-        moment et tout retrouver intact.
-      </p>
-
-      {/* 5. RGPD */}
-      <h2 className="mt-12 text-2xl font-bold text-fg">
-        5. Données personnelles (RGPD)
-      </h2>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Le traitement de vos données personnelles est régi par notre <Link href="/confidentialite" className="text-primary-soft hover:underline">Politique de confidentialité</Link>.
-        Vous pouvez à tout moment exercer vos droits d&apos;accès, rectification, portabilité
-        et suppression depuis <Link href="/mon-compte" className="text-primary-soft hover:underline">/mon-compte</Link> (bouton « Supprimer mon compte » =
-        endpoint conforme art. 17 RGPD, suppression effective sous 30 jours).
-      </p>
-
-      {/* 6. Loi applicable */}
-      <h2 className="mt-12 text-2xl font-bold text-fg">
-        6. Loi applicable et règlement des litiges
-      </h2>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Les présentes CGV sont régies par le droit français. En cas de litige, vous
-        disposez d&apos;un droit de recours auprès du Médiateur de la consommation
-        (CMAP — <a href="https://www.cmap.fr" className="text-primary-soft hover:underline" target="_blank" rel="noopener noreferrer">cmap.fr</a>) conformément à l&apos;article L612-1 du Code de la consommation,
-        avant toute saisine des tribunaux français.
-      </p>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Plateforme européenne de règlement des litiges en ligne (RLL) :{" "}
-        <a href="https://ec.europa.eu/consumers/odr" className="text-primary-soft hover:underline" target="_blank" rel="noopener noreferrer">ec.europa.eu/consumers/odr</a>
-      </p>
-
-      {/* 7. Contact */}
-      <h2 className="mt-12 text-2xl font-bold text-fg">
-        7. Contact
-      </h2>
-      <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-        Pour toute question relative aux présentes CGV ou à votre abonnement, contactez
-        le service client à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
-        Réponse sous 48 heures ouvrées.
-      </p>
-
-      {/* CTA retour */}
-      <div className="mt-16 flex flex-wrap gap-4">
+      {/* Liens utiles */}
+      <div className="mt-12 flex flex-wrap gap-4">
         <Link
-          href="/pro"
+          href="/outils"
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-background hover:bg-primary/90"
         >
-          ← Retour à la page Soutien
+          Explorer les outils gratuits
         </Link>
         <Link
           href="/mentions-legales"
@@ -302,51 +97,6 @@ export default function CgvAbonnementPage() {
           Politique de confidentialité
         </Link>
       </div>
-
-      {/* FIX LEGAL 2026-05-02 #16 — Médiateur de la consommation
-          obligatoire (Code conso L.616-1) — référencé aussi dans
-          /mentions-legales pour double-couverture. */}
-      <section className="mt-12 rounded-2xl border border-border bg-surface/50 p-6">
-        <h2 className="text-lg font-bold text-fg">
-          Médiateur de la consommation
-        </h2>
-        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          En cas de litige concernant votre abonnement Cryptoreflex Pro et après
-          avoir contacté notre service client (<a href="mailto:contact@cryptoreflex.fr" className="text-primary-soft hover:underline">contact@cryptoreflex.fr</a>)
-          sans solution amiable trouvée sous 30 jours, vous pouvez saisir
-          gratuitement le médiateur de la consommation que nous avons désigné :
-        </p>
-        <ul className="mt-3 text-sm text-fg/85 space-y-1">
-          <li>
-            <strong>CM2C</strong> — Centre de Médiation de la Consommation de
-            Conciliateurs de Justice
-          </li>
-          <li>14 rue Saint-Jean, 75017 Paris</li>
-          <li>
-            Site web :{" "}
-            <a
-              href="https://www.cm2c.net/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-soft hover:underline"
-            >
-              www.cm2c.net
-            </a>
-          </li>
-        </ul>
-        <p className="mt-3 text-sm text-fg/85 leading-relaxed">
-          Vous pouvez également utiliser la{" "}
-          <a
-            href="https://ec.europa.eu/consumers/odr/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-soft hover:underline"
-          >
-            plateforme européenne de Règlement en Ligne des Litiges (RLL)
-          </a>
-          .
-        </p>
-      </section>
     </article>
   );
 }

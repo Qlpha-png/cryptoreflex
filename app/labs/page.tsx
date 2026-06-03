@@ -116,8 +116,8 @@ export default function LabsPage() {
           desc="Le bouton « attire » la souris dans un rayon ~80px (translate ±6px vers cursor, intensité 0.25). Reset smooth au pointerleave. Désactivé sur tactile (no-op CSS). Effort ROI excellent : 1 ligne d'utilisation."
         >
           <div className="flex flex-wrap items-center justify-center gap-6 py-6">
-            <MagneticCta href="/pro-plus" className="btn-primary btn-primary-shine inline-flex">
-              Découvrir Pro+
+            <MagneticCta href="/outils" className="btn-primary btn-primary-shine inline-flex">
+              Explorer les outils
               <Sparkles className="h-4 w-4 ml-2" aria-hidden />
             </MagneticCta>
             <MagneticCta
@@ -176,7 +176,7 @@ export default function LabsPage() {
               <Award className="h-3 w-3" aria-hidden /> Score 9+
             </span>
             <span className="conic-border-anim inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-fg bg-bg">
-              ⚡ Pro+
+              ⚡ Avancé
             </span>
             <span className="conic-border-anim inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-warning-fg bg-bg">
               💎 Hidden Gem

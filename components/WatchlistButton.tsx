@@ -54,7 +54,7 @@ export default function WatchlistButton({
   // Si /api/me n'a pas encore répondu, `loading=true` → on bloque l'ajout
   // (l'utilisateur clique 50ms après mount, on évite d'appliquer une mauvaise
   // limite par défaut).
-  const { limits, isPro, loading: planLoading } = useUserPlan();
+  const { limits, loading: planLoading } = useUserPlan();
   const maxWatchlist = limits.watchlist;
 
   // Sync initiale + abonnement aux events cross-component.
@@ -103,15 +103,11 @@ export default function WatchlistButton({
           setTimeout(() => setPulse(false), 420);
           showFeedback(`${cryptoName} ajouté à la watchlist`);
         } else {
-          // Distinction Free vs Pro pour le hint d'upgrade.
-          const upgradeHint = isPro
-            ? ""
-            : " — passe Soutien sur /pro pour étendre";
-          showFeedback(`Watchlist pleine (max ${maxWatchlist})${upgradeHint}`);
+          showFeedback(`Watchlist pleine (max ${maxWatchlist})`);
         }
       }
     },
-    [active, cryptoId, cryptoName, showFeedback, maxWatchlist, isPro, planLoading]
+    [active, cryptoId, cryptoName, showFeedback, maxWatchlist, planLoading]
   );
 
   const sizeBox = size === "md" ? "h-9 w-9" : "h-7 w-7";

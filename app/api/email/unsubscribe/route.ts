@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
     `<!DOCTYPE html><html><head><title>Désinscription confirmée — Cryptoreflex</title></head><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;line-height:1.6;">
     <h1 style="color:#F59E0B;">✓ Désinscription confirmée</h1>
     <p>Votre adresse <strong>${escapeHtml(email)}</strong> a été désinscrite de la newsletter Cryptoreflex.</p>
-    <p>Vous continuerez à recevoir uniquement les emails transactionnels obligatoires (factures, alertes de paiement) tant que votre abonnement Pro est actif.</p>
+    <p>Vos éventuelles alertes de prix continuent de fonctionner — vous pouvez les gérer ou les supprimer à tout moment depuis la page Alertes.</p>
     <p>Pour supprimer complètement votre compte (RGPD), écrivez à <a href="mailto:hello@cryptoreflex.fr">hello@cryptoreflex.fr</a>.</p>
     <p style="margin-top:40px;font-size:12px;color:#71757D;"><a href="https://www.cryptoreflex.fr">Retour sur cryptoreflex.fr</a></p>
     </body></html>`,

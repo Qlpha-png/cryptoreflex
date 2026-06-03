@@ -2,33 +2,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
-  Crown,
-  CreditCard,
   FileText,
   Settings,
   ShieldCheck,
-  ExternalLink,
   Sparkles,
-  Calendar,
   Mail,
   LogOut,
-  AlertCircle,
   Lock,
   ArrowRight,
 } from "lucide-react";
 import {
   Bell,
   Wallet,
-  ReceiptText,
-  CalendarDays,
 } from "lucide-react";
 import { getUser } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
-import ManageSubscriptionButton from "@/components/account/ManageSubscriptionButton";
-import OnboardingChecklist from "@/components/account/OnboardingChecklist";
-import KpiCard from "@/components/account/KpiCard";
-import FreeUserDashboard from "@/components/account/FreeUserDashboard";
 import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 import AskAiQuotaCard from "@/components/account/AskAiQuotaCard";
 import EditableDisplayName from "@/components/account/EditableDisplayName";
@@ -38,7 +27,7 @@ import GamificationPanel from "@/components/GamificationPanel";
 export const metadata: Metadata = {
   title: "Mon compte",
   description:
-    "Gère ton abonnement Cryptoreflex Pro, télécharge tes factures, mets à jour ta carte et accède à toutes tes fonctionnalités premium.",
+    "Ton espace personnel Cryptoreflex : tes outils, tes préférences et la gestion de tes données. 100 % gratuit.",
   alternates: { canonical: `${BRAND.url}/mon-compte` },
   robots: { index: false, follow: false },
 };
@@ -54,34 +43,9 @@ export default async function AccountPage() {
     redirect("/connexion?next=/mon-compte");
   }
 
-  const isPro =
-    user.plan === "pro_monthly" ||
-    user.plan === "pro_annual" ||
-    user.plan === "pro_plus_monthly" ||
-    user.plan === "pro_plus_annual";
-
-  // Calcul KPI dynamiques (data-driven, ZERO invention)
-  const daysLeftPro =
-    isPro && user.planExpiresAt
-      ? Math.max(
-          0,
-          Math.ceil(
-            (user.planExpiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-          )
-        )
-      : null;
-
-  // Lecture des prix depuis env (cohérence avec /pro). Fallbacks alignés
-  // sur la décision business 30/04/2026 (2,99 €/mois, 28,99 €/an).
-  const monthlyPriceLabel =
-    process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
-  const annualPriceLabel =
-    process.env.NEXT_PUBLIC_PRO_ANNUAL_PRICE ?? "28,99 €";
-
-  const annualSavings =
-    user.plan === "pro_annual"
-      ? "+6,89 €" // 2,99 × 12 = 35,88 ; 35,88 - 28,99 = 6,89 économie réelle
-      : null;
+  // DÉMONÉTISATION (juin 2026) — Cryptoreflex est 100 % gratuit : plus de plan
+  // payant, plus d'abonnement à gérer. Tous les outils sont accessibles à tout
+  // compte connecté. La page ne fait donc plus de distinction Free/Pro.
 
   // Display name : metadata Supabase si défini, sinon dérivé de l'email.
   // L'utilisateur peut le personnaliser via EditableDisplayName.
@@ -120,18 +84,6 @@ export default async function AccountPage() {
                 Admin
               </Link>
             )}
-            {isPro && (
-              // BATCH 47b — conic-border-anim : conic gradient gold qui tourne
-              // 6s autour du badge. Signature "premium animé" Linear/Vercel.
-              // Auto-disable reduced-motion via globals.css. Le pulse-strong
-              // ajoute un halo discret qui tape l'oeil au mount post-upgrade.
-              <span className="badge badge-trust conic-border-anim">
-                <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-                {user.isAdmin
-                  ? "Admin (accès Pro)"
-                  : `Pro ${user.plan === "pro_annual" ? "Annuel" : "Mensuel"}`}
-              </span>
-            )}
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
@@ -147,264 +99,155 @@ export default async function AccountPage() {
           </div>
         </header>
 
-        {/* Onboarding checklist Pro (post-paiement) */}
-        {isPro && <OnboardingChecklist />}
-
-        {/* KPI cards Pro — data-driven uniquement */}
-        {isPro && (
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
-            aria-label="Indicateurs clés de ton abonnement"
-          >
-            {daysLeftPro !== null && (
-              <KpiCard
-                index={0}
-                tone="info"
-                Icon={CalendarDays}
-                label="Jours Pro restants"
-                value={daysLeftPro}
-                subText={
-                  user.planExpiresAt
-                    ? `renouv. le ${user.planExpiresAt.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}`
-                    : undefined
-                }
-              />
-            )}
-            {annualSavings && (
-              <KpiCard
-                index={1}
-                tone="success"
-                Icon={ReceiptText}
-                label="Économie vs mensuel"
-                value={annualSavings}
-                trend={{ direction: "up", pct: "19%" }}
-                subText="sur 12 mois"
-              />
-            )}
-            {/* BATCH 48d (audit /mon-compte P0) — KPI cards qui annoncent
-                "100" / "500" sont LES PLAFONDS de l'abonnement Soutien (pas
-                la consommation actuelle de l'user). On clarifie le label
-                pour eviter le faux-dynamisme : ce sont des limites, pas
-                des metriques user. Tant qu'on n'a pas la vraie API
-                /api/account/usage, on garde les plafonds visibles avec
-                label clair "Plafond" pour ne pas tromper. */}
-            <KpiCard
-              index={2}
-              tone="info"
-              Icon={Bell}
-              label="Plafond alertes"
-              value="100"
-              subText="alertes prix actives (vs 3 en Free)"
-            />
-            <KpiCard
-              index={3}
-              tone="info"
-              Icon={Wallet}
-              label="Plafond portfolio"
-              value="500"
-              subText="positions trackables (vs 10 Free)"
-            />
+        {/* Section "Tes outils" — tout est gratuit (démonétisation juin 2026) */}
+        <section
+          aria-labelledby="tools-title"
+          className="mb-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-background p-5 sm:p-6"
+        >
+          <div className="flex items-baseline justify-between gap-3 flex-wrap mb-4">
+            <h2
+              id="tools-title"
+              className="font-display text-lg font-extrabold text-fg flex items-center gap-2"
+            >
+              <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+              Tes outils
+            </h2>
+            <Link
+              href="/outils"
+              className="text-xs font-semibold text-primary-soft hover:text-primary inline-flex items-center gap-1"
+            >
+              Tous les outils
+              <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
-        )}
 
-        {/* Section "Tes outils Soutien" — grille des features Pro accessibles */}
-        {isPro && (
-          <section
-            aria-labelledby="pro-tools-title"
-            className="mb-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-background p-5 sm:p-6"
-          >
-            <div className="flex items-baseline justify-between gap-3 flex-wrap mb-4">
-              <h2
-                id="pro-tools-title"
-                className="font-display text-lg font-extrabold text-fg flex items-center gap-2"
-              >
-                <Crown className="h-4 w-4 text-primary" aria-hidden="true" />
-                Tes outils Soutien
-              </h2>
-              <Link
-                href="/outils"
-                className="text-xs font-semibold text-primary-soft hover:text-primary inline-flex items-center gap-1"
-              >
-                Tous les outils
-                <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-3">
-              {/* Cerfa 2086 — feature flagship.
-                  BATCH 47b — spotlight-card halo gold qui suit la souris
-                  via SpotlightDelegate global (deja monte dans layout).
-                  Innovation Linear/Vercel sans Tilt3D wrapper (les Link
-                  sont en grid sm:grid-cols-2 et un Tilt3D pousserait
-                  width:auto qui casse le layout). */}
-              <Link
-                href="/outils/cerfa-2086-auto"
-                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25 transition-colors">
-                    <FileText className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    {/* BATCH 47b — emoji ✨ remplace par Sparkles Lucide
-                        (pixellise sur certains OS, accessibilite). */}
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-400">
-                      <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-                      Nouveau
-                    </span>
-                    <h3 className="mt-1 font-bold text-fg text-sm">
-                      Cerfa 2086 + 3916-bis auto
-                    </h3>
-                    <p className="mt-1 text-xs text-fg/70 leading-snug">
-                      Importe ton CSV → PDF pré-rempli en 30s. 5 PDF/jour.
-                    </p>
-                  </div>
-                  <ArrowRight
-                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
+          <div className="grid sm:grid-cols-2 gap-3">
+            {/* Cerfa 2086 — outil phare, gratuit pour tous. */}
+            <Link
+              href="/outils/cerfa-2086-auto"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25 transition-colors">
+                  <FileText className="h-4 w-4" aria-hidden="true" />
                 </div>
-              </Link>
-
-              {/* IA Q&A par fiche */}
-              <Link
-                href="/cryptos"
-                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-primary/15 text-primary group-hover:bg-primary/25 transition-colors">
-                    <Sparkles className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    {/* BATCH 47b — emoji ✨ remplace par Sparkles Lucide. */}
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-primary">
-                      <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-                      Nouveau
-                    </span>
-                    <h3 className="mt-1 font-bold text-fg text-sm">
-                      IA Q&amp;A par fiche
-                    </h3>
-                    <p className="mt-1 text-xs text-fg/70 leading-snug">
-                      20 questions/jour Claude Haiku contextualisé.
-                    </p>
-                  </div>
-                  <ArrowRight
-                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-fg text-sm">
+                    Cerfa 2086 + 3916-bis auto
+                  </h3>
+                  <p className="mt-1 text-xs text-fg/70 leading-snug">
+                    Importe ton CSV → PDF pré-rempli en 30s. 5 PDF/jour.
+                  </p>
                 </div>
-              </Link>
+                <ArrowRight
+                  className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </div>
+            </Link>
 
-              {/* Portfolio étendu 500 */}
-              <Link
-                href="/portefeuille"
-                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
-                    <Wallet className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-fg text-sm">Portfolio 500</h3>
-                    <p className="mt-1 text-xs text-fg/70 leading-snug">
-                      Suis 500 positions (vs 10 Free). Allocation, P&amp;L live.
-                    </p>
-                  </div>
-                  <ArrowRight
-                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
+            {/* Fiches crypto */}
+            <Link
+              href="/cryptos"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-primary/15 text-primary group-hover:bg-primary/25 transition-colors">
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
                 </div>
-              </Link>
-
-              {/* Alertes 100 */}
-              <Link
-                href="/alertes"
-                className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-blue-500/15 text-blue-400 group-hover:bg-blue-500/25 transition-colors">
-                    <Bell className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-fg text-sm">Alertes 100</h3>
-                    <p className="mt-1 text-xs text-fg/70 leading-snug">
-                      100 alertes prix par email (vs 3 Free).
-                    </p>
-                  </div>
-                  <ArrowRight
-                    className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-fg text-sm">
+                    Fiches crypto
+                  </h3>
+                  <p className="mt-1 text-xs text-fg/70 leading-snug">
+                    100 fiches éditoriales : résumé, points clés, données.
+                  </p>
                 </div>
-              </Link>
-            </div>
+                <ArrowRight
+                  className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </div>
+            </Link>
 
-            {/* Quota IA Q&A en pied de section */}
-            <div className="mt-4">
-              <AskAiQuotaCard />
-            </div>
-          </section>
-        )}
+            {/* Portfolio */}
+            <Link
+              href="/portefeuille"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
+                  <Wallet className="h-4 w-4" aria-hidden="true" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-fg text-sm">Portfolio</h3>
+                  <p className="mt-1 text-xs text-fg/70 leading-snug">
+                    Suis tes positions. Allocation, P&amp;L live.
+                  </p>
+                </div>
+                <ArrowRight
+                  className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </div>
+            </Link>
 
-        {/* Si pas Pro : nouvelle vue conversion premium */}
-        {!isPro && <FreeUserDashboard />}
+            {/* Alertes prix */}
+            <Link
+              href="/alertes"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 transition-all"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-blue-500/15 text-blue-400 group-hover:bg-blue-500/25 transition-colors">
+                  <Bell className="h-4 w-4" aria-hidden="true" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-fg text-sm">Alertes prix</h3>
+                  <p className="mt-1 text-xs text-fg/70 leading-snug">
+                    Reçois un email quand un seuil est franchi.
+                  </p>
+                </div>
+                <ArrowRight
+                  className="h-4 w-4 text-primary-soft mt-1 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </div>
+            </Link>
+          </div>
+
+          {/* Quota IA Q&A en pied de section */}
+          <div className="mt-4">
+            <AskAiQuotaCard />
+          </div>
+        </section>
 
         {/* Grid principal */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Abonnement */}
+          {/* Statut du compte — gratuit */}
           <div className="lg:col-span-2 glass rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-4">
-              <CreditCard
-                className="h-4 w-4 text-primary-soft"
+              <ShieldCheck
+                className="h-4 w-4 text-success"
                 aria-hidden="true"
               />
-              <h2 className="font-bold text-fg">Abonnement</h2>
+              <h2 className="font-bold text-fg">Ton compte</h2>
             </div>
 
-            {isPro ? (
-              <>
-                <div className="rounded-xl bg-elevated/40 border border-border p-4 mb-4">
-                  <div className="flex items-center justify-between gap-3 mb-2">
-                    <span className="text-sm font-semibold text-fg">
-                      Plan actuel
-                    </span>
-                    <span className="text-base font-extrabold text-primary">
-                      {user.plan === "pro_annual"
-                        ? `Soutien Annuel — ${annualPriceLabel}/an`
-                        : `Soutien Mensuel — ${monthlyPriceLabel}/mois`}
-                    </span>
-                  </div>
-                  {user.planExpiresAt && (
-                    <p className="text-xs text-muted">
-                      <Calendar
-                        className="inline-block h-3 w-3 mr-1 align-text-bottom"
-                        aria-hidden="true"
-                      />
-                      Prochain renouvellement&nbsp;:{" "}
-                      {user.planExpiresAt.toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
-                  )}
-                </div>
-
-                <ManageSubscriptionButton />
-
-                <p className="mt-3 text-xs text-muted">
-                  Tu seras redirigé vers Stripe Customer Portal pour gérer ta
-                  carte, télécharger tes factures, changer de plan ou résilier
-                  en 1 clic.
-                </p>
-              </>
-            ) : (
-              <p className="text-sm text-fg/70">
-                Aucun abonnement actif. Découvre les plans Pro pour débloquer
-                l&apos;outillage premium.
+            <div className="rounded-xl bg-elevated/40 border border-border p-4">
+              <div className="flex items-center justify-between gap-3 mb-1">
+                <span className="text-sm font-semibold text-fg">
+                  Accès
+                </span>
+                <span className="text-base font-extrabold text-success">
+                  Gratuit · tous les outils
+                </span>
+              </div>
+              <p className="text-xs text-muted">
+                Cryptoreflex est entièrement gratuit. Aucun abonnement, aucune
+                carte bancaire, rien à gérer — tous les outils ci-dessus sont
+                accessibles avec ton compte.
               </p>
-            )}
+            </div>
           </div>
 
           {/* Préférences */}
@@ -493,14 +336,15 @@ export default async function AccountPage() {
               Exporter mes données (par email)
             </a>
             {/* Bouton DSR RGPD art. 17 — appelle /api/account/delete avec
-                double confirmation. Cancel auto Stripe + delete Supabase. */}
+                double confirmation (suppression Supabase + données liées). */}
             <DeleteAccountButton />
           </div>
           <p className="mt-3 text-xs text-muted">
-            Note : conformément à l&apos;article L123-22 du Code de commerce,
-            tes factures Stripe sont conservées 10 ans (obligation comptable).
-            La suppression de compte anonymise tes données mais ne peut pas
-            détruire les factures émises.
+            Note : si tu as par le passé réglé un abonnement, les factures
+            correspondantes restent conservées 10 ans (obligation comptable,
+            article L123-22 du Code de commerce). La suppression de compte
+            anonymise tes données mais ne peut pas détruire les factures déjà
+            émises.
           </p>
         </div>
       </div>
@@ -524,15 +368,15 @@ function NotConfiguredView() {
         </h1>
         <p className="text-sm text-fg/70 leading-relaxed mb-6">
           On finalise l&apos;activation de l&apos;espace personnel Cryptoreflex.
-          Tes accès Pro sont déjà actifs côté Stripe — un email te sera
-          envoyé dès l&apos;ouverture officielle.
+          Tous les outils du site restent gratuits et accessibles — un email te
+          sera envoyé dès l&apos;ouverture officielle de l&apos;espace.
         </p>
         <Link
-          href="/pro"
+          href="/outils"
           className="btn-primary btn-primary-shine min-h-[48px] inline-flex"
         >
-          Voir les plans Pro
-          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+          Découvrir les outils
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
         <p className="mt-6 text-xs text-muted">
           Une question urgente ?{" "}

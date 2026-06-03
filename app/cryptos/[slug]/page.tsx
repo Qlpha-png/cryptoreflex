@@ -185,7 +185,7 @@ const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
   loading: () => (
     <div
       className="h-64 animate-pulse rounded-3xl bg-elevated/40"
-      aria-label="Chargement de l'assistant IA"
+      aria-label="Chargement"
     />
   ),
 });

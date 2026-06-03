@@ -230,17 +230,17 @@ export default function TaxLossHarvestingPage() {
             un professionnel. */}
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">
-            Analyse de scénarios avec Cryptoreflex Pro
+            Analyse de scénarios fiscaux
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Pro analyse votre portefeuille mi-décembre et identifie les
-            positions en moins-value latente ainsi que l&apos;impact théorique
-            de leur matérialisation sur votre plus-value annuelle. Toute
-            décision de cession reste à valider avec un professionnel.
+            Suivez vos positions et vos moins-values latentes toute l&apos;année
+            avec le portefeuille Cryptoreflex, 100&nbsp;% gratuit, pour anticiper
+            l&apos;impact théorique d&apos;une cession sur votre plus-value annuelle.
+            Toute décision de cession reste à valider avec un professionnel.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/pro" className="btn-primary btn-primary-shine">
-              Découvrir Pro
+            <Link href="/portefeuille" className="btn-primary btn-primary-shine">
+              Suivre mon portefeuille (gratuit)
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link href="/outils/calculateur-fiscalite" className="btn-ghost">

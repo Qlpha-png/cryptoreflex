@@ -171,15 +171,11 @@ export function welcomeProEmail(opts: {
   plan: "pro_monthly" | "pro_annual" | "pro_plus_monthly" | "pro_plus_annual";
   magicLink: string;
 }): EmailContent {
-  // Patch Pro+ V1.1 — labels par tier (Pro V1 vs Pro+).
-  const planLabel =
-    opts.plan === "pro_plus_annual"
-      ? "Pro+ Annuel (79 €/an)"
-      : opts.plan === "pro_plus_monthly"
-        ? "Pro+ Mensuel (9,99 €/mois)"
-        : opts.plan === "pro_annual"
-          ? "Soutien Annuel (28,99 €/an)"
-          : "Soutien Mensuel (2,99 €/mois)";
+  // DÉMONÉTISATION (juin 2026) : plus d'offre payante. Cette fonction (email
+  // post-paiement Stripe) n'est plus appelée nulle part — le webhook Stripe est
+  // désactivé. Libellé neutralisé pour ne plus exposer d'ancien prix d'abonnement.
+  // À SUPPRIMER côté Kevin (code mort) si l'email de bienvenue payant n'est plus utile.
+  const planLabel = "Cryptoreflex";
 
   const subject = `Bienvenue dans Cryptoreflex Soutien`;
   const preheader = `Ton accès Soutien est actif. 4 actions à faire en 60 secondes.`;

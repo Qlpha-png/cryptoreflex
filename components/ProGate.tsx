@@ -19,7 +19,7 @@
  */
 
 import type { ReactNode } from "react";
-import { getUser, isPro } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
 
 interface Props {
   children: ReactNode;
@@ -33,11 +33,12 @@ export default async function ProGate({
   fallback = null,
   authOnly = false,
 }: Props) {
-  const user = await getUser();
-
-  if (authOnly) {
-    return user ? <>{children}</> : <>{fallback}</>;
+  // DÉMONÉTISATION (juin 2026) : plus de gating Pro. Le contenu autrefois « Pro »
+  // est gratuit pour tous → pass-through. `authOnly` reste respecté (features
+  // qui nécessitent réellement un compte connecté).
+  if (!authOnly) {
+    return <>{children}</>;
   }
-
-  return isPro(user) ? <>{children}</> : <>{fallback}</>;
+  const user = await getUser();
+  return user ? <>{children}</> : <>{fallback}</>;
 }

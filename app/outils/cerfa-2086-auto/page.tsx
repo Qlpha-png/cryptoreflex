@@ -1,19 +1,16 @@
 /**
  * /outils/cerfa-2086-auto
  * -----------------------
- * Page de l'outil "Génération auto Cerfa 2086 + 3916-bis pré-rempli"
- * réservé aux abonnés Soutien (Pro).
+ * Page de l'outil "Génération auto Cerfa 2086 + 3916-bis pré-rempli".
+ * Démonétisation juin 2026 : outil 100 % gratuit, sans abonnement.
  *
  * Architecture :
  *  - Server Component pour SEO (title/description/canonical/structured data).
  *  - Composant client <Cerfa2086Generator /> lazy-loadé via next/dynamic
  *    (le parser CSV + le state d'upload pèsent ~12 KB minified, lazy = LCP intact).
- *  - Le gating Pro est dans le composant client (via /api/me) ET dans la
- *    route /api/cerfa-2086 (vérité serveur).
  *
  * SEO :
- *  - title court (<60 chars), keyword "Cerfa 2086 crypto auto 2026 — Pro"
- *  - description longue avec mention "Soutien" (qualifie le trafic)
+ *  - title court (<60 chars), keyword "Cerfa 2086 crypto auto 2026"
  *  - schema WebApplication + Breadcrumb
  *  - YMYL : disclaimer en hero + footer du composant
  */
@@ -24,7 +21,6 @@ import dynamic from "next/dynamic";
 import {
   AlertTriangle,
   ArrowRight,
-  Crown,
   FileText,
   ShieldCheck,
   Sparkles,
@@ -58,9 +54,9 @@ const Cerfa2086Generator = dynamic(
 /*  SEO                                                                       */
 /* -------------------------------------------------------------------------- */
 
-const PAGE_TITLE = "Génération auto Cerfa 2086 crypto 2026 — Pro";
+const PAGE_TITLE = "Génération auto Cerfa 2086 crypto 2026 — gratuit";
 const PAGE_DESCRIPTION =
-  "Importez votre CSV Binance/Coinbase/Bitpanda et générez un Cerfa 2086 + 3916-bis pré-rempli en 30 secondes. Calcul officiel article 150 VH bis. Réservé aux abonnés Soutien Cryptoreflex.";
+  "Importez votre CSV Binance/Coinbase/Bitpanda et générez un Cerfa 2086 + 3916-bis pré-rempli en 30 secondes. Calcul officiel article 150 VH bis. 100 % gratuit, sans inscription.";
 const PAGE_PATH = "/outils/cerfa-2086-auto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -75,7 +71,7 @@ export const metadata: Metadata = {
     "3916-bis crypto",
     "déclaration crypto automatique",
     "import CSV Binance impôts",
-    "outil fiscal crypto Pro",
+    "outil fiscal crypto gratuit",
     "calculateur Cerfa 2086",
   ],
   openGraph: {
@@ -108,12 +104,12 @@ export default function Cerfa2086AutoPage() {
     operatingSystem: "Any",
     description: PAGE_DESCRIPTION,
     inLanguage: "fr-FR",
-    isAccessibleForFree: false,
+    isAccessibleForFree: true,
     offers: {
       "@type": "Offer",
-      price: "2.99",
+      price: "0",
       priceCurrency: "EUR",
-      description: "Inclus dans l'abonnement Cryptoreflex Soutien (mensuel ou annuel)",
+      description: "Outil gratuit, sans inscription",
     },
   };
 
@@ -166,8 +162,8 @@ export default function Cerfa2086AutoPage() {
         <section className="relative py-14 sm:py-20">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-bold text-gold">
-              <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-              Fonctionnalité Soutien — réservée aux abonnés Pro
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Outil avancé — 100 % gratuit
             </span>
 
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
@@ -190,7 +186,7 @@ export default function Cerfa2086AutoPage() {
                 { icon: FileText, label: "Annexe Cerfa 2086 — cessions ligne par ligne" },
                 { icon: ShieldCheck, label: "Calcul prorata portefeuille (formule officielle)" },
                 { icon: Sparkles, label: "3916-bis auto par exchange étranger détecté" },
-                { icon: Crown, label: "5 générations / jour incluses" },
+                { icon: ShieldCheck, label: "5 générations / jour incluses" },
               ].map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-2 text-fg/85">
                   <Icon className="h-4 w-4 text-primary-soft" aria-hidden="true" />

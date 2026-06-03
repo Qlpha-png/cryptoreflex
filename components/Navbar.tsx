@@ -76,18 +76,10 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
 /**
  * NAV — 5 items dont 1 monétisation explicite "Pro".
  *
- * Audit business 27/04/2026 (user feedback) :
- *  "fais une catégorie dans le dashboard pour que les gens le voient sur le
- *   site, le but c'est qu'on gagne de l'argent l'oublie pas !"
- *  -> Ajout d'un 5e item NAV "Soutien" qui pousse vers /pro (abonnements
- *     2,99 €/mois ou 28,99 €/an). Style distinctif (couleur or + Crown icon)
- *     pour qu'il ressorte sans casser la hiérarchie des 4 autres items.
- *
- * On dépasse temporairement la règle "Hick's law max 4-5" mais c'est le seul
- * lien monétisé sur le site (tous les autres sont gratuits / éducatifs / SEO).
- * Trade-off acceptable : si le Pro pèse 60-80% du revenu, il mérite cette
- * exposition permanente sur toutes les pages. Style or = signal "premium"
- * universel, pas un bug visuel.
+ * Item NAV "Soutien" → /soutenir. Démonétisation juin 2026 : ce n'est plus
+ * un abonnement payant mais une contribution volontaire (soutien libre à un
+ * éditeur indépendant). Style distinctif conservé (couleur or + Crown icon)
+ * comme accent « soutenir l'indépendance », sans aucun prix affiché.
  */
 /**
  * NAV — 6 items dont 2 monétisation (Partenaires affiliés + Pro).
@@ -112,7 +104,7 @@ const NAV = [
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", hideOnMd: true as const },
   { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés", revenueAccent: true as const },
-  { href: "/pro", label: "Soutien", desc: "Soutiens un éditeur indé (2,99 €/mois ou 28,99 €/an)", premium: true as const },
+  { href: "/soutenir", label: "Soutien", desc: "Soutiens un éditeur indé — contribution volontaire", premium: true as const },
 ];
 
 /**

@@ -9,12 +9,10 @@ import {
   Sparkles,
   Wand2,
 } from "lucide-react";
-import WhitepaperTldr from "@/components/WhitepaperTldr";
 import StructuredData from "@/components/StructuredData";
 import {
   breadcrumbSchema,
   faqSchema,
-  howToSchema,
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -24,22 +22,22 @@ const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: "Whitepaper TL;DR — Résumé + score BS d'un whitepaper crypto",
+  title: "Whitepaper TL;DR — Grille de red flags crypto (score BS)",
   description:
-    "Colle un whitepaper crypto et reçois en 5 secondes un résumé FR structuré plus un score BS (0-100) basé sur 15+ red flags : tokenomics, équipe, vesting, audits. Gratuit, sans inscription.",
+    "La méthode publique Cryptoreflex pour décoder un whitepaper crypto : grille de 15+ red flags (tokenomics, équipe, vesting, audits) et logique de score BS sur 100. Pédagogie gratuite, sans inscription.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",
     url: PAGE_URL,
-    title: "Whitepaper TL;DR — Score BS instantane",
+    title: "Whitepaper TL;DR — Grille de red flags crypto",
     description:
-      "Outil gratuit pour décoder un whitepaper crypto : résumé structuré + score BS sur 100 + verdict Sérieux/Mitigé/Suspect.",
+      "Décoder un whitepaper crypto : grille publique de red flags + logique de score BS sur 100 + verdict Sérieux/Mitigé/Suspect.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Whitepaper TL;DR — Score BS instantane",
+    title: "Whitepaper TL;DR — Grille de red flags crypto",
     description:
-      "Décode un whitepaper crypto en 5 secondes. Tokenomics, équipe, vesting, audits — tout est analyse.",
+      "La méthode Cryptoreflex pour repérer les red flags d'un whitepaper crypto. Tokenomics, équipe, vesting, audits.",
   },
 };
 
@@ -80,29 +78,9 @@ const FAQ_ITEMS = [
       "Ne rien acheter sans investigation supplémentaire. Consultez la liste des red flags listés dans le rapport, vérifiez l'équipe sur LinkedIn, cherchez des audits indépendants (Certik, Hacken), consultez la répartition on-chain des wallets et évaluez la liquidité. Si plusieurs red flags critiques sont présents, considérez le projet comme très risqué.",
   },
   {
-    question: "Une version IA est-elle prévue ?",
+    question: "L'outil interactif est-il disponible ?",
     answer:
-      "Oui. La V1 utilise une analyse heuristique pure (gratuite, instantanée, transparente). La V2 ajoutera une analyse via LLM (Claude Haiku 4.5 via OpenRouter) pour des résumés plus fins et une détection contextuelle plus profonde, sans changer la grille des red flags. La grille restera publique et auditable.",
-  },
-];
-
-const HOWTO_STEPS = [
-  {
-    name: "Récupérer le texte du whitepaper",
-    text: "Ouvrez le whitepaper officiel du projet (sur le site officiel ou GitHub) et copiez l'intégralité du texte (Ctrl+A puis Ctrl+C). Si le whitepaper est un PDF, ouvrez-le et copiez le contenu.",
-  },
-  {
-    name: "Coller dans la zone d'analyse",
-    text: "Sur cette page, collez le texte dans la zone prévue. Minimum 200 caractères, maximum 30 000 caractères. Pour de meilleurs résultats, incluez l'introduction, la solution, la tokenomics et la section équipe.",
-    url: `${PAGE_URL}#wp-tldr-input`,
-  },
-  {
-    name: "Cliquer sur Analyser",
-    text: "Cliquez sur le bouton Analyser. L'outil retourne en moins de 5 secondes un résumé structuré, la liste des red flags détectés, un score BS sur 100 et un verdict global (Sérieux, Mitigé ou Suspect).",
-  },
-  {
-    name: "Lire le rapport et croiser avec d'autres sources",
-    text: "Examinez les red flags un par un, lisez les extraits du whitepaper qui ont déclenché chaque alerte, puis croisez avec d'autres sources (audits indépendants, répartition on-chain, recherche sur l'équipe) avant toute décision d'investissement.",
+      "L'analyseur interactif est actuellement en refonte et temporairement indisponible. La grille des red flags reste publique et auditable sur cette page : tu peux l'appliquer toi-même à n'importe quel whitepaper. La méthodologie de scoring (chaque red flag pèse un nombre de points prédéfini) est documentée ci-dessous.",
   },
 ];
 
@@ -115,15 +93,6 @@ export default function WhitepaperTldrPage() {
   ]);
 
   const faq = faqSchema(FAQ_ITEMS);
-
-  const howto = howToSchema({
-    name: "Comment analyser un whitepaper crypto avec Cryptoreflex",
-    description:
-      "Méthode pas-à-pas pour décoder un whitepaper crypto et obtenir un score BS sur 100 grace a l'outil gratuit Whitepaper TL;DR de Cryptoreflex.",
-    totalTime: "PT5M",
-    estimatedCost: { currency: "EUR", value: 0 },
-    steps: HOWTO_STEPS,
-  });
 
   const webApp = {
     "@context": "https://schema.org",
@@ -158,7 +127,7 @@ export default function WhitepaperTldrPage() {
 
   return (
     <>
-      <StructuredData data={[breadcrumb, faq, howto, webApp]} id="wp-tldr-jsonld" />
+      <StructuredData data={[breadcrumb, faq, webApp]} id="wp-tldr-jsonld" />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -171,14 +140,15 @@ export default function WhitepaperTldrPage() {
               Outil signature Cryptoreflex
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-              <span className="gradient-text">Whitepaper TL;DR</span> — décode
-              un whitepaper en 5 secondes
+              <span className="gradient-text">Whitepaper TL;DR</span> — la grille
+              de red flags pour décoder un whitepaper crypto
             </h1>
             <p className="mt-4 text-lg text-white/70 leading-relaxed">
-              Colle le texte d'un whitepaper crypto, recois un résumé FR
-              structure (problème, solution, tokenomics, équipe) et un{" "}
-              <strong>score BS sur 100</strong> basé sur 15 red flags. Verdict
-              instantane : <em>Sérieux</em>, <em>Mitigé</em> ou <em>Suspect</em>.
+              La méthode publique Cryptoreflex pour lire un whitepaper crypto avec
+              un œil critique : une grille de 15 red flags (tokenomics, équipe,
+              vesting, audits) et une logique de <strong>score BS sur 100</strong>{" "}
+              qui mène à un verdict <em>Sérieux</em>, <em>Mitigé</em> ou{" "}
+              <em>Suspect</em>.
             </p>
           </div>
 
@@ -195,31 +165,20 @@ export default function WhitepaperTldrPage() {
           </div>
 
           {/* ----------------------------------------------------------- */}
-          {/* Composant outil                                              */}
+          {/* Outil interactif — en refonte (temporairement indisponible)  */}
           {/* ----------------------------------------------------------- */}
           <div className="mt-10 max-w-5xl">
-            <WhitepaperTldr />
-          </div>
-
-          {/* ----------------------------------------------------------- */}
-          {/* Comment ca marche                                            */}
-          {/* ----------------------------------------------------------- */}
-          <div className="mt-20 max-w-5xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
-              Comment ca marche
-            </h2>
-            <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {HOWTO_STEPS.map((step, idx) => (
-                <div key={step.name} className="glass rounded-2xl p-5">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary font-mono font-bold">
-                    {idx + 1}
-                  </div>
-                  <h3 className="mt-3 font-semibold text-white">{step.name}</h3>
-                  <p className="mt-2 text-sm text-white/70 leading-relaxed">
-                    {step.text}
-                  </p>
-                </div>
-              ))}
+            <div className="glass rounded-2xl p-6 sm:p-8 border border-border text-center">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                Analyseur interactif en refonte
+              </h2>
+              <p className="mt-2 text-sm text-white/70 max-w-2xl mx-auto leading-relaxed">
+                L&apos;outil qui analyse automatiquement un whitepaper collé est
+                temporairement indisponible, le temps d&apos;une refonte. En
+                attendant, la grille de red flags ci-dessous est entièrement
+                publique : tu peux l&apos;appliquer toi-même, red flag par red
+                flag, à n&apos;importe quel whitepaper.
+              </p>
             </div>
           </div>
 
@@ -234,9 +193,9 @@ export default function WhitepaperTldrPage() {
               </h2>
             </div>
             <p className="text-white/70 max-w-3xl">
-              L'outil applique une grille publique de criteres connus pour
-              identifier les projets crypto douteux. Plus le score est haut,
-              plus le whitepaper accumule de signaux negatifs.
+              Cette grille publique réunit des critères connus pour identifier
+              les projets crypto douteux. Plus un whitepaper accumule de red
+              flags, plus son score BS est élevé.
             </p>
             <div className="mt-6 grid md:grid-cols-2 gap-3">
               {RED_FLAGS_DOCS.map((rf) => (

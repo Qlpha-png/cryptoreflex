@@ -1,18 +1,17 @@
-"use client";
-
 /**
- * PricingCheckoutLink — wrapper Client du CTA "checkout" pour l'expé
- * `pricing_display_v1`. Tracke `click_checkout` au click.
+ * PricingCheckoutLink — NEUTRALISÉ (démonétisation juin 2026).
  *
- * Utilisé par TieredPricing UNIQUEMENT pour les tiers qui portent
- * `abTestKey: "pricing_display_v1"`. Pour les autres tiers, le rendu legacy
- * (Link/anchor) est conservé tel quel.
+ * Ce wrapper traquait `click_checkout` (conversion A/B) sur le CTA d'un
+ * abonnement payant. Cryptoreflex est désormais 100 % gratuit : il n'y a plus
+ * de checkout ni de conversion payante à tracker.
  *
- * Compat externe / interne / anchor : on supporte les 3 cas du parent.
+ * Le composant rend désormais un simple lien de navigation (interne / ancre /
+ * externe) sans aucun tracking de paiement. On conserve l'export par défaut et
+ * la signature de props (`href`, `label`, `className`) pour ne casser aucun
+ * import résiduel.
  */
 
 import Link from "next/link";
-import { getVariant, trackVariantConversion } from "@/lib/abtest";
 
 interface PricingCheckoutLinkProps {
   href: string;
@@ -20,18 +19,11 @@ interface PricingCheckoutLinkProps {
   className: string;
 }
 
-const EXPERIMENT_ID = "pricing_display_v1";
-
 export default function PricingCheckoutLink({
   href,
   label,
   className,
 }: PricingCheckoutLinkProps) {
-  const handleClick = () => {
-    const variant = getVariant(EXPERIMENT_ID);
-    trackVariantConversion(EXPERIMENT_ID, variant, "click_checkout");
-  };
-
   const isAnchor = href.startsWith("#");
   const isExternal = /^https?:\/\//.test(href);
 
@@ -42,7 +34,6 @@ export default function PricingCheckoutLink({
         target="_blank"
         rel="noopener noreferrer"
         className={className}
-        onClick={handleClick}
       >
         {label}
       </a>
@@ -50,13 +41,13 @@ export default function PricingCheckoutLink({
   }
   if (isAnchor) {
     return (
-      <a href={href} className={className} onClick={handleClick}>
+      <a href={href} className={className}>
         {label}
       </a>
     );
   }
   return (
-    <Link href={href} className={className} onClick={handleClick}>
+    <Link href={href} className={className}>
       {label}
     </Link>
   );

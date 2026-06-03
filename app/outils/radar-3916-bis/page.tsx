@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ShieldCheck,
   AlertTriangle,
   CheckCircle2,
-  Crown,
   ArrowRight,
   Zap,
   Lock,
@@ -85,7 +83,7 @@ const FAQS = [
   },
   {
     q: "Le Radar 3916-bis est-il vraiment gratuit ?",
-    a: "Oui — le détecteur d'exposition (étapes 1, 2, 3) et les instructions impots.gouv.fr sont 100 % gratuits, sans inscription. La version Pro (à venir) ajoutera la génération automatique d'un PDF mémo personnalisé pré-rempli + un rappel email avant la deadline mai 2026.",
+    a: "Oui — le détecteur d'exposition (étapes 1, 2, 3) et les instructions impots.gouv.fr sont 100 % gratuits, sans inscription. Les fonctionnalités avancées à venir (PDF mémo personnalisé pré-rempli + rappel email avant la deadline) seront elles aussi gratuites.",
   },
   {
     q: "Cryptoreflex peut-il déclarer pour moi ?",
@@ -324,19 +322,18 @@ export default function RadarPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="text-center mb-8">
             <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
-              <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-              VERSION PRO
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              FONCTIONNALITÉS AVANCÉES
             </span>
             <h2
               id="pro-title"
               className="mt-3 text-2xl sm:text-3xl font-extrabold text-fg"
             >
-              Pour aller plus loin :{" "}
-              <span className="gradient-text">Cryptoreflex Pro</span>
+              Pour aller plus loin, <span className="gradient-text">gratuitement</span>
             </h2>
             <p className="mt-3 text-sm text-fg/70 max-w-2xl mx-auto">
-              Le Radar gratuit vous donne le diagnostic. Pro ajoute les
-              fonctionnalités pratiques pour ne plus jamais oublier une
+              Le Radar vous donne le diagnostic. Ces fonctionnalités avancées,
+              elles aussi gratuites, vous aident à ne plus jamais oublier une
               déclaration.
             </p>
           </div>
@@ -373,21 +370,20 @@ export default function RadarPage() {
           </div>
 
           <div className="text-center">
-            <Link
-              href="/pro"
+            <a
+              href="#radar"
               className="btn-primary btn-primary-shine min-h-[52px] text-base px-7 group inline-flex"
-              data-cta="radar-to-pro"
+              data-cta="radar-advanced"
             >
-              <Crown className="h-4 w-4" aria-hidden="true" />
-              Découvrir Cryptoreflex Pro
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              Lancer le check gratuit
               <ArrowRight
                 className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
-            </Link>
+            </a>
             <p className="mt-3 text-xs text-muted">
-              À partir de 2,99 €/mois · Annulation 1 clic · Garantie commerciale
-              7 j satisfait-ou-remboursé
+              100 % gratuit · sans inscription · aucune carte bancaire
             </p>
           </div>
         </div>

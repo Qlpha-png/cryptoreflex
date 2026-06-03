@@ -263,13 +263,9 @@ export async function createAlert(
   const existing = await getAlertsByEmail(email);
   const activeCount = existing.filter((a) => a.status === "active").length;
   if (activeCount >= maxAlerts) {
-    const upgradeHint =
-      maxAlerts <= MAX_ALERTS_PER_EMAIL
-        ? " Passe en plan Soutien sur /pro pour des alertes illimitées."
-        : "";
     return {
       ok: false,
-      error: `Tu as déjà ${maxAlerts} alertes actives — supprime-en une avant d'en créer une nouvelle.${upgradeHint}`,
+      error: `Tu as déjà ${maxAlerts} alertes actives — supprime-en une avant d'en créer une nouvelle.`,
       field: "email",
     };
   }

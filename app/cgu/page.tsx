@@ -6,13 +6,13 @@ import { withHreflang } from "@/lib/seo-alternates";
 /**
  * /cgu — Conditions Générales d'Utilisation du SITE Cryptoreflex.
  *
- * Distincte des CGV Abonnement (qui s'appliquent uniquement aux abonnés
- * Pro/Pro+/Pack one-shot). Les CGU couvrent l'usage du site gratuit
- * (consultation, outils freemium, recherche, lecture).
+ * Le site est entièrement gratuit : aucune vente ni abonnement payant.
+ * Les CGU couvrent l'usage du site gratuit (consultation, outils,
+ * recherche, lecture).
  *
  * FIX LEGAL 2026-05-02 #21 (audit expert legal) — document obligatoire
- * en tant qu'éditeur d'un site français à vocation commerciale (intermédiaire
- * en ligne au sens L.111-7 du Code de la consommation).
+ * en tant qu'éditeur d'un site français (intermédiaire en ligne au sens
+ * L.111-7 du Code de la consommation, au titre des liens d'affiliation).
  */
 
 export const metadata: Metadata = {
@@ -34,12 +34,10 @@ export default function CguPage() {
         Les présentes Conditions Générales d&apos;Utilisation (« CGU »)
         régissent l&apos;accès et l&apos;utilisation du site{" "}
         <a href="/" className="text-primary-soft hover:underline">{BRAND.url}</a>{" "}
-        édité par {BRAND.name} (Kevin VOISIN, EI, SIREN 103 352 621). Pour
-        les conditions relatives aux abonnements payants (Pro / Pro+ / Pack
-        Déclaration), voir{" "}
-        <a href="/cgv-abonnement" className="text-primary-soft hover:underline">
-          les CGV Abonnement
-        </a>.
+        édité par {BRAND.name} (Kevin VOISIN, EI, SIREN 103 352 621).
+        {" "}{BRAND.name} est un service <strong>entièrement gratuit</strong> :
+        l&apos;accès aux contenus et aux outils ne donne lieu à aucune vente,
+        aucun abonnement ni aucun paiement de la part de l&apos;utilisateur.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">1. Acceptation</h2>
@@ -61,11 +59,11 @@ export default function CguPage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">3. Description du service</h2>
       <p className="text-fg/85 leading-relaxed">
-        Cryptoreflex propose : (1) du contenu éditorial gratuit (articles,
+        Cryptoreflex propose, gratuitement : (1) du contenu éditorial (articles,
         fiches crypto, comparatifs plateformes) ; (2) des outils interactifs
-        gratuits (calculateurs, simulateurs, convertisseur, glossaire) ;
-        (3) un service Pro/Pro+ payant et automatisé (cf. CGV Abonnement) ;
-        (4) une newsletter optionnelle. Le Site n&apos;est <strong>ni un PSAN
+        (calculateurs, simulateurs, convertisseur, glossaire) ; (3) une
+        newsletter optionnelle. L&apos;ensemble de ces services est accessible
+        sans frais et sans abonnement. Le Site n&apos;est <strong>ni un PSAN
         agréé AMF, ni un CIF, ni un courtier</strong>. Aucun conseil personnalisé
         en investissement n&apos;est fourni.
       </p>
@@ -158,10 +156,9 @@ export default function CguPage() {
       <p className="text-fg/85 leading-relaxed">
         L&apos;éditeur s&apos;efforce de maintenir le Site disponible 24/7
         mais ne garantit pas l&apos;absence d&apos;interruptions
-        (maintenance, incident technique, force majeure). Aucune indemnité
-        ne pourra être réclamée en cas d&apos;indisponibilité temporaire.
-        Pour les abonnés Pro/Pro+, les conditions spécifiques figurent dans
-        les CGV Abonnement.
+        (maintenance, incident technique, force majeure). Le Site étant
+        fourni gratuitement, aucune indemnité ne pourra être réclamée en
+        cas d&apos;indisponibilité temporaire.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">
@@ -180,13 +177,13 @@ export default function CguPage() {
         une tentative de résolution amiable (contact{" "}
         <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
           {BRAND.email}
-        </a>{" "}
-        et, le cas échéant, recours au médiateur de la consommation visé
-        dans les{" "}
+        </a>
+        ), les tribunaux français sont seuls compétents. Les informations sur
+        l&apos;éditeur figurent dans les{" "}
         <a href="/mentions-legales" className="text-primary-soft hover:underline">
           mentions légales
         </a>
-        ), les tribunaux français sont seuls compétents.
+        .
       </p>
 
       <hr className="my-10 border-border" />

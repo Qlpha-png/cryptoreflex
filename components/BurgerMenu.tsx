@@ -15,7 +15,7 @@
  *  - Sticky search bar Cmd+K en haut du drawer (filtre 145+ pages live)
  *  - 7 catégories en sections accordéon (Découvrir / Plateformes / Cryptos
  *    / Outils / Apprendre / Marché / Membres)
- *  - 3 highlights revenus en haut (Quiz Plateforme, Soutien Pro, Partenaires)
+ *  - 3 highlights en haut (Quiz Plateforme, Soutien libre, Partenaires)
  *  - Animations 240ms cubic-bezier(0.32,0.72,0,1) iOS spring
  *  - Stagger 30ms par item à l'ouverture
  *  - Reduced-motion : fade simple 120ms
@@ -34,6 +34,7 @@ import {
   Crown,
   DollarSign,
   Gift,
+  Heart,
   Search,
   Sparkles,
   Target,
@@ -119,7 +120,7 @@ const SECTIONS: MenuSection[] = [
     items: [
       { href: "/outils", label: "Tous les outils (28)", desc: "Vue complète" },
       { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU", desc: "Impôt crypto en 2 min" },
-      { href: "/outils/cerfa-2086-auto", label: "Cerfa 2086 + 3916-bis auto", desc: "PDF pré-rempli en 30s", badge: "SOUTIEN" },
+      { href: "/outils/cerfa-2086-auto", label: "Cerfa 2086 + 3916-bis auto", desc: "PDF pré-rempli en 30s — gratuit" },
       { href: "/outils/radar-3916-bis", label: "Radar 3916-bis", desc: "Détecte amendes potentielles" },
       { href: "/outils/simulateur-dca", label: "Simulateur DCA", desc: "Strategy long terme" },
       { href: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", desc: "Net après frais" },
@@ -171,12 +172,11 @@ const SECTIONS: MenuSection[] = [
     Icon: Crown,
     intro: "Pro, portefeuille, alertes",
     items: [
-      { href: "/pro", label: "Devenir Soutien Cryptoreflex", desc: "2,99€/mois · 5 outils Pro débloqués", badge: "PRO" },
-      { href: "/pro-plus", label: "Pro+ : pack premium", desc: "9,99€/mois · IA Q&A illimité, exports", badge: "NEW" },
+      { href: "/soutenir", label: "Soutenir Cryptoreflex", desc: "Contribution volontaire — tout reste gratuit" },
       { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi positions live" },
       { href: "/watchlist", label: "Ma watchlist", desc: "Cryptos favorites avec alertes" },
       { href: "/alertes", label: "Alertes prix", desc: "Notifications custom par crypto" },
-      { href: "/mon-compte", label: "Mon compte", desc: "Profil, préférences, abonnement" },
+      { href: "/mon-compte", label: "Mon compte", desc: "Profil et préférences" },
       { href: "/ambassadeurs", label: "Programme ambassadeurs", desc: "Gagne en partageant" },
     ],
   },
@@ -185,7 +185,7 @@ const SECTIONS: MenuSection[] = [
 /** 3 highlights revenus en haut du drawer (KPI conversion). */
 const HIGHLIGHTS: { href: string; label: string; sub: string; Icon: LucideIcon; tone: "primary" | "accent" }[] = [
   { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Quiz 2 min · sans email", Icon: Target, tone: "primary" },
-  { href: "/pro", label: "Devenir Soutien", sub: "5 outils Pro · 2,99€/mois", Icon: Crown, tone: "primary" },
+  { href: "/soutenir", label: "Soutenir Cryptoreflex", sub: "Contribution libre · tout gratuit", Icon: Heart, tone: "primary" },
   { href: "/partenaires", label: "Offres partenaires", sub: "Ledger, Trezor, Waltio…", Icon: Gift, tone: "accent" },
 ];
 

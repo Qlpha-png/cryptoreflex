@@ -221,32 +221,31 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   };
 }
 
-/** Check rapide : l'utilisateur est-il Pro actif (Pro V1 OU Pro+) ? */
+/**
+ * DÉMONÉTISATION (juin 2026) : Cryptoreflex est 100 % gratuit.
+ * Tout utilisateur authentifié est traité comme « Pro » — il n'y a plus de plan
+ * payant qui débloque des features. (L'accès anonyme aux features UI passe par
+ * <ProGate> devenu pass-through ; les routes qui ont besoin d'une identité
+ * gardent leur garde `getUser() === null`.)
+ */
 export function isPro(user: CryptoreflexUser | null): boolean {
-  if (!user) return false;
-  return (
-    user.plan === "pro_monthly" ||
-    user.plan === "pro_annual" ||
-    user.plan === "pro_plus_monthly" ||
-    user.plan === "pro_plus_annual"
-  );
+  return user !== null;
 }
 
-/** Check rapide : l'utilisateur a-t-il le tier Pro+ (features avancées : IA
- *  illimitée, exports illimités, alertes multi-conditions, API personnel) ? */
+/** DÉMONÉTISATION : toutes les features avancées sont gratuites pour tout compte. */
 export function isProPlus(user: CryptoreflexUser | null): boolean {
-  if (!user) return false;
-  return user.plan === "pro_plus_monthly" || user.plan === "pro_plus_annual";
+  return user !== null;
 }
 
-/** Server Component / Route Handler guard : redirect vers /pro si pas Pro. */
+/**
+ * Server Component / Route Handler guard. DÉMONÉTISATION : on n'exige plus de
+ * plan payant — seulement d'être connecté (les features liées à un compte ont
+ * besoin d'une identité). Plus aucune redirection vers /pro pour cause de plan.
+ */
 export async function requirePro(): Promise<CryptoreflexUser> {
   const user = await getUser();
   if (!user) {
     redirect("/connexion?next=/mon-compte");
-  }
-  if (!isPro(user)) {
-    redirect("/pro");
   }
   return user;
 }

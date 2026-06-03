@@ -84,43 +84,11 @@ export default function MentionsLegalesPage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">7. Droit applicable</h2>
       <p className="text-fg/85 leading-relaxed">
-        Les présentes mentions légales sont régies par le droit français. En cas de litige et après
-        une tentative de résolution amiable, les juridictions françaises sont compétentes.
-      </p>
-
-      {/* FIX LEGAL 2026-05-02 #16 (audit expert legal) — désignation du
-          médiateur de la consommation OBLIGATOIRE pour tout pro vendant
-          B2C un service en ligne (Code conso L.616-1, amende 15k€). */}
-      <h2 className="mt-10 text-2xl font-bold text-fg">8. Médiateur de la consommation</h2>
-      <p className="text-fg/85 leading-relaxed">
-        Conformément à l&apos;article L.616-1 du Code de la consommation, en cas de
-        litige concernant un abonnement payant Cryptoreflex Pro et après avoir
-        contacté le service client à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>,
-        vous pouvez recourir gratuitement à un médiateur de la consommation.
-      </p>
-      <p className="text-fg/85 leading-relaxed mt-3">
-        <strong>Médiateur désigné :</strong>{" "}
-        <a
-          href="https://www.cm2c.net/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary-soft hover:underline"
-        >
-          CM2C — Centre de la Médiation de la Consommation de Conciliateurs de Justice
-        </a>{" "}
-        — 14 rue Saint Jean, 75017 Paris.
-      </p>
-      <p className="text-fg/85 leading-relaxed mt-3">
-        Vous pouvez également utiliser la{" "}
-        <a
-          href="https://ec.europa.eu/consumers/odr/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary-soft hover:underline"
-        >
-          plateforme européenne de Règlement en Ligne des Litiges (RLL)
-        </a>
-        .
+        Les présentes mentions légales sont régies par le droit français. {BRAND.name} est
+        un service entièrement gratuit : aucune vente ni abonnement payant n&apos;est proposé
+        aux utilisateurs. En cas de litige et après une tentative de résolution amiable
+        (contact <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>),
+        les juridictions françaises sont compétentes.
       </p>
     </article>
   );

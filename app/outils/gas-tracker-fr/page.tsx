@@ -48,7 +48,7 @@ export default function GasTrackerFrPage() {
     },
     {
       q: "Comment fonctionneront les alertes gas ?",
-      a: "Pro+ : tu paramètres « préviens-moi quand gas ETH < 15 gwei » → email/push immédiat. Idéal pour batcher tes swaps à bas coût ou claim des airdrops.",
+      a: "Tu paramètres « préviens-moi quand gas ETH < 15 gwei » → email/push immédiat. Idéal pour batcher tes swaps à bas coût ou claim des airdrops. Gratuit.",
     },
   ];
 
@@ -107,7 +107,7 @@ export default function GasTrackerFrPage() {
               { emoji: "⚡", text: "Mainnet ETH + 5 L2 majeurs en temps réel (refresh 30 s)" },
               { emoji: "💸", text: "Estimation coût € pour un swap, un transfert, un mint NFT" },
               { emoji: "🕐", text: "Meilleure heure historique pour transacter (weekend matin)" },
-              { emoji: "🔔", text: "Alerte gas < X gwei (Pro+)" },
+              { emoji: "🔔", text: "Alerte gas < X gwei (gratuit, bientôt)" },
             ]}
             readingTime="2 min"
             level="Tous niveaux"
@@ -148,7 +148,7 @@ export default function GasTrackerFrPage() {
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Active l&apos;alerte gas bas</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
             Inscris-toi pour être prévenu·e dès que le gas Ethereum descend
-            sous 15 gwei (Pro+).
+            sous 15 gwei. Gratuit.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">
             M&apos;inscrire <ArrowRight className="h-4 w-4" aria-hidden />

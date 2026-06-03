@@ -125,7 +125,7 @@ const NAV_GROUPS: FooterGroup[] = [
     id: "footer-pro-heading",
     title: "Soutien & contact",
     links: [
-      { href: "/pro", label: "Soutenir Cryptoreflex" },
+      { href: "/soutenir", label: "Soutenir Cryptoreflex" },
       { href: "/ambassadeurs", label: "Programme ambassadeurs" },
       { href: "/sponsoring", label: "Sponsoring B2B" },
       { href: "/contact", label: "Nous contacter" },

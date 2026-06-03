@@ -4,20 +4,19 @@
  * <Cerfa2086Generator />
  * ----------------------
  * Composant client de l'outil "Génération auto Cerfa 2086 + 3916-bis"
- * (réservé aux abonnés Soutien / Pro).
+ * (gratuit pour tout le monde — démonétisation juin 2026).
  *
  * Flow utilisateur :
- *  1. (Free)  → encart lock + CTA upgrade. Pas d'upload exposé.
- *  2. (Pro)   → upload CSV (Binance/Coinbase/Bitpanda) ou JSON Waltio
- *              + saisie nom + année fiscale.
- *  3. Client : parse CSV en JSON normalisé.
- *  4. Preview : affiche résumé (n cessions, plus-values, impôt PFU estimé)
+ *  1. Upload CSV (Binance/Coinbase/Bitpanda) ou JSON Waltio
+ *     + saisie nom + année fiscale.
+ *  2. Client : parse CSV en JSON normalisé.
+ *  3. Preview : affiche résumé (n cessions, plus-values, impôt PFU estimé)
  *               via un POST "dry-run" léger (utilise le même endpoint mais
  *               on demande uniquement le PDF — la preview locale lit
  *               les chiffres dans la réponse). En V1, on appelle l'API
  *               qui retourne le PDF + headers de comptage ; on calcule la
  *               preview côté client en parallèle pour l'UX.
- *  5. Téléchargement : blob PDF.
+ *  4. Téléchargement : blob PDF.
  *
  * Conformité YMYL :
  *  - disclaimer renforcé en haut + en bas du composant
@@ -25,21 +24,16 @@
  */
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
   CheckCircle2,
-  Crown,
   Download,
   FileText,
-  Lock,
   Loader2,
   Sparkles,
   Upload,
   XCircle,
 } from "lucide-react";
-import { useUserPlan } from "@/lib/use-user-plan";
 
 /* -------------------------------------------------------------------------- */
 /*  Types locaux (réplique légère de lib/cerfa-2086.ts pour le client)        */
@@ -252,11 +246,7 @@ function fmtEur(n: number): string {
 /*  Composant principal                                                       */
 /* -------------------------------------------------------------------------- */
 
-const monthlyPriceLabel = process.env.NEXT_PUBLIC_PRO_MONTHLY_PRICE ?? "2,99 €";
-
 export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
-  const { isPro, loading: planLoading, isAuthenticated } = useUserPlan();
-
   const [state, setState] = useState<State>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [parseErrors, setParseErrors] = useState<string[]>([]);
@@ -425,11 +415,6 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         setState("error");
         return;
       }
-      if (res.status === 403) {
-        setErrorMsg("Cette fonctionnalité est réservée aux abonnés Soutien.");
-        setState("error");
-        return;
-      }
       if (res.status === 429) {
         setErrorMsg(
           "Vous avez atteint la limite de 5 PDFs par jour. Réessayez demain.",
@@ -479,85 +464,6 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
 
   /* ---------- Rendu ---------- */
 
-  if (planLoading) {
-    return (
-      <div
-        className="glass rounded-2xl p-8 min-h-[300px] flex items-center justify-center"
-        aria-live="polite"
-      >
-        <Loader2 className="h-6 w-6 animate-spin text-primary-soft" aria-hidden="true" />
-        <span className="ml-3 text-sm text-fg/70">Vérification de votre plan…</span>
-      </div>
-    );
-  }
-
-  /* === Cas FREE → encart lock + CTA upgrade === */
-  if (!isPro) {
-    return (
-      <div className="glass rounded-2xl p-6 sm:p-8 border border-warning/40 bg-warning/5">
-        <div className="flex items-start gap-4">
-          <div className="shrink-0 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-gold">
-            <Lock className="h-6 w-6" aria-hidden="true" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 text-xs font-bold text-gold">
-              <Crown className="h-3 w-3" aria-hidden="true" />
-              Réservé aux abonnés Soutien
-            </span>
-            <h2 className="mt-3 font-display text-2xl font-extrabold text-fg">
-              Générez votre Cerfa 2086 + 3916-bis pré-rempli en 30 secondes
-            </h2>
-            <p className="mt-2 text-sm text-fg/75 leading-relaxed">
-              Importez vos exports Binance, Coinbase ou Bitpanda — le calcul
-              officiel <span className="font-semibold">article 150 VH bis du CGI</span>{" "}
-              est appliqué automatiquement, et vous recevez un PDF prêt à
-              accompagner votre déclaration sur impots.gouv.fr.
-            </p>
-
-            <ul className="mt-4 space-y-2 text-sm text-fg/80">
-              {[
-                "Annexe Cerfa 2086 récapitulative (cessions ligne par ligne)",
-                "Annexe 3916-bis automatique pour chaque exchange étranger",
-                "Calcul prorata portefeuille (formule 150 VH bis)",
-                "5 PDF/jour inclus — couvre toute votre préparation déclarative",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <CheckCircle2
-                    className="h-4 w-4 mt-0.5 shrink-0 text-success"
-                    aria-hidden="true"
-                  />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/pro"
-                className="btn-primary"
-                aria-label="Devenir un Soutien pour débloquer la génération auto Cerfa 2086"
-              >
-                <Crown className="h-4 w-4" aria-hidden="true" />
-                Devenir un Soutien — {monthlyPriceLabel}/mois
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              {!isAuthenticated && (
-                <Link href="/connexion?next=/outils/cerfa-2086-auto" className="btn-ghost">
-                  J'ai déjà un compte
-                </Link>
-              )}
-            </div>
-
-            <p className="mt-4 text-xs text-fg/55">
-              Annulable en 1 clic depuis Stripe Customer Portal. Sans engagement.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  /* === Cas PRO === */
   return (
     <div className="space-y-6">
       {/* Disclaimer YMYL renforcé */}

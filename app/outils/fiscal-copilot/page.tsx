@@ -38,14 +38,14 @@ import { withHreflang } from "@/lib/seo-alternates";
  *
  * USP unique en France — personne d'autre n'offre ce niveau de spécialisation.
  *
- * Phase actuelle (mai 2026) : LANDING PAGE qui présente l'agent + capture
- * d'intérêt Pro. La V1 fonctionnelle exigera :
+ * Phase actuelle (mai 2026) : LANDING PAGE qui présente l'agent. La V1
+ * fonctionnelle exigera :
  *   1. Parser CSV multi-format (Binance, Coinbase, Kraken, Bitpanda...)
  *   2. Réutilisation de l'infra IA Q&A existante (`lib/ai-qa`)
  *   3. Connexion à `lib/cerfa-2086.ts` pour générer le PDF final
- *   4. Statut Pro+ 9,99€/mois (justifié par l'expertise legalement sourcée)
  *
- * Aujourd'hui : page éditoriale teasing + CTA Pro (capture d'audience).
+ * Démonétisation juin 2026 : outil 100 % gratuit, sans abonnement.
+ * Aujourd'hui : page éditoriale teasing + CTA d'accès gratuit.
  */
 
 export const revalidate = 86400;
@@ -111,7 +111,7 @@ export default function FiscalCopilotPage() {
     },
     {
       q: "Mes données sont-elles stockées ?",
-      a: "Le CSV est traité en mémoire serveur le temps du calcul, puis purgé. Les agrégats (totaux par année, par crypto) peuvent être stockés si vous activez la sauvegarde Pro pour comparer entre années. Vous pouvez tout supprimer en 1 clic.",
+      a: "Le CSV est traité en mémoire serveur le temps du calcul, puis purgé. Les agrégats (totaux par année, par crypto) peuvent être stockés si vous activez la sauvegarde pour comparer entre années. Vous pouvez tout supprimer en 1 clic.",
     },
     {
       q: "Quelle est la précision des calculs vs un cabinet ?",
@@ -119,7 +119,7 @@ export default function FiscalCopilotPage() {
     },
     {
       q: "Combien ça coûte ?",
-      a: "Inclus dans Cryptoreflex Pro+ (9,99 €/mois ou 79 €/an, 14 jours d'essai). À ne pas confondre avec le tier Soutien à 2,99 €/mois (sans IA fiscale avancée). Sans abonnement, l'agent IA fiscal classique reste disponible avec questions limitées.",
+      a: "Rien : le Fiscal Copilot est 100 % gratuit, sans abonnement ni carte bancaire. Cryptoreflex étant un éditeur indépendant, vous pouvez soutenir le projet librement si l'outil vous est utile.",
     },
   ];
 
@@ -167,7 +167,7 @@ export default function FiscalCopilotPage() {
         {/* Hero */}
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Inclus dans Cryptoreflex Pro+
+            <Sparkles className="h-3 w-3" aria-hidden /> Outil avancé — 100 % gratuit
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Le copilot IA qui parle{" "}
@@ -230,28 +230,29 @@ export default function FiscalCopilotPage() {
           </ul>
         </section>
 
-        {/* CTA Pro */}
+        {/* CTA — accès gratuit */}
         <section className="mt-16 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">
-            Essaye le Fiscal Copilot gratuitement
+            Le Fiscal Copilot est 100 % gratuit
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Inclus dans Cryptoreflex <strong>Pro+</strong> à <strong>9,99 €/mois</strong> ou{" "}
-            <strong>79 €/an</strong>. Essai gratuit 14 jours, résiliable en 1 clic.
+            Aucun abonnement, aucune carte bancaire. En attendant la mise en ligne
+            de l'agent, utilise le calculateur fiscalité. Si Cryptoreflex t'es
+            utile, tu peux soutenir le projet librement.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/pro"
+              href="/outils/calculateur-fiscalite"
               className="btn-primary btn-primary-shine"
             >
-              Découvrir Pro
+              Utiliser le calculateur gratuit
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link
-              href="/outils/calculateur-fiscalite"
+              href="/soutenir"
               className="btn-ghost"
             >
-              Calculateur gratuit (sans IA)
+              Soutenir le projet
             </Link>
           </div>
         </section>

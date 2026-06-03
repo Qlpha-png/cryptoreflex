@@ -5,23 +5,19 @@
  * ------------------------------------------------------------------
  * Carte de téléchargement réutilisable pour les lead magnets.
  *
- * Comportement :
- *  - Affiche titre + description + nombre de pages + image preview optionnelle.
- *  - Form email inline (pas de modal — moins de friction).
- *  - Sur submit :
- *      1. POST /api/newsletter/subscribe avec source = `lead-magnet-{id}`.
- *      2. Si succès, redirige vers /api/lead-magnet/{id}?email={email}
- *         (qui re-vérifie l'abonnement et 302 vers le PDF).
- *      3. Pose un cookie pour skip le form au prochain téléchargement.
+ * 100 % gratuit, accès direct :
+ *  - Le PDF se télécharge DIRECTEMENT via un lien `/api/lead-magnet/{id}`
+ *    (302 vers le fichier statique). Aucun email requis, aucun blocage.
+ *  - Sous le bouton, un champ email FACULTATIF permet de s'abonner à la
+ *    newsletter pour être prévenu des mises à jour. Il ne conditionne JAMAIS
+ *    l'accès au PDF.
  *
  * UX :
- *  - États idle / loading / success / error explicites.
- *  - Erreur affichée inline (pas d'alert).
- *  - Pas de `noscript` requis (graceful degradation : le formulaire submit
- *    marche aussi en HTML pur via action=).
+ *  - Bouton principal = lien `<a>` (fonctionne sans JS, ouvre le PDF).
+ *  - Opt-in newsletter : états idle / loading / success / error inline.
  *
  * Conformité :
- *  - Mention RGPD courte sous le bouton.
+ *  - Mention RGPD courte sous le champ.
  *  - Pas de pré-coche dark pattern.
  */
 
@@ -40,7 +36,7 @@ export interface LeadMagnetCardProps {
   pages: number;
   /** Path vers l'image preview (optionnel — fallback icône). */
   previewSrc?: string;
-  /** Surcharge du wording du bouton (par défaut : "Télécharger gratuitement"). */
+  /** Surcharge du wording du bouton (par défaut : "Télécharger le PDF gratuitement"). */
   ctaLabel?: string;
 }
 
@@ -50,7 +46,7 @@ export default function LeadMagnetCard({
   description,
   pages,
   previewSrc,
-  ctaLabel = "Télécharger gratuitement",
+  ctaLabel = "Télécharger le PDF gratuitement",
 }: LeadMagnetCardProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
@@ -58,7 +54,13 @@ export default function LeadMagnetCard({
   );
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  // Lien de téléchargement direct (302 vers le PDF statique). Accessible
+  // sans email — c'est l'action principale de la carte.
+  const downloadHref = "/api/lead-magnet/" + id;
+
+  // Opt-in newsletter FACULTATIF : s'inscrire pour être prévenu des mises à
+  // jour. N'affecte pas le téléchargement (le PDF reste accessible sans).
+  async function onSubmitOptIn(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMsg("");
 
@@ -78,8 +80,6 @@ export default function LeadMagnetCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: trimmed,
-          // Source whitelist côté serveur : on tombe sur "unknown" si l'id n'est
-          // pas dans ALLOWED_SOURCES — pas grave, l'inscription passe quand même.
           source: "lead-magnet-" + id,
           utm: {
             source: "cryptoreflex",
@@ -101,16 +101,6 @@ export default function LeadMagnetCard({
       }
 
       setStatus("success");
-      // Cookie de skip pour les téléchargements futurs (1 an)
-      try {
-        document.cookie =
-          "cr_lead_magnet_unlocked=1; path=/; max-age=31536000; samesite=lax";
-      } catch {
-        /* SSR-safe */
-      }
-      // Redirige vers la route de download (qui revérifie l'abonnement et 302 vers le PDF)
-      window.location.href =
-        "/api/lead-magnet/" + id + "?email=" + encodeURIComponent(trimmed);
     } catch {
       setStatus("error");
       setErrorMsg("Une erreur est survenue. Réessaie.");
@@ -138,47 +128,59 @@ export default function LeadMagnetCard({
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-fg">{title}</h3>
           <div className="mt-1 inline-flex items-center gap-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-soft">
-            PDF · {pages} pages
+            PDF · {pages} pages · Gratuit
           </div>
         </div>
       </div>
 
       <p className="mb-4 text-sm leading-relaxed text-muted">{description}</p>
 
+      {/* Action principale : téléchargement direct, sans email. */}
+      <a
+        href={downloadHref}
+        className="mt-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition hover:bg-primary-glow"
+      >
+        <Download className="h-4 w-4" aria-hidden />
+        {ctaLabel}
+      </a>
+
+      {/* Opt-in newsletter facultatif — n'affecte pas le téléchargement. */}
       {status === "success" ? (
         <div
-          className="rounded-lg border border-success-fg/30 bg-success-fg/10 p-3 text-sm text-success-fg"
+          className="mt-3 rounded-lg border border-success-fg/30 bg-success-fg/10 p-3 text-sm text-success-fg"
           role="status"
           aria-live="polite"
         >
           <CheckCircle2 className="mr-2 inline h-4 w-4" aria-hidden />
-          Téléchargement lancé. Vérifie aussi tes mails.
+          C'est noté — tu seras prévenu des mises à jour.
         </div>
       ) : (
-        <form onSubmit={onSubmit} className="mt-auto flex flex-col gap-2">
-          <label htmlFor={"lm-email-" + id} className="sr-only">
-            Adresse email pour recevoir {title}
-          </label>
-          <input
-            id={"lm-email-" + id}
-            type="email"
-            required
-            aria-required="true"
-            autoComplete="email"
-            placeholder="ton@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted focus:border-primary focus:outline-none"
-            disabled={status === "loading"}
-          />
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-background transition hover:bg-primary-glow disabled:opacity-50"
+        <form onSubmit={onSubmitOptIn} className="mt-3 flex flex-col gap-2">
+          <label
+            htmlFor={"lm-email-" + id}
+            className="text-[11px] leading-snug text-muted"
           >
-            <Download className="h-4 w-4" aria-hidden />
-            {status === "loading" ? "Envoi…" : ctaLabel}
-          </button>
+            Optionnel : laisse ton email pour être prévenu des mises à jour.
+          </label>
+          <div className="flex gap-2">
+            <input
+              id={"lm-email-" + id}
+              type="email"
+              autoComplete="email"
+              placeholder="ton@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted focus:border-primary focus:outline-none"
+              disabled={status === "loading"}
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="inline-flex items-center justify-center rounded-lg border border-border px-3 py-2 text-sm font-medium text-fg transition hover:border-primary/50 disabled:opacity-50"
+            >
+              {status === "loading" ? "Envoi…" : "M'abonner"}
+            </button>
+          </div>
           {status === "error" && errorMsg ? (
             <p className="flex items-center gap-1 text-xs text-danger-fg" role="alert">
               <AlertCircle className="h-3 w-3" aria-hidden />
@@ -186,8 +188,8 @@ export default function LeadMagnetCard({
             </p>
           ) : null}
           <p className="text-[11px] leading-snug text-muted/70">
-            Inscription à la newsletter Cryptoreflex. Désinscription en 1 clic
-            depuis chaque email.{" "}
+            Newsletter Cryptoreflex, facultative. Désinscription en 1 clic depuis
+            chaque email.{" "}
             <Link href="/confidentialite" className="underline hover:text-muted">
               RGPD
             </Link>

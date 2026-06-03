@@ -19,8 +19,10 @@
  *    cookie déjà strict).
  *  - Service role : appelle `auth.admin.deleteUser(userId)` qui cascade sur
  *    `public.users` via `ON DELETE CASCADE` du schema (cf. supabase/schema.sql).
- *  - Stripe : si l'user a un `stripe_customer_id`, on cancel ses subscriptions
- *    actives + supprime le customer Stripe (best-effort, pas bloquant).
+ *  - Stripe : DÉMONÉTISATION (juin 2026) — le site est gratuit, il n'y a plus
+ *    d'abonnement actif. L'étape de résiliation Stripe est désormais un no-op
+ *    (on ne crée aucune dépendance à Stripe pour supprimer un compte). Seule la
+ *    suppression Supabase compte.
  *  - Idempotent : si déjà supprimé, retourne 200 (no-op).
  *
  * Le cookie de session est invalidé en réponse (le client doit rediriger
@@ -33,7 +35,6 @@ import {
   createSupabaseServerClient,
   createSupabaseServiceRoleClient,
 } from "@/lib/supabase/server";
-import { getStripeClient } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -90,47 +91,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 4. Best-effort cleanup Stripe (cancel subscriptions + delete customer)
-  //    Si Stripe n'est pas configuré ou si le user n'a pas de customer ID,
-  //    on skip silencieusement.
-  const { data: profile } = await admin
-    .from("users")
-    .select("stripe_customer_id")
-    .eq("id", authUser.id)
-    .single();
-
-  const stripeCustomerId = profile?.stripe_customer_id ?? null;
-  if (stripeCustomerId) {
-    const stripe = getStripeClient();
-    if (stripe) {
-      try {
-        // Cancel toutes les subscriptions actives
-        const subs = await stripe.subscriptions.list({
-          customer: stripeCustomerId,
-          status: "active",
-          limit: 100,
-        });
-        await Promise.allSettled(
-          subs.data.map((s) =>
-            stripe.subscriptions.cancel(s.id, { invoice_now: false })
-          )
-        );
-        // Supprime le customer (Stripe garde l'historique facturation pour
-        // raisons légales mais l'objet customer est marqué deleted).
-        await stripe.customers.del(stripeCustomerId);
-      } catch (err) {
-        // Pas bloquant — l'objectif principal est de supprimer côté Supabase.
-        // On remonte quand même : un échec de cleanup Stripe = subscription
-        // active orpheline → facturation continue après suppression compte.
-        Sentry.captureException(err, {
-          tags: { route: "account/delete", stage: "stripeCleanup" },
-          extra: { userId: authUser.id, stripeCustomerId },
-          level: "warning",
-        });
-        console.warn("[account/delete] Stripe cleanup partiel:", err);
-      }
-    }
-  }
+  // 4. Cleanup Stripe — NO-OP (démonétisation juin 2026).
+  //    Le site est gratuit : aucun abonnement payant actif à résilier. On ne
+  //    crée donc aucune dépendance à Stripe pour supprimer un compte (un
+  //    échec/timeout Stripe ne doit jamais empêcher l'effacement RGPD). La
+  //    suppression Supabase ci-dessous reste la seule étape qui compte.
 
   // 5. Suppression Supabase Auth user (cascade via ON DELETE CASCADE
   //    sur les FK depuis public.users + tables liées : portfolios, alerts,

@@ -16,11 +16,12 @@ import { withHreflang } from "@/lib/seo-alternates";
  *
  * Audit 2026-05-02 : "Niche B2B sous-exploitée : les EC FR demandent un
  * export ECF (Écritures Comptables Format) pré-formaté pour intégrer
- * dans Sage / Cegid / EBP. Pas d'équivalent FR pour les crypto. Stripe-style
- * mais pour les indépendants/sociétés crypto."
+ * dans Sage / Cegid / EBP. Pas d'équivalent FR pour les crypto, pour les
+ * indépendants/sociétés crypto."
  *
- * Phase actuelle : landing + pricing one-shot 49 €. V1 = template Excel +
- * algo de mapping vers PCG (Plan Comptable Général).
+ * Démonétisation juin 2026 : outil 100 % gratuit (plus de tarif one-shot).
+ * Phase actuelle : landing + waitlist. V1 = template Excel + algo de
+ * mapping vers PCG (Plan Comptable Général).
  */
 
 export const revalidate = 86400;
@@ -28,7 +29,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Export Expert-Comptable Crypto — Format ECF Sage / Cegid / EBP",
   description:
-    "Convertissez vos transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. 49 € one-shot, automatisé.",
+    "Convertissez vos transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. Gratuit, automatisé.",
   alternates: withHreflang(`${BRAND.url}/outils/export-expert-comptable`),
 };
 
@@ -47,8 +48,8 @@ export default function ExportExpertComptablePage() {
       a: "C'est un outil 100 % automatisé. Vous uploadez votre CSV (Coinbase, Binance, Kraken, Ledger Live), l'algo mappe chaque transaction vers les comptes du PCG (47/47x pour les comptes financiers, 76 pour les revenus, 67 pour les pertes). Le PDF + ECF généré est prêt à transmettre à votre EC. Aucune intervention humaine côté Cryptoreflex.",
     },
     {
-      q: "Pourquoi 49 € one-shot et pas un abonnement ?",
-      a: "Parce que la plupart des indés/sociétés font 1 export par exercice fiscal (annuel). Pas de raison de payer un abo mensuel. Si vous voulez faire plusieurs exports/an (TVA mensuelle par ex.), regardez notre offre Pro+ qui inclut les exports illimités.",
+      q: "C'est gratuit ?",
+      a: "Oui, 100 % gratuit, sans abonnement. Vous pouvez générer autant d'exports que nécessaire (un par exercice fiscal, ou plusieurs si vous êtes en TVA mensuelle), sans frais.",
     },
     {
       q: "L'outil donne-t-il un avis fiscal ?",
@@ -63,7 +64,7 @@ export default function ExportExpertComptablePage() {
       description: "Outil B2B de conversion CSV crypto → écritures comptables PCG-compatibles.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
-      category: "Outil pro",
+      category: "Outil avancé",
       tags: ["expert comptable", "ECF", "FEC", "comptabilité crypto"],
     }),
     breadcrumbSchema([
@@ -89,7 +90,7 @@ export default function ExportExpertComptablePage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 border border-success/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-success">
-            <ShieldCheck className="h-3 w-3" aria-hidden /> B2B · Automatisé · 49 €
+            <ShieldCheck className="h-3 w-3" aria-hidden /> B2B · Automatisé · Gratuit
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Export <span className="gradient-text">Expert-Comptable</span> Crypto
@@ -103,7 +104,7 @@ export default function ExportExpertComptablePage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Vous uploadez, on mappe vers le PCG, votre EC intègre — 49 € pour un exercice fiscal complet."
+            headline="Vous uploadez, on mappe vers le PCG, votre EC intègre — gratuit, pour un exercice fiscal complet."
             bullets={[
               { emoji: "📊", text: "Mapping automatique vers PCG (47x, 76, 67) selon nature opération" },
               { emoji: "🇫🇷", text: "Format ECF normalisé compatible Sage / Cegid / EBP / Quadratus" },
@@ -111,24 +112,23 @@ export default function ExportExpertComptablePage() {
               { emoji: "🧾", text: "Récap PDF récapitulatif + fichier ECF + tableur pivot" },
             ]}
             readingTime="3 min"
-            level="Pro / TPE-PME"
+            level="Indé / TPE-PME"
           />
         </div>
 
         <section className="mt-12 rounded-3xl border border-success/30 bg-gradient-to-br from-success/15 via-success/5 to-transparent p-6 sm:p-10 text-center">
           <FileSpreadsheet className="mx-auto h-10 w-10 text-success" aria-hidden />
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">49 € — Exercice fiscal complet</h2>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Gratuit — Exercice fiscal complet</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            One-shot, pas d&apos;abonnement. Inclut tous les CSV de vos
-            exchanges + un fichier ECF prêt à transmettre à votre EC. Garantie
-            satisfait ou remboursé 7 jours.
+            Sans abonnement. Inclut tous les CSV de vos exchanges + un fichier
+            ECF prêt à transmettre à votre EC. 100 % gratuit, sans inscription.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">
-            Réserver mon accès <ArrowRight className="h-4 w-4" aria-hidden />
+            Être prévenu·e du lancement <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <p className="mt-3 text-xs text-muted">
-            Lancement Q3 2026. Inscription waitlist pour bénéficier du tarif
-            early-bird 39 €.
+            Lancement Q3 2026. Inscription à la liste d&apos;attente pour être
+            prévenu·e dès l&apos;ouverture.
           </p>
         </section>
 

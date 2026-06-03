@@ -14,7 +14,6 @@ import {
   Radar,
   FileText,
   Sparkles,
-  Crown,
   Bot,
   Wallet,
   Zap,
@@ -39,14 +38,15 @@ import { withHreflang } from "@/lib/seo-alternates";
 // sur sections + Tilt3D sur cards hub. Composants existants, juste branches.
 import Reveal from "@/components/ui/Reveal";
 import Tilt3D from "@/components/ui/Tilt3D";
-// BATCH 45c — barre de recherche + tabs Tous/Gratuit/Soutien client.
+// BATCH 45c — barre de recherche + tabs Tous/Gratuit/Avancé client.
 // Ne refactor pas le hub server : agit sur le DOM via data-* attributs.
 import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 
 // AUDIT 2026-05-03 — chiffres outils alignes au reel (28 = TOOLS.length actuel).
-// Avant : 26 hardcoded en title/desc/og/twitter alors que TOOLS array = 28 entries
-// (23 free + 5 pro). Le badge "28 outils" / stat "23 + 5 = 28" etait incoherent
-// avec le SEO meta "26". Maintenant : 28 partout. Layout root applique deja
+// Avant : 26 hardcoded en title/desc/og/twitter alors que TOOLS array = 28 entries.
+// Maintenant : 28 partout. Démonétisation juin 2026 : tous les outils sont
+// gratuits ; le tier "pro" ne sert plus qu'à marquer les outils « avancés »
+// (Cerfa auto, IA) pour le tri/filtre interne. Layout root applique deja
 // '%s | Cryptoreflex' donc le suffix manuel est retire (evite doublon).
 export const metadata: Metadata = {
   title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
@@ -233,22 +233,22 @@ const TOOLS: Tool[] = [
     cat: "pedagogie",
   },
 
-  // ─── IA SOUTIEN ───
+  // ─── IA & AVANCÉ ───
   {
-    title: "IA Q&A par fiche crypto",
-    desc: "20 questions/jour à Claude Haiku contextualisé sur chacune des 100 fiches éditoriales premium Cryptoreflex.",
+    title: "Résumés éditoriaux par fiche",
+    desc: "Un résumé clair et des points clés sur chacune des 100 fiches crypto éditoriales Cryptoreflex.",
     href: "/cryptos",
     Icon: Bot,
-    tier: "pro",
-    status: "new",
+    tier: "free",
+    status: "live",
     cat: "ia",
   },
 
   // FIX 2026-05-02 #11 — TIER 3 features (5 nouvelles pages) du plan
   // d'audit consolidé 6 experts. Chaque outil a sa propre page avec
-  // landing + maillage + schemas. Les 3 "Pro" (Fiscal Copilot, Tax Loss
-  // Harvesting auto, Wallet Connect) servent à monétiser. Les 2 "Free"
-  // (Yield Stablecoins, Crypto Wrapped) servent à acquérir.
+  // landing + maillage + schemas. Démonétisation juin 2026 : tous gratuits.
+  // Le tier "pro" ne marque plus qu'un niveau « avancé » (Fiscal Copilot,
+  // Cerfa auto, IA) pour le tri/filtre interne.
   {
     title: "Yield stablecoins (USDC/USDT/EURC)",
     desc: "Comparateur APY sur 34 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
@@ -327,7 +327,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Export Expert-Comptable",
-    desc: "Convertis tes CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). One-shot 49 €.",
+    desc: "Convertis tes CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). Gratuit.",
     href: "/outils/export-expert-comptable",
     Icon: FileSpreadsheet,
     tier: "pro",
@@ -383,9 +383,9 @@ const CATEGORIES: Array<{
   },
   {
     id: "ia",
-    label: "IA & Soutien",
+    label: "IA & outils avancés",
     icon: Sparkles,
-    desc: "Features Pro premium — IA contextuelle Claude Haiku",
+    desc: "Outils avancés et résumés éditoriaux — accès libre",
     accent: "from-primary/30",
   },
   {
@@ -417,8 +417,10 @@ const CATEGORIES: Array<{
 
 export default function OutilsPage() {
   const totalTools = TOOLS.length;
-  const proTools = TOOLS.filter((t) => t.tier === "pro").length;
-  const freeTools = totalTools - proTools;
+  // Démonétisation juin 2026 : tous les outils sont gratuits. Le tier "pro"
+  // ne sert plus qu'à distinguer les outils « avancés » (Cerfa auto, IA) pour
+  // le tri/filtre interne — aucun paywall associé.
+  const advancedTools = TOOLS.filter((t) => t.tier === "pro").length;
   // Audit honnêteté (juin 2026) : distinguer les outils RÉELLEMENT disponibles
   // des fonctionnalités « à venir » (status:"soon") pour ne pas survendre « 28 outils ».
   const soonTools = TOOLS.filter((t) => t.status === "soon").length;
@@ -432,7 +434,7 @@ export default function OutilsPage() {
     "@type": "ItemList",
     name: `${totalTools} outils crypto français Cryptoreflex`,
     description:
-      "Catalogue d'outils gratuits et Soutien : fiscalité PFU, simulateur DCA, vérificateur MiCA, convertisseur live, Cerfa 2086, glossaire 250+ termes.",
+      "Catalogue d'outils crypto gratuits : fiscalité PFU, simulateur DCA, vérificateur MiCA, convertisseur live, Cerfa 2086, glossaire 250+ termes.",
     numberOfItems: totalTools,
     itemListElement: TOOLS.map((t, idx) => ({
       "@type": "ListItem",
@@ -496,8 +498,9 @@ export default function OutilsPage() {
           </h1>
           <p className="mt-3 text-base text-muted">
             <strong className="text-fg">{liveTools} disponibles maintenant</strong>, {soonTools} en
-            préparation. {freeTools} gratuits (sans inscription) + {proTools} réservés au Soutien
-            (Cerfa 2086 auto, IA Q&amp;A par fiche). Méthodologie publique, aucune donnée bancaire stockée.
+            préparation. <strong className="text-fg">100 % gratuits</strong>, sans inscription —
+            y compris les outils avancés (Cerfa 2086 auto, résumés éditoriaux par fiche). Méthodologie
+            publique, aucune donnée bancaire stockée.
           </p>
         </header>
 
@@ -507,12 +510,12 @@ export default function OutilsPage() {
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
             <StatCard label="Disponibles" value={String(liveTools)} accent="emerald" />
             <StatCard label="Bientôt" value={String(soonTools)} accent="amber" />
-            <StatCard label="Gratuits" value={String(freeTools)} accent="purple" />
-            <StatCard label="Soutien" value={String(proTools)} accent="primary" />
+            <StatCard label="Gratuits" value={String(totalTools)} accent="purple" />
+            <StatCard label="Avancés" value={String(advancedTools)} accent="primary" />
           </div>
         </Reveal>
 
-        {/* BATCH 45c — barre recherche + tabs Tous/Gratuits/Soutien.
+        {/* BATCH 45c — barre recherche + tabs Tous/Gratuits/Avancés.
             Filtre live le DOM via data-tool-card / data-category-section
             poses plus bas. 0 refactor server, 0 store, pure progressive
             enhancement. Si JS off : grille complete reste accessible. */}
@@ -537,37 +540,36 @@ export default function OutilsPage() {
           })}
         </div>
 
-        {/* Étude pilier fiscalité (maillage SEO 2026-05-14) — placé avant
-            le CTA Pro pour conserver le contexte éditorial avant la conversion. */}
+        {/* Étude pilier fiscalité (maillage SEO 2026-05-14). */}
         <div className="mt-16">
           <FiscalCornerstoneCard fromPage="outils-hub" />
         </div>
 
+        {/* Démonétisation juin 2026 — l'ancien bloc « Débloque les outils
+            Soutien / 2,99 €/mois » (paywall) est remplacé par un encart
+            « tout gratuit » avec un lien discret et facultatif de soutien
+            libre (contribution volontaire, aucun paywall). */}
         <section className="mt-16 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-background to-background p-6 sm:p-8">
           <div className="flex items-start gap-4">
             <div className="shrink-0 grid place-items-center h-12 w-12 rounded-xl bg-primary/20 text-primary">
-              <Crown className="h-6 w-6" />
+              <Heart className="h-6 w-6" />
             </div>
             <div className="flex-1">
               <h2 className="text-xl sm:text-2xl font-bold text-fg">
-                Débloque les {proTools} outils Soutien
+                Tous les outils sont 100 % gratuits
               </h2>
               <p className="mt-2 text-sm text-fg/80 max-w-2xl">
-                Cerfa 2086 PDF auto (5/jour), IA Q&amp;A par fiche crypto (20 questions/jour avec
-                Claude Haiku contextualisé). 2,99 €/mois ou 28,99 €/an. Annulation 1 clic, garantie
-                14 j remboursé + 7 j commercial bonus.
+                Y compris les outils avancés comme le Cerfa 2086 PDF auto et les résumés
+                éditoriaux par fiche crypto. Aucun compte requis, aucune carte bancaire.
+                Cryptoreflex est un éditeur indépendant : si nos outils te sont utiles, tu peux
+                soutenir le projet librement.
               </p>
-              {/* BATCH 45b — CTA Soutien : btn-primary-shine (shimmer gold
-                  qui balaye au hover, classe globals.css existante) +
-                  partner-cta-pulse (anneau gold qui pulse en boucle 2.5s,
-                  signature buy-now). Pattern Linear/Vercel pour les CTAs
-                  conversion-critical. Auto-disable reduced-motion. */}
               <Link
-                href="/pro"
-                className="partner-cta-pulse btn-primary-shine mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-background hover:bg-primary/90 transition-colors"
+                href="/soutenir"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-5 py-3 text-sm font-bold text-primary hover:bg-primary/15 transition-colors"
               >
-                Devenir un Soutien
-                <ArrowRight className="h-4 w-4 arrow-spring" aria-hidden="true" />
+                Soutenir le projet
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -691,9 +693,10 @@ function ToolCard({ tool }: { tool: Tool }) {
   const isPro = tool.tier === "pro";
   const isSoon = tool.status === "soon";
   // BATCH 45a a11y : aria-label explicite consolide titre + tier + status,
-  // sinon NVDA lit "Soutien Nouveau {titre}" dans cet ordre desordonne
+  // sinon NVDA lit "Avancé Nouveau {titre}" dans cet ordre desordonne
   // (badges absolute top-right/top-left lus en premier en source order).
-  const ariaLabel = `${tool.title}${isPro ? " — outil Soutien" : " — gratuit"}${tool.status === "new" ? " (nouveau)" : tool.status === "soon" ? " (bientôt disponible)" : ""}`;
+  // Démonétisation juin 2026 : tout est gratuit ; le tier "pro" = « avancé ».
+  const ariaLabel = `${tool.title}${isPro ? " — outil avancé, gratuit" : " — gratuit"}${tool.status === "new" ? " (nouveau)" : tool.status === "soon" ? " (bientôt disponible)" : ""}`;
   return (
     <Link
       href={tool.href}
@@ -730,7 +733,7 @@ function ToolCard({ tool }: { tool: Tool }) {
         ) : (
           <span aria-hidden="true" />
         )}
-        {/* Right : badge Soutien / Gratuit */}
+        {/* Right : badge Avancé / Gratuit (tout est gratuit ; "avancé" = ex-tier pro) */}
         <span
           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
             isPro
@@ -738,8 +741,8 @@ function ToolCard({ tool }: { tool: Tool }) {
               : "border border-accent-green/30 bg-accent-green/10 text-accent-green"
           }`}
         >
-          {isPro ? <Crown className="h-2.5 w-2.5" /> : <Sparkles className="h-2.5 w-2.5" />}
-          {isPro ? "Soutien" : "Gratuit"}
+          <Sparkles className="h-2.5 w-2.5" />
+          {isPro ? "Avancé" : "Gratuit"}
         </span>
       </div>
 
@@ -771,7 +774,7 @@ function ToolCard({ tool }: { tool: Tool }) {
           isSoon ? "text-muted" : "text-primary-soft group-hover:text-primary"
         }`}
       >
-        {isSoon ? "Bientôt disponible" : isPro ? "Voir l'outil Soutien" : "Utiliser gratuitement"}
+        {isSoon ? "Bientôt disponible" : "Utiliser gratuitement"}
         {!isSoon && (
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         )}

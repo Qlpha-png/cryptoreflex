@@ -4,10 +4,9 @@
  * Génère un PDF "Cerfa 2086 + 3916-bis" pré-rempli à partir d'une liste de
  * transactions crypto importées par l'utilisateur.
  *
- * Triple gating :
- *  1. Auth Supabase (getUser())
- *  2. Plan Pro (isPro())
- *  3. Rate limit 5 PDF/jour/user (anti-abus)
+ * Gating (démonétisation juin 2026 — outil gratuit pour tout compte connecté) :
+ *  1. Auth Supabase (getUser()) — identité requise pour le rate-limit par user
+ *  2. Rate limit 5 PDF/jour/user (anti-abus)
  *
  * Body attendu :
  *  {
@@ -32,7 +31,6 @@
  *  - 200 : application/pdf en stream (Content-Disposition: attachment)
  *  - 400 : body invalide (validation Zod-like)
  *  - 401 : non authentifié
- *  - 403 : plan non Pro
  *  - 429 : rate limit
  *  - 500 : erreur génération PDF
  *
@@ -41,7 +39,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getUser, isPro } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { generateFullCerfa, validateTransactions } from "@/lib/cerfa-2086";
 import { awardXp } from "@/lib/gamification";
@@ -81,20 +79,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  /* ---------- 2) Gating Pro ---------- */
-  if (!isPro(user)) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "Cette fonctionnalité est réservée aux abonnés Soutien (Pro). Active ton plan sur /pro pour générer ton Cerfa 2086 automatiquement.",
-        code: "PRO_REQUIRED",
-      },
-      { status: 403 },
-    );
-  }
-
-  /* ---------- 3) Rate limit (par user.id, pas par IP) ---------- */
+  /* ---------- 2) Rate limit (par user.id, pas par IP) ---------- */
   const rl = await limiter(`user:${user.id}`);
   if (!rl.ok) {
     return NextResponse.json(
@@ -110,7 +95,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  /* ---------- 4) Parse + validation du body ---------- */
+  /* ---------- 3) Parse + validation du body ---------- */
   // Garde-fou taille — Next limite par défaut mais on documente l'intention.
   const contentLengthHeader = req.headers.get("content-length");
   if (contentLengthHeader) {
@@ -174,7 +159,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  /* ---------- 5) Génération PDF ---------- */
+  /* ---------- 4) Génération PDF ---------- */
   let pdfBytes: Uint8Array;
   let summary: Awaited<ReturnType<typeof generateFullCerfa>>["summary"];
   try {
@@ -197,7 +182,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  /* ---------- 5b) Award XP gamification (étude #16 ETUDE-2026-05-02) ----- */
+  /* ---------- 4b) Award XP gamification (étude #16 ETUDE-2026-05-02) ----- */
   // Big award (50 XP) car le Cerfa 2086 est l'action la plus engageante du
   // site. Best-effort, jamais bloquant : si le badge fail, le PDF est livré.
   // Rate-limit 1×/jour côté lib/gamification (cf. ACTION_LIMITS).
@@ -210,7 +195,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  /* ---------- 6) Stream PDF + headers ---------- */
+  /* ---------- 5) Stream PDF + headers ---------- */
   const filename = `cryptoreflex-cerfa-2086-${summary.taxYear}.pdf`;
   return new Response(new Uint8Array(pdfBytes) as BodyInit, {
     status: 200,

@@ -1,58 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import {
   CheckCircle2,
-  Crown,
+  Sparkles,
   Mail,
   ArrowRight,
-  Sparkles,
-  ShieldCheck,
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
-// BATCH 39 — confetti CSS-only (zéro lib) qui se déclenche uniquement
-// quand session_id Stripe est présent (vrai retour paiement, pas un
-// utilisateur qui revient sur la page bookmark).
-const SimpleConfetti = dynamic(
-  () => import("@/components/animations/SimpleConfetti"),
-  { ssr: false },
-);
-
-// Plan E (mai 2026) — pixel de conversion publicitaire (Reddit/X/Google Ads)
-// fired UNIQUEMENT si session_id Stripe est présent (= retour paiement).
-const PurchaseConversionFire = dynamic(
-  () => import("@/components/PurchaseConversionFire"),
-  { ssr: false },
-);
+/**
+ * /pro/welcome — page de bienvenue (démonétisation juin 2026).
+ *
+ * Anciennement page post-paiement (retour Stripe, confetti + pixel de
+ * conversion publicitaire). Cryptoreflex étant désormais 100 % gratuit, il
+ * n'y a plus de paiement : on retire toute référence paiement/abonnement, le
+ * pixel de conversion et le confetti lié au session_id Stripe.
+ *
+ * On conserve la route (pas de 404) avec une notice neutre de bienvenue qui
+ * oriente vers la connexion / l'espace compte et les outils gratuits. Reste
+ * noindex (pas de valeur SEO propre).
+ */
 
 export const metadata: Metadata = {
-  title: "Bienvenue dans Cryptoreflex Pro",
+  title: "Bienvenue sur Cryptoreflex",
   description:
-    "Votre paiement est confirmé. Voici comment accéder à votre compte Pro et débloquer vos premières features.",
+    "Bienvenue : tous les outils Cryptoreflex sont gratuits. Connectez-vous pour retrouver votre portfolio, vos alertes et votre watchlist.",
   alternates: withHreflang(`${BRAND.url}/pro/welcome`),
-  robots: { index: false, follow: true }, // page post-paiement, pas indexable
+  robots: { index: false, follow: true },
 };
 
-interface SearchParams {
-  searchParams?: { session_id?: string };
-}
-
-export default function WelcomePage({ searchParams }: SearchParams) {
-  // session_id Stripe — on l'affiche pour la traçabilité user
-  const sessionId = searchParams?.session_id;
-
+export default function WelcomePage() {
   return (
     <section
       aria-labelledby="welcome-title"
       className="relative overflow-hidden min-h-[80vh] py-16 sm:py-20 isolate"
     >
-      {/* BATCH 39 — Confetti CSS-only déclenché uniquement si session_id
-          Stripe présent (= vrai retour paiement). Évite déclenchement sur
-          user qui revient bookmark. */}
-      {sessionId && <SimpleConfetti />}
-      {sessionId && <PurchaseConversionFire sessionId={sessionId} />}
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
       <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] bg-primary/15 rounded-full blur-3xl pointer-events-none" />
 
@@ -62,69 +45,48 @@ export default function WelcomePage({ searchParams }: SearchParams) {
             <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
           </span>
           <span className="ds-eyebrow inline-flex items-center gap-1.5 text-primary-soft">
-            <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-            BIENVENUE DANS PRO
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            BIENVENUE
           </span>
           <h1
             id="welcome-title"
             className="mt-4 text-3xl sm:text-5xl font-extrabold text-fg leading-tight"
           >
-            Votre paiement est{" "}
-            <span className="text-gradient-gold-animate">confirmé.</span>
+            Tout est{" "}
+            <span className="text-gradient-gold-animate">gratuit.</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-xl mx-auto leading-relaxed">
-            Merci de votre confiance. Votre accès Pro est actif. Voici comment
-            vous connecter à votre espace personnel.
+            Bienvenue sur {BRAND.name}. Portfolio, alertes, watchlist et tous
+            les outils sont ouverts à tout le monde, gratuitement. Connectez-vous
+            pour retrouver votre espace personnel.
           </p>
         </div>
 
-        {/* Étape 1 : email magic link */}
-        <div className="glass rounded-2xl p-6 mb-4 border-l-4 border-primary">
+        {/* Connexion par lien magique */}
+        <div className="glass rounded-2xl p-6 mb-8 border-l-4 border-primary">
           <div className="flex items-start gap-4">
             <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/30">
               <Mail className="h-5 w-5" aria-hidden="true" />
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wider text-primary-soft mb-1">
-                Étape 1 — Email envoyé
-              </p>
               <h2 className="font-bold text-fg text-lg">
-                Vérifiez votre boîte mail
+                Connectez-vous en un clic
               </h2>
               <p className="mt-2 text-sm text-fg/70 leading-relaxed">
-                Un lien magique de connexion vient d&apos;être envoyé à
-                l&apos;email utilisé pour votre paiement Stripe. Cliquez
-                dessus pour activer votre accès — pas de mot de passe à
-                retenir.
+                Entrez votre email sur la page de connexion : vous recevez un
+                lien magique pour activer votre espace — pas de mot de passe à
+                retenir. Pensez à vérifier vos spams (le lien expire dans
+                1&nbsp;heure).
               </p>
-              <p className="mt-2 text-xs text-muted">
-                Pensez à vérifier vos spams. Le lien expire dans 1 heure.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Étape 2 : si magic link non reçu */}
-        <div className="glass rounded-2xl p-6 mb-8">
-          <div className="flex items-start gap-4">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-warning/15 text-warning border border-warning/30">
-              <Sparkles className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wider text-warning-fg mb-1">
-                Pas reçu d&apos;email ?
-              </p>
-              <p className="mt-1 text-sm text-fg/70 leading-relaxed">
-                Vous pouvez demander un nouveau lien sur la page connexion en
-                renseignant votre email de paiement. Si rien ne fonctionne,
-                écrivez-nous à{" "}
+              <p className="mt-2 text-sm text-fg/70 leading-relaxed">
+                Une question&nbsp;? Écrivez-nous à{" "}
                 <a
-                  href={`mailto:${BRAND.email}?subject=Probl%C3%A8me%20activation%20Pro`}
+                  href={`mailto:${BRAND.email}`}
                   className="text-primary-soft underline hover:text-primary font-semibold"
                 >
                   {BRAND.email}
-                </a>{" "}
-                — on débloque sous 24 h ouvrées.
+                </a>
+                .
               </p>
             </div>
           </div>
@@ -143,10 +105,6 @@ export default function WelcomePage({ searchParams }: SearchParams) {
               aria-hidden="true"
             />
           </Link>
-          <p className="mt-4 text-xs text-muted flex items-center justify-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-success" aria-hidden="true" />
-            Annulation 1 clic · Garantie 14 j remboursé · RGPD UE
-          </p>
         </div>
 
         {/* Quick wins disponibles immédiatement */}
@@ -163,7 +121,7 @@ export default function WelcomePage({ searchParams }: SearchParams) {
                 Radar 3916-bis
               </h3>
               <p className="mt-1 text-xs text-fg/70">
-                Détectez vos amendes crypto avant mai 2026
+                Détectez vos comptes crypto étrangers à déclarer
               </p>
             </Link>
             <Link
@@ -190,13 +148,6 @@ export default function WelcomePage({ searchParams }: SearchParams) {
             </Link>
           </div>
         </div>
-
-        {sessionId && (
-          <p className="mt-8 text-center text-xs text-muted">
-            Référence de paiement&nbsp;:{" "}
-            <code className="font-mono">{sessionId.slice(0, 20)}…</code>
-          </p>
-        )}
       </div>
     </section>
   );

@@ -83,13 +83,15 @@ const SUB_CRONS = [
   // leads PDF recevaient l'email J0 mais jamais les J2/J5/J9/J14. Ajout en
   // critical:false (échec ne bloque pas le reste) + timeout 12s par défaut.
   { name: "email-series-fiscalite", path: "/api/cron/email-series-fiscalite", critical: false },
-  { name: "aggregate-news", path: "/api/cron/aggregate-news", critical: false },
-  { name: "generate-ta", path: "/api/cron/generate-ta", critical: false },
+  // DÉMONÉTISATION (juin 2026) : génération de CONTENU AUTO désactivée tant que
+  // Kevin n'a pas validé un budget IA + un process éditorial. On retire de
+  // l'orchestrateur : aggregate-news (réécriture news via OpenRouter = coût IA),
+  // generate-ta (analyses techniques auto) et daily-brief (brief auto). Les jobs
+  // DATA/ops (prix, alertes, événements, indexnow, emails) restent actifs.
+  // { name: "aggregate-news", path: "/api/cron/aggregate-news", critical: false },
+  // { name: "generate-ta", path: "/api/cron/generate-ta", critical: false },
+  // { name: "daily-brief", path: "/api/cron/daily-brief", critical: false },
   { name: "refresh-events", path: "/api/cron/refresh-events", critical: false },
-  // Daily Brief — Tier S #3 (Café Crypto 7h). Génère un MDX dans content/news/
-  // avec top movers, événements à venir et FAQ rotative AEO. Critical:false
-  // car si CoinGecko down, on ne veut pas casser les autres jobs.
-  { name: "daily-brief", path: "/api/cron/daily-brief", critical: false },
   // BATCH 19 — IndexNow daily push (Bing/Yandex/Seznam) sur ~28 URLs
   // critiques (hubs + landings). Très rapide (~1s, 1 fetch interne).
   // Critical:false : si Bing API down, on continue les autres jobs.
