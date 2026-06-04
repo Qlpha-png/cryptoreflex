@@ -170,7 +170,7 @@ const SECTIONS: MenuSection[] = [
     id: "membres",
     title: "Membres",
     Icon: Crown,
-    intro: "Pro, portefeuille, alertes",
+    intro: "Portefeuille, alertes, soutien libre",
     items: [
       { href: "/soutenir", label: "Soutenir Cryptoreflex", desc: "Contribution volontaire — tout reste gratuit" },
       { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi positions live" },

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import Logo from "./Logo";
-import LiveCommunityStats from "./LiveCommunityStats";
 
 /**
  * Footer — pied de page Cryptoreflex (CRITIQUE SEO sitelinks Google + UX engagement final).
@@ -145,7 +144,6 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/embed", label: "Widgets embed (gratuit)" },
       { href: "/confidentialite", label: "Confidentialité (RGPD)" },
       { href: "/mentions-legales", label: "Mentions légales" },
-      { href: "/cgv-abonnement", label: "CGV abonnement" },
       { href: "/accessibilite", label: "Accessibilité (RGAA)" },
     ],
   },
@@ -283,18 +281,8 @@ export default async function Footer() {
           </span>
         </div>
 
-        {/*
-          Étude 02/05/2026 — Proposition #18 (LiveCommunityStats compact) :
-          bandeau "communauté en vie" au-dessus du copyright. Server Component
-          async qui fetch /api/community-stats (cache 5 min). Variant "compact"
-          = 3 chiffres en ligne, pas d'icônes lourdes pour rester discret.
-        */}
-        <div
-          className="mt-6 pt-4 border-t border-border/60"
-          aria-label="Communauté Cryptoreflex en vie"
-        >
-          <LiveCommunityStats variant="compact" />
-        </div>
+        {/* DÉMONÉTISATION juin 2026 : widget LiveCommunityStats retiré du footer
+            (il affichait « abonnés Soutien Pro » — il n'y a plus de tier payant). */}
 
         <div className="mt-6 pt-4 border-t border-border/60 space-y-3 text-xs text-fg/75">
           <div className="flex flex-col md:flex-row justify-between gap-3">

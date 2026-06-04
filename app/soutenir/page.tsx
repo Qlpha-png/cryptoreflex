@@ -297,6 +297,74 @@ export default function SoutenirPage() {
         </div>
       </section>
 
+      {/* POURQUOI GRATUIT — transparence du modèle (Option C : section, pas de page doublon) */}
+      <section
+        aria-labelledby="pourquoi-gratuit-title"
+        className="border-t border-border bg-surface/20"
+      >
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center mb-8">
+            <span className="ds-eyebrow text-primary-soft">TRANSPARENCE</span>
+            <h2
+              id="pourquoi-gratuit-title"
+              className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg"
+            >
+              Pourquoi Cryptoreflex est gratuit ?
+            </h2>
+          </div>
+
+          <div className="glass rounded-2xl divide-y divide-border overflow-hidden">
+            {[
+              {
+                q: "Comment le site est-il financé si tout est gratuit ?",
+                a: "Par des liens d'affiliation transparents (quand vous ouvrez un compte ou achetez du matériel via nos liens, un partenaire nous reverse une commission, sans surcoût pour vous) et par le soutien libre, facultatif. Aucun paywall, aucun abonnement.",
+              },
+              {
+                q: "Le soutien donne-t-il des avantages ou influence-t-il les classements ?",
+                a: "Non. C'est une contribution volontaire, sans contrepartie : tout reste accessible gratuitement à tout le monde. Nos comparatifs et classements ne sont jamais vendus — la méthodologie est publique et les liens affiliés n'achètent aucune position.",
+              },
+              {
+                q: "Quels sont les coûts derrière le site ?",
+                a: "Hébergement et bande passante, APIs de données crypto, temps de rédaction et de mise à jour, vérifications, et maintenance technique. Le soutien libre sert uniquement à couvrir ces frais et à garder le projet indépendant.",
+              },
+              {
+                q: "Y a-t-il des limites à ce que propose Cryptoreflex ?",
+                a: "Oui : de la pédagogie et des outils, pas de conseil en investissement personnalisé. Cryptoreflex n'est ni un PSAN ni un CIF immatriculé. Pour une situation fiscale ou patrimoniale précise, consultez un professionnel réglementé.",
+              },
+            ].map((f) => (
+              <details key={f.q} className="group">
+                <summary className="flex items-center justify-between gap-3 cursor-pointer list-none px-5 sm:px-6 py-4 font-semibold text-fg text-sm sm:text-base">
+                  {f.q}
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full bg-elevated text-primary-soft border border-border group-open:rotate-45 transition-transform text-lg leading-none"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="px-5 sm:px-6 pb-5 text-sm text-fg/75 leading-relaxed">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </div>
+
+          <p className="mt-6 text-center text-xs text-muted">
+            Pour aller plus loin :{" "}
+            <Link href="/transparence" className="text-primary-soft underline hover:text-primary">
+              affiliation transparente
+            </Link>{" · "}
+            <Link href="/charte" className="text-primary-soft underline hover:text-primary">
+              charte éthique
+            </Link>{" · "}
+            <Link href="/methodologie" className="text-primary-soft underline hover:text-primary">
+              méthodologie publique
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
       {/* ÉDITEUR INDÉPENDANT */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-14 text-center">
         <p className="text-sm text-fg/70 leading-relaxed">

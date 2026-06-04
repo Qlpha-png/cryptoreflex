@@ -70,7 +70,7 @@ type Tab = {
 const TABS: ReadonlyArray<Tab> = [
   { href: "/", label: "Accueil", Icon: Home },
   { href: "/quiz/plateforme", label: "Quiz", Icon: Sparkles },
-  { href: "/partenaires", label: "Boutique", Icon: ShoppingBag, revenue: true },
+  { href: "/partenaires", label: "Partenaires", Icon: ShoppingBag, revenue: true },
   { href: "/actualites", label: "Actu", Icon: Newspaper },
   { href: "/outils", label: "Outils", Icon: Wrench },
 ];
