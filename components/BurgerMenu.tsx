@@ -101,7 +101,7 @@ const SECTIONS: MenuSection[] = [
     Icon: Sparkles,
     intro: "780 fiches + 4950 comparatifs",
     items: [
-      { href: "/cryptos", label: "780 cryptos analysées", desc: "100 fiches premium + 680 LLM" },
+      { href: "/cryptos", label: "780 fiches crypto", desc: "100 fiches premium + 680 LLM" },
       { href: "/comparer", label: "Comparer 2 cryptos", desc: "Hub des 100 fiches éditoriales", badge: "MASSIF" },
       { href: "/vs", label: "Tous les duels crypto", desc: "4950 paires analysées (BTC vs ETH, etc.)" },
       { href: "/cryptos/comparer", label: "Comparateur dynamique", desc: "Compare 3-4 cryptos avec prix live" },
