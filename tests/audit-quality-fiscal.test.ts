@@ -126,4 +126,53 @@ describe("audit:quality — anti-régression fiscale (fiscal-*)", () => {
       0,
     );
   });
+
+  /* ----------------------------------------------------------------------- */
+  /*  Anti-régression Codex (juin 2026) — durcissement FISCAL_NUANCE         */
+  /*  La nuance trop large `actifs? numériques?` a été retirée : c'est une   */
+  /*  catégorie descriptive, pas une nuance fiscale (sursis/sans soulte/     */
+  /*  150 VH bis). Le pattern accueille aussi « déclenche l'impôt ».         */
+  /* ----------------------------------------------------------------------- */
+
+  it("FLAG (Codex) : « échange entre actifs numériques est une cession imposable » (sans vraie nuance)", () => {
+    expect(rules("Un échange entre actifs numériques est une cession imposable.")).toContain(
+      "fiscal-swap-cession-sans-nuance",
+    );
+  });
+
+  it("OK (Codex) : échange entre actifs numériques sans soulte + sursis + 150 VH bis", () => {
+    expect(
+      lint(
+        "Un échange entre actifs numériques sans soulte bénéficie du sursis d'imposition prévu par l'article 150 VH bis du CGI.",
+      ),
+    ).toHaveLength(0);
+  });
+
+  it("FLAG (Codex) : arbitrage entre deux actifs numériques déclenche une cession imposable", () => {
+    expect(
+      rules("Un arbitrage entre deux actifs numériques déclenche une cession imposable."),
+    ).toContain("fiscal-swap-cession-sans-nuance");
+  });
+
+  it("OK (Codex) : cession contre monnaie ayant cours légal + échange sans soulte = sursis", () => {
+    expect(
+      lint(
+        "Une cession contre monnaie ayant cours légal peut constituer un fait générateur fiscal, tandis qu'un échange entre actifs numériques sans soulte relève du sursis prévu par l'article 150 VH bis.",
+      ),
+    ).toHaveLength(0);
+  });
+
+  it("FLAG (Codex) : « Passer de Bitcoin vers un stablecoin déclenche automatiquement l'impôt »", () => {
+    expect(
+      rules("Passer de Bitcoin vers un stablecoin déclenche automatiquement l'impôt."),
+    ).toContain("fiscal-swap-cession-sans-nuance");
+  });
+
+  it("OK (Codex) : crypto vers stablecoin sans soulte = sursis (analyse prudente)", () => {
+    expect(
+      lint(
+        "Un échange crypto vers stablecoin doit être analysé comme un échange entre actifs numériques ; sans soulte, le sursis d'imposition prévu par l'article 150 VH bis peut s'appliquer selon la situation.",
+      ),
+    ).toHaveLength(0);
+  });
 });

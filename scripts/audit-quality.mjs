@@ -23,7 +23,8 @@
  *      seulement à la cession contre euro/bien/service ou avec soulte). Le timing du
  *      staking/airdrop n'est PAS tranché par une doctrine officielle dédiée.
  *      Scan ÉLARGI (broadScan) : + content/news (bot daily), content/lead-magnets, data (+ .json).
- *      Les 4 guides fiscaux dédiés sont whitelistés (ils exposent le débat avec caveats).
+ *      Les 4 guides fiscaux dédiés NE sont PAS whitelistés (audit Codex juin 2026) — une
+ *      régression doctrinale y serait la plus grave. Cf. note ci-dessous (L75+).
  *
  * Usage :
  *   node scripts/audit-quality.mjs              # check tout, exit 1 si erreur
@@ -84,14 +85,17 @@ const FISCAL_EXTS = [...SOURCE_EXTS, ".json"]; // glossary.json / faq-crypto.jso
 // Marqueurs qui rendent une mention "imposable/cession" acceptable parce que la
 // phrase est correcte ou prudente.
 const FISCAL_NUANCE =
-  // négation imposable/taxable, tolérante au markdown (**pas** imposable)
-  "sans soulte|sursis|150[\\s ]?VH[\\s ]?bis|\\bpas[\\s*_]{0,3}(?:imposabl|taxabl|un fait)|" +
+  // négation imposable/taxable, tolérante au markdown (**pas** imposable / pas immédiatement imposable)
+  "sans soulte|avec soulte|sursis|150[\\s ]?VH[\\s ]?bis|\\bpas[\\s*_]{0,3}(?:imposabl|taxabl|un fait)|" +
+  "pas imm[ée]diatement (?:imposabl|taxabl)|" +
   "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
   "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
   "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente|BNC|plus-value)|" +
-  // cession LÉGITIMEment imposable (contre euro/fiat/devise) — ne pas flaguer
-  "contre (?:un[e]? |des )?euro|en euros|contre fiat|contre devise|cours légal|\\bfiat\\b|vers (?:le )?fiat|" +
-  "bien\\/service|états?[- ]?unis|aux us\\b|professionnel|mining|actifs? numériques?|" +
+  // cession LÉGITIMEment imposable (contre euro/fiat/devise/bien-service) — ne pas flaguer
+  "contre (?:un[e]? |des )?euro|en euros|contre fiat|contre devise|cours légal|monnaie ayant cours l[ée]gal|\\bfiat\\b|vers (?:le )?fiat|" +
+  "bien\\/service|contre un bien ou service|états?[- ]?unis|aux us\\b|professionnel|mining|" +
+  // RETIRÉ (audit Codex juin 2026) : `actifs? numériques?` — c'est une catégorie descriptive, PAS une nuance
+  // fiscale. Elle laissait passer « Un échange entre actifs numériques est une cession imposable » sans flag.
   "report d['’]imposition|intercalaire|régime occasionnel|qualifié[es]?|activité (?:régulière|habituelle)|" +
   // débat documenté : framing conditionnel / absence de doctrine dédiée (ne pas flaguer)
   "ne (?:traite|contient|précise|fixe|mentionne) pas|pas explicitement|si imposé|\\bsinon\\b|" +
@@ -179,7 +183,7 @@ const RULES = [
     label:
       "Swap crypto→crypto / crypto→stablecoin présenté comme cession imposable sans nuance (sursis 150 VH bis)",
     pattern:
-      /(?:swap|échange|conversion|arbitrage|token[- ]?to[- ]?token|crypto[- ]?(?:→|->|vers|contre|à)[- ]?(?:crypto|stablecoin|token)|crypto[- ]crypto|stablecoin)[^.\n]{0,75}(?:cession (?:taxable|imposable)|fait g[ée]n[ée]rateur(?: fiscal)?|(?:est|sont|constitue|considéré[es]*? comme|assimilé[es]*? à)[^.\n]{0,22}(?:taxable|imposable|une cession))/gi,
+      /(?:swap|échange|conversion|arbitrage|token[- ]?to[- ]?token|crypto[- ]?(?:→|->|vers|contre|à)[- ]?(?:crypto|stablecoin|token)|crypto[- ]crypto|stablecoin)[^.\n]{0,75}(?:cession (?:taxable|imposable)|fait g[ée]n[ée]rateur(?: fiscal)?|d[ée]clenche[^.\n]{0,22}(?:l['’]?imp[oô]t|la (?:taxation|fiscalit[ée])|l['’]imposition|une? (?:cession|taxation))|taxation imm[ée]diate|(?:est|sont|constitue|considéré[es]*? comme|assimilé[es]*? à)[^.\n]{0,22}(?:taxable|imposable|une cession))/gi,
     severity: "error",
     broadScan: true,
     allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
