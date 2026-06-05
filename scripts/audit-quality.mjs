@@ -44,6 +44,11 @@ const ROOT = resolve(process.argv[1] || ".", "..", "..");
 const argv = process.argv.slice(2);
 const STRICT = argv.includes("--strict");
 const JSON_OUT = argv.includes("--json");
+// Gate CI fiscal (juin 2026) : --fiscal-only ne lance QUE la famille de règles
+// fiscales (broadScan), en sautant les règles de base — la dette historique
+// no-signal-achat-direct ne fait donc PAS échouer le gate. La règle fiscale
+// n'est PAS affaiblie : elle tourne en entier. Utilisé par daily-content.yml.
+const FISCAL_ONLY = argv.includes("--fiscal-only");
 
 // Scan de base (règles historiques).
 const SCAN_DIRS = ["app", "components", "lib", "content/articles"];
@@ -322,10 +327,17 @@ const checkFile = (path, opts) => {
 };
 
 const main = () => {
-  if (!JSON_OUT) console.log(`audit-quality — scan ${SCAN_DIRS.join(", ")} (+ fiscal élargi)`);
+  if (!JSON_OUT)
+    console.log(
+      FISCAL_ONLY
+        ? "audit-quality — règles FISCALES uniquement (--fiscal-only, gate CI)"
+        : `audit-quality — scan ${SCAN_DIRS.join(", ")} (+ fiscal élargi)`,
+    );
 
   // Passe 1 : règles historiques sur le scan de base.
-  const baseFiles = SCAN_DIRS.flatMap((d) => walk(resolve(ROOT, d)));
+  // En --fiscal-only on la saute : le gate daily ne doit bloquer que sur la
+  // doctrine fiscale, pas sur la dette préexistante no-signal-achat-direct.
+  const baseFiles = FISCAL_ONLY ? [] : SCAN_DIRS.flatMap((d) => walk(resolve(ROOT, d)));
   for (const f of baseFiles) checkFile(f, { onlyBroad: false });
 
   // Passe 2 : règles fiscales (broadScan) sur le scan élargi (+ .json).

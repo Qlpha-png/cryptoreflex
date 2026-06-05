@@ -58,6 +58,17 @@ jobs:
           # jamais de coquille vide publiée).
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
+      # GATE ANTI-RÉGRESSION FISCALE (juin 2026) — bloquant, AVANT commit/push.
+      # Si le contenu généré réintroduit une fausse doctrine fiscale (swap
+      # crypto→crypto / crypto→stablecoin imposable sans nuance, staking/airdrop
+      # BNC à la réception sans prudence, fausses dates BOFiP, seuils inventés),
+      # ce step échoue → le mauvais contenu n'est NI committé NI poussé.
+      # Volontairement bloquant : pas de `|| true`, pas de `continue-on-error`.
+      # --fiscal-only ne lance que la famille fiscale (ignore la dette historique
+      # no-signal-achat-direct, sans affaiblir la règle fiscale). Script zéro-dépendance.
+      - name: Gate audit fiscal anti-régression (bloquant)
+        run: node scripts/audit-quality.mjs --fiscal-only
+
       - name: Detect changes
         id: changes
         run: |

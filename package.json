@@ -17,6 +17,7 @@
     "audit:sitemap:local": "node scripts/audit-sitemap.mjs --base http://localhost:3000",
     "audit:quality": "node scripts/audit-quality.mjs",
     "audit:quality:strict": "node scripts/audit-quality.mjs --strict",
+    "audit:fiscal": "node scripts/audit-quality.mjs --fiscal-only",
     "audit:all": "npm run audit:quality && npm run audit:sitemap",
     "test": "vitest run",
     "test:watch": "vitest",
