@@ -16,13 +16,17 @@ import AcademyCrossLink from "@/components/AcademyCrossLink";
  * (unstable_cache). Dégradation gracieuse : si Supabase n'est pas configuré
  * (build local), seules les 100 statiques sont retournées.
  *
- * RENDU DYNAMIQUE (runtime) — IMPORTANT : au BUILD/SSG, le fetch Supabase des
- * 680 fiches LLM revient vide (clé service-role indispo au build Vercel) → la
- * page serait figée à 100. Au runtime, getAllCryptosUnified renvoie bien les
- * 780 (vérifié : /alertes, /admin, /api/*). On force donc le rendu runtime ;
- * la data restant cachée 6h (unstable_cache), le coût DB reste borné.
+ * ISR 1h (2026-05-28) — remplace l'ancien `force-dynamic`. La justification
+ * historique (« clé service-role indispo au build Vercel ») est caduque :
+ * SUPABASE_SERVICE_ROLE_KEY est configurée côté Vercel depuis la migration
+ * Hetzner→Vercel (2026-05-27), le build a donc accès aux 780 fiches.
+ * Gain mesuré : TTFB 1.9 s (render dynamique) → ~50 ms (HIT CDN).
+ * Filet de sécurité : si un build tombe pendant un incident Supabase, la page
+ * régénérée ne contiendrait que les 100 fiches statiques pendant au plus 1 h
+ * (revalidate ci-dessous) avant le retour des 780 — dégradation acceptable
+ * et silencieuse (CryptosBrowser pagine ce qu'on lui donne).
  */
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const SITE = "https://www.cryptoreflex.fr";
 
