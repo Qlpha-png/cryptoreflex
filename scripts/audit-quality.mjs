@@ -148,8 +148,23 @@ const RULES = [
     pattern: /signal d'achat/gi,
     severity: "error",
     allowContextRegex:
-      /(?:pas|aucun|sans|jamais|interdit|ne donne|ne fait) (?:de |un )?signal d'achat|signal d'achat[a-zà-ÿ ',]*?(?:n'est|pas|jamais)/i,
-    allowPaths: ["lib/crypto-glossary.ts", "lib/glossary.ts"],
+      // "comme " optionnel couvre les négations « jamais comme signal d'achat »
+      // et « pas comme un signal d'achat » (audit 2026-05-28, faux positifs).
+      /(?:pas|aucun|sans|jamais|interdit|ne donne|ne fait) (?:comme )?(?:de |un )?signal d'achat|signal d'achat[a-zà-ÿ ',]*?(?:n'est|pas|jamais)/i,
+    allowPaths: [
+      "lib/crypto-glossary.ts",
+      "lib/glossary.ts",
+      // Option PIÈGE de quiz académie ("C'est un signal d'achat immédiat." est
+      // une mauvaise réponse, l'explication la réfute juste après). Vérifié
+      // manuellement 2026-05-28.
+      "lib/academy-quizzes.ts",
+      // Articles pédagogiques d'analyse technique : "signal d'achat" y est un
+      // terme métier défini/illustré (MACD, chandeliers), jamais une reco perso.
+      // Audit 2026-05-28 : contexte vérifié manuellement, mentions légitimes.
+      "content/articles/lire-graphique-crypto-chandeliers-japonais-2026.mdx",
+      "content/articles/pump-and-dump-crypto-comprendre-eviter-2026.mdx",
+      "content/articles/indicateurs-techniques-rsi-macd-moyennes-mobiles-2026.mdx",
+    ],
   },
   {
     id: "no-zero-plus-counter",
