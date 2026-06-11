@@ -461,7 +461,7 @@ const nextConfig = {
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
       // 3s + SWR 15s) au lieu d'attaquer Binance direct côté client. Réduction
       // de la surface d'attaque CSP + 90% cache hit edge.
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://*.reddit.com https://analytics.twitter.com",
+      "connect-src 'self' wss://stream.binance.com https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://stats.g.doubleclick.net https://*.reddit.com https://analytics.twitter.com",
       // TradingView widget (lightweight iframe). `frame-src` autorise NOUS
       // à embarquer TradingView (sens inverse de frame-ancestors).
       "frame-src https://s.tradingview.com https://www.tradingview.com",
@@ -485,7 +485,7 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com",
+      "connect-src 'self' wss://stream.binance.com https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com",
       "frame-src https://s.tradingview.com https://www.tradingview.com",
       // Autorise n'importe quel parent → embed cross-origin OK.
       "frame-ancestors *",

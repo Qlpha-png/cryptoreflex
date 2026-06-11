@@ -21,6 +21,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { COINGECKO_TO_BINANCE } from "@/lib/binance-mapping";
 
 export type LivePriceStatus = "connecting" | "live" | "fallback" | "error";
 
@@ -78,6 +79,7 @@ export function useLivePrices(ids: string[]): UseLivePricesResult {
 
   // Refs pour le cycle de vie (close, retry, fallback timer).
   const esRef = useRef<EventSource | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fallbackTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const failureCountRef = useRef(0);
@@ -267,12 +269,100 @@ export function useLivePrices(ids: string[]): UseLivePricesResult {
       };
     };
 
-    connect();
+    /* ------------------------------------------------------------------
+     * VOIE 0 (2026-06-12) — WebSocket Binance DIRECT côté navigateur.
+     * Binance bloque les IP serveur Vercel mais PAS les clients : le
+     * navigateur du visiteur se connecte à wss://stream.binance.com →
+     * vrai temps réel tick-par-tick, zéro coût serveur, zéro quota.
+     * miniTicker fournit close (c) + open 24h (o) → change24h dérivée.
+     * Les ids sans paire Binance (ex. tether ≡ 1 $) gardent leur valeur
+     * seed SSR. Si le WS échoue (réseau d'entreprise, extension), on
+     * retombe sur la chaîne existante SSE → poll REST, inchangée.
+     * ------------------------------------------------------------------ */
+    const symbolToId = new Map<string, string>();
+    for (const id of cappedIds) {
+      const sym = COINGECKO_TO_BINANCE[id];
+      if (sym) symbolToId.set(sym, id);
+    }
+
+    const startBinanceWs = (): boolean => {
+      if (typeof WebSocket === "undefined" || symbolToId.size === 0) {
+        return false;
+      }
+      try {
+        const streams = [...symbolToId.keys()]
+          .map((s) => `${s.toLowerCase()}@miniTicker`)
+          .join("/");
+        // Port 443 standard (PAS :9443) : le 9443 est filtré par beaucoup
+        // de pare-feux/réseaux (constaté au contrôle local), et la CSP
+        // wss://stream.binance.com ne couvre que le port par défaut.
+        const ws = new WebSocket(
+          `wss://stream.binance.com/stream?streams=${streams}`,
+        );
+        wsRef.current = ws;
+
+        ws.onopen = () => {
+          if (cancelledRef.current) return;
+          setStatus("live");
+        };
+        ws.onmessage = (ev) => {
+          if (cancelledRef.current) return;
+          try {
+            const msg = JSON.parse(ev.data as string) as {
+              data?: { s?: string; c?: string; o?: string; E?: number };
+            };
+            const d = msg.data;
+            const id = d?.s ? symbolToId.get(d.s) : undefined;
+            if (!id || !d?.c || !d?.o) return;
+            const price = parseFloat(d.c);
+            const open = parseFloat(d.o);
+            if (!Number.isFinite(price) || !Number.isFinite(open) || open <= 0) {
+              return;
+            }
+            applyUpdate({
+              id,
+              price,
+              change24h: ((price - open) / open) * 100,
+              ts: d.E ?? Date.now(),
+            });
+          } catch {
+            /* message malformé : on ignore */
+          }
+        };
+        const failover = () => {
+          if (cancelledRef.current) return;
+          wsRef.current = null;
+          // WS indisponible → chaîne historique (SSE désactivé → poll REST)
+          connect();
+        };
+        ws.onerror = failover;
+        ws.onclose = (ev) => {
+          // Fermeture propre par nous (cleanup) → cancelledRef coupe tout.
+          if (!cancelledRef.current && wsRef.current === ws) failover();
+        };
+        return true;
+      } catch {
+        wsRef.current = null;
+        return false;
+      }
+    };
+
+    if (!startBinanceWs()) {
+      connect();
+    }
 
     return () => {
       cancelledRef.current = true;
       cleanupTimers();
       closeEventSource();
+      if (wsRef.current) {
+        try {
+          wsRef.current.close();
+        } catch {
+          /* noop */
+        }
+        wsRef.current = null;
+      }
     };
   }, [idsKey]);
 
