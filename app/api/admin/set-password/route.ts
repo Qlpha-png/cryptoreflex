@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
   if (listError) {
     console.error("[admin/set-password] users query error:", listError.message);
     return NextResponse.json(
-      { error: "Erreur Supabase: " + listError.message },
+      { error: "Erreur interne (détail dans les logs serveur)" },
       { status: 500 }
     );
   }
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
 
   if (!user) {
     return NextResponse.json(
-      { error: `Aucun user trouvé avec email ${email}` },
+      { error: "Aucun utilisateur trouvé pour cet email" },
       { status: 404 }
     );
   }

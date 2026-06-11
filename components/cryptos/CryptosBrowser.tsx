@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -146,14 +146,19 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
     return CATEGORY_ORDER.filter((n) => g[n] > 0).map((n) => ({ name: n, count: g[n] }));
   }, [items]);
 
+  // PERF 2026-06-11 — useDeferredValue sur la recherche : la frappe reste
+  // fluide (l'input se met à jour en priorité), le re-filtre/re-render de la
+  // grille 780 items suit en transition non bloquante (React 18).
+  const deferredQuery = useDeferredValue(query);
+
   const filtered = useMemo(() => {
     let list = items;
     if (filter === "llm") list = list.filter((c) => c.source === "llm-pipeline");
     else if (filter === "top10" || filter === "hidden-gem")
       list = list.filter((c) => c.source === "static" && staticById.get(c.id)?.kind === filter);
     if (category) list = list.filter((c) => classifyCategory(c.category) === category);
-    if (query.trim()) {
-      const q = query.toLowerCase();
+    if (deferredQuery.trim()) {
+      const q = deferredQuery.toLowerCase();
       list = list.filter((c) => {
         const r = c.source === "static" ? staticById.get(c.id) : undefined;
         return (
@@ -165,12 +170,12 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
       });
     }
     return [...list].sort((a, b) => rankKey(a, staticById) - rankKey(b, staticById));
-  }, [items, filter, category, query, staticById]);
+  }, [items, filter, category, deferredQuery, staticById]);
 
   // Reset à la page 1 dès qu'un filtre/recherche change.
   useEffect(() => {
     setPage(1);
-  }, [filter, category, query]);
+  }, [filter, category, deferredQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const safePage = Math.min(page, totalPages);

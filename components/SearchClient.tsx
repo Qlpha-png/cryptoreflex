@@ -165,7 +165,6 @@ export default function SearchClient() {
                 type="button"
                 role="radio"
                 aria-checked={isActive}
-                aria-pressed={isActive}
                 disabled={disabled}
                 onClick={() => setFilter(f.key)}
                 className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${

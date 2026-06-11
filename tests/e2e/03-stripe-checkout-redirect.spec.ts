@@ -17,7 +17,10 @@
 
 import { test, expect } from "@playwright/test";
 
-test.describe("Stripe checkout redirect", () => {
+// SKIP 2026-06-11 — fonctionnalité démonétisée le 3 juin 2026
+// (Cryptoreflex 100 % gratuit : webhook Stripe stub, AskAI désactivé).
+// Ré-activer ce describe si le plan Soutien/Pro revient.
+test.describe.skip("Stripe checkout redirect", () => {
   test("clicking 'Devenir Soutien' triggers Stripe checkout creation", async ({
     page,
   }) => {

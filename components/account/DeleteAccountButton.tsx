@@ -63,7 +63,7 @@ export default function DeleteAccountButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-sm font-semibold text-danger hover:text-danger inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-danger/40 hover:bg-danger/10 transition-colors min-h-[40px]"
+        className="text-sm font-semibold text-danger hover:text-danger inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-danger/40 hover:bg-danger/10 transition-colors min-h-tap"
       >
         <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
         Supprimer mon compte
@@ -137,7 +137,7 @@ export default function DeleteAccountButton() {
                 type="button"
                 onClick={handleDelete}
                 disabled={!isReady || loading}
-                className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-2 rounded-lg bg-danger text-white font-semibold px-4 py-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-danger/90 transition-colors"
+                className="flex-1 min-h-tap inline-flex items-center justify-center gap-2 rounded-lg bg-danger text-white font-semibold px-4 py-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-danger/90 transition-colors"
               >
                 {loading ? (
                   "Suppression en cours…"

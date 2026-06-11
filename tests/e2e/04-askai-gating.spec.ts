@@ -14,7 +14,10 @@
 
 import { test, expect } from "@playwright/test";
 
-test.describe("AskAI Pro gating", () => {
+// SKIP 2026-06-11 — fonctionnalité démonétisée le 3 juin 2026
+// (Cryptoreflex 100 % gratuit : webhook Stripe stub, AskAI désactivé).
+// Ré-activer ce describe si le plan Soutien/Pro revient.
+test.describe.skip("AskAI Pro gating", () => {
   test("free user sees lock and CTA → /pro", async ({ page }) => {
     // Mock /api/me pour garantir le statut "free" sans dépendre de cookies/Supabase.
     await page.route("**/api/me", async (route) => {
