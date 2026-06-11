@@ -25,6 +25,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import { TRACKS, TRACK_GROUPS, getTrack, type Track } from "@/lib/academy-tracks";
 import TrackCard from "@/components/academy/TrackCard";
+import AcademyResumeBanner from "@/components/academy/AcademyResumeBanner";
 import AcademyLevelGuide from "@/components/academy/AcademyLevelGuide";
 import StructuredData from "@/components/StructuredData";
 import FAQ from "@/components/mdx/FAQ";
@@ -170,6 +171,11 @@ export default function AcademiePage() {
               Mon parcours
             </Link>
           </div>
+
+          {/* DA OBSIDIAN sprint 3 — la progression remonte sur la landing :
+              bandeau client "Reprendre" (null SSR + null si vierge, la
+              page reste 100 % statique pour les nouveaux visiteurs). */}
+          <AcademyResumeBanner />
         </header>
 
         {/* Pourquoi notre académie */}

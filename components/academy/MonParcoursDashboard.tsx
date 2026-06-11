@@ -35,7 +35,16 @@ import {
   Palette,
   Banknote,
   RefreshCw,
+  Compass,
+  Star,
+  Zap,
+  Crown,
+  Lock,
 } from "lucide-react";
+import {
+  computeBadgesFromInputs,
+  type BadgeInputs,
+} from "@/lib/academy-badges";
 import {
   TRACKS,
   getTrack,
@@ -244,6 +253,22 @@ export default function MonParcoursDashboard() {
         </dl>
       </section>
 
+      {/* Badges de paliers (DA OBSIDIAN sprint 3) — dérivés des agrégats
+          déjà calculés ci-dessus, zéro stockage en plus (cf. lib/academy-badges). */}
+      {hydrated && (
+        <BadgeShelf
+          inputs={{
+            totalCompletedLessons: lessonsDone,
+            startedTracks: rows.filter((r) => r.doneCount > 0).length,
+            completedTracks: tracksDone,
+            totalTracks: ordered.length,
+            globalProgressPct: globalPct,
+            quizzesPassed: certifiedCount,
+            bestStreak: streak.best,
+          }}
+        />
+      )}
+
       {/* Reprendre */}
       {resume && (
         <Link
@@ -345,7 +370,7 @@ export default function MonParcoursDashboard() {
           id="tracks-h"
           className="text-2xl font-bold tracking-tight text-fg"
         >
-          Tes {ordered.length} parcours
+          Vos {ordered.length} parcours
         </h2>
         <ul role="list" className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map(({ track, pct, certified, doneCount }) => {
@@ -461,6 +486,88 @@ export default function MonParcoursDashboard() {
         </Link>
       </p>
     </div>
+  );
+}
+
+/* Icônes des badges (clé → composant lucide). */
+const BADGE_ICONS = {
+  sprout: Sprout,
+  compass: Compass,
+  flame: Flame,
+  trophy: Trophy,
+  star: Star,
+  zap: Zap,
+  crown: Crown,
+  target: Target,
+} as const;
+
+/**
+ * BadgeShelf — étagère des badges de paliers. Les badges obtenus sont
+ * colorés (gold), les autres grisés avec un cadenas : la "carotte"
+ * visible est ce qui fait revenir (pattern Duolingo).
+ */
+function BadgeShelf({ inputs }: { inputs: BadgeInputs }) {
+  const badges = computeBadgesFromInputs(inputs);
+  const earnedCount = badges.filter((b) => b.earned).length;
+
+  return (
+    <section aria-labelledby="badges-h" className="mt-6">
+      <div className="flex items-baseline justify-between">
+        <h2 id="badges-h" className="text-base font-bold text-fg">
+          Badges
+        </h2>
+        <span className="text-xs text-muted">
+          <span className="num-data font-semibold text-fg">{earnedCount}</span>
+          /{badges.length} obtenus
+        </span>
+      </div>
+      <ul
+        role="list"
+        className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4"
+      >
+        {badges.map((badge) => {
+          const Icon = BADGE_ICONS[badge.iconKey];
+          return (
+            <li
+              key={badge.id}
+              className={`relative rounded-xl border p-4 text-center transition-colors ${
+                badge.earned
+                  ? "border-primary/40 bg-primary/10"
+                  : "border-border bg-background/40 opacity-60"
+              }`}
+            >
+              <span
+                className={`mx-auto inline-flex h-10 w-10 items-center justify-center rounded-full ${
+                  badge.earned
+                    ? "bg-primary/20 text-primary-glow"
+                    : "bg-elevated text-muted"
+                }`}
+              >
+                {badge.earned ? (
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Lock className="h-4 w-4" aria-hidden="true" />
+                )}
+              </span>
+              <p
+                className={`mt-2 text-sm font-semibold ${
+                  badge.earned ? "text-fg" : "text-muted"
+                }`}
+              >
+                {badge.label}
+              </p>
+              <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                {badge.earned ? (
+                  <span className="text-success-fg">Obtenu ✓</span>
+                ) : (
+                  badge.description
+                )}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 
