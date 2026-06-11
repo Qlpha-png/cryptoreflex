@@ -33,6 +33,9 @@
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
   --color-info: #0ea5e9;
+  /* DA OBSIDIAN 2026-06-11 — accent froid "glacier" (data). Cf. tailwind.config.ts */
+  --color-ice: #38bdf8;
+  --color-ice-fg: #7dd3fc;
 
   /* Motion tokens */
   --duration-fast: 120ms;
@@ -70,19 +73,94 @@ body {
   }
 }
 
-/* Halo gold doux en haut, signal premium discret */
+/* ============================================================
+ * DA OBSIDIAN 2026-06-11 — fond multi-couches (feedback Kev :
+ * « le fond juste jaune c'est trop simple »).
+ * Avant : un seul halo gold plein haut qui jaunissait tout le site.
+ * Après, de haut en bas dans le stacking des background-image :
+ *   1. vignettage — assombrit les bords, creuse la profondeur
+ *   2. glacier (froid) en haut droite — le 2e accent signature
+ *   3. bleu nuit ambiant large — donne la teinte "obsidienne"
+ *   4. pointe d'or résiduelle haut gauche — le brand, en retrait
+ * Toutes les opacités ≤ 0.06 : on doit SENTIR la profondeur sans
+ * voir les gradients. background-attachment fixed (ignoré iOS = OK,
+ * fallback scroll sans dégât visuel).
+ * ============================================================ */
 body {
-  background-image: radial-gradient(
-    ellipse 60% 35% at 50% -10%,
-    rgba(245, 165, 36, 0.08),
-    transparent 60%
-  );
+  background-image:
+    radial-gradient(
+      ellipse 120% 90% at 50% 10%,
+      transparent 55%,
+      rgba(0, 0, 0, 0.42) 100%
+    ),
+    radial-gradient(
+      ellipse 45% 32% at 82% -4%,
+      rgba(56, 189, 248, 0.055),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 95% 55% at 50% -12%,
+      rgba(30, 41, 59, 0.5),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 38% 26% at 12% -2%,
+      rgba(245, 165, 36, 0.04),
+      transparent 60%
+    );
   background-attachment: fixed;
 }
 
 /* Tabular nums pour tous les chiffres en mono — alignement parfait des prix */
 .font-mono {
   font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+ * DA OBSIDIAN 2026-06-11 — utilitaires signature
+ * ============================================================ */
+
+/* .glass-card — carte "verre" : fond translucide + blur + liseré.
+   À appliquer progressivement sur les surfaces au-dessus du fond
+   multi-couches (widgets live, stats, modals). Le blur n'est actif
+   que si le navigateur le supporte (fallback = surface pleine). */
+.glass-card {
+  background: rgba(22, 25, 31, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 6px 16px -4px rgba(0, 0, 0, 0.4);
+}
+@supports (backdrop-filter: blur(12px)) {
+  .glass-card {
+    background: rgba(22, 25, 31, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* .num-data — chiffres "terminal" : mono + tabular pour que les prix
+   s'alignent et ne sautent pas quand ils changent (sensation exchange).
+   À appliquer sur tout chiffre LIVE (prix, %, volume). */
+.num-data {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* .ticker-tape-track — défilement du bandeau marché fin (TickerTape.tsx).
+   45s : la piste contient ~11 cellules ×2 (vs 6 pour l'ancien ticker 22s),
+   on garde la même vitesse linéaire perçue. Pause hover gérée côté
+   composant (group-hover). Désactivé si prefers-reduced-motion. */
+.ticker-tape-track {
+  animation: ticker 45s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-tape-track {
+    animation: none;
+    flex-wrap: wrap;
+  }
 }
 
 /* FIX UX 2026-05-02 #18 (audit dynamisme expert) — utility globale `.hover-lift`
@@ -443,6 +521,9 @@ body {
      Recalibrage façon Linear/Stripe : glow 2,5× plus discret, localisé
      derrière le titre (gauche) + une pointe en haut à droite. Le noir
      anthracite redevient dominant, le gold redevient un ACCENT. */
+  /* DA OBSIDIAN 2026-06-11 — duo chaud/froid : l'or reste derrière le
+     titre (brand), la 2e source devient GLACIER (haut droite). Deux
+     températures = profondeur réelle, fini le monochrome jaune. */
   background:
     radial-gradient(
       ellipse 48% 38% at 20% 16%,
@@ -450,9 +531,9 @@ body {
       transparent 58%
     ),
     radial-gradient(
-      ellipse 30% 26% at 84% 6%,
-      rgba(251, 191, 36, 0.04),
-      transparent 62%
+      ellipse 34% 30% at 84% 8%,
+      rgba(56, 189, 248, 0.06),
+      transparent 64%
     );
 }
 
@@ -499,6 +580,13 @@ body {
 .hero-particle.p3 { top: 30%; left: 70%; animation-delay: 6s;  }
 .hero-particle.p4 { top: 78%; left: 82%; animation-delay: 9s;  width: 5px; height: 5px; }
 .hero-particle.p5 { top: 45%; left: 50%; animation-delay: 11s; width: 3px; height: 3px; }
+/* DA OBSIDIAN 2026-06-11 — 2 particules sur 5 passent en glacier (côté
+   droit du hero, sous la source froide). Cohérence avec le duo halo. */
+.hero-particle.p3,
+.hero-particle.p4 {
+  background: rgba(125, 211, 252, 0.55);
+  box-shadow: 0 0 12px 2px rgba(56, 189, 248, 0.4);
+}
 
 @keyframes particle-drift {
   0%   { opacity: 0;    transform: translate3d(0, 0, 0); }
@@ -571,12 +659,18 @@ body {
   /* DESIGN 2026-06-11 — même recalibrage que .hero-halo : l'aurora en
      mix-blend screen + blur 60px AMPLIFIE fortement ses opacités ;
      cumulée au halo, elle créait l'aplat jaune-brun. Divisée ~2,5×. */
+  /* DA OBSIDIAN 2026-06-11 — l'aurora devient bi-chromatique : un bras
+     or, un bras glacier opposé. Le blend screen mélange les deux
+     températures dans la rotation → effet "northern lights" réel au
+     lieu d'un voile jaune tournant. */
   background: conic-gradient(
     from 0deg at 30% 40%,
     transparent 0deg,
     rgba(245, 165, 36, 0.07) 60deg,
     rgba(251, 191, 36, 0.04) 120deg,
     transparent 180deg,
+    rgba(56, 189, 248, 0.05) 240deg,
+    rgba(125, 211, 252, 0.03) 300deg,
     transparent 360deg
   );
   filter: blur(60px);

@@ -44,6 +44,19 @@ const config: Config = {
           rose: "#EF4444",
         },
 
+        // DA OBSIDIAN 2026-06-11 — accent FROID "glacier" pour la data
+        // (chiffres live, sparklines, liens data). Duo signature avec le
+        // gold : or = brand/CTA, glacier = données. C'est la grammaire des
+        // exchanges pro (un accent chaud + un froid), ce qui évite le
+        // "tout jaune" pointé par Kev. Distinct du token sémantique `info`
+        // (réservé aux alertes/notices) même si les teintes sont voisines.
+        ice: {
+          DEFAULT: "#38BDF8",
+          fg: "#7DD3FC",
+          soft: "rgba(56, 189, 248, 0.10)",
+          border: "rgba(56, 189, 248, 0.35)",
+        },
+
         // Texte
         fg: "#F4F5F7",
         // muted : foncé de #9BA3AF → #B0B7C3 pour passer WCAG AA (4.5:1)
@@ -142,6 +155,7 @@ const config: Config = {
 
         // Brand-specific
         "glow-gold": "0 0 60px -10px rgba(245, 165, 36, 0.4)",
+        "glow-ice": "0 0 60px -10px rgba(56, 189, 248, 0.35)",
         // Backward compat (alias) — préférer e3
         card: "0 8px 24px -8px rgba(0, 0, 0, 0.4)",
       },

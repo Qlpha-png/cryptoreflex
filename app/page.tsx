@@ -13,8 +13,14 @@ import {
   Wrench,
 } from "lucide-react";
 
-import { fetchTopMarket, type CoinId, type CoinPrice } from "@/lib/coingecko";
-import GlobalMetricsBar from "@/components/GlobalMetricsBar";
+import {
+  fetchTopMarket,
+  fetchGlobalMetrics,
+  fetchFearGreed,
+  type CoinId,
+  type CoinPrice,
+} from "@/lib/coingecko";
+import TickerTape, { type TickerCoin } from "@/components/TickerTape";
 import Hero from "@/components/Hero";
 // PriceTicker retiré BATCH 35d (user "enlève ça") — doublon avec MarketTable + /marche
 import ReassuranceSection from "@/components/ReassuranceSection";
@@ -223,7 +229,23 @@ export default async function HomePage() {
   //  - Fix : un seul fetch (top 20), on dérive prices = top 6 pour le ticker
   //    via mapping MarketCoin → CoinPrice (currentPrice → price, etc.).
   //    Économie -50% appels CG, -200ms TTFB cold-start.
-  const market = await fetchTopMarket(20);
+  // DA OBSIDIAN sprint 1b — fetchGlobalMetrics (/global, cache 30 min) et
+  // fetchFearGreed (alternative.me, pas CoinGecko) s'ajoutent SANS doublon
+  // de quota : 3 endpoints distincts. Ils alimentaient déjà GlobalMetricsBar
+  // (server component) ; le TickerTape les reprend, la barre est retirée.
+  const [market, globalMetrics, fearGreed] = await Promise.all([
+    fetchTopMarket(20),
+    fetchGlobalMetrics(),
+    fetchFearGreed(),
+  ]);
+  const tickerCoins: TickerCoin[] = market.slice(0, 8).map((m) => ({
+    id: m.id,
+    symbol: m.symbol,
+    name: m.name,
+    image: m.image,
+    price: m.currentPrice,
+    change24h: m.priceChange24h,
+  }));
   const prices: CoinPrice[] = market.slice(0, 6).map((m) => ({
     id: m.id as CoinId,
     symbol: m.symbol,
@@ -271,6 +293,28 @@ export default async function HomePage() {
           Les bandeaux (metrics / news / ticker) viennent APRÈS le Hero, comme
           ressources contextuelles. Réduit -300ms LCP p75 mobile estimé.
          ────────────────────────────────────────────────────────────────── */}
+      {/* DA OBSIDIAN sprint 1b — TickerTape : bandeau marché "terminal" FIN
+          (28px) au-dessus du Hero. ≠ ancien PriceTicker (retiré BATCH 35d) :
+          il fusionne prix top 8 + MCap + dominance + F&G en UNE ligne et
+          REMPLACE GlobalMetricsBar (zéro bandeau net ajouté). Impact LCP
+          négligeable (~30px, le H1 reste above-the-fold). */}
+      <TickerTape
+        coins={tickerCoins}
+        globalMetrics={
+          globalMetrics
+            ? {
+                mcapUsd: globalMetrics.totalMarketCapUsd,
+                mcapChange24h: globalMetrics.marketCapChange24h,
+                btcDominance: globalMetrics.btcDominance,
+              }
+            : null
+        }
+        fearGreed={
+          fearGreed
+            ? { value: fearGreed.value, label: fearGreed.classification }
+            : null
+        }
+      />
       <Hero
         prices={prices}
         sparklines={heroSparklines}
@@ -295,19 +339,10 @@ export default async function HomePage() {
       <Reveal>
         <ReassuranceSection />
       </Reveal>
-      {/* BATCH 35d — user feedback "enlève ça" sur NewsBar + PriceTicker.
-          On garde uniquement GlobalMetricsBar (Market Cap + F&G + dominance)
-          qui apporte de la donnée live unique sans répéter ce qui est déjà
-          ailleurs (le PriceTicker doublonne avec MarketTable + page /marche
-          + le PairConverter sur les fiches crypto ; la NewsBar doublonne
-          avec /actualites + le CryptoNewsAggregator par fiche).
-          Garde la classe live-market-strip pour conserver le scan line gold. */}
-      <aside
-        aria-label="Indicateurs de marché crypto"
-        className="live-market-strip border-y border-border/50 bg-elevated/20 [&_section]:border-0 [&_section]:bg-transparent"
-      >
-        <GlobalMetricsBar />
-      </aside>
+      {/* BATCH 35d "enlève ça" (NewsBar + PriceTicker) puis DA OBSIDIAN
+          2026-06-11 : GlobalMetricsBar (MCap + F&G + dominance) a fusionné
+          dans le TickerTape tout en haut de page — données identiques,
+          un bandeau de moins dans le flux. */}
 
       {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
           26/04/2026 "des onglets pour faire respirer + pas se perdre".

@@ -135,8 +135,8 @@ export default function CookieBanner() {
                 className="mt-1 text-sm text-muted leading-relaxed"
               >
                 Cryptoreflex utilise{" "}
-                <strong className="text-fg">Plausible Analytics</strong>{" "}
-                (RGPD-friendly, sans cookie de tracking) pour mesurer
+                <strong className="text-fg">Vercel Web Analytics</strong>{" "}
+                (mesure anonyme agrégée, sans cookie de tracking) pour mesurer
                 l'audience. Aucun cookie publicitaire n'est déposé sans votre
                 accord. Vous pouvez modifier vos choix à tout moment depuis la
                 page{" "}
@@ -166,7 +166,7 @@ export default function CookieBanner() {
               />
               <CategoryRow
                 title="Mesure d'audience"
-                description="Plausible Analytics, sans cookie tiers ni profilage. Nous aide à améliorer le contenu."
+                description="Vercel Web Analytics, sans cookie tiers ni profilage. Nous aide à améliorer le contenu."
                 checked={prefs.analytics}
                 onChange={(v) => setPrefs((p) => ({ ...p, analytics: v }))}
               />

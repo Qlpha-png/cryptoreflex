@@ -165,8 +165,8 @@ const ADMIN_LINKS_GROUPS: Array<{
     label: "📈 Analytics & contenu",
     links: [
       {
-        href: "https://plausible.io/cryptoreflex.fr",
-        title: "Plausible Analytics",
+        href: "https://vercel.com/reflexx/cryptoreflex/analytics",
+        title: "Vercel Web Analytics",
         description: "Trafic, sources, top pages",
         Icon: TrendingUp,
         external: true,

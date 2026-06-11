@@ -27,7 +27,7 @@ export default function ConfidentialitePage() {
       <h2 className="mt-10 text-2xl font-bold text-fg">2. Données collectées</h2>
       <p className="text-fg/85 leading-relaxed">Nous collectons les données suivantes :</p>
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Données de navigation</strong> : adresse IP anonymisée, type de navigateur, pages visitées, durée de visite, source de trafic. Collectées via Plausible Analytics (RGPD-compliant, sans cookie).</li>
+        <li><strong>Données de navigation</strong> : adresse IP anonymisée, type de navigateur, pages visitées, durée de visite, source de trafic. Collectées via Vercel Web Analytics (mesure anonyme agrégée, sans cookie).</li>
         <li><strong>Données de newsletter</strong> : adresse e-mail (si vous vous inscrivez volontairement), date d'inscription, ouverture/clic des emails. Collectées via Beehiiv.</li>
         <li><strong>Données de contact</strong> : informations que vous nous transmettez via formulaire ou e-mail.</li>
         <li><strong>Liens d'affiliation</strong> : aucune donnée personnelle n'est partagée avec les plateformes partenaires. Le tracking d'affiliation se fait via cookie de la plateforme partenaire (ex: Binance, Bitpanda) une fois sur leur site, hors de notre contrôle.</li>
@@ -43,7 +43,7 @@ export default function ConfidentialitePage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">4. Bases légales</h2>
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Intérêt légitime</strong> : statistiques anonymisées (Plausible)</li>
+        <li><strong>Intérêt légitime</strong> : statistiques anonymisées (Vercel Web Analytics)</li>
         <li><strong>Consentement</strong> : inscription newsletter, formulaires</li>
       </ul>
 
@@ -76,7 +76,7 @@ export default function ConfidentialitePage() {
       <p className="text-fg/85 leading-relaxed">
         {BRAND.name} <strong>n'utilise pas de cookies de tracking ou de publicité</strong>. Les
         seuls éléments de stockage local utilisés sont strictement nécessaires au fonctionnement
-        du site (préférences d'affichage, etc.). Plausible Analytics fonctionne sans cookie.
+        du site (préférences d'affichage, etc.). Vercel Web Analytics fonctionne sans cookie.
       </p>
       <p className="text-fg/85 leading-relaxed">
         Lorsque vous cliquez sur un lien d'affiliation et que vous êtes redirigé vers une
@@ -86,8 +86,7 @@ export default function ConfidentialitePage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">8. Sous-traitants</h2>
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Vercel Inc.</strong> — Hébergement (USA, Data Processing Agreement signé)</li>
-        <li><strong>Plausible Insights OÜ</strong> — Analytics RGPD (UE, Estonie)</li>
+        <li><strong>Vercel Inc.</strong> — Hébergement et Web Analytics anonyme (USA, Data Processing Agreement signé)</li>
         <li><strong>Beehiiv Inc.</strong> — Newsletter (USA, opt-in explicite requis)</li>
         <li><strong>CoinGecko Pte Ltd</strong> — API prix crypto (Singapour, données publiques)</li>
       </ul>
