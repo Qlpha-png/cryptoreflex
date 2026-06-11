@@ -65,11 +65,11 @@ export default function StartHere() {
           id="start-here-title"
           className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl"
         >
-          Choisis votre point de départ
+          Choisissez votre point de départ
         </h2>
         <p className="mt-3 text-base text-fg/70 sm:text-lg">
-          Trois portes selon ce que tu veux faire aujourd&apos;hui. Tu peux
-          changer de chemin à tout moment.
+          Trois portes selon ce que vous voulez faire aujourd&apos;hui. Vous
+          pouvez changer de chemin à tout moment.
         </p>
       </header>
 
