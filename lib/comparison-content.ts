@@ -133,7 +133,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
   return [
     {
       question: `${a.name} ou ${b.name} : laquelle est la moins chère en frais ?`,
-      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Sur l'achat instantané CB, ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si vous tradez plus que tu ne HODLez.`,
+      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Sur l'achat instantané CB, ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si vous tradez plus que vous ne HODLez.`,
     },
     {
       question: `${a.name} et ${b.name} sont-elles régulées MiCA en France ?`,

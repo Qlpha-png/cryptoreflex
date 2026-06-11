@@ -373,7 +373,7 @@ const J5_CONTENT_HTML =
   "<li>TMI 0 % → barème : <strong>860 €</strong> (PS uniquement) vs PFU : 1 500 € → <strong>économie 640 €</strong></li>" +
   "<li>TMI 41 % → barème : 2 910 € vs PFU : 1 500 € → <strong>perte 1 410 €</strong> si on choisit le barème</li>" +
   "</ul>" +
-  '<p style="margin-top:16px;background:#1F2937;padding:12px;border-left:3px solid #F5A524;"><strong>Attention :</strong> l\'option barème est <strong>globale</strong> — si tu la coches, elle s\'applique aussi à vos dividendes, intérêts et autres PV mobilières. Calcule toujours sur l\'ensemble.</p>';
+  '<p style="margin-top:16px;background:#1F2937;padding:12px;border-left:3px solid #F5A524;"><strong>Attention :</strong> l\'option barème est <strong>globale</strong> — si vous la cochez, elle s\'applique aussi à vos dividendes, intérêts et autres PV mobilières. Calcule toujours sur l\'ensemble.</p>';
 
 const J5: EmailInSequence = {
   id: "fiscalite-j5-pfu-vs-bareme",

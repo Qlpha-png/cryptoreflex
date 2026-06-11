@@ -309,7 +309,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Comment contacter le support Kraken en français ?",
         answer:
-          "Kraken propose un chat en français 24/7 directement depuis l'application, avec un délai de réponse moyen de 12h. Le support téléphonique en français est disponible sur rendez-tu via le centre d'aide. La qualité technique du support est régulièrement saluée comme l'une des meilleures du secteur.",
+          "Kraken propose un chat en français 24/7 directement depuis l'application, avec un délai de réponse moyen de 12h. Le support téléphonique en français est disponible sur rendez-vous via le centre d'aide. La qualité technique du support est régulièrement saluée comme l'une des meilleures du secteur.",
       },
     ],
     related: RELATED_DEFAULT,
@@ -444,7 +444,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
   /* =========================================================== COINHOUSE */
   coinhouse: {
     intro: [
-      "Coinhouse est, en 2026, le plus ancien acteur crypto français encore en activité. Fondée en 2014 sous le nom de La Maison du Bitcoin par Eric Larchevêque (qui fondera également Ledger), la société a été le tout premier PSAN enregistré en France auprès de l'AMF (numéro E2020-001) en mars 2020. Coinhouse opère depuis Paris avec une équipe 100 % francophone, des bureaux physiques accessibles aux clients sur rendez-tu, et un service client par téléphone — une rareté dans le secteur.",
+      "Coinhouse est, en 2026, le plus ancien acteur crypto français encore en activité. Fondée en 2014 sous le nom de La Maison du Bitcoin par Eric Larchevêque (qui fondera également Ledger), la société a été le tout premier PSAN enregistré en France auprès de l'AMF (numéro E2020-001) en mars 2020. Coinhouse opère depuis Paris avec une équipe 100 % francophone, des bureaux physiques accessibles aux clients sur rendez-vous, et un service client par téléphone — une rareté dans le secteur.",
       "Le positionnement de Coinhouse est radicalement différent de celui des géants américains et asiatiques : la plateforme se présente comme un courtier patrimonial crypto, avec un service de conseil humain pour les clients à partir d'un certain volume d'investissement. C'est l'option de prédilection pour qui veut un contact humain, du conseil personnalisé et un acteur 100 % français qui comprend les enjeux de fiscalité française et de transmission patrimoniale.",
       "Le revers de la médaille : les frais. Coinhouse pratique parmi les frais les plus élevés du marché, avec 1,49 % à 1,99 % en spot et jusqu'à 2,49 % sur l'achat instantané, plus un spread de 1,5 à 3 % selon la liquidité. Sur 1 000 € de Bitcoin, le coût réel peut atteindre 40 à 50 €, soit 5x plus cher qu'un Binance. C'est le prix à payer pour le service personnalisé et la garantie de parler à un humain en cas de souci.",
     ],
@@ -473,7 +473,7 @@ export const PLATFORM_EDITORIAL: Record<string, PlatformEditorial> = {
       {
         question: "Pourquoi les frais Coinhouse sont-ils si élevés ?",
         answer:
-          "Coinhouse facture 1,49 % à 2,49 % sur les transactions car la plateforme intègre un service humain complet : équipe basée à Paris, support client français par téléphone, bureaux physiques accessibles sur rendez-tu, conseil patrimonial pour les clients importants. C'est un modèle économique opposé à celui des exchanges automatisés type Binance, qui peuvent pratiquer 0,1 % grâce à un effet d'échelle massif et une absence de service humain.",
+          "Coinhouse facture 1,49 % à 2,49 % sur les transactions car la plateforme intègre un service humain complet : équipe basée à Paris, support client français par téléphone, bureaux physiques accessibles sur rendez-vous, conseil patrimonial pour les clients importants. C'est un modèle économique opposé à celui des exchanges automatisés type Binance, qui peuvent pratiquer 0,1 % grâce à un effet d'échelle massif et une absence de service humain.",
       },
       {
         question: "Puis-je vraiment parler à un humain en français en cas de problème ?",
