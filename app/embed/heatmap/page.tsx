@@ -20,7 +20,9 @@ import { BRAND } from "@/lib/brand";
  * Cross-origin : middleware.ts skip /embed/* — voir matcher dans middleware.
  */
 
-export const revalidate = 120;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : title.absolute pour embed widgets (noindex de toute façon, mais évite doublon dans logs/scrapers).

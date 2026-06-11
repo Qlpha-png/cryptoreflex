@@ -43,7 +43,9 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import type { CryptoEvent } from "@/lib/events-types";
 import { withHreflang } from "@/lib/seo-alternates";
 
-export const revalidate = 3600;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 86400;
 
 const PAGE_PATH = "/calendrier";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;

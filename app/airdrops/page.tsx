@@ -45,7 +45,9 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
  * SEO : indexable, hreflang, JSON-LD CollectionPage + FAQ + ItemList.
  */
 
-export const revalidate = 3600;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 86400;
 
 const PAGE_PATH = "/airdrops";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;

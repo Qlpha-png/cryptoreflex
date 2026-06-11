@@ -62,7 +62,10 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 // 4845 autres SSR a la demande (ISR cache 24h). Vercel Hobby timeout 45min
 // supporte sans probleme : 105 paires × 6s = 10.5min de build, large marge.
 // Crawler Google tape progressivement les 4845 autres a son rythme.
-export const revalidate = 86400; // 1 jour ISR
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+// 4950 duels × 1 write/jour = ~150K/mois à eux seuls → 7 jours.
+export const revalidate = 604800;
 export const dynamicParams = true;
 
 interface Props {

@@ -182,7 +182,9 @@ export function generateMetadata({ searchParams }: Props): Metadata {
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export const revalidate = 300; // 5 min — aligné sur le cache CoinGecko
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 3600;
 
 export default async function CryptoComparePage({ searchParams }: Props) {
   const cryptos = parseIds(searchParams.ids);

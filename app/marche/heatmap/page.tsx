@@ -40,14 +40,16 @@ const Heatmap = dynamic(() => import("@/components/Heatmap"), {
  * d'eux n'expose une heatmap visuelle. C'est un asset SEO + visuel fort.
  */
 
-export const revalidate = 120;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 const PAGE_URL = `${BRAND.url}/marche/heatmap`;
 
 export const metadata: Metadata = {
   title: "Heatmap crypto temps réel — Top 100 marché 2026",
   description:
-    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, mise à jour toutes les 2 minutes via CoinGecko. 100 % gratuit.",
+    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, données live CoinGecko. 100 % gratuit.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Heatmap crypto temps réel — Top 100",
@@ -137,7 +139,7 @@ export default async function HeatmapPage() {
           <p className="mt-3 text-base text-muted max-w-2xl">
             Visualisez en un coup d'œil quelles cryptos montent ou chutent
             aujourd'hui. Carrés colorés vert (hausse) / rouge (baisse), classés
-            par capitalisation. Données CoinGecko, rafraîchies toutes les 2 min.
+            par capitalisation. Données CoinGecko, prix rafraîchis en continu côté navigateur.
           </p>
         </header>
 

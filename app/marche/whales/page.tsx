@@ -43,7 +43,9 @@ import {
  * (clef absent / rate-limit), la page rend sans tx et affiche un message.
  */
 
-export const revalidate = 300;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 const PAGE_PATH = "/marche/whales";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;

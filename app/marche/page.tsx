@@ -42,7 +42,9 @@ import GainerLoserList from "@/components/GainerLoserList";
  * internes sont conservés).
  */
 
-export const revalidate = 120;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 const PAGE_PATH = "/marche";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;

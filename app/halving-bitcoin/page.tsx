@@ -24,7 +24,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  * dynamiquement à partir du blockheight courant et du temps moyen entre blocs.
  */
 
-export const revalidate = 3600;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 86400;
 
 const PAGE_URL = `${BRAND.url}/halving-bitcoin`;
 const NEXT_HALVING_DATE = new Date("2028-04-15T00:00:00Z");

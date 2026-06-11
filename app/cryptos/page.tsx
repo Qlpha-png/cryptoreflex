@@ -26,7 +26,9 @@ import AcademyCrossLink from "@/components/AcademyCrossLink";
  * (revalidate ci-dessous) avant le retour des 780 — dégradation acceptable
  * et silencieuse (CryptosBrowser pagine ce qu'on lui donne).
  */
-export const revalidate = 3600;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 86400;
 
 const SITE = "https://www.cryptoreflex.fr";
 

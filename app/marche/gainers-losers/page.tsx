@@ -25,7 +25,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  * SEO : ranks "top gainers crypto", "top losers crypto", "qui monte aujourd'hui".
  */
 
-export const revalidate = 300; // 5 min
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 const PAGE_URL = `${BRAND.url}/marche/gainers-losers`;
 const LIMIT_PER_LIST = 10;

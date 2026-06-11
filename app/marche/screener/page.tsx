@@ -18,7 +18,9 @@ import EmptyState from "@/components/ui/EmptyState";
  * /cryptos (éditorial, 780 fiches).
  */
 
-export const revalidate = 120;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 900;
 
 const PAGE_PATH = "/marche/screener";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
@@ -103,7 +105,7 @@ export default async function ScreenerPage() {
             </p>
           </div>
           <span className="live-dot inline-flex items-center text-xs font-semibold text-success-fg">
-            Mis à jour toutes les 2 min
+            Données CoinGecko
           </span>
         </header>
 
@@ -113,13 +115,13 @@ export default async function ScreenerPage() {
           ) : (
             <EmptyState
               title="Données marché momentanément indisponibles"
-              description="CoinGecko ne répond pas. Réessayez dans quelques instants — la page se met à jour automatiquement toutes les 2 minutes."
+              description="CoinGecko ne répond pas. Réessayez dans quelques instants."
             />
           )}
         </div>
 
         <p className="mt-6 text-xs text-muted">
-          Données CoinGecko, rafraîchies toutes les 2 minutes. Les variations
+          Données CoinGecko. Les variations
           1h/7j peuvent être momentanément indisponibles pour certains actifs.
           Aucune donnée de cette page ne constitue un conseil en
           investissement.

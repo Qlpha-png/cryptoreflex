@@ -102,7 +102,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export const revalidate = 60; // ISR : taux frais toutes les 60 s
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 86400; // le taux affiché est fetché LIVE par Converter (client)
 
 export default async function PairPage({ params }: PageProps) {
   const parsed = parsePair(params.pair);

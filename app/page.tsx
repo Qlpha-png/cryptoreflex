@@ -85,7 +85,9 @@ import {
   topPlatformsItemListSchema,
 } from "@/lib/schema";
 
-export const revalidate = 60;
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+export const revalidate = 300;
 
 /**
  * Métadonnées de la home — canonical explicite (P0-3 audit-back-live-final).

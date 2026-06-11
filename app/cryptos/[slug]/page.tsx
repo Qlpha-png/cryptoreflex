@@ -212,7 +212,10 @@ import {
 /*  Static generation                                                         */
 /* -------------------------------------------------------------------------- */
 
-export const revalidate = 3600; // 1h — la donnée éditoriale bouge peu, le prix vient de fetchCoinDetail
+// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
+// le HTML seed peut dater, les données fraîches arrivent côté client.
+// 780 pages × crawls bots : c'était le plus gros poste de writes.
+export const revalidate = 86400;
 // FIX BUILD PERF 2026-05-06 — `dynamicParams = true` + SSG limité au top 10.
 //
 // Avant : SSG des 100 fiches au build → 13 min de build à cause du rate-limit

@@ -382,7 +382,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
         >
           CoinGecko
         </a>{" "}
-        · Mis à jour toutes les 2 min · Couleurs : vert = hausse, rouge = baisse
+        · Couleurs : vert = hausse, rouge = baisse
         sur la période sélectionnée.
       </p>
     </div>
