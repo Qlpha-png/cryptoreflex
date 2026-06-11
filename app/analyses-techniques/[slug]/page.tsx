@@ -42,13 +42,13 @@ const PriceChart = dynamic(
 /*  Static generation                                                         */
 /* -------------------------------------------------------------------------- */
 
-export const revalidate = 3600;
-
-// FIX SEO 2026-05-28 — même fix que blog/[slug] (2026-05-05) : sans
-// dynamicParams=false, un slug inconnu rendait la 404 en HTTP 200 (soft-404,
-// vérifié live sur /analyses-techniques/url-bidon-12345). Les slugs sont des
-// MDX commités (GitHub Actions → rebuild Vercel), donc toujours connus au
-// build : aucun contenu légitime n'est bloqué par dynamicParams=false.
+// FIX SEO 2026-06-11 — alignement complet sur le pattern blog/[slug]
+// (2026-05-05) : SSG pur, SANS revalidate. Vérifié en prod : avec
+// `revalidate` (ISR), Next 14 rend la not-found co-localisée mais en
+// HTTP 200 (soft-404) même avec dynamicParams=false ; sans revalidate,
+// le 404 est réel. Les analyses sont des MDX commités (GitHub Actions →
+// rebuild Vercel), le contenu ne change jamais entre deux builds : l'ISR
+// ne servait à rien.
 export const dynamicParams = false;
 
 interface Props {

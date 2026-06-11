@@ -45,14 +45,15 @@ import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
  *  - JSON-LD NewsArticle + BreadcrumbList + Organization
  */
 
-export const revalidate = 600;
-
-// FIX SEO 2026-05-28 — même fix que blog/[slug] (2026-05-05) : sans
-// dynamicParams=false, un slug inconnu rendait la 404 en HTTP 200 (soft-404).
-// Les news sont des MDX commités par GitHub Actions (le cron Vercel
-// aggregate-news short-circuit avant tout writeFile en prod) → chaque
-// nouvelle news déclenche un rebuild, les slugs sont toujours connus au
-// build. Aucune news légitime n'est bloquée par dynamicParams=false.
+// FIX SEO 2026-06-11 — alignement complet sur le pattern blog/[slug]
+// (2026-05-05) : SSG pur, SANS revalidate. Vérifié en prod : avec
+// `revalidate` (ISR), Next 14 rend la not-found co-localisée mais en
+// HTTP 200 (soft-404) même avec dynamicParams=false ; sans revalidate,
+// le 404 est réel (comparatif live blog=404 vs actualites=200).
+// Retirer l'ISR ne coûte rien : les news sont des MDX commités par
+// GitHub Actions (le cron Vercel aggregate-news short-circuit avant tout
+// writeFile en prod) → chaque nouvelle news déclenche un rebuild, le
+// contenu ne change jamais entre deux builds.
 export const dynamicParams = false;
 
 interface PageProps {
