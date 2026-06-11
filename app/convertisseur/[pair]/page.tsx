@@ -122,7 +122,7 @@ export default async function PairPage({ params }: PageProps) {
   const faqItems = [
     {
       question: `Combien vaut 1 ${fromUp} en ${toUp} aujourd'hui ?`,
-      answer: rate
+      answer: rate?.rate != null
         ? `Au taux actuel CoinGecko, 1 ${fromName} (${fromUp}) vaut environ ${formatRate(
             rate.rate
           )} ${toUp}. Ce taux est mis à jour toutes les 60 secondes.`
@@ -174,7 +174,7 @@ export default async function PairPage({ params }: PageProps) {
               <span className="gradient-text">{toUp}</span>
             </h1>
             <p className="mt-4 text-lg text-white/70">
-              {rate ? (
+              {rate?.rate != null ? (
                 <>
                   Au taux actuel,{" "}
                   <strong className="text-white">
@@ -279,7 +279,11 @@ export default async function PairPage({ params }: PageProps) {
   );
 }
 
-function formatRate(v: number): string {
+function formatRate(v: number | null | undefined): string {
+  // FIX BUILD 2026-06-12 — /convertisseur/matic-eth plantait au prerender :
+  // fetchConversionRate renvoyait un objet avec rate:null (id matic-network
+  // déprécié côté CoinGecko) et le formatter déréférençait null.
+  if (v == null || !Number.isFinite(v)) return "—";
   if (v >= 1000) return v.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
   if (v >= 1) return v.toLocaleString("fr-FR", { maximumFractionDigits: 4 });
   return v.toLocaleString("fr-FR", { maximumFractionDigits: 8 });
