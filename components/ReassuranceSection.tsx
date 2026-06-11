@@ -381,7 +381,7 @@ export default function ReassuranceSection() {
             ))}
           </ul>
           <p className="mt-2 text-[11px] text-muted/70">
-            Tape (ou survole) une étiquette pour voir ce qui change concrètement pour vous.
+            Tapez (ou survolez) une étiquette pour voir ce qui change concrètement pour vous.
           </p>
         </div>
 

@@ -66,7 +66,7 @@ const FAQ_ITEMS = [
   {
     question: "Combien de temps faut-il pour terminer un parcours ?",
     answer:
-      "Comptez environ 2 heures de lecture confortable par parcours, étalées sur le rythme que vous voulez. La progression est sauvegardée dans votre navigateur (localStorage) — vous pouvez reprendre exactement où tu en étais à chaque visite.",
+      "Comptez environ 2 heures de lecture confortable par parcours, étalées sur le rythme que vous voulez. La progression est sauvegardée dans votre navigateur (localStorage) — vous pouvez reprendre exactement où vous en étiez à chaque visite.",
   },
   {
     question: "Mes données et ma progression sont-elles envoyées à un serveur ?",
@@ -145,7 +145,7 @@ export default function AcademiePage() {
             Formation crypto · 100% gratuite
           </span>
           <h1 className="mt-3 ds-h1 leading-[1.1]">
-            Apprends à investir crypto avec{" "}
+            Apprenez à investir crypto avec{" "}
             <span className="text-gradient-gold">l&apos;Académie Cryptoreflex</span>
           </h1>
           <p className="mt-4 ds-lead">
@@ -209,7 +209,7 @@ export default function AcademiePage() {
               id="parcours-h"
               className="text-3xl font-bold tracking-tight text-fg sm:text-4xl"
             >
-              Choisis ton parcours
+              Choisissez votre parcours
             </h2>
             <p className="mt-2 text-sm text-fg/70 max-w-2xl">
               Les parcours sont rangés en {TRACK_GROUPS.length} étapes logiques :

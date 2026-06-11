@@ -29,7 +29,11 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
 
-export const revalidate = 86400;
+// FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
+// Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
+// Données 100 % statiques (fichiers data/ commités) : aucun contenu créé
+// entre deux builds, l'ISR ne servait à rien.
+export const dynamicParams = false;
 
 interface Props {
   params: { slug: string };

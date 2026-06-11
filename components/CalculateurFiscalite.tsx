@@ -145,7 +145,7 @@ export default function CalculateurFiscalite() {
       next.reportablePrevious = "Le montant ne peut pas être négatif.";
 
     if (cessions === 0 && achats === 0) {
-      next.totalCessions = "Renseigne au moins un montant de cessions.";
+      next.totalCessions = "Renseignez au moins un montant de cessions.";
     }
 
     setErrors(next);

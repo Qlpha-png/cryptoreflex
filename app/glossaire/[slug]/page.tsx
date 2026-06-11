@@ -28,13 +28,17 @@ import { withHreflang } from "@/lib/seo-alternates";
 // les 200+ autres en ISR on-demand. Avant : 252 pages SSG forcées.
 // Le `dynamicParams=true` garantit que tous les termes restent accessibles ;
 // le `revalidate=86400` bornent la fraîcheur à 1 jour (donnée éditoriale stable).
-export const revalidate = 86400;
-export const dynamicParams = true;
+// FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
+// Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
+// Données 100 % statiques (fichiers data/ commités) : aucun contenu créé
+// entre deux builds, l'ISR ne servait à rien.
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  // SSG les 50 premiers termes (alphabetic, suffisant pour amorcer le crawl
-  // SEO + dégager le maillage interne). Les 200 autres se rendent au 1er hit.
-  return GLOSSARY_TERMS.slice(0, 50).map((t) => ({ slug: t.id }));
+  // FIX SEO 2026-06-11 — SSG EXHAUSTIF : avec dynamicParams=false (vrais
+  // 404), tous les termes doivent être pré-générés. Pages data-driven
+  // légères (data/glossary.json, zéro appel API) : coût build négligeable.
+  return GLOSSARY_TERMS.map((t) => ({ slug: t.id }));
 }
 
 interface PageProps {

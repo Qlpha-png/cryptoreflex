@@ -136,7 +136,7 @@ export default async function AccountPage() {
                     Cerfa 2086 + 3916-bis auto
                   </h3>
                   <p className="mt-1 text-xs text-fg/70 leading-snug">
-                    Importe votre CSV → PDF pré-rempli en 30s. 5 PDF/jour.
+                    Importez votre CSV → PDF pré-rempli en 30s. 5 PDF/jour.
                   </p>
                 </div>
                 <ArrowRight

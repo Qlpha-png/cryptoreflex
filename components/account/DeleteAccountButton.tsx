@@ -119,7 +119,7 @@ export default function DeleteAccountButton() {
               autoFocus
               autoComplete="off"
               spellCheck="false"
-              aria-label="Tape SUPPRIMER pour confirmer la suppression de votre compte"
+              aria-label="Tapez SUPPRIMER pour confirmer la suppression de votre compte"
               className="mt-2 w-full rounded-lg border border-border bg-elevated px-3 py-2 text-sm font-mono text-fg focus:border-danger focus:outline-none focus:ring-2 focus:ring-danger/40"
               placeholder="SUPPRIMER"
               disabled={loading}

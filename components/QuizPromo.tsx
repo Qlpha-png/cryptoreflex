@@ -58,7 +58,7 @@ export default function QuizPromo() {
                 id="quiz-promo-title"
                 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight"
               >
-                Trouve votre <span className="gradient-text">plateforme idéale</span> en 5 questions
+                Trouvez votre <span className="gradient-text">plateforme idéale</span> en 5 questions
               </h2>
               <p className="mt-3 text-white/70 max-w-xl">
                 Budget, fréquence d&apos;achat, support FR, conformité MiCA : on te

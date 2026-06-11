@@ -25,7 +25,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Wallet Phishing Checker — Vérifiez si une adresse crypto est scam",
   description:
-    "Colle une adresse crypto (BTC, ETH, SOL) → score de risque scam/phishing en 2 sec. Bases Chainabuse, ScamSniffer + custom FR. Gratuit, anonyme, 100 % automatisé.",
+    "Collez une adresse crypto (BTC, ETH, SOL) → score de risque scam/phishing en 2 sec. Bases Chainabuse, ScamSniffer + custom FR. Gratuit, anonyme, 100 % automatisé.",
   alternates: withHreflang(`${BRAND.url}/outils/phishing-checker`),
 };
 

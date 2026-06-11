@@ -264,7 +264,7 @@ export default function MiniInvestSimulator() {
 
         {!result && !loading && !error && (
           <p className="text-xs text-muted">
-            Renseigne un montant pour voir l&apos;estimation.
+            Renseignez un montant pour voir l&apos;estimation.
           </p>
         )}
       </div>

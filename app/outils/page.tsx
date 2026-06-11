@@ -93,7 +93,7 @@ const TOOLS: Tool[] = [
   // ─── FISCALITÉ ───
   {
     title: "Cerfa 2086 + 3916-bis auto",
-    desc: "Importe votre CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul officiel 150 VH bis.",
+    desc: "Importez votre CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul officiel 150 VH bis.",
     href: "/outils/cerfa-2086-auto",
     Icon: FileText,
     tier: "pro",
@@ -225,7 +225,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Whitepaper TLDR",
-    desc: "Colle un whitepaper crypto, reçois un résumé FR + score BS sur 100 (red flags détectés).",
+    desc: "Collez un whitepaper crypto, recevez un résumé FR + score BS sur 100 (red flags détectés).",
     href: "/outils/whitepaper-tldr",
     Icon: FileText,
     tier: "free",
@@ -300,7 +300,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Phishing Checker",
-    desc: "Colle une adresse crypto → score de risque scam/phishing (Chainabuse + ScamSniffer + custom FR).",
+    desc: "Collez une adresse crypto → score de risque scam/phishing (Chainabuse + ScamSniffer + custom FR).",
     href: "/outils/phishing-checker",
     Icon: ShieldAlert,
     tier: "free",

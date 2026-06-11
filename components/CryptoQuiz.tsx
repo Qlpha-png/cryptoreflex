@@ -558,7 +558,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
               Précédent
             </button>
             <p className="text-[11px] text-muted hidden sm:block">
-              Astuce — appuie sur{" "}
+              Astuce — appuyez sur{" "}
               <kbd className="font-mono px-1 py-0.5 rounded border border-border bg-elevated text-fg">
                 1-{currentQuestion.options.length}
               </kbd>{" "}

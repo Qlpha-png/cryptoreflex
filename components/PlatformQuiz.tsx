@@ -127,7 +127,7 @@ const QUESTIONS: Question[] = [
     maxSelections: 2,
     title: "Vos 2 priorités max — qu'est-ce qui compte vraiment ?",
     subtitle:
-      "Choisis 1 ou 2 critères. Pondération : 1ère priorité × 2, 2ème × 1.",
+      "Choisissez 1 ou 2 critères. Pondération : 1ère priorité × 2, 2ème × 1.",
     options: [
       { value: "fees", label: "Frais bas", hint: "Optimiser le coût total" },
       { value: "security", label: "Sécurité maximale", hint: "Cold storage, assurance, MiCA" },
