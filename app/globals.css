@@ -108,7 +108,11 @@ body {
       rgba(245, 165, 36, 0.04),
       transparent 60%
     );
-  background-attachment: fixed;
+  /* PAS de background-attachment: fixed — combiné aux backdrop-filter des
+     cards, il force Chrome à re-rasteriser tout le backdrop à chaque
+     scroll (renderer freeze constaté au contrôle local sur /marche).
+     Sans fixed : les couches scrollent avec la page, le haut (là où il y
+     a de la lumière) reste identique, le bas est sobre — et 60 fps. */
 }
 
 /* Tabular nums pour tous les chiffres en mono — alignement parfait des prix */
@@ -120,23 +124,18 @@ body {
  * DA OBSIDIAN 2026-06-11 — utilitaires signature
  * ============================================================ */
 
-/* .glass-card — carte "verre" : fond translucide + blur + liseré.
-   À appliquer progressivement sur les surfaces au-dessus du fond
-   multi-couches (widgets live, stats, modals). Le blur n'est actif
-   que si le navigateur le supporte (fallback = surface pleine). */
+/* .glass-card — carte "verre" : fond translucide + liseré + reflet.
+   VOLONTAIREMENT sans backdrop-filter : sur de grandes surfaces, le blur
+   force Chrome à re-rasteriser le backdrop en continu (freeze constaté
+   au contrôle local sur /marche). Sur fond sombre, semi-opacité + inset
+   highlight suffisent à lire "verre" — réserver backdrop-blur aux PETITES
+   surfaces (ticker, badges). */
 .glass-card {
   background: rgba(22, 25, 31, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 6px 16px -4px rgba(0, 0, 0, 0.4);
-}
-@supports (backdrop-filter: blur(12px)) {
-  .glass-card {
-    background: rgba(22, 25, 31, 0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
 }
 
 /* .num-data — chiffres "terminal" : mono + tabular pour que les prix

@@ -55,12 +55,20 @@ interface RestPayload {
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000];
 const MAX_FAILURES_BEFORE_FALLBACK = 3;
 const FALLBACK_POLL_MS = 30_000;
+// /api/prices rejette > 50 ids (400 anti-DoS, cf. MAX_IDS route). On cape
+// ici pour protéger TOUS les consommateurs : un parent qui passe 60 coins
+// (heatmap top 60 du dashboard /marche) reste live sur les 50 plus gros au
+// lieu de perdre le live entièrement sur un 400.
+const MAX_POLL_IDS = 50;
 
 export function useLivePrices(ids: string[]): UseLivePricesResult {
   // On clé le useEffect sur la version normalisée (sorted + joined) pour
   // éviter les reconnects intempestifs si le parent passe un nouveau tableau
   // référentiellement différent mais sémantiquement identique.
-  const idsKey = ids.length === 0 ? "" : [...ids].sort().join(",");
+  // NB : on tronque AVANT le sort pour préserver la priorité du parent
+  // (les listes arrivent triées par market cap → on garde les plus gros).
+  const cappedIds = ids.length > MAX_POLL_IDS ? ids.slice(0, MAX_POLL_IDS) : ids;
+  const idsKey = cappedIds.length === 0 ? "" : [...cappedIds].sort().join(",");
 
   const [prices, setPrices] = useState<Record<string, LivePrice>>({});
   const [status, setStatus] = useState<LivePriceStatus>(
