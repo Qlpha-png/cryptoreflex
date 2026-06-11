@@ -170,10 +170,13 @@ export default async function MarcheDashboardPage() {
           {/* Header compact — le dashboard prime sur le discours */}
           <header className="mt-4 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <p className="section-eyebrow">
+                <strong>Marché</strong> — heatmap · sentiment · top movers · live
+              </p>
+              <h1 className="section-h1 mt-3 font-display font-bold">
                 Marché crypto <span className="gradient-text">en direct</span>
               </h1>
-              <p className="mt-2 max-w-2xl text-sm text-fg/70">
+              <p className="mt-3 max-w-2xl text-sm text-fg/70">
                 La température du marché en 30 secondes : vision globale,
                 sentiment, rotations.
               </p>

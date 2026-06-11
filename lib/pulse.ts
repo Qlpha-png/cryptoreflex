@@ -115,6 +115,43 @@ export function fallbackSpark(n = 96): number[] {
 }
 
 /**
+ * coilToRing — LE SCEAU (panel créatif, étape 8) : la même sparkline 7j,
+ * ENROULÉE en anneau. Une signature, deux formes : déroulée = pouls
+ * monumental du hero, enroulée = sceau d'authenticité des fiches.
+ *
+ * Géométrie polaire : l'angle parcourt 360° moins un `gap` (anneau
+ * ouvert, l'ouverture pointe en haut — la fin du tracé = « maintenant »),
+ * le rayon module avec le prix normalisé. Path lissé Catmull-Rom.
+ */
+export function coilToRing(
+  points: number[],
+  size: number,
+  gapDeg = 24,
+): { path: string; last: [number, number] } | null {
+  if (!points || points.length < 8) return null;
+  const pts = downsample(points, 48);
+  const min = Math.min(...pts);
+  const max = Math.max(...pts);
+  const span = max - min || 1;
+
+  const cx = size / 2;
+  const cy = size / 2;
+  const innerR = size * 0.3;
+  const amp = size * 0.13;
+  const startAngle = -90 + gapDeg / 2;
+  const sweep = 360 - gapDeg;
+
+  const coords: Array<[number, number]> = pts.map((v, i) => {
+    const t = i / (pts.length - 1);
+    const a = ((startAngle + t * sweep) * Math.PI) / 180;
+    const r = innerR + ((v - min) / span) * amp;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  });
+
+  return { path: smoothPath(coords), last: coords[coords.length - 1] };
+}
+
+/**
  * Position du stop « or » du gradient thermique selon le Fear & Greed
  * (0-100). Greed → l'or s'étend ; Fear → le glacier remonte. Jamais de
  * vert/rouge : la température n'est PAS un signal d'achat.

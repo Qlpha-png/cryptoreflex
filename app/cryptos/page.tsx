@@ -110,7 +110,10 @@ export default async function CryptosIndexPage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+          <p className="section-eyebrow">
+            <strong>Cryptos</strong> — fiches éditoriales · scores publics · sans hype
+          </p>
+          <h1 className="section-h1 mt-3 font-display font-bold">
             {items.length} cryptos <span className="gradient-text">analysées</span>
           </h1>
           <p className="mt-3 text-base text-muted">

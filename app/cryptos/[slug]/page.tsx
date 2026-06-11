@@ -46,6 +46,7 @@ import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
+import PulseSeal from "@/components/crypto-detail/PulseSeal";
 import CryptoSources from "@/components/crypto-detail/CryptoSources";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
 import dynamic from "next/dynamic";
@@ -641,6 +642,14 @@ export default async function CryptoPage({ params }: Props) {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <AddToCompareButton slug={c.id} cryptoName={c.name} />
           <LastReviewedBadge dateIso={FICHE_REVIEWED_DATE} variant="compact" />
+          {/* DA POULS étape 8 — LE SCEAU : la sparkline 7j du coin enroulée
+              en anneau or → glacier. 780 fiches, 780 sceaux uniques gravés
+              par le marché (null si données indisponibles — jamais de faux). */}
+          <PulseSeal
+            sparkline={detail?.sparkline7d}
+            coinName={c.name}
+            size={44}
+          />
         </div>
 
         {/* QUICK BUY BOX (FIX #1 audit conversion 2026-04-26) — encart d'achat
