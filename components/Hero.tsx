@@ -11,7 +11,7 @@ import type { CoinPrice } from "@/lib/coingecko";
 const HeroPulseLive = dynamic(() => import("@/components/hero/HeroPulseLive"), {
   ssr: false,
 });
-const HeroPulseComet = dynamic(() => import("@/components/hero/HeroPulseComet"), {
+const HeroPulseRider = dynamic(() => import("@/components/hero/HeroPulseRider"), {
   ssr: false,
 });
 
@@ -92,11 +92,12 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
             initialPrice={btcPrice}
           />
         )}
-        {/* LA COMÈTE — ride la courbe, accélère dans les descentes,
-            étincelles aux sommets (idée Kev « prend les bosses », version
-            lumière). Uniquement sur données réelles. */}
+        {/* LE RIDER — la mascotte moto-cross de lumière (demande Kev) :
+            roule sur la vraie courbe, s'incline dans les pentes, décolle
+            aux sommets avec backflip, atterrit en étincelles. Uniquement
+            sur données réelles. */}
         {head.isReal && polyline.length > 1 && (
-          <HeroPulseComet points={polyline} />
+          <HeroPulseRider points={polyline} />
         )}
       </div>
 

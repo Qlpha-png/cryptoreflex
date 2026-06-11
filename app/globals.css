@@ -886,6 +886,37 @@ body {
   }
 }
 
+
+/* LE RIDER — mascotte moto-cross en line-art néon (HeroPulseRider.tsx).
+   .hero-rider est positionné par le rAF (left/top %), .hero-rider-flip
+   porte la rotation (pente + backflip), les roues tournent en CSS. */
+.hero-rider {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  filter: drop-shadow(0 0 12px rgba(245, 165, 36, 0.35));
+}
+.hero-rider-flip {
+  will-change: transform;
+}
+.hero-rider-svg {
+  /* Ancre : la moto repose sur la courbe — roues à y=33/44 du viewBox,
+     donc on remonte le SVG pour que le point de contact soit l'origine. */
+  transform: translate(-29px, -33px);
+  display: block;
+}
+.hero-rider-wheel {
+  animation: rider-wheel-spin 0.5s linear infinite;
+}
+@keyframes rider-wheel-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rider { display: none; }
+}
+
 /* Pulse dot vert : signal "live data" sur le widget hero */
 .live-dot::before {
   content: "";
