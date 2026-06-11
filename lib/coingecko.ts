@@ -616,40 +616,11 @@ export interface MarketCoin {
 async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   // BATCH 51 — Migration aggregator maison. CoinCap retourne deja le top
   // par market cap, on l'utilise en priorite. Fallback CoinGecko si vide.
-  try {
-    const { getTopMarket } = await import("@/lib/price-source");
-    const top = await getTopMarket(limit);
-    if (top.length >= Math.min(limit, 10)) {
-      // CoinCap n'expose pas sparkline 7d ni change 1h. On enrichit
-      // optionnellement avec Binance klines (en parallele, best-effort).
-      const { getPriceSnapshot } = await import("@/lib/price-source");
-      const enriched = await Promise.all(
-        top.map(async (c) => {
-          const snap = await getPriceSnapshot(c.id).catch(() => null);
-          return {
-            id: c.id,
-            symbol: c.symbol,
-            name: c.name,
-            image: c.image,
-            currentPrice: c.priceUsd,
-            marketCap: c.marketCap,
-            marketCapRank: c.marketCapRank,
-            totalVolume: c.volume24h,
-            priceChange1h: null, // pas dispo via price-source pour l'instant
-            priceChange24h: c.change24h,
-            priceChange7d: snap?.change7d ?? null,
-            sparkline7d: snap?.sparkline7d ?? [],
-            circulatingSupply: c.marketCap > 0 && c.priceUsd > 0 ? c.marketCap / c.priceUsd : 0,
-            ath: 0, // approximation : nous n'avons pas l'ATH historique
-          };
-        }),
-      );
-      return enriched;
-    }
-  } catch {
-    // price-source unavailable, fallback CoinGecko
-  }
-
+  // INVERSION 2026-06-12 — depuis que COINGECKO_API_KEY existe, l'appel
+  // direct CoinGecko (1 requête = prix + sparkline 7j + variations + ATH
+  // réels) est STRICTEMENT meilleur que la voie aggregator (1+N requêtes,
+  // sparklines via Binance — bloqué depuis les IP Vercel → le hero Pouls
+  // ne recevait jamais la vraie courbe en prod). Aggregator = secours.
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
   try {
     // FIX P0 2026-05-06 — timeout 8s
@@ -694,8 +665,45 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
       ath: c.ath,
     }));
   } catch {
-    return [];
+    // CG rate-limité/down → on tente l'aggregator ci-dessous.
   }
+
+  // SECOURS — aggregator maison (prix corrects mais sans sparkline/1h)
+  try {
+    const { getTopMarket } = await import("@/lib/price-source");
+    const top = await getTopMarket(limit);
+    if (top.length >= Math.min(limit, 10)) {
+      // CoinCap n'expose pas sparkline 7d ni change 1h. On enrichit
+      // optionnellement avec Binance klines (en parallele, best-effort).
+      const { getPriceSnapshot } = await import("@/lib/price-source");
+      const enriched = await Promise.all(
+        top.map(async (c) => {
+          const snap = await getPriceSnapshot(c.id).catch(() => null);
+          return {
+            id: c.id,
+            symbol: c.symbol,
+            name: c.name,
+            image: c.image,
+            currentPrice: c.priceUsd,
+            marketCap: c.marketCap,
+            marketCapRank: c.marketCapRank,
+            totalVolume: c.volume24h,
+            priceChange1h: null, // pas dispo via price-source pour l'instant
+            priceChange24h: c.change24h,
+            priceChange7d: snap?.change7d ?? null,
+            sparkline7d: snap?.sparkline7d ?? [],
+            circulatingSupply: c.marketCap > 0 && c.priceUsd > 0 ? c.marketCap / c.priceUsd : 0,
+            ath: 0, // approximation : nous n'avons pas l'ATH historique
+          };
+        }),
+      );
+      return enriched;
+    }
+  } catch {
+    // aggregator down aussi — on rend [] : le wrapper fetchTopMarket
+    // servira STATIC_TOP_MARKET_FALLBACK sans mise en cache du vide.
+  }
+  return [];
 }
 
 /**
