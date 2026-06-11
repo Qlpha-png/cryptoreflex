@@ -219,7 +219,7 @@ function CategoryHeader({
  */
 function CategoryDivider() {
   return (
-    <div className="mx-auto my-2 h-px max-w-7xl bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+    <div className="filon-hairline mx-auto my-2 max-w-7xl" />
   );
 }
 

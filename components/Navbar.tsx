@@ -97,14 +97,20 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
  *  - Sur md (768-1023px), on cache Blog pour garder Partenaires visible
  *    (Blog est éditorial low-conversion ; Partenaires est revenu direct)
  */
+/* DA POULS 2026-06-11 (feedback Kev « la barre en haut moins encombrée ») :
+   desktop = 5 liens calmes (Marché·Actu·Académie·Outils·Partenaires).
+   Blog et Soutien vivent dans le burger (burgerOnly) — Blog est couvert
+   par Actu en découverte, Soutien est une contribution volontaire
+   post-démonétisation. Partenaires perd son icône/accent : un lien
+   normal (le revenu passe par la page, pas par le bling de navbar). */
 const NAV = [
   { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
   { href: "/actualites", label: "Actu", desc: "Le brief quotidien + l'actualité crypto FR décryptée" },
   { href: "/academie", label: "Académie", desc: "Parcours guidés & quiz de validation" },
   { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
-  { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", hideOnMd: true as const },
-  { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés", revenueAccent: true as const },
-  { href: "/soutenir", label: "Soutien", desc: "Soutiens un éditeur indé — contribution volontaire", premium: true as const },
+  { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés" },
+  { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", burgerOnly: true as const },
+  { href: "/soutenir", label: "Soutien", desc: "Soutenez un éditeur indé — contribution volontaire", premium: true as const, burgerOnly: true as const },
 ];
 
 /**
@@ -121,6 +127,7 @@ function isActive(href: string, pathname: string): boolean {
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
   const pathname = usePathname() ?? "/";
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -184,7 +191,14 @@ export default function Navbar() {
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => setScrolled(window.scrollY > 12));
+      raf = requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 12);
+        // DA POULS — progression de lecture peinte or -> glacier (hairline
+        // bas de navbar). doc.scrollHeight - innerHeight peut etre 0 sur
+        // les pages courtes -> guard.
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -259,7 +273,7 @@ export default function Navbar() {
             aria-label="Navigation principale"
             className="hidden md:flex items-center gap-5 lg:gap-7 ml-6 lg:ml-10"
           >
-            {NAV.map((item) => {
+            {NAV.filter((item) => !("burgerOnly" in item && item.burgerOnly)).map((item) => {
               const active = isActive(item.href, pathname);
               const isPremium = "premium" in item && item.premium === true;
               const isRevenue = "revenueAccent" in item && item.revenueAccent === true;
@@ -415,6 +429,23 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* DA POULS — le fil de lecture : hairline or -> glacier qui se
+          complete au scroll. La signature du site devient un systeme de
+          lecture. aria-hidden : purement decoratif. */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 h-px w-full overflow-hidden"
+      >
+        <div
+          className="h-full origin-left will-change-transform"
+          style={{
+            transform: `scaleX(${progress})`,
+            background:
+              "linear-gradient(90deg, #F5A524 0%, #FBBF24 40%, #FFE9C2 65%, #7DD3FC 85%, #38BDF8 100%)",
+            boxShadow: "0 0 8px rgba(245, 165, 36, 0.35)",
+          }}
+        />
+      </div>
     </header>
 
     {/* BATCH 60 — Drawer mega-nav unifie mobile + desktop. Cree par

@@ -104,7 +104,7 @@ export default function HeroPriceChart({ prices, sparklines, updatedAt }: Props)
   return (
     <aside
       aria-label="Marché crypto en direct"
-      className="glass card-aurora-border relative rounded-2xl p-5 sm:p-6 shadow-card"
+      className="glass card-obsidian relative rounded-2xl p-5 sm:p-6 shadow-card"
     >
       {/* Onglets coins + badge LIVE */}
       <header className="flex items-center justify-between gap-3">

@@ -79,7 +79,7 @@ export default function StartHere() {
             <Link
               href={d.href}
               aria-label={`${d.eyebrow} — ${d.cta}`}
-              className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="card-obsidian group flex h-full flex-col rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary-glow">
                 <d.Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
