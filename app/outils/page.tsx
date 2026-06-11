@@ -490,10 +490,10 @@ export default function OutilsPage() {
         </nav>
 
         <header className="mt-6 max-w-3xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">
-            <Zap className="h-3.5 w-3.5" /> {totalTools} outils crypto français
-          </span>
-          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
+          <p className="section-eyebrow">
+            <strong>Outils</strong> — {totalTools} calculateurs, simulateurs et vérificateurs · gratuits
+          </p>
+          <h1 className="section-h1 mt-4 font-display font-bold">
             Tous les outils <span className="gradient-text">Cryptoreflex</span>
           </h1>
           <p className="mt-3 text-base text-muted">
@@ -508,10 +508,12 @@ export default function OutilsPage() {
             (24px / 700ms cubic-bezier emphasized). Effet Linear/Vercel. */}
         <Reveal>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatCard label="Disponibles" value={String(liveTools)} accent="emerald" />
-            <StatCard label="Bientôt" value={String(soonTools)} accent="amber" />
-            <StatCard label="Gratuits" value={String(totalTools)} accent="purple" />
-            <StatCard label="Avancés" value={String(advancedTools)} accent="primary" />
+            {/* DA POULS — palette resserrée or/glacier (les accents
+                emerald/purple sortaient de l'identité, vu au contrôle Chrome) */}
+            <StatCard label="Disponibles" value={String(liveTools)} accent="primary" />
+            <StatCard label="Bientôt" value={String(soonTools)} accent="ice" />
+            <StatCard label="Gratuits" value={String(totalTools)} accent="primary" />
+            <StatCard label="Avancés" value={String(advancedTools)} accent="ice" />
           </div>
         </Reveal>
 
@@ -602,19 +604,16 @@ function StatCard({
 }: {
   label: string;
   value: string;
-  accent: "emerald" | "primary" | "purple" | "amber";
+  accent: "primary" | "ice";
 }) {
+  // DA POULS — duo or/glacier uniquement (emerald/purple/amber retirés)
   const bg = {
-    emerald: "from-emerald-500/15",
     primary: "from-primary/15",
-    purple: "from-purple-500/15",
-    amber: "from-amber-500/15",
+    ice: "from-ice/15",
   }[accent];
   const text = {
-    emerald: "text-emerald-400",
     primary: "text-primary",
-    purple: "text-purple-400",
-    amber: "text-amber-400",
+    ice: "text-ice-fg",
   }[accent];
   // BATCH 49d — count-up scroll-driven sur valeurs numeriques. Si la value
   // est un nombre, on injecte le compteur natif CSS (BATCH 48b classes

@@ -207,11 +207,10 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
 
         {/* HERO */}
         <header className="mt-6 mb-8 max-w-3xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
-            <Newspaper className="h-3.5 w-3.5" aria-hidden="true" />
-            Le Journal Cryptoreflex · édition quotidienne
-          </span>
-          <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+          <p className="section-eyebrow">
+            <strong>Le Journal Cryptoreflex</strong> — édition quotidienne · sources citées
+          </p>
+          <h1 className="section-h1 mt-4 font-display font-bold">
             Actualités crypto françaises{headingSuffix && (
               <>{" "}<span className="gradient-text">{headingSuffix.replace(" — ", "")}</span></>
             )}
@@ -227,7 +226,7 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
 
           <p
             role="note"
-            className="mt-4 flex items-start gap-2 rounded-xl border border-info/30 bg-info/5 p-3 text-xs leading-relaxed text-info-fg"
+            className="mt-5 flex items-start gap-2 rounded-xl border border-border bg-surface/60 p-3 text-xs leading-relaxed text-muted"
           >
             <Info className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>

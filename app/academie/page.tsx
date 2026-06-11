@@ -141,11 +141,10 @@ export default function AcademiePage() {
 
         {/* Hero */}
         <header className="mt-6 mb-14 max-w-3xl">
-          <span className="badge-info">
-            <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-            Formation crypto · 100% gratuite
-          </span>
-          <h1 className="mt-3 ds-h1 leading-[1.1]">
+          <p className="section-eyebrow">
+            <strong>Académie</strong> — formation crypto · 100 % gratuite · sans email
+          </p>
+          <h1 className="section-h1 mt-4 font-display font-bold">
             Apprenez à investir crypto avec{" "}
             <span className="text-gradient-gold">l&apos;Académie Cryptoreflex</span>
           </h1>

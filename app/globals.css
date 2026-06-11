@@ -796,6 +796,28 @@ body {
   box-shadow: 0 0 12px rgba(245, 165, 36, 0.18);
 }
 
+
+/* DA POULS — grammaire des pages-piliers : eyebrow mono + H1 display.
+   Constat (inspection Chrome 2026-06-12) : toutes les pages internes
+   avaient un H1 ~40px + badge pill = la composition timide que le
+   panel a tuee sur la home. */
+.section-eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+}
+.section-eyebrow strong {
+  font-weight: 600;
+  color: var(--color-primary-glow);
+}
+.section-h1 {
+  font-size: clamp(38px, 4.6vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
 /* Pulse dot vert : signal "live data" sur le widget hero */
 .live-dot::before {
   content: "";
