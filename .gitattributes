@@ -1,0 +1,9 @@
+# Fins de ligne normalisées — les .mjs en CRLF font planter le transform
+# vitest sous Windows (SyntaxError opaque, diagnostiqué 2026-06-11).
+* text=auto
+*.mjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.md text eol=lf
