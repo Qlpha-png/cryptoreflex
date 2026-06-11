@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye dans une heure." },
+      { error: "Trop de tentatives. Réessayez dans une heure." },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     );
   }
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Cet email a déjà un compte. Va sur /connexion pour te connecter, ou utilise « Mot de passe oublié ».",
+            "Cet email a déjà un compte. Allez sur /connexion pour vous connecter, ou utilisez « Mot de passe oublié ».",
         },
         { status: 409 }
       );
@@ -174,12 +174,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       ok: true,
       needsLogin: true,
-      message: "Compte créé. Va sur /connexion pour te connecter.",
+      message: "Compte créé. Allez sur /connexion pour vous connecter.",
     });
   }
 
   // FIX critique : applique les cookies set par signInWithPassword sur la response
   return applyCookies(
-    NextResponse.json({ ok: true, message: "Compte créé. Tu es connecté." })
+    NextResponse.json({ ok: true, message: "Compte créé. Vous êtes connecté." })
   );
 }

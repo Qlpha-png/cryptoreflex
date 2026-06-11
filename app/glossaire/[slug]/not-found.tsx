@@ -37,8 +37,8 @@ export default function GlossaireNotFound() {
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             Notre glossaire couvre les termes essentiels de la crypto en
-            français (MiCA, staking, halving, smart contract…). Si tu
-            cherches un terme spécifique, parcours notre index complet.
+            français (MiCA, staking, halving, smart contract…). Si vous
+            cherchez un terme spécifique, parcourez notre index complet.
           </p>
 
           <form

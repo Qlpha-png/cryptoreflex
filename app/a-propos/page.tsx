@@ -216,9 +216,9 @@ export default function AProposPage() {
               <p>
                 {BRAND.name} <strong>n'appartient à aucune plateforme crypto</strong>,
                 aucun fonds d'investissement et aucun groupe média. Le site est financé
-                <strong> uniquement par l'affiliation</strong> : si tu ouvres un
+                <strong> uniquement par l'affiliation</strong> : si vous ouvrez un
                 compte via un de nos liens, la plateforme nous reverse une commission —{" "}
-                <strong>sans surcoût pour toi</strong>.
+                <strong>sans surcoût pour vous</strong>.
               </p>
               <p>
                 Cette commission <strong>n'influence pas les notes</strong>. Plusieurs

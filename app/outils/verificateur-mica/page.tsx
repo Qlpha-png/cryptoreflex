@@ -367,7 +367,7 @@ const FAQ = [
   },
   {
     q: "Puis-je intégrer un badge sur mon site ?",
-    a: "Oui. Sur la fiche d'une plateforme, clique sur 'Partager (embed iframe)' pour copier le code HTML à coller sur ton site. Le badge se met à jour automatiquement en cas de changement de statut.",
+    a: "Oui. Sur la fiche d'une plateforme, clique sur 'Partager (embed iframe)' pour copier le code HTML à coller sur votre site. Le badge se met à jour automatiquement en cas de changement de statut.",
   },
   {
     q: "Cryptoreflex fait-il du conseil en investissement ?",

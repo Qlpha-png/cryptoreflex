@@ -14,7 +14,7 @@ export const revalidate = 86400;
 
 // Note : le suffixe "| Cryptoreflex" est ajouté automatiquement par le template
 // title de app/layout.tsx — on l'omet ici pour éviter la duplication.
-const TITLE = `Quiz : quelle plateforme crypto pour toi ?`;
+const TITLE = `Quiz : quelle plateforme crypto pour vous ?`;
 const DESCRIPTION =
   "6 questions courtes pour trouver la plateforme crypto la plus adaptée à votre profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/plateforme";
@@ -94,7 +94,7 @@ export default function QuizPlateformePage() {
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
               Quelle plateforme crypto{" "}
-              <span className="gradient-text">pour toi&nbsp;?</span>
+              <span className="gradient-text">pour vous&nbsp;?</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
               Répondez à 6 questions courtes — budget, fréquence d'achat, support

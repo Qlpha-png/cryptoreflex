@@ -20,7 +20,7 @@ export async function POST() {
       ok: false,
       disabled: true,
       error:
-        "La question IA est indisponible. Consulte le résumé et les sources de la fiche ci-dessous.",
+        "La question IA est indisponible. Consultez le résumé et les sources de la fiche ci-dessous.",
     },
     { status: 410 },
   );

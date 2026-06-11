@@ -183,8 +183,8 @@ export default function TrackPage({ params }: Props) {
                     </h2>
                     <p className="mt-1 text-sm text-fg/80">
                       5 questions, 4 bonnes réponses minimum pour valider. Une
-                      fois réussi, ton parcours est marqué « quiz validé » dans
-                      ton tableau de bord.
+                      fois réussi, votre parcours est marqué « quiz validé » dans
+                      votre tableau de bord.
                     </p>
                     <Link
                       href={`/academie/${track.id}/quiz`}
@@ -194,7 +194,7 @@ export default function TrackPage({ params }: Props) {
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </Link>
                     <p className="mt-2 text-[11px] text-muted">
-                      Recommandé : termine d&apos;abord toutes les leçons. Le
+                      Recommandé : terminez d&apos;abord toutes les leçons. Le
                       quiz couvre tout le parcours.
                     </p>
                   </div>
@@ -213,7 +213,7 @@ export default function TrackPage({ params }: Props) {
               {nextTrack ? (
                 <>
                   <p className="mt-1 text-sm text-muted">
-                    Une fois les leçons terminées et le quiz validé, enchaîne avec
+                    Une fois les leçons terminées et le quiz validé, enchaînez avec
                     le parcours recommandé :
                   </p>
                   <Link
@@ -226,14 +226,14 @@ export default function TrackPage({ params }: Props) {
                 </>
               ) : (
                 <p className="mt-1 text-sm text-muted">
-                  🎓 Tu as parcouru tout le cursus de l&apos;académie.{" "}
+                  🎓 Vous avez parcouru tout le cursus de l&apos;académie.{" "}
                   <Link
                     href="/academie"
                     className="text-primary-soft underline underline-offset-2 hover:text-primary"
                   >
                     Revoir tous les parcours
                   </Link>{" "}
-                  ou approfondis selon tes besoins.
+                  ou approfondissez selon vos besoins.
                 </p>
               )}
             </section>
@@ -245,7 +245,7 @@ export default function TrackPage({ params }: Props) {
             <div className="mt-4 rounded-xl border border-border bg-surface p-4 text-xs">
               <p className="font-semibold text-fg">Astuce</p>
               <p className="mt-1 text-muted leading-relaxed">
-                Ta progression est sauvegardée dans ton navigateur. Ouvre cette
+                Votre progression est sauvegardée dans votre navigateur. Ouvrez cette
                 page sur le même appareil pour reprendre.
               </p>
             </div>

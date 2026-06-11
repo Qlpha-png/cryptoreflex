@@ -39,17 +39,17 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Quelle est la fiscalité crypto en France en 2026 ?",
     answer:
-      "Pour un particulier, les plus-values crypto sont imposées au PFU (Prélèvement Forfaitaire Unique) de 31,4 % par défaut (12,8 % d'impôt + 18,6 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que tu restes en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite pour simuler ta note fiscale.",
+      "Pour un particulier, les plus-values crypto sont imposées au PFU (Prélèvement Forfaitaire Unique) de 31,4 % par défaut (12,8 % d'impôt + 18,6 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que vous restez en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite pour simuler votre note fiscale.",
   },
   {
     question: "MiCA Phase 2 : qu'est-ce qui change le 30 juin 2026 ?",
     answer:
-      "Le 30 juin 2026, la fenêtre de transition MiCA s'achève. Les plateformes crypto qui n'ont pas obtenu l'agrément CASP (Crypto-Asset Service Provider) ne pourront plus servir les résidents français. Vérifie le statut de ta plateforme sur /outils/verificateur-mica.",
+      "Le 30 juin 2026, la fenêtre de transition MiCA s'achève. Les plateformes crypto qui n'ont pas obtenu l'agrément CASP (Crypto-Asset Service Provider) ne pourront plus servir les résidents français. Vérifiez le statut de votre plateforme sur /outils/verificateur-mica.",
   },
   {
     question: "Faut-il déclarer ses comptes crypto à l'étranger en France ?",
     answer:
-      "Oui, tout compte ouvert chez un exchange étranger (Binance, Coinbase, Bitpanda, Kraken, etc.) doit être déclaré via le formulaire 3916-bis. L'amende est de 750 € par compte oublié (jusqu'à 10 000 € si compte > 50 000 €). Voir /outils/radar-3916-bis pour vérifier ton exposition.",
+      "Oui, tout compte ouvert chez un exchange étranger (Binance, Coinbase, Bitpanda, Kraken, etc.) doit être déclaré via le formulaire 3916-bis. L'amende est de 750 € par compte oublié (jusqu'à 10 000 € si compte > 50 000 €). Voir /outils/radar-3916-bis pour vérifier votre exposition.",
   },
   {
     question: "Comment choisir une plateforme crypto sécurisée en France ?",
@@ -59,7 +59,7 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "DCA vs lump sum : quelle stratégie pour débuter ?",
     answer:
-      "Le DCA (Dollar Cost Averaging — achats étalés) lisse la volatilité et réduit le risque de mauvais timing. Statistiquement le lump sum (achat unique) bat le DCA ~70 % du temps sur 10 ans, mais avec une volatilité émotionnelle bien plus élevée. Pour un débutant : DCA mensuel sur 12-24 mois est recommandé. Simule sur /outils/simulateur-dca.",
+      "Le DCA (Dollar Cost Averaging — achats étalés) lisse la volatilité et réduit le risque de mauvais timing. Statistiquement le lump sum (achat unique) bat le DCA ~70 % du temps sur 10 ans, mais avec une volatilité émotionnelle bien plus élevée. Pour un débutant : DCA mensuel sur 12-24 mois est recommandé. Simulez sur /outils/simulateur-dca.",
   },
   {
     question: "Bitcoin ou Ethereum : par lequel commencer ?",
@@ -69,7 +69,7 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Que faire si une plateforme crypto fait faillite (FTX-style) ?",
     answer:
-      "1) Garder ses cryptos sur exchange = plateforme contrôle tes clés → risque max. 2) Au-delà de quelques centaines d'euros que tu ne trades pas, transfère vers un hardware wallet (Ledger, Trezor). 3) Vérifie systématiquement le statut MiCA + Proof-of-Reserves de ta plateforme. Notre méthode complète : /methodologie.",
+      "1) Garder ses cryptos sur exchange = plateforme contrôle vos clés → risque max. 2) Au-delà de quelques centaines d'euros que vous ne tradez pas, transférez vers un hardware wallet (Ledger, Trezor). 3) Vérifiez systématiquement le statut MiCA + Proof-of-Reserves de votre plateforme. Notre méthode complète : /methodologie.",
   },
 ];
 
@@ -243,7 +243,7 @@ keywords: ["brief crypto", "actualité crypto FR", "marché crypto aujourd'hui",
 import { Callout } from "@/components/mdx/Callout";
 
 <Callout type="info" title="Café Crypto 7h">
-  Ton récap quotidien des marchés crypto en France, généré automatiquement à partir des données CoinGecko fiables. ${trendLabel} ce matin.
+  Votre récap quotidien des marchés crypto en France, généré automatiquement à partir des données CoinGecko fiables. ${trendLabel} ce matin.
 </Callout>
 
 ## 📊 Top 5 mouvements 24h
@@ -279,7 +279,7 @@ ${data.faq.answer}
 - [📊 780 fiches crypto analysées](/cryptos) — 100 fiches premium + 680 LLM, score fiabilité, on-chain live, roadmap
 - [⚖️ Comparer 2 cryptos face à face](/comparer) — 4 950 duels prêts
 - [🧮 Calculateur fiscalité PFU 31,4%](/outils/calculateur-fiscalite) — gratuit
-- [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte tes amendes potentielles
+- [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte vos amendes potentielles
 
 <Callout type="warning" title="Pas un conseil financier">
   Ce brief est une synthèse pédagogique automatisée des données de marché publiques (CoinGecko). Il ne constitue pas un conseil d'investissement. Cryptoreflex n'est pas Prestataire de Services sur Actifs Numériques (PSAN/CASP). Investir en crypto comporte un risque de perte en capital.

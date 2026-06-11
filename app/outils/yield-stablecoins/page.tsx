@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Comparateur yield stablecoins — Cryptoreflex",
     description:
-      "Combien rapporte ton USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, Binance Earn, SwissBorg ? Comparatif APY mis à jour chaque semaine.",
+      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, Binance Earn, SwissBorg ? Comparatif APY mis à jour chaque semaine.",
     url: `${BRAND.url}/outils/yield-stablecoins`,
     type: "website",
   },
@@ -66,15 +66,15 @@ export default function YieldStablecoinsPage() {
     },
     {
       q: "Quelle est la fiscalité du yield stablecoin en France ?",
-      a: "Les intérêts/récompenses perçus sont imposables, mais le régime et le moment exacts (revenu à la perception, ou plus-value à la cession) ne sont pas tranchés par une source officielle dédiée — à vérifier selon ta situation. Un échange crypto→crypto sans soulte n'est, lui, pas un fait générateur (sursis, art. 150 VH bis CGI) ; l'imposition intervient à la cession contre euro.",
+      a: "Les intérêts/récompenses perçus sont imposables, mais le régime et le moment exacts (revenu à la perception, ou plus-value à la cession) ne sont pas tranchés par une source officielle dédiée — à vérifier selon votre situation. Un échange crypto→crypto sans soulte n'est, lui, pas un fait générateur (sursis, art. 150 VH bis CGI) ; l'imposition intervient à la cession contre euro.",
     },
     {
-      q: "Pourquoi pas de DeFi (Aave, Compound) sur ta liste prioritaire ?",
+      q: "Pourquoi pas de DeFi (Aave, Compound) sur votre liste prioritaire ?",
       a: "Le DeFi expose à un risque smart contract (hack, exploit) et de pool (depeg). On le mentionne en référence pour les profils avancés mais on priorise les plateformes MiCA pour les débutants français.",
     },
     {
       q: "Comment vérifier que le taux affiché est encore actuel ?",
-      a: `Cette page indique sa date de dernière vérification (${STABLECOIN_YIELDS_LAST_UPDATED}) et est mise à jour chaque semaine. Pour le taux à la minute, va sur la plateforme directement.`,
+      a: `Cette page indique sa date de dernière vérification (${STABLECOIN_YIELDS_LAST_UPDATED}) et est mise à jour chaque semaine. Pour le taux à la minute, allez sur la plateforme directement.`,
     },
     {
       q: "Quelle différence entre USDC et EURC ?",

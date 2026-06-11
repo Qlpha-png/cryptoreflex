@@ -204,7 +204,7 @@ export default function SimulateurHalvingBitcoin() {
                 Bitstack — DCA Bitcoin auto dès 1 €/jour
               </h3>
               <p className="mt-2 text-sm text-white/70">
-                Programme tes achats récurrents et accumule des sats à chaque halving
+                Programme vos achats récurrents et accumule des sats à chaque halving
                 sans devoir te connecter. Application FR conforme MiCA.
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function SimulateurHalvingBitcoin() {
             basés sur les multiplicateurs des cycles passés. Aucun rendement n'est
             garanti — Bitcoin peut perdre 80 % de sa valeur entre deux halvings comme
             il l'a déjà fait. Cet outil n'est pas un conseil en investissement.
-            N'investis que ce que tu peux te permettre de perdre.
+            N'investis que ce que vous pouvez te permettre de perdre.
           </p>
         </div>
       </div>

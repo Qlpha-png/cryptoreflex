@@ -11,7 +11,7 @@ import { ArrowLeft, Search, Trophy, ShieldCheck } from "lucide-react";
 export const metadata: Metadata = {
   title: "Avis introuvable — Cryptoreflex",
   description:
-    "Cet avis n'existe pas (encore !). Découvre tous nos avis détaillés sur les plateformes crypto régulées MiCA en France.",
+    "Cet avis n'existe pas (encore !). Découvrez tous nos avis détaillés sur les plateformes crypto régulées MiCA en France.",
   robots: { index: false, follow: false },
 };
 
@@ -37,7 +37,7 @@ export default function AvisNotFound() {
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             Cryptoreflex publie des avis éditoriaux uniquement sur les
-            plateformes crypto régulées MiCA / PSAN AMF. Si tu cherches une
+            plateformes crypto régulées MiCA / PSAN AMF. Si vous cherchez une
             plateforme spécifique, consulte notre comparatif complet.
           </p>
 

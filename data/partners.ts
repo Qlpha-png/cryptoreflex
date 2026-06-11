@@ -136,12 +136,12 @@ export const partners: Partner[] = [
       {
         name: "Premier hardware wallet",
         description:
-          "Tu as 2 000–50 000 € en crypto sur un exchange. Tu veux sortir, simplement. Nano S Plus 79 €, setup 15 min, tu dors mieux.",
+          "Vous avez 2 000–50 000 € en crypto sur un exchange. Vous voulez sortir, simplement. Nano S Plus 79 €, setup 15 min, vous dormez mieux.",
       },
       {
         name: "Voyageur / nomade crypto",
         description:
-          "Tu signes des transactions en déplacement depuis ton téléphone. Nano X (149 €) avec Bluetooth chiffré.",
+          "Vous signez des transactions en déplacement depuis votre téléphone. Nano X (149 €) avec Bluetooth chiffré.",
       },
     ],
     products: [
@@ -193,7 +193,7 @@ export const partners: Partner[] = [
     shortDescription:
       "Pionnier du hardware wallet (2014, République tchèque). Firmware + software entièrement auditables sur GitHub. Shamir Backup natif sur Model T.",
     whyWeUseIt:
-      "C'est le wallet qu'on garde en parallèle de Ledger pour la diversification fabricant (best practice patrimoine sérieux). Code 100% public sur GitHub : tu n'as pas à faire confiance, tu vérifies toi-même. La référence absolue pour qui veut la souveraineté complète.",
+      "C'est le wallet qu'on garde en parallèle de Ledger pour la diversification fabricant (best practice patrimoine sérieux). Code 100% public sur GitHub : vous n'avez pas à faire confiance, vous vérifiez vous-même. La référence absolue pour qui veut la souveraineté complète.",
     affiliateUrl: "https://affil.trezor.io/aff_c?offer_id=137&aff_id=141576",
     logoPath: "/logos/partners/trezor.svg",
     brandColor: "#1B1B1B",
@@ -214,12 +214,12 @@ export const partners: Partner[] = [
       {
         name: "Cypherpunk / privacy advocate",
         description:
-          "\"Don't trust, verify\" n'est pas un slogan — c'est ton mode de vie. Trezor est ton seul choix possible.",
+          "\"Don't trust, verify\" n'est pas un slogan — c'est votre mode de vie. Trezor est votre seul choix possible.",
       },
       {
         name: "Audit-conscious user",
         description:
-          "Patrimoine crypto sérieux (>20 k€). Tu veux vérifier le code, pas faire confiance au marketing. Trezor expose tout.",
+          "Patrimoine crypto sérieux (>20 k€). Vous voulez vérifier le code, pas faire confiance au marketing. Trezor expose tout.",
       },
     ],
     products: [
@@ -291,7 +291,7 @@ export const partners: Partner[] = [
     cons: [
       "Plan Trader 549 €/an cher si > 50 000 transactions",
       "Couverture moins exhaustive que Koinly sur chains exotiques (Sui, Aptos, Cosmos)",
-      "Hors-sujet si tu n'es pas résident fiscal français",
+      "Hors-sujet si vous n'êtes pas résident fiscal français",
     ],
     featured: true,
     order: 3,
@@ -299,7 +299,7 @@ export const partners: Partner[] = [
       {
         name: "Tax-anxious deadline mai",
         description:
-          "Multi-exchange, deadline approche, tu paniques. Waltio Investor 199 €/an + nos guides Pro = déclaration en 1 weekend.",
+          "Multi-exchange, deadline approche, vous paniquez. Waltio Investor 199 €/an + nos guides Pro = déclaration en 1 weekend.",
       },
       {
         name: "Investor lourd >100 k€",
@@ -312,7 +312,7 @@ export const partners: Partner[] = [
         id: "decouverte",
         name: "Découverte",
         price: "Gratuit",
-        description: "Visualise ton portfolio, jusqu'à 30 transactions.",
+        description: "Visualisez votre portfolio, jusqu'à 30 transactions.",
         Icon: Sparkles,
         badge: { label: "Sans CB", tone: "info" },
         highlights: [

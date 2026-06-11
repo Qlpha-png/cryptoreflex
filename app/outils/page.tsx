@@ -93,7 +93,7 @@ const TOOLS: Tool[] = [
   // ─── FISCALITÉ ───
   {
     title: "Cerfa 2086 + 3916-bis auto",
-    desc: "Importe ton CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul officiel 150 VH bis.",
+    desc: "Importe votre CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul officiel 150 VH bis.",
     href: "/outils/cerfa-2086-auto",
     Icon: FileText,
     tier: "pro",
@@ -102,7 +102,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Radar 3916-bis",
-    desc: "Détecte tes amendes potentielles (750 € à 10 000 €/compte) sur tes comptes crypto étrangers en 2 min.",
+    desc: "Détecte vos amendes potentielles (750 € à 10 000 €/compte) sur vos comptes crypto étrangers en 2 min.",
     href: "/outils/radar-3916-bis",
     Icon: Radar,
     tier: "free",
@@ -111,7 +111,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Calculateur fiscalité PFU 31,4 %",
-    desc: "Simule ton impôt crypto en 2 min. Régime PFU ou barème, prorata portefeuille intégré.",
+    desc: "Simule votre impôt crypto en 2 min. Régime PFU ou barème, prorata portefeuille intégré.",
     href: "/outils/calculateur-fiscalite",
     Icon: Calculator,
     tier: "free",
@@ -120,7 +120,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Comparatif outils déclaration",
-    desc: "Waltio vs Koinly vs CoinTracking : choisis l'outil adapté à ton volume de transactions.",
+    desc: "Waltio vs Koinly vs CoinTracking : choisis l'outil adapté à votre volume de transactions.",
     href: "/outils/declaration-fiscale-crypto",
     Icon: GitCompare,
     tier: "free",
@@ -149,7 +149,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Simulateur DCA backtest",
-    desc: "Et si tu avais investi 100 €/mois en BTC depuis 2020 ? Backtest réel sur 5 ans.",
+    desc: "Et si vous aviez investi 100 €/mois en BTC depuis 2020 ? Backtest réel sur 5 ans.",
     href: "/outils/simulateur-dca",
     Icon: LineChart,
     tier: "free",
@@ -158,7 +158,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Vérificateur MiCA / CASP",
-    desc: "Ta plateforme crypto est-elle conforme MiCA et autorisée en France à partir du 1er juillet 2026 ?",
+    desc: "Votre plateforme crypto est-elle conforme MiCA et autorisée en France à partir du 1er juillet 2026 ?",
     href: "/outils/verificateur-mica",
     Icon: ShieldCheck,
     tier: "free",
@@ -178,7 +178,7 @@ const TOOLS: Tool[] = [
   // ─── PORTFOLIO ───
   {
     title: "Portfolio tracker",
-    desc: "Suis ta valeur live en EUR, P&L automatique, allocation par crypto. 100 % local (RGPD).",
+    desc: "Suivez votre valeur live en EUR, P&L automatique, allocation par crypto. 100 % local (RGPD).",
     href: "/outils/portfolio-tracker",
     Icon: Briefcase,
     tier: "free",
@@ -187,7 +187,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Calculateur APY staking",
-    desc: "Compare le rendement réel staking (ETH, SOL, ADA, ATOM…) après commission validateur.",
+    desc: "Comparez le rendement réel staking (ETH, SOL, ADA, ATOM…) après commission validateur.",
     href: "/outils/calculateur-apy-staking",
     Icon: Wallet,
     tier: "free",
@@ -196,7 +196,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Comparateur personnalisé",
-    desc: "Compare jusqu'à 4 plateformes crypto sur tes critères (frais, sécurité, MiCA, support FR).",
+    desc: "Compare jusqu'à 4 plateformes crypto sur vos critères (frais, sécurité, MiCA, support FR).",
     href: "/outils/comparateur-personnalise",
     Icon: GitCompare,
     tier: "free",
@@ -260,7 +260,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Tax Loss Harvesting (FR)",
-    desc: "Réduis ton PFU 31,4 % en compensant tes plus-values par les moins-values réalisées avant le 31/12.",
+    desc: "Réduis votre PFU 31,4 % en compensant vos plus-values par les moins-values réalisées avant le 31/12.",
     href: "/outils/tax-loss-harvesting",
     Icon: TrendingUp,
     tier: "free",
@@ -269,7 +269,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Fiscal Copilot IA",
-    desc: "Agent conversationnel qui parse ton CSV exchange et génère ton Cerfa 2086 pré-rempli. Sources légales citées.",
+    desc: "Agent conversationnel qui parse votre CSV exchange et génère votre Cerfa 2086 pré-rempli. Sources légales citées.",
     href: "/outils/fiscal-copilot",
     Icon: Sparkles,
     tier: "pro",
@@ -278,7 +278,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Wallet Connect read-only",
-    desc: "MetaMask, Rabby, Ledger, Phantom… Suis ton portfolio DeFi multi-chain en lecture seule.",
+    desc: "MetaMask, Rabby, Ledger, Phantom… Suivez votre portfolio DeFi multi-chain en lecture seule.",
     href: "/outils/wallet-connect",
     Icon: Wallet,
     tier: "free",
@@ -327,7 +327,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Export Expert-Comptable",
-    desc: "Convertis tes CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). Gratuit.",
+    desc: "Convertis vos CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). Gratuit.",
     href: "/outils/export-expert-comptable",
     Icon: FileSpreadsheet,
     tier: "pro",
@@ -336,7 +336,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Permis Crypto FR",
-    desc: "Quiz 50 questions (technique, régulation, fiscalité, sécurité). Score >70 % → ton Permis Crypto PDF.",
+    desc: "Quiz 50 questions (technique, régulation, fiscalité, sécurité). Score >70 % → votre Permis Crypto PDF.",
     href: "/outils/crypto-license",
     Icon: Award,
     tier: "free",
@@ -345,7 +345,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Succession Crypto",
-    desc: "Guide légal FR + checklist sécurité + générateur lettre d'intention crypto pour ton notaire.",
+    desc: "Guide légal FR + checklist sécurité + générateur lettre d'intention crypto pour votre notaire.",
     href: "/outils/succession-crypto",
     Icon: Heart,
     tier: "free",
@@ -561,7 +561,7 @@ export default function OutilsPage() {
               <p className="mt-2 text-sm text-fg/80 max-w-2xl">
                 Y compris les outils avancés comme le Cerfa 2086 PDF auto et les résumés
                 éditoriaux par fiche crypto. Aucun compte requis, aucune carte bancaire.
-                Cryptoreflex est un éditeur indépendant : si nos outils te sont utiles, tu peux
+                Cryptoreflex est un éditeur indépendant : si nos outils te sont utiles, vous pouvez
                 soutenir le projet librement.
               </p>
               <Link

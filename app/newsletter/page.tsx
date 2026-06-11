@@ -29,7 +29,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Newsletter quotidienne crypto FR — 3 min/jour",
   description:
-    "Reçois chaque matin à 7h les 3 infos crypto qui comptent pour un investisseur FR. MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
+    "Recevez chaque matin à 7h les 3 infos crypto qui comptent pour un investisseur FR. MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
   alternates: withHreflang(`${BRAND.url}/newsletter`),
   openGraph: {
     title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
@@ -53,7 +53,7 @@ const benefits = [
   {
     icon: Clock,
     title: "3 minutes le matin",
-    text: "Format court : titre, contexte, ce que ça change pour toi. Pas de pavé indigeste.",
+    text: "Format court : titre, contexte, ce que ça change pour vous. Pas de pavé indigeste.",
   },
   {
     icon: ShieldCheck,

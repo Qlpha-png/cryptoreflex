@@ -155,7 +155,7 @@ export function generateMetadata({ searchParams }: Props): Metadata {
     return {
       title: "Comparateur de cryptomonnaies — 100 fiches éditoriales premium",
       description:
-        "Compare jusqu'à 4 cryptos côte à côte parmi nos 100 fiches éditoriales premium Cryptoreflex (top 10 + 90 hidden gems sur 780 cryptos au total) : prix temps réel, fiabilité, forces/faiblesses, plateformes régulées MiCA. 10 combos populaires pré-construits.",
+        "Comparez jusqu'à 4 cryptos côte à côte parmi nos 100 fiches éditoriales premium Cryptoreflex (top 10 + 90 hidden gems sur 780 cryptos au total) : prix temps réel, fiabilité, forces/faiblesses, plateformes régulées MiCA. 10 combos populaires pré-construits.",
       robots: { index: false, follow: true },
     };
   }
@@ -172,7 +172,7 @@ export function generateMetadata({ searchParams }: Props): Metadata {
         .join(",")}`),
     openGraph: {
       title: `${names} — Comparatif crypto`,
-      description: `Compare ${symbols} en un coup d'œil sur ${BRAND.name}.`,
+      description: `Comparez ${symbols} en un coup d'œil sur ${BRAND.name}.`,
       type: "website",
     },
   };
@@ -224,11 +224,11 @@ export default async function CryptoComparePage({ searchParams }: Props) {
               Comparateur multi-cryptos
             </div>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Compare jusqu&apos;à <span className="gradient-text">4 cryptos</span>{" "}
+              Comparez jusqu&apos;à <span className="gradient-text">4 cryptos</span>{" "}
               côte à côte
             </h1>
             <p className="mt-3 text-sm sm:text-base text-muted">
-              Choisis parmi nos <strong className="text-fg">100 fiches éditoriales</strong>{" "}
+              Choisissez parmi nos <strong className="text-fg">100 fiches éditoriales</strong>{" "}
               (top 10 + 90 hidden gems, sur 780 cryptos au total). Prix CoinGecko temps réel, données
               éditoriales vérifiées par {BRAND.name}.
             </p>
@@ -252,16 +252,16 @@ export default async function CryptoComparePage({ searchParams }: Props) {
             <h2 className="font-bold text-fg">Comment ça marche ?</h2>
             <ol className="mt-2 list-decimal pl-5 space-y-1 text-muted">
               <li>
-                Choisis un <strong className="text-fg">combo populaire</strong>{" "}
+                Choisissez un <strong className="text-fg">combo populaire</strong>{" "}
                 ci-dessus pour comparer en 1 clic.
               </li>
               <li>
-                Ou utilise le{" "}
+                Ou utilisez le{" "}
                 <strong className="text-fg">sélecteur ci-dessus</strong> pour
-                composer ton propre comparatif (max {MAX_IDS} cryptos).
+                composer votre propre comparatif (max {MAX_IDS} cryptos).
               </li>
               <li>
-                Ou tente le bouton{" "}
+                Ou tentez le bouton{" "}
                 <strong className="text-fg">&laquo; Surprends-moi &raquo;</strong>{" "}
                 pour découvrir un mix aléatoire diversifié.
               </li>
@@ -389,7 +389,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
             Choisir d&apos;autres cryptos
           </Link>
           <span className="text-xs text-muted">
-            Tu peux comparer jusqu&apos;à {MAX_IDS} cryptos en même temps.
+            Vous pouvez comparer jusqu&apos;à {MAX_IDS} cryptos en même temps.
           </span>
         </div>
 

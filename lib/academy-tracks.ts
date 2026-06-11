@@ -95,7 +95,7 @@ const TRACK_DEBUTANT: Track = {
   id: "debutant",
   title: "Débutant",
   description:
-    "Tu n'as jamais acheté de crypto. On part de zéro : c'est quoi la blockchain, comment acheter ton premier Bitcoin sereinement, comment le sécuriser et comment déclarer aux impôts.",
+    "Vous n'avez jamais acheté de crypto. On part de zéro : c'est quoi la blockchain, comment acheter votre premier Bitcoin sereinement, comment le sécuriser et comment déclarer aux impôts.",
   level: "Beginner",
   estimatedHours: 2,
   accentClass: "from-emerald-500/30 to-teal-600/20 border-emerald-500/40",
@@ -193,7 +193,7 @@ const TRACK_INTERMEDIAIRE: Track = {
   id: "intermediaire",
   title: "Intermédiaire",
   description:
-    "Tu as déjà ton premier portefeuille. On structure : DCA vs HODL vs trade, comprendre PoS/PoW, les Layer 2, configurer un Ledger, et faire le tri sur les plateformes post-MiCA.",
+    "Vous avez déjà votre premier portefeuille. On structure : DCA vs HODL vs trade, comprendre PoS/PoW, les Layer 2, configurer un Ledger, et faire le tri sur les plateformes post-MiCA.",
   level: "Intermediate",
   estimatedHours: 2.5,
   accentClass: "from-amber-500/30 to-orange-600/20 border-amber-500/40",
@@ -319,7 +319,7 @@ const TRACK_AVANCE: Track = {
   id: "avance",
   title: "Avancé",
   description:
-    "Tu maîtrises les bases. On creuse les sujets pointus : DeFi, staking comparé, NFT, fiscalité experte (BIC/BNC, NFT, 3916-bis, PFU vs barème), et la cartographie MiCA des plateformes à risque.",
+    "Vous maîtrisez les bases. On creuse les sujets pointus : DeFi, staking comparé, NFT, fiscalité experte (BIC/BNC, NFT, 3916-bis, PFU vs barème), et la cartographie MiCA des plateformes à risque.",
   level: "Advanced",
   estimatedHours: 2.5,
   accentClass: "from-fuchsia-500/30 to-violet-600/20 border-fuchsia-500/40",
@@ -436,7 +436,7 @@ const TRACK_SECURITE: Track = {
   id: "securite",
   title: "Sécurité",
   description:
-    "Tu détiens déjà des cryptos et tu veux dormir tranquille. De l'hygiène 2FA au multisig : protège ton patrimoine contre le hack d'exchange, le phishing et la perte de seed phrase.",
+    "Vous détenez déjà des cryptos et vous voulez dormir tranquille. De l'hygiène 2FA au multisig : protégez votre patrimoine contre le hack d'exchange, le phishing et la perte de seed phrase.",
   level: "Intermediate",
   estimatedHours: 2,
   accentClass: "from-sky-500/30 to-cyan-600/20 border-sky-500/40",
@@ -640,7 +640,7 @@ const TRACK_PLATEFORMES: Track = {
   id: "plateformes",
   title: "Plateformes",
   description:
-    "Où acheter et conserver sans te faire piéger par une plateforme non conforme. Méthode de choix, revues des grands exchanges et lecture du risque MiCA : PSAN, CASP, alternatives.",
+    "Où acheter et conserver sans vous faire piéger par une plateforme non conforme. Méthode de choix, revues des grands exchanges et lecture du risque MiCA : PSAN, CASP, alternatives.",
   level: "Beginner",
   estimatedHours: 2,
   accentClass: "from-blue-500/30 to-indigo-600/20 border-blue-500/40",
@@ -771,7 +771,7 @@ const TRACK_ARNAQUES: Track = {
   id: "arnaques",
   title: "Arnaques & erreurs : se protéger",
   description:
-    "Le parcours d'autodéfense crypto : les réflexes anti-arnaque universels, les grandes arnaques (rug pull, Ponzi, faux support, pump and dump, drainers, pig butchering) et les erreurs qu'on s'inflige soi-même. Pour protéger ton capital avant de te faire avoir.",
+    "Le parcours d'autodéfense crypto : les réflexes anti-arnaque universels, les grandes arnaques (rug pull, Ponzi, faux support, pump and dump, drainers, pig butchering) et les erreurs qu'on s'inflige soi-même. Pour protéger votre capital avant de vous faire avoir.",
   level: "Beginner",
   estimatedHours: 2,
   accentClass: "from-red-500/30 to-rose-600/20 border-red-500/40",
@@ -780,7 +780,7 @@ const TRACK_ARNAQUES: Track = {
     {
       order: 1,
       articleSlug: "checklist-anti-arnaque-crypto-reflexes-2026",
-      title: "La checklist anti-arnaque : tes réflexes universels",
+      title: "La checklist anti-arnaque : vos réflexes universels",
       durationMin: 9,
       prereqs: [],
     },
@@ -1265,14 +1265,14 @@ export const TRACK_GROUPS: TrackGroup[] = [
     id: "fondations",
     title: "Les fondations",
     subtitle:
-      "Commence ici. Du tout premier achat à l'autonomie complète — le socle à suivre dans l'ordre.",
+      "Commencez ici. Du tout premier achat à l'autonomie complète — le socle à suivre dans l'ordre.",
     trackIds: ["debutant", "intermediaire", "avance"],
   },
   {
     id: "protection",
-    title: "Te protéger",
+    title: "Vous protéger",
     subtitle:
-      "Sécuriser tes cryptos et reconnaître les arnaques avant qu'il soit trop tard.",
+      "Sécuriser vos cryptos et reconnaître les arnaques avant qu'il soit trop tard.",
     trackIds: ["securite", "arnaques"],
   },
   {
@@ -1286,7 +1286,7 @@ export const TRACK_GROUPS: TrackGroup[] = [
     id: "investir",
     title: "Choisir & déclarer",
     subtitle:
-      "Plateforme régulée MiCA, stablecoins et fiscalité française : gérer concrètement tes avoirs.",
+      "Plateforme régulée MiCA, stablecoins et fiscalité française : gérer concrètement vos avoirs.",
     trackIds: ["plateformes", "fiscalite", "stablecoins"],
   },
   {

@@ -80,7 +80,7 @@ export default function GlobalError({
             Une erreur critique est survenue
           </h1>
           <p style={{ color: "#9BA3AF", margin: "0 0 24px", lineHeight: 1.5 }}>
-            Le site n'a pas pu charger correctement. Tu peux essayer de
+            Le site n'a pas pu charger correctement. Vous pouvez essayer de
             recharger la page ou revenir dans quelques instants.
           </p>
 

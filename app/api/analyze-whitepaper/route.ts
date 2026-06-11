@@ -23,7 +23,7 @@ function disabledResponse(): NextResponse {
       ok: false,
       disabled: true,
       error:
-        "L'analyse de whitepaper n'est plus disponible. Consulte les fiches crypto et leurs sources.",
+        "L'analyse de whitepaper n'est plus disponible. Consultez les fiches crypto et leurs sources.",
     },
     { status: 410 },
   );

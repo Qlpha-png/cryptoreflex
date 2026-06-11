@@ -127,7 +127,7 @@ export default function ComparatifSecuritePage() {
     faqSchema([
       {
         question: "Quelle est la plateforme crypto la plus securisee en 2026 ?",
-        answer: `Selon notre score Cryptoreflex (composite cold storage / assurance / 2FA / track record / conformite MiCA), ${top.name} arrive en tete avec ${top.securityScore.toFixed(1)}/5. A nuancer : la securite reelle depend AUSSI de tes propres pratiques (mot de passe fort, 2FA hardware key, jamais d'API key sans whitelist IP).`,
+        answer: `Selon notre score Cryptoreflex (composite cold storage / assurance / 2FA / track record / conformite MiCA), ${top.name} arrive en tete avec ${top.securityScore.toFixed(1)}/5. A nuancer : la securite reelle depend AUSSI de vos propres pratiques (mot de passe fort, 2FA hardware key, jamais d'API key sans whitelist IP).`,
       },
       {
         question: "Qu'est-ce que le cold storage et pourquoi c'est important ?",
@@ -135,7 +135,7 @@ export default function ComparatifSecuritePage() {
       },
       {
         question: "L'assurance d'une plateforme couvre-t-elle vraiment mes fonds ?",
-        answer: "Pas toujours. Les polices d'assurance crypto couvrent typiquement le hack de l'infrastructure (ex: vol de hot wallet) MAIS PAS : ton compte piratee a cause d'un mot de passe faible, le phishing, l'erreur utilisateur. Coinbase et Kraken ont les couvertures les plus larges (Lloyd's of London). Toujours lire les conditions.",
+        answer: "Pas toujours. Les polices d'assurance crypto couvrent typiquement le hack de l'infrastructure (ex: vol de hot wallet) MAIS PAS : votre compte pirate a cause d'un mot de passe faible, le phishing, l'erreur utilisateur. Coinbase et Kraken ont les couvertures les plus larges (Lloyd's of London). Toujours lire les conditions.",
       },
       {
         question: "MiCA / agrement CASP, ca change quoi pour la securite ?",
@@ -337,10 +337,10 @@ export default function ComparatifSecuritePage() {
               Important
             </div>
             <p className="mt-2 text-sm text-fg/85">
-              La meilleure plateforme du monde ne te protege pas contre tes
+              La meilleure plateforme du monde ne vous protege pas contre vos
               propres erreurs : phishing, mot de passe faible, partage de cle
-              API. Active toujours <strong className="text-fg">2FA hardware</strong>
-              {" "}(YubiKey) et garde tes seeds <strong className="text-fg">en cold wallet</strong>.
+              API. Activez toujours <strong className="text-fg">2FA hardware</strong>
+              {" "}(YubiKey) et gardez vos seeds <strong className="text-fg">en cold wallet</strong>.
             </p>
           </div>
         </section>
@@ -362,7 +362,7 @@ export default function ComparatifSecuritePage() {
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
-              Verifie une plateforme
+              Verifiez une plateforme
             </div>
             <div className="mt-2 text-base font-bold text-fg">Verificateur MiCA / CASP</div>
             <div className="mt-1 text-xs text-muted">Statut PSAN/CASP en 1 clic</div>

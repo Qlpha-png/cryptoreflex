@@ -20,7 +20,7 @@ import { Code2, KeyRound, ShieldCheck, Plus, ArrowUpRight } from "lucide-react";
 export const metadata: Metadata = {
   title: "Clés API développeur",
   description:
-    "Crée et gère tes clés API B2B Cryptoreflex (sandbox 14j gratuits ou abonnement Starter / Pro).",
+    "Créez et gérez vos clés API B2B Cryptoreflex (sandbox 14j gratuits ou abonnement Starter / Pro).",
   alternates: { canonical: `${BRAND.url}/mon-compte/dev` },
   robots: { index: false, follow: false },
 };
@@ -49,11 +49,11 @@ export default async function DevDashboardPage({
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
           <Code2 className="size-8 text-primary" />
-          Tes clés API B2B
+          Vos clés API B2B
         </h1>
         <p className="mt-3 text-muted-foreground max-w-2xl">
-          Branche tes outils, tes scripts ou ton projet quant sur les données
-          Cryptoreflex via une API REST stable. Documente les endpoints sur la{" "}
+          Branchez vos outils, vos scripts ou votre projet quant sur les données
+          Cryptoreflex via une API REST stable. Documentez les endpoints sur la{" "}
           <Link href="/dev/api/docs" className="underline">
             page développeur
           </Link>
@@ -63,7 +63,7 @@ export default async function DevDashboardPage({
 
       {searchParams?.error === "create_failed" ? (
         <div className="mb-6 rounded-lg border border-destructive/50 bg-destructive/5 p-4 text-sm text-destructive">
-          La création de la clé a échoué. Réessaie ou contacte le support.
+          La création de la clé a échoué. Réessayez ou contactez le support.
         </div>
       ) : null}
 
@@ -76,8 +76,8 @@ export default async function DevDashboardPage({
               Tier sandbox — 14 jours gratuits
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Génère une clé d'essai pour tester l'API sans engagement. Scopes
-              limités à la lecture (60 req/min). Tu peux upgrader vers Starter
+              Générez une clé d'essai pour tester l'API sans engagement. Scopes
+              limités à la lecture (60 req/min). Vous pouvez upgrader vers Starter
               ou Pro à tout moment depuis le détail de la clé.
             </p>
           </div>
@@ -130,7 +130,7 @@ export default async function DevDashboardPage({
 
         {keys.length === 0 ? (
           <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">
-            Aucune clé créée pour l'instant. Génère ta première clé sandbox
+            Aucune clé créée pour l'instant. Générez votre première clé sandbox
             ci-dessus pour démarrer.
           </div>
         ) : (
@@ -192,8 +192,8 @@ export default async function DevDashboardPage({
           Aucune recommandation d'investissement — article L321-1 CMF.
         </p>
         <p>
-          Conformité RGPD : tes données sont hébergées en UE (Frankfurt). Tu
-          peux exporter ou supprimer ton compte à tout moment depuis{" "}
+          Conformité RGPD : vos données sont hébergées en UE (Frankfurt). Vous
+          pouvez exporter ou supprimer votre compte à tout moment depuis{" "}
           <Link href="/mon-compte" className="underline">
             Mon compte
           </Link>

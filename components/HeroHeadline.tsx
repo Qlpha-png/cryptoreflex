@@ -34,7 +34,7 @@ export default function HeroHeadline() {
       <h1 className="ds-h1 leading-[1.05]">
         <span className="hero-headline-accent">847k Français</span>
         <br className="hidden lg:inline" />{" "}
-        <span className="text-fg">investissent en crypto. Comprends pourquoi.</span>
+        <span className="text-fg">investissent en crypto. Comprenez pourquoi.</span>
       </h1>
     );
   }
@@ -42,7 +42,7 @@ export default function HeroHeadline() {
   if (variant === "speed") {
     return (
       <h1 className="ds-h1 leading-[1.05]">
-        Ton 1<sup className="text-[0.55em] align-super">er</sup> achat crypto{" "}
+        Votre 1<sup className="text-[0.55em] align-super">er</sup> achat crypto{" "}
         <span className="hero-headline-accent">en 5 minutes</span>
         <br className="hidden lg:inline" />{" "}
         <span className="text-fg">— guidé étape par étape.</span>
@@ -63,7 +63,7 @@ export default function HeroHeadline() {
       <span className="hero-headline-accent">847 pages de MiCA</span>
       <br className="hidden lg:inline" />{" "}
       <span className="text-fg">
-        pour toi. Plateformes, analyses, outils, fiscalité — tout en un.
+        pour vous. Plateformes, analyses, outils, fiscalité — tout en un.
       </span>
     </h1>
   );

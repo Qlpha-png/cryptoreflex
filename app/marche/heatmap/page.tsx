@@ -206,7 +206,7 @@ export default async function HeatmapPage() {
           </h2>
           <p className="mt-2 text-sm text-fg/80 leading-relaxed">
             Une iframe, zéro maintenance — la heatmap top 20 live (SSE Binance)
-            directement sur ton blog, ton dashboard ou ton agrégateur. License
+            directement sur votre blog, votre dashboard ou votre agrégateur. License
             CC-BY 4.0 (attribution dofollow vers Cryptoreflex incluse).
           </p>
           <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background/60 p-3 text-[11px] leading-relaxed text-white/85 font-mono whitespace-pre-wrap break-all">

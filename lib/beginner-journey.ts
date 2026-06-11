@@ -49,7 +49,7 @@ export const BEGINNER_STEPS = [
     meta: "2 min de lecture",
     title: "Choisir une plateforme",
     description:
-      "Compare les plateformes agréées PSAN (enregistrées AMF) et conformes MiCA — en 2 minutes.",
+      "Comparez les plateformes agréées PSAN (enregistrées AMF) et conformes MiCA — en 2 minutes.",
     href: "/comparatif",
     cta: "Comparer les plateformes PSAN",
     minutes: 2,
@@ -60,7 +60,7 @@ export const BEGINNER_STEPS = [
     meta: "8 min de lecture",
     title: "Acheter sa 1ère crypto",
     description:
-      "Tutoriel pas-à-pas avec captures d'écran : du virement à ton premier bitcoin.",
+      "Tutoriel pas-à-pas avec captures d'écran : du virement à votre premier bitcoin.",
     href: "/blog/premier-achat-crypto-france-2026-guide-step-by-step",
     cta: "Suivre le tuto premier achat",
     minutes: 8,
@@ -71,7 +71,7 @@ export const BEGINNER_STEPS = [
     meta: "6 min de lecture",
     title: "Sécuriser",
     description:
-      "Portefeuille physique (wallet), double authentification (2FA), phrase secrète : protège tes cryptos comme un pro.",
+      "Portefeuille physique (wallet), double authentification (2FA), phrase secrète : protégez vos cryptos comme un pro.",
     href: "/blog/securiser-cryptos-wallet-2fa-2026",
     cta: "Lire le guide sécurité wallet",
     minutes: 6,

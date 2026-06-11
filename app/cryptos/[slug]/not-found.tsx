@@ -24,7 +24,7 @@ import { ArrowLeft, Search, Trophy, BarChart3 } from "lucide-react";
 export const metadata: Metadata = {
   title: "Cette crypto n'existe pas — Cryptoreflex",
   description:
-    "Cette fiche crypto n'existe pas (encore !). Découvre nos 780 cryptos analysées (100 fiches éditoriales premium + 680 fiches LLM).",
+    "Cette fiche crypto n'existe pas (encore !). Découvrez nos 780 cryptos analysées (100 fiches éditoriales premium + 680 fiches LLM).",
   robots: { index: false, follow: false },
 };
 
@@ -51,7 +51,7 @@ export default function CryptoNotFound() {
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             Cryptoreflex couvre 780 cryptos analysées : 100 fiches éditoriales
             premium (top 10 marketcap + 90 hidden gems) plus 680 fiches LLM
-            exploratoires. Si tu cherches un projet plus exotique, dis-le-nous —
+            exploratoires. Si vous cherchez un projet plus exotique, dis-le-nous —
             on l'ajoutera peut-être au prochain batch.
           </p>
 

@@ -124,7 +124,7 @@ export function priceAlertHtml(ctx: PriceAlertEmailContext): string {
                 ${headline}
               </h1>
               <p style="margin:0;font-size:15px;line-height:1.55;color:#9CA3AF;">
-                Tu avais demandé à être prévenu·e dès que ${esc(name)} passerait ${directionLabel} <strong style="color:#E5E7EB;">${formatPrice(alert.threshold, alert.currency)}</strong>. C'est fait.
+                Vous aviez demandé à être prévenu·e dès que ${esc(name)} passerait ${directionLabel} <strong style="color:#E5E7EB;">${formatPrice(alert.threshold, alert.currency)}</strong>. C'est fait.
               </p>
             </td>
           </tr>
@@ -190,7 +190,7 @@ export function priceAlertHtml(ctx: PriceAlertEmailContext): string {
             <td style="padding:24px 28px 28px 28px;">
               <hr style="border:0;border-top:1px solid rgba(255,255,255,0.08);margin:0 0 16px 0;" />
               <p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#9CA3AF;">
-                Tu reçois cet e-mail car tu as configuré une alerte prix sur ${esc(BRAND.domain)}.
+                Vous recevez cet e-mail car vous avez configuré une alerte prix sur ${esc(BRAND.domain)}.
                 Pour ne plus recevoir cette alerte précise :
                 <a href="${unsubscribeUrl}" style="color:#A5B4FC;text-decoration:underline;">désactiver cette alerte</a>.
               </p>
@@ -268,7 +268,7 @@ function regimeLabelEmail(regime: string): string {
  * Sujet de l'email post-calcul. Centralisé pour cohérence avec le préheader.
  */
 export const calculateurFiscaliteWelcomeSubject =
-  "Ton simulation fiscalité crypto + nos 5 conseils gratuits";
+  "Votre simulation fiscalité crypto + nos 5 conseils gratuits";
 
 /**
  * Génère le HTML d'un email transactionnel envoyé après le calcul fiscalité.
@@ -295,14 +295,14 @@ export function calculateurFiscaliteWelcomeHtml(
   let headline: string;
   let intro: string;
   if (summary.exonere) {
-    headline = "Tu es exonéré d'impôt sur tes plus-values crypto";
-    intro = "Le total de tes cessions reste sous le seuil de 305 € — aucun impôt dû. Pense quand même au formulaire 3916-bis pour tes comptes étrangers.";
+    headline = "Vous êtes exonéré d'impôt sur vos plus-values crypto";
+    intro = "Le total de vos cessions reste sous le seuil de 305 € — aucun impôt dû. Pensez quand même au formulaire 3916-bis pour vos comptes étrangers.";
   } else if (summary.deficit) {
-    headline = "Tu es en moins-value cette année";
-    intro = "Aucun impôt n'est dû sur tes plus-values crypto. Tu trouveras dans la simulation le détail à reporter sur ta déclaration.";
+    headline = "Vous êtes en moins-value cette année";
+    intro = "Aucun impôt n'est dû sur vos plus-values crypto. Vous trouverez dans la simulation le détail à reporter sur votre déclaration.";
   } else {
     headline = `Impôt total estimé : ${formatEuroEmail(summary.impotTotal)}`;
-    intro = `Voici le résumé de ton calcul. Pour le détail (formulaires 2086 + 3916-bis, ventilation IR / PS), ouvre ta simulation et imprime-la en PDF.`;
+    intro = `Voici le résumé de votre calcul. Pour le détail (formulaires 2086 + 3916-bis, ventilation IR / PS), ouvrez votre simulation et imprimez-la en PDF.`;
   }
 
   return `<!DOCTYPE html>
@@ -316,7 +316,7 @@ export function calculateurFiscaliteWelcomeHtml(
 </head>
 <body style="margin:0;padding:0;background:#0B0F1A;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#E5E7EB;">
   <span style="display:none!important;visibility:hidden;opacity:0;height:0;width:0;mso-hide:all;">
-    Ta simulation fiscalité crypto est prête (régime : ${esc(regimeLabelEmail(summary.regime))})
+    Votre simulation fiscalité crypto est prête (régime : ${esc(regimeLabelEmail(summary.regime))})
   </span>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0B0F1A;padding:32px 16px;">
@@ -394,7 +394,7 @@ export function calculateurFiscaliteWelcomeHtml(
                 <tr>
                   <td align="center">
                     <p style="margin:6px 0 0 0;font-size:12px;color:#9CA3AF;">
-                      Lien valable 1 heure — relance le calculateur si expiré.
+                      Lien valable 1 heure — relancez le calculateur si expiré.
                     </p>
                   </td>
                 </tr>
@@ -409,7 +409,7 @@ export function calculateurFiscaliteWelcomeHtml(
                 Bonus : nos 5 conseils fiscalité crypto
               </h2>
               <p style="margin:0 0 12px 0;font-size:14px;line-height:1.55;color:#D1D5DB;">
-                Tu vas recevoir dans les prochains jours une séquence de 5 emails avec :
+                Vous allez recevoir dans les prochains jours une séquence de 5 emails avec :
               </p>
               <ul style="margin:0 0 0 0;padding:0 0 0 18px;font-size:14px;line-height:1.7;color:#D1D5DB;">
                 <li>Comment remplir le 2086 sans erreur (avec exemple chiffré)</li>
@@ -447,9 +447,9 @@ export function calculateurFiscaliteWelcomeHtml(
             <td style="padding:24px 28px 28px 28px;">
               <hr style="border:0;border-top:1px solid rgba(255,255,255,0.08);margin:0 0 16px 0;" />
               <p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#9CA3AF;">
-                Tu reçois cet email car tu as utilisé le calculateur fiscalité de ${esc(BRAND.domain)} et
+                Vous recevez cet email car vous avez utilisé le calculateur fiscalité de ${esc(BRAND.domain)} et
                 accepté de recevoir notre newsletter.
-                Pour te désabonner :
+                Pour vous désabonner :
                 <a href="${unsubscribeUrl}" style="color:#FCD34D;text-decoration:underline;">se désinscrire en 1 clic</a>.
               </p>
               <p style="margin:0;font-size:11px;line-height:1.5;color:#6B7280;">

@@ -46,12 +46,15 @@ export default function RiskBadge({
 }
 
 function RiskTile({ riskLevel }: { riskLevel: RiskLevel }) {
+  // Tokens sémantiques (tailwind.config "SEMANTIC COLOR TOKENS") — alignés
+  // sur DataQualityBadge. Les *-fg sont plus clairs que les anciennes
+  // couleurs accent-* : meilleur contraste AA sur fond sombre.
   const colors: Record<RiskLevel, string> = {
-    "Très faible": "border-accent-green/30 bg-accent-green/5 text-accent-green",
-    Faible: "border-accent-green/30 bg-accent-green/5 text-accent-green",
-    Modéré: "border-amber-400/30 bg-amber-400/5 text-amber-300",
-    Élevé: "border-accent-rose/30 bg-accent-rose/5 text-accent-rose",
-    "Très élevé": "border-accent-rose/30 bg-accent-rose/5 text-accent-rose",
+    "Très faible": "border-success-border bg-success-soft text-success-fg",
+    Faible: "border-success-border bg-success-soft text-success-fg",
+    Modéré: "border-warning-border bg-warning-soft text-warning-fg",
+    Élevé: "border-danger-border bg-danger-soft text-danger-fg",
+    "Très élevé": "border-danger-border bg-danger-soft text-danger-fg",
   };
 
   return (
@@ -71,10 +74,10 @@ function RiskTile({ riskLevel }: { riskLevel: RiskLevel }) {
 function ReliabilityTile({ score }: { score: number }) {
   const tone =
     score >= 8.5
-      ? "border-accent-green/30 bg-accent-green/5 text-accent-green"
+      ? "border-success-border bg-success-soft text-success-fg"
       : score >= 7
-      ? "border-amber-400/30 bg-amber-400/5 text-amber-300"
-      : "border-accent-rose/30 bg-accent-rose/5 text-accent-rose";
+      ? "border-warning-border bg-warning-soft text-warning-fg"
+      : "border-danger-border bg-danger-soft text-danger-fg";
 
   return (
     <div className={`rounded-2xl border p-4 ${tone}`}>

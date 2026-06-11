@@ -97,8 +97,8 @@ export default function QuizPage({ params }: Props) {
             <span className="text-gradient-gold">{track.title}</span>
           </h1>
           <p className="mt-3 ds-lead">
-            5 questions tirées des leçons que tu viens de suivre. Avec 4 bonnes
-            réponses minimum, ton parcours est marqué « quiz validé ».
+            5 questions tirées des leçons que vous venez de suivre. Avec 4 bonnes
+            réponses minimum, votre parcours est marqué « quiz validé ».
           </p>
         </header>
 

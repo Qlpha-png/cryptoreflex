@@ -70,7 +70,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "À quelle fréquence l'indice est-il mis à jour ?",
-    a: "L'API publie un nouveau score chaque jour, généralement vers minuit UTC. Cette page Cryptoreflex met en cache la donnée pendant 1 heure côté serveur (ISR Next.js) pour économiser les appels API. Si tu vois un score qui semble bloqué pendant plusieurs heures, c'est normal — alternative.me publie une seule valeur par jour.",
+    a: "L'API publie un nouveau score chaque jour, généralement vers minuit UTC. Cette page Cryptoreflex met en cache la donnée pendant 1 heure côté serveur (ISR Next.js) pour économiser les appels API. Si vous voyez un score qui semble bloqué pendant plusieurs heures, c'est normal — alternative.me publie une seule valeur par jour.",
   },
   {
     q: "Quelle est la différence avec le Fear & Greed des actions ?",
@@ -266,7 +266,7 @@ export default async function FearGreedPage() {
                 Couplé au DCA
               </h3>
               <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-                Un usage simple : moduler la taille de tes achats DCA mensuels.
+                Un usage simple : moduler la taille de vos achats DCA mensuels.
                 Doubler la mise quand l'indice est sous 30, ne rien acheter
                 quand il dépasse 80. Voir notre{" "}
                 <Link href="/outils/simulateur-dca" className="underline hover:text-fg">

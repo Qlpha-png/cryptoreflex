@@ -81,7 +81,7 @@ export default function Error({
 
         <p className="mt-4 text-base text-fg/70">
           Quelque chose n'a pas fonctionné de notre côté. On a déjà été notifiés —
-          tu peux réessayer ou nous signaler le problème.
+          vous pouvez réessayer ou nous signaler le problème.
         </p>
 
         {error.digest ? (

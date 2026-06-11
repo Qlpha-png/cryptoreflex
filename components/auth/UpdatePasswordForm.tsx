@@ -79,7 +79,7 @@ export default function UpdatePasswordForm() {
           Mot de passe enregistré&nbsp;!
         </h2>
         <p className="text-sm text-fg/75 leading-relaxed">
-          Tu pourras désormais te connecter avec ton email et ce mot de passe.
+          Vous pourrez désormais vous connecter avec votre email et ce mot de passe.
         </p>
         <p className="mt-4 text-xs text-muted">Redirection en cours…</p>
       </div>
@@ -139,7 +139,7 @@ export default function UpdatePasswordForm() {
 
       <label className="block">
         <span className="block text-sm font-semibold text-fg mb-2">
-          Confirme ton mot de passe
+          Confirmez votre mot de passe
         </span>
         <div className="relative">
           <Lock

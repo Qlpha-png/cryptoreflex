@@ -16,7 +16,7 @@
       "title": "Bitcoin pour les nuls",
       "slug": "bitcoin-guide-complet-debutant-2026",
       "targetUrl": "/blog/bitcoin-guide-complet-debutant-2026",
-      "summary": "Le guide ultra-complet sur Bitcoin : fonctionnement, plateformes, fiscalité, sécurisation. Un must-read avant d'acheter ton premier sat.",
+      "summary": "Le guide ultra-complet sur Bitcoin : fonctionnement, plateformes, fiscalité, sécurisation. Un must-read avant d'acheter votre premier sat.",
       "readingTime": 28,
       "order": 2
     },
@@ -26,27 +26,27 @@
       "title": "Comment choisir une plateforme crypto",
       "slug": "choisir-plateforme-crypto",
       "targetUrl": "/quiz/plateforme",
-      "summary": "Un quiz interactif de 6 questions pour identifier la plateforme MiCA qui colle vraiment à ton profil (frais, débutant friendly, support FR…).",
+      "summary": "Un quiz interactif de 6 questions pour identifier la plateforme MiCA qui colle vraiment à votre profil (frais, débutant friendly, support FR…).",
       "readingTime": 4,
       "order": 3
     },
     {
       "id": "premier-achat-crypto",
       "level": "debutant",
-      "title": "Acheter ta première crypto",
+      "title": "Acheter votre première crypto",
       "slug": "premier-achat-crypto",
       "targetUrl": "/wizard/premier-achat",
-      "summary": "Le wizard pas-à-pas qui te tient la main du KYC à ton premier ordre, avec les pièges concrets (frais cachés, instant buy vs spot, etc.).",
+      "summary": "Le wizard pas-à-pas qui te tient la main du KYC à votre premier ordre, avec les pièges concrets (frais cachés, instant buy vs spot, etc.).",
       "readingTime": 8,
       "order": 4
     },
     {
       "id": "securiser-cryptos-wallet-2fa",
       "level": "debutant",
-      "title": "Sécuriser tes crypto (wallet, 2FA)",
+      "title": "Sécuriser vos crypto (wallet, 2FA)",
       "slug": "securiser-cryptos-wallet-2fa-2026",
       "targetUrl": "/blog/securiser-cryptos-wallet-2fa-2026",
-      "summary": "2FA, hardware wallet, seed phrase, anti-phishing. Les 5 bonnes pratiques minimales pour ne pas perdre ton capital sur une bête erreur.",
+      "summary": "2FA, hardware wallet, seed phrase, anti-phishing. Les 5 bonnes pratiques minimales pour ne pas perdre votre capital sur une bête erreur.",
       "readingTime": 9,
       "order": 5
     },
@@ -66,7 +66,7 @@
       "title": "Staking : comment ça marche",
       "slug": "staking-comment-ca-marche",
       "targetUrl": "/staking",
-      "summary": "Comparateur des 20 cryptos staking-éligibles sur les exchanges MiCA français : APY, lock-up, risque de slashing. Combien tu peux espérer gagner ?",
+      "summary": "Comparateur des 20 cryptos staking-éligibles sur les exchanges MiCA français : APY, lock-up, risque de slashing. Combien vous pouvez espérer gagner ?",
       "readingTime": 7,
       "order": 7
     },
@@ -76,7 +76,7 @@
       "title": "Comprendre la fiscalité crypto FR",
       "slug": "fiscalite-crypto-fr",
       "targetUrl": "/outils/calculateur-fiscalite",
-      "summary": "Flat tax 31,4%, formulaire 2086, déclaration des wallets étrangers (3916-bis). Le calculateur t'aide à estimer ce que tu devras payer.",
+      "summary": "Flat tax 31,4%, formulaire 2086, déclaration des wallets étrangers (3916-bis). Le calculateur t'aide à estimer ce que vous devrez payer.",
       "readingTime": 7,
       "order": 8
     },
@@ -86,7 +86,7 @@
       "title": "MiCA : la régulation européenne",
       "slug": "mica-regulation-europe-2026",
       "targetUrl": "/blog/mica-regulation-europe-2026",
-      "summary": "Le règlement européen qui change tout pour les exchanges crypto. Pourquoi MiCA va éliminer 60% des plateformes, et ce que ça implique pour toi.",
+      "summary": "Le règlement européen qui change tout pour les exchanges crypto. Pourquoi MiCA va éliminer 60% des plateformes, et ce que ça implique pour vous.",
       "readingTime": 8,
       "order": 9
     },
@@ -126,7 +126,7 @@
       "title": "Restaking et liquid staking",
       "slug": "restaking-liquid-staking",
       "targetUrl": "/glossaire/staking",
-      "summary": "EigenLayer, stETH, rsETH. Comment empiler plusieurs couches de yield sur tes ETH stakés — et pourquoi le risque grimpe vite.",
+      "summary": "EigenLayer, stETH, rsETH. Comment empiler plusieurs couches de yield sur vos ETH stakés — et pourquoi le risque grimpe vite.",
       "readingTime": 10,
       "order": 13
     },

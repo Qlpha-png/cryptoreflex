@@ -27,12 +27,14 @@ interface Props {
 export default function TrendBadge({ trend, size = "sm", iconOnly = false }: Props) {
   const label = TREND_LABEL_FR[trend];
 
+  // Tokens sémantiques (tailwind.config) au lieu d'emerald/rose/amber bruts —
+  // cohérence avec DataQualityBadge/RiskBadge, rendu visuel quasi identique.
   const colorClasses =
     trend === "bullish"
-      ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
+      ? "border-success-border bg-success-soft text-success-fg"
       : trend === "bearish"
-        ? "border-rose-500/40 bg-rose-500/15 text-rose-300"
-        : "border-amber-500/40 bg-amber-500/15 text-amber-300";
+        ? "border-danger-border bg-danger-soft text-danger-fg"
+        : "border-warning-border bg-warning-soft text-warning-fg";
 
   const sizeClasses =
     size === "md"

@@ -51,7 +51,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
     slug: "eviter-pfu-30-crypto-bareme-progressif-legalement-2026",
     title: "Eviter le PFU 31,4 % crypto — option barème progressif 2026",
     description:
-      "PFU 31,4 % ou barème progressif sur tes plus-values 2026 ? Comparatif chiffré par TMI, mécanisme case 2OP et piège de l'engagement annuel global.",
+      "PFU 31,4 % ou barème progressif sur vos plus-values 2026 ? Comparatif chiffré par TMI, mécanisme case 2OP et piège de l'engagement annuel global.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -75,7 +75,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
     slug: "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
     title: "Fiscalité DeFi France 2026 — BIC ou BNC ?",
     description:
-      "Yield farming, lending, LP tokens, airdrops : quel régime fiscal pour ta DeFi en 2026 ? Critères BIC/BNC, exemples chiffrés, jurisprudence DGFiP.",
+      "Yield farming, lending, LP tokens, airdrops : quel régime fiscal pour votre DeFi en 2026 ? Critères BIC/BNC, exemples chiffrés, jurisprudence DGFiP.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -86,7 +86,7 @@ export const FISCALITE_SATELLITES: FiscaliteRelatedArticle[] = [
     slug: "calcul-pfu-30-crypto-exemple-chiffre",
     title: "Calcul PFU 31,4 % crypto — 5 exemples chiffrés concrets (2026)",
     description:
-      "Comment calculer concrètement le PFU 31,4 % sur tes plus-values crypto en 2026 : 5 cas chiffrés (DCA, swap, perte, gros gain, micro), formules, pièges.",
+      "Comment calculer concrètement le PFU 31,4 % sur vos plus-values crypto en 2026 : 5 cas chiffrés (DCA, swap, perte, gros gain, micro), formules, pièges.",
     category: "Fiscalité",
     cluster: "satellite",
   },
@@ -252,12 +252,12 @@ export function generateFiscaliteSchema(
     steps: [
       {
         name: "Récupérer l'historique d'opérations 2025",
-        text: "Exporte le CSV complet de tes cessions sur Binance, Coinbase, Kraken, Bitget. Conserve uniquement les cessions vers monnaie ayant cours légal (EUR, USD) — les swaps crypto/crypto sont fiscalement neutres.",
+        text: "Exporte le CSV complet de vos cessions sur Binance, Coinbase, Kraken, Bitget. Conserve uniquement les cessions vers monnaie ayant cours légal (EUR, USD) — les swaps crypto/crypto sont fiscalement neutres.",
         url: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026",
       },
       {
         name: "Calculer le total des cessions et des acquisitions",
-        text: "Additionne le montant total des ventes en euros (T1) puis le total des achats correspondants (T2). Si T1 reste inférieur ou égal à 305 euros sur l'année, tu es exonéré : passe directement à l'étape 5.",
+        text: "Additionne le montant total des ventes en euros (T1) puis le total des achats correspondants (T2). Si T1 reste inférieur ou égal à 305 euros sur l'année, vous êtes exonéré : passe directement à l'étape 5.",
       },
       {
         name: "Appliquer la formule article 150 VH bis du CGI",
@@ -266,12 +266,12 @@ export function generateFiscaliteSchema(
       },
       {
         name: "Choisir entre PFU 31,4 % et barème progressif",
-        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que ta TMI dépasse 12,8 %. Si ta TMI est à 0 ou 11 %, opte pour le barème progressif via la case 2OP du Cerfa 2042. Le calculateur affiche les deux scénarios côte à côte.",
+        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que votre TMI dépasse 12,8 %. Si votre TMI est à 0 ou 11 %, opte pour le barème progressif via la case 2OP du Cerfa 2042. Le calculateur affiche les deux scénarios côte à côte.",
         url: "/blog/bareme-progressif-vs-pfu-crypto-2026",
       },
       {
         name: "Reporter sur le Cerfa 2086 puis 2042-C",
-        text: "Remplis le formulaire 2086 ligne par ligne (une ligne par cession), reporte le total plus-value en case 3AN du 2042-C, et déclare tes comptes étrangers en 3916-bis. Date limite 21 mai au 4 juin 2026 en ligne (19 mai pour la déclaration papier) selon ton département.",
+        text: "Remplis le formulaire 2086 ligne par ligne (une ligne par cession), reporte le total plus-value en case 3AN du 2042-C, et déclare vos comptes étrangers en 3916-bis. Date limite 21 mai au 4 juin 2026 en ligne (19 mai pour la déclaration papier) selon votre département.",
         url: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026",
       },
     ],

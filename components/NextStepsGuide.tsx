@@ -84,7 +84,7 @@ const POOL: Record<string, Step> = {
     href: "/quiz/plateforme",
     Icon: HelpCircle,
     label: "Comparer les plateformes en 30 secondes",
-    desc: "6 questions → Top 3 plateformes adaptées à ton profil. Outil pédagogique, le choix final t'appartient.",
+    desc: "6 questions → Top 3 plateformes adaptées à votre profil. Outil pédagogique, le choix final vous appartient.",
     primary: true,
   },
   comparator: {
@@ -139,20 +139,20 @@ const POOL: Record<string, Step> = {
     href: "/blog/premier-achat-crypto-france-2026-guide-step-by-step",
     Icon: Compass,
     label: "Premier achat — pas-à-pas",
-    desc: "Du virement à ton premier bitcoin : 5 étapes captures à l'appui.",
+    desc: "Du virement à votre premier bitcoin : 5 étapes captures à l'appui.",
     primary: true,
   },
   securiser: {
     href: "/blog/securiser-cryptos-wallet-2fa-2026",
     Icon: ShieldCheck,
-    label: "Sécuriser tes cryptos",
+    label: "Sécuriser vos cryptos",
     desc: "Wallet hardware, 2FA, phrase de récupération — comme un pro.",
   },
   micaGuide: {
     href: "/blog/mica-phase-2-juillet-2026-ce-qui-change",
     Icon: ShieldCheck,
     label: "MiCA Phase 2 (juillet 2026)",
-    desc: "Ce que ça change pour ton choix de plateforme.",
+    desc: "Ce que ça change pour votre choix de plateforme.",
   },
   declarationCrypto: {
     href: "/blog/comment-declarer-crypto-impots-2026-guide-complet",
@@ -272,7 +272,7 @@ export default function NextStepsGuide(props: Props) {
   const title = props.title ?? "Continue ton exploration";
   const intro =
     props.intro ??
-    "Voici les 3 prochaines étapes recommandées en fonction de ce que tu viens de lire.";
+    "Voici les 3 prochaines étapes recommandées en fonction de ce que vous venez de lire.";
 
   return (
     <section

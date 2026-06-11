@@ -27,14 +27,14 @@
           "type": "Desktop wallet",
           "level": "Pour utilisateurs avancés",
           "url": null,
-          "note": "Wallet desktop self-custody, tournant sur ton propre nœud Bitcoin si possible. Compatible matériel."
+          "note": "Wallet desktop self-custody, tournant sur votre propre nœud Bitcoin si possible. Compatible matériel."
         },
         {
           "name": "Coinbase / Bitpanda",
           "type": "Custodial (exchange)",
           "level": "Court terme uniquement",
           "url": "/avis/coinbase",
-          "note": "Garder sur exchange = plateforme contrôle tes clés. À éviter pour > 6 mois."
+          "note": "Garder sur exchange = plateforme contrôle vos clés. À éviter pour > 6 mois."
         }
       ]
     },
@@ -112,7 +112,7 @@
           "type": "Desktop wallet",
           "level": "Standard officiel",
           "url": null,
-          "note": "Wallet officiel téléchargeable sur getmonero.org. Fonctionne avec ton propre nœud pour préserver la confidentialité."
+          "note": "Wallet officiel téléchargeable sur getmonero.org. Fonctionne avec votre propre nœud pour préserver la confidentialité."
         },
         {
           "name": "Cake Wallet",
@@ -321,7 +321,7 @@
       "type": "Custodial",
       "level": "Court terme uniquement",
       "url": "/comparatif",
-      "note": "Garder sur Coinbase/Bitpanda/Kraken = OK pour quelques semaines max. Au-delà, transfère vers ton hardware."
+      "note": "Garder sur Coinbase/Bitpanda/Kraken = OK pour quelques semaines max. Au-delà, transfère vers votre hardware."
     }
   ]
 }

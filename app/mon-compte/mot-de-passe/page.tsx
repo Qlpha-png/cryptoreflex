@@ -9,7 +9,7 @@ import UpdatePasswordForm from "@/components/auth/UpdatePasswordForm";
 
 export const metadata: Metadata = {
   title: "Mot de passe — Mon compte",
-  description: "Définis ou modifie ton mot de passe Cryptoreflex.",
+  description: "Définis ou modifie votre mot de passe Cryptoreflex.",
   alternates: { canonical: `${BRAND.url}/mon-compte/mot-de-passe` },
   robots: { index: false, follow: false },
 };

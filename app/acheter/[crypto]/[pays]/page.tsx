@@ -165,7 +165,7 @@ function buildSteps(
     },
     {
       name: `Sécuriser ses fonds sur un wallet personnel`,
-      text: `Pour un capital > 1 000 ${country.currency}, transférer les ${crypto.symbol} vers un hardware wallet (Ledger, Trezor) plutôt que de les laisser sur la plateforme. Règle "not your keys, not your coins" : la plateforme reste un point de défaillance unique tant que tu n'as pas la clé privée.`,
+      text: `Pour un capital > 1 000 ${country.currency}, transférer les ${crypto.symbol} vers un hardware wallet (Ledger, Trezor) plutôt que de les laisser sur la plateforme. Règle "not your keys, not your coins" : la plateforme reste un point de défaillance unique tant que vous n'avez pas la clé privée.`,
     },
   ];
 }

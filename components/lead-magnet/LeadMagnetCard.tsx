@@ -96,14 +96,14 @@ export default function LeadMagnetCard({
 
       if (!res.ok || !json.ok) {
         setStatus("error");
-        setErrorMsg(json.error ?? "Inscription impossible. Réessaie.");
+        setErrorMsg(json.error ?? "Inscription impossible. Réessayez.");
         return;
       }
 
       setStatus("success");
     } catch {
       setStatus("error");
-      setErrorMsg("Une erreur est survenue. Réessaie.");
+      setErrorMsg("Une erreur est survenue. Réessayez.");
     }
   }
 
@@ -152,7 +152,7 @@ export default function LeadMagnetCard({
           aria-live="polite"
         >
           <CheckCircle2 className="mr-2 inline h-4 w-4" aria-hidden />
-          C'est noté — tu seras prévenu des mises à jour.
+          C'est noté — vous serez prévenu des mises à jour.
         </div>
       ) : (
         <form onSubmit={onSubmitOptIn} className="mt-3 flex flex-col gap-2">
@@ -160,14 +160,14 @@ export default function LeadMagnetCard({
             htmlFor={"lm-email-" + id}
             className="text-[11px] leading-snug text-muted"
           >
-            Optionnel : laisse ton email pour être prévenu des mises à jour.
+            Optionnel : laissez votre email pour être prévenu des mises à jour.
           </label>
           <div className="flex gap-2">
             <input
               id={"lm-email-" + id}
               type="email"
               autoComplete="email"
-              placeholder="ton@email.com"
+              placeholder="votre@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-fg placeholder:text-muted focus:border-primary focus:outline-none"

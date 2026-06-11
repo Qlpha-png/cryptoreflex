@@ -99,7 +99,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     description:
       "Comparatif des exchanges crypto qui ont les frais spot les plus bas en 2026. Maker / taker, achat instantané, retraits SEPA. Plateformes MiCA uniquement.",
     intro:
-      "Si tu trades en spot ou en DCA mensuel, les frais font la différence sur le long terme. Ce classement met en avant les exchanges régulés en Europe avec les frais spot taker les plus bas (l'ordre marché que tu utilises 90 % du temps).",
+      "Si vous tradez en spot ou en DCA mensuel, les frais font la différence sur le long terme. Ce classement met en avant les exchanges régulés en Europe avec les frais spot taker les plus bas (l'ordre marché que vous utilisez 90 % du temps).",
     monthlyVolumeFr: 720,
     difficulty: 24,
     select() {
@@ -122,7 +122,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     title: "Top 5 plateformes crypto les plus sécurisées en 2026",
     h1: "Plateformes crypto les plus sécurisées (2026)",
     description:
-      "Classement sécurité 2026 : cold storage, assurance, 2FA, historique d'incidents. Les exchanges les plus sûrs pour stocker tes crypto en France.",
+      "Classement sécurité 2026 : cold storage, assurance, 2FA, historique d'incidents. Les exchanges les plus sûrs pour stocker vos crypto en France.",
     intro:
       "Après l'effondrement de FTX en 2022, le critère sécurité est devenu le n°1 quand on choisit un exchange. Voici les 5 plateformes régulées MiCA avec les meilleurs standards : pourcentage de cold storage, assurance des dépôts, historique sans incident.",
     monthlyVolumeFr: 480,
@@ -147,9 +147,9 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     title: "Top 5 plateformes crypto pour débuter en 2026",
     h1: "Meilleures plateformes crypto pour débutants (2026)",
     description:
-      "Top 5 des plateformes les plus simples pour acheter ta première crypto en France 2026 : interface, support FR, dépôt minimum bas, achat en CB.",
+      "Top 5 des plateformes les plus simples pour acheter votre première crypto en France 2026 : interface, support FR, dépôt minimum bas, achat en CB.",
     intro:
-      "Pour un premier achat crypto, on ne cherche pas le trader pro à zéro frais — on cherche la plateforme qui te rend autonome en 10 minutes : interface limpide, support en français, dépôt minimum bas et achat carte bancaire en 5 secondes. Voici notre sélection 2026.",
+      "Pour un premier achat crypto, on ne cherche pas le trader pro à zéro frais — on cherche la plateforme qui vous rend autonome en 10 minutes : interface limpide, support en français, dépôt minimum bas et achat carte bancaire en 5 secondes. Voici notre sélection 2026.",
     monthlyVolumeFr: 590,
     difficulty: 22,
     select() {
@@ -174,7 +174,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     description:
       "Plateformes crypto françaises agréées AMF : Coinhouse, Bitstack, Trade Republic. Frais, services, fiscalité auto. Comparatif Cryptoreflex 2026.",
     intro:
-      "Si tu veux soutenir l'écosystème français ou simplifier ta déclaration fiscale (export 2086 prêt à l'emploi), il existe plusieurs alternatives 100 % FR enregistrées PSAN auprès de l'AMF. Voici les principales plateformes opérées depuis la France.",
+      "Si vous voulez soutenir l'écosystème français ou simplifier votre déclaration fiscale (export 2086 prêt à l'emploi), il existe plusieurs alternatives 100 % FR enregistrées PSAN auprès de l'AMF. Voici les principales plateformes opérées depuis la France.",
     monthlyVolumeFr: 320,
     difficulty: 16,
     select() {
@@ -200,9 +200,9 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     title: "Top 3 wallets hardware Bitcoin & crypto en 2026",
     h1: "Meilleurs hardware wallets pour Bitcoin et crypto (2026)",
     description:
-      "Comparatif Ledger, Trezor et autres wallets hardware en 2026. Sécurité, prix, cryptos supportées. Le bon choix pour mettre tes crypto à l'abri.",
+      "Comparatif Ledger, Trezor et autres wallets hardware en 2026. Sécurité, prix, cryptos supportées. Le bon choix pour mettre vos crypto à l'abri.",
     intro:
-      "Quand ton portefeuille crypto dépasse 1 000-2 000 €, il est temps de sortir tes coins de l'exchange et de les mettre sur un wallet hardware. Tes clés privées restent hors ligne, immunisées contre les hacks de plateforme et les faillites comme FTX. Voici notre top.",
+      "Quand votre portefeuille crypto dépasse 1 000-2 000 €, il est temps de sortir vos coins de l'exchange et de les mettre sur un wallet hardware. Vos clés privées restent hors ligne, immunisées contre les hacks de plateforme et les faillites comme FTX. Voici notre top.",
     monthlyVolumeFr: 1450,
     difficulty: 32,
     select() {

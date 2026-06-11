@@ -15,7 +15,7 @@ import { ArrowLeft, Search, Trophy, BarChart3 } from "lucide-react";
 export const metadata: Metadata = {
   title: "Comparatif introuvable — Cryptoreflex",
   description:
-    "Ce comparatif n'existe pas (encore !). Découvre nos comparatifs MiCA officiels et nos top plateformes crypto françaises.",
+    "Ce comparatif n'existe pas (encore !). Découvrez nos comparatifs MiCA officiels et nos top plateformes crypto françaises.",
   robots: { index: false, follow: false },
 };
 
@@ -41,7 +41,7 @@ export default function ComparatifNotFound() {
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             On compare uniquement des plateformes crypto régulées MiCA / PSAN
-            référencées par Cryptoreflex. Si tu cherches une comparaison
+            référencées par Cryptoreflex. Si vous cherchez une comparaison
             spécifique, parcours nos comparatifs officiels ou notre top.
           </p>
 

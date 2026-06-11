@@ -477,7 +477,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         />
         <p>
           <strong className="text-warning-fg">Outil d'aide à la déclaration :</strong>{" "}
-          ce PDF est un récapitulatif généré automatiquement à partir de tes
+          ce PDF est un récapitulatif généré automatiquement à partir de vos
           données. <strong>La validation par un fiscaliste ou expert-comptable
           spécialisé crypto est fortement recommandée</strong> avant tout dépôt
           officiel sur impots.gouv.fr.

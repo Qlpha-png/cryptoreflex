@@ -473,7 +473,7 @@ function Step2Crypto({
     <>
       <StepHeader
         titleRef={titleRef}
-        eyebrow="Étape 2 — Quelle crypto pour toi"
+        eyebrow="Étape 2 — Quelle crypto pour vous"
         title="Bitcoin, Ethereum ou Solana ?"
         subtitle={
           amount <= 100
@@ -620,7 +620,7 @@ function Step3Platform({
               Vous hésitez entre les trois&nbsp;?
             </h3>
             <p className="mt-1 text-xs text-fg/75">
-              Lance le quiz "quelle plateforme pour toi" — 6 questions courtes
+              Lancez le quiz "quelle plateforme pour vous" — 6 questions courtes
               pour une reco personnalisée.
             </p>
           </div>

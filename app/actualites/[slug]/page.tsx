@@ -47,6 +47,14 @@ import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 
 export const revalidate = 600;
 
+// FIX SEO 2026-05-28 — même fix que blog/[slug] (2026-05-05) : sans
+// dynamicParams=false, un slug inconnu rendait la 404 en HTTP 200 (soft-404).
+// Les news sont des MDX commités par GitHub Actions (le cron Vercel
+// aggregate-news short-circuit avant tout writeFile en prod) → chaque
+// nouvelle news déclenche un rebuild, les slugs sont toujours connus au
+// build. Aucune news légitime n'est bloquée par dynamicParams=false.
+export const dynamicParams = false;
+
 interface PageProps {
   params: { slug: string };
 }

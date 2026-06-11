@@ -64,7 +64,7 @@ export default function ProgressTracker({
     if (
       typeof window !== "undefined" &&
       window.confirm(
-        "Réinitialiser ta progression sur ce parcours ? Tes leçons cochées seront effacées (mais les articles restent accessibles)."
+        "Réinitialiser votre progression sur ce parcours ? Vos leçons cochées seront effacées (mais les articles restent accessibles)."
       )
     ) {
       resetProgress(track.id);

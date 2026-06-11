@@ -238,7 +238,7 @@ export default function FiscalCopilotPage() {
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
             Aucun abonnement, aucune carte bancaire. En attendant la mise en ligne
             de l'agent, utilise le calculateur fiscalité. Si Cryptoreflex t'es
-            utile, tu peux soutenir le projet librement.
+            utile, vous pouvez soutenir le projet librement.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link

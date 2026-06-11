@@ -182,7 +182,7 @@ function computeVerdicts(
       icon: Layers,
       winnerName: "Combo equilibre",
       winnerSymbol: `${cryptos.length} categories`,
-      reason: `Tes ${cryptos.length} cryptos couvrent ${cryptos.length} categories distinctes. Tu reduis l'exposition a un seul recit.`,
+      reason: `Vos ${cryptos.length} cryptos couvrent ${cryptos.length} categories distinctes. Vous reduisez l'exposition a un seul recit.`,
       accent: "amber",
     });
   } else {
@@ -211,7 +211,7 @@ function computeVerdicts(
         icon: Layers,
         winnerName: "Profil concentre",
         winnerSymbol: `${categories.size} categorie${categories.size > 1 ? "s" : ""}`,
-        reason: `Tes cryptos partagent peu de categories. Pour diversifier, ajoute une crypto d'un autre secteur (DeFi, RWA, DePIN, stablecoin...).`,
+        reason: `Vos cryptos partagent peu de categories. Pour diversifier, ajoutez une crypto d'un autre secteur (DeFi, RWA, DePIN, stablecoin...).`,
         accent: "amber",
       });
     }

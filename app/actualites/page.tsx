@@ -320,8 +320,8 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
             publiées sur cette page ont une vocation pédagogique et informative.
             Elles ne constituent pas un conseil en investissement, ni une
             sollicitation à acheter ou vendre des cryptoactifs. Les
-            cryptomonnaies sont des actifs volatils : tu peux perdre tout ou
-            partie de ton capital. Consulte toujours un conseiller financier
+            cryptomonnaies sont des actifs volatils : vous pouvez perdre tout ou
+            partie de votre capital. Consultez toujours un conseiller financier
             agréé avant d'engager des fonds.
           </p>
           <p>

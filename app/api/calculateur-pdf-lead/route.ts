@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         ok: false,
-        error: "Trop de demandes. Tu as déjà téléchargé 3 simulations dans la dernière heure.",
+        error: "Trop de demandes. Vous avez déjà téléchargé 3 simulations dans la dernière heure.",
       },
       {
         status: 429,
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("[calc-pdf-lead] storeCalculation failed", err);
     return NextResponse.json(
-      { ok: false, error: "Stockage temporaire indisponible. Réessaie." },
+      { ok: false, error: "Stockage temporaire indisponible. Réessayez." },
       { status: 502 },
     );
   }
@@ -167,14 +167,14 @@ export async function POST(req: NextRequest) {
   // `from` ne sont plus supportés (FROM_EMAIL centralisé via BRAND_EMAIL).
   const previewUrl = `${BRAND.url}/outils/calculateur-fiscalite/preview-pdf/${sessionId}`;
   const emailText =
-    `Ta simulation fiscalité crypto est prête.\n\n` +
+    `Votre simulation fiscalité crypto est prête.\n\n` +
     `Régime : ${summary.regime}\n` +
     `Plus-value nette : ${summary.plusValueNette.toFixed(2)} €\n` +
     `Impôt total estimé : ${summary.impotTotal.toFixed(2)} €\n` +
     `Net après impôt : ${summary.netApresImpot.toFixed(2)} €\n\n` +
     `Voir et imprimer en PDF : ${previewUrl}\n` +
     `(lien valable 1 heure)\n\n` +
-    `Tu vas aussi recevoir 5 emails avec nos conseils fiscalité crypto.\n\n` +
+    `Vous allez aussi recevoir 5 emails avec nos conseils fiscalité crypto.\n\n` +
     `${BRAND.name} — ${BRAND.url}`;
   const emailRes = await sendEmail({
     to: email,

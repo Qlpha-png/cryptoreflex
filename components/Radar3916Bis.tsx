@@ -592,7 +592,7 @@ function Step3Recap({
 
       {/* Liste détaillée */}
       <h3 className="text-base font-bold text-fg mb-3">
-        Détail de tes {exchanges.length} compte(s)
+        Détail de vos {exchanges.length} compte(s)
       </h3>
       <ul className="space-y-2">
         {exchanges.map((ex) => {
@@ -710,7 +710,7 @@ function Step4Declare({
         Comment déclarer sur impots.gouv.fr
       </h3>
       <p className="text-sm text-fg/70 mb-5">
-        Voici les étapes exactes à suivre pour déclarer tes{" "}
+        Voici les étapes exactes à suivre pour déclarer vos{" "}
         <strong>{undeclared.length} compte(s)</strong> avant la deadline (mai-juin
         2026 typiquement).
       </p>

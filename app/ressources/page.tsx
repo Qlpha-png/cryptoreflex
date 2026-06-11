@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ressources gratuites Cryptoreflex",
     description:
-      "Tout pour comprendre, calculer et déclarer tes cryptos en 2026 — 100 % gratuit.",
+      "Tout pour comprendre, calculer et déclarer vos cryptos en 2026 — 100 % gratuit.",
     url: BRAND.url + "/ressources",
     type: "website",
   },
@@ -72,14 +72,14 @@ const LEAD_MAGNETS: LeadMagnetMeta[] = [
     id: "bible-fiscalite",
     title: "Bible Fiscalité Crypto 2026",
     description:
-      "Le guide exhaustif (30 pages) pour déclarer correctement tes cryptos sans payer un euro de trop. Cerfa 2086, 3916-bis, staking, DeFi, NFT — tout y est.",
+      "Le guide exhaustif (30 pages) pour déclarer correctement vos cryptos sans payer un euro de trop. Cerfa 2086, 3916-bis, staking, DeFi, NFT — tout y est.",
     pages: 30,
   },
   {
     id: "checklist",
     title: "Checklist Déclaration 2026",
     description:
-      "30 actions concrètes en 1 page A4. Imprime et coche au fur et à mesure. Aucune case ne doit rester vide avant le 19 mai 2026.",
+      "30 actions concrètes en 1 page A4. Imprimez et cochez au fur et à mesure. Aucune case ne doit rester vide avant le 19 mai 2026.",
     pages: 1,
   },
   {
@@ -103,7 +103,7 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Calculateur Fiscalité",
     description:
-      "Estime ton impôt crypto français (PFU 31,4 % vs barème) et génère un export prêt pour la 2086.",
+      "Estimez votre impôt crypto français (PFU 31,4 % vs barème) et générez un export prêt pour la 2086.",
     href: "/outils/calculateur-fiscalite",
     Icon: Receipt,
     badge: "Top",
@@ -111,14 +111,14 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Vérificateur MiCA",
     description:
-      "Vérifie en 2 secondes si ta plateforme crypto est conforme MiCA et autorisée en France post-juillet 2026.",
+      "Vérifiez en 2 secondes si votre plateforme crypto est conforme MiCA et autorisée en France post-juillet 2026.",
     href: "/outils/verificateur-mica",
     Icon: ShieldCheck,
   },
   {
     title: "Simulateur DCA",
     description:
-      "Backtest 5 ans : combien aurais-tu en investissant 100 € par mois en BTC, ETH ou SOL ?",
+      "Backtest 5 ans : combien auriez-vous en investissant 100 € par mois en BTC, ETH ou SOL ?",
     href: "/outils/simulateur-dca",
     Icon: TrendingUp,
   },
@@ -132,14 +132,14 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Calculateur ROI",
     description:
-      "Calcule la plus-value brute / nette + impôt PFU estimé sur n'importe quel achat-vente crypto.",
+      "Calculez la plus-value brute / nette + impôt PFU estimé sur n'importe quel achat-vente crypto.",
     href: "/outils/calculateur-roi-crypto",
     Icon: LineChart,
   },
   {
     title: "Portfolio Tracker",
     description:
-      "Suis tes positions crypto en EUR temps réel. Données dans ton navigateur, export CSV.",
+      "Suivez vos positions crypto en EUR temps réel. Données dans votre navigateur, export CSV.",
     href: "/outils/portfolio-tracker",
     Icon: Briefcase,
   },
@@ -153,7 +153,7 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Calculateur de profits",
     description:
-      "Simule un achat / une vente avec frais. ROI net, plus-value et quantité achetée en un clic.",
+      "Simulez un achat / une vente avec frais. ROI net, plus-value et quantité achetée en un clic.",
     href: "/outils#calculateur",
     Icon: Calculator,
   },
@@ -232,7 +232,7 @@ export default function RessourcesPage() {
               Ressources gratuites <span className="gradient-text">Cryptoreflex</span>
             </h1>
             <p className="mt-3 text-fg/70">
-              Tout ce qu'il te faut pour comprendre, calculer et déclarer tes
+              Tout ce qu'il vous faut pour comprendre, calculer et déclarer vos
               cryptos en 2026 : 3 PDFs téléchargeables (Bible Fiscalité,
               Checklist déclaration, Glossaire), 8 outils interactifs et
               l'intégralité du blog éditorial.
@@ -250,8 +250,8 @@ export default function RessourcesPage() {
               </span>
             </div>
             <p className="mt-2 max-w-2xl text-fg/70">
-              Trois PDF essentiels pour préparer ta déclaration crypto 2026. En
-              t'inscrivant, tu reçois aussi notre série email "Fiscalité crypto en
+              Trois PDF essentiels pour préparer votre déclaration crypto 2026. En
+              vous inscrivant, vous recevez aussi notre série email "Fiscalité crypto en
               5 emails" — 14 jours pour tout maîtriser.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -282,7 +282,7 @@ export default function RessourcesPage() {
             </div>
             <p className="mt-2 max-w-2xl text-fg/70">
               Calculateurs, simulateurs et glossaires utilisables sans
-              inscription. Tes données ne quittent jamais ton navigateur.
+              inscription. Vos données ne quittent jamais votre navigateur.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {TOOLS.map((tool) => (
@@ -296,7 +296,7 @@ export default function RessourcesPage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-bold text-fg">
-                  Tu préfères du contenu long format ?
+                  Vous préférez du contenu long format ?
                 </h2>
                 <p className="mt-1 text-sm text-fg/70">
                   Plus de 200 articles éditoriaux : analyses techniques, guides
@@ -320,7 +320,7 @@ export default function RessourcesPage() {
             disposition (PDFs et outils) sont fournies à titre indicatif et ne
             constituent pas un conseil fiscal ou financier personnalisé. La
             fiscalité crypto évolue régulièrement. Pour toute situation complexe
-            (DeFi, BIC pro, mining, NFT &gt; 50 000 €), consulte un
+            (DeFi, BIC pro, mining, NFT &gt; 50 000 €), consultez un
             expert-comptable agréé.
           </p>
         </div>

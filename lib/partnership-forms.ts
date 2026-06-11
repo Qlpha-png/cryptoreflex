@@ -131,12 +131,12 @@ export async function submitAmbassadeur(
   }
   if (!name) return { ok: false, error: "Le nom est obligatoire." };
   if (!profileUrl) {
-    return { ok: false, error: "Indique le lien vers ton profil ou ta chaîne." };
+    return { ok: false, error: "Indique le lien vers votre profil ou votre chaîne." };
   }
   if (!consent) {
     return {
       ok: false,
-      error: "Tu dois accepter le traitement de tes données pour soumettre.",
+      error: "Vous devez accepter le traitement de vos données pour soumettre.",
     };
   }
 
@@ -177,9 +177,9 @@ export async function submitAmbassadeur(
   // accusé de réception part en vrac (le partenaire interne a déjà reçu).
   const confirmHtml = `
       <h2>Merci ${escapeHtml(name)} !</h2>
-      <p>On a bien reçu ta candidature au programme ambassadeurs ${BRAND.name}.</p>
+      <p>On a bien reçu votre candidature au programme ambassadeurs ${BRAND.name}.</p>
       <p>Notre équipe t'écrit sous 5 à 7 jours ouvrés depuis <strong>${BRAND.partnersEmail}</strong>.
-      D'ici là, n'hésite pas à compléter ton message en répondant à cet email
+      D'ici là, n'hésitez pas à compléter votre message en répondant à cet email
       (capture d'audience, exemple de contenu, etc.).</p>
       <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(profileUrl)} – ${escapeHtml(channel || "canal non précisé")}</p>
       <hr>
@@ -187,7 +187,7 @@ export async function submitAmbassadeur(
     `;
   await sendEmail({
     to: email,
-    subject: `Ta candidature ambassadeur ${BRAND.name} a bien été reçue`,
+    subject: `Votre candidature ambassadeur ${BRAND.name} a bien été reçue`,
     html: confirmHtml,
     text: htmlToPlainText(confirmHtml),
   });
@@ -228,7 +228,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
   if (!consent) {
     return {
       ok: false,
-      error: "Tu dois accepter le traitement de tes données pour soumettre.",
+      error: "Vous devez accepter le traitement de vos données pour soumettre.",
     };
   }
 
@@ -261,8 +261,8 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
 
   // Confirmation au demandeur (best-effort)
   const confirmHtml = `
-      <h2>Merci pour ton intérêt</h2>
-      <p>${BRAND.name} a bien reçu ta demande au nom de <strong>${escapeHtml(company)}</strong>.</p>
+      <h2>Merci pour votre intérêt</h2>
+      <p>${BRAND.name} a bien reçu votre demande au nom de <strong>${escapeHtml(company)}</strong>.</p>
       <p>Notre équipe partenariats te répond <strong>sous 48 h ouvrées</strong> depuis ${BRAND.partnersEmail} avec :
       un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne un PSAN.</p>
       <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(offer || "offre non précisée")} – budget ${escapeHtml(budget || "non précisé")}</p>
@@ -273,7 +273,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
     `;
   await sendEmail({
     to: email,
-    subject: `Ta demande de sponsoring ${BRAND.name} est en file de traitement`,
+    subject: `Votre demande de sponsoring ${BRAND.name} est en file de traitement`,
     html: confirmHtml,
     text: htmlToPlainText(confirmHtml),
   });
@@ -317,7 +317,7 @@ export async function submitContact(formData: FormData): Promise<FormResult> {
   if (!consent) {
     return {
       ok: false,
-      error: "Tu dois accepter le traitement de tes données pour soumettre.",
+      error: "Vous devez accepter le traitement de vos données pour soumettre.",
     };
   }
 

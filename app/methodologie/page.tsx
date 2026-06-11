@@ -123,7 +123,7 @@ export default function MethodologiePage() {
       <p className="text-sm text-muted leading-relaxed">
         Note de transparence (avril 2026) : le site étant récent, certaines sous-notes restent en
         cours de validation. Chaque fiche plateforme indique la date de dernière vérification et
-        la source de chaque sous-note. Si tu repères une note injustifiée, écris à{" "}
+        la source de chaque sous-note. Si vous repérez une note injustifiée, écrivez à{" "}
         <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
           {BRAND.email}
         </a>{" "}
@@ -256,10 +256,10 @@ export default function MethodologiePage() {
         </Link>
       </div>
 
-      <h2 className="mt-12 text-2xl font-bold text-fg">Tu penses qu'on a fait une erreur ?</h2>
+      <h2 className="mt-12 text-2xl font-bold text-fg">Vous pensez qu'on a fait une erreur ?</h2>
       <p className="text-fg/85 leading-relaxed">
-        Si tu repères une donnée obsolète, une note injustifiée ou un manque sur une fiche,
-        écris-nous : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
+        Si vous repérez une donnée obsolète, une note injustifiée ou un manque sur une fiche,
+        écrivez-nous : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
         Nous corrigeons sous 7 jours et publions la correction de manière transparente.
       </p>
     </article>

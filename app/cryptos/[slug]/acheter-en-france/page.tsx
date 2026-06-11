@@ -132,28 +132,28 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
-        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${best.scoring.global}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Compare avec les autres options du comparatif selon ton profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
-        : `En France, plusieurs plateformes enregistrées AMF / MiCA-compliant proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Compare les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon ton usage.`,
+        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${best.scoring.global}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
+        : `En France, plusieurs plateformes enregistrées AMF / MiCA-compliant proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon votre usage.`,
     },
     {
       question: `Quel montant minimum pour acheter du ${meta.symbol} ?`,
-      answer: `La plupart des plateformes régulées en France acceptent des achats à partir de 10 € (Bitstack, Bitpanda) à 25 € (Coinhouse, Trade Republic). Tu peux acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Bon point d'entrée pour expérimenter le DCA (Dollar Cost Averaging) avec des montants raisonnables, sans jouer "ton épargne" (la crypto reste un actif volatil, perte en capital possible).`,
+      answer: `La plupart des plateformes régulées en France acceptent des achats à partir de 10 € (Bitstack, Bitpanda) à 25 € (Coinhouse, Trade Republic). Vous pouvez acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Bon point d'entrée pour expérimenter le DCA (Dollar Cost Averaging) avec des montants raisonnables, sans jouer "votre épargne" (la crypto reste un actif volatil, perte en capital possible).`,
     },
     {
       question: `Faut-il déclarer l'achat de ${meta.name} aux impôts ?`,
-      answer: `Non, l'achat seul n'est pas un événement fiscal. Tu dois déclarer uniquement quand tu vends contre euros (cession imposable, PFU 31,4 % en 2026) ou quand tu utilises ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
+      answer: `Non, l'achat seul n'est pas un événement fiscal. Vous devez déclarer uniquement quand vous vendez contre euros (cession imposable, PFU 31,4 % en 2026) ou quand vous utilisez ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
     },
     {
       question: `Achat instantané (CB) ou virement SEPA pour ${meta.symbol} ?`,
-      answer: `L'achat par carte bancaire est ultra-rapide (5 secondes) mais coûte 1.5 à 3 % de frais. Le virement SEPA (gratuit ou ~0.1 %) prend 1 à 24 h mais est ${best ? `${(((best.fees.instantBuy - best.fees.spotTaker) / 100) * 1000).toFixed(0)} € moins cher pour 1 000 €` : "beaucoup moins cher"}. Pour des montants > 200 €, privilégie le SEPA.`,
+      answer: `L'achat par carte bancaire est ultra-rapide (5 secondes) mais coûte 1.5 à 3 % de frais. Le virement SEPA (gratuit ou ~0.1 %) prend 1 à 24 h mais est ${best ? `${(((best.fees.instantBuy - best.fees.spotTaker) / 100) * 1000).toFixed(0)} € moins cher pour 1 000 €` : "beaucoup moins cher"}. Pour des montants > 200 €, privilégiez le SEPA.`,
     },
     {
       question: `Faut-il transférer ${meta.symbol} sur un wallet hardware ?`,
-      answer: `Pour des montants conséquents (> 1 000-2 000 €), oui. Un Ledger ou Trezor met tes ${meta.symbol} hors ligne et te protège du risque de faillite ou de hack de la plateforme. Pour des sommes accessoires que tu comptes vendre rapidement, garder sur un exchange MiCA avec assurance et 2FA est suffisant.`,
+      answer: `Pour des montants conséquents (> 1 000-2 000 €), oui. Un Ledger ou Trezor met vos ${meta.symbol} hors ligne et vous protège du risque de faillite ou de hack de la plateforme. Pour des sommes accessoires que vous comptez vendre rapidement, garder sur un exchange MiCA avec assurance et 2FA est suffisant.`,
     },
     {
       question: `Le ${meta.name} est-il MiCA-compliant en France ?`,
-      answer: `${meta.name} (${meta.symbol}) est négociable sur des plateformes régulées MiCA en France. La régulation MiCA (Markets in Crypto-Assets) impose à l'exchange — pas au token lui-même — d'être agréé. Vérifie toujours le statut "PSAN/CASP" de la plateforme avant un dépôt.`,
+      answer: `${meta.name} (${meta.symbol}) est négociable sur des plateformes régulées MiCA en France. La régulation MiCA (Markets in Crypto-Assets) impose à l'exchange — pas au token lui-même — d'être agréé. Vérifiez toujours le statut "PSAN/CASP" de la plateforme avant un dépôt.`,
     },
   ];
 
@@ -203,21 +203,21 @@ export default async function AcheterEnFrancePage({ params }: Props) {
             <ol className="mt-6 space-y-4">
               <Step
                 n={1}
-                title="Choisis une plateforme régulée MiCA"
-                description={`En France, privilégie ${platforms
+                title="Choisissez une plateforme régulée MiCA"
+                description={`En France, privilégiez ${platforms
                   .slice(0, 3)
                   .map((p) => p.name)
                   .join(", ")} : agrément AMF (PSAN) + conformité MiCA, fonds clients ségrégués, 2FA obligatoire.`}
               />
               <Step
                 n={2}
-                title="Approvisionne ton compte (CB ou virement SEPA)"
+                title="Approvisionnez votre compte (CB ou virement SEPA)"
                 description="Carte bancaire = instantané mais 1.5-3 % de frais. Virement SEPA = quasi gratuit mais 1-24 h de délai. Au-delà de 200 €, le SEPA gagne."
               />
               <Step
                 n={3}
-                title={`Achète ${meta.symbol} et sécurise`}
-                description={`Préfère un ordre spot (frais ~0.1-0.5 %) à l'achat instantané pour économiser. Pour > 1 000 €, transfère vers un wallet hardware (Ledger / Trezor).`}
+                title={`Achetez ${meta.symbol} et sécurisez`}
+                description={`Préférez un ordre spot (frais ~0.1-0.5 %) à l'achat instantané pour économiser. Pour > 1 000 €, transférez vers un wallet hardware (Ledger / Trezor).`}
               />
             </ol>
           </section>
@@ -343,7 +343,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
                   <strong>L'achat seul n'est pas imposable.</strong> Aucune déclaration tant
-                  que tu ne vends pas ton {meta.symbol} contre euros.
+                  que vous ne vendez pas votre {meta.symbol} contre euros.
                 </span>
               </li>
               <li className="flex gap-2">
@@ -365,7 +365,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               <li className="flex gap-2">
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
-                  <strong>Compte étranger :</strong> si tu utilises Binance, Coinbase ou Kraken,
+                  <strong>Compte étranger :</strong> si vous utilisez Binance, Coinbase ou Kraken,
                   déclaration du compte sur formulaire 3916-bis (oubli = 750 € d'amende par compte, 1 500 € si solde &gt; 50 000 €).
                 </span>
               </li>
@@ -382,23 +382,23 @@ export default async function AcheterEnFrancePage({ params }: Props) {
           {/* Conseil sécurité */}
           <section className="mt-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Sécuriser ton {meta.symbol} après l'achat
+              Sécuriser votre {meta.symbol} après l'achat
             </h2>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
               <SecurityTip
                 Icon={ShieldCheck}
-                title="Active la 2FA"
+                title="Activez la 2FA"
                 description="Authy ou Google Authenticator. Jamais par SMS (vulnérable au SIM-swap)."
               />
               <SecurityTip
                 Icon={Wallet}
                 title="Wallet hardware > 1 000 €"
-                description="Ledger Nano X ou Trezor Safe 5 : tes clés privées hors ligne, immunisé contre faillite exchange."
+                description="Ledger Nano X ou Trezor Safe 5 : vos clés privées hors ligne, immunisé contre faillite exchange."
               />
               <SecurityTip
                 Icon={CheckCircle2}
                 title="Phrase de récupération papier"
-                description="Note tes 24 mots sur papier (jamais en photo, jamais sur cloud). C'est ton seul backup."
+                description="Notez vos 24 mots sur papier (jamais en photo, jamais sur cloud). C'est votre seul backup."
               />
             </div>
           </section>
@@ -429,10 +429,10 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               <div className="glass glow-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-bold text-fg">
-                    Veux-tu en savoir plus sur {meta.name} ?
+                    Voulez-vous en savoir plus sur {meta.name} ?
                   </h3>
                   <p className="mt-1 text-sm text-fg/70">
-                    Lis notre fiche complète : ce que c'est, à quoi ça sert, forces /
+                    Lisez notre fiche complète : ce que c'est, à quoi ça sert, forces /
                     faiblesses et risques.
                   </p>
                 </div>

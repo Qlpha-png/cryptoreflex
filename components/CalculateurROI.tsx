@@ -200,7 +200,7 @@ export default function CalculateurROI() {
               {result.taxFr > 0 ? (
                 <>
                   <p className="text-sm text-fg leading-relaxed">
-                    <strong>Si tu vendais maintenant :</strong> tu paierais
+                    <strong>Si vous vendiez maintenant :</strong> vous paieriez
                     environ{" "}
                     <span className="text-warning-fg font-bold tabular-nums">
                       {formatEur(result.taxFr)}
@@ -211,12 +211,12 @@ export default function CalculateurROI() {
                 </>
               ) : (
                 <p className="text-sm text-fg leading-relaxed">
-                  <strong>Bonne nouvelle :</strong> ta plus-value nette de{" "}
+                  <strong>Bonne nouvelle :</strong> votre plus-value nette de{" "}
                   <span className="text-success-fg font-bold tabular-nums">
                     {formatEur(result.profitNet)}
                   </span>{" "}
                   reste sous le seuil annuel d'exonération de 305 € — donc
-                  aucun impôt si c'est ta seule cession de l'année.
+                  aucun impôt si c'est votre seule cession de l'année.
                 </p>
               )}
               <Link

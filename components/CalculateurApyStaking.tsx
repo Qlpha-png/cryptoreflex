@@ -172,7 +172,7 @@ export default function CalculateurApyStaking() {
                   {bestRow.provider} — APY {bestRow.apy.toFixed(2)} %
                 </h3>
                 <p className="mt-1 text-sm text-white/70">
-                  Avec {formatEur(amount)} stakés sur {months} mois, tu touches
+                  Avec {formatEur(amount)} stakés sur {months} mois, vous touchez
                   ~ <span className="text-primary-soft font-bold">{formatEur(bestRow.netReward)}</span> nets
                   (frais provider {bestRow.feePct} % retirés).
                 </p>
@@ -247,8 +247,8 @@ export default function CalculateurApyStaking() {
                 <span className="badge-info">Sécurité maximale</span>
                 <h4 className="mt-3 font-bold text-white">Stake via Ledger Live</h4>
                 <p className="mt-2 text-sm text-white/70">
-                  Garde le contrôle de tes clés privées et stake ETH, SOL, ADA, DOT
-                  directement depuis ton hardware wallet. Pas de risque CEX.
+                  Gardez le contrôle de vos clés privées et stakez ETH, SOL, ADA, DOT
+                  directement depuis votre hardware wallet. Pas de risque CEX.
                 </p>
                 <div className="mt-4">
                   <AffiliateLink
@@ -270,17 +270,17 @@ export default function CalculateurApyStaking() {
                 <h4 className="mt-3 font-bold text-white">SwissBorg — staking sans bloquer</h4>
                 <p className="mt-2 text-sm text-white/70">
                   Programme staking automatique, pas de lock-up, retraits libres.
-                  Idéal si tu veux du rendement sans gérer un wallet.
+                  Idéal si vous voulez du rendement sans gérer un wallet.
                 </p>
                 <div className="mt-4">
                   <AffiliateLink
                     href={swissborg.affiliateUrl}
                     platform="swissborg"
                     placement="apy-staking-cta"
-                    ctaText="Stake sur SwissBorg"
+                    ctaText="Stakez sur SwissBorg"
                     className="btn-primary w-full justify-center"
                   >
-                    Stake sur SwissBorg
+                    Stakez sur SwissBorg
                     <ArrowRight className="h-4 w-4" />
                   </AffiliateLink>
                 </div>
@@ -299,10 +299,10 @@ export default function CalculateurApyStaking() {
             les récompenses de staking sont imposables, mais le moment exact (à
             la perception comme un revenu, ou à la cession contre euro) n’est pas
             tranché par une source officielle que nous puissions citer à ce jour —
-            l’administration n’a pas publié de doctrine dédiée. Si tu stakes à
-            titre professionnel (volume conséquent, automatisation), tu peux relever du BIC.
+            l’administration n’a pas publié de doctrine dédiée. Si vous stakez à
+            titre professionnel (volume conséquent, automatisation), vous pouvez relever du BIC.
             Cet outil produit une <strong>estimation</strong> — pas un conseil
-            d'investissement ni fiscal. Consulte un expert-comptable pour ton cas.
+            d'investissement ni fiscal. Consultez un expert-comptable pour votre cas.
           </p>
         </div>
       </div>

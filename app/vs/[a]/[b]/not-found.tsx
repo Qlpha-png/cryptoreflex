@@ -47,7 +47,7 @@ export default function VsNotFound() {
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             Cryptoreflex compare les 100 plus grosses cryptos entre elles
             (forces, décentralisation, corrélation 7j, plateformes communes).
-            Si la paire que tu cherches n'existe pas, c'est qu'au moins l'un des
+            Si la paire que vous cherchez n'existe pas, c'est qu'au moins l'un des
             deux actifs sort de notre périmètre comparatif.
           </p>
 

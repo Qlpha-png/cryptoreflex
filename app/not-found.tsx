@@ -23,7 +23,7 @@ import {
 export const metadata: Metadata = {
   title: "Page introuvable",
   description:
-    "Cette page n'existe pas (encore !). Découvre nos 780 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
+    "Cette page n'existe pas (encore !). Découvrez nos 780 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
   robots: { index: false, follow: false },
 };
 
@@ -76,7 +76,7 @@ export default function NotFound() {
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
             Le lien est peut-être obsolète, ou la page a été déplacée. Pas de panique,
-            on a quelques pistes pour toi 👇
+            on a quelques pistes pour vous 👇
           </p>
 
           {/* Recherche transverse — pointe vers /recherche?q=... qui consomme /api/search. */}

@@ -50,7 +50,7 @@ const GUIDES: GuideCard[] = [
     slug: "declaration-crypto-2026-checklist",
     title: "Checklist déclaration crypto 2026 (étapes avant le 31 mai)",
     subtitle:
-      "8 étapes pour déclarer correctement tes cryptos en 2026. Imprimable, à cocher. Couvre Cerfa 2086 + 3916-bis + cas particuliers staking/airdrops.",
+      "8 étapes pour déclarer correctement vos cryptos en 2026. Imprimable, à cocher. Couvre Cerfa 2086 + 3916-bis + cas particuliers staking/airdrops.",
     date: "2026-05-06",
     duration: "5 min",
     topic: "fiscalite",
@@ -117,7 +117,7 @@ export default function GuidesHubPage() {
             Guides pratiques
           </h1>
           <p className="mt-4 max-w-3xl text-lg text-slate-300">
-            Tu as déjà compris le sujet ? Passe à l'action. Ces guides sont
+            Vous avez déjà compris le sujet ? Passe à l'action. Ces guides sont
             courts (5-10 min), structurés en étapes à cocher, imprimables, et
             terminent toujours par un CTA concret.
           </p>

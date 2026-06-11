@@ -124,7 +124,7 @@ export default async function CryptosIndexPage() {
 
         <div className="mt-12">
           <AcademyCrossLink
-            title="Tu débutes ? Apprends avant d'investir"
+            title="Vous débutez ? Apprenez avant d'investir"
             links={[
               { href: "/academie/debutant", label: "Parcours Débutant" },
               { href: "/academie/choisir", label: "Bien choisir ses cryptos" },

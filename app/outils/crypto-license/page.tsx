@@ -25,9 +25,9 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Permis Crypto FR — Teste tes connaissances + obtiens ton badge",
+  title: "Permis Crypto FR — Testez vos connaissances + obtenez votre badge",
   description:
-    "Quiz gratuit 50 questions sur la crypto en France (régulation MiCA, fiscalité PFU, sécurité wallet, écosystème). Score >70 % → ton Permis Crypto Cryptoreflex en PDF. Bientôt.",
+    "Quiz gratuit 50 questions sur la crypto en France (régulation MiCA, fiscalité PFU, sécurité wallet, écosystème). Score >70 % → votre Permis Crypto Cryptoreflex en PDF. Bientôt.",
   alternates: withHreflang(`${BRAND.url}/outils/crypto-license`),
 };
 
@@ -35,7 +35,7 @@ export default function CryptoLicensePage() {
   const faqItems = [
     {
       q: "C'est un diplôme officiel ?",
-      a: "Non, c'est un badge éducatif et ludique délivré par Cryptoreflex. Il n'a aucune valeur réglementaire (pas de lien avec l'AMF, l'ACPR ou le RNCP). Il atteste que tu as répondu correctement à 70 % minimum d'un quiz de 50 questions sur les fondamentaux de l'investissement crypto en France.",
+      a: "Non, c'est un badge éducatif et ludique délivré par Cryptoreflex. Il n'a aucune valeur réglementaire (pas de lien avec l'AMF, l'ACPR ou le RNCP). Il atteste que vous avez répondu correctement à 70 % minimum d'un quiz de 50 questions sur les fondamentaux de l'investissement crypto en France.",
     },
     {
       q: "Quelles thématiques sont couvertes ?",
@@ -43,22 +43,22 @@ export default function CryptoLicensePage() {
     },
     {
       q: "Combien de temps prend le quiz ?",
-      a: "Compte 15-25 min pour les 50 questions. Tu peux mettre en pause et reprendre. Pour passer, il faut 35/50 (70 %). Tu peux retenter autant de fois que tu veux (mais le permis affiche le meilleur score).",
+      a: "Comptez 15-25 min pour les 50 questions. Vous pouvez mettre en pause et reprendre. Pour passer, il faut 35/50 (70 %). Vous pouvez retenter autant de fois que vous voulez (mais le permis affiche le meilleur score).",
     },
     {
       q: "Que contient le PDF Permis Crypto ?",
-      a: "Une page A4 stylée avec ton pseudo, ton score détaillé par chapitre, un QR code de vérification (renvoyant vers cryptoreflex.fr/permis/[id]), et la date d'obtention. Idéal à mettre en story Discord ou en lien dans ton bio si tu es curateur crypto.",
+      a: "Une page A4 stylée avec votre pseudo, votre score détaillé par chapitre, un QR code de vérification (renvoyant vers cryptoreflex.fr/permis/[id]), et la date d'obtention. Idéal à mettre en story Discord ou en lien dans votre bio si vous êtes curateur crypto.",
     },
     {
       q: "C'est gratuit ?",
-      a: "Oui, 100 % gratuit, illimité, sans login obligatoire (login optionnel pour sauvegarder ton historique de scores).",
+      a: "Oui, 100 % gratuit, illimité, sans login obligatoire (login optionnel pour sauvegarder votre historique de scores).",
     },
   ];
 
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/crypto-license",
-      title: "Permis Crypto FR — Teste tes connaissances + obtiens ton badge",
+      title: "Permis Crypto FR — Testez vos connaissances + obtenez votre badge",
       description: "Quiz gratuit 50 questions + PDF Permis Crypto.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
@@ -94,8 +94,8 @@ export default function CryptoLicensePage() {
             <span className="gradient-text">Permis Crypto</span> FR
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Teste tes connaissances en investissement crypto avec un quiz
-            ludique de 50 questions. Score &gt; 70 % → tu débloques ton
+            Testez vos connaissances en investissement crypto avec un quiz
+            ludique de 50 questions. Score &gt; 70 % → vous débloquez votre
             Permis Crypto Cryptoreflex (PDF + QR code de vérification).
           </p>
           <div className="mt-3">
@@ -105,11 +105,11 @@ export default function CryptoLicensePage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Un quiz sérieux mais ludique pour vérifier que tu maîtrises les bases avant d'investir, et un PDF stylé à partager si tu réussis."
+            headline="Un quiz sérieux mais ludique pour vérifier que vous maîtrisez les bases avant d'investir, et un PDF stylé à partager si vous réussissez."
             bullets={[
               { emoji: "🎓", text: "50 questions × 5 chapitres : technique, régulation, fiscalité, sécurité, écosystème" },
               { emoji: "🏆", text: "Score >70 % → PDF Permis Crypto avec QR code unique" },
-              { emoji: "🔁", text: "Retentes illimitées, on garde ton meilleur score" },
+              { emoji: "🔁", text: "Retentes illimitées, on garde votre meilleur score" },
               { emoji: "🆓", text: "100 % gratuit, login optionnel" },
             ]}
             readingTime="3 min"
@@ -139,7 +139,7 @@ export default function CryptoLicensePage() {
           <Award className="mx-auto h-10 w-10 text-primary" aria-hidden />
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Accès anticipé au Permis Crypto</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscris-toi à la newsletter pour passer le
+            Lancement Q3 2026. Inscrivez-vous à la newsletter pour passer le
             quiz en avant-première et débloquer le badge collector early-bird.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

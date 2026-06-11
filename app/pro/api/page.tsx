@@ -16,15 +16,15 @@ import { Check, Code2, ArrowRight } from "lucide-react";
 export const metadata: Metadata = {
   title: "API personnelle",
   description:
-    "Branche tes outils sur les données Cryptoreflex (PSAN, MiCA, top cryptos, scores de décentralisation). Accès API personnel gratuit, conforme RGPD, hébergé en UE.",
+    "Branchez vos outils sur les données Cryptoreflex (PSAN, MiCA, top cryptos, scores de décentralisation). Accès API personnel gratuit, conforme RGPD, hébergé en UE.",
   alternates: { canonical: `${BRAND.url}/pro/api` },
 };
 
 const FEATURES = [
   "Endpoints publics élargis (PSAN/MiCA, top cryptos, scores, fiscalité 2086)",
-  "Lecture de ton portfolio, tes trades et tes alertes",
+  "Lecture de votre portfolio, vos trades et vos alertes",
   "Webhooks (gestion + signature HMAC)",
-  "Clé personnelle révocable à tout moment depuis ton espace",
+  "Clé personnelle révocable à tout moment depuis votre espace",
   "Données hébergées en UE (Frankfurt), conformes RGPD",
 ];
 
@@ -37,11 +37,11 @@ export default function ProApiPage() {
           API personnelle Cryptoreflex
         </div>
         <h1 className="text-3xl sm:text-5xl font-bold tracking-tight max-w-3xl mx-auto">
-          Branche tes outils sur les données crypto FR/UE de Cryptoreflex
+          Branchez vos outils sur les données crypto FR/UE de Cryptoreflex
         </h1>
         <p className="mt-4 text-muted max-w-2xl mx-auto">
           PSAN/MiCA, top cryptos, scores de décentralisation, fiscalité 2086,
-          portfolio agrégé via tes exchanges. Une seule API, conforme RGPD,
+          portfolio agrégé via vos exchanges. Une seule API, conforme RGPD,
           hébergée en UE — et désormais <strong>gratuite</strong>.
         </p>
         <div className="mt-6 flex justify-center">
@@ -56,7 +56,7 @@ export default function ProApiPage() {
       </header>
 
       <section className="rounded-2xl border border-border bg-surface p-6 sm:p-8 mb-12">
-        <h2 className="text-xl font-bold mb-4">Ce que l&apos;API te donne</h2>
+        <h2 className="text-xl font-bold mb-4">Ce que l&apos;API vous donne</h2>
         <ul className="space-y-2 text-sm">
           {FEATURES.map((f) => (
             <li key={f} className="flex items-start gap-2">
@@ -71,18 +71,18 @@ export default function ProApiPage() {
         <h2 className="text-xl font-semibold mb-4">Premier appel en 30 secondes</h2>
         <ol className="space-y-3 text-sm">
           <li>
-            <strong>1.</strong> Crée une clé sur{" "}
+            <strong>1.</strong> Créez une clé sur{" "}
             <Link href="/mon-compte/dev" className="underline">
               /mon-compte/dev
             </Link>
             .
           </li>
           <li>
-            <strong>2.</strong> Copie la clé qui s&apos;affiche (une seule fois) puis
-            stocke-la dans une variable d&apos;environnement.
+            <strong>2.</strong> Copiez la clé qui s&apos;affiche (une seule fois) puis
+            stockez-la dans une variable d&apos;environnement.
           </li>
           <li>
-            <strong>3.</strong> Lance ton premier appel :
+            <strong>3.</strong> Lancez votre premier appel :
           </li>
         </ol>
         <pre className="mt-4 text-xs sm:text-sm font-mono bg-background border border-border rounded-lg p-4 overflow-x-auto">

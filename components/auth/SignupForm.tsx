@@ -64,7 +64,7 @@ export default function SignupForm() {
       if (data.needsConfirmation) {
         setDone({
           needsConfirmation: true,
-          message: data.message || "Vérifie ta boîte mail.",
+          message: data.message || "Vérifiez votre boîte mail.",
         });
       } else {
         // Compte créé + connecté immédiatement
@@ -95,7 +95,7 @@ export default function SignupForm() {
             href="/connexion"
             className="text-primary-soft underline hover:text-primary"
           >
-            Tu peux te connecter directement
+            Vous pouvez vous connecter directement
           </Link>{" "}
           dès la confirmation.
         </p>
@@ -118,7 +118,7 @@ export default function SignupForm() {
             aria-required="true"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ton@email.com"
+            placeholder="votre@email.com"
             autoComplete="email"
             className="w-full rounded-lg border border-border bg-elevated pl-10 pr-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
             disabled={loading}
@@ -212,7 +212,7 @@ export default function SignupForm() {
       </button>
 
       <p className="text-xs text-muted text-center leading-relaxed">
-        En créant un compte tu acceptes nos{" "}
+        En créant un compte vous acceptez nos{" "}
         <Link
           href="/mentions-legales"
           className="text-primary-soft hover:text-primary underline"

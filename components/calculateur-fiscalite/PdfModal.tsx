@@ -135,7 +135,7 @@ export default function PdfModal({
       };
       if (!res.ok || !data.ok || !data.sessionId) {
         setStep("error");
-        setErrorMsg(data.error || "Une erreur est survenue. Réessaie.");
+        setErrorMsg(data.error || "Une erreur est survenue. Réessayez.");
         return;
       }
       setSessionId(data.sessionId);
@@ -164,7 +164,7 @@ export default function PdfModal({
     } catch (err) {
       setStep("error");
       setErrorMsg(
-        err instanceof Error ? err.message : "Erreur réseau. Réessaie.",
+        err instanceof Error ? err.message : "Erreur réseau. Réessayez.",
       );
     }
   }
@@ -220,10 +220,10 @@ export default function PdfModal({
                   id="pdf-modal-title"
                   className="font-display text-lg font-bold text-fg"
                 >
-                  Télécharge ta simulation en PDF
+                  Téléchargez votre simulation en PDF
                 </h2>
                 <p className="mt-1 text-sm text-fg/75">
-                  Reçois ta simulation par email + nos{" "}
+                  Recevez votre simulation par email + nos{" "}
                   <strong className="text-primary-soft">5 conseils fiscalité crypto</strong>{" "}
                   (gratuits).
                 </p>
@@ -241,7 +241,7 @@ export default function PdfModal({
                 required
                 aria-required="true"
                 autoComplete="email"
-                placeholder="ton@email.com"
+                placeholder="votre@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={step === "error"}
@@ -270,7 +270,7 @@ export default function PdfModal({
                 aria-hidden="true"
               />
               <p>
-                Ton email reste confidentiel. Utilisé uniquement pour cette
+                Votre email reste confidentiel. Utilisé uniquement pour cette
                 simulation et notre newsletter mensuelle. Désinscription en 1
                 clic, données jamais revendues.
               </p>
@@ -289,10 +289,10 @@ export default function PdfModal({
               id="pdf-modal-title"
               className="mt-4 font-display text-lg font-bold text-fg"
             >
-              Préparation de ta simulation…
+              Préparation de votre simulation…
             </h2>
             <p className="mt-1 text-sm text-fg/70">
-              On enregistre ton calcul et on t'envoie un récap par email.
+              On enregistre votre calcul et on vous envoie un récap par email.
             </p>
           </div>
         )}
@@ -318,8 +318,8 @@ export default function PdfModal({
               C'est prêt !
             </h2>
             <p className="mt-1 text-sm text-fg/75">
-              Ta simulation et nos 5 conseils arrivent dans ta boîte mail.
-              Ouvre l'aperçu pour l'imprimer en PDF.
+              Votre simulation et nos 5 conseils arrivent dans votre boîte mail.
+              Ouvrez l'aperçu pour l'imprimer en PDF.
             </p>
             <button
               type="button"
@@ -330,7 +330,7 @@ export default function PdfModal({
               Voir et imprimer mon PDF
             </button>
             <p className="mt-3 text-[11px] text-muted">
-              S'ouvre dans un nouvel onglet — utilise « Imprimer » puis
+              S'ouvre dans un nouvel onglet — utilisez « Imprimer » puis
               « Enregistrer en PDF ».
             </p>
 
@@ -343,10 +343,10 @@ export default function PdfModal({
                 />
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-fg">
-                    Et si Waltio le faisait pour toi ?
+                    Et si Waltio le faisait pour vous ?
                   </p>
                   <p className="mt-1 text-xs text-fg/70">
-                    Le PDF, c'est ton calcul. Waltio génère en plus le Cerfa
+                    Le PDF, c'est votre calcul. Waltio génère en plus le Cerfa
                     2086 + 3916-bis prêts à téléverser.{" "}
                     <strong className="text-primary-soft">-30 %</strong> avec le
                     code CRYPTOREFLEX.

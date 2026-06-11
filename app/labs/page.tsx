@@ -69,7 +69,7 @@ export default function LabsPage() {
             <span className="gradient-text-anim">Prouesses dynamiques</span>
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-fg/80 leading-relaxed">
-            7 effets WOW techniques ajoutés au design system. Bouge ta souris
+            7 effets WOW techniques ajoutés au design system. Bouge votre souris
             pour les tester. Tous respectent <code>prefers-reduced-motion</code>{" "}
             et restent inertes en tactile.
           </p>

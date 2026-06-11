@@ -24,12 +24,12 @@ const SimulateurHalvingBitcoin = dynamic(
 export const metadata: Metadata = {
   title: "Simulateur halving Bitcoin 2028 — projection DCA jusqu'en 2036",
   description:
-    "Simule ton DCA Bitcoin jusqu'aux halvings 2028, 2032, 2036. 3 scénarios (conservateur, moyen, bullish), graphique recharts, basé sur les cycles historiques BTC.",
+    "Simulez votre DCA Bitcoin jusqu'aux halvings 2028, 2032, 2036. 3 scénarios (conservateur, moyen, bullish), graphique recharts, basé sur les cycles historiques BTC.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin"),
   openGraph: {
     title: "Simulateur halving Bitcoin 2028 — projection DCA",
     description:
-      "Combien vaudra ton DCA Bitcoin après les prochains halvings ? 3 scénarios sourcés sur les cycles passés.",
+      "Combien vaudra votre DCA Bitcoin après les prochains halvings ? 3 scénarios sourcés sur les cycles passés.",
     url: "https://www.cryptoreflex.fr/outils/simulateur-halving-bitcoin",
     type: "website",
   },
@@ -54,12 +54,12 @@ const FAQ_ITEMS = [
   {
     question: "Quel est le meilleur moment pour faire du DCA Bitcoin ?",
     answer:
-      "Le DCA neutralise la question du timing. Statistiquement, les meilleurs ROI long terme sont obtenus en démarrant le DCA après un halving et en continuant pendant tout le cycle (4 ans). Si tu attends le prochain ATH, tu rates les achats les moins chers du cycle.",
+      "Le DCA neutralise la question du timing. Statistiquement, les meilleurs ROI long terme sont obtenus en démarrant le DCA après un halving et en continuant pendant tout le cycle (4 ans). Si vous attendez le prochain ATH, vous ratez les achats les moins chers du cycle.",
   },
   {
     question: "Sur quelle plateforme automatiser un DCA Bitcoin en France ?",
     answer:
-      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Bitpanda et Coinbase proposent aussi des achats récurrents. Sur Binance, tu peux programmer un Auto-Invest. Notre comparatif détaillé : /comparatif.",
+      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Bitpanda et Coinbase proposent aussi des achats récurrents. Sur Binance, vous pouvez programmer un Auto-Invest. Notre comparatif détaillé : /comparatif.",
   },
 ];
 
@@ -109,7 +109,7 @@ export default function SimulateurHalvingBitcoinPage() {
               Simulateur <span className="gradient-text">halving Bitcoin 2028</span>
             </h1>
             <p className="mt-4 text-lg text-white/70">
-              Combien vaudra ton DCA Bitcoin après les 3 prochains halvings (2028,
+              Combien vaudra votre DCA Bitcoin après les 3 prochains halvings (2028,
               2032, 2036) ? Projection en 3 scénarios — basée sur les cycles passés,
               pas une promesse de rendement.
             </p>
@@ -136,7 +136,7 @@ export default function SimulateurHalvingBitcoinPage() {
             <Card
               icon={<BookOpen className="h-6 w-6" />}
               title="Stratégie DCA"
-              text="Lisse ton entrée sur tout le cycle plutôt que de timer un point d'entrée. Minimise les regrets."
+              text="Lissez votre entrée sur tout le cycle plutôt que de timer un point d'entrée. Minimisez les regrets."
             />
           </div>
 

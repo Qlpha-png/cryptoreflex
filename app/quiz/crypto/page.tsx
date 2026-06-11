@@ -13,9 +13,9 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
-const TITLE = `Quiz : quelle crypto correspond à ton profil ?`;
+const TITLE = `Quiz : quelle crypto correspond à votre profil ?`;
 const DESCRIPTION =
-  "6 questions courtes pour découvrir la crypto la plus adaptée à ton profil : tolérance au risque, horizon, type de projet, capital, stratégie. Reco neutre Cryptoreflex.";
+  "6 questions courtes pour découvrir la crypto la plus adaptée à votre profil : tolérance au risque, horizon, type de projet, capital, stratégie. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/crypto";
 
 export const metadata: Metadata = {
@@ -97,11 +97,11 @@ export default async function QuizCryptoPage() {
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
               Quelle crypto pour{" "}
-              <span className="gradient-text">ton profil&nbsp;?</span>
+              <span className="gradient-text">votre profil&nbsp;?</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
-              Réponds à 6 questions courtes — risque accepté, horizon, type de
-              projet, familiarité tech, capital, stratégie — on te recommande la
+              Répondez à 6 questions courtes — risque accepté, horizon, type de
+              projet, familiarité tech, capital, stratégie — on vous recommande la
               crypto la plus adaptée parmi {unifiedCount} fiches analysées.
             </p>
           </header>
@@ -117,11 +117,11 @@ export default async function QuizCryptoPage() {
             />
             <Method
               title="Sans biais sponsor"
-              description="Aucun lien d'affiliation crypto — Cryptoreflex ne touche rien si tu choisis BTC plutôt qu'un autre."
+              description="Aucun lien d'affiliation crypto — Cryptoreflex ne touche rien si vous choisissez BTC plutôt qu'un autre."
             />
             <Method
               title="Reco honnête"
-              description="Si rien ne matche tes contraintes, on te le dit. Pas de reco forcée pour faire plaisir."
+              description="Si rien ne matche vos contraintes, on vous le dit. Pas de reco forcée pour faire plaisir."
             />
           </section>
 
@@ -129,12 +129,12 @@ export default async function QuizCryptoPage() {
           <aside className="mt-12 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-fg">
-                Tu sais quelle crypto ? Compare les plateformes MiCA
+                Vous savez quelle crypto ? Comparez les plateformes MiCA
               </h2>
               <p className="mt-1 text-sm text-fg/70">
                 Quiz pédagogique en 6 questions — il présente les exchanges régulés
-                MiCA pertinents selon ton budget, ta fréquence d&apos;achat et ton
-                support préféré. Le choix final t&apos;appartient.
+                MiCA pertinents selon votre budget, votre fréquence d&apos;achat et votre
+                support préféré. Le choix final vous appartient.
               </p>
             </div>
             <Link href="/quiz/plateforme" className="btn-primary shrink-0">

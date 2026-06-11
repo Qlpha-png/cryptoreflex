@@ -320,7 +320,7 @@ export default function NewsletterInline({
               Voir un exemple du dernier email
             </summary>
             <div className="mt-2 rounded-lg border border-border bg-elevated/40 p-3 text-xs text-fg/70 leading-relaxed">
-              <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda decroche son agrement MiCA — 3 conséquences pour toi</p>
+              <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda decroche son agrement MiCA — 3 conséquences pour vous</p>
               <p className="mt-1.5 italic text-muted">7h02 · Edition du jour</p>
               <p className="mt-2">
                 1/ <strong>Bitpanda Asset Management AG</strong> rejoint la liste des entites MiCA-compliant en zone UE.

@@ -141,7 +141,7 @@ export default function AddHoldingDialog({
       if (submitting) return;
 
       if (!selected) {
-        setError("Sélectionne une cryptomonnaie.");
+        setError("Sélectionnez une cryptomonnaie.");
         return;
       }
       const q = Number(quantity.replace(",", "."));
@@ -445,7 +445,7 @@ export default function AddHoldingDialog({
               className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
             <p className="mt-1.5 text-[11px] text-muted">
-              Ton PRU (prix de revient unitaire) en EUR. Mets 0 si la position
+              Votre PRU (prix de revient unitaire) en EUR. Mettez 0 si la position
               est offerte (airdrop, cadeau).
             </p>
           </div>

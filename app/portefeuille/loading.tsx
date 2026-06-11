@@ -9,7 +9,7 @@
  */
 export default function PortefeuilleLoading() {
   return (
-    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement de ton portfolio">
+    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement de votre portfolio">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="space-y-3 mb-8">

@@ -624,7 +624,7 @@ export default function StakingComparator({ pairs }: Props) {
             aria-live="polite"
           >
             <p className="text-fg font-semibold">
-              Aucune crypto ne correspond à tes filtres.
+              Aucune crypto ne correspond à vos filtres.
             </p>
             <p className="mt-1 text-sm text-muted">
               Essaie d'élargir le range APY, d'autoriser plus de risque ou de

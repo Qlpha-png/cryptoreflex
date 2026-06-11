@@ -80,7 +80,7 @@ export default function QuickBuyBox({
 
       <p className="mt-3 text-[11px] text-muted/90 leading-relaxed">
         Liens d&apos;affiliation. Cryptoreflex perçoit une commission sans
-        surcoût pour toi (
+        surcoût pour vous (
         <Link href="/transparence" className="underline hover:text-fg">
           détail
         </Link>

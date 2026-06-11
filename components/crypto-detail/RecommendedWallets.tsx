@@ -29,7 +29,7 @@ export default function RecommendedWallets({
     <section id="wallets" className="scroll-mt-24">
       <div className="flex items-baseline justify-between gap-4 flex-wrap">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Où stocker tes {cryptoSymbol} en sécurité ?
+          Où stocker vos {cryptoSymbol} en sécurité ?
         </h2>
         <span className="text-xs text-muted font-mono">
           Chain : <span className="text-fg/70">{chain}</span>
@@ -38,7 +38,7 @@ export default function RecommendedWallets({
       <p className="mt-2 text-sm text-muted max-w-3xl">
         Acheter sur une plateforme régulée, c&apos;est l&apos;étape 1. L&apos;étape 2 — souvent
         oubliée — c&apos;est <strong className="text-fg">retirer ses cryptos vers un wallet
-        dont tu contrôles les clés</strong>. Voici les wallets compatibles avec {cryptoName} adaptés à
+        dont vous contrôlez les clés</strong>. Voici les wallets compatibles avec {cryptoName} adaptés à
         chaque profil.
       </p>
 
@@ -50,9 +50,9 @@ export default function RecommendedWallets({
 
       <div className="mt-4 rounded-xl border border-border bg-elevated/40 p-4 text-xs text-muted leading-relaxed">
         <strong className="text-fg">Règle d&apos;or :</strong> au-delà de quelques centaines
-        d&apos;euros que tu ne comptes pas trader, transfère vers un hardware wallet (Ledger ou
-        Trezor). Garder &quot;sur la plateforme&quot; = la plateforme contrôle tes clés. En cas
-        de hack, faillite ou gel de compte, tu perds tout.
+        d&apos;euros que vous ne comptez pas trader, transférez vers un hardware wallet (Ledger ou
+        Trezor). Garder &quot;sur la plateforme&quot; = la plateforme contrôle vos clés. En cas
+        de hack, faillite ou gel de compte, vous perdez tout.
       </div>
     </section>
   );

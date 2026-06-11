@@ -150,7 +150,7 @@ export default function GlossaireCryptoPage() {
               Plus de {GLOSSARY.length} termes crypto définis en français clair :
               trading, DeFi, sécurité, régulation MiCA, NFT, Layer 2, tokenomics,
               wallets, mining et stablecoins. Cherche, filtre par catégorie,
-              partage les ancres avec tes amis.
+              partage les ancres avec vos amis.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {GLOSSARY_FLAT_CATEGORIES.map((c) => (

@@ -37,7 +37,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Message envoyé</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci. Nous te répondons sous 48h ouvrées (réponses presse :
+          Merci. Nous vous répondons sous 48h ouvrées (réponses presse :
           généralement plus rapide).
         </p>
         <button
@@ -121,7 +121,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             type="text"
             maxLength={200}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            placeholder="Bref résumé de ta demande"
+            placeholder="Bref résumé de votre demande"
           />
         </div>
 
@@ -139,7 +139,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             aria-invalid={result?.ok === false}
             aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
-            placeholder="Détaille ta demande, on te répond dans les 48h ouvrées."
+            placeholder="Détaillez votre demande, on vous répond dans les 48h ouvrées."
           />
         </div>
 

@@ -397,7 +397,7 @@ export default function RootLayout({
             }}
           >
             Ce site utilise des outils de mesure d'audience (Vercel Web Analytics, sans cookies tiers).
-            JavaScript étant désactivé, tu peux consulter notre{" "}
+            JavaScript étant désactivé, vous pouvez consulter notre{" "}
             <a href="/confidentialite" style={{ color: "#FCD34D", textDecoration: "underline" }}>
               politique de confidentialité
             </a>{" "}

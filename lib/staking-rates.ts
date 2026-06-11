@@ -62,7 +62,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
     risks: [
       "Slashing théorique (jamais appliqué massivement à ce jour).",
       "Cooldown de unstake direct ~ 2 epochs (~ 4-5 jours).",
-      "Concentration validateurs : risque de censure si tu choisis mal.",
+      "Concentration validateurs : risque de censure si vous choisissez mal.",
     ],
     providers: [
       { provider: "Validateur direct", apy: 6.8, lockupDays: 4, feePct: 0, method: "direct", infoUrl: "https://solana.com/staking" },
@@ -78,7 +78,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
     name: "Cardano",
     risks: [
       "Pas de slashing sur Cardano (modèle Ouroboros).",
-      "Pas de lock-up : tes ADA restent dans ton wallet, libres à tout moment.",
+      "Pas de lock-up : vos ADA restent dans votre wallet, libres à tout moment.",
       "Rendement variable selon la saturation du pool choisi.",
     ],
     providers: [

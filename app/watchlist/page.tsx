@@ -15,7 +15,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Ma watchlist crypto",
   description:
-    "Ta watchlist crypto Cryptoreflex — jusqu'à 10 cryptos suivies en temps réel, stockées localement sur ton appareil (zéro compte requis).",
+    "Votre watchlist crypto Cryptoreflex — jusqu'à 10 cryptos suivies en temps réel, stockées localement sur votre appareil (zéro compte requis).",
   alternates: withHreflang(`${BRAND.url}/watchlist`),
   robots: { index: false, follow: true },
 };
@@ -44,7 +44,7 @@ export default function WatchlistPage() {
           </h1>
           <p className="mt-3 ds-lead max-w-2xl">
             Jusqu'à 10 cryptos suivies en temps réel. Données stockées
-            uniquement sur ton appareil (localStorage) — aucun compte, aucune
+            uniquement sur votre appareil (localStorage) — aucun compte, aucune
             donnée envoyée à nos serveurs.
           </p>
         </header>
@@ -67,12 +67,12 @@ export default function WatchlistPage() {
                 id="portfolio-cross-heading"
                 className="text-base font-semibold text-fg"
               >
-                Tu veux suivre tes gains ?
+                Vous voulez suivre vos gains ?
               </h2>
               <p className="mt-1 text-sm text-fg/80">
-                Utilise notre tracker portefeuille gratuit pour voir la valeur
-                live de tes positions, ton gain/perte global et l&apos;allocation
-                de ton portefeuille. Toujours 100% local.
+                Utilisez notre tracker portefeuille gratuit pour voir la valeur
+                live de vos positions, votre gain/perte global et l&apos;allocation
+                de votre portefeuille. Toujours 100% local.
               </p>
               <Link
                 href="/portefeuille"
@@ -87,8 +87,8 @@ export default function WatchlistPage() {
 
         {/* Aide pédagogique en bas */}
         <p className="mt-12 text-[12px] text-muted leading-relaxed border-t border-border/60 pt-6">
-          La watchlist est conservée dans ton navigateur. Si tu vides le
-          cache, changes de navigateur ou utilises la navigation privée, ta
+          La watchlist est conservée dans votre navigateur. Si vous videz le
+          cache, changez de navigateur ou utilisez la navigation privée, votre
           liste ne sera pas synchronisée. Les prix sont rafraîchis toutes les
           deux minutes via l'API CoinGecko.
         </p>

@@ -20,7 +20,7 @@ export default function QuizPromo() {
     "@type": "Quiz",
     name: "Quiz pédagogique : compare les plateformes crypto MiCA",
     description:
-      "5 questions courtes pour comparer les plateformes crypto MiCA selon ton profil (budget, fréquence d'achat, support FR, conformité). Outil pédagogique, sans recommandation personnalisée.",
+      "5 questions courtes pour comparer les plateformes crypto MiCA selon votre profil (budget, fréquence d'achat, support FR, conformité). Outil pédagogique, sans recommandation personnalisée.",
     educationalAlignment: {
       "@type": "AlignmentObject",
       alignmentType: "educationalSubject",
@@ -58,12 +58,12 @@ export default function QuizPromo() {
                 id="quiz-promo-title"
                 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight"
               >
-                Trouve ta <span className="gradient-text">plateforme idéale</span> en 5 questions
+                Trouve votre <span className="gradient-text">plateforme idéale</span> en 5 questions
               </h2>
               <p className="mt-3 text-white/70 max-w-xl">
                 Budget, fréquence d&apos;achat, support FR, conformité MiCA : on te
                 pose 5 questions courtes et on te recommande la plateforme la
-                plus adaptée à ton profil. Reco neutre, sans bullshit.
+                plus adaptée à votre profil. Reco neutre, sans bullshit.
               </p>
 
               {/* Audit UX F1 : aperçu d'une question d'exemple (transparence + démo) */}

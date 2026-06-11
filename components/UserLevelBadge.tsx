@@ -89,7 +89,7 @@ export default function UserLevelBadge() {
     progress.streakDays > 0
       ? ` · streak ${progress.streakDays}j (record ${progress.bestStreak}j)`
       : ""
-  } — clique pour voir ta progression complète.`;
+  } — clique pour voir votre progression complète.`;
 
   return (
     <Link

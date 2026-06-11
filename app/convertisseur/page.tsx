@@ -126,7 +126,7 @@ export default function ConvertisseurHub() {
         {/* Cross-links */}
         <section className="mt-16 rounded-2xl border border-border bg-surface/40 p-6 text-center">
           <h2 className="text-lg font-bold text-fg mb-3">
-            Tu cherches plus que de la conversion ?
+            Vous cherchez plus que de la conversion ?
           </h2>
           <p className="text-sm text-muted mb-4 max-w-xl mx-auto">
             On a 28 outils crypto gratuits : calculateur fiscalité PFU, simulateur

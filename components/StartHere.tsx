@@ -29,7 +29,7 @@ const DOORS: Door[] = [
     href: "/academie",
     eyebrow: "Je débute",
     title: "Apprendre les bases",
-    desc: "Les concepts essentiels expliqués simplement, sans jargon, à ton rythme.",
+    desc: "Les concepts essentiels expliqués simplement, sans jargon, à votre rythme.",
     cta: "Commencer à apprendre",
     Icon: GraduationCap,
   },
@@ -65,7 +65,7 @@ export default function StartHere() {
           id="start-here-title"
           className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl"
         >
-          Choisis ton point de départ
+          Choisis votre point de départ
         </h2>
         <p className="mt-3 text-base text-fg/70 sm:text-lg">
           Trois portes selon ce que tu veux faire aujourd&apos;hui. Tu peux

@@ -47,7 +47,7 @@ export default function SponsoringForm() {
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Demande envoyée</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci ! Notre équipe partenariats te répond sous 48h ouvrées avec un
+          Merci ! Notre équipe partenariats vous répond sous 48h ouvrées avec un
           devis détaillé et un planning de publication.
         </p>
         <button
@@ -140,7 +140,7 @@ export default function SponsoringForm() {
               className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>
-                — Sélectionne —
+                — Sélectionnez —
               </option>
               {OFFERS.map((o) => (
                 <option key={o} value={o}>
@@ -160,7 +160,7 @@ export default function SponsoringForm() {
               className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>
-                — Sélectionne —
+                — Sélectionnez —
               </option>
               {BUDGETS.map((b) => (
                 <option key={b} value={b}>
@@ -181,7 +181,7 @@ export default function SponsoringForm() {
             rows={5}
             maxLength={2000}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            placeholder="Présente brièvement ton produit, l'objectif (acquisition, awareness, lancement), la cible idéale et la deadline souhaitée."
+            placeholder="Présentez brièvement votre produit, l'objectif (acquisition, awareness, lancement), la cible idéale et la deadline souhaitée."
           />
         </div>
 

@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
   if (!user) {
     return NextResponse.json(
-      { error: "Tu dois être connecté pour modifier ton mot de passe." },
+      { error: "Vous devez être connecté pour modifier votre mot de passe." },
       { status: 401 }
     );
   }

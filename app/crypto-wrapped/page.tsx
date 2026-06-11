@@ -49,14 +49,14 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Crypto Wrapped 2026 — Ton année crypto en 60 secondes",
+  title: "Crypto Wrapped 2026 — Votre année crypto en 60 secondes",
   description:
-    "Bientôt : ton récap crypto personnalisé style Spotify Wrapped — meilleure perf, biais détectés, badges, partageable en 1 clic. Laisse ton email pour le lancement.",
+    "Bientôt : votre récap crypto personnalisé style Spotify Wrapped — meilleure perf, biais détectés, badges, partageable en 1 clic. Laissez votre email pour le lancement.",
   alternates: withHreflang(`${BRAND.url}/crypto-wrapped`),
   openGraph: {
-    title: "Crypto Wrapped 2026 — Ton année crypto en 60 secondes",
+    title: "Crypto Wrapped 2026 — Votre année crypto en 60 secondes",
     description:
-      "Récap annuel personnalisé : meilleure perf, biais détectés, badges. Spotify Wrapped pour ton portefeuille crypto.",
+      "Récap annuel personnalisé : meilleure perf, biais détectés, badges. Spotify Wrapped pour votre portefeuille crypto.",
     url: `${BRAND.url}/crypto-wrapped`,
     type: "website",
   },
@@ -66,8 +66,8 @@ const STORIES = [
   {
     Icon: Trophy,
     eyebrow: "Story 1",
-    title: "Ta meilleure perf 2026",
-    blurb: "Quelle crypto t'a fait gagner le plus, à quel moment, et pourquoi.",
+    title: "Votre meilleure perf 2026",
+    blurb: "Quelle crypto vous a fait gagner le plus, à quel moment, et pourquoi.",
     color: "text-amber-300",
     bg: "bg-amber-400/15",
   },
@@ -75,14 +75,14 @@ const STORIES = [
     Icon: TrendingUp,
     eyebrow: "Story 2",
     title: "Ta strat dominante",
-    blurb: "DCA, lump sum, swing trader ou hodler ? On te révèle ton style.",
+    blurb: "DCA, lump sum, swing trader ou hodler ? On te révèle votre style.",
     color: "text-success",
     bg: "bg-success/15",
   },
   {
     Icon: Eye,
     eyebrow: "Story 3",
-    title: "Tes biais cachés",
+    title: "Vos biais cachés",
     blurb: "Overtrading ? FOMO sur le top 10 ? Concentration sur 1 coin ? Le miroir honnête.",
     color: "text-cyan-300",
     bg: "bg-cyan-400/15",
@@ -98,16 +98,16 @@ const STORIES = [
   {
     Icon: AlertTriangle,
     eyebrow: "Story 5",
-    title: "Ta facture fiscale projetée",
-    blurb: "Estimation de ton PFU 31,4 % sur l'année. Pré-rempli au format Cerfa 2086.",
+    title: "Votre facture fiscale projetée",
+    blurb: "Estimation de votre PFU 31,4 % sur l'année. Pré-rempli au format Cerfa 2086.",
     color: "text-warning-fg",
     bg: "bg-warning/15",
   },
   {
     Icon: Share2,
     eyebrow: "Story 6",
-    title: "Tes badges débloqués",
-    blurb: "Hodler 365j, First Steps, Streak Master… Partage tes trophées en 1 clic.",
+    title: "Vos badges débloqués",
+    blurb: "Hodler 365j, First Steps, Streak Master… Partage vos trophées en 1 clic.",
     color: "text-primary",
     bg: "bg-primary/15",
   },
@@ -117,9 +117,9 @@ export default function CryptoWrappedPage() {
   const schemas = graphSchema([
     articleSchema({
       slug: "crypto-wrapped",
-      title: "Crypto Wrapped 2026 — Ton année crypto en 60 secondes",
+      title: "Crypto Wrapped 2026 — Votre année crypto en 60 secondes",
       description:
-        "Récap annuel personnalisé style Spotify Wrapped pour ton portefeuille crypto.",
+        "Récap annuel personnalisé style Spotify Wrapped pour votre portefeuille crypto.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Outil",
@@ -149,12 +149,12 @@ export default function CryptoWrappedPage() {
             <Sparkles className="h-3 w-3" aria-hidden /> Lancement décembre 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Ton année crypto,
+            Votre année crypto,
             <br />
             <span className="gradient-text">en 60 secondes</span>.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Spotify Wrapped, mais pour ton portefeuille crypto. 6 stories
+            Spotify Wrapped, mais pour votre portefeuille crypto. 6 stories
             partageables : meilleure perf, biais cachés, strat dominante,
             facture fiscale projetée, badges débloqués. Un clic = un récap
             personnalisé.
@@ -164,9 +164,9 @@ export default function CryptoWrappedPage() {
         {/* TLDR */}
         <div className="mt-8">
           <Tldr
-            headline="Ton année crypto résumée en 6 stories partageables, basées sur ton vrai portefeuille."
+            headline="Votre année crypto résumée en 6 stories partageables, basées sur votre vrai portefeuille."
             bullets={[
-              { emoji: "🎯", text: "100 % personnalisé — connecte ton portfolio Cryptoreflex" },
+              { emoji: "🎯", text: "100 % personnalisé — connecte votre portfolio Cryptoreflex" },
               { emoji: "📊", text: "Détection de biais (overtrading, FOMO, concentration)" },
               { emoji: "📋", text: "Estimation Cerfa 2086 incluse pour la déclaration" },
               { emoji: "🚀", text: "Partage en 1 clic Insta / X / TikTok (image OG dédiée)" },
@@ -217,8 +217,8 @@ export default function CryptoWrappedPage() {
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
             Le Wrapped 2026 sortira mi-décembre 2026, juste avant la déclaration
-            fiscale. Inscris-toi à la newsletter — tu recevras un email avec
-            ton récap dès qu&apos;il sera prêt.
+            fiscale. Inscrivez-vous à la newsletter — vous recevrez un email avec
+            votre récap dès qu&apos;il sera prêt.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link

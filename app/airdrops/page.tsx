@@ -110,22 +110,22 @@ export default function AirdropsPage() {
       {
         question: "Comment savoir si je suis eligible a un airdrop ?",
         answer:
-          "Verifie sur le site OFFICIEL du projet (jamais sur un site tiers). Les checkers d'eligibilite officiels te demandent ton adresse wallet (lecture seule, jamais signature) et te disent si tu es eligible + le montant. ATTENTION : les sites de checker non officiels sont la 1ere source de fake airdrops drainer en 2026. Verifie le domaine 2x.",
+          "Verifie sur le site OFFICIEL du projet (jamais sur un site tiers). Les checkers d'eligibilite officiels te demandent votre adresse wallet (lecture seule, jamais signature) et te disent si vous êtes eligible + le montant. ATTENTION : les sites de checker non officiels sont la 1ere source de fake airdrops drainer en 2026. Verifie le domaine 2x.",
       },
       {
         question: "Comment claim un airdrop en securite ?",
         answer:
-          "1) Verifie l'URL officielle (compare avec docs.projectname / le tweet officiel). 2) Connecte un wallet \"hot\" qui ne contient AUCUN autre token (eviter sweep total). 3) Signe l'unique transaction de claim, jamais d'autre. 4) Apres claim, transfere immediatement les tokens dans ton wallet principal. NE JAMAIS approuver un \"unlimited spend\" sur des tokens etrangers.",
+          "1) Verifie l'URL officielle (compare avec docs.projectname / le tweet officiel). 2) Connecte un wallet \"hot\" qui ne contient AUCUN autre token (eviter sweep total). 3) Signe l'unique transaction de claim, jamais d'autre. 4) Apres claim, transfere immediatement les tokens dans votre wallet principal. NE JAMAIS approuver un \"unlimited spend\" sur des tokens etrangers.",
       },
       {
         question: "Les airdrops sont-ils imposables en France ?",
         answer:
-          "Oui, les airdrops sont imposables, mais le traitement n'est pas tranche par une doctrine officielle dediee. Position majoritaire : pas d'imposition a la reception, plus-value a la cession contre euro (prix d'acquisition 0). Position prudente (airdrops actifs/farmes) : revenu (BNC) a la reception, a la valeur du jour. A confirmer selon ta situation et la doctrine a jour — voir notre guide dedie /blog/fiscalite-airdrops-crypto-france-2026.",
+          "Oui, les airdrops sont imposables, mais le traitement n'est pas tranche par une doctrine officielle dediee. Position majoritaire : pas d'imposition a la reception, plus-value a la cession contre euro (prix d'acquisition 0). Position prudente (airdrops actifs/farmes) : revenu (BNC) a la reception, a la valeur du jour. A confirmer selon votre situation et la doctrine a jour — voir notre guide dedie /blog/fiscalite-airdrops-crypto-france-2026.",
       },
       {
         question: "Comment se proteger des fake airdrops ?",
         answer:
-          "Regles d'or : (1) JAMAIS de \"surprise airdrop\" recu dans ton wallet sans avoir farm avant - c'est un scam 99% du temps. (2) JAMAIS connecter ton wallet principal sur un site clique depuis un lien Twitter/Telegram. (3) Toujours acceder via le domaine officiel direct (bookmark). (4) Verifie le smart contract sur Etherscan AVANT d'approuver une transaction. (5) Utilise un \"burner wallet\" dedie au farming.",
+          "Regles d'or : (1) JAMAIS de \"surprise airdrop\" recu dans votre wallet sans avoir farm avant - c'est un scam 99% du temps. (2) JAMAIS connecter votre wallet principal sur un site clique depuis un lien Twitter/Telegram. (3) Toujours acceder via le domaine officiel direct (bookmark). (4) Verifie le smart contract sur Etherscan AVANT d'approuver une transaction. (5) Utilise un \"burner wallet\" dedie au farming.",
       },
       {
         question: "Combien rapporte un airdrop en moyenne ?",

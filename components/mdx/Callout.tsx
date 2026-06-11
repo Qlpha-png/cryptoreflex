@@ -61,7 +61,12 @@ export default function Callout({ type = "info", title, children }: CalloutProps
   const heading = title ?? style.defaultTitle;
 
   return (
+    // A11Y 2026-05-28 — aria-label sur l'aside : les lecteurs d'écran
+    // annoncent le rôle ("complément") avec son intitulé au lieu d'un
+    // landmark anonyme. Le heading visuel reste un <p> (pas de <hN>) pour
+    // ne pas polluer l'outline des articles MDX.
     <aside
+      aria-label={heading}
       className={`my-6 flex gap-3 rounded-xl border ${style.border} ${style.bg} p-4 sm:p-5 not-prose`}
     >
       <div

@@ -265,7 +265,7 @@ export async function createAlert(
   if (activeCount >= maxAlerts) {
     return {
       ok: false,
-      error: `Tu as déjà ${maxAlerts} alertes actives — supprime-en une avant d'en créer une nouvelle.`,
+      error: `Vous avez déjà ${maxAlerts} alertes actives — supprime-en une avant d'en créer une nouvelle.`,
       field: "email",
     };
   }

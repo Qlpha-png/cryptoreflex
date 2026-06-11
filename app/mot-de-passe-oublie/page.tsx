@@ -9,7 +9,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Mot de passe oublié",
   description:
-    "Réinitialise ton mot de passe Cryptoreflex en quelques clics via un lien sécurisé reçu par email.",
+    "Réinitialise votre mot de passe Cryptoreflex en quelques clics via un lien sécurisé reçu par email.",
   alternates: withHreflang(`${BRAND.url}/mot-de-passe-oublie`),
   robots: { index: false, follow: true },
 };
@@ -36,7 +36,7 @@ export default function MotDePasseOubliePage() {
             Mot de passe <span className="gradient-text">oublié&nbsp;?</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
-            Entre ton email — on t&apos;envoie un lien pour en définir un nouveau.
+            Entre votre email — on t&apos;envoie un lien pour en définir un nouveau.
           </p>
         </div>
 

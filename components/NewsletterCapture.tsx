@@ -204,7 +204,7 @@ export default function NewsletterCapture() {
                 </div>
               </div>
 
-              {/* 3 puces "Ce que tu reçois" — concises et visibles */}
+              {/* 3 puces "Ce que vous recevez" — concises et visibles */}
               <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-fg/75" role="list">
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />

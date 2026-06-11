@@ -136,7 +136,7 @@ export default async function Image() {
           >
             <span style={{ display: "flex" }}>Aucun compte requis</span>
             <span style={{ display: "flex", color: "#F5A524" }}>•</span>
-            <span style={{ display: "flex" }}>Données chez toi</span>
+            <span style={{ display: "flex" }}>Données chez vous</span>
           </div>
         </div>
       </div>

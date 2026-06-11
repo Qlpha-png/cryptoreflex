@@ -125,7 +125,7 @@ const QUESTIONS: Question[] = [
     key: "priority",
     type: "multi",
     maxSelections: 2,
-    title: "Tes 2 priorités max — qu'est-ce qui compte vraiment ?",
+    title: "Vos 2 priorités max — qu'est-ce qui compte vraiment ?",
     subtitle:
       "Choisis 1 ou 2 critères. Pondération : 1ère priorité × 2, 2ème × 1.",
     options: [
@@ -694,7 +694,7 @@ function ResultView({
     <div>
       <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
         <Trophy className="h-4 w-4" aria-hidden="true" />
-        Tes 3 plateformes recommandées
+        Vos 3 plateformes recommandées
       </div>
       <p className="mt-1 text-xs text-muted max-w-2xl">
         Classement basé sur vos réponses + notre méthodologie publique. Comparez,

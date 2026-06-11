@@ -117,21 +117,21 @@ export const LEVEL_META: Record<AcademyLevel, LevelMeta> = {
     label: "Débutant",
     badge: "1",
     description:
-      "Tu n'as jamais acheté de crypto. On part de zéro : c'est quoi, comment acheter, comment sécuriser.",
+      "Vous n'avez jamais acheté de crypto. On part de zéro : c'est quoi, comment acheter, comment sécuriser.",
   },
   intermediaire: {
     level: "intermediaire",
     label: "Intermédiaire",
     badge: "2",
     description:
-      "Tu détiens déjà quelques cryptos. On va plus loin : DCA, staking, fiscalité, MiCA, choix de stratégie.",
+      "Vous détenez déjà quelques cryptos. On va plus loin : DCA, staking, fiscalité, MiCA, choix de stratégie.",
   },
   avance: {
     level: "avance",
     label: "Avancé",
     badge: "3",
     description:
-      "Tu maîtrises les bases. On creuse les sujets pointus : L2, DeFi, restaking, stablecoins, allocation portefeuille.",
+      "Vous maîtrisez les bases. On creuse les sujets pointus : L2, DeFi, restaking, stablecoins, allocation portefeuille.",
   },
 };
 

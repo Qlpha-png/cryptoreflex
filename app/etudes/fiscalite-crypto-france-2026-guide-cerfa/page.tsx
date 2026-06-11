@@ -125,7 +125,7 @@ const FAQ = [
   },
   {
     q: "Le staking et les rewards Proof-of-Stake sont-ils imposables ?",
-    a: "Oui, les revenus de staking sont imposables. En revanche, le MOMENT exact de l’imposition (à la réception comme un revenu, ou à la cession contre euro) n’est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour. Tant que la doctrine n’est pas clarifiée, vérifie ce point sur la source officielle à jour et, pour des montants significatifs ou des montages atypiques (liquid staking, restaking), fais valider ta situation par un expert-comptable.",
+    a: "Oui, les revenus de staking sont imposables. En revanche, le MOMENT exact de l’imposition (à la réception comme un revenu, ou à la cession contre euro) n’est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour. Tant que la doctrine n’est pas clarifiée, vérifie ce point sur la source officielle à jour et, pour des montants significatifs ou des montages atypiques (liquid staking, restaking), fais valider votre situation par un expert-comptable.",
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
@@ -1033,7 +1033,7 @@ export default function FiscaliteCryptoStudyPage() {
             context="fiscalite"
             variant="default"
             title="Rate aucune mise à jour fiscale"
-            subtitle="Cette étude est révisée chaque trimestre et après chaque nouvelle publication BOFiP. Reçois la version mise à jour par email. 1 envoi par trimestre, 0 spam."
+            subtitle="Cette étude est révisée chaque trimestre et après chaque nouvelle publication BOFiP. Recevez la version mise à jour par email. 1 envoi par trimestre, 0 spam."
             ctaLabel="M'abonner à la veille fiscale crypto"
           />
         </div>
@@ -1054,7 +1054,7 @@ export default function FiscaliteCryptoStudyPage() {
                 Outil Cerfa 2086 + 3916-bis auto
               </h3>
               <p className="mt-2 text-sm text-slate-300">
-                Génère ton PDF en 2 minutes depuis un CSV exchange. Gratuit,
+                Génère votre PDF en 2 minutes depuis un CSV exchange. Gratuit,
                 sans inscription.
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300">

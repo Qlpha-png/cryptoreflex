@@ -72,7 +72,7 @@ export default function LessonNotes({ slug }: LessonNotesProps) {
         )}
       </div>
       <p className="mt-1 text-xs text-muted">
-        Notes ce que tu veux retenir. Elles restent dans ton navigateur —
+        Notes ce que vous voulez retenir. Elles restent dans votre navigateur —
         privées, jamais envoyées.
       </p>
       <textarea

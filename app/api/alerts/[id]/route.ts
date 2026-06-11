@@ -90,7 +90,7 @@ async function handleDelete(
   }
 
   return options.html
-    ? htmlResponse(200, "Alerte supprimée", `Tu ne recevras plus d'email pour cette alerte (${alert.symbol} ${alert.condition === "above" ? ">" : "<"} ${alert.threshold} ${alert.currency.toUpperCase()}).`)
+    ? htmlResponse(200, "Alerte supprimée", `Vous ne recevrez plus d'email pour cette alerte (${alert.symbol} ${alert.condition === "above" ? ">" : "<"} ${alert.threshold} ${alert.currency.toUpperCase()}).`)
     : NextResponse.json({ ok: true }, { status: 200 });
 }
 

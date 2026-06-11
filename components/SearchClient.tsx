@@ -262,7 +262,7 @@ export default function SearchClient() {
       {!query && (
         <div className="mt-10 rounded-2xl border border-border bg-elevated/30 p-8 text-center">
           <p className="text-fg/70 text-sm">
-            Tape ce que tu cherches dans la barre ci-dessus — l'index couvre{" "}
+            Tape ce que vous cherchez dans la barre ci-dessus — l'index couvre{" "}
             <strong className="text-fg">tous les contenus du site</strong> :
             articles, plateformes, cryptos, comparatifs, outils, glossaire.
           </p>

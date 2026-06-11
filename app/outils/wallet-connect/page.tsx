@@ -46,12 +46,12 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Wallet Connect read-only — Suis tes wallets DeFi sur Cryptoreflex",
   description:
-    "Bientôt : connecte ton wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement ton portfolio DeFi. Lecture seule, jamais de private key requise.",
+    "Bientôt : connecte votre wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement votre portfolio DeFi. Lecture seule, jamais de private key requise.",
   alternates: withHreflang(`${BRAND.url}/outils/wallet-connect`),
   openGraph: {
     title: "Wallet Connect Cryptoreflex — Suivi DeFi read-only (lecture seule)",
     description:
-      "Read-only : on lit ton solde public on-chain, pas tes clés. Comme Zerion, mais avec la fiscalité française intégrée.",
+      "Read-only : on lit votre solde public on-chain, pas vos clés. Comme Zerion, mais avec la fiscalité française intégrée.",
     url: `${BRAND.url}/outils/wallet-connect`,
     type: "website",
   },
@@ -72,19 +72,19 @@ const SECURITY = [
     Icon: EyeOff,
     title: "Aucune private key demandée",
     blurb:
-      "Tu n'envoies JAMAIS ta seed phrase ni ta clé privée. On utilise WalletConnect : tu signes une preuve de propriété, on lit ton adresse publique.",
+      "Vous n'envoyez JAMAIS votre seed phrase ni votre clé privée. On utilise WalletConnect : vous signez une preuve de propriété, on lit votre adresse publique.",
   },
   {
     Icon: ShieldCheck,
     title: "Read-only strict",
     blurb:
-      "Aucune autorisation de transaction n'est demandée. On peut UNIQUEMENT lire ton solde, jamais bouger un satoshi.",
+      "Aucune autorisation de transaction n'est demandée. On peut UNIQUEMENT lire votre solde, jamais bouger un satoshi.",
   },
   {
     Icon: Lock,
     title: "Adresse stockée chiffrée",
     blurb:
-      "Si tu actives la sauvegarde (sync hebdo), ton adresse est stockée hashée + chiffrée AES-256-GCM côté Supabase. Tu peux supprimer en 1 clic.",
+      "Si vous activez la sauvegarde (sync hebdo), votre adresse est stockée hashée + chiffrée AES-256-GCM côté Supabase. Vous pouvez supprimer en 1 clic.",
   },
 ];
 
@@ -92,11 +92,11 @@ export default function WalletConnectPage() {
   const faqItems = [
     {
       q: "Wallet Connect peut-il vider mon wallet ?",
-      a: "Non. Wallet Connect est un protocole de communication chiffré : tu signes UNE FOIS une preuve de propriété (zéro frais, zéro tx onchain) et on lit ton adresse. Aucune autorisation d'envoi de fonds n'est demandée. Si jamais une dApp te demande une telle autorisation (approve), refuse.",
+      a: "Non. Wallet Connect est un protocole de communication chiffré : vous signez UNE FOIS une preuve de propriété (zéro frais, zéro tx onchain) et on lit votre adresse. Aucune autorisation d'envoi de fonds n'est demandée. Si jamais une dApp te demande une telle autorisation (approve), refuse.",
     },
     {
       q: "Pourquoi connecter mon wallet vs entrer manuellement mes positions ?",
-      a: "Auto-sync : tes balances sont mises à jour à chaque visite (vs ressaisie manuelle). Couverture DeFi : on lit aussi tes positions Aave/Compound/Uniswap LP que tu oublierais. Précision fiscale : import tx history pour calculer le PFU exact (au lieu d'estimations).",
+      a: "Auto-sync : vos balances sont mises à jour à chaque visite (vs ressaisie manuelle). Couverture DeFi : on lit aussi vos positions Aave/Compound/Uniswap LP que vous oublieriez. Précision fiscale : import tx history pour calculer le PFU exact (au lieu d'estimations).",
     },
     {
       q: "Quelles blockchains seront supportées au lancement ?",
@@ -108,7 +108,7 @@ export default function WalletConnectPage() {
     },
     {
       q: "Comment c'est différent de Zerion / DeBank ?",
-      a: "Même principe technique (wallet connect read-only) mais Cryptoreflex ajoute : (1) la couche fiscalité française intégrée (Cerfa 2086 auto), (2) le scoring sécurité plateformes MiCA, (3) l'IA Q&A par fiche crypto, et (4) l'académie certifiante pour comprendre ce que tu détiens.",
+      a: "Même principe technique (wallet connect read-only) mais Cryptoreflex ajoute : (1) la couche fiscalité française intégrée (Cerfa 2086 auto), (2) le scoring sécurité plateformes MiCA, (3) l'IA Q&A par fiche crypto, et (4) l'académie certifiante pour comprendre ce que vous détenez.",
     },
   ];
 
@@ -117,7 +117,7 @@ export default function WalletConnectPage() {
       slug: "outils/wallet-connect",
       title: "Wallet Connect read-only sur Cryptoreflex",
       description:
-        "Bientôt : connecte ton wallet MetaMask/Ledger/Phantom et suis ton portfolio DeFi en read-only.",
+        "Bientôt : connecte votre wallet MetaMask/Ledger/Phantom et suis votre portfolio DeFi en read-only.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
       category: "Outil",
@@ -161,7 +161,7 @@ export default function WalletConnectPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="On se connecte à ton wallet pour LIRE ton solde — jamais pour bouger tes fonds."
+            headline="On se connecte à votre wallet pour LIRE votre solde — jamais pour bouger vos fonds."
             bullets={[
               { emoji: "🔒", text: "Pas de seed phrase, pas de clé privée demandées" },
               { emoji: "👁️", text: "Read-only via WalletConnect v2 / Reown protocol" },
@@ -217,7 +217,7 @@ export default function WalletConnectPage() {
             Sois prévenu·e à l&apos;ouverture
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement prévu Q3 2026. Inscris-toi à la newsletter — accès
+            Lancement prévu Q3 2026. Inscrivez-vous à la newsletter — accès
             anticipé pour les early adopters.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">

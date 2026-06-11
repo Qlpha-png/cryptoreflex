@@ -887,7 +887,7 @@ export default async function CryptoPage({ params }: Props) {
                   Stratégie recommandée
                 </div>
                 <p className="mt-1 text-sm text-fg/85 leading-relaxed">
-                  Préfère le DCA (Dollar Cost Averaging) : un petit montant chaque mois automatiquement, plutôt qu'un gros achat unique. Cela lisse la volatilité et évite le stress du timing parfait. Voir notre <Link href="/outils/simulateur-dca" className="underline hover:text-fg">simulateur DCA</Link>.
+                  Préférez le DCA (Dollar Cost Averaging) : un petit montant chaque mois automatiquement, plutôt qu'un gros achat unique. Cela lisse la volatilité et évite le stress du timing parfait. Voir notre <Link href="/outils/simulateur-dca" className="underline hover:text-fg">simulateur DCA</Link>.
                 </p>
               </div>
               <div>
@@ -1056,11 +1056,11 @@ export default async function CryptoPage({ params }: Props) {
               className="h-5 w-5 text-emerald-300"
               aria-hidden="true"
             />
-            Débutant ? Commence par notre académie
+            Débutant ? Commencez par notre académie
           </h2>
           <p className="mt-2 text-sm text-fg/85 leading-relaxed">
             On a structuré des parcours gratuits en 3 niveaux (Débutant /
-            Intermédiaire / Avancé) pour partir de zéro et progresser à ton
+            Intermédiaire / Avancé) pour partir de zéro et progresser à votre
             rythme : blockchain, choix de plateforme, sécurisation, fiscalité
             FR. {c.name} est juste une brique — il y a beaucoup à découvrir.{" "}
             <Link

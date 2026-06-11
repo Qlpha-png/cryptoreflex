@@ -26,7 +26,7 @@ export default function PrintButton() {
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-5 py-3 font-semibold text-slate-900 shadow-xl ring-2 ring-amber-300 transition-transform hover:scale-105 hover:bg-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-300/60"
+        className="inline-flex min-h-tap items-center gap-2 rounded-full bg-primary px-5 py-3 font-semibold text-background shadow-xl ring-2 ring-primary-soft transition-transform hover:scale-105 hover:bg-primary-glow focus:outline-none focus:ring-4 focus:ring-primary-soft/60"
         aria-label="Imprimer ou sauvegarder la simulation en PDF"
       >
         <Printer className="h-5 w-5" aria-hidden="true" />

@@ -168,7 +168,7 @@ export default function MicaCountdown({
             )}
             <p className="mt-1 text-xs text-fg/70 leading-relaxed">
               Toute plateforme crypto sans agrément CASP devra cesser ses
-              activités en UE. Vérifie le statut MiCA de tes plateformes avant
+              activités en UE. Vérifiez le statut MiCA de vos plateformes avant
               cette date.
             </p>
           </div>

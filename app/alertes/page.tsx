@@ -81,7 +81,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Cryptoreflex stocke-t-il mon email ?",
-    a: "Uniquement le strict nécessaire pour t'envoyer l'alerte (email + cryptoId + seuil). Aucune revente, aucun tracking marketing croisé. Conforme RGPD : suppression immédiate sur demande.",
+    a: "Uniquement le strict nécessaire pour vous envoyer l'alerte (email + cryptoId + seuil). Aucune revente, aucun tracking marketing croisé. Conforme RGPD : suppression immédiate sur demande.",
   },
   {
     q: "Quelles cryptos sont supportées ?",
@@ -156,7 +156,7 @@ export default async function AlertesPage() {
             100 % gratuit · Sans compte
           </span>
           <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Crée tes <span className="gradient-text">alertes prix crypto</span>
+            Créez vos <span className="gradient-text">alertes prix crypto</span>
             <br className="hidden sm:block" /> par email.
           </h1>
           <p className="mt-4 text-lg text-fg/80 max-w-3xl">
@@ -202,7 +202,7 @@ export default async function AlertesPage() {
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary font-bold">
                   1
                 </span>
-                <h3 className="text-base font-semibold text-fg">Choisis une crypto</h3>
+                <h3 className="text-base font-semibold text-fg">Choisissez une crypto</h3>
               </div>
               <p className="mt-3 text-sm text-fg/75 leading-relaxed">
                 Bitcoin, Ethereum, Solana, ou parmi les 40+ cryptos suivies.
@@ -225,7 +225,7 @@ export default async function AlertesPage() {
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary font-bold">
                   3
                 </span>
-                <h3 className="text-base font-semibold text-fg">Reçois l'alerte</h3>
+                <h3 className="text-base font-semibold text-fg">Recevez l'alerte</h3>
               </div>
               <p className="mt-3 text-sm text-fg/75 leading-relaxed">
                 Email automatique dès que le seuil est franchi. Pas de pub, pas

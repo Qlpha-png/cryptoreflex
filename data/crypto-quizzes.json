@@ -4,7 +4,7 @@
     "purpose": "Quiz par crypto — 8 questions factuelles éducatives par fiche, top 20 par market cap. Pas de question YMYL (\"Faut-il acheter ?\" interdit). Sources : data/top-cryptos.json + data/hidden-gems.json + faits publics vérifiés.",
     "format": {
       "questions": "8 par crypto : 3 faciles (Quoi/Qui/Quand) + 3 moyennes (Comment/Pourquoi) + 2 expert",
-      "explanation": "1-2 phrases factuelles, ton pédagogique, jamais condescendant"
+      "explanation": "1-2 phrases factuelles, votre pédagogique, jamais condescendant"
     }
   },
   "quizzes": {

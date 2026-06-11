@@ -139,18 +139,18 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
   let recommendation: string;
 
   if (cheap && isExchange) {
-    recommendation = `Si ta priorité est de comprimer chaque centime de frais — typiquement parce que tu trades du spot mensuellement ou que tu DCA-es sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${p.fees.spotMaker}% maker / ${p.fees.spotTaker}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
+    recommendation = `Si votre priorité est de comprimer chaque centime de frais — typiquement parce que vous tradez du spot mensuellement ou que vous DCA-ez sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${p.fees.spotMaker}% maker / ${p.fees.spotTaker}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
   } else if (safe && french) {
     recommendation = `${p.name} se distingue d'abord par ce que ${p.security.coldStoragePct}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne peuvent pas concurrencer Binance ou Bitget en pure compétition tarifaire.`;
   } else if (p.cryptos.totalCount < 100) {
-    recommendation = `${p.name} fait un pari clair : moins de cryptos (${p.cryptos.totalCount} listées), mais une expérience qu'on peut tendre à un parent ou à un collègue sans honte. Si tu cherches à acheter Bitcoin, Ethereum et 3-4 majors sans jamais ouvrir un onglet trading, le fonctionnement est exactement calibré pour ça. Si tu veux chasser la prochaine alt à 100M$ de capi, il faudra regarder ailleurs.`;
+    recommendation = `${p.name} fait un pari clair : moins de cryptos (${p.cryptos.totalCount} listées), mais une expérience qu'on peut tendre à un parent ou à un collègue sans honte. Si vous cherchez à acheter Bitcoin, Ethereum et 3-4 majors sans jamais ouvrir un onglet trading, le fonctionnement est exactement calibré pour ça. Si vous voulez chasser la prochaine alt à 100M$ de capi, il faudra regarder ailleurs.`;
   } else {
-    recommendation = `${p.name} occupe une position d'équilibriste : assez large (${p.cryptos.totalCount} cryptos) pour ne pas te limiter, assez régulé pour respecter MiCA, mais sans le tranchant tarifaire des leaders frais ni la simplicité radicale des brokers grand public. C'est typiquement un choix par défaut intelligent — pas le meilleur sur un seul axe, mais probablement dans le top 3 sur 4 axes.`;
+    recommendation = `${p.name} occupe une position d'équilibriste : assez large (${p.cryptos.totalCount} cryptos) pour ne pas vous limiter, assez régulé pour respecter MiCA, mais sans le tranchant tarifaire des leaders frais ni la simplicité radicale des brokers grand public. C'est typiquement un choix par défaut intelligent — pas le meilleur sur un seul axe, mais probablement dans le top 3 sur 4 axes.`;
   }
 
   const ideal = p.idealFor;
   const avoid = p.weaknesses[0]
-    ? `Si ${p.weaknesses[0].toLowerCase()} est un dealbreaker pour toi, regarde plutôt nos ${p.scoring.fees < 4 ? "alternatives à frais réduits" : "alternatives plus simples"}.`
+    ? `Si ${p.weaknesses[0].toLowerCase()} est un dealbreaker pour vous, regardez plutôt nos ${p.scoring.fees < 4 ? "alternatives à frais réduits" : "alternatives plus simples"}.`
     : "Aucun dealbreaker structurel identifié à date.";
 
   return { headline, recommendation, ideal, avoid };
@@ -170,7 +170,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `Quels sont les frais réels sur ${p.name} ?`,
-    a: `Sur le marché spot, tu paies ${p.fees.spotMaker}% en maker et ${p.fees.spotTaker}% en taker. L'achat instantané (CB) coûte ${p.fees.instantBuy}%, ce qui reste plus cher que le passage par ordre limite. Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? `${p.fees.withdrawalFiatSepa}€` : p.fees.withdrawalFiatSepa}. Le spread observé : ${p.fees.spread}.`,
+    a: `Sur le marché spot, vous payez ${p.fees.spotMaker}% en maker et ${p.fees.spotTaker}% en taker. L'achat instantané (CB) coûte ${p.fees.instantBuy}%, ce qui reste plus cher que le passage par ordre limite. Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? `${p.fees.withdrawalFiatSepa}€` : p.fees.withdrawalFiatSepa}. Le spread observé : ${p.fees.spread}.`,
   });
 
   faq.push({
@@ -179,18 +179,18 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
       ? `Oui — chat ET téléphone en français, avec un délai de réponse moyen de ${p.support.responseTime}. C'est un cas rare sur le marché.`
       : p.support.frenchChat
         ? `Le support chat est disponible en français (délai ${p.support.responseTime}), mais il n'y a pas de ligne téléphonique. Pour de la résolution complexe, comptez 1 à 2 cycles d'aller-retour.`
-        : `Le support n'est pas disponible en français. Tu seras redirigé vers l'anglais avec un délai de ${p.support.responseTime}.`,
+        : `Le support n'est pas disponible en français. Vous serez redirigé vers l'anglais avec un délai de ${p.support.responseTime}.`,
   });
 
   if (p.cryptos.stakingAvailable) {
     faq.push({
       q: `Peut-on faire du staking sur ${p.name} ?`,
-      a: `Oui. ${p.name} propose du staking sur ${p.cryptos.stakingCryptos.length} cryptos majeures, dont ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")}. Les APY varient selon la crypto (typiquement 2-12%) et sont versés directement sur ton compte. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
+      a: `Oui. ${p.name} propose du staking sur ${p.cryptos.stakingCryptos.length} cryptos majeures, dont ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")}. Les APY varient selon la crypto (typiquement 2-12%) et sont versés directement sur votre compte. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
     });
   } else {
     faq.push({
       q: `Peut-on faire du staking sur ${p.name} ?`,
-      a: `Non, ${p.name} ne propose pas de staking en propre. Si le staking est une de tes priorités, regarde plutôt Coinbase, Kraken ou Bitpanda qui offrent un large catalogue avec une expérience régulée MiCA.`,
+      a: `Non, ${p.name} ne propose pas de staking en propre. Si le staking est une de vos priorités, regardez plutôt Coinbase, Kraken ou Bitpanda qui offrent un large catalogue avec une expérience régulée MiCA.`,
     });
   }
 
@@ -211,7 +211,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   // Q6 — quel dépôt minimum / how to start
   faq.push({
     q: `Quel est le dépôt minimum sur ${p.name} et comment recharger ?`,
-    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Tu peux recharger ton compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${p.fees.instantBuy}%.`,
+    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${p.fees.instantBuy}%.`,
   });
 
   // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
@@ -219,7 +219,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   if (p.name !== competitor) {
     faq.push({
       q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,
-      a: `Tout dépend de ta priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "les frais bas et le catalogue le plus large"}. Notre comparatif détaillé tranche selon ton profil.`,
+      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "les frais bas et le catalogue le plus large"}. Notre comparatif détaillé tranche selon votre profil.`,
     });
   }
 
@@ -378,7 +378,7 @@ export default function ReviewPage({ params }: Props) {
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
             <p className="mt-3 text-[11px] text-muted leading-relaxed">
-              Publicité — Cryptoreflex perçoit une commission si tu ouvres un compte, sans surcoût pour toi. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
+              Publicité — Cryptoreflex perçoit une commission si vous ouvrez un compte, sans surcoût pour vous. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
             </p>
           </aside>
         </header>
@@ -428,43 +428,43 @@ export default function ReviewPage({ params }: Props) {
               <div className="bg-accent-green/5 p-5">
                 <div className="flex items-center gap-2 text-sm font-bold text-accent-green">
                   <CheckCircle2 className="h-4 w-4" />
-                  Fait pour toi si…
+                  Fait pour vous si…
                 </div>
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
                   {p.scoring.fees >= 4.4 && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu chasses les frais les plus bas du marché.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous chassez les frais les plus bas du marché.</li>
                   )}
                   {p.scoring.security >= 4.7 && (
                     <li className="flex gap-2"><span className="text-accent-green">•</span> La sécurité (cold storage, audits) prime sur tout le reste.</li>
                   )}
                   {p.scoring.ux >= 4.5 && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu démarres et veux une interface qui ne te perd pas.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous démarrez et voulez une interface qui ne vous perd pas.</li>
                   )}
                   {p.support.frenchPhone && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu veux un support FR par téléphone (pas que par chat).</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez un support FR par téléphone (pas que par chat).</li>
                   )}
                   {p.cryptos.stakingAvailable && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Tu veux faire du staking ({p.cryptos.stakingCryptos.length} cryptos éligibles).</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez faire du staking ({p.cryptos.stakingCryptos.length} cryptos éligibles).</li>
                   )}
                   {p.mica.micaCompliant && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un dealbreaker pour toi.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un dealbreaker pour vous.</li>
                   )}
                 </ul>
               </div>
               <div className="bg-accent-rose/5 p-5">
                 <div className="flex items-center gap-2 text-sm font-bold text-accent-rose">
                   <XCircle className="h-4 w-4" />
-                  Pas pour toi si…
+                  Pas pour vous si…
                 </div>
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
                   {p.weaknesses.slice(0, 3).map((w) => (
                     <li key={w} className="flex gap-2"><span className="text-accent-rose">•</span> {w}.</li>
                   ))}
                   {!p.support.frenchPhone && (
-                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Tu as besoin d&apos;un support téléphonique en français.</li>
+                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Vous avez besoin d&apos;un support téléphonique en français.</li>
                   )}
                   {!p.cryptos.stakingAvailable && (
-                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Le staking est un de tes critères principaux.</li>
+                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Le staking est un de vos critères principaux.</li>
                   )}
                 </ul>
               </div>
@@ -504,7 +504,7 @@ export default function ReviewPage({ params }: Props) {
             </div>
           </div>
           <p className="mt-4 text-xs text-muted leading-relaxed">
-            <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, tu paies environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
+            <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
           </p>
         </section>
 
@@ -649,7 +649,7 @@ export default function ReviewPage({ params }: Props) {
               ? `C'est un catalogue large qui couvre Bitcoin et Ethereum, l'intégralité du top 50 par capitalisation, et descend dans les altcoins de cap moyenne. Pour un trader qui chasse les rotations sectorielles (DePIN, RWA, IA), c'est suffisant.`
               : p.cryptos.totalCount > 80
                 ? `C'est un catalogue intermédiaire : tous les majors, l'essentiel du top 50, mais des trous dès qu'on descend en cap moyenne. Conviendra parfaitement à un investisseur long terme.`
-                : `C'est un catalogue volontairement resserré sur les majors. Tu y trouveras Bitcoin, Ethereum et l'essentiel du top 20, mais pas les altcoins de niche. C'est un choix éditorial cohérent avec un positionnement grand public.`}
+                : `C'est un catalogue volontairement resserré sur les majors. Vous y trouverez Bitcoin, Ethereum et l'essentiel du top 20, mais pas les altcoins de niche. C'est un choix éditorial cohérent avec un positionnement grand public.`}
           </p>
           {p.cryptos.stakingAvailable ? (
             <div className="mt-5 rounded-xl border border-border bg-surface p-5">
@@ -847,8 +847,8 @@ export default function ReviewPage({ params }: Props) {
             Alternatives à {p.name}
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Trois plateformes comparables — choisis celle qui matche ton profil ou
-            <Link href={`/comparatif`} className="text-primary-glow hover:underline"> compare-les en duel</Link>.
+            Trois plateformes comparables — choisissez celle qui matche votre profil ou
+            <Link href={`/comparatif`} className="text-primary-glow hover:underline"> comparez-les en duel</Link>.
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {otherPlatforms.map((op) => {

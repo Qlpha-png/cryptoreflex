@@ -137,22 +137,22 @@ export default function StakingDetailPage({ params }: Props) {
       question: `Y a-t-il un lock-up sur le staking ${pair.name} ?`,
       answer:
         pair.lockUpDays === 0
-          ? `Non, ${pair.name} est éligible au liquid staking : tu peux retirer tes tokens à tout moment via les exchanges régulés MiCA (Coinbase, Bitpanda, etc.). Tu reçois souvent un token dérivé (ex: stETH pour Ethereum) qui représente ta position.`
-          : `Oui, un lock-up de ${formatLockUp(pair.lockUpDays)} s'applique avant de pouvoir débloquer tes ${pair.symbol}. Pendant cette période, tu ne peux ni vendre ni transférer tes tokens. Pense-y avant d'engager un montant que tu pourrais devoir mobiliser.`,
+          ? `Non, ${pair.name} est éligible au liquid staking : vous pouvez retirer vos tokens à tout moment via les exchanges régulés MiCA (Coinbase, Bitpanda, etc.). Vous recevez souvent un token dérivé (ex: stETH pour Ethereum) qui représente votre position.`
+          : `Oui, un lock-up de ${formatLockUp(pair.lockUpDays)} s'applique avant de pouvoir débloquer vos ${pair.symbol}. Pendant cette période, vous ne pouvez ni vendre ni transférer vos tokens. Pensez-y avant d'engager un montant que vous pourriez devoir mobiliser.`,
     },
     {
       question: `Le staking ${pair.name} est-il imposé en France ?`,
-      answer: `Oui. En 2026, les rendements du staking restent traités comme des plus-values lors de leur cession contre euros (PFU 31,4%). Si tu réinvestis ou accumules, l'événement fiscal n'a lieu qu'à la conversion en monnaie fiat. Voir notre guide fiscalité crypto pour le détail de la déclaration annexe 2086.`,
+      answer: `Oui. En 2026, les rendements du staking restent traités comme des plus-values lors de leur cession contre euros (PFU 31,4%). Si vous réinvestissez ou accumulez, l'événement fiscal n'a lieu qu'à la conversion en monnaie fiat. Voir notre guide fiscalité crypto pour le détail de la déclaration annexe 2086.`,
     },
     {
       question: `Quel est le risque de slashing sur ${pair.name} ?`,
-      answer: `${risk.description} En passant par un exchange régulé MiCA (${platforms.slice(0, 3).map((p) => p.name).join(", ") || "Coinbase, Kraken, Bitpanda"}), c'est l'opérateur qui supporte le risque opérationnel — toi tu vois juste l'APY net. Si tu stakes en self-custody (validateur perso ou pool décentralisé), tu portes le risque entier.`,
+      answer: `${risk.description} En passant par un exchange régulé MiCA (${platforms.slice(0, 3).map((p) => p.name).join(", ") || "Coinbase, Kraken, Bitpanda"}), c'est l'opérateur qui supporte le risque opérationnel — vous, vous voyez juste l'APY net. Si vous stakez en self-custody (validateur perso ou pool décentralisé), vous portez le risque entier.`,
     },
     {
       question: `Sur quelle plateforme staker ${pair.name} en France ?`,
       answer:
         platforms.length === 0
-          ? `Aucune plateforme MiCA-compliant ne propose actuellement le staking ${pair.name} de manière fiable en France. Surveille les annonces de Bitpanda, Kraken et Binance France.`
+          ? `Aucune plateforme MiCA-compliant ne propose actuellement le staking ${pair.name} de manière fiable en France. Surveillez les annonces de Bitpanda, Kraken et Binance France.`
           : `${platforms.length} plateforme${platforms.length > 1 ? "s" : ""} régulée${platforms.length > 1 ? "s" : ""} MiCA propose${platforms.length > 1 ? "nt" : ""} le staking ${pair.name} en France : ${platforms.map((p) => p.name).join(", ")}. Notre recommandation : ${platforms[0]!.name} (note globale ${platforms[0]!.scoring.global}/5) pour la combinaison APY + sécurité + UX.`,
     },
   ];
@@ -233,7 +233,7 @@ export default function StakingDetailPage({ params }: Props) {
             {platforms.length === 0 ? (
               <div className="mt-6 rounded-2xl border border-amber-400/40 bg-amber-400/10 p-6 text-sm text-amber-100">
                 Aucune plateforme régulée MiCA ne propose actuellement le staking {pair.name} de façon fiable
-                en France. Surveille les annonces des principaux exchanges régulés.
+                en France. Surveillez les annonces des principaux exchanges régulés.
               </div>
             ) : (
               <ul className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -311,7 +311,7 @@ export default function StakingDetailPage({ params }: Props) {
               className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary"
             >
               <Calculator className="h-4 w-4" />
-              Simuler ton propre montant
+              Simuler votre propre montant
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </section>
@@ -333,7 +333,7 @@ export default function StakingDetailPage({ params }: Props) {
                 description={
                   pair.lockUpDays === 0
                     ? "Liquid staking : pas de lock-up direct. Mais le token dérivé (ex: stETH) peut décoter par rapport au sous-jacent en période de stress de marché."
-                    : `Tes ${pair.symbol} sont bloqués pendant ${formatLockUp(pair.lockUpDays)} après la demande de retrait. Si le prix décroche pendant ce délai, tu ne peux pas vendre.`
+                    : `Vos ${pair.symbol} sont bloqués pendant ${formatLockUp(pair.lockUpDays)} après la demande de retrait. Si le prix décroche pendant ce délai, vous ne pouvez pas vendre.`
                 }
                 level={pair.lockUpDays === 0 ? "Faible" : pair.lockUpDays > 14 ? "Élevé" : "Modéré"}
                 levelClass={
@@ -342,7 +342,7 @@ export default function StakingDetailPage({ params }: Props) {
               />
               <RiskCard
                 title="Risque de contrepartie"
-                description={`En passant par un exchange centralisé (CEX), tu confies tes ${pair.symbol} à la plateforme pendant le staking. Si elle fait faillite (cf. FTX 2022), tes tokens peuvent être bloqués. Privilégie les exchanges MiCA avec assurance et cold storage majoritaire.`}
+                description={`En passant par un exchange centralisé (CEX), vous confiez vos ${pair.symbol} à la plateforme pendant le staking. Si elle fait faillite (cf. FTX 2022), vos tokens peuvent être bloqués. Privilégiez les exchanges MiCA avec assurance et cold storage majoritaire.`}
                 level="Modéré"
                 levelClass="text-amber-400"
               />

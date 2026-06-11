@@ -61,22 +61,22 @@ const FAQ_ITEMS = [
   {
     question: "L'académie est-elle vraiment 100% gratuite ?",
     answer:
-      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Tu peux tout consulter et valider les quiz sans rien payer.",
+      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Vous pouvez tout consulter et valider les quiz sans rien payer.",
   },
   {
     question: "Combien de temps faut-il pour terminer un parcours ?",
     answer:
-      "Compte environ 2 heures de lecture confortable par parcours, étalées sur le rythme que tu veux. La progression est sauvegardée dans ton navigateur (localStorage) — tu peux reprendre exactement où tu en étais à chaque visite.",
+      "Comptez environ 2 heures de lecture confortable par parcours, étalées sur le rythme que vous voulez. La progression est sauvegardée dans votre navigateur (localStorage) — vous pouvez reprendre exactement où tu en étais à chaque visite.",
   },
   {
     question: "Mes données et ma progression sont-elles envoyées à un serveur ?",
     answer:
-      "Non. Ta progression (leçons cochées, score quiz) reste dans ton navigateur via localStorage. Aucune donnée personnelle (PII) n'est envoyée à Cryptoreflex pour suivre ta lecture.",
+      "Non. Votre progression (leçons cochées, score quiz) reste dans votre navigateur via localStorage. Aucune donnée personnelle (PII) n'est envoyée à Cryptoreflex pour suivre votre lecture.",
   },
   {
     question: "Comment sont organisés les parcours ?",
     answer:
-      "Trois parcours par niveau (Débutant, Intermédiaire, Avancé) forment le cursus principal, à suivre dans l'ordre si tu pars de zéro. S'y ajoutent des parcours thématiques (sécurité de tes cryptos, fiscalité française, choix de plateforme) que tu peux suivre indépendamment selon ton besoin du moment. Chaque parcours est auto-suffisant.",
+      "Trois parcours par niveau (Débutant, Intermédiaire, Avancé) forment le cursus principal, à suivre dans l'ordre si vous partez de zéro. S'y ajoutent des parcours thématiques (sécurité de vos cryptos, fiscalité française, choix de plateforme) que vous pouvez suivre indépendamment selon votre besoin du moment. Chaque parcours est auto-suffisant.",
   },
 ];
 
@@ -215,7 +215,7 @@ export default function AcademiePage() {
               Les parcours sont rangés en {TRACK_GROUPS.length} étapes logiques :
               commence par les fondations, puis avance vers la protection, le
               marché, l&apos;investissement et le Web3. Chaque parcours reste
-              auto-suffisant — tu peux aussi aller directement à ton besoin.
+              auto-suffisant — vous pouvez aussi aller directement à votre besoin.
             </p>
           </header>
 

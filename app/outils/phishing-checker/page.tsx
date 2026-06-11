@@ -23,7 +23,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Wallet Phishing Checker — Vérifie si une adresse crypto est scam",
+  title: "Wallet Phishing Checker — Vérifiez si une adresse crypto est scam",
   description:
     "Colle une adresse crypto (BTC, ETH, SOL) → score de risque scam/phishing en 2 sec. Bases Chainabuse, ScamSniffer + custom FR. Gratuit, anonyme, 100 % automatisé.",
   alternates: withHreflang(`${BRAND.url}/outils/phishing-checker`),
@@ -41,14 +41,14 @@ export default function PhishingCheckerPage() {
     },
     {
       q: "C'est anonyme ?",
-      a: "Oui. Aucun login requis. L'adresse que tu colles est envoyée aux APIs en read-only, jamais stockée côté Cryptoreflex (sauf si tu signales toi-même un scam).",
+      a: "Oui. Aucun login requis. L'adresse que vous collez est envoyée aux APIs en read-only, jamais stockée côté Cryptoreflex (sauf si vous signalez vous-même un scam).",
     },
   ];
 
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/phishing-checker",
-      title: "Wallet Phishing Checker — vérifie si une adresse crypto est scam",
+      title: "Wallet Phishing Checker — vérifiez si une adresse crypto est scam",
       description: "Outil gratuit de check d'adresse contre bases scam.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
@@ -84,7 +84,7 @@ export default function PhishingCheckerPage() {
             <span className="gradient-text">Wallet Phishing Checker</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Avant d&apos;envoyer ta crypto vers une adresse, vérifie qu&apos;elle
+            Avant d&apos;envoyer votre crypto vers une adresse, vérifiez qu&apos;elle
             n&apos;est pas signalée comme scam ou phishing. Score de risque
             agrégé en 2 secondes.
           </p>
@@ -92,7 +92,7 @@ export default function PhishingCheckerPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Colle une adresse, on consulte 3 bases scam (Chainabuse + ScamSniffer + custom FR), tu as un score 0-100 en 2 sec."
+            headline="Collez une adresse, on consulte 3 bases scam (Chainabuse + ScamSniffer + custom FR), vous avez un score 0-100 en 2 sec."
             bullets={[
               { emoji: "🛡️", text: "Bases : Chainabuse, ScamSniffer, custom FR Cryptoreflex" },
               { emoji: "⚡", text: "Multi-réseaux : BTC, ETH/EVM, SOL, TRX" },
@@ -111,7 +111,7 @@ export default function PhishingCheckerPage() {
             <h2 className="text-lg font-bold">Service en construction</h2>
             <p className="mt-2 text-sm text-fg/85">
               Le checker live arrive en Q3 2026 (intégration ScamSniffer API
-              + cache Redis). En attendant, tu peux consulter manuellement :
+              + cache Redis). En attendant, vous pouvez consulter manuellement :
             </p>
             <ul className="mt-3 space-y-1 text-sm text-fg/80">
               <li>• <a href="https://chainabuse.com" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Chainabuse.com</a> (open-source)</li>

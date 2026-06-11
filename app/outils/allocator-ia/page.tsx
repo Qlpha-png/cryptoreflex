@@ -28,7 +28,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Allocator IA Crypto — Allocation portefeuille personnalisée FR",
   description:
-    "Réponds à 5 questions (horizon, risque, conviction BTC, budget, objectif) → tu reçois une allocation crypto adaptée (%BTC, %ETH, %alts), justifiée par notre méthodologie et reliée aux fiches Cryptoreflex.",
+    "Répondez à 5 questions (horizon, risque, conviction BTC, budget, objectif) → vous recevez une allocation crypto adaptée (%BTC, %ETH, %alts), justifiée par notre méthodologie et reliée aux fiches Cryptoreflex.",
   alternates: withHreflang(`${BRAND.url}/outils/allocator-ia`),
 };
 
@@ -36,7 +36,7 @@ export default function AllocatorIaPage() {
   const faqItems = [
     {
       q: "C'est un conseil en investissement ?",
-      a: "Non. Cryptoreflex n'est ni CIF, ni PSAN/CASP, ni gestionnaire d'actifs. L'allocation suggérée est purement éducative — basée sur les modèles classiques de portefeuille (Markowitz simplifié, satellite-core) et publiée pour t'aider à réfléchir, pas à décider à ta place.",
+      a: "Non. Cryptoreflex n'est ni CIF, ni PSAN/CASP, ni gestionnaire d'actifs. L'allocation suggérée est purement éducative — basée sur les modèles classiques de portefeuille (Markowitz simplifié, satellite-core) et publiée pour vous aider à réfléchir, pas à décider à votre place.",
     },
     {
       q: "Quel est le moteur derrière l'« IA » ?",
@@ -44,7 +44,7 @@ export default function AllocatorIaPage() {
     },
     {
       q: "Pourquoi limiter aux cryptos suivies par Cryptoreflex ?",
-      a: "Pour deux raisons. (1) On ne recommande que des actifs qu'on a vérifiés (score fiabilité > 60/100, équipe identifiée, métriques on-chain vérifiables). (2) Pour rester honnête : si on t'envoyait sur la première shitcoin venue, ce serait du marketing déguisé — pas notre genre.",
+      a: "Pour deux raisons. (1) On ne recommande que des actifs qu'on a vérifiés (score fiabilité > 60/100, équipe identifiée, métriques on-chain vérifiables). (2) Pour rester honnête : si on vous envoyait sur la première shitcoin venue, ce serait du marketing déguisé — pas notre genre.",
     },
     {
       q: "C'est gratuit ?",
@@ -91,8 +91,8 @@ export default function AllocatorIaPage() {
             <span className="gradient-text">Allocator IA</span> Crypto
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Réponds à 5 questions simples (horizon, tolérance au risque,
-            conviction Bitcoin, budget, objectif). On te propose une allocation
+            Répondez à 5 questions simples (horizon, tolérance au risque,
+            conviction Bitcoin, budget, objectif). On vous propose une allocation
             personnalisée %BTC / %ETH / %altcoins, justifiée et reliée aux
             fiches Cryptoreflex.
           </p>
@@ -103,7 +103,7 @@ export default function AllocatorIaPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Un outil pédagogique pour t'aider à structurer ton portefeuille crypto sans suivre aveuglément un influenceur."
+            headline="Un outil pédagogique pour vous aider à structurer votre portefeuille crypto sans suivre aveuglément un influenceur."
             bullets={[
               { emoji: "🧠", text: "Moteur déterministe transparent — pas de boîte noire" },
               { emoji: "🎯", text: "5 critères : horizon, risque, conviction BTC, budget, objectif" },
@@ -117,10 +117,10 @@ export default function AllocatorIaPage() {
 
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <Brain className="mx-auto h-10 w-10 text-primary" aria-hidden />
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Sois prévenu·e au lancement</h2>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Soyez prévenu·e au lancement</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscris-toi à la newsletter pour avoir l&apos;accès
-            anticipé et tester le moteur sur ton propre profil.
+            Lancement Q3 2026. Inscrivez-vous à la newsletter pour avoir l&apos;accès
+            anticipé et tester le moteur sur votre propre profil.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">
             M&apos;inscrire <ArrowRight className="h-4 w-4" aria-hidden />

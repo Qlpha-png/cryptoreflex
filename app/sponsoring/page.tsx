@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sponsoriser un placement Cryptoreflex",
     description:
-      "Touche les investisseurs FR qualifiés via du contenu éditorial, du placement comparateur premium ou de la newsletter — tarifs publics, MiCA-only.",
+      "Touchez les investisseurs FR qualifiés via du contenu éditorial, du placement comparateur premium ou de la newsletter — tarifs publics, MiCA-only.",
     url: `${BRAND.url}/sponsoring`,
     type: "website",
   },
@@ -103,7 +103,7 @@ const TIERS: PricingTier[] = [
     priceUnit: "/ article",
     availability: "Disponible dès aujourd'hui",
     description:
-      "Article 1 500 – 2 500 mots rédigé par le fondateur selon ton brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
+      "Article 1 500 – 2 500 mots rédigé par le fondateur selon votre brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
     features: [
       "1 500 – 2 500 mots optimisés SEO",
       "Brief co-construit (1 visio 30 min)",
@@ -125,10 +125,10 @@ const TIERS: PricingTier[] = [
     priceUnit: "/ mois",
     availability: "Ouverture juin 2026",
     description:
-      "Visibilité top sur /comparatif et chaque page /avis/[slug] de ta plateforme. Engagement 3 mois minimum, badge « Partenaire » + bonus de bienvenue mis en avant.",
+      "Visibilité top sur /comparatif et chaque page /avis/[slug] de votre plateforme. Engagement 3 mois minimum, badge « Partenaire » + bonus de bienvenue mis en avant.",
     features: [
       "Position #1 + carte premium /comparatif",
-      "Encart « Partenaire » sur ton /avis/[slug]",
+      "Encart « Partenaire » sur votre /avis/[slug]",
       "Badge bonus de bienvenue valorisé",
       "Lien d'affiliation tracé UTM unique",
       "Reporting clics + conversions mensuel",
@@ -164,9 +164,9 @@ const TIERS: PricingTier[] = [
 /* -------------------------------------------------------------------------- */
 
 const CONDITIONS = [
-  "Ta plateforme doit être enregistrée PSAN AMF (ou en cours d'enregistrement MiCA via l'autorité d'un État membre UE).",
+  "Votre plateforme doit être enregistrée PSAN AMF (ou en cours d'enregistrement MiCA via l'autorité d'un État membre UE).",
   "Pas de promotion de tokens à rendement irréaliste, schémas pump, NFT spéculatifs sans utilité, ou produits non conformes MiCA.",
-  "Validation MiCA obligatoire : nous vérifions ton statut sur le registre AMF avant signature de devis.",
+  "Validation MiCA obligatoire : nous vérifions votre statut sur le registre AMF avant signature de devis.",
   "Maximum 1 article sponsorisé par mois sur Cryptoreflex — pour préserver la valeur perçue par nos lecteurs.",
   "Contrôle éditorial préservé : nous gardons le droit de refuser un angle qui contredit notre charte (sécurité, fiscalité, transparence).",
   "Mention « Sponsorisé » obligatoire en haut + bas conformément à l'art. 222-15 du règlement général AMF et à la charte ARPP.",
@@ -180,7 +180,7 @@ const PROCESS_STEPS = [
   {
     n: 1,
     title: "Email ou formulaire",
-    text: `Envoie ta demande à ${BRAND.partnersEmail} ou via le formulaire en bas. Précise format souhaité, brief, deadline.`,
+    text: `Envoie votre demande à ${BRAND.partnersEmail} ou via le formulaire en bas. Précise format souhaité, brief, deadline.`,
   },
   {
     n: 2,
@@ -190,7 +190,7 @@ const PROCESS_STEPS = [
   {
     n: 3,
     title: "Brief & rédaction",
-    text: "Visio 30 min de cadrage. Rédaction par le fondateur sous 7 à 10 jours ouvrés selon planning. Tu valides 1 round de modifications.",
+    text: "Visio 30 min de cadrage. Rédaction par le fondateur sous 7 à 10 jours ouvrés selon planning. Vous validez 1 round de modifications.",
   },
   {
     n: 4,
@@ -206,11 +206,11 @@ const PROCESS_STEPS = [
 const FAQS = [
   {
     q: "Quelles plateformes acceptez-vous comme sponsor ?",
-    a: "Uniquement des PSAN enregistrés AMF ou des projets crypto en cours d'enregistrement MiCA dans un État membre UE. On vérifie systématiquement ton statut sur le registre officiel AMF avant signature. On refuse les exchanges offshore non régulés, les memecoins isolés, les schémas de rendement irréaliste, et tout token sans utilité avérée.",
+    a: "Uniquement des PSAN enregistrés AMF ou des projets crypto en cours d'enregistrement MiCA dans un État membre UE. On vérifie systématiquement votre statut sur le registre officiel AMF avant signature. On refuse les exchanges offshore non régulés, les memecoins isolés, les schémas de rendement irréaliste, et tout token sans utilité avérée.",
   },
   {
     q: "Le sponsoring influence-t-il votre note ou votre verdict éditorial ?",
-    a: "Non. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA, support FR) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Tu peux acheter un article sponsorisé tout en recevant une note 6,5/10 sur le comparateur — c'est déjà arrivé.",
+    a: "Non. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA, support FR) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Vous pouvez acheter un article sponsorisé tout en recevant une note 6,5/10 sur le comparateur — c'est déjà arrivé.",
   },
   {
     q: "Comment se passe la mention « sponsorisé » légalement ?",
@@ -222,7 +222,7 @@ const FAQS = [
   },
   {
     q: "Puis-je désengager mon contrat en cours ?",
-    a: "Articles : non remboursable une fois la rédaction lancée (workflow déjà engagé). Comparateur premium : préavis 1 mois, prorata du mois en cours non remboursé. Newsletter : annulable jusqu'à 48 h avant l'envoi prévu. Conditions complètes dans le devis détaillé envoyé après ta demande.",
+    a: "Articles : non remboursable une fois la rédaction lancée (workflow déjà engagé). Comparateur premium : préavis 1 mois, prorata du mois en cours non remboursé. Newsletter : annulable jusqu'à 48 h avant l'envoi prévu. Conditions complètes dans le devis détaillé envoyé après votre demande.",
   },
 ];
 
@@ -385,7 +385,7 @@ export default function SponsoringPage() {
         <TieredPricing
           tiers={TIERS}
           heading="3 offres tarifées publiquement"
-          subheading="Pas de devis opaque. Pas de frais cachés. Tu sais combien et quand."
+          subheading="Pas de devis opaque. Pas de frais cachés. Vous savez combien et quand."
         />
       </section>
 

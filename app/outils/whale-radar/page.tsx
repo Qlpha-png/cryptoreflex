@@ -116,7 +116,7 @@ export default function WhaleRadarPage() {
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">Sois prévenu·e au lancement</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscris-toi à la newsletter pour avoir accès
+            Lancement Q3 2026. Inscrivez-vous à la newsletter pour avoir accès
             anticipé.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

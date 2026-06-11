@@ -44,6 +44,13 @@ const PriceChart = dynamic(
 
 export const revalidate = 3600;
 
+// FIX SEO 2026-05-28 — même fix que blog/[slug] (2026-05-05) : sans
+// dynamicParams=false, un slug inconnu rendait la 404 en HTTP 200 (soft-404,
+// vérifié live sur /analyses-techniques/url-bidon-12345). Les slugs sont des
+// MDX commités (GitHub Actions → rebuild Vercel), donc toujours connus au
+// build : aucun contenu légitime n'est bloqué par dynamicParams=false.
+export const dynamicParams = false;
+
 interface Props {
   params: { slug: string };
 }

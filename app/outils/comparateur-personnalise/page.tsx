@@ -24,12 +24,12 @@ const ComparateurPersonnalise = dynamic(
 export const metadata: Metadata = {
   title: "Quelle plateforme crypto choisir 2026 ? Quiz personnalisé en 60 sec",
   description:
-    "Réponds à 5 questions et reçois ton top 3 personnalisé parmi Bitstack, Bitpanda, Binance, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur ton profil.",
+    "Répondez à 5 questions et recevez votre top 3 personnalisé parmi Bitstack, Bitpanda, Binance, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur votre profil.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/comparateur-personnalise"),
   openGraph: {
     title: "Quelle plateforme crypto choisir ? Quiz personnalisé 2026",
     description:
-      "5 questions, ton top 3 personnalisé. Compare prix, UX, sécurité selon TON profil — pas un comparatif générique.",
+      "5 questions, votre top 3 personnalisé. Comparez prix, UX, sécurité selon VOTRE profil — pas un comparatif générique.",
     url: "https://www.cryptoreflex.fr/outils/comparateur-personnalise",
     type: "website",
   },
@@ -39,7 +39,7 @@ const FAQ_ITEMS = [
   {
     question: "Comment fonctionne le scoring personnalisé ?",
     answer:
-      "Chaque plateforme reçoit une note de 1 à 10 sur 9 axes (prix, UX, sécurité, DCA, swing, hold, day trading, débutant, avancé). Tes 5 réponses pondèrent ces axes : ta priorité numéro 1 reçoit un boost x2, ton intent (DCA / hold / trading) sélectionne l'axe d'usage, ton volume mensuel ajoute un bonus pour les plateformes adaptées (frais bas si > 500 €, micro-DCA si < 50 €). Le score final 0-100 reflète l'adéquation avec TON profil.",
+      "Chaque plateforme reçoit une note de 1 à 10 sur 9 axes (prix, UX, sécurité, DCA, swing, hold, day trading, débutant, avancé). Vos 5 réponses pondèrent ces axes : votre priorité numéro 1 reçoit un boost x2, votre intent (DCA / hold / trading) sélectionne l'axe d'usage, votre volume mensuel ajoute un bonus pour les plateformes adaptées (frais bas si > 500 €, micro-DCA si < 50 €). Le score final 0-100 reflète l'adéquation avec VOTRE profil.",
   },
   {
     question: "Pourquoi ces 6 plateformes et pas 50 ?",
@@ -54,7 +54,7 @@ const FAQ_ITEMS = [
   {
     question: "Mes réponses sont-elles enregistrées ?",
     answer:
-      "Non. Tout le calcul tourne dans ton navigateur (zéro serveur). On envoie uniquement à Plausible (analytics anonymisé, RGPD-friendly) la priorité et l'intent que tu as choisis pour mesurer la popularité du quiz — jamais ton montant ni ton email. Si tu utilises l'option « recevoir mon récap par email », tu nous donnes alors ton email volontairement.",
+      "Non. Tout le calcul tourne dans votre navigateur (zéro serveur). On envoie uniquement à Plausible (analytics anonymisé, RGPD-friendly) la priorité et l'intent que vous avez choisis pour mesurer la popularité du quiz — jamais votre montant ni votre email. Si vous utilisez l'option « recevoir mon récap par email », vous nous donnez alors votre email volontairement.",
   },
   {
     question: "À quelle fréquence les notes sont-elles mises à jour ?",
@@ -72,7 +72,7 @@ export default function ComparateurPersonnalisePage() {
             slug: "comparateur-personnalise",
             name: "Comparateur plateformes crypto personnalisé Cryptoreflex",
             description:
-              "Quiz interactif 5 questions qui présente 3 plateformes crypto pertinentes selon ton profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading). Outil pédagogique, sans recommandation personnalisée.",
+              "Quiz interactif 5 questions qui présente 3 plateformes crypto pertinentes selon votre profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading). Outil pédagogique, sans recommandation personnalisée.",
             featureList: [
               "5 questions, résultat en 60 secondes",
               "Score personnalisé sur 9 axes par plateforme",
@@ -109,10 +109,10 @@ export default function ComparateurPersonnalisePage() {
               Quelle <span className="gradient-text">plateforme crypto</span> choisir en 2026 ?
             </h1>
             <p className="mt-4 text-lg text-white/70">
-              Quiz personnalisé : 5 questions sur ton profil, et on te sort
+              Quiz personnalisé : 5 questions sur votre profil, et on vous sort
               les 3 plateformes les plus adaptées (parmi Bitstack, Bitpanda, Binance,
               Coinbase, Kraken, SwissBorg). Pas un comparatif générique — UN scoring
-              calé sur TES réponses.
+              calé sur VOS réponses.
             </p>
           </div>
 
@@ -126,7 +126,7 @@ export default function ComparateurPersonnalisePage() {
             </h2>
             <Card
               icon={<Sparkles className="h-6 w-6" />}
-              title="TON profil compte"
+              title="VOTRE profil compte"
               text="Un débutant qui veut DCA 50 €/mois et un trader actif qui swing 2 000 €/mois ont besoin de 2 plateformes radicalement différentes."
             />
             <Card
@@ -137,7 +137,7 @@ export default function ComparateurPersonnalisePage() {
             <Card
               icon={<GitCompare className="h-6 w-6" />}
               title="Transparence totale"
-              text="On affiche le score sur prix, UX et sécurité — tu peux déconstruire la reco si tu n'es pas d'accord."
+              text="On affiche le score sur prix, UX et sécurité — vous pouvez déconstruire la reco si vous n'êtes pas d'accord."
             />
           </div>
 

@@ -63,7 +63,7 @@ export default function AmbassadeurForm() {
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Candidature envoyée</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci ! Nous étudions chaque candidature manuellement et te répondons
+          Merci ! Nous étudions chaque candidature manuellement et vous répondons
           sous 5 jours ouvrés à l&apos;adresse fournie.
         </p>
         <button
@@ -131,7 +131,7 @@ export default function AmbassadeurForm() {
 
         <div>
           <label htmlFor="amb-profile" className="block text-sm font-medium text-white mb-1.5">
-            Lien vers ton profil principal <span className="text-danger">*</span>
+            Lien vers votre profil principal <span className="text-danger">*</span>
           </label>
           <input
             id="amb-profile"
@@ -142,7 +142,7 @@ export default function AmbassadeurForm() {
             inputMode="url"
             maxLength={500}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            placeholder="https://youtube.com/@toi"
+            placeholder="https://youtube.com/@vous"
           />
         </div>
 
@@ -158,7 +158,7 @@ export default function AmbassadeurForm() {
               defaultValue=""
             >
               <option value="" disabled>
-                — Sélectionne —
+                — Sélectionnez —
               </option>
               {CHANNEL_OPTIONS.map((c) => (
                 <option key={c} value={c}>
@@ -192,7 +192,7 @@ export default function AmbassadeurForm() {
             rows={4}
             maxLength={2000}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            placeholder="Parle-nous brièvement de ton contenu et de ton audience…"
+            placeholder="Parlez-nous brièvement de votre contenu et de votre audience…"
           />
         </div>
 

@@ -15,7 +15,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Candidature ambassadeur reçue",
   description:
-    "Merci pour ta candidature au programme ambassadeurs Cryptoreflex. Réponse manuelle sous 7 jours ouvrés.",
+    "Merci pour votre candidature au programme ambassadeurs Cryptoreflex. Réponse manuelle sous 7 jours ouvrés.",
   alternates: withHreflang(`${BRAND.url}/ambassadeurs/merci`),
   robots: { index: false, follow: true },
 };
@@ -32,18 +32,18 @@ export default function MerciPage() {
           Candidature reçue
         </h1>
         <p className="mt-4 text-fg/75">
-          Merci ! On a bien reçu ta candidature au programme ambassadeurs
+          Merci ! On a bien reçu votre candidature au programme ambassadeurs
           {" "}
           <span className="text-primary-soft font-semibold">{BRAND.name}</span>.
-          Tu reçois un email de confirmation tout de suite et notre équipe
-          partenariats t&apos;écrit sous 7 jours ouvrés depuis{" "}
+          Vous recevez un email de confirmation tout de suite et notre équipe
+          partenariats vous écrit sous 7 jours ouvrés depuis{" "}
           <span className="text-primary-soft">{BRAND.partnersEmail}</span>.
         </p>
 
         <div className="mt-8 glass rounded-2xl p-6 text-left">
           <h2 className="font-bold text-fg flex items-center gap-2">
             <Mail className="h-4 w-4 text-primary-soft" aria-hidden="true" />
-            Pendant qu&apos;on étudie ta candidature
+            Pendant qu&apos;on étudie votre candidature
           </h2>
           <ul className="mt-3 space-y-2 text-sm text-white/80" role="list">
             <li className="flex items-start gap-2">
@@ -52,7 +52,7 @@ export default function MerciPage() {
                 aria-hidden="true"
               />
               <span>
-                Découvre la{" "}
+                Découvrez la{" "}
                 <Link
                   href="/methodologie"
                   className="text-primary-soft underline hover:text-primary"
@@ -69,7 +69,7 @@ export default function MerciPage() {
                 aria-hidden="true"
               />
               <span>
-                Inscris-toi à la{" "}
+                Inscrivez-vous à la{" "}
                 <Link
                   href="/newsletter"
                   className="text-primary-soft underline hover:text-primary"
@@ -85,7 +85,7 @@ export default function MerciPage() {
                 aria-hidden="true"
               />
               <span>
-                Réponds à l&apos;email de confirmation pour ajouter du contexte
+                Répondez à l&apos;email de confirmation pour ajouter du contexte
                 (URL d&apos;exemple, capture analytics, niche précise).
               </span>
             </li>

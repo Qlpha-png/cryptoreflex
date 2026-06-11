@@ -33,7 +33,7 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
       "Un grand livre comptable partagé entre des milliers d'ordinateurs, où personne ne peut tricher.",
       "Une base de données privée hébergée par Bitcoin Inc.",
       "Un compte bancaire en ligne anonyme.",
-      "Un coffre-fort numérique sur ton ordinateur.",
+      "Un coffre-fort numérique sur votre ordinateur.",
     ],
     correctIndex: 0,
     explanation:
@@ -56,7 +56,7 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
   {
     id: "deb-q3-2fa",
     question:
-      "Quelle est la méthode 2FA la PLUS sûre pour ton exchange crypto ?",
+      "Quelle est la méthode 2FA la PLUS sûre pour votre exchange crypto ?",
     choices: [
       "Le SMS — c'est la plus simple.",
       "Une app TOTP (Google Authenticator, Aegis) ou une clé physique (YubiKey).",
@@ -72,28 +72,28 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
     question:
       "Quel est le taux du Prélèvement Forfaitaire Unique (PFU) sur les plus-values crypto pour un particulier en France en 2026 ?",
     choices: [
-      "0 % si tu ne vends pas en euros.",
+      "0 % si vous ne vendez pas en euros.",
       "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 %.",
       "45 % automatique.",
       "Seulement 17,2 % de prélèvements sociaux.",
     ],
     correctIndex: 1,
     explanation:
-      "Depuis le 1er janvier 2026, le PFU (flat tax) est de 31,4 % : 12,8 % d'IR + 18,6 % de prélèvements sociaux (la CSG est passée de 9,2 % à 10,6 %). Il était de 30 % jusqu'aux gains réalisés en 2025. Une option pour le barème progressif (case 2OP) peut être plus avantageuse si ta TMI est faible.",
+      "Depuis le 1er janvier 2026, le PFU (flat tax) est de 31,4 % : 12,8 % d'IR + 18,6 % de prélèvements sociaux (la CSG est passée de 9,2 % à 10,6 %). Il était de 30 % jusqu'aux gains réalisés en 2025. Une option pour le barème progressif (case 2OP) peut être plus avantageuse si votre TMI est faible.",
   },
   {
     id: "deb-q5-cold-vs-hot",
     question:
-      "Tu détiens 5 000 € de Bitcoin que tu ne comptes pas trader. Quelle option est la plus sécurisée ?",
+      "Vous détenez 5 000 € de Bitcoin que vous ne comptez pas trader. Quelle option est la plus sécurisée ?",
     choices: [
-      "Tout laisser sur l'exchange où tu as acheté.",
+      "Tout laisser sur l'exchange où vous avez acheté.",
       "Tout sur une app mobile type MetaMask connectée à Internet.",
       "Transférer la majorité sur un cold wallet (hardware) et garder un petit fonds liquide pour DCA / arbitrage.",
       "Imprimer une capture d'écran de la seed phrase et la stocker dans le cloud.",
     ],
     correctIndex: 2,
     explanation:
-      "La règle 80/20 : la majorité de ton stack en cold storage (Ledger/Trezor) protège du hack d'exchange et des malwares. Garder un petit montant en hot wallet/exchange permet de rester opérationnel sans risquer le bag entier.",
+      "La règle 80/20 : la majorité de votre stack en cold storage (Ledger/Trezor) protège du hack d'exchange et des malwares. Garder un petit montant en hot wallet/exchange permet de rester opérationnel sans risquer le bag entier.",
   },
 ];
 
@@ -174,7 +174,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q1-defi-fisca",
     question:
-      "Tu fais du yield farming régulier sur Aave (lending) et Uniswap (LP). Quelle qualification fiscale est la plus probable en France ?",
+      "Vous faites du yield farming régulier sur Aave (lending) et Uniswap (LP). Quelle qualification fiscale est la plus probable en France ?",
     choices: [
       "Plus-values mobilières (PFU 30%).",
       "BNC (bénéfices non commerciaux) en activité non professionnelle.",
@@ -188,12 +188,12 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q2-3916",
     question:
-      "Tu as un compte Binance et un compte Coinbase US. Quelle est ta principale obligation déclarative supplémentaire en 2026 ?",
+      "Vous avez un compte Binance et un compte Coinbase US. Quelle est votre principale obligation déclarative supplémentaire en 2026 ?",
     choices: [
-      "Aucune, l'exchange déclare pour toi.",
+      "Aucune, l'exchange déclare pour vous.",
       "Remplir un Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère.",
       "Envoyer un courrier recommandé à Bercy.",
-      "Acheter un VPN pour t'anonymiser.",
+      "Acheter un VPN pour vous anonymiser.",
     ],
     correctIndex: 1,
     explanation:
@@ -211,21 +211,21 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     ],
     correctIndex: 2,
     explanation:
-      "Il n'existe pas de doctrine BOFiP dédiée au staking : le sujet n'est pas tranché. Deux approches coexistent (revenu à la réception, par analogie au minage ; ou plus-value à la cession en gestion occasionnelle). Le moment et le régime dépendent de ta situation — vérifie la doctrine à jour et, pour des montants significatifs, consulte un professionnel.",
+      "Il n'existe pas de doctrine BOFiP dédiée au staking : le sujet n'est pas tranché. Deux approches coexistent (revenu à la réception, par analogie au minage ; ou plus-value à la cession en gestion occasionnelle). Le moment et le régime dépendent de votre situation — vérifiez la doctrine à jour et, pour des montants significatifs, consultez un professionnel.",
   },
   {
     id: "adv-q4-pfu-bareme",
     question:
-      "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU sur tes plus-values crypto ?",
+      "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU sur vos plus-values crypto ?",
     choices: [
       "Toujours.",
-      "Quand ta TMI est à 0% ou 11% : le total avec PS reste sous 31,4%.",
-      "Quand tu es en TMI 45%.",
+      "Quand votre TMI est à 0% ou 11% : le total avec PS reste sous 31,4%.",
+      "Quand vous êtes en TMI 45%.",
       "Jamais.",
     ],
     correctIndex: 1,
     explanation:
-      "Depuis 2026 le PFU est à 31,4% (PS à 18,6%). À TMI 0% : 0% IR + 18,6% PS = 18,6%. À TMI 11% : 11% + 18,6% = 29,6%. Les deux restent sous 31,4%. Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. Attention : l'option 2OP engage TOUS tes revenus mobiliers de l'année.",
+      "Depuis 2026 le PFU est à 31,4% (PS à 18,6%). À TMI 0% : 0% IR + 18,6% PS = 18,6%. À TMI 11% : 11% + 18,6% = 29,6%. Les deux restent sous 31,4%. Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. Attention : l'option 2OP engage TOUS vos revenus mobiliers de l'année.",
   },
   {
     id: "adv-q5-mica-risque",
@@ -247,12 +247,12 @@ const QUIZ_SECURITE: QuizQuestion[] = [
   {
     id: "sec-q1-seed",
     question:
-      "Que représentent les 12 ou 24 mots de ta seed phrase ?",
+      "Que représentent les 12 ou 24 mots de votre seed phrase ?",
     choices: [
-      "Un mot de passe que tu peux changer quand tu veux.",
-      "La clé maîtresse qui régénère TOUTES les clés privées de ton wallet — qui la détient possède tes fonds.",
+      "Un mot de passe que vous pouvez changer quand vous voulez.",
+      "La clé maîtresse qui régénère TOUTES les clés privées de votre wallet — qui la détient possède vos fonds.",
       "Un code de récupération fourni et conservé par l'exchange.",
-      "Le numéro de série de ton Ledger.",
+      "Le numéro de série de votre Ledger.",
     ],
     correctIndex: 1,
     explanation:
@@ -261,7 +261,7 @@ const QUIZ_SECURITE: QuizQuestion[] = [
   {
     id: "sec-q2-phishing",
     question:
-      "Tu reçois un email « Ledger » te demandant de saisir ta seed phrase pour « sécuriser ton compte ». Que fais-tu ?",
+      "Vous recevez un email « Ledger » vous demandant de saisir votre seed phrase pour « sécuriser votre compte ». Que faites-vous ?",
     choices: [
       "Je la saisis, c'est le support officiel.",
       "Je la tape sur le site lié dans l'email pour vérifier.",
@@ -270,7 +270,7 @@ const QUIZ_SECURITE: QuizQuestion[] = [
     ],
     correctIndex: 2,
     explanation:
-      "Aucun fabricant, exchange ou support ne demandera jamais ta seed phrase. Toute demande de seed est une arnaque (phishing). La seed ne se saisit QUE directement sur l'appareil hardware lui-même, lors d'une restauration — jamais sur un site web, une app ou un email.",
+      "Aucun fabricant, exchange ou support ne demandera jamais votre seed phrase. Toute demande de seed est une arnaque (phishing). La seed ne se saisit QUE directement sur l'appareil hardware lui-même, lors d'une restauration — jamais sur un site web, une app ou un email.",
   },
   {
     id: "sec-q3-cold-hot",
@@ -298,7 +298,7 @@ const QUIZ_SECURITE: QuizQuestion[] = [
     ],
     correctIndex: 2,
     explanation:
-      "La passphrase (25e mot) est une chaîne secrète qui s'ajoute à la seed pour dériver un wallet entièrement distinct. Même si quelqu'un trouve tes 24 mots, sans la passphrase il n'accède qu'à un wallet « leurre ». Revers de la médaille : la passphrase n'est stockée nulle part — la perdre, c'est perdre l'accès.",
+      "La passphrase (25e mot) est une chaîne secrète qui s'ajoute à la seed pour dériver un wallet entièrement distinct. Même si quelqu'un trouve vos 24 mots, sans la passphrase il n'accède qu'à un wallet « leurre ». Revers de la médaille : la passphrase n'est stockée nulle part — la perdre, c'est perdre l'accès.",
   },
   {
     id: "sec-q5-multisig",
@@ -312,7 +312,7 @@ const QUIZ_SECURITE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "En 2-sur-3, trois clés existent mais deux suffisent pour signer une transaction. Avantage : la perte ou le vol d'une seule clé ne compromet pas les fonds, et tu conserves l'accès. C'est un standard pour sécuriser un patrimoine important ou une trésorerie partagée.",
+      "En 2-sur-3, trois clés existent mais deux suffisent pour signer une transaction. Avantage : la perte ou le vol d'une seule clé ne compromet pas les fonds, et vous conservez l'accès. C'est un standard pour sécuriser un patrimoine important ou une trésorerie partagée.",
   },
 ];
 
@@ -320,21 +320,21 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
   {
     id: "fis-q1-pfu-2026",
     question:
-      "En 2026, quel est le taux du PFU (flat tax) sur tes plus-values crypto, et comment se décompose-t-il ?",
+      "En 2026, quel est le taux du PFU (flat tax) sur vos plus-values crypto, et comment se décompose-t-il ?",
     choices: [
       "12,8 % d'IR + 17,2 % de prélèvements sociaux = 30 % (taux inchangé).",
       "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 % (hausse de la CSG au 1er janvier 2026).",
       "Un taux unique de 19 % sur la plus-value.",
-      "0 % tant que tu ne convertis pas en euros.",
+      "0 % tant que vous ne convertissez pas en euros.",
     ],
     correctIndex: 1,
     explanation:
-      "Le PFU = impôt sur le revenu (12,8 %) + prélèvements sociaux. La LFSS 2026 a relevé la CSG de 9,2 % à 10,6 %, portant les prélèvements sociaux à 18,6 % et la flat tax à 31,4 % sur les gains réalisés à partir de 2026. Pour tes gains réalisés jusqu'en 2025 (déclarés au printemps 2026), c'était encore 30 %.",
+      "Le PFU = impôt sur le revenu (12,8 %) + prélèvements sociaux. La LFSS 2026 a relevé la CSG de 9,2 % à 10,6 %, portant les prélèvements sociaux à 18,6 % et la flat tax à 31,4 % sur les gains réalisés à partir de 2026. Pour vos gains réalisés jusqu'en 2025 (déclarés au printemps 2026), c'était encore 30 %.",
   },
   {
     id: "fis-q2-seuil-305",
     question:
-      "À partir de quel montant es-tu obligé de déclarer tes cessions crypto (et potentiellement imposé) ?",
+      "À partir de quel montant êtes-vous obligé de déclarer vos cessions crypto (et potentiellement imposé) ?",
     choices: [
       "Dès le premier euro de plus-value.",
       "À partir de 305 € de cessions cumulées dans l'année (montant des ventes, pas de la plus-value).",
@@ -348,35 +348,35 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
   {
     id: "fis-q3-2086-3916",
     question:
-      "Tu as un compte sur une plateforme étrangère et tu as vendu pour 2 000 € de crypto en euros. Quelles obligations déclaratives ?",
+      "Vous avez un compte sur une plateforme étrangère et vous avez vendu pour 2 000 € de crypto en euros. Quelles obligations déclaratives ?",
     choices: [
       "Aucune, la plateforme déclare tout au fisc français.",
       "Le formulaire 2086 (calcul des plus-values) ET le 3916-bis (déclaration du compte étranger).",
-      "Seulement un courrier à ton centre des impôts.",
-      "Rien tant que tu ne dépasses pas 10 000 €.",
+      "Seulement un courrier à votre centre des impôts.",
+      "Rien tant que vous ne dépassez pas 10 000 €.",
     ],
     correctIndex: 1,
     explanation:
-      "Deux obligations distinctes : le Cerfa 2086 détaille le calcul de tes plus-values (reporté ensuite sur la 2042 C), et le Cerfa 3916-bis déclare chaque compte d'actifs numériques ouvert sur une plateforme étrangère. Oublier le 3916-bis coûte 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année (art. 1736, X du CGI).",
+      "Deux obligations distinctes : le Cerfa 2086 détaille le calcul de vos plus-values (reporté ensuite sur la 2042 C), et le Cerfa 3916-bis déclare chaque compte d'actifs numériques ouvert sur une plateforme étrangère. Oublier le 3916-bis coûte 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année (art. 1736, X du CGI).",
   },
   {
     id: "fis-q4-bareme-vs-pfu",
     question:
-      "Quand l'option pour le barème progressif (case 2OP) est-elle plus avantageuse que le PFU sur tes plus-values crypto ?",
+      "Quand l'option pour le barème progressif (case 2OP) est-elle plus avantageuse que le PFU sur vos plus-values crypto ?",
     choices: [
       "Toujours.",
-      "Quand ta tranche marginale d'imposition (TMI) est faible : 0 % ou 11 %.",
-      "Quand tu es dans la tranche à 45 %.",
+      "Quand votre tranche marginale d'imposition (TMI) est faible : 0 % ou 11 %.",
+      "Quand vous êtes dans la tranche à 45 %.",
       "Jamais, le PFU est toujours meilleur.",
     ],
     correctIndex: 1,
     explanation:
-      "Au barème, ta TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. Attention : l'option 2OP s'applique à TOUS tes revenus de capitaux mobiliers de l'année, pas seulement la crypto.",
+      "Au barème, votre TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. Attention : l'option 2OP s'applique à TOUS vos revenus de capitaux mobiliers de l'année, pas seulement la crypto.",
   },
   {
     id: "fis-q5-defi-bic-bnc",
     question:
-      "Tu fais du staking et du yield farming réguliers. Comment ces revenus sont-ils généralement qualifiés en France ?",
+      "Vous faites du staking et du yield farming réguliers. Comment ces revenus sont-ils généralement qualifiés en France ?",
     choices: [
       "Exonérés — la DeFi n'est pas fiscalisée.",
       "En BNC le plus souvent, voire en BIC si l'activité devient quasi-professionnelle.",
@@ -435,16 +435,16 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
   {
     id: "pla-q4-migration-non-agreee",
     question:
-      "Ta plateforme annonce qu'elle n'aura pas l'agrément CASP-MiCA à temps. Quelle est la bonne réaction ?",
+      "Votre plateforme annonce qu'elle n'aura pas l'agrément CASP-MiCA à temps. Quelle est la bonne réaction ?",
     choices: [
       "Ne rien faire, ça va s'arranger.",
-      "Migrer tes avoirs vers une plateforme agréée CASP, en conservant l'historique des prix d'acquisition.",
+      "Migrer vos avoirs vers une plateforme agréée CASP, en conservant l'historique des prix d'acquisition.",
       "Tout convertir en USDT dans la panique.",
       "Attendre le dernier jour pour décider.",
     ],
     correctIndex: 1,
     explanation:
-      "Une plateforme sans agrément doit organiser la cessation ordonnée de ses services. Migre tes avoirs vers un prestataire agréé CASP en gardant tes historiques (prix et dates d'acquisition) — indispensables pour calculer correctement tes plus-values futures sur le Cerfa 2086 et éviter une sur-imposition.",
+      "Une plateforme sans agrément doit organiser la cessation ordonnée de ses services. Migrez vos avoirs vers un prestataire agréé CASP en gardant vos historiques (prix et dates d'acquisition) — indispensables pour calculer correctement vos plus-values futures sur le Cerfa 2086 et éviter une sur-imposition.",
   },
   {
     id: "pla-q5-cout-reel",
@@ -493,10 +493,10 @@ const QUIZ_STABLECOINS: QuizQuestion[] = [
   {
     id: "stb-q3-fiscalite",
     question:
-      "Tu vends 1 ETH contre de l'USDC, puis tu conserves cet USDC. Quel est l'impact fiscal en France ?",
+      "Vous vendez 1 ETH contre de l'USDC, puis vous conservez cet USDC. Quel est l'impact fiscal en France ?",
     choices: [
-      "Plus-value imposable immédiatement, car tu as « vendu » ton ETH.",
-      "Aucun impôt à ce stade : c'est un échange crypto-crypto en sursis ; l'imposition viendra quand tu convertiras en euros.",
+      "Plus-value imposable immédiatement, car vous avez « vendu » votre ETH.",
+      "Aucun impôt à ce stade : c'est un échange crypto-crypto en sursis ; l'imposition viendra quand vous convertirez en euros.",
       "Imposable seulement si le gain latent dépasse 305 €.",
       "Exonéré définitivement puisque l'USDC est stable.",
     ],
@@ -544,7 +544,7 @@ const QUIZ_STAKING: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Le piège classique : un APR « positif » est exprimé dans le jeton staké. Si ce jeton perd 40 % en euros, ton rendement nominal ne compense pas la baisse. Le staking n'est donc pas « sans risque », et Bitcoin (Proof of Work) ne se stake pas nativement.",
+      "Le piège classique : un APR « positif » est exprimé dans le jeton staké. Si ce jeton perd 40 % en euros, votre rendement nominal ne compense pas la baisse. Le staking n'est donc pas « sans risque », et Bitcoin (Proof of Work) ne se stake pas nativement.",
   },
   {
     id: "stk-q2-slashing-cas",
@@ -570,34 +570,34 @@ const QUIZ_STAKING: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Le liquid staking échange de l'illiquidité contre des risques supplémentaires : ton ETH staké devient un jeton (stETH) utilisable ailleurs, mais tu t'exposes au bug du contrat et à un possible dépeg. Plus de souplesse, plus de surface de risque — pas un repas gratuit.",
+      "Le liquid staking échange de l'illiquidité contre des risques supplémentaires : votre ETH staké devient un jeton (stETH) utilisable ailleurs, mais vous vous exposez au bug du contrat et à un possible dépeg. Plus de souplesse, plus de surface de risque — pas un repas gratuit.",
   },
   {
     id: "stk-q4-controle-scenario",
     question:
-      "Tu veux staker de l'ETH en gardant un contrôle MAXIMAL sur tes clés, quitte à assumer la complexité technique. Quelle voie ?",
+      "Vous voulez staker de l'ETH en gardant un contrôle MAXIMAL sur vos clés, quitte à assumer la complexité technique. Quelle voie ?",
     choices: [
       "Le staking sur une plateforme d'échange (custodial).",
-      "Le validateur solo : tu contrôles tes clés et ton nœud, mais avec des exigences techniques et de capital.",
+      "Le validateur solo : vous contrôlez vos clés et votre nœud, mais avec des exigences techniques et de capital.",
       "Le liquid staking via un protocole centralisé.",
       "Ne pas staker du tout, c'est la seule option sûre.",
     ],
     correctIndex: 1,
     explanation:
-      "Le validateur solo offre le contrôle maximal (tes clés, ton nœud) au prix de la complexité (exigences matérielles, capital, exploitation). L'exchange est simple mais custodial ; le liquid staking centralisé ajoute un intermédiaire. Le compromis dépend de ton profil.",
+      "Le validateur solo offre le contrôle maximal (vos clés, votre nœud) au prix de la complexité (exigences matérielles, capital, exploitation). L'exchange est simple mais custodial ; le liquid staking centralisé ajoute un intermédiaire. Le compromis dépend de votre profil.",
   },
   {
     id: "stk-q5-faux",
     question: "Parmi ces affirmations sur le staking, laquelle est FAUSSE ?",
     choices: [
       "Le staking concerne les blockchains en Proof of Stake.",
-      "Le staking sur une plateforme d'échange est non-custodial : tu gardes le contrôle de tes clés.",
-      "Une période de déblocage (unbonding) peut immobiliser tes fonds un certain temps.",
+      "Le staking sur une plateforme d'échange est non-custodial : vous gardez le contrôle de vos clés.",
+      "Une période de déblocage (unbonding) peut immobiliser vos fonds un certain temps.",
       "Les récompenses proviennent de l'émission de jetons et des frais du réseau.",
     ],
     correctIndex: 1,
     explanation:
-      "Le staking sur exchange est au contraire CUSTODIAL : la plateforme détient tes clés. Les trois autres affirmations sont exactes. Confondre « pratique » et « non-custodial » est une erreur de débutant qui expose au risque de contrepartie.",
+      "Le staking sur exchange est au contraire CUSTODIAL : la plateforme détient vos clés. Les trois autres affirmations sont exactes. Confondre « pratique » et « non-custodial » est une erreur de débutant qui expose au risque de contrepartie.",
   },
 ];
 
@@ -619,7 +619,7 @@ const QUIZ_CHOISIR: QuizQuestion[] = [
   {
     id: "chx-q2-duediligence",
     question:
-      "Tu découvres un projet inconnu qui monte fort. Quelle démarche est la plus solide AVANT d'investir ?",
+      "Vous découvrez un projet inconnu qui monte fort. Quelle démarche est la plus solide AVANT d'investir ?",
     choices: [
       "Suivre la recommandation d'un influenceur populaire qui en parle.",
       "Croiser plusieurs sources : équipe, whitepaper, activité réelle du code, répartition des jetons, liquidité et audits.",
@@ -655,7 +655,7 @@ const QUIZ_CHOISIR: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Une offre très concentrée met ton capital à la merci de quelques gros détenteurs : s'ils vendent, le prix s'effondre. Une répartition large est généralement plus saine. L'analyse on-chain (répartition des holders) est justement là pour repérer ça.",
+      "Une offre très concentrée met votre capital à la merci de quelques gros détenteurs : s'ils vendent, le prix s'effondre. Une répartition large est généralement plus saine. L'analyse on-chain (répartition des holders) est justement là pour repérer ça.",
   },
   {
     id: "chx-q5-faux",
@@ -684,7 +684,7 @@ const QUIZ_DEFI: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "En DeFi, ton argent est entre les mains d'un code : un bug ou un exploit peut vider un protocole, même audité (l'audit réduit le risque, ne l'élimine pas). Pas de fonds de garantie, et la fiscalité s'applique. La décentralisation ne « supprime » pas le risque, elle le déplace.",
+      "En DeFi, votre argent est entre les mains d'un code : un bug ou un exploit peut vider un protocole, même audité (l'audit réduit le risque, ne l'élimine pas). Pas de fonds de garantie, et la fiscalité s'applique. La décentralisation ne « supprime » pas le risque, elle le déplace.",
   },
   {
     id: "defi-q2-rollup",
@@ -715,9 +715,9 @@ const QUIZ_DEFI: QuizQuestion[] = [
   {
     id: "defi-q4-fiscalite",
     question:
-      "Tu fais du yield farming régulier en DeFi en France. Comment c'est généralement traité fiscalement ?",
+      "Vous faites du yield farming régulier en DeFi en France. Comment c'est généralement traité fiscalement ?",
     choices: [
-      "Totalement défiscalisé tant que tu ne sors pas en euros.",
+      "Totalement défiscalisé tant que vous ne sortez pas en euros.",
       "Revenus généralement imposables (BNC, voire BIC si l'activité est habituelle/organisée), ET la revente ultérieure des jetons reçus génère une plus-value distincte.",
       "Seule la plus-value finale compte ; les revenus reçus ne sont jamais imposables.",
       "Imposé uniquement au-delà d'un million d'euros de gains.",
@@ -745,12 +745,12 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
     id: "arn-q1-ponzi-scenario",
     question:
-      "Un proche te montre une plateforme qui promet +2 % par JOUR « garantis », avec un bonus si tu parraines des amis. Quel est le bon réflexe ?",
+      "Un proche te montre une plateforme qui promet +2 % par JOUR « garantis », avec un bonus si vous parrainez des amis. Quel est le bon réflexe ?",
     choices: [
       "Investir vite, avant que l'opportunité ne disparaisse.",
       "Reconnaître les marqueurs d'un Ponzi (rendement fixe élevé « garanti » + parrainage) et refuser.",
       "Investir un petit montant pour « tester » sans risque.",
-      "Attendre que ton proche ait retiré ses gains, puis te lancer.",
+      "Attendre que votre proche ait retiré ses gains, puis te lancer.",
     ],
     correctIndex: 1,
     explanation:
@@ -759,16 +759,16 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
     id: "arn-q2-phishing-scenario",
     question:
-      "Tu reçois un SMS : « Coinbase : connexion suspecte détectée, sécurisez votre compte ici : [lien] ». Que fais-tu ?",
+      "Vous recevez un SMS : « Coinbase : connexion suspecte détectée, sécurisez votre compte ici : [lien] ». Que faites-vous ?",
     choices: [
-      "Tu cliques vite sur le lien pour sécuriser ton compte.",
-      "Tu ne cliques pas : tu ouvres l'appli ou le site toi-même (via ton favori) pour vérifier.",
-      "Tu réponds au SMS pour demander plus de détails.",
-      "Tu transfères tes fonds via le lien, par précaution.",
+      "Vous cliquez vite sur le lien pour sécuriser votre compte.",
+      "Vous ne cliquez pas : vous ouvrez l'appli ou le site vous-même (via votre favori) pour vérifier.",
+      "Vous répondez au SMS pour demander plus de détails.",
+      "Vous transférez vos fonds via le lien, par précaution.",
     ],
     correctIndex: 1,
     explanation:
-      "Le phishing joue sur l'urgence. Ne clique jamais sur un lien reçu par SMS ou email : accède au service par tes propres moyens (favori, appli officielle). Un vrai problème de sécurité se règle depuis ton compte, pas depuis un lien qu'on t'envoie.",
+      "Le phishing joue sur l'urgence. Ne clique jamais sur un lien reçu par SMS ou email : accède au service par vos propres moyens (favori, appli officielle). Un vrai problème de sécurité se règle depuis votre compte, pas depuis un lien qu'on vous envoie.",
   },
   {
     id: "arn-q3-rugpull-signes",
@@ -786,16 +786,16 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
     id: "arn-q4-seed-scenario",
     question:
-      "Un « agent du support » te demande ta phrase de récupération (12-24 mots) pour « débloquer » un retrait bloqué. Que fais-tu ?",
+      "Un « agent du support » vous demande votre phrase de récupération (12-24 mots) pour « débloquer » un retrait bloqué. Que faites-vous ?",
     choices: [
-      "Tu la donnes, puisque c'est pour débloquer TON propre argent.",
-      "Tu refuses : personne de légitime ne demande jamais ta seed phrase — c'est toujours une tentative de vol.",
-      "Tu ne donnes que les 12 premiers mots, par prudence.",
-      "Tu la communiques par téléphone plutôt que par écrit.",
+      "Vous la donnez, puisque c'est pour débloquer VOTRE propre argent.",
+      "Vous refusez : personne de légitime ne demande jamais votre seed phrase — c'est toujours une tentative de vol.",
+      "Vous ne donnez que les 12 premiers mots, par prudence.",
+      "Vous la communiquez par téléphone plutôt que par écrit.",
     ],
     correctIndex: 1,
     explanation:
-      "Ta seed phrase = l'accès total à tes fonds. Aucun support, agent ou « déblocage » légitime ne la demandera jamais. La donner, même « à moitié » ou « par téléphone », revient à remettre les clés de ton coffre à un voleur.",
+      "Votre seed phrase = l'accès total à vos fonds. Aucun support, agent ou « déblocage » légitime ne la demandera jamais. La donner, même « à moitié » ou « par téléphone », revient à remettre les clés de votre coffre à un voleur.",
   },
   {
     id: "arn-q5-pigbutchering-scenario",
@@ -803,9 +803,9 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
       "Une personne rencontrée en ligne, très attentionnée depuis des semaines, te conseille une plateforme où « elle gagne très bien ». Quel est le signal ?",
     choices: [
       "C'est une bonne opportunité, partagée par quelqu'un de confiance.",
-      "C'est le schéma classique du « pig butchering » : confiance construite dans le temps, puis fausse plateforme — tu refuses.",
-      "Tu investis un petit montant pour ne pas la vexer.",
-      "Tu suis, car elle t'a montré des captures d'écran de ses gains.",
+      "C'est le schéma classique du « pig butchering » : confiance construite dans le temps, puis fausse plateforme — vous refusez.",
+      "Vous investissez un petit montant pour ne pas la vexer.",
+      "Vous suivez, car elle t'a montré des captures d'écran de ses gains.",
     ],
     correctIndex: 1,
     explanation:
@@ -861,7 +861,7 @@ const QUIZ_MARCHE: QuizQuestion[] = [
     choices: [
       "Une faible liquidité augmente le spread (écart achat/vente).",
       "Sur un marché peu liquide, un gros ordre fait à peine bouger le prix.",
-      "La liquidité conditionne ta capacité à sortir au prix voulu.",
+      "La liquidité conditionne votre capacité à sortir au prix voulu.",
       "Les petites capitalisations sont souvent moins liquides.",
     ],
     correctIndex: 1,
@@ -928,16 +928,16 @@ const QUIZ_TRADING: QuizQuestion[] = [
   {
     id: "trd-q4-ordre-scenario",
     question:
-      "Tu veux acheter SEULEMENT si le prix redescend à un niveau précis, sans rester devant l'écran. Quel ordre utiliser ?",
+      "Vous voulez acheter SEULEMENT si le prix redescend à un niveau précis, sans rester devant l'écran. Quel ordre utiliser ?",
     choices: [
       "Un ordre au marché.",
-      "Un ordre limite d'achat, placé au prix que tu vises.",
+      "Un ordre limite d'achat, placé au prix que vous visez.",
       "Aucun ordre ne permet cela.",
       "Un ordre au marché avec effet de levier.",
     ],
     correctIndex: 1,
     explanation:
-      "L'ordre limite te laisse fixer ton prix : il ne s'exécute qu'à ce niveau (ou mieux), sans surveillance. L'ordre au marché, lui, s'exécuterait tout de suite au prix courant — l'inverse de ce que tu veux ici.",
+      "L'ordre limite te laisse fixer votre prix : il ne s'exécute qu'à ce niveau (ou mieux), sans surveillance. L'ordre au marché, lui, s'exécuterait tout de suite au prix courant — l'inverse de ce que vous voulez ici.",
   },
   {
     id: "trd-q5-gestion-risque",
@@ -966,7 +966,7 @@ const QUIZ_NFT_WEB3: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Posséder un NFT ne te donne PAS les droits d'auteur par défaut : sauf licence explicite, tu détiens un jeton de propriété/authenticité, pas la propriété intellectuelle de l'œuvre. C'est un malentendu très répandu. Les trois autres affirmations sont exactes.",
+      "Posséder un NFT ne te donne PAS les droits d'auteur par défaut : sauf licence explicite, vous détenez un jeton de propriété/authenticité, pas la propriété intellectuelle de l'œuvre. C'est un malentendu très répandu. Les trois autres affirmations sont exactes.",
   },
   {
     id: "nft-q2-standards",
@@ -997,16 +997,16 @@ const QUIZ_NFT_WEB3: QuizQuestion[] = [
   {
     id: "nft-q4-wallet-scenario",
     question:
-      "Tu utilises MetaMask (wallet non-custodial) et tu perds ta seed phrase. Que se passe-t-il ?",
+      "Vous utilisez MetaMask (wallet non-custodial) et vous perdez votre seed phrase. Que se passe-t-il ?",
     choices: [
-      "Tu cliques sur « mot de passe oublié » pour la régénérer.",
-      "Personne ne peut récupérer l'accès : en self-custody, la seed phrase est l'unique clé de tes fonds.",
+      "Vous cliquez sur « mot de passe oublié » pour la régénérer.",
+      "Personne ne peut récupérer l'accès : en self-custody, la seed phrase est l'unique clé de vos fonds.",
       "MetaMask te la renvoie par email après vérification d'identité.",
-      "Tu contactes le support pour réinitialiser ton compte.",
+      "Vous contactez le support pour réinitialiser votre compte.",
     ],
     correctIndex: 1,
     explanation:
-      "Un wallet non-custodial fait de toi ta propre banque : aucun « mot de passe oublié », aucun support qui réinitialise. Perdre la seed phrase = perdre l'accès définitivement. D'où l'importance d'un backup hors-ligne soigné.",
+      "Un wallet non-custodial fait de vous votre propre banque : aucun « mot de passe oublié », aucun support qui réinitialise. Perdre la seed phrase = perdre l'accès définitivement. D'où l'importance d'un backup hors-ligne soigné.",
   },
   {
     id: "nft-q5-dao",

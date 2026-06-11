@@ -73,7 +73,7 @@ interface QuizCard {
 const QUIZZES: QuizCard[] = [
   {
     href: "/quiz/plateforme",
-    title: "Quel exchange crypto pour toi ?",
+    title: "Quel exchange crypto pour vous ?",
     description:
       "Six questions courtes pour matcher votre profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi nos 9 plateformes notées.",
     questionCount: "6 questions",

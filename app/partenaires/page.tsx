@@ -177,7 +177,7 @@ export default function PartnersPage() {
             ))}
           </ul>
           <p className="mt-6 text-xs text-muted italic">
-            Si tu hésites, n&apos;achète pas. Reviens quand tu sauras pourquoi.
+            Si vous hésitez, n&apos;achète pas. Reviens quand vous saurez pourquoi.
           </p>
         </div>
       </section>
@@ -319,7 +319,7 @@ function PartnerShowcase({
 
             <p className="text-[11px] text-center text-muted leading-relaxed">
               Lien affilié — Cryptoreflex perçoit{" "}
-              {partner.commission ?? "une commission"} sans surcoût pour toi.
+              {partner.commission ?? "une commission"} sans surcoût pour vous.
             </p>
           </div>
         </div>

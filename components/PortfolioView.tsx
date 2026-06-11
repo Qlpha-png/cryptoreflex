@@ -235,7 +235,7 @@ export default function PortfolioView() {
 
   const handleClearAll = useCallback(() => {
     const ok = window.confirm(
-      "Vider l'intégralité du portefeuille ? Cette action est irréversible (les données sont stockées uniquement sur ton appareil)."
+      "Vider l'intégralité du portefeuille ? Cette action est irréversible (les données sont stockées uniquement sur votre appareil)."
     );
     if (!ok) return;
     clearHoldings();
@@ -342,8 +342,8 @@ export default function PortfolioView() {
       <>
         <EmptyState
           icon={<Briefcase className="h-6 w-6" aria-hidden="true" />}
-          title="Tu n'as pas encore ajouté de crypto à ton portefeuille"
-          description="Ajoute tes positions (jeton + quantité + prix moyen d'achat) pour suivre ta valeur en temps réel et tes plus/moins-values latentes. Jusqu'à 500 positions, gratuit pour tout le monde. Les données restent sur ton appareil."
+          title="Vous n'avez pas encore ajouté de crypto à votre portefeuille"
+          description="Ajoute vos positions (jeton + quantité + prix moyen d'achat) pour suivre votre valeur en temps réel et vos plus/moins-values latentes. Jusqu'à 500 positions, gratuit pour tout le monde. Les données restent sur votre appareil."
         />
         <div className="mt-6 flex justify-center">
           <button

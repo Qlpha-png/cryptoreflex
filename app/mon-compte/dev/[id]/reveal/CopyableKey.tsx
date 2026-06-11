@@ -23,7 +23,7 @@ export function CopyableKey({ value }: { value: string }) {
     } catch {
       // Si le clipboard est bloqué (contexte non-secure), on ne peut pas
       // grand-chose ; le user peut sélectionner manuellement.
-      alert("Impossible de copier automatiquement. Sélectionne le texte avec ta souris.");
+      alert("Impossible de copier automatiquement. Sélectionne le texte avec votre souris.");
     }
   }
 
@@ -31,7 +31,7 @@ export function CopyableKey({ value }: { value: string }) {
     <div className="rounded-xl border bg-card p-4">
       <div className="flex items-center justify-between gap-2 mb-2">
         <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Ta clé secrète
+          Votre clé secrète
         </span>
         <button
           type="button"

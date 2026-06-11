@@ -369,7 +369,7 @@ function PartnerHero({
 
             {/* Disclosure légère */}
             <p className="mt-3 text-[11px] text-muted">
-              Lien affilié — sans surcoût pour toi.
+              Lien affilié — sans surcoût pour vous.
             </p>
           </div>
 
@@ -570,7 +570,7 @@ function PartnerVerdict({
         {/* CTA in-content */}
         <div className="mt-7 pt-6 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <p className="text-sm text-fg/75">
-            Tu te reconnais dans &ldquo;à choisir si&rdquo; ? Passe à
+            Vous vous reconnaissez dans &ldquo;à choisir si&rdquo; ? Passez à
             l&apos;action :
           </p>
           <Link
@@ -618,11 +618,11 @@ function Pedagogy({
           id="pedagogy-title"
           className="mt-3 text-3xl sm:text-4xl font-extrabold text-fg tracking-[-0.02em] leading-tight"
         >
-          Pourquoi tu en as <span className="text-primary">vraiment</span> besoin
+          Pourquoi vous en avez <span className="text-primary">vraiment</span> besoin
         </h2>
         <p className="mt-3 text-base text-fg/70 leading-relaxed">
           Pas de jargon. Pas de marketing. Juste les 4 vérités qui justifient
-          (ou pas) cet investissement pour toi.
+          (ou pas) cet investissement pour vous.
         </p>
       </header>
 
@@ -812,7 +812,7 @@ function BeforeAfter({
       >
         <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
           <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-          VOILÀ CE QUI CHANGE POUR TOI
+          VOILÀ CE QUI CHANGE POUR VOUS
         </span>
         <h2
           id="before-after-title"
@@ -929,7 +929,7 @@ function BeforeAfter({
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </Link>
         <p className="mt-2 text-[11px] text-muted">
-          Lien affilié — sans surcoût pour toi.
+          Lien affilié — sans surcoût pour vous.
         </p>
       </div>
     </section>
@@ -1019,7 +1019,7 @@ function ProductShowcase({ partner }: { partner: Partner }) {
             id="products-title"
             className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
           >
-            Quel modèle est fait pour toi ?
+            Quel modèle est fait pour vous ?
           </h2>
         </div>
         <Link
@@ -1207,7 +1207,7 @@ function FieldTest({
             Convaincu par {review.testDuration} de retour terrain ?
           </p>
           <p className="text-sm text-fg/75">
-            Ne perds pas le momentum — passe sur {partner.name}.
+            Ne perdez pas le momentum — passez sur {partner.name}.
           </p>
         </div>
         <Link
@@ -1259,7 +1259,7 @@ function RisksAvoided({
         <header className="mb-6">
           <span className="ds-eyebrow text-warning inline-flex items-center gap-1.5">
             <Shield className="h-3.5 w-3.5" aria-hidden="true" />
-            CE QUE TU ÉVITES EN AGISSANT MAINTENANT
+            CE QUE VOUS ÉVITEZ EN AGISSANT MAINTENANT
           </span>
           <h2
             id="risks-title"
@@ -1547,7 +1547,7 @@ function FinalCta({
         </div>
 
         <p className="mt-5 text-[11px] text-muted">
-          Lien affilié — Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour toi. Si {partner.name}{" "}
+          Lien affilié — Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour vous. Si {partner.name}{" "}
           cesse d&apos;être recommandable, on retire la page.
         </p>
       </div>

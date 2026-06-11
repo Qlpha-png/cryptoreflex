@@ -36,9 +36,9 @@ const SimpleConfetti = dynamic(
  */
 
 export const metadata: Metadata = {
-  title: "Merci — vérifie ta boîte mail",
+  title: "Merci — vérifiez votre boîte mail",
   description:
-    "Inscription confirmée. Télécharge ton guide PDF crypto et continue d'explorer Cryptoreflex.",
+    "Inscription confirmée. Téléchargez votre guide PDF crypto et continuez d'explorer Cryptoreflex.",
   alternates: withHreflang(`${BRAND.url}/merci`),
   // CRITIQUE : page de conversion -> hors index
   robots: { index: false, follow: true, nocache: true },
@@ -69,13 +69,13 @@ const tools = [
     icon: Calculator,
     title: "Calculateur de plus-values crypto",
     href: "/outils",
-    desc: "Estime ton imposition crypto en France (flat tax 31,4%) en quelques clics.",
+    desc: "Estimez votre imposition crypto en France (flat tax 31,4%) en quelques clics.",
   },
   {
     icon: TrendingUp,
     title: "Calculateur de profits",
     href: "/outils",
-    desc: "Simule ton ROI sur Bitcoin, Ethereum & altcoins majeurs.",
+    desc: "Simulez votre ROI sur Bitcoin, Ethereum & altcoins majeurs.",
   },
 ];
 
@@ -93,12 +93,12 @@ export default function MerciPage() {
           </span>
 
           <h1 className="mt-6 text-3xl sm:text-5xl font-extrabold text-fg leading-tight">
-            Merci ! <span className="gradient-text">Vérifie ta boîte mail.</span>
+            Merci ! <span className="gradient-text">Vérifiez votre boîte mail.</span>
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-xl mx-auto">
-            Un email de confirmation vient de t&apos;être envoyé. Clique sur le lien à
-            l&apos;intérieur pour activer ton inscription et garantir la réception
+            Un email de confirmation vient de vous être envoyé. Cliquez sur le lien à
+            l&apos;intérieur pour activer votre inscription et garantir la réception
             quotidienne de la newsletter.
           </p>
 
@@ -110,7 +110,7 @@ export default function MerciPage() {
                   <Download className="h-5 w-5" />
                 </span>
                 <div className="min-w-0">
-                  <h2 className="font-bold text-fg">Ton guide PDF, tout de suite</h2>
+                  <h2 className="font-bold text-fg">Votre guide PDF, tout de suite</h2>
                   <p className="text-xs text-muted mt-1">
                     Les plateformes crypto régulées MiCA à utiliser en France 2026 (PDF, ~1.2 Mo)
                   </p>
@@ -129,7 +129,7 @@ export default function MerciPage() {
 
           <p className="mt-6 text-xs text-muted flex items-center justify-center gap-1.5">
             <Mail className="h-3.5 w-3.5" />
-            Pas reçu l&apos;email après 5&nbsp;min ? Vérifie tes spams ou écris à{" "}
+            Pas reçu l&apos;email après 5&nbsp;min ? Vérifiez vos spams ou écrivez à{" "}
             <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
               {BRAND.email}
             </a>
@@ -141,7 +141,7 @@ export default function MerciPage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-center gap-2 mb-6">
           <BookOpen className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-extrabold text-fg">Pendant que tu attends l&apos;email…</h2>
+          <h2 className="text-2xl font-extrabold text-fg">Pendant que vous attendez l&apos;email…</h2>
         </div>
         <p className="text-sm text-fg/70 mb-6">
           Quelques lectures pour démarrer du bon pied.
@@ -172,7 +172,7 @@ export default function MerciPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center gap-2 mb-6">
             <Calculator className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-extrabold text-fg">Ou teste nos outils gratuits</h2>
+            <h2 className="text-2xl font-extrabold text-fg">Ou testez nos outils gratuits</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {tools.map((t) => (

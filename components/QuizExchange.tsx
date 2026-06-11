@@ -112,7 +112,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "priority",
-    title: "Qu'est-ce qui compte le plus pour toi ?",
+    title: "Qu'est-ce qui compte le plus pour vous ?",
     subtitle: "Une seule réponse — c'est elle qui pèsera le plus dans le score.",
     options: [
       { value: "security", label: "Sécurité maximale", hint: "Régulation MiCA, cold storage" },

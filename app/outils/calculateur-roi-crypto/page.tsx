@@ -47,7 +47,7 @@ const CalculateurROIClient = dynamic(
 const PAGE_TITLE =
   "Calculateur ROI crypto gratuit — plus-value & impôts (PFU 31,4 %)";
 const PAGE_DESCRIPTION =
-  "Calcule ton ROI crypto + plus-value nette + impôt français estimé en 5 secondes. Frais d'achat/vente inclus, PFU 31,4 %, seuil 305 €. 100 % gratuit, sans inscription.";
+  "Calculez votre ROI crypto + plus-value nette + impôt français estimé en 5 secondes. Frais d'achat/vente inclus, PFU 31,4 %, seuil 305 €. 100 % gratuit, sans inscription.";
 const PAGE_PATH = "/outils/calculateur-roi-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -89,17 +89,17 @@ const FAQ_ITEMS = [
   {
     question: "À partir de quel montant les plus-values crypto sont-elles imposables ?",
     answer:
-      "Le seuil annuel d'exonération est de 305 € de cessions totales (vers euros ou stablecoins). En-dessous, aucune imposition. Au-delà, tu dois déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
+      "Le seuil annuel d'exonération est de 305 € de cessions totales (vers euros ou stablecoins). En-dessous, aucune imposition. Au-delà, vous devez déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
   },
   {
     question: "Faut-il déclarer même si on n'a pas vendu en euros ?",
     answer:
-      "Les stablecoins (USDC, USDT, DAI) sont des actifs numériques : une conversion crypto → stablecoin sans soulte n’est pas un fait générateur (sursis, art. 150 VH bis CGI), au même titre qu’un swap crypto → crypto. Tu n’es imposé qu’à la cession contre euro (FIAT), un bien/service, ou en présence d’une soulte. Pour un calcul exhaustif, utilise notre calculateur fiscalité complet.",
+      "Les stablecoins (USDC, USDT, DAI) sont des actifs numériques : une conversion crypto → stablecoin sans soulte n’est pas un fait générateur (sursis, art. 150 VH bis CGI), au même titre qu’un swap crypto → crypto. Vous n’êtes imposé qu’à la cession contre euro (FIAT), un bien/service, ou en présence d’une soulte. Pour un calcul exhaustif, utilisez notre calculateur fiscalité complet.",
   },
   {
     question: "Cet outil est-il fiable pour préparer ma déclaration ?",
     answer:
-      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, tu dois agréger l'ensemble de tes cessions de l'année, calculer le prix moyen pondéré d'acquisition (PMPA) et remplir le Cerfa 2086. Notre outil dédié /outils/calculateur-fiscalite gère cette complexité, ou consulte un expert-comptable spécialisé crypto.",
+      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, vous devez agréger l'ensemble de vos cessions de l'année, calculer le prix moyen pondéré d'acquisition (PMPA) et remplir le Cerfa 2086. Notre outil dédié /outils/calculateur-fiscalite gère cette complexité, ou consultez un expert-comptable spécialisé crypto.",
   },
 ];
 
@@ -164,7 +164,7 @@ export default function CalculateurROIPage() {
               gratuit (PFU 31,4 %)
             </h1>
             <p className="mt-4 text-lg text-muted leading-relaxed">
-              Calcule ton ROI net, ta plus-value et l'impôt français estimé en
+              Calculez votre ROI net, votre plus-value et l'impôt français estimé en
               5 secondes. Frais d'achat et de vente personnalisables. Résultat
               instantané, conforme PFU 2026.
             </p>
@@ -254,10 +254,10 @@ export default function CalculateurROIPage() {
               </div>
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-fg">
-                  Tu vas vraiment déclarer ?
+                  Vous allez vraiment déclarer ?
                 </h2>
                 <p className="mt-2 text-sm text-muted leading-relaxed">
-                  Pour la déclaration officielle, il faut agréger toutes tes
+                  Pour la déclaration officielle, il faut agréger toutes vos
                   cessions de l'année et calculer le prix moyen pondéré
                   d'acquisition (PMPA). Notre calculateur fiscalité complet
                   gère le PFU, le barème progressif, le BIC, et exporte un

@@ -125,7 +125,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
       id: "trader-actif",
       label: "Trader actif",
       summary:
-        "Tu fais plusieurs trades par semaine — tu cherches frais bas, liquidité et profondeur de carnet.",
+        "Vous faites plusieurs trades par semaine — vous cherchez frais bas, liquidité et profondeur de carnet.",
     };
   }
 
@@ -134,7 +134,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
       id: "souverain-bitcoiner",
       label: "Souverain auto-custody",
       summary:
-        "Tu veux retirer tes crypto vers ton wallet personnel — la plateforme est juste un guichet d'achat.",
+        "Vous voulez retirer vos crypto vers votre wallet personnel — la plateforme est juste un guichet d'achat.",
     };
   }
 
@@ -143,7 +143,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
       id: "long-termiste-securitaire",
       label: "Long-termiste sécuritaire",
       summary:
-        "Capital conséquent, horizon long terme — tu veux régulation MiCA, cold storage et assurance.",
+        "Capital conséquent, horizon long terme — vous voulez régulation MiCA, cold storage et assurance.",
     };
   }
 
@@ -152,7 +152,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
       id: "dca-hodler",
       label: "DCA HODLer",
       summary:
-        "Tu veux automatiser un achat mensuel et oublier — UX simple et frais réguliers maîtrisés.",
+        "Vous voulez automatiser un achat mensuel et oublier — UX simple et frais réguliers maîtrisés.",
     };
   }
 
@@ -164,7 +164,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
       id: "debutant-prudent",
       label: "Débutant prudent",
       summary:
-        "Tu démarres avec un petit ticket pour tester — interface simple et plateforme régulée en priorité.",
+        "Vous démarrez avec un petit ticket pour tester — interface simple et plateforme régulée en priorité.",
     };
   }
 
@@ -172,7 +172,7 @@ export function detectProfile(answers: QuizAnswers): UserProfile {
     id: "investisseur-equilibre",
     label: "Investisseur équilibré",
     summary:
-      "Tu cherches un bon compromis entre frais, sécurité et catalogue — sans extrême.",
+      "Vous cherchez un bon compromis entre frais, sécurité et catalogue — sans extrême.",
   };
 }
 
@@ -309,7 +309,7 @@ export function scorePlatform(
       reasons.push("Staking natif disponible (rendements passifs)");
     } else {
       bonuses -= 10;
-      reasons.push("Pas de staking natif — limitant pour ton objectif");
+      reasons.push("Pas de staking natif — limitant pour votre objectif");
     }
   }
   if (answers.staking === "optional" && p.cryptos.stakingAvailable) {
@@ -325,7 +325,7 @@ export function scorePlatform(
 
   if (answers.withdrawal === "must" && p.category === "wallet") {
     bonuses += 20;
-    reasons.push("Hardware wallet : auto-custody totale, tes clés tes crypto");
+    reasons.push("Hardware wallet : auto-custody totale, vos clés vos crypto");
   }
   if (answers.withdrawal === "optional" && p.category === "wallet") {
     bonuses += 6;
@@ -368,7 +368,7 @@ function generateRationale(
   // Plan B / Plan C : on est plus court
   const r = score.reasons[0];
   return r
-    ? `${r} — alternative solide si ${p.name} te parle plus.`
+    ? `${r} — alternative solide si ${p.name} vous parle plus.`
     : p.idealFor;
 }
 
@@ -398,7 +398,7 @@ export function computeQuizResult(
     .filter((s) => s.score.excluded)
     .map((s) => ({
       platform: s.platform,
-      reason: s.score.excluded ?? "Score trop faible pour ton profil",
+      reason: s.score.excluded ?? "Score trop faible pour votre profil",
     }));
 
   const top3 = eligible.slice(0, 3).map((s, idx) => ({

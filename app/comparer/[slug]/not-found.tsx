@@ -18,7 +18,7 @@ import { ArrowLeft, Search, GitCompareArrows } from "lucide-react";
 export const metadata: Metadata = {
   title: "Ce comparatif n'existe pas — Cryptoreflex",
   description:
-    "Ce comparatif n'existe pas (encore !). Découvre tous nos comparatifs de plateformes crypto.",
+    "Ce comparatif n'existe pas (encore !). Découvrez tous nos comparatifs de plateformes crypto.",
   robots: { index: false, follow: false },
 };
 
@@ -43,7 +43,7 @@ export default function ComparerNotFound() {
           </h2>
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
-            Le comparatif que tu cherches n'existe pas sous ce format. Retrouve
+            Le comparatif que vous cherchez n'existe pas sous ce format. Retrouve
             tous nos comparatifs de plateformes crypto (frais, sécurité,
             conformité MiCA) depuis notre hub dédié.
           </p>

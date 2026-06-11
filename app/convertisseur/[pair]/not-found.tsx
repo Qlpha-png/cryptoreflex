@@ -19,7 +19,7 @@ import { ArrowLeft, Search, ArrowRightLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "Cette conversion n'existe pas — Cryptoreflex",
   description:
-    "Cette paire de conversion n'est pas disponible. Utilise notre convertisseur crypto pour toutes les paires supportées.",
+    "Cette paire de conversion n'est pas disponible. Utilisez notre convertisseur crypto pour toutes les paires supportées.",
   robots: { index: false, follow: false },
 };
 
@@ -44,9 +44,9 @@ export default function ConvertisseurNotFound() {
           </h2>
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
-            La paire que tu cherches n'est pas (ou pas encore) prise en charge :
+            La paire que vous cherchez n'est pas (ou pas encore) prise en charge :
             l'un des deux actifs sort de notre liste de cryptos et devises
-            supportées, ou les deux sont identiques. Utilise le convertisseur
+            supportées, ou les deux sont identiques. Utilisez le convertisseur
             pour choisir une paire valide.
           </p>
 

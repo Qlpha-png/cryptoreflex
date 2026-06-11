@@ -35,7 +35,7 @@ export function magicLinkEmail(opts: {
   email: string;
   magicLink: string;
 }): EmailContent {
-  const subject = `Ton lien de connexion à Cryptoreflex`;
+  const subject = `Votre lien de connexion à Cryptoreflex`;
   const preheader = `Lien sécurisé valide 1 heure. Pas besoin de mot de passe.`;
 
   const content = `
@@ -44,11 +44,11 @@ Bienvenue&nbsp;👋
 </h1>
 
 <p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
-Ton lien de connexion à <strong style="color:${T.colors.primary};">Cryptoreflex</strong> est prêt.
+Votre lien de connexion à <strong style="color:${T.colors.primary};">Cryptoreflex</strong> est prêt.
 </p>
 
 <p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
-Clique sur le bouton ci-dessous pour accéder à ton espace. Pas de mot de passe à retenir, pas de friction.
+Cliquez sur le bouton ci-dessous pour accéder à votre espace. Pas de mot de passe à retenir, pas de friction.
 </p>
 
 <!-- CTA principal -->
@@ -65,14 +65,14 @@ Lien sécurisé valide 1&nbsp;heure. Usage unique.
   <tr><td style="padding:16px 20px;">
     <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;">Le bouton ne fonctionne pas&nbsp;?</p>
     <p style="margin:0;font-size:12px;line-height:1.5;color:${T.colors.textMuted};word-break:break-all;">
-      Copie-colle ce lien dans ton navigateur&nbsp;:<br>
+      Copiez-collez ce lien dans votre navigateur&nbsp;:<br>
       <a href="${opts.magicLink}" style="color:${T.colors.primary};text-decoration:underline;font-size:11px;">${opts.magicLink}</a>
     </p>
   </td></tr>
 </table>
 
 <p style="margin:24px 0 6px;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
-Tu n'as pas demandé ce lien&nbsp;? Tu peux ignorer ce message en toute sécurité — sans clic, rien ne se passe.
+Vous n'avez pas demandé ce lien&nbsp;? Vous pouvez ignorer ce message en toute sécurité — sans clic, rien ne se passe.
 </p>
 `;
 
@@ -82,12 +82,12 @@ Tu n'as pas demandé ce lien&nbsp;? Tu peux ignorer ce message en toute sécurit
     html: wrapEmail({ subject, preheader, content, email: opts.email }),
     text: `Bienvenue 👋
 
-Ton lien de connexion à Cryptoreflex :
+Votre lien de connexion à Cryptoreflex :
 ${opts.magicLink}
 
 Lien sécurisé valide 1 heure. Usage unique.
 
-Tu n'as pas demandé ce lien ? Tu peux l'ignorer en toute sécurité.
+Vous n'avez pas demandé ce lien ? Vous pouvez l'ignorer en toute sécurité.
 
 —
 Cryptoreflex EI · SIREN 103 352 621
@@ -103,8 +103,8 @@ export function resetPasswordEmail(opts: {
   email: string;
   resetLink: string;
 }): EmailContent {
-  const subject = `Réinitialisation de ton mot de passe Cryptoreflex`;
-  const preheader = `Lien sécurisé valide 1 heure. Si tu n'as rien demandé, ignore cet email.`;
+  const subject = `Réinitialisation de votre mot de passe Cryptoreflex`;
+  const preheader = `Lien sécurisé valide 1 heure. Si vous n'avez rien demandé, ignorez cet email.`;
 
   const content = `
 <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
@@ -138,7 +138,7 @@ Lien sécurisé · Expire en 1&nbsp;h · Usage unique
 
 <!-- Sécurité : note discrète -->
 <p style="margin:24px 0 6px;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
-<strong style="color:${T.colors.text};">Tu n'as pas demandé de réinitialisation&nbsp;?</strong> Ignore ce message — ton mot de passe actuel reste valide. Si tu reçois ce mail souvent sans le demander, contacte-nous.
+<strong style="color:${T.colors.text};">Vous n'avez pas demandé de réinitialisation&nbsp;?</strong> Ignorez ce message — votre mot de passe actuel reste valide. Si vous recevez ce mail souvent sans le demander, contactez-nous.
 </p>
 `;
 
@@ -148,13 +148,13 @@ Lien sécurisé · Expire en 1&nbsp;h · Usage unique
     html: wrapEmail({ subject, preheader, content, email: opts.email }),
     text: `Mot de passe oublié ?
 
-Voici ton lien sécurisé pour en définir un nouveau :
+Voici votre lien sécurisé pour en définir un nouveau :
 ${opts.resetLink}
 
 Le lien expire dans 1 heure et ne peut être utilisé qu'une seule fois.
 
-Tu n'as pas demandé cette réinitialisation ? Ignore ce message,
-ton mot de passe actuel reste valide.
+Vous n'avez pas demandé cette réinitialisation ? Ignorez ce message,
+votre mot de passe actuel reste valide.
 
 —
 Cryptoreflex EI · SIREN 103 352 621
@@ -178,7 +178,7 @@ export function welcomeProEmail(opts: {
   const planLabel = "Cryptoreflex";
 
   const subject = `Bienvenue dans Cryptoreflex Soutien`;
-  const preheader = `Ton accès Soutien est actif. 4 actions à faire en 60 secondes.`;
+  const preheader = `Votre accès Soutien est actif. 4 actions à faire en 60 secondes.`;
 
   const content = `
 <!-- H1 -->
@@ -189,7 +189,7 @@ export function welcomeProEmail(opts: {
 <p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">Merci. Vraiment.</p>
 
 <p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
-Ton paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Ton accès Soutien est actif <em>maintenant</em>. Tu débloques :
+Votre paiement <strong style="color:${T.colors.text};">${planLabel}</strong> est confirmé. Votre accès Soutien est actif <em>maintenant</em>. Vous débloquez :
 portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchlist 200 cryptos (vs 10) et IA Q&amp;A 20 questions/jour avec Claude Haiku contextualisé sur chacune des 100 fiches éditoriales premium.
 </p>
 
@@ -202,29 +202,29 @@ portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchli
   <tr>
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">①</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
-      <strong>Lance le Radar 3916-bis</strong><br>
-      <span style="color:${T.colors.textMuted};font-size:13px;">Détecte tes amendes potentielles avant la deadline mai 2026 (1500-10000€/compte).</span>
+      <strong>Lancez le Radar 3916-bis</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Détectez vos amendes potentielles avant la deadline mai 2026 (1500-10000€/compte).</span>
     </td>
   </tr>
   <tr>
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">②</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
-      <strong>Configure ton portfolio</strong><br>
+      <strong>Configurez votre portfolio</strong><br>
       <span style="color:${T.colors.textMuted};font-size:13px;">Suivi multi-wallets, P&L automatique, allocation pie chart, export CSV.</span>
     </td>
   </tr>
   <tr>
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">③</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
-      <strong>Active une alerte prix</strong><br>
+      <strong>Activez une alerte prix</strong><br>
       <span style="color:${T.colors.textMuted};font-size:13px;">Seuil up/down, % de variation, market crash — illimitées en Pro.</span>
     </td>
   </tr>
   <tr>
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">④</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
-      <strong>Pose ta première question fiscale</strong><br>
-      <span style="color:${T.colors.textMuted};font-size:13px;">Réponds simplement à cet email — réponse argumentée sous 48&nbsp;h.</span>
+      <strong>Posez votre première question fiscale</strong><br>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Répondez simplement à cet email — réponse argumentée sous 48&nbsp;h.</span>
     </td>
   </tr>
 </table>
@@ -243,7 +243,7 @@ Lien sécurisé valide 1&nbsp;heure. Pas besoin de mot de passe.
   <tr><td style="padding:18px 20px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;padding-bottom:8px;">Ton abonnement</td>
+        <td style="font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;padding-bottom:8px;">Votre abonnement</td>
         <td align="right" style="font-size:11px;font-weight:700;color:${T.colors.success};text-transform:uppercase;letter-spacing:1.2px;padding-bottom:8px;">● Actif</td>
       </tr>
       <tr>
@@ -251,14 +251,14 @@ Lien sécurisé valide 1&nbsp;heure. Pas besoin de mot de passe.
       </tr>
     </table>
     <div style="border-top:1px solid ${T.colors.border};margin-top:14px;padding-top:12px;font-size:12px;line-height:1.5;color:${T.colors.textMuted};">
-      Tu peux annuler à tout moment, en 1&nbsp;clic, depuis <a href="${SITE_URL}/mon-compte" style="color:${T.colors.textMuted};text-decoration:underline;">ton espace</a>. Pas de question, pas de friction.
+      Vous pouvez annuler à tout moment, en 1&nbsp;clic, depuis <a href="${SITE_URL}/mon-compte" style="color:${T.colors.textMuted};text-decoration:underline;">votre espace</a>. Pas de question, pas de friction.
     </div>
   </td></tr>
 </table>
 
 <!-- Sign off -->
 <p style="margin:24px 0 6px;font-size:14px;line-height:1.55;color:${T.colors.text};font-weight:600;">
-Une question&nbsp;? Réponds simplement à cet email.
+Une question&nbsp;? Répondez simplement à cet email.
 </p>
 <p style="margin:0;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
 C'est une vraie boîte mail surveillée. Réponse sous 24&nbsp;h ouvrées, par un humain.
@@ -273,22 +273,22 @@ C'est une vraie boîte mail surveillée. Réponse sous 24&nbsp;h ouvrées, par u
 
 Merci. Vraiment.
 
-Ton paiement ${planLabel} est confirmé. Ton accès Pro est actif maintenant.
+Votre paiement ${planLabel} est confirmé. Votre accès Pro est actif maintenant.
 
 Connexion sécurisée (1 h, usage unique) :
 ${opts.magicLink}
 
 À faire dans les 60 prochaines secondes :
 1. Radar 3916-bis (avant mai 2026) : ${SITE_URL}/outils/radar-3916-bis
-2. Configure ton portfolio : ${SITE_URL}/outils/portfolio-tracker
-3. Active une alerte prix
-4. Pose ta première question fiscale (réponds à cet email)
+2. Configurez votre portfolio : ${SITE_URL}/outils/portfolio-tracker
+3. Activez une alerte prix
+4. Posez votre première question fiscale (répondez à cet email)
 
-Une question ? Réponds simplement à ce message — réponse sous 24 h.
+Une question ? Répondez simplement à ce message — réponse sous 24 h.
 
 —
 Cryptoreflex EI · SIREN 103 352 621
-Tu peux annuler à tout moment depuis ${SITE_URL}/mon-compte`,
+Vous pouvez annuler à tout moment depuis ${SITE_URL}/mon-compte`,
   };
 }
 
@@ -307,7 +307,7 @@ export function cancelConfirmationEmail(opts: {
   });
 
   const subject = `Annulation enregistrée — accès Pro jusqu'au ${endDateFr}`;
-  const preheader = `Ton accès Pro reste actif jusqu'au ${endDateFr}. Aucun nouveau prélèvement.`;
+  const preheader = `Votre accès Pro reste actif jusqu'au ${endDateFr}. Aucun nouveau prélèvement.`;
 
   const content = `
 <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
@@ -315,7 +315,7 @@ C'est confirmé.
 </h1>
 
 <p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
-Ta demande d'annulation est bien prise en compte. Aucun nouveau prélèvement ne sera effectué après le ${endDateFr}.
+Votre demande d'annulation est bien prise en compte. Aucun nouveau prélèvement ne sera effectué après le ${endDateFr}.
 </p>
 
 <!-- End date banner success -->
@@ -326,22 +326,22 @@ Ta demande d'annulation est bien prise en compte. Aucun nouveau prélèvement ne
   </td></tr>
 </table>
 
-<h2 style="margin:32px 0 12px;font-size:17px;font-weight:700;color:${T.colors.text};">Ce que tu gardes en Free</h2>
+<h2 style="margin:32px 0 12px;font-size:17px;font-weight:700;color:${T.colors.text};">Ce que vous gardez en Free</h2>
 <ul style="margin:0;padding:0 0 0 20px;font-size:15px;color:${T.colors.text};line-height:1.7;">
   <li style="margin-bottom:6px;">Tous les calculateurs gratuits (fiscal, DCA, ROI, halving, glossaire 100 termes)</li>
   <li style="margin-bottom:6px;">Le Radar 3916-bis (gratuit, sans limite)</li>
-  <li style="margin-bottom:6px;">Tes préférences et ton historique</li>
+  <li style="margin-bottom:6px;">Vos préférences et votre historique</li>
 </ul>
 
 <h2 style="margin:24px 0 8px;font-size:15px;font-weight:600;color:${T.colors.textMuted};">Ce qui change après le ${endDateFr}</h2>
 <p style="margin:0;font-size:14px;color:${T.colors.textMuted};">Limites Free : 10 positions portfolio, 3 alertes prix.</p>
 
 <p style="margin:32px 0 0;font-size:14px;color:${T.colors.textMuted};line-height:1.55;">
-Si tu changes d'avis, tu peux te réabonner à tout moment depuis <a href="${SITE_URL}/pro" style="color:${T.colors.primary};text-decoration:underline;">cryptoreflex.fr/pro</a>.
+Si vous changez d'avis, vous pouvez vous réabonner à tout moment depuis <a href="${SITE_URL}/pro" style="color:${T.colors.primary};text-decoration:underline;">cryptoreflex.fr/pro</a>.
 </p>
 
 <p style="margin:24px 0 0;font-size:13px;color:${T.colors.textMuted};line-height:1.55;">
-On reste à l'écoute. Réponds simplement à ce message si tu as une question.
+On reste à l'écoute. Répondez simplement à ce message si vous avez une question.
 </p>
 `;
 
@@ -351,20 +351,20 @@ On reste à l'écoute. Réponds simplement à ce message si tu as une question.
     html: wrapEmail({ subject, preheader, content, email: opts.email }),
     text: `C'est confirmé.
 
-Ta demande d'annulation est bien prise en compte.
+Votre demande d'annulation est bien prise en compte.
 Aucun nouveau prélèvement ne sera effectué après le ${endDateFr}.
 
 Accès Pro maintenu jusqu'au ${endDateFr}.
 
-Ce que tu gardes en Free :
+Ce que vous gardez en Free :
 - Tous les calculateurs gratuits
 - Le Radar 3916-bis (gratuit)
-- Tes préférences et ton historique
+- Vos préférences et votre historique
 
-Si tu changes d'avis, tu peux te réabonner à tout moment :
+Si vous changez d'avis, vous pouvez vous réabonner à tout moment :
 ${SITE_URL}/pro
 
-On reste à l'écoute. Réponds simplement à ce message si tu as une question.
+On reste à l'écoute. Répondez simplement à ce message si vous avez une question.
 
 —
 Cryptoreflex EI · SIREN 103 352 621`,
@@ -380,12 +380,12 @@ export function paymentFailedEmail(opts: {
   updatePaymentUrl: string;
   graceDays: number;
 }): EmailContent {
-  const subject = `Petit souci avec ton paiement Cryptoreflex`;
-  const preheader = `Pas de panique — ${opts.graceDays} jours pour mettre à jour ta carte.`;
+  const subject = `Petit souci avec votre paiement Cryptoreflex`;
+  const preheader = `Pas de panique — ${opts.graceDays} jours pour mettre à jour votre carte.`;
 
   const content = `
 <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
-Ton paiement n'est pas passé
+Votre paiement n'est pas passé
 </h1>
 
 <p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
@@ -401,8 +401,8 @@ Pas de panique — ça arrive régulièrement. Causes les plus fréquentes :
 <!-- Grace period banner warning -->
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;margin:24px 0;">
   <tr><td style="padding:16px 20px;">
-    <p style="margin:0 0 4px;font-size:14px;color:${T.colors.warning};font-weight:700;">Tu as ${opts.graceDays} jours pour mettre à jour ta carte</p>
-    <p style="margin:0;font-size:13px;color:${T.colors.text};line-height:1.5;">Pendant ce délai, ton accès Pro reste actif. Aucune interruption, aucune perte de données.</p>
+    <p style="margin:0 0 4px;font-size:14px;color:${T.colors.warning};font-weight:700;">Vous avez ${opts.graceDays} jours pour mettre à jour votre carte</p>
+    <p style="margin:0;font-size:13px;color:${T.colors.text};line-height:1.5;">Pendant ce délai, votre accès Pro reste actif. Aucune interruption, aucune perte de données.</p>
   </td></tr>
 </table>
 
@@ -412,7 +412,7 @@ Pas de panique — ça arrive régulièrement. Causes les plus fréquentes :
 </div>
 
 <p style="margin:24px 0 0;font-size:13px;color:${T.colors.textMuted};line-height:1.55;text-align:center;">
-Besoin d'aide ? Réponds à ce message — on traite sous 24&nbsp;h ouvrées.
+Besoin d'aide ? Répondez à ce message — on traite sous 24&nbsp;h ouvrées.
 </p>
 `;
 
@@ -420,16 +420,16 @@ Besoin d'aide ? Réponds à ce message — on traite sous 24&nbsp;h ouvrées.
     subject,
     preheader,
     html: wrapEmail({ subject, preheader, content, email: opts.email }),
-    text: `Ton paiement n'est pas passé
+    text: `Votre paiement n'est pas passé
 
 Pas de panique — ça arrive. Causes : carte expirée, plafond, refus 3D Secure.
 
-Tu as ${opts.graceDays} jours pour mettre à jour ta carte.
-Pendant ce délai, ton accès Pro reste actif.
+Vous avez ${opts.graceDays} jours pour mettre à jour votre carte.
+Pendant ce délai, votre accès Pro reste actif.
 
 Mettre à jour : ${opts.updatePaymentUrl}
 
-Besoin d'aide ? Réponds à ce message.
+Besoin d'aide ? Répondez à ce message.
 
 —
 Cryptoreflex EI · SIREN 103 352 621`,

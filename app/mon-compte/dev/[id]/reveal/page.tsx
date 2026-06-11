@@ -31,7 +31,7 @@ import { CopyableKey } from "./CopyableKey";
 import { AlertTriangle, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Ta clé API — copie-la maintenant",
+  title: "Votre clé API — copiez-la maintenant",
   alternates: { canonical: `${BRAND.url}/mon-compte/dev` },
   robots: { index: false, follow: false },
 };
@@ -75,11 +75,11 @@ export default async function RevealKeyPage({
       </div>
 
       <h1 className="text-2xl sm:text-3xl font-bold mb-3">
-        Copie ta clé secrète <span className="text-primary">maintenant</span>
+        Copiez votre clé secrète <span className="text-primary">maintenant</span>
       </h1>
       <p className="text-muted-foreground mb-8">
-        Cette clé ne sera <strong>plus jamais affichée</strong>. Stocke-la dans
-        ton gestionnaire de secrets (1Password, Bitwarden, fichier{" "}
+        Cette clé ne sera <strong>plus jamais affichée</strong>. Stockez-la dans
+        votre gestionnaire de secrets (1Password, Bitwarden, fichier{" "}
         <code className="px-1 rounded bg-muted">.env</code>, etc.) avant de
         quitter cette page.
       </p>
@@ -89,15 +89,15 @@ export default async function RevealKeyPage({
         <div className="text-sm">
           <p className="font-medium text-amber-900">Sécurité :</p>
           <ul className="mt-1 list-disc list-inside space-y-1 text-amber-900/80">
-            <li>Ne committe jamais la clé dans un repo public.</li>
+            <li>Ne committez jamais la clé dans un repo public.</li>
             <li>
-              Transmets-la uniquement via header{" "}
+              Transmettez-la uniquement via header{" "}
               <code className="px-1 rounded bg-amber-500/10">
                 Authorization: Bearer
               </code>
               , jamais en query string.
             </li>
-            <li>Si tu la perds, génère-en une nouvelle (rotation 7j de grâce).</li>
+            <li>Si vous la perdez, générez-en une nouvelle (rotation 7j de grâce).</li>
           </ul>
         </div>
       </div>

@@ -101,7 +101,7 @@ export default function LoginForm() {
         />
         <h2 className="text-lg font-bold text-fg mb-2">Email envoyé&nbsp;!</h2>
         <p className="text-sm text-fg/75 leading-relaxed">
-          Vérifie ta boîte mail (et tes spams) — clique sur le lien pour te
+          Vérifie votre boîte mail (et vos spams) — clique sur le lien pour te
           connecter. Le lien expire dans 1 heure.
         </p>
         <p className="mt-4 text-xs text-muted">
@@ -114,7 +114,7 @@ export default function LoginForm() {
             }}
             className="text-primary-soft underline hover:text-primary"
           >
-            Utilise plutôt ton mot de passe
+            Utilise plutôt votre mot de passe
           </button>
         </p>
       </div>
@@ -232,7 +232,7 @@ export default function LoginForm() {
                 aria-required="true"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Ton mot de passe"
+                placeholder="Votre mot de passe"
                 autoComplete="current-password"
                 className="w-full rounded-lg border border-border bg-elevated pl-10 pr-11 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
                 disabled={loading}

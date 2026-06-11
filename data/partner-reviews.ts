@@ -102,7 +102,7 @@ export const partnerReviews: PartnerReview[] = [
     testDuration: "8 ans (2018 → aujourd'hui)",
     verdict: {
       summary:
-        "Ledger reste le hardware wallet le plus mature pour 90% des utilisateurs : Secure Element certifié, écosystème riche, support FR. Le drama Recover (2023) a entamé la confiance des puristes mais ne change rien à la sécurité de l'appareil tant que tu n'actives pas le service.",
+        "Ledger reste le hardware wallet le plus mature pour 90% des utilisateurs : Secure Element certifié, écosystème riche, support FR. Le drama Recover (2023) a entamé la confiance des puristes mais ne change rien à la sécurité de l'appareil tant que vous n'activez pas le service.",
       bestFor: [
         "Premier hardware wallet (débutant 2k–50k €)",
         "Voyageur / nomade crypto (Nano X Bluetooth)",
@@ -117,44 +117,44 @@ export const partnerReviews: PartnerReview[] = [
     },
     pedagogy: {
       problem: {
-        title: "Tes cryptos sur un exchange ne t'appartiennent pas",
-        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que tes cryptos sont sur Binance, Coinbase ou Bitpanda, tu détiens une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
+        title: "Vos cryptos sur un exchange ne vous appartiennent pas",
+        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que vos cryptos sont sur Binance, Coinbase ou Bitpanda, vous détenez une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
         stat: "30 Md$",
       },
       solution: {
-        title: "Une puce certifiée militaire qui garde tes clés hors-ligne",
-        body: "Ledger isole tes clés privées dans un Secure Element (puce certifiée Common Criteria EAL5+, même grade que les passeports biométriques). Cette puce résiste aux attaques physiques connues : extraction par micro-soudure, glitching électrique, side-channel. Même si ton ordinateur est piraté demain, tes cryptos restent intactes parce que la signature des transactions se fait DANS l'appareil, pas sur ton PC.",
+        title: "Une puce certifiée militaire qui garde vos clés hors-ligne",
+        body: "Ledger isole vos clés privées dans un Secure Element (puce certifiée Common Criteria EAL5+, même grade que les passeports biométriques). Cette puce résiste aux attaques physiques connues : extraction par micro-soudure, glitching électrique, side-channel. Même si votre ordinateur est piraté demain, vos cryptos restent intactes parce que la signature des transactions se fait DANS l'appareil, pas sur votre PC.",
         stat: "EAL5+",
       },
       mechanism: {
         title: "Comment ça fonctionne, simplement",
-        body: "Tu n'as pas besoin d'être ingénieur. Le hardware wallet sépare deux choses qui devraient toujours être séparées : ton portefeuille (la blockchain, où sont tes cryptos) et ta clé pour y accéder (qui doit rester chez toi).",
+        body: "Vous n'avez pas besoin d'être ingénieur. Le hardware wallet sépare deux choses qui devraient toujours être séparées : votre portefeuille (la blockchain, où sont vos cryptos) et votre clé pour y accéder (qui doit rester chez vous).",
         steps: [
-          "À l'achat, tu génères une seed de 24 mots — c'est la clé maîtresse, à noter sur papier (jamais photo, jamais cloud).",
-          "Chaque transaction nécessite une confirmation physique sur l'écran du Ledger : tu vérifies l'adresse, tu valides avec un bouton.",
-          "Si tu perds ou casses l'appareil, tu rachètes n'importe quel hardware compatible BIP-39 et tu restaures avec ta seed.",
+          "À l'achat, vous générez une seed de 24 mots — c'est la clé maîtresse, à noter sur papier (jamais photo, jamais cloud).",
+          "Chaque transaction nécessite une confirmation physique sur l'écran du Ledger : vous vérifiez l'adresse, vous validez avec un bouton.",
+          "Si vous perdez ou cassez l'appareil, vous rachetez n'importe quel hardware compatible BIP-39 et vous restaurez avec votre seed.",
         ],
       },
       roi: {
         title: "Le calcul, sans bullshit",
-        body: "Nano S Plus : 79 €. Si tu protèges ne serait-ce que 5 000 € de cryptos, c'est 1,6% de ton patrimoine alloué à la sécurité physique — l'équivalent d'une assurance habitation pour ton portefeuille. Lissé sur 8 ans d'usage moyen : 0,82 €/mois. Le coût d'un café par trimestre pour ne pas finir comme un client FTX qui attend toujours son dépôt 4 ans après.",
+        body: "Nano S Plus : 79 €. Si vous protégez ne serait-ce que 5 000 € de cryptos, c'est 1,6% de votre patrimoine alloué à la sécurité physique — l'équivalent d'une assurance habitation pour votre portefeuille. Lissé sur 8 ans d'usage moyen : 0,82 €/mois. Le coût d'un café par trimestre pour ne pas finir comme un client FTX qui attend toujours son dépôt 4 ans après.",
         stat: "0,82 €/mois",
       },
     },
     beforeAfter: {
       beforeTitle: "Sans hardware wallet",
       beforeItems: [
-        "Tes cryptos vivent sur un exchange — tu détiens une promesse, pas du Bitcoin",
+        "Vos cryptos vivent sur un exchange — vous détenez une promesse, pas du Bitcoin",
         "Un hack du PC, un mot de passe leaké, un phishing email = vidange instantanée",
-        "Tu vérifies frénétiquement les news pour voir si \"ton\" exchange tient encore",
-        "En cas de défaillance (FTX, Celsius), tu deviens créancier dans une procédure de 4+ ans",
+        "Vous vérifiez frénétiquement les news pour voir si \"votre\" exchange tient encore",
+        "En cas de défaillance (FTX, Celsius), vous devenez créancier dans une procédure de 4+ ans",
       ],
-      afterTitle: "Avec ton Ledger",
+      afterTitle: "Avec votre Ledger",
       afterItems: [
-        "Tes clés sont OFFLINE dans le Secure Element — inaccessibles à distance",
-        "Chaque transaction nécessite TA confirmation physique sur l'écran du Nano",
-        "Tu dors tranquille même si Binance fait la une demain matin",
-        "Ta seed phrase de 24 mots = filet de sécurité absolu, recoverable n'importe où",
+        "Vos clés sont OFFLINE dans le Secure Element — inaccessibles à distance",
+        "Chaque transaction nécessite VOTRE confirmation physique sur l'écran du Nano",
+        "Vous dormez tranquille même si Binance fait la une demain matin",
+        "Votre seed phrase de 24 mots = filet de sécurité absolu, recoverable n'importe où",
       ],
     },
     sections: [
@@ -166,7 +166,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "Ce qu'on a confirmé en 8 ans d'usage quotidien",
         content:
-          "**Le Secure Element fait son job.** La puce ST33K1M5 (certifiée Common Criteria EAL5+) résiste aux attaques physiques connues : extraction de clé par micro-soudure, glitching électrique, side-channel. Le grade EAL5+ est celui exigé pour les passeports biométriques européens. Si on te vole ton wallet, le Secure Element rend l'attaque économiquement non rentable.\n\n**Ledger Live est devenu LA référence.** Vrai dashboard mature : historique multi-comptes, swap intégré, staking ETH/SOL/DOT/ATOM en quelques clics, intégration MetaMask/Rabby native via WebUSB. Sur 200+ transactions signées en 2025, zéro bug bloquant. L'app desktop est sortie en 2018 et s'améliore release après release.\n\n**Le support en français est un game-changer.** Email contact dédié FR, réponse sous 24h en semaine. Quand on a eu une question firmware Nano X en 2024, ticket résolu en 36h. Pour un user FR qui n'est pas à l'aise en anglais, c'est tranquillité d'esprit garantie.",
+          "**Le Secure Element fait son job.** La puce ST33K1M5 (certifiée Common Criteria EAL5+) résiste aux attaques physiques connues : extraction de clé par micro-soudure, glitching électrique, side-channel. Le grade EAL5+ est celui exigé pour les passeports biométriques européens. Si on vous vole votre wallet, le Secure Element rend l'attaque économiquement non rentable.\n\n**Ledger Live est devenu LA référence.** Vrai dashboard mature : historique multi-comptes, swap intégré, staking ETH/SOL/DOT/ATOM en quelques clics, intégration MetaMask/Rabby native via WebUSB. Sur 200+ transactions signées en 2025, zéro bug bloquant. L'app desktop est sortie en 2018 et s'améliore release après release.\n\n**Le support en français est un game-changer.** Email contact dédié FR, réponse sous 24h en semaine. Quand on a eu une question firmware Nano X en 2024, ticket résolu en 36h. Pour un user FR qui n'est pas à l'aise en anglais, c'est tranquillité d'esprit garantie.",
       },
       {
         title: "Pourquoi Ledger est le choix par défaut en 2026",
@@ -188,61 +188,61 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "1. Achat depuis source officielle uniquement",
         description:
-          "N'achète JAMAIS un Ledger d'occasion (Amazon, Leboncoin, Vinted). Risque pré-flashed : un attaquant peut pré-générer la seed et te la \"révéler\" comme si tu venais de la créer. Achète sur shop.ledger.com (notre lien affilié -10% pour Pro) ou revendeurs certifiés (Fnac, Boulanger).",
+          "N'achetez JAMAIS un Ledger d'occasion (Amazon, Leboncoin, Vinted). Risque pré-flashed : un attaquant peut pré-générer la seed et vous la \"révéler\" comme si vous veniez de la créer. Achetez sur shop.ledger.com (notre lien affilié -10% pour Pro) ou revendeurs certifiés (Fnac, Boulanger).",
       },
       {
         title: "2. Génération de la seed (24 mots)",
         description:
-          "Branche, crée un PIN 4-8 chiffres (jamais 0000 ou 1234), génère la seed. NOTE-LA À LA MAIN sur les feuilles fournies. JAMAIS de photo, JAMAIS de cloud, JAMAIS de notes téléphone. Si tu fais ça, le hardware ne sert à rien.",
+          "Branchez, créez un PIN 4-8 chiffres (jamais 0000 ou 1234), générez la seed. NOTEZ-LA À LA MAIN sur les feuilles fournies. JAMAIS de photo, JAMAIS de cloud, JAMAIS de notes téléphone. Si vous faites ça, le hardware ne sert à rien.",
       },
       {
         title: "3. Test recovery dès J1",
         description:
-          "C'est l'étape que 80% des gens sautent. Reset le wallet (Settings > Security > Reset). Restore avec ta seed. Si ça marche, ta sauvegarde est valide. Si pas, recommence l'étape 2 maintenant — pas dans 6 mois quand tu as 5 000 € dessus.",
+          "C'est l'étape que 80% des gens sautent. Reset le wallet (Settings > Security > Reset). Restore avec votre seed. Si ça marche, votre sauvegarde est valide. Si pas, recommencez l'étape 2 maintenant — pas dans 6 mois quand vous avez 5 000 € dessus.",
       },
       {
         title: "4. Premier transfert : montant test 10 €",
         description:
-          "Avant de transférer 5 000 € depuis Binance, envoie d'abord 10 € de BTC. Vérifie que ça arrive bien sur ton wallet Ledger Live. Une seule lettre changée dans l'adresse = fonds perdus à jamais. Le test à 10 € coûte 1 € de fees, pas 5 000 € de regret.",
+          "Avant de transférer 5 000 € depuis Binance, envoyez d'abord 10 € de BTC. Vérifiez que ça arrive bien sur votre wallet Ledger Live. Une seule lettre changée dans l'adresse = fonds perdus à jamais. Le test à 10 € coûte 1 € de fees, pas 5 000 € de regret.",
       },
       {
         title: "5. Stockage seed offline + redondance",
         description:
-          "La feuille papier dans le tiroir = mauvaise idée long-terme (incendie, dégât des eaux). Investis 30 € dans un Cryptosteel ou équivalent métallique. Idéalement 2 copies en 2 lieux différents (chez toi + coffre bancaire / parents).",
+          "La feuille papier dans le tiroir = mauvaise idée long-terme (incendie, dégât des eaux). Investissez 30 € dans un Cryptosteel ou équivalent métallique. Idéalement 2 copies en 2 lieux différents (chez vous + coffre bancaire / parents).",
       },
     ],
     faq: [
       {
         question: "Ledger est-il vraiment sûr en 2026 après le drama Recover ?",
         answer:
-          "Oui, tant que tu n'actives pas le service Recover. Le Secure Element et le firmware de signature offline restent fonctionnels comme avant. La controverse portait sur la communication marketing initiale (\"ta seed ne quittera jamais l'appareil\"), pas sur une faille de sécurité technique. Si tu veux la garantie philosophique absolue, regarde Trezor ou Coldcard.",
+          "Oui, tant que vous n'activez pas le service Recover. Le Secure Element et le firmware de signature offline restent fonctionnels comme avant. La controverse portait sur la communication marketing initiale (\"votre seed ne quittera jamais l'appareil\"), pas sur une faille de sécurité technique. Si vous voulez la garantie philosophique absolue, regardez Trezor ou Coldcard.",
       },
       {
         question: "Quelle différence entre Nano S Plus et Nano X ?",
         answer:
-          "Nano S Plus (79 €) suffit pour 90% des users : USB-C, écran 128×64, 100+ apps simultanées, support de tous les coins majeurs. Nano X (149 €) ajoute Bluetooth chiffré + batterie pour signer en mobilité depuis ton téléphone (iOS + Android). Si tu utilises ton wallet 100% depuis ton ordinateur fixe, Nano S Plus est largement suffisant — tu paies +70 € pour rien.",
+          "Nano S Plus (79 €) suffit pour 90% des users : USB-C, écran 128×64, 100+ apps simultanées, support de tous les coins majeurs. Nano X (149 €) ajoute Bluetooth chiffré + batterie pour signer en mobilité depuis votre téléphone (iOS + Android). Si vous utilisez votre wallet 100% depuis votre ordinateur fixe, Nano S Plus est largement suffisant — vous payez +70 € pour rien.",
       },
       {
         question: "Peut-on acheter Ledger d'occasion ?",
         answer:
-          "Non. Risque pre-flashed massif : un attaquant peut acheter un Ledger, générer une seed connue de lui, le re-emballer sous plastique, et te le revendre sur Leboncoin. Quand tu allumes, l'appareil te \"propose\" la seed pré-générée comme si elle était nouvelle. Tu transfères tes cryptos dessus, l'attaquant les vide. Achat neuf depuis shop.ledger.com ou revendeur certifié uniquement.",
+          "Non. Risque pre-flashed massif : un attaquant peut acheter un Ledger, générer une seed connue de lui, le re-emballer sous plastique, et vous le revendre sur Leboncoin. Quand vous allumez, l'appareil vous \"propose\" la seed pré-générée comme si elle était nouvelle. Vous transférez vos cryptos dessus, l'attaquant les vide. Achat neuf depuis shop.ledger.com ou revendeur certifié uniquement.",
       },
       {
         question: "Ledger fonctionne-t-il avec MetaMask ?",
         answer:
-          "Oui, parfaitement. Connexion via USB (Nano S Plus) ou Bluetooth (Nano X). Tu importes ton compte Ledger dans MetaMask, et chaque transaction nécessite une confirmation physique sur l'appareil. C'est exactement le setup que recommande l'écosystème DeFi : MetaMask comme interface, Ledger comme signataire isolé. Les clés privées ne quittent jamais le Secure Element.",
+          "Oui, parfaitement. Connexion via USB (Nano S Plus) ou Bluetooth (Nano X). Vous importez votre compte Ledger dans MetaMask, et chaque transaction nécessite une confirmation physique sur l'appareil. C'est exactement le setup que recommande l'écosystème DeFi : MetaMask comme interface, Ledger comme signataire isolé. Les clés privées ne quittent jamais le Secure Element.",
       },
       {
         question: "Que faire si je perds mon Ledger ?",
         answer:
-          "Rien — du moins, rien d'urgent. Le Ledger en lui-même ne contient pas de cryptos, il contient la clé privée chiffrée. Tes cryptos sont sur la blockchain. Tant que tu as ta seed phrase de 24 mots, tu peux acheter un nouveau Ledger (ou Trezor, ou n'importe quel hardware compatible BIP-39) et restaurer l'accès complet à tes fonds. Le PIN est protégé : 3 mauvais essais et l'appareil se réinitialise automatiquement.",
+          "Rien — du moins, rien d'urgent. Le Ledger en lui-même ne contient pas de cryptos, il contient la clé privée chiffrée. Vos cryptos sont sur la blockchain. Tant que vous avez votre seed phrase de 24 mots, vous pouvez acheter un nouveau Ledger (ou Trezor, ou n'importe quel hardware compatible BIP-39) et restaurer l'accès complet à vos fonds. Le PIN est protégé : 3 mauvais essais et l'appareil se réinitialise automatiquement.",
       },
     ],
     whyBuyNow: [
       {
         reason: "Le hardware le plus mature du marché (8 ans d'usage testé)",
         description:
-          "Secure Element ST33K1M5 certifié CC EAL5+, app Ledger Live polish, écosystème 5500+ tokens. Tu n'achètes pas un produit jeune : tu achètes 8 ans d'itérations sécurité.",
+          "Secure Element ST33K1M5 certifié CC EAL5+, app Ledger Live polish, écosystème 5500+ tokens. Vous n'achetez pas un produit jeune : vous achetez 8 ans d'itérations sécurité.",
       },
       {
         reason: "Made in France — design + R&D + fabrication EU",
@@ -252,7 +252,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Bluetooth chiffré (Nano X) pour signer en mobilité",
         description:
-          "Si tu utilises ton wallet depuis ton iPhone ou Android en déplacement, Nano X est le seul qui le fait bien. App mobile iOS + Android natives. Pour un freelance crypto qui voyage, c'est game-changer.",
+          "Si vous utilisez votre wallet depuis votre iPhone ou Android en déplacement, Nano X est le seul qui le fait bien. App mobile iOS + Android natives. Pour un freelance crypto qui voyage, c'est game-changer.",
       },
       {
         reason: "Support en français sous 24h ouvrées",
@@ -302,43 +302,43 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Faire confiance à un fabricant, c'est encore faire confiance",
-        body: "Le marketing crypto te vend de la \"sécurité\" comme une boîte noire : achète ce produit, fais-nous confiance, on te promet que c'est bien fait. Mais comment vérifies-tu ? Si le firmware est fermé, tu n'as aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer ta seed sans que tu t'en aperçoives — et tu ne pourrais pas le démontrer.",
+        body: "Le marketing crypto vous vend de la \"sécurité\" comme une boîte noire : achète ce produit, fais-nous confiance, on vous promet que c'est bien fait. Mais comment vérifiez-vous ? Si le firmware est fermé, vous n'avez aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer votre seed sans que vous vous en aperceviez — et vous ne pourriez pas le démontrer.",
         stat: "0%",
       },
       solution: {
         title: "100% du code public sur GitHub — vérifiable par n'importe qui",
-        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Tu n'achètes pas un produit qui te promet la sécurité — tu achètes un produit dont la sécurité est démontrable mathématiquement et publiquement.",
+        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Vous n'achetez pas un produit qui te promet la sécurité — vous achetez un produit dont la sécurité est démontrable mathématiquement et publiquement.",
         stat: "11 ans",
       },
       mechanism: {
         title: "Comment la transparence crée la sécurité",
         body: "Le paradoxe : montrer le code rend l'appareil PLUS sûr, pas moins. Parce que des milliers d'yeux scrutent en permanence ce que mille employés Ledger ne pourraient pas vérifier eux-mêmes. C'est le principe \"many eyes\" cher à la sécurité informatique sérieuse depuis Linux.",
         steps: [
-          "Tu télécharges Trezor Suite (open-source) — tu peux compiler depuis source si tu veux la paranoïa absolue.",
-          "Tu génères ta seed BIP-39 24 mots, OU tu actives Shamir Backup (5 parts dont 3 nécessaires) sur Safe 5.",
+          "Vous téléchargez Trezor Suite (open-source) — vous pouvez compiler depuis source si vous voulez la paranoïa absolue.",
+          "Vous générez votre seed BIP-39 24 mots, OU vous activez Shamir Backup (5 parts dont 3 nécessaires) sur Safe 5.",
           "Chaque transaction est signée hors-ligne dans le Secure Element Optiga (EAL6+), avec validation visuelle sur l'écran couleur.",
         ],
       },
       roi: {
         title: "Le prix de la souveraineté crypto",
-        body: "Trezor Safe 3 : 79 €. Sur un horizon crypto réaliste de 10 ans, ça fait 7,90 €/an pour la liberté de NE PAS faire confiance. Pour un investisseur qui dépasse les 20 k€ en patrimoine numérique, ce coût est insignifiant face au principe : tu ne délègues à personne le contrôle de ton avenir financier.",
+        body: "Trezor Safe 3 : 79 €. Sur un horizon crypto réaliste de 10 ans, ça fait 7,90 €/an pour la liberté de NE PAS faire confiance. Pour un investisseur qui dépasse les 20 k€ en patrimoine numérique, ce coût est insignifiant face au principe : vous ne déléguez à personne le contrôle de votre avenir financier.",
         stat: "7,90 €/an",
       },
     },
     beforeAfter: {
       beforeTitle: "Sans contrôle souverain",
       beforeItems: [
-        "Tu fais confiance à un fabricant qui peut, en théorie, pousser une update opaque",
-        "En cas de pression étatique sur la marque, tu n'as aucun moyen de savoir si le firmware a été modifié",
+        "Vous faites confiance à un fabricant qui peut, en théorie, pousser une update opaque",
+        "En cas de pression étatique sur la marque, vous n'avez aucun moyen de savoir si le firmware a été modifié",
         "Si la société disparaît ou est rachetée, le code peut devenir inaccessible",
-        "Tu ne peux pas démontrer la sécurité — tu y crois sur parole marketing",
+        "Vous ne pouvez pas démontrer la sécurité — vous y croyez sur parole marketing",
       ],
       afterTitle: "Avec Trezor open-source",
       afterItems: [
-        "Chaque ligne de firmware est sur GitHub — tu peux la lire, la compiler, la flasher toi-même",
+        "Chaque ligne de firmware est sur GitHub — vous pouvez la lire, la compiler, la flasher vous-même",
         "Toute backdoor serait détectée par la communauté en heures, signalée publiquement",
         "Si SatoshiLabs disparaît demain, le projet continue (déjà arrivé : Trezor One forké à plusieurs reprises)",
-        "Shamir Backup natif : tu fragmentes ta seed sur 5 lieux, 3 nécessaires pour restaurer",
+        "Shamir Backup natif : vous fragmentez votre seed sur 5 lieux, 3 nécessaires pour restaurer",
       ],
     },
     sections: [
@@ -350,7 +350,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "Ce qu'on adore : l'open-source intégral",
         content:
-          "**Firmware 100% open-source depuis 2014.** Tu peux télécharger le code source, le compiler toi-même, le flasher sur ton appareil. Personne ne peut t'imposer une mise à jour cachée. Si SatoshiLabs disparaît demain, la communauté peut continuer le projet — c'est gravé dans la licence.\n\n**Trezor Suite est aussi open-source.** Tu peux auditer chaque interaction de l'app desktop. La paranoïa cypherpunk peut compiler Suite depuis le code source pour s'assurer qu'il n'y a pas de télémétrie cachée. Personne d'autre n'offre cette transparence à ce niveau.\n\n**Shamir Backup natif (SLIP-39) sur Safe 5 et Model T.** Tu peux fractionner ta seed en 5 parts dont 3 sont nécessaires pour restaurer. Idéal pour patrimoines sérieux : 1 part chez toi, 1 chez tes parents, 1 dans un coffre bancaire, 1 chez ton notaire, 1 dans un coffre fort distant. Aucun lieu compromis ne donne accès aux fonds — 3/5 reconstituent la seed.",
+          "**Firmware 100% open-source depuis 2014.** Vous pouvez télécharger le code source, le compiler vous-même, le flasher sur votre appareil. Personne ne peut vous imposer une mise à jour cachée. Si SatoshiLabs disparaît demain, la communauté peut continuer le projet — c'est gravé dans la licence.\n\n**Trezor Suite est aussi open-source.** Vous pouvez auditer chaque interaction de l'app desktop. La paranoïa cypherpunk peut compiler Suite depuis le code source pour s'assurer qu'il n'y a pas de télémétrie cachée. Personne d'autre n'offre cette transparence à ce niveau.\n\n**Shamir Backup natif (SLIP-39) sur Safe 5 et Model T.** Vous pouvez fractionner votre seed en 5 parts dont 3 sont nécessaires pour restaurer. Idéal pour patrimoines sérieux : 1 part chez vous, 1 chez vos parents, 1 dans un coffre bancaire, 1 chez votre notaire, 1 dans un coffre fort distant. Aucun lieu compromis ne donne accès aux fonds — 3/5 reconstituent la seed.",
       },
       {
         title: "11 ans de leadership sur la transparence",
@@ -377,12 +377,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "2. Vérification d'authenticité",
         description:
-          "À l'ouverture, Trezor Suite vérifie cryptographiquement que ton appareil est authentique (firmware signé Trezor). Si l'écran affiche \"non authentique\", retourne le produit immédiatement.",
+          "À l'ouverture, Trezor Suite vérifie cryptographiquement que votre appareil est authentique (firmware signé Trezor). Si l'écran affiche \"non authentique\", retourne le produit immédiatement.",
       },
       {
         title: "3. Choix : seed standard 24 mots OU Shamir Backup",
         description:
-          "Sur Safe 5 et Model T, tu peux choisir Shamir Backup (5 parts dont 3 nécessaires). Plus complexe mais plus sécurisé pour gros patrimoines. Sur Safe 3 et One, seed BIP-39 24 mots classique.",
+          "Sur Safe 5 et Model T, vous pouvez choisir Shamir Backup (5 parts dont 3 nécessaires). Plus complexe mais plus sécurisé pour gros patrimoines. Sur Safe 3 et One, seed BIP-39 24 mots classique.",
       },
       {
         title: "4. Test recovery + envoi 10 € test",
@@ -392,7 +392,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "5. Activation Passphrase (optionnel mais recommandé)",
         description:
-          "Le 25e mot Trezor Passphrase crée un wallet caché supplémentaire. Si on te force à révéler ta seed sous contrainte, tu donnes la seed sans passphrase (= wallet leurre avec petit montant), ton vrai wallet reste invisible. Configurable depuis Suite > Settings > Passphrase.",
+          "Le 25e mot Trezor Passphrase crée un wallet caché supplémentaire. Si on te force à révéler votre seed sous contrainte, vous donnez la seed sans passphrase (= wallet leurre avec petit montant), votre vrai wallet reste invisible. Configurable depuis Suite > Settings > Passphrase.",
       },
     ],
     faq: [
@@ -404,7 +404,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Qu'est-ce que le Shamir Backup et qui devrait l'activer ?",
         answer:
-          "Shamir Backup (SLIP-39) divise ta seed en N parts dont M sont nécessaires pour restaurer (par défaut 5 parts, 3 requises). Avantages : plus de single point of failure, distribution géographique possible. Inconvénients : plus complexe, risque d'oublier une part. Recommandé pour patrimoines >50 k€. Pour un user lambda avec 5 k€, la seed BIP-39 classique 24 mots reste plus simple.",
+          "Shamir Backup (SLIP-39) divise votre seed en N parts dont M sont nécessaires pour restaurer (par défaut 5 parts, 3 requises). Avantages : plus de single point of failure, distribution géographique possible. Inconvénients : plus complexe, risque d'oublier une part. Recommandé pour patrimoines >50 k€. Pour un user lambda avec 5 k€, la seed BIP-39 classique 24 mots reste plus simple.",
       },
       {
         question: "Trezor fonctionne-t-il avec MetaMask ?",
@@ -414,34 +414,34 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Pourquoi Trezor n'a pas d'app iOS ?",
         answer:
-          "Trezor a fait le choix philosophique de ne pas développer pour iOS (restrictions Apple sur USB hardware) et de limiter Android à un usage Suite Lite (consultation). Si l'usage mobile est central pour toi, Ledger Nano X (Bluetooth + iOS + Android) est plus adapté.",
+          "Trezor a fait le choix philosophique de ne pas développer pour iOS (restrictions Apple sur USB hardware) et de limiter Android à un usage Suite Lite (consultation). Si l'usage mobile est central pour vous, Ledger Nano X (Bluetooth + iOS + Android) est plus adapté.",
       },
       {
         question: "Comment éviter le phishing post-leak Trezor 2022 ?",
         answer:
-          "Règles strictes : (1) Trezor ne t'envoie jamais d'email avec lien de mise à jour. (2) Toute update se fait depuis Trezor Suite, jamais via lien externe. (3) Si tu reçois un email \"urgent\" — ignore. Configure un filtre Gmail pour mettre tout email contenant \"trezor\" en quarantaine pour vérification manuelle.",
+          "Règles strictes : (1) Trezor ne vous envoie jamais d'email avec lien de mise à jour. (2) Toute update se fait depuis Trezor Suite, jamais via lien externe. (3) Si vous recevez un email \"urgent\" — ignore. Configure un filtre Gmail pour mettre tout email contenant \"trezor\" en quarantaine pour vérification manuelle.",
       },
     ],
     whyBuyNow: [
       {
-        reason: "100% open-source — vérifie toi-même, ne fais pas confiance",
+        reason: "100% open-source — vérifiez vous-même, ne faites pas confiance",
         description:
-          "Chaque ligne de firmware est sur GitHub. Personne ne peut t'imposer une mise à jour cachée. Si tu veux savoir ce que fait ton wallet à la milliseconde près, tu peux le lire. Aucun autre hardware wallet sérieux ne fait ça intégralement.",
+          "Chaque ligne de firmware est sur GitHub. Personne ne peut vous imposer une mise à jour cachée. Si vous voulez savoir ce que fait votre wallet à la milliseconde près, vous pouvez le lire. Aucun autre hardware wallet sérieux ne fait ça intégralement.",
       },
       {
         reason: "Shamir Backup natif (SLIP-39) sur Safe 5 et Model T",
         description:
-          "Tu fragmentes ta seed en 5 parts dont 3 nécessaires pour restaurer. Distribution géographique sécurisée : 1 chez toi, 1 chez tes parents, 1 dans un coffre bancaire. Aucun lieu compromis ne donne accès aux fonds. Idéal pour patrimoines >50 k€.",
+          "Vous fragmentez votre seed en 5 parts dont 3 nécessaires pour restaurer. Distribution géographique sécurisée : 1 chez vous, 1 chez vos parents, 1 dans un coffre bancaire. Aucun lieu compromis ne donne accès aux fonds. Idéal pour patrimoines >50 k€.",
       },
       {
         reason: "Pionnier du marché (depuis 2014) — 11 ans sans incident firmware critique",
         description:
-          "Quand tu achètes Trezor, tu achètes une décennie de retours d'expérience communauté, de bugs corrigés en public, d'audits indépendants. La maturité du code prouvée par le temps.",
+          "Quand vous achetez Trezor, vous achetez une décennie de retours d'expérience communauté, de bugs corrigés en public, d'audits indépendants. La maturité du code prouvée par le temps.",
       },
       {
         reason: "Compatibilité Linux native + philosophie souveraine",
         description:
-          "Tu compiles ton kernel le week-end ? Trezor Suite tourne nativement sur Linux. Tu peux compiler le firmware depuis source. C'est l'outil des utilisateurs qui refusent de déléguer leur sécurité à une marque.",
+          "Vous compilez votre kernel le week-end ? Trezor Suite tourne nativement sur Linux. Vous pouvez compiler le firmware depuis source. C'est l'outil des utilisateurs qui refusent de déléguer leur sécurité à une marque.",
       },
     ],
     socialProof: [
@@ -491,55 +491,55 @@ export const partnerReviews: PartnerReview[] = [
       },
       solution: {
         title: "Le seul SaaS qui produit un Cerfa 2086 prêt à téléverser",
-        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Tu connectes tes exchanges, l'outil applique automatiquement la méthode PMP, classe tes plus-values cession par cession, et te génère deux PDFs : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Tu n'as qu'à recopier les chiffres sur impots.gouv.fr.",
+        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode PMP, classe vos plus-values cession par cession, et te génère deux PDFs : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
         stat: "100% Bercy",
       },
       mechanism: {
         title: "Comment Waltio transforme 14h de Excel en 45 min",
-        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour te laisser uniquement la partie qui demande ta validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
+        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour te laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
         steps: [
-          "Tu colles les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
-          "L'IA reconnaît et classe 95% des transactions ; tu réconcilies manuellement les 5% restants (15-30 min).",
-          "Tu télécharges les PDFs Cerfa 2086 + 3916-bis pré-remplis et tu les recopies sur impots.gouv.fr (15 min).",
+          "Vous collez les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
+          "L'IA reconnaît et classe 95% des transactions ; vous réconciliez manuellement les 5% restants (15-30 min).",
+          "Vous téléchargez les PDFs Cerfa 2086 + 3916-bis pré-remplis et vous les recopiez sur impots.gouv.fr (15 min).",
         ],
       },
       roi: {
         title: "Le ROI sale et défendable, en chiffres",
-        body: "Plan Investisseur : 199 €/an. Tu gagnes 12 heures de saisie chaque mai (× 30 €/h de ton temps facturé = 360 € de valeur récupérée dès la 1ère année). Tu évites 750 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon ton profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
+        body: "Plan Investisseur : 199 €/an. Vous gagnez 12 heures de saisie chaque mai (× 30 €/h de votre temps facturé = 360 € de valeur récupérée dès la 1ère année). Vous évitez 750 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon votre profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
         stat: "ROI 1.8x–250x",
       },
     },
     beforeAfter: {
       beforeTitle: "Sans Waltio en mai",
       beforeItems: [
-        "14 heures de Excel multi-onglets pour calculer tes plus-values en PMP manuellement",
+        "14 heures de Excel multi-onglets pour calculer vos plus-values en PMP manuellement",
         "Risque réel d'amende 750 € à 10 000 € par compte étranger oublié au 3916-bis",
-        "Stress fiscal jusqu'au dépôt — tu doutes de chaque calcul, tu refais 3 fois",
-        "Pas de traçabilité : si Bercy t'audite, tu n'as pas de méthode défendable",
+        "Stress fiscal jusqu'au dépôt — vous doutez de chaque calcul, vous refaites 3 fois",
+        "Pas de traçabilité : si Bercy t'audite, vous n'avez pas de méthode défendable",
       ],
       afterTitle: "Avec Waltio Investisseur",
       afterItems: [
         "1h30 la première année, 45 min les suivantes — incrémental automatique",
         "Cerfa 2086 + 3916-bis pré-remplis selon doctrine BOFiP, prêts à téléverser",
-        "Toutes tes plateformes étrangères listées exhaustivement, aucun oubli possible",
-        "Méthode PMP horodatée + sources légales citées : tu es défendable face à un audit fiscal",
+        "Toutes vos plateformes étrangères listées exhaustivement, aucun oubli possible",
+        "Méthode PMP horodatée + sources légales citées : vous êtes défendable face à un audit fiscal",
       ],
     },
     sections: [
       {
         title: "Pourquoi Waltio est l'unique solution conforme à Bercy",
         content:
-          "Pour un résident fiscal français, Waltio est le seul SaaS qui produit un export 100% conforme au Cerfa 2086 (formulaire des plus-values d'actifs numériques) avec la méthode exigée par la doctrine BOFiP : le PMP (Prix Moyen Pondéré, art. 150 VH bis CGI).\n\nLe résultat : tu obtiens deux PDFs prêts à téléverser sur impots.gouv.fr. Le 2086 avec tes plus-values calculées cession par cession, et la liste exhaustive des comptes étrangers (3916-bis, case 8UU) à déclarer. Tu copies les valeurs, c'est fini. Sans cet outil, c'est 14 heures de Excel multi-onglets.",
+          "Pour un résident fiscal français, Waltio est le seul SaaS qui produit un export 100% conforme au Cerfa 2086 (formulaire des plus-values d'actifs numériques) avec la méthode exigée par la doctrine BOFiP : le PMP (Prix Moyen Pondéré, art. 150 VH bis CGI).\n\nLe résultat : vous obtenez deux PDFs prêts à téléverser sur impots.gouv.fr. Le 2086 avec vos plus-values calculées cession par cession, et la liste exhaustive des comptes étrangers (3916-bis, case 8UU) à déclarer. Vous copiez les valeurs, c'est fini. Sans cet outil, c'est 14 heures de Excel multi-onglets.",
       },
       {
         title: "Ce qu'on a confirmé en 4 campagnes fiscales",
         content:
-          "**Connexion 220+ plateformes en API.** Binance, Bitpanda, Coinhouse, Kraken, Bitget, Coinbase Pro, Crypto.com — tu colles tes clés API read-only et l'historique se reconstitue automatiquement. On a importé 4 ans d'historique multi-exchanges en moins de 30 minutes. Quand un exchange change son format API (Binance l'a fait 3 fois en 2024), Waltio patche en quelques jours.\n\n**Cerfa 2086 + 3916-bis pré-remplis.** Sans Waltio, on a passé 14h sur Excel pour la déclaration 2022. Avec Waltio, 1h30 en 2023, 45 min en 2024. Chaque année devient incrémentale.\n\n**Support FR sous 24h en période fiscale (avril-juin).** Quand on a eu un cas tordu (un airdrop à valoriser fiscalement), réponse argumentée par leur équipe en 18h, avec citation de la doctrine BOFiP. Pour un user FR qui galère avec un cas particulier, c'est de l'or.\n\n**Prix défendable.** Plan Investisseur 199 €/an pour 5 000 transactions max = environ 1h de travail d'un expert-comptable spécialisé crypto (200-300 €/h). Tu gagnes 12-13h chaque mai. ROI évident dès la première utilisation.",
+          "**Connexion 220+ plateformes en API.** Binance, Bitpanda, Coinhouse, Kraken, Bitget, Coinbase Pro, Crypto.com — vous collez vos clés API read-only et l'historique se reconstitue automatiquement. On a importé 4 ans d'historique multi-exchanges en moins de 30 minutes. Quand un exchange change son format API (Binance l'a fait 3 fois en 2024), Waltio patche en quelques jours.\n\n**Cerfa 2086 + 3916-bis pré-remplis.** Sans Waltio, on a passé 14h sur Excel pour la déclaration 2022. Avec Waltio, 1h30 en 2023, 45 min en 2024. Chaque année devient incrémentale.\n\n**Support FR sous 24h en période fiscale (avril-juin).** Quand on a eu un cas tordu (un airdrop à valoriser fiscalement), réponse argumentée par leur équipe en 18h, avec citation de la doctrine BOFiP. Pour un user FR qui galère avec un cas particulier, c'est de l'or.\n\n**Prix défendable.** Plan Investisseur 199 €/an pour 5 000 transactions max = environ 1h de travail d'un expert-comptable spécialisé crypto (200-300 €/h). Vous gagnez 12-13h chaque mai. ROI évident dès la première utilisation.",
       },
       {
         title: "Pourquoi Waltio est devenu la référence FR depuis 2018",
         content:
-          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Tes clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Ton patrimoine reste chez toi, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand l'administration fait évoluer sa doctrine, Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
+          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Vos clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Votre patrimoine reste chez vous, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand l'administration fait évoluer sa doctrine, Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
       },
     ],
     specs: [
@@ -556,27 +556,27 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "1. Inscription (gratuit, plan Découverte)",
         description:
-          "Pas besoin de payer immédiatement. Le plan Découverte (0 €) te permet d'importer tes exchanges et visualiser ton portfolio + un aperçu des plus-values. Tu paies uniquement pour générer les exports Cerfa.",
+          "Pas besoin de payer immédiatement. Le plan Découverte (0 €) vous permet d'importer vos exchanges et visualiser votre portfolio + un aperçu des plus-values. Vous payez uniquement pour générer les exports Cerfa.",
       },
       {
         title: "2. Connexion API exchanges (read-only)",
         description:
-          "Sur chaque exchange, génère une clé API READ-ONLY (jamais avec droits de trade ou retrait). Colle dans Waltio. L'historique des transactions s'importe automatiquement. Pour les wallets DeFi (MetaMask, Phantom), tu colles l'adresse publique.",
+          "Sur chaque exchange, génère une clé API READ-ONLY (jamais avec droits de trade ou retrait). Colle dans Waltio. L'historique des transactions s'importe automatiquement. Pour les wallets DeFi (MetaMask, Phantom), vous collez l'adresse publique.",
       },
       {
         title: "3. Réconciliation (10-30 min selon volume)",
         description:
-          "Waltio te montre les transactions \"non reconnues\" : par exemple un airdrop reçu, un swap exotique, un staking reward. Tu les classes manuellement ou tu laisses l'IA Waltio le faire. Cette étape est cruciale pour la fiabilité du calcul fiscal.",
+          "Waltio vous montre les transactions \"non reconnues\" : par exemple un airdrop reçu, un swap exotique, un staking reward. Vous les classez manuellement ou vous laissez l'IA Waltio le faire. Cette étape est cruciale pour la fiabilité du calcul fiscal.",
       },
       {
         title: "4. Upgrade Investisseur quand prêt",
         description:
-          "Une fois ton historique réconcilié, upgrade vers Investisseur (199 €/an) pour générer les Cerfa. Le paiement débloque les exports PDF + CSV.",
+          "Une fois votre historique réconcilié, upgrade vers Investisseur (199 €/an) pour générer les Cerfa. Le paiement débloque les exports PDF + CSV.",
       },
       {
         title: "5. Téléversement sur impots.gouv.fr",
         description:
-          "Tu te connectes à impots.gouv.fr, vas dans la déclaration des revenus, et copies les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Ne télécharge pas le PDF Waltio en pièce jointe (le fisc veut les valeurs, pas le PDF).",
+          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copies les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Ne télécharge pas le PDF Waltio en pièce jointe (le fisc veut les valeurs, pas le PDF).",
       },
     ],
     faq: [
@@ -598,7 +598,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Est-ce que Waltio gère le staking, les airdrops, les NFT ?",
         answer:
-          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon ton profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifie la doctrine à jour ou consulte un professionnel.",
+          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon votre profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifie la doctrine à jour ou consulte un professionnel.",
       },
       {
         question: "Combien de temps pour finir ma déclaration avec Waltio ?",
@@ -610,7 +610,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Le seul outil qui produit un Cerfa 2086 conforme à Bercy",
         description:
-          "La méthode du prix moyen pondéré (PMP) imposée par l'art. 150 VH bis CGI est native dans Waltio. Tu télécharges, tu téléverses sur impots.gouv.fr, c'est fini. Aucun autre SaaS international (Koinly, CoinTracking) ne le fait pour la France.",
+          "La méthode du prix moyen pondéré (PMP) imposée par l'art. 150 VH bis CGI est native dans Waltio. Vous téléchargez, vous téléversez sur impots.gouv.fr, c'est fini. Aucun autre SaaS international (Koinly, CoinTracking) ne le fait pour la France.",
       },
       {
         reason: "Évite jusqu'à 10 000 € d'amende par compte 3916-bis non déclaré",
@@ -620,12 +620,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Gagne 12 à 14 heures de saisie chaque mai",
         description:
-          "Sans Waltio : 14h de Excel multi-onglets pour calculer tes plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de ton temps facturé, c'est 360 €+ de valeur récupérée pour 199 €/an.",
+          "Sans Waltio : 14h de Excel multi-onglets pour calculer vos plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de votre temps facturé, c'est 360 €+ de valeur récupérée pour 199 €/an.",
       },
       {
         reason: "Support FR sous 24h en période fiscale (avril-juin)",
         description:
-          "Tu as un cas tordu (airdrop, swap DeFi, fork) ? Tu écris au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne te donne ça en français.",
+          "Vous avez un cas tordu (airdrop, swap DeFi, fork) ? Vous écrivez au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne te donne ça en français.",
       },
     ],
     socialProof: [

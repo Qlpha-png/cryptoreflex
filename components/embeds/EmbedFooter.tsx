@@ -50,7 +50,7 @@ export default function EmbedFooter({
           <AlertTriangle size={12} style={{ marginTop: 2, flexShrink: 0 }} />
           <span>
             Outil pédagogique — ne constitue pas un conseil en investissement
-            ni un conseil fiscal. Consulte un professionnel pour ta situation.
+            ni un conseil fiscal. Consulte un professionnel pour votre situation.
           </span>
         </p>
       )}

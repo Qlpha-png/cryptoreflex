@@ -45,7 +45,7 @@ const FAQ_ITEMS = [
   {
     question: "Comment fonctionne l'outil Whitepaper TL;DR ?",
     answer:
-      "Tu colles le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une série d'heuristiques (regex et détection de mots-clés) puis retourne un résumé structuré FR (problème, solution, tokenomics, équipe), une liste de red flags détectés, un score BS sur 100 et un verdict (Sérieux, Mitigé ou Suspect).",
+      "Vous collez le texte d'un whitepaper crypto dans la zone de saisie, l'outil analyse le contenu via une série d'heuristiques (regex et détection de mots-clés) puis retourne un résumé structuré FR (problème, solution, tokenomics, équipe), une liste de red flags détectés, un score BS sur 100 et un verdict (Sérieux, Mitigé ou Suspect).",
   },
   {
     question: "Mes données sont-elles stockées ?",
@@ -80,7 +80,7 @@ const FAQ_ITEMS = [
   {
     question: "L'outil interactif est-il disponible ?",
     answer:
-      "L'analyseur interactif est actuellement en refonte et temporairement indisponible. La grille des red flags reste publique et auditable sur cette page : tu peux l'appliquer toi-même à n'importe quel whitepaper. La méthodologie de scoring (chaque red flag pèse un nombre de points prédéfini) est documentée ci-dessous.",
+      "L'analyseur interactif est actuellement en refonte et temporairement indisponible. La grille des red flags reste publique et auditable sur cette page : vous pouvez l'appliquer vous-même à n'importe quel whitepaper. La méthodologie de scoring (chaque red flag pèse un nombre de points prédéfini) est documentée ci-dessous.",
   },
 ];
 
@@ -176,7 +176,7 @@ export default function WhitepaperTldrPage() {
                 L&apos;outil qui analyse automatiquement un whitepaper collé est
                 temporairement indisponible, le temps d&apos;une refonte. En
                 attendant, la grille de red flags ci-dessous est entièrement
-                publique : tu peux l&apos;appliquer toi-même, red flag par red
+                publique : vous pouvez l&apos;appliquer vous-même, red flag par red
                 flag, à n&apos;importe quel whitepaper.
               </p>
             </div>

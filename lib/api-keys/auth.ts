@@ -124,9 +124,9 @@ export async function requireApiKey(
       response: errorResponse(
         429,
         "TOO_MANY_REQUESTS",
-        "Trop de tentatives d'authentification. Réessaie dans quelques instants.",
+        "Trop de tentatives d'authentification. Réessayez dans quelques instants.",
         request_id,
-        "Tu peux ralentir tes appels ou contacter le support si le problème persiste.",
+        "Vous pouvez ralentir vos appels ou contacter le support si le problème persiste.",
         { "Retry-After": String(preAuth.retryAfter) },
       ),
     };
@@ -141,7 +141,7 @@ export async function requireApiKey(
       response: errorResponse(
         401,
         "MISSING_CREDENTIALS",
-        "Clé API manquante. Ajoute le header `Authorization: Bearer cr_sk_...`.",
+        "Clé API manquante. Ajoutez le header `Authorization: Bearer cr_sk_...`.",
         request_id,
       ),
     };
@@ -207,9 +207,9 @@ export async function requireApiKey(
         "Cette clé n'est plus active.",
         request_id,
         servable.reason === "deprecated_grace_over"
-          ? "La période de grâce est dépassée. Génère une nouvelle clé."
+          ? "La période de grâce est dépassée. Générez une nouvelle clé."
           : servable.reason === "expired" || servable.reason === "expired_natural"
-            ? "Cette clé a expiré. Crée une nouvelle clé dans ton dashboard."
+            ? "Cette clé a expiré. Créez une nouvelle clé dans votre dashboard."
             : "Cette clé a été révoquée.",
       ),
     };
@@ -267,7 +267,7 @@ export async function requireApiKey(
         "RATE_LIMIT_EXCEEDED",
         "Quota dépassé pour cette clé.",
         request_id,
-        "Patiente, ralentis tes appels, ou passe à un tier supérieur.",
+        "Patientez, ralentissez vos appels, ou passez à un tier supérieur.",
         rlHeaders,
       ),
     };
@@ -305,7 +305,7 @@ function invalidCredentials(request_id: string): Response {
     "INVALID_CREDENTIALS",
     "Clé API invalide ou inactive.",
     request_id,
-    "Vérifie ton header Authorization ou crée une nouvelle clé sur /mon-compte/dev.",
+    "Vérifiez votre header Authorization ou créez une nouvelle clé sur /mon-compte/dev.",
   );
 }
 

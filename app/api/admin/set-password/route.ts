@@ -132,6 +132,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     ok: true,
     userId: user.id,
-    message: `Password reset pour ${email}. Tu peux te connecter via /connexion.`,
+    message: `Password reset pour ${email}. Vous pouvez te connecter via /connexion.`,
   });
 }

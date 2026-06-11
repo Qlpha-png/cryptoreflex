@@ -40,7 +40,7 @@ export default function GasTrackerFrPage() {
     },
     {
       q: "Pourquoi tracker les L2 ?",
-      a: "Les Layer 2 (Arbitrum, Optimism, Base, zkSync, Polygon) coûtent 10-100× moins cher que le mainnet Ethereum. Si tu fais un swap < 1000 €, ça vaut presque toujours le coup de passer par un L2 plutôt que par le mainnet. On te montre la comparaison live.",
+      a: "Les Layer 2 (Arbitrum, Optimism, Base, zkSync, Polygon) coûtent 10-100× moins cher que le mainnet Ethereum. Si vous faites un swap < 1000 €, ça vaut presque toujours le coup de passer par un L2 plutôt que par le mainnet. On vous montre la comparaison live.",
     },
     {
       q: "Quelle est la « meilleure heure » pour transacter ?",
@@ -48,7 +48,7 @@ export default function GasTrackerFrPage() {
     },
     {
       q: "Comment fonctionneront les alertes gas ?",
-      a: "Tu paramètres « préviens-moi quand gas ETH < 15 gwei » → email/push immédiat. Idéal pour batcher tes swaps à bas coût ou claim des airdrops. Gratuit.",
+      a: "Vous paramétrez « prévenez-moi quand gas ETH < 15 gwei » → email/push immédiat. Idéal pour batcher vos swaps à bas coût ou claim des airdrops. Gratuit.",
     },
   ];
 
@@ -91,7 +91,7 @@ export default function GasTrackerFrPage() {
             <span className="gradient-text">Gas Tracker</span> FR
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Suis en temps réel les frais de gas Ethereum + Layer 2 majeurs
+            Suivez en temps réel les frais de gas Ethereum + Layer 2 majeurs
             (Arbitrum, Optimism, Base, zkSync, Polygon). Traduit en français
             + suggestions « meilleure heure pour swap » + alertes gas bas.
           </p>
@@ -145,9 +145,9 @@ export default function GasTrackerFrPage() {
 
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <Zap className="mx-auto h-10 w-10 text-primary" aria-hidden />
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Active l&apos;alerte gas bas</h2>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Activez l&apos;alerte gas bas</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Inscris-toi pour être prévenu·e dès que le gas Ethereum descend
+            Inscrivez-vous pour être prévenu·e dès que le gas Ethereum descend
             sous 15 gwei. Gratuit.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

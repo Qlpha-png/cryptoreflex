@@ -25,7 +25,7 @@ export async function POST(): Promise<NextResponse> {
 
   const result = await sendPushToUser(user.id, {
     title: "🧪 Test push réussi",
-    body: "Si tu vois ce message, la config VAPID + Service Worker est OK.",
+    body: "Si vous voyez ce message, la config VAPID + Service Worker est OK.",
     url: "/admin",
     tag: "admin-test",
   });

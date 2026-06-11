@@ -3,7 +3,7 @@ import { loadOgFonts } from "@/lib/og-fonts";
 import { BRAND } from "@/lib/brand";
 
 export const runtime = "edge";
-export const alt = "Quiz : trouve ton exchange crypto idéal en 60 sec";
+export const alt = "Quiz : trouve votre exchange crypto idéal en 60 sec";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -113,7 +113,7 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            Compare les plateformes MiCA selon ton profil — Coinbase, Binance, Bitpanda…
+            Compare les plateformes MiCA selon votre profil — Coinbase, Binance, Bitpanda…
           </div>
         </div>
 

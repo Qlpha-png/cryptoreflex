@@ -14,7 +14,7 @@ import { WifiOff, RotateCcw, Home } from "lucide-react";
  */
 export const metadata: Metadata = {
   title: "Hors ligne",
-  description: "Tu es actuellement hors ligne. Reconnecte-toi pour reprendre.",
+  description: "Vous êtes actuellement hors ligne. Reconnectez-vous pour reprendre.",
   robots: { index: false, follow: false },
 };
 
@@ -29,12 +29,12 @@ export default function OfflinePage() {
         </div>
 
         <h1 className="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-fg">
-          Tu es hors ligne
+          Vous êtes hors ligne
         </h1>
 
         <p className="mt-4 text-base text-fg/70">
-          Pas de connexion détectée. Vérifie ton réseau (Wi-Fi, données mobiles)
-          puis recharge la page. Les pages déjà visitées restent disponibles.
+          Pas de connexion détectée. Vérifiez votre réseau (Wi-Fi, données mobiles)
+          puis rechargez la page. Les pages déjà visitées restent disponibles.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

@@ -19,7 +19,7 @@ import { ArrowLeft, Search, Trophy, Wallet } from "lucide-react";
 export const metadata: Metadata = {
   title: "Ce guide d'achat n'existe pas — Cryptoreflex",
   description:
-    "Ce guide d'achat crypto n'est pas disponible. Découvre nos 780 cryptos analysées et où les acheter.",
+    "Ce guide d'achat crypto n'est pas disponible. Découvrez nos 780 cryptos analysées et où les acheter.",
   robots: { index: false, follow: false },
 };
 

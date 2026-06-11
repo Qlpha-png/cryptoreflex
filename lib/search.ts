@@ -176,7 +176,7 @@ const TOOLS: Array<{
     id: "calculateur-fiscalite",
     title: "Calculateur fiscalité crypto FR",
     url: "/outils/calculateur-fiscalite",
-    snippet: "Calcule tes plus-values et l'impôt à payer (PFU 31,4 %).",
+    snippet: "Calcule vos plus-values et l'impôt à payer (PFU 31,4 %).",
     keywords: ["impot", "fiscalite", "pfu", "plus-value", "declaration", "france"],
   },
   {

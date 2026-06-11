@@ -123,8 +123,8 @@ export default function TradingViewWidget({
               </div>
               <p className="text-sm text-fg/85 max-w-md">
                 Le graphique TradingView ne s'affiche pas ? C'est probablement
-                ton bloqueur de pubs ou ton extension de confidentialité qui
-                bloque l'iframe. Tu peux désactiver le bloqueur sur cette page,
+                votre bloqueur de pubs ou votre extension de confidentialité qui
+                bloque l'iframe. Vous pouvez désactiver le bloqueur sur cette page,
                 ou consulter directement le graphique sur TradingView.
               </p>
               <a

@@ -164,7 +164,7 @@ export default async function ApiKeyDetailPage({
         <p className="text-sm text-muted-foreground mb-3">
           La révocation est <strong>irréversible</strong>. Toutes les requêtes
           avec cette clé renverront 401 instantanément. Utilise cette action
-          si tu soupçonnes une fuite.
+          si vous soupçonnez une fuite.
         </p>
         {canBeRevoked ? (
           <form action={revokeApiKeyAction}>

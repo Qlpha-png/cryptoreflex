@@ -84,14 +84,14 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
     if (ratio >= 0.875) {
       return {
         title: `Expert ${cryptoSymbol} !`,
-        sub: "Tu maîtrises mieux que 95 % des investisseurs crypto FR. Bravo.",
+        sub: "Vous maîtrisez mieux que 95 % des investisseurs crypto FR. Bravo.",
         color: "text-accent-green",
       };
     }
     if (ratio >= 0.625) {
       return {
         title: "Bien joué !",
-        sub: "Tu maîtrises les fondamentaux. Lis la fiche complète pour aller plus loin.",
+        sub: "Vous maîtrisez les fondamentaux. Lisez la fiche complète pour aller plus loin.",
         color: "text-primary-soft",
       };
     }
@@ -104,7 +104,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
     }
     return {
       title: "À découvrir",
-      sub: `Pas grave — explore la fiche ${cryptoName} ci-dessus, et reviens dans 1 semaine.`,
+      sub: `Pas grave — explorez la fiche ${cryptoName} ci-dessus, et revenez dans 1 semaine.`,
       color: "text-accent-rose",
     };
   })();
@@ -126,7 +126,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-fg">
-            Connais-tu vraiment {cryptoName} ?
+            Connaissez-vous vraiment {cryptoName} ?
           </h2>
           <p className="mt-2 text-sm text-fg/75">
             {totalQuestions} questions, 2 min, sans piège — juste de la pédagogie.
@@ -281,7 +281,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
           {score / totalQuestions >= 0.75 && (
             <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-4 text-left">
               <p className="text-sm text-fg/85">
-                <strong className="text-fg">Bravo !</strong> Reçois la newsletter
+                <strong className="text-fg">Bravo !</strong> Recevez la newsletter
                 Cryptoreflex (3 min de lecture chaque matin) — actus crypto FR sans
                 hype, fiscalité, MiCA.
               </p>

@@ -69,7 +69,7 @@ export default function ProgressBackupCard() {
 
   function handleImport() {
     if (!importCode.trim()) {
-      setImportState({ kind: "error", msg: "Colle ton code de sauvegarde avant de restaurer." });
+      setImportState({ kind: "error", msg: "Collez votre code de sauvegarde avant de restaurer." });
       return;
     }
     setImportState({ kind: "loading" });
@@ -80,7 +80,7 @@ export default function ProgressBackupCard() {
         // Recharge après 1s pour que l'UI reflète la progression restaurée
         setTimeout(() => window.location.reload(), 1200);
       } else {
-        setImportState({ kind: "error", msg: "Code invalide ou vide — vérifie que tu n'as pas tronqué le code." });
+        setImportState({ kind: "error", msg: "Code invalide ou vide — vérifiez que vous n'avez pas tronqué le code." });
       }
     } catch {
       setImportState({ kind: "error", msg: "Erreur lors de la restauration. Code corrompu ?" });
@@ -93,11 +93,11 @@ export default function ProgressBackupCard() {
       className="mt-10 rounded-2xl border border-border bg-surface/60 p-6 sm:p-8"
     >
       <h2 id="backup-h" className="flex items-center gap-2 text-lg font-bold text-fg">
-        Sauvegarder ta progression
+        Sauvegarder votre progression
       </h2>
       <p className="mt-1 text-sm text-muted">
-        Ta progression vit dans ton navigateur. Si tu vides ton cache ou changes
-        d&apos;appareil, exporte ton code de sauvegarde — et colle-le sur le nouvel
+        Votre progression vit dans votre navigateur. Si vous videz votre cache ou changez
+        d&apos;appareil, exportez votre code de sauvegarde — et collez-le sur le nouvel
         appareil pour tout retrouver.
       </p>
 
@@ -138,7 +138,7 @@ export default function ProgressBackupCard() {
               {exportState.code ? (
                 <>
                   <p className="text-xs text-muted">
-                    Copie ce code et conserve-le (notes, email à toi-même, fichier texte).
+                    Copiez ce code et conservez-le (notes, email à vous-même, fichier texte).
                   </p>
                   <div className="relative">
                     <textarea
@@ -161,7 +161,7 @@ export default function ProgressBackupCard() {
                 </>
               ) : (
                 <p className="text-sm text-muted italic">
-                  Aucune progression enregistrée pour l&apos;instant — commence une leçon pour créer une sauvegarde.
+                  Aucune progression enregistrée pour l&apos;instant — commencez une leçon pour créer une sauvegarde.
                 </p>
               )}
             </div>
@@ -170,7 +170,7 @@ export default function ProgressBackupCard() {
           {exportState.kind === "copied" && (
             <div className="flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-400/10 p-3 text-sm text-emerald-300">
               <Check className="h-4 w-4 shrink-0" aria-hidden="true" />
-              Copié ! Conserve ce code en lieu sûr.
+              Copié ! Conservez ce code en lieu sûr.
             </div>
           )}
         </div>
@@ -180,13 +180,13 @@ export default function ProgressBackupCard() {
       {tab === "import" && (
         <div className="mt-4 space-y-3">
           <p className="text-xs text-muted">
-            Colle ici le code exporté depuis un autre appareil pour restaurer ta progression.
+            Collez ici le code exporté depuis un autre appareil pour restaurer votre progression.
           </p>
           <textarea
             value={importCode}
             onChange={(e) => setImportCode(e.target.value)}
             rows={4}
-            placeholder="Colle ton code ici…"
+            placeholder="Collez votre code ici…"
             className="w-full resize-none rounded-xl border border-border bg-background/60 p-3 font-mono text-xs text-fg/90 placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Code de sauvegarde à restaurer"
           />

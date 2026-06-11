@@ -147,7 +147,7 @@ export default function RessourcesLibresPage() {
               Outils embeddables
             </h2>
             <p className="mt-3 text-fg/70">
-              4 calculateurs et simulateurs prêts à intégrer en 1 ligne sur ton
+              4 calculateurs et simulateurs prêts à intégrer en 1 ligne sur votre
               site (iframe + attribution dofollow obligatoire).
             </p>
           </header>
@@ -379,7 +379,7 @@ export default function RessourcesLibresPage() {
                   Tous les contenus listés sur cette page (widgets, données,
                   logo, glossaire) sont publiés sous license{" "}
                   <strong>Creative Commons Attribution 4.0 International</strong>.
-                  Tu peux les réutiliser pour un usage personnel, éducatif ou
+                  Vous pouvez les réutiliser pour un usage personnel, éducatif ou
                   commercial — la seule condition est de citer la source avec
                   un lien <em>dofollow</em> vers <code className="text-primary-soft">cryptoreflex.fr</code>.
                 </p>

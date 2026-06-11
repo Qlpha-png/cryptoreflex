@@ -100,7 +100,7 @@ export const metadata: Metadata = {
   // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Compare 34 plateformes MiCA, analyse 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils crypto, méthodologie publique.",
+    "Comparez 34 plateformes MiCA, analysez 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils crypto, méthodologie publique.",
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
@@ -373,7 +373,7 @@ export default async function HomePage() {
           variant="secondary"
           Icon={GraduationCap}
           eyebrow="Académie · 100% gratuit"
-          title="Apprends la crypto, de zéro à autonome"
+          title="Apprenez la crypto, de zéro à autonome"
           intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation. Progression sauvegardée, sans compte ni paywall."
           ctaHref="/academie"
           ctaLabel="Découvrir l'académie"
@@ -451,8 +451,8 @@ export default async function HomePage() {
           newsletter). Cf. selectSteps() case "homepage" dans NextStepsGuide. */}
       <NextStepsGuide
         context="homepage"
-        title="Avant de partir, garde ça sous la main"
-        intro="Les ressources les plus utiles pour aller plus loin — à ton rythme."
+        title="Avant de partir, gardez ça sous la main"
+        intro="Les ressources les plus utiles pour aller plus loin — à votre rythme."
       />
 
       {/* StickyMobileCta — barre CTA flottante mobile au-dessus de

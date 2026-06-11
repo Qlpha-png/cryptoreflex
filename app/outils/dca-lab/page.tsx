@@ -28,9 +28,9 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "DCA Lab — Compare 6 stratégies DCA sur n'importe quelle crypto",
+  title: "DCA Lab — Comparez 6 stratégies DCA sur n'importe quelle crypto",
   description:
-    "Simulateur avancé : DCA simple, DCA-X RSI, Value Averaging, Lump-Sum, 50/50, DCA-Out drawdown. Backtest sur 1-7 ans, toutes cryptos top 100. Vérifie quelle stratégie aurait gagné. Bientôt.",
+    "Simulateur avancé : DCA simple, DCA-X RSI, Value Averaging, Lump-Sum, 50/50, DCA-Out drawdown. Backtest sur 1-7 ans, toutes cryptos top 100. Vérifiez quelle stratégie aurait gagné. Bientôt.",
   alternates: withHreflang(`${BRAND.url}/outils/dca-lab`),
 };
 
@@ -46,11 +46,11 @@ export default function DcaLabPage() {
     },
     {
       q: "Quels actifs sont supportés ?",
-      a: "Top 100 cryptos par capitalisation, données historiques depuis 2018 (ou date de listing si plus récent). Sources : CryptoCompare API + CoinGecko. Tu choisis la crypto, la fréquence (quotidien/hebdo/mensuel), la période (1-7 ans), le montant.",
+      a: "Top 100 cryptos par capitalisation, données historiques depuis 2018 (ou date de listing si plus récent). Sources : CryptoCompare API + CoinGecko. Vous choisissez la crypto, la fréquence (quotidien/hebdo/mensuel), la période (1-7 ans), le montant.",
     },
     {
       q: "Pourquoi c'est intéressant pédagogiquement ?",
-      a: "Parce que la plupart des « gourous » disent « DCA = solution ultime » sans contexte. Un backtest honnête montre que sur Bitcoin 2020-2024, lump-sum a battu DCA sur la plupart des périodes (marché haussier). Mais sur un actif baissier comme LUNA 2022, DCA a au moins limité la casse. L'outil te fait voir par toi-même.",
+      a: "Parce que la plupart des « gourous » disent « DCA = solution ultime » sans contexte. Un backtest honnête montre que sur Bitcoin 2020-2024, lump-sum a battu DCA sur la plupart des périodes (marché haussier). Mais sur un actif baissier comme LUNA 2022, DCA a au moins limité la casse. L'outil vous fait voir par vous-même.",
     },
     {
       q: "C'est gratuit ?",
@@ -61,7 +61,7 @@ export default function DcaLabPage() {
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/dca-lab",
-      title: "DCA Lab — Compare 6 stratégies DCA sur n'importe quelle crypto",
+      title: "DCA Lab — Comparez 6 stratégies DCA sur n'importe quelle crypto",
       description: "Simulateur multi-stratégies DCA / Lump-Sum / Value Averaging / RSI-based / drawdown.",
       date: "2026-05-02",
       dateModified: "2026-05-02",
@@ -97,7 +97,7 @@ export default function DcaLabPage() {
             <span className="gradient-text">DCA Lab</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Compare 6 stratégies d&apos;investissement crypto (DCA simple, DCA
+            Comparez 6 stratégies d&apos;investissement crypto (DCA simple, DCA
             RSI, Value Averaging, Lump-Sum, 50/50, DCA-Out drawdown) sur
             n&apos;importe quelle crypto top 100, sur 1 à 7 ans. Voir laquelle
             aurait vraiment gagné — pas ce que le tweetos dit.
@@ -109,12 +109,12 @@ export default function DcaLabPage() {
 
         <div className="mt-8">
           <Tldr
-            headline="Le débat DCA vs Lump-Sum est mal posé : il dépend de l'actif et de la période. Le DCA Lab te le montre chiffré, sans bullshit."
+            headline="Le débat DCA vs Lump-Sum est mal posé : il dépend de l'actif et de la période. Le DCA Lab vous le montre chiffré, sans bullshit."
             bullets={[
               { emoji: "🧪", text: "6 stratégies testées en parallèle sur la même période" },
               { emoji: "📈", text: "Top 100 cryptos, historique depuis 2018" },
               { emoji: "🎯", text: "Fréquence flexible : quotidien / hebdo / mensuel" },
-              { emoji: "🔗", text: "Share-link pour partager ton backtest (gratuit)" },
+              { emoji: "🔗", text: "Share-link pour partager votre backtest (gratuit)" },
             ]}
             readingTime="4 min"
             level="Intermédiaire"
@@ -142,9 +142,9 @@ export default function DcaLabPage() {
 
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <TestTube2 className="mx-auto h-10 w-10 text-primary" aria-hidden />
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Active l&apos;accès anticipé</h2>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Activez l&apos;accès anticipé</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscris-toi à la newsletter pour tester le
+            Lancement Q3 2026. Inscrivez-vous à la newsletter pour tester le
             DCA Lab en avant-première et recevoir des backtests pré-calculés
             sur les 10 cryptos majeures.
           </p>

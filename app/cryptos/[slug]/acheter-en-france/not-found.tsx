@@ -11,7 +11,7 @@ import { ArrowLeft, Search, Trophy, ShieldCheck } from "lucide-react";
 export const metadata: Metadata = {
   title: "Crypto introuvable — Cryptoreflex",
   description:
-    "Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvre nos 780 cryptos analysées sur des plateformes régulées MiCA.",
+    "Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvrez nos 780 cryptos analysées sur des plateformes régulées MiCA.",
   robots: { index: false, follow: false },
 };
 

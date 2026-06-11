@@ -13,7 +13,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 export const metadata: Metadata = {
   title: "Créer un compte",
   description:
-    "Crée ton compte Cryptoreflex en 30 secondes avec ton email et un mot de passe. Gratuit, sans engagement.",
+    "Crée votre compte Cryptoreflex en 30 secondes avec votre email et un mot de passe. Gratuit, sans engagement.",
   alternates: { canonical: `${BRAND.url}/inscription` },
   robots: { index: false, follow: true },
 };
@@ -29,7 +29,7 @@ export default function InscriptionPage() {
             <UserPlus className="h-6 w-6" aria-hidden="true" />
           </span>
           <h1 className="text-3xl font-extrabold text-fg">
-            Crée ton <span className="gradient-text">compte</span>
+            Crée votre <span className="gradient-text">compte</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
             Gratuit · 30 secondes · Aucune carte bancaire requise.

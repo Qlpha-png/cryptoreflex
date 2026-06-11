@@ -193,6 +193,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ok: true,
     connectionId: data.id,
     provider,
-    message: "Connexion enregistrée. Lance la sync pour importer tes balances.",
+    message: "Connexion enregistrée. Lance la sync pour importer vos balances.",
   });
 }

@@ -68,7 +68,7 @@ export default function AcademyLevelGuide() {
         Par où commencer ?
       </h2>
       <p className="mt-1 text-sm text-muted">
-        Dis-nous où tu en es — on te montre ton point de départ idéal. Tu restes
+        Dites-nous où vous en êtes — on vous montre votre point de départ idéal. Vous restez
         libre de suivre n&apos;importe quel parcours : rien n&apos;est verrouillé.
       </p>
 
@@ -112,7 +112,7 @@ export default function AcademyLevelGuide() {
       {hydrated && entry && (
         <div className="mt-5 rounded-xl border border-primary/30 bg-primary/5 p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-soft">
-            Ton point de départ recommandé
+            Votre point de départ recommandé
           </p>
           <Link
             href={`/academie/${entry.id}`}
@@ -123,7 +123,7 @@ export default function AcademyLevelGuide() {
           </Link>
           {nextOnes.length > 0 && (
             <div className="mt-4">
-              <p className="text-xs text-muted">Puis, à ton rythme :</p>
+              <p className="text-xs text-muted">Puis, à votre rythme :</p>
               <ul role="list" className="mt-2 flex flex-wrap gap-2">
                 {nextOnes.map((t) => (
                   <li key={t.id}>

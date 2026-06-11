@@ -93,7 +93,7 @@ export const BADGES: Badge[] = [
   {
     id: "first_steps",
     name: "Premier Pas",
-    description: "Tu as gagné tes 10 premiers XP — bienvenue dans l'aventure.",
+    description: "Vous avez gagné vos 10 premiers XP — bienvenue dans l'aventure.",
     icon: "Sparkles",
     unlock: (p) => p.xp >= 10,
   },
@@ -107,7 +107,7 @@ export const BADGES: Badge[] = [
   {
     id: "strategist",
     name: "Stratège",
-    description: "Premier portfolio créé — tu suis ton patrimoine sereinement.",
+    description: "Premier portfolio créé — vous suivez votre patrimoine sereinement.",
     icon: "Briefcase",
     // Heuristique : portfolio_update donne 10 XP ; ce badge devrait être
     // attribué directement par le code de portfolio (TODO : on évalue ici sur xp ≥ 10).
@@ -137,14 +137,14 @@ export const BADGES: Badge[] = [
   {
     id: "diamond_hands",
     name: "Diamond Hands",
-    description: "180 jours consécutifs. Tu es au-delà du marché.",
+    description: "180 jours consécutifs. Vous êtes au-delà du marché.",
     icon: "Gem",
     unlock: (p) => p.bestStreak >= 180,
   },
   {
     id: "insider",
     name: "Cryptoreflex Insider",
-    description: "1 an consécutif. Tu fais partie du noyau dur.",
+    description: "1 an consécutif. Vous faites partie du noyau dur.",
     icon: "Crown",
     unlock: (p) => p.bestStreak >= 365,
   },

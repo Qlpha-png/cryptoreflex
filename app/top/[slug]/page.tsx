@@ -202,11 +202,11 @@ function buildListicleFaqs(
     },
     {
       question: `Comment investir dans ces cryptos depuis la France ?`,
-      answer: `Toutes les cryptos de ce classement sont disponibles à l'achat sur des plateformes régulées MiCA en France (Coinbase, Bitpanda, Kraken, Bitstack, Binance, etc.). Compare nos avis pour choisir la plateforme la plus adaptée à ton profil.`,
+      answer: `Toutes les cryptos de ce classement sont disponibles à l'achat sur des plateformes régulées MiCA en France (Coinbase, Bitpanda, Kraken, Bitstack, Binance, etc.). Compare nos avis pour choisir la plateforme la plus adaptée à votre profil.`,
     },
     {
       question: `Quel est le risque réel de ces cryptos ?`,
-      answer: `Le marché crypto reste hautement volatile. Les cryptos du Top 10 (BTC, ETH, SOL…) ont une volatilité 3-5× supérieure aux actions, mais une liquidité élevée. Les hidden gems peuvent perdre 50-80 % en quelques semaines. Investis uniquement ce que tu peux te permettre de perdre.`,
+      answer: `Le marché crypto reste hautement volatile. Les cryptos du Top 10 (BTC, ETH, SOL…) ont une volatilité 3-5× supérieure aux actions, mais une liquidité élevée. Les hidden gems peuvent perdre 50-80 % en quelques semaines. Investis uniquement ce que vous pouvez te permettre de perdre.`,
     },
   ];
 }

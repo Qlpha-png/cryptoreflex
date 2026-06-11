@@ -198,8 +198,8 @@ export default async function GainersLosersPage() {
               </h3>
               <p className="mt-1 text-sm text-fg/80 leading-relaxed">
                 Une crypto qui monte fortement sur 24h n'est pas forcément un
-                "bon investissement". Vérifie le volume, la news catalyseur
-                (annonce, listing, partenariat), et méfie-toi des pumps
+                "bon investissement". Vérifiez le volume, la news catalyseur
+                (annonce, listing, partenariat), et méfiez-vous des pumps
                 spéculatifs sans fondamental. Les hausses extrêmes (+50 %, +100 %)
                 sur des petites caps sont souvent suivies de retours brutaux.
               </p>

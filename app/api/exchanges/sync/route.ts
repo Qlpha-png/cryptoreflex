@@ -56,7 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         ok: false,
-        error: `Sync trop fréquente. Réessaie dans ${rl.retryAfter}s.`,
+        error: `Sync trop fréquente. Réessayez dans ${rl.retryAfter}s.`,
       },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
     );
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       {
         ok: false,
         error:
-          "Aucune connexion Binance trouvée. Connecte d'abord ton compte via /portefeuille → Connecter Binance.",
+          "Aucune connexion Binance trouvée. Connectez d'abord votre compte via /portefeuille → Connecter Binance.",
       },
       { status: 404 },
     );
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         ok: false,
-        error: `Connexion désactivée après ${MAX_CONSECUTIVE_FAILURES} échecs consécutifs. Reconnecte ta clé Binance.`,
+        error: `Connexion désactivée après ${MAX_CONSECUTIVE_FAILURES} échecs consécutifs. Reconnectez votre clé Binance.`,
       },
       { status: 403 },
     );
@@ -133,7 +133,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       {
         ok: false,
         error:
-          "Impossible de déchiffrer la clé. La clé maître a peut-être été rotée. Reconnecte ton compte Binance.",
+          "Impossible de déchiffrer la clé. La clé maître a peut-être été rotée. Reconnectez votre compte Binance.",
       },
       { status: 500 },
     );

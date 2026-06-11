@@ -136,11 +136,11 @@ export default function ComparatifFraisPage() {
     faqSchema([
       {
         question: "Quelle est la plateforme crypto la moins chere en 2026 ?",
-        answer: `Selon nos donnees au ${new Date().toLocaleDateString("fr-FR")}, ${cheapestMaker.name} affiche les frais maker les plus bas du marche FR (${fmtPct(cheapestMaker.spotMaker)}). A nuancer : un maker bas peut s'accompagner d'un spread plus large ou de frais de retrait eleves. On recommande de calculer le cout total selon ton profil de trade.`,
+        answer: `Selon nos donnees au ${new Date().toLocaleDateString("fr-FR")}, ${cheapestMaker.name} affiche les frais maker les plus bas du marche FR (${fmtPct(cheapestMaker.spotMaker)}). A nuancer : un maker bas peut s'accompagner d'un spread plus large ou de frais de retrait eleves. On recommande de calculer le cout total selon votre profil de trade.`,
       },
       {
         question: "Quelle difference entre frais maker et taker ?",
-        answer: "Le maker pose un ordre limit qui ajoute de la liquidite au carnet (taux plus bas). Le taker prend un ordre marche qui retire de la liquidite (taux plus eleve, en general 1.5x a 2x le maker). Pour minimiser : trade avec ordres limit quand possible.",
+        answer: "Le maker pose un ordre limit qui ajoute de la liquidite au carnet (taux plus bas). Le taker prend un ordre marche qui retire de la liquidite (taux plus eleve, en general 1.5x a 2x le maker). Pour minimiser : tradez avec ordres limit quand possible.",
       },
       {
         question: "Pourquoi le spread peut peser plus que les frais ?",
@@ -304,13 +304,13 @@ export default function ComparatifFraisPage() {
           <h2 className="text-lg font-bold text-fg">Comment lire ce comparatif</h2>
           <ul className="mt-3 space-y-2 text-sm text-fg/85">
             <li>
-              <strong className="text-fg">Maker :</strong> tu poses un ordre
+              <strong className="text-fg">Maker :</strong> vous posez un ordre
               limit qui ajoute de la liquidite au carnet d&apos;ordres. Frais
               les plus bas. <em className="text-muted">Bonne nouvelle pour les traders patients.</em>
             </li>
             <li>
-              <strong className="text-fg">Taker :</strong> tu prends un ordre
-              marche, tu consommes la liquidite existante. Frais ~1.5x a 2x
+              <strong className="text-fg">Taker :</strong> vous prenez un ordre
+              marche, vous consommez la liquidite existante. Frais ~1.5x a 2x
               superieurs au maker.
             </li>
             <li>

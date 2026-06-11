@@ -247,20 +247,20 @@ export default function TrackQuiz({
           {passed ? "Bravo, quiz validé !" : "Pas encore validé"}
         </h2>
         <p className="mt-2 text-sm text-fg/80">
-          Ton score : <strong className="text-primary-glow">{score}</strong> /{" "}
+          Votre score : <strong className="text-primary-glow">{score}</strong> /{" "}
           {questions.length}{" "}
           {passed
             ? "— parcours validé, bravo !"
-            : `— il te faut ${PASSING_SCORE} bonnes réponses pour valider.`}
+            : `— il vous faut ${PASSING_SCORE} bonnes réponses pour valider.`}
         </p>
       </header>
 
       {/* Détail des réponses — aria-live polite pour le feedback question par
           question (annonce le détail après le score global, dans l'ordre). */}
       <p className="mt-8 text-center text-xs text-muted">
-        Comprends ta note : pour chaque question,{" "}
+        Comprenez votre note : pour chaque question,{" "}
         <span className="font-medium text-success-fg">en vert la bonne réponse</span>,{" "}
-        <span className="font-medium text-danger-fg">en rouge ton erreur</span> s&apos;il y en a une, et le « pourquoi » juste en dessous.
+        <span className="font-medium text-danger-fg">en rouge votre erreur</span> s&apos;il y en a une, et le « pourquoi » juste en dessous.
       </p>
       <ol
         className="mt-4 space-y-3"
@@ -317,7 +317,7 @@ export default function TrackQuiz({
                           {isCorrectChoice ? (
                             <CheckCircle2 className="h-4 w-4 shrink-0 text-success-fg" aria-label="Bonne réponse" />
                           ) : isUserChoice ? (
-                            <XCircle className="h-4 w-4 shrink-0 text-danger-fg" aria-label="Ton choix, incorrect" />
+                            <XCircle className="h-4 w-4 shrink-0 text-danger-fg" aria-label="Votre choix, incorrect" />
                           ) : (
                             <span className="h-4 w-4 shrink-0" aria-hidden="true" />
                           )}
@@ -329,7 +329,7 @@ export default function TrackQuiz({
                           )}
                           {isUserChoice && !isCorrectChoice && (
                             <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-danger-fg">
-                              Ton choix
+                              Votre choix
                             </span>
                           )}
                         </li>
@@ -339,7 +339,7 @@ export default function TrackQuiz({
 
                   {userAns < 0 && (
                     <p className="mt-2 text-xs font-medium text-warning-fg">
-                      Tu n&apos;as pas répondu à cette question.
+                      Vous n&apos;avez pas répondu à cette question.
                     </p>
                   )}
 
@@ -387,7 +387,7 @@ export default function TrackQuiz({
 
       {passed && !nextTrack && (
         <p className="mt-6 text-center text-sm font-semibold text-primary-glow">
-          🎓 Tu as validé tout le cursus de l&apos;académie. Bravo !
+          🎓 Vous avez validé tout le cursus de l&apos;académie. Bravo !
         </p>
       )}
     </section>

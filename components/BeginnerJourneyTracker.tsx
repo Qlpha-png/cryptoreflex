@@ -88,7 +88,7 @@ export default function BeginnerJourneyTracker() {
 
     // Annonce SR du changement de progression.
     if (allComplete) {
-      setProgressMessage("Bravo, tu as parcouru les 4 étapes du parcours débutant !");
+      setProgressMessage("Bravo, vous avez parcouru les 4 étapes du parcours débutant !");
     } else if (currentStep && visited.length > 0) {
       const next = BEGINNER_STEPS.find((s) => s.step === currentStep);
       setProgressMessage(

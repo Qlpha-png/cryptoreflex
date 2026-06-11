@@ -97,7 +97,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/guides", label: "Guides pratiques actionnables" },
       { href: "/actualites", label: "Actualités crypto FR" },
       { href: "/calendrier", label: "Calendrier crypto (halvings, ETF, FOMC)" },
-      { href: "/quiz/crypto", label: "Quiz : quelle crypto pour toi ?" },
+      { href: "/quiz/crypto", label: "Quiz : quelle crypto pour vous ?" },
       // BATCH 44a — historique programmatic 240 URLs orphelines
       { href: "/historique-prix", label: "Historique prix crypto par année" },
     ],
@@ -196,7 +196,7 @@ export default async function Footer() {
           <div className="lg:col-span-3">
             <Logo variant="full" height={36} className="mb-3" asLink={false} title="Cryptoreflex" />
             <p className="text-sm text-fg/80 max-w-md">
-              Ton guide pour naviguer dans l&apos;univers crypto. Comparatifs de plateformes,
+              Votre guide pour naviguer dans l&apos;univers crypto. Comparatifs de plateformes,
               guides pour débutants et outils gratuits — sans jargon.
             </p>
 

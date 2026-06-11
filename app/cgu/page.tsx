@@ -129,9 +129,9 @@ export default function CguPage() {
       <h2 className="mt-10 text-2xl font-bold text-fg">8. Compte utilisateur</h2>
       <p className="text-fg/85 leading-relaxed">
         L&apos;ouverture d&apos;un compte gratuit (watchlist, alertes) est
-        soumise à fourniture d&apos;une adresse email valide. Tu es
-        responsable de la confidentialité de tes identifiants. En cas
-        d&apos;usage non-autorisé, contacte immédiatement{" "}
+        soumise à fourniture d&apos;une adresse email valide. Vous êtes
+        responsable de la confidentialité de vos identifiants. En cas
+        d&apos;usage non-autorisé, contactez immédiatement{" "}
         <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
           {BRAND.email}
         </a>. L&apos;éditeur peut suspendre/supprimer un compte en cas
@@ -168,7 +168,7 @@ export default function CguPage() {
         L&apos;éditeur se réserve le droit de modifier les CGU à tout moment.
         Les modifications prennent effet à leur publication sur cette page.
         La date de dernière mise à jour figure en haut du document. Pour
-        être notifié des changements majeurs, abonne-toi à la newsletter.
+        être notifié des changements majeurs, abonnez-vous à la newsletter.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">12. Droit applicable</h2>
@@ -189,11 +189,11 @@ export default function CguPage() {
       <hr className="my-10 border-border" />
 
       <p className="text-sm text-muted">
-        Pour toute question relative aux présentes CGU, contacte{" "}
+        Pour toute question relative aux présentes CGU, contactez{" "}
         <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
           {BRAND.email}
         </a>{" "}
-        ou consulte les pages{" "}
+        ou consultez les pages{" "}
         <Link href="/mentions-legales" className="text-primary-soft hover:underline">
           mentions légales
         </Link>{" "}

@@ -45,7 +45,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 // Mot-clé long-tail "widgets crypto embed gratuits" + brand en suffixe.
 const PAGE_TITLE = "Widgets crypto embed gratuits | Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "4 widgets crypto gratuits à intégrer en 1 ligne sur ton blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
+  "4 widgets crypto gratuits à intégrer en 1 ligne sur votre blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -69,38 +69,38 @@ const FAQ_ITEMS = [
   {
     question: "Puis-je modifier le widget (couleurs, taille, langue) ?",
     answer:
-      "La taille (width / height) est libre — utilise les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du dark theme Cryptoreflex (gold + dark). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonne-toi à la newsletter pour être notifié.",
+      "La taille (width / height) est libre — utilisez les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du dark theme Cryptoreflex (gold + dark). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonnez-vous à la newsletter pour être notifié.",
   },
   {
     question: "Quelle license s'applique ?",
     answer:
-      "Creative Commons BY 4.0. Tu peux intégrer les widgets gratuitement, y compris sur des sites commerciaux ou monétisés (pub, affiliation), à une seule condition : conserver l'attribution « Powered by Cryptoreflex » avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
+      "Creative Commons BY 4.0. Vous pouvez intégrer les widgets gratuitement, y compris sur des sites commerciaux ou monétisés (pub, affiliation), à une seule condition : conserver l'attribution « Powered by Cryptoreflex » avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
   },
   {
     question: "Les iframes ralentissent-elles ma page ?",
     answer:
-      "Très peu. Les widgets utilisent loading=\"lazy\" par défaut (ils se chargent quand l'utilisateur scrolle dessus) et le bundle JS est tree-shaké. Sur un test Lighthouse standard, l'impact LCP / CLS est négligeable. Le widget tourne en CSR (Client-Side Rendering) chez Cryptoreflex, pas chez toi.",
+      "Très peu. Les widgets utilisent loading=\"lazy\" par défaut (ils se chargent quand l'utilisateur scrolle dessus) et le bundle JS est tree-shaké. Sur un test Lighthouse standard, l'impact LCP / CLS est négligeable. Le widget tourne en CSR (Client-Side Rendering) chez Cryptoreflex, pas chez vous.",
   },
   {
     question:
       "Est-ce que mes utilisateurs sont trackés par Cryptoreflex ?",
     answer:
-      "Uniquement avec Plausible (analytics RGPD-friendly, sans cookie, sans IP stockée). On voit qu'un widget a été affiché sur ton domaine, c'est tout. Aucune fingerprint, aucun cross-site tracking. Le code source est inspectable.",
+      "Uniquement avec Plausible (analytics RGPD-friendly, sans cookie, sans IP stockée). On voit qu'un widget a été affiché sur votre domaine, c'est tout. Aucune fingerprint, aucun cross-site tracking. Le code source est inspectable.",
   },
   {
     question: "Que se passe-t-il si Cryptoreflex met à jour le widget ?",
     answer:
-      "L'iframe pointe vers une URL stable (ex: /embed/calculateur-fiscalite). Quand on améliore le widget côté serveur, ton intégration bénéficie automatiquement de l'update — sans rien toucher chez toi. On s'engage à ne pas casser la rétro-compatibilité visuelle.",
+      "L'iframe pointe vers une URL stable (ex: /embed/calculateur-fiscalite). Quand on améliore le widget côté serveur, votre intégration bénéficie automatiquement de l'update — sans rien toucher chez vous. On s'engage à ne pas casser la rétro-compatibilité visuelle.",
   },
   {
     question: "Un site WordPress / Webflow / Shopify peut-il l'intégrer ?",
     answer:
-      "Oui, partout où tu peux coller du HTML brut. Sur WordPress, utilise le bloc « HTML personnalisé » ou un shortcode iframe. Sur Webflow, le composant Embed. Sur Shopify, dans une section « Custom Liquid ». Aucun plugin requis.",
+      "Oui, partout où vous pouvez coller du HTML brut. Sur WordPress, utilisez le bloc « HTML personnalisé » ou un shortcode iframe. Sur Webflow, le composant Embed. Sur Shopify, dans une section « Custom Liquid ». Aucun plugin requis.",
   },
   {
     question: "Comment être notifié des nouveaux widgets ?",
     answer:
-      "Inscris-toi à la newsletter Cryptoreflex (lien en footer du site) — on annonce chaque nouveau widget embeddable. Notre roadmap inclut un widget heatmap marché, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
+      "Inscrivez-vous à la newsletter Cryptoreflex (lien en footer du site) — on annonce chaque nouveau widget embeddable. Notre roadmap inclut un widget heatmap marché, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
   },
 ];
 
@@ -138,12 +138,12 @@ export default function EmbedsLandingPage() {
               License CC-BY 4.0 — gratuit, à vie
             </span>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
-              Intègre les outils{" "}
-              <span className="gradient-text">Cryptoreflex</span> sur ton site
+              Intégrez les outils{" "}
+              <span className="gradient-text">Cryptoreflex</span> sur votre site
             </h1>
             <p className="mt-4 text-lg text-fg/80">
-              4 widgets crypto prêts à coller sur ton blog, ton site finance
-              perso ou ton agrégateur. Une ligne d'iframe, zéro maintenance —
+              4 widgets crypto prêts à coller sur votre blog, votre site finance
+              perso ou votre agrégateur. Une ligne d'iframe, zéro maintenance —
               on s'occupe des updates côté serveur.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -172,25 +172,25 @@ export default function EmbedsLandingPage() {
           <div className="max-w-3xl">
             <span className="badge-info">Pourquoi nos widgets</span>
             <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
-              Plus d'engagement, plus de temps passé sur ton site
+              Plus d'engagement, plus de temps passé sur votre site
             </h2>
           </div>
 
           <div className="mt-8 grid md:grid-cols-3 gap-5">
             <BenefitCard
               icon={<Zap className="h-6 w-6" />}
-              title="UX gain pour ton audience"
-              text="Tes lecteurs n'ont plus besoin de quitter ton site pour calculer un ROI ou un impôt crypto. Time-on-page +30 % en moyenne sur les pages avec outil interactif."
+              title="UX gain pour votre audience"
+              text="Vos lecteurs n'ont plus besoin de quitter votre site pour calculer un ROI ou un impôt crypto. Time-on-page +30 % en moyenne sur les pages avec outil interactif."
             />
             <BenefitCard
               icon={<ShieldCheck className="h-6 w-6" />}
-              title="SEO benefit pour toi"
-              text="Google récompense les pages utiles avec rich content. Un calculateur intégré envoie un signal d'usefulness qui aide ton ranking sur les requêtes long-tail."
+              title="SEO benefit pour vous"
+              text="Google récompense les pages utiles avec rich content. Un calculateur intégré envoie un signal d'usefulness qui aide votre ranking sur les requêtes long-tail."
             />
             <BenefitCard
               icon={<Code className="h-6 w-6" />}
               title="Zéro maintenance"
-              text="On gère les updates (taux CoinGecko, fiscalité 2026, MiCA…) côté serveur. Toi, tu gardes ton iframe — tu profites des améliorations sans toucher à rien."
+              text="On gère les updates (taux CoinGecko, fiscalité 2026, MiCA…) côté serveur. Vous, vous gardez votre iframe — vous profitez des améliorations sans toucher à rien."
             />
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function EmbedsLandingPage() {
               4 widgets disponibles immédiatement
             </h2>
             <p className="mt-3 text-fg/70">
-              Clique sur « Copier » et colle le snippet où tu veux. C'est
+              Cliquez sur « Copier » et collez le snippet où vous voulez. C'est
               prêt — l'attribution dofollow vers Cryptoreflex est déjà
               incluse (clause CC-BY).
             </p>
@@ -276,15 +276,15 @@ export default function EmbedsLandingPage() {
               License Creative Commons BY 4.0
             </h2>
             <p className="mt-3 text-sm text-fg/80 leading-relaxed">
-              Tu peux intégrer ces widgets <strong>gratuitement</strong>, y
+              Vous pouvez intégrer ces widgets <strong>gratuitement</strong>, y
               compris sur des sites commerciaux, en respectant{" "}
               <strong>une seule règle</strong> : conserver l'attribution
               « Powered by Cryptoreflex » avec le lien <em>dofollow</em>
-              inclus en bas du widget. Ne masque pas le footer, ne supprime
+              inclus en bas du widget. Ne masquez pas le footer, ne supprimez
               pas le lien — c'est le contrat moral.
             </p>
             <p className="mt-3 text-sm text-fg/80 leading-relaxed">
-              En cas de question, écris-nous à{" "}
+              En cas de question, écrivez-nous à{" "}
               <a
                 href={`mailto:${BRAND.email}`}
                 className="text-primary-soft underline-offset-2 hover:underline"
@@ -314,14 +314,14 @@ export default function EmbedsLandingPage() {
                 href={`mailto:${BRAND.partnersEmail}?subject=Notification%20integration%20widget%20Cryptoreflex&body=Bonjour%2C%0A%0AJ%27ai%20integre%20le%20widget%20%5BNOM%5D%20sur%20%5BURL%5D.%0AAttribution%20conservee%20%3A%20%5BOUI%2FNON%5D.%0A%0AMerci.`}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary-soft hover:bg-primary/20"
               >
-                Notifier Cryptoreflex de ton integration (optionnel)
+                Notifier Cryptoreflex de votre intégration (optionnel)
               </a>
             </div>
             <p className="mt-4 text-xs text-fg/60 leading-relaxed">
               <strong>Pourquoi nous notifier ?</strong> Pour qu&apos;on suive
               l&apos;adoption des widgets, qu&apos;on remercie les sites
-              integrateurs (mention dans notre page Partenaires si tu acceptes),
-              et qu&apos;on te previenne en cas de breaking change.
+              intégrateurs (mention dans notre page Partenaires si vous acceptez),
+              et qu&apos;on vous prévienne en cas de breaking change.
             </p>
           </div>
         </div>

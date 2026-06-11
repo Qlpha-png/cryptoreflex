@@ -236,7 +236,7 @@ export default function AlertsManager({ cryptos }: Props) {
     // Validation client
     if (!selectedCryptoId) {
       setSubmitState("error");
-      setSubmitMsg("Sélectionne une crypto dans la liste.");
+      setSubmitMsg("Sélectionnez une crypto dans la liste.");
       return;
     }
     const trimmedEmail = email.trim();
@@ -249,7 +249,7 @@ export default function AlertsManager({ cryptos }: Props) {
     const num = Number(cleanedThreshold);
     if (!Number.isFinite(num) || num <= 0) {
       setSubmitState("error");
-      setSubmitMsg("Seuil invalide. Saisis un nombre positif.");
+      setSubmitMsg("Seuil invalide. Saisissez un nombre positif.");
       return;
     }
 
@@ -269,7 +269,7 @@ export default function AlertsManager({ cryptos }: Props) {
       const data = (await res.json()) as { ok: boolean; error?: string };
       if (!res.ok || !data.ok) {
         setSubmitState("error");
-        setSubmitMsg(data.error || "Création impossible. Réessaie.");
+        setSubmitMsg(data.error || "Création impossible. Réessayez.");
         return;
       }
       setSubmitState("success");

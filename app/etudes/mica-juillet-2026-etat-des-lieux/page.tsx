@@ -945,7 +945,7 @@ export default function MicaStudyPage() {
             source="bottom-article"
             context="regulation"
             variant="default"
-            title="Tu suis l'évolution MiCA ?"
+            title="Vous suivez l'évolution MiCA ?"
             subtitle="Recevoir la mise à jour mensuelle de l'étude (nouveaux agréments, délistages, recommandations). 1 envoi par mois, 0 spam, désinscription en 1 clic."
             ctaLabel="M'abonner à la veille MiCA"
           />
@@ -983,7 +983,7 @@ export default function MicaStudyPage() {
                 API publique CC-BY 4.0
               </h3>
               <p className="mt-2 text-sm text-slate-300">
-                Réutilise les données PSAN/MiCA dans tes propres projets. Open
+                Réutilise les données PSAN/MiCA dans vos propres projets. Open
                 data, sans clé API.
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">

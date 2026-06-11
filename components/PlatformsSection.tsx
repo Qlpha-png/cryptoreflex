@@ -84,7 +84,7 @@ export default function PlatformsSection() {
             <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">
               Pourquoi ?
             </Link>
-            {" — "}Sans surcoût pour toi, le site reste gratuit.
+            {" — "}Sans surcoût pour vous, le site reste gratuit.
           </span>
         </p>
 
@@ -150,7 +150,7 @@ export default function PlatformsSection() {
                     <Sparkles className="h-7 w-7 text-primary" strokeWidth={1.85} aria-hidden="true" />
                   </span>
                   <p className="text-lg font-extrabold text-fg mb-1">
-                    Tu hésites encore ?
+                    Vous hésitez encore ?
                   </p>
                   <p className="text-sm text-fg/70 max-w-[240px] mb-4 leading-relaxed">
                     Vois tous nos duels comparatifs (Coinbase vs Binance, Ledger vs Trezor…)
@@ -181,7 +181,7 @@ export default function PlatformsSection() {
           </p>
           <p className="mt-1 text-sm text-fg/70">
             Quiz pédagogique en 5 questions — il te présente les plateformes pertinentes
-            selon ton profil (30 secondes). Le choix final t&apos;appartient.
+            selon votre profil (30 secondes). Le choix final t&apos;appartient.
           </p>
           <Link href="/quiz/plateforme" className="btn-primary mt-4 inline-flex">
             Faire le quiz pédagogique

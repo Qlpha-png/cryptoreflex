@@ -155,7 +155,7 @@ export default function ContactPage() {
               Contacter <span className="gradient-text">{BRAND.name}</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Choisis le canal adapté à ta demande. Réponse personnelle de
+              Choisis le canal adapté à votre demande. Réponse personnelle de
               Kevin (fondateur solo) sous 5 jours ouvrés.
             </p>
           </div>

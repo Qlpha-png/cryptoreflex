@@ -95,7 +95,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
             >
               <Calculator className="h-3.5 w-3.5" strokeWidth={2.25} />
             </span>
-            Combien d&apos;impôt sur ta plus-value {symbol} ?
+            Combien d&apos;impôt sur votre plus-value {symbol} ?
           </h3>
           <p className="mt-1 text-[12px] text-muted">
             Simulation PFU 31,4% (article 150 VH bis CGI) — calcul indicatif par opération.
@@ -169,8 +169,8 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
       >
         {!result ? (
           <p className="text-[13px] text-muted">
-            Saisis ton prix d&apos;achat moyen et la quantité de {symbol} pour voir
-            ta plus-value estimée et l&apos;impôt PFU dû à la cession en euros.
+            Saisis votre prix d&apos;achat moyen et la quantité de {symbol} pour voir
+            votre plus-value estimée et l&apos;impôt PFU dû à la cession en euros.
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">

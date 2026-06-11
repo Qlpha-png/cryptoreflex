@@ -86,7 +86,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       {
         ok: false,
         error:
-          "Tu as atteint la limite de 5 générations PDF par jour. Réessaie demain ou contacte le support si besoin.",
+          "Vous avez atteint la limite de 5 générations PDF par jour. Réessayez demain ou contactez le support si besoin.",
       },
       {
         status: 429,
@@ -152,7 +152,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json(
       {
         ok: false,
-        error: "Transactions invalides — corrige ton fichier et réessaie.",
+        error: "Transactions invalides — corrigez votre fichier et réessayez.",
         details: validation.errors.slice(0, 10),
       },
       { status: 400 },
@@ -176,7 +176,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       {
         ok: false,
         error:
-          "Erreur lors de la génération du PDF. Réessaie ou contacte le support si le problème persiste.",
+          "Erreur lors de la génération du PDF. Réessayez ou contactez le support si le problème persiste.",
       },
       { status: 500 },
     );

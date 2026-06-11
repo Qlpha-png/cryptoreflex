@@ -85,7 +85,7 @@ const FAQ = [
   },
   {
     q: "Mes cryptos sur une plateforme non-conforme sont-elles perdues ?",
-    a: "Non, mais tu dois agir. Les plateformes annoncent généralement 30 à 90 jours pour retirer tes fonds avant fermeture des accès. Le mieux est d’anticiper : transfère tes cryptos vers un wallet personnel (Ledger, Trezor) ou vers une plateforme conforme MiCA AVANT mai 2026.",
+    a: "Non, mais vous devez agir. Les plateformes annoncent généralement 30 à 90 jours pour retirer vos fonds avant fermeture des accès. Le mieux est d’anticiper : transfère vos cryptos vers un wallet personnel (Ledger, Trezor) ou vers une plateforme conforme MiCA AVANT mai 2026.",
   },
   {
     q: "Quelle plateforme choisir si je suis débutant ?",
@@ -271,7 +271,7 @@ export default function MicaLandingPage() {
             source="inline"
             context="regulation"
             variant="default"
-            title="Suis l'évolution MiCA en temps réel"
+            title="Suivez l'évolution MiCA en temps réel"
             subtitle="Newsletter mensuelle qui suit les agréments CASP UE, les délistages et les recommandations de plateformes. 1 envoi par mois, 0 spam."
             ctaLabel="M'abonner à la veille MiCA"
           />

@@ -147,10 +147,10 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
           <div>
             <span className="badge-info">Reco personnalisée</span>
             <h3 className="mt-2 text-xl font-bold text-white">
-              Tes 3 plateformes les plus adaptées
+              Vos 3 plateformes les plus adaptées
             </h3>
             <p className="mt-1 text-sm text-white/70">
-              Calculé à partir de tes 5 réponses : {answers.monthlyAmountEur} €/mois,
+              Calculé à partir de vos 5 réponses : {answers.monthlyAmountEur} €/mois,
               priorité {answers.priority}, profil {answers.experience}, usage {answers.intent}.
             </p>
           </div>
@@ -165,9 +165,9 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
 
       {/* Lead capture optionnel — non bloquant pour le résultat */}
       <div className="glass rounded-2xl p-6">
-        <h4 className="font-bold text-white">Reçois ces recommandations par email</h4>
+        <h4 className="font-bold text-white">Recevez ces recommandations par email</h4>
         <p className="mt-1 text-sm text-white/70">
-          On t'envoie un récap PDF + nos alertes quand une nouvelle plateforme MiCA arrive.
+          On vous envoie un récap PDF + nos alertes quand une nouvelle plateforme MiCA arrive.
         </p>
         <Link
           href="/ressources?source=comparateur-perso"
@@ -199,7 +199,7 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
             <strong className="text-amber-200">Reco indicative :</strong>{" "}
             ce comparateur est un outil d'aide à la décision basé sur l'audit
             interne Cryptoreflex (Q1 2026). Les notes par axe sont mises à jour
-            chaque trimestre. Vérifie toujours la conformité MiCA via notre{" "}
+            chaque trimestre. Vérifiez toujours la conformité MiCA via notre{" "}
             <Link href="/outils/verificateur-mica" className="text-primary-soft underline">
               vérificateur MiCA
             </Link>{" "}

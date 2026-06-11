@@ -3,7 +3,7 @@
     "lastUpdated": "2026-05-09",
     "source": "Recherche editoriale Cryptoreflex (a recouper avec annonces officielles avant claim)",
     "schemaVersion": "1.0",
-    "disclaimer": "Les airdrops crypto evoluent vite. Verifie toujours l'URL officielle du projet AVANT de connecter ton wallet. Les fake airdrops sont la 1ere source de drainer de wallet en 2026.",
+    "disclaimer": "Les airdrops crypto evoluent vite. Verifie toujours l'URL officielle du projet AVANT de connecter votre wallet. Les fake airdrops sont la 1ere source de drainer de wallet en 2026.",
     "statusLegend": "live = claim en cours | upcoming = annonce mais pas encore ouvert | claimed = distribue mais claim window encore active | expired = claim window terminee (valeur historique conservee)"
   },
   "airdrops": [

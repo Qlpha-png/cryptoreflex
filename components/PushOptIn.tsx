@@ -207,12 +207,12 @@ export default function PushOptIn({
           <Bell className="h-4 w-4 mt-0.5 text-primary shrink-0" aria-hidden="true" />
           <div className="flex-1 min-w-0">
             <p className="text-fg/85">
-              <strong className="text-fg">Active les notifs push</strong> pour
-              recevoir tes alertes immédiatement, même hors-ligne.
+              <strong className="text-fg">Activez les notifs push</strong> pour
+              recevoir vos alertes immédiatement, même hors-ligne.
             </p>
             {status === "denied" ? (
               <p className="mt-1 text-xs text-muted">
-                Tu as refusé les notifs. Réactive-les dans les paramètres de ton
+                Vous avez refusé les notifs. Réactivez-les dans les paramètres de votre
                 navigateur (icône cadenas à gauche de l&apos;URL).
               </p>
             ) : (
@@ -252,14 +252,14 @@ export default function PushOptIn({
       </div>
 
       <p className="text-sm text-fg/70 leading-relaxed mb-4">
-        Reçois tes alertes prix et le brief quotidien directement sur ton appareil,
-        même quand le site est fermé. Pas d&apos;email, pas de spam — juste tes
+        Recevez vos alertes prix et le brief quotidien directement sur votre appareil,
+        même quand le site est fermé. Pas d&apos;email, pas de spam — juste vos
         notifs en temps réel.
       </p>
 
       {status === "unsupported" && (
         <p className="text-xs text-muted">
-          Ton navigateur ne supporte pas les notifications push (essaie Chrome,
+          Votre navigateur ne supporte pas les notifications push (essayez Chrome,
           Firefox ou Edge sur desktop, ou Safari iOS 16.4+).
         </p>
       )}
@@ -267,9 +267,9 @@ export default function PushOptIn({
       {status === "denied" && (
         <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-300">
           <AlertCircle className="inline h-3.5 w-3.5 mr-1 align-text-bottom" aria-hidden="true" />
-          Tu as refusé les notifications dans ton navigateur. Pour les réactiver :
-          clique sur l&apos;icône cadenas (ou ⓘ) à gauche de l&apos;URL → autorise
-          les notifications → recharge la page.
+          Vous avez refusé les notifications dans votre navigateur. Pour les réactiver :
+          cliquez sur l&apos;icône cadenas (ou ⓘ) à gauche de l&apos;URL → autorisez
+          les notifications → rechargez la page.
         </div>
       )}
 

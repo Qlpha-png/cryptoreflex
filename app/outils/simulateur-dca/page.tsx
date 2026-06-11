@@ -26,12 +26,12 @@ export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand
   title: "Simulateur DCA crypto FR 2026 — backtest BTC/ETH/SOL 5 ans",
   description:
-    "Backtest DCA réel : combien aurais-tu en investissant 100€/mois en BTC, ETH ou SOL depuis 2020 ? Comparaison achat unique vs étalé. Gratuit.",
+    "Backtest DCA réel : combien auriez-vous en investissant 100€/mois en BTC, ETH ou SOL depuis 2020 ? Comparaison achat unique vs étalé. Gratuit.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/simulateur-dca"),
   openGraph: {
     title: "Simulateur DCA crypto FR 2026 — backtest 5 ans gratuit",
     description:
-      "Investis un montant fixe chaque mois en BTC, ETH ou SOL et visualise la performance réelle sur 1 à 5 ans.",
+      "Investissez un montant fixe chaque mois en BTC, ETH ou SOL et visualisez la performance réelle sur 1 à 5 ans.",
     url: "https://www.cryptoreflex.fr/outils/simulateur-dca",
     type: "website",
   },
@@ -46,22 +46,22 @@ const FAQ_ITEMS = [
   {
     question: "Le DCA est-il vraiment plus performant qu'un achat unique ?",
     answer:
-      "Pas toujours. Statistiquement, sur les marchés haussiers de long terme (comme le Bitcoin entre 2020 et 2024), un achat unique au début surperforme souvent le DCA. En revanche, le DCA réduit drastiquement le risque de timing — tu évites d'acheter juste avant un krach. C'est un trade-off entre performance maximale et tranquillité d'esprit.",
+      "Pas toujours. Statistiquement, sur les marchés haussiers de long terme (comme le Bitcoin entre 2020 et 2024), un achat unique au début surperforme souvent le DCA. En revanche, le DCA réduit drastiquement le risque de timing — vous évitez d'acheter juste avant un krach. C'est un trade-off entre performance maximale et tranquillité d'esprit.",
   },
   {
     question: "Sur quelles données est basé ce simulateur ?",
     answer:
-      "Les prix historiques proviennent de l'API publique CoinGecko (clôtures quotidiennes en EUR), couvrant jusqu'à 5 ans glissants. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoute ces frais à ton prix moyen.",
+      "Les prix historiques proviennent de l'API publique CoinGecko (clôtures quotidiennes en EUR), couvrant jusqu'à 5 ans glissants. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoutez ces frais à votre prix moyen.",
   },
   {
     question: "Quelle plateforme propose du DCA automatique en France ?",
     answer:
-      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Coinbase et Bitpanda proposent aussi des achats récurrents sur Ethereum et Solana. Sur la plupart des grandes plateformes, tu peux programmer un virement SEPA mensuel et un ordre d'achat automatique.",
+      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Coinbase et Bitpanda proposent aussi des achats récurrents sur Ethereum et Solana. Sur la plupart des grandes plateformes, vous pouvez programmer un virement SEPA mensuel et un ordre d'achat automatique.",
   },
   {
     question: "Quel montant DCA pour débuter ?",
     answer:
-      "Il n'y a pas de minimum universel, mais la règle est simple : ne jamais investir plus que ce que tu peux te permettre de perdre. Beaucoup d'investisseurs commencent à 50-100 € par mois sur Bitcoin uniquement, puis diversifient progressivement. L'important est la régularité, pas le montant.",
+      "Il n'y a pas de minimum universel, mais la règle est simple : ne jamais investir plus que ce que vous pouvez vous permettre de perdre. Beaucoup d'investisseurs commencent à 50-100 € par mois sur Bitcoin uniquement, puis diversifient progressivement. L'important est la régularité, pas le montant.",
   },
   {
     question: "Combien de temps faut-il faire du DCA ?",
@@ -119,7 +119,7 @@ export default function SimulateurDcaPage() {
               Simulateur <span className="gradient-text">DCA crypto</span>
             </h1>
             <p className="mt-4 text-lg text-white/70">
-              Combien aurais-tu aujourd'hui en investissant 100 € par mois en Bitcoin
+              Combien auriez-vous aujourd'hui en investissant 100 € par mois en Bitcoin
               depuis 3 ans ? Réponse en 2 secondes — données réelles, pas de
               projection magique.
             </p>
@@ -138,12 +138,12 @@ export default function SimulateurDcaPage() {
             <Card
               icon={<ShieldCheck className="h-6 w-6" />}
               title="Lisser la volatilité"
-              text="En achetant un peu chaque mois, tu obtiens un prix moyen — fini le stress d'acheter pile au plus haut ou de rater le bas."
+              text="En achetant un peu chaque mois, vous obtenez un prix moyen — fini le stress d'acheter pile au plus haut ou de rater le bas."
             />
             <Card
               icon={<Zap className="h-6 w-6" />}
               title="Discipline automatique"
-              text="Plus besoin de timer le marché. Tu programmes ton ordre une fois et le DCA tourne tout seul, en haussier comme en baissier."
+              text="Plus besoin de timer le marché. Vous programmez votre ordre une fois et le DCA tourne tout seul, en haussier comme en baissier."
             />
             <Card
               icon={<TrendingUp className="h-6 w-6" />}
@@ -205,7 +205,7 @@ export default function SimulateurDcaPage() {
               </div>
               <p className="mt-3 text-xs text-muted">
                 Lien affilié — Cryptoreflex peut percevoir une commission, sans
-                surcoût pour toi. Notre comparatif reste indépendant.
+                surcoût pour vous. Notre comparatif reste indépendant.
               </p>
             </div>
           )}

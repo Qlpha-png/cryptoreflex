@@ -160,8 +160,8 @@ export default function MonParcoursDashboard() {
           Mon <span className="text-gradient-gold">parcours</span>
         </h1>
         <p className="mt-4 ds-lead">
-          Ta progression sur les {TRACKS.length} parcours de l&apos;académie,
-          suivie dans ton navigateur — sans compte, sans email.
+          Votre progression sur les {TRACKS.length} parcours de l&apos;académie,
+          suivie dans votre navigateur — sans compte, sans email.
         </p>
       </header>
 
@@ -171,7 +171,7 @@ export default function MonParcoursDashboard() {
         className="mt-8 grid items-center gap-6 rounded-2xl border border-border bg-surface/60 p-6 sm:p-8 lg:grid-cols-[auto_1fr]"
       >
         <h2 id="resume-h" className="sr-only">
-          Résumé de ta progression
+          Résumé de votre progression
         </h2>
 
         {/* Anneau de progression global */}
@@ -306,7 +306,7 @@ export default function MonParcoursDashboard() {
             Notions à revoir
           </h2>
           <p className="mt-1 text-xs text-muted">
-            Repérées d&apos;après tes dernières réponses au quiz. Relis la leçon
+            Repérées d&apos;après vos dernières réponses au quiz. Relis la leçon
             concernée, puis retente.
           </p>
           <ul role="list" className="mt-4 space-y-4">
@@ -426,7 +426,7 @@ export default function MonParcoursDashboard() {
             className="flex items-center gap-2 text-lg font-bold text-fg"
           >
             <Award className="h-5 w-5 text-amber-300" aria-hidden="true" />
-            Tes quiz validés ({certifiedCount})
+            Vos quiz validés ({certifiedCount})
           </h2>
           <ul role="list" className="mt-4 grid gap-2 sm:grid-cols-2">
             {rows
@@ -451,7 +451,7 @@ export default function MonParcoursDashboard() {
 
       {/* Note + lien retour */}
       <p className="mt-8 text-center text-xs text-muted">
-        Ta progression est sauvegardée localement (localStorage), sur cet
+        Votre progression est sauvegardée localement (localStorage), sur cet
         appareil et ce navigateur.{" "}
         <Link
           href="/academie"

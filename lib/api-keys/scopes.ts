@@ -34,15 +34,15 @@ export const SCOPE_LABELS: Record<ApiKeyScope, string> = {
   "public:read":
     "Lire les données publiques (plateformes, scores PSAN, top cryptos) avec rate limit étendu.",
   "user:portfolio:read":
-    "Lire ton portfolio agrégé (positions, PMP, plus-values réalisées).",
+    "Lire votre portfolio agrégé (positions, PMP, plus-values réalisées).",
   "user:portfolio:write":
     "Recalculer ton portfolio (force resync depuis tes exchanges).",
-  "user:trades:read": "Lire ton historique de trades.",
+  "user:trades:read": "Lire votre historique de trades.",
   "user:trades:write": "Ajouter ou supprimer des trades manuels.",
   "user:alerts:read": "Lire tes alertes prix.",
-  "user:alerts:write": "Créer, modifier, supprimer tes alertes.",
+  "user:alerts:write": "Créer, modifier, supprimer vos alertes.",
   "webhooks:manage":
-    "Gérer tes webhooks (créer, modifier, supprimer, tester).",
+    "Gérer vos webhooks (créer, modifier, supprimer, tester).",
   "historical:read":
     "Accéder aux séries historiques étendues (24 mois platformes, breakdown scores).",
   "admin:*":

@@ -41,13 +41,13 @@
       "id": "comment-acheter-bitcoin-france",
       "category": "debutant",
       "question": "Comment acheter du Bitcoin en France en 2026 ?",
-      "answer": "1) Choisis une plateforme reguleeMiCA / agreee CASP : Coinbase, Kraken, Bitpanda, Bitstamp sont les plus serieuses pour debuter. 2) Cree ton compte (KYC obligatoire : carte d'identite + selfie). 3) Effectue un depot en EUR par virement SEPA (gratuit, 1-3j) ou carte bancaire (instant mais 1-2% de frais). 4) Achete via l'interface 'Trade' (ordre marche pour rapidite, ordre limit pour le meilleur prix). 5) Important : transfere tes BTC vers un cold wallet (Ledger, Trezor) pour la securite long terme. Eviter les plateformes non-MiCA car risque de blocage UE au 1er juillet 2026."
+      "answer": "1) Choisissez une plateforme regulee MiCA / agreee CASP : Coinbase, Kraken, Bitpanda, Bitstamp sont les plus serieuses pour debuter. 2) Creez votre compte (KYC obligatoire : carte d'identite + selfie). 3) Effectuez un depot en EUR par virement SEPA (gratuit, 1-3j) ou carte bancaire (instant mais 1-2% de frais). 4) Achetez via l'interface 'Trade' (ordre marche pour rapidite, ordre limit pour le meilleur prix). 5) Important : transferez vos BTC vers un cold wallet (Ledger, Trezor) pour la securite long terme. Eviter les plateformes non-MiCA car risque de blocage UE au 1er juillet 2026."
     },
     {
       "id": "minimum-pour-acheter-crypto",
       "category": "debutant",
       "question": "Quel est le montant minimum pour acheter de la crypto ?",
-      "answer": "La plupart des plateformes acceptent des minimums tres bas : Coinbase = 2€ minimum, Bitpanda = 1€, Kraken = 1€. Il n'y a PAS de quantite minimum de BTC ou ETH a detenir : tu peux acheter 0.0001 BTC (10€ environ). Les frais fixes (1-2€ par achat carte) deviennent prohibitifs sous 50€ : viser au moins 100-200€ par achat pour un ratio frais/montant raisonnable."
+      "answer": "La plupart des plateformes acceptent des minimums tres bas : Coinbase = 2€ minimum, Bitpanda = 1€, Kraken = 1€. Il n'y a PAS de quantite minimum de BTC ou ETH a detenir : vous pouvez acheter 0.0001 BTC (10€ environ). Les frais fixes (1-2€ par achat carte) deviennent prohibitifs sous 50€ : viser au moins 100-200€ par achat pour un ratio frais/montant raisonnable."
     },
     {
       "id": "stable-coin-c-est-quoi",
@@ -59,25 +59,25 @@
       "id": "wallet-cest-quoi",
       "category": "debutant",
       "question": "Wallet, c'est quoi exactement ?",
-      "answer": "Un wallet (portefeuille) crypto stocke tes CLES PRIVEES, pas vraiment tes cryptos (qui restent on-chain). Types : (1) Hot wallet : connecte a internet, pratique mais plus expose (MetaMask, Phantom, Trust Wallet), (2) Cold wallet : hors ligne, plus sur (Ledger, Trezor, Coldcard), (3) Custody plateforme : la plateforme detient tes cles (FTX 2022 a montre les limites). Regle d'or : 'Not your keys, not your coins'. Pour > 1000€ de crypto, investis dans un Ledger Nano S Plus (~80€)."
+      "answer": "Un wallet (portefeuille) crypto stocke vos CLES PRIVEES, pas vraiment vos cryptos (qui restent on-chain). Types : (1) Hot wallet : connecte a internet, pratique mais plus expose (MetaMask, Phantom, Trust Wallet), (2) Cold wallet : hors ligne, plus sur (Ledger, Trezor, Coldcard), (3) Custody plateforme : la plateforme detient vos cles (FTX 2022 a montre les limites). Regle d'or : 'Not your keys, not your coins'. Pour > 1000€ de crypto, investissez dans un Ledger Nano S Plus (~80€)."
     },
     {
       "id": "seed-phrase-importance",
       "category": "securite",
       "question": "Qu'est-ce qu'une seed phrase et pourquoi c'est crucial ?",
-      "answer": "La seed phrase (ou phrase de recuperation) = 12 ou 24 mots qui SONT ton wallet. Si tu les perds, tes cryptos sont definitivement perdues. Si quelqu'un les voit, il vide ton wallet. Bonnes pratiques : (1) Note-la sur PAPIER (pas screenshot, pas email, pas cloud), (2) Stocke 2 copies en lieux differents (coffre, famille de confiance), (3) Considere un backup acier (Cryptosteel, Steelwallet) pour resister feu/eau, (4) NE JAMAIS la taper sur un site web ou application non-reconnue. Voir notre guide /blog/backup-seed-phrase-5-methodes-ultra-sures-2026."
+      "answer": "La seed phrase (ou phrase de recuperation) = 12 ou 24 mots qui SONT votre wallet. Si vous les perdez, vos cryptos sont definitivement perdues. Si quelqu'un les voit, il vide votre wallet. Bonnes pratiques : (1) Notez-la sur PAPIER (pas screenshot, pas email, pas cloud), (2) Stockez 2 copies en lieux differents (coffre, famille de confiance), (3) Considerez un backup acier (Cryptosteel, Steelwallet) pour resister feu/eau, (4) NE JAMAIS la taper sur un site web ou application non-reconnue. Voir notre guide /blog/backup-seed-phrase-5-methodes-ultra-sures-2026."
     },
     {
       "id": "phishing-crypto-eviter",
       "category": "securite",
       "question": "Comment reconnaitre un phishing crypto ?",
-      "answer": "Patterns frequents en 2026 : (1) Email 'support Ledger' demandant ta seed -> SCAM, Ledger ne te la demandera JAMAIS, (2) DM Twitter/Discord avec lien 'reclame ton airdrop' -> SCAM, jamais de DM officiel, (3) Site clone (etherscann.io vs etherscan.io) avec 1 lettre changee -> bookmark le site officiel, (4) Wallet drainer via 'permit2' ou 'approve unlimited' -> revoquer regulierement via Revoke.cash, (5) Fake support sur Telegram/Discord -> Coinbase/Kraken n'ont PAS de canal Telegram official. Si doute -> ne clique pas, rejoint la communaute officielle via le lien depuis le site officiel."
+      "answer": "Patterns frequents en 2026 : (1) Email 'support Ledger' demandant votre seed -> SCAM, Ledger ne vous la demandera JAMAIS, (2) DM Twitter/Discord avec lien 'reclame votre airdrop' -> SCAM, jamais de DM officiel, (3) Site clone (etherscann.io vs etherscan.io) avec 1 lettre changee -> bookmark le site officiel, (4) Wallet drainer via 'permit2' ou 'approve unlimited' -> revoquer regulierement via Revoke.cash, (5) Fake support sur Telegram/Discord -> Coinbase/Kraken n'ont PAS de canal Telegram official. Si doute -> ne cliquez pas, rejoignez la communaute officielle via le lien depuis le site officiel."
     },
     {
       "id": "2fa-quel-choisir",
       "category": "securite",
       "question": "Quelle 2FA choisir : SMS, app ou hardware key ?",
-      "answer": "Niveaux de securite croissants : (1) SMS = TRES MAUVAISE idee (SIM swap = ton numero pirate), (2) Email = mauvais (compromis si ton email l'est), (3) TOTP app (Google Authenticator, Authy, Aegis) = correct, (4) Hardware key FIDO2/U2F (YubiKey, Titan) = excellent, immune au phishing. Recommandation : utilise YubiKey 5C (~50€) pour Coinbase, Kraken, Binance, Gmail, GitHub. Backup : 2eme YubiKey identique en lieu sur. Les hardware keys sont supportees par toutes les plateformes serieuses en 2026."
+      "answer": "Niveaux de securite croissants : (1) SMS = TRES MAUVAISE idee (SIM swap = votre numero pirate), (2) Email = mauvais (compromis si votre email l'est), (3) TOTP app (Google Authenticator, Authy, Aegis) = correct, (4) Hardware key FIDO2/U2F (YubiKey, Titan) = excellent, immune au phishing. Recommandation : utilise YubiKey 5C (~50€) pour Coinbase, Kraken, Binance, Gmail, GitHub. Backup : 2eme YubiKey identique en lieu sur. Les hardware keys sont supportees par toutes les plateformes serieuses en 2026."
     },
     {
       "id": "fiscalite-crypto-france-2026",
@@ -89,13 +89,13 @@
       "id": "declarer-crypto-impots",
       "category": "fiscalite",
       "question": "Comment declarer ses cryptos aux impots ?",
-      "answer": "Etapes : (1) Lister TOUS les comptes plateformes etrangeres (Binance, Coinbase, Kraken, etc.) sur le formulaire 3916-bis - obligation depuis 2020, amende 750€ par compte non declare. (2) Calculer toutes les plus-values 2025 sur formulaire 2086 (annexe a la 2042-C). (3) Reporter le total en case 3AN (plus-values) ou 3BN (moins-values reportables). (4) Conserver les justificatifs 6 ans (releves, factures). Pour faciliter : utilise notre /outils/cerfa-2086-auto qui pre-remplit le PDF, ou un service comme Waltio/Koinly (~150€/an) si tu as &gt; 100 trades."
+      "answer": "Etapes : (1) Lister TOUS les comptes plateformes etrangeres (Binance, Coinbase, Kraken, etc.) sur le formulaire 3916-bis - obligation depuis 2020, amende 750€ par compte non declare. (2) Calculer toutes les plus-values 2025 sur formulaire 2086 (annexe a la 2042-C). (3) Reporter le total en case 3AN (plus-values) ou 3BN (moins-values reportables). (4) Conserver les justificatifs 6 ans (releves, factures). Pour faciliter : utilise notre /outils/cerfa-2086-auto qui pre-remplit le PDF, ou un service comme Waltio/Koinly (~150€/an) si vous avez &gt; 100 trades."
     },
     {
       "id": "perte-crypto-deductible",
       "category": "fiscalite",
       "question": "Mes pertes crypto sont-elles deductibles ?",
-      "answer": "Oui mais sous conditions : pour un particulier (regime 150 VH bis), les moins-values crypto s'imputent uniquement sur les plus-values crypto de la MEME annee et ne sont pas reportables sur les annees suivantes. Tu ne peux PAS les deduire de tes salaires ou autres revenus. Important : les pertes doivent etre REALISEES (cession effectuee), pas latentes. Un BTC achete 60k€ et vendu 30k€ = -30k€ de moins-value imputable sur tes plus-values crypto de l'annee. Un BTC achete 60k€ qui vaut 30k€ mais que tu hold = 0 de moins-value (latente). En cas de hack/vol/disparition de plateforme (FTX, Celsius), le traitement d'une eventuelle moins-value est a verifier sur la doctrine officielle a jour (conserve un depot de plainte et les justificatifs)."
+      "answer": "Oui mais sous conditions : pour un particulier (regime 150 VH bis), les moins-values crypto s'imputent uniquement sur les plus-values crypto de la MEME annee et ne sont pas reportables sur les annees suivantes. Tu ne peux PAS les deduire de vos salaires ou autres revenus. Important : les pertes doivent etre REALISEES (cession effectuee), pas latentes. Un BTC achete 60k€ et vendu 30k€ = -30k€ de moins-value imputable sur vos plus-values crypto de l'annee. Un BTC achete 60k€ qui vaut 30k€ mais que tu hold = 0 de moins-value (latente). En cas de hack/vol/disparition de plateforme (FTX, Celsius), le traitement d'une eventuelle moins-value est a verifier sur la doctrine officielle a jour (conserve un depot de plainte et les justificatifs)."
     },
     {
       "id": "airdrop-imposable",
@@ -107,7 +107,7 @@
       "id": "mica-quoi-cest",
       "category": "regulation",
       "question": "Qu'est-ce que MiCA et pourquoi c'est important ?",
-      "answer": "MiCA (Markets in Crypto-Assets) = reglement europeen 2023/1114 qui harmonise les regles crypto dans les 27 pays UE. Objectifs : (1) protection consommateur (capital reglementaire pour les exchanges, separation des fonds clients), (2) lutte contre le blanchiment, (3) supervision macroeconomique des stablecoins. Calendrier : Phase 1 stablecoins applicable depuis 30 juin 2024, Phase 2 services CASP depuis 30 decembre 2024 avec PERIODE TRANSITOIRE jusqu'au 30 juin 2026. A partir du 1er juillet 2026 : seules les plateformes agreees CASP peuvent operer en UE. Les non-conformes risquent le blocage. Verifie le statut de ta plateforme sur /outils/verificateur-mica."
+      "answer": "MiCA (Markets in Crypto-Assets) = reglement europeen 2023/1114 qui harmonise les regles crypto dans les 27 pays UE. Objectifs : (1) protection consommateur (capital reglementaire pour les exchanges, separation des fonds clients), (2) lutte contre le blanchiment, (3) supervision macroeconomique des stablecoins. Calendrier : Phase 1 stablecoins applicable depuis 30 juin 2024, Phase 2 services CASP depuis 30 decembre 2024 avec PERIODE TRANSITOIRE jusqu'au 30 juin 2026. A partir du 1er juillet 2026 : seules les plateformes agreees CASP peuvent operer en UE. Les non-conformes risquent le blocage. Verifie le statut de votre plateforme sur /outils/verificateur-mica."
     },
     {
       "id": "psan-vs-casp",
@@ -131,31 +131,31 @@
       "id": "exit-strategy-quand-vendre",
       "category": "trading",
       "question": "Quand faut-il vendre ses cryptos ?",
-      "answer": "Pas de regle universelle, mais frameworks utiles : (1) Vente progressive en paliers (TP1 : -25% a +100%, TP2 : -25% a +200%, etc.) - retire le capital initial, laisse le reste courir, (2) Rebalancing periodique : si BTC depasse 70% de ton portfolio, retire pour rebalancer, (3) Vente sur indicateurs cycliques : Fear & Greed > 90 + dominance BTC qui chute = signal historique de top, (4) Si tu en as besoin pour un projet vie (achat appartement) : vendre ce qu'il faut, ne pas timing parfait. EVITE : tout vendre en panic au creux du bear, tout vendre au moindre +10% (FOMO inverse). Notre /outils/exit-strategy-planner aide a planifier."
+      "answer": "Pas de regle universelle, mais frameworks utiles : (1) Vente progressive en paliers (TP1 : -25% a +100%, TP2 : -25% a +200%, etc.) - retire le capital initial, laisse le reste courir, (2) Rebalancing periodique : si BTC depasse 70% de votre portfolio, retire pour rebalancer, (3) Vente sur indicateurs cycliques : Fear & Greed > 90 + dominance BTC qui chute = signal historique de top, (4) Si tu en as besoin pour un projet vie (achat appartement) : vendre ce qu'il faut, ne pas timing parfait. EVITE : tout vendre en panic au creux du bear, tout vendre au moindre +10% (FOMO inverse). Notre /outils/exit-strategy-planner aide a planifier."
     },
     {
       "id": "rebalancing-portfolio",
       "category": "trading",
       "question": "Faut-il rebalancer son portefeuille crypto ?",
-      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si tu vises 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC tu as 70/20/10, tu vends du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si tu as enormement bouge). Attention fiscale : un rebalancing crypto vers crypto sans soulte (BTC vers ETH) n'est pas imposable (sursis, art. 150 VH bis) ; seule une cession contre euro (ou un bien/service) declenche l'impot (PFU 31,4%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
+      "answer": "Oui, le rebalancing periodique (mensuel/trimestriel) est sous-estime. Principe : si vous visez 50% BTC / 30% ETH / 20% altcoins et qu'apres une montee BTC vous avez 70/20/10, vous vendez du BTC pour racheter ETH+altcoins jusqu'au ratio cible. Avantages : (1) verrouille les profits sur l'actif qui a monte, (2) achete bas l'actif qui a baisse, (3) discipline anti-FOMO. Frequence : trimestriel suffit (mensuel si vous avez enormement bouge). Attention fiscale : un rebalancing crypto vers crypto sans soulte (BTC vers ETH) n'est pas imposable (sursis, art. 150 VH bis) ; seule une cession contre euro (ou un bien/service) declenche l'impot (PFU 31,4%). Le rebalancing intelligent maximise apres-frais + apres-impot, pas brut."
     },
     {
       "id": "staking-cest-sur",
       "category": "defi",
       "question": "Le staking, c'est sur ?",
-      "answer": "Depend du type : (1) Staking centralise sur exchange (Coinbase, Kraken) : safe sur la blockchain mais expose au risque plateforme (hack, faillite). Yield bas (3-7%). (2) Liquid staking (Lido, Rocket Pool) : tu recois un token (stETH) qui represente ton stake + recompenses. Tradable. Risque smart contract. (3) Staking natif validator (run un node Ethereum) : 32 ETH minimum, technique. Plus secure mais demande competence. (4) Staking de petits altcoins via DeFi : ATTENTION rugpull. Risques generaux : slashing (si validator misbehave, partial loss), unlock period (parfois 7-30 jours), impermanent loss si LP. Pour debutant : staking ETH via Coinbase/Kraken, simple et sur."
+      "answer": "Depend du type : (1) Staking centralise sur exchange (Coinbase, Kraken) : safe sur la blockchain mais expose au risque plateforme (hack, faillite). Yield bas (3-7%). (2) Liquid staking (Lido, Rocket Pool) : tu recois un token (stETH) qui represente votre stake + recompenses. Tradable. Risque smart contract. (3) Staking natif validator (run un node Ethereum) : 32 ETH minimum, technique. Plus secure mais demande competence. (4) Staking de petits altcoins via DeFi : ATTENTION rugpull. Risques generaux : slashing (si validator misbehave, partial loss), unlock period (parfois 7-30 jours), impermanent loss si LP. Pour debutant : staking ETH via Coinbase/Kraken, simple et sur."
     },
     {
       "id": "yield-farming-risque",
       "category": "defi",
       "question": "Le yield farming, est-ce dangereux ?",
-      "answer": "OUI, plus risque que staking simple. Mecanisme : tu fournis de la liquidite a un pool DeFi (ex: USDC/ETH sur Uniswap) et tu touches une portion des frais + des tokens de governance. Risques majeurs : (1) Impermanent Loss : si le ratio des 2 tokens bouge, tu sors avec moins que si tu avais juste hold, (2) Smart contract exploit : Curve, Balancer ont eu des hacks $10M+, (3) Rugpull : sur les 'farms' de petits projets, l'equipe peut vider la pool, (4) Yields trop beaux : 100% APR souvent = ponzi inflation token (le token que tu farm n'a pas de valeur). Si tu farms : reste sur les pools 'blue chips' (Curve stable, Aave, Compound), 5-15% APR est realiste."
+      "answer": "OUI, plus risque que staking simple. Mecanisme : vous fournissez de la liquidite a un pool DeFi (ex: USDC/ETH sur Uniswap) et vous touchez une portion des frais + des tokens de governance. Risques majeurs : (1) Impermanent Loss : si le ratio des 2 tokens bouge, tu sors avec moins que si vous aviez juste hold, (2) Smart contract exploit : Curve, Balancer ont eu des hacks $10M+, (3) Rugpull : sur les 'farms' de petits projets, l'equipe peut vider la pool, (4) Yields trop beaux : 100% APR souvent = ponzi inflation token (le token que tu farm n'a pas de valeur). Si tu farms : reste sur les pools 'blue chips' (Curve stable, Aave, Compound), 5-15% APR est realiste."
     },
     {
       "id": "defi-dangereux-pourquoi",
       "category": "defi",
       "question": "Pourquoi tout le monde dit que la DeFi est dangereuse ?",
-      "answer": "Risques structurels : (1) Pas de support client : si tu fais une erreur, c'est perdu pour toujours. (2) Smart contract exploits : 2024 = $1.5Md vol DeFi (Chainalysis). (3) Frontend hacks (DNS poisoning) : tu signes une transaction qui semble legit mais signe un drainer. (4) Liquidations cascade en flash crash. (5) MEV / sandwich attacks qui te volent silencieusement. (6) Composition risk : un protocole DeFi qui depend d'un autre qui hack -> chain reaction. CONSEILS : (1) Reste sur les blue chips (Aave, Curve, Uniswap V3, Lido), (2) Limite ton exposition DeFi a 10-20% max du portfolio, (3) Revoke les approvals regulierement (Revoke.cash), (4) Ne fais jamais 'approve unlimited' sur un nouveau protocole."
+      "answer": "Risques structurels : (1) Pas de support client : si vous faites une erreur, c'est perdu pour toujours. (2) Smart contract exploits : 2024 = $1.5Md vol DeFi (Chainalysis). (3) Frontend hacks (DNS poisoning) : vous signez une transaction qui semble legit mais signe un drainer. (4) Liquidations cascade en flash crash. (5) MEV / sandwich attacks qui te volent silencieusement. (6) Composition risk : un protocole DeFi qui depend d'un autre qui hack -> chain reaction. CONSEILS : (1) Reste sur les blue chips (Aave, Curve, Uniswap V3, Lido), (2) Limite votre exposition DeFi a 10-20% max du portfolio, (3) Revoke les approvals regulierement (Revoke.cash), (4) Ne fais jamais 'approve unlimited' sur un nouveau protocole."
     }
   ]
 }

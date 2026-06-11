@@ -26,7 +26,7 @@ import { BRAND } from "@/lib/brand";
 
 const TITLE = "Embed widgets Cryptoreflex — JS gratuit pour blogs FR";
 const DESCRIPTION =
-  "3 widgets JavaScript gratuits à embarquer sur ton blog : badge MiCA d'une plateforme, countdown deadline juillet 2026, top 10 cryptos. Sans inscription, CC-BY 4.0, 5 min d'install.";
+  "3 widgets JavaScript gratuits à embarquer sur votre blog : badge MiCA d'une plateforme, countdown deadline juillet 2026, top 10 cryptos. Sans inscription, CC-BY 4.0, 5 min d'install.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -45,17 +45,17 @@ const FAQ = [
   {
     question: "Le widget est-il vraiment gratuit ?",
     answer:
-      "Oui, totalement gratuit, sans inscription. La seule contrepartie est l'attribution Cryptoreflex (lien dofollow) qui est imposée par la licence CC-BY 4.0 et embarquée automatiquement dans le rendu du widget. Tu n'as rien à ajouter manuellement.",
+      "Oui, totalement gratuit, sans inscription. La seule contrepartie est l'attribution Cryptoreflex (lien dofollow) qui est imposée par la licence CC-BY 4.0 et embarquée automatiquement dans le rendu du widget. Vous n'avez rien à ajouter manuellement.",
   },
   {
     question: "Comment fonctionne le widget techniquement ?",
     answer:
-      "Une seule ligne <script> charge un fichier JS de < 5 Ko. Le script scanne ton DOM à la recherche d'élements [data-cryptoreflex-widget], récupère les données depuis notre API publique (CC-BY 4.0, CORS *), et injecte le rendu inline avec des styles encapsulés (zéro conflit CSS avec ton site).",
+      "Une seule ligne <script> charge un fichier JS de < 5 Ko. Le script scanne votre DOM à la recherche d'éléments [data-cryptoreflex-widget], récupère les données depuis notre API publique (CC-BY 4.0, CORS *), et injecte le rendu inline avec des styles encapsulés (zéro conflit CSS avec votre site).",
   },
   {
     question: "Le widget ralentit-il mon site ?",
     answer:
-      "Non. Le script est chargé en async (parallèle au reste de ta page), pèse < 5 Ko gzippé, et utilise le cache CDN Cloudflare 24h + stale-while-revalidate 7 jours. Le rendu intervient après DOMContentLoaded sans bloquer le LCP.",
+      "Non. Le script est chargé en async (parallèle au reste de votre page), pèse < 5 Ko gzippé, et utilise le cache CDN Cloudflare 24h + stale-while-revalidate 7 jours. Le rendu intervient après DOMContentLoaded sans bloquer le LCP.",
   },
   {
     question: "Puis-je personnaliser le style du widget ?",
@@ -175,7 +175,7 @@ export default function EmbedPage() {
             Widgets JavaScript Cryptoreflex
           </h1>
           <p className="mt-4 max-w-3xl text-lg text-slate-300">
-            3 widgets prêts à copier-coller dans ton blog FR : badge MiCA d'une
+            3 widgets prêts à copier-coller dans votre blog FR : badge MiCA d'une
             plateforme, countdown deadline juillet 2026, top 10 cryptos
             vulgarisées. <strong>5 minutes d'install</strong>, &lt; 5 Ko
             gzippé, données ouvertes mises à jour mensuellement.
@@ -213,18 +213,18 @@ export default function EmbedPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 1
               </div>
-              <h3 className="mt-3 font-semibold text-white">Copie le snippet</h3>
+              <h3 className="mt-3 font-semibold text-white">Copiez le snippet</h3>
               <p className="mt-1 text-sm text-slate-400">
-                Choisis l'un des 3 widgets ci-dessous et copie le snippet.
+                Choisissez l'un des 3 widgets ci-dessous et copiez le snippet.
               </p>
             </li>
             <li className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 2
               </div>
-              <h3 className="mt-3 font-semibold text-white">Colle dans ton article</h3>
+              <h3 className="mt-3 font-semibold text-white">Collez dans votre article</h3>
               <p className="mt-1 text-sm text-slate-400">
-                Dans la zone HTML brut de ton CMS (WordPress, Ghost, Webflow,
+                Dans la zone HTML brut de votre CMS (WordPress, Ghost, Webflow,
                 Notion-pages, etc.).
               </p>
             </li>
@@ -232,7 +232,7 @@ export default function EmbedPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 3
               </div>
-              <h3 className="mt-3 font-semibold text-white">Publie. C'est tout.</h3>
+              <h3 className="mt-3 font-semibold text-white">Publiez. C'est tout.</h3>
               <p className="mt-1 text-sm text-slate-400">
                 Le widget se rend automatiquement et se met à jour
                 mensuellement avec nos data.

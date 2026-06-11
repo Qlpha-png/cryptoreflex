@@ -89,8 +89,8 @@ function buildConfirmHtml(email: string): string {
     <div class="logo">${BRAND.name}</div>
     <h1>Désabonnement confirmé</h1>
     <p>L'adresse <span class="email">${safeEmail}</span> a bien été retirée de notre liste de diffusion.</p>
-    <p>Tu ne recevras plus aucun email de notre part. Conformément au RGPD (art. 21), ton retrait est immédiat et définitif.</p>
-    <p>Si c'était une erreur, tu peux te réinscrire à tout moment depuis notre site.</p>
+    <p>Vous ne recevrez plus aucun email de notre part. Conformément au RGPD (art. 21), votre retrait est immédiat et définitif.</p>
+    <p>Si c'était une erreur, vous pouvez vous réinscrire à tout moment depuis notre site.</p>
     <div class="actions">
       <a class="btn btn-primary" href="${BRAND.url}">Retour à l'accueil</a>
       <a class="btn btn-secondary" href="${BRAND.url}/confidentialite">Politique RGPD</a>
@@ -108,20 +108,20 @@ function buildConfirmHtml(email: string): string {
 function buildConfirmRequestEmail(email: string, confirmUrl: string): string {
   const safeEmail = escapeHtml(email);
   return `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><title>Confirme ton désabonnement</title></head>
+<html lang="fr"><head><meta charset="utf-8"><title>Confirmez votre désabonnement</title></head>
 <body style="margin:0;padding:0;background:#0B0D10;font-family:Arial,sans-serif;color:#F4F5F7;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#0B0D10">
 <tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#111827;border-radius:12px;padding:32px 24px;">
 <tr><td>
-<h1 style="margin:0 0 16px 0;font-size:22px;color:#F5A524;">Confirme ton désabonnement</h1>
-<p style="font-size:15px;line-height:1.6;color:#D1D5DB;">Tu as demandé à te désinscrire de la newsletter ${BRAND.name} pour l'adresse <strong>${safeEmail}</strong>.</p>
-<p style="font-size:15px;line-height:1.6;color:#D1D5DB;">Pour confirmer, clique simplement sur le bouton ci-dessous :</p>
+<h1 style="margin:0 0 16px 0;font-size:22px;color:#F5A524;">Confirmez votre désabonnement</h1>
+<p style="font-size:15px;line-height:1.6;color:#D1D5DB;">Vous avez demandé à vous désinscrire de la newsletter ${BRAND.name} pour l'adresse <strong>${safeEmail}</strong>.</p>
+<p style="font-size:15px;line-height:1.6;color:#D1D5DB;">Pour confirmer, cliquez simplement sur le bouton ci-dessous :</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:24px auto 0 auto;">
 <tr><td align="center" bgcolor="#F5A524" style="border-radius:8px;">
 <a href="${confirmUrl}" style="display:inline-block;padding:14px 28px;font-family:Arial,sans-serif;font-size:16px;font-weight:700;color:#0B0D10;text-decoration:none;border-radius:8px;">Me désinscrire définitivement</a>
 </td></tr></table>
-<p style="font-size:12px;line-height:1.6;color:#9CA3AF;margin-top:24px;">Si tu n'es pas à l'origine de cette demande, ignore simplement cet email — aucune action n'est nécessaire.</p>
+<p style="font-size:12px;line-height:1.6;color:#9CA3AF;margin-top:24px;">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email — aucune action n'est nécessaire.</p>
 <p style="font-size:11px;line-height:1.5;color:#6B7280;margin-top:24px;border-top:1px solid #374151;padding-top:16px;">${BRAND.name} — ${BRAND.domain}</p>
 </td></tr>
 </table>
@@ -223,14 +223,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // Migration 27/04 → lib/email/client : signature requiert `text` ; `tag` et `from`
   // ne sont plus supportés (FROM_EMAIL centralisé).
   const confirmText =
-    `Confirme ton désabonnement de ${BRAND.name}\n\n` +
-    `Tu as demandé à te désinscrire pour l'adresse ${email}.\n\n` +
-    `Pour confirmer, ouvre ce lien :\n${confirmUrl}\n\n` +
-    `Si tu n'es pas à l'origine de cette demande, ignore simplement cet email — aucune action n'est nécessaire.\n\n` +
+    `Confirmez votre désabonnement de ${BRAND.name}\n\n` +
+    `Vous avez demandé à vous désinscrire pour l'adresse ${email}.\n\n` +
+    `Pour confirmer, ouvrez ce lien :\n${confirmUrl}\n\n` +
+    `Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email — aucune action n'est nécessaire.\n\n` +
     `${BRAND.name} — ${BRAND.domain}`;
   const sendResult = await sendEmail({
     to: email,
-    subject: `Confirme ton désabonnement de ${BRAND.name}`,
+    subject: `Confirmez votre désabonnement de ${BRAND.name}`,
     html: buildConfirmRequestEmail(email, confirmUrl),
     text: confirmText,
   });

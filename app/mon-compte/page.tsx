@@ -27,7 +27,7 @@ import GamificationPanel from "@/components/GamificationPanel";
 export const metadata: Metadata = {
   title: "Mon compte",
   description:
-    "Ton espace personnel Cryptoreflex : tes outils, tes préférences et la gestion de tes données. 100 % gratuit.",
+    "Votre espace personnel Cryptoreflex : vos outils, vos préférences et la gestion de vos données. 100 % gratuit.",
   alternates: { canonical: `${BRAND.url}/mon-compte` },
   robots: { index: false, follow: false },
 };
@@ -99,7 +99,7 @@ export default async function AccountPage() {
           </div>
         </header>
 
-        {/* Section "Tes outils" — tout est gratuit (démonétisation juin 2026) */}
+        {/* Section "Vos outils" — tout est gratuit (démonétisation juin 2026) */}
         <section
           aria-labelledby="tools-title"
           className="mb-6 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-background p-5 sm:p-6"
@@ -136,7 +136,7 @@ export default async function AccountPage() {
                     Cerfa 2086 + 3916-bis auto
                   </h3>
                   <p className="mt-1 text-xs text-fg/70 leading-snug">
-                    Importe ton CSV → PDF pré-rempli en 30s. 5 PDF/jour.
+                    Importe votre CSV → PDF pré-rempli en 30s. 5 PDF/jour.
                   </p>
                 </div>
                 <ArrowRight
@@ -245,7 +245,7 @@ export default async function AccountPage() {
               <p className="text-xs text-muted">
                 Cryptoreflex est entièrement gratuit. Aucun abonnement, aucune
                 carte bancaire, rien à gérer — tous les outils ci-dessus sont
-                accessibles avec ton compte.
+                accessibles avec votre compte.
               </p>
             </div>
           </div>
@@ -299,8 +299,8 @@ export default async function AccountPage() {
           </div>
           <p className="text-sm text-fg/70 leading-relaxed mb-4">
             Définis un mot de passe pour te connecter sans attendre un email à
-            chaque fois. Tu peux aussi continuer à utiliser le lien magique si
-            tu préfères.
+            chaque fois. Vous pouvez aussi continuer à utiliser le lien magique si
+            vous préférez.
           </p>
           <Link
             href="/mon-compte/mot-de-passe"
@@ -319,11 +319,11 @@ export default async function AccountPage() {
               className="h-4 w-4 text-success"
               aria-hidden="true"
             />
-            <h2 className="font-bold text-fg">Tes données (RGPD)</h2>
+            <h2 className="font-bold text-fg">Vos données (RGPD)</h2>
           </div>
           <p className="text-sm text-fg/70 leading-relaxed mb-4">
-            Conformément au RGPD, tu peux à tout moment exporter ou supprimer
-            tes données. La suppression de compte est{" "}
+            Conformément au RGPD, vous pouvez à tout moment exporter ou supprimer
+            vos données. La suppression de compte est{" "}
             <strong className="text-fg">automatique en 1 clic</strong> via le
             bouton ci-dessous (pas besoin d&apos;email).
           </p>
@@ -340,10 +340,10 @@ export default async function AccountPage() {
             <DeleteAccountButton />
           </div>
           <p className="mt-3 text-xs text-muted">
-            Note : si tu as par le passé réglé un abonnement, les factures
+            Note : si vous avez par le passé réglé un abonnement, les factures
             correspondantes restent conservées 10 ans (obligation comptable,
             article L123-22 du Code de commerce). La suppression de compte
-            anonymise tes données mais ne peut pas détruire les factures déjà
+            anonymise vos données mais ne peut pas détruire les factures déjà
             émises.
           </p>
         </div>

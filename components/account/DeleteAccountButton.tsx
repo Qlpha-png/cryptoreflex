@@ -100,9 +100,9 @@ export default function DeleteAccountButton() {
               Elle déclenche :
             </p>
             <ul className="mt-2 space-y-1 text-sm text-fg/75 list-disc pl-5">
-              <li>Suppression de ton profil utilisateur</li>
+              <li>Suppression de votre profil utilisateur</li>
               <li>
-                Anonymisation de tes données associées (alertes, etc.)
+                Anonymisation de vos données associées (alertes, etc.)
               </li>
             </ul>
             <p className="mt-4 text-sm text-fg/80">
@@ -119,7 +119,7 @@ export default function DeleteAccountButton() {
               autoFocus
               autoComplete="off"
               spellCheck="false"
-              aria-label="Tape SUPPRIMER pour confirmer la suppression de ton compte"
+              aria-label="Tape SUPPRIMER pour confirmer la suppression de votre compte"
               className="mt-2 w-full rounded-lg border border-border bg-elevated px-3 py-2 text-sm font-mono text-fg focus:border-danger focus:outline-none focus:ring-2 focus:ring-danger/40"
               placeholder="SUPPRIMER"
               disabled={loading}

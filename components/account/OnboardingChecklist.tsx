@@ -41,7 +41,7 @@ interface Step {
 const STEPS: Step[] = [
   {
     id: "radar",
-    title: "Lance le Radar 3916-bis",
+    title: "Lancez le Radar 3916-bis",
     benefit: "Détecte jusqu'à 10 000 € d'amende potentielle (deadline mai)",
     cta: "Scanner (2 min)",
     href: "/outils/radar-3916-bis",
@@ -49,7 +49,7 @@ const STEPS: Step[] = [
   },
   {
     id: "portfolio",
-    title: "Ajoute ta 1ère position portfolio",
+    title: "Ajoutez votre 1ère position portfolio",
     benefit: "P&L live, illimité (vs 5 max en Free)",
     cta: "Configurer",
     href: "/outils/portfolio-tracker",
@@ -57,7 +57,7 @@ const STEPS: Step[] = [
   },
   {
     id: "alert",
-    title: "Active ta première alerte prix",
+    title: "Activez votre première alerte prix",
     benefit: "Email instantané sur seuil franchi",
     cta: "Créer alerte",
     // FIX 2026-05-02 #7 (audit 404) : la route est /alertes (page hub user),
@@ -67,7 +67,7 @@ const STEPS: Step[] = [
   },
   {
     id: "fiscal",
-    title: "Pose ta question fiscale (48 h)",
+    title: "Posez votre question fiscale (48 h)",
     benefit: "Réponse argumentée par un humain, sources légales citées",
     cta: "Ouvrir",
     href: "mailto:hello@cryptoreflex.fr?subject=Question%20fiscale",
@@ -75,7 +75,7 @@ const STEPS: Step[] = [
   },
   {
     id: "password",
-    title: "Sécurise ton compte (mot de passe)",
+    title: "Sécurisez votre compte (mot de passe)",
     benefit: "Connexion en 2 sec sans attendre un email",
     cta: "Définir",
     href: "/mon-compte/mot-de-passe",
@@ -83,7 +83,7 @@ const STEPS: Step[] = [
   },
   {
     id: "brief",
-    title: "Active le Brief PRO hebdo",
+    title: "Activez le Brief PRO hebdo",
     benefit: "Alpha + on-chain, dimanche soir, 4 min de lecture",
     cta: "M'abonner",
     href: "/mon-compte#brief",
@@ -184,17 +184,17 @@ export default function OnboardingChecklist() {
         <div className="flex-1 min-w-0">
           <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            ACTIVE TON PRO EN 5 MINUTES
+            ACTIVEZ VOTRE PRO EN 5 MINUTES
           </span>
           <h2
             id="onboarding-heading"
             className="mt-2 text-xl font-extrabold text-fg leading-tight"
           >
-            Bien joué, te voilà{" "}
+            Bien joué, vous voilà{" "}
             <span className="text-primary">Pro&nbsp;!</span>
           </h2>
           <p className="mt-1 text-sm text-fg/70">
-            Quelques quick-wins pour débloquer ta valeur dès aujourd&apos;hui.
+            Quelques quick-wins pour débloquer votre valeur dès aujourd&apos;hui.
           </p>
         </div>
         <div className="flex gap-1 shrink-0">

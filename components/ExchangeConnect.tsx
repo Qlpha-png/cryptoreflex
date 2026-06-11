@@ -178,7 +178,7 @@ export default function ExchangeConnect() {
       }
       setSuccess(
         added > 0
-          ? `${added} position${added > 1 ? "s" : ""} importée${added > 1 ? "s" : ""} dans ton portfolio.`
+          ? `${added} position${added > 1 ? "s" : ""} importée${added > 1 ? "s" : ""} dans votre portfolio.`
           : "Sync OK — aucune nouvelle position à importer (déjà à jour).",
       );
       await refresh();
@@ -192,7 +192,7 @@ export default function ExchangeConnect() {
   const handleDisconnect = async () => {
     if (
       !window.confirm(
-        "Déconnecter Binance ? Tes positions importées dans le portfolio restent (rien n'est supprimé). La clé chiffrée est effacée.",
+        "Déconnecter Binance ? Vos positions importées dans le portfolio restent (rien n'est supprimé). La clé chiffrée est effacée.",
       )
     ) {
       return;
@@ -237,7 +237,7 @@ export default function ExchangeConnect() {
               Connecte ton compte Binance (read-only)
             </h3>
             <p className="mt-1 text-xs text-fg/65 leading-relaxed">
-              Connecte-toi à Cryptoreflex pour activer l&apos;import auto de tes
+              Connectez-vous à Cryptoreflex pour activer l&apos;import auto de vos
               balances Binance. Aucun CSV à uploader, sync 1-clic.
             </p>
           </div>
@@ -390,7 +390,7 @@ export default function ExchangeConnect() {
           {!showForm ? (
             <div>
               <p className="text-xs text-fg/70 leading-relaxed mb-3">
-                Importe automatiquement tes balances Binance dans ton portfolio
+                Importe automatiquement vos balances Binance dans votre portfolio
                 Cryptoreflex. <strong>Aucune transaction</strong> n&apos;est
                 possible : on accepte uniquement les clés{" "}
                 <strong className="text-emerald-300">READ-ONLY</strong> (vérifié
@@ -536,9 +536,9 @@ export default function ExchangeConnect() {
               </div>
 
               <p className="text-[11px] text-muted leading-relaxed">
-                Tes clés sont chiffrées AES-256-GCM côté serveur (clé maître non
+                Vos clés sont chiffrées AES-256-GCM côté serveur (clé maître non
                 exposée). Ce site ne stockera JAMAIS de clé avec permission de
-                trading ou retrait — la connexion est rejetée si tu cochés
+                trading ou retrait — la connexion est rejetée si vous cochez
                 d&apos;autres permissions.
               </p>
             </form>

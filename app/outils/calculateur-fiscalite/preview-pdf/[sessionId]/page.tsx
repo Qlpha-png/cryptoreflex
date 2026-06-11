@@ -24,9 +24,9 @@ import { getCalculation } from "@/lib/calculateur-pdf-storage";
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "— Cryptoreflex" (template root layout l'ajoute déjà).
-  title: "Aperçu PDF de ta simulation fiscalité crypto",
+  title: "Aperçu PDF de votre simulation fiscalité crypto",
   description:
-    "Aperçu personnel de ta simulation fiscalité crypto, prêt à imprimer ou sauvegarder en PDF.",
+    "Aperçu personnel de votre simulation fiscalité crypto, prêt à imprimer ou sauvegarder en PDF.",
   robots: { index: false, follow: false, nocache: true },
 };
 

@@ -79,7 +79,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     try {
       const r = await sendPushToUser(row.user_id, {
         title: `🔥 ${row.streak_days} jours de streak — ne casse pas la chaîne !`,
-        body: `Connecte-toi avant minuit pour conserver ton record. Ton record perso est en jeu.`,
+        body: `Connectez-vous avant minuit pour conserver votre record. Votre record perso est en jeu.`,
         url: "/mon-compte#progression",
         tag: `streak-reminder-${row.user_id}`,
       });

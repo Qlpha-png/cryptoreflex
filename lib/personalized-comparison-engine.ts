@@ -178,7 +178,7 @@ export function getTop3(answers: QuizAnswers): PlatformRecommendation[] {
 export const QUIZ_QUESTIONS = [
   {
     id: "monthlyAmount",
-    label: "Quel montant mensuel envisages-tu d'investir en crypto ?",
+    label: "Quel montant mensuel envisagez-vous d'investir en crypto ?",
     options: [
       { value: 25, label: "Moins de 50 € / mois" },
       { value: 100, label: "50 - 200 € / mois" },
@@ -188,7 +188,7 @@ export const QUIZ_QUESTIONS = [
   },
   {
     id: "frequency",
-    label: "À quelle fréquence comptes-tu acheter ?",
+    label: "À quelle fréquence comptez-vous acheter ?",
     options: [
       { value: "ponctuel", label: "Achat unique ou ponctuel" },
       { value: "mensuel", label: "Une fois par mois (DCA)" },
@@ -197,7 +197,7 @@ export const QUIZ_QUESTIONS = [
   },
   {
     id: "experience",
-    label: "Quel est ton niveau d'expérience crypto ?",
+    label: "Quel est votre niveau d'expérience crypto ?",
     options: [
       { value: "debutant", label: "Débutant — premier achat ou presque" },
       { value: "intermediaire", label: "Intermédiaire — quelques mois/années" },
@@ -206,7 +206,7 @@ export const QUIZ_QUESTIONS = [
   },
   {
     id: "priority",
-    label: "Quelle est ta priorité numéro 1 ?",
+    label: "Quelle est votre priorité numéro 1 ?",
     options: [
       { value: "prix", label: "Frais les plus bas possible" },
       { value: "ux", label: "Application simple et agréable" },
@@ -215,7 +215,7 @@ export const QUIZ_QUESTIONS = [
   },
   {
     id: "intent",
-    label: "Comment vas-tu utiliser tes cryptos ?",
+    label: "Comment allez-vous utiliser vos cryptos ?",
     options: [
       { value: "dca", label: "DCA régulier (achat auto)" },
       { value: "hold", label: "Hold long terme (3-5 ans+)" },

@@ -63,7 +63,7 @@ export default function EmbedSnippet({
     <div className="rounded-xl border border-border bg-elevated/60 overflow-hidden">
       <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border bg-surface/40">
         <span className="text-xs font-mono text-muted">
-          Code iframe à coller sur ton site
+          Code iframe à coller sur votre site
         </span>
         <button
           type="button"

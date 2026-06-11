@@ -124,7 +124,7 @@ export default function WizardPremierAchatPage() {
                 Pas sûr de la plateforme à choisir&nbsp;?
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                Lance le quiz dédié — 6 questions courtes, reco basée sur ton
+                Lance le quiz dédié — 6 questions courtes, reco basée sur votre
                 profil (budget, fréquence d'achat, priorité).
               </p>
               <Link

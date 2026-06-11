@@ -5,7 +5,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Hors ligne",
   description:
-    "Tu es actuellement hors ligne. Reconnecte-toi pour accéder à toutes les ressources Cryptoreflex.",
+    "Vous êtes actuellement hors ligne. Reconnectez-vous pour accéder à toutes les ressources Cryptoreflex.",
   robots: { index: false, follow: false },
 };
 

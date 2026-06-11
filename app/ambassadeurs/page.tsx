@@ -53,12 +53,12 @@ export const metadata: Metadata = {
   // avec le template root layout `%s | Cryptoreflex` → 2× Cryptoreflex en SERP.
   title: "Programme ambassadeurs — 50 % de commission pendant 12 mois",
   description:
-    "Créateur YouTube, TikTok, podcast ou newsletter crypto FR ? Envoie tes leads sur Cryptoreflex, on convertit, on reverse 50 % de la commission affilié pendant 12 mois. Paiement mensuel.",
+    "Créateur YouTube, TikTok, podcast ou newsletter crypto FR ? Envoyez vos leads sur Cryptoreflex, on convertit, on reverse 50 % de la commission affilié pendant 12 mois. Paiement mensuel.",
   alternates: withHreflang(`${BRAND.url}/ambassadeurs`),
   openGraph: {
     title: "Devenir ambassadeur Cryptoreflex",
     description:
-      "Crée du contenu crypto, on s'occupe de la monétisation. 50 % de commission pendant 12 mois sur chaque inscription qualifiée. Paiement mensuel dès 50 €.",
+      "Créez du contenu crypto, on s'occupe de la monétisation. 50 % de commission pendant 12 mois sur chaque inscription qualifiée. Paiement mensuel dès 50 €.",
     url: `${BRAND.url}/ambassadeurs`,
     type: "website",
   },
@@ -72,8 +72,8 @@ export const metadata: Metadata = {
 const VALUE_PROPS = [
   {
     icon: Send,
-    title: "Tu envoies, on convertit",
-    text: "Tu partages ton lien personnalisé sur ta chaîne / podcast / newsletter. Notre calculateur fiscalité, comparateur et newsletter font le reste.",
+    title: "Vous envoyez, on convertit",
+    text: "Vous partagez votre lien personnalisé sur votre chaîne / podcast / newsletter. Notre calculateur fiscalité, comparateur et newsletter font le reste.",
   },
   {
     icon: Wallet,
@@ -88,7 +88,7 @@ const VALUE_PROPS = [
   {
     icon: Handshake,
     title: "Paiement mensuel sur facture",
-    text: "Virement SEPA, PayPal ou USDC sur facture EI Kevin Voisin, dès que tu passes le seuil de 50 € accumulés. En dessous, le solde est reporté au mois suivant.",
+    text: "Virement SEPA, PayPal ou USDC sur facture EI Kevin Voisin, dès que vous passez le seuil de 50 € accumulés. En dessous, le solde est reporté au mois suivant.",
   },
 ];
 
@@ -102,7 +102,7 @@ const IDEAL_PROFILES = [
     name: "Le créateur YouTube / TikTok crypto FR",
     audience: "1k – 50k abonnés",
     angle:
-      "Niche fiscalité crypto, MiCA, sécurité hardware wallet ou DCA stratégie. Audience qui pose des questions concrètes — Cryptoreflex est ta réponse outillée.",
+      "Niche fiscalité crypto, MiCA, sécurité hardware wallet ou DCA stratégie. Audience qui pose des questions concrètes — Cryptoreflex est votre réponse outillée.",
     examples: [
       "Tutos calcul plus-values + Cerfa 2086",
       "Compare exchanges français post-MiCA",
@@ -114,7 +114,7 @@ const IDEAL_PROFILES = [
     name: "Le bloggeur finance perso",
     audience: "Site, Substack, Beehiiv",
     angle:
-      "Tu couvres l'épargne, la fiscalité, l'investissement long terme — et tes lecteurs te demandent de la crypto. Tu n'es pas expert pur, mais Cryptoreflex te permet de répondre sérieusement.",
+      "Vous couvrez l'épargne, la fiscalité, l'investissement long terme — et vos lecteurs vous demandent de la crypto. Vous n'êtes pas expert pur, mais Cryptoreflex vous permet de répondre sérieusement.",
     examples: [
       "« 5 % crypto dans une allocation patrimoniale »",
       "Comparatif PEA vs CTO vs PSAN",
@@ -126,7 +126,7 @@ const IDEAL_PROFILES = [
     name: "Le newsletter writer FR",
     audience: "Substack, Beehiiv, Kit",
     angle:
-      "Tu écris une newsletter finance / tech FR avec engagement réel (>30 % open rate). Une mention ciblée par mois suffit à générer du trafic qualifié — sans cramer ta liste.",
+      "Vous écrivez une newsletter finance / tech FR avec engagement réel (>30 % open rate). Une mention ciblée par mois suffit à générer du trafic qualifié — sans cramer votre liste.",
     examples: [
       "Encart « Outil de la semaine » récurrent",
       "Édition spéciale fiscalité avant mai",
@@ -143,22 +143,22 @@ const STEPS = [
   {
     n: 1,
     title: "Application en 2 minutes",
-    text: "Formulaire ci-dessous : nom, email, URL de ta chaîne, audience, niche, message court.",
+    text: "Formulaire ci-dessous : nom, email, URL de votre chaîne, audience, niche, message court.",
   },
   {
     n: 2,
     title: "Validation manuelle sous 7 jours",
-    text: "On regarde ta qualité éditoriale + alignement valeurs (zéro scam / zéro shitcoin promu). Réponse à 100 %.",
+    text: "On regarde votre qualité éditoriale + alignement valeurs (zéro scam / zéro shitcoin promu). Réponse à 100 %.",
   },
   {
     n: 3,
     title: "Lien personnalisé tracké",
-    text: "Validation = on te crée ton sub-id Cryptoreflex. Tous les liens du site deviennent traqués à toi.",
+    text: "Validation = on vous crée votre sub-id Cryptoreflex. Tous les liens du site deviennent traqués à vous.",
   },
   {
     n: 4,
     title: "Premier paiement à M+1 (seuil 50 €)",
-    text: "Paiement SEPA / PayPal / USDC le 5 du mois suivant si tu as franchi 50 € accumulés. Sinon report.",
+    text: "Paiement SEPA / PayPal / USDC le 5 du mois suivant si vous avez franchi 50 € accumulés. Sinon report.",
   },
 ];
 
@@ -169,11 +169,11 @@ const STEPS = [
 const FAQS = [
   {
     q: "Quels sont les prérequis pour devenir ambassadeur ?",
-    a: "Tu dois être créateur de contenu francophone actif sur au moins une plateforme (YouTube, TikTok, podcast, blog, newsletter, Discord) avec une audience minimum d'environ 1 000 abonnés ou auditeurs. On valide aussi sur la qualité éditoriale et l'alignement avec nos valeurs : zéro promotion de scams, de shitcoins ou de schémas pump.",
+    a: "Vous devez être créateur de contenu francophone actif sur au moins une plateforme (YouTube, TikTok, podcast, blog, newsletter, Discord) avec une audience minimum d'environ 1 000 abonnés ou auditeurs. On valide aussi sur la qualité éditoriale et l'alignement avec nos valeurs : zéro promotion de scams, de shitcoins ou de schémas pump.",
   },
   {
     q: "Comment sont calculées les commissions ?",
-    a: "Tu touches 50 % de la commission affiliée que Cryptoreflex perçoit, pendant 12 mois après inscription du référé. Ex : si une plateforme nous verse 100 € pour un client référé, tu touches 50 €. Si ce même client réinvestit dans 6 mois et nous reverse 60 €, tu touches encore 30 €. Pas de dilution, pas de sous-pourcentage caché — moitié-moitié, point.",
+    a: "Vous touchez 50 % de la commission affiliée que Cryptoreflex perçoit, pendant 12 mois après inscription du référé. Ex : si une plateforme nous verse 100 € pour un client référé, vous touchez 50 €. Si ce même client réinvestit dans 6 mois et nous reverse 60 €, vous touchez encore 30 €. Pas de dilution, pas de sous-pourcentage caché — moitié-moitié, point.",
   },
   {
     q: "Quand et comment je reçois mes paiements ?",
@@ -181,15 +181,15 @@ const FAQS = [
   },
   {
     q: "Y a-t-il une exclusivité demandée ?",
-    a: "Non, exclusivité non requise. On veut que tu sois indépendant et que tu recommandes ce qui est le mieux pour ton audience. Note simplement que certaines plateformes partenaires limitent le multi-affiliation (rare) — on te tient au courant si une de tes plateformes le demande.",
+    a: "Non, exclusivité non requise. On veut que vous soyez indépendant et que vous recommandiez ce qui est le mieux pour votre audience. Notez simplement que certaines plateformes partenaires limitent le multi-affiliation (rare) — on vous tient au courant si une de vos plateformes le demande.",
   },
   {
     q: "Mon audience est-elle assez grande pour postuler ?",
-    a: "Le seuil indicatif est ~1 000 abonnés mais on regarde aussi la qualité d'engagement. Une niche micro avec 500 fans actifs (taux d'ouverture newsletter > 40 % par exemple) convertit souvent mieux qu'un compte généraliste 10 000+. Postule, on te répond honnêtement et on t'oriente.",
+    a: "Le seuil indicatif est ~1 000 abonnés mais on regarde aussi la qualité d'engagement. Une niche micro avec 500 fans actifs (taux d'ouverture newsletter > 40 % par exemple) convertit souvent mieux qu'un compte généraliste 10 000+. Postulez, on vous répond honnêtement et on vous oriente.",
   },
   {
     q: "Que se passe-t-il si je ne génère rien le premier mois ?",
-    a: "Rien de grave — pas de pénalité, pas de désactivation. Le programme est conçu pour les créateurs réguliers : ce qui compte c'est que tu produises du contenu de qualité quand ça te convient. On désactive uniquement les comptes inactifs depuis 12+ mois ou ceux qui violent la charte (promotion de scams, etc.).",
+    a: "Rien de grave — pas de pénalité, pas de désactivation. Le programme est conçu pour les créateurs réguliers : ce qui compte c'est que vous produisiez du contenu de qualité quand ça vous convient. On désactive uniquement les comptes inactifs depuis 12+ mois ou ceux qui violent la charte (promotion de scams, etc.).",
   },
 ];
 
@@ -256,13 +256,13 @@ export default function AmbassadeursPage() {
               Programme ambassadeurs — créateurs FR
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
-              Crée du contenu crypto,{" "}
+              Créez du contenu crypto,{" "}
               <span className="gradient-text">on s&apos;occupe de la monétisation</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Tu envoies tes leads sur Cryptoreflex via ton lien personnalisé.
+              Vous envoyez vos leads sur Cryptoreflex via votre lien personnalisé.
               On convertit avec notre calculateur fiscalité, notre comparateur
-              MiCA et notre newsletter. On te reverse{" "}
+              MiCA et notre newsletter. On vous reverse{" "}
               <span className="text-primary-soft font-semibold">
                 50 % de la commission affilié pendant 12 mois
               </span>
@@ -311,11 +311,11 @@ export default function AmbassadeursPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Ce qui convertit ton trafic chez nous
+              Ce qui convertit votre trafic chez nous
             </h2>
             <p className="mt-2 text-fg/70">
-              Tu n&apos;envoies pas dans le vide — voici les outils qui transforment
-              tes lecteurs en utilisateurs payants des plateformes partenaires.
+              Vous n&apos;envoyez pas dans le vide — voici les outils qui transforment
+              vos lecteurs en utilisateurs payants des plateformes partenaires.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -366,7 +366,7 @@ export default function AmbassadeursPage() {
             3 profils ambassadeurs qu&apos;on cherche en priorité
           </h2>
           <p className="mt-2 text-fg/70">
-            Tu te reconnais ? Postule — on lit chaque candidature manuellement.
+            Vous vous reconnaissez ? Postulez — on lit chaque candidature manuellement.
           </p>
         </div>
 
@@ -453,7 +453,7 @@ export default function AmbassadeursPage() {
           <p className="mt-2 text-fg/70">
             Réponse manuelle sous 7 jours ouvrés à{" "}
             <span className="text-primary-soft">{BRAND.partnersEmail}</span>.
-            Tu reçois un email de confirmation tout de suite.
+            Vous recevez un email de confirmation tout de suite.
           </p>
         </div>
         <AmbassadeurForm />
@@ -462,7 +462,7 @@ export default function AmbassadeursPage() {
             className="inline-block h-3.5 w-3.5 mr-1 align-text-bottom text-primary-soft"
             aria-hidden="true"
           />
-          Tu seras dirigé vers /ambassadeurs/merci avec les prochaines étapes.
+          Vous serez dirigé vers /ambassadeurs/merci avec les prochaines étapes.
         </div>
       </section>
 
@@ -519,8 +519,8 @@ export default function AmbassadeursPage() {
               aria-hidden="true"
             />
             <span>
-              <strong className="text-fg">Contenu sponsorisé —</strong> Si tu
-              recommandes Cryptoreflex via lien tracké, tu dois mentionner la
+              <strong className="text-fg">Contenu sponsorisé —</strong> Si vous
+              recommandez Cryptoreflex via lien tracké, vous devez mentionner la
               relation commerciale conformément à la charte ARPP « influence »
               (mention « partenariat rémunéré » ou « lien affilié »).
             </span>

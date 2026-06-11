@@ -351,7 +351,7 @@ export default function ChecklistPage() {
             source="bottom-article"
             context="fiscalite"
             variant="default"
-            title="Garde une longueur d'avance sur la prochaine déclaration"
+            title="Gardez une longueur d'avance sur la prochaine déclaration"
             subtitle="On envoie un rappel personnalisé en mars 2027 + nos analyses fiscales mises à jour BOFiP. 1 envoi par trimestre, 0 spam."
             ctaLabel="M'abonner à la veille fiscale"
           />

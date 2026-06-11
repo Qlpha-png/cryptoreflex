@@ -312,7 +312,7 @@ function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
   return [
     {
       q: `Faut-il choisir ${a.name} ou ${b.name} en 2026 ?`,
-      ans: `Aucune des deux n'est meilleure dans l'absolu : ${a.name} (${a.symbol}) cible "${a.tagline.toLowerCase()}" ; ${b.name} (${b.symbol}) cible "${b.tagline.toLowerCase()}". Le bon arbitrage dépend de ton objectif (long terme, paiement, DeFi, NFT…) et de ta tolérance au risque (${riskOf(a)} pour ${a.name}, ${riskOf(b)} pour ${b.name}). Cryptoreflex publie sa méthodologie : aucun signal d'achat n'est donné — c'est à toi de trancher avec ces éléments factuels.`,
+      ans: `Aucune des deux n'est meilleure dans l'absolu : ${a.name} (${a.symbol}) cible "${a.tagline.toLowerCase()}" ; ${b.name} (${b.symbol}) cible "${b.tagline.toLowerCase()}". Le bon arbitrage dépend de votre objectif (long terme, paiement, DeFi, NFT…) et de votre tolérance au risque (${riskOf(a)} pour ${a.name}, ${riskOf(b)} pour ${b.name}). Cryptoreflex publie sa méthodologie : aucun signal d'achat n'est donné — c'est à vous de trancher avec ces éléments factuels.`,
     },
     {
       q: `Quelle plateforme pour acheter ${a.name} et ${b.name} en France ?`,

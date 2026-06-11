@@ -117,7 +117,7 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On corrige nos erreurs publiquement",
     detail:
-      "Toute erreur factuelle signalée est corrigée sous 48 h, avec une mention en bas d'article (« Corrigé le {date} : {nature de la correction} »). Pas de correction silencieuse. Tu peux nous écrire à contact@cryptoreflex.fr.",
+      "Toute erreur factuelle signalée est corrigée sous 48 h, avec une mention en bas d'article (« Corrigé le {date} : {nature de la correction} »). Pas de correction silencieuse. Vous pouvez nous écrire à contact@cryptoreflex.fr.",
   },
   {
     title: "On garde le contrôle éditorial total",
@@ -135,7 +135,7 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On ne donne JAMAIS de conseil en investissement personnalisé",
     detail:
-      "Cryptoreflex n'est ni PSAN agréé, ni CIF (Conseiller en Investissements Financiers). On ne te dit pas « achète ça maintenant » ou « vends ça ». Pour un conseil personnel, vois un CIF inscrit à l'ORIAS ou un fiscaliste agréé.",
+      "Cryptoreflex n'est ni PSAN agréé, ni CIF (Conseiller en Investissements Financiers). On ne vous dit pas « achetez ça maintenant » ou « vendez ça ». Pour un conseil personnel, voyez un CIF inscrit à l'ORIAS ou un fiscaliste agréé.",
   },
   {
     title: "On ne publie pas de prédictions de prix",
@@ -145,12 +145,12 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On ne fait pas de signaux de trading",
     detail:
-      "Pas de canal Telegram « entrée long BTC 95k $ », pas de groupe payant « pump détecté », pas d'alerte d'achat/vente. Si tu cherches ça, on n'est pas le bon site (et statistiquement, ces produits font perdre de l'argent à 95 % de leurs abonnés).",
+      "Pas de canal Telegram « entrée long BTC 95k $ », pas de groupe payant « pump détecté », pas d'alerte d'achat/vente. Si vous cherchez ça, on n'est pas le bon site (et statistiquement, ces produits font perdre de l'argent à 95 % de leurs abonnés).",
   },
   {
     title: "On ne relaye pas les coups de pub d'influenceurs",
     detail:
-      "Pas de partenariat avec des influenceurs crypto qui ont fait pump leur token. Pas de promotion de memecoins, pas de presale, pas de NFT « Mint exclusif ». Si un projet te promet 100x, fuis.",
+      "Pas de partenariat avec des influenceurs crypto qui ont fait pump leur token. Pas de promotion de memecoins, pas de presale, pas de NFT « Mint exclusif ». Si un projet vous promet 100x, fuyez.",
   },
   {
     title: "On ne touche pas de commission sur du trading",
@@ -160,7 +160,7 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On n'accepte pas d'argent contre une bonne note",
     detail:
-      "Plusieurs plateformes nous ont approchés pour « améliorer leur score ». La réponse est non, à chaque fois. Notre score est calculé via la méthodologie publique, pas négociable. Si tu vois un site crypto FR qui surnote tout : fuis aussi.",
+      "Plusieurs plateformes nous ont approchés pour « améliorer leur score ». La réponse est non, à chaque fois. Notre score est calculé via la méthodologie publique, pas négociable. Si vous voyez un site crypto FR qui surnote tout : fuyez aussi.",
   },
 ];
 
@@ -197,7 +197,7 @@ export default function ChartePage() {
               d&apos;arnaques, d&apos;influenceurs douteux et de sites
               déguisés en média qui touchent des commissions cachées.{" "}
               {BRAND.name} prend l&apos;engagement public de ne pas être
-              ça. Ce que tu lis ci-dessous est notre contrat moral avec toi.
+              ça. Ce que vous lisez ci-dessous est notre contrat moral avec vous.
             </p>
             <p className="mt-3 text-xs text-muted">
               Publié le{" "}
@@ -314,14 +314,14 @@ export default function ChartePage() {
                 <span>
                   <strong>Pas CIF</strong> (Conseiller en Investissements
                   Financiers inscrit à l&apos;ORIAS) — on ne conseille pas un
-                  investissement personnalisé. Si tu en cherches un,{" "}
+                  investissement personnalisé. Si vous en cherchez un,{" "}
                   <a
                     href="https://www.orias.fr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary-soft underline hover:text-primary"
                   >
-                    consulte le registre ORIAS
+                    consultez le registre ORIAS
                   </a>
                   .
                 </span>
@@ -332,7 +332,7 @@ export default function ChartePage() {
                   <strong>Pas expert-comptable / fiscaliste agréé</strong> — nos
                   contenus fiscaux (Cerfa 2086, 3916-bis) sont pédagogiques,
                   basés sur la doctrine publique DGFiP. Pour un dossier
-                  spécifique, consulte un{" "}
+                  spécifique, consultez un{" "}
                   <a
                     href="https://www.experts-comptables.fr/"
                     target="_blank"
@@ -373,7 +373,7 @@ export default function ChartePage() {
             </h2>
             <ol className="mt-4 space-y-3 text-sm text-fg/85 list-decimal list-inside marker:text-amber-400 marker:font-bold">
               <li>
-                Tu nous écris à{" "}
+                Vous nous écrivez à{" "}
                 <a
                   href={`mailto:${BRAND.email}`}
                   className="text-primary-soft underline hover:text-primary"

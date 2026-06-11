@@ -62,7 +62,7 @@ export default async function BlogPreview() {
           <EmptyState
             icon={<FileText className="h-6 w-6" aria-hidden="true" />}
             title="Pas encore d'articles publiés"
-            description="On prépare nos premiers guides — abonne-toi à la newsletter pour être prévenu dès la sortie."
+            description="On prépare nos premiers guides — abonnez-vous à la newsletter pour être prévenu dès la sortie."
             cta={{ label: "S'abonner à la newsletter", href: "#cat-informe" }}
             secondaryCta={{ label: "Voir les outils", href: "/outils" }}
           />

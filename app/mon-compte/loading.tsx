@@ -14,7 +14,7 @@
  */
 export default function MonCompteLoading() {
   return (
-    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement de ton espace personnel">
+    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement de votre espace personnel">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header skeleton : nom + email + badges */}
         <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
