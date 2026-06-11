@@ -437,17 +437,36 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* DESIGN 2026-06-11 — feedback Kev « fond jaune simple et pas parfait » :
+     le halo couvrait ~80 % du hero (ellipses 70 %/50 %, opacités .18/.10),
+     cumulé avec .hero-aurora (blend screen) → aplat brun-jaune uniforme.
+     Recalibrage façon Linear/Stripe : glow 2,5× plus discret, localisé
+     derrière le titre (gauche) + une pointe en haut à droite. Le noir
+     anthracite redevient dominant, le gold redevient un ACCENT. */
   background:
     radial-gradient(
-      ellipse 70% 55% at 22% 18%,
-      rgba(245, 165, 36, 0.18),
-      transparent 60%
+      ellipse 48% 38% at 20% 16%,
+      rgba(245, 165, 36, 0.07),
+      transparent 58%
     ),
     radial-gradient(
-      ellipse 50% 45% at 82% 8%,
-      rgba(251, 191, 36, 0.10),
-      transparent 65%
+      ellipse 30% 26% at 84% 6%,
+      rgba(251, 191, 36, 0.04),
+      transparent 62%
     );
+}
+
+/* DESIGN 2026-06-11 — grain photographique subtil (feedback Kev : les
+   aplats faisaient "simple"). Noise SVG fractal inline (zéro requête),
+   opacité 2,5 % : invisible consciemment, mais donne la texture "matière"
+   des sites premium (Linear, Arc, Stripe). Pointer-events none. */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 1;
 }
 
 /* Conteneur des particules — caché sous 768px (perf) */
@@ -549,11 +568,14 @@ body {
   position: absolute;
   inset: -20%;
   pointer-events: none;
+  /* DESIGN 2026-06-11 — même recalibrage que .hero-halo : l'aurora en
+     mix-blend screen + blur 60px AMPLIFIE fortement ses opacités ;
+     cumulée au halo, elle créait l'aplat jaune-brun. Divisée ~2,5×. */
   background: conic-gradient(
     from 0deg at 30% 40%,
     transparent 0deg,
-    rgba(245, 165, 36, 0.18) 60deg,
-    rgba(251, 191, 36, 0.10) 120deg,
+    rgba(245, 165, 36, 0.07) 60deg,
+    rgba(251, 191, 36, 0.04) 120deg,
     transparent 180deg,
     transparent 360deg
   );

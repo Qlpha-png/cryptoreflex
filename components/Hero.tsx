@@ -136,6 +136,9 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
       <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
       <div className="hero-halo" aria-hidden="true" />
       <div className="hero-aurora" aria-hidden="true" />
+      {/* DESIGN 2026-06-11 — grain subtil par-dessus les glows (cf.
+          globals.css .hero-grain) : texture "matière" premium. */}
+      <div className="hero-grain" aria-hidden="true" />
       <div className="hero-particles" aria-hidden="true">
         <span className="hero-particle p1" />
         <span className="hero-particle p2" />

@@ -101,12 +101,16 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
                  motion-reduce:md:hover:translate-y-0"
       style={{ ["--i" as string]: index }}
     >
-      {/* Badge éditorial. Audit A11y : gradient gold→primary-dark au lieu de
-          cyan (contraste AA) + .badge-pulse-strong pour attention catcher. */}
+      {/* Badge éditorial. DESIGN 2026-06-11 (feedback Kev anti-jaune) :
+          l'aplat gradient gold plein criait au milieu des autres éléments
+          dorés. Style "glass" premium : fond surface translucide + ring
+          gold + texte gold clair — toujours lisible (contraste AA :
+          #FCD34D sur #16191F ≈ 9:1), mais discret. Le pulse est conservé
+          sur les badges prioritaires. */}
       {badge && (
         <span
-          className={`absolute -top-3 right-4 sm:right-6 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-background z-10
-                      bg-gradient-to-r from-primary to-primary-glow shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] ring-1 ring-black/20
+          className={`absolute -top-3 right-4 sm:right-6 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary-soft z-10
+                      bg-surface/95 backdrop-blur-sm ring-1 ring-primary/40 shadow-[0_4px_14px_-4px_rgba(245,165,36,0.25)]
                       ${badge.toLowerCase().includes("recommand") || badge.toLowerCase().includes("plus régulé") ? "badge-pulse-strong" : ""}`}
         >
           {badge}
