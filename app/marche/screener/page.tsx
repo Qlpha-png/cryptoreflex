@@ -26,7 +26,7 @@ const PAGE_PATH = "/marche/screener";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Screener crypto — top 100 triable en direct";
 const DESCRIPTION =
-  "Screener du top 100 crypto par capitalisation : prix, variations 1h/24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée. Données CoinGecko.";
+  "Screener du top 100 crypto par capitalisation : prix, variations 24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée. Données CoinGecko.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -121,8 +121,8 @@ export default async function ScreenerPage() {
         </div>
 
         <p className="mt-6 text-xs text-muted">
-          Données CoinGecko. Les variations
-          1h/7j peuvent être momentanément indisponibles pour certains actifs.
+          Données CoinGecko. La variation 7 jours et les sparklines peuvent
+          être momentanément indisponibles pour certains actifs.
           Aucune donnée de cette page ne constitue un conseil en
           investissement.
         </p>

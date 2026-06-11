@@ -406,7 +406,8 @@ const BULLISH_KEYWORDS: readonly string[] = [
 const BEARISH_KEYWORDS: readonly string[] = [
   "crash", "plunges", "drops", "tumbles", "ban", "hack", "exploit",
   "bearish", "rejection", "lawsuit", "investigation", "delisted",
-  "chute", "effondre", "plonge", "baissier", "piratage", "interdit",
+  "chute", "effondre", "effondrement", "effondré", "plonge", "baissier",
+  "piratage", "interdit", "interdiction",
   "enquête", "rejet", "procès",
 ];
 
@@ -427,13 +428,28 @@ export function inferNewsSentiment(
   return inferSentiment(text);
 }
 
+/**
+ * FIX AUDIT 2026-06-11 (P1 code-review) — match en MOTS ENTIERS, plus en
+ * sous-chaîne. Avant : "ban" matchait "néo-BANque", "drops" matchait
+ * "airDROPS", "ath" matchait "marATHon" → badges Baissier/Haussier faux
+ * depuis que SentimentBadge affiche l'heuristique sur chaque card news.
+ * Boundaries Unicode (\p{L}/\p{N}) car le \b de JS ignore les accents
+ * français ("envolée", "effondré" seraient mal bornés).
+ */
+function hasWholeWord(text: string, kw: string): boolean {
+  const esc = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(
+    `(?:^|[^\\p{L}\\p{N}])${esc}(?:[^\\p{L}\\p{N}]|$)`,
+    "iu",
+  ).test(text);
+}
+
 function inferSentiment(text: string): CryptoNewsItem["sentiment"] {
-  const t = text.toLowerCase();
   for (const kw of BULLISH_KEYWORDS) {
-    if (t.includes(kw.toLowerCase())) return "bullish";
+    if (hasWholeWord(text, kw)) return "bullish";
   }
   for (const kw of BEARISH_KEYWORDS) {
-    if (t.includes(kw.toLowerCase())) return "bearish";
+    if (hasWholeWord(text, kw)) return "bearish";
   }
   return "neutral";
 }

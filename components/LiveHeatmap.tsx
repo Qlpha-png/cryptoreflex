@@ -626,19 +626,20 @@ function LiveStatusBadge({
   status: ReturnType<typeof useLivePrices>["status"];
   lastUpdate: Date | null;
 }) {
+  // AUDIT 2026-06-11 — depuis la désactivation du SSE (incident quota
+  // Vercel mai 2026), "fallback" (poll REST 30 s) est l'état NORMAL de
+  // fonctionnement : les prix se mettent bien à jour. Un badge orange
+  // "FALLBACK" permanent faisait croire à une panne. On l'affiche comme
+  // du direct (ce que c'est, à 30 s près).
   const label =
-    status === "live"
+    status === "live" || status === "fallback"
       ? "EN DIRECT"
-      : status === "fallback"
-      ? "FALLBACK"
       : status === "connecting"
       ? "CONNEXION…"
       : "HORS LIGNE";
   const color =
-    status === "live"
+    status === "live" || status === "fallback"
       ? "#34d399"
-      : status === "fallback"
-      ? "#fbbf24"
       : status === "connecting"
       ? "#9BA3AF"
       : "#f87171";

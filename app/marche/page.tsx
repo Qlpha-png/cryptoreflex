@@ -80,7 +80,7 @@ const SUBPAGES = [
   {
     href: "/marche/screener",
     title: "Screener top 100",
-    description: "Table triable : prix, 1h/24h/7j, cap, volume, sparklines.",
+    description: "Table triable : prix, 24h/7j, cap, volume, sparklines.",
     icon: ListFilter,
   },
   {
@@ -119,8 +119,11 @@ export default async function MarcheDashboardPage() {
   // Top movers dérivés du même fetch (zéro appel en plus). Les stablecoins
   // s'auto-excluent (variation ~0 % → jamais dans un top 5 trié).
   const sorted = [...all].sort((a, b) => b.priceChange24h - a.priceChange24h);
+  // AUDIT 2026-06-11 — en dégradation (fallback 6 coins), slice(0,5) et
+  // slice(-5) se chevauchaient : les mêmes cryptos dans les 2 colonnes.
   const gainers = sorted.slice(0, 5);
-  const losers = sorted.slice(-5).reverse();
+  const losers =
+    sorted.length >= 10 ? sorted.slice(-5).reverse() : [];
 
   const collectionSchema: JsonLd = {
     "@context": "https://schema.org",

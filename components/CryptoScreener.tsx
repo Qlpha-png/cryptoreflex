@@ -67,7 +67,8 @@ function sortValue(c: MarketCoin, key: SortKey): number | string {
     case "price":
       return c.currentPrice;
     case "change24h":
-      return c.priceChange24h;
+      // CG renvoie null sur certains low-caps malgré le type number (audit)
+      return c.priceChange24h ?? -Infinity;
     case "change7d":
       return c.priceChange7d ?? -Infinity;
     case "marketCap":
@@ -83,6 +84,25 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
   const [query, setQuery] = useState("");
 
   const slugSet = useMemo(() => new Set(internalSlugs), [internalSlugs]);
+
+  // AUDIT 2026-06-11 (contrôle prod) — l'enrichissement Binance (7j +
+  // sparklines) échoue parfois sur tout le top 100 : plutôt que deux
+  // colonnes de tirets, on les MASQUE quand aucune ligne n'a la donnée.
+  const has7d = useMemo(
+    () =>
+      coins.some(
+        (c) => c.priceChange7d !== null && Number.isFinite(c.priceChange7d),
+      ),
+    [coins],
+  );
+  const hasSparklines = useMemo(
+    () => coins.some((c) => c.sparkline7d && c.sparkline7d.length > 1),
+    [coins],
+  );
+  const columns = useMemo(
+    () => (has7d ? COLUMNS : COLUMNS.filter((c) => c.key !== "change7d")),
+    [has7d],
+  );
 
   const rows = useMemo(() => {
     let list = coins;
@@ -147,7 +167,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
         <span className="font-semibold text-fg">{rows.length}</span> crypto
         {rows.length > 1 ? "s" : ""}
         {rows.length !== coins.length && ` sur ${coins.length}`} · tri :{" "}
-        {COLUMNS.find((c) => c.key === sortKey)?.label}{" "}
+        {columns.find((c) => c.key === sortKey)?.label}{" "}
         {sortAsc ? "croissant" : "décroissant"}
       </p>
 
@@ -159,7 +179,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
           </caption>
           <thead className="sticky top-0 z-10 bg-elevated/95 backdrop-blur-sm">
             <tr>
-              {COLUMNS.map((col) => {
+              {columns.map((col) => {
                 const active = sortKey === col.key;
                 return (
                   <th
@@ -196,12 +216,14 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
                   </th>
                 );
               })}
-              <th
-                scope="col"
-                className="border-b border-border px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted"
-              >
-                7 jours
-              </th>
+              {hasSparklines && (
+                <th
+                  scope="col"
+                  className="border-b border-border px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted"
+                >
+                  7 jours
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -253,13 +275,14 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
                     {formatUsd(c.currentPrice)}
                   </td>
                   <PctCell value={c.priceChange24h} />
-                  <PctCell value={c.priceChange7d} />
+                  {has7d && <PctCell value={c.priceChange7d} />}
                   <td className="px-3 py-2.5 text-right num-data text-fg/80">
                     {formatCompactUsd(c.marketCap)}
                   </td>
                   <td className="hidden px-3 py-2.5 text-right num-data text-fg/80 lg:table-cell">
                     {formatCompactUsd(c.totalVolume)}
                   </td>
+                  {hasSparklines && (
                   <td className="px-3 py-2.5 text-right">
                     {c.sparkline7d && c.sparkline7d.length > 1 ? (
                       <Sparkline
@@ -273,13 +296,14 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
                       <span className="text-xs text-muted">—</span>
                     )}
                   </td>
+                  )}
                 </tr>
               );
             })}
             {rows.length === 0 && (
               <tr>
                 <td
-                  colSpan={COLUMNS.length + 1}
+                  colSpan={columns.length + (hasSparklines ? 1 : 0)}
                   className="px-3 py-8 text-center text-sm text-muted"
                 >
                   Aucune crypto ne correspond à « {query} ».

@@ -160,6 +160,12 @@ body {
     animation: none;
     flex-wrap: wrap;
   }
+  /* AUDIT 2026-06-11 — sans défilement, la copie de boucle (aria-hidden)
+     s'affichait : chaque prix apparaissait DEUX fois pour les utilisateurs
+     reduced-motion. On ne montre que la piste originale. */
+  .ticker-tape-track > [aria-hidden="true"] {
+    display: none;
+  }
 }
 
 /* FIX UX 2026-05-02 #18 (audit dynamisme expert) — utility globale `.hover-lift`
