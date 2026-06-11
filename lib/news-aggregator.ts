@@ -414,6 +414,19 @@ const BEARISH_KEYWORDS: readonly string[] = [
  * Heuristique de sentiment — 1er match l'emporte (bullish prioritaire).
  * Test case-insensitive sur title + snippet.
  */
+/**
+ * Version publique de l'heuristique de sentiment — utilisée par les pages
+ * /actualites (badge haussier/baissier/neutre sur les news MDX, DA Obsidian
+ * sprint 4). Les fichiers MDX n'ont pas de champ sentiment en frontmatter :
+ * on infère à l'affichage avec la MÊME heuristique que l'aggregator des
+ * fiches crypto (cohérence des badges sur tout le site, zéro migration).
+ */
+export function inferNewsSentiment(
+  text: string,
+): "bullish" | "bearish" | "neutral" {
+  return inferSentiment(text);
+}
+
 function inferSentiment(text: string): CryptoNewsItem["sentiment"] {
   const t = text.toLowerCase();
   for (const kw of BULLISH_KEYWORDS) {

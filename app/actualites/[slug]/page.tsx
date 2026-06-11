@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, ChevronLeft } from "lucide-react";
+import { ExternalLink, ChevronLeft, Clock } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import {
@@ -25,6 +25,7 @@ import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
 import AuthorCard from "@/components/AuthorCard";
 import RelatedNews from "@/components/news/RelatedNews";
+import { SentimentBadge } from "@/components/news/NewsCard";
 import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
@@ -216,6 +217,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
             >
               {catLabel}
             </Link>
+            <SentimentBadge title={news.title} description={news.description} />
             <time
               dateTime={news.date}
               className="text-xs font-mono text-muted"
@@ -227,6 +229,15 @@ export default async function NewsDetailPage({ params }: PageProps) {
               })}
               {relDate && <span className="ml-2 text-muted/60">· {relDate}</span>}
             </time>
+            {/* Temps de lecture — ~200 mots/min, calculé sur le body MDX */}
+            <span className="text-xs text-muted">
+              <Clock
+                className="mr-1 inline-block h-3 w-3 align-[-1px]"
+                aria-hidden="true"
+              />
+              {Math.max(1, Math.round(news.content.split(/\s+/).length / 200))}{" "}
+              min de lecture
+            </span>
           </div>
 
           <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-fg">

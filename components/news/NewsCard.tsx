@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
 import { NEWS_CATEGORY_LABELS, NEWS_CATEGORY_SLUGS } from "@/lib/news-types";
-import { formatRelativeFr } from "@/lib/news-aggregator";
+import { formatRelativeFr, inferNewsSentiment } from "@/lib/news-aggregator";
 
 /**
  * NewsCard (pilier news MDX) — carte d'une news Cryptoreflex réécrite.
@@ -86,11 +86,14 @@ export default function NewsCard({ news }: Props) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5">
-        {/* Header : source + date */}
+        {/* Header : source + sentiment + date */}
         <div className="flex items-center justify-between gap-2 text-[11px] text-muted">
-          <span className="font-semibold text-fg/80">{news.source}</span>
+          <span className="flex items-center gap-2 min-w-0">
+            <span className="truncate font-semibold text-fg/80">{news.source}</span>
+            <SentimentBadge title={news.title} description={news.description} />
+          </span>
           {relDate && (
-            <time dateTime={news.date} className="font-mono">
+            <time dateTime={news.date} className="font-mono shrink-0">
               {relDate}
             </time>
           )}
@@ -123,6 +126,37 @@ export default function NewsCard({ news }: Props) {
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * SentimentBadge — pastille haussier/baissier (DA Obsidian sprint 4).
+ * Sentiment inféré à l'affichage (heuristique mots-clés partagée avec
+ * l'aggregator des fiches crypto — les MDX n'ont pas le champ). On
+ * n'affiche RIEN pour "neutral" : la majorité des news sont neutres, un
+ * badge omniprésent perdrait tout pouvoir de signal.
+ */
+export function SentimentBadge({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
+  const sentiment = inferNewsSentiment(`${title} ${description ?? ""}`);
+  if (sentiment === "neutral") return null;
+  const up = sentiment === "bullish";
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px text-[10px] font-semibold ring-1 ${
+        up
+          ? "bg-success-soft text-success-fg ring-success-border"
+          : "bg-danger-soft text-danger-fg ring-danger-border"
+      }`}
+    >
+      <span aria-hidden="true">{up ? "▲" : "▼"}</span>
+      {up ? "Haussier" : "Baissier"}
+    </span>
   );
 }
 
