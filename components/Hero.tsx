@@ -2,13 +2,16 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowRight, Mail, ShieldAlert } from "lucide-react";
 import HeroPrimaryCta from "@/components/HeroPrimaryCta";
-import HeroPulse, { pulseHeadPosition } from "@/components/hero/HeroPulse";
+import HeroPulse, { pulseHeadPosition, pulsePolyline } from "@/components/hero/HeroPulse";
 import type { CoinPrice } from "@/lib/coingecko";
 
 // Île client unique du hero : tête pulsante + chip prix BTC live.
 // ssr:false (pattern BATCH 54 validé contre l'hydration mismatch des
 // prix live). Aucun skeleton : l'île est un overlay absolu, zéro CLS.
 const HeroPulseLive = dynamic(() => import("@/components/hero/HeroPulseLive"), {
+  ssr: false,
+});
+const HeroPulseComet = dynamic(() => import("@/components/hero/HeroPulseComet"), {
   ssr: false,
 });
 
@@ -65,6 +68,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
 
   const btcSparkline = sparklines?.bitcoin;
   const head = pulseHeadPosition(btcSparkline);
+  const polyline = pulsePolyline(btcSparkline);
   const btcPrice = prices.find((p) => p.id === "bitcoin")?.price ?? 0;
 
   return (
@@ -87,6 +91,12 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
             yPct={head.yPct}
             initialPrice={btcPrice}
           />
+        )}
+        {/* LA COMÈTE — ride la courbe, accélère dans les descentes,
+            étincelles aux sommets (idée Kev « prend les bosses », version
+            lumière). Uniquement sur données réelles. */}
+        {head.isReal && polyline.length > 1 && (
+          <HeroPulseComet points={polyline} />
         )}
       </div>
 

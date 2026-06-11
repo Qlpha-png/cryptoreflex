@@ -60,7 +60,7 @@ export default function TrackCard({ track }: TrackCardProps) {
     <Link
       href={`/academie/${track.id}`}
       aria-label={`Parcours ${track.title} — ${lessonCount} leçons, environ ${track.estimatedHours}h`}
-      className={`group relative flex h-full flex-col rounded-2xl border bg-gradient-to-br p-6 transition-all hover:shadow-glow-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${track.accentClass}`}
+      className={`card-obsidian group relative flex h-full flex-col rounded-2xl border bg-gradient-to-br p-6 transition-all hover:shadow-glow-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${track.accentClass}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-background/40 text-primary-glow">

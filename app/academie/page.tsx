@@ -384,7 +384,7 @@ function ValueCard({
   text: string;
 }) {
   return (
-    <article className="rounded-2xl border border-border bg-surface p-5">
+    <article className="card-obsidian rounded-2xl border border-border bg-surface p-5">
       <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary-glow">
         {icon}
       </div>

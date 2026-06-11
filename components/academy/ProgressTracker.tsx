@@ -99,7 +99,7 @@ export default function ProgressTracker({
         className="mt-3 h-2 w-full overflow-hidden rounded-full bg-elevated"
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-primary to-primary-glow transition-all duration-500"
+          className="h-full rounded-full transition-all duration-500 bg-[linear-gradient(90deg,#F5A524_0%,#FBBF24_45%,#FFE9C2_70%,#7DD3FC_90%,#38BDF8_100%)]"
           style={{ width: `${progressPct}%` }}
         />
       </div>

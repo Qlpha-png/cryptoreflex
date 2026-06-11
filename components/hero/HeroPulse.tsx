@@ -105,6 +105,34 @@ export default function HeroPulse({ sparkline, fearGreed }: Props) {
   );
 }
 
+/**
+ * Polyline complète de la courbe en % du conteneur — pour la comète
+ * (HeroPulseComet). Downsample à 48 pts : assez fidèle pour le suivi,
+ * deux fois moins de JSON sérialisé vers l'île client.
+ */
+export function pulsePolyline(
+  sparkline?: number[],
+): Array<[number, number]> {
+  const isReal = !!sparkline && sparkline.length >= 24;
+  if (!isReal) return [];
+  const points = downsample(sparkline!, 48);
+  const geo = buildPulseGeometry(points, VIEW_W, VIEW_H, PAD_T, PAD_B);
+  if (!geo) return [];
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const span = max - min || 1;
+  const innerH = VIEW_H - PAD_T - PAD_B;
+  const step = VIEW_W / (points.length - 1);
+  return points.map((v, i) => [
+    Number((((i * step) / VIEW_W) * 100).toFixed(2)),
+    Number(
+      (((PAD_T + innerH - ((v - min) / span) * innerH) / VIEW_H) * 100).toFixed(
+        2,
+      ),
+    ),
+  ]);
+}
+
 /** Coordonnées du dernier point en % du viewBox — pour ancrer l'île live. */
 export function pulseHeadPosition(sparkline?: number[]): {
   xPct: number;
