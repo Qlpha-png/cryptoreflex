@@ -529,15 +529,18 @@ body {
   /* DA OBSIDIAN 2026-06-11 — duo chaud/froid : l'or reste derrière le
      titre (brand), la 2e source devient GLACIER (haut droite). Deux
      températures = profondeur réelle, fini le monochrome jaune. */
+  /* DA POULS 2026-06-11 (panel createur) — fini l'homeopathie : les
+     opacites 0.06-0.07 etaient indetectables a l'oeil (diagnostic panel,
+     verifie au screenshot). x2.5 : la lumiere se VOIT, le noir domine. */
   background:
     radial-gradient(
-      ellipse 48% 38% at 20% 16%,
-      rgba(245, 165, 36, 0.07),
-      transparent 58%
+      ellipse 52% 40% at 18% 22%,
+      rgba(245, 165, 36, 0.18),
+      transparent 60%
     ),
     radial-gradient(
-      ellipse 34% 30% at 84% 8%,
-      rgba(56, 189, 248, 0.06),
+      ellipse 38% 32% at 86% 10%,
+      rgba(56, 189, 248, 0.14),
       transparent 64%
     );
 }
@@ -550,59 +553,195 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.025;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   z-index: 1;
 }
 
-/* Conteneur des particules — caché sous 768px (perf) */
-.hero-particles {
+/* DA POULS 2026-06-11 — hero-particles SUPPRIMEES (cf. note aurora). */
+
+
+
+/* ============================================================
+ * DA POULS INCANDESCENT 2026-06-11 — panel creatif 3 experts + juge.
+ * La vraie courbe BTC 7j rendue en veine de lumiere or -> glacier,
+ * monumentale, traversant le hero. SVG server (HeroPulse.tsx),
+ * draw d'entree CSS pur via pathLength=1.
+ * ============================================================ */
+
+/* Scene : hauteur genereuse, le vide fait partie de la composition */
+.hero-stage {
+  min-height: min(88vh, 920px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Vignette obsidienne — profondeur immediate, sans JS */
+.hero-vignette {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   pointer-events: none;
-  display: none;
-}
-@media (min-width: 768px) {
-  .hero-particles { display: block; }
+  background: radial-gradient(
+    120% 90% at 50% 30%,
+    #0e1116 0%,
+    #0b0d10 55%,
+    #07080a 100%
+  );
 }
 
-.hero-particle {
+/* H1 monumental — le token display servait enfin a quelque chose */
+.hero-h1 {
+  font-size: clamp(44px, 7.5vw, 96px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+.hero-h1-accent {
+  background-image: linear-gradient(100deg, #f5a524 0%, #fbbf24 45%, #ffe9c2 75%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.05em;
+  display: inline-block;
+}
+
+/* Bande de la ligne de vie — plein-bleed, zone basse du hero */
+.hero-pulse-band {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 9999px;
-  background: rgba(252, 211, 77, 0.55);
-  box-shadow: 0 0 12px 2px rgba(245, 165, 36, 0.45);
-  opacity: 0;
-  will-change: transform, opacity;
-  /* BATCH 42 — accéléré 14s → 8s. Particules visibles bouger en
-     quelques secondes au lieu de paraître figées. */
-  animation: particle-drift 8s ease-in-out infinite;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(240px, 38vh, 400px);
+  pointer-events: none;
+  z-index: 1;
 }
-.hero-particle.p1 { top: 18%; left: 12%; animation-delay: 0s;  }
-.hero-particle.p2 { top: 62%; left: 28%; animation-delay: 3s;  width: 3px; height: 3px; }
-.hero-particle.p3 { top: 30%; left: 70%; animation-delay: 6s;  }
-.hero-particle.p4 { top: 78%; left: 82%; animation-delay: 9s;  width: 5px; height: 5px; }
-.hero-particle.p5 { top: 45%; left: 50%; animation-delay: 11s; width: 3px; height: 3px; }
-/* DA OBSIDIAN 2026-06-11 — 2 particules sur 5 passent en glacier (côté
-   droit du hero, sous la source froide). Cohérence avec le duo halo. */
-.hero-particle.p3,
-.hero-particle.p4 {
-  background: rgba(125, 211, 252, 0.55);
-  box-shadow: 0 0 12px 2px rgba(56, 189, 248, 0.4);
+.hero-pulse-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-@keyframes particle-drift {
-  0%   { opacity: 0;    transform: translate3d(0, 0, 0); }
-  20%  { opacity: 0.85; }
-  50%  { opacity: 0.6;  transform: translate3d(14px, -22px, 0); }
-  80%  { opacity: 0.4; }
-  100% { opacity: 0;    transform: translate3d(-8px, -40px, 0); }
+/* Draw d'entree : pathLength=1 -> dasharray normalise, CSS pur, 1 fois */
+.hero-pulse-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: pulse-draw 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pulse-draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Tete pulsante au bout de la ligne (ile client) */
+.hero-pulse-head {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 9999px;
+  background: #ffe9c2;
+  box-shadow:
+    0 0 0 3px rgba(125, 211, 252, 0.25),
+    0 0 18px 4px rgba(125, 211, 252, 0.55),
+    0 0 40px 10px rgba(56, 189, 248, 0.25);
+  animation: pulse-head 2.4s ease-in-out infinite;
+}
+@keyframes pulse-head {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(1.35); opacity: 0.85; }
+}
+
+/* Chip prix BTC — mono, factuel, au-dessus de la tete */
+.hero-pulse-chip {
+  position: absolute;
+  transform: translate(-50%, -190%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  color: var(--color-fg);
+  background: rgba(14, 17, 22, 0.82);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+.hero-pulse-chip-flash {
+  border-color: rgba(125, 211, 252, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 22px -2px rgba(56, 189, 248, 0.45);
+}
+.hero-pulse-chip-label {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-ice-fg);
+}
+.hero-pulse-chip-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+.hero-pulse-chip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-success);
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrim de contraste : garantit la lisibilite AA du bloc texte
+   quel que soit le passage de la ligne */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    85% 70% at 28% 32%,
+    rgba(7, 8, 10, 0.55),
+    transparent 70%
+  );
+}
+
+/* Caption factuelle de la ligne */
+.hero-pulse-caption {
+  position: absolute;
+  bottom: 14px;
+  left: max(1rem, calc((100% - 80rem) / 2 + 2rem));
+  z-index: 2;
+  font-size: 11px;
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+.hero-stat-sep {
+  margin: 0 0.6em;
+  color: rgba(245, 165, 36, 0.5);
+}
+
+@media (max-width: 640px) {
+  .hero-stage { min-height: 78svh; }
+  .hero-pulse-band { height: clamp(170px, 26vh, 240px); }
+  .hero-pulse-chip { font-size: 12px; padding: 5px 10px; }
+  .hero-pulse-caption { font-size: 10px; right: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-particles { display: none !important; }
+  .hero-pulse-path { animation: none; stroke-dashoffset: 0; }
+  .hero-pulse-head { animation: none; }
+  .hero-pulse-chip-dot { animation: none; }
 }
 
 /* Pulse dot vert : signal "live data" sur le widget hero */
@@ -632,20 +771,17 @@ body {
 .hero-halo {
   /* BATCH 42 — accéléré 6s→4s (halo) et 20s→10s (mesh shift). Plus
      visible en quelques secondes de visite. */
-  animation: halo-breathe 4s ease-in-out infinite, mesh-shift 10s linear infinite;
-  background-size: 200% 200%;
-  will-change: opacity, transform, background-position;
+  /* DA POULS — respiration lente (8s), plus de mesh-shift : une
+     respiration, pas une alarme. */
+  animation: halo-breathe 8s ease-in-out infinite;
+  will-change: opacity, transform;
 }
 @keyframes halo-breathe {
   /* BATCH 42 — amplitude renforcée (user "rien ne bouge").
      Avant : opacity 1→0.78 (delta 0.22), scale 1→1.04 (delta 4%) = sub-seuil JND
      Après : opacity 1→0.55 (delta 0.45), scale 1→1.10 (delta 10%) = clairement visible */
   0%, 100% { opacity: 1;    transform: scale(1); }
-  50%      { opacity: 0.55; transform: scale(1.10); }
-}
-@keyframes mesh-shift {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  50%      { opacity: 0.75; transform: scale(1.05); }
 }
 
 /* ============================================================
@@ -654,39 +790,8 @@ body {
  * faible + animations sub-seuil JND + zéro feedback hover.
  * ============================================================ */
 
-/* AURORA BEAM — gradient conique gold qui tourne 30s, mix-blend
-   screen pour effet "northern lights". Référence : Vercel hero,
-   Anthropic claude page. Pointer-events:none impératif. */
-.hero-aurora {
-  position: absolute;
-  inset: -20%;
-  pointer-events: none;
-  /* DESIGN 2026-06-11 — même recalibrage que .hero-halo : l'aurora en
-     mix-blend screen + blur 60px AMPLIFIE fortement ses opacités ;
-     cumulée au halo, elle créait l'aplat jaune-brun. Divisée ~2,5×. */
-  /* DA OBSIDIAN 2026-06-11 — l'aurora devient bi-chromatique : un bras
-     or, un bras glacier opposé. Le blend screen mélange les deux
-     températures dans la rotation → effet "northern lights" réel au
-     lieu d'un voile jaune tournant. */
-  background: conic-gradient(
-    from 0deg at 30% 40%,
-    transparent 0deg,
-    rgba(245, 165, 36, 0.07) 60deg,
-    rgba(251, 191, 36, 0.04) 120deg,
-    transparent 180deg,
-    rgba(56, 189, 248, 0.05) 240deg,
-    rgba(125, 211, 252, 0.03) 300deg,
-    transparent 360deg
-  );
-  filter: blur(60px);
-  mix-blend-mode: screen;
-  /* BATCH 42 — accéléré 30s → 18s (user "rien ne défile, accélère ça"). */
-  animation: aurora-rotate 18s linear infinite;
-  z-index: 0;
-}
-@keyframes aurora-rotate {
-  to { transform: rotate(360deg); }
-}
+/* DA POULS 2026-06-11 — hero-aurora SUPPRIMEE (remplacee par la ligne
+   de vie HeroPulse : une signature forte au lieu de 5 effets faibles). */
 
 /* SCAN LINE — barre lumineuse gold qui balaye horizontalement le bandeau
    live-market-strip. Évoque "scanner crypto live" Bloomberg style.

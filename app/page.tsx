@@ -321,6 +321,7 @@ export default async function HomePage() {
         prices={prices}
         sparklines={heroSparklines}
         updatedAt={updatedAt}
+        fearGreed={fearGreed?.value ?? null}
       />
       {/* ──────────────────────────────────────────────────────────────────
           ROUTEUR D'INTENTION — « Par où commencer ? » (audit Codex 2026-06)

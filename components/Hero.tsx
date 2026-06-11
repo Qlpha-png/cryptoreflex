@@ -1,119 +1,61 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import {
-  ArrowRight,
-  FileCheck,
-  Sparkles,
-  Mail,
-  ShieldAlert,
-} from "lucide-react";
-// BATCH 54 — passe les widgets LIVE en client-only (ssr:false) pour
-// ELIMINER le React #425/#422 hydration mismatch. Cause : prix LIVE
-// changent entre SSR (cache stale) et hydration client (cache plus
-// frais) -> text content mismatch sur les valeurs $US/+0.83%. Le
-// widget LIVE n'apporte AUCUN benefice SEO (chiffres dynamiques).
-// Skeleton reserve la place via min-h pour 0 CLS.
-// BATCH 55 — colonne droite desktop : grand graphique de prix premium
-// (HeroPriceChart) sur données réelles (sparkline 7j + live SSE). Remplace
-// l'ancienne liste compacte pour donner un point focal visuel "dynamique +
-// technique + beau". Client-only (ssr:false) → 0 mismatch d'hydration ;
-// skeleton min-h pour 0 CLS.
-const HeroPriceChart = dynamic(() => import("@/components/HeroPriceChart"), {
-  ssr: false,
-  loading: () => (
-    <aside
-      aria-label="Graphique de marche en cours de chargement"
-      className="rounded-2xl border border-border bg-surface/40 p-5 motion-safe:animate-pulse"
-      style={{ minHeight: 320 }}
-    />
-  ),
-});
-const HeroLiveWidgetMobile = dynamic(() => import("@/components/HeroLiveWidgetMobile"), {
-  ssr: false,
-  loading: () => (
-    <aside
-      aria-label="Widget marche mobile en cours de chargement"
-      className="rounded-2xl border border-border bg-surface/40 p-4 motion-safe:animate-pulse"
-      style={{ minHeight: 240 }}
-    />
-  ),
-});
-import HeroHeadline from "@/components/HeroHeadline";
+import { ArrowRight, Mail, ShieldAlert } from "lucide-react";
 import HeroPrimaryCta from "@/components/HeroPrimaryCta";
-import HeroKpiGrid from "@/components/HeroKpiGrid";
-import AnimatedNumber from "@/components/ui/AnimatedNumber";
-// BATCH 41a — wire les composants WOW créés en BATCH 29-36 mais jamais
-// branchés (Tilt3D 3D parallax + Reveal scroll fade-up). Magnetic est
-// déjà câblé en interne dans HeroPrimaryCta.
-import Tilt3D from "@/components/ui/Tilt3D";
+import HeroPulse, { pulseHeadPosition } from "@/components/hero/HeroPulse";
 import type { CoinPrice } from "@/lib/coingecko";
 
+// Île client unique du hero : tête pulsante + chip prix BTC live.
+// ssr:false (pattern BATCH 54 validé contre l'hydration mismatch des
+// prix live). Aucun skeleton : l'île est un overlay absolu, zéro CLS.
+const HeroPulseLive = dynamic(() => import("@/components/hero/HeroPulseLive"), {
+  ssr: false,
+});
+
 /**
- * Hero — refonte premium 2026 (best-of-breed CoinGecko / Phantom / Bitpanda / Linear / Stripe).
+ * Hero — « LE POULS INCANDESCENT » (panel créatif 3 experts + juge,
+ * 2026-06-11, sur feedback propriétaire « toujours pas wow »).
  *
- * Audit consolidé Block 1 RE-AUDIT 26/04/2026 (10 agents PRO : front, back, UX,
- * SEO, conversion, visual, a11y, mobile, content, performance, animation) :
- *  - H1 : ajout keyword "comparatif" + "2026" (SEO + Conversion).
- *  - CTA primary : ancre `#cat-comparer` (avant : `#plateformes` cassée).
- *  - CTA secondaire : ancre `#cat-informe` (avant : `#newsletter` cassée).
- *  - Cohérence "5 min" → "2 min" (alignement CTA / sous-titre).
- *  - "Sans biais d'affiliation" → "Affiliation transparente" (conformité copy).
- *  - Disclaimer risque MiCA above-the-fold (loi Influenceurs juin 2023, AMF).
- *  - lastUpdate dérivé de la prop `updatedAt` (avant : `new Date()` au render
- *    = build time, malhonnête vs WebPage.dateModified).
- *  - HeroLiveWidget MOBILE visible <lg (avant : `hidden lg:block` cachait le
- *    signal "live data" pour 60% du trafic FR).
- *  - Suppression dead code `TrustSignal` (jamais utilisé).
+ * Diagnostic du panel : le problème n'était pas un manque d'effets mais
+ * une COMPOSITION CASSÉE — H1 plafonné à 48px quand le token display
+ * dormait, 7 strates d'information, 12 animations à 5 % d'opacité,
+ * aucun point focal. Le wow vient de l'ÉCHELLE et du VIDE.
  *
- * - Server component (le seul îlot client = AnimatedNumber + HeroLiveWidget).
- * - Background : dotted grid + halo gold radial animé (breathe + mesh shift).
- * - 1 CTA primary fort + 1 CTA secondaire newsletter.
- * - Stats card 4 KPI en bas (30+ plateformes / 100 cryptos / 18 outils / Méthode).
- * - Mobile-first, Lighthouse 95+ : 0 lib externe lourde, animations CSS pures.
+ * La recomposition :
+ *  - H1 monumental clamp(44px → 96px), copy 5 mots, « réflexe » en or.
+ *  - UNE signature : la vraie courbe BTC 7 jours rendue en veine de
+ *    lumière or → glacier qui traverse tout le hero (<HeroPulse/>,
+ *    SSR, 4 passes). La tête pulse au rythme du prix live.
+ *  - SUPPRIMÉ : aurora conique, 5 particules, Tilt3D, KPI card animée,
+ *    badges trust, chips ✓, A/B headline (hero_headline_v1 débranchée —
+ *    une copy de 22 mots ne peut pas porter cette composition), widget
+ *    chart desktop + mobile (la ligne EST le marché ; le chart d'analyse
+ *    vit sur /cryptos/bitcoin). Moins de couches, plus d'intensité.
+ *  - CONSERVÉ : 1 CTA primary + 1 lien newsletter, statline factuelle
+ *    mono, disclaimer AMF above-the-fold (loi Influenceurs 2023).
+ *
+ * Compliance : la ligne n'a ni axe, ni %, ni échelle — signature
+ * visuelle, pas un graphique d'aide à la décision. La caption la
+ * décrit factuellement.
  */
 
 interface HeroProps {
   prices: CoinPrice[];
-  /** Optional 7d sparklines keyed by coin id (CoinGecko sparkline_in_7d.price). */
+  /** Sparklines 7j par coin id — bitcoin alimente la ligne de vie. */
   sparklines?: Partial<Record<string, number[]>>;
-  /** ISO timestamp of last data refresh. Affiché dans le widget LIVE. */
+  /** ISO du dernier refresh des données (affiché dans la caption). */
   updatedAt?: string;
+  /** Fear & Greed 0-100 — module la frontière or/glacier de la ligne. */
+  fearGreed?: number | null;
 }
 
-/**
- * STATS exposés en home — chiffres réels uniquement (audit crédibilité 2026-04-26).
- *  - platforms: 30 = total marques sélectionnées + auditées par Cryptoreflex.
- *    AUDIT 2026-05-02 user "il en manque trop" : élargissement du catalogue
- *    de 11 à 34 plateformes via 2 vagues (commit 2026-05-02 #13). Le chiffre
- *    affiché est conservateur (30 vs 34 réels = buffer pour 4 plateformes
- *    en transition CASP non encore vérifiées sur ESMA register live).
- *    Couverture : 11 historiques + 10 vague 1 (OKX, Crypto.com, Gemini,
- *    Bitstamp, Bitvavo, eToro, Paymium, Deblock, Nexo, MoonPay) +
- *    13 vague 2 (N26, 21Bitcoin, Wirex, Young Platform, PayPal Crypto,
- *    Bitfinex, BSDEX, Plus500, AnyCoin Direct, Trading 212, StackinSat,
- *    Just Mining, Feel Mining).
- *  - cryptos: 100 = total fiches éditoriales (10 top-cryptos + 90 hidden-gems).
- *  - tools: 26 = comptage actuel app/outils (incl. BATCH 7-8 :
- *    whale-radar, phishing-checker, allocator-ia, gas-tracker-fr,
- *    export-expert-comptable, crypto-license, succession-crypto, dca-lab).
- *  - method: "Publique" = qualitatif, pas un chiffre.
- *
- * MAJ 2026-05-02 (audit cohérence BATCH 11+20) : la valeur 30 plateformes
- * / 18 outils était sous-évaluée vs catalogue réel. Sync avec
- * data/platforms.json (34) + app/outils TOOLS.length (28 outils).
- * Audit 19/05/2026 — chiffre 28 confirmé (était mentionné "26" en commentaire).
- */
 const STATS = {
   platforms: 34,
   cryptos: 780,
   tools: 28,
-  method: "Publique",
 } as const;
 
-export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
-  // Audit Block 1 RE-AUDIT 26/04/2026 (Agents back+SEO) : la date doit refléter
-  // la prop `updatedAt` propagée par le serveur (ISO du fetch CoinGecko réel),
-  // pas un `new Date()` au render qui retourne l'instant du build.
+export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroProps) {
   const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
   const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
     day: "2-digit",
@@ -121,282 +63,121 @@ export default function Hero({ prices, sparklines, updatedAt }: HeroProps) {
     year: "numeric",
   });
 
+  const btcSparkline = sparklines?.bitcoin;
+  const head = pulseHeadPosition(btcSparkline);
+  const btcPrice = prices.find((p) => p.id === "bitcoin")?.price ?? 0;
+
   return (
     <section
       aria-label="Présentation Cryptoreflex"
-      className="relative overflow-hidden isolate"
+      className="hero-stage relative overflow-hidden isolate"
     >
-      {/* Background layers — pure CSS, zero JS. Audit Block 1 RE-AUDIT
-          (Agent dynamism) : .hero-halo embarque maintenant les keyframes
-          halo-breathe (6s) + mesh-shift (20s) pour un fond "vivant" type
-          Stripe gradient mesh / Linear ambient.
-          BATCH 29A : ajout .hero-aurora (gradient conique 30s) pour
-          transformer la perception immédiate du hero. Référence Vercel/
-          Anthropic. Mix-blend screen + blur 60px = "northern lights" doux. */}
-      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
+      {/* ── Couches de fond (CSS pur, SSR) ── */}
+      <div className="hero-vignette" aria-hidden="true" />
+      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" aria-hidden="true" />
       <div className="hero-halo" aria-hidden="true" />
-      <div className="hero-aurora" aria-hidden="true" />
-      {/* DESIGN 2026-06-11 — grain subtil par-dessus les glows (cf.
-          globals.css .hero-grain) : texture "matière" premium. */}
       <div className="hero-grain" aria-hidden="true" />
-      <div className="hero-particles" aria-hidden="true">
-        <span className="hero-particle p1" />
-        <span className="hero-particle p2" />
-        <span className="hero-particle p3" />
-        <span className="hero-particle p4" />
-        <span className="hero-particle p5" />
-      </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-16 lg:pt-20 lg:pb-24">
-        {/* FIX HOMEPAGE 2026-05-02 #10 — badges trust DÉPLACÉS sous le H1
-            (avant: au-dessus, ils volaient l'attention au H1 = problème
-            #7 de l'audit chirurgical homepage). Le H1 est maintenant le
-            premier élément perçu, les badges crédibilisent juste après. */}
-
-        {/* Layout 2 colonnes — message / live widget desktop */}
-        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-14 items-start">
-          {/* Colonne gauche — H1 + sub + CTAs + trust signals */}
-          <div className="max-w-2xl">
-            {/* H1 — A/B test `hero_headline_v1` (mai 2026, vague Conversion).
-                Variants : control (copie SEO actuelle) / social-proof / speed.
-                SSR rend "control" puis Client réassigne. Cf. components/HeroHeadline.tsx
-                + lib/abtest-experiments.ts. */}
-            <HeroHeadline />
-
-            {/* Badges trust — sous le H1 (audit homepage chirurgical 2026-05-02
-                #7 : remontés ici car au-dessus du H1 ils volaient l'attention).
-                "Mis à jour" → /methodologie + "Affiliation transparente" DGCCRF. */}
-            <div className="mt-3 flex flex-wrap items-center gap-2 animate-hero-fade-up">
-              <Link
-                href="/methodologie"
-                className="badge-info hover:border-primary hover:bg-primary/15 transition-colors min-h-tap py-2"
-                aria-label={`Mis à jour le ${lastUpdate} — voir la méthodologie`}
-              >
-                <FileCheck className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                Mis à jour le {lastUpdate}
-                <ArrowRight className="h-3 w-3 opacity-70" strokeWidth={1.75} aria-hidden="true" />
-              </Link>
-              <span className="badge-trust min-h-tap py-2">
-                <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
-                Affiliation transparente
-              </span>
-            </div>
-
-            {/* FIX HOMEPAGE 2026-05-02 #10 (audit expert chirurgical, note
-                5.5/10 due à hyperdensité) — sous-titre re-écrit en 1 phrase
-                de 16 mots vs 39 avant. Suppression des promesses redondantes
-                (les KPI grid en bas affiche déjà cryptos/plateformes/outils
-                en chiffres). On garde la promesse essentielle + le ton
-                Cryptoreflex (sans bullshit). Impact estimé +20-30% conversion
-                hero. */}
-            <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed text-fg/80 animate-hero-fade-up animate-hero-fade-up-delay-2">
-              {STATS.platforms}&nbsp;plateformes <strong className="text-fg font-semibold">régulées MiCA</strong>,{" "}
-              {STATS.cryptos}&nbsp;fiches crypto,{" "}
-              <strong className="text-fg font-semibold">méthodologie 100&nbsp;% publique</strong>.
-            </p>
-
-            {/* FIX HOMEPAGE 2026-05-02 #10 — chips supprimées (les 4 chips
-                "Prix live / On-chain TVL/holders / Score fiabilité 0-10 / IA
-                Q&A" dupliquaient les KPI grid en bas du hero ET utilisaient
-                du jargon (TVL, on-chain) en above-the-fold qui décrochait
-                les débutants). Économie ~60px above-the-fold mobile. Impact
-                cumulé avec le sous-titre court : ~+30-40% conversion hero. */}
-
-            {/* CTAs — 1 primary fort + 1 secondaire newsletter.
-                Audit Block 1 RE-AUDIT (5 agents convergents) : ancres `#plateformes`
-                et `#newsletter` étaient CASSÉES (n'existaient pas dans page.tsx).
-                Fix : `#cat-comparer` (PlatformsSection) et `#cat-informe`
-                (NewsletterCapture) qui sont les vraies ancres CategoryHeader. */}
-            <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 animate-hero-fade-up animate-hero-fade-up-delay-3">
-              {/* CTA primary — wrappé Client pour tracker la conversion
-                  `click_pro_cta` de l'expé `hero_headline_v1`. Cf.
-                  components/HeroPrimaryCta.tsx. */}
-              {/* FIX HOMEPAGE 2026-05-02 #10 — CTA primary pointe maintenant
-                  directement vers /quiz/plateforme (page produit) au lieu
-                  de #cat-comparer (ancre = scroll). L'audit chirurgical
-                  identifiait ça comme problème #2 (friction conversion :
-                  l'utilisateur scrolle, perd contexte, abandonne). Le quiz
-                  convertit ~3x mieux que le comparatif statique mobile. */}
-              {/* BATCH 29D + audit 19/05/2026 — CTA reformulé pédagogique :
-                  "Décode ma plateforme" suggérait une recommandation perso
-                  (risque MiCA/PSAN). On garde le verbe d'action mais cadre
-                  l'outil comme un comparateur pédagogique, pas un conseil. */}
-              <HeroPrimaryCta
-                href="/quiz/plateforme"
-                label="Comparer les plateformes en 2 min"
-                ariaLabel="Comparer les plateformes crypto en 2 minutes — quiz pédagogique, aucun email demandé"
-              />
-              <Link
-                href="#cat-informe"
-                className="btn-ghost text-base w-full sm:w-auto"
-                aria-label="Recevoir le brief crypto FR par email"
-              >
-                <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                Le brief de 7h, 3 infos
-              </Link>
-            </div>
-
-            {/* BATCH 36 — fix audit Conversion P0 : objection killer rendu
-                VISIBLE (avant : caché en aria-label seul). Chips sous CTA
-                qui désamorcent les 3 frictions principales du quiz : durée,
-                email, instantanéité. Pattern Anthropic "no credit card". */}
-            <ul
-              aria-label="Ce qui est inclus dans le quiz"
-              className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted"
-            >
-              <li className="inline-flex items-center gap-1">
-                <span aria-hidden="true" className="text-success-fg">✓</span>
-                <span>Quiz 2&nbsp;min</span>
-              </li>
-              <li className="inline-flex items-center gap-1">
-                <span aria-hidden="true" className="text-success-fg">✓</span>
-                <span>Aucun email demandé</span>
-              </li>
-              <li className="inline-flex items-center gap-1">
-                <span aria-hidden="true" className="text-success-fg">✓</span>
-                <span>Résultat instantané</span>
-              </li>
-            </ul>
-
-            {/* Audit Block 1 RE-AUDIT (Agent content) : disclaimer risque MiCA
-                P0 conformité loi Influenceurs juin 2023 + recommandation AMF
-                2023. Doit être visible above-the-fold. text-[11px] = seuil
-                lisibilité minimale, contrast ratio fg/60 sur background ≥ 4.5:1. */}
-            <p className="mt-5 text-[11px] leading-relaxed text-fg/55 max-w-xl">
-              <ShieldAlert className="inline h-3 w-3 mr-1 -mt-0.5 text-primary-soft/70" aria-hidden="true" />
-              Investir en cryptomonnaies comporte un risque de perte en capital.
-              Liens partenaires rémunérés signalés. <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">En savoir plus</Link>.
-            </p>
-          </div>
-
-          {/* Colonne droite — live widget DESKTOP (>=lg). Le widget MOBILE
-              compact est rendu juste après pour les écrans <lg (cf. plus bas).
-              Audit Block 1 RE-AUDIT (4 agents convergents : UX + Conversion +
-              Visual + Mobile) : `hidden lg:block` cachait le signal "live data"
-              pour 60-70% du trafic FR (mobile). Solution : 2 widgets (compact
-              mobile + complet desktop) au lieu d'un seul caché. */}
-          {/* Colonne droite — live widget DESKTOP (>=lg). */}
-          <div className="hidden lg:block lg:pt-2 animate-hero-fade-up animate-hero-fade-up-delay-2">
-            <HeroPriceChart
-              prices={prices}
-              sparklines={sparklines}
-              updatedAt={updatedAt}
-            />
-          </div>
-        </div>
-
-        {/* Widget MOBILE compact (visible <lg) */}
-        <div className="lg:hidden mt-8 animate-hero-fade-up animate-hero-fade-up-delay-2">
-          <HeroLiveWidgetMobile
-            prices={prices}
-            sparklines={sparklines}
-            updatedAt={updatedAt}
+      {/* ── La ligne de vie — plein-bleed, derrière le contenu ── */}
+      <div className="hero-pulse-band" aria-hidden="true">
+        <HeroPulse sparkline={btcSparkline} fearGreed={fearGreed} />
+        {head.isReal && btcPrice > 0 && (
+          <HeroPulseLive
+            xPct={head.xPct}
+            yPct={head.yPct}
+            initialPrice={btcPrice}
           />
-        </div>
-
-        {/* Stats card en bas — premium depth (multi-shadow + ring gold subtil).
-            HeroKpiGrid (client) staggere chaque cellule via Motion (delay = i*0.1s).
-            Respect prefers-reduced-motion : voir HeroKpiGrid.tsx. */}
-        <div className="mt-10 lg:mt-14 animate-hero-fade-up animate-hero-fade-up-delay-4">
-          {/* BATCH 29A + 41a : card-aurora-border (conic gradient gold rotation
-              4s) + Tilt3D 4° subtle pour signature visuelle "2026". Tilt amplitude
-              4° (vs 5° HeroLiveWidget) car KPI grid est plus large = même angle
-              visuel à l'œil. */}
-          <Tilt3D max={4}>
-            <HeroKpiGrid className="card-premium card-aurora-border p-5 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2">
-              <KpiCell value={STATS.platforms} label="Marques fiables" accent />
-              <KpiCell value={STATS.cryptos} label="Fiches crypto" />
-              <KpiCell value={STATS.tools} label="Outils crypto" />
-              <KpiCell text={STATS.method} label="Méthode" />
-            </HeroKpiGrid>
-          </Tilt3D>
-        </div>
+        )}
       </div>
 
-      {/* Style local — gradient text gold avec anti-clip descendeurs (g, j, p, y).
-          Inline pour éviter d'élargir globals.css avec un sélecteur scope-hero.
-          Audit Block 1 RE-AUDIT (Agent dynamism) : ajout d'un shimmer subtil
-          6s ease-in-out infinite (style Arc.net headline) pour donner vie au
-          gradient gold. Désactivé via prefers-reduced-motion (cf. globals.css). */}
-      {/*
-        FIX 2026-05-08 — repro local Chrome MCP a revele que ce <style>
-        provoquait React #422 + #425 sur home + bitcoin (prod). Cause :
-        l'apostrophe francaise dans `l'effet vivant` etait HTML-encodee
-        cote serveur (`l&#x27;effet`) mais brute cote client → mismatch.
-        Solution : `dangerouslySetInnerHTML` shortcircuit l'encoding HTML
-        (pattern React recommande pour CSS inline avec caracteres speciaux).
-        BATCH 36 — fix audit Perf P0 : retire gold-hue-breath qui utilisait
-        filter:hue-rotate. filter = layer GPU permanent + repaint continu
-        sur le LCP element = -50ms LCP, -15% INP idle. Garde uniquement
-        gold-shimmer qui anime background-position (compositable, gratuit
-        sur GPU).
-      */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .hero-headline-accent {
-          background-image: linear-gradient(
-            100deg,
-            #F5A524 0%,
-            #FBBF24 20%,
-            #FFFFFF 50%,
-            #FBBF24 80%,
-            #F5A524 100%
-          );
-          background-size: 300% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          padding-bottom: 0.06em;
-          display: inline-block;
-          animation: gold-shimmer 3.5s linear infinite;
-          will-change: background-position;
-        }
-        @keyframes gold-shimmer {
-          0%   { background-position: 200% 50%; }
-          100% { background-position: -100% 50%; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .hero-headline-accent {
-            animation: none !important;
-            background-position: 50% 50% !important;
-          }
-        }
-      `,
-        }}
-      />
+      {/* Scrim de contraste derrière le bloc texte */}
+      <div className="hero-scrim" aria-hidden="true" />
+
+      {/* ── Contenu ── */}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 pb-[clamp(220px,34vh,360px)]">
+        <div className="max-w-4xl">
+          {/* Eyebrow factuelle — annonce la signature */}
+          <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">
+            <span className="text-primary-soft">Pouls du marché</span>
+            <span aria-hidden="true"> — </span>
+            BTC · 7 jours · données réelles
+          </p>
+
+          {/* H1 monumental — 5 mots, échelle display enfin utilisée */}
+          <h1 className="hero-h1 mt-5 font-display font-bold text-fg animate-hero-fade-up animate-hero-fade-up-delay-1">
+            Le <span className="hero-h1-accent">réflexe</span> crypto
+            <br />
+            des Français.
+          </h1>
+
+          {/* Sous-titre : 12 mots, une seule promesse */}
+          <p className="mt-6 max-w-xl text-lg sm:text-xl leading-relaxed text-fg/75 animate-hero-fade-up animate-hero-fade-up-delay-2">
+            Comparez, apprenez, décidez — avec des données vérifiables et
+            une méthode publique.
+          </p>
+
+          {/* 1 CTA fort + 1 lien */}
+          <div className="mt-9 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 animate-hero-fade-up animate-hero-fade-up-delay-3">
+            <HeroPrimaryCta
+              href="/quiz/plateforme"
+              label="Comparer les plateformes en 2 min"
+              ariaLabel="Comparer les plateformes crypto en 2 minutes — quiz pédagogique, aucun email demandé"
+            />
+            <Link
+              href="#cat-informe"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-fg transition-colors"
+              aria-label="Recevoir le brief crypto FR par email"
+            >
+              <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              Le brief de 7h, 3 infos
+            </Link>
+          </div>
+
+          {/* Statline mono — les preuves en une ligne, sans carte */}
+          <p className="mt-9 font-mono text-xs sm:text-sm text-muted tabular-nums animate-hero-fade-up animate-hero-fade-up-delay-4">
+            <span className="text-fg/85">{STATS.platforms}</span> plateformes
+            MiCA
+            <span className="hero-stat-sep" aria-hidden="true">·</span>
+            <span className="text-fg/85">{STATS.cryptos}</span> fiches crypto
+            <span className="hero-stat-sep" aria-hidden="true">·</span>
+            <span className="text-fg/85">{STATS.tools}</span> outils
+            <span className="hero-stat-sep" aria-hidden="true">·</span>
+            <Link href="/methodologie" className="underline decoration-border underline-offset-4 hover:text-fg transition-colors">
+              méthode publique
+            </Link>
+          </p>
+
+          {/* Disclaimer AMF — above the fold, inchangé */}
+          <p className="mt-5 text-[11px] leading-relaxed text-fg/55 max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
+            <ShieldAlert className="inline h-3 w-3 mr-1 -mt-0.5 text-primary-soft/70" aria-hidden="true" />
+            Investir en cryptomonnaies comporte un risque de perte en capital.
+            Liens partenaires rémunérés signalés.{" "}
+            <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">
+              En savoir plus
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* Caption de la ligne — factuelle, en bas du hero */}
+        <p className="hero-pulse-caption font-mono" aria-live="off">
+          {head.isReal ? (
+            <>
+              Cette ligne est dessinée par les 168 dernières heures du cours de
+              Bitcoin · mise à jour le {lastUpdate} ·{" "}
+              <Link
+                href="/cryptos/bitcoin"
+                className="pointer-events-auto underline underline-offset-2 decoration-border hover:text-fg transition-colors"
+              >
+                voir l&apos;analyse complète
+                <ArrowRight className="ml-0.5 inline h-3 w-3" aria-hidden="true" />
+              </Link>
+            </>
+          ) : (
+            <>Illustration — données de marché momentanément indisponibles.</>
+          )}
+        </p>
+      </div>
     </section>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Atoms                                                                       */
-/* -------------------------------------------------------------------------- */
-
-function KpiCell({
-  value,
-  text,
-  label,
-  accent,
-}: {
-  value?: number;
-  text?: string;
-  label: string;
-  accent?: boolean;
-}) {
-  const isNum = typeof value === "number";
-  return (
-    <div className="text-center sm:text-left sm:px-4 sm:first:pl-0 sm:last:pr-0 sm:border-r sm:border-border/60 sm:last:border-r-0">
-      <div
-        className={`text-2xl sm:text-3xl font-extrabold font-mono tabular-nums leading-none ${
-          accent ? "text-primary-soft" : "text-fg"
-        }`}
-      >
-        {isNum ? <AnimatedNumber value={value!} duration={900} /> : text}
-      </div>
-      <div className="mt-1.5 text-caption sm:text-xs text-muted uppercase tracking-wide font-medium">
-        {label}
-      </div>
-    </div>
   );
 }
