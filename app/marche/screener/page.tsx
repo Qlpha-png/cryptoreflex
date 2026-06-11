@@ -110,7 +110,9 @@ export default async function ScreenerPage() {
         </header>
 
         <div className="mt-8">
-          {coins.length > 0 ? (
+          {/* AUDIT 2026-06-11 — exiger >= 10 coins : le fallback ultime
+              (6 coins, prix statiques de mai) est PIRE qu'un état vide. */}
+          {coins.length >= 10 ? (
             <CryptoScreener coins={coins} internalSlugs={internalSlugs} />
           ) : (
             <EmptyState

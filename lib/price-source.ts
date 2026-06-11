@@ -285,10 +285,17 @@ async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
   try {
     const cap = Math.min(Math.max(1, limit), 250);
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${cap}&page=1&sparkline=false&price_change_percentage=24h`;
+    // FIX AUDIT 2026-06-11 — cette voie PRIMAIRE appelait CoinGecko SANS
+    // la clé API : sur Vercel, l'IP de sortie est partagée entre des
+    // milliers de sites → 429 quasi permanent → fallback statique (6
+    // coins, prix périmés) servi aux pages marché. cgHeaders() ajoute
+    // x-cg-demo-api-key (quota par clé, pas par IP) dès que
+    // COINGECKO_API_KEY est définie.
+    const { cgHeaders } = await import("@/lib/coingecko");
     const res = await fetch(url, {
       next: { revalidate: 600 },
       signal: AbortSignal.timeout(7000),
-      headers: { Accept: "application/json" },
+      headers: cgHeaders(),
     });
     if (!res.ok) return [];
     const data = (await res.json()) as Array<{
