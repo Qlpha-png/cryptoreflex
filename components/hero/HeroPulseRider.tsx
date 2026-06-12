@@ -3,48 +3,62 @@
 import { useEffect, useRef } from "react";
 
 /**
- * HeroPulseRider — la mascotte moto-cross de lumière, MOTEUR V2
- * (retours propriétaire 2026-06-12 : « collée à la ligne », « on dirait
- * qu'elle va sous la terre », « fais un truc qui pourrait faire réel »).
+ * HeroPulseRider — la mascotte moto-cross de lumière, MOTEUR V2.2
+ * (retours propriétaire 2026-06-12 : « sauter depuis la bosse d'avant
+ * au lieu d'escalader », « des capteurs qui détectent si la courbe
+ * change car c'est du live »).
  *
- * Le moteur V1 ancrait UN point sur la courbe et tournait autour de lui :
- * géométriquement, le châssis balayait SOUS la ligne pendant le backflip,
- * et l'angle de pente ignorait le ratio réel de l'écran. V2 = physique de
- * jeu 2D propre :
+ *  1. CAPTEUR DE COURBE — le terrain est échantillonné DIRECTEMENT sur
+ *     le path SVG affiché (getPointAtLength sur le cœur du pouls) :
+ *     fidélité parfaite au trait, quel que soit son lissage. Un
+ *     MutationObserver surveille l'attribut `d` : si la courbe change
+ *     (données live, re-render), le terrain ET le plan de sauts sont
+ *     reconstruits — le rider s'adapte sans remount. ResizeObserver
+ *     couvre les changements de géométrie. Fallback : polyline props.
+ *  2. DEUX ROUES TANGENTES — le profil est échantillonné sous TOUTE la
+ *     largeur de chaque pneu : le flanc ne mord jamais une paroi. La
+ *     moto est la corde entre les deux contacts.
+ *  3. SAUTS PLANIFIÉS — au rebuild du terrain, les segments
+ *     infranchissables sont détectés : MUR montant (pente > ~51° sur
+ *     ≥ 30 px) → décollage depuis l'épaule douce AVANT le pied,
+ *     atterrissage après le sommet ; FALAISE descendante → décollage au
+ *     bord, atterrissage au pied. La moto ne « grimpe » plus les murs :
+ *     elle les saute, comme une vraie moto-cross. Les sommets restants
+ *     donnent des sauts plaisir espacés.
+ *  4. VOL BALISTIQUE PUR — pendant un saut, la trajectoire est une
+ *     parabole décollage → atterrissage, INDÉPENDANTE du relief
+ *     survolé (fini le « bond » en plein vol quand le terrain remonte).
+ *     Backflip uniquement sur les gros sauts, en fenêtre haute, autour
+ *     du centre de masse (pivot rampé sin(p·π)) ; petits sauts = pitch
+ *     balistique léger, plus naturel. Le point d'atterrissage est relu
+ *     chaque frame : si la courbe bouge en plein vol, le rider vise la
+ *     nouvelle position.
+ *  5. ANTI-SACCADE — angle amorti (τ 150 ms, borne 200 °/s) et vitesse
+ *     lissée (EMA 200 ms, clamp 1.45×) : validé au banc télémétrique.
  *
- *  1. TOUT EN PIXELS MESURÉS — la polyline (%) est convertie en px au
- *     mount et à chaque resize (ResizeObserver) : les angles sont VRAIS
- *     quel que soit l'écran.
- *  2. DEUX ROUES INDÉPENDANTES — le terrain est échantillonné sous la
- *     roue arrière ET la roue avant (interpolation yAtX) ; la moto est
- *     la corde entre les deux contacts : elle ÉPOUSE les bosses comme
- *     une vraie moto-cross, jamais en porte-à-faux.
- *  3. GARDE AU SOL — 7 px de clearance le long de la normale : les pneus
- *     se posent au-dessus du trait PERÇU (cœur + glow ≈ 5 px de rayon),
- *     pas dans son épaisseur. Le terrain est échantillonné sur la MÊME
- *     courbe lissée que la ligne affichée (V2.1). Rien ne pénètre.
- *  4. BACKFLIP EN FENÊTRE HAUTE — la rotation ne s'effectue qu'entre
- *     18 % et 86 % du saut (~1.1 s : il se lit), autour du CENTRE DE
- *     MASSE (pivot rampé sin(p·π)) : le flip se fait DANS LE CIEL. Aux
- *     bords du saut, l'angle interpole pente de décollage → pente
- *     d'atterrissage (lue à l'avance dans le terrain).
- *  5. ATTERRISSAGE — squash de suspension (scaleY bref) + gerbe
- *     d'étincelles au point de contact réel.
- *
- * Perf : 1 rAF, transforms only, pause hors-viewport/onglet caché,
+ * Perf : 1 rAF, transforms only, échantillonnage du path uniquement au
+ * rebuild (jamais dans la boucle), pause hors-viewport/onglet caché,
  * reduced-motion désactive tout, monté uniquement sur données réelles.
  */
 
 interface Props {
-  /** Polyline de la courbe en % du conteneur ([xPct, yPct]…, ~48 pts). */
+  /** Polyline de la courbe en % du conteneur — FALLBACK si le path SVG
+      n'est pas trouvable dans le DOM ([xPct, yPct]…, ~48 pts). */
   points: Array<[number, number]>;
 }
 
+type Jump = {
+  takeoff: number;
+  land: number;
+  apex: number;
+  flip: boolean;
+  dur: number;
+  kind: "wall" | "cliff" | "fun";
+};
+
 const SPARK_COUNT = 6;
 const PAUSE_BETWEEN_RUNS_MS = 2600;
-// V2.1 — flip RALENTI (1.6 s, « looping trop rapide ») et plus haut.
-const JUMP_MS = 1600;
-/** Vitesse de croisière en px/s (modulée par la pente). */
+/** Vitesse de croisière en px/s (modulée par la pente, lissée EMA). */
 const CRUISE_PX_S = 95;
 /** Demi-empattement en px (roues du SVG v3.1 à x=15/50, rendu 88px). */
 const HALF_WHEELBASE_PX = 24;
@@ -54,8 +68,6 @@ const WHEEL_R_PX = 11;
     exacte), 3.5 px suffisent pour que le pneu repose sur le bord du trait
     (cœur 1.75 px + glow) au lieu de baigner dedans. */
 const CLEARANCE_PX = 3.5;
-/** Hauteur d'apex du saut en px. */
-const JUMP_APEX_PX = 110;
 
 export default function HeroPulseRider({ points }: Props) {
   const riderRef = useRef<HTMLDivElement | null>(null);
@@ -71,26 +83,56 @@ export default function HeroPulseRider({ points }: Props) {
     const flip = flipRef.current;
     const wrap = wrapRef.current;
     if (!rider || !flip || !wrap) return;
+    // Le SVG du pouls est un sibling : on remonte à la bande commune.
+    const band = wrap.parentElement;
 
-    /* ── Terrain en pixels (recalculé au resize) ────────────────────── */
+    /* ── Terrain en pixels + plan de sauts (rebuild au resize/mutation) ── */
     let terrain: Array<[number, number]> = [];
     let bandW = 0;
-    let peakXs: number[] = [];
+    let jumps: Jump[] = [];
+    let jumpIdx = 0;
+    let x = HALF_WHEELBASE_PX; // abscisse du centre en px
 
-    const rebuildTerrain = () => {
-      const rect = wrap.getBoundingClientRect();
-      if (rect.width < 50 || rect.height < 50) return;
-      bandW = rect.width;
-      // V2.1 — TERRAIN DENSIFIÉ sur la MÊME courbe lissée que la ligne
-      // affichée (Catmull-Rom → Bézier, 6 échantillons par segment).
-      // Avant : interpolation LINÉAIRE entre les 48 points — la ligne SVG
-      // lissée passe au-dessus de la corde dans les courbures → les roues
-      // semblaient passer « sous le trait ».
+    /** CAPTEUR principal : échantillonne le path SVG réellement affiché
+        (cœur du pouls). Coordonnées viewBox → px via le rect mesuré
+        (preserveAspectRatio="none"). Renvoie null si indisponible. */
+    const sampleDomPath = (rect: DOMRect): Array<[number, number]> | null => {
+      if (!band) return null;
+      const paths = band.querySelectorAll<SVGPathElement>("path.hero-pulse-path");
+      const core = paths[paths.length - 1];
+      const svg = core?.ownerSVGElement;
+      if (!core || !svg) return null;
+      const vb = svg.viewBox.baseVal;
+      if (!vb || vb.width < 1 || vb.height < 1) return null;
+      let total = 0;
+      try {
+        total = core.getTotalLength();
+      } catch {
+        return null;
+      }
+      if (!total || !Number.isFinite(total)) return null;
+      const N = 220;
+      const out: Array<[number, number]> = [];
+      let prevX = -Infinity;
+      for (let i = 0; i <= N; i++) {
+        const pt = core.getPointAtLength((i / N) * total);
+        const px = ((pt.x - vb.x) / vb.width) * rect.width;
+        const py = ((pt.y - vb.y) / vb.height) * rect.height;
+        if (px <= prevX + 0.05) continue; // garde la monotonie en x
+        out.push([px, py]);
+        prevX = px;
+      }
+      return out.length >= 16 ? out : null;
+    };
+
+    /** Fallback : densifie la polyline props sur la même courbe
+        Catmull-Rom que le rendu (6 échantillons Bézier par segment). */
+    const fallbackFromProps = (rect: DOMRect): Array<[number, number]> => {
       const raw: Array<[number, number]> = points.map(([xp, yp]) => [
         (xp / 100) * rect.width,
         (yp / 100) * rect.height,
       ]);
-      terrain = [];
+      const out: Array<[number, number]> = [];
       for (let i = 0; i < raw.length - 1; i++) {
         const p0 = raw[i - 1] ?? raw[i];
         const p1 = raw[i];
@@ -103,37 +145,25 @@ export default function HeroPulseRider({ points }: Props) {
         for (let k = 0; k < 6; k++) {
           const u = k / 6;
           const v = 1 - u;
-          terrain.push([
+          out.push([
             v * v * v * p1[0] + 3 * v * v * u * c1x + 3 * v * u * u * c2x + u * u * u * p2[0],
             v * v * v * p1[1] + 3 * v * v * u * c1y + 3 * v * u * u * c2y + u * u * u * p2[1],
           ]);
         }
       }
-      terrain.push(raw[raw.length - 1]);
-      // Sommets locaux marqués (fenêtre ±6 pts densifiés = ±1 segment
-      // d'origine) → points de saut.
-      peakXs = [];
-      for (let i = 6; i < terrain.length - 6; i++) {
-        if (
-          terrain[i][1] < terrain[i - 6][1] - 4 &&
-          terrain[i][1] < terrain[i + 6][1] - 4 &&
-          terrain[i][1] <= terrain[i - 1][1] &&
-          terrain[i][1] <= terrain[i + 1][1]
-        ) {
-          peakXs.push(terrain[i][0]);
-        }
-      }
+      out.push(raw[raw.length - 1]);
+      return out;
     };
 
     /** Hauteur du terrain sous x (interpolation linéaire, clamp aux bords). */
-    const yAtX = (x: number): number => {
+    const yAtX = (px: number): number => {
       if (terrain.length < 2) return 0;
-      if (x <= terrain[0][0]) return terrain[0][1];
+      if (px <= terrain[0][0]) return terrain[0][1];
       for (let i = 0; i < terrain.length - 1; i++) {
         const [x1, y1] = terrain[i];
         const [x2, y2] = terrain[i + 1];
-        if (x <= x2) {
-          const f = (x - x1) / Math.max(0.001, x2 - x1);
+        if (px <= x2) {
+          const f = (px - x1) / Math.max(0.001, x2 - x1);
           return y1 + (y2 - y1) * f;
         }
       }
@@ -141,9 +171,8 @@ export default function HeroPulseRider({ points }: Props) {
     };
 
     /** Centre d'une roue (rayon R) posée TANGENTE au terrain : le profil
-        est échantillonné sous TOUTE la largeur du pneu. Avant, seul le
-        point bas était posé — dans un creux en V le FLANC du cercle
-        mordait la paroi montante (« roues sous le trait »). */
+        est échantillonné sous TOUTE la largeur du pneu — le flanc ne peut
+        pas mordre une paroi. */
     const wheelCenterY = (wx: number): number => {
       let top = Infinity;
       for (let k = -4; k <= 4; k++) {
@@ -158,41 +187,214 @@ export default function HeroPulseRider({ points }: Props) {
     /** Pose au sol pour un x donné — 2 roues tangentes. L'origine du
         rider = MILIEU DES CENTRES DE ROUES (cf. ancrage CSS -50.9 px),
         remontée de la garde le long de la normale. */
-    const groundPose = (x: number) => {
-      const xr = x - HALF_WHEELBASE_PX;
-      const xf = x + HALF_WHEELBASE_PX;
-      const yr = wheelCenterY(xr);
-      const yf = wheelCenterY(xf);
-      const angle = Math.atan2(yf - yr, xf - xr);
+    const groundPose = (px: number) => {
+      const yr = wheelCenterY(px - HALF_WHEELBASE_PX);
+      const yf = wheelCenterY(px + HALF_WHEELBASE_PX);
+      const angle = Math.atan2(yf - yr, 2 * HALF_WHEELBASE_PX);
       const cy = (yr + yf) / 2 - Math.cos(angle) * CLEARANCE_PX;
-      return { cx: x, cy, angle };
+      return { cy, angle };
+    };
+
+    /** Pente locale moyenne autour d'un index (fenêtre ±2 points). */
+    const slopeAt = (i: number): number => {
+      const lo = Math.max(0, i - 2);
+      const hi = Math.min(terrain.length - 1, i + 2);
+      return (
+        (terrain[hi][1] - terrain[lo][1]) /
+        Math.max(1, terrain[hi][0] - terrain[lo][0])
+      );
+    };
+
+    /** PLAN DE SAUTS — murs et falaises d'abord (obligatoires : on ne
+        grimpe pas une paroi, on la saute), sommets plaisir ensuite. */
+    const planJumps = () => {
+      jumps = [];
+      const n = terrain.length;
+      if (n < 8 || bandW < 200) return;
+
+      let i = 0;
+      while (i < n - 1) {
+        const dx = terrain[i + 1][0] - terrain[i][0];
+        const s = (terrain[i + 1][1] - terrain[i][1]) / Math.max(0.2, dx);
+
+        if (s < -1.25) {
+          // MUR MONTANT (y diminue vite) : étendre jusqu'à la fin de la
+          // montée raide, puis planifier le franchissement.
+          let k = i + 1;
+          while (k < n - 1) {
+            const ddx = terrain[k + 1][0] - terrain[k][0];
+            const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
+            if (s2 < -0.85) k++;
+            else break;
+          }
+          const rise = terrain[i][1] - terrain[k][1];
+          if (rise >= 30) {
+            const footX = terrain[i][0];
+            const topX = terrain[k][0];
+            const topY = terrain[k][1];
+            // Décollage : la dernière épaule douce avant le pied du mur.
+            let takeoff = footX - 56;
+            for (let b = i; b >= 0; b--) {
+              if (footX - terrain[b][0] > 230) break;
+              if (
+                Math.abs(slopeAt(b)) < 0.45 &&
+                footX - terrain[b][0] >= 36
+              ) {
+                takeoff = terrain[b][0];
+                break;
+              }
+            }
+            // Atterrissage : première pente douce après le sommet.
+            let landI = k;
+            while (landI < n - 1 && terrain[landI][0] - topX < 60) {
+              if (Math.abs(slopeAt(landI)) > 0.8) landI++;
+              else break;
+            }
+            const land = Math.min(terrain[landI][0] + 26, bandW - 40);
+            const range = land - takeoff;
+            if (range >= 60 && range <= 430 && takeoff > 30) {
+              const apex = Math.min(
+                150,
+                Math.max(80, yAtX(takeoff) - topY + 46),
+              );
+              // Flip sur les gros airs (haut OU long) : les murs modestes
+              // se franchissent sobrement — c'est l'alternance qui fait
+              // le naturel.
+              const flip = apex >= 95 || range >= 160;
+              let dur = Math.min(1900, Math.max(1000, range * 5.2));
+              if (flip) dur = Math.max(dur, 1500);
+              jumps.push({ takeoff, land, apex, flip, dur, kind: "wall" });
+            }
+          }
+          i = Math.max(k, i + 1);
+        } else if (s > 1.25) {
+          // FALAISE DESCENDANTE : on décolle au bord, on retombe au pied.
+          let k = i + 1;
+          while (k < n - 1) {
+            const ddx = terrain[k + 1][0] - terrain[k][0];
+            const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
+            if (s2 > 0.85) k++;
+            else break;
+          }
+          const drop = terrain[k][1] - terrain[i][1];
+          if (drop >= 36) {
+            const takeoff = Math.max(30, terrain[i][0] - 4);
+            let landI = k;
+            while (landI < n - 1 && terrain[landI][0] - terrain[k][0] < 50) {
+              if (Math.abs(slopeAt(landI)) > 0.8) landI++;
+              else break;
+            }
+            const land = Math.min(terrain[landI][0] + 22, bandW - 40);
+            const range = land - takeoff;
+            if (range >= 50 && range <= 430) {
+              const flip = drop >= 110 && range >= 150;
+              let dur = Math.min(1900, Math.max(850, range * 5.2));
+              if (flip) dur = Math.max(dur, 1500);
+              jumps.push({ takeoff, land, apex: 42, flip, dur, kind: "cliff" });
+            }
+          }
+          i = Math.max(k, i + 1);
+        } else {
+          i++;
+        }
+      }
+
+      // Sauts plaisir sur les sommets restants (hors zones planifiées).
+      for (let p = 6; p < n - 6; p++) {
+        if (
+          terrain[p][1] < terrain[p - 6][1] - 4 &&
+          terrain[p][1] < terrain[p + 6][1] - 4 &&
+          terrain[p][1] <= terrain[p - 1][1] &&
+          terrain[p][1] <= terrain[p + 1][1]
+        ) {
+          const px = terrain[p][0];
+          if (px < 60 || px > bandW - 140) continue;
+          if (jumps.some((j) => px > j.takeoff - 110 && px < j.land + 110))
+            continue;
+          jumps.push({
+            takeoff: px,
+            land: Math.min(px + 96, bandW - 40),
+            apex: 110,
+            flip: true,
+            dur: 1600,
+            kind: "fun",
+          });
+        }
+      }
+
+      jumps.sort((a, b) => a.takeoff - b.takeoff);
+      // Respiration : un saut doit être un événement. Les sauts plaisir
+      // trop proches du précédent sont retirés ; murs/falaises restent
+      // (obligatoires) sauf chevauchement direct.
+      const kept: Jump[] = [];
+      for (const j of jumps) {
+        const prev = kept[kept.length - 1];
+        if (prev) {
+          if (j.kind === "fun" && j.takeoff < prev.land + 300) continue;
+          if (j.takeoff < prev.land + 20) continue;
+        }
+        kept.push(j);
+      }
+      jumps = kept;
+    };
+
+    const rebuildTerrain = () => {
+      const rect = wrap.getBoundingClientRect();
+      if (rect.width < 50 || rect.height < 50) return;
+      bandW = rect.width;
+      const dom = sampleDomPath(rect);
+      terrain = dom ?? fallbackFromProps(rect);
+      planJumps();
+      // Re-synchronise le pointeur de saut sur la position courante.
+      jumpIdx = jumps.findIndex((j) => j.takeoff >= x - 18);
+      if (jumpIdx === -1) jumpIdx = jumps.length;
+      // État de debug pour le banc de vérification (négligeable en prod).
+      (window as unknown as Record<string, unknown>).__crxRider = {
+        src: dom ? "dom" : "props",
+        terrainPts: terrain.length,
+        jumps: jumps.map((j) => ({ ...j })),
+      };
     };
 
     rebuildTerrain();
     const ro = new ResizeObserver(rebuildTerrain);
     ro.observe(wrap);
+    // CAPTEUR LIVE : si le path du pouls change (nouvelles données,
+    // re-render serveur), on re-mesure terrain + plan de sauts.
+    let moRaf = 0;
+    const mo = new MutationObserver(() => {
+      cancelAnimationFrame(moRaf);
+      moRaf = requestAnimationFrame(rebuildTerrain);
+    });
+    if (band) {
+      mo.observe(band, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ["d"],
+      });
+    }
 
     /* ── Boucle ─────────────────────────────────────────────────────── */
     let raf = 0;
     let running = true;
     let visible = true;
-    let x = 0; // abscisse du centre en px
     let lastTs = 0;
     let pauseUntil = 0;
     let sparkIdx = 0;
-    let lastPeakX = -1;
     let jumpStart = 0;
+    let jumpDur = 1600;
+    let jumpLand = 0;
+    let jumpApex = 110;
+    let jumpFlip = true;
+    let jumpY0 = 0;
     let jumpFromAngle = 0;
-    let jumpLandAngle = 0;
     let landedFx = false;
     let squashUntil = 0;
-    // V2.1 — angle AMORTI au roulage (lissage exponentiel ≈ suspension de
-    // châssis) : fini les à-coups quand la pente change d'un segment à
-    // l'autre. NaN = pas encore initialisé.
+    // Angle AMORTI au roulage (lissage exponentiel ≈ suspension de
+    // châssis). NaN = pas encore initialisé.
     let smoothAngle = Number.NaN;
-    // Vitesse lissée (EMA ~200 ms) : la modulation de pente ne produit
-    // plus de sursauts mesurables (banc télémétrique : 161 px/s de pointe
-    // avant lissage pour 95 de croisière).
+    // Vitesse lissée (EMA ~200 ms) : pas de sursaut mesurable au banc.
     let smoothSpeed = CRUISE_PX_S;
 
     function emitSparks(px: number, py: number, wide = false) {
@@ -228,25 +430,30 @@ export default function HeroPulseRider({ points }: Props) {
       lastTs = ts;
       if (ts < pauseUntil) return;
 
-      const inJump = jumpStart > 0 && ts - jumpStart < JUMP_MS;
+      const inJump = jumpStart > 0 && ts - jumpStart < jumpDur;
 
-      // Pente locale pour la modulation de vitesse (descente = y monte).
-      const slopePx =
-        (yAtX(x + HALF_WHEELBASE_PX) - yAtX(x - HALF_WHEELBASE_PX)) /
-        (2 * HALF_WHEELBASE_PX);
-      const targetSpeed = inJump
-        ? CRUISE_PX_S * 0.62
-        : Math.max(
-            CRUISE_PX_S * 0.6,
-            Math.min(CRUISE_PX_S * 1.45, CRUISE_PX_S * (1 + slopePx * 0.55)),
-          );
-      smoothSpeed += (targetSpeed - smoothSpeed) * Math.min(1, dt / 200);
-      x += (smoothSpeed * dt) / 1000;
+      if (inJump) {
+        // VOL BALISTIQUE : vitesse horizontale constante = portée/durée.
+        const flySpeed = ((jumpLand - x) / Math.max(1, jumpDur - (ts - jumpStart))) * 1000;
+        smoothSpeed = Math.max(40, Math.min(420, flySpeed));
+        x += (smoothSpeed * dt) / 1000;
+      } else {
+        // Pente locale pour la modulation de vitesse (descente = y monte).
+        const slopePx =
+          (yAtX(x + HALF_WHEELBASE_PX) - yAtX(x - HALF_WHEELBASE_PX)) /
+          (2 * HALF_WHEELBASE_PX);
+        const targetSpeed = Math.max(
+          CRUISE_PX_S * 0.6,
+          Math.min(CRUISE_PX_S * 1.45, CRUISE_PX_S * (1 + slopePx * 0.55)),
+        );
+        smoothSpeed += (targetSpeed - smoothSpeed) * Math.min(1, dt / 200);
+        x += (smoothSpeed * dt) / 1000;
+      }
 
       if (x >= bandW - HALF_WHEELBASE_PX) {
         x = HALF_WHEELBASE_PX;
-        lastPeakX = -1;
         jumpStart = 0;
+        jumpIdx = 0;
         pauseUntil = ts + PAUSE_BETWEEN_RUNS_MS;
         rider!.style.opacity = "0";
         return;
@@ -254,9 +461,8 @@ export default function HeroPulseRider({ points }: Props) {
       if (x < HALF_WHEELBASE_PX) x = HALF_WHEELBASE_PX;
       rider!.style.opacity = "1";
 
-      const pose = groundPose(x);
-      let cy = pose.cy;
-      let angleDeg = (pose.angle * 180) / Math.PI;
+      let cy: number;
+      let angleDeg: number;
       // Pivot de rotation : 0 = ligne des centres de roues, remonte au
       // CENTRE DE MASSE (-17 px) en vol via sin(p·π) — un vrai backflip
       // tourne autour du centre de masse, pas des roues. La rampe garantit
@@ -264,38 +470,62 @@ export default function HeroPulseRider({ points }: Props) {
       let pivotY = 0;
 
       if (inJump) {
-        const p = (ts - jumpStart) / JUMP_MS;
+        const p = (ts - jumpStart) / jumpDur;
         const lift = Math.sin(p * Math.PI);
-        cy -= lift * JUMP_APEX_PX;
+        // L'atterrissage est RELU chaque frame : si la courbe live bouge
+        // en plein vol, le rider vise la nouvelle position du sol.
+        const landPose = groundPose(jumpLand);
+        cy = jumpY0 + (landPose.cy - jumpY0) * p - lift * jumpApex;
         pivotY = -17 * lift;
-        // Rotation dans la fenêtre haute [0.18, 0.86] : garde mini
-        // sin(0.18π) × 110 ≈ 59 px > encombrement — le flip reste au ciel,
-        // et dure ~1.1 s : il se LIT (« looping trop rapide » corrigé).
-        const w = Math.min(1, Math.max(0, (p - 0.18) / 0.68));
-        const blend = jumpFromAngle + (jumpLandAngle - jumpFromAngle) * p;
-        angleDeg = blend - 360 * ease(w);
-        // Resynchronise l'amortisseur MODULO 360 : -360 ≡ 0, sinon le lerp
-        // de sortie ferait un tour inverse éclair à l'atterrissage.
+        const landDeg = (landPose.angle * 180) / Math.PI;
+        const blend = jumpFromAngle + (landDeg - jumpFromAngle) * p;
+        if (jumpFlip) {
+          // Rotation en fenêtre haute [0.18, 0.86] (~1.1 s : le flip se
+          // LIT), uniquement sur les gros sauts.
+          const w = Math.min(1, Math.max(0, (p - 0.18) / 0.68));
+          angleDeg = blend - 360 * ease(w);
+        } else {
+          // Petit saut : pitch balistique léger (nez qui se lève puis
+          // replonge), pas de looping — c'est ça, le naturel.
+          angleDeg = blend - 12 * lift;
+        }
+        // Resynchronise l'amortisseur MODULO 360 pour la sortie de saut.
         smoothAngle = ((angleDeg % 360) + 540) % 360 - 180;
-        if (p > 0.94 && !landedFx) {
+        if (p > 0.93 && !landedFx) {
           landedFx = true;
           squashUntil = ts + 160;
-          emitSparks(x, yAtX(x));
+          emitSparks(x, yAtX(x), jumpFlip);
         }
       } else {
         if (jumpStart > 0) jumpStart = 0;
+        const pose = groundPose(x);
+        cy = pose.cy;
+        angleDeg = (pose.angle * 180) / Math.PI;
         // Amortissement : l'angle affiché rejoint l'angle du terrain avec
-        // une constante de temps ~150 ms (banc télémétrique : 90 ms
-        // laissait passer des pointes à 265 deg/s — saccade perceptible).
-        // Delta normalisé [-180,180].
+        // une constante de temps ~150 ms, borné à 200 °/s (banc : zéro
+        // saccade au-dessus du seuil). Delta normalisé [-180, 180].
         if (Number.isNaN(smoothAngle)) smoothAngle = angleDeg;
         const k = Math.min(1, dt / 150);
         const delta = (((angleDeg - smoothAngle) % 360) + 540) % 360 - 180;
-        // Borne dure 200 deg/s : même à l'attaque d'une paroi raide, le
-        // châssis pivote à vitesse de moto, jamais en claquement.
         const maxStep = (200 * dt) / 1000;
         smoothAngle += Math.max(-maxStep, Math.min(maxStep, delta * k));
         angleDeg = smoothAngle;
+
+        // Déclenchement du prochain saut planifié.
+        while (jumpIdx < jumps.length && jumps[jumpIdx].takeoff < x - 18)
+          jumpIdx++;
+        const j = jumps[jumpIdx];
+        if (j && x >= j.takeoff) {
+          jumpStart = ts;
+          jumpDur = j.dur;
+          jumpLand = j.land;
+          jumpApex = j.apex;
+          jumpFlip = j.flip;
+          jumpY0 = cy;
+          jumpFromAngle = angleDeg;
+          landedFx = false;
+          jumpIdx++;
+        }
       }
 
       rider!.style.transform = `translate3d(${x}px, ${cy}px, 0)`;
@@ -303,29 +533,6 @@ export default function HeroPulseRider({ points }: Props) {
       flip!.style.transform = pivotY
         ? `translate(0px, ${pivotY}px) rotate(${angleDeg}deg) translate(0px, ${-pivotY}px)${squash}`
         : `rotate(${angleDeg}deg)${squash}`;
-
-      // Décollage : on franchit un sommet (et pas déjà en l'air).
-      // FEEDBACK KEV (« tes wheelings passent vite ») — les sauts sont
-      // ESPACÉS d'au moins 380 px : un saut doit être un ÉVÉNEMENT, pas
-      // un tressautement permanent sur chaque bosse.
-      if (!inJump) {
-        for (const px of peakXs) {
-          if (px > lastPeakX && px - lastPeakX < 380 && lastPeakX > 0) continue;
-          if (px > lastPeakX && x >= px && x - px < 14) {
-            lastPeakX = px;
-            jumpStart = ts;
-            landedFx = false;
-            jumpFromAngle = angleDeg;
-            // Pente d'atterrissage anticipée (vitesse moyenne × durée).
-            const landX = Math.min(
-              bandW - HALF_WHEELBASE_PX,
-              x + (CRUISE_PX_S * 0.62 * JUMP_MS) / 1000,
-            );
-            jumpLandAngle = (groundPose(landX).angle * 180) / Math.PI;
-            break;
-          }
-        }
-      }
     }
 
     const io = new IntersectionObserver(
@@ -340,8 +547,10 @@ export default function HeroPulseRider({ points }: Props) {
     return () => {
       running = false;
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(moRaf);
       io.disconnect();
       ro.disconnect();
+      mo.disconnect();
     };
   }, [points]);
 
@@ -375,7 +584,7 @@ export default function HeroPulseRider({ points }: Props) {
  *
  * viewBox 64×48 — repères d'ancrage (cf. CSS .hero-rider-svg) :
  *   sol = bas des pneus y = 45 ; centre d'empattement x = 32.5 ;
- *   rendu 88×66 px desktop → origine (32.5, 45) × 1.375 = (44.7, 61.9).
+ *   centres de roues y = 37 → ancrage rendu (44.7, 50.9).
  */
 function RiderSvg() {
   return (

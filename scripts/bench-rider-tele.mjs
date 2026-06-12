@@ -15,6 +15,23 @@ try {
 } catch {}
 await page.waitForTimeout(1500);
 
+// Plan de sauts + source du terrain (capteur DOM vs fallback props)
+const plan = await page.evaluate(() => {
+  const d = window.__crxRider;
+  return d ? { src: d.src, terrainPts: d.terrainPts, jumps: d.jumps } : null;
+});
+if (plan) {
+  console.log(`terrain: source=${plan.src} (${plan.terrainPts} pts)`);
+  console.log(`plan de sauts: ${plan.jumps.length}`);
+  for (const j of plan.jumps) {
+    console.log(
+      `  ${j.kind.padEnd(5)} takeoff=${j.takeoff.toFixed(0)} land=${j.land.toFixed(0)} portee=${(j.land - j.takeoff).toFixed(0)} apex=${j.apex.toFixed(0)} flip=${j.flip} dur=${j.dur.toFixed(0)}ms`,
+    );
+  }
+} else {
+  console.log("PAS de __crxRider — composant non monte ?");
+}
+
 const samples = [];
 for (let i = 0; i < 60; i++) {
   const s = await page.evaluate(() => {
