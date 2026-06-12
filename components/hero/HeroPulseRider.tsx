@@ -44,8 +44,8 @@ const PAUSE_BETWEEN_RUNS_MS = 2600;
 const JUMP_MS = 1250;
 /** Vitesse de croisière en px/s (modulée par la pente). */
 const CRUISE_PX_S = 115;
-/** Demi-empattement en px (roues du SVG à x=14/50 sur 64, rendu 88px). */
-const HALF_WHEELBASE_PX = 25;
+/** Demi-empattement en px (roues du SVG v3.1 à x=15/50, rendu 88px). */
+const HALF_WHEELBASE_PX = 24;
 /** Garde au sol (suspension) en px. */
 const CLEARANCE_PX = 3;
 /** Hauteur d'apex du saut en px. */
@@ -277,19 +277,20 @@ export default function HeroPulseRider({ points }: Props) {
 }
 
 /**
- * La moto-cross + rider en line-art néon, profil droit (viewBox 64×44).
- * Rendu 88×60.5 px desktop (calibré : lisible sans dominer le hero),
- * 64×44 px mobile via CSS. 2 couches : glow or diffus + traits nets.
- * Le point (32, 41.5) du viewBox = centre de l'empattement AU SOL —
- * c'est l'origine du système (cf. translate dans .hero-rider-svg).
+ * La moto-cross + son pilote — dessin v3.1, VALIDÉ EN RENDU PNG (itération
+ * visuelle Edge headless, feedback Kev « personnage difforme » corrigé) :
+ * pilote en SILHOUETTE PLEINE, posture d'attaque (debout-penché, dos
+ * arqué, jambe articulée avec botte, bras fléchi jusqu'au guidon), casque
+ * cross d'un seul tenant (coque + mentonnière + écran glacier), corps de
+ * moto continu (selle cross fusionnée au réservoir), garde-boue relevé.
+ *
+ * viewBox 64×48 — repères d'ancrage (cf. CSS .hero-rider-svg) :
+ *   sol = bas des pneus y = 45 ; centre d'empattement x = 32.5 ;
+ *   rendu 88×66 px desktop → origine (32.5, 45) × 1.375 = (44.7, 61.9).
  */
 function RiderSvg() {
   return (
-    <svg
-      viewBox="0 0 64 44"
-      fill="none"
-      className="hero-rider-svg"
-    >
+    <svg viewBox="0 0 64 48" fill="none" className="hero-rider-svg">
       <defs>
         <linearGradient id="rider-body" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#F5A524" />
@@ -297,42 +298,69 @@ function RiderSvg() {
         </linearGradient>
       </defs>
 
-      <g stroke="#F5A524" strokeWidth="4.5" strokeOpacity="0.22" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        <circle cx="14" cy="33" r="8.5" />
-        <circle cx="50" cy="33" r="8.5" />
-        <path d="M14 33 L26 26 L36 26 M26 26 L23 18 L36 17 L42 14 M36 26 L40 17" />
-        <path d="M42 13 L50 33" />
-        <path d="M30 7 L37 11 L44 12 M36 11 L31 17 L33 23" />
+      <g stroke="#F5A524" strokeWidth="4" strokeOpacity="0.18" strokeLinecap="round" strokeLinejoin="round" fill="none">
+        <circle cx="15" cy="37" r="8" />
+        <circle cx="50" cy="37" r="8" />
+        <path d="M15 37 L27 31 L38 31 M27 31 L25 24 L38 23 M38 31 L42 23 M44 19 L50 37" />
       </g>
 
-      <g className="hero-rider-wheel" style={{ transformOrigin: "14px 33px" }}>
-        <circle cx="14" cy="33" r="8.5" stroke="#7DD3FC" strokeWidth="2" />
-        <circle cx="14" cy="33" r="1.6" fill="#7DD3FC" />
-        <path d="M14 25.5 L14 40.5 M6.6 33 L21.4 33 M8.8 27.8 L19.2 38.2" stroke="#7DD3FC" strokeWidth="1" strokeOpacity="0.7" />
+      <g className="hero-rider-wheel" style={{ transformOrigin: "15px 37px" }}>
+        <circle cx="15" cy="37" r="8" stroke="#7DD3FC" strokeWidth="1.8" />
+        <circle cx="15" cy="37" r="5.6" stroke="#7DD3FC" strokeWidth="0.7" strokeOpacity="0.5" />
+        <circle cx="15" cy="37" r="1.5" fill="#7DD3FC" />
+        <path d="M15 31.4 L15 42.6 M9.4 37 L20.6 37 M11 33 L19 41 M11 41 L19 33" stroke="#7DD3FC" strokeWidth="0.8" strokeOpacity="0.65" />
       </g>
-      <g className="hero-rider-wheel" style={{ transformOrigin: "50px 33px" }}>
-        <circle cx="50" cy="33" r="8.5" stroke="#7DD3FC" strokeWidth="2" />
-        <circle cx="50" cy="33" r="1.6" fill="#7DD3FC" />
-        <path d="M50 25.5 L50 40.5 M42.6 33 L57.4 33 M44.8 27.8 L55.2 38.2" stroke="#7DD3FC" strokeWidth="1" strokeOpacity="0.7" />
-      </g>
-
-      <g stroke="url(#rider-body)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        <path d="M14 33 L26 26 L36 26" />
-        <path d="M26 26 L23 18 L36 17 L42 14" />
-        <path d="M36 26 L40 17" />
-        <path d="M42 13 L50 33" />
-        <path d="M43 24 Q50 20 57 24" />
-        <path d="M41 13 L46 10" />
-        <path d="M23 17 L31 16" />
+      <g className="hero-rider-wheel" style={{ transformOrigin: "50px 37px" }}>
+        <circle cx="50" cy="37" r="8" stroke="#7DD3FC" strokeWidth="1.8" />
+        <circle cx="50" cy="37" r="5.6" stroke="#7DD3FC" strokeWidth="0.7" strokeOpacity="0.5" />
+        <circle cx="50" cy="37" r="1.5" fill="#7DD3FC" />
+        <path d="M50 31.4 L50 42.6 M44.4 37 L55.6 37 M46 33 L54 41 M46 41 L54 33" stroke="#7DD3FC" strokeWidth="0.8" strokeOpacity="0.65" />
       </g>
 
-      <g stroke="#FFE9C2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        <path d="M30 8 L37 12" />
-        <path d="M33 10 L45 10.5" />
-        <path d="M37 12 L32 18 L34 24" />
-      </g>
-      <circle cx="29" cy="6.5" r="3.4" fill="#0E1116" stroke="#FFE9C2" strokeWidth="2" />
-      <path d="M31.5 5.5 L34.5 6.5" stroke="#7DD3FC" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M15 37 L28 32" stroke="url(#rider-body)" strokeWidth="1.8" strokeLinecap="round" />
+      <path
+        d="M17.5 25 L24 25.8 L31 23.5 L40 22.5 L42.5 25 L38 28.5 L29 29.5 L23.5 28.6 L17.2 27 Z"
+        fill="#16191F"
+        stroke="url(#rider-body)"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path d="M30 29.5 L31.5 33.5 M28 32 L31.5 33.5 L37 32.5" stroke="url(#rider-body)" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M43.5 21.5 L50 37 M45 21 L51.4 36.4" stroke="url(#rider-body)" strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M40.5 22.5 Q47 16.5 53.5 21" stroke="url(#rider-body)" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M43.5 21 L41.5 17.8 M40 17.2 L43.2 16" stroke="url(#rider-body)" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M27 30.5 L19.5 33" stroke="#FBBF24" strokeWidth="1.8" strokeOpacity="0.8" strokeLinecap="round" />
+
+      <path
+        d="M26.5 16.5 L24 21.5 L28.5 24.5 L31 30 L33 32.2 L36.8 33.4 L36.4 35 L31.8 33.6 L29.5 30.8 L31.5 22.5 L30 17.5 Z"
+        fill="#10131A"
+        stroke="#FFE9C2"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M25.5 17.5 Q26.5 12.5 30.5 10.5 L34 9.8 L36.5 12 L33.5 17 L28.5 18.5 Z"
+        fill="#10131A"
+        stroke="#FFE9C2"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M33 11.5 L37 13.2 L40.6 16.6 L39.6 18 L36 15.4 L32.5 14 Z"
+        fill="#10131A"
+        stroke="#FFE9C2"
+        strokeWidth="1.1"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M30.2 10.6 Q28.6 6.2 32.2 4.8 Q35.8 3.6 37.6 6 L39.8 8.2 Q40.4 9.2 39.4 9.9 L36.6 10.3 L33.8 10.8 Z"
+        fill="#0E1116"
+        stroke="#FFE9C2"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path d="M31.2 5.4 L29.2 4.7" stroke="#FFE9C2" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M34.6 6.2 Q36.4 6.6 37.6 7.8" stroke="#7DD3FC" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }

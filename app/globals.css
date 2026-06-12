@@ -907,19 +907,18 @@ body {
   will-change: transform;
 }
 .hero-rider-svg {
-  /* Taille CALIBRÉE (feedback Kev) : 88×60.5 desktop. Le point (32,41.5)
-     du viewBox 64×44 = centre d'empattement au sol → à l'échelle 1.375 :
-     translate(-44px, -57px) pose ce point sur l'origine du rider. */
+  /* Dessin v3.1 (viewBox 64×48) : sol = y45, centre empattement = x32.5.
+     Rendu 88×66 desktop → origine (44.7, 61.9). */
   width: 88px;
-  height: 60.5px;
-  transform: translate(-44px, -57px);
+  height: 66px;
+  transform: translate(-44.7px, -61.9px);
   display: block;
 }
 @media (max-width: 640px) {
   .hero-rider-svg {
     width: 64px;
-    height: 44px;
-    transform: translate(-32px, -41.5px);
+    height: 48px;
+    transform: translate(-32.5px, -45px);
   }
 }
 .hero-rider-wheel {
