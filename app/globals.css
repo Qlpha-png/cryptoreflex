@@ -899,9 +899,14 @@ body {
   width: 0;
   height: 0;
   opacity: 0;
-  transition: opacity 300ms ease;
+  transition: opacity 300ms ease, filter 350ms ease;
   will-change: transform;
   filter: drop-shadow(0 0 12px rgba(245, 165, 36, 0.35));
+}
+/* En vol : la lumière passe de l'or au glacier et s'intensifie — écho de
+   la thermique du pouls (l'or = le sol/passé, le glacier = l'air/présent). */
+.hero-rider-air {
+  filter: drop-shadow(0 0 18px rgba(125, 211, 252, 0.55));
 }
 .hero-rider-flip {
   /* FIX MAJEUR 2026-06-12 — sans transform-origin explicite, la rotation

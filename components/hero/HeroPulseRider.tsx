@@ -52,11 +52,14 @@ type Jump = {
   land: number;
   apex: number;
   flip: boolean;
+  /** Sens de la figure : -360 backflip (murs), +360 frontflip (falaises,
+      rotation avant naturelle en descente). Les sauts plaisir alternent. */
+  spin: number;
   dur: number;
   kind: "wall" | "cliff" | "fun";
 };
 
-const SPARK_COUNT = 6;
+const SPARK_COUNT = 10;
 const PAUSE_BETWEEN_RUNS_MS = 2600;
 /** Vitesse de croisière en px/s (modulée par la pente, lissée EMA). */
 const CRUISE_PX_S = 95;
@@ -263,7 +266,15 @@ export default function HeroPulseRider({ points }: Props) {
               const flip = apex >= 95 || range >= 160;
               let dur = Math.min(1900, Math.max(1000, range * 5.2));
               if (flip) dur = Math.max(dur, 1500);
-              jumps.push({ takeoff, land, apex, flip, dur, kind: "wall" });
+              jumps.push({
+                takeoff,
+                land,
+                apex,
+                flip,
+                spin: -360,
+                dur,
+                kind: "wall",
+              });
             }
           }
           i = Math.max(k, i + 1);
@@ -290,7 +301,15 @@ export default function HeroPulseRider({ points }: Props) {
               const flip = drop >= 110 && range >= 150;
               let dur = Math.min(1900, Math.max(850, range * 5.2));
               if (flip) dur = Math.max(dur, 1500);
-              jumps.push({ takeoff, land, apex: 42, flip, dur, kind: "cliff" });
+              jumps.push({
+                takeoff,
+                land,
+                apex: 42,
+                flip,
+                spin: 360,
+                dur,
+                kind: "cliff",
+              });
             }
           }
           i = Math.max(k, i + 1);
@@ -316,6 +335,8 @@ export default function HeroPulseRider({ points }: Props) {
             land: Math.min(px + 96, bandW - 40),
             apex: 110,
             flip: true,
+            // Alternance backflip / frontflip d'un saut plaisir à l'autre.
+            spin: jumps.filter((j) => j.kind === "fun").length % 2 ? 360 : -360,
             dur: 1600,
             kind: "fun",
           });
@@ -387,10 +408,16 @@ export default function HeroPulseRider({ points }: Props) {
     let jumpLand = 0;
     let jumpApex = 110;
     let jumpFlip = true;
+    let jumpSpin = -360;
     let jumpY0 = 0;
     let jumpFromAngle = 0;
     let landedFx = false;
     let squashUntil = 0;
+    /** Roost : poussière de lumière éjectée par la roue arrière dans les
+        montées — dernier tir (throttle ~300 ms). */
+    let lastRoost = 0;
+    /** Classe glow-vol togglée seulement au changement d'état. */
+    let airClass = false;
     // Angle AMORTI au roulage (lissage exponentiel ≈ suspension de
     // châssis). NaN = pas encore initialisé.
     let smoothAngle = Number.NaN;
@@ -412,6 +439,23 @@ export default function HeroPulseRider({ points }: Props) {
         s.classList.add("hero-spark-fire");
       }
       sparkIdx = (sparkIdx + count) % SPARK_COUNT;
+    }
+
+    /** Roost moto-cross : 2 poussières éjectées vers l'arrière-bas depuis
+        la roue arrière (les montées creusent, comme sur terre battue). */
+    function emitRoost(px: number, py: number) {
+      const rect = wrap!.getBoundingClientRect();
+      for (let k = 0; k < 2; k++) {
+        const s = sparkRefs.current[(sparkIdx + k) % SPARK_COUNT];
+        if (!s) continue;
+        s.style.left = `${(px / rect.width) * 100}%`;
+        s.style.top = `${(py / rect.height) * 100}%`;
+        s.style.setProperty("--spark-angle", `${-148 - k * 22}deg`);
+        s.classList.remove("hero-spark-fire");
+        void s.offsetWidth;
+        s.classList.add("hero-spark-fire");
+      }
+      sparkIdx = (sparkIdx + 2) % SPARK_COUNT;
     }
 
     /** Ease in-out cubique pour la rotation du flip. */
@@ -481,9 +525,11 @@ export default function HeroPulseRider({ points }: Props) {
         const blend = jumpFromAngle + (landDeg - jumpFromAngle) * p;
         if (jumpFlip) {
           // Rotation en fenêtre haute [0.18, 0.86] (~1.1 s : le flip se
-          // LIT), uniquement sur les gros sauts.
+          // LIT), uniquement sur les gros sauts. Le SENS dépend du
+          // contexte : backflip (-360) sur les murs, frontflip (+360)
+          // sur les falaises, alternance sur les sauts plaisir.
           const w = Math.min(1, Math.max(0, (p - 0.18) / 0.68));
-          angleDeg = blend - 360 * ease(w);
+          angleDeg = blend + jumpSpin * ease(w);
         } else {
           // Petit saut : pitch balistique léger (nez qui se lève puis
           // replonge), pas de looping — c'est ça, le naturel.
@@ -511,6 +557,14 @@ export default function HeroPulseRider({ points }: Props) {
         smoothAngle += Math.max(-maxStep, Math.min(maxStep, delta * k));
         angleDeg = smoothAngle;
 
+        // Roost : dans une montée franche, la roue arrière éjecte de la
+        // poussière de lumière vers l'arrière (throttle ~300 ms).
+        if (angleDeg < -16 && ts - lastRoost > 300) {
+          lastRoost = ts;
+          const rx = x - HALF_WHEELBASE_PX;
+          emitRoost(rx, yAtX(rx));
+        }
+
         // Déclenchement du prochain saut planifié.
         while (jumpIdx < jumps.length && jumps[jumpIdx].takeoff < x - 18)
           jumpIdx++;
@@ -521,11 +575,18 @@ export default function HeroPulseRider({ points }: Props) {
           jumpLand = j.land;
           jumpApex = j.apex;
           jumpFlip = j.flip;
+          jumpSpin = j.spin;
           jumpY0 = cy;
           jumpFromAngle = angleDeg;
           landedFx = false;
           jumpIdx++;
         }
+      }
+
+      // Glow renforcé en vol (or → glacier) — toggle au changement d'état.
+      if (inJump !== airClass) {
+        airClass = inJump;
+        rider!.classList.toggle("hero-rider-air", inJump);
       }
 
       rider!.style.transform = `translate3d(${x}px, ${cy}px, 0)`;
