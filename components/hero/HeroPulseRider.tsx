@@ -56,7 +56,7 @@ type Jump = {
       rotation avant naturelle en descente). Les sauts plaisir alternent. */
   spin: number;
   dur: number;
-  kind: "wall" | "cliff" | "fun";
+  kind: "gap" | "wall" | "cliff" | "fun";
 };
 
 const SPARK_COUNT = 10;
@@ -224,6 +224,55 @@ export default function HeroPulseRider({ points }: Props) {
       const n = terrain.length;
       if (n < 8 || bandW < 200) return;
 
+      // 0. GAPS — les creux étroits et profonds se SAUTENT bord à bord
+      // avec l'élan (feedback : « c'est surtout les creux qu'il ne faut
+      // pas qu'elle aille »). On repère les sommets locaux, et chaque
+      // paire de sommets adjacents encadrant un fond ≥ 26 px sur une
+      // largeur ≤ 250 px devient un saut TENDU (apex bas, pas de figure,
+      // rapide) — une vraie moto ne plonge pas dans chaque trou.
+      const tops: number[] = [];
+      for (let t = 6; t < n - 6; t++) {
+        if (
+          terrain[t][1] < terrain[t - 6][1] &&
+          terrain[t][1] < terrain[t + 6][1] &&
+          terrain[t][1] <= terrain[t - 1][1] &&
+          terrain[t][1] <= terrain[t + 1][1]
+        ) {
+          tops.push(t);
+        }
+      }
+      const gaps: Jump[] = [];
+      for (let g = 0; g < tops.length - 1; g++) {
+        const a = tops[g];
+        const b = tops[g + 1];
+        const xg = terrain[a][0];
+        const xd = terrain[b][0];
+        const width = xd - xg;
+        if (width < 60 || width > 250) continue;
+        let floor = -Infinity;
+        for (let j = a; j <= b; j++) floor = Math.max(floor, terrain[j][1]);
+        const depth = floor - Math.max(terrain[a][1], terrain[b][1]);
+        // Un creux ne se saute que s'il est VRAIMENT un trou : profond
+        // ET aux parois raides (profondeur/largeur >= 0.3 ~= 31 deg de
+        // pente moyenne). Les cuvettes douces se roulent.
+        if (depth < 26 || depth / width < 0.3) continue;
+        const takeoff = Math.max(30, xg - 2);
+        const land = Math.min(xd + 10, bandW - 40);
+        if (land - takeoff < 50) continue;
+        gaps.push({
+          takeoff,
+          land,
+          apex: 34 * S,
+          flip: false,
+          spin: 0,
+          dur: Math.min(1400, Math.max(700, width * 4.5)),
+          kind: "gap",
+        });
+      }
+      jumps.push(...gaps);
+      const inGap = (px: number) =>
+        gaps.some((gj) => px >= gj.takeoff - 12 && px <= gj.land + 12);
+
       let i = 0;
       while (i < n - 1) {
         const dx = terrain[i + 1][0] - terrain[i][0];
@@ -241,7 +290,7 @@ export default function HeroPulseRider({ points }: Props) {
             else break;
           }
           const rise = terrain[i][1] - terrain[k][1];
-          if (rise >= 44) {
+          if (rise >= 44 && !inGap(terrain[i][0])) {
             const footX = terrain[i][0];
             const topX = terrain[k][0];
             const topY = terrain[k][1];
@@ -299,7 +348,7 @@ export default function HeroPulseRider({ points }: Props) {
             else break;
           }
           const drop = terrain[k][1] - terrain[i][1];
-          if (drop >= 52) {
+          if (drop >= 52 && !inGap(terrain[i][0])) {
             const takeoff = Math.max(30, terrain[i][0] - 4);
             let landI = k;
             while (landI < n - 1 && terrain[landI][0] - terrain[k][0] < 50) {
@@ -368,6 +417,27 @@ export default function HeroPulseRider({ points }: Props) {
         kept.push(j);
       }
       jumps = kept;
+
+      // Garde-fou wow — APRÈS le filtre d'espacement : si le plan FINAL
+      // ne contient aucune figure (tout en gaps tendus), le plus large
+      // gap devient LE gros saut du run.
+      if (!jumps.some((j) => j.flip)) {
+        let big: Jump | null = null;
+        for (const j of jumps) {
+          if (
+            j.kind === "gap" &&
+            (!big || j.land - j.takeoff > big.land - big.takeoff)
+          ) {
+            big = j;
+          }
+        }
+        if (big) {
+          big.flip = true;
+          big.spin = -360;
+          big.apex = 100 * S;
+          big.dur = Math.max(big.dur, 1500);
+        }
+      }
     };
 
     const rebuildTerrain = () => {
