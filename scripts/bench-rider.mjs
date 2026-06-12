@@ -21,6 +21,9 @@ await page.goto("http://localhost:3100/", { waitUntil: "networkidle" });
 try {
   await page.getByRole("button", { name: /tout refuser/i }).click({ timeout: 4000 });
 } catch {}
+// Scroller pour decoller la bande du bas du viewport : sinon les creux
+// de la courbe sont COUPES par le bord ecran dans les captures.
+await page.mouse.wheel(0, 260);
 await page.waitForTimeout(2000);
 
 const telemetry = [];

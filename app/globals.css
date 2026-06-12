@@ -891,8 +891,8 @@ body {
    .hero-rider est positionné par le rAF (left/top %), .hero-rider-flip
    porte la rotation (pente + backflip), les roues tournent en CSS. */
 .hero-rider {
-  /* MOTEUR V2 — positionné en px par transform (translate3d), origine du
-     système = centre de l'empattement AU SOL. */
+  /* MOTEUR V2.1 — positionné en px par transform (translate3d), origine
+     du système = MILIEU DES CENTRES DE ROUES (roues posées tangentes). */
   position: absolute;
   left: 0;
   top: 0;
@@ -905,26 +905,27 @@ body {
 }
 .hero-rider-flip {
   /* FIX MAJEUR 2026-06-12 — sans transform-origin explicite, la rotation
-     pivotait autour du centre de la BOÎTE CSS (excentré ~33px du point de
-     contact dessiné) : la moto plongeait sous la ligne en pente et le
-     backflip décrivait des cercles. L origine (0,0) = le point de contact
-     au sol (cf. translate du SVG). */
+     pivotait autour du centre de la BOÎTE CSS (excentré ~33px du point
+     d'ancrage dessiné) : la moto plongeait sous la ligne en pente et le
+     backflip décrivait des cercles. L origine (0,0) = milieu des centres
+     de roues (cf. translate du SVG) ; en vol, le moteur rampe le pivot
+     vers le centre de masse. */
   transform-origin: 0 0;
   will-change: transform;
 }
 .hero-rider-svg {
-  /* Dessin v3.1 (viewBox 64×48) : sol = y45, centre empattement = x32.5.
-     Rendu 88×66 desktop → origine (44.7, 61.9). */
+  /* Dessin v3.1 (viewBox 64×48) : centres de roues = y37, centre
+     empattement = x32.5. Rendu 88×66 desktop → ancrage (44.7, 50.9). */
   width: 88px;
   height: 66px;
-  transform: translate(-44.7px, -61.9px);
+  transform: translate(-44.7px, -50.9px);
   display: block;
 }
 @media (max-width: 640px) {
   .hero-rider-svg {
     width: 64px;
     height: 48px;
-    transform: translate(-32.5px, -45px);
+    transform: translate(-32.5px, -37px);
   }
 }
 .hero-rider-wheel {
