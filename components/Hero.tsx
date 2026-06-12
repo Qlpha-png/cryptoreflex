@@ -14,6 +14,10 @@ const HeroPulseLive = dynamic(() => import("@/components/hero/HeroPulseLive"), {
 const HeroPulseRider = dynamic(() => import("@/components/hero/HeroPulseRider"), {
   ssr: false,
 });
+// Scrub desktop : survoler la courbe révèle prix + heure du point.
+const HeroPulseScrub = dynamic(() => import("@/components/hero/HeroPulseScrub"), {
+  ssr: false,
+});
 
 /**
  * Hero — « LE POULS INCANDESCENT » (panel créatif 3 experts + juge,
@@ -99,13 +103,20 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
         {head.isReal && polyline.length > 1 && (
           <HeroPulseRider points={polyline} />
         )}
+        {/* Scrub souris : la courbe devient lisible heure par heure. */}
+        {head.isReal && btcSparkline && polyline.length > 1 && (
+          <HeroPulseScrub sparkline={btcSparkline} points={polyline} />
+        )}
       </div>
 
       {/* Scrim de contraste derrière le bloc texte */}
       <div className="hero-scrim" aria-hidden="true" />
 
       {/* ── Contenu ── */}
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 pb-[clamp(220px,34vh,360px)]">
+      {/* max-md : la bande pulse est remontée de 64px (bottom-nav) — on
+          réserve autant d'espace en plus pour que le chip prix ne touche
+          jamais le disclaimer (lisibilité compliance). */}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 pb-[clamp(220px,34vh,360px)] max-md:pb-[calc(clamp(220px,34vh,360px)+64px)]">
         <div className="max-w-4xl">
           {/* Eyebrow factuelle — annonce la signature */}
           <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">

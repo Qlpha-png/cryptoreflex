@@ -737,6 +737,71 @@ body {
   .hero-pulse-chip { font-size: 12px; padding: 5px 10px; }
   .hero-pulse-caption { font-size: 10px; right: 1rem; }
 }
+/* Sous md (768px), la bottom-nav mobile (64px, fixed) recouvrait le bas
+   de la courbe au premier écran : on remonte la bande d'autant. */
+@media (max-width: 767px) {
+  .hero-pulse-band { bottom: var(--mobile-bar-h, 64px); }
+}
+
+/* ── SCRUB de la ligne de vie (desktop, souris) ──────────────────────
+   Survol = réticule posé sur le trait + hairline verticale + chip mono
+   « prix · il y a N h ». Caché par défaut, révélé par .hero-scrub-on. */
+.hero-scrub {
+  pointer-events: auto;
+  z-index: 3; /* au-dessus du rider (1) et de l'île live (2) pour capter */
+}
+.hero-scrub-line,
+.hero-scrub-dot,
+.hero-scrub-chip {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 160ms ease;
+  pointer-events: none;
+}
+.hero-scrub-on .hero-scrub-line,
+.hero-scrub-on .hero-scrub-dot,
+.hero-scrub-on .hero-scrub-chip {
+  opacity: 1;
+}
+.hero-scrub-line {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-0.5px);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(125, 211, 252, 0.35) 30%,
+    rgba(125, 211, 252, 0.35) 70%,
+    transparent
+  );
+}
+.hero-scrub-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: #ffe9c2;
+  box-shadow:
+    0 0 0 3px rgba(125, 211, 252, 0.25),
+    0 0 14px rgba(125, 211, 252, 0.8);
+}
+.hero-scrub-chip {
+  transform: translate(-50%, -100%);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--color-foreground, #e8e6e1);
+  background: rgba(10, 12, 16, 0.88);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  backdrop-filter: blur(6px);
+}
+/* Le scrub n'existe pas en tactile ni en reduced-motion. */
+@media (hover: none), (pointer: coarse) {
+  .hero-scrub { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-pulse-path { animation: none; stroke-dashoffset: 0; }
