@@ -891,23 +891,36 @@ body {
    .hero-rider est positionné par le rAF (left/top %), .hero-rider-flip
    porte la rotation (pente + backflip), les roues tournent en CSS. */
 .hero-rider {
+  /* MOTEUR V2 — positionné en px par transform (translate3d), origine du
+     système = centre de l'empattement AU SOL. */
   position: absolute;
+  left: 0;
+  top: 0;
   width: 0;
   height: 0;
   opacity: 0;
   transition: opacity 300ms ease;
+  will-change: transform;
   filter: drop-shadow(0 0 12px rgba(245, 165, 36, 0.35));
 }
 .hero-rider-flip {
   will-change: transform;
 }
 .hero-rider-svg {
-  /* FEEDBACK KEV 2026-06-12 (« collée à la ligne ») — l'ancrage était au
-     CENTRE des roues (y=33) : la moto roulait enfoncée d'un rayon. Le
-     point de contact = BAS des roues (y=33+8.5=41.5 du viewBox 64×44),
-     mis à l'échelle du rendu 72×50 → translate(-33px, -47px). */
-  transform: translate(-33px, -47px);
+  /* Taille CALIBRÉE (feedback Kev) : 88×60.5 desktop. Le point (32,41.5)
+     du viewBox 64×44 = centre d'empattement au sol → à l'échelle 1.375 :
+     translate(-44px, -57px) pose ce point sur l'origine du rider. */
+  width: 88px;
+  height: 60.5px;
+  transform: translate(-44px, -57px);
   display: block;
+}
+@media (max-width: 640px) {
+  .hero-rider-svg {
+    width: 64px;
+    height: 44px;
+    transform: translate(-32px, -41.5px);
+  }
 }
 .hero-rider-wheel {
   animation: rider-wheel-spin 0.5s linear infinite;
