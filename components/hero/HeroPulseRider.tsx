@@ -667,7 +667,7 @@ export default function HeroPulseRider({ points }: Props) {
   }, [points]);
 
   return (
-    <div ref={wrapRef} className="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div ref={wrapRef} className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
       {[0, 1].map((i) => (
         <div
           key={`g${i}`}

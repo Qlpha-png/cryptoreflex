@@ -42,7 +42,7 @@ export default function HeroPulseLive({ xPct, yPct, initialPrice }: Props) {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0"
+      className="pointer-events-none absolute inset-0 z-[2]"
       aria-hidden="true"
       style={{ containIntrinsicSize: "0 0" }}
     >
