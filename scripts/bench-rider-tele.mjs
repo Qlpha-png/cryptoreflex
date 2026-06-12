@@ -35,8 +35,8 @@ if (plan) {
 const samples = [];
 for (let i = 0; i < 60; i++) {
   const s = await page.evaluate(() => {
-    const r = document.querySelector(".hero-rider");
-    const f = document.querySelector(".hero-rider-flip");
+    const r = document.querySelector(".hero-rider-main");
+    const f = document.querySelector(".hero-rider-main .hero-rider-flip");
     if (!r || !f) return null;
     const m = /translate3d\(([\d.-]+)px, ([\d.-]+)px/.exec(r.style.transform || "");
     const a = /rotate\(([-\d.]+)deg\)/.exec(f.style.transform || "");

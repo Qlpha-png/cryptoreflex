@@ -77,6 +77,8 @@ export default function HeroPulseRider({ points }: Props) {
   const flipRef = useRef<HTMLDivElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const sparkRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  /** Traînée de vol : 2 échos de la moto, retardés de 70/140 ms. */
+  const ghostRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   useEffect(() => {
     if (points.length < 2) return;
@@ -94,6 +96,14 @@ export default function HeroPulseRider({ points }: Props) {
     let bandW = 0;
     let jumps: Jump[] = [];
     let jumpIdx = 0;
+    // ÉCHELLE MOBILE : le SVG est rendu 88 px desktop / 64 px mobile
+    // (cf. CSS .hero-rider-svg). Le moteur scale TOUTES ses cotes moto
+    // (empattement, rayon de roue, garde, apex, pivot) — sinon les roues
+    // mobiles flottent à ~3 px au-dessus du trait.
+    let S = 1;
+    let halfWB = HALF_WHEELBASE_PX;
+    let wheelR = WHEEL_R_PX;
+    let clear = CLEARANCE_PX;
     let x = HALF_WHEELBASE_PX; // abscisse du centre en px
 
     /** CAPTEUR principal : échantillonne le path SVG réellement affiché
@@ -179,9 +189,8 @@ export default function HeroPulseRider({ points }: Props) {
     const wheelCenterY = (wx: number): number => {
       let top = Infinity;
       for (let k = -4; k <= 4; k++) {
-        const dx = (k / 4) * WHEEL_R_PX;
-        const limit =
-          yAtX(wx + dx) - Math.sqrt(WHEEL_R_PX * WHEEL_R_PX - dx * dx);
+        const dx = (k / 4) * wheelR;
+        const limit = yAtX(wx + dx) - Math.sqrt(wheelR * wheelR - dx * dx);
         if (limit < top) top = limit;
       }
       return top;
@@ -191,10 +200,10 @@ export default function HeroPulseRider({ points }: Props) {
         rider = MILIEU DES CENTRES DE ROUES (cf. ancrage CSS -50.9 px),
         remontée de la garde le long de la normale. */
     const groundPose = (px: number) => {
-      const yr = wheelCenterY(px - HALF_WHEELBASE_PX);
-      const yf = wheelCenterY(px + HALF_WHEELBASE_PX);
-      const angle = Math.atan2(yf - yr, 2 * HALF_WHEELBASE_PX);
-      const cy = (yr + yf) / 2 - Math.cos(angle) * CLEARANCE_PX;
+      const yr = wheelCenterY(px - halfWB);
+      const yf = wheelCenterY(px + halfWB);
+      const angle = Math.atan2(yf - yr, 2 * halfWB);
+      const cy = (yr + yf) / 2 - Math.cos(angle) * clear;
       return { cy, angle };
     };
 
@@ -257,13 +266,13 @@ export default function HeroPulseRider({ points }: Props) {
             const range = land - takeoff;
             if (range >= 60 && range <= 430 && takeoff > 30) {
               const apex = Math.min(
-                150,
-                Math.max(80, yAtX(takeoff) - topY + 46),
+                150 * S,
+                Math.max(80 * S, yAtX(takeoff) - topY + 46 * S),
               );
               // Flip sur les gros airs (haut OU long) : les murs modestes
               // se franchissent sobrement — c'est l'alternance qui fait
               // le naturel.
-              const flip = apex >= 95 || range >= 160;
+              const flip = apex >= 95 * S || range >= 160;
               let dur = Math.min(1900, Math.max(1000, range * 5.2));
               if (flip) dur = Math.max(dur, 1500);
               jumps.push({
@@ -304,7 +313,7 @@ export default function HeroPulseRider({ points }: Props) {
               jumps.push({
                 takeoff,
                 land,
-                apex: 42,
+                apex: 42 * S,
                 flip,
                 spin: 360,
                 dur,
@@ -333,7 +342,7 @@ export default function HeroPulseRider({ points }: Props) {
           jumps.push({
             takeoff: px,
             land: Math.min(px + 96, bandW - 40),
-            apex: 110,
+            apex: 110 * S,
             flip: true,
             // Alternance backflip / frontflip d'un saut plaisir à l'autre.
             spin: jumps.filter((j) => j.kind === "fun").length % 2 ? 360 : -360,
@@ -363,6 +372,11 @@ export default function HeroPulseRider({ points }: Props) {
       const rect = wrap.getBoundingClientRect();
       if (rect.width < 50 || rect.height < 50) return;
       bandW = rect.width;
+      // Échelle moto selon le breakpoint (cf. CSS .hero-rider-svg).
+      S = window.matchMedia("(max-width: 640px)").matches ? 64 / 88 : 1;
+      halfWB = HALF_WHEELBASE_PX * S;
+      wheelR = WHEEL_R_PX * S;
+      clear = CLEARANCE_PX * S;
       const dom = sampleDomPath(rect);
       terrain = dom ?? fallbackFromProps(rect);
       planJumps();
@@ -416,6 +430,10 @@ export default function HeroPulseRider({ points }: Props) {
     /** Roost : poussière de lumière éjectée par la roue arrière dans les
         montées — dernier tir (throttle ~300 ms). */
     let lastRoost = 0;
+    /** Buffer circulaire d'états récents pour la traînée de vol. */
+    const trail: Array<[number, number, number, number, number]> = [];
+    const GHOST_DELAYS = [70, 140];
+    let ghostsOn = false;
     /** Classe glow-vol togglée seulement au changement d'état. */
     let airClass = false;
     // Angle AMORTI au roulage (lissage exponentiel ≈ suspension de
@@ -484,8 +502,7 @@ export default function HeroPulseRider({ points }: Props) {
       } else {
         // Pente locale pour la modulation de vitesse (descente = y monte).
         const slopePx =
-          (yAtX(x + HALF_WHEELBASE_PX) - yAtX(x - HALF_WHEELBASE_PX)) /
-          (2 * HALF_WHEELBASE_PX);
+          (yAtX(x + halfWB) - yAtX(x - halfWB)) / (2 * halfWB);
         const targetSpeed = Math.max(
           CRUISE_PX_S * 0.6,
           Math.min(CRUISE_PX_S * 1.45, CRUISE_PX_S * (1 + slopePx * 0.55)),
@@ -494,15 +511,15 @@ export default function HeroPulseRider({ points }: Props) {
         x += (smoothSpeed * dt) / 1000;
       }
 
-      if (x >= bandW - HALF_WHEELBASE_PX) {
-        x = HALF_WHEELBASE_PX;
+      if (x >= bandW - halfWB) {
+        x = halfWB;
         jumpStart = 0;
         jumpIdx = 0;
         pauseUntil = ts + PAUSE_BETWEEN_RUNS_MS;
         rider!.style.opacity = "0";
         return;
       }
-      if (x < HALF_WHEELBASE_PX) x = HALF_WHEELBASE_PX;
+      if (x < halfWB) x = halfWB;
       rider!.style.opacity = "1";
 
       let cy: number;
@@ -520,7 +537,7 @@ export default function HeroPulseRider({ points }: Props) {
         // en plein vol, le rider vise la nouvelle position du sol.
         const landPose = groundPose(jumpLand);
         cy = jumpY0 + (landPose.cy - jumpY0) * p - lift * jumpApex;
-        pivotY = -17 * lift;
+        pivotY = -17 * S * lift;
         const landDeg = (landPose.angle * 180) / Math.PI;
         const blend = jumpFromAngle + (landDeg - jumpFromAngle) * p;
         if (jumpFlip) {
@@ -561,7 +578,7 @@ export default function HeroPulseRider({ points }: Props) {
         // poussière de lumière vers l'arrière (throttle ~300 ms).
         if (angleDeg < -16 && ts - lastRoost > 300) {
           lastRoost = ts;
-          const rx = x - HALF_WHEELBASE_PX;
+          const rx = x - halfWB;
           emitRoost(rx, yAtX(rx));
         }
 
@@ -580,6 +597,9 @@ export default function HeroPulseRider({ points }: Props) {
           jumpFromAngle = angleDeg;
           landedFx = false;
           jumpIdx++;
+          // Kick de poussière au décollage.
+          const rx = x - halfWB;
+          emitRoost(rx, yAtX(rx));
         }
       }
 
@@ -594,6 +614,37 @@ export default function HeroPulseRider({ points }: Props) {
       flip!.style.transform = pivotY
         ? `translate(0px, ${pivotY}px) rotate(${angleDeg}deg) translate(0px, ${-pivotY}px)${squash}`
         : `rotate(${angleDeg}deg)${squash}`;
+
+      // TRAÎNÉE DE VOL — on mémorise l'état courant et on pose chaque
+      // écho sur l'état d'il y a 70/140 ms. Visible uniquement en l'air.
+      trail.push([ts, x, cy, angleDeg, pivotY]);
+      if (trail.length > 40) trail.shift();
+      if (inJump !== ghostsOn) {
+        ghostsOn = inJump;
+        for (const g of ghostRefs.current)
+          g?.classList.toggle("hero-rider-ghost-on", inJump);
+      }
+      if (inJump) {
+        for (let gi = 0; gi < GHOST_DELAYS.length; gi++) {
+          const g = ghostRefs.current[gi];
+          if (!g) continue;
+          const target = ts - GHOST_DELAYS[gi];
+          let st = trail[0];
+          for (let t = trail.length - 1; t >= 0; t--) {
+            if (trail[t][0] <= target) {
+              st = trail[t];
+              break;
+            }
+          }
+          const inner = g.firstElementChild as HTMLElement | null;
+          g.style.transform = `translate3d(${st[1]}px, ${st[2]}px, 0)`;
+          if (inner) {
+            inner.style.transform = st[4]
+              ? `translate(0px, ${st[4]}px) rotate(${st[3]}deg) translate(0px, ${-st[4]}px)`
+              : `rotate(${st[3]}deg)`;
+          }
+        }
+      }
     }
 
     const io = new IntersectionObserver(
@@ -617,7 +668,21 @@ export default function HeroPulseRider({ points }: Props) {
 
   return (
     <div ref={wrapRef} className="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div ref={riderRef} className="hero-rider">
+      {[0, 1].map((i) => (
+        <div
+          key={`g${i}`}
+          ref={(el) => {
+            ghostRefs.current[i] = el;
+          }}
+          className="hero-rider hero-rider-ghost"
+          data-ghost={i + 1}
+        >
+          <div className="hero-rider-flip">
+            <RiderSvg />
+          </div>
+        </div>
+      ))}
+      <div ref={riderRef} className="hero-rider hero-rider-main">
         <div ref={flipRef} className="hero-rider-flip">
           <RiderSvg />
         </div>

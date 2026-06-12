@@ -29,8 +29,8 @@ await page.waitForTimeout(2000);
 const telemetry = [];
 for (let i = 0; i < 14; i++) {
   const info = await page.evaluate(() => {
-    const r = document.querySelector(".hero-rider");
-    const f = document.querySelector(".hero-rider-flip");
+    const r = document.querySelector(".hero-rider-main");
+    const f = document.querySelector(".hero-rider-main .hero-rider-flip");
     const band = document.querySelector(".hero-pulse-band");
     if (!r || !band) return null;
     const br = band.getBoundingClientRect();

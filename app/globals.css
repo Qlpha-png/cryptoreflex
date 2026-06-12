@@ -908,6 +908,19 @@ body {
 .hero-rider-air {
   filter: drop-shadow(0 0 18px rgba(125, 211, 252, 0.55));
 }
+/* Traînée de vol : 2 échos retardés (70/140 ms), floutés, glacier —
+   visibles uniquement en l'air (classe -on togglée par le moteur). */
+.hero-rider-ghost {
+  opacity: 0;
+  transition: opacity 250ms ease;
+  filter: blur(1.2px) drop-shadow(0 0 10px rgba(125, 211, 252, 0.3));
+}
+.hero-rider-ghost[data-ghost="1"].hero-rider-ghost-on {
+  opacity: 0.26;
+}
+.hero-rider-ghost[data-ghost="2"].hero-rider-ghost-on {
+  opacity: 0.12;
+}
 .hero-rider-flip {
   /* FIX MAJEUR 2026-06-12 — sans transform-origin explicite, la rotation
      pivotait autour du centre de la BOÎTE CSS (excentré ~33px du point
