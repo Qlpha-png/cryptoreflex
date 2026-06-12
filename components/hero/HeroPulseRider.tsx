@@ -220,8 +220,12 @@ export default function HeroPulseRider({ points }: Props) {
       flip!.style.transform = `rotate(${angleDeg}deg)${squash}`;
 
       // Décollage : on franchit un sommet (et pas déjà en l'air).
+      // FEEDBACK KEV (« tes wheelings passent vite ») — les sauts sont
+      // ESPACÉS d'au moins 380 px : un saut doit être un ÉVÉNEMENT, pas
+      // un tressautement permanent sur chaque bosse.
       if (!inJump) {
         for (const px of peakXs) {
+          if (px > lastPeakX && px - lastPeakX < 380 && lastPeakX > 0) continue;
           if (px > lastPeakX && x >= px && x - px < 14) {
             lastPeakX = px;
             jumpStart = ts;

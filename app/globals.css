@@ -904,6 +904,12 @@ body {
   filter: drop-shadow(0 0 12px rgba(245, 165, 36, 0.35));
 }
 .hero-rider-flip {
+  /* FIX MAJEUR 2026-06-12 — sans transform-origin explicite, la rotation
+     pivotait autour du centre de la BOÎTE CSS (excentré ~33px du point de
+     contact dessiné) : la moto plongeait sous la ligne en pente et le
+     backflip décrivait des cercles. L origine (0,0) = le point de contact
+     au sol (cf. translate du SVG). */
+  transform-origin: 0 0;
   will-change: transform;
 }
 .hero-rider-svg {
