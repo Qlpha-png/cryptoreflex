@@ -229,18 +229,19 @@ export default function HeroPulseRider({ points }: Props) {
         const dx = terrain[i + 1][0] - terrain[i][0];
         const s = (terrain[i + 1][1] - terrain[i][1]) / Math.max(0.2, dx);
 
-        if (s < -1.25) {
-          // MUR MONTANT (y diminue vite) : étendre jusqu'à la fin de la
-          // montée raide, puis planifier le franchissement.
+        if (s < -2.25) {
+          // MUR MONTANT quasi vertical (> ~66°) : la moto GRIMPE tout ce
+          // qui est grimpable (feedback : « il faut qu'il monte les
+          // pentes s'il peut ») — seuls les vrais murs se sautent.
           let k = i + 1;
           while (k < n - 1) {
             const ddx = terrain[k + 1][0] - terrain[k][0];
             const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
-            if (s2 < -0.85) k++;
+            if (s2 < -1.6) k++;
             else break;
           }
           const rise = terrain[i][1] - terrain[k][1];
-          if (rise >= 30) {
+          if (rise >= 44) {
             const footX = terrain[i][0];
             const topX = terrain[k][0];
             const topY = terrain[k][1];
@@ -287,17 +288,18 @@ export default function HeroPulseRider({ points }: Props) {
             }
           }
           i = Math.max(k, i + 1);
-        } else if (s > 1.25) {
-          // FALAISE DESCENDANTE : on décolle au bord, on retombe au pied.
+        } else if (s > 2.25) {
+          // FALAISE quasi verticale : on décolle au bord, on retombe au
+          // pied. Les descentes raides mais roulables se descendent.
           let k = i + 1;
           while (k < n - 1) {
             const ddx = terrain[k + 1][0] - terrain[k][0];
             const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
-            if (s2 > 0.85) k++;
+            if (s2 > 1.6) k++;
             else break;
           }
           const drop = terrain[k][1] - terrain[i][1];
-          if (drop >= 36) {
+          if (drop >= 52) {
             const takeoff = Math.max(30, terrain[i][0] - 4);
             let landI = k;
             while (landI < n - 1 && terrain[landI][0] - terrain[k][0] < 50) {
