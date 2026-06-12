@@ -902,9 +902,11 @@ body {
   will-change: transform;
 }
 .hero-rider-svg {
-  /* Ancre : la moto repose sur la courbe — roues à y=33/44 du viewBox,
-     donc on remonte le SVG pour que le point de contact soit l'origine. */
-  transform: translate(-29px, -33px);
+  /* FEEDBACK KEV 2026-06-12 (« collée à la ligne ») — l'ancrage était au
+     CENTRE des roues (y=33) : la moto roulait enfoncée d'un rayon. Le
+     point de contact = BAS des roues (y=33+8.5=41.5 du viewBox 64×44),
+     mis à l'échelle du rendu 72×50 → translate(-33px, -47px). */
+  transform: translate(-33px, -47px);
   display: block;
 }
 .hero-rider-wheel {

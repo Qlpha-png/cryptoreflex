@@ -170,24 +170,15 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           </p>
         </div>
 
-        {/* Caption de la ligne — factuelle, en bas du hero */}
-        <p className="hero-pulse-caption font-mono" aria-live="off">
-          {head.isReal ? (
-            <>
-              Cette ligne est dessinée par les 168 dernières heures du cours de
-              Bitcoin · mise à jour le {lastUpdate} ·{" "}
-              <Link
-                href="/cryptos/bitcoin"
-                className="pointer-events-auto underline underline-offset-2 decoration-border hover:text-fg transition-colors"
-              >
-                voir l&apos;analyse complète
-                <ArrowRight className="ml-0.5 inline h-3 w-3" aria-hidden="true" />
-              </Link>
-            </>
-          ) : (
-            <>Illustration — données de marché momentanément indisponibles.</>
-          )}
-        </p>
+        {/* FEEDBACK KEV 2026-06-12 — légende retirée quand la donnée est
+            réelle (la ligne parle d'elle-même). On garde UNIQUEMENT la
+            mention honnête du mode dégradé : le décor de secours ne doit
+            jamais passer pour de la vraie donnée. */}
+        {!head.isReal && (
+          <p className="hero-pulse-caption font-mono" aria-live="off">
+            Illustration — données de marché momentanément indisponibles.
+          </p>
+        )}
       </div>
     </section>
   );

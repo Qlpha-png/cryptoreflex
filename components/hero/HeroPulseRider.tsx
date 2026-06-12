@@ -32,8 +32,9 @@ interface Props {
 }
 
 const SPARK_COUNT = 6;
-const PAUSE_BETWEEN_RUNS_MS = 2200;
-const JUMP_MS = 720;
+const PAUSE_BETWEEN_RUNS_MS = 2600;
+// FEEDBACK KEV — saut plus LONG et plus HAUT : la figure doit se LIRE.
+const JUMP_MS = 1150;
 
 export default function HeroPulseRider({ points }: Props) {
   const riderRef = useRef<HTMLDivElement | null>(null);
@@ -109,9 +110,10 @@ export default function HeroPulseRider({ points }: Props) {
       const slope = (y2 - y1) / Math.max(0.2, x2 - x1);
       const inJump = jumpStart > 0 && ts - jumpStart < JUMP_MS;
 
-      // Vitesse : descente accélère, montée freine ; boost léger en vol.
-      const speed = inJump ? 13 : 10 + slope * 5;
-      t += (Math.max(5, Math.min(20, speed)) * dt) / 1000;
+      // FEEDBACK KEV (« trop vite ») — vitesse ÷2.2 : traversée ~11 s,
+      // les inclinaisons et le freinage en montée deviennent lisibles.
+      const speed = inJump ? 5.5 : 4.5 + slope * 2.5;
+      t += (Math.max(2.4, Math.min(9, speed)) * dt) / 1000;
 
       if (t >= points.length - 1) {
         t = 0;
@@ -130,8 +132,8 @@ export default function HeroPulseRider({ points }: Props) {
       let angle = groundAngle;
       if (inJump) {
         const p = (ts - jumpStart) / JUMP_MS;
-        // Cloche balistique (en % de hauteur de bande) + BACKFLIP -360°
-        y -= Math.sin(p * Math.PI) * 16;
+        // Cloche balistique HAUTE (le saut doit se voir) + BACKFLIP -360°
+        y -= Math.sin(p * Math.PI) * 26;
         angle = jumpFromAngle - p * 360;
         if (p > 0.92 && flip!.dataset.landed !== "1") {
           flip!.dataset.landed = "1";
@@ -199,8 +201,8 @@ export default function HeroPulseRider({ points }: Props) {
 function RiderSvg() {
   return (
     <svg
-      width="58"
-      height="40"
+      width="72"
+      height="50"
       viewBox="0 0 64 44"
       fill="none"
       className="hero-rider-svg"
