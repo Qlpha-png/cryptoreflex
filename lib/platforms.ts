@@ -137,6 +137,17 @@ export function getPlatformsAtRisk(): Platform[] {
   return getAllPlatforms().filter((p) => p.mica.atRiskJuly2026);
 }
 
+/**
+ * Plateforme accessible à un résident français.
+ * false si elle a fermé son marché FR/UE (ex : Gemini, avril 2026) —
+ * détecté via fees.verified.verdict === "indisponible".
+ * À utiliser pour NE PAS recommander une plateforme qu'on ne peut plus ouvrir
+ * (classements, quiz, CTA) et pour noindexer sa fiche.
+ */
+export function isAvailableFr(p: Platform): boolean {
+  return p.fees.verified?.verdict !== "indisponible";
+}
+
 export const platformsMeta = data._meta;
 
 /* -------------------------------------------------------------------------- */

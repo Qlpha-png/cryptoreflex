@@ -24,6 +24,7 @@ import {
   Trophy,
 } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
+import { isAvailableFr } from "@/lib/platforms";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
 
 /* ------------------------------------------------------------------ */
@@ -343,7 +344,7 @@ interface QuizResult {
 function computeResult(platforms: Platform[], answers: Answers): QuizResult | null {
   const scored = platforms
     .map((p) => ({ p, score: scorePlatform(p, answers) }))
-    .filter((s) => !s.score.excluded)
+    .filter((s) => !s.score.excluded && isAvailableFr(s.p))
     .sort((a, b) => b.score.total - a.score.total);
 
   if (scored.length === 0) return null;

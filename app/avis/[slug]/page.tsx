@@ -15,7 +15,7 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react";
-import { getAllPlatforms, getPlatformById, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
@@ -66,6 +66,9 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
+    // Plateforme fermée au marché FR (ex : Gemini) → noindex : on ne laisse pas
+    // Google envoyer du trafic vers une fiche qui recommande un service inaccessible.
+    robots: isAvailableFr(p) ? { index: true, follow: true } : { index: false, follow: true },
     keywords: [
       `${p.name} avis 2026`,
       `${p.name} avis`,
@@ -270,6 +273,8 @@ export default function ReviewPage({ params }: Props) {
     ]),
   ]);
 
+  const available = isAvailableFr(p);
+
   return (
     <article className="py-12 sm:py-16">
       <script
@@ -290,6 +295,19 @@ export default function ReviewPage({ params }: Props) {
           <span className="mx-2">/</span>
           <span className="text-white/80">{p.name}</span>
         </nav>
+
+        {/* Bandeau plateforme fermée au marché FR (ex : Gemini) */}
+        {!available && (
+          <div className="mt-4 rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm leading-relaxed text-red-200">
+            <strong className="font-semibold text-red-100">
+              {p.name} n&apos;est plus accessible aux résidents français.
+            </strong>{" "}
+            {p.fees.verified?.note}{" "}
+            <Link href="/comparatif/frais" className="underline hover:text-white">
+              Voir les plateformes disponibles →
+            </Link>
+          </div>
+        )}
 
         {/* HEADER */}
         <header className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
@@ -371,7 +389,7 @@ export default function ReviewPage({ params }: Props) {
               </div>
             )}
             <AffiliateLink
-              href={p.affiliateUrl}
+              href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-sidebar"
               ctaText={`Aller sur ${p.name}`}
@@ -409,7 +427,7 @@ export default function ReviewPage({ params }: Props) {
           </ul>
           <div className="mt-5">
             <AffiliateLink
-              href={p.affiliateUrl}
+              href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-express"
               ctaText={`Tester ${p.name}`}
@@ -629,7 +647,7 @@ export default function ReviewPage({ params }: Props) {
             </p>
           </div>
           <AffiliateLink
-            href={p.affiliateUrl}
+            href={available ? p.affiliateUrl : "/comparatif/frais"}
             platform={p.id}
             placement="avis-mid-content"
             ctaText={`Ouvrir un compte ${p.name}`}
@@ -774,7 +792,7 @@ export default function ReviewPage({ params }: Props) {
           </div>
           <div className="mt-6">
             <AffiliateLink
-              href={p.affiliateUrl}
+              href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-final"
               ctaText={`S'inscrire sur ${p.name}`}
@@ -911,8 +929,8 @@ export default function ReviewPage({ params }: Props) {
       <MobileStickyCTA
         platformId={p.id}
         title={p.name}
-        label={`Aller sur ${p.name}`}
-        href={p.affiliateUrl}
+        label={available ? `Aller sur ${p.name}` : "Voir les alternatives"}
+        href={available ? p.affiliateUrl : "/comparatif/frais"}
         surface="avis-page"
       />
     </article>

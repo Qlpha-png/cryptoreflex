@@ -14,7 +14,7 @@ import {
   Plus,
   Equal,
 } from "lucide-react";
-import { getPlatformById, type Platform } from "@/lib/platforms";
+import { getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
 import {
   COMPARISONS,
   getComparison,
@@ -51,9 +51,12 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!a || !b) return { robots: { index: false, follow: false } };
   const title = `${a.name} vs ${b.name} 2026 : comparatif frais, sécurité, MiCA`;
   const description = `${a.name} ou ${b.name} ? Comparatif détaillé : frais (spot, instant, retrait), sécurité, agrément MiCA, support FR, bonus. Verdict Cryptoreflex.`;
+  // Duel impliquant une plateforme fermée au marché FR (ex : Gemini) → noindex.
+  const indexable = isAvailableFr(a) && isAvailableFr(b);
   return {
     title,
     description,
+    robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
     alternates: withHreflang(`${BRAND.url}/comparatif/${params.slug}`),
     openGraph: { title, description, url: `${BRAND.url}/comparatif/${params.slug}`, type: "article" },
     twitter: { card: "summary_large_image", title, description },

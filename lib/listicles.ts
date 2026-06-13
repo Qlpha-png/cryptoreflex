@@ -11,7 +11,7 @@
  *   - SEO : mêmes Title/Description que la query, pas de bullshit générique
  */
 
-import { getAllPlatforms, getExchangePlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, getExchangePlatforms, isAvailableFr, type Platform } from "@/lib/platforms";
 import {
   getAllCryptos,
   getHiddenGems,
@@ -80,7 +80,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     difficulty: 38,
     select() {
       return getAllPlatforms()
-        .filter((p) => p.mica.micaCompliant && p.category !== "wallet")
+        .filter((p) => p.mica.micaCompliant && p.category !== "wallet" && isAvailableFr(p))
         .slice(0, 5)
         .map((p, i) => ({
           rank: i + 1,
@@ -104,7 +104,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     difficulty: 24,
     select() {
       return getExchangePlatforms()
-        .filter((p) => p.mica.micaCompliant)
+        .filter((p) => p.mica.micaCompliant && isAvailableFr(p))
         .sort((a, b) => a.fees.spotTaker - b.fees.spotTaker)
         .slice(0, 5)
         .map((p, i) => ({
@@ -129,7 +129,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     difficulty: 21,
     select() {
       return getAllPlatforms()
-        .filter((p) => p.category !== "wallet")
+        .filter((p) => p.category !== "wallet" && isAvailableFr(p))
         .sort((a, b) => b.scoring.security - a.scoring.security)
         .slice(0, 5)
         .map((p, i) => ({
@@ -154,7 +154,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     difficulty: 22,
     select() {
       return getAllPlatforms()
-        .filter((p) => p.category !== "wallet" && p.support.frenchChat)
+        .filter((p) => p.category !== "wallet" && p.support.frenchChat && isAvailableFr(p))
         .sort((a, b) => b.scoring.ux - a.scoring.ux)
         .slice(0, 5)
         .map((p, i) => ({
