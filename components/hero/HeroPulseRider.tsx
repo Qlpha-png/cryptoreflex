@@ -501,7 +501,12 @@ export default function HeroPulseRider({ points }: Props) {
     let jumpY0 = 0;
     let jumpFromAngle = 0;
     let landedFx = false;
-    let squashUntil = 0;
+    // SUSPENSION : à l'atterrissage le châssis encaisse — compression
+    // amortie qui rebondit (ressort). landTs = instant de toucher,
+    // landImpact = sévérité (proportionnelle à la hauteur du saut).
+    let landTs = -9999;
+    let landImpact = 0;
+    let wasInJump = false;
     /** Roost : poussière de lumière éjectée par la roue arrière dans les
         montées — dernier tir (throttle ~300 ms). */
     let lastRoost = 0;
@@ -631,7 +636,6 @@ export default function HeroPulseRider({ points }: Props) {
         smoothAngle = ((angleDeg % 360) + 540) % 360 - 180;
         if (p > 0.93 && !landedFx) {
           landedFx = true;
-          squashUntil = ts + 160;
           emitSparks(x, yAtX(x), jumpFlip);
         }
       } else {
@@ -684,8 +688,36 @@ export default function HeroPulseRider({ points }: Props) {
         rider!.classList.toggle("hero-rider-air", inJump);
       }
 
+      // ATTERRISSAGE — instant exact du toucher (sortie de saut) : on
+      // arme la suspension, d'autant plus forte que le saut était haut.
+      if (wasInJump && !inJump) {
+        landTs = ts;
+        landImpact = Math.min(1.1, Math.max(0.45, jumpApex / (110 * S)));
+      }
+      wasInJump = inJump;
+
+      // SUSPENSION amortie (ressort) : compression scaleY ancrée sur la
+      // ligne des roues (origin 0,0) → le châssis encaisse, les pneus
+      // restent plantés sur le trait. Oscillation amortie : compression
+      // max au toucher, léger rebond, retour au repos en ~360 ms. Jamais
+      // en vol (gate !inJump).
+      let suspSX = 1;
+      let suspSY = 1;
+      const tl = ts - landTs;
+      if (!inJump && tl >= 0 && tl < 360) {
+        const env = landImpact * Math.exp(-tl / 130);
+        const s = env * Math.cos((2 * Math.PI * tl) / 240);
+        const comp = Math.max(0, s); // compression
+        const reb = Math.max(0, -s); // rebond (étirement léger)
+        suspSY = 1 - comp * 0.13 + reb * 0.06;
+        suspSX = 1 + comp * 0.07 - reb * 0.03;
+      }
+
       rider!.style.transform = `translate3d(${x}px, ${cy}px, 0)`;
-      const squash = ts < squashUntil ? " scale(1.06, 0.9)" : "";
+      const squash =
+        suspSX !== 1 || suspSY !== 1
+          ? ` scale(${suspSX.toFixed(4)}, ${suspSY.toFixed(4)})`
+          : "";
       flip!.style.transform = pivotY
         ? `translate(0px, ${pivotY}px) rotate(${angleDeg}deg) translate(0px, ${-pivotY}px)${squash}`
         : `rotate(${angleDeg}deg)${squash}`;
