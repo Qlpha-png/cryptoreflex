@@ -747,8 +747,11 @@ body {
    Survol = réticule posé sur le trait + hairline verticale + chip mono
    « prix · il y a N h ». Caché par défaut, révélé par .hero-scrub-on. */
 .hero-scrub {
-  pointer-events: auto;
-  z-index: 3; /* au-dessus du rider (1) et de l'île live (2) pour capter */
+  /* v2 — NE capture PLUS le pointeur (l'écoute est sur la <section>) :
+     l'overlay ne doit jamais bloquer les boutons/liens du hero situés
+     dans la zone de la bande. */
+  pointer-events: none;
+  z-index: 3; /* visuel au-dessus du rider (1) et de l'île live (2) */
 }
 .hero-scrub-line,
 .hero-scrub-dot,

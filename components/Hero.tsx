@@ -105,7 +105,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
         )}
         {/* Scrub souris : la courbe devient lisible heure par heure. */}
         {head.isReal && btcSparkline && polyline.length > 1 && (
-          <HeroPulseScrub sparkline={btcSparkline} points={polyline} />
+          <HeroPulseScrub sparkline={btcSparkline} />
         )}
       </div>
 
