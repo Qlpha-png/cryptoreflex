@@ -17,7 +17,7 @@ import { BRAND } from "@/lib/brand";
 const TOOLS = [
   {
     title: "Calculateur de profits",
-    description: "Calcule ton ROI et tes plus-values en quelques clics.",
+    description: "Calculez votre ROI et vos plus-values en quelques clics.",
     Icon: Calculator,
     href: "/outils#calculateur",
   },

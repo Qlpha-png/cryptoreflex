@@ -70,7 +70,7 @@ export default function QuizPromo() {
               <div className="mt-4 inline-flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-fg/75">
                 <HelpCircle className="h-3.5 w-3.5 text-primary-soft shrink-0 mt-0.5" strokeWidth={2} aria-hidden="true" focusable="false" />
                 <span>
-                  Exemple : <em className="text-fg/90 not-italic font-medium">« Combien veux-tu investir par mois ? »</em>
+                  Exemple : <em className="text-fg/90 not-italic font-medium">« Combien souhaitez-vous investir par mois ? »</em>
                 </span>
               </div>
 

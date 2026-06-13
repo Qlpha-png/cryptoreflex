@@ -180,8 +180,8 @@ export default function PlatformsSection() {
             Pas sûr·e par où commencer ?
           </p>
           <p className="mt-1 text-sm text-fg/70">
-            Quiz pédagogique en 5 questions — il te présente les plateformes pertinentes
-            selon votre profil (30 secondes). Le choix final t&apos;appartient.
+            Quiz pédagogique en 5 questions — il vous présente les plateformes pertinentes
+            selon votre profil (30 secondes). Le choix final vous appartient.
           </p>
           <Link href="/quiz/plateforme" className="btn-primary mt-4 inline-flex">
             Faire le quiz pédagogique

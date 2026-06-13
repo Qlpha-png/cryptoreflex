@@ -121,7 +121,7 @@ const POOL: Record<string, Step> = {
     href: "/outils/simulateur-dca",
     Icon: Calculator,
     label: "Simulateur DCA",
-    desc: "Backtest 5 ans : combien aurais-tu en investissant 100 €/mois ?",
+    desc: "Backtest 5 ans : combien auriez-vous en investissant 100 €/mois ?",
   },
   blog: {
     href: "/blog",
@@ -269,7 +269,7 @@ function selectSteps(props: Props): Step[] {
 
 export default function NextStepsGuide(props: Props) {
   const steps = selectSteps(props);
-  const title = props.title ?? "Continue ton exploration";
+  const title = props.title ?? "Continuez votre exploration";
   const intro =
     props.intro ??
     "Voici les 3 prochaines étapes recommandées en fonction de ce que vous venez de lire.";

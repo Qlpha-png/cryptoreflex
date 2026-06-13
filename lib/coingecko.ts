@@ -753,8 +753,8 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "BTC",
     name: "Bitcoin",
     image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-    currentPrice: 78500,
-    marketCap: 1550000000000,
+    currentPrice: 63662,
+    marketCap: 1267000000000,
     marketCapRank: 1,
     totalVolume: 35000000000,
     priceChange1h: 0,
@@ -769,8 +769,8 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "ETH",
     name: "Ethereum",
     image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-    currentPrice: 2320,
-    marketCap: 280000000000,
+    currentPrice: 1667,
+    marketCap: 201000000000,
     marketCapRank: 2,
     totalVolume: 18000000000,
     priceChange1h: 0,
@@ -801,8 +801,8 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "BNB",
     name: "BNB",
     image: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
-    currentPrice: 600,
-    marketCap: 90000000000,
+    currentPrice: 605,
+    marketCap: 90700000000,
     marketCapRank: 4,
     totalVolume: 1800000000,
     priceChange1h: 0,
@@ -817,8 +817,8 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "SOL",
     name: "Solana",
     image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-    currentPrice: 145,
-    marketCap: 68000000000,
+    currentPrice: 67,
+    marketCap: 31400000000,
     marketCapRank: 5,
     totalVolume: 3000000000,
     priceChange1h: 0,
@@ -833,8 +833,8 @@ const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
     symbol: "XRP",
     name: "XRP",
     image: "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png",
-    currentPrice: 0.62,
-    marketCap: 34000000000,
+    currentPrice: 1.13,
+    marketCap: 62000000000,
     marketCapRank: 6,
     totalVolume: 2500000000,
     priceChange1h: 0,
@@ -1067,6 +1067,12 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const snap = await getPriceSnapshot(coingeckoId);
+    // FIX 2026-06-13 (red team) — ne JAMAIS servir le snapshot figé (dernier
+    // recours codé en dur) comme prix « actuel » sur la fiche : un prix périmé
+    // affiché comme live est pire qu'un « — ». On renvoie null → la fiche affiche
+    // honnêtement « données indisponibles » (ISR réhydrate si une source live
+    // revient). Le cache KV récent NE porte pas isStaleFallback → non impacté.
+    if (snap.isStaleFallback) return null;
     // BUG FIX 2026-05-03 audit live — accept TOUTE source avec priceUsd>0,
     // y compris static fallback. Avant : on skippait static et tombait sur
     // CoinGecko (epuise) -> "—" affiche sur la fiche. Le static fallback

@@ -219,6 +219,13 @@ export interface PriceSnapshot {
   source: PriceSource;
   /** ISO timestamp du fetch. */
   fetchedAt: string;
+  /**
+   * true UNIQUEMENT pour le dernier recours codé en dur (STATIC_FALLBACK,
+   * snapshot figé). Permet aux consommateurs (ex: fiche /cryptos) de NE PAS
+   * afficher un prix périmé comme « live » — un prix figé présenté comme actuel
+   * est pire qu'un « — ». Le cache KV (récent) NE porte PAS ce flag.
+   */
+  isStaleFallback?: boolean;
 }
 
 export interface TopMarketCoin extends PriceSnapshot {
@@ -343,11 +350,11 @@ async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
 // si Binance + CoinCap echouent (cas Vercel Edge IP block, freeze, etc.).
 // MAJ trimestrielle ou via cron (a faire BATCH 52 : auto-update via KV).
 const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24h" | "marketCap" | "volume24h">> = {
-  bitcoin:    { priceUsd: 78500, change24h: 0,  marketCap: 1550000000000, volume24h: 35000000000 },
-  ethereum:   { priceUsd: 2320,  change24h: 0,  marketCap:  280000000000, volume24h: 18000000000 },
-  ripple:     { priceUsd: 0.62,  change24h: 0,  marketCap:   34000000000, volume24h:  2500000000 },
-  binancecoin:{ priceUsd: 600,   change24h: 0,  marketCap:   90000000000, volume24h:  1800000000 },
-  solana:     { priceUsd: 145,   change24h: 0,  marketCap:   68000000000, volume24h:  3000000000 },
+  bitcoin:    { priceUsd: 63662, change24h: 0,  marketCap: 1267000000000, volume24h: 35000000000 },
+  ethereum:   { priceUsd: 1667,  change24h: 0,  marketCap:  201000000000, volume24h: 18000000000 },
+  ripple:     { priceUsd: 1.13,  change24h: 0,  marketCap:   62000000000, volume24h:  2500000000 },
+  binancecoin:{ priceUsd: 605,   change24h: 0,  marketCap:   90700000000, volume24h:  1800000000 },
+  solana:     { priceUsd: 67,    change24h: 0,  marketCap:   31400000000, volume24h:  3000000000 },
   cardano:    { priceUsd: 0.45,  change24h: 0,  marketCap:   16000000000, volume24h:   600000000 },
   dogecoin:   { priceUsd: 0.12,  change24h: 0,  marketCap:   17000000000, volume24h:   900000000 },
   tron:       { priceUsd: 0.16,  change24h: 0,  marketCap:   14000000000, volume24h:   500000000 },
@@ -468,6 +475,7 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
       sparkline7d: [],
       source: "static",
       fetchedAt: new Date().toISOString(),
+      isStaleFallback: true, // snapshot figé : ne pas afficher comme « live »
     };
   }
 }

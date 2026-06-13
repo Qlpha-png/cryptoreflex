@@ -150,7 +150,10 @@ export function generateMetadata({ params }: Props): Metadata {
 /* -------------------------------------------------------------------------- */
 
 function fmtUsd(n: number | null | undefined): string {
-  if (n == null || Number.isNaN(n)) return "—";
+  // FIX 2026-06-13 (red team) — 0 sur un prix / market cap / volume d'un top-10
+  // = donnée manquante (impossible en réalité), pas une vraie valeur. On affiche
+  // « — » plutôt que « 0.00 $ » (qui faisait douter de toute la donnée du tableau).
+  if (n == null || Number.isNaN(n) || n === 0) return "—";
   if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)} Md $`;
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M $`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)} k $`;
