@@ -21,7 +21,14 @@
 // Contexte : user signale "aucun lien fonctionne". Reproduction prod KO mais
 // stale chunks JS dans cryptoreflex-static-v2 = suspect #1 (tous les anciens
 // builds restaient indéfiniment). v3 supprime v2 à l'activate (cf. lifecycle).
-const CACHE_VERSION = "v3";
+//
+// 2026-06-13 — bump v3 → v4 + networkFirst en `cache: "no-store"`. Cause de
+// staleness perçue (« je dois vider Firefox pour voir les changements ») :
+// le network-first appelait fetch(request) en mode cache par défaut, donc
+// le HTTP cache de Firefox pouvait re-servir un vieux HTML pointant vers
+// d'anciens chunks. no-store garantit un HTML toujours frais ; le bump v4
+// purge tous les caches v3 existants à l'activate.
+const CACHE_VERSION = "v4";
 const STATIC_CACHE = `cryptoreflex-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `cryptoreflex-runtime-${CACHE_VERSION}`;
 
@@ -84,7 +91,10 @@ self.addEventListener("activate", (event) => {
  */
 async function networkFirst(request) {
   try {
-    const fresh = await fetch(request);
+    // `no-store` : on contourne le HTTP cache de Firefox pour le HTML —
+    // un déploiement est vu immédiatement (les chunks JS, eux, restent
+    // immutables/hashés donc cache-first reste sûr).
+    const fresh = await fetch(request, { cache: "no-store" });
     // On stocke une copie en runtime cache pour offline futur.
     if (fresh && fresh.status === 200 && fresh.type === "basic") {
       const cache = await caches.open(RUNTIME_CACHE);
