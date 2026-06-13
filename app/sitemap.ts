@@ -18,6 +18,7 @@ import { getAllTASummaries } from "@/lib/ta-mdx";
 import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
 import { getAllPlatforms } from "@/lib/platforms";
+import { getAllCryptos } from "@/lib/cryptos";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -360,18 +361,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // 30 cryptos × 9 années = 270 URLs prebuild ; le reste en ISR on-demand.
-  // FIX 2026-05-09 — Ajout 2026 (annee courante en cours) au sitemap.
-  const HIST_TOP_30 = [
-    "bitcoin", "ethereum", "binancecoin", "ripple", "solana",
-    "cardano", "dogecoin", "tron", "avalanche-2", "chainlink",
-    "polkadot", "matic-network", "litecoin", "shiba-inu", "uniswap",
-    "near", "internet-computer", "cosmos", "stellar", "bitcoin-cash",
-    "filecoin", "aptos", "monero", "the-open-network", "tezos",
-    "algorand", "hedera-hashgraph", "ethereum-classic", "aave", "maker",
-  ];
+  // FIX 2026-06-13 — Source unique de vérité : on aligne le sitemap sur
+  // generateStaticParams de la page (getAllCryptos × YEARS, dynamicParams=false).
+  // L'ancien HIST_TOP_30 hardcodé contenait 9 ids inexistants dans la data
+  // (binancecoin, ripple, avalanche-2, matic-network, near, the-open-network,
+  // hedera-hashgraph, ethereum-classic, maker) → 81 URLs sitemap en vrai 404,
+  // et n'exposait que 30 cryptos alors que 100 sont buildées (~630 manquantes).
+  // Page 100 % synchrone (aucun fetch) → lister toutes ces URLs n'ajoute pas d'I/O.
+  const HIST_CRYPTOS = getAllCryptos().map((c) => c.id);
   const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
-  const historiquePrixRoutes: MetadataRoute.Sitemap = HIST_TOP_30.flatMap((crypto) =>
+  const historiquePrixRoutes: MetadataRoute.Sitemap = HIST_CRYPTOS.flatMap((crypto) =>
     HIST_YEARS.map((annee) => ({
       url: `${SITE_URL}/historique-prix/${crypto}/${annee}`,
       lastModified: now,

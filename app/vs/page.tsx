@@ -76,12 +76,12 @@ const FEATURED_PAIRS: Array<{ a: string; b: string; aLabel: string; bLabel: stri
 // MAILLAGE SEO 2026-06-13 — hub dense par crypto. Avant : seules 20 paires
 // "stars" étaient liées depuis ce hub → ~4930 pages /vs/[a]/[b] quasi
 // orphelines (découvrables seulement via 8 cross-links par page) donc peu
-// crawlées/indexées. Ici : top 28 cryptos × ~15 adversaires = ~300 liens
+// crawlées/indexées. Ici : top 45 cryptos × ~15 adversaires = ~640 liens
 // internes canoniques → Google découvre tout le cluster comparateur.
 // 100 % statique (aucun fetch), donc zéro coût build / quota.
 function buildCryptoMesh() {
   const catalogue = getAllCryptos();
-  const hubCryptos = catalogue.slice(0, 28); // têtes de gondole (market cap)
+  const hubCryptos = catalogue.slice(0, 45); // têtes de gondole (market cap) — élargi 28→45 pour pousser le maillage dense plus loin dans la longue traîne
   const opponents = catalogue.slice(0, 16); // adversaires les plus cherchés
   return hubCryptos.map((c) => ({
     id: c.id,

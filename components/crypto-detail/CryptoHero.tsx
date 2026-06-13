@@ -65,6 +65,11 @@ export default function CryptoHero({
   const positive = change24h >= 0;
   const positive7d = (detail?.priceChange7d ?? 0) >= 0;
   const theme = getCategoryTheme(category);
+  // FIX 2026-06-13 — Ne JAMAIS afficher un badge variation 24h quand les
+  // données live sont absentes (CoinGecko down/rate-limit → detail=null ou
+  // prix 0). Sinon on rendait « +0,00 % 24h » en VERT, signal faussement
+  // rassurant et incohérent avec CryptoStats (« données indisponibles »).
+  const hasLive = detail != null && price > 0;
 
   return (
     <header className="grid gap-8 lg:grid-cols-[1fr_auto] items-start min-w-0">
@@ -154,17 +159,21 @@ export default function CryptoHero({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold ${
-                positive
-                  ? "bg-accent-green/10 text-accent-green border border-accent-green/30"
-                  : "bg-accent-rose/10 text-accent-rose border border-accent-rose/30"
-              }`}
-            >
-              {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-              {formatPct(change24h)} <span className="opacity-70">24h</span>
-            </span>
-            {detail?.priceChange7d !== null && detail?.priceChange7d !== undefined && (
+            {hasLive ? (
+              <span
+                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold ${
+                  positive
+                    ? "bg-accent-green/10 text-accent-green border border-accent-green/30"
+                    : "bg-accent-rose/10 text-accent-rose border border-accent-rose/30"
+                }`}
+              >
+                {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                {formatPct(change24h)} <span className="opacity-70">24h</span>
+              </span>
+            ) : (
+              <span className="text-sm text-muted">Variation 24h indisponible</span>
+            )}
+            {hasLive && detail?.priceChange7d !== null && detail?.priceChange7d !== undefined && (
               <span className="text-xs text-muted">
                 7j :{" "}
                 <span className={positive7d ? "text-accent-green" : "text-accent-rose"}>

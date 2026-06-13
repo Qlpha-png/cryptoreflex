@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 
 import {
-  TOP_30_CRYPTO_IDS,
   getCryptoPairs,
   isCanonicalPair,
   canonicalizePair,
@@ -45,7 +44,7 @@ import {
   describeCorrelation,
 } from "@/lib/correlation";
 import { fetchCoinDetail, formatCompactNumber } from "@/lib/coingecko";
-import type { AnyCrypto } from "@/lib/cryptos";
+import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import {
@@ -257,6 +256,39 @@ function buildIntro(a: AnyCrypto, b: AnyCrypto, commonCount: number): string {
 }
 
 /**
+ * Cross-links pertinents (FIX 2026-06-13) : on ancre sur les VOISINS catalogue
+ * de a ET b (ordre market-cap = proximité thématique) plutôt que sur la seule
+ * tête de marché. Garantit qu'une paire longue traîne (rank 31-100) émet des
+ * liens vers d'autres duels la contenant → maillage ascendant anti crawl-budget.
+ * 100 % data-local, aucun fetch.
+ */
+function buildVsCrossLinks(a: AnyCrypto, b: AnyCrypto): { href: string; label: string }[] {
+  const catalogue = getAllCryptos();
+  const neighbours = (self: AnyCrypto): AnyCrypto[] => {
+    const i = catalogue.findIndex((c) => c.id === self.id);
+    if (i < 0) return [];
+    return catalogue
+      .slice(Math.max(0, i - 3), i + 4)
+      .filter((c) => c.id !== a.id && c.id !== b.id)
+      .slice(0, 6);
+  };
+  const selfPair = [a.id, b.id].sort().join("/");
+  const seen = new Set<string>();
+  const links: { href: string; label: string }[] = [];
+  for (const { self, other } of [
+    ...neighbours(a).map((o) => ({ self: a, other: o })),
+    ...neighbours(b).map((o) => ({ self: b, other: o })),
+  ]) {
+    const [x, y] = [self.id, other.id].sort();
+    const href = `/vs/${x}/${y}`;
+    if (`${x}/${y}` === selfPair || seen.has(href)) continue;
+    seen.add(href);
+    links.push({ href, label: `${self.symbol} vs ${other.symbol}` });
+  }
+  return links.slice(0, 12);
+}
+
+/**
  * BATCH 58 — Verdict editorial unique par paire, base sur les attributs
  * concrets des 2 cryptos. Pas de prose generique, 100% data-driven.
  *
@@ -438,7 +470,10 @@ export default async function CryptoPairPage({ params }: Props) {
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
-      { name: "Comparer", url: "/comparer" },
+      // FIX 2026-06-13 — Le parent canonique des pages /vs/[a]/[b] est le hub
+      // /vs (et non /comparer, hub frère). Pointer le fil d'Ariane vers /vs
+      // consolide le PageRank interne ascendant du cluster vers son vrai hub.
+      { name: "Duels crypto", url: "/vs" },
       { name: `${a.symbol} vs ${b.symbol}`, url: `/vs/${a.id}/${b.id}` },
     ]),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.ans }))),
@@ -454,8 +489,8 @@ export default async function CryptoPairPage({ params }: Props) {
             Accueil
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/comparer" className="hover:text-fg">
-            Comparer
+          <Link href="/vs" className="hover:text-fg">
+            Duels crypto
           </Link>
           <span className="mx-2">/</span>
           <span className="text-fg/80">
@@ -724,29 +759,28 @@ export default async function CryptoPairPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Cross-link : autres comparaisons depuis l'une des deux cryptos */}
+        {/* Cross-link : autres comparaisons pertinentes (FIX 2026-06-13).
+            Avant : 8 paires construites depuis la tête de marché → une paire
+            rank 31-100 ne recevait quasi aucun lien entrant. Désormais on
+            ancre sur les VOISINS catalogue de a ET b → chaque page /vs/[a]/[b],
+            même longue traîne, émet des liens vers des duels qui contiennent
+            a ou b (maillage ascendant de la longue traîne, anti crawl-budget). */}
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">Autres comparatifs</h2>
           <p className="mt-2 text-sm text-muted">
-            Compare {a.name} ou {b.name} avec d'autres top 30 :
+            Comparez {a.name} ou {b.name} à des cryptos proches :
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            {TOP_30_CRYPTO_IDS.filter((id) => id !== a.id && id !== b.id)
-              .slice(0, 8)
-              .map((other) => {
-                // Construit l'URL canonique a/b avec other.
-                const [x, y] = [a.id, other].sort();
-                return (
-                  <Link
-                    key={`a-${other}`}
-                    href={`/vs/${x}/${y}`}
-                    className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs text-fg/85 hover:border-primary/40 hover:text-primary-soft"
-                  >
-                    {a.symbol} vs {other.toUpperCase()}
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                );
-              })}
+            {buildVsCrossLinks(a, b).map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs text-fg/85 hover:border-primary/40 hover:text-primary-soft"
+              >
+                {label}
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            ))}
           </div>
         </section>
 
