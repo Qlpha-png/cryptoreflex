@@ -23,15 +23,21 @@ vi.mock("next/cache", () => ({
 }));
 
 const ORIGINAL_FETCH = global.fetch;
+const ORIGINAL_CC_KEY = process.env.CRYPTOCOMPARE_API_KEY;
 
 beforeEach(() => {
   // Reset module cache + fetch mock entre tests.
   vi.resetModules();
   global.fetch = vi.fn() as typeof global.fetch;
+  // 2026-06-13 — sans clé, le batch est court-circuité (skip réseau).
+  // Pour tester le CHEMIN DE FETCH, on pose une clé factice.
+  process.env.CRYPTOCOMPARE_API_KEY = "test-key";
 });
 
 afterEach(() => {
   global.fetch = ORIGINAL_FETCH;
+  if (ORIGINAL_CC_KEY === undefined) delete process.env.CRYPTOCOMPARE_API_KEY;
+  else process.env.CRYPTOCOMPARE_API_KEY = ORIGINAL_CC_KEY;
 });
 
 function mockFetchResponse(body: unknown, ok = true, status = 200): typeof global.fetch {
@@ -70,6 +76,30 @@ describe("cryptocompare batch fetcher", () => {
     expect(result?.priceUsd).toBe(80000);
     expect(result?.change24h).toBe(-1.5);
     expect(result?.marketCap).toBe(1500000000000);
+  });
+
+  it("SANS clé API : skip réseau (aucun fetch) et retourne null", async () => {
+    delete process.env.CRYPTOCOMPARE_API_KEY;
+    const fetchSpy = mockFetchResponse({
+      RAW: { BTC: { USD: { PRICE: 80000, CHANGEPCT24HOUR: 0, MKTCAP: 0, TOTALVOLUME24HTO: 0 } } },
+    });
+    global.fetch = fetchSpy;
+    const { getCryptoComparePrice } = await import("@/lib/cryptocompare");
+    const result = await getCryptoComparePrice("BTC");
+    expect(result).toBeNull();
+    expect(fetchSpy).not.toHaveBeenCalled(); // pas de 401, pas d'appel réseau
+  });
+
+  it("AVEC clé API : envoie le header authorization Apikey", async () => {
+    const fetchSpy = mockFetchResponse({
+      RAW: { BTC: { USD: { PRICE: 80000, CHANGEPCT24HOUR: 0, MKTCAP: 0, TOTALVOLUME24HTO: 0 } } },
+    });
+    global.fetch = fetchSpy;
+    const { getCryptoComparePrice } = await import("@/lib/cryptocompare");
+    await getCryptoComparePrice("BTC");
+    const call = (fetchSpy as unknown as ReturnType<typeof vi.fn>).mock.calls[0];
+    const headers = (call?.[1] as { headers?: Record<string, string> })?.headers ?? {};
+    expect(headers.authorization).toBe("Apikey test-key");
   });
 
   it("retourne null si CryptoCompare repond Response:Error", async () => {

@@ -63,9 +63,16 @@ interface CryptoCompareRawResponse {
  */
 async function _fetchOneChunk(chunk: string[], fetchedAt: string): Promise<Record<string, CryptoComparePriceData>> {
   const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${chunk.join(",")}&tsyms=USD`;
+  // 2026-06-13 — CryptoCompare exige désormais une clé (HTTP 401 sans, vu
+  // en prod Vercel via `vercel logs`). La clé est OPTIONNELLE : si absente
+  // le batch est court-circuité en amont (cf. _fetchBatch), on n'arrive
+  // donc ici qu'avec une clé valide.
+  const apiKey = process.env.CRYPTOCOMPARE_API_KEY;
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (apiKey) headers.authorization = `Apikey ${apiKey}`;
   const res = await fetch(url, {
     signal: AbortSignal.timeout(12000),
-    headers: { Accept: "application/json" },
+    headers,
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} for ${chunk.length} symbols`);
@@ -94,6 +101,15 @@ async function _fetchOneChunk(chunk: string[], fetchedAt: string): Promise<Recor
 }
 
 async function _fetchBatch(): Promise<Record<string, CryptoComparePriceData>> {
+  // SKIP PROPRE — sans clé API, CryptoCompare renvoie 401 sur chaque chunk
+  // (constaté en prod). On ne tente même pas le réseau : retour vide → la
+  // cascade tombe instantanément sur CoinGecko (chaîne gratuite déjà en
+  // place), sans 401 ni spam de logs. Pour réactiver CC : poser
+  // CRYPTOCOMPARE_API_KEY (offre gratuite cryptocompare.com).
+  if (!process.env.CRYPTOCOMPARE_API_KEY) {
+    return {};
+  }
+
   const fetchedAt = new Date().toISOString();
   const result: Record<string, CryptoComparePriceData> = {};
 
