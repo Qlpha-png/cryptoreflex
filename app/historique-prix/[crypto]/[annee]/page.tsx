@@ -65,16 +65,28 @@ export function generateMetadata({ params }: Props): Metadata {
   const c = getCryptoBySlug(params.crypto);
   if (!c || !YEARS.includes(params.annee as Annee))
     return { robots: { index: false, follow: false } };
-  const title = `Prix ${c.name} (${c.symbol}) en ${params.annee} — historique annuel`;
-  const description = `Évolution du prix ${c.name} en ${params.annee} : ouverture, clôture, plus haut, plus bas, événements majeurs. Données vérifiées Cryptoreflex.`;
+  const annee = params.annee as Annee;
+  // FIX 2026-06-13 — (a) ne plus PROMETTRE des prix OHLC (ouverture/clôture/
+  // haut/bas) que la page ne rend pas encore, ni « Données vérifiées » : c'est
+  // une promesse non tenue (règle éditoriale #1). (b) noindex les couples où la
+  // crypto n'existait pas encore : page garantie vide → on la retire de l'index
+  // (mais follow) pour ne pas gâcher le budget de crawl ni diluer le cluster.
+  const didNotExist = Number(annee) < c.yearCreated;
+  const title = didNotExist
+    ? `${c.name} (${c.symbol}) en ${annee} : avant son lancement`
+    : `Prix ${c.name} (${c.symbol}) en ${annee} : contexte et repères`;
+  const description = didNotExist
+    ? `${c.name} (${c.symbol}) a été lancé en ${c.yearCreated} : le projet n'existait pas encore en ${annee}, il n'y a donc pas de prix de marché.`
+    : `${c.name} (${c.symbol}) en ${annee} : contexte macro du marché crypto, événements marquants et repères pour situer le projet cette année-là.`;
   return {
     title,
     description,
-    alternates: withHreflang(`${BRAND.url}/historique-prix/${c.id}/${params.annee}`),
+    ...(didNotExist ? { robots: { index: false, follow: true } } : {}),
+    alternates: withHreflang(`${BRAND.url}/historique-prix/${c.id}/${annee}`),
     openGraph: {
       title,
       description,
-      url: `${BRAND.url}/historique-prix/${c.id}/${params.annee}`,
+      url: `${BRAND.url}/historique-prix/${c.id}/${annee}`,
       type: "article",
     },
   };
@@ -97,6 +109,12 @@ const MACRO_EVENTS: Record<Annee, string[]> = {
 // partir des champs locaux (yearCreated, category) — aucune donnée inventée.
 // Le cas "n'existait pas encore" est un vrai signal utile (et explique
 // pourquoi certaines années n'ont pas de prix de marché).
+function firstSentence(s?: string): string {
+  if (!s) return "";
+  const cut = s.split(". ")[0].trim();
+  return cut.replace(/\.?$/, ".");
+}
+
 function buildIntro(c: AnyCrypto, annee: Annee): string {
   const y = Number(annee);
   const age = y - c.yearCreated;
@@ -104,10 +122,13 @@ function buildIntro(c: AnyCrypto, annee: Annee): string {
   if (age < 0) {
     return `Important : ${c.name} (${c.symbol}) n'existait pas encore en ${annee} — le projet a été lancé en ${c.yearCreated}. Il n'y a donc pas de prix de marché pour cette année-là. Pour suivre son parcours réel, commencez à son année de lancement.`;
   }
+  // Phrase descriptive propre à la crypto (champ `what`, commun top10/gems) :
+  // c'est ce qui casse la quasi-duplication entre deux cryptos d'une même année.
+  const desc = `${c.name} (${c.symbol}) — ${cat}. ${firstSentence(c.what)}`;
   if (age === 0) {
-    return `${annee} est l'année de lancement de ${c.name} (${c.symbol}), positionné sur « ${cat} ». Les premiers prix de marché apparaissent cette année-là : volatilité élevée et faible profondeur de marché sont typiques d'un actif naissant.`;
+    return `${annee} est l'année de lancement de ${c.name}. ${desc} Les premiers prix de marché apparaissent cette année-là : volatilité élevée et faible profondeur de marché sont typiques d'un actif naissant.`;
   }
-  return `En ${annee}, ${c.name} (${c.symbol}) — ${cat} — avait ${age} an${age > 1 ? "s" : ""} d'existence (lancé en ${c.yearCreated}). On replace ci-dessous son évolution de prix dans le contexte macro du marché crypto de l'année.`;
+  return `En ${annee}, ${c.name} avait ${age} an${age > 1 ? "s" : ""} d'existence (lancé en ${c.yearCreated}). ${desc} On replace ci-dessous le projet dans le contexte macro du marché crypto de l'année.`;
 }
 
 export default function HistoriquePrixPage({ params }: Props) {
@@ -158,9 +179,9 @@ export default function HistoriquePrixPage({ params }: Props) {
             <span className="gradient-text">{annee}</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Évolution du prix de {c.name} sur l&apos;année {annee} : ouverture,
-            clôture, plus haut historique, plus bas, et les événements macro
-            qui ont marqué le marché crypto cette année-là.
+            {c.name} sur l&apos;année {annee} : le contexte macro du marché
+            crypto, les événements marquants et des repères pour situer le
+            projet cette année-là.
           </p>
           <p className="mt-3 text-base text-fg/75 leading-relaxed max-w-3xl">
             {buildIntro(c, annee)}
@@ -169,7 +190,7 @@ export default function HistoriquePrixPage({ params }: Props) {
 
         <div className="mt-8">
           <Tldr
-            headline={`En ${annee}, ${c.name} a évolué dans un contexte macro spécifique. Voici les chiffres clés et événements marquants.`}
+            headline={`En ${annee}, ${c.name} a évolué dans un contexte macro spécifique. Voici les événements marquants et les repères de l'année.`}
             bullets={events.map((e) => ({ emoji: "📅", text: e }))}
             readingTime="3 min"
             level="Tous niveaux"
@@ -206,8 +227,8 @@ export default function HistoriquePrixPage({ params }: Props) {
               </h2>
               <p className="mt-2 text-sm text-fg/80 leading-relaxed">
                 Pour visualiser l&apos;évolution complète (chart interactif,
-                ATH/ATL, volume, volatilité) du prix {c.name} en {annee}, utilise
-                notre simulateur ROI sur la fiche détaillée. Sélectionne la date
+                ATH/ATL, volume, volatilité) du prix {c.name} en {annee}, utilisez
+                notre simulateur ROI sur la fiche détaillée. Sélectionnez la date
                 de départ {annee} pour voir le rendement à aujourd&apos;hui.
               </p>
               <Link

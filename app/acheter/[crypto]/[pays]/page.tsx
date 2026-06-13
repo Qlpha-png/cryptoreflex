@@ -274,6 +274,13 @@ export default function AcheterPaysPage({ params }: Props) {
           </p>
         </header>
 
+        {/* Bloc éditorial par crypto (FIX 2026-06-13) — avant, les 600 pages
+            /acheter n'exploitaient AUCUN champ propre à la crypto (what,
+            useCase, forces/risques) → quasi-duplication entre pays et entre
+            cryptos. Ces blocs 100 % data-locaux différencient chaque page sans
+            la moindre donnée inventée. Wording neutre/éducatif (pas de conseil). */}
+        <CryptoEditorialBlocks c={c} />
+
         {/* Plateformes recommandées */}
         <section className="mt-10">
           <h2 className="text-2xl font-bold tracking-tight">Plateformes recommandées</h2>
@@ -440,5 +447,112 @@ export default function AcheterPaysPage({ params }: Props) {
         </div>
       </div>
     </article>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Bloc éditorial par crypto — 100 % dérivé de la data locale (AnyCrypto).   */
+/*  Discriminé sur c.kind : top10 (forces/faiblesses + fiche technique) vs    */
+/*  hidden-gem (pourquoi surveiller + risques + indicateurs). Aucun conseil.  */
+/* -------------------------------------------------------------------------- */
+
+function EditorialStat({ label, value }: { label: string; value: string }) {
+  if (!value) return null;
+  return (
+    <div className="rounded-lg border border-border bg-surface px-3 py-2">
+      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dd className="mt-0.5 text-sm font-semibold text-fg">{value}</dd>
+    </div>
+  );
+}
+
+function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
+  return (
+    <section className="mt-10 space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Comprendre {c.name}</h2>
+        <p className="mt-3 text-sm sm:text-base text-fg/80 leading-relaxed">{c.what}</p>
+        {c.useCase && (
+          <p className="mt-2 text-sm text-fg/70 leading-relaxed">
+            <span className="font-semibold text-fg/85">Usage principal :</span> {c.useCase}
+          </p>
+        )}
+      </div>
+
+      {c.kind === "top10" ? (
+        <>
+          {(c.strengths.length > 0 || c.weaknesses.length > 0) && (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {c.strengths.length > 0 && (
+                <div className="rounded-xl border border-accent-green/25 bg-accent-green/5 p-4">
+                  <h3 className="text-sm font-bold text-accent-green">Points forts</h3>
+                  <ul className="mt-2 space-y-1.5">
+                    {c.strengths.map((s) => (
+                      <li key={s} className="text-sm text-fg/80 flex gap-2">
+                        <span aria-hidden className="text-accent-green">+</span>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {c.weaknesses.length > 0 && (
+                <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
+                  <h3 className="text-sm font-bold text-amber-300">Points de vigilance</h3>
+                  <ul className="mt-2 space-y-1.5">
+                    {c.weaknesses.map((w) => (
+                      <li key={w} className="text-sm text-fg/80 flex gap-2">
+                        <span aria-hidden className="text-amber-300">!</span>
+                        {w}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <EditorialStat label="Consensus" value={c.consensus} />
+            <EditorialStat label="Temps de bloc" value={c.blockTime} />
+            <EditorialStat label="Offre max" value={c.maxSupply} />
+            <EditorialStat label="Profil de risque" value={c.riskLevel} />
+          </dl>
+        </>
+      ) : (
+        <>
+          {c.whyHiddenGem && (
+            <div className="rounded-xl border border-border bg-surface p-4">
+              <h3 className="text-sm font-bold text-fg">Pourquoi {c.name} est à surveiller</h3>
+              <p className="mt-2 text-sm text-fg/80 leading-relaxed">{c.whyHiddenGem}</p>
+            </div>
+          )}
+          {c.risks.length > 0 && (
+            <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
+              <h3 className="text-sm font-bold text-amber-300">Risques à connaître</h3>
+              <ul className="mt-2 space-y-1.5">
+                {c.risks.map((r) => (
+                  <li key={r} className="text-sm text-fg/80 flex gap-2">
+                    <span aria-hidden className="text-amber-300">!</span>
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {c.monitoringSignals.length > 0 && (
+            <div>
+              <h3 className="text-sm font-bold text-fg">Indicateurs à suivre</h3>
+              <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                {c.monitoringSignals.map((m) => (
+                  <li key={m} className="text-sm text-fg/75">
+                    • {m}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }

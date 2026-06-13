@@ -36,6 +36,7 @@ import {
   FIAT_CODES,
   fetchConversionRate,
 } from "@/lib/historical-prices";
+import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 
 interface PageProps {
@@ -120,6 +121,17 @@ export default async function PairPage({ params }: PageProps) {
   const fromUp = from.toUpperCase();
   const toUp = to.toUpperCase();
 
+  // FIX 2026-06-13 — Texte unique par paire : on résout chaque côté par SYMBOLE
+  // (et non par id, car from/to sont des symboles type "btc") dans la base
+  // éditoriale. Null-safe : les fiats et tokens absents de la base ne rendent
+  // simplement pas de bloc. 100 % data-local, zéro hallucination.
+  const bySymbol = (sym: string) =>
+    getAllCryptos().find((c) => c.symbol.toLowerCase() === sym.toLowerCase());
+  const fromCrypto = bySymbol(from);
+  const toCrypto = bySymbol(to);
+  const firstSentence = (s?: string) =>
+    s ? s.split(". ")[0].trim().replace(/\.?$/, ".") : "";
+
   // Pré-fetch côté serveur pour avoir un H1 dynamique
   const rate = await fetchConversionRate(from, to);
 
@@ -197,13 +209,40 @@ export default async function PairPage({ params }: PageProps) {
             <Converter defaultFrom={from} defaultTo={to} defaultAmount={1} />
           </div>
 
+          {/* À propos des actifs de la paire (FIX 2026-06-13) — blocs uniques
+              par crypto issus de la base éditoriale (tagline + what + useCase).
+              La combinaison X+Y donne 2-4 phrases distinctes par paire, ce qui
+              différencie ~150 pages auparavant quasi superposables. */}
+          {(fromCrypto || toCrypto) && (
+            <div className="mt-10 max-w-3xl space-y-3">
+              {fromCrypto && (
+                <p className="text-white/70 leading-relaxed">
+                  <strong className="text-white">À propos de {fromName} :</strong>{" "}
+                  {fromCrypto.tagline}. {firstSentence(fromCrypto.what)}{" "}
+                  <span className="text-white/60">
+                    Usage principal : {firstSentence(fromCrypto.useCase)}
+                  </span>
+                </p>
+              )}
+              {toCrypto && (
+                <p className="text-white/70 leading-relaxed">
+                  <strong className="text-white">À propos de {toName} :</strong>{" "}
+                  {toCrypto.tagline}. {firstSentence(toCrypto.what)}{" "}
+                  <span className="text-white/60">
+                    Usage principal : {firstSentence(toCrypto.useCase)}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Texte SEO */}
           <div className="mt-12 max-w-3xl prose prose-invert">
             <h2 className="text-2xl font-bold text-white">
               Convertisseur {fromName} → {toName}
             </h2>
             <p className="text-white/70">
-              Cette page te permet de convertir{" "}
+              Cette page vous permet de convertir{" "}
               <strong className="text-white">{fromName} ({fromUp})</strong> en{" "}
               <strong className="text-white">{toName} ({toUp})</strong> avec le taux
               de change marché actuel. Les données proviennent de l'API CoinGecko,
@@ -211,12 +250,12 @@ export default async function PairPage({ params }: PageProps) {
               (Binance, Coinbase, Kraken…). Le taux est rafraîchi toutes les 60 secondes.
             </p>
             <p className="text-white/70 mt-3">
-              Pour une conversion réelle (achat / vente), passe par une plateforme
+              Pour une conversion réelle (achat / vente), passez par une plateforme
               régulée MiCA en France. Notre{" "}
               <Link href="/comparatif" className="text-primary-soft hover:text-primary-glow">
                 comparatif des plateformes crypto
               </Link>{" "}
-              t'aide à choisir celle avec les frais les plus bas pour la paire {fromUp}/{toUp}.
+              vous aide à choisir celle avec les frais les plus bas pour la paire {fromUp}/{toUp}.
             </p>
           </div>
 
