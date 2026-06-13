@@ -368,11 +368,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // hedera-hashgraph, ethereum-classic, maker) → 81 URLs sitemap en vrai 404,
   // et n'exposait que 30 cryptos alors que 100 sont buildées (~630 manquantes).
   // Page 100 % synchrone (aucun fetch) → lister toutes ces URLs n'ajoute pas d'I/O.
-  const HIST_CRYPTOS = getAllCryptos().map((c) => c.id);
+  // FIX 2026-06-13 (bis) — aligner sitemap ↔ meta-robots. La page noindexe les
+  // couples pré-existence (annee < yearCreated). Lister ces ~184 URLs noindex
+  // au sitemap = signal de pollution. Le filtre `>= yearCreated` est le
+  // complément exact de la condition noindex de la page : on conserve TOUS les
+  // couples indexables (716), on retire seulement les noindex. generateStaticParams
+  // (donc le prerender) reste inchangé sur les 900 couples.
   const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
-  const historiquePrixRoutes: MetadataRoute.Sitemap = HIST_CRYPTOS.flatMap((crypto) =>
-    HIST_YEARS.map((annee) => ({
-      url: `${SITE_URL}/historique-prix/${crypto}/${annee}`,
+  const historiquePrixRoutes: MetadataRoute.Sitemap = getAllCryptos().flatMap((c) =>
+    HIST_YEARS.filter((annee) => Number(annee) >= c.yearCreated).map((annee) => ({
+      url: `${SITE_URL}/historique-prix/${c.id}/${annee}`,
       lastModified: now,
       changeFrequency: "yearly" as const,
       priority: 0.55,

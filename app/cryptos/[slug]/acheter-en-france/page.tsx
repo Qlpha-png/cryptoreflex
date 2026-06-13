@@ -54,14 +54,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const title = `Acheter ${meta.name} (${meta.symbol}) en France 2026 — guide pas-à-pas`;
   const description = `Comment acheter du ${meta.name} (${meta.symbol}) en France en 2026 : meilleures plateformes MiCA, frais réels, méthodes de paiement (CB, virement SEPA), fiscalité PFU 31,4%. Guide Cryptoreflex.`;
+  // FIX 2026-06-13 — duplicate-content / cannibalisation : cette page legacy et
+  // /acheter/{id}/fr ciblent la même intention « acheter X en France ». On
+  // canonicalise vers le cluster /acheter (plus riche, maillé, funnel /avis)
+  // QUAND il existe (getCryptoBySlug = top10+gems ; absent pour ADDITIONAL_CRYPTOS),
+  // sinon self-canonical. La page reste indexable, Google consolide les signaux.
+  const hasClusterPage = !!getCryptoBySlug(meta.id);
+  const canonicalUrl = hasClusterPage
+    ? `${BRAND.url}/acheter/${meta.id}/fr`
+    : `${BRAND.url}/cryptos/${meta.id}/acheter-en-france`;
   return {
     title,
     description,
-    alternates: withHreflang(`${BRAND.url}/cryptos/${meta.id}/acheter-en-france`),
+    alternates: withHreflang(canonicalUrl),
     openGraph: {
       title,
       description,
-      url: `${BRAND.url}/cryptos/${meta.id}/acheter-en-france`,
+      url: canonicalUrl,
       type: "article",
     },
   };

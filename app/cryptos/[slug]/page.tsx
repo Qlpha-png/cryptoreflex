@@ -290,17 +290,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { robots: { index: false, follow: false } };
   }
   const isGem = c.kind === "hidden-gem";
-  // BATCH 23 SEO P0 #2 — titles raccourcis pour rester < 60 chars (avant
-  // certains > 80 chars tronqués SERP). Le pattern "${c.name} ${c.symbol} :
-  // prix, où acheter en France" tient pour les noms < 25 chars.
+  // BATCH 23 SEO P0 #2 — titles raccourcis pour rester <= 60 chars SERP.
+  // ATTENTION (FIX 2026-06-13) : le root layout (app/layout.tsx) applique le
+  // template "%s | Cryptoreflex" qui AJOUTE 15 chars → budget réel pour %s = 45.
+  // L'ancien "prix, où acheter en France 2026" faisait dépasser 7/10 top coins.
+  // Le pattern ci-dessous (max ~44 pour "Avalanche") tient avec le suffixe.
   // AUDIT 2026-05-03 — fix doublon "| Cryptoreflex" sur les hidden gems
-  // (root layout applique deja template). Et ajout twitter card explicite
-  // pour eviter le fallback global generique (les 100 fiches /cryptos
-  // affichaient le tweet "Cryptoreflex — Tout pour investir..." au lieu
-  // du contenu specifique a la crypto).
+  // (root layout applique deja template). Et ajout twitter card explicite.
   const title = isGem
     ? `${c.name} (${c.symbol}) — Hidden Gem 2026`
-    : `${c.name} (${c.symbol}) : prix, où acheter en France 2026`;
+    : `${c.name} (${c.symbol}) : prix et achat France 2026`;
   const description = isGem
     ? `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, score de fiabilité, risques, plateformes régulées MiCA pour acheter en France. Analyse Cryptoreflex.`
     : `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, ce que c'est, à quoi ça sert, forces/faiblesses et où acheter en France sur des plateformes régulées MiCA.`;
