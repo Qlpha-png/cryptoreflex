@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, TrendingUp, Calendar, Info } from "lucide-react";
 
-import { getAllCryptos, getCryptoBySlug } from "@/lib/cryptos";
+import { getAllCryptos, getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import {
@@ -93,6 +93,23 @@ const MACRO_EVENTS: Record<Annee, string[]> = {
   "2026": ["MiCA Phase 2 enforcement (ESMA, Q2)", "Cycle post-halving en cours", "Tokenisation RWA accélérée (Ondo, BlackRock BUIDL)", "Année partielle — données mises à jour mensuellement"],
 };
 
+// Intro data-derivée, unique par couple (crypto, année). 100 % calculée à
+// partir des champs locaux (yearCreated, category) — aucune donnée inventée.
+// Le cas "n'existait pas encore" est un vrai signal utile (et explique
+// pourquoi certaines années n'ont pas de prix de marché).
+function buildIntro(c: AnyCrypto, annee: Annee): string {
+  const y = Number(annee);
+  const age = y - c.yearCreated;
+  const cat = c.category.toLowerCase();
+  if (age < 0) {
+    return `Important : ${c.name} (${c.symbol}) n'existait pas encore en ${annee} — le projet a été lancé en ${c.yearCreated}. Il n'y a donc pas de prix de marché pour cette année-là. Pour suivre son parcours réel, commencez à son année de lancement.`;
+  }
+  if (age === 0) {
+    return `${annee} est l'année de lancement de ${c.name} (${c.symbol}), positionné sur « ${cat} ». Les premiers prix de marché apparaissent cette année-là : volatilité élevée et faible profondeur de marché sont typiques d'un actif naissant.`;
+  }
+  return `En ${annee}, ${c.name} (${c.symbol}) — ${cat} — avait ${age} an${age > 1 ? "s" : ""} d'existence (lancé en ${c.yearCreated}). On replace ci-dessous son évolution de prix dans le contexte macro du marché crypto de l'année.`;
+}
+
 export default function HistoriquePrixPage({ params }: Props) {
   const c = getCryptoBySlug(params.crypto);
   if (!c || !YEARS.includes(params.annee as Annee)) {
@@ -144,6 +161,9 @@ export default function HistoriquePrixPage({ params }: Props) {
             Évolution du prix de {c.name} sur l&apos;année {annee} : ouverture,
             clôture, plus haut historique, plus bas, et les événements macro
             qui ont marqué le marché crypto cette année-là.
+          </p>
+          <p className="mt-3 text-base text-fg/75 leading-relaxed max-w-3xl">
+            {buildIntro(c, annee)}
           </p>
         </header>
 

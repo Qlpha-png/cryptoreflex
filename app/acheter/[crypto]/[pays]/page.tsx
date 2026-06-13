@@ -266,7 +266,10 @@ export default function AcheterPaysPage({ params }: Props) {
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">
             Comment acheter {c.name} en {country.name} en 2026
           </h1>
-          <p className="mt-3 text-base text-muted">
+          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-3xl">
+            {`Acheter ${c.name} (${c.symbol}) depuis ${country.name} passe par une plateforme régulée — agréée MiCA dans l'UE ou supervisée par l'autorité compétente (${country.regulator}) — avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; notre base recense ${c.whereToBuy.length} plateforme${c.whereToBuy.length > 1 ? "s" : ""} où l'acquérir. Étapes (compte, KYC, dépôt, achat, sécurisation) et fiscalité applicable détaillées ci-dessous — information éducative, jamais un conseil d'investissement.`}
+          </p>
+          <p className="mt-3 text-sm text-muted">
             Guide MiCA · plateformes régulées · fiscalité {country.regulator} · paiement en {country.currency}
           </p>
         </header>
