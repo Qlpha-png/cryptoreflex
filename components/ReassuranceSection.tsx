@@ -121,31 +121,6 @@ function useInView<T extends HTMLElement>() {
   return { ref, seen };
 }
 
-/** Timestamp relatif "il y a Xh" — refresh client toutes les 60s.
- *  BATCH 54 — useRef(new Date()) cause mismatch SSR vs client (timestamp
- *  initial different). Maintenant : pas de baseDate prop, on calcule
- *  directement Date.now() - 4h dans useEffect (client only). Initial
- *  state "il y a 4h" stable des 2 cotes.
- */
-function useRelativeTime() {
-  const [label, setLabel] = useState("il y a 4 h");
-  useEffect(() => {
-    // Reset baseDate au mount client (4h dans le passé)
-    const baseTime = Date.now() - 4 * 60 * 60 * 1000;
-    const compute = () => {
-      const diffMin = Math.floor((Date.now() - baseTime) / 60000);
-      if (diffMin < 1) setLabel("à l'instant");
-      else if (diffMin < 60) setLabel(`il y a ${diffMin} min`);
-      else if (diffMin < 1440) setLabel(`il y a ${Math.floor(diffMin / 60)} h`);
-      else setLabel(`il y a ${Math.floor(diffMin / 1440)} j`);
-    };
-    compute();
-    const id = setInterval(compute, 60_000);
-    return () => clearInterval(id);
-  }, []);
-  return label;
-}
-
 /** Countdown MiCA Phase 2 — refresh 60s.
  *  BATCH 53 #1 — Fix React #425 home (audit 2026-05-03). Avant :
  *  useState(MICA_PHASE2_DEADLINE - Date.now()) appele Date.now() au
@@ -263,10 +238,6 @@ function KpiCard({
 }
 
 export default function ReassuranceSection() {
-  // BATCH 54 — useRelativeTime ne prend plus de baseDate prop. La logique
-  // est interne au hook qui utilise useEffect (client only) pour eviter
-  // le mismatch SSR vs client (avant : useRef(new Date()) different).
-  const relTime = useRelativeTime();
   const micaDays = useMicaCountdown();
 
   return (
@@ -288,21 +259,21 @@ export default function ReassuranceSection() {
               </span>
             </div>
             <h2 className="text-h3 sm:text-h2 font-extrabold tracking-tight text-fg leading-tight">
-              Conformité <span className="gradient-text">vérifiée en continu</span>
+              Statut MiCA <span className="gradient-text">rapproché des registres</span>
             </h2>
             <p className="mt-2 text-sm text-muted max-w-xl leading-relaxed">
-              Chaque plateforme listée est confrontée aux registres officiels.
-              Méthodologie publique, sources tracées, aucune autorité prêtée.
-              Si on dit «&nbsp;conforme MiCA&nbsp;», c&apos;est qu&apos;on l&apos;a vérifié dans le registre.
+              Le statut réglementaire de chaque plateforme est rapproché des
+              registres officiels AMF/ESMA et revu manuellement. Méthodologie
+              publique, sources tracées, aucune autorité prêtée. Le badge
+              «&nbsp;Agréé MiCA&nbsp;» n&apos;est affiché que pour les acteurs
+              titulaires d&apos;un agrément CASP&nbsp;; à recouper avec le
+              registre ESMA officiel.
             </p>
           </div>
           <div className="flex flex-col gap-1 items-end text-xs text-muted">
             <div className="flex items-center gap-2">
               <Activity className="h-3.5 w-3.5 text-success-fg" />
-              <span>Dernière vérif. ESMA register :</span>
-              <span className="font-mono font-semibold text-fg tabular-nums">
-                {relTime}
-              </span>
+              <span>Revue manuelle · source : registre ESMA/AMF</span>
             </div>
           </div>
         </div>

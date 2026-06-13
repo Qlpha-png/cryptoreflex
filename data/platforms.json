@@ -117,12 +117,12 @@
         "catalogue": 5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Binance France",
+        "status": "Agrément MiCA en cours — dossier AMF/Luxembourg (non agréé au 06/2026)",
         "amfRegistration": "E2022-037",
         "registrationDate": "2022-05-04",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0.1,
@@ -1560,9 +1560,9 @@
         "status": "PSAN AMF (transition CASP en cours)",
         "amfRegistration": "E2020-001",
         "registrationDate": "2020-03-25",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0.59,
@@ -1643,9 +1643,9 @@
         "status": "PSAN AMF + agrément EME (CASP en cours)",
         "amfRegistration": "E2024-018",
         "registrationDate": "2024-06-12",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 1,
@@ -1904,9 +1904,9 @@
         "status": "Service crypto via partenariat Bitpanda (Allemagne BaFin)",
         "amfRegistration": "BaFin-Bitpanda-N26-2024",
         "registrationDate": "2024-04-01",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 1.5,
@@ -2068,9 +2068,9 @@
         "status": "Agrément MiCA en cours (Lituanie Bank of Lithuania)",
         "amfRegistration": "BoL-CASP-WRX-2025",
         "registrationDate": "2025-07-10",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0,
@@ -2325,9 +2325,9 @@
         "status": "Agrément MiCA en cours (entité européenne)",
         "amfRegistration": "À confirmer ESMA register",
         "registrationDate": null,
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": true,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0.1,
@@ -2495,9 +2495,9 @@
         "status": "Agrément CFD MiFID II + crypto via filiale CASP Chypre CySEC",
         "amfRegistration": "CySEC-CASP-P500-2025",
         "registrationDate": "2025-02-01",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0,
@@ -2663,9 +2663,9 @@
         "status": "Broker actions/ETF + CFD crypto (CASP Chypre CySEC en cours)",
         "amfRegistration": "CySEC-CASP-T212-2025",
         "registrationDate": "2025-03-15",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0,
@@ -2747,9 +2747,9 @@
         "status": "PSAN AMF (transition CASP en cours)",
         "amfRegistration": "E2021-024",
         "registrationDate": "2021-11-08",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 1,
@@ -2829,9 +2829,9 @@
         "status": "PSAN AMF (transition CASP)",
         "amfRegistration": "E2020-007",
         "registrationDate": "2020-09-15",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 1.5,
@@ -2917,9 +2917,9 @@
         "status": "PSAN AMF (transition CASP)",
         "amfRegistration": "E2021-016",
         "registrationDate": "2021-07-22",
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 1.5,

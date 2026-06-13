@@ -25,9 +25,9 @@
         "status": "Hors périmètre MiCA (matériel autocustody, pas de garde de fonds tiers)",
         "amfRegistration": null,
         "registrationDate": null,
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0,
@@ -113,9 +113,9 @@
         "status": "Hors périmètre MiCA (matériel autocustody, pas de garde de fonds tiers)",
         "amfRegistration": null,
         "registrationDate": null,
-        "micaCompliant": true,
+        "micaCompliant": false,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-06-13"
       },
       "fees": {
         "spotMaker": 0,
