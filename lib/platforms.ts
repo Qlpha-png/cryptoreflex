@@ -37,6 +37,35 @@ export interface Platform {
     withdrawalCrypto: string;
     withdrawalFiatSepa: number | string;
     spread: string;
+    /**
+     * Frais vérifiés sur grille officielle (ou recoupement 2+ sources <6 mois),
+     * sourcés + datés. Ajouté le 2026-06-13 (audit "frais réels", 3 lots de
+     * 2 finders + 1 adversarial). Source de vérité pour /comparatif/frais.
+     * Si absent : la plateforme n'a pas (encore) été re-vérifiée individuellement.
+     */
+    verified?: {
+      /** Date de vérification, ISO (YYYY-MM-DD). */
+      date: string;
+      /** URL de la source (officielle si lisible, sinon tierce fiable datée). */
+      source: string;
+      /** Modèle économique réel — détermine si maker/taker a un sens. */
+      model:
+        | "exchange"
+        | "courtier"
+        | "carte"
+        | "cfd"
+        | "on-ramp"
+        | "dca"
+        | "hybride";
+      /** false pour les courtiers/apps/CFD : ne PAS afficher maker/taker. */
+      makerTakerApplies: boolean;
+      /** Frais réel pour un particulier (achat simple), libellé prêt à afficher. */
+      realCostPct: string;
+      /** fiable = publiable tel quel ; douteux/non vérifiable = afficher "à vérifier" ; indisponible = retirer du marché FR. */
+      verdict: "fiable" | "douteux" | "non vérifiable" | "indisponible";
+      /** Pièges à signaler (spread caché, réduction token, frais fixe, CFD, inactivité…). */
+      note?: string;
+    };
   };
   deposit: { minEur: number; methods: string[] };
   cryptos: { totalCount: number; stakingAvailable: boolean; stakingCryptos: string[] };
