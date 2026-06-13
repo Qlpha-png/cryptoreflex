@@ -35,7 +35,16 @@
         "instantBuy": 0,
         "withdrawalCrypto": "Frais réseau uniquement",
         "withdrawalFiatSepa": 0,
-        "spread": "Spread broker intégré (Ledger Live ~1-2%)"
+        "spread": "Spread broker intégré (Ledger Live ~1-2%)",
+        "verified": {
+          "date": "2026-06-13",
+          "source": "https://www.ledger.com",
+          "model": "carte",
+          "makerTakerApplies": false,
+          "realCostPct": "Pas de frais de trading (appareil) · achat in-app spread ~1-2 %",
+          "verdict": "fiable",
+          "note": "Ledger est un appareil d'autocustody : aucun frais maker/taker. Acheter de la crypto via Ledger Live passe par un partenaire (spread intégré ~1-2 %). Retrait = frais réseau uniquement. Prix de l'appareil : voir la boutique officielle."
+        }
       },
       "deposit": {
         "minEur": 0,
@@ -123,7 +132,16 @@
         "instantBuy": 0,
         "withdrawalCrypto": "Frais réseau uniquement",
         "withdrawalFiatSepa": 0,
-        "spread": "Spread partenaires intégré (Invity ~1-2.5%)"
+        "spread": "Spread partenaires intégré (Invity ~1-2.5%)",
+        "verified": {
+          "date": "2026-06-13",
+          "source": "https://trezor.io",
+          "model": "carte",
+          "makerTakerApplies": false,
+          "realCostPct": "Pas de frais de trading (appareil) · achat in-app spread ~1-2,5 %",
+          "verdict": "fiable",
+          "note": "Trezor est un appareil d'autocustody : aucun frais maker/taker. Acheter de la crypto via Trezor Suite passe par un partenaire (Invity, spread intégré ~1-2,5 %). Retrait = frais réseau uniquement. Prix de l'appareil : voir la boutique officielle."
+        }
       },
       "deposit": {
         "minEur": 0,

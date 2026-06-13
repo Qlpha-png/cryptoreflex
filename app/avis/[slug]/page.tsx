@@ -276,6 +276,7 @@ export default function ReviewPage({ params }: Props) {
   const available = isAvailableFr(p);
   const v = p.fees.verified;
   const mt = v?.makerTakerApplies ?? true;
+  const isWallet = p.category === "wallet";
   const verdictLabel =
     v?.verdict === "fiable"
       ? "Vérifié"
@@ -548,7 +549,7 @@ export default function ReviewPage({ params }: Props) {
             </div>
           )}
 
-          {mt ? (
+          {!isWallet && (mt ? (
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-border bg-elevated p-4">
@@ -603,7 +604,7 @@ export default function ReviewPage({ params }: Props) {
                 <strong className="text-fg/80">À noter :</strong> {p.name} est un courtier — il n&apos;y a pas de frais maker/taker séparés. Vous payez un frais unique (souvent assorti d&apos;un spread intégré au prix). Le détail vérifié figure dans «&nbsp;Frais réel vérifié&nbsp;» ci-dessus. Spread : {p.fees.spread}.
               </p>
             </>
-          )}
+          ))}
         </section>
 
         {/* SCORING DÉTAILLÉ */}
@@ -647,14 +648,16 @@ export default function ReviewPage({ params }: Props) {
                   </>
                 ) : (
                   <tr>
-                    <td className="px-4 py-3 text-muted">Frais d&apos;achat/vente (courtier)</td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotTaker}%</td>
+                    <td className="px-4 py-3 text-muted">{isWallet ? "Achat in-app (spread)" : "Frais d'achat/vente (courtier)"}</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{isWallet ? p.fees.spread : `${p.fees.spotTaker}%`}</td>
                   </tr>
                 )}
-                <tr>
-                  <td className="px-4 py-3 text-muted">Achat instantané (CB)</td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.instantBuy}%</td>
-                </tr>
+                {!isWallet && (
+                  <tr>
+                    <td className="px-4 py-3 text-muted">Achat instantané (CB)</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.instantBuy}%</td>
+                  </tr>
+                )}
                 <tr>
                   <td className="px-4 py-3 text-muted">Spread observé</td>
                   <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spread}</td>
