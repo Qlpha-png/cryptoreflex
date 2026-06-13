@@ -68,7 +68,11 @@ export async function generateStaticParams() {
   return TOP_PAIRS.map(({ from, to }) => ({ pair: `${from}-${to}` }));
 }
 
-export const dynamicParams = true; // accepter d'autres paires à la volée
+// 2026-06-13 — HARD 404 : generateStaticParams couvre déjà toutes les
+// paires valides (TOP_PAIRS) et le taux est re-fetché LIVE côté client →
+// dynamicParams=false rend un vrai 404 sur les paires hors-liste (au lieu
+// du soft-200 de notFound() sous ISR). Aligne « valide » = sitemap.
+export const dynamicParams = false;
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata par paire                                                        */
