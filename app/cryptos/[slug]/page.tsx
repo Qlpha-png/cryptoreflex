@@ -43,6 +43,7 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
+import { getYearOhlc, formatOhlcPrice } from "@/lib/historical-ohlc";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
@@ -985,6 +986,11 @@ export default async function CryptoPage({ params }: Props) {
           />
         </div>
 
+        {/* PERFORMANCE ANNUELLE (FIX 2026-06-13) — réutilise l'OHLC Binance réel
+            (lib/historical-ohlc). Données factuelles par année + maillage vers
+            /historique-prix. Rendu UNIQUEMENT si on a des données pour ce coin. */}
+        <AnnualPerformance cryptoId={c.id} cryptoName={c.name} />
+
         {/* ASK AI — Q&A IA contextuelle Pro-only, post-ROISimulator pour
             engager le visiteur déjà conquis par les outils interactifs.
             Free voit un lock + CTA Pro, Pro voit l'input fonctionnel.
@@ -1316,6 +1322,66 @@ function Spec({
       </div>
       <div className="mt-1 text-sm font-semibold text-fg">{value}</div>
     </div>
+  );
+}
+
+/**
+ * Performance annuelle — OHLC Binance réel (lib/historical-ohlc), USD.
+ * Rendu uniquement si on a des données ; sinon null (coin hors Binance).
+ * Chaque année lie vers /historique-prix/[id]/[année] (maillage interne).
+ */
+function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoName: string }) {
+  const PERF_YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+  const rows = PERF_YEARS.map((y) => {
+    const d = getYearOhlc(cryptoId, y);
+    return d ? { y, c: d.c, h: d.h, l: d.l, chg: d.chg } : null;
+  }).filter((r): r is { y: number; c: number; h: number; l: number; chg: number } => r !== null);
+
+  if (rows.length === 0) return null;
+
+  return (
+    <section className="mt-12">
+      <h2 className="text-2xl font-bold tracking-tight">Performance annuelle de {cryptoName}</h2>
+      <p className="mt-2 text-sm text-muted">
+        Clôture, plus haut, plus bas et variation (ouverture→clôture) par année — USD,
+        source Binance, indicatif.
+      </p>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs uppercase tracking-wider text-muted">
+              <th className="py-2 pr-4 font-semibold">Année</th>
+              <th className="py-2 pr-4 font-semibold">Clôture</th>
+              <th className="py-2 pr-4 font-semibold">Plus haut</th>
+              <th className="py-2 pr-4 font-semibold">Plus bas</th>
+              <th className="py-2 font-semibold">Variation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.y} className="border-t border-border">
+                <td className="py-2 pr-4 font-semibold">
+                  <Link href={`/historique-prix/${cryptoId}/${r.y}`} className="hover:text-primary-soft">
+                    {r.y}
+                  </Link>
+                </td>
+                <td className="py-2 pr-4 tabular-nums">{formatOhlcPrice(r.c)}</td>
+                <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.h)}</td>
+                <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.l)}</td>
+                <td
+                  className={`py-2 font-bold tabular-nums ${
+                    r.chg >= 0 ? "text-accent-green" : "text-accent-rose"
+                  }`}
+                >
+                  {r.chg >= 0 ? "+" : ""}
+                  {r.chg} %
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 
