@@ -151,9 +151,14 @@ export default function ComparatifFraisPage() {
   const flagged = all.filter(
     (r) => r.v?.verdict === "indisponible" || r.v?.model === "cfd"
   );
+  // Coût réel pour un particulier : taker pour un exchange order-book ; frais
+  // d'achat simple (instantBuy) pour un courtier/app — évite de flatter les
+  // hybrides (Nexo/Wirex/Young) dont le taux "Pro" cache un spread ~2% en App.
+  const realCost = (r: FeesRow) =>
+    (r.v?.makerTakerApplies ?? true) ? r.spotTaker : r.instantBuy;
   const active = all
     .filter((r) => r.v?.verdict !== "indisponible" && r.v?.model !== "cfd")
-    .sort((a, b) => a.spotTaker - b.spotTaker);
+    .sort((a, b) => realCost(a) - realCost(b));
 
   const cheapestTrade = active[0];
   const dearestBuy = [...active].sort((a, b) => b.instantBuy - a.instantBuy)[0];

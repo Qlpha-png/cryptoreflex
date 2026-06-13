@@ -4,10 +4,11 @@
     "source": "Recherche Cryptoreflex (à recouper avec données AMF/ESMA officielles avant publication)",
     "schemaVersion": "1.0",
     "bonusPolicy": "Les promotions/bonus crypto évoluent fréquemment et ne sont pas tous valides en zone UE/FR (durcissement post-MiCA). Pour rester conforme à la loi commerciale FR (pas de promesse engageante non vérifiée) on n'affiche plus de montant chiffré : libellé générique uniquement, l'utilisateur doit consulter les conditions sur la plateforme.",
-    "lastScored": "2026-05-02",
+    "lastScored": "2026-06-14",
     "scoringFormula": "global = 0.20·fees + 0.25·security + 0.20·mica + 0.15·ux + 0.10·support + 0.10·catalogue",
     "feesVerifiedAt": "2026-06-13",
-    "feesSource": "Frais re-vérifiés un par un sur grilles officielles (ou recoupement 2+ sources <6 mois), audit 2026-06-13 (3 lots adversariaux + re-contrôle manuel). Détail sourcé/daté dans fees.verified de chaque plateforme. Valeurs 'douteux' = à confirmer sur le site officiel."
+    "feesSource": "Frais re-vérifiés un par un sur grilles officielles (ou recoupement 2+ sources <6 mois), audit 2026-06-13 (3 lots adversariaux + re-contrôle manuel). Détail sourcé/daté dans fees.verified de chaque plateforme. Valeurs 'douteux' = à confirmer sur le site officiel.",
+    "scoringNote": "Note frais réalignée le 2026-06-14 sur le coût réel pour 11 courtiers sur-notés (frais auparavant sous-estimés). Global ajusté du delta pondéré (0,20 × Δ note frais). Autres plateformes inchangées."
   },
   "platforms": [
     {
@@ -1795,8 +1796,8 @@
       "websiteUrl": "https://deblock.com",
       "affiliateUrl": "https://deblock.com/r/cryptoreflex",
       "scoring": {
-        "global": 4,
-        "fees": 4,
+        "global": 3.6,
+        "fees": 2.2,
         "security": 4.5,
         "ux": 4.4,
         "support": 3.8,
@@ -1888,8 +1889,8 @@
       "websiteUrl": "https://nexo.com",
       "affiliateUrl": "https://nexo.com/?refId=cryptoreflex",
       "scoring": {
-        "global": 3.8,
-        "fees": 4,
+        "global": 3.4,
+        "fees": 2.2,
         "security": 3.8,
         "ux": 4.2,
         "support": 3.6,
@@ -1989,8 +1990,8 @@
       "websiteUrl": "https://moonpay.com",
       "affiliateUrl": "https://buy.moonpay.com?apiKey=cryptoreflex",
       "scoring": {
-        "global": 3.5,
-        "fees": 2.5,
+        "global": 3.2,
+        "fees": 1,
         "security": 4.2,
         "ux": 4.6,
         "support": 3,
@@ -2083,8 +2084,8 @@
       "websiteUrl": "https://n26.com",
       "affiliateUrl": "https://n26.com?utm_source=cryptoreflex",
       "scoring": {
-        "global": 3.6,
-        "fees": 2.8,
+        "global": 3.3,
+        "fees": 1.5,
         "security": 4,
         "ux": 4.5,
         "support": 3.5,
@@ -2174,8 +2175,8 @@
       "websiteUrl": "https://21bitcoin.app",
       "affiliateUrl": "https://21bitcoin.app/?ref=cryptoreflex",
       "scoring": {
-        "global": 3.9,
-        "fees": 4,
+        "global": 3.7,
+        "fees": 2.9,
         "security": 4.5,
         "ux": 4.5,
         "support": 3.8,
@@ -2265,8 +2266,8 @@
       "websiteUrl": "https://wirexapp.com",
       "affiliateUrl": "https://wirexapp.com?refer=cryptoreflex",
       "scoring": {
-        "global": 3.5,
-        "fees": 3.5,
+        "global": 3.2,
+        "fees": 2.2,
         "security": 3.8,
         "ux": 4,
         "support": 3.2,
@@ -2362,8 +2363,8 @@
       "websiteUrl": "https://youngplatform.com",
       "affiliateUrl": "https://youngplatform.com?ref=cryptoreflex",
       "scoring": {
-        "global": 3.6,
-        "fees": 3.6,
+        "global": 3.2,
+        "fees": 1.5,
         "security": 3.8,
         "ux": 4.4,
         "support": 3.7,
@@ -2737,8 +2738,8 @@
       "websiteUrl": "https://plus500.com",
       "affiliateUrl": "https://plus500.com?utm_source=cryptoreflex",
       "scoring": {
-        "global": 3.4,
-        "fees": 3,
+        "global": 3.2,
+        "fees": 2,
         "security": 4.2,
         "ux": 4.2,
         "support": 3.5,
@@ -2830,8 +2831,8 @@
       "websiteUrl": "https://anycoindirect.eu",
       "affiliateUrl": "https://anycoindirect.eu?ref=cryptoreflex",
       "scoring": {
-        "global": 3.5,
-        "fees": 3,
+        "global": 3.1,
+        "fees": 1,
         "security": 4,
         "ux": 4,
         "support": 3.6,
@@ -3016,8 +3017,8 @@
       "websiteUrl": "https://stackinsat.com",
       "affiliateUrl": "https://stackinsat.com?utm_source=cryptoreflex",
       "scoring": {
-        "global": 4,
-        "fees": 4,
+        "global": 3.5,
+        "fees": 1.5,
         "security": 4.6,
         "ux": 4.3,
         "support": 4.2,
@@ -3107,8 +3108,8 @@
       "websiteUrl": "https://just-mining.com",
       "affiliateUrl": "https://just-mining.com?utm_source=cryptoreflex",
       "scoring": {
-        "global": 3.5,
-        "fees": 3.4,
+        "global": 3.1,
+        "fees": 1.5,
         "security": 4,
         "ux": 3.8,
         "support": 4,

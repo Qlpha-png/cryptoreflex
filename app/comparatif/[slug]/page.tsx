@@ -93,6 +93,13 @@ interface CompareRow {
 function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: CompareRow[]; ux: CompareRow[]; support: CompareRow[] } {
   const fees: CompareRow[] = [
     {
+      label: "Frais réel (achat)",
+      aDisplay: a.fees.verified?.realCostPct ?? `${a.fees.instantBuy}%`,
+      bDisplay: b.fees.verified?.realCostPct ?? `${b.fees.instantBuy}%`,
+      hint: "tie",
+      note: "Coût réel pour un particulier (frais vérifié, sourcé et daté).",
+    },
+    {
       label: "Frais spot maker",
       aDisplay: `${a.fees.spotMaker}%`,
       bDisplay: `${b.fees.spotMaker}%`,

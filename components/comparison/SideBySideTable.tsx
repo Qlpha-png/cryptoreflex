@@ -72,7 +72,8 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Support (note)", a: a.scoring.support.toFixed(1) + "/5", b: b.scoring.support.toFixed(1) + "/5", aRaw: a.scoring.support, bRaw: b.scoring.support, direction: "higher" },
 
     // GROUP : FRAIS
-    { group: "Frais", label: "Frais maker (spot)", a: a.fees.spotMaker + " %", b: b.fees.spotMaker + " %", aRaw: a.fees.spotMaker, bRaw: b.fees.spotMaker, direction: "lower" },
+    { group: "Frais", label: "Frais réel (achat)", a: a.fees.verified?.realCostPct ?? `${a.fees.instantBuy} %`, b: b.fees.verified?.realCostPct ?? `${b.fees.instantBuy} %`, direction: "none" },
+    { label: "Frais maker (spot)", a: a.fees.spotMaker + " %", b: b.fees.spotMaker + " %", aRaw: a.fees.spotMaker, bRaw: b.fees.spotMaker, direction: "lower" },
     { label: "Frais taker (spot)", a: a.fees.spotTaker + " %", b: b.fees.spotTaker + " %", aRaw: a.fees.spotTaker, bRaw: b.fees.spotTaker, direction: "lower" },
     { label: "Frais achat instantané", a: a.fees.instantBuy + " %", b: b.fees.instantBuy + " %", aRaw: a.fees.instantBuy, bRaw: b.fees.instantBuy, direction: "lower" },
     { label: "Spread typique", a: a.fees.spread, b: b.fees.spread, direction: "none" },
