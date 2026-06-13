@@ -251,7 +251,7 @@ const TOOLS: Tool[] = [
   // Cerfa auto, IA) pour le tri/filtre interne.
   {
     title: "Yield stablecoins (USDC/USDT/EURC)",
-    desc: "Comparateur APY sur 34 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
+    desc: "Comparateur APY sur 33 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
     href: "/outils/yield-stablecoins",
     Icon: Zap,
     tier: "free",

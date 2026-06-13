@@ -51,7 +51,7 @@ export function GET() {
         path: "/api/public/platforms",
         url: `${baseUrl}/api/public/platforms`,
         description:
-          "Catalogue des 34 plateformes crypto comparées (frais, sécurité, MiCA, support FR). Mise à jour mensuelle.",
+          "Catalogue des 33 plateformes crypto comparées (frais, sécurité, MiCA, support FR). Mise à jour mensuelle.",
         responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
         updateFrequency: "monthly",
       },

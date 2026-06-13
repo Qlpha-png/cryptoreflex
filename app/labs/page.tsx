@@ -125,7 +125,7 @@ export default function LabsPage() {
               intensity={0.4}
               className="btn-ghost inline-flex"
             >
-              Comparer 34 plateformes
+              Comparer 33 plateformes
             </MagneticCta>
             <MagneticCta href="/outils" intensity={0.15} className="btn-ghost inline-flex">
               Outils gratuits
@@ -190,7 +190,7 @@ export default function LabsPage() {
           icon={ScrollText}
           title="Marquee logos plateformes"
           stack="CSS keyframes translateX + mask-image fade"
-          desc="Bandeau infini défilant (38s). Pause au hover/focus. Mask-image gradient sur les bords pour le fade-in/out. Preuve sociale visuelle (« 34 plateformes auditées »)."
+          desc="Bandeau infini défilant (38s). Pause au hover/focus. Mask-image gradient sur les bords pour le fade-in/out. Preuve sociale visuelle (« 33 plateformes auditées »)."
         >
           <div className="marquee-wrap py-6 border-y border-border">
             <div className="marquee-track text-fg/70 font-display text-2xl font-bold">
@@ -234,8 +234,8 @@ export default function LabsPage() {
         >
           <div className="grid gap-4 sm:grid-cols-3">
             {[
-              { href: "/comparatif", title: "Comparatif", body: "34 plateformes — prerendered" },
-              { href: "/avis", title: "Avis détaillés", body: "34 plateformes auditées" },
+              { href: "/comparatif", title: "Comparatif", body: "33 plateformes — prerendered" },
+              { href: "/avis", title: "Avis détaillés", body: "33 plateformes auditées" },
               { href: "/outils", title: "Outils gratuits", body: "28 outils crypto FR" },
             ].map((c) => (
               <Link

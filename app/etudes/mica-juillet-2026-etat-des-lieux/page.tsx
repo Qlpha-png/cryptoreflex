@@ -45,7 +45,7 @@ const LAST_UPDATED = "2026-05-06";
 const TITLE =
   "MiCA juillet 2026 : état des lieux des plateformes crypto en France";
 const DESCRIPTION =
-  "Analyse exhaustive des 34 plateformes crypto opérant en France à 60 jours de la deadline MiCA. Sources AMF, ESMA, BaFin officielles. Plateformes conformes vs à risque. Méthodologie publique CC-BY 4.0.";
+  "Analyse exhaustive des 33 plateformes crypto disponibles en France à la deadline MiCA. Sources AMF, ESMA, BaFin officielles. Plateformes conformes vs à risque. Méthodologie publique CC-BY 4.0.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
 
 const STATS = [
   {
-    value: "34",
+    value: "33",
     label: "plateformes analysées",
     color: "text-cyan-400",
   },
@@ -397,7 +397,7 @@ export default function MicaStudyPage() {
 
           <p className="mt-6 text-lg text-slate-300 leading-relaxed">
             À 60 jours de la fin de la période transitoire MiCA (30 juin 2026),
-            cette étude analyse l’ensemble des 34 plateformes crypto opérant en
+            cette étude analyse l’ensemble des 33 plateformes crypto opérant en
             France selon leur statut réglementaire actuel. Sources publiques
             (AMF, ESMA, BaFin, CNMV, MFSA, CSSF), méthodologie publiée,
             données réutilisables sous licence{" "}
@@ -590,7 +590,7 @@ export default function MicaStudyPage() {
         <section id="methodologie" className="mt-12">
           <h2>3. Méthodologie d’analyse</h2>
           <p>
-            Cette étude couvre les <strong>34 plateformes crypto</strong> opérant
+            Cette étude couvre les <strong>33 plateformes crypto</strong> opérant
             activement en France au 6 mai 2026, identifiées par recoupement de :
           </p>
           <ul>
@@ -858,7 +858,7 @@ export default function MicaStudyPage() {
             <Link href="/comparatif/securite">
               /comparatif/securite
             </Link>{" "}
-            note les 34 plateformes selon ces 5 critères pondérés. Méthodologie
+            note les 33 plateformes selon ces 5 critères pondérés. Méthodologie
             détaillée sur <Link href="/methodologie">/methodologie</Link>.
           </p>
         </section>
@@ -964,7 +964,7 @@ export default function MicaStudyPage() {
               className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
               <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
-                Comparatif sécurité 34 plateformes
+                Comparatif sécurité 33 plateformes
               </h3>
               <p className="mt-2 text-sm text-slate-300">
                 Notation détaillée par plateforme (sécurité, frais, MiCA,

@@ -127,7 +127,7 @@ export default function MicaLandingPage() {
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            34 plateformes auditées, classées par conformité MiCA + agrément
+            33 plateformes auditées, classées par conformité MiCA + agrément
             AMF. Sources officielles. <strong>Liste à jour mensuelle</strong>,
             méthodologie publique.
           </p>
@@ -230,7 +230,7 @@ export default function MicaLandingPage() {
               href={target}
               className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-2.5 text-sm font-bold text-cyan-300 hover:bg-cyan-500/20 transition"
             >
-              Voir le comparatif complet (34 plateformes)
+              Voir le comparatif complet (33 plateformes)
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>

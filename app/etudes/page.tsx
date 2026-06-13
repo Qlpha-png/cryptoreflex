@@ -66,7 +66,7 @@ const STUDIES: StudyCard[] = [
     slug: "mica-juillet-2026-etat-des-lieux",
     title: "MiCA juillet 2026 : état des lieux des plateformes crypto",
     subtitle:
-      "Analyse exhaustive des 34 plateformes opérant en France à 60 jours de la deadline MiCA. Quelles sont conformes ? Quelles risquent le blocage ? Recommandations pratiques.",
+      "Analyse exhaustive des 33 plateformes disponibles en France à la deadline MiCA. Quelles sont conformes ? Quelles risquent le blocage ? Recommandations pratiques.",
     date: "2026-05-06",
     readingTime: "18 min",
     topic: "regulation",

@@ -28,7 +28,7 @@ export const BRAND = {
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout sur la crypto, en français",
   description:
-    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 33 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;

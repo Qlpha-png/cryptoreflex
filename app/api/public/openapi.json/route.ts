@@ -34,7 +34,7 @@ export function GET() {
     info: {
       title: "Cryptoreflex Public Open Data API",
       description:
-        "API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marche crypto francais : 34 plateformes auditees, registre PSAN+MiCA consolide, scores de decentralisation, top cryptos vulgarisees, outils fiscalite. Toute reutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.",
+        "API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marche crypto francais : 33 plateformes auditees, registre PSAN+MiCA consolide, scores de decentralisation, top cryptos vulgarisees, outils fiscalite. Toute reutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.",
       version: "1.0.0",
       termsOfService: BRAND.url + "/mentions-legales",
       contact: {
@@ -98,7 +98,7 @@ export function GET() {
         get: {
           summary: "Catalogue plateformes crypto",
           description:
-            "34 plateformes crypto auditees : frais maker/taker/SEPA, securite, statut MiCA, support FR. Mise a jour mensuelle.",
+            "33 plateformes crypto auditees : frais maker/taker/SEPA, securite, statut MiCA, support FR. Mise a jour mensuelle.",
           tags: ["platforms"],
           responses: {
             "200": {

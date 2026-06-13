@@ -90,7 +90,7 @@ const POOL: Record<string, Step> = {
   comparator: {
     href: "/comparatif",
     Icon: BarChart3,
-    label: "Compare les 34 plateformes",
+    label: "Compare les 33 plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
   pdfPlateformes: {
