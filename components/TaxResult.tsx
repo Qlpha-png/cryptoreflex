@@ -166,7 +166,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
           <span className="ml-1 text-xs text-muted font-normal">(bientôt)</span>
         </button>
         <a
-          href="/blog/declarer-crypto-impots-2086-3916-bis"
+          href="/blog/declaration-crypto-cerfa-2086-tutoriel-2026"
           className="btn-primary"
         >
           Comment remplir le 2086 avec ces chiffres ?

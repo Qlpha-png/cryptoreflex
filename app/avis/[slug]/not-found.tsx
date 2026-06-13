@@ -81,7 +81,7 @@ export default function AvisNotFound() {
               Accueil
             </Link>
             <Link
-              href="/mica"
+              href="/comparatif/securite"
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
             >
               <ShieldCheck className="h-4 w-4" />
