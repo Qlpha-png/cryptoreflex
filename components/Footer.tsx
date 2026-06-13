@@ -80,7 +80,10 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
       { href: "/cryptos", label: "100 cryptomonnaies analysées" },
       // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)
-      { href: "/comparer", label: "Comparer 2 cryptos (4950 duels)" },
+      // 2026-06-13 — pointe vers /vs (vrai hub 4950 duels maillé) et non
+      // /comparer (legacy 105 paires) : le label promettait 4950.
+      { href: "/vs", label: "Comparer 2 cryptos (4950 duels)" },
+      { href: "/acheter", label: "Où acheter une crypto (par pays)" },
       { href: "/marche", label: "Marché crypto en direct" },
       { href: "/marche/heatmap", label: "Heatmap marché crypto" },
     ],
@@ -100,6 +103,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/quiz/crypto", label: "Quiz : quelle crypto pour vous ?" },
       // BATCH 44a — historique programmatic 240 URLs orphelines
       { href: "/historique-prix", label: "Historique prix crypto par année" },
+      { href: "/glossaire", label: "Glossaire crypto (définitions)" },
     ],
   },
   {
