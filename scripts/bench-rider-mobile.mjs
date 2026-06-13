@@ -10,11 +10,21 @@ try {
 await page.waitForTimeout(2000);
 const d = await page.evaluate(() => {
   const r = window.__crxRider;
-  return r ? { src: r.src, pts: r.terrainPts, jumps: r.jumps.length } : null;
+  return r ? { src: r.src, pts: r.terrainPts, jumps: r.jumps } : null;
 });
-console.log("mobile __crxRider:", JSON.stringify(d));
+if (d) {
+  console.log(`mobile terrain: source=${d.src} (${d.pts} pts), bande=${(await page.locator(".hero-pulse-band").boundingBox()).width.toFixed(0)}px`);
+  console.log(`plan de sauts mobile: ${d.jumps.length}`);
+  for (const j of d.jumps) {
+    console.log(
+      `  ${j.kind.padEnd(5)} takeoff=${j.takeoff.toFixed(0)} land=${j.land.toFixed(0)} portee=${(j.land - j.takeoff).toFixed(0)} apex=${j.apex.toFixed(0)} flip=${j.flip} dur=${j.dur.toFixed(0)}ms`,
+    );
+  }
+} else {
+  console.log("PAS de __crxRider mobile");
+}
 const band = await page.locator(".hero-pulse-band").boundingBox();
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 8; i++) {
   await page.screenshot({
     path: `${OUT}\\m0${i}.png`,
     clip: {
@@ -24,7 +34,7 @@ for (let i = 0; i < 4; i++) {
       height: Math.min(band.height + 100, 844),
     },
   });
-  await page.waitForTimeout(1400);
+  await page.waitForTimeout(900);
 }
-console.log("4 frames mobiles");
+console.log("8 frames mobiles");
 await browser.close();

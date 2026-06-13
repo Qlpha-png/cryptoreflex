@@ -94,6 +94,7 @@ export default function HeroPulseRider({ points }: Props) {
     /* ── Terrain en pixels + plan de sauts (rebuild au resize/mutation) ── */
     let terrain: Array<[number, number]> = [];
     let bandW = 0;
+    let bandH = 0;
     let jumps: Jump[] = [];
     let jumpIdx = 0;
     // ÉCHELLE MOBILE : le SVG est rendu 88 px desktop / 64 px mobile
@@ -222,14 +223,19 @@ export default function HeroPulseRider({ points }: Props) {
     const planJumps = () => {
       jumps = [];
       const n = terrain.length;
-      if (n < 8 || bandW < 200) return;
+      const W = bandW;
+      const H = bandH || 1;
+      if (n < 8 || W < 200) return;
+      // Seuils NORMALISÉS : tout est exprimé en fraction de la largeur (W)
+      // ou de la hauteur (H) de bande, et les pentes via sl() — sinon les
+      // seuils en px écran donnaient un ride différent sur mobile (bande
+      // ~3,7× plus étroite → creux non détectés, tout vu comme « mur »).
+      // sl(norm) convertit une pente normalisée en pente écran px.
+      const sl = (norm: number) => (norm * H) / W;
 
       // 0. GAPS — les creux étroits et profonds se SAUTENT bord à bord
       // avec l'élan (feedback : « c'est surtout les creux qu'il ne faut
-      // pas qu'elle aille »). On repère les sommets locaux, et chaque
-      // paire de sommets adjacents encadrant un fond ≥ 26 px sur une
-      // largeur ≤ 250 px devient un saut TENDU (apex bas, pas de figure,
-      // rapide) — une vraie moto ne plonge pas dans chaque trou.
+      // pas qu'elle aille »). Une vraie moto ne plonge pas dans un trou.
       const tops: number[] = [];
       for (let t = 6; t < n - 6; t++) {
         if (
@@ -248,59 +254,58 @@ export default function HeroPulseRider({ points }: Props) {
         const xg = terrain[a][0];
         const xd = terrain[b][0];
         const width = xd - xg;
-        if (width < 60 || width > 250) continue;
+        if (width < 0.041 * W || width > 0.171 * W) continue;
         let floor = -Infinity;
         for (let j = a; j <= b; j++) floor = Math.max(floor, terrain[j][1]);
         const depth = floor - Math.max(terrain[a][1], terrain[b][1]);
-        // Un creux ne se saute que s'il est VRAIMENT un trou : profond
-        // ET aux parois raides (profondeur/largeur >= 0.3 ~= 31 deg de
-        // pente moyenne). Les cuvettes douces se roulent.
-        if (depth < 26 || depth / width < 0.3) continue;
-        const takeoff = Math.max(30, xg - 2);
-        const land = Math.min(xd + 10, bandW - 40);
-        if (land - takeoff < 50) continue;
+        // Vrai trou : profond ET parois raides (ratio normalisé ≥ 1.2 ≈
+        // 31° de pente moyenne en espace données). Les cuvettes se roulent.
+        if (depth < 0.076 * H || depth / width < 1.2 * (H / W)) continue;
+        const takeoff = Math.max(0.02 * W, xg - 2);
+        const land = Math.min(xd + 0.007 * W, W - 0.027 * W);
+        if (land - takeoff < 0.034 * W) continue;
         gaps.push({
           takeoff,
           land,
           apex: 34 * S,
           flip: false,
           spin: 0,
-          dur: Math.min(1400, Math.max(700, width * 4.5)),
+          dur: Math.min(1400, Math.max(700, (width / W) * 6800)),
           kind: "gap",
         });
       }
       jumps.push(...gaps);
       const inGap = (px: number) =>
-        gaps.some((gj) => px >= gj.takeoff - 12 && px <= gj.land + 12);
+        gaps.some((gj) => px >= gj.takeoff - 0.008 * W && px <= gj.land + 0.008 * W);
 
       let i = 0;
       while (i < n - 1) {
         const dx = terrain[i + 1][0] - terrain[i][0];
         const s = (terrain[i + 1][1] - terrain[i][1]) / Math.max(0.2, dx);
 
-        if (s < -2.25) {
-          // MUR MONTANT quasi vertical (> ~66°) : la moto GRIMPE tout ce
-          // qui est grimpable (feedback : « il faut qu'il monte les
-          // pentes s'il peut ») — seuls les vrais murs se sautent.
+        if (s < sl(-9.6)) {
+          // MUR MONTANT quasi vertical (> ~66° en espace données) : la
+          // moto GRIMPE tout ce qui est grimpable — seuls les vrais murs
+          // se sautent.
           let k = i + 1;
           while (k < n - 1) {
             const ddx = terrain[k + 1][0] - terrain[k][0];
             const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
-            if (s2 < -1.6) k++;
+            if (s2 < sl(-6.8)) k++;
             else break;
           }
           const rise = terrain[i][1] - terrain[k][1];
-          if (rise >= 44 && !inGap(terrain[i][0])) {
+          if (rise >= 0.129 * H && !inGap(terrain[i][0])) {
             const footX = terrain[i][0];
             const topX = terrain[k][0];
             const topY = terrain[k][1];
             // Décollage : la dernière épaule douce avant le pied du mur.
-            let takeoff = footX - 56;
+            let takeoff = footX - 0.038 * W;
             for (let b = i; b >= 0; b--) {
-              if (footX - terrain[b][0] > 230) break;
+              if (footX - terrain[b][0] > 0.157 * W) break;
               if (
-                Math.abs(slopeAt(b)) < 0.45 &&
-                footX - terrain[b][0] >= 36
+                Math.abs(slopeAt(b)) < sl(1.92) &&
+                footX - terrain[b][0] >= 0.025 * W
               ) {
                 takeoff = terrain[b][0];
                 break;
@@ -308,22 +313,19 @@ export default function HeroPulseRider({ points }: Props) {
             }
             // Atterrissage : première pente douce après le sommet.
             let landI = k;
-            while (landI < n - 1 && terrain[landI][0] - topX < 60) {
-              if (Math.abs(slopeAt(landI)) > 0.8) landI++;
+            while (landI < n - 1 && terrain[landI][0] - topX < 0.041 * W) {
+              if (Math.abs(slopeAt(landI)) > sl(3.4)) landI++;
               else break;
             }
-            const land = Math.min(terrain[landI][0] + 26, bandW - 40);
+            const land = Math.min(terrain[landI][0] + 0.018 * W, W - 0.027 * W);
             const range = land - takeoff;
-            if (range >= 60 && range <= 430 && takeoff > 30) {
+            if (range >= 0.041 * W && range <= 0.294 * W && takeoff > 0.02 * W) {
               const apex = Math.min(
                 150 * S,
                 Math.max(80 * S, yAtX(takeoff) - topY + 46 * S),
               );
-              // Flip sur les gros airs (haut OU long) : les murs modestes
-              // se franchissent sobrement — c'est l'alternance qui fait
-              // le naturel.
-              const flip = apex >= 95 * S || range >= 160;
-              let dur = Math.min(1900, Math.max(1000, range * 5.2));
+              const flip = apex >= 95 * S || range >= 0.109 * W;
+              let dur = Math.min(1900, Math.max(1000, (range / W) * 7600));
               if (flip) dur = Math.max(dur, 1500);
               jumps.push({
                 takeoff,
@@ -337,29 +339,29 @@ export default function HeroPulseRider({ points }: Props) {
             }
           }
           i = Math.max(k, i + 1);
-        } else if (s > 2.25) {
+        } else if (s > sl(9.6)) {
           // FALAISE quasi verticale : on décolle au bord, on retombe au
           // pied. Les descentes raides mais roulables se descendent.
           let k = i + 1;
           while (k < n - 1) {
             const ddx = terrain[k + 1][0] - terrain[k][0];
             const s2 = (terrain[k + 1][1] - terrain[k][1]) / Math.max(0.2, ddx);
-            if (s2 > 1.6) k++;
+            if (s2 > sl(6.8)) k++;
             else break;
           }
           const drop = terrain[k][1] - terrain[i][1];
-          if (drop >= 52 && !inGap(terrain[i][0])) {
-            const takeoff = Math.max(30, terrain[i][0] - 4);
+          if (drop >= 0.152 * H && !inGap(terrain[i][0])) {
+            const takeoff = Math.max(0.02 * W, terrain[i][0] - 0.003 * W);
             let landI = k;
-            while (landI < n - 1 && terrain[landI][0] - terrain[k][0] < 50) {
-              if (Math.abs(slopeAt(landI)) > 0.8) landI++;
+            while (landI < n - 1 && terrain[landI][0] - terrain[k][0] < 0.034 * W) {
+              if (Math.abs(slopeAt(landI)) > sl(3.4)) landI++;
               else break;
             }
-            const land = Math.min(terrain[landI][0] + 22, bandW - 40);
+            const land = Math.min(terrain[landI][0] + 0.015 * W, W - 0.027 * W);
             const range = land - takeoff;
-            if (range >= 50 && range <= 430) {
-              const flip = drop >= 110 && range >= 150;
-              let dur = Math.min(1900, Math.max(850, range * 5.2));
+            if (range >= 0.034 * W && range <= 0.294 * W) {
+              const flip = drop >= 0.322 * H && range >= 0.103 * W;
+              let dur = Math.min(1900, Math.max(850, (range / W) * 7600));
               if (flip) dur = Math.max(dur, 1500);
               jumps.push({
                 takeoff,
@@ -379,20 +381,20 @@ export default function HeroPulseRider({ points }: Props) {
       }
 
       // Sauts plaisir sur les sommets restants (hors zones planifiées).
-      for (let p = 6; p < n - 6; p++) {
+      for (let pp = 6; pp < n - 6; pp++) {
         if (
-          terrain[p][1] < terrain[p - 6][1] - 4 &&
-          terrain[p][1] < terrain[p + 6][1] - 4 &&
-          terrain[p][1] <= terrain[p - 1][1] &&
-          terrain[p][1] <= terrain[p + 1][1]
+          terrain[pp][1] < terrain[pp - 6][1] - 0.011 * H &&
+          terrain[pp][1] < terrain[pp + 6][1] - 0.011 * H &&
+          terrain[pp][1] <= terrain[pp - 1][1] &&
+          terrain[pp][1] <= terrain[pp + 1][1]
         ) {
-          const px = terrain[p][0];
-          if (px < 60 || px > bandW - 140) continue;
-          if (jumps.some((j) => px > j.takeoff - 110 && px < j.land + 110))
+          const px = terrain[pp][0];
+          if (px < 0.041 * W || px > W - 0.096 * W) continue;
+          if (jumps.some((j) => px > j.takeoff - 0.075 * W && px < j.land + 0.075 * W))
             continue;
           jumps.push({
             takeoff: px,
-            land: Math.min(px + 96, bandW - 40),
+            land: Math.min(px + 0.066 * W, W - 0.027 * W),
             apex: 110 * S,
             flip: true,
             // Alternance backflip / frontflip d'un saut plaisir à l'autre.
@@ -411,8 +413,8 @@ export default function HeroPulseRider({ points }: Props) {
       for (const j of jumps) {
         const prev = kept[kept.length - 1];
         if (prev) {
-          if (j.kind === "fun" && j.takeoff < prev.land + 300) continue;
-          if (j.takeoff < prev.land + 20) continue;
+          if (j.kind === "fun" && j.takeoff < prev.land + 0.205 * W) continue;
+          if (j.takeoff < prev.land + 0.014 * W) continue;
         }
         kept.push(j);
       }
@@ -444,6 +446,7 @@ export default function HeroPulseRider({ points }: Props) {
       const rect = wrap.getBoundingClientRect();
       if (rect.width < 50 || rect.height < 50) return;
       bandW = rect.width;
+      bandH = rect.height;
       // Échelle moto selon le breakpoint (cf. CSS .hero-rider-svg).
       S = window.matchMedia("(max-width: 640px)").matches ? 64 / 88 : 1;
       halfWB = HALF_WHEELBASE_PX * S;
