@@ -30,7 +30,22 @@ import {
   getCountry,
   type CountryConfig,
 } from "@/lib/programmatic-pages";
+import { getAllPlatforms } from "@/lib/platforms";
+import { getPublishableReviewSlugs } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+
+// MAILLAGE 2026-06-13 — chaque plateforme citée renvoie vers son AVIS quand
+// la fiche existe (publishable) → parcours « où acheter → étudier la
+// plateforme » complet + maillage des 600 pages /acheter vers /avis.
+// Lookup nom plateforme (label whereToBuy) → slug avis, UNIQUEMENT pour les
+// avis réellement publiés (zéro lien cassé : /avis est dynamicParams=false).
+const _REVIEW_SLUGS = new Set(getPublishableReviewSlugs());
+const PLATFORM_REVIEW_SLUG: Record<string, string> = {};
+for (const p of getAllPlatforms()) {
+  if (_REVIEW_SLUGS.has(p.id)) {
+    PLATFORM_REVIEW_SLUG[p.name.toLowerCase().trim()] = p.id;
+  }
+}
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 // FIX SEO 2026-05-02 #7 (audit interne) — sortir 600 pages /acheter de
@@ -265,17 +280,32 @@ export default function AcheterPaysPage({ params }: Props) {
             </p>
           )}
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {platforms.map((p, idx) => (
-              <li
-                key={p}
-                className="rounded-2xl border border-border bg-surface p-4 flex items-center gap-3"
-              >
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary-soft">
-                  {idx + 1}
-                </span>
-                <span className="text-sm font-semibold text-fg">{p}</span>
-              </li>
-            ))}
+            {platforms.map((p, idx) => {
+              const reviewSlug = PLATFORM_REVIEW_SLUG[p.toLowerCase().trim()];
+              return (
+                <li
+                  key={p}
+                  className="rounded-2xl border border-border bg-surface p-4 flex items-center gap-3"
+                >
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary-soft">
+                    {idx + 1}
+                  </span>
+                  {reviewSlug ? (
+                    <Link
+                      href={`/avis/${reviewSlug}`}
+                      className="text-sm font-semibold text-fg hover:text-primary-soft inline-flex items-center gap-1.5"
+                    >
+                      {p}
+                      <span className="text-[11px] font-normal text-muted">
+                        (avis)
+                      </span>
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-semibold text-fg">{p}</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           {country.code === "fr" && (
             <p className="mt-4 text-xs text-muted">
