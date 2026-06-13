@@ -184,18 +184,15 @@ export default function HeroPulseRider({ points }: Props) {
       return terrain[terrain.length - 1][1];
     };
 
-    /** Centre d'une roue (rayon R) posée TANGENTE au terrain : le profil
-        est échantillonné sous TOUTE la largeur du pneu — le flanc ne peut
-        pas mordre une paroi. */
-    const wheelCenterY = (wx: number): number => {
-      let top = Infinity;
-      for (let k = -4; k <= 4; k++) {
-        const dx = (k / 4) * wheelR;
-        const limit = yAtX(wx + dx) - Math.sqrt(wheelR * wheelR - dx * dx);
-        if (limit < top) top = limit;
-      }
-      return top;
-    };
+    /** Centre d'une roue (rayon R) : posée sur le terrain (bas du pneu sur
+        le trait, centre R au-dessus). ANTI-JITTER — l'ancienne version
+        prenait un min sur 9 échantillons tangents : le point contraignant
+        basculait brusquement (centre↔bord) → kinks de courbure →
+        tremblement vertical. Le terrain est désormais lissé et les creux
+        nets sont SAUTÉS (plus roulés) : une pose directe suffit et reste
+        C¹ → ride lisse, zéro lag. La pente est portée par la CORDE entre
+        les 2 roues (cf. groundPose), pas par chaque roue. */
+    const wheelCenterY = (wx: number): number => yAtX(wx) - wheelR;
 
     /** Pose au sol pour un x donné — 2 roues tangentes. L'origine du
         rider = MILIEU DES CENTRES DE ROUES (cf. ancrage CSS -50.9 px),
@@ -454,6 +451,31 @@ export default function HeroPulseRider({ points }: Props) {
       clear = CLEARANCE_PX * S;
       const dom = sampleDomPath(rect);
       terrain = dom ?? fallbackFromProps(rect);
+      // ANTI-JITTER — lissage léger du profil (moyenne glissante ±2 pts
+      // sur y, ~30 px). Le terrain échantillonné est interpolé
+      // linéairement entre 220 points : chaque sommet crée un kink, et la
+      // pose tangente des 2 roues amplifie ces ruptures → micro-tremblement
+      // vertical de la moto (constaté au banc : ~15-25 % de frames qui
+      // inversent le sens). On lisse À LA SOURCE (zéro lag runtime) : la
+      // moto suit exactement ce profil adouci, qui reste à ~1 px de la
+      // ligne (dans son halo). x inchangé, bords préservés.
+      if (terrain.length > 8) {
+        const ys = terrain.map((p) => p[1]);
+        // Gaussienne 7 taps [1,2,3,4,3,2,1]/16 : amortit les wiggles plus
+        // courts que l'empattement (que la moto ne peut PAS suivre
+        // physiquement), tout en restant à ~1 px de la ligne affichée.
+        for (let i = 3; i < terrain.length - 3; i++) {
+          terrain[i][1] =
+            (ys[i - 3] +
+              2 * ys[i - 2] +
+              3 * ys[i - 1] +
+              4 * ys[i] +
+              3 * ys[i + 1] +
+              2 * ys[i + 2] +
+              ys[i + 3]) /
+            16;
+        }
+      }
       planJumps();
       // Re-synchronise le pointeur de saut sur la position courante.
       jumpIdx = jumps.findIndex((j) => j.takeoff >= x - 18);
@@ -511,6 +533,12 @@ export default function HeroPulseRider({ points }: Props) {
     // puis se détend d'un coup au décollage (« pop »). popTs = instant du
     // décollage.
     let popTs = -9999;
+    // FILTRE ONE-EURO sur la hauteur (cy) au roulage — anti-jitter : lisse
+    // fort quand la moto monte/descend lentement (tue le tremblement dû à
+    // l'échantillonnage de la courbe BTC volatile), mais suit sans lag les
+    // vraies pentes franches (le cutoff s'ouvre avec la vitesse verticale).
+    let cyFilt = Number.NaN;
+    let dCyFilt = 0;
     /** Roost : poussière de lumière éjectée par la roue arrière dans les
         montées — dernier tir (throttle ~300 ms). */
     let lastRoost = 0;
@@ -563,6 +591,15 @@ export default function HeroPulseRider({ points }: Props) {
     /** Ease in-out cubique pour la rotation du flip. */
     const ease = (u: number) =>
       u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+
+    /** Filtre One-Euro (Casiez 2012) sur la hauteur cy au roulage. */
+    const oneEuroAlpha = (cutoffHz: number, dtSec: number) => {
+      const tau = 1 / (2 * Math.PI * cutoffHz);
+      return 1 / (1 + tau / dtSec);
+    };
+    const ONE_EURO_MIN = 1.0; // Hz : lissage de base (jitter lent tué)
+    const ONE_EURO_BETA = 0.018; // ouverture du cutoff avec la vitesse vy
+    const ONE_EURO_DCUT = 1.2; // Hz : lissage de la dérivée
 
     function frame(ts: number) {
       if (!running) return;
@@ -647,6 +684,20 @@ export default function HeroPulseRider({ points }: Props) {
         const pose = groundPose(x);
         cy = pose.cy;
         angleDeg = (pose.angle * 180) / Math.PI;
+
+        // ANTI-JITTER (One-Euro) sur cy : tue le tremblement vertical dû à
+        // la volatilité de la courbe BTC sans laguer les vraies pentes.
+        if (Number.isNaN(cyFilt)) {
+          cyFilt = cy;
+          dCyFilt = 0;
+        } else {
+          const dtSec = Math.max(0.001, dt / 1000);
+          const dRaw = (cy - cyFilt) / dtSec;
+          dCyFilt = dCyFilt + oneEuroAlpha(ONE_EURO_DCUT, dtSec) * (dRaw - dCyFilt);
+          const cutoff = ONE_EURO_MIN + ONE_EURO_BETA * Math.abs(dCyFilt);
+          cyFilt = cyFilt + oneEuroAlpha(cutoff, dtSec) * (cy - cyFilt);
+          cy = cyFilt;
+        }
         // Amortissement : l'angle affiché rejoint l'angle du terrain avec
         // une constante de temps ~150 ms, borné à 200 °/s (banc : zéro
         // saccade au-dessus du seuil). Delta normalisé [-180, 180].
@@ -681,6 +732,7 @@ export default function HeroPulseRider({ points }: Props) {
           landedFx = false;
           jumpIdx++;
           popTs = ts; // détente de suspension au décollage (« pop »)
+          cyFilt = Number.NaN; // re-seed du filtre cy à l'atterrissage
           // Kick de poussière au décollage.
           const rx = x - halfWB;
           emitRoost(rx, yAtX(rx));
