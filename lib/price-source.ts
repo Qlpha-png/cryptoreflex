@@ -219,13 +219,6 @@ export interface PriceSnapshot {
   source: PriceSource;
   /** ISO timestamp du fetch. */
   fetchedAt: string;
-  /**
-   * true UNIQUEMENT pour le dernier recours codé en dur (STATIC_FALLBACK,
-   * snapshot figé). Permet aux consommateurs (ex: fiche /cryptos) de NE PAS
-   * afficher un prix périmé comme « live » — un prix figé présenté comme actuel
-   * est pire qu'un « — ». Le cache KV (récent) NE porte PAS ce flag.
-   */
-  isStaleFallback?: boolean;
 }
 
 export interface TopMarketCoin extends PriceSnapshot {
@@ -475,7 +468,6 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
       sparkline7d: [],
       source: "static",
       fetchedAt: new Date().toISOString(),
-      isStaleFallback: true, // snapshot figé : ne pas afficher comme « live »
     };
   }
 }
