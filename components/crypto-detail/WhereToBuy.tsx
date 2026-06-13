@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
-import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 
 interface Props {
@@ -111,7 +111,7 @@ function PlatformRow({
             <span className="font-mono font-semibold">{p.scoring.global.toFixed(1)}</span>
             <span className="text-muted">/5</span>
           </div>
-          <div className="mt-1 text-[10px] text-muted">Frais spot {p.fees.spotMaker}%</div>
+          <div className="mt-1 text-[10px] text-muted">Frais {feeShort(p)}</div>
         </div>
       </div>
 

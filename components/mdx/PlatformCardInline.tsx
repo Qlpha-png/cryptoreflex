@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Sparkles } from "lucide-react";
-import { getPlatformById } from "@/lib/platforms";
+import { getPlatformById, feeShort } from "@/lib/platforms";
 import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "@/components/PlatformLogo";
 
@@ -80,7 +80,7 @@ export default function PlatformCardInline({
       </div>
 
       <dl className="grid grid-cols-2 gap-px border-t border-border bg-border text-xs sm:grid-cols-4">
-        <Stat label="Frais spot" value={`${p.fees.spotMaker}%`} />
+        <Stat label="Frais" value={feeShort(p)} />
         <Stat label="Dépôt min" value={`${p.deposit.minEur}€`} />
         <Stat label="Cryptos" value={`${p.cryptos.totalCount}+`} />
         <Stat

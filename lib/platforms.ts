@@ -148,6 +148,21 @@ export function isAvailableFr(p: Platform): boolean {
   return p.fees.verified?.verdict !== "indisponible";
 }
 
+/**
+ * Frais court et HONNÊTE pour les cartes/listes : le coût réel d'un achat.
+ * - exchange order-book : taker (l'ordre marché qu'utilise un débutant) ;
+ * - courtier/app : frais d'achat réel (instantBuy), pas le taux "Pro" qui flatte
+ *   les hybrides (Nexo/Wirex/Young affichent 0,20 % Pro mais coûtent ~2 % en App) ;
+ * - hardware wallet : spread broker in-app (pas de frais de trading).
+ * Évite le « Frais spot 0,XX % » trompeur pour les non-exchanges.
+ */
+export function feeShort(p: Platform): string {
+  if (p.category === "wallet") return "spread in-app";
+  const mt = p.fees.verified?.makerTakerApplies ?? true;
+  const rc = mt ? p.fees.spotTaker : p.fees.instantBuy;
+  return `${rc}%`;
+}
+
 export const platformsMeta = data._meta;
 
 /* -------------------------------------------------------------------------- */
@@ -189,8 +204,13 @@ export function pickSocialProof(p: Platform): {
  */
 export function buildMicaLabel(p: Platform): string | undefined {
   if (!p.mica.status) return undefined;
-  if (p.mica.amfRegistration) {
-    return `MiCA · AMF ${p.mica.amfRegistration}`;
+  // Pas de label MiCA positif si la plateforme n'est pas (ou plus) conforme.
+  if (!p.mica.micaCompliant) return undefined;
+  const reg = p.mica.amfRegistration;
+  if (reg) {
+    // "AMF" uniquement pour un enregistrement AMF (format E20xx-xxx). Les autres
+    // régulateurs UE (CBI Irlande, etc.) ne sont pas l'AMF française.
+    return /^E\d/.test(reg) ? `MiCA · AMF ${reg}` : `MiCA · ${reg}`;
   }
   return p.mica.status;
 }

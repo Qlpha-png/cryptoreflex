@@ -4,7 +4,7 @@ import PlatformCard from "./PlatformCard";
 import AmfDisclaimer from "./AmfDisclaimer";
 import StructuredData from "./StructuredData";
 import PlatformsCarouselControls from "./PlatformsCarouselControls";
-import { getExchangePlatforms, platformsItemListSchema } from "@/lib/platforms";
+import { getExchangePlatforms, isAvailableFr, platformsItemListSchema } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -28,8 +28,10 @@ import { BRAND } from "@/lib/brand";
  */
 
 export default function PlatformsSection() {
-  // TOUTES les plateformes (était top 6) — triées par scoring global desc
-  const platforms = getExchangePlatforms();
+  // TOUTES les plateformes (était top 6) — triées par scoring global desc.
+  // Exclut les plateformes fermées au marché FR (ex : Gemini) : on ne les met ni
+  // dans le carousel (CTA "s'inscrire"), ni dans le JSON-LD ItemList.
+  const platforms = getExchangePlatforms().filter(isAvailableFr);
   const totalAvailable = platforms.length;
 
   return (

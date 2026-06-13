@@ -68,10 +68,15 @@ function fmtScore(n: number): string {
 }
 
 function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platform; gap: string } {
-  if (a.fees.spotTaker <= b.fees.spotTaker) {
-    return { winner: a, loser: b, gap: `${(b.fees.spotTaker - a.fees.spotTaker).toFixed(2)} pts` };
-  }
-  return { winner: b, loser: a, gap: `${(a.fees.spotTaker - b.fees.spotTaker).toFixed(2)} pts` };
+  // Coût réel : taker pour un exchange order-book, frais d'achat (instantBuy) pour
+  // un courtier/app — sinon le taux "Pro" 0,20 % de certains hybrides (Nexo/Wirex/
+  // Young) fausse le gagnant alors qu'ils coûtent ~2 % en achat réel.
+  const realCost = (p: Platform) =>
+    (p.fees.verified?.makerTakerApplies ?? true) ? p.fees.spotTaker : p.fees.instantBuy;
+  const ra = realCost(a);
+  const rb = realCost(b);
+  if (ra <= rb) return { winner: a, loser: b, gap: `${(rb - ra).toFixed(2)} pts` };
+  return { winner: b, loser: a, gap: `${(ra - rb).toFixed(2)} pts` };
 }
 
 function bestOnSecurity(a: Platform, b: Platform): { winner: Platform; loser: Platform } {

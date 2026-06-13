@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star, Zap } from "lucide-react";
-import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
 
 interface Props {
   cryptoName: string;
@@ -138,7 +138,7 @@ function QuickBuyRow({
             <span className="font-mono font-semibold text-fg">
               {platform.scoring.global.toFixed(1)}
             </span>
-            <span>/5 · Frais {platform.fees.spotMaker}%</span>
+            <span>/5 · Frais {feeShort(platform)}</span>
           </div>
         </div>
       </div>

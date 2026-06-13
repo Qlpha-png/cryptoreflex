@@ -17,7 +17,7 @@ import { getAllNewsSummaries } from "@/lib/news-mdx";
 import { getAllTASummaries } from "@/lib/ta-mdx";
 import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { getAllCryptos } from "@/lib/cryptos";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
@@ -266,12 +266,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    *    /cryptos/[slug]/acheter-en-france, /staking/[slug]
    *    Source unique de vérité : lib/programmatic.ts
    * ---------------------------------------------------------------- */
-  const programmaticRoutes: MetadataRoute.Sitemap = getAllProgrammaticRoutes().map((r) => ({
-    url: `${SITE_URL}${r.path}`,
-    lastModified: now,
-    changeFrequency: r.changeFrequency,
-    priority: r.priority,
-  }));
+  // Exclut du sitemap les routes des plateformes fermées au marché FR (ex : Gemini,
+  // déjà en noindex) : /avis/[id], /alternative-a/[id] et les duels /comparatif/x-vs-id.
+  const unavailableIds = getAllPlatforms()
+    .filter((p) => !isAvailableFr(p))
+    .map((p) => p.id);
+  const refersToUnavailable = (path: string) =>
+    unavailableIds.some(
+      (id) =>
+        path === `/avis/${id}` ||
+        path === `/alternative-a/${id}` ||
+        (path.startsWith("/comparatif/") &&
+          (path.split("/comparatif/")[1] ?? "").split("-vs-").includes(id))
+    );
+  const programmaticRoutes: MetadataRoute.Sitemap = getAllProgrammaticRoutes()
+    .filter((r) => !refersToUnavailable(r.path))
+    .map((r) => ({
+      url: `${SITE_URL}${r.path}`,
+      lastModified: now,
+      changeFrequency: r.changeFrequency,
+      priority: r.priority,
+    }));
 
   /* ----------------------------------------------------------------
    * 3.b. Fiches LLM scaling Phase 1 (DB-backed)
@@ -354,12 +369,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    *          /alternative-a/[plateforme]   → 1 URL/plateforme
    *          /historique-prix/[crypto]/[annee] → top 30 cryptos × 8 années
    * ---------------------------------------------------------------- */
-  const alternativeRoutes: MetadataRoute.Sitemap = getAllPlatforms().map((p) => ({
-    url: `${SITE_URL}/alternative-a/${p.id}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const alternativeRoutes: MetadataRoute.Sitemap = getAllPlatforms()
+    .filter((p) => isAvailableFr(p))
+    .map((p) => ({
+      url: `${SITE_URL}/alternative-a/${p.id}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
 
   // FIX 2026-06-13 — Source unique de vérité : on aligne le sitemap sur
   // generateStaticParams de la page (getAllCryptos × YEARS, dynamicParams=false).
