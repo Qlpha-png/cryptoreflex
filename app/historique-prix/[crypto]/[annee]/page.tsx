@@ -43,26 +43,21 @@ import { withHreflang } from "@/lib/seo-alternates";
 const YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"] as const;
 type Annee = (typeof YEARS)[number];
 
-// FIX BUILD 2026-05-06 — Top 30 → Top 10 cryptos pour pré-build.
-// Avant : 30 × 8 années = 240 pages SSG au build (~60-120s).
-// Après : 10 × 8 = 80 pages au build. Les 20 autres + tous les coins hors
-// liste sont en ISR on-demand (dynamicParams=true, revalidate 7 jours).
-// Volume couvert : top 10 cryptos = ~80% du trafic SEO sur ce pattern.
-const TOP_10_FOR_BUILD = [
-  "bitcoin", "ethereum", "binancecoin", "ripple", "solana",
-  "cardano", "dogecoin", "tron", "avalanche-2", "chainlink",
-];
-
 interface Props {
   params: { crypto: string; annee: string };
 }
 
 export const revalidate = 604800; // 7 jours (donnée annuelle immuable)
-export const dynamicParams = true;
+// 2026-06-13 — HARD 404 sur params invalides (fix soft-404 SEO). Page
+// synchrone (aucun fetch réseau au build) → on liste TOUS les couples
+// valides (100 cryptos × 9 années) et on passe dynamicParams=false : un
+// (crypto, année) hors-liste renvoie un vrai 404 au lieu du soft-200 de
+// notFound() sous ISR. Build mesuré OK (page légère, sans I/O).
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return TOP_10_FOR_BUILD.flatMap((crypto) =>
-    YEARS.map((annee) => ({ crypto, annee })),
+  return getAllCryptos().flatMap((c) =>
+    YEARS.map((annee) => ({ crypto: c.id, annee })),
   );
 }
 
