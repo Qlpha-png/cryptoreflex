@@ -224,6 +224,39 @@ function buildKeyDifferences(a: AnyCrypto, b: AnyCrypto): string[] {
 }
 
 /**
+ * Intro de synthèse — 100 % dérivée des données réelles des 2 cryptos
+ * (aucune prose hallucinée). Unique par paire → ajoute du texte indexable
+ * en tête de page (anti « thin content » : les pages partaient directement
+ * sur le tableau). 2026-06-13.
+ */
+function buildIntro(a: AnyCrypto, b: AnyCrypto, commonCount: number): string {
+  const gap = Math.abs(a.yearCreated - b.yearCreated);
+  const elder = a.yearCreated <= b.yearCreated ? a : b;
+  const sameCat = a.category === b.category;
+  const parts: string[] = [];
+  parts.push(
+    `${a.name} (${a.symbol}), ${a.category.toLowerCase()} lancé en ${a.yearCreated}, face à ${b.name} (${b.symbol}), ${b.category.toLowerCase()} lancé en ${b.yearCreated}.`,
+  );
+  parts.push(
+    sameCat
+      ? `Deux projets du même créneau (${a.category.toLowerCase()}) : ce sont des concurrents directs.`
+      : `Deux créneaux distincts qui peuvent se compléter dans un portefeuille diversifié.`,
+  );
+  if (gap > 0) {
+    parts.push(`${elder.name} compte ${gap} an${gap > 1 ? "s" : ""} d'antériorité sur le marché.`);
+  }
+  parts.push(
+    `Niveau de risque : ${a.name} ${riskOf(a).toLowerCase()}, ${b.name} ${riskOf(b).toLowerCase()}.`,
+  );
+  parts.push(
+    commonCount > 0
+      ? `${commonCount} plateforme${commonCount > 1 ? "s" : ""} régulée${commonCount > 1 ? "s" : ""} en France permet${commonCount > 1 ? "tent" : ""} d'acheter les deux.`
+      : `Aucune plateforme française commune aux deux dans notre base éditoriale.`,
+  );
+  return parts.join(" ");
+}
+
+/**
  * BATCH 58 — Verdict editorial unique par paire, base sur les attributs
  * concrets des 2 cryptos. Pas de prose generique, 100% data-driven.
  *
@@ -434,7 +467,10 @@ export default async function CryptoPairPage({ params }: Props) {
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">
             Comparatif {a.name} <span className="gradient-text">vs</span> {b.name} en 2026
           </h1>
-          <p className="mt-3 text-base text-muted">
+          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-3xl">
+            {buildIntro(a, b, commonPlatforms.length)}
+          </p>
+          <p className="mt-3 text-sm text-muted">
             Tableau side-by-side · données CoinGecko + méthodologie publique Cryptoreflex
           </p>
         </header>
