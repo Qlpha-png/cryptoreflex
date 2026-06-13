@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getCryptoPairs } from "@/lib/programmatic-pages";
+import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -72,8 +73,32 @@ const FEATURED_PAIRS: Array<{ a: string; b: string; aLabel: string; bLabel: stri
   { a: "aptos", b: "sui", aLabel: "Aptos", bLabel: "Sui" },
 ];
 
+// MAILLAGE SEO 2026-06-13 — hub dense par crypto. Avant : seules 20 paires
+// "stars" étaient liées depuis ce hub → ~4930 pages /vs/[a]/[b] quasi
+// orphelines (découvrables seulement via 8 cross-links par page) donc peu
+// crawlées/indexées. Ici : top 28 cryptos × ~15 adversaires = ~300 liens
+// internes canoniques → Google découvre tout le cluster comparateur.
+// 100 % statique (aucun fetch), donc zéro coût build / quota.
+function buildCryptoMesh() {
+  const catalogue = getAllCryptos();
+  const hubCryptos = catalogue.slice(0, 28); // têtes de gondole (market cap)
+  const opponents = catalogue.slice(0, 16); // adversaires les plus cherchés
+  return hubCryptos.map((c) => ({
+    id: c.id,
+    name: c.name,
+    symbol: c.symbol,
+    duels: opponents
+      .filter((o) => o.id !== c.id)
+      .map((o) => {
+        const [x, y] = [c.id, o.id].sort(); // URL canonique a<b
+        return { href: `/vs/${x}/${y}`, label: o.symbol, name: o.name };
+      }),
+  }));
+}
+
 export default function VsHub() {
   const totalPairs = getCryptoPairs().length;
+  const mesh = buildCryptoMesh();
 
   const schema = graphSchema([
     breadcrumbSchema([
@@ -98,7 +123,7 @@ export default function VsHub() {
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
             Compare 2 cryptos côte à côte : prix, market cap, supply, roadmap,
-            fiscalité FR. {totalPairs} combinaisons possibles parmi nos 30
+            fiscalité FR. {totalPairs} combinaisons possibles parmi nos 100
             cryptos analysées.
           </p>
         </header>
@@ -130,6 +155,48 @@ export default function VsHub() {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* MAILLAGE DENSE — tous les duels, groupés par crypto (découverte
+            crawl du cluster comparateur complet). */}
+        <section className="mt-16" aria-labelledby="all-duels">
+          <h2 id="all-duels" className="text-xl sm:text-2xl font-bold text-fg mb-2 flex items-center gap-2">
+            <Swords className="h-5 w-5 text-primary-soft" aria-hidden="true" />
+            Tous les duels, crypto par crypto
+          </h2>
+          <p className="text-sm text-muted mb-6 max-w-2xl">
+            Choisis une crypto, puis son adversaire. Chaque duel compare prix,
+            market cap, supply, sécurité et plateformes FR côte à côte.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {mesh.map((c) => (
+              <div
+                key={c.id}
+                className="rounded-xl border border-border bg-surface p-4"
+              >
+                <Link
+                  href={`/cryptos/${c.id}`}
+                  className="text-sm font-bold text-fg hover:text-primary-soft"
+                >
+                  {c.name}{" "}
+                  <span className="text-muted font-normal">({c.symbol})</span>
+                </Link>
+                <ul className="mt-3 flex flex-wrap gap-1.5">
+                  {c.duels.map((d) => (
+                    <li key={d.href}>
+                      <Link
+                        href={d.href}
+                        className="inline-flex items-center rounded-md border border-border/70 bg-elevated/40 px-2 py-0.5 text-[11px] font-medium text-fg/75 hover:border-primary/40 hover:text-primary-soft transition-colors"
+                        aria-label={`Comparer ${c.name} contre ${d.name}`}
+                      >
+                        vs {d.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Cross-link vers comparer alternatif */}
