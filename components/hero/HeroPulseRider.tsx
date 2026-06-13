@@ -79,6 +79,8 @@ export default function HeroPulseRider({ points }: Props) {
   const sparkRefs = useRef<Array<HTMLSpanElement | null>>([]);
   /** Traînée de vol : 2 échos de la moto, retardés de 70/140 ms. */
   const ghostRefs = useRef<Array<HTMLDivElement | null>>([]);
+  /** Halo de contact : la ligne s'illumine sous la roue (« charge »). */
+  const glowRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
     if (points.length < 2) return;
@@ -87,6 +89,7 @@ export default function HeroPulseRider({ points }: Props) {
     const rider = riderRef.current;
     const flip = flipRef.current;
     const wrap = wrapRef.current;
+    const glow = glowRef.current;
     if (!rider || !flip || !wrap) return;
     // Le SVG du pouls est un sibling : on remonte à la bande commune.
     const band = wrap.parentElement;
@@ -611,7 +614,12 @@ export default function HeroPulseRider({ points }: Props) {
       if (!lastTs) lastTs = ts;
       const dt = Math.min(64, ts - lastTs);
       lastTs = ts;
-      if (ts < pauseUntil) return;
+      if (ts < pauseUntil) {
+        // Pendant la pause inter-passage, la moto est masquée : on éteint
+        // aussi le halo de contact (sinon il resterait figé/allumé).
+        if (glow) glow.style.opacity = "0";
+        return;
+      }
 
       const inJump = jumpStart > 0 && ts - jumpStart < jumpDur;
 
@@ -638,6 +646,7 @@ export default function HeroPulseRider({ points }: Props) {
         jumpIdx = 0;
         pauseUntil = ts + PAUSE_BETWEEN_RUNS_MS;
         rider!.style.opacity = "0";
+        if (glow) glow.style.opacity = "0";
         return;
       }
       if (x < halfWB) x = halfWB;
@@ -788,6 +797,16 @@ export default function HeroPulseRider({ points }: Props) {
       }
 
       rider!.style.transform = `translate3d(${x}px, ${cy}px, 0)`;
+
+      // HALO DE CONTACT — la ligne s'illumine sous la roue arrière au
+      // roulage (la moto « charge » le pouls), s'éteint en vol.
+      if (glow) {
+        const gx = x - halfWB * 0.6;
+        const gy = yAtX(gx);
+        glow.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
+        glow.style.opacity = inJump ? "0" : "0.7";
+      }
+
       const squash =
         suspSX !== 1 || suspSY !== 1
           ? ` scale(${suspSX.toFixed(4)}, ${suspSY.toFixed(4)})`
@@ -849,6 +868,7 @@ export default function HeroPulseRider({ points }: Props) {
 
   return (
     <div ref={wrapRef} className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
+      <span ref={glowRef} className="hero-rider-glow" />
       {[0, 1].map((i) => (
         <div
           key={`g${i}`}

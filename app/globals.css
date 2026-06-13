@@ -976,6 +976,46 @@ body {
 .hero-rider-air {
   filter: drop-shadow(0 0 18px rgba(125, 211, 252, 0.55));
 }
+/* Halo de contact : la ligne s'illumine sous la roue arrière au roulage
+   (la moto « charge » le pouls en lumière). Positionné en px par le
+   moteur (translate3d) ; origine = point de contact. */
+.hero-rider-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  will-change: transform, opacity;
+}
+.hero-rider-glow::before {
+  content: "";
+  position: absolute;
+  left: -40px;
+  top: -40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgba(125, 211, 252, 0.55),
+    rgba(125, 211, 252, 0.18) 45%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+}
+@media (max-width: 640px) {
+  .hero-rider-glow::before {
+    left: -28px;
+    top: -28px;
+    width: 56px;
+    height: 56px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rider-glow { display: none; }
+}
 /* Traînée de vol : 2 échos retardés (70/140 ms), floutés, glacier —
    visibles uniquement en l'air (classe -on togglée par le moteur). */
 .hero-rider-ghost {
