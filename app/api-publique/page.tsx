@@ -26,7 +26,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 const TITLE = "API publique gratuite — données crypto FR (PSAN, MiCA, fiscalité)";
 const DESCRIPTION =
-  "5 endpoints JSON gratuits CC-BY 4.0 : 34 plateformes, registre PSAN/MiCA, scores décentralisation, top cryptos, outils fiscaux. Sans inscription, CORS *.";
+  "5 endpoints JSON gratuits CC-BY 4.0 : 33 plateformes, registre PSAN/MiCA, scores décentralisation, top cryptos, outils fiscaux. Sans inscription, CORS *.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -55,7 +55,7 @@ const ENDPOINTS: EndpointDoc[] = [
     path: "/api/public/platforms",
     title: "Catalogue plateformes",
     description:
-      "34 plateformes crypto comparées : frais maker/taker, retrait SEPA, sécurité, MiCA, support FR.",
+      "33 plateformes crypto comparées : frais maker/taker, retrait SEPA, sécurité, MiCA, support FR.",
     responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
     updateFrequency: "Mensuelle",
   },
@@ -170,7 +170,7 @@ const datasetSchema = {
   name: "Cryptoreflex — Open Data Crypto FR",
   alternateName: "Cryptoreflex Public API",
   description:
-    "Dataset open data CC-BY 4.0 sur le marché crypto français : 34 plateformes auditées (frais, sécurité, MiCA, PSAN), registre PSAN+MiCA consolidé, scores de décentralisation pour 10+ blockchains, top 10 cryptos vulgarisées, comparatif outils fiscalité crypto. Compilation à partir des registres officiels AMF, ESMA, BaFin, CNMV, MFSA, CSSF + sources publiques (Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub).",
+    "Dataset open data CC-BY 4.0 sur le marché crypto français : 33 plateformes auditées (frais, sécurité, MiCA, PSAN), registre PSAN+MiCA consolidé, scores de décentralisation pour 10+ blockchains, top 10 cryptos vulgarisées, comparatif outils fiscalité crypto. Compilation à partir des registres officiels AMF, ESMA, BaFin, CNMV, MFSA, CSSF + sources publiques (Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub).",
   url: baseUrl + "/api-publique",
   sameAs: [baseUrl + "/api/public"],
   keywords: [
@@ -290,7 +290,7 @@ export default function ApiPubliquePage() {
             >
               CC-BY 4.0
             </a>{" "}
-            : 34 plateformes, registre PSAN + MiCA, scores de décentralisation, top
+            : 33 plateformes, registre PSAN + MiCA, scores de décentralisation, top
             cryptos vulgarisées, outils fiscalité. Réutilisation libre — attribution
             obligatoire (lien dofollow vers cryptoreflex.fr).
           </p>

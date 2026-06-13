@@ -68,7 +68,11 @@ function buildPayload(): PlatformsPayload {
       lastUpdated,
       contact: BRAND.partnersEmail,
     },
-    platforms: raw.platforms ?? [],
+    // Exclut les plateformes fermées au marché FR (ex : Gemini) — le dataset public
+    // reflète les plateformes disponibles en France (cohérent avec le compteur 33).
+    platforms: ((raw.platforms as Array<{ fees?: { verified?: { verdict?: string } } }>) ?? []).filter(
+      (p) => p?.fees?.verified?.verdict !== "indisponible",
+    ),
   };
 }
 

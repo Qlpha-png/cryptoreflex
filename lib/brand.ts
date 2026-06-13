@@ -52,12 +52,14 @@ export const BRAND = {
  */
 export const STATS = {
   /**
-   * Nombre de plateformes auditées dans data/platforms.json.
-   * Sync auto possible via `getAllPlatforms().length` mais on garde une
-   * constante affichée pour éviter les drift visuels (ex: 34 → 33 après
-   * dépublication d'une plateforme).
+   * Nombre de plateformes DISPONIBLES en France, affiché partout (« X plateformes »).
+   * = exchanges/brokers de data/platforms.json HORS plateformes fermées au marché FR
+   * (Gemini, avril 2026) et hors hardware wallets. Source UNIQUE pour les strings —
+   * ne jamais hardcoder ce nombre ailleurs, importer STATS.platforms (ou, en Server
+   * Component, getAvailablePlatformCount() dans lib/platforms.ts).
+   * (34 audités − 1 fermé = 33 ; recompter à chaque ajout/fermeture.)
    */
-  platforms: 34,
+  platforms: 33,
   /**
    * Nombre TOTAL de fiches crypto disponibles sur le site.
    * = 100 fiches éditoriales statiques (10 top + 90 hidden gems) + 680 fiches

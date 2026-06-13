@@ -22,7 +22,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { TRACKS, TRACK_GROUPS, getTrack, type Track } from "@/lib/academy-tracks";
 import TrackCard from "@/components/academy/TrackCard";
 import AcademyResumeBanner from "@/components/academy/AcademyResumeBanner";
@@ -304,7 +304,7 @@ export default function AcademiePage() {
                   Plateformes crypto régulées MiCA
                 </div>
                 <div className="mt-1 text-xs text-muted leading-snug">
-                  34 plateformes : frais réels, sécurité, support FR, statut MiCA.
+                  {STATS.platforms} plateformes : frais réels, sécurité, support FR, statut MiCA.
                   Méthodologie publique, pas de classement payé.
                 </div>
               </Link>

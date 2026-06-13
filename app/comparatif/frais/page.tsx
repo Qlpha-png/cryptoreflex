@@ -13,7 +13,7 @@ import {
   Ban,
 } from "lucide-react";
 
-import { getExchangePlatforms } from "@/lib/platforms";
+import { getExchangePlatforms, isAvailableFr, getAvailablePlatformCount } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
@@ -43,9 +43,9 @@ export const revalidate = 86400;
 const PAGE_PATH = "/comparatif/frais";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const VERIFIED_AT = "13 juin 2026";
-const TITLE = "Frais crypto 2026 : 34 plateformes comparées (frais réels)";
-const DESCRIPTION =
-  "Frais réels vérifiés sur grilles officielles : maker, taker, achat carte, SEPA. 34 plateformes crypto en France, sourcées et datées. Du moins cher au plus cher.";
+const PLATFORM_COUNT = getAvailablePlatformCount();
+const TITLE = `Frais crypto 2026 : ${PLATFORM_COUNT} plateformes comparées (frais réels)`;
+const DESCRIPTION = `Frais réels vérifiés sur grilles officielles : maker, taker, achat carte, SEPA. ${PLATFORM_COUNT} plateformes crypto en France, sourcées et datées. Du moins cher au plus cher.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -87,7 +87,9 @@ interface FeesRow {
 }
 
 function buildRows(): FeesRow[] {
-  return getExchangePlatforms().map((p) => ({
+  // Exclut les plateformes fermées au marché FR (Gemini) — on ne compare pas une
+  // plateforme qu'un Français ne peut plus ouvrir. Cohérent avec le compteur global.
+  return getExchangePlatforms().filter(isAvailableFr).map((p) => ({
     id: p.id,
     name: p.name,
     logo: p.logo,

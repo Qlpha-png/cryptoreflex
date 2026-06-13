@@ -26,7 +26,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 const TITLE = "MiCA juillet 2026 : 12 plateformes crypto qui vont disparaître";
 const DESCRIPTION =
-  "Liste à jour des 34 plateformes crypto françaises classées par conformité MiCA + AMF. Quelles vont être bloquées en juillet 2026 ? Quelles plateformes sécurisées choisir ?";
+  "Liste à jour des 33 plateformes crypto disponibles en France classées par conformité MiCA + AMF. Quelles vont être bloquées en juillet 2026 ? Quelles plateformes sécurisées choisir ?";
 
 export const metadata: Metadata = {
   title: TITLE,

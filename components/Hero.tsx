@@ -56,8 +56,10 @@ interface HeroProps {
   fearGreed?: number | null;
 }
 
+// Compteurs alignés sur la source unique lib/brand.ts (STATS.platforms = 33
+// plateformes disponibles, hors fermées FR comme Gemini).
 const STATS = {
-  platforms: 34,
+  platforms: 33,
   cryptos: 780,
   tools: 28,
 } as const;

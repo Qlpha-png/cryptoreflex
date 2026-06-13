@@ -12,6 +12,7 @@ import {
 
 import {
   getAllPlatforms,
+  getAvailablePlatformCount,
   getPlatformById,
   type Platform,
 } from "@/lib/platforms";
@@ -201,7 +202,7 @@ export default function ComparatifHubPage() {
     },
     {
       question: "Combien de plateformes sont comparées sur Cryptoreflex ?",
-      answer: `À ce jour, ${getAllPlatforms().length} plateformes crypto régulées ou présentes en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Binance, Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic, Plus500), wallets (Ledger, Trezor) et services spécialisés (StackinSat, Just Mining, Feel Mining). Liste complète sur /avis.`,
+      answer: `À ce jour, ${getAvailablePlatformCount()} plateformes crypto (exchanges et brokers) disponibles en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Binance, Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic, Plus500) et services spécialisés (StackinSat, Just Mining, Feel Mining), complétés par des hardware wallets (Ledger, Trezor). Liste complète sur /avis.`,
     },
     {
       question: "Cryptoreflex perçoit-il des commissions sur les comparatifs ?",
@@ -439,7 +440,7 @@ export default function ComparatifHubPage() {
               Trouvez votre plateforme en 30 secondes
             </h2>
             <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
-              Plus rapide que de comparer {getAllPlatforms().length} fiches plateformes une par une : le quiz pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
+              Plus rapide que de comparer {getAvailablePlatformCount()} fiches plateformes une par une : le quiz pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
             </p>
             <Link
               href="/quiz/trouve-ton-exchange"

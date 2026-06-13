@@ -149,6 +149,16 @@ export function isAvailableFr(p: Platform): boolean {
 }
 
 /**
+ * Nombre de plateformes (exchanges/brokers) DISPONIBLES en France — le compteur
+ * « X plateformes » affiché partout. Exclut les plateformes fermées au marché FR
+ * (ex : Gemini) et les hardware wallets. Source dynamique = pas de drift.
+ * Constante miroir pour les contextes string : STATS.platforms (lib/brand.ts).
+ */
+export function getAvailablePlatformCount(): number {
+  return getExchangePlatforms().filter(isAvailableFr).length;
+}
+
+/**
  * Frais court et HONNÊTE pour les cartes/listes : le coût réel d'un achat.
  * - exchange order-book : taker (l'ordre marché qu'utilise un débutant) ;
  * - courtier/app : frais d'achat réel (instantBuy), pas le taux "Pro" qui flatte

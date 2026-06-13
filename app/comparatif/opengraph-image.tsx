@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAvailablePlatformCount } from "@/lib/platforms";
 
 /**
  * OG image dynamique pour /comparatif (BATCH 23 SEO P0 #3).
@@ -24,7 +24,7 @@ export const alt = "Comparatif des plateformes crypto MiCA en France 2026 — Cr
 
 export default async function OgImage() {
   const fonts = await loadOgFonts();
-  const platformCount = getAllPlatforms().length;
+  const platformCount = getAvailablePlatformCount();
 
   return new ImageResponse(
     (

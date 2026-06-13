@@ -42,7 +42,11 @@ export async function GET(req: Request): Promise<Response> {
 
   const data = {
     last_updated: raw._meta?.lastUpdated ?? null,
-    platforms: raw.platforms ?? [],
+    // Exclut les plateformes fermées au marché FR (ex : Gemini) — cohérent avec le
+    // compteur "33 plateformes disponibles" affiché côté site.
+    platforms: ((raw.platforms as Array<{ fees?: { verified?: { verdict?: string } } }>) ?? []).filter(
+      (p) => p?.fees?.verified?.verdict !== "indisponible",
+    ),
     history: includeHistory ? (raw.history ?? null) : undefined,
     _capabilities: {
       include_history_available: hasScope(key.scopes, "historical:read"),

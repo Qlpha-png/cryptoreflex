@@ -122,7 +122,7 @@ export default function AlternativeAHub() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/comparatif" className="btn-ghost text-sm">
-              Voir le comparatif des 34 plateformes
+              Voir le comparatif des 33 plateformes
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
