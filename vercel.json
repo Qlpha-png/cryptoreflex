@@ -1,0 +1,7 @@
+{
+  "crons": [
+    { "path": "/api/cron/refresh-ticker-prices", "schedule": "*/10 * * * *" },
+    { "path": "/api/cron/update-static-prices", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/refresh-static-details", "schedule": "0 */6 * * *" }
+  ]
+}
