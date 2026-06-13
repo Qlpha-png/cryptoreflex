@@ -26,25 +26,18 @@ for (let i = 0; i < 220; i++) {
 }
 await browser.close();
 
-// Repère les épisodes de suspension (sy < 0.995) et leur min sy.
-let episodes = 0, worstSy = 1, maxSx = 1, reboundSeen = 0, glitch = 0;
-let inEp = false, epMinSy = 1, epMaxSy = 0;
-for (let i = 1; i < samples.length; i++) {
-  const a = samples[i];
-  if (a.sy < 0.992 || a.sx > 1.008) {
-    if (!inEp) { inEp = true; epMinSy = 1; epMaxSy = 0; episodes++; }
-    epMinSy = Math.min(epMinSy, a.sy);
-    epMaxSy = Math.max(epMaxSy, a.sy);
-    worstSy = Math.min(worstSy, a.sy);
-    maxSx = Math.max(maxSx, a.sx);
-    if (a.sy > 1.001) reboundSeen++;        // étirement = rebond
-    if (a.sy < 0.80) glitch++;              // compression aberrante
-  } else if (inEp) {
-    inEp = false;
-  }
+// Min/max globaux du scale : compression (sy<1) ET détente/pop (sy>1).
+let minSy = 1, maxSy = 1, maxSx = 1, minSx = 1, compFrames = 0, extFrames = 0, glitch = 0;
+for (const a of samples) {
+  minSy = Math.min(minSy, a.sy);
+  maxSy = Math.max(maxSy, a.sy);
+  maxSx = Math.max(maxSx, a.sx);
+  minSx = Math.min(minSx, a.sx);
+  if (a.sy < 0.99) compFrames++;
+  if (a.sy > 1.01) extFrames++;
+  if (a.sy < 0.78 || a.sy > 1.18) glitch++;
 }
 console.log(`viewport ${VIEW.width}x${VIEW.height}`);
-console.log(`épisodes de suspension : ${episodes}`);
-console.log(`compression max : scaleY ${worstSy.toFixed(3)} (attendu ~0.87), scaleX ${maxSx.toFixed(3)}`);
-console.log(`frames de rebond (étirement) : ${reboundSeen}`);
-console.log(glitch ? `ALERTE compression aberrante x${glitch}` : "aucune compression aberrante");
+console.log(`COMPRESSION (préload+atterrissage) : scaleY min ${minSy.toFixed(3)} (~0.87 attendu), scaleX max ${maxSx.toFixed(3)} — ${compFrames} frames`);
+console.log(`DÉTENTE (pop décollage) : scaleY max ${maxSy.toFixed(3)} (>1 attendu), scaleX min ${minSx.toFixed(3)} — ${extFrames} frames`);
+console.log(glitch ? `ALERTE scale aberrant x${glitch}` : "aucun scale aberrant");

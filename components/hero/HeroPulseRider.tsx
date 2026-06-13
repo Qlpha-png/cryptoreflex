@@ -507,6 +507,10 @@ export default function HeroPulseRider({ points }: Props) {
     let landTs = -9999;
     let landImpact = 0;
     let wasInJump = false;
+    // PRÉLOAD : la suspension se charge (compression) juste avant un saut,
+    // puis se détend d'un coup au décollage (« pop »). popTs = instant du
+    // décollage.
+    let popTs = -9999;
     /** Roost : poussière de lumière éjectée par la roue arrière dans les
         montées — dernier tir (throttle ~300 ms). */
     let lastRoost = 0;
@@ -676,6 +680,7 @@ export default function HeroPulseRider({ points }: Props) {
           jumpFromAngle = angleDeg;
           landedFx = false;
           jumpIdx++;
+          popTs = ts; // détente de suspension au décollage (« pop »)
           // Kick de poussière au décollage.
           const rx = x - halfWB;
           emitRoost(rx, yAtX(rx));
@@ -696,21 +701,38 @@ export default function HeroPulseRider({ points }: Props) {
       }
       wasInJump = inJump;
 
-      // SUSPENSION amortie (ressort) : compression scaleY ancrée sur la
-      // ligne des roues (origin 0,0) → le châssis encaisse, les pneus
-      // restent plantés sur le trait. Oscillation amortie : compression
-      // max au toucher, léger rebond, retour au repos en ~360 ms. Jamais
-      // en vol (gate !inJump).
+      // SUSPENSION — cycle complet, scaleY ancré sur la ligne des roues
+      // (origin 0,0) → le châssis travaille, les pneus restent plantés sur
+      // le trait. `flex` > 0 = compression, < 0 = détente :
+      //   1) PRÉLOAD : compression croissante à l'approche d'un saut
+      //   2) POP : détente brève au décollage
+      //   3) ENCAISSEMENT : ressort amorti à l'atterrissage (rebond léger)
       let suspSX = 1;
       let suspSY = 1;
+      let flex = 0;
+      // 1) Préload (au sol, juste avant le décollage).
+      if (!inJump) {
+        const nj = jumps[jumpIdx];
+        if (nj) {
+          const dist = nj.takeoff - x;
+          const win = Math.max(18, smoothSpeed * 0.14);
+          if (dist > 0 && dist < win) flex += 0.55 * (1 - dist / win);
+        }
+      }
+      // 2) Pop de détente au décollage (extension qui retombe en ~180 ms).
+      const tp = ts - popTs;
+      if (tp >= 0 && tp < 180) flex -= 0.5 * Math.exp(-tp / 70);
+      // 3) Encaissement amorti à l'atterrissage (au sol uniquement).
       const tl = ts - landTs;
       if (!inJump && tl >= 0 && tl < 360) {
-        const env = landImpact * Math.exp(-tl / 130);
-        const s = env * Math.cos((2 * Math.PI * tl) / 240);
-        const comp = Math.max(0, s); // compression
-        const reb = Math.max(0, -s); // rebond (étirement léger)
-        suspSY = 1 - comp * 0.13 + reb * 0.06;
-        suspSX = 1 + comp * 0.07 - reb * 0.03;
+        flex += landImpact * Math.exp(-tl / 130) * Math.cos((2 * Math.PI * tl) / 240);
+      }
+      flex = Math.max(-1, Math.min(1.1, flex));
+      if (flex !== 0) {
+        const comp = Math.max(0, flex);
+        const ext = Math.max(0, -flex);
+        suspSY = 1 - comp * 0.13 + ext * 0.06;
+        suspSX = 1 + comp * 0.07 - ext * 0.03;
       }
 
       rider!.style.transform = `translate3d(${x}px, ${cy}px, 0)`;
