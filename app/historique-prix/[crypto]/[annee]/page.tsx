@@ -16,6 +16,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
+import { getYearOhlc, getOhlcMeta, formatOhlcPrice } from "@/lib/historical-ohlc";
 
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
@@ -72,12 +73,25 @@ export function generateMetadata({ params }: Props): Metadata {
   // crypto n'existait pas encore : page garantie vide → on la retire de l'index
   // (mais follow) pour ne pas gâcher le budget de crawl ni diluer le cluster.
   const didNotExist = Number(annee) < c.yearCreated;
+  // OHLC réel (Binance, USD) quand disponible → description chiffrée unique.
+  const ohlc = didNotExist ? null : getYearOhlc(c.id, annee);
   const title = didNotExist
     ? `${c.name} (${c.symbol}) en ${annee} : avant son lancement`
     : `Prix ${c.name} (${c.symbol}) en ${annee}`;
-  const description = didNotExist
-    ? `${c.name} (${c.symbol}) a été lancé en ${c.yearCreated} : le projet n'existait pas encore en ${annee}, il n'y a donc pas de prix de marché.`
-    : `${c.name} (${c.symbol}) en ${annee} : contexte macro du marché crypto, événements marquants et repères pour situer le projet cette année-là.`;
+  let description: string;
+  if (didNotExist) {
+    description = `${c.name} (${c.symbol}) a été lancé en ${c.yearCreated} : le projet n'existait pas encore en ${annee}, il n'y a donc pas de prix de marché.`;
+  } else if (ohlc) {
+    // Forme compacte (ouv./clôt./haut/bas) + garde 160c : les coins à micro-prix
+    // (SHIB, 8 décimales) débordaient sinon et étaient tronqués en SERP.
+    const raw = `Prix ${c.name} (${c.symbol}) en ${annee} : ouv. ${formatOhlcPrice(ohlc.o)}, clôt. ${formatOhlcPrice(ohlc.c)} (${ohlc.chg >= 0 ? "+" : ""}${ohlc.chg} %), haut ${formatOhlcPrice(ohlc.h)}, bas ${formatOhlcPrice(ohlc.l)}. Source Binance (USD).`;
+    description =
+      raw.length > 160
+        ? raw.slice(0, 159).replace(/[\s,;:.…-]+$/, "").replace(/\s+\S*$/, "").trimEnd() + "…"
+        : raw;
+  } else {
+    description = `${c.name} (${c.symbol}) en ${annee} : contexte macro du marché crypto, événements marquants et repères pour situer le projet cette année-là.`;
+  }
   return {
     title,
     description,
@@ -141,6 +155,9 @@ export default function HistoriquePrixPage({ params }: Props) {
   // FIX 2026-06-13 — quand la crypto n'existait pas encore cette année-là, le
   // corps ne doit pas affirmer qu'elle « a évolué » (contradiction avec l'intro).
   const didNotExist = Number(annee) < c.yearCreated;
+  // OHLC annuel réel (Binance, USD) — null si pas de données pour ce couple.
+  const ohlc = didNotExist ? null : getYearOhlc(c.id, annee);
+  const ohlcMeta = getOhlcMeta(c.id);
 
   const schemas = graphSchema([
     articleSchema({
@@ -200,6 +217,49 @@ export default function HistoriquePrixPage({ params }: Props) {
             {buildIntro(c, annee)}
           </p>
         </header>
+
+        {/* OHLC ANNUEL RÉEL (FIX 2026-06-13 — "go OHLC") — la page tenait enfin
+            sa promesse de prix. Données Binance (bougies mensuelles agrégées par
+            année, USD), snapshot statique → zéro coût build. Affiché seulement
+            quand on a la donnée (sinon contexte macro uniquement, sans bluff). */}
+        {ohlc && (
+          <section className="mt-8 rounded-2xl border border-primary/25 bg-primary/5 p-5 sm:p-6">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary-soft" aria-hidden />
+              <h2 className="text-xl font-bold tracking-tight">
+                {c.name} en {annee} : le prix en un coup d&apos;œil
+              </h2>
+            </div>
+            <dl className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <OhlcCell label="Ouverture" value={formatOhlcPrice(ohlc.o)} />
+              <OhlcCell label="Clôture" value={formatOhlcPrice(ohlc.c)} />
+              <OhlcCell label="Plus haut" value={formatOhlcPrice(ohlc.h)} />
+              <OhlcCell label="Plus bas" value={formatOhlcPrice(ohlc.l)} />
+              <div className="rounded-lg border border-border bg-surface px-3 py-2">
+                <dt className="text-[11px] uppercase tracking-wider text-muted">Variation (ouv.→clôt.)</dt>
+                <dd
+                  className={`mt-0.5 text-sm font-bold ${
+                    ohlc.chg >= 0 ? "text-accent-green" : "text-accent-rose"
+                  }`}
+                >
+                  {ohlc.chg >= 0 ? "+" : ""}
+                  {ohlc.chg} %
+                </dd>
+              </div>
+            </dl>
+            <p className="mt-3 text-xs text-muted">
+              Ouverture, clôture, plus haut et plus bas {annee} en{" "}
+              {ohlcMeta?.currency ?? "USD"}, dérivés des bougies mensuelles{" "}
+              {ohlcMeta?.source ?? "Binance"} — données indicatives, à recouper
+              avant toute décision. La variation mesure l&apos;écart
+              ouverture→clôture sur l&apos;année (et non la baisse depuis un
+              sommet précédent).
+              {ohlc.m < 12
+                ? ` Année partielle (${ohlc.m} mois de cotation${ohlc.m > 1 ? "s" : ""}).`
+                : ""}
+            </p>
+          </section>
+        )}
 
         <div className="mt-8">
           <Tldr
@@ -311,5 +371,14 @@ export default function HistoriquePrixPage({ params }: Props) {
         </div>
       </div>
     </article>
+  );
+}
+
+function OhlcCell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface px-3 py-2">
+      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dd className="mt-0.5 text-sm font-semibold text-fg tabular-nums">{value}</dd>
+    </div>
   );
 }
