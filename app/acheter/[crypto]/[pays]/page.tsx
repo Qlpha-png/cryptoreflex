@@ -45,43 +45,32 @@ import {
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 
-// FIX URGENT 2026-05-02 — build Vercel timeout 45min sur 600 URLs.
-// Cause : `dynamic="force-static"` + `dynamicParams=false` force le pre-build
-// de 100 cryptos × 6 pays au build, chacun lit toute la config + plateformes.
-//
-// Fix : ISR à la demande. On garde `revalidate=86400` (1j cache) mais on
-// PASSE en `dynamicParams=true` ET on réduit generateStaticParams à
-// (top 10 cryptos × pays FR) = 10 URLs pre-build (trafic principal France).
-// Les 590 autres URLs sont SSR au 1er hit puis cachées 24h.
+// 2026-06-13 — HARD 404 sur params invalides (fix soft-404 SEO). La page
+// est 100 % SYNCHRONE (aucun fetch réseau au build : tout vient de la data
+// locale getCryptoBySlug/getCountry). On peut donc lister les 600 params
+// valides et passer `dynamicParams=false` : les params hors-liste renvoient
+// un vrai 404 (couche routing), au lieu du soft-200 que produisait
+// `notFound()` sous ISR. Le timeout 45min de 2026-05-02 venait d'un setup
+// force-static plus lourd ; ici 600 rendus statiques sans I/O = quelques
+// secondes (mesuré au build avant push).
 export const revalidate = 86400; // 1 jour ISR
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 interface Props {
   params: { crypto: string; pays: string };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  generateStaticParams — TOP 10 cryptos × pays FR = 10 URLs pre-build       */
-/*  Les 590 autres URLs sont SSR à la demande (ISR cache 24h ensuite).        */
+/*  generateStaticParams — TOUTES les paires valides (100 cryptos × 6 pays)  */
+/*  → params hors-liste = 404 réel (dynamicParams=false).                      */
 /* -------------------------------------------------------------------------- */
-
-const PRE_BUILD_CRYPTO_SLUGS = [
-  "bitcoin",
-  "ethereum",
-  "tether",
-  "binancecoin",
-  "solana",
-  "ripple",
-  "cardano",
-  "dogecoin",
-  "avalanche-2",
-  "polkadot",
-];
 
 export function generateStaticParams() {
   const out: { crypto: string; pays: string }[] = [];
-  for (const cryptoId of PRE_BUILD_CRYPTO_SLUGS) {
-    out.push({ crypto: cryptoId, pays: "fr" });
+  for (const c of getAllCryptos()) {
+    for (const code of COUNTRY_CODES) {
+      out.push({ crypto: c.id, pays: code });
+    }
   }
   return out;
 }
