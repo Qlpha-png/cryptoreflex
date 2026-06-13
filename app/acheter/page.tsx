@@ -51,7 +51,27 @@ export default function AcheterHub() {
   const cryptos = getAllCryptos().slice(0, 24);
   const countries = COUNTRY_CODES.map((code) => COUNTRIES[code]);
 
+  // FIX 2026-06-13 — ItemList du hub (comme /comparatif et /cryptos). Pointe
+  // sur les fiches /cryptos/[id] (entités stables), pas les 600 /acheter/*.
+  const cryptoItemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${BRAND.url}/acheter#itemlist`,
+    name: "Cryptomonnaies analysées par Cryptoreflex",
+    description:
+      "Cryptomonnaies pour lesquelles Cryptoreflex détaille où acheter sur une plateforme régulée et comment déclarer, selon votre pays.",
+    numberOfItems: cryptos.length,
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    itemListElement: cryptos.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${BRAND.url}/cryptos/${c.id}`,
+      name: c.name,
+    })),
+  };
+
   const schema = graphSchema([
+    cryptoItemList,
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Acheter une crypto", url: "/acheter" },

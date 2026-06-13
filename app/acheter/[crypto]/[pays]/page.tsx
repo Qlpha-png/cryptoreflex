@@ -99,8 +99,13 @@ export function generateMetadata({ params }: Props): Metadata {
   const country = getCountry(params.pays);
   if (!c || !country) return { robots: { index: false, follow: false } };
 
-  const title = `Comment acheter ${c.name} (${c.symbol}) en ${country.name} en 2026 — guide MiCA`;
-  const description = `Acheter ${c.name} en ${country.name} : plateformes recommandées, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator}. Guide pas-à-pas Cryptoreflex.`;
+  // FIX 2026-06-13 — title front-loadé sur "Acheter {name}" (query d'intention)
+  // et raccourci : avec le suffixe " | Cryptoreflex" (+15) l'ancien dépassait
+  // 60 chars sur les 600 pages, tronquant la fin. On garde l'année.
+  const longTitle = `Acheter ${c.name} (${c.symbol}) en ${country.name} (2026)`;
+  const title =
+    longTitle.length > 46 ? `Acheter ${c.name} en ${country.name} (2026)` : longTitle;
+  const description = `Acheter ${c.name} en ${country.name} : plateformes, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator} (guide MiCA). Pas-à-pas Cryptoreflex.`;
 
   return {
     title,
@@ -228,7 +233,9 @@ export default function AcheterPaysPage({ params }: Props) {
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
-      { name: "Acheter", url: "/cryptos" },
+      // FIX 2026-06-13 — le crumb pointait /cryptos mais s'appelait "Acheter"
+      // (libellé ≠ destination, et le hub /acheter — vrai parent — était absent).
+      { name: "Acheter une crypto", url: "/acheter" },
       { name: c.name, url: `/cryptos/${c.id}` },
       {
         name: `${country.name}`,
@@ -251,8 +258,8 @@ export default function AcheterPaysPage({ params }: Props) {
             Accueil
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/cryptos" className="hover:text-fg">
-            Cryptos
+          <Link href="/acheter" className="hover:text-fg">
+            Acheter une crypto
           </Link>
           <span className="mx-2">/</span>
           <Link href={`/cryptos/${c.id}`} className="hover:text-fg">
@@ -524,6 +531,27 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
             <div className="rounded-xl border border-border bg-surface p-4">
               <h3 className="text-sm font-bold text-fg">Pourquoi {c.name} est à surveiller</h3>
               <p className="mt-2 text-sm text-fg/80 leading-relaxed">{c.whyHiddenGem}</p>
+            </div>
+          )}
+          {/* Signaux de fiabilité (sources publiques) — le levier de confiance
+              le plus fort avant un dépôt sur un actif moins connu. Data locale,
+              cadrage non-jugement (aligné /cryptos), AMF-safe. */}
+          {c.reliability && (
+            <div className="rounded-xl border border-border bg-surface p-4">
+              <h3 className="text-sm font-bold text-fg">Signaux de fiabilité (sources publiques)</h3>
+              <p className="mt-1 text-xs text-muted">
+                Critères vérifiables sur sources ouvertes (registres, rapports d&apos;audit). Aucun jugement de valeur.
+              </p>
+              <dl className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <EditorialStat label="Score fiabilité" value={`${c.reliability.score.toFixed(1)}/10`} />
+                <EditorialStat label="Levée de fonds" value={c.reliability.fundingRaised} />
+                <EditorialStat label="Audité par" value={c.reliability.auditedBy.join(", ")} />
+              </dl>
+              {c.reliability.backers.length > 0 && (
+                <p className="mt-3 text-sm text-fg/75">
+                  <span className="font-semibold text-fg/85">Investisseurs :</span> {c.reliability.backers.join(" · ")}
+                </p>
+              )}
             </div>
           )}
           {c.risks.length > 0 && (

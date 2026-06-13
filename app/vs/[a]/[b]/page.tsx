@@ -55,6 +55,8 @@ import {
 } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import RelatedPagesNav from "@/components/RelatedPagesNav";
+import NextStepsGuide from "@/components/NextStepsGuide";
 
 // BATCH 58 (2026-05-03) — Extension TOP 30 -> TOP 100 (4950 paires).
 // Strategy : pre-build top 15 cryptos = 105 paires (les plus search FR), les
@@ -113,8 +115,16 @@ export function generateMetadata({ params }: Props): Metadata {
 
   // BATCH 58 — retire '— Cryptoreflex' suffix manuel : layout root applique
   // deja template '%s | Cryptoreflex' -> sans ca on aurait '...Cryptoreflex | Cryptoreflex'.
-  const title = `${a.name} vs ${b.name} : comparatif crypto complet 2026`;
-  const description = `${a.name} (${a.symbol}) et ${b.name} (${b.symbol}) en face-à-face : market cap, supply, sécurité, plateformes FR. ${a.tagline} face à ${b.tagline.toLowerCase()}.`;
+  // FIX 2026-06-13 — title raccourci (symboles front-loadés, query exacte
+  // "btc vs eth") pour rester < 60 chars avec le suffixe " | Cryptoreflex".
+  const title = `${a.symbol} vs ${b.symbol} : comparatif 2026`;
+  // Description front-loadée + coupée proprement à 160 chars (le tail unique
+  // était systématiquement tronqué par Google sinon). Une seule tagline.
+  const rawDescription = `${a.name} (${a.symbol}) ou ${b.name} (${b.symbol}) en 2026 : market cap, supply, risque, plateformes FR. ${a.tagline.replace(/\.*$/, "")}.`;
+  const description =
+    rawDescription.length > 160
+      ? rawDescription.slice(0, 159).replace(/[\s,;:.…-]+$/, "").replace(/\s+\S*$/, "").trimEnd() + "…"
+      : rawDescription;
 
   const url = `${BRAND.url}/vs/${params.a}/${params.b}`;
   return {
@@ -149,6 +159,10 @@ function fmtUsd(n: number | null | undefined): string {
 
 function consensusOf(c: AnyCrypto): string {
   return c.kind === "top10" ? c.consensus : "—";
+}
+
+function blockTimeOf(c: AnyCrypto): string {
+  return c.kind === "top10" ? c.blockTime : "—";
 }
 
 function maxSupplyOf(c: AnyCrypto): string {
@@ -316,7 +330,7 @@ function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
   if (sameCategory) {
     conclusion = `${a.name} et ${b.name} sont des concurrents directs sur le créneau "${a.category}". L'arbitrage se fait sur 3 axes : maturité (${elder.name} a ${ageGap} an${ageGap > 1 ? "s" : ""} d'avance), niveau de risque (${riskA} pour ${a.name}, ${riskB} pour ${b.name}) et disponibilité plateformes en France (${a.whereToBuy.length} vs ${b.whereToBuy.length}).`;
   } else {
-    conclusion = `${a.name} et ${b.name} sont sur des créneaux différents : ${a.name} cible "${a.category}" tandis que ${b.name} se positionne sur "${b.category}". Ce ne sont pas des concurrents directs — ils peuvent coexister dans un portefeuille diversifié si les use cases t'intéressent les deux.`;
+    conclusion = `${a.name} et ${b.name} sont sur des créneaux différents : ${a.name} cible "${a.category}" tandis que ${b.name} se positionne sur "${b.category}". Ce ne sont pas des concurrents directs — ils peuvent coexister dans un portefeuille diversifié si leurs deux cas d'usage vous intéressent.`;
   }
 
   // 2. Choix débutant : le moins risqué + le plus ancien
@@ -334,7 +348,7 @@ function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
 
   // 3. Choix expérimenté : volatilité + use case sophistiqué
   const riskier = (riskOrder[riskA] ?? 0) >= (riskOrder[riskB] ?? 0) ? a : b;
-  const expReason = `Risque ${riskOf(riskier)} = volatilité supérieure mais potentiel de gains/pertes asymétrique. Cas d'usage "${riskier.tagline.toLowerCase()}" demande de comprendre la thèse avant d'investir.`;
+  const expReason = `Risque ${riskOf(riskier)} = volatilité supérieure mais potentiel de gains/pertes asymétrique. Cas d'usage "${riskier.tagline.toLowerCase()}" demande de comprendre la thèse en amont.`;
 
   // 4. Long terme : ancienneté = anti-fragilité (Lindy effect)
   const elderAge = new Date().getFullYear() - elder.yearCreated;
@@ -546,6 +560,7 @@ export default async function CryptoPairPage({ params }: Props) {
                   winner={a.yearCreated < b.yearCreated ? "a" : a.yearCreated > b.yearCreated ? "b" : null}
                 />
                 <Row label="Consensus" a={consensusOf(a)} b={consensusOf(b)} />
+                <Row label="Temps de bloc" a={blockTimeOf(a)} b={blockTimeOf(b)} />
                 <Row label="Niveau de risque" a={riskOf(a)} b={riskOf(b)} />
                 <Row label="Beginner-friendly" a={beginnerScore(a)} b={beginnerScore(b)} />
                 <Row
@@ -628,7 +643,7 @@ export default async function CryptoPairPage({ params }: Props) {
         <section className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6">
           <h2 className="text-2xl font-bold text-fg flex items-center gap-2">
             <Trophy className="h-6 w-6 text-primary" />
-            {a.name} ou {b.name} : sur quoi investir ?
+            {a.name} ou {b.name} : quel profil pour quelle crypto ?
           </h2>
           <p className="mt-3 text-base text-fg/85 leading-relaxed">
             {verdict.conclusion}
@@ -639,7 +654,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 Profil débutant
               </div>
               <div className="mt-1 text-lg font-bold text-fg">
-                → {verdict.beginnerChoice.winner.name}
+                Plutôt adapté : {verdict.beginnerChoice.winner.name}
               </div>
               <p className="mt-2 text-xs text-fg/75 leading-relaxed">
                 {verdict.beginnerChoice.reason}
@@ -650,7 +665,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 Profil expérimenté
               </div>
               <div className="mt-1 text-lg font-bold text-fg">
-                → {verdict.experimentedChoice.winner.name}
+                Plutôt adapté : {verdict.experimentedChoice.winner.name}
               </div>
               <p className="mt-2 text-xs text-fg/75 leading-relaxed">
                 {verdict.experimentedChoice.reason}
@@ -661,7 +676,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 Long terme (5-10 ans)
               </div>
               <div className="mt-1 text-lg font-bold text-fg">
-                → {verdict.longTermChoice.winner.name}
+                Plutôt adapté : {verdict.longTermChoice.winner.name}
               </div>
               <p className="mt-2 text-xs text-fg/75 leading-relaxed">
                 {verdict.longTermChoice.reason}
@@ -669,7 +684,7 @@ export default async function CryptoPairPage({ params }: Props) {
             </div>
           </div>
           <p className="mt-5 text-xs text-fg/60 leading-relaxed">
-            ⚠️ Ces recommandations sont DÉRIVÉES des données factuelles (risque, ancienneté,
+            ⚠️ Ces correspondances sont DÉRIVÉES des données factuelles (risque, ancienneté,
             disponibilité). Ce n'est PAS un conseil en investissement individualisé. Voir notre{" "}
             <Link href="/methodologie" className="underline font-semibold hover:text-primary-soft">
               méthodologie complète
@@ -786,6 +801,20 @@ export default async function CryptoPairPage({ params }: Props) {
 
         <div className="mt-12">
           <AmfDisclaimer variant="educatif" />
+        </div>
+
+        {/* FIX 2026-06-13 — /vs était la SEULE route à trafic sans next-steps :
+            le visiteur arrivait en cul-de-sac. On ajoute le maillage + les
+            prochaines étapes comme sur les autres clusters. */}
+        <div className="mt-12">
+          <RelatedPagesNav
+            currentPath={`/vs/${a.id}/${b.id}`}
+            variant="default"
+            limit={4}
+          />
+        </div>
+        <div className="mt-12">
+          <NextStepsGuide context="comparator" />
         </div>
       </div>
     </article>

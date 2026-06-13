@@ -100,7 +100,26 @@ export default function VsHub() {
   const totalPairs = getCryptoPairs().length;
   const mesh = buildCryptoMesh();
 
+  // FIX 2026-06-13 — ItemList des duels phares (comme /comparatif et /cryptos).
+  // Le hub du plus gros cluster de trafic n'avait que BreadcrumbList.
+  const featuredItemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Duels crypto les plus consultés",
+    description:
+      "Comparatifs crypto vs crypto les plus recherchés (prix, market cap, supply, plateformes FR).",
+    numberOfItems: FEATURED_PAIRS.length,
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    itemListElement: FEATURED_PAIRS.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${BRAND.url}/vs/${p.a}/${p.b}`,
+      name: `${p.aLabel} vs ${p.bLabel}`,
+    })),
+  };
+
   const schema = graphSchema([
+    featuredItemList,
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Duels crypto", url: "/vs" },

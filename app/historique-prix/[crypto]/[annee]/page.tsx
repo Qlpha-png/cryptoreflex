@@ -74,7 +74,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const didNotExist = Number(annee) < c.yearCreated;
   const title = didNotExist
     ? `${c.name} (${c.symbol}) en ${annee} : avant son lancement`
-    : `Prix ${c.name} (${c.symbol}) en ${annee} : contexte et repères`;
+    : `Prix ${c.name} (${c.symbol}) en ${annee}`;
   const description = didNotExist
     ? `${c.name} (${c.symbol}) a été lancé en ${c.yearCreated} : le projet n'existait pas encore en ${annee}, il n'y a donc pas de prix de marché.`
     : `${c.name} (${c.symbol}) en ${annee} : contexte macro du marché crypto, événements marquants et repères pour situer le projet cette année-là.`;
@@ -138,6 +138,9 @@ export default function HistoriquePrixPage({ params }: Props) {
   }
   const annee = params.annee as Annee;
   const events = MACRO_EVENTS[annee];
+  // FIX 2026-06-13 — quand la crypto n'existait pas encore cette année-là, le
+  // corps ne doit pas affirmer qu'elle « a évolué » (contradiction avec l'intro).
+  const didNotExist = Number(annee) < c.yearCreated;
 
   const schemas = graphSchema([
     articleSchema({
@@ -175,13 +178,23 @@ export default function HistoriquePrixPage({ params }: Props) {
             <Calendar className="h-3 w-3" aria-hidden /> Historique annuel
           </span>
           <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
-            Prix {c.name} ({c.symbol}) en{" "}
+            {didNotExist ? <>{c.name} ({c.symbol}) en{" "}</> : <>Prix {c.name} ({c.symbol}) en{" "}</>}
             <span className="gradient-text">{annee}</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            {c.name} sur l&apos;année {annee} : le contexte macro du marché
-            crypto, les événements marquants et des repères pour situer le
-            projet cette année-là.
+            {didNotExist ? (
+              <>
+                {c.name} ({c.symbol}) a été lancé en {c.yearCreated} : en {annee}
+                {" "}le projet n&apos;existait pas encore, il n&apos;y a donc pas de
+                prix de marché. Ci-dessous, des repères macro du marché crypto de l&apos;année.
+              </>
+            ) : (
+              <>
+                {c.name} sur l&apos;année {annee} : le contexte macro du marché
+                crypto, les événements marquants et des repères pour situer le
+                projet cette année-là.
+              </>
+            )}
           </p>
           <p className="mt-3 text-base text-fg/75 leading-relaxed max-w-3xl">
             {buildIntro(c, annee)}
@@ -190,7 +203,11 @@ export default function HistoriquePrixPage({ params }: Props) {
 
         <div className="mt-8">
           <Tldr
-            headline={`En ${annee}, ${c.name} a évolué dans un contexte macro spécifique. Voici les événements marquants et les repères de l'année.`}
+            headline={
+              didNotExist
+                ? `${c.name} a été lancé en ${c.yearCreated} ; ${annee} précède son existence — repères macro du marché crypto ci-dessous.`
+                : `En ${annee}, ${c.name} a évolué dans un contexte macro spécifique. Voici les événements marquants et les repères de l'année.`
+            }
             bullets={events.map((e) => ({ emoji: "📅", text: e }))}
             readingTime="3 min"
             level="Tous niveaux"
@@ -200,7 +217,7 @@ export default function HistoriquePrixPage({ params }: Props) {
         {/* Section "événements macro" */}
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">
-            Le contexte macro en {annee}
+            {didNotExist ? `Le marché crypto en ${annee}` : `Le contexte macro en ${annee}`}
           </h2>
           <ul className="mt-4 space-y-3">
             {events.map((event, i) => (
@@ -215,6 +232,12 @@ export default function HistoriquePrixPage({ params }: Props) {
               </li>
             ))}
           </ul>
+          {/* FIX 2026-06-13 — attribution source des chiffres macro (E-E-A-T). */}
+          <p className="mt-3 text-xs text-muted">
+            Repères issus de l&apos;historique public du marché crypto, vérifiés
+            éditorialement et à recouper avant toute décision. Les chiffres (ATH,
+            variations annuelles) sont donnés à titre indicatif.
+          </p>
         </section>
 
         {/* Live data hint — V2 fetch CoinGecko historical */}
@@ -223,13 +246,23 @@ export default function HistoriquePrixPage({ params }: Props) {
             <Info className="h-5 w-5 text-primary-soft mt-0.5 shrink-0" aria-hidden />
             <div>
               <h2 className="text-lg font-bold">
-                Données prix détaillées
+                {didNotExist ? `${c.name} avant son lancement` : "Données prix détaillées"}
               </h2>
               <p className="mt-2 text-sm text-fg/80 leading-relaxed">
-                Pour visualiser l&apos;évolution complète (chart interactif,
-                ATH/ATL, volume, volatilité) du prix {c.name} en {annee}, utilisez
-                notre simulateur ROI sur la fiche détaillée. Sélectionnez la date
-                de départ {annee} pour voir le rendement à aujourd&apos;hui.
+                {didNotExist ? (
+                  <>
+                    {c.name} n&apos;existait pas encore en {annee} (lancé en {c.yearCreated}).
+                    Pour suivre son parcours réel, commencez à son année de lancement
+                    sur la fiche détaillée.
+                  </>
+                ) : (
+                  <>
+                    Pour visualiser l&apos;évolution complète (chart interactif,
+                    ATH/ATL, volume, volatilité) du prix {c.name} en {annee}, utilisez
+                    notre simulateur ROI sur la fiche détaillée. Sélectionnez la date
+                    de départ {annee} pour voir le rendement à aujourd&apos;hui.
+                  </>
+                )}
               </p>
               <Link
                 href={`/cryptos/${c.id}#roi-simulator`}
