@@ -258,12 +258,12 @@ export default function Cerfa2086AutoPage() {
                 description="Waltio vs Koinly vs CoinTracking — choisissez l'outil adapté à votre volume."
               />
               <CrossLink
-                href="/articles/declaration-crypto-cerfa-2086-tutoriel-2026"
+                href="/blog/declaration-crypto-cerfa-2086-tutoriel-2026"
                 title="Tutoriel Cerfa 2086 pas à pas"
                 description="Guide complet pour remplir le formulaire 2086 manuellement."
               />
               <CrossLink
-                href="/articles/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
+                href="/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
                 title="3916-bis : déclarer ses comptes étrangers"
                 description="L'amende est de 750 €/compte oublié. Procédure complète."
               />
