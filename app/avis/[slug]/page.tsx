@@ -274,6 +274,24 @@ export default function ReviewPage({ params }: Props) {
   ]);
 
   const available = isAvailableFr(p);
+  const v = p.fees.verified;
+  const mt = v?.makerTakerApplies ?? true;
+  const verdictLabel =
+    v?.verdict === "fiable"
+      ? "Vérifié"
+      : v?.verdict === "douteux"
+      ? "À vérifier"
+      : v?.verdict === "indisponible"
+      ? "Fermé FR"
+      : "Non vérifiable";
+  const verdictClass =
+    v?.verdict === "fiable"
+      ? "bg-accent-green/15 text-accent-green"
+      : v?.verdict === "douteux"
+      ? "bg-amber-400/15 text-amber-300"
+      : v?.verdict === "indisponible"
+      ? "bg-red-400/15 text-red-300"
+      : "bg-elevated text-muted";
 
   return (
     <article className="py-12 sm:py-16">
@@ -502,32 +520,90 @@ export default function ReviewPage({ params }: Props) {
           <p className="mt-2 text-sm text-muted">
             Estimation indicative au {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} — recoupe avec le backoffice de la plateforme avant tout investissement engageant.
           </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-elevated p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Achat instantané (CB)</div>
-              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+          {v && (
+            <div className="mt-4 rounded-xl border border-primary/25 bg-primary/5 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-primary-soft">
+                  Frais réel vérifié
+                </span>
+                <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${verdictClass}`}>
+                  {verdictLabel}
+                </span>
               </div>
-              <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
-            </div>
-            <div className="rounded-xl border border-border bg-elevated p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
-              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                {(1000 * p.fees.spotTaker / 100).toFixed(2)} €
+              <div className="mt-1 text-lg font-bold text-white">{v.realCostPct}</div>
+              {v.note && (
+                <p className="mt-1 text-xs text-muted leading-snug">{v.note}</p>
+              )}
+              <div className="mt-2 text-[11px] text-muted">
+                <a
+                  href={v.source}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  className="underline hover:text-white"
+                >
+                  Source
+                </a>{" "}
+                · vérifié le {v.date}
               </div>
-              <div className="mt-1 text-xs text-fg/60">{p.fees.spotTaker}% sur 1 000 €</div>
             </div>
-            <div className="rounded-xl border border-border bg-elevated p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
-              <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                {(1000 * p.fees.spotMaker / 100).toFixed(2)} €
+          )}
+
+          {mt ? (
+            <>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-border bg-elevated p-4">
+                  <div className="text-xs uppercase tracking-wide text-muted">Achat instantané (CB)</div>
+                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+                  </div>
+                  <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
+                </div>
+                <div className="rounded-xl border border-border bg-elevated p-4">
+                  <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
+                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    {(1000 * p.fees.spotTaker / 100).toFixed(2)} €
+                  </div>
+                  <div className="mt-1 text-xs text-fg/60">{p.fees.spotTaker}% sur 1 000 €</div>
+                </div>
+                <div className="rounded-xl border border-border bg-elevated p-4">
+                  <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
+                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    {(1000 * p.fees.spotMaker / 100).toFixed(2)} €
+                  </div>
+                  <div className="mt-1 text-xs text-fg/60">{p.fees.spotMaker}% sur 1 000 €</div>
+                </div>
               </div>
-              <div className="mt-1 text-xs text-fg/60">{p.fees.spotMaker}% sur 1 000 €</div>
-            </div>
-          </div>
-          <p className="mt-4 text-xs text-muted leading-relaxed">
-            <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
-          </p>
+              <p className="mt-4 text-xs text-muted leading-relaxed">
+                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-border bg-elevated p-4">
+                  <div className="text-xs uppercase tracking-wide text-muted">Frais d&apos;achat (courtier)</div>
+                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+                  </div>
+                  <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
+                </div>
+                <div className="rounded-xl border border-border bg-elevated p-4">
+                  <div className="text-xs uppercase tracking-wide text-muted">Retrait SEPA</div>
+                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    {typeof p.fees.withdrawalFiatSepa === "number"
+                      ? p.fees.withdrawalFiatSepa === 0
+                        ? "Gratuit"
+                        : `${p.fees.withdrawalFiatSepa} €`
+                      : p.fees.withdrawalFiatSepa}
+                  </div>
+                  <div className="mt-1 text-xs text-fg/60">par retrait</div>
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-muted leading-relaxed">
+                <strong className="text-fg/80">À noter :</strong> {p.name} est un courtier — il n&apos;y a pas de frais maker/taker séparés. Vous payez un frais unique (souvent assorti d&apos;un spread intégré au prix). Le détail vérifié figure dans «&nbsp;Frais réel vérifié&nbsp;» ci-dessus. Spread : {p.fees.spread}.
+              </p>
+            </>
+          )}
         </section>
 
         {/* SCORING DÉTAILLÉ */}
@@ -558,14 +634,23 @@ export default function ReviewPage({ params }: Props) {
           <div className="mt-5 overflow-hidden rounded-xl border border-border">
             <table className="w-full text-sm">
               <tbody className="divide-y divide-border">
-                <tr>
-                  <td className="px-4 py-3 text-muted">Spot maker</td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotMaker}%</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 text-muted">Spot taker</td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotTaker}%</td>
-                </tr>
+                {mt ? (
+                  <>
+                    <tr>
+                      <td className="px-4 py-3 text-muted">Spot maker</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotMaker}%</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 text-muted">Spot taker</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotTaker}%</td>
+                    </tr>
+                  </>
+                ) : (
+                  <tr>
+                    <td className="px-4 py-3 text-muted">Frais d&apos;achat/vente (courtier)</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotTaker}%</td>
+                  </tr>
+                )}
                 <tr>
                   <td className="px-4 py-3 text-muted">Achat instantané (CB)</td>
                   <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.instantBuy}%</td>
