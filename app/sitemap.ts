@@ -112,6 +112,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/alternative-a`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/historique-prix`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/vs`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
+    // Hub /acheter créé 2026-06-13 (cluster 600 pages crypto×pays) — ajout
+    // au sitemap pour découverte directe (manquait : page nouvelle).
+    { url: `${SITE_URL}/acheter`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     // Landing pages dédiées campagnes (MiCA, déclaration CERFA) — meilleurs
     // taux de conversion newsletter, justifient priority haute.
     { url: `${SITE_URL}/lp/mica-2026`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
