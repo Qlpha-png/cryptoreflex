@@ -54,7 +54,7 @@ export default async function DevDashboardPage({
         <p className="mt-3 text-muted-foreground max-w-2xl">
           Branchez vos outils, vos scripts ou votre projet quant sur les données
           Cryptoreflex via une API REST stable. Documentez les endpoints sur la{" "}
-          <Link href="/dev/api/docs" className="underline">
+          <Link href="/api-publique" className="underline">
             page développeur
           </Link>
           .
