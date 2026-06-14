@@ -1,8 +1,8 @@
 ---
 title: "Configurer Ledger Nano X en 30 minutes : guide pas-à-pas 2026"
 slug: "configurer-ledger-nano-x-30-minutes-guide-pas-a-pas"
-description: "Tutoriel complet pour configurer ton Ledger Nano X en 30 minutes : unboxing, code PIN, génération seed 24 mots, installation Ledger Live, ajout de comptes BTC et ETH, premier transfert test. Toutes les étapes, captures et pièges à éviter."
-excerpt: "Tu viens de recevoir ton Ledger Nano X ? Ce guide pas-à-pas te fait passer de la boîte fermée à un wallet 100 % opérationnel en 30 minutes chrono, sans rater aucune étape critique."
+description: "Tutoriel complet pour configurer votre Ledger Nano X en 30 minutes : unboxing, code PIN, génération seed 24 mots, installation Ledger Live, ajout de comptes BTC et ETH, premier transfert test. Toutes les étapes, captures et pièges à éviter."
+excerpt: "Vous venez de recevoir votre Ledger Nano X ? Ce guide pas-à-pas vous fait passer de la boîte fermée à un wallet 100 % opérationnel en 30 minutes chrono, sans rater aucune étape critique."
 category: "Self-custody"
 date: "2026-04-26"
 lastUpdated: "2026-04-26"
@@ -27,125 +27,125 @@ keywords:
   - "initialiser ledger nano x"
 ---
 
-Tu viens de recevoir ton **Ledger Nano X** et tu veux faire les choses correctement du premier coup ? Bonne nouvelle : la configuration prend **30 minutes**, ne demande aucune compétence technique, et si tu suis ce guide à la lettre, tu obtiendras un wallet **inviolable à distance** et utilisable sur ordinateur comme sur smartphone via Bluetooth.
+Vous venez de recevoir votre **Ledger Nano X** et vous voulez faire les choses correctement du premier coup ? Bonne nouvelle : la configuration prend **30 minutes**, ne demande aucune compétence technique, et si vous suivez ce guide à la lettre, vous obtiendrez un wallet **inviolable à distance** et utilisable sur ordinateur comme sur smartphone via Bluetooth.
 
-Je vais te guider étape par étape, comme si on déballait l'appareil ensemble. À la fin, tu auras un Ledger configuré, ta seed phrase sauvegardée en sécurité, Ledger Live installé, des comptes BTC et ETH créés, et un premier petit transfert test validé. Aucune approximation, aucune zone d'ombre.
+Je vais vous guider étape par étape, comme si on déballait l'appareil ensemble. À la fin, vous aurez un Ledger configuré, votre seed phrase sauvegardée en sécurité, Ledger Live installé, des comptes BTC et ETH créés, et un premier petit transfert test validé. Aucune approximation, aucune zone d'ombre.
 
-<Callout type="warning" title="Avant de commencer : ce qu'il te faut">
+<Callout type="warning" title="Avant de commencer : ce qu'il vous faut">
 - Un **Ledger Nano X neuf, scellé**, acheté sur <AffiliateLink platform="ledger">le site officiel Ledger</AffiliateLink> (jamais Amazon ni eBay).
 - Le **carnet de seed phrase** fourni dans la boîte (3 carnets sont inclus).
 - Un **stylo bille** (pas de feutre qui bave dans le temps).
-- 30 minutes au calme, sans interruption, dans une pièce **non filmée** (pas devant ta caméra de portier connecté ni ta GoPro).
+- 30 minutes au calme, sans interruption, dans une pièce **non filmée** (pas devant votre caméra de portier connecté ni votre GoPro).
 - Un ordinateur Windows/macOS/Linux avec un câble USB-C, **ou** un smartphone Android/iOS récent pour la version Bluetooth.
 </Callout>
 
 ## 1. Préparation : l'environnement avant de toucher à l'appareil
 
-Avant de déchirer le carton, prépare ton environnement. C'est l'étape que tout le monde néglige et qui peut tout faire foirer.
+Avant de déchirer le carton, préparez votre environnement. C'est l'étape que tout le monde néglige et qui peut tout faire foirer.
 
 **Check-list pré-configuration :**
-1. Tu es **seul dans la pièce**, pas de caméra, pas de webcam allumée.
-2. Tu as téléchargé Ledger Live **depuis le site officiel** (`ledger.com/ledger-live`) — surtout pas un lien Google Ads en haut des résultats, qui mènent souvent à des sites pirates parfaitement copiés.
-3. Ton ordinateur est à jour (OS, navigateur), antivirus actif, pas de fichiers suspects récemment téléchargés.
-4. Ton téléphone n'est **pas en train de filmer** ce que tu fais (pas de Snapchat ouvert, pas d'appel vidéo).
-5. Tu as une bouteille d'eau et 30 minutes : **ne fais pas ça à la va-vite entre deux réunions**.
+1. Vous êtes **seul dans la pièce**, pas de caméra, pas de webcam allumée.
+2. Vous avez téléchargé Ledger Live **depuis le site officiel** (`ledger.com/ledger-live`) — surtout pas un lien Google Ads en haut des résultats, qui mènent souvent à des sites pirates parfaitement copiés.
+3. Votre ordinateur est à jour (OS, navigateur), antivirus actif, pas de fichiers suspects récemment téléchargés.
+4. Votre téléphone n'est **pas en train de filmer** ce que vous faites (pas de Snapchat ouvert, pas d'appel vidéo).
+5. Vous avez une bouteille d'eau et 30 minutes : **ne faites pas ça à la va-vite entre deux réunions**.
 
 Cette préparation paraît parano. Elle ne l'est pas. Plusieurs cas documentés en 2024-2025 montrent que des seeds ont fuité parce qu'elles ont été tapées devant une caméra de surveillance domestique sans que la victime y pense.
 
 ## 2. Unboxing : vérifier que rien n'a été altéré
 
-La boîte du Ledger Nano X est conçue pour rendre toute manipulation visible. Vérifie :
+La boîte du Ledger Nano X est conçue pour rendre toute manipulation visible. Vérifiez :
 
 - **L'emballage extérieur** est intact, pas d'ouverture/recollage visible.
 - Le **scellé en plastique transparent** sur la boîte n'a pas été coupé puis recollé.
 - À l'intérieur : l'appareil, un câble USB-C, **3 carnets de seed phrase** (papier épais, fond gris), une dragonne, un livret de démarrage rapide.
-- L'appareil **n'est pas pré-configuré** : si en l'allumant pour la première fois, il te propose une seed phrase déjà prête, **arrête tout** et contacte le support Ledger. C'est un appareil piégé.
+- L'appareil **n'est pas pré-configuré** : si en l'allumant pour la première fois, il vous propose une seed phrase déjà prête, **arrêtez tout** et contactez le support Ledger. C'est un appareil piégé.
 
 <Callout type="info" title="Ledger n'envoie jamais de seed pré-imprimée">
-Tout vrai Ledger te demande de **générer toi-même** la seed à la première initialisation. Si tu reçois une feuille avec 24 mots déjà imprimés dedans, c'est une arnaque, point final. Renvoie l'appareil et préviens Ledger.
+Tout vrai Ledger vous demande de **générer vous-même** la seed à la première initialisation. Si vous recevez une feuille avec 24 mots déjà imprimés dedans, c'est une arnaque, point final. Renvoyez l'appareil et prévenez Ledger.
 </Callout>
 
 ## 3. Étape 1 — Mise sous tension et choix du PIN
 
-Branche le Ledger Nano X sur ton ordinateur via le câble USB-C. L'appareil s'allume automatiquement. Tu vois le logo Ledger, puis « Welcome to Ledger Nano X ».
+Branchez le Ledger Nano X sur votre ordinateur via le câble USB-C. L'appareil s'allume automatiquement. Vous voyez le logo Ledger, puis « Welcome to Ledger Nano X ».
 
 Navigation : **bouton gauche** = précédent, **bouton droit** = suivant, **les deux ensemble** = valider.
 
-L'appareil te propose deux options :
-- **Set up as new device** (configurer comme appareil neuf) → choisis cette option.
-- **Restore from recovery phrase** (restaurer depuis une seed existante) → seulement si tu remplaces un Ledger précédent.
+L'appareil vous propose deux options :
+- **Set up as new device** (configurer comme appareil neuf) → choisissez cette option.
+- **Restore from recovery phrase** (restaurer depuis une seed existante) → seulement si vous remplacez un Ledger précédent.
 
-Première vraie étape : **choisir un code PIN de 4 à 8 chiffres**. Recommandation : **8 chiffres**, parce que la sécurité augmente exponentiellement avec la longueur. Évite les patterns évidents (1234, ta date de naissance, ton année de naissance, 0000).
+Première vraie étape : **choisir un code PIN de 4 à 8 chiffres**. Recommandation : **8 chiffres**, parce que la sécurité augmente exponentiellement avec la longueur. Évitez les patterns évidents (1234, votre date de naissance, votre année de naissance, 0000).
 
-L'appareil te fait saisir le PIN deux fois pour confirmation. **Note-le quelque part de sûr** (gestionnaire de mots de passe, ou simplement avec ta seed phrase). Si tu te trompes 3 fois consécutives à l'usage, le Ledger se réinitialise — tu devras restaurer avec ta seed.
+L'appareil vous fait saisir le PIN deux fois pour confirmation. **Notez-le quelque part de sûr** (gestionnaire de mots de passe, ou simplement avec votre seed phrase). Si vous vous trompez 3 fois consécutives à l'usage, le Ledger se réinitialise — vous devrez restaurer avec votre seed.
 
 ## 4. Étape 2 — Génération de la seed phrase 24 mots
 
-C'est **l'étape la plus critique de tout le processus**. Concentre-toi.
+C'est **l'étape la plus critique de tout le processus**. Concentrez-vous.
 
-L'appareil affiche : « Write down your recovery phrase ». Il va générer **24 mots** aléatoires et te les afficher un par un, sur son écran sécurisé.
+L'appareil affiche : « Write down your recovery phrase ». Il va générer **24 mots** aléatoires et vous les afficher un par un, sur son écran sécurisé.
 
 Pour chaque mot :
-1. Note-le **soigneusement** sur le carnet papier fourni, à la position numérotée correspondante (1 à 24).
-2. Vérifie l'orthographe **deux fois**. Les mots viennent de la liste BIP39 (2 048 mots), une seule lettre erronée et la seed est invalide.
-3. Écris **lisiblement** — pas de pattes de mouche, pas de lettres ambiguës (un « 0 » qui ressemble à un « O »).
-4. Avance avec le bouton droit pour passer au mot suivant.
+1. Notez-le **soigneusement** sur le carnet papier fourni, à la position numérotée correspondante (1 à 24).
+2. Vérifiez l'orthographe **deux fois**. Les mots viennent de la liste BIP39 (2 048 mots), une seule lettre erronée et la seed est invalide.
+3. Écrivez **lisiblement** — pas de pattes de mouche, pas de lettres ambiguës (un « 0 » qui ressemble à un « O »).
+4. Avancez avec le bouton droit pour passer au mot suivant.
 
 <Callout type="warning" title="Règles absolues pendant cette étape">
 - **JAMAIS de photo** des mots. Même supprimée immédiatement, l'image transite par iCloud ou Google Photos.
 - **JAMAIS de saisie numérique** : ni note iPhone, ni Notion, ni Google Docs, ni gestionnaire de mots de passe. Papier uniquement.
-- **JAMAIS à voix haute** si tu n'es pas absolument seul (Alexa, Google Home, Siri écoutent).
-- **JAMAIS sur un site web qui te le demande**, peu importe le prétexte. Aucun site légitime ne te demandera jamais ta seed.
+- **JAMAIS à voix haute** si vous n'êtes pas absolument seul (Alexa, Google Home, Siri écoutent).
+- **JAMAIS sur un site web qui vous le demande**, peu importe le prétexte. Aucun site légitime ne vous demandera jamais votre seed.
 </Callout>
 
-À la fin des 24 mots, le Ledger te demande de **vérifier ta saisie** : il va te demander aléatoirement plusieurs mots (« Quel est le mot 7 ? Le mot 19 ? »). Tu dois sélectionner les bons via les boutons. Si tu te trompes, ça veut dire que tu as mal noté quelque chose — recommence dès le début.
+À la fin des 24 mots, le Ledger vous demande de **vérifier votre saisie** : il va vous demander aléatoirement plusieurs mots (« Quel est le mot 7 ? Le mot 19 ? »). Vous devez sélectionner les bons via les boutons. Si vous vous trompez, ça veut dire que vous avez mal noté quelque chose — recommencez dès le début.
 
 ## 5. Étape 3 — Installer Ledger Live et appairer l'appareil
 
-Pendant que tu finis la vérification de seed sur l'appareil, télécharge **Ledger Live** depuis `ledger.com/ledger-live`. Vérifie bien que tu es sur le vrai site (icône cadenas, domaine exact `ledger.com`, pas `ledger-app.com` ou autre variante).
+Pendant que vous finissez la vérification de seed sur l'appareil, téléchargez **Ledger Live** depuis `ledger.com/ledger-live`. Vérifiez bien que vous êtes sur le vrai site (icône cadenas, domaine exact `ledger.com`, pas `ledger-app.com` ou autre variante).
 
-Installe le logiciel (Windows, macOS ou Linux). À l'ouverture :
-1. Choisis « **Get started** ».
-2. Sélectionne ton appareil : **Ledger Nano X**.
-3. Choisis « **Set up a new Nano X** » → puis « **I've already set it up** » (puisque tu viens de le faire physiquement).
-4. Ledger Live te fait passer un **genuine check** : il interroge ton appareil pour vérifier que c'est un vrai Ledger avec un firmware authentique. Dure 30 secondes.
-5. Tu peux aussi **appairer en Bluetooth** sur smartphone via l'app Ledger Live mobile (Android/iOS). Le PIN te sera demandé à chaque connexion.
+Installez le logiciel (Windows, macOS ou Linux). À l'ouverture :
+1. Choisissez « **Get started** ».
+2. Sélectionnez votre appareil : **Ledger Nano X**.
+3. Choisissez « **Set up a new Nano X** » → puis « **I've already set it up** » (puisque vous venez de le faire physiquement).
+4. Ledger Live vous fait passer un **genuine check** : il interroge votre appareil pour vérifier que c'est un vrai Ledger avec un firmware authentique. Dure 30 secondes.
+5. Vous pouvez aussi **appairer en Bluetooth** sur smartphone via l'app Ledger Live mobile (Android/iOS). Le PIN vous sera demandé à chaque connexion.
 
-Une fois le genuine check passé, ton Ledger Nano X est officiellement configuré et reconnu. Bienvenue dans la self-custody.
+Une fois le genuine check passé, votre Ledger Nano X est officiellement configuré et reconnu. Bienvenue dans la self-custody.
 
-## 6. Étape 4 — Installer les apps des cryptos que tu détiens
+## 6. Étape 4 — Installer les apps des cryptos que vous détenez
 
-Ledger Live fonctionne par **apps modulaires** : pour gérer du Bitcoin, tu installes l'app Bitcoin sur ton appareil. Pour de l'Ethereum, l'app Ethereum. Etc. Le Nano X a 2 Mo de mémoire, ce qui permet d'installer une vingtaine d'apps en parallèle (largement assez pour la plupart des utilisateurs).
+Ledger Live fonctionne par **apps modulaires** : pour gérer du Bitcoin, vous installez l'app Bitcoin sur votre appareil. Pour de l'Ethereum, l'app Ethereum. Etc. Le Nano X a 2 Mo de mémoire, ce qui permet d'installer une vingtaine d'apps en parallèle (largement assez pour la plupart des utilisateurs).
 
 Dans Ledger Live :
 1. Onglet « **Mes apps sur l'appareil** » (Manager).
-2. Recherche « Bitcoin » → bouton **Installer**. L'app se charge sur l'appareil en 10 secondes.
-3. Idem pour **Ethereum**, **Solana**, etc. selon tes besoins.
-4. Tu peux désinstaller/réinstaller à volonté : tes cryptos ne sont **pas stockées dans l'app** mais dérivées de ta seed, donc elles ne disparaissent jamais même si tu désinstalles l'app.
+2. Recherchez « Bitcoin » → bouton **Installer**. L'app se charge sur l'appareil en 10 secondes.
+3. Idem pour **Ethereum**, **Solana**, etc. selon vos besoins.
+4. Vous pouvez désinstaller/réinstaller à volonté : vos cryptos ne sont **pas stockées dans l'app** mais dérivées de votre seed, donc elles ne disparaissent jamais même si vous désinstallez l'app.
 
 ## 7. Étape 5 — Ajouter ses premiers comptes BTC et ETH
 
 Une fois les apps installées, retour dans Ledger Live :
 1. Onglet « **Comptes** » → bouton **Ajouter un compte**.
-2. Sélectionne **Bitcoin** → Ledger Live communique avec l'appareil → tu confirmes sur le Nano X (l'app Bitcoin doit être ouverte sur l'appareil).
-3. Ledger Live détecte les comptes existants (vide pour un nouvel utilisateur) → choisis « **Ajouter le compte Bitcoin 1** ».
-4. Donne-lui un nom parlant : « BTC HODL », « Bitcoin principal », etc.
-5. Répète pour **Ethereum**, **Solana**, etc.
+2. Sélectionnez **Bitcoin** → Ledger Live communique avec l'appareil → vous confirmez sur le Nano X (l'app Bitcoin doit être ouverte sur l'appareil).
+3. Ledger Live détecte les comptes existants (vide pour un nouvel utilisateur) → choisissez « **Ajouter le compte Bitcoin 1** ».
+4. Donnez-lui un nom parlant : « BTC HODL », « Bitcoin principal », etc.
+5. Répétez pour **Ethereum**, **Solana**, etc.
 
-Ton compte est maintenant créé. Pour **recevoir des fonds**, clique sur « Recevoir », confirme l'adresse sur l'écran sécurisé du Ledger (très important : compare visuellement les premiers et derniers caractères de l'adresse à l'écran de l'appareil et sur Ledger Live), puis copie-colle l'adresse vers l'exchange depuis lequel tu veux retirer.
+Votre compte est maintenant créé. Pour **recevoir des fonds**, cliquez sur « Recevoir », confirmez l'adresse sur l'écran sécurisé du Ledger (très important : comparez visuellement les premiers et derniers caractères de l'adresse à l'écran de l'appareil et sur Ledger Live), puis copiez-collez l'adresse vers l'exchange depuis lequel vous voulez retirer.
 
 ## 8. Étape 6 — Le premier transfert test : 10 € avant le gros virement
 
 **Ne transfère JAMAIS un gros montant sans avoir d'abord testé avec un petit.** C'est la règle d'or qui sauve des vies (financières).
 
 Procédure recommandée :
-1. Depuis ton exchange (Bitpanda, Coinbase, Binance...), envoie **10 € en BTC ou ETH** vers l'adresse de réception générée par Ledger Live.
+1. Depuis votre exchange (Bitpanda, Coinbase, Binance...), envoyez **10 € en BTC ou ETH** vers l'adresse de réception générée par Ledger Live.
 2. Attends la confirmation réseau (10-30 minutes pour BTC, 1-2 minutes pour ETH).
-3. Vérifie que le solde apparaît bien dans Ledger Live.
-4. Refais une **transaction test inverse** : envoie 5 € depuis le Ledger vers ton exchange, vérifie qu'elle arrive bien.
-5. **Maintenant seulement**, tu peux transférer ton vrai montant.
+3. Vérifiez que le solde apparaît bien dans Ledger Live.
+4. Refaites une **transaction test inverse** : envoyez 5 € depuis le Ledger vers votre exchange, vérifiez qu'elle arrive bien.
+5. **Maintenant seulement**, vous pouvez transférer votre vrai montant.
 
-Ce test de 10 € te coûte 1-2 € de frais réseau. C'est l'assurance la moins chère du monde contre une faute de frappe d'adresse ou un mauvais réseau choisi.
+Ce test de 10 € vous coûte 1-2 € de frais réseau. C'est l'assurance la moins chère du monde contre une faute de frappe d'adresse ou un mauvais réseau choisi.
 
 ## 9. Tableau : check-list complète post-configuration
 
@@ -169,28 +169,28 @@ Ce test de 10 € te coûte 1-2 € de frais réseau. C'est l'assurance la moins
 ## 10. Bonnes pratiques post-config et erreurs courantes
 
 **Bonnes pratiques :**
-- **Range ton carnet seed** dans un endroit physique sécurisé : tiroir fermé à clé, coffre domestique, coffre bancaire pour les très gros montants.
-- **Grave ta seed sur plaque acier** (Cryptosteel, Billfodl, Tinyseed) dans les semaines qui suivent. Le papier brûle, l'acier non. Voir notre [guide backup seed phrase](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026).
-- **Mets à jour le firmware** régulièrement quand Ledger Live le propose. Les mises à jour corrigent des vulnérabilités potentielles.
-- **Active la passphrase** (25ᵉ mot optionnel) pour les très gros montants. Ça crée un wallet caché, protégé par un mot de passe supplémentaire que tu choisis.
+- **Rangez votre carnet seed** dans un endroit physique sécurisé : tiroir fermé à clé, coffre domestique, coffre bancaire pour les très gros montants.
+- **Gravez votre seed sur plaque acier** (Cryptosteel, Billfodl, Tinyseed) dans les semaines qui suivent. Le papier brûle, l'acier non. Voir notre [guide backup seed phrase](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026).
+- **Mettez à jour le firmware** régulièrement quand Ledger Live le propose. Les mises à jour corrigent des vulnérabilités potentielles.
+- **Activez la passphrase** (25ᵉ mot optionnel) pour les très gros montants. Ça crée un wallet caché, protégé par un mot de passe supplémentaire que vous choisissez.
 
 **Erreurs courantes à éviter :**
 - Connecter le Ledger à un ordinateur public ou à un cybercafé.
 - Utiliser un câble USB-C bizarre trouvé dans un tiroir (préfère le câble Ledger officiel).
 - Garder la seed dans la même boîte que l'appareil (un voleur ferait les deux d'un coup).
 - Oublier de tester un transfert avant de tout migrer.
-- Croire que Ledger te contactera un jour pour « vérifier ton compte » : Ledger ne te contactera **jamais**.
+- Croire que Ledger vous contactera un jour pour « vérifier votre compte » : Ledger ne vous contactera **jamais**.
 
-<Callout type="success" title="Tu n'as pas encore ton Ledger ?">
-Si tu lis ce guide pour préparer ton achat, commande ton Nano X (ou Nano S Plus si budget serré) directement sur <AffiliateLink platform="ledger">le site officiel Ledger</AffiliateLink>. Livraison en 24-48h en France, paiement sécurisé, et tu es certain d'avoir un appareil neuf, scellé, non altéré.
+<Callout type="success" title="Vous n'avez pas encore votre Ledger ?">
+Si vous lisez ce guide pour préparer votre achat, commandez votre Nano X (ou Nano S Plus si budget serré) directement sur <AffiliateLink platform="ledger">le site officiel Ledger</AffiliateLink>. Livraison en 24-48h en France, paiement sécurisé, et vous êtes certain d'avoir un appareil neuf, scellé, non altéré.
 </Callout>
 
-## FAQ : tes questions sur la configuration du Ledger Nano X
+## FAQ : vos questions sur la configuration du Ledger Nano X
 
 <FAQ items={[
   {
     question: "Combien de temps prend vraiment la configuration ?",
-    answer: "Compte 30 à 45 minutes la première fois, sans stress. La majorité du temps est passée à écrire et vérifier la seed phrase de 24 mots. L'installation de Ledger Live et la création des premiers comptes prennent 10 minutes max. Si tu vas plus vite, c'est que tu négliges des vérifications critiques."
+    answer: "Comptez 30 à 45 minutes la première fois, sans stress. La majorité du temps est passée à écrire et vérifier la seed phrase de 24 mots. L'installation de Ledger Live et la création des premiers comptes prennent 10 minutes max. Si vous allez plus vite, c'est que vous négligez des vérifications critiques."
   },
   {
     question: "Faut-il acheter direct un Stax au lieu d'un Nano X ?",
@@ -198,38 +198,38 @@ Si tu lis ce guide pour préparer ton achat, commande ton Nano X (ou Nano S Plus
   },
   {
     question: "Que faire si je me trompe à la vérification de seed ?",
-    answer: "Si tu rates la vérification, l'appareil te ramène au début. Tu dois recommencer la génération entière (avec une nouvelle seed différente). Surtout, ne 'devine' pas — si tu doutes d'un mot, recommence proprement. Une erreur dans la seed = impossibilité de restaurer en cas de perte de l'appareil."
+    answer: "Si vous ratez la vérification, l'appareil vous ramène au début. Vous devez recommencer la génération entière (avec une nouvelle seed différente). Surtout, ne 'devinez' pas — si vous doutez d'un mot, recommencez proprement. Une erreur dans la seed = impossibilité de restaurer en cas de perte de l'appareil."
   },
   {
     question: "Le Bluetooth du Nano X est-il vraiment sécurisé ?",
-    answer: "Oui. Le Bluetooth Ledger Nano X est chiffré end-to-end et ne transmet jamais la clé privée. Même si quelqu'un interceptait le signal Bluetooth, il ne pourrait que voir des données chiffrées sans signification. Toutes les transactions doivent toujours être validées physiquement par appui sur l'appareil. Tu peux donc utiliser le Bluetooth sans crainte."
+    answer: "Oui. Le Bluetooth Ledger Nano X est chiffré end-to-end et ne transmet jamais la clé privée. Même si quelqu'un interceptait le signal Bluetooth, il ne pourrait que voir des données chiffrées sans signification. Toutes les transactions doivent toujours être validées physiquement par appui sur l'appareil. Vous pouvez donc utiliser le Bluetooth sans crainte."
   },
   {
     question: "Puis-je utiliser le Ledger Nano X avec MetaMask ou Phantom ?",
-    answer: "Absolument, c'est même recommandé pour la DeFi et les NFT. Tu connectes ton Ledger via 'Connecter un hardware wallet' dans MetaMask (pour Ethereum/L2) ou Phantom (pour Solana). Toutes les transactions doivent être signées physiquement sur l'appareil, ce qui te donne la sécurité du cold wallet avec la flexibilité du Web3. Voir notre guide complet sur le hardware wallet pour aller plus loin."
+    answer: "Absolument, c'est même recommandé pour la DeFi et les NFT. Vous connectez votre Ledger via 'Connecter un hardware wallet' dans MetaMask (pour Ethereum/L2) ou Phantom (pour Solana). Toutes les transactions doivent être signées physiquement sur l'appareil, ce qui vous donne la sécurité du cold wallet avec la flexibilité du Web3. Voir notre guide complet sur le hardware wallet pour aller plus loin."
   }
 ]} />
 
 ## Pour aller plus loin
 
 - [Passphrase BIP39 (25e mot) : sécurité avancée](/blog/passphrase-bip39-25e-mot-securite-avance-2026) — l'étape suivante après ce setup, pour activer un wallet caché.
-- [Wallet air-gap vs Bluetooth : sécurité comparée](/blog/wallet-air-gap-vs-bluetooth-securite-2026) — comprendre les vraies vulnérabilités de ton Nano X.
-- [Phishing crypto 2026 : éviter les arnaques](/blog/phishing-crypto-2026-eviter-arnaques-courantes) — protéger ton Ledger fraîchement configuré contre les attaques courantes.
+- [Wallet air-gap vs Bluetooth : sécurité comparée](/blog/wallet-air-gap-vs-bluetooth-securite-2026) — comprendre les vraies vulnérabilités de votre Nano X.
+- [Phishing crypto 2026 : éviter les arnaques](/blog/phishing-crypto-2026-eviter-arnaques-courantes) — protéger votre Ledger fraîchement configuré contre les attaques courantes.
 - [Multi-sig wallet Bitcoin débutant 2026](/blog/multi-sig-wallet-bitcoin-debutant-2026) — pour passer au niveau supérieur (patrimoines plus de 100 000 €).
 - [Shamir Backup (SLIP-39) : découper sa seed](/blog/shamir-backup-seed-decouper-en-parts-2026) — alternative à la sauvegarde unique de la seed.
 - [Ledger Live : tout ce qu'on peut faire dedans en 2026](/blog/ledger-live-tout-ce-qu-on-peut-faire-2026) — explore les fonctionnalités cachées de Ledger Live.
 - [Backup seed phrase : 5 méthodes ultra-sûres](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026) — passe de la seed papier à la plaque acier.
 - [Cold wallet vs hot wallet : guide complet](/blog/cold-wallet-vs-hot-wallet-guide-complet-2026) — comprendre la stratégie 80/20.
-- [Sécuriser tes cryptos en 2026](/blog/securiser-cryptos-wallet-2fa-2026) — les 5 réflexes anti-phishing à ajouter.
+- [Sécuriser vos cryptos en 2026](/blog/securiser-cryptos-wallet-2fa-2026) — les 5 réflexes anti-phishing à ajouter.
 - [Comparatif Ledger vs Trezor 2026](/blog/ledger-vs-trezor-duel-objectif-2026-par-profil) — pour ceux qui hésitent encore.
 
-Tu as maintenant un wallet self-custody opérationnel. Tu es **propriétaire au sens cryptographique** de tes cryptos, plus locataire d'un exchange. C'est la différence entre épargne et dépôt bancaire, à un niveau supérieur. Bienvenue dans le club.
+Vous avez maintenant un wallet self-custody opérationnel. Vous êtes **propriétaire au sens cryptographique** de vos cryptos, plus locataire d'un exchange. C'est la différence entre épargne et dépôt bancaire, à un niveau supérieur. Bienvenue dans le club.
 
 
 <KeyTakeaways>
-- Achète toujours ton Ledger neuf et scellé sur le site officiel, et vérifie à l'unboxing qu'aucune seed n'est pré-imprimée : un appareil pré-configuré est piégé.
-- Prépare un environnement sûr (seul, sans caméra ni micro autour) avant de générer ta seed, et télécharge le logiciel uniquement depuis le domaine officiel, jamais via une publicité.
-- Note ta seed à la main sur le carnet papier, jamais en photo ni en saisie numérique, vérifie chaque mot, et range-la séparément de l'appareil.
-- Choisis un code PIN long et non évident, et passe le contrôle d'authenticité du logiciel pour confirmer que ton appareil est génuine.
-- Avant tout gros virement, fais un transfert test de faible montant dans les deux sens, et planifie un backup durable de ta seed dans un second lieu sécurisé.
+- Achetez toujours votre Ledger neuf et scellé sur le site officiel, et vérifiez à l'unboxing qu'aucune seed n'est pré-imprimée : un appareil pré-configuré est piégé.
+- Préparez un environnement sûr (seul, sans caméra ni micro autour) avant de générer votre seed, et téléchargez le logiciel uniquement depuis le domaine officiel, jamais via une publicité.
+- Notez votre seed à la main sur le carnet papier, jamais en photo ni en saisie numérique, vérifiez chaque mot, et rangez-la séparément de l'appareil.
+- Choisissez un code PIN long et non évident, et passez le contrôle d'authenticité du logiciel pour confirmer que votre appareil est génuine.
+- Avant tout gros virement, faites un transfert test de faible montant dans les deux sens, et planifiez un backup durable de votre seed dans un second lieu sécurisé.
 </KeyTakeaways>
