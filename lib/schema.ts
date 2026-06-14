@@ -175,7 +175,7 @@ export function organizationSchema(): JsonLd {
      */
     taxID: "103352621",
     /**
-     * VAT ID — non renseigné car franchise en base de TVA (CA < 36 800 €).
+     * VAT ID — non renseigné car franchise en base de TVA (CA < 37 500 €).
      * Quand on bascule en TVA, ajouter `vatID: "FR..."` ici (1 ligne).
      */
     url: SITE_URL,

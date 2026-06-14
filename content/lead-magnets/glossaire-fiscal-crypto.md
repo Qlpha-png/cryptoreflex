@@ -41,7 +41,7 @@ Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent 
 Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 18,6 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
 
 ### BNC (Bénéfices Non Commerciaux)
-Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 77 700 €/an (abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
+Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 83 600 €/an (seuil 2026-2028 ; abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
 
 ### BOFIP (Bulletin Officiel des Finances Publiques)
 Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La doctrine BOI-RPPM-PVBMC-30-30 régit la fiscalité crypto. **Opposable à l'administration** : si tu as suivi le BOFIP, tu es protégé d'un redressement même si la jurisprudence évolue.
@@ -155,7 +155,7 @@ Mécanisme du calcul IR : le revenu imposable est divisé par le nombre de parts
 Indicateur calculé par la DGFiP qui inclut **toutes** tes ressources, y compris les PV crypto. Sert de référence pour de nombreux droits et exonérations (CMU-C, taxe d'habitation résiduelle, bourses étudiantes…). Une PV crypto importante peut te faire perdre des droits.
 
 ### Régime micro-BNC
-Régime simplifié pour les BNC : si CA < 77 700 €, abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5HQ ou 5JQ). Adapté pour les petits revenus de staking/lending.
+Régime simplifié pour les BNC : si CA < 83 600 € (seuil 2026-2028), abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5HQ ou 5JQ). Adapté pour les petits revenus de staking/lending.
 
 ### Report (de moins-value)
 **Pas de report pour les particuliers** sur les MV crypto (régime 150 VH bis). En revanche, en BIC pro : report sur 6 ans. En régime classique de PV mobilières : report sur 10 ans.
@@ -177,7 +177,7 @@ Verrouillage de tokens pour participer à la sécurisation d'une blockchain Proo
 Taux d'imposition de la dernière tranche de tes revenus dans le barème IR. Varie de 0 % à 45 %. Critique pour le choix PFU vs barème.
 
 ### TVA
-Pour les particuliers : **non applicable** aux opérations crypto (jurisprudence CJUE Hedqvist 2015 : les opérations en bitcoin sont exonérées de TVA). Pour les pros BIC > 36 800 € de CA : TVA peut s'appliquer sur certaines prestations connexes (consulting, formation).
+Pour les particuliers : **non applicable** aux opérations crypto (jurisprudence CJUE Hedqvist 2015 : les opérations en bitcoin sont exonérées de TVA). Pour les pros dont le CA de prestations de services dépasse 37 500 € (seuil de franchise en base de TVA) : la TVA peut s'appliquer sur certaines prestations connexes (consulting, formation).
 
 ## U
 

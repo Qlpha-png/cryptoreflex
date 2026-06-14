@@ -179,7 +179,7 @@ Waltio (et concurrents) pré-remplissent automatiquement les 3916-bis à partir 
 **Point non tranché officiellement** : il n'existe pas de doctrine BOFiP dédiée au staking. L'interprétation la plus répandue (par analogie au minage) est l'imposition des rewards **en BNC à la réception** (valeur du jour), avec ensuite une plus-value à la cession (150 VH bis). Une approche « imposition à la cession uniquement » est toutefois aussi défendue. À confirmer selon la doctrine à jour et ton profil.
 
 **Exemple (hypothèse « imposition à la réception », à confirmer)** : tu reçois 0,1 ETH de staking le 15 mars (valeur ce jour : 300 €).
-- Dans cette hypothèse, tu déclarerais 300 € en BNC (micro-BNC si < 77 700 € : abattement 34 %, ou régime réel).
+- Dans cette hypothèse, tu déclarerais 300 € en BNC (micro-BNC si < 83 600 € : abattement 34 %, ou régime réel).
 - Quand tu vends ces 0,1 ETH plus tard à 350 €, ta PV brute serait 50 € (pas 350 €).
 - Dans l'hypothèse « imposition à la cession », rien n'est dû à la réception ; toute la valeur de cession suit le régime des plus-values.
 
@@ -263,7 +263,7 @@ Au lieu du PFU 31,4 %, tu passes en **BIC professionnel** :
 - Imposition à la TMI sur les bénéfices nets
 - 18,6 % de PS
 - Cotisations sociales TNS (~ 22 % du bénéfice net en SSI/URSSAF)
-- TVA possible à partir de 36 800 € de CA (régime micro-BIC dépassé)
+- TVA possible au-delà de 37 500 € de CA en prestations de services (franchise en base de TVA dépassée ; les cessions de crypto restent exonérées de TVA)
 
 **Total potentiel** : 70-75 % de prélèvements sur les bénéfices nets. Très lourd.
 
@@ -271,7 +271,7 @@ Au lieu du PFU 31,4 %, tu passes en **BIC professionnel** :
 
 - **Report des déficits** sur 6 ans (vs 0 an en PV particulière)
 - **Déduction des charges réelles** (matériel, abonnements, formation, expert-comptable)
-- **Choix régime micro-BIC** si CA < 188 700 € : abattement forfaitaire 71 % (commerce) ou 50 % (services)
+- **Choix régime micro-BIC** : CA < 203 100 € pour l'achat-revente (abattement forfaitaire 71 %) ou < 83 600 € pour les prestations de services (abattement 50 %) — seuils 2026-2028
 
 ### Recommandation
 
