@@ -41,7 +41,7 @@ schema:
 
 <AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="26 avril 2026" readingTime="11 min" methodology="/methodologie" />
 
-Tu as déjà entendu le mot **blockchain** une centaine de fois — dans les médias, sur LinkedIn, dans des conversations crypto — mais personne n'a jamais pris le temps de te l'expliquer **vraiment simplement**. Pas de jargon, pas de mathématiques, pas de white paper de 80 pages. Juste l'idée centrale, illustrée comme on l'expliquerait à un ami qui débute.
+Vous avez déjà entendu le mot **blockchain** une centaine de fois — dans les médias, sur LinkedIn, dans des conversations crypto — mais personne n'a jamais pris le temps de vous l'expliquer **vraiment simplement**. Pas de jargon, pas de mathématiques, pas de white paper de 80 pages. Juste l'idée centrale, illustrée comme on l'expliquerait à un ami qui débute.
 
 C'est ce que cet article propose : comprendre la blockchain en 11 minutes, avec des analogies concrètes (un cahier de comptes au village, un puzzle scellé, etc.), et savoir pourquoi cette technologie est considérée comme une vraie révolution — pas seulement un buzzword.
 
@@ -57,7 +57,7 @@ C'est ce que cet article propose : comprendre la blockchain en 11 minutes, avec 
 
 ## 1. La blockchain expliquée avec une seule analogie
 
-Imagine un petit village où il n'y a pas de banque. Pour que tout le monde puisse acheter, vendre et prêter de l'argent en confiance, le village met en place un **grand cahier de comptes posé sur la place publique**. Chaque transaction est notée à la main par un volontaire :
+Imaginez un petit village où il n'y a pas de banque. Pour que tout le monde puisse acheter, vendre et prêter de l'argent en confiance, le village met en place un **grand cahier de comptes posé sur la place publique**. Chaque transaction est notée à la main par un volontaire :
 
 > *« 26 avril 2026 — Alice a donné 10 € à Bob. »*
 
@@ -97,18 +97,18 @@ Une fois le bloc validé (par un mécanisme appelé **consensus**, voir notre [a
 
 ## 3. Le rôle du « hash » : le sceau de cire numérique
 
-Tu te souviens des lettres scellées au Moyen Âge avec un cachet de cire ? Si quelqu'un ouvrait la lettre, le sceau se brisait. C'était impossible de le recoller à l'identique.
+Vous vous souvenez des lettres scellées au Moyen Âge avec un cachet de cire ? Si quelqu'un ouvrait la lettre, le sceau se brisait. C'était impossible de le recoller à l'identique.
 
 Le **hash** (ou « empreinte cryptographique ») fait exactement la même chose pour un bloc de la blockchain :
 
-- Tu prends toutes les données du bloc (transactions, date, référence au bloc précédent).
-- Tu les passes dans un algorithme spécial (appelé **SHA-256** sur Bitcoin).
-- Tu obtiens une suite de 64 caractères qui ressemble à : `0000000000000000000a8c4e3f...`
+- Vous prenez toutes les données du bloc (transactions, date, référence au bloc précédent).
+- Vous les passez dans un algorithme spécial (appelé **SHA-256** sur Bitcoin).
+- Vous obtenez une suite de 64 caractères qui ressemble à : `0000000000000000000a8c4e3f...`
 
 Le moindre changement dans le bloc, **même un seul caractère**, produit un hash totalement différent. Et comme chaque nouveau bloc contient le hash du précédent, modifier un ancien bloc casse toute la chaîne.
 
 <Callout type="info" title="Bon à savoir : le hash, ce n'est pas un mot de passe">
-Contrairement à un mot de passe (qu'on peut récupérer en cas d'oubli), un hash est **à sens unique**. Tu peux calculer le hash à partir des données, mais tu ne peux **jamais retrouver les données** à partir du hash. C'est cette propriété qui rend la blockchain inviolable.
+Contrairement à un mot de passe (qu'on peut récupérer en cas d'oubli), un hash est **à sens unique**. Vous pouvez calculer le hash à partir des données, mais vous ne pouvez **jamais retrouver les données** à partir du hash. C'est cette propriété qui rend la blockchain inviolable.
 </Callout>
 
 ---
@@ -151,13 +151,13 @@ Bitcoin (BTC) est la **première blockchain de l'histoire**, lancée en janvier 
 
 Ethereum (ETH), lancé en 2015, va plus loin : sa blockchain ne sert pas qu'à transférer de l'argent, elle peut **exécuter des programmes** (appelés **smart contracts**, ou « contrats intelligents »). C'est la base de la finance décentralisée (DeFi), des NFT, des jeux blockchain, etc.
 
-Pense à Bitcoin comme à une **calculatrice** (faite pour une seule chose : compter de la monnaie) et à Ethereum comme à un **smartphone** (sur lequel on peut installer des milliers d'applications différentes).
+Pensez à Bitcoin comme à une **calculatrice** (faite pour une seule chose : compter de la monnaie) et à Ethereum comme à un **smartphone** (sur lequel on peut installer des milliers d'applications différentes).
 
 [Comparer Bitcoin et Ethereum en détail →](/blog/bitcoin-vs-ethereum-differences-debutant-2026)
 
 ### Les NFT : des objets numériques uniques
 
-Un **NFT** (*Non-Fungible Token*, ou « jeton non fongible ») est un certificat de propriété stocké sur une blockchain (souvent Ethereum). Il prouve que tu es bien le propriétaire d'un objet numérique unique : une œuvre d'art, une carte de jeu, un nom de domaine, un billet de concert, etc. La blockchain garantit que personne ne peut copier-coller la propriété.
+Un **NFT** (*Non-Fungible Token*, ou « jeton non fongible ») est un certificat de propriété stocké sur une blockchain (souvent Ethereum). Il prouve que vous êtes bien le propriétaire d'un objet numérique unique : une œuvre d'art, une carte de jeu, un nom de domaine, un billet de concert, etc. La blockchain garantit que personne ne peut copier-coller la propriété.
 
 ---
 
@@ -197,7 +197,7 @@ Bitcoin traite environ **7 transactions par seconde**. Ethereum, environ 15. À 
 Quand beaucoup de monde utilise la blockchain en même temps, les frais de transaction explosent. En période de forte demande, envoyer 100 € sur Ethereum a déjà coûté 50 € de frais. C'est exactement comme un péage saturé un dimanche soir. Les Layer 2 et les blockchains plus récentes (Solana, Avalanche) tentent de résoudre ce problème.
 
 <Callout type="warning" title="Attention : tout n'est pas blockchain">
-De nombreuses entreprises ont prétendu « utiliser la blockchain » alors qu'elles utilisaient en réalité une simple base de données. Avant d'être impressionné par un projet, pose-toi cette question : **est-ce vraiment décentralisé ? Y a-t-il un acteur unique qui contrôle tout ?** Si oui, ce n'est pas vraiment une blockchain au sens fort du terme.
+De nombreuses entreprises ont prétendu « utiliser la blockchain » alors qu'elles utilisaient en réalité une simple base de données. Avant d'être impressionné par un projet, posez-vous cette question : **est-ce vraiment décentralisé ? Y a-t-il un acteur unique qui contrôle tout ?** Si oui, ce n'est pas vraiment une blockchain au sens fort du terme.
 </Callout>
 
 ---
@@ -254,7 +254,7 @@ L'idée commune : à chaque fois qu'on a besoin de **prouver quelque chose sans 
 - [Bitcoin : guide complet débutant 2026](/blog/bitcoin-guide-complet-debutant-2026)
 - [Sécuriser ses cryptos : wallet et 2FA](/blog/securiser-cryptos-wallet-2fa-2026)
 
-La blockchain est une technologie complexe à concevoir, mais simple à comprendre dans ses grandes lignes : un grand cahier de comptes partagé par des milliers d'ordinateurs, où personne ne peut tricher. Tout le reste — Bitcoin, Ethereum, NFT, DeFi — n'est qu'une application de cette idée fondamentale. Une fois que tu as compris la blockchain, tu as compris 80 % de l'écosystème crypto.
+La blockchain est une technologie complexe à concevoir, mais simple à comprendre dans ses grandes lignes : un grand cahier de comptes partagé par des milliers d'ordinateurs, où personne ne peut tricher. Tout le reste — Bitcoin, Ethereum, NFT, DeFi — n'est qu'une application de cette idée fondamentale. Une fois que vous avez compris la blockchain, vous avez compris 80 % de l'écosystème crypto.
 
 <Callout type="warning" title="Avertissement">
 Cet article est purement éducatif et n'est pas un conseil en investissement. Les crypto-actifs sont des placements à risque pouvant entraîner une perte totale du capital investi. Avant tout investissement, prenez le temps de vous former et n'investissez que ce que vous pouvez vous permettre de perdre.
@@ -262,9 +262,9 @@ Cet article est purement éducatif et n'est pas un conseil en investissement. Le
 
 
 <KeyTakeaways>
-- Vois la blockchain comme un grand cahier de comptes dupliqué sur des milliers d'ordinateurs, où une transaction validée par la majorité du réseau devient impossible à modifier.
-- Retiens qu'aucun tiers de confiance (banque, notaire, État) n'est nécessaire : c'est le réseau qui valide par consensus.
-- Distingue les blockchains publiques (Bitcoin, Ethereum, ouvertes à tous) des blockchains privées (réservées à des participants invités pour des usages internes).
-- Garde en tête les vraies limites : consommation énergétique (surtout en Proof of Work), vitesse limitée et scalabilité encore en chantier.
-- Méfie-toi des projets qui prétendent « utiliser la blockchain » : si un acteur unique contrôle tout, ce n'en est pas vraiment une.
+- Voyez la blockchain comme un grand cahier de comptes dupliqué sur des milliers d'ordinateurs, où une transaction validée par la majorité du réseau devient impossible à modifier.
+- Retenez qu'aucun tiers de confiance (banque, notaire, État) n'est nécessaire : c'est le réseau qui valide par consensus.
+- Distinguez les blockchains publiques (Bitcoin, Ethereum, ouvertes à tous) des blockchains privées (réservées à des participants invités pour des usages internes).
+- Gardez en tête les vraies limites : consommation énergétique (surtout en Proof of Work), vitesse limitée et scalabilité encore en chantier.
+- Méfiez-vous des projets qui prétendent « utiliser la blockchain » : si un acteur unique contrôle tout, ce n'en est pas vraiment une.
 </KeyTakeaways>

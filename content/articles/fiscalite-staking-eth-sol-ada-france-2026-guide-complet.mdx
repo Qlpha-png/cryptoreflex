@@ -48,12 +48,12 @@ schema:
 <AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="26 avril 2026" readingTime="17 min" methodology="/methodologie" />
 
 <Callout type="warning" title="Disclaimer fiscal">
-Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. Consulte un expert-comptable pour ta situation. La doctrine fiscale française sur le staking reste mouvante au 26 avril 2026 — vérifie systématiquement les rescrits et la jurisprudence à jour.
+Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. Consultez un expert-comptable pour votre situation. La doctrine fiscale française sur le staking reste mouvante au 26 avril 2026 — vérifiez systématiquement les rescrits et la jurisprudence à jour.
 </Callout>
 
-Tu stakes de l'ETH sur Coinbase, du SOL sur Phantom, de l'ADA sur Daedalus ou un peu de tout via Lido ? La question fiscale de tes récompenses est **plus complexe que la simple plus-value de cession**. Trois régimes peuvent s'appliquer selon ta situation : **régime occasionnel (PFU 31,4 %)**, **BNC (Bénéfices Non Commerciaux)** ou — plus rarement — **BIC (Bénéfices Industriels et Commerciaux)**.
+Vous stakez de l'ETH sur Coinbase, du SOL sur Phantom, de l'ADA sur Daedalus ou un peu de tout via Lido ? La question fiscale de vos récompenses est **plus complexe que la simple plus-value de cession**. Trois régimes peuvent s'appliquer selon votre situation : **régime occasionnel (PFU 31,4 %)**, **BNC (Bénéfices Non Commerciaux)** ou — plus rarement — **BIC (Bénéfices Industriels et Commerciaux)**.
 
-Ce guide t'explique le **fait générateur de l'impôt** (réception ? conversion ?), la **valeur d'acquisition** à retenir, comment **déclarer chaque cas**, et un **cas par crypto** (ETH 4-5 %, SOL 7-8 %, ADA 3-4 % d'APR). Avec des **exemples chiffrés** et le **piège du liquid staking** (Lido stETH).
+Ce guide vous explique le **fait générateur de l'impôt** (réception ? conversion ?), la **valeur d'acquisition** à retenir, comment **déclarer chaque cas**, et un **cas par crypto** (ETH 4-5 %, SOL 7-8 %, ADA 3-4 % d'APR). Avec des **exemples chiffrés** et le **piège du liquid staking** (Lido stETH).
 
 ## TL;DR (60 secondes)
 
@@ -63,7 +63,7 @@ Ce guide t'explique le **fait générateur de l'impôt** (réception ? conversio
 - **Fait générateur** : à la **cession** des tokens reçus en staking dans le régime occasionnel (interprétation majoritaire sans doctrine BOFiP dédiée, appuyée sur la jurisprudence Conseil d'État 2018), pas à la réception.
 - **Valeur d'acquisition** : 0 € pour les récompenses dans le régime occasionnel (la plus-value imposable = totalité du prix de vente).
 - **Liquid staking (Lido stETH)** : la conversion ETH → stETH est traitée comme un échange = pas de fait générateur (article 150 VH bis), mais les rebasing de récompenses sont sujets à interprétation.
-- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) modélise les deux régimes (occasionnel vs BNC) sur tes récompenses staking.
+- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) modélise les deux régimes (occasionnel vs BNC) sur vos récompenses staking.
 
 ---
 
@@ -73,11 +73,11 @@ Avant de parler fiscalité, il faut distinguer **3 modes de staking** car ils n'
 
 | Mode | Description | Exemples | Complexité fiscale |
 |---|---|---|---|
-| **Staking custodial via CEX** | Tu déposes des tokens, la plateforme stake pour toi | Coinbase Earn, Binance Earn, Kraken Staking | Faible (CEX émet un récap) |
-| **Staking délégué non custodial** | Tu gardes tes clés, tu délégues à un validateur | SOL via Phantom, ADA via Daedalus, ETH via Lido | Moyenne |
-| **Validateur solo** | Tu fais tourner toi-même un nœud validateur | ETH solo staking (32 ETH), SOL validator | Élevée (BNC quasi obligatoire) |
+| **Staking custodial via CEX** | Vous déposez des tokens, la plateforme stake pour vous | Coinbase Earn, Binance Earn, Kraken Staking | Faible (CEX émet un récap) |
+| **Staking délégué non custodial** | Vous gardez vos clés, vous déléguez à un validateur | SOL via Phantom, ADA via Daedalus, ETH via Lido | Moyenne |
+| **Validateur solo** | Vous faites tourner vous-même un nœud validateur | ETH solo staking (32 ETH), SOL validator | Élevée (BNC quasi obligatoire) |
 
-Plus tu es **actif**, plus la doctrine fiscale tend vers le **régime BNC** (activité non salariée habituelle).
+Plus vous êtes **actif**, plus la doctrine fiscale tend vers le **régime BNC** (activité non salariée habituelle).
 
 ---
 
@@ -85,15 +85,15 @@ Plus tu es **actif**, plus la doctrine fiscale tend vers le **régime BNC** (act
 
 ### Doctrine actuelle (rescrits 2023-2024)
 
-Pour la **majorité des particuliers** qui stakent occasionnellement via une plateforme custodial (Coinbase, Binance, Kraken) ou délèguent simplement, l'interprétation **majoritaire** des fiscalistes — en l'absence de doctrine BOFiP dédiée — retient que les récompenses **ne déclenchent pas d'imposition à la réception**, l'imposition intervenant à la **cession ultérieure** des tokens. Ce point n'est toutefois **pas tranché officiellement** (une autre approche impose à la réception) — à confirmer selon ta situation.
+Pour la **majorité des particuliers** qui stakent occasionnellement via une plateforme custodial (Coinbase, Binance, Kraken) ou délèguent simplement, l'interprétation **majoritaire** des fiscalistes — en l'absence de doctrine BOFiP dédiée — retient que les récompenses **ne déclenchent pas d'imposition à la réception**, l'imposition intervenant à la **cession ultérieure** des tokens. Ce point n'est toutefois **pas tranché officiellement** (une autre approche impose à la réception) — à confirmer selon votre situation.
 
 C'est cohérent avec la **jurisprudence du Conseil d'État du 26 avril 2018** (n° 417809) sur les bitcoins issus du minage : tant qu'il n'y a pas cession en monnaie ayant cours légal (ou contre un bien/service), il n'y a pas de fait générateur.
 
 ### Conséquences pratiques
 
-1. Tu reçois 0,5 ETH en récompense de staking → **rien à déclarer cette année** si tu ne vends pas.
-2. Tu vends ces 0,5 ETH 2 ans plus tard à 2 000 € chacun (1 000 € total) → la **totalité des 1 000 €** est plus-value imposable au PFU 31,4 %.
-3. **Pas de valeur d'acquisition** des récompenses (= 0 €) puisque tu ne les as pas "achetées".
+1. Vous recevez 0,5 ETH en récompense de staking → **rien à déclarer cette année** si vous ne vendez pas.
+2. Vous vendez ces 0,5 ETH 2 ans plus tard à 2 000 € chacun (1 000 € total) → la **totalité des 1 000 €** est plus-value imposable au PFU 31,4 %.
+3. **Pas de valeur d'acquisition** des récompenses (= 0 €) puisque vous ne les avez pas "achetées".
 
 <Callout type="info" title="Pourquoi la valeur d'acquisition est de 0 €">
 Pour un cryptoactif acheté, la valeur d'acquisition est le prix payé. Pour un cryptoactif reçu gratuitement (récompense de staking, airdrop, fork), il n'y a pas eu de paiement initial. La doctrine considère donc que la valeur d'acquisition est nulle, ce qui maximise la base imposable au moment de la cession.
@@ -105,7 +105,7 @@ Pour une cession donnée, la **plus-value imposable** se calcule au prorata du p
 
 > **Plus-value = Prix de cession − [Prix total d'acquisition × (Prix de cession / Valeur globale du portefeuille)]**
 
-Si tes récompenses staking ont une valeur d'acquisition de 0 €, elles **augmentent la valeur globale du portefeuille** sans en augmenter le prix d'acquisition cumulé. Ça réduit légèrement la fraction "non imposable" de chaque vente future.
+Si vos récompenses staking ont une valeur d'acquisition de 0 €, elles **augmentent la valeur globale du portefeuille** sans en augmenter le prix d'acquisition cumulé. Ça réduit légèrement la fraction "non imposable" de chaque vente future.
 
 ---
 
@@ -113,10 +113,10 @@ Si tes récompenses staking ont une valeur d'acquisition de 0 €, elles **augme
 
 ### Qui est concerné par le BNC ?
 
-Le **régime des Bénéfices Non Commerciaux** (article 92 CGI) s'applique si ton activité de staking présente un **caractère habituel et professionnel**. La DGFiP regarde un **faisceau d'indices** :
+Le **régime des Bénéfices Non Commerciaux** (article 92 CGI) s'applique si votre activité de staking présente un **caractère habituel et professionnel**. La DGFiP regarde un **faisceau d'indices** :
 
 - **Régularité** des opérations (récompenses quotidiennes, hebdomadaires).
-- **Volume** des actifs stakés (très significatif vs ton patrimoine).
+- **Volume** des actifs stakés (très significatif vs votre patrimoine).
 - **Diversité** des réseaux et stratégies.
 - **Infrastructure dédiée** (validateur perso, serveur, monitoring).
 - **Temps consacré** à l'activité.
@@ -128,7 +128,7 @@ Aucun texte ne fixe un seuil chiffré (en EUR ou en nombre de récompenses) au-d
 
 ### Régime micro-BNC (recettes < 77 700 €)
 
-Si tu choisis (ou bascules en) BNC, le **régime micro-BNC** s'applique automatiquement tant que tes recettes annuelles ne dépassent pas **77 700 €** (seuil 2025-2026) :
+Si vous choisissez (ou basculez en) BNC, le **régime micro-BNC** s'applique automatiquement tant que vos recettes annuelles ne dépassent pas **77 700 €** (seuil 2025-2026) :
 
 - **Abattement forfaitaire** de 34 % (frais réputés couverts).
 - Imposition au **barème progressif** sur 66 % des recettes.
@@ -137,11 +137,11 @@ Si tu choisis (ou bascules en) BNC, le **régime micro-BNC** s'applique automati
 
 ### Régime BNC réel
 
-Au-delà de 77 700 €, ou sur option, tu passes au **BNC déclaration contrôlée (régime réel)** :
+Au-delà de 77 700 €, ou sur option, vous passez au **BNC déclaration contrôlée (régime réel)** :
 
-- Tu déduis tes **frais réels** (matériel, électricité, abonnements).
-- Tu tiens une **comptabilité commerciale** (livre des recettes/dépenses).
-- Tu déclares via **2035 + 2042-C-PRO**.
+- Vous déduisez vos **frais réels** (matériel, électricité, abonnements).
+- Vous tenez une **comptabilité commerciale** (livre des recettes/dépenses).
+- Vous déclarez via **2035 + 2042-C-PRO**.
 
 ---
 
@@ -158,7 +158,7 @@ C'est la question la plus discutée dans la communauté fiscaliste crypto. Voici
 | Activité régulière qualifiée BNC | **Réception des récompenses** (cours du jour) | BNC (barème + URSSAF) |
 
 <Callout type="info" title="La nuance BNC vs occasionnel sur le fait générateur">
-En BNC, l'imposition intervient à la **réception** de la récompense (au cours du jour), comme pour n'importe quel revenu professionnel. En occasionnel, l'imposition est différée à la **cession**. C'est une différence majeure : en BNC tu paies l'impôt même si tu n'as pas vendu, alors qu'en occasionnel tu paies seulement quand tu convertis en EUR.
+En BNC, l'imposition intervient à la **réception** de la récompense (au cours du jour), comme pour n'importe quel revenu professionnel. En occasionnel, l'imposition est différée à la **cession**. C'est une différence majeure : en BNC vous payez l'impôt même si vous n'avez pas vendu, alors qu'en occasionnel vous payez seulement quand vous convertissez en EUR.
 </Callout>
 
 ---
@@ -172,7 +172,7 @@ En BNC, l'imposition intervient à la **réception** de la récompense (au cours
 - **Pooled staking via CEX** (Coinbase, Kraken) : occasionnel pour la grande majorité.
 - **Liquid staking (Lido stETH, Rocket Pool rETH)** : voir section dédiée plus bas.
 
-**Exemple chiffré** : tu déposes 5 ETH sur Coinbase Earn en janvier 2025. APR 4,5 % = **0,225 ETH récompense annuelle** = environ 525 € au cours moyen 2025 (2 333 €/ETH). En décembre 2025, tu vends ces 0,225 ETH à 600 €.
+**Exemple chiffré** : vous déposez 5 ETH sur Coinbase Earn en janvier 2025. APR 4,5 % = **0,225 ETH récompense annuelle** = environ 525 € au cours moyen 2025 (2 333 €/ETH). En décembre 2025, vous vendez ces 0,225 ETH à 600 €.
 
 - Régime occasionnel : 600 € × 31,4 % = **188,40 € d'impôt**.
 - Régime BNC micro : 525 € × 66 % × TMI 30 % = **104 €** + cotisations URSSAF si seuil atteint.
@@ -187,14 +187,14 @@ En BNC, l'imposition intervient à la **réception** de la récompense (au cours
 ### Cardano (ADA) — APR 3 à 4 %
 
 - **Délégation à un pool** via Daedalus, Yoroi, Lace ou CEX.
-- **Pas de lock-up** : tu peux retirer à tout moment.
+- **Pas de lock-up** : vous pouvez retirer à tout moment.
 - **Récompenses tous les 5 jours environ** (chaque epoch).
 
 **Exemple** : 10 000 ADA délégués à 4 % APR = 400 ADA/an. Au cours moyen 2025 (~0,55 €), recettes ≈ 220 €. Cession = imposable au PFU 31,4 %.
 
 <CTABox
-  title="Calcule l'impact fiscal de ton staking en 2 minutes"
-  description="Notre calculateur fiscalité crypto modélise les deux scénarios (occasionnel PFU vs BNC) sur tes récompenses ETH, SOL, ADA, et te dit lequel optimise ton impôt selon ta TMI et ton volume."
+  title="Calculez l'impact fiscal de votre staking en 2 minutes"
+  description="Notre calculateur fiscalité crypto modélise les deux scénarios (occasionnel PFU vs BNC) sur vos récompenses ETH, SOL, ADA, et vous dit lequel optimise votre impôt selon votre TMI et votre volume."
   ctaText="Lancer le calculateur"
   ctaUrl="/outils/calculateur-fiscalite"
   variant="primary"
@@ -206,9 +206,9 @@ En BNC, l'imposition intervient à la **réception** de la récompense (au cours
 
 Le **liquid staking** ajoute une couche de complexité fiscale :
 
-1. Tu déposes 1 ETH sur Lido → tu reçois 1 stETH (token représentatif).
+1. Vous déposez 1 ETH sur Lido → vous recevez 1 stETH (token représentatif).
 2. **Le solde stETH augmente automatiquement** chaque jour (rebasing) au rythme des récompenses.
-3. Tu peux vendre stETH à tout moment ou attendre de le swap retour en ETH.
+3. Vous pouvez vendre stETH à tout moment ou attendre de le swap retour en ETH.
 
 ### Position fiscale au 26 avril 2026
 
@@ -228,20 +228,20 @@ Le rebasing quotidien de stETH change le solde de tokens en wallet sans transact
 
 ### Si occasionnel : formulaire 2086 + 2042
 
-À la **cession** de tes récompenses (vente en EUR) :
+À la **cession** de vos récompenses (vente en EUR) :
 
-1. Calcule la plus-value avec la formule du prorata (article 150 VH bis).
-2. Reporte chaque cession ligne par ligne sur le **formulaire 2086**.
-3. Reporte le total sur la **case 3AN (plus-value)** ou **3BN (moins-value)** du **formulaire 2042**.
-4. Imposition automatique au PFU 31,4 % (ou barème si tu coches **2OP** — voir notre [guide PFU vs barème](/blog/eviter-pfu-30-crypto-bareme-progressif-legalement-2026)).
+1. Calculez la plus-value avec la formule du prorata (article 150 VH bis).
+2. Reportez chaque cession ligne par ligne sur le **formulaire 2086**.
+3. Reportez le total sur la **case 3AN (plus-value)** ou **3BN (moins-value)** du **formulaire 2042**.
+4. Imposition automatique au PFU 31,4 % (ou barème si vous cochez **2OP** — voir notre [guide PFU vs barème](/blog/eviter-pfu-30-crypto-bareme-progressif-legalement-2026)).
 
 ### Si BNC : formulaire 2042-C-PRO
 
 À chaque **réception de récompense** (cours du jour) :
 
-1. Tiens un journal : date, quantité reçue, cours du jour, contre-valeur EUR.
-2. Cumule les recettes annuelles.
-3. Reporte sur le **formulaire 2042-C-PRO** :
+1. Tenez un journal : date, quantité reçue, cours du jour, contre-valeur EUR.
+2. Cumulez les recettes annuelles.
+3. Reportez sur le **formulaire 2042-C-PRO** :
    - Régime micro : case **5HQ** (revenus non commerciaux non professionnels) ou **5KU** (NCN sans CGA).
    - Régime réel : annexe 2035 + report sur 2042-C-PRO.
 4. Si > seuil URSSAF (~ 24 000 €/an), inscription au régime micro-entrepreneur ou réel.
@@ -280,11 +280,11 @@ Dans ce cas : **occasionnel reste plus avantageux** pour Marc (volume modéré, 
 - **Croire qu'il faut déclarer chaque récompense reçue** : non, en occasionnel, seule la cession compte.
 - **Utiliser le mauvais cours** pour la valeur d'acquisition BNC (prendre le cours du jour exact, pas un cours moyen).
 - **Mélanger plus-values et BNC** dans la déclaration : ce sont deux rubriques distinctes (3AN vs 5HQ).
-- **Oublier les comptes étrangers** : si tu stakes via Binance ou Coinbase, le compte doit être déclaré en [Cerfa 3916-bis](/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026).
+- **Oublier les comptes étrangers** : si vous stakez via Binance ou Coinbase, le compte doit être déclaré en [Cerfa 3916-bis](/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026).
 - **Sous-estimer le BNC** pour un solo staker : la requalification rétroactive en BNC peut être très coûteuse (cotisations URSSAF + majorations).
 
 <Callout type="tip" title="Documenter, documenter, documenter">
-Conserve TOUS les justificatifs : exports CSV de la plateforme (Coinbase, Kraken, Lido), historiques des récompenses, captures d'écran avec dates, cours du jour. La DGFiP peut demander ces preuves jusqu'à 4 ans après la déclaration. Sans documentation, tu ne peux pas justifier ton calcul de plus-value.
+Conservez TOUS les justificatifs : exports CSV de la plateforme (Coinbase, Kraken, Lido), historiques des récompenses, captures d'écran avec dates, cours du jour. La DGFiP peut demander ces preuves jusqu'à 4 ans après la déclaration. Sans documentation, vous ne pouvez pas justifier votre calcul de plus-value.
 </Callout>
 
 ---
@@ -301,37 +301,37 @@ Conserve TOUS les justificatifs : exports CSV de la plateforme (Coinbase, Kraken
 <FAQ items={[
   {
     question: "Dois-je déclarer mes récompenses de staking ETH chaque année, même si je ne les vends pas ?",
-    answer: "Ce point n'est pas tranché par une doctrine officielle dédiée. Selon l'interprétation majoritaire en gestion occasionnelle (qui s'applique à la majorité des particuliers), l'imposition n'interviendrait qu'à la cession des récompenses contre des euros (ou un bien/service) — tant que tes 0,225 ETH restent dans ton wallet, pas d'obligation déclarative au titre de l'impôt sur le revenu dans cette approche. Mais une autre approche impose à la réception (au cours du jour), notamment si l'activité est qualifiée BNC. À vérifier selon ta situation."
+    answer: "Ce point n'est pas tranché par une doctrine officielle dédiée. Selon l'interprétation majoritaire en gestion occasionnelle (qui s'applique à la majorité des particuliers), l'imposition n'interviendrait qu'à la cession des récompenses contre des euros (ou un bien/service) — tant que vos 0,225 ETH restent dans votre wallet, pas d'obligation déclarative au titre de l'impôt sur le revenu dans cette approche. Mais une autre approche impose à la réception (au cours du jour), notamment si l'activité est qualifiée BNC. À vérifier selon votre situation."
   },
   {
     question: "Quelle est la valeur d'acquisition d'un ETH reçu en staking ?",
-    answer: "Dans le régime occasionnel, la valeur d'acquisition est de 0 €. Tu n'as pas \"acheté\" cet ETH, tu l'as reçu gratuitement. Conséquence : à la revente, la totalité du prix de cession est plus-value imposable (avec la formule du prorata sur la valeur globale du portefeuille). Dans le régime BNC, tu déclares la récompense au cours du jour de réception, et cette valeur devient ton prix d'acquisition pour une éventuelle revente future."
+    answer: "Dans le régime occasionnel, la valeur d'acquisition est de 0 €. Vous n'avez pas \"acheté\" cet ETH, vous l'avez reçu gratuitement. Conséquence : à la revente, la totalité du prix de cession est plus-value imposable (avec la formule du prorata sur la valeur globale du portefeuille). Dans le régime BNC, vous déclarez la récompense au cours du jour de réception, et cette valeur devient votre prix d'acquisition pour une éventuelle revente future."
   },
   {
     question: "Le liquid staking via Lido (stETH) déclenche-t-il un fait générateur d'impôt ?",
-    answer: "L'opération de dépôt ETH → réception stETH est généralement traitée comme un swap crypto-to-crypto, donc non imposable au sens de l'article 150 VH bis du CGI. Le rebasing quotidien de stETH (qui augmente la quantité de tokens en wallet) reste une zone grise au 26 avril 2026, la position dominante des cabinets fiscalistes est de le considérer comme une récompense de staking ; son moment d'imposition (réception ou cession) n'est pas tranché officiellement — à confirmer selon ta situation."
+    answer: "L'opération de dépôt ETH → réception stETH est généralement traitée comme un swap crypto-to-crypto, donc non imposable au sens de l'article 150 VH bis du CGI. Le rebasing quotidien de stETH (qui augmente la quantité de tokens en wallet) reste une zone grise au 26 avril 2026, la position dominante des cabinets fiscalistes est de le considérer comme une récompense de staking ; son moment d'imposition (réception ou cession) n'est pas tranché officiellement — à confirmer selon votre situation."
   },
   {
     question: "À partir de combien de récompenses staking suis-je en BNC obligatoire ?",
     answer: "Aucun texte fiscal français ne fixe de seuil chiffré. La qualification BNC vs occasionnel relève d'un faisceau d'indices : régularité, volume, infrastructure, temps consacré, intention de générer un revenu professionnel. En pratique, un solo staker ETH faisant tourner son propre nœud (32 ETH minimum) est presque toujours requalifiable en BNC. Un particulier qui stake 2 ou 5 ETH passivement via Coinbase Earn ou Lido reste très généralement en occasionnel."
   },
   {
-    question: "Je stakes du SOL via Phantom et reçois des récompenses tous les 2-3 jours, dois-je faire une ligne par récompense dans le 2086 ?",
-    answer: "Non. Dans le régime occasionnel, le formulaire 2086 ne se remplit qu'au moment des cessions (ventes en EUR), pas à chaque réception. Tu peux donc ignorer toutes les récompenses tant qu'elles restent en SOL non vendus. Au moment où tu vends une partie de tes SOL, tu calcules une seule plus-value globale avec la formule du prorata, en intégrant les récompenses reçues à valeur d'acquisition 0 € dans la valeur globale du portefeuille."
+    question: "Je stake du SOL via Phantom et reçois des récompenses tous les 2-3 jours, dois-je faire une ligne par récompense dans le 2086 ?",
+    answer: "Non. Dans le régime occasionnel, le formulaire 2086 ne se remplit qu'au moment des cessions (ventes en EUR), pas à chaque réception. Vous pouvez donc ignorer toutes les récompenses tant qu'elles restent en SOL non vendus. Au moment où vous vendez une partie de vos SOL, vous calculez une seule plus-value globale avec la formule du prorata, en intégrant les récompenses reçues à valeur d'acquisition 0 € dans la valeur globale du portefeuille."
   }
 ]} />
 
 ---
 
 <Callout type="info" title="Sources et mise à jour">
-Cet article s'appuie sur l'article 150 VH bis du CGI, l'arrêt du Conseil d'État du 26 avril 2018 (n° 417809) sur les bitcoins issus du minage, la doctrine BOFiP BOI-RPPM-PVBMC-30, le BOI-BNC-CHAMP-10 sur les BNC, et les rescrits fiscaux récents (2023-2024) sur les actifs numériques. La doctrine fiscale française sur le staking continue d'évoluer — vérifie les rescrits à jour ou consulte un fiscaliste spécialisé pour des montants significatifs.
+Cet article s'appuie sur l'article 150 VH bis du CGI, l'arrêt du Conseil d'État du 26 avril 2018 (n° 417809) sur les bitcoins issus du minage, la doctrine BOFiP BOI-RPPM-PVBMC-30, le BOI-BNC-CHAMP-10 sur les BNC, et les rescrits fiscaux récents (2023-2024) sur les actifs numériques. La doctrine fiscale française sur le staking continue d'évoluer — vérifiez les rescrits à jour ou consultez un fiscaliste spécialisé pour des montants significatifs.
 </Callout>
 
 
 <KeyTakeaways>
-- Identifie d'abord ton profil : staking passif via plateforme penche vers le régime occasionnel, validateur actif et infrastructure dédiée tirent vers le BNC.
-- Retiens la règle du fait générateur : en occasionnel tu n'es imposé qu'à la cession en euros, en BNC tu déclares dès la réception au cours du jour.
-- Souviens-toi que les récompenses reçues gratuitement ont une valeur d'acquisition nulle, ce qui gonfle la base imposable lors de la revente.
-- Traite le liquid staking avec prudence : le dépôt est vu comme un échange neutre, mais le rebasing reste une zone grise à documenter.
-- Conserve tous tes justificatifs (exports, historiques, cours du jour) et déclare tes comptes plateforme via le 3916-bis.
+- Identifiez d'abord votre profil : staking passif via plateforme penche vers le régime occasionnel, validateur actif et infrastructure dédiée tirent vers le BNC.
+- Retenez la règle du fait générateur : en occasionnel vous n'êtes imposé qu'à la cession en euros, en BNC vous déclarez dès la réception au cours du jour.
+- Souvenez-vous que les récompenses reçues gratuitement ont une valeur d'acquisition nulle, ce qui gonfle la base imposable lors de la revente.
+- Traitez le liquid staking avec prudence : le dépôt est vu comme un échange neutre, mais le rebasing reste une zone grise à documenter.
+- Conservez tous vos justificatifs (exports, historiques, cours du jour) et déclarez vos comptes plateforme via le 3916-bis.
 </KeyTakeaways>

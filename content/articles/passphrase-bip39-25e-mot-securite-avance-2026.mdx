@@ -2,7 +2,7 @@
 title: "Passphrase BIP39 (25e mot Ledger) : guide sécurité avancée 2026"
 slug: "passphrase-bip39-25e-mot-securite-avance-2026"
 description: "Passphrase BIP39 (25e mot) : tutoriel complet pour activer une passphrase sur Ledger en 2026. Fonctionnement HMAC-SHA512, protection contre le wrench attack, hidden wallet, risques (perte = perte définitive)."
-excerpt: "La passphrase BIP39 — surnommée le 25e mot — transforme tes 24 mots en un nombre infini de wallets cachés. Ultra-sécurisé contre le wrench attack, mais 1 typo = fonds perdus à jamais. Voici comment l'activer correctement."
+excerpt: "La passphrase BIP39 — surnommée le 25e mot — transforme vos 24 mots en un nombre infini de wallets cachés. Ultra-sécurisé contre le wrench attack, mais 1 typo = fonds perdus à jamais. Voici comment l'activer correctement."
 category: "Self-custody"
 date: "2026-04-26"
 lastUpdated: "2026-04-26"
@@ -31,16 +31,16 @@ keywords:
   - "wrench attack protection"
 ---
 
-Tu as configuré ton Ledger, tu as sauvegardé ta seed phrase de 24 mots sur plaque acier, et tu te demandes maintenant comment **passer au niveau supérieur** de sécurité. La réponse a un nom : la **passphrase BIP39**, surnommée à tort le **25e mot**. C'est la fonctionnalité la plus puissante et la plus mal comprise des hardware wallets.
+Vous avez configuré votre Ledger, vous avez sauvegardé votre seed phrase de 24 mots sur plaque acier, et vous vous demandez maintenant comment **passer au niveau supérieur** de sécurité. La réponse a un nom : la **passphrase BIP39**, surnommée à tort le **25e mot**. C'est la fonctionnalité la plus puissante et la plus mal comprise des hardware wallets.
 
-Ce guide te donne **tout** : le fonctionnement cryptographique réel, comment l'activer sur Ledger en 10 minutes, les vrais cas d'usage (notamment la protection contre le **wrench attack**), et surtout les **risques mortels** (une faute de frappe = fonds perdus à jamais). Aucune approximation, aucune zone grise.
+Ce guide vous donne **tout** : le fonctionnement cryptographique réel, comment l'activer sur Ledger en 10 minutes, les vrais cas d'usage (notamment la protection contre le **wrench attack**), et surtout les **risques mortels** (une faute de frappe = fonds perdus à jamais). Aucune approximation, aucune zone grise.
 
 <Callout type="tip" title="TL;DR (en 60 secondes)">
-- **Passphrase BIP39** = mot ou phrase supplémentaire (de 1 à 100 caractères) qui se combine à tes 24 mots pour générer un wallet **différent**.
+- **Passphrase BIP39** = mot ou phrase supplémentaire (de 1 à 100 caractères) qui se combine à vos 24 mots pour générer un wallet **différent**.
 - **24 mots seuls** → wallet visible standard. **24 mots + passphrase** → wallet caché complètement séparé.
-- **Avantage** : protection ultime contre le wrench attack (tu donnes les 24 mots sous la torture, l'attaquant tombe sur ton wallet "leurre" presque vide).
+- **Avantage** : protection ultime contre le wrench attack (vous donnez les 24 mots sous la torture, l'attaquant tombe sur votre wallet "leurre" presque vide).
 - **Risque mortel** : perdre la passphrase = fonds du wallet caché perdus définitivement, même avec les 24 mots intacts.
-- **Pour qui ?** À partir de 20 000 € en crypto, ou si tu vis dans un pays à risque physique élevé.
+- **Pour qui ?** À partir de 20 000 € en crypto, ou si vous vivez dans un pays à risque physique élevé.
 </Callout>
 
 ## 1. Qu'est-ce qu'une passphrase BIP39, vraiment
@@ -49,9 +49,9 @@ Le standard **BIP39** (Bitcoin Improvement Proposal n°39) définit comment gén
 
 **Comment ça marche techniquement** :
 
-1. Tes 24 mots sont d'abord convertis en une **entropie binaire** (256 bits + 8 bits de checksum).
+1. Vos 24 mots sont d'abord convertis en une **entropie binaire** (256 bits + 8 bits de checksum).
 2. Ces 24 mots sont passés dans une fonction **PBKDF2 avec HMAC-SHA512** (2 048 itérations) pour générer un master seed de 512 bits.
-3. La passphrase sert de **sel** dans cette fonction PBKDF2. Sans passphrase, le sel par défaut est la chaîne "mnemonic". Avec passphrase, le sel devient "mnemonic" + ta passphrase.
+3. La passphrase sert de **sel** dans cette fonction PBKDF2. Sans passphrase, le sel par défaut est la chaîne "mnemonic". Avec passphrase, le sel devient "mnemonic" + votre passphrase.
 
 **Conséquence cruciale** : changer **un seul caractère** de la passphrase produit un master seed totalement différent, donc des adresses Bitcoin/Ethereum totalement différentes, et donc un **wallet entièrement séparé**.
 
@@ -59,25 +59,25 @@ Le standard **BIP39** (Bitcoin Improvement Proposal n°39) définit comment gén
 
 Le surnom "25e mot" est marketing : la passphrase n'est pas obligée d'être un mot du dictionnaire BIP39. C'est **n'importe quelle chaîne** de 1 à 100 caractères ASCII : majuscules, minuscules, chiffres, caractères spéciaux, espaces, emojis (déconseillés pour des raisons de compatibilité).
 
-Tu peux donc avoir comme passphrase : `correcthorsebatterystaple`, `Mon_Bitcoin_Caché_2026!`, ou `oeufsbrouillesAuPesto42`. Plus c'est long et entropique, plus c'est sécurisé — mais plus c'est facile à oublier.
+Vous pouvez donc avoir comme passphrase : `correcthorsebatterystaple`, `Mon_Bitcoin_Caché_2026!`, ou `oeufsbrouillesAuPesto42`. Plus c'est long et entropique, plus c'est sécurisé — mais plus c'est facile à oublier.
 
 ## 2. Le wrench attack : pourquoi la passphrase est révolutionnaire
 
-Le **wrench attack** (XKCD 538) est l'attaque la plus simple et la plus efficace contre la self-custody : un attaquant te menace physiquement (ou menace tes proches) jusqu'à ce que tu donnes ta seed phrase. Aucun chiffrement ne résiste à 5 € de clé à molette bien placée.
+Le **wrench attack** (XKCD 538) est l'attaque la plus simple et la plus efficace contre la self-custody : un attaquant vous menace physiquement (ou menace vos proches) jusqu'à ce que vous donniez votre seed phrase. Aucun chiffrement ne résiste à 5 € de clé à molette bien placée.
 
 La passphrase BIP39 résout ce problème par le **plausible deniability** :
 
 **Setup recommandé** :
-- Tes 24 mots seuls dérivent un wallet "leurre" qui contient quelques centaines d'euros (du Bitcoin, un peu d'ETH, quelques NFT). Visible, plausible.
-- Tes 24 mots **+ passphrase** dérivent ton wallet "réel" qui contient tes 50 000 ou 200 000 € de patrimoine crypto.
-- Sous wrench attack, tu donnes les 24 mots. L'attaquant configure un wallet, voit 200 € de BTC, conclut qu'il s'est trompé de cible, te laisse partir.
+- Vos 24 mots seuls dérivent un wallet "leurre" qui contient quelques centaines d'euros (du Bitcoin, un peu d'ETH, quelques NFT). Visible, plausible.
+- Vos 24 mots **+ passphrase** dérivent votre wallet "réel" qui contient vos 50 000 ou 200 000 € de patrimoine crypto.
+- Sous wrench attack, vous donnez les 24 mots. L'attaquant configure un wallet, voit 200 € de BTC, conclut qu'il s'est trompé de cible, vous laisse partir.
 
 **Le wallet caché reste invisible** sans la passphrase exacte. Il n'y a aucune façon technique de prouver qu'il existe : un Ledger se restaure soit avec les 24 mots seuls, soit avec les 24 mots + passphrase, et **rien ne distingue les deux cas** côté appareil.
 
 C'est exactement la définition de **plausible deniability** dans la cryptographie.
 
 <Callout type="info" title="Le piège du wallet leurre vide">
-Si ton wallet leurre est **complètement vide**, l'attaquant ne te croira pas : il sait que tu as forcément quelque chose. Garde **20 à 500 €** crédibles sur le wallet leurre — assez pour paraître réel, pas assez pour t'appauvrir si tu le perds. C'est la dîme de sécurité.
+Si votre wallet leurre est **complètement vide**, l'attaquant ne vous croira pas : il sait que vous avez forcément quelque chose. Gardez **20 à 500 €** crédibles sur le wallet leurre — assez pour paraître réel, pas assez pour vous appauvrir si vous le perdez. C'est la dîme de sécurité.
 </Callout>
 
 ## 3. Comment activer une passphrase sur Ledger Nano X
@@ -86,29 +86,29 @@ La passphrase peut être activée à tout moment sur un Ledger Nano S Plus, Nano
 
 ### Méthode 1 — Passphrase saisie sur l'appareil (recommandée)
 
-1. Ledger Live → **Mes apps** → ouvre l'app **Bitcoin** sur l'appareil.
-2. Sur le Ledger physiquement, va dans **Settings** → **Security** → **Passphrase**.
-3. Choisis **Set up passphrase** → **Attach to PIN**.
-4. Tu choisis un **second PIN** (différent du PIN principal). Ce second PIN active automatiquement la passphrase quand tu l'utilises pour déverrouiller.
-5. Saisis ta passphrase sur l'appareil (clavier virtuel via les boutons). Long, mais c'est l'option la plus sécurisée.
-6. L'appareil te demande de confirmer. Une fois validée, ta passphrase est enregistrée.
+1. Ledger Live → **Mes apps** → ouvrez l'app **Bitcoin** sur l'appareil.
+2. Sur le Ledger physiquement, allez dans **Settings** → **Security** → **Passphrase**.
+3. Choisissez **Set up passphrase** → **Attach to PIN**.
+4. Vous choisissez un **second PIN** (différent du PIN principal). Ce second PIN active automatiquement la passphrase quand vous l'utilisez pour déverrouiller.
+5. Saisissez votre passphrase sur l'appareil (clavier virtuel via les boutons). Long, mais c'est l'option la plus sécurisée.
+6. L'appareil vous demande de confirmer. Une fois validée, votre passphrase est enregistrée.
 
 **Désormais** :
-- Tu déverrouilles avec le **PIN principal** → tu accèdes à ton wallet leurre (24 mots).
-- Tu déverrouilles avec le **PIN secondaire** → tu accèdes à ton wallet caché (24 mots + passphrase).
+- Vous déverrouillez avec le **PIN principal** → vous accédez à votre wallet leurre (24 mots).
+- Vous déverrouillez avec le **PIN secondaire** → vous accédez à votre wallet caché (24 mots + passphrase).
 
 ### Méthode 2 — Passphrase tapée temporairement (à chaque session)
 
-Si tu préfères ne pas associer la passphrase à un PIN secondaire, tu peux choisir **Set temporary passphrase** : tu la saisis manuellement à chaque session sur l'appareil. Plus sécurisé (rien de stocké dans l'appareil), mais plus pénible.
+Si vous préférez ne pas associer la passphrase à un PIN secondaire, vous pouvez choisir **Set temporary passphrase** : vous la saisissez manuellement à chaque session sur l'appareil. Plus sécurisé (rien de stocké dans l'appareil), mais plus pénible.
 
 ### Vérification
 
-Une fois la passphrase activée, ouvre Ledger Live. Tu vois maintenant **deux ensembles de comptes** distincts si tu déverrouilles avec les 2 PINs différents. Crée un **compte Bitcoin** dans le wallet caché : l'adresse générée doit être différente de celle du wallet leurre.
+Une fois la passphrase activée, ouvrez Ledger Live. Vous voyez maintenant **deux ensembles de comptes** distincts si vous déverrouillez avec les 2 PINs différents. Créez un **compte Bitcoin** dans le wallet caché : l'adresse générée doit être différente de celle du wallet leurre.
 
-**Test obligatoire** : envoie 0,0001 BTC (~5 €) sur le wallet caché. Vérifie qu'il arrive. Puis dépense-le. Si tout fonctionne, ton setup passphrase est opérationnel.
+**Test obligatoire** : envoyez 0,0001 BTC (~5 €) sur le wallet caché. Vérifiez qu'il arrive. Puis dépensez-le. Si tout fonctionne, votre setup passphrase est opérationnel.
 
 <Callout type="warning" title="Tutoriel Ledger officiel et hardware recommandé">
-Pour suivre la procédure officielle Ledger avec captures d'écran, consulte la <a href="https://support.ledger.com/article/4404366864-zd" target="_blank" rel="noopener noreferrer">documentation Ledger Academy sur la passphrase</a>. Si tu n'as pas encore de hardware wallet, le <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-passphrase-tuto">Ledger Nano X</AffiliateLink> supporte nativement la passphrase BIP39 depuis 2018, avec une UX dédiée (PIN secondaire). C'est la référence pour ce setup.
+Pour suivre la procédure officielle Ledger avec captures d'écran, consultez la <a href="https://support.ledger.com/article/4404366864-zd" target="_blank" rel="noopener noreferrer">documentation Ledger Academy sur la passphrase</a>. Si vous n'avez pas encore de hardware wallet, le <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-passphrase-tuto">Ledger Nano X</AffiliateLink> supporte nativement la passphrase BIP39 depuis 2018, avec une UX dédiée (PIN secondaire). C'est la référence pour ce setup.
 </Callout>
 
 ## 4. Comment sauvegarder une passphrase sans la perdre
@@ -117,11 +117,11 @@ C'est **le sujet le plus délicat** de cet article. Une passphrase oubliée = fo
 
 ### Option 1 — Mémorisation pure (la plus risquée)
 
-Tu mémorises la passphrase sans la noter nulle part. Avantage : aucune trace physique à voler. Inconvénient : si tu meurs ou perds la mémoire, tes fonds sont perdus à jamais. **Recommandé seulement** pour des montants modestes ou si tu acceptes ce risque.
+Vous mémorisez la passphrase sans la noter nulle part. Avantage : aucune trace physique à voler. Inconvénient : si vous mourez ou perdez la mémoire, vos fonds sont perdus à jamais. **Recommandé seulement** pour des montants modestes ou si vous acceptez ce risque.
 
 ### Option 2 — Passphrase notée séparément des 24 mots
 
-Tu écris ta passphrase sur **un autre support physique**, dans un autre lieu géographique que les 24 mots. Logique : si un voleur trouve les 24 mots, il n'a pas la passphrase, et inversement.
+Vous écrivez votre passphrase sur **un autre support physique**, dans un autre lieu géographique que les 24 mots. Logique : si un voleur trouve les 24 mots, il n'a pas la passphrase, et inversement.
 
 Exemple :
 - 24 mots gravés sur plaque acier dans un coffre domestique.
@@ -129,16 +129,16 @@ Exemple :
 
 ### Option 3 — Passphrase mnémotechnique forte
 
-Tu construis une passphrase à partir d'une **phrase facile à retenir** mais difficile à deviner. Exemple : prendre la première lettre de chaque mot d'une chanson personnelle, plus une date qui n'est dans aucun document public.
+Vous construisez une passphrase à partir d'une **phrase facile à retenir** mais difficile à deviner. Exemple : prendre la première lettre de chaque mot d'une chanson personnelle, plus une date qui n'est dans aucun document public.
 
-Risque : si la phrase est trop simple (extrait d'un livre, d'une chanson connue), un attaquant ciblé peut la brute-force. Évite tout ce qui est cherchable sur Internet.
+Risque : si la phrase est trop simple (extrait d'un livre, d'une chanson connue), un attaquant ciblé peut la brute-force. Évitez tout ce qui est cherchable sur Internet.
 
 ### Option 4 — Backup cryptographique sur Shamir Secret Sharing
 
-Pour les patrimoines importants, tu peux **diviser ta passphrase via Shamir** (SLIP-39) : 3 parts dont 2 suffisent pour reconstruire. Une part chez toi, une chez un proche, une au coffre bancaire. Voir notre guide [Shamir backup](/blog/shamir-backup-seed-decouper-en-parts-2026).
+Pour les patrimoines importants, vous pouvez **diviser votre passphrase via Shamir** (SLIP-39) : 3 parts dont 2 suffisent pour reconstruire. Une part chez vous, une chez un proche, une au coffre bancaire. Voir notre guide [Shamir backup](/blog/shamir-backup-seed-decouper-en-parts-2026).
 
 <Callout type="warning" title="Erreur classique : la passphrase oubliée à 99 %">
-"Je m'en souviendrai" est l'illusion qui tue le plus de wallets. Une passphrase utilisée tous les 6 mois s'oublie en 18 à 36 mois pour 80 % des gens. **Tu DOIS avoir un backup physique** (sauf si tu acceptes consciemment le risque de perte). Et tu dois **tester** la récupération une fois par an : restaure ton wallet sur un Ledger neuf avec les 24 mots + passphrase, vérifie que les fonds apparaissent.
+"Je m'en souviendrai" est l'illusion qui tue le plus de wallets. Une passphrase utilisée tous les 6 mois s'oublie en 18 à 36 mois pour 80 % des gens. **Vous DEVEZ avoir un backup physique** (sauf si vous acceptez consciemment le risque de perte). Et vous devez **tester** la récupération une fois par an : restaurez votre wallet sur un Ledger neuf avec les 24 mots + passphrase, vérifiez que les fonds apparaissent.
 </Callout>
 
 ## 5. Tableau comparatif : 24 mots seuls vs 24 mots + passphrase
@@ -147,7 +147,7 @@ Pour les patrimoines importants, tu peux **diviser ta passphrase via Shamir** (S
 |---|---|---|
 | **Configuration** | Standard, par défaut | Activation manuelle (10 min) |
 | **Sécurité face au vol de seed** | Faible (qui a la seed a les fonds) | Très élevée (passphrase requise) |
-| **Sécurité face au wrench attack** | Faible (tu cèdes sous menace) | Très élevée (plausible deniability) |
+| **Sécurité face au wrench attack** | Faible (vous cédez sous menace) | Très élevée (plausible deniability) |
 | **Risque de perte irréversible** | Si seed perdue uniquement | Si seed OU passphrase perdue |
 | **Compatibilité hardware wallets** | Universelle | Ledger, Trezor, Coldcard, Sparrow |
 | **Complexité opérationnelle** | Faible | Moyenne |
@@ -178,15 +178,15 @@ Setup multi-couches :
 
 ## Erreurs courantes à éviter
 
-1. **Activer une passphrase sans test de récupération immédiat** : tu actives, tu envoies 50 000 € sur le wallet caché, tu te casses le bras, tu oublies la passphrase précise → tout perdu. **Toujours tester** la restauration sur un Ledger vierge avant de transférer des montants importants.
+1. **Activer une passphrase sans test de récupération immédiat** : vous activez, vous envoyez 50 000 € sur le wallet caché, vous vous cassez le bras, vous oubliez la passphrase précise → tout perdu. **Toujours tester** la restauration sur un Ledger vierge avant de transférer des montants importants.
 2. **Utiliser une passphrase de 5 caractères** : trop courte, brute-forçable. Minimum 12 caractères avec mix majuscules/minuscules/chiffres/symboles.
 3. **Stocker la passphrase au même endroit que les 24 mots** : annule complètement l'avantage. À séparer absolument.
-4. **Wallet leurre à 0 €** : alerte immédiate l'attaquant. Garde au moins 100-300 € crédibles dessus.
-5. **Utiliser une passphrase facile à deviner** (date de naissance, nom du chien, citation de film) : un attaquant qui te cible peut brute-forcer en quelques heures.
+4. **Wallet leurre à 0 €** : alerte immédiate l'attaquant. Gardez au moins 100-300 € crédibles dessus.
+5. **Utiliser une passphrase facile à deviner** (date de naissance, nom du chien, citation de film) : un attaquant qui vous cible peut brute-forcer en quelques heures.
 
 ## Pour aller plus loin
 
-- [Configurer ton Ledger Nano X en 30 minutes](/blog/configurer-ledger-nano-x-30-minutes-guide-pas-a-pas) — la base avant la passphrase.
+- [Configurer votre Ledger Nano X en 30 minutes](/blog/configurer-ledger-nano-x-30-minutes-guide-pas-a-pas) — la base avant la passphrase.
 - [Backup seed phrase : 5 méthodes ultra-sûres](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026) — pour sauvegarder seed ET passphrase.
 - [Cold wallet vs hot wallet : guide complet](/blog/cold-wallet-vs-hot-wallet-guide-complet-2026) — la base de la self-custody.
 - [Shamir backup : découper la seed en parts](/blog/shamir-backup-seed-decouper-en-parts-2026) — alternative ou complément à la passphrase.
@@ -194,19 +194,19 @@ Setup multi-couches :
 - [Ledger vs Trezor : duel objectif 2026](/blog/ledger-vs-trezor-duel-objectif-2026-par-profil) — les deux supportent la passphrase BIP39.
 
 <Callout type="warning" title="Avertissement (YMYL — sécurité crypto)">
-La passphrase BIP39 est une fonctionnalité de sécurité avancée. **Une passphrase oubliée ou perdue entraîne la perte définitive et irréversible** des fonds du wallet caché, même si tes 24 mots sont parfaitement sauvegardés. Cryptoreflex ne fournit pas de conseil personnalisé en sécurité crypto. Avant d'activer une passphrase et d'y transférer des fonds, **teste impérativement** la procédure de récupération sur un appareil vierge avec un micro-montant. La self-custody implique une responsabilité totale.
+La passphrase BIP39 est une fonctionnalité de sécurité avancée. **Une passphrase oubliée ou perdue entraîne la perte définitive et irréversible** des fonds du wallet caché, même si vos 24 mots sont parfaitement sauvegardés. Cryptoreflex ne fournit pas de conseil personnalisé en sécurité crypto. Avant d'activer une passphrase et d'y transférer des fonds, **testez impérativement** la procédure de récupération sur un appareil vierge avec un micro-montant. La self-custody implique une responsabilité totale.
 </Callout>
 
-## FAQ : tes questions sur la passphrase BIP39
+## FAQ : vos questions sur la passphrase BIP39
 
 <FAQ items={[
   {
     question: "La passphrase BIP39 est-elle compatible entre Ledger et Trezor ?",
-    answer: "Oui à 100 %. La passphrase BIP39 est un standard ouvert. Tu peux configurer une passphrase sur Ledger, perdre ton appareil, racheter un Trezor (ou un Coldcard), restaurer avec les 24 mots + la même passphrase, et tu retrouves exactement les mêmes adresses et fonds. C'est l'avantage des standards BIP."
+    answer: "Oui à 100 %. La passphrase BIP39 est un standard ouvert. Vous pouvez configurer une passphrase sur Ledger, perdre votre appareil, racheter un Trezor (ou un Coldcard), restaurer avec les 24 mots + la même passphrase, et vous retrouvez exactement les mêmes adresses et fonds. C'est l'avantage des standards BIP."
   },
   {
     question: "Peut-on avoir plusieurs passphrases différentes sur le même Ledger ?",
-    answer: "Oui. Tu peux saisir une passphrase différente à chaque session via l'option 'Set temporary passphrase'. Chaque passphrase ouvre un wallet caché distinct. Certains utilisent cela pour séparer leurs cryptos par usage : passphrase A pour BTC long terme, passphrase B pour DeFi, passphrase C pour fonds familiaux."
+    answer: "Oui. Vous pouvez saisir une passphrase différente à chaque session via l'option 'Set temporary passphrase'. Chaque passphrase ouvre un wallet caché distinct. Certains utilisent cela pour séparer leurs cryptos par usage : passphrase A pour BTC long terme, passphrase B pour DeFi, passphrase C pour fonds familiaux."
   },
   {
     question: "Quelle longueur de passphrase recommander ?",
@@ -214,7 +214,7 @@ La passphrase BIP39 est une fonctionnalité de sécurité avancée. **Une passph
   },
   {
     question: "Si je tape ma passphrase avec une faute de frappe, que se passe-t-il ?",
-    answer: "Ledger n'affichera aucune erreur. Tu accéderas simplement à un wallet **différent** (vide, puisque tu n'y as jamais envoyé de fonds). C'est le piège : aucune indication que tu t'es trompé. D'où l'importance de tester la passphrase sur un montant minime avant tout transfert important. Et de toujours sauvegarder la passphrase exacte (caractère par caractère, casse comprise)."
+    answer: "Ledger n'affichera aucune erreur. Vous accéderez simplement à un wallet **différent** (vide, puisque vous n'y avez jamais envoyé de fonds). C'est le piège : aucune indication que vous vous êtes trompé. D'où l'importance de tester la passphrase sur un montant minime avant tout transfert important. Et de toujours sauvegarder la passphrase exacte (caractère par caractère, casse comprise)."
   },
   {
     question: "La passphrase remplace-t-elle un setup multi-sig ?",
@@ -229,13 +229,13 @@ La passphrase BIP39 est une fonctionnalité de sécurité avancée. **Une passph
 - [Trezor Wiki — Passphrase](https://wiki.trezor.io/Passphrase)
 - [NIST — PBKDF2 spécification](https://csrc.nist.gov/publications/detail/sp/800-132/final)
 
-La passphrase BIP39 est probablement la **meilleure feature gratuite** des hardware wallets. Elle ajoute une couche de sécurité quasi-incassable contre les attaques physiques, sans coût financier. Mais elle exige rigueur opérationnelle : test, sauvegarde, et pleine conscience du risque "passphrase perdue = fonds perdus". Si tu es à l'aise avec ces contraintes, active-la. Si tu doutes, reste sur les 24 mots seuls bien sécurisés — c'est déjà excellent.
+La passphrase BIP39 est probablement la **meilleure feature gratuite** des hardware wallets. Elle ajoute une couche de sécurité quasi-incassable contre les attaques physiques, sans coût financier. Mais elle exige rigueur opérationnelle : test, sauvegarde, et pleine conscience du risque "passphrase perdue = fonds perdus". Si vous êtes à l'aise avec ces contraintes, activez-la. Si vous doutez, restez sur les 24 mots seuls bien sécurisés — c'est déjà excellent.
 
 
 <KeyTakeaways>
-- La passphrase se combine à tes mots de récupération pour générer un wallet caché totalement séparé du wallet visible.
-- Son intérêt majeur est la négation plausible face au wrench attack : tu peux exposer un wallet leurre crédible et garder l'essentiel invisible.
-- Retiens le risque mortel : une passphrase oubliée ou mal orthographiée entraîne la perte définitive des fonds, même avec tes mots intacts.
-- Sauvegarde ta passphrase sur un support séparé de ta seed, et teste la récupération avant d'y transférer un montant important.
-- Garde un peu de fonds crédibles sur le wallet leurre : complètement vide, il alerte immédiatement un attaquant.
+- La passphrase se combine à vos mots de récupération pour générer un wallet caché totalement séparé du wallet visible.
+- Son intérêt majeur est la négation plausible face au wrench attack : vous pouvez exposer un wallet leurre crédible et garder l'essentiel invisible.
+- Retenez le risque mortel : une passphrase oubliée ou mal orthographiée entraîne la perte définitive des fonds, même avec vos mots intacts.
+- Sauvegardez votre passphrase sur un support séparé de votre seed, et testez la récupération avant d'y transférer un montant important.
+- Gardez un peu de fonds crédibles sur le wallet leurre : complètement vide, il alerte immédiatement un attaquant.
 </KeyTakeaways>

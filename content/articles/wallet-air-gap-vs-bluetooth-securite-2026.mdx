@@ -30,9 +30,9 @@ keywords:
   - "seedsigner"
 ---
 
-Tu lis sur Twitter Bitcoin que **« le Bluetooth de Ledger est dangereux »**, qu'il faut absolument passer à un **wallet air-gap** comme **Coldcard** ou **SeedSigner**. Tu hésites maintenant entre acheter le Ledger Nano X que tout le monde recommande ou suivre les puristes qui crient au scandale.
+Vous lisez sur Twitter Bitcoin que **« le Bluetooth de Ledger est dangereux »**, qu'il faut absolument passer à un **wallet air-gap** comme **Coldcard** ou **SeedSigner**. Vous hésitez maintenant entre acheter le Ledger Nano X que tout le monde recommande ou suivre les puristes qui crient au scandale.
 
-Ce guide te donne **l'analyse technique honnête** de la sécurité air-gap vs Bluetooth en 2026. Sans dogme, sans religion. On regarde les **vraies vulnérabilités documentées** (notamment les CVE de 2020 sur le Bluetooth Ledger), on compare ce qui est protégé et ce qui ne l'est pas, et on conclut par des **recommandations claires par profil** : pour qui Coldcard est justifié, pour qui Ledger reste le meilleur choix.
+Ce guide vous donne **l'analyse technique honnête** de la sécurité air-gap vs Bluetooth en 2026. Sans dogme, sans religion. On regarde les **vraies vulnérabilités documentées** (notamment les CVE de 2020 sur le Bluetooth Ledger), on compare ce qui est protégé et ce qui ne l'est pas, et on conclut par des **recommandations claires par profil** : pour qui Coldcard est justifié, pour qui Ledger reste le meilleur choix.
 
 <Callout type="tip" title="TL;DR (en 60 secondes)">
 - **Air-gap** = wallet sans aucune connexion sans-fil (USB OK, Bluetooth/Wi-Fi non). Signatures via QR codes, microSD, ou écran physique.
@@ -76,7 +76,7 @@ Le Bluetooth du Ledger Nano X (et Stax) suscite la méfiance depuis sa sortie en
 ### Risques résiduels théoriques
 
 - **Attaque par proximité** : un attaquant à moins de 5 mètres peut théoriquement essayer d'exploiter une 0-day BLE non encore patchée. Probabilité faible pour le grand public, non négligeable pour des cibles ciblées (HNWI connus).
-- **Compromission du smartphone** : si ton téléphone Android/iOS est rooté/jailbreaké avec malware, l'app Ledger Live peut être compromise. Mais cela vaut aussi pour USB sur PC compromis.
+- **Compromission du smartphone** : si votre téléphone Android/iOS est rooté/jailbreaké avec malware, l'app Ledger Live peut être compromise. Mais cela vaut aussi pour USB sur PC compromis.
 
 ### Conclusion sur le Bluetooth Ledger
 
@@ -129,41 +129,41 @@ Soyons honnêtes : **air-gap pur n'est pas pour tout le monde**. Voici les profi
 
 ### Profil 1 — Bitcoiner maximaliste avec plus de 100 000 € BTC
 
-Tu n'as que du Bitcoin, tu n'as **aucune** intention de toucher aux altcoins, NFT ou DeFi. Coldcard te donne le **maximum de sécurité possible** sans surface d'attaque sans-fil, avec une intégration native Sparrow Wallet pour multi-sig. C'est l'approche orthodoxe.
+Vous n'avez que du Bitcoin, vous n'avez **aucune** intention de toucher aux altcoins, NFT ou DeFi. Coldcard vous donne le **maximum de sécurité possible** sans surface d'attaque sans-fil, avec une intégration native Sparrow Wallet pour multi-sig. C'est l'approche orthodoxe.
 
 ### Profil 2 — Cible potentielle (notoriété crypto, fortune visible)
 
-Si tu es médiatisé, identifié comme détenteur de crypto important, ou que tu vis dans un pays à risque physique élevé (Amérique latine, certaines régions à risque), le risque d'attaque ciblée (incluant proximité Bluetooth) augmente. Air-gap réduit la surface d'attaque physique.
+Si vous êtes médiatisé, identifié comme détenteur de crypto important, ou que vous vivez dans un pays à risque physique élevé (Amérique latine, certaines régions à risque), le risque d'attaque ciblée (incluant proximité Bluetooth) augmente. Air-gap réduit la surface d'attaque physique.
 
 ### Profil 3 — Paranoïa technique justifiée (devs sécurité, cryptographes)
 
-Si tu comprends en détail les protocoles BLE, les attaques side-channel et que tu n'acceptes pas de faire confiance à un firmware Bluetooth propriétaire, air-gap est la position cohérente avec ton modèle de menace.
+Si vous comprenez en détail les protocoles BLE, les attaques side-channel et que vous n'acceptez pas de faire confiance à un firmware Bluetooth propriétaire, air-gap est la position cohérente avec votre modèle de menace.
 
 ### Et pour les autres ? Ledger Nano X reste le meilleur compromis
 
 Pour 95 % des utilisateurs français :
-- Tu n'es pas une cible ciblée connue.
-- Tu as moins de 50 000 € en crypto.
-- Tu veux pouvoir gérer Bitcoin, Ethereum, Solana, NFT, DeFi.
-- Tu utilises ton wallet en mobilité (Bluetooth indispensable).
+- Vous n'êtes pas une cible ciblée connue.
+- Vous avez moins de 50 000 € en crypto.
+- Vous voulez pouvoir gérer Bitcoin, Ethereum, Solana, NFT, DeFi.
+- Vous utilisez votre wallet en mobilité (Bluetooth indispensable).
 
-Dans ce cas, le **Ledger Nano X** offre le meilleur ratio sécurité/UX/prix. Le risque résiduel Bluetooth est négligeable face à ton profil. C'est exactement pour cette raison qu'il représente plus de 80 % des ventes hardware wallet en France.
+Dans ce cas, le **Ledger Nano X** offre le meilleur ratio sécurité/UX/prix. Le risque résiduel Bluetooth est négligeable face à votre profil. C'est exactement pour cette raison qu'il représente plus de 80 % des ventes hardware wallet en France.
 
 <Callout type="info" title="Le meilleur compromis pour la majorité">
-Pour la majorité des utilisateurs (moins de 50 000 € en crypto, multi-cryptos, usage mobile), le <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-airgap-compromis">Ledger Nano X</AffiliateLink> reste le meilleur choix. Si tu veux le maximum de sécurité visuelle pour les transactions complexes (DeFi, NFT), monte au <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-airgap-stax">Ledger Stax</AffiliateLink> avec son grand écran tactile e-ink. L'air-gap pur (Coldcard) n'est justifié que pour les bitcoiners maximalistes ou les profils HNWI ciblés.
+Pour la majorité des utilisateurs (moins de 50 000 € en crypto, multi-cryptos, usage mobile), le <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-airgap-compromis">Ledger Nano X</AffiliateLink> reste le meilleur choix. Si vous voulez le maximum de sécurité visuelle pour les transactions complexes (DeFi, NFT), montez au <AffiliateLink href="https://shop.ledger.com/" platform="ledger" placement="article-airgap-stax">Ledger Stax</AffiliateLink> avec son grand écran tactile e-ink. L'air-gap pur (Coldcard) n'est justifié que pour les bitcoiners maximalistes ou les profils HNWI ciblés.
 </Callout>
 
 ## 6. Comment se rapprocher de l'air-gap avec un Ledger
 
-Si tu as un Ledger et veux **maximiser la sécurité sans changer d'appareil**, voici les bonnes pratiques :
+Si vous avez un Ledger et voulez **maximiser la sécurité sans changer d'appareil**, voici les bonnes pratiques :
 
-1. **Désactive le Bluetooth** : Settings → Bluetooth → Off. Tu utilises uniquement USB-C. Tu perds le confort mobile mais tu élimines la surface d'attaque BLE.
-2. **Utilise un PC dédié à la signature** : un vieux laptop reformaté, sans navigation web, dédié uniquement à Ledger Live. Diminue le risque de malware.
-3. **Vérifie chaque transaction** sur l'écran physique : adresse de destination (premiers et derniers caractères), montant, frais. Aucun malware ne peut modifier l'écran sécurisé.
-4. **Combine avec passphrase BIP39** : voir notre [guide passphrase 25e mot](/blog/passphrase-bip39-25e-mot-securite-avance-2026) pour ajouter une couche de plausible deniability.
-5. **Utilise Sparrow Wallet** au lieu de Ledger Live pour Bitcoin : Sparrow supporte le mode air-gap via QR codes (Coldcard-style) compatible avec certains Ledger en lecture-only via xpub.
+1. **Désactivez le Bluetooth** : Settings → Bluetooth → Off. Vous utilisez uniquement USB-C. Vous perdez le confort mobile mais vous éliminez la surface d'attaque BLE.
+2. **Utilisez un PC dédié à la signature** : un vieux laptop reformaté, sans navigation web, dédié uniquement à Ledger Live. Diminue le risque de malware.
+3. **Vérifiez chaque transaction** sur l'écran physique : adresse de destination (premiers et derniers caractères), montant, frais. Aucun malware ne peut modifier l'écran sécurisé.
+4. **Combinez avec passphrase BIP39** : voir notre [guide passphrase 25e mot](/blog/passphrase-bip39-25e-mot-securite-avance-2026) pour ajouter une couche de plausible deniability.
+5. **Utilisez Sparrow Wallet** au lieu de Ledger Live pour Bitcoin : Sparrow supporte le mode air-gap via QR codes (Coldcard-style) compatible avec certains Ledger en lecture-only via xpub.
 
-Avec ce setup, ton Ledger Nano X est **fonctionnellement très proche d'un semi air-gap**, sans avoir à racheter du matériel.
+Avec ce setup, votre Ledger Nano X est **fonctionnellement très proche d'un semi air-gap**, sans avoir à racheter du matériel.
 
 ## 7. Erreurs courantes à éviter
 
@@ -187,17 +187,17 @@ Avec ce setup, ton Ledger Nano X est **fonctionnellement très proche d'un semi 
 ## Pour aller plus loin
 
 - [Cold wallet vs hot wallet : guide complet](/blog/cold-wallet-vs-hot-wallet-guide-complet-2026) — la base avant tout choix hardware.
-- [Configurer ton Ledger Nano X en 30 minutes](/blog/configurer-ledger-nano-x-30-minutes-guide-pas-a-pas) — le tuto pas-à-pas.
+- [Configurer votre Ledger Nano X en 30 minutes](/blog/configurer-ledger-nano-x-30-minutes-guide-pas-a-pas) — le tuto pas-à-pas.
 - [Backup seed phrase : 5 méthodes ultra-sûres](/blog/backup-seed-phrase-5-methodes-ultra-sures-2026) — peu importe l'appareil, la seed est critique.
 - [Ledger vs Trezor : duel objectif 2026](/blog/ledger-vs-trezor-duel-objectif-2026-par-profil) — comparatif complet.
 - [Multi-sig wallet Bitcoin débutant 2026](/blog/multi-sig-wallet-bitcoin-debutant-2026) — combiner air-gap + multi-sig.
 - [Passphrase BIP39 : le 25e mot](/blog/passphrase-bip39-25e-mot-securite-avance-2026) — ajouter une couche de sécurité plausible deniability.
 
 <Callout type="warning" title="Avertissement (YMYL — sécurité crypto)">
-Le choix d'un hardware wallet engage la sécurité de patrimoines potentiellement importants. **Aucun hardware wallet n'est invulnérable** : la sécurité dépend du matériel, du firmware, de l'OPSEC utilisateur et de la sauvegarde de la seed. Cryptoreflex ne fournit pas de conseil personnalisé. Avant tout achat, lis les **audits de sécurité publics** (Kraken Security Labs, Donjon Ledger, NCC Group), évalue ton modèle de menace réel, et privilégie toujours **les sites officiels** des constructeurs (jamais Amazon ni revendeur tiers pour ce type de matériel).
+Le choix d'un hardware wallet engage la sécurité de patrimoines potentiellement importants. **Aucun hardware wallet n'est invulnérable** : la sécurité dépend du matériel, du firmware, de l'OPSEC utilisateur et de la sauvegarde de la seed. Cryptoreflex ne fournit pas de conseil personnalisé. Avant tout achat, lisez les **audits de sécurité publics** (Kraken Security Labs, Donjon Ledger, NCC Group), évaluez votre modèle de menace réel, et privilégiez toujours **les sites officiels** des constructeurs (jamais Amazon ni revendeur tiers pour ce type de matériel).
 </Callout>
 
-## FAQ : tes questions sur air-gap vs Bluetooth
+## FAQ : vos questions sur air-gap vs Bluetooth
 
 <FAQ items={[
   {
@@ -210,11 +210,11 @@ Le choix d'un hardware wallet engage la sécurité de patrimoines potentiellemen
   },
   {
     question: "Puis-je désactiver le Bluetooth de mon Ledger Nano X ?",
-    answer: "Oui, totalement. Va dans Settings → Bluetooth → Off sur l'appareil. Tu utilises uniquement USB-C. Tu obtiens un fonctionnement équivalent à un Ledger Nano S Plus (semi air-gap), avec le bénéfice de pouvoir réactiver le Bluetooth si besoin de mobilité ponctuelle."
+    answer: "Oui, totalement. Allez dans Settings → Bluetooth → Off sur l'appareil. Vous utilisez uniquement USB-C. Vous obtenez un fonctionnement équivalent à un Ledger Nano S Plus (semi air-gap), avec le bénéfice de pouvoir réactiver le Bluetooth si besoin de mobilité ponctuelle."
   },
   {
     question: "L'écran tactile du Ledger Stax est-il un risque sécurité ?",
-    answer: "Non. L'écran tactile e-ink du Stax communique avec le Secure Element via un protocole interne sécurisé. Le contenu affiché ne peut être modifié par un malware externe. L'avantage du grand écran : tu lis mieux les transactions complexes (smart contracts, DeFi, NFT), donc tu vérifies mieux ce que tu signes — c'est un gain net de sécurité face au phishing."
+    answer: "Non. L'écran tactile e-ink du Stax communique avec le Secure Element via un protocole interne sécurisé. Le contenu affiché ne peut être modifié par un malware externe. L'avantage du grand écran : vous lisez mieux les transactions complexes (smart contracts, DeFi, NFT), donc vous vérifiez mieux ce que vous signez — c'est un gain net de sécurité face au phishing."
   },
   {
     question: "SeedSigner DIY est-il viable pour un débutant ?",
@@ -230,13 +230,13 @@ Le choix d'un hardware wallet engage la sécurité de patrimoines potentiellemen
 - [SeedSigner GitHub officiel](https://github.com/SeedSigner/seedsigner)
 - [STMicroelectronics ST33 — Spec Secure Element](https://www.st.com/en/secure-mcus/st33j2m0.html)
 
-L'opposition air-gap vs Bluetooth est trop souvent présentée comme religieuse. La réalité technique est nuancée : pour la majorité des utilisateurs, **le Bluetooth Ledger 2026 est sécurisé** et offre un confort net. Pour les profils spécifiques (bitcoiners maximalistes, HNWI ciblés), **air-gap pur reste la posture orthodoxe** justifiée. Choisis selon ton vrai profil, pas selon le bruit Twitter.
+L'opposition air-gap vs Bluetooth est trop souvent présentée comme religieuse. La réalité technique est nuancée : pour la majorité des utilisateurs, **le Bluetooth Ledger 2026 est sécurisé** et offre un confort net. Pour les profils spécifiques (bitcoiners maximalistes, HNWI ciblés), **air-gap pur reste la posture orthodoxe** justifiée. Choisissez selon votre vrai profil, pas selon le bruit Twitter.
 
 
 <KeyTakeaways>
-- Retiens qu'un wallet avec USB ou Bluetooth n'est pas « en ligne » : la clé privée reste dans le composant sécurisé et n'est jamais transmise.
+- Retenez qu'un wallet avec USB ou Bluetooth n'est pas « en ligne » : la clé privée reste dans le composant sécurisé et n'est jamais transmise.
 - Pour la majorité des utilisateurs, le Bluetooth Ledger chiffré offre le meilleur compromis sécurité, UX et multi-crypto ; l'air-gap pur ne s'impose pas.
-- Réserve l'air-gap pur (Coldcard, SeedSigner) aux bitcoiners maximalistes, aux profils ciblés et à une paranoïa technique justifiée.
-- Si tu veux durcir ton Ledger sans changer d'appareil, désactive le Bluetooth, vérifie chaque transaction sur l'écran physique et tiens le firmware à jour.
-- Garde en tête qu'aucun hardware wallet n'est invulnérable : ta sécurité dépend autant de ton hygiène d'usage que du matériel, et achète toujours sur le site officiel.
+- Réservez l'air-gap pur (Coldcard, SeedSigner) aux bitcoiners maximalistes, aux profils ciblés et à une paranoïa technique justifiée.
+- Si vous voulez durcir votre Ledger sans changer d'appareil, désactivez le Bluetooth, vérifiez chaque transaction sur l'écran physique et tenez le firmware à jour.
+- Gardez en tête qu'aucun hardware wallet n'est invulnérable : votre sécurité dépend autant de votre hygiène d'usage que du matériel, et achetez toujours sur le site officiel.
 </KeyTakeaways>
