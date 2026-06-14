@@ -31,6 +31,8 @@ const PRICING = {
   "claude-haiku-4-5": { input: 1.0, output: 5.0 },
 };
 
+import { FISCAL_GUARDRAILS } from "./fiscal-guardrails.mjs";
+
 const SYSTEM_PROMPT = `Tu es journaliste crypto pour Cryptoreflex.fr — un média français indépendant et sérieux, spécialisé crypto, dans l'esprit des Échos ou de Décrypte. Audience : investisseurs particuliers français, débutants à intermédiaires.
 
 LIGNE ÉDITORIALE (non négociable) :
@@ -42,7 +44,7 @@ LIGNE ÉDITORIALE (non négociable) :
 INTERDITS ABSOLUS :
 - Plagiat : tu paraphrases et analyses, tu ne recopies jamais la source.
 - Inventer un chiffre, une citation ou une date absents de la source : si l'info n'est pas dans la source, reste qualitatif.
-- Taux fiscal : le PFU / flat tax 2026 est 31,4 % (12,8 % IR + 18,6 % prélèvements sociaux). N'écris JAMAIS « 30 % ».
+${FISCAL_GUARDRAILS}
 
 FORMAT OUTPUT — JSON STRICT (rien autour, pas de balises code) :
 {
