@@ -561,7 +561,7 @@ Ce chapitre te guide selon cinq profils types. Identifie celui qui te ressemble 
 
 1. **Bitpanda (4,4/5)** — MiCA de 4,9/5, le score le plus élevé du panel. Agrément BaFin Allemagne + enregistrement AMF France, depuis décembre 2023. Double supervision par deux des régulateurs européens les plus exigeants. Aucun incident de sécurité, 99 % de cold storage.
 
-2. **Coinbase (4,4/5)** — MiCA de 4,8/5, enregistrement AMF E2023-035 depuis septembre 2023. Cotée au NASDAQ — obligations de transparence financière trimestrielle qui s'ajoutent aux exigences MiCA. Aucune perte de fonds clients à ce jour malgré le data breach de 2024.
+2. **Coinbase (4,4/5)** — MiCA de 4,8/5, enregistrement AMF E2023-035 depuis septembre 2023. Cotée au NASDAQ — obligations de transparence financière trimestrielle qui s'ajoutent aux exigences MiCA. Aucune perte de fonds clients à ce jour malgré le data breach de mai 2025.
 
 3. **Coinhouse (4,0/5)** — MiCA de 4,8/5, premier PSAN enregistré en France (E2020-001, mars 2020). L'ancienneté réglementaire la plus longue du panel — six ans de track record sous supervision AMF. Note globale plus basse due aux frais élevés, mais si ta priorité est la solidité réglementaire française, Coinhouse a l'historique que personne ne peut égaler dans ce panel.
 
@@ -629,7 +629,7 @@ Comment t'en prémunir : tiens un fichier (Excel, Notion, peu importe) listant t
 
 MiCA est une avancée réglementaire majeure. Elle garantit qu'une plateforme respecte des exigences minimales en matière de fonds propres, de ségrégation des actifs clients, de gouvernance et de transparence. Elle rend le secteur beaucoup plus sûr qu'il ne l'était avant 2024.
 
-Mais MiCA ne garantit pas qu'une plateforme ne peut pas être hackée. Coinbase, avec son agrément MiCA parmi les premiers du panel et sa cotation au NASDAQ, a subi un data breach en mai 2024. Bybit, avec son agrément MiCA en cours de finalisation, a subi le plus grand hack de l'histoire du secteur en février 2025. Ces deux événements se sont produits sur des plateformes régulées.
+Mais MiCA ne garantit pas qu'une plateforme ne peut pas être hackée. Coinbase, avec son agrément MiCA parmi les premiers du panel et sa cotation au NASDAQ, a subi un data breach en mai 2025. Bybit, avec son agrément MiCA en cours de finalisation, a subi le plus grand hack de l'histoire du secteur en février 2025. Ces deux événements se sont produits sur des plateformes régulées.
 
 La conformité réglementaire est une condition nécessaire — elle élimine les plateformes frauduleuses ou insolvables par construction. Mais elle n't est pas une condition suffisante pour la sécurité opérationnelle. Pour une protection complète, combine : agrément MiCA (condition nécessaire, toutes les plateformes de cette étude), cold storage élevé (95 %+), assurance des fonds, MFA obligatoire sur ton compte, et wallet hardware pour les montants au-delà de ta "poche courante". Aucune plateforme ne peut te donner une garantie absolue. La diversification des risques — plusieurs plateformes, cold storage pour le gros — est la seule stratégie robuste.
 

@@ -149,7 +149,7 @@ const FAQ_ITEMS = [
     question:
       "Comment se calcule exactement la plus-value selon l'article 150 VH bis ?",
     answer:
-      "La formule officielle est : plus-value nette = prix de cession − (prix total d'acquisition × prix de cession / valeur globale du portefeuille au jour de cession) − frais. Notre calculateur applique ce prorata automatiquement et déduit les reports de moins-values des années précédentes (jusqu'à 10 ans).",
+      "La formule officielle est : plus-value nette = prix de cession − (prix total d'acquisition × prix de cession / valeur globale du portefeuille au jour de cession) − frais. Notre calculateur applique ce prorata automatiquement.",
   },
   {
     question:
@@ -167,7 +167,7 @@ const FAQ_ITEMS = [
     question:
       "Puis-je reporter une moins-value crypto sur les années suivantes ?",
     answer:
-      "Oui, pendant 10 ans (article 150 VH bis I 4° du CGI). Une moins-value crypto se compense d'abord avec les plus-values crypto de la même année, puis l'excédent est reportable sur les 10 années suivantes — uniquement contre des plus-values d'actifs numériques, pas contre d'autres revenus.",
+      "Non. Pour un particulier (article 150 VH bis du CGI), une moins-value crypto se compense uniquement avec les plus-values crypto de la même année. Aucun report sur les années suivantes (contrairement aux actions cotées) : selon la doctrine administrative, le solde négatif est définitivement perdu au 31 décembre.",
   },
   {
     question:
@@ -515,11 +515,11 @@ export default function CalculateurFiscalitePage() {
             <p>
               Vos moins-values crypto se compensent avec vos plus-values crypto
               de la même année (compensation automatique). Si le solde annuel
-              est négatif, l'excédent est{" "}
-              <strong>reportable pendant 10 ans</strong> sur les plus-values
-              crypto futures uniquement (article 150 VH bis I 4° du CGI). Ce
-              mécanisme est crucial pour optimiser votre fiscalité sur un cycle
-              complet — méthode dans{" "}
+              est négatif, l'excédent{" "}
+              <strong>n'est pas reportable</strong> (différence majeure avec les
+              actions cotées) : selon la doctrine administrative, la moins-value
+              non utilisée est définitivement perdue au 31 décembre — d'où
+              l'intérêt du tax-loss harvesting avant la clôture. Méthode dans{" "}
               <Link
                 href="/blog/deduire-pertes-crypto-impot-2026"
                 className="text-primary-soft underline"
@@ -766,9 +766,7 @@ export default function CalculateurFiscalitePage() {
               Le total annuel des plus-values du Cerfa 2086 se reporte
               automatiquement en <strong>case 3AN</strong> du Cerfa 2042-C
               (déclaration complémentaire). Pour les moins-values, c'est la
-              <strong> case 3BN</strong>. Si vous avez des stocks de
-              moins-values antérieures à imputer, utilisez la
-              <strong> case 3SG</strong>. Si vous voulez opter pour le barème
+              <strong> case 3BN</strong>. Si vous voulez opter pour le barème
               progressif, cochez aussi la <strong>case 2OP</strong>.
             </p>
 

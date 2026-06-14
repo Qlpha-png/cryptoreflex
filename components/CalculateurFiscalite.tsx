@@ -524,7 +524,7 @@ function WaltioPostResultCta({
       taxAmount,
     )}`;
     pitch =
-      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values reportables (10 ans), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
+      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values de l'année (imputables sur vos plus-values crypto), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
   } else {
     headline = "Économisez 40 h sur votre déclaration crypto";
     pitch =

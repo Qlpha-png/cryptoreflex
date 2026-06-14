@@ -160,7 +160,7 @@ export default function TaxLossHarvestingPage() {
               { emoji: "⚖️", text: "Cadre légal : article 150 VH bis CGI, compensation intra-annuelle" },
               { emoji: "🔄", text: "Pas de wash sale rule en France (contrairement aux US) — vérifier le cas particulier avec un professionnel" },
               { emoji: "📅", text: "Fenêtre temporelle pertinente : 15 → 31 décembre" },
-              { emoji: "♻️", text: "Excédent de moins-values reportable 10 ans selon CGI" },
+              { emoji: "⏳", text: "Moins-value imputable uniquement sur les plus-values crypto de la même année — aucun report, d'où l'urgence d'agir avant le 31/12" },
             ]}
             readingTime="6 min"
             level="Intermédiaire"

@@ -307,8 +307,8 @@ export default function CalculateurROIPage() {
             <strong className="text-fg">Avertissement :</strong> ce calculateur
             est à but pédagogique et ne constitue pas un conseil fiscal ou en
             investissement. Le PFU à 31,4 % s'applique aux particuliers en
-            gestion non professionnelle ; les situations BIC pro, les
-            moins-values reportables et les régimes spécifiques (staking, NFT,
+            gestion non professionnelle ; les situations BIC pro, la
+            compensation des moins-values et les régimes spécifiques (staking, NFT,
             DeFi) ne sont pas couverts par cet outil. Consultez un
             expert-comptable agréé crypto-actifs pour toute déclaration
             officielle.

@@ -155,7 +155,8 @@ export default function ProfitLossCalculatorPage() {
             <li>
               <strong className="text-fg">PnL net apres impot</strong> = si PnL
               net frais &gt; 0 alors × (1 - 0.314), sinon inchange (les pertes
-              ne sont pas \"taxables negativement\" mais reportables 10 ans).
+              crypto s&apos;imputent uniquement sur vos plus-values crypto de la
+              meme annee, sans report sur les annees suivantes - art. 150 VH bis).
             </li>
           </ol>
         </section>
