@@ -175,7 +175,7 @@ export default function NewsletterPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Ce que vous recevez (et ce que vous <span className="text-accent-rose">ne recevez pas</span>)
+            Ce que vous recevez (et ce que vous <span className="text-danger-fg">ne recevez pas</span>)
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
             Une newsletter qui respecte votre temps : 3 min, factuel, actionnable.

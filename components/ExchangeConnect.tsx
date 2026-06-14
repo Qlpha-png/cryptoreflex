@@ -278,7 +278,7 @@ export default function ExchangeConnect() {
 
       {/* Erreurs / succès */}
       {error && (
-        <div className="mb-3 rounded-xl border border-accent-rose/30 bg-accent-rose/5 p-3 flex items-start gap-2 text-xs text-accent-rose">
+        <div className="mb-3 rounded-xl border border-accent-rose/30 bg-accent-rose/5 p-3 flex items-start gap-2 text-xs text-danger-fg">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <span className="leading-relaxed">{error}</span>
         </div>
@@ -303,7 +303,7 @@ export default function ExchangeConnect() {
                       binanceConn.lastSyncStatus === "ok"
                         ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                         : binanceConn.lastSyncStatus === "error"
-                          ? "bg-accent-rose/15 text-accent-rose border border-accent-rose/30"
+                          ? "bg-accent-rose/15 text-danger-fg border border-accent-rose/30"
                           : "bg-elevated text-muted border border-border"
                     }`}
                   >

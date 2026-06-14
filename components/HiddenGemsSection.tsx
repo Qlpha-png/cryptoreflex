@@ -89,7 +89,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
       ? "text-accent-green border-accent-green/40 bg-accent-green/10"
       : score >= 7
       ? "text-amber-300 border-amber-400/40 bg-amber-400/10"
-      : "text-accent-rose border-accent-rose/40 bg-accent-rose/10";
+      : "text-danger-fg border-accent-rose/40 bg-accent-rose/10";
 
   return (
     <article className="glass rounded-2xl p-5 sm:p-6 hover:border-primary/40 hover-lift">
@@ -264,7 +264,7 @@ function Indicator({
       <span className="text-muted">{label}</span>
       <span
         className={`font-medium ${
-          ok ? "text-accent-green" : "text-accent-rose"
+          ok ? "text-accent-green" : "text-danger-fg"
         }`}
       >
         {value}

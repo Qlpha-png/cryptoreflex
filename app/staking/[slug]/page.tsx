@@ -79,12 +79,12 @@ const RISK_LABELS: Record<StakingPair["risk"], { label: string; color: string; d
   },
   4: {
     label: "Élevé",
-    color: "text-accent-rose",
+    color: "text-danger-fg",
     description: "Protocole récent ou liquid staking complexe. Risque de smart contract significatif. Réservé aux montants accessoires.",
   },
   5: {
     label: "Très élevé",
-    color: "text-accent-rose",
+    color: "text-danger-fg",
     description: "Restaking, liquid restaking ou protocoles expérimentaux. Risque de perte totale possible.",
   },
 };
@@ -337,7 +337,7 @@ export default function StakingDetailPage({ params }: Props) {
                 }
                 level={pair.lockUpDays === 0 ? "Faible" : pair.lockUpDays > 14 ? "Élevé" : "Modéré"}
                 levelClass={
-                  pair.lockUpDays === 0 ? "text-accent-green" : pair.lockUpDays > 14 ? "text-accent-rose" : "text-amber-400"
+                  pair.lockUpDays === 0 ? "text-accent-green" : pair.lockUpDays > 14 ? "text-danger-fg" : "text-amber-400"
                 }
               />
               <RiskCard

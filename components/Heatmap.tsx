@@ -419,7 +419,7 @@ function CellTooltip({
       {change !== null && (
         <div
           className={`mt-0.5 font-mono text-[11px] font-semibold tabular-nums ${
-            change >= 0 ? "text-accent-green" : "text-accent-rose"
+            change >= 0 ? "text-accent-green" : "text-danger-fg"
           }`}
         >
           {period === "7d" ? "7 j" : period} {formatPct(change)}

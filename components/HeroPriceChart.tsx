@@ -155,7 +155,7 @@ export default function HeroPriceChart({ prices, sparklines, updatedAt }: Props)
         </div>
         <div
           className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-mono font-bold ${
-            up ? "bg-success/10 text-accent-green" : "bg-danger/10 text-accent-rose"
+            up ? "bg-success/10 text-accent-green" : "bg-danger/10 text-danger-fg"
           }`}
         >
           {up ? <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" /> : <TrendingDown className="h-3.5 w-3.5" aria-hidden="true" />}

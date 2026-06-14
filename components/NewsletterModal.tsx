@@ -222,7 +222,7 @@ export default function NewsletterModal({
             </form>
 
             {status === "error" && (
-              <p role="alert" className="mt-3 text-xs text-accent-rose inline-flex items-center gap-1.5">
+              <p role="alert" className="mt-3 text-xs text-danger-fg inline-flex items-center gap-1.5">
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errorMsg}
               </p>

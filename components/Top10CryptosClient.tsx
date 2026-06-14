@@ -85,8 +85,8 @@ const RISK_COLORS: Record<TopCrypto["riskLevel"], string> = {
   "Très faible": "text-accent-green",
   Faible: "text-accent-green",
   Modéré: "text-amber-400",
-  Élevé: "text-accent-rose",
-  "Très élevé": "text-accent-rose",
+  Élevé: "text-danger-fg",
+  "Très élevé": "text-danger-fg",
 };
 
 const RISK_RANK: Record<TopCrypto["riskLevel"], number> = {

@@ -307,7 +307,7 @@ export default function PushOptIn({
       )}
 
       {status === "error" && errorMsg && (
-        <p className="mt-3 text-xs text-accent-rose inline-flex items-center gap-1">
+        <p className="mt-3 text-xs text-danger-fg inline-flex items-center gap-1">
           <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
           {errorMsg}
         </p>
@@ -340,7 +340,7 @@ function StatusBadge({ status }: { status: Status }) {
     },
     error: {
       label: "Erreur",
-      cls: "bg-accent-rose/10 text-accent-rose border-accent-rose/30",
+      cls: "bg-accent-rose/10 text-danger-fg border-accent-rose/30",
       Icon: AlertCircle,
     },
   };

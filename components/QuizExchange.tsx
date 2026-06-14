@@ -830,7 +830,7 @@ function LeadMagnetForm({
             <div
               id="quiz-email-error"
               role="alert"
-              className="mt-3 inline-flex items-center gap-2 text-sm text-accent-rose"
+              className="mt-3 inline-flex items-center gap-2 text-sm text-danger-fg"
             >
               <AlertCircle className="h-4 w-4" aria-hidden="true" />
               {errorMsg}

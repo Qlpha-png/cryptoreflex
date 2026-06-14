@@ -411,7 +411,7 @@ function ResultCard({
         <div className="text-sm">
           <div
             className={`font-semibold ${
-              platform.atRiskJuly2026 ? "text-accent-rose" : "text-accent-green"
+              platform.atRiskJuly2026 ? "text-danger-fg" : "text-accent-green"
             }`}
           >
             À risque au 1er juillet 2026 ?{" "}

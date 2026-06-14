@@ -561,7 +561,7 @@ function ProjectionPanel({
                     <td className="px-2 py-2 text-right font-mono">
                       {formatEur(r.capitalBrut, { decimals: 0 })}
                     </td>
-                    <td className="px-2 py-2 text-right font-mono text-accent-rose">
+                    <td className="px-2 py-2 text-right font-mono text-danger-fg">
                       {formatEur(r.impotCumule, { decimals: 0 })}
                     </td>
                     <td className="px-2 py-2 text-right font-mono font-semibold text-accent-green">
@@ -618,7 +618,7 @@ function SummaryTile({
     tone === "green"
       ? "text-accent-green"
       : tone === "rose"
-      ? "text-accent-rose"
+      ? "text-danger-fg"
       : "text-white";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-3">

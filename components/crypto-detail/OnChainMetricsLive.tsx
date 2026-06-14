@@ -295,7 +295,7 @@ function TrendBadge({ value }: { value: number }) {
   const Icon = positive ? TrendingUp : TrendingDown;
   const cls = positive
     ? "text-accent-green border-accent-green/30 bg-accent-green/5"
-    : "text-accent-rose border-accent-rose/30 bg-accent-rose/5";
+    : "text-danger-fg border-accent-rose/30 bg-accent-rose/5";
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums ${cls}`}

@@ -310,7 +310,7 @@ function SentimentBadge({ sentiment }: { sentiment: CryptoNewsItem["sentiment"] 
     },
     bearish: {
       label: "Bearish",
-      cls: "text-accent-rose border-accent-rose/30 bg-accent-rose/5",
+      cls: "text-danger-fg border-accent-rose/30 bg-accent-rose/5",
       Icon: TrendingDown,
     },
     neutral: {

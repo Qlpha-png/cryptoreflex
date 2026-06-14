@@ -134,7 +134,7 @@ export default function Converter({
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="text-muted">
           {error ? (
-            <span className="text-accent-rose">{error}</span>
+            <span className="text-danger-fg">{error}</span>
           ) : rate !== null ? (
             <>
               <span className="font-mono text-white/80">

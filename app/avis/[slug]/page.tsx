@@ -493,19 +493,19 @@ export default function ReviewPage({ params }: Props) {
                 </ul>
               </div>
               <div className="bg-accent-rose/5 p-5">
-                <div className="flex items-center gap-2 text-sm font-bold text-accent-rose">
+                <div className="flex items-center gap-2 text-sm font-bold text-danger-fg">
                   <XCircle className="h-4 w-4" />
                   Pas pour vous si…
                 </div>
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
                   {p.weaknesses.slice(0, 3).map((w) => (
-                    <li key={w} className="flex gap-2"><span className="text-accent-rose">•</span> {w}.</li>
+                    <li key={w} className="flex gap-2"><span className="text-danger-fg">•</span> {w}.</li>
                   ))}
                   {!p.support.frenchPhone && (
-                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Vous avez besoin d&apos;un support téléphonique en français.</li>
+                    <li className="flex gap-2"><span className="text-danger-fg">•</span> Vous avez besoin d&apos;un support téléphonique en français.</li>
                   )}
                   {!p.cryptos.stakingAvailable && (
-                    <li className="flex gap-2"><span className="text-accent-rose">•</span> Le staking est un de vos critères principaux.</li>
+                    <li className="flex gap-2"><span className="text-danger-fg">•</span> Le staking est un de vos critères principaux.</li>
                   )}
                 </ul>
               </div>
@@ -849,7 +849,7 @@ export default function ReviewPage({ params }: Props) {
             </ul>
           </div>
           <div className="rounded-2xl border border-accent-rose/30 bg-accent-rose/5 p-6">
-            <h3 className="text-lg font-bold text-accent-rose flex items-center gap-2">
+            <h3 className="text-lg font-bold text-danger-fg flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" /> Ce qui peut bloquer
             </h3>
             <ul className="mt-4 space-y-3">

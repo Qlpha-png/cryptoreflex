@@ -142,7 +142,7 @@ export default function HeroLiveWidget({
 function CoinRow({ coin }: { coin: CoinWithSpark }) {
   const up = coin.change24h >= 0;
   const TrendIcon = up ? TrendingUp : TrendingDown;
-  const trendCls = up ? "text-accent-green" : "text-accent-rose";
+  const trendCls = up ? "text-accent-green" : "text-danger-fg";
 
   // Sparkline : utilise la prop si dispo, sinon une mini courbe synthétique.
   const points = coin.sparkline?.length ? coin.sparkline : synthSpark(coin);

@@ -302,7 +302,7 @@ export default function DcaSimulator() {
           )}
 
           {error && !loading && (
-            <div className="rounded-xl border border-accent-rose/40 bg-accent-rose/10 p-4 text-sm text-accent-rose">
+            <div className="rounded-xl border border-accent-rose/40 bg-accent-rose/10 p-4 text-sm text-danger-fg">
               Impossible de charger les prix historiques. Réessaie dans un instant.
             </div>
           )}
@@ -353,7 +353,7 @@ export default function DcaSimulator() {
                     </div>
                     <div
                       className={`text-xs font-semibold ${
-                        result.roi >= 0 ? "text-accent-green" : "text-accent-rose"
+                        result.roi >= 0 ? "text-accent-green" : "text-danger-fg"
                       }`}
                     >
                       {result.roi >= 0 ? "+" : ""}
@@ -371,7 +371,7 @@ export default function DcaSimulator() {
                       className={`text-xs font-semibold ${
                         result.lumpSumRoi >= 0
                           ? "text-accent-green"
-                          : "text-accent-rose"
+                          : "text-danger-fg"
                       }`}
                     >
                       {result.lumpSumRoi >= 0 ? "+" : ""}
@@ -450,7 +450,7 @@ function Stat({
     tone === "positive"
       ? "text-accent-green"
       : tone === "negative"
-      ? "text-accent-rose"
+      ? "text-danger-fg"
       : "text-white";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-3">

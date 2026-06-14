@@ -48,7 +48,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
             isProfit
               ? "border-primary/40 bg-primary/10 text-primary-soft"
               : isDeficit
-              ? "border-accent-rose/40 bg-accent-rose/10 text-accent-rose"
+              ? "border-accent-rose/40 bg-accent-rose/10 text-danger-fg"
               : "border-accent-green/40 bg-accent-green/10 text-accent-green"
           }`}
         >
@@ -91,7 +91,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
             aria-hidden="true"
           />
           <div>
-            <p className="font-semibold text-accent-rose">Moins-value constatée</p>
+            <p className="font-semibold text-danger-fg">Moins-value constatée</p>
             <p className="text-white/80">
               Cette moins-value est imputable uniquement sur les plus-values crypto
               de la <strong>même année</strong>. Pour les particuliers, elle{" "}
@@ -144,7 +144,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
             <p className="text-xs text-muted">Net après impôt</p>
             <p
               className={`font-mono font-semibold text-lg ${
-                flat.netApresImpot >= 0 ? "text-accent-green" : "text-accent-rose"
+                flat.netApresImpot >= 0 ? "text-accent-green" : "text-danger-fg"
               }`}
             >
               {formatEur(flat.netApresImpot)}
@@ -201,7 +201,7 @@ function Tile({
     tone === "primary"
       ? "text-primary-soft"
       : tone === "rose"
-      ? "text-accent-rose"
+      ? "text-danger-fg"
       : "text-white";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-4">

@@ -104,7 +104,7 @@ export default function ProfitLossCalculator() {
   );
   const accentClass = isProfit
     ? "border-accent-green/40 bg-accent-green/5 text-accent-green"
-    : "border-accent-rose/40 bg-accent-rose/5 text-accent-rose";
+    : "border-accent-rose/40 bg-accent-rose/5 text-danger-fg";
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
@@ -319,7 +319,7 @@ function Row({
     tone === "green"
       ? "text-accent-green"
       : tone === "rose"
-        ? "text-accent-rose"
+        ? "text-danger-fg"
         : tone === "muted"
           ? "text-muted"
           : "text-fg/85";

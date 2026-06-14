@@ -91,7 +91,7 @@ export default function EditableDisplayName({ initialName }: Props) {
           <X className="h-4 w-4" />
         </button>
         {error && (
-          <span className="text-xs text-accent-rose ml-2" role="alert">
+          <span className="text-xs text-danger-fg ml-2" role="alert">
             {error}
           </span>
         )}

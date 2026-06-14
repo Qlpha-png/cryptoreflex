@@ -765,7 +765,7 @@ function PaymentOption({
         <ul className="space-y-1.5">
           {cons.map((c) => (
             <li key={c} className="flex gap-1.5 text-fg/75">
-              <span aria-hidden="true" className="font-bold mt-0.5 text-accent-rose">−</span>
+              <span aria-hidden="true" className="font-bold mt-0.5 text-danger-fg">−</span>
               <span>{c}</span>
             </li>
           ))}

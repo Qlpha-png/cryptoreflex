@@ -227,7 +227,7 @@ export default function NewsletterStickyBar() {
         {status === "error" && (
           <p
             role="alert"
-            className="mt-1.5 text-xs text-accent-rose inline-flex items-center gap-1"
+            className="mt-1.5 text-xs text-danger-fg inline-flex items-center gap-1"
           >
             <AlertCircle className="h-3 w-3" />
             {errorMsg}

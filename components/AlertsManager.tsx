@@ -531,7 +531,7 @@ export default function AlertsManager({ cryptos }: Props) {
                 </p>
               )}
               {submitState === "error" && (
-                <p className="inline-flex items-center gap-2 text-sm text-accent-rose">
+                <p className="inline-flex items-center gap-2 text-sm text-danger-fg">
                   <AlertCircle className="h-4 w-4" aria-hidden="true" />
                   {submitMsg}
                 </p>
@@ -582,7 +582,7 @@ export default function AlertsManager({ cryptos }: Props) {
         ) : listState === "error" ? (
           <p
             role="alert"
-            className="mt-6 inline-flex items-center gap-2 text-sm text-accent-rose"
+            className="mt-6 inline-flex items-center gap-2 text-sm text-danger-fg"
           >
             <AlertCircle className="h-4 w-4" aria-hidden="true" />
             Impossible de charger vos alertes ({listError}).

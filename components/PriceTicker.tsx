@@ -90,7 +90,7 @@ export default function PriceTicker({ initial }: Props) {
               </PriceFlash>
               <span
                 className={`inline-flex items-center gap-1 text-sm font-medium ${
-                  up ? "text-accent-green" : "text-accent-rose"
+                  up ? "text-accent-green" : "text-danger-fg"
                 }`}
               >
                 {up ? (

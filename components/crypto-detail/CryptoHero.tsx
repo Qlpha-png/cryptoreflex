@@ -164,7 +164,7 @@ export default function CryptoHero({
                 className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold ${
                   positive
                     ? "bg-accent-green/10 text-accent-green border border-accent-green/30"
-                    : "bg-accent-rose/10 text-accent-rose border border-accent-rose/30"
+                    : "bg-accent-rose/10 text-danger-fg border border-accent-rose/30"
                 }`}
               >
                 {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
@@ -176,7 +176,7 @@ export default function CryptoHero({
             {hasLive && detail?.priceChange7d !== null && detail?.priceChange7d !== undefined && (
               <span className="text-xs text-muted">
                 7j :{" "}
-                <span className={positive7d ? "text-accent-green" : "text-accent-rose"}>
+                <span className={positive7d ? "text-accent-green" : "text-danger-fg"}>
                   {formatPct(detail.priceChange7d)}
                 </span>
               </span>

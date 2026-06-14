@@ -861,7 +861,7 @@ export default async function CryptoPage({ params }: Props) {
               </ul>
             </div>
             <div className="rounded-2xl border border-accent-rose/30 bg-accent-rose/5 p-6">
-              <h3 className="text-lg font-bold text-accent-rose flex items-center gap-2">
+              <h3 className="text-lg font-bold text-danger-fg flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5" /> Faiblesses
               </h3>
               <ul className="mt-4 space-y-3">
@@ -1370,7 +1370,7 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
                 <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.l)}</td>
                 <td
                   className={`py-2 font-bold tabular-nums ${
-                    r.chg >= 0 ? "text-accent-green" : "text-accent-rose"
+                    r.chg >= 0 ? "text-accent-green" : "text-danger-fg"
                   }`}
                 >
                   {r.chg >= 0 ? "+" : ""}
@@ -1499,7 +1499,7 @@ function ReliabilityCell({
       <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
       <div
         className={`mt-1 text-sm font-semibold ${
-          ok ? "text-accent-green" : "text-accent-rose"
+          ok ? "text-accent-green" : "text-danger-fg"
         } ${multiline ? "" : "truncate"}`}
       >
         {value}

@@ -145,7 +145,7 @@ function CoinCardMobile({ coin }: { coin: CoinWithSpark }) {
         <div className="flex items-center justify-between gap-2 mt-1">
           <SparklineMini points={points} up={up} coinId={coin.id} />
           <span
-            className={`text-[11px] font-mono font-bold inline-flex items-center gap-0.5 ${up ? "text-accent-green" : "text-accent-rose"}`}
+            className={`text-[11px] font-mono font-bold inline-flex items-center gap-0.5 ${up ? "text-accent-green" : "text-danger-fg"}`}
           >
             <span aria-hidden="true">{up ? "▲" : "▼"}</span>
             <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>

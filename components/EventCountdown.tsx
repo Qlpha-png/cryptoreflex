@@ -92,7 +92,7 @@ export default function EventCountdown({ date, isApproximate, fallbackLabel }: P
   if (days < 1) {
     // Affichage urgent : "14h 22m 08s"
     return (
-      <span className="font-mono tabular-nums text-accent-rose">
+      <span className="font-mono tabular-nums text-danger-fg">
         {h.toString().padStart(2, "0")}h {m.toString().padStart(2, "0")}m {s.toString().padStart(2, "0")}s
       </span>
     );

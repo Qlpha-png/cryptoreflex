@@ -105,7 +105,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
     return {
       title: "À découvrir",
       sub: `Pas grave — explorez la fiche ${cryptoName} ci-dessus, et revenez dans 1 semaine.`,
-      color: "text-accent-rose",
+      color: "text-danger-fg",
     };
   })();
 
@@ -186,7 +186,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props
                 if (isCorrect) {
                   style = "border-accent-green bg-accent-green/10 text-accent-green";
                 } else if (isSelected) {
-                  style = "border-accent-rose bg-accent-rose/10 text-accent-rose";
+                  style = "border-accent-rose bg-accent-rose/10 text-danger-fg";
                 } else {
                   style = "border-border bg-surface/40 opacity-50";
                 }

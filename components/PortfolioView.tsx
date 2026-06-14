@@ -572,7 +572,7 @@ function StatCard({
     accent === "green"
       ? "text-accent-green"
       : accent === "rose"
-        ? "text-accent-rose"
+        ? "text-danger-fg"
         : accent === "primary"
           ? "text-primary-glow"
           : "text-fg";
@@ -666,7 +666,7 @@ function HoldingRow({
         {hasPrice ? (
           <span
             className={`inline-flex flex-col items-end font-mono text-xs font-semibold ${
-              up ? "text-accent-green" : "text-accent-rose"
+              up ? "text-accent-green" : "text-danger-fg"
             }`}
           >
             <span className="inline-flex items-center gap-0.5">
@@ -757,7 +757,7 @@ function HoldingCardMobile({
           {hasPrice && (
             <div
               className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold mt-0.5 ${
-                up ? "text-accent-green" : "text-accent-rose"
+                up ? "text-accent-green" : "text-danger-fg"
               }`}
             >
               {up ? (

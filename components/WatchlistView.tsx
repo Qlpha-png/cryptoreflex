@@ -336,7 +336,7 @@ function PriceRow({
       <td className="px-4 py-3 text-right">
         <span
           className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold ${
-            up ? "text-accent-green" : "text-accent-rose"
+            up ? "text-accent-green" : "text-danger-fg"
           }`}
         >
           {up ? (
@@ -406,7 +406,7 @@ function PriceCardMobile({
         </div>
         <div
           className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold mt-0.5 ${
-            up ? "text-accent-green" : "text-accent-rose"
+            up ? "text-accent-green" : "text-danger-fg"
           }`}
         >
           {up ? (

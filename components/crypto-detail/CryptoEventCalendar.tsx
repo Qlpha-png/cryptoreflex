@@ -41,7 +41,7 @@ const TYPE_LABEL: Record<CryptoEventType, string> = {
 };
 
 const IMPORTANCE_COLOR: Record<CryptoEventImportance, string> = {
-  high: "text-accent-rose border-accent-rose/40 bg-accent-rose/10",
+  high: "text-danger-fg border-accent-rose/40 bg-accent-rose/10",
   medium: "text-amber-300 border-amber-500/40 bg-amber-500/10",
   low: "text-accent-green border-accent-green/40 bg-accent-green/10",
 };

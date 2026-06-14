@@ -299,7 +299,7 @@ function ResultBlock({
   periodLabel: string;
 }) {
   const positive = result.delta >= 0;
-  const colorClass = positive ? "text-accent-green" : "text-accent-rose";
+  const colorClass = positive ? "text-accent-green" : "text-danger-fg";
   const Icon = positive ? TrendingUp : TrendingDown;
 
   return (

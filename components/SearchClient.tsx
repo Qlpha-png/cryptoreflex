@@ -187,7 +187,7 @@ export default function SearchClient() {
       <div className="mt-6 min-h-[24px] text-sm text-muted" aria-live="polite">
         {isLoading && "Recherche en cours…"}
         {!isLoading && error && (
-          <span className="text-accent-rose">{error}</span>
+          <span className="text-danger-fg">{error}</span>
         )}
         {!isLoading && !error && query && results.length === 0 && (
           <span>

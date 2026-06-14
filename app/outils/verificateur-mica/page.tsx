@@ -259,7 +259,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="badge border-accent-rose/40 bg-accent-rose/10 text-accent-rose shrink-0 mt-0.5">
+                <span className="badge border-accent-rose/40 bg-accent-rose/10 text-danger-fg shrink-0 mt-0.5">
                   Non conforme
                 </span>
                 <span>

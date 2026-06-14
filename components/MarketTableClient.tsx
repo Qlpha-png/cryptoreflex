@@ -102,7 +102,7 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
             <p className="mt-2 text-sm text-fg/65">
               {/* Audit UX F6 : sous-titre vulgarisé pour débutants */}
               Capitalisation, volume, variations en temps réel via CoinGecko.
-              <span className="hidden sm:inline">{" "}Repère les cryptos en hausse <span className="text-accent-green font-semibold">(vert)</span> ou en baisse <span className="text-accent-rose font-semibold">(rouge)</span> sur 24h.</span>
+              <span className="hidden sm:inline">{" "}Repère les cryptos en hausse <span className="text-accent-green font-semibold">(vert)</span> ou en baisse <span className="text-danger-fg font-semibold">(rouge)</span> sur 24h.</span>
             </p>
           </div>
         </div>
@@ -366,7 +366,7 @@ function CoinCardMobile({
         </div>
         <div
           className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold mt-0.5 ${
-            up ? "text-accent-green" : "text-accent-rose"
+            up ? "text-accent-green" : "text-danger-fg"
           }`}
           aria-label={`Variation 24 heures : ${up ? "hausse" : "baisse"} de ${formatPct(change)}`}
         >
@@ -519,7 +519,7 @@ function PctCell({ value }: { value: number | null }) {
   return (
     <span
       className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold tabular-nums ${
-        up ? "text-accent-green" : "text-accent-rose"
+        up ? "text-accent-green" : "text-danger-fg"
       }`}
     >
       {up ? (

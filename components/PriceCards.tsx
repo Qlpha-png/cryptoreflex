@@ -49,7 +49,7 @@ export default function PriceCards({ prices }: Props) {
                 className={`inline-flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 ${
                   up
                     ? "bg-accent-green/10 text-accent-green"
-                    : "bg-accent-rose/10 text-accent-rose"
+                    : "bg-accent-rose/10 text-danger-fg"
                 }`}
               >
                 {up ? (

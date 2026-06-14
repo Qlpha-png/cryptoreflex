@@ -43,7 +43,7 @@ export default function GainerLoserList({
     : {
         ring: "border-accent-rose/30",
         bg: "bg-accent-rose/5",
-        text: "text-accent-rose",
+        text: "text-danger-fg",
         badgeBg: "bg-accent-rose/15",
       };
 

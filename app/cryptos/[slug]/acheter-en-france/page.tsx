@@ -539,7 +539,7 @@ function PaymentCard({
         </ul>
         <ul className="space-y-1.5">
           {cons.map((c) => (
-            <li key={c} className="flex gap-1.5 text-accent-rose">
+            <li key={c} className="flex gap-1.5 text-danger-fg">
               <span className="font-bold mt-0.5">−</span>
               <span className="text-fg/75">{c}</span>
             </li>

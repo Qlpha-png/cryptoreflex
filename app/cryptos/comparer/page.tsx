@@ -635,7 +635,7 @@ function DesktopTable({
             d ? (
               <span
                 className={`inline-flex items-center gap-1 font-mono tabular-nums ${
-                  v.isUp ? "text-accent-green" : "text-accent-rose"
+                  v.isUp ? "text-accent-green" : "text-danger-fg"
                 }`}
               >
                 {v.isUp ? (
@@ -662,7 +662,7 @@ function DesktopTable({
               <div className="space-y-1">
                 <div
                   className={`inline-flex items-center gap-1 font-mono tabular-nums text-sm ${
-                    v.isUp ? "text-accent-green" : "text-accent-rose"
+                    v.isUp ? "text-accent-green" : "text-danger-fg"
                   }`}
                 >
                   {v.isUp ? (
@@ -1045,7 +1045,7 @@ function MobileCard({
               ? undefined
               : chg24.isUp
                 ? "text-accent-green"
-                : "text-accent-rose"
+                : "text-danger-fg"
           }
         />
         <Stat

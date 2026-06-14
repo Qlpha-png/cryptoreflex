@@ -239,7 +239,7 @@ export default function HistoriquePrixPage({ params }: Props) {
                 <dt className="text-[11px] uppercase tracking-wider text-muted">Variation (ouv.→clôt.)</dt>
                 <dd
                   className={`mt-0.5 text-sm font-bold ${
-                    ohlc.chg >= 0 ? "text-accent-green" : "text-accent-rose"
+                    ohlc.chg >= 0 ? "text-accent-green" : "text-danger-fg"
                   }`}
                 >
                   {ohlc.chg >= 0 ? "+" : ""}

@@ -72,7 +72,7 @@ export default function ProfitCalculator() {
             <span className="text-sm text-white/70">Profit net</span>
             <span
               className={`font-mono font-bold text-lg ${
-                positive ? "text-accent-green" : "text-accent-rose"
+                positive ? "text-accent-green" : "text-danger-fg"
               }`}
             >
               {fmtEur(result.net)}
@@ -82,7 +82,7 @@ export default function ProfitCalculator() {
             <span className="text-sm text-white/70">ROI</span>
             <span
               className={`inline-flex items-center gap-1 font-semibold ${
-                positive ? "text-accent-green" : "text-accent-rose"
+                positive ? "text-accent-green" : "text-danger-fg"
               }`}
             >
               {positive ? (

@@ -311,7 +311,7 @@ export default function NewsletterCapture() {
                 className="mt-3 min-h-[20px]"
               >
                 {status === "error" && errorMsg && (
-                  <span className="inline-flex items-center gap-2 text-sm text-accent-rose">
+                  <span className="inline-flex items-center gap-2 text-sm text-danger-fg">
                     <AlertCircle className="h-4 w-4" aria-hidden="true" focusable="false" />
                     {errorMsg}
                   </span>

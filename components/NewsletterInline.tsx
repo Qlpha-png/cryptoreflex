@@ -340,7 +340,7 @@ export default function NewsletterInline({
           <p
             id={`nl-inline-err-${source}`}
             role="alert"
-            className="mt-2 text-xs text-accent-rose inline-flex items-center gap-1.5"
+            className="mt-2 text-xs text-danger-fg inline-flex items-center gap-1.5"
           >
             <AlertCircle className="h-3.5 w-3.5" />
             {errorMsg}
