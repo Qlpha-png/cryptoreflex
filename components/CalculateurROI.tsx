@@ -262,8 +262,8 @@ export default function CalculateurROI() {
       <p className="mt-6 text-xs text-muted leading-relaxed">
         Cet outil est purement pédagogique et ne constitue pas un conseil
         fiscal ou en investissement. L'impôt affiché applique le PFU à 31,4 %
-        sans tenir compte du barème progressif, de l'option BIC ni des
-        moins-values reportables. Pour une déclaration officielle, consultez
+        sans tenir compte du barème progressif, de l'option BIC ni de la
+        compensation des moins-values. Pour une déclaration officielle, consultez
         un expert-comptable agréé crypto-actifs.
       </p>
     </div>

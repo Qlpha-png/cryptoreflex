@@ -175,8 +175,8 @@ export default function ProfitLossCalculatorPage() {
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
-              Detaille vos obligations annuelles complete (cessions, pertes
-              reportables, declaration 2086).
+              Detaille vos obligations annuelles complete (cessions, moins-values,
+              declaration 2086).
             </div>
           </Link>
           <Link

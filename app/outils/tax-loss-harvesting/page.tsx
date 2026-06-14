@@ -76,7 +76,7 @@ export default function TaxLossHarvestingPage() {
     },
     {
       q: "Que se passe-t-il si mes moins-values dépassent mes plus-values ?",
-      a: "Le solde net négatif est REPORTABLE sur les 10 années suivantes (article 150 VH bis IV). Vous pourrez donc l'utiliser sur les plus-values 2027, 2028… jusqu'en 2036.",
+      a: "Non, aucun report. Pour un particulier (article 150 VH bis du CGI), la compensation est strictement intra-annuelle : le solde net négatif est définitivement perdu au 31 décembre. Le report 10 ans existe pour les plus-values mobilières classiques (article 150-0 D 11), PAS pour la crypto — d'où l'intérêt d'agir avant la clôture.",
     },
     {
       q: "Quel timing optimal pour le tax-loss harvesting ?",

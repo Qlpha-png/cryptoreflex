@@ -507,7 +507,7 @@ function WaltioPostResultCta({
   // Headline contextuel selon le profil fiscal (CRO 26-04)
   // - Exonéré (≤ 305 €) : focus sur 3916-bis (obligatoire même sans impôt)
   // - Régime BIC : focus expert-comptable / pro
-  // - Gros impôt > 1000 € : focus optimisation (moins-values reportables, etc.)
+  // - Gros impôt > 1000 € : focus optimisation (compensation des moins-values, etc.)
   // - Cas standard : focus économie de temps
   let headline: string;
   let pitch: string;
