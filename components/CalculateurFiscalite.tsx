@@ -70,11 +70,13 @@ const INITIAL: FormState = {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Barème IR 2026 (revenus 2025), bornes revalorisées +0,9 % par la LFI 2026.
+// Source : service-public.gouv.fr A18045 / economie.gouv.fr (vérifié 2026-06-14).
 const TMI_LABELS: Record<string, string> = {
-  "0.11": "11 % — revenu net imposable de 11 295 € à 28 797 €",
-  "0.30": "30 % — revenu net imposable de 28 798 € à 82 341 €",
-  "0.41": "41 % — revenu net imposable de 82 342 € à 177 106 €",
-  "0.45": "45 % — au-delà de 177 106 €",
+  "0.11": "11 % — revenu net imposable de 11 601 € à 29 579 €",
+  "0.30": "30 % — revenu net imposable de 29 580 € à 84 577 €",
+  "0.41": "41 % — revenu net imposable de 84 578 € à 181 917 €",
+  "0.45": "45 % — au-delà de 181 917 €",
 };
 
 /* -------------------------------------------------------------------------- */

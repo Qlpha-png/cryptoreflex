@@ -101,7 +101,7 @@ Tu peux **opter** (case 2OP de la déclaration) pour intégrer tes plus-values c
 | 11 % | Barème | 29,6 % au lieu de 31,4 % |
 | 30 % | PFU | 48,6 % au barème vs 31,4 % — PFU largement gagnant |
 | 41 % | PFU | 59,6 % au barème vs 31,4 % — PFU dominant |
-| 45 % | PFU | 62,2 % au barème vs 31,4 % — PFU obligatoire |
+| 45 % | PFU | 63,6 % au barème vs 31,4 % — PFU obligatoire |
 
 ### Cas particulier : abattement pour durée de détention
 

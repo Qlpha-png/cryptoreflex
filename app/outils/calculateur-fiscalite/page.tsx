@@ -637,7 +637,7 @@ export default function CalculateurFiscalitePage() {
             <p>
               Le PFU est avantageux dès que votre TMI dépasse{" "}
               <strong>12,8 %</strong>, c'est-à-dire à partir de la tranche 30 %
-              (revenu fiscal au-dessus de 29 315 euros pour une part). En
+              (revenu fiscal au-dessus de 29 579 euros pour une part). En
               tranche 11 % et 0 %, le barème est gagnant. Notre calculateur
               affiche les deux scénarios côte à côte selon votre TMI déclarée.
             </p>
