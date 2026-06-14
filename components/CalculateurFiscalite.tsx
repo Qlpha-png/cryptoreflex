@@ -363,7 +363,7 @@ export default function CalculateurFiscalite() {
             >
               {TMI_VALUES.map((rate) => (
                 <option key={rate} value={String(rate)}>
-                  {TMI_LABELS[String(rate)]}
+                  {TMI_LABELS[rate.toFixed(2)]}
                 </option>
               ))}
             </select>
