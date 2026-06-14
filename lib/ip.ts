@@ -7,54 +7,53 @@
  *
  * SECURITE — CONTEXTE DE DEPLOIEMENT (Vercel-only)
  * ------------------------------------------------
- * Cette implémentation fait confiance au header `x-forwarded-for` envoyé par
- * le proxy en amont. C'est SAFE en pratique parce que :
- *   1. On tourne derrière Vercel Edge Network qui RECRIT systématiquement
- *      `x-forwarded-for` avec l'IP réelle du client (en première position),
- *      même si le client a tenté de spoofer le header.
- *   2. Cloudflare en frontal (option) ajoute `cf-connecting-ip` (IP réelle)
- *      qui prime ici si présent — non spoofable côté client.
+ * La prod est servie DIRECTEMENT par Vercel Edge (DNS basculé sur Vercel,
+ * plus de Cloudflare en frontal — vérifié : `Server: Vercel`, aucun `cf-ray`).
  *
- * Si un jour on déploie ailleurs (self-host derrière un LB qui ne strip pas
- * `x-forwarded-for` côté entrée), il faudra ajouter une validation des IPs de
- * confiance (trusted proxies) avant de faire confiance au header.
+ * IMPORTANT (faille corrigée 2026-06-14) : on NE lit PLUS `cf-connecting-ip`.
+ * Tant qu'aucun proxy de confiance (Cloudflare) ne le pose, ce header est
+ * librement FORGEABLE par le client (`curl -H "cf-connecting-ip: 1.2.3.4"`),
+ * ce qui permettait de contourner tout le rate-limit IP en variant l'IP forgée
+ * (brute-force login, DoS scrypt, etc.). Sur Vercel, le header de confiance
+ * est `x-vercel-forwarded-for` : la plateforme réécrit/strip les headers
+ * `x-vercel-*` entrants, le client ne peut donc pas l'usurper.
+ *
+ * Si un jour Cloudflare (ou un autre proxy) revient EN FRONTAL, réintroduire
+ * `cf-connecting-ip` EN PREMIER — mais uniquement après avoir validé que la
+ * requête provient bien des plages IP de ce proxy (sinon même problème).
+ * De même pour un self-host derrière un LB : valider les trusted proxies.
  *
  * Comportement, par ordre de priorité :
- *   1. `cf-connecting-ip` → IP réelle injectée par Cloudflare (non spoofable).
- *   2. `x-vercel-forwarded-for` → header propre à Vercel, plus stable.
- *   3. `x-forwarded-for` → 1ère IP (le client réel ; suivantes = proxies traversés).
- *   4. `x-real-ip`       → fallback Nginx générique.
- *   5. `"unknown"`       → dev local sans proxy ou requête sans header.
+ *   1. `x-vercel-forwarded-for` → header propre à Vercel, non usurpable.
+ *   2. `x-forwarded-for` → 1ère IP (le client réel ; suivantes = proxies traversés).
+ *   3. `x-real-ip`       → fallback Nginx générique.
+ *   4. `"unknown"`       → dev local sans proxy ou requête sans header.
  *
  * Note : on accepte indifféremment `Request` (fetch standard) et `NextRequest`
  * (Next.js) — `headers.get()` a la même API.
  */
 
 export function getClientIp(req: Request): string {
-  // 1) Cloudflare — non spoofable car le frontal Cloudflare l'écrit/écrase.
-  const cf = req.headers.get("cf-connecting-ip");
-  if (cf) {
-    const trimmed = cf.trim();
-    if (trimmed) return trimmed;
-  }
-
-  // 2) Vercel — header dédié, plus fiable que le x-forwarded-for générique.
+  // 1) Vercel — header dédié, non usurpable (la plateforme réécrit les
+  //    `x-vercel-*` entrants). C'est notre source de vérité en prod.
   const vercel = req.headers.get("x-vercel-forwarded-for");
   if (vercel) {
     const first = vercel.split(",")[0]?.trim();
     if (first) return first;
   }
 
-  // 3) Standard XFF — Vercel/Next renseignent ce header en prod.
+  // 2) Standard XFF — Vercel/Next renseignent ce header en prod (IP réelle en
+  //    1ère position, posée par l'edge).
   const fwd = req.headers.get("x-forwarded-for");
   if (fwd) {
     const first = fwd.split(",")[0]?.trim();
     if (first) return first;
   }
 
-  // 4) Nginx-style fallback.
+  // 3) Nginx-style fallback.
   const real = req.headers.get("x-real-ip");
   if (real) return real.trim();
 
+  // NB : `cf-connecting-ip` volontairement NON lu — voir le bloc SECURITE ci-dessus.
   return "unknown";
 }

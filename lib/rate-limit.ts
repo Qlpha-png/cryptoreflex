@@ -196,12 +196,19 @@ export function createRateLimiter(
 
   return async function rateLimit(ip: string): Promise<RateLimitResult> {
     // OPTIM 2026-05-11 — FORCE IN-MEMORY pour économiser 2K-10K KV commands/jour
-    // (chaque rate-limit hit = 1 GET + 1 SET KV). On n'a qu'un seul container
-    // Coolify, donc pas besoin de partage distribué entre instances.
-    // Trade-off : compteurs perdus au restart container, acceptable pour
-    // anti-burst (vs DDoS mitigation, qui devrait être Cloudflare).
+    // (chaque rate-limit hit = 1 GET + 1 SET KV).
     //
-    // Pour réactiver KV (multi-container distribué) : set env RATE_LIMIT_USE_KV=true
+    // ⚠️ LIMITE 2026-06-14 (prod = Vercel serverless, plus Coolify mono-container) :
+    // chaque invocation lambda a SA propre Map → le compteur N'EST PAS partagé
+    // entre instances. Le rate-limit ne tient donc que dans une même lambda
+    // chaude ; un attaquant réparti sur plusieurs lambdas voit des compteurs
+    // distincts. Acceptable comme anti-burst best-effort, MAIS pour un vrai
+    // rate-limit distribué (brute-force login, DoS scrypt) il faut un store
+    // partagé : provisionner Upstash KV (KV_REST_API_URL/TOKEN) puis set
+    // RATE_LIMIT_USE_KV=true. Sans KV provisionné, RATE_LIMIT_USE_KV=true
+    // retombe en mocked→memory (voir plus bas), donc inutile seul.
+    //
+    // Pour réactiver KV (multi-lambda distribué) : provisionner Upstash + set RATE_LIMIT_USE_KV=true
     if (process.env.RATE_LIMIT_USE_KV !== "true") {
       return memoryRateLimit(namespace, ip, limit, windowMs);
     }
