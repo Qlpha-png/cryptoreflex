@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
 import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
+import AffiliateLink from "@/components/AffiliateLink";
+import { getAffiliationKind } from "@/lib/partnerships";
 
 interface Props {
   cryptoName: string;
@@ -29,6 +31,13 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
     }
   );
 
+  // Audit F (cohérence partnerships) : la mention « commission » n'est légitime
+  // que si au moins une plateforme listée est réellement rémunérée. Sinon =
+  // claim trompeur (DGCCRF L.121-1). Source de vérité : lib/partnerships.ts.
+  const anyPaid = matches.some(
+    (m) => m.platform && getAffiliationKind(m.platform.id) !== null,
+  );
+
   return (
     <section id="acheter" className="scroll-mt-24">
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
@@ -36,8 +45,8 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       </h2>
       <p className="mt-2 text-sm text-muted max-w-3xl">
         Les plateformes ci-dessous sont régulées (PSAN AMF ou agrément MiCA européen)
-        et listent {cryptoName} en avril 2026. Clique pour ouvrir un compte directement
-        depuis le lien d'affiliation Cryptoreflex (sans surcoût pour vous).
+        et listent {cryptoName}. Ouvrez un compte directement depuis Cryptoreflex
+        {anyPaid ? " (certains liens sont rémunérés, sans surcoût pour vous)" : ""}.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -47,9 +56,17 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       </div>
 
       <p className="mt-4 text-[11px] text-muted leading-relaxed">
-        Publicité. Cryptoreflex perçoit une commission lorsqu'un visiteur ouvre
-        un compte via l'un de ces liens — cela ne change ni le classement, ni la note attribuée
-        (cf. <a href="/transparence" className="underline hover:text-white">page transparence</a>).
+        {anyPaid ? (
+          <>
+            Publicité. Certains de ces liens sont rémunérés (affiliation ou
+            parrainage) — cela ne change ni le classement, ni la note attribuée
+            (cf.{" "}
+            <Link href="/transparence" className="underline hover:text-white">
+              page transparence
+            </Link>
+            ).{" "}
+          </>
+        ) : null}
         Vérifiez systématiquement le statut MiCA et les frais avant tout dépôt.
       </p>
     </section>
@@ -121,16 +138,21 @@ function PlatformRow({
         </div>
       )}
 
+      {/* AffiliateLink (et non <a> brut) : rel="sponsored" calculé seulement si
+          la plateforme est rémunérée, pas de noreferrer (préserve l'attribution
+          Binance/Kraken), clic tracé. showCaption=false : disclaimer de section
+          unique en bas de la liste. */}
       <div className="mt-4 flex items-center gap-2">
-        <a
+        <AffiliateLink
           href={p.affiliateUrl}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
+          platform={p.id}
+          placement="crypto-detail-where-to-buy"
+          showCaption={false}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-3 py-2 text-xs font-semibold text-background hover:opacity-90 transition"
         >
           Acheter {cryptoName} sur {p.name}
           <ExternalLink className="h-3.5 w-3.5" />
-        </a>
+        </AffiliateLink>
         <Link
           href={`/avis/${p.id}`}
           className="inline-flex items-center justify-center rounded-xl border border-border px-3 py-2 text-xs font-semibold text-fg hover:border-primary/40"

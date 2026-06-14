@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star, Zap } from "lucide-react";
 import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
+import AffiliateLink from "@/components/AffiliateLink";
+import { getAffiliationKind } from "@/lib/partnerships";
 
 interface Props {
   cryptoName: string;
@@ -24,8 +26,9 @@ interface Props {
  * `platformNames`) avec un CTA primary clair, sans dupliquer le contenu
  * détaillé de <WhereToBuy /> (qui reste pour ceux qui veulent comparer).
  *
- * Conformité : badge MiCA + mention "Lien d'affiliation" + rel="sponsored".
- * Pas de countdown faux, pas de social proof inventé.
+ * Conformité : badge MiCA + CTA via <AffiliateLink> (rel="sponsored" et mention
+ * « Publicité » UNIQUEMENT sur les plateformes réellement rémunérées, cf.
+ * lib/partnerships.ts). Pas de countdown faux, pas de social proof inventé.
  */
 export default function QuickBuyBox({
   cryptoName,
@@ -49,6 +52,12 @@ export default function QuickBuyBox({
   // Si moins de 2 plateformes connues, on n'affiche pas (fallback : <WhereToBuy />
   // en bas reste la source de vérité). Évite un encart bancal "1 seule option".
   if (matched.length < 2) return null;
+
+  // Audit F (cohérence partnerships) : on ne peut affirmer « commission » que si
+  // AU MOINS une des plateformes affichées est réellement rémunérée. Sinon le
+  // disclaimer serait un claim trompeur (DGCCRF L.121-1) — la plupart des
+  // plateformes ne sont pas affiliées (cf. lib/partnerships.ts).
+  const anyPaid = matched.some((p) => getAffiliationKind(p.id) !== null);
 
   return (
     <aside
@@ -79,12 +88,24 @@ export default function QuickBuyBox({
       </div>
 
       <p className="mt-3 text-[11px] text-muted/90 leading-relaxed">
-        Liens d&apos;affiliation. Cryptoreflex perçoit une commission sans
-        surcoût pour vous (
-        <Link href="/transparence" className="underline hover:text-fg">
-          détail
-        </Link>
-        ). Pas de conseil en investissement — capital à risque.
+        {anyPaid ? (
+          <>
+            Certains de ces liens sont rémunérés (affiliation ou parrainage),
+            sans surcoût pour vous — cela ne change ni le classement, ni la note (
+            <Link href="/transparence" className="underline hover:text-fg">
+              détail
+            </Link>
+            ). Pas de conseil en investissement — capital à risque.
+          </>
+        ) : (
+          <>
+            Liens directs vers les plateformes (
+            <Link href="/transparence" className="underline hover:text-fg">
+              nos partenariats
+            </Link>
+            ). Pas de conseil en investissement — capital à risque.
+          </>
+        )}
       </p>
     </aside>
   );
@@ -147,12 +168,16 @@ function QuickBuyRow({
           Le CTA principal (isTop=true) recoit btn-primary-shine (shimmer
           gold hover) + partner-cta-pulse (anneau gold qui pulse 2.5s,
           signature buy-now). Le 2eme CTA garde un style sobre car il y a
-          deja une hierarchie #1 vs alternative. */}
-      <a
+          deja une hierarchie #1 vs alternative.
+          AffiliateLink (et non <a> brut) : calcule rel="sponsored" UNIQUEMENT
+          si la plateforme est rémunérée (sinon faux claim), retire noreferrer
+          (qui cassait l'attribution Binance/Kraken) et trace le clic.
+          showCaption=false : le disclaimer de section ci-dessus suffit. */}
+      <AffiliateLink
         href={platform.affiliateUrl}
-        target="_blank"
-        rel="noopener noreferrer sponsored"
-        data-analytics-cta={`quickbuy-${platform.id}`}
+        platform={platform.id}
+        placement="crypto-detail-quickbuy"
+        showCaption={false}
         className={`mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
           isTop
             ? "btn-primary-shine partner-cta-pulse bg-primary text-background hover:bg-primary-glow"
@@ -161,7 +186,7 @@ function QuickBuyRow({
       >
         Acheter sur {platform.name}
         <ExternalLink className="h-3.5 w-3.5 arrow-spring" aria-hidden="true" />
-      </a>
+      </AffiliateLink>
       <Link
         href={`/avis/${platform.id}`}
         className="mt-1.5 block text-center text-[11px] text-muted hover:text-fg"

@@ -463,6 +463,16 @@ export default function ComparatifFraisPage() {
               <Ban className="inline h-3.5 w-3.5 text-red-300" /> fermé au marché FR.
             </li>
           </ul>
+          <p className="mt-4 text-sm text-muted">
+            Comment nous notons et pondérons chaque plateforme :{" "}
+            <Link
+              href="/methodologie"
+              className="font-semibold text-primary underline underline-offset-2 hover:text-primary-glow"
+            >
+              notre méthodologie complète
+            </Link>
+            .
+          </p>
         </section>
 
         {/* CTA cross-link */}

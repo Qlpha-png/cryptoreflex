@@ -23,11 +23,14 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowLeftRight,
   CheckCircle2,
   ExternalLink,
+  ShoppingCart,
   Sparkles,
   Trophy,
 } from "lucide-react";
+import { TOP_PAIRS } from "@/lib/historical-prices";
 
 import {
   getCryptoPairs,
@@ -457,6 +460,17 @@ export default async function CryptoPairPage({ params }: Props) {
   // 4. Plateformes communes (intersection brute des labels whereToBuy).
   const commonPlatforms = a.whereToBuy.filter((p) => b.whereToBuy.includes(p));
 
+  // 4bis. Paire de conversion (bas de funnel) : on ne lie vers /convertisseur que
+  // si la paire existe RÉELLEMENT dans TOP_PAIRS — sinon lien mort (la route est
+  // dynamicParams=false = 404 dur hors-liste). On respecte la direction prébuild.
+  const _symA = a.symbol.toLowerCase();
+  const _symB = b.symbol.toLowerCase();
+  const convPair = TOP_PAIRS.find(
+    (p) =>
+      (p.from === _symA && p.to === _symB) ||
+      (p.from === _symB && p.to === _symA),
+  );
+
   // 5. Différences + FAQ + verdict editorial unique
   const keyDiffs = buildKeyDifferences(a, b);
   const faq = buildFaq(a, b);
@@ -640,6 +654,55 @@ export default async function CryptoPairPage({ params }: Props) {
               Aucune plateforme commune dans notre base. Voir les fiches détaillées pour la liste complète.
             </p>
           )}
+        </section>
+
+        {/* Passer à l'achat / la conversion — irrigue les hubs bas-de-funnel
+            (acheter, convertisseur) depuis le cluster /vs qui reçoit du trafic.
+            Liens internes uniquement, tous garantis valides : /acheter/{id}/fr est
+            prébuild pour toutes les cryptos, /convertisseur seulement si la paire
+            existe dans TOP_PAIRS (sinon pas de lien → zéro 404). */}
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Passer à l&apos;achat
+          </h2>
+          <p className="mt-3 text-sm text-muted">
+            Vous avez comparé {a.name} et {b.name} ? Voici comment acheter l&apos;un
+            ou l&apos;autre en France, ou convertir directement entre les deux.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <Link
+              href={`/acheter/${a.id}/fr`}
+              className="group flex items-center justify-between gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg hover:border-primary/50 transition-colors"
+            >
+              <span className="inline-flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4 text-primary" aria-hidden="true" />
+                Acheter {a.name} ({a.symbol}) en France
+              </span>
+              <ArrowRight className="h-4 w-4 text-muted group-hover:text-primary" aria-hidden="true" />
+            </Link>
+            <Link
+              href={`/acheter/${b.id}/fr`}
+              className="group flex items-center justify-between gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg hover:border-primary/50 transition-colors"
+            >
+              <span className="inline-flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4 text-primary" aria-hidden="true" />
+                Acheter {b.name} ({b.symbol}) en France
+              </span>
+              <ArrowRight className="h-4 w-4 text-muted group-hover:text-primary" aria-hidden="true" />
+            </Link>
+            {convPair && (
+              <Link
+                href={`/convertisseur/${convPair.from}-${convPair.to}`}
+                className="group flex items-center justify-between gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg hover:border-primary/50 transition-colors sm:col-span-2"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <ArrowLeftRight className="h-4 w-4 text-primary" aria-hidden="true" />
+                  Convertir {convPair.from.toUpperCase()} en {convPair.to.toUpperCase()} (taux en temps réel)
+                </span>
+                <ArrowRight className="h-4 w-4 text-muted group-hover:text-primary" aria-hidden="true" />
+              </Link>
+            )}
+          </div>
         </section>
 
         {/* BATCH 58 — Verdict editorial unique par paire (data-driven) */}
