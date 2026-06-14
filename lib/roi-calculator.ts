@@ -23,7 +23,7 @@ import {
  *  5. Frais de vente = valeur finale × sellFeeRate / 100.
  *  6. Plus-value nette = valueFinal - investissement - totalFees.
  *  7. ROI % = profitNet / investissement × 100.
- *  8. Impôt FR = profitNet × 30 % si profitNet > 305 € (PFU), sinon 0.
+ *  8. Impôt FR = profitNet × 31,4 % si profitNet > 305 € (PFU), sinon 0.
  *
  * @example
  * calculateROI({ buyPrice: 100, sellPrice: 200, quantity: 1, buyFeeRate: 0.5, sellFeeRate: 0.5 })

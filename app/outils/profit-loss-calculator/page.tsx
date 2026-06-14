@@ -154,7 +154,7 @@ export default function ProfitLossCalculatorPage() {
             </li>
             <li>
               <strong className="text-fg">PnL net apres impot</strong> = si PnL
-              net frais &gt; 0 alors × (1 - 0.30), sinon inchange (les pertes
+              net frais &gt; 0 alors × (1 - 0.314), sinon inchange (les pertes
               ne sont pas \"taxables negativement\" mais reportables 10 ans).
             </li>
           </ol>

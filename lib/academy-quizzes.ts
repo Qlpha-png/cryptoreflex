@@ -75,7 +75,7 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
       "0 % si vous ne vendez pas en euros.",
       "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 %.",
       "45 % automatique.",
-      "Seulement 17,2 % de prélèvements sociaux.",
+      "Seulement 18,6 % de prélèvements sociaux.",
     ],
     correctIndex: 1,
     explanation:
@@ -176,7 +176,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     question:
       "Vous faites du yield farming régulier sur Aave (lending) et Uniswap (LP). Quelle qualification fiscale est la plus probable en France ?",
     choices: [
-      "Plus-values mobilières (PFU 30%).",
+      "Plus-values mobilières (PFU 31,4%).",
       "BNC (bénéfices non commerciaux) en activité non professionnelle.",
       "Salaire imposé en traitements et salaires.",
       "Aucune — la DeFi est défiscalisée.",
