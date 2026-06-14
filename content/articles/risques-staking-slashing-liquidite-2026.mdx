@@ -17,15 +17,15 @@ type: "guide"
 
 # Risques du staking : slashing, blocage et liquid staking (2026)
 
-Le staking génère un rendement passif. Ça, tu le sais. Ce que la plupart des guides passent sous silence, c'est la liste des choses qui peuvent mal tourner avant que ce rendement arrive dans ton portefeuille.
+Le staking génère un rendement passif. Ça, vous le savez. Ce que la plupart des guides passent sous silence, c'est la liste des choses qui peuvent mal tourner avant que ce rendement arrive dans votre portefeuille.
 
 Ce guide couvre les cinq risques concrets du staking : le slashing, le blocage des fonds, le risque custodial sur exchange, les risques propres au liquid staking, et la volatilité de l'actif lui-même. Pas de catastrophisme — mais pas de faux-semblants non plus.
 
 ---
 
-## Le slashing : quand le protocole te pénalise directement
+## Le slashing : quand le protocole vous pénalise directement
 
-Le **slashing** est une pénalité on-chain. Le protocole retire une partie de ton stake directement depuis la blockchain, sans intermédiaire, sans appel possible.
+Le **slashing** est une pénalité on-chain. Le protocole retire une partie de votre stake directement depuis la blockchain, sans intermédiaire, sans appel possible.
 
 Sur Ethereum, un validateur (le nœud qui participe à la validation des blocs) peut être slashé pour trois raisons :
 - **Double proposition** : signer deux blocs différents pour le même slot.
@@ -34,7 +34,7 @@ Sur Ethereum, un validateur (le nœud qui participe à la validation des blocs) 
 
 Ces trois infractions se résument à une seule réalité : le validateur a envoyé des messages contradictoires au réseau, volontairement ou par erreur de configuration.
 
-### Ce que tu perds concrètement
+### Ce que vous perdez concrètement
 
 La pénalité initiale représente **1/32 du solde effectif du validateur**, soit environ 1 ETH pour un validateur standard de 32 ETH. Le validateur est ensuite retiré du set actif pendant environ **36 jours**. À mi-parcours (jour 18), une pénalité corrélée s'ajoute : plus il y a de validateurs slashés simultanément sur le réseau, plus cette pénalité secondaire est élevée. Dans le pire scénario, avec de nombreux validateurs slashés en même temps, la perte peut atteindre la totalité du stake.
 
@@ -45,16 +45,16 @@ Depuis le lancement de la Beacon Chain (le socle Proof of Stake d'Ethereum) fin 
 En Q1 2026, le réseau Ethereum a enregistré 33 événements de slashing sur l'ensemble du réseau.
 
 <Callout type="warning">
-Si tu délègues ton stake à un opérateur (staking poolé, liquid staking), c'est son infrastructure qui détermine ton exposition au slashing. Vérifie son historique opérationnel avant de choisir.
+Si vous déléguez votre stake à un opérateur (staking poolé, liquid staking), c'est son infrastructure qui détermine votre exposition au slashing. Vérifiez son historique opérationnel avant de choisir.
 </Callout>
 
-Le slashing n'est pas le risque dominant du staking. Il est rare et souvent limité. Mais il est irréversible — aucun support client ne te remboursera.
+Le slashing n'est pas le risque dominant du staking. Il est rare et souvent limité. Mais il est irréversible — aucun support client ne vous remboursera.
 
 ---
 
 ## Le blocage des fonds : l'unbonding, ce piège temporel
 
-L'**unbonding** (ou période de retrait) est la durée pendant laquelle tes fonds sont immobilisés après que tu as demandé à récupérer ton stake. Ton capital est bloqué. Tu ne peux ni le vendre, ni le déplacer, ni t'en servir.
+L'**unbonding** (ou période de retrait) est la durée pendant laquelle vos fonds sont immobilisés après que vous avez demandé à récupérer votre stake. Votre capital est bloqué. Vous ne pouvez ni le vendre, ni le déplacer, ni vous en servir.
 
 Sur Ethereum, le processus de sortie de validateur suit une file d'attente dont la capacité est plafonnée par le protocole. En conditions normales, la durée totale tourne habituellement entre **1 et 5 jours**, mais peut s'allonger significativement si beaucoup de validateurs cherchent à sortir simultanément.
 
@@ -62,7 +62,7 @@ D'autres réseaux imposent des durées bien plus longues. Cosmos (ATOM) applique
 
 ### Pourquoi c'est un risque réel
 
-Imagine Tom, qui a staké 10 000 € en ETH. Le marché chute de 30 % en 72 heures — événement déjà observé plusieurs fois dans l'histoire du crypto. Tom ne peut pas vendre. Son stake est en unbonding. Il regarde son capital fondre sans pouvoir agir.
+Imaginez Tom, qui a staké 10 000 € en ETH. Le marché chute de 30 % en 72 heures — événement déjà observé plusieurs fois dans l'histoire du crypto. Tom ne peut pas vendre. Son stake est en unbonding. Il regarde son capital fondre sans pouvoir agir.
 
 Le rendement du staking ne compense jamais une chute sévère du sous-jacent pendant la période de blocage. C'est une asymétrie de risque que beaucoup d'investisseurs sous-estiment.
 
@@ -72,40 +72,40 @@ Le liquid staking (voir section suivante) a précisément été créé pour cont
 
 ---
 
-## Le risque custodial : staker sur un exchange, c'est confier tes clés
+## Le risque custodial : staker sur un exchange, c'est confier vos clés
 
-Quand tu stakes sur Binance, Coinbase, Kraken ou n'importe quel exchange centralisé, tu ne contrôles pas tes clés privées. L'exchange les détient à ta place. C'est ce qu'on appelle le **staking custodial**.
+Quand vous stakez sur Binance, Coinbase, Kraken ou n'importe quel exchange centralisé, vous ne contrôlez pas vos clés privées. L'exchange les détient à votre place. C'est ce qu'on appelle le **staking custodial**.
 
-Ce modèle t'expose à un risque de contrepartie : la santé financière de la plateforme, ses décisions internes et la réglementation qui s'applique à elle déterminent si tu récupères tes fonds.
+Ce modèle vous expose à un risque de contrepartie : la santé financière de la plateforme, ses décisions internes et la réglementation qui s'applique à elle déterminent si vous récupérez vos fonds.
 
 ### Les précédents qui comptent
 
 En 2022, Celsius Network a gelé tous les retraits et dépôts avant de déposer le bilan. Les utilisateurs qui avaient "staké" ou prêté leurs actifs sur la plateforme n'ont pas pu récupérer leurs fonds pendant des mois, parfois des années. FTX et BlockFi ont suivi le même schéma.
 
-Ces faillites ne sont pas des anomalies exotiques — elles illustrent un risque structurel inhérent à tout modèle custodial : en cas d'insolvabilité, tes actifs peuvent être traités comme des créances non prioritaires dans la procédure de faillite.
+Ces faillites ne sont pas des anomalies exotiques — elles illustrent un risque structurel inhérent à tout modèle custodial : en cas d'insolvabilité, vos actifs peuvent être traités comme des créances non prioritaires dans la procédure de faillite.
 
-### Ce que tu acceptes réellement
+### Ce que vous acceptez réellement
 
-En confiant tes actifs à un exchange pour staker :
-- Tu n'as aucun droit de retrait garanti en temps réel.
-- Tes fonds peuvent être gelés par décision de la plateforme ou par injonction réglementaire.
-- Tu n'as aucune visibilité sur ce que la plateforme fait réellement avec tes actifs en coulisses.
+En confiant vos actifs à un exchange pour staker :
+- Vous n'avez aucun droit de retrait garanti en temps réel.
+- Vos fonds peuvent être gelés par décision de la plateforme ou par injonction réglementaire.
+- Vous n'avez aucune visibilité sur ce que la plateforme fait réellement avec vos actifs en coulisses.
 
 <Callout type="warning">
-"Not your keys, not your coins" reste la règle d'or. Le staking sur exchange est pratique — mais tu externalises le risque vers une entité centralisée dont tu n'évalues pas le bilan quotidiennement.
+"Not your keys, not your coins" reste la règle d'or. Le staking sur exchange est pratique — mais vous externalisez le risque vers une entité centralisée dont vous n'évaluez pas le bilan quotidiennement.
 </Callout>
 
 ---
 
 ## Les risques du liquid staking : smart contract, dépeg et centralisation
 
-Le **liquid staking** résout le problème d'illiquidité de l'unbonding. Tu déposes de l'ETH sur Lido, tu reçois du stETH (staked ETH) — un token qui représente ta position stakée et continue d'accumuler des récompenses. Tu peux revendre ce stETH à tout moment sur un marché secondaire.
+Le **liquid staking** résout le problème d'illiquidité de l'unbonding. Vous déposez de l'ETH sur Lido, vous recevez du stETH (staked ETH) — un token qui représente votre position stakée et continue d'accumuler des récompenses. Vous pouvez revendre ce stETH à tout moment sur un marché secondaire.
 
 Mais ce confort vient avec trois risques distincts.
 
 ### Risque 1 : le smart contract
 
-Ton ETH est verrouillé dans un smart contract (programme autonome déployé sur la blockchain). Si ce contrat contient une vulnérabilité, un attaquant peut en exploiter la faille pour vider les fonds — et les audits de sécurité ne garantissent pas l'absence de bugs.
+Votre ETH est verrouillé dans un smart contract (programme autonome déployé sur la blockchain). Si ce contrat contient une vulnérabilité, un attaquant peut en exploiter la faille pour vider les fonds — et les audits de sécurité ne garantissent pas l'absence de bugs.
 
 En 2025, le protocole Cork Protocol a perdu environ 3 761 wstETH (environ 12 millions de dollars) à cause d'une vulnérabilité liée à la façon dont il modélisait la valeur de wstETH. Une faille dans la comptabilité interne, pas dans la logique de staking elle-même, a suffi.
 
@@ -135,7 +135,7 @@ Pour diversifier ce risque, des alternatives comme Rocket Pool (modèle décentr
 
 C'est le risque le moins souvent discuté — et pourtant le plus courant.
 
-Le staking te verse des récompenses dans le token natif du réseau. Si ce token perd de la valeur, ton rendement réel (mesuré en euros ou en dollars) peut être négatif, même avec un taux de récompense élevé en termes nominaux.
+Le staking vous verse des récompenses dans le token natif du réseau. Si ce token perd de la valeur, votre rendement réel (mesuré en euros ou en dollars) peut être négatif, même avec un taux de récompense élevé en termes nominaux.
 
 ### L'arithmétique qui fait mal
 
@@ -157,7 +157,7 @@ Un rendement annuel de staking, aussi attractif soit-il en nominal, ne protège 
 | Unbonding / blocage | Mécanique du réseau | Non (temporaire) |
 | Contrepartie exchange | Plateforme centralisée | Partiel |
 | Smart contract liquid staking | Code du protocole | Non |
-| Volatilité du sous-jacent | Marché | Oui (si tu attends) |
+| Volatilité du sous-jacent | Marché | Oui (si vous attendez) |
 
 ---
 
@@ -173,7 +173,7 @@ Il est plus sûr qu'en 2022, notamment grâce à l'amélioration de la liquidit�
 
 ### Comment éviter le risque custodial des exchanges ?
 
-En stackant en self-custody via des clients validateurs natifs (pour 32 ETH minimum sur Ethereum), via des pools décentralisés comme Rocket Pool, ou via des protocoles de liquid staking non-custodials. La ségrégation de tes clés privées est la seule garantie réelle.
+En stackant en self-custody via des clients validateurs natifs (pour 32 ETH minimum sur Ethereum), via des pools décentralisés comme Rocket Pool, ou via des protocoles de liquid staking non-custodials. La ségrégation de vos clés privées est la seule garantie réelle.
 
 ### Quelle est la durée d'unbonding sur Ethereum en 2026 ?
 
@@ -181,7 +181,7 @@ Entre 1 et 5 jours dans des conditions normales. Cette durée peut s'allonger si
 
 ### Les récompenses de staking sont-elles garanties ?
 
-Non. Les récompenses dépendent de la participation globale du réseau, du comportement de ton validateur, et dans certains cas de la gouvernance du protocole. Aucune plateforme sérieuse ne peut te garantir un taux fixe.
+Non. Les récompenses dépendent de la participation globale du réseau, du comportement de votre validateur, et dans certains cas de la gouvernance du protocole. Aucune plateforme sérieuse ne peut vous garantir un taux fixe.
 
 ---
 
@@ -207,8 +207,8 @@ Pour approfondir : [Comprendre le staking](/academie) — [Sécurité des wallet
 
 <KeyTakeaways>
 - Le slashing est une pénalité on-chain irréversible : environ 1/32 du stake pour un validateur isolé, potentiellement plus si la faute est corrélée à d'autres validateurs. Il reste historiquement très rare, et survient principalement par erreur de configuration.
-- L'unbonding immobilise tes fonds pendant 1 à 5 jours sur Ethereum (jusqu'à 28 jours sur d'autres réseaux). Pendant ce temps, tu ne peux ni vendre ni déplacer ton capital — le marché, lui, peut bouger.
-- Staker sur un exchange centralisé, c'est confier tes clés. En cas de faillite ou de gel (précédents Celsius, FTX, BlockFi), tes fonds peuvent être bloqués des mois sans recours.
+- L'unbonding immobilise vos fonds pendant 1 à 5 jours sur Ethereum (jusqu'à 28 jours sur d'autres réseaux). Pendant ce temps, vous ne pouvez ni vendre ni déplacer votre capital — le marché, lui, peut bouger.
+- Staker sur un exchange centralisé, c'est confier vos clés. En cas de faillite ou de gel (précédents Celsius, FTX, BlockFi), vos fonds peuvent être bloqués des mois sans recours.
 - Le liquid staking (stETH, wstETH, etc.) expose à trois risques cumulés : bug de smart contract, dépeg temporaire du token par rapport au sous-jacent, et risque systémique lié à la concentration (Lido domine le marché du liquid staking ETH).
 - La volatilité du sous-jacent est le risque le plus fréquent et le moins discuté : un rendement de staking exprimé en tokens ne compense pas une baisse sévère du prix de ces mêmes tokens.
 </KeyTakeaways>
