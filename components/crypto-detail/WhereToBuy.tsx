@@ -125,7 +125,7 @@ function PlatformRow({
         <div className="shrink-0 text-right">
           <div className="inline-flex items-center gap-1 text-xs text-fg">
             <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-            <span className="font-mono font-semibold">{p.scoring.global.toFixed(1)}</span>
+            <span className="font-mono font-semibold">{p.scoring.global.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
             <span className="text-muted">/5</span>
           </div>
           <div className="mt-1 text-[10px] text-muted">Frais {feeShort(p)}</div>

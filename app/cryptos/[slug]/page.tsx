@@ -47,7 +47,6 @@ import { getYearOhlc, formatOhlcPrice } from "@/lib/historical-ohlc";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
-import PulseSeal from "@/components/crypto-detail/PulseSeal";
 import CryptoSources from "@/components/crypto-detail/CryptoSources";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
 import dynamic from "next/dynamic";
@@ -642,14 +641,6 @@ export default async function CryptoPage({ params }: Props) {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <AddToCompareButton slug={c.id} cryptoName={c.name} />
           <LastReviewedBadge dateIso={FICHE_REVIEWED_DATE} variant="compact" />
-          {/* DA POULS étape 8 — LE SCEAU : la sparkline 7j du coin enroulée
-              en anneau or → glacier. 780 fiches, 780 sceaux uniques gravés
-              par le marché (null si données indisponibles — jamais de faux). */}
-          <PulseSeal
-            sparkline={detail?.sparkline7d}
-            coinName={c.name}
-            size={44}
-          />
         </div>
 
         {/* QUICK BUY BOX (FIX #1 audit conversion 2026-04-26) — encart d'achat
@@ -1342,8 +1333,8 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
   const PERF_YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
   const rows = PERF_YEARS.map((y) => {
     const d = getYearOhlc(cryptoId, y);
-    return d ? { y, c: d.c, h: d.h, l: d.l, chg: d.chg } : null;
-  }).filter((r): r is { y: number; c: number; h: number; l: number; chg: number } => r !== null);
+    return d ? { y, c: d.c, h: d.h, l: d.l, chg: d.chg, m: d.m } : null;
+  }).filter((r): r is { y: number; c: number; h: number; l: number; chg: number; m: number } => r !== null);
 
   if (rows.length === 0) return null;
 
@@ -1372,6 +1363,11 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
                   <Link href={`/historique-prix/${cryptoId}/${r.y}`} className="hover:text-primary-soft">
                     {r.y}
                   </Link>
+                  {r.m < 12 && (
+                    <span className="ml-1.5 text-[10px] font-normal text-muted whitespace-nowrap">
+                      en cours · {r.m} mois
+                    </span>
+                  )}
                 </td>
                 <td className="py-2 pr-4 tabular-nums">{formatOhlcPrice(r.c)}</td>
                 <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.h)}</td>

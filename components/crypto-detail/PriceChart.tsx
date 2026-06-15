@@ -442,7 +442,7 @@ function formatPrice(value: number, currency: "eur" | "usd"): string {
       maximumFractionDigits: value >= 1 ? 2 : 6,
     }).format(value);
   } catch {
-    return `${value.toFixed(2)} ${currency.toUpperCase()}`;
+    return `${value.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} ${currency.toUpperCase()}`;
   }
 }
 

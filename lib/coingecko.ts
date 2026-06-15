@@ -448,24 +448,23 @@ export const fetchPricesWithSparkline = unstable_cache(
 );
 
 export function formatUsd(value: number): string {
-  if (!value) return "—";
-  if (value >= 1000) {
-    return value.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    });
-  }
-  return value.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  });
+  if (!value || !Number.isFinite(value)) return "—";
+  // FR-FR + suffixe « $ » (cohérent avec formatCompactUsd « X Md $ »). Décimales
+  // adaptatives : 0 ≥1000, 2 ≥1, 4 ≥0,01, 8 sinon → un prix sub-cent (memecoin
+  // à 0,0000045 $) ne s'affiche JAMAIS « 0,00 $ » (= faux/gratuit).
+  const abs = Math.abs(value);
+  const maxFrac = abs >= 1000 ? 0 : abs >= 1 ? 2 : abs >= 0.01 ? 4 : 8;
+  return `${value.toLocaleString("fr-FR", { maximumFractionDigits: maxFrac })} $`;
 }
 
 export function formatPct(value: number): string {
+  if (!Number.isFinite(value)) return "—";
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}%`;
+  // FR-FR : virgule décimale + espace avant % (« +1,68 % », pas « +1.68% »).
+  return `${sign}${value.toLocaleString("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} %`;
 }
 
 /* ============================================================

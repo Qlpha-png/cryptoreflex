@@ -45,15 +45,15 @@ export default function AthAlertBanner({
 
   if (isNewAth) {
     title = `${cryptoName} vient de signer un nouveau sommet historique`;
-    badge = `+${distancePct.toFixed(2)}% au-dessus de l'ancien ATH`;
+    badge = `+${distancePct.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % au-dessus de l'ancien ATH`;
     palette = "border-success-border bg-success-soft text-success-fg";
   } else if (isVeryClose) {
-    title = `${cryptoName} à ${Math.abs(distancePct).toFixed(2)}% de son sommet historique`;
+    title = `${cryptoName} à ${Math.abs(distancePct).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % de son sommet historique`;
     badge = "ATH potentiel imminent";
     palette = "border-warning-border bg-warning-soft text-warning-fg";
   } else {
     title = `${cryptoName} se rapproche de son sommet historique`;
-    badge = `Plus que ${Math.abs(distancePct).toFixed(2)}% à parcourir`;
+    badge = `Plus que ${Math.abs(distancePct).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % à parcourir`;
     palette = "border-warning-border bg-warning-soft text-warning-fg";
   }
 

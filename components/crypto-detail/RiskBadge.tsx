@@ -86,7 +86,7 @@ function ReliabilityTile({ score }: { score: number }) {
         <div className="text-[11px] uppercase tracking-wider opacity-80">Score fiabilité</div>
       </div>
       <div className="mt-2 font-mono text-2xl font-bold tabular-nums">
-        {score.toFixed(1)}<span className="text-base text-fg/60">/10</span>
+        {score.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}<span className="text-base text-fg/60">/10</span>
       </div>
       <p className="mt-1 text-xs text-fg/70 leading-snug">
         Équipe + open source + audits + années + incidents.

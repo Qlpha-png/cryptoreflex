@@ -755,20 +755,20 @@ function formatEur(v: number): string {
       maximumFractionDigits: v >= 1000 ? 0 : 2,
     }).format(v);
   } catch {
-    return `${v.toFixed(0)} €`;
+    return `${v.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €`;
   }
 }
 
 function formatPct(v: number): string {
   const abs = Math.abs(v);
   const digits = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
-  return `${v.toFixed(digits)} %`;
+  return `${v.toLocaleString("fr-FR", { minimumFractionDigits: digits, maximumFractionDigits: digits })} %`;
 }
 
 function formatCrypto(v: number): string {
   if (!Number.isFinite(v) || v === 0) return "0";
-  if (v >= 1) return v.toFixed(4);
-  if (v >= 0.0001) return v.toFixed(6);
+  if (v >= 1) return v.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (v >= 0.0001) return v.toLocaleString("fr-FR", { minimumFractionDigits: 6, maximumFractionDigits: 6 });
   return v.toExponential(2);
 }
 

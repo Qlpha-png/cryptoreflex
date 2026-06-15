@@ -157,7 +157,7 @@ function QuickBuyRow({
               aria-hidden="true"
             />
             <span className="font-mono font-semibold text-fg">
-              {platform.scoring.global.toFixed(1)}
+              {platform.scoring.global.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
             </span>
             <span>/5 · Frais {feeShort(platform)}</span>
           </div>

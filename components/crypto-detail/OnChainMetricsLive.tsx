@@ -223,7 +223,7 @@ function buildCards(m: OnChainMetrics): CardSpec[] {
       key: "dominance",
       label: "Dominance marché",
       icon: PieChart,
-      value: `${m.marketCapDominance.toFixed(2)}%`,
+      value: `${m.marketCapDominance.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`,
       sub: "du market cap crypto total",
       source: "CoinGecko",
     });
@@ -248,7 +248,7 @@ function buildCards(m: OnChainMetrics): CardSpec[] {
       value: formatCompactNumber(m.holdersCount),
       sub:
         typeof m.holdersTop10Pct === "number"
-          ? `Top 10 = ${m.holdersTop10Pct.toFixed(1)}% du supply`
+          ? `Top 10 = ${m.holdersTop10Pct.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % du supply`
           : undefined,
       source: "CoinGecko",
     });
@@ -301,7 +301,7 @@ function TrendBadge({ value }: { value: number }) {
       className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums ${cls}`}
     >
       <Icon className="h-3 w-3" aria-hidden="true" />
-      {(positive ? "+" : "") + value.toFixed(2)}%
+      {(positive ? "+" : "") + value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
     </span>
   );
 }

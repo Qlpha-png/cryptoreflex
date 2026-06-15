@@ -196,7 +196,7 @@ export default function MiniOrderBook({
           className="text-[10px] text-muted tabular-nums"
           aria-live="polite"
         >
-          spread {spreadPct.toFixed(3)} %
+          spread {spreadPct.toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 })} %
         </div>
       </div>
 
@@ -237,7 +237,7 @@ export default function MiniOrderBook({
                     aria-hidden="true"
                   />
                   <span className="relative text-success">
-                    {b ? b.qty.toFixed(b.qty < 1 ? 4 : 2) : ""}
+                    {b ? b.qty.toLocaleString("fr-FR", { minimumFractionDigits: b.qty < 1 ? 4 : 2, maximumFractionDigits: b.qty < 1 ? 4 : 2 }) : ""}
                   </span>
                 </td>
                 {/* Bid price */}
@@ -260,7 +260,7 @@ export default function MiniOrderBook({
                 {/* Ask qty */}
                 <td className="relative w-[24%] px-1 text-right">
                   <span className="relative text-danger">
-                    {a ? a.qty.toFixed(a.qty < 1 ? 4 : 2) : ""}
+                    {a ? a.qty.toLocaleString("fr-FR", { minimumFractionDigits: a.qty < 1 ? 4 : 2, maximumFractionDigits: a.qty < 1 ? 4 : 2 }) : ""}
                   </span>
                 </td>
               </tr>

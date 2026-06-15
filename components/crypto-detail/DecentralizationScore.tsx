@@ -79,7 +79,7 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
     {
       Icon: Globe,
       label: "Diversité géographique",
-      value: `${b.geographicDiversity}%`,
+      value: `${b.geographicDiversity} %`,
       score: b.geographicScore,
       sub: "Score de répartition mondiale des nodes",
       weight: 15,
@@ -123,7 +123,7 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
           className={`shrink-0 inline-flex items-baseline gap-2 rounded-2xl border px-5 py-3 ${colorClass}`}
         >
           <span className="font-mono text-3xl font-extrabold tabular-nums">
-            {score.score.toFixed(1)}
+            {score.score.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
           </span>
           <span className="text-sm font-semibold">/ 10</span>
         </div>

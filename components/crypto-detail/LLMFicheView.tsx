@@ -54,11 +54,16 @@ interface LLMContent {
 }
 
 function formatNumber(n: number | null | undefined): string {
-  if (n == null) return "—";
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)} Md $`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} M $`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)} k $`;
-  return `${n.toFixed(2)} $`;
+  if (n == null || !Number.isFinite(n)) return "—";
+  const fr = (x: number, d: number) =>
+    x.toLocaleString("fr-FR", { maximumFractionDigits: d });
+  const abs = Math.abs(n);
+  if (abs >= 1e9) return `${fr(n / 1e9, 2)} Md $`;
+  if (abs >= 1e6) return `${fr(n / 1e6, 1)} M $`;
+  if (abs >= 1e3) return `${fr(n / 1e3, 0)} k $`;
+  // Décimales adaptatives : un prix sub-cent ne s'affiche jamais « 0.00 $ ».
+  const maxFrac = abs >= 1 ? 2 : abs >= 0.01 ? 4 : 8;
+  return `${fr(n, maxFrac)} $`;
 }
 
 const SCORE_LABELS: Record<string, string> = {

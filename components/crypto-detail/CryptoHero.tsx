@@ -63,7 +63,16 @@ export default function CryptoHero({
   const price = detail?.currentPrice ?? 0;
   const change24h = detail?.priceChange24h ?? 0;
   const positive = change24h >= 0;
-  const positive7d = (detail?.priceChange7d ?? 0) >= 0;
+  // FIX prod (Binance bloqué IP Vercel → priceChange7d peut être null alors que
+  // la sparkline vient de CoinGecko) : dériver le signe DE LA COURBE quand le %
+  // est absent, sinon la sparkline restait toujours verte même en baisse.
+  const spark7d = detail?.sparkline7d ?? [];
+  const positive7d =
+    detail?.priceChange7d != null
+      ? detail.priceChange7d >= 0
+      : spark7d.length > 1
+        ? spark7d[spark7d.length - 1]! >= spark7d[0]!
+        : true;
   const theme = getCategoryTheme(category);
   // FIX 2026-06-13 — Ne JAMAIS afficher un badge variation 24h quand les
   // données live sont absentes (CoinGecko down/rate-limit → detail=null ou

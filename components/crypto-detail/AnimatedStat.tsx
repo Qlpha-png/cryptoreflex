@@ -80,12 +80,13 @@ function formatValue(n: number, type: FormatType): string {
   switch (type) {
     case "compact-usd":
       return formatCompactUsdFr(n);
-    case "usd":
-      return new Intl.NumberFormat("fr-FR", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 2,
-      }).format(n);
+    case "usd": {
+      // Aligné sur formatUsd (coingecko.ts) : fr-FR, suffixe « $ », décimales
+      // adaptatives (sub-cent safe). Évite l'incohérence hero « X $US » vs ATH « X $ ».
+      const abs = Math.abs(n);
+      const maxFrac = abs >= 1000 ? 0 : abs >= 1 ? 2 : abs >= 0.01 ? 4 : 8;
+      return `${n.toLocaleString("fr-FR", { maximumFractionDigits: maxFrac })} $`;
+    }
     case "compact-number":
       return formatCompactNumberFr(n);
     case "number":

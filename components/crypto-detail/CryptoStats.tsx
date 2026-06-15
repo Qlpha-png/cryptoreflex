@@ -243,10 +243,10 @@ function DistanceBadge({
     return (
       <span
         className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
-        title={`Le prix actuel est à ${distance.toFixed(1)}% de son sommet historique`}
+        title={`Le prix actuel est à ${distance.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % de son sommet historique`}
       >
         <span aria-hidden="true">▼</span>
-        {distance.toFixed(1)}%
+        {distance.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %
       </span>
     );
   }
@@ -264,11 +264,14 @@ function DistanceBadge({
     );
   }
   // Multiplicateur si > 10x (plus lisible que "+10000%"), % sinon
-  const display = ratio >= 10 ? `×${ratio.toFixed(1)}` : `+${distance.toFixed(0)}%`;
+  const display =
+    ratio >= 10
+      ? `×${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}`
+      : `+${distance.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} %`;
   return (
     <span
       className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg"
-      title={`Le prix actuel est ${ratio.toFixed(1)}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`}
+      title={`Le prix actuel est ${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`}
     >
       <span aria-hidden="true">▲</span>
       {display}
@@ -294,11 +297,11 @@ function PegBadge({ current }: { current: number }) {
   return (
     <span
       className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
-      title={`Écart au peg (1,00 $) : ${sign}${dev.toFixed(2)} %`}
+      title={`Écart au peg (1,00 $) : ${sign}${dev.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`}
     >
       <span aria-hidden="true">⚓</span>
       {sign}
-      {dev.toFixed(2)} %
+      {dev.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
     </span>
   );
 }
