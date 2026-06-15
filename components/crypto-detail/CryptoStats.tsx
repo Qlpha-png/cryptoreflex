@@ -8,6 +8,9 @@ import AnimatedStat from "./AnimatedStat";
 interface Props {
   symbol: string;
   detail: CoinDetail | null;
+  /** Catégorie éditoriale (data JSON). Sert à détecter les stablecoins
+   *  (=== "Stablecoin" STRICT) dont les cartes ATH/ATL n'ont aucun sens. */
+  category?: string;
   /** Fallback texte (depuis JSON éditorial) si le ATH/ATL n'est pas remonté. */
   fallbackMaxSupply?: string;
 }
@@ -27,8 +30,16 @@ interface Props {
 export default function CryptoStats({
   symbol,
   detail,
+  category,
   fallbackMaxSupply,
 }: Props) {
+  // Détection stablecoin : ÉGALITÉ STRICTE sur "Stablecoin" — JAMAIS un
+  // includes("stablecoin"), sinon TRON ("Smart contracts / stablecoins"),
+  // MKR ("DeFi / Stablecoin & RWA") et FXS ("DeFi / Stablecoin & Ecosystem"),
+  // qui sont des cryptos VOLATILES, seraient masqués à tort. Seuls USDT/USDC/DAI
+  // portent exactement cette catégorie. Pour eux, ATH/ATL (peg ~1$) sont absurdes
+  // (ex USDT "ATL 0,57$ +74%") → on affiche l'écart au peg à la place.
+  const isStablecoin = (category ?? "").trim().toLowerCase() === "stablecoin";
   const athDate = detail?.athDate
     ? new Date(detail.athDate).toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -124,43 +135,64 @@ export default function CryptoStats({
         )}
       </StatCard>
 
-      {/* ATH — distance % depuis le sommet (BATCH 28 — innovation expert agents
-          quick win #1). On enrichit le label avec un badge "à -X% du sommet"
-          immédiatement perceptible : signal contexte ROI > simple valeur USD.
-          Color tokens sémantiques (success/warning/danger) selon la distance. */}
-      <StatCard
-        label="ATH (sommet historique)"
-        sub={athDate}
-        badge={
-          detail && detail.ath > 0 ? (
-            <DistanceBadge
-              current={detail.currentPrice}
-              reference={detail.ath}
-              kind="ath"
-            />
-          ) : undefined
-        }
-      >
-        {detail ? formatUsd(detail.ath) : "—"}
-      </StatCard>
+      {isStablecoin ? (
+        /* Stablecoin (USDT/USDC/DAI) : ATH/ATL sont hors-sol pour un actif
+           ancré ~1$ (ex USDT "ATL 0,57$ +74%" / "ATH 1,32$ -24%"). On masque
+           les deux cartes et on affiche l'écart au peg — la seule métrique
+           pertinente pour un stablecoin. */
+        <StatCard
+          label="Ancrage (peg)"
+          sub="Cible 1,00 $ (stablecoin)"
+          badge={
+            detail && detail.currentPrice > 0 ? (
+              <PegBadge current={detail.currentPrice} />
+            ) : undefined
+          }
+        >
+          {detail ? formatUsd(detail.currentPrice) : "—"}
+        </StatCard>
+      ) : (
+        <>
+          {/* ATH — distance % depuis le sommet (BATCH 28 — innovation expert
+              agents quick win #1). Badge "à -X% du sommet" : signal contexte ROI
+              > simple valeur USD. Color tokens sémantiques selon la distance.
+              NB : l'ATH (sommet post-2013) est fiable, contrairement à l'ATL. */}
+          <StatCard
+            label="ATH (sommet historique)"
+            sub={athDate}
+            badge={
+              detail && detail.ath > 0 ? (
+                <DistanceBadge
+                  current={detail.currentPrice}
+                  reference={detail.ath}
+                  kind="ath"
+                />
+              ) : undefined
+            }
+          >
+            {detail ? formatUsd(detail.ath) : "—"}
+          </StatCard>
 
-      {/* ATL — multiplicateur depuis le plancher (innovation : "x47 depuis ATL"
-          beaucoup plus parlant que "+4700%" pour un retail français). */}
-      <StatCard
-        label="ATL (plus bas historique)"
-        sub={atlDate}
-        badge={
-          detail && detail.atl > 0 ? (
-            <DistanceBadge
-              current={detail.currentPrice}
-              reference={detail.atl}
-              kind="atl"
-            />
-          ) : undefined
-        }
-      >
-        {detail ? formatUsd(detail.atl) : "—"}
-      </StatCard>
+          {/* ATL — "plus bas LISTÉ", pas "historique" : la série CoinGecko
+              démarre ~2013 et rate le vrai plancher (BTC ~0,05$ en 2010 → badge
+              ×940 trompeur). Libellé honnête + tooltip qui le précise. */}
+          <StatCard
+            label="ATL (plus bas listé)"
+            sub={atlDate}
+            badge={
+              detail && detail.atl > 0 ? (
+                <DistanceBadge
+                  current={detail.currentPrice}
+                  reference={detail.atl}
+                  kind="atl"
+                />
+              ) : undefined
+            }
+          >
+            {detail ? formatUsd(detail.atl) : "—"}
+          </StatCard>
+        </>
+      )}
     </section>
   );
 }
@@ -236,10 +268,37 @@ function DistanceBadge({
   return (
     <span
       className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg"
-      title={`Le prix actuel est ${ratio.toFixed(1)}× supérieur à son plancher historique`}
+      title={`Le prix actuel est ${ratio.toFixed(1)}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`}
     >
       <span aria-hidden="true">▲</span>
       {display}
+    </span>
+  );
+}
+
+/**
+ * PegBadge — stablecoins uniquement : écart au peg (cible 1,00 $) en %.
+ * Vert si quasi-ancré (<0,5%), ambre si <2%, rouge au-delà (dé-peg).
+ */
+function PegBadge({ current }: { current: number }) {
+  if (!Number.isFinite(current) || current <= 0) return null;
+  const dev = (current - 1) * 100; // écart vs peg 1 USD, en %
+  const abs = Math.abs(dev);
+  const palette =
+    abs < 0.5
+      ? "bg-success-soft border-success-border text-success-fg"
+      : abs < 2
+        ? "bg-warning-soft border-warning-border text-warning-fg"
+        : "bg-danger-soft border-danger-border text-danger-fg";
+  const sign = dev >= 0 ? "+" : "";
+  return (
+    <span
+      className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
+      title={`Écart au peg (1,00 $) : ${sign}${dev.toFixed(2)} %`}
+    >
+      <span aria-hidden="true">⚓</span>
+      {sign}
+      {dev.toFixed(2)} %
     </span>
   );
 }

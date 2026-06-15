@@ -7,7 +7,8 @@
  * Hardening Sprint 4 :
  *  - Rate limit 30 req/min/IP (helper unifié `lib/rate-limit.ts`).
  *  - Validation déjà OK : whitelist sur `coin` (COIN_IDS values), clamp
- *    `days ∈ [30, 1825]`.
+ *    `days ∈ [1, 1825]` (min ramené à 1 — fix graphe 7j du 2026-06-15 ;
+ *    granularité horaire pour days≤7 gérée dans lib/historical-prices.ts).
  *  - `force-dynamic` + `runtime = "nodejs"` pour forcer Next à traiter la
  *    route en SSR (la query string varie). Le cache long (`s-maxage=3600`)
  *    est piloté côté CDN via le header `Cache-Control` de la réponse.
@@ -65,7 +66,14 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const coin = searchParams.get("coin") ?? "bitcoin";
   const daysParam = parseInt(searchParams.get("days") ?? "1825", 10);
-  const days = Math.min(Math.max(daysParam, 30), 1825);
+  // FIX P0 (audit fiches 2026-06-15) : le clamp min était 30 → une demande
+  // "7j" servait en réalité 30 jours de données journalières. Min ramené à 1
+  // (+ garde NaN). La granularité horaire pour days≤7 est gérée côté
+  // lib/historical-prices.ts (Binance/CryptoCompare en bougies 1h).
+  const days = Math.min(
+    Math.max(Number.isFinite(daysParam) ? daysParam : 1825, 1),
+    1825,
+  );
 
   if (!ALLOWED_IDS.has(coin)) {
     return NextResponse.json({ error: "coin not supported" }, { status: 400 });

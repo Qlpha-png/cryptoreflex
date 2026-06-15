@@ -235,8 +235,13 @@ async function _fetchFromBinance(
   if (override === "__USD_1__") {
     const usdToEur = await _getEurUsdRate();
     const now = Date.now();
-    return Array.from({ length: Math.min(days, 1000) }, (_, i) => ({
-      t: now - (days - 1 - i) * SECONDS_PER_DAY * 1000,
+    // Vue 7j → série horaire (sinon 7 points < seuil de validité 30 →
+    // cascade inutile vers les fallbacks). Au-delà : 1 point/jour.
+    const hourly = days <= 7;
+    const count = hourly ? Math.min(days * 24, 1000) : Math.min(days, 1000);
+    const stepMs = hourly ? 3600 * 1000 : SECONDS_PER_DAY * 1000;
+    return Array.from({ length: count }, (_, i) => ({
+      t: now - (count - 1 - i) * stepMs,
       price: usdToEur, // 1 USD en EUR
     }));
   }
@@ -244,10 +249,14 @@ async function _fetchFromBinance(
   const ccSymbol = CG_TO_CC[coinId];
   if (!ccSymbol) return [];
   const pair = override ?? `${ccSymbol}USDT`;
-  const limit = Math.min(days, 1000); // Binance cap = 1000 points
+  // Vue 7j → bougies HORAIRES (jusqu'à 168 pts) pour une vraie granularité
+  // intraday : l'axe X du graphe 7j affiche des heures. Au-delà → journalier.
+  const hourly = days <= 7;
+  const interval = hourly ? "1h" : "1d";
+  const limit = hourly ? Math.min(days * 24, 1000) : Math.min(days, 1000); // cap Binance = 1000
 
   try {
-    const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=1d&limit=${limit}`;
+    const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=${interval}&limit=${limit}`;
     const res = await fetch(url, {
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(8000),
@@ -437,10 +446,13 @@ async function _fetchFromCryptoCompare(
   symbol: string,
   days: number,
 ): Promise<HistoricalPoint[]> {
-  // CC limite `limit` à 2000 ; si l'utilisateur demande plus on cap.
-  const limit = Math.min(days, 2000);
+  // Vue 7j → endpoint HORAIRE (histohour, jusqu'à 168 pts) pour matcher l'axe
+  // intraday du graphe ; sinon histoday. CC limite `limit` à 2000.
+  const hourly = days <= 7;
+  const endpoint = hourly ? "histohour" : "histoday";
+  const limit = hourly ? Math.min(days * 24, 2000) : Math.min(days, 2000);
   const url =
-    `${CRYPTOCOMPARE_BASE}/histoday` +
+    `${CRYPTOCOMPARE_BASE}/${endpoint}` +
     `?fsym=${encodeURIComponent(symbol)}&tsym=EUR&limit=${limit}&tryConversion=true`;
   try {
     // FIX P0 2026-05-06 — timeout 8s
@@ -563,7 +575,11 @@ async function _fetchFromCoinGecko(
 ): Promise<HistoricalPoint[]> {
   // ---- Cas simple : <= 365j ----
   if (days <= 365) {
-    const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=eur&days=${days}&interval=daily`;
+    // Pour days≤7 on NE force PAS interval=daily : le plan Demo CoinGecko
+    // renvoie alors automatiquement de l'horaire (le param `interval` explicite
+    // est Enterprise-only → l'imposer échouerait). Au-delà : interval=daily.
+    const interval = days <= 7 ? "" : "&interval=daily";
+    const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=eur&days=${days}${interval}`;
     try {
       // Cf. fix dans _fetchHistoricalRange : cgHeaders() ajoute la clé Demo
       // CoinGecko qui stabilise le rate-limit (30 req/min vs 5-15 erratique).

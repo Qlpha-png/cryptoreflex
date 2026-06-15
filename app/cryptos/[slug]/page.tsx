@@ -665,8 +665,15 @@ export default async function CryptoPage({ params }: Props) {
 
         {/* ATH ALERT BANNER (BATCH 29C) — bandeau narratif si crypto ≤ 5% ATH.
             Render null sinon. Capte l'attention immédiatement avec un signal
-            "il se passe quelque chose maintenant". */}
-        {detail && detail.currentPrice > 0 && detail.ath > 0 && (
+            "il se passe quelque chose maintenant".
+            FIX P0 (audit fiches 2026-06-15) — exclu pour les stablecoins : leur
+            "ATH" (~1$) déclenche un "à X% du sommet historique" absurde (cas USDC,
+            ATH ~1,0x). Même règle STRICTE que CryptoStats (category ===
+            "Stablecoin", jamais un includes — TRON/MKR/FXS restent éligibles). */}
+        {detail &&
+          detail.currentPrice > 0 &&
+          detail.ath > 0 &&
+          (c.category ?? "").trim().toLowerCase() !== "stablecoin" && (
           <div className="mt-8">
             <AthAlertBanner
               cryptoName={c.name}
@@ -682,6 +689,7 @@ export default async function CryptoPage({ params }: Props) {
           <CryptoStats
             symbol={c.symbol}
             detail={detail}
+            category={c.category}
             fallbackMaxSupply={c.kind === "top10" ? c.maxSupply : c.marketCapRange}
           />
         </div>
