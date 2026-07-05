@@ -1,0 +1,68 @@
+---
+title: "ChangeNOW : comment fonctionne vraiment le moteur d'échange derrière l'interface simple ?"
+description: "La CSO de ChangeNOW lève le voile sur l'infrastructure technique qui permet des swaps rapides. Ce que ça change pour un utilisateur français."
+date: "2026-07-05"
+category: "Plateformes"
+source: "Decrypt"
+sourceUrl: "https://decrypt.co/372679/inside-the-trading-engine-behind-changenows-fast-seamless-swaps"
+originalTitle: "Inside the Trading Engine Behind ChangeNOW’s ‘Fast, Seamless Swaps’"
+author: "La rédaction Cryptoreflex"
+keywords:
+  - "exchange"
+---
+
+ChangeNOW se présente comme l'un des exchanges instantanés les plus utilisés au monde : pas de compte obligatoire, une interface épurée, et des échanges censés s'exécuter en quelques minutes. Mais derrière cette façade minimaliste se cache une mécanique bien plus complexe. Pauline Shangett, directrice de la stratégie (CSO) de la plateforme, a accepté de détailler pour [Decrypt](https://decrypt.co/372679/inside-the-trading-engine-behind-changenows-fast-seamless-swaps) les rouages du moteur d'échange — une rare fenêtre ouverte sur l'infrastructure réelle d'un agrégateur crypto.
+
+## Un agrégateur, pas un exchange classique
+
+Contrairement à Binance ou Coinbase, ChangeNOW ne tient pas son propre carnet d'ordres. La plateforme fonctionne comme un **agrégateur de liquidité** : elle interroge simultanément plusieurs sources — exchanges centralisés (CEX), protocoles décentralisés (DEX) et teneurs de marché — pour trouver le meilleur taux disponible au moment de la transaction.
+
+Concrètement, lorsque tu demandes à échanger du Bitcoin contre de l'Ethereum, l'algorithme de ChangeNOW compare en temps réel les cotations de dizaines de partenaires, sélectionne le chemin le plus avantageux, puis exécute la transaction en ton nom. L'utilisateur ne voit qu'un seul écran simple ; en coulisses, plusieurs appels d'API s'enchaînent en fractions de seconde.
+
+Ce modèle présente un avantage évident : la profondeur de liquidité est mutualisée. Mais il implique aussi une dépendance aux partenaires — si l'un d'eux subit une panne ou un glissement de prix, la transaction peut être retardée ou légèrement réévaluée.
+
+## La gestion des « taux flottants » et des « taux fixes »
+
+ChangeNOW propose deux modes d'échange que Shangett distingue clairement :
+
+- **Taux flottant** : le montant final reçu dépend du prix du marché au moment exact où la transaction est confirmée sur la blockchain. C'est le mode le plus courant, généralement plus compétitif, mais soumis à la volatilité.
+- **Taux fixe** : le montant est garanti dès la confirmation de la commande, quelle que soit l'évolution du marché pendant le délai de traitement. Ce mode intègre une prime de risque pour la plateforme, mais offre une prévisibilité appréciable lors des périodes agitées.
+
+Pour un investisseur particulier, ce choix n'est pas anodin : en période de forte volatilité — comme lors d'une annonce macroéconomique ou d'un événement on-chain majeur — quelques minutes peuvent suffire à faire varier le prix reçu de plusieurs pourcents.
+
+## Vitesse d'exécution : entre promesse marketing et réalité technique
+
+L'argument phare de ChangeNOW est la rapidité. Shangett reconnaît que le délai réel dépend de plusieurs facteurs indépendants de la plateforme elle-même : la congestion du réseau blockchain concerné, le nombre de confirmations requises par le partenaire de liquidité, et la nature des actifs échangés.
+
+Un swap BTC → ETH prendra mécaniquement plus de temps qu'un swap entre deux tokens ERC-20, car la finalité de Bitcoin nécessite davantage de confirmations. Les échanges impliquant des réseaux comme Solana ou des solutions de couche 2 d'Ethereum peuvent, en revanche, s'exécuter bien plus vite grâce à des temps de bloc réduits. Si tu veux comprendre pourquoi ces différences existent, notre article sur les [Layer 2 Ethereum](/blog/layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026) donne un bon éclairage.
+
+## Ce que ça change concrètement pour un utilisateur en France
+
+### Statut réglementaire : une zone grise à surveiller
+
+ChangeNOW est enregistrée en Estonie et opère sans exiger de vérification d'identité (KYC) pour les montants inférieurs à certains seuils. Ce modèle, qui fait une partie de son attractivité, est précisément celui que la réglementation européenne **MiCA** et les directives anti-blanchiment (AMLD) cherchent à encadrer plus strictement.
+
+Depuis le 30 décembre 2024, MiCA est pleinement applicable aux prestataires de services sur crypto-actifs (CASP) dans l'Union européenne. En France, la période transitoire accordée aux acteurs déjà enregistrés comme PSAN prend fin le **1er juillet 2026**. Or, ChangeNOW ne figure pas à ce jour parmi les entités agréées ou enregistrées auprès de l'AMF. Avant d'utiliser une telle plateforme, il est donc prudent de vérifier son statut réglementaire — notre comparatif [PSAN vs CASP](/blog/psan-vs-casp-statut-mica-plateformes-crypto) t'aide à comprendre ces distinctions.
+
+Concrètement, utiliser un exchange non enregistré en France n'est pas illégal pour un particulier, mais cela implique des risques : absence de recours en cas de litige, protection des fonds non garantie, et potentiellement des complications lors de la déclaration fiscale.
+
+### Fiscalité : les swaps instantanés ne sont pas tous équivalents
+
+C'est un point que beaucoup d'utilisateurs ignorent. En France, le régime fiscal des crypto-actifs (article 150 VH bis du CGI) distingue deux types d'opérations :
+
+- **Les échanges crypto contre crypto** (par exemple BTC → ETH) bénéficient d'un **sursis d'imposition** : ils ne génèrent pas d'événement fiscal immédiat. La plus-value latente n'est constatée qu'au moment où tu convertis en euros ou utilises tes cryptos pour payer un bien ou service.
+- **Les échanges crypto contre euros** (ou stablecoins adossés à des monnaies fiduciaires selon leur qualification) constituent, eux, des **cessions imposables**.
+
+Si tu utilises ChangeNOW pour convertir du Bitcoin en USDT, la qualification fiscale de cette opération mérite attention — et il vaut mieux consulter un professionnel. Pour aller plus loin, notre [guide complet sur la déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet) détaille les règles applicables. Rappelons que depuis le 1er janvier 2026, le taux du prélèvement forfaitaire unique (PFU) applicable aux plus-values crypto s'élève à **31,4 %** (12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux), suite à la hausse de la CSG introduite par la LFSS 2026 (loi n° 2025-1403 du 30 décembre 2025).
+
+### Transparence des frais : lire entre les lignes
+
+ChangeNOW affiche des frais apparemment bas, voire nuls. En réalité, la rémunération de la plateforme est intégrée dans le spread — l'écart entre le prix auquel elle achète et celui auquel elle vend. Ce mécanisme est courant chez les agrégateurs, mais il rend la comparaison de coûts réels difficile pour l'utilisateur non averti. Pour choisir la plateforme la mieux adaptée à ton profil, consulte notre sélection des [meilleures plateformes crypto pour débutants en France](/blog/meilleure-plateforme-crypto-debutant-france-2026).
+
+## Ce que l'on retient
+
+L'article de Decrypt offre un regard rare sur la mécanique interne d'un exchange instantané. ChangeNOW illustre une tendance de fond : la complexité technique croissante des infrastructures crypto, masquée derrière des interfaces de plus en plus simples. Pour l'investisseur français, la facilité d'utilisation ne doit pas occulter les questions essentielles — statut réglementaire, traçabilité des transactions pour la déclaration fiscale, et réalité des coûts cachés dans le spread.
+
+À l'approche de l'échéance MiCA du 1er juillet 2026, le paysage des plateformes disponibles en France va continuer d'évoluer. Rester informé sur le statut des acteurs que tu utilises n'est pas une option, c'est une nécessité.
+
+<Callout type="warning" title="Avertissement">Cet article est fourni à titre informatif et pédagogique uniquement. Il ne constitue en aucun cas un conseil en investissement, une recommandation d'achat ou de vente d'actifs numériques, ni une incitation à utiliser une plateforme particulière. Les crypto-actifs sont des instruments hautement volatils : tu peux perdre tout ou partie du capital investi. Consulte un conseiller financier agréé avant toute décision d'investissement.</Callout>
