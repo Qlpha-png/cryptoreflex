@@ -1,0 +1,71 @@
+---
+title: "Radar Chat veut rendre les paiements Bitcoin aussi simples qu'un SMS"
+description: "Radar Chat combine messagerie chiffrée et paiements Bitcoin via le Lightning Network. Ce que ça change pour les utilisateurs français."
+date: "2026-07-08"
+category: "Technologie"
+source: "Decrypt"
+sourceUrl: "https://decrypt.co/372941/radar-chat-make-sending-bitcoin-easy-text"
+originalTitle: "Radar Chat Wants to Make Sending Bitcoin as Easy as Firing Off a Text"
+author: "La rédaction Cryptoreflex"
+image: "/news-covers/2026-07-08-radar-chat-wants-to-make-sending-bitcoin-as-easy-as-firing-off-a-text.jpg"
+imageCredit: "zcopley (CC BY-SA)"
+imageCreditUrl: "https://www.flickr.com/photos/22823034@N00/8085409641"
+keywords:
+  - "bitcoin"
+---
+
+Et si envoyer des bitcoins à un ami devenait aussi banal qu'envoyer un message vocal ? C'est le pari de Radar Chat, une nouvelle application qui marie messagerie chiffrée et paiements en bitcoin via le Lightning Network. Construite sur les fondations open source de Signal, elle cible un obstacle bien réel : la complexité perçue des transactions crypto pour le grand public.
+
+## Qu'est-ce que Radar Chat, concrètement ?
+
+Radar Chat est une application de messagerie instantanée qui intègre nativement la possibilité d'envoyer et de recevoir des bitcoins directement dans une conversation. Selon [l'article original publié par Decrypt](https://decrypt.co/372941/radar-chat-make-sending-bitcoin-easy-text), l'application repose sur le code open source de Signal — la référence en matière de messagerie sécurisée — pour garantir le chiffrement de bout en bout des échanges.
+
+Là où Radar Chat se distingue, c'est dans son approche des paiements : elle s'appuie sur le **Lightning Network**, une couche de protocole construite au-dessus de la blockchain Bitcoin. Concrètement, le Lightning Network permet d'effectuer des transactions quasi instantanées et à frais très réduits, en évitant d'inscrire chaque paiement directement sur la chaîne principale de Bitcoin — ce qui serait trop lent et trop coûteux pour de petits montants.
+
+Autre point notable : l'application adopte un modèle **self-custodial**, c'est-à-dire que l'utilisateur conserve le contrôle de ses clés privées. Il n'y a pas d'intermédiaire qui détient les fonds à sa place, contrairement à ce qui se passe sur la plupart des plateformes d'échange centralisées.
+
+## Le Lightning Network : pourquoi c'est important pour les débutants
+
+Pour comprendre l'enjeu, un petit rappel s'impose. La blockchain Bitcoin, dans sa version de base, peut traiter environ 7 transactions par seconde — un débit très faible comparé aux réseaux de paiement traditionnels comme Visa. Les frais peuvent aussi grimper significativement lors des périodes de forte activité.
+
+Le Lightning Network résout ce problème en créant des **canaux de paiement** entre utilisateurs. Les transactions circulent dans ces canaux off-chain et ne sont enregistrées sur la blockchain principale qu'à l'ouverture et à la fermeture du canal. Résultat : des paiements en quelques secondes, pour des frais souvent inférieurs à un centime d'euro.
+
+C'est précisément cette technologie qui permet à Radar Chat de proposer une expérience comparable à celle d'un virement via une application de paiement classique. Si tu veux en savoir plus sur les fondements du Bitcoin avant d'aller plus loin, notre [guide complet Bitcoin pour débutants](/blog/bitcoin-guide-complet-debutant-2026) est un bon point de départ.
+
+## Self-custody : liberté maximale, responsabilité totale
+
+Le choix du modèle self-custodial est une décision philosophique forte, mais elle a des implications pratiques importantes. En ne confiant pas tes fonds à un tiers, tu élimines le risque de faillite ou de gel de compte d'une plateforme — un scénario que plusieurs utilisateurs ont vécu douloureusement ces dernières années.
+
+En revanche, **si tu perds l'accès à ton portefeuille** (phrase de récupération égarée, appareil cassé sans sauvegarde), personne ne peut te venir en aide. Il n'existe pas de service client pour récupérer des bitcoins perdus dans un wallet self-custodial. C'est le revers de la médaille de la souveraineté financière.
+
+Cette distinction est aussi importante d'un point de vue réglementaire : les applications self-custodial ne sont pas soumises aux mêmes obligations que les plateformes d'échange centralisées (KYC, lutte anti-blanchiment, agrément PSAN ou CASP). Pour comprendre les différences entre ces statuts réglementaires en France, consulte notre article sur [PSAN vs CASP et le statut MiCA des plateformes](/blog/psan-vs-casp-statut-mica-plateformes-crypto).
+
+## Ce que ça change concrètement pour un utilisateur français
+
+### Sur le plan de l'usage
+
+L'idée de payer en bitcoin dans une interface de chat est séduisante, mais elle reste encore marginale dans les usages quotidiens en France. Peu de commerçants acceptent le bitcoin comme moyen de paiement, et les transferts entre particuliers en crypto restent anecdotiques comparés aux virements bancaires ou aux applications comme Lydia ou PayLib.
+
+Cela dit, pour des envois internationaux — vers un proche à l'étranger, par exemple — le Lightning Network peut présenter un intérêt réel en termes de rapidité et de coût, là où un virement SWIFT peut prendre plusieurs jours et générer des frais importants.
+
+### Sur le plan fiscal : attention aux cessions !
+
+C'est le point que tout utilisateur français doit garder en tête. En France, **chaque utilisation de bitcoin pour payer un bien ou un service constitue une cession imposable**, au même titre qu'une vente contre des euros. Autrement dit, si tu envoies des bitcoins via Radar Chat pour régler une dépense, tu dois en principe calculer la plus-value éventuelle réalisée et la déclarer.
+
+Depuis le 1er janvier 2026, le taux de la flat tax applicable aux plus-values crypto pour les particuliers est de **31,4 %** (12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux), suite à la hausse de la CSG introduite par la loi n° 2025-1403 du 30 décembre 2025 (LFSS 2026). Le seuil d'exonération de 305 € porte sur le montant total des cessions dans l'année, pas sur la plus-value nette.
+
+En revanche, un simple échange de bitcoin contre une autre cryptomonnaie (swap crypto-crypto) reste en sursis d'imposition et n'est pas imposable au moment de l'échange. Pour tout comprendre sur tes obligations déclaratives, notre [guide complet sur la déclaration crypto aux impôts 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet) détaille les règles applicables.
+
+### Sur le plan réglementaire
+
+Radar Chat, en tant qu'application self-custodial, n'entre pas dans le périmètre des prestataires de services sur actifs numériques (PSAN/CASP) soumis à l'agrément de l'AMF. Cela signifie qu'elle n'est pas tenue aux mêmes obligations de protection des utilisateurs que les plateformes régulées. Le cadre MiCA, entré pleinement en vigueur au niveau européen, vise principalement les acteurs centralisés. La période transitoire française pour les PSAN existants se termine le 1er juillet 2026.
+
+## Un pari sur l'adoption de masse
+
+Radar Chat s'inscrit dans une tendance plus large : celle des applications qui cherchent à rendre la crypto aussi intuitive que les outils numériques du quotidien. L'enjeu est réel — la complexité technique reste l'un des principaux freins à l'adoption du bitcoin par le grand public.
+
+Si l'application tient ses promesses en matière d'expérience utilisateur, elle pourrait contribuer à normaliser les micro-paiements en bitcoin. Mais la route est encore longue avant qu'envoyer des satoshis dans un chat devienne aussi réflexe qu'un virement par SMS.
+
+<Callout type="warning" title="Avertissement">
+Cet article est rédigé à titre informatif et pédagogique uniquement. Il ne constitue en aucun cas un conseil en investissement, une recommandation d'achat ou de vente d'actifs numériques. Les cryptomonnaies sont des actifs hautement volatils : tu peux perdre tout ou partie du capital investi. Avant toute décision financière, consulte un conseiller en gestion de patrimoine agréé. Les informations fiscales mentionnées sont données à titre indicatif et peuvent évoluer ; rapproche-toi d'un expert-comptable ou de la DGFiP pour ta situation personnelle.
+</Callout>
