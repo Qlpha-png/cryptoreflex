@@ -207,6 +207,12 @@ export async function computeUnsubscribeToken(email: string): Promise<string> {
  * Comparaison constante-time pour éviter les attaques par timing.
  */
 export async function verifyUnsubscribeToken(email: string, token: string): Promise<boolean> {
+  // SÉCURITÉ (audit 2026-10-01) : sans secret, le token « mocked-token » est
+  // connu de tous → en production on refuse tout plutôt que tout accepter.
+  if (!process.env.ALERT_DELETE_SECRET && process.env.NODE_ENV === "production") {
+    console.error("[alerts] ALERT_DELETE_SECRET manquant en production — token refusé.");
+    return false;
+  }
   const expected = await computeUnsubscribeToken(email);
   if (expected.length !== token.length) return false;
   let diff = 0;
@@ -566,6 +572,8 @@ export async function evaluateAndFire(
           subject,
           html,
           text,
+          // One-click Gmail/Outlook = suppression de CETTE alerte (POST signé).
+          listUnsubscribeUrl: `${BRAND.url}/api/alerts/${encodeURIComponent(alert.id)}?token=${encodeURIComponent(token)}&action=delete`,
         });
 
         if (!mail.ok) {

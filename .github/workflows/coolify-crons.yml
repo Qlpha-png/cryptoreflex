@@ -98,16 +98,13 @@ jobs:
             # 200 = full success, 207 = multi-status (au moins 1 sub-job en fail
             # mais l'orchestrateur a fini sa course — on ne fail PAS le workflow).
             if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "207" ]; then
+              # Dépôt public = logs publics : le corps de réponse (rapports des
+              # sous-jobs, identifiants) n'est JAMAIS affiché. Détails : logs Vercel.
               echo "[${TS}] ✅ OK (status=${HTTP_CODE}) after ${attempt} attempt(s)"
-              echo "--- response body (truncated) ---"
-              head -c 2000 /tmp/body.json
-              echo ""
               exit 0
             fi
 
             echo "⚠️ Attempt ${attempt} failed (HTTP ${HTTP_CODE})"
-            head -c 500 /tmp/body.json
-            echo ""
 
             if [ "${attempt}" -lt 3 ]; then
               SLEEP=$((attempt * 30))
@@ -122,13 +119,10 @@ jobs:
           # (debug manuel) et pour les autres codes (timeout 000, 404, 401, etc.).
           if [ "${{ github.event_name }}" = "schedule" ] && [ "${HTTP_CODE}" = "500" ]; then
             echo "::warning title=daily-orchestrator transient 500::HTTP 500 after 3 retries, scheduled run treated as soft-skip (server-side bug in investigation)."
-            cat /tmp/body.json
             exit 0
           fi
 
           echo "::error title=daily-orchestrator FAIL after 3 retries::HTTP ${HTTP_CODE}"
-          echo "--- full response body (last attempt) ---"
-          cat /tmp/body.json
           exit 1
 
       - name: Job summary
@@ -180,9 +174,8 @@ jobs:
             echo "HTTP status : ${HTTP_CODE}"
 
             if [ "${HTTP_CODE}" = "200" ]; then
+              # Corps (identifiants utilisateurs) jamais affiché : dépôt public.
               echo "[${TS}] ✅ OK after ${attempt} attempt(s)"
-              head -c 2000 /tmp/body.json
-              echo ""
               exit 0
             fi
 
@@ -200,12 +193,10 @@ jobs:
           # v5.45 PATCH 3 (Kevin) : si scheduled + 500, warn sans email.
           if [ "${{ github.event_name }}" = "schedule" ] && [ "${HTTP_CODE}" = "500" ]; then
             echo "::warning title=streak-reminders transient 500::HTTP 500 after 3 retries, scheduled run treated as soft-skip (server-side bug in investigation)."
-            cat /tmp/body.json
             exit 0
           fi
 
           echo "::error title=streak-reminders FAIL after 3 retries::HTTP ${HTTP_CODE}"
-          cat /tmp/body.json
           exit 1
 
       - name: Job summary

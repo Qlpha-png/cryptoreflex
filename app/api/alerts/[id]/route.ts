@@ -1,19 +1,34 @@
 /**
  * /api/alerts/[id]
  *
- * GET    : récupère une alerte (debug — pas vraiment utilisé en prod)
- * DELETE : supprime l'alerte. Authentifié via `?token=<sha256(email + secret)>`.
- *          En mode mocked (pas de secret), token = "mocked-token".
+ * GET    : récupère une alerte — propriétaire connecté uniquement.
+ * DELETE : supprime l'alerte. Autorisé si :
+ *          - `?token=` valide (lien signé présent dans l'email d'alerte), OU
+ *          - session dont l'email = email de l'alerte (UI /alertes).
  *
  * Variante "one-click unsubscribe" : DELETE peut aussi être appelée par GET
  * avec `?action=delete&token=...`. Permet le lien direct dans l'email reçu
  * (les clients mail ne peuvent pas envoyer de DELETE).
+ *
+ * SÉCURITÉ (audit 2026-10-01) : avant, une requête SANS en-tête Origin (curl)
+ * était traitée comme « same-origin » → suppression de n'importe quelle
+ * alerte sans token. Corrigé : preuve cryptographique ou session propriétaire.
+ * CSRF : les cookies Supabase sont SameSite=Lax → non envoyés sur un DELETE
+ * cross-site.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { deleteAlert, getAlertById, verifyUnsubscribeToken } from "@/lib/alerts";
-import { getKv } from "@/lib/kv";
+import { getUser } from "@/lib/auth";
 import { getClientIp } from "@/lib/ip";
+import { confirmActionPage, HTML_HEADERS } from "@/lib/confirm-action-page";
+
+/** L'utilisateur connecté est-il le propriétaire (même email) de l'alerte ? */
+async function isOwner(alertEmail: string): Promise<boolean> {
+  const user = await getUser();
+  if (!user?.email) return false;
+  return user.email.trim().toLowerCase() === alertEmail.trim().toLowerCase();
+}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,10 +58,8 @@ function rateLimit(key: string): boolean {
  * Cœur partagé GET (action=delete) + DELETE.
  *
  * Auth :
- *  - Si `requireToken` (cas du GET one-click depuis l'email) → on exige un token
- *    cryptographique valide.
- *  - Sinon (cas du DELETE depuis l'UI same-origin) → on a déjà filtré côté caller
- *    (Origin same-host) et on accepte sans token.
+ *  - `?token=` fourni → il doit être valide pour l'email de l'alerte.
+ *  - sinon → session propriétaire obligatoire (même email que l'alerte).
  *
  * Rendu :
  *  - `options.html` = page HTML lisible (lien depuis l'email).
@@ -55,14 +68,12 @@ function rateLimit(key: string): boolean {
 async function handleDelete(
   req: NextRequest,
   id: string,
-  options: { html: boolean; requireToken: boolean },
+  options: { html: boolean },
 ): Promise<NextResponse> {
   const token = req.nextUrl.searchParams.get("token") ?? "";
 
-  if (options.requireToken && !token) {
-    return options.html
-      ? htmlResponse(400, "Lien invalide", "Token manquant.")
-      : NextResponse.json({ ok: false, error: "Token manquant." }, { status: 400 });
+  if (options.html && !token) {
+    return htmlResponse(400, "Lien invalide", "Token manquant.");
   }
 
   const alert = await getAlertById(id);
@@ -73,13 +84,16 @@ async function handleDelete(
       : NextResponse.json({ ok: false, error: "Alerte introuvable." }, { status: 404 });
   }
 
-  if (options.requireToken) {
-    const valid = await verifyUnsubscribeToken(alert.email, token);
-    if (!valid) {
-      return options.html
-        ? htmlResponse(403, "Lien invalide", "Le lien de désinscription n'est pas valide ou a expiré.")
-        : NextResponse.json({ ok: false, error: "Token invalide." }, { status: 403 });
-    }
+  // Paramètre `token` présent (même vide) = parcours « lien signé » : jeton
+  // valide exigé, AUCUN repli sur la session (sinon `?token=` vide servirait à
+  // contourner le contrôle CSRF du middleware).
+  const authorized = req.nextUrl.searchParams.has("token")
+    ? Boolean(token) && (await verifyUnsubscribeToken(alert.email, token))
+    : await isOwner(alert.email);
+  if (!authorized) {
+    return options.html
+      ? htmlResponse(403, "Lien invalide", "Le lien de désinscription n'est pas valide ou a expiré.")
+      : NextResponse.json({ ok: false, error: "Accès refusé." }, { status: 403 });
   }
 
   const ok = await deleteAlert(id);
@@ -101,12 +115,30 @@ export async function GET(req: NextRequest, ctx: Ctx): Promise<NextResponse> {
 
   const action = req.nextUrl.searchParams.get("action");
   if (action === "delete") {
-    return handleDelete(req, ctx.params.id, { html: true, requireToken: true });
+    // Le lien de l'email n'exécute rien : page de confirmation, puis POST.
+    // (Les scanners de liens ouvrent les URL des emails — audit 2026-10-01.)
+    const token = req.nextUrl.searchParams.get("token") ?? "";
+    const alert = token ? await getAlertById(ctx.params.id) : null;
+    if (!alert) {
+      return htmlResponse(token ? 200 : 400, token ? "Alerte introuvable" : "Lien invalide", token ? "Cette alerte a déjà été supprimée ou n'existe plus." : "Token manquant.");
+    }
+    if (!(await verifyUnsubscribeToken(alert.email, token))) {
+      return htmlResponse(403, "Lien invalide", "Le lien de désinscription n'est pas valide ou a expiré.");
+    }
+    return new NextResponse(
+      confirmActionPage({
+        title: "Désactiver cette alerte ?",
+        message: `Alerte ${alert.symbol} ${alert.condition === "above" ? ">" : "<"} ${alert.threshold} ${alert.currency.toUpperCase()} : vous ne recevrez plus d'email pour elle.`,
+        actionUrl: `${req.nextUrl.pathname}${req.nextUrl.search}`,
+        buttonLabel: "Désactiver l'alerte",
+      }),
+      { status: 200, headers: HTML_HEADERS },
+    );
   }
 
-  // Lecture simple (debug)
+  // Lecture simple — propriétaire connecté uniquement.
   const alert = await getAlertById(ctx.params.id);
-  if (!alert) {
+  if (!alert || !(await isOwner(alert.email))) {
     return NextResponse.json({ ok: false, error: "Introuvable." }, { status: 404 });
   }
   // On ne renvoie pas l'email complet (privacy) sauf au caller authentifié → ici on masque.
@@ -122,38 +154,23 @@ export async function GET(req: NextRequest, ctx: Ctx): Promise<NextResponse> {
   );
 }
 
+/** POST = bouton de la page de confirmation (lien email, token obligatoire). */
+export async function POST(req: NextRequest, ctx: Ctx): Promise<NextResponse> {
+  if (!rateLimit(getClientIp(req))) {
+    return NextResponse.json({ ok: false, error: "Trop de requêtes." }, { status: 429 });
+  }
+  if (req.nextUrl.searchParams.get("action") !== "delete") {
+    return NextResponse.json({ ok: false, error: "Action inconnue." }, { status: 400 });
+  }
+  return handleDelete(req, ctx.params.id, { html: true });
+}
+
 export async function DELETE(req: NextRequest, ctx: Ctx): Promise<NextResponse> {
   if (!rateLimit(getClientIp(req))) {
     return NextResponse.json({ ok: false, error: "Trop de requêtes." }, { status: 429 });
   }
 
-  // CSRF : on accepte le DELETE quand :
-  //  - l'Origin est same-host (UI Cryptoreflex), OU
-  //  - on est en mode mocked (dev / preview), OU
-  //  - un token cryptographique valide est fourni (caller externe authentifié).
-  const sameOrigin = isOriginAllowed(req);
-  const hasToken = Boolean(req.nextUrl.searchParams.get("token"));
-  if (!sameOrigin && !hasToken && !getKv().mocked) {
-    return NextResponse.json({ ok: false, error: "Origine non autorisée." }, { status: 403 });
-  }
-
-  // Si pas de same-origin (donc forcément un token), on l'exige valide.
-  // Si same-origin OU mocked → token optionnel.
-  const requireToken = !sameOrigin && !getKv().mocked;
-  return handleDelete(req, ctx.params.id, { html: false, requireToken });
-}
-
-function isOriginAllowed(req: NextRequest): boolean {
-  if (getKv().mocked) return true;
-  const origin = req.headers.get("origin");
-  if (!origin) return true;
-  try {
-    const o = new URL(origin);
-    const host = req.headers.get("host");
-    return Boolean(host) && o.host === host;
-  } catch {
-    return false;
-  }
+  return handleDelete(req, ctx.params.id, { html: false });
 }
 
 function maskEmail(email: string): string {

@@ -49,8 +49,12 @@ jobs:
           node scripts/populate-all-cryptos-kv.mjs
 
       - name: Verify KV coverage
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -s --max-time 10 \
-            "https://www.cryptoreflex.fr/api/diag/api-usage" \
-            | head -c 500
-          echo
+          # Dépôt public = logs publics : on n'affiche QUE le code HTTP,
+          # jamais le contenu du diagnostic.
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://www.cryptoreflex.fr/api/diag/api-usage")
+          echo "api-usage HTTP $code"

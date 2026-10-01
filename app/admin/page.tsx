@@ -1,8 +1,8 @@
 /**
  * /admin — Dashboard administrateur Cryptoreflex.
  *
- * Accès STRICTEMENT réservé aux emails listés dans ADMIN_EMAILS env var
- * (fallback : kevinvoisin2016@gmail.com + contact@cryptoreflex.fr).
+ * Accès STRICTEMENT réservé aux emails listés dans ADMIN_EMAILS env var,
+ * vérifiés (email_confirmed_at). Aucun fallback (cf. lib/auth.ts).
  *
  * Si non-admin → 404 strict (pas de redirect vers /pro qui révélerait
  * l'existence de la page).

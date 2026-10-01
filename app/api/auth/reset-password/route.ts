@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
+import { generateSafeEmailLink } from "@/lib/auth-guards";
 import { resetPasswordEmail } from "@/lib/email/templates";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye dans une heure." },
+      { error: "Trop de tentatives. Réessayez dans une heure." },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     );
   }
@@ -88,35 +89,27 @@ export async function POST(req: NextRequest) {
   // STEP 1 : genere le recovery link → recupere hashed_token (cf /api/auth/login
   // pour explication : action_link supabase verify utilise hash fragment illisible
   // serveur, donc on construit notre URL avec token_hash + verifyOtp dans le callback)
-  const { data: linkData, error: linkError } =
-    await admin.auth.admin.generateLink({
-      type: "recovery",
-      email,
-      options: {
-        redirectTo: `${siteUrl}/api/auth/callback`,
-      },
-    });
+  // SÉCURITÉ (audit 2026-10-01) : compte non confirmé → mot de passe posé sans
+  // preuve neutralisé AVANT l'émission du lien ; toute erreur = pas d'email.
+  const link = await generateSafeEmailLink(
+    admin,
+    "recovery",
+    email,
+    `${siteUrl}/api/auth/callback`,
+  );
 
-  if (linkError || !linkData?.properties?.hashed_token) {
-    // Cas "email inconnu" : Supabase renvoie un message du type "User not
-    // found" / "user_not_found" — c'est attendu, on retourne uniforme sans
-    // bruiter les logs. Pour les vraies erreurs (timeout, 500, quota…) on
-    // log pour pouvoir investiguer.
-    const msg = (linkError?.message ?? "").toLowerCase();
-    const isUserNotFound =
-      msg.includes("not found") || msg.includes("user_not_found");
-    if (!isUserNotFound) {
-      console.error(
-        "[auth/reset-password] generateLink error:",
-        linkError?.message,
-      );
+  if (!link.ok) {
+    // Cas "email inconnu" : attendu, réponse uniforme sans bruiter les logs.
+    // Vraies erreurs (timeout, 500, quota…) : log pour investiguer.
+    if (link.reason === "not_found") {
+      console.log("[auth/reset-password] Email inconnu (no-op)");
     } else {
-      console.log(`[auth/reset-password] Email inconnu : ${email} (no-op)`);
+      console.error("[auth/reset-password] generateLink error:", link.message);
     }
     return uniformResponse;
   }
 
-  const tokenHash = linkData.properties.hashed_token;
+  const tokenHash = link.hashedToken;
   const resetLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=recovery&next=/mon-compte/mot-de-passe`;
 
   // STEP 3 : envoie l'email via Resend

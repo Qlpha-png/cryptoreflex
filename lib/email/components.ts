@@ -10,6 +10,7 @@
  */
 
 import { EMAIL_TOKENS as T, BRAND_EMAIL } from "./tokens";
+import { generateUnsubscribeToken } from "@/lib/auth-tokens";
 
 /* -------------------------------------------------------------------------- */
 /*  Header — logo brand                                                       */
@@ -38,10 +39,12 @@ export function renderFooter({
   unsubscribeUrl,
   showSocial = false,
 }: FooterArgs): string {
-  const safeEmail = email.replace(/[<>"'&]/g, "");
+  // Token HMAC obligatoire : sans lui la route de désinscription refuse (403).
+  // On signe l'email BRUT (celui que la route vérifiera) ; encodeURIComponent
+  // suffit à neutraliser < > " ' & dans l'attribut href.
   const unsubUrl =
     unsubscribeUrl ||
-    `${BRAND_EMAIL.siteUrl}/api/email/unsubscribe?email=${encodeURIComponent(safeEmail)}`;
+    `${BRAND_EMAIL.siteUrl}/api/email/unsubscribe?email=${encodeURIComponent(email)}&token=${generateUnsubscribeToken(email)}`;
 
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${T.colors.bg};border-top:1px solid ${T.colors.border};">
   <tr><td align="center" style="padding:32px 24px;font-family:${T.fonts.sans};color:${T.colors.textMuted};font-size:13px;line-height:1.6;">

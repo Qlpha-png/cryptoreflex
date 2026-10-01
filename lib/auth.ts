@@ -110,28 +110,27 @@ export interface CryptoreflexUser {
   /** Nom d'affichage personnalisé (depuis users.display_name si présent, sinon
       dérivé de l'email avant @). */
   displayName: string;
-  /** True si l'utilisateur fait partie de la liste hardcodée admin (env var
-      ADMIN_EMAILS séparés par virgule, fallback : kevinvoisin2016@gmail.com). */
+  /** True si l'email est listé dans ADMIN_EMAILS (csv, pas de fallback) ET
+      a été vérifié (email_confirmed_at). */
   isAdmin: boolean;
 }
 
 /**
- * Liste des emails administrateurs. Lus depuis ADMIN_EMAILS env var (csv) ou
- * fallback hardcodé sur l'email du fondateur.
+ * Liste des emails administrateurs, lue depuis ADMIN_EMAILS env var (csv).
  *
- * Les admins ont accès gratuit à toutes les features Pro (pas besoin de payer
- * leur propre site) et au dashboard /admin.
+ * SÉCURITÉ (audit 2026-10-01) : plus AUCUN fallback hardcodé. Avant, si la
+ * variable disparaissait, des emails connus devenaient admin par défaut — et
+ * comme l'inscription ne vérifiait pas l'email, n'importe qui pouvait créer
+ * un compte avec une de ces adresses et obtenir le rôle admin.
+ * Variable absente = aucun admin (fail-closed).
  */
 function getAdminEmails(): string[] {
   const raw = process.env.ADMIN_EMAILS;
-  if (raw) {
-    return raw
-      .split(",")
-      .map((e) => e.trim().toLowerCase())
-      .filter(Boolean);
-  }
-  // Fallback : email fondateur (cohérent avec lib/brand.ts BRAND.email).
-  return ["kevinvoisin2016@gmail.com", "contact@cryptoreflex.fr"];
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
 }
 
 const ADMIN_EMAILS = new Set(getAdminEmails());
@@ -157,7 +156,9 @@ export async function getUser(): Promise<CryptoreflexUser | null> {
   if (!authUser) return null;
 
   const email = authUser.email ?? "";
-  const admin = isAdminEmail(email);
+  // Admin = email listé ET prouvé (email_confirmed_at). Un compte dont
+  // l'email n'a jamais été vérifié ne peut pas être admin.
+  const admin = isAdminEmail(email) && Boolean(authUser.email_confirmed_at);
 
   // Helper : dérive un display name lisible à partir de l'email + override
   // user_metadata.display_name (Supabase Auth permet de stocker des metadata

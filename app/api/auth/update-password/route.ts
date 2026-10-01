@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye plus tard." },
+      { error: "Trop de tentatives. Réessayez plus tard." },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     );
   }
@@ -96,9 +96,24 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.auth.updateUser({ password });
 
   if (error) {
+    // Refus « métier » de Supabase (mot de passe jugé faible / déjà fuité,
+    // identique à l'actuel) → message clair en 400, pas une fausse panne.
+    const code = (error as { code?: string }).code;
+    if (code === "weak_password") {
+      return NextResponse.json(
+        { error: "Mot de passe trop faible ou présent dans des fuites connues. Choisissez-en un autre." },
+        { status: 400 }
+      );
+    }
+    if (code === "same_password") {
+      return NextResponse.json(
+        { error: "Ce mot de passe est déjà le vôtre. Choisissez-en un nouveau." },
+        { status: 400 }
+      );
+    }
     console.error("[auth/update-password] updateUser error:", error.message);
     return NextResponse.json(
-      { error: "Erreur lors de la mise à jour. Réessaye plus tard." },
+      { error: "Erreur lors de la mise à jour. Réessayez plus tard." },
       { status: 500 }
     );
   }

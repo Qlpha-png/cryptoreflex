@@ -93,7 +93,8 @@ export async function POST(req: NextRequest) {
   const { data: publicUser, error: listError } = await admin
     .from("users")
     .select("id, email")
-    .ilike("email", email)
+    // `.eq` : en ilike, « _ » et « % » sont des jokers (plusieurs lignes possibles).
+    .eq("email", email)
     .maybeSingle();
 
   if (listError) {

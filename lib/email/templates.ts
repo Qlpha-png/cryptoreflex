@@ -96,6 +96,69 @@ ${SITE_URL}/confidentialite`,
 }
 
 /* -------------------------------------------------------------------------- */
+/*  0ter. CONFIRMATION D'INSCRIPTION — preuve de possession de l'email        */
+/* -------------------------------------------------------------------------- */
+
+export function signupConfirmEmail(opts: {
+  email: string;
+  confirmLink: string;
+}): EmailContent {
+  const subject = `Confirmez votre inscription à Cryptoreflex`;
+  const preheader = `Un clic pour activer votre compte. Lien sécurisé à usage unique.`;
+
+  const content = `
+<h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:${T.colors.text};font-weight:800;letter-spacing:-0.5px;">
+Plus qu'un clic&nbsp;✉️
+</h1>
+
+<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:${T.colors.text};">
+Confirmez votre adresse pour activer votre compte <strong style="color:${T.colors.primary};">Cryptoreflex</strong>. Vous choisirez ensuite votre mot de passe.
+</p>
+
+<p style="margin:0 0 28px;font-size:15px;line-height:1.65;color:${T.colors.textMuted};">
+Cette étape garantit que personne ne peut créer de compte avec votre email à votre place.
+</p>
+
+<div style="text-align:center;margin:32px 0 12px;">
+  ${renderButton({ href: opts.confirmLink, label: "Confirmer mon email →" })}
+</div>
+
+<p style="margin:14px 0 0;font-size:12px;color:${T.colors.textMuted};text-align:center;">
+Lien sécurisé · Usage unique
+</p>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${T.colors.surface};border:1px solid ${T.colors.border};border-radius:10px;margin:32px 0 24px;">
+  <tr><td style="padding:16px 20px;">
+    <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:${T.colors.textMuted};text-transform:uppercase;letter-spacing:1.2px;">Le bouton ne fonctionne pas&nbsp;?</p>
+    <p style="margin:0;font-size:12px;line-height:1.5;color:${T.colors.textMuted};word-break:break-all;">
+      <a href="${opts.confirmLink}" style="color:${T.colors.primary};text-decoration:underline;font-size:11px;">${opts.confirmLink}</a>
+    </p>
+  </td></tr>
+</table>
+
+<p style="margin:24px 0 6px;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
+<strong style="color:${T.colors.text};">Vous n'avez pas créé de compte&nbsp;?</strong> Ne cliquez pas : sans confirmation, le compte reste inactif.
+</p>
+`;
+
+  return {
+    subject,
+    preheader,
+    html: wrapEmail({ subject, preheader, content, email: opts.email }),
+    text: `Confirmez votre inscription à Cryptoreflex :
+${opts.confirmLink}
+
+Vous choisirez ensuite votre mot de passe. Lien sécurisé à usage unique.
+
+Vous n'avez pas créé de compte ? Ne cliquez pas : sans confirmation, le compte reste inactif.
+
+—
+Cryptoreflex EI · SIREN 103 352 621
+${SITE_URL}/confidentialite`,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
 /*  0bis. RESET PASSWORD — reinitialisation password                          */
 /* -------------------------------------------------------------------------- */
 

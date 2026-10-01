@@ -2,32 +2,21 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
-import {
-  Loader2,
-  CheckCircle2,
-  ArrowRight,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  Check,
-  X,
-} from "lucide-react";
+import { Loader2, CheckCircle2, ArrowRight, Mail, KeyRound } from "lucide-react";
 
 /**
- * SignupForm — Inscription email + mot de passe.
+ * SignupForm — Inscription « email d'abord ».
  *
- * Validation password live (UX inspirée Stripe, Notion) :
- *  - 8 caractères min
- *  - Mélange lettres + chiffres ou symboles
- *  - Indicateur de force visuel
+ * SÉCURITÉ (audit 2026-10-01) : aucun mot de passe n'est choisi avant la
+ * preuve de l'email. Sinon, un tiers pourrait inscrire l'adresse d'une
+ * victime avec SON mot de passe ; si la victime cliquait le lien reçu, le
+ * tiers aurait accès au compte. Le mot de passe se choisit juste après le
+ * clic (/mon-compte/mot-de-passe).
  *
- * Soumission → POST /api/auth/signup → confirmation email OU connexion directe.
+ * Soumission → POST /api/auth/signup → « vérifiez votre boîte mail ».
  */
 export default function SignupForm() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState<{
     needsConfirmation: boolean;
@@ -35,15 +24,8 @@ export default function SignupForm() {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const pwdChecks = {
-    length: password.length >= 8,
-    mix: /[a-zA-Z]/.test(password) && /[\d\W]/.test(password),
-  };
-  const pwdStrong = pwdChecks.length && pwdChecks.mix;
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!pwdStrong) return;
 
     setLoading(true);
     setError(null);
@@ -52,7 +34,7 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await res.json();
@@ -84,20 +66,20 @@ export default function SignupForm() {
           aria-hidden="true"
         />
         <h2 className="text-lg font-bold text-fg mb-2">
-          Compte créé&nbsp;!
+          Vérifiez votre boîte mail
         </h2>
         <p className="text-sm text-fg/75 leading-relaxed">
           {done.message} Le lien de confirmation expire dans 1&nbsp;heure.
         </p>
         <p className="mt-4 text-xs text-muted">
-          Pas reçu&nbsp;?{" "}
+          Pas reçu&nbsp;? Regardez dans les spams, ou{" "}
           <Link
             href="/connexion"
             className="text-primary-soft underline hover:text-primary"
           >
-            Vous pouvez vous connecter directement
-          </Link>{" "}
-          dès la confirmation.
+            recevez un lien de connexion
+          </Link>
+          .
         </p>
       </div>
     );
@@ -116,6 +98,7 @@ export default function SignupForm() {
             type="email"
             required
             aria-required="true"
+            aria-describedby="signup-pwd-note"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="votre@email.com"
@@ -126,66 +109,17 @@ export default function SignupForm() {
         </div>
       </label>
 
-      <label className="block">
-        <span className="block text-sm font-semibold text-fg mb-2">
-          Mot de passe
+      <p
+        id="signup-pwd-note"
+        className="flex items-start gap-2 text-xs text-fg/70 leading-relaxed"
+      >
+        <KeyRound className="h-3.5 w-3.5 mt-0.5 shrink-0 text-muted" aria-hidden="true" />
+        <span>
+          Vous choisirez votre mot de passe juste après avoir confirmé votre
+          email. C&apos;est ce qui empêche quiconque de créer un compte à votre
+          place.
         </span>
-        <div className="relative">
-          <Lock
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted"
-            aria-hidden="true"
-          />
-          <input
-            type={showPwd ? "text" : "password"}
-            required
-            aria-required="true"
-            aria-describedby={password.length > 0 ? "signup-pwd-rules" : undefined}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Au moins 8 caractères"
-            autoComplete="new-password"
-            minLength={8}
-            maxLength={72}
-            className="w-full rounded-lg border border-border bg-elevated pl-10 pr-11 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
-            disabled={loading}
-          />
-          <button
-            type="button"
-            // BATCH 25 a11y — stopPropagation pour éviter que le click bubble
-            // jusqu'au <label> parent et toggle le focus de l'input par
-            // accident. aria-pressed pour annoncer l'état toggle au SR.
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowPwd((v) => !v);
-            }}
-            // BATCH 47a a11y P0 — tap target 44x44 (h-9 w-9 dans un input
-            // h-12 = ne depasse pas, OK). Avant : 24px = WCAG 2.5.5 fail.
-            className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 text-muted hover:text-fg hover:bg-elevated focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none rounded-md transition-colors"
-            aria-label={
-              showPwd ? "Masquer le mot de passe" : "Afficher le mot de passe"
-            }
-            aria-pressed={showPwd}
-          >
-            {showPwd ? (
-              <EyeOff className="h-4 w-4" aria-hidden="true" />
-            ) : (
-              <Eye className="h-4 w-4" aria-hidden="true" />
-            )}
-          </button>
-        </div>
-
-        {/* Live validation — BATCH 25 a11y : id="signup-pwd-rules" lié à
-            l'input via aria-describedby, le SR annonce les règles vivantes. */}
-        {password.length > 0 && (
-          <div id="signup-pwd-rules" className="mt-2 space-y-1">
-            <PwdCheck ok={pwdChecks.length} label="8 caractères minimum" />
-            <PwdCheck
-              ok={pwdChecks.mix}
-              label="Lettres + chiffres ou symboles"
-            />
-          </div>
-        )}
-      </label>
+      </p>
 
       {error && (
         <p role="alert" className="text-sm text-danger">
@@ -195,7 +129,7 @@ export default function SignupForm() {
 
       <button
         type="submit"
-        disabled={loading || !email || !pwdStrong}
+        disabled={loading || !email}
         className="btn-primary btn-primary-shine w-full min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
@@ -229,22 +163,5 @@ export default function SignupForm() {
         .
       </p>
     </form>
-  );
-}
-
-function PwdCheck({ ok, label }: { ok: boolean; label: string }) {
-  return (
-    <div
-      className={`flex items-center gap-1.5 text-xs ${
-        ok ? "text-success" : "text-muted"
-      }`}
-    >
-      {ok ? (
-        <Check className="h-3 w-3" aria-hidden="true" />
-      ) : (
-        <X className="h-3 w-3" aria-hidden="true" />
-      )}
-      {label}
-    </div>
   );
 }

@@ -78,7 +78,8 @@ export function priceAlertHtml(ctx: PriceAlertEmailContext): string {
   const headline = `${esc(name)} est passé ${directionLabel} ${formatPrice(alert.threshold, alert.currency)}`;
 
   const detailUrl = `${BRAND.url}/cryptos/${esc(detailSlug)}`;
-  const manageUrl = `${BRAND.url}/alertes?email=${encodeURIComponent(alert.email)}`;
+  // Pas d'email en query string (donnée perso) : la gestion passe par la session.
+  const manageUrl = `${BRAND.url}/alertes`;
   const unsubscribeUrl = `${BRAND.url}/api/alerts/${esc(alert.id)}?token=${encodeURIComponent(unsubscribeToken)}&action=delete`;
   const logoUrl = `${BRAND.url}/logo.png`;
 

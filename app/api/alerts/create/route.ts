@@ -1,10 +1,13 @@
 /**
  * POST /api/alerts/create
  *
- * Body : { email, cryptoId, condition: "above"|"below", threshold, currency: "eur"|"usd" }
+ * Body : { cryptoId, condition: "above"|"below", threshold, currency: "eur"|"usd" }
  *
  * Sécurité :
- *  - Rate limit 10 req/min/IP (in-memory, même pattern que /api/newsletter/subscribe)
+ *  - Session obligatoire (audit 2026-10-01) : l'email destinataire est TOUJOURS
+ *    celui du compte connecté (prouvé par lien email). Avant, n'importe qui
+ *    pouvait abonner l'email d'un tiers à 100 alertes (harcèlement / spam).
+ *  - Rate limit 10 req/min/IP
  *  - CSRF léger : vérification du header `Origin` same-origin (skip si mocked)
  *  - Validation full côté serveur (jamais faire confiance au client)
  *
@@ -28,6 +31,9 @@ export const dynamic = "force-dynamic";
 
 // FIX P0 audit-fonctionnel-live-final #4 : namespace KV pour isoler les compteurs.
 const limiter = createRateLimiter({ limit: 10, windowMs: 60_000, key: "alerts-create" });
+// XP : même quota que /api/gamification/award (10 / jour / user) — sinon une
+// boucle créer/supprimer donnait de l'XP illimitée.
+const xpLimiter = createRateLimiter({ limit: 10, windowMs: 24 * 60 * 60 * 1000, key: "xp-alert_create" });
 
 /**
  * CSRF léger : on accepte uniquement les Origins same-host.
@@ -66,6 +72,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  const user = await getUser();
+  if (!user || !user.email) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Connectez-vous pour créer une alerte (un lien par email suffit, sans mot de passe).",
+      },
+      { status: 401 },
+    );
+  }
+
   // Parse body
   let payload: unknown;
   try {
@@ -79,14 +96,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const body = payload as {
-    email?: unknown;
     cryptoId?: unknown;
     condition?: unknown;
     threshold?: unknown;
     currency?: unknown;
   };
 
-  const email = typeof body.email === "string" ? body.email : "";
+  const email = user.email;
   const cryptoId = typeof body.cryptoId === "string" ? body.cryptoId : "";
   const condition = body.condition === "below" ? "below" : "above";
   const currency = body.currency === "usd" ? "usd" : "eur";
@@ -118,14 +134,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(result, { status: 400 });
   }
 
-  // Étude #16 ETUDE-2026-05-02 — gamification : award XP si l'user est
-  // authentifié Supabase (les alertes peuvent être créées par anonymes via
-  // email seul — dans ce cas, pas de XP). Best-effort, non bloquant.
+  // Étude #16 ETUDE-2026-05-02 — gamification : award XP. Best-effort, non bloquant.
   try {
-    const user = await getUser();
-    if (user) {
-      await awardXp(user.id, "alert_create");
-    }
+    if ((await xpLimiter(user.id)).ok) await awardXp(user.id, "alert_create");
   } catch (err) {
     console.warn(
       "[alerts/create] awardXp failed:",
@@ -145,8 +156,8 @@ export async function GET(): Promise<NextResponse> {
       service: "Alertes prix Cryptoreflex",
       method: "POST",
       contract: {
+        auth: "session Supabase requise (email = celui du compte)",
         body: {
-          email: "string",
           cryptoId: "string (CoinGecko id ou symbol ou slug Cryptoreflex)",
           condition: "above | below",
           threshold: "number > 0",

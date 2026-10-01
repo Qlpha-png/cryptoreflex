@@ -1,7 +1,7 @@
 /**
  * E2E — Create price alert
  *
- * Funnel testé : /alertes → fill email + crypto + seuil → submit →
+ * Funnel testé : /alertes (utilisateur connecté simulé) → crypto + seuil → submit →
  * vérifie que l'alerte apparaît dans la liste OU que le message succès s'affiche.
  *
  * Stratégie :
@@ -46,12 +46,15 @@ test.describe("Create price alert", () => {
         return;
       }
 
-      // GET — retourne la liste (vide avant création, contenant MOCK_ALERT après).
+      // GET /api/alerts/by-email — depuis l'audit sécurité 2026-10-01, l'email
+      // vient de la SESSION : la réponse 200 (avec email) simule un utilisateur
+      // connecté ; la liste est vide avant création, contient MOCK_ALERT après.
       await route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
           ok: true,
+          email: TEST_EMAIL,
           alerts: alertCreated ? [MOCK_ALERT] : [],
         }),
       });
@@ -64,10 +67,8 @@ test.describe("Create price alert", () => {
       page.getByRole("heading", { name: /alertes prix crypto/i }),
     ).toBeVisible();
 
-    // Fill email — input avec type=email dans AlertsManager.
-    const emailInput = page.locator('input[type="email"]').first();
-    await expect(emailInput).toBeVisible();
-    await emailInput.fill(TEST_EMAIL);
+    // Plus de champ email : l'adresse du compte connecté est affichée.
+    await expect(page.getByText(TEST_EMAIL).first()).toBeVisible();
 
     // Crypto : input texte de recherche (selector basé sur placeholder/aria).
     // On essaie d'abord par role combobox, fallback sur input recherche.

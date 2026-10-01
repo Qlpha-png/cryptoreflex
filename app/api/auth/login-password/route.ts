@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const rlIp = await ipLimiter(ip);
   if (!rlIp.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye dans 15 minutes." },
+      { error: "Trop de tentatives. Réessayez dans 15 minutes." },
       { status: 429, headers: { "Retry-After": String(rlIp.retryAfter) } }
     );
   }
@@ -77,22 +77,40 @@ export async function POST(req: NextRequest) {
   const rlEmail = await emailLimiter(`email:${email}`);
   if (!rlEmail.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye dans 15 minutes." },
+      { error: "Trop de tentatives. Réessayez dans 15 minutes." },
       { status: 429, headers: { "Retry-After": String(rlEmail.retryAfter) } }
     );
   }
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
+  const notConfirmedResponse = NextResponse.json(
+    {
+      error:
+        "Email non confirmé : cliquez le lien reçu à l'inscription, ou utilisez « Mot de passe oublié » pour en recevoir un nouveau.",
+    },
+    { status: 403 }
+  );
+
   if (error) {
     console.error("[auth/login-password] signInWithPassword error:", error.message);
+    if (error.message.toLowerCase().includes("not confirmed")) {
+      return notConfirmedResponse;
+    }
     return NextResponse.json(
       { error: "Identifiants invalides." },
       { status: 401 }
     );
+  }
+
+  // SÉCURITÉ (audit 2026-10-01) : même si le projet Supabase auto-confirme,
+  // aucune session n'est donnée à un compte dont l'email n'a jamais été prouvé.
+  if (!data.user?.email_confirmed_at) {
+    await supabase.auth.signOut();
+    return notConfirmedResponse;
   }
 
   // FIX critique : applique les cookies set par signInWithPassword sur la response.

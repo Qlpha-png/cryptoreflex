@@ -1,174 +1,132 @@
 /**
- * /api/email/unsubscribe — Désinscription RGPD en 1 clic.
+ * /api/email/unsubscribe — Désinscription RGPD (art. 21) + One-Click RFC 8058.
  *
- * Endpoint requis par RFC 8058 (List-Unsubscribe-Post One-Click) pour
- * la conformité Gmail bulk sender 2024+.
+ * URL présente dans le header List-Unsubscribe et le pied de chaque email
+ * (lib/email/client.ts, lib/email/components.ts) : ?email=…&token=… (HMAC).
  *
- * Comportement :
- *  - GET ?email=xxx : page HTML simple confirmant la désinscription
- *  - POST : same effect, no-cache (pour les outils anti-spam Gmail)
- *
- * Action : marque le user en "unsubscribed" dans Supabase pour ne plus
- * recevoir d'emails marketing (les emails transactionnels — facture,
- * échec paiement — restent obligatoires car liés à l'exécution du contrat).
+ * Comportement (audit sécurité 2026-10-01) :
+ *  - GET  (clic sur le lien du pied d'email) → page de CONFIRMATION avec un
+ *    bouton, sans rien modifier. Les scanners de liens (Outlook Safe Links,
+ *    antivirus) ouvrent les URL des emails : un GET qui désinscrit les
+ *    désinscrirait à l'insu des destinataires.
+ *  - POST (bouton de la page, ou POST « List-Unsubscribe=One-Click » des
+ *    messageries) → désinscription effective :
+ *      1. users.unsubscribed_at = maintenant (comptes Cryptoreflex) ;
+ *      2. statut « inactive » dans Beehiiv (newsletter + séquences email),
+ *         sinon la désinscription n'avait AUCUN effet sur les envois.
+ *  - Token HMAC exigé dans tous les cas (plus de contournement « formulaire »).
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { verifyUnsubscribeToken } from "@/lib/auth-tokens";
+import { unsubscribeFromBeehiiv } from "@/lib/beehiiv";
+import { confirmActionPage, resultPage, HTML_HEADERS } from "@/lib/confirm-action-page";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/**
- * P0 SECURITY FIX (audit backend 30/04/2026) :
- *
- * Avant cette refonte, GET ?email= et POST ?email= désinscrivaient n'importe
- * quel email passé en query SANS aucune vérification HMAC, sans rate-limit.
- * Un attaquant ou un bot malveillant pouvait désinscrire en boucle tous les
- * abonnés (DOS marketing + violation RGPD : on perdait la trace du
- * consentement explicite).
- *
- * Maintenant : on exige un token HMAC signé pour l'email cible (pattern déjà
- * implémenté dans /api/newsletter/unsubscribe). Le token est généré par
- * `generateUnsubscribeToken(email)` et inclus dans chaque email marketing
- * (List-Unsubscribe header + lien footer).
- *
- * RFC 8058 (One-Click Unsubscribe Gmail) : le POST sans token est toléré
- * UNIQUEMENT si la requête vient de Gmail/anti-spam (List-Unsubscribe-Post
- * header), sinon on exige le token aussi.
- */
-function isGmailOneClickRequest(req: NextRequest): boolean {
-  // RFC 8058 : Gmail/Yahoo POSTent avec Content-Type form-data + body
-  // `List-Unsubscribe=One-Click`. On le tolère sans token car la signature
-  // de l'email DKIM/SPF a déjà été vérifiée côté MTA.
-  const ct = req.headers.get("content-type") ?? "";
-  return ct.includes("multipart/form-data") || ct.includes("application/x-www-form-urlencoded");
-}
-
 async function handleUnsubscribe(email: string): Promise<{ success: boolean }> {
+  const normalized = email.toLowerCase().trim();
+  let ok = true;
+
   const supabase = createSupabaseServiceRoleClient();
-  if (!supabase) return { success: false };
-
-  // On stocke la désinscription dans la table users
-  // (colonne `unsubscribed_at` — à ajouter au schema si pas encore fait)
-  const { error } = await supabase
-    .from("users")
-    .update({
-      unsubscribed_at: new Date().toISOString(),
-    })
-    .eq("email", email.toLowerCase().trim());
-
-  if (error && error.code !== "PGRST116") {
-    // PGRST116 = no row found, OK car user peut être inconnu
-    console.error("[unsubscribe] update échoué:", error);
-    return { success: false };
+  if (supabase) {
+    const { error } = await supabase
+      .from("users")
+      .update({ unsubscribed_at: new Date().toISOString() })
+      .eq("email", normalized);
+    // PGRST116 = aucune ligne : l'email peut ne pas avoir de compte, c'est normal.
+    if (error && error.code !== "PGRST116") {
+      console.error("[unsubscribe] update users échoué:", error.message);
+      ok = false;
+    }
   }
 
-  return { success: true };
+  const beehiiv = await unsubscribeFromBeehiiv(normalized);
+  if (!beehiiv.ok) {
+    console.error("[unsubscribe] Beehiiv a échoué pour un token valide");
+    ok = false;
+  }
+  return { success: ok };
+}
+
+function invalidPage(status: number) {
+  return new NextResponse(
+    resultPage({
+      title: "Lien invalide",
+      message: "Ce lien de désinscription est invalide ou incomplet. Pour toute demande : contact@cryptoreflex.fr",
+    }),
+    { status, headers: HTML_HEADERS },
+  );
 }
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const email = url.searchParams.get("email");
   const token = url.searchParams.get("token");
+  if (!email || !token) return invalidPage(400);
+  if (!verifyUnsubscribeToken(email, token)) return invalidPage(403);
 
-  if (!email || !token) {
-    return new NextResponse(
-      `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;">
-      <h1>Lien invalide</h1>
-      <p>Le lien de désinscription est invalide ou expiré. Contactez-nous : contact@cryptoreflex.fr</p>
-      </body></html>`,
-      { status: 400, headers: { "Content-Type": "text/html; charset=utf-8" } }
-    );
-  }
-
-  // P0 SECURITY FIX : on exige une signature HMAC valide pour l'email cible.
-  if (!verifyUnsubscribeToken(email, token)) {
-    return new NextResponse(
-      `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;">
-      <h1>Signature invalide</h1>
-      <p>Le lien de désinscription est invalide ou expiré. Pour toute question : contact@cryptoreflex.fr</p>
-      </body></html>`,
-      { status: 403, headers: { "Content-Type": "text/html; charset=utf-8" } }
-    );
-  }
-
-  await handleUnsubscribe(email);
-
+  // Aucune modification ici : on demande confirmation (cf. en-tête).
   return new NextResponse(
-    `<!DOCTYPE html><html><head><title>Désinscription confirmée — Cryptoreflex</title></head><body style="font-family:sans-serif;max-width:600px;margin:60px auto;padding:0 20px;color:#0a0a0a;line-height:1.6;">
-    <h1 style="color:#F59E0B;">✓ Désinscription confirmée</h1>
-    <p>Votre adresse <strong>${escapeHtml(email)}</strong> a été désinscrite de la newsletter Cryptoreflex.</p>
-    <p>Vos éventuelles alertes de prix continuent de fonctionner — vous pouvez les gérer ou les supprimer à tout moment depuis la page Alertes.</p>
-    <p>Pour supprimer complètement votre compte (RGPD), écrivez à <a href="mailto:hello@cryptoreflex.fr">hello@cryptoreflex.fr</a>.</p>
-    <p style="margin-top:40px;font-size:12px;color:#71757D;"><a href="https://www.cryptoreflex.fr">Retour sur cryptoreflex.fr</a></p>
-    </body></html>`,
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "no-store",
-      },
-    }
+    confirmActionPage({
+      title: "Se désinscrire ?",
+      message: `Vous ne recevrez plus d'emails d'information de Cryptoreflex à l'adresse ${email.trim().toLowerCase()}. Vos éventuelles alertes de prix restent actives.`,
+      actionUrl: `${url.pathname}${url.search}`,
+      buttonLabel: "Confirmer la désinscription",
+    }),
+    { status: 200, headers: HTML_HEADERS },
   );
 }
 
 export async function POST(req: NextRequest) {
-  // RFC 8058 : One-Click Unsubscribe via POST.
-  // Le body peut être form-data (Gmail) ou JSON.
+  // RFC 8058 : email + token sont dans l'URL (header List-Unsubscribe).
+  // Repli : formulaire ou JSON portant email/token.
   const url = new URL(req.url);
   let email = url.searchParams.get("email");
   let token = url.searchParams.get("token");
-  const isGmailRequest = isGmailOneClickRequest(req);
+  const ct = req.headers.get("content-type") ?? "";
+  const wantsJson = ct.includes("application/json");
 
-  if (!email) {
+  if (!email || !token) {
     try {
-      const formData = await req.formData();
-      email = formData.get("email")?.toString() || null;
-      token = token ?? formData.get("token")?.toString() ?? null;
-    } catch {
-      // try JSON
-      try {
+      if (wantsJson) {
         const json = await req.json();
-        email = json.email;
+        email = email ?? json.email ?? null;
         token = token ?? json.token ?? null;
-      } catch {
-        email = null;
+      } else {
+        const form = await req.formData();
+        email = email ?? form.get("email")?.toString() ?? null;
+        token = token ?? form.get("token")?.toString() ?? null;
       }
+    } catch {
+      /* corps absent ou illisible */
     }
   }
 
-  if (!email) {
-    return NextResponse.json({ error: "Email required" }, { status: 400 });
-  }
-
-  // P0 SECURITY FIX : on exige le token sauf pour les POST Gmail RFC 8058
-  // (Gmail valide DKIM/SPF côté MTA donc on lui fait confiance pour le
-  // List-Unsubscribe-Post=One-Click). Toute autre requête doit présenter
-  // un HMAC valide.
-  if (!isGmailRequest) {
-    if (!token || !verifyUnsubscribeToken(email, token)) {
-      return NextResponse.json(
-        { error: "Invalid or missing token" },
-        { status: 403 }
-      );
-    }
+  if (!email || !token || !verifyUnsubscribeToken(email, token)) {
+    return wantsJson
+      ? NextResponse.json({ error: "Invalid or missing token" }, { status: 403 })
+      : invalidPage(403);
   }
 
   const { success } = await handleUnsubscribe(email);
-
-  if (!success) {
-    return NextResponse.json({ error: "Unsubscribe failed" }, { status: 500 });
+  if (wantsJson) {
+    return success
+      ? NextResponse.json({ ok: true, message: "Unsubscribed" })
+      : NextResponse.json({ error: "Unsubscribe failed" }, { status: 500 });
   }
-
-  return NextResponse.json({ ok: true, message: "Unsubscribed" });
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return new NextResponse(
+    success
+      ? resultPage({
+          title: "Désinscription confirmée",
+          message: "C'est fait : vous ne recevrez plus d'emails d'information de Cryptoreflex. Vos alertes de prix éventuelles restent actives et se gèrent depuis la page Alertes.",
+        })
+      : resultPage({
+          title: "Désinscription en cours",
+          message: "Votre demande est enregistrée mais un service n'a pas répondu. Nous la traitons manuellement ; vous pouvez aussi écrire à contact@cryptoreflex.fr.",
+        }),
+    { status: success ? 200 : 500, headers: HTML_HEADERS },
+  );
 }

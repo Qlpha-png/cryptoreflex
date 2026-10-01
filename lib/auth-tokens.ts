@@ -34,9 +34,11 @@ const UNSUBSCRIBE_NAMESPACE = "unsubscribe";
  * emails, et l'endpoint /api/newsletter/unsubscribe vit sur localhost.
  */
 function getSecret(): string {
+  // `||` et non `??` : une variable définie mais VIDE (ex. `UNSUBSCRIBE_SECRET=`
+  // copié de .env.example) donnerait une clé HMAC "" → jetons forgeables.
   return (
-    process.env.UNSUBSCRIBE_SECRET ??
-    process.env.CRON_SECRET ??
+    process.env.UNSUBSCRIBE_SECRET ||
+    process.env.CRON_SECRET ||
     "dev-only-unsubscribe-secret-do-not-use-in-prod"
   );
 }
@@ -76,6 +78,12 @@ export function generateUnsubscribeToken(email: string): string {
  */
 export function verifyUnsubscribeToken(email: string, token: string): boolean {
   if (!email || !token) return false;
+  // SÉCURITÉ (audit 2026-10-01) : sans secret, la signature retombe sur une
+  // constante publique (forgeable). En production on refuse tout.
+  if (!process.env.UNSUBSCRIBE_SECRET && !process.env.CRON_SECRET && process.env.NODE_ENV === "production") {
+    console.error("[auth-tokens] UNSUBSCRIBE_SECRET et CRON_SECRET absents en production — token refusé.");
+    return false;
+  }
   let expected: string;
   try {
     expected = generateUnsubscribeToken(email);

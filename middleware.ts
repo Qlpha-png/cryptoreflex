@@ -55,16 +55,37 @@ function isCrossSiteMutation(request: NextRequest): boolean {
   // Embed widgets : intentionnellement cross-origin (frame-ancestors *).
   if (path.startsWith("/api/embed/")) return false;
 
+  // Liens signés HMAC (désinscription / suppression d'alerte depuis un email) :
+  // le jeton est la preuve, l'Origin n'apporte rien (et vaut parfois « null »).
+  // Jeton NON vide exigé ; pour les alertes, uniquement le POST de suppression
+  // (pas /create ni /by-email).
+  const token = request.nextUrl.searchParams.get("token")?.trim();
+  if (
+    token &&
+    (path === "/api/email/unsubscribe" ||
+      path === "/api/newsletter/unsubscribe" ||
+      (method === "POST" &&
+        request.nextUrl.searchParams.get("action") === "delete" &&
+        /^\/api\/alerts\/(?!create$|by-email$)[^/]+$/.test(path)))
+  ) {
+    return false;
+  }
+
   const origin = request.headers.get("origin");
   if (!origin) {
     // Same-origin POST / fetch SSR : pas d'Origin sent, on accepte.
     return false;
   }
-  // Vercel preview : *.vercel.app pour les branches non-prod.
-  if (origin.endsWith(".vercel.app") && origin.includes("cryptoreflex")) {
-    return false;
+  // AUDIT 2026-10-01 : plus de joker *.vercel.app — un tiers peut réserver
+  // « cryptoreflex-xxx.vercel.app ». Liste exacte, ou même hôte que la requête
+  // (déploiements de préproduction) : un site tiers ne peut pas forger ça.
+  if (ALLOWED_ORIGINS.has(origin)) return false;
+  try {
+    if (new URL(origin).host === request.headers.get("host")) return false;
+  } catch {
+    // Origin « null » ou mal formé → traité comme cross-site.
   }
-  return !ALLOWED_ORIGINS.has(origin);
+  return true;
 }
 
 export async function middleware(request: NextRequest) {
@@ -180,6 +201,9 @@ export const config = {
     // Avant : ces routes faisaient un Supabase JWT round-trip à chaque hit
     // (TTFB +30 à +60ms inutile). Maintenant : middleware skipped, latence
     // p50 alignée sur le reste des SEO routes déjà exclues.
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
+    // AUDIT 2026-10-01 : `api/news/` AVEC le slash — sans lui, le préfixe
+    // excluait aussi /api/newsletter/* (POST abonnement/désabonnement) du
+    // contrôle CSRF ci-dessus.
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
   ],
 };

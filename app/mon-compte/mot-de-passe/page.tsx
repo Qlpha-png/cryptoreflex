@@ -9,7 +9,7 @@ import UpdatePasswordForm from "@/components/auth/UpdatePasswordForm";
 
 export const metadata: Metadata = {
   title: "Mot de passe — Mon compte",
-  description: "Définis ou modifie votre mot de passe Cryptoreflex.",
+  description: "Définissez ou modifiez votre mot de passe Cryptoreflex.",
   alternates: { canonical: `${BRAND.url}/mon-compte/mot-de-passe` },
   robots: { index: false, follow: false },
 };
@@ -43,7 +43,7 @@ export default async function MotDePassePage() {
             Définir un <span className="gradient-text">mot de passe</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
-            Pour te connecter sans attendre un email à chaque fois.
+            Pour vous connecter sans attendre un email à chaque fois.
           </p>
         </div>
 

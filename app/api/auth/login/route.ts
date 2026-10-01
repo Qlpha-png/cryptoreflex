@@ -15,7 +15,10 @@
  *
  * SECURITE :
  *  - Email enumeration prevention : on repond 200 OK meme si email inconnu
- *  - Si user inexistant : admin.generateLink le cree (shouldCreateUser default)
+ *  - Si user inexistant : créé ici (createUser, confirmé, sans mot de passe)
+ *    AVANT generateLink — sinon GoTrue le crée en type « signup » et le jeton
+ *    ne correspond plus au type=magiclink du lien.
+ *  - Compte non confirmé : mot de passe neutralisé (lib/auth-guards.ts)
  *  - Rate limiting : 5 tentatives / 15 min / IP
  *  - Token unique 1-shot, expire 1h (gere par Supabase)
  */
@@ -24,6 +27,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
+import { generateSafeEmailLink } from "@/lib/auth-guards";
 import { magicLinkEmail } from "@/lib/email/templates";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
@@ -43,7 +47,7 @@ export async function POST(req: NextRequest) {
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Réessaye dans quelques minutes." },
+      { error: "Trop de tentatives. Réessayez dans quelques minutes." },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
     );
   }
@@ -71,17 +75,21 @@ export async function POST(req: NextRequest) {
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
 
-  // STEP 1 : verifie si user existe (admin.generateLink ne cree pas auto).
+  // STEP 1 : verifie si user existe (pour le créer nous-mêmes s'il est absent).
   //
   // P1 FIX (audit backend 30/04/2026) — N+1 / O(n) sur chaque login.
   // Avant : listUsers({ perPage: 1000 }).find() = telecharge 1000 users
   // a chaque login + scan JS lineaire. Casse silencieusement >1000 users.
   // Maintenant : query directe sur public.users (indexee sur email) +
   // fallback listUsers si la table publique est vide (cas post-creation).
+  // AUDIT 2026-10-01 : `.eq` et non `.ilike` (« _ » et « % » sont des jokers
+  // en ilike → plusieurs lignes → maybeSingle en erreur). Une ligne ratée ne
+  // coûte qu'un createUser refusé (« already ») : la protection du compte, elle,
+  // est faite par generateSafeEmailLink sur auth.users.
   const { data: publicUser } = await admin
     .from("users")
     .select("id, email")
-    .ilike("email", email)
+    .eq("email", email)
     .maybeSingle();
   const existingUser = publicUser ? { email: publicUser.email } : null;
 
@@ -106,25 +114,22 @@ export async function POST(req: NextRequest) {
   // action_link pointe vers Supabase /verify qui redirige avec hash fragment
   // (illisible serveur). Avec hashed_token + verifyOtp dans notre callback,
   // on contourne ce probleme et on set la session via cookies.
-  const { data: linkData, error: linkError } =
-    await admin.auth.admin.generateLink({
-      type: "magiclink",
-      email,
-      options: {
-        redirectTo: `${siteUrl}/api/auth/callback`,
-      },
-    });
+  // SÉCURITÉ (audit 2026-10-01) : compte non confirmé → mot de passe posé sans
+  // preuve neutralisé AVANT l'émission du lien ; toute erreur = pas d'email.
+  const link = await generateSafeEmailLink(
+    admin,
+    "magiclink",
+    email,
+    `${siteUrl}/api/auth/callback`,
+  );
 
-  if (linkError || !linkData?.properties?.hashed_token) {
-    Sentry.captureException(
-      linkError ?? new Error("generateLink returned no hashed_token"),
-      {
-        tags: { route: "auth/login", stage: "generateLink" },
-        extra: { emailDomain: email.split("@")[1] ?? "unknown" },
-        level: "error",
-      },
-    );
-    console.error("[auth/login] generateLink error:", linkError?.message);
+  if (!link.ok) {
+    Sentry.captureException(new Error(`generateSafeEmailLink: ${link.message}`), {
+      tags: { route: "auth/login", stage: "generateLink" },
+      extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+      level: "error",
+    });
+    console.error("[auth/login] generateLink error:", link.message);
     return NextResponse.json({
       ok: true,
       message: "Si ce compte existe, un email de connexion a été envoyé.",
@@ -133,7 +138,7 @@ export async function POST(req: NextRequest) {
 
   // Build NOTRE URL : pointe direct sur /api/auth/callback avec token_hash.
   // Le callback fera verifyOtp() qui set le cookie session puis redirige.
-  const tokenHash = linkData.properties.hashed_token;
+  const tokenHash = link.hashedToken;
   const magicLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=/mon-compte`;
 
   // STEP 3 : envoie l'email via NOTRE Resend (qui marche)
@@ -154,7 +159,7 @@ export async function POST(req: NextRequest) {
     });
     console.error("[auth/login] sendEmail error:", result.error);
     return NextResponse.json(
-      { error: "Erreur d'envoi du lien. Réessaye dans quelques instants." },
+      { error: "Erreur d'envoi du lien. Réessayez dans quelques instants." },
       { status: 500 }
     );
   }

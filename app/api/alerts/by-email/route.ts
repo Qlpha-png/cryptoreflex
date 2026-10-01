@@ -1,18 +1,19 @@
 /**
- * GET /api/alerts/by-email?email=...
+ * GET /api/alerts/by-email
  *
- * Lecture publique des alertes d'un email.
- * - Pas de mot de passe : on assume que l'email est déjà la "clé" (UX self-service).
- * - Pour limiter le scraping, on rate-limit par IP (30 req/min).
- * - Aucune info sensible n'est exposée hors champs déjà connus du user.
+ * Liste les alertes du compte connecté.
  *
- * Note RGPD : si une personne soupçonne qu'un email tiers a été abonné sans consentement,
- * elle peut consulter cette URL et déclencher la suppression via le lien d'opt-out
- * envoyé dans chaque email. Conforme.
+ * SÉCURITÉ (audit 2026-10-01) : avant, `?email=` suffisait — n'importe qui
+ * pouvait lire les alertes (cryptos suivies, seuils) de n'importe quel email,
+ * et récupérer leurs identifiants pour les supprimer. Désormais l'email est
+ * TOUJOURS celui de la session (prouvé par lien email). Le paramètre `email`
+ * reste toléré pour compatibilité mais doit correspondre au compte.
+ * Rate limit conservé (30 req/min/IP).
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getAlertsByEmail, isValidEmail } from "@/lib/alerts";
+import { getAlertsByEmail } from "@/lib/alerts";
+import { getUser } from "@/lib/auth";
 import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
@@ -34,6 +35,7 @@ function rateLimit(key: string): boolean {
   return true;
 }
 
+const NO_STORE = { "Cache-Control": "private, no-store" };
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   if (!rateLimit(getClientIp(req))) {
@@ -43,17 +45,26 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const email = req.nextUrl.searchParams.get("email")?.trim().toLowerCase() ?? "";
-  if (!isValidEmail(email)) {
+  const user = await getUser();
+  if (!user || !user.email) {
     return NextResponse.json(
-      { ok: false, error: "Email manquant ou invalide.", alerts: [] },
-      { status: 400 },
+      { ok: false, error: "Connexion requise.", alerts: [] },
+      { status: 401, headers: NO_STORE },
+    );
+  }
+
+  const email = user.email.trim().toLowerCase();
+  const asked = req.nextUrl.searchParams.get("email")?.trim().toLowerCase();
+  if (asked && asked !== email) {
+    return NextResponse.json(
+      { ok: false, error: "Accès refusé.", alerts: [] },
+      { status: 403, headers: NO_STORE },
     );
   }
 
   const alerts = await getAlertsByEmail(email);
   return NextResponse.json(
-    { ok: true, alerts, count: alerts.length },
-    { status: 200, headers: { "Cache-Control": "no-store" } },
+    { ok: true, email, alerts, count: alerts.length },
+    { status: 200, headers: NO_STORE },
   );
 }

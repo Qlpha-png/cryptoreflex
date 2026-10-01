@@ -26,6 +26,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
+import { resolveSameOriginRedirect } from "@/lib/safe-redirect";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -71,14 +72,13 @@ export async function GET(req: NextRequest) {
   // `/` mais pas `//` (qui serait `//evil.com`), pas `/\\` ni `/\` (que
   // certains navigateurs Safari/Chrome legacy normalisent en `//evil.com`).
   // Tout le reste tombe sur le défaut `/mon-compte`.
-  const rawNext = url.searchParams.get("next") ?? "/mon-compte";
-  const isSafePath =
-    rawNext.startsWith("/") &&
-    !rawNext.startsWith("//") &&
-    !rawNext.startsWith("/\\") &&
-    !rawNext.startsWith("/%2f") && // décodage `/` — `/%2fevil.com`
-    !rawNext.startsWith("/%5c"); // décodage `\` — `/%5cevil.com`
-  const next = isSafePath ? rawNext : "/mon-compte";
+  // AUDIT 2026-10-01 : la liste de préfixes interdits était contournable
+  // (`/%09/evil.com`) → résolution + exigence de MÊME origine, cf.
+  // lib/safe-redirect.ts (testé dans tests/lib/auth-security.test.ts).
+  const redirectTarget = resolveSameOriginRedirect(
+    url.searchParams.get("next"),
+    url.origin,
+  );
 
   let authError: string | null = null;
 
@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Redirect avec session cookies appliques + headers de securite
-  const response = NextResponse.redirect(new URL(next, req.url));
+  const response = NextResponse.redirect(redirectTarget);
   response.headers.set("Referrer-Policy", "no-referrer");
   response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
   return applyCookies(response);

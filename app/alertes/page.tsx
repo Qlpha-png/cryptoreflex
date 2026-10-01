@@ -36,7 +36,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_URL = `${BRAND.url}/alertes`;
 
 export const metadata: Metadata = {
-  title: "Alertes prix crypto par email — gratuites, sans compte",
+  title: "Alertes prix crypto par email — gratuites, sans mot de passe",
   description:
     "Créez vos alertes prix crypto en 30 secondes. Recevez un email dès que Bitcoin, Ethereum ou n'importe quelle crypto franchit votre seuil — gratuit, sans pub, désinscription en 1 clic.",
   alternates: withHreflang(PAGE_URL),
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     title: "Alertes prix crypto par email — gratuites",
     description:
-      "Soyez prévenu·e par email dès qu'une crypto franchit votre seuil. Gratuit, sans compte, RGPD-friendly.",
+      "Soyez prévenu·e par email dès qu'une crypto franchit votre seuil. Gratuit, sans mot de passe, RGPD-friendly.",
   },
   keywords: [
     "alerte prix bitcoin",
@@ -65,11 +65,11 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Comment fonctionnent les alertes prix Cryptoreflex ?",
-    a: "Vous choisissez une crypto, un seuil (par exemple Bitcoin > 50 000 €), vous indiquez votre email, et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
+    a: "Vous vous connectez (un lien par email, sans mot de passe), vous choisissez une crypto et un seuil (par exemple Bitcoin > 50 000 €), et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
   },
   {
     q: "Faut-il créer un compte ?",
-    a: "Non. Aucun mot de passe, aucun compte. Votre email est l'unique identifiant de vos alertes. Vous pouvez les retrouver à tout moment en saisissant votre email sur cette page.",
+    a: "Un compte gratuit, mais sans mot de passe : vous saisissez votre email sur la page de connexion et cliquez le lien reçu. Cette vérification garantit que personne d'autre ne peut lire, créer ou supprimer des alertes à votre nom.",
   },
   {
     q: "Combien d'alertes puis-je créer ?",
@@ -77,7 +77,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Comment me désinscrire ?",
-    a: "Chaque email d'alerte contient un lien direct \"désactiver cette alerte\" — un clic suffit. Vous pouvez aussi supprimer toutes vos alertes depuis cette page, sans email de confirmation.",
+    a: "Chaque email d'alerte contient un lien direct \"désactiver cette alerte\" — un clic suffit. Une fois connecté, vous pouvez aussi supprimer vos alertes depuis cette page.",
   },
   {
     q: "Cryptoreflex stocke-t-il mon email ?",
@@ -153,7 +153,7 @@ export default async function AlertesPage() {
         <header className="mt-6">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft uppercase tracking-wider">
             <Bell className="h-3.5 w-3.5" aria-hidden="true" />
-            100 % gratuit · Sans compte
+            100 % gratuit · Sans mot de passe
           </span>
           <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
             Créez vos <span className="gradient-text">alertes prix crypto</span>

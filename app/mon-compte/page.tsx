@@ -298,7 +298,7 @@ export default async function AccountPage() {
             <h2 className="font-bold text-fg">Sécurité</h2>
           </div>
           <p className="text-sm text-fg/70 leading-relaxed mb-4">
-            Définis un mot de passe pour te connecter sans attendre un email à
+            Définissez un mot de passe pour vous connecter sans attendre un email à
             chaque fois. Vous pouvez aussi continuer à utiliser le lien magique si
             vous préférez.
           </p>

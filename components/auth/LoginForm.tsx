@@ -101,7 +101,7 @@ export default function LoginForm() {
         />
         <h2 className="text-lg font-bold text-fg mb-2">Email envoyé&nbsp;!</h2>
         <p className="text-sm text-fg/75 leading-relaxed">
-          Vérifie votre boîte mail (et vos spams) — clique sur le lien pour te
+          Vérifiez votre boîte mail (et vos spams) — cliquez sur le lien pour vous
           connecter. Le lien expire dans 1 heure.
         </p>
         <p className="mt-4 text-xs text-muted">
@@ -114,7 +114,7 @@ export default function LoginForm() {
             }}
             className="text-primary-soft underline hover:text-primary"
           >
-            Utilise plutôt votre mot de passe
+            Utilisez plutôt votre mot de passe
           </button>
         </p>
       </div>

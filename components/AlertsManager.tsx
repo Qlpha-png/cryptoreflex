@@ -47,8 +47,6 @@ interface PriceAlert {
   status: "active" | "triggered" | "paused";
 }
 
-const EMAIL_LS_KEY = "cr:alerts:email:v1";
-
 /* -------------------------------------------------------------------------- */
 /*  Helpers UI                                                                */
 /* -------------------------------------------------------------------------- */
@@ -78,8 +76,6 @@ function formatRelativeTime(ts: number): string {
   return `il y a ${d} j`;
 }
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
 /* -------------------------------------------------------------------------- */
 /*  Component                                                                 */
 /* -------------------------------------------------------------------------- */
@@ -92,6 +88,10 @@ export default function AlertsManager({ cryptos }: Props) {
   const searchParams = useSearchParams();
 
   const [hydrated, setHydrated] = useState(false);
+  // SÉCURITÉ (audit 2026-10-01) : l'email vient TOUJOURS de la session
+  // (/api/me). Plus de saisie libre : on ne peut ni lire ni créer d'alertes
+  // pour l'email d'un tiers.
+  const [auth, setAuth] = useState<"loading" | "anon" | "user">("loading");
   const [email, setEmail] = useState("");
   const [cryptoQuery, setCryptoQuery] = useState("");
   const [selectedCryptoId, setSelectedCryptoId] = useState<string>("");
@@ -113,15 +113,10 @@ export default function AlertsManager({ cryptos }: Props) {
   useEffect(() => {
     setHydrated(true);
 
-    // 1) Email persisté
-    try {
-      const stored = window.localStorage.getItem(EMAIL_LS_KEY);
-      if (stored && EMAIL_REGEX.test(stored)) setEmail(stored);
-    } catch {
-      /* localStorage indispo (Safari privé) — silencieux */
-    }
+    // 1) Session + liste : /api/alerts/by-email (no-store) → 401 = anonyme.
+    fetchAlerts();
 
-    // 2) Pré-remplissage depuis ?cryptoId=... ou ?email=...
+    // 2) Pré-remplissage depuis ?cryptoId=...
     const qpCrypto = searchParams?.get("cryptoId");
     if (qpCrypto) {
       const match = cryptos.find(
@@ -135,8 +130,6 @@ export default function AlertsManager({ cryptos }: Props) {
         setCryptoQuery(`${match.name} (${match.symbol})`);
       }
     }
-    const qpEmail = searchParams?.get("email");
-    if (qpEmail && EMAIL_REGEX.test(qpEmail)) setEmail(qpEmail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -162,48 +155,32 @@ export default function AlertsManager({ cryptos }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* --------- Fetch alertes existantes pour l'email courant ----------------- */
-  const fetchAlerts = useCallback(async (mail: string) => {
-    if (!EMAIL_REGEX.test(mail)) {
-      setAlerts([]);
-      setListState("idle");
-      return;
-    }
+  /* --------- Fetch alertes du compte connecté ------------------------------ */
+  const fetchAlerts = useCallback(async () => {
     setListState("loading");
     setListError("");
     try {
-      const res = await fetch(
-        `/api/alerts/by-email?email=${encodeURIComponent(mail)}`,
-        { cache: "no-store" },
-      );
+      const res = await fetch("/api/alerts/by-email", { cache: "no-store" });
+      if (res.status === 401) {
+        setAuth("anon");
+        setAlerts([]);
+        setListState("idle");
+        return;
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as { ok: boolean; alerts: PriceAlert[] };
+      const data = (await res.json()) as { ok: boolean; email?: string; alerts: PriceAlert[] };
+      if (data.email) setEmail(data.email);
+      setAuth("user");
       setAlerts(Array.isArray(data.alerts) ? data.alerts : []);
       setListState((data.alerts?.length ?? 0) > 0 ? "ready" : "empty");
     } catch (err) {
       setListError(err instanceof Error ? err.message : "Erreur réseau");
       setListState("error");
+      // Session inconnue (réseau) : on sort de l'état de chargement.
+      setAuth((prev) => (prev === "loading" ? "anon" : prev));
     }
   }, []);
 
-  // Refetch quand l'email valide change (debounce 400 ms)
-  useEffect(() => {
-    if (!hydrated) return;
-    const t = setTimeout(() => {
-      if (EMAIL_REGEX.test(email)) {
-        try {
-          window.localStorage.setItem(EMAIL_LS_KEY, email);
-        } catch {
-          /* noop */
-        }
-        fetchAlerts(email);
-      } else {
-        setAlerts([]);
-        setListState("idle");
-      }
-    }, 400);
-    return () => clearTimeout(t);
-  }, [email, hydrated, fetchAlerts]);
 
   /* --------- Filtrage suggestions crypto ---------------------------------- */
   const filteredCryptos = useMemo(() => {
@@ -239,10 +216,9 @@ export default function AlertsManager({ cryptos }: Props) {
       setSubmitMsg("Sélectionnez une crypto dans la liste.");
       return;
     }
-    const trimmedEmail = email.trim();
-    if (!EMAIL_REGEX.test(trimmedEmail)) {
+    if (auth !== "user") {
       setSubmitState("error");
-      setSubmitMsg("Adresse email invalide.");
+      setSubmitMsg("Connectez-vous pour créer une alerte.");
       return;
     }
     const cleanedThreshold = threshold.replace(/\s/g, "").replace(",", ".");
@@ -259,7 +235,6 @@ export default function AlertsManager({ cryptos }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: trimmedEmail,
           cryptoId: selectedCryptoId,
           condition,
           threshold: num,
@@ -276,7 +251,7 @@ export default function AlertsManager({ cryptos }: Props) {
       setSubmitMsg("Alerte créée. Vous recevrez un email quand le seuil sera atteint.");
       setThreshold("");
       // Refresh la liste
-      fetchAlerts(trimmedEmail);
+      fetchAlerts();
     } catch (err) {
       setSubmitState("error");
       setSubmitMsg(err instanceof Error ? err.message : "Erreur réseau");
@@ -289,7 +264,7 @@ export default function AlertsManager({ cryptos }: Props) {
     );
     if (!confirmed) return;
     try {
-      // Same-origin : pas besoin de token (le serveur fait le check Origin).
+      // Session propriétaire (cookie) : pas besoin de token.
       // Le token signé est réservé au lien one-click depuis l'email.
       const res = await fetch(`/api/alerts/${encodeURIComponent(target.id)}`, {
         method: "DELETE",
@@ -309,7 +284,7 @@ export default function AlertsManager({ cryptos }: Props) {
   }, [alerts]);
 
   const fillIndicator =
-    selectedCryptoId && Number(threshold) > 0 && EMAIL_REGEX.test(email);
+    selectedCryptoId && Number(threshold) > 0 && auth === "user";
 
   /* --------- Render ------------------------------------------------------- */
 
@@ -472,29 +447,29 @@ export default function AlertsManager({ cryptos }: Props) {
             Sépare les milliers par espace ou virgule (ex : 50 000 ou 50,5).
           </p>
 
-          {/* Email */}
-          <div>
-            <label htmlFor="alert-email" className="block text-sm font-medium text-fg/85 mb-1.5">
-              Votre adresse email
-            </label>
-            <input
-              id="alert-email"
-              type="email"
-              autoComplete="email"
-              required
-              aria-required="true"
-              placeholder="prenom@email.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (submitState === "error") setSubmitState("idle");
-              }}
-              className="w-full rounded-xl bg-background border border-border px-3 py-2.5 text-sm text-fg
-                         placeholder:text-muted focus:outline-none focus:border-primary/60
-                         focus:ring-2 focus:ring-primary/30
-                         focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            />
-          </div>
+          {/* Email = celui du compte connecté */}
+          {auth === "user" ? (
+            <p className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-fg/85">
+              Alertes envoyées à <strong className="text-fg">{email}</strong>
+            </p>
+          ) : auth === "anon" ? (
+            <div className="rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-fg/85">
+              <p>
+                Connectez-vous pour créer vos alertes : un lien par email suffit,{" "}
+                <strong>sans mot de passe</strong>. Personne d'autre ne peut ainsi
+                voir ou modifier vos alertes.
+              </p>
+              <a
+                href="/connexion"
+                className="mt-2 inline-flex items-center gap-1.5 font-semibold text-primary-soft underline hover:text-primary"
+              >
+                Me connecter
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            </div>
+          ) : (
+            <div className="h-11 animate-pulse rounded-xl bg-elevated/40" aria-hidden="true" />
+          )}
 
           {/* Submit + feedback */}
           <div>
@@ -567,13 +542,15 @@ export default function AlertsManager({ cryptos }: Props) {
           )}
         </header>
 
-        {!hydrated ? (
+        {!hydrated || auth === "loading" ? (
           <div className="mt-6">
             <Skeleton />
           </div>
-        ) : !email || !EMAIL_REGEX.test(email) ? (
+        ) : auth === "anon" ? (
           <p className="mt-6 text-sm text-muted">
-            Saisissez votre email dans le formulaire pour voir vos alertes.
+            <a href="/connexion" className="underline hover:text-fg">Connectez-vous</a>{" "}
+            pour voir et gérer vos alertes. Chaque email d'alerte contient aussi un
+            lien de désactivation en 1 clic.
           </p>
         ) : listState === "loading" ? (
           <div className="mt-6">

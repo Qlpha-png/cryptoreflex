@@ -3,9 +3,11 @@
  *
  * Deux modes :
  *
- *   1. GET  ?email=xxx&token=xxx  — one-click depuis un lien email.
+ *   1. GET  ?email=xxx&token=xxx  — lien depuis un email.
  *      • Validation du token HMAC (timingSafe) côté serveur.
- *      • Si valide → unsubscribe Beehiiv + page HTML de confirmation.
+ *      • Si valide → page de CONFIRMATION (bouton) ; le POST de ce bouton
+ *        (même URL) désinscrit de Beehiiv. Un GET seul ne modifie rien
+ *        (scanners de liens, audit 2026-10-01).
  *      • Si invalide → 404 (pas de leak sur l'existence du compte).
  *
  *   2. POST { email }  — formulaire web depuis /confidentialite ou similaire.
@@ -36,6 +38,7 @@ import { sendEmail } from "@/lib/email/client";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { BRAND } from "@/lib/brand";
+import { confirmActionPage, HTML_HEADERS } from "@/lib/confirm-action-page";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -156,8 +159,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Token valide — appel Beehiiv. Si Beehiiv échoue on log mais on confirme
-  // quand même côté UX (l'utilisateur a légitimement validé son token).
+  // SÉCURITÉ (audit 2026-10-01) : le GET ne désinscrit plus. Les scanners de
+  // liens ouvrent les URL des emails ; on affiche une confirmation et seul le
+  // POST du bouton (même URL, token inclus) exécute la désinscription.
+  return new NextResponse(
+    confirmActionPage({
+      title: "Se désinscrire de la newsletter ?",
+      message: `L'adresse ${email} ne recevra plus la newsletter ni les séquences d'emails de ${BRAND.name}.`,
+      actionUrl: `${req.nextUrl.pathname}${req.nextUrl.search}`,
+      buttonLabel: "Confirmer la désinscription",
+    }),
+    { status: 200, headers: HTML_HEADERS },
+  );
+}
+
+/** Désinscription effective (POST confirmé, token valide). */
+async function performUnsubscribe(email: string): Promise<NextResponse> {
+  // Si Beehiiv échoue on log mais on confirme quand même côté UX (l'utilisateur
+  // a légitimement validé son token).
   const result = await unsubscribeFromBeehiiv(email);
   if (!result.ok) {
     console.error("[newsletter/unsubscribe] beehiiv failed but token valid", {
@@ -183,6 +202,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 /* -------------------------------------------------------------------------- */
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Bouton de la page de confirmation : email + token dans l'URL → action directe.
+  const qEmail = (req.nextUrl.searchParams.get("email") ?? "").trim().toLowerCase();
+  const qToken = (req.nextUrl.searchParams.get("token") ?? "").trim();
+  if (qEmail && qToken) {
+    if (!EMAIL_REGEX.test(qEmail) || !verifyUnsubscribeToken(qEmail, qToken)) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return performUnsubscribe(qEmail);
+  }
+
   // Rate limit pour éviter qu'un attaquant nous fasse spammer des emails.
   const ip = getClientIp(req);
   const rl = await postLimiter(ip);

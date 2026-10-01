@@ -18,6 +18,7 @@
 
 import { Resend } from "resend";
 import { BRAND_EMAIL } from "./tokens";
+import { generateUnsubscribeToken } from "@/lib/auth-tokens";
 
 let _resend: Resend | null = null;
 
@@ -37,6 +38,12 @@ export interface SendEmailOptions {
   text: string;
   /** Pre-header (preview text Gmail/Outlook), 60 chars max — deja inclus dans html. */
   preheader?: string;
+  /**
+   * URL one-click (RFC 8058) propre à cet email, signée. Par défaut : la
+   * désinscription générale. Les alertes prix passent la suppression de
+   * l'alerte concernée (sinon « se désabonner » dans Gmail ne coupait pas l'alerte).
+   */
+  listUnsubscribeUrl?: string;
 }
 
 /**
@@ -95,7 +102,8 @@ export async function sendEmail(opts: SendEmailOptions): Promise<{
       text: opts.text,
       headers: {
         // RFC 8058 List-Unsubscribe pour Gmail bulk sender compliance 2024+
-        "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>, <${SITE_URL}/api/email/unsubscribe?email=${encodeURIComponent(opts.to)}>`,
+        // Token HMAC obligatoire (la route refuse toute désinscription sans lui).
+        "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>, <${opts.listUnsubscribeUrl ?? `${SITE_URL}/api/email/unsubscribe?email=${encodeURIComponent(opts.to)}&token=${generateUnsubscribeToken(opts.to)}`}>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
         // Feedback-ID pour Gmail Postmaster Tools (improve deliverability monitoring)
         "Feedback-ID": `transactional:cryptoreflex:${Date.now()}`,

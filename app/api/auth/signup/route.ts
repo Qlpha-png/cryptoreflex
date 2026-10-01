@@ -1,31 +1,39 @@
 /**
- * /api/auth/signup — Inscription par email + mot de passe (sans SMTP).
+ * /api/auth/signup — Inscription « email d'abord », AVEC vérification de
+ * l'email (Supabase SMTP contourné : l'email part via Resend).
  *
- * Flow (bypass SMTP entièrement) :
- *  1. POST { email, password }
- *  2. admin.createUser({ email, password, email_confirm: true })
- *     → user créé immédiatement comme confirmé, AUCUN email envoyé
- *  3. signInWithPassword({ email, password })
- *     → Supabase set le cookie de session (collecté par applyCookies)
- *  4. Réponse 200 → client redirect /mon-compte
+ * Flow :
+ *  1. POST { email } (un éventuel `password` envoyé par un ancien client est ignoré)
+ *  2. admin.createUser({ email, password: <aléatoire jetable>, email_confirm: false })
+ *     → compte créé NON confirmé : impossible de s'y connecter tant que
+ *       l'email n'est pas prouvé (cf. /api/auth/login-password).
+ *  3. admin.generateLink({ type: "signup" }) → hashed_token
+ *  4. Email Resend avec /api/auth/callback?token_hash=…&type=signup
+ *     → verifyOtp confirme l'email + ouvre la session
+ *     → /mon-compte/mot-de-passe : l'utilisateur choisit SON mot de passe.
+ *  5. Réponse { needsConfirmation: true } → SignupForm affiche « vérifiez
+ *     votre boîte mail ».
  *
- * FIX cookies : le helper createRouteHandlerClient bind les cookies set par
- * Supabase sur la NextResponse explicitement, sinon Next 14 ne les propage
- * pas (le user pense etre connecte mais le cookie n'arrive jamais cote browser).
- *
- * SÉCURITÉ :
- *  - Rate limit : 20 inscriptions / heure / IP (large, anti-spam reel)
- *  - Si email existe deja → tente signInWithPassword. Si match → connecte.
- *    Sinon → message clair "compte existant, /connexion ou /mot-de-passe-oublie".
- *  - Service role utilise UNIQUEMENT pour createUser cote serveur.
+ * SÉCURITÉ (audit 2026-10-01) — avant, le compte était créé « confirmé »
+ * sans aucune preuve : n'importe qui pouvait s'inscrire avec l'email d'un
+ * tiers (dont un email admin). Désormais :
+ *  - Rate limit : 20 inscriptions / heure / IP.
+ *  - Email déjà inscrit → 409 « compte existant » (aucune tentative de
+ *    connexion ici, pas d'oracle de mot de passe).
+ *  - AUCUN mot de passe choisi avant la preuve de l'email : si un tiers
+ *    inscrit l'adresse d'une victime et que celle-ci clique le lien, le tiers
+ *    n'a rien pour se connecter (il ne connaît pas le mot de passe jetable).
+ *  - Service role utilisé UNIQUEMENT côté serveur.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { createRouteHandlerClient } from "@/lib/supabase/route-handler";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { sendEmail } from "@/lib/email/client";
+import { signupConfirmEmail } from "@/lib/email/templates";
+import { randomPassword } from "@/lib/auth-guards";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -36,20 +44,6 @@ const limiter = createRateLimiter({
   key: "auth-signup-v2",
 });
 
-
-function isPasswordStrong(pwd: string): { ok: boolean; reason?: string } {
-  if (pwd.length < 8) return { ok: false, reason: "Au moins 8 caractères." };
-  if (pwd.length > 72) return { ok: false, reason: "Maximum 72 caractères." };
-  const hasLetter = /[a-zA-Z]/.test(pwd);
-  const hasDigitOrSym = /[\d\W]/.test(pwd);
-  if (!hasLetter || !hasDigitOrSym) {
-    return {
-      ok: false,
-      reason: "Mélange lettres et chiffres ou symboles requis.",
-    };
-  }
-  return { ok: true };
-}
 
 function isUserExistsError(message: string): boolean {
   const m = message.toLowerCase();
@@ -71,18 +65,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const client = createRouteHandlerClient(req);
   const admin = createSupabaseServiceRoleClient();
 
-  if (!client || !admin) {
+  if (!admin) {
     return NextResponse.json(
       { error: "Inscription temporairement indisponible." },
       { status: 503 }
     );
   }
-  const { supabase, applyCookies } = client;
 
-  let body: { email?: string; password?: string };
+  let body: { email?: string };
   try {
     body = await req.json();
   } catch {
@@ -90,96 +82,106 @@ export async function POST(req: NextRequest) {
   }
 
   const email = body.email?.trim().toLowerCase();
-  const password = body.password;
 
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
-  if (!password) {
-    return NextResponse.json({ error: "Mot de passe requis" }, { status: 400 });
-  }
 
-  const pwdCheck = isPasswordStrong(password);
-  if (!pwdCheck.ok) {
-    return NextResponse.json({ error: pwdCheck.reason }, { status: 400 });
-  }
+  // Mot de passe jetable : l'utilisateur choisit le sien APRÈS avoir prouvé
+  // l'email (/mon-compte/mot-de-passe). Personne ne connaît celui-ci.
+  const password = randomPassword();
 
-  // STEP 1 : créer le user via admin API (bypass SMTP)
+  const existingAccountResponse = NextResponse.json(
+    {
+      error:
+        "Cet email a déjà un compte. Allez sur /connexion pour vous connecter, ou utilisez « Mot de passe oublié ».",
+    },
+    { status: 409 }
+  );
+
+  // STEP 1 : créer le user NON confirmé via admin API
   const { data: createData, error: createError } =
     await admin.auth.admin.createUser({
       email,
       password,
-      email_confirm: true,
+      email_confirm: false,
     });
 
   if (createError) {
-    // Skip "user déjà existant" (cas attendu, pas une erreur infrastructure).
-    if (!isUserExistsError(createError.message)) {
-      Sentry.captureException(createError, {
-        tags: { route: "auth/signup", stage: "createUser" },
-        extra: { emailDomain: email.split("@")[1] ?? "unknown" },
-        level: "error",
-      });
-    }
-    console.error("[auth/signup] createUser error:", createError.message);
-
     if (isUserExistsError(createError.message)) {
-      // Tente login avec le password fourni (peut-etre meme pwd ou user a deja set son pwd)
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (!signInError) {
-        return applyCookies(
-          NextResponse.json({ ok: true, message: "Connexion réussie." })
-        );
-      }
-
-      return NextResponse.json(
-        {
-          error:
-            "Cet email a déjà un compte. Allez sur /connexion pour vous connecter, ou utilisez « Mot de passe oublié ».",
-        },
-        { status: 409 }
-      );
+      // Compte existant : pas de tentative de connexion ici (sinon cette route
+      // servirait à tester des mots de passe sans la limite par email de
+      // /api/auth/login-password). L'utilisateur passe par /connexion.
+      return existingAccountResponse;
     }
 
+    Sentry.captureException(createError, {
+      tags: { route: "auth/signup", stage: "createUser" },
+      extra: { emailDomain: email.split("@")[1] ?? "unknown" },
+      level: "error",
+    });
+    console.error("[auth/signup] createUser error:", createError.message);
     return NextResponse.json(
-      { error: `Erreur lors de l'inscription : ${createError.message}` },
+      { error: "Erreur lors de l'inscription. Réessayez dans quelques instants." },
       { status: 500 }
     );
   }
 
-  if (!createData?.user) {
+  const userId = createData?.user?.id;
+  if (!userId) {
     return NextResponse.json(
       { error: "Erreur lors de la création du compte." },
       { status: 500 }
     );
   }
 
-  // STEP 2 : user créé, on le connecte (signInWithPassword set les cookies)
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (signInError) {
-    Sentry.captureException(signInError, {
-      tags: { route: "auth/signup", stage: "signInAfterCreate" },
+  // Échec après création → on supprime le compte pour permettre un nouvel essai.
+  const rollback = async (stage: string, err: unknown) => {
+    Sentry.captureException(err instanceof Error ? err : new Error(String(err)), {
+      tags: { route: "auth/signup", stage },
       extra: { emailDomain: email.split("@")[1] ?? "unknown" },
       level: "error",
     });
-    console.error("[auth/signup] signInWithPassword after create:", signInError.message);
-    return NextResponse.json({
-      ok: true,
-      needsLogin: true,
-      message: "Compte créé. Allez sur /connexion pour vous connecter.",
+    console.error(`[auth/signup] ${stage} failed:`, err);
+    await admin.auth.admin.deleteUser(userId).catch(() => undefined);
+    return NextResponse.json(
+      { error: "Impossible d'envoyer l'email de confirmation. Réessayez dans quelques instants." },
+      { status: 500 }
+    );
+  };
+
+  // STEP 2 : lien de confirmation (hashed_token → verifyOtp dans le callback)
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
+  const { data: linkData, error: linkError } =
+    await admin.auth.admin.generateLink({
+      type: "signup",
+      email,
+      password,
+      options: { redirectTo: `${siteUrl}/api/auth/callback` },
     });
+  const tokenHash = linkData?.properties?.hashed_token;
+  if (linkError || !tokenHash) {
+    return rollback("generateLink", linkError ?? "no hashed_token");
+  }
+  const confirmLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=signup&next=/mon-compte/mot-de-passe`;
+
+  // STEP 3 : email via Resend
+  const tmpl = signupConfirmEmail({ email, confirmLink });
+  const sent = await sendEmail({
+    to: email,
+    subject: tmpl.subject,
+    preheader: tmpl.preheader,
+    html: tmpl.html,
+    text: tmpl.text,
+  });
+  if (!sent.ok) {
+    return rollback("sendEmail", sent.error ?? "unknown");
   }
 
-  // FIX critique : applique les cookies set par signInWithPassword sur la response
-  return applyCookies(
-    NextResponse.json({ ok: true, message: "Compte créé. Vous êtes connecté." })
-  );
+  return NextResponse.json({
+    ok: true,
+    needsConfirmation: true,
+    message: `Un lien de confirmation vient d'être envoyé à ${email}. Cliquez dessus pour activer votre compte, puis choisissez votre mot de passe.`,
+  });
 }

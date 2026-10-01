@@ -4,18 +4,23 @@
  * Diagnostic léger : test instantané du quota CoinGecko depuis le serveur.
  * Indique si l'IP est ban (429 immédiat) ou OK (200 + payload).
  *
- * Usage :
- *   curl https://www.cryptoreflex.fr/api/diag/api-usage
+ * Usage (protégé depuis l'audit 2026-10-01 — chaque appel consomme du quota
+ * CoinGecko/CryptoCompare/KV, ne doit pas être déclenchable par n'importe qui) :
+ *   curl -H "Authorization: Bearer $CRON_SECRET" https://www.cryptoreflex.fr/api/diag/api-usage
  *
  * Réponse : { coingeckoStatus, kvStaticDetails, kvTickerPrices, durationMs }
  */
 
 import { NextResponse } from "next/server";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: Request): Promise<NextResponse> {
+  if (!verifyBearer(req, process.env.CRON_SECRET)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const startedAt = Date.now();
   const checks: Record<string, unknown> = {};
 

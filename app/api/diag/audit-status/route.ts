@@ -1,9 +1,10 @@
 /**
  * GET /api/diag/audit-status
  *
- * Endpoint public léger pour voir l'état du système de monitoring crypto.
- * Tu peux le hit à tout moment via :
- *   curl https://www.cryptoreflex.fr/api/diag/audit-status
+ * État du système de monitoring crypto. Protégé (audit 2026-10-01) : avant,
+ * endpoint public → requêtes base + scan KV `KEYS` déclenchables à volonté
+ * par n'importe qui (coût / DoS) et fuite d'infos internes.
+ *   curl -H "Authorization: Bearer $CRON_SECRET" https://www.cryptoreflex.fr/api/diag/audit-status
  *
  * Renvoie :
  *   - Nombre de fiches needs_review (à reviewer manuellement)
@@ -14,11 +15,15 @@
 
 import { NextResponse } from "next/server";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: Request): Promise<NextResponse> {
+  if (!verifyBearer(req, process.env.CRON_SECRET)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const out: Record<string, unknown> = {};
 
   // 1. Fiches needs_review
