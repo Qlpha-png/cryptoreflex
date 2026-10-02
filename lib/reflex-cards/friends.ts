@@ -17,6 +17,8 @@ export interface FriendsDb {
   remove(player: string, code: string): Promise<string>;
   list(player: string): Promise<FriendRow[]>;
   cards(player: string): Promise<{ pid: string; card_id: string }[]>;
+  /** fiche publique d'une partie (pseudo, perso, boosters ouverts, premier jour) — appelée seulement pour un ami accepté */
+  profile(pid: string): Promise<{ pseudo: string; perso: Record<string, unknown> | null; opened: number; first_day: string } | null>;
 }
 /** la migration des amis n'est pas encore passée en base : l'onglet Amis reste caché */
 export class FriendsNotReady extends Error {}
@@ -38,7 +40,27 @@ export function supabaseFriendsDb(sb: SupabaseClient): FriendsDb {
     remove: (p, c) => rpc<string>("rc_friend_remove", { p_me: p, p_code: c }),
     list: (p) => rpc<FriendRow[]>("rc_friend_list", { p_me: p }),
     cards: (p) => rpc<{ pid: string; card_id: string }[]>("rc_friend_cards", { p_me: p }),
+    async profile(pid) {
+      const { data, error } = await sb.from("rc_players").select("pseudo,perso,opened,first_day").eq("player_id", pid).maybeSingle();
+      if (error) { if (missing(error)) throw new FriendsNotReady(error.message); throw new Error(error.message); }
+      return (data as { pseudo: string; perso: Record<string, unknown> | null; opened: number; first_day: string } | null) ?? null;
+    },
   };
+}
+
+/** le profil d'un ami : son Panthéon (ou ses plus belles cartes), toute sa collection — pour la visiter sans tourner de pages */
+export interface FriendProfile { code: string; pseudo: string; since: string; title: string | null; pantheon: string[]; opened: number; firstDay: string; cards: string[] }
+/** null : ce joueur n'est pas (ou plus) un ami accepté — on ne révèle rien */
+export async function friendProfile(db: FriendsDb, me: string, code: string): Promise<FriendProfile | null> {
+  const f = (await db.list(me)).find((r) => r.code === code && r.status === "accepted");
+  if (!f) return null;
+  const [p, all] = await Promise.all([db.profile(f.pid), db.cards(me)]);
+  if (!p) return null;
+  const cards = all.filter((c) => c.pid === f.pid && CARD.get(c.card_id)).map((c) => c.card_id);
+  const own = new Set(cards), perso = p.perso ?? {};
+  /* clés du Panthéon : « édition|carte » (itemKey du jeu) ; seules les cartes qu'il possède encore comptent */
+  const pantheon = (Array.isArray(perso.pantheon) ? perso.pantheon : []).map(String).filter((k) => own.has(k.split("|")[1] ?? "")).slice(0, 3);
+  return { code, pseudo: p.pseudo, since: f.since, title: typeof perso.title === "string" ? perso.title : null, pantheon, opened: p.opened, firstDay: String(p.first_day).slice(0, 10), cards };
 }
 
 /* Lien d'invitation (Kev 02/10) = le code ami SIGNÉ. L'ouvrir rend amis tout de suite : c'est le joueur qui a partagé

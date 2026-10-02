@@ -28,5 +28,13 @@ export function seasonDay(now: Date = new Date()): number {
   return Math.max(0, Math.min(d, SEASON_DAYS));
 }
 
+/** la date d'un jour de saison, en clair (« 9 oct. », ou « 9 octobre » en long) ; null avant la date de lancement */
+export function dayDate(day: number, long = false): string | null {
+  const L = launchDate();
+  if (!L || !Number.isFinite(day)) return null;
+  const d = new Date(Date.parse(L) + (day - 1) * 86_400_000);
+  return d.toLocaleDateString("fr-FR", { timeZone: "UTC", day: "numeric", month: long ? "long" : "short" });
+}
+
 /** le jeu est-il ouvert ? (formulations « bientôt » / « nouveau ») */
 export const isLaunched = (now: Date = new Date()): boolean => seasonDay(now) >= 1;

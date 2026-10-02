@@ -138,6 +138,21 @@ describe("Reflex Cards — Amis", () => {
     as("A"); expect((await post({ a: "invitation", tok: a.invite })).j.error).toMatch(/propre lien/);
     expect((await pg.query("select count(*)::int as n from public.rc_friends")).rows[0]).toEqual(n0);
   });
+  it("profil d'un ami : pseudo, boosters ouverts, toutes ses cartes ; refusé pour un non-ami ou un code invalide", async () => {
+    as("A");
+    const r = await amis.GET(mk(`/api/cartes/amis?profil=${codeB.toLowerCase()}`));
+    const j = await r.json();
+    expect(r.status).toBe(200);
+    expect(j.profil).toMatchObject({ code: codeB, pseudo: "Joueur", title: null, pantheon: [], opened: 3, firstDay: "2026-10-03" });
+    const own = (await pg.query("select count(*)::int as n from public.rc_cards c join public.rc_players p using(player_id) where p.owner=$1 and c.n>0", [USERS.B])).rows[0] as { n: number };
+    expect(j.profil.cards).toHaveLength(own.n);
+    expect(new Set(j.profil.cards).size).toBe(own.n);
+    expect(JSON.stringify(j.profil)).not.toMatch(/player_id|owner|@/); // rien d'interne, pas d'e-mail
+    /* B a refusé C : C ne voit pas le profil de B ; code invalide : refus clair */
+    as("C");
+    expect((await amis.GET(mk(`/api/cartes/amis?profil=${codeB}`))).status).toBe(404);
+    expect((await amis.GET(mk("/api/cartes/amis?profil=abc"))).status).toBe(422);
+  });
   it("limite : 20 demandes par 24 h", async () => {
     const me = (await pg.query("select player_id from public.rc_players where owner=$1", [USERS.C])).rows[0] as { player_id: string };
     /* 21 comptes de test, puis la règle vérifiée directement en SQL */

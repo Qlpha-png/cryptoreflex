@@ -27,6 +27,7 @@ import {
 } from "@/lib/reflex-cards/data";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import { reflexAccountsMode } from "@/lib/reflex-cards/flag";
+import { dayDate } from "@/lib/reflex-cards/season";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
 
 /**
@@ -212,7 +213,7 @@ export default function CartesPage() {
             <table className="w-full min-w-[560px] text-sm">
               <thead className="bg-surface text-left text-xs uppercase tracking-wide text-muted">
                 <tr>
-                  <th className="px-4 py-3">Jour</th>
+                  <th className="px-4 py-3">Sortie</th>
                   <th className="px-4 py-3">Collection</th>
                   <th className="px-4 py-3">Cartes</th>
                   <th className="px-4 py-3">Têtes d&apos;affiche</th>
@@ -221,7 +222,7 @@ export default function CartesPage() {
               <tbody>
                 {REFLEX_PARTS.map((p) => (
                   <tr key={p.jour} className="border-t border-border">
-                    <td className="px-4 py-2.5 font-semibold text-fg">J{p.jour}</td>
+                    <td className="px-4 py-2.5 font-semibold text-fg">{dayDate(p.jour) ?? `Jour ${p.jour}`}</td>
                     <td className="px-4 py-2.5 text-fg/80">{p.collection} · partie {p.partie}</td>
                     <td className="px-4 py-2.5 text-fg/80">{p.taille}</td>
                     <td className="px-4 py-2.5">

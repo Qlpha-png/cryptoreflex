@@ -1,6 +1,7 @@
 /**
  * /api/cartes/amis — les amis Reflex Cards (phase B2, 1re partie).
  *   GET  : mon code ami, mon jeton d'invitation (code signé), mes amis (aperçu de leur collection), demandes reçues et envoyées ;
+ *   GET ?profil=CODE : le profil d'un ami ACCEPTÉ (pseudo, titre, Panthéon, toutes ses cartes) ; 404 sinon ;
  *   POST : { a: "demande", code } | { a: "repondre", code, ok } | { a: "retirer", code } | { a: "invitation", tok } → { ok, msg, list }.
  *   « invitation » = lien ouvert : amis tout de suite (l'inviteur a partagé son lien) ; « demande » = code saisi : l'autre accepte.
  * Compte Cryptoreflex obligatoire (jamais d'invité). Tant que la migration des amis n'est pas passée en base :
@@ -10,7 +11,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isReflexCardsEnabled, reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { NO_STORE, SessionError, errorJson, gameCtx, resolvePlayer, type Who } from "@/lib/reflex-cards/session";
 import { supabaseGameDb } from "@/lib/reflex-cards/store";
-import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendsView, inviteCode, inviteToken, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
+import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendProfile, friendsView, inviteCode, inviteToken, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 
@@ -44,6 +45,15 @@ export async function GET(req: NextRequest) {
   try {
     const r = await who(req);
     w = r.w;
+    /* ?profil=CODE : le profil et toute la collection d'un ami accepté (Kev 03/10) */
+    const profil = req.nextUrl.searchParams.get("profil");
+    if (profil !== null) {
+      const code = profil.toUpperCase().replace(/\s+/g, "");
+      if (!FRIEND_CODE_RE.test(code)) return w.finish(NextResponse.json({ ok: false, error: "Un code ami fait 8 caractères (lettres et chiffres)." }, { status: 422, headers: NO_STORE }));
+      const p = await friendProfile(r.fdb, w.player!, code);
+      if (!p) return w.finish(NextResponse.json({ ok: false, error: "Ce joueur n'est pas (ou plus) dans vos amis." }, { status: 404, headers: NO_STORE }));
+      return w.finish(NextResponse.json({ ok: true, profil: p }, { headers: NO_STORE }));
+    }
     return w.finish(NextResponse.json({ ok: true, ...(await view(r.fdb, w.player!)) }, { headers: NO_STORE }));
   } catch (e) {
     if (e instanceof FriendsNotReady) return w ? w.finish(notReady()) : notReady();

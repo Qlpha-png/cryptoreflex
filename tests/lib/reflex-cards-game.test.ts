@@ -85,6 +85,24 @@ describe("Reflex Cards — page du jeu : rien ne fuit", () => {
     }
   });
 
+  it("dates de sortie en clair : jour de saison → date (« 9 oct. » / « 9 octobre »), null avant le lancement", async () => {
+    const { dayDate } = await import("@/lib/reflex-cards/season");
+    const prev = process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
+    try {
+      process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "2026-10-02";
+      expect(dayDate(1)).toBe("2 oct.");
+      expect(dayDate(8, true)).toBe("9 octobre");
+      expect(dayDate(31)).toBe("1 nov.");
+      expect(dayDate(90, true)).toBe("30 décembre");
+      process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "";
+      delete process.env.REFLEX_CARDS_LAUNCH_DATE;
+      expect(dayDate(1)).toBeNull();
+    } finally {
+      if (prev === undefined) delete process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
+      else process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = prev;
+    }
+  });
+
   it("données sûres dans un <script>", () => {
     for (const day of [1, 90]) expect(gameDataScript(day)).not.toMatch(/<\/script|<!--/i);
   });
