@@ -13,3 +13,14 @@ export function isReflexCardsEnabled(): boolean {
   /* trim : une valeur saisie avec un retour à la ligne (« true\n ») allume quand même le jeu */
   return process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED?.trim() === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
 }
+
+/**
+ * Comptes joueurs (phase B, SERVEUR uniquement) — REFLEX_CARDS_ACCOUNTS :
+ *  - « true »  : la partie de chacun vit sur le serveur (invité ou compte) ;
+ *  - « essai » : routes /api/cartes actives, mais le jeu ne s'en sert qu'avec ?comptes=essai (recette en production) ;
+ *  - absent    : routes en 404, le jeu garde sa partie dans le navigateur (bêta).
+ */
+export function reflexAccountsMode(): "on" | "essai" | "off" {
+  const v = process.env.REFLEX_CARDS_ACCOUNTS?.trim();
+  return v === "true" ? "on" : v === "essai" ? "essai" : "off";
+}

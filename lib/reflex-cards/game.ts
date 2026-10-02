@@ -1,5 +1,5 @@
 /**
- * Reflex Cards — la page du jeu (cryptoreflex.fr/cartes/jouer, bêta sans compte, Kev 02/10/2026).
+ * Reflex Cards — la page du jeu (cryptoreflex.fr/cartes/jouer, Kev 02/10/2026) ; bêta dans le navigateur, puis partie tenue par le serveur (REFLEX_CARDS_ACCOUNTS).
  *
  * Le gabarit (lib/reflex-cards/game/template.ts) et les données (data/reflex-cards-game.json) sont générés par
  * Reflex-Cards/src/export-game.mjs depuis la maquette v9. Le navigateur ne reçoit que ce qui est sorti au jour `day` :
@@ -11,6 +11,7 @@
 import "server-only";
 import raw from "@/data/reflex-cards-game.json";
 import { GAME_TEMPLATE } from "./game/template";
+import { reflexAccountsMode } from "./flag";
 
 type Row = [string, string, string, string, number, string, string, number, string, string, string, number];
 type Palier = { fam: string; sub: string; r: string; noto: number; part: number; legende?: number; merite?: number };
@@ -103,7 +104,7 @@ const js = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c").split(LS).
 /** bloc de données injecté dans le gabarit */
 export function gameDataScript(day: number): string {
   const d = gameData(day);
-  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)};
+  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())};
 const CARDS=${js(d.cards)};
 const PALIERS=${js(d.paliers)};
 const NOTO=${js(d.noto)};

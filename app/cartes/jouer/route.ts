@@ -2,12 +2,14 @@ import { gameHtml } from "@/lib/reflex-cards/game";
 import { isReflexCardsEnabled, seasonDay } from "@/lib/reflex-cards/data";
 
 /**
- * /cartes/jouer — le jeu Reflex Cards (bêta sans compte : la partie est enregistrée dans le navigateur).
+ * /cartes/jouer — le jeu Reflex Cards. Bêta : partie dans le navigateur ; avec REFLEX_CARDS_ACCOUNTS, partie tenue par le serveur
+ * (routes /api/cartes/*, invité ou compte du site).
  * Page autonome (son propre en-tête, lien de retour vers le site), régénérée toutes les heures : chaque jour à minuit
  * (Paris) la saison avance et les nouvelles cartes sortent, sans intervention. Seules les cartes sorties sont envoyées.
  * Interrupteur coupé : next.config.js réécrit déjà /cartes/* vers une vraie 404.
  */
-export const revalidate = 3600;
+/* 5 min : la page suit vite les sorties de minuit (le serveur de jeu accepte aussi la page de la veille) */
+export const revalidate = 300;
 
 export function GET(): Response {
   if (!isReflexCardsEnabled()) return new Response("Page introuvable", { status: 404 });

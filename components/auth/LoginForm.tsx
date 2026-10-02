@@ -57,8 +57,10 @@ export default function LoginForm() {
         throw new Error(data.error || "Identifiants invalides");
       }
 
-      // Connecté — full reload pour que le middleware récupère le cookie
-      window.location.href = "/mon-compte";
+      // Connecté — full reload pour que le middleware récupère le cookie.
+      // Retour au jeu Reflex Cards si on vient de lui (?next=/cartes/jouer) ; liste fermée : aucune redirection ouverte.
+      const next = new URLSearchParams(window.location.search).get("next");
+      window.location.href = next === "/cartes/jouer" ? next : "/mon-compte";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inattendue");
       setLoading(false);
