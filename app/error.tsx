@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RotateCcw, Home, Mail } from "lucide-react";
-import * as Sentry from "@sentry/nextjs";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -17,8 +16,12 @@ import { BRAND } from "@/lib/brand";
  *  - reset : callback fourni par Next pour ré-essayer le rendu du segment
  *
  * Logging :
- *  - dev : console.error pour debug local
- *  - prod : placeholder Sentry (à brancher quand SENTRY_DSN sera dispo)
+ *  - console.error structuré (conservé en prod par `removeConsole`).
+ *  - PERF 2026-10-02 — le SDK Sentry navigateur a été retiré (NEXT_PUBLIC_SENTRY_DSN
+ *    jamais défini en prod → ~78 kB gz chargés sur chaque page pour rien).
+ *    Les erreurs de rendu serveur restent capturées par Sentry côté serveur
+ *    (instrumentation.ts → onRequestError) ; le `digest` affiché permet de
+ *    retrouver l'event serveur correspondant.
  */
 export default function Error({
   error,
@@ -28,11 +31,6 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Remontée systématique à Sentry (en prod ET preview). Tag `digest` pour
-    // matcher l'erreur affichée à l'utilisateur avec l'event Sentry.
-    Sentry.captureException(error, {
-      tags: { scope: "app-error-boundary", digest: error.digest ?? "none" },
-    });
     if (process.env.NODE_ENV === "production") {
       // En prod on log quand même un payload structuré, exploitable par
       // n'importe quel collector (Vercel logs, Logtail, Datadog…).

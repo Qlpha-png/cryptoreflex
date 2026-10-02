@@ -88,7 +88,17 @@ import {
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
-export const revalidate = 300;
+//
+// PERF 2026-10-02 — 300 → 3600. Données réellement sensibles au temps :
+//  - prix du TickerTape + tête BTC du Hero : rafraîchis côté client
+//    (useLivePrices, polling/SSE) → le seed SSR peut dater d'1 h ;
+//  - MCap/dominance/F&G : caches amont de 30 min à 1 h de toute façon.
+// ATTENTION : en Next 14 la revalidation effective d'une route = MIN(segment,
+// fetch `next.revalidate`, `unstable_cache.revalidate`). Elle valait 60 s
+// (pas 300 !) à cause des caches MDX articles/news à 60 s — passés à 1 h,
+// clés scopées par commit (lib/mdx.ts, lib/news-mdx.ts). Plancher restant :
+// fetchTopMarket / fetchGlobalMetrics (unstable_cache 1800 s) → ~30 min.
+export const revalidate = 3600;
 
 /**
  * Métadonnées de la home — canonical explicite (P0-3 audit-back-live-final).

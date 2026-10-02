@@ -16,6 +16,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { unstable_cache } from "next/cache";
+import { DEPLOY_CACHE_SCOPE } from "@/lib/cache-scope";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -225,8 +226,16 @@ async function readArticlesFromDisk(): Promise<Article[]> {
  *
  *  Le cache reste tagué "articles" pour permettre un bust manuel via
  *  POST /api/revalidate?tag=articles + revalidatePath ciblé.
+ *
+ * PERF 2026-10-02 — 60 s → 3600 s, clés scopées par commit (DEPLOY_CACHE_SCOPE).
+ *  Le bug du `null` resservi après deploy venait du Data Cache partagé entre
+ *  déploiements : avec une clé par commit, un nouveau deploy ne lit JAMAIS les
+ *  entrées de l'ancien → le TTL court n'a plus de raison d'être. Or en Next 14
+ *  un `unstable_cache` à 60 s plafonne la revalidation ISR de TOUTE page qui
+ *  l'appelle à 60 s (home : `revalidate = 300` déclaré, 60 s effectifs) →
+ *  ISR writes inutiles. Les MDX ne changent qu'au déploiement.
  */
-const ARTICLES_CACHE_TTL_SEC = 60;
+const ARTICLES_CACHE_TTL_SEC = 3600;
 
 /**
  * Version des clés de cache MDX. À BUMPER dès qu'on modifie le contenu/format
@@ -236,7 +245,7 @@ const ARTICLES_CACHE_TTL_SEC = 60;
  * Historique : v2 -> v3 (BATCH 60, suppression `cover:`). v3 -> v4 (2026-06,
  * refresh du hub MiCA particuliers — l'ancien HTML restait en cache).
  */
-const MDX_CACHE_VERSION = "v5";
+const MDX_CACHE_VERSION = `v5-${DEPLOY_CACHE_SCOPE}`;
 
 /** Retourne tous les articles (avec leur contenu MDX), triés par date desc. */
 export const getAllArticles = unstable_cache(
