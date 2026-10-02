@@ -87,7 +87,7 @@ export default function ResetPasswordForm() {
             aria-required="true"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ton@email.com"
+            placeholder="votre@email.com"
             autoComplete="email"
             className="w-full rounded-lg border border-border bg-elevated pl-10 pr-4 py-3 text-base text-fg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary focus-visible:outline-none"
             disabled={loading}

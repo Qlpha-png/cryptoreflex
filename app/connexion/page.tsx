@@ -23,9 +23,9 @@ interface SearchParams {
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid_code:
-    "Le lien de connexion est invalide ou a expiré. Demande un nouveau lien ci-dessous.",
+    "Le lien de connexion est invalide ou a expiré. Demandez un nouveau lien ci-dessous.",
   missing_code:
-    "Le lien semble incomplet. Demande un nouveau lien ci-dessous.",
+    "Le lien semble incomplet. Demandez un nouveau lien ci-dessous.",
   service_unavailable:
     "L'authentification est temporairement indisponible. On y travaille.",
 };
@@ -36,7 +36,7 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
   const errorMessage = errorKey ? ERROR_MESSAGES[errorKey] : null;
 
   return (
-    <section className="min-h-[80vh] flex items-center py-16">
+    <section className="min-h-[80vh] flex flex-col justify-center py-16">
       <div className="mx-auto max-w-md px-4 sm:px-6 w-full">
         <div className="text-center mb-8">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary border border-primary/30 mb-4">

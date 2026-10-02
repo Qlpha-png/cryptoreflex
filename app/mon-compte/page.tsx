@@ -204,7 +204,7 @@ export default async function AccountPage() {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-fg text-sm">Alertes prix</h3>
                   <p className="mt-1 text-xs text-fg/70 leading-snug">
-                    Reçois un email quand un seuil est franchi.
+                    Recevez un email quand un seuil est franchi.
                   </p>
                 </div>
                 <ArrowRight

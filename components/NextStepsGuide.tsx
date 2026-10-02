@@ -90,13 +90,13 @@ const POOL: Record<string, Step> = {
   comparator: {
     href: "/comparatif",
     Icon: BarChart3,
-    label: "Compare les 33 plateformes",
+    label: "Comparer toutes les plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
   pdfPlateformes: {
     href: "/lead-magnets/guide-plateformes-crypto-2026.pdf",
     Icon: Download,
-    label: "Télécharge le PDF gratuit",
+    label: "Télécharger le PDF gratuit",
     desc: "62 pages — étude indépendante des plateformes crypto FR (CASP MiCA + PSAN).",
   },
   pdfFiscalite: {
