@@ -20,7 +20,7 @@ vi.mock("@/lib/supabase/server", () => ({ createSupabaseServiceRoleClient: () =>
 const etat = await import("@/app/api/cartes/etat/route");
 const action = await import("@/app/api/cartes/action/route");
 const amis = await import("@/app/api/cartes/amis/route");
-const { quizDay, qjReward } = await import("@/lib/reflex-cards/quiz-day");
+const { quizDay, qjReward, CULTURE } = await import("@/lib/reflex-cards/quiz-day");
 
 const BASE = "https://www.cryptoreflex.fr";
 let ipN = 0;
@@ -207,5 +207,55 @@ describe("Reflex Cards — Quiz du jour", () => {
     expect(r.status).toBe(422);
     const e = await (await etat.GET(mk("/api/cartes/etat?jour=2"))).json();
     expect(e.state.qj.done).toBe(false);
+  });
+  it("questions variées et accessibles : 2 de culture + 3 sur les cartes, une explication à chaque fois, ni année ni rareté", () => {
+    for (const c of CULTURE) { expect(new Set([c.a, ...c.d]).size).toBe(4); expect(c.e.length).toBeGreaterThan(20); expect(c.q.length).toBeGreaterThan(10); }
+    expect(CULTURE.length).toBeGreaterThanOrEqual(30);
+    for (const d of ["2026-10-03", "2026-10-10", "2026-11-01", "2026-12-24"]) {
+      const qs = quizDay("partie-y", d, 2);
+      expect(qs).toHaveLength(5);
+      const cult = qs.filter((q) => CULTURE.some((c) => c.q === q.q));
+      expect(cult).toHaveLength(2);
+      for (const q of qs) { expect(q.e.length).toBeGreaterThan(10); expect(q.c[q.ok].length).toBeGreaterThan(0); expect(/En quelle année est né|rareté de la carte/.test(q.q)).toBe(false); }
+      for (const q of qs.filter((x) => !cult.includes(x))) expect(/ticker|description|famille|Laquelle de ces cryptos/.test(q.q)).toBe(true);
+    }
+  });
+  it("question par question : la bonne réponse n'est révélée qu'après avoir répondu, la première réponse compte, la 5e donne le score", async () => {
+    as("B");
+    const pid = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.B])).rows[0] as { player_id: string }).player_id;
+    const sol = quizDay(pid, "2026-10-03", 2);
+    const e0 = await (await etat.GET(mk("/api/cartes/etat?jour=2"))).json();
+    expect(e0.state.qj.given).toEqual([]);
+    const before = e0.state;
+    /* Q1 ratée : la correction de Q1 seulement, les autres questions restent sans réponse */
+    const wrong = (sol[0].ok + 1) % 4;
+    const r0 = await act({ a: "quiz-jour", i: 0, rep: wrong });
+    expect(r0.status).toBe(200);
+    expect(r0.j.data).toEqual({ i: 0, rep: wrong, ok: sol[0].ok, correct: false, e: sol[0].e, answered: 1 });
+    expect(r0.j.state.qj.given).toEqual([{ i: 0, rep: wrong, ok: sol[0].ok, correct: false, e: sol[0].e }]);
+    expect(JSON.stringify(r0.j.state.qj.q)).not.toMatch(/"ok"|"a":/);
+    expect(r0.j.state.reflets).toBe(before.reflets);
+    /* répondre une 2e fois à Q1 : même correction, rien d'écrit (la première réponse compte) */
+    const r0b = await act({ a: "quiz-jour", i: 0, rep: sol[0].ok });
+    expect(r0b.j.data).toMatchObject({ i: 0, rep: wrong, correct: false, answered: 1 });
+    expect((await pg.query("select count(*)::int as n from public.rc_claims where key like 'zq|2026-10-03|%'")).rows[0]).toEqual({ n: 1 });
+    /* entrées invalides, et plus de « tout d'un coup » une fois commencé */
+    expect((await act({ a: "quiz-jour", i: 9, rep: 0 })).status).toBe(422);
+    expect((await act({ a: "quiz-jour", i: 1, rep: 7 })).status).toBe(422);
+    expect((await act({ a: "quiz-jour", rep: sol.map((q) => q.ok) })).status).toBe(422);
+    /* Q2 à Q4 justes, puis Q5 juste → 4/5 : +40 Reflets, pas de booster */
+    for (let i = 1; i < 4; i++) {
+      const r = await act({ a: "quiz-jour", i, rep: sol[i].ok });
+      expect(r.j.data).toMatchObject({ i, correct: true, answered: i + 1 });
+      expect(r.j.data.done).toBeUndefined();
+    }
+    const last = await act({ a: "quiz-jour", i: 4, rep: sol[4].ok });
+    expect(last.j.data).toMatchObject({ i: 4, correct: true, done: true, score: 4, reward: { reflets: 40, booster: 0 } });
+    expect(last.j.data.sol).toHaveLength(5);
+    expect(last.j.data.sol[0]).toEqual({ q: sol[0].q, a: sol[0].c[sol[0].ok], e: sol[0].e });
+    expect(last.j.state.reflets).toBe(before.reflets + 40);
+    expect(last.j.state.packs.stock).toBe(before.packs.stock);
+    expect(last.j.state.qj).toMatchObject({ done: true, score: 4 });
+    expect((await act({ a: "quiz-jour", i: 2, rep: 0 })).j.error).toMatch(/déjà joué/);
   });
 });

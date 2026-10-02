@@ -26,6 +26,12 @@ const plusOne = (s: GameState, ctx: Ctx) => {
 };
 /** clé du tirage du Quiz du jour : la partie (identifiant stable), sinon son premier jour */
 const qjKey = (s: GameState) => String((s.player as { player_id?: string }).player_id ?? s.player.first_day);
+/** réponses déjà données au Quiz du jour (question → choix), notées comme des jalons « zq|date|i|choix » */
+function qjGiven(s: GameState, today: string): Map<number, number> {
+  const m = new Map<number, number>(), pre = `zq|${today}|`;
+  for (const k of s.claims) if (k.startsWith(pre)) { const [i, r] = k.slice(pre.length).split("|").map(Number); if (Number.isInteger(i) && Number.isInteger(r) && !m.has(i)) m.set(i, r); }
+  return m;
+}
 const sanitizePseudo = (v: unknown) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 20);
 
 /** mises à jour du jour : jour joué, offres du Colporteur, objets mérités (appliquées à la lecture de la partie) */
@@ -184,19 +190,38 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       return { patch: { player: { perso: { ...s.player.perso, pantheon: keys } } } };
     }
     case "quiz-jour": {
+      /* question par question (Kev 02/10) : la bonne réponse n'est révélée qu'une fois répondu, la première réponse compte ;
+         à la 5e, le score, la récompense et le corrigé. (Un tableau `rep` complet reste accepté : ancienne page en cache.) */
       const key = "z|" + ctx.today;
       if (s.claims.has(key)) throw new GameError("done", "Quiz du jour déjà joué : revenez demain.");
       const qs = quizDay(qjKey(s), ctx.today, ctx.day);
-      const rep = Array.isArray(b.rep) ? (b.rep as unknown[]).map((x) => Number(x)) : [];
-      if (qs.length < QJ_LEN || rep.length !== qs.length) throw new GameError("bad", "Réponses incomplètes.");
-      const score = qs.reduce((n, q, i) => n + (rep[i] === q.ok ? 1 : 0), 0);
-      const rw = qjReward(score);
-      const player: Record<string, unknown> = {};
-      if (rw.reflets) player.reflets = rw.reflets;
-      if (rw.booster) Object.assign(player, plusOne(s, ctx));
+      if (qs.length < QJ_LEN) throw new GameError("bad", "Pas de quiz aujourd'hui.");
+      const given = qjGiven(s, ctx.today);
+      const finish = (answers: number[]) => {
+        const score = qs.reduce((n, q, i) => n + (answers[i] === q.ok ? 1 : 0), 0);
+        const rw = qjReward(score);
+        const player: Record<string, unknown> = {};
+        if (rw.reflets) player.reflets = rw.reflets;
+        if (rw.booster) Object.assign(player, plusOne(s, ctx));
+        return { player: Object.keys(player).length ? player : null, score, rw, sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok], e: q.e })) };
+      };
+      if (Array.isArray(b.rep)) {
+        const rep = (b.rep as unknown[]).map((x) => Number(x));
+        if (rep.length !== qs.length || given.size) throw new GameError("bad", "Réponses incomplètes.");
+        const f = finish(rep);
+        return { patch: { ...(f.player ? { player: f.player } : {}), claims: [key], day: { day: ctx.today, inc: { qj: f.score + 1 } } }, data: { done: true, score: f.score, reward: f.rw, sol: f.sol } };
+      }
+      const i = Number(b.i), rep = Number(b.rep);
+      if (!Number.isInteger(i) || i < 0 || i >= qs.length || !Number.isInteger(rep) || rep < 0 || rep >= qs[i].c.length) throw new GameError("bad", "Réponse invalide.");
+      const reveal = (j: number, r: number) => ({ i: j, rep: r, ok: qs[j].ok, correct: r === qs[j].ok, e: qs[j].e, answered: given.size });
+      if (given.has(i)) return { patch: {}, data: reveal(i, given.get(i)!) }; // déjà répondu : même révélation, rien d'écrit
+      given.set(i, rep);
+      const claims = [`zq|${ctx.today}|${i}|${rep}`];
+      if (given.size < qs.length) return { patch: { claims }, data: reveal(i, rep) };
+      const f = finish(qs.map((_, j) => given.get(j) ?? -1));
       return {
-        patch: { ...(Object.keys(player).length ? { player } : {}), claims: [key], day: { day: ctx.today, inc: { qj: score + 1 } } },
-        data: { score, reward: rw, sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok] })) },
+        patch: { ...(f.player ? { player: f.player } : {}), claims: [...claims, key], day: { day: ctx.today, inc: { qj: f.score + 1 } } },
+        data: { ...reveal(i, rep), done: true, score: f.score, reward: f.rw, sol: f.sol },
       };
     }
     case "pseudo": {
@@ -232,14 +257,15 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
     v: s.player.version, day: ctx.day, today: ctx.today, account,
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
     pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
-    /* Quiz du jour : les questions sans la bonne réponse tant qu'il n'est pas joué ; score et corrigé ensuite */
+    /* Quiz du jour : les questions sans la bonne réponse tant qu'on n'y a pas répondu ; les questions déjà répondues
+       aujourd'hui avec leur correction (reprise après rechargement) ; score et corrigé une fois fini */
     qj: (() => {
       const qs = quizDay(qjKey(s), ctx.today, ctx.day);
       if (qs.length < QJ_LEN) return null;
       const done = s.claims.has("z|" + ctx.today);
-      return done
-        ? { done: true, n: qs.length, score: Math.max(0, Number(s.days.get(ctx.today)?.ev.qj ?? 1) - 1), sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok] })) }
-        : { done: false, n: qs.length, q: qs.map((q) => ({ q: q.q, c: q.c })) };
+      if (done) return { done: true, n: qs.length, score: Math.max(0, Number(s.days.get(ctx.today)?.ev.qj ?? 1) - 1), sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok], e: q.e })) };
+      const given = qjGiven(s, ctx.today);
+      return { done: false, n: qs.length, q: qs.map((q) => ({ q: q.q, c: q.c })), given: [...given].map(([i, rep]) => ({ i, rep, ok: qs[i].ok, correct: rep === qs[i].ok, e: qs[i].e })) };
     })(),
     col, eds, shards: s.player.eclats, reflets: s.player.reflets, recent: s.player.recent, pity: s.player.pity,
     packs: { stock: r.stock, last: r.stockAt, theme: s.player.theme },
