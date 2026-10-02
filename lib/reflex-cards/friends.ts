@@ -5,6 +5,7 @@
  * (service role). Le navigateur ne voit jamais l'identifiant de partie d'un autre joueur : seulement son code ami.
  */
 import "server-only";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CARD } from "./engine";
 
@@ -38,6 +39,41 @@ export function supabaseFriendsDb(sb: SupabaseClient): FriendsDb {
     list: (p) => rpc<FriendRow[]>("rc_friend_list", { p_me: p }),
     cards: (p) => rpc<{ pid: string; card_id: string }[]>("rc_friend_cards", { p_me: p }),
   };
+}
+
+/* Lien d'invitation (Kev 02/10) = le code ami SIGNÉ. L'ouvrir rend amis tout de suite : c'est le joueur qui a partagé
+   son lien qui donne son accord. Le code seul, saisi à la main, reste une demande que l'autre accepte. La signature
+   empêche de transformer un code aperçu chez quelqu'un en « invitation ». Clé : REFLEX_CARDS_INVITE_SECRET, sinon
+   dérivée (SHA-256) de la clé service, qui ne quitte jamais le serveur. */
+export const INVITE_RE = /^[A-HJ-NP-Z2-9]{8}\.[a-f0-9]{16}$/;
+const inviteKey = (): Buffer | null => {
+  const s = process.env.REFLEX_CARDS_INVITE_SECRET?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  return s ? createHash("sha256").update("rc-invite|" + s).digest() : null;
+};
+/** jeton d'invitation d'un code ami (null : aucune clé serveur, le jeu retombe sur le lien à code simple) */
+export function inviteToken(code: string): string | null {
+  const k = inviteKey();
+  if (!k || !FRIEND_CODE_RE.test(code)) return null;
+  return code + "." + createHmac("sha256", k).update(code).digest("hex").slice(0, 16);
+}
+/** le code ami d'un jeton valide, sinon null */
+export function inviteCode(tok: string): string | null {
+  if (!INVITE_RE.test(tok)) return null;
+  const code = tok.slice(0, 8), want = inviteToken(code);
+  if (!want) return null;
+  const a = Buffer.from(tok), b = Buffer.from(want);
+  return a.length === b.length && timingSafeEqual(a, b) ? code : null;
+}
+/** arrivée par un lien d'invitation : la demande part, puis elle est acceptée au nom de l'inviteur (il a partagé son lien).
+ *  Renvoie 'accepted', ou le refus de la demande (already, self, unknown, limites, gone). */
+export async function befriendByInvite(db: FriendsDb, me: string, code: string): Promise<string> {
+  const res = await db.request(me, code);
+  if (res !== "sent" && res !== "pending") return res; // accepted (demande croisée), already, self, unknown, limit_*
+  const myCode = await db.code(me);
+  if (!myCode) return "gone";
+  const host = (await db.list(me)).find((r) => r.code === code && r.status === "pending" && r.outgoing);
+  if (!host) return "gone";
+  return db.answer(host.pid, myCode, true);
 }
 
 const RANK: Record<string, number> = { C: 0, PC: 1, R: 2, SR: 3, UR: 4, L: 5 };

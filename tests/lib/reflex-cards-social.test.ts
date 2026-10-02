@@ -41,6 +41,7 @@ beforeAll(async () => {
   vi.stubEnv("NEXT_PUBLIC_REFLEX_CARDS_ENABLED", "true");
   vi.stubEnv("NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE", "2026-10-02");
   vi.stubEnv("REFLEX_CARDS_ACCOUNTS", "true");
+  vi.stubEnv("REFLEX_CARDS_INVITE_SECRET", "secret-de-test");
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-10-03T10:00:00Z")); // jour 2
 });
@@ -108,6 +109,34 @@ describe("Reflex Cards — Amis", () => {
     as("B"); const no = await post({ a: "repondre", code: codeC, ok: false });
     expect(no.j.msg).toMatch(/refusée/);
     expect(no.j.list.incoming).toEqual([]);
+  });
+  it("lien d'invitation : code signé ; l'ouvrir rend amis sans attendre d'acceptation", async () => {
+    const { inviteToken, inviteCode } = await import("@/lib/reflex-cards/friends");
+    as("A"); const a = await getAmis();
+    expect(a.invite).toMatch(/^[A-HJ-NP-Z2-9]{8}\.[a-f0-9]{16}$/);
+    expect(a.invite).toBe(inviteToken(codeA));
+    expect(inviteCode(a.invite)).toBe(codeA);
+    expect(inviteCode(codeA + ".0000000000000000")).toBeNull(); // code seul, signature inventée
+    expect(inviteCode(codeB + a.invite.slice(8))).toBeNull();    // signature d'un autre code
+    expect(inviteCode(codeA)).toBeNull();
+    /* C (plus ami de A depuis le retrait) ouvre le lien de A : amis tout de suite, rien « en attente » */
+    as("C");
+    expect((await post({ a: "invitation", tok: codeA + ".0000000000000000" })).status).toBe(422);
+    expect((await post({ a: "invitation", tok: codeA })).status).toBe(422);
+    const r = await post({ a: "invitation", tok: a.invite });
+    expect(r.status).toBe(200);
+    expect(r.j.msg).toBe("Vous êtes maintenant amis avec Joueur !");
+    expect(r.j.list.friends.map((f: { code: string }) => f.code)).toContain(codeA);
+    expect(r.j.list.outgoing).toEqual([]);
+    expect(r.j.list.invite).toBe(inviteToken(codeC));
+    as("A");
+    expect((await getAmis()).friends.map((f: { code: string }) => f.code).sort()).toEqual([codeB, codeC].sort());
+    expect((await getAmis()).incoming).toEqual([]);
+    /* déjà amis, ou son propre lien : refus clair, rien d'écrit en plus */
+    const n0 = (await pg.query("select count(*)::int as n from public.rc_friends")).rows[0];
+    as("C"); expect((await post({ a: "invitation", tok: a.invite })).j.error).toMatch(/déjà amis/);
+    as("A"); expect((await post({ a: "invitation", tok: a.invite })).j.error).toMatch(/propre lien/);
+    expect((await pg.query("select count(*)::int as n from public.rc_friends")).rows[0]).toEqual(n0);
   });
   it("limite : 20 demandes par 24 h", async () => {
     const me = (await pg.query("select player_id from public.rc_players where owner=$1", [USERS.C])).rows[0] as { player_id: string };
