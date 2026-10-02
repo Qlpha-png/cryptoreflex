@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { STATS } from "@/lib/brand";
 import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck,
@@ -8,7 +9,6 @@ import {
   ArrowUpRight,
   FileCheck,
   Database,
-  Clock,
 } from "lucide-react";
 
 /**
@@ -32,7 +32,6 @@ import {
  */
 
 // Date deadline transition PSAN→CASP MiCA (1er juillet 2026, BOFIP confirmé).
-const MICA_PHASE2_DEADLINE = new Date("2026-07-01T00:00:00+02:00").getTime();
 
 // Régulateurs + sources fusionnés. Microcopy contextuelle "ce qui change pour toi"
 // (Expert 3 storytelling : "concrètement..." plutôt que "aligné sur les recommandations").
@@ -119,26 +118,6 @@ function useInView<T extends HTMLElement>() {
     return () => io.disconnect();
   }, [seen]);
   return { ref, seen };
-}
-
-/** Countdown MiCA Phase 2 — refresh 60s.
- *  BATCH 53 #1 — Fix React #425 home (audit 2026-05-03). Avant :
- *  useState(MICA_PHASE2_DEADLINE - Date.now()) appele Date.now() au
- *  render initial = SSR != client = hydration mismatch. Sentinel
- *  null pendant SSR + 1er render -> placeholder identique des 2
- *  cotes. Le composant qui utilise micaDays affiche "—" tant que
- *  null (1 frame avant useEffect tick).
- */
-function useMicaCountdown() {
-  const [diff, setDiff] = useState<number | null>(null);
-  useEffect(() => {
-    const compute = () => setDiff(MICA_PHASE2_DEADLINE - Date.now());
-    compute();
-    const id = setInterval(compute, 60_000);
-    return () => clearInterval(id);
-  }, []);
-  if (diff === null) return null;
-  return Math.max(0, Math.floor(diff / 86_400_000));
 }
 
 function Sparkline({ data }: { data: number[] }) {
@@ -238,8 +217,6 @@ function KpiCard({
 }
 
 export default function ReassuranceSection() {
-  const micaDays = useMicaCountdown();
-
   return (
     <section
       aria-label="Conformité, sources publiques et méthodologie"
@@ -291,7 +268,7 @@ export default function ReassuranceSection() {
             target={34}
             suffix="+"
             label="Plateformes suivies"
-            hint="CASP MiCA + PSAN FR + portefeuilles + outils fiscaux — comparées et re-checkées"
+            hint="Plateformes, portefeuilles et outils fiscaux comparés, puis re-vérifiés chaque mois"
             sparkline={SPARK_DATA}
           />
           <KpiCard
@@ -306,16 +283,13 @@ export default function ReassuranceSection() {
             hint="Statut MiCA, frais, garde des fonds, KYC re-checkés chaque mois"
             pillLabel="En continu"
           />
-          {/* Countdown MiCA Phase 2 — chiffre dynamique calculé. Fallback 60
-              (~jours jusqu'au 1er juillet 2026 depuis mai 2026) si micaDays
-              === null (sentinel SSR/hydration). Après 1er useEffect tick,
-              valeur réelle. Évite NaN ou crash. */}
+          {/* Plateformes agréées MiCA avec accès à la France (l'échéance du 1er juillet 2026 est passée :
+              l'ancien compte à rebours affichait J-0). Source : STATS.platforms, aligné sur isAvailableFr. */}
           <KpiCard
-            Icon={Clock}
-            target={micaDays ?? 60}
-            prefix="J-"
-            label="Transition MiCA suivie"
-            hint="MiCA Phase 2 — 1er juillet 2026. Plateformes en transition surveillées."
+            Icon={ShieldCheck}
+            target={STATS.platforms}
+            label="Plateformes agréées MiCA"
+            hint="Avec accès à la France : registre de l'ESMA et listes blanches AMF, vérifiés chaque mois"
           />
         </div>
 

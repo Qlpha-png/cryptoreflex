@@ -255,7 +255,10 @@ export default function ComparisonPage({ params }: Props) {
   const verdict = buildVerdict(a, b);
 
   // Plateforme gagnante par score global → CTA mobile sticky (égalité → a).
-  const winner = b.scoring.global > a.scoring.global ? b : a;
+  const okA = isAvailableFr(a);
+  const okB = isAvailableFr(b);
+  /* une plateforme non autorisée en France n'est jamais désignée gagnante */
+  const winner = okA && !okB ? a : okB && !okA ? b : b.scoring.global > a.scoring.global ? b : a;
 
   // Comparatifs liés (autres duels où l'une des 2 plateformes apparaît)
   const related = COMPARISONS.filter(
@@ -316,6 +319,24 @@ export default function ComparisonPage({ params }: Props) {
                 : `Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR. Données vérifiées le ${new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}.`}
           </p>
 
+          {/* Plateforme non autorisée en France (registre MiCA de l'ESMA, liste blanche AMF) */}
+          {(!okA || !okB) && (
+            <div role="note" className="mt-5 rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm leading-relaxed text-red-200">
+              {[a, b].filter((p) => !isAvailableFr(p)).map((p) => (
+                <p key={p.id}>
+                  <strong className="font-semibold text-red-100">{p.name} n&apos;est pas autorisée à servir les résidents français.</strong>{" "}
+                  {p.mica.status}.
+                </p>
+              ))}
+              <p className="mt-1">
+                Depuis le 1er juillet 2026, seules les plateformes agréées MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs. Ce comparatif reste en ligne à titre d&apos;information.{" "}
+                <Link href="/comparatif/frais" className="underline hover:text-white">
+                  Voir les plateformes autorisées →
+                </Link>
+              </p>
+            </div>
+          )}
+
           {/* Cartes versus */}
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[a, b].map((plat) => (
@@ -348,15 +369,21 @@ export default function ComparisonPage({ params }: Props) {
                     />
                   </div>
                 )}
-                <a
-                  href={plat.affiliateUrl}
-                  target="_blank"
-                  rel="noopener noreferrer sponsored"
-                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
-                >
-                  Tester {plat.name}
-                  <ExternalLink className="h-4 w-4" />
-                </a>
+                {isAvailableFr(plat) ? (
+                  <a
+                    href={plat.affiliateUrl}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
+                  >
+                    Tester {plat.name}
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <span className="mt-2 inline-flex items-center justify-center rounded-xl border border-red-400/40 bg-red-400/10 px-4 py-2.5 text-sm font-semibold text-red-200">
+                    Non autorisée en France
+                  </span>
+                )}
                 <Link
                   href={`/avis/${plat.id}`}
                   className="text-center text-xs text-muted hover:text-white"
@@ -489,28 +516,40 @@ export default function ComparisonPage({ params }: Props) {
                 Choisir {a.name}
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickA}</p>
-              <a
-                href={a.affiliateUrl}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
-              >
-                Aller sur {a.name} <ArrowRight className="h-4 w-4" />
-              </a>
+              {okA ? (
+                <a
+                  href={a.affiliateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
+                >
+                  Aller sur {a.name} <ArrowRight className="h-4 w-4" />
+                </a>
+              ) : (
+                <Link href={`/avis/${a.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-red-200 hover:underline">
+                  Non autorisée en France : voir la fiche <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-primary-glow">
                 Choisir {b.name}
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickB}</p>
-              <a
-                href={b.affiliateUrl}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
-              >
-                Aller sur {b.name} <ArrowRight className="h-4 w-4" />
-              </a>
+              {okB ? (
+                <a
+                  href={b.affiliateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
+                >
+                  Aller sur {b.name} <ArrowRight className="h-4 w-4" />
+                </a>
+              ) : (
+                <Link href={`/avis/${b.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-red-200 hover:underline">
+                  Non autorisée en France : voir la fiche <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
           </div>
         </section>
@@ -560,13 +599,15 @@ export default function ComparisonPage({ params }: Props) {
       <NextStepsGuide context="comparator" />
 
       {/* Sticky CTA mobile sur le verdict / la plateforme recommandée. */}
-      <MobileStickyCTA
-        platformId={winner.id}
-        title={`Verdict : ${winner.name}`}
-        label={`Aller sur ${winner.name}`}
-        href={winner.affiliateUrl}
-        surface="comparatif-page"
-      />
+      {isAvailableFr(winner) && (
+        <MobileStickyCTA
+          platformId={winner.id}
+          title={`Verdict : ${winner.name}`}
+          label={`Aller sur ${winner.name}`}
+          href={winner.affiliateUrl}
+          surface="comparatif-page"
+        />
+      )}
     </article>
   );
 }

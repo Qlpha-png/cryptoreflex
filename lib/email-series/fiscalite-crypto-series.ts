@@ -244,18 +244,18 @@ const J0_CONTENT_HTML =
   "<p>Merci d'avoir utilisé notre <strong>calculateur fiscalité crypto</strong>. Vous avez fait le premier pas — la majorité des Français qui détiennent du Bitcoin ne déclarent encore <strong>rien</strong>, par peur ou par méconnaissance. C'est exactement ce qu'on va corriger en 14 jours.</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Vos 5 conseils pour démarrer la déclaration 2026</h2>' +
   '<ol style="padding-left:20px;">' +
-  "<li><strong>Récupère tous vos historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer votre plus-value selon la formule officielle 150 VH bis.</li>" +
-  "<li><strong>Identifie vos plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
-  "<li><strong>Compte vos cessions, pas vos achats</strong>. Si vous avez moins de 305 € de cessions sur l'année, vous êtes <strong>exonéré·e</strong>.</li>" +
-  "<li><strong>Choisis votre régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
-  "<li><strong>N'oublie pas tes pertes</strong> : elles peuvent compenser tes gains. On creuse au mail 4.</li>" +
+  "<li><strong>Récupérez tous vos historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer votre plus-value selon la formule officielle 150 VH bis.</li>" +
+  "<li><strong>Identifiez vos plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
+  "<li><strong>Comptez vos cessions, pas vos achats</strong>. Si vous avez moins de 305 € de cessions sur l'année, vous êtes <strong>exonéré·e</strong>.</li>" +
+  "<li><strong>Choisissez votre régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
+  "<li><strong>N'oubliez pas vos pertes</strong> : elles peuvent compenser vos gains de la même année. On creuse au mail 4.</li>" +
   "</ol>" +
   '<p style="margin-top:24px;">Pour automatiser tout ça (import des exchanges, calcul plus-value, génération Cerfa), nous recommandons <strong>Waltio</strong> — outil français, agréé expert-comptable, pré-remplissage 2086 + 3916-bis automatique.</p>';
 
 const J0: EmailInSequence = {
   id: "fiscalite-j0-bienvenue",
   dayOffset: 0,
-  subject: "Bienvenue — voici ta simulation et 5 conseils gratuits",
+  subject: "Bienvenue — voici votre simulation et 5 conseils gratuits",
   preheader: "Vos premiers pas vers une déclaration crypto sereine en 14 jours.",
   htmlBody: wrapEmail({
     preheader: "Vos premiers pas vers une déclaration crypto sereine en 14 jours.",
@@ -273,11 +273,11 @@ const J0: EmailInSequence = {
   textBody:
     "Bienvenue chez Cryptoreflex !\n\n" +
     "Vos 5 conseils pour démarrer la déclaration 2026 :\n" +
-    "1. Récupère tous vos historiques (CSV ou API).\n" +
-    "2. Identifie vos plateformes étrangères et déclare-les via le 3916-bis.\n" +
+    "1. Récupérez tous vos historiques (CSV ou API).\n" +
+    "2. Identifiez vos plateformes étrangères et déclarez-les via le 3916-bis.\n" +
     "3. Si vous avez moins de 305 EUR de cessions sur l'année, vous êtes exonéré·e.\n" +
-    "4. Choisis votre régime : PFU 31,4 % ou barème progressif.\n" +
-    "5. N'oublie pas tes pertes — elles compensent tes gains.\n\n" +
+    "4. Choisissez votre régime : PFU 31,4 % ou barème progressif.\n" +
+    "5. N'oubliez pas vos pertes — elles compensent vos gains de la même année.\n\n" +
     "Outil recommandé : Waltio (lien d'affiliation publicitaire).\n" +
     waltioUrl(0, "j0-bienvenue") +
     "\n\nInformation indicative — ne constitue pas un conseil fiscal personnalisé.\n\n" +
@@ -306,7 +306,7 @@ const J2_CONTENT_HTML =
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Combien ça coûte si vous oubliez ?</h2>' +
   '<ul style="padding-left:20px;">' +
   "<li><strong>750 € par compte non déclaré</strong> (1 500 € si solde &gt; 50 000 €, article 1736 X du CGI)</li>" +
-  "<li><strong>10 000 €</strong> si l'État du compte n'a pas signé d'accord d'assistance avec la France</li>" +
+  "<li><strong>125 €</strong> par omission ou inexactitude (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration</li>" +
   "<li>Délai de prescription porté à <strong>10 ans</strong> au lieu de 3</li>" +
   "</ul>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le truc qui change tout</h2>' +
@@ -356,32 +356,32 @@ const J2: EmailInSequence = {
 /* -------------------------------------------------------------------------- */
 
 const J5_CONTENT_HTML =
-  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">PFU 31,4 % ou barème progressif ? Le piège qui coûte cher</h1>' +
-  "<p>La majorité des contribuables crypto laissent par défaut le PFU 31,4 %. Et pour 70 % d'entre eux, c'est en effet le bon choix.</p>" +
-  "<p>Mais pour <strong>30 % des cas</strong>, opter pour le barème progressif fait économiser des centaines (parfois milliers) d'euros.</p>" +
+  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">PFU 31,4 % ou barème progressif ? Le bon choix selon votre tranche</h1>' +
+  "<p>Par défaut, vos plus-values crypto sont taxées au PFU de 31,4 % (12,8 % d'impôt + 18,6 % de prélèvements sociaux), y compris celles de 2025 déclarées en 2026.</p>" +
+  "<p>Mais si votre tranche d'imposition (TMI) est basse, opter pour le barème progressif peut vous faire économiser des centaines d'euros.</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">La règle simple</h2>' +
   '<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;background:#1F2937;border-radius:8px;margin:12px 0;">' +
-  '<tr><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Ta TMI</td><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Choix optimal</td></tr>' +
+  '<tr><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Votre TMI</td><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Choix optimal</td></tr>' +
   "<tr><td>0 % (non imposable)</td><td>Barème (vous ne payez que les 18,6 % de PS)</td></tr>" +
-  "<tr><td>11 %</td><td>Barème (28,2 % au lieu de 30 %)</td></tr>" +
-  "<tr><td>30 %</td><td>Indifférent (47,2 % vs 31,4 % — PFU gagne)</td></tr>" +
+  "<tr><td>11 %</td><td>Barème (29,6 % au lieu de 31,4 %)</td></tr>" +
+  "<tr><td>30 %</td><td>PFU (48,6 % au barème contre 31,4 %)</td></tr>" +
   "<tr><td>41 / 45 %</td><td>PFU (économie large)</td></tr>" +
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Exemple chiffré (PV crypto = 5 000 €)</h2>' +
   '<ul style="padding-left:20px;">' +
-  "<li>TMI 11 % → barème : <strong>1 410 €</strong> d'impôt vs PFU : 1 500 € → économie 90 €</li>" +
-  "<li>TMI 0 % → barème : <strong>860 €</strong> (PS uniquement) vs PFU : 1 500 € → <strong>économie 640 €</strong></li>" +
-  "<li>TMI 41 % → barème : 2 910 € vs PFU : 1 500 € → <strong>perte 1 410 €</strong> si on choisit le barème</li>" +
+  "<li>TMI 0 % → barème : <strong>930 €</strong> (prélèvements sociaux uniquement) contre 1 570 € au PFU → <strong>économie 640 €</strong></li>" +
+  "<li>TMI 11 % → barème : <strong>1 480 €</strong> d'impôt contre 1 570 € au PFU → économie 90 €</li>" +
+  "<li>TMI 41 % → barème : 2 980 € contre 1 570 € au PFU → <strong>perte 1 410 €</strong> si vous choisissez le barème</li>" +
   "</ul>" +
-  '<p style="margin-top:16px;background:#1F2937;padding:12px;border-left:3px solid #F5A524;"><strong>Attention :</strong> l\'option barème est <strong>globale</strong> — si vous la cochez, elle s\'applique aussi à vos dividendes, intérêts et autres PV mobilières. Calcule toujours sur l\'ensemble.</p>';
+  '<p style="margin-top:16px;background:#1F2937;padding:12px;border-left:3px solid #F5A524;"><strong>Comment opter :</strong> cochez la <strong>case 3CN</strong> de la déclaration 2042 C (là où vous reportez votre plus-value en 3AN). L\'option porte sur <strong>toutes</strong> vos plus-values crypto de l\'année et elle est irrévocable, mais elle ne touche <strong>pas</strong> vos dividendes ni vos intérêts (leur option, la case 2OP, est distincte).</p>';
 
 const J5: EmailInSequence = {
   id: "fiscalite-j5-pfu-vs-bareme",
   dayOffset: 5,
-  subject: "PFU 31,4 % ou barème ? Le piège qui coûte cher",
-  preheader: "30 % des contribuables crypto choisissent le mauvais régime. Calcule en 2 clics.",
+  subject: "PFU 31,4 % ou barème ? Le bon choix selon votre tranche",
+  preheader: "Selon votre tranche d'imposition, le barème peut vous faire économiser des centaines d'euros.",
   htmlBody: wrapEmail({
-    preheader: "30 % des contribuables crypto choisissent le mauvais régime. Calcule en 2 clics.",
+    preheader: "Selon votre tranche d'imposition, le barème peut vous faire économiser des centaines d'euros.",
     contentHtml: J5_CONTENT_HTML,
     ctaPrimary: {
       label: "Comparer PFU vs Barème en 2 clics",
@@ -397,14 +397,15 @@ const J5: EmailInSequence = {
     "PFU 31,4 % ou barème progressif ?\n\n" +
     "Règle simple :\n" +
     "- TMI 0 % ou 11 % → barème (vous payez moins).\n" +
-    "- TMI 31,4 % et plus → PFU (tu paies moins).\n\n" +
+    "- TMI 30 % et plus → PFU (vous payez moins).\n\n" +
     "Exemple PV 5 000 EUR :\n" +
-    "- TMI 0 % → 860 EUR au barème vs 1 500 EUR au PFU (-640 EUR)\n" +
-    "- TMI 11 % → 1 410 EUR vs 1 500 EUR (-90 EUR)\n" +
-    "- TMI 41 % → 2 910 EUR vs 1 500 EUR (+1 410 EUR si on choisit le barème)\n\n" +
-    "Compare avec notre calculateur : " +
+    "- TMI 0 % → 930 EUR au barème contre 1 570 EUR au PFU (-640 EUR)\n" +
+    "- TMI 11 % → 1 480 EUR contre 1 570 EUR (-90 EUR)\n" +
+    "- TMI 41 % → 2 980 EUR contre 1 570 EUR (+1 410 EUR si vous choisissez le barème)\n\n" +
+    "Pour opter : case 3CN de la déclaration 2042 C (option globale pour vos cryptos de l'année, irrévocable, sans effet sur vos dividendes).\n\n" +
+    "Comparez avec notre calculateur : " +
     internalUrl("/outils/calculateur-fiscalite", 5, "j5-pfu-bareme") +
-    "\n\nOu automatise tout avec Waltio (lien d'affiliation publicitaire) : " +
+    "\n\nOu automatisez tout avec Waltio (lien d'affiliation publicitaire) : " +
     waltioUrl(5, "j5-pfu-bareme") +
     "\n\nInformation indicative — ne constitue pas un conseil fiscal personnalisé.\n\n" +
     "Désinscription : {{unsubscribe_url}}",
@@ -424,8 +425,8 @@ const J5: EmailInSequence = {
 /* -------------------------------------------------------------------------- */
 
 const J9_CONTENT_HTML =
-  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">Vos pertes crypto peuvent te faire économiser des impôts</h1>' +
-  "<p>Si vous avez vendu à perte en 2025 (Luna, FTX, projets DeFi qui ont rugged…), bonne nouvelle : ces pertes peuvent <strong>diminuer votre plus-value imposable</strong>.</p>" +
+  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">Vos pertes crypto peuvent vous faire économiser des impôts</h1>' +
+  "<p>Si vous avez vendu à perte cette année (Luna, FTX, projets DeFi qui ont rugged…), bonne nouvelle : ces pertes peuvent <strong>diminuer votre plus-value imposable</strong>.</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Comment ça marche ?</h2>' +
   '<ul style="padding-left:20px;">' +
   "<li>Les <strong>moins-values crypto sont compensables</strong> avec les plus-values crypto de la <strong>même année</strong>.</li>" +
@@ -441,15 +442,15 @@ const J9_CONTENT_HTML =
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le piège à éviter</h2>' +
   "<p>Si vos tokens sont stuck sur un exchange en faillite (FTX, Celsius), vous ne pouvez <strong>pas</strong> les déduire tant qu'ils ne sont pas \"officiellement perdus\" (jugement, liquidation). Conserve les preuves d'irrécouvrabilité.</p>" +
-  '<p style="margin-top:16px;">Pour identifier toutes vos pertes 2025, l\'import automatique Waltio scanne vos 200+ exchanges + wallets DeFi.</p>';
+  '<p style="margin-top:16px;">Pour identifier toutes vos pertes de l\'année, l\'import automatique Waltio scanne vos 200+ exchanges + wallets DeFi.</p>';
 
 const J9: EmailInSequence = {
   id: "fiscalite-j9-pertes",
   dayOffset: 9,
-  subject: "Vos pertes crypto peuvent te faire économiser des impôts",
-  preheader: "Vendu à perte en 2025 ? Voici comment compenser votre plus-value (exemples chiffrés).",
+  subject: "Vos pertes crypto peuvent vous faire économiser des impôts",
+  preheader: "Vendu à perte cette année ? Voici comment compenser votre plus-value (exemples chiffrés).",
   htmlBody: wrapEmail({
-    preheader: "Vendu à perte en 2025 ? Voici comment compenser votre plus-value (exemples chiffrés).",
+    preheader: "Vendu à perte cette année ? Voici comment compenser votre plus-value (exemples chiffrés).",
     contentHtml: J9_CONTENT_HTML,
     ctaPrimary: {
       label: "Importer mes données dans Waltio (gratuit)",
@@ -490,39 +491,37 @@ const J9: EmailInSequence = {
 /* -------------------------------------------------------------------------- */
 
 const J14_CONTENT_HTML =
-  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">Votre plan d\'action complet pour la déclaration 2026</h1>' +
-  "<p>Dernier email de la série ! Voici la checklist condensée des 10 actions à mener entre <strong>maintenant et juin 2026</strong>.</p>" +
+  '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">Votre plan d\'action complet pour votre prochaine déclaration</h1>' +
+  "<p>Dernier email de la série ! Voici la checklist condensée des 10 actions à mener d'ici votre <strong>prochaine déclaration de revenus</strong> (au printemps).</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">La checklist 10 points</h2>' +
   '<ol style="padding-left:20px;">' +
-  "<li>Recense <strong>toutes</strong> les plateformes utilisées en 2025 (CEX, DEX, wallets, applis mobiles).</li>" +
-  "<li>Exporte les historiques CSV ou connecte les API à un agrégateur fiscal.</li>" +
-  "<li>Vérifie que votre total de cessions dépasse 305 € (sinon exonération).</li>" +
-  "<li>Liste les comptes étrangers → un <strong>3916-bis par compte</strong>.</li>" +
-  "<li>Calcule la plus-value via la formule 150 VH bis (prorata du portefeuille).</li>" +
-  "<li>Compare PFU 31,4 % vs barème progressif selon votre TMI.</li>" +
-  "<li>Identifie les pertes 2025 réalisées (vente effective requise).</li>" +
-  "<li>Remplis le <strong>Cerfa 2086</strong> (détail des cessions) + <strong>2042-C</strong> (synthèse).</li>" +
-  "<li>Joins les 3916-bis et garde les exports CSV en backup pendant 6 ans.</li>" +
-  "<li>Soumets avant la date limite (mai-juin 2026 selon votre département).</li>" +
+  "<li>Recensez <strong>toutes</strong> les plateformes utilisées dans l'année (CEX, DEX, wallets, applis mobiles).</li>" +
+  "<li>Exportez les historiques CSV ou connectez les API à un agrégateur fiscal.</li>" +
+  "<li>Vérifiez si votre total de cessions dépasse 305 € (sinon exonération).</li>" +
+  "<li>Listez les comptes étrangers → un <strong>3916-bis par compte</strong>.</li>" +
+  "<li>Calculez la plus-value via la formule 150 VH bis (prorata du portefeuille).</li>" +
+  "<li>Comparez PFU 31,4 % et barème progressif selon votre TMI (option barème = case 3CN de la 2042 C).</li>" +
+  "<li>Identifiez les pertes réalisées dans l'année (vente effective requise).</li>" +
+  "<li>Remplissez le <strong>Cerfa 2086</strong> (détail des cessions) + <strong>2042-C</strong> (report en 3AN ou 3BN).</li>" +
+  "<li>Joignez les 3916-bis et gardez les exports CSV en sauvegarde pendant 6 ans.</li>" +
+  "<li>Déclarez avant la date limite (fin mai ou début juin selon votre département).</li>" +
   "</ol>" +
-  '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Dates clés 2026 à retenir</h2>' +
+  '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le calendrier à retenir</h2>' +
   '<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;background:#1F2937;border-radius:8px;margin:12px 0;">' +
-  "<tr><td><strong>Avril 2026</strong></td><td>Ouverture du service de déclaration en ligne</td></tr>" +
-  "<tr><td><strong>19 mai 2026</strong></td><td>Date limite déclaration papier</td></tr>" +
-  "<tr><td><strong>21 mai 2026</strong></td><td>Date limite en ligne départements 01-19 + non-résidents</td></tr>" +
-  "<tr><td><strong>28 mai 2026</strong></td><td>Date limite en ligne départements 20-54</td></tr>" +
-  "<tr><td><strong>4 juin 2026</strong></td><td>Date limite en ligne départements 55-976</td></tr>" +
+  "<tr><td><strong>Avril</strong></td><td>Ouverture du service de déclaration en ligne</td></tr>" +
+  "<tr><td><strong>Mi-mai</strong></td><td>Date limite de la déclaration papier</td></tr>" +
+  "<tr><td><strong>Fin mai – début juin</strong></td><td>Dates limites en ligne, selon votre département</td></tr>" +
   "</table>" +
-  '<p style="font-style:italic;color:#9CA3AF;font-size:13px;">Dates indicatives selon le calendrier 2025 — les dates 2026 seront confirmées par la DGFiP en mars 2026.</p>' +
-  '<p style="margin-top:16px;">Pour avoir tout sous la main, télécharge notre <strong>Bible Fiscalité Crypto 2026</strong> (30 pages, gratuit). Et si vous voulez gagner 10h de paperasse, Waltio reste l\'outil le plus complet du marché FR.</p>';
+  '<p style="font-style:italic;color:#9CA3AF;font-size:13px;">Les dates exactes sont publiées chaque année par la DGFiP sur impots.gouv.fr.</p>' +
+  '<p style="margin-top:16px;">Pour avoir tout sous la main, téléchargez notre <strong>Bible Fiscalité Crypto</strong> (gratuit). Et pour gagner du temps sur les calculs, Waltio importe vos historiques et prépare le 2086.</p>';
 
 const J14: EmailInSequence = {
   id: "fiscalite-j14-recap",
   dayOffset: 14,
-  subject: "Récap : votre plan d'action complet pour la déclaration 2026",
-  preheader: "Checklist 10 points + dates clés mai-juin 2026 + Bible Fiscalité PDF offerte.",
+  subject: "Récap : votre plan d'action complet pour votre prochaine déclaration",
+  preheader: "Checklist 10 points + calendrier de la déclaration + Bible Fiscalité PDF offerte.",
   htmlBody: wrapEmail({
-    preheader: "Checklist 10 points + dates clés mai-juin 2026 + Bible Fiscalité PDF offerte.",
+    preheader: "Checklist 10 points + calendrier de la déclaration + Bible Fiscalité PDF offerte.",
     contentHtml: J14_CONTENT_HTML,
     ctaPrimary: {
       label: "Télécharger la Bible Fiscalité (PDF)",
@@ -535,17 +534,17 @@ const J14: EmailInSequence = {
     },
   }),
   textBody:
-    "Votre plan d'action déclaration 2026 — checklist 10 points :\n\n" +
-    "1. Recense toutes tes plateformes 2025.\n" +
-    "2. Exporte les historiques CSV / API.\n" +
-    "3. Vérifie le seuil 305 EUR de cessions.\n" +
+    "Votre plan d'action pour votre prochaine déclaration — checklist 10 points :\n\n" +
+    "1. Recensez toutes vos plateformes de l'année.\n" +
+    "2. Exportez les historiques CSV / API.\n" +
+    "3. Vérifiez le seuil de 305 EUR de cessions.\n" +
     "4. 1 formulaire 3916-bis par compte étranger.\n" +
-    "5. Calcule la PV via 150 VH bis.\n" +
-    "6. Compare PFU vs Barème.\n" +
-    "7. Identifie les pertes (vente effective).\n" +
-    "8. Remplis Cerfa 2086 + 2042-C.\n" +
-    "9. Joins 3916-bis + garde CSV 6 ans.\n" +
-    "10. Soumets avant mai-juin 2026.\n\n" +
+    "5. Calculez la PV via 150 VH bis.\n" +
+    "6. Comparez PFU et barème (option barème = case 3CN de la 2042 C).\n" +
+    "7. Identifiez les pertes (vente effective).\n" +
+    "8. Remplissez le Cerfa 2086 + la 2042-C (3AN ou 3BN).\n" +
+    "9. Joignez les 3916-bis + gardez les CSV 6 ans.\n" +
+    "10. Déclarez avant la date limite (fin mai ou début juin selon votre département).\n\n" +
     "Bible Fiscalité Crypto 2026 (PDF gratuit) : " +
     internalUrl("/api/lead-magnet/bible-fiscalite", 14, "j14-recap-bible") +
     "\n\nWaltio (lien d'affiliation publicitaire) : " +

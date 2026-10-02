@@ -49,7 +49,7 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Faut-il déclarer ses comptes crypto à l'étranger en France ?",
     answer:
-      "Oui, tout compte ouvert chez un exchange étranger (Binance, Coinbase, Bitpanda, Kraken, etc.) doit être déclaré via le formulaire 3916-bis. L'amende est de 750 € par compte oublié (jusqu'à 10 000 € si compte > 50 000 €). Voir /outils/radar-3916-bis pour vérifier votre exposition.",
+      "Oui, tout compte ouvert chez un exchange étranger (Binance, Coinbase, Bitpanda, Kraken, etc.) doit être déclaré via le formulaire 3916-bis. L'amende est de 750 € par compte oublié (1 500 € si la valeur des comptes dépasse 50 000 €). Voir /outils/radar-3916-bis pour vérifier votre exposition.",
   },
   {
     question: "Comment choisir une plateforme crypto sécurisée en France ?",

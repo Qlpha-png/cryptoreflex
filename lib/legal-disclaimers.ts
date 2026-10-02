@@ -110,10 +110,10 @@ export const MICA_RISK_DISCLAIMER =
  * pendant la période de transition (avril → juin 2026).
  */
 export const MICA_TRANSITION_NOTICE =
-  "Période transitoire MiCA en cours. Le règlement MiCA Phase 2 (CASP) entre en " +
-  "application le 1er juillet 2026. Cryptoreflex ne recommande activement que les " +
-  "plateformes ayant déjà obtenu leur agrément CASP ou ayant une probabilité forte " +
-  "de l'obtenir avant cette date. Statut détaillé sur /transparence.";
+  "La période transitoire MiCA a pris fin le 1er juillet 2026 : depuis, seuls les " +
+  "prestataires agréés MiCA avec un accès à la France peuvent servir des clients " +
+  "français. Cryptoreflex ne recommande que ces plateformes ; les autres sont " +
+  "signalées « non autorisées en France », sans lien affilié.";
 
 /* -------------------------------------------------------------------------- */
 /*  Loi Influenceurs n°2023-451 du 9 juin 2023                                */

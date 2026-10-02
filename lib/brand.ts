@@ -28,7 +28,7 @@ export const BRAND = {
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout sur la crypto, en français",
   description:
-    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 33 plateformes MiCA / PSAN comparées (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes comparées, dont 22 agréées MiCA en France (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;
@@ -57,9 +57,10 @@ export const STATS = {
    * (Gemini, avril 2026) et hors hardware wallets. Source UNIQUE pour les strings —
    * ne jamais hardcoder ce nombre ailleurs, importer STATS.platforms (ou, en Server
    * Component, getAvailablePlatformCount() dans lib/platforms.ts).
-   * (34 audités − 1 fermé = 33 ; recompter à chaque ajout/fermeture.)
+   * Depuis le 02/10/2026 : agréées MiCA avec accès à la France (registre ESMA / liste blanche AMF),
+   * cf. isAvailableFr. 34 auditées − 12 non autorisées en France = 22 ; recompter à chaque mise à jour du registre.
    */
-  platforms: 33,
+  platforms: 22,
   /**
    * Nombre TOTAL de fiches crypto disponibles sur le site.
    * = 100 fiches éditoriales statiques (10 top + 90 hidden gems) + 680 fiches

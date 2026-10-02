@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Star, Trophy, ShieldCheck } from "lucide-react";
 
-import { getAllPlatforms, getPlatformById, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import {
@@ -132,7 +132,7 @@ export function generateMetadata({ params }: Props): Metadata {
  * proche). Exclut le target lui-même.
  */
 function findAlternatives(target: Platform, limit = 5): Platform[] {
-  const all = getAllPlatforms().filter((p) => p.id !== target.id);
+  const all = getAllPlatforms().filter((p) => p.id !== target.id && isAvailableFr(p));
   const scored = all.map((p) => {
     let score = 0;
     if (p.category === target.category) score += 10;

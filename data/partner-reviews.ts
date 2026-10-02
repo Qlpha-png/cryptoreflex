@@ -513,7 +513,7 @@ export const partnerReviews: PartnerReview[] = [
       beforeTitle: "Sans Waltio en mai",
       beforeItems: [
         "14 heures de Excel multi-onglets pour calculer vos plus-values en PMP manuellement",
-        "Risque réel d'amende 750 € à 10 000 € par compte étranger oublié au 3916-bis",
+        "Risque réel d'amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger oublié au 3916-bis",
         "Stress fiscal jusqu'au dépôt — vous doutez de chaque calcul, vous refaites 3 fois",
         "Pas de traçabilité : si Bercy t'audite, vous n'avez pas de méthode défendable",
       ],
@@ -613,9 +613,9 @@ export const partnerReviews: PartnerReview[] = [
           "La méthode du prix moyen pondéré (PMP) imposée par l'art. 150 VH bis CGI est native dans Waltio. Vous téléchargez, vous téléversez sur impots.gouv.fr, c'est fini. Aucun autre SaaS international (Koinly, CoinTracking) ne le fait pour la France.",
       },
       {
-        reason: "Évite jusqu'à 10 000 € d'amende par compte 3916-bis non déclaré",
+        reason: "Évite 750 € (ou 1 500 €) d'amende par compte 3916-bis non déclaré",
         description:
-          "Article 1736 X CGI : 750 € d'amende par compte étranger non déclaré (1 500 € si solde > 50 000 €, jusqu'à 10 000 € si pays non-coopératif). Waltio te liste exhaustivement chaque exchange étranger à déclarer. Sur 5 exchanges oubliés, c'est 3 750 € à 50 000 € d'amende potentielle évitée.",
+          "Article 1736, X du CGI : 750 € d'amende par compte étranger non déclaré (1 500 € si la valeur des comptes dépasse 50 000 €). Waltio liste chaque exchange étranger à déclarer. Sur 5 exchanges oubliés, c'est 3 750 € à 7 500 € d'amende potentielle évitée.",
       },
       {
         reason: "Gagne 12 à 14 heures de saisie chaque mai",
@@ -634,7 +634,7 @@ export const partnerReviews: PartnerReview[] = [
       { stat: "2018", source: "Première solution fiscalité crypto SAS française (depuis 7 ans)" },
     ],
     risksAvoided: [
-      "Amende 750 € à 10 000 € par compte étranger crypto non déclaré (3916-bis, art. 1736 CGI)",
+      "Amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger crypto non déclaré (3916-bis, art. 1736, X du CGI)",
       "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de PMP)",
       "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables — moment exact non tranché officiellement, à vérifier)",
       "Erreur déclaration aboutissant à intérêts de retard 0,2%/mois + majoration 10-80%",

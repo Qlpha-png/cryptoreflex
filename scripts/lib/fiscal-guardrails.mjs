@@ -6,13 +6,23 @@
  * erreurs fiscales récurrentes corrigées en juin 2026 (report 10 ans, PFU 30 %,
  * "pas de seuil", source "loi de finances 2023", "Binance agréée CASP"...).
  *
- * Tous les faits ci-dessous sont WEB-VÉRIFIÉS (Légifrance, BOFiP, AMF,
- * economie.gouv.fr) au 2026-06-14. Mettre à jour ICI uniquement (DRY).
+ * Tous les faits ci-dessous sont WEB-VÉRIFIÉS. Mise à jour du 2026-10-02 (audit) :
+ *  - 31,4 % s'applique DÈS les plus-values 2025 (CSG : « à compter de l'imposition
+ *    des revenus de l'année 2025 » pour les revenus du patrimoine — legea-avocat.fr,
+ *    bdor.fr) ; l'ancienne règle « 30 % jusqu'aux gains 2025 » était FAUSSE ;
+ *  - option barème crypto = case 3CN de la 2042 C (notice du formulaire 2086 revenus
+ *    2025 ; impots.gouv), indépendante de 2OP ;
+ *  - Binance a cessé ses services en France le 1er juillet 2026 (Euronews, 25/06/2026) ;
+ *  - NFT : article 150 VH ter du CGI (loi n° 2026-534 du 25 juin 2026, art. 91).
+ * Mettre à jour ICI uniquement (DRY).
  */
 export const FISCAL_GUARDRAILS = `GARDE-FOUS FISCAUX FR 2026 (vérifiés — ne JAMAIS dévier ; si un chiffre n'est pas certain, reste qualitatif plutôt que d'inventer) :
-- PFU / flat tax sur plus-values CRYPTO = 31,4 % (12,8 % IR + 18,6 % prélèvements sociaux), depuis le 1er janvier 2026 (hausse de la CSG sur les revenus du capital 9,2 → 10,6 %, LFSS 2026 = loi n°2025-1403 du 30/12/2025). Pour la crypto, n'écris JAMAIS « 30 % » ni « 17,2 % » comme taux courants (ce sont les anciens taux, valables jusqu'aux gains réalisés en 2025). N'attribue JAMAIS le 31,4 % à « la loi de finances 2023/2026 » : la source est la LFSS 2026 (loi 2025-1403). NB : d'autres placements (assurance-vie) conservent 17,2 % de prélèvements sociaux — ne les confonds pas avec la crypto.
+- PFU / flat tax sur plus-values CRYPTO = 31,4 % (12,8 % IR + 18,6 % prélèvements sociaux) DÈS les plus-values réalisées en 2025 et déclarées en 2026 (hausse de la CSG sur les revenus du capital 9,2 → 10,6 %, LFSS 2026 = loi n°2025-1403 du 30/12/2025, applicable à compter de l'imposition des revenus 2025). Pour la crypto, n'écris JAMAIS « 30 % » ni « 17,2 % » comme taux actuels : ce sont les taux des plus-values réalisées jusqu'en 2024. N'attribue JAMAIS le 31,4 % à « la loi de finances 2023/2026 » : la source est la LFSS 2026 (loi 2025-1403). NB : d'autres placements (assurance-vie) conservent 17,2 % de prélèvements sociaux — ne les confonds pas avec la crypto.
+- Option pour le barème progressif sur les plus-values CRYPTO = case 3CN de la déclaration 2042 C (la plus-value se reporte en 3AN, la moins-value en 3BN). L'option est globale pour TOUTES les plus-values crypto du foyer de l'année, expresse et irrévocable, et INDÉPENDANTE de l'option 2OP (dividendes, intérêts, plus-values sur actions). N'écris JAMAIS « cochez 2OP » pour la crypto et n'écris JAMAIS que l'option crypto fait basculer les dividendes au barème.
 - Moins-values crypto (particulier, art. 150 VH bis du CGI) : imputables UNIQUEMENT sur les plus-values crypto de la MÊME année. AUCUN report sur les années suivantes — le solde négatif est définitivement perdu au 31 décembre. Le « report 10 ans » concerne les ACTIONS / valeurs mobilières (art. 150-0 D), JAMAIS la crypto. (Régime BIC professionnel : déficit reportable 6 ans, art. 156 — à ne pas confondre.)
 - Seuil d'exonération = 305 €/an portant sur le TOTAL DES CESSIONS (montant des ventes), PAS sur la plus-value nette. Ce seuil EXISTE : n'écris JAMAIS « il n'y a pas de seuil en France ».
 - Swaps crypto-crypto : NON imposables (sursis d'imposition, art. 150 VH bis) ; seules les cessions vers euros / biens / services sont imposables.
-- Dates de déclaration des revenus 2026 : ouverture en ligne le 9 avril 2026, déclaration papier le 19 mai 2026, dates limites en ligne 21 mai / 28 mai / 4 juin selon la zone départementale.
-- Plateformes : n'affirme JAMAIS qu'une plateforme est « agréée CASP » ou « MiCA-compliant » sans certitude. Binance France = PSAN (agrément CASP en cours d'instruction, NON délivré à mi-2026), pas CASP. MiCA est déjà en vigueur ; la fin de la période transitoire française est le 1er juillet 2026.`;
+- Comptes crypto à l'étranger (3916-bis, art. 1649 bis C) : amende de 750 € par compte non déclaré, 1 500 € si la valeur dépasse 50 000 €. N'écris JAMAIS d'autre montant d'amende (pas de « 10 000 € par compte ») pour un compte crypto. Depuis le 1er juillet 2026, les comptes de NFT à l'étranger sont aussi à déclarer.
+- NFT : depuis le 1er janvier 2026, l'article 150 VH ter du CGI (loi n° 2026-534 du 25 juin 2026, art. 91) impose la plus-value d'un NFT selon le régime du bien ou du droit qu'il représente. N'écris JAMAIS que les NFT sont dans un « vide juridique ».
+- Dates de déclaration des revenus 2025 (campagne 2026) : ouverture en ligne le 9 avril 2026, déclaration papier le 19 mai 2026, dates limites en ligne 21 mai / 28 mai / 4 juin selon la zone départementale. La campagne 2026 est TERMINÉE : ne donne pas ces dates comme à venir.
+- Plateformes et MiCA : la période transitoire française a pris fin le 1er juillet 2026 : depuis, seuls les prestataires agréés MiCA (CASP) peuvent servir des clients français. Binance a CESSÉ ses services de crypto-actifs en France le 1er juillet 2026 : ne recommande JAMAIS Binance à un lecteur français et n'écris jamais qu'il « reste utilisable en France ». N'affirme JAMAIS qu'une plateforme est « agréée CASP » ou « MiCA-compliant », et n'invente JAMAIS de numéro d'agrément : renvoie au registre officiel (AMF / ESMA).`;

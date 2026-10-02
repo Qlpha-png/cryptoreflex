@@ -138,9 +138,9 @@ export default function SuccessionCryptoPage() {
 
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <FileText className="mx-auto h-10 w-10 text-primary" aria-hidden />
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Reçois le guide complet (PDF gratuit)</h2>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Recevez le guide complet (PDF gratuit)</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            32 pages, mis à jour 2026, validé par un notaire FR. Inclut la
+            Mis à jour en 2026. Inclut la
             checklist + les modèles de lettre d&apos;intention. Inscrivez-vous
             à la newsletter pour le recevoir au lancement.
           </p>

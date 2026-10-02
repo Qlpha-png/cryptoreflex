@@ -93,7 +93,7 @@ Ces 31,4 % s'appliquent à la **plus-value nette** (gains − pertes de l'année
 
 ### L'option barème progressif : pour qui ?
 
-Tu peux **opter** (case 2OP de la déclaration) pour intégrer tes plus-values crypto à ton **revenu global** soumis au barème progressif de l'IR (TMI). Cette option est **globale** : elle s'applique aussi à tes dividendes, intérêts et autres revenus de capitaux mobiliers. À calculer avec précaution.
+Tu peux **opter** (case **3CN** de la déclaration 2042 C) pour intégrer tes plus-values crypto à ton **revenu global** soumis au barème progressif de l'IR (TMI). L'option porte sur **toutes** tes plus-values crypto de l'année, elle est **irrévocable** une fois exercée, et elle ne touche **pas** tes dividendes ni tes intérêts (leur option, la case 2OP, est distincte). À calculer avec précaution.
 
 | TMI du foyer | Choix optimal | Pourquoi |
 |---|---|---|
@@ -130,7 +130,7 @@ Tu as fait 3 ventes en 2025 :
 | 18/11/2025 | 35 000 € | 4 000 € | 8 000 € | 3 086 € |
 | **Total** | — | **12 000 €** | — | **8 566 €** |
 
-Tu reportes 8 566 € sur la 2042-C ligne 3AN (régime PFU) ou 2OP cochée si option barème.
+Tu reportes 8 566 € sur la 2042-C ligne 3AN, et tu coches en plus la case 3CN si tu optes pour le barème.
 
 ### Les 3 erreurs fatales sur le 2086
 
@@ -302,7 +302,7 @@ Si tu fais > 100 transactions/mois, consulte un expert-comptable. Le passage en 
 5. **Oublier de déclarer les rewards staking** (revenus imposables ; régime et moment à vérifier, non tranchés officiellement)
 6. **Mal calculer le portefeuille global** (oublier les wallets DeFi/NFT)
 7. **Ne pas déclarer les airdrops reçus** (revenus imposables ; régime à vérifier — voir ci-dessus)
-8. **Cocher 2OP sans calculer** (option barème globale = peut taxer plus tes dividendes)
+8. **Cocher la mauvaise case** (pour la crypto, l'option barème est la case 3CN, pas la 2OP) **ou opter sans calculer** (au-delà de la TMI 11 %, le barème coûte plus cher)
 9. **Conserver les preuves moins de 6 ans** (durée de prescription DGFiP)
 10. **Faire confiance à un seul exchange** pour le calcul de PV — toujours croiser avec un outil agrégateur
 

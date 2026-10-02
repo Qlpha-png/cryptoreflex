@@ -487,9 +487,20 @@ async function generateNews() {
 
   let created = 0, skipped = 0, errors = 0;
 
+  /* Audit 2026-10-02 : la même info, restée plusieurs jours dans un flux RSS, était republiée chaque jour
+     (23 doublons sur 137 news). On saute toute source déjà traitée, QUELLE QUE SOIT sa date : on compare la
+     partie du nom de fichier après la date (slug du titre source). */
+  const existingSources = new Set(
+    (await fs.readdir(NEWS_DIR)).filter((f) => f.endsWith(".mdx")).map((f) => f.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.mdx$/, "")),
+  );
+
   for (const raw of raws) {
     if (created >= MAX_NEWS_PER_RUN) break;
     try {
+      if (existingSources.has(slugify(raw.title))) {
+        skipped++;
+        continue;
+      }
       // Pré-check d'existence basé sur le slug du titre brut, AVANT l'appel LLM
       // (économise un appel API ~2s + ~0.001$ si le slug du jour existe déjà).
       const slugPreview = `${TODAY}-${slugify(raw.title)}`;
@@ -702,7 +713,19 @@ async function generateTA() {
   console.log(`Skipped: ${newsRes.skipped + taRes.skipped}`);
   console.log(`Errors:  ${newsRes.errors + taRes.errors}`);
 
-  // Exit code 0 même si errors > 0 (best effort)
+  // Exit 0 (best effort : les analyses techniques créées doivent être committées), mais les compteurs sont
+  // publiés pour le workflow : son dernier step ÉCHOUE si aucune news n'a pu être créée alors que des
+  // tentatives ont échoué (audit 2026-10-02 : crédit Anthropic épuisé = 0 news du 14/07 au 02/10/2026, sans
+  // aucune alerte, car ce script sortait toujours en 0).
+  if (process.env.GITHUB_OUTPUT) {
+    await fs.appendFile(process.env.GITHUB_OUTPUT, `news_created=${newsRes.created}
+news_errors=${newsRes.errors}
+news_skipped=${newsRes.skipped}
+`);
+  }
+  if (newsRes.created === 0 && newsRes.errors > 0) {
+    console.error(`[ALERTE] 0 news créée, ${newsRes.errors} échec(s) : vérifier ANTHROPIC_API_KEY (clé et crédit).`);
+  }
   process.exit(0);
 })().catch((err) => {
   console.error(`[FATAL] ${err.message}`);

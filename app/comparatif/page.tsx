@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import {
-  getAllPlatforms,
+  getAllPlatforms, isAvailableFr,
   getAvailablePlatformCount,
   getPlatformById,
   type Platform,
@@ -140,7 +140,7 @@ function profilesFor(p: Platform): Array<"debutant" | "intermediaire" | "avance"
 
 export default function ComparatifHubPage() {
   const all = getPublishableComparisons();
-  const topPlatforms = getAllPlatforms().slice(0, 8);
+  const topPlatforms = getAllPlatforms().filter(isAvailableFr).slice(0, 8);
 
   // Regroupement par bucket.
   const byBucket = new Map<ComparisonSpec["bucket"], ComparisonSpec[]>();

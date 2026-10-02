@@ -266,7 +266,7 @@ portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchli
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">①</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
       <strong>Lancez le Radar 3916-bis</strong><br>
-      <span style="color:${T.colors.textMuted};font-size:13px;">Détectez vos amendes potentielles avant la deadline mai 2026 (1500-10000€/compte).</span>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Détectez vos amendes potentielles avant votre prochaine déclaration (750 € par compte oublié).</span>
     </td>
   </tr>
   <tr>

@@ -76,7 +76,7 @@ const SECTIONS: MenuSection[] = [
     Icon: Compass,
     intro: "Démarrer avec Cryptoreflex",
     items: [
-      { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 33 plateformes" },
+      { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 34 plateformes" },
       ...(isReflexCardsEnabled()
         ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: RC_BADGE }]
         : []),
@@ -96,7 +96,7 @@ const SECTIONS: MenuSection[] = [
     Icon: DollarSign,
     intro: "Comparer & choisir où acheter",
     items: [
-      { href: "/comparatif", label: "Comparatif plateformes", desc: "33 plateformes notées MiCA" },
+      { href: "/comparatif", label: "Comparatif plateformes", desc: "22 plateformes agréées MiCA" },
       { href: "/comparatif/frais", label: "Frais : ranking 2026", desc: "Maker, taker, spread, SEPA", badge: "NEW" },
       { href: "/comparatif/securite", label: "Sécurité : audit complet", desc: "Cold storage, hack, MiCA", badge: "NEW" },
       { href: "/avis", label: "Avis détaillés", desc: "Tests réels de chaque plateforme" },
@@ -134,7 +134,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/outils/simulateur-dca", label: "Simulateur DCA", desc: "Strategy long terme" },
       { href: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", desc: "Net après frais" },
       { href: "/outils/whale-radar", label: "Whale Radar", desc: "Mouvements > 1M$ en direct" },
-      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut PSAN/CASP en 1 clic" },
+      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut MiCA en 1 clic" },
       { href: "/outils/phishing-checker", label: "Phishing checker", desc: "URL crypto suspecte ?" },
       { href: "/outils/wallet-connect", label: "Wallet Connect", desc: "Connectez votre wallet en sécurité" },
       { href: "/outils/yield-stablecoins", label: "Yield stablecoins", desc: "USDC/USDT à 5%+ APR" },

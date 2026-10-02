@@ -102,7 +102,7 @@ const TOOLS: Tool[] = [
   },
   {
     title: "Radar 3916-bis",
-    desc: "Détecte vos amendes potentielles (750 € à 10 000 €/compte) sur vos comptes crypto étrangers en 2 min.",
+    desc: "Détecte vos amendes potentielles (750 € par compte, 1 500 € au-delà de 50 000 €) sur vos comptes crypto étrangers en 2 min.",
     href: "/outils/radar-3916-bis",
     Icon: Radar,
     tier: "free",
@@ -251,7 +251,7 @@ const TOOLS: Tool[] = [
   // Cerfa auto, IA) pour le tri/filtre interne.
   {
     title: "Yield stablecoins (USDC/USDT/EURC)",
-    desc: "Comparateur APY sur 33 plateformes MiCA + DeFi. Trie par rendement, lock-up, risque.",
+    desc: "Comparateur APY sur les plateformes agréées MiCA + DeFi. Trie par rendement, lock-up, risque.",
     href: "/outils/yield-stablecoins",
     Icon: Zap,
     tier: "free",

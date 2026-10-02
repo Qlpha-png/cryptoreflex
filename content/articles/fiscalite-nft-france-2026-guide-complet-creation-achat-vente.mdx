@@ -6,9 +6,9 @@ excerpt: "NFT achetés en ETH, revendus 6 mois plus tard, mintés ou royalties d
 category: "Fiscalité"
 date: "2026-04-26"
 publishedAt: "2026-04-26"
-updatedAt: "2026-04-26"
+updatedAt: "2026-10-02"
 lastUpdated: "2026-04-26"
-dateModified: "2026-04-26"
+dateModified: "2026-10-02"
 readTime: "16 min"
 readingTime: 16
 author: "Kevin Voisin"
@@ -45,20 +45,21 @@ schema:
   audience: "Particuliers résidents fiscaux français investisseurs ou créateurs de NFT"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="26 avril 2026" readingTime="16 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="2 octobre 2026" readingTime="16 min" methodology="/methodologie" />
 
 <Callout type="warning" title="Disclaimer fiscal">
-Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. Consultez un expert-comptable pour votre situation. Les NFT restent un domaine fiscal en construction au 26 avril 2026 — la doctrine évolue rapidement et certains points relèvent encore de l'interprétation.
+Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. Consultez un expert-comptable pour votre situation. Depuis la loi n° 2026-534 du 25 juin 2026, les NFT ont un régime fiscal défini (article 150 VH ter du CGI), mais certains points d'application restent à préciser par l'administration.
 </Callout>
 
 Vous avez acheté un **NFT Pudgy Penguin pour 1 ETH**, mintée une collection sur OpenSea, ou vous touchez des **royalties** d'auteur sur vos ventes secondaires ? La fiscalité française des NFT en 2026 mêle **plusieurs régimes** : plus-value crypto pour le règlement en ETH, **biens incorporels** pour la valorisation, **BNC artiste** ou **BIC commerçant** pour les créateurs, et **TVA** selon la nature du NFT.
 
-Ce guide vous détaille **chaque cas par profil** (acheteur, revendeur, créateur), avec les **calculs concrets**, les **formulaires** à remplir et le **vide juridique** persistant entre "actif numérique fungible" (article 150 VH bis CGI) et "œuvre d'art" (régime des plus-values mobilières classiques).
+Ce guide vous détaille **chaque cas par profil** (acheteur, revendeur, créateur), avec les **calculs concrets**, les **formulaires** à remplir et le **nouveau régime de l'article 150 VH ter du CGI**, créé par la loi du 25 juin 2026 : le NFT est désormais imposé selon ce qu'il représente.
 
 ## TL;DR (60 secondes)
 
 - **NFT ≠ crypto fungible** : un NFT n'entre pas dans la définition stricte de l'article L. 54-10-1 du Code monétaire et financier.
-- **Régime applicable** : par défaut **biens incorporels** (article 150 A bis CGI), avec interprétation possible vers le régime des plus-values d'actifs numériques selon la nature du NFT.
+- **Régime applicable** : depuis le 1er janvier 2026, le **nouvel article 150 VH ter du CGI** (loi n° 2026-534 du 25 juin 2026) impose la plus-value de cession d'un NFT **selon le régime du bien ou du droit qu'il représente** (exemple : un NFT donnant un droit sur un bien immobilier relève des plus-values immobilières).
+- **Comptes NFT à l'étranger** : à déclarer depuis le 1er juillet 2026 (article 1649 bis C du CGI), comme les comptes crypto ; amende de 750 € par compte non déclaré (1 500 € au-delà de 50 000 €).
 - **Achat NFT en ETH** = **cession des ETH** = **fait générateur** sur les ETH (PFU 31,4 % ou barème) au moment de l'achat.
 - **Revente NFT** = plus-value imposable selon profil (occasionnel ou BIC professionnel).
 - **Créateur NFT** : revenus de vente = **BNC artiste** (artiste plasticien) ou **BIC** (commerçant), avec abattements spécifiques.
@@ -68,22 +69,15 @@ Ce guide vous détaille **chaque cas par profil** (acheteur, revendeur, créateu
 
 ---
 
-## 1. Le statut fiscal des NFT en 2026 : un vide juridique persistant
+## 1. Le statut fiscal des NFT en 2026 : un régime enfin défini (article 150 VH ter)
 
-Au 26 avril 2026, **aucun texte fiscal français spécifique aux NFT** n'existe. La doctrine s'appuie sur trois cadres possibles, qui ne se recoupent pas parfaitement :
+Jusqu'en 2025, aucun texte fiscal français ne visait spécifiquement les NFT, et les praticiens hésitaient entre plusieurs régimes. **La loi n° 2026-534 du 25 juin 2026 (article 91)** a tranché :
 
-| Cadre | Article CGI | Avantage / Inconvénient |
-|---|---|---|
-| **Plus-values d'actifs numériques** | 150 VH bis | PFU 31,4 %. Mais NFT pas formellement inclus dans la définition d'actif numérique. |
-| **Plus-values mobilières (biens meubles)** | 150 UA | Abattement durée de détention. Adapté aux NFT "objets de collection". |
-| **Régime général (biens incorporels)** | 200 A | Imposition au PFU 31,4 % par défaut. Doctrine majoritaire pour 2026. |
+- **Nouvel article 150 VH ter du CGI** : pour les cessions réalisées depuis le **1er janvier 2026**, la plus-value de cession d'un actif numérique non fongible (NFT) est imposée **selon le régime applicable aux actifs ou aux droits que le NFT représente**. Un NFT qui confère un droit sur un bien immobilier relève ainsi du régime des plus-values immobilières.
+- **Article 1649 bis C du CGI** : depuis le **1er juillet 2026**, les comptes de NFT ouverts à l'étranger doivent être déclarés comme les comptes crypto (formulaire 3916-bis), sous peine d'une amende de 750 € par compte non déclaré (1 500 € si la valeur dépasse 50 000 €).
 
-### Position dominante en 2026
-
-La majorité des cabinets fiscalistes spécialisés crypto retiennent le **régime général des biens incorporels (article 200 A CGI)** pour les NFT non clairement assimilables à des cryptoactifs fongibles, avec **imposition au PFU 31,4 %** ou option barème progressif (case 2OP).
-
-<Callout type="info" title="Pourquoi pas le régime art ?">
-L'article 150 VI du CGI prévoit un régime spécifique pour les œuvres d'art (taxe forfaitaire de 6,5 % sur le prix de vente, ou option pour le régime des plus-values des particuliers). En théorie, un NFT artistique pourrait y prétendre. En pratique, l'administration fiscale considère que le NFT n'a pas de substance matérielle (c'est un certificat de propriété sur la blockchain, pas l'œuvre elle-même), et écarte généralement ce régime.
+<Callout type="info" title="Ce qui reste à préciser">
+Pour un NFT qui ne représente aucun bien ou droit clairement identifiable (simple objet de collection numérique, image de profil), l'application concrète du nouveau texte doit encore être précisée par la doctrine administrative (BOFiP). Pour des montants significatifs, faites valider le régime retenu par un fiscaliste.
 </Callout>
 
 ---
@@ -122,11 +116,11 @@ Beaucoup de collectionneurs croient qu'acheter un NFT en ETH est "neutre" fiscal
 
 ### Scénario A : revente occasionnelle (collectionneur)
 
-Si vous êtes un **collectionneur particulier** qui revend ponctuellement, vous êtes dans le **régime des plus-values des particuliers** sur biens incorporels (article 200 A CGI) :
+Si vous êtes un **collectionneur particulier** qui revend ponctuellement, la plus-value est imposée **selon le régime de ce que représente le NFT** (article 150 VH ter du CGI, cessions depuis le 1er janvier 2026) :
 
-- Imposition au **PFU 31,4 %** sur la plus-value.
 - Plus-value = prix de cession (en EUR ou EUR-équivalent au jour J) − prix d'acquisition (idem).
-- Option barème progressif possible (case 2OP).
+- NFT qui confère un droit sur un bien (immobilier, objet, œuvre) : régime des plus-values de ce bien.
+- NFT purement numérique sans droit identifiable : en attendant la doctrine administrative, faites valider le régime retenu par un fiscaliste (voir l'encadré « Ce qui reste à préciser » plus haut).
 
 ### Scénario B : revente professionnelle (trader NFT)
 
@@ -232,8 +226,7 @@ Depuis 2023, la TVA s'applique différemment selon la nature du NFT :
 
 Si vous êtes **créateur** (BNC ou BIC), vous n'êtes pas redevable de la TVA tant que vos recettes annuelles restent sous le seuil de franchise en base :
 
-- **BNC** : 39 100 € (2026, plafond majoré).
-- **BIC services** : 39 100 €.
+- **Prestations de services (BNC et BIC services)** : 37 500 € de chiffre d'affaires annuel en 2026.
 
 Au-delà, vous facturez la TVA sur vos ventes et la reversez à l'État. **Ouvrir un compte pro et facturer en EUR équivalent** du prix en ETH au jour de la vente.
 
@@ -276,7 +269,8 @@ Pour un **non-créateur** (qui aurait acheté les droits sur une collection), c'
 ## 9. Erreurs courantes à éviter
 
 - **Oublier le fait générateur ETH** lors d'un achat NFT : vous devez déclarer la plus-value sur les ETH cédés, même sans conversion en EUR.
-- **Confondre NFT et crypto fungible** : article 150 VH bis ne s'applique pas automatiquement aux NFT.
+- **Appliquer d'office le régime crypto à un NFT** : depuis 2026, l'article 150 VH ter impose le NFT selon ce qu'il représente.
+- **Oublier de déclarer un compte NFT à l'étranger** : obligatoire depuis le 1er juillet 2026 (3916-bis), 750 € d'amende par compte non déclaré.
 - **Négliger la TVA** quand vous vendez un NFT utility ou que vous dépassez les seuils de franchise.
 - **Mal choisir BNC vs BIC** : impact direct sur l'abattement et les cotisations.
 - **Ignorer les royalties** : ce sont des revenus récurrents passifs taxables.
@@ -306,7 +300,7 @@ Pour suivre l'historique de vos NFT (date d'achat, prix, ventes secondaires), ut
   },
   {
     question: "Les NFT sont-ils soumis au PFU 31,4 % comme les autres cryptos ?",
-    answer: "Pas automatiquement. Les NFT ne relèvent pas formellement de l'article 150 VH bis du CGI (qui concerne les actifs numériques fongibles). La position dominante des fiscalistes en 2026 est de les rattacher au régime des biens incorporels (article 200 A CGI), avec imposition au PFU 31,4 % par défaut et option barème progressif possible. Le régime peut différer pour des NFT clairement artistiques relevant du régime des œuvres d'art."
+    answer: "Pas automatiquement. Depuis la loi n° 2026-534 du 25 juin 2026, l'article 150 VH ter du CGI impose la plus-value de cession d'un NFT (cessions depuis le 1er janvier 2026) selon le régime du bien ou du droit qu'il représente : un NFT donnant un droit sur un bien immobilier relève par exemple des plus-values immobilières. Pour un NFT sans droit identifiable, l'application doit encore être précisée par l'administration : faites valider votre cas par un fiscaliste."
   },
   {
     question: "Si je crée et vends mes propres NFT, suis-je en BNC ou en BIC ?",
@@ -318,14 +312,14 @@ Pour suivre l'historique de vos NFT (date d'achat, prix, ventes secondaires), ut
   },
   {
     question: "Y a-t-il de la TVA sur la vente d'un NFT ?",
-    answer: "Cela dépend de la nature du NFT. Un NFT artistique (œuvre d'art originale) peut bénéficier d'un régime favorable (exonération ou TVA réduite à 5,5 % selon les conditions). Un NFT utility (accès à un service, jeu, métavers, abonnement) est soumis à la TVA standard de 20 %. Un NFT collectible (PFP) suit également le régime de prestation de service. Tant que vos recettes restent sous le seuil de franchise en base (39 100 € en 2026), vous n'êtes pas redevable de la TVA."
+    answer: "Cela dépend de la nature du NFT. Un NFT artistique (œuvre d'art originale) peut bénéficier d'un régime favorable (exonération ou TVA réduite à 5,5 % selon les conditions). Un NFT utility (accès à un service, jeu, métavers, abonnement) est soumis à la TVA standard de 20 %. Un NFT collectible (PFP) suit également le régime de prestation de service. Tant que vos recettes restent sous le seuil de franchise en base (37 500 € de chiffre d'affaires annuel en 2026 pour les prestations de services), vous n'êtes pas redevable de la TVA."
   }
 ]} />
 
 ---
 
 <Callout type="info" title="Sources et mise à jour">
-Cet article s'appuie sur les articles 150 VH bis, 150 A bis, 200 A, 92, 34 et 261-7 du Code général des impôts, ainsi que sur la doctrine BOFiP générale au 26 avril 2026. La fiscalité française des NFT n'a pas de cadre dédié et continue d'évoluer — une mise à jour sera nécessaire dès la publication d'une doctrine ou d'un rescrit spécifique. Pour des montants significatifs (> 10 000 €/an), consultez un expert-comptable ou un avocat fiscaliste spécialisé crypto/art.
+Cet article s'appuie sur la loi n° 2026-534 du 25 juin 2026 (article 91), sur les articles 150 VH bis, 150 VH ter, 1649 bis C, 92, 34 et 261-7 du Code général des impôts, et sur la doctrine BOFiP au 2 octobre 2026. Une mise à jour sera faite dès la publication de la doctrine administrative sur le nouvel article 150 VH ter. Pour des montants significatifs (> 10 000 €/an), consultez un expert-comptable ou un avocat fiscaliste spécialisé crypto/art.
 </Callout>
 
 

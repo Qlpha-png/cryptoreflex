@@ -160,7 +160,7 @@ export default function NewsletterModal({
               id="nl-modal-title"
               className="mt-4 text-xl sm:text-2xl font-extrabold text-fg leading-tight"
             >
-              Reçois le <span className="gradient-text">guide PDF gratuit</span>
+              Recevez le <span className="gradient-text">guide PDF gratuit</span>
             </h2>
 
             <p

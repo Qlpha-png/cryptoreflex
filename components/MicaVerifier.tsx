@@ -229,17 +229,17 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
         {showMethodology && (
           <div className="border-t border-border px-5 py-4 text-sm text-white/75 space-y-3">
             <p>
-              Notre registre croise quatre sources publiques officielles : la
-              liste PSAN de l'AMF, les registres CASP nationaux (BaFin, CNMV,
-              MFSA, CSSF, Bank of Lithuania, Central Bank of Ireland), le
-              registre ESMA des entités MiCA passeportées, et les pages "Legal
-              / Licenses" publiées par chaque plateforme.
+              Notre registre repose sur deux sources officielles : le registre
+              intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date
+              d'agrément et pays couverts par passeport) et la liste blanche de
+              l'AMF (numéros d'agrément des prestataires français).
             </p>
             <p>
-              Chaque fiche est vérifiée manuellement chaque mois. Le statut
-              "à risque juillet 2026" est attribué automatiquement à toute
-              plateforme qui n'a ni agrément MiCA en vigueur, ni dossier CASP
-              déposé en France à date du dernier audit.
+              Depuis le 1er juillet 2026, fin de la période transitoire, seul un
+              prestataire agréé MiCA, en France ou dans un autre pays de l'UE
+              avec un passeport vers la France, peut servir des clients
+              français. Une plateforme absente du registre est indiquée « non
+              autorisée en France ».
             </p>
             <p className="text-xs text-muted">
               Source consolidée :{" "}
@@ -350,7 +350,7 @@ function ResultCard({
       <dl className="mt-6 grid sm:grid-cols-2 gap-4">
         <Field
           icon={ShieldCheck}
-          label="Statut PSAN"
+          label="Statut en France"
           value={getPsanLabel(platform)}
           mono={Boolean(platform.amfRegistration)}
         />
@@ -395,7 +395,7 @@ function ResultCard({
         </div>
       )}
 
-      {/* À risque juillet 2026 */}
+      {/* Accès à la France (fin de la période transitoire le 1er juillet 2026) */}
       <div
         className={`mt-4 flex items-start gap-3 rounded-xl border px-4 py-3 ${
           platform.atRiskJuly2026
@@ -414,13 +414,15 @@ function ResultCard({
               platform.atRiskJuly2026 ? "text-danger-fg" : "text-accent-green"
             }`}
           >
-            À risque au 1er juillet 2026 ?{" "}
-            {platform.atRiskJuly2026 ? "OUI" : "NON"}
+            Peut servir des clients en France ?{" "}
+            {platform.atRiskJuly2026 ? "NON" : "OUI"}
           </div>
           <p className="mt-0.5 text-white/75">
             {platform.atRiskJuly2026
-              ? "Cette plateforme n'a pas (encore) d'agrément MiCA pleinement opposable. Son accès aux résidents UE pourrait être restreint à compter du 1er juillet 2026 (fin de la période transitoire le 30 juin 2026)."
-              : "Cette plateforme dispose d'un cadre réglementaire MiCA conforme ou est hors champ d'application — pas de risque identifié à la fin de la période transitoire."}
+              ? "Depuis le 1er juillet 2026, fin de la période transitoire, seul un prestataire agréé MiCA avec accès à la France peut y fournir des services sur crypto-actifs. Cette plateforme n'en fait pas partie à la date de notre vérification."
+              : platform.micaStatus === "out_of_scope"
+                ? "Hors champ de l'agrément MiCA (portefeuille en auto-conservation ou protocole décentralisé) : vous gardez vous-même vos clés."
+                : "Agréée MiCA avec accès à la France à la date de notre vérification. L'agrément encadre la plateforme ; il ne protège pas contre les pertes liées aux marchés."}
           </p>
         </div>
       </div>

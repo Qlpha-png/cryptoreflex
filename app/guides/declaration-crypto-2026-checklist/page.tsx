@@ -117,7 +117,7 @@ const STEPS: Step[] = [
     title: "Remplissez l'annexe 3916-bis (comptes étrangers)",
     detail:
       "Pour chaque exchange étranger (Binance, Kraken Irlande, Coinbase Europe, Bitpanda Autriche, etc.) : 1 ligne sur 3916-bis avec le nom de l'établissement, adresse, numéro de compte, date d'ouverture (et éventuellement de clôture).",
-    why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 750 €/compte (1 500 € si solde > 50 000 €, 10 000 € si État non coopératif). À déclarer même sans transaction dans l'année.",
+    why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 750 €/compte (1 500 € si la valeur des comptes dépasse 50 000 €). À déclarer même sans transaction dans l'année.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cerfa-3916", label: "Détail 3916-bis" },
   },
   {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
-import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 import AffiliateLink from "@/components/AffiliateLink";
 import { getAffiliationKind } from "@/lib/partnerships";
@@ -19,7 +19,7 @@ interface Props {
  *   les inconnues sont rendues en "fallback léger" (pas de hardcoded URL).
  */
 export default function WhereToBuy({ cryptoName, platformNames }: Props) {
-  const knownPlatforms = getAllPlatforms();
+  const knownPlatforms = getAllPlatforms().filter(isAvailableFr);
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
   const matches: Array<{ name: string; platform?: Platform }> = platformNames.map(

@@ -286,8 +286,8 @@ export default function PdfPreview({
 
           <div className="mt-3 rounded bg-slate-100 p-3 text-[9.5pt] text-slate-700">
             <strong>Report sur la 2042-C :</strong> ligne <span className="font-mono">3AN</span>{" "}
-            (plus-values) ou <span className="font-mono">3BN</span> (moins-values
-            reportables). Cochez la case <span className="font-mono">2OP</span> si
+            (plus-values) ou <span className="font-mono">3BN</span> (moins-values,
+            non reportables sur les années suivantes). Cochez la case <span className="font-mono">3CN</span> si
             vous optez pour le barème progressif.
           </div>
         </section>

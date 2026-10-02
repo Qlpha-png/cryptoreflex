@@ -175,7 +175,7 @@ export default function NewsletterStickyBar() {
           <div className="flex items-center gap-2 text-fg">
             <Mail className="h-4 w-4 text-primary" aria-hidden="true" />
             <p className="text-sm font-semibold leading-tight">
-              Recois la newsletter quotidienne
+              Recevez la newsletter quotidienne
             </p>
           </div>
           <button
@@ -206,7 +206,7 @@ export default function NewsletterStickyBar() {
                 setEmail(e.target.value);
                 if (status === "error") setStatus("idle");
               }}
-              placeholder="ton@email.fr"
+              placeholder="votre@email.fr"
               aria-invalid={status === "error"}
               className="flex-1 min-w-0 rounded-lg bg-elevated border border-border px-3 py-2 text-sm text-fg placeholder:text-muted focus:outline-none focus:border-primary/60"
             />
@@ -236,7 +236,7 @@ export default function NewsletterStickyBar() {
         )}
 
         <p className="mt-1.5 text-[10px] text-muted leading-snug">
-          3 min/jour, gratuit, desabonnement 1 clic. RGPD-compliant (Beehiiv).
+          3 min par jour, gratuit, désabonnement en 1 clic. Conforme au RGPD (Beehiiv).
         </p>
       </div>
     </div>

@@ -59,7 +59,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, article]);
 const CRITERIA = [
   { name: "Frais réels", weight: 20, what: "Frais maker/taker spot, achat instantané, retrait fiat SEPA, retrait crypto, spread typique. Calcul d'un coût total par transaction type pour 1000€." },
   { name: "Sécurité", weight: 25, what: "Cold storage %, assurance des fonds, MFA obligatoire, audits de sécurité tiers, historique d'incidents et de remboursements." },
-  { name: "Conformité MiCA / PSAN", weight: 20, what: "Statut PSAN AMF, agrément MiCA (CASP), juridiction de l'agrément, ancienneté du statut, restrictions imposées." },
+  { name: "Conformité MiCA", weight: 20, what: "Agrément MiCA (CASP) et accès à la France, autorité qui l'a délivré, ancienneté de l'agrément, restrictions imposées." },
   { name: "Expérience utilisateur", weight: 15, what: "Onboarding, ergonomie de l'app, qualité des notes Trustpilot, App Store, Play Store. Test pratique du parcours d'achat." },
   { name: "Support en français", weight: 10, what: "Disponibilité chat FR, support téléphonique FR, temps de réponse moyen, qualité documentaire FR." },
   { name: "Catalogue & services", weight: 10, what: "Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels (carte, lending)." },
@@ -148,7 +148,7 @@ export default function MethodologiePage() {
         Fréquence de mise à jour
       </h2>
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Statut MiCA / PSAN</strong> : vérifié <strong>chaque mois</strong> (publications AMF, ESMA)</li>
+        <li><strong>Statut MiCA</strong> : vérifié <strong>chaque mois</strong> (registre de l&apos;ESMA, listes blanches de l&apos;AMF)</li>
         <li><strong>Frais</strong> : vérifiés <strong>chaque trimestre</strong></li>
         <li><strong>Notes Trustpilot</strong> : actualisées <strong>chaque mois</strong></li>
         <li><strong>Bonus de bienvenue</strong> : vérifiés <strong>chaque mois</strong></li>

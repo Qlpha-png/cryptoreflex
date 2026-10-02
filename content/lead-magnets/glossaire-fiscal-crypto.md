@@ -35,7 +35,7 @@ Formulaire Cerfa à joindre à la déclaration 2042-C qui détaille **chaque ces
 ## B
 
 ### Barème progressif
-Régime d'imposition optionnel (case 2OP) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
+Régime d'imposition optionnel (case 3CN de la 2042 C) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
 
 ### BIC (Bénéfices Industriels et Commerciaux)
 Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 18,6 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
@@ -72,7 +72,7 @@ Directive européenne adoptée 2023, en application 2026. Oblige les exchanges c
 Administration fiscale française. Reçoit les déclarations, calcule l'impôt, contrôle les contribuables.
 
 ### Déclaration 2042
-Déclaration principale des revenus du foyer fiscal. La 2042-C est l'annexe complémentaire qui contient la section "Plus-values mobilières" (case 3AN pour PFU, case 2OP pour barème).
+Déclaration principale des revenus du foyer fiscal. La 2042-C est l'annexe complémentaire qui contient la section "Plus-values mobilières" (ligne 3AN pour une plus-value, 3BN pour une moins-value, case 3CN pour opter pour le barème).
 
 ### DeFi (Decentralized Finance)
 Finance décentralisée : protocoles on-chain (Aave, Compound, Uniswap, Curve, Lido, etc.) permettant de prêter, emprunter, échanger sans intermédiaire centralisé. Fiscalité **complexe et zone grise** : chaque opération (deposit, withdraw, claim) peut être un fait générateur.

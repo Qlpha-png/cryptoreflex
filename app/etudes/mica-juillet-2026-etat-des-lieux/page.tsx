@@ -23,29 +23,27 @@ import {
 } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
 import { withHreflang } from "@/lib/seo-alternates";
+import { getExchangePlatforms, isAvailableFr } from "@/lib/platforms";
+import { getAllMicaPlatforms } from "@/lib/mica";
 
 /**
- * /etudes/mica-juillet-2026-etat-des-lieux — etude cornerstone backlinks magnet.
+ * /etudes/mica-juillet-2026-etat-des-lieux — état des lieux des plateformes crypto en France
+ * après la fin de la période transitoire MiCA (1er juillet 2026).
  *
- * Strategie : 3000+ mots, sources publiques, methodologie publiee. Cible :
- *  - Backlinks dofollow (presse, blogs FR, podcasts crypto qui citent une etude)
- *  - SEO long-tail "etude MiCA 2026", "rapport plateformes crypto FR", etc.
- *  - Soutien des landing pages /lp/mica-2026 (donne du fond a la promesse)
- *
- * Schemas JSON-LD : Article + ResearchProject + Breadcrumb + FAQPage.
- *
- * Mise a jour : avant le 30 juin 2026, vérifier la liste plateformes
- * (atRiskJuly2026 dans data/psan-registry.json) et mettre a jour la date
- * en bas de page (`lastUpdated`).
+ * Réécrite le 2026-10-02 (audit) : la version du 6 mai 2026 décrivait la situation avant
+ * l'échéance et contenait des statuts et dates d'agrément erronés. Tous les statuts sont
+ * désormais calculés depuis data/platforms.json, lui-même aligné sur le registre MiCA de
+ * l'ESMA (CASPS.csv, données au 29/09/2026) et la liste blanche de l'AMF.
+ * Mise à jour : relancer la vérification des registres, puis changer LAST_UPDATED / REGISTER_AS_OF.
  */
 
 const PUBLISHED_DATE = "2026-05-06";
-const LAST_UPDATED = "2026-05-06";
+const LAST_UPDATED = "2026-10-02";
+const REGISTER_AS_OF = "29 septembre 2026";
 
-const TITLE =
-  "MiCA juillet 2026 : état des lieux des plateformes crypto en France";
+const TITLE = "MiCA juillet 2026 : état des lieux des plateformes crypto en France";
 const DESCRIPTION =
-  "Analyse exhaustive des 33 plateformes crypto disponibles en France à la deadline MiCA. Sources AMF, ESMA, BaFin officielles. Plateformes conformes vs à risque. Méthodologie publique CC-BY 4.0.";
+  "Après la fin de la période transitoire MiCA (1er juillet 2026) : quelles plateformes crypto sont agréées pour servir la France, lesquelles ne le sont pas. Données du registre officiel de l'ESMA et de la liste blanche de l'AMF, mises à jour le 2 octobre 2026.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -62,239 +60,75 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const frDate = (iso: string | null) =>
+  iso ? new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" }) : "—";
+
+const PLATFORMS = getExchangePlatforms();
+const AUTHORIZED = PLATFORMS.filter(isAvailableFr).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+const NOT_AUTHORIZED = PLATFORMS.filter((p) => !isAvailableFr(p)).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+const AMF_AUTHORIZED = AUTHORIZED.filter((p) => p.mica.amfRegistration);
+
 const STATS = [
-  {
-    value: "33",
-    label: "plateformes analysées",
-    color: "text-cyan-400",
-  },
-  {
-    value: "22",
-    label: "MiCA-compliant (juillet 2025)",
-    color: "text-emerald-400",
-  },
-  {
-    value: "12",
-    label: "à risque deadline 30 juin 2026",
-    color: "text-amber-400",
-  },
-  {
-    value: "5,2 M",
-    label: "Français détenteurs crypto (ADAN/Ipsos 2025)",
-    color: "text-indigo-400",
-  },
+  { value: String(PLATFORMS.length), label: "plateformes suivies par Cryptoreflex", color: "text-cyan-400" },
+  { value: String(AUTHORIZED.length), label: "agréées MiCA avec accès à la France", color: "text-emerald-400" },
+  { value: String(NOT_AUTHORIZED.length), label: "non autorisées en France", color: "text-amber-400" },
+  { value: String(AMF_AUTHORIZED.length), label: "agréées directement par l'AMF", color: "text-indigo-400" },
 ];
 
 const TOC = [
-  { id: "tldr", label: "Résumé exécutif" },
-  { id: "contexte", label: "1. Contexte réglementaire MiCA" },
-  { id: "calendrier", label: "2. Calendrier des phases" },
-  { id: "methodologie", label: "3. Méthodologie d’analyse" },
-  { id: "compliant", label: "4. Plateformes MiCA-compliant" },
-  { id: "at-risk", label: "5. Plateformes à risque" },
-  { id: "stablecoins", label: "6. Stablecoins MiCA" },
-  { id: "implications", label: "7. Implications pour les utilisateurs FR" },
-  { id: "faq", label: "8. FAQ" },
-  { id: "sources", label: "9. Sources & méthodologie" },
+  { id: "tldr", label: "Résumé" },
+  { id: "contexte", label: "1. Ce qui a changé le 1er juillet 2026" },
+  { id: "agreees", label: "2. Plateformes agréées avec accès à la France" },
+  { id: "non-autorisees", label: "3. Plateformes non autorisées en France" },
+  { id: "stablecoins", label: "4. Stablecoins" },
+  { id: "pratique", label: "5. Ce que vous devez faire" },
+  { id: "faq", label: "6. FAQ" },
+  { id: "sources", label: "7. Sources & méthodologie" },
 ];
 
-const COMPLIANT_PLATFORMS = [
-  {
-    name: "Coinbase",
-    legalEntity: "Coinbase Europe Limited",
-    jurisdiction: "Irlande",
-    micaDate: "26 juin 2025",
-    psanFr: "E2023-035",
-    notes:
-      "Société cotée NASDAQ (COIN). Agrément MiCA passporté dans toute l’UE depuis le siège irlandais.",
-  },
-  {
-    name: "Bitpanda",
-    legalEntity: "Bitpanda GmbH",
-    jurisdiction: "Autriche",
-    micaDate: "1er juin 2025",
-    psanFr: "Non requis (passport CASP UE)",
-    notes:
-      "Premier exchange à avoir obtenu l’agrément MiCA. Forte présence FR via support natif et virements SEPA.",
-  },
-  {
-    name: "Kraken",
-    legalEntity: "Payward Europe Solutions Limited",
-    jurisdiction: "Irlande",
-    micaDate: "11 mars 2025",
-    psanFr: "Passport CASP UE depuis Dublin",
-    notes:
-      "Un des premiers exchanges autorisés MiCA en Irlande. Service futures et marges restreints aux clients qualifiés.",
-  },
-  {
-    name: "Binance",
-    legalEntity: "Binance France SAS / Binance MENA",
-    jurisdiction: "France (PSAN) + en cours UE",
-    micaDate: "Demande déposée Q1 2026",
-    psanFr: "E2022-037",
-    notes:
-      "Statut PSAN AMF E2022-037 toujours valide. Demande CASP MiCA en cours d’instruction. Restrictions dérivés en France.",
-  },
-  {
-    name: "OKX",
-    legalEntity: "Okcoin Europe Limited",
-    jurisdiction: "Malte",
-    micaDate: "22 janvier 2025",
-    psanFr: "Passport CASP UE",
-    notes:
-      "Premier exchange MiCA-compliant à Malte. Catalogue tokens étendu, mais filtrage strict des tokens non-conformes UE.",
-  },
-  {
-    name: "Bitstack",
-    legalEntity: "Bitstack SAS",
-    jurisdiction: "France",
-    micaDate: "Q2 2026 (prévue)",
-    psanFr: "E2022-008",
-    notes:
-      "DCA app FR populaire. Procédure CASP MiCA en cours. Statut PSAN FR maintient l’activité jusqu’à la deadline.",
-  },
-  {
-    name: "Coinhouse",
-    legalEntity: "Coinhouse SAS",
-    jurisdiction: "France",
-    micaDate: "Q2 2026 (prévue)",
-    psanFr: "E2020-001 (1er PSAN AMF)",
-    notes:
-      "Premier PSAN AMF historique. Plateforme bancaire crypto avec partenariats ALAN, BNP Paribas. Procédure CASP en cours.",
-  },
-  {
-    name: "Trade Republic",
-    legalEntity: "Trade Republic Bank GmbH",
-    jurisdiction: "Allemagne",
-    micaDate: "30 mai 2025",
-    psanFr: "Passport CASP UE depuis Allemagne",
-    notes:
-      "Néobanque allemande agréée par BaFin, propose 50+ cryptos via une infrastructure custody bank-grade.",
-  },
-];
-
-const AT_RISK_PLATFORMS = [
-  {
-    name: "MEXC",
-    flag: "Aucun agrément CASP UE annoncé",
-    risk:
-      "Pas de procédure publique en cours auprès des régulateurs européens. Probable cessation des services UE après le 30 juin 2026.",
-  },
-  {
-    name: "KuCoin",
-    flag: "Bloqué en Italie depuis 2024",
-    risk:
-      "La CONSOB italienne a déjà bloqué KuCoin pour absence d’agrément. La déclaration FR via PSAN est expirée. Risque d’extension du blocage.",
-  },
-  {
-    name: "ByBit",
-    flag: "Pas de roadmap CASP UE confirmée",
-    risk:
-      "Communique de manière inconstante sur sa stratégie de conformité européenne. Cessation possible des dépôts UE en juin 2026.",
-  },
-  {
-    name: "Crypto.com",
-    flag: "CASP partiel, à vérifier avant juin",
-    risk:
-      "Statut MiCA partiel (Malte). Couverture services dérivés et card incertaine. Les utilisateurs FR doivent vérifier leur compte spécifiquement.",
-  },
-];
-
+/* Registre des émetteurs de jetons de monnaie électronique (EMT) de l'ESMA, vérifié le 02/10/2026 */
 const STABLECOINS = [
-  {
-    name: "USDC (Circle)",
-    status: "compliant",
-    detail: "Émetteur Circle agréé EMI/EMT. Disponible sur Coinbase, Kraken, Bitpanda, Binance UE.",
-  },
-  {
-    name: "EURC (Circle)",
-    status: "compliant",
-    detail: "Stablecoin euro CC européen, agréé EMT. Premier stablecoin euro à grande échelle.",
-  },
-  {
-    name: "USDT (Tether)",
-    status: "non-compliant",
-    detail:
-      "Pas d’agrément MiCA déposé à ce jour. Coinbase Europe a délisté USDT en décembre 2024. Risque de délistage généralisé sur les exchanges UE compliants.",
-  },
-  {
-    name: "DAI (MakerDAO)",
-    status: "uncertain",
-    detail:
-      "Stablecoin algorithmique sans entité émettrice claire. Statut MiCA en cours d’interprétation par l’ESMA.",
-  },
-  {
-    name: "EUROC / EURCV",
-    status: "compliant",
-    detail:
-      "Stablecoins euro émis par Circle (EURCV via Société Générale Forge). Entièrement MiCA-conformes.",
-  },
+  { name: "USDC et EURC (Circle)", ok: true, detail: "Émis par Circle, établissement agréé en France par l'ACPR, inscrit au registre des émetteurs de jetons de monnaie électronique (EMT) de l'ESMA." },
+  { name: "EURCV et USDCV (Société Générale-Forge)", ok: true, detail: "Émis par Société Générale-Forge, agréée par l'ACPR, inscrite au même registre EMT de l'ESMA." },
+  { name: "USDT (Tether)", ok: false, detail: "Aucun émetteur inscrit au registre EMT de l'ESMA à la date de notre vérification." },
+  { name: "DAI / USDS", ok: false, detail: "Aucun émetteur inscrit au registre EMT de l'ESMA à la date de notre vérification." },
 ];
 
 const FAQ = [
   {
-    q: "Que se passe-t-il concrètement le 1er juillet 2026 ?",
-    a: "La période transitoire prévue par l’article 143 du règlement MiCA (UE) 2023/1114 prend fin pour les CASP qui opéraient en UE avant le 30 décembre 2024. Toute plateforme n’ayant pas obtenu son agrément CASP auprès d’un régulateur national de l’UE devra cesser ses activités auprès des résidents UE. Concrètement : les retraits resteront généralement possibles pendant 30 à 90 jours, mais les dépôts, le trading et l’ouverture de nouveaux comptes seront bloqués.",
+    q: "Que s'est-il passé le 1er juillet 2026 ?",
+    a: "La période transitoire prévue par l'article 143 du règlement MiCA (UE) 2023/1114 a pris fin en France. Depuis, seul un prestataire agréé MiCA (CASP), en France ou dans un autre État membre avec un passeport vers la France, peut fournir des services sur crypto-actifs à des résidents français. Binance, par exemple, a cessé ses services sur crypto-actifs en France à cette date.",
   },
   {
-    q: "Mes cryptos sur une plateforme non-conforme sont-elles perdues ?",
-    a: "Non, mais il faut agir avant la date limite communiquée par chaque plateforme. La pratique observée (KuCoin Italie 2024, Binance USA 2023) est : annonce du calendrier 30-90 jours avant cessation, période de retrait obligatoire, puis fermeture des comptes. La meilleure pratique est de transférer ses cryptos vers un wallet personnel (Ledger, Trezor) ou vers une plateforme MiCA-conforme avant juin 2026.",
+    q: "Mes cryptos sur une plateforme non autorisée sont-elles perdues ?",
+    a: "Non, en principe : la plateforme doit vous permettre de récupérer vos avoirs. Renseignez-vous sans tarder sur les conditions et délais de retrait qu'elle annonce, puis transférez vos cryptos vers une plateforme agréée ou vers un portefeuille personnel.",
   },
   {
-    q: "Pourquoi certaines plateformes obtiennent l’agrément en Irlande / Malte / Autriche plutôt qu’en France ?",
-    a: "Le règlement MiCA permet le « passporting » : un agrément CASP obtenu auprès d’un régulateur d’un État membre est valable dans toute l’UE. Plusieurs facteurs expliquent le choix : rapidité des régulateurs (la Central Bank of Ireland et la MFSA maltaise ont été plus rapides à délivrer les premiers agréments), expertise locale (Coinbase, Kraken ont leurs équipes UE basées en Irlande), fiscalité d’entreprise (Irlande 12,5%, Malte 5-35%), historique réglementaire (Malte avait la VFA Act depuis 2018).",
+    q: "Un ancien numéro PSAN (E20xx-xxx) vaut-il encore autorisation ?",
+    a: "Non. Le régime PSAN, créé par la loi PACTE de 2019, a pris fin avec la période transitoire : depuis le 1er juillet 2026, il faut un agrément MiCA. Plusieurs anciens PSAN français l'ont obtenu auprès de l'AMF, par exemple Coinhouse (n° A2026-013) ou Bitstack (n° A2025-003).",
   },
   {
-    q: "Le PSAN AMF FR reste-t-il valable après juillet 2026 ?",
-    a: "Non. Le statut PSAN (introduit par la loi PACTE 2019) est progressivement remplacé par le statut CASP MiCA. Les PSAN actuels doivent migrer vers MiCA avant le 1er juillet 2026 pour continuer leur activité. L’AMF a publié un calendrier de transition et accepte les demandes CASP depuis fin 2024.",
+    q: "Une plateforme agréée dans un autre pays de l'UE est-elle moins sûre ?",
+    a: "Juridiquement, non : l'agrément MiCA est le même dans toute l'Union, et le passeport européen permet à un prestataire agréé à Malte, en Irlande ou au Luxembourg de servir la France. Ce qui compte, c'est que la France figure parmi les pays couverts par son passeport au registre de l'ESMA. En cas de litige, votre interlocuteur réglementaire sera l'autorité du pays d'agrément.",
   },
   {
-    q: "Quels stablecoins resteront accessibles aux Français après juillet 2026 ?",
-    a: "Les stablecoins ART (Asset-Referenced Token) et EMT (Electronic Money Token) MiCA-conformes : USDC et EURC (Circle) en priorité, EUROC/EURCV (alternatives euro), et tout autre stablecoin qui obtiendra l’agrément ART/EMT avant la deadline. USDT (Tether) est très probablement délisté des plateformes UE compliantes (Coinbase Europe l’a déjà fait fin 2024). Les utilisateurs détenant USDT doivent surveiller les annonces de leurs exchanges et anticiper une conversion.",
+    q: "Changer de plateforme est-il imposable ?",
+    a: "Transférer vos cryptos d'une plateforme à une autre, ou vers votre portefeuille personnel, n'est pas une cession : ce n'est pas imposable. Un échange crypto contre crypto (par exemple USDT contre USDC) bénéficie du sursis d'imposition de l'article 150 VH bis du CGI. Seules les cessions contre des euros ou contre un bien sont imposables. Pensez aussi à déclarer chaque compte détenu à l'étranger (formulaire 3916-bis).",
   },
   {
-    q: "Les services DeFi (Aave, Uniswap, Curve) sont-ils concernés par MiCA ?",
-    a: "Non, pas directement. Le règlement MiCA exempte les services « entièrement décentralisés » (article 2.2 et considérant 22). En pratique, l’ESMA a publié en 2024 une consultation pour préciser cette définition (notamment les frontends qui peuvent geler des fonds, les UI hostées sur des CDN centralisés, etc.). Les protocoles DeFi vraiment décentralisés (smart contracts immutables, pas de DAO opérée depuis l’UE) restent accessibles aux utilisateurs européens.",
+    q: "Les services DeFi (Aave, Uniswap…) sont-ils concernés ?",
+    a: "Pas directement : le règlement exclut les services fournis de manière entièrement décentralisée (considérant 22). Les portefeuilles en auto-conservation, où vous gardez vos clés, sont eux aussi hors du champ de l'agrément.",
   },
   {
-    q: "Comment vérifier si ma plateforme est compliant ?",
-    a: "Trois méthodes complémentaires : (1) la liste publique ESMA (https://www.esma.europa.eu/publications-and-data/registers-and-data) qui répertorie tous les CASP autorisés ; (2) le registre AMF (https://www.amf-france.org/fr/espace-professionnels/fintech) pour la France ; (3) le dataset open data Cryptoreflex (cryptoreflex.fr/api/public/psan-registry) qui consolide les sources nationales européennes en JSON.",
-  },
-  {
-    q: "Cryptoreflex est-il rémunéré pour mettre certaines plateformes en avant ?",
-    a: "Cryptoreflex perçoit des commissions d’affiliation sur certaines plateformes (transparence complète sur /transparence). Les scores publiés ne dépendent PAS du fait qu’une plateforme soit partenaire affilié ou non. La méthodologie est publique sur /methodologie, et les sources réglementaires (AMF, ESMA, BaFin) sont citées item par item dans le dataset. En cas de désaccord d’une plateforme avec son classement, contact à partners@cryptoreflex.fr — correction sous 24h si erreur factuelle.",
+    q: "Comment vérifier moi-même une plateforme ?",
+    a: "Deux sources officielles : le registre MiCA de l'ESMA, qui liste les prestataires agréés et les pays couverts par leur passeport, et les listes blanches de l'AMF, qui incluent les prestataires étrangers autorisés en France. Notre vérificateur MiCA reprend ces deux sources.",
   },
 ];
 
 const SOURCES = [
-  {
-    name: "Règlement (UE) 2023/1114 — MiCA",
-    url: "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32023R1114",
-  },
-  {
-    name: "AMF — Registre PSAN",
-    url: "https://www.amf-france.org/fr/espace-professionnels/fintech/mes-relations-avec-lamf/obtenir-un-enregistrement-psan",
-  },
-  {
-    name: "ESMA — Registers and data",
-    url: "https://www.esma.europa.eu/publications-and-data/registers-and-data",
-  },
-  {
-    name: "BaFin — Krypto­werte (Allemagne)",
-    url: "https://www.bafin.de/EN/Aufsicht/FinTech/Kryptowerte/kryptowerte_node_en.html",
-  },
-  {
-    name: "Central Bank of Ireland — CASP register",
-    url: "https://www.centralbank.ie/regulation/markets-update/article/mica",
-  },
-  {
-    name: "MFSA — VFA & MiCA register (Malte)",
-    url: "https://www.mfsa.mt/financial-services-register/",
-  },
-  {
-    name: "ADAN x Ipsos — Étude des Français et la crypto 2025",
-    url: "https://adan.eu/etudes/",
-  },
+  { name: "Règlement (UE) 2023/1114 (MiCA), EUR-Lex", url: "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32023R1114" },
+  { name: "ESMA : registres intérimaires MiCA (prestataires agréés, émetteurs EMT)", url: "https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica" },
+  { name: "AMF : listes blanches des acteurs autorisés", url: "https://www.amf-france.org/fr/espace-epargnants/proteger-son-epargne/listes-blanches-autorisations" },
 ];
 
 const baseUrl = BRAND.url;
@@ -302,10 +136,7 @@ const baseUrl = BRAND.url;
 const breadcrumb = breadcrumbSchema([
   { name: "Accueil", url: baseUrl + "/" },
   { name: "Études", url: baseUrl + "/etudes" },
-  {
-    name: "MiCA juillet 2026",
-    url: baseUrl + "/etudes/mica-juillet-2026-etat-des-lieux",
-  },
+  { name: "MiCA juillet 2026", url: baseUrl + "/etudes/mica-juillet-2026-etat-des-lieux" },
 ]);
 
 const article = articleSchema({
@@ -315,34 +146,14 @@ const article = articleSchema({
   date: PUBLISHED_DATE,
   dateModified: LAST_UPDATED,
   category: "Réglementation",
-  tags: ["MiCA", "PSAN", "AMF", "ESMA", "France", "réglementation"],
-  readTime: "18 min",
+  tags: ["MiCA", "CASP", "AMF", "ESMA", "France", "réglementation"],
+  readTime: "8 min",
   author: "Kevin Voisin",
 });
 
 const faq = faqSchema(FAQ.map((f) => ({ question: f.q, answer: f.a })));
 
-const researchProject = {
-  "@context": "https://schema.org",
-  "@type": "ResearchProject",
-  name: TITLE,
-  description: DESCRIPTION,
-  url: baseUrl + "/etudes/mica-juillet-2026-etat-des-lieux",
-  sponsor: {
-    "@type": "Organization",
-    name: "Cryptoreflex",
-    url: baseUrl,
-  },
-  funding: "Auto-financé (Cryptoreflex SARL)",
-  about: [
-    "Règlement (UE) 2023/1114 (MiCA)",
-    "Crypto-Asset Service Providers (CASP)",
-    "Prestataires de Services sur Actifs Numériques (PSAN)",
-    "Stablecoins ART / EMT",
-  ],
-};
-
-const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq, researchProject]);
+const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq]);
 
 export default function MicaStudyPage() {
   return (
@@ -376,51 +187,41 @@ export default function MicaStudyPage() {
           <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" />
-              Publié le {new Date(PUBLISHED_DATE).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+              Publié le {frDate(PUBLISHED_DATE)}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5" />
-              18 min de lecture
+              <FileText className="h-3.5 w-3.5" />8 min de lecture
             </span>
+            <span className="inline-flex items-center gap-1.5">Mis à jour le {frDate(LAST_UPDATED)}</span>
             <span className="inline-flex items-center gap-1.5">
-              Mis à jour le{" "}
-              {new Date(LAST_UPDATED).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              Auteur : <Link href="/a-propos" className="text-cyan-300 hover:underline">Kevin Voisin</Link>
+              Auteur :{" "}
+              <Link href="/a-propos" className="text-cyan-300 hover:underline">
+                Kevin Voisin
+              </Link>
             </span>
           </div>
 
+          <div role="note" className="mt-6 rounded-xl border border-cyan-500/30 bg-cyan-500/[0.06] p-4 text-sm text-slate-200 leading-relaxed">
+            <strong className="text-cyan-200">Mise à jour du {frDate(LAST_UPDATED)}.</strong> La première version de cette étude
+            décrivait la situation avant la fin de la période transitoire. Elle a été entièrement réécrite : tous les statuts
+            ci-dessous viennent du registre MiCA de l&apos;ESMA (données au {REGISTER_AS_OF}) et de la liste blanche de l&apos;AMF.
+          </div>
+
           <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-            À 60 jours de la fin de la période transitoire MiCA (30 juin 2026),
-            cette étude analyse l’ensemble des 33 plateformes crypto opérant en
-            France selon leur statut réglementaire actuel. Sources publiques
-            (AMF, ESMA, BaFin, CNMV, MFSA, CSSF), méthodologie publiée,
-            données réutilisables sous licence{" "}
-            <Link
-              href="/api-publique"
-              className="text-cyan-300 underline-offset-2 hover:underline"
-            >
+            Depuis le 1er juillet 2026, une plateforme crypto doit être agréée MiCA, avec un accès à la France, pour servir des
+            clients français. Sur les {PLATFORMS.length} plateformes que nous suivons, {AUTHORIZED.length} remplissent cette
+            condition et {NOT_AUTHORIZED.length} ne la remplissent pas. Données réutilisables sous licence{" "}
+            <Link href="/api-publique" className="text-cyan-300 underline-offset-2 hover:underline">
               CC-BY 4.0
             </Link>
             .
           </p>
 
-          {/* Stats grid */}
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {STATS.map((s) => (
-              <div
-                key={s.label}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
-              >
+              <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-                <div className="mt-1 text-[11px] uppercase tracking-wider text-slate-400 leading-tight">
-                  {s.label}
-                </div>
+                <div className="mt-1 text-xs text-slate-400 leading-snug">{s.label}</div>
               </div>
             ))}
           </div>
@@ -430,16 +231,11 @@ export default function MicaStudyPage() {
       {/* TOC */}
       <section className="border-b border-white/5 bg-white/[0.02]">
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
-            Sommaire
-          </h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Sommaire</h2>
           <ol className="mt-4 grid gap-2 sm:grid-cols-2 text-sm">
-            {TOC.map((item, i) => (
+            {TOC.map((item) => (
               <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300 transition"
-                >
+                <a href={`#${item.id}`} className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300 transition">
                   <ChevronRight className="h-3.5 w-3.5 text-cyan-500" />
                   {item.label}
                 </a>
@@ -451,494 +247,214 @@ export default function MicaStudyPage() {
 
       {/* Body */}
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-white prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-white">
-        {/* TL;DR */}
         <section id="tldr">
-          <h2 className="text-2xl font-bold tracking-tight">Résumé exécutif</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Résumé</h2>
           <ul className="mt-4 space-y-2 list-none p-0">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
               <span>
-                <strong>22 plateformes</strong> sur 34 ont déjà obtenu leur
-                agrément CASP MiCA via un régulateur UE. Elles continuent leur
-                activité sans interruption après juillet 2026.
+                <strong>{AUTHORIZED.length} plateformes</strong> sur {PLATFORMS.length} sont agréées MiCA avec un accès à la
+                France, dont {AMF_AUTHORIZED.length} agréées directement par l&apos;AMF.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-400" />
               <span>
-                <strong>12 plateformes</strong> sont à risque immédiat (pas
-                d’agrément, pas de roadmap claire, ou statut partiel). Les
-                utilisateurs FR doivent vérifier leurs comptes avant le 1er juin
-                2026.
+                <strong>{NOT_AUTHORIZED.length} plateformes</strong> ne peuvent plus servir de clients français, dont Binance,
+                qui a cessé ses services en France le 1er juillet 2026.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
               <span>
-                <strong>USDT</strong> n’est pas MiCA-compliant à ce jour.
-                Coinbase Europe l’a délisté en décembre 2024. Les utilisateurs
-                doivent anticiper une conversion vers USDC ou EURC avant juin
-                2026.
+                Côté stablecoins, <strong>USDC, EURC et EURCV</strong> ont un émetteur inscrit au registre de l&apos;ESMA ;
+                USDT n&apos;en a pas.
               </span>
             </li>
             <li className="flex items-start gap-2">
               <BookOpen className="mt-1 h-4 w-4 shrink-0 text-indigo-400" />
               <span>
-                Le statut <strong>PSAN AMF</strong> (loi PACTE 2019) est
-                progressivement remplacé par le statut <strong>CASP MiCA</strong>{" "}
-                (passport UE). Les plateformes FR (Bitstack, Coinhouse, Binance
-                France) sont en transition.
+                L&apos;ancien statut <strong>PSAN</strong> ne vaut plus autorisation : seul compte l&apos;agrément{" "}
+                <strong>MiCA (CASP)</strong>.
               </span>
             </li>
           </ul>
         </section>
 
-        {/* 1. Contexte */}
         <section id="contexte" className="mt-12">
-          <h2>1. Contexte réglementaire MiCA</h2>
+          <h2>1. Ce qui a changé le 1er juillet 2026</h2>
           <p>
-            Le règlement <strong>(UE) 2023/1114</strong>, dit <strong>MiCA</strong>{" "}
-            (Markets in Crypto-Assets), est entré en vigueur le 30 décembre
-            2024 pour les fournisseurs de services sur crypto-actifs (CASP).
-            Il s’applique à toute entité offrant des services aux résidents de
-            l’Union européenne, qu’elle soit basée dans l’UE ou hors UE.
+            Le règlement <strong>(UE) 2023/1114</strong>, dit <strong>MiCA</strong>, s&apos;applique aux prestataires de
+            services sur crypto-actifs (CASP) depuis le 30 décembre 2024, et aux émetteurs de stablecoins depuis le 30 juin
+            2024. Son article 143 laissait aux acteurs déjà en activité une période transitoire, que la France a fixée à 18
+            mois : elle a pris fin le 1er juillet 2026.
           </p>
           <p>
-            MiCA harmonise pour la première fois en Europe les règles
-            applicables :
-          </p>
-          <ul>
-            <li>aux émetteurs de stablecoins (titres ART, EMT) ;</li>
-            <li>aux fournisseurs de services crypto (CASP) ;</li>
-            <li>aux marchés de crypto-actifs ;</li>
-            <li>à la lutte contre les abus de marché crypto.</li>
-          </ul>
-          <p>
-            En France, le régime <strong>PSAN</strong> (Prestataire de Services
-            sur Actifs Numériques) introduit par la loi PACTE de 2019 est
-            progressivement remplacé. Les plateformes déjà enregistrées PSAN
-            auprès de l’AMF doivent obtenir leur agrément CASP avant le 30 juin
-            2026 pour continuer leur activité.
+            Depuis, seul un prestataire agréé MiCA peut fournir des services sur crypto-actifs à un résident français. Il peut
+            être agréé par l&apos;AMF, ou par l&apos;autorité d&apos;un autre État membre à condition que son passeport européen
+            couvre la France. L&apos;ancien régime français, le <strong>PSAN</strong>, a disparu avec la période transitoire.
           </p>
         </section>
 
-        {/* 2. Calendrier */}
-        <section id="calendrier" className="mt-12">
-          <h2>2. Calendrier des phases d’application</h2>
+        <section id="agreees" className="mt-12">
+          <h2>2. Plateformes agréées avec accès à la France</h2>
           <p>
-            MiCA s’applique en deux phases successives. La première ciblait les
-            émetteurs de stablecoins, la seconde les fournisseurs de services :
-          </p>
-          <div className="my-6 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-slate-400">
-                <tr>
-                  <th className="pb-3 pr-4">Date</th>
-                  <th className="pb-3 pr-4">Événement</th>
-                  <th className="pb-3">Impact</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                <tr>
-                  <td className="py-3 pr-4 font-mono text-cyan-300">30 juin 2024</td>
-                  <td className="py-3 pr-4 font-medium">
-                    Entrée en application — émetteurs ART/EMT
-                  </td>
-                  <td className="py-3">
-                    Stablecoins : agrément obligatoire pour émettre/distribuer
-                    en UE.
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-3 pr-4 font-mono text-cyan-300">
-                    30 décembre 2024
-                  </td>
-                  <td className="py-3 pr-4 font-medium">
-                    Entrée en application — CASP
-                  </td>
-                  <td className="py-3">
-                    Tous nouveaux entrants : agrément CASP obligatoire avant
-                    activité.
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-3 pr-4 font-mono text-amber-300">
-                    30 juin 2026
-                  </td>
-                  <td className="py-3 pr-4 font-medium">
-                    Fin période transitoire (FR)
-                  </td>
-                  <td className="py-3">
-                    Plateformes opérant en FR avant le 30/12/2024 : agrément
-                    obligatoire pour continuer.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>
-            La période transitoire de 18 mois (article 143 du règlement) permet
-            aux plateformes existantes de migrer leur statut national (PSAN, BaFin
-            license, MFSA VFA, etc.) vers le statut CASP MiCA harmonisé. Les
-            États membres ont la flexibilité de raccourcir cette période. La
-            France a maintenu les 18 mois maximum, l’Italie a réduit à 12 mois
-            (déjà expiré décembre 2025).
-          </p>
-        </section>
-
-        {/* 3. Méthodologie */}
-        <section id="methodologie" className="mt-12">
-          <h2>3. Méthodologie d’analyse</h2>
-          <p>
-            Cette étude couvre les <strong>33 plateformes crypto</strong> opérant
-            activement en France au 6 mai 2026, identifiées par recoupement de :
-          </p>
-          <ul>
-            <li>
-              le <strong>registre PSAN AMF</strong> publique (entités
-              enregistrées et autorisées) ;
-            </li>
-            <li>
-              le <strong>registre CASP ESMA</strong> consolidé des autorités
-              nationales ;
-            </li>
-            <li>
-              les <strong>top 50 plateformes par volume FR</strong> selon Bingo
-              (données publiques de trafic et téléchargements applicatifs) ;
-            </li>
-            <li>
-              les <strong>communications officielles</strong> des plateformes
-              concernant leur conformité MiCA.
-            </li>
-          </ul>
-          <p>Pour chaque plateforme, nous analysons :</p>
-          <ol>
-            <li>
-              <strong>Statut PSAN AMF</strong> : enregistré, agréé, expiré, ou
-              non requis (passport CASP).
-            </li>
-            <li>
-              <strong>Statut CASP MiCA</strong> : agréé, en cours d’instruction,
-              non déposé, refusé.
-            </li>
-            <li>
-              <strong>Juridiction d’agrément</strong> : pays UE qui délivre
-              l’agrément CASP (Irlande, Malte, Allemagne, etc.).
-            </li>
-            <li>
-              <strong>Date d’agrément ou prévision</strong> : date publique de
-              délivrance ou roadmap communiquée.
-            </li>
-            <li>
-              <strong>Risque deadline 30 juin 2026</strong> : flag binaire si la
-              plateforme risque le blocage.
-            </li>
-            <li>
-              <strong>Restrictions service</strong> : produits dérivés, futures,
-              cartes bancaires limitées par juridiction.
-            </li>
-          </ol>
-          <p>
-            Les données sont mises à jour mensuellement (révision le 25 de
-            chaque mois) et exposées en open data CC-BY 4.0 sur{" "}
-            <Link href="/api/public/psan-registry">/api/public/psan-registry</Link>.
-            Toute erreur factuelle signalée à <code>partners@cryptoreflex.fr</code>{" "}
-            est corrigée sous 24 heures, avec mention au changelog public.
-          </p>
-        </section>
-
-        {/* 4. Compliant platforms */}
-        <section id="compliant" className="mt-12">
-          <h2>4. Plateformes MiCA-compliant (sélection)</h2>
-          <p>
-            Les 8 plateformes ci-dessous sont parmi les principales actives en
-            France, déjà MiCA-compliantes ou avec une procédure crédible en
-            cours. La liste exhaustive des 22 plateformes est disponible via
-            l’API publique.
+            Ces {AUTHORIZED.length} plateformes, parmi celles que nous suivons, figurent au registre MiCA de l&apos;ESMA avec un
+            accès à la France (données au {REGISTER_AS_OF}).
           </p>
           <div className="my-6 not-prose space-y-3">
-            {COMPLIANT_PLATFORMS.map((p) => (
-              <div
-                key={p.name}
-                className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5"
-              >
+            {AUTHORIZED.map((p) => (
+              <div key={p.id} className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5">
                 <div className="flex flex-wrap items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                  <h3 className="text-lg font-bold text-white">{p.name}</h3>
-                  <span className="text-xs text-slate-400">
-                    {p.legalEntity}
-                  </span>
+                  <h3 className="text-lg font-bold text-white">
+                    <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
+                      {p.name}
+                    </Link>
+                  </h3>
+                  {p.mica.legalEntity && <span className="text-xs text-slate-400">{p.mica.legalEntity}</span>}
                 </div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">
-                      Juridiction
-                    </div>
-                    <div className="text-slate-200">{p.jurisdiction}</div>
+                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Autorité</div>
+                    <div className="text-slate-200">{p.mica.authority ?? "—"}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">
-                      Agrément MiCA
-                    </div>
-                    <div className="text-slate-200">{p.micaDate}</div>
+                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Agrément MiCA</div>
+                    <div className="text-slate-200">{frDate(p.mica.registrationDate)}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">
-                      PSAN FR
+                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Accès à la France</div>
+                    <div className="text-slate-200">
+                      {p.mica.amfRegistration ? `Agrément AMF n° ${p.mica.amfRegistration}` : "Passeport européen"}
                     </div>
-                    <div className="text-slate-200">{p.psanFr}</div>
                   </div>
                 </div>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{p.notes}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 5. At-risk */}
-        <section id="at-risk" className="mt-12">
-          <h2>5. Plateformes à risque pour la deadline juillet 2026</h2>
+        <section id="non-autorisees" className="mt-12">
+          <h2>3. Plateformes non autorisées en France</h2>
           <p>
-            Les 4 plateformes ci-dessous présentent un risque réglementaire
-            documenté à 60 jours de la deadline. Cette liste évolue : certaines
-            peuvent obtenir leur CASP avant le 30 juin 2026. Vérifiez la liste
-            à jour via l’API publique avant toute décision.
+            Ces {NOT_AUTHORIZED.length} plateformes, que nous suivions avant l&apos;échéance, ne peuvent pas servir de clients
+            français à la date de notre vérification. Nous ne les recommandons pas et ne proposons aucun lien vers elles.
           </p>
           <div className="my-6 not-prose space-y-3">
-            {AT_RISK_PLATFORMS.map((p) => (
-              <div
-                key={p.name}
-                className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-5"
-              >
+            {NOT_AUTHORIZED.map((p) => (
+              <div key={p.id} className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-5">
                 <div className="flex flex-wrap items-center gap-3">
                   <XCircle className="h-5 w-5 text-amber-400" />
-                  <h3 className="text-lg font-bold text-white">{p.name}</h3>
+                  <h3 className="text-lg font-bold text-white">
+                    <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
+                      {p.name}
+                    </Link>
+                  </h3>
                 </div>
-                <div className="mt-2 text-xs uppercase tracking-wider text-amber-300">
-                  {p.flag}
-                </div>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-                  {p.risk}
-                </p>
+                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{p.mica.status}</p>
               </div>
             ))}
           </div>
-          <p className="text-sm">
-            <strong className="text-amber-300">Recommandation pratique :</strong>{" "}
-            si vous détenez des fonds sur une plateforme listée ici, soit
-            transférez vers une plateforme compliante (cf. section 4), soit vers
-            un wallet personnel (Ledger, Trezor) avant le 1er juin 2026 pour
-            anticiper d’éventuelles fenêtres de retrait restreintes.
-          </p>
         </section>
 
-        {/* 6. Stablecoins */}
         <section id="stablecoins" className="mt-12">
-          <h2>6. Stablecoins MiCA-compliant</h2>
+          <h2>4. Stablecoins</h2>
           <p>
-            MiCA distingue les stablecoins ART (Asset-Referenced Token) des EMT
-            (Electronic Money Token). Les ART référencent des paniers d’actifs ;
-            les EMT référencent une devise unique (USD, EUR, etc.). Tous deux
-            doivent obtenir un agrément MiCA pour être proposés en UE.
+            MiCA encadre aussi les émetteurs de stablecoins adossés à une monnaie, les jetons de monnaie électronique (EMT).
+            Situation au registre de l&apos;ESMA pour les plus utilisés :
           </p>
-          <div className="my-6 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-slate-400">
-                <tr>
-                  <th className="pb-3 pr-4">Stablecoin</th>
-                  <th className="pb-3 pr-4">Statut MiCA</th>
-                  <th className="pb-3">Détail</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {STABLECOINS.map((s) => (
-                  <tr key={s.name}>
-                    <td className="py-3 pr-4 font-medium text-white">{s.name}</td>
-                    <td className="py-3 pr-4">
-                      {s.status === "compliant" && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-300">
-                          Conforme
-                        </span>
-                      )}
-                      {s.status === "non-compliant" && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-300">
-                          Non conforme
-                        </span>
-                      )}
-                      {s.status === "uncertain" && (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300">
-                          Incertain
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 text-slate-300">{s.detail}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="my-6 not-prose space-y-3">
+            {STABLECOINS.map((s) => (
+              <div
+                key={s.name}
+                className={`rounded-xl border p-5 ${s.ok ? "border-emerald-500/15 bg-emerald-500/[0.04]" : "border-amber-500/20 bg-amber-500/[0.04]"}`}
+              >
+                <div className="flex items-center gap-3">
+                  {s.ok ? <CheckCircle2 className="h-5 w-5 text-emerald-400" /> : <XCircle className="h-5 w-5 text-amber-400" />}
+                  <h3 className="text-base font-bold text-white">{s.name}</h3>
+                </div>
+                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{s.detail}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* 7. Implications */}
-        <section id="implications" className="mt-12">
-          <h2>7. Implications pratiques pour les utilisateurs FR</h2>
-          <h3>7.1. Anticipation des retraits</h3>
-          <p>
-            Les utilisateurs FR détenant des cryptos sur des plateformes
-            non-compliantes doivent anticiper la fermeture progressive des
-            services. Calendrier recommandé :
-          </p>
-          <ul>
-            <li>
-              <strong>Avril 2026</strong> : audit de ses comptes (lister les
-              plateformes utilisées, vérifier le statut MiCA de chacune).
-            </li>
-            <li>
-              <strong>Mai 2026</strong> : transfert progressif vers plateformes
-              compliantes ou wallet personnel. Préférer les wallets non-custody
-              pour la souveraineté.
-            </li>
-            <li>
-              <strong>Juin 2026</strong> : conversion des stablecoins
-              non-compliants (USDT) en USDC / EURC. Anticipation des éventuels
-              gels de retrait.
-            </li>
-            <li>
-              <strong>Juillet 2026+</strong> : surveillance des annonces
-              officielles, finalisation des opérations.
-            </li>
-          </ul>
-          <h3>7.2. Implications fiscales d’une migration</h3>
-          <p>
-            Le transfert d’une plateforme à une autre (ou vers un wallet
-            personnel) est <strong>non taxable</strong> en France selon le BOFiP
-            RPPM-PVBMC-30-30, car il s’agit d’un transfert entre comptes
-            personnels et non d’une cession. En revanche, la conversion d’un
-            stablecoin USDT vers USDC est un échange entre actifs numériques sans soulte (token-to-token),
-            non imposable (sursis, art. 150 VH bis CGI), mais à déclarer comme événement
-            dans son suivi fiscal.
-          </p>
-          <p>
-            Pour les patrimoines{" "}
-            <strong>&gt; 50&nbsp;k€</strong>, il est recommandé de valider la
-            stratégie de migration avec un expert-comptable agréé maîtrisant la
-            fiscalité crypto. Cryptoreflex met à disposition l’outil gratuit{" "}
-            <Link href="/outils/cerfa-2086-auto">/outils/cerfa-2086-auto</Link>{" "}
-            pour tracker les cessions, mais ne fournit pas de conseil fiscal
-            personnalisé.
-          </p>
-          <h3>7.3. Choix de la plateforme cible</h3>
-          <p>Les critères d’évaluation d’une plateforme MiCA-compliant :</p>
+        <section id="pratique" className="mt-12">
+          <h2>5. Ce que vous devez faire</h2>
           <ol>
             <li>
-              <strong>Solidité de l’agrément</strong> : préférer les agréments
-              de régulateurs historiquement stricts (BaFin, AMF, MFSA) sur les
-              juridictions plus laxistes.
+              <strong>Vérifiez chacune de vos plateformes</strong> avec notre{" "}
+              <Link href="/outils/verificateur-mica">vérificateur MiCA</Link> ou directement sur les registres officiels.
             </li>
             <li>
-              <strong>Couverture passporting</strong> : vérifier que l’agrément
-              couvre la France (passport UE complet, pas restriction
-              géographique).
+              <strong>Si une plateforme n&apos;est pas autorisée</strong>, renseignez-vous sur ses conditions de retrait et
+              transférez vos avoirs vers une plateforme agréée ou vers un portefeuille personnel. Un transfert entre vos propres
+              comptes n&apos;est pas imposable.
             </li>
             <li>
-              <strong>Custody bank-grade</strong> : ségrégation des fonds
-              clients, audit annuel public, assurance custody.
+              <strong>Déclarez vos comptes à l&apos;étranger</strong> (formulaire 3916-bis), y compris ceux que vous avez fermés
+              en cours d&apos;année : l&apos;oubli coûte 750 € par compte, 1 500 € si la valeur dépasse 50 000 €.
             </li>
             <li>
-              <strong>Support FR</strong> : KYC en français, support client
-              FR, documentation fiscale conforme.
-            </li>
-            <li>
-              <strong>Stablecoins disponibles</strong> : préférer les
-              plateformes proposant USDC + EURC (vs USDT exclusif).
+              <strong>Choisissez une plateforme agréée</strong> selon vos besoins réels (frais, catalogue, support en
+              français) : voir notre <Link href="/comparatif/frais">comparatif des frais</Link>.
             </li>
           </ol>
-          <p>
-            Le comparateur Cryptoreflex{" "}
-            <Link href="/comparatif/securite">
-              /comparatif/securite
-            </Link>{" "}
-            note les 33 plateformes selon ces 5 critères pondérés. Méthodologie
-            détaillée sur <Link href="/methodologie">/methodologie</Link>.
-          </p>
         </section>
 
-        {/* 8. FAQ */}
         <section id="faq" className="mt-12">
-          <h2>8. FAQ</h2>
+          <h2>6. FAQ</h2>
           <div className="my-6 not-prose space-y-3">
             {FAQ.map((item) => (
-              <details
-                key={item.q}
-                className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-amber-500/30"
-              >
+              <details key={item.q} className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-amber-500/30">
                 <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-semibold text-white">
                   <span>{item.q}</span>
-                  <span className="text-amber-300 transition group-open:rotate-45 mt-0.5 shrink-0">
-                    +
-                  </span>
+                  <span className="text-amber-300 transition group-open:rotate-45 mt-0.5 shrink-0">+</span>
                 </summary>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-                  {item.a}
-                </p>
+                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.a}</p>
               </details>
             ))}
           </div>
         </section>
 
-        {/* 9. Sources */}
         <section id="sources" className="mt-12">
-          <h2>9. Sources & méthodologie</h2>
+          <h2>7. Sources & méthodologie</h2>
           <p>
-            Toutes les données présentées sont issues de sources publiques
-            officielles. Aucune donnée propriétaire ou commerciale n’est
-            utilisée. Sources principales :
+            Les statuts viennent du registre intérimaire MiCA de l&apos;ESMA (fichier officiel des prestataires agréés, données
+            au {REGISTER_AS_OF}) et des listes blanches de l&apos;AMF pour les numéros d&apos;agrément français, consultés le{" "}
+            {frDate(LAST_UPDATED)}. Une plateforme est dite « agréée avec accès à la France » si elle est agréée par l&apos;AMF
+            ou si la France figure parmi les pays couverts par son passeport.
           </p>
           <ul className="not-prose mt-4 space-y-2">
             {SOURCES.map((s) => (
               <li key={s.url} className="flex items-start gap-2 text-sm">
                 <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-cyan-400" />
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-cyan-300 hover:underline"
-                >
+                <a href={s.url} target="_blank" rel="noreferrer noopener" className="text-cyan-300 hover:underline">
                   {s.name}
                 </a>
               </li>
             ))}
           </ul>
           <p className="mt-6 text-sm">
-            <strong>Données réutilisables</strong> : tous les chiffres et
-            classements présentés dans cette étude sont disponibles en JSON
-            structuré sur{" "}
-            <Link href="/api/public/psan-registry">
-              /api/public/psan-registry
-            </Link>{" "}
-            sous licence CC-BY 4.0. Toute reprise impose la mention
-            d’attribution conformément à la licence.
+            <strong>Données réutilisables</strong> : les statuts sont disponibles en JSON sur{" "}
+            <Link href="/api/public/psan-registry">/api/public/psan-registry</Link> sous licence CC-BY 4.0, avec mention
+            d&apos;attribution.
           </p>
           <p className="mt-4 text-sm">
-            <strong>Contact erreurs / corrections</strong> :{" "}
+            <strong>Une erreur ?</strong> Écrivez-nous :{" "}
             <a href={`mailto:${BRAND.partnersEmail}`} className="text-cyan-300">
               {BRAND.partnersEmail}
             </a>
-            . Délai de correction maximal : 24 heures pour toute erreur
-            factuelle documentée.
+            .
           </p>
           <p className="mt-4 text-xs text-slate-500 leading-relaxed">
-            <strong>Disclaimer.</strong> Cette étude est publiée à titre
-            d’information. Cryptoreflex ne fournit pas de conseil en
-            investissement ni de conseil juridique. Les utilisateurs sont
-            invités à consulter un avocat ou un conseiller en investissements
-            financiers (CIF) pour leur situation particulière. Investir dans
-            les crypto-actifs comporte des risques de perte en capital.
+            <strong>Avertissement.</strong> Cette étude est publiée à titre d&apos;information. Cryptoreflex ne fournit ni conseil
+            en investissement ni conseil juridique. Investir dans les crypto-actifs comporte un risque de perte en capital.
           </p>
         </section>
       </article>
 
-      {/* Newsletter capture */}
       <section className="border-t border-white/5 bg-white/[0.02]">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <NewsletterInline
@@ -946,48 +462,35 @@ export default function MicaStudyPage() {
             context="regulation"
             variant="default"
             title="Vous suivez l'évolution MiCA ?"
-            subtitle="Recevoir la mise à jour mensuelle de l'étude (nouveaux agréments, délistages, recommandations). 1 envoi par mois, 0 spam, désinscription en 1 clic."
+            subtitle="Nouveaux agréments, plateformes qui ferment, ce que ça change pour vous. Désinscription en 1 clic."
             ctaLabel="M'abonner à la veille MiCA"
           />
         </div>
       </section>
 
-      {/* Final CTA */}
       <section className="border-t border-white/5">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Continue la lecture
-          </h2>
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Continuer</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
-              href="/comparatif/securite"
+              href="/outils/verificateur-mica"
               className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
-                Comparatif sécurité 33 plateformes
-              </h3>
-              <p className="mt-2 text-sm text-slate-300">
-                Notation détaillée par plateforme (sécurité, frais, MiCA,
-                support FR).
-              </p>
+              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">Vérificateur MiCA</h3>
+              <p className="mt-2 text-sm text-slate-300">Le statut de {getAllMicaPlatforms().length} plateformes et portefeuilles, à partir des registres officiels.</p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
-                Voir le comparatif
+                Vérifier une plateforme
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>
             </Link>
             <Link
-              href="/api-publique"
+              href="/comparatif/frais"
               className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
-                API publique CC-BY 4.0
-              </h3>
-              <p className="mt-2 text-sm text-slate-300">
-                Réutilise les données PSAN/MiCA dans vos propres projets. Open
-                data, sans clé API.
-              </p>
+              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">Comparatif des frais</h3>
+              <p className="mt-2 text-sm text-slate-300">Les frais réels des plateformes autorisées en France, sourcés et datés.</p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
-                Voir l’API
+                Voir le comparatif
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>
             </Link>

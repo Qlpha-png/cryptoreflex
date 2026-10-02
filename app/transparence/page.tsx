@@ -236,7 +236,7 @@ export default function TransparencePage() {
             <EngagementCard
               Icon={ShieldCheck}
               title="Filtre MiCA-only"
-              body="Nous ne recommandons que des plateformes agréées CASP au sens du règlement MiCA (cadre crypto européen, en application depuis fin 2024). Les acteurs en attente d'agrément sont signalés explicitement comme « à risque juillet 2026 »."
+              body="Nous ne recommandons que des plateformes agréées MiCA avec un accès à la France (registre de l'ESMA, liste blanche AMF). Celles qui ne le sont pas sont signalées « non autorisées en France », sans aucun lien affilié."
               cta={{ label: "Vérificateur MiCA", href: "/outils/verificateur-mica" }}
             />
             <EngagementCard
@@ -264,7 +264,7 @@ export default function TransparencePage() {
             Vrais contrats commerciaux signés entre {BRAND.name} et le partenaire
             (via plateforme professionnelle Impact.com, Cellxpert ou programme
             d&apos;affiliation maison). Pour chaque ligne : statut MiCA, numéro
-            d&apos;enregistrement AMF (le cas échéant), commission perçue, date
+            d&apos;agrément AMF (le cas échéant), commission perçue, date
             de mise en place. Mention « Publicité — lien affilié » obligatoire
             sur chaque CTA pointant vers ces partenaires.
           </p>
@@ -496,7 +496,7 @@ export default function TransparencePage() {
         {/* CONFORMITÉ MICA PHASE 2 ------------------------------------------ */}
         <section id="mica-phase-2" className="mt-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-fg">
-            Conformité MiCA Phase 2 (1<sup>er</sup> juillet 2026)
+            Conformité MiCA depuis le 1<sup>er</sup> juillet 2026
           </h2>
           <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed max-w-3xl">
             {MICA_TRANSITION_NOTICE}
@@ -505,27 +505,27 @@ export default function TransparencePage() {
             <MicaCountdown variant="card" />
           </div>
           <p className="mt-4 text-xs text-muted">
-            Les statuts CASP affichés sur Cryptoreflex sont vérifiés
-            mensuellement auprès du{" "}
+            Les statuts MiCA affichés sur Cryptoreflex sont vérifiés
+            chaque mois sur les{" "}
             <a
-              href="https://protect.amf-france.org/registre-psan/"
+              href="https://www.amf-france.org/fr/espace-epargnants/proteger-son-epargne/listes-blanches-autorisations"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary-soft underline"
             >
-              registre PSAN/CASP de l'AMF
+              listes blanches de l'AMF
             </a>{" "}
-            et de l'<a
-              href="https://www.esma.europa.eu/"
+            et le registre MiCA de l'<a
+              href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary-soft underline"
             >
               ESMA
             </a>
-            . Toute plateforme dont l'agrément n'est pas confirmé au 1
-            <sup>er</sup> juin 2026 sera explicitement étiquetée
-            « à risque juillet 2026 » dans nos comparatifs.
+            . Une plateforme qui ne peut pas servir la France est étiquetée
+            « non autorisée en France » dans nos comparatifs, sans aucun lien
+            affilié.
           </p>
         </section>
 

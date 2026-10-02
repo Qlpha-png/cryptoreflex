@@ -51,7 +51,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
     slug: "eviter-pfu-30-crypto-bareme-progressif-legalement-2026",
     title: "Eviter le PFU 31,4 % crypto — option barème progressif 2026",
     description:
-      "PFU 31,4 % ou barème progressif sur vos plus-values 2026 ? Comparatif chiffré par TMI, mécanisme case 2OP et piège de l'engagement annuel global.",
+      "PFU 31,4 % ou barème progressif sur vos plus-values 2026 ? Comparatif chiffré par TMI, option case 3CN (2042 C) et effet de seuil sur la TMI.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -102,7 +102,7 @@ export const FISCALITE_SATELLITES: FiscaliteRelatedArticle[] = [
     slug: "bareme-progressif-vs-pfu-crypto-2026",
     title: "Barème progressif ou PFU 31,4 % crypto — lequel choisir en 2026 ?",
     description:
-      "Tableau comparatif chiffré : à partir de quelle TMI le PFU est plus avantageux ? Cas étudiants, retraités, cadres, traders. Méthode case 2OP.",
+      "Tableau comparatif chiffré : à partir de quelle TMI le PFU est plus avantageux ? Cas étudiants, retraités, cadres, traders. Option case 3CN.",
     category: "Fiscalité",
     cluster: "satellite",
   },
@@ -266,7 +266,7 @@ export function generateFiscaliteSchema(
       },
       {
         name: "Choisir entre PFU 31,4 % et barème progressif",
-        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que votre TMI dépasse 12,8 %. Si votre TMI est à 0 ou 11 %, opte pour le barème progressif via la case 2OP du Cerfa 2042. Le calculateur affiche les deux scénarios côte à côte.",
+        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que votre TMI dépasse 12,8 %. Si votre TMI est à 0 ou 11 %, optez pour le barème progressif via la case 3CN de la déclaration 2042 C. Le calculateur affiche les deux scénarios côte à côte.",
         url: "/blog/bareme-progressif-vs-pfu-crypto-2026",
       },
       {

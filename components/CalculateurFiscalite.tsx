@@ -1092,7 +1092,7 @@ function EmailCapture({
             id="lead-magnet-title"
             className="font-display font-bold text-white"
           >
-            Reçois la checklist Cerfa 2086 + déclaration 2042-C
+            Recevez la checklist Cerfa 2086 + déclaration 2042-C
           </h4>
           <p className="mt-1 text-sm text-white/75">
             Pas-à-pas pour reporter vos cessions sur les bons formulaires, avec
@@ -1112,7 +1112,7 @@ function EmailCapture({
               required
               aria-required="true"
               autoComplete="email"
-              placeholder="ton@email.com"
+              placeholder="votre@email.com"
               value={email}
               onChange={(e) => onChange(e.target.value)}
               aria-invalid={state === "error"}

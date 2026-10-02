@@ -8,7 +8,9 @@
     "scoringFormula": "global = 0.20·fees + 0.25·security + 0.20·mica + 0.15·ux + 0.10·support + 0.10·catalogue",
     "feesVerifiedAt": "2026-06-13",
     "feesSource": "Frais re-vérifiés un par un sur grilles officielles (ou recoupement 2+ sources <6 mois), audit 2026-06-13 (3 lots adversariaux + re-contrôle manuel). Détail sourcé/daté dans fees.verified de chaque plateforme. Valeurs 'douteux' = à confirmer sur le site officiel.",
-    "scoringNote": "Note frais réalignée le 2026-06-14 sur le coût réel pour 11 courtiers sur-notés (frais auparavant sous-estimés). Global ajusté du delta pondéré (0,20 × Δ note frais). Autres plateformes inchangées."
+    "scoringNote": "Note frais réalignée le 2026-06-14 sur le coût réel pour 11 courtiers sur-notés (frais auparavant sous-estimés). Global ajusté du delta pondéré (0,20 × Δ note frais). Autres plateformes inchangées.",
+    "micaVerifiedAt": "2026-10-02",
+    "micaSource": "Registre intérimaire MiCA de l'ESMA (CASPS.csv, données au 29/09/2026) et liste blanche AMF, consultés le 02/10/2026"
   },
   "platforms": [
     {
@@ -28,12 +30,15 @@
         "catalogue": 4.6
       },
       "mica": {
-        "status": "Agrément MiCA (CASP)",
-        "amfRegistration": "E2023-035",
-        "registrationDate": "2023-09-19",
+        "status": "Agréée MiCA (CASP) · CSSF, Luxembourg",
+        "amfRegistration": null,
+        "registrationDate": "2025-06-20",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Coinbase Luxembourg S.A.",
+        "authority": "CSSF, Luxembourg",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.6,
@@ -129,12 +134,15 @@
         "catalogue": 5
       },
       "mica": {
-        "status": "Agrément MiCA en cours — dossier AMF/Luxembourg (non agréé au 06/2026)",
-        "amfRegistration": "E2022-037",
-        "registrationDate": "2022-05-04",
+        "status": "Services crypto fermés en France depuis le 1er juillet 2026 · absente du registre MiCA de l'ESMA",
+        "amfRegistration": null,
+        "registrationDate": null,
         "micaCompliant": false,
         "atRiskJuly2026": true,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.1,
@@ -231,12 +239,15 @@
         "catalogue": 5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) - Allemagne (BaFin) + France",
-        "amfRegistration": "E2023-058",
-        "registrationDate": "2023-12-08",
+        "status": "Agréée MiCA (CASP) · FMA, Autriche",
+        "amfRegistration": null,
+        "registrationDate": "2025-04-09",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Bitpanda GmbH",
+        "authority": "FMA, Autriche",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -334,12 +345,15 @@
         "catalogue": 4.8
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Irlande",
-        "amfRegistration": "E2024-012",
-        "registrationDate": "2024-03-21",
+        "status": "Agréée MiCA (CASP) · Banque centrale d'Irlande",
+        "amfRegistration": null,
+        "registrationDate": "2025-06-25",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Payward Europe Solutions Limited",
+        "authority": "Banque centrale d'Irlande",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.25,
@@ -437,12 +451,15 @@
         "catalogue": 5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Lituanie",
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
         "amfRegistration": null,
-        "registrationDate": "2025-07-14",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "registrationDate": null,
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.1,
@@ -538,12 +555,15 @@
         "catalogue": 3.6
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Allemagne (BaFin)",
+        "status": "Agréée MiCA (CASP) · BaFin, Allemagne",
         "amfRegistration": null,
-        "registrationDate": "2024-11-15",
+        "registrationDate": "2025-04-28",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Trade Republic Bank GmbH",
+        "authority": "BaFin, Allemagne",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1,
@@ -631,12 +651,15 @@
         "catalogue": 3.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) - France",
-        "amfRegistration": "E2020-001",
-        "registrationDate": "2020-03-31",
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2026-013",
+        "registrationDate": "2026-05-07",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "COINHOUSE SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -729,12 +752,15 @@
         "catalogue": 2.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) - France",
-        "amfRegistration": "E2022-019",
-        "registrationDate": "2022-09-12",
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2025-003",
+        "registrationDate": "2025-06-30",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "BITSTACK DIGITAL ASSETS SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -822,12 +848,15 @@
         "catalogue": 4.1
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via France",
-        "amfRegistration": "E2022-005",
-        "registrationDate": "2022-04-08",
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2026-011",
+        "registrationDate": "2026-03-05",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "BLOCKNODES SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 0.99,
@@ -921,12 +950,15 @@
         "catalogue": 5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Autriche (FMA)",
+        "status": "Agréée MiCA (CASP) · FMA, Autriche",
         "amfRegistration": null,
-        "registrationDate": "2025-05-22",
+        "registrationDate": "2025-05-28",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Bybit EU GmbH",
+        "authority": "FMA, Autriche",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.1,
@@ -1022,12 +1054,15 @@
         "catalogue": 4.8
       },
       "mica": {
-        "status": "Agrément MiCA (CASP) via Lituanie (Banque centrale)",
+        "status": "Agréée MiCA (CASP) · CySEC, Chypre",
         "amfRegistration": null,
-        "registrationDate": "2024-12-19",
+        "registrationDate": "2025-10-20",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-04-26"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Revolut Digital Assets (Europe) Ltd",
+        "authority": "CySEC, Chypre",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -1122,12 +1157,15 @@
         "catalogue": 4.7
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Malta)",
-        "amfRegistration": "MFSA-CASP-2024",
+        "status": "Agréée MiCA (CASP) · MFSA, Malte",
+        "amfRegistration": null,
         "registrationDate": "2025-01-27",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "OKX Europe Limited",
+        "authority": "MFSA, Malte",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.08,
@@ -1222,12 +1260,15 @@
         "catalogue": 4.4
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Malta + Pays-Bas)",
-        "amfRegistration": "MFSA-CASP-CDC-2024",
-        "registrationDate": "2024-12-15",
+        "status": "Agréée MiCA (CASP) · MFSA, Malte",
+        "amfRegistration": null,
+        "registrationDate": "2025-01-27",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Foris DAX MT Limited",
+        "authority": "MFSA, Malte",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.25,
@@ -1322,12 +1363,15 @@
         "catalogue": 3.8
       },
       "mica": {
-        "status": "Quitte le marché UE/FR (avril 2026) — agrément CASP Irlande non exploité",
-        "amfRegistration": "CBI-CASP-GEM-2025",
-        "registrationDate": "2025-04-10",
+        "status": "Agréée MiCA (MFSA, Malte), mais a quitté le marché français en avril 2026",
+        "amfRegistration": null,
+        "registrationDate": "2025-08-21",
         "micaCompliant": false,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Gemini Intergalactic EU Ltd",
+        "authority": "MFSA, Malte",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.2,
@@ -1417,12 +1461,15 @@
         "catalogue": 3.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Luxembourg)",
-        "amfRegistration": "CSSF-CASP-BST-2025",
-        "registrationDate": "2025-02-20",
+        "status": "Agréée MiCA (CASP) · CSSF, Luxembourg",
+        "amfRegistration": null,
+        "registrationDate": "2025-05-15",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Bitstamp Europe S.A.",
+        "authority": "CSSF, Luxembourg",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.3,
@@ -1514,12 +1561,15 @@
         "catalogue": 4
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Pays-Bas DNB)",
-        "amfRegistration": "DNB-CASP-BVO-2024",
-        "registrationDate": "2024-11-08",
+        "status": "Agréée MiCA (CASP) · AFM, Pays-Bas",
+        "amfRegistration": null,
+        "registrationDate": "2025-06-26",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Bitvavo B.V.",
+        "authority": "AFM, Pays-Bas",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.15,
@@ -1615,12 +1665,15 @@
         "catalogue": 3.6
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Chypre CySEC)",
-        "amfRegistration": "CySEC-CASP-ETO-2024",
-        "registrationDate": "2024-09-25",
+        "status": "Agréée MiCA (CASP) · CySEC, Chypre",
+        "amfRegistration": null,
+        "registrationDate": "2025-01-16",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "eToro (Europe) Ltd",
+        "authority": "CySEC, Chypre",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1,
@@ -1713,12 +1766,15 @@
         "catalogue": 1.5
       },
       "mica": {
-        "status": "PSAN AMF (transition CASP en cours)",
-        "amfRegistration": "E2020-001",
-        "registrationDate": "2020-03-25",
-        "micaCompliant": false,
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2026-018",
+        "registrationDate": "2026-06-22",
+        "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "PAYMIUM SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -1805,12 +1861,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "PSAN AMF + agrément EME (CASP en cours)",
-        "amfRegistration": "E2024-018",
-        "registrationDate": "2024-06-12",
-        "micaCompliant": false,
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2025-001",
+        "registrationDate": "2025-05-23",
+        "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "DEBLOCK SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 1.99,
@@ -1898,12 +1957,15 @@
         "catalogue": 4
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Pays-Bas)",
-        "amfRegistration": "DNB-CASP-NXO-2025",
-        "registrationDate": "2025-03-18",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.2,
@@ -1999,12 +2061,15 @@
         "catalogue": 3.8
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Pays-Bas DNB)",
-        "amfRegistration": "DNB-CASP-MNP-2024",
-        "registrationDate": "2024-08-15",
+        "status": "Agréée MiCA (CASP) · AFM, Pays-Bas",
+        "amfRegistration": null,
+        "registrationDate": "2024-12-30",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "MoonPay Europe B.V.",
+        "authority": "AFM, Pays-Bas",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 4.5,
@@ -2093,12 +2158,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "Service crypto via partenariat Bitpanda (Allemagne BaFin)",
-        "amfRegistration": "BaFin-Bitpanda-N26-2024",
-        "registrationDate": "2024-04-01",
-        "micaCompliant": false,
+        "status": "Agréée MiCA (CASP) · BaFin, Allemagne",
+        "amfRegistration": null,
+        "registrationDate": "2025-05-14",
+        "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "N26 Bank SE",
+        "authority": "BaFin, Allemagne",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.5,
@@ -2184,12 +2252,15 @@
         "catalogue": 1
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Autriche FMA)",
-        "amfRegistration": "FMA-CASP-21B-2025",
-        "registrationDate": "2025-06-15",
+        "status": "Agréée MiCA (CASP) · FMA, Autriche",
+        "amfRegistration": null,
+        "registrationDate": "2025-11-27",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "FIOR Digital GmbH",
+        "authority": "FMA, Autriche",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.49,
@@ -2275,12 +2346,15 @@
         "catalogue": 3.8
       },
       "mica": {
-        "status": "Agrément MiCA en cours (Lituanie Bank of Lithuania)",
-        "amfRegistration": "BoL-CASP-WRX-2025",
-        "registrationDate": "2025-07-10",
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
         "micaCompliant": false,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.2,
@@ -2372,12 +2446,15 @@
         "catalogue": 3.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Italie OAM/CONSOB)",
-        "amfRegistration": "OAM-CASP-YP-2025",
-        "registrationDate": "2025-05-20",
+        "status": "Agréée MiCA (CASP) · CONSOB, Italie",
+        "amfRegistration": null,
+        "registrationDate": "2026-06-30",
         "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "YOUNG PLATFORM S.P.A.",
+        "authority": "CONSOB, Italie",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.2,
@@ -2467,12 +2544,15 @@
         "catalogue": 2.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Lituanie via PayPal Europe)",
-        "amfRegistration": "BoL-CASP-PYP-2024",
-        "registrationDate": "2024-08-30",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 2,
@@ -2559,12 +2639,15 @@
         "catalogue": 4.5
       },
       "mica": {
-        "status": "Agrément MiCA en cours (entité européenne)",
-        "amfRegistration": "À confirmer ESMA register",
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
         "registrationDate": null,
         "micaCompliant": false,
         "atRiskJuly2026": true,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0,
@@ -2656,12 +2739,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Allemagne BaFin)",
-        "amfRegistration": "BaFin-CASP-BSDEX-2024",
-        "registrationDate": "2024-10-22",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "status": "Agréée MiCA (BaFin, Allemagne), sans passeport vers la France",
+        "amfRegistration": null,
+        "registrationDate": "2025-07-03",
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Baden-Württembergische Wertpapierbörse GmbH",
+        "authority": "BaFin, Allemagne",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.2,
@@ -2747,12 +2833,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "Agrément CFD MiFID II + crypto via filiale CASP Chypre CySEC",
-        "amfRegistration": "CySEC-CASP-P500-2025",
-        "registrationDate": "2025-02-01",
+        "status": "Courtier en CFD sur crypto · absent du registre MiCA de l'ESMA",
+        "amfRegistration": null,
+        "registrationDate": null,
         "micaCompliant": false,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0,
@@ -2840,12 +2929,15 @@
         "catalogue": 3.5
       },
       "mica": {
-        "status": "Agrément MiCA (CASP Pays-Bas DNB)",
-        "amfRegistration": "DNB-CASP-ACD-2024",
-        "registrationDate": "2024-12-05",
-        "micaCompliant": true,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-05-02"
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
+        "micaCompliant": false,
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1,
@@ -2933,12 +3025,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "Broker actions/ETF + CFD crypto (CASP Chypre CySEC en cours)",
-        "amfRegistration": "CySEC-CASP-T212-2025",
-        "registrationDate": "2025-03-15",
-        "micaCompliant": false,
+        "status": "Agréée MiCA (CASP) · CySEC, Chypre",
+        "amfRegistration": null,
+        "registrationDate": "2025-09-22",
+        "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "Trading 212 Markets Ltd",
+        "authority": "CySEC, Chypre",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 0.3,
@@ -3026,12 +3121,15 @@
         "catalogue": 1
       },
       "mica": {
-        "status": "PSAN AMF (transition CASP en cours)",
-        "amfRegistration": "E2021-024",
-        "registrationDate": "2021-11-08",
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
         "micaCompliant": false,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.5,
@@ -3117,12 +3215,15 @@
         "catalogue": 3
       },
       "mica": {
-        "status": "PSAN AMF (transition CASP)",
-        "amfRegistration": "E2020-007",
-        "registrationDate": "2020-09-15",
+        "status": "Absente du registre MiCA de l'ESMA (au 29/09/2026)",
+        "amfRegistration": null,
+        "registrationDate": null,
         "micaCompliant": false,
-        "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "atRiskJuly2026": true,
+        "lastVerified": "2026-10-02",
+        "legalEntity": null,
+        "authority": null,
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026"
       },
       "fees": {
         "spotMaker": 1.5,
@@ -3214,12 +3315,15 @@
         "catalogue": 2.5
       },
       "mica": {
-        "status": "PSAN AMF (transition CASP)",
-        "amfRegistration": "E2021-016",
-        "registrationDate": "2021-07-22",
-        "micaCompliant": false,
+        "status": "Agréée MiCA (CASP) · AMF, France",
+        "amfRegistration": "A2026-029",
+        "registrationDate": "2026-07-24",
+        "micaCompliant": true,
         "atRiskJuly2026": false,
-        "lastVerified": "2026-06-13"
+        "lastVerified": "2026-10-02",
+        "legalEntity": "BLOCKCHAIN PROCESS SECURITY (B.P.S.) SAS",
+        "authority": "AMF, France",
+        "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
         "spotMaker": 1.5,

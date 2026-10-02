@@ -43,7 +43,7 @@ export async function GET(req: Request): Promise<Response> {
   const data = {
     last_updated: raw._meta?.lastUpdated ?? null,
     // Exclut les plateformes fermées au marché FR (ex : Gemini) — cohérent avec le
-    // compteur "33 plateformes disponibles" affiché côté site.
+    // le statut MiCA exposé (micaCompliant) indique en plus si la plateforme peut servir la France.
     platforms: ((raw.platforms as Array<{ fees?: { verified?: { verdict?: string } } }>) ?? []).filter(
       (p) => p?.fees?.verified?.verdict !== "indisponible",
     ),

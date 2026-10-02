@@ -29,6 +29,10 @@ export interface Platform {
     micaCompliant: boolean;
     atRiskJuly2026: boolean;
     lastVerified: string;
+    /** Entité agréée et autorité, telles qu'inscrites au registre MiCA de l'ESMA (null si absente). */
+    legalEntity?: string | null;
+    authority?: string | null;
+    registerSource?: string;
   };
   fees: {
     spotMaker: number;
@@ -104,8 +108,31 @@ export interface PlatformsData {
 const data = platformsData as unknown as PlatformsData;
 const wallets = walletsData as unknown as PlatformsData;
 
+/**
+ * Peut servir un résident français : agréée MiCA avec accès à la France (registre ESMA / liste blanche AMF)
+ * et pas sortie du marché FR. Les hardware wallets (auto-conservation) sont hors champ MiCA.
+ */
+const servesFr = (p: Platform): boolean =>
+  p.category === "wallet" || (p.fees.verified?.verdict !== "indisponible" && p.mica.micaCompliant);
+
+/**
+ * Une plateforme qui ne peut pas servir la France ne porte jamais de lien affilié ni d'offre :
+ * tout CTA, où qu'il soit sur le site, mène à sa fiche, qui explique pourquoi (audit du 02/10/2026).
+ */
+const withoutPromotion = (p: Platform): Platform =>
+  servesFr(p)
+    ? p
+    : {
+        ...p,
+        affiliateUrl: `/avis/${p.id}`,
+        badge: null,
+        bonus: { welcome: "Aucune offre : plateforme non autorisée en France", amount: null, currency: null, conditions: null, validUntil: null },
+      };
+
+const PLATFORMS = data.platforms.map(withoutPromotion);
+
 /** Concatène exchanges/brokers + hardware wallets (source pour comparatifs cross-catégorie). */
-const ALL = [...data.platforms, ...wallets.platforms];
+const ALL = [...PLATFORMS, ...wallets.platforms];
 
 /** Toutes les plateformes (exchanges + brokers + wallets) triées par score global décroissant. */
 export function getAllPlatforms(): Platform[] {
@@ -114,7 +141,7 @@ export function getAllPlatforms(): Platform[] {
 
 /** Uniquement les exchanges / brokers (sans hardware wallets). */
 export function getExchangePlatforms(): Platform[] {
-  return [...data.platforms].sort(
+  return [...PLATFORMS].sort(
     (a, b) => b.scoring.global - a.scoring.global
   );
 }
@@ -138,14 +165,14 @@ export function getPlatformsAtRisk(): Platform[] {
 }
 
 /**
- * Plateforme accessible à un résident français.
- * false si elle a fermé son marché FR/UE (ex : Gemini, avril 2026) —
- * détecté via fees.verified.verdict === "indisponible".
+ * Plateforme accessible à un résident français : agréée MiCA avec accès à la France
+ * (registre ESMA / liste blanche AMF) et pas sortie du marché FR (ex : Gemini, avril 2026 ;
+ * Binance, 1er juillet 2026). Les hardware wallets sont hors champ MiCA.
  * À utiliser pour NE PAS recommander une plateforme qu'on ne peut plus ouvrir
  * (classements, quiz, CTA) et pour noindexer sa fiche.
  */
 export function isAvailableFr(p: Platform): boolean {
-  return p.fees.verified?.verdict !== "indisponible";
+  return servesFr(p);
 }
 
 /**
@@ -218,9 +245,9 @@ export function buildMicaLabel(p: Platform): string | undefined {
   if (!p.mica.micaCompliant) return undefined;
   const reg = p.mica.amfRegistration;
   if (reg) {
-    // "AMF" uniquement pour un enregistrement AMF (format E20xx-xxx). Les autres
-    // régulateurs UE (CBI Irlande, etc.) ne sont pas l'AMF française.
-    return /^E\d/.test(reg) ? `MiCA · AMF ${reg}` : `MiCA · ${reg}`;
+    // "AMF" uniquement pour un agrément MiCA délivré par l'AMF (format A20xx-xxx, liste
+    // blanche AMF). Les agréments étrangers n'ont pas de numéro AMF.
+    return /^A\d/.test(reg) ? `MiCA · AMF ${reg}` : `MiCA · ${reg}`;
   }
   return p.mica.status;
 }

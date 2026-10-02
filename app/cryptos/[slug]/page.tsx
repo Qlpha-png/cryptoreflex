@@ -192,7 +192,7 @@ const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
   ),
 });
 import MobileStickyCTA from "@/components/MobileStickyCTA";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 // FIX UX FLOW 2026-05-02 #7 — NextStepsGuide en fin de fiche crypto pour
 // éviter le cul-de-sac après 25 sections (audit UX expert).
@@ -531,7 +531,7 @@ export default async function CryptoPage({ params }: Props) {
 
   // Plateforme recommandée pour la sticky CTA mobile : on prend la 1re plateforme
   // listée dans `whereToBuy` qui a une fiche dans `lib/platforms.ts`.
-  const knownPlatforms = getAllPlatforms();
+  const knownPlatforms = getAllPlatforms().filter(isAvailableFr);
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
   const recommendedPlatform = c.whereToBuy
     .map((name) =>

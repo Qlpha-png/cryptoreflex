@@ -139,7 +139,7 @@ export default function ComparatifSecuritePage() {
       },
       {
         question: "MiCA / agrement CASP, ca change quoi pour la securite ?",
-        answer: `Le reglement MiCA UE (en application complete au 1er juillet 2026) impose : (1) capital reglementaire minimum, (2) separation des fonds clients, (3) audits reguliers, (4) responsabilite de la plateforme en cas de hack. ${micaCompliantCount} plateformes sur ${rows.length} dans notre base sont deja agreees CASP. Les non-conformes risquent de perdre l'acces UE le 1er juillet 2026.`,
+        answer: `Le règlement MiCA impose notamment aux prestataires agréés un capital minimum, la ségrégation des fonds clients, des règles de gouvernance et de sécurité informatique. ${micaCompliantCount} plateformes sur ${rows.length} dans notre base sont agréées MiCA avec un accès à la France (registre de l'ESMA vérifié le 2 octobre 2026). Depuis le 1er juillet 2026, fin de la période transitoire, les autres ne peuvent plus servir de clients français.`,
       },
       {
         question: "Comment activer 2FA hardware (YubiKey) sur les plateformes ?",
@@ -292,12 +292,12 @@ export default function ComparatifSecuritePage() {
                       {r.micaCompliant ? (
                         <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green">
                           <CheckCircle2 className="h-3 w-3" />
-                          {r.micaStatus.length > 30 ? "Agree CASP" : r.micaStatus}
+                          {r.micaStatus.length > 30 ? "Agréée MiCA" : r.micaStatus}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold text-amber-300">
                           <AlertTriangle className="h-3 w-3" />
-                          A risque 1er juillet 2026
+                          Non autorisée en France
                         </span>
                       )}
                     </td>
@@ -365,7 +365,7 @@ export default function ComparatifSecuritePage() {
               Verifiez une plateforme
             </div>
             <div className="mt-2 text-base font-bold text-fg">Verificateur MiCA / CASP</div>
-            <div className="mt-1 text-xs text-muted">Statut PSAN/CASP en 1 clic</div>
+            <div className="mt-1 text-xs text-muted">Statut MiCA en 1 clic</div>
           </Link>
         </section>
 

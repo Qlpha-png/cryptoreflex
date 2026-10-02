@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star, Zap } from "lucide-react";
-import { getAllPlatforms, feeShort, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 import { getAffiliationKind } from "@/lib/partnerships";
 
@@ -35,7 +35,7 @@ export default function QuickBuyBox({
   cryptoSymbol,
   platformNames,
 }: Props) {
-  const knownPlatforms = getAllPlatforms();
+  const knownPlatforms = getAllPlatforms().filter(isAvailableFr);
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
   // Match par nom puis tri par score global (top 2).

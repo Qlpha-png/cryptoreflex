@@ -26,7 +26,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 const TITLE = "API publique gratuite — données crypto FR (PSAN, MiCA, fiscalité)";
 const DESCRIPTION =
-  "5 endpoints JSON gratuits CC-BY 4.0 : 33 plateformes, registre PSAN/MiCA, scores décentralisation, top cryptos, outils fiscaux. Sans inscription, CORS *.";
+  "5 endpoints JSON gratuits CC-BY 4.0 : 34 plateformes, registre MiCA, scores décentralisation, top cryptos, outils fiscaux. Sans inscription, CORS *.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -55,7 +55,7 @@ const ENDPOINTS: EndpointDoc[] = [
     path: "/api/public/platforms",
     title: "Catalogue plateformes",
     description:
-      "33 plateformes crypto comparées : frais maker/taker, retrait SEPA, sécurité, MiCA, support FR.",
+      "34 plateformes crypto comparées : frais maker/taker, retrait SEPA, sécurité, MiCA, support FR.",
     responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
     updateFrequency: "Mensuelle",
   },
@@ -63,7 +63,7 @@ const ENDPOINTS: EndpointDoc[] = [
     path: "/api/public/psan-registry",
     title: "Registre PSAN + MiCA",
     description:
-      "Statut PSAN (FR, AMF) + MiCA (UE, ESMA) consolidé. Inclut le champ atRiskJuly2026 (deadline transition).",
+      "Statut MiCA (registre de l'ESMA) et numéro d'agrément AMF des prestataires français. Le champ atRiskJuly2026 vaut true si la plateforme ne peut pas servir la France depuis le 1er juillet 2026.",
     responseShape:
       "{ _meta, platforms: [{ id, name, psanStatus, amfRegistration, micaStatus, atRiskJuly2026, ... }] }",
     updateFrequency: "Mensuelle",
@@ -170,7 +170,7 @@ const datasetSchema = {
   name: "Cryptoreflex — Open Data Crypto FR",
   alternateName: "Cryptoreflex Public API",
   description:
-    "Dataset open data CC-BY 4.0 sur le marché crypto français : 33 plateformes auditées (frais, sécurité, MiCA, PSAN), registre PSAN+MiCA consolidé, scores de décentralisation pour 10+ blockchains, top 10 cryptos vulgarisées, comparatif outils fiscalité crypto. Compilation à partir des registres officiels AMF, ESMA, BaFin, CNMV, MFSA, CSSF + sources publiques (Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub).",
+    "Dataset open data CC-BY 4.0 sur le marché crypto français : 34 plateformes auditées (frais, sécurité, MiCA), registre MiCA consolidé, scores de décentralisation pour 10+ blockchains, top 10 cryptos vulgarisées, comparatif outils fiscalité crypto. Compilation à partir des registres officiels AMF, ESMA, BaFin, CNMV, MFSA, CSSF + sources publiques (Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub).",
   url: baseUrl + "/api-publique",
   sameAs: [baseUrl + "/api/public"],
   keywords: [
@@ -215,7 +215,7 @@ const datasetSchema = {
   variableMeasured: [
     "Frais maker / taker / SEPA / retrait par plateforme",
     "Score de sécurité par plateforme",
-    "Statut PSAN AMF + agrément CASP MiCA UE",
+    "Agrément MiCA (CASP) et accès à la France",
     "Score de décentralisation composite (Nakamoto coef, validators, géo, clients, open source)",
     "Notation des outils fiscalité crypto (tarifs, fonctionnalités, support FR)",
   ],
@@ -290,7 +290,7 @@ export default function ApiPubliquePage() {
             >
               CC-BY 4.0
             </a>{" "}
-            : 33 plateformes, registre PSAN + MiCA, scores de décentralisation, top
+            : 34 plateformes, registre MiCA, scores de décentralisation, top
             cryptos vulgarisées, outils fiscalité. Réutilisation libre — attribution
             obligatoire (lien dofollow vers cryptoreflex.fr).
           </p>
@@ -510,7 +510,7 @@ data = r.json()`}</code>
               </h2>
               <p className="mt-2 max-w-2xl text-slate-300">
                 On finalise un tier dédié B2B avec webhooks de mise à jour, accès
-                historique et support prioritaire. Inscris-toi sur la liste
+                historique et support prioritaire. Inscrivez-vous sur la liste
                 d'attente — premier tarif réservé.
               </p>
             </div>

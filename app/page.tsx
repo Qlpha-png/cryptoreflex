@@ -109,13 +109,13 @@ export const metadata: Metadata = {
   // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
   // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
   description:
-    "Comparez 33 plateformes MiCA, analysez 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils crypto, méthodologie publique.",
+    "Comparez 22 plateformes agréées MiCA, analysez 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 28 outils crypto, méthodologie publique.",
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
     title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 33 plateformes MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité). Méthode publique.",
+      "L'écosystème crypto français : 22 plateformes agréées MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité). Méthode publique.",
     images: [
       {
         url: "/opengraph-image",
@@ -128,7 +128,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
     description:
-      "L'écosystème crypto français : 33 plateformes MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité).",
+      "L'écosystème crypto français : 22 plateformes agréées MiCA, 780 fiches crypto, 28 outils (PFU, DCA, fiscalité).",
   },
 };
 

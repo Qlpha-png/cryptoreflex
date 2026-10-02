@@ -264,8 +264,8 @@ export default function RessourcesLibresPage() {
             <DatasetCard
               icon={<Database className="h-6 w-6" />}
               title="Plateformes MiCA"
-              count="33 plateformes vérifiées"
-              description="Statut PSAN, juridiction MiCA, date d'agrément, risque juillet 2026 — vérifié manuellement par l'équipe Cryptoreflex."
+              count="34 plateformes vérifiées"
+              description="Agrément MiCA, autorité, date d'agrément et accès à la France, d'après le registre de l'ESMA et la liste blanche AMF."
               href="/outils/verificateur-mica"
               format="HTML / JSON-LD / iframe"
             />

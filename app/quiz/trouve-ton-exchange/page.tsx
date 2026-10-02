@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Timer, ShieldCheck } from "lucide-react";
 
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import QuizExchange from "@/components/QuizExchange";
@@ -98,7 +98,7 @@ const FAQ = [
 /* -------------------------------------------------------------------------- */
 
 export default function QuizTrouveTonExchangePage() {
-  const platforms = getAllPlatforms();
+  const platforms = getAllPlatforms().filter(isAvailableFr);
 
   /* ----------------- JSON-LD : Quiz + Breadcrumb + FAQPage ---------------- */
 

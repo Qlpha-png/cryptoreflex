@@ -191,6 +191,8 @@ export type StatusColor = "green" | "amber" | "red" | "gray";
 export function getStatusColor(p: PlatformMica): StatusColor {
   if (p.psanStatus === "revoked") return "gray";
   if (p.micaStatus === "out_of_scope") return "gray";
+  /* agréée ailleurs mais sans accès à la France (pas de passeport, ou sortie du marché FR) */
+  if (p.micaStatus === "authorized" && p.atRiskJuly2026) return "amber";
   if (p.micaStatus === "authorized") return "green";
   if (p.micaStatus === "non_compliant") return "red";
   if (p.atRiskJuly2026) return "amber";
@@ -203,18 +205,21 @@ export function getStatusLabel(p: PlatformMica): string {
   if (p.micaStatus === "out_of_scope") return "Hors champ MiCA";
   if (p.micaStatus === "authorized") return "Agréé MiCA (CASP)";
   if (p.micaStatus === "in_progress") return "Dossier MiCA en cours";
-  if (p.micaStatus === "non_compliant") return "Non conforme MiCA";
+  if (p.micaStatus === "non_compliant") return "Aucun agrément MiCA (registre ESMA)";
   return "Statut inconnu";
 }
 
+/**
+ * Statut en France depuis la fin de la période transitoire (1er juillet 2026). L'ancien régime
+ * PSAN a pris fin le 30 juin 2026 : ses numéros (E20xx-xxx) ne sont plus affichés.
+ */
 export function getPsanLabel(p: PlatformMica): string {
-  if (p.psanStatus === "registered" && p.psanCountry === "FR")
-    return `PSAN AMF (${p.amfRegistration ?? "n° non communiqué"})`;
-  if (p.psanStatus === "registered" && p.psanCountry)
-    return `Enregistré ${p.psanCountry}`;
-  if (p.psanStatus === "revoked") return "Enregistrement révoqué";
-  if (p.psanStatus === "not_applicable") return "Hors régime PSAN";
-  return "Non enregistré PSAN";
+  if (p.micaStatus === "out_of_scope") return "Hors champ de l'agrément MiCA";
+  if (p.psanStatus === "revoked") return "Plateforme en liquidation";
+  if (p.micaStatus === "authorized" && p.psanCountry === "FR")
+    return p.amfRegistration ? `Agréée par l'AMF (n° ${p.amfRegistration})` : "Agréée par l'AMF";
+  if (p.micaStatus === "authorized" && !p.atRiskJuly2026) return "Autorisée en France (passeport MiCA)";
+  return "Non autorisée en France";
 }
 
 /** Tailwind classes pour un badge selon la couleur de statut. */

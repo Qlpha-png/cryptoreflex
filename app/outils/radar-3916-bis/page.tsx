@@ -23,7 +23,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const metadata: Metadata = {
   title: "Radar 3916-bis — détectez vos amendes crypto en 2 min (gratuit)",
   description:
-    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle 750 € à 10 000 € par compte oublié. Conforme BOI-CF-CPF-30-20.",
+    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle : 750 € par compte oublié (1 500 € au-delà de 50 000 €). Conforme BOI-CF-CPF-30-20.",
   alternates: withHreflang(`${BRAND.url}/outils/radar-3916-bis`),
   keywords: [
     "3916-bis crypto",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Radar 3916-bis — chiffrez l'amende crypto qui vous attend",
     description:
-      "Détectez en 2 min les comptes crypto étrangers que vous devez déclarer (Binance, Kraken, MEXC…). Amende 1 500 à 10 000 € par compte oublié.",
+      "Détectez en 2 min les comptes crypto étrangers que vous devez déclarer (Binance, Kraken, MEXC…). Amende de 750 € par compte oublié, 1 500 € au-delà de 50 000 €.",
     url: `${BRAND.url}/outils/radar-3916-bis`,
     type: "website",
     locale: "fr_FR",
@@ -75,7 +75,7 @@ const FAQS = [
   },
   {
     q: "Quelle est l'amende si je ne déclare pas ?",
-    a: "750 € par compte non déclaré pour les exchanges situés en pays coopératif (UE, UK, US…), porté à 1 500 € par compte si le solde dépasse 50 000 € à un moment de l'année. 10 000 € par compte si l'exchange est situé en pays non-coopératif (liste FR : Seychelles, Iles Vierges britanniques, Bahamas, Panama, Vanuatu…). MEXC, KuCoin, Bitget, Bitfinex sont concernés par le tarif majoré.",
+    a: "750 € par compte d'actifs numériques non déclaré, porté à 1 500 € par compte si la valeur de vos comptes à l'étranger dépasse 50 000 € (article 1736, X du CGI). S'y ajoutent 125 € par omission ou inexactitude (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration. Le montant de 10 000 € par compte situé dans un État non coopératif concerne les comptes bancaires, pas les comptes crypto.",
   },
   {
     q: "Mon compte est vide / fermé, dois-je quand même le déclarer ?",
@@ -99,7 +99,7 @@ const FAQS = [
   },
   {
     q: "Quelle est la deadline de déclaration ?",
-    a: "Le 3916-bis est joint à votre déclaration de revenus annuelle. La deadline 2026 dépend de votre département (typiquement entre fin mai et début juin). Vérifiez sur impots.gouv.fr votre date limite exacte.",
+    a: "Le 3916-bis est joint à votre déclaration de revenus annuelle. La date limite dépend de votre département (en général entre fin mai et début juin). Vérifiez sur impots.gouv.fr votre date limite exacte.",
   },
 ];
 
@@ -116,7 +116,7 @@ const HOW_TO_STEPS = [
   },
   {
     name: "Découvrez votre exposition financière",
-    text: "Le Radar calcule en € la somme exacte des amendes que vous risquez si vous ne déclarez pas. Comptes en pays non-coopératif (Seychelles, BVI…) = 10 000 €/compte. Comptes en pays coopératif = 750 € à 750 €/compte.",
+    text: "Le Radar calcule en € la somme exacte des amendes que vous risquez si vous ne déclarez pas. 750 € par compte non déclaré, 1 500 € si la valeur de vos comptes à l'étranger dépasse 50 000 €.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
@@ -131,7 +131,7 @@ export default function RadarPage() {
     howToSchema({
       name: "Comment déclarer ses comptes crypto étrangers (3916-bis)",
       description:
-        "Procédure complète pour déclarer ses comptes crypto étrangers (Binance, Kraken, MEXC…) sur impots.gouv.fr et éviter l'amende de 750 € à 10 000 € par compte oublié.",
+        "Procédure complète pour déclarer ses comptes crypto étrangers (Binance, Kraken, MEXC…) sur impots.gouv.fr et éviter l'amende de 750 € (ou 1 500 €) par compte oublié.",
       totalTime: "PT15M",
       steps: HOW_TO_STEPS,
     }),
@@ -170,15 +170,15 @@ export default function RadarPage() {
               <span className="text-gradient-gold-animate">
                 d&apos;amende crypto
               </span>{" "}
-              en mai 2026 ?
+              à votre prochaine déclaration ?
             </h1>
 
             <p className="mt-6 text-base sm:text-lg text-fg/80 max-w-2xl leading-relaxed">
               Si vous avez un compte sur Binance, Kraken, MEXC, Bybit, KuCoin…
               et que vous ne l&apos;avez pas déclaré sur le 3916-bis,
               l&apos;amende est de{" "}
-              <strong className="text-warning">750 €</strong> à{" "}
-              <strong className="text-danger">10 000 € PAR COMPTE</strong>.
+              <strong className="text-warning">750 € par compte</strong>, et{" "}
+              <strong className="text-danger">1 500 €</strong> si la valeur de vos comptes dépasse 50 000 €.
               Vérifiez votre exposition en 2 min.
             </p>
 
@@ -247,8 +247,8 @@ export default function RadarPage() {
               {
                 icon: AlertTriangle,
                 color: "danger",
-                title: "10 000 € par compte non-coopératif",
-                text: "Pour MEXC, KuCoin, Bitget (Seychelles), Bitfinex (BVI), Bybit historique — la sanction est portée à 10 000 € par compte non déclaré.",
+                title: "125 € par omission ou inexactitude",
+                text: "Une information manquante ou erronée sur un compte déclaré coûte 125 € (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration.",
               },
               {
                 icon: ShieldCheck,
@@ -346,7 +346,7 @@ export default function RadarPage() {
               },
               {
                 title: "Rappel pré-deadline",
-                text: "Email automatique 14 jours avant la deadline mai 2026 — plus jamais d'oubli.",
+                text: "Email automatique 14 jours avant la date limite de votre déclaration : plus jamais d'oubli.",
               },
               {
                 title: "Suivi pluri-annuel",

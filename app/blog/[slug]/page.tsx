@@ -20,7 +20,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import RelatedEntities from "@/components/RelatedEntities";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import {
@@ -283,7 +283,7 @@ export default async function BlogArticlePage({ params }: Props) {
 
   let stickyPlatform: ReturnType<typeof getAllPlatforms>[number] | undefined;
   if (isTransactionalArticle) {
-    const allPlatforms = getAllPlatforms();
+    const allPlatforms = getAllPlatforms().filter(isAvailableFr);
     const haystack = `${article.title} ${article.description}`.toLowerCase();
     stickyPlatform = allPlatforms.find((p) =>
       haystack.includes(p.name.toLowerCase()),

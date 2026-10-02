@@ -75,13 +75,7 @@ export const PLATFORM_SCORES: PlatformScores[] = [
     scores: { prix: 8, ux: 8, securite: 8, dca: 8, swing: 6, hold: 8, daytrading: 5, debutant: 8, avance: 6 },
     reasonShort: "Plateforme européenne, frais bas en spot, large catalogue (350+ cryptos).",
   },
-  {
-    id: "binance",
-    name: "Binance",
-    reviewSlug: "binance",
-    scores: { prix: 9, ux: 6, securite: 7, dca: 7, swing: 9, hold: 8, daytrading: 10, debutant: 5, avance: 10 },
-    reasonShort: "Frais les plus bas du marché, liquidité massive, idéal trader actif.",
-  },
+  /* Binance retirée le 02/10/2026 : services fermés en France depuis le 1er juillet 2026 */
   {
     id: "coinbase",
     name: "Coinbase",

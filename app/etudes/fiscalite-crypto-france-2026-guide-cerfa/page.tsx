@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     q: "Dois-je déclarer mes cryptos même si je n’ai rien vendu ?",
-    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction. Oubli = amende 750 € par compte non déclaré (1 500 € si solde supérieur à 50 000 €, ou 10 000 € si compte dans un État non coopératif).",
+    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction. Oubli = amende 750 € par compte non déclaré (1 500 € si la valeur des comptes dépasse 50 000 €).",
   },
   {
     q: "Que se passe-t-il en cas de moins-value (perte) ?",
@@ -389,8 +389,8 @@ export default function FiscaliteCryptoStudyPage() {
               <span>
                 <strong>Annexe 3916-bis obligatoire</strong> pour tout compte
                 ouvert chez un exchange étranger (Binance, Kraken, Coinbase,
-                etc.). Oubli = amende 750 €/compte (1 500 € si solde &gt; 50 000 €,
-                10 000 € en cas d’État non coopératif).
+                etc.). Oubli = amende 750 €/compte (1 500 € si la valeur des
+                comptes dépasse 50 000 €).
               </span>
             </li>
             <li className="flex items-start gap-2">
@@ -678,9 +678,9 @@ export default function FiscaliteCryptoStudyPage() {
               dépasse 50 000 € à un moment de l’année ;
             </li>
             <li>
-              <strong>10 000 € par compte non déclaré</strong> si l’État
-              concerné figure sur la liste des États non coopératifs (rares
-              cas pour la crypto).
+              <strong>125 € par omission ou inexactitude</strong> sur un compte
+              déclaré (250 € au-delà de 50 000 €), dans la limite de 10 000 € par
+              déclaration.
             </li>
           </ul>
           <p>

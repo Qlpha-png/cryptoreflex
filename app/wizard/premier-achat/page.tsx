@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import FirstPurchaseWizard from "@/components/FirstPurchaseWizard";
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 };
 
 export default function WizardPremierAchatPage() {
-  const platforms = getAllPlatforms();
+  const platforms = getAllPlatforms().filter(isAvailableFr);
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },

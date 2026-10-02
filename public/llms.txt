@@ -39,7 +39,7 @@ Cryptoreflex expose ses données en open data sous licence Creative Commons CC-B
 ## Études cornerstone (recherche & analyse)
 
 - [Hub /etudes](https://www.cryptoreflex.fr/etudes) : recherche longue, sources publiques, méthodologie publiée.
-- [Étude MiCA juillet 2026](https://www.cryptoreflex.fr/etudes/mica-juillet-2026-etat-des-lieux) : analyse exhaustive des 34 plateformes à 60 jours de la deadline. Sources AMF, ESMA, BaFin, MFSA, CSSF.
+- [Étude MiCA juillet 2026](https://www.cryptoreflex.fr/etudes/mica-juillet-2026-etat-des-lieux) : plateformes crypto agréées MiCA ou non autorisées en France depuis le 1er juillet 2026, d'après le registre de l'ESMA et la liste blanche AMF (mise à jour du 2 octobre 2026).
 - [Étude Fiscalité crypto FR 2026](https://www.cryptoreflex.fr/etudes/fiscalite-crypto-france-2026-guide-cerfa) : guide complet Cerfa 2086 + 3916-bis. Sources BOFiP officielles. Régime PFU 31,4%, cas particuliers (staking, NFT, airdrops, DeFi), erreurs courantes, optimisation légale.
 
 ## Outils gratuits clés

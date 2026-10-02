@@ -22,20 +22,20 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_URL = `${BRAND.url}/outils/verificateur-mica`;
 
 export const metadata: Metadata = {
-  title: "Vérificateur PSAN AMF & MiCA — exchange crypto régulé en France ?",
+  title: "Vérificateur MiCA : plateforme crypto autorisée en France ?",
   description:
-    "Vérifiez en 3 secondes si une plateforme crypto est enregistrée PSAN AMF et agréée MiCA. Statut, juridiction, restrictions, risque juillet 2026 — sources officielles.",
+    "Vérifiez en 3 secondes si une plateforme crypto est agréée MiCA et autorisée à servir la France : autorité, date d'agrément, numéro AMF. Registre officiel de l'ESMA et liste blanche AMF.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",
     url: PAGE_URL,
-    title: "Vérificateur PSAN AMF & MiCA — Cryptoreflex",
+    title: "Vérificateur MiCA (AMF & ESMA) — Cryptoreflex",
     description:
       "L'outil officiel pour vérifier le statut réglementaire d'un exchange crypto en France et en Europe (MiCA).",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vérificateur PSAN AMF & MiCA",
+    title: "Vérificateur MiCA (AMF & ESMA)",
     description:
       "Vérifiez en 3 secondes le statut réglementaire d'un exchange crypto.",
   },
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     "Coinbase MiCA",
     "Kraken MiCA",
     "réglementation crypto Europe",
-    "à risque juillet 2026",
+    "plateforme crypto autorisée en France",
   ],
 };
 
@@ -66,7 +66,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
   const webAppLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Vérificateur PSAN AMF & MiCA",
+    name: "Vérificateur MiCA (AMF & ESMA)",
     url: PAGE_URL,
     applicationCategory: "FinanceApplication",
     operatingSystem: "All",
@@ -74,7 +74,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
     creator: { "@type": "Organization", name: BRAND.name, url: BRAND.url },
     description:
-      "Outil gratuit de vérification du statut PSAN (AMF) et MiCA (CASP) des exchanges crypto opérant en France et en Europe.",
+      "Outil gratuit de vérification de l'agrément MiCA (CASP) des plateformes crypto qui servent la France, d'après le registre de l'ESMA et la liste blanche de l'AMF.",
     inLanguage: "fr-FR",
     dateModified: meta.lastUpdated,
   };
@@ -84,7 +84,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
     "@type": "HowTo",
     name: "Comment vérifier si un exchange crypto est régulé en France",
     description:
-      "Vérifier en 3 étapes le statut PSAN AMF et MiCA d'une plateforme crypto.",
+      "Vérifier en 3 étapes l'agrément MiCA d'une plateforme crypto.",
     totalTime: "PT30S",
     step: [
       {
@@ -103,7 +103,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
         "@type": "HowToStep",
         position: 3,
         name: "Lisez la fiche réglementaire",
-        text: "Consultez le statut PSAN AMF, l'agrément MiCA, la juridiction, les restrictions et le risque juillet 2026.",
+        text: "Consultez l'agrément MiCA, l'autorité qui l'a délivré, la date d'agrément et l'accès à la France.",
       },
     ],
   };
@@ -146,7 +146,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
               <span className="gradient-text">régulé en France</span> ?
             </h1>
             <p className="mt-4 text-lg text-white/75">
-              Vérifiez en 3 secondes le statut PSAN AMF et l'agrément MiCA de
+              Vérifiez en 3 secondes l'agrément MiCA et l'accès à la France de
               n'importe quelle plateforme crypto. Données croisées depuis les
               registres officiels AMF, ESMA, BaFin — mises à jour mensuellement.
             </p>
@@ -215,7 +215,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <MethodCard
               icon={Database}
               title="Sources officielles uniquement"
-              text="Liste PSAN AMF, registres CASP nationaux (BaFin, CNMV, MFSA, CSSF, Bank of Lithuania, Central Bank of Ireland), registre ESMA des entités MiCA, pages 'Legal/Licenses' de chaque plateforme."
+              text="Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français). Dernière vérification : 2 octobre 2026."
             />
             <MethodCard
               icon={CheckCircle2}
@@ -228,8 +228,8 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             />
             <MethodCard
               icon={AlertTriangle}
-              title="Critère « à risque juillet 2026 »"
-              text="Attribué à toute plateforme qui n'a ni agrément MiCA en vigueur, ni dossier CASP déposé en France à la date du dernier audit. La période transitoire MiCA s'achève le 30 juin 2026 ; l'application pleine de MiCA Phase 2 prend effet le 1er juillet 2026."
+              title="Critère « autorisée en France »"
+              text="Depuis le 1er juillet 2026, fin de la période transitoire française, seul un prestataire agréé MiCA, en France ou dans un autre pays de l'UE avec un passeport vers la France, peut servir des clients français. Une plateforme absente du registre de l'ESMA est indiquée « non autorisée en France »."
             />
           </div>
 
@@ -250,22 +250,20 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
               </li>
               <li className="flex gap-3">
                 <span className="badge border-primary/40 bg-primary/10 text-primary-soft shrink-0 mt-0.5">
-                  En cours
+                  Sans accès France
                 </span>
                 <span>
-                  Plateforme PSAN nationale ayant déposé un dossier CASP MiCA
-                  encore en instruction. Reste autorisée à opérer pendant la
-                  période transitoire.
+                  Plateforme agréée MiCA dans un autre pays de l'UE, mais sans
+                  passeport vers la France, ou sortie du marché français.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="badge border-accent-rose/40 bg-accent-rose/10 text-danger-fg shrink-0 mt-0.5">
-                  Non conforme
+                  Non autorisée
                 </span>
                 <span>
-                  Plateforme sans agrément MiCA ni enregistrement PSAN dans un
-                  État membre. Risque de blocage d'accès aux résidents UE à
-                  partir du 1er juillet 2026.
+                  Plateforme absente du registre MiCA de l'ESMA : depuis le 1er
+                  juillet 2026, elle ne peut plus servir de clients français.
                 </span>
               </li>
               <li className="flex gap-3">
@@ -343,15 +341,15 @@ function MethodCard({
 const FAQ = [
   {
     q: "C'est quoi un PSAN ?",
-    a: "Un PSAN (Prestataire de Services sur Actifs Numériques) est un statut français créé par la loi PACTE (2019). L'enregistrement PSAN est obligatoire pour exercer en France les activités de conservation, achat/vente, échange et exploitation de plateforme crypto. La liste officielle est tenue par l'AMF.",
+    a: "Un PSAN (Prestataire de Services sur Actifs Numériques) était le statut français créé par la loi PACTE (2019) pour les activités crypto, avec une liste tenue par l'AMF. Ce régime a pris fin avec la période transitoire MiCA : depuis le 1er juillet 2026, un prestataire doit être agréé MiCA (CASP) pour servir des clients français, et un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation.",
   },
   {
     q: "Et MiCA, c'est quoi la différence ?",
-    a: "MiCA (\"Markets in Crypto-Assets\") est le cadre crypto européen harmonisé, adopté par l'UE en 2023 et entré en application progressivement depuis le 30 décembre 2024. Concrètement : toutes les plateformes crypto qui veulent servir des clients européens doivent obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'un régulateur national (AMF en France, BaFin en Allemagne, etc.). Cet agrément est ensuite valable dans toute l'UE — c'est le « passeport européen ». MiCA remplace progressivement les régimes nationaux comme le PSAN français. La période transitoire pour les acteurs PSAN s'achève le 30 juin 2026 ; à partir du 1er juillet 2026, plus aucune plateforme ne peut opérer dans l'UE sans agrément CASP. (Référence juridique : Règlement UE 2023/1114.)",
+    a: "MiCA (\"Markets in Crypto-Assets\") est le cadre crypto européen harmonisé, adopté par l'UE en 2023 et entré en application progressivement depuis le 30 décembre 2024. Concrètement : toutes les plateformes crypto qui veulent servir des clients européens doivent obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'un régulateur national (AMF en France, BaFin en Allemagne, etc.). Cet agrément est ensuite valable dans toute l'UE — c'est le « passeport européen ». MiCA remplace progressivement les régimes nationaux comme le PSAN français. La période transitoire française a pris fin le 30 juin 2026 : depuis le 1er juillet 2026, une plateforme ne peut plus servir de clients français sans agrément CASP. (Référence juridique : Règlement UE 2023/1114.)",
   },
   {
-    q: "Que se passe-t-il pour les plateformes non conformes après le 1er juillet 2026 ?",
-    a: "Toute plateforme proposant des services aux résidents UE sans agrément MiCA pourra faire l'objet de mesures de blocage par les autorités nationales (AMF/ARCOM en France) : référencement sur liste noire, blocage d'accès aux sites miroirs, sanctions financières. Concrètement, les utilisateurs européens devraient perdre l'accès aux services concernés.",
+    q: "Que se passe-t-il pour les plateformes non agréées depuis le 1er juillet 2026 ?",
+    a: "Elles ne peuvent plus fournir de services sur crypto-actifs à des résidents français. Certaines ont fermé leurs services en France, comme Binance le 1er juillet 2026. L'AMF publie aussi une liste noire des acteurs qui proposent des services sans autorisation. Si vous détenez un compte sur une plateforme non agréée, renseignez-vous sur les conditions de retrait de vos avoirs.",
   },
   {
     q: "Une plateforme « agréée MiCA via Lituanie » est-elle aussi sûre qu'une « agréée via BaFin » ?",

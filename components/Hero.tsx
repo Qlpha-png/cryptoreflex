@@ -4,6 +4,7 @@ import { ArrowRight, Mail, ShieldAlert } from "lucide-react";
 import HeroPrimaryCta from "@/components/HeroPrimaryCta";
 import HeroPulse, { pulseHeadPosition, pulsePolyline } from "@/components/hero/HeroPulse";
 import type { CoinPrice } from "@/lib/coingecko";
+import { STATS } from "@/lib/brand";
 
 // Île client unique du hero : tête pulsante + chip prix BTC live.
 // ssr:false (pattern BATCH 54 validé contre l'hydration mismatch des
@@ -56,13 +57,8 @@ interface HeroProps {
   fearGreed?: number | null;
 }
 
-// Compteurs alignés sur la source unique lib/brand.ts (STATS.platforms = 33
-// plateformes disponibles, hors fermées FR comme Gemini).
-const STATS = {
-  platforms: 33,
-  cryptos: 780,
-  tools: 28,
-} as const;
+// Compteurs : source unique lib/brand.ts (STATS.platforms = plateformes agréées MiCA
+// avec accès à la France ; la copie locale de ces chiffres avait divergé).
 
 export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroProps) {
   const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();

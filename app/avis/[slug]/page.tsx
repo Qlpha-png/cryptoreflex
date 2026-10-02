@@ -167,12 +167,20 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
  * FAQ — questions générées en contexte (varient selon les data)
  * ------------------------------------------------------------------ */
 
+const frDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
+
 function buildFaq(p: Platform): { q: string; a: string }[] {
   const faq: { q: string; a: string }[] = [];
 
   faq.push({
     q: `${p.name} est-elle régulée en France en 2026 ?`,
-    a: `Oui. ${p.name} dispose du statut "${p.mica.status}"${p.mica.amfRegistration ? ` (enregistrement AMF n°${p.mica.amfRegistration})` : ""}, avec une mise en conformité MiCA validée. Vérification effectuée par notre équipe le ${p.mica.lastVerified}.`,
+    a:
+      p.category === "wallet"
+        ? `${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, il n'a donc pas besoin d'agrément MiCA. Les achats proposés dans son application passent par des prestataires partenaires.`
+        : isAvailableFr(p)
+          ? `Oui. ${p.name} figure au registre MiCA de l'ESMA : ${p.mica.status}${p.mica.amfRegistration ? ` (agrément AMF n° ${p.mica.amfRegistration})` : ""}${p.mica.legalEntity ? `, via ${p.mica.legalEntity}` : ""}. Vérification effectuée par notre équipe le ${frDate(p.mica.lastVerified)}.`
+          : `Non. ${p.mica.status}. Depuis le 1er juillet 2026, fin de la période transitoire MiCA, seuls les prestataires agréés avec accès à la France peuvent y fournir des services sur crypto-actifs. Vérification effectuée par notre équipe le ${frDate(p.mica.lastVerified)}.`,
   });
 
   faq.push({
@@ -319,11 +327,11 @@ export default function ReviewPage({ params }: Props) {
         {!available && (
           <div className="mt-4 rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm leading-relaxed text-red-200">
             <strong className="font-semibold text-red-100">
-              {p.name} n&apos;est plus accessible aux résidents français.
+              {p.name} n&apos;est pas autorisée à servir les résidents français.
             </strong>{" "}
-            {p.fees.verified?.note}{" "}
+            {p.mica.status}. Depuis le 1er juillet 2026, seuls les prestataires agréés MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs : nous ne proposons aucun lien vers {p.name}.{" "}
             <Link href="/comparatif/frais" className="underline hover:text-white">
-              Voir les plateformes disponibles →
+              Voir les plateformes autorisées →
             </Link>
           </div>
         )}
@@ -383,7 +391,7 @@ export default function ReviewPage({ params }: Props) {
           {/* Carte CTA latérale */}
           <aside className="rounded-2xl border border-border bg-surface p-5 sticky top-24">
             <div className="text-xs uppercase tracking-wide text-muted">
-              Tester {p.name}
+              {available ? `Tester ${p.name}` : "Non autorisée en France"}
             </div>
             {/*
               MiCA badge JUSTE au-dessus du CTA = trust signal au moment exact
@@ -411,14 +419,14 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-sidebar"
-              ctaText={`Aller sur ${p.name}`}
+              ctaText={available ? `Aller sur ${p.name}` : "Voir les plateformes autorisées"}
               showCaption={false}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
-              Aller sur {p.name}
+              {available ? `Aller sur ${p.name}` : "Voir les plateformes autorisées"}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
-            <p className="mt-3 text-[11px] text-muted leading-relaxed">
+            <p className={available ? "mt-3 text-[11px] text-muted leading-relaxed" : "hidden"}>
               Publicité — Cryptoreflex perçoit une commission si vous ouvrez un compte, sans surcoût pour vous. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
             </p>
           </aside>
@@ -449,11 +457,11 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-express"
-              ctaText={`Tester ${p.name}`}
+              ctaText={available ? `Tester ${p.name}` : "Voir les plateformes autorisées"}
               showCaption={false}
               className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-glow hover:bg-primary/25 transition-colors"
             >
-              Tester {p.name}
+              {available ? `Tester ${p.name}` : "Voir les plateformes autorisées"}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
           </div>
@@ -692,7 +700,11 @@ export default function ReviewPage({ params }: Props) {
             Sécurité et conformité
           </h2>
           <p className="mt-3 text-white/80 leading-relaxed">
-            En 2026, la conformité MiCA n'est plus une option pour opérer en France : c'est l'agrément qui autorise une plateforme à offrir des services crypto à un résident français. {p.name} a obtenu cet agrément ({p.mica.status}){p.mica.amfRegistration ? ` avec un enregistrement AMF n°${p.mica.amfRegistration}` : ""}, ce qui implique une ségrégation stricte des fonds clients, des audits annuels et un capital minimum réglementaire. C'est une protection structurelle qui n'existait pas avant 2024.
+            {isWallet
+              ? `${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, il n'est donc pas soumis à l'agrément MiCA, qui encadre les prestataires qui gardent ou échangent les cryptos de leurs clients.`
+              : available
+                ? `Depuis le 1er juillet 2026, fin de la période transitoire, seul un prestataire agréé MiCA peut offrir des services crypto à un résident français. ${p.name} en fait partie (${p.mica.status}${p.mica.amfRegistration ? `, agrément AMF n° ${p.mica.amfRegistration}` : ""}) : l'agrément impose notamment la ségrégation des fonds clients, des règles de gouvernance et un capital minimum. Il ne protège pas contre les pertes liées aux marchés.`
+                : `Depuis le 1er juillet 2026, fin de la période transitoire, seul un prestataire agréé MiCA peut offrir des services crypto à un résident français. ${p.name} n'en fait pas partie à la date de notre vérification (${p.mica.status}) : nous ne la recommandons pas et ne proposons aucun lien vers elle.`}
           </p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
@@ -728,21 +740,21 @@ export default function ReviewPage({ params }: Props) {
         <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div>
             <div className="text-base font-bold text-white">
-              Prêt à tester {p.name} ?
+              {available ? `Prêt à tester ${p.name} ?` : "Cherchez une plateforme autorisée en France"}
             </div>
             <p className="mt-1 text-sm text-white/70 max-w-xl">
-              {p.mica.micaCompliant ? "Plateforme agréée MiCA" : "Statut en cours de revue"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
+              {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
             </p>
           </div>
           <AffiliateLink
             href={available ? p.affiliateUrl : "/comparatif/frais"}
             platform={p.id}
             placement="avis-mid-content"
-            ctaText={`Ouvrir un compte ${p.name}`}
+            ctaText={available ? `Ouvrir un compte ${p.name}` : "Comparer les plateformes autorisées"}
             showCaption={false}
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition shrink-0"
           >
-            Ouvrir un compte {p.name}
+            {available ? `Ouvrir un compte ${p.name}` : "Comparer les plateformes autorisées"}
             <ExternalLink className="h-4 w-4" />
           </AffiliateLink>
         </section>
@@ -883,11 +895,11 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-final"
-              ctaText={`S'inscrire sur ${p.name}`}
+              ctaText={available ? `S'inscrire sur ${p.name}` : "Voir les plateformes autorisées"}
               showCaption={false}
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
-              S&apos;inscrire sur {p.name}
+              {available ? `S'inscrire sur ${p.name}` : "Voir les plateformes autorisées"}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
           </div>

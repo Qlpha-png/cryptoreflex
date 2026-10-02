@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export default function QuizPlateformePage() {
-  const platforms = getAllPlatforms();
+  const platforms = getAllPlatforms().filter(isAvailableFr);
 
   /**
    * Schema.org : on combine un Breadcrumb + une WebPage de type Quiz

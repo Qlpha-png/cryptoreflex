@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import type { StakingPair } from "@/lib/programmatic";
-import { getPlatformById } from "@/lib/platforms";
+import { getPlatformById, isAvailableFr } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 
 /* ------------------------------------------------------------------ */
@@ -177,10 +177,12 @@ function PlatformBadge({ id }: { id: string }) {
 }
 
 function StakingCard({ pair }: { pair: StakingPair }) {
-  const bestPlatformId = pair.availableOn[0];
+  /* seules les plateformes autorisées en France sont proposées (les ids hors catalogue, ex. protocoles, restent) */
+  const ids = pair.availableOn.filter((id) => { const p = getPlatformById(id); return !p || isAvailableFr(p); });
+  const bestPlatformId = ids[0];
   const bestPlatform = bestPlatformId ? getPlatformById(bestPlatformId) : undefined;
-  const visiblePlatforms = pair.availableOn.slice(0, 4);
-  const overflow = Math.max(pair.availableOn.length - visiblePlatforms.length, 0);
+  const visiblePlatforms = ids.slice(0, 4);
+  const overflow = Math.max(ids.length - visiblePlatforms.length, 0);
   const lockText = formatLockUp(pair.lockUpDays);
 
   return (

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import PlatformLogo from "./PlatformLogo";
 import MarqueePauseButton from "./MarqueePauseButton";
 
@@ -28,7 +28,7 @@ interface PlatformsMarqueeProps {
 }
 
 export default function PlatformsMarquee({ limit }: PlatformsMarqueeProps) {
-  const all = getAllPlatforms();
+  const all = getAllPlatforms().filter(isAvailableFr);
   // Trier par scoring global décroissant pour mettre les plus crédibles en tête
   const sorted = [...all].sort(
     (a, b) => (b.scoring?.global ?? 0) - (a.scoring?.global ?? 0),

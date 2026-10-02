@@ -10,8 +10,8 @@
  *  4. Instructions exactes pour déclarer sur impots.gouv.fr (rubrique 3916-bis)
  *
  * Conformité légale (BOI-CF-CPF-30-20 + CGI art. 1736 X) :
- *  - Amende 750 € par compte non déclaré (pays coopératif, 1 500 € si solde > 50 000 €)
- *  - Amende 10 000 € par compte non déclaré (pays non-coopératif : Seychelles, BVI, etc.)
+ *  - Amende 750 € par compte non déclaré, 1 500 € si la valeur des comptes dépasse 50 000 € (art. 1736, X CGI).
+ *    Les 10 000 € « État non coopératif » (art. 1736, IV) visent les comptes bancaires, pas les comptes crypto.
  *  - Toute personne physique fiscalement domiciliée en France doit déclarer même si compte vide
  *
  * UX :
@@ -348,7 +348,6 @@ function Step1Exchanges({
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
         {exchanges.map((ex) => {
           const isSelected = selectedIds.includes(ex.id);
-          const hasNonCoop = ex.entities.some((e) => e.isNonCooperative);
           return (
             <button
               key={ex.id}
@@ -370,15 +369,6 @@ function Step1Exchanges({
                   />
                 )}
               </div>
-              {hasNonCoop && (
-                <span
-                  className="mt-1 inline-flex items-center gap-1 text-[10px] text-warning font-semibold"
-                  title="Pays non-coopératif possible : amende 10 000 € si non déclaré"
-                >
-                  <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                  Risque 10 k€
-                </span>
-              )}
             </button>
           );
         })}
@@ -541,7 +531,7 @@ function Step3Recap({
         className={`rounded-2xl border p-5 sm:p-6 mb-5 ${
           exposure.total === 0
             ? "border-success/40 bg-success/10"
-            : exposure.total >= 10000
+            : exposure.total >= 3000
             ? "border-danger/40 bg-danger/10"
             : "border-warning/40 bg-warning/10"
         }`}
@@ -553,7 +543,7 @@ function Step3Recap({
           className={`text-4xl sm:text-5xl font-extrabold font-mono tabular-nums ${
             exposure.total === 0
               ? "text-success"
-              : exposure.total >= 10000
+              : exposure.total >= 3000
               ? "text-danger"
               : "text-warning-fg"
           }`}
@@ -566,27 +556,14 @@ function Step3Recap({
             : `Amende potentielle si ${exposure.countCooperative + exposure.countNonCooperative} compte(s) restent non déclaré(s).`}
         </p>
 
-        {(exposure.countCooperative > 0 || exposure.countNonCooperative > 0) && (
-          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            {exposure.countCooperative > 0 && (
-              <li className="rounded-lg bg-elevated/60 border border-border p-2.5">
-                <span className="font-bold text-fg">
-                  {exposure.countCooperative} compte(s)
-                </span>{" "}
-                pays coopératif → {fmt(exposure.countCooperative * 1500)} € (1
-                500 €/compte)
-              </li>
-            )}
-            {exposure.countNonCooperative > 0 && (
-              <li className="rounded-lg bg-danger/10 border border-danger/30 p-2.5">
-                <span className="font-bold text-danger">
-                  {exposure.countNonCooperative} compte(s)
-                </span>{" "}
-                pays NON-coopératif →{" "}
-                {fmt(exposure.countNonCooperative * 10000)} € (10 000 €/compte)
-              </li>
-            )}
-          </ul>
+        {exposure.countCooperative + exposure.countNonCooperative > 0 && (
+          <p className="mt-4 rounded-lg bg-elevated/60 border border-border p-2.5 text-xs text-fg/80">
+            <span className="font-bold text-fg">
+              {exposure.countCooperative + exposure.countNonCooperative} compte(s)
+            </span>{" "}
+            × 750 € par compte non déclaré. L&apos;amende passe à 1 500 € par compte si la
+            valeur de vos comptes à l&apos;étranger dépasse 50 000 € (article 1736, X du CGI).
+          </p>
         )}
       </div>
 
@@ -614,11 +591,6 @@ function Step3Recap({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-sm text-fg">{ex.name}</span>
-                    {entity.isNonCooperative && (
-                      <span className="text-[10px] font-bold uppercase rounded-full bg-danger/15 text-danger border border-danger/30 px-2 py-0.5">
-                        Non-coopératif
-                      </span>
-                    )}
                     {account.declaredBefore && (
                       <span className="text-[10px] font-bold uppercase rounded-full bg-success/15 text-success border border-success/30 px-2 py-0.5">
                         Déjà déclaré
@@ -636,7 +608,7 @@ function Step3Recap({
                 {!account.declaredBefore && (
                   <span
                     className={`text-sm font-mono tabular-nums font-extrabold whitespace-nowrap ${
-                      entity.isNonCooperative ? "text-danger" : "text-warning-fg"
+                      "text-warning-fg"
                     }`}
                   >
                     {fmt(entity.amendeRisque)} €

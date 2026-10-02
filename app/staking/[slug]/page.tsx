@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { STAKING_PAIRS, getStakingPair, type StakingPair } from "@/lib/programmatic";
-import { getPlatformById, type Platform } from "@/lib/platforms";
+import { getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -112,7 +112,7 @@ export default function StakingDetailPage({ params }: Props) {
 
   const platforms = pair.availableOn
     .map((id) => getPlatformById(id))
-    .filter((p): p is Platform => Boolean(p))
+    .filter((p): p is Platform => Boolean(p) && isAvailableFr(p as Platform))
     .sort((a, b) => b.scoring.global - a.scoring.global);
 
   const risk = RISK_LABELS[pair.risk];

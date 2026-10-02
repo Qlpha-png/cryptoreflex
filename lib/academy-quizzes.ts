@@ -79,7 +79,7 @@ const QUIZ_DEBUTANT: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Depuis le 1er janvier 2026, le PFU (flat tax) est de 31,4 % : 12,8 % d'IR + 18,6 % de prélèvements sociaux (la CSG est passée de 9,2 % à 10,6 %). Il était de 30 % jusqu'aux gains réalisés en 2025. Une option pour le barème progressif (case 2OP) peut être plus avantageuse si votre TMI est faible.",
+      "Le PFU (flat tax) est de 31,4 % : 12,8 % d'IR + 18,6 % de prélèvements sociaux (la LFSS 2026 a porté la CSG de 9,2 % à 10,6 %, dès l'imposition des revenus 2025 : vos plus-values 2025 déclarées en 2026 sont déjà à 31,4 %). Une option pour le barème progressif (case 3CN de la déclaration 2042 C) peut être plus avantageuse si votre TMI est faible.",
   },
   {
     id: "deb-q5-cold-vs-hot",
@@ -216,7 +216,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q4-pfu-bareme",
     question:
-      "Quand l'option pour le barème progressif (case 2OP) est-elle plus intéressante que le PFU sur vos plus-values crypto ?",
+      "Quand l'option pour le barème progressif (case 3CN) est-elle plus intéressante que le PFU sur vos plus-values crypto ?",
     choices: [
       "Toujours.",
       "Quand votre TMI est à 0% ou 11% : le total avec PS reste sous 31,4%.",
@@ -225,7 +225,7 @@ const QUIZ_AVANCE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Depuis 2026 le PFU est à 31,4% (PS à 18,6%). À TMI 0% : 0% IR + 18,6% PS = 18,6%. À TMI 11% : 11% + 18,6% = 29,6%. Les deux restent sous 31,4%. Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. Attention : l'option 2OP engage TOUS vos revenus mobiliers de l'année.",
+      "Depuis 2026 le PFU est à 31,4% (PS à 18,6%). À TMI 0% : 0% IR + 18,6% PS = 18,6%. À TMI 11% : 11% + 18,6% = 29,6%. Les deux restent sous 31,4%. Au-delà (30%, 41%, 45%), le PFU reste plus avantageux. L'option (case 3CN) porte sur toutes vos plus-values crypto de l'année, sans toucher à vos dividendes.",
   },
   {
     id: "adv-q5-mica-risque",
@@ -323,13 +323,13 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
       "En 2026, quel est le taux du PFU (flat tax) sur vos plus-values crypto, et comment se décompose-t-il ?",
     choices: [
       "12,8 % d'IR + 17,2 % de prélèvements sociaux = 30 % (taux inchangé).",
-      "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 % (hausse de la CSG au 1er janvier 2026).",
+      "12,8 % d'IR + 18,6 % de prélèvements sociaux = 31,4 % (hausse de la CSG, applicable dès les plus-values 2025).",
       "Un taux unique de 19 % sur la plus-value.",
       "0 % tant que vous ne convertissez pas en euros.",
     ],
     correctIndex: 1,
     explanation:
-      "Le PFU = impôt sur le revenu (12,8 %) + prélèvements sociaux. La LFSS 2026 a relevé la CSG de 9,2 % à 10,6 %, portant les prélèvements sociaux à 18,6 % et la flat tax à 31,4 % sur les gains réalisés à partir de 2026. Pour vos gains réalisés jusqu'en 2025 (déclarés au printemps 2026), c'était encore 30 %.",
+      "Le PFU = impôt sur le revenu (12,8 %) + prélèvements sociaux. La LFSS 2026 a relevé la CSG de 9,2 % à 10,6 %, portant les prélèvements sociaux à 18,6 % et la flat tax à 31,4 %, dès l'imposition des revenus 2025 : vos plus-values réalisées en 2025 et déclarées au printemps 2026 sont déjà taxées à 31,4 %.",
   },
   {
     id: "fis-q2-seuil-305",
@@ -362,7 +362,7 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
   {
     id: "fis-q4-bareme-vs-pfu",
     question:
-      "Quand l'option pour le barème progressif (case 2OP) est-elle plus avantageuse que le PFU sur vos plus-values crypto ?",
+      "Quand l'option pour le barème progressif (case 3CN) est-elle plus avantageuse que le PFU sur vos plus-values crypto ?",
     choices: [
       "Toujours.",
       "Quand votre tranche marginale d'imposition (TMI) est faible : 0 % ou 11 %.",
@@ -371,7 +371,7 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Au barème, votre TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. Attention : l'option 2OP s'applique à TOUS vos revenus de capitaux mobiliers de l'année, pas seulement la crypto.",
+      "Au barème, votre TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. L'option (case 3CN de la déclaration 2042 C) porte sur toutes vos plus-values crypto de l'année, sans toucher à vos dividendes ni à vos intérêts.",
   },
   {
     id: "fis-q5-defi-bic-bnc",

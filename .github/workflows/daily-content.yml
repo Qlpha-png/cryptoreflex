@@ -50,6 +50,7 @@ jobs:
       #   run: npm ci --omit=dev
 
       - name: Generate daily content (news + TA)
+        id: gen
         run: node scripts/generate-daily-content.mjs
         env:
           NODE_ENV: production
@@ -126,6 +127,16 @@ jobs:
         if: steps.changes.outputs.has_changes == 'true'
         continue-on-error: true
         run: node scripts/ping-search-engines.mjs
+
+      # Audit 2026-10-02 : la génération des news pouvait échouer en silence (crédit Anthropic
+      # épuisé = 0 news du 14/07 au 02/10/2026, run « vert »). Les analyses techniques sont déjà
+      # committées à ce stade ; ce step fait échouer le run (→ issue « Notify on failure »)
+      # si aucune news n'a été créée alors que des tentatives ont échoué.
+      - name: Échec si aucune news générée
+        if: steps.gen.outputs.news_created == '0' && steps.gen.outputs.news_errors != '0'
+        run: |
+          echo "::error::0 news créée, ${{ steps.gen.outputs.news_errors }} échec(s) : vérifier le secret ANTHROPIC_API_KEY (clé et crédit)."
+          exit 1
 
       - name: Job summary
         if: always()

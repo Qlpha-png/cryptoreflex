@@ -127,7 +127,7 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On vérifie les claims réglementaires",
     detail:
-      "Statut PSAN, agrément MiCA, juridiction → vérifiés sur les registres officiels (AMF / ESMA / BCE) avant publication. Audit complet rejoué chaque trimestre.",
+      "Agrément MiCA, autorité et accès à la France → vérifiés sur les registres officiels (ESMA, listes blanches de l'AMF) avant publication. Audit complet rejoué chaque trimestre.",
   },
 ];
 

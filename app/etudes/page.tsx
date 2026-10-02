@@ -66,9 +66,9 @@ const STUDIES: StudyCard[] = [
     slug: "mica-juillet-2026-etat-des-lieux",
     title: "MiCA juillet 2026 : état des lieux des plateformes crypto",
     subtitle:
-      "Analyse exhaustive des 33 plateformes disponibles en France à la deadline MiCA. Quelles sont conformes ? Quelles risquent le blocage ? Recommandations pratiques.",
-    date: "2026-05-06",
-    readingTime: "18 min",
+      "Depuis le 1er juillet 2026 : quelles plateformes crypto sont agréées MiCA pour servir la France, lesquelles ne le sont pas. Registre officiel de l'ESMA et liste blanche AMF, mis à jour le 2 octobre 2026.",
+    date: "2026-10-02",
+    readingTime: "8 min",
     topic: "regulation",
   },
 ];

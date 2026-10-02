@@ -15,7 +15,7 @@ import {
 import { ALL_CRYPTOS, getCrypto } from "@/lib/programmatic";
 import { getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
-import { getAllPlatforms, getPlatformById, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *  - sinon on retombe sur les top exchanges (catalog large, BTC/ETH/SOL toujours dispo)
  */
 function platformsForCrypto(symbol: string): Platform[] {
-  const all = getAllPlatforms();
+  const all = getAllPlatforms().filter(isAvailableFr);
   const exact = all.filter((p) =>
     p.cryptos.stakingCryptos.includes(symbol.toUpperCase())
   );

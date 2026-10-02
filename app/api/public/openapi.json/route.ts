@@ -34,7 +34,7 @@ export function GET() {
     info: {
       title: "Cryptoreflex Public Open Data API",
       description:
-        "API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marche crypto francais : 33 plateformes auditees, registre PSAN+MiCA consolide, scores de decentralisation, top cryptos vulgarisees, outils fiscalite. Toute reutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.",
+        "API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marche crypto francais : 34 plateformes auditees, registre PSAN+MiCA consolide, scores de decentralisation, top cryptos vulgarisees, outils fiscalite. Toute reutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.",
       version: "1.0.0",
       termsOfService: BRAND.url + "/mentions-legales",
       contact: {
@@ -98,7 +98,7 @@ export function GET() {
         get: {
           summary: "Catalogue plateformes crypto",
           description:
-            "33 plateformes crypto auditees : frais maker/taker/SEPA, securite, statut MiCA, support FR. Mise a jour mensuelle.",
+            "34 plateformes crypto auditees : frais maker/taker/SEPA, securite, statut MiCA, support FR. Mise a jour mensuelle.",
           tags: ["platforms"],
           responses: {
             "200": {
@@ -116,7 +116,7 @@ export function GET() {
         get: {
           summary: "Registre PSAN + MiCA consolide",
           description:
-            "Statut PSAN (FR, AMF) + MiCA (UE, ESMA) consolide. Inclut le champ atRiskJuly2026 (deadline transition MiCA juillet 2026).",
+            "Statut MiCA (registre ESMA) + numero d agrement AMF pour les prestataires francais. Le champ atRiskJuly2026 vaut true si la plateforme ne peut pas servir la France depuis le 1er juillet 2026.",
           tags: ["regulatory"],
           responses: {
             "200": {
@@ -287,8 +287,8 @@ export function GET() {
             },
             amfRegistration: {
               type: "string",
-              example: "E2023-035",
-              description: "Numero d enregistrement AMF (FR)",
+              example: "A2025-003",
+              description: "Numero d agrement MiCA delivre par l AMF (A20xx-xxx), null pour un agrement etranger",
             },
             micaStatus: {
               type: "string",

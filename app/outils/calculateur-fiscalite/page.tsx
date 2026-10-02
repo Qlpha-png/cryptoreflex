@@ -133,7 +133,7 @@ const FAQ_ITEMS = [
   {
     question: "PFU ou barème progressif : que choisir ?",
     answer:
-      "Le PFU à 31,4 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 2OP du Cerfa 2042 dans votre déclaration.",
+      "Le PFU à 31,4 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 3CN de la déclaration 2042 C.",
   },
   {
     question: "Quand bascule-t-on en BIC professionnel ?",
@@ -417,10 +417,11 @@ export default function CalculateurFiscalitePage() {
               le régime par défaut est le <strong>Prélèvement Forfaitaire Unique
               (PFU)</strong> à 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de
               prélèvements sociaux. Vous pouvez aussi opter pour le barème
-              progressif (TMI 11/30/41/45 %) via la case 2OP du Cerfa 2042 si
-              votre tranche d'IR est basse — l'option est globale et annuelle,
-              elle s'applique à l'ensemble de vos revenus de capitaux mobiliers
-              (dividendes, intérêts, plus-values mobilières).
+              progressif (TMI 0/11/30/41/45 %) en cochant la case 3CN de la
+              déclaration 2042 C si votre tranche d'IR est basse : l'option porte
+              sur toutes vos plus-values crypto de l'année, elle est irrévocable
+              une fois exercée, et elle ne touche pas vos dividendes ni vos
+              intérêts (option 2OP distincte).
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -561,7 +562,7 @@ export default function CalculateurFiscalitePage() {
               Par défaut, vos plus-values crypto sont imposées au PFU 31,4 %
               (12,8 % d'IR + 18,6 % de prélèvements sociaux). Mais vous pouvez{" "}
               <strong>opter pour le barème progressif</strong> de l'impôt sur le
-              revenu via la <strong>case 2OP du Cerfa 2042</strong>. Pour
+              revenu via la <strong>case 3CN de la déclaration 2042 C</strong>. Pour
               certains profils (TMI 0 ou 11 %), cette option divise l'impôt par
               deux. Pour d'autres (TMI 30, 41, 45 %), elle est désastreuse.
             </p>
@@ -643,16 +644,17 @@ export default function CalculateurFiscalitePage() {
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              Le piège de la case 2OP
+              Case 3CN : ce que l'option couvre vraiment
             </h3>
             <p>
-              L'option case 2OP est <strong>annuelle et globale</strong> : elle
-              s'applique à <em>tous</em> vos revenus de capitaux mobiliers de
-              l'année (dividendes, intérêts, plus-values crypto, plus-values
-              mobilières). Avant de cocher, simulez l'impact sur l'ensemble de
-              vos revenus, pas seulement votre crypto. Un dividende de
-              5 000 euros peut transformer une bonne idée en mauvaise affaire si
-              vous êtes proche d'une frontière de tranche TMI.
+              L'option (case <strong>3CN</strong> de la déclaration 2042 C) porte
+              sur <em>toutes</em> vos plus-values crypto de l'année : impossible
+              de choisir le barème pour une vente et le PFU pour une autre. Elle
+              est <strong>irrévocable</strong> une fois exercée et elle est{" "}
+              <strong>indépendante</strong> de vos dividendes et intérêts (leur
+              option est la case 2OP). Avant de cocher, simulez l'effet de votre
+              plus-value sur votre tranche : ajoutée à vos autres revenus, elle
+              peut vous faire passer en TMI 30 %.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -660,7 +662,7 @@ export default function CalculateurFiscalitePage() {
             </h3>
             <p>
               Tableau complet par profil (étudiant, retraité, cadre, trader),
-              calculs chiffrés et méthode case 2OP pas-à-pas dans nos guides{" "}
+              calculs chiffrés et méthode case 3CN pas-à-pas dans nos guides{" "}
               <Link
                 href="/blog/bareme-progressif-vs-pfu-crypto-2026"
                 className="text-primary-soft underline"
@@ -767,7 +769,7 @@ export default function CalculateurFiscalitePage() {
               automatiquement en <strong>case 3AN</strong> du Cerfa 2042-C
               (déclaration complémentaire). Pour les moins-values, c'est la
               <strong> case 3BN</strong>. Si vous voulez opter pour le barème
-              progressif, cochez aussi la <strong>case 2OP</strong>.
+              progressif, cochez aussi la <strong>case 3CN</strong> de la même déclaration.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -778,8 +780,8 @@ export default function CalculateurFiscalitePage() {
               en 2025 (même inactif), vous devez déposer un Cerfa 3916-bis :
               identité du compte, plateforme, pays, numéro de compte (UID
               Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 X CGI) :
-              750 euros par compte, portée à 1 500 euros si le solde dépasse 50 000 euros,
-              et jusqu'à 10 000 euros pour un compte dans un État non coopératif.
+              750 euros par compte, portée à 1 500 euros si la valeur des comptes dépasse
+              50 000 euros.
               Applicable rétroactivement sur 4 à 6 ans. Tutoriel :{" "}
               <Link
                 href="/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
@@ -861,8 +863,8 @@ export default function CalculateurFiscalitePage() {
               <p className="mt-3 text-sm text-white/70">
                 Déclaration des comptes crypto à l'étranger (Binance, Kraken,
                 Coinbase…). Obligatoire même sans vente. 750 € d'amende par
-                compte oublié (1 500 € si solde &gt; 50 000 €, 10 000 € si pays
-                non coopératif).
+                compte oublié (1 500 € si la valeur des comptes dépasse
+                50 000 €).
               </p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary-soft group-hover:gap-2 transition-all">
                 Lire le guide{" "}

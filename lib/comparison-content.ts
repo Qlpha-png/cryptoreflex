@@ -17,7 +17,7 @@
  *   wordCount export).
  */
 
-import type { Platform } from "@/lib/platforms";
+import { isAvailableFr, type Platform } from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
@@ -142,7 +142,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
     },
     {
       question: `${a.name} et ${b.name} sont-elles régulées MiCA en France ?`,
-      answer: `${a.name} : ${a.mica.status}${a.mica.amfRegistration ? ` (enregistrement AMF ${a.mica.amfRegistration})` : ""}. ${b.name} : ${b.mica.status}${b.mica.amfRegistration ? ` (enregistrement AMF ${b.mica.amfRegistration})` : ""}. Les deux plateformes sont conformes au règlement européen MiCA en vigueur depuis juillet 2025, ce qui garantit ségrégation des fonds clients, audit des réserves et procédures KYC harmonisées dans toute l'UE.`,
+      answer: `${a.name} : ${a.mica.status}${a.mica.amfRegistration ? ` (agrément AMF n° ${a.mica.amfRegistration})` : ""}. ${b.name} : ${b.mica.status}${b.mica.amfRegistration ? ` (agrément AMF n° ${b.mica.amfRegistration})` : ""}. ${isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes peuvent servir des résidents français : l'agrément MiCA impose notamment la ségrégation des fonds clients et des règles harmonisées dans toute l'UE." : "Attention : depuis le 1er juillet 2026, fin de la période transitoire, seuls les prestataires agréés MiCA avec accès à la France peuvent servir des résidents français."}`,
     },
     {
       question: `Quelle est la plus sécurisée entre ${a.name} et ${b.name} ?`,
@@ -191,7 +191,7 @@ function defaultProfiles(a: Platform, b: Platform): ProfileVerdict[] {
     {
       profile: "investisseur_francais",
       winner: frWinner,
-      reasoning: `Pour un résident fiscal français qui veut un interlocuteur en France et une déclaration simplifiée, ${frWinner === "a" ? a.name : frWinner === "b" ? b.name : "les deux options se valent"}. ${frWinner !== "tie" ? `Avantage à ${frWinner === "a" ? a.name : b.name} grâce à ${(frWinner === "a" ? a.mica.amfRegistration : b.mica.amfRegistration) ? "son enregistrement AMF (PSAN) historique" : "son support client en français"} — élément clé en cas de litige ou de demande de l'administration fiscale.` : `Aucun atout local décisif d'un côté ou de l'autre — choisissez selon vos autres priorités (frais, catalogue).`}`,
+      reasoning: `Pour un résident fiscal français qui veut un interlocuteur en France et une déclaration simplifiée, ${frWinner === "a" ? a.name : frWinner === "b" ? b.name : "les deux options se valent"}. ${frWinner !== "tie" ? `Avantage à ${frWinner === "a" ? a.name : b.name} grâce à ${(frWinner === "a" ? a.mica.amfRegistration : b.mica.amfRegistration) ? "son agrément délivré directement par l'AMF" : "son support client en français"} — élément clé en cas de litige ou de demande de l'administration fiscale.` : `Aucun atout local décisif d'un côté ou de l'autre — choisissez selon vos autres priorités (frais, catalogue).`}`,
     },
   ];
 }
@@ -205,11 +205,11 @@ function defaultProfiles(a: Platform, b: Platform): ProfileVerdict[] {
  */
 const OVERRIDES: Record<string, SlugOverride> = {
   "binance-vs-coinbase": {
-    angle: "Frais bas + catalogue immense vs simplicité réglementée",
+    angle: "Plateforme fermée en France vs plateforme agréée MiCA",
     pick: (a, b) =>
-      `Pour 90 % des Français qui débutent : ${b.name} (interface, MiCA solide). Pour qui veut trader actif et explorer 380+ altcoins : ${a.name}, à condition d'accepter une UX plus dense.`,
+      `Pour un résident français, la question est tranchée : ${a.name} a cessé ses services sur crypto-actifs en France le 1er juillet 2026 ; ${b.name} est agréée MiCA avec un passeport vers la France.`,
     finalVerdict: (a, b) =>
-      `${b.name} reste notre recommandation par défaut pour les particuliers français : agrément MiCA via E2023-035, plateforme cotée NASDAQ (transparence comptable), interface qui pardonne aux débutants. ${a.name} prend l'avantage dès que vous dépassez 1 000 € de volume mensuel ou que vous voulez accéder aux altcoins exotiques : les frais de 0,1 % maker/taker sont 4 à 6 fois moins chers que ${b.name} (0,4 / 0,6 %), et le catalogue de 380 cryptos couvre 95 % des opportunités. La friction reste l'historique réglementaire de ${a.name} (SEC US, DOJ) — sans impact direct sur les utilisateurs européens depuis l'agrément MiCA, mais à garder en tête.`,
+      `${b.name} est la seule des deux à pouvoir servir un résident français : ${a.name} a cessé ses services sur crypto-actifs en France le 1er juillet 2026, à la fin de la période transitoire MiCA, tandis que ${b.name} est agréée MiCA (CSSF, Luxembourg) avec un passeport vers la France. Si les frais de ${b.name} vous semblent élevés, comparez les plateformes agréées dans notre comparatif des frais.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -286,11 +286,11 @@ const OVERRIDES: Record<string, SlugOverride> = {
   },
 
   "bitget-vs-bybit": {
-    angle: "Copy trading leader vs plateforme dérivés mature post-hack",
+    angle: "Plateforme non autorisée en France vs plateforme agréée MiCA",
     pick: (a, b) =>
-      `Pour le copy trading et les altcoins exotiques : ${a.name}. Pour la profondeur de carnet sur les futures et les options crypto : ${b.name}.`,
+      `Pour un résident français, seule ${b.name} est utilisable : elle est agréée MiCA (FMA, Autriche) avec un passeport vers la France, alors que ${a.name} ne figure pas au registre MiCA de l'ESMA.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} sont les deux exchanges dérivés "challengers" de ${"Binance"}, tous deux régulés MiCA (Lituanie pour Bitget, Autriche pour Bybit). ${a.name} a construit sa marque sur le copy trading — leader mondial sur ce produit, avec 800 cryptos au catalogue (record altcoins). ${b.name} reste plus mature sur les produits dérivés "purs" : profondeur de carnet inégalée sur perp BTC/ETH, options crypto complètes, frais futures parmi les plus bas (taker 0,055 %). L'ombre au tableau ${b.name} : le hack de février 2025 (1,4 Md $), résolu sans perte client mais qui a marqué les esprits. Verdict : ${a.name} pour copy trading + altcoins, ${b.name} pour trader actif sur dérivés grands volumes.`,
+      `${b.name} est la seule des deux à pouvoir servir un résident français : Bybit EU GmbH est agréée MiCA par la FMA autrichienne depuis le 28 mai 2025, avec un passeport vers la France, alors que ${a.name} ne figure ni au registre MiCA de l'ESMA ni sur la liste blanche de l'AMF (vérification du 2 octobre 2026). Les deux plateformes sont orientées produits dérivés, à haut risque : réservez-les à une petite part de votre épargne, et seulement sur une plateforme agréée.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -336,11 +336,11 @@ const OVERRIDES: Record<string, SlugOverride> = {
   },
 
   "binance-vs-bitget": {
-    angle: "Géant absolu vs spécialiste copy trading + altcoins exotiques",
+    angle: "Deux plateformes non autorisées en France",
     pick: (a, b) =>
-      `Pour la liquidité maximale, l'écosystème complet et la marque #1 mondiale : ${a.name}. Pour le copy trading et les altcoins exotiques (800+) : ${b.name}.`,
+      `Ni ${a.name} ni ${b.name} ne peut servir un résident français en 2026 : choisissez une plateforme agréée MiCA de notre comparatif.`,
     finalVerdict: (a, b) =>
-      `${a.name} reste le n°1 incontournable pour qui veut la liquidité maximale, un écosystème complet (Earn, Launchpad, NFT marketplace, Pay) et un statut PSAN AMF (E2022-037 ; agrément MiCA CASP encore en cours d'instruction à mi-2026). ${b.name} se positionne comme le challenger spécialisé : leader mondial du copy trading (suivre les positions de traders performants), catalogue altcoins record (800+, dont mémecoins très récents), frais futures ultra-compétitifs. Le compromis ${b.name} : régulation MiCA via Lituanie (jeune, moins stricte que France/Allemagne), pas d'enregistrement AMF direct. Verdict : ${a.name} pour la majorité des cas d'usage ; ${b.name} si vous voulez tester le copy trading ou chercher un altcoin introuvable ailleurs.`,
+      `Aucune des deux plateformes ne peut servir un résident français : ${a.name} a cessé ses services sur crypto-actifs en France le 1er juillet 2026, et ${b.name} ne figure ni au registre MiCA de l'ESMA ni sur la liste blanche de l'AMF (vérification du 2 octobre 2026). Pour trader depuis la France, choisissez une plateforme agréée MiCA de notre comparatif.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -399,8 +399,8 @@ export function buildComparisonCopy(
   ];
 
   const micaAnalysis = [
-    `Le règlement européen MiCA est en vigueur depuis le 30 décembre 2024 (sections crypto-actifs hors stablecoins). Toutes les plateformes opérant en France doivent obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'un régulateur national d'un État membre. ${a.name} : ${a.mica.status}${a.mica.amfRegistration ? `, enregistrement AMF ${a.mica.amfRegistration} obtenu le ${a.mica.registrationDate}` : ""}. ${b.name} : ${b.mica.status}${b.mica.amfRegistration ? `, enregistrement AMF ${b.mica.amfRegistration} obtenu le ${b.mica.registrationDate}` : ""}.`,
-    `Sur notre note de conformité MiCA pondérée (qualité du régulateur d'origine, ancienneté de l'agrément, transparence sur la ségrégation des fonds), ${mica.winner.name} score ${fmtScore(mica.winner.scoring.mica)} contre ${fmtScore(mica.loser.scoring.mica)} pour ${mica.loser.name}. Pour un investisseur français, l'enregistrement AMF historique reste un signal fort — il garantit un dialogue déjà rodé entre la plateforme et le régulateur national, utile en cas de litige.`,
+    `Le règlement européen MiCA s'applique aux prestataires de services sur crypto-actifs depuis le 30 décembre 2024, et la période transitoire française a pris fin le 1er juillet 2026 : depuis, une plateforme doit être agréée CASP dans un État membre, avec un passeport vers la France, pour servir des résidents français. ${a.name} : ${a.mica.status}${a.mica.amfRegistration ? `, agrément AMF n° ${a.mica.amfRegistration}` : ""}. ${b.name} : ${b.mica.status}${b.mica.amfRegistration ? `, agrément AMF n° ${b.mica.amfRegistration}` : ""}.`,
+    `Sur notre note de conformité MiCA pondérée (qualité du régulateur d'origine, ancienneté de l'agrément, transparence sur la ségrégation des fonds), ${mica.winner.name} score ${fmtScore(mica.winner.scoring.mica)} contre ${fmtScore(mica.loser.scoring.mica)} pour ${mica.loser.name}. Pour un investisseur français, un agrément délivré directement par l'AMF reste un signal fort : votre interlocuteur réglementaire est alors le régulateur français.`,
   ];
 
   const uxAnalysis = [
