@@ -43,6 +43,7 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
+import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
 import { getYearOhlc, formatOhlcPrice } from "@/lib/historical-ohlc";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
@@ -653,6 +654,10 @@ export default async function CryptoPage({ params }: Props) {
             platformNames={c.whereToBuy}
           />
         </div>
+
+        {/* REFLEX CARDS — bandeau compact juste sous l'encart d'achat (demande Kev 02/10 :
+            plus haut sur la fiche, sans passer devant l'achat). Masqué si le jeu est coupé ou sans carte. */}
+        <ReflexCardPromo coingeckoIds={[c.coingeckoId]} className="mt-6" />
 
         {/* ATH ALERT BANNER (BATCH 29C) — bandeau narratif si crypto ≤ 5% ATH.
             Render null sinon. Capte l'attention immédiatement avec un signal

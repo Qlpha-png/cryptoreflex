@@ -19,6 +19,7 @@ import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { getAllCryptos } from "@/lib/cryptos";
+import { allCards as allReflexCards, isIndexable, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -451,8 +452,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
+  // Reflex Cards : hub + pages carte déjà visibles (sorties ou révélées) et indexables
+  // (description + fiche à relier), seulement quand le jeu est activé (lib/reflex-cards/data.ts).
+  const reflexDay = seasonDay();
+  const reflexCardRoutes: MetadataRoute.Sitemap = isReflexCardsEnabled()
+    ? [
+        { url: `${SITE_URL}/cartes`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.8 },
+        ...allReflexCards()
+          .filter((c) => isVisible(c, reflexDay) && isIndexable(c))
+          .map((c) => ({
+            url: `${SITE_URL}/cartes/${c.id}`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.5,
+          })),
+      ]
+    : [];
+
   return [
     ...staticRoutes,
+    ...reflexCardRoutes,
     ...partnerRoutes,
     ...listicleRoutes,
     ...glossaryRoutes,

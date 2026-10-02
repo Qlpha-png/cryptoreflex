@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import Logo from "./Logo";
+import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
 
 /**
  * Footer — pied de page Cryptoreflex (CRITIQUE SEO sitelinks Google + UX engagement final).
@@ -86,6 +87,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/acheter", label: "Où acheter une crypto (par pays)" },
       { href: "/marche", label: "Marché crypto en direct" },
       { href: "/marche/heatmap", label: "Heatmap marché crypto" },
+      ...(isReflexCardsEnabled() ? [{ href: "/cartes", label: "Reflex Cards : jeu de cartes crypto" }] : []),
     ],
   },
   {

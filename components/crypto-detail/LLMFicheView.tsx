@@ -9,6 +9,7 @@ import { BRAND } from "@/lib/brand";
 import { resolveCoingeckoId } from "@/lib/crypto-aliases";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
 import {
   articleSchema,
   breadcrumbSchema,
@@ -188,6 +189,9 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
           </span>
         </p>
       </header>
+
+      {/* Reflex Cards : bandeau compact en haut de fiche (demande Kev 02/10), masqué si le jeu est coupé ou sans carte */}
+      <ReflexCardPromo coingeckoIds={[fiche.coingecko_id, resolveCoingeckoId(fiche.coingecko_id)]} className="mb-8" />
 
       {/* Thesis */}
       {llm.thesis ? (
