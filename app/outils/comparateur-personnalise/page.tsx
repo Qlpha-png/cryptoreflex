@@ -22,12 +22,12 @@ const ComparateurPersonnalise = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Quelle plateforme crypto choisir 2026 ? Quiz personnalisé en 60 sec",
+  title: "Quelle plateforme crypto choisir 2026 ? Questionnaire personnalisé en 60 sec",
   description:
     "Répondez à 5 questions et recevez votre top 3 personnalisé parmi Bitstack, Bitpanda, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur votre profil.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/comparateur-personnalise"),
   openGraph: {
-    title: "Quelle plateforme crypto choisir ? Quiz personnalisé 2026",
+    title: "Quelle plateforme crypto choisir ? Questionnaire personnalisé 2026",
     description:
       "5 questions, votre top 3 personnalisé. Comparez prix, UX, sécurité selon VOTRE profil — pas un comparatif générique.",
     url: "https://www.cryptoreflex.fr/outils/comparateur-personnalise",
@@ -54,7 +54,7 @@ const FAQ_ITEMS = [
   {
     question: "Mes réponses sont-elles enregistrées ?",
     answer:
-      "Non. Tout le calcul tourne dans votre navigateur (zéro serveur). On envoie uniquement à Plausible (analytics anonymisé, RGPD-friendly) la priorité et l'intent que vous avez choisis pour mesurer la popularité du quiz — jamais votre montant ni votre email. Si vous utilisez l'option « recevoir mon récap par email », vous nous donnez alors votre email volontairement.",
+      "Non. Tout le calcul tourne dans votre navigateur (zéro serveur). On envoie uniquement à Plausible (analytics anonymisé, RGPD-friendly) la priorité et l'intent que vous avez choisis pour mesurer la popularité du questionnaire — jamais votre montant ni votre email. Si vous utilisez l'option « recevoir mon récap par email », vous nous donnez alors votre email volontairement.",
   },
   {
     question: "À quelle fréquence les notes sont-elles mises à jour ?",
@@ -72,7 +72,7 @@ export default function ComparateurPersonnalisePage() {
             slug: "comparateur-personnalise",
             name: "Comparateur plateformes crypto personnalisé Cryptoreflex",
             description:
-              "Quiz interactif 5 questions qui présente 3 plateformes crypto pertinentes selon votre profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading). Outil pédagogique, sans recommandation personnalisée.",
+              "Questionnaire interactif de 5 questions qui présente 3 plateformes crypto pertinentes selon votre profil (montant, expérience, priorité prix/UX/sécurité, intent DCA/hold/trading). Outil pédagogique, sans recommandation personnalisée.",
             featureList: [
               "5 questions, résultat en 60 secondes",
               "Score personnalisé sur 9 axes par plateforme",
@@ -109,7 +109,7 @@ export default function ComparateurPersonnalisePage() {
               Quelle <span className="gradient-text">plateforme crypto</span> choisir en 2026 ?
             </h1>
             <p className="mt-4 text-lg text-white/70">
-              Quiz personnalisé : 5 questions sur votre profil, et on vous sort
+              Questionnaire personnalisé : 5 questions sur votre profil, et on vous sort
               les 3 plateformes les plus adaptées (parmi Bitstack, Bitpanda,
               Coinbase, Kraken, SwissBorg). Pas un comparatif générique — UN scoring
               calé sur VOS réponses.

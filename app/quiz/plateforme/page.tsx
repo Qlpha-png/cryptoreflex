@@ -14,7 +14,7 @@ export const revalidate = 86400;
 
 // Note : le suffixe "| Cryptoreflex" est ajouté automatiquement par le template
 // title de app/layout.tsx — on l'omet ici pour éviter la duplication.
-const TITLE = `Quiz : quelle plateforme crypto pour vous ?`;
+const TITLE = `Questionnaire : quelle plateforme crypto pour vous ?`;
 const DESCRIPTION =
   "6 questions courtes pour trouver la plateforme crypto la plus adaptée à votre profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/plateforme";
@@ -46,7 +46,7 @@ export default function QuizPlateformePage() {
    */
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
-    { name: "Quiz plateforme", url: `${BRAND.url}${PATH}` },
+    { name: "Questionnaire plateforme", url: `${BRAND.url}${PATH}` },
   ]);
 
   const quizSchema = {
@@ -83,14 +83,14 @@ export default function QuizPlateformePage() {
               Accueil
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-fg">Quiz plateforme</span>
+            <span className="text-fg">Questionnaire plateforme</span>
           </nav>
 
           {/* Hero */}
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Quiz personnalisé · 2 minutes
+              Questionnaire personnalisé · 2 minutes
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
               Quelle plateforme crypto{" "}

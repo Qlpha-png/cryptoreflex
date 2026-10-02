@@ -184,7 +184,7 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
           onClick={onReset}
           className="text-sm text-white/70 hover:text-white"
         >
-          Refaire le quiz
+          Refaire le questionnaire
         </button>
         <Link href="/comparatif" className="text-sm text-primary-soft hover:text-primary-glow">
           Voir tout le comparatif

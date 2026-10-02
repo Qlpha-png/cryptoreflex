@@ -124,14 +124,14 @@ export default function WizardPremierAchatPage() {
                 Pas sûr de la plateforme à choisir&nbsp;?
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                Lance le quiz dédié — 6 questions courtes, reco basée sur votre
+                Lancez le questionnaire dédié — 6 questions courtes, reco basée sur votre
                 profil (budget, fréquence d'achat, priorité).
               </p>
               <Link
                 href="/quiz/plateforme"
                 className="mt-4 btn-ghost"
               >
-                Faire le quiz plateforme
+                Faire le questionnaire plateforme
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </aside>

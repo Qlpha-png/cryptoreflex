@@ -620,7 +620,7 @@ function Step3Platform({
               Vous hésitez entre les trois&nbsp;?
             </h3>
             <p className="mt-1 text-xs text-fg/75">
-              Lancez le quiz "quelle plateforme pour vous" — 6 questions courtes
+              Lancez le questionnaire « quelle plateforme pour vous » — 6 questions courtes
               pour une reco personnalisée.
             </p>
           </div>
@@ -630,7 +630,7 @@ function Step3Platform({
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded"
           >
-            Lancer le quiz
+            Lancer le questionnaire
             <ArrowRight className="h-3 w-3" aria-hidden="true" />
           </Link>
         </div>

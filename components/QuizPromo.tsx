@@ -18,7 +18,7 @@ export default function QuizPromo() {
   const quizSchema = {
     "@context": "https://schema.org",
     "@type": "Quiz",
-    name: "Quiz pédagogique : compare les plateformes crypto MiCA",
+    name: "Questionnaire pédagogique : comparez les plateformes crypto MiCA",
     description:
       "5 questions courtes pour comparer les plateformes crypto MiCA selon votre profil (budget, fréquence d'achat, support FR, conformité). Outil pédagogique, sans recommandation personnalisée.",
     educationalAlignment: {
@@ -52,7 +52,7 @@ export default function QuizPromo() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                 <Clock className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" focusable="false" />
-                Quiz éclair — 30 secondes
+                Questionnaire éclair — 30 secondes
               </span>
               <h2
                 id="quiz-promo-title"
@@ -80,7 +80,7 @@ export default function QuizPromo() {
                   className="btn-primary btn-primary-shine text-sm sm:text-base inline-flex items-center gap-2"
                 >
                   <Sparkles className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" focusable="false" />
-                  Démarrer le quiz
+                  Démarrer le questionnaire
                   <ArrowRight className="h-4 w-4 arrow-spring" strokeWidth={1.75} aria-hidden="true" focusable="false" />
                 </Link>
                 {/* Audit UX F2 : downgrade en lien texte secondaire (1 CTA primary suffit) */}

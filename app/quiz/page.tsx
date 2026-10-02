@@ -31,9 +31,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/quiz";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Quiz crypto — trouvez votre plateforme et votre première crypto";
+const TITLE = "Questionnaires crypto — trouvez votre plateforme et votre première crypto";
 const DESCRIPTION =
-  "Deux quiz courts et neutres pour vous aider à démarrer dans la crypto : quelle plateforme pour votre profil (6 questions) et quelle crypto pour votre premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
+  "Deux questionnaires courts et neutres pour vous aider à démarrer dans la crypto : quelle plateforme pour votre profil (6 questions) et quelle crypto pour votre premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -128,7 +128,7 @@ export default function QuizHubPage() {
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: "/" },
-    { name: "Quiz", url: PAGE_PATH },
+    { name: "Questionnaires", url: PAGE_PATH },
   ]);
 
   const schema = graphSchema([collectionSchema, breadcrumbs]);
@@ -144,20 +144,20 @@ export default function QuizHubPage() {
               Accueil
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-fg/80">Quiz</span>
+            <span className="text-fg/80">Questionnaires</span>
           </nav>
 
           {/* Header */}
           <header className="mt-6 max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
               <Sparkles className="h-3.5 w-3.5" />
-              {QUIZZES.length} quiz pédagogiques
+              {QUIZZES.length} questionnaires pédagogiques
             </span>
             <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Quiz <span className="gradient-text">crypto</span>
+              Questionnaires <span className="gradient-text">crypto</span>
             </h1>
             <p className="mt-3 text-lg text-fg/70">
-              Deux quiz courts, neutres et pédagogiques pour démarrer sans
+              Deux questionnaires courts, neutres et pédagogiques pour démarrer sans
               prendre de mauvaise décision : choisir sa plateforme, choisir sa
               première crypto. Aucune réponse n'est "fausse" — on adapte la
               recommandation à votre profil.
@@ -200,7 +200,7 @@ export default function QuizHubPage() {
                   </ul>
 
                   <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary-soft group-hover:text-primary">
-                    Démarrer le quiz
+                    Démarrer le questionnaire
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </Link>
@@ -212,7 +212,7 @@ export default function QuizHubPage() {
           <aside className="mt-16 rounded-2xl border border-border bg-surface p-6">
             <div className="flex items-center gap-2 text-fg font-bold">
               <Compass className="h-4 w-4 text-primary-soft" />
-              Ce que ces quiz font (et ne font pas)
+              Ce que ces questionnaires font (et ne font pas)
             </div>
             <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-fg/80">
               <div>

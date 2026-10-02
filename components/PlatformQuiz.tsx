@@ -477,7 +477,7 @@ export default function PlatformQuiz({ platforms }: Props) {
   return (
     <section
       role="form"
-      aria-label="Quiz plateforme crypto"
+      aria-label="Questionnaire plateforme crypto"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -499,7 +499,7 @@ export default function PlatformQuiz({ platforms }: Props) {
           aria-valuemin={0}
           aria-valuemax={TOTAL_STEPS}
           aria-valuenow={showResult ? TOTAL_STEPS : step}
-          aria-label={`Progression du quiz : étape ${showResult ? TOTAL_STEPS : step + 1} sur ${TOTAL_STEPS}`}
+          aria-label={`Progression du questionnaire : étape ${showResult ? TOTAL_STEPS : step + 1} sur ${TOTAL_STEPS}`}
           className="h-1.5 w-full bg-elevated rounded-full overflow-hidden"
         >
           <div
@@ -514,7 +514,7 @@ export default function PlatformQuiz({ platforms }: Props) {
       {/* Live region pour SR */}
       <div id={liveRegionId} aria-live="polite" className="sr-only">
         {showResult
-          ? `Résultat du quiz : ${result?.top3[0]?.platform.name ?? "aucune plateforme ne correspond"}.`
+          ? `Résultat du questionnaire : ${result?.top3[0]?.platform.name ?? "aucune plateforme ne correspond"}.`
           : `Étape ${step + 1} sur ${TOTAL_STEPS} : ${currentQuestion?.title ?? ""}`}
       </div>
 
@@ -779,7 +779,7 @@ function ResultView({
         >
           <div className="flex items-center gap-2 text-fg/75 text-sm font-semibold">
             <RefreshCcw className="h-4 w-4" aria-hidden="true" />
-            Refaire le quiz
+            Refaire le questionnaire
           </div>
           <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
@@ -807,7 +807,7 @@ function NoResultView({ onRestart }: { onRestart: () => void }) {
         className="mt-6 btn-primary"
       >
         <RefreshCcw className="h-4 w-4" aria-hidden="true" />
-        Refaire le quiz
+        Refaire le questionnaire
       </button>
     </div>
   );

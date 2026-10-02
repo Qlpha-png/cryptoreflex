@@ -31,7 +31,7 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/quiz/trouve-ton-exchange";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Quiz : Trouve votre exchange crypto idéal en 60 sec";
+const TITLE = "Questionnaire : trouvez votre exchange crypto idéal en 60 sec";
 const DESCRIPTION =
   "Réponds à 6 questions et compare les plateformes crypto selon votre profil (budget, fréquence, support FR, conformité MiCA). Outil pédagogique, sans recommandation personnalisée. 100 % gratuit, sans inscription.";
 
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
 
 const FAQ = [
   {
-    question: "Le quiz est-il vraiment gratuit ?",
+    question: "Le questionnaire est-il vraiment gratuit ?",
     answer:
-      "Oui, 100 % gratuit, sans inscription obligatoire. Vous pouvez faire le quiz et obtenir votre recommandation sans laisser votre email. Le formulaire à la fin est optionnel — il sert uniquement à recevoir votre reco par mail et le guide PDF bonus.",
+      "Oui, 100 % gratuit, sans inscription obligatoire. Vous pouvez faire le questionnaire et obtenir votre recommandation sans laisser votre email. Le formulaire à la fin est optionnel — il sert uniquement à recevoir votre reco par mail et le guide PDF bonus.",
   },
   {
     question: "Sur quels critères les plateformes sont-elles classées ?",
@@ -82,14 +82,14 @@ const FAQ = [
       "Non. Les liens d'affiliation existent (c'est notre modèle économique) mais ne modifient ni le scoring ni l'ordre des recommandations. Si une plateforme ne correspond pas à votre profil, on ne te la propose pas — même si elle nous rapporterait plus.",
   },
   {
-    question: "Combien de temps prend le quiz ?",
+    question: "Combien de temps prend le questionnaire ?",
     answer:
       "Environ 60 secondes pour les 6 questions. Vous pouvez utiliser les chiffres 1 à 4 du clavier pour répondre encore plus vite, ou la flèche gauche pour revenir en arrière.",
   },
   {
-    question: "Mon profil change avec le temps : puis-je refaire le quiz ?",
+    question: "Mon profil change avec le temps : puis-je refaire le questionnaire ?",
     answer:
-      "Oui, autant de fois que vous voulez. Le quiz est conçu pour évoluer avec vous : si vous passez de débutant à trader actif, votre top 3 changera complètement. Le bouton « Refaire le quiz » est en bas du résultat.",
+      "Oui, autant de fois que vous voulez. Le questionnaire est conçu pour évoluer avec vous : si vous passez de débutant à trader actif, votre top 3 changera complètement. Le bouton « Refaire le questionnaire » est en bas du résultat.",
   },
 ];
 
@@ -104,7 +104,7 @@ export default function QuizTrouveTonExchangePage() {
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: "/" },
-    { name: "Quiz", url: "/quiz" },
+    { name: "Questionnaires", url: "/quiz" },
     { name: "Trouve ton exchange", url: PAGE_PATH },
   ]);
 
@@ -150,7 +150,7 @@ export default function QuizTrouveTonExchangePage() {
             </Link>
             <span className="mx-1.5">/</span>
             <Link href="/quiz" className="hover:text-fg">
-              Quiz
+              Questionnaires
             </Link>
             <span className="mx-1.5">/</span>
             <span className="text-fg">Trouve ton exchange</span>
@@ -160,7 +160,7 @@ export default function QuizTrouveTonExchangePage() {
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Quiz personnalisé · 60 secondes
+              Questionnaire personnalisé · 60 secondes
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
               Trouve ton exchange crypto{" "}

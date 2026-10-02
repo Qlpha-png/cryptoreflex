@@ -80,7 +80,7 @@ const SECTIONS: MenuSection[] = [
       ...(isReflexCardsEnabled()
         ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: RC_BADGE }]
         : []),
-      { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouvez votre plateforme en 5 questions", badge: "POPULAIRE" },
+      { href: "/quiz/plateforme", label: "Questionnaire plateforme idéale", desc: "Trouvez votre plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
       { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
       { href: "/methodologie", label: "Notre méthodologie", desc: "6 critères publics, 0 bullshit" },
@@ -156,7 +156,7 @@ const SECTIONS: MenuSection[] = [
       { href: "/glossaire", label: "Glossaire crypto", desc: "250+ termes expliqués" },
       { href: "/blog/comment-declarer-crypto-impots-2026-guide-complet", label: "Déclarer ses crypto impôts 2026", desc: "Guide officiel mis à jour" },
       { href: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026", label: "Cold vs Hot wallet", desc: "Comment sécuriser ses cryptos" },
-      { href: "/quiz", label: "Tous les quiz", desc: "Testez vos connaissances" },
+      { href: "/quiz", label: "Tous les questionnaires", desc: "Trouvez votre plateforme et votre crypto" },
     ],
   },
   {
@@ -196,7 +196,7 @@ const HIGHLIGHTS: { href: string; label: string; sub: string; Icon: LucideIcon; 
   ...(isReflexCardsEnabled()
     ? [{ href: "/cartes", label: "Reflex Cards", sub: `Le jeu de cartes crypto gratuit · ${RC_BADGE.toLowerCase()}`, Icon: GalleryVerticalEnd, tone: "primary" as const }]
     : []),
-  { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Quiz 2 min · sans email", Icon: Target, tone: "primary" },
+  { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Questionnaire 2 min · sans email", Icon: Target, tone: "primary" },
   { href: "/soutenir", label: "Soutenir Cryptoreflex", sub: "Contribution libre · tout gratuit", Icon: Heart, tone: "primary" },
   { href: "/partenaires", label: "Offres partenaires", sub: "Ledger, Trezor, Waltio…", Icon: Gift, tone: "accent" },
 ];

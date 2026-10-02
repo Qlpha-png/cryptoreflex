@@ -431,7 +431,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
   return (
     <section
       role="form"
-      aria-label="Quiz crypto pour votre profil"
+      aria-label="Questionnaire crypto pour votre profil"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -451,7 +451,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
           aria-valuemin={0}
           aria-valuemax={TOTAL_STEPS}
           aria-valuenow={showResult ? TOTAL_STEPS : step}
-          aria-label={`Progression du quiz : étape ${
+          aria-label={`Progression du questionnaire : étape ${
             showResult ? TOTAL_STEPS : step + 1
           } sur ${TOTAL_STEPS}`}
           className="h-1.5 w-full bg-elevated rounded-full overflow-hidden"
@@ -467,7 +467,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
 
       <div id={liveRegionId} aria-live="polite" className="sr-only">
         {showResult
-          ? `Résultat du quiz : ${result?.top.name ?? "aucune crypto ne correspond"}.`
+          ? `Résultat du questionnaire : ${result?.top.name ?? "aucune crypto ne correspond"}.`
           : `Étape ${step + 1} sur ${TOTAL_STEPS} : ${currentQuestion?.title ?? ""}`}
       </div>
 
@@ -771,7 +771,7 @@ function ResultView({
         >
           <div className="flex items-center gap-2 text-fg/75 text-sm font-semibold">
             <RefreshCcw className="h-4 w-4" aria-hidden="true" />
-            Refaire le quiz
+            Refaire le questionnaire
           </div>
           <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
@@ -795,7 +795,7 @@ function NoResultView({ onRestart }: { onRestart: () => void }) {
       </p>
       <button type="button" onClick={onRestart} className="mt-6 btn-primary">
         <RefreshCcw className="h-4 w-4" aria-hidden="true" />
-        Refaire le quiz
+        Refaire le questionnaire
       </button>
     </div>
   );

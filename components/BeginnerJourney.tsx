@@ -88,7 +88,7 @@ export default function BeginnerJourney() {
             aria-label="Pas sûr·e par où commencer ? Réponds à 5 questions, on te dit l'étape 1"
           >
             <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" focusable="false" />
-            Pas sûr·e par où commencer ? Quiz 5Q
+            Pas sûr·e par où commencer ? Questionnaire en 5 questions
           </Link>
         </div>
 

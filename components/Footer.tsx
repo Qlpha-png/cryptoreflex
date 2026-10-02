@@ -77,7 +77,7 @@ const NAV_GROUPS: FooterGroup[] = [
     title: "Découvrir",
     links: [
       { href: "/comparatif", label: "Comparatif plateformes crypto FR" },
-      { href: "/quiz/plateforme", label: "Quiz : comparer les plateformes" },
+      { href: "/quiz/plateforme", label: "Questionnaire : comparer les plateformes" },
       { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
       { href: "/cryptos", label: "100 cryptomonnaies analysées" },
       // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)
@@ -102,7 +102,7 @@ const NAV_GROUPS: FooterGroup[] = [
       { href: "/guides", label: "Guides pratiques actionnables" },
       { href: "/actualites", label: "Actualités crypto FR" },
       { href: "/calendrier", label: "Calendrier crypto (halvings, ETF, FOMC)" },
-      { href: "/quiz/crypto", label: "Quiz : quelle crypto pour vous ?" },
+      { href: "/quiz/crypto", label: "Questionnaire : quelle crypto pour vous ?" },
       // BATCH 44a — historique programmatic 240 URLs orphelines
       { href: "/historique-prix", label: "Historique prix crypto par année" },
       { href: "/glossaire", label: "Glossaire crypto (définitions)" },

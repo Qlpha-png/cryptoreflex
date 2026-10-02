@@ -213,13 +213,15 @@ describe("Reflex Cards — compte Cryptoreflex obligatoire (réglage par défaut
     expect(setCookie(w.finish(NextResponse.json({})))).toMatch(/rc_g=;.*Max-Age=0/);
     await expect(resolvePlayer(mk("/api/cartes/action", { cookies: { [GUEST_COOKIE]: tok } }), { create: true, today: TODAY })).rejects.toMatchObject({ code: "login" });
   });
-  it("avec un compte : premier booster → partie du compte créée, puis retrouvée", async () => {
+  it("avec un compte : partie créée dès la première lecture (jamais « compte reconnu, partie vide »), puis retrouvée", async () => {
     const OWNER = "aaaaaaaa-0000-4000-8000-0000000000c1";
     await pg.query("insert into auth.users(id) values ($1)", [OWNER]);
     auth.user = ACCOUNT(OWNER);
     const sb = { "sb-x-auth-token": "1" };
     const e0 = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
-    expect(e0).toMatchObject({ state: null, account: { guest: false, email: "joueur@exemple.test" } });
+    /* 02/10 : un compte reconnu retrouve (ou reçoit) toujours sa partie ; pseudo jamais choisi → le jeu le demandera une fois */
+    expect(e0.state).toMatchObject({ account: { guest: false, email: "joueur@exemple.test" }, packs: { stock: 10 }, col: {}, pseudoChosen: false });
+    expect((await pg.query("select count(*)::int as n from public.rc_players where owner=$1", [OWNER])).rows[0]).toEqual({ n: 1 });
     const r = await action.POST(mk("/api/cartes/action", { method: "POST", body: { a: "ouvrir", jour: 2, req: crypto.randomUUID() }, cookies: sb }));
     expect(r.status).toBe(200);
     expect(setCookie(r)).not.toContain("rc_g=");
@@ -230,5 +232,23 @@ describe("Reflex Cards — compte Cryptoreflex obligatoire (réglage par défaut
     expect(row).toEqual({ owner: OWNER, guest_hash: null });
     const e1 = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
     expect(e1.state.packs.stock).toBe(9);
+  });
+});
+
+describe("Reflex Cards — pseudo demandé une seule fois (Kev 02/10)", () => {
+  it("pseudoChosen passe à vrai dès que le joueur a choisi un pseudo, et le reste", async () => {
+    const OWNER = "aaaaaaaa-0000-4000-8000-0000000000c2";
+    await pg.query("insert into auth.users(id) values ($1)", [OWNER]);
+    auth.user = ACCOUNT(OWNER);
+    const sb = { "sb-x-auth-token": "1" };
+    const e0 = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
+    expect(e0.state.pseudoChosen).toBe(false);
+    const r = await action.POST(mk("/api/cartes/action", { method: "POST", body: { a: "pseudo", jour: 2, v: "Val" }, cookies: sb }));
+    expect(r.status).toBe(200);
+    expect((await r.json()).state).toMatchObject({ pseudoChosen: true, perso: { pseudo: "Val" } });
+    for (let i = 0; i < 3; i++) {
+      const e = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
+      expect(e.state).toMatchObject({ pseudoChosen: true, perso: { pseudo: "Val" } });
+    }
   });
 });

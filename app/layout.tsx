@@ -333,7 +333,7 @@ export default function RootLayout({
             "@context": "https://schema.org",
             "@type": "SiteNavigationElement",
             name: [
-              "Comparer", "Actualités", "Académie", "Outils", "Quiz", "Marché",
+              "Comparer", "Actualités", "Académie", "Outils", "Questionnaires", "Marché",
             ],
             url: [
               `${BRAND.url}/comparatif`,
@@ -383,7 +383,7 @@ export default function RootLayout({
           </div>
         </noscript>
         {/*
-          Fallback no-JS : nos formulaires (alertes, quiz, wizard, portefeuille)
+          Fallback no-JS : nos formulaires (alertes, questionnaires, wizard, portefeuille)
           et le cookie banner sont des Client Components. Sans JS, ils ne
           s'affichent pas. On informe l'utilisateur honnêtement, sans casser
           le SSR pour les contenus statiques (articles, comparatifs).

@@ -211,6 +211,8 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
   const P = s.player.perso as Record<string, unknown>;
   return {
     v: s.player.version, day: ctx.day, today: ctx.today, account,
+    /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
+    pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
     col, eds, shards: s.player.eclats, reflets: s.player.reflets, recent: s.player.recent, pity: s.player.pity,
     packs: { stock: r.stock, last: r.stockAt, theme: s.player.theme },
     pstats: {

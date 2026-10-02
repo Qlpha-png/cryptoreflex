@@ -13,7 +13,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
-const TITLE = `Quiz : quelle crypto correspond à votre profil ?`;
+const TITLE = `Questionnaire : quelle crypto correspond à votre profil ?`;
 const DESCRIPTION =
   "6 questions courtes pour découvrir la crypto la plus adaptée à votre profil : tolérance au risque, horizon, type de projet, capital, stratégie. Reco neutre Cryptoreflex.";
 const PATH = "/quiz/crypto";
@@ -49,7 +49,7 @@ export default async function QuizCryptoPage() {
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
-    { name: "Quiz crypto", url: `${BRAND.url}${PATH}` },
+    { name: "Questionnaire crypto", url: `${BRAND.url}${PATH}` },
   ]);
 
   const quizSchema = {
@@ -86,14 +86,14 @@ export default async function QuizCryptoPage() {
               Accueil
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-fg">Quiz crypto</span>
+            <span className="text-fg">Questionnaire crypto</span>
           </nav>
 
           {/* Hero */}
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Quiz personnalisé · 2 minutes
+              Questionnaire personnalisé · 2 minutes
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
               Quelle crypto pour{" "}
@@ -132,13 +132,13 @@ export default async function QuizCryptoPage() {
                 Vous savez quelle crypto ? Comparez les plateformes MiCA
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                Quiz pédagogique en 6 questions — il présente les exchanges régulés
+                Questionnaire pédagogique en 6 questions — il présente les exchanges régulés
                 MiCA pertinents selon votre budget, votre fréquence d&apos;achat et votre
                 support préféré. Le choix final vous appartient.
               </p>
             </div>
             <Link href="/quiz/plateforme" className="btn-primary shrink-0">
-              Quiz plateforme
+              Questionnaire plateforme
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </aside>

@@ -432,7 +432,7 @@ const TOPICS_MICA: SeoTopic[] = [
   },
   {
     slug: "mica-travel-rule-tfr-2026-explication",
-    title: "Travel Rule TFR 2026 : tu dois nommer ton wallet, voici comment",
+    title: "Travel Rule TFR 2026 : vous devez identifier votre wallet, voici comment",
     category: "mica",
     searchVolumeMo: 1100,
     competitionLevel: "medium",

@@ -46,7 +46,8 @@ export class SessionError extends Error {
   constructor(public status: number, message: string, public code?: string) { super(message); }
 }
 
-export async function resolvePlayer(req: NextRequest, o: { create: boolean; today: string; db?: GameDb }): Promise<Who> {
+/** create : crée la partie (invité ou compte) ; createAccount : crée/retrouve la partie d'un COMPTE seulement (lecture d'état) */
+export async function resolvePlayer(req: NextRequest, o: { create: boolean; createAccount?: boolean; today: string; db?: GameDb }): Promise<Who> {
   let db = o.db;
   if (!db) {
     const sb = createSupabaseServiceRoleClient();
@@ -79,7 +80,7 @@ export async function resolvePlayer(req: NextRequest, o: { create: boolean; toda
   let player: string | null = null;
   if (user) {
     if (hash) player = await db.claim(hash, user.id);
-    if (!player) player = o.create ? await db.account(user.id, o.today) : await db.findAccount(user.id);
+    if (!player) player = o.create || o.createAccount ? await db.account(user.id, o.today) : await db.findAccount(user.id);
   } else {
     if (hash && guestsAllowed()) player = await db.findGuest(hash);
     if (!player && o.create) {

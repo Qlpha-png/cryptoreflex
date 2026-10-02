@@ -18,7 +18,8 @@ export async function GET(req: NextRequest) {
   if (ctx.day < 1) return new NextResponse("Page introuvable", { status: 404 });
   let who: Who | null = null;
   try {
-    who = await resolvePlayer(req, { create: false, today: ctx.today });
+    /* compte reconnu : sa partie est retrouvée (ou créée) comme pour un geste — jamais « partie introuvable » à la lecture */
+    who = await resolvePlayer(req, { create: false, createAccount: true, today: ctx.today });
     if (!who.player) return who.finish(NextResponse.json({ ok: true, state: null, account: who.account, guests: guestsAllowed() }, { headers: NO_STORE }));
     const s = await loadGame(who.db, who.player, ctx);
     return who.finish(NextResponse.json({ ok: true, state: toClient(s, ctx, who.account), guests: guestsAllowed() }, { headers: NO_STORE }));

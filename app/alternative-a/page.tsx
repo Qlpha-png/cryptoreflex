@@ -114,7 +114,7 @@ export default function AlternativeAHub() {
                 Pas sûr de quelle alternative choisir ?
               </h2>
               <p className="mt-1 text-sm text-muted leading-relaxed">
-                Notre quiz pédagogique vous présente les plateformes MiCA
+                Notre questionnaire pédagogique vous présente les plateformes MiCA
                 pertinentes en 30 secondes, selon votre profil (débutant,
                 investisseur régulier, trader actif). Outil informatif, sans
                 conseil personnalisé — le choix final vous appartient.
@@ -123,7 +123,7 @@ export default function AlternativeAHub() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/quiz/plateforme" className="btn-primary text-sm">
-              Lancer le quiz plateforme
+              Lancer le questionnaire plateforme
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/comparatif" className="btn-ghost text-sm">

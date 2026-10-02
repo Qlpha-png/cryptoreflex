@@ -141,7 +141,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
             <HeroPrimaryCta
               href="/quiz/plateforme"
               label="Comparer les plateformes en 2 min"
-              ariaLabel="Comparer les plateformes crypto en 2 minutes — quiz pédagogique, aucun email demandé"
+              ariaLabel="Comparer les plateformes crypto en 2 minutes — questionnaire pédagogique, aucun email demandé"
             />
             <Link
               href="#cat-informe"

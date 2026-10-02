@@ -277,7 +277,7 @@ export default function QuizExchange({ platforms }: Props) {
   return (
     <section
       role="form"
-      aria-label="Quiz Trouvez votre exchange en 60 sec"
+      aria-label="Questionnaire : trouvez votre exchange en 60 sec"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -483,7 +483,7 @@ function ResultView({
           {top3.length === 0 && (
             <li className="rounded-2xl border border-border bg-elevated/40 p-6 text-center text-fg/70">
               Aucune plateforme ne matche ce profil — vos contraintes sont
-              peut-être trop strictes. Refaites le quiz en assouplissant une
+              peut-être trop strictes. Refaites le questionnaire en assouplissant une
               réponse.
             </li>
           )}
@@ -545,7 +545,7 @@ function ResultView({
         >
           <div className="flex items-center gap-2 text-fg/75 text-sm font-semibold">
             <RefreshCcw className="h-4 w-4" aria-hidden="true" />
-            Refaire le quiz
+            Refaire le questionnaire
           </div>
           <div className="mt-1 font-bold text-fg">Tester d&apos;autres réponses</div>
           <div className="mt-1 text-xs text-muted">
@@ -895,14 +895,14 @@ function ShareButton({ profile }: { profile: string }) {
       typeof window !== "undefined"
         ? window.location.href
         : "https://www.cryptoreflex.fr/quiz/trouve-ton-exchange";
-    const text = `J'ai fait le quiz Cryptoreflex — mon profil est "${profile}". Trouve le tien :`;
+    const text = `J'ai fait le questionnaire Cryptoreflex — mon profil est "${profile}". Trouvez le vôtre :`;
 
     track("Quiz Share Click", { quiz: "trouve-ton-exchange", profil: profile });
 
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
-          title: "Quiz : Trouvez votre exchange crypto idéal",
+          title: "Questionnaire : trouvez votre exchange crypto idéal",
           text,
           url,
         });
@@ -930,14 +930,14 @@ function ShareButton({ profile }: { profile: string }) {
       className="text-left rounded-2xl border border-border bg-elevated/30 p-4 hover:border-primary/40 transition-colors
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                  focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      aria-label="Partager le quiz"
+      aria-label="Partager le questionnaire"
     >
       <div className="flex items-center gap-2 text-fg/75 text-sm font-semibold">
         <Share2 className="h-4 w-4" aria-hidden="true" />
         Partager
       </div>
       <div className="mt-1 font-bold text-fg">
-        {shared ? "Lien copié dans le presse-papier" : "Partager le quiz"}
+        {shared ? "Lien copié dans le presse-papier" : "Partager le questionnaire"}
       </div>
       <div className="mt-1 text-xs text-muted">
         Aidez vos proches à trouver leur exchange.

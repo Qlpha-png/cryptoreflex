@@ -75,7 +75,7 @@ type Tab = {
    pied de page). Point doré « nouveau ». Variables publiques : même rendu serveur et navigateur. */
 const TABS: ReadonlyArray<Tab> = [
   { href: "/", label: "Accueil", Icon: Home },
-  { href: "/quiz/plateforme", label: "Quiz", Icon: Sparkles },
+  { href: "/quiz/plateforme", label: "Questionnaire", Icon: Sparkles },
   { href: "/partenaires", label: "Partenaires", Icon: ShoppingBag, revenue: true },
   { href: "/actualites", label: "Actu", Icon: Newspaper },
   isReflexCardsEnabled()
@@ -163,7 +163,7 @@ export default function MobileBottomNav() {
                     className="pointer-events-none absolute top-2 left-1/2 ml-2.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
                   />
                 )}
-                <span className={`relative text-[11px] leading-none ${revenue ? "font-bold" : "font-medium"}`}>
+                <span className={`relative ${label.length > 10 ? "text-[9.5px] tracking-[-0.01em]" : "text-[11px]"} leading-none whitespace-nowrap ${revenue ? "font-bold" : "font-medium"}`}>
                   {label}
                 </span>
               </Link>

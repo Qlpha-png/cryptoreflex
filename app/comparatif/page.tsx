@@ -269,7 +269,7 @@ export default function ComparatifHubPage() {
               </div>
               <div className="min-w-0">
                 <div className="text-base sm:text-lg font-bold text-fg">
-                  Vous hésitez entre 3 plateformes ? Faites le quiz en 30s
+                  Vous hésitez entre 3 plateformes ? Faites le questionnaire en 30 s
                 </div>
                 <div className="mt-0.5 text-xs sm:text-sm text-fg/70">
                   6 questions · résultat personnalisé · aucune inscription requise
@@ -398,14 +398,14 @@ export default function ComparatifHubPage() {
                 Toujours pas décidé ?
               </div>
               <p className="mt-1 text-sm text-fg/70 max-w-xl">
-                Notre quiz croise vos priorités (frais, sécurité, support FR, niveau) avec les data 2026 et vous sort 1 plateforme principale + 2 alternatives.
+                Notre questionnaire croise vos priorités (frais, sécurité, support FR, niveau) avec les data 2026 et vous sort 1 plateforme principale + 2 alternatives.
               </p>
             </div>
             <Link
               href="/quiz/trouve-ton-exchange"
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-background hover:bg-primary-glow transition-colors shrink-0"
             >
-              Faire le quiz (30s)
+              Faire le questionnaire (30 s)
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -450,14 +450,14 @@ export default function ComparatifHubPage() {
               Trouvez votre plateforme en 30 secondes
             </h2>
             <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
-              Plus rapide que de comparer {getAvailablePlatformCount()} fiches plateformes une par une : le quiz pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
+              Plus rapide que de comparer {getAvailablePlatformCount()} fiches plateformes une par une : le questionnaire pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
             </p>
             <Link
               href="/quiz/trouve-ton-exchange"
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
               <Zap className="h-4 w-4" />
-              Lancer le quiz
+              Lancer le questionnaire
               <ArrowRight className="h-4 w-4" />
             </Link>
           </section>
