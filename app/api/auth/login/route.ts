@@ -19,7 +19,7 @@
  *    AVANT generateLink — sinon GoTrue le crée en type « signup » et le jeton
  *    ne correspond plus au type=magiclink du lien.
  *  - Compte non confirmé : mot de passe neutralisé (lib/auth-guards.ts)
- *  - Rate limiting : 5 tentatives / 15 min / IP
+ *  - Rate limiting : 5 tentatives / 15 min / IP + 5 emails d'auth / adresse / 24 h
  *  - Token unique 1-shot, expire 1h (gere par Supabase)
  */
 
@@ -30,7 +30,11 @@ import { sendEmail } from "@/lib/email/client";
 import { generateSafeEmailLink } from "@/lib/auth-guards";
 import { allowedAuthNext } from "@/lib/safe-redirect";
 import { magicLinkEmail } from "@/lib/email/templates";
-import { createRateLimiter } from "@/lib/rate-limit";
+import {
+  createRateLimiter,
+  authEmailRecipientLimiter,
+  maskEmailForLog,
+} from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
@@ -71,6 +75,20 @@ export async function POST(req: NextRequest) {
   const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  }
+
+  // AUDIT 2026-10-02 — limite par DESTINATAIRE en plus de la limite IP :
+  // 5 emails d'auth / adresse / 24 h (seau partagé login + signup + reset).
+  // Compté que le compte existe ou non → aucune fuite d'existence.
+  const rcpt = await authEmailRecipientLimiter(email);
+  if (!rcpt.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "Trop d'emails de connexion envoyés à cette adresse aujourd'hui. Vérifiez vos spams, connectez-vous avec votre mot de passe ou réessayez demain.",
+      },
+      { status: 429, headers: { "Retry-After": String(rcpt.retryAfter) } }
+    );
   }
 
   const siteUrl =
@@ -166,7 +184,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  console.log(`[auth/login] Magic link envoye a ${email} (Resend id: ${result.id})`);
+  console.log(`[auth/login] Magic link envoye a ${maskEmailForLog(email)} (Resend id: ${result.id})`);
 
   return NextResponse.json({
     ok: true,

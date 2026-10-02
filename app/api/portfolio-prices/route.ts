@@ -6,14 +6,21 @@
  *
  * Différence avec /api/prices :
  *   - /api/prices : USD, ids restreints à DEFAULT_COINS, utilisé par le ticker
- *   - /api/portfolio-prices : EUR, ids libres (jusqu'à 50 par requête),
- *     utilisé par le portfolio user qui peut tracker n'importe quelle crypto
+ *   - /api/portfolio-prices : EUR, jusqu'à 50 ids par requête, restreints à
+ *     une liste blanche (fiches du site + top 200 de l'autocomplete), utilisé
+ *     par le portfolio user. Rate limit 60 req/min/IP.
  *
  * Cache : 60 s côté Edge (CoinGecko free tier limite à 30 req/min — raisonnable).
  */
 
 import { NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
+import { DEFAULT_COINS } from "@/lib/coingecko";
+import { COIN_IDS } from "@/lib/historical-prices";
+import { getAllCryptosUnified } from "@/lib/cryptos-extended";
+import { getTopMarket } from "@/lib/price-source";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const revalidate = 60;
 
@@ -161,7 +168,45 @@ async function fetchPortfolioPricesCached(
   return cached();
 }
 
+/**
+ * AUDIT SÉCURITÉ 2026-10-02 — ids restreints à une liste blanche (comme
+ * /api/prices). Avant : n'importe quel id kebab-case était accepté → chaque id
+ * inventé déclenchait la cascade de providers (Binance, Kraken, CoinGecko…)
+ * et créait des entrées unstable_cache (quota upstream + écritures cache).
+ *
+ * Liste blanche =
+ *  - les ids de /api/prices (DEFAULT_COINS + COIN_IDS + 780 fiches) ;
+ *  - le top 200 de getTopMarket : c'est la source de l'autocomplete du
+ *    portefeuille (/api/coins/top, ids CoinCap type « binance-coin ») — sans
+ *    ça, des positions déjà saisies perdraient leur prix live.
+ * Les deux sources sont déjà en cache (1 h / 10 min) côté lib.
+ */
+async function getAllowedIds(): Promise<Set<string>> {
+  const [all, top] = await Promise.all([
+    getAllCryptosUnified().catch(() => []),
+    getTopMarket(200).catch(() => []),
+  ]);
+  return new Set<string>([
+    ...DEFAULT_COINS,
+    ...Object.values(COIN_IDS),
+    ...all.map((c) => c.coingeckoId),
+    ...top.map((c) => c.id),
+  ]);
+}
+
+// Même budget que /api/prices (le portefeuille poll toutes les ~60 s).
+const limiter = createRateLimiter({ limit: 60, windowMs: 60_000, key: "portfolio-prices" });
+
 export async function GET(request: Request) {
+  // ---- Rate limit ----
+  const rl = await limiter(getClientIp(request));
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Trop de requêtes — réessaie dans une minute." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const idsParam = searchParams.get("ids") ?? "";
   const includeParam = searchParams.get("include") ?? "";
@@ -171,7 +216,7 @@ export async function GET(request: Request) {
     .includes("sparkline");
 
   // Sanitize : split, trim, dedupe, kebab-only, plafonne à MAX_IDS.
-  const ids = Array.from(
+  const candidates = Array.from(
     new Set(
       idsParam
         .split(",")
@@ -179,6 +224,10 @@ export async function GET(request: Request) {
         .filter((s) => /^[a-z0-9-]+$/.test(s) && s.length > 0 && s.length < 60)
     )
   ).slice(0, MAX_IDS);
+
+  // Drop silencieux des ids hors liste blanche (contrat de réponse inchangé).
+  const allowedIds = candidates.length > 0 ? await getAllowedIds() : new Set<string>();
+  const ids = candidates.filter((id) => allowedIds.has(id));
 
   if (ids.length === 0) {
     return NextResponse.json(

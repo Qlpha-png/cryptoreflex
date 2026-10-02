@@ -46,6 +46,7 @@ import { sendEmail } from "@/lib/email/client";
 import { renderEmailHtml, renderEmailText } from "@/lib/email-renderer";
 import { getKv } from "@/lib/kv";
 import { verifyBearer } from "@/lib/auth";
+import { maskEmailForLog } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -143,7 +144,7 @@ async function markSent(email: string, offset: number): Promise<void> {
   const fieldName = "fiscalite_j" + String(offset) + "_sent";
   // Beehiiv (source de vérité)
   await updateSubscriberCustomField(email, fieldName, true).catch((err) => {
-    console.error("[fiscalite-cron] mark beehiiv failed", { email, offset, err });
+    console.error("[fiscalite-cron] mark beehiiv failed", { email: maskEmailForLog(email), offset, err });
   });
   // KV fallback
   try {
@@ -151,7 +152,7 @@ async function markSent(email: string, offset: number): Promise<void> {
     const key = "fiscalite-series:sent:" + email + ":" + String(offset);
     await kv.set(key, new Date().toISOString(), { ex: KV_IDEMPOTENCY_TTL_SEC });
   } catch (err) {
-    console.error("[fiscalite-cron] mark kv failed", { email, offset, err });
+    console.error("[fiscalite-cron] mark kv failed", { email: maskEmailForLog(email), offset, err });
   }
 }
 
@@ -236,9 +237,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     if (!result.ok) {
       failed++;
-      errors.push({ email: subscriber.email, reason: result.error ?? "unknown" });
+      errors.push({ email: maskEmailForLog(subscriber.email), reason: result.error ?? "unknown" });
       console.error("[fiscalite-cron] send failed", {
-        email: subscriber.email,
+        email: maskEmailForLog(subscriber.email),
         offset: decision.daysSinceSubscribe,
         error: result.error,
       });
@@ -248,7 +249,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     sent++;
     await markSent(subscriber.email, decision.daysSinceSubscribe);
     console.log("[fiscalite-cron] sent", {
-      email: subscriber.email,
+      email: maskEmailForLog(subscriber.email),
       offset: decision.daysSinceSubscribe,
       resendId: result.id,
     });

@@ -59,13 +59,22 @@ function isCrossSiteMutation(request: NextRequest): boolean {
   // le jeton est la preuve, l'Origin n'apporte rien (et vaut parfois « null »).
   // Jeton NON vide exigé ; pour les alertes, uniquement le POST de suppression
   // (pas /create ni /by-email).
-  const token = request.nextUrl.searchParams.get("token")?.trim();
+  // AUDIT 2026-10-02 : pour les désinscriptions, `email` NON vide exigé AUSSI.
+  // Les liens signés (pied d'email, List-Unsubscribe, bouton de la page de
+  // confirmation) portent toujours email ET token dans l'URL ; avec
+  // `?token=x` seul, /api/newsletter/unsubscribe retombait sur sa branche
+  // « formulaire » (envoi d'un email de confirmation à l'adresse du body) →
+  // un site tiers pouvait la déclencher en contournant ce contrôle.
+  const params = request.nextUrl.searchParams;
+  const token = params.get("token")?.trim();
+  const email = params.get("email")?.trim();
   if (
     token &&
-    (path === "/api/email/unsubscribe" ||
-      path === "/api/newsletter/unsubscribe" ||
+    (((path === "/api/email/unsubscribe" ||
+      path === "/api/newsletter/unsubscribe") &&
+      email) ||
       (method === "POST" &&
-        request.nextUrl.searchParams.get("action") === "delete" &&
+        params.get("action") === "delete" &&
         /^\/api\/alerts\/(?!create$|by-email$)[^/]+$/.test(path)))
   ) {
     return false;

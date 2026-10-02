@@ -6,26 +6,28 @@
  *  - Debug en dev : reset rapidement le password d'un user de test
  *
  * SECURITE :
- *  - Header X-Admin-Secret obligatoire = process.env.CRON_SECRET
- *    (le meme secret que pour les crons Vercel, deja configure)
- *  - Comparaison timing-safe via verifyBearer (mais on utilise un header
- *    custom plutot que Authorization pour ne pas trigger le mecanisme Bearer
- *    interne qu'on utilise ailleurs)
+ *  - AUDIT 2026-10-02 : secret DÉDIÉ `ADMIN_SET_PASSWORD_SECRET` (avant :
+ *    CRON_SECRET, partagé avec GitHub Actions / Vercel crons → toute fuite
+ *    d'un secret de cron permettait de prendre n'importe quel compte).
+ *    Variable absente → route DÉSACTIVÉE (404). À ne définir que le temps
+ *    d'une intervention, puis la retirer de Vercel.
+ *  - Header X-Admin-Secret comparé en temps constant (safeCompare, longueur
+ *    en octets : un header non-ASCII ne provoque plus de 500).
  *  - Rate limit : 5 calls / 15 min / IP
  *  - Service role utilise UNIQUEMENT cote serveur, jamais expose
  *
  * Usage curl :
  *   curl -X POST 'https://www.cryptoreflex.fr/api/admin/set-password' \
- *     -H 'X-Admin-Secret: <CRON_SECRET>' \
+ *     -H 'X-Admin-Secret: <ADMIN_SET_PASSWORD_SECRET>' \
  *     -H 'Content-Type: application/json' \
  *     -d '{"email":"user@example.com","password":"NewPass123!"}'
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "node:crypto";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
-import { createRateLimiter } from "@/lib/rate-limit";
+import { createRateLimiter, maskEmailForLog } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { safeCompare } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,18 +39,18 @@ const limiter = createRateLimiter({
 });
 
 
-function verifyAdminSecret(req: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) {
-    console.error("[admin/set-password] CRON_SECRET manquant");
-    return false;
-  }
+function verifyAdminSecret(req: NextRequest, secret: string): boolean {
   const provided = req.headers.get("x-admin-secret") ?? "";
-  if (provided.length !== secret.length) return false;
-  return timingSafeEqual(Buffer.from(provided), Buffer.from(secret));
+  return safeCompare(provided, secret);
 }
 
+const NOT_FOUND = () => NextResponse.json({ error: "Not found" }, { status: 404 });
+
 export async function POST(req: NextRequest) {
+  // Route désactivée tant que le secret dédié n'est pas défini (fail-closed).
+  const secret = process.env.ADMIN_SET_PASSWORD_SECRET;
+  if (!secret) return NOT_FOUND();
+
   const ip = getClientIp(req);
   const rl = await limiter(ip);
   if (!rl.ok) {
@@ -58,9 +60,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!verifyAdminSecret(req)) {
+  if (!verifyAdminSecret(req, secret)) {
     // 404 plutot que 401 pour ne pas reveler l'existence de la route
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NOT_FOUND();
   }
 
   const admin = createSupabaseServiceRoleClient();
@@ -128,7 +130,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  console.log(`[admin/set-password] Password reset OK pour ${email} (user ${user.id})`);
+  console.log(`[admin/set-password] Password reset OK pour ${maskEmailForLog(email)} (user ${user.id})`);
 
   return NextResponse.json({
     ok: true,

@@ -59,6 +59,122 @@ interface SendResult {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Garde-fous (audit sécurité 2026-10-02)                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Timeout par envoi. `web-push` ne pose qu'un timeout de SOCKET (inactivité) :
+ * on double avec un timeout global (Promise.race) pour qu'un push service
+ * lent ne bloque jamais une boucle de cron.
+ */
+export const PUSH_SEND_TIMEOUT_MS = 5000;
+
+/** Concurrence max des envois push (cron alertes, streaks, topics). */
+export const PUSH_CONCURRENCY = 8;
+
+/**
+ * Hôtes des VRAIS push services navigateur. Toute autre URL est refusée à
+ * l'inscription (sinon notre serveur POST vers n'importe quelle URL fournie
+ * par un client : SSRF / rebond vers des tiers).
+ *  - Chrome / Opera / Samsung / Brave : fcm.googleapis.com
+ *  - Firefox : updates.push.services.mozilla.com
+ *  - Safari (macOS / iOS) : web.push.apple.com (+ sous-domaines *.push.apple.com)
+ *  - Edge (WNS) : wns2-xxx.notify.windows.com (*.notify.windows.com)
+ */
+const PUSH_HOSTS_EXACT = new Set([
+  "fcm.googleapis.com",
+  "updates.push.services.mozilla.com",
+  "web.push.apple.com",
+]);
+const PUSH_HOST_SUFFIXES = [".push.apple.com", ".notify.windows.com"];
+const MAX_PUSH_ENDPOINT_LENGTH = 2048;
+
+/** true si `endpoint` est une URL https d'un push service reconnu. */
+export function isAllowedPushEndpoint(endpoint: unknown): endpoint is string {
+  if (typeof endpoint !== "string" || endpoint.length > MAX_PUSH_ENDPOINT_LENGTH) {
+    return false;
+  }
+  let url: URL;
+  try {
+    url = new URL(endpoint);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "https:") return false;
+  if (url.username || url.password) return false;
+  if (url.port && url.port !== "443") return false;
+  const host = url.hostname.toLowerCase();
+  if (PUSH_HOSTS_EXACT.has(host)) return true;
+  return PUSH_HOST_SUFFIXES.some(
+    (suffix) => host.endsWith(suffix) && host.length > suffix.length,
+  );
+}
+
+/** Rejette si `promise` ne se résout pas en `ms` millisecondes. */
+export function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} : timeout ${ms} ms`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
+}
+
+/**
+ * Exécute `fn` sur chaque item avec au plus `concurrency` appels simultanés.
+ * Ne rejette jamais : renvoie un PromiseSettledResult par item (ordre conservé).
+ * `shouldStop` (ex. deadline cron atteinte) → les items non démarrés sont
+ * marqués "rejected" sans être exécutés.
+ */
+export async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  concurrency: number,
+  fn: (item: T, index: number) => Promise<R>,
+  shouldStop?: () => boolean,
+): Promise<PromiseSettledResult<R>[]> {
+  const results: PromiseSettledResult<R>[] = new Array(items.length);
+  let next = 0;
+  const worker = async (): Promise<void> => {
+    while (next < items.length) {
+      const i = next++;
+      if (shouldStop?.()) {
+        results[i] = { status: "rejected", reason: new Error("arrêt demandé avant envoi") };
+        continue;
+      }
+      try {
+        results[i] = { status: "fulfilled", value: await fn(items[i], i) };
+      } catch (reason) {
+        results[i] = { status: "rejected", reason };
+      }
+    }
+  };
+  const workers = Math.max(1, Math.min(Math.floor(concurrency) || 1, items.length));
+  await Promise.allSettled(Array.from({ length: workers }, () => worker()));
+  return results;
+}
+
+/** Un envoi, borné par le timeout socket de web-push ET un timeout global. */
+async function sendOne(
+  sub: { endpoint: string; p256dh: string; auth: string },
+  json: string,
+): Promise<void> {
+  if (!isAllowedPushEndpoint(sub.endpoint)) {
+    // Lignes antérieures au filtrage à l'inscription : jamais de POST hors push services.
+    throw new Error("endpoint hors liste des push services");
+  }
+  await withTimeout(
+    webpush.sendNotification(
+      { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+      json,
+      { timeout: PUSH_SEND_TIMEOUT_MS },
+    ),
+    PUSH_SEND_TIMEOUT_MS + 1000,
+    "web-push",
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Config                                                                    */
 /* -------------------------------------------------------------------------- */
 
@@ -178,37 +294,31 @@ export async function sendPushToUser(
 
   const json = JSON.stringify(payload);
 
-  await Promise.all(
-    subs.map(async (sub) => {
-      try {
-        await webpush.sendNotification(
-          {
-            endpoint: sub.endpoint,
-            keys: { p256dh: sub.p256dh, auth: sub.auth },
-          },
-          json,
+  // Concurrence bornée + timeout par envoi (un push service lent ne bloque
+  // plus l'appelant au-delà de ~PUSH_SEND_TIMEOUT_MS).
+  await mapWithConcurrency(subs, PUSH_CONCURRENCY, async (sub) => {
+    try {
+      await sendOne(sub, json);
+      result.sent++;
+      await touchLastSeen(sub.id);
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "statusCode" in err
+          ? Number((err as { statusCode?: unknown }).statusCode)
+          : 0;
+      if (status === 404 || status === 410) {
+        result.expired++;
+        await deleteSubscriptionByEndpoint(sub.endpoint);
+      } else {
+        result.failed++;
+        const msg = err instanceof Error ? err.message : String(err);
+        console.warn(
+          `[web-push] send failed for sub ${sub.id} (status=${status}):`,
+          msg,
         );
-        result.sent++;
-        await touchLastSeen(sub.id);
-      } catch (err: unknown) {
-        const status =
-          typeof err === "object" && err !== null && "statusCode" in err
-            ? Number((err as { statusCode?: unknown }).statusCode)
-            : 0;
-        if (status === 404 || status === 410) {
-          result.expired++;
-          await deleteSubscriptionByEndpoint(sub.endpoint);
-        } else {
-          result.failed++;
-          const msg = err instanceof Error ? err.message : String(err);
-          console.warn(
-            `[web-push] send failed for sub ${sub.id} (status=${status}):`,
-            msg,
-          );
-        }
       }
-    }),
-  );
+    }
+  });
 
   return result;
 }
@@ -249,35 +359,32 @@ export async function sendPushToTopic(
 
   const json = JSON.stringify(payload);
 
-  await Promise.all(
-    (data ?? []).map(async (sub) => {
-      try {
-        await webpush.sendNotification(
-          {
-            endpoint: sub.endpoint as string,
-            keys: {
-              p256dh: sub.p256dh as string,
-              auth: sub.auth as string,
-            },
-          },
-          json,
-        );
-        aggregate.sent++;
-        await touchLastSeen(sub.id as string);
-      } catch (err: unknown) {
-        const status =
-          typeof err === "object" && err !== null && "statusCode" in err
-            ? Number((err as { statusCode?: unknown }).statusCode)
-            : 0;
-        if (status === 404 || status === 410) {
-          aggregate.expired++;
-          await deleteSubscriptionByEndpoint(sub.endpoint as string);
-        } else {
-          aggregate.failed++;
-        }
+  // Concurrence bornée + timeout par envoi (cf. sendPushToUser).
+  await mapWithConcurrency(data ?? [], PUSH_CONCURRENCY, async (sub) => {
+    try {
+      await sendOne(
+        {
+          endpoint: sub.endpoint as string,
+          p256dh: sub.p256dh as string,
+          auth: sub.auth as string,
+        },
+        json,
+      );
+      aggregate.sent++;
+      await touchLastSeen(sub.id as string);
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "statusCode" in err
+          ? Number((err as { statusCode?: unknown }).statusCode)
+          : 0;
+      if (status === 404 || status === 410) {
+        aggregate.expired++;
+        await deleteSubscriptionByEndpoint(sub.endpoint as string);
+      } else {
+        aggregate.failed++;
       }
-    }),
-  );
+    }
+  });
 
   return aggregate;
 }

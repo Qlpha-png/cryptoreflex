@@ -34,9 +34,9 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
  *    pattern `Bearer <secret>`. Toute différence (longueur ou contenu) = false.
  *
  * Note : `timingSafeEqual` throw si les deux Buffer ont des longueurs
- * différentes. On gère ça par un check explicite en amont qui sort en `false`,
- * ce qui est volontairement constant côté caller (toujours `false` rapide,
- * pas d'exception à catcher).
+ * différentes. On gère ça par un check explicite en amont (longueur en
+ * OCTETS, cf. safeCompare) qui sort en `false`, ce qui est volontairement
+ * constant côté caller (toujours `false` rapide, pas d'exception à catcher).
  *
  * @param req — la requête entrante (Request standard ou NextRequest)
  * @param secret — la valeur attendue après "Bearer " (typiquement `process.env.CRON_SECRET`)
@@ -57,10 +57,25 @@ export function verifyBearer(req: Request, secret: string | undefined): boolean 
     return true; // mode dev sans secret
   }
   const auth = req.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
+  return safeCompare(auth, `Bearer ${secret}`);
+}
+
+/**
+ * Comparaison de secrets en temps constant, SANS jamais lever d'exception.
+ *
+ * AUDIT 2026-10-02 : on comparait `a.length` (unités UTF-16) avant
+ * `timingSafeEqual` (octets UTF-8). Un header contenant un caractère non-ASCII
+ * de même longueur JS mais de longueur différente en octets faisait throw
+ * `timingSafeEqual` → 500 au lieu de 401/404. On compare donc les longueurs
+ * en OCTETS (Buffer.byteLength), puis les buffers.
+ */
+export function safeCompare(provided: string, expected: string): boolean {
+  if (typeof provided !== "string" || typeof expected !== "string") return false;
+  const a = Buffer.from(provided, "utf8");
+  const b = Buffer.from(expected, "utf8");
   // Longueurs différentes → reject sans appeler timingSafeEqual (qui throw).
-  if (auth.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
+  if (a.byteLength !== b.byteLength) return false;
+  return timingSafeEqual(a, b);
 }
 
 /* -------------------------------------------------------------------------- */

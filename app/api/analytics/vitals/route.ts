@@ -21,6 +21,8 @@
 
 import { NextResponse } from "next/server";
 import { getKv } from "@/lib/kv";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
 
 export const runtime = "edge";
 
@@ -66,7 +68,23 @@ function p75(values: number[]): number {
   return sorted[idx] ?? 0;
 }
 
+/**
+ * AUDIT SÉCURITÉ 2026-10-02 — rate limit par IP : chaque POST = 1 à ~50
+ * commandes KV (LPUSH, trim, p75). Sans limite, un script pouvait vider le
+ * quota Upstash et noyer les vraies mesures. 60/min couvre largement un
+ * visiteur réel (≤ 5 métriques par page vue). In-memory (best-effort Edge).
+ */
+const limiter = createRateLimiter({ limit: 60, windowMs: 60_000, key: "vitals" });
+
 export async function POST(req: Request): Promise<Response> {
+  const rl = await limiter(getClientIp(req));
+  if (!rl.ok) {
+    return NextResponse.json(
+      { ok: false, error: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();

@@ -5,7 +5,8 @@
  *
  * Flow :
  *  1. Validation email + body (calculation data).
- *  2. Rate limit 3 requêtes/IP/heure (anti-abuse — un PDF par demande sérieuse).
+ *  2. Rate limit 3 requêtes/IP/heure (anti-abuse — un PDF par demande sérieuse)
+ *     + 3 emails / adresse / 24 h (au-delà : PDF servi, email sauté).
  *  3. Génère un sessionId UUID v4.
  *  4. Persiste le calcul dans KV (TTL 1h) via lib/calculateur-pdf-storage.
  *  5. Subscribe à Beehiiv (source = "calculateur-fiscalite-pdf",
@@ -21,8 +22,9 @@
  *
  * Idempotence :
  *  - Pas garantie strictement (un user qui clique 2 fois aura 2 sessionId
- *    et 2 emails). Les souscriptions Beehiiv sont reactivate_existing : true
- *    donc pas de duplicate côté newsletter.
+ *    et 2 emails, plafonnés à 3 / adresse / 24 h). Côté Beehiiv, une adresse
+ *    déjà connue n'est pas dupliquée (et une adresse désinscrite n'est plus
+ *    réactivée : reactivate_existing: false, audit 2026-10-02).
  *
  * Sécurité :
  *  - sessionId UUID v4 (non prédictible).
@@ -33,7 +35,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { subscribe, isValidEmail } from "@/lib/newsletter";
 import { sendEmail } from "@/lib/email/client";
-import { createRateLimiter } from "@/lib/rate-limit";
+import {
+  createRateLimiter,
+  createRecipientLimiter,
+  maskEmailForLog,
+} from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import {
   generateSessionId,
@@ -56,6 +62,13 @@ export const dynamic = "force-dynamic";
 const limiter = createRateLimiter({
   limit: 3,
   windowMs: 60 * 60 * 1000, // 1h
+  key: "calc-pdf-lead",
+});
+
+/** Emails envoyés : 3 / adresse / 24 h (anti « email bombing » multi-IP). */
+const recipientLimiter = createRecipientLimiter({
+  limit: 3,
+  windowSec: 24 * 3600,
   key: "calc-pdf-lead",
 });
 
@@ -176,14 +189,26 @@ export async function POST(req: NextRequest) {
     `(lien valable 1 heure)\n\n` +
     `Vous allez aussi recevoir 5 emails avec nos conseils fiscalité crypto.\n\n` +
     `${BRAND.name} — ${BRAND.url}`;
-  const emailRes = await sendEmail({
-    to: email,
-    subject: calculateurFiscaliteWelcomeSubject,
-    html: calculateurFiscaliteWelcomeHtml({ email, summary, sessionId }),
-    text: emailText,
-  });
-  if (!emailRes.ok) {
-    console.warn("[calc-pdf-lead] Resend sendEmail failed", emailRes.error);
+  // AUDIT 2026-10-02 — limite par DESTINATAIRE (3 emails / adresse / 24 h) en
+  // plus de la limite IP. Au-delà : pas d'email, mais le flow continue (le
+  // client a son sessionId et ouvre la preview directement).
+  const rcpt = await recipientLimiter(email);
+  let emailRes: { ok: boolean; error?: string };
+  if (!rcpt.ok) {
+    console.warn("[calc-pdf-lead] limite destinataire atteinte, email non envoyé", {
+      email: maskEmailForLog(email),
+    });
+    emailRes = { ok: false, error: "recipient_limit" };
+  } else {
+    emailRes = await sendEmail({
+      to: email,
+      subject: calculateurFiscaliteWelcomeSubject,
+      html: calculateurFiscaliteWelcomeHtml({ email, summary, sessionId }),
+      text: emailText,
+    });
+    if (!emailRes.ok) {
+      console.warn("[calc-pdf-lead] Resend sendEmail failed", emailRes.error);
+    }
   }
 
   return NextResponse.json(
