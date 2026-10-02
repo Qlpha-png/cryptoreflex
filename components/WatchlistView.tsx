@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -318,7 +319,7 @@ function PriceRow({
           />
           <div className="min-w-0">
             <Link
-              href={`/cryptos/${price.id}`}
+              href={cryptoPagePath(price.id)}
               className="font-semibold text-fg hover:text-primary truncate
                          focus:outline-none focus-visible:underline rounded"
             >
@@ -390,7 +391,7 @@ function PriceCardMobile({
       />
       <div className="min-w-0 flex-1">
         <Link
-          href={`/cryptos/${price.id}`}
+          href={cryptoPagePath(price.id)}
           className="font-semibold text-fg text-[15px] truncate block
                      focus:outline-none focus-visible:underline rounded"
         >

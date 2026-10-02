@@ -3,7 +3,6 @@ import { getAllArticleSummaries } from "@/lib/mdx";
 import { BRAND } from "@/lib/brand";
 import { getAllProgrammaticRoutes } from "@/lib/programmatic";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
-import { getAllCryptoComparisonSlugs } from "@/lib/crypto-comparisons";
 import {
   getComparerPairRoutes,
   getAcheterRoutes,
@@ -15,10 +14,17 @@ import { ALL_LISTICLES } from "@/lib/listicles";
 // Piliers V2 (26-04) : News auto, Analyses TA auto, Académie certifiante.
 import { getAllNewsSummaries } from "@/lib/news-mdx";
 import { getAllTASummaries } from "@/lib/ta-mdx";
-import { TRACKS, getAllAcademyArticleSlugs } from "@/lib/academy-tracks";
+import { TRACKS } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
-import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
-import { getAllCryptos } from "@/lib/cryptos";
+import { getAllPlatforms, getPlatformById, isAvailableFr } from "@/lib/platforms";
+import { EDITORIAL_FICHE_REVIEWED_DATE, getAllCryptos } from "@/lib/cryptos";
+import { getHistYearsFor } from "@/lib/historique-prix";
+import {
+  buildSitemapFilterContext,
+  filterSitemapEntries,
+  latestDate,
+  toLastModified,
+} from "@/lib/sitemap-filters";
 import { allCards as allReflexCards, isIndexable, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
@@ -37,238 +43,226 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
+/*
+ * AUDIT SEO 2026-10-02 — deux règles pour tout le fichier :
+ *
+ * 1. `lastModified` = VRAIE date quand la donnée l'a (frontmatter des articles,
+ *    lastUpdated du glossaire, date de vérification des frais d'une plateforme,
+ *    date de revue éditoriale des fiches, updated_at DB…). Sinon on OMET le
+ *    champ (optionnel dans le protocole) au lieu de `new Date()` : un lastmod
+ *    « maintenant » sur 7 000 URLs à chaque régénération apprend à Google à
+ *    ignorer tous nos lastmod.
+ * 2. Uniquement des URLs canoniques, indexables, en 200 : filtre final
+ *    lib/sitemap-filters.ts (leçons /academie/* canonicalisées vers /blog,
+ *    /cryptos/<id>/acheter-en-france canonicalisées vers /acheter/<id>/fr,
+ *    /cryptos/<coingeckoId> redirigées, /lp/* noindex, /pro, /pro-plus,
+ *    /cgv-abonnement) + dédoublonnage.
+ */
+
+type Entry = MetadataRoute.Sitemap[number];
+type ChangeFrequency = NonNullable<Entry["changeFrequency"]>;
+
+function entry(
+  path: string,
+  changeFrequency: ChangeFrequency,
+  priority: number,
+  lastModified?: Date,
+): Entry {
+  return {
+    url: `${SITE_URL}${path}`,
+    ...(lastModified ? { lastModified } : {}),
+    changeFrequency,
+    priority,
+  };
+}
+
+/** Date de dernière vérification des données d'une plateforme (fees.verified.date). */
+function platformDate(id: string): Date | undefined {
+  return toLastModified(getPlatformById(id)?.fees.verified?.date);
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  // Contenus datés (frontmatter) : servent aussi de lastmod aux hubs qui les listent.
+  const articles = await getAllArticleSummaries();
+  const newsSummaries = await getAllNewsSummaries();
+  const taSummaries = await getAllTASummaries();
+  const latestArticle = latestDate(articles.map((a) => a.lastUpdated ?? a.date));
+  const latestNews = latestDate(newsSummaries.map((n) => n.date));
+  const latestTA = latestDate(taSummaries.map((t) => t.date));
+  const latestContent = latestDate(
+    [latestArticle, latestNews, latestTA].map((d) => d?.toISOString()),
+  );
+  const ficheReviewed = toLastModified(EDITORIAL_FICHE_REVIEWED_DATE);
+
   /* ----------------------------------------------------------------
    * 1. Routes statiques éditoriales
+   *    Retirées le 2026-10-02 : /lp/mica-2026 et /lp/cerfa-2026 (noindex),
+   *    /pro, /pro-plus, /cgv-abonnement (pages de transition « tout est
+   *    gratuit » depuis la démonétisation de juin 2026, noindex).
    * ---------------------------------------------------------------- */
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "daily", priority: 1 },
-    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${SITE_URL}/actualites`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    entry("/", "daily", 1, latestContent),
+    entry("/blog", "weekly", 0.8, latestArticle),
+    entry("/actualites", "daily", 0.8, latestNews),
     // NOTE — /calendrier-crypto (legacy) supprimé du sitemap : redirige 301
     // vers /calendrier (cf. next.config.js, audit SEO 26-04 CRIT-3).
-    { url: `${SITE_URL}/outils`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    entry("/outils", "monthly", 0.7),
     // Phase 3 / Agent A4 — page hub /ressources (lead magnets PDF + outils + blog).
-    // Priority 0.7 (~ /outils) car page de conversion newsletter via lead magnet gating.
-    { url: `${SITE_URL}/ressources`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/simulateur-dca`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/convertisseur`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    entry("/ressources", "weekly", 0.7),
+    entry("/outils/simulateur-dca", "monthly", 0.7),
+    entry("/outils/convertisseur", "monthly", 0.7),
     // P1 #1 roadmap : LE outil viral (Cryptoast top 3 Google sur "fiscalité crypto").
-    // Priority 0.85 supérieur aux autres outils car lead magnet principal.
-    { url: `${SITE_URL}/outils/calculateur-fiscalite`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    entry("/outils/calculateur-fiscalite", "monthly", 0.85),
     // Phase 3 / Agent A1 — page comparative outils fiscaux (Waltio recommandé).
-    // Cluster fiscalité : co-positionnement avec /outils/calculateur-fiscalite.
-    { url: `${SITE_URL}/outils/declaration-fiscale-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    // Vérificateur MiCA : trafic stratégique sur "plateforme MiCA conforme" + redirige vers /comparatif.
-    { url: `${SITE_URL}/outils/verificateur-mica`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
-    // Whitepaper TL;DR : outil expérimental, priorité standard.
-    { url: `${SITE_URL}/outils/whitepaper-tldr`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    // Pilier 5 (V2) — 3 nouveaux outils interactifs ajoutés le 26-04-2026.
-    { url: `${SITE_URL}/outils/glossaire-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/calculateur-roi-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${SITE_URL}/outils/portfolio-tracker`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    // Pilier "Innovation features killer" (26-04-2026) — 3 outils différenciants
-    // qui n'existent pas chez les concurrents FR (Cryptoast, JDC).
-    { url: `${SITE_URL}/outils/calculateur-apy-staking`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/simulateur-halving-bitcoin`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/comparateur-personnalise`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // Piliers V2 (26-04) : pages-mère pour News auto, Analyses TA auto, Calendrier événements.
-    { url: `${SITE_URL}/analyses-techniques`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
-    { url: `${SITE_URL}/calendrier`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    // Fix audit SEO 01/05/2026 — `/partenariats` a été 301 vers `/sponsoring`.
-    // Le retirer du sitemap évite que Google crawle un redirect inutile et
-    // signale "Submitted URL has redirect" en Search Console.
-    // Vitrine partenaires affiliés (3 marques curées) + détail par slug.
-    // Priority 0.85 (vitrine principale revenue-driving) — détails 0.8.
-    { url: `${SITE_URL}/partenaires`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // Pages business / monétisation (M+4-6 plan 2026)
-    { url: `${SITE_URL}/pro`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/ambassadeurs`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/sponsoring`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // /api-publique — page de docs des endpoints CC-BY 4.0 (stratégie backlinks
-    // organiques : devs, journalistes, étudiants qui réutilisent le dataset).
-    { url: `${SITE_URL}/api-publique`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // /etudes — hub des études cornerstone (rapports longs sourcés, magnet
-    // backlinks presse + chercheurs). Mise à jour mensuelle des datasets.
-    { url: `${SITE_URL}/etudes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/etudes/mica-juillet-2026-etat-des-lieux`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    { url: `${SITE_URL}/etudes/fiscalite-crypto-france-2026-guide-cerfa`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    // /guides — hub des guides pratiques actionnables (HowTo schema, rich snippets SERP).
-    { url: `${SITE_URL}/guides`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/guides/declaration-crypto-2026-checklist`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    // /embed — page de docs des widgets JS embarquables (stratégie viral
-    // backlinks : chaque install d'un widget par un blog FR = 1 backlink dofollow).
-    { url: `${SITE_URL}/embed`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${SITE_URL}/methodologie`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    entry("/outils/declaration-fiscale-crypto", "monthly", 0.8),
+    // Vérificateur MiCA : trafic stratégique sur "plateforme MiCA conforme".
+    entry("/outils/verificateur-mica", "weekly", 0.75),
+    entry("/outils/whitepaper-tldr", "monthly", 0.6),
+    // Pilier 5 (V2) — outils interactifs ajoutés le 26-04-2026.
+    entry("/outils/glossaire-crypto", "weekly", 0.7),
+    entry("/outils/calculateur-roi-crypto", "monthly", 0.8),
+    entry("/outils/portfolio-tracker", "monthly", 0.75),
+    // Pilier "Innovation features killer" (26-04-2026).
+    entry("/outils/calculateur-apy-staking", "monthly", 0.7),
+    entry("/outils/simulateur-halving-bitcoin", "monthly", 0.7),
+    entry("/outils/comparateur-personnalise", "monthly", 0.7),
+    // Piliers V2 (26-04) : pages-mère News auto, Analyses TA auto, Calendrier.
+    entry("/analyses-techniques", "daily", 0.8, latestTA),
+    entry("/calendrier", "weekly", 0.7),
+    // /partenariats a été 301 vers /sponsoring (audit SEO 01/05/2026).
+    entry("/partenaires", "weekly", 0.85),
+    entry("/ambassadeurs", "monthly", 0.7),
+    entry("/sponsoring", "monthly", 0.7),
+    // /api-publique — docs des endpoints CC-BY 4.0 (stratégie backlinks).
+    entry("/api-publique", "monthly", 0.7),
+    // /etudes — hub des études cornerstone.
+    entry("/etudes", "monthly", 0.7),
+    entry("/etudes/mica-juillet-2026-etat-des-lieux", "monthly", 0.85),
+    entry("/etudes/fiscalite-crypto-france-2026-guide-cerfa", "monthly", 0.9),
+    // /guides — hub des guides pratiques actionnables (HowTo schema).
+    entry("/guides", "monthly", 0.7),
+    entry("/guides/declaration-crypto-2026-checklist", "monthly", 0.85),
+    // /embed — docs des widgets JS embarquables (les /embed/* restent noindex).
+    entry("/embed", "monthly", 0.7),
+    entry("/contact", "monthly", 0.5),
+    entry("/methodologie", "monthly", 0.5),
     // Charte éthique éditoriale — ajout 2026-05-07 (signal E-E-A-T).
-    { url: `${SITE_URL}/charte`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${SITE_URL}/a-propos`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    // FIX SEO 2026-05-06 — Pages hubs et landing pages absentes du sitemap.
-    // Audit triple-passe a relevé que ces routes étaient indexables (robots:
-    // index/follow + metadata complète) mais jamais soumises à Googlebot.
-    // Impact estimé : ~3-5% trafic SEO long-tail récupéré.
-    { url: `${SITE_URL}/cryptos`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/alternative-a`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/historique-prix`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/vs`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
-    // Hub /acheter créé 2026-06-13 (cluster 600 pages crypto×pays) — ajout
-    // au sitemap pour découverte directe (manquait : page nouvelle).
-    { url: `${SITE_URL}/acheter`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    // Landing pages dédiées campagnes (MiCA, déclaration CERFA) — meilleurs
-    // taux de conversion newsletter, justifient priority haute.
-    { url: `${SITE_URL}/lp/mica-2026`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    { url: `${SITE_URL}/lp/cerfa-2026`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    // Dashboard public d'impact (audit Trust 26-04 "idée killer") — V1 statique,
-    // V2 juin 2026 = compteurs live via webhook Beehiiv + partenaires affil.
-    { url: `${SITE_URL}/impact`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    // Fix audit SEO 01/05/2026 — `/affiliations` a été 301 vers `/transparence`.
-    // Retirer du sitemap pour éviter un redirect inutile dans Google Search Console.
-    // Page de transparence (loi Influenceurs juin 2023 + DGCCRF) — liste
-    // exhaustive des partenariats actifs, statut MiCA et rémunération perçue.
-    { url: `${SITE_URL}/transparence`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${SITE_URL}/mentions-legales`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${SITE_URL}/confidentialite`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${SITE_URL}/cgv-abonnement`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${SITE_URL}/top`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/staking`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/glossaire`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    entry("/charte", "yearly", 0.6),
+    entry("/a-propos", "monthly", 0.6),
+    // FIX SEO 2026-05-06 — hubs indexables jamais soumis auparavant.
+    entry("/cryptos", "weekly", 0.85),
+    entry("/alternative-a", "monthly", 0.7),
+    entry("/historique-prix", "weekly", 0.7),
+    entry("/vs", "weekly", 0.75),
+    // Hub /acheter créé 2026-06-13 (cluster 600 pages crypto×pays).
+    entry("/acheter", "weekly", 0.8),
+    // Dashboard public d'impact (audit Trust 26-04).
+    entry("/impact", "weekly", 0.7),
+    // /affiliations a été 301 vers /transparence (audit SEO 01/05/2026).
+    entry("/transparence", "monthly", 0.5),
+    entry("/mentions-legales", "yearly", 0.3),
+    entry("/confidentialite", "yearly", 0.3),
+    entry("/top", "weekly", 0.7),
+    entry("/staking", "weekly", 0.7),
+    entry("/glossaire", "monthly", 0.6, latestDate(GLOSSARY_TERMS.map((t) => t.lastUpdated))),
     // Hubs (P0-5) — pages-mère qui regroupent les sous-routes existantes.
-    { url: `${SITE_URL}/avis`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/comparatif`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${SITE_URL}/marche`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
-    { url: `${SITE_URL}/quiz`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    { url: `${SITE_URL}/marche/heatmap`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
-    { url: `${SITE_URL}/marche/fear-greed`, lastModified: now, changeFrequency: "daily", priority: 0.6 },
-    { url: `${SITE_URL}/marche/gainers-losers`, lastModified: now, changeFrequency: "daily", priority: 0.6 },
-    { url: `${SITE_URL}/halving-bitcoin`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
-    { url: `${SITE_URL}/quiz/plateforme`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/quiz/crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // Quiz "Trouve ton exchange en 60 sec" (P0-différenciation : aucun concurrent FR
-    // n'a de quiz interactif). Lead magnet ultra-converting → priority 0.85, weekly.
-    { url: `${SITE_URL}/quiz/trouve-ton-exchange`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // Programmatic SEO — /comparer (cryptos vs cryptos, 105 paires top 15)
-    // Différencié de /comparatif (plateformes) et /cryptos/comparer (dynamique).
-    { url: `${SITE_URL}/comparer`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
-    { url: `${SITE_URL}/wizard/premier-achat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // Alertes prix par email — page outil, à indexer (potentiel "alerte prix bitcoin", etc.)
-    { url: `${SITE_URL}/alertes`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    // Phase 3 / A5 — landing widgets embeddables + page ressources libres
-    // (linkable assets pour générer des backlinks organiques sans démarchage).
-    // Les routes /embed/* restent volontairement HORS sitemap (noindex).
-    { url: `${SITE_URL}/embeds`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/ressources-libres`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    entry("/avis", "weekly", 0.85),
+    entry("/comparatif", "weekly", 0.85),
+    entry("/marche", "daily", 0.8),
+    entry("/quiz", "monthly", 0.75),
+    entry("/marche/heatmap", "daily", 0.7),
+    entry("/marche/fear-greed", "daily", 0.6),
+    entry("/marche/gainers-losers", "daily", 0.6),
+    entry("/halving-bitcoin", "weekly", 0.65),
+    entry("/quiz/plateforme", "monthly", 0.7),
+    entry("/quiz/crypto", "monthly", 0.7),
+    // Quiz "Trouve ton exchange en 60 sec" (lead magnet).
+    entry("/quiz/trouve-ton-exchange", "weekly", 0.85),
+    // Programmatic SEO — /comparer (hub cryptos vs cryptos).
+    entry("/comparer", "weekly", 0.75),
+    entry("/wizard/premier-achat", "monthly", 0.7),
+    // Alertes prix par email — page outil indexable.
+    entry("/alertes", "monthly", 0.7),
+    // Phase 3 / A5 — landing widgets embeddables + ressources libres.
+    entry("/embeds", "monthly", 0.7),
+    entry("/ressources-libres", "monthly", 0.7),
     // FIX 2026-05-02 #11 — TIER 3 features (audit consolidé 6 experts).
-    // 5 nouvelles pages : 4 outils + 1 landing Wrapped.
-    { url: `${SITE_URL}/outils/yield-stablecoins`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${SITE_URL}/outils/tax-loss-harvesting`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    { url: `${SITE_URL}/outils/fiscal-copilot`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/wallet-connect`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
-    { url: `${SITE_URL}/crypto-wrapped`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    // FIX 2026-05-02 #20 — TIER 1+2 nouvelles pages (audit 9 experts).
-    // Pro+ landing + Pack Déclaration one-shot + 2 patterns SEO programmatic
-    // (historique-prix x 240 URLs prebuild, alternative-a x 34 URLs).
-    { url: `${SITE_URL}/pro-plus`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    { url: `${SITE_URL}/pack-declaration-crypto-2026`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    // FIX 2026-05-02 #21+22 (audit 9 experts, BATCH 7+8+9) — innovation features
-    // landings (waitlist) + WOW landings + Conditions Générales d'Utilisation.
-    { url: `${SITE_URL}/outils/whale-radar`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/phishing-checker`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    { url: `${SITE_URL}/outils/allocator-ia`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    { url: `${SITE_URL}/outils/gas-tracker-fr`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/export-expert-comptable`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${SITE_URL}/outils/crypto-license`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/succession-crypto`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/outils/dca-lab`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${SITE_URL}/cgu`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    // Académie : page indexable, mise à jour ~hebdomadaire (ajout de leçons V2+)
-    { url: `${SITE_URL}/academie`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    // BLOCs 0-7 (2026-05-04) — 6 nouvelles pages SEO + 2 pages newsletter/airdrops
-    // ajoutees lors de la session "fais tout par bloc". User feedback :
-    // "tu as audit tout front et back ?" → audit BACK a revele que ces 6
-    // routes etaient ABSENTES du sitemap (P0 SEO). Fix : declaration explicite.
-    // /comparatif/frais : ranking maker spot 30+ plateformes (BLOC 2)
-    { url: `${SITE_URL}/comparatif/frais`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // /comparatif/securite : audit cold storage / hack / MiCA (BLOC 2)
-    { url: `${SITE_URL}/comparatif/securite`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // /airdrops : 12 airdrops curated (live/upcoming/claimed) (BLOC 3)
-    { url: `${SITE_URL}/airdrops`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // /outils/profit-loss-calculator : calc PnL net apres frais + PFU 31,4% (BLOC 4)
-    { url: `${SITE_URL}/outils/profit-loss-calculator`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    // /faq-crypto : 20 Q&A en 6 categories + JSON-LD FAQPage (BLOC 5)
-    // Priority 0.85 (Featured Snippets long-tail majeur).
-    { url: `${SITE_URL}/faq-crypto`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    // /marche/whales : hub Whale Watcher unifie 8 cryptos (BLOC 6)
-    { url: `${SITE_URL}/marche/whales`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
-    // /newsletter (orphelin expose BLOC 1) — lead magnet majeur
-    { url: `${SITE_URL}/newsletter`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
-    // Fix audit SEO 30/04/2026 — /portefeuille retiré du sitemap car
-    // disallow dans robots.txt (cohérence stricte : disallow > sitemap pour
-    // Google, mais une URL sitemap ignorée envoie un signal de pollution).
-    // Le PageRank passe quand même via les liens internes du Footer/Navbar.
+    entry("/outils/yield-stablecoins", "weekly", 0.8),
+    entry("/outils/tax-loss-harvesting", "monthly", 0.75),
+    entry("/outils/fiscal-copilot", "monthly", 0.7),
+    entry("/outils/wallet-connect", "monthly", 0.65),
+    entry("/crypto-wrapped", "monthly", 0.6),
+    // Pack Déclaration (ressource gratuite depuis juin 2026).
+    entry("/pack-declaration-crypto-2026", "weekly", 0.9),
+    // FIX 2026-05-02 #21+22 — innovation features landings + CGU.
+    entry("/outils/whale-radar", "monthly", 0.7),
+    entry("/outils/phishing-checker", "monthly", 0.75),
+    entry("/outils/allocator-ia", "monthly", 0.75),
+    entry("/outils/gas-tracker-fr", "weekly", 0.7),
+    entry("/outils/export-expert-comptable", "monthly", 0.8),
+    entry("/outils/crypto-license", "monthly", 0.7),
+    entry("/outils/succession-crypto", "monthly", 0.7),
+    entry("/outils/dca-lab", "monthly", 0.7),
+    entry("/cgu", "yearly", 0.3),
+    // Académie : hub indexable (les leçons sont canonicalisées vers /blog).
+    entry("/academie", "weekly", 0.8),
+    // BLOCs 0-7 (2026-05-04) — pages SEO ajoutées lors de la session "par bloc".
+    entry("/comparatif/frais", "weekly", 0.85, latestDate(getAllPlatforms().map((p) => p.fees.verified?.date))),
+    entry("/comparatif/securite", "weekly", 0.85),
+    entry("/airdrops", "weekly", 0.85),
+    entry("/outils/profit-loss-calculator", "monthly", 0.8),
+    entry("/faq-crypto", "weekly", 0.85),
+    entry("/marche/whales", "daily", 0.7),
+    entry("/newsletter", "weekly", 0.7),
+    // /portefeuille hors sitemap : disallow dans robots.txt (audit SEO 30/04/2026).
   ];
 
   /* ----------------------------------------------------------------
    * 1bis. Top X listicles
    * ---------------------------------------------------------------- */
-  const listicleRoutes: MetadataRoute.Sitemap = ALL_LISTICLES.map((l) => ({
-    url: `${SITE_URL}/top/${l.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.75,
-  }));
+  const listicleRoutes: MetadataRoute.Sitemap = ALL_LISTICLES.map((l) =>
+    entry(`/top/${l.slug}`, "weekly", 0.75),
+  );
 
   /* ----------------------------------------------------------------
-   * 1quater. Pages partenaires affiliés (revenue-driving long-form reviews)
+   * 1quater. Pages partenaires affiliés (long-form reviews)
    * ---------------------------------------------------------------- */
-  const partnerRoutes: MetadataRoute.Sitemap = affiliatePartners.map((p) => ({
-    url: `${SITE_URL}/partenaires/${p.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const partnerRoutes: MetadataRoute.Sitemap = affiliatePartners.map((p) =>
+    entry(`/partenaires/${p.slug}`, "weekly", 0.8),
+  );
 
   /* ----------------------------------------------------------------
-   * 1ter. Glossaire (pages individuelles)
+   * 1ter. Glossaire (pages individuelles) — lastUpdated de chaque terme
    * ---------------------------------------------------------------- */
-  const glossaryRoutes: MetadataRoute.Sitemap = GLOSSARY_TERMS.map((t) => ({
-    url: `${SITE_URL}/glossaire/${t.id}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+  const glossaryRoutes: MetadataRoute.Sitemap = GLOSSARY_TERMS.map((t) =>
+    entry(`/glossaire/${t.id}`, "monthly", 0.5, toLastModified(t.lastUpdated)),
+  );
 
   /* ----------------------------------------------------------------
-   * 2. Articles de blog
+   * 2. Articles de blog — date de mise à jour du frontmatter
    * ---------------------------------------------------------------- */
-  const articles = await getAllArticleSummaries();
-  const articleRoutes: MetadataRoute.Sitemap = articles.map((a) => ({
-    url: `${SITE_URL}/blog/${a.slug}`,
-    lastModified: new Date(a.lastUpdated ?? a.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const articleRoutes: MetadataRoute.Sitemap = articles.map((a) =>
+    entry(`/blog/${a.slug}`, "monthly", 0.6, toLastModified(a.lastUpdated ?? a.date)),
+  );
 
   /* ----------------------------------------------------------------
    * 2bis. Pages auteur (E-E-A-T)
    * ---------------------------------------------------------------- */
-  const authorRoutes: MetadataRoute.Sitemap = getAllAuthors().map((a) => ({
-    url: `${SITE_URL}/auteur/${a.id}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+  const authorRoutes: MetadataRoute.Sitemap = getAllAuthors().map((a) =>
+    entry(`/auteur/${a.id}`, "monthly", 0.5),
+  );
 
   /* ----------------------------------------------------------------
-   * 3. Routes programmatiques
+   * 3. Routes programmatiques (lib/programmatic.ts)
    *    /avis/[slug], /comparatif/[slug], /cryptos/[slug],
    *    /cryptos/[slug]/acheter-en-france, /staking/[slug]
-   *    Source unique de vérité : lib/programmatic.ts
+   *    lastmod : date de vérification des données plateforme (avis,
+   *    comparatifs) ; date de revue éditoriale (fiches /cryptos).
    * ---------------------------------------------------------------- */
-  // Exclut du sitemap les routes des plateformes fermées au marché FR (ex : Gemini,
-  // déjà en noindex) : /avis/[id], /alternative-a/[id] et les duels /comparatif/x-vs-id.
+  // Exclut les plateformes fermées au marché FR (ex : Gemini, déjà en noindex) :
+  // /avis/[id], /alternative-a/[id] et les duels /comparatif/x-vs-id.
   const unavailableIds = getAllPlatforms()
     .filter((p) => !isAvailableFr(p))
     .map((p) => p.id);
@@ -280,22 +274,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         (path.startsWith("/comparatif/") &&
           (path.split("/comparatif/")[1] ?? "").split("-vs-").includes(id))
     );
+  const editorialIds = new Set(getAllCryptos().map((c) => c.id));
+  const programmaticLastModified = (path: string): Date | undefined => {
+    const seg = path.split("/").filter(Boolean);
+    if (seg[0] === "avis" && seg[1]) return platformDate(seg[1]);
+    if (seg[0] === "comparatif" && seg[1]) {
+      return latestDate(seg[1].split("-vs-").map((id) => getPlatformById(id)?.fees.verified?.date));
+    }
+    if (seg[0] === "cryptos" && seg.length === 2 && editorialIds.has(seg[1])) return ficheReviewed;
+    return undefined;
+  };
   const programmaticRoutes: MetadataRoute.Sitemap = getAllProgrammaticRoutes()
     .filter((r) => !refersToUnavailable(r.path))
-    .map((r) => ({
-      url: `${SITE_URL}${r.path}`,
-      lastModified: now,
-      changeFrequency: r.changeFrequency,
-      priority: r.priority,
-    }));
+    .map((r) => entry(r.path, r.changeFrequency, r.priority, programmaticLastModified(r.path)));
 
   /* ----------------------------------------------------------------
-   * 3.b. Fiches LLM scaling Phase 1 (DB-backed)
-   *      ~680 fiches T3 générées par batch-generate-fiches.mjs.
-   *      Distinct de getAllProgrammaticRoutes (qui couvre top 100 statiques
-   *      via top-cryptos.json + hidden-gems.json + ALL_CRYPTOS mapping).
-   *      Best-effort : si la DB est down, on retourne [] silencieusement
-   *      (le sitemap reste valide avec les autres routes).
+   * 3.b. Fiches LLM scaling Phase 1 (DB-backed, updated_at réel)
+   *      Best-effort : si la DB est down, on retourne [] silencieusement.
+   *      Les coingecko_id des fiches éditoriales (ripple, binancecoin…) sont
+   *      retirés par le filtre final (308 vers /cryptos/<id>).
    * ---------------------------------------------------------------- */
   const dbFichesRoutes: MetadataRoute.Sitemap = await (async () => {
     try {
@@ -309,19 +306,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .order("market_cap_rank", { ascending: true, nullsFirst: false })
         .limit(2000);
       if (error || !data) return [];
-      return data.map((r: { coingecko_id: string; updated_at: string; market_cap_rank: number | null }) => ({
-        url: `${SITE_URL}/cryptos/${r.coingecko_id}`,
-        lastModified: r.updated_at ? new Date(r.updated_at) : now,
-        // Priorité dégressive selon market_cap_rank : top 100 = 0.7,
-        // 100-300 = 0.6, 300-700 = 0.5, 700+ = 0.4.
-        priority: r.market_cap_rank == null
-          ? 0.4
-          : r.market_cap_rank < 100 ? 0.7
-          : r.market_cap_rank < 300 ? 0.6
-          : r.market_cap_rank < 700 ? 0.5
-          : 0.4,
-        changeFrequency: "weekly" as const,
-      }));
+      return data.map((r: { coingecko_id: string; updated_at: string; market_cap_rank: number | null }) =>
+        entry(
+          `/cryptos/${r.coingecko_id}`,
+          "weekly",
+          // Priorité dégressive selon market_cap_rank : top 100 = 0.7,
+          // 100-300 = 0.6, 300-700 = 0.5, 700+ = 0.4.
+          r.market_cap_rank == null
+            ? 0.4
+            : r.market_cap_rank < 100 ? 0.7
+            : r.market_cap_rank < 300 ? 0.6
+            : r.market_cap_rank < 700 ? 0.5
+            : 0.4,
+          toLastModified(r.updated_at),
+        ),
+      );
     } catch (err) {
       console.warn("[sitemap] DB fiches fetch failed:", err);
       return [];
@@ -329,127 +328,63 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })();
 
   /* ----------------------------------------------------------------
-   * 3bis. /comparer/[slug] LEGACY — BATCH 59 redirect 301 vers /vs/[a]/[b]
-   *
-   * Avant : 105 URLs /comparer/{a}-vs-{b} indexees independamment.
-   * Maintenant : ces URLs redirigent (canonical /vs/), donc on RETIRE du
-   * sitemap pour ne pas faire crawler des redirects par Google. Les vrais
-   * URLs canoniques /vs/[a]/[b] sont listees plus bas (4950 entries).
-   *
-   * Note : on garde getAllCryptoComparisonSlugs() referencee dans le code
-   * pour generateStaticParams (105 paires pre-build = 105 redirect cache).
+   * 3bis. /comparer/[slug] LEGACY : redirigé en 308 vers /vs/[a]/[b]
+   *       (next.config.js → lib/seo-redirects.cjs) → absent du sitemap.
    * ---------------------------------------------------------------- */
-  const cryptoComparisonRoutes: MetadataRoute.Sitemap = [];
 
   /* ----------------------------------------------------------------
-   * 3ter. Programmatic SEO massif (BATCH 58 — etendu top 30 -> top 100) :
-   *       /vs/[a]/[b]            → 4950 paires top 100 cryptos (au lieu de 435)
-   *       /acheter/[crypto]/[pays] → 600 (100 cryptos × 6 pays FR-speaking)
+   * 3ter. Programmatic SEO massif (BATCH 58 — top 100) :
+   *       /vs/[a]/[b] → 4950 paires ; /acheter/[crypto]/[pays] → 600.
    *       Source : lib/programmatic-pages.ts.
-   *
-   *       Volume total ajoute : ~5550 URLs (au lieu de ~1035). Sitemap reste
-   *       largement sous la limite Google (50k URLs) — pas besoin de splitter.
-   *       Strategy : ISR a la demande (105 paires pre-build au build, 4845
-   *       autres SSR au 1er hit puis cachees 24h).
    * ---------------------------------------------------------------- */
-  const comparerPairRoutes: MetadataRoute.Sitemap = getComparerPairRoutes().map((r) => ({
-    url: `${SITE_URL}${r.path}`,
-    lastModified: now,
-    changeFrequency: r.changeFrequency,
-    priority: r.priority,
-  }));
-  const acheterRoutes: MetadataRoute.Sitemap = getAcheterRoutes().map((r) => ({
-    url: `${SITE_URL}${r.path}`,
-    lastModified: now,
-    changeFrequency: r.changeFrequency,
-    priority: r.priority,
-  }));
+  const comparerPairRoutes: MetadataRoute.Sitemap = getComparerPairRoutes().map((r) =>
+    entry(r.path, r.changeFrequency, r.priority),
+  );
+  const acheterRoutes: MetadataRoute.Sitemap = getAcheterRoutes().map((r) =>
+    entry(r.path, r.changeFrequency, r.priority),
+  );
 
   /* ----------------------------------------------------------------
-   * 3quater. Programmatic SEO BATCH 7 (audit 9 experts 2026-05-02) :
-   *          /alternative-a/[plateforme]   → 1 URL/plateforme
-   *          /historique-prix/[crypto]/[annee] → top 30 cryptos × 8 années
+   * 3quater. /alternative-a/[plateforme] — même périmètre que la route
+   *          (generateStaticParams exclut les hardware wallets : Ledger et
+   *          Trezor y sont des 404, retirés du sitemap le 2026-10-02).
    * ---------------------------------------------------------------- */
   const alternativeRoutes: MetadataRoute.Sitemap = getAllPlatforms()
-    .filter((p) => isAvailableFr(p))
-    .map((p) => ({
-      url: `${SITE_URL}/alternative-a/${p.id}`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
+    .filter((p) => p.category !== "wallet" && isAvailableFr(p))
+    .map((p) => entry(`/alternative-a/${p.id}`, "monthly", 0.7, platformDate(p.id)));
 
-  // FIX 2026-06-13 — Source unique de vérité : on aligne le sitemap sur
-  // generateStaticParams de la page (getAllCryptos × YEARS, dynamicParams=false).
-  // L'ancien HIST_TOP_30 hardcodé contenait 9 ids inexistants dans la data
-  // (binancecoin, ripple, avalanche-2, matic-network, near, the-open-network,
-  // hedera-hashgraph, ethereum-classic, maker) → 81 URLs sitemap en vrai 404,
-  // et n'exposait que 30 cryptos alors que 100 sont buildées (~630 manquantes).
-  // Page 100 % synchrone (aucun fetch) → lister toutes ces URLs n'ajoute pas d'I/O.
-  // FIX 2026-06-13 (bis) — aligner sitemap ↔ meta-robots. La page noindexe les
-  // couples pré-existence (annee < yearCreated). Lister ces ~184 URLs noindex
-  // au sitemap = signal de pollution. Le filtre `>= yearCreated` est le
-  // complément exact de la condition noindex de la page : on conserve TOUS les
-  // couples indexables (716), on retire seulement les noindex. generateStaticParams
-  // (donc le prerender) reste inchangé sur les 900 couples.
-  const HIST_YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+  // /historique-prix/[crypto]/[annee] : aligné sur generateStaticParams de la page
+  // (getAllCryptos × HIST_YEARS, dynamicParams=false), SANS les années
+  // antérieures au lancement du projet (noindex côté page) — getHistYearsFor.
   const historiquePrixRoutes: MetadataRoute.Sitemap = getAllCryptos().flatMap((c) =>
-    HIST_YEARS.filter((annee) => Number(annee) >= c.yearCreated).map((annee) => ({
-      url: `${SITE_URL}/historique-prix/${c.id}/${annee}`,
-      lastModified: now,
-      changeFrequency: "yearly" as const,
-      priority: 0.55,
-    })),
+    getHistYearsFor(c).map((annee) =>
+      entry(`/historique-prix/${c.id}/${annee}`, "yearly", 0.55),
+    ),
   );
 
   /* ----------------------------------------------------------------
    * 4. Pages convertisseur SEO programmatic (top 30 pairs)
    * ---------------------------------------------------------------- */
-  const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) => ({
-    url: `${SITE_URL}/convertisseur/${from}-${to}`,
-    lastModified: now,
-    changeFrequency: "daily" as const,
-    priority: 0.5,
-  }));
+  const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) =>
+    entry(`/convertisseur/${from}-${to}`, "daily", 0.5),
+  );
 
   /* ----------------------------------------------------------------
-   * 5. Piliers V2 — News, Analyses TA, Académie (parcours + leçons)
-   *
-   * NOTE — `lastModified` utilise la VRAIE date de publication de l'article
-   * (frontmatter `date`) plutôt que `now`. Sinon Google reçoit un signal
-   * "tout a bougé hier" alors que les news de la semaine dernière n'ont pas
-   * été touchées → cannibalise le freshness signal des nouveaux articles.
+   * 5. Piliers V2 — News, Analyses TA, Académie (parcours)
+   *    lastModified = vraie date de publication (frontmatter `date`).
+   *    Les leçons /academie/<parcours>/<slug> ne sont PAS listées : même MDX
+   *    que /blog/<slug>, canonical vers le blog (déjà listé en 2.).
    * ---------------------------------------------------------------- */
-  const newsSummaries = await getAllNewsSummaries();
-  const newsRoutes: MetadataRoute.Sitemap = newsSummaries.map((n) => ({
-    url: `${SITE_URL}/actualites/${n.slug}`,
-    lastModified: new Date(n.date),
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+  const newsRoutes: MetadataRoute.Sitemap = newsSummaries.map((n) =>
+    entry(`/actualites/${n.slug}`, "monthly", 0.5, toLastModified(n.date)),
+  );
 
-  const taSummaries = await getAllTASummaries();
-  const taRoutes: MetadataRoute.Sitemap = taSummaries.map((a) => ({
-    url: `${SITE_URL}/analyses-techniques/${a.slug}`,
-    lastModified: new Date(a.date),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
+  const taRoutes: MetadataRoute.Sitemap = taSummaries.map((a) =>
+    entry(`/analyses-techniques/${a.slug}`, "weekly", 0.6, toLastModified(a.date)),
+  );
 
-  // Académie : 3 routes parcours + N routes leçons (1 par couple track × article).
-  const academyTrackRoutes: MetadataRoute.Sitemap = TRACKS.map((t) => ({
-    url: `${SITE_URL}/academie/${t.id}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.75,
-  }));
-  const academyLessonRoutes: MetadataRoute.Sitemap = TRACKS.flatMap((track) =>
-    track.lessons.map((lesson) => ({
-      url: `${SITE_URL}/academie/${track.id}/${lesson.articleSlug}`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
+  const academyTrackRoutes: MetadataRoute.Sitemap = TRACKS.map((t) =>
+    entry(`/academie/${t.id}`, "weekly", 0.75),
   );
 
   // Reflex Cards : hub + pages carte déjà visibles (sorties ou révélées) et indexables
@@ -469,25 +404,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ]
     : [];
 
-  return [
-    ...staticRoutes,
-    ...reflexCardRoutes,
-    ...partnerRoutes,
-    ...listicleRoutes,
-    ...glossaryRoutes,
-    ...articleRoutes,
-    ...authorRoutes,
-    ...programmaticRoutes,
-    ...dbFichesRoutes,
-    ...cryptoComparisonRoutes,
-    ...comparerPairRoutes,
-    ...acheterRoutes,
-    ...alternativeRoutes,
-    ...historiquePrixRoutes,
-    ...converterPairRoutes,
-    ...newsRoutes,
-    ...taRoutes,
-    ...academyTrackRoutes,
-    ...academyLessonRoutes,
-  ];
+  return filterSitemapEntries(
+    [
+      ...staticRoutes,
+      ...reflexCardRoutes,
+      ...partnerRoutes,
+      ...listicleRoutes,
+      ...glossaryRoutes,
+      ...articleRoutes,
+      ...authorRoutes,
+      ...programmaticRoutes,
+      ...dbFichesRoutes,
+      ...comparerPairRoutes,
+      ...acheterRoutes,
+      ...alternativeRoutes,
+      ...historiquePrixRoutes,
+      ...converterPairRoutes,
+      ...newsRoutes,
+      ...taRoutes,
+      ...academyTrackRoutes,
+    ],
+    (e) => e.url,
+    buildSitemapFilterContext(),
+  );
 }

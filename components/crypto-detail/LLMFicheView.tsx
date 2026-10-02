@@ -7,6 +7,7 @@ import { ExternalLink, BarChart3, Coins, Calendar, Bot } from "lucide-react";
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
 import { resolveCoingeckoId } from "@/lib/crypto-aliases";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
@@ -300,7 +301,7 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
                   <div className="font-medium">
                     {isLinkable ? (
                       <Link
-                        href={`/cryptos/${resolvedId}`}
+                        href={cryptoPagePath(resolvedId)}
                         className="hover:underline"
                       >
                         {cp.name}

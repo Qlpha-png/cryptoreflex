@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const track = getTrack(params.track);
   if (!track) return { title: "Quiz introuvable" };
 
-  const title = `Quiz final — Parcours ${track.title} | Académie Cryptoreflex`;
+  const title = `Quiz final — Parcours ${track.title} | Académie crypto`;
   const description = `Quiz de validation du parcours ${track.title} : 5 questions, 4 bonnes réponses minimum pour valider le parcours.`;
   const url = `${BRAND.url}/academie/${track.id}/quiz`;
 

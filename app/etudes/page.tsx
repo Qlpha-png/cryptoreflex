@@ -24,7 +24,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  *  - CTA API publique + comparateur
  */
 
-const TITLE = "Études cornerstone Cryptoreflex — recherche crypto FR";
+const TITLE = "Études cornerstone — recherche crypto FR";
 const DESCRIPTION =
   "Études longues, sources publiques, méthodologie publiée. Analyses approfondies du marché crypto français : MiCA, fiscalité, décentralisation, sécurité.";
 

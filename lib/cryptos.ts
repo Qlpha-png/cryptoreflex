@@ -92,6 +92,13 @@ const GEMS: HiddenGem[] = hiddenGemsData.hiddenGems as HiddenGem[];
 /*  API publique                                                              */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Date de dernière revue éditoriale humaine des 100 fiches /cryptos/[slug]
+ * (affichée par LastReviewedBadge, dateModified JSON-LD, lastmod du sitemap).
+ * À bumper UNIQUEMENT après une vraie revue (jamais automatiquement au build).
+ */
+export const EDITORIAL_FICHE_REVIEWED_DATE = "2026-04-25";
+
 /** Retourne toutes les cryptos (top 10 + hidden gems) avec leur `kind`. */
 export function getAllCryptos(): AnyCrypto[] {
   const top: AnyCrypto[] = TOP.map((c) => ({ kind: "top10", ...c }));

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import {
+  EDITORIAL_FICHE_REVIEWED_DATE,
   getCryptoBySlug,
   getRelatedCryptos,
   getTopCryptos,
@@ -28,6 +29,7 @@ import {
 } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
 import { resolveSlugAlias } from "@/lib/crypto-slug-aliases";
+import { toCryptoPageSlug } from "@/lib/crypto-page-slug";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -259,7 +261,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // metadata pour le slug CANONIQUE (chain-2) pour rester cohérent. Le
   // redirect 308 lui-même se fait dans CryptoPage().
   const { canonical } = resolveSlugAlias(params.slug);
-  const c = getCryptoBySlug(canonical);
+  // Audit SEO 2026-10-02 — /cryptos/<coingeckoId> d'une fiche éditoriale
+  // (ripple, binancecoin…) est redirigé en 308 par next.config.js
+  // (lib/seo-redirects.cjs). Défense en profondeur : si la page est atteinte
+  // quand même, métadonnées (canonical) de la fiche éditoriale.
+  const c = getCryptoBySlug(toCryptoPageSlug(canonical));
   // Fall-back DB pour les fiches LLM (Phase 1 scaling).
   // params.slug = coingecko_id (= slug DB column).
   if (!c) {
@@ -340,7 +346,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * Standard fiche crypto premium (audit phase 3 — 19/05/2026).
  */
-const FICHE_REVIEWED_DATE = "2026-04-25";
+const FICHE_REVIEWED_DATE = EDITORIAL_FICHE_REVIEWED_DATE;
 
 /**
  * Construit la liste de sources d'une fiche crypto pour <CryptoSources>.
@@ -490,9 +496,13 @@ export default async function CryptoPage({ params }: Props) {
   // On vérifie EN PREMIER si le slug d'URL est un alias friendly. Si oui,
   // on émet un 308 Permanent Redirect via `permanentRedirect()` (signal SEO
   // "URL définitivement déplacée", canonique vers le coingecko_id officiel).
+  // NB : en prod (ISR) ce permanentRedirect répond 200 + meta refresh ; le vrai
+  // 308 est émis en amont par next.config.js (lib/seo-redirects.cjs), qui couvre
+  // les alias ET les coingeckoId des fiches éditoriales. Ceci reste un filet.
   const { canonical, isAlias } = resolveSlugAlias(params.slug);
-  if (isAlias) {
-    permanentRedirect(`/cryptos/${canonical}`);
+  const editorialSlug = toCryptoPageSlug(canonical);
+  if (isAlias || editorialSlug !== canonical) {
+    permanentRedirect(`/cryptos/${editorialSlug}`);
   }
 
   const c = getCryptoBySlug(canonical);
@@ -1212,7 +1222,7 @@ export default async function CryptoPage({ params }: Props) {
                     className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-3 hover:border-primary/40"
                   >
                     <span className="text-sm font-semibold text-fg">
-                      Acheter {c.symbol} en {co.name}
+                      Acheter {c.symbol} {co.inName}
                     </span>
                     <span className="text-xs text-muted">
                       {co.regulator} · {co.currency}

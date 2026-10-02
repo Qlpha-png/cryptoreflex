@@ -22,7 +22,9 @@ export const metadata: Metadata = {
   description:
     "Les abonnements payants Cryptoreflex ont été supprimés : le service est désormais 100 % gratuit. L'usage du site est régi par les CGU.",
   alternates: withHreflang(`${BRAND.url}/cgv-abonnement`),
-  robots: { index: true, follow: true },
+  // CGV sans objet (plus d'abonnement) : conservées pour information, hors index
+  // et hors sitemap (audit SEO 2026-10-02).
+  robots: { index: false, follow: true },
 };
 
 export default function CgvAbonnementPage() {

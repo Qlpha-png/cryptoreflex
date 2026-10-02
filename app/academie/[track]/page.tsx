@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const track = getTrack(params.track);
   if (!track) return { title: "Parcours introuvable" };
 
-  const title = `Parcours ${track.title} — Académie crypto Cryptoreflex`;
+  const title = `Parcours ${track.title} — Académie crypto`;
   const description = `${track.description} ${track.lessons.length} leçons, ~${track.estimatedHours}h, progression suivie.`;
   const url = `${BRAND.url}/academie/${track.id}`;
 

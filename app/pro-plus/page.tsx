@@ -55,7 +55,9 @@ export const metadata: Metadata = {
     description: "Le tier Pro+ payant a disparu : tout est gratuit pour tout le monde.",
     images: [`${BRAND.url}/og-image.png`],
   },
-  robots: { index: true, follow: true },
+  // Page de transition (plan Pro+ supprimé) : conservée pour les liens entrants,
+  // mais hors index et hors sitemap (audit SEO 2026-10-02).
+  robots: { index: false, follow: true },
 };
 
 const NOW_FREE = [

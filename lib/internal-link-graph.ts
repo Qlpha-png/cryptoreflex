@@ -381,6 +381,7 @@ import { getAllCryptos } from "./cryptos";
 import { getAllPlatforms } from "./platforms";
 import { getAllFiscalTools } from "./fiscal-tools";
 import { getAllComparisons } from "./comparisons";
+import { buildComparisonSlug, getPublishableComparisons } from "./programmatic";
 import { GLOSSARY as GLOSSARY_FLAT } from "./glossary";
 
 export type EntityType =
@@ -531,7 +532,15 @@ export function buildEntityIndex(): Map<string, EntityIndexEntry> {
   }
 
   /* ---------------------------- 4. COMPARISONS ---------------------------- */
-  for (const cmp of getAllComparisons()) {
+  // Audit 2026-10-02 — data/comparisons.json contient des duels SANS page
+  // (bitget-vs-bybit absent de lib/programmatic.ts, ledger/trezor…) et des slugs
+  // non canoniques (coinbase-vs-bitpanda). /comparatif/[slug] étant en
+  // dynamicParams=false, on ne lie que les duels publiés, sous leur slug canonique.
+  const publishedComparisonSlugs = new Set(getPublishableComparisons().map((c) => c.slug));
+  for (const raw of getAllComparisons()) {
+    const canonicalSlug = buildComparisonSlug(raw.platforme1_id, raw.platforme2_id);
+    if (!publishedComparisonSlugs.has(canonicalSlug)) continue;
+    const cmp = { ...raw, slug: canonicalSlug };
     const aliases = new Set<string>();
     // Un comparatif "binance-vs-coinbase" : on n'auto-link PAS le texte (trop
     // ambigu — "binance vs coinbase" en plein article ne pointe pas forcément

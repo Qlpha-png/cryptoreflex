@@ -21,6 +21,7 @@ import SupportResistanceList from "@/components/ta/SupportResistanceList";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 import { withHreflang } from "@/lib/seo-alternates";
+import { stripBrandSuffix } from "@/lib/seo-title";
 
 // PriceChart : Client Component (fetch /api/historical au mount).
 // Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
@@ -64,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getTAArticleBySlug(params.slug);
   if (!article) return { robots: { index: false, follow: false } };
   return {
-    title: article.title,
+    title: stripBrandSuffix(article.title),
     description: article.description,
     alternates: withHreflang(`${BRAND.url}/analyses-techniques/${article.slug}`),
     openGraph: {

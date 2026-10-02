@@ -113,7 +113,7 @@ export default function AcheterHub() {
                 className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2"
               >
                 <MapPin className="h-5 w-5 text-primary-soft" aria-hidden="true" />
-                Acheter une crypto en {country.name}
+                Acheter une crypto {country.inName}
               </h2>
               <span className="text-xs text-muted">
                 Régulateur : {country.regulator} · {country.currency}
@@ -125,7 +125,7 @@ export default function AcheterHub() {
                   <Link
                     href={`/acheter/${c.id}/${country.code}`}
                     className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-fg/85 hover:border-primary/40 hover:text-primary-soft transition-colors"
-                    aria-label={`Comment acheter ${c.name} en ${country.name}`}
+                    aria-label={`Comment acheter ${c.name} ${country.inName}`}
                   >
                     {c.name}
                     <span className="text-muted font-normal">{c.symbol}</span>

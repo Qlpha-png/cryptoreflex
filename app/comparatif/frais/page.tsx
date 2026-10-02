@@ -14,9 +14,11 @@ import {
 } from "lucide-react";
 
 import { getExchangePlatforms, isAvailableFr, getAvailablePlatformCount } from "@/lib/platforms";
+import { getReviewHref } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
+import PlatformName from "@/components/comparison/PlatformName";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -75,7 +77,8 @@ interface FeesRow {
   id: string;
   name: string;
   logo: string;
-  href: string;
+  /** Fiche /avis/<id> si elle existe, sinon null (pas de lien). */
+  href: string | null;
   spotMaker: number;
   spotTaker: number;
   instantBuy: number;
@@ -93,7 +96,8 @@ function buildRows(): FeesRow[] {
     id: p.id,
     name: p.name,
     logo: p.logo,
-    href: `/comparatif/${p.id}`,
+    // Audit 2026-10-02 : /comparatif/<id> n'existe pas (33 liens en 404) → fiche avis.
+    href: getReviewHref(p.id),
     spotMaker: p.fees.spotMaker,
     spotTaker: p.fees.spotTaker,
     instantBuy: p.fees.instantBuy,
@@ -311,9 +315,9 @@ export default function ComparatifFraisPage() {
                   >
                     <td className="px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
                     <td className="px-4 py-3">
-                      <Link
+                      <PlatformName
                         href={r.href}
-                        className="inline-flex items-center gap-2 font-semibold text-fg hover:text-primary transition-colors"
+                        className="inline-flex items-center gap-2 font-semibold text-fg"
                       >
                         {r.logo && (
                           <Image
@@ -331,7 +335,7 @@ export default function ComparatifFraisPage() {
                             #1
                           </span>
                         )}
-                      </Link>
+                      </PlatformName>
                       {r.v?.model && (
                         <div className="mt-1 text-[10px] uppercase tracking-wide text-muted">
                           {r.v.model === "exchange"
@@ -394,13 +398,17 @@ export default function ComparatifFraisPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link
-                        href={r.href}
-                        className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
-                      >
-                        Voir
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
+                      {r.href ? (
+                        <Link
+                          href={r.href}
+                          className="inline-flex items-center gap-1 text-xs text-primary-soft hover:text-primary"
+                        >
+                          Voir l&apos;avis
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-muted">—</span>
+                      )}
                     </td>
                   </tr>
                 );

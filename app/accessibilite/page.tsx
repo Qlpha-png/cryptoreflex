@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 
 /**
  * /accessibilite — Déclaration d'accessibilité (RGAA 4.1 + EAA 2025).
@@ -21,6 +22,8 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: "Déclaration d'accessibilité",
   description: `Engagement et niveau de conformité d'accessibilité numérique de ${BRAND.name} (RGAA, WCAG 2.1, European Accessibility Act).`,
+  // Canonical propre (le root layout ne fournit plus de canonical par défaut).
+  alternates: withHreflang(`${BRAND.url}/accessibilite`),
   robots: { index: true, follow: true },
 };
 

@@ -10,7 +10,7 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import MonParcoursDashboard from "@/components/academy/MonParcoursDashboard";
 
-const TITLE = "Mon parcours — Académie crypto Cryptoreflex";
+const TITLE = "Mon parcours — Académie crypto";
 const DESCRIPTION =
   "Votre tableau de bord de l'académie crypto Cryptoreflex : progression, parcours terminés et quiz validés — suivi localement, sans compte.";
 

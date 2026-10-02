@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
 import {
-  COMPARISONS,
   getComparison,
   getPublishableComparisons,
   parseComparisonSlug,
@@ -260,8 +259,10 @@ export default function ComparisonPage({ params }: Props) {
   /* une plateforme non autorisée en France n'est jamais désignée gagnante */
   const winner = okA && !okB ? a : okB && !okA ? b : b.scoring.global > a.scoring.global ? b : a;
 
-  // Comparatifs liés (autres duels où l'une des 2 plateformes apparaît)
-  const related = COMPARISONS.filter(
+  // Comparatifs liés (autres duels où l'une des 2 plateformes apparaît).
+  // Uniquement les duels PUBLIÉS (dynamicParams=false : un duel avec une
+  // plateforme absente de platforms.json, ex. « n26 », serait un 404).
+  const related = getPublishableComparisons().filter(
     (c) => c.slug !== spec.slug && (c.a === a.id || c.b === a.id || c.a === b.id || c.b === b.id)
   ).slice(0, 6);
 

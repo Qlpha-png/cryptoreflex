@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { ArrowDown, ArrowUp, ArrowUpDown, Search, X } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
 import { formatUsd, formatCompactUsd } from "@/lib/coingecko";
@@ -240,7 +241,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
                   <td className="px-3 py-2.5">
                     {hasPage ? (
                       <Link
-                        href={`/cryptos/${c.id}`}
+                        href={cryptoPagePath(c.id)}
                         className="group inline-flex items-center gap-2"
                       >
                         <CryptoLogo

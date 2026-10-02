@@ -44,7 +44,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Wallet Connect read-only — Suis tes wallets DeFi sur Cryptoreflex",
+  title: "Wallet Connect read-only — suivez vos wallets DeFi",
   description:
     "Bientôt : connecte votre wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement votre portfolio DeFi. Lecture seule, jamais de private key requise.",
   alternates: withHreflang(`${BRAND.url}/outils/wallet-connect`),

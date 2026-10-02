@@ -42,7 +42,7 @@ const GlossaryClient = dynamic(() => import("@/components/Glossary"), {
 // BATCH 37 — fix audit cohérence : title aligné sur GLOSSARY.length dynamique
 // (avant : "200+" figé alors que la landing /outils annonce "250+").
 // Maintenant on prend le vrai count + on enrichit avec "FR 2026 | Cryptoreflex".
-const PAGE_TITLE = `Glossaire crypto FR 2026 — ${GLOSSARY.length}+ termes définis | Cryptoreflex`;
+const PAGE_TITLE = `Glossaire crypto FR 2026 — ${GLOSSARY.length}+ termes définis`;
 const PAGE_DESCRIPTION = `${GLOSSARY.length}+ termes crypto français définis simplement : Bitcoin, DeFi, MiCA, halving, staking, Layer 2, NFT. Glossaire complet, gratuit, mis à jour en 2026.`;
 const PAGE_PATH = "/outils/glossaire-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;

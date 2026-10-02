@@ -47,7 +47,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_PATH = "/ressources-libres";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const PAGE_TITLE =
-  "Ressources libres Cryptoreflex — outils, données, assets sous CC-BY 4.0";
+  "Ressources libres — outils, données, assets sous CC-BY 4.0";
 const PAGE_DESCRIPTION =
   "Tout ce qui est gratuit, open et réutilisable sur Cryptoreflex : 4 widgets embeddables, données ouvertes (top cryptos, plateformes MiCA, glossaire), logo de marque. License CC-BY 4.0.";
 

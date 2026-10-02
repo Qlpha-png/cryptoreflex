@@ -20,7 +20,8 @@ import { withHreflang } from "@/lib/seo-alternates";
  * SEO : page-clé pour capter migration intent (CASP/MiCA).
  */
 
-const PAGE_TITLE = "Alternatives aux plateformes crypto en 2026 — Cryptoreflex";
+// Pas de « — Cryptoreflex » : le template du root layout ajoute déjà la marque.
+const PAGE_TITLE = "Alternatives aux plateformes crypto en 2026";
 const PAGE_DESCRIPTION =
   "Vous voulez migrer de Binance, Bitstack, Coinhouse ou autre ? Découvrez les meilleures alternatives crypto régulées MiCA en France pour chaque plateforme.";
 
@@ -39,7 +40,10 @@ export const metadata: Metadata = {
 export const revalidate = 86400;
 
 export default function AlternativeAHub() {
-  const platforms = getAllPlatforms();
+  // Audit 2026-10-02 : les hardware wallets (Ledger, Trezor) n'ont pas de page
+  // /alternative-a/<id> (exclus de generateStaticParams, dynamicParams=false) →
+  // ne pas les lister ici (2 liens en 404).
+  const platforms = getAllPlatforms().filter((p) => p.category !== "wallet");
 
   const schema = graphSchema([
     breadcrumbSchema([

@@ -1,3 +1,8 @@
+// Redirections SEO 308 générées depuis data/ (fiches /cryptos/<coingeckoId>,
+// /historique-prix sans année ou en coingeckoId, /comparer/a-vs-b legacy).
+// Voir lib/seo-redirects.cjs.
+const { buildSeoRedirects } = require("./lib/seo-redirects.cjs");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -308,22 +313,9 @@ const nextConfig = {
       // car /blog/cryptos/ contient AUSSI des articles long-form légitimes
       // qu'on ne veut PAS rediriger. 11 entrées explicites > 1 pattern flou.
       // ────────────────────────────────────────────────────────────────
-      // /historique-prix/{crypto} → /cryptos/{crypto}
-      {
-        source: "/historique-prix/tron",
-        destination: "/cryptos/tron",
-        permanent: true,
-      },
-      {
-        source: "/historique-prix/litecoin",
-        destination: "/cryptos/litecoin",
-        permanent: true,
-      },
-      {
-        source: "/historique-prix/uniswap",
-        destination: "/cryptos/uniswap",
-        permanent: true,
-      },
+      // /historique-prix/{crypto} (tron, litecoin, uniswap…) : désormais couvert
+      // par la règle générique de lib/seo-redirects.cjs → dernière année
+      // (/historique-prix/{id}/2026) au lieu de la fiche /cryptos (audit 2026-10-02).
       // /blog/cryptos/{crypto} → /cryptos/{crypto}
       // Note : ces 3 slugs ont été crawlés par Google sous /blog/cryptos/* mais
       // existent désormais (et seulement) sous /cryptos/*.
@@ -375,6 +367,13 @@ const nextConfig = {
         destination: "/outils/export-expert-comptable",
         permanent: true,
       },
+
+      // Audit SEO 2026-10-02 — 308 générés depuis la data (lib/seo-redirects.cjs) :
+      // doublons /cryptos/<coingeckoId>, /historique-prix sans année ou en
+      // coingeckoId, /comparer/<a>-vs-<b> legacy → /vs/<a>/<b>. Évalués avant le
+      // routing fichier : vrai 308 (un redirect() dans une page ISR répond 200 +
+      // meta refresh en prod).
+      ...buildSeoRedirects(),
 
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux
