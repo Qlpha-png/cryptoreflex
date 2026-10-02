@@ -397,7 +397,7 @@ const nextConfig = {
   // dynamique). Pas de cache CF spécifique nécessaire (icon.tsx est edge-runtime
   // et déjà cache-controllé par Next.js).
   async rewrites() {
-    return [
+    const afterFiles = [
       {
         source: "/favicon.ico",
         destination: "/icon",
@@ -410,6 +410,20 @@ const nextConfig = {
         destination: "/api/v1/:path*",
       },
     ];
+    // REFLEX CARDS coupé (production tant que NEXT_PUBLIC_REFLEX_CARDS_ENABLED n'est pas « true ») :
+    // /cartes, /cartes/* et /embed/carte/* vers une route inexistante = VRAI 404. Un notFound() dans la page
+    // répondait 200 avec « index, follow » (loading.tsx racine) — mesuré le 02/10/2026 sur un build interrupteur coupé.
+    // Même condition que lib/reflex-cards/flag.ts (variables publiques, figées au build).
+    const reflexOn =
+      process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
+    const beforeFiles = reflexOn
+      ? []
+      : [
+          { source: "/cartes", destination: "/_reflex-cards-off" },
+          { source: "/cartes/:path*", destination: "/_reflex-cards-off" },
+          { source: "/embed/carte/:path*", destination: "/_reflex-cards-off" },
+        ];
+    return { beforeFiles, afterFiles, fallback: [] };
   },
 
   // Headers de sécurité — gain Lighthouse "Best Practices" + protection prod.
