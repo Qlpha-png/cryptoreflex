@@ -10,5 +10,6 @@
  * NEXT_PUBLIC_VERCEL_ENV est fourni par Vercel au build et à l'exécution (production, preview).
  */
 export function isReflexCardsEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
+  /* trim : une valeur saisie avec un retour à la ligne (« true\n ») allume quand même le jeu */
+  return process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED?.trim() === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
 }

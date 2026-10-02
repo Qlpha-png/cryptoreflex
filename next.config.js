@@ -415,7 +415,7 @@ const nextConfig = {
     // répondait 200 avec « index, follow » (loading.tsx racine) — mesuré le 02/10/2026 sur un build interrupteur coupé.
     // Même condition que lib/reflex-cards/flag.ts (variables publiques, figées au build).
     const reflexOn =
-      process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
+      (process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED || "").trim() === "true" || process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
     const beforeFiles = reflexOn
       ? []
       : [

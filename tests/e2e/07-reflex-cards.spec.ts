@@ -11,14 +11,21 @@
  */
 import { test, expect } from "@playwright/test";
 
-test.describe("Reflex Cards — avant lancement", () => {
-  test("hub /cartes : héros, raretés, calendrier sans têtes d'affiche futures, aucune liste", async ({ page }) => {
+/* jeu ouvert (date de lancement dans le build, ex. jour 1 = 02/10/2026) : XRP (jour 43) reste « à venir » */
+const LAUNCHED = !!process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
+
+test.describe("Reflex Cards — cartes pas encore sorties", () => {
+  test("hub /cartes : héros, raretés, calendrier sans têtes d'affiche futures", async ({ page }) => {
     await page.goto("/cartes");
     await expect(page.getByRole("heading", { level: 1, name: /Reflex Cards/i })).toBeVisible();
     await expect(page.locator(".rc-card").filter({ visible: true }).first()).toBeVisible();
     await expect(page.getByText(/Révélée le jour 43/)).toBeVisible();
     await expect(page.getByRole("link", { name: "XRP" })).toHaveCount(0);
-    await expect(page.locator("details")).toHaveCount(0);
+    /* avant lancement : aucune liste ; jeu ouvert : la liste des cartes sorties et le bouton « Jouer maintenant » */
+    if (LAUNCHED) {
+      expect(await page.locator("details").count()).toBeGreaterThan(0);
+      await expect(page.getByRole("link", { name: /Jouer maintenant/ }).first()).toHaveAttribute("href", "/cartes/jouer");
+    } else await expect(page.locator("details")).toHaveCount(0);
     await expect(page.getByText(/Prévenez-moi|prévenu du lancement/)).toHaveCount(0);
   });
 

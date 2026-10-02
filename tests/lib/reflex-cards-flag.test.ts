@@ -30,6 +30,10 @@ describe("Reflex Cards — interrupteur", () => {
     set({ NEXT_PUBLIC_VERCEL_ENV: "production", NEXT_PUBLIC_REFLEX_CARDS_ENABLED: "1" });
     expect(isReflexCardsEnabled()).toBe(false);
   });
+  it("tolère un retour à la ligne dans la valeur saisie sur Vercel", () => {
+    set({ NEXT_PUBLIC_VERCEL_ENV: "production", NEXT_PUBLIC_REFLEX_CARDS_ENABLED: "true\n" });
+    expect(isReflexCardsEnabled()).toBe(true);
+  });
   it("actif en préproduction Vercel", () => {
     set({ NEXT_PUBLIC_VERCEL_ENV: "preview" });
     expect(isReflexCardsEnabled()).toBe(true);

@@ -28,9 +28,20 @@ export default function ReflexCardsHomeBanner() {
               <p className="mt-2 text-fg/75">
                 {day >= 1 ? "Le jeu de cartes crypto gratuit de Cryptoreflex est ouvert" : "Bientôt sur Cryptoreflex, le jeu de cartes crypto gratuit"} : boosters offerts, album à compléter, six raretés, et pas un centime à dépenser. Aucune revente : on joue pour collectionner et apprendre.
               </p>
-              <Link href="/cartes" className="btn-primary mt-5 inline-flex text-sm py-2.5 px-5">
-                Découvrir les cartes <ArrowRight className="h-4 w-4" />
-              </Link>
+              <div className="mt-5 flex flex-wrap gap-3">
+                {/* le jeu est une page autonome : lien classique, pas de navigation côté client */}
+                {day >= 1 && (
+                  <a href="/cartes/jouer" className="btn-primary inline-flex text-sm py-2.5 px-5">
+                    Jouer maintenant <ArrowRight className="h-4 w-4" />
+                  </a>
+                )}
+                <Link
+                  href="/cartes"
+                  className={day >= 1 ? "inline-flex items-center rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-fg/85 hover:border-primary/50 hover:text-fg" : "btn-primary inline-flex text-sm py-2.5 px-5"}
+                >
+                  Découvrir les cartes {day >= 1 ? null : <ArrowRight className="h-4 w-4" />}
+                </Link>
+              </div>
             </div>
             {/* éventail : 480 × 380 réduit à 62 % (60 % sur mobile) */}
             <Link href="/cartes" aria-label="Découvrir Reflex Cards" className="relative mx-auto block h-[228px] w-[288px] sm:h-[236px] sm:w-[298px]">

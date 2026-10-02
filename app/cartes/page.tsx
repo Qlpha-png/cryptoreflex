@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, Gift, Landmark, Scale, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, Gift, Landmark, Scale, ShieldCheck, Sparkles } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -38,7 +38,7 @@ export const revalidate = 3600;
 
 const PAGE_URL = `${BRAND.url}/cartes`;
 const TITLE = "Reflex Cards : le jeu de cartes crypto gratuit";
-const DESCRIPTION = `${REFLEX_META.ncards} cartes à collectionner, une par crypto, classées par notoriété durable et jamais par le prix. Gratuit, sans achat ni revente. Saison 1 bientôt sur Cryptoreflex.`;
+const DESCRIPTION = `${REFLEX_META.ncards} cartes à collectionner, une par crypto, classées par notoriété durable et jamais par le prix. Gratuit, sans achat ni revente, sans compte : la saison 1 se joue sur Cryptoreflex.`;
 
 export function generateMetadata(): Metadata {
   if (!isReflexCardsEnabled()) return {};
@@ -109,7 +109,16 @@ export default function CartesPage() {
                 {REFLEX_META.ncards} cartes à collectionner, une par crypto. Ouvrez des boosters gratuits, remplissez votre album et apprenez à connaître chaque projet. Aucun achat possible, aucune revente : on joue pour le plaisir de collectionner.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#toutes-les-cartes" className="btn-primary text-sm py-2.5 px-5">
+                {/* le jeu est une page autonome (/cartes/jouer) : lien classique, pas de navigation côté client */}
+                {day >= 1 && (
+                  <a href="/cartes/jouer" className="btn-primary text-sm py-2.5 px-5">
+                    Jouer maintenant <ArrowRight className="h-4 w-4" />
+                  </a>
+                )}
+                <a
+                  href="#toutes-les-cartes"
+                  className={day >= 1 ? "inline-flex items-center rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-fg/85 hover:border-primary/50 hover:text-fg" : "btn-primary text-sm py-2.5 px-5"}
+                >
                   {released > 0 ? `Explorer les ${released} cartes sorties` : "Comment sortent les cartes"}
                 </a>
                 <a href="#calendrier" className="inline-flex items-center rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-fg/85 hover:border-primary/50 hover:text-fg">
@@ -171,9 +180,9 @@ export default function CartesPage() {
           <h2 className="text-2xl font-bold sm:text-3xl">Les règles du jeu</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Gift, t: "Gratuit, pour toujours", d: "Un booster de 5 cartes offert toutes les 10 minutes, jusqu'à 36 en réserve. Rien à acheter." },
+              { icon: Gift, t: "Gratuit, pour toujours", d: "Un booster de 5 cartes offert toutes les 15 minutes, jusqu'à 10 en réserve. Rien à acheter, sans compte." },
               { icon: ShieldCheck, t: "Vos cartes à vie", d: "Chaque carte obtenue reste dans votre collection, doubles compris : vous voyez combien vous en avez." },
-              { icon: Scale, t: "Échanges entre amis", d: "1 carte contre 1 carte de même rareté, 3 échanges par jour, gratuits. Aucune revente possible." },
+              { icon: Scale, t: "Échanges", d: "Le Colporteur échange avec vous chaque jour : 1 carte contre 1 doublon de même rareté. Entre amis : avec les comptes, bientôt. Aucune revente." },
               { icon: Landmark, t: "Aucune valeur marchande", d: "Les cartes ne s'achètent pas, ne se vendent pas et ne sont pas un conseil en investissement." },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="rounded-2xl border border-border bg-surface p-5">
@@ -302,9 +311,9 @@ export default function CartesPage() {
             <dl className="mt-4 space-y-4 text-sm">
               {[
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
-                ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande ; seuls les échanges entre amis, 1 contre 1 et de même rareté, sont prévus."],
+                ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec le Colporteur dès maintenant, entre amis avec les comptes joueurs."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
-                ["Quand le jeu ouvre-t-il ?", day >= 1 ? "La saison 1 « Genèse » est ouverte : une nouvelle partie de cartes sort chaque semaine." : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
+                ["Quand le jeu ouvre-t-il ?", day >= 1 ? "La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, sans compte (la partie est enregistrée dans votre navigateur). Une nouvelle partie de cartes sort chaque semaine." : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (
                 <div key={q}>
                   <dt className="font-semibold text-fg">{q}</dt>

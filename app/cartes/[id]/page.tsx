@@ -273,11 +273,17 @@ export default function CartePage({ params }: Props) {
               <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
                 <h2 className="text-lg font-bold">{isLaunched() ? "Jouez à Reflex Cards" : "Reflex Cards arrive bientôt"}</h2>
                 <p className="mt-1 text-sm text-fg/70">
-                  Le jeu de cartes crypto gratuit de Cryptoreflex : un booster de 5 cartes offert toutes les 10 minutes (jusqu&apos;à 36 en réserve), sans achat ni revente.
+                  Le jeu de cartes crypto gratuit de Cryptoreflex : un booster de 5 cartes offert toutes les 15 minutes (jusqu&apos;à 10 en réserve), sans achat ni revente.
                 </p>
-                <Link href="/cartes" className="btn-primary mt-4 text-sm py-2.5 px-5">
-                  Découvrir le jeu <ArrowRight className="h-4 w-4" />
-                </Link>
+                {isLaunched() ? (
+                  <a href="/cartes/jouer" className="btn-primary mt-4 text-sm py-2.5 px-5">
+                    Jouer maintenant <ArrowRight className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <Link href="/cartes" className="btn-primary mt-4 text-sm py-2.5 px-5">
+                    Découvrir le jeu <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
               </div>
 
               {revealed && <details className="mt-6 rounded-2xl border border-border p-5 text-sm">
