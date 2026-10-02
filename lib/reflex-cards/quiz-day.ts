@@ -133,7 +133,7 @@ export function quizDay(playerKey: string, date: string, day: number): QjQuestio
   const kinds = shuffle(r, ["sym2name", "name2sym", "tagline", "fam", "odd", "sym2name", "tagline"]);
   for (let k = 0; out.length < QJ_LEN && k < 80; k++) {
     const kind = kinds[k % kinds.length];
-    const row = pick(r, kind === "fam" || kind === "odd" ? rows : famous);
+    const row = pick(r, famous); // toujours une carte connue (les leurres, eux, viennent de toutes les cartes sorties)
     if (used.has(row[0])) continue;
     const [id, name, symRaw, , , , sub, , , tagline] = row, sym = symRaw.toUpperCase(), fam = famOf(id);
     let q: QjQuestion | null = null;
