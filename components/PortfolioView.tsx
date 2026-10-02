@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { useSearchParams } from "next/navigation";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import {
@@ -634,7 +635,7 @@ function HoldingRow({
           />
           <div className="min-w-0">
             <Link
-              href={`/cryptos/${holding.cryptoId}`}
+              href={cryptoPagePath(holding.cryptoId)}
               className="font-semibold text-fg hover:text-primary truncate focus:outline-none focus-visible:underline rounded"
             >
               {holding.name}
@@ -741,7 +742,7 @@ function HoldingCardMobile({
         />
         <div className="min-w-0 flex-1">
           <Link
-            href={`/cryptos/${holding.cryptoId}`}
+            href={cryptoPagePath(holding.cryptoId)}
             className="font-semibold text-fg text-[15px] truncate block focus:outline-none focus-visible:underline rounded"
           >
             {holding.name}

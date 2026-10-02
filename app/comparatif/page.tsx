@@ -212,7 +212,7 @@ export default function ComparatifHubPage() {
     {
       question: "Comment choisir entre Coinbase, Binance et Kraken ?",
       answer:
-        "Coinbase = pour les débutants en France (interface simple, support FR, MiCA Irlande). Binance = catalogue le plus large + frais bas pour traders actifs (CASP Malta). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur) mais interface moins ergonomique. Comparatif détaillé sur /comparatif/coinbase-vs-binance et /comparatif/kraken-vs-binance.",
+        "Coinbase = pour les débutants en France (interface simple, support FR, MiCA Irlande). Binance = catalogue le plus large + frais bas pour traders actifs (CASP Malta). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur) mais interface moins ergonomique. Comparatif détaillé sur /comparatif/binance-vs-coinbase et /comparatif/binance-vs-kraken.",
     },
   ]);
 

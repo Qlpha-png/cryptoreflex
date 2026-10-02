@@ -176,10 +176,12 @@ export const metadata: Metadata = {
   // (Next.js détecte le fichier et l'ajoute dans <head> pour CHAQUE page).
   // Inutile de re-déclarer `images` ici — le fallback global est piloté
   // par opengraph-image.tsx au niveau racine.
+  // AUDIT SEO 2026-10-02 — PAS d'`url` ici : hérité par toute page sans son
+  // propre openGraph (ex. /blog, /staking, /top, plusieurs /outils/*), il leur
+  // donnait og:url = la home. Chaque page déclare son og:url si besoin.
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: BRAND.url,
     siteName: BRAND.name,
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description:
@@ -199,31 +201,15 @@ export const metadata: Metadata = {
   // par Next.js : la card s'affichera comme summary_large_image standard.
   robots: { index: true, follow: true },
   /**
-   * Hreflang multi-région — déclare au crawler Google que le contenu FR
-   * cible explicitement France/Belgique/Suisse/Québec, sans avoir à dupliquer
-   * le contenu sous /be /ch /ca (impossible vu nos effectifs).
+   * AUDIT SEO 2026-10-02 — PLUS de `alternates` (canonical + hreflang) au
+   * niveau racine. Hérité par toute page qui ne déclare pas les siens, il
+   * forçait canonical = home (ex. /accessibilite) : Google pouvait dédupliquer
+   * la page avec la home et l'évincer de l'index.
    *
-   * Pourquoi c'est utile sans rewrites par marché :
-   *  - Google Search comprend "le même contenu sert 4 régions FR"
-   *  - Évite que GoogleBot considère duplicate content si un visiteur BE/CH/CA
-   *    arrive sur cryptoreflex.fr (cas standard pour un site .fr unique)
-   *  - Le `x-default` indique le fallback canonique
-   *
-   * Si plus tard on lance des sous-versions /be /ch /ca, on remplace les URLs
-   * (4 lignes à éditer ici, le reste suit via canonical/sitemap dynamiques).
-   *
-   * Source : audit SEO 26-04 (issue critique #1 "Hreflang manquant").
+   * Chaque page indexable déclare son propre canonical + hreflang multi-région
+   * (fr-FR/BE/CH/CA + x-default) via `withHreflang(url)` (lib/seo-alternates.ts) ;
+   * la home le fait dans app/page.tsx.
    */
-  alternates: {
-    canonical: BRAND.url,
-    languages: {
-      "fr-FR": BRAND.url,
-      "fr-BE": BRAND.url,
-      "fr-CH": BRAND.url,
-      "fr-CA": BRAND.url,
-      "x-default": BRAND.url,
-    },
-  },
   // Vérification de propriété pour les Webmaster Tools.
   // Next.js gère nativement Google ; pour Bing on injecte une meta custom plus bas.
   // Trustpilot one-time domain verification : meta hardcodée le temps de la vérif,

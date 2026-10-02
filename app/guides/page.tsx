@@ -19,7 +19,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  * (etoiles + duree + steps directement dans Google).
  */
 
-const TITLE = "Guides pratiques Cryptoreflex — pas-à-pas actionnables FR";
+const TITLE = "Guides pratiques — pas-à-pas actionnables FR";
 const DESCRIPTION =
   "Guides courts et actionnables : checklists imprimables, pas-à-pas. Pour passer de la théorie à la pratique en 5 minutes.";
 

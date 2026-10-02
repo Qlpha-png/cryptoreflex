@@ -33,7 +33,7 @@ export const revalidate = 86400;
 const SITE = "https://www.cryptoreflex.fr";
 
 export const metadata: Metadata = {
-  title: "Cryptos analysées : fiches, scores de fiabilité & risques | Cryptoreflex",
+  title: "Cryptos analysées : fiches, scores de fiabilité & risques",
   description:
     "La plus grande base d'analyse crypto francophone : fiches détaillées avec score de fiabilité, statut MiCA, audits et risques. Recherche, filtres et navigation par pages.",
   alternates: { canonical: `${SITE}/cryptos` },

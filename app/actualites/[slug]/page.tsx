@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, ChevronLeft, Clock } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
+import { stripBrandSuffix } from "@/lib/seo-title";
 import {
   getNewsBySlug,
   getNewsSlugs,
@@ -83,7 +84,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const ogImage = news.image ?? `${BRAND.url}/actualites/${news.slug}/opengraph-image`;
 
   return {
-    title: news.title,
+    // Sans « — analyse Cryptoreflex » final : le template root ajoute la marque.
+    title: stripBrandSuffix(news.title),
     description: news.description,
     alternates: {
       canonical: url,

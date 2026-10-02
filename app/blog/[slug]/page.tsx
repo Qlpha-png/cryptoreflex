@@ -23,6 +23,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import { getAllPlatforms } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { stripBrandSuffix } from "@/lib/seo-title";
 import {
   articleSchema,
   breadcrumbSchema,
@@ -67,7 +68,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // AUDIT 2026-05-03 — preference metaTitle/metaDescription pour SERP (<60/<155
   // chars) avec fallback titre/description complet pour le rendu page.
-  const seoTitle = article.metaTitle || article.title;
+  // stripBrandSuffix : le template root ajoute déjà « | Cryptoreflex ».
+  const seoTitle = stripBrandSuffix(article.metaTitle || article.title);
   const seoDescription = article.metaDescription || article.description;
   // og:image fallback sur l'OG image dynamique generee par Next.js
   // (/blog/[slug]/opengraph-image) si pas de cover MDX explicite.

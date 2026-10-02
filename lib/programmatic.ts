@@ -83,6 +83,16 @@ export function getPublishableReviewSlugs(): string[] {
   return REVIEW_SLUGS.filter((slug) => ids.has(slug));
 }
 
+/**
+ * Lien vers la fiche /avis/<id> d'une plateforme, ou null si cette page n'existe
+ * pas (/avis/[slug] est en dynamicParams=false : tout slug hors
+ * getPublishableReviewSlugs() est un 404). Audit 2026-10-02 : /comparatif/frais
+ * et /comparatif/securite liaient /comparatif/<id> (route inexistante → 404).
+ */
+export function getReviewHref(platformId: string): string | null {
+  return getPublishableReviewSlugs().includes(platformId) ? `/avis/${platformId}` : null;
+}
+
 /* =====================================================================
  * 2. COMPARATIFS — /comparatif/[slug]
  * =====================================================================
@@ -227,9 +237,16 @@ export function getPublishableComparisons(): ComparisonSpec[] {
   return COMPARISONS.filter((c) => ids.has(c.a) && ids.has(c.b));
 }
 
-/** Pour une plateforme donnée, suggère N comparatifs pertinents (liens internes). */
+/**
+ * Pour une plateforme donnée, suggère N comparatifs pertinents (liens internes).
+ * Uniquement les comparatifs PUBLIÉS (les deux plateformes existent) : /comparatif/[slug]
+ * est en dynamicParams=false, un duel non publié = 404 (ex. n26-vs-revolut depuis
+ * /avis/revolut, « n26 » n'existant pas dans platforms.json — audit 2026-10-02).
+ */
 export function getRelatedComparisons(platformId: string, limit = 4): ComparisonSpec[] {
-  return COMPARISONS.filter((c) => c.a === platformId || c.b === platformId).slice(0, limit);
+  return getPublishableComparisons()
+    .filter((c) => c.a === platformId || c.b === platformId)
+    .slice(0, limit);
 }
 
 /* =====================================================================
@@ -289,22 +306,25 @@ const ADDITIONAL_CRYPTOS: Array<{ id: string; coingeckoId: string; symbol: strin
 
 export const ALL_CRYPTOS: CryptoMeta[] = (() => {
   const seen = new Set<string>();
+  // Audit SEO 2026-10-02 — dédup AUSSI par coingeckoId : « immutable-x » et
+  // « maker » (ADDITIONAL) doublonnaient les fiches éditoriales « immutable » et
+  // « sky-maker » (même coin CoinGecko) → 2 guides /cryptos/…/acheter-en-france
+  // pour la même crypto. Les anciennes URLs sont redirigées en 308
+  // (lib/seo-redirects.cjs, /cryptos/<coingeckoId>/:path*).
+  const seenCg = new Set<string>();
   const list: CryptoMeta[] = [];
-  for (const c of TOP_CRYPTOS) {
-    if (seen.has(c.id)) continue;
+  const add = (
+    c: { id: string; coingeckoId: string; symbol: string; name: string },
+    hasEditorial: boolean,
+  ) => {
+    if (seen.has(c.id) || seenCg.has(c.coingeckoId)) return;
     seen.add(c.id);
-    list.push({ id: c.id, coingeckoId: c.coingeckoId, symbol: c.symbol, name: c.name, hasEditorial: true });
-  }
-  for (const c of HIDDEN_GEMS) {
-    if (seen.has(c.id)) continue;
-    seen.add(c.id);
-    list.push({ id: c.id, coingeckoId: c.coingeckoId, symbol: c.symbol, name: c.name, hasEditorial: true });
-  }
-  for (const c of ADDITIONAL_CRYPTOS) {
-    if (seen.has(c.id)) continue;
-    seen.add(c.id);
-    list.push({ id: c.id, coingeckoId: c.coingeckoId, symbol: c.symbol, name: c.name, hasEditorial: false });
-  }
+    seenCg.add(c.coingeckoId);
+    list.push({ id: c.id, coingeckoId: c.coingeckoId, symbol: c.symbol, name: c.name, hasEditorial });
+  };
+  for (const c of TOP_CRYPTOS) add(c, true);
+  for (const c of HIDDEN_GEMS) add(c, true);
+  for (const c of ADDITIONAL_CRYPTOS) add(c, false);
   return list;
 })();
 

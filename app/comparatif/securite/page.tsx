@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 
 import { getExchangePlatforms } from "@/lib/platforms";
+import { getReviewHref } from "@/lib/programmatic";
+import PlatformName from "@/components/comparison/PlatformName";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
@@ -80,7 +82,8 @@ interface SecurityRow {
   id: string;
   name: string;
   logo: string;
-  href: string;
+  /** Fiche /avis/<id> si elle existe, sinon null (pas de lien). */
+  href: string | null;
   securityScore: number;
   coldStoragePct: number;
   insurance: boolean;
@@ -97,7 +100,8 @@ function buildRows(): SecurityRow[] {
       id: p.id,
       name: p.name,
       logo: p.logo,
-      href: `/comparatif/${p.id}`,
+      // Audit 2026-10-02 : /comparatif/<id> n'existe pas (404) → fiche avis.
+      href: getReviewHref(p.id),
       securityScore: p.scoring.security,
       coldStoragePct: p.security.coldStoragePct,
       insurance: p.security.insurance,
@@ -241,9 +245,9 @@ export default function ComparatifSecuritePage() {
                   >
                     <td className="px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
                     <td className="px-4 py-3">
-                      <Link
+                      <PlatformName
                         href={r.href}
-                        className="inline-flex items-center gap-2 font-semibold text-fg hover:text-primary transition-colors"
+                        className="inline-flex items-center gap-2 font-semibold text-fg"
                       >
                         {r.logo && (
                           <Image
@@ -259,7 +263,7 @@ export default function ComparatifSecuritePage() {
                         {isBest && (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-primary">#1</span>
                         )}
-                      </Link>
+                      </PlatformName>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-bold text-primary-soft">

@@ -36,8 +36,9 @@ import { BRAND } from "@/lib/brand";
  *
  * VAGUE 3 — SEO P0 Schema.org (Agent SEO 5/10 → 9/10)
  *  - JSON-LD ItemList + NewsArticle pour les 3 news (rich Top Stories Google).
- *  - JSON-LD Event pour les 3 events (Knowledge Panel Google).
- *  - <article itemScope itemType="..."> microdata sur chaque news + event.
+ *  - (2026-10-02 : JSON-LD + microdata Event RETIRÉS — événements tiers
+ *    présentés comme organisés par Cryptoreflex = données structurées trompeuses.)
+ *  - <article itemScope itemType="..."> microdata sur chaque news.
  *
  * VAGUE 4 — DYNAMISME (Agent Visual+Animation 5.5/10 → 9/10)
  *  - NewsRelativeTime : auto-update 30s "il y a 12 min" (vs figé SSR).
@@ -139,30 +140,11 @@ export default async function TodaysNewsAndEvents() {
       }
     : null;
 
-  // JSON-LD Schema.org Event (Knowledge Panel Google).
-  const eventsSchema = upcomingEvents.length > 0
-    ? upcomingEvents.map((event) => ({
-        "@context": "https://schema.org",
-        "@type": "Event",
-        name: event.title,
-        description: event.description,
-        startDate: event.date,
-        endDate: event.date,
-        eventStatus: "https://schema.org/EventScheduled",
-        eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-        location: {
-          "@type": "VirtualLocation",
-          url: `${BRAND.url}/calendrier#${event.id}`,
-        },
-        organizer: {
-          "@type": "Organization",
-          name: "Cryptoreflex",
-          url: BRAND.url,
-        },
-        url: `${BRAND.url}/calendrier#${event.id}`,
-        isAccessibleForFree: true,
-      }))
-    : [];
+  // AUDIT SEO 2026-10-02 — JSON-LD Event SUPPRIMÉ. Il déclarait des événements
+  // tiers (Devcon, ETHDenver, FOMC…) comme des événements EN LIGNE organisés par
+  // Cryptoreflex (organizer + VirtualLocation sur notre /calendrier) : données
+  // structurées trompeuses (risque d'action manuelle Google). Les événements
+  // restent affichés ; aucune donnée structurée Event sur la home.
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -170,9 +152,6 @@ export default async function TodaysNewsAndEvents() {
       {newsItemListSchema && (
         <StructuredData id="home-news-itemlist" data={newsItemListSchema} />
       )}
-      {eventsSchema.map((schema, idx) => (
-        <StructuredData key={`event-schema-${idx}`} id={`home-event-${idx}`} data={schema} />
-      ))}
 
       <div className={gridClass}>
         {/* Colonne 1 : NEWS DU JOUR */}
@@ -299,21 +278,18 @@ export default async function TodaysNewsAndEvents() {
                 const isHot = days >= 0 && days <= HOT_DAYS;
                 return (
                   <li key={event.id}>
-                    <article
-                      itemScope
-                      itemType="https://schema.org/Event"
-                    >
+                    {/* Pas de microdata schema.org/Event (audit SEO 2026-10-02) :
+                        événements tiers, ni organisés ni hébergés par Cryptoreflex. */}
+                    <article>
                       <Link
                         // Audit Block 6 (Agent A11y/Front) : deep link #event-id (vs générique /calendrier)
                         href={`/calendrier#${event.id}`}
-                        itemProp="url"
                         aria-label={`${event.title}, ${dateLabel}, voir dans le calendrier`}
                         className="group block rounded-xl border border-border/60 bg-elevated/40 p-3.5 hover:border-primary/40 hover:bg-elevated hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-fast
                                    focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span
-                            itemProp="about"
                             className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ring-1 ring-inset ${badgeClass}`}
                           >
                             {catLabel}
@@ -329,7 +305,6 @@ export default async function TodaysNewsAndEvents() {
                               />
                             )}
                             <Clock className="h-3 w-3" aria-hidden="true" />
-                            <meta itemProp="startDate" content={event.date} />
                             <EventCountdown
                               date={event.date}
                               isApproximate={event.isApproximate}
@@ -346,17 +321,13 @@ export default async function TodaysNewsAndEvents() {
                           </span>
                         </div>
                         <h4
-                          itemProp="name"
                           title={event.title}
                           className="mt-2 text-sm font-semibold text-fg leading-snug line-clamp-2 group-hover:text-primary-glow transition-colors"
                         >
                           {event.title}
                         </h4>
                         {event.description && (
-                          <p
-                            itemProp="description"
-                            className="mt-1 text-xs text-fg/65 line-clamp-2"
-                          >
+                          <p className="mt-1 text-xs text-fg/65 line-clamp-2">
                             {event.description}
                           </p>
                         )}

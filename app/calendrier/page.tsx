@@ -6,7 +6,8 @@
  * SEO :
  *  - Title + description ciblent "calendrier crypto 2026", "événements crypto",
  *    "halving", "FOMC".
- *  - JSON-LD : ItemList des events à venir + Event individuels (top 10).
+ *  - JSON-LD : ItemList (position + nom) des 10 events à venir — pas de @type
+ *    Event (événements tiers, cf. upcomingItemListSchema).
  *  - JSON-LD BreadcrumbList.
  *  - Canonical /calendrier.
  *
@@ -76,32 +77,15 @@ export const metadata: Metadata = {
 /* JSON-LD helpers (locaux à cette page)                                      */
 /* -------------------------------------------------------------------------- */
 
-/** Schema.org/Event individuel — pour les events les plus importants. */
-function eventSchema(event: CryptoEvent): JsonLd {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: event.title,
-    description: event.description,
-    startDate: event.date,
-    eventStatus: "https://schema.org/EventScheduled",
-    eventAttendanceMode: "https://schema.org/MixedEventAttendanceMode",
-    location: {
-      "@type": "VirtualLocation",
-      url: event.sourceUrl,
-    },
-    organizer: {
-      "@type": "Organization",
-      name: event.source,
-      url: event.sourceUrl,
-    },
-    inLanguage: "fr-FR",
-    isAccessibleForFree: true,
-    url: PAGE_URL,
-  };
-}
-
-/** ItemList des events à venir — éligible carrousel Google. */
+/**
+ * ItemList simple des events à venir (position + nom).
+ *
+ * AUDIT SEO 2026-10-02 — plus de `@type: Event` : ces événements sont des
+ * événements TIERS (FOMC, conférences, upgrades réseau) que nous ne faisons que
+ * recenser. L'ancien balisage inventait un lieu virtuel (VirtualLocation =
+ * l'URL de la source), un mode « Mixed » et un organisateur = la source de
+ * l'info : données structurées non fiables. Une liste suffit.
+ */
 function upcomingItemListSchema(events: CryptoEvent[]): JsonLd {
   return {
     "@context": "https://schema.org",
@@ -113,7 +97,8 @@ function upcomingItemListSchema(events: CryptoEvent[]): JsonLd {
     itemListElement: events.map((event, idx) => ({
       "@type": "ListItem",
       position: idx + 1,
-      item: eventSchema(event),
+      // Pas d'url par item : les cartes du calendrier n'ont pas d'ancre propre.
+      name: event.title,
     })),
   };
 }

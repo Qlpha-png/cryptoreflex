@@ -24,7 +24,7 @@ import { BRAND } from "@/lib/brand";
  * SEO target : "embed widget crypto FR", "widget MiCA blog", "widget PSAN".
  */
 
-const TITLE = "Embed widgets Cryptoreflex — JS gratuit pour blogs FR";
+const TITLE = "Embed widgets — JS gratuit pour blogs FR";
 const DESCRIPTION =
   "3 widgets JavaScript gratuits à embarquer sur votre blog : badge MiCA d'une plateforme, countdown deadline juillet 2026, top 10 cryptos. Sans inscription, CC-BY 4.0, 5 min d'install.";
 

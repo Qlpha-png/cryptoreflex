@@ -116,9 +116,18 @@ export type CountryCode = "fr" | "be" | "ch" | "lu" | "mc" | "ca-fr";
 export interface CountryConfig {
   code: CountryCode;
   name: string;
+  /**
+   * Complément de lieu avec la bonne préposition (audit 2026-10-02 : « en
+   * Luxembourg », « en Monaco », « en Canada (Québec) » dans les titres/H1).
+   */
+  inName: string;
+  /** « depuis » + article : « depuis la France », « depuis le Luxembourg »… */
+  fromName: string;
   currency: string;
   /** Régulateur principal sur les CASP / PSAN crypto. */
   regulator: string;
+  /** Régulateur précédé de son article : « l'AMF », « la FSMA »… */
+  regulatorWithArticle: string;
   /** Lien officiel régulateur (utilisé en CTA dans la page /acheter). */
   regulatorUrl: string;
   /** Note fiscale 1-2 phrases — purement factuelle, pas de conseil. */
@@ -133,8 +142,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   fr: {
     code: "fr",
     name: "France",
+    inName: "en France",
+    fromName: "depuis la France",
     currency: "EUR",
     regulator: "AMF",
+    regulatorWithArticle: "l'AMF",
     regulatorUrl: "https://www.amf-france.org",
     taxNote:
       "Plus-values crypto imposées au PFU 31,4 % (12,8 % IR + 18,6 % PS) lors de la conversion en euros. Déclaration via formulaire Cerfa 2086.",
@@ -144,8 +156,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   be: {
     code: "be",
     name: "Belgique",
+    inName: "en Belgique",
+    fromName: "depuis la Belgique",
     currency: "EUR",
     regulator: "FSMA",
+    regulatorWithArticle: "la FSMA",
     regulatorUrl: "https://www.fsma.be",
     taxNote:
       "Pas de régime crypto unifié : taxation au cas par cas selon profil (gestion de bon père de famille, spéculative, professionnelle). Voir SPF Finances pour le ruling personnel.",
@@ -155,8 +170,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   ch: {
     code: "ch",
     name: "Suisse",
+    inName: "en Suisse",
+    fromName: "depuis la Suisse",
     currency: "CHF",
     regulator: "FINMA",
+    regulatorWithArticle: "la FINMA",
     regulatorUrl: "https://www.finma.ch",
     taxNote:
       "Plus-values privées sur fortune mobilière exonérées d'impôt sur le revenu fédéral. Les rewards de staking et la fortune crypto restent imposables (impôt sur la fortune cantonal).",
@@ -166,8 +184,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   lu: {
     code: "lu",
     name: "Luxembourg",
+    inName: "au Luxembourg",
+    fromName: "depuis le Luxembourg",
     currency: "EUR",
     regulator: "CSSF",
+    regulatorWithArticle: "la CSSF",
     regulatorUrl: "https://www.cssf.lu",
     taxNote:
       "Plus-values privées exonérées si la cession intervient plus de 6 mois après l'achat (régime spéculatif court / non spéculatif long). Vérifier avec un conseil fiscal local.",
@@ -177,8 +198,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   mc: {
     code: "mc",
     name: "Monaco",
+    inName: "à Monaco",
+    fromName: "depuis Monaco",
     currency: "EUR",
     regulator: "CCAF",
+    regulatorWithArticle: "la CCAF",
     regulatorUrl: "https://service-public-entreprises.gouv.mc",
     taxNote:
       "Aucun impôt sur le revenu pour les résidents monégasques (hors nationaux français soumis à la convention fiscale franco-monégasque de 1963).",
@@ -188,8 +212,11 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
   "ca-fr": {
     code: "ca-fr",
     name: "Canada (Québec)",
+    inName: "au Canada (Québec)",
+    fromName: "depuis le Canada (Québec)",
     currency: "CAD",
     regulator: "AMF Québec",
+    regulatorWithArticle: "l'AMF Québec",
     regulatorUrl: "https://lautorite.qc.ca",
     taxNote:
       "Cryptos = biens (property) au Canada : 50 % du gain en capital est imposable au taux marginal du contribuable. Déclaration fédérale T1 + relevé Québec TP-1.",
@@ -202,6 +229,11 @@ export const COUNTRY_CODES: CountryCode[] = Object.keys(COUNTRIES) as CountryCod
 
 export function isCountryCode(code: string): code is CountryCode {
   return (COUNTRY_CODES as string[]).includes(code);
+}
+
+/** Majuscule initiale (« au Luxembourg » → « Au Luxembourg » en début de phrase). */
+export function capitalizeFirst(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 export function getCountry(code: string): CountryConfig | undefined {

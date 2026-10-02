@@ -9,7 +9,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Tous les classements crypto Cryptoreflex 2026",
+  title: "Tous les classements crypto 2026",
   description:
     "Tous nos classements et tops crypto 2026 : meilleures plateformes, hidden gems, exchanges les moins chers, plateformes pour débuter, etc.",
   alternates: withHreflang(`${BRAND.url}/top`),

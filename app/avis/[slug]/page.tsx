@@ -19,7 +19,7 @@ import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform } from "
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
-  COMPARISONS,
+  getPublishableComparisons,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
@@ -963,8 +963,10 @@ export default function ReviewPage({ params }: Props) {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {otherPlatforms.map((op) => {
               const altSlug = `${p.id}-vs-${op.id}`;
-              const altExists = COMPARISONS.some((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`);
-              const realSlug = COMPARISONS.find((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`)?.slug;
+              // Duels PUBLIÉS uniquement (sinon lien vers un 404 /comparatif/…).
+              const published = getPublishableComparisons();
+              const altExists = published.some((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`);
+              const realSlug = published.find((c) => c.slug === altSlug || c.slug === `${op.id}-vs-${p.id}`)?.slug;
               return (
                 <div
                   key={op.id}

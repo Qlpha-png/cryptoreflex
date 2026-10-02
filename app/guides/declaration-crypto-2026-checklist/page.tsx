@@ -80,7 +80,10 @@ const STEPS: Step[] = [
     detail:
       "Connectez-vous à chaque exchange et téléchargez l'historique complet 2025 au format CSV. Sur Binance : Wallet → Transaction History → Export. Sur Coinbase : Settings → Statements → Generate. Sur Kraken : History → Export.",
     why: "Le CSV est la source officielle pour calculer les plus-values. Sans CSV propre, impossible de remplir le Cerfa 2086 correctement.",
-    link: { href: "/blog/exporter-csv-binance-kraken-coinbase", label: "Tutoriel export CSV par exchange" },
+    // Audit 2026-10-02 : /blog/exporter-csv-binance-kraken-coinbase n'existe pas (404).
+    // Les étapes d'export par exchange sont détaillées ci-dessus ; on renvoie vers
+    // le comparatif des logiciels qui importent ces CSV.
+    link: { href: "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026", label: "Logiciels qui importent vos CSV (comparatif)" },
   },
   {
     n: 3,

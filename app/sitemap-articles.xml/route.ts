@@ -1,6 +1,6 @@
 /**
  * /sitemap-articles.xml — Sitemap dédié aux articles éditoriaux (blog + news +
- * analyses TA + académie).
+ * analyses TA). Les leçons de l'académie n'y figurent plus (canonical → /blog).
  *
  * Pourquoi un sitemap dédié ?
  *  - Crawl-budget : Google priorise différemment articles vs pages outils.
@@ -17,7 +17,6 @@
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { getAllNewsSummaries } from "@/lib/news-mdx";
 import { getAllTASummaries } from "@/lib/ta-mdx";
-import { TRACKS } from "@/lib/academy-tracks";
 import { BRAND } from "@/lib/brand";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
@@ -84,24 +83,13 @@ export async function GET(): Promise<Response> {
   }));
 
   /* ------------------------------------------------------------------ */
-  /*  4. Académie (leçons)                                              */
+  /*  4. Académie (leçons) — RETIRÉES le 2026-10-02 (audit SEO)         */
   /* ------------------------------------------------------------------ */
-  const now = new Date().toISOString();
-  const academyEntries: Entry[] = TRACKS.flatMap((track) =>
-    track.lessons.map((lesson) => ({
-      loc: `${SITE_URL}/academie/${track.id}/${lesson.articleSlug}`,
-      lastmod: now,
-      changefreq: "monthly" as const,
-      priority: 0.65,
-    })),
-  );
+  // /academie/<parcours>/<slug> sert le même MDX que /blog/<slug> et déclare
+  // un canonical vers /blog/<slug> (déjà listé en 1.) : soumettre ces ~120
+  // doublons envoyait un signal contradictoire (« URL soumise non canonique »).
 
-  const allEntries = [
-    ...blogEntries,
-    ...newsEntries,
-    ...taEntries,
-    ...academyEntries,
-  ];
+  const allEntries = [...blogEntries, ...newsEntries, ...taEntries];
 
   const items = allEntries
     .map((e) => {

@@ -2,6 +2,7 @@
 
 import { memo, useMemo, useState } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
   formatCompactUsd,
@@ -400,7 +401,7 @@ function CoinCardMobile({
   if (hasPage) {
     return (
       <Link
-        href={`/cryptos/${coin.id}`}
+        href={cryptoPagePath(coin.id)}
         className="block rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         aria-label={`Voir la fiche ${coin.name}`}
       >
@@ -454,7 +455,7 @@ function CoinRow({
           <div className="min-w-0">
             {hasPage ? (
               <Link
-                href={`/cryptos/${coin.id}`}
+                href={cryptoPagePath(coin.id)}
                 className="font-semibold text-fg truncate hover:text-primary focus:outline-none focus-visible:underline rounded"
               >
                 {coin.name}

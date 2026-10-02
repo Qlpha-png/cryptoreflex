@@ -81,7 +81,8 @@ const FORMATTED_AS_OF = "26 avril 2026";
 /* -------------------------------------------------------------------------- */
 
 export const metadata: Metadata = {
-  title: "L'impact Cryptoreflex en chiffres — Dashboard public",
+  // Marque dans le titre lui-même → `absolute` (sinon « … | Cryptoreflex » en double).
+  title: { absolute: "L'impact Cryptoreflex en chiffres — Dashboard public" },
   description: `Mesurer ce que la communauté ${BRAND.name} a construit ensemble : ${IMPACT_STATS.accountsOpened} comptes ouverts, ${IMPACT_STATS.totalSavingsEur}€ d'économies cumulées, ${IMPACT_STATS.newsletterSubscribers} abonnés newsletter. Mis à jour mensuellement.`,
   alternates: withHreflang("/impact"),
   openGraph: {

@@ -32,6 +32,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
  *  - /portefeuille                                  : outil personnel.
  *  - /watchlist                                     : idem.
  *  - /outils/calculateur-fiscalite/preview-pdf/     : URLs de session PDF.
+ *  - /go/                                           : redirecteur d'affiliation.
  *
  * # Sitemap
  *
@@ -53,6 +54,9 @@ export default function robots(): MetadataRoute.Robots {
     "/inscription",
     "/mot-de-passe-oublie",
     "/outils/calculateur-fiscalite/preview-pdf/",
+    // Audit SEO 2026-10-02 — redirecteur d'affiliation (/go/<partenaire>) :
+    // 302 vers des sites tiers, aucune valeur d'indexation, budget de crawl gâché.
+    "/go/",
   ];
 
   return {

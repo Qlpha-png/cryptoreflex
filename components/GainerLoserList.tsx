@@ -1,5 +1,6 @@
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
 import { formatCompactUsd, formatPct } from "@/lib/coingecko";
@@ -100,7 +101,7 @@ export default function GainerLoserList({
               <li key={c.id}>
                 {hasInternal ? (
                   <Link
-                    href={`/cryptos/${c.id}`}
+                    href={cryptoPagePath(c.id)}
                     className="block rounded-xl
                                focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                                focus-visible:ring-offset-2 focus-visible:ring-offset-background"

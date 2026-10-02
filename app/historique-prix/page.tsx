@@ -5,6 +5,12 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { withHreflang } from "@/lib/seo-alternates";
+import {
+  HIST_FEATURED_YEAR,
+  HIST_YEARS,
+  getHistHubCryptos,
+  getHistYearsFor,
+} from "@/lib/historique-prix";
 
 /**
  * /historique-prix — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -23,49 +29,21 @@ import { withHreflang } from "@/lib/seo-alternates";
  * BreadcrumbList schema, ItemList implicite via les liens H3.
  */
 
-// FIX 2026-05-09 — Ajout 2026 (annee courante en cours). Le primary link
-// reste 2025 (annee fiscale complete + declaration impots faite en mai 2026,
-// donc forte intention de recherche "prix bitcoin 2025" pour la 2086).
-// 2026 apparait dans les chips secondaires : couvre les recherches
-// "prix bitcoin 2026" deja actives mi-annee.
-const YEARS = ["2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018"] as const;
+// FIX 2026-10-02 (audit SEO) — le hub liait des ids CoinGecko (binancecoin,
+// ripple, avalanche-2, the-open-network, hedera-hashgraph, near, maker,
+// matic-network, ethereum-classic) alors que la route détail n'accepte que les
+// ids éditoriaux → 81 liens en 404. Sélection + années désormais dans
+// lib/historique-prix.ts (ids éditoriaux, années filtrées sur l'existence du
+// projet : on ne lie plus les pages « avant lancement », noindex).
+// Lien principal = HIST_FEATURED_YEAR (2025, dernière année complète) ; 2026 et
+// les années antérieures en raccourcis.
+const HUB = getHistHubCryptos();
+const FIRST_YEAR = HIST_YEARS[0];
+const LAST_YEAR = HIST_YEARS[HIST_YEARS.length - 1];
+const PAGE_COUNT = HUB.reduce((n, e) => n + getHistYearsFor(e.crypto).length, 0);
 
-const CRYPTOS_HIST: Array<{ slug: string; name: string; symbol: string; tagline: string }> = [
-  { slug: "bitcoin", name: "Bitcoin", symbol: "BTC", tagline: "L'actif crypto historique, réserve de valeur numérique" },
-  { slug: "ethereum", name: "Ethereum", symbol: "ETH", tagline: "Smart contracts, DeFi, NFT — n°2 mondial" },
-  { slug: "binancecoin", name: "BNB", symbol: "BNB", tagline: "Token de l'écosystème Binance + BNB Chain" },
-  { slug: "ripple", name: "XRP", symbol: "XRP", tagline: "Paiements transfrontaliers, partenariats banques" },
-  { slug: "solana", name: "Solana", symbol: "SOL", tagline: "L1 ultra-rapide, écosystème DeFi et NFT" },
-  { slug: "cardano", name: "Cardano", symbol: "ADA", tagline: "PoS académique, gouvernance décentralisée" },
-  { slug: "dogecoin", name: "Dogecoin", symbol: "DOGE", tagline: "Le memecoin originel, paiements P2P" },
-  { slug: "tron", name: "TRON", symbol: "TRX", tagline: "Blockchain content + USDT majoritairement émis ici" },
-  { slug: "avalanche-2", name: "Avalanche", symbol: "AVAX", tagline: "L1 sub-second finality, subnets enterprise" },
-  { slug: "chainlink", name: "Chainlink", symbol: "LINK", tagline: "Oracles décentralisés, RWA tokenization" },
-  { slug: "polkadot", name: "Polkadot", symbol: "DOT", tagline: "Multi-chain interoperability, parachains" },
-  { slug: "matic-network", name: "Polygon", symbol: "MATIC", tagline: "Layer 2 Ethereum, zkEVM" },
-  { slug: "litecoin", name: "Litecoin", symbol: "LTC", tagline: "Argent digital, transactions rapides BTC-like" },
-  { slug: "shiba-inu", name: "Shiba Inu", symbol: "SHIB", tagline: "Memecoin avec écosystème Shibarium L2" },
-  { slug: "uniswap", name: "Uniswap", symbol: "UNI", tagline: "DEX leader, AMM automatisé sur Ethereum" },
-  { slug: "near", name: "NEAR Protocol", symbol: "NEAR", tagline: "Sharding nativif, AI on-chain" },
-  { slug: "internet-computer", name: "Internet Computer", symbol: "ICP", tagline: "Web hébergé en blockchain (DFINITY)" },
-  { slug: "cosmos", name: "Cosmos", symbol: "ATOM", tagline: "Internet of blockchains, IBC interopérabilité" },
-  { slug: "stellar", name: "Stellar", symbol: "XLM", tagline: "Paiements transfrontaliers low-cost, banques émergentes" },
-  { slug: "bitcoin-cash", name: "Bitcoin Cash", symbol: "BCH", tagline: "Hard fork Bitcoin 2017, blocs plus larges" },
-  { slug: "filecoin", name: "Filecoin", symbol: "FIL", tagline: "Stockage décentralisé IPFS-incentivé" },
-  { slug: "aptos", name: "Aptos", symbol: "APT", tagline: "L1 Move-based ex-Meta Diem" },
-  { slug: "monero", name: "Monero", symbol: "XMR", tagline: "Cryptomonnaie privacy par défaut, ring signatures" },
-  { slug: "the-open-network", name: "Toncoin", symbol: "TON", tagline: "Blockchain Telegram, mass-market wallet" },
-  { slug: "tezos", name: "Tezos", symbol: "XTZ", tagline: "On-chain governance, NFT artistique français" },
-  { slug: "algorand", name: "Algorand", symbol: "ALGO", tagline: "Pure PoS, finality 4s, RWA institutional" },
-  { slug: "hedera-hashgraph", name: "Hedera", symbol: "HBAR", tagline: "Hashgraph DAG, governance Council Fortune 500" },
-  { slug: "ethereum-classic", name: "Ethereum Classic", symbol: "ETC", tagline: "Fork ETH original PoW, immuabilité maximale" },
-  { slug: "aave", name: "Aave", symbol: "AAVE", tagline: "Money market DeFi leader, V3 multi-chain" },
-  { slug: "maker", name: "MakerDAO", symbol: "MKR", tagline: "Émetteur DAI, gouvernance protocole RWA" },
-];
-
-const PAGE_TITLE = "Historique prix crypto par année (2018-2026) — Cryptoreflex";
-const PAGE_DESCRIPTION =
-  "Évolution annuelle des 30 principales cryptomonnaies : Bitcoin, Ethereum, Solana, BNB et plus. Prix d'ouverture, ATH, ATL, performance % par année.";
+const PAGE_TITLE = `Historique prix crypto par année (${FIRST_YEAR}-${LAST_YEAR})`;
+const PAGE_DESCRIPTION = `Évolution annuelle de ${HUB.length} cryptomonnaies majeures : Bitcoin, Ethereum, Solana, BNB et plus. Prix d'ouverture, ATH, ATL, performance % par année.`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -97,22 +75,26 @@ export default function HistoriquePrixHub() {
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider mb-4">
             <Calendar className="h-3 w-3" aria-hidden="true" />
-            240 pages historiques
+            {PAGE_COUNT} pages historiques
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg leading-tight">
             Historique des prix crypto{" "}
             <span className="gradient-text">par année</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
-            30 cryptomonnaies analysées × 9 années (2018-2026).
+            {HUB.length} cryptomonnaies analysées, année par année ({FIRST_YEAR}-{LAST_YEAR}).
             Prix d&apos;ouverture, ATH, ATL, performance % et événements marquants.
           </p>
         </header>
 
         {/* Liste des cryptos */}
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {CRYPTOS_HIST.map((c) => (
-            <li key={c.slug}>
+          {HUB.map(({ id, tagline, crypto: c }) => {
+            const years = getHistYearsFor(c);
+            // Années décroissantes, sans l'année mise en avant (lien principal).
+            const otherYears = [...years].reverse().filter((y) => y !== HIST_FEATURED_YEAR);
+            return (
+            <li key={id}>
               <article className="group rounded-2xl border border-border bg-elevated/40 p-5 hover:border-primary/40 hover:bg-elevated transition-colors h-full flex flex-col">
                 <header className="flex items-baseline justify-between gap-2 mb-2">
                   <h2 className="text-base font-bold text-fg">
@@ -124,23 +106,25 @@ export default function HistoriquePrixHub() {
                   <TrendingUp className="h-4 w-4 text-primary-soft shrink-0" aria-hidden="true" />
                 </header>
                 <p className="text-xs text-muted leading-relaxed mb-4 flex-1">
-                  {c.tagline}
+                  {tagline}
                 </p>
-                {/* Lien principal vers année récente */}
-                <Link
-                  href={`/historique-prix/${c.slug}/2025`}
-                  className="inline-flex items-center gap-1 text-sm font-semibold text-primary-soft hover:text-primary mb-3 group-hover:gap-2 transition-all"
-                  aria-label={`Voir l'historique de prix ${c.name} en 2025`}
-                >
-                  Historique 2025
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </Link>
-                {/* Liens années secondaires (toutes sauf 2025 qui est le primary) */}
+                {/* Lien principal vers la dernière année complète */}
+                {years.includes(HIST_FEATURED_YEAR) && (
+                  <Link
+                    href={`/historique-prix/${id}/${HIST_FEATURED_YEAR}`}
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-primary-soft hover:text-primary mb-3 group-hover:gap-2 transition-all"
+                    aria-label={`Voir l'historique de prix ${c.name} en ${HIST_FEATURED_YEAR}`}
+                  >
+                    Historique {HIST_FEATURED_YEAR}
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                )}
+                {/* Liens années secondaires (années d'existence du projet) */}
                 <ul className="flex flex-wrap gap-1.5">
-                  {YEARS.filter((y) => y !== "2025").map((year) => (
+                  {otherYears.map((year) => (
                     <li key={year}>
                       <Link
-                        href={`/historique-prix/${c.slug}/${year}`}
+                        href={`/historique-prix/${id}/${year}`}
                         className="inline-block rounded-md border border-border bg-background/60 px-2 py-0.5 text-[11px] font-mono text-fg/75 hover:border-primary/50 hover:text-primary transition-colors"
                         aria-label={`Historique ${c.name} ${year}`}
                       >
@@ -151,13 +135,14 @@ export default function HistoriquePrixHub() {
                 </ul>
               </article>
             </li>
-          ))}
+            );
+          })}
         </ul>
 
         {/* Cross-links vers les autres hubs */}
         <section className="mt-16 rounded-2xl border border-border bg-surface/40 p-6 text-center">
           <h2 className="text-lg font-bold text-fg mb-3">
-            Tu cherches autre chose ?
+            Vous cherchez autre chose ?
           </h2>
           <p className="text-sm text-muted mb-4 max-w-xl mx-auto">
             Cryptoreflex couvre aussi les fiches détaillées par crypto, les

@@ -36,7 +36,7 @@ export const revalidate = 86400; // 1 jour — contenu très stable
 
 const TRACK_COUNT = TRACKS.length;
 
-const TITLE = "Académie crypto gratuite — formation structurée Cryptoreflex";
+const TITLE = "Académie crypto gratuite — formation structurée";
 const DESCRIPTION = `Académie crypto Cryptoreflex : ${TRACK_COUNT} parcours pédagogiques gratuits (niveaux Débutant à Avancé + thématiques sécurité, fiscalité, plateformes) pour apprendre à investir crypto en France. Progression suivie, quiz de validation.`;
 
 export const metadata: Metadata = {

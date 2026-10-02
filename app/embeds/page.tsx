@@ -43,7 +43,7 @@ const PAGE_PATH = "/embeds";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 // Audit SEO 26-04 — title raccourci de 86 → 44 chars (≤ 60 cible Google SERP).
 // Mot-clé long-tail "widgets crypto embed gratuits" + brand en suffixe.
-const PAGE_TITLE = "Widgets crypto embed gratuits | Cryptoreflex";
+const PAGE_TITLE = "Widgets crypto embed gratuits";
 const PAGE_DESCRIPTION =
   "4 widgets crypto gratuits à intégrer en 1 ligne sur votre blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
 

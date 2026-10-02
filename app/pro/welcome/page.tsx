@@ -23,7 +23,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title: "Bienvenue sur Cryptoreflex",
+  title: { absolute: "Bienvenue sur Cryptoreflex" },
   description:
     "Bienvenue : tous les outils Cryptoreflex sont gratuits. Connectez-vous pour retrouver votre portfolio, vos alertes et votre watchlist.",
   alternates: withHreflang(`${BRAND.url}/pro/welcome`),

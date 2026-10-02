@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import {
   formatCompactUsd,
   formatPct,
@@ -326,7 +327,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
             return (
               <Link
                 key={coin.id}
-                href={`/cryptos/${coin.id}`}
+                href={cryptoPagePath(coin.id)}
                 role="gridcell"
                 aria-label={cellLabel}
                 className={baseClass}

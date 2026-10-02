@@ -154,10 +154,15 @@ const mdxComponents = {
   /* Overrides Markdown standard ------------------------------------------ */
   a: MdxLink,
 
-  h1: (props: ComponentProps<"h1">) => (
-    // En général le H1 vient déjà de la page (pas du MDX) — on neutralise.
-    <h1
-      className="mt-10 scroll-mt-24 text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
+  // AUDIT SEO 2026-10-02 — un « # Titre » markdown dans le MDX est rendu en
+  // <h2> : chaque page qui affiche du MDX (blog, académie, actualités, analyses)
+  // rend déjà son propre <h1>. Avant : 2 H1 sur 16 pages (8 articles × blog +
+  // académie). Rendu visuel identique à un H2 de section. Sans `id` : ce titre
+  // répète le H1 de la page, il ne doit pas entrer dans le sommaire
+  // (ArticleToc liste les `h2[id]`).
+  h1: ({ id: _slugId, ...props }: ComponentProps<"h1">) => (
+    <h2
+      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-white sm:text-3xl"
       {...props}
     />
   ),

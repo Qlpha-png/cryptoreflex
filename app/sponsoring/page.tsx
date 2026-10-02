@@ -44,7 +44,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   title:
-    "Sponsoring & placements B2B Cryptoreflex — articles, comparateur, newsletter",
+    "Sponsoring & placements B2B — articles, comparateur, newsletter",
   description:
     "PSAN, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
   alternates: withHreflang(`${BRAND.url}/sponsoring`),

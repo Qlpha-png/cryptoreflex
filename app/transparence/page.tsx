@@ -39,7 +39,7 @@ const PAGE_PATH = "/transparence";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: `Transparence et partenariats — ${BRAND.name}`,
+  title: "Transparence et partenariats",
   description:
     "Liste exhaustive de nos partenariats d'affiliation, statut MiCA/CASP de chaque plateforme, type de rémunération perçue et engagement éditorial. Conformité loi Influenceurs juin 2023.",
   alternates: withHreflang(PAGE_URL),

@@ -34,6 +34,7 @@ import {
   type CSSProperties,
 } from "react";
 import Link from "next/link";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import {
   formatCompactUsd,
   formatPct,
@@ -514,7 +515,7 @@ export default function LiveHeatmap({
             return (
               <div key={coin.id} style={tileStyle}>
                 <Link
-                  href={`/cryptos/${coin.id}`}
+                  href={cryptoPagePath(coin.id)}
                   role="link"
                   aria-label={cellLabel}
                   style={innerStyle}

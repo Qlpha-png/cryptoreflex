@@ -27,6 +27,7 @@ import { getAllCryptos, getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import {
   COUNTRY_CODES,
   COUNTRIES,
+  capitalizeFirst,
   getCountry,
   type CountryConfig,
 } from "@/lib/programmatic-pages";
@@ -102,10 +103,10 @@ export function generateMetadata({ params }: Props): Metadata {
   // FIX 2026-06-13 — title front-loadé sur "Acheter {name}" (query d'intention)
   // et raccourci : avec le suffixe " | Cryptoreflex" (+15) l'ancien dépassait
   // 60 chars sur les 600 pages, tronquant la fin. On garde l'année.
-  const longTitle = `Acheter ${c.name} (${c.symbol}) en ${country.name} (2026)`;
+  const longTitle = `Acheter ${c.name} (${c.symbol}) ${country.inName} (2026)`;
   const title =
-    longTitle.length > 46 ? `Acheter ${c.name} en ${country.name} (2026)` : longTitle;
-  const description = `Acheter ${c.name} en ${country.name} : plateformes, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator} (guide MiCA). Pas-à-pas Cryptoreflex.`;
+    longTitle.length > 46 ? `Acheter ${c.name} ${country.inName} (2026)` : longTitle;
+  const description = `Acheter ${c.name} ${country.inName} : plateformes, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator} (guide MiCA). Pas-à-pas Cryptoreflex.`;
 
   return {
     title,
@@ -186,24 +187,24 @@ function buildFaq(
 ): { q: string; ans: string }[] {
   return [
     {
-      q: `Est-il légal d'acheter ${crypto.name} en ${country.name} en 2026 ?`,
-      ans: `Oui. ${crypto.name} (${crypto.symbol}) peut être acheté légalement en ${country.name} via une plateforme agréée par le ${country.regulator} ou un CASP MiCA opérant dans l'UE. Il n'y a pas d'interdiction sur la détention ou l'achat de cryptoactifs pour un particulier — seules certaines activités professionnelles (échange contre fiat, custody de fonds tiers) requièrent un agrément.`,
+      q: `Est-il légal d'acheter ${crypto.name} ${country.inName} en 2026 ?`,
+      ans: `Oui. ${crypto.name} (${crypto.symbol}) peut être acheté légalement ${country.inName} via une plateforme agréée par ${country.regulatorWithArticle} ou un CASP MiCA opérant dans l'UE. Il n'y a pas d'interdiction sur la détention ou l'achat de cryptoactifs pour un particulier — seules certaines activités professionnelles (échange contre fiat, custody de fonds tiers) requièrent un agrément.`,
     },
     {
-      q: `Quelle fiscalité s'applique aux gains sur ${crypto.symbol} en ${country.name} ?`,
+      q: `Quelle fiscalité s'applique aux gains sur ${crypto.symbol} ${country.inName} ?`,
       ans: `${country.taxNote} Pour un cas individuel complexe (volume élevé, activité professionnelle, mining/staking), consulter un avocat fiscaliste local. Cryptoreflex publie un calculateur fiscalité (cas FR uniquement à ce jour) sur /outils/calculateur-fiscalite.`,
     },
     {
-      q: `Quelles plateformes sont recommandées pour acheter ${crypto.name} depuis ${country.name} ?`,
-      ans: `Notre base éditoriale liste ${crypto.whereToBuy.length} plateformes pour ${crypto.name} : ${crypto.whereToBuy.slice(0, 5).join(", ")}${crypto.whereToBuy.length > 5 ? "…" : ""}. La plupart sont MiCA-compliant et accessibles depuis ${country.name}, mais les méthodes de dépôt en ${country.currency} et le support local varient. Tester avec un petit dépôt avant d'engager un capital significatif.`,
+      q: `Quelles plateformes sont recommandées pour acheter ${crypto.name} ${country.fromName} ?`,
+      ans: `Notre base éditoriale liste ${crypto.whereToBuy.length} plateformes pour ${crypto.name} : ${crypto.whereToBuy.slice(0, 5).join(", ")}${crypto.whereToBuy.length > 5 ? "…" : ""}. La plupart sont MiCA-compliant et accessibles ${country.fromName}, mais les méthodes de dépôt en ${country.currency} et le support local varient. Tester avec un petit dépôt avant d'engager un capital significatif.`,
     },
     {
-      q: `Puis-je staker mon ${crypto.symbol} depuis ${country.name} ?`,
+      q: `Puis-je staker mon ${crypto.symbol} ${country.fromName} ?`,
       ans: `Le staking de ${crypto.symbol} dépend du protocole sous-jacent et de l'offre de chaque plateforme. ${
         crypto.kind === "top10"
           ? `${crypto.name} fonctionne en ${crypto.consensus} : le staking ${crypto.consensus.toLowerCase().includes("proof of stake") || crypto.consensus.toLowerCase().includes("pos") ? "est techniquement possible" : "n'est pas applicable au protocole de base"}.`
           : `Vérifier le mécanisme de consensus du projet (PoS = staking possible, PoW = pas de staking).`
-      } Côté ${country.name}, attention à la fiscalité des rewards : ils sont imposables, mais le moment exact (réception ou cession) n'est pas tranché par une source officielle citable — vérifie la doctrine à jour.`,
+      } Côté ${country.name}, attention à la fiscalité des rewards : ils sont imposables, mais le moment exact (réception ou cession) n'est pas tranché par une source officielle citable — vérifiez la doctrine à jour.`,
     },
   ];
 }
@@ -225,8 +226,8 @@ export default function AcheterPaysPage({ params }: Props) {
   // Schemas
   const schemas = graphSchema([
     howToSchema({
-      name: `Acheter ${c.name} en ${country.name} en 2026`,
-      description: `Guide pas-à-pas pour acheter ${c.name} (${c.symbol}) en ${country.name} via une plateforme régulée ${country.regulator}/MiCA.`,
+      name: `Acheter ${c.name} ${country.inName} en 2026`,
+      description: `Guide pas-à-pas pour acheter ${c.name} (${c.symbol}) ${country.inName} via une plateforme régulée ${country.regulator}/MiCA.`,
       totalTime: "PT15M",
       estimatedCost: { currency: country.currency, value: 50 },
       steps: steps.map((s) => ({ name: s.name, text: s.text })),
@@ -271,10 +272,10 @@ export default function AcheterPaysPage({ params }: Props) {
 
         <header className="mt-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">
-            Comment acheter {c.name} en {country.name} en 2026
+            Comment acheter {c.name} {country.inName} en 2026
           </h1>
           <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-3xl">
-            {`Acheter ${c.name} (${c.symbol}) depuis ${country.name} passe par une plateforme régulée — agréée MiCA dans l'UE ou supervisée par l'autorité compétente (${country.regulator}) — avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; notre base recense ${c.whereToBuy.length} plateforme${c.whereToBuy.length > 1 ? "s" : ""} où l'acquérir. Étapes (compte, KYC, dépôt, achat, sécurisation) et fiscalité applicable détaillées ci-dessous — information éducative, jamais un conseil d'investissement.`}
+            {`Acheter ${c.name} (${c.symbol}) ${country.fromName} passe par une plateforme régulée — agréée MiCA dans l'UE ou supervisée par l'autorité compétente (${country.regulator}) — avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; notre base recense ${c.whereToBuy.length} plateforme${c.whereToBuy.length > 1 ? "s" : ""} où l'acquérir. Étapes (compte, KYC, dépôt, achat, sécurisation) et fiscalité applicable détaillées ci-dessous — information éducative, jamais un conseil d'investissement.`}
           </p>
           <p className="mt-3 text-sm text-muted">
             Guide MiCA · plateformes régulées · fiscalité {country.regulator} · paiement en {country.currency}
@@ -382,8 +383,8 @@ export default function AcheterPaysPage({ params }: Props) {
             Régulation {country.regulator}
           </h2>
           <p className="mt-3 text-base text-fg/85 leading-relaxed">
-            En {country.name}, la supervision des prestataires de services sur actifs
-            numériques relève du {country.regulator}. Vérifier l'autorisation d'une
+            {capitalizeFirst(country.inName)}, la supervision des prestataires de services sur actifs
+            numériques relève de {country.regulatorWithArticle}. Vérifier l'autorisation d'une
             plateforme avant d'y déposer des fonds reste la première règle d'hygiène
             financière. Les plateformes opérant sous régime MiCA (UE) bénéficient du
             passporting européen et sont reconnues dans tous les États membres.

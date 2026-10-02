@@ -17,6 +17,7 @@ import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
 import { getYearOhlc, getOhlcMeta, formatOhlcPrice } from "@/lib/historical-ohlc";
+import { HIST_YEARS, type HistYear } from "@/lib/historique-prix";
 
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
@@ -41,8 +42,10 @@ import { getYearOhlc, getOhlcMeta, formatOhlcPrice } from "@/lib/historical-ohlc
 // FIX 2026-05-09 — Ajout 2026 (annee courante en cours, mai 2026).
 // Couvre les recherches "prix bitcoin 2026" deja actives. L'annee 2025
 // reste la plus pertinente fiscalement (declaration faite en mai 2026).
-const YEARS = ["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"] as const;
-type Annee = (typeof YEARS)[number];
+// 2026-10-02 — liste centralisée (lib/historique-prix.ts) : partagée avec le
+// hub, le sitemap et la redirection /historique-prix/<id> → dernière année.
+const YEARS = HIST_YEARS;
+type Annee = HistYear;
 
 interface Props {
   params: { crypto: string; annee: string };
