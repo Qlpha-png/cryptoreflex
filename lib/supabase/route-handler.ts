@@ -59,6 +59,8 @@ export function createRouteHandlerClient(req: NextRequest) {
     req.url.startsWith("https://");
 
   const supabase = createServerClient(url, anonKey, {
+    /* sans le cache de données de Next.js : la session (GET /auth/v1/user) et les lectures doivent être fraîches à chaque appel */
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }) },
     cookies: {
       getAll() {
         return req.cookies.getAll();

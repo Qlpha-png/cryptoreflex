@@ -12,6 +12,7 @@ import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const ACTIONS = new Set(["ouvrir", "mission", "semaine", "defi", "collection", "quiz", "fiche", "fabriquer", "acheter", "equiper", "service", "colporteur", "titre", "pantheon", "pseudo", "quiz-jour"]);
 /* 120 gestes par minute et par partie : largement au-dessus d'un joueur réel */

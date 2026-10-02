@@ -16,6 +16,7 @@ import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 /* 30 gestes par minute et par partie : largement au-dessus d'un usage réel */
 const perPlayer = createRateLimiter({ limit: 30, windowMs: 60_000, key: "rc-amis" });

@@ -28,6 +28,7 @@ export function createSupabaseServerClient() {
   const cookieStore = cookies();
 
   return createServerClient(url, anonKey, {
+    global: { fetch: noStoreFetch },
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -70,5 +71,11 @@ export function createSupabaseServiceRoleClient() {
       persistSession: false,
       autoRefreshToken: false,
     },
+    /* JAMAIS de cache : dans une route GET, Next.js mettait en cache les lectures Supabase (GET PostgREST) et renvoyait
+       des parties Reflex Cards périmées pendant des heures (02/10 : « 10 boosters », cartes absentes, pseudo redemandé). */
+    global: { fetch: noStoreFetch },
   });
 }
+
+/** fetch sans le cache de données de Next.js : chaque lecture repart vers Supabase */
+export const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store" });

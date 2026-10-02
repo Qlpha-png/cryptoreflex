@@ -11,6 +11,8 @@ import { toClient } from "@/lib/reflex-cards/actions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/* la partie est relue à CHAQUE appel : aucune lecture Supabase ne doit passer par le cache de données de Next.js */
+export const fetchCache = "force-no-store";
 
 export async function GET(req: NextRequest) {
   if (!isReflexCardsEnabled() || reflexAccountsMode() === "off") return new NextResponse("Page introuvable", { status: 404 });
