@@ -23,3 +23,11 @@ export function resolveSameOriginRedirect(
     return defaultTarget;
   }
 }
+
+/**
+ * Retours autorisés après connexion / inscription (liste FERMÉE, comparaison stricte) :
+ * seul le jeu Reflex Cards. Tout le reste (URL absolue, « //hôte », tableau, autre chemin) → null.
+ */
+export function allowedAuthNext(raw: unknown): "/cartes/jouer" | null {
+  return raw === "/cartes/jouer" ? "/cartes/jouer" : null;
+}

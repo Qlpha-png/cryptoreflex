@@ -39,9 +39,10 @@ export const revalidate = 3600;
 
 const PAGE_URL = `${BRAND.url}/cartes`;
 const TITLE = "Reflex Cards : le jeu de cartes crypto gratuit";
-/* comptes joueurs ouverts à tous (REFLEX_CARDS_ACCOUNTS=true) : la partie vit sur le serveur, plus « dans le navigateur » */
+/* comptes joueurs ouverts à tous (REFLEX_CARDS_ACCOUNTS=true) : la partie vit sur le serveur, plus « dans le navigateur » ;
+   compte Cryptoreflex gratuit obligatoire pour ouvrir un booster (Kev 02/10) */
 const ACCOUNTS = reflexAccountsMode() === "on";
-const DESCRIPTION = `${REFLEX_META.ncards} cartes à collectionner, une par crypto, classées par notoriété durable et jamais par le prix. Gratuit, sans achat ni revente, ${ACCOUNTS ? "sans inscription obligatoire" : "sans compte"} : la saison 1 se joue sur Cryptoreflex.`;
+const DESCRIPTION = `${REFLEX_META.ncards} cartes à collectionner, une par crypto, classées par notoriété durable et jamais par le prix. Gratuit, sans achat ni revente, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit" : "sans compte"} : la saison 1 se joue sur Cryptoreflex.`;
 
 export function generateMetadata(): Metadata {
   if (!isReflexCardsEnabled()) return {};
@@ -183,7 +184,7 @@ export default function CartesPage() {
           <h2 className="text-2xl font-bold sm:text-3xl">Les règles du jeu</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Gift, t: "Gratuit, pour toujours", d: `Un booster de 5 cartes offert toutes les 15 minutes, jusqu'à 10 en réserve. Rien à acheter, ${ACCOUNTS ? "compte facultatif" : "sans compte"}.` },
+              { icon: Gift, t: "Gratuit, pour toujours", d: `Un booster de 5 cartes offert toutes les 15 minutes, jusqu'à 10 en réserve. Rien à acheter, ${ACCOUNTS ? "un compte gratuit suffit" : "sans compte"}.` },
               { icon: ShieldCheck, t: "Vos cartes à vie", d: "Chaque carte obtenue reste dans votre collection, doubles compris : vous voyez combien vous en avez." },
               { icon: Scale, t: "Échanges", d: "Le Colporteur échange avec vous chaque jour : 1 carte contre 1 doublon de même rareté. Entre amis : avec les comptes, bientôt. Aucune revente." },
               { icon: Landmark, t: "Aucune valeur marchande", d: "Les cartes ne s'achètent pas, ne se vendent pas et ne sont pas un conseil en investissement." },
@@ -316,7 +317,7 @@ export default function CartesPage() {
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
                 ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec le Colporteur dès maintenant, entre amis avec les comptes joueurs."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
-                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "sans inscription obligatoire (la partie est enregistrée sur nos serveurs ; un compte gratuit permet de la retrouver sur tous vos appareils)" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Une nouvelle partie de cartes sort chaque semaine.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
+                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit (votre collection est enregistrée sur nos serveurs et vous suit sur tous vos appareils)" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Une nouvelle partie de cartes sort chaque semaine.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (
                 <div key={q}>
                   <dt className="font-semibold text-fg">{q}</dt>

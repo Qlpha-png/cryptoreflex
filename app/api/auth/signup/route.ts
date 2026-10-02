@@ -34,6 +34,7 @@ import { getClientIp } from "@/lib/ip";
 import { sendEmail } from "@/lib/email/client";
 import { signupConfirmEmail } from "@/lib/email/templates";
 import { randomPassword } from "@/lib/auth-guards";
+import { allowedAuthNext } from "@/lib/safe-redirect";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -74,14 +75,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { email?: string };
+  let body: { email?: unknown; next?: unknown } | null;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const email = body.email?.trim().toLowerCase();
+  const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
 
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
@@ -164,7 +165,10 @@ export async function POST(req: NextRequest) {
   if (linkError || !tokenHash) {
     return rollback("generateLink", linkError ?? "no hashed_token");
   }
-  const confirmLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=signup&next=/mon-compte/mot-de-passe`;
+  // Reflex Cards : après le choix du mot de passe, retour au jeu (liste fermée, aucune redirection ouverte).
+  const toGame = allowedAuthNext(body?.next);
+  const afterPassword = toGame ? `/mon-compte/mot-de-passe?next=${encodeURIComponent(toGame)}` : "/mon-compte/mot-de-passe";
+  const confirmLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=signup&next=${encodeURIComponent(afterPassword)}`;
 
   // STEP 3 : email via Resend
   const tmpl = signupConfirmEmail({ email, confirmLink });

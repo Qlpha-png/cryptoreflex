@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -38,6 +38,9 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /* Reflex Cards : venu du jeu (?next=/cartes/jouer) → on y revient (lu après le rendu : pas d'écart d'hydratation) */
+  const [toGame, setToGame] = useState(false);
+  useEffect(() => setToGame(new URLSearchParams(window.location.search).get("next") === "/cartes/jouer"), []);
 
   async function handlePasswordSubmit(e: FormEvent) {
     e.preventDefault();
@@ -76,7 +79,7 @@ export default function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(toGame ? { email, next: "/cartes/jouer" } : { email }),
       });
 
       const data = await res.json();
@@ -289,10 +292,10 @@ export default function LoginForm() {
           <p className="text-xs text-muted text-center">
             Pas encore de compte&nbsp;?{" "}
             <Link
-              href="/inscription"
+              href={toGame ? "/inscription?next=%2Fcartes%2Fjouer" : "/inscription"}
               className="text-primary-soft hover:text-primary underline font-semibold"
             >
-              Crée-en un en 30 sec
+              Créez-en un en 30 secondes
             </Link>
           </p>
         </form>

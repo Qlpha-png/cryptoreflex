@@ -58,9 +58,11 @@ export default function UpdatePasswordForm() {
       }
 
       setSuccess(true);
-      // Redirect après 2 sec pour laisser voir le succès
+      // Redirect après 2 sec pour laisser voir le succès.
+      // Reflex Cards : retour au jeu si l'inscription venait de lui (liste fermée : aucune redirection ouverte).
+      const next = new URLSearchParams(window.location.search).get("next");
       setTimeout(() => {
-        window.location.href = "/mon-compte";
+        window.location.href = next === "/cartes/jouer" ? next : "/mon-compte";
       }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inattendue");

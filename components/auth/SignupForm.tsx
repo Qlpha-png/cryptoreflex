@@ -34,7 +34,8 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        // Reflex Cards : ?next=/cartes/jouer → le lien de confirmation ramène au jeu (liste fermée côté serveur)
+        body: JSON.stringify(new URLSearchParams(window.location.search).get("next") === "/cartes/jouer" ? { email, next: "/cartes/jouer" } : { email }),
       });
 
       const data = await res.json();
@@ -50,7 +51,7 @@ export default function SignupForm() {
         });
       } else {
         // Compte créé + connecté immédiatement
-        window.location.href = "/mon-compte";
+        window.location.href = new URLSearchParams(window.location.search).get("next") === "/cartes/jouer" ? "/cartes/jouer" : "/mon-compte";
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inattendue");

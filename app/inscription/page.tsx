@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { allowedAuthNext } from "@/lib/safe-redirect";
 import { UserPlus, ShieldCheck, Lock } from "lucide-react";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
@@ -18,8 +19,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function InscriptionPage() {
+export default function InscriptionPage({ searchParams }: { searchParams?: { next?: string } }) {
   const isConfigured = isSupabaseConfigured();
+  /* Reflex Cards : venu du jeu → la connexion y ramène aussi (liste fermée) */
+  const toGame = allowedAuthNext(searchParams?.next) !== null;
 
   return (
     <section className="min-h-[80vh] flex flex-col justify-center py-16">
@@ -53,7 +56,7 @@ export default function InscriptionPage() {
         <p className="mt-6 text-center text-sm text-fg/70">
           Déjà un compte&nbsp;?{" "}
           <Link
-            href="/connexion"
+            href={toGame ? "/connexion?next=%2Fcartes%2Fjouer" : "/connexion"}
             className="text-primary-soft hover:text-primary underline font-semibold"
           >
             Se connecter

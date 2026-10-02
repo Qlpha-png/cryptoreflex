@@ -239,3 +239,12 @@ describe("confirmActionPage", () => {
     expect(html).toMatch(/<form method="post"/);
   });
 });
+
+describe("allowedAuthNext — retours après connexion / inscription (liste fermée)", () => {
+  it("seul /cartes/jouer passe, à l'identique", async () => {
+    const { allowedAuthNext } = await import("@/lib/safe-redirect");
+    expect(allowedAuthNext("/cartes/jouer")).toBe("/cartes/jouer");
+    for (const v of ["//evil.com", "https://evil.com/cartes/jouer", "/cartes/jouer/", "/cartes/jouer?x=1", "/CARTES/JOUER", "/mon-compte", "", null, undefined, 1, ["/cartes/jouer"], { toString: () => "/cartes/jouer" }])
+      expect(allowedAuthNext(v)).toBeNull();
+  });
+});

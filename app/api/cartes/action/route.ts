@@ -12,8 +12,6 @@ import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-/* près de la base Supabase (Londres) et dans l'UE (RGPD), comme /api/v1/me */
-export const preferredRegion = ["fra1"];
 
 const ACTIONS = new Set(["ouvrir", "mission", "semaine", "defi", "collection", "quiz", "fiche", "fabriquer", "acheter", "equiper", "service", "colporteur", "titre", "pantheon", "pseudo"]);
 /* 120 gestes par minute et par partie : largement au-dessus d'un joueur réel */

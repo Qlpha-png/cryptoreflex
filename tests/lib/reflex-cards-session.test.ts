@@ -44,7 +44,8 @@ beforeAll(async () => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-10-03T10:00:00Z")); // jour 2
 });
-beforeEach(() => { auth.user = null; auth.calls = 0; });
+/* parties invitées testées dans les premiers blocs ; coupées par défaut (bloc « compte obligatoire ») */
+beforeEach(() => { auth.user = null; auth.calls = 0; vi.stubEnv("REFLEX_CARDS_GUESTS", "true"); });
 
 describe("Reflex Cards — invité", () => {
   it("sans cookie ni création : pas de partie, aucun cookie, aucun appel à l'authentification", async () => {
@@ -60,7 +61,7 @@ describe("Reflex Cards — invité", () => {
     const sc = setCookie(res), tok = tokenOf(res)!;
     expect(tok).toBeTruthy();
     expect(sc).toMatch(/HttpOnly/i); expect(sc).toMatch(/Secure/i); expect(sc).toMatch(/SameSite=lax/i);
-    expect(sc).toMatch(/Path=\/api\/cartes/); expect(sc).toMatch(/Max-Age=34560000/);
+    expect(sc).toMatch(/Path=\/api\/cartes/); expect(sc).toMatch(/Max-Age=33696000/);
     const rows = (await pg.query("select guest_hash from public.rc_players where player_id=$1", [w.player])).rows as { guest_hash: string }[];
     expect(rows[0].guest_hash).toBe(hashToken(tok));
     expect(JSON.stringify((await pg.query("select * from public.rc_players")).rows)).not.toContain(tok);
@@ -121,10 +122,12 @@ describe("Reflex Cards — compte du site et rattachement", () => {
 });
 
 describe("Reflex Cards — jour de jeu", () => {
-  it("jour du serveur, ou la veille si la page a été chargée avant minuit ; rien d'autre", () => {
-    const at = new Date("2026-10-05T10:00:00Z"); // jour 4
+  it("jour du serveur ; la veille seulement dans les 30 minutes après minuit (Paris) ; rien d'autre", () => {
+    const at = new Date("2026-10-05T10:00:00Z"); // jour 4, 12 h à Paris
     expect(gameCtx(undefined, at)).toMatchObject({ day: 4, today: "2026-10-05" });
-    expect(gameCtx(3, at).day).toBe(3);
+    expect(gameCtx(3, at).day).toBe(4); // veille refusée en journée : pas d'alternance entre deux jeux d'offres
+    expect(gameCtx(3, new Date("2026-10-04T22:20:00Z")).day).toBe(3); // 00 h 20 à Paris : page d'avant minuit acceptée
+    expect(gameCtx(3, new Date("2026-10-04T22:31:00Z")).day).toBe(4); // 00 h 31 : refusée
     for (const v of [2, 5, 90, "4; drop", 3.5, -1, null]) expect(gameCtx(v, at).day).toBe(4);
     expect(gameCtx(undefined, new Date("2026-10-04T22:30:00Z")).today).toBe("2026-10-05"); // minuit passé à Paris
   });
@@ -179,5 +182,53 @@ describe("Reflex Cards — routes /api/cartes", () => {
     expect(tok).toBeTruthy();
     const e = await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: { [GUEST_COOKIE]: tok! } }));
     expect((await e.json()).state).not.toBeNull();
+  });
+});
+
+describe("Reflex Cards — compte Cryptoreflex obligatoire (réglage par défaut : invités coupés)", () => {
+  beforeEach(() => { vi.stubEnv("REFLEX_CARDS_GUESTS", ""); });
+  const count = async () => Number(((await pg.query("select count(*) n from public.rc_players")).rows[0] as { n: number }).n);
+  it("sans compte : aucun geste, aucune partie créée, aucun cookie ; l'API répond 401 « login »", async () => {
+    const n0 = await count();
+    await expect(resolvePlayer(mk("/api/cartes/action"), { create: true, today: TODAY })).rejects.toMatchObject({ status: 401, code: "login" });
+    for (const body of [{ a: "ouvrir", jour: 2, req: crypto.randomUUID() }, { a: "mission", jour: 2, key: "x" }, { a: "pseudo", jour: 2, v: "Bot" }]) {
+      const r = await action.POST(mk("/api/cartes/action", { method: "POST", body }));
+      expect(r.status).toBe(401);
+      expect(await r.json()).toMatchObject({ ok: false, code: "login" });
+      expect(setCookie(r)).not.toContain("rc_g=");
+    }
+    expect(await count()).toBe(n0);
+  });
+  it("sans compte : l'état est vide et annonce que les invités ne sont pas admis", async () => {
+    const r = await etat.GET(mk("/api/cartes/etat?jour=2"));
+    expect(await r.json()).toMatchObject({ ok: true, state: null, account: { guest: true }, guests: false });
+  });
+  it("un ancien jeton invité n'ouvre plus rien et il est effacé", async () => {
+    vi.stubEnv("REFLEX_CARDS_GUESTS", "true");
+    const g = await resolvePlayer(mk("/api/cartes/action"), { create: true, today: TODAY });
+    const tok = tokenOf(g.finish(NextResponse.json({})))!;
+    vi.stubEnv("REFLEX_CARDS_GUESTS", "");
+    const w = await resolvePlayer(mk("/api/cartes/etat", { cookies: { [GUEST_COOKIE]: tok } }), { create: false, today: TODAY });
+    expect(w.player).toBeNull();
+    expect(setCookie(w.finish(NextResponse.json({})))).toMatch(/rc_g=;.*Max-Age=0/);
+    await expect(resolvePlayer(mk("/api/cartes/action", { cookies: { [GUEST_COOKIE]: tok } }), { create: true, today: TODAY })).rejects.toMatchObject({ code: "login" });
+  });
+  it("avec un compte : premier booster → partie du compte créée, puis retrouvée", async () => {
+    const OWNER = "aaaaaaaa-0000-4000-8000-0000000000c1";
+    await pg.query("insert into auth.users(id) values ($1)", [OWNER]);
+    auth.user = ACCOUNT(OWNER);
+    const sb = { "sb-x-auth-token": "1" };
+    const e0 = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
+    expect(e0).toMatchObject({ state: null, account: { guest: false, email: "joueur@exemple.test" } });
+    const r = await action.POST(mk("/api/cartes/action", { method: "POST", body: { a: "ouvrir", jour: 2, req: crypto.randomUUID() }, cookies: sb }));
+    expect(r.status).toBe(200);
+    expect(setCookie(r)).not.toContain("rc_g=");
+    const j = await r.json();
+    expect(j.data.items).toHaveLength(5);
+    expect(j.state.account).toEqual({ guest: false, email: "joueur@exemple.test" });
+    const row = (await pg.query("select owner, guest_hash from public.rc_players where owner=$1", [OWNER])).rows[0] as { owner: string; guest_hash: string | null };
+    expect(row).toEqual({ owner: OWNER, guest_hash: null });
+    const e1 = await (await etat.GET(mk("/api/cartes/etat?jour=2", { cookies: sb }))).json();
+    expect(e1.state.packs.stock).toBe(9);
   });
 });

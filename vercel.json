@@ -1,4 +1,5 @@
 {
+  "regions": ["cdg1"],
   "crons": [
     { "path": "/api/cron/refresh-ticker-prices", "schedule": "*/10 * * * *" },
     { "path": "/api/cron/update-static-prices", "schedule": "*/15 * * * *" },

@@ -28,6 +28,7 @@ import * as Sentry from "@sentry/nextjs";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
 import { generateSafeEmailLink } from "@/lib/auth-guards";
+import { allowedAuthNext } from "@/lib/safe-redirect";
 import { magicLinkEmail } from "@/lib/email/templates";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
@@ -60,14 +61,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { email?: string };
+  let body: { email?: unknown; next?: unknown } | null;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const email = body.email?.trim().toLowerCase();
+  const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
@@ -139,7 +140,8 @@ export async function POST(req: NextRequest) {
   // Build NOTRE URL : pointe direct sur /api/auth/callback avec token_hash.
   // Le callback fera verifyOtp() qui set le cookie session puis redirige.
   const tokenHash = link.hashedToken;
-  const magicLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=/mon-compte`;
+  // Reflex Cards : retour au jeu après le lien magique (liste fermée, aucune redirection ouverte).
+  const magicLink = `${siteUrl}/api/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=${encodeURIComponent(allowedAuthNext(body?.next) ?? "/mon-compte")}`;
 
   // STEP 3 : envoie l'email via NOTRE Resend (qui marche)
   const tmpl = magicLinkEmail({ email, magicLink });
