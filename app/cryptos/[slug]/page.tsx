@@ -52,113 +52,33 @@ import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
 import CryptoSources from "@/components/crypto-detail/CryptoSources";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
-import dynamic from "next/dynamic";
-import { SkeletonChart } from "@/components/ui/Skeleton";
-
-// Lazy-load PriceChart : Client Component lourd (chart + fetch /api/historical
-// au mount), positionné below-the-fold sous Hero+Stats. Audit Perf 26-04 :
-// gain JS eval -50ms + TTI -100ms par chart différée.
-const PriceChart = dynamic(
-  () => import("@/components/crypto-detail/PriceChart"),
-  {
-    loading: () => (
-      <SkeletonChart height={384} label="Chargement du graphique de prix" />
-    ),
-    ssr: false,
-  },
-);
-
-// Polish UX 01/05/2026 : composants Client purement décoratifs lazy-loadés
-// pour 0 coût SSR. Aucun n'est critique au LCP.
-const ReadingProgressBar = dynamic(
-  () => import("@/components/crypto-detail/ReadingProgressBar"),
-  { ssr: false },
-);
-const StickyBreadcrumb = dynamic(
-  () => import("@/components/crypto-detail/StickyBreadcrumb"),
-  { ssr: false },
-);
-const FloatingShareButton = dynamic(
-  () => import("@/components/crypto-detail/FloatingShareButton"),
-  { ssr: false },
-);
-
-// Lazy-load OnChainMetricsLive : Client Component qui fetch /api/onchain au
-// mount. SSR désactivé pour 0 coût TTFB et pour ne pas bloquer le ISR de la page.
-// Si la donnée n'est pas dispo, le composant rend null → aucun bloc fantôme.
-const OnChainMetricsLive = dynamic(
-  () => import("@/components/crypto-detail/OnChainMetricsLive"),
-  { ssr: false },
-);
-
-// BATCH 28 — innovation expert agents quick win #2 : convertisseur live
-// crypto ⇄ EUR/USD avec presets retail. Client-only (state input).
-const PairConverter = dynamic(
-  () => import("@/components/crypto-detail/PairConverter"),
-  { ssr: false },
-);
-
-// BATCH 28 — innovation expert agents quick win #3 (différenciation FR
-// maximum) : calculateur PFU 31,4% inline (sans plus-value cumulée annuelle).
-const PfuQuickCalc = dynamic(
-  () => import("@/components/crypto-detail/PfuQuickCalc"),
-  { ssr: false },
-);
-
-// BATCH 28 — innovation expert agents quick win #4 (BTC-only) : countdown
-// live JJ/HH/MM/SS jusqu'au prochain halving Bitcoin (avril 2028). Composant
-// existant (lib + UI), juste pas branché jusqu'ici sur la fiche BTC.
-const HalvingCountdown = dynamic(
-  () => import("@/components/HalvingCountdown"),
-  { ssr: false },
-);
-
-// BATCH 31 — généralisation : countdown générique pour TOUTES les cryptos
-// (user feedback "la fiche BTC je veux ça pour toutes les cryptos").
-// Utilise getUpcomingEventsFor() qui fournit le prochain event éditorial.
-const NextEventCountdown = dynamic(
-  () => import("@/components/crypto-detail/NextEventCountdown"),
-  { ssr: false },
-);
-
-// Lazy-load ROISimulator : Client Component interactif (sliders + fetch
-// /api/historical) positionné après le verdict pour engager le visiteur
-// avant la roadmap. ssr:false : aucun intérêt à SSR une UI qui dépend
-// d'un fetch client + Date.now().
-const ROISimulator = dynamic(
-  () => import("@/components/crypto-detail/ROISimulator"),
-  {
-    loading: () => (
-      <div
-        className="h-[420px] animate-pulse rounded-2xl bg-elevated/40"
-        aria-label="Chargement du simulateur ROI"
-      />
-    ),
-    ssr: false,
-  },
-);
-
-// Audit user 2026-05-02 : barre de recherche compacte pour switcher entre
-// fiches cryptos sans repasser par /cryptos. ssr:false car purement
-// client-side (state, keyboard nav). Lazy = 0 coût SSR/TTFB sur le hero.
-const CryptoQuickSwitcher = dynamic(
-  () => import("@/components/crypto-detail/CryptoQuickSwitcher"),
-  { ssr: false },
-);
+// PERF 2026-10-02 — widgets client lazy : les `dynamic()` vivent dans un
+// module "use client" (components/crypto-detail/FicheLazyWidgets.tsx). Appelés
+// ici, dans un Server Component, ils ne créaient AUCUN chunk séparé (CryptoQuiz
+// + data/crypto-quizzes.json 69 kB, TradingView… partaient dans le First Load
+// JS de chaque fiche). Rendu identique (ssr:false → skeleton/rien au SSR).
+import {
+  AskAI,
+  CryptoNewsAggregator,
+  CryptoQuickSwitcher,
+  CryptoQuiz,
+  FloatingShareButton,
+  HalvingCountdown,
+  NextEventCountdown,
+  OnChainMetricsLive,
+  PairConverter,
+  PfuQuickCalc,
+  PriceChart,
+  ReadingProgressBar,
+  ROISimulator,
+  StickyBreadcrumb,
+  TradingViewWidget,
+  WhaleWatcher,
+} from "@/components/crypto-detail/FicheLazyWidgets";
+import { getQuizFor } from "@/lib/crypto-quizzes";
 import WhereToBuy from "@/components/crypto-detail/WhereToBuy";
 import QuickBuyBox from "@/components/crypto-detail/QuickBuyBox";
 import RiskBadge from "@/components/crypto-detail/RiskBadge";
-// Lazy-load TradingView : iframe externe qui charge ~200KB de JS quand
-// dépliée. Skeleton chart court (replié par défaut, on évite un trou visuel).
-const TradingViewWidget = dynamic(
-  () => import("@/components/crypto-detail/TradingViewWidget"),
-  {
-    loading: () => (
-      <SkeletonChart height={120} label="Chargement du graphique avancé TradingView" />
-    ),
-    ssr: false,
-  },
-);
 import RecommendedWallets from "@/components/crypto-detail/RecommendedWallets";
 // BATCH 29C — bandeau narratif ATH (render conditionnel : ne s'affiche que
 // si la crypto est ≤ 5% de son sommet historique). Storytelling fort.
@@ -167,32 +87,6 @@ import CryptoRoadmap from "@/components/crypto-detail/CryptoRoadmap";
 import CryptoEventCalendar from "@/components/crypto-detail/CryptoEventCalendar";
 import WhitepaperTldr from "@/components/crypto-detail/WhitepaperTldr";
 import DecentralizationScore from "@/components/crypto-detail/DecentralizationScore";
-// Lazy-load CryptoNewsAggregator (Client + fetch /api/news au mount).
-const CryptoNewsAggregator = dynamic(
-  () => import("@/components/crypto-detail/CryptoNewsAggregator"),
-  { ssr: false },
-);
-// Lazy-load WhaleWatcher (Client + fetch /api/whales, top cryptos seulement).
-const WhaleWatcher = dynamic(
-  () => import("@/components/crypto-detail/WhaleWatcher"),
-  { ssr: false },
-);
-// Lazy-load CryptoQuiz (Client component avec state).
-const CryptoQuiz = dynamic(
-  () => import("@/components/crypto-detail/CryptoQuiz"),
-  { ssr: false },
-);
-// Lazy-load AskAI : Client Component qui fetch /api/me + /api/ask. Pro-only.
-// ssr:false : aucun intérêt à SSR (état dépend du plan user via fetch).
-const AskAI = dynamic(() => import("@/components/crypto-detail/AskAI"), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="h-64 animate-pulse rounded-3xl bg-elevated/40"
-      aria-label="Chargement"
-    />
-  ),
-});
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -1045,6 +939,7 @@ export default async function CryptoPage({ params }: Props) {
             cryptoId={c.id}
             cryptoName={c.name}
             cryptoSymbol={c.symbol}
+            quiz={getQuizFor(c.id)}
           />
         </div>
 

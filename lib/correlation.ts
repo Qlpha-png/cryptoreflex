@@ -1,21 +1,21 @@
 /**
  * lib/correlation.ts — Statistical helpers for crypto pair pages.
  *
- * Pearson correlation coefficient + cached 7d sparkline correlation between
- * any two CoinGecko IDs. Used by /comparer/[a]/[b] to surface a real signal
- * ("BTC and ETH bouge à 0.92 sur 7j") instead of a hallucinated one.
+ * Pearson correlation coefficient + 7d sparkline correlation between two
+ * coins. Used by /vs/[a]/[b] to surface a real signal ("BTC and ETH bouge à
+ * 0.92 sur 7j") instead of a hallucinated one.
  *
  * Implementation notes :
  *   - Pearson is computed inline (no SciPy dep needed for a 168-points series)
- *   - We call CoinGecko `/coins/markets?sparkline=true` for both coins in
- *     parallel and align series by truncating to min length (rare drift on
- *     fresh tokens with < 168 hourly points).
- *   - Result is cached 1h via `unstable_cache` to stay under the 30 req/min
- *     CoinGecko Demo tier with 435 pages × 2 coins = 870 lookups per build.
+ *   - Series are aligned by truncating to min length (rare drift on fresh
+ *     tokens with < 168 hourly points).
+ *   - PERF 2026-10-02 — pure function over the sparklines the page ALREADY
+ *     has (fetchCoinDetailDaily). The former `getPairCorrelation7d`
+ *     (unstable_cache per pair) re-fetched both coin details inside the cache
+ *     callback, where Next 14 forces every nested fetch/cache to no-store:
+ *     a second, uncached network chain on every new pair (+1 Data Cache write
+ *     per pair). Removed.
  */
-
-import { unstable_cache } from "next/cache";
-import { fetchCoinDetail } from "@/lib/coingecko";
 
 /**
  * Pearson correlation coefficient between two equal-length numeric series.
@@ -79,25 +79,18 @@ export function describeCorrelation(r: number): string {
 }
 
 /**
- * Récupère la corrélation 7j (sparkline horaire CoinGecko) entre 2 cryptos.
+ * Corrélation 7j entre deux sparklines horaires (mêmes règles que l'ancien
+ * `getPairCorrelation7d`, sans aucun appel réseau).
  *
- * Renvoie `null` si l'une des deux séries est vide / API down.
- *
- * Cache 1h pour rester sous les 30 req/min CoinGecko Demo (435 paires × 2
- * coins = 870 fetchs au pire ; en pratique, fetchCoinDetail est déjà caché
- * 5 min côté coingecko.ts donc on profite de son tag invalidation).
+ * Renvoie `null` si une série manque ou compte moins de 24 points, ou si la
+ * corrélation est indéfinie (variance nulle).
  */
-async function _getPairCorrelation7d(
-  coingeckoIdA: string,
-  coingeckoIdB: string,
-): Promise<number | null> {
-  const [a, b] = await Promise.all([
-    fetchCoinDetail(coingeckoIdA),
-    fetchCoinDetail(coingeckoIdB),
-  ]);
-  if (!a || !b) return null;
-  const sa = a.sparkline7d ?? [];
-  const sb = b.sparkline7d ?? [];
+export function correlationFromSparklines(
+  sparklineA: number[] | null | undefined,
+  sparklineB: number[] | null | undefined,
+): number | null {
+  const sa = sparklineA ?? [];
+  const sb = sparklineB ?? [];
   if (sa.length < 24 || sb.length < 24) return null;
   // Aligne les longueurs en tronquant à la plus courte (rare drift sur tokens
   // récents qui ont moins de 168 points horaires).
@@ -106,9 +99,3 @@ async function _getPairCorrelation7d(
   if (Number.isNaN(r)) return null;
   return r;
 }
-
-export const getPairCorrelation7d = unstable_cache(
-  _getPairCorrelation7d,
-  ["pair-correlation-7d-v1"],
-  { revalidate: 3600, tags: ["coingecko:market"] },
-);

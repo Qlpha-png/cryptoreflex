@@ -621,9 +621,19 @@ const nextConfig = {
 };
 
 // ────────────────────────────────────────────────────────────────────────
-// Sentry — wrapping de la config Next.js pour activer source maps upload,
-// tunnel route (/monitoring → bypass adblockers qui bloquent ingest.sentry.io),
-// et les hooks d'instrumentation.
+// Sentry — wrapping de la config Next.js pour activer source maps upload
+// et les hooks d'instrumentation SERVEUR (Node + Edge, cf. instrumentation.ts).
+//
+// PERF 2026-10-02 — Sentry NAVIGATEUR retiré (décision owner) :
+// NEXT_PUBLIC_SENTRY_DSN n'a jamais été défini en prod, donc le SDK client
+// (~78 kB gz du First Load JS partagé, chargé sur TOUTES les pages — mesuré
+// au build : 167 → 89 kB) ne
+// s'initialisait jamais. withSentryConfig n'injecte le SDK dans les entrées
+// client QUE si `instrumentation-client.ts` / `sentry.client.config.ts`
+// existe → fichier supprimé, plus aucun import "@sentry/nextjs" côté client
+// (app/error.tsx + app/global-error.tsx nettoyés). Le tunnel /monitoring
+// (route + option `tunnelRoute`) ne servait qu'au SDK navigateur → retiré.
+// NE PAS recréer instrumentation-client.ts sans re-mesurer le First Load JS.
 //
 // Sans SENTRY_AUTH_TOKEN (typique en local dev / preview sans secret), le
 // plugin Sentry passe en mode "no-op upload" : on a quand même les hooks
@@ -643,9 +653,8 @@ const sentryWebpackPluginOptions = {
   // (suffit pour avoir des stack traces lisibles), mais sans pousser les
   // chunks parsés au runtime. Gain : -30/50KB JS moyen sur bundles publics.
   widenClientFileUpload: false,
-  // Tunnel SDK → /monitoring : bypass des adblockers qui drop les requêtes
-  // vers *.ingest.sentry.io. Next.js proxy transparent, zéro latence ajoutée.
-  tunnelRoute: "/monitoring",
+  // `tunnelRoute: "/monitoring"` retiré (2026-10-02) : il ne servait qu'au SDK
+  // navigateur, supprimé (cf. bloc ci-dessus).
   // Désactive le logger Sentry runtime pour économiser ~5KB sur le bundle
   // client (les warnings de la lib elle-même).
   disableLogger: true,

@@ -1,26 +1,28 @@
 /**
  * Analytics — Cryptoreflex
  * ------------------------
- * Wrapper minimal au-dessus de l'API custom events de Plausible.
+ * Wrapper minimal au-dessus des custom events Vercel Web Analytics
+ * (`track` de @vercel/analytics ; Plausible retiré le 2026-05-21).
  *
- * - Aucune dépendance externe.
- * - Respecte le consentement utilisateur (catégorie "analytics").
- *   Si l'utilisateur a refusé, le script Plausible n'est pas chargé du tout
- *   (cf. app/layout.tsx + components/PlausibleScript.tsx) — donc les appels
- *   ci-dessous deviennent simplement des no-ops sûrs.
+ * - Le script Vercel est injecté par `<Analytics />` (app/layout.tsx). Sans
+ *   lui (bloqueur, dev), `track()` est un no-op sûr (window.va absent).
  * - SSR-safe : tous les appels vérifient `typeof window`.
+ * - Vercel Web Analytics : sans cookie ni IP stockée (cf. commentaire
+ *   « Analytics — migration 2026-05-21 » dans app/layout.tsx).
  *
- * Référence Plausible custom events :
- *   https://plausible.io/docs/custom-event-goals
- *   La fonction globale `window.plausible(eventName, { props: {...} })`
- *   est exposée par le snippet `script.js` quand `data-domain` est défini.
- *
- * Server-side analytics indépendant Plausible :
+ * Server-side, indépendant du script :
  *  - `trackAffiliateClick` POST aussi vers `/api/analytics/affiliate-click`
- *    pour persister un compteur KV (`analytics:aff-click:...`). Permet de
- *    construire la page /admin/stats sans dépendre de l'API Plausible.
+ *    pour persister un compteur KV (`analytics:aff-click:...`) → /admin/stats.
+ *  - Les redirections /go/[partner] incrémentent le même compteur KV
+ *    côté serveur (cf. app/go/[partner]/route.ts).
  */
 
+import { track as vercelTrack } from "@vercel/analytics";
+
+/**
+ * Legacy Plausible — conservé pour le typage de `window.plausible`, encore
+ * référencé par quelques composants (PerfMonitor…) qui restent des no-ops.
+ */
 type PlausibleEventOptions = {
   props?: Record<string, string | number | boolean>;
   callback?: () => void;
@@ -35,7 +37,7 @@ declare global {
 }
 
 /**
- * Liste des événements custom configurables comme "Goals" dans Plausible.
+ * Liste des custom events (Vercel Web Analytics — onglet Events du dashboard).
  *
  * FIX DATA 2026-05-02 #19 (audit expert data) — extension du catalogue
  * d'EVENTS critiques business non-trackés. Naming standardisé Title Case
@@ -79,15 +81,37 @@ export const EVENTS = {
 
 export type EventName = (typeof EVENTS)[keyof typeof EVENTS];
 
-/** Émet un événement Plausible si le script est chargé. No-op sinon. */
+/**
+ * Nombre max de propriétés par custom event Vercel sur le plan Pro (8 avec
+ * l'add-on Web Analytics Plus). Source : vercel.com/docs/analytics/limits-and-pricing
+ * (consulté le 2026-10-02). On garde les N premières clés, dans l'ordre
+ * d'insertion → les appelants mettent la propriété la plus utile en premier
+ * (ex. trackAffiliateClick : platform, placement, puis cta).
+ */
+const MAX_EVENT_PROPS = 2;
+
+/**
+ * Émet un custom event Vercel Web Analytics (`<Analytics />` monté dans
+ * app/layout.tsx). No-op côté serveur ou si le script n'est pas chargé.
+ *
+ * FIX 2026-10-02 — conversion tracking mort depuis la sortie de Plausible
+ * (2026-05-21) : cette fonction ne parlait qu'à `window.plausible`, absent →
+ * aucun event. Noms d'events (EVENTS) inchangés.
+ */
 export function track(
   eventName: string,
   props?: Record<string, string | number | boolean>
 ): void {
   if (typeof window === "undefined") return;
-  if (typeof window.plausible !== "function") return;
   try {
-    window.plausible(eventName, props ? { props } : undefined);
+    if (props && Object.keys(props).length > 0) {
+      const capped = Object.fromEntries(
+        Object.entries(props).slice(0, MAX_EVENT_PROPS),
+      );
+      vercelTrack(eventName, capped);
+    } else {
+      vercelTrack(eventName);
+    }
   } catch {
     /* on n'altère jamais l'UX si l'analytics échoue */
   }
@@ -116,14 +140,14 @@ export function trackAffiliateClick(
   placement?: string,
   ctaText?: string,
 ): void {
-  // 1) Plausible custom event (côté browser, conditionnel au consent).
+  // 1) Custom event Vercel Web Analytics (côté browser ; props limitées à 2 sur Pro).
   track(EVENTS.AffiliateClick, {
     platform: platformId,
     ...(placement ? { placement } : {}),
     ...(ctaText ? { cta: ctaText } : {}),
   });
 
-  // 2) POST KV server-side (independent de Plausible / consent).
+  // 2) POST KV server-side (indépendant du script analytics).
   //    On n'a pas besoin du consent ici : les compteurs KV sont totalement
   //    anonymes (aucune donnée perso, aucun cookie posé). Conforme RGPD.
   postAffiliateClickServerSide(platformId, placement, ctaText);

@@ -39,14 +39,22 @@ import { cgHeaders } from "@/lib/coingecko";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+// FIX 2026-10-02 — 60 → 120 s (plan Pro) : 1 × 504 (timeout Vercel 60 s) en
+// 24 h. La boucle d'UPDATE Supabase (~500 requêtes séquentielles) ignorait la
+// deadline interne → elle s'arrête désormais proprement à REFRESH_DEADLINE_MS
+// et renvoie un rapport partiel (200, ok:false) au lieu d'un 504.
+// NB : le workflow GitHub `refresh-prices-db.yml` appelle avec --max-time 120.
+export const maxDuration = 120;
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                                */
 /* -------------------------------------------------------------------------- */
 
-/** Marge avant le hard timeout maxDuration. */
-const REFRESH_DEADLINE_MS = 55_000;
+/**
+ * Deadline interne, avec marge avant le hard timeout `maxDuration` (120 s) :
+ * 10 s pour clore la boucle en cours, logger et répondre.
+ */
+const REFRESH_DEADLINE_MS = 110_000;
 
 /** Page size CoinGecko /coins/markets (max 250 par appel). */
 const COINGECKO_PAGE_SIZE = 250;
@@ -155,6 +163,7 @@ async function bulkUpdatePrices(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sb: any,
   updates: PriceUpdate[],
+  signal: AbortSignal,
 ): Promise<{ updated: number; errors: Array<{ stage: string; message: string }> }> {
   const errors: Array<{ stage: string; message: string }> = [];
   let updated = 0;
@@ -169,7 +178,16 @@ async function bulkUpdatePrices(
   // Donc on fait des UPDATE par row, pas des upsert. Pas idéal pour les
   // perf (N queries vs 1) mais 780 updates × 30ms = 23s = acceptable
   // pour 1 run/jour. Et pas de violation contraint.
-  for (const u of updates) {
+  for (const [idx, u] of updates.entries()) {
+    // Deadline interne atteinte → on s'arrête proprement (rapport partiel)
+    // plutôt que de se faire tuer par le timeout Vercel (504, rien loggé).
+    if (signal.aborted) {
+      errors.push({
+        stage: "db-update",
+        message: `aborted (deadline) after ${idx}/${updates.length} rows`,
+      });
+      break;
+    }
     try {
       const { error } = await sb
         .from("cryptos")
@@ -319,7 +337,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     // 4) Bulk upsert Supabase par chunks de 100.
     if (updates.length > 0 && !controller.signal.aborted) {
-      const { updated: u, errors: upsertErrors } = await bulkUpdatePrices(sb, updates);
+      const { updated: u, errors: upsertErrors } = await bulkUpdatePrices(
+        sb,
+        updates,
+        controller.signal,
+      );
       updated = u;
       errorDetails.push(...upsertErrors);
     }

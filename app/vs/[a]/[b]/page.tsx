@@ -15,7 +15,8 @@
  *
  * Contenu 100 % data-driven (pas de prose hallucinée) :
  * tout est généré depuis getAllCryptos(), getDecentralizationScore(),
- * fetchCoinDetail() (CoinGecko) et getPairCorrelation7d().
+ * fetchCoinDetailDaily() (CoinGecko/KV, cache par coin et par jour) et
+ * correlationFromSparklines().
  */
 
 import type { Metadata } from "next";
@@ -43,10 +44,10 @@ import {
   formatDecentralizationVerdict,
 } from "@/lib/decentralization-scores";
 import {
-  getPairCorrelation7d,
+  correlationFromSparklines,
   describeCorrelation,
 } from "@/lib/correlation";
-import { fetchCoinDetail, formatCompactNumber } from "@/lib/coingecko";
+import { fetchCoinDetailDaily, formatCompactNumber } from "@/lib/coingecko";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -446,12 +447,20 @@ export default async function CryptoPairPage({ params }: Props) {
   if (!pair) notFound();
   const { a, b } = pair;
 
-  // 2. Live data CoinGecko (cached 5min via fetchCoinDetail) + corrélation 1h.
-  const [detailA, detailB, correlation] = await Promise.all([
-    fetchCoinDetail(a.coingeckoId),
-    fetchCoinDetail(b.coingeckoId),
-    getPairCorrelation7d(a.coingeckoId, b.coingeckoId),
+  // 2. Données marché : cache par coin et par jour (fetchCoinDetailDaily),
+  //    partagé par les 99 duels de chaque coin. PERF 2026-10-02 — avant :
+  //    fetchCoinDetail ×2 + getPairCorrelation7d (qui refaisait ×2 en no-store)
+  //    → rendus à froid de 6-8 s (fallback CoinGecko per-id en 429 + pauses de
+  //    retry) et revalidation ISR effective de 60 s au lieu de 7 j.
+  //    La corrélation est calculée sur les sparklines déjà en main.
+  const [detailA, detailB] = await Promise.all([
+    fetchCoinDetailDaily(a.coingeckoId),
+    fetchCoinDetailDaily(b.coingeckoId),
   ]);
+  const correlation = correlationFromSparklines(
+    detailA?.sparkline7d,
+    detailB?.sparkline7d,
+  );
 
   // 3. Decentralization scores (statiques, peuvent être null).
   const decentA = getDecentralizationScore(a.id);
@@ -806,7 +815,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 <div className="mt-1 text-sm text-fg/80">{describeCorrelation(correlation)}</div>
                 <div className="mt-3 text-xs text-muted">
                   Échelle : -1 (mouvements opposés) → 0 (indépendantes) → +1 (mouvements
-                  synchronisés). Cache 1h, source CoinGecko.
+                  synchronisés). Source CoinGecko.
                 </div>
               </>
             ) : (

@@ -1042,7 +1042,29 @@ async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>>
 // = données toujours fraîches dès le 1er hit après cron passage.
 const _hydrateStaticDetailsBatch = _fetchStaticDetailsBatch;
 
-async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null> {
+/**
+ * Options du mode "rapide" (PERF 2026-10-02, pages /vs/[a]/[b]).
+ *
+ * Le fallback per-id (coin absent du batch KV `cg-static-details:v1`, ex.
+ * polymesh) passait par `fetchWithRetry` : 3 tentatives, timeout 8 s chacune,
+ * pauses 1,5 s + 4 s sur 429 — CoinGecko free répond 429 depuis les IP
+ * Vercel → ~6 s de rendu bloquant à CHAQUE rendu (un 429 n'est jamais mis en
+ * cache). En mode rapide : 1 seule tentative, timeout court, aucune pause.
+ */
+interface CoinDetailFetchOptions {
+  fast?: boolean;
+}
+const FAST_FALLBACK_TIMEOUT_MS = 2500;
+
+async function _fetchCoinDetail(
+  coingeckoId: string,
+  opts: CoinDetailFetchOptions = {},
+): Promise<CoinDetail | null> {
+  const fast = opts.fast === true;
+  // Retries + timeout appliqués aux fallbacks réseau per-id (CG, CoinPaprika).
+  const fallbackRetries = fast ? 0 : 2;
+  const fallbackSignal = (): AbortSignal | undefined =>
+    fast ? AbortSignal.timeout(FAST_FALLBACK_TIMEOUT_MS) : undefined;
   // FIX 2026-05-06 BUILD PERF — Skip CoinGecko fallback au build-time.
   // Symptôme : `next build` SSG 100 fiches /cryptos/[slug] en parallèle ;
   // les coins absents de notre price-source (render-token, the-graph, etc.)
@@ -1161,9 +1183,15 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
           headers?: Record<string, string>,
         ): Promise<unknown> => {
           try {
-            const r = await fetchWithRetry(url, {
-              ...(headers ? { headers } : {}),
-            });
+            const signal = fallbackSignal();
+            const r = await fetchWithRetry(
+              url,
+              {
+                ...(headers ? { headers } : {}),
+                ...(signal ? { signal } : {}),
+              },
+              fallbackRetries,
+            );
             return r.ok ? await r.json() : null;
           } catch {
             return null;
@@ -1306,16 +1334,22 @@ async function _fetchCoinDetail(coingeckoId: string): Promise<CoinDetail | null>
     // → fetch retournait null, mis en cache 5 min, page cassée 5 min.
     // Solution : retry exponentiel sur 429 + headers x-cg-demo-api-key si défini
     // + bypass cache du `null` (cf. wrapper fetchCoinDetail plus bas).
-    const res = await fetchWithRetry(url, {
-      // BATCH 50 — 300s -> 1800s (30 min). Avec 100 fiches /cryptos/[slug]
-      // sur free plan = consumption insoutenable. 30min reste acceptable
-      // pour des donnees enrichies (ATH, supply) qui bougent rarement.
-      // OPTIM 2026-05-10 — 1800s -> 14400s (30min -> 4h). ATH/ATL bouge
-      // ~jamais en 4h, et le cron refresh-static-details (1×/jour) garde
-      // KV à jour. Cache 4h = fallback per-id quasi gratuit.
-      next: { revalidate: 14400, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
-      headers: cgHeaders(),
-    });
+    const fastSignal = fallbackSignal();
+    const res = await fetchWithRetry(
+      url,
+      {
+        // BATCH 50 — 300s -> 1800s (30 min). Avec 100 fiches /cryptos/[slug]
+        // sur free plan = consumption insoutenable. 30min reste acceptable
+        // pour des donnees enrichies (ATH, supply) qui bougent rarement.
+        // OPTIM 2026-05-10 — 1800s -> 14400s (30min -> 4h). ATH/ATL bouge
+        // ~jamais en 4h, et le cron refresh-static-details (1×/jour) garde
+        // KV à jour. Cache 4h = fallback per-id quasi gratuit.
+        next: { revalidate: 14400, tags: [cgCryptoTag(coingeckoId), CG_TAGS.market] },
+        headers: cgHeaders(),
+        ...(fastSignal ? { signal: fastSignal } : {}),
+      },
+      fallbackRetries,
+    );
     if (!res.ok) {
       console.warn(`[coingecko] fetchCoinDetail ${coingeckoId} → ${res.status} (after retry)`);
       throw new Error(`CoinGecko detail ${res.status}`);
@@ -1440,6 +1474,79 @@ export async function fetchCoinDetail(coingeckoId: string): Promise<CoinDetail |
     return await _fetchCoinDetail(coingeckoId);
   } catch {
     return null;
+  }
+}
+
+/**
+ * Détail crypto mis en cache PAR COIN et PAR JOUR (UTC) — pour les pages de
+ * masse à faible fraîcheur requise (/vs/[a]/[b] : 4 950 URLs, revalidate 7 j).
+ *
+ * PERF 2026-10-02 — cause des rendus /vs à froid de 6-8 s : chaque rendu
+ * relançait la chaîne réseau complète de fetchCoinDetail (×4 : 2 directs +
+ * 2 dans getPairCorrelation7d, dont les fetchs internes sont forcés no-store
+ * par unstable_cache) ; pour un coin absent du batch KV (ex. polymesh) elle
+ * finissait sur CoinGecko per-id → 429 → pauses 1,5 s + 4 s, jamais mises en
+ * cache. Ici :
+ *  - 1 entrée Data Cache par coin et par jour, partagée par ses 99 duels →
+ *    au plus ~100 calculs/jour au lieu d'un par rendu ;
+ *  - mode `fast` : fallbacks per-id en 1 tentative, timeout 2,5 s ;
+ *  - isolation de revalidation : les fetchs/caches internes (KV 60 s,
+ *    getPriceSnapshot 300 s…) tournent dans le store copié par
+ *    unstable_cache et ne font plus tomber la revalidation ISR de la page
+ *    (60 s effectifs jusqu'ici malgré `revalidate = 604800`).
+ * `revalidate` de l'entrée = 7 j (≥ celui de /vs : ne l'abaisse pas) ; la
+ * fraîcheur vient de la clé jour.
+ *
+ * Donnée incomplète (null ou market cap ≤ 0 : KV/fournisseurs en panne au
+ * moment du calcul) : JAMAIS mise en cache (nouvelle tentative au rendu
+ * suivant) et la revalidation ISR de la page appelante est abaissée à
+ * DEGRADED_PAGE_REVALIDATE_SEC — sinon un « — » figerait la page 7 jours.
+ */
+const COIN_DETAIL_DAILY_REVALIDATE_SEC = 604800;
+const DEGRADED_PAGE_REVALIDATE_SEC = 3600;
+
+/** Porte le résultat incomplet hors de unstable_cache sans le mettre en cache. */
+class IncompleteCoinDetail extends Error {
+  constructor(readonly detail: CoinDetail | null) {
+    super("COIN_DETAIL_DAILY_INCOMPLETE");
+  }
+}
+
+const _coinDetailDaily = unstable_cache(
+  async (coingeckoId: string, _utcDay: number): Promise<CoinDetail> => {
+    const result = await _fetchCoinDetail(coingeckoId, { fast: true });
+    // Throw = rien n'est mis en cache → nouvelle tentative au prochain rendu.
+    if (!result || !(result.marketCap > 0)) throw new IncompleteCoinDetail(result);
+    return result;
+  },
+  ["coin-detail-daily-v1"],
+  { revalidate: COIN_DETAIL_DAILY_REVALIDATE_SEC, tags: ["coin-detail-daily"] },
+);
+
+/**
+ * Marqueur sans donnée : l'appeler abaisse la revalidation ISR de la route en
+ * cours à DEGRADED_PAGE_REVALIDATE_SEC (Next 14 : min des unstable_cache
+ * appelés). Utilisé seulement quand la donnée affichée est incomplète.
+ */
+const _degradedPageMarker = unstable_cache(
+  async (): Promise<number> => DEGRADED_PAGE_REVALIDATE_SEC,
+  ["coin-detail-degraded-marker-v1"],
+  { revalidate: DEGRADED_PAGE_REVALIDATE_SEC },
+);
+
+export async function fetchCoinDetailDaily(
+  coingeckoId: string,
+): Promise<CoinDetail | null> {
+  const utcDay = Math.floor(Date.now() / 86_400_000);
+  try {
+    return await _coinDetailDaily(coingeckoId, utcDay);
+  } catch (err) {
+    try {
+      await _degradedPageMarker();
+    } catch {
+      /* le marqueur ne doit jamais casser le rendu */
+    }
+    return err instanceof IncompleteCoinDetail ? err.detail : null;
   }
 }
 

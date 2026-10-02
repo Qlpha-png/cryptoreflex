@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
 
 /**
  * Fallback ULTIME — déclenché si le RootLayout lui-même crash.
@@ -22,12 +21,9 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // RootLayout a crashé — fallback ULTIME. Remontée Sentry obligatoire
-    // (sinon perte de signal totale, l'app n'a même pas pu monter).
-    Sentry.captureException(error, {
-      tags: { scope: "global", digest: error.digest ?? "none" },
-      level: "fatal",
-    });
+    // RootLayout a crashé — fallback ULTIME. Le SDK Sentry navigateur a été
+    // retiré (PERF 2026-10-02) : une erreur de rendu serveur est déjà capturée
+    // côté serveur (instrumentation.ts → onRequestError, même `digest`).
     if (process.env.NODE_ENV === "production") {
       console.error("[Cryptoreflex] Global runtime error", {
         message: error.message,

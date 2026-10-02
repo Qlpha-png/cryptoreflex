@@ -25,14 +25,25 @@ import { BRAND } from "@/lib/brand";
  * pour TOUTES les plateformes (pas seulement les 6 visibles avant).
  *
  * Disclaimer affiliation global préservé (loi 9 juin 2023 + DGCCRF).
+ *
+ * PERF 2026-10-02 — la home rendait les 33 PlatformCards complètes (HTML home
+ * 1,48 MB dont 774 kB de payload RSC, 615 SVG inline). On ne rend plus que le
+ * TOP `HOME_PLATFORM_CARDS` (même tri par score global) ; la carte finale et
+ * le lien d'en-tête mènent au comparatif complet (/comparatif). Le JSON-LD
+ * ItemList décrit uniquement les cartes visibles (balisage = contenu affiché).
  */
 
+/** Nombre de cartes plateformes rendues sur la home. */
+const HOME_PLATFORM_CARDS = 6;
+
 export default function PlatformsSection() {
-  // TOUTES les plateformes (était top 6) — triées par scoring global desc.
-  // Exclut les plateformes fermées au marché FR (ex : Gemini) : on ne les met ni
-  // dans le carousel (CTA "s'inscrire"), ni dans le JSON-LD ItemList.
-  const platforms = getExchangePlatforms().filter(isAvailableFr);
-  const totalAvailable = platforms.length;
+  // Triées par scoring global desc. Exclut les plateformes fermées au marché
+  // FR (ex : Gemini) : on ne les met ni dans le carousel (CTA "s'inscrire"),
+  // ni dans le JSON-LD ItemList, ni dans le décompte.
+  const allPlatforms = getExchangePlatforms().filter(isAvailableFr);
+  const totalAvailable = allPlatforms.length;
+  const platforms = allPlatforms.slice(0, HOME_PLATFORM_CARDS);
+  const shown = platforms.length;
 
   return (
     // BATCH 26 — section orchestrée par <CategoryHeader Comparer les plateformes>
@@ -61,12 +72,12 @@ export default function PlatformsSection() {
               className="mt-4 text-xl sm:text-2xl font-bold tracking-tight"
             >
               Sélection éditoriale —{" "}
-              <span className="gradient-text">{totalAvailable} options</span>
+              <span className="gradient-text">top {shown} sur {totalAvailable}</span>
             </h3>
             <p className="mt-3 text-sm text-white/70 leading-relaxed">
-              Triées par score global. Glisse pour découvrir les {totalAvailable}{" "}
-              plateformes (méthodologie publique, frais réels, conformité MiCA
-              vérifiée).
+              Triées par score global : les {shown} premières ici, les{" "}
+              {totalAvailable} dans le comparatif complet (méthodologie publique,
+              frais réels, conformité MiCA vérifiée).
             </p>
           </div>
           <Link
@@ -90,7 +101,7 @@ export default function PlatformsSection() {
           </span>
         </p>
 
-        {/* Carousel horizontal swipeable — toutes les plateformes en defile */}
+        {/* Carousel horizontal swipeable — top HOME_PLATFORM_CARDS + carte « comparatifs » */}
         <div className="relative mt-8 sm:mt-12 -mx-4 sm:-mx-6 lg:-mx-8">
           {/* Gradient fades latéraux : signal visuel "il y a plus de contenu"
               (pattern Netflix / Apple App Store carousel). pointer-events-none

@@ -3,7 +3,7 @@
  *
  * Distinct de `lib/mdx.ts` (articles de blog) parce que :
  *  - Schéma frontmatter différent (cf. `NewsFrontmatter` dans news-types.ts)
- *  - TTL cache plus court (60s) — les news sont très volatiles
+ *  - Clés de cache scopées par déploiement (cf. CACHE_TTL_SEC plus bas)
  *  - Catégories closed-set (Marche/Regulation/Technologie/Plateformes)
  *
  * Les pages `/actualites` et `/actualites/[slug]` consomment exclusivement
@@ -16,6 +16,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { unstable_cache } from "next/cache";
+import { DEPLOY_CACHE_SCOPE } from "@/lib/cache-scope";
 import {
   type NewsArticle,
   type NewsSummary,
@@ -37,8 +38,18 @@ export const NEWS_MDX_TAG = "news-mdx" as const;
  * TTL court : les news sont volatiles (création quotidienne via cron).
  * Le cron lui-même appelle `revalidateTag(NEWS_MDX_TAG)` pour forcer un
  * refresh immédiat post-écriture (cf. route cron).
+ *
+ * PERF 2026-10-02 — 60 s → 3600 s + clés scopées par commit. Sur Vercel le FS
+ * est en lecture seule : les news n'arrivent QUE par déploiement (nouvelle
+ * clé → contenu frais immédiatement) ou via le cron + revalidateTag (qui
+ * purge aussi les pages taguées). Le TTL de 60 s ne protégeait donc de rien
+ * mais plafonnait la revalidation ISR des pages consommatrices (home,
+ * /actualites…) à 60 s en Next 14 → ISR writes inutiles.
  */
-const CACHE_TTL_SEC = 60;
+const CACHE_TTL_SEC = 3600;
+
+/** Suffixe de clé : un déploiement ne relit jamais les entrées d'un autre. */
+const NEWS_CACHE_SCOPE = DEPLOY_CACHE_SCOPE;
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers                                                                   */
@@ -142,7 +153,7 @@ async function readNewsFromDisk(): Promise<NewsArticle[]> {
 /** Toutes les news avec leur body, triées par date desc. */
 export const getAllNews = unstable_cache(
   async (): Promise<NewsArticle[]> => readNewsFromDisk(),
-  ["news-mdx:all"],
+  [`news-mdx:all-${NEWS_CACHE_SCOPE}`],
   { tags: [NEWS_MDX_TAG], revalidate: CACHE_TTL_SEC }
 );
 
@@ -152,7 +163,7 @@ export const getAllNewsSummaries = unstable_cache(
     const all = await readNewsFromDisk();
     return all.map(({ content: _content, ...rest }) => rest);
   },
-  ["news-mdx:summaries"],
+  [`news-mdx:summaries-${NEWS_CACHE_SCOPE}`],
   { tags: [NEWS_MDX_TAG], revalidate: CACHE_TTL_SEC }
 );
 
@@ -162,7 +173,7 @@ export const getNewsBySlug = unstable_cache(
     const all = await readNewsFromDisk();
     return all.find((a) => a.slug === slug) ?? null;
   },
-  ["news-mdx:by-slug"],
+  [`news-mdx:by-slug-${NEWS_CACHE_SCOPE}`],
   { tags: [NEWS_MDX_TAG], revalidate: CACHE_TTL_SEC }
 );
 
@@ -172,7 +183,7 @@ export const getNewsSlugs = unstable_cache(
     const all = await readNewsFromDisk();
     return all.map((a) => a.slug);
   },
-  ["news-mdx:slugs"],
+  [`news-mdx:slugs-${NEWS_CACHE_SCOPE}`],
   { tags: [NEWS_MDX_TAG], revalidate: CACHE_TTL_SEC }
 );
 

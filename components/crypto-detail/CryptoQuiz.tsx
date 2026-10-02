@@ -12,12 +12,17 @@ import {
   Twitter,
   Sparkles,
 } from "lucide-react";
-import { getQuizFor, type CryptoQuiz as CryptoQuizData } from "@/lib/crypto-quizzes";
+// PERF 2026-10-02 — import TYPE uniquement : le quiz arrive en prop depuis la
+// page serveur (getQuizFor(slug)). Importer getQuizFor ici embarquait tout
+// data/crypto-quizzes.json (69 kB) dans le bundle client de chaque fiche.
+import type { CryptoQuiz as CryptoQuizData } from "@/lib/crypto-quizzes";
 
 interface Props {
   cryptoId: string;
   cryptoName: string;
   cryptoSymbol: string;
+  /** Quiz éditorial de cette crypto (null si absent → rendu null). */
+  quiz: CryptoQuizData | null;
 }
 
 type GameState = "idle" | "playing" | "finished";
@@ -29,9 +34,7 @@ type GameState = "idle" | "playing" | "finished";
  * Flow : start → 8 questions avec feedback immédiat → score final +
  * suggestions selon score + lead magnet newsletter si > 6/8.
  */
-export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol }: Props) {
-  // Récupère le quiz une fois (utile pour gating "render null si absent")
-  const [quiz] = useState<CryptoQuizData | null>(() => getQuizFor(cryptoId));
+export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }: Props) {
   const [state, setState] = useState<GameState>("idle");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
