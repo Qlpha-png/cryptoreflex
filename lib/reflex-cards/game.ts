@@ -112,7 +112,13 @@ const FICHES=${js(d.fiches)};
 const WATCH=${js(d.watch)};`;
 }
 
+/* comptes actifs : le voile « Chargement de votre partie… » est dans le HTML dès la première image, sinon l'album par défaut
+   (0 carte, 10 boosters) peut s'afficher un instant avant que le jeu ne le pose (téléphone lent, onglet en arrière-plan) */
+const BODY = "</head>\n<body>";
+const SRV_BODY = '</head>\n<body class="srv srv-wait">\n<div id="srvLoad" role="status"><b>Chargement de votre partie…</b></div>';
+
 /** la page complète du jeu au jour `day` (1 à 90) */
 export function gameHtml(day: number): string {
-  return GAME_TEMPLATE.replace("/*__GAME_DATA__*/", () => gameDataScript(day));
+  const html = GAME_TEMPLATE.replace("/*__GAME_DATA__*/", () => gameDataScript(day));
+  return reflexAccountsMode() === "on" ? html.replace(BODY, () => SRV_BODY) : html;
 }

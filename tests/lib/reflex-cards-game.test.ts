@@ -66,6 +66,25 @@ describe("Reflex Cards — page du jeu : rien ne fuit", () => {
     expect(html.split("const GAME_PUBLIC=true").length).toBe(2);
   });
 
+  it("comptes actifs : le voile de chargement est dans le HTML (jamais d'album vide affiché avant la partie)", () => {
+    expect(GAME_TEMPLATE.split("</head>\n<body>").length).toBe(2);
+    const prev = process.env.REFLEX_CARDS_ACCOUNTS;
+    try {
+      process.env.REFLEX_CARDS_ACCOUNTS = "true";
+      const on = gameHtml(1);
+      expect(on).toContain('<body class="srv srv-wait">\n<div id="srvLoad" role="status">');
+      /* un seul voile ajouté au HTML (le code du jeu garde sa copie de secours, posée seulement s'il n'y en a pas) */
+      expect(on.split('id="srvLoad"').length).toBe(GAME_TEMPLATE.split('id="srvLoad"').length + 1);
+      process.env.REFLEX_CARDS_ACCOUNTS = "essai";
+      expect(gameHtml(1)).not.toContain("srv-wait\">");
+      delete process.env.REFLEX_CARDS_ACCOUNTS;
+      expect(gameHtml(1)).toContain("</head>\n<body>\n");
+    } finally {
+      if (prev === undefined) delete process.env.REFLEX_CARDS_ACCOUNTS;
+      else process.env.REFLEX_CARDS_ACCOUNTS = prev;
+    }
+  });
+
   it("données sûres dans un <script>", () => {
     for (const day of [1, 90]) expect(gameDataScript(day)).not.toMatch(/<\/script|<!--/i);
   });
