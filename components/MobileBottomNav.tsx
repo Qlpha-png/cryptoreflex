@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Newspaper, Wrench, ShoppingBag } from "lucide-react";
+import { Home, Sparkles, Newspaper, Wrench, ShoppingBag, GalleryVerticalEnd } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
 
 /**
  * FIX BUNDLE 2026-05-06 — Suppression de `motion/react` (~25KB JS dans le
@@ -49,6 +50,8 @@ type Tab = {
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
   /** Revenue-driving slot (Partenaires affiliés) → accent gold permanent. */
   revenue?: boolean;
+  /** Nouveauté (Reflex Cards) → point doré sur l'icône. */
+  isNew?: boolean;
 };
 
 /**
@@ -67,12 +70,17 @@ type Tab = {
  *  - "Boutique" (8 chars) tient dans 60-72px de slot sur 360px+ devices.
  *  - Accent gold permanent (vs hover only) : signal "cliquable rentable" 24/7.
  */
+/* REFLEX CARDS (Kev 02/10/2026 : « accessible et le mieux placé ») : quand le jeu est activé,
+   « Cartes » prend la place d'« Outils » (5 onglets max ; Outils reste dans le menu burger et le
+   pied de page). Point doré « nouveau ». Variables publiques : même rendu serveur et navigateur. */
 const TABS: ReadonlyArray<Tab> = [
   { href: "/", label: "Accueil", Icon: Home },
   { href: "/quiz/plateforme", label: "Quiz", Icon: Sparkles },
   { href: "/partenaires", label: "Partenaires", Icon: ShoppingBag, revenue: true },
   { href: "/actualites", label: "Actu", Icon: Newspaper },
-  { href: "/outils", label: "Outils", Icon: Wrench },
+  isReflexCardsEnabled()
+    ? { href: "/cartes", label: "Cartes", Icon: GalleryVerticalEnd, isNew: true }
+    : { href: "/outils", label: "Outils", Icon: Wrench },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -113,7 +121,7 @@ export default function MobileBottomNav() {
         style={{ left: indicatorLeft }}
       />
       <ul className="relative flex items-stretch justify-around">
-        {TABS.map(({ href, label, Icon, revenue }) => {
+        {TABS.map(({ href, label, Icon, revenue, isNew }) => {
           const active = isActive(pathname, href);
           // Slot revenue (Partenaires) : couleur gold permanente, pas seulement
           // au hover/active → signal CTA constant "ici tu peux acheter".
@@ -149,6 +157,12 @@ export default function MobileBottomNav() {
                   strokeWidth={1.85}
                   aria-hidden="true"
                 />
+                {isNew && !active && (
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute top-2 left-1/2 ml-2.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
+                  />
+                )}
                 <span className={`relative text-[11px] leading-none ${revenue ? "font-bold" : "font-medium"}`}>
                   {label}
                 </span>

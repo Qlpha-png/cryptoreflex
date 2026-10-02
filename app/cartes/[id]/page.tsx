@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, CalendarDays, ExternalLink, Sparkles } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import CardVisual from "@/components/reflex-cards/CardVisual";
@@ -20,6 +21,8 @@ import {
   isRevealed,
   isVisible,
   oddsText,
+  ordinal,
+  isLaunched,
   rarityInfo,
   seasonDay,
   shareText,
@@ -60,7 +63,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const url = `${BRAND.url}/cartes/${c.id}`;
   if (!isVisible(c, seasonDay())) {
     const t = `${name} : carte Reflex à venir`;
-    return { title: t, description: `La carte Reflex de ${name} sortira au fil de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex.`, robots: { index: false, follow: true }, alternates: { canonical: url } };
+    return { title: t, description: `La carte Reflex de ${name} sortira au fil de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex.`, robots: { index: false, follow: true }, alternates: withHreflang(url) };
   }
   const label = c.sym.toLowerCase() === name.toLowerCase() ? name : `${name} (${c.sym})`;
   const title = c.fossil ? `${name} : carte Fossile Reflex Cards` : `${label} : carte ${RNAME[c.r]} Reflex Cards`;
@@ -70,7 +73,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: withHreflang(url),
     robots: isIndexable(c) ? undefined : { index: false, follow: true },
     openGraph: { title, description, url, type: "website" },
     twitter: { card: "summary_large_image", title, description },
@@ -83,14 +86,14 @@ function rarityReason(c: ReflexCard): string {
   const fam = albumCards().filter((x) => x.fam === c.fam).sort((a, b) => a.noto - b.noto);
   if (c.r === "L") {
     const why = [c.legende && `le projet le plus connu de la famille ${c.fam}`, c.merite && "l'un des 10 projets les plus connus de la saison (hors stablecoins)"].filter(Boolean);
-    return why.length ? `Légendaire car c'est ${why.join(" et ")}.` : `Légendaire d'après son rang de notoriété durable : ${c.noto}e sur ${REFLEX_META.ncards}.`;
+    return why.length ? `Légendaire car c'est ${why.join(" et ")}.` : `Légendaire d'après son rang de notoriété durable : ${ordinal(c.noto)} sur ${REFLEX_META.ncards}.`;
   }
   if (c.r === "UR") {
     const k = fam.filter((x) => x.r !== "L").findIndex((x) => x.id === c.id) + 1;
     if (k > 0 && k <= 2) return `Ultra rare car c'est l'un des 2 projets les plus connus de la famille ${c.fam} après ses Légendaires.`;
     return "Ultra rare car c'est l'un des 40 projets les plus connus de la saison.";
   }
-  return `${RNAME[c.r]} d'après son rang de notoriété durable : ${c.noto}e sur ${REFLEX_META.ncards}.`;
+  return `${RNAME[c.r]} d'après son rang de notoriété durable : ${ordinal(c.noto)} sur ${REFLEX_META.ncards}.`;
 }
 
 /** carte pas encore sortie : rien ne fuite (ni rareté, ni numéro, ni partie, ni date) */
@@ -107,7 +110,7 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
         </nav>
         <div className="mt-6 grid items-start gap-8 md:grid-cols-[288px,1fr] md:gap-12">
           <div className="mx-auto md:mx-0">
-            <CardVisual card={c} mode="back" width={288} />
+            <CardVisual card={c} mode="back" day={0} width={288} />
           </div>
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
@@ -116,6 +119,10 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">{name} : carte Reflex à venir</h1>
             <p className="mt-3 text-fg/75">
               La carte de {name} sortira au fil de la saison 1. Sa rareté, son numéro et sa date de sortie restent secrets jusque-là : les cartes se dévoilent partie après partie, chaque semaine.
+            </p>
+            <h2 className="mt-8 text-lg font-bold">Comment sortent les cartes ?</h2>
+            <p className="mt-2 text-sm text-fg/70">
+              La saison 1 compte {REFLEX_META.ncards} cartes, dévoilées en 12 parties : 300 le premier jour, puis une cinquantaine chaque semaine. Chaque carte se tire dès sa sortie, gratuitement, dans des boosters de 5 cartes.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/cartes" className="btn-primary text-sm py-2.5 px-5">
@@ -169,7 +176,7 @@ export default function CartePage({ params }: Props) {
         ["Rareté", <span key="r" style={{ color: col }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
         ["Famille (chapitre)", c.fam],
         ["N° d'album", `${String(c.num).padStart(3, "0")} / ${REFLEX_META.ncards}`],
-        ["Notoriété durable", `${c.noto}e projet le plus connu de la saison`],
+        ["Notoriété durable", `${ordinal(c.noto)} projet le plus connu de la saison`],
         ...(c.year ? ([["Lancement", String(c.year)]] as [string, string][]) : []),
         ["Sortie", c.sortie ? `${c.sortie.collection}, partie ${c.sortie.partie} · jour ${c.sortie.jour} de la saison${c.sortie.tete ? " (tête d'affiche)" : ""}` : "—"],
         ["Fabrication", c.sortie ? `avec des éclats, dès le jour ${c.sortie.fabrication}` : "—"],
@@ -264,7 +271,7 @@ export default function CartePage({ params }: Props) {
               )}
 
               <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
-                <h2 className="text-lg font-bold">Reflex Cards arrive bientôt</h2>
+                <h2 className="text-lg font-bold">{isLaunched() ? "Jouez à Reflex Cards" : "Reflex Cards arrive bientôt"}</h2>
                 <p className="mt-1 text-sm text-fg/70">
                   Le jeu de cartes crypto gratuit de Cryptoreflex : un booster de 5 cartes offert toutes les 10 minutes (jusqu&apos;à 36 en réserve), sans achat ni revente.
                 </p>
@@ -300,7 +307,7 @@ export default function CartePage({ params }: Props) {
           )}
 
           <p className="mt-10 text-xs text-muted">
-            Saison 1 · données du {new Date(REFLEX_META.genere).toLocaleDateString("fr-FR")}
+            Saison 1 · données du {new Date(REFLEX_META.genere).toLocaleDateString("fr-FR", { timeZone: "UTC" })}
             {REFLEX_META.provisoire ? " · classement provisoire, susceptible d'évoluer avant le lancement" : ""}. Reflex Cards est un jeu gratuit : les cartes n&apos;ont aucune valeur marchande et ne constituent pas un conseil en investissement.
           </p>
         </div>

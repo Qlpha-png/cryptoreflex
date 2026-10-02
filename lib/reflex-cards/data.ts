@@ -1,8 +1,10 @@
 /**
  * Reflex Cards — accès aux données du jeu (data/reflex-cards.json, généré par
  * Reflex-Cards/src/export-site.mjs depuis la maquette v8). Côté serveur uniquement :
- * le JSON pèse ~700 Ko, il ne doit jamais partir dans un bundle client.
+ * le JSON pèse ~760 Ko et contient les raretés et dates de sortie des cartes pas encore sorties ;
+ * il ne doit jamais partir dans un bundle client (« server-only » casse le build si c'est le cas).
  */
+import "server-only";
 import raw from "@/data/reflex-cards.json";
 import { getAllCryptos } from "@/lib/cryptos";
 import type { Rarity, ReflexCard, ReflexCardsData, ReflexRarityInfo } from "./types";
@@ -18,10 +20,13 @@ export const CARD_ENV: CardEnv & { back: string } = { ncards: DATA.meta.ncards, 
 export const FOSSIL_P = DATA.fossilP;
 
 export { isReflexCardsEnabled } from "./flag";
-export { seasonDay } from "./season";
+export { seasonDay, isLaunched, launchDate } from "./season";
+
+/** rang en toutes lettres : « 1er », « 2e », « 590e » */
+export const ordinal = (n: number): string => (n === 1 ? "1er" : `${n}e`);
 
 /* ---------- sorties et révélations (règle de la maquette, validée par Kev le 02/10) ----------
-   - pas encore sortie : rien ne fuite (ni page, ni nom de tête d'affiche, ni rareté) ;
+   - pas encore sortie : rien ne fuite (page « à venir » neutre, tête d'affiche anonyme, ni rareté ni numéro ni date) ;
    - sortie mais pas obtenue : la case vide de l'album (numéro, logo grisé, nom, rareté, chance) ;
    - obtenue (phase B, comptes) ou révélée officiellement : la carte entière. */
 const J1 = (c: ReflexCard) => !c.fossil && c.sortie?.jour === 1;
@@ -97,8 +102,8 @@ export function ficheHref(c: ReflexCard): string | null {
   return c.slug ? `/cryptos/${c.slug}` : null;
 }
 
-/** nom lisible hors carte (CoinGecko glisse parfois des espaces invisibles : « ​​Stable ») */
-export const cleanName = (s: string) => s.replace(/[​-‍⁠﻿]/g, "").trim();
+/** nom lisible hors carte (CoinGecko glisse parfois des espaces invisibles : « \u200b\u200bStable ») */
+export const cleanName = (s: string) => s.replace(/[\u200b-\u200d\u2060\ufeff]/g, "").trim();
 
 /**
  * Page carte indexable seulement si elle apporte du contenu : une vraie description
@@ -117,5 +122,5 @@ export function shareText(p: number): string {
 export function oddsText(p: number): string {
   const x = 1 / p;
   const r = x < 100 ? Math.round(x) : x < 10_000 ? Math.round(x / 10) * 10 : x < 1_000_000 ? Math.round(x / 1000) * 1000 : Math.round(x / 100_000) * 100_000;
-  return "1 carte sur " + r.toLocaleString("fr-FR").replace(/ | /g, " ");
+  return "1 carte sur " + r.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
 }

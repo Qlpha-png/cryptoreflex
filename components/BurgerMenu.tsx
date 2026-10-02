@@ -33,6 +33,7 @@ import {
   Compass,
   Crown,
   DollarSign,
+  GalleryVerticalEnd,
   Gift,
   Heart,
   Search,
@@ -44,6 +45,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
+import { isLaunched } from "@/lib/reflex-cards/season";
+
+/* Reflex Cards : « bientôt » avant le lancement, « nouveau » ensuite (le menu est rendu côté client seulement) */
+const RC_BADGE = isLaunched() ? "NOUVEAU" : "BIENTÔT";
 
 interface MenuItem {
   href: string;
@@ -72,11 +77,11 @@ const SECTIONS: MenuSection[] = [
     intro: "Démarrer avec Cryptoreflex",
     items: [
       { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 33 plateformes" },
+      ...(isReflexCardsEnabled()
+        ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: RC_BADGE }]
+        : []),
       { href: "/quiz/plateforme", label: "Quiz plateforme idéale", desc: "Trouvez votre plateforme en 5 questions", badge: "POPULAIRE" },
       { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
-      ...(isReflexCardsEnabled()
-        ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: "BIENTÔT" }]
-        : []),
       { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
       { href: "/methodologie", label: "Notre méthodologie", desc: "6 critères publics, 0 bullshit" },
       { href: "/transparence", label: "Transparence affiliation", desc: "Qui paie, comment, combien" },
@@ -186,8 +191,11 @@ const SECTIONS: MenuSection[] = [
   },
 ];
 
-/** 3 highlights revenus en haut du drawer (KPI conversion). */
+/** 3 highlights revenus en haut du drawer (KPI conversion), précédés de Reflex Cards quand le jeu est actif. */
 const HIGHLIGHTS: { href: string; label: string; sub: string; Icon: LucideIcon; tone: "primary" | "accent" }[] = [
+  ...(isReflexCardsEnabled()
+    ? [{ href: "/cartes", label: "Reflex Cards", sub: `Le jeu de cartes crypto gratuit · ${RC_BADGE.toLowerCase()}`, Icon: GalleryVerticalEnd, tone: "primary" as const }]
+    : []),
   { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Quiz 2 min · sans email", Icon: Target, tone: "primary" },
   { href: "/soutenir", label: "Soutenir Cryptoreflex", sub: "Contribution libre · tout gratuit", Icon: Heart, tone: "primary" },
   { href: "/partenaires", label: "Offres partenaires", sub: "Ledger, Trezor, Waltio…", Icon: Gift, tone: "accent" },

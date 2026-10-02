@@ -19,8 +19,10 @@ export const revalidate = 3600;
 
 /* contrôle visuel local uniquement (build lancé avec REFLEX_CARDS_QA_ALL=1, jamais sur Vercel) :
    toutes les cartes, pour la comparaison pixel avec la maquette */
-const shown = (c: Parameters<typeof isRevealed>[0]) =>
-  (process.env.REFLEX_CARDS_QA_ALL === "1" && process.env.VERCEL !== "1") || isRevealed(c);
+const QA_ALL =
+  process.env.REFLEX_CARDS_QA_ALL === "1" && !process.env.VERCEL && !process.env.VERCEL_ENV && !process.env.NEXT_PUBLIC_VERCEL_ENV && !process.env.CI;
+if (QA_ALL) console.warn("[reflex-cards] REFLEX_CARDS_QA_ALL actif : TOUTES les cartes sont rendues en widget. Build de contrôle local uniquement, ne jamais le servir au public.");
+const shown = (c: Parameters<typeof isRevealed>[0]) => QA_ALL || isRevealed(c);
 
 export function generateStaticParams() {
   if (!isReflexCardsEnabled()) return [];

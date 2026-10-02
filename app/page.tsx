@@ -37,6 +37,7 @@ import TrustMarquee from "@/components/TrustMarquee";
 // pointe vers /academie. Composant conservé dans components/ pour réutilisation.
 import AcademyHomeTeaser from "@/components/AcademyHomeTeaser";
 import StartHere from "@/components/StartHere";
+import ReflexCardsHomeBanner from "@/components/reflex-cards/ReflexCardsHomeBanner";
 import Top10CryptosSection from "@/components/Top10CryptosSection";
 import PlatformsSection from "@/components/PlatformsSection";
 // BATCH 26 — PlatformsMarquee retiré de la home (doublon). Composant
@@ -330,6 +331,9 @@ export default async function HomePage() {
           PREMIER (protège H1 + LCP) ; StartHere donne immédiatement les 3 portes
           d'intention. Server Component pur (0 JS client). */}
       <StartHere />
+      {/* REFLEX CARDS — bandeau du jeu de cartes, juste après le routeur d'intention
+          (Kev 02/10/2026 : « accessible et le mieux placé »). Rien si le jeu est coupé. */}
+      <ReflexCardsHomeBanner />
       {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
           slowly entre Hero et Reassurance. Comble la zone morte narrative
           + signal "ces 8 sources nous surveillent". Pause au hover. */}

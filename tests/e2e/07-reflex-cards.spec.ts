@@ -6,7 +6,7 @@
  * Règle vérifiée (décision Kev 02/10) : rien ne fuite avant la sortie.
  *  - révélations officielles du jour 1 (ex. Bitcoin) : carte entière ;
  *  - fossiles : case vide du Musée, histoire publique ;
- *  - carte pas encore sortie (ex. XRP, jour 43) : page « à venir » neutre (noindex), image de partage 404,
+ *  - carte pas encore sortie (ex. XRP, jour 43) : page « à venir » neutre (noindex), image de partage neutre,
  *    dos de carte sur la fiche ; id inconnu : vrai 404.
  */
 import { test, expect } from "@playwright/test";
@@ -36,14 +36,19 @@ test.describe("Reflex Cards — avant lancement", () => {
     await expect(page.getByRole("heading", { name: /Ce qui s'est passé/ })).toBeVisible();
   });
 
-  test("carte pas encore sortie : page « à venir » neutre (noindex), image de partage en 404", async ({ page, request }) => {
+  test("carte pas encore sortie : page « à venir » neutre (noindex), image de partage neutre", async ({ page, request }) => {
     expect((await page.goto("/cartes/ripple"))?.status()).toBe(200);
     await expect(page.getByRole("heading", { level: 1, name: /XRP : carte Reflex à venir/ })).toBeVisible();
     await expect(page.locator(".rc-back")).toBeVisible();
     await expect(page.locator(".rc-card, .rc-ph")).toHaveCount(0);
     await expect(page.locator("main")).not.toContainText(/Légendaire|Ultra rare|Super rare|Peu commune|N° d'album|jour 43/);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
-    expect((await request.get("/cartes/ripple/opengraph-image")).status()).toBe(404);
+    /* image de partage : neutre (« carte à venir », sans rareté) — non testable sur Windows (bug @vercel/og), vérifiée en préproduction */
+    if (process.platform !== "win32") {
+      const og = await request.get("/cartes/ripple/opengraph-image");
+      expect(og.status()).toBe(200);
+      expect(og.headers()["content-type"]).toContain("image/png");
+    }
   });
 
   test("id inconnu : vrai 404", async ({ page }) => {

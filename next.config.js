@@ -511,6 +511,13 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
         ],
       },
+      // Reflex Cards : guilloché des Légendaires (209 Ko, change avec la maquette seulement).
+      {
+        source: "/reflex-cards/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
+        ],
+      },
       {
         source: "/icons/:path*",
         headers: [

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Logo from "./Logo";
 import dynamic from "next/dynamic";
+import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
 
 // Lazy : le badge fetch /api/gamification/me et n'a aucun intérêt pour les
 // users non-authentifiés (composant return null). Pas la peine d'inclure
@@ -103,11 +104,20 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
    par Actu en découverte, Soutien est une contribution volontaire
    post-démonétisation. Partenaires perd son icône/accent : un lien
    normal (le revenu passe par la page, pas par le bling de navbar). */
+/* REFLEX CARDS (Kev 02/10/2026 : « accessible et le mieux placé ») : 2e lien, juste après Marché,
+   avec un point doré « nouveau ». Visible seulement quand le jeu est activé (variables publiques :
+   même rendu côté serveur et navigateur). */
 const NAV = [
   { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
+  ...(isReflexCardsEnabled()
+    ? [{ href: "/cartes", label: "Cartes", desc: "Reflex Cards, le jeu de cartes crypto gratuit", isNew: true as const }]
+    : []),
   { href: "/actualites", label: "Actu", desc: "Le brief quotidien + l'actualité crypto FR décryptée" },
-  { href: "/academie", label: "Académie", desc: "Parcours guidés & quiz de validation" },
-  { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire" },
+  /* Avec « Cartes », 6 liens : mesuré le 02/10/2026, le logo s'écrasait (0 px à 768, 34 px à 1024) et le
+     burger sortait de l'écran. Académie passe dans le burger sous 1280 px, Outils sous 1024 px
+     (logo ≥ 79 px partout ; il était déjà écrasé à 18 px à 768 avant l'ajout). Seulement si Cartes est affiché. */
+  { href: "/academie", label: "Académie", desc: "Parcours guidés & quiz de validation", ...(isReflexCardsEnabled() ? { hideBelowXl: true as const } : {}) },
+  { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire", ...(isReflexCardsEnabled() ? { hideOnMd: true as const } : {}) },
   { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés" },
   { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", burgerOnly: true as const },
   { href: "/soutenir", label: "Soutien", desc: "Soutenez un éditeur indé — contribution volontaire", premium: true as const, burgerOnly: true as const },
@@ -278,6 +288,7 @@ export default function Navbar() {
               const isPremium = "premium" in item && item.premium === true;
               const isRevenue = "revenueAccent" in item && item.revenueAccent === true;
               const hideOnMd = "hideOnMd" in item && item.hideOnMd === true;
+              const hideBelowXl = "hideBelowXl" in item && item.hideBelowXl === true;
               return (
                 <Link
                   key={item.href}
@@ -288,6 +299,7 @@ export default function Navbar() {
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
                              ${hideOnMd ? "hidden lg:inline-flex" : ""}
+                             ${hideBelowXl ? "hidden xl:inline-flex" : ""}
                              ${
                                isPremium
                                  ? `nav-pro overflow-hidden rounded-full px-2.5 py-1 ring-1 ring-primary/25 bg-primary/[0.08]
@@ -322,6 +334,12 @@ export default function Navbar() {
                     />
                   )}
                   {item.label}
+                  {"isNew" in item && item.isNew && (
+                    <>
+                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]" />
+                      <span className="sr-only">(nouveauté)</span>
+                    </>
+                  )}
                   {/* Underline classique pour les items non-premium ; pour Pro,
                       le pill ring + bg + pulse remplacent l'underline visuellement. */}
                   {!isPremium && (

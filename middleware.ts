@@ -204,6 +204,8 @@ export const config = {
     // AUDIT 2026-10-01 : `api/news/` AVEC le slash — sans lui, le préfixe
     // excluait aussi /api/newsletter/* (POST abonnement/désabonnement) du
     // contrôle CSRF ci-dessus.
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
+    // REFLEX CARDS (02/10/2026) : /cartes et /cartes/* sont 100 % publics en lecture (phase A, sans comptes) :
+    // pas de refresh JWT Supabase. À revoir en phase B (comptes) si une page /cartes devient auth-aware.
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cartes|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
   ],
 };

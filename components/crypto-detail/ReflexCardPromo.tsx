@@ -26,10 +26,11 @@ export default function ReflexCardPromo({ coingeckoIds, className }: { coingecko
   const title = !out ? `${name} aura sa carte Reflex` : `${name} a sa carte ${rar}`;
   const sub = !out
     ? "Elle sortira au fil de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex. Sa rareté reste secrète jusque-là."
-    : revealed
+    : revealed && day < 1
       ? `Révélée avant le lancement de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex : ${oddsText(todayChance(c, day))} tirée.`
       : `À trouver dans les boosters de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex : ${oddsText(todayChance(c, day))} tirée.`;
-  const visual = <CardVisual card={c} mode={revealed ? "card" : out ? "slot" : "back"} day={day} width={92} uid="fiche" />;
+  /* vignette de 92 px : animations coupées (pas de rafraîchissement continu sur chaque fiche) */
+  const visual = <CardVisual card={c} mode={revealed ? "card" : out ? "slot" : "back"} day={day} width={92} uid="fiche" still />;
 
   return (
     <section
@@ -46,7 +47,7 @@ export default function ReflexCardPromo({ coingeckoIds, className }: { coingecko
       )}
       <div className="min-w-0 flex-1">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide" style={{ color: col }}>
-          <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · bientôt
+          <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · {day >= 1 ? "nouveau" : "bientôt"}
         </span>
         <p className="mt-1 text-base font-bold text-fg sm:text-lg">
           {title} {out && !c.fossil && <span className="text-sm" style={{ color: col }}>{PIPS[c.r]}</span>}

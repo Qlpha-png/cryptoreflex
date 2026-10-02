@@ -2,7 +2,7 @@
 @property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 .rc-card,.rc-ph,.rc-back{--mono:var(--font-mono),'JetBrains Mono',monospace;--cond:var(--rc-f-cond),'Barlow Condensed',system-ui,sans-serif;--serif:var(--rc-f-serif),'Cinzel',Georgia,serif;--L:#f5b52a;--UR:#fb923c;--SR:#a78bfa;--R:#38bdf8;--PC:#34d399;--C:#9aa3b2;--fg:#eef1f7;--muted:#8e98ab;--noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 /* la carte ne doit pas hériter du texte du site (Tailwind) : mêmes réglages que la page de la maquette */
-.rc-card,.rc-ph,.rc-back{font-family:var(--rc-f-sans),'Space Grotesk',system-ui,sans-serif;color:var(--fg);font-size:16px;font-weight:400;font-style:normal;line-height:normal;letter-spacing:normal;text-align:start;text-transform:none;white-space:normal;word-spacing:normal;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto}
+.rc-card,.rc-ph,.rc-back{font-family:var(--font-display),'Space Grotesk',system-ui,sans-serif;color:var(--fg);font-size:16px;font-weight:400;font-style:normal;line-height:normal;letter-spacing:normal;text-align:start;text-transform:none;white-space:normal;word-spacing:normal;overflow-wrap:normal;word-break:normal;font-feature-settings:normal;font-variant-ligatures:normal;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto}
 .rc-card,.rc-card :where(*),.rc-card :where(*)::before,.rc-card :where(*)::after,.rc-ph,.rc-ph :where(*),.rc-ph :where(*)::before,.rc-ph :where(*)::after,.rc-back,.rc-back :where(*),.rc-back :where(*)::before,.rc-back :where(*)::after{box-sizing:border-box;margin:0;padding:0;border:0 none currentColor}
 .rc-card :where(img,svg),.rc-ph :where(img,svg),.rc-back :where(img,svg){display:inline;vertical-align:baseline;max-width:none}
 .rc-card :where(img),.rc-ph :where(img),.rc-back :where(img){height:auto}
@@ -103,7 +103,7 @@
 .rc-ph-ring{position:absolute;left:50%;top:98px;width:116px;height:116px;margin-left:-58px;border-radius:50%;border:1px dashed rgba(233,185,73,.28)}
 .rc-ph-name{position:absolute;left:14px;right:14px;top:226px;height:26px;display:flex;align-items:center;justify-content:center;font:700 19px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:rgba(238,241,247,.42);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rc-ph-name.rc-two{display:block;white-space:normal;line-height:1.05;text-align:center}
-.rc-ph-rar{position:absolute;left:0;right:0;top:256px;text-align:center;font:600 10px var(--rc-f-sans),'Space Grotesk';letter-spacing:.18em;text-transform:uppercase;color:var(--rc)}
+.rc-ph-rar{position:absolute;left:0;right:0;top:256px;text-align:center;font:600 10px var(--font-display),'Space Grotesk';letter-spacing:.18em;text-transform:uppercase;color:var(--rc)}
 .rc-ph-rar i{display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--rc);transform:rotate(45deg);vertical-align:1px;box-shadow:0 0 8px var(--rc)}
 .rc-ph-odds{position:absolute;left:0;right:0;top:276px;text-align:center;font:500 9px var(--mono);letter-spacing:.08em;color:#6f7a8e}
 .rc-r-UR .rc-medal,.rc-r-L .rc-medal{translate:var(--px,0px) var(--py,0px);transition:translate .14s ease-out}

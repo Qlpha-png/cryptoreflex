@@ -224,7 +224,7 @@ function laurel(x: Ctx) {
     <path d="M70 123l4.4 5-4.4 5-4.4-5z" fill="url(#${u})" stroke="#5a3d0a" stroke-width=".5"/></svg>`;
 }
 const logoTag = (c: ReflexCard, size = "large", cls = "lg") =>
-  `<img class="${cls}" src="${IMG(c.img, size)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">`;
+  `<img class="${cls}" src="${esc(IMG(c.img, size))}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">`;
 
 export interface CardEnv {
   /** nombre de cartes de l'album (pied de carte « S1 · 004/881 ») */
@@ -272,8 +272,8 @@ export function cardHTMLRaw(c: ReflexCard, env: CardEnv, key: string = c.id, cha
   /* 3 faits toujours renseignés : (score Cryptoreflex | année | n° d'album), notoriété, chance de tirer CETTE carte */
   const score = c.score, f1c: [string, string | number] = score != null ? ["SCORE CR", score] : c.year ? ["LANCÉ", c.year] : ["N° ALBUM", String(c.num).padStart(3, "0")];
   const chance = chanceText;
-  return `<div style="--fc:${ed === "fossil" ? FOSSIL_COLOR : (FAM[c.fam] || FAM["Layer 1"]).c}" class="card r-${c.r}${ed ? " ed-" + ed : ""}" data-tilt data-id="${c.id}" data-ed="${ed || ""}" data-fin="" data-serial=""><div class="card-in"><div class="face">
-    ${deco}<img class="amb" src="${IMG(c.img, "small")}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"><div class="tex"></div><div class="pat">${bg}</div><div class="plate"></div><div class="grain"></div>${fil}<div class="inner"></div>${sp}${extra}
+  return `<div style="--fc:${ed === "fossil" ? FOSSIL_COLOR : (FAM[c.fam] || FAM["Layer 1"]).c}" class="card r-${c.r}${ed ? " ed-" + ed : ""}" data-tilt data-id="${esc(c.id)}" data-ed="${ed || ""}" data-fin="" data-serial=""><div class="card-in"><div class="face">
+    ${deco}<img class="amb" src="${esc(IMG(c.img, "small"))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"><div class="tex"></div><div class="pat">${bg}</div><div class="plate"></div><div class="grain"></div>${fil}<div class="inner"></div>${sp}${extra}
     <div class="c-top">${tag ? `<div class="edtag${rarTag ? " rar" : ""}">${esc(tag)}</div>` : ""}
       <div class="ovr" title="Indice de notoriété durable (Wikipédia + abonnés CoinGecko, jamais le prix)"><b>${c.ovr}</b><small>${esc(c.sym)}</small><span class="fic" title="${esc(c.fam)}">${famIcon(c.fam)}</span></div>
       <div class="gem" title="${esc(rarLabel)}">${ed ? "★" : c.r}</div>
@@ -288,11 +288,11 @@ export function cardHTMLRaw(c: ReflexCard, env: CardEnv, key: string = c.id, cha
 }
 
 /* nombres et pourcentages à la française (espace insécable), comme fr() et pct() de la maquette */
-const frN = (n: number) => n.toLocaleString("fr-FR").replace(/ /g, " ");
-export const pct = (p: number, d = 2) => (p * 100).toLocaleString("fr-FR", { maximumFractionDigits: d }).replace(/ /g, " ") + " %";
+const frN = (n: number) => n.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
+export const pct = (p: number, d = 2) => (p * 100).toLocaleString("fr-FR", { maximumFractionDigits: d }).replace(/\u202f/g, "\u00a0") + "\u00a0%";
 /** « 1 sur N » compact et insécable de la carte (odds() de la maquette) : 438 · 2 877 · 20 k · 6 M · 1 Md */
 export function odds(p: number): string {
-  const NB = " ", x = 1 / p, d1 = (v: number) => (Math.round(v * 10) / 10).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
+  const NB = "\u00a0", x = 1 / p, d1 = (v: number) => (Math.round(v * 10) / 10).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
   const s = x < 1e4 ? frN(Math.round(x)) : x < 1e5 ? d1(x / 1e3) + NB + "k" : x < 1e6 ? frN(Math.round(x / 1e3)) + NB + "k" : x < 1e9 ? d1(x / 1e6) + NB + "M" : d1(x / 1e9) + NB + "Md";
   return s.replace(/\s/g, NB);
 }
@@ -304,7 +304,7 @@ export function odds(p: number): string {
  */
 export function slotHTMLRaw(c: ReflexCard, odd: string): string {
   const n = c.ph;
-  return `<div class="ph r-${c.r}" data-ph data-id="${c.id}" style="--rc:${RC[c.r]}">
+  return `<div class="ph r-${c.r}" data-ph data-id="${esc(c.id)}" style="--rc:${RC[c.r]}">
     <svg class="shape" viewBox="0 0 240 336" aria-hidden="true"><path d="M1 19 L19 1 H221 L239 19 V306 L120 335 L1 306 Z" fill="rgba(255,255,255,.028)" stroke="rgba(233,185,73,.42)" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M9 23 L23 9 H217 L231 23 V302 L120 327 L9 302 Z" fill="none" stroke="${RC[c.r]}" stroke-opacity=".22"/></svg>
     <div class="ph-num">${String(c.num).padStart(3, "0")}</div>
     <div class="ph-ring"></div>${logoTag(c, "small", "ph-logo")}
@@ -316,7 +316,7 @@ export function slotHTMLRaw(c: ReflexCard, odd: string): string {
 /** case vide du Musée des Fossiles (fossilSlot() de la maquette) : l'histoire est publique, le nom reste visible */
 export function fossilSlotHTMLRaw(c: ReflexCard, fossilP: number): string {
   const n = c.ph;
-  return `<div class="ph fos" data-ph data-ed="fossil" data-id="${c.id}" style="--rc:#a8927a">
+  return `<div class="ph fos" data-ph data-ed="fossil" data-id="${esc(c.id)}" style="--rc:#a8927a">
     <svg class="shape" viewBox="0 0 240 336" aria-hidden="true"><path d="M1 19 L19 1 H221 L239 19 V306 L120 335 L1 306 Z" fill="rgba(168,146,122,.06)" stroke="rgba(168,146,122,.55)" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M9 23 L23 9 H217 L231 23 V302 L120 327 L9 302 Z" fill="none" stroke="#a8927a" stroke-opacity=".25"/></svg>
     <div class="ph-num">${c.num}</div><div class="ph-ring"></div>${logoTag(c, "small", "ph-logo")}
     <div class="ph-name${n.two ? " two" : ""}" style="font-size:${n.size}px">${n.html}</div>

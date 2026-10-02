@@ -105,8 +105,10 @@ const mono = JetBrains_Mono({
   display: "swap",
   preload: false,
 });
+// latin-ext : signes hors latin de base (₮ de USA₮ sur les cartes Reflex). Fichier téléchargé
+// seulement si un de ces signes est affiché (unicode-range) : aucun coût sur les autres pages.
 const display = Space_Grotesk({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-display",
   display: "swap",
   preload: false,

@@ -44,6 +44,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./"),
+      // « server-only » (lib/reflex-cards/data.ts) : fourni par Next, absent de node_modules à la racine.
+      "server-only": path.resolve(__dirname, "node_modules/next/dist/compiled/server-only/empty.js"),
     },
   },
 });

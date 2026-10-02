@@ -31,7 +31,8 @@ const DISMISS_KEY = "cr_nl_sticky_dismiss_until";
 const DISMISS_DAYS = 7;
 const SHOW_AFTER_MS = 30_000;
 const SCROLL_THRESHOLD = 0.5;
-const SUPPRESSED_PATHS = ["/newsletter", "/merci"];
+// /embed : widgets en iframe sur des sites tiers (la barre recouvrirait le widget).
+const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed"];
 
 function isAlreadySubscribed(): boolean {
   if (typeof document === "undefined") return false;

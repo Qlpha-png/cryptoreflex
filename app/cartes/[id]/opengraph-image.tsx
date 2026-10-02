@@ -1,45 +1,36 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
-import { cleanName, getCard, isReflexCardsEnabled, isVisible, oddsText, seasonDay, todayChance } from "@/lib/reflex-cards/data";
-import { IMG, PIPS, RC, RNAME, shade } from "@/lib/reflex-cards/render";
+import { cleanName, getCard, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
+import { PIPS, RC, RNAME, shade } from "@/lib/reflex-cards/render";
+import { logoData } from "@/lib/reflex-cards/og";
 
 /**
  * Image de partage d'une carte Reflex — /cartes/[id]/opengraph-image.
  * Même composition que l'image « Partager » de la maquette (médaillon aux couleurs
  * de la rareté, logo, nom, rareté + symboles), au format 1200 × 630 des réseaux.
+ * Carte pas encore sortie : visuel neutre doré « carte à venir », sans rareté ni numéro.
+ * Rien de variable dans le temps (chance du jour…) : Next met cette image en cache un an.
  */
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Carte Reflex Cards — Cryptoreflex";
 
-/* logo CoinGecko en data URI : si le téléchargement échoue, l'image reste valide (symbole à la place) */
-async function logoData(img: string): Promise<string | null> {
-  try {
-    const res = await fetch(IMG(img, "large"), { signal: AbortSignal.timeout(5000) });
-    if (!res.ok) return null;
-    const type = res.headers.get("content-type") || "image/png";
-    if (!/^image\/(png|jpeg|jpg|gif|webp)/.test(type)) return null;
-    const buf = Buffer.from(await res.arrayBuffer());
-    return `data:${type};base64,${buf.toString("base64")}`;
-  } catch {
-    return null;
-  }
-}
+const GOLD = "#e9b949";
+const STAR = "M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z";
 
 export default async function OgImage({ params }: { params: { id: string } }) {
-  const day = seasonDay();
   const c = isReflexCardsEnabled() ? getCard(params.id) : undefined;
-  /* carte pas encore sortie : rien ne fuite, même pas son image de partage */
-  if (!c || !isVisible(c, day)) return new Response("Not found", { status: 404 });
-  const col = c.fossil ? "#a8927a" : RC[c.r];
+  if (!c) return new Response("Not found", { status: 404 });
+  const out = isVisible(c, seasonDay());
+  const col = !out ? GOLD : c.fossil ? "#a8927a" : RC[c.r];
   const name = cleanName(c.name);
-  const label = c.fossil ? "FOSSILE" : RNAME[c.r].toUpperCase();
+  const label = !out ? "CARTE À VENIR" : c.fossil ? "FOSSILE" : RNAME[c.r].toUpperCase();
   /* symboles de rareté dessinés (la police des images de partage n'a ni ◆ ni ★) */
-  const pips = c.fossil ? "" : PIPS[c.r];
-  const STAR = "M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z";
+  const pips = !out || c.fossil ? "" : PIPS[c.r];
   const [fonts, logo] = await Promise.all([loadOgFonts(), logoData(c.img)]);
   const nameSize = name.length > 22 ? 58 : name.length > 14 ? 74 : 92;
+  const line = !out ? "Sortie au fil de la saison 1 · rareté secrète" : c.fossil ? `Musée des Fossiles · ${c.fam}` : `${c.fam} · N° ${String(c.num).padStart(3, "0")}`;
 
   return new ImageResponse(
     (
@@ -84,7 +75,7 @@ export default async function OgImage({ params }: { params: { id: string } }) {
           >
             {logo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={logo} width={220} height={220} style={{ borderRadius: 9999 }} alt="" />
+              <img src={logo} width={220} height={220} style={{ borderRadius: 9999, opacity: out ? 1 : 0.85 }} alt="" />
             ) : (
               <div style={{ display: "flex", fontSize: 72, fontWeight: 800, color: col }}>{c.sym}</div>
             )}
@@ -93,12 +84,8 @@ export default async function OgImage({ params }: { params: { id: string } }) {
 
         {/* texte */}
         <div style={{ display: "flex", flexDirection: "column", gap: 22, flex: 1 }}>
-          <div style={{ display: "flex", fontSize: 24, fontWeight: 700, letterSpacing: "0.18em", color: "#f3d68a" }}>
-            REFLEX CARDS · SAISON 1
-          </div>
-          <div style={{ display: "flex", fontSize: nameSize, fontWeight: 800, lineHeight: 1.02, textTransform: "uppercase", letterSpacing: "-0.01em" }}>
-            {name}
-          </div>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 700, letterSpacing: "0.18em", color: "#f3d68a" }}>REFLEX CARDS · SAISON 1</div>
+          <div style={{ display: "flex", fontSize: nameSize, fontWeight: 800, lineHeight: 1.02, textTransform: "uppercase", letterSpacing: "-0.01em" }}>{name}</div>
           <div style={{ display: "flex" }}>
             <div
               style={{
@@ -126,12 +113,8 @@ export default async function OgImage({ params }: { params: { id: string } }) {
               )}
             </div>
           </div>
-          <div style={{ display: "flex", fontSize: 26, color: "rgba(255,255,255,0.72)" }}>
-            {c.fossil ? `Musée des Fossiles · ${c.fam}` : `${c.fam} · N° ${String(c.num).padStart(3, "0")} · ${oddsText(todayChance(c, day))}`}
-          </div>
-          <div style={{ display: "flex", fontSize: 22, color: "rgba(255,255,255,0.5)", marginTop: 18 }}>
-            Jeu gratuit · cryptoreflex.fr/cartes
-          </div>
+          <div style={{ display: "flex", fontSize: 26, color: "rgba(255,255,255,0.72)" }}>{line}</div>
+          <div style={{ display: "flex", fontSize: 22, color: "rgba(255,255,255,0.5)", marginTop: 18 }}>Jeu gratuit · cryptoreflex.fr/cartes</div>
         </div>
       </div>
     ),

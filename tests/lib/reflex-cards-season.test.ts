@@ -6,9 +6,10 @@ import { seasonDay } from "@/lib/reflex-cards/season";
 import { odds } from "@/lib/reflex-cards/render";
 import { HERO_CARDS, SHOWCASE_CARDS, REFLEX_PARTS, allCards, isReleased, isRevealed, isVisible, isPartNamed, todayChance, rarityInfo } from "@/lib/reflex-cards/data";
 
-const KEY = "REFLEX_CARDS_LAUNCH_DATE";
+const KEY = "NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE";
 afterEach(() => {
   delete process.env[KEY];
+  delete process.env.REFLEX_CARDS_LAUNCH_DATE;
 });
 
 describe("Reflex Cards — jour de saison", () => {
@@ -16,9 +17,15 @@ describe("Reflex Cards — jour de saison", () => {
     delete process.env[KEY];
     expect(seasonDay(new Date("2026-10-20T12:00:00Z"))).toBe(0);
   });
-  it("date invalide : jour 0", () => {
-    process.env[KEY] = "15/10/2026";
-    expect(seasonDay(new Date("2026-10-20T12:00:00Z"))).toBe(0);
+  it("date invalide : jour 0 (format, ou date inexistante comme le 31 février)", () => {
+    for (const v of ["15/10/2026", "2026-02-31", "2026-13-01", "demain"]) {
+      process.env[KEY] = v;
+      expect(seasonDay(new Date("2026-10-20T12:00:00Z"))).toBe(0);
+    }
+  });
+  it("ancienne variable serveur encore lue si la publique est absente", () => {
+    process.env.REFLEX_CARDS_LAUNCH_DATE = "2026-10-15";
+    expect(seasonDay(new Date("2026-10-16T12:00:00Z"))).toBe(2);
   });
   it("jour 1 = date de lancement à Paris, minuit compris", () => {
     process.env[KEY] = "2026-10-15";

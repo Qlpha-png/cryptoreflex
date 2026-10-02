@@ -40,6 +40,10 @@ export default function CookieBanner() {
   // Affichage initial : seulement si pas encore de décision.
   useEffect(() => {
     setMounted(true);
+    // Widgets /embed (iframe sur des sites tiers) : pas de bandeau. Le stockage y est cloisonné par
+    // site hôte, le bandeau réapparaîtrait sur chaque site par-dessus le widget ; aucun traceur
+    // soumis à consentement n'y est chargé sans décision.
+    if (window.location.pathname.startsWith("/embed")) return;
     if (!hasConsentDecision()) {
       setOpen(true);
     } else {

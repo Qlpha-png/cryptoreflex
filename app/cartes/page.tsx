@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CalendarDays, Gift, Landmark, Scale, ShieldCheck, Sparkles } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import CardVisual from "@/components/reflex-cards/CardVisual";
@@ -44,7 +45,7 @@ export function generateMetadata(): Metadata {
   return {
     title: TITLE,
     description: DESCRIPTION,
-    alternates: { canonical: PAGE_URL },
+    alternates: withHreflang(PAGE_URL),
     openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website" },
     twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
   };
@@ -99,7 +100,7 @@ export default function CartesPage() {
           <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
-                <Sparkles className="h-3.5 w-3.5" /> Bientôt · Saison 1 « Genèse »
+                <Sparkles className="h-3.5 w-3.5" /> {day >= 1 ? "Saison 1 « Genèse » · en cours" : "Bientôt · Saison 1 « Genèse »"}
               </span>
               <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
                 Reflex Cards, le jeu de cartes <span className="gradient-text">crypto</span> gratuit
@@ -303,7 +304,7 @@ export default function CartesPage() {
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
                 ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande ; seuls les échanges entre amis, 1 contre 1 et de même rareté, sont prévus."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
-                ["Quand le jeu ouvre-t-il ?", "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
+                ["Quand le jeu ouvre-t-il ?", day >= 1 ? "La saison 1 « Genèse » est ouverte : une nouvelle partie de cartes sort chaque semaine." : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (
                 <div key={q}>
                   <dt className="font-semibold text-fg">{q}</dt>

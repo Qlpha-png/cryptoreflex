@@ -1,0 +1,15 @@
+/* Réglages du site autour des cartes Reflex (écrit à la main, à la différence de reflex-cards.css qui est généré). */
+
+/* Vignettes (bandeau des fiches) : animations coupées — pas de rafraîchissement continu de l'écran
+   pour une carte de 92 px. Les cartes en grand gardent leurs animations. */
+.rc-still .rc-card,
+.rc-still .rc-card *,
+.rc-still .rc-ph *,
+.rc-still .rc-back,
+.rc-still .rc-back::after {
+  animation: none !important;
+  transition: none !important;
+}
+.rc-still .rc-back::after {
+  opacity: 0;
+}
