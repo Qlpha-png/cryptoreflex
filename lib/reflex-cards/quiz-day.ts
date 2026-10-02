@@ -109,16 +109,17 @@ function mcq(r: () => number, q: string, good: string, pool: string[], e: string
   return { q, c, ok: c.indexOf(good), e };
 }
 const famOf = (id: string) => RAW.paliers.cartes[id]?.fam ?? "";
-const article = (fam: string) => (/^[aeiouyéè]/i.test(fam) ? "un " : "un ") + fam; // familles au masculin dans l'album (« un Layer 1 », « un Stablecoin »)
+/* les familles de l'album n'ont pas de genre fiable (« IA », « DeFi », « Layer 1 ») : on parle toujours de « la famille « X » » */
+const inFam = (fam: string) => `la famille « ${fam} »`;
 
 /** les 5 questions du jour pour une partie (même résultat à chaque appel le même jour) */
 export function quizDay(playerKey: string, date: string, day: number): QjQuestion[] {
   const r = rng(`${playerKey}|${date}|quiz-du-jour`);
   const rows = RAW.cards.filter((row) => row[1] && row[2] && released(row[0], day));
   if (rows.length < 8) return [];
-  /* plutôt les cartes connues : la moitié la plus notoire des cartes sorties (au moins 24) */
+  /* plutôt les cartes connues : le tiers le plus notoire des cartes sorties (entre 24 et 80 cartes) */
   const byNoto = [...rows].sort((a, b) => (RAW.paliers.cartes[a[0]].noto ?? 9999) - (RAW.paliers.cartes[b[0]].noto ?? 9999));
-  const famous = byNoto.slice(0, Math.max(24, Math.ceil(byNoto.length / 2)));
+  const famous = byNoto.slice(0, Math.min(80, Math.max(24, Math.ceil(byNoto.length / 3))));
   const names = rows.map((row) => row[1]), syms = rows.map((row) => row[2].toUpperCase());
   const fams = [...new Set(rows.map((row) => famOf(row[0])))];
   const used = new Set<string>();
@@ -146,7 +147,7 @@ export function quizDay(playerKey: string, date: string, day: number): QjQuestio
       const others = shuffle(r, famous.filter((x) => famOf(x[0]) !== fam && x[0] !== id)).slice(0, 3);
       if (others.length < 3) continue;
       const ch = shuffle(r, [name, ...others.map((x) => x[1])]);
-      q = { q: `Laquelle de ces cryptos est ${article(fam)} ?`, c: ch, ok: ch.indexOf(name), e: `${name} est ${article(fam)}${sub ? ` (${sub})` : ""} ; ${others.map((x) => `${x[1]} est ${article(famOf(x[0]))}`).join(", ")}.` };
+      q = { q: `Laquelle de ces cryptos appartient à ${inFam(fam)} ?`, c: ch, ok: ch.indexOf(name), e: `${name} appartient à ${inFam(fam)}${sub ? ` (${sub})` : ""} ; ${others.map((x) => `${x[1]} à ${inFam(famOf(x[0]))}`).join(", ")}.` };
     }
     if (!q) continue;
     used.add(id);
