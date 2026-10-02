@@ -101,7 +101,7 @@ function BeginnerTile({ score }: { score: number }) {
     <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 text-primary-soft">
       <div className="flex items-center gap-2">
         <AlertTriangle className="h-4 w-4" />
-        <div className="text-[11px] uppercase tracking-wider opacity-80">Beginner-friendly</div>
+        <div className="text-[11px] uppercase tracking-wider opacity-80">Accessible aux débutants</div>
       </div>
       <div className="mt-2 flex items-center gap-1">
         {dots.map((_, i) => (

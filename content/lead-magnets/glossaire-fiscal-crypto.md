@@ -18,7 +18,7 @@ disclaimer: "Document à valeur informative. Définitions issues de la doctrine 
 Article du Code Général des Impôts qui régit la fiscalité des cessions de crypto-actifs par les particuliers depuis la loi de finances 2019. Pose les principes de la PFU 31,4 %, de la formule de calcul au prorata du portefeuille, et du seuil d'exonération à 305 €/an.
 
 ### Abattement durée de détention
-**N'existe PAS pour les crypto-actifs**. Contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements jusqu'à 65 % selon la durée, le crypto est imposé identique que tu détiennes 5 jours ou 5 ans. Ne pas confondre avec le régime mobilier classique.
+**N'existe PAS pour les crypto-actifs**. Contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements jusqu'à 65 % selon la durée, le crypto est imposé de façon identique, que vous le déteniez 5 jours ou 5 ans. Ne pas confondre avec le régime mobilier classique.
 
 ### Acquisition (prix d')
 Somme totale dépensée pour acquérir un crypto-actif, frais d'achat inclus. Important : on parle du prix d'acquisition **du portefeuille global**, pas d'un token spécifique. Utilisé dans la formule 150 VH bis.
@@ -27,7 +27,7 @@ Somme totale dépensée pour acquérir un crypto-actif, frais d'achat inclus. Im
 Distribution gratuite de tokens à une communauté (souvent en remerciement d'une activité on-chain). Fiscalement : cas non tranché par une doctrine officielle dédiée — position majoritaire = plus-value à la cession (prix d'acquisition 0), position prudente = revenu (BNC) à la réception. À vérifier au cas par cas.
 
 ### AMF (Autorité des Marchés Financiers)
-Régulateur français des marchés financiers. Compétente pour les PSAN (Prestataires de Services sur Actifs Numériques) jusqu'à fin 2025, remplacée progressivement par le régime MiCA européen depuis juillet 2026.
+Régulateur français des marchés financiers. Elle enregistrait les PSAN (Prestataires de Services sur Actifs Numériques) jusqu'à la fin de la période transitoire MiCA, le 30 juin 2026 ; elle délivre désormais les agréments MiCA (CASP) en France et publie une liste blanche des prestataires autorisés.
 
 ### Annexe 2086
 Formulaire Cerfa à joindre à la déclaration 2042-C qui détaille **chaque cession crypto** de l'année. Comporte 5 colonnes : date, valeur globale du portefeuille, prix de cession, prix total d'acquisition, plus ou moins-value.
@@ -44,7 +44,7 @@ Régime applicable au trading **professionnel** de crypto-actifs (caractère hab
 Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 83 600 €/an (seuil 2026-2028 ; abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
 
 ### BOFIP (Bulletin Officiel des Finances Publiques)
-Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La doctrine BOI-RPPM-PVBMC-30-30 régit la fiscalité crypto. **Opposable à l'administration** : si tu as suivi le BOFIP, tu es protégé d'un redressement même si la jurisprudence évolue.
+Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La doctrine BOI-RPPM-PVBMC-30-30 régit la fiscalité crypto. **Opposable à l'administration** : si vous avez suivi le BOFIP, vous êtes protégé d'un redressement même si la jurisprudence évolue.
 
 ## C
 
@@ -52,7 +52,7 @@ Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent
 Voir "Annexe 2086".
 
 ### Cession
-Tout transfert à titre onéreux d'un crypto-actif : vente contre euros, **swap crypto-vers-crypto**, paiement d'un bien ou service en crypto. Le simple transfert entre wallets perso n'est PAS une cession. Fait générateur de l'imposition.
+Tout transfert à titre onéreux d'un crypto-actif : vente contre euros, paiement d'un bien ou service en crypto. Un échange crypto-vers-crypto sans soulte bénéficie d'un sursis d'imposition (voir « Swap »). Le simple transfert entre wallets perso n'est PAS une cession. La cession imposable est le fait générateur de l'imposition.
 
 ### CGI (Code Général des Impôts)
 Texte légal de référence pour toute la fiscalité française. L'article 150 VH bis CGI = base juridique du régime crypto particuliers.
@@ -80,7 +80,7 @@ Finance décentralisée : protocoles on-chain (Aave, Compound, Uniswap, Curve, L
 ## E
 
 ### Exonération (seuil de)
-Si le total de tes cessions sur l'année est **≤ 305 €**, tu es exonéré·e d'imposition sur les plus-values. **MAIS** : le 3916-bis reste obligatoire si tu as des comptes étrangers, même sous le seuil.
+Si le total de vos cessions sur l'année est **≤ 305 €**, vous êtes exonéré·e d'imposition sur les plus-values. **MAIS** : le 3916-bis reste obligatoire si vous avez des comptes étrangers, même sous le seuil.
 
 ## F
 
@@ -91,7 +91,7 @@ Méthodes de calcul du prix d'acquisition utilisées dans certains pays (USA, Al
 Plus-value = Prix de cession − (Prix total d'acquisition × Prix de cession ÷ Valeur globale du portefeuille à la date de cession). Aussi appelée "calcul au prorata" ou "méthode du portefeuille global".
 
 ### Formulaire 3916-bis
-Déclaration obligatoire pour chaque compte crypto détenu hors France (Binance, Kraken, Bybit, KuCoin, etc.). Une déclaration par compte. Sanction omission : 750 € par compte non déclaré (1 500 € si le compte dépasse 50 000 €) ; 10 000 € si État sans accord d'assistance avec la France.
+Déclaration obligatoire pour chaque compte crypto détenu hors France (Binance, Kraken, Bybit, KuCoin, etc.). Une déclaration par compte, y compris pour un compte fermé en cours d'année : il se déclare pour chaque année où il était ouvert. Sanction omission : 750 € par compte non déclaré (1 500 € si la valeur du compte dépasse 50 000 €).
 
 ## G
 
@@ -114,7 +114,7 @@ Prêt de crypto-actifs sur une plateforme (centralisée ou DeFi) en échange d'i
 ## M
 
 ### MiCA (Markets in Crypto-Assets)
-Règlement européen entré pleinement en vigueur en juillet 2026. Cadre les Crypto-Asset Service Providers (CASP). Remplace progressivement le régime PSAN français. Les exchanges non-MiCA ne peuvent plus servir le marché européen.
+Règlement européen (UE 2023/1114) qui encadre les Crypto-Asset Service Providers (CASP). En France, la période transitoire a pris fin le 1er juillet 2026 : depuis, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut fournir des services sur crypto-actifs à des résidents français. Le régime PSAN a pris fin.
 
 ### Mining
 Activité de validation des transactions blockchain en échange de tokens. Considéré fiscalement comme **BNC professionnel** dès qu'il est habituel (achat de matériel ASIC, électricité dédiée). Charges déductibles (matériel, électricité, internet).
@@ -139,10 +139,10 @@ Gain réalisé à la cession d'un crypto-actif. Calculée selon la formule 150 V
 **Somme des valeurs de marché de TOUS les crypto-actifs détenus** par le contribuable au moment d'une cession. Inclut tous les wallets, exchanges, DeFi, NFT. Base de calcul de la formule 150 VH bis.
 
 ### Prélèvements sociaux (PS)
-18,6 % au total : 10,6 % CSG + 0,5 % CRDS + 7,5 % prélèvement de solidarité. S'appliquent à la PV crypto, que tu choisisses PFU ou barème.
+18,6 % au total : 10,6 % CSG + 0,5 % CRDS + 7,5 % prélèvement de solidarité. S'appliquent à la PV crypto, que vous choisissiez le PFU ou le barème.
 
 ### PSAN (Prestataire de Services sur Actifs Numériques)
-Régime français d'enregistrement obligatoire (AMF) pour les exchanges, custodians et conseillers crypto. **Remplacé progressivement par le statut CASP MiCA** depuis juillet 2026. Les anciens PSAN bénéficient d'une période transitoire pour basculer.
+Ancien régime français d'enregistrement obligatoire (AMF) pour les exchanges, custodians et conseillers crypto. **Il a pris fin avec la période transitoire MiCA, le 1er juillet 2026** : un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation, seul l'agrément CASP MiCA compte.
 
 ## Q
 
@@ -152,7 +152,7 @@ Mécanisme du calcul IR : le revenu imposable est divisé par le nombre de parts
 ## R
 
 ### RFR (Revenu Fiscal de Référence)
-Indicateur calculé par la DGFiP qui inclut **toutes** tes ressources, y compris les PV crypto. Sert de référence pour de nombreux droits et exonérations (CMU-C, taxe d'habitation résiduelle, bourses étudiantes…). Une PV crypto importante peut te faire perdre des droits.
+Indicateur calculé par la DGFiP qui inclut **toutes** vos ressources, y compris les PV crypto. Sert de référence pour de nombreux droits et exonérations (CMU-C, taxe d'habitation résiduelle, bourses étudiantes…). Une PV crypto importante peut vous faire perdre des droits.
 
 ### Régime micro-BNC
 Régime simplifié pour les BNC : si CA < 83 600 € (seuil 2026-2028), abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5HQ ou 5JQ). Adapté pour les petits revenus de staking/lending.
@@ -174,7 +174,7 @@ Verrouillage de tokens pour participer à la sécurisation d'une blockchain Proo
 ## T
 
 ### TMI (Tranche Marginale d'Imposition)
-Taux d'imposition de la dernière tranche de tes revenus dans le barème IR. Varie de 0 % à 45 %. Critique pour le choix PFU vs barème.
+Taux d'imposition de la dernière tranche de vos revenus dans le barème IR. Varie de 0 % à 45 %. Critique pour le choix PFU vs barème.
 
 ### TVA
 Pour les particuliers : **non applicable** aux opérations crypto (jurisprudence CJUE Hedqvist 2015 : les opérations en bitcoin sont exonérées de TVA). Pour les pros dont le CA de prestations de services dépasse 37 500 € (seuil de franchise en base de TVA) : la TVA peut s'appliquer sur certaines prestations connexes (consulting, formation).
@@ -193,7 +193,7 @@ Voir "Portefeuille global". À calculer à la **date de chaque cession** — pas
 
 ## Disclaimer
 
-Ce glossaire est à jour au 26 avril 2026. Les définitions s'appuient sur le CGI, le BOFIP et la pratique des professionnels du chiffre. **Pour toute situation patrimoniale complexe ou doute spécifique, consulte un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur l'application de ces définitions à un cas individuel.
+Ce glossaire a été mis à jour le 2 octobre 2026. Les définitions s'appuient sur le CGI, le BOFIP et la pratique des professionnels du chiffre. **Pour toute situation patrimoniale complexe ou doute spécifique, consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur l'application de ces définitions à un cas individuel.
 
 ---
 

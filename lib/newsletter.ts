@@ -146,7 +146,7 @@ export async function subscribe(input: SubscribeInput): Promise<SubscribeResult>
       });
       return {
         ok: false,
-        error: "Inscription impossible — réessaie dans un instant.",
+        error: "Inscription impossible — réessayez dans un instant.",
         status: res.status,
       };
     }
@@ -165,7 +165,7 @@ export async function subscribe(input: SubscribeInput): Promise<SubscribeResult>
     console.error("[newsletter] Beehiiv fetch failed", { message });
     return {
       ok: false,
-      error: "Service temporairement indisponible. Réessaie dans un instant.",
+      error: "Service temporairement indisponible. Réessayez dans un instant.",
     };
   }
 }

@@ -59,7 +59,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
     slug: "cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026",
     title: "Cerfa 3916-bis — déclarer ses comptes crypto étrangers 2026",
     description:
-      "Tutoriel complet du Cerfa 3916-bis pour déclarer Binance, Bitget, Kraken Irlande. Sanctions 750 € à 1 500 € par compte oublié, prescription 6 ans.",
+      "Tutoriel complet du Cerfa 3916-bis pour déclarer Binance, Bitget, Kraken Irlande. Sanctions 750 € à 1 500 € par compte oublié, délai de reprise porté à 10 ans.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -110,7 +110,7 @@ export const FISCALITE_SATELLITES: FiscaliteRelatedArticle[] = [
     slug: "deduire-pertes-crypto-impot-2026",
     title: "Déduire ses pertes crypto de l'impôt en 2026 — méthode complète",
     description:
-      "Moins-values crypto : règle du report fiscal, mécanisme de compensation 150 VH bis, durée de report, cas pratiques et limites légales 2026.",
+      "Moins-values crypto : compensation sur les plus-values de la même année (150 VH bis), absence de report sur les années suivantes, cas pratiques et limites légales 2026.",
     category: "Fiscalité",
     cluster: "satellite",
   },
@@ -169,7 +169,7 @@ function calculatorSoftwareSchema(description: string): JsonLd {
     name: "Calculateur fiscalité crypto France 2026",
     alternateName: [
       "Simulateur impôt crypto 2026",
-      "Calculateur PFU 30 crypto",
+      "Calculateur PFU 31,4 % crypto",
       "Calculateur déclaration 2086",
     ],
     description,
@@ -252,16 +252,16 @@ export function generateFiscaliteSchema(
     steps: [
       {
         name: "Récupérer l'historique d'opérations 2025",
-        text: "Exporte le CSV complet de vos cessions sur Binance, Coinbase, Kraken, Bitget. Conserve uniquement les cessions vers monnaie ayant cours légal (EUR, USD) — les swaps crypto/crypto sont fiscalement neutres.",
+        text: "Exportez le CSV complet de vos cessions sur Binance, Coinbase, Kraken, Bitget. Conservez uniquement les cessions vers monnaie ayant cours légal (EUR, USD) — les swaps crypto/crypto sont fiscalement neutres.",
         url: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026",
       },
       {
         name: "Calculer le total des cessions et des acquisitions",
-        text: "Additionne le montant total des ventes en euros (T1) puis le total des achats correspondants (T2). Si T1 reste inférieur ou égal à 305 euros sur l'année, vous êtes exonéré : passe directement à l'étape 5.",
+        text: "Additionnez le montant total des ventes en euros (T1) puis le total des achats correspondants (T2). Si T1 reste inférieur ou égal à 305 euros sur l'année, vous êtes exonéré : passez directement à l'étape 5.",
       },
       {
         name: "Appliquer la formule article 150 VH bis du CGI",
-        text: "Plus-value nette = total cessions − (prix total acquisition × cessions / valeur globale portefeuille) − frais. Le calculateur applique cette formule de prorata automatiquement et déduit les reports de moins-values.",
+        text: "Plus-value nette = total cessions − (prix total acquisition × cessions / valeur globale portefeuille) − frais. Le calculateur applique cette formule de prorata automatiquement. Les moins-values ne s'imputent que sur les plus-values de la même année, sans report.",
         url: "/outils/calculateur-fiscalite",
       },
       {
@@ -271,7 +271,7 @@ export function generateFiscaliteSchema(
       },
       {
         name: "Reporter sur le Cerfa 2086 puis 2042-C",
-        text: "Remplis le formulaire 2086 ligne par ligne (une ligne par cession), reporte le total plus-value en case 3AN du 2042-C, et déclare vos comptes étrangers en 3916-bis. Date limite 21 mai au 4 juin 2026 en ligne (19 mai pour la déclaration papier) selon votre département.",
+        text: "Remplissez le formulaire 2086 ligne par ligne (une ligne par cession), reportez le total plus-value en case 3AN du 2042-C (moins-value en case 3BN), et déclarez vos comptes étrangers en 3916-bis. Date limite 21 mai au 4 juin 2026 en ligne (19 mai pour la déclaration papier) selon votre département ; correction en ligne possible du 29 juillet au 30 novembre 2026 inclus.",
         url: "/blog/declaration-crypto-cerfa-2086-tutoriel-2026",
       },
     ],

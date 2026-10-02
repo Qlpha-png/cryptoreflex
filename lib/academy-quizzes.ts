@@ -402,7 +402,7 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "L'AMF a confirmé que la période transitoire permettant aux PSAN d'opérer sans agrément MiCA prend fin le 1er juillet 2026. Après cette date, seuls les prestataires agréés CASP (en France, ou passeportés depuis un autre État de l'UE) peuvent fournir des services crypto en France. Opérer sans agrément expose à 2 ans de prison et 30 000 € d'amende.",
+      "La période transitoire qui permettait aux PSAN d'opérer sans agrément MiCA a pris fin le 1er juillet 2026. Depuis cette date, seuls les prestataires agréés CASP (en France, ou passeportés depuis un autre État de l'UE) peuvent fournir des services crypto en France. Opérer sans agrément expose à des sanctions pénales.",
   },
   {
     id: "pla-q2-critere-principal",
@@ -410,7 +410,7 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
       "Quel est le critère le PLUS important pour choisir une plateforme crypto en France en 2026 ?",
     choices: [
       "Le nombre de cryptos exotiques listées.",
-      "La régulation : agrément CASP-MiCA (ou PSAN en transition).",
+      "La régulation : agrément CASP-MiCA.",
       "Le montant des bonus de parrainage.",
       "Le design de l'application mobile.",
     ],
@@ -605,7 +605,7 @@ const QUIZ_CHOISIR: QuizQuestion[] = [
   {
     id: "chx-q1-fdv-scenario",
     question:
-      "Un token a une petite capitalisation, mais une FDV (valorisation totalement diluée) 10 fois supérieure. Qu'est-ce que ça t'apprend ?",
+      "Un token a une petite capitalisation, mais une FDV (valorisation totalement diluée) 10 fois supérieure. Qu'est-ce que cela vous apprend ?",
     choices: [
       "Le token est sous-évalué : c'est une bonne affaire.",
       "Une grande partie de l'offre n'est pas encore en circulation : de futurs déblocages risquent de diluer les détenteurs et de peser sur le prix.",
@@ -745,16 +745,16 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
     id: "arn-q1-ponzi-scenario",
     question:
-      "Un proche te montre une plateforme qui promet +2 % par JOUR « garantis », avec un bonus si vous parrainez des amis. Quel est le bon réflexe ?",
+      "Un proche vous montre une plateforme qui promet +2 % par JOUR « garantis », avec un bonus si vous parrainez des amis. Quel est le bon réflexe ?",
     choices: [
       "Investir vite, avant que l'opportunité ne disparaisse.",
       "Reconnaître les marqueurs d'un Ponzi (rendement fixe élevé « garanti » + parrainage) et refuser.",
       "Investir un petit montant pour « tester » sans risque.",
-      "Attendre que votre proche ait retiré ses gains, puis te lancer.",
+      "Attendre que votre proche ait retiré ses gains, puis vous lancer.",
     ],
     correctIndex: 1,
     explanation:
-      "+2 %/jour « garanti » + parrainage = signature d'un Ponzi. « Tester avec un petit montant » ou « attendre que l'autre retire » sont justement les pièges qui te font entrer : au début les retraits marchent (payés par l'argent des nouveaux), jusqu'à l'effondrement.",
+      "+2 %/jour « garanti » + parrainage = signature d'un Ponzi. « Tester avec un petit montant » ou « attendre que l'autre retire » sont justement les pièges qui vous font entrer : au début les retraits marchent (payés par l'argent des nouveaux), jusqu'à l'effondrement.",
   },
   {
     id: "arn-q2-phishing-scenario",
@@ -768,7 +768,7 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Le phishing joue sur l'urgence. Ne clique jamais sur un lien reçu par SMS ou email : accède au service par vos propres moyens (favori, appli officielle). Un vrai problème de sécurité se règle depuis votre compte, pas depuis un lien qu'on vous envoie.",
+      "Le phishing joue sur l'urgence. Ne cliquez jamais sur un lien reçu par SMS ou email : accédez au service par vos propres moyens (favori, appli officielle). Un vrai problème de sécurité se règle depuis votre compte, pas depuis un lien qu'on vous envoie.",
   },
   {
     id: "arn-q3-rugpull-signes",
@@ -800,16 +800,16 @@ const QUIZ_ARNAQUES: QuizQuestion[] = [
   {
     id: "arn-q5-pigbutchering-scenario",
     question:
-      "Une personne rencontrée en ligne, très attentionnée depuis des semaines, te conseille une plateforme où « elle gagne très bien ». Quel est le signal ?",
+      "Une personne rencontrée en ligne, très attentionnée depuis des semaines, vous conseille une plateforme où « elle gagne très bien ». Quel est le signal ?",
     choices: [
       "C'est une bonne opportunité, partagée par quelqu'un de confiance.",
       "C'est le schéma classique du « pig butchering » : confiance construite dans le temps, puis fausse plateforme — vous refusez.",
       "Vous investissez un petit montant pour ne pas la vexer.",
-      "Vous suivez, car elle t'a montré des captures d'écran de ses gains.",
+      "Vous suivez, car elle vous a montré des captures d'écran de ses gains.",
     ],
     correctIndex: 1,
     explanation:
-      "Le « pig butchering » mise sur la relation (amitié, romance) bâtie sur des semaines avant de t'orienter vers une plateforme bidon aux faux gains. Les « preuves » de gains et la peur de vexer sont précisément les leviers de l'arnaque.",
+      "Le « pig butchering » mise sur la relation (amitié, romance) bâtie sur des semaines avant de vous orienter vers une plateforme bidon aux faux gains. Les « preuves » de gains et la peur de vexer sont précisément les leviers de l'arnaque.",
   },
 ];
 
@@ -879,7 +879,7 @@ const QUIZ_MARCHE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Les marchés alternent euphorie et déprime, mais personne ne timer le haut/bas de façon répétée. C'est pourquoi lisser ses achats (DCA) et garder son sang-froid battent statistiquement la tentative de « timer le marché ».",
+      "Les marchés alternent euphorie et déprime, mais personne ne sait timer le haut et le bas de façon répétée. C'est pourquoi lisser ses achats (DCA) et garder son sang-froid battent statistiquement la tentative de « timer le marché ».",
   },
 ];
 
@@ -937,7 +937,7 @@ const QUIZ_TRADING: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "L'ordre limite te laisse fixer votre prix : il ne s'exécute qu'à ce niveau (ou mieux), sans surveillance. L'ordre au marché, lui, s'exécuterait tout de suite au prix courant — l'inverse de ce que vous voulez ici.",
+      "L'ordre limite vous laisse fixer votre prix : il ne s'exécute qu'à ce niveau (ou mieux), sans surveillance. L'ordre au marché, lui, s'exécuterait tout de suite au prix courant — l'inverse de ce que vous voulez ici.",
   },
   {
     id: "trd-q5-gestion-risque",
@@ -960,13 +960,13 @@ const QUIZ_NFT_WEB3: QuizQuestion[] = [
     question: "Parmi ces affirmations sur les NFT, laquelle est FAUSSE ?",
     choices: [
       "Un NFT prouve une entrée unique et identifiable sur la blockchain.",
-      "Acheter un NFT te transfère automatiquement les droits d'auteur de l'œuvre associée.",
+      "Acheter un NFT vous transfère automatiquement les droits d'auteur de l'œuvre associée.",
       "La grande majorité des NFT du pic 2021 ont perdu l'essentiel de leur valeur.",
       "Le standard le plus courant des NFT sur Ethereum est l'ERC-721.",
     ],
     correctIndex: 1,
     explanation:
-      "Posséder un NFT ne te donne PAS les droits d'auteur par défaut : sauf licence explicite, vous détenez un jeton de propriété/authenticité, pas la propriété intellectuelle de l'œuvre. C'est un malentendu très répandu. Les trois autres affirmations sont exactes.",
+      "Posséder un NFT ne vous donne PAS les droits d'auteur par défaut : sauf licence explicite, vous détenez un jeton de propriété/authenticité, pas la propriété intellectuelle de l'œuvre. C'est un malentendu très répandu. Les trois autres affirmations sont exactes.",
   },
   {
     id: "nft-q2-standards",
@@ -1001,7 +1001,7 @@ const QUIZ_NFT_WEB3: QuizQuestion[] = [
     choices: [
       "Vous cliquez sur « mot de passe oublié » pour la régénérer.",
       "Personne ne peut récupérer l'accès : en self-custody, la seed phrase est l'unique clé de vos fonds.",
-      "MetaMask te la renvoie par email après vérification d'identité.",
+      "MetaMask vous la renvoie par email après vérification d'identité.",
       "Vous contactez le support pour réinitialiser votre compte.",
     ],
     correctIndex: 1,

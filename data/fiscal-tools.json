@@ -18,47 +18,54 @@
       "micaCompliant": true,
       "plansEur": [
         {
-          "name": "Découverte",
+          "name": "Free",
           "priceEur": 0,
-          "maxTransactions": 30,
+          "maxTransactions": "unlimited",
           "features": [
-            "Connexion à 200+ plateformes",
-            "Visualisation portefeuille",
-            "Aperçu plus-values",
-            "Aucun export Cerfa"
+            "Plateformes et wallets illimités",
+            "Suivi du portefeuille (CeFi et wallets)",
+            "Plus-values calculées manuellement",
+            "Formulaire des comptes étrangers (3916-bis)",
+            "Aucun rapport fiscal"
           ]
         },
         {
-          "name": "Hodler",
-          "priceEur": 79,
-          "maxTransactions": 500,
+          "name": "Lite",
+          "priceEur": 39,
+          "maxTransactions": 50,
           "features": [
-            "Export Cerfa 2086 + 2042-C",
-            "Pré-remplissage 3916-bis",
-            "Support email FR",
-            "Mise à jour annuelle incluse"
+            "Plus-values calculées automatiquement",
+            "Rapport des plus et moins-values",
+            "Attestation fiscale",
+            "Export des documents"
           ]
         },
         {
-          "name": "Trader",
-          "priceEur": 199,
-          "maxTransactions": 5000,
+          "name": "Starter",
+          "priceEur": 99,
+          "maxTransactions": 1000,
           "features": [
-            "Tout Hodler",
-            "DeFi multi-chain (ETH, BNB, Polygon, Arbitrum, Solana)",
-            "NFT & airdrops automatiques",
-            "Support chat prioritaire FR"
+            "Tout Lite",
+            "Suivi CeFi et DeFi",
+            "Guide de déclaration pas à pas"
           ]
         },
         {
-          "name": "Pro",
-          "priceEur": 549,
-          "maxTransactions": 50000,
+          "name": "Smart",
+          "priceEur": 249,
+          "maxTransactions": 10000,
           "features": [
-            "Tout Trader",
-            "Comptes illimités sur exchanges",
-            "Mode expert-comptable (accès partagé)",
-            "Support téléphonique FR"
+            "Tout Starter, jusqu'à 10 000 transactions"
+          ]
+        },
+        {
+          "name": "Unlimited",
+          "priceEur": 999,
+          "maxTransactions": "unlimited",
+          "features": [
+            "Tout Smart, transactions illimitées",
+            "Rapatriement de fonds",
+            "Dossier en cas de contrôle fiscal"
           ]
         }
       ],
@@ -74,15 +81,15 @@
         "Génère le formulaire 2086 + 3916-bis prêt à téléverser sur impots.gouv.fr",
         "Support client en français par chat et email (réponse <24h)",
         "Compatible DeFi, staking, NFT et airdrops sans config manuelle",
-        "Partenariats officiels avec Bitpanda, Binance France, Coinhouse"
+        "Partenariats officiels avec Bitpanda et Coinhouse"
       ],
       "cons": [
-        "Pas de plan gratuit pour l'export Cerfa (palier 79 €/an minimum)",
+        "Rapport fiscal payant : 39 €/an jusqu'à 50 transactions, 99 €/an jusqu'à 1 000",
         "Interface mobile limitée (web-first)"
       ],
       "score": 9.4,
       "recommended": true,
-      "notes": "Notre recommandation #1 pour les contribuables français. Partenaire officiel Cryptoreflex — code promo réduction 30 %."
+      "notes": "Notre recommandation #1 pour les contribuables français. Partenaire officiel Cryptoreflex."
     },
     {
       "id": "koinly",

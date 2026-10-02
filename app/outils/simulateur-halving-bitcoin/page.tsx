@@ -59,7 +59,7 @@ const FAQ_ITEMS = [
   {
     question: "Sur quelle plateforme automatiser un DCA Bitcoin en France ?",
     answer:
-      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Bitpanda et Coinbase proposent aussi des achats récurrents. Sur Binance, vous pouvez programmer un Auto-Invest. Notre comparatif détaillé : /comparatif.",
+      "Bitstack est la référence francophone pour le DCA Bitcoin (achats automatiques dès 1 €/jour, conforme MiCA). Bitpanda et Coinbase proposent aussi des achats récurrents. Notre comparatif détaillé : /comparatif.",
   },
 ];
 

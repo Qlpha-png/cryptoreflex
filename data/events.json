@@ -62,7 +62,7 @@
       "category": "regulation",
       "date": "2026-07-01",
       "isApproximate": false,
-      "description": "Fin de la période de transition : seuls les CASP agréés MiCA peuvent fournir des services crypto en France après cette date. Les PSAN non-MiCA doivent cesser leur activité (peine encourue : 2 ans + 30 000 €).",
+      "description": "Fin de la période de transition : seuls les CASP agréés MiCA peuvent fournir des services crypto en France après cette date. Les PSAN non-MiCA doivent cesser leur activité.",
       "impact": "high",
       "links": [
         { "label": "Communiqué AMF", "url": "https://www.amf-france.org/en/news-publications/news/amf-reminds-digital-asset-service-providers-transitional-period-allowing-them-continue-providing" },

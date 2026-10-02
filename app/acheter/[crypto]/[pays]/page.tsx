@@ -23,7 +23,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { getAllCryptos, getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
+import { getAllCryptos, getCryptoBySlug, isNoPlatformNote, listedVenues, type AnyCrypto } from "@/lib/cryptos";
 import {
   COUNTRY_CODES,
   COUNTRIES,
@@ -140,7 +140,7 @@ function platformsForCryptoCountry(
   crypto: AnyCrypto,
   country: CountryConfig,
 ): { platforms: string[]; warning: string | null } {
-  const platforms = crypto.whereToBuy.slice(0, 6);
+  const platforms = listedVenues(crypto.whereToBuy).slice(0, 6);
   if (country.code === "fr") {
     return { platforms, warning: null };
   }
@@ -154,12 +154,12 @@ function platformsForCryptoCountry(
 function buildSteps(
   crypto: AnyCrypto,
   country: CountryConfig,
-  topPlatform: string,
+  topPlatform: string | undefined,
 ): { name: string; text: string }[] {
   return [
     {
       name: `Choisir une plateforme régulée et créer un compte`,
-      text: `Sélectionner une plateforme dans la liste ci-dessous (ex : ${topPlatform}). Vérifier qu'elle est agréée CASP/MiCA ou qu'elle dispose d'une autorisation locale ${country.regulator}. Création de compte avec adresse email + mot de passe fort + 2FA obligatoire.`,
+      text: `${topPlatform ? `Sélectionner une plateforme dans la liste ci-dessous (ex : ${topPlatform}).` : `Aucune plateforme agréée MiCA ne propose ${crypto.name} à notre connaissance : vérifier d'abord qu'une plateforme régulée la liste.`} Vérifier qu'elle est agréée CASP/MiCA ou qu'elle dispose d'une autorisation locale ${country.regulator}. Création de compte avec adresse email + mot de passe fort + 2FA obligatoire.`,
     },
     {
       name: `Compléter la vérification d'identité (KYC)`,
@@ -196,7 +196,9 @@ function buildFaq(
     },
     {
       q: `Quelles plateformes sont recommandées pour acheter ${crypto.name} ${country.fromName} ?`,
-      ans: `Notre base éditoriale liste ${crypto.whereToBuy.length} plateformes pour ${crypto.name} : ${crypto.whereToBuy.slice(0, 5).join(", ")}${crypto.whereToBuy.length > 5 ? "…" : ""}. La plupart sont MiCA-compliant et accessibles ${country.fromName}, mais les méthodes de dépôt en ${country.currency} et le support local varient. Tester avec un petit dépôt avant d'engager un capital significatif.`,
+      ans: listedVenues(crypto.whereToBuy).length === 0
+        ? `${crypto.whereToBuy.find(isNoPlatformNote) ?? "Aucune plateforme agréée MiCA ne la propose à notre connaissance"}. Vérifiez le statut de toute plateforme sur le registre de l'ESMA avant d'y déposer des fonds.`
+        : `Notre base éditoriale liste ${listedVenues(crypto.whereToBuy).length} plateforme${listedVenues(crypto.whereToBuy).length > 1 ? "s" : ""} pour ${crypto.name} : ${listedVenues(crypto.whereToBuy).slice(0, 5).join(", ")}${listedVenues(crypto.whereToBuy).length > 5 ? "…" : ""}. Vérifiez le statut MiCA de chacune avant inscription ; par ailleurs, les méthodes de dépôt en ${country.currency} et le support local varient. Tester avec un petit dépôt avant d'engager un capital significatif.`,
     },
     {
       q: `Puis-je staker mon ${crypto.symbol} ${country.fromName} ?`,
@@ -219,7 +221,7 @@ export default function AcheterPaysPage({ params }: Props) {
   if (!c || !country) notFound();
 
   const { platforms, warning } = platformsForCryptoCountry(c, country);
-  const topPlatform = platforms[0] ?? "Coinbase";
+  const topPlatform = platforms[0];
   const steps = buildSteps(c, country, topPlatform);
   const faq = buildFaq(c, country);
 
@@ -295,6 +297,16 @@ export default function AcheterPaysPage({ params }: Props) {
           {warning && (
             <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-amber-200">
               {warning}
+            </p>
+          )}
+          {platforms.length === 0 && (
+            <p className="mt-4 text-sm text-muted">
+              {c.whereToBuy.find(isNoPlatformNote) ?? "Aucune plateforme agréée MiCA ne la propose à notre connaissance"}. Vérifiez le
+              statut de toute plateforme avec notre{" "}
+              <Link href="/outils/verificateur-mica" className="underline hover:text-fg">
+                vérificateur MiCA
+              </Link>{" "}
+              avant d&apos;y déposer des fonds.
             </p>
           )}
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">

@@ -116,10 +116,13 @@ const MACRO_EVENTS: Record<Annee, string[]> = {
   "2020": ["Halving Bitcoin mai", "DeFi Summer (Compound, Uniswap V2)", "MicroStrategy achète 38 250 BTC"],
   "2021": ["Bull run épique : BTC ATH 69 000 $", "Tesla achète 1.5 Md$ BTC", "El Salvador adopte Bitcoin", "NFT mania (Beeple 69M$)"],
   "2022": ["Krach Terra/UST mai", "Faillite FTX novembre", "Tightening Fed hausse taux", "BTC -75%"],
-  "2023": ["Reprise lente", "ETF Bitcoin spot soumissions SEC", "MiCA voté UE"],
-  "2024": ["Approbation ETF BTC spot janvier", "Halving Bitcoin avril", "BTC ATH 108 000 $", "Trump pro-crypto élu novembre"],
-  "2025": ["MiCA Phase 2 juillet", "Adoption institutionnelle massive", "ETF Ethereum spot", "Année BTC stabilisée 70-110 k$"],
-  "2026": ["MiCA Phase 2 enforcement (ESMA, Q2)", "Cycle post-halving en cours", "Tokenisation RWA accélérée (Ondo, BlackRock BUIDL)", "Année partielle — données mises à jour mensuellement"],
+  // 2023-2026 revérifiés le 2026-10-02 (SEC, règlement MiCA, GENIUS Act, DAC8,
+  // registres et presse financière) : ETF Ethereum spot replacés en 2024, fausse
+  // « MiCA Phase 2 juillet 2025 » et fourchette BTC 2025 non sourcée retirées.
+  "2023": ["Reprise du marché après le krach de 2022", "Vague de demandes d'ETF Bitcoin spot auprès de la SEC (dont BlackRock)", "Règlement MiCA adopté par l'UE"],
+  "2024": ["Approbation des ETF Bitcoin spot aux États-Unis (janvier)", "Halving Bitcoin (avril)", "Autorisation des ETF Ethereum spot aux États-Unis (mai, cotation en juillet)", "MiCA applicable aux stablecoins (30 juin) puis aux prestataires crypto (30 décembre)", "Élection de Donald Trump, candidat pro-crypto (novembre)", "BTC record historique au-delà de 108 000 $ (décembre)"],
+  "2025": ["GENIUS Act : première loi américaine encadrant les stablecoins (juillet)", "BTC nouveau record historique vers 126 000 $ (octobre), porté par les flux des ETF spot", "Vague de liquidations à partir du 10 octobre : BTC repasse sous 105 000 $"],
+  "2026": ["Directive DAC8 : depuis le 1er janvier, les prestataires crypto de l'UE collectent les données de leurs clients pour les administrations fiscales", "Fin de la période transitoire MiCA en France (1er juillet) : seuls les prestataires agréés MiCA peuvent servir les résidents français", "Binance cesse ses services sur crypto-actifs en France (1er juillet)", "Cycle post-halving en cours", "Année partielle — données mises à jour mensuellement"],
 };
 
 // Intro data-derivée, unique par couple (crypto, année). 100 % calculée à
@@ -168,7 +171,7 @@ export default function HistoriquePrixPage({ params }: Props) {
       title: `Prix ${c.name} (${c.symbol}) en ${annee} — historique annuel`,
       description: `Évolution du prix ${c.name} en ${annee} avec événements macro contextualisés.`,
       date: "2026-05-02",
-      dateModified: "2026-05-02",
+      dateModified: "2026-10-02",
       category: "Historique prix",
       tags: [c.name, c.symbol, "historique", annee, "prix crypto"],
     }),

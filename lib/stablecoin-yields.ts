@@ -13,7 +13,7 @@
  * Refresh cadence : édité hebdo via PR. Le composant `<StablecoinYieldsTable>`
  * affiche `lastUpdated` pour transparence.
  *
- * Pourquoi pas live ? Trade Republic / Crypto.com / Binance Earn ne publient
+ * Pourquoi pas live ? Trade Republic / Crypto.com ne publient
  * pas leurs APY via API publique stable. Les afficher à la milliseconde près
  * créerait un faux signal de précision dans un produit volatile par nature
  * (les APY varient au jour le jour selon utilization rate).
@@ -42,8 +42,6 @@ export interface StablecoinYield {
   notes?: string;
   /** Lien d'inscription (affiliation si applicable). */
   url: string;
-  /** True si lien d'affiliation (affichage transparence). */
-  isAffiliate?: boolean;
 }
 
 /**
@@ -70,7 +68,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     risk: 2,
     notes: "Liquide, capé à 25k€ par stablecoin. APY fixe.",
     url: "https://www.bitpanda.com/fr",
-    isAffiliate: true,
   },
   {
     platformId: "bitpanda",
@@ -83,7 +80,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     productType: "Earn",
     risk: 2,
     url: "https://www.bitpanda.com/fr",
-    isAffiliate: true,
   },
   {
     platformId: "bitpanda",
@@ -97,7 +93,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     risk: 2,
     notes: "EURC = stablecoin EUR émis par Circle, conforme MiCA.",
     url: "https://www.bitpanda.com/fr",
-    isAffiliate: true,
   },
   {
     platformId: "coinbase",
@@ -111,7 +106,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     risk: 2,
     notes: "USDC Rewards. Coinbase = émetteur (via Circle).",
     url: "https://www.coinbase.com/fr",
-    isAffiliate: true,
   },
   {
     platformId: "kraken",
@@ -125,7 +119,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     risk: 2,
     notes: "Tier-based : 25k$ first @ 5.5%, au-delà 4.5%.",
     url: "https://www.kraken.com/fr-fr",
-    isAffiliate: true,
   },
   {
     platformId: "kraken",
@@ -138,35 +131,10 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     productType: "Earn",
     risk: 2,
     url: "https://www.kraken.com/fr-fr",
-    isAffiliate: true,
   },
-  {
-    platformId: "binance",
-    platformName: "Binance Earn",
-    regulation: "MiCA",
-    stablecoin: "USDC",
-    apyMin: 4.0,
-    apyMax: 9.5,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 3,
-    notes: "Flexible 4 % / Locked 30j 9.5 %. APY variable.",
-    url: "https://www.binance.com/fr/earn",
-    isAffiliate: true,
-  },
-  {
-    platformId: "binance",
-    platformName: "Binance Earn",
-    regulation: "MiCA",
-    stablecoin: "USDT",
-    apyMin: 4.5,
-    apyMax: 11.0,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 3,
-    url: "https://www.binance.com/fr/earn",
-    isAffiliate: true,
-  },
+  // Audit 2026-10-02 : entrées « Binance Earn » retirées — Binance a cessé ses
+  // services sur crypto-actifs en France le 1er juillet 2026 (absente du
+  // registre MiCA de l'ESMA) ; elles étaient en outre étiquetées « MiCA » à tort.
   {
     platformId: "swissborg",
     platformName: "SwissBorg",
@@ -179,7 +147,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     risk: 3,
     notes: "Smart Yield — APY tier selon plan Premium.",
     url: "https://swissborg.com/fr",
-    isAffiliate: true,
   },
   {
     platformId: "swissborg",
@@ -192,7 +159,6 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     productType: "Earn",
     risk: 3,
     url: "https://swissborg.com/fr",
-    isAffiliate: true,
   },
 
   // === DeFi (référence — non-MiCA) ===

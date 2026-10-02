@@ -14,7 +14,7 @@ interface FaqAccordionProps {
  *
  * Usage MDX :
  *   <FaqAccordion items={[
- *     { question: "Binance est-il interdit ?", answer: "Non, …" },
+ *     { question: "Faut-il déclarer un compte à zéro ?", answer: "Oui, …" },
  *   ]} />
  */
 export default function FaqAccordion({ items, title }: FaqAccordionProps) {

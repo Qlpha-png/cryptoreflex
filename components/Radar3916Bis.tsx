@@ -709,7 +709,7 @@ function Step4Declare({
           },
           {
             title: "Validez et imprimez votre accusé de réception",
-            text: "Après validation, téléchargez l'accusé de réception PDF. Gardez-le 6 ans (durée de prescription fiscale).",
+            text: "Après validation, téléchargez l'accusé de réception PDF. Conservez-le au moins 10 ans (délai de reprise maximal pour un compte crypto étranger).",
           },
         ].map((s, idx) => (
           <li
@@ -754,8 +754,8 @@ function Step4Declare({
           <span>
             <strong>Rappel légal :</strong> l&apos;obligation de déclarer
             s&apos;applique chaque année tant que le compte est ouvert, même
-            sans mouvement. La prescription fiscale est de 6 ans (10 ans pour
-            les comptes en pays non-coopératif). Si vous avez oublié de déclarer
+            sans mouvement. Le délai de reprise de l&apos;administration est porté à
+            10 ans quand un compte n&apos;a pas été déclaré (art. L169 du LPF). Si vous avez oublié de déclarer
             sur les années passées, une régularisation spontanée auprès de la
             DGFiP est généralement traitée plus favorablement qu&apos;un
             redressement.

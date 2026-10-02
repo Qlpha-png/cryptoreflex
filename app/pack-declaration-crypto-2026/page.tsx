@@ -104,7 +104,7 @@ export default function PackDeclarationPage() {
     },
     {
       q: "Quand est la date limite de déclaration ?",
-      a: "Mi-mai 2026 (date variable selon zone géographique : zone 1 mi-mai, zone 2 fin mai, zone 3 début juin). Vous avez accès au Pack jusqu'à la dernière date limite de votre zone. Le Cerfa est conservé dans votre compte 5 ans (durée de prescription fiscale).",
+      a: "Pour la déclaration 2026 (revenus 2025), les dates limites s'échelonnaient de mi-mai à début juin selon votre zone géographique. Pour corriger une déclaration déjà déposée, le service de correction en ligne est ouvert du 29 juillet au 30 novembre 2026 inclus (impots.gouv.fr).",
     },
   ];
 
@@ -114,7 +114,7 @@ export default function PackDeclarationPage() {
       title: "Pack Déclaration Crypto 2026 — Cerfa 2086 auto (gratuit)",
       description: "Cerfa 2086 + Annexe 3916-bis pré-remplis automatiquement.",
       date: "2026-05-02",
-      dateModified: "2026-05-02",
+      dateModified: "2026-10-02",
       category: "Service fiscal",
       tags: ["Cerfa 2086", "déclaration crypto", "fiscalité", "PFU 31,4%", "150 VH bis"],
     }),
@@ -138,7 +138,7 @@ export default function PackDeclarationPage() {
 
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-warning-fg">
-            <Calendar className="h-3 w-3" aria-hidden /> Date limite mi-mai 2026
+            <Calendar className="h-3 w-3" aria-hidden /> Correction en ligne jusqu'au 30 novembre 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Cerfa 2086 prêt en{" "}

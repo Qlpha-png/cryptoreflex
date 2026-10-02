@@ -6,8 +6,8 @@ excerpt: "ETH paie 2,8 à 4,5 %, SOL monte à 7,8 % et ADA reste sur 2,5 à 4 %.
 category: "Staking"
 date: "2026-04-25"
 publishedAt: "2026-04-25"
-updatedAt: "2026-04-25"
-lastUpdated: "2026-04-25"
+updatedAt: "2026-10-02"
+lastUpdated: "2026-10-02"
 readTime: "13 min"
 readingTime: 13
 author: "Kevin Voisin"
@@ -40,7 +40,7 @@ schema:
   audience: "Investisseurs particuliers français cherchant à mettre en staking au moins un de ces trois actifs"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="25 avril 2026" updatedAt="25 avril 2026" readingTime="13 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="25 avril 2026" updatedAt="2 octobre 2026" readingTime="13 min" methodology="/methodologie" />
 
 Le staking, c'est devenu **le rendement passif par défaut** de l'écosystème crypto. Mais 2026 a trois nouveautés majeures depuis nos premiers comparatifs en 2023 : (1) MiCA encadre désormais les programmes earn proposés par les exchanges, (2) la fiscalité des récompenses de staking reste un point à surveiller (le moment d'imposition n'est pas tranché par une source officielle citable), (3) les APY se sont stabilisés à des niveaux **bien inférieurs** au pic de 2021.
 
@@ -132,7 +132,7 @@ C'est le point le plus délicat : le **moment d'imposition** des récompenses de
 **Exemple (hypothèse « réception », à confirmer)** : si vous recevez 0,1 ETH de rewards valorisés 300 €, cela représenterait 300 € de base imposable l'année de réception (≈ 94,20 € à 31,4 %), puis une plus-value calculée à la revente sur la base d'un prix de revient de 300 €. Cet exemple n'a qu'une valeur illustrative : le moment d'imposition n'est pas tranché par une source officielle citable.
 
 <Callout type="warning" title="Plateformes étrangères : comptes à déclarer">
-Si vous faites votre staking sur Bitpanda (Autriche) ou Bitget (Lituanie), vous devez déclarer ces comptes via le formulaire **3916-bis** chaque année. Oubli = 750 € à 1 500 € d’amende par compte. Le détail dans notre guide [déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet).
+Si vous faites votre staking sur Bitpanda (Autriche) ou Kraken (Irlande), vous devez déclarer ces comptes via le formulaire **3916-bis** chaque année, y compris l'année de leur fermeture. Oubli = 750 € à 1 500 € d’amende par compte. Le détail dans notre guide [déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet).
 </Callout>
 
 **ADA est plus simple à suivre** : la plupart des plateformes versent les rewards directement en ADA mensuellement, ce qui facilite le tracking de leur valeur. ETH et SOL accumulent les rewards en quasi-temps réel, ce qui complique le suivi — notez la **valeur EUR au jour de chaque payout** pour votre déclaration, quel que soit le moment d'imposition finalement retenu. Des logiciels comme Koinly ou Cointracker automatisent.
@@ -141,19 +141,19 @@ Si vous faites votre staking sur Bitpanda (Autriche) ou Bitget (Lituanie), vous 
 
 ## 5. Plateformes MiCA qui proposent ETH + SOL + ADA en France
 
-Croisé avec `STAKING_PAIRS` du `lib/programmatic.ts` de Cryptoreflex, **trois plateformes MiCA-compliant** proposent les 3 actifs simultanément en avril 2026 :
+Croisé avec `STAKING_PAIRS` du `lib/programmatic.ts` de Cryptoreflex, **plusieurs plateformes agréées MiCA** proposaient les 3 actifs simultanément en avril 2026 (statuts mis à jour le 2 octobre 2026 d'après le registre MiCA de l'ESMA) :
 
 <ComparisonTable
   headers={["Plateforme", "Statut MiCA", "ETH", "SOL", "ADA", "Commission", "UX staking"]}
   rows={[
-    ["Coinbase", "CASP Irlande (PSAN FR)", "Oui", "Oui", "Oui", "25 % rewards", "Excellente, 1 clic"],
-    ["Kraken", "CASP Irlande (PSAN FR)", "Oui", "Oui", "Oui", "15 % rewards", "Bonne, dashboard clair"],
-    ["Bitpanda", "CASP Allemagne (PSAN FR)", "Oui", "Oui", "Oui", "25 % rewards", "Très bonne, fiscale-friendly (rapport CSV)"],
-    ["Binance", "PSAN FR (CASP en cours)", "Oui (limité)", "Oui", "Oui", "10-15 %", "Excellente, mais zone rouge MiCA"],
-    ["Bitget", "CASP Lituanie", "Oui", "Oui", "Oui", "10 %", "Bonne mais commissions opaques"],
-    ["Coinhouse", "CASP France", "Oui", "Oui", "Oui", "20 % rewards", "Solide, support FR top"],
+    ["Coinbase", "CASP Luxembourg (CSSF)", "Oui", "Oui", "Oui", "25 % rewards", "Excellente, 1 clic"],
+    ["Kraken", "CASP Irlande (Banque centrale d'Irlande)", "Oui", "Oui", "Oui", "15 % rewards", "Bonne, dashboard clair"],
+    ["Bitpanda", "CASP Autriche (FMA)", "Oui", "Oui", "Oui", "25 % rewards", "Très bonne, fiscale-friendly (rapport CSV)"],
+    ["Coinhouse", "CASP France (AMF)", "Oui", "Oui", "Oui", "20 % rewards", "Solide, support FR top"],
   ]}
 />
+
+Binance et Bitget, qui figuraient dans la première version de ce tableau, ne sont pas autorisées en France : Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026, et Bitget ne figure pas au registre MiCA de l'ESMA.
 
 **Verdict plateforme** :
 
@@ -168,28 +168,30 @@ Pour l'analyse détaillée de chaque plateforme : [Coinbase staking](/staking/et
 
 ## 6. Verdict par profil
 
+Les répartitions ci-dessous sont des exemples pour illustrer chaque profil, pas des conseils personnalisés : adaptez-les à votre situation et à votre tolérance au risque.
+
 **Profil 1 — Long-term holder (HODL > 3 ans)**
 
-- **Recommandation** : 70 % ETH staking + 20 % SOL staking + 10 % ADA staking sur **Kraken** (meilleur APY net).
+- **Exemple de répartition** : 70 % ETH staking + 20 % SOL staking + 10 % ADA staking sur **Kraken** (meilleur APY net).
 - **Raison** : ETH reste le plus liquide et le moins volatile parmi les altcoins. Le staking ajoute 3 % de rendement « gratuit » sur ce qu'on aurait gardé de toute façon.
 - **À éviter** : trop de SOL ratio rendement/volatilité dégradé en cycle baissier.
 
 **Profil 2 — Yield farmer (cherche le rendement maximal)**
 
-- **Recommandation** : 60 % SOL staking + 20 % ETH + 20 % ADA, **diversifier sur 2 plateformes** (Kraken pour APY, Bitpanda pour redondance).
+- **Exemple de répartition** : 60 % SOL staking + 20 % ETH + 20 % ADA, **diversifier sur 2 plateformes** (Kraken pour APY, Bitpanda pour redondance).
 - **Raison** : SOL paie le plus, mais corrélation à ETH élevée — diversifier sur ADA (corrélation moindre) atténue.
 - **À éviter** : staking sur des Layer 1 obscurs avec APY > 10 % — c'est généralement de l'inflation pure, pas du vrai yield.
 
 **Profil 3 — Débutant (premier staking)**
 
-- **Recommandation** : 100 % ADA staking sur **Coinbase** ou **Coinhouse**.
+- **Exemple** : 100 % ADA staking sur **Coinbase** ou **Coinhouse**.
 - **Raison** : 0 lock-up, 0 slashing, 0 commission native. UX la plus simple, pas de stress « j'ai bloqué mes fonds ».
-- **À faire ensuite** : après 6 mois sans stress, ajouter 30 % d'ETH staking pour tester l'expérience exit queue.
+- **Piste ensuite** : après quelques mois, une petite part d'ETH staking permet de découvrir la file de sortie (exit queue).
 
 <CTABox
   variant="primary"
   title="Tester Kraken staking — meilleur APY net en France"
-  description="Kraken propose ETH, SOL et ADA en staking avec une commission de 15 % sur les rewards (vs 25 % chez la concurrence). Agrément MiCA Irlande, PSAN AMF actif."
+  description="Kraken propose ETH, SOL et ADA en staking avec une commission de 15 % sur les rewards (vs 25 % chez la concurrence). Agrément MiCA délivré par la Banque centrale d'Irlande."
   ctaText="Ouvrir un compte Kraken"
   ctaUrl="https://www.kraken.com/?utm_source=cryptoreflex&utm_medium=blog&utm_campaign=staking-comparatif"
   disclosure="Lien d'affiliation. Aucun coût supplémentaire pour vous. Cryptoreflex perçoit une commission si vous ouvrez un compte."

@@ -46,7 +46,7 @@ export default function WaltioPromoCard({
     "Générez votre Cerfa 3916-bis automatiquement avec Waltio";
   const finalDescription =
     description ??
-    "Pour des centaines de transactions, le formulaire 2086 et le 3916-bis manuels deviennent ingérables. Waltio (édité en France) connecte vos exchanges, calcule vos plus-values et pré-remplit les formulaires fiscaux français — 30 % de réduction via Cryptoreflex.";
+    "Pour des centaines de transactions, le formulaire 2086 et le 3916-bis manuels deviennent ingérables. Waltio (édité en France) connecte vos exchanges, calcule vos plus-values et pré-remplit les formulaires fiscaux français — rapport fiscal dès 39 €/an.";
 
   if (variant === "compact") {
     return (
@@ -65,9 +65,9 @@ export default function WaltioPromoCard({
             className="font-semibold text-primary-soft underline hover:text-primary"
             showCaption={false}
           >
-            essaie Waltio
+            essayez Waltio
           </AffiliateLink>{" "}
-          (notre outil recommandé, FR, 30 % de réduction Cryptoreflex). Voir le{" "}
+          (notre outil recommandé, édité en France, rapport fiscal dès 39 €/an). Voir le{" "}
           <Link
             href="/outils/declaration-fiscale-crypto"
             className="underline hover:text-primary-soft"

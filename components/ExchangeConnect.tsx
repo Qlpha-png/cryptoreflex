@@ -128,7 +128,7 @@ export default function ExchangeConnect() {
       // Auto-sync immédiat après connexion
       await handleSync();
     } catch {
-      setError("Erreur réseau. Réessaie.");
+      setError("Erreur réseau. Réessayez.");
     } finally {
       setSubmitting(false);
     }

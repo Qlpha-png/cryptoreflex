@@ -272,9 +272,9 @@
       "longDefinition": "Le 2FA (two-factor authentication, ou authentification à deux facteurs) ajoute une seconde couche de sécurité à la connexion : en plus du mot de passe, l'utilisateur doit fournir un code temporaire ou une preuve physique.\n\nTrois grandes formes existent. Le 2FA par SMS (un code envoyé par texto) est le plus répandu mais le moins sûr : vulnérable au SIM-swapping où un attaquant convainc l'opérateur de transférer votre numéro sur sa propre carte SIM. Le 2FA par application (Google Authenticator, Authy, Aegis) génère des codes locaux toutes les 30 secondes : nettement plus sûr. Le 2FA matériel (YubiKey, Titan) utilise une clé physique USB ou NFC : le standard actuel le plus robuste.\n\nSur les exchanges crypto, activer un 2FA fort est non négociable. Privilégier impérativement l'application ou la clé matérielle au SMS.",
       "synonyms": ["Authentification à deux facteurs", "Two-factor", "MFA"],
       "relatedTerms": ["phishing", "custodial", "kyc"],
-      "example": "Sur Binance, configurer une YubiKey en 2FA empêche un attaquant de se connecter même s'il possède votre mot de passe et votre numéro de téléphone.",
+      "example": "Sur Coinbase, configurer une YubiKey en 2FA empêche un attaquant de se connecter même s'il possède votre mot de passe et votre numéro de téléphone.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "phishing",
@@ -293,12 +293,12 @@
       "term": "Custodial",
       "category": "Wallets & sécurité",
       "shortDefinition": "Solution où un tiers (exchange, néobanque) garde vos cryptos et vos clés privées à votre place.",
-      "longDefinition": "Un service custodial est un service où un tiers — typiquement un exchange comme Coinbase, Binance, Kraken, ou une néobanque comme Revolut — détient vos cryptomonnaies et leurs clés privées à votre place. Vous voyez votre solde dans l'application, mais vous ne contrôlez pas les fonds directement on-chain.\n\nLes avantages : aucune crainte de perdre une seed, récupération de mot de passe possible, support client en cas de problème, intégration aux services de trading et fiscalité. Les inconvénients : vous dépendez de la solvabilité et de la sécurité du tiers (FTX a fait faillite en 2022 avec les fonds de millions d'utilisateurs), gel de compte possible, KYC obligatoire.\n\nL'opposé est le « non-custodial » ou « self-custody » : vous gérez vous-même vos clés privées via un wallet (MetaMask, Ledger). L'adage crypto résume le débat : « Not your keys, not your coins ».",
+      "longDefinition": "Un service custodial est un service où un tiers — typiquement un exchange comme Coinbase, Kraken, Bitpanda, ou une néobanque comme Revolut — détient vos cryptomonnaies et leurs clés privées à votre place. Vous voyez votre solde dans l'application, mais vous ne contrôlez pas les fonds directement on-chain.\n\nLes avantages : aucune crainte de perdre une seed, récupération de mot de passe possible, support client en cas de problème, intégration aux services de trading et fiscalité. Les inconvénients : vous dépendez de la solvabilité et de la sécurité du tiers (FTX a fait faillite en 2022 avec les fonds de millions d'utilisateurs), gel de compte possible, KYC obligatoire.\n\nL'opposé est le « non-custodial » ou « self-custody » : vous gérez vous-même vos clés privées via un wallet (MetaMask, Ledger). L'adage crypto résume le débat : « Not your keys, not your coins ».",
       "synonyms": ["Sous garde", "Centralisé", "CEX"],
       "relatedTerms": ["wallet-chaud", "kyc", "psan", "casp"],
       "example": "Acheter du Bitcoin sur Revolut et le laisser dans l'app, c'est du custodial : Revolut détient les clés et vous fait confiance qu'il vous remboursera à la demande.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "defi",
@@ -497,12 +497,12 @@
       "term": "DCA",
       "category": "Trading",
       "shortDefinition": "Stratégie d'investissement progressif qui consiste à acheter régulièrement un montant fixe pour lisser le prix moyen.",
-      "longDefinition": "Le DCA (Dollar Cost Averaging, ou investissement programmé) consiste à acheter un montant fixe d'un actif à intervalles réguliers (chaque semaine, chaque mois), quel que soit le prix du marché. C'est l'inverse du market timing.\n\nL'avantage : on n'a pas besoin de prévoir le creux du marché — personne n'y arrive de toute façon. Quand le prix est bas, on achète plus d'unités ; quand il est haut, on en achète moins. Sur la durée, le prix moyen d'achat est lissé et l'impact émotionnel des fluctuations est neutralisé.\n\nLe DCA est particulièrement adapté à la crypto, marché extrêmement volatil où essayer de timer entraîne souvent à acheter haut et vendre bas. La plupart des plateformes (Coinbase, Binance, Revolut, Bitpanda) proposent des achats récurrents automatiques. Conseil classique : programmer un DCA hebdomadaire sur Bitcoin et Ethereum, et ne plus regarder le marché pendant des années.",
+      "longDefinition": "Le DCA (Dollar Cost Averaging, ou investissement programmé) consiste à acheter un montant fixe d'un actif à intervalles réguliers (chaque semaine, chaque mois), quel que soit le prix du marché. C'est l'inverse du market timing.\n\nL'avantage : on n'a pas besoin de prévoir le creux du marché — personne n'y arrive de toute façon. Quand le prix est bas, on achète plus d'unités ; quand il est haut, on en achète moins. Sur la durée, le prix moyen d'achat est lissé et l'impact émotionnel des fluctuations est neutralisé.\n\nLe DCA est particulièrement adapté à la crypto, marché extrêmement volatil où essayer de timer entraîne souvent à acheter haut et vendre bas. La plupart des plateformes (Coinbase, Bitpanda, Revolut, Bitstack) proposent des achats récurrents automatiques. Conseil classique : programmer un DCA hebdomadaire sur Bitcoin et Ethereum, et ne plus regarder le marché pendant des années.",
       "synonyms": ["Dollar Cost Averaging", "Investissement programmé", "Achat lissé"],
       "relatedTerms": ["spot", "ath", "atl", "fud-fomo"],
       "example": "Acheter 100 € de BTC chaque lundi pendant 5 ans, peu importe le cours, est un DCA classique qui aurait été très rentable historiquement.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "ath",
@@ -544,13 +544,13 @@
       "id": "psan",
       "term": "PSAN",
       "category": "Régulation FR",
-      "shortDefinition": "Prestataire de Services sur Actifs Numériques enregistré ou agréé par l'AMF en France.",
-      "longDefinition": "Le statut PSAN (Prestataire de Services sur Actifs Numériques) a été créé par la loi PACTE de 2019 pour encadrer les acteurs crypto opérant en France : exchanges, wallets custodial, conseillers, gestionnaires de portefeuilles crypto.\n\nDeux niveaux. L'enregistrement obligatoire pour les services suivants : conservation pour compte de tiers, achat-vente d'actifs numériques contre monnaie ayant cours légal, ou exploitation d'une plateforme de négociation. L'agrément optionnel (mais plus contraignant) qui ajoute des exigences de fonds propres, d'organisation et de cybersécurité.\n\nL'AMF tient une liste publique des PSAN enregistrés (plus de 100 acteurs en 2026). Investir via un PSAN ne garantit pas la solidité financière de la plateforme, mais offre un cadre légal minimal : lutte anti-blanchiment, KYC, sanctions possibles en cas de manquement. À partir de 2026, le statut PSAN est progressivement remplacé par l'agrément CASP de MiCA.",
+      "shortDefinition": "Ancien statut français des prestataires crypto (enregistrement ou agrément AMF), remplacé depuis le 1er juillet 2026 par l'agrément MiCA (CASP).",
+      "longDefinition": "Le statut PSAN (Prestataire de Services sur Actifs Numériques) a été créé par la loi PACTE de 2019 pour encadrer les acteurs crypto opérant en France : exchanges, wallets custodial, conseillers, gestionnaires de portefeuilles crypto.\n\nDeux niveaux coexistaient. L'enregistrement obligatoire pour les services suivants : conservation pour compte de tiers, achat-vente d'actifs numériques contre monnaie ayant cours légal, ou exploitation d'une plateforme de négociation. L'agrément optionnel (mais plus contraignant) qui ajoutait des exigences de fonds propres, d'organisation et de cybersécurité.\n\nL'AMF tenait une liste publique des PSAN enregistrés. Ce régime a pris fin le 1er juillet 2026, à l'issue de la période transitoire MiCA en France : depuis cette date, seul un prestataire agréé MiCA (CASP), par l'AMF ou par l'autorité d'un autre État de l'UE avec un passeport vers la France, peut fournir des services sur crypto-actifs à des résidents français. Un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation.",
       "synonyms": ["Prestataire Services Actifs Numériques"],
       "relatedTerms": ["amf", "mica", "casp", "kyc", "aml"],
-      "example": "Coinhouse, Binance France et Bitpanda France figurent sur la liste blanche des PSAN enregistrés à l'AMF.",
+      "example": "Coinhouse a été le premier PSAN enregistré par l'AMF, sous le n° E2020-001, en mars 2020. Elle est aujourd'hui agréée MiCA par l'AMF (n° A2026-013).",
       "difficulty": "Intermédiaire",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "mica",
@@ -568,13 +568,13 @@
       "id": "amf",
       "term": "AMF",
       "category": "Régulation FR",
-      "shortDefinition": "Autorité des Marchés Financiers : régulateur français des marchés, qui supervise les PSAN et CASP.",
-      "longDefinition": "L'AMF (Autorité des Marchés Financiers) est l'autorité de régulation des marchés financiers en France. Créée en 2003, elle protège les investisseurs, veille au bon fonctionnement des marchés, et délivre les agréments.\n\nDans le domaine crypto, l'AMF est l'autorité compétente pour enregistrer et agréer les PSAN, et désormais les CASP au titre de MiCA. Elle publie une liste blanche des acteurs autorisés et une liste noire des sites identifiés comme proposant illégalement des services en France.\n\nL'AMF mène aussi un travail pédagogique important : guides destinés aux particuliers, alertes sur les arnaques, baromètre annuel de l'épargne. Elle peut prononcer des sanctions financières et professionnelles. Avant d'investir via une plateforme, vérifier qu'elle figure sur la liste blanche AMF (et pas sur la noire) est un réflexe de base.",
+      "shortDefinition": "Autorité des Marchés Financiers : régulateur français des marchés, qui agrée et supervise les prestataires crypto (CASP) en France.",
+      "longDefinition": "L'AMF (Autorité des Marchés Financiers) est l'autorité de régulation des marchés financiers en France. Créée en 2003, elle protège les investisseurs, veille au bon fonctionnement des marchés, et délivre les agréments.\n\nDans le domaine crypto, l'AMF a enregistré et agréé les PSAN jusqu'à la fin de ce régime, le 1er juillet 2026, et agrée désormais les CASP au titre de MiCA. Elle publie une liste blanche des acteurs autorisés et une liste noire des sites identifiés comme proposant illégalement des services en France.\n\nL'AMF mène aussi un travail pédagogique important : guides destinés aux particuliers, alertes sur les arnaques, baromètre annuel de l'épargne. Elle peut prononcer des sanctions financières et professionnelles. Avant d'investir via une plateforme, vérifier qu'elle figure sur la liste blanche AMF (et pas sur la noire) est un réflexe de base.",
       "synonyms": ["Autorité des Marchés Financiers"],
       "relatedTerms": ["psan", "mica", "casp", "esma", "kyc"],
       "example": "L'AMF a sanctionné en 2023 plusieurs influenceurs faisant la promotion non autorisée de plateformes crypto offshore.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "esma",
@@ -593,12 +593,12 @@
       "term": "KYC",
       "category": "Régulation FR",
       "shortDefinition": "Know Your Customer : procédure de vérification d'identité obligatoire sur les plateformes crypto régulées.",
-      "longDefinition": "Le KYC (Know Your Customer, ou « connais votre client ») est l'ensemble des procédures par lesquelles une plateforme financière vérifie l'identité de ses utilisateurs : pièce d'identité, justificatif de domicile, parfois selfie vidéo. C'est une obligation légale pour tous les acteurs régulés (PSAN, CASP, banques, courtiers).\n\nL'objectif officiel : prévenir le blanchiment d'argent, le financement du terrorisme et la fraude fiscale. Concrètement, ouvrir un compte sur Coinbase, Binance France ou Bitpanda demande aujourd'hui 5 à 30 minutes de vérification.\n\nDébat fréquent dans la communauté : le KYC va à l'encontre de l'esprit originel de la crypto (anonymat, résistance à la censure). Pour l'utilisateur grand public, c'est néanmoins un mal nécessaire : sans KYC, pas d'achat depuis un compte bancaire, pas de retrait simple en euros. Les solutions « non-KYC » existent (DEX, P2P, Bisq) mais sont plus techniques et juridiquement floues.",
+      "longDefinition": "Le KYC (Know Your Customer, ou « connais votre client ») est l'ensemble des procédures par lesquelles une plateforme financière vérifie l'identité de ses utilisateurs : pièce d'identité, justificatif de domicile, parfois selfie vidéo. C'est une obligation légale pour tous les acteurs régulés (prestataires crypto agréés MiCA, banques, courtiers).\n\nL'objectif officiel : prévenir le blanchiment d'argent, le financement du terrorisme et la fraude fiscale. Concrètement, ouvrir un compte sur Coinbase, Kraken ou Bitpanda demande aujourd'hui 5 à 30 minutes de vérification.\n\nDébat fréquent dans la communauté : le KYC va à l'encontre de l'esprit originel de la crypto (anonymat, résistance à la censure). Pour l'utilisateur grand public, c'est néanmoins un mal nécessaire : sans KYC, pas d'achat depuis un compte bancaire, pas de retrait simple en euros. Les solutions « non-KYC » existent (DEX, P2P, Bisq) mais sont plus techniques et juridiquement floues.",
       "synonyms": ["Know Your Customer", "Vérification d'identité"],
       "relatedTerms": ["aml", "psan", "casp", "amf", "custodial"],
       "example": "Pour acheter pour plus de 1 000 € sur Bitpanda, le KYC complet (pièce d'identité + selfie vidéo) est obligatoire.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "aml",
@@ -617,24 +617,24 @@
       "term": "CASP",
       "category": "Régulation FR",
       "shortDefinition": "Crypto-Asset Service Provider : équivalent européen du PSAN sous le règlement MiCA.",
-      "longDefinition": "Le CASP (Crypto-Asset Service Provider) est le statut européen unique créé par MiCA pour tous les prestataires de services sur crypto-actifs : exchanges, custodians, conseillers, gestionnaires, plateformes de trading.\n\nL'agrément CASP est délivré par le régulateur national (AMF en France, BaFin en Allemagne…) après examen d'un dossier portant sur le capital minimum, l'organisation interne, la cybersécurité, la séparation des actifs clients, le dispositif AML, et la solidité des dirigeants. Une fois obtenu, il vaut passeport européen : un acteur agréé en Allemagne peut opérer en France sans nouvel agrément.\n\nLa transition est progressive. Les PSAN français existants bénéficient d'une période transitoire (jusqu'à mi-2026) pour basculer vers le statut CASP. Les nouveaux entrants doivent directement viser le CASP. Pour les utilisateurs, c'est une bonne nouvelle : standardisation des règles dans toute l'Europe, meilleure protection, plus grande transparence.",
+      "longDefinition": "Le CASP (Crypto-Asset Service Provider) est le statut européen unique créé par MiCA pour tous les prestataires de services sur crypto-actifs : exchanges, custodians, conseillers, gestionnaires, plateformes de trading.\n\nL'agrément CASP est délivré par le régulateur national (AMF en France, BaFin en Allemagne…) après examen d'un dossier portant sur le capital minimum, l'organisation interne, la cybersécurité, la séparation des actifs clients, le dispositif AML, et la solidité des dirigeants. Une fois obtenu, il vaut passeport européen : un acteur agréé en Allemagne peut opérer en France sans nouvel agrément.\n\nLes PSAN français existants ont bénéficié d'une période transitoire pour basculer vers le statut CASP ; elle a pris fin le 1er juillet 2026, et un ancien numéro PSAN ne vaut plus autorisation. Pour les utilisateurs, c'est une bonne nouvelle : standardisation des règles dans toute l'Europe, meilleure protection, plus grande transparence.",
       "synonyms": ["Crypto-Asset Service Provider", "Prestataire de services crypto MiCA"],
       "relatedTerms": ["psan", "mica", "amf", "esma", "kyc"],
-      "example": "À partir de juillet 2026, plus aucun nouveau service crypto ne pourra être proposé en Europe sans agrément CASP.",
+      "example": "Depuis le 1er juillet 2026, seul un prestataire agréé MiCA, par l'AMF ou par l'autorité d'un autre État de l'UE avec un passeport vers la France, peut fournir des services sur crypto-actifs à des résidents français.",
       "difficulty": "Intermédiaire",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "flat-tax",
       "term": "Flat tax",
       "category": "Régulation FR",
       "shortDefinition": "Prélèvement Forfaitaire Unique de 31,4 % appliqué aux plus-values crypto des particuliers en France.",
-      "longDefinition": "La flat tax (ou PFU, Prélèvement Forfaitaire Unique) est le régime fiscal par défaut applicable aux plus-values crypto des particuliers en France depuis 2019. Son taux est de 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux.\n\nElle ne s'applique qu'à la cession en monnaie ayant cours légal (vente contre des euros, achat de biens en euros via une carte crypto). Les échanges crypto-crypto sont neutres fiscalement tant qu'on reste dans l'écosystème : convertir des BTC en ETH n'est pas un fait générateur d'impôt.\n\nLa déclaration se fait via le formulaire 2086 (calcul de la plus-value globale annuelle) accompagné de la 2042-C. Une exonération existe pour les portefeuilles dont la valeur cumulée des cessions reste sous 305 € sur l'année. Les contribuables fortement imposés peuvent opter pour le barème progressif s'il leur est plus favorable. Le mining relève d'un régime distinct (BNC). Pour le staking, le régime et le moment d'imposition ne sont pas tranchés par une source officielle dédiée (plus-value en gestion occasionnelle, ou BIC/BNC en activité habituelle/professionnelle).",
+      "longDefinition": "La flat tax (ou PFU, Prélèvement Forfaitaire Unique) est le régime fiscal par défaut applicable aux plus-values crypto des particuliers en France depuis 2019. Son taux est de 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux.\n\nElle ne s'applique qu'à la cession en monnaie ayant cours légal (vente contre des euros, achat de biens en euros via une carte crypto). Les échanges crypto-crypto sont neutres fiscalement tant qu'on reste dans l'écosystème : convertir des BTC en ETH n'est pas un fait générateur d'impôt.\n\nLa déclaration se fait via le formulaire 2086 (calcul de la plus-value globale annuelle) accompagné de la 2042-C. Une exonération existe pour les portefeuilles dont la valeur cumulée des cessions reste sous 305 € sur l'année. Les contribuables faiblement imposés peuvent opter pour le barème progressif (case 3CN de la déclaration 2042 C) s'il leur est plus favorable. Le mining relève d'un régime distinct (BNC). Pour le staking, le régime et le moment d'imposition ne sont pas tranchés par une source officielle dédiée (plus-value en gestion occasionnelle, ou BIC/BNC en activité habituelle/professionnelle).",
       "synonyms": ["PFU", "Prélèvement Forfaitaire Unique", "Flat tax crypto"],
       "relatedTerms": ["psan", "mica", "amf", "spot"],
       "example": "Vendre 10 000 € de BTC achetés 6 000 € génère 4 000 € de plus-value : impôt dû = 4 000 × 31,4 % = 1 256 €.",
       "difficulty": "Débutant",
-      "lastUpdated": "2026-04-25"
+      "lastUpdated": "2026-10-02"
     },
     {
       "id": "nft",

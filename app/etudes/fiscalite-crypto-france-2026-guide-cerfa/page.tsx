@@ -43,7 +43,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 const PUBLISHED_DATE = "2026-05-06";
-const LAST_UPDATED = "2026-06-02";
+const LAST_UPDATED = "2026-10-02";
 
 const TITLE =
   "Fiscalité crypto France 2026 : guide complet Cerfa 2086 + 3916-bis";
@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     q: "Dois-je déclarer mes cryptos même si je n’ai rien vendu ?",
-    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction. Oubli = amende 750 € par compte non déclaré (1 500 € si la valeur des comptes dépasse 50 000 €).",
+    a: "Pour le Cerfa 2086 (plus-values) : non, l’absence de cession contre euro = pas de déclaration. Pour l’annexe 3916-bis (comptes étrangers) : OUI. Tout compte ouvert chez un exchange étranger (Binance, Kraken, Coinbase, Bybit, etc.) doit être déclaré chaque année tant qu’il existe, même sans transaction, y compris l’année de sa clôture. Oubli = amende 750 € par compte non déclaré (1 500 € si la valeur des comptes dépasse 50 000 €).",
   },
   {
     q: "Que se passe-t-il en cas de moins-value (perte) ?",
@@ -125,7 +125,7 @@ const FAQ = [
   },
   {
     q: "Le staking et les rewards Proof-of-Stake sont-ils imposables ?",
-    a: "Oui, les revenus de staking sont imposables. En revanche, le MOMENT exact de l’imposition (à la réception comme un revenu, ou à la cession contre euro) n’est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour. Tant que la doctrine n’est pas clarifiée, vérifie ce point sur la source officielle à jour et, pour des montants significatifs ou des montages atypiques (liquid staking, restaking), fais valider votre situation par un expert-comptable.",
+    a: "Oui, les revenus de staking sont imposables. En revanche, le MOMENT exact de l’imposition (à la réception comme un revenu, ou à la cession contre euro) n’est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour. Tant que la doctrine n’est pas clarifiée, vérifiez ce point sur la source officielle à jour et, pour des montants significatifs ou des montages atypiques (liquid staking, restaking), faites valider votre situation par un expert-comptable.",
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
@@ -133,7 +133,7 @@ const FAQ = [
   },
   {
     q: "Si j’utilise un exchange français (Coinhouse, Bitstack), dois-je quand même remplir le 3916-bis ?",
-    a: "Non, si l’exchange est régulé en France (PSAN/CASP avec siège social FR). Coinhouse et Bitstack sont des entités françaises : leurs comptes ne sont PAS étrangers et ne déclenchent pas l’obligation 3916-bis. En revanche, Coinbase Europe Limited (Irlande), Bitpanda (Autriche), Kraken (Irlande), Binance France SAS (entité FR mais comptes hébergés sur infrastructure UE) sont à vérifier au cas par cas : si vous accédez à un compte hébergé hors France, déclarez par sécurité.",
+    a: "Non, si l’exchange est une entité française agréée MiCA par l’AMF (siège social en France). Coinhouse et Bitstack sont des entités françaises : leurs comptes ne sont PAS étrangers et ne déclenchent pas l’obligation 3916-bis. En revanche, Coinbase (entité luxembourgeoise), Bitpanda (Autriche) et Kraken (Irlande) sont des entités étrangères : leurs comptes sont à déclarer, de même qu’un ancien compte Binance, y compris ouvert via Binance France SAS : si votre compte était tenu hors de France, déclarez-le par sécurité pour chaque année où il était ouvert.",
   },
   {
     q: "Y a-t-il un risque de redressement TRACFIN si je déclare correctement ?",
@@ -508,12 +508,13 @@ export default function FiscaliteCryptoStudyPage() {
             Le PFU s’applique <strong>par défaut</strong> aux plus-values de
             cession d’actifs numériques depuis l’imposition des revenus 2023.
             Les contribuables peuvent opter pour le <strong>barème progressif</strong>{" "}
-            à condition que cette option couvre l’ensemble des revenus du
-            capital de l’année (intérêts, dividendes, plus-values mobilières et
-            crypto). L’option est avantageuse uniquement pour les contribuables
-            dont la TMI (Tranche Marginale d’Imposition) est inférieure à 12,8
-            % — soit des revenus annuels imposables inférieurs à environ
-            28 800 € pour un célibataire.
+            en cochant la <strong>case 3CN</strong> de la déclaration 2042 C :
+            l’option porte sur l’ensemble des plus-values crypto de l’année,
+            sans toucher aux dividendes ni aux intérêts (leur option, la case
+            2OP, est distincte). Elle n’est avantageuse que pour les
+            contribuables dont la TMI (Tranche Marginale d’Imposition) est
+            inférieure à 12,8 %, c’est-à-dire ceux imposés dans la tranche à
+            0 % ou à 11 %.
           </p>
           <h3>2.2. Le seuil d’exonération de 305 €</h3>
           <p>
@@ -654,16 +655,22 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <ul>
             <li>
-              <strong>Comptes à déclarer</strong> : Coinbase Europe (Irlande),
-              Kraken (Irlande), Bitpanda (Autriche), Binance (entité MENA pour
-              certains comptes), Bybit (BVI), KuCoin (Seychelles), MEXC
-              (Seychelles), OKX (Malte), Bit2Me (Espagne), Bitvavo (Pays-Bas).
+              <strong>Comptes à déclarer</strong> : Coinbase (Luxembourg depuis
+              MiCA), Kraken (Irlande), Bitpanda (Autriche), Bybit (Autriche pour
+              l’entité européenne), OKX (Malte), Bit2Me (Espagne), Bitvavo
+              (Pays-Bas), ainsi que tout compte Binance, KuCoin ou MEXC tenu par
+              une entité étrangère. L’entité exacte figure dans vos CGU.
             </li>
             <li>
               <strong>Comptes NON à déclarer</strong> : Coinhouse (siège FR),
-              Bitstack (siège FR), Binance France SAS (entité FR — sauf si
-              certains comptes sont migrés sur l’infrastructure UE, à vérifier
-              au cas par cas).
+              Bitstack (siège FR).
+            </li>
+            <li>
+              <strong>Ancien compte Binance</strong> (y compris ouvert via
+              Binance France SAS) : à vérifier au cas par cas selon l’entité
+              qui tenait le compte ; dans le doute, déclarez-le pour chaque
+              année où il était ouvert, même s’il a été fermé en cours
+              d’année.
             </li>
           </ul>
           <h3>4.2. Sanctions en cas d’oubli</h3>
@@ -685,9 +692,10 @@ export default function FiscaliteCryptoStudyPage() {
           </ul>
           <p>
             Cette amende s’applique <strong>par compte et par année</strong>{" "}
-            d’omission, dans la limite de la prescription fiscale (6 à 10 ans
-            selon les cas). Un oubli sur 4 ans pour 3 exchanges = 18 000 €
-            d’amende théorique.
+            d’omission, dans la limite du délai de reprise (porté à 10 ans quand
+            un compte n’a pas été déclaré, art. L169 du LPF). Un oubli sur 4 ans pour 3 exchanges = 9 000 €
+            d’amende théorique (18 000 € si la valeur des comptes dépasse
+            50 000 €).
           </p>
           <h3>4.3. Régularisation spontanée</h3>
           <p>
@@ -876,9 +884,11 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Si votre Tranche Marginale d’Imposition est inférieure à 12,8 %,
             vous avez intérêt à opter pour le barème progressif au lieu du
-            PFU. Cette option couvre l’ensemble des revenus du capital de
-            l’année (intérêts, dividendes, plus-values), à exercer chaque
-            année lors de la déclaration.
+            PFU. Pour les plus-values crypto, l’option se fait en cochant la
+            case 3CN de la déclaration 2042 C : elle porte sur toutes vos
+            plus-values crypto de l’année, sans toucher à vos dividendes ni à
+            vos intérêts (case 2OP, distincte), et s’exerce chaque année lors
+            de la déclaration.
           </p>
           <h3>7.5. Démembrement et nue-propriété</h3>
           <p>
@@ -1032,7 +1042,7 @@ export default function FiscaliteCryptoStudyPage() {
             source="bottom-article"
             context="fiscalite"
             variant="default"
-            title="Rate aucune mise à jour fiscale"
+            title="Ne ratez aucune mise à jour fiscale"
             subtitle="Cette étude est révisée chaque trimestre et après chaque nouvelle publication BOFiP. Recevez la version mise à jour par email. 1 envoi par trimestre, 0 spam."
             ctaLabel="M'abonner à la veille fiscale crypto"
           />
@@ -1043,7 +1053,7 @@ export default function FiscaliteCryptoStudyPage() {
       <section className="border-t border-white/5">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Continue la lecture
+            Poursuivez la lecture
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
@@ -1070,8 +1080,8 @@ export default function FiscaliteCryptoStudyPage() {
                 Étude MiCA juillet 2026
               </h3>
               <p className="mt-2 text-sm text-slate-300">
-                Quelles plateformes vont disparaître ? Comment migrer ?
-                Implications fiscales.
+                Quelles plateformes ne sont plus autorisées en France ? Comment
+                migrer ? Implications fiscales.
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-amber-300">
                 Lire l’étude
@@ -1103,7 +1113,7 @@ export default function FiscaliteCryptoStudyPage() {
               </h3>
               <p className="mt-2 text-sm text-slate-300">
                 La régulation (MiCA) et la fiscalité sont deux sujets distincts.
-                Comprends ce que MiCA change — sans le confondre avec la fiscalité.
+                Comprenez ce que MiCA change — sans le confondre avec la fiscalité.
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300">
                 Comprendre MiCA

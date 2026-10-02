@@ -91,7 +91,8 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
     expect(iso("/vs/bitcoin/ethereum")).toBeUndefined();
     const today = new Date().toISOString().slice(0, 10);
     const stampedToday = entries.filter((e) => e.lastModified && new Date(e.lastModified).toISOString().slice(0, 10) === today);
-    // Seules d'éventuelles entrées réellement datées d'aujourd'hui (contenu publié ce jour).
-    expect(stampedToday.length).toBeLessThan(50);
+    // Seules d'éventuelles entrées réellement datées d'aujourd'hui (contenu mis à jour ce jour, ex. une passe
+    // éditoriale sur quelques dizaines d'articles) — jamais tout le sitemap (« maintenant » partout = > 5 000).
+    expect(stampedToday.length).toBeLessThan(Math.max(50, Math.round(entries.length * 0.02)));
   });
 });

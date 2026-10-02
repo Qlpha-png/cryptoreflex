@@ -303,7 +303,7 @@ export default function DcaSimulator() {
 
           {error && !loading && (
             <div className="rounded-xl border border-accent-rose/40 bg-accent-rose/10 p-4 text-sm text-danger-fg">
-              Impossible de charger les prix historiques. Réessaie dans un instant.
+              Impossible de charger les prix historiques. Réessayez dans un instant.
             </div>
           )}
 

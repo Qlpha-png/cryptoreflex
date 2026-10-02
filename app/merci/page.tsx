@@ -53,7 +53,7 @@ const suggestedArticles = [
     desc: "Le guide complet débutant : choisir une plateforme, KYC, premier achat, sécurité.",
   },
   {
-    title: "Coinbase vs Bitpanda vs Binance : lequel choisir ?",
+    title: "Coinbase vs Bitpanda vs Kraken : lequel choisir ?",
     href: "/comparatif",
     desc: "Comparatif détaillé : frais réels, statut MiCA, ergonomie, support FR.",
   },

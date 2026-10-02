@@ -142,7 +142,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
         ? `Dans notre comparatif, ${best.name} ressort avec un score global ${best.scoring.global}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
-        : `En France, plusieurs plateformes enregistrées AMF / MiCA-compliant proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon votre usage.`,
+        : `En France, plusieurs plateformes agréées MiCA proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon votre usage.`,
     },
     {
       question: `Quel montant minimum pour acheter du ${meta.symbol} ?`,
@@ -162,7 +162,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     },
     {
       question: `Le ${meta.name} est-il MiCA-compliant en France ?`,
-      answer: `${meta.name} (${meta.symbol}) est négociable sur des plateformes régulées MiCA en France. La régulation MiCA (Markets in Crypto-Assets) impose à l'exchange — pas au token lui-même — d'être agréé. Vérifiez toujours le statut "PSAN/CASP" de la plateforme avant un dépôt.`,
+      answer: `${meta.name} (${meta.symbol}) est négociable sur des plateformes régulées MiCA en France. La régulation MiCA (Markets in Crypto-Assets) impose à l'exchange — pas au token lui-même — d'être agréé. Depuis le 1er juillet 2026, un ancien enregistrement PSAN ne suffit plus : vérifiez toujours que la plateforme est agréée MiCA (CASP) avant un dépôt.`,
     },
   ];
 
@@ -216,7 +216,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 description={`En France, privilégiez ${platforms
                   .slice(0, 3)
                   .map((p) => p.name)
-                  .join(", ")} : agrément AMF (PSAN) + conformité MiCA, fonds clients ségrégués, 2FA obligatoire.`}
+                  .join(", ")} : agrément MiCA (AMF ou autorité d'un autre État de l'UE), fonds clients ségrégués, 2FA obligatoire.`}
               />
               <Step
                 n={2}
@@ -374,8 +374,9 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               <li className="flex gap-2">
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
-                  <strong>Compte étranger :</strong> si vous utilisez Binance, Coinbase ou Kraken,
-                  déclaration du compte sur formulaire 3916-bis (oubli = 750 € d'amende par compte, 1 500 € si solde &gt; 50 000 €).
+                  <strong>Compte étranger :</strong> si vous avez un compte chez Coinbase ou Kraken
+                  (ou en aviez un chez Binance, même fermé depuis), déclaration du compte sur formulaire
+                  3916-bis pour chaque année où il était ouvert (oubli = 750 € d'amende par compte, 1 500 € si solde &gt; 50 000 €).
                 </span>
               </li>
             </ul>

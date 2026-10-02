@@ -124,6 +124,20 @@ export function getCryptoSlugs(): string[] {
   return getAllCryptos().map((c) => c.id);
 }
 
+/**
+ * Quand aucune plateforme agréée MiCA ne propose une crypto, whereToBuy porte une note
+ * « Aucune plateforme agréée MiCA… » à la place d'un nom (audit 2026-10-02). Ce n'est pas
+ * une plateforme : ne jamais la compter, la lier ni l'afficher comme telle.
+ */
+export function isNoPlatformNote(name: string): boolean {
+  return name.startsWith("Aucune plateforme agréée MiCA");
+}
+
+/** whereToBuy sans la note « Aucune plateforme agréée MiCA… ». */
+export function listedVenues(names: string[]): string[] {
+  return names.filter((n) => !isNoPlatformNote(n));
+}
+
 /** Helper pratique pour récupérer le coingeckoId associé à un slug. */
 export function getCoingeckoId(slug: string): string | undefined {
   return getCryptoBySlug(slug)?.coingeckoId;

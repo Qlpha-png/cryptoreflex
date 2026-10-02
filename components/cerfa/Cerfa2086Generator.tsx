@@ -495,8 +495,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           },
           {
             n: "2",
-            title: "Importe-le ici",
-            desc: "Glisse-dépose ou clique pour parcourir. Le calcul est instantané.",
+            title: "Importez-le ici",
+            desc: "Glissez-déposez ou cliquez pour parcourir. Le calcul est instantané.",
             done: state === "preview" || state === "success",
           },
           {
@@ -546,8 +546,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               steps: [
                 "Connectez-vous sur binance.com",
                 "Compte (icône en haut à droite) → Historique de transactions",
-                "Sélectionne la période (toute l'année fiscale)",
-                "Clique « Exporter rapport CSV » — délai 24-48h, email envoyé",
+                "Sélectionnez la période (toute l'année fiscale)",
+                "Cliquez « Exporter rapport CSV » — délai 24-48h, email envoyé",
               ],
             },
             {

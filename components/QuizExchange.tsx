@@ -719,7 +719,7 @@ function LeadMagnetForm({
 
       if (!res.ok || !json.ok) {
         setStatus("error");
-        setErrorMsg(json.error ?? "Une erreur est survenue. Réessaie.");
+        setErrorMsg(json.error ?? "Une erreur est survenue. Réessayez.");
         return;
       }
 
@@ -742,7 +742,7 @@ function LeadMagnetForm({
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Une erreur est survenue. Réessaie dans un instant.");
+      setErrorMsg("Une erreur est survenue. Réessayez dans un instant.");
     }
   }
 

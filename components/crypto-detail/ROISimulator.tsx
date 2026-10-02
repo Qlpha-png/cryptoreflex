@@ -332,7 +332,7 @@ export default function ROISimulator({
           Simulateur ROI
         </div>
         <h2 className="mt-1.5 text-xl font-extrabold text-fg">
-          Et si tu avais investi en {cryptoName} ?
+          Et si vous aviez investi en {cryptoName} ?
         </h2>
         <p className="mt-3 text-sm text-muted leading-relaxed">
           Simulateur disponible uniquement pour les top 30 cryptos par market
@@ -358,7 +358,7 @@ export default function ROISimulator({
             Simulateur ROI interactif
           </div>
           <h2 className="mt-0.5 text-xl sm:text-2xl font-extrabold text-fg leading-tight">
-            Et si tu avais investi en {cryptoName} ?
+            Et si vous aviez investi en {cryptoName} ?
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-muted leading-snug">
             Choisis un montant, une date de départ et une stratégie — le calcul
@@ -499,7 +499,7 @@ export default function ROISimulator({
 
         {error === "fetch" && !loading && (
           <p className="text-sm text-muted">
-            Données indisponibles pour le moment. Réessaie dans quelques
+            Données indisponibles pour le moment. Réessayez dans quelques
             secondes ou utilise notre{" "}
             <a
               href="/outils/simulateur-dca"

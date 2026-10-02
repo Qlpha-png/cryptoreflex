@@ -99,13 +99,13 @@ export default function StickyWaltioCta() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white truncate">
-              Économisez 40h sur votre déclaration crypto
+              Automatisez votre déclaration crypto
             </p>
             <p className="hidden sm:block text-xs text-white/70 truncate">
               Waltio (FR) génère votre Cerfa 2086 + 3916-bis automatiquement —
               <span className="text-primary-soft font-semibold">
                 {" "}
-                -30 % via Cryptoreflex
+                rapport dès 39 €/an
               </span>
             </p>
           </div>

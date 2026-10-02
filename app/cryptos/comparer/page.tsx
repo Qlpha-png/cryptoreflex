@@ -52,6 +52,7 @@ import {
   getAllCryptos,
   getCryptoBySlug,
   type AnyCrypto,
+  listedVenues,
 } from "@/lib/cryptos";
 import {
   fetchCoinDetail,
@@ -846,7 +847,7 @@ function DesktopTable({
                 {c.beginnerFriendly}/5
               </div>
               <div className="text-[11px] text-muted">
-                Beginner-friendly · Risque {c.riskLevel.toLowerCase()}
+                Accessible aux débutants · Risque {c.riskLevel.toLowerCase()}
               </div>
             </div>,
             isBest,
@@ -905,7 +906,10 @@ function DesktopTable({
         {cryptos.map((c) =>
           cell(
             <div className="flex flex-wrap gap-1.5">
-              {c.whereToBuy.slice(0, 5).map((p) => (
+              {listedVenues(c.whereToBuy).length === 0 && (
+                <span className="text-[11px] text-muted">Aucune plateforme agréée MiCA</span>
+              )}
+              {listedVenues(c.whereToBuy).slice(0, 5).map((p) => (
                 <span
                   key={p}
                   className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"
@@ -1074,7 +1078,7 @@ function MobileCard({
           <>
             <Stat label="Consensus" value={c.consensus} />
             <Stat
-              label="Beginner-friendly"
+              label="Accessible aux débutants"
               value={`${c.beginnerFriendly}/5`}
             />
           </>
@@ -1137,7 +1141,10 @@ function MobileCard({
           Où acheter
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {c.whereToBuy.slice(0, 5).map((p) => (
+          {listedVenues(c.whereToBuy).length === 0 && (
+            <span className="text-[11px] text-muted">Aucune plateforme agréée MiCA</span>
+          )}
+          {listedVenues(c.whereToBuy).slice(0, 5).map((p) => (
             <span
               key={p}
               className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"

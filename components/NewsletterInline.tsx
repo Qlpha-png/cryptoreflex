@@ -205,7 +205,7 @@ export default function NewsletterInline({
 
       if (!res.ok || !json.ok) {
         setStatus("error");
-        setErrorMsg(json.error ?? "Une erreur est survenue. Réessaie dans un instant.");
+        setErrorMsg(json.error ?? "Une erreur est survenue. Réessayez dans un instant.");
         return;
       }
 
@@ -228,7 +228,7 @@ export default function NewsletterInline({
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Service indisponible. Réessaie plus tard.");
+      setErrorMsg("Service indisponible. Réessayez plus tard.");
     }
   }
 

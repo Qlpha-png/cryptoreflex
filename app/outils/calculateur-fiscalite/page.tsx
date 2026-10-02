@@ -173,13 +173,13 @@ const FAQ_ITEMS = [
     question:
       "Que se passe-t-il si j'ai un compte sur une plateforme étrangère ?",
     answer:
-      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Binance Lithuania, Bitget, Kraken Irlande, Coinbase Irlande), même si le compte est inactif. Sanction d'oubli : 750 € par compte si solde sous 50 000 €, 1 500 € au-dessus (article 1736 X CGI, propre aux comptes d'actifs numériques). Applicable sur 4 à 6 ans.",
+      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Coinbase, Kraken, Bitpanda… et Binance ou Bitget pour les années où vous y aviez un compte), même si le compte est inactif ou a été fermé en cours d'année. Sanction d'oubli : 750 € par compte si solde sous 50 000 €, 1 500 € au-dessus (article 1736 X CGI, propre aux comptes d'actifs numériques). Applicable sur toutes les années non prescrites (délai de reprise porté à 10 ans pour un compte non déclaré).",
   },
   {
     question:
       "Quel est le calendrier de la déclaration crypto 2026 ?",
     answer:
-      "La déclaration en ligne ouvre le 9 avril 2026. Date limite selon votre département : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai 2026 (20-54), 4 juin 2026 (55-974 + 976 + outre-mer). La déclaration papier doit être déposée au plus tard le 19 mai 2026. Source : calendrier officiel impots.gouv.fr.",
+      "La déclaration en ligne ouvre le 9 avril 2026. Date limite selon votre département : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai 2026 (20-54), 4 juin 2026 (55-974 + 976 + outre-mer). La déclaration papier doit être déposée au plus tard le 19 mai 2026. Pour corriger une déclaration déjà déposée, le service de correction en ligne est ouvert du 29 juillet au 30 novembre 2026 inclus. Source : calendrier officiel impots.gouv.fr.",
   },
   {
     question:
@@ -192,18 +192,18 @@ const FAQ_ITEMS = [
     question:
       "Pourquoi utiliser Waltio plutôt que de tout faire à la main ?",
     answer:
-      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte vos exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Comptez 30 minutes au total au lieu d'un week-end. 30 % de réduction via Cryptoreflex sur le plan Hodler (79 €).",
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte vos exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Comptez 30 minutes au total au lieu d'un week-end. Rapport fiscal à partir de 39 €/an (jusqu'à 50 transactions).",
   },
   {
     question:
       "Combien me coûte Waltio par rapport à un expert-comptable crypto ?",
     answer:
-      "Waltio plan Hodler 79 €/an (jusqu'à 500 transactions) ou Trader 199 €/an (jusqu'à 5 000 + DeFi/NFT). Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable mais utilisez Waltio Pro (549 €/an, mode partagé inclus) pour livrer un dossier propre et baisser ses honoraires.",
+      "Waltio : Lite 39 €/an (jusqu'à 50 transactions), Starter 99 €/an (jusqu'à 1 000, DeFi inclus) ou Smart 249 €/an (jusqu'à 10 000) — tarifs relevés sur waltio.com le 2 octobre 2026. Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable : un export Waltio propre (Smart 249 €/an ou Unlimited 999 €/an selon le volume) peut alléger son travail.",
   },
   {
     question: "Waltio prend-il en compte le DeFi, le staking et les NFT ?",
     answer:
-      "Oui — sur les plans Trader (199 €) et Pro (549 €). Le moteur Waltio gère DeFi multi-chain (Ethereum, BNB Chain, Polygon, Arbitrum, Solana), pools de liquidité (LP tokens), staking (Cosmos, Tezos, Polkadot, Lido), airdrops automatiques et NFT (OpenSea, Blur, LooksRare). Notre calculateur ne couvre que la plus-value classique : pour ces cas, Waltio est indispensable. Plan Découverte gratuit pour visualiser votre portefeuille avant d'acheter un export Cerfa.",
+      "Oui — le suivi DeFi est inclus à partir du plan Starter (99 €/an). Le moteur Waltio gère DeFi multi-chain (Ethereum, BNB Chain, Polygon, Arbitrum, Solana), pools de liquidité (LP tokens), staking (Cosmos, Tezos, Polkadot, Lido), airdrops automatiques et NFT (OpenSea, Blur, LooksRare). Notre calculateur ne couvre que la plus-value classique : pour ces cas, Waltio est indispensable. Le plan Free (gratuit) permet de visualiser votre portefeuille avant d'acheter un rapport fiscal.",
   },
 ];
 
@@ -446,7 +446,7 @@ export default function CalculateurFiscalitePage() {
             </h3>
             <p>
               Léo achète 1 BTC à 30 000 euros en mars 2025 et le revend à
-              45 000 euros en octobre 2025. Frais Binance 45 euros à la vente.
+              45 000 euros en octobre 2025. Frais de plateforme : 45 euros à la vente.
               Pas d'autre crypto en portefeuille. Calcul : prix de cession net =
               44 955 euros. Prix d'acquisition = 30 000 euros. Valeur globale =
               45 000 euros. Plus-value = 44 955 − (30 000 × 44 955 / 45 000) =
@@ -782,7 +782,7 @@ export default function CalculateurFiscalitePage() {
               Binance), date d'ouverture/clôture. Sanction d'oubli (art. 1736 X CGI) :
               750 euros par compte, portée à 1 500 euros si la valeur des comptes dépasse
               50 000 euros.
-              Applicable rétroactivement sur 4 à 6 ans. Tutoriel :{" "}
+              Applicable sur toutes les années non prescrites (délai de reprise porté à 10 ans pour un compte non déclaré). Tutoriel :{" "}
               <Link
                 href="/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026"
                 className="text-primary-soft underline"
@@ -800,9 +800,10 @@ export default function CalculateurFiscalitePage() {
               ligne : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai
               2026 (20-54), 4 juin 2026 (55-976 + outre-mer). La déclaration
               papier doit être déposée pour le 19 mai 2026. Vous pouvez modifier
-              votre déclaration en ligne <strong>jusqu'au 4 décembre 2026</strong>{" "}
-              sans pénalité, ce qui est une bonne sécurité si vous réalisez
-              avoir oublié une cession ou un compte. Avis d'impôt envoyé entre
+              votre déclaration en ligne via le service de correction, ouvert du
+              29 juillet au <strong>30 novembre 2026 inclus</strong>, ce qui est
+              une bonne sécurité si vous réalisez avoir oublié une cession ou un
+              compte. Avis d'impôt envoyé entre
               juillet et septembre 2026, paiement solde au 15 septembre 2026.
             </p>
           </div>
@@ -884,13 +885,13 @@ export default function CalculateurFiscalitePage() {
           <div className="max-w-3xl">
             <span className="badge-info">Outils complémentaires</span>
             <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-              Au-delà de 30 transactions, automatise avec un logiciel dédié
+              Au-delà de 30 transactions, automatisez avec un logiciel dédié
             </h2>
             <p className="mt-3 text-white/75">
               Notre calculateur gratuit vous donne le montant d'impôt en 2 min,
               mais ne génère pas les formulaires Cerfa pré-remplis. Pour ça, on
-              recommande <strong>Waltio</strong> (édité en France, 30 % de
-              réduction Cryptoreflex). Comparatif complet Waltio vs Koinly vs
+              recommande <strong>Waltio</strong> (édité en France, rapport fiscal
+              dès 39 €/an). Comparatif complet Waltio vs Koinly vs
               CoinTracking pour bien choisir.
             </p>
           </div>

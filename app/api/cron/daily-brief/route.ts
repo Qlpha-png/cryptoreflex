@@ -25,6 +25,7 @@ import { verifyBearer } from "@/lib/auth";
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getAllUpcomingEvents } from "@/lib/crypto-events";
 import { BRAND } from "@/lib/brand";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -213,7 +214,7 @@ function buildMdxContent(data: BriefData): string {
   const moversTable = data.topMovers
     .map(
       (m) =>
-        `| [${m.name} (${m.symbol})](/cryptos/${m.id}) | ${fmtEur(m.price)} | ${m.change24h >= 0 ? "🟢" : "🔴"} ${fmtPct(m.change24h)} |`,
+        `| [${m.name} (${m.symbol})](${cryptoPagePath(m.id)}) | ${fmtEur(m.price)} | ${m.change24h >= 0 ? "🟢" : "🔴"} ${fmtPct(m.change24h)} |`,
     )
     .join("\n");
 

@@ -75,7 +75,7 @@ export default function SearchClient() {
       setResults(data.results ?? []);
     } catch (err) {
       console.error("[search] failed:", err);
-      setError("Recherche indisponible. Réessaie dans un instant.");
+      setError("Recherche indisponible. Réessayez dans un instant.");
       setResults([]);
     } finally {
       setIsLoading(false);

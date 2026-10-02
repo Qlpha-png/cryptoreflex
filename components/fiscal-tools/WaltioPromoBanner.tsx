@@ -16,6 +16,9 @@ import { Tag, X } from "lucide-react";
 import { track, trackAffiliateClick } from "@/lib/analytics";
 
 const STORAGE_KEY = "waltio-promo-banner-dismissed-2026-05";
+/** Fin de l'offre (-30 % jusqu'au 31 mai 2026 inclus, heure de Paris) : passé ce moment, la bannière ne s'affiche plus
+ *  (audit 2026-10-02 : elle annonçait encore une offre expirée). */
+const PROMO_END = Date.parse("2026-06-01T00:00:00+02:00");
 const WALTIO_AFFILIATE_URL =
   "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-promo-banner&utm_content=fr-2026-05";
 
@@ -24,6 +27,7 @@ export default function WaltioPromoBanner() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (Date.now() >= PROMO_END) return; // offre terminée : reste masquée
     try {
       const flag = window.localStorage.getItem(STORAGE_KEY);
       if (!flag) {

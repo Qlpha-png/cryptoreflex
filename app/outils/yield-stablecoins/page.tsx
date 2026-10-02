@@ -15,6 +15,7 @@ import {
   getAvailableStablecoins,
 } from "@/lib/stablecoin-yields";
 import { BRAND } from "@/lib/brand";
+import { getAffiliationKind } from "@/lib/partnerships";
 import StructuredData from "@/components/StructuredData";
 import {
   articleSchema,
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Comparateur yield stablecoins — Cryptoreflex",
     description:
-      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, Binance Earn, SwissBorg ? Comparatif APY mis à jour chaque semaine.",
+      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, SwissBorg ? Comparatif APY mis à jour chaque semaine.",
     url: `${BRAND.url}/outils/yield-stablecoins`,
     type: "website",
   },
@@ -138,7 +139,7 @@ export default function YieldStablecoinsPage() {
               },
               {
                 emoji: "🔥",
-                text: "Binance Earn locked 30j : jusqu'à 9-11 %, mais lock-up + risque plateforme",
+                text: "SwissBorg Smart Yield : jusqu'à 8 % sur USDC, mais risque plateforme plus élevé (3/5)",
               },
               {
                 emoji: "🇪🇺",
@@ -249,7 +250,7 @@ export default function YieldStablecoinsPage() {
                             <a
                               href={y.url}
                               target="_blank"
-                              rel={y.isAffiliate ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+                              rel={getAffiliationKind(y.platformId) ? "sponsored noopener noreferrer" : "noopener noreferrer"}
                               className="inline-flex items-center gap-1 text-xs font-semibold text-primary-soft hover:text-primary"
                             >
                               Voir

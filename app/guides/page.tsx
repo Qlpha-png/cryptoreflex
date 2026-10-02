@@ -48,7 +48,7 @@ interface GuideCard {
 const GUIDES: GuideCard[] = [
   {
     slug: "declaration-crypto-2026-checklist",
-    title: "Checklist déclaration crypto 2026 (étapes avant le 31 mai)",
+    title: "Checklist déclaration crypto (8 étapes avant votre déclaration)",
     subtitle:
       "8 étapes pour déclarer correctement vos cryptos en 2026. Imprimable, à cocher. Couvre Cerfa 2086 + 3916-bis + cas particuliers staking/airdrops.",
     date: "2026-05-06",

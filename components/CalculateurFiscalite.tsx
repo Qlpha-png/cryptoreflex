@@ -221,7 +221,7 @@ export default function CalculateurFiscalite() {
       const data = (await res.json()) as { ok: boolean; error?: string };
       if (!res.ok || !data.ok) {
         setEmailState("error");
-        setEmailMsg(data.error || "Inscription impossible. Réessaie.");
+        setEmailMsg(data.error || "Inscription impossible. Réessayez.");
         return;
       }
       setEmailState("success");
@@ -236,7 +236,7 @@ export default function CalculateurFiscalite() {
     } catch (err) {
       setEmailState("error");
       setEmailMsg(
-        err instanceof Error ? err.message : "Erreur réseau. Réessaie.",
+        err instanceof Error ? err.message : "Erreur réseau. Réessayez.",
       );
     }
   }
@@ -516,17 +516,17 @@ function WaltioPostResultCta({
   if (isExonere) {
     headline = "Vous êtes exonéré — mais le 3916-bis reste obligatoire";
     pitch =
-      "Même sans impôt à payer, chaque compte ouvert sur Binance, Kraken ou Coinbase doit être déclaré (formulaire 3916-bis). 750 € à 750 € d’amende par compte oublié. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
+      "Même sans impôt à payer, chaque compte ouvert sur une plateforme étrangère (Kraken, Coinbase, ou Binance pour les années où vous y aviez un compte) doit être déclaré (formulaire 3916-bis). 750 € d’amende par compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 €. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
   } else if (regime === "bic") {
     headline = "BIC professionnel : votre expert-comptable va vous aimer";
     pitch =
-      "Au régime BIC, votre expert-comptable facture 600 € à 5 000 € selon le volume. Waltio Pro (549 €/an) fournit un dossier propre avec accès partagé : vous divisez sa facture par 2 ou 3 et vous gardez un audit-trail complet en cas de contrôle.";
+      "Au régime BIC, votre expert-comptable facture 600 € à 5 000 € selon le volume. Un export Waltio propre (Smart 249 €/an jusqu'à 10 000 transactions) peut alléger son travail, et vous gardez l'historique détaillé en cas de contrôle.";
   } else if (taxAmount >= 1000) {
-    headline = `Économise potentiellement des centaines d'€ sur ces ${formatEuro(
+    headline = `Économisez potentiellement des centaines d'€ sur ces ${formatEuro(
       taxAmount,
     )}`;
     pitch =
-      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values de l'année (imputables sur vos plus-values crypto), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Hodler 79 € (vs 600 € chez un comptable).";
+      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values de l'année (imputables sur vos plus-values crypto), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Starter 99 €/an jusqu'à 1 000 transactions (vs 600 € et plus chez un comptable).";
   } else {
     headline = "Économisez 40 h sur votre déclaration crypto";
     pitch =
@@ -556,9 +556,9 @@ function WaltioPostResultCta({
           <p className="mt-2 text-sm text-white/75">
             {pitch}{" "}
             <strong className="text-primary-soft">
-              -30 % avec le code CRYPTOREFLEX
+              Rapport fiscal dès 39 €/an
             </strong>{" "}
-            (jusqu'au 31 mai 2026).
+            (tarifs sur le site de Waltio).
           </p>
 
           {/* Trust strip — bénéfices clés (à remplacer par vrais témoignages

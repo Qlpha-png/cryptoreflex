@@ -510,7 +510,7 @@ export default function ComparatifFraisPage() {
               30+ duels plateforme vs plateforme
             </div>
             <div className="mt-1 text-xs text-muted">
-              Coinbase vs Binance, Ledger vs Trezor, etc.
+              Coinbase vs Kraken, Ledger vs Trezor, etc.
             </div>
           </Link>
         </section>

@@ -142,7 +142,7 @@ export default function StakingDetailPage({ params }: Props) {
     },
     {
       question: `Le staking ${pair.name} est-il imposé en France ?`,
-      answer: `Oui. En 2026, les rendements du staking restent traités comme des plus-values lors de leur cession contre euros (PFU 31,4%). Si vous réinvestissez ou accumulez, l'événement fiscal n'a lieu qu'à la conversion en monnaie fiat. Voir notre guide fiscalité crypto pour le détail de la déclaration annexe 2086.`,
+      answer: `Oui, les récompenses de staking sont imposables, mais le moment (réception ou cession) et le régime exacts ne sont pas tranchés par une doctrine officielle dédiée. À la cession contre euros, la plus-value relève du PFU 31,4 % (déclaration 2086). Vérifiez la doctrine à jour et, pour des montants significatifs, consultez un professionnel. Voir notre guide fiscalité crypto pour le détail.`,
     },
     {
       question: `Quel est le risque de slashing sur ${pair.name} ?`,
@@ -152,7 +152,7 @@ export default function StakingDetailPage({ params }: Props) {
       question: `Sur quelle plateforme staker ${pair.name} en France ?`,
       answer:
         platforms.length === 0
-          ? `Aucune plateforme MiCA-compliant ne propose actuellement le staking ${pair.name} de manière fiable en France. Surveillez les annonces de Bitpanda, Kraken et Binance France.`
+          ? `Aucune plateforme agréée MiCA ne propose actuellement le staking ${pair.name} de manière fiable en France à notre connaissance. Surveillez les annonces de Bitpanda, Kraken et Coinbase.`
           : `${platforms.length} plateforme${platforms.length > 1 ? "s" : ""} régulée${platforms.length > 1 ? "s" : ""} MiCA propose${platforms.length > 1 ? "nt" : ""} le staking ${pair.name} en France : ${platforms.map((p) => p.name).join(", ")}. Notre recommandation : ${platforms[0]!.name} (note globale ${platforms[0]!.scoring.global}/5) pour la combinaison APY + sécurité + UX.`,
     },
   ];
@@ -226,7 +226,7 @@ export default function StakingDetailPage({ params }: Props) {
               Où staker du {pair.symbol} en France ?
             </h2>
             <p className="mt-2 text-fg/70 max-w-2xl">
-              Plateformes enregistrées AMF / MiCA-compliant qui proposent le staking {pair.name} avec assurance
+              Plateformes agréées MiCA et accessibles en France qui proposent le staking {pair.name} avec assurance
               et reporting fiscal pour la déclaration annexe 2086.
             </p>
 
@@ -380,7 +380,7 @@ export default function StakingDetailPage({ params }: Props) {
                   Pas encore de {pair.symbol} en wallet ?
                 </h3>
                 <p className="mt-1 text-sm text-fg/70">
-                  Achète d'abord du {pair.symbol} sur une plateforme régulée puis active le staking en 1 clic.
+                  Achetez d'abord du {pair.symbol} sur une plateforme agréée MiCA, puis activez le staking en 1 clic.
                 </p>
               </div>
               <Link href={`/cryptos/${pair.cryptoId}`} className="btn-primary shrink-0">

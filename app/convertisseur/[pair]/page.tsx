@@ -146,7 +146,7 @@ export default async function PairPage({ params }: PageProps) {
     },
     {
       question: `Comment convertir des ${fromName} en ${toName} ?`,
-      answer: `Pour une conversion réelle (et non un simple calcul), utilisez une plateforme régulée MiCA comme Coinbase, Binance ou Bitpanda. Comparez les frais sur notre page comparatif — l'écart peut atteindre 1,5 % entre les pires et les meilleures.`,
+      answer: `Pour une conversion réelle (et non un simple calcul), utilisez une plateforme agréée MiCA comme Coinbase, Kraken ou Bitpanda. Comparez les frais sur notre page comparatif — l'écart peut atteindre 1,5 % entre les pires et les meilleures.`,
     },
     {
       question: `Le taux ${fromUp}/${toUp} inclut-il les frais d'exchange ?`,

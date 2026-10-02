@@ -145,7 +145,7 @@ export async function submitAmbassadeur(
   const ip = getActionIp();
   const rl = await ambassadeurLimiter(ip);
   if (!rl.ok) {
-    return { ok: false, error: "Trop de tentatives. Réessaie dans une minute." };
+    return { ok: false, error: "Trop de tentatives. Réessayez dans une minute." };
   }
 
   // Honeypot — un humain ne voit pas ce champ ; un bot le remplit.
@@ -245,7 +245,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
   const ip = getActionIp();
   const rl = await sponsoringLimiter(ip);
   if (!rl.ok) {
-    return { ok: false, error: "Trop de tentatives. Réessaie dans une minute." };
+    return { ok: false, error: "Trop de tentatives. Réessayez dans une minute." };
   }
 
   // Honeypot — bot guard sans alerter le bot qu'il s'est fait choper.
@@ -343,7 +343,7 @@ export async function submitContact(formData: FormData): Promise<FormResult> {
   const ip = getActionIp();
   const rl = await contactLimiter(ip);
   if (!rl.ok) {
-    return { ok: false, error: "Trop de tentatives. Réessaie dans une minute." };
+    return { ok: false, error: "Trop de tentatives. Réessayez dans une minute." };
   }
 
   const email = clean(formData.get("email"), 200);

@@ -89,7 +89,7 @@ export default function PriceChart({
         if (cancelled) return;
         // UX-friendly : on indique que c'est temporaire (rate-limit ou refresh).
         // L'user n'a pas à comprendre pourquoi — juste que ça reviendra.
-        setError("Données live indisponibles · réessaie dans quelques minutes");
+        setError("Données live indisponibles · réessayez dans quelques minutes");
         setPoints(null);
       })
       .finally(() => {

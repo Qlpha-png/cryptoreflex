@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const rl = await limiter(ip);
   if (!rl.ok) {
     return NextResponse.json(
-      { ok: false, error: "Trop de tentatives. Réessaie dans une minute." },
+      { ok: false, error: "Trop de tentatives. Réessayez dans une minute." },
       {
         status: 429,
         headers: { "Retry-After": String(rl.retryAfter) },

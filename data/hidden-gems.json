@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-26",
+    "lastUpdated": "2026-10-02",
     "purpose": "90 cryptos analysées (10 hidden gems originaux + 80 nouvelles fiches : Layer 1, DeFi, DePIN, AI, memecoins, RWA, stablecoins, etc.). Combinées aux 10 du data/top-cryptos.json, on couvre les 100 cryptos analysées du site Cryptoreflex.",
     "selectionCriteria": [
       "Cap entre 100M$ et 5Md$",
@@ -53,10 +53,8 @@
       ],
       "useCase": "dApps haute performance, agents IA on-chain, micro-paiements, NFT gaming, comptes abstraits",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitget",
         "Bybit"
       ],
       "officialUrl": "https://near.org",
@@ -105,11 +103,9 @@
       ],
       "useCase": "Stockage de données pour rollups Ethereum, sovereign rollups, app-chains modulaires, gaming on-chain à coût réduit",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://celestia.org",
       "monitoringSignals": [
@@ -156,11 +152,9 @@
       ],
       "useCase": "Indexation pour dApps, dashboards analytiques, oracles de données historiques, agents IA",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://thegraph.com",
       "monitoringSignals": [
@@ -205,11 +199,9 @@
       ],
       "useCase": "Rendu 3D pour films/jeux, entraînement et inférence de modèles IA, génération d'images, métaverses 3D",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://rendernetwork.com",
       "monitoringSignals": [
@@ -256,11 +248,9 @@
       ],
       "useCase": "Investissement institutionnel on-chain, collatéral DeFi à rendement, gestion de trésorerie DAO, accès non-US aux Treasuries",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://ondo.finance",
       "monitoringSignals": [
@@ -308,10 +298,8 @@
       ],
       "useCase": "DeFi à frais réduits (GMX, Camelot, Pendle), gaming on-chain, NFT, lancement de L3 via Arbitrum Orbit",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitget",
         "Bybit"
       ],
       "officialUrl": "https://arbitrum.io",
@@ -360,11 +348,9 @@
       ],
       "useCase": "Oracles de prix pour DEX, lending protocols, dérivés on-chain, données financières institutionnelles, RWA pricing",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://pyth.network",
       "monitoringSignals": [
@@ -412,11 +398,9 @@
       ],
       "useCase": "Stockage décentralisé, archivage long terme, datasets IA, NFT metadata, sauvegardes d'entreprise, données scientifiques",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://filecoin.io",
       "monitoringSignals": [
@@ -464,11 +448,9 @@
       ],
       "useCase": "DEX de dérivés perpétuels, options on-chain, prediction markets, tokenisation d'actifs synthétiques, structured products",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://injective.com",
       "monitoringSignals": [
@@ -514,11 +496,9 @@
       ],
       "useCase": "Identité décentralisée privée, KYC zero-knowledge, vérification off-chain (credit scoring, attestations), oracles privés, voting privé",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://minaprotocol.com",
       "monitoringSignals": [
@@ -566,11 +546,9 @@
       ],
       "useCase": "Interopérabilité multi-chaines, parachains spécialisées (DeFi, identité, IoT), gouvernance OpenGov, staking via nomination",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://polkadot.network",
       "monitoringSignals": [
@@ -617,11 +595,9 @@
       ],
       "useCase": "Hub d'interopérabilité IBC, staking, sécurité partagée (Interchain Security), gouvernance",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://docs.cosmos.network/hub",
       "monitoringSignals": [
@@ -670,11 +646,9 @@
       ],
       "useCase": "Gaming on-chain, DeFi haute frequence, NFT dynamiques, social Web3, paiements",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://sui.io",
       "monitoringSignals": [
@@ -723,11 +697,9 @@
       ],
       "useCase": "Smart contracts haute performance, RWA, paiements institutionnels, gaming, DeFi",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://aptosfoundation.org",
       "monitoringSignals": [
@@ -771,11 +743,9 @@
       ],
       "useCase": "Tokenisation enterprise, micropaiements, supply chain, identité, RWA, audit logs",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://hedera.com",
       "monitoringSignals": [
@@ -820,11 +790,9 @@
       ],
       "useCase": "Remittances internationales, stablecoins (USDC), tokenisation d'actifs, micropaiements, smart contracts Soroban",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://stellar.org",
       "monitoringSignals": [
@@ -871,11 +839,9 @@
       ],
       "useCase": "CBDC, tokenisation d'actifs réglementés, paiements, identité, jeux a frais bas, RWA",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://algorand.co",
       "monitoringSignals": [
@@ -922,10 +888,8 @@
       ],
       "useCase": "NFT (TzKT, fxhash, art digital), gouvernance on-chain, RWA institutionnels, CBDC, smart contracts vérifiés formellement",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitget",
         "Bybit"
       ],
       "officialUrl": "https://tezos.com",
@@ -973,11 +937,9 @@
       ],
       "useCase": "Hébergement web on-chain, dApps SocialFi (OpenChat, DSCVR), intégration Bitcoin/Ethereum sans bridge, IA on-chain",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://internetcomputer.org",
       "monitoringSignals": [
@@ -1025,9 +987,7 @@
       ],
       "useCase": "Mini-apps Telegram, paiements in-app, NFT (.ton domains), GameFi, stablecoins (USDT TON)",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX"
       ],
       "officialUrl": "https://ton.org",
@@ -1077,11 +1037,9 @@
       ],
       "useCase": "DEX a carnet d'ordres, dérivés perpetuels, trading haute frequence, RWA",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://sei.io",
       "monitoringSignals": [
@@ -1125,8 +1083,6 @@
       "useCase": "Paiements PoW rapides, store of value alternatif, future couche smart contracts (KRC-20, EVM L2 en développement)",
       "whereToBuy": [
         "Kraken",
-        "Bitget",
-        "MEXC",
         "Kucoin"
       ],
       "officialUrl": "https://kaspa.org",
@@ -1168,14 +1124,11 @@
       "risks": [
         "DÉLISTAGE GÉNÉRALISÉ depuis 2024 : Binance, Kraken (US), OKX, Coinbase, Bitstamp ne listent plus XMR en UE/USA pour cause MiCA et réglementation AML",
         "Risque réglementaire majeur : interdiction probable dans plusieurs pays (déjà le cas en Corée, Japon)",
-        "Accès très restreint pour particuliers FR via plateformes régulées : a privilégier DEX ou plateformes hors UE"
+        "Accès très restreint pour les particuliers en France : aucune plateforme agréée MiCA ne le propose à notre connaissance, seules restent les voies décentralisées (DEX, P2P)"
       ],
       "useCase": "Paiements confidentiels, protection vie privée financière, store of value résistant a la censure",
       "whereToBuy": [
-        "Kraken (hors UE uniquement)",
-        "TradeOgre",
-        "Cake Wallet (P2P)",
-        "DEX atomic swaps"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance : uniquement via un DEX (atomic swaps) ou un portefeuille en P2P (Cake Wallet)"
       ],
       "officialUrl": "https://www.getmonero.org",
       "monitoringSignals": [
@@ -1218,11 +1171,9 @@
       ],
       "useCase": "Paiements quotidiens, remittances, store of value alternatif, transactions privées optionnelles (MWEB)",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://litecoin.org",
       "monitoringSignals": [
@@ -1265,11 +1216,9 @@
       ],
       "useCase": "Paiements peer-to-peer a frais bas, micropaiements, CashTokens (NFT et tokens natifs), smart contracts CashScript",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://bitcoincash.org",
       "monitoringSignals": [
@@ -1317,9 +1266,7 @@
       ],
       "useCase": "Transactions privées optionnelles, recherche cryptographique zk, paiements confidentiels",
       "whereToBuy": [
-        "Kraken (hors UE)",
-        "Gemini",
-        "Bitfinex"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance"
       ],
       "officialUrl": "https://z.cash",
       "monitoringSignals": [
@@ -1363,8 +1310,6 @@
       ],
       "useCase": "Paiements quotidiens (Amérique Latine, Afrique), transactions instantanées, mixing optionnel (PrivateSend)",
       "whereToBuy": [
-        "Kraken (hors UE)",
-        "Bitfinex",
         "Bitstamp (selon juridiction)"
       ],
       "officialUrl": "https://www.dash.org",
@@ -1413,7 +1358,6 @@
       "useCase": "Smart contracts privés, NFT confidentiels, vote on-chain anonyme, DeFi privée, identité",
       "whereToBuy": [
         "Kraken (selon juridiction)",
-        "MEXC",
         "Gate.io"
       ],
       "officialUrl": "https://scrt.network",
@@ -1464,11 +1408,9 @@
       ],
       "useCase": "Layer 2 Ethereum (PoS, zkEVM), NFT enterprise, jeux, paiements, RWA, AggLayer cross-chain",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://polygon.technology",
       "monitoringSignals": [
@@ -1517,11 +1459,9 @@
       ],
       "useCase": "Layer 2 Ethereum (DeFi, NFT, jeux), OP Stack pour app-chains, gouvernance Superchain, RetroPGF (financement biens publics)",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://optimism.io",
       "monitoringSignals": [
@@ -1569,11 +1509,9 @@
       ],
       "useCase": "Swap de tokens, fourniture de liquidité, gouvernance protocole, déploiement multi-chain via Uniswap V4 hooks",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitstamp",
-        "Bitget"
+        "Bitstamp"
       ],
       "officialUrl": "https://uniswap.org",
       "monitoringSignals": [
@@ -1622,11 +1560,9 @@
       ],
       "useCase": "Prêt et emprunt crypto, génération de yield, flash loans, stablecoin GHO, déploiements RWA institutionnels",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitstamp",
-        "Bitget"
+        "Bitstamp"
       ],
       "officialUrl": "https://aave.com",
       "monitoringSignals": [
@@ -1675,11 +1611,9 @@
       ],
       "useCase": "Émission de stablecoin DAI/USDS, collatéralisation crypto et RWA, gouvernance Sky DAO, exposition tokenisée aux Treasuries US",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitstamp",
-        "Bitget"
+        "Bitstamp"
       ],
       "officialUrl": "https://sky.money",
       "monitoringSignals": [
@@ -1729,11 +1663,9 @@
       ],
       "useCase": "Liquid staking ETH/MATIC, collatéral DeFi via stETH/wstETH, gouvernance Lido DAO, infrastructure validateurs",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://lido.fi",
       "monitoringSignals": [
@@ -1782,9 +1714,7 @@
       ],
       "useCase": "Yield fixe sur stablecoins/ETH, spéculation sur les taux, farming de points avec leverage YT, hedging de rendements",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -1832,11 +1762,9 @@
       ],
       "useCase": "Swap stablecoins low-slippage, fourniture de liquidité, vote-locking veCRV, stablecoin crvUSD, bribes via Convex/Votium",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://curve.fi",
       "monitoringSignals": [
@@ -1885,11 +1813,9 @@
       ],
       "useCase": "Prêt et emprunt crypto, génération d'intérêts cTokens, gouvernance protocole, infrastructure de référence pour forks",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitstamp",
-        "Bitget"
+        "Bitstamp"
       ],
       "officialUrl": "https://compound.finance",
       "monitoringSignals": [
@@ -1934,9 +1860,7 @@
       ],
       "useCase": "Trading perpetuel avec leverage, liquidity providing GLP/GM, staking GMX pour fees, gouvernance",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -1986,11 +1910,9 @@
       ],
       "useCase": "Trading perpétuel avec orderbook, staking DYDX pour fees, gouvernance dYdX Chain, validation réseau Cosmos",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://dydx.exchange",
       "monitoringSignals": [
@@ -2039,11 +1961,9 @@
       ],
       "useCase": "Émission de Synths (sUSD, sETH, etc.), staking SNX pour fees, infrastructure pour perp DEX (Kwenta, Polynomial), exposition synthétique aux actifs",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://synthetix.io",
       "monitoringSignals": [
@@ -2088,9 +2008,7 @@
       ],
       "useCase": "Swap multi-DEX optimisé Solana, trading perpetuel Jupiter Perp, lending Jupiter Lend, DCA et limit orders, launchpad Jupiter Studio",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken",
         "DEX Solana via Jupiter app"
@@ -2139,9 +2057,7 @@
       ],
       "useCase": "Swap AMM Solana, fourniture de liquidité, launchpad memecoin via CPMM, staking RAY, intégration native avec Pump.fun et Jupiter",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken",
         "DEX Solana via Raydium app"
@@ -2184,12 +2100,11 @@
         "Équipe largement anonyme (Jeff Yan, fondateur identifié, mais reste de l'équipe peu transparente)",
         "Code propriétaire non open-source et incident JELLY 2025 montre une centralisation de fait",
         "Tokenomics post-airdrop fragile : 70% des tokens encore à débloquer, risque de dilution massive 2026-2028",
-        "France : pas de plateforme PSAN FR ne propose HYPE ; accès uniquement via Bybit/Bitget/OKX (selon juridiction utilisateur), à mesurer fiscalement et juridiquement"
+        "France : aucune plateforme agréée par l'AMF ne propose HYPE à notre connaissance ; accès via Bybit ou OKX (selon l'offre de leur entité européenne agréée MiCA) ou via le DEX Hyperliquid, à mesurer fiscalement et juridiquement"
       ],
       "useCase": "Trading perpetuel décentralisé high-performance, staking HYPE pour validation, fourniture de liquidité HLP, déploiement dApps sur HyperEVM",
       "whereToBuy": [
         "Bybit",
-        "Bitget",
         "OKX",
         "DEX uniquement (Hyperliquid frontend) pour trading principal"
       ],
@@ -2240,11 +2155,9 @@
       ],
       "useCase": "Agrégation de swap multi-DEX, swaps cross-chain Fusion+, limit orders on-chain, staking 1INCH (st1INCH)",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://1inch.io",
       "monitoringSignals": [
@@ -2289,9 +2202,7 @@
       ],
       "useCase": "Boost de yield Curve sans lock CRV, staking vlCVX pour bribes et gouvernance, staking cvxCRV pour rewards, primitive d'agrégation pour autres protocoles",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -2339,11 +2250,9 @@
       ],
       "useCase": "Liquid staking ETH avec rETH, opération de nodes Ethereum à seuil réduit, staking RPL en collatéral, gouvernance décentralisée",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://rocketpool.net",
       "monitoringSignals": [
@@ -2390,9 +2299,7 @@
       ],
       "useCase": "Stablecoin frxUSD (ex-FRAX), LST ETH avec frxETH/sfrxETH, lending Fraxlend, gas token sur Fraxtal L2, staking veFXS pour gouvernance",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -2444,9 +2351,7 @@
       ],
       "useCase": "Stablecoin USDe pour la DeFi, sUSDe pour yield natif (carry trade), collatéral DeFi (Aave, Pendle, Morpho), USDtb pour exposition Treasuries via BUIDL",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Coinbase"
       ],
@@ -2497,9 +2402,7 @@
       ],
       "useCase": "Restaking ETH/LST pour sécuriser des AVS, déploiement d'AVS (oracles, bridges, DA), gouvernance via EIGEN, primitive pour LRT (EtherFi, Renzo, Kelp)",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Coinbase"
       ],
@@ -2547,9 +2450,7 @@
       "useCase": "Swap AMM sur Base, liquidity providing volatile/stable, vote-locking veAERO pour gauges, bribes pour diriger les émissions, infrastructure de liquidité Base",
       "whereToBuy": [
         "Coinbase",
-        "Binance",
         "Bybit",
-        "Bitget",
         "DEX uniquement (Aerodrome) pour la majorité des paires"
       ],
       "officialUrl": "https://aerodrome.finance",
@@ -2597,11 +2498,9 @@
       ],
       "useCase": "Couverture IoT LoRaWAN, opérateur 5G décentralisé, forfaits mobiles aux US, infrastructure capteurs urbains",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.helium.com",
       "monitoringSignals": [
@@ -2699,9 +2598,7 @@
       ],
       "useCase": "Entraînement modèles IA, inférence LLM, fine-tuning, batch processing, ML research",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "KuCoin"
       ],
@@ -2749,11 +2646,9 @@
       ],
       "useCase": "Streaming vidéo P2P, edge compute IA, rendu 3D, distribution NFT vidéo",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.thetatoken.org",
       "monitoringSignals": [
@@ -2800,7 +2695,6 @@
       ],
       "useCase": "Entraînement collaboratif LLM, inférence décentralisée, marchés de prédiction IA, données synthétiques",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
         "Bybit",
@@ -2850,11 +2744,9 @@
       ],
       "useCase": "Agents IA autonomes, marketplace de données IA, AGI research, IoT industriel",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://superintelligence.io",
       "monitoringSignals": [
@@ -2902,8 +2794,7 @@
       ],
       "useCase": "Proof-of-personhood, anti-bot, distribution d'aides (UBI), authentification dApps, World App wallet",
       "whereToBuy": [
-        "AUCUNE plateforme PSAN FR ne propose WLD à un résident français (suspension CNIL)",
-        "Hors France : Binance, Bybit, OKX, Kraken (selon juridiction)"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance"
       ],
       "officialUrl": "https://world.org",
       "monitoringSignals": [
@@ -2949,7 +2840,6 @@
       ],
       "useCase": "Stockage permanent NFT, archivage web, hébergement dApps, datasets IA, journalisme décentralisé",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
         "Bybit",
@@ -2999,10 +2889,8 @@
       ],
       "useCase": "Backup entreprise, hébergement vidéo, datasets IA, archivage long terme, CDN décentralisé",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bitget",
         "KuCoin"
       ],
       "officialUrl": "https://www.storj.io",
@@ -3049,7 +2937,6 @@
       ],
       "useCase": "Prix DeFi, données sportives pour paris décentralisés, oracles IoT, calculs de rendement",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
         "Bybit",
@@ -3099,11 +2986,9 @@
       ],
       "useCase": "Prix DeFi, oracles random (QRNG), données spécialisées, OEV redistribution",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://api3.org",
       "monitoringSignals": [
@@ -3147,10 +3032,8 @@
       ],
       "useCase": "Lancement agents IA (KOL, gaming, divertissement), tokenisation IP, communautés fan-token",
       "whereToBuy": [
-        "Binance",
         "Bybit",
         "OKX",
-        "Bitget",
         "KuCoin"
       ],
       "officialUrl": "https://www.virtuals.io",
@@ -3196,11 +3079,9 @@
       ],
       "useCase": "Marketplace datasets IA, compute-to-data, monétisation data privée, recherche IA",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://oceanprotocol.com",
       "monitoringSignals": [
@@ -3248,10 +3129,8 @@
       ],
       "useCase": "Cloud gaming, inférence IA, rendu 3D, training LLM, infrastructure VR/AR",
       "whereToBuy": [
-        "Binance",
         "Bybit",
         "OKX",
-        "Bitget",
         "Gate.io"
       ],
       "officialUrl": "https://aethir.com",
@@ -3300,10 +3179,8 @@
       "useCase": "Live streaming décentralisé, transcodage vidéo, AI vidéo (génération, upscale), VOD",
       "whereToBuy": [
         "Coinbase",
-        "Binance",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://livepeer.org",
       "monitoringSignals": [
@@ -3350,10 +3227,8 @@
       ],
       "useCase": "Tokenisation IP, licences musique/art on-chain, royalties IA, remix programmable, agents créatifs",
       "whereToBuy": [
-        "Binance",
         "Bybit",
         "OKX",
-        "Bitget",
         "Kraken"
       ],
       "officialUrl": "https://www.story.foundation",
@@ -3400,10 +3275,8 @@
       ],
       "useCase": "Datasets training LLM, scraping web décentralisé, intelligence concurrentielle, AI search",
       "whereToBuy": [
-        "Binance",
         "Bybit",
         "OKX",
-        "Bitget",
         "KuCoin"
       ],
       "officialUrl": "https://www.grass.io",
@@ -3451,7 +3324,6 @@
       "useCase": "Cartographie HD pour conduite autonome, navigation, logistique, urbanisme, IA véhicule",
       "whereToBuy": [
         "Bybit",
-        "Bitget",
         "OKX",
         "KuCoin",
         "Gate.io"
@@ -3498,7 +3370,6 @@
       ],
       "useCase": "Trading P2P énergie solaire, certificats verts (RECs/I-RECs), flexibilité grid, comptage smart meters",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
         "Bybit",
@@ -3550,9 +3421,7 @@
       "whereToBuy": [
         "Kraken",
         "KuCoin",
-        "Bitget",
-        "Gate.io",
-        "MEXC"
+        "Gate.io"
       ],
       "officialUrl": "https://www.energyweb.org",
       "monitoringSignals": [
@@ -3598,11 +3467,9 @@
       ],
       "useCase": "Memecoin, ShibaSwap DEX, Shibarium L2, NFT collections",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://shibatoken.com",
       "monitoringSignals": [
@@ -3646,10 +3513,8 @@
       ],
       "useCase": "Memecoin uniquement, aucune utilité technique",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Bybit",
-        "Bitget",
         "OKX"
       ],
       "officialUrl": "https://www.pepe.vip",
@@ -3694,9 +3559,7 @@
       ],
       "useCase": "Memecoin Solana, intégration BonkBot Telegram, gas alternatif sur certaines apps",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -3718,7 +3581,7 @@
       "category": "Memecoin",
       "tagline": "Le memecoin chien-au-bonnet sur Solana, hype 2024 puis crash",
       "what": "dogwifhat est un memecoin Solana lancé fin 2023, basé sur l'image d'un Shiba Inu portant un bonnet rose. A connu une hype virale début 2024 (+10000%) puis a perdu 80% en 2025.",
-      "whyHiddenGem": "Cas d'école du memecoin : explose vite, retombe tout aussi vite. À traiter comme jeu d'argent pur. Si tu n'étais pas dedans avant la hype, c'est probablement trop tard.",
+      "whyHiddenGem": "Cas d'école du memecoin : explose vite, retombe tout aussi vite. À traiter comme jeu d'argent pur. Si vous n'étiez pas dedans avant la hype, c'est probablement trop tard.",
       "reliability": {
         "score": 4,
         "teamIdentified": false,
@@ -3742,9 +3605,7 @@
       ],
       "useCase": "Memecoin uniquement",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Coinbase"
       ],
@@ -3790,9 +3651,7 @@
       ],
       "useCase": "Memecoin, Valhalla metaverse, FlokiFi (locker), Floki University",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Kraken"
       ],
@@ -3841,11 +3700,9 @@
       ],
       "useCase": "Metaverse gaming, achat de LANDs, création d'expériences, marketplace NFT",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.sandbox.game",
       "monitoringSignals": [
@@ -3892,11 +3749,9 @@
       ],
       "useCase": "Metaverse, achat de LAND, événements virtuels, marketplace NFT, gouvernance DAO",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://decentraland.org",
       "monitoringSignals": [
@@ -3944,11 +3799,9 @@
       ],
       "useCase": "Jeu blockchain, élevage NFT Axies, gouvernance AXS, staking",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://axieinfinity.com",
       "monitoringSignals": [
@@ -3992,10 +3845,8 @@
       ],
       "useCase": "Gaming Web3, nodes Gala, NFT in-game, GalaChain",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Bybit",
-        "Bitget",
         "OKX"
       ],
       "officialUrl": "https://gala.com",
@@ -4045,10 +3896,8 @@
       "useCase": "Subnet gaming Avalanche, infrastructure jeux Web3, account abstraction",
       "whereToBuy": [
         "Bybit",
-        "Bitget",
         "OKX",
-        "Gate.io",
-        "MEXC"
+        "Gate.io"
       ],
       "officialUrl": "https://www.onbeam.com",
       "monitoringSignals": [
@@ -4092,10 +3941,7 @@
       ],
       "useCase": "Stablecoin trading, transferts internationaux, paiements crypto, refuge volatilité",
       "whereToBuy": [
-        "Binance (achat possible mais paires limitées en EEE post-MiCA)",
-        "Bitget, Bybit (selon juridiction utilisateur)",
-        "Coinbase EU et Kraken EU : délisté pour résidents EEE",
-        "Détention OK, swap/conversion vers USDC recommandée pour résidents FR"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance (délistée pour les résidents de l'EEE)"
       ],
       "officialUrl": "https://tether.to",
       "monitoringSignals": [
@@ -4142,11 +3988,9 @@
       ],
       "useCase": "Stablecoin conforme MiCA, trading, paiements, DeFi, treasury entreprises",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.circle.com/usdc",
       "monitoringSignals": [
@@ -4194,7 +4038,6 @@
       ],
       "useCase": "Stablecoin DeFi, garantie prêts, paiements, DAI Savings Rate",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
         "Bybit",
@@ -4243,10 +4086,8 @@
       "useCase": "Réduction frais OKX, launchpad Jumpstart, gas X Layer, gouvernance",
       "whereToBuy": [
         "OKX",
-        "Bitfinex",
         "Bybit",
-        "Gate.io",
-        "MEXC"
+        "Gate.io"
       ],
       "officialUrl": "https://www.okx.com/okb",
       "monitoringSignals": [
@@ -4292,9 +4133,7 @@
       "useCase": "Cashback carte Visa, staking exchange, gas Cronos chain, DeFi écosystème",
       "whereToBuy": [
         "Crypto.com",
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX"
       ],
       "officialUrl": "https://crypto.com/cronos",
@@ -4315,7 +4154,7 @@
       "category": "Exchange Token",
       "tagline": "Token de l'exchange KuCoin avec partage de revenus, mais risques réglementaires",
       "what": "KCS est le token natif de l'exchange KuCoin. Offre des réductions sur frais et un partage quotidien de 50% des revenus de l'exchange aux holders qui en stockent 6+ KCS.",
-      "whyHiddenGem": "Modèle de revenue sharing intéressant (rendement passif via dividendes). Mais KuCoin a payé 297M$ d'amende US en 2025 pour absence d'enregistrement, et reste non disponible en France.",
+      "whyHiddenGem": "Modèle de revenue sharing intéressant (rendement passif via dividendes). Mais KuCoin a payé 297M$ d'amende US en 2025 pour absence d'enregistrement. En France, seule son entité européenne KuCoin EU, agréée MiCA (FMA, Autriche), peut servir les résidents.",
       "reliability": {
         "score": 6.5,
         "teamIdentified": true,
@@ -4333,17 +4172,15 @@
         ]
       },
       "risks": [
-        "France : acheter KCS depuis la France implique de passer par une plateforme non-PSAN, ce qui crée un risque juridique et fiscal personnel à mesurer (blocages AMF observés en 2023 sur KuCoin)",
+        "France : acheter KCS sur une plateforme non agréée MiCA crée un risque juridique et fiscal personnel à mesurer",
         "Risques réglementaires (amendes US)",
-        "Non disponible en France",
+        "Aucune plateforme agréée MiCA proposant KCS identifiée à ce jour",
         "Dépendance KuCoin centralisé",
         "Liquidité concentrée"
       ],
       "useCase": "Réductions frais KuCoin, partage revenus quotidiens, gas KCC chain",
       "whereToBuy": [
-        "AUCUNE plateforme PSAN FR ne liste KCS à ce jour",
-        "Plateformes hors PSAN FR (déconseillées) : KuCoin, Gate.io, MEXC, BingX",
-        "Bitfinex (statut variable selon juridiction)"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance"
       ],
       "officialUrl": "https://www.kcs.foundation",
       "monitoringSignals": [
@@ -4391,11 +4228,9 @@
       ],
       "useCase": "L2 gaming Ethereum, marketplace NFT (Immutable zkEVM), staking IMX, infrastructure studios",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.immutable.com",
       "monitoringSignals": [
@@ -4444,11 +4279,9 @@
       ],
       "useCase": "L2 zk-rollup Ethereum, gas Starknet, staking, gouvernance protocole",
       "whereToBuy": [
-        "Binance",
         "Coinbase",
         "Kraken",
-        "Bybit",
-        "Bitget"
+        "Bybit"
       ],
       "officialUrl": "https://www.starknet.io",
       "monitoringSignals": [
@@ -4495,9 +4328,7 @@
       ],
       "useCase": "Tokenisation RWA (immobilier, obligations), staking, gouvernance, conformité MiCA / VARA",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "OKX",
         "Gate.io"
       ],
@@ -4546,9 +4377,7 @@
       ],
       "useCase": "Tokenisation security tokens, fonds, obligations, infrastructure conforme institutionnels, KYC on-chain",
       "whereToBuy": [
-        "Binance",
         "Bybit",
-        "Bitget",
         "Gate.io",
         "Kraken"
       ],

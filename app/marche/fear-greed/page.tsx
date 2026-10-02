@@ -157,7 +157,7 @@ export default async function FearGreedPage() {
           <EmptyState
             icon={<Activity className="h-6 w-6" aria-hidden="true" />}
             title="Indice indisponible"
-            description="Notre fournisseur de sentiment (alternative.me) est temporairement injoignable. Réessaie dans quelques minutes."
+            description="Notre fournisseur de sentiment (alternative.me) est temporairement injoignable. Réessayez dans quelques minutes."
             cta={{ label: "Réessayer", href: "/marche/fear-greed" }}
             secondaryCta={{ label: "Voir la heatmap", href: "/marche/heatmap" }}
           />

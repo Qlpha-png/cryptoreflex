@@ -1,15 +1,15 @@
 ---
 title: "MiCA juillet 2026 : checklist de survie pour les utilisateurs français"
 slug: "mica-juillet-2026-checklist-survie"
-description: "Le 1er juillet 2026, le grandfathering PSAN se ferme : seules les plateformes agréées CASP-MiCA pourront opérer en France. 7 actions concrètes à boucler dès maintenant pour ne pas perdre l'accès à vos fonds."
-excerpt: "Le 30 juin 2026, la France ferme la période transitoire PSAN. Les plateformes encore en cours d'instruction MiCA seront en zone rouge. Voici la checklist 7 étapes pour sécuriser vos comptes avant minuit."
+description: "Depuis le 1er juillet 2026, seules les plateformes agréées MiCA peuvent servir les résidents français. 7 actions concrètes pour vérifier vos comptes, rapatrier vos fonds si nécessaire et rester en règle avec le fisc."
+excerpt: "La période transitoire MiCA a pris fin le 1er juillet 2026 en France. Binance a cessé ses services sur crypto-actifs en France, d'autres plateformes ne sont pas autorisées. Voici la checklist en 7 étapes pour vérifier vos comptes et sécuriser vos avoirs."
 category: "MiCA"
 date: "2026-04-25"
 publishedAt: "2026-04-25"
-updatedAt: "2026-04-25"
-lastUpdated: "2026-04-25"
-readTime: "11 min"
-readingTime: 11
+updatedAt: "2026-10-02"
+lastUpdated: "2026-10-02"
+readTime: "10 min"
+readingTime: 10
 author: "Kevin Voisin"
 tags:
   - "mica"
@@ -23,11 +23,11 @@ tags:
 keywords:
   - "mica juillet 2026 plateformes"
   - "checklist mica utilisateur"
-  - "psan deadline 1er juillet 2026"
+  - "fin psan 1er juillet 2026"
   - "binance mica france"
-  - "exporter compte crypto avant mica"
+  - "exporter compte crypto mica"
   - "fin grandfathering psan"
-  - "plateformes safe mica france"
+  - "plateformes agréées mica france"
 type: "guide"
 status: "published"
 featured: true
@@ -35,164 +35,161 @@ gradient: "from-amber-500/40 to-orange-600/40"
 schema:
   type: "Article"
   headline: "MiCA juillet 2026 : checklist de survie pour les utilisateurs français"
-  about: "Préparation utilisateur final à la fermeture du grandfathering PSAN le 30 juin 2026"
+  about: "Actions à mener par les utilisateurs français après la fin de la période transitoire MiCA le 1er juillet 2026"
   audience: "Particuliers français détenant des cryptoactifs sur une plateforme étrangère"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="25 avril 2026" updatedAt="25 avril 2026" readingTime="11 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="25 avril 2026" updatedAt="2 octobre 2026" readingTime="10 min" methodology="/methodologie" />
 
-À minuit, le 30 juin 2026, la France ferme la **période transitoire de 18 mois** prévue par le règlement MiCA. Seuls les prestataires détenant un **agrément CASP** (officiel ou passeporté depuis un autre État membre) pourront continuer à servir des clients français. Tous les autres — y compris ceux encore en instruction à l'AMF — basculeront en **service interdit**, au sens du droit européen, à partir du 1er juillet 2026.
+Le **1er juillet 2026**, la France a refermé la **période transitoire de 18 mois** prévue par le règlement MiCA. Depuis cette date, seul un prestataire agréé MiCA (**CASP**) — par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France — peut fournir des services sur crypto-actifs à des résidents français. Le régime PSAN a pris fin : un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation.
 
-Cet article est votre **checklist en 7 actions concrètes** pour ne pas découvrir le 2 juillet 2026 que votre exchange refuse vos ordres ou bloque vos retraits. On travaille avec les données du registre interne Cryptoreflex (`data/psan-registry.json`, vérifié 25/04/2026) et les communications officielles AMF / ESMA.
+Cet article est votre **checklist en 7 actions concrètes** pour vérifier que vos comptes sont chez des prestataires autorisés, rapatrier vos fonds si nécessaire et rester en règle avec l'administration fiscale. Les statuts cités proviennent du registre MiCA de l'ESMA (données au 29 septembre 2026) et de la liste blanche de l'AMF, consultés le 2 octobre 2026.
+
+<Callout type="info" title="Mise à jour du 2 octobre 2026">
+La première version de cet article, publiée le 25 avril 2026, préparait l'échéance du 1er juillet et contenait des prévisions et des statuts qui se sont révélés inexacts (notamment pour Binance, Bitget, Bybit et KuCoin). Le texte ci-dessous décrit la situation constatée.
+</Callout>
 
 ## TL;DR (60 secondes)
 
-- **Date butoir** : 30 juin 2026, 23h59 (fuseau de Paris, fin du grandfathering PSAN).
-- **Plateformes safe MiCA** (agrément CASP délivré et passeporté en France) : Bitpanda, Coinbase Europe, Kraken, Coinhouse, Bitstack, Bitget Europe, Trade Republic, SwissBorg.
-- **Plateformes en zone rouge** au 25/04/2026 : **Binance** (dossier France toujours en instruction), **MEXC, KuCoin, Gate.io, Bybit, Phemex, Bitfinex, HTX, BingX** (aucun agrément CASP UE communiqué).
-- **Action prioritaire** : si vous avez plus de 1 000 € sur une plateforme en zone rouge, **lancez un transfert dès cette semaine** vers un wallet personnel ou un exchange agréé.
-- **Risque réel** : pas de saisie ni de blocage du jour au lendemain, mais **gel des dépôts**, des trades, et possiblement des retraits SEPA si l'opérateur ferme son entité européenne en urgence.
-- **À ne pas oublier** : déclarer les comptes étrangers via le formulaire **3916-bis** au printemps 2027 — l'oubli coûte 750 € par compte (1 500 € si solde > 50 000 €).
+- **1er juillet 2026** : fin de la période transitoire MiCA en France et du régime PSAN.
+- **Agréées avec accès à la France** (exemples) : Coinbase, Kraken, Bitpanda, Trade Republic, Coinhouse, Bitstack, SwissBorg, Bybit, OKX, Crypto.com, KuCoin EU.
+- **Non autorisées en France** : Binance (a cessé ses services sur crypto-actifs en France le 1er juillet 2026), Gemini (a quitté le marché français en avril 2026), ainsi que Bitget, Nexo, MEXC, HTX, BingX, Phemex, Bitfinex, Deribit, YouHodler, absentes du registre MiCA de l'ESMA.
+- **Action prioritaire** : si des fonds sont restés sur une plateforme non autorisée, référez-vous à ses communications officielles et rapatriez-les vers un portefeuille personnel ou une plateforme agréée.
+- **À ne pas oublier** : déclarer au printemps 2027 vos comptes à l'étranger sur le formulaire **3916-bis**, y compris ceux fermés en 2026 — l'oubli coûte 750 € par compte (1 500 € si la valeur du compte dépasse 50 000 €).
 
-> Pour aller plus loin : on tient à jour le détail plateforme par plateforme dans [MiCA Binance France](/blog/mica-binance-france-2026), [Alternative Binance post-MiCA](/blog/alternative-binance-france-post-mica) et le [vérificateur MiCA](/outils/verificateur-mica).
+> Pour aller plus loin : [MiCA et Binance en France](/blog/mica-binance-france-2026), [Alternative à Binance post-MiCA](/blog/alternative-binance-france-post-mica) et le [vérificateur MiCA](/outils/verificateur-mica).
 
 ---
 
-## 1. Ce qui se passe vraiment le 1er juillet 2026
+## 1. Ce qui s'est passé le 1er juillet 2026
 
-Le règlement européen 2023/1114 (MiCA) prévoit dans son article 143 §3 que chaque État membre peut prolonger jusqu'à **18 mois** la période pendant laquelle les acteurs « anciens régimes » (PSAN simple en France, BaFin allemand, MFSA maltais...) peuvent continuer d'opérer **sans agrément CASP**. La France a choisi le maximum autorisé : 18 mois à compter du 30 décembre 2024, soit **fin au 30 juin 2026**.
+Le règlement européen 2023/1114 (MiCA) prévoyait dans son article 143 §3 que chaque État membre pouvait prolonger jusqu'à **18 mois** la période pendant laquelle les acteurs relevant des anciens régimes nationaux (le PSAN en France) continuaient d'opérer **sans agrément CASP**. La France a choisi le maximum : 18 mois à compter du 30 décembre 2024, soit **une fin au 30 juin 2026**.
 
-Concrètement, voilà ce qui change le 1er juillet :
+Concrètement, depuis le 1er juillet 2026 :
 
-- **Aucun nouveau client français** ne peut être pris par une plateforme non agréée CASP. Cette règle est déjà appliquée chez la majorité des acteurs depuis fin 2025.
-- **Les comptes existants** sur une plateforme non agréée doivent être **fermés en mode "wind-down"** : retraits autorisés, mais **plus de dépôts, plus de trade, plus d'achats**.
-- **L'AMF peut publier** une liste noire actualisée et bloquer l'accès aux sites web (DNS) au titre de la protection des consommateurs.
-- **Les passeports MiCA** délivrés par d'autres États membres restent valables : un agrément reçu en Lituanie (Bitget), Allemagne (Bitpanda), Irlande (Coinbase, Kraken) ou Autriche (Bitpanda) couvre la France sans formalité supplémentaire.
+- **Seuls les prestataires agréés MiCA avec accès à la France** peuvent fournir des services sur crypto-actifs à des résidents français.
+- **Un ancien enregistrement PSAN ne vaut plus autorisation**, quel que soit son numéro.
+- **Les passeports MiCA** délivrés par d'autres États membres restent valables : un agrément obtenu en Irlande (Kraken), au Luxembourg (Coinbase), en Autriche (Bitpanda, Bybit) ou à Malte (OKX, Crypto.com) couvre la France dès lors que le passeport vers la France est activé.
+- **L'AMF publie une liste blanche** des prestataires autorisés et une liste noire des acteurs non autorisés.
 
 <Callout type="warning" title="L'idée fausse à ne pas reprendre">
-Beaucoup de tweets et de threads circulent en disant que « vos crypto vont être saisies ». **C'est faux.** L'AMF n'a aucun pouvoir de saisie sur des actifs détenus à l'étranger. Le risque réel est purement opérationnel : geler les fonctions du compte, et vous laisser quelques mois pour rapatrier — délai pendant lequel le cours peut bouger défavorablement.
+Beaucoup de messages ont circulé en affirmant que « vos cryptos vont être saisies ». **C'est faux.** La fin de la période transitoire interdit aux plateformes non agréées de vous fournir des services ; elle ne transfère pas la propriété de vos actifs. Le risque est opérationnel : un compte dont les services s'arrêtent, et des fonds à rapatrier.
 </Callout>
 
 ---
 
-## 2. Plateformes en zone rouge au 25 avril 2026
+## 2. Plateformes non autorisées en France
 
-Croisé avec `data/psan-registry.json` (champ `atRiskJuly2026: true`), voici la liste des plateformes encore en risque à 9 semaines de la deadline :
+Situation au 2 octobre 2026 (registre MiCA de l'ESMA, données au 29 septembre 2026) :
 
-| Plateforme | Statut MiCA actuel | Action client recommandée |
+| Plateforme | Situation | Que faire si vous y avez un compte |
 |---|---|---|
-| **Binance** | Dossier CASP en instruction (AMF + Pologne) | Surveiller hebdomadairement, plan B prêt |
-| **MEXC** | Aucun dossier CASP UE annoncé | Rapatrier d'ici fin mai 2026 |
-| **KuCoin** | Retrait UE évoqué fin 2025 | Rapatrier d'ici fin mai 2026 |
-| **Gate.io** | Aucun dossier CASP UE annoncé | Rapatrier d'ici fin mai 2026 |
-| **Bybit** | Stratégie UE annoncée (Autriche), pas validée | Plan B prêt |
-| **Phemex** | Aucun agrément CASP, pas de plan UE clair | Rapatrier dès maintenant |
-| **Bitfinex** | Pas de dossier CASP — historiquement BVI | Rapatrier dès maintenant |
-| **HTX (ex-Huobi)** | Aucun agrément CASP UE | Rapatrier dès maintenant |
-| **BingX** | Pas d'agrément CASP UE | Rapatrier dès maintenant |
-| **Deribit** | Statut spécifique dérivés, en attente | Pour pros uniquement |
-| **Nexo / YouHodler** | Programmes earn — pas couverts par MiCA Title V | Réduire l'exposition |
+| **Binance** | A cessé ses services sur crypto-actifs en France le 1er juillet 2026 | Rapatrier les fonds restants, exporter l'historique |
+| **Gemini** | A quitté le marché français en avril 2026 | Rapatrier les fonds restants, exporter l'historique |
+| **Bitget** | Absente du registre MiCA de l'ESMA | Rapatrier vers une plateforme agréée ou un wallet |
+| **MEXC, HTX (ex-Huobi), BingX, Phemex** | Absentes du registre MiCA de l'ESMA | Rapatrier vers une plateforme agréée ou un wallet |
+| **Bitfinex, Deribit** | Absentes du registre MiCA de l'ESMA | Rapatrier vers une plateforme agréée ou un wallet |
+| **Nexo, YouHodler** | Absentes du registre MiCA de l'ESMA | Rapatrier vers une plateforme agréée ou un wallet |
 
-L'enjeu, ce n'est pas la plateforme **en absolu** : c'est **l'écart entre le statut au 30 juin 2026 et votre solde**. Si vous avez 80 € sur MEXC pour faire du shitcoin testing, ce n'est pas la même urgence qu'un solde de 12 000 € sur Binance.
+Dans tous les cas, **conservez votre historique complet** : il vous servira pour la déclaration de vos plus-values et de vos comptes à l'étranger.
 
 ---
 
-## 3. Plateformes safe (agrément CASP-MiCA effectif)
+## 3. Plateformes agréées MiCA avec accès à la France
 
-À l'inverse, voici les plateformes **déjà agréées CASP** et utilisables en France sans risque réglementaire au 1er juillet 2026 (registre interne Cryptoreflex au 25/04/2026) :
+À l'inverse, voici des prestataires **agréés MiCA** avec un accès à la France (autorité d'agrément entre parenthèses), d'après le registre de l'ESMA et la liste blanche de l'AMF :
 
 <ComparisonTable
-  headers={["Plateforme", "Pays d'agrément MiCA", "Date d'obtention", "Statut FR"]}
+  headers={["Plateforme", "Autorité d'agrément MiCA", "Pays"]}
   rows={[
-    ["Bitpanda", "Allemagne (BaFin)", "13 mai 2025", "Passeport actif + PSAN"],
-    ["Coinbase Europe", "Irlande (Central Bank)", "26 juin 2025", "Passeport actif + PSAN"],
-    ["Bitget Europe", "Lituanie (Bank of Lithuania)", "14 juillet 2025", "Passeport actif (pas de PSAN AMF)"],
-    ["Kraken", "Irlande (Central Bank)", "15 septembre 2025", "Passeport actif + PSAN"],
-    ["Trade Republic", "Allemagne (BaFin)", "15 novembre 2024", "Passeport actif + PSAN"],
-    ["Coinhouse", "France (AMF/ACPR)", "Mai 2025", "Agrément FR direct"],
-    ["Bitstack", "France (AMF/ACPR)", "Juillet 2025", "Agrément FR direct"],
-    ["SwissBorg", "France (AMF/ACPR)", "Octobre 2025", "Agrément FR direct"],
+    ["Coinhouse", "AMF (n° A2026-013)", "France"],
+    ["Bitstack", "AMF (n° A2025-003)", "France"],
+    ["SwissBorg", "AMF, via Blocknodes SAS (n° A2026-011)", "France"],
+    ["Paymium", "AMF (n° A2026-018)", "France"],
+    ["Coinbase", "CSSF", "Luxembourg"],
+    ["Kraken", "Banque centrale d'Irlande", "Irlande"],
+    ["Bitpanda", "FMA", "Autriche"],
+    ["Bybit", "FMA", "Autriche"],
+    ["Trade Republic", "BaFin", "Allemagne"],
+    ["OKX", "MFSA", "Malte"],
+    ["Crypto.com", "MFSA", "Malte"],
+    ["Revolut", "CySEC", "Chypre"],
   ]}
 />
 
-Pour vérifier votre agrément, on a un [vérificateur d'agrément MiCA](/outils/verificateur-mica) en libre accès qui interroge notre registre et la base ESMA. Si vous voyez "Agrément CASP - Confirmé" sur votre exchange, vous n'avez **rien à faire** côté changement de plateforme. Gardez quand même en tête les obligations déclaratives au point 7.
+Pour vérifier une plateforme, utilisez notre [vérificateur d'agrément MiCA](/outils/verificateur-mica), qui reprend le registre de l'ESMA. Si votre plateforme y apparaît comme agréée avec accès à la France, vous n'avez **rien à faire** côté changement de plateforme. Gardez quand même en tête les obligations déclaratives du point 7.
 
 ---
 
-## 4. La checklist 7 actions
+## 4. La checklist en 7 actions
 
-C'est le cœur de l'article. À faire dans l'ordre, en y consacrant idéalement **2 heures par étape**. Estimation totale : un samedi après-midi.
+C'est le cœur de l'article. À faire dans l'ordre ; comptez quelques heures au total.
 
 <HowToSchema
-  name="Sécuriser ses comptes crypto avant le 30 juin 2026"
-  description="Procédure pas-à-pas pour préparer le passage MiCA et éviter le gel d'accès au 1er juillet 2026."
+  name="Sécuriser ses comptes crypto après la fin de la transition MiCA"
+  description="Procédure pas-à-pas pour vérifier le statut de ses plateformes, rapatrier ses fonds si nécessaire et rester en règle après le 1er juillet 2026."
   totalTime="PT3H"
   estimatedCost="0 € (frais réseau crypto à prévoir)"
   steps={[
     {
       name: "1. Vérifier le statut MiCA de chaque plateforme utilisée",
-      text: "Lister tous les exchanges et apps custodiales sur lesquels vous détenez du capital. Pour chacun, vérifier le statut CASP via le vérificateur MiCA Cryptoreflex ou le registre ESMA (esma.europa.eu/registers). Marquer en vert (CASP délivré), orange (en instruction) ou rouge (aucun dossier).",
+      text: "Listez tous les exchanges et applications custodiales sur lesquels vous détenez du capital. Pour chacun, vérifiez le statut via le vérificateur MiCA Cryptoreflex, le registre de l'ESMA ou la liste blanche de l'AMF. Classez-les en vert (agréée MiCA avec accès à la France) ou en rouge (non autorisée en France).",
       url: "https://www.cryptoreflex.fr/outils/verificateur-mica"
     },
     {
-      name: "2. Exporter son historique complet sur les plateformes en orange et rouge",
-      text: "Aller dans les paramètres > 'Export historique transactions' (CSV) et télécharger l'intégralité depuis l'inscription. Indispensable pour la déclaration fiscale 2086 et pour reconstituer une preuve d'achat si la plateforme ferme."
+      name: "2. Exporter son historique complet sur les plateformes à quitter",
+      text: "Dans les paramètres, cherchez l'export de l'historique des transactions (CSV) et téléchargez l'intégralité depuis l'inscription. Indispensable pour la déclaration fiscale 2086 et pour reconstituer une preuve d'achat."
     },
     {
-      name: "3. Mettre à jour son KYC sur les plateformes safe",
-      text: "Passer en KYC niveau 2 (justificatif de domicile + selfie) sur au moins 2 plateformes vertes. Évitez l'ironie de devoir attendre 5 jours de validation KYC le 28 juin, en pleine bousculade."
+      name: "3. Ouvrir ou mettre à jour un compte sur une plateforme agréée",
+      text: "Passez la vérification d'identité complète (pièce d'identité, justificatif de domicile, selfie) sur au moins une plateforme agréée MiCA avec accès à la France, avant de lancer les transferts."
     },
     {
       name: "4. Activer les retraits crypto on-chain",
-      text: "Sur chaque plateforme verte, vérifier que les retraits on-chain sont activés et que la liste blanche d'adresses est configurée (whitelist ETH, BTC, SOL minimum). Ces réglages ont parfois un délai de 24h après modification."
+      text: "Sur la plateforme de destination, vérifiez que les dépôts et retraits on-chain sont activés et configurez la liste blanche d'adresses si elle est proposée. Ces réglages ont parfois un délai d'activation."
     },
     {
       name: "5. Préparer son wallet personnel",
-      text: "Si vous n'avez pas encore de hardware wallet (Ledger Nano S Plus à 80 €, Trezor Safe 3 à 90 €), c'est le moment. Configurer une seed phrase écrite sur métal ou papier ignifuge, jamais sauvegardée numériquement.",
+      text: "Si vous voulez conserver vous-même vos cryptos, préparez un portefeuille matériel (Ledger, Trezor) acheté sur le site officiel du fabricant. Notez la phrase de récupération sur papier ou sur métal, jamais sous forme numérique.",
       url: "https://www.cryptoreflex.fr/blog/securiser-cryptos-wallet-2fa-2026"
     },
     {
-      name: "6. Migrer les soldes des plateformes en zone rouge",
-      text: "Selon votre plan : (a) retrait crypto vers votre wallet personnel, (b) retrait fiat SEPA vers votre compte bancaire, ou (c) transfert vers une plateforme safe. Faire des tests à 50 € avant le transfert principal pour valider l'adresse."
+      name: "6. Rapatrier les soldes des plateformes non autorisées",
+      text: "Selon votre situation : (a) retrait crypto vers votre wallet personnel, (b) retrait en euros vers votre compte bancaire, ou (c) transfert vers une plateforme agréée. Faites d'abord un transfert test d'un petit montant pour valider l'adresse et le réseau."
     },
     {
       name: "7. Documenter et déclarer",
-      text: "Après chaque mouvement : screenshot de la transaction, hash on-chain, conservé dans un dossier dédié. Au printemps 2027, ces preuves seront demandées pour le formulaire 2086 (plus-values) et 3916-bis (comptes étrangers fermés ou actifs).",
+      text: "Après chaque mouvement : capture de la transaction et hash on-chain, conservés dans un dossier dédié. Au printemps 2027, ces preuves serviront pour le formulaire 2086 (plus-values) et le 3916-bis (comptes à l'étranger, y compris ceux fermés en 2026).",
       url: "https://www.cryptoreflex.fr/blog/comment-declarer-crypto-impots-2026-guide-complet"
     }
   ]}
 />
 
-<Callout type="tip" title="Ordre recommandé selon le solde">
-- **< 500 €** : étapes 1, 2 et 7 suffisent, on peut différer le transfert si la plateforme communique sur son agrément en cours.
-- **500 – 5 000 €** : étapes 1 à 6 dans le mois.
-- **> 5 000 €** : faire les 7 étapes immédiatement, c'est la priorité du week-end.
+<Callout type="tip" title="Ordre de priorité">
+- **Fonds encore présents sur une plateforme non autorisée** : étapes 2, 3 et 6 en priorité.
+- **Comptes uniquement chez des plateformes agréées** : étapes 1 et 7 suffisent.
+- **Dans tous les cas** : ne laissez pas passer la déclaration du 3916-bis pour les comptes fermés en 2026.
 </Callout>
 
 ---
 
 ## 5. Cas particuliers à connaître
 
-**Vous détenez des stablecoins non-conformes MiCA (USDT en particulier)** : depuis mars 2025, les paires USDT spot ont été progressivement délistées chez Coinbase Europe, Kraken et Bitpanda. Si vous en détenez encore, **convertissez en EUR ou en USDC** (qui est conforme MiCA via Circle) avant juillet 2026. Sinon vous risquez de vous retrouver bloqué avec un actif non échangeable sur une plateforme régulée.
+**Vous détenez des stablecoins non conformes MiCA (USDT en particulier)** : les paires USDT ont été progressivement retirées des plateformes agréées pour leurs clients européens. Si vous en détenez encore, vous pouvez les conserver sur votre wallet ou les convertir vers un stablecoin conforme (EURC, USDC) ou en euros.
 
-**Vous faites du staking** : les programmes earn de Nexo, YouHodler, ou les anciens Earn de Binance sont en zone grise. Le staking « pur » blockchain (déléguer ses ETH, SOL, ADA à un validateur) reste autorisé. Détail dans notre comparatif [staking ETH vs SOL vs ADA 2026](/blog/staking-eth-vs-sol-vs-ada-2026).
+**Vous faites du staking** : les programmes « earn » de plateformes non autorisées en France (Nexo, YouHodler…) ne sont plus une option. Le staking « pur » blockchain (déléguer ses ETH, SOL, ADA à un validateur depuis votre propre wallet) reste possible. Détail dans notre comparatif [staking ETH vs SOL vs ADA 2026](/blog/staking-eth-vs-sol-vs-ada-2026).
 
-**Vous détenez des NFT ou des tokens DeFi** : MiCA exclut les NFT uniques et la DeFi pure. Aucune action requise côté plateforme, mais restez vigilant sur les marketplaces centralisées (OpenSea, Blur) qui pourraient ajuster leur stratégie UE.
+**Vous détenez des NFT ou des tokens DeFi** : MiCA exclut les NFT uniques et la DeFi pleinement décentralisée. Aucune action requise côté plateforme, mais restez vigilant sur les places de marché centralisées.
 
-**Vous utilisez Trade Republic ou Revolut Crypto** : ces apps sont des **brokers custodiaux**. Vous n'avez pas accès aux retraits crypto on-chain. Si la plateforme ferme l'activité crypto, le solde sera **liquidé en EUR automatiquement**, avec frais. Pas idéal en marché baissier, donc anticipez.
+**Vous utilisez Trade Republic ou Revolut** : ces applications sont agréées MiCA avec un accès à la France (BaFin pour Trade Republic, CySEC pour Revolut). Vérifiez dans chaque application les conditions de retrait de vos cryptos vers un wallet externe.
 
 ---
 
-## 6. Le scénario noir (et pourquoi il est peu probable)
+## 6. Le scénario noir : une fermeture brutale
 
-Le scénario que tout le monde redoute : la plateforme ferme du jour au lendemain, sans préavis, avec les fonds bloqués. C'est arrivé avec FTX en novembre 2022. **C'est le pire des cas, et il reste peu probable pour les plateformes en zone rouge MiCA**, parce que :
+Le scénario le plus redouté reste la fermeture du jour au lendemain, sans préavis, avec des fonds bloqués : c'est ce qui s'est produit avec FTX en novembre 2022. La fin de la période transitoire MiCA n'a pas ce caractère : il s'agit d'une échéance réglementaire connue de longue date. Mais une plateforme non autorisée qui continue d'opérer hors de tout cadre européen vous laisse sans la protection prévue par MiCA (ségrégation des avoirs, exigences de fonds propres, supervision).
 
-1. Les plateformes ont **6 à 18 mois de visibilité** sur la deadline. Elles ont eu le temps d'ajuster leurs flux UE.
-2. Une fermeture brutale **détruirait la valeur de la marque mondiale** — Binance et MEXC ne peuvent pas se permettre ça.
-3. La pratique observée (cas Bybit France 2023, Crypto.com Japon 2024) est un **wind-down de 30 à 90 jours** : retraits autorisés, plus de trade, communication claire.
-4. La protection AMF reste limitée mais **réelle pour les plateformes PSAN simple** : en cas de défaut, l'AMF peut imposer un mandataire de liquidation au profit des clients.
-
-> **Ma règle perso** : je ne laisse jamais plus de 30 % de mon exposition crypto sur une plateforme custodiale, et **0 %** sur une plateforme en zone rouge MiCA à 6 semaines de la deadline. Reste 70 % en cold storage Ledger + 30 % réparti entre 2 exchanges agréés MiCA.
+C'est pourquoi la règle de prudence reste la même : ne laissez pas d'avoirs sur une plateforme non autorisée, et conservez ce que vous détenez sur le long terme dans un portefeuille dont vous contrôlez les clés. Cette information est éducative et ne constitue pas un conseil en investissement.
 
 ---
 
@@ -200,14 +197,16 @@ Le scénario que tout le monde redoute : la plateforme ferme du jour au lendemai
 
 La fermeture d'un compte crypto ou son transfert vers un wallet n'efface **aucune obligation déclarative**. Au printemps 2027, vous devrez déclarer :
 
-- **Toutes les plus-values 2026** sur le formulaire 2086 (flat tax 31,4 % par défaut).
-- **Tous les comptes crypto étrangers ouverts en 2026**, même fermés en cours d'année, sur le formulaire 3916-bis.
-- **Le total des cessions imposables** sur la case 3AN du formulaire 2042 C.
+- **Toutes vos cessions 2026** sur le formulaire 2086, imposées au PFU de 31,4 % par défaut (ou au barème progressif sur option, case 3CN de la 2042 C).
+- **Tous les comptes crypto ouverts à l'étranger en 2026**, même fermés en cours d'année, sur le formulaire 3916-bis.
+- **Votre plus-value nette** en case 3AN de la 2042 C.
 
-L'oubli du 3916-bis coûte **750 € par compte** en cas de solde < 50 000 €, **1 500 € au-dessus**. Pour le détail pas-à-pas, on a publié le guide complet [Comment déclarer ses crypto aux impôts en 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet).
+Rappels utiles : le seuil de 305 € s'apprécie sur le total de vos cessions de l'année ; les moins-values s'imputent uniquement sur les plus-values de la même année, sans report.
+
+L'oubli du 3916-bis coûte **750 € par compte**, **1 500 €** si la valeur du compte dépasse 50 000 €. Pour le détail pas-à-pas, voir notre guide [Comment déclarer ses crypto aux impôts en 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet).
 
 <Callout type="info" title="Mouvement de fonds = événement à documenter">
-Un transfert de Binance vers votre Ledger n'est **pas une cession imposable** (transfert entre vos propres comptes). Mais en cas de contrôle, l'administration peut vous demander de prouver que c'est bien le même bénéficiaire effectif. **Conservez les hashes on-chain** dans un dossier dédié — c'est votre meilleure défense.
+Un transfert de vos cryptos depuis une plateforme vers votre Ledger n'est **pas une cession imposable** (transfert entre vos propres comptes). Mais en cas de contrôle, l'administration peut vous demander de prouver que vous restez bien le bénéficiaire effectif. **Conservez les hashes on-chain** dans un dossier dédié : c'est votre meilleure défense.
 </Callout>
 
 ---
@@ -216,36 +215,32 @@ Un transfert de Binance vers votre Ledger n'est **pas une cession imposable** (t
 
 <FAQ items={[
   {
-    question: "Si Binance n'a pas son agrément MiCA au 30 juin 2026, qu'est-ce qui change pour mon compte ?",
-    answer: "Concrètement : (1) vous ne pourrez plus déposer ni acheter, (2) vous ne pourrez plus trader sur les paires spot, (3) vous pourrez encore retirer en crypto on-chain ou en EUR via SEPA pendant la période de wind-down (généralement 30 à 90 jours). Aucune saisie n'est prévue. La meilleure pratique reste de rapatrier les fonds avant la deadline."
+    question: "Binance n'a pas obtenu d'agrément MiCA pour la France : qu'est-ce que ça change pour mon compte ?",
+    answer: "Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026 et ne figure pas au registre MiCA de l'ESMA. Référez-vous à ses communications officielles et à votre espace client pour connaître les modalités qui vous concernent, exportez votre historique et rapatriez les fonds restants vers un wallet personnel ou une plateforme agréée. Le compte reste à déclarer sur le 3916-bis pour chaque année où il était ouvert."
   },
   {
-    question: "Bitget est en Lituanie, c'est vraiment safe pour la France ?",
-    answer: "Oui. La Lituanie a délivré l'agrément CASP-MiCA à Bitget Europe en juillet 2025. Cet agrément est passeporté dans toute l'UE, France comprise. La protection est moindre qu'avec une plateforme PSAN-AMF directe (Coinhouse, Bitstack), mais c'est légalement équivalent au sens MiCA."
+    question: "Bitget est-elle autorisée en France ?",
+    answer: "Non. Au 29 septembre 2026, Bitget ne figure pas au registre MiCA de l'ESMA : elle n'est pas autorisée à fournir des services sur crypto-actifs à des résidents français. La première version de cet article indiquait à tort un agrément valable pour la France."
   },
   {
-    question: "Mes USDT sur Binance vont-elles être confisquées ?",
-    answer: "Non. Les USDT que vous détenez en wallet ou sur une plateforme étrangère ne sont pas confiscables par l'AMF. En revanche, les paires spot USDT/EUR ou USDT/BTC ont été progressivement délistées sur les plateformes agréées MiCA (Coinbase, Kraken, Bitpanda). Vous pouvez convertir en EUR ou USDC sans problème."
+    question: "Mes USDT vont-elles être confisquées ?",
+    answer: "Non. Les USDT que vous détenez vous appartiennent toujours. En revanche, les paires USDT ont été progressivement retirées des plateformes agréées pour leurs clients européens. Vous pouvez les conserver sur votre wallet ou les convertir en euros ou en stablecoin conforme (EURC, USDC)."
   },
   {
     question: "Faut-il vraiment un hardware wallet ou un wallet logiciel suffit ?",
-    answer: "Pour des sommes inférieures à 1 000 €, un wallet logiciel sérieux (Phantom, MetaMask + extension, Rabby) reste raisonnable si vous prenez des précautions de base (mot de passe fort, pas de seed dans le cloud). Au-delà, un hardware wallet (Ledger Nano S Plus à 80 € ou Trezor Safe 3 à 90 €) est le minimum."
+    answer: "Pour de petites sommes, un wallet logiciel sérieux (Phantom, MetaMask, Rabby) reste raisonnable si vous prenez des précautions de base (mot de passe fort, phrase de récupération jamais stockée en ligne). Pour des montants plus importants, un hardware wallet (Ledger, Trezor) acheté sur le site officiel du fabricant offre une protection nettement supérieure."
   },
   {
-    question: "Combien de temps pour transférer mes fonds depuis Binance vers Ledger ?",
-    answer: "Le transfert on-chain en lui-même est rapide (BTC : 30-60 min, ETH : 5-10 min, SOL : 30 sec). Le délai principal vient des cooldowns de sécurité Binance après changement de paramètres (24-48h pour activer une nouvelle adresse de retrait). Anticipez une journée ouvrée pour un retrait propre."
+    question: "Combien de temps pour transférer mes fonds vers mon Ledger ?",
+    answer: "Le transfert on-chain lui-même est rapide (de quelques secondes à quelques dizaines de minutes selon la blockchain). Le délai principal vient souvent des contrôles de sécurité de la plateforme, par exemple après l'ajout d'une nouvelle adresse de retrait. Prévoyez une marge d'une journée ouvrée."
   },
   {
-    question: "Est-ce que le 1er juillet 2026 va impacter le cours du Bitcoin ?",
-    answer: "Très peu probable. Le cours mondial du Bitcoin se forme principalement sur les marchés US et asiatiques, pas sur les flux français. La fermeture de quelques plateformes UE ne représente que < 5 % du volume global. L'impact local (sentiment, FUD français) sera plus visible que macro."
-  },
-  {
-    question: "Que faire si une plateforme refuse mon retrait après le 1er juillet ?",
-    answer: "Étape 1 : capture d'écran et message via tous leurs canaux (chat, ticket, mail). Étape 2 : signalement à l'AMF via le formulaire AMF Épargne Info Service (gratuit). Étape 3 : si > 5 000 €, contact d'un avocat spécialisé droit financier. La saisine de l'AMF est rapide et gratuite — utilisez-la."
+    question: "Que faire si une plateforme refuse mon retrait ?",
+    answer: "Étape 1 : capture d'écran et message via tous ses canaux officiels (chat, ticket, e-mail). Étape 2 : signalement à l'AMF via Épargne Info Service. Étape 3 : pour un montant important, contact d'un avocat spécialisé en droit financier. Ne payez jamais un intermédiaire qui promet de débloquer vos fonds."
   },
   {
     question: "Les taxes restent-elles les mêmes après MiCA ?",
-    answer: "Oui. MiCA est un règlement de marché, pas un texte fiscal. La flat tax de 31,4 % sur les plus-values en EUR (PFU 12,8 % IR + 18,6 % PS) reste applicable. Les obligations 2086 et 3916-bis restent inchangées. Détail dans notre guide déclaration crypto 2026."
+    answer: "Oui. MiCA est un règlement de marché, pas un texte fiscal. Le PFU de 31,4 % sur les plus-values (12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux) s'applique dès les gains 2025, avec option possible pour le barème progressif (case 3CN). Les obligations 2086 et 3916-bis restent inchangées."
   }
 ]} />
 
@@ -254,7 +249,7 @@ Un transfert de Binance vers votre Ledger n'est **pas une cession imposable** (t
 <CTABox
   variant="primary"
   title="Pas le temps de tout vérifier ? On a un outil pour ça."
-  description="Le vérificateur MiCA Cryptoreflex vous indique en 1 clic si votre plateforme est CASP-agréée, dans quel pays, et si elle est passeportée en France."
+  description="Le vérificateur MiCA Cryptoreflex vous indique en 1 clic si votre plateforme est agréée MiCA, par quelle autorité, et si elle peut servir les résidents français."
   ctaText="Vérifier ma plateforme"
   ctaUrl="/outils/verificateur-mica"
   disclosure="Outil gratuit, sans inscription. Données ESMA + registre Cryptoreflex mis à jour mensuellement."
@@ -264,21 +259,21 @@ Un transfert de Binance vers votre Ledger n'est **pas une cession imposable** (t
 
 ## Pour aller plus loin
 
-- [MiCA Binance France : ma plateforme reste-t-elle légale en juillet 2026 ?](/blog/mica-binance-france-2026)
-- [Alternative à Binance post-MiCA : 5 plateformes safe en France](/blog/alternative-binance-france-post-mica)
+- [MiCA et Binance en France : ce qui s'est passé le 1er juillet 2026](/blog/mica-binance-france-2026)
+- [Alternative à Binance post-MiCA en France](/blog/alternative-binance-france-post-mica)
 - [Avis Trade Republic crypto : MiCA via BaFin, frais 1 %](/blog/trade-republic-crypto-avis-2026)
 - [Comparatif staking ETH vs SOL vs ADA 2026](/blog/staking-eth-vs-sol-vs-ada-2026)
 - [Comment déclarer ses crypto aux impôts en 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet)
 - [Sécuriser ses crypto : wallet, 2FA, seed phrase](/blog/securiser-cryptos-wallet-2fa-2026)
 - [Notre méthodologie](/methodologie)
 
-Le 1er juillet 2026 ne sera pas un mur, mais une porte qui se ferme **dans un sens unique**. Une fois passée, il sera bien plus compliqué de récupérer un solde bloqué que de l'avoir migré tranquillement en avril, en mai ou en juin. Sortez la to-do list, prenez votre samedi, c'est rentable.
+Le 1er juillet 2026 est passé. La suite est simple : des comptes uniquement chez des prestataires agréés, un historique exporté, des transferts documentés et des comptes étrangers déclarés, y compris ceux que vous avez fermés.
 
 
 <KeyTakeaways>
-- Vérifiez le statut de chaque plateforme que vous utilisez et classez-les en agréées, en instruction ou sans dossier.
-- Donnez la priorité à l'action selon votre solde : un petit montant sur une plateforme à risque n'a pas la même urgence qu'un capital important.
-- Exportez vos historiques, préparez un wallet personnel et activez vos retraits à l'avance pour éviter le rush de dernière minute.
-- Souvenez-vous qu'aucune saisie n'est prévue : le vrai risque est opérationnel, c'est le gel des fonctions du compte qui peut vous bloquer.
-- N'oubliez pas les obligations fiscales : un transfert vers votre wallet n'est pas une cession, mais vous devez déclarer plus-values et comptes étrangers via les formulaires dédiés.
+- Vérifiez le statut de chaque plateforme que vous utilisez sur le registre de l'ESMA ou la liste blanche de l'AMF : agréée avec accès à la France, ou non autorisée.
+- Depuis le 1er juillet 2026, un ancien numéro PSAN ne vaut plus autorisation ; Binance, Gemini, Bitget ou Nexo ne sont pas autorisées en France.
+- Si des fonds sont restés sur une plateforme non autorisée, exportez votre historique, préparez une destination agréée ou un wallet personnel, et faites un transfert test avant de tout déplacer.
+- Aucune saisie n'est prévue : le risque est opérationnel, et les fausses offres de « déblocage » sont des arnaques.
+- N'oubliez pas les obligations fiscales : un transfert vers votre wallet n'est pas une cession, mais vous devez déclarer vos plus-values et vos comptes à l'étranger, même fermés en cours d'année.
 </KeyTakeaways>

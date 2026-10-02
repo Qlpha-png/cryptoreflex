@@ -21,6 +21,7 @@ import {
   type ComparisonSpec,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import { affiliationNotice, getAffiliationKind } from "@/lib/partnerships";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
@@ -57,7 +58,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 // = doublon visible dans onglet et SERP. Fix : retirer le suffix manuel.
 const TITLE = "Comparatif plateformes crypto MiCA 2026";
 const DESCRIPTION =
-  "Comparatifs binaires des plateformes crypto en France : Coinbase vs Binance, Ledger vs Trezor, Bitpanda vs Trade Republic, OKX vs Binance et 30+ autres duels. Frais, sécurité, MiCA, verdict.";
+  "Comparatifs binaires des plateformes crypto en France : Coinbase vs Kraken, Ledger vs Trezor, Bitpanda vs Trade Republic, Coinbase vs Bitpanda et 30+ autres duels. Frais, sécurité, MiCA, verdict.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -113,7 +114,7 @@ const BUCKET_DESCRIPTIONS: Record<ComparisonSpec["bucket"], string> = {
   "wallet-vs-wallet":
     "Duels entre hardware wallets pour la conservation cold storage à long terme.",
   "fr-vs-international":
-    "Acteur français (Coinhouse, Bitstack…) vs international (Coinbase, Binance, Bitpanda…).",
+    "Acteur français (Coinhouse, Bitstack…) vs international (Coinbase, Kraken, Bitpanda…).",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -154,8 +155,17 @@ export default function ComparatifHubPage() {
     arr.sort((a, b) => b.priority - a.priority);
   }
 
-  // Top 6 globaux pour la "rangée mise en avant".
-  const top6 = [...all].sort((a, b) => b.priority - a.priority).slice(0, 6);
+  // Top 6 globaux pour la "rangée mise en avant". Audit 2026-10-02 : on ne
+  // met en avant que les duels entre plateformes autorisées en France (les
+  // duels avec Binance, Bitget… restent listés par bucket, avec avertissement).
+  const top6 = [...all]
+    .filter((c) => {
+      const pa = getPlatformById(c.a);
+      const pb = getPlatformById(c.b);
+      return !!pa && !!pb && isAvailableFr(pa) && isAvailableFr(pb);
+    })
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, 6);
 
   // Schema.org : CollectionPage + ItemList + Breadcrumb.
   const itemListSchema: JsonLd = {
@@ -193,16 +203,16 @@ export default function ComparatifHubPage() {
       question:
         "Comment Cryptoreflex compare les plateformes crypto en France ?",
       answer:
-        "Notre méthodologie publique évalue chaque plateforme sur 6 critères pondérés : frais réels (achat/vente/retrait), sécurité (custody, audits, historique de hack), conformité MiCA / agrément AMF PSAN, qualité du support FR, ergonomie de la plateforme et catalogue d'actifs disponibles. Score global sur 5 étoiles, détails par critère sur chaque fiche /avis.",
+        "Notre méthodologie publique évalue chaque plateforme sur 6 critères pondérés : frais réels (achat/vente/retrait), sécurité (custody, audits, historique de hack), conformité MiCA (agrément CASP), qualité du support FR, ergonomie de la plateforme et catalogue d'actifs disponibles. Score global sur 5 étoiles, détails par critère sur chaque fiche /avis.",
     },
     {
       question: "Qu'est-ce que MiCA et pourquoi c'est important ?",
       answer:
-        "MiCA (Markets in Crypto-Assets) est le règlement européen entré en vigueur en juin 2024 qui harmonise la régulation des plateformes crypto à l'échelle UE. Toute plateforme servant les résidents UE doit obtenir un agrément CASP (Crypto-Asset Service Provider). En France, ce statut remplace progressivement le PSAN historique. Une plateforme MiCA-compliant offre des garanties sur la séparation des fonds, l'audit des réserves et la transparence des frais.",
+        "MiCA (Markets in Crypto-Assets) est le règlement européen, applicable depuis juin 2024 (stablecoins) et décembre 2024 (prestataires), qui harmonise la régulation des plateformes crypto à l'échelle UE. Toute plateforme servant les résidents UE doit obtenir un agrément CASP (Crypto-Asset Service Provider). En France, la période transitoire a pris fin le 1er juillet 2026 : depuis, seul un prestataire agréé MiCA peut servir les résidents français, et l'ancien régime PSAN ne vaut plus autorisation. Une plateforme MiCA-compliant offre des garanties sur la séparation des fonds, l'audit des réserves et la transparence des frais.",
     },
     {
       question: "Combien de plateformes sont comparées sur Cryptoreflex ?",
-      answer: `À ce jour, ${getAvailablePlatformCount()} plateformes crypto (exchanges et brokers) disponibles en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Binance, Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic, Plus500) et services spécialisés (StackinSat, Just Mining, Feel Mining), complétés par des hardware wallets (Ledger, Trezor). Liste complète sur /avis.`,
+      answer: `À ce jour, ${getAvailablePlatformCount()} plateformes crypto (exchanges et brokers) disponibles en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic) et services spécialisés (Bitstack, Feel Mining), complétés par des hardware wallets (Ledger, Trezor). Liste complète sur /avis.`,
     },
     {
       question: "Cryptoreflex perçoit-il des commissions sur les comparatifs ?",
@@ -210,9 +220,9 @@ export default function ComparatifHubPage() {
         "Oui, Cryptoreflex est rémunéré par affiliation lorsqu'un visiteur s'inscrit sur une plateforme via nos liens (signalés par la mention « Publicité » et l'attribut rel=\"sponsored\"). Ces partenariats financent la gratuité du contenu et N'INFLUENCENT PAS le classement : la méthodologie est publique et les rémunérations détaillées sur /transparence.",
     },
     {
-      question: "Comment choisir entre Coinbase, Binance et Kraken ?",
+      question: "Comment choisir entre Coinbase et Kraken ?",
       answer:
-        "Coinbase = pour les débutants en France (interface simple, support FR, MiCA Irlande). Binance = catalogue le plus large + frais bas pour traders actifs (CASP Malta). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur) mais interface moins ergonomique. Comparatif détaillé sur /comparatif/binance-vs-coinbase et /comparatif/binance-vs-kraken.",
+        "Coinbase = pour les débutants en France (interface simple, support FR, agréée MiCA par la CSSF luxembourgeoise). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur), agréée MiCA par la Banque centrale d'Irlande, mais interface moins ergonomique. Binance n'est plus une option : elle a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Comparatif détaillé sur /comparatif/coinbase-vs-kraken.",
     },
   ]);
 
@@ -524,14 +534,14 @@ function PlatformMiniCard({ platform }: { platform: Platform }) {
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           className="inline-flex items-center gap-1 rounded-lg bg-primary text-background px-3 py-2 font-semibold hover:bg-primary-glow transition-colors flex-1 justify-center"
-          aria-label={`Visiter ${platform.name} (lien sponsorisé)`}
+          aria-label={`Visiter ${platform.name}${getAffiliationKind(platform.id) ? " (lien rémunéré)" : ""}`}
         >
           Visiter
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </a>
       </div>
       <p className="mt-2 text-[10px] text-muted text-center">
-        Lien sponsorisé — <Link href="/transparence" className="underline hover:text-fg">commission Cryptoreflex</Link>
+        {affiliationNotice(platform.id)} · <Link href="/transparence" className="underline hover:text-fg">transparence</Link>
       </p>
     </div>
   );

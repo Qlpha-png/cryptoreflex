@@ -72,7 +72,7 @@ export type FiscaliteDayOffset = 0 | 2 | 5 | 9 | 14;
 
 /** CTA primaire / secondaire d'un email. */
 export interface EmailCta {
-  /** Wording du bouton (ex: "Découvre Waltio (30% de réduction)"). */
+  /** Wording du bouton (ex: "Découvrir Waltio"). */
   label: string;
   /** URL absolue (déjà UTM-isée si externe). */
   url: string;
@@ -190,7 +190,7 @@ function wrapEmail(opts: {
     "<strong>Information importante :</strong> les exemples chiffrés et les conseils de cet email sont fournis " +
     "à titre indicatif et ne constituent pas un conseil fiscal personnalisé. La fiscalité crypto évolue " +
     "régulièrement (cf. art. 150 VH bis CGI). Pour une situation complexe (DeFi, staking, activité habituelle/professionnelle), " +
-    "consulte un expert-comptable agréé." +
+    "consultez un expert-comptable agréé." +
     "</p>";
 
   // Footer commun à tous les emails (mention RGPD + désinscription).
@@ -245,7 +245,7 @@ const J0_CONTENT_HTML =
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Vos 5 conseils pour démarrer la déclaration 2026</h2>' +
   '<ol style="padding-left:20px;">' +
   "<li><strong>Récupérez tous vos historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer votre plus-value selon la formule officielle 150 VH bis.</li>" +
-  "<li><strong>Identifiez vos plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
+  "<li><strong>Identifiez vos plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>, y compris un compte fermé en cours d'année. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
   "<li><strong>Comptez vos cessions, pas vos achats</strong>. Si vous avez moins de 305 € de cessions sur l'année, vous êtes <strong>exonéré·e</strong>.</li>" +
   "<li><strong>Choisissez votre régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
   "<li><strong>N'oubliez pas vos pertes</strong> : elles peuvent compenser vos gains de la même année. On creuse au mail 4.</li>" +
@@ -300,14 +300,14 @@ const J0: EmailInSequence = {
 const J2_CONTENT_HTML =
   '<h1 style="margin:0 0 12px 0;font-size:24px;line-height:1.3;color:#F5A524;">L\'erreur n°1 que font 80 % des Français</h1>' +
   "<p>Aujourd'hui on parle d'un truc qui passe sous le radar — et qui coûte cher.</p>" +
-  '<p style="background:#1F2937;padding:12px;border-left:3px solid #F5A524;">Si vous détenez des cryptos sur <strong>Binance, Kraken, Bybit, KuCoin, Coinbase Inc. (USA)</strong> ou tout autre exchange basé hors de France, vous devez remplir un formulaire dédié : le <strong>3916-bis</strong>.</p>' +
+  '<p style="background:#1F2937;padding:12px;border-left:3px solid #F5A524;">Si vous détenez — ou avez détenu dans l\'année, même sur un compte fermé depuis — des cryptos sur <strong>Binance, Kraken, Bybit, KuCoin, Coinbase Inc. (USA)</strong> ou tout autre exchange basé hors de France, vous devez remplir un formulaire dédié : le <strong>3916-bis</strong>.</p>' +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">C\'est quoi le 3916-bis ?</h2>' +
   "<p>Une simple déclaration des comptes étrangers que vous détenez, à joindre à votre déclaration de revenus. Un formulaire par compte. Pas de calcul, juste de l'identification (nom de l'exchange, n° de compte, adresse).</p>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Combien ça coûte si vous oubliez ?</h2>' +
   '<ul style="padding-left:20px;">' +
   "<li><strong>750 € par compte non déclaré</strong> (1 500 € si solde &gt; 50 000 €, article 1736 X du CGI)</li>" +
   "<li><strong>125 €</strong> par omission ou inexactitude (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration</li>" +
-  "<li>Délai de prescription porté à <strong>10 ans</strong> au lieu de 3</li>" +
+  "<li>Délai de reprise de l'administration pouvant être porté à <strong>10 ans</strong> au lieu de 3 (art. L169 du LPF)</li>" +
   "</ul>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le truc qui change tout</h2>' +
   "<p>Remplir manuellement 5 ou 10 formulaires 3916-bis, c'est fastidieux. Waltio les pré-remplit automatiquement à partir de vos connexions exchanges (200+ supportées). Vous n'avez qu'à imprimer et joindre.</p>";
@@ -332,7 +332,7 @@ const J2: EmailInSequence = {
   }),
   textBody:
     "L'erreur n°1 : oublier le formulaire 3916-bis.\n\n" +
-    "Si vous avez un compte sur Binance, Kraken, Bybit ou tout autre exchange étranger, vous devez le déclarer.\n\n" +
+    "Si vous avez (ou avez eu dans l'année) un compte sur Binance, Kraken, Bybit ou tout autre exchange étranger, vous devez le déclarer, même s'il est fermé depuis.\n\n" +
     "Sanction : 750 EUR par compte oublié, 1 500 EUR si solde > 50 000 EUR (art. 1736 X CGI).\n\n" +
     "Waltio pré-remplit le 3916-bis automatiquement (lien d'affiliation publicitaire) :\n" +
     waltioUrl(2, "j2-3916bis") +
@@ -438,10 +438,10 @@ const J9_CONTENT_HTML =
   "<tr><td>+ 8 000 € PV sur BTC vendu en avril</td><td align=\"right\">+ 8 000 €</td></tr>" +
   "<tr><td>- 3 000 € MV sur Luna vendu en mai (poussière restante)</td><td align=\"right\">- 3 000 €</td></tr>" +
   '<tr><td style="font-weight:700;color:#F5A524;">PV nette imposable</td><td align="right" style="font-weight:700;color:#F5A524;">5 000 €</td></tr>' +
-  "<tr><td>Économie d'impôt (PFU 31,4 %)</td><td align=\"right\"><strong>900 €</strong></td></tr>" +
+  "<tr><td>Économie d'impôt (PFU 31,4 %)</td><td align=\"right\"><strong>942 €</strong></td></tr>" +
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Le piège à éviter</h2>' +
-  "<p>Si vos tokens sont stuck sur un exchange en faillite (FTX, Celsius), vous ne pouvez <strong>pas</strong> les déduire tant qu'ils ne sont pas \"officiellement perdus\" (jugement, liquidation). Conserve les preuves d'irrécouvrabilité.</p>" +
+  "<p>Si vos tokens sont stuck sur un exchange en faillite (FTX, Celsius), vous ne pouvez <strong>pas</strong> les déduire tant qu'ils ne sont pas \"officiellement perdus\" (jugement, liquidation). Conservez les preuves d'irrécouvrabilité.</p>" +
   '<p style="margin-top:16px;">Pour identifier toutes vos pertes de l\'année, l\'import automatique Waltio scanne vos 200+ exchanges + wallets DeFi.</p>';
 
 const J9: EmailInSequence = {
@@ -467,7 +467,7 @@ const J9: EmailInSequence = {
     "Règle : les MV crypto compensent les PV crypto de la MÊME année.\n" +
     "Pas de report sur années suivantes pour les particuliers.\n\n" +
     "Exemple : PV BTC +8 000 EUR - MV Luna 3 000 EUR = PV nette 5 000 EUR\n" +
-    "Économie : 900 EUR (au PFU 31,4 %).\n\n" +
+    "Économie : 942 EUR (au PFU 31,4 %).\n\n" +
     "Piège : tokens stuck sur exchange en faillite ne sont pas déductibles tant que pas de jugement.\n\n" +
     "Importer mes données dans Waltio (lien d'affiliation publicitaire) : " +
     waltioUrl(9, "j9-pertes") +

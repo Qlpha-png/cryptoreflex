@@ -670,14 +670,14 @@ const TRACK_PLATEFORMES: Track = {
     {
       order: 4,
       articleSlug: "binance-avis-france-2026",
-      title: "Avis Binance",
+      title: "Avis Binance (non autorisée en France)",
       durationMin: 10,
       prereqs: [],
     },
     {
       order: 5,
       articleSlug: "bitget-avis-france-2026",
-      title: "Avis Bitget",
+      title: "Avis Bitget (non autorisée en France)",
       durationMin: 10,
       prereqs: [],
     },

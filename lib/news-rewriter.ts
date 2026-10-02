@@ -72,7 +72,7 @@ const RELATED_LINKS: Record<NewsCategory, ReadonlyArray<{ slug: string; label: s
     { slug: "meilleure-plateforme-crypto-debutant-france-2026",    label: "Meilleure plateforme crypto débutant en France" },
     { slug: "alternative-binance-france-post-mica",                label: "Alternatives à Binance en France post-MiCA" },
     { slug: "plateformes-crypto-risque-mica-phase-2-alternatives", label: "Plateformes crypto à risque (MiCA Phase 2)" },
-    { slug: "bitget-avis-france-2026",                             label: "Bitget avis France 2026" },
+    { slug: "kraken-avis-france-2026",                             label: "Kraken avis France 2026" },
   ],
 };
 

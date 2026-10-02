@@ -102,7 +102,7 @@ export default function NewsletterModal({
 
       if (!res.ok || !json.ok) {
         setStatus("error");
-        setErrorMsg(json.error ?? "Une erreur est survenue. Réessaie.");
+        setErrorMsg(json.error ?? "Une erreur est survenue. Réessayez.");
         return;
       }
 
@@ -118,7 +118,7 @@ export default function NewsletterModal({
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Service indisponible. Réessaie plus tard.");
+      setErrorMsg("Service indisponible. Réessayez plus tard.");
     }
   }
 

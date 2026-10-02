@@ -48,7 +48,7 @@ import {
   describeCorrelation,
 } from "@/lib/correlation";
 import { fetchCoinDetailDaily, formatCompactNumber } from "@/lib/coingecko";
-import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
+import { getAllCryptos, listedVenues, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import {
@@ -190,6 +190,16 @@ function beginnerScore(c: AnyCrypto): string {
 }
 
 /**
+ * Plateformes (ou protocoles) réellement listés dans whereToBuy. Audit 2026-10-02 :
+ * quand aucune plateforme agréée MiCA ne propose la crypto, data/hidden-gems.json
+ * porte un libellé « Aucune plateforme agréée MiCA… » — ce n'est pas une
+ * plateforme : il ne doit être ni compté, ni présenté comme plateforme commune.
+ */
+function venuesOf(c: AnyCrypto): string[] {
+  return listedVenues(c.whereToBuy);
+}
+
+/**
  * 4 différences clés calculées depuis les fields (pas de jugement éditorial).
  */
 function buildKeyDifferences(a: AnyCrypto, b: AnyCrypto): string[] {
@@ -229,7 +239,7 @@ function buildKeyDifferences(a: AnyCrypto, b: AnyCrypto): string[] {
   }
 
   // 4. Disponibilité plateformes (intersection)
-  const common = a.whereToBuy.filter((p) => b.whereToBuy.includes(p));
+  const common = venuesOf(a).filter((p) => venuesOf(b).includes(p));
   if (common.length > 0) {
     diffs.push(
       `Plateformes communes pour acheter en France : ${common.slice(0, 4).join(", ")}${common.length > 4 ? "…" : ""} (${common.length} au total).`,
@@ -335,7 +345,7 @@ function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
   // 1. Conclusion
   let conclusion: string;
   if (sameCategory) {
-    conclusion = `${a.name} et ${b.name} sont des concurrents directs sur le créneau "${a.category}". L'arbitrage se fait sur 3 axes : maturité (${elder.name} a ${ageGap} an${ageGap > 1 ? "s" : ""} d'avance), niveau de risque (${riskA} pour ${a.name}, ${riskB} pour ${b.name}) et disponibilité plateformes en France (${a.whereToBuy.length} vs ${b.whereToBuy.length}).`;
+    conclusion = `${a.name} et ${b.name} sont des concurrents directs sur le créneau "${a.category}". L'arbitrage se fait sur 3 axes : maturité (${elder.name} a ${ageGap} an${ageGap > 1 ? "s" : ""} d'avance), niveau de risque (${riskA} pour ${a.name}, ${riskB} pour ${b.name}) et disponibilité plateformes en France (${venuesOf(a).length} vs ${venuesOf(b).length}).`;
   } else {
     conclusion = `${a.name} et ${b.name} sont sur des créneaux différents : ${a.name} cible "${a.category}" tandis que ${b.name} se positionne sur "${b.category}". Ce ne sont pas des concurrents directs — ils peuvent coexister dans un portefeuille diversifié si leurs deux cas d'usage vous intéressent.`;
   }
@@ -351,7 +361,7 @@ function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
   const beginnerReason =
     beginnerWinner === safer
       ? `Niveau de risque ${riskOf(beginnerWinner)} (vs ${riskOf(beginnerWinner === a ? b : a)} pour l'autre). Plus accessible quand on débute.`
-      : `Score beginner-friendly ${beginnerWinner.kind === "top10" ? `${beginnerWinner.beginnerFriendly}/5` : "n/a"} et ${beginnerWinner.whereToBuy.length} plateformes FR.`;
+      : `Score « accessible aux débutants » ${beginnerWinner.kind === "top10" ? `${beginnerWinner.beginnerFriendly}/5` : "n/a"} et ${venuesOf(beginnerWinner).length} plateformes FR.`;
 
   // 3. Choix expérimenté : volatilité + use case sophistiqué
   const riskier = (riskOrder[riskA] ?? 0) >= (riskOrder[riskB] ?? 0) ? a : b;
@@ -396,7 +406,7 @@ function buildStrengths(c: AnyCrypto): string[] {
  * 4 questions FAQ avec réponses 100 % dérivées des data des 2 cryptos.
  */
 function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
-  const common = a.whereToBuy.filter((p) => b.whereToBuy.includes(p));
+  const common = venuesOf(a).filter((p) => venuesOf(b).includes(p));
 
   return [
     {
@@ -408,7 +418,7 @@ function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
       ans:
         common.length > 0
           ? `Plateformes régulées MiCA disponibles pour les deux : ${common.join(", ")}. Choisir une seule plateforme commune simplifie la fiscalité (un seul export Cerfa 2086) et le suivi de portefeuille.`
-          : `Aucune plateforme MiCA ne propose simultanément ${a.symbol} et ${b.symbol} dans notre base. Pour ${a.name} : ${a.whereToBuy.slice(0, 3).join(", ")}. Pour ${b.name} : ${b.whereToBuy.slice(0, 3).join(", ")}.`,
+          : `Aucune plateforme MiCA ne propose simultanément ${a.symbol} et ${b.symbol} dans notre base. Pour ${a.name} : ${venuesOf(a).slice(0, 3).join(", ") || "aucune plateforme agréée MiCA à notre connaissance"}. Pour ${b.name} : ${venuesOf(b).slice(0, 3).join(", ") || "aucune plateforme agréée MiCA à notre connaissance"}.`,
     },
     {
       q: `Quels sont les risques majeurs de ${a.name} et ${b.name} ?`,
@@ -424,7 +434,7 @@ function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
     },
     {
       q: `${a.name} et ${b.name} sont-ils conformes MiCA ?`,
-      ans: `MiCA s'applique aux PRESTATAIRES (CASP/PSAN) et non aux cryptos elles-mêmes. ${a.name} et ${b.name} sont disponibles sur des plateformes agréées MiCA en France (${a.whereToBuy.length} plateformes pour ${a.name}, ${b.whereToBuy.length} pour ${b.name}). Vérifiez le statut MiCA via notre /outils/verificateur-mica avant de déposer des fonds.`,
+      ans: `MiCA s'applique aux PRESTATAIRES (CASP) et non aux cryptos elles-mêmes. Depuis le 1er juillet 2026, seul un prestataire agréé MiCA peut servir les résidents français. Notre base recense ${venuesOf(a).length} plateforme(s) ou protocole(s) pour ${a.name} et ${venuesOf(b).length} pour ${b.name}. Vérifiez le statut MiCA via notre /outils/verificateur-mica avant de déposer des fonds.`,
     },
   ];
 }
@@ -467,7 +477,7 @@ export default async function CryptoPairPage({ params }: Props) {
   const decentB = getDecentralizationScore(b.id);
 
   // 4. Plateformes communes (intersection brute des labels whereToBuy).
-  const commonPlatforms = a.whereToBuy.filter((p) => b.whereToBuy.includes(p));
+  const commonPlatforms = venuesOf(a).filter((p) => venuesOf(b).includes(p));
 
   // 4bis. Paire de conversion (bas de funnel) : on ne lie vers /convertisseur que
   // si la paire existe RÉELLEMENT dans TOP_PAIRS — sinon lien mort (la route est
@@ -588,7 +598,7 @@ export default async function CryptoPairPage({ params }: Props) {
                 <Row label="Consensus" a={consensusOf(a)} b={consensusOf(b)} />
                 <Row label="Temps de bloc" a={blockTimeOf(a)} b={blockTimeOf(b)} />
                 <Row label="Niveau de risque" a={riskOf(a)} b={riskOf(b)} />
-                <Row label="Beginner-friendly" a={beginnerScore(a)} b={beginnerScore(b)} />
+                <Row label="Accessible aux débutants" a={beginnerScore(a)} b={beginnerScore(b)} />
                 <Row
                   label="Score décentralisation"
                   a={decentA ? `${decentA.score.toFixed(1)}/10` : "—"}
@@ -605,8 +615,8 @@ export default async function CryptoPairPage({ params }: Props) {
                 />
                 <Row
                   label="Disponibilité France"
-                  a={`${a.whereToBuy.length} plateformes`}
-                  b={`${b.whereToBuy.length} plateformes`}
+                  a={`${venuesOf(a).length} plateformes`}
+                  b={`${venuesOf(b).length} plateformes`}
                 />
               </tbody>
             </table>

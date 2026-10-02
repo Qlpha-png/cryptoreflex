@@ -176,7 +176,7 @@ function buildListicleFaqs(
     return [
       {
         question: `Quelle est la meilleure plateforme du classement ?`,
-        answer: `${top.name} arrive en tête avec un score global de ${top.scoring.global}/5. ${top.tagline} Sa combinaison de ${top.fees.spotTaker}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "en cours de mise en conformité"} et ${top.support.frenchChat ? "support en français" : "support anglophone"} explique sa position.`,
+        answer: `${top.name} arrive en tête avec un score global de ${top.scoring.global}/5. ${top.tagline} Sa combinaison de ${top.fees.spotTaker}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "non agréé MiCA"} et ${top.support.frenchChat ? "support en français" : "support anglophone"} explique sa position.`,
       },
       {
         question: `Comment ce classement est-il établi ?`,
@@ -184,7 +184,7 @@ function buildListicleFaqs(
       },
       {
         question: `Toutes les plateformes du classement sont-elles légales en France ?`,
-        answer: `Oui. Cryptoreflex ne référence que des plateformes enregistrées PSAN auprès de l'AMF, ou agréées MiCA via leur entité européenne. Une plateforme qui perd son agrément est immédiatement retirée du classement.`,
+        answer: `Oui. Cryptoreflex ne classe que des plateformes agréées MiCA autorisées à servir la France (par l'AMF ou via le passeport européen d'un autre État de l'UE) ; les portefeuilles en auto-conservation (Ledger, Trezor) sont hors du champ de l'agrément. Une plateforme qui perd son agrément est immédiatement retirée du classement.`,
       },
     ];
   }
@@ -202,11 +202,11 @@ function buildListicleFaqs(
     },
     {
       question: `Comment investir dans ces cryptos depuis la France ?`,
-      answer: `Toutes les cryptos de ce classement sont disponibles à l'achat sur des plateformes régulées MiCA en France (Coinbase, Bitpanda, Kraken, Bitstack, Binance, etc.). Compare nos avis pour choisir la plateforme la plus adaptée à votre profil.`,
+      answer: `Toutes les cryptos de ce classement sont disponibles à l'achat sur des plateformes régulées MiCA en France (Coinbase, Bitpanda, Kraken, Bitstack, etc.). Comparez nos avis pour choisir la plateforme la plus adaptée à votre profil.`,
     },
     {
       question: `Quel est le risque réel de ces cryptos ?`,
-      answer: `Le marché crypto reste hautement volatile. Les cryptos du Top 10 (BTC, ETH, SOL…) ont une volatilité 3-5× supérieure aux actions, mais une liquidité élevée. Les hidden gems peuvent perdre 50-80 % en quelques semaines. Investis uniquement ce que vous pouvez te permettre de perdre.`,
+      answer: `Le marché crypto reste hautement volatile. Les cryptos du Top 10 (BTC, ETH, SOL…) ont une volatilité 3-5× supérieure aux actions, mais une liquidité élevée. Les hidden gems peuvent perdre 50-80 % en quelques semaines. Investissez uniquement ce que vous pouvez vous permettre de perdre.`,
     },
   ];
 }

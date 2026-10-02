@@ -66,7 +66,7 @@ export async function GET(request: Request) {
   const rl = await limiter(getClientIp(request));
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Trop de requêtes — réessaie dans une minute." },
+      { error: "Trop de requêtes — réessayez dans une minute." },
       {
         status: 429,
         headers: {

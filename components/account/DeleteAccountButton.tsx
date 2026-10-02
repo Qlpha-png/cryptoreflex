@@ -52,7 +52,7 @@ export default function DeleteAccountButton() {
       setError(
         e instanceof Error
           ? e.message
-          : "Erreur réseau. Réessaie ou contacte le support."
+          : "Erreur réseau. Réessayez ou contacte le support."
       );
       setLoading(false);
     }

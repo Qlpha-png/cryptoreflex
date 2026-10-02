@@ -40,7 +40,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PUBLISHED_DATE = "2026-05-06";
 
 const TITLE =
-  "Checklist déclaration crypto 2026 : 8 étapes avant le 31 mai";
+  "Checklist déclaration crypto 2026 : 8 étapes avant votre déclaration";
 const DESCRIPTION =
   "Checklist pas-à-pas pour déclarer correctement vos cryptomonnaies en 2026. 8 étapes à cocher, imprimable, couvre Cerfa 2086 + 3916-bis. Pour vous organiser avant la deadline.";
 
@@ -127,7 +127,7 @@ const STEPS: Step[] = [
     n: 8,
     title: "Déclarez avant la deadline de votre département",
     detail:
-      "Dates 2026 : 21 mai pour départements 1-19 + non-résidents, 28 mai pour 20-54, 4 juin pour 55-976. Déclaration papier : 19 mai 2026 maximum. En cas de retard : majoration 10 % minimum.",
+      "Dates 2026 : 21 mai pour départements 1-19 + non-résidents, 28 mai pour 20-54, 4 juin pour 55-976. Déclaration papier : 19 mai 2026 maximum. En cas de retard : majoration 10 % minimum. Pour corriger une déclaration déjà déposée, le service de correction en ligne est ouvert du 29 juillet au 30 novembre 2026 inclus (impots.gouv.fr).",
     why: "Le retard de déclaration est le 2ème motif de pénalité après l'oubli. Mieux vaut déclarer un peu approximatif dans les délais qu'attendre la perfection en retard (vous pouvez toujours faire une déclaration rectificative ensuite).",
   },
 ];
@@ -213,7 +213,7 @@ export default function ChecklistPage() {
           </div>
 
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl print-h1">
-            Checklist déclaration crypto 2026 :<br className="hidden sm:block" /> 8 étapes avant le 31 mai
+            Checklist déclaration crypto 2026 :<br className="hidden sm:block" /> 8 étapes avant votre déclaration
           </h1>
 
           <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400 print-muted no-print">
@@ -394,8 +394,8 @@ export default function ChecklistPage() {
                 Étude — MiCA juillet 2026
               </div>
               <div className="mt-1 text-slate-400">
-                Quelles plateformes vont disparaître ? Implications fiscales
-                de la migration.
+                Quelles plateformes ne sont plus autorisées en France ?
+                Implications fiscales de la migration.
               </div>
             </Link>
           </div>

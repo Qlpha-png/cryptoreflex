@@ -62,7 +62,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         ok: false,
-        error: `Trop de tentatives. Réessaie dans ${Math.ceil(rl.retryAfter / 60)} min.`,
+        error: `Trop de tentatives. Réessayez dans ${Math.ceil(rl.retryAfter / 60)} min.`,
       },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
     );
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       err instanceof Error ? err.message : err,
     );
     return NextResponse.json(
-      { ok: false, error: "Erreur de chiffrement. Réessaie." },
+      { ok: false, error: "Erreur de chiffrement. Réessayez." },
       { status: 500 },
     );
   }

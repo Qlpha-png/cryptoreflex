@@ -160,7 +160,7 @@ export default function PortfolioTrackerPage() {
               <BenefitCard
                 Icon={Eye}
                 title="Vue d'ensemble en 1 clic"
-                body="Combiner positions sur Coinbase, Binance, Ledger… dans une vue unique en EUR. Évite de jongler entre 4 apps pour calculer son patrimoine global."
+                body="Combiner positions sur Coinbase, Kraken, Ledger… dans une vue unique en EUR. Évite de jongler entre 4 apps pour calculer son patrimoine global."
               />
               <BenefitCard
                 Icon={TrendingUp}

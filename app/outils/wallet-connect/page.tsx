@@ -92,7 +92,7 @@ export default function WalletConnectPage() {
   const faqItems = [
     {
       q: "Wallet Connect peut-il vider mon wallet ?",
-      a: "Non. Wallet Connect est un protocole de communication chiffré : vous signez UNE FOIS une preuve de propriété (zéro frais, zéro tx onchain) et on lit votre adresse. Aucune autorisation d'envoi de fonds n'est demandée. Si jamais une dApp te demande une telle autorisation (approve), refuse.",
+      a: "Non. Wallet Connect est un protocole de communication chiffré : vous signez UNE FOIS une preuve de propriété (zéro frais, zéro tx onchain) et on lit votre adresse. Aucune autorisation d'envoi de fonds n'est demandée. Si jamais une dApp vous demande une telle autorisation (approve), refusez.",
     },
     {
       q: "Pourquoi connecter mon wallet vs entrer manuellement mes positions ?",
@@ -149,11 +149,11 @@ export default function WalletConnectPage() {
             <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Connecte ton wallet,{" "}
+            Connectez votre wallet,{" "}
             <span className="gradient-text">on lit, c&apos;est tout</span>.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            MetaMask, Rabby, Ledger, Phantom… On suit automatiquement ton
+            MetaMask, Rabby, Ledger, Phantom… On suit automatiquement votre
             portfolio DeFi multi-chain. Aucune private key. Aucune autorisation
             de transaction. Lecture seule, point.
           </p>

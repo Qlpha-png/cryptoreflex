@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
 import { isAvailableFr } from "@/lib/platforms";
+import { affiliationNotice } from "@/lib/partnerships";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
 
 /* ------------------------------------------------------------------ */
@@ -934,7 +935,7 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
       </div>
 
       <p className="mt-2 text-[10px] text-muted text-center">
-        Lien sponsorisé — <Link href="/transparence" className="underline hover:text-fg">commission Cryptoreflex</Link>
+        {affiliationNotice(p.id)} · <Link href="/transparence" className="underline hover:text-fg">transparence</Link>
       </p>
     </article>
   );

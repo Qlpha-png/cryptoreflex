@@ -50,7 +50,7 @@ const FAQ_ITEMS = [
   {
     question: "Les frais d'exchange sont-ils inclus ?",
     answer:
-      "Non. Le convertisseur affiche le taux marché brut. Sur une plateforme réelle (Coinbase, Binance, Bitpanda…), il faut ajouter 0,1 à 1,5 % de frais selon le mode d'achat (spot vs instant buy) et le spread.",
+      "Non. Le convertisseur affiche le taux marché brut. Sur une plateforme réelle (Coinbase, Kraken, Bitpanda…), il faut ajouter 0,1 à 1,5 % de frais selon le mode d'achat (spot vs instant buy) et le spread.",
   },
   {
     question: "Quelle différence avec Google Finance ?",

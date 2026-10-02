@@ -4,7 +4,7 @@ import { ArrowRight, Repeat, ShieldCheck } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
-import { getAllPlatforms } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
 
@@ -67,8 +67,9 @@ export default function AlternativeAHub() {
             <span className="gradient-text">{platforms.length} plateformes</span> crypto
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
-            MiCA Phase 2 oblige certaines plateformes à fermer ou restreindre
-            leur offre FR. Trouvez une alternative régulée en 30 secondes.
+            Depuis le 1er juillet 2026, fin de la période transitoire MiCA en
+            France, seul un prestataire agréé MiCA peut servir les résidents
+            français. Trouvez une alternative agréée en 30 secondes.
           </p>
         </header>
 
@@ -92,7 +93,7 @@ export default function AlternativeAHub() {
                     Alternatives à {p.name}
                   </h2>
                   <p className="text-[11px] text-muted mt-0.5">
-                    {p.mica?.amfRegistration ? "PSAN " + p.mica.amfRegistration : "Plateforme crypto"}
+                    {isAvailableFr(p) ? "Agréée MiCA, accessible en France" : "Non autorisée en France"}
                   </p>
                 </div>
                 <ArrowRight

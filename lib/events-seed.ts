@@ -187,18 +187,6 @@ export const EVENTS_SEED: CryptoEvent[] = [
     importance: 3,
   },
   {
-    id: "pumpfun-listing-2026-q1",
-    title: "Listing PUMP sur les CEX majeurs",
-    date: "2026-01-15",
-    crypto: "PUMP",
-    category: "Listing",
-    source: "Pump.fun",
-    sourceUrl: "https://pump.fun/",
-    description:
-      "Cotation du token PUMP de la plateforme de lancement memecoin Pump.fun sur Binance, Coinbase et OKX simultanément. Volatilité extrême les 48 premières heures.",
-    importance: 2,
-  },
-  {
     id: "btc-etf-anniv-2026",
     title: "2 ans des ETF Bitcoin spot US",
     date: "2026-01-10",

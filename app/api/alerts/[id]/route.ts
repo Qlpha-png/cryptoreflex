@@ -99,7 +99,7 @@ async function handleDelete(
   const ok = await deleteAlert(id);
   if (!ok) {
     return options.html
-      ? htmlResponse(500, "Erreur", "Suppression impossible. Réessaie plus tard.")
+      ? htmlResponse(500, "Erreur", "Suppression impossible. Réessayez plus tard.")
       : NextResponse.json({ ok: false, error: "Suppression impossible." }, { status: 500 });
   }
 

@@ -95,7 +95,7 @@ const FAQS = [
   },
   {
     q: "J'ai oublié de déclarer les années précédentes — que faire ?",
-    a: "La régularisation spontanée auprès de la DGFiP est généralement traitée plus favorablement qu'un redressement (réduction des pénalités possible). Vous pouvez déclarer les comptes oubliés via le formulaire 3916-bis pour les années non prescrites (6 ans pour pays coopératif, 10 ans pour pays non-coopératif). Pour les gros enjeux, consultez un avocat fiscaliste.",
+    a: "La régularisation spontanée auprès de la DGFiP est généralement traitée plus favorablement qu'un redressement (réduction des pénalités possible). Vous pouvez déclarer les comptes oubliés via le formulaire 3916-bis pour les années non prescrites (le délai de reprise est porté à 10 ans quand un compte crypto étranger n'a pas été déclaré, art. L169 du LPF). Pour les gros enjeux, consultez un avocat fiscaliste.",
   },
   {
     q: "Quelle est la deadline de déclaration ?",
@@ -110,8 +110,8 @@ const HOW_TO_STEPS = [
     url: "/outils/radar-3916-bis#radar",
   },
   {
-    name: "Confirme l'entité contractante",
-    text: "Pour chaque exchange, indiquez l'entité légale qui vous sert (ex: Binance France SAS vs Binance Holdings Cayman) et l'année d'ouverture du compte. Le Radar vous aide en pointant vers les Mentions Légales officielles.",
+    name: "Confirmez l'entité contractante",
+    text: "Pour chaque exchange, indiquez l'entité légale qui tient (ou tenait) votre compte (ex: Binance France SAS vs Binance Holdings Cayman) et l'année d'ouverture du compte. Le Radar vous aide en pointant vers les Mentions Légales officielles.",
     url: "/outils/radar-3916-bis#radar",
   },
   {
@@ -174,7 +174,7 @@ export default function RadarPage() {
             </h1>
 
             <p className="mt-6 text-base sm:text-lg text-fg/80 max-w-2xl leading-relaxed">
-              Si vous avez un compte sur Binance, Kraken, MEXC, Bybit, KuCoin…
+              Si vous avez (ou aviez dans l&apos;année) un compte sur Binance, Kraken, MEXC, Bybit, KuCoin…
               et que vous ne l&apos;avez pas déclaré sur le 3916-bis,
               l&apos;amende est de{" "}
               <strong className="text-warning">750 € par compte</strong>, et{" "}

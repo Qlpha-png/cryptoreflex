@@ -136,7 +136,7 @@ export default function MiniInvestSimulator() {
         </span>
         <div>
           <h3 className="text-sm font-bold text-fg">
-            Et si tu avais investi… ?
+            Et si vous aviez investi… ?
           </h3>
           <p className="text-[11px] text-muted">
             Estimation rapide single-shot sur historique CoinGecko.
@@ -309,11 +309,11 @@ function ResultBlock({
         aria-hidden="true"
       />
       <div className="text-sm text-fg/85 leading-snug">
-        Si tu avais investi{" "}
+        Si vous aviez investi{" "}
         <strong className="text-fg font-mono tabular-nums">
           {formatEur(amount)}
         </strong>{" "}
-        en {coinSymbol} il y a {periodLabel}, tu aurais aujourd&apos;hui{" "}
+        en {coinSymbol} il y a {periodLabel}, vous auriez aujourd&apos;hui{" "}
         <strong className="text-fg font-mono tabular-nums">
           {formatEur(result.current)}
         </strong>{" "}

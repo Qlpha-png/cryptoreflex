@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         ok: false,
-        error: `Trop de modifications (5/jour max). Réessaie dans ${Math.ceil(rl.retryAfter / 3600)}h.`,
+        error: `Trop de modifications (5/jour max). Réessayez dans ${Math.ceil(rl.retryAfter / 3600)}h.`,
       },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
     );
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
   if (error) {
     console.error("[update-name] Supabase error:", error.message);
     return NextResponse.json(
-      { ok: false, error: "Impossible de sauvegarder le nom. Réessaie." },
+      { ok: false, error: "Impossible de sauvegarder le nom. Réessayez." },
       { status: 500 },
     );
   }

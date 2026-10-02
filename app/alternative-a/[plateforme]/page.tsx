@@ -112,7 +112,7 @@ export function generateMetadata({ params }: Props): Metadata {
     `${DEFAULT_ALT_COUNT} alternatives à ${target.name} en 2026 — comparatif crypto FR`;
   const description =
     override?.description ??
-    `Vous cherchez à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto régulées MiCA/PSAN équivalentes ou meilleures sur frais, sécurité, support FR.`;
+    `Vous cherchez à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto agréées MiCA, équivalentes ou meilleures sur frais, sécurité, support FR.`;
   return {
     title,
     description,
@@ -170,7 +170,7 @@ export default function AlternativePage({ params }: Props) {
       title: `${altCount} alternatives à ${target.name} en 2026`,
       description: `Comparatif des plateformes crypto FR équivalentes ou meilleures que ${target.name}.`,
       date: "2026-05-02",
-      dateModified: "2026-05-02",
+      dateModified: "2026-10-02",
       category: "Comparatif",
       tags: [target.name, "alternative", "comparatif", "MiCA"],
     }),
@@ -201,8 +201,8 @@ export default function AlternativePage({ params }: Props) {
             en 2026
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Vous utilisez {target.name} mais souhaitez comparer avec d&apos;autres
-            plateformes crypto régulées en France ? Voici {altCount} alternatives
+            Vous utilisez {target.name} et souhaitez comparer avec des
+            plateformes crypto agréées MiCA accessibles en France ? Voici {altCount} alternatives
             classées par notre scoring transparent (frais, sécurité, conformité
             MiCA, support FR). Comparatif informationnel, sans recommandation
             personnalisée.
@@ -214,7 +214,7 @@ export default function AlternativePage({ params }: Props) {
             headline={`Top 5 alternatives à ${target.name} : plateformes équivalentes ou meilleures sur les critères clés.`}
             bullets={[
               { emoji: "🏆", text: `Notre #1 alternative : ${alternatives[0]?.name ?? "—"}` },
-              { emoji: "⚖️", text: "Toutes régulées MiCA ou PSAN AMF" },
+              { emoji: "⚖️", text: "Toutes agréées MiCA et accessibles en France" },
               { emoji: "🇫🇷", text: "Sélection adaptée au public français" },
               { emoji: "💸", text: "Comparaison frais, sécurité, score global Cryptoreflex" },
             ]}
@@ -295,7 +295,7 @@ export default function AlternativePage({ params }: Props) {
           </h2>
           <ul className="mt-3 space-y-2 text-sm text-fg/85 leading-relaxed">
             <li>• <strong>Frais trop élevés</strong> : si vous tradez plus de 1000 €/mois, comparer les makers/takers fait économiser 50-200 €/an.</li>
-            <li>• <strong>Conformité MiCA</strong> : certaines plateformes vont voir leur statut évoluer en juillet 2026 (Phase 2). Anticipez.</li>
+            <li>• <strong>Conformité MiCA</strong> : depuis le 1er juillet 2026, seul un prestataire agréé MiCA peut fournir des services sur crypto-actifs aux résidents français. Une plateforme absente du registre MiCA ne peut plus vous servir.</li>
             <li>• <strong>Catalogue limité</strong> : si vous cherchez une crypto spécifique non listée chez {target.name}, il faut élargir.</li>
             <li>• <strong>Support FR</strong> : si {target.name} n&apos;a pas de support en français, c&apos;est un facteur de friction réel.</li>
             <li>• <strong>Diversification du risque plateforme</strong> : ne mettez pas tous vos œufs dans le même exchange (cf. FTX 2022).</li>

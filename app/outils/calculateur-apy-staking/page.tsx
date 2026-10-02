@@ -25,7 +25,7 @@ const CalculateurApyStaking = dynamic(
 export const metadata: Metadata = {
   title: "Calculateur APY staking crypto 2026 — ETH, SOL, ADA, DOT, ATOM, NEAR",
   description:
-    "Calculez vos récompenses de staking en EUR sur ETH, SOL, ADA, DOT, ATOM, NEAR. Comparez staking direct vs liquid staking (Lido, Marinade) vs CEX (Binance, Coinbase). APY indicatifs Q1 2026.",
+    "Calculez vos récompenses de staking en EUR sur ETH, SOL, ADA, DOT, ATOM, NEAR. Comparez staking direct vs liquid staking (Lido, Marinade) vs CEX (Coinbase, Kraken). APY indicatifs Q1 2026.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/calculateur-apy-staking"),
   openGraph: {
     title: "Calculateur APY staking crypto — comparatif 2026",
@@ -45,7 +45,7 @@ const FAQ_ITEMS = [
   {
     question: "Quelle différence entre staking direct, liquid staking et CEX staking ?",
     answer:
-      "Staking direct : vous devenez validateur ou déléguez à un pool depuis votre wallet, contrôle total mais lock-up. Liquid staking (Lido, Marinade, Jito) : vous recevez un token liquide (stETH, mSOL) qui représente votre stake et garde sa valeur, mais risque smart contract. CEX staking (Binance, Coinbase, Kraken) : la plateforme stake pour vous, plus simple mais frais élevés (15-30 %) et risque de contrepartie.",
+      "Staking direct : vous devenez validateur ou déléguez à un pool depuis votre wallet, contrôle total mais lock-up. Liquid staking (Lido, Marinade, Jito) : vous recevez un token liquide (stETH, mSOL) qui représente votre stake et garde sa valeur, mais risque smart contract. CEX staking (Coinbase, Kraken, Bitpanda) : la plateforme stake pour vous, plus simple mais frais élevés (15-30 %) et risque de contrepartie.",
   },
   {
     question: "Quel APY réaliste viser sur l'ETH en 2026 ?",
@@ -114,7 +114,7 @@ export default function CalculateurApyStakingPage() {
             <p className="mt-4 text-lg text-white/70">
               Estimez vos récompenses de staking sur ETH, SOL, ADA, DOT, ATOM, NEAR.
               On compare staking direct, liquid staking (Lido, Marinade) et CEX
-              (Binance, Coinbase) en 1 clic.
+              (Coinbase, Kraken) en 1 clic.
             </p>
           </div>
 

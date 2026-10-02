@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "lastUpdated": "2026-04-26",
+    "lastUpdated": "2026-10-02",
     "purpose": "Top 10 cryptos par capitalisation, expliquées pour débutants FR"
   },
   "topCryptos": [
@@ -78,7 +78,7 @@
       "category": "Token d'exchange",
       "tagline": "La crypto de Binance, le plus grand exchange au monde",
       "what": "BNB est la cryptomonnaie de Binance. Elle sert à payer des frais réduits et à utiliser la BNB Chain, une blockchain rapide et peu coûteuse.",
-      "useCase": "Réduire ses frais de trading sur Binance. Utiliser des dApps sur BNB Chain. Payer dans certains commerces. Participer aux Launchpads. Faire du staking.",
+      "useCase": "Réduire ses frais de trading sur Binance (exchange qui ne fournit plus de services sur crypto-actifs en France depuis le 1er juillet 2026). Utiliser des dApps sur BNB Chain. Payer dans certains commerces. Participer aux Launchpads. Faire du staking.",
       "consensus": "Proof of Staked Authority",
       "blockTime": "3 secondes",
       "maxSupply": "200M (réduit régulièrement par burn)",
@@ -86,7 +86,7 @@
       "weaknesses": ["Très lié au sort de Binance", "Plus centralisé que d'autres blockchains"],
       "beginnerFriendly": 4,
       "riskLevel": "Modéré",
-      "whereToBuy": ["Binance", "Bitpanda", "Coinhouse"]
+      "whereToBuy": ["Bitpanda", "Coinhouse"]
     },
     {
       "rank": 5,
@@ -170,7 +170,7 @@
       "weaknesses": ["Très centralisé (peu de validateurs)", "Image controversée (fondateur sous enquêtes)"],
       "beginnerFriendly": 3,
       "riskLevel": "Modéré",
-      "whereToBuy": ["Binance", "Bitpanda", "Kraken"]
+      "whereToBuy": ["Bitpanda", "Kraken"]
     },
     {
       "rank": 9,

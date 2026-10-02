@@ -68,13 +68,10 @@ export const PARTNERSHIPS: Record<string, PartnershipMeta> = {
     status: "live",
     kind: "referral",
   },
-  binance: {
-    revenue:
-      "Code parrainage personnel — Programme referral Binance (réduction de frais et bonus filleul)",
-    since: "2026-04-25",
-    status: "live",
-    kind: "referral",
-  },
+  // Audit 2026-10-02 : code parrainage Binance retiré — Binance a cessé ses
+  // services sur crypto-actifs en France le 1er juillet 2026 (absente du
+  // registre MiCA de l'ESMA). Aucun lien rémunéré vers une plateforme non
+  // autorisée en France.
 };
 
 /**
@@ -87,4 +84,12 @@ export const PARTNERSHIPS: Record<string, PartnershipMeta> = {
 export function getAffiliationKind(platformId: string): PartnershipKind | null {
   const p = PARTNERSHIPS[platformId];
   return p && p.status === "live" ? p.kind : null;
+}
+
+/** Mention visible sous un lien sortant : ne jamais annoncer une rémunération qui n'existe pas (ni en cacher une). */
+export function affiliationNotice(platformId: string): string {
+  const kind = getAffiliationKind(platformId);
+  if (kind === "affiliate") return "Lien d'affiliation : commission Cryptoreflex";
+  if (kind === "referral") return "Lien de parrainage : prime de parrainage";
+  return "Lien direct : aucune commission";
 }

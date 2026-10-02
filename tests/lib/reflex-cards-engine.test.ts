@@ -32,9 +32,10 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
         if (best >= 2) R++; if (best >= 3) SR++; if (best >= 4) UR++; if (best >= 5) L++;
       }
       expect(unknown).toBe(0);
-      expect(R / N).toBeGreaterThan(0.366); expect(R / N).toBeLessThan(0.376);
-      expect(SR / N).toBeGreaterThan(0.069); expect(SR / N).toBeLessThan(0.076);
-      expect(UR / N).toBeGreaterThan(0.0088); expect(UR / N).toBeLessThan(0.0112);
+      /* option C (02/10/2026) : Rare garantie au 4e booster, UR 0,30 % par carte, Légendaire inchangée */
+      expect(R / N).toBeGreaterThan(0.417); expect(R / N).toBeLessThan(0.431);
+      expect(SR / N).toBeGreaterThan(0.074); expect(SR / N).toBeLessThan(0.082);
+      expect(UR / N).toBeGreaterThan(0.0150); expect(UR / N).toBeLessThan(0.0185);
       expect(L / N).toBeGreaterThan(0.0013); expect(L / N).toBeLessThan(0.0021);
     });
   it("booster thématique : les cartes de base viennent de la catégorie, rareté inchangée", () => {
@@ -47,13 +48,13 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       if (best >= 2) R++;
     }
     expect(fam).toBe(base);
-    expect(R / 50000).toBeGreaterThan(0.36); expect(R / 50000).toBeLessThan(0.383);
+    expect(R / 50000).toBeGreaterThan(0.41); expect(R / 50000).toBeLessThan(0.437);
   });
   it("l'Équipe de la saison ne tombe pas avant le jour 46", () => {
     expect(dayTables(45).ed.toty.p).toBe(0);
     expect(dayTables(46).ed.toty.p).toBeGreaterThan(0);
   });
-  it("garanties : une Rare au plus tard au 6e booster sans Rare", () => {
+  it("garanties : une Rare au plus tard au 4e booster sans Rare", () => {
     const rnd = seeded(7), ps = freshPity();
     let since = 0, worst = 0;
     for (let i = 0; i < 20000; i++) {
@@ -63,6 +64,19 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       worst = Math.max(worst, since);
     }
     expect(worst).toBeLessThan(RULES.pity.R);
+  });
+  it("premier frisson : 1re Ultra rare au plus tard au 10e booster, et au prochain pour un joueur déjà au-delà sans UR", () => {
+    expect(RULES.onboard.UR).toBe(10);
+    for (let seed = 1; seed <= 300; seed++) {
+      const rnd = seeded(seed), ps = freshPity();
+      let first = 0;
+      for (let i = 1; i <= RULES.onboard.UR && !first; i++) if (drawPack(30, ps, null, rnd).some((it) => !it.ed && rank(it.id) >= 4)) first = i;
+      expect(first).toBeGreaterThan(0);
+    }
+    /* joueur passé à 25 boosters sans UR (ancienne règle du 30e) : UR dès le booster suivant */
+    const late: Pity = { R: 0, SR: 0, UR: 25, opened: 25, gotSR: true, gotUR: false };
+    expect(drawPack(30, late, null, seeded(99)).some((it) => !it.ed && rank(it.id) >= 4)).toBe(true);
+    expect(late.gotUR).toBe(true);
   });
   it("réserve : un booster toutes les 15 minutes, 10 au plus", () => {
     const now = Date.parse("2026-10-03T12:00:00Z"), p = { stock: 3, stock_at: new Date(now - 61 * 60000).toISOString() } as PlayerRow;

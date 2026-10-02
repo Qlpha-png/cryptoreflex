@@ -43,7 +43,7 @@
       "criteres_focus": ["frais", "securite", "liquidite", "support", "mica"]
     },
     {
-      "slug": "coinbase-vs-bitpanda",
+      "slug": "bitpanda-vs-coinbase",
       "platforme1_id": "bitpanda",
       "platforme2_id": "coinbase",
       "intent": "debutant",
@@ -59,15 +59,6 @@
       "volume_estime": 540,
       "kw_principal": "revolut vs trade republic",
       "criteres_focus": ["frais", "ux", "epargne_dca", "diversification", "mica"]
-    },
-    {
-      "slug": "bitget-vs-bybit",
-      "platforme1_id": "bitget",
-      "platforme2_id": "bybit",
-      "intent": "avance",
-      "volume_estime": 720,
-      "kw_principal": "bitget vs bybit",
-      "criteres_focus": ["frais", "derives", "copy_trading", "catalogue", "mica"]
     },
     {
       "slug": "bitpanda-vs-coinhouse",

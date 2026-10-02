@@ -46,7 +46,7 @@ import { BRAND } from "@/lib/brand";
  *  - Lead magnet badge "+ PDF 62 pages offert" dans le H2 area
  *  - Validation onBlur (icône check verte si valide)
  *  - enterKeyHint="send" sur input (clavier mobile iOS/Android montre "send")
- *  - Tap target 44px sur "réessaie" (was inline link)
+ *  - Tap target 44px sur "réessayez" (was inline link)
  */
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -120,7 +120,7 @@ export default function NewsletterCapture() {
 
       if (!res.ok || !json.ok) {
         setStatus("error");
-        setErrorMsg(json.error ?? "Une erreur est survenue. Réessaie.");
+        setErrorMsg(json.error ?? "Une erreur est survenue. Réessayez.");
         return;
       }
 
@@ -142,7 +142,7 @@ export default function NewsletterCapture() {
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Une erreur est survenue. Réessaie dans un instant.");
+      setErrorMsg("Une erreur est survenue. Réessayez dans un instant.");
     }
   }
 
@@ -397,7 +397,7 @@ export default function NewsletterCapture() {
                   className="inline-flex items-center min-h-[36px] px-2 -mx-2 py-1 text-primary-soft hover:text-primary-glow underline rounded
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  réessaie avec une autre adresse
+                  réessayez avec une autre adresse
                 </button>
                 .
               </p>

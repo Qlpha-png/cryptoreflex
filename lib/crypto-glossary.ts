@@ -159,15 +159,15 @@ export const CRYPTO_GLOSSARY: Record<string, GlossaryTerm> = {
   },
   "PSAN": {
     term: "PSAN",
-    short: "Un label français qui certifie qu'une plateforme crypto est enregistrée auprès de l'AMF (le gendarme de la finance).",
-    full: "PSAN (Prestataire de Services sur Actifs Numériques) est l'enregistrement obligatoire en France pour les exchanges et wallets depuis 2020. Il vérifie l'identité des dirigeants, l'anti-blanchiment et la cybersécurité. À ne pas confondre avec MiCA (européen). Liste publique sur amf-france.org.",
+    short: "Un ancien statut français : l'enregistrement des plateformes crypto auprès de l'AMF (le gendarme de la finance), remplacé depuis le 1er juillet 2026 par l'agrément MiCA.",
+    full: "PSAN (Prestataire de Services sur Actifs Numériques) a été l'enregistrement obligatoire en France pour les exchanges et wallets à partir de 2020. Ce régime a pris fin le 1er juillet 2026, à l'issue de la période transitoire MiCA : un ancien numéro PSAN ne vaut plus autorisation. Seul un prestataire agréé MiCA peut désormais servir les résidents français.",
     alias: ["enregistrement PSAN"],
     category: "regulation",
   },
   "AMF": {
     term: "AMF",
     short: "L'Autorité des Marchés Financiers : le « gendarme » français qui surveille les sociétés cotées et les acteurs crypto.",
-    full: "L'AMF est l'autorité publique indépendante française qui régule l'investissement. Elle délivre l'enregistrement PSAN aux plateformes crypto et publie une liste noire des sites non autorisés. Elle peut sanctionner (amendes, interdictions). En cas de doute sur une plateforme : vérifier amf-france.org.",
+    full: "L'AMF est l'autorité publique indépendante française qui régule l'investissement. Elle agrée les prestataires crypto au titre de MiCA (elle délivrait auparavant l'enregistrement PSAN) et publie une liste noire des sites non autorisés. Elle peut sanctionner (amendes, interdictions). En cas de doute sur une plateforme : vérifier amf-france.org.",
     alias: ["Autorité des Marchés Financiers"],
     category: "regulation",
   },
@@ -180,7 +180,7 @@ export const CRYPTO_GLOSSARY: Record<string, GlossaryTerm> = {
   },
   "2FA": {
     term: "2FA",
-    short: "Une double sécurité : en plus de votre mot de passe, on te demande un code temporaire (Google Authenticator, SMS).",
+    short: "Une double sécurité : en plus de votre mot de passe, on vous demande un code temporaire (Google Authenticator, SMS).",
     full: "Le 2FA (Two-Factor Authentication) ajoute une 2e barrière à la connexion. Code généré toutes les 30s par une app (Google Authenticator, Authy) — beaucoup plus sûr que le SMS qui peut être intercepté (SIM swap). Activer le 2FA app sur tous vos comptes crypto = obligatoire.",
     alias: ["double authentification", "two-factor authentication"],
     category: "concept",
@@ -208,8 +208,8 @@ export const CRYPTO_GLOSSARY: Record<string, GlossaryTerm> = {
   },
   "exchange": {
     term: "Exchange",
-    short: "Une plateforme web où vous achetez et vends des cryptos contre des euros ou d'autres cryptos.",
-    full: "Un exchange (Coinbase, Binance, Kraken, Bitpanda) est l'équivalent crypto d'une bourse. CEX (Centralized Exchange) = société qui détient les fonds (rapide, légal mais risqué : faillite FTX). DEX (Decentralized Exchange, ex Uniswap) = échange via smart contract, vous gardez vos clés (plus sûr, plus complexe).",
+    short: "Une plateforme web où vous achetez et vendez des cryptos contre des euros ou d'autres cryptos.",
+    full: "Un exchange (Coinbase, Kraken, Bitpanda) est l'équivalent crypto d'une bourse. CEX (Centralized Exchange) = société qui détient les fonds (rapide, légal mais risqué : faillite FTX). DEX (Decentralized Exchange, ex Uniswap) = échange via smart contract, vous gardez vos clés (plus sûr, plus complexe).",
     alias: ["plateforme d'échange", "CEX", "DEX"],
     category: "produit",
   },
@@ -223,7 +223,7 @@ export const CRYPTO_GLOSSARY: Record<string, GlossaryTerm> = {
   "ETF": {
     term: "ETF",
     short: "Un produit boursier classique qui suit le prix d'une crypto, accessible via votre compte bourse standard (Bourse Direct, Trade Republic).",
-    full: "Un ETF (Exchange-Traded Fund) crypto permet d'investir dans Bitcoin ou Ethereum sans avoir à gérer de wallet ni de seed phrase. Approuvés en 2024 (USA) et 2024-2025 (UE). Avantage : simple, fiscal classique, dans un PEA-PME parfois. Inconvénient : tu ne possèdes pas la vraie crypto, frais annuels (0,2-1%).",
+    full: "Un ETF (Exchange-Traded Fund) crypto permet d'investir dans Bitcoin ou Ethereum sans avoir à gérer de wallet ni de seed phrase. Approuvés en 2024 (USA) et 2024-2025 (UE). Avantage : simple, fiscal classique, dans un PEA-PME parfois. Inconvénient : vous ne possédez pas la vraie crypto, frais annuels (0,2-1%).",
     alias: ["Exchange-Traded Fund"],
     category: "produit",
   },

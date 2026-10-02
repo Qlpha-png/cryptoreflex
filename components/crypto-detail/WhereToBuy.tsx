@@ -4,6 +4,8 @@ import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/p
 import PlatformLogo from "@/components/PlatformLogo";
 import AffiliateLink from "@/components/AffiliateLink";
 import { getAffiliationKind } from "@/lib/partnerships";
+import { getMicaStatusByName } from "@/lib/mica";
+import { isNoPlatformNote } from "@/lib/cryptos";
 
 interface Props {
   cryptoName: string;
@@ -19,17 +21,38 @@ interface Props {
  *   les inconnues sont rendues en "fallback léger" (pas de hardcoded URL).
  */
 export default function WhereToBuy({ cryptoName, platformNames }: Props) {
-  const knownPlatforms = getAllPlatforms().filter(isAvailableFr);
+  const allPlatforms = getAllPlatforms();
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
-  const matches: Array<{ name: string; platform?: Platform }> = platformNames.map(
-    (name) => {
-      const p = knownPlatforms.find(
-        (kp) => norm(kp.name) === norm(name) || norm(kp.id) === norm(name)
-      );
-      return { name, platform: p };
-    }
-  );
+  /* Ne restent que : les plateformes du comparatif autorisées en France, et les protocoles décentralisés / portefeuilles
+     (hors du champ de l'agrément MiCA). Une plateforme non autorisée ou inconnue du registre n'est jamais affichée. */
+  const note = platformNames.find(isNoPlatformNote);
+  const matches: Array<{ name: string; platform?: Platform }> = platformNames.flatMap((name) => {
+    if (isNoPlatformNote(name)) return [];
+    const p = allPlatforms.find((kp) => norm(kp.name) === norm(name) || norm(kp.id) === norm(name));
+    if (p) return isAvailableFr(p) ? [{ name, platform: p }] : [];
+    const reg = getMicaStatusByName(name);
+    if (reg) return reg.micaStatus === "out_of_scope" ? [{ name }] : [];
+    return isDecentralized(name) ? [{ name }] : [];
+  });
+
+  if (!matches.length) {
+    return (
+      <section id="acheter" className="scroll-mt-24">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Où acheter {cryptoName} en France ?</h2>
+        <p className="mt-2 text-sm text-muted max-w-3xl">
+          {note
+            ? `${note}.`
+            : `À notre connaissance, aucune plateforme agréée MiCA avec un accès à la France ne propose ${cryptoName} aujourd'hui.`}{" "}
+          Vérifiez le statut de toute plateforme avec notre{" "}
+          <Link href="/outils/verificateur-mica" className="underline hover:text-white">
+            vérificateur MiCA
+          </Link>{" "}
+          avant d&apos;y déposer des fonds.
+        </p>
+      </section>
+    );
+  }
 
   // Audit F (cohérence partnerships) : la mention « commission » n'est légitime
   // que si au moins une plateforme listée est réellement rémunérée. Sinon =
@@ -44,8 +67,8 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
         Où acheter {cryptoName} en France ?
       </h2>
       <p className="mt-2 text-sm text-muted max-w-3xl">
-        Les plateformes ci-dessous sont régulées (PSAN AMF ou agrément MiCA européen)
-        et listent {cryptoName}. Ouvrez un compte directement depuis Cryptoreflex
+        Plateformes agréées MiCA avec un accès à la France (registre de l&apos;ESMA) qui listent{" "}
+        {cryptoName}, et protocoles décentralisés le cas échéant. Ouvrez un compte directement depuis Cryptoreflex
         {anyPaid ? " (certains liens sont rémunérés, sans surcoût pour vous)" : ""}.
       </p>
 
@@ -83,18 +106,18 @@ function PlatformRow({
   cryptoName: string;
 }) {
   if (!platform) {
-    // Plateforme citée dans la sélection éditoriale mais pas (encore) review-ée par CR.
+    // Protocole décentralisé ou portefeuille (hors du champ de l'agrément MiCA), sans fiche Cryptoreflex.
     return (
       <div className="rounded-2xl border border-border bg-surface/60 p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-sm font-bold text-fg">{name}</div>
             <div className="mt-0.5 text-xs text-muted">
-              Plateforme citée — fiche détaillée à venir
+              Protocole décentralisé : vous gardez vos clés, pas d&apos;agrément MiCA
             </div>
           </div>
           <span className="text-[11px] uppercase tracking-wider text-muted">
-            Non testée
+            DEX
           </span>
         </div>
       </div>
@@ -162,4 +185,9 @@ function PlatformRow({
       </div>
     </div>
   );
+}
+
+/** Protocole décentralisé ou portefeuille cité dans les données éditoriales (hors du champ de l'agrément MiCA). */
+function isDecentralized(name: string): boolean {
+  return /\bDEX\b|wallet|portefeuille|jupiter|raydium|uniswap|aerodrome|hyperliquid|curve|pancakeswap|atomic swap/i.test(name);
 }

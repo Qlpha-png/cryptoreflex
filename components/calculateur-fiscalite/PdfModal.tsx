@@ -347,9 +347,8 @@ export default function PdfModal({
                   </p>
                   <p className="mt-1 text-xs text-fg/70">
                     Le PDF, c'est votre calcul. Waltio génère en plus le Cerfa
-                    2086 + 3916-bis prêts à téléverser.{" "}
-                    <strong className="text-primary-soft">-30 %</strong> avec le
-                    code CRYPTOREFLEX.
+                    2086 + 3916-bis prêts à téléverser. Rapport fiscal dès{" "}
+                    <strong className="text-primary-soft">39 €/an</strong>.
                   </p>
                   <a
                     href={WALTIO_AFFILIATE_URL_POST_PDF}

@@ -98,7 +98,7 @@ export const partnerReviews: PartnerReview[] = [
       name: "Trustpilot",
       url: "https://fr.trustpilot.com/review/ledger.com",
     },
-    lastUpdated: "2026-04-28",
+    lastUpdated: "2026-10-02",
     testDuration: "8 ans (2018 → aujourd'hui)",
     verdict: {
       summary:
@@ -118,7 +118,7 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Vos cryptos sur un exchange ne vous appartiennent pas",
-        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que vos cryptos sont sur Binance, Coinbase ou Bitpanda, vous détenez une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
+        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que vos cryptos sont sur Coinbase, Kraken ou Bitpanda, vous détenez une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
         stat: "30 Md$",
       },
       solution: {
@@ -153,7 +153,7 @@ export const partnerReviews: PartnerReview[] = [
       afterItems: [
         "Vos clés sont OFFLINE dans le Secure Element — inaccessibles à distance",
         "Chaque transaction nécessite VOTRE confirmation physique sur l'écran du Nano",
-        "Vous dormez tranquille même si Binance fait la une demain matin",
+        "Vous dormez tranquille même si un exchange fait la une demain matin",
         "Votre seed phrase de 24 mots = filet de sécurité absolu, recoverable n'importe où",
       ],
     },
@@ -198,12 +198,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "3. Test recovery dès J1",
         description:
-          "C'est l'étape que 80% des gens sautent. Reset le wallet (Settings > Security > Reset). Restore avec votre seed. Si ça marche, votre sauvegarde est valide. Si pas, recommencez l'étape 2 maintenant — pas dans 6 mois quand vous avez 5 000 € dessus.",
+          "C'est l'étape que 80% des gens sautent. Réinitialisez le wallet (Settings > Security > Reset). Restaurez-le avec votre seed. Si ça marche, votre sauvegarde est valide. Si pas, recommencez l'étape 2 maintenant — pas dans 6 mois quand vous avez 5 000 € dessus.",
       },
       {
         title: "4. Premier transfert : montant test 10 €",
         description:
-          "Avant de transférer 5 000 € depuis Binance, envoyez d'abord 10 € de BTC. Vérifiez que ça arrive bien sur votre wallet Ledger Live. Une seule lettre changée dans l'adresse = fonds perdus à jamais. Le test à 10 € coûte 1 € de fees, pas 5 000 € de regret.",
+          "Avant de transférer 5 000 € depuis votre plateforme d'achat, envoyez d'abord 10 € de BTC. Vérifiez que ça arrive bien sur votre wallet Ledger Live. Une seule lettre changée dans l'adresse = fonds perdus à jamais. Le test à 10 € coûte 1 € de fees, pas 5 000 € de regret.",
       },
       {
         title: "5. Stockage seed offline + redondance",
@@ -302,12 +302,12 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Faire confiance à un fabricant, c'est encore faire confiance",
-        body: "Le marketing crypto vous vend de la \"sécurité\" comme une boîte noire : achète ce produit, fais-nous confiance, on vous promet que c'est bien fait. Mais comment vérifiez-vous ? Si le firmware est fermé, vous n'avez aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer votre seed sans que vous vous en aperceviez — et vous ne pourriez pas le démontrer.",
+        body: "Le marketing crypto vous vend de la \"sécurité\" comme une boîte noire : achetez ce produit, faites-nous confiance, on vous promet que c'est bien fait. Mais comment vérifiez-vous ? Si le firmware est fermé, vous n'avez aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer votre seed sans que vous vous en aperceviez — et vous ne pourriez pas le démontrer.",
         stat: "0%",
       },
       solution: {
         title: "100% du code public sur GitHub — vérifiable par n'importe qui",
-        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Vous n'achetez pas un produit qui te promet la sécurité — vous achetez un produit dont la sécurité est démontrable mathématiquement et publiquement.",
+        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Vous n'achetez pas un produit qui vous promet la sécurité — vous achetez un produit dont la sécurité est démontrable mathématiquement et publiquement.",
         stat: "11 ans",
       },
       mechanism: {
@@ -377,7 +377,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "2. Vérification d'authenticité",
         description:
-          "À l'ouverture, Trezor Suite vérifie cryptographiquement que votre appareil est authentique (firmware signé Trezor). Si l'écran affiche \"non authentique\", retourne le produit immédiatement.",
+          "À l'ouverture, Trezor Suite vérifie cryptographiquement que votre appareil est authentique (firmware signé Trezor). Si l'écran affiche \"non authentique\", renvoyez le produit immédiatement.",
       },
       {
         title: "3. Choix : seed standard 24 mots OU Shamir Backup",
@@ -387,12 +387,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "4. Test recovery + envoi 10 € test",
         description:
-          "Identique à Ledger : reset, restore, vérifie que ça marche. Puis envoi test 10 € avant de migrer le reste.",
+          "Identique à Ledger : réinitialisez, restaurez, vérifiez que ça marche. Puis envoi test 10 € avant de migrer le reste.",
       },
       {
         title: "5. Activation Passphrase (optionnel mais recommandé)",
         description:
-          "Le 25e mot Trezor Passphrase crée un wallet caché supplémentaire. Si on te force à révéler votre seed sous contrainte, vous donnez la seed sans passphrase (= wallet leurre avec petit montant), votre vrai wallet reste invisible. Configurable depuis Suite > Settings > Passphrase.",
+          "Le 25e mot Trezor Passphrase crée un wallet caché supplémentaire. Si on vous force à révéler votre seed sous contrainte, vous donnez la seed sans passphrase (= wallet leurre avec petit montant), votre vrai wallet reste invisible. Configurable depuis Suite > Settings > Passphrase.",
       },
     ],
     faq: [
@@ -419,7 +419,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Comment éviter le phishing post-leak Trezor 2022 ?",
         answer:
-          "Règles strictes : (1) Trezor ne vous envoie jamais d'email avec lien de mise à jour. (2) Toute update se fait depuis Trezor Suite, jamais via lien externe. (3) Si vous recevez un email \"urgent\" — ignore. Configure un filtre Gmail pour mettre tout email contenant \"trezor\" en quarantaine pour vérification manuelle.",
+          "Règles strictes : (1) Trezor ne vous envoie jamais d'email avec lien de mise à jour. (2) Toute update se fait depuis Trezor Suite, jamais via lien externe. (3) Si vous recevez un email \"urgent\" — ignorez-le. Configurez un filtre Gmail pour mettre tout email contenant \"trezor\" en quarantaine pour vérification manuelle.",
       },
     ],
     whyBuyNow: [
@@ -466,37 +466,37 @@ export const partnerReviews: PartnerReview[] = [
       name: "Trustpilot",
       url: "https://fr.trustpilot.com/review/waltio.com",
     },
-    lastUpdated: "2026-04-28",
+    lastUpdated: "2026-10-02",
     testDuration: "4 ans (campagnes fiscales 2022, 2023, 2024, 2025)",
     verdict: {
       summary:
         "Waltio est la seule solution SaaS qui produit un Cerfa 2086 conforme à la doctrine fiscale française (méthode du prix moyen pondéré, art. 150 VH bis CGI). Koinly et CoinTracking ne le font pas pour la France. Pour un contribuable FR avec multi-exchanges, c'est l'outil qui fait gagner le plus de temps en mai.",
       bestFor: [
         "Contribuable FR avec >100 transactions/an",
-        "Multi-exchanges (Binance + Bitpanda + Coinhouse + Kraken…)",
+        "Multi-exchanges (Coinbase + Bitpanda + Coinhouse + Kraken…)",
         "DeFi user qui veut classer staking, airdrops, swaps automatiquement",
         "Fiscalité 3916-bis (comptes étrangers) à déclarer",
       ],
       notFor: [
         "Résident fiscal hors France (Koinly plus universel)",
-        "Trader ultra-haute fréquence > 50 000 transactions (Trader 549 €/an cher)",
-        "User <30 transactions (le plan Découverte gratuit suffit)",
+        "Trader ultra-haute fréquence > 50 000 transactions (au-delà de 10 000 transactions, plan Unlimited à 999 €/an)",
+        "User sans cession imposable (le plan Free gratuit suffit pour le suivi et le 3916-bis)",
       ],
     },
     pedagogy: {
       problem: {
         title: "Déclarer ses cryptos en France, c'est un piège technique",
-        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré case 8UU du formulaire 3916-bis — sous peine de 750 € à 10 000 € d'amende PAR compte oublié (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
-        stat: "10 000 €",
+        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque compte ouvert sur un exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis (case 8UU cochée sur la 2042) — sous peine de 750 € d'amende PAR compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 € (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
+        stat: "750 €",
       },
       solution: {
         title: "Le seul SaaS qui produit un Cerfa 2086 prêt à téléverser",
-        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode PMP, classe vos plus-values cession par cession, et te génère deux PDFs : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
+        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode PMP, classe vos plus-values cession par cession, et vous génère deux PDF : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
         stat: "100% Bercy",
       },
       mechanism: {
         title: "Comment Waltio transforme 14h de Excel en 45 min",
-        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour te laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
+        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour vous laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
         steps: [
           "Vous collez les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
           "L'IA reconnaît et classe 95% des transactions ; vous réconciliez manuellement les 5% restants (15-30 min).",
@@ -505,8 +505,8 @@ export const partnerReviews: PartnerReview[] = [
       },
       roi: {
         title: "Le ROI sale et défendable, en chiffres",
-        body: "Plan Investisseur : 199 €/an. Vous gagnez 12 heures de saisie chaque mai (× 30 €/h de votre temps facturé = 360 € de valeur récupérée dès la 1ère année). Vous évitez 750 € à 50 000 € d'amendes potentielles par compte 3916-bis oublié. Ratio coût/valeur : entre 1,8x et 250x selon votre profil. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
-        stat: "ROI 1.8x–250x",
+        body: "Plan Starter : 99 €/an jusqu'à 1 000 transactions (grille relevée le 2 octobre 2026). Vous gagnez 12 heures de saisie chaque mai (× 30 €/h de votre temps facturé = 360 € de valeur récupérée dès la 1ère année). Vous évitez en plus 750 € d'amende potentielle par compte 3916-bis oublié (1 500 € au-delà de 50 000 €). Ratio coût/valeur : au moins 1,8x dès la première année, sur le seul temps gagné. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
+        stat: "ROI ≥ 1,8x",
       },
     },
     beforeAfter: {
@@ -515,7 +515,7 @@ export const partnerReviews: PartnerReview[] = [
         "14 heures de Excel multi-onglets pour calculer vos plus-values en PMP manuellement",
         "Risque réel d'amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger oublié au 3916-bis",
         "Stress fiscal jusqu'au dépôt — vous doutez de chaque calcul, vous refaites 3 fois",
-        "Pas de traçabilité : si Bercy t'audite, vous n'avez pas de méthode défendable",
+        "Pas de traçabilité : si Bercy vous contrôle, vous n'avez pas de méthode défendable",
       ],
       afterTitle: "Avec Waltio Investisseur",
       afterItems: [
@@ -543,7 +543,7 @@ export const partnerReviews: PartnerReview[] = [
       },
     ],
     specs: [
-      { label: "Plans testés", value: "Découverte (gratuit), Investisseur (199 €/an)" },
+      { label: "Plans testés", value: "Découverte (gratuit), Investisseur (199 €/an) — ancienne grille ; aujourd'hui Free, Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 €" },
       { label: "Plateformes connectées", value: "220+ (API + import CSV)" },
       { label: "Méthode de calcul", value: "PMP (art. 150 VH bis CGI)" },
       { label: "Exports", value: "Cerfa 2086, 3916-bis pré-rempli, CSV détaillé" },
@@ -554,14 +554,14 @@ export const partnerReviews: PartnerReview[] = [
     ],
     setupSteps: [
       {
-        title: "1. Inscription (gratuit, plan Découverte)",
+        title: "1. Inscription (gratuit, plan Free)",
         description:
-          "Pas besoin de payer immédiatement. Le plan Découverte (0 €) vous permet d'importer vos exchanges et visualiser votre portfolio + un aperçu des plus-values. Vous payez uniquement pour générer les exports Cerfa.",
+          "Pas besoin de payer immédiatement. Le plan Free (0 €) vous permet d'importer vos exchanges et visualiser votre portfolio + un aperçu des plus-values. Vous payez uniquement pour générer les exports Cerfa.",
       },
       {
         title: "2. Connexion API exchanges (read-only)",
         description:
-          "Sur chaque exchange, génère une clé API READ-ONLY (jamais avec droits de trade ou retrait). Colle dans Waltio. L'historique des transactions s'importe automatiquement. Pour les wallets DeFi (MetaMask, Phantom), vous collez l'adresse publique.",
+          "Sur chaque exchange, générez une clé API READ-ONLY (jamais avec droits de trade ou retrait). Collez-la dans Waltio. L'historique des transactions s'importe automatiquement. Pour les wallets DeFi (MetaMask, Phantom), vous collez l'adresse publique.",
       },
       {
         title: "3. Réconciliation (10-30 min selon volume)",
@@ -571,19 +571,19 @@ export const partnerReviews: PartnerReview[] = [
       {
         title: "4. Upgrade Investisseur quand prêt",
         description:
-          "Une fois votre historique réconcilié, upgrade vers Investisseur (199 €/an) pour générer les Cerfa. Le paiement débloque les exports PDF + CSV.",
+          "Une fois votre historique réconcilié, passez au plan adapté à votre volume (Lite 39 €/an jusqu'à 50 transactions, Starter 99 €/an jusqu'à 1 000) pour générer les documents fiscaux. Le paiement débloque les exports PDF + CSV.",
       },
       {
         title: "5. Téléversement sur impots.gouv.fr",
         description:
-          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copies les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Ne télécharge pas le PDF Waltio en pièce jointe (le fisc veut les valeurs, pas le PDF).",
+          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copiez les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Ne téléversez pas le PDF Waltio en pièce jointe (le fisc veut les valeurs, pas le PDF).",
       },
     ],
     faq: [
       {
         question: "Waltio est-il un substitut à un expert-comptable ?",
         answer:
-          "Non. Waltio est un outil de préparation à la déclaration. Pour des cas complexes (BIC professionnel, sociétés, succession crypto, donations), un expert-comptable spécialisé crypto reste nécessaire. Waltio te fait gagner du temps de saisie ; un expert-comptable te conseille sur la stratégie fiscale.",
+          "Non. Waltio est un outil de préparation à la déclaration. Pour des cas complexes (BIC professionnel, sociétés, succession crypto, donations), un expert-comptable spécialisé crypto reste nécessaire. Waltio vous fait gagner du temps de saisie ; un expert-comptable vous conseille sur la stratégie fiscale.",
       },
       {
         question: "Que se passe-t-il si Bercy change la doctrine fiscale ?",
@@ -598,7 +598,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Est-ce que Waltio gère le staking, les airdrops, les NFT ?",
         answer:
-          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon votre profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifie la doctrine à jour ou consulte un professionnel.",
+          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon votre profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifiez la doctrine à jour ou consultez un professionnel.",
       },
       {
         question: "Combien de temps pour finir ma déclaration avec Waltio ?",
@@ -620,12 +620,12 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Gagne 12 à 14 heures de saisie chaque mai",
         description:
-          "Sans Waltio : 14h de Excel multi-onglets pour calculer vos plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de votre temps facturé, c'est 360 €+ de valeur récupérée pour 199 €/an.",
+          "Sans Waltio : 14h de Excel multi-onglets pour calculer vos plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de votre temps facturé, c'est 360 €+ de valeur récupérée pour 99 €/an.",
       },
       {
         reason: "Support FR sous 24h en période fiscale (avril-juin)",
         description:
-          "Vous avez un cas tordu (airdrop, swap DeFi, fork) ? Vous écrivez au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne te donne ça en français.",
+          "Vous avez un cas tordu (airdrop, swap DeFi, fork) ? Vous écrivez au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne vous donne ça en français.",
       },
     ],
     socialProof: [

@@ -152,8 +152,9 @@ export function drawPack(day: number, ps: Pity, fam: string | null, rnd: Rnd = c
     out[lo] = { ...baseItem(t, day, fam, rnd), pity: t };
   };
   const b = best();
-  if (!ps.gotUR && ps.opened === RULES.onboard.UR && b < RNK("UR")) force("UR");
-  else if (!ps.gotSR && ps.opened === RULES.onboard.SR && b < RNK("SR")) force("SR");
+  /* « premier frisson » : aussi pour un joueur déjà au-delà du seuil sans UR (>=, Kev 02/10, option C) */
+  if (!ps.gotUR && ps.opened >= RULES.onboard.UR && b < RNK("UR")) force("UR");
+  else if (!ps.gotSR && ps.opened >= RULES.onboard.SR && b < RNK("SR")) force("SR");
   else if (ps.UR + 1 >= RULES.pity.UR && b < RNK("UR")) force("UR");
   else if (ps.SR + 1 >= RULES.pity.SR && b < RNK("SR")) force("SR");
   else if (ps.R + 1 >= RULES.pity.R && b < RNK("R")) force("R");

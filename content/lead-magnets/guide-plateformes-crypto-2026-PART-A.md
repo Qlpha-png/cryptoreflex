@@ -1,22 +1,24 @@
 ---
-title: "Les 11 plateformes crypto à utiliser en France 2026"
+title: "Les 9 plateformes crypto à utiliser en France 2026"
 subtitle: "Étude indépendante — méthodologie publique, 6 critères pondérés, zéro bonus marketing gonflé"
 author: "Cryptoreflex"
 date: "2026-04-26"
-version: "1.0"
+version: "1.1"
 pages: 50
-disclaimer: "Étude éditoriale Cryptoreflex. Cryptoreflex perçoit une commission d'affiliation lorsqu'un lecteur ouvre un compte via certains liens du site (signalés \"sponsorisé\"). La méthodologie de scoring publique (cf. /methodologie) est appliquée de façon identique à toutes les plateformes — affiliées ou non. Les données chiffrées sont indicatives au 26 avril 2026 et peuvent évoluer (bonus, frais, statut MiCA). Document à valeur informative, ne constitue pas un conseil en investissement personnalisé."
+disclaimer: "Étude éditoriale Cryptoreflex. Cryptoreflex perçoit une commission d'affiliation lorsqu'un lecteur ouvre un compte via certains liens du site (signalés \"sponsorisé\"). La méthodologie de scoring publique (cf. /methodologie) est appliquée de façon identique à toutes les plateformes — affiliées ou non. Les données chiffrées sont indicatives au 26 avril 2026 et peuvent évoluer (bonus, frais, statut MiCA). Statuts réglementaires mis à jour le 2 octobre 2026 d'après le registre MiCA de l'ESMA (données au 29/09/2026) et la liste blanche de l'AMF. Document à valeur informative, ne constitue pas un conseil en investissement personnalisé."
 ---
 
-# Les 11 plateformes crypto à utiliser en France 2026
+# Les 9 plateformes crypto à utiliser en France 2026
 
-> Étude indépendante par Cryptoreflex — choisis ta plateforme avec une méthodologie publique, 6 critères pondérés, et la transparence totale sur les conflits d'intérêts.
+> Étude indépendante par Cryptoreflex — choisissez votre plateforme avec une méthodologie publique, 6 critères pondérés, et la transparence totale sur les conflits d'intérêts.
+
+> **Mise à jour du 2 octobre 2026 (v1.1)** — Depuis le 1er juillet 2026, fin de la période transitoire MiCA en France, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut servir les résidents français. Binance, qui a cessé ses services sur crypto-actifs en France le 1er juillet 2026, et Bitget, absente du registre MiCA de l'ESMA, figuraient dans la première édition de ce guide : elles en ont été retirées. Les statuts des autres plateformes ont été alignés sur le registre de l'ESMA (données au 29 septembre 2026) et la liste blanche de l'AMF ; les anciens numéros d'enregistrement PSAN, qui ne valent plus autorisation, ont été supprimés. Les autres données (frais, notes, catalogues) restent celles du 26 avril 2026.
 
 ---
 
 ## Avertissement YMYL et conflits d'intérêts
 
-Ce document entre dans la catégorie YMYL (Your Money Your Life) au sens des guidelines de qualité éditoriale : il traite de décisions financières susceptibles d'avoir un impact réel sur ton patrimoine. Il est produit à titre informatif et éducatif par Cryptoreflex (cryptoreflex.fr) et ne constitue pas un conseil en investissement personnalisé au sens de l'article L321-1 du Code monétaire et financier. Conformément à l'article 222-15 de l'AMF et à la loi du 1er juin 2023 relative à l'influence commerciale, Cryptoreflex déclare percevoir des commissions d'affiliation lorsqu'un lecteur ouvre un compte via certains liens présents sur le site — ces liens sont systématiquement signalés "sponsorisé". Cette rémunération n'influence pas les notes attribuées : la méthodologie de scoring est publique, déterministe et calculée de façon identique pour toutes les plateformes, qu'elles soient partenaires ou non. Les investissements en crypto-actifs sont risqués, volatils, et peuvent conduire à la perte totale du capital investi. Pour toute situation patrimoniale complexe, consulte un conseiller en investissements financiers (CIF) agréé AMF.
+Ce document entre dans la catégorie YMYL (Your Money Your Life) au sens des guidelines de qualité éditoriale : il traite de décisions financières susceptibles d'avoir un impact réel sur votre patrimoine. Il est produit à titre informatif et éducatif par Cryptoreflex (cryptoreflex.fr) et ne constitue pas un conseil en investissement personnalisé au sens de l'article L321-1 du Code monétaire et financier. Conformément à l'article 222-15 de l'AMF et à la loi du 1er juin 2023 relative à l'influence commerciale, Cryptoreflex déclare percevoir des commissions d'affiliation lorsqu'un lecteur ouvre un compte via certains liens présents sur le site — ces liens sont systématiquement signalés "sponsorisé". Cette rémunération n'influence pas les notes attribuées : la méthodologie de scoring est publique, déterministe et calculée de façon identique pour toutes les plateformes, qu'elles soient partenaires ou non. Les investissements en crypto-actifs sont risqués, volatils, et peuvent conduire à la perte totale du capital investi. Pour toute situation patrimoniale complexe, consultez un conseiller en investissements financiers (CIF) agréé AMF.
 
 ---
 
@@ -24,14 +26,15 @@ Ce document entre dans la catégorie YMYL (Your Money Your Life) au sens des gui
 
 1. [Pourquoi cette étude maintenant](#chapitre-1)
 2. [Notre méthodologie de scoring](#chapitre-2)
-3. [Tableau récapitulatif des 11 plateformes](#chapitre-3)
-4. [Les 11 fiches plateformes — partie 1 (fiches 1 à 6)](#chapitre-4)
-5. [Les 11 fiches plateformes — partie 2 (fiches 7 à 11)](#chapitre-5)
-6. [Comparatif par profil : quelle plateforme pour qui ?](#chapitre-6)
-7. [Frais réels : simulation sur 10 cas concrets](#chapitre-7)
-8. [Sécurité & MiCA : ce que ça change vraiment pour toi](#chapitre-8)
-9. [Les pièges à éviter en 2026](#chapitre-9)
-10. [FAQ — les 20 questions les plus posées](#chapitre-10)
+3. [Tableau récapitulatif des 9 plateformes](#chapitre-3)
+4. [Les 9 fiches plateformes — partie 1 (fiches 1 à 4)](#chapitre-4)
+5. [Les 9 fiches plateformes — partie 2 (fiches 5 à 9)](#chapitre-4-suite)
+6. [Tableaux comparatifs synthétiques](#chapitre-5)
+7. [Choisir votre plateforme selon votre profil](#chapitre-6)
+8. [Pièges fréquents à éviter en 2026](#chapitre-7)
+9. [MiCA : ce qui a changé le 1er juillet 2026](#chapitre-8)
+10. [Glossaire express](#chapitre-9)
+11. [Disclaimers et ressources Cryptoreflex](#chapitre-10)
 
 ---
 
@@ -41,7 +44,7 @@ Ce document entre dans la catégorie YMYL (Your Money Your Life) au sens des gui
 
 Selon l'AMF, environ 12 % des Français adultes détiennent au moins un crypto-actif en 2026. Ce chiffre, stable depuis 2024, masque une réalité plus profonde : la qualité de la détention s'est radicalement transformée. Les utilisateurs ne cherchent plus simplement à "acheter du Bitcoin" — ils cherchent à le faire dans un cadre légal, sécurisé, et avec une fiscalité maîtrisée.
 
-L'année 2026 marque l'entrée en vigueur pleine et entière du règlement MiCA (Markets in Crypto-Assets). Adopté par l'Union européenne, ce texte oblige toutes les plateformes opérant dans l'UE à obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'une autorité nationale compétente avant le 1er juillet 2026. Les plateformes qui ne satisfont pas à cette exigence doivent cesser toute activité en Europe. En pratique, on estime que 60 % des exchanges actifs mondialement ne remplissent pas les critères MiCA et ne sont plus accessibles aux résidents de l'UE après cette date. Choisir une plateforme conforme MiCA n'est donc plus un détail optionnel : c'est une condition pratique pour rester accessible à ton compte demain.
+L'année 2026 marque l'application pleine et entière du règlement MiCA (Markets in Crypto-Assets) en France. Adopté par l'Union européenne, ce texte impose aux prestataires de services sur crypto-actifs d'obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'une autorité nationale compétente. La période transitoire française a pris fin le 1er juillet 2026 : depuis cette date, seul un prestataire agréé MiCA — par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France — peut servir les résidents français, et un ancien numéro PSAN ne vaut plus autorisation. Binance a ainsi cessé ses services sur crypto-actifs en France le 1er juillet 2026. Choisir une plateforme agréée MiCA n'est donc plus un détail optionnel : c'est la condition pour être servi légalement.
 
 Le second facteur de rupture est fiscal. La directive DAC8 est entrée en application en 2026 : les plateformes crypto européennes transmettent désormais automatiquement à la DGFiP (Direction générale des Finances publiques) les données de transactions de leurs utilisateurs résidents fiscaux français. La déclaration "oubliée" n'est plus une stratégie viable. Les contrôles fiscaux sur les plus-values crypto vont mécaniquement augmenter dans les deux à trois prochaines années. Choisir une plateforme sérieuse — qui produit des relevés annuels clairs et compatibles avec les outils de déclaration comme Waltio ou Koinly — est devenu une décision patrimoniale à part entière.
 
@@ -49,13 +52,13 @@ Le second facteur de rupture est fiscal. La directive DAC8 est entrée en applic
 
 Avant MiCA, le choix d'une plateforme crypto se résumait souvent à deux critères : les frais et le catalogue de cryptos disponibles. En 2026, la grille de lecture est beaucoup plus riche. Voici pourquoi chaque critère de cette étude compte vraiment :
 
-La **conformité MiCA et le statut PSAN AMF** déterminent si tu peux continuer à utiliser une plateforme dans les prochains mois. Une plateforme dont l'agrément est en cours ou limité à une juridiction secondaire peut fermer l'accès aux résidents français sans préavis suffisant. Cela implique des risques de blocage de fonds pendant la procédure de fermeture — un scénario que plusieurs utilisateurs ont vécu avec des exchanges hors MiCA en 2025.
+La **conformité MiCA** détermine si une plateforme peut légalement vous servir. Depuis le 1er juillet 2026, une plateforme absente du registre MiCA de l'ESMA, ou agréée sans passeport vers la France, n'est pas autorisée à fournir ses services aux résidents français : c'est le cas de Binance, qui a cessé ses services en France à cette date, ou de Bitget, absente du registre. Une fermeture d'accès oblige à rapatrier ses fonds, avec les risques opérationnels que cela comporte.
 
 La **sécurité** va bien au-delà du "la plateforme a-t-elle déjà été hackée". Elle couvre la part de fonds conservés en cold storage (hors ligne, inaccessibles à distance), l'existence d'une assurance des fonds, le caractère obligatoire ou facultatif de la double authentification, et la qualité des audits de sécurité tiers. Le hack de Bybit en février 2025 (1,4 milliard de dollars détournés, fonds clients finalement couverts) a rappelé que même les grandes plateformes ne sont pas invulnérables.
 
-Les **frais réels** ne se lisent pas dans une grille tarifaire standard. Un "frais maker 0,1 %" n'a de sens que si tu comprends ce qu'il ne comprend pas : le spread implicite sur les ordres au marché, les frais de retrait crypto variables selon le réseau, les frais de conversion fiat-crypto sur les plateformes broker. Cette étude calcule un coût total simulé sur une transaction type de 1 000 € pour chaque plateforme.
+Les **frais réels** ne se lisent pas dans une grille tarifaire standard. Un "frais maker 0,1 %" n'a de sens que si vous comprenez ce qu'il ne comprend pas : le spread implicite sur les ordres au marché, les frais de retrait crypto variables selon le réseau, les frais de conversion fiat-crypto sur les plateformes broker. Cette étude calcule un coût total simulé sur une transaction type de 1 000 € pour chaque plateforme.
 
-Les **notes Trustpilot et App Store** méritent une lecture critique. Une note Trustpilot de 1,6/5 pour Coinbase (pourtant la plateforme la plus régulée du monde) indique davantage un biais de sélection (les clients mécontents notent, les satisfaits moins) qu'une réalité opérationnelle catastrophique. On te donne les chiffres bruts et le contexte.
+Les **notes Trustpilot et App Store** méritent une lecture critique. Une note Trustpilot de 1,6/5 pour Coinbase (pourtant la plateforme la plus régulée du monde) indique davantage un biais de sélection (les clients mécontents notent, les satisfaits moins) qu'une réalité opérationnelle catastrophique. Nous vous donnons les chiffres bruts et le contexte.
 
 ### Pourquoi cette étude est différente
 
@@ -67,9 +70,9 @@ Notre approche est différente sur trois points concrets. D'abord, la formule de
 
 ### Comment lire ce document
 
-Ce guide est structuré pour être lu dans l'ordre ou consulté de façon ciblée. Si tu découvres le sujet, commence par le Chapitre 2 (méthodologie) pour comprendre comment les notes sont construites, puis consulte le Chapitre 3 (tableau récapitulatif) pour une vue d'ensemble rapide. Les Chapitres 4 et 5 contiennent les fiches détaillées des 11 plateformes, à lire selon tes besoins : inutile de tout parcourir si tu sais déjà que tu cherches un broker simple pour faire du DCA. Le Chapitre 6 synthétise les recommandations par profil. Les Chapitres 7 à 10 sont des ressources complémentaires : simulations de frais, décryptage des enjeux sécurité/MiCA, pièges courants, et FAQ.
+Ce guide est structuré pour être lu dans l'ordre ou consulté de façon ciblée. Si vous découvrez le sujet, commencez par le Chapitre 2 (méthodologie) pour comprendre comment les notes sont construites, puis consultez le Chapitre 3 (tableau récapitulatif) pour une vue d'ensemble rapide. Le Chapitre 4 contient les fiches détaillées des 9 plateformes, à lire selon vos besoins : inutile de tout parcourir si vous savez déjà que vous cherchez un broker simple pour faire du DCA. Le Chapitre 5 rassemble les tableaux comparatifs et le Chapitre 6 synthétise les recommandations par profil. Les Chapitres 7 à 10 sont des ressources complémentaires : pièges courants, décryptage de MiCA, glossaire et ressources.
 
-Une note sur les données : toutes les valeurs chiffrées de ce document sont issues de notre base de données, notre base de données interne mise à jour au 26 avril 2026. Aucun chiffre n'est inventé. Les frais et bonus peuvent évoluer après cette date — consulte les fiches en ligne sur cryptoreflex.fr pour les valeurs à jour.
+Une note sur les données : toutes les valeurs chiffrées de ce document (frais, notes, catalogues) sont issues de notre base de données interne mise à jour au 26 avril 2026 ; les statuts réglementaires ont été mis à jour le 2 octobre 2026. Les frais et bonus peuvent évoluer — consultez les fiches en ligne sur cryptoreflex.fr pour les valeurs à jour.
 
 ---
 
@@ -88,7 +91,7 @@ Le score global de chaque plateforme est une moyenne pondérée de 6 critères, 
 | Support en français | 10 % | Disponibilité chat FR, support téléphonique FR, temps de réponse moyen, qualité documentaire FR. |
 | Catalogue & services | 10 % | Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels. |
 
-La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les conséquences en cas de défaillance sont les plus irréparables. Un mauvais support client est récupérable — un hack qui entraîne la perte des fonds, non. Les frais (20 %) et la conformité réglementaire (20 %) sont co-deuxièmes, parce qu'en 2026 ces deux critères ont un impact direct sur l'accessibilité à long terme de ton compte. L'UX (15 %) compte davantage que le support (10 %) car elle détermine si tu utilises réellement la plateforme ou si tu la laisses de côté après la première friction. Le catalogue (10 %) ferme le classement : c'est utile, mais 90 % des investisseurs particuliers n'ont besoin que de 10 à 20 cryptos.
+La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les conséquences en cas de défaillance sont les plus irréparables. Un mauvais support client est récupérable — un hack qui entraîne la perte des fonds, non. Les frais (20 %) et la conformité réglementaire (20 %) sont co-deuxièmes, parce qu'en 2026 ces deux critères ont un impact direct sur l'accessibilité à long terme de votre compte. L'UX (15 %) compte davantage que le support (10 %) car elle détermine si vous utilisez réellement la plateforme ou si vous la laissez de côté après la première friction. Le catalogue (10 %) ferme le classement : c'est utile, mais 90 % des investisseurs particuliers n'ont besoin que de 10 à 20 cryptos.
 
 ### 2.2 Comment on calcule chaque sous-note
 
@@ -96,7 +99,7 @@ La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les 
 
 **Sécurité (25 %)** : quatre dimensions sont évaluées. Le pourcentage de fonds en cold storage (hors ligne) — plus c'est élevé, mieux c'est. L'existence d'une assurance des fonds clients. Le caractère obligatoire ou seulement recommandé du MFA (authentification à deux facteurs). Et l'historique d'incidents : chaque hack significatif non remboursé dans les 12 mois est pénalisé lourdement. Un hack ancien entièrement remboursé est noté moins sévèrement.
 
-**Conformité MiCA / PSAN (20 %)** : on vérifie le statut PSAN sur le registre AMF (accessible publiquement), l'existence d'un agrément MiCA de type CASP, la juridiction de l'agrément (un agrément français ou allemand vaut plus qu'un agrément lituanien, non par xénophobie réglementaire mais parce que les délais de supervision et la solidité des fonds propres exigés diffèrent), et l'ancienneté du statut (une plateforme enregistrée depuis 2020 a un track record réglementaire plus solide qu'une enregistrée en 2025).
+**Conformité MiCA / PSAN (20 %)** : on vérifie le statut PSAN sur le registre AMF (accessible publiquement), l'existence d'un agrément MiCA de type CASP, la juridiction de l'agrément (un agrément français ou allemand vaut plus qu'un agrément lituanien, non par xénophobie réglementaire mais parce que les délais de supervision et la solidité des fonds propres exigés diffèrent), et l'ancienneté du statut (une plateforme enregistrée depuis 2020 a un track record réglementaire plus solide qu'une enregistrée en 2025). Ces sous-notes ont été attribuées en avril 2026. Depuis le 1er juillet 2026, l'ancien statut PSAN ne vaut plus autorisation : le critère éliminatoire est désormais l'agrément MiCA avec un accès à la France, vérifié sur le registre de l'ESMA et la liste blanche de l'AMF.
 
 **Expérience utilisateur (15 %)** : on agrège trois sources. Les notes externes (Trustpilot, App Store, Play Store) avec leur volume d'avis comme facteur de fiabilité. Un test pratique du parcours d'achat (onboarding KYC, premier dépôt, premier achat). Une évaluation de l'ergonomie générale. On ne pénalise pas une interface "complexe" si elle est justifiée pour un public expert — on pénalise une interface complexe sur une plateforme qui se positionne pour débutants.
 
@@ -127,12 +130,13 @@ Le critère catalogue est le seul critère entièrement dérivé de façon algor
 
 Ce barème est intentionnellement simple et transparent. La courbe sur le nombre de cryptos est concave : les premières 100 cryptos comptent beaucoup (elles couvrent 99 % des besoins du marché retail), les suivantes de moins en moins. Avoir 800 cryptos au lieu de 400 ne vaut que 0,2 point supplémentaire. Les bonus staking et multi-actifs récompensent des services à valeur ajoutée réelle pour l'investisseur particulier.
 
-Exemple de calcul pour Binance (380 cryptos, staking oui, 5 méthodes de paiement, pas broker multi-actifs) :
+Exemple de calcul pour Bitpanda (480 cryptos, staking oui, 7 méthodes de paiement, broker multi-actifs) :
 
-- Base pour 380 cryptos : 4,3 + ((380 - 300) / 200) × 0,4 = 4,3 + 0,16 = 4,46
-- +0,3 (staking) = 4,76
-- +0,2 (5 méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay) = 4,96
-- Arrondi à 5,0 (cap)
+- Base pour 480 cryptos : 4,3 + ((480 - 300) / 200) × 0,4 = 4,3 + 0,36 = 4,66
+- +0,3 (staking) = 4,96
+- +0,2 (7 méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay, Skrill, Neteller) = 5,16
+- +0,3 (broker multi-actifs) = 5,46
+- Plafonné à 5,0 (cap)
 
 Résultat : 5,0 — ce qui correspond bien à la valeur dans notre base de données.
 
@@ -162,13 +166,13 @@ La note globale est mécaniquement dérivée des six sous-notes via un calcul pu
 
 Nous avons construit ce système pour une raison simple : un comparateur qui gonfle les notes de ses partenaires perd sa valeur informative. Un lecteur trompé une fois ne revient pas. Et en matière financière, une mauvaise recommandation peut causer un préjudice réel. Le modèle qui nous semble durable à long terme — et le seul compatible avec les exigences E-E-A-T de Google et les obligations légales françaises — c'est celui où la note est honnête et vérifiable, indépendamment de la relation commerciale.
 
-Pour être transparent sur ce qui n'est pas encore parfait : nous lançons ce site en avril 2026 et notre base de données couvre 11 plateformes. Nous n'avons pas encore testé toutes les situations edge (retrait crypto vers wallet hardware, support lors d'un blocage KYC, délais de virement SEPA dans les pays secondaires). Les notes seront affinées au fil des mises à jour trimestrielles et des retours lecteurs. Si tu repères une erreur, écris-nous.
+Pour être transparent sur ce qui n'est pas encore parfait : nous avons lancé ce site en avril 2026 et notre base de données couvrait alors 11 plateformes ; Binance et Bitget ont été retirées de cette édition (v1.1), faute d'autorisation en France. Nous n'avons pas encore testé toutes les situations edge (retrait crypto vers wallet hardware, support lors d'un blocage KYC, délais de virement SEPA dans les pays secondaires). Les notes seront affinées au fil des mises à jour trimestrielles et des retours lecteurs. Si vous repérez une erreur, écrivez-nous.
 
 ### 2.6 Fréquence de mise à jour
 
 Les données de cette étude ont une date de péremption différente selon les critères :
 
-- **Statut MiCA / PSAN** : vérifié chaque mois sur le registre AMF et les publications ESMA. En 2026, ce critère est particulièrement volatile car de nouvelles plateformes finalisent leurs agréments et certaines peuvent perdre leur statut.
+- **Statut MiCA** : vérifié sur le registre MiCA de l'ESMA et la liste blanche de l'AMF (dernière vérification : 2 octobre 2026, données ESMA au 29 septembre 2026). Depuis la fin de la période transitoire, le 1er juillet 2026, l'ancien statut PSAN ne vaut plus autorisation.
 - **Frais** : vérifiés chaque trimestre. Les grilles tarifaires changent moins souvent mais les spreads implicites et les frais de réseau varient.
 - **Notes Trustpilot, App Store, Play Store** : actualisées chaque mois.
 - **Bonus de bienvenue** : vérifiés chaque mois — mais conformément à notre politique éditoriale (et à la loi sur les influenceurs), nous n'affichons aucun montant chiffré de bonus. Le wording standard est "Bonus actuel — voir conditions sur la plateforme". Les montants et conditions variant chaque semaine, afficher "100 €" serait soit inexact soit trompeur.
@@ -178,9 +182,9 @@ La date de dernière mise à jour est toujours visible en haut de chaque fiche s
 
 ---
 
-## Chapitre 3 — Tableau récapitulatif des 11 plateformes {#chapitre-3}
+## Chapitre 3 — Tableau récapitulatif des 9 plateformes {#chapitre-3}
 
-Le tableau ci-dessous est trié par score global décroissant. Toutes les notes sont issues du calcul au 26 avril 2026 .
+Le tableau ci-dessous est trié par score global décroissant. Toutes les notes sont issues du calcul au 26 avril 2026.
 
 | Rang | Plateforme | Catégorie | Global /5 | Forces | Faiblesses | Idéal pour |
 |---:|---|---|---:|---|---|---|
@@ -189,20 +193,20 @@ Le tableau ci-dessous est trié par score global décroissant. Toutes les notes 
 | 2 | Bitpanda | Broker | 4,4 | MiCA, multi-actifs | Spread élevé, pas de levier | Long terme européen |
 | 2 | SwissBorg | Broker | 4,4 | Best execution, yield | Token BORG requis, dépôt 50 € min | Yield intermédiaire |
 | 5 | Trade Republic | Broker | 4,3 | UX mobile, plans épargne | Catalogue limité, pas retrait crypto | Débutant tout-en-un |
-| 6 | Binance | Exchange | 4,2 | Frais bas, catalogue max | Historique réglementaire, débutants | Traders catalogue large |
-| 6 | Bybit | Exchange | 4,2 | Frais dérivés, profondeur | Hack 2025, MiCA récent | Traders dérivés avancés |
-| 8 | Bitget | Exchange | 4,1 | Copy trading, altcoins | MiCA Lituanie, pas AMF direct | Copy trading, altcoins |
-| 8 | Bitstack | Broker | 4,1 | DCA auto, UX simple | Catalogue très limité, pas trading | DCA Bitcoin débutant |
-| 10 | Coinhouse | Broker | 4,0 | 100 % français, support humain | Frais très élevés, catalogue limité | Accompagnement humain |
-| 10 | Revolut | Broker | 4,0 | Intégration néobanque, UX | Frais app classique, retraits limités | Clients Revolut existants |
+| 6 | Bybit | Exchange | 4,2 | Frais dérivés, profondeur | Hack 2025, note MiCA la plus basse | Traders dérivés avancés |
+| 7 | Bitstack | Broker | 4,1 | DCA auto, UX simple | Catalogue très limité, pas trading | DCA Bitcoin débutant |
+| 8 | Coinhouse | Broker | 4,0 | 100 % français, support humain | Frais très élevés, catalogue limité | Accompagnement humain |
+| 8 | Revolut | Broker | 4,0 | Intégration néobanque, UX | Frais app classique, retraits limités | Clients Revolut existants |
 
-**Comment lire ce ranking.** Le score global est un point d'entrée, pas une conclusion. Kraken à 4,5/5 est objectivement le score le plus élevé du panel — mais Kraken n'est pas la bonne plateforme pour quelqu'un qui découvre la crypto et veut acheter 50 € de Bitcoin par mois. Pour ce profil, Bitstack (4,1/5) ou Trade Republic (4,3/5) sont des choix plus adaptés. Inversement, Binance à 4,2/5 déçoit sur la conformité MiCA (3,8/5) et sur le support (3,5/5) — mais si tu es un trader actif et que tu sais ce que tu fais, ses frais spot à 0,1 % et ses 380 cryptos disponibles en font un outil de travail imbattable.
+Binance et Bitget, classées dans la première édition de ce guide, ont été retirées du classement : elles ne sont pas autorisées à servir les résidents français (voir le Chapitre 8).
 
-Lis les fiches détaillées des plateformes qui correspondent à ton profil. Le Chapitre 6 te propose une grille de lecture par cas d'usage.
+**Comment lire ce ranking.** Le score global est un point d'entrée, pas une conclusion. Kraken à 4,5/5 est objectivement le score le plus élevé du panel — mais Kraken n'est pas la bonne plateforme pour quelqu'un qui découvre la crypto et veut acheter 50 € de Bitcoin par mois. Pour ce profil, Bitstack (4,1/5) ou Trade Republic (4,3/5) sont des choix plus adaptés. Inversement, Bybit à 4,2/5 a la note MiCA la plus basse du panel (3,6/5) et une interface très technique — mais pour un trader actif qui sait ce qu'il fait, ses frais spot à 0,1 % et ses 700 cryptos disponibles en font un outil de travail efficace.
+
+Lisez les fiches détaillées des plateformes qui correspondent à votre profil. Le Chapitre 6 vous propose une grille de lecture par cas d'usage.
 
 ---
 
-## Chapitre 4 — Les 11 fiches plateformes (1/2 — fiches 1 à 6) {#chapitre-4}
+## Chapitre 4 — Les 9 fiches plateformes (1/2 — fiches 1 à 4) {#chapitre-4}
 
 ---
 
@@ -225,7 +229,7 @@ Lis les fiches détaillées des plateformes qui correspondent à ton profil. Le 
 | **Global** | **4,4 / 5** | 100 % | **4,37 → arrondi 4,4** |
 
 **Statut MiCA :**
-Coinbase détient un agrément MiCA de type CASP. Enregistrement AMF : E2023-035, date d'enregistrement PSAN : 19 septembre 2023. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. La plateforme est cotée au NASDAQ (ticker COIN), ce qui impose des obligations de transparence financière trimestrielles supplémentaires — un facteur de confiance que peu de concurrents peuvent revendiquer.
+Coinbase est agréée MiCA par la CSSF (Luxembourg), avec un passeport vers la France (registre MiCA de l'ESMA, données au 29 septembre 2026). La plateforme est cotée au NASDAQ (ticker COIN), ce qui impose des obligations de transparence financière trimestrielles supplémentaires — un facteur de confiance que peu de concurrents peuvent revendiquer.
 
 **Frais réels :**
 - Maker spot : 0,40 %
@@ -246,7 +250,7 @@ Coinbase détient un agrément MiCA de type CASP. Enregistrement AMF : E2023-035
 - Cold storage : 98 % des fonds clients
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : mai 2024 — data breach via un prestataire de support tiers. Des données personnelles de certains clients ont été exposées. Coinbase a confirmé l'incident, proposé une compensation aux clients affectés et renforcé ses procédures de vérification des sous-traitants. Aucune perte de fonds crypto.
+- Dernier incident significatif : mai 2025 — data breach via un prestataire de support tiers. Des données personnelles de certains clients ont été exposées. Coinbase a confirmé l'incident, proposé une compensation aux clients affectés et renforcé ses procédures de vérification des sous-traitants. Aucune perte de fonds crypto.
 
 **Support FR :**
 - Chat FR : oui
@@ -262,89 +266,26 @@ La dissonance entre le Trustpilot (1,6/5) et les stores mobiles (4,6-4,7/5) mér
 
 **Forces :**
 - Cotée NASDAQ (COIN) : transparence financière trimestrielle, obligations légales US + UE cumulées
-- Agrément MiCA CASP complet + PSAN AMF depuis 2023
+- Agrément MiCA (CSSF, Luxembourg) avec passeport vers la France
 - Coinbase Earn : apprentissage rémunéré en crypto, parcours pédagogique efficace pour débutants
 
 **Faiblesses :**
 - Frais d'achat instantané à 1,49 % : parmi les plus élevés du panel pour le mode d'achat utilisé par la grande majorité des débutants
 - Trustpilot 1,6/5 : signal à surveiller même si le contexte atténue la sévérité
-- Incident de sécurité en 2024 : pas de pertes de fonds, mais exposition de données personnelles — à connaître
+- Incident de sécurité en 2025 : pas de pertes de fonds, mais exposition de données personnelles — à connaître
 
 **Verdict Cryptoreflex :**
-Coinbase est la plateforme que tu choisis quand ta priorité absolue est la sécurité réglementaire et que tu acceptes de payer un premium pour ça. Cotée en Bourse, agréée MiCA, historique sans perte de fonds clients — c'est un dossier solide. Si tu achètes 100 € de Bitcoin par mois et que tu ne regardes pas les frais à la loupe, Coinbase est un choix totalement défendable. Si tu gères des montants importants ou si tu fais du trading actif, les frais de 1,49 % sur achat instantané deviennent vite significatifs — regarde Kraken ou Binance. À éviter si tu cherches des altcoins exotiques (catalogue limité à 260 cryptos) ou des produits dérivés.
+Coinbase est la plateforme à envisager quand votre priorité absolue est la sécurité réglementaire et que vous acceptez de payer un premium pour ça. Cotée en Bourse, agréée MiCA, historique sans perte de fonds clients — c'est un dossier solide. Si vous achetez 100 € de Bitcoin par mois et que vous ne regardez pas les frais à la loupe, Coinbase est un choix totalement défendable. Si vous gérez des montants importants ou si vous faites du trading actif, les frais de 1,49 % sur achat instantané deviennent vite significatifs — regardez Kraken ou Bybit. À éviter si vous cherchez des altcoins exotiques (catalogue limité à 260 cryptos) ou des produits dérivés.
 
 Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
-### Binance — Exchange — 4,2 / 5
+### Binance — fiche retirée (non autorisée en France)
 
-**En une phrase :** Le plus grand exchange crypto au monde par volume, avec les frais spot les plus compétitifs et le catalogue le plus large — mais un historique réglementaire qui reste une ombre.
+Binance figurait dans la première édition de ce guide (avril 2026), avec un statut présenté à tort comme conforme. Elle a cessé ses services sur crypto-actifs en France le 1er juillet 2026, à la fin de la période transitoire MiCA, et ne figure pas au registre MiCA de l'ESMA : ce n'est plus une option pour un résident français. Sa fiche a été retirée et elle n'apparaît plus dans les classements de ce guide.
 
-**Idéal pour :** Traders intermédiaires et avancés cherchant frais bas, large catalogue d'altcoins et liquidité maximale sur les paires majeures.
-
-**Sous-notes :**
-
-| Critère | Note | Pondération | Contribution |
-|---|---:|---:|---:|
-| Frais | 4,7 / 5 | 20 % | 0,94 |
-| Sécurité | 4,0 / 5 | 25 % | 1,00 |
-| MiCA | 3,8 / 5 | 20 % | 0,76 |
-| UX | 4,3 / 5 | 15 % | 0,645 |
-| Support FR | 3,5 / 5 | 10 % | 0,35 |
-| Catalogue | 5,0 / 5 | 10 % | 0,50 |
-| **Global** | **4,2 / 5** | 100 % | **4,195 → arrondi 4,2** |
-
-**Statut MiCA :**
-Binance opère en France via Binance France, qui détient un agrément MiCA de type CASP. Enregistrement AMF : E2022-037, date d'enregistrement PSAN : 4 mai 2022. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. Le score MiCA de 3,8/5 — inférieur à Coinbase ou Kraken — reflète le parcours réglementaire chahuté de l'entité mère (sanctions SEC aux États-Unis en 2023, accord DOJ, restrictions dans plusieurs pays hors UE). L'entité française est conforme, mais le contexte groupe pèse sur la note.
-
-**Frais réels :**
-- Maker spot : 0,10 %
-- Taker spot : 0,10 %
-- Achat instantané : 1,80 %
-- Retrait fiat SEPA : 0 €
-- Retrait crypto : variable selon réseau
-- Spread typique : 0,1 à 0,5 %
-- **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,80 % à l'achat (18 €) + 0,10 % à la vente (0,90 € sur 1 000 € nets) + spread 0,3 % estimé = environ **20 à 22 € pour un aller-retour de 1 000 €** en mode instantané. En trading spot avec ordre limite (mode maker), le coût descend à environ 3 € pour un aller-retour — l'un des plus bas du marché.
-
-**Catalogue & services :**
-- 380 cryptos listées 
-- Staking disponible : oui — ETH, SOL, ADA, DOT, BNB, MATIC, AVAX
-- Méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay (5 méthodes)
-- Services additionnels : Binance Futures (dérivés perpétuels), Binance Earn (staking, lending, liquidity pools), Binance Card (carte Visa crypto), Launchpad (nouvelles cryptos en avant-première), NFT marketplace
-
-**Sécurité :**
-- Cold storage : 95 % des fonds clients
-- Assurance des fonds : oui — fonds SAFU (Secure Asset Fund for Users), fonds de réserve constitué depuis 2018
-- MFA obligatoire : oui
-- Dernier incident significatif : aucun hack majeur depuis la création du fonds SAFU en 2019. L'incident de 2018 (hack de 7 000 BTC) avait été intégralement remboursé via le fonds SAFU — c'est précisément pour ça que ce fonds a été créé.
-
-**Support FR :**
-- Chat FR : oui
-- Téléphone FR : non
-- Temps de réponse moyen : inférieur à 48 h
-
-**Notes externes :**
-- Trustpilot : 2,5 / 5 (152 000 avis)
-- App Store : 4,5 / 5
-- Play Store : 4,4 / 5
-
-Le Trustpilot de Binance (2,5/5 sur 152 000 avis) est difficile à ignorer par son volume. La majorité des plaintes portent sur des blocages de compte lors de contrôles KYC renforcés et des délais de retrait fiat. L'App Store (4,5/5) et Play Store (4,4/5) reflètent une expérience de trading quotidienne appréciée par sa rapidité et sa fonctionnalité.
-
-**Forces :**
-- Frais spot maker/taker à 0,10 % : parmi les plus bas du marché, sans condition de volume minimal
-- 380 cryptos disponibles : le plus large catalogue du panel parmi les plateformes accessibles en France
-- Liquidité inégalée sur les paires majeures (BTC, ETH, BNB) : spreads réels parmi les plus faibles
-
-**Faiblesses :**
-- Historique réglementaire de l'entité groupe (SEC, DOJ, 2023-2024) : facteur de risque de réputation à connaître, même si l'entité française est conforme
-- Interface principale intimidante pour les débutants : le mode Simple existe mais la profusion d'onglets déroute
-- Support client lent (moins de 48 h, pas de téléphone FR) : problématique en cas de blocage urgent
-
-**Verdict Cryptoreflex :**
-Binance est l'outil de travail des traders actifs. Si tu passes des ordres plusieurs fois par semaine sur des paires spot, que tu veux accéder à des altcoins mid-cap que les brokers européens ne listent pas, ou que tu fais du staking sur BNB, Binance est difficile à battre sur les frais et la profondeur de marché. Pour un investisseur long terme qui achète en DCA tous les mois, l'avantage de frais spot à 0,1 % est moins décisif que tu ne le crois : c'est le spread et les frais d'achat instantané (1,8 %) qui comptent pour toi. À éviter si tu recherches la garantie réglementaire maximale dans l'UE, ou si l'interface complexe te décourage.
-
-Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
+Si vous y déteniez un compte, il reste à déclarer sur le formulaire 3916-bis pour chaque année où il était ouvert, même s'il a été fermé en cours d'année (amende de 750 € par compte non déclaré, 1 500 € si la valeur du compte dépasse 50 000 €).
 
 ---
 
@@ -367,7 +308,7 @@ Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 | **Global** | **4,4 / 5** | 100 % | **4,365 → arrondi 4,4** |
 
 **Statut MiCA :**
-Bitpanda détient un agrément MiCA CASP via l'Allemagne (BaFin) et la France. Enregistrement AMF : E2023-058, date d'enregistrement PSAN : 8 décembre 2023. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. Avec un score MiCA de 4,9/5 — le plus élevé du panel — Bitpanda est la plateforme qui présente le profil réglementaire le plus solide en Europe. L'agrément BaFin allemand, parmi les plus exigeants de l'UE, et la double présence en France et en Allemagne constituent un atout structurel.
+Bitpanda est agréée MiCA par la FMA (Autriche), avec un passeport vers la France (registre MiCA de l'ESMA, données au 29 septembre 2026). Avec un score MiCA de 4,9/5 — le plus élevé du panel — Bitpanda présente l'un des profils réglementaires les plus solides en Europe, renforcé par son cadre MiFID II pour les actions et les ETF.
 
 **Frais réels :**
 - Maker spot : 0,15 %
@@ -403,17 +344,17 @@ Bitpanda détient un agrément MiCA CASP via l'Allemagne (BaFin) et la France. E
 Bitpanda est l'une des rares grandes plateformes crypto à maintenir un Trustpilot au-dessus de 4/5 sur un volume significatif d'avis (47 000). C'est un signal fort de satisfaction client cohérente, pas uniquement d'une base d'avis restreinte facile à maintenir positive.
 
 **Forces :**
-- Régulation européenne complète : MiCA CASP (BaFin + AMF) + MiFID II pour les actions/ETF — double agrément unique dans le panel
+- Régulation européenne complète : agrément MiCA (FMA, Autriche) + MiFID II pour les actions/ETF — double agrément unique dans le panel
 - Plans d'épargne automatiques : DCA programmable sur crypto, actions, ETF, métaux depuis 1 €
 - 99 % des fonds en cold storage : le meilleur ratio de conservation hors ligne du panel
 
 **Faiblesses :**
-- Spread 1 à 2 % : coût réel plus élevé qu'il n'y paraît sur les frais affichés — à intégrer dans ton calcul de rentabilité
+- Spread 1 à 2 % : coût réel plus élevé qu'il n'y paraît sur les frais affichés — à intégrer dans votre calcul de rentabilité
 - Pas de trading avancé, pas de dérivés, pas de levier — plateforme exclusivement orientée investissement long terme
 - Pas de numéro de téléphone FR pour le support urgent
 
 **Verdict Cryptoreflex :**
-Bitpanda est le choix cohérent pour un investisseur européen qui pense en années, pas en semaines. La combinaison crypto + actions + ETF + or dans une seule app régulée MiCA et MiFID II est une proposition de valeur unique dans le panel. Les plans d'épargne automatiques sont parmi les mieux conçus du marché. Le seul vrai reproche est le spread de 1 à 2 % — si tu investis régulièrement des montants importants, ce coût s'accumule. Pour un DCA mensuel de 100 à 500 €, Bitpanda est un excellent compromis. Pour du trading actif ou de la recherche d'altcoins très liquides, regarde Binance ou Kraken. À éviter si tu as besoin de déplacer tes cryptos vers un wallet externe régulièrement (le spread rend ces transferts coûteux).
+Bitpanda est le choix cohérent pour un investisseur européen qui pense en années, pas en semaines. La combinaison crypto + actions + ETF + or dans une seule app régulée MiCA et MiFID II est une proposition de valeur unique dans le panel. Les plans d'épargne automatiques sont parmi les mieux conçus du marché. Le seul vrai reproche est le spread de 1 à 2 % — si vous investissez régulièrement des montants importants, ce coût s'accumule. Pour un DCA mensuel de 100 à 500 €, Bitpanda est un excellent compromis. Pour du trading actif ou de la recherche d'altcoins très liquides, regardez Kraken ou Bybit. À éviter si vous avez besoin de déplacer vos cryptos vers un wallet externe régulièrement (le spread rend ces transferts coûteux).
 
 Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
@@ -438,7 +379,7 @@ Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 | **Global** | **4,5 / 5** | 100 % | **4,485 → arrondi 4,5** |
 
 **Statut MiCA :**
-Kraken détient un agrément MiCA CASP via l'Irlande. Enregistrement AMF : E2024-012, date d'enregistrement PSAN : 21 mars 2024. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. L'enregistrement AMF date de 2024 — plus récent que Coinbase (2023) ou Coinhouse (2020) — mais Kraken opère depuis 2011 avec un bilan sécuritaire irréprochable. La juridiction irlandaise est une juridiction UE reconnue, même si elle suscite parfois des questions sur la supervision directe par l'AMF (la supervision MiCA se fait au niveau du pays d'agrément).
+Kraken est agréée MiCA par la Banque centrale d'Irlande, avec un passeport vers la France (registre MiCA de l'ESMA, données au 29 septembre 2026). Kraken opère depuis 2011 avec un bilan sécuritaire irréprochable. La juridiction irlandaise est une juridiction UE reconnue ; la supervision MiCA se fait au niveau du pays d'agrément, et non directement par l'AMF.
 
 **Frais réels :**
 - Maker spot : 0,16 %
@@ -447,13 +388,13 @@ Kraken détient un agrément MiCA CASP via l'Irlande. Enregistrement AMF : E2024
 - Retrait fiat SEPA : 0,35 €
 - Retrait crypto : variable
 - Spread typique : 0,2 à 0,8 %
-- **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,50 % à l'achat (15 €) + 0,26 % à la vente (2,36 €) + spread 0,5 % estimé = environ **20 à 25 € pour un aller-retour de 1 000 €**. Les frais taker spot à 0,26 % sont légèrement supérieurs à Binance (0,10 %) mais le spread bien inférieur à Bitpanda (1-2 %). Kraken Pro (interface avancée) offre des tarifs encore réduits à partir de certains volumes.
+- **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,50 % à l'achat (15 €) + 0,26 % à la vente (2,36 €) + spread 0,5 % estimé = environ **20 à 25 € pour un aller-retour de 1 000 €**. Les frais taker spot à 0,26 % sont supérieurs à ceux de Bybit (0,10 %), mais le spread est bien inférieur à celui de Bitpanda (1-2 %). Kraken Pro (interface avancée) offre des tarifs encore réduits à partir de certains volumes.
 
 **Catalogue & services :**
 - 290 cryptos listées 
 - Staking disponible : oui — ETH, SOL, ADA, DOT, ATOM, XTZ, MATIC, ALGO (le plus large programme de staking du panel parmi les exchanges, 8 cryptos)
 - Méthodes de paiement : CB, SEPA, SEPA Instant, Apple Pay, Google Pay (5 méthodes)
-- Services additionnels : Kraken Pro (interface trading avancée), futures perpétuels, staking on-chain et off-chain, Kraken NFT marketplace, Proof-of-Reserves (audit mensuel)
+- Services additionnels : Kraken Pro (interface trading avancée), futures perpétuels, staking on-chain et off-chain, Kraken NFT marketplace, Proof-of-Reserves (attestation trimestrielle)
 
 **Sécurité :**
 - Cold storage : 95 % des fonds clients
@@ -475,7 +416,7 @@ Un Trustpilot de 3,5/5 sur un volume modéré (9 500 avis) est dans la moyenne d
 
 **Forces :**
 - Aucun hack majeur en 14 ans d'existence (depuis 2011) : le meilleur track record de sécurité du secteur
-- Proof-of-Reserves audité mensuellement par un tiers indépendant : tu peux vérifier que tes cryptos sont bien là
+- Proof-of-Reserves audité mensuellement par un tiers indépendant : vous pouvez vérifier que vos cryptos sont bien là
 - Support FR par téléphone avec un temps de réponse inférieur à 12 h : critère différenciant rare dans le panel
 
 **Faiblesses :**
@@ -484,80 +425,17 @@ Un Trustpilot de 3,5/5 sur un volume modéré (9 500 avis) est dans la moyenne d
 - Staking US restreint suite aux actions SEC — les conditions du staking pour résidents non-UE ont été modifiées, mais cela n'affecte pas les utilisateurs français (UE)
 
 **Verdict Cryptoreflex :**
-Kraken mérite son score de 4,5/5 et la première place du classement. C'est la seule plateforme du panel à combiner 14 ans sans hack, un Proof-of-Reserves audité mensuellement, un support téléphonique en français, et un agrément MiCA solide. Pour un investisseur qui place des montants significatifs (au-delà de quelques milliers d'euros), ce profil de sécurité vaut largement le premium de quelques dixièmes de pourcent de frais par rapport à Binance. Pour un débutant total qui commence avec 50 à 200 €, l'interface Pro peut être un frein — mais Kraken a travaillé sur son interface Simple, qui est tout à fait accessible. À recommander sans hésitation pour l'investisseur expérimenté ; à considérer sérieusement pour tout investisseur qui accorde de la valeur à la sécurité.
+Kraken mérite son score de 4,5/5 et la première place du classement. C'est la seule plateforme du panel à combiner 14 ans sans hack, un Proof-of-Reserves attesté chaque trimestre, un support téléphonique en français, et un agrément MiCA solide. Pour un investisseur qui place des montants significatifs (au-delà de quelques milliers d'euros), ce profil de sécurité vaut largement le premium de quelques dixièmes de pourcent de frais par rapport aux exchanges les moins chers du panel. Pour un débutant total qui commence avec 50 à 200 €, l'interface Pro peut être un frein — mais Kraken a travaillé sur son interface Simple, qui est tout à fait accessible. À recommander sans hésitation pour l'investisseur expérimenté ; à considérer sérieusement pour tout investisseur qui accorde de la valeur à la sécurité.
 
 Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
 ---
 
-### Bitget — Exchange — 4,1 / 5
+### Bitget — fiche retirée (non autorisée en France)
 
-**En une phrase :** Le leader du copy trading crypto, avec le catalogue d'altcoins le plus large du panel et des frais futures parmi les plus compétitifs — mais une conformité MiCA via Lituanie et l'absence d'enregistrement AMF direct pèsent sur la note réglementaire.
+Bitget figurait dans la première édition de ce guide (avril 2026), présentée à tort comme agréée MiCA avec un accès à la France. Au 29 septembre 2026, elle ne figure pas au registre MiCA de l'ESMA : elle n'est pas autorisée à fournir des services sur crypto-actifs à des résidents français. Sa fiche a été retirée et elle n'apparaît plus dans les classements de ce guide.
 
-**Idéal pour :** Traders intermédiaires et avancés intéressés par le copy trading, les altcoins mid-cap, et les produits dérivés avec une tarification competitive.
-
-**Sous-notes :**
-
-| Critère | Note | Pondération | Contribution |
-|---|---:|---:|---:|
-| Frais | 4,5 / 5 | 20 % | 0,90 |
-| Sécurité | 4,0 / 5 | 25 % | 1,00 |
-| MiCA | 3,5 / 5 | 20 % | 0,70 |
-| UX | 4,2 / 5 | 15 % | 0,63 |
-| Support FR | 3,5 / 5 | 10 % | 0,35 |
-| Catalogue | 5,0 / 5 | 10 % | 0,50 |
-| **Global** | **4,1 / 5** | 100 % | **4,08 → arrondi 4,1** |
-
-**Statut MiCA :**
-Bitget détient un agrément MiCA CASP via la Lituanie. Pas d'enregistrement AMF direct (AMF registration : null dans les données source). Date d'enregistrement MiCA : 14 juillet 2025. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. La Lituanie est un État membre de l'UE et l'agrément MiCA lituanien est juridiquement valable pour opérer dans l'ensemble de l'Union européenne, y compris en France. Toutefois, la supervision directe de la Banque nationale de Lituanie est généralement considérée moins exigeante que l'AMF, la BaFin ou la CBI irlandaise — d'où le score MiCA de 3,5/5, le plus bas du panel parmi les plateformes retenues.
-
-**Frais réels :**
-- Maker spot : 0,10 %
-- Taker spot : 0,10 %
-- Achat instantané : 1,50 %
-- Retrait fiat SEPA : 0 €
-- Retrait crypto : variable
-- Spread typique : 0,1 à 0,4 %
-- **Coût total simulé — achat 1 000 € instantané + 1 vente spot taker :** ~1,50 % à l'achat (15 €) + 0,10 % à la vente (0,90 €) + spread 0,25 % estimé = environ **18 à 20 € pour un aller-retour de 1 000 €** en mode instantané. En trading spot avec ordre limite, le coût descend à environ 3 à 4 € — très compétitif.
-
-**Catalogue & services :**
-- 800 cryptos listées — le plus grand catalogue du panel 
-- Staking disponible : oui — ETH, SOL, ADA, DOT, BGB, ATOM
-- Méthodes de paiement : CB, SEPA, Apple Pay, Google Pay, P2P (5 méthodes)
-- Services additionnels : Bitget Futures (dérivés perpétuels, options), Copy Trading (reproduire automatiquement les stratégies des meilleurs traders), Bitget Earn (staking, savings), PoolX (mining pools), Launchpad altcoins
-
-**Sécurité :**
-- Cold storage : 90 % des fonds clients — le plus bas du panel parmi les exchanges retenus
-- Assurance des fonds : oui
-- MFA obligatoire : oui
-- Dernier incident significatif : aucun hack confirmé 
-
-**Support FR :**
-- Chat FR : oui
-- Téléphone FR : non
-- Temps de réponse moyen : inférieur à 24 h
-
-**Notes externes :**
-- Trustpilot : 4,4 / 5 (32 000 avis)
-- App Store : 4,6 / 5
-- Play Store : 4,5 / 5
-
-Le Trustpilot de Bitget (4,4/5 sur 32 000 avis) est l'un des plus solides du panel, ce qui est notable pour un exchange de cette taille. Il reflète une satisfaction utilisateur réelle, principalement portée par la fluidité de l'app et la qualité du copy trading.
-
-**Forces :**
-- Copy trading le plus développé du marché : interface dédiée, classement des traders, statistiques de performance transparentes, reproduction automatique avec paramètres de risque personnalisables
-- 800 cryptos disponibles : tu trouveras des altcoins mid-cap et small-cap introuvables ailleurs dans le panel
-- Frais futures parmi les plus bas du secteur — avantage structurel pour les traders de dérivés
-
-**Faiblesses :**
-- MiCA via Lituanie (enregistrement juillet 2025) : supervision moins exigeante que AMF direct ou BaFin, et enregistrement récent — à surveiller dans les prochains mois
-- Pas d'enregistrement AMF direct : pour les utilisateurs qui souhaitent une supervision française explicite, ce point compte
-- 90 % en cold storage : honorable mais inférieur à Kraken (95 %), Coinbase (98 %) ou Bitpanda (99 %)
-
-**Verdict Cryptoreflex :**
-Bitget est la plateforme référence pour deux cas d'usage spécifiques : le copy trading et la recherche d'altcoins pointus. Si tu veux apprendre le trading en suivant des traders vérifiés avec une reproduction automatique, il n'y a pas de meilleure interface dans ce panel. Si tu cherches un altcoin précis qui n'est pas listé chez Binance, Bitget a 800 cryptos. En dehors de ces deux usages, Bitget n'a pas d'avantage décisif sur Binance ou Kraken. Le point de vigilance reste la conformité MiCA : l'agrément lituanien est valide mais récent (juillet 2025) et la supervision moins directe qu'un enregistrement AMF. À éviter si ta priorité est la solidité réglementaire maximale en France.
-
-Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
+Si vous y déteniez un compte, il se déclare sur le formulaire 3916-bis pour chaque année où il était ouvert, même s'il a été fermé en cours d'année.
 
 ---
 
@@ -580,7 +458,7 @@ Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 | **Global** | **4,3 / 5** | 100 % | **4,295 → arrondi 4,3** |
 
 **Statut MiCA :**
-Trade Republic détient un agrément MiCA CASP via l'Allemagne (BaFin). Pas d'enregistrement AMF direct (AMF registration : null dans les données source). Date d'enregistrement MiCA : 15 novembre 2024. `micaCompliant: true`, `atRiskJuly2026: false`. Dernière vérification : 26 avril 2026. L'agrément BaFin est l'un des plus solides de l'UE — même niveau d'exigence que pour Bitpanda. Trade Republic est également titulaire d'une licence bancaire allemande depuis 2023, ce qui ajoute une couche de protection des dépôts fiat via le système de garantie des dépôts allemand (jusqu'à 100 000 € pour les espèces sur compte).
+Trade Republic est agréée MiCA par la BaFin (Allemagne), avec un passeport vers la France (registre MiCA de l'ESMA, données au 29 septembre 2026). Pas d'enregistrement AMF direct. L'agrément BaFin est l'un des plus solides de l'UE. Trade Republic est également titulaire d'une licence bancaire allemande depuis 2023, ce qui ajoute une couche de protection des dépôts fiat via le système de garantie des dépôts allemand (jusqu'à 100 000 € pour les espèces sur compte).
 
 **Frais réels :**
 - Maker spot : 1,00 %
@@ -621,11 +499,11 @@ Un Trustpilot de 3,8/5 sur 28 000 avis est respectable pour un broker. Les plain
 - Plans d'épargne automatiques crypto et ETF dès 1 € par semaine : le meilleur outil de DCA intégré du panel, couvrant crypto ET actions
 
 **Faiblesses :**
-- Pas de retrait crypto possible vers wallet externe : tu ne possèdes pas tes clés. C'est un choix de modèle (custodial pur) — à comprendre et accepter avant d'investir des montants significatifs
-- 70 cryptos disponibles : bien en dessous de la moyenne du panel — si tu cherches des altcoins, Trade Republic n'est pas la bonne plateforme
+- Pas de retrait crypto possible vers wallet externe : vous ne possédez pas vos clés. C'est un choix de modèle (custodial pur) — à comprendre et accepter avant d'investir des montants significatifs
+- 70 cryptos disponibles : bien en dessous de la moyenne du panel — si vous cherchez des altcoins, Trade Republic n'est pas la bonne plateforme
 - Pas de staking crypto : manque à combler pour les investisseurs qui veulent générer du rendement passif sur leurs positions
 
 **Verdict Cryptoreflex :**
-Trade Republic est un excellent choix pour une catégorie très précise d'investisseurs : ceux qui veulent construire un patrimoine à long terme mêlant crypto, ETF monde, et actions en automatique, sans avoir à gérer plusieurs applications. La combinaison d'une interface mobile remarquable, de plans d'épargne dès 1 €, d'un agrément BaFin et d'un catalogue boursier complet est difficile à battre dans cette niche. L'absence de retrait crypto vers wallet externe est le point de vigilance majeur : si tu as l'intention un jour de déplacer tes cryptos vers un wallet hardware (Ledger, Trezor), Trade Republic n'est pas fait pour toi. Si tu penses garder tes cryptos en custodial sur le long terme dans le cadre d'un portefeuille diversifié, c'est une plateforme solide.
+Trade Republic est un excellent choix pour une catégorie très précise d'investisseurs : ceux qui veulent construire un patrimoine à long terme mêlant crypto, ETF monde, et actions en automatique, sans avoir à gérer plusieurs applications. La combinaison d'une interface mobile remarquable, de plans d'épargne dès 1 €, d'un agrément BaFin et d'un catalogue boursier complet est difficile à battre dans cette niche. L'absence de retrait crypto vers wallet externe est le point de vigilance majeur : si vous avez l'intention un jour de déplacer vos cryptos vers un wallet hardware (Ledger, Trezor), Trade Republic n'est pas fait pour vous. Si vous pensez garder vos cryptos en custodial sur le long terme dans le cadre d'un portefeuille diversifié, c'est une plateforme solide.
 
 Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr

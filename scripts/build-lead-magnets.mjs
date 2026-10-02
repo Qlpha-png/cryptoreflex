@@ -37,7 +37,7 @@ const MAGNETS = [
   { slug: "bible-fiscalite-crypto-2026", title: "Bible Fiscalité Crypto 2026" },
   { slug: "checklist-declaration-crypto-2026", title: "Checklist Déclaration Crypto 2026" },
   { slug: "glossaire-fiscal-crypto", title: "Glossaire Fiscal Crypto" },
-  { slug: "guide-plateformes-crypto-2026", title: "Les 11 plateformes crypto à utiliser en France 2026" },
+  { slug: "guide-plateformes-crypto-2026", title: "Les 9 plateformes crypto à utiliser en France 2026" },
 ];
 
 const filterSlug = process.argv[2];
@@ -343,6 +343,8 @@ const COVER_HTML = (title, subtitle, author, date, version) => `
 
 // Parse YAML frontmatter trivial (sans dépendance gray-matter).
 function parseFrontmatter(md) {
+  // Sources en CRLF (Windows) ou avec BOM : sans normalisation, le frontmatter s'imprimait en tête du PDF.
+  md = md.replace(/^﻿/, "").replace(/\r\n/g, "\n");
   const m = md.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) return { meta: {}, body: md };
   const meta = {};

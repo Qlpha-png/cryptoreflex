@@ -94,7 +94,7 @@ export default async function EmbedHeatmapPage() {
             borderRadius: 12,
           }}
         >
-          Données momentanément indisponibles. Réessaie dans quelques minutes.
+          Données momentanément indisponibles. Réessayez dans quelques minutes.
         </div>
       ) : (
         <LiveHeatmap coins={coins} internalSlugs={internalSlugs} embed />

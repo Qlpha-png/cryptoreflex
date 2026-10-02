@@ -9,7 +9,7 @@
  *
  * 5 scores (0-100) :
  *  1. decentralization     — Niveau de décentralisation (consensus, distribution)
- *  2. complianceFrEu       — Conformité FR/EU (PSAN, MiCA, exchanges)
+ *  2. complianceFrEu       — Conformité FR/EU (agrément MiCA, exchanges)
  *  3. technicalMaturity    — Maturité tech (audits, age, incidents)
  *  4. communityHealth      — Santé communauté (strengths/weaknesses signals)
  *  5. overall              — Composite pondéré (moyenne weighted)
@@ -47,13 +47,15 @@ export interface CryptoreflexScores {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Exchanges PSAN enregistrés AMF (liste partielle des principaux).
- * Source : registre AMF (PSAN). À synchroniser périodiquement.
+ * Plateformes agréées MiCA avec accès à la France (liste partielle des principales).
+ * Source : registre MiCA de l'ESMA + liste blanche AMF (audit 2026-10-02 : Binance
+ * France retirée — services en France arrêtés le 1er juillet 2026, régime PSAN éteint).
+ * Le nom de la constante est conservé pour limiter le diff.
  *
- * Heuristique : si une crypto est listée sur ≥1 PSAN majeur, score conformité+50.
+ * Heuristique : si une crypto est listée sur ≥1 plateforme majeure agréée, score conformité+30.
  */
 const PSAN_EXCHANGES_MAJOR = new Set([
-  "Coinbase", "Kraken", "Bitpanda", "Bitstamp", "Binance France", "Crypto.com",
+  "Coinbase", "Kraken", "Bitpanda", "Bitstamp", "Crypto.com",
   "Coinhouse", "Paymium", "Bitvavo",
 ]);
 
@@ -120,7 +122,7 @@ function scoreComplianceFrEu(crypto: AnyCrypto): ScoreEntry {
   let score = 30; // base : disponible n'importe où ne suffit pas
   const reasons: string[] = [];
 
-  // Listings sur exchanges PSAN majeurs
+  // Listings sur les plateformes majeures agréées MiCA
   const whereToBuy = crypto.whereToBuy ?? [];
   const psanCount = whereToBuy.filter((ex) =>
     Array.from(PSAN_EXCHANGES_MAJOR).some((psan) =>
@@ -130,25 +132,25 @@ function scoreComplianceFrEu(crypto: AnyCrypto): ScoreEntry {
 
   if (psanCount >= 3) {
     score += 50;
-    reasons.push(`disponible sur ${psanCount} exchanges PSAN majeurs`);
+    reasons.push(`disponible sur ${psanCount} plateformes majeures agréées MiCA`);
   } else if (psanCount >= 1) {
     score += 30;
-    reasons.push(`disponible sur ${psanCount} exchange(s) PSAN`);
+    reasons.push(`disponible sur ${psanCount} plateforme(s) agréée(s) MiCA`);
   } else {
     score -= 10;
-    reasons.push("pas de listing PSAN détecté dans whereToBuy");
+    reasons.push("aucune plateforme majeure agréée MiCA détectée");
   }
 
   // Stablecoins : MiCA-compliant ou non ?
   const category = crypto.category?.toLowerCase() ?? "";
   if (category.includes("stablecoin")) {
-    // Heuristique : USDC = oui, USDT = pas encore, EURT = oui
+    // Heuristique : USDC = oui, USDT = non, EURT = oui
     if (crypto.symbol === "USDC" || crypto.symbol === "EURC" || crypto.symbol === "EURT") {
       score += 20;
       reasons.push("stablecoin MiCA-compliant");
     } else if (crypto.symbol === "USDT") {
       score -= 15;
-      reasons.push("Tether USDT : conformité MiCA en cours");
+      reasons.push("Tether USDT : non conforme MiCA");
     }
   }
 

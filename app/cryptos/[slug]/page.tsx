@@ -26,6 +26,8 @@ import {
   type AnyCrypto,
   type HiddenGem,
   type TopCrypto,
+  isNoPlatformNote,
+  listedVenues,
 } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
 import { resolveSlugAlias } from "@/lib/crypto-slug-aliases";
@@ -336,9 +338,15 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
     a: c.what,
   });
 
+  // Audit 2026-10-02 : whereToBuy peut ne contenir qu'un libellé « Aucune plateforme
+  // agréée MiCA… » (crypto non proposée par un prestataire agréé) → pas de phrase
+  // « Vous pouvez acheter X sur Aucune plateforme… ».
+  const noAgreedPlatform = listedVenues(c.whereToBuy).length === 0;
   faq.push({
     q: `Comment acheter ${c.name} en France en 2026 ?`,
-    a: `Vous pouvez acheter ${c.name} sur ${c.whereToBuy.slice(0, 3).join(", ")} et d'autres plateformes régulées MiCA. La procédure standard prend 5 à 10 minutes : création du compte, vérification d'identité (KYC), dépôt en euros par virement SEPA ou carte bancaire, puis ordre d'achat sur le marché spot. Voir la section "Où acheter" plus haut pour la liste complète et les liens directs.`,
+    a: noAgreedPlatform
+      ? `${c.whereToBuy.find(isNoPlatformNote) ?? "Aucune plateforme agréée MiCA ne la propose à notre connaissance"}. Depuis le 1er juillet 2026, seul un prestataire agréé MiCA peut fournir des services sur crypto-actifs aux résidents français : vérifiez le statut de toute plateforme avant d'y déposer des fonds. Voir la section "Où acheter" plus haut.`
+      : `Vous pouvez acheter ${c.name} sur ${listedVenues(c.whereToBuy).slice(0, 3).join(", ")} et d'autres plateformes régulées MiCA. La procédure standard prend 5 à 10 minutes : création du compte, vérification d'identité (KYC), dépôt en euros par virement SEPA ou carte bancaire, puis ordre d'achat sur le marché spot. Voir la section "Où acheter" plus haut pour la liste complète et les liens directs.`,
   });
 
   if (c.kind === "hidden-gem") {

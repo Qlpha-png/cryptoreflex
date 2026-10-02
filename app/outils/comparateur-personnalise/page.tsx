@@ -24,7 +24,7 @@ const ComparateurPersonnalise = dynamic(
 export const metadata: Metadata = {
   title: "Quelle plateforme crypto choisir 2026 ? Quiz personnalisé en 60 sec",
   description:
-    "Répondez à 5 questions et recevez votre top 3 personnalisé parmi Bitstack, Bitpanda, Binance, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur votre profil.",
+    "Répondez à 5 questions et recevez votre top 3 personnalisé parmi Bitstack, Bitpanda, Coinbase, Kraken, SwissBorg. Score sur prix, UX, sécurité — basé sur votre profil.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/comparateur-personnalise"),
   openGraph: {
     title: "Quelle plateforme crypto choisir ? Quiz personnalisé 2026",
@@ -42,14 +42,14 @@ const FAQ_ITEMS = [
       "Chaque plateforme reçoit une note de 1 à 10 sur 9 axes (prix, UX, sécurité, DCA, swing, hold, day trading, débutant, avancé). Vos 5 réponses pondèrent ces axes : votre priorité numéro 1 reçoit un boost x2, votre intent (DCA / hold / trading) sélectionne l'axe d'usage, votre volume mensuel ajoute un bonus pour les plateformes adaptées (frais bas si > 500 €, micro-DCA si < 50 €). Le score final 0-100 reflète l'adéquation avec VOTRE profil.",
   },
   {
-    question: "Pourquoi ces 6 plateformes et pas 50 ?",
+    question: "Pourquoi ces 5 plateformes et pas 50 ?",
     answer:
-      "On affiche uniquement les plateformes que Cryptoreflex a auditées en profondeur (audit interne Q1 2026) ET avec lesquelles on a un partenariat actif (transparence : on touche une commission). Si on listait 50 plateformes, la qualité du scoring chuterait — la plupart des comparateurs grand public le font et finissent par recommander n'importe quoi.",
+      "On affiche uniquement des plateformes que Cryptoreflex a auditées en profondeur (audit interne Q1 2026). Quand un lien nous rapporte quelque chose (parrainage), c'est indiqué à côté du lien et détaillé sur notre page transparence. Si on listait 50 plateformes, la qualité du scoring chuterait — la plupart des comparateurs grand public le font et finissent par recommander n'importe quoi.",
   },
   {
     question: "Pourquoi une plateforme étrangère apparaît dans mes résultats ?",
     answer:
-      "Toutes les plateformes recommandées sont conformes MiCA et accessibles aux résidents français (vérifié dans notre /verificateur-mica). Binance et Kraken sont enregistrés ailleurs en UE, pas en France, mais opèrent légalement chez nous via le passeport européen MiCA depuis janvier 2025.",
+      "Toutes les plateformes recommandées sont conformes MiCA et accessibles aux résidents français (vérifié dans notre /verificateur-mica). Kraken (Banque centrale d'Irlande) et Coinbase (CSSF, Luxembourg) sont agréés MiCA dans un autre État de l'UE et servent légalement la France grâce au passeport européen.",
   },
   {
     question: "Mes réponses sont-elles enregistrées ?",
@@ -76,7 +76,7 @@ export default function ComparateurPersonnalisePage() {
             featureList: [
               "5 questions, résultat en 60 secondes",
               "Score personnalisé sur 9 axes par plateforme",
-              "6 plateformes auditées Q1 2026",
+              "5 plateformes auditées et agréées MiCA",
               "Reco affiliée transparente (loi Influenceurs)",
               "Aucune donnée stockée, calcul navigateur",
               "Lead capture optionnel (récap par email)",
@@ -86,7 +86,7 @@ export default function ComparateurPersonnalisePage() {
               "comparateur crypto personnalisé",
               "quiz exchange crypto",
               "meilleure plateforme crypto 2026",
-              "bitstack vs binance vs coinbase",
+              "bitstack vs bitpanda vs coinbase",
             ],
           }),
           breadcrumbSchema([
@@ -110,7 +110,7 @@ export default function ComparateurPersonnalisePage() {
             </h1>
             <p className="mt-4 text-lg text-white/70">
               Quiz personnalisé : 5 questions sur votre profil, et on vous sort
-              les 3 plateformes les plus adaptées (parmi Bitstack, Bitpanda, Binance,
+              les 3 plateformes les plus adaptées (parmi Bitstack, Bitpanda,
               Coinbase, Kraken, SwissBorg). Pas un comparatif générique — UN scoring
               calé sur VOS réponses.
             </p>

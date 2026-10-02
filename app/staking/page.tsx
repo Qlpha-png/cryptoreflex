@@ -12,7 +12,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Staking crypto en France 2026 — APY, plateformes MiCA, risques",
   description:
-    "Comparateur staking 2026 pour 20 cryptos : filtres APY, lock-up, risque et plateforme. Plateformes régulées MiCA (Coinbase, Kraken, Bitpanda, Binance…) pour trouver le meilleur staking en France.",
+    "Comparateur staking 2026 pour 20 cryptos : filtres APY, lock-up, risque et plateforme. Plateformes agréées MiCA (Coinbase, Kraken, Bitpanda…) pour trouver le meilleur staking en France.",
   alternates: withHreflang(`${BRAND.url}/staking`),
 };
 
@@ -31,7 +31,7 @@ export default function StakingIndexPage() {
           </h1>
           <p className="mt-3 text-fg/70">
             20 cryptos staking-éligibles. Filtre par APY, lock-up, risque ou
-            plateforme MiCA pour trouver le couple rendement / sécurité qui te
+            plateforme MiCA pour trouver le couple rendement / sécurité qui vous
             convient. APY estimés avril 2026, à recouper avec les UI exchange.
           </p>
         </div>

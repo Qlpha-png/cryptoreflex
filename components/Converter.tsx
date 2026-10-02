@@ -60,7 +60,7 @@ export default function Converter({
       setRate(data.rate);
       setLastUpdated(data.lastUpdated);
     } catch (err) {
-      setError("Conversion temporairement indisponible. Réessaie dans 1 min.");
+      setError("Conversion temporairement indisponible. Réessayez dans 1 min.");
       setRate(null);
     } finally {
       setLoading(false);
