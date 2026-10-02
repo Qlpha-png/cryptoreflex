@@ -26,7 +26,8 @@ interface Rules {
   fin: Record<Fin, { p: number; cap?: number }>;
   finOrder: Fin[];
   pity: { R: number; SR: number; UR: number };
-  onboard: { SR: number; UR: number };
+  /** « premier frisson » : 1re carte du palier garantie au N-ième booster (seule la SR en a un depuis le 02/10 au soir) */
+  onboard: { SR: number; UR?: number };
   shardDup: Record<Rar, number>;
   edDup: Record<string, number>;
   craft: Record<Rar, number>;
@@ -152,8 +153,9 @@ export function drawPack(day: number, ps: Pity, fam: string | null, rnd: Rnd = c
     out[lo] = { ...baseItem(t, day, fam, rnd), pity: t };
   };
   const b = best();
-  /* « premier frisson » : aussi pour un joueur déjà au-delà du seuil sans UR (>=, Kev 02/10, option C) */
-  if (!ps.gotUR && ps.opened >= RULES.onboard.UR && b < RNK("UR")) force("UR");
+  /* « premier frisson » : aussi pour un joueur déjà au-delà du seuil (>=). Plus de 1re UR garantie depuis le 02/10 au soir
+     (Kev : « UR plus rares, comme avant ») ; la branche reste au cas où une saison en remettrait une. */
+  if (RULES.onboard.UR != null && !ps.gotUR && ps.opened >= RULES.onboard.UR && b < RNK("UR")) force("UR");
   else if (!ps.gotSR && ps.opened >= RULES.onboard.SR && b < RNK("SR")) force("SR");
   else if (ps.UR + 1 >= RULES.pity.UR && b < RNK("UR")) force("UR");
   else if (ps.SR + 1 >= RULES.pity.SR && b < RNK("SR")) force("SR");

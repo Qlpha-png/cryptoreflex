@@ -11,7 +11,8 @@ import {
 
 export interface Ctx { day: number; today: string; now: number }
 /** qui joue : invité (partie liée à ce navigateur) ou compte du site (e-mail affiché dans le jeu) */
-export interface Account { guest: boolean; email: string | null }
+/** expired : un cookie de session du site était présent mais ne correspond plus à une session valide (à reconnecter) */
+export interface Account { guest: boolean; email: string | null; expired?: boolean }
 export interface Planned { patch: Patch; msg?: string; data?: Record<string, unknown> }
 
 const reflets = (s: GameState, n: number) => {
@@ -104,7 +105,7 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       const id = String(b.id ?? ""), answer = String(b.rep ?? "");
       if (!RULES.quiz[id] || !inClear(id, ctx.day)) throw new GameError("bad", "Carte inconnue.");
       const q = s.quiz.get(id);
-      if (q?.ok) throw new GameError("done", "Quiz déjà réussi.");
+      if (q?.ok) throw new GameError("done", "Questionnaire déjà réussi.");
       if (q && q.day === ctx.today) throw new GameError("later", "Nouvel essai demain.");
       const ok = RULES.quiz[id] === answer;
       if (!ok) return { patch: { quiz: { id, ok: false, day: ctx.today } }, data: { ok: false, answer: RULES.quiz[id] } };

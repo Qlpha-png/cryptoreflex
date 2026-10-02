@@ -59,12 +59,19 @@ export async function resolvePlayer(req: NextRequest, o: { create: boolean; toda
 
   /* compte du site : seulement s'il y a un cookie de session Supabase (sinon pas d'appel réseau) */
   let user: { id: string; email: string | null } | null = null;
+  let expired = false;
   if (rh && req.cookies.getAll().some((c) => c.name.startsWith("sb-"))) {
     const { data, error } = await rh.supabase.auth.getUser();
     /* service de connexion injoignable : on ne traite PAS le joueur en visiteur (album vide) → 503, le jeu propose « Réessayer » */
     if (error && (error.name === "AuthRetryableFetchError" || (error.status ?? 0) >= 500)) throw new SessionError(503, "Connexion à votre compte momentanément impossible : réessayez dans un instant.");
     const u = data?.user;
     if (u && !u.is_anonymous && u.email_confirmed_at) user = { id: u.id, email: u.email ?? null };
+    else {
+      /* cookie de session présent mais aucun compte valide : session expirée ou renouvellement refusé. Journalisé sans donnée
+         personnelle pour comprendre les « albums vides » (02/10) ; le jeu propose alors de se reconnecter. */
+      expired = true;
+      console.warn("[reflex-cards] session illisible", JSON.stringify({ name: error?.name ?? null, status: error?.status ?? null, code: (error as { code?: string } | null)?.code ?? null, user: !!u, confirmed: !!u?.email_confirmed_at }));
+    }
   }
   const raw = req.cookies.get(GUEST_COOKIE)?.value ?? "";
   const hash = TOKEN_RE.test(raw) ? hashToken(raw) : null;
@@ -90,7 +97,7 @@ export async function resolvePlayer(req: NextRequest, o: { create: boolean; toda
   return {
     db,
     player,
-    account: { guest: !user, email: user?.email ?? null },
+    account: { guest: !user, email: user?.email ?? null, ...(expired && !user ? { expired: true } : {}) },
     finish(res) {
       rh?.applyCookies(res);
       if (setGuest) res.cookies.set(GUEST_COOKIE, setGuest, { httpOnly: true, secure: https, sameSite: "lax", path: GUEST_PATH, maxAge: GUEST_MAX_AGE });
