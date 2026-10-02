@@ -19,6 +19,8 @@
  * Doc API : https://developers.beehiiv.com/docs/v2/2krgmq6m4nkb1-create-subscription
  */
 
+import { maskEmailForLog } from "@/lib/rate-limit";
+
 export type SubscribeSource =
   | "inline"
   | "popup"
@@ -75,7 +77,7 @@ export async function subscribe(input: SubscribeInput): Promise<SubscribeResult>
     console.info(
       "[newsletter] mode mock — Beehiiv non configuré. Inscription simulée :",
       {
-        email: input.email,
+        email: maskEmailForLog(input.email),
         source: input.source ?? "unknown",
         utmCampaign: input.utmCampaign,
       }
@@ -92,10 +94,12 @@ export async function subscribe(input: SubscribeInput): Promise<SubscribeResult>
 
   const body = {
     email: input.email,
-    // `reactivate_existing: true` -> si l'user s'était désinscrit, on le réactive
-    // proprement plutôt que de renvoyer une erreur 409. Évite de blâmer l'user
-    // pour une action passée qu'il a peut-être oubliée.
-    reactivate_existing: true,
+    // AUDIT SÉCURITÉ 2026-10-02 : `reactivate_existing: false`. Avec `true`,
+    // n'importe qui pouvait RÉ-ABONNER une adresse qui s'était désinscrite
+    // (RGPD art. 21 : le retrait doit tenir) juste en tapant son email dans un
+    // formulaire. Une adresse désinscrite reste donc inactive côté Beehiiv ;
+    // la réponse au formulaire reste un succès uniforme (cf. 409 ci-dessous).
+    reactivate_existing: false,
     // `send_welcome_email: true` -> Beehiiv envoie son template de bienvenue.
     // À désactiver si on veut piloter le welcome via une automation custom.
     send_welcome_email: true,
@@ -121,6 +125,16 @@ export async function subscribe(input: SubscribeInput): Promise<SubscribeResult>
       // Timeout dur côté Next runtime ; 8s suffit largement pour Beehiiv (~300ms typique).
       signal: AbortSignal.timeout(8000),
     });
+
+    if (res.status === 409) {
+      // Adresse déjà connue de Beehiiv (abonnée, ou désinscrite et NON
+      // réactivée depuis reactivate_existing: false). Succès uniforme pour
+      // l'UI : pas d'erreur affichée, pas de fuite « cet email est inscrit ».
+      console.info("[newsletter] Beehiiv 409 — adresse déjà connue", {
+        email: maskEmailForLog(input.email),
+      });
+      return { ok: true, mocked: false, subscriberId: "existing" };
+    }
 
     if (!res.ok) {
       // Beehiiv renvoie un body JSON `{ errors: [...] }` en cas d'erreur.

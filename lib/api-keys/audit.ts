@@ -40,6 +40,49 @@ export interface AuditEntry {
   metadata?: Record<string, unknown>;
 }
 
+/** Longueur max du user-agent stocké (un attaquant contrôle ce header). */
+export const MAX_USER_AGENT_LENGTH = 256;
+
+/** Tronque un user-agent (null si absent / vide). */
+export function truncateUserAgent(ua: string | null | undefined): string | null {
+  if (typeof ua !== "string" || ua.length === 0) return null;
+  return ua.slice(0, MAX_USER_AGENT_LENGTH);
+}
+
+/**
+ * Échecs d'auth NON persistés dans audit_log (AUDIT 2026-10-02) : un attaquant
+ * sans clé valide (format invalide, clé inconnue) pouvait faire écrire une
+ * ligne en base par requête → gonflement de table / coût Supabase. Ces cas
+ * sont seulement comptés + loggés (console). Les échecs sur une clé EXISTANTE
+ * (BAD_SECRET, clé inactive, scope…) restent audités : vrai signal d'attaque
+ * ciblée sur un compte.
+ */
+const UNPERSISTED_UNAUTHORIZED_REASONS: ReadonlySet<string> = new Set([
+  "INVALID_FORMAT",
+  "KEY_NOT_FOUND",
+]);
+
+export function shouldPersistUnauthorizedAudit(reason: string): boolean {
+  return !UNPERSISTED_UNAUTHORIZED_REASONS.has(reason);
+}
+
+/** Ligne `audit_log` normalisée (user_agent tronqué). Exportée pour les tests. */
+export function toAuditRow(entry: AuditEntry): {
+  user_id: string | null;
+  event: string;
+  ip: string | null;
+  user_agent: string | null;
+  metadata: Record<string, unknown>;
+} {
+  return {
+    user_id: entry.user_id,
+    event: entry.event,
+    ip: entry.ip ?? null,
+    user_agent: truncateUserAgent(entry.user_agent),
+    metadata: entry.metadata ?? {},
+  };
+}
+
 /**
  * Insert dans `audit_log`. Best-effort — on log un warn si ça échoue mais on
  * NE bloque PAS le flow d'API. L'absence d'audit n'empêche pas la réponse au
@@ -52,13 +95,7 @@ export async function logAudit(entry: AuditEntry): Promise<void> {
     console.warn("[api-keys/audit] Supabase absent — audit non écrit", entry.event);
     return;
   }
-  const { error } = await sb.from("audit_log").insert({
-    user_id: entry.user_id,
-    event: entry.event,
-    ip: entry.ip ?? null,
-    user_agent: entry.user_agent ?? null,
-    metadata: entry.metadata ?? {},
-  });
+  const { error } = await sb.from("audit_log").insert(toAuditRow(entry));
   if (error) {
     console.warn("[api-keys/audit] insert warn", entry.event, error.message);
   }
@@ -77,6 +114,6 @@ export function extractRequestMeta(req: Request): {
     xff.split(",")[0].trim() ||
     req.headers.get("x-real-ip") ||
     null;
-  const user_agent = req.headers.get("user-agent") || null;
+  const user_agent = truncateUserAgent(req.headers.get("user-agent"));
   return { ip, user_agent };
 }

@@ -15,14 +15,35 @@
  *    existante. Sinon on insert.
  *  - On stocke aussi user_agent (utile pour debug "ah cette sub vient de mon
  *    iPhone Safari").
+ *
+ * Garde-fous (audit sécurité 2026-10-02) :
+ *  - endpoint limité aux VRAIS push services (FCM, Mozilla, Apple, WNS) via
+ *    isAllowedPushEndpoint — sinon le cron POSTerait vers n'importe quelle URL.
+ *  - 10 souscriptions max par utilisateur (au-delà : 409, sauf mise à jour
+ *    d'un endpoint déjà enregistré pour ce user).
+ *  - Rate limit 20 req / heure / utilisateur.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { isAllowedPushEndpoint } from "@/lib/web-push";
+import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** Nombre max de navigateurs / appareils abonnés par utilisateur. */
+const MAX_SUBSCRIPTIONS_PER_USER = 10;
+
+/** Clés Web Push (base64url, éventuellement base64 standard + padding). */
+const PUSH_KEY_REGEX = /^[A-Za-z0-9_\-+/=]{8,256}$/;
+
+const limiter = createRateLimiter({
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+  key: "push-subscribe",
+});
 
 interface SubscribeBody {
   endpoint?: unknown;
@@ -42,6 +63,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const user = await requireAuth();
   // requireAuth peut redirect — si on est ici, user est défini.
 
+  const rl = await limiter(user.id);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { ok: false, error: "Trop de tentatives. Réessayez plus tard." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
+    );
+  }
+
   let body: SubscribeBody;
   try {
     body = (await req.json()) as SubscribeBody;
@@ -52,17 +81,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const endpoint =
-    typeof body.endpoint === "string" && body.endpoint.startsWith("https://")
-      ? body.endpoint
-      : null;
+  const endpoint = isAllowedPushEndpoint(body.endpoint) ? body.endpoint : null;
   const p256dh =
-    typeof body.keys?.p256dh === "string" ? body.keys.p256dh : null;
-  const auth = typeof body.keys?.auth === "string" ? body.keys.auth : null;
+    typeof body.keys?.p256dh === "string" && PUSH_KEY_REGEX.test(body.keys.p256dh)
+      ? body.keys.p256dh
+      : null;
+  const auth =
+    typeof body.keys?.auth === "string" && PUSH_KEY_REGEX.test(body.keys.auth)
+      ? body.keys.auth
+      : null;
 
   if (!endpoint || !p256dh || !auth) {
     return NextResponse.json(
-      { ok: false, error: "Subscription invalide (endpoint/keys manquants)." },
+      {
+        ok: false,
+        error: "Subscription invalide (endpoint/keys manquants ou push service non reconnu).",
+      },
       { status: 400 },
     );
   }
@@ -77,6 +111,31 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       { ok: false, error: "Service indisponible." },
       { status: 503 },
+    );
+  }
+
+  // Plafond par utilisateur : on compte ses souscriptions existantes. Un
+  // endpoint déjà à lui = simple mise à jour (toujours autorisée).
+  const { data: existing, error: countError } = await supabase
+    .from("user_push_subscriptions")
+    .select("endpoint")
+    .eq("user_id", user.id);
+  if (countError) {
+    console.error("[push/subscribe] count failed:", countError.message);
+    return NextResponse.json(
+      { ok: false, error: "Impossible d'enregistrer la souscription." },
+      { status: 500 },
+    );
+  }
+  const rows = (existing ?? []) as Array<{ endpoint: string }>;
+  const alreadyMine = rows.some((r) => r.endpoint === endpoint);
+  if (!alreadyMine && rows.length >= MAX_SUBSCRIPTIONS_PER_USER) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: `Nombre maximal d'appareils atteint (${MAX_SUBSCRIPTIONS_PER_USER}). Désactivez les notifications sur un ancien appareil.`,
+      },
+      { status: 409 },
     );
   }
 

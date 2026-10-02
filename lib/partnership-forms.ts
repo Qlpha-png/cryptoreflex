@@ -20,7 +20,7 @@
 import { headers } from "next/headers";
 import { sendEmail } from "@/lib/email/client";
 import { isValidEmail } from "@/lib/newsletter";
-import { createRateLimiter } from "@/lib/rate-limit";
+import { createRateLimiter, createRecipientLimiter } from "@/lib/rate-limit";
 import { BRAND } from "@/lib/brand";
 
 /* -------------------------------------------------------------------------- */
@@ -51,14 +51,50 @@ const contactLimiter = createRateLimiter({
   key: "contact-form",
 });
 
-/** Récupère l'IP cliente depuis les headers de la requête (server action). */
+/**
+ * Accusés de réception envoyés à l'adresse SAISIE (donc potentiellement celle
+ * d'un tiers) : 3 / adresse / 24 h, tous formulaires confondus.
+ */
+const confirmationRecipientLimiter = createRecipientLimiter({
+  limit: 3,
+  windowSec: 24 * 3600,
+  key: "partnership-confirm",
+});
+
+/**
+ * Récupère l'IP cliente depuis les headers de la requête (server action).
+ * Même ordre de confiance que lib/ip.ts : `x-vercel-forwarded-for` (non
+ * usurpable sur Vercel) d'abord.
+ */
 function getActionIp(): string {
   const h = headers();
   return (
+    h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() ||
     h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     h.get("x-real-ip") ||
     "unknown"
   );
+}
+
+/**
+ * Prénom affichable dans un email envoyé à une adresse non vérifiée.
+ *
+ * AUDIT SÉCURITÉ 2026-10-02 : l'accusé de réception part vers l'email SAISI
+ * dans le formulaire. Recopier le nom / l'URL / la société saisis permettait
+ * d'envoyer, depuis notre domaine, un texte de phishing (« Votre compte est
+ * bloqué : https://… ») à n'importe qui. On ne garde donc que le 1er mot du
+ * nom s'il ne contient QUE des lettres (accents, tiret, apostrophe), 30 car.
+ * max — sinon rien. Aucune URL, aucun chiffre, aucun point possible.
+ */
+function safeFirstName(name: string): string {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  if (!first || first.length > 30) return "";
+  return /^[\p{L}][\p{L}'’-]*$/u.test(first) ? first : "";
+}
+
+/** Retire CR/LF (sujet d'email construit avec une saisie utilisateur). */
+function oneLine(s: string): string {
+  return s.replace(/[\r\n]+/g, " ").trim();
 }
 
 /** Échappe les caractères HTML dans un input user pour insertion en HTML email. */
@@ -164,7 +200,7 @@ export async function submitAmbassadeur(
   // L'email du candidat reste accessible via le corps du message.
   const result = await sendEmail({
     to: BRAND.partnersEmail,
-    subject: `[Ambassadeurs] Candidature de ${name}`,
+    subject: oneLine(`[Ambassadeurs] Candidature de ${name}`),
     html,
     text: htmlToPlainText(html),
   });
@@ -175,22 +211,28 @@ export async function submitAmbassadeur(
 
   // Confirmation au candidat — best-effort, on n'échoue pas si l'email
   // accusé de réception part en vrac (le partenaire interne a déjà reçu).
-  const confirmHtml = `
-      <h2>Merci ${escapeHtml(name)} !</h2>
+  // AUDIT 2026-10-02 : texte FIXE (aucune saisie recopiée hormis un prénom
+  // filtré) + plafond par destinataire, cf. safeFirstName.
+  const rcpt = await confirmationRecipientLimiter(email);
+  if (rcpt.ok) {
+    const firstName = safeFirstName(name);
+    const confirmHtml = `
+      <h2>Merci${firstName ? ` ${escapeHtml(firstName)}` : ""} !</h2>
       <p>On a bien reçu votre candidature au programme ambassadeurs ${BRAND.name}.</p>
       <p>Notre équipe t'écrit sous 5 à 7 jours ouvrés depuis <strong>${BRAND.partnersEmail}</strong>.
       D'ici là, n'hésitez pas à compléter votre message en répondant à cet email
       (capture d'audience, exemple de contenu, etc.).</p>
-      <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(profileUrl)} – ${escapeHtml(channel || "canal non précisé")}</p>
+      <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette candidature, ignorez simplement cet email.</p>
       <hr>
       <p style="color:#888;font-size:12px">${BRAND.name} – ${BRAND.url}</p>
     `;
-  await sendEmail({
-    to: email,
-    subject: `Votre candidature ambassadeur ${BRAND.name} a bien été reçue`,
-    html: confirmHtml,
-    text: htmlToPlainText(confirmHtml),
-  });
+    await sendEmail({
+      to: email,
+      subject: `Votre candidature ambassadeur ${BRAND.name} a bien été reçue`,
+      html: confirmHtml,
+      text: htmlToPlainText(confirmHtml),
+    });
+  }
 
   return { ok: true, mocked: false };
 }
@@ -252,31 +294,37 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
 
   const result = await sendEmail({
     to: BRAND.partnersEmail,
-    subject: `[Sponsoring] Demande de ${company}`,
+    subject: oneLine(`[Sponsoring] Demande de ${company}`),
     html,
     text: htmlToPlainText(html),
   });
 
   if (!result.ok) return { ok: false, error: result.error ?? "Envoi email impossible." };
 
-  // Confirmation au demandeur (best-effort)
-  const confirmHtml = `
+  // Confirmation au demandeur (best-effort).
+  // AUDIT 2026-10-02 : texte FIXE — la société / l'offre / le budget saisis ne
+  // sont plus recopiés (vecteur de phishing vers une adresse non vérifiée,
+  // ex. société « crypto-bonus.com ») + plafond par destinataire.
+  const rcpt = await confirmationRecipientLimiter(email);
+  if (rcpt.ok) {
+    const confirmHtml = `
       <h2>Merci pour votre intérêt</h2>
-      <p>${BRAND.name} a bien reçu votre demande au nom de <strong>${escapeHtml(company)}</strong>.</p>
+      <p>${BRAND.name} a bien reçu votre demande de sponsoring.</p>
       <p>Notre équipe partenariats te répond <strong>sous 48 h ouvrées</strong> depuis ${BRAND.partnersEmail} avec :
       un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne un PSAN.</p>
-      <p style="color:#888;font-size:12px">Récap envoyé : ${escapeHtml(offer || "offre non précisée")} – budget ${escapeHtml(budget || "non précisé")}</p>
+      <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email.</p>
       <hr>
       <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un PSAN ni un CIF.
       Tout contenu sponsorisé est explicitement signalé conformément à l'art. 222-15 du règlement général AMF
       et à la charte ARPP. ${BRAND.url}</p>
     `;
-  await sendEmail({
-    to: email,
-    subject: `Votre demande de sponsoring ${BRAND.name} est en file de traitement`,
-    html: confirmHtml,
-    text: htmlToPlainText(confirmHtml),
-  });
+    await sendEmail({
+      to: email,
+      subject: `Votre demande de sponsoring ${BRAND.name} est en file de traitement`,
+      html: confirmHtml,
+      text: htmlToPlainText(confirmHtml),
+    });
+  }
 
   return { ok: true, mocked: false };
 }
@@ -346,7 +394,7 @@ export async function submitContact(formData: FormData): Promise<FormResult> {
 
   const result = await sendEmail({
     to: recipient,
-    subject: `[${labelMap[type]}] ${subject || "Nouveau message"}`,
+    subject: oneLine(`[${labelMap[type]}] ${subject || "Nouveau message"}`),
     html,
     text: htmlToPlainText(html),
   });

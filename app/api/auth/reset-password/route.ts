@@ -11,7 +11,8 @@
  * SECURITE :
  *  - Email enumeration prevention : reponse uniforme meme si email inconnu
  *  - Si user inexistant : on ne genere pas de link mais on repond comme si
- *  - Rate limit : 3 demandes / heure / IP (anti-spam)
+ *  - Rate limit : 3 demandes / heure / IP (anti-spam) + 5 emails d'auth /
+ *    adresse / 24 h (seau partagé avec login et signup)
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +20,11 @@ import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/client";
 import { generateSafeEmailLink } from "@/lib/auth-guards";
 import { resetPasswordEmail } from "@/lib/email/templates";
-import { createRateLimiter } from "@/lib/rate-limit";
+import {
+  createRateLimiter,
+  authEmailRecipientLimiter,
+  maskEmailForLog,
+} from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 
 export const runtime = "nodejs";
@@ -57,9 +62,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const email = body.email?.trim().toLowerCase();
+  const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  }
+
+  // AUDIT 2026-10-02 — limite par DESTINATAIRE en plus de la limite IP :
+  // 5 emails d'auth / adresse / 24 h (seau partagé login + signup + reset).
+  // Compté AVANT de savoir si le compte existe → le 429 ne révèle rien.
+  const rcpt = await authEmailRecipientLimiter(email);
+  if (!rcpt.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "Trop d'emails envoyés à cette adresse aujourd'hui. Vérifiez vos spams ou réessayez demain.",
+      },
+      { status: 429, headers: { "Retry-After": String(rcpt.retryAfter) } }
+    );
   }
 
   const siteUrl =
@@ -127,7 +146,7 @@ export async function POST(req: NextRequest) {
     // On retourne quand meme la reponse uniforme — l'user voit "email envoye"
     // meme si en realite il a pas marche. On log cote serveur pour alerter.
   } else {
-    console.log(`[auth/reset-password] Reset link envoye a ${email} (Resend id: ${result.id})`);
+    console.log(`[auth/reset-password] Reset link envoye a ${maskEmailForLog(email)} (Resend id: ${result.id})`);
   }
 
   return uniformResponse;

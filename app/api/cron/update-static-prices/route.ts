@@ -17,12 +17,14 @@
  * naturellement. Ce endpoint reste invocable manuellement pour debug
  * ou via webhook externe.
  *
- * Securite : token requis via header X-Cron-Token (env CRON_SECRET).
+ * Securite : header `Authorization: Bearer <CRON_SECRET>` obligatoire ;
+ * CRON_SECRET absent → 401 (fail-closed).
  */
 
 import { NextResponse } from "next/server";
 import { getKv } from "@/lib/kv";
 import { getTopMarket, type PriceSnapshot } from "@/lib/price-source";
+import { verifyBearer } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,10 +40,17 @@ interface StaticSnapshotEntry {
 }
 
 export async function GET(request: Request) {
-  // Securite : verifier le token cron
-  const authHeader = request.headers.get("authorization");
+  // Securite : verifier le token cron.
+  // AUDIT 2026-10-02 : fail-CLOSED si CRON_SECRET est absent (avant : route
+  // ouverte à tous → écriture KV déclenchable par n'importe qui) + comparaison
+  // timing-safe via verifyBearer. Le cron Vercel (vercel.json) envoie
+  // automatiquement `Authorization: Bearer <CRON_SECRET>`.
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret) {
+    console.error("[cron/update-static-prices] CRON_SECRET absent — refus (fail-closed).");
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (!verifyBearer(request, cronSecret)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

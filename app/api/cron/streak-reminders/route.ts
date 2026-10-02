@@ -25,10 +25,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
-import { sendPushToUser } from "@/lib/web-push";
+import {
+  sendPushToUser,
+  mapWithConcurrency,
+  withTimeout,
+  PUSH_CONCURRENCY,
+  PUSH_SEND_TIMEOUT_MS,
+} from "@/lib/web-push";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** Budget par utilisateur (fetch des subs + envois bornés à PUSH_SEND_TIMEOUT_MS). */
+const PUSH_JOB_TIMEOUT_MS = PUSH_SEND_TIMEOUT_MS + 3000;
 
 interface AtRiskRow {
   user_id: string;
@@ -72,30 +81,38 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   const atRisk = (data ?? []) as AtRiskRow[];
-  const results: Array<{ userId: string; streak: number; pushed: boolean }> = [];
 
-  for (const row of atRisk) {
-    let pushed = false;
-    try {
-      const r = await sendPushToUser(row.user_id, {
+  // AUDIT 2026-10-02 : avant, boucle séquentielle sans timeout → un seul push
+  // service lent bloquait tout le cron. Désormais : concurrence bornée +
+  // timeout par utilisateur (envois déjà bornés dans lib/web-push).
+  const settled = await mapWithConcurrency(atRisk, PUSH_CONCURRENCY, (row) =>
+    withTimeout(
+      sendPushToUser(row.user_id, {
         title: `🔥 ${row.streak_days} jours de streak — ne casse pas la chaîne !`,
         body: `Connectez-vous avant minuit pour conserver votre record. Votre record perso est en jeu.`,
         url: "/mon-compte#progression",
         tag: `streak-reminder-${row.user_id}`,
-      });
-      pushed = Boolean(r?.sent && r.sent > 0);
-    } catch (err) {
-      console.warn(
-        `[streak-reminders] push failed for ${row.user_id}:`,
-        err instanceof Error ? err.message : String(err),
-      );
-    }
-    results.push({
-      userId: row.user_id,
-      streak: row.streak_days,
-      pushed,
+      }),
+      PUSH_JOB_TIMEOUT_MS,
+      `streak push ${row.user_id}`,
+    ),
+  );
+
+  const results: Array<{ userId: string; streak: number; pushed: boolean }> =
+    atRisk.map((row, i) => {
+      const r = settled[i];
+      if (r.status === "rejected") {
+        console.warn(
+          `[streak-reminders] push failed for ${row.user_id}:`,
+          r.reason instanceof Error ? r.reason.message : String(r.reason),
+        );
+      }
+      return {
+        userId: row.user_id,
+        streak: row.streak_days,
+        pushed: r.status === "fulfilled" && Boolean(r.value?.sent && r.value.sent > 0),
+      };
     });
-  }
 
   return NextResponse.json({
     ok: true,

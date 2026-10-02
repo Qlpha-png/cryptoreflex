@@ -24,7 +24,9 @@
  * Sécurité :
  *  - Token HMAC (lib/auth-tokens.ts) — pas de DB lookup nécessaire.
  *  - Pas de CORS (same-origin uniquement pour POST).
- *  - Rate limit 30 req/min/IP sur POST (protège contre spam d'emails de confirmation).
+ *  - Rate limit 30 req/min/IP sur POST (protège contre spam d'emails de confirmation)
+ *    + 3 emails de confirmation / adresse / 24 h (au-delà : rien n'est envoyé,
+ *    réponse identique).
  *  - Réponses identiques pour email valide / invalide / inconnu (anti-enum).
  */
 
@@ -35,7 +37,11 @@ import {
 } from "@/lib/auth-tokens";
 import { unsubscribeFromBeehiiv } from "@/lib/beehiiv";
 import { sendEmail } from "@/lib/email/client";
-import { createRateLimiter } from "@/lib/rate-limit";
+import {
+  createRateLimiter,
+  createRecipientLimiter,
+  maskEmailForLog,
+} from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { BRAND } from "@/lib/brand";
 import { confirmActionPage, HTML_HEADERS } from "@/lib/confirm-action-page";
@@ -142,6 +148,13 @@ const postLimiter = createRateLimiter({
   key: "newsletter-unsubscribe",
 });
 
+/** Emails de confirmation : 3 / adresse / 24 h (anti « email bombing »). */
+const recipientLimiter = createRecipientLimiter({
+  limit: 3,
+  windowSec: 24 * 3600,
+  key: "newsletter-unsubscribe",
+});
+
 /* -------------------------------------------------------------------------- */
 /*  GET — one-click depuis email                                              */
 /* -------------------------------------------------------------------------- */
@@ -180,7 +193,7 @@ async function performUnsubscribe(email: string): Promise<NextResponse> {
   const result = await unsubscribeFromBeehiiv(email);
   if (!result.ok) {
     console.error("[newsletter/unsubscribe] beehiiv failed but token valid", {
-      email,
+      email: maskEmailForLog(email),
     });
     // On affiche quand même la page de confirmation : l'utilisateur a fait sa
     // part. On retentera côté backend (logs) ou via une re-tentative manuelle.
@@ -232,9 +245,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Body JSON invalide." }, { status: 400 });
   }
 
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
   if (!email || !EMAIL_REGEX.test(email)) {
     return NextResponse.json({ error: "Email invalide." }, { status: 400 });
+  }
+
+  // AUDIT 2026-10-02 — limite par DESTINATAIRE (3 emails de confirmation /
+  // adresse / 24 h) en plus de la limite IP. Au-delà : on n'envoie rien mais on
+  // répond { ok: true } comme d'habitude (réponse uniforme, anti-énumération).
+  const rcpt = await recipientLimiter(email);
+  if (!rcpt.ok) {
+    console.warn("[newsletter/unsubscribe] limite destinataire atteinte, email non envoyé", {
+      email: maskEmailForLog(email),
+    });
+    return NextResponse.json({ ok: true }, { status: 200 });
   }
 
   // Génère le token + URL de confirmation (GET ci-dessus).
@@ -266,7 +290,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (!sendResult.ok) {
     console.error("[newsletter/unsubscribe] confirmation email failed", {
-      email,
+      email: maskEmailForLog(email),
       error: sendResult.error,
     });
   }

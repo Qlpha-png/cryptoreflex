@@ -17,7 +17,7 @@
  * SÉCURITÉ (audit 2026-10-01) — avant, le compte était créé « confirmé »
  * sans aucune preuve : n'importe qui pouvait s'inscrire avec l'email d'un
  * tiers (dont un email admin). Désormais :
- *  - Rate limit : 20 inscriptions / heure / IP.
+ *  - Rate limit : 20 inscriptions / heure / IP + 5 emails d'auth / adresse / 24 h.
  *  - Email déjà inscrit → 409 « compte existant » (aucune tentative de
  *    connexion ici, pas d'oracle de mot de passe).
  *  - AUCUN mot de passe choisi avant la preuve de l'email : si un tiers
@@ -29,7 +29,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
-import { createRateLimiter } from "@/lib/rate-limit";
+import { createRateLimiter, authEmailRecipientLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { sendEmail } from "@/lib/email/client";
 import { signupConfirmEmail } from "@/lib/email/templates";
@@ -86,6 +86,20 @@ export async function POST(req: NextRequest) {
 
   if (!email || !email.includes("@")) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  }
+
+  // AUDIT 2026-10-02 — limite par DESTINATAIRE en plus de la limite IP :
+  // 5 emails d'auth / adresse / 24 h (seau partagé login + signup + reset).
+  // Vérifiée AVANT createUser : aucun compte créé si l'email ne partira pas.
+  const rcpt = await authEmailRecipientLimiter(email);
+  if (!rcpt.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "Trop d'emails envoyés à cette adresse aujourd'hui. Vérifiez vos spams ou réessayez demain.",
+      },
+      { status: 429, headers: { "Retry-After": String(rcpt.retryAfter) } }
+    );
   }
 
   // Mot de passe jetable : l'utilisateur choisit le sien APRÈS avoir prouvé

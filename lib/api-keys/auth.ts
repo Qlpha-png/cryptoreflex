@@ -44,7 +44,12 @@ import {
 } from "./db";
 import { checkPreAuthIpQuota } from "./ip-pre-rl";
 import { checkApiKeyRateLimit, rateLimitHeaders } from "./rate-limit";
-import { logAudit, newRequestId, extractRequestMeta } from "./audit";
+import {
+  logAudit,
+  newRequestId,
+  extractRequestMeta,
+  shouldPersistUnauthorizedAudit,
+} from "./audit";
 import type {
   ApiKeyRecord,
   ApiKeyScope,
@@ -309,12 +314,31 @@ function invalidCredentials(request_id: string): Response {
   );
 }
 
+/**
+ * Compteur (par instance) des échecs d'auth non persistés — visible dans les
+ * logs pour repérer un scan sans écrire en base à chaque requête.
+ */
+let unpersistedUnauthorizedCount = 0;
+
 async function logUnauthorized(
   meta: { ip: string | null; user_agent: string | null },
   request_id: string,
   reason: string,
   extra?: Record<string, unknown>,
 ): Promise<void> {
+  if (!shouldPersistUnauthorizedAudit(reason)) {
+    // AUDIT 2026-10-02 : clé mal formée / inconnue → pas de ligne audit_log
+    // (sinon une requête anonyme = une écriture en base). Log console borné.
+    unpersistedUnauthorizedCount++;
+    const publicKey =
+      typeof extra?.public_key === "string" ? extra.public_key.slice(0, 32) : undefined;
+    console.warn(
+      `[api-keys/auth] unauthorized reason=${reason} ip=${meta.ip ?? "?"} request_id=${request_id}` +
+        (publicKey ? ` public_key=${publicKey}` : "") +
+        ` count=${unpersistedUnauthorizedCount}`,
+    );
+    return;
+  }
   await logAudit({
     user_id: null, // pas authentifié
     event: "b2b.request.unauthorized",

@@ -31,7 +31,13 @@ import { BRAND } from "@/lib/brand";
 import { COIN_IDS, COIN_NAMES } from "@/lib/historical-prices";
 import { getAllCryptos } from "@/lib/cryptos";
 import { fetchPrices, cgHeaders, type CoinId } from "@/lib/coingecko";
-import { sendPushToUser } from "@/lib/web-push";
+import {
+  sendPushToUser,
+  mapWithConcurrency,
+  withTimeout,
+  PUSH_CONCURRENCY,
+  PUSH_SEND_TIMEOUT_MS,
+} from "@/lib/web-push";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 
 /* -------------------------------------------------------------------------- */
@@ -412,6 +418,9 @@ export interface EvaluationReport {
 const FIRED_MARKER_PREFIX = "alerts:fired:";
 const FIRED_MARKER_TTL_SEC = 86_400; // 24h
 
+/** Budget d'un job push (lookup user Supabase + envois bornés à PUSH_SEND_TIMEOUT_MS). */
+const PUSH_JOB_TIMEOUT_MS = PUSH_SEND_TIMEOUT_MS + 3000;
+
 export async function evaluateAndFire(
   signal?: AbortSignal,
 ): Promise<EvaluationReport> {
@@ -472,6 +481,9 @@ export async function evaluateAndFire(
   }
 
   const now = Date.now();
+
+  /** Push à envoyer APRÈS la boucle (cf. plus bas). */
+  const pushJobs: Array<{ alertId: string; run: () => Promise<void> }> = [];
 
   // Pour chaque crypto, on fetch le prix puis on évalue ses alertes.
   for (const [cryptoId, alerts] of byCrypto) {
@@ -583,29 +595,28 @@ export async function evaluateAndFire(
           continue;
         }
 
-        // Push notification en parallèle de l'email (pas bloquant : si l'user
+        // Push notification en complément de l'email (pas bloquant : si l'user
         // n'a pas activé les push ou si VAPID n'est pas configuré, sendPushToUser
         // est un no-op silencieux). On garde l'email comme canal de référence.
-        try {
-          const userId = await lookupUserIdByEmail(alert.email);
-          if (userId) {
-            const direction =
-              alert.condition === "above" ? "franchit" : "passe sous";
-            const formattedThreshold = `${alert.threshold} ${alert.currency.toUpperCase()}`;
+        // AUDIT 2026-10-02 : le push n'est plus attendu DANS la boucle (un push
+        // service lent bloquait toutes les alertes suivantes) — mis en file,
+        // envoyé après la boucle avec concurrence bornée + timeout par job.
+        const pushDirection =
+          alert.condition === "above" ? "franchit" : "passe sous";
+        const formattedThreshold = `${alert.threshold} ${alert.currency.toUpperCase()}`;
+        pushJobs.push({
+          alertId: alert.id,
+          run: async () => {
+            const userId = await lookupUserIdByEmail(alert.email);
+            if (!userId) return;
             await sendPushToUser(userId, {
               title: `🚨 Alerte prix ${alert.symbol}`,
-              body: `${cryptoName} ${direction} ${formattedThreshold}`,
+              body: `${cryptoName} ${pushDirection} ${formattedThreshold}`,
               url: `/cryptos/${detailSlug}`,
               tag: `alert-${alert.id}`,
             });
-          }
-        } catch (err) {
-          // Push non bloquant : on log mais on ne fail pas l'alerte.
-          console.warn(
-            `[alerts] push failed for ${alert.id}:`,
-            err instanceof Error ? err.message : String(err),
-          );
-        }
+          },
+        });
 
         await updateAlert(alert, { status: "triggered", lastTriggered: now });
         report.fired++;
@@ -615,6 +626,26 @@ export async function evaluateAndFire(
         );
       }
     }
+  }
+
+  // Envoi des push en file : concurrence bornée, timeout par job (lookup user
+  // + envoi), arrêt des jobs non démarrés si la deadline cron est atteinte.
+  // Un échec push n'invalide jamais l'alerte (email déjà parti).
+  if (pushJobs.length > 0) {
+    const settled = await mapWithConcurrency(
+      pushJobs,
+      PUSH_CONCURRENCY,
+      (job) => withTimeout(job.run(), PUSH_JOB_TIMEOUT_MS, `push alerte ${job.alertId}`),
+      isAborted,
+    );
+    settled.forEach((r, i) => {
+      if (r.status === "rejected") {
+        console.warn(
+          `[alerts] push failed for ${pushJobs[i].alertId}:`,
+          r.reason instanceof Error ? r.reason.message : String(r.reason),
+        );
+      }
+    });
   }
 
   report.durationMs = Date.now() - startedAt;
