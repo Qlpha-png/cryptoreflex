@@ -2,11 +2,16 @@ name: Weekly long-form blog generator
 
 # Cron samedi 8h UTC = 9h-10h Paris (selon DST). Manuel via "Run workflow" possible.
 on:
-  # DÉMONÉTISATION (juin 2026) — génération hebdo IA STOPPÉE (zéro coût IA auto).
-  # Schedule désactivé : plus aucun article auto le samedi. Réactiver = décommenter.
-  # schedule:
-  #   - cron: "0 8 * * 6"
+  # RÉACTIVÉ le 02/10/2026 (Kev : « fais fonctionner tous les trucs automatiques », clé Anthropic conservée).
+  # (Coupé de juin à octobre 2026 pendant la démonétisation.)
+  schedule:
+    - cron: "0 8 * * 6"
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Essai : générer l'article sans le publier (joint au run pour relecture)"
+        type: boolean
+        default: false
 
 # Permissions write requise pour commit + push automatique sur main.
 # Permissions issues requise pour ouvrir une issue de notif en cas de fail.
@@ -21,9 +26,6 @@ concurrency:
 
 jobs:
   generate:
-    # DÉMONÉTISATION (juin 2026) : job désactivé (bot IA hebdo stoppé, zéro coût).
-    # Réactiver = repasser `if` à ${{ true }} (ou supprimer la ligne) + décommenter le schedule.
-    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -69,9 +71,18 @@ jobs:
             echo "slug=$SLUG" >> $GITHUB_OUTPUT
           fi
 
+      # Mode essai : l'article est joint au run (onglet Artifacts) et rien n'est publié.
+      - name: Upload article (dry run)
+        if: steps.changes.outputs.has_changes == 'true' && inputs.dry_run == true
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-article-dry-run
+          path: content/articles/${{ steps.changes.outputs.slug }}.mdx
+          retention-days: 7
+
       - name: Commit + push (with rebase loop anti-race)
         id: commit_push
-        if: steps.changes.outputs.has_changes == 'true'
+        if: steps.changes.outputs.has_changes == 'true' && inputs.dry_run != true
         run: |
           git config user.name "Cryptoreflex Bot"
           git config user.email "bot@cryptoreflex.fr"
@@ -96,11 +107,11 @@ jobs:
           exit 1
 
       - name: Wait for Vercel deploy (90s)
-        if: steps.changes.outputs.has_changes == 'true'
+        if: steps.changes.outputs.has_changes == 'true' && inputs.dry_run != true
         run: sleep 90
 
       - name: Ping Google + Bing (sitemap update)
-        if: steps.changes.outputs.has_changes == 'true'
+        if: steps.changes.outputs.has_changes == 'true' && inputs.dry_run != true
         continue-on-error: true
         run: node scripts/ping-search-engines.mjs
 
@@ -111,7 +122,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           # Fix audit 2026-05-06 : on lit la conclusion REELLE du step
           # commit_push, pas seulement has_changes (cf. daily-content.yml).
-          if [ "${{ steps.changes.outputs.has_changes }}" = "false" ]; then
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "🧪 Essai : article \`${{ steps.changes.outputs.slug }}\` généré, NON publié (voir Artifacts)." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.changes.outputs.has_changes }}" = "false" ]; then
             echo "ℹ️ Aucun nouvel article (validation LLM en échec, ANTHROPIC_API_KEY absente, ou catalogue épuisé)." >> $GITHUB_STEP_SUMMARY
           elif [ "${{ steps.commit_push.conclusion }}" = "success" ]; then
             echo "✅ Nouvel article publié : **${{ steps.changes.outputs.slug }}**" >> $GITHUB_STEP_SUMMARY
