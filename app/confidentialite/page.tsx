@@ -32,7 +32,7 @@ export default function ConfidentialitePage() {
         <li><strong>Données de contact</strong> : informations que vous nous transmettez via formulaire ou e-mail.</li>
         <li><strong>Compte Cryptoreflex</strong> : adresse e-mail, mot de passe (conservé chiffré par notre hébergeur de comptes, jamais lisible par nous) et date de création.</li>
         <li><strong>Reflex Cards (jeu de cartes)</strong> : pseudo choisi, cartes, objets, Reflets et Éclats, historique des boosters et des quiz, rattachés à votre compte.</li>
-        <li><strong>Liens d'affiliation</strong> : aucune donnée personnelle n'est partagée avec les plateformes partenaires. Le tracking d'affiliation se fait via cookie de la plateforme partenaire (ex: Binance, Bitpanda) une fois sur leur site, hors de notre contrôle.</li>
+        <li><strong>Liens d'affiliation</strong> : aucune donnée personnelle n'est partagée avec les plateformes partenaires. Le tracking d'affiliation se fait via cookie de la plateforme partenaire (par exemple Bitpanda ou Kraken) une fois sur leur site, hors de notre contrôle.</li>
       </ul>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">3. Finalités</h2>
@@ -81,7 +81,9 @@ export default function ConfidentialitePage() {
       <p className="text-fg/85 leading-relaxed">
         {BRAND.name} <strong>n'utilise pas de cookies de tracking ou de publicité</strong>. Les
         seuls éléments de stockage local utilisés sont strictement nécessaires au fonctionnement
-        du site (préférences d'affichage, etc.). Vercel Web Analytics fonctionne sans cookie.
+        du site (préférences d'affichage, etc.). Vercel Web Analytics fonctionne sans cookie ;
+        vous pouvez refuser cette mesure d'audience depuis le bandeau de consentement, elle est
+        alors coupée. Nous n'utilisons ni pixel publicitaire ni outil d'enregistrement de session.
       </p>
       <p className="text-fg/85 leading-relaxed">
         Si vous créez un compte, des cookies de session strictement nécessaires vous gardent connecté
@@ -90,7 +92,7 @@ export default function ConfidentialitePage() {
       </p>
       <p className="text-fg/85 leading-relaxed">
         Lorsque vous cliquez sur un lien d'affiliation et que vous êtes redirigé vers une
-        plateforme partenaire (Binance, Bitpanda, etc.), cette plateforme peut utiliser ses propres
+        plateforme partenaire (Bitpanda, Kraken, etc.), cette plateforme peut utiliser ses propres
         cookies, conformément à sa propre politique de confidentialité.
       </p>
 

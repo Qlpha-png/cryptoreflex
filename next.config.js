@@ -2,6 +2,8 @@
 // /historique-prix sans année ou en coingeckoId, /comparer/a-vs-b legacy).
 // Voir lib/seo-redirects.cjs.
 const { buildSeoRedirects } = require("./lib/seo-redirects.cjs");
+// News publiées en double, supprimées le 2026-10-02 → 308 vers la première publication.
+const NEWS_DUPLICATE_REDIRECTS = require("./lib/news-duplicate-redirects.cjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -374,6 +376,10 @@ const nextConfig = {
       // routing fichier : vrai 308 (un redirect() dans une page ISR répond 200 +
       // meta refresh en prod).
       ...buildSeoRedirects(),
+      ...NEWS_DUPLICATE_REDIRECTS,
+      // Landing de campagne « 12 plateformes qui vont disparaître en juillet 2026 » : échéance passée, contenu
+      // périmé (audit 2026-10-02) → étude à jour, construite sur le registre MiCA de l'ESMA.
+      { source: "/lp/mica-2026", destination: "/etudes/mica-juillet-2026-etat-des-lieux", permanent: true },
 
       // Apex (cryptoreflex.fr) → www (www.cryptoreflex.fr) — 308 permanent.
       // `has` sur le hostname garantit que la règle ne s'applique qu'aux

@@ -138,11 +138,11 @@ export default function CookieBanner() {
                 id={descId}
                 className="mt-1 text-sm text-muted leading-relaxed"
               >
-                Cryptoreflex utilise{" "}
+                Cryptoreflex mesure son audience avec{" "}
                 <strong className="text-fg">Vercel Web Analytics</strong>{" "}
-                (mesure anonyme agrégée, sans cookie de tracking) pour mesurer
-                l'audience. Aucun cookie publicitaire n'est déposé sans votre
-                accord. Vous pouvez modifier vos choix à tout moment depuis la
+                (statistiques anonymes et agrégées, sans cookie), que vous pouvez
+                refuser. Aucun pixel publicitaire ni enregistrement de session
+                n'est utilisé. Vous pouvez modifier vos choix à tout moment depuis la
                 page{" "}
                 <a
                   href="/confidentialite"
@@ -170,13 +170,13 @@ export default function CookieBanner() {
               />
               <CategoryRow
                 title="Mesure d'audience"
-                description="Vercel Web Analytics, sans cookie tiers ni profilage. Nous aide à améliorer le contenu."
+                description="Vercel Web Analytics : statistiques anonymes et agrégées, sans cookie ni profilage. Nous aide à améliorer le contenu."
                 checked={prefs.analytics}
                 onChange={(v) => setPrefs((p) => ({ ...p, analytics: v }))}
               />
               <CategoryRow
                 title="Marketing / affiliation"
-                description="Mesure des clics sortants vers les plateformes partenaires (UTM, conversions). Aucune publicité personnalisée."
+                description="Aucun outil publicitaire n'est actif aujourd'hui. Si nous en ajoutons un, il ne sera chargé qu'avec votre accord."
                 checked={prefs.marketing}
                 onChange={(v) => setPrefs((p) => ({ ...p, marketing: v }))}
               />

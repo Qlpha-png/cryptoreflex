@@ -7,9 +7,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
-import { Analytics } from "@vercel/analytics/next";
-import ClarityScript from "@/components/ClarityScript";
-import AdsPixels from "@/components/AdsPixels";
+import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import SkipToContent from "@/components/SkipToContent";
 import StructuredData from "@/components/StructuredData";
@@ -133,12 +131,12 @@ const display = Space_Grotesk({
  * (Project → Analytics → Enable).
  */
 
-/**
- * Project ID Microsoft Clarity (heatmaps + session recording).
- * Optionnel : si absent, le composant ClarityScript ne fait rien.
- * Cf. components/ClarityScript.tsx pour la procédure d'activation.
+/*
+ * Microsoft Clarity (enregistrement de sessions) et pixels publicitaires (components/AdsPixels.tsx) :
+ * DÉSACTIVÉS le 2026-10-02 (audit consentement, décision Kev). Le bandeau ne les mentionnait pas.
+ * Pour les réactiver : remonter <ClarityScript projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID} />
+ * et <AdsPixels /> dans le body, ET mettre à jour CookieBanner + /confidentialite avant.
  */
-const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
 
 /**
  * Tokens de vérification pour la propriété du site.
@@ -462,23 +460,8 @@ export default function RootLayout({
           MIGRATION 2026-05-21 : remplace <PlausibleScript /> qui chargeait
           depuis plausible.cryptoreflex.fr (self-host Hetzner mort).
         */}
-        <Analytics />
-        {/*
-          Microsoft Clarity — heatmaps + session recording (gratuit, illimité).
-          Chargé uniquement si :
-            1. NEXT_PUBLIC_CLARITY_PROJECT_ID est défini en env vars Vercel.
-            2. L'utilisateur a accepté la catégorie "Mesure d'audience".
-          Cf. components/ClarityScript.tsx pour la procédure de setup.
-        */}
-        <ClarityScript projectId={CLARITY_PROJECT_ID} />
-        {/*
-          AdsPixels — pixels de conversion Reddit + X + Google Ads (Plan E
-          tracking). Gated par 3 env vars (NEXT_PUBLIC_REDDIT_PIXEL_ID,
-          NEXT_PUBLIC_X_PIXEL_ID, NEXT_PUBLIC_GOOGLE_ADS_ID). Si aucune n'est
-          configurée, le composant ne rend rien (zéro impact perf/RGPD).
-          Cf. components/AdsPixels.tsx pour activation.
-        */}
-        <AdsPixels />
+        {/* Vercel Web Analytics : actif par défaut, coupé si le visiteur refuse la mesure d'audience. */}
+        <ConsentAwareAnalytics />
         {/*
           Service worker PWA — enregistre /sw.js côté client (uniquement en prod).
           Active le mode offline minimal + cache des assets statiques.

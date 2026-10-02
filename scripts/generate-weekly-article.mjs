@@ -159,7 +159,7 @@ Mission : rédiger un article SEO long-form de 1500-2500 mots, qualité éditori
 
 RÈGLES STRICTES :
 - 100% français, accents corrects (à é è ê ç ô û ï)
-- Tutoiement (style Cryptoreflex)
+- Vouvoiement (« vous »), jamais de tutoiement
 - Aucun jargon non expliqué (toujours définir les termes techniques en parenthèses ou via une mini-définition)
 - Disclaimer YMYL OBLIGATOIRE en fin d'article : <Callout type="warning" title="Avertissement">Cet article est purement informatif. Il ne constitue pas un conseil...</Callout>
 - Sources légales/officielles citées si applicable (BOFiP, AMF, ESMA, règlement UE 2023/1114, articles du CGI)
