@@ -171,6 +171,67 @@ describe("Reflex Cards — Amis", () => {
   });
 });
 
+describe("Reflex Cards — garde-fous de l'audit du 03/10", () => {
+  it("pseudo : 20 caractères comptés en points de code, un emoji n'est jamais coupé ; invisibles retirés", async () => {
+    as("B");
+    const r = await act({ a: "pseudo", v: "Joueur du dimanche!🎉 et la suite" });
+    expect(r.status).toBe(200);
+    expect(r.j.state.perso.pseudo).toBe("Joueur du dimanche!🎉");
+    expect((await act({ a: "pseudo", v: "A‮B​C" })).j.state.perso.pseudo).toBe("ABC");
+    expect((await act({ a: "pseudo", v: "​ ​" })).status).toBe(422);
+  });
+  it("booster : identifiant de demande strictement UUID (36 tirets refusés sans toucher la base)", async () => {
+    as("B");
+    const r = await act({ a: "ouvrir", req: "------------------------------------" });
+    expect(r.status).toBe(422);
+    expect(r.j.error).toMatch(/invalide/);
+  });
+  it("page d'un jour passé hors tolérance : refus « reload » AVANT tout geste, rien de consommé", async () => {
+    as("B");
+    const before = (await (await etat.GET(mk("/api/cartes/etat?jour=2"))).json()).state;
+    const r = await act({ a: "ouvrir", jour: 1, req: crypto.randomUUID() }); // jour 1 envoyé alors que le serveur est au jour 2, 10 h : plus toléré
+    expect(r.status).toBe(409);
+    expect(r.j.code).toBe("reload");
+    const after = (await (await etat.GET(mk("/api/cartes/etat?jour=2"))).json()).state;
+    expect(after.packs.stock).toBe(before.packs.stock);
+    expect(after.pstats.opened).toBe(before.pstats.opened);
+  });
+  it("questionnaire d'une carte non possédée : refusé", async () => {
+    as("B");
+    const own = new Set(((await pg.query("select c.card_id from public.rc_cards c join public.rc_players p using(player_id) where p.owner=$1", [USERS.B])).rows as { card_id: string }[]).map((r) => r.card_id));
+    const rules = (await import("@/data/reflex-cards-rules.json")).default as unknown as { quiz: Record<string, string> };
+    const { isSentInClear } = await import("@/lib/reflex-cards/game");
+    const id = Object.keys(rules.quiz).find((k) => !own.has(k) && isSentInClear(k, 2))!;
+    expect(id).toBeTruthy();
+    const r = await act({ a: "quiz", id, rep: rules.quiz[id] });
+    expect(r.status).toBe(422);
+    expect(r.j.error).toMatch(/non possédée/);
+  });
+  it("cartes des amis : paginées et triées (plus de 1 000 lignes rendues en entier)", async () => {
+    const { supabaseFriendsDb } = await import("@/lib/reflex-cards/friends");
+    const sbFake = fakeSupabase(pg);
+    /* un faux rpc qui plafonne à 1 000 lignes comme PostgREST, par-dessus la fixture */
+    const capped = { ...sbFake, rpc: (fn: string, args: Record<string, unknown>) => { const b = sbFake.rpc(fn, args); const range = b.range.bind(b); let asked = false; b.range = (a: number, z: number) => { asked = true; return range(a, Math.min(z, a + 999)); }; const then = b.then.bind(b); b.then = (ok: any, ko: any) => then((res: any) => ok(asked || !Array.isArray(res.data) ? res : { ...res, data: res.data.slice(0, 1000) }), ko); return b; } };
+    const db = supabaseFriendsDb(capped as any);
+    const me = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.A])).rows[0] as { player_id: string }).player_id;
+    const pidB = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.B])).rows[0] as { player_id: string }).player_id;
+    /* le test de la limite a vidé rc_friends : on recrée une amitié acceptée A–B directement en base */
+    const pidC = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.C])).rows[0] as { player_id: string }).player_id;
+    for (const f of [pidB, pidC]) await pg.query("insert into public.rc_friends(a, b, status, accepted_at) values ($1, $2, 'accepted', now()) on conflict do nothing", [me, f]);
+    const friends = (await db.list(me)).filter((r) => r.status === "accepted").map((r) => r.pid);
+    expect(friends).toEqual(expect.arrayContaining([pidB, pidC]));
+    /* on gonfle les collections des deux amis directement en base (test seulement) : plus de 1 000 lignes à ramener */
+    const ids = Object.keys((await import("@/data/reflex-cards-rules.json")).default.quiz) as string[];
+    for (const id of ids) await pg.query("insert into public.rc_cards(player_id, card_id, n) values ($1,$2,1) on conflict (player_id, card_id) do nothing", [pidB, id]);
+    for (const id of ids.slice(0, 400)) await pg.query("insert into public.rc_cards(player_id, card_id, n) values ($1,$2,1) on conflict (player_id, card_id) do nothing", [pidC, id]);
+    const total = (await pg.query("select count(*)::int as n from public.rc_cards where n>0 and player_id = any($1::uuid[])", [friends])).rows[0] as { n: number };
+    const got = await db.cards(me);
+    expect(total.n).toBeGreaterThan(1000);
+    expect(got.length).toBe(total.n);
+    expect(new Set(got.map((c) => c.pid + "|" + c.card_id)).size).toBe(total.n);
+  });
+});
+
 describe("Reflex Cards — Quiz du jour", () => {
   it("5 questions à 4 choix, les mêmes toute la journée, différentes le lendemain", () => {
     const q1 = quizDay("partie-x", "2026-10-03", 2), q2 = quizDay("partie-x", "2026-10-03", 2), q3 = quizDay("partie-x", "2026-10-04", 3);

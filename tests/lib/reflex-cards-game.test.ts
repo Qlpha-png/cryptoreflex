@@ -103,6 +103,27 @@ describe("Reflex Cards — page du jeu : rien ne fuit", () => {
     }
   });
 
+  it("le jeu reçoit la date de lancement et la liste « Les Pionniers » du serveur (cartes à venir masquées)", async () => {
+    const prev = process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
+    try {
+      process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "2026-10-02";
+      const s1 = gameDataScript(1), s90 = gameDataScript(90);
+      expect(s1).toContain('GAME_LAUNCH="2026-10-02"');
+      const pion = (s: string) => JSON.parse(s.match(/GAME_THEME_PION=(\[[^\]]*\])/)![1]) as string[];
+      const rules = (await import("@/data/reflex-cards-rules.json")).default as unknown as { themes: { id: string; cards?: string[] }[] };
+      const want = rules.themes.find((t) => t.id === "th-pion")!.cards!;
+      expect(pion(s90)).toEqual(want); // tout est sorti au jour 90 : la liste du serveur telle quelle
+      const p1 = pion(s1);
+      expect(p1).toHaveLength(want.length);
+      p1.forEach((id, i) => { if (!/^x\d{3}$/.test(id)) expect(id).toBe(want[i]); }); // les cartes à venir sont masquées, les autres identiques
+      expect(p1.some((id) => /^x\d{3}$/.test(id))).toBe(true);
+      for (const id of want) if (!isSentInClear(id, 1)) expect(s1).not.toContain(`"${id}"`);
+    } finally {
+      if (prev === undefined) delete process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
+      else process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = prev;
+    }
+  });
+
   it("données sûres dans un <script>", () => {
     for (const day of [1, 90]) expect(gameDataScript(day)).not.toMatch(/<\/script|<!--/i);
   });

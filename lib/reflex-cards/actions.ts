@@ -9,6 +9,7 @@ import {
   type GameState, type Patch, type Rar,
 } from "./engine";
 import { QJ_LEN, qjReward, quizDay } from "./quiz-day";
+import { seasonDay } from "./season";
 
 export interface Ctx { day: number; today: string; now: number }
 /** qui joue : invité (partie liée à ce navigateur) ou compte du site (e-mail affiché dans le jeu) */
@@ -22,17 +23,24 @@ const reflets = (s: GameState, n: number) => {
 /** réserve + 1 booster (récompenses et Comptoir) : la réserve à jour, puis un de plus */
 const plusOne = (s: GameState, ctx: Ctx) => {
   const r = refill(s.player, ctx.now);
-  return { stock: r.stock + 1, stock_at: new Date(r.stockAt).toISOString() };
+  /* la base plafonne la réserve à 60 : au-delà, le bonus serait refusé (« Solde insuffisant ») et le geste bloqué */
+  return { stock: Math.min(60, r.stock + 1), stock_at: new Date(r.stockAt).toISOString() };
 };
 /** clé du tirage du Quiz du jour : la partie (identifiant stable), sinon son premier jour */
 const qjKey = (s: GameState) => String((s.player as { player_id?: string }).player_id ?? s.player.first_day);
+/* le Quiz du jour se calcule sur le jour du SERVEUR, jamais sur celui de la page : une page de la veille (tolérée 30 min après
+   minuit) donnerait d'autres questions, et les réponses déjà données seraient notées contre les mauvaises (audit du 03/10) */
+const qjDay = (ctx: Ctx) => seasonDay(new Date(ctx.now));
 /** réponses déjà données au Quiz du jour (question → choix), notées comme des jalons « zq|date|i|choix » */
 function qjGiven(s: GameState, today: string): Map<number, number> {
   const m = new Map<number, number>(), pre = `zq|${today}|`;
   for (const k of s.claims) if (k.startsWith(pre)) { const [i, r] = k.slice(pre.length).split("|").map(Number); if (Number.isInteger(i) && Number.isInteger(r) && !m.has(i)) m.set(i, r); }
   return m;
 }
-const sanitizePseudo = (v: unknown) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 20);
+/* 20 caractères comptés en points de code (un emoji n'est jamais coupé en deux : la base refuserait le JSON) ; caractères de
+   contrôle, invisibles et de changement de sens d'écriture retirés */
+const sanitizePseudo = (v: unknown) =>
+  [...String(v ?? "").normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f​-‏‪-‮⁦-⁩﻿<>]/g, "").replace(/\s+/g, " ").trim()].slice(0, 20).join("").trim();
 
 /** mises à jour du jour : jour joué, offres du Colporteur, objets mérités (appliquées à la lecture de la partie) */
 export function planDaily(s: GameState, ctx: Ctx): Patch | null {
@@ -49,7 +57,7 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
   switch (a) {
     case "ouvrir": {
       const req = String(b.req ?? "");
-      if (!/^[0-9a-f-]{36}$/i.test(req)) throw new GameError("bad", "Demande invalide.");
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req)) throw new GameError("bad", "Demande invalide.");
       const o = planOpen(s, { day: ctx.day, today: ctx.today, now: ctx.now, req });
       return { patch: o.patch, data: { items: o.items, results: o.results, theme: o.theme } };
     }
@@ -113,6 +121,8 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
     case "quiz": {
       const id = String(b.id ?? ""), answer = String(b.rep ?? "");
       if (!RULES.quiz[id] || !inClear(id, ctx.day)) throw new GameError("bad", "Carte inconnue.");
+      /* le questionnaire est celui de la fiche d'une carte POSSÉDÉE (comme dans le jeu) : sinon un script réussit « Érudit » dès le jour 1 */
+      if (!s.cards.has(id)) throw new GameError("bad", "Carte non possédée.");
       const q = s.quiz.get(id);
       if (q?.ok) throw new GameError("done", "Questionnaire déjà réussi.");
       if (q && q.day === ctx.today) throw new GameError("later", "Nouvel essai demain.");
@@ -182,7 +192,8 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       return { patch: { player: { perso: { ...s.player.perso, title: id } } } };
     }
     case "pantheon": {
-      const keys = Array.isArray(b.keys) ? b.keys.map(String).slice(0, 3) : [];
+      /* clés « édition|carte » strictes et sans doublon : rien d'autre ne doit entrer dans le profil */
+      const keys = [...new Set(Array.isArray(b.keys) ? b.keys.map(String) : [])].filter((k) => /^[a-z]{2,12}\|[a-z0-9-]{1,80}$/.test(k)).slice(0, 3);
       for (const k of keys) {
         const [ed, id] = k.split("|");
         if (!(ed === "base" ? s.cards.has(id) : s.eds.has(k))) throw new GameError("bad", "Carte non possédée.");
@@ -194,7 +205,7 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
          à la 5e, le score, la récompense et le corrigé. (Un tableau `rep` complet reste accepté : ancienne page en cache.) */
       const key = "z|" + ctx.today;
       if (s.claims.has(key)) throw new GameError("done", "Quiz du jour déjà joué : revenez demain.");
-      const qs = quizDay(qjKey(s), ctx.today, ctx.day);
+      const qs = quizDay(qjKey(s), ctx.today, qjDay(ctx));
       if (qs.length < QJ_LEN) throw new GameError("bad", "Pas de quiz aujourd'hui.");
       const given = qjGiven(s, ctx.today);
       const finish = (answers: number[]) => {
@@ -260,7 +271,7 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
     /* Quiz du jour : les questions sans la bonne réponse tant qu'on n'y a pas répondu ; les questions déjà répondues
        aujourd'hui avec leur correction (reprise après rechargement) ; score et corrigé une fois fini */
     qj: (() => {
-      const qs = quizDay(qjKey(s), ctx.today, ctx.day);
+      const qs = quizDay(qjKey(s), ctx.today, qjDay(ctx));
       if (qs.length < QJ_LEN) return null;
       const done = s.claims.has("z|" + ctx.today);
       if (done) return { done: true, n: qs.length, score: Math.max(0, Number(s.days.get(ctx.today)?.ev.qj ?? 1) - 1), sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok], e: q.e })) };

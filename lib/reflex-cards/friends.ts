@@ -39,7 +39,18 @@ export function supabaseFriendsDb(sb: SupabaseClient): FriendsDb {
     answer: (p, c, ok) => rpc<string>("rc_friend_answer", { p_me: p, p_code: c, p_accept: ok }),
     remove: (p, c) => rpc<string>("rc_friend_remove", { p_me: p, p_code: c }),
     list: (p) => rpc<FriendRow[]>("rc_friend_list", { p_me: p }),
-    cards: (p) => rpc<{ pid: string; card_id: string }[]>("rc_friend_cards", { p_me: p }),
+    /* PostgREST plafonne aussi les fonctions-tables (1 000 lignes par défaut) : pagination triée, sinon un joueur avec plusieurs
+       amis bien garnis verrait des compteurs et des profils tronqués (audit du 03/10) */
+    async cards(p) {
+      const out: { pid: string; card_id: string }[] = [];
+      for (let from = 0; ; from += 1000) {
+        const { data, error } = await sb.rpc("rc_friend_cards", { p_me: p }).order("pid").order("card_id").range(from, from + 999);
+        if (error) { if (missing(error)) throw new FriendsNotReady(error.message); throw new Error(error.message); }
+        const rows = (data ?? []) as { pid: string; card_id: string }[];
+        out.push(...rows);
+        if (rows.length < 1000) return out;
+      }
+    },
     async profile(pid) {
       const { data, error } = await sb.from("rc_players").select("pseudo,perso,opened,first_day").eq("player_id", pid).maybeSingle();
       if (error) { if (missing(error)) throw new FriendsNotReady(error.message); throw new Error(error.message); }

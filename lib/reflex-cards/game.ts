@@ -10,8 +10,12 @@
  */
 import "server-only";
 import raw from "@/data/reflex-cards-game.json";
+import rulesRaw from "@/data/reflex-cards-rules.json";
 import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
+import { launchDate } from "./season";
+
+const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
 type Row = [string, string, string, string, number, string, string, number, string, string, string, number];
 type Palier = { fam: string; sub: string; r: string; noto: number; part: number; legende?: number; merite?: number };
@@ -45,6 +49,8 @@ export type GameData = {
   watch: Record<string, number>;
   toty: string[];
   masked: number;
+  /** cartes de la collection « Les Pionniers » (identifiants masqués pour celles à venir) : la même liste que le serveur */
+  themePion: string[];
 };
 
 export function gameData(day: number): GameData {
@@ -94,6 +100,7 @@ export function gameData(day: number): GameData {
     watch: keep(RAW.watch),
     toty: day >= RAW.meta.toty_revelee_jour ? RAW.toty.filter((id) => !mask.has(id)) : [],
     masked: mask.size,
+    themePion: (RULES.themes.find((t) => t.id === "th-pion")?.cards ?? []).map((id) => mask.get(id) ?? id),
   };
 }
 
@@ -104,7 +111,8 @@ const js = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c").split(LS).
 /** bloc de données injecté dans le gabarit */
 export function gameDataScript(day: number): string {
   const d = gameData(day);
-  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())};
+  /* GAME_LAUNCH : la date du jour 1, pour afficher de vraies dates de sortie sans dépendre de l'horloge ni du cache de la page */
+  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEME_PION=${js(d.themePion)};
 const CARDS=${js(d.cards)};
 const PALIERS=${js(d.paliers)};
 const NOTO=${js(d.noto)};

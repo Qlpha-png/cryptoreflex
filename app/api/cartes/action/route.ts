@@ -36,6 +36,10 @@ export async function POST(req: NextRequest) {
   if (!ACTIONS.has(a)) return NextResponse.json({ ok: false, error: "Action inconnue." }, { status: 400, headers: NO_STORE });
   const ctx = gameCtx(body.jour);
   if (ctx.day < 1) return new NextResponse("Page introuvable", { status: 404 });
+  /* page d'un jour passé (ouverte avant minuit au-delà de la tolérance, ou servie par le cache) : refus AVANT tout geste.
+     Sinon le booster serait tiré dans les cartes du jour, inconnues de la page : consommé, mais jamais révélé. Le jeu se recharge. */
+  const cd = Number(body.jour);
+  if (Number.isInteger(cd) && cd !== ctx.day) return NextResponse.json({ ok: false, code: "reload", error: "De nouvelles cartes sont sorties : la page se recharge." }, { status: 409, headers: NO_STORE });
   let who: Who | null = null;
   try {
     who = await resolvePlayer(req, { create: true, today: ctx.today });

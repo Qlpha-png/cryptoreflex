@@ -323,8 +323,14 @@ describe("Reflex Cards — récompenses longues (2e joueur, fin de saison)", () 
     const missing = RULES.cards.find((c) => c.r === "L")!.id;
     await expect(runAction(db, V, "pantheon", { keys: ["base|" + missing] }, ctx, ACC)).rejects.toThrow(/non possédée/);
     await expect(runAction(db, V, "pantheon", { keys: ["myth|" + owned] }, ctx, ACC)).rejects.toThrow(/non possédée/);
-    const r = await runAction(db, V, "pantheon", { keys: ["base|" + owned, "base|" + owned, "base|" + owned, "base|" + owned] }, ctx, ACC);
-    expect(r.state.perso.pantheon).toHaveLength(3);
+    /* doublons retirés (audit 03/10), clés parasites refusées, 3 au plus */
+    const r = await runAction(db, V, "pantheon", { keys: ["base|" + owned, "base|" + owned, "base|" + owned, "base|" + owned, "base|" + owned + "|parasite", "<b>|x"] }, ctx, ACC);
+    expect(r.state.perso.pantheon).toEqual(["base|" + owned]);
+    const st = await loadGame(db, V, ctx);
+    const four = RULES.cards.filter((c) => !c.fossil && c.r !== "L" && st.cards.has(c.id)).slice(0, 4).map((c) => "base|" + c.id);
+    expect(four).toHaveLength(4);
+    const r2 = await runAction(db, V, "pantheon", { keys: four }, ctx, ACC);
+    expect(r2.state.perso.pantheon).toEqual(four.slice(0, 3));
   });
   it("un joueur ne voit jamais la partie d'un autre ; la partie invitée se rattache à un compte neuf", async () => {
     const a = await loadGame(db, U, ctx), b = await loadGame(db, V, ctx);

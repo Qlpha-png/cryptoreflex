@@ -60,13 +60,13 @@ export function fakeSupabase(pg: PGlite): any {
   const id = (s: string) => { if (!/^[a-z_]+$/.test(s)) throw new Error("identifiant refusé : " + s); return s; };
   return {
     from(table: string) {
-      const st = { cols: "*", where: [] as [string, string, unknown][], range: null as null | [number, number] };
+      const st = { cols: "*", where: [] as [string, string, unknown][], order: [] as string[], range: null as null | [number, number] };
       const run = async (single: boolean) => {
         try {
           const params: unknown[] = [];
           const w = st.where.map(([c, op, v]) => (params.push(v), `${id(c)} ${op} $${params.length}`));
           const cols = st.cols === "*" ? "*" : st.cols.split(",").map((c) => id(c.trim())).join(",");
-          const sql = `select ${cols} from public.${id(table)}${w.length ? " where " + w.join(" and ") : ""}${st.range ? ` limit ${st.range[1] - st.range[0] + 1} offset ${st.range[0]}` : ""}`;
+          const sql = `select ${cols} from public.${id(table)}${w.length ? " where " + w.join(" and ") : ""}${st.order.length ? " order by " + st.order.map(id).join(", ") : ""}${st.range ? ` limit ${st.range[1] - st.range[0] + 1} offset ${st.range[0]}` : ""}`;
           const rows = out(await pg.query(sql, params) as any);
           if (single && rows.length > 1) return { data: null, error: { message: "plusieurs lignes" } };
           return { data: single ? rows[0] ?? null : rows, error: null };
@@ -78,24 +78,39 @@ export function fakeSupabase(pg: PGlite): any {
         select(c: string) { st.cols = c; return qb; },
         eq(c: string, v: unknown) { st.where.push([c, "=", v]); return qb; },
         gte(c: string, v: unknown) { st.where.push([c, ">=", v]); return qb; },
+        order(c: string) { st.order.push(c); return qb; },
         range(a: number, b: number) { st.range = [a, b]; return qb; },
         maybeSingle() { return run(true); },
         then(ok: any, ko: any) { return run(false).then(ok, ko); },
       };
       return qb;
     },
-    async rpc(fn: string, args: Record<string, unknown>) {
-      try {
-        const keys = Object.keys(args);
-        const call = `public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${k === "p_patch" ? "::jsonb" : ""}`).join(", ")})`;
-        const params = keys.map((k) => (k === "p_patch" ? JSON.stringify(args[k]) : args[k]));
-        /* fonctions qui renvoient une table : comme PostgREST, un tableau d'objets */
-        if (fn === "rc_friend_list" || fn === "rc_friend_cards") return { data: out((await pg.query(`select * from ${call}`, params)) as any), error: null };
-        const res = await pg.query(`select ${call} as r`, params);
-        return { data: (res.rows[0] as any).r, error: null };
-      } catch (e) {
-        return { data: null, error: { message: String((e as Error).message), code: (e as any).code } };
-      }
+    rpc(fn: string, args: Record<string, unknown>) {
+      /* comme supabase-js : un « thenable » qui accepte .order() et .range() sur les fonctions-tables */
+      const order: string[] = [];
+      let range: null | [number, number] = null;
+      const run = async () => {
+        try {
+          const keys = Object.keys(args);
+          const call = `public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${k === "p_patch" ? "::jsonb" : ""}`).join(", ")})`;
+          const params = keys.map((k) => (k === "p_patch" ? JSON.stringify(args[k]) : args[k]));
+          /* fonctions qui renvoient une table : comme PostgREST, un tableau d'objets (tri et limit/offset compris) */
+          if (fn === "rc_friend_list" || fn === "rc_friend_cards") {
+            const tail = `${order.length ? " order by " + order.map(id).join(", ") : ""}${range ? ` limit ${range[1] - range[0] + 1} offset ${range[0]}` : ""}`;
+            return { data: out((await pg.query(`select * from ${call}${tail}`, params)) as any), error: null };
+          }
+          const res = await pg.query(`select ${call} as r`, params);
+          return { data: (res.rows[0] as any).r, error: null };
+        } catch (e) {
+          return { data: null, error: { message: String((e as Error).message), code: (e as any).code } };
+        }
+      };
+      const b: any = {
+        order(c: string) { order.push(c); return b; },
+        range(a: number, z: number) { range = [a, z]; return b; },
+        then(ok: any, ko: any) { return run().then(ok, ko); },
+      };
+      return b;
     },
   };
 }

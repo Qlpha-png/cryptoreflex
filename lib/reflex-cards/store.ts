@@ -35,10 +35,14 @@ export interface GameDb {
 
 /* ---------- Supabase (production) ---------- */
 export function supabaseGameDb(sb: SupabaseClient): GameDb {
-  const all = async <T>(table: string, cols: string, player: string, extra?: (q: any) => any): Promise<T[]> => {
+  /* pagination par 1 000 (plafond PostgREST), TOUJOURS triée sur la clé : sans tri, une insertion entre deux pages décale
+     l'OFFSET et une ligne est sautée (audit du 03/10) */
+  const all = async <T>(table: string, cols: string, player: string, order: string[], extra?: (q: any) => any): Promise<T[]> => {
     const out: T[] = [];
     for (let from = 0; ; from += 1000) {
-      let q = sb.from(table).select(cols).eq("player_id", player).range(from, from + 999);
+      let q = sb.from(table).select(cols).eq("player_id", player);
+      for (const c of order) q = q.order(c);
+      q = q.range(from, from + 999);
       if (extra) q = extra(q);
       const { data, error } = await q;
       if (error) throw new Error(error.message);
@@ -73,14 +77,17 @@ export function supabaseGameDb(sb: SupabaseClient): GameDb {
       return (data as string | null) ?? null;
     },
     async load(id, since) {
-      const [player, cards, eds, cos, claims, days, quiz] = await Promise.all([
-        sb.from("rc_players").select("*").eq("player_id", id).maybeSingle().then((r) => { if (r.error) throw new Error(r.error.message); return r.data; }),
-        all<Loaded["cards"][number]>("rc_cards", "card_id,n,holo,fins,first_at", id),
-        all<Loaded["eds"][number]>("rc_editions", "ed,card_id,n,first_at", id),
-        all<Loaded["cos"][number]>("rc_cosmetics", "item_id,no,at", id),
-        all<Loaded["claims"][number]>("rc_claims", "key", id),
-        all<Loaded["days"][number]>("rc_days", "day,ev,colp", id, (q) => q.gte("day", since)),
-        all<Loaded["quiz"][number]>("rc_quiz", "card_id,ok,day", id),
+      /* la ligne du joueur (donc sa version) d'ABORD, les autres tables ensuite : une écriture arrivée entre les deux fait monter la
+         version et rc_apply la refusera (rc_conflict), au lieu d'accepter un geste calculé sur des cartes ou des jalons périmés
+         avec la bonne version (audit du 03/10 : lecture non atomique) */
+      const player = await sb.from("rc_players").select("*").eq("player_id", id).maybeSingle().then((r) => { if (r.error) throw new Error(r.error.message); return r.data; });
+      const [cards, eds, cos, claims, days, quiz] = await Promise.all([
+        all<Loaded["cards"][number]>("rc_cards", "card_id,n,holo,fins,first_at", id, ["card_id"]),
+        all<Loaded["eds"][number]>("rc_editions", "ed,card_id,n,first_at", id, ["ed", "card_id"]),
+        all<Loaded["cos"][number]>("rc_cosmetics", "item_id,no,at", id, ["item_id"]),
+        all<Loaded["claims"][number]>("rc_claims", "key", id, ["key"]),
+        all<Loaded["days"][number]>("rc_days", "day,ev,colp", id, ["day"], (q) => q.gte("day", since)),
+        all<Loaded["quiz"][number]>("rc_quiz", "card_id,ok,day", id, ["card_id"]),
       ]);
       return { player: player as Loaded["player"], cards, eds, cos, claims, days, quiz };
     },
