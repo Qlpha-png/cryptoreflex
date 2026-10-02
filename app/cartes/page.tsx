@@ -202,7 +202,7 @@ export default function CartesPage() {
             <CalendarDays className="h-6 w-6 text-amber-300" /> Le calendrier de la saison 1
           </h2>
           <p className="mt-2 max-w-3xl text-fg/70">
-            4 collections, chacune en 3 parties hebdomadaires. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.
+            4 collections (Genèse, Ascension, Éclipse, Apogée), chacune en 3 parties hebdomadaires. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.
           </p>
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
             <table className="w-full min-w-[560px] text-sm">
