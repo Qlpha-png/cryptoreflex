@@ -6,7 +6,7 @@
  */
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { GameError, dayAdd, type ColpDay, type GameState, type Patch, type PlayerRow, type CardRow } from "./engine";
+import { GameError, dayAdd, type ColpDay, type GameState, type Patch, type PlayerRow, type CardRow, type Pity } from "./engine";
 import { planAction, planDaily, toClient, type Account, type Ctx } from "./actions";
 
 export interface Loaded {
@@ -120,22 +120,81 @@ function dbError(e: unknown): GameError {
   return new GameError("db", "Service momentanément indisponible, réessayez.");
 }
 
+/**
+ * Applique EN MÉMOIRE le patch que rc_apply vient d'écrire, avec exactement la même sémantique que la fonction SQL
+ * (supabase/migrations/20261002_reflex_cards_b1.sql) : évite de relire toute la partie après chaque geste
+ * (moitié moins de transfert depuis Supabase, geste plus rapide). Équivalence vérifiée par les tests (état en mémoire
+ * = état relu en base, après chaque geste). Seuls les horodatages des nouvelles lignes diffèrent de quelques ms.
+ */
+export function applyPatch(s: GameState, p: Patch, res: ApplyResult, now: number): GameState {
+  const P = p.player ?? {};
+  const add = (k: string) => Number(P[k] ?? 0);
+  const player: PlayerRow = {
+    ...s.player,
+    version: res.version,
+    reflets: s.player.reflets + add("reflets"),
+    eclats: s.player.eclats + add("eclats"),
+    opened: s.player.opened + add("opened"),
+    ...(P.stock != null ? { stock: Number(P.stock) } : {}),
+    ...(P.stock_at != null ? { stock_at: String(P.stock_at) } : {}),
+    ...(P.pity != null ? { pity: P.pity as Pity } : {}),
+    ...("theme" in P ? { theme: P.theme == null ? null : String(P.theme) } : {}),
+    ...(P.perso != null ? { perso: P.perso as Record<string, unknown> } : {}),
+    ...(P.recent != null ? { recent: P.recent as unknown[] } : {}),
+    ...(P.days != null ? { days: P.days as string[] } : {}),
+    ...(P.pseudo != null ? { pseudo: String(P.pseudo) } : {}),
+  };
+  const cards = new Map(s.cards);
+  for (const c of p.cards ?? []) {
+    const e = cards.get(c.id);
+    let row: CardRow = e ? { ...e, fins: { ag: [...e.fins.ag], or: [...e.fins.or], onyx: [...e.fins.onyx] } } : { n: 0, holo: 0, fins: { ag: [], or: [], onyx: [] }, t: now };
+    if (c.dn > 0) row = { ...row, n: row.n + c.dn, holo: row.holo + (c.dholo ?? 0) };
+    else if (c.dn < 0) row = { ...row, n: row.n + c.dn };
+    if (c.fin) {
+      const n = res.numbered?.find((x) => x.i === c.i);
+      if (n && n.fin === "holo") row.holo += 1;
+      else if (n && n.serial != null && (n.fin === "ag" || n.fin === "or" || n.fin === "onyx")) row.fins[n.fin].push(n.serial);
+    }
+    cards.set(c.id, row);
+  }
+  const eds = new Map(s.eds);
+  for (const x of p.eds ?? []) { const k = x.ed + "|" + x.id, e = eds.get(k); eds.set(k, { n: (e?.n ?? 0) + x.dn, t: e?.t ?? now }); }
+  const cos = new Map(s.cos);
+  for (const x of p.cos ?? []) cos.set(x.id, { no: x.no ?? null, t: now });
+  const claims = new Set(s.claims);
+  for (const k of p.claims ?? []) claims.add(k);
+  const days = new Map(s.days);
+  if (p.day) {
+    const d = days.get(p.day.day) ?? { ev: {}, colp: null };
+    const ev = { ...d.ev };
+    for (const [k, v] of Object.entries(p.day.inc ?? {})) ev[k] = (ev[k] ?? 0) + Number(v);
+    days.set(p.day.day, { ev, colp: "colp" in p.day ? (p.day.colp ?? null) : d.colp });
+  }
+  const quiz = new Map(s.quiz);
+  if (p.quiz && !quiz.get(p.quiz.id)?.ok) quiz.set(p.quiz.id, { ok: p.quiz.ok, day: p.quiz.day });
+  return { player, cards, eds, cos, claims, days, quiz };
+}
+
+/** mises à jour du jour (offres du Colporteur, objets mérités…) appliquées en base puis en mémoire, sans relecture */
+async function withDaily(db: GameDb, player: string, s: GameState, ctx: Ctx): Promise<GameState | null> {
+  const daily = planDaily(s, ctx);
+  if (!daily) return s;
+  try {
+    return applyPatch(s, daily, await db.apply(player, s.player.version, daily), ctx.now);
+  } catch (e) {
+    if (/rc_conflict/.test(errMsg(e))) return null; // la partie a bougé ailleurs : on relit
+    throw dbError(e);
+  }
+}
+
 /** charge la partie (déjà créée par session.ts) et applique les mises à jour du jour */
 export async function loadGame(db: GameDb, player: string, ctx: Ctx): Promise<GameState> {
   const since = dayAdd(ctx.today, -9);
   let L = await db.load(player, since);
   for (let attempt = 0; attempt < 3; attempt++) {
-    const s = toState(L);
-    const daily = planDaily(s, ctx);
-    if (!daily) return s;
-    try {
-      await db.apply(player, s.player.version, daily);
-      L = await db.load(player, since);
-      return toState(L);
-    } catch (e) {
-      if (!/rc_conflict/.test(errMsg(e))) throw dbError(e);
-      L = await db.load(player, since);
-    }
+    const d = await withDaily(db, player, toState(L), ctx);
+    if (d) return d;
+    L = await db.load(player, since); // conflit (autre onglet) : on relit et on recommence
   }
   return toState(L);
 }
@@ -165,7 +224,9 @@ export async function runAction(db: GameDb, player: string, a: string, body: Rec
       const items = plan.data.items as { fin: string | null; serial?: number | null }[];
       for (const n of res.numbered) { items[n.i].fin = n.fin; items[n.i].serial = n.serial; }
     }
-    const s2 = await loadGame(db, player, ctx);
+    /* état après le geste calculé en mémoire (pas de relecture), puis mises à jour du jour éventuelles (objet mérité…) */
+    const after = applyPatch(s, plan.patch, res, ctx.now);
+    const s2 = (await withDaily(db, player, after, ctx)) ?? (await loadGame(db, player, ctx));
     return { ok: true, msg: plan.msg, data: plan.data, state: toClient(s2, ctx, account) };
   }
   throw new GameError("busy", "Votre partie est en cours de mise à jour ailleurs : réessayez.");

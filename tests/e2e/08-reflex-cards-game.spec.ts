@@ -25,9 +25,13 @@ test.describe("Reflex Cards — page du jeu", () => {
     await expect(page.locator("#stockn")).toHaveText("10");
     await page.goto("/cartes/jouer#booster");
     await page.locator("#pack").click();
+    /* « Tout révéler » n'agit qu'une fois la main étalée (fin de l'animation d'ouverture) */
+    await page.locator("#rv").waitFor({ timeout: 10_000 });
     await page.locator("#revealAll").click();
     await expect.poll(() => page.evaluate(() => Object.keys(JSON.parse(localStorage.getItem("rc9:col") || "{}")).length)).toBeGreaterThan(0);
     await expect(page.locator("#stockn")).toHaveText("9");
+    /* le bilan du booster s'affiche (garde-fou du bilan différé : il ne doit pas l'empêcher) */
+    await expect(page.locator(".bilan")).toBeVisible({ timeout: 15_000 });
     /* rien de simulé à l'écran en bêta : ni mur, ni amis, ni objectif mondial */
     await expect(page.locator('[data-xt="mur"]')).toBeHidden();
     await expect(page.locator("#world")).toBeHidden();
