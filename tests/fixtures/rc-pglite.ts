@@ -11,6 +11,7 @@ export async function makeGameDb(): Promise<{ pg: PGlite; db: GameDb }> {
   const pg = new PGlite();
   await pg.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users (id uuid primary key);`);
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b1.sql", "utf8"));
+  await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b2_amis.sql", "utf8"));
   const q = async (s: string, p: unknown[]) => (await pg.query(s, p)).rows as any[];
   const iso = (r: any) => ({ ...r, ...(r.first_at ? { first_at: new Date(r.first_at).toISOString() } : {}), ...(r.at ? { at: new Date(r.at).toISOString() } : {}), ...(r.day ? { day: new Date(r.day).toISOString().slice(0, 10) } : {}) });
   const db: GameDb = {
@@ -86,8 +87,11 @@ export function fakeSupabase(pg: PGlite): any {
     async rpc(fn: string, args: Record<string, unknown>) {
       try {
         const keys = Object.keys(args);
-        const sql = `select public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${k === "p_patch" ? "::jsonb" : ""}`).join(", ")}) as r`;
-        const res = await pg.query(sql, keys.map((k) => (k === "p_patch" ? JSON.stringify(args[k]) : args[k])));
+        const call = `public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${k === "p_patch" ? "::jsonb" : ""}`).join(", ")})`;
+        const params = keys.map((k) => (k === "p_patch" ? JSON.stringify(args[k]) : args[k]));
+        /* fonctions qui renvoient une table : comme PostgREST, un tableau d'objets */
+        if (fn === "rc_friend_list" || fn === "rc_friend_cards") return { data: out((await pg.query(`select * from ${call}`, params)) as any), error: null };
+        const res = await pg.query(`select ${call} as r`, params);
         return { data: (res.rows[0] as any).r, error: null };
       } catch (e) {
         return { data: null, error: { message: String((e as Error).message), code: (e as any).code } };

@@ -402,7 +402,7 @@ const QUIZ_PLATEFORMES: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "La période transitoire qui permettait aux PSAN d'opérer sans agrément MiCA a pris fin le 1er juillet 2026. Depuis cette date, seuls les prestataires agréés CASP (en France, ou passeportés depuis un autre État de l'UE) peuvent fournir des services crypto en France. Opérer sans agrément expose à des sanctions pénales.",
+      "La période transitoire qui permettait aux PSAN d'opérer sans agrément MiCA a pris fin le 1er juillet 2026. Depuis cette date, seuls les prestataires agréés CASP (en France, ou passeportés depuis un autre État de l'UE) peuvent fournir des services crypto en France. Fournir ces services sans agrément est puni de deux ans d'emprisonnement et de 30 000 € d'amende (art. L. 572-23 du Code monétaire et financier) : la sanction vise le prestataire, pas l'utilisateur.",
   },
   {
     id: "pla-q2-critere-principal",

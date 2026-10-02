@@ -400,7 +400,7 @@ Kraken est agréée MiCA par la Banque centrale d'Irlande, avec un passeport ver
 - Cold storage : 95 % des fonds clients
 - Assurance des fonds : oui
 - MFA obligatoire : oui
-- Dernier incident significatif : aucun hack majeur depuis la création en 2011. C'est l'exchange majeur qui a le bilan de sécurité le plus long et le plus propre du secteur. 14 ans sans perte de fonds clients confirmée.
+- Incidents : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance. Deux incidents sans perte client : une faille exploitée par des chercheurs en juin 2024 (environ 3 M$ retirés, aucun actif client touché) et une tentative d'extorsion en avril 2026 (accès abusif d'employés du support à environ 2 000 comptes, fonds jamais menacés selon Kraken).
 
 **Support FR :**
 - Chat FR : oui
@@ -425,7 +425,7 @@ Un Trustpilot de 3,5/5 sur un volume modéré (9 500 avis) est dans la moyenne d
 - Staking US restreint suite aux actions SEC — les conditions du staking pour résidents non-UE ont été modifiées, mais cela n'affecte pas les utilisateurs français (UE)
 
 **Verdict Cryptoreflex :**
-Kraken mérite son score de 4,5/5 et la première place du classement. C'est la seule plateforme du panel à combiner 14 ans sans hack, un Proof-of-Reserves attesté chaque trimestre, un support téléphonique en français, et un agrément MiCA solide. Pour un investisseur qui place des montants significatifs (au-delà de quelques milliers d'euros), ce profil de sécurité vaut largement le premium de quelques dixièmes de pourcent de frais par rapport aux exchanges les moins chers du panel. Pour un débutant total qui commence avec 50 à 200 €, l'interface Pro peut être un frein — mais Kraken a travaillé sur son interface Simple, qui est tout à fait accessible. À recommander sans hésitation pour l'investisseur expérimenté ; à considérer sérieusement pour tout investisseur qui accorde de la valeur à la sécurité.
+Kraken mérite son score de 4,5/5 et la première place du classement. C'est la seule plateforme du panel à combiner plus de 14 ans sans vol de fonds clients, un Proof-of-Reserves attesté chaque trimestre, un support téléphonique en français, et un agrément MiCA solide. Pour un investisseur qui place des montants significatifs (au-delà de quelques milliers d'euros), ce profil de sécurité vaut largement le premium de quelques dixièmes de pourcent de frais par rapport aux exchanges les moins chers du panel. Pour un débutant total qui commence avec 50 à 200 €, l'interface Pro peut être un frein — mais Kraken a travaillé sur son interface Simple, qui est tout à fait accessible. À recommander sans hésitation pour l'investisseur expérimenté ; à considérer sérieusement pour tout investisseur qui accorde de la valeur à la sécurité.
 
 Voir la fiche détaillée et toujours à jour sur cryptoreflex.fr
 
@@ -989,7 +989,7 @@ Ce chapitre vous guide selon cinq profils types. Identifiez celui qui vous resse
 
 **Top 3 pour ce profil :**
 
-1. **Kraken (4,5/5)** — sécurité de 4,9/5 (14 ans sans hack), MiCA de 4,6/5, support FR par téléphone avec réponse en moins de 12 heures. En cas de blocage, vous pouvez appeler. L'interface Simple de Kraken est accessible, et le Proof-of-Reserves trimestriel vous donne une garantie supplémentaire que vos cryptos sont bien là.
+1. **Kraken (4,5/5)** — sécurité de 4,9/5 (aucun fonds client volé par piratage depuis 2011), MiCA de 4,6/5, support FR par téléphone avec réponse en moins de 12 heures. En cas de blocage, vous pouvez appeler. L'interface Simple de Kraken est accessible, et le Proof-of-Reserves trimestriel vous donne une garantie supplémentaire que vos cryptos sont bien là.
 
 2. **Bitpanda (4,4/5)** — le score MiCA le plus élevé du panel (4,9/5), 99 % des fonds en cold storage, interface mobile exemplaire (UX 4,6/5), Trustpilot de 4,3/5 sur 47 000 avis — le signal de satisfaction client le plus robuste statistiquement dans le panel. Plans d'épargne à partir de 1 € si vous voulez automatiser ensuite.
 

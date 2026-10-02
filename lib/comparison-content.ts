@@ -260,7 +260,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour le trader actif qui maximise frais et choix : ${a.name}. Pour qui dort mieux la nuit avec un acteur jamais hacké en 14 ans : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} reste, à frais quasi équivalents (0,16/0,26 % vs 0,1/0,1 %), la plateforme la plus saine du marché : aucun hack majeur depuis 2011, Proof-of-Reserves audité trimestriellement, support téléphonique en français — un combo rare. ${a.name} compense par un catalogue 30 % plus large (380 vs 290), la liquidité spot la plus profonde au monde et un écosystème futures complet. Pour la majorité des particuliers européens, l'écart de frais n'est pas décisif (0,16 % suffit). Conclusion : ${b.name} pour la tranquillité, ${a.name} si vous cherchez un asset spécifique introuvable ailleurs ou si vous tradez plus de 5 000 € / mois.`,
+      `${b.name} reste, à frais quasi équivalents (0,16/0,26 % vs 0,1/0,1 %), la plateforme la plus saine du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, Proof-of-Reserves audité trimestriellement, support téléphonique en français — un combo rare. ${a.name} compense par un catalogue 30 % plus large (380 vs 290), la liquidité spot la plus profonde au monde et un écosystème futures complet. Pour la majorité des particuliers européens, l'écart de frais n'est pas décisif (0,16 % suffit). Conclusion : ${b.name} pour la tranquillité, ${a.name} si vous cherchez un asset spécifique introuvable ailleurs ou si vous tradez plus de 5 000 € / mois.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },

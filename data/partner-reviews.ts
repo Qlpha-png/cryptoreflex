@@ -623,7 +623,7 @@ export const partnerReviews: PartnerReview[] = [
           "Sans Waltio : 14h de Excel multi-onglets pour calculer vos plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de votre temps facturé, c'est 360 €+ de valeur récupérée pour 99 €/an.",
       },
       {
-        reason: "Support FR sous 24h en période fiscale (avril-juin)",
+        reason: "Support par e-mail (chat dès l'offre Smart) et centre d'aide en français",
         description:
           "Vous avez un cas tordu (airdrop, swap DeFi, fork) ? Vous écrivez au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne vous donne ça en français.",
       },

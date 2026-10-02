@@ -222,7 +222,7 @@ export default function ComparatifHubPage() {
     {
       question: "Comment choisir entre Coinbase et Kraken ?",
       answer:
-        "Coinbase = pour les débutants en France (interface simple, support FR, agréée MiCA par la CSSF luxembourgeoise). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, historique zéro hack majeur), agréée MiCA par la Banque centrale d'Irlande, mais interface moins ergonomique. Binance n'est plus une option : elle a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Comparatif détaillé sur /comparatif/coinbase-vs-kraken.",
+        "Coinbase = pour les débutants en France (interface simple, support FR, agréée MiCA par la CSSF luxembourgeoise). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, aucun vol de fonds clients par piratage à notre connaissance), agréée MiCA par la Banque centrale d'Irlande, mais interface moins ergonomique. Binance n'est plus une option : elle a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Comparatif détaillé sur /comparatif/coinbase-vs-kraken.",
     },
   ]);
 

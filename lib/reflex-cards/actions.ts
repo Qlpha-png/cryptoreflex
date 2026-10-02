@@ -8,6 +8,7 @@ import {
   ownsCos, planOpen, questProg, refill, spendDups, svcKey, tradeN, titleOk, themeProg, weekDone, weekStart, cosItem,
   type GameState, type Patch, type Rar,
 } from "./engine";
+import { QJ_LEN, qjReward, quizDay } from "./quiz-day";
 
 export interface Ctx { day: number; today: string; now: number }
 /** qui joue : invité (partie liée à ce navigateur) ou compte du site (e-mail affiché dans le jeu) */
@@ -23,6 +24,8 @@ const plusOne = (s: GameState, ctx: Ctx) => {
   const r = refill(s.player, ctx.now);
   return { stock: r.stock + 1, stock_at: new Date(r.stockAt).toISOString() };
 };
+/** clé du tirage du Quiz du jour : la partie (identifiant stable), sinon son premier jour */
+const qjKey = (s: GameState) => String((s.player as { player_id?: string }).player_id ?? s.player.first_day);
 const sanitizePseudo = (v: unknown) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 20);
 
 /** mises à jour du jour : jour joué, offres du Colporteur, objets mérités (appliquées à la lecture de la partie) */
@@ -180,6 +183,22 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       }
       return { patch: { player: { perso: { ...s.player.perso, pantheon: keys } } } };
     }
+    case "quiz-jour": {
+      const key = "z|" + ctx.today;
+      if (s.claims.has(key)) throw new GameError("done", "Quiz du jour déjà joué : revenez demain.");
+      const qs = quizDay(qjKey(s), ctx.today, ctx.day);
+      const rep = Array.isArray(b.rep) ? (b.rep as unknown[]).map((x) => Number(x)) : [];
+      if (qs.length < QJ_LEN || rep.length !== qs.length) throw new GameError("bad", "Réponses incomplètes.");
+      const score = qs.reduce((n, q, i) => n + (rep[i] === q.ok ? 1 : 0), 0);
+      const rw = qjReward(score);
+      const player: Record<string, unknown> = {};
+      if (rw.reflets) player.reflets = rw.reflets;
+      if (rw.booster) Object.assign(player, plusOne(s, ctx));
+      return {
+        patch: { ...(Object.keys(player).length ? { player } : {}), claims: [key], day: { day: ctx.today, inc: { qj: score + 1 } } },
+        data: { score, reward: rw, sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok] })) },
+      };
+    }
     case "pseudo": {
       const v = sanitizePseudo(b.v);
       if (!v) throw new GameError("bad", "Pseudo vide.");
@@ -213,6 +232,15 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
     v: s.player.version, day: ctx.day, today: ctx.today, account,
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
     pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
+    /* Quiz du jour : les questions sans la bonne réponse tant qu'il n'est pas joué ; score et corrigé ensuite */
+    qj: (() => {
+      const qs = quizDay(qjKey(s), ctx.today, ctx.day);
+      if (qs.length < QJ_LEN) return null;
+      const done = s.claims.has("z|" + ctx.today);
+      return done
+        ? { done: true, n: qs.length, score: Math.max(0, Number(s.days.get(ctx.today)?.ev.qj ?? 1) - 1), sol: qs.map((q) => ({ q: q.q, a: q.c[q.ok] })) }
+        : { done: false, n: qs.length, q: qs.map((q) => ({ q: q.q, c: q.c })) };
+    })(),
     col, eds, shards: s.player.eclats, reflets: s.player.reflets, recent: s.player.recent, pity: s.player.pity,
     packs: { stock: r.stock, last: r.stockAt, theme: s.player.theme },
     pstats: {

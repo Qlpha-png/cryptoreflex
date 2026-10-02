@@ -481,7 +481,7 @@ Ce chapitre vous guide selon cinq profils types. Identifiez celui qui vous resse
 
 **Top 3 pour ce profil :**
 
-1. **Kraken (4,5/5)** — sécurité de 4,9/5 (14 ans sans hack), MiCA de 4,6/5, support FR par téléphone avec réponse en moins de 12 heures. En cas de blocage, vous pouvez appeler. L'interface Simple de Kraken est accessible, et le Proof-of-Reserves trimestriel vous donne une garantie supplémentaire que vos cryptos sont bien là.
+1. **Kraken (4,5/5)** — sécurité de 4,9/5 (aucun fonds client volé par piratage depuis 2011), MiCA de 4,6/5, support FR par téléphone avec réponse en moins de 12 heures. En cas de blocage, vous pouvez appeler. L'interface Simple de Kraken est accessible, et le Proof-of-Reserves trimestriel vous donne une garantie supplémentaire que vos cryptos sont bien là.
 
 2. **Bitpanda (4,4/5)** — le score MiCA le plus élevé du panel (4,9/5), 99 % des fonds en cold storage, interface mobile exemplaire (UX 4,6/5), Trustpilot de 4,3/5 sur 47 000 avis — le signal de satisfaction client le plus robuste statistiquement dans le panel. Plans d'épargne à partir de 1 € si vous voulez automatiser ensuite.
 

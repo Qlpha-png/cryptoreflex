@@ -1260,13 +1260,14 @@
         ]
       },
       "risks": [
-        "DÉLISTAGE généralisé depuis 2024 : Binance, OKX, Bitstamp ne listent plus ZEC en UE pour cause MiCA",
+        "Cryptos d'anonymisation sous pression en Europe : Kraken a retiré le monero (XMR) de l'EEE fin 2024 ; à partir de juillet 2027, le règlement anti-blanchiment européen (AMLR) interdira aux prestataires agréés de les proposer, ce qui pourrait entraîner le retrait du ZEC",
         "Très faible utilisation des transactions privées (z-addrs) : <5% du volume",
         "Cérémonie de setup initiale (Powers of Tau) historiquement controversée (trust assumption)"
       ],
       "useCase": "Transactions privées optionnelles, recherche cryptographique zk, paiements confidentiels",
       "whereToBuy": [
-        "Aucune plateforme agréée MiCA ne la propose à notre connaissance"
+        "Kraken",
+        "Bitpanda"
       ],
       "officialUrl": "https://z.cash",
       "monitoringSignals": [
@@ -2778,7 +2779,7 @@
         ],
         "lastAuditDate": "2025-01",
         "yearsActive": 3,
-        "majorIncidents": "Critique majeure de la CNIL (FR) et de l'autorité bavaroise (BayLDA) en 2023 sur la collecte biométrique. Suspension en France et en Espagne (TFR) en 2024. Enquêtes en cours au Royaume-Uni et au Portugal.",
+        "majorIncidents": "Collecte biométrique (Orb) mise en cause : contrôle de la CNIL dans les bureaux parisiens (août 2023), interdiction temporaire de la collecte en Espagne par l'AEPD (mars 2024), procédure de l'autorité bavaroise (BayLDA).",
         "fundingRaised": "240M$",
         "backers": [
           "Andreessen Horowitz (a16z)",
@@ -2788,13 +2789,14 @@
         ]
       },
       "risks": [
-        "WLD non disponible aux résidents français (suspension CNIL/AMF) et restreint en UE",
+        "Collecte biométrique contestée en Europe (contrôle de la CNIL en 2023, interdiction temporaire en Espagne en 2024) : le service World ID peut être restreint, le jeton WLD reste proposé par des plateformes agréées MiCA",
         "Risques RGPD et collecte biométrique : controverse permanente",
         "Forte inflation prévue (unlock progressif jusqu'en 2038)"
       ],
       "useCase": "Proof-of-personhood, anti-bot, distribution d'aides (UBI), authentification dApps, World App wallet",
       "whereToBuy": [
-        "Aucune plateforme agréée MiCA ne la propose à notre connaissance"
+        "Kraken",
+        "Bitpanda"
       ],
       "officialUrl": "https://world.org",
       "monitoringSignals": [
@@ -4038,10 +4040,7 @@
       ],
       "useCase": "Stablecoin DeFi, garantie prêts, paiements, DAI Savings Rate",
       "whereToBuy": [
-        "Coinbase",
-        "Kraken",
-        "Bybit",
-        "OKX"
+        "Aucune plateforme agréée MiCA ne la propose à notre connaissance (stablecoin non conforme MiCA, interdit dans l'EEE chez Kraken)"
       ],
       "officialUrl": "https://makerdao.com",
       "monitoringSignals": [
@@ -4172,7 +4171,7 @@
         ]
       },
       "risks": [
-        "France : acheter KCS sur une plateforme non agréée MiCA crée un risque juridique et fiscal personnel à mesurer",
+        "France : kucoin.com figure sur la liste noire de l'AMF depuis le 15 avril 2024 ; acheter du KCS sur une plateforme non agréée MiCA crée un risque juridique et fiscal personnel",
         "Risques réglementaires (amendes US)",
         "Aucune plateforme agréée MiCA proposant KCS identifiée à ce jour",
         "Dépendance KuCoin centralisé",

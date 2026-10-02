@@ -621,7 +621,7 @@ const TRACK_FISCALITE: Track = {
     {
       order: 13,
       articleSlug: "waltio-vs-koinly-vs-accointing-comparatif-2026",
-      title: "Choisir son outil fiscal : Waltio, Koinly, Accointing",
+      title: "Choisir son outil fiscal : Waltio ou Koinly",
       durationMin: 12,
       prereqs: [],
     },

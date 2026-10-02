@@ -285,7 +285,7 @@ export const partners: Partner[] = [
     pros: [
       "Cerfa 2086 + 3916-bis pré-remplis automatiquement (unique en FR)",
       "Méthode PMP native (art. 150 VH bis CGI exigée par Bercy)",
-      "Support FR sous 24h pendant période fiscale",
+      "Support par e-mail, chat à partir de l'offre Smart",
       "Connexion 220+ plateformes (Binance, Bitpanda, Coinhouse, Kraken, MetaMask…)",
     ],
     cons: [

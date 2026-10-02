@@ -330,7 +330,7 @@ Pourquoi nous recommandons Waltio (testé sur 12 outils en 2025) :
 2. **Conformité Cerfa 2086 + 3916-bis** : génération directe des PDF officiels.
 3. **200+ exchanges supportés** + DeFi multi-chain.
 4. **Tarification transparente** (relevée sur waltio.com le 2 octobre 2026) : suivi gratuit, puis 39 € par an jusqu'à 50 transactions (Lite), 99 € jusqu'à 1 000 (Starter), 249 € jusqu'à 10 000 (Smart), 999 € au-delà (Unlimited).
-5. **Support email FR + chat prioritaire** sur plans payants.
+5. **Support par e-mail**, chat à partir de l'offre Smart, centre d'aide en français.
 
 [Découvrir Waltio (essai gratuit)](https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=lead-magnet&utm_campaign=bible-fiscalite-2026)
 
