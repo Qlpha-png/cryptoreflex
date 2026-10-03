@@ -39,16 +39,16 @@ export const famIcon = (f: string) =>
   `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">${(FAM[f] || FAM["Layer 1"]).i}</svg>`;
 
 /* Fossile : seule édition affichée par le site pour l'instant (Musée des Fossiles) */
-const FOSSIL_COLOR = "#a8927a";
+export const FOSSIL_COLOR = "#a8927a";
 /* motif de fond par rareté : la matière dit la rareté (la Commune garde le motif de sa famille) */
-const RPAT: Partial<Record<Rarity, string>> = { PC: "hex", R: "facets", SR: "crystals", UR: "embers", L: "rays" };
-const RAR_INDEX = (r: Rarity) => RAR.indexOf(r);
+export const RPAT: Partial<Record<Rarity, string>> = { PC: "hex", R: "facets", SR: "crystals", UR: "embers", L: "rays" };
+export const RAR_INDEX = (r: Rarity) => RAR.indexOf(r);
 
 export const esc = (s: unknown) =>
   String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 export const IMG = (p: string, size = "large") => "https://coin-images.coingecko.com/coins/images/" + p.replace("/", "/" + size + "/");
 const f1 = (v: number) => v.toFixed(1);
-function h32(s: string) {
+export function h32(s: string) {
   let h = 2166136261;
   for (const c of s) {
     h ^= c.charCodeAt(0);
@@ -56,7 +56,7 @@ function h32(s: string) {
   }
   return h >>> 0;
 }
-function rng(seed: number) {
+export function rng(seed: number) {
   let a = seed;
   return () => {
     a |= 0;
@@ -72,11 +72,11 @@ export function shade(hex: string, a: number) {
 }
 
 /* identifiants SVG uniques dans la page : mg_<instance>_<n> (médaillon), lr_<instance>_<n> (lauriers) */
-interface Ctx { key: string; n: number }
+export interface Ctx { key: string; n: number }
 const uid = (x: Ctx, p: "mg" | "lr") => `${p}_${x.key}_${++x.n}`;
 
 /* ---------- motifs ---------- */
-function pattern(c: { id: string; fam: string }, col: string, kind?: string) {
+export function pattern(c: { id: string; fam: string }, col: string, kind?: string) {
   const R = rng(h32(c.id + "pat"));
   let g = "";
   switch (kind || FAM[c.fam].pat) {
@@ -164,16 +164,16 @@ function pattern(c: { id: string; fam: string }, col: string, kind?: string) {
   return `<svg viewBox="0 0 240 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${g}</svg>`;
 }
 /* ornements d'angle sobres pour Commune / Peu commune / Rare */
-function corners(col: string) {
+export function corners(col: string) {
   const c = `<path d="M10 30 V15 L15 10 H30" fill="none" stroke="${col}" stroke-width="1.3" stroke-opacity=".7"/><circle cx="30" cy="10" r="1.5" fill="${col}" fill-opacity=".8"/><circle cx="10" cy="30" r="1.5" fill="${col}" fill-opacity=".8"/>`;
   return `<svg viewBox="0 0 232 328" preserveAspectRatio="none" aria-hidden="true"><g>${c}</g><g transform="translate(232 0) scale(-1 1)">${c}</g></svg>`;
 }
-function filigree(col: string) {
+export function filigree(col: string) {
   const c = `<path d="M4 34 C4 16 16 4 34 4" fill="none" stroke="${col}" stroke-width="1.2" opacity=".75"/><path d="M9 34 C9 20 20 9 34 9" fill="none" stroke="${col}" stroke-width=".7" opacity=".55"/><circle cx="34" cy="4" r="1.8" fill="${col}"/><circle cx="4" cy="34" r="1.8" fill="${col}"/><path d="M14 14 l4 -6 l4 6 l-4 6z" fill="${col}" opacity=".7"/>`;
   return `<svg viewBox="0 0 232 328" preserveAspectRatio="none" aria-hidden="true"><g>${c}</g><g transform="translate(232 0) scale(-1 1)">${c}</g></svg>`;
 }
 /* lunette du médaillon : métal dégradé (reflets clairs/sombres) + ornements selon la rareté */
-function ring(x: Ctx, r: Rarity, col: string, ed: string | null) {
+export function ring(x: Ctx, r: Rarity, col: string, ed: string | null) {
   const id = uid(x, "mg"), tier = ed ? 5 : RAR_INDEX(r);
   let g = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(col, 0.65)}"/><stop offset=".35" stop-color="${col}"/><stop offset=".6" stop-color="${shade(col, -0.45)}"/><stop offset="1" stop-color="${shade(col, 0.4)}"/></linearGradient></defs>
     <circle cx="54" cy="54" r="44" fill="none" stroke="url(#${id})" stroke-width="4"/>`;
@@ -197,7 +197,7 @@ function ring(x: Ctx, r: Rarity, col: string, ed: string | null) {
   return `<svg class="ring" viewBox="0 0 108 108" aria-hidden="true">${g}</svg>`;
 }
 /* couronne de lauriers dorée autour du médaillon : la signature de la Légendaire */
-function laurel(x: Ctx) {
+export function laurel(x: Ctx) {
   const u = uid(x, "lr");
   let lv = "";
   /* berceau de lauriers sous le médaillon (ne touche ni la note ni la gemme) : θ de 96° à 150° de chaque côté */

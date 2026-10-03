@@ -9,6 +9,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import CardTilt from "@/components/reflex-cards/CardTilt";
+import { InviteBanner, PlayLink } from "@/components/reflex-cards/InviteLanding";
 import {
   REFLEX_META,
   albumCards,
@@ -72,13 +73,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = c.fossil
     ? `${name} au Musée des Fossiles de Reflex Cards : ce qui s'est passé et la leçon à retenir. Jeu de cartes crypto gratuit de Cryptoreflex.`
     : `Carte ${RNAME[c.r]} n° ${c.num} de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex. ${c.tag || ""}`.trim();
+  /* texte sous l'aperçu du lien partagé : donner envie de venir collectionner, sans rien promettre de faux */
+  const share = c.fossil
+    ? `${name} au Musée des Fossiles de Reflex Cards : ce qui s'est passé et la leçon à retenir. ${REFLEX_META.ncards} cartes crypto à collectionner gratuitement.`
+    : `Carte ${RNAME[c.r]} n° ${String(c.num).padStart(3, "0")} sur ${REFLEX_META.ncards}. Collectionnez les ${REFLEX_META.ncards} cartes crypto gratuitement, sans achat : ouvrez votre premier booster et tentez votre chance !`;
   return {
     title,
     description,
     alternates: withHreflang(url),
     robots: isIndexable(c) ? undefined : { index: false, follow: true },
-    openGraph: { title, description, url, type: "website" },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: { title, description: share, url, type: "website" },
+    twitter: { card: "summary_large_image", title, description: share },
   };
 }
 
@@ -199,6 +204,7 @@ export default async function CartePage({ params }: Props) {
             <span className="mx-2">/</span>
             <span className="text-fg/80">{name}</span>
           </nav>
+          {isLaunched() && <InviteBanner name={name} />}
 
           <div className="mt-6 grid gap-8 md:grid-cols-[288px,1fr] md:gap-12 items-start">
             <div className="mx-auto md:mx-0 md:sticky md:top-24">
@@ -279,9 +285,9 @@ export default async function CartePage({ params }: Props) {
                   Le jeu de cartes crypto gratuit de Cryptoreflex : un booster de 5 cartes offert toutes les 15 minutes (jusqu&apos;à 10 en réserve), sans achat ni revente.
                 </p>
                 {isLaunched() ? (
-                  <a href="/cartes/jouer" className="btn-primary mt-4 text-sm py-2.5 px-5">
+                  <PlayLink className="btn-primary mt-4 text-sm py-2.5 px-5">
                     Jouer maintenant <ArrowRight className="h-4 w-4" />
-                  </a>
+                  </PlayLink>
                 ) : (
                   <Link href="/cartes" className="btn-primary mt-4 text-sm py-2.5 px-5">
                     Découvrir le jeu <ArrowRight className="h-4 w-4" />

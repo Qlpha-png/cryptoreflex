@@ -6,8 +6,12 @@ import { IMG } from "./render";
  * ou renvoie autre chose qu'une image, on rend l'image sans logo plutôt qu'une erreur.
  */
 export async function logoData(img: string): Promise<string | null> {
+  /* deux essais : un réseau lent au premier appel ne doit pas figer une carte sans logo (l'image reste longtemps en cache) */
+  return (await logoOnce(img)) ?? (await logoOnce(img));
+}
+async function logoOnce(img: string): Promise<string | null> {
   try {
-    const res = await fetch(IMG(img, "large"), { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(IMG(img, "large"), { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return null;
     /* Format détecté sur les octets, pas sur l'en-tête (audit 2026-10-02 : des logos WebP servis en
        « image/png » faisaient planter 12 images de partage — le moteur des images OG ne lit pas le WebP).
