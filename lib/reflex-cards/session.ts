@@ -80,7 +80,9 @@ export async function resolvePlayer(req: NextRequest, o: { create: boolean; crea
   let player: string | null = null;
   if (user) {
     if (hash) player = await db.claim(hash, user.id);
-    if (!player) player = o.create || o.createAccount ? await db.account(user.id, o.today) : await db.findAccount(user.id);
+    /* une LECTURE d'abord (cas courant : la partie existe) ; l'écriture (création) seulement pour un compte qui n'en a pas encore.
+       Avant : un « upsert » à chaque chargement, donc une écriture en base pour une simple lecture (audit du 03/10). */
+    if (!player) player = (await db.findAccount(user.id)) ?? (o.create || o.createAccount ? await db.account(user.id, o.today) : null);
   } else {
     if (hash && guestsAllowed()) player = await db.findGuest(hash);
     if (!player && o.create) {

@@ -18,7 +18,8 @@ export interface Loaded {
   days: { day: string; ev: Record<string, number>; colp: unknown }[];
   quiz: { card_id: string; ok: boolean; day: string }[];
 }
-export interface ApplyResult { version: number; numbered: { i: number; fin: string; serial: number | null }[] }
+/** holo_cap : la base applique la garde « holo ≤ exemplaires non numérotés » (migration B3) — la mémoire fait pareil */
+export interface ApplyResult { version: number; numbered: { i: number; fin: string; serial: number | null }[]; holo_cap?: boolean }
 export interface GameDb {
   /** partie invitée retrouvée (find) ou créée (create) par l'empreinte SHA-256 du jeton du navigateur */
   findGuest(hash: string): Promise<string | null>;
@@ -34,6 +35,20 @@ export interface GameDb {
 }
 
 /* ---------- Supabase (production) ---------- */
+/** rc_load absente (migration B3 pas encore passée) : prochain essai après cette heure */
+let RC_LOAD_RETRY = 0;
+/** tests : oublier qu'rc_load était absente */
+export const resetRcLoadProbe = () => { RC_LOAD_RETRY = 0; };
+const missingFn = (e: { code?: string; message?: string }) => e.code === "PGRST202" || e.code === "42883" || /rc_load/.test(e.message ?? "") && /exist|schema cache|find/i.test(e.message ?? "");
+/** la réponse de rc_load (un seul objet JSON) au format Loaded ; null = partie introuvable */
+export function fromRcLoad(data: unknown): Loaded {
+  const d = (data ?? null) as Partial<Loaded> | null;
+  if (!d) return { player: null, cards: [], eds: [], cos: [], claims: [], days: [], quiz: [] };
+  return {
+    player: (d.player ?? null) as Loaded["player"],
+    cards: d.cards ?? [], eds: d.eds ?? [], cos: d.cos ?? [], claims: d.claims ?? [], days: d.days ?? [], quiz: d.quiz ?? [],
+  };
+}
 export function supabaseGameDb(sb: SupabaseClient): GameDb {
   /* pagination par 1 000 (plafond PostgREST), TOUJOURS triée sur la clé : sans tri, une insertion entre deux pages décale
      l'OFFSET et une ligne est sautée (audit du 03/10) */
@@ -77,6 +92,14 @@ export function supabaseGameDb(sb: SupabaseClient): GameDb {
       return (data as string | null) ?? null;
     },
     async load(id, since) {
+      /* migration B3 passée : toute la partie en UN appel, un seul instantané (rc_load). Sinon (fonction absente) : ancienne lecture,
+         et on ne réessaie rc_load qu'après 5 minutes (pas un aller-retour perdu à chaque geste en attendant la migration). */
+      if (Date.now() >= RC_LOAD_RETRY) {
+        const { data, error } = await sb.rpc("rc_load", { p_player: id, p_since: since });
+        if (!error) return fromRcLoad(data);
+        if (!missingFn(error)) throw new Error(error.message);
+        RC_LOAD_RETRY = Date.now() + 5 * 60_000;
+      }
       /* la ligne du joueur (donc sa version) d'ABORD, les autres tables ensuite : une écriture arrivée entre les deux fait monter la
          version et rc_apply la refusera (rc_conflict), au lieu d'accepter un geste calculé sur des cartes ou des jalons périmés
          avec la bonne version (audit du 03/10 : lecture non atomique) */
@@ -156,7 +179,11 @@ export function applyPatch(s: GameState, p: Patch, res: ApplyResult, now: number
     const e = cards.get(c.id);
     let row: CardRow = e ? { ...e, fins: { ag: [...e.fins.ag], or: [...e.fins.or], onyx: [...e.fins.onyx] } } : { n: 0, holo: 0, fins: { ag: [], or: [], onyx: [] }, t: now };
     if (c.dn > 0) row = { ...row, n: row.n + c.dn, holo: row.holo + (c.dholo ?? 0) };
-    else if (c.dn < 0) row = { ...row, n: row.n + c.dn };
+    else if (c.dn < 0) {
+      /* même règle que rc_apply (B3) : les exemplaires ordinaires partent d'abord, puis les Holo */
+      const n2 = row.n + c.dn, nb = row.fins.ag.length + row.fins.or.length + row.fins.onyx.length;
+      row = { ...row, n: n2, ...(res.holo_cap ? { holo: Math.min(row.holo, n2 - nb) } : {}) };
+    }
     if (c.fin) {
       const n = res.numbered?.find((x) => x.i === c.i);
       if (n && n.fin === "holo") row.holo += 1;

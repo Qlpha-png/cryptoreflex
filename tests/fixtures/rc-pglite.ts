@@ -4,33 +4,41 @@
  */
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
-import type { GameDb, Loaded } from "@/lib/reflex-cards/store";
+import { fromRcLoad, type GameDb, type Loaded } from "@/lib/reflex-cards/store";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export async function makeGameDb(): Promise<{ pg: PGlite; db: GameDb }> {
+export async function makeGameDb(o: { b3?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
   const pg = new PGlite();
   await pg.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users (id uuid primary key);`);
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b1.sql", "utf8"));
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b2_amis.sql", "utf8"));
+  /* B3 (rc_load + garde holo) par défaut ; { b3: false } = la base de production d'avant la migration */
+  if (o.b3 !== false) await pg.exec(readFileSync("supabase/migrations/20261003_reflex_cards_b3_perf.sql", "utf8"));
   const q = async (s: string, p: unknown[]) => (await pg.query(s, p)).rows as any[];
   const iso = (r: any) => ({ ...r, ...(r.first_at ? { first_at: new Date(r.first_at).toISOString() } : {}), ...(r.at ? { at: new Date(r.at).toISOString() } : {}), ...(r.day ? { day: new Date(r.day).toISOString().slice(0, 10) } : {}) });
+  /** l'ancienne lecture (7 requêtes), gardée pour comparer avec rc_load */
+  const legacyLoad: GameDb["load"] = async (id, since) => {
+    const [player] = await q("select * from public.rc_players where player_id=$1", [id]);
+    return {
+      player: player ? { ...player, stock_at: new Date(player.stock_at).toISOString(), first_day: new Date(player.first_day).toISOString().slice(0, 10) } : null,
+      cards: (await q("select card_id,n,holo,fins,first_at from public.rc_cards where player_id=$1 order by card_id", [id])).map(iso),
+      eds: (await q("select ed,card_id,n,first_at from public.rc_editions where player_id=$1 order by ed, card_id", [id])).map(iso),
+      cos: (await q("select item_id,no,at from public.rc_cosmetics where player_id=$1 order by item_id", [id])).map(iso),
+      claims: await q("select key from public.rc_claims where player_id=$1 order by key", [id]),
+      days: (await q("select day,ev,colp from public.rc_days where player_id=$1 and day >= $2 order by day", [id, since])).map(iso),
+      quiz: (await q("select card_id,ok,day from public.rc_quiz where player_id=$1 order by card_id", [id])).map(iso),
+    } as Loaded;
+  };
   const db: GameDb = {
     async findGuest(hash) { return (await q("select player_id from public.rc_players where guest_hash=$1", [hash]))[0]?.player_id ?? null; },
     async createGuest(hash, day) { return (await q("select public.rc_guest($1,$2) as id", [hash, day]))[0].id; },
     async findAccount(owner) { return (await q("select player_id from public.rc_players where owner=$1", [owner]))[0]?.player_id ?? null; },
     async account(owner, day) { return (await q("select public.rc_account($1,$2) as id", [owner, day]))[0].id; },
     async claim(hash, owner) { return (await q("select public.rc_claim($1,$2) as id", [hash, owner]))[0].id ?? null; },
+    /* comme la production : rc_load (B3) si elle existe, sinon l'ancienne lecture table par table */
     async load(id, since) {
-      const [player] = await q("select * from public.rc_players where player_id=$1", [id]);
-      return {
-        player: player ? { ...player, stock_at: new Date(player.stock_at).toISOString(), first_day: new Date(player.first_day).toISOString().slice(0, 10) } : null,
-        cards: (await q("select card_id,n,holo,fins,first_at from public.rc_cards where player_id=$1", [id])).map(iso),
-        eds: (await q("select ed,card_id,n,first_at from public.rc_editions where player_id=$1", [id])).map(iso),
-        cos: (await q("select item_id,no,at from public.rc_cosmetics where player_id=$1", [id])).map(iso),
-        claims: await q("select key from public.rc_claims where player_id=$1", [id]),
-        days: (await q("select day,ev,colp from public.rc_days where player_id=$1 and day >= $2", [id, since])).map(iso),
-        quiz: (await q("select card_id,ok,day from public.rc_quiz where player_id=$1", [id])).map(iso),
-      } as Loaded;
+      if (o.b3 !== false) return fromRcLoad((await q("select public.rc_load($1,$2) as r", [id, since]))[0].r);
+      return legacyLoad(id, since);
     },
     async apply(id, version, patch) {
       try {
@@ -42,7 +50,7 @@ export async function makeGameDb(): Promise<{ pg: PGlite; db: GameDb }> {
       }
     },
   };
-  return { pg, db };
+  return { pg, db, legacyLoad };
 }
 
 /**
