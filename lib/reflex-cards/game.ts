@@ -14,6 +14,7 @@ import rulesRaw from "@/data/reflex-cards-rules.json";
 import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
+import { partDay, totyDay } from "./engine";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
@@ -38,7 +39,7 @@ export function isSentInClear(id: string, day: number): boolean {
   const P = RAW.paliers;
   if (P.fossiles[id] || PUBLIQUES.has(id)) return true;
   const p = P.cartes[id];
-  return !!p && day >= 1 && P.parties[p.part].jour <= day;
+  return !!p && day >= 1 && partDay(p.part) <= day;
 }
 
 export type GameData = {
@@ -94,11 +95,12 @@ export function gameData(day: number): GameData {
   const keep = <T>(o: Record<string, T>) => Object.fromEntries(Object.entries(o).filter(([id]) => !mask.has(id)));
   return {
     cards,
-    paliers: { meta: P.meta, cartes, parties: P.parties.map((p) => ({ ...p, tete: p.tete.map((id) => mask.get(id) ?? id) })), fossiles: P.fossiles },
+    /* le jour de sortie envoyé est le jour EFFECTIF (paliers de joueurs) : FAR = partie en attente, aucune date */
+    paliers: { meta: P.meta, cartes, parties: P.parties.map((p, i) => ({ ...p, jour: partDay(i), tete: p.tete.map((id) => mask.get(id) ?? id) })), fossiles: P.fossiles },
     noto: keep(RAW.noto),
     fiches: { desc: keep(RAW.fiches.desc) },
     watch: keep(RAW.watch),
-    toty: day >= RAW.meta.toty_revelee_jour ? RAW.toty.filter((id) => !mask.has(id)) : [],
+    toty: day >= totyDay() ? RAW.toty.filter((id) => !mask.has(id)) : [],
     masked: mask.size,
     themePion: (RULES.themes.find((t) => t.id === "th-pion")?.cards ?? []).map((id) => mask.get(id) ?? id),
   };
@@ -108,11 +110,15 @@ export function gameData(day: number): GameData {
 const LS = String.fromCharCode(0x2028), PS = String.fromCharCode(0x2029);
 const js = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c").split(LS).join("\\u2028").split(PS).join("\\u2029");
 
+/** ce que le jeu doit savoir des sorties en attente : prochaine partie, palier, joueurs du jour (null = masqué) */
+export interface GameNext { part: number; need: number; have: number | null }
+
 /** bloc de données injecté dans le gabarit */
-export function gameDataScript(day: number): string {
+export function gameDataScript(day: number, next: GameNext | null = null): string {
   const d = gameData(day);
-  /* GAME_LAUNCH : la date du jour 1, pour afficher de vraies dates de sortie sans dépendre de l'horloge ni du cache de la page */
-  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEME_PION=${js(d.themePion)};
+  /* GAME_LAUNCH : la date du jour 1, pour afficher de vraies dates de sortie sans dépendre de l'horloge ni du cache de la page ;
+     GAME_NEXT : la prochaine partie en attente et son palier de joueurs ; GAME_TOTY_DAY : jour de révélation de l'Équipe (FAR = pas encore fixé) */
+  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEME_PION=${js(d.themePion)},GAME_NEXT=${js(next)},GAME_TOTY_DAY=${totyDay()};
 const CARDS=${js(d.cards)};
 const PALIERS=${js(d.paliers)};
 const NOTO=${js(d.noto)};
@@ -125,8 +131,8 @@ const WATCH=${js(d.watch)};`;
 const BODY = "</head>\n<body>";
 const SRV_BODY = '</head>\n<body class="srv srv-wait">\n<div id="srvLoad" role="status"><b>Chargement de votre partie…</b></div>';
 
-/** la page complète du jeu au jour `day` (1 à 90) */
-export function gameHtml(day: number): string {
-  const html = GAME_TEMPLATE.replace("/*__GAME_DATA__*/", () => gameDataScript(day));
+/** la page complète du jeu au jour `day` */
+export function gameHtml(day: number, next: GameNext | null = null): string {
+  const html = GAME_TEMPLATE.replace("/*__GAME_DATA__*/", () => gameDataScript(day, next));
   return reflexAccountsMode() === "on" ? html.replace(BODY, () => SRV_BODY) : html;
 }

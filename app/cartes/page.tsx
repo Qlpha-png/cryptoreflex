@@ -28,6 +28,7 @@ import {
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import { reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { dayDate } from "@/lib/reflex-cards/season";
+import { applyReleases, FUTURE_LABEL } from "@/lib/reflex-cards/releases";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
 
 /**
@@ -56,9 +57,11 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function CartesPage() {
+export default async function CartesPage() {
   if (!isReflexCardsEnabled()) notFound();
   const day = seasonDay();
+  /* sorties effectives : par paliers de joueurs inscrits (décision Kev, 03/10), plus par dates */
+  const rel = await applyReleases();
   /* héros et vitrine : révélations officielles du jour 1 (hors stablecoins pour le héros) */
   const hero = HERO_CARDS;
   const showcase = SHOWCASE_CARDS;
@@ -207,7 +210,7 @@ export default function CartesPage() {
             <CalendarDays className="h-6 w-6 text-amber-300" /> Le calendrier de la saison 1
           </h2>
           <p className="mt-2 max-w-3xl text-fg/70">
-            4 collections (Genèse, Ascension, Éclipse, Apogée), chacune en 3 parties hebdomadaires. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.
+            4 collections (Genèse, Ascension, Éclipse, Apogée), chacune en 3 parties ; les parties suivantes sortiront plus tard dans la saison. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.
           </p>
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
             <table className="w-full min-w-[560px] text-sm">
@@ -220,9 +223,11 @@ export default function CartesPage() {
                 </tr>
               </thead>
               <tbody>
-                {REFLEX_PARTS.map((p) => (
+                {REFLEX_PARTS.map((p, i) => (
                   <tr key={p.jour} className="border-t border-border">
-                    <td className="px-4 py-2.5 font-semibold text-fg">{dayDate(p.jour) ?? `Jour ${p.jour}`}</td>
+                    <td className="px-4 py-2.5 font-semibold text-fg">
+                      {rel.dates[i] ? (dayDate(rel.days[i]) ?? rel.dates[i]) : <span className="text-muted">{FUTURE_LABEL}</span>}
+                    </td>
                     <td className="px-4 py-2.5 text-fg/80">{p.collection} · partie {p.partie}</td>
                     <td className="px-4 py-2.5 text-fg/80">{p.taille}</td>
                     <td className="px-4 py-2.5">
@@ -234,7 +239,7 @@ export default function CartesPage() {
                           </span>
                         ))
                       ) : (
-                        <span className="text-muted">Révélée le jour {p.jour}</span>
+                        <span className="text-muted">Révélée à sa sortie</span>
                       )}
                     </td>
                   </tr>
@@ -277,7 +282,7 @@ export default function CartesPage() {
           <p className="mt-2 max-w-3xl text-fg/70">
             {released > 0
               ? `${released} cartes sorties sur ${REFLEX_META.ncards}. Douze familles, douze chapitres de l'album ; les autres cartes restent secrètes jusqu'à leur sortie.`
-              : `Les cartes restent secrètes jusqu'à leur sortie : 300 le premier jour, puis une cinquantaine chaque semaine, jusqu'aux ${REFLEX_META.ncards} cartes de la saison.`}
+              : `Les cartes restent secrètes jusqu'à leur sortie : 300 le premier jour, puis une cinquantaine à chaque future sortie, jusqu'aux ${REFLEX_META.ncards} cartes de la saison.`}
           </p>
           <div className="mt-6 space-y-3">
             {released > 0 && chs.map((ch) => (

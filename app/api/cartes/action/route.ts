@@ -8,6 +8,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isReflexCardsEnabled, reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { NO_STORE, SessionError, errorJson, gameCtx, resolvePlayer, type Who } from "@/lib/reflex-cards/session";
 import { runAction } from "@/lib/reflex-cards/store";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
   if (Number.isInteger(cd) && cd !== ctx.day) return NextResponse.json({ ok: false, code: "reload", error: "De nouvelles cartes sont sorties : la page se recharge." }, { status: 409, headers: NO_STORE });
   let who: Who | null = null;
   try {
+    await applyReleases(); // calendrier effectif des sorties, avant tout geste
     who = await resolvePlayer(req, { create: true, today: ctx.today });
     if (!who.player) throw new SessionError(503, "Service momentanément indisponible.");
     const rl = await perPlayer(who.player);

@@ -18,6 +18,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
+    setupFiles: ["./tests/setup/reflex-static-releases.ts"],
     include: ["tests/**/*.test.ts", "tests/**/*.spec.ts"],
     // FIX 2026-05-07 — séparer Vitest (unit) de Playwright (E2E).
     // Sans cet exclude, Vitest tentait de runner les 6 fichiers

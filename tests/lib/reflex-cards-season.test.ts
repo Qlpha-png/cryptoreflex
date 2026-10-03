@@ -33,7 +33,8 @@ describe("Reflex Cards — jour de saison", () => {
     expect(seasonDay(new Date("2026-10-14T22:00:00Z"))).toBe(1); // minuit à Paris
     expect(seasonDay(new Date("2026-10-21T12:00:00Z"))).toBe(7);
     expect(seasonDay(new Date("2026-10-22T12:00:00Z"))).toBe(8);
-    expect(seasonDay(new Date("2027-06-01T12:00:00Z"))).toBe(90);
+    /* plus de plafond à 90 jours depuis le 03/10 : la saison 1 dure tant que les paliers de joueurs ne sont pas atteints */
+    expect(seasonDay(new Date("2027-06-01T12:00:00Z"))).toBe(230);
   });
 });
 

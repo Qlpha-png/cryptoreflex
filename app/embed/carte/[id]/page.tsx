@@ -5,6 +5,7 @@ import CardVisual from "@/components/reflex-cards/CardVisual";
 import CardTilt from "@/components/reflex-cards/CardTilt";
 import { BRAND } from "@/lib/brand";
 import { allCards, cleanName, getCard, isReflexCardsEnabled, isRevealed, seasonDay } from "@/lib/reflex-cards/data";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 
 /**
  * /embed/carte/[id] — widget iframe d'une carte Reflex, à coller sur un blog ou un profil.
@@ -37,7 +38,8 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
   };
 }
 
-export default function EmbedCartePage({ params }: { params: { id: string } }) {
+export default async function EmbedCartePage({ params }: { params: { id: string } }) {
+  await applyReleases(); // sorties effectives (paliers de joueurs)
   if (!isReflexCardsEnabled()) notFound();
   const c = getCard(params.id);
   if (!c || !shown(c)) notFound();

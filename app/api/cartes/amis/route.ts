@@ -14,6 +14,7 @@ import { supabaseGameDb } from "@/lib/reflex-cards/store";
 import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendProfile, friendsView, inviteCode, inviteToken, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +33,7 @@ async function view(fdb: FriendsDb, player: string) {
 }
 
 async function who(req: NextRequest): Promise<{ w: Who; fdb: FriendsDb }> {
+  await applyReleases(); // calendrier effectif des sorties (aperçus de collections)
   const sb = createSupabaseServiceRoleClient();
   if (!sb) throw new SessionError(503, "Service momentanément indisponible.");
   const w = await resolvePlayer(req, { create: false, createAccount: true, today: gameCtx().today, db: supabaseGameDb(sb) });

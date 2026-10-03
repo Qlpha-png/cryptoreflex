@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
 import { cleanName, getCard, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME, shade } from "@/lib/reflex-cards/render";
 import { logoData } from "@/lib/reflex-cards/og";
 
@@ -22,6 +23,7 @@ const STAR = "M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1
 export default async function OgImage({ params }: { params: { id: string } }) {
   const c = isReflexCardsEnabled() ? getCard(params.id) : undefined;
   if (!c) return new Response("Not found", { status: 404 });
+  await applyReleases();
   const out = isVisible(c, seasonDay());
   const col = !out ? GOLD : c.fossil ? "#a8927a" : RC[c.r];
   const name = cleanName(c.name);

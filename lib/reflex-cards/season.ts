@@ -5,7 +5,8 @@
  * et navigateur. Absente ou invalide : avant-lancement (jour 0), rien n'est sorti — seules les
  * révélations officielles se voient. Les pages qui en dépendent sont régénérées toutes les heures.
  */
-const SEASON_DAYS = 90;
+/* la saison 1 dure tant que les paliers de joueurs ne sont pas atteints (décision Kev, 03/10) : plus de plafond à 90 jours */
+const SEASON_DAYS = 3650;
 
 /** date « AAAA-MM-JJ » réellement existante (refuse 2026-02-31, que Date.parse accepte) */
 const isRealDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) && new Date(v + "T00:00:00Z").toISOString().slice(0, 10) === v;

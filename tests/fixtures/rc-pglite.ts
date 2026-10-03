@@ -60,11 +60,16 @@ export function fakeSupabase(pg: PGlite): any {
   const id = (s: string) => { if (!/^[a-z_]+$/.test(s)) throw new Error("identifiant refusé : " + s); return s; };
   return {
     from(table: string) {
-      const st = { cols: "*", where: [] as [string, string, unknown][], order: [] as string[], range: null as null | [number, number] };
+      const st = { cols: "*", where: [] as [string, string, unknown][], order: [] as string[], range: null as null | [number, number], count: false };
       const run = async (single: boolean) => {
         try {
           const params: unknown[] = [];
-          const w = st.where.map(([c, op, v]) => (params.push(v), `${id(c)} ${op} $${params.length}`));
+          const w = st.where.map(([c, op, v]) => (v === null && /\bis\b/.test(op) ? `${id(c)} ${op} null` : (params.push(v), `${id(c)} ${op} $${params.length}`)));
+          /* select(cols, { count: "exact", head: true }) : seulement le nombre de lignes */
+          if (st.count) {
+            const r = await pg.query(`select count(*)::int as n from public.${id(table)}${w.length ? " where " + w.join(" and ") : ""}`, params);
+            return { data: null, count: (r.rows[0] as { n: number }).n, error: null };
+          }
           const cols = st.cols === "*" ? "*" : st.cols.split(",").map((c) => id(c.trim())).join(",");
           const sql = `select ${cols} from public.${id(table)}${w.length ? " where " + w.join(" and ") : ""}${st.order.length ? " order by " + st.order.map(id).join(", ") : ""}${st.range ? ` limit ${st.range[1] - st.range[0] + 1} offset ${st.range[0]}` : ""}`;
           const rows = out(await pg.query(sql, params) as any);
@@ -75,8 +80,9 @@ export function fakeSupabase(pg: PGlite): any {
         }
       };
       const qb: any = {
-        select(c: string) { st.cols = c; return qb; },
+        select(c: string, o?: { count?: string; head?: boolean }) { st.cols = c; st.count = !!o?.count && !!o?.head; return qb; },
         eq(c: string, v: unknown) { st.where.push([c, "=", v]); return qb; },
+        not(c: string, op: string, v: unknown) { st.where.push([c, op === "is" ? "is not" : "<>", v]); return qb; },
         gte(c: string, v: unknown) { st.where.push([c, ">=", v]); return qb; },
         order(c: string) { st.order.push(c); return qb; },
         range(a: number, b: number) { st.range = [a, b]; return qb; },

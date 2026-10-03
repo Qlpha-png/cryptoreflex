@@ -28,6 +28,7 @@ import {
   shareText,
   todayChance,
 } from "@/lib/reflex-cards/data";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
 
@@ -56,7 +57,8 @@ interface Props {
 
 const rarityArticle = (c: ReflexCard) => (c.fossil ? "Fossile" : RNAME[c.r]);
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  await applyReleases();
   const c = getCard(params.id);
   if (!c || !isReflexCardsEnabled()) return {};
   const name = cleanName(c.name);
@@ -122,7 +124,7 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
             </p>
             <h2 className="mt-8 text-lg font-bold">Comment sortent les cartes ?</h2>
             <p className="mt-2 text-sm text-fg/70">
-              La saison 1 compte {REFLEX_META.ncards} cartes, dévoilées en 12 parties : 300 le premier jour, puis une cinquantaine chaque semaine. Chaque carte se tire dès sa sortie, gratuitement, dans des boosters de 5 cartes.
+              La saison 1 compte {REFLEX_META.ncards} cartes, dévoilées en 12 parties : 300 le premier jour, puis une cinquantaine à chaque future sortie. Chaque carte se tire dès sa sortie, gratuitement, dans des boosters de 5 cartes.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/cartes" className="btn-primary text-sm py-2.5 px-5">
@@ -141,7 +143,8 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
   );
 }
 
-export default function CartePage({ params }: Props) {
+export default async function CartePage({ params }: Props) {
+  await applyReleases(); // sorties effectives (paliers de joueurs)
   if (!isReflexCardsEnabled()) notFound();
   const c = getCard(params.id);
   if (!c) notFound();

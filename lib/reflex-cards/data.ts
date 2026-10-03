@@ -9,6 +9,7 @@ import raw from "@/data/reflex-cards.json";
 import { getAllCryptos } from "@/lib/cryptos";
 import type { Rarity, ReflexCard, ReflexCardsData, ReflexRarityInfo } from "./types";
 import { pct, type CardEnv } from "./render";
+import { partDay } from "./engine";
 
 const DATA = raw as unknown as ReflexCardsData;
 const BY_ID = new Map(DATA.cartes.map((c) => [c.id, c]));
@@ -49,13 +50,18 @@ export const SHOWCASE_CARDS: ReflexCard[] = (["C", "PC", "R", "SR", "UR", "L"] a
 /** révélations officielles avant le lancement : têtes d'affiche du jour 1 + héros + vitrine des raretés */
 const REVEALED = new Set([...(DATA.parties[0]?.tete ?? []), ...HERO_CARDS.map((c) => c.id), ...SHOWCASE_CARDS.map((c) => c.id)]);
 
-export const isReleased = (c: ReflexCard, day: number): boolean => (c.fossil ? day >= 1 : !!c.sortie && day >= 1 && c.sortie.jour <= day);
+/* le jour de sortie imprimé dans les données (« jour 8 ») est un rang de partie ; la sortie EFFECTIVE vient du moteur
+   (paliers de joueurs, lib/reflex-cards/releases.ts) : partDay(index de la partie) */
+const PART_INDEX = new Map(DATA.parties.map((p, i) => [p.jour, i]));
+const effectiveDay = (jour: number): number => partDay(PART_INDEX.get(jour) ?? N_PARTS_FAR);
+const N_PARTS_FAR = 99;
+export const isReleased = (c: ReflexCard, day: number): boolean => (c.fossil ? day >= 1 : !!c.sortie && day >= 1 && effectiveDay(c.sortie.jour) <= day);
 /** carte entière visible par tous (révélation officielle) */
 export const isRevealed = (c: ReflexCard): boolean => REVEALED.has(c.id);
 /** a une page publique : sortie, révélée, ou fossile (l'histoire du Musée est publique, la carte reste à trouver) */
 export const isVisible = (c: ReflexCard, day: number): boolean => isReleased(c, day) || isRevealed(c) || c.fossil;
 /** une tête d'affiche se nomme dès que sa partie est sortie (le jour 1 est révélé d'avance) */
-export const isPartNamed = (jour: number, day: number): boolean => jour === 1 || jour <= day;
+export const isPartNamed = (jour: number, day: number): boolean => jour === 1 || effectiveDay(jour) <= day;
 
 /**
  * chance qu'une carte tirée soit CELLE-CI ce jour-là (avant le lancement : au jour 1) :

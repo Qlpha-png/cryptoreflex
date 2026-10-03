@@ -15,6 +15,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import raw from "@/data/reflex-cards-game.json";
+import { partDay } from "./engine";
 
 /* [id, nom, ticker, image, ?, famille, sous-famille, année, « en bref », accroche, slug, ?] */
 type Row = [string, string, string, string, number, string, string, number, string, string, ...unknown[]];
@@ -35,7 +36,7 @@ const CULTURE_PER_DAY = 2;
 const released = (id: string, day: number) => {
   if (RAW.paliers.fossiles[id]) return false;
   const p = RAW.paliers.cartes[id];
-  return !!p && (PUBLIQUES.has(id) || (day >= 1 && RAW.paliers.parties[p.part]?.jour <= day));
+  return !!p && (PUBLIQUES.has(id) || (day >= 1 && partDay(p.part) <= day));
 };
 
 /* ---------- culture crypto pour débutants : question, bonne réponse, 3 leurres, explication ---------- */

@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import { cleanName, getCard, isReflexCardsEnabled, isReleased, isRevealed, oddsText, seasonDay, todayChance } from "@/lib/reflex-cards/data";
+import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 
 /**
@@ -13,10 +14,11 @@ import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
  *  - pas encore sortie : le dos de carte, sans rareté ni date.
  * Rien si le jeu est coupé ou si la crypto n'a pas de carte. L'id passé est l'identifiant CoinGecko.
  */
-export default function ReflexCardPromo({ coingeckoIds, className }: { coingeckoIds: (string | null | undefined)[]; className?: string }) {
+export default async function ReflexCardPromo({ coingeckoIds, className }: { coingeckoIds: (string | null | undefined)[]; className?: string }) {
   if (!isReflexCardsEnabled()) return null;
   const c = coingeckoIds.map((id) => (id ? getCard(id) : undefined)).find(Boolean);
   if (!c) return null;
+  await applyReleases(); // sorties effectives (paliers de joueurs)
   const day = seasonDay();
   const name = cleanName(c.name);
   const revealed = isRevealed(c);

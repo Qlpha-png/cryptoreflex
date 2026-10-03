@@ -75,7 +75,20 @@ export const cryptoRnd: Rnd = () => randomInt(0, SCALE) / SCALE;
 const pick = <T>(a: T[], rnd: Rnd): T => a[Math.floor(rnd() * a.length)];
 
 /* ---------- sorties ---------- */
-export const relDay = (c: RCard): number => (c.fossil ? 1 : RULES.parts[c.part as number].jour);
+/** jour « jamais encore » : la partie est en attente d'un palier de joueurs (voir releases.ts) */
+export const FAR = 9999;
+/* calendrier EFFECTIF : posé par applyReleases() ; par défaut seule la partie 1 est sortie (jamais une sortie par accident) */
+let PART_DAYS: number[] = RULES.parts.map((p, i) => (i === 0 ? p.jour : FAR));
+let TOTY_DAY = FAR, END_DAY = FAR, GEN = 0;
+export function setPartDays(days: number[], totyDay: number, endDay: number): void {
+  const next = RULES.parts.map((_, i) => (i === 0 ? RULES.parts[0].jour : (Number.isFinite(days[i]) ? days[i] : FAR)));
+  if (JSON.stringify(next) !== JSON.stringify(PART_DAYS) || totyDay !== TOTY_DAY || endDay !== END_DAY) GEN++;
+  PART_DAYS = next; TOTY_DAY = totyDay; END_DAY = endDay;
+}
+export const partDay = (i: number): number => PART_DAYS[i] ?? FAR;
+export const totyDay = (): number => TOTY_DAY;
+export const seasonEndDay = (): number => END_DAY;
+export const relDay = (c: RCard): number => (c.fossil ? 1 : partDay(c.part as number));
 export const isOut = (c: RCard, day: number): boolean => relDay(c) <= day;
 /** carte connue du joueur ce jour-là (mêmes règles que la page publique : sorties, Fossiles, Icônes, Trophées) */
 export const inClear = (id: string, day: number): boolean => {
@@ -85,19 +98,20 @@ export const inClear = (id: string, day: number): boolean => {
 export const craftDay = (c: RCard): number => (c.fossil ? 1 : relDay(c) + ((c.part as number) > 0 ? 7 : 0));
 
 interface DayTables { byRD: Record<Rar, RCard[]>; ed: Record<string, { p: number; list: string[] }> }
-const DAYC = new Map<number, DayTables>();
+const DAYC = new Map<string, DayTables>();
 export function dayTables(day: number): DayTables {
-  const hit = DAYC.get(day);
+  const key = `${GEN}|${day}`; // le cache suit le calendrier effectif : une nouvelle sortie invalide les tables
+  const hit = DAYC.get(key);
   if (hit) return hit;
   const byRD = Object.fromEntries(RAR.map((r) => [r, BASE.filter((c) => c.r === r && isOut(c, day)).sort((a, b) => a.noto - b.noto)])) as Record<Rar, RCard[]>;
   const ed: DayTables["ed"] = {};
   for (const k of ED_ORDER) {
     let list = RULES.ed[k].list.filter((id) => inClear(id, day));
-    if (k === "toty" && day < RULES.totyFromDay) list = [];
+    if (k === "toty" && day < TOTY_DAY) list = [];
     ed[k] = { p: list.length ? RULES.ed[k].p : 0, list };
   }
   const t = { byRD, ed };
-  DAYC.set(day, t);
+  DAYC.set(key, t);
   return t;
 }
 
@@ -325,7 +339,7 @@ export function titleOk(s: GameState, id: string): boolean {
 export function earnedNow(s: GameState, day: number): string[] {
   const ok: Record<string, boolean> = {
     "frame-chelem": s.claims.has("t|th-gc"),
-    "frame-s1": day >= 90 && BASE.filter((c) => own(s, c.id)).length / BASE.length >= 0.95,
+    "frame-s1": day >= END_DAY && BASE.filter((c) => own(s, c.id)).length / BASE.length >= 0.95,
   };
   return RULES.cos.filter((x) => x.src === "earn" && !s.cos.has(x.id) && (x.title ? titleOk(s, x.title) : ok[x.id])).map((x) => x.id);
 }
