@@ -167,8 +167,8 @@ place dans `lib/reflex-cards/game.ts`.
 | Raccourci « Jouer à Reflex Cards » dans le manifest du site | `app/manifest.ts` |
 | Tests : 25 nouveaux (injection, manifest, icônes, script, règles des notifications, fusion des sujets) + test e2e « installable » | `tests/lib/reflex-cards-pwa.test.ts`, `tests/lib/reflex-cards-push.test.ts`, `tests/e2e/08-reflex-cards-game.spec.ts` |
 
-Vérifié : `npx tsc --noEmit` propre, `npm test` 769 tests verts. (`npm run lint` n'a pas de configuration ESLint dans le
-dépôt : il demande d'en créer une, c'était déjà le cas avant.)
+Vérifié : `npx tsc --noEmit` propre, `npm test` 769 tests verts, `next build` passe (les deux nouvelles routes sont bien
+listées). (`npm run lint` n'a pas de configuration ESLint dans le dépôt : il demande d'en créer une, c'était déjà le cas avant.)
 
 ### Mise en production — ce que Kev doit faire ou vérifier
 
