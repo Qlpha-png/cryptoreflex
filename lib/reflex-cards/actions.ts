@@ -47,7 +47,9 @@ export function planDaily(s: GameState, ctx: Ctx): Patch | null {
   const patch: Patch = {};
   if (!s.player.days.includes(ctx.today)) patch.player = { days: [...s.player.days, ctx.today].slice(-400) };
   const d = s.days.get(ctx.today);
-  if (!d?.colp || d.colp.k !== ctx.today + "|" + ctx.day) patch.day = { day: ctx.today, colp: colpOffers(s, ctx.today, ctx.day) };
+  /* offres du Colporteur figées pour la JOURNÉE (clé = date) : deux pages de jours différents entre 00 h 00 et 00 h 30 ne les
+     font plus alterner ; l'ancienne clé « date|jour » reste acceptée pour aujourd'hui */
+  if (!d?.colp || (d.colp.k !== ctx.today && !d.colp.k.startsWith(ctx.today + "|"))) patch.day = { day: ctx.today, colp: colpOffers(s, ctx.today, ctx.day) };
   const earned = earnedNow(s, ctx.day);
   if (earned.length) patch.cos = earned.map((id) => ({ id, no: null }));
   return Object.keys(patch).length ? patch : null;
@@ -176,7 +178,8 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
     }
     case "colporteur": {
       const i = Number(b.i), give = String(b.give ?? ""), D = s.days.get(ctx.today)?.colp;
-      if (!D || D.k !== ctx.today + "|" + ctx.day || !D.offers[i]) throw new GameError("gone", "Offres du jour renouvelées : rechargez la page.");
+      /* offres du jour : clé « date » (ou l'ancienne « date|jour ») */
+      if (!D || (D.k !== ctx.today && D.k !== ctx.today + "|" + ctx.day) || !D.offers[i]) throw new GameError("gone", "Offres du jour renouvelées : rechargez la page.");
       const key = `c|${ctx.today}|${i}`, o = D.offers[i];
       if (s.claims.has(key)) throw new GameError("done", "Offre déjà prise.");
       if (CARD.get(give)?.r !== o.r || tradeN(s, give) < 1) throw new GameError("no_dup", `Il vous faut un doublon de la même rareté.`);
@@ -234,6 +237,11 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
         patch: { ...(f.player ? { player: f.player } : {}), claims: [...claims, key], day: { day: ctx.today, inc: { qj: f.score + 1 } } },
         data: { ...reveal(i, rep), done: true, score: f.score, reward: f.rw, sol: f.sol },
       };
+    }
+    case "lien-ami": {
+      /* nouveau lien d'invitation : la version monte, tous les liens déjà partagés deviennent invalides (Kev 03/10) */
+      const v = Number((s.player.perso as Record<string, unknown>).inviteV ?? 0);
+      return { patch: { player: { perso: { ...s.player.perso, inviteV: (Number.isInteger(v) && v >= 0 ? v : 0) + 1 } } }, msg: "Nouveau lien créé : les anciens ne fonctionnent plus." };
     }
     case "pseudo": {
       const v = sanitizePseudo(b.v);

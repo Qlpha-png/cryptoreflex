@@ -362,7 +362,8 @@ function seeded(seed: number): Rnd {
   };
 }
 export function colpOffers(s: GameState, today: string, day: number): ColpDay {
-  const k = today + "|" + day, R = seeded(h32("colp|" + k));
+  /* clé = la date seule (offres figées pour la journée) ; le tirage garde le jour de saison dans sa graine */
+  const k = today, R = seeded(h32("colp|" + today + "|" + day));
   const rs: Rar[] = [R() < 0.5 ? "C" : "PC", R() < 0.55 ? "R" : "PC", R() < 0.35 ? "SR" : "R"];
   const offers: ColpDay["offers"] = [];
   for (const r of rs) {

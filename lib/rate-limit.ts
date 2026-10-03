@@ -72,6 +72,8 @@ export interface RateLimiterOptions {
    * fenêtre par IP, ce qui pénalise un user honnête qui cumule plusieurs APIs.
    */
   key?: string;
+  /** compteur partagé entre lambdas (KV) pour ce limiteur seulement, même sans RATE_LIMIT_USE_KV (faible volume) */
+  forceKv?: boolean;
 }
 
 interface Entry {
@@ -209,7 +211,8 @@ export function createRateLimiter(
     // retombe en mocked→memory (voir plus bas), donc inutile seul.
     //
     // Pour réactiver KV (multi-lambda distribué) : provisionner Upstash + set RATE_LIMIT_USE_KV=true
-    if (process.env.RATE_LIMIT_USE_KV !== "true") {
+    /* forceKv : compteur partagé entre lambdas pour CE limiteur seulement (faible volume, ex. demandes d'ami Reflex Cards) */
+    if (!opts.forceKv && process.env.RATE_LIMIT_USE_KV !== "true") {
       return memoryRateLimit(namespace, ip, limit, windowMs);
     }
     const kv = getKv();

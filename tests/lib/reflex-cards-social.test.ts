@@ -115,12 +115,15 @@ describe("Reflex Cards — Amis", () => {
     as("A"); const a = await getAmis();
     expect(a.invite).toMatch(/^[A-HJ-NP-Z2-9]{8}\.[a-f0-9]{16}$/);
     expect(a.invite).toBe(inviteToken(codeA));
-    expect(inviteCode(a.invite)).toBe(codeA);
+    expect(inviteCode(a.invite)).toEqual({ code: codeA, v: 0 });
     expect(inviteCode(codeA + ".0000000000000000")).toBeNull(); // code seul, signature inventée
     expect(inviteCode(codeB + a.invite.slice(8))).toBeNull();    // signature d'un autre code
     expect(inviteCode(codeA)).toBeNull();
-    /* C (plus ami de A depuis le retrait) ouvre le lien de A : amis tout de suite, rien « en attente » */
+    /* C (plus ami de A depuis le retrait) ouvre le lien de A : le jeu demande d'abord QUI invite (accepter / refuser) */
     as("C");
+    const who = await (await amis.GET(mk(`/api/cartes/amis?inv=${encodeURIComponent(a.invite)}`))).json();
+    expect(who).toEqual({ ok: true, invitation: { code: codeA, pseudo: "Joueur" } });
+    expect((await amis.GET(mk(`/api/cartes/amis?inv=${codeA}.0000000000000000`))).status).toBe(404);
     expect((await post({ a: "invitation", tok: codeA + ".0000000000000000" })).status).toBe(422);
     expect((await post({ a: "invitation", tok: codeA })).status).toBe(422);
     const r = await post({ a: "invitation", tok: a.invite });
@@ -137,6 +140,40 @@ describe("Reflex Cards — Amis", () => {
     as("C"); expect((await post({ a: "invitation", tok: a.invite })).j.error).toMatch(/déjà amis/);
     as("A"); expect((await post({ a: "invitation", tok: a.invite })).j.error).toMatch(/propre lien/);
     expect((await pg.query("select count(*)::int as n from public.rc_friends")).rows[0]).toEqual(n0);
+    /* « Nouveau lien » : la version monte, l'ancien lien meurt, le nouveau est signé avec la version */
+    as("A");
+    const nl = await act({ a: "lien-ami" });
+    expect(nl.status).toBe(200);
+    expect(nl.j.msg).toMatch(/Nouveau lien/);
+    expect(((await pg.query("select perso->>'inviteV' as v from public.rc_players where owner=$1", [USERS.A])).rows[0] as { v: string }).v).toBe("1");
+    const a2 = await getAmis();
+    expect(a2.invite).toBe(inviteToken(codeA, 1));
+    expect(a2.invite).toMatch(new RegExp(`^${codeA}\\.1\\.[a-f0-9]{16}$`));
+    expect(inviteCode(a2.invite)).toEqual({ code: codeA, v: 1 });
+    as("C");
+    expect((await amis.GET(mk(`/api/cartes/amis?inv=${encodeURIComponent(a.invite)}`))).status).toBe(404); // ancien lien
+    expect((await post({ a: "invitation", tok: a.invite })).status).toBe(422);
+    expect((await (await amis.GET(mk(`/api/cartes/amis?inv=${encodeURIComponent(a2.invite)}`))).json()).invitation.code).toBe(codeA); // nouveau lien
+  });
+  it("lien d'invitation : l'hôte plafonné à 100 amis ou demandes n'en reçoit pas un 101e", async () => {
+    const pidB = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.B])).rows[0] as { player_id: string }).player_id;
+    const already = (await pg.query("select count(*)::int as n from public.rc_friends where a=$1 or b=$1", [pidB])).rows[0] as { n: number };
+    for (let i = 0; i < 100 - already.n; i++) {
+      const u = `eeeeeeee-0000-4000-8000-${String(i).padStart(12, "0")}`;
+      await pg.query("insert into auth.users(id) values ($1)", [u]);
+      const p = ((await pg.query("select public.rc_account($1,'2026-10-03') as id", [u])).rows[0] as { id: string }).id;
+      await pg.query("insert into public.rc_friends(a, b, status, accepted_at) values ($1, $2, 'accepted', now())", [p, pidB]);
+    }
+    expect((await pg.query("select count(*)::int as n from public.rc_friends where a=$1 or b=$1", [pidB])).rows[0]).toEqual({ n: 100 });
+    as("B"); const b = await getAmis();
+    as("C");
+    await post({ a: "retirer", code: codeB }); // C n'est pas (plus) lié à B
+    const r = await post({ a: "invitation", tok: b.invite });
+    expect(r.status).toBe(422);
+    expect(r.j.error).toMatch(/100 amis/);
+    const pidC = ((await pg.query("select player_id from public.rc_players where owner=$1", [USERS.C])).rows[0] as { player_id: string }).player_id;
+    expect((await pg.query("select count(*)::int as n from public.rc_friends where (a=$1 and b=$2) or (a=$2 and b=$1)", [pidB, pidC])).rows[0]).toEqual({ n: 0 });
+    await pg.query("delete from public.rc_friends where a in (select player_id from public.rc_players where owner::text like 'eeeeeeee-%')");
   });
   it("profil d'un ami : pseudo, boosters ouverts, toutes ses cartes ; refusé pour un non-ami ou un code invalide", async () => {
     as("A");

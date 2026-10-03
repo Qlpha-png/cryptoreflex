@@ -2,8 +2,10 @@
  * /api/cartes/amis — les amis Reflex Cards (phase B2, 1re partie).
  *   GET  : mon code ami, mon jeton d'invitation (code signé), mes amis (aperçu de leur collection), demandes reçues et envoyées ;
  *   GET ?profil=CODE : le profil d'un ami ACCEPTÉ (pseudo, titre, Panthéon, toutes ses cartes) ; 404 sinon ;
+ *   GET ?inv=JETON : qui invite (pseudo, code) si le lien est signé et encore valable — le jeu demande d'accepter ou refuser ;
  *   POST : { a: "demande", code } | { a: "repondre", code, ok } | { a: "retirer", code } | { a: "invitation", tok } → { ok, msg, list }.
- *   « invitation » = lien ouvert : amis tout de suite (l'inviteur a partagé son lien) ; « demande » = code saisi : l'autre accepte.
+ *   « invitation » = lien ouvert ET accepté : amis sans autre attente (l'hôte a partagé son lien) ; « demande » = code saisi : l'autre accepte.
+ *   Plafond 100 amis/demandes des deux côtés ; 20 demandes par jour ; 30 gestes par minute (compteur partagé KV).
  * Compte Cryptoreflex obligatoire (jamais d'invité). Tant que la migration des amis n'est pas passée en base :
  * 503 { code: "not_ready" } et le jeu garde l'onglet Amis caché. Mutations inter-sites refusées par le middleware.
  */
@@ -11,7 +13,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isReflexCardsEnabled, reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { NO_STORE, SessionError, errorJson, gameCtx, resolvePlayer, type Who } from "@/lib/reflex-cards/session";
 import { supabaseGameDb } from "@/lib/reflex-cards/store";
-import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendProfile, friendsView, inviteCode, inviteToken, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
+import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendProfile, friendsView, inviteInfo, inviteToken, inviteVersion, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { applyReleases } from "@/lib/reflex-cards/releases";
@@ -20,16 +22,17 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-/* 30 gestes par minute et par partie : largement au-dessus d'un usage réel */
-const perPlayer = createRateLimiter({ limit: 30, windowMs: 60_000, key: "rc-amis" });
+/* 30 gestes par minute et par partie : largement au-dessus d'un usage réel. Compteur PARTAGÉ entre serveurs (KV) : les
+   demandes d'ami sont la seule porte ouverte au spam, et ce volume reste minuscule (Kev 03/10 : « sans brider le jeu »). */
+const perPlayer = createRateLimiter({ limit: 30, windowMs: 60_000, key: "rc-amis", forceKv: true });
 
 const notFound = () => new NextResponse("Page introuvable", { status: 404 });
 const notReady = () => NextResponse.json({ ok: false, code: "not_ready", error: "Les amis arrivent très bientôt." }, { status: 503, headers: NO_STORE });
 
-/** ce que voit le joueur : la vue des amis + son jeton d'invitation */
+/** ce que voit le joueur : la vue des amis + son jeton d'invitation (version courante de son lien) */
 async function view(fdb: FriendsDb, player: string) {
-  const v = await friendsView(fdb, player);
-  return { ...v, invite: inviteToken(v.code) };
+  const [v, p] = await Promise.all([friendsView(fdb, player), fdb.profile(player)]);
+  return { ...v, invite: inviteToken(v.code, inviteVersion(p?.perso)) };
 }
 
 async function who(req: NextRequest): Promise<{ w: Who; fdb: FriendsDb }> {
@@ -47,6 +50,13 @@ export async function GET(req: NextRequest) {
   try {
     const r = await who(req);
     w = r.w;
+    /* ?inv=JETON : qui invite ? (le jeu demande « accepter / refuser » avant toute amitié) */
+    const inv = req.nextUrl.searchParams.get("inv");
+    if (inv !== null) {
+      const info = await inviteInfo(r.fdb, inv.trim());
+      if (!info) return w.finish(NextResponse.json({ ok: false, error: "Ce lien d'invitation n'est plus valide : demandez-en un nouveau à votre ami." }, { status: 404, headers: NO_STORE }));
+      return w.finish(NextResponse.json({ ok: true, invitation: info }, { headers: NO_STORE }));
+    }
     /* ?profil=CODE : le profil et toute la collection d'un ami accepté (Kev 03/10) */
     const profil = req.nextUrl.searchParams.get("profil");
     if (profil !== null) {
@@ -73,21 +83,20 @@ export async function POST(req: NextRequest) {
   catch { return NextResponse.json({ ok: false, error: "Demande illisible." }, { status: 400, headers: NO_STORE }); }
   const a = String(body.a ?? "");
   if (!["demande", "repondre", "retirer", "invitation"].includes(a)) return NextResponse.json({ ok: false, error: "Action inconnue." }, { status: 400, headers: NO_STORE });
-  let code: string;
-  if (a === "invitation") {
-    const c = inviteCode(String(body.tok ?? "").trim());
-    if (!c) return NextResponse.json({ ok: false, error: "Ce lien d'invitation n'est pas valide : demandez-en un nouveau à votre ami." }, { status: 422, headers: NO_STORE });
-    code = c;
-  } else {
-    code = String(body.code ?? "").toUpperCase().replace(/\s+/g, "");
-    if (!FRIEND_CODE_RE.test(code)) return NextResponse.json({ ok: false, error: "Un code ami fait 8 caractères (lettres et chiffres)." }, { status: 422, headers: NO_STORE });
-  }
+  let code = String(body.code ?? "").toUpperCase().replace(/\s+/g, "");
+  if (a !== "invitation" && !FRIEND_CODE_RE.test(code)) return NextResponse.json({ ok: false, error: "Un code ami fait 8 caractères (lettres et chiffres)." }, { status: 422, headers: NO_STORE });
   let w: Who | null = null;
   try {
     const r = await who(req);
     w = r.w;
     const rl = await perPlayer(w.player!);
     if (!rl.ok) throw new SessionError(429, "Doucement : réessayez dans une minute.");
+    if (a === "invitation") {
+      /* lien signé ET de la version courante de l'hôte (un lien révoqué ne vaut plus rien) */
+      const info = await inviteInfo(r.fdb, String(body.tok ?? "").trim());
+      if (!info) return w.finish(NextResponse.json({ ok: false, error: "Ce lien d'invitation n'est plus valide : demandez-en un nouveau à votre ami." }, { status: 422, headers: NO_STORE }));
+      code = info.code;
+    }
     await r.fdb.code(w.player!); // la partie qui demande a toujours un code (pour apparaître chez l'autre)
     const res = a === "demande" ? await r.fdb.request(w.player!, code)
       : a === "repondre" ? await r.fdb.answer(w.player!, code, body.ok === true)

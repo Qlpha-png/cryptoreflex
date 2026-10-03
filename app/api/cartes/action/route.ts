@@ -15,7 +15,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-const ACTIONS = new Set(["ouvrir", "mission", "semaine", "defi", "collection", "quiz", "fiche", "fabriquer", "acheter", "equiper", "service", "colporteur", "titre", "pantheon", "pseudo", "quiz-jour"]);
+const ACTIONS = new Set(["ouvrir", "mission", "semaine", "defi", "collection", "quiz", "fiche", "fabriquer", "acheter", "equiper", "service", "colporteur", "titre", "pantheon", "pseudo", "quiz-jour", "lien-ami"]);
 /* 120 gestes par minute et par partie : largement au-dessus d'un joueur réel */
 const perPlayer = createRateLimiter({ limit: 120, windowMs: 60_000, key: "rc-action" });
 

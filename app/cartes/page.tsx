@@ -323,7 +323,7 @@ export default async function CartesPage() {
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
                 ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec le Colporteur dès maintenant, entre amis avec les comptes joueurs."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
-                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit (votre collection est enregistrée sur nos serveurs et vous suit sur tous vos appareils)" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Une nouvelle partie de cartes sort chaque semaine.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
+                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit (votre collection est enregistrée sur nos serveurs et vous suit sur tous vos appareils)" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Les parties suivantes sortiront plus tard dans la saison.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (
                 <div key={q}>
                   <dt className="font-semibold text-fg">{q}</dt>

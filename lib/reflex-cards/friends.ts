@@ -19,6 +19,8 @@ export interface FriendsDb {
   cards(player: string): Promise<{ pid: string; card_id: string }[]>;
   /** fiche publique d'une partie (pseudo, perso, boosters ouverts, premier jour) — appelée seulement pour un ami accepté */
   profile(pid: string): Promise<{ pseudo: string; perso: Record<string, unknown> | null; opened: number; first_day: string } | null>;
+  /** l'hôte d'un code ami (lien d'invitation) : partie de COMPTE seulement */
+  host(code: string): Promise<{ pid: string; pseudo: string; perso: Record<string, unknown> | null } | null>;
 }
 /** la migration des amis n'est pas encore passée en base : l'onglet Amis reste caché */
 export class FriendsNotReady extends Error {}
@@ -56,6 +58,12 @@ export function supabaseFriendsDb(sb: SupabaseClient): FriendsDb {
       if (error) { if (missing(error)) throw new FriendsNotReady(error.message); throw new Error(error.message); }
       return (data as { pseudo: string; perso: Record<string, unknown> | null; opened: number; first_day: string } | null) ?? null;
     },
+    async host(code) {
+      const { data, error } = await sb.from("rc_players").select("player_id,pseudo,perso,owner").eq("friend_code", code).maybeSingle();
+      if (error) { if (missing(error)) throw new FriendsNotReady(error.message); throw new Error(error.message); }
+      const d = data as { player_id: string; pseudo: string; perso: Record<string, unknown> | null; owner: string | null } | null;
+      return d && d.owner ? { pid: d.player_id, pseudo: d.pseudo, perso: d.perso } : null;
+    },
   };
 }
 
@@ -74,29 +82,48 @@ export async function friendProfile(db: FriendsDb, me: string, code: string): Pr
   return { code, pseudo: p.pseudo, since: f.since, title: typeof perso.title === "string" ? perso.title : null, pantheon, opened: p.opened, firstDay: String(p.first_day).slice(0, 10), cards };
 }
 
-/* Lien d'invitation (Kev 02/10) = le code ami SIGNÉ. L'ouvrir rend amis tout de suite : c'est le joueur qui a partagé
-   son lien qui donne son accord. Le code seul, saisi à la main, reste une demande que l'autre accepte. La signature
-   empêche de transformer un code aperçu chez quelqu'un en « invitation ». Clé : REFLEX_CARDS_INVITE_SECRET, sinon
-   dérivée (SHA-256) de la clé service, qui ne quitte jamais le serveur. */
-export const INVITE_RE = /^[A-HJ-NP-Z2-9]{8}\.[a-f0-9]{16}$/;
+/* Lien d'invitation (Kev 02/10, précisé le 03/10) = le code ami SIGNÉ + version. Celui qui l'ouvre voit « X vous invite :
+   accepter / refuser » ; s'il accepte, les deux sont amis sans autre attente (c'est l'hôte qui a partagé son lien).
+   Le code seul, saisi à la main, reste une demande que l'autre accepte. La signature empêche de transformer un code
+   aperçu chez quelqu'un en « invitation » ; la version (perso.inviteV) permet à l'hôte de révoquer ses anciens liens.
+   Clé : REFLEX_CARDS_INVITE_SECRET, sinon dérivée (SHA-256) de la clé service, qui ne quitte jamais le serveur. */
+/* jeton : CODE.mac (version 0, liens déjà partagés) ou CODE.v.mac (version v, après « Nouveau lien » : les anciens liens meurent) */
+export const INVITE_RE = /^([A-HJ-NP-Z2-9]{8})(?:\.(\d{1,4}))?\.([a-f0-9]{16})$/;
 const inviteKey = (): Buffer | null => {
   const s = process.env.REFLEX_CARDS_INVITE_SECRET?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   return s ? createHash("sha256").update("rc-invite|" + s).digest() : null;
 };
 /** jeton d'invitation d'un code ami (null : aucune clé serveur, le jeu retombe sur le lien à code simple) */
-export function inviteToken(code: string): string | null {
+export function inviteToken(code: string, v = 0): string | null {
   const k = inviteKey();
-  if (!k || !FRIEND_CODE_RE.test(code)) return null;
-  return code + "." + createHmac("sha256", k).update(code).digest("hex").slice(0, 16);
+  if (!k || !FRIEND_CODE_RE.test(code) || !Number.isInteger(v) || v < 0) return null;
+  const mac = createHmac("sha256", k).update(v > 0 ? `${code}|${v}` : code).digest("hex").slice(0, 16);
+  return v > 0 ? `${code}.${v}.${mac}` : `${code}.${mac}`;
 }
-/** le code ami d'un jeton valide, sinon null */
-export function inviteCode(tok: string): string | null {
-  if (!INVITE_RE.test(tok)) return null;
-  const code = tok.slice(0, 8), want = inviteToken(code);
+/** le code ami et la version d'un jeton bien signé, sinon null (la version est ensuite comparée à celle de l'hôte) */
+export function inviteCode(tok: string): { code: string; v: number } | null {
+  const m = INVITE_RE.exec(tok);
+  if (!m) return null;
+  const code = m[1], v = m[2] ? Number(m[2]) : 0, want = inviteToken(code, v);
   if (!want) return null;
   const a = Buffer.from(tok), b = Buffer.from(want);
-  return a.length === b.length && timingSafeEqual(a, b) ? code : null;
+  return a.length === b.length && timingSafeEqual(a, b) ? { code, v } : null;
 }
+/** version courante du lien d'un joueur (perso.inviteV, 0 au départ) */
+export const inviteVersion = (perso: Record<string, unknown> | null | undefined): number => {
+  const v = Number(perso?.inviteV ?? 0);
+  return Number.isInteger(v) && v >= 0 ? v : 0;
+};
+/** qui invite ? (lien ouvert) : le pseudo et le code de l'hôte si le jeton est signé ET encore de la version courante */
+export async function inviteInfo(db: FriendsDb, tok: string): Promise<{ code: string; pseudo: string } | null> {
+  const t = inviteCode(tok);
+  if (!t) return null;
+  const h = await db.host(t.code);
+  if (!h || inviteVersion(h.perso) !== t.v) return null;
+  return { code: t.code, pseudo: h.pseudo };
+}
+/** plafond d'amis et de demandes, des deux côtés */
+export const FRIENDS_MAX = 100;
 /** arrivée par un lien d'invitation : la demande part, puis elle est acceptée au nom de l'inviteur (il a partagé son lien).
  *  Renvoie 'accepted', ou le refus de la demande (already, self, unknown, limites, gone). */
 export async function befriendByInvite(db: FriendsDb, me: string, code: string): Promise<string> {
@@ -106,6 +133,8 @@ export async function befriendByInvite(db: FriendsDb, me: string, code: string):
   if (!myCode) return "gone";
   const host = (await db.list(me)).find((r) => r.code === code && r.status === "pending" && r.outgoing);
   if (!host) return "gone";
+  /* le plafond vaut aussi pour l'hôte : un lien public ne lui fabrique pas une liste sans fin (ma demande vient d'y entrer) */
+  if ((await db.list(host.pid)).length > FRIENDS_MAX) { await db.remove(me, code); return "limit_total"; }
   return db.answer(host.pid, myCode, true);
 }
 
