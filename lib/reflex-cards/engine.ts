@@ -214,10 +214,22 @@ export class GameError extends Error {
 }
 
 /** nombre de doublons échangeables (l'exemplaire de l'album et les numérotées restent) */
+/** doublons ORDINAIRES qu'on peut donner (Colporteur, défis). Règle Kev (03/10) : une finition ne s'échange que contre la même
+ *  finition — les Holo et les numérotées (Argent, Or, Onyx) ne partent jamais contre une carte ordinaire. L'album garde le plus
+ *  bel exemplaire (numérotée, sinon Holo, sinon ordinaire) : seuls les exemplaires ordinaires en plus sont donnables. */
 export const tradeN = (s: GameState, id: string): number => {
   const e = s.cards.get(id);
   if (!e) return 0;
-  return Math.max(0, e.n - 1 - (e.fins.ag.length + e.fins.or.length + e.fins.onyx.length));
+  const num = e.fins.ag.length + e.fins.or.length + e.fins.onyx.length;
+  const ord = Math.max(0, e.n - e.holo - num);
+  return Math.max(0, ord - (num === 0 && e.holo === 0 ? 1 : 0));
+};
+/** doublons Holo (réservés aux échanges Holo contre Holo, à venir avec le mur d'échanges) */
+export const holoDupN = (s: GameState, id: string): number => {
+  const e = s.cards.get(id);
+  if (!e) return 0;
+  const num = e.fins.ag.length + e.fins.or.length + e.fins.onyx.length;
+  return Math.max(0, Math.min(e.holo, e.n - num) - (num === 0 ? 1 : 0));
 };
 
 /* ---------- réserve de boosters (1 toutes les 15 min, 10 au plus) ---------- */

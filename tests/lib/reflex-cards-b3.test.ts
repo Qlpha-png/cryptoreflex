@@ -90,6 +90,37 @@ describe("Reflex Cards — B3 : lecture de la partie en un appel (rc_load)", () 
   });
 });
 
+describe("Reflex Cards — même finition : seuls les doublons ordinaires se donnent (Kev 03/10)", () => {
+  it("doublons donnables = exemplaires ordinaires en plus de celui de l'album ; Holo et numérotées protégées", async () => {
+    const { tradeN, holoDupN } = await import("@/lib/reflex-cards/engine");
+    const st = (n: number, holo: number, ag: number[] = []) => ({ cards: new Map([["x", { n, holo, fins: { ag, or: [], onyx: [] }, t: 0 }]]) }) as never;
+    expect(tradeN(st(3, 0), "x")).toBe(2);       // 3 ordinaires : l'album en garde 1
+    expect(tradeN(st(3, 1), "x")).toBe(2);       // l'album garde la Holo : les 2 ordinaires partent
+    expect(tradeN(st(2, 2), "x")).toBe(0);       // que des Holo : rien à donner contre une ordinaire
+    expect(holoDupN(st(2, 2), "x")).toBe(1);     // …mais 1 Holo en double, pour un futur Holo contre Holo
+    expect(tradeN(st(4, 1, [7]), "x")).toBe(2);  // l'album garde la numérotée : 2 ordinaires donnables, la Holo reste
+    expect(holoDupN(st(4, 1, [7]), "x")).toBe(1);
+    expect(tradeN(st(1, 0), "x")).toBe(0);
+  });
+  it("Colporteur : une carte dont le seul doublon est une Holo ne peut pas être donnée", async () => {
+    const { pg, db } = await makeGameDb();
+    const P = await db.createGuest("d".repeat(64), "2026-10-29");
+    const s0 = await loadGame(db, P, ctx);
+    const D = s0.days.get(ctx.today)!.colp!;
+    const o = D.offers.find((x) => x.r === "C" || x.r === "PC")!;
+    const give = RULES.cards.find((c) => !c.fossil && c.r === o.r && c.id !== o.id)!.id;
+    await pg.query(`insert into public.rc_cards(player_id, card_id, n, holo) values ($1,$2,2,2) on conflict (player_id, card_id) do update set n=2, holo=2`, [P, give]);
+    const i = D.offers.indexOf(o);
+    await expect(runAction(db, P, "colporteur", { i, give }, ctx, ACC)).rejects.toThrow(/ordinaire/);
+    expect((await pg.query("select n, holo from public.rc_cards where player_id=$1 and card_id=$2", [P, give])).rows[0]).toEqual({ n: 2, holo: 2 });
+    /* avec un exemplaire ordinaire en plus : l'échange passe, et c'est l'ordinaire qui part (les 2 Holo restent) */
+    await pg.query("update public.rc_cards set n = 3 where player_id=$1 and card_id=$2", [P, give]);
+    const r = await runAction(db, P, "colporteur", { i, give }, ctx, ACC);
+    expect(r.state.col[give]).toMatchObject({ n: 2, holo: 2 });
+    expect((await pg.query("select n, holo from public.rc_cards where player_id=$1 and card_id=$2", [P, give])).rows[0]).toEqual({ n: 2, holo: 2 });
+  });
+});
+
 describe("Reflex Cards — B3 : garde « holo ≤ exemplaires non numérotés »", () => {
   const ID = RULES.cards.find((c) => !c.fossil && c.r === "C")!.id;
   async function setup(b3: boolean) {

@@ -182,7 +182,8 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       if (!D || (D.k !== ctx.today && D.k !== ctx.today + "|" + ctx.day) || !D.offers[i]) throw new GameError("gone", "Offres du jour renouvelées : rechargez la page.");
       const key = `c|${ctx.today}|${i}`, o = D.offers[i];
       if (s.claims.has(key)) throw new GameError("done", "Offre déjà prise.");
-      if (CARD.get(give)?.r !== o.r || tradeN(s, give) < 1) throw new GameError("no_dup", `Il vous faut un doublon de la même rareté.`);
+      /* le Colporteur donne une carte ordinaire : il ne prend qu'un doublon ORDINAIRE de même rareté (jamais une Holo ni une numérotée) */
+      if (CARD.get(give)?.r !== o.r || tradeN(s, give) < 1) throw new GameError("no_dup", `Il vous faut un doublon ordinaire (ni Holo ni numéroté) de la même rareté.`);
       const isNew = !s.cards.has(o.id);
       return {
         patch: { cards: [{ id: give, dn: -1 }, { id: o.id, dn: 1 }], claims: [key], day: { day: ctx.today, inc: { trade: 1, ...(isNew ? { newc: 1 } : {}) } } },
