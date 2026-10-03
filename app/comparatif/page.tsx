@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   },
   keywords: [
     "comparatif plateforme crypto",
-    "Coinbase vs Binance",
+    "Coinbase vs Kraken",
     "Ledger vs Trezor",
     "meilleur exchange france",
     "comparatif crypto MiCA",

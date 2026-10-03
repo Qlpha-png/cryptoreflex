@@ -84,14 +84,15 @@ export const staticProvider: PriceProvider = {
     return Boolean(STATIC_FALLBACK[meta.coingeckoId]);
   },
 
-  async fetch(meta: CryptoMeta): Promise<ProviderPriceData | null> {
-    const stat = STATIC_FALLBACK[meta.coingeckoId];
-    if (!stat) return null;
-    return {
-      priceUsd: stat.priceUsd,
-      change24h: stat.change24h,
-      volume24h: stat.volume24h,
-      marketCap: stat.marketCap,
-    };
+  // AUDIT 2026-10-03 — ce provider ne renvoie PLUS de prix : la table
+  // STATIC_FALLBACK date de mai 2026 (BTC 78 500 $, ETH 2 320 $) et ses
+  // valeurs arrivaient en production affichées comme un cours courant
+  // (bandeau d'accueil, fiches) dès que la cascade live échouait.
+  // Règle du site : aucun chiffre faux. Sans source live ni cache KV
+  // (cron, TTL 6 h), le front affiche « — » / « Prix indisponible ».
+  // La table reste utilisée uniquement pour estimer le supply
+  // (estimateMarketCap = marketCap / priceUsd × prix live).
+  async fetch(_meta: CryptoMeta): Promise<ProviderPriceData | null> {
+    return null;
   },
 };

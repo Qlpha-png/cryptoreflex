@@ -120,7 +120,9 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">
             <span className="text-primary-soft">Pouls du marché</span>
             <span aria-hidden="true"> — </span>
-            BTC · 7 jours · données réelles
+            {/* « données réelles » seulement quand la courbe l'est (audit 03/10/2026 : le titre
+                l'affirmait au-dessus de l'illustration de secours) */}
+            {head.isReal ? "BTC · 7 jours · données réelles" : "BTC · 7 jours"}
           </p>
 
           {/* H1 monumental — 5 mots, échelle display enfin utilisée */}

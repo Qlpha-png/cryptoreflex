@@ -113,7 +113,7 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            Compare les plateformes MiCA selon votre profil — Coinbase, Binance, Bitpanda…
+            Comparez les plateformes autorisées en France selon votre profil — Coinbase, Kraken, Bitpanda…
           </div>
         </div>
 

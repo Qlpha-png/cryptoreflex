@@ -2,7 +2,7 @@
 title: "Frais d'acquisition crypto : sont-ils déductibles en 2026 ?"
 slug: "frais-acquisition-crypto-deductible-2026"
 description: "Frais Coinbase, Kraken, Bitpanda (et frais Binance de vos opérations passées), gas Ethereum, frais de retrait : ce qui est déductible et ce qui ne l'est pas selon l'article 150 VH bis du CGI en 2026."
-excerpt: "Tour d'horizon complet des frais crypto et de leur traitement fiscal en 2026 : frais d'achat oui, frais de retrait non, gas Ethereum non, frais de cession oui — exemples chiffrés et justificatifs à conserver."
+excerpt: "Tour d'horizon complet des frais crypto et de leur traitement fiscal en 2026 : frais de cession oui (ligne 214), frais d'achat selon la lecture retenue de la ligne 220, frais de retrait non, gas Ethereum non — exemples chiffrés et justificatifs à conserver."
 category: "Fiscalité"
 date: "2026-04-26"
 publishedAt: "2026-04-26"
@@ -38,7 +38,7 @@ featured: true
 ---
 
 <Callout type="warning" title="Disclaimer fiscal">
-Cet article est purement informatif et ne constitue pas un conseil fiscal personnalisé. Le traitement fiscal des frais repose sur l'article 150 VH bis du CGI et le BOI-RPPM-PVBMC-30-30 § 220 (mise à jour janvier 2026). Pour votre situation, consultez un expert-comptable agréé.
+Cet article est purement informatif et ne constitue pas un conseil fiscal personnalisé. Le traitement fiscal des frais repose sur l'article 150 VH bis du CGI, le BOI-RPPM-PVBMC-30-20 (§ 50 et § 70) et la notice du formulaire 2086. Pour votre situation, consultez un expert-comptable.
 </Callout>
 
 Quand on calcule sa plus-value crypto pour la déclaration 2086, la question revient toujours : **quels frais peut-on déduire ?** Frais Coinbase ou Kraken à l'achat ? Au retrait ? Frais de réseau (gas Ethereum) ? Frais de spread sur Revolut ? Beaucoup de contribuables se trompent — soit en sur-déduisant (risque de redressement) soit en sous-déduisant (impôt trop élevé).
@@ -49,24 +49,27 @@ Vous voulez le calcul automatique ? Notre [calculateur fiscalité crypto](/outil
 
 ## TL;DR (60 secondes)
 
-- **Déductibles** : frais d'**acquisition** (achat) et frais de **cession** (vente) directement liés à l'opération imposable.
+- **Déductibles, texte à l'appui** : les frais de **cession** (vente), ligne 214 du formulaire 2086. Ils réduisent le prix de cession, mais pas le quotient de la formule.
+- **Frais d'achat** : la notice du 2086 définit la ligne 220 comme « la somme de tous les prix acquittés en monnaie ayant cours légal » pour vos acquisitions, sans citer les frais. Les compter dans le prix acquitté est la lecture la plus courante, mais l'administration ne l'a pas écrite noir sur blanc : on vous explique les deux lectures et leur effet (quelques euros par cession).
 - **Non déductibles** : frais de **retrait**, frais de **réseau** (gas), frais de **dépôt**, abonnements de plateforme.
 - **Justificatif requis** : reçu/CSV de la plateforme avec date, montant, type de frais.
 - **Conservation** : au moins 6 ans, 10 ans par prudence (le délai de reprise atteint 10 ans en cas de compte étranger non déclaré).
-- **Source** : article 150 VH bis du CGI, BOI-RPPM-PVBMC-30-30 § 220.
+- **Source** : article 150 VH bis du CGI, BOI-RPPM-PVBMC-30-20 § 50 et § 70, notice du formulaire 2086.
 
 ---
 
 ## 1. Le principe général — distinction entre 2 catégories
 
-L'article 150 VH bis du CGI distingue deux catégories de frais dans la formule de calcul de plus-value :
+La formule de l'article 150 VH bis du CGI fait intervenir deux prix, et les frais n'y sont pas traités de la même façon :
 
-- **Prix d'acquisition** : il **inclut** les frais directement liés à l'achat (commissions de la plateforme à l'achat). Ces frais **gonflent** votre PRU et **réduisent** donc la plus-value future.
-- **Prix de cession** : il est **réduit** des frais directement liés à la vente (commissions plateforme à la vente). Ces frais **réduisent** la plus-value imposable.
+- **Prix de cession** (lignes 213 à 218) : il est **réduit**, sur justificatifs, des frais supportés lors de la vente (commissions de la plateforme, frais de réseau payés pour cette vente). C'est écrit dans la notice du formulaire et au BOFiP (BOI-RPPM-PVBMC-30-20, § 50).
+- **Prix total d'acquisition** (ligne 220) : « la somme de tous les prix acquittés en monnaie ayant cours légal à l'occasion de l'ensemble des acquisitions » (notice 2086). Le texte ne cite pas les frais d'achat. Si vous avez payé 30 030 € pour obtenir 1 BTC (30 000 € + 30 € de commission), le prix acquitté est, à notre lecture, 30 030 € — c'est la lecture la plus courante, mais l'administration ne l'a jamais confirmée explicitement. Par prudence, notre [générateur Cerfa 2086](/outils/cerfa-2086-auto) ne les ajoute pas automatiquement : il affiche leur montant à part, et vous tranchez avec votre conseil.
 
 **Formule officielle (rappel) :**
 
-Plus-value nette = Prix de cession net (vente moins frais cession) moins Fraction du prix total d'acquisition (achats + frais d'acquisition × prix de cession net / valeur globale portefeuille).
+Plus-value (ligne 224) = Prix de cession net des frais (ligne 218) − Prix total d'acquisition net (ligne 223) × Prix de cession (ligne 217) / Valeur globale du portefeuille (ligne 212).
+
+Attention au piège : dans la fraction, c'est le prix de cession **brut** (ligne 217) qui compte. Les frais de cession ne réduisent que le premier terme (BOI-RPPM-PVBMC-30-20, § 50, remarque : ils « ne viennent pas en diminution du prix de cession pour la détermination du quotient »).
 
 Donc en théorie, **tous les frais directement liés** aux opérations imposables sont déductibles. Le piège : la majorité des frais que vous payez dans la vie réelle ne sont **pas directement liés** à une cession imposable au sens du CGI.
 
@@ -76,12 +79,12 @@ Donc en théorie, **tous les frais directement liés** aux opérations imposable
 
 | Type de frais | Déductible ? | Pourquoi |
 |---|---|---|
-| Commission Coinbase/Kraken/Bitpanda sur l'achat | Oui | Frais d'acquisition direct |
-| Commission Coinbase/Kraken/Bitpanda sur la vente | Oui | Frais de cession direct |
+| Commission Coinbase/Kraken/Bitpanda sur l'achat | Selon la lecture de la ligne 220 (voir § 1) | Fait partie du prix acquitté pour acquérir, mais non cité par le texte |
+| Commission Coinbase/Kraken/Bitpanda sur la vente | Oui | Frais de cession (ligne 214), texte explicite |
 | Spread d'achat (Revolut, Bitpanda) | Oui (intégré au prix) | Inclus dans le prix réel |
 | Frais de retrait EUR (vers banque) | Non | Pas lié à une cession imposable |
 | Frais de retrait crypto (vers Ledger) | Non | Pas une cession imposable |
-| Frais de réseau (gas Ethereum, BTC fee) | Non | Pas une cession imposable au sens fiscal |
+| Frais de réseau (gas Ethereum, BTC fee) | Non, sauf gas de la vente imposable elle-même | Un transfert ou un swap n'est pas une cession imposable ; la notice 2086 admet seulement les frais des « mineurs » payés pour l'opération imposable |
 | Frais de dépôt fiat (CB, virement) | Non | Pas lié à une cession |
 | Abonnement mensuel plateforme (Coinbase One) | Non | Pas direct à une opération |
 | Frais de stop-loss/limit non exécuté | Non | Pas de cession effective |
@@ -95,15 +98,15 @@ Donc en théorie, **tous les frais directement liés** aux opérations imposable
 
 ### Frais Coinbase / Kraken / Bitpanda — à l'achat
 
-**Statut : DÉDUCTIBLE.** Ils s'**incorporent au prix d'acquisition**. La règle vaut aussi pour les frais payés lors de vos achats passés sur une plateforme que vous n'utilisez plus, comme Binance (qui a cessé ses services en France le 1er juillet 2026).
+**Statut : SELON LA LECTURE RETENUE DE LA LIGNE 220.** Le texte officiel parle des « prix acquittés » pour vos acquisitions, sans citer les frais. Les compter dans le prix acquitté est la lecture la plus courante, non confirmée explicitement par l'administration. Si vous la retenez, elle vaut aussi pour vos achats passés sur une plateforme que vous n'utilisez plus, comme Binance (qui a cessé ses services en France le 1er juillet 2026).
 
 **Exemple :** Vous achetez 1 BTC à 30 000 euros sur une plateforme qui facture 0,1 % de frais, soit 30 euros.
 
 - Prix payé total : 30 030 euros.
-- **Prix d'acquisition retenu** : 30 030 euros (et non 30 000).
-- Effet : votre PRU est de 30 030 euros au lieu de 30 000, ce qui **réduira votre plus-value future** de 30 euros.
+- **Lecture courante** : prix total d'acquisition de 30 030 euros. Effet : la plus-value d'une future vente totale baisse de 30 euros, soit 9,42 euros d'impôt en moins (31,4 %).
+- **Lecture prudente** (celle de notre générateur) : 30 000 euros, les 30 euros de frais sont indiqués à part.
 
-Sur l'année, si vous faites 50 achats de ce type, vous pouvez ajouter ~1 500 euros à votre prix d'acquisition cumulé.
+Sur l'année, 50 achats de ce type représentent ~1 500 euros de frais : l'écart d'impôt entre les deux lectures reste de l'ordre de 470 euros au maximum, atteint seulement si vous vendez tout. Gardez les justificatifs quelle que soit votre position.
 
 ### Frais Coinbase / Kraken / Bitpanda — à la vente
 
@@ -112,7 +115,7 @@ Sur l'année, si vous faites 50 achats de ce type, vous pouvez ajouter ~1 500 eu
 **Exemple :** Vous vendez 1 BTC à 45 000 euros sur une plateforme qui facture 0,1 % de frais, soit 45 euros.
 
 - Prix de cession brut : 45 000 euros.
-- **Prix de cession net** : 44 955 euros (à reporter en colonne 214 du Cerfa 2086).
+- **Prix de cession net** : 44 955 euros (à reporter en ligne 215 du formulaire 2086).
 
 ### Spread Revolut / Bitpanda
 
@@ -135,13 +138,13 @@ Quand vous retirez des euros vers votre banque, ce n'est **pas une cession**, c'
 
 ### Frais de réseau / gas Ethereum
 
-**Statut : NON DÉDUCTIBLE.**
+**Statut : NON DÉDUCTIBLE, sauf s'ils sont payés pour la cession imposable elle-même.**
 
-C'est le frais le plus controversé, mais la position de la DGFiP est **claire depuis 2023** : les frais de réseau (gas Ethereum, fee Bitcoin, frais Solana, frais Polygon) ne sont **pas des frais directement liés à une cession imposable** au sens du CGI. Pourquoi : ils sont liés à un **transfert de blockchain**, pas à une cession.
+La notice du formulaire 2086 est précise : les frais déductibles du prix de cession sont ceux « perçus à l'occasion de l'opération imposable par les plateformes […] ainsi que ceux perçus par les membres du réseau (appelés "mineurs") ». Autrement dit, un frais de réseau se déduit uniquement quand il paie la transaction qui constitue la vente imposable (par exemple la vente on-chain d'une crypto contre un euro tokenisé ou vers un service de retrait en euros). Dans la vie réelle, l'immense majorité du gas que vous payez sert à des **transferts** (vers un portefeuille, vers une plateforme) ou à des **swaps crypto/crypto** : ces opérations ne sont pas des cessions imposables, donc ce gas n'est pas déductible.
 
-**Exemple :** Vous envoyez 1 ETH de Coinbase vers Ledger, gas 5 euros. Le gas n'est **pas déductible**.
+**Exemple :** Vous envoyez 1 ETH de Coinbase vers Ledger, gas 5 euros. Le gas n'est **pas déductible** : un transfert n'est pas une cession.
 
-**Exception pratique :** dans le cadre d'un swap c/c sur DEX (Uniswap, 1inch), le gas ne se déduit pas non plus, parce que le swap est lui-même fiscalement neutre. Les frais sont **perdus fiscalement**, mais peuvent en revanche augmenter votre prix d'acquisition de la nouvelle crypto reçue.
+**Swap sur DEX (Uniswap, 1inch) :** le gas ne se déduit pas non plus, parce que l'échange crypto/crypto est en sursis d'imposition. Il ne s'ajoute pas non plus à la ligne 220 : le prix total d'acquisition ne retient que les sommes « acquittées en monnaie ayant cours légal », et du gas payé en ETH n'en est pas. Ces frais sont **perdus fiscalement**.
 
 ### Frais d'abonnement plateforme (Coinbase One…)
 
@@ -157,9 +160,11 @@ Un abonnement mensuel pour réduire les commissions ne se déduit pas. Il n'est 
 
 Sur certaines plateformes, les frais peuvent être payés avec un jeton maison, avec une réduction (c'était le cas du BNB sur Binance, pour vos opérations passées). Comment l'intégrer ?
 
-**Méthode** : vous **convertissez le montant des frais en euros** au cours du jour de l'opération. Le BNB utilisé pour payer les frais sort de votre portefeuille — pour la formule prorata, vous réduisez votre valeur globale d'autant.
+**Côté vente :** la notice du 2086 le prévoit : des frais de cession payés en actifs numériques sont, par simplification, assimilés à la cession elle-même et déduits du prix de cession, convertis en euros au cours du jour. Le jeton utilisé sort de votre portefeuille.
 
-**Exemple :** Frais d'achat 0,075 % (avec BNB) sur 30 000 euros = 22,50 euros payés en BNB. Vous intégrez ces 22,50 euros au prix d'acquisition du BTC acheté, et vous retirez l'équivalent BNB de votre valeur globale.
+**Côté achat :** des frais payés en BNB ne sont pas « acquittés en monnaie ayant cours légal » ; même avec la lecture courante de la ligne 220, les ajouter au prix total d'acquisition n'a pas d'appui dans le texte. Prudence : ne les comptez pas.
+
+**Exemple :** vente de 30 000 euros de BTC avec 22,50 euros de frais payés en BNB : prix de cession 30 000 euros, frais de cession 22,50 euros (ligne 214), prix net 29 977,50 euros (ligne 218). Le quotient de la formule reste calculé sur 30 000 euros.
 
 ### Cas B — Frais de courtage chez un broker FR (Trade Republic, eToro)
 
@@ -193,11 +198,11 @@ En cas de contrôle DGFiP, vous devez pouvoir **justifier chaque frais déduit**
 
 ## 6. Erreurs fréquentes (à éviter absolument)
 
-**Erreur 1 — déduire le gas Ethereum.** Très tentant, mais position DGFiP claire : non. Si vous déduisez et que vous êtes contrôlé, le rappel d'impôt + intérêt + majoration peut atteindre 40 % du montant déduit indûment.
+**Erreur 1 — déduire le gas de vos transferts et de vos swaps.** Seul le gas payé pour la vente imposable elle-même est déductible (notice 2086 : frais des « mineurs » perçus à l'occasion de l'opération imposable). Le gas d'un transfert vers Ledger ou d'un swap sur Uniswap, lui, n'est lié à aucune cession imposable : en cas de contrôle, la déduction est rejetée, avec rappel d'impôt, intérêts de retard et majoration éventuelle.
 
 **Erreur 2 — déduire les frais de retrait fiat.** Non liés à une cession imposable, donc non déductibles. Erreur très fréquente.
 
-**Erreur 3 — oublier les frais d'achat.** Vous faites du DCA mensuel sur une plateforme qui facture 0,1 % de frais : à la fin de l'année, ces frais représentent quelques dizaines à centaines d'euros à intégrer dans votre PRU. Oublier de les compter, c'est **gonfler votre plus-value future** et payer plus d'impôt.
+**Erreur 3 — compter les frais d'achat sans justificatifs.** Si vous retenez la lecture courante de la ligne 220 (frais d'achat inclus dans le prix acquitté), chaque euro ajouté doit être prouvé par l'export de la plateforme : en contrôle, un prix d'acquisition gonflé sans pièce est rejeté. À l'inverse, les oublier vous coûte au plus 31,4 % de leur montant.
 
 **Erreur 4 — double-compter le spread.** Si vous achetez sur Revolut à 3 000 euros (prix incluant le spread), vous n'ajoutez pas 30 euros de spread en plus. Vous prenez simplement 3 000 euros comme prix d'acquisition.
 
@@ -213,26 +218,26 @@ En cas de contrôle DGFiP, vous devez pouvoir **justifier chaque frais déduit**
 - 15 mai : achat 0,5 BTC à 18 000 euros (BTC à 36 000 euros), frais 18 euros.
 - 3 octobre : vente 1 BTC à 50 000 euros, frais 50 euros.
 
-**Calcul prorata article 150 VH bis :**
+**Calcul ligne par ligne (formulaire 2086), lecture prudente — frais d'achat non ajoutés :**
 
-- Prix de cession brut : 50 000 euros.
-- Frais cession : 50 euros.
-- **Prix de cession net** (col. 214) : **49 950 euros**.
-- Prix total d'acquisition (achats + frais d'acquisition) : 30 000 + 30 + 18 000 + 18 = **48 048 euros**.
-- Valeur globale portefeuille au jour de cession (50 000 vendus + 25 000 BTC restant 0,5 BTC à 50 000 euros) : **75 000 euros**.
-- Fraction prix acquisition imputée : (48 048 × 49 950) / 75 000 = **31 999,97 euros**.
-- **Plus-value imposable** (col. 218) : 49 950 − 31 999,97 = **17 950,03 euros**.
+- Prix de cession (ligne 213) : 50 000 euros.
+- Frais de cession (ligne 214) : 50 euros.
+- **Prix de cession net de frais** (ligne 215, et 218 sans soulte) : **49 950 euros**.
+- Prix total d'acquisition (ligne 220) : 30 000 + 18 000 = **48 000 euros**. Première cession de l'année et aucune auparavant : lignes 221 et 222 à 0, donc ligne 223 = 48 000 euros.
+- Valeur globale du portefeuille au moment de la cession (ligne 212) : 1,5 BTC détenus × 50 000 euros = **75 000 euros** (la part vendue compte, le portefeuille s'évalue juste avant la vente).
+- Fraction du prix d'acquisition imputée : 223 × 217 / 212 = (48 000 × 50 000) / 75 000 = **32 000 euros**. Le quotient se calcule sur le prix de cession **avant** frais (ligne 217) : les frais ne jouent que sur le premier terme.
+- **Plus-value** (ligne 224) : 49 950 − 32 000 = **17 950 euros**.
 
-**PFU 31,4 %** : 17 950,03 × 0,314 = **5 636,31 euros d'impôt total**.
+**PFU 31,4 %** : 17 950 × 0,314 = **5 636,30 euros d'impôt total**.
 
-**Si Sophie avait oublié les frais d'achat (30 + 18 = 48 euros) :**
+**Lecture courante — frais d'achat (30 + 18 = 48 euros) comptés dans le prix acquitté :**
 
-- Prix total d'acquisition : 48 000 euros (au lieu de 48 048 euros).
-- Fraction imputée : (48 000 × 49 950) / 75 000 = 31 968 euros.
-- Plus-value : 49 950 − 31 968 = 17 982 euros.
-- PFU : 17 982 × 0,314 = **5 646,35 euros**.
+- Prix total d'acquisition : 48 048 euros.
+- Fraction imputée : (48 048 × 50 000) / 75 000 = 32 032 euros.
+- Plus-value : 49 950 − 32 032 = 17 918 euros.
+- PFU : 17 918 × 0,314 = **5 626,25 euros**.
 
-**Différence :** 5 646,35 − 5 636,31 = **10,04 euros**. Sur un seul cycle d'achat, c'est marginal. Mais sur 50 ou 100 opérations DCA, ça peut atteindre **plusieurs centaines d'euros** par an.
+**Écart entre les deux lectures :** 5 636,30 − 5 626,25 = **10,05 euros** sur cette cession. L'enjeu est faible tant que vous ne vendez pas tout d'un coup : sur 50 ou 100 achats en DCA, il peut atteindre quelques centaines d'euros, jamais plus que 31,4 % des frais d'achat payés.
 
 <Callout type="info" title="Calculez votre impôt en 2 min">
 Le [calculateur fiscalité crypto Cryptoreflex](/outils/calculateur-fiscalite) gère nativement les frais de courtage dans la formule article 150 VH bis. Vous rentrez vos cessions, vos achats, vos frais — il calcule la plus-value nette et le PFU 31,4 % à payer en intégrant tous les frais déductibles. Aucune donnée envoyée.
@@ -251,10 +256,10 @@ comparatif reste indépendant. Voir notre [politique de transparence](/transpare
 
 ## 8. Comment reporter les frais sur le Cerfa 2086
 
-Concrètement, le formulaire 2086 a une **colonne 213 dédiée aux frais de cession** :
+Concrètement, le formulaire 2086 a une **ligne 214 dédiée aux frais de cession** :
 
-- **Colonne 213 — Frais de cession (€)** : vous mettez le montant des frais de la plateforme sur la **vente** uniquement.
-- Les **frais d'acquisition** ne sont **pas une colonne séparée** : ils s'**intègrent à la colonne 216** (prix total d'acquisition du portefeuille). Vous sommez le prix d'achat + frais d'achat dans cette colonne.
+- **Ligne 214 — Frais de cession (€)** : vous mettez le montant des frais de la plateforme sur la **vente** uniquement. Ils réduisent le prix de cession (ligne 215, puis 218) mais **pas** le prorata : la fraction du prix d'acquisition se calcule sur le prix de cession avant frais (ligne 217).
+- Les **frais d'acquisition** n'ont **pas de ligne dédiée**. La ligne 220 (prix total d'acquisition du portefeuille) reçoit « la somme de tous les prix acquittés » pour vos achats : si vous retenez la lecture courante, vous y comptez le prix d'achat frais compris ; sinon, le prix hors frais. Dans les deux cas, gardez les exports qui justifient chaque montant.
 
 Tutoriel complet : [Déclaration crypto Cerfa 2086 — tutoriel 2026](/blog/declaration-crypto-cerfa-2086-tutoriel-2026).
 
@@ -264,15 +269,15 @@ Tutoriel complet : [Déclaration crypto Cerfa 2086 — tutoriel 2026](/blog/decl
 
 ### Les frais Binance sont-ils déductibles dans la déclaration crypto ?
 
-Oui, partiellement, pour vos opérations passées : Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026, mais les frais payés sur vos achats et ventes antérieurs suivent les règles générales. Les **frais à l'achat** s'intègrent au prix d'acquisition (colonne 216 du 2086), les **frais à la vente** réduisent le prix de cession (colonne 213). Les frais de retrait, frais de gas et abonnements ne sont pas déductibles.
+Pour vos opérations passées, oui en partie : Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026, mais les frais payés sur vos achats et ventes antérieurs suivent les règles générales. Les **frais à la vente** réduisent le prix de cession (ligne 214, texte explicite). Les **frais à l'achat** relèvent de la lecture que vous retenez de la ligne 220 (prix acquitté frais compris, ou hors frais par prudence). Les frais de retrait, frais de gas et abonnements ne sont pas déductibles.
 
 ### Le gas Ethereum est-il déductible des plus-values crypto ?
 
-Non. Position DGFiP : le gas Ethereum (et tous les frais de réseau) n'est **pas un frais directement lié à une cession imposable** au sens de l'article 150 VH bis. Il est donc fiscalement perdu.
+Seulement s'il paie la vente imposable elle-même : la notice du 2086 range parmi les frais déductibles du prix de cession ceux « perçus par les membres du réseau (appelés "mineurs") » à l'occasion de l'opération imposable. Le gas de vos transferts (vers un portefeuille, vers une plateforme) et de vos swaps crypto/crypto n'est lié à aucune cession imposable : il est fiscalement perdu.
 
 ### Comment déduire les frais d'un swap fiscalement neutre ?
 
-Un swap crypto contre crypto étant fiscalement neutre, les frais associés (commission DEX, gas) ne sont **pas déductibles** au moment du swap. En revanche, ces frais peuvent **augmenter le prix d'acquisition de la nouvelle crypto reçue**, ce qui réduira la plus-value lors d'une cession future vers EUR.
+On ne les déduit pas. Un échange crypto contre crypto est en sursis d'imposition : il n'y a ni plus-value à calculer, ni prix de cession dont retrancher les frais. Et ces frais, payés en crypto, n'entrent pas non plus dans le prix total d'acquisition (ligne 220), réservé aux sommes acquittées en euros ou en biens et services. Ils sont perdus fiscalement.
 
 ### Les frais d'un logiciel comme Koinly sont-ils déductibles ?
 
@@ -286,9 +291,9 @@ Le spread est **automatiquement intégré au prix payé**. Vous prenez simplemen
 
 **Sources légales :**
 
-- Article 150 VH bis du Code général des impôts.
-- BOI-RPPM-PVBMC-30-30 § 220 (BOFiP, traitement des frais — mise à jour janvier 2026).
-- Notice Cerfa 2086 2026 (DGFiP).
+- Article 150 VH bis du Code général des impôts (III : formule de la plus-value).
+- BOI-RPPM-PVBMC-30-20 (BOFiP, base d'imposition : § 50 frais de cession et quotient, § 70 prix total d'acquisition, § 100 à 120 exemples).
+- Formulaire 2086 et sa notice (CERFA 16043*06, revenus 2024, DGFiP) : lignes 213 à 224 et ligne 51.
 - Article L102 B du Livre des procédures fiscales (durée conservation justificatifs).
 
 **À lire ensuite :**
@@ -301,9 +306,9 @@ Le spread est **automatiquement intégré au prix payé**. Vous prenez simplemen
 
 
 <KeyTakeaways>
-- Distinguez les deux familles de frais : ceux d'achat gonflent votre prix d'acquisition, ceux de vente réduisent votre prix de cession.
-- Ne déduisez jamais les frais de retrait, les frais de réseau (gas) ni les abonnements de plateforme : ils ne sont pas liés à une cession imposable.
-- Quand vous payez vos frais en crypto, convertissez-les en euros au cours du jour pour les intégrer correctement.
-- Conservez vos exports et reçus pendant toute la durée de prescription, car vous devez pouvoir justifier chaque frais déduit en cas de contrôle.
-- Reportez les frais aux bons endroits du Cerfa 2086 : frais de vente sur la colonne dédiée, frais d'achat intégrés au prix d'acquisition.
+- Les frais de vente (ligne 214) réduisent le prix de cession, mais pas le quotient de la formule : c'est écrit noir sur blanc.
+- Les frais d'achat dépendent de votre lecture de la ligne 220 (« prix acquittés ») : lecture courante frais compris, lecture prudente hors frais ; l'écart ne dépasse jamais 31,4 % de ces frais.
+- Ne déduisez pas les frais de retrait, le gas de vos transferts et de vos swaps, ni les abonnements : aucune cession imposable derrière.
+- Des frais de vente payés en crypto se déduisent, convertis en euros au cours du jour.
+- Conservez vos exports et reçus pendant toute la durée de prescription : chaque frais déduit doit être justifiable en cas de contrôle.
 </KeyTakeaways>

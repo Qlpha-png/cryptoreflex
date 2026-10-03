@@ -136,8 +136,10 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
     ? all.filter((n) => n.category === activeCategory)
     : all;
 
-  // 2bis) Brief du jour mis en "une" (page 1, sans filtre catégorie).
-  const brief = all.find((n) => n.isBrief) ?? null;
+  // 2bis) Brief du jour mis en "une" (page 1, sans filtre catégorie) — seulement s'il date de
+  // moins de 36 h (audit 03/10/2026 : un brief du 28 mai restait affiché « du jour » en octobre).
+  const FRESH_MS = 36 * 3600 * 1000;
+  const brief = all.find((n) => n.isBrief && Date.now() - new Date(n.date).getTime() < FRESH_MS) ?? null;
   const page = parsePage(searchParams?.page);
   const showBrief = !activeCategory && page === 1 && brief !== null;
 

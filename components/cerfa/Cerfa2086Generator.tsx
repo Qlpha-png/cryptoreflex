@@ -23,7 +23,8 @@
  *  - validation par un fiscaliste recommandée
  */
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { CerfaSummary } from "@/lib/cerfa-2086";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -49,16 +50,8 @@ interface CerfaTransaction {
   priceEur: number;
   fees: number;
   exchange?: string;
-}
-
-interface PreviewSummary {
-  nbCessions: number;
-  totalCessions: number;
-  totalPV: number;
-  totalMV: number;
-  plusValueNette: number;
-  impotEstime: number;
-  exchanges: string[];
+  /** (Vente) Valeur globale du portefeuille au moment de la cession — ligne 212, saisie par l'utilisateur. */
+  portfolioValueEur?: number;
 }
 
 type State = "idle" | "parsing" | "preview" | "generating" | "success" | "error";
@@ -142,6 +135,9 @@ function csvToTransactions(rows: Array<Record<string, string>>): {
       errors.push(`Ligne ${i + 2}: quantité invalide.`);
       continue;
     }
+    // Ligne 212 (ventes) : valeur globale du portefeuille au moment de la cession, si l'utilisateur la fournit.
+    const pvRaw = r.portfolio_value_eur ?? r.portfoliovalueeur ?? r.valeur_portefeuille_eur ?? "";
+    const portfolioValueEur = pvRaw.trim() ? num(pvRaw) : NaN;
     txs.push({
       date,
       type: type as CerfaTxType,
@@ -150,87 +146,21 @@ function csvToTransactions(rows: Array<Record<string, string>>): {
       priceEur: Number.isFinite(priceEur) ? priceEur : 0,
       fees: Number.isFinite(fees) ? fees : 0,
       exchange: r.exchange || undefined,
+      ...(type === "sell" && Number.isFinite(portfolioValueEur) && portfolioValueEur > 0
+        ? { portfolioValueEur }
+        : {}),
     });
   }
   return { txs, errors };
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Calcul preview (client) — version simplifiée du serveur                   */
+/*  Aperçu : calculé par le serveur (audit 2026-10-03)                         */
 /* -------------------------------------------------------------------------- */
-
-/**
- * Calcule un résumé approximatif côté client pour afficher la preview avant
- * envoi serveur. La vérité reste le serveur (qui re-calcule via lib/tax-fr).
- */
-function computePreview(txs: CerfaTransaction[], taxYear: number): PreviewSummary {
-  const sorted = [...txs].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-  );
-  const holdings = new Map<string, { qty: number; totalAcquis: number }>();
-  const lastPrice = new Map<string, number>();
-
-  let nb = 0;
-  let totalCessions = 0;
-  let pv = 0;
-  let mv = 0;
-  const exchangesSet = new Set<string>();
-
-  for (const tx of sorted) {
-    const year = new Date(tx.date).getUTCFullYear();
-    if (tx.priceEur > 0) lastPrice.set(tx.asset, tx.priceEur);
-    if (tx.exchange) exchangesSet.add(tx.exchange);
-
-    if (tx.type === "buy" || tx.type === "reward") {
-      const cur = holdings.get(tx.asset) ?? { qty: 0, totalAcquis: 0 };
-      cur.qty += tx.quantity;
-      cur.totalAcquis += tx.quantity * tx.priceEur;
-      holdings.set(tx.asset, cur);
-    } else if (tx.type === "sell") {
-      const cur = holdings.get(tx.asset) ?? { qty: 0, totalAcquis: 0 };
-      const prixCession = tx.quantity * tx.priceEur;
-      let valeurPort = 0;
-      let acqTot = 0;
-      for (const [a, h] of holdings.entries()) {
-        valeurPort += h.qty * (lastPrice.get(a) ?? 0);
-        acqTot += h.totalAcquis;
-      }
-      if (valeurPort < prixCession) valeurPort = prixCession;
-
-      if (year === taxYear && prixCession > 0 && valeurPort > 0) {
-        const prixAcqImpute = (acqTot * prixCession) / valeurPort;
-        const plusValue = prixCession - prixAcqImpute;
-        nb += 1;
-        totalCessions += prixCession;
-        if (plusValue >= 0) pv += plusValue;
-        else mv += Math.abs(plusValue);
-      }
-      // Maj portefeuille post-cession
-      if (cur.qty > 0) {
-        const ratio = Math.min(1, tx.quantity / cur.qty);
-        cur.totalAcquis = cur.totalAcquis * (1 - ratio);
-        cur.qty = Math.max(0, cur.qty - tx.quantity);
-        holdings.set(tx.asset, cur);
-      }
-    }
-  }
-
-  const plusValueNette = pv - mv;
-  // Impôt PFU 31,4 % sur base imposable positive (si total > 305 €)
-  const exonere = totalCessions <= 305;
-  const impotEstime =
-    !exonere && plusValueNette > 0 ? plusValueNette * 0.314 : 0; // PFU 31,4 % (cf. lib/fiscalite TAUX_PFU)
-
-  return {
-    nbCessions: nb,
-    totalCessions,
-    totalPV: pv,
-    totalMV: mv,
-    plusValueNette,
-    impotEstime,
-    exchanges: Array.from(exchangesSet).sort(),
-  };
-}
+// L'ancien calcul client (prorata par crypto, « dernier prix connu ») n'était
+// pas celui du formulaire : l'aperçu divergeait du PDF. Désormais l'aperçu est
+// demandé à /api/cerfa-2086 avec `preview: true` : même moteur (lib/cerfa-2086,
+// formule de la ligne 224), aucun PDF, pas de compte requis.
 
 function fmtEur(n: number): string {
   if (!Number.isFinite(n)) return "—";
@@ -256,9 +186,46 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const preview = useMemo<PreviewSummary | null>(() => {
-    if (transactions.length === 0) return null;
-    return computePreview(transactions, taxYear);
+  const [preview, setPreview] = useState<CerfaSummary | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  // Aperçu serveur : même moteur que le PDF. Relancé à chaque fichier ou
+  // changement d'année ; la requête précédente est annulée.
+  useEffect(() => {
+    if (transactions.length === 0) {
+      setPreview(null);
+      setPreviewError(null);
+      setPreviewLoading(false);
+      return;
+    }
+    const ctrl = new AbortController();
+    setPreviewLoading(true);
+    setPreviewError(null);
+    fetch("/api/cerfa-2086", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ preview: true, transactions, taxYear }),
+      signal: ctrl.signal,
+    })
+      .then(async (res) => {
+        const body = (await res.json().catch(() => null)) as
+          | { ok?: boolean; error?: string; summary?: CerfaSummary }
+          | null;
+        if (!res.ok || !body?.ok || !body.summary) {
+          throw new Error(body?.error || `Aperçu indisponible (erreur ${res.status}).`);
+        }
+        setPreview(body.summary);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        setPreview(null);
+        setPreviewError(err instanceof Error ? err.message : "Aperçu indisponible.");
+      })
+      .finally(() => {
+        if (!ctrl.signal.aborted) setPreviewLoading(false);
+      });
+    return () => ctrl.abort();
   }, [transactions, taxYear]);
 
   /* ---------- Handlers fichier ---------- */
@@ -291,6 +258,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
                 const q = num(r.quantity ?? r.amount);
                 const p = num(r.priceEur ?? r.price_eur ?? r.price);
                 const fees = num(r.fees ?? 0);
+                const pvj = num(r.portfolioValueEur ?? r.portfolio_value_eur ?? NaN);
                 return {
                   date: String(r.date ?? ""),
                   type: type as CerfaTxType,
@@ -300,6 +268,9 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
                   fees: Number.isFinite(fees) ? fees : 0,
                   exchange:
                     typeof r.exchange === "string" ? r.exchange : undefined,
+                  ...(type === "sell" && Number.isFinite(pvj) && pvj > 0
+                    ? { portfolioValueEur: pvj }
+                    : {}),
                 };
               })
               .filter((x: CerfaTransaction | null): x is CerfaTransaction => x !== null);
@@ -490,13 +461,13 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           {
             n: "1",
             title: "Exportez votre CSV",
-            desc: "Sur Binance/Coinbase/Bitpanda : Compte → Historique → Exporter en CSV.",
+            desc: "Sur Coinbase, Kraken ou Bitpanda : Compte → Historique → Exporter en CSV (vos anciens exports Binance passent aussi).",
             done: transactions.length > 0,
           },
           {
             n: "2",
             title: "Importez-le ici",
-            desc: "Glissez-déposez ou cliquez pour parcourir. Le calcul est instantané.",
+            desc: "Glissez-déposez ou cliquez pour parcourir. L'aperçu est calculé ligne par ligne, comme le PDF.",
             done: state === "preview" || state === "success",
           },
           {
@@ -542,7 +513,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         <div className="mt-4 grid sm:grid-cols-3 gap-3 text-xs">
           {[
             {
-              name: "Binance",
+              name: "Binance (ancien compte)",
               steps: [
                 "Connectez-vous sur binance.com",
                 "Compte (icône en haut à droite) → Historique de transactions",
@@ -654,7 +625,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           aria-hidden="true"
         />
         <p className="mt-3 font-semibold text-fg">
-          Déposez votre CSV (Binance, Coinbase, Bitpanda) ou JSON Waltio
+          Déposez votre CSV (Coinbase, Kraken, Bitpanda, anciens exports Binance) ou JSON Waltio
         </p>
         <p className="mt-1 text-xs text-fg/60">
           ou clique pour parcourir — max 5 MB, 1000 lignes
@@ -662,6 +633,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         <p className="mt-3 text-[11px] text-fg/55">
           Colonnes attendues :{" "}
           <code className="font-mono">date, type, asset, quantity, price_eur, fees, exchange</code>
+          {" "}· sur les ventes, <code className="font-mono">portfolio_value_eur</code> (valeur du
+          portefeuille au moment de la vente, ligne 212) si vous la connaissez
         </p>
       </div>
 
@@ -691,8 +664,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         </div>
       )}
 
-      {/* Preview */}
-      {preview && state !== "parsing" && (
+      {/* Aperçu (calculé par le serveur avec le moteur du PDF) */}
+      {transactions.length > 0 && state !== "parsing" && (
         <div className="glass rounded-2xl p-5 sm:p-6 space-y-4">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-primary-soft" aria-hidden="true" />
@@ -701,51 +674,116 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             </h3>
           </div>
 
-          <dl className="grid sm:grid-cols-2 gap-3 text-sm">
-            <PreviewRow label="Cessions détectées" value={String(preview.nbCessions)} />
-            <PreviewRow label="Total des cessions" value={fmtEur(preview.totalCessions)} />
-            <PreviewRow
-              label="Plus-values brutes"
-              value={fmtEur(preview.totalPV)}
-              tone="success"
-            />
-            <PreviewRow
-              label="Moins-values"
-              value={fmtEur(preview.totalMV)}
-              tone="muted"
-            />
-            <PreviewRow
-              label="Plus-value nette"
-              value={fmtEur(preview.plusValueNette)}
-              tone={preview.plusValueNette >= 0 ? "success" : "danger"}
-              strong
-            />
-            <PreviewRow
-              label="Impôt PFU 31,4 % estimé"
-              value={fmtEur(preview.impotEstime)}
-              tone="primary"
-              strong
-            />
-          </dl>
-
-          {preview.exchanges.length > 0 && (
-            <div className="text-xs text-fg/65">
-              <strong className="text-fg/80">Exchanges détectés :</strong>{" "}
-              {preview.exchanges.join(", ")}
-              <span className="ml-2 text-fg/65">
-                (un 3916-bis sera généré pour chaque compte étranger)
-              </span>
+          {previewLoading && (
+            <div className="flex items-center gap-2 text-sm text-fg/70" aria-live="polite">
+              <Loader2 className="h-4 w-4 animate-spin text-primary-soft" aria-hidden="true" />
+              Calcul ligne par ligne (formulaire 2086)…
             </div>
           )}
 
-          {preview.totalCessions <= 305 && preview.nbCessions > 0 && (
-            <div className="rounded-lg border border-success/40 bg-success/10 p-3 text-xs text-fg/85">
-              <CheckCircle2
-                className="inline h-4 w-4 mr-1 text-success"
-                aria-hidden="true"
-              />
-              Total des cessions ≤ 305 € : exonération applicable (article 150 VH bis II du CGI).
+          {!previewLoading && previewError && (
+            <div
+              role="alert"
+              className="rounded-lg border border-danger/40 bg-danger/10 p-3 text-xs text-fg/85"
+            >
+              <XCircle className="inline h-4 w-4 mr-1 text-danger-fg" aria-hidden="true" />
+              {previewError}
             </div>
+          )}
+
+          {!previewLoading && preview && (
+            <>
+              {preview.calculIncomplet && (
+                <div
+                  role="alert"
+                  className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-xs text-fg/90"
+                >
+                  <AlertTriangle
+                    className="inline h-4 w-4 mr-1 text-warning-fg"
+                    aria-hidden="true"
+                  />
+                  <strong>Calcul incomplet :</strong> {preview.nbCessionsACompleter} cession
+                  {preview.nbCessionsACompleter > 1 ? "s" : ""} sur {preview.nbCessions} n'
+                  {preview.nbCessionsACompleter > 1 ? "ont" : "a"} pas de valeur globale du
+                  portefeuille (ligne 212). Les totaux ci-dessous sont partiels : ajoutez la
+                  colonne <code className="font-mono">portfolio_value_eur</code> sur ces ventes,
+                  ou un prix du jour pour chaque actif détenu.
+                </div>
+              )}
+
+              <dl className="grid sm:grid-cols-2 gap-3 text-sm">
+                <PreviewRow
+                  label="Cessions de l'année"
+                  value={
+                    preview.calculIncomplet
+                      ? `${preview.nbCessions} (dont ${preview.nbCessionsACompleter} à compléter)`
+                      : String(preview.nbCessions)
+                  }
+                />
+                <PreviewRow
+                  label="Total des prix de cession (l. 213)"
+                  value={fmtEur(preview.totalCessionsEur)}
+                />
+                <PreviewRow
+                  label="Plus-values (lignes 224 positives)"
+                  value={fmtEur(preview.totalPlusValuesEur)}
+                  tone="success"
+                />
+                <PreviewRow
+                  label="Moins-values (lignes 224 négatives)"
+                  value={fmtEur(preview.totalMoinsValuesEur)}
+                  tone="muted"
+                />
+                <PreviewRow
+                  label={preview.calculIncomplet ? "Plus-value nette (partielle)" : "Plus-value nette"}
+                  value={fmtEur(preview.plusValueNetteEur)}
+                  tone={preview.plusValueNetteEur >= 0 ? "success" : "danger"}
+                  strong
+                />
+                <PreviewRow
+                  label={preview.exonere ? "Impôt PFU 31,4 % (exonéré)" : "Impôt PFU 31,4 % estimé"}
+                  value={fmtEur(preview.impotPfuEur)}
+                  tone="primary"
+                  strong
+                />
+              </dl>
+
+              {preview.foreignExchanges.length > 0 && (
+                <div className="text-xs text-fg/65">
+                  <strong className="text-fg/80">Plateformes étrangères détectées :</strong>{" "}
+                  {preview.foreignExchanges.join(", ")}
+                  <span className="ml-2 text-fg/65">
+                    (un 3916-bis sera généré pour chaque compte)
+                  </span>
+                </div>
+              )}
+
+              {preview.exonere && preview.nbCessions > 0 && (
+                <div className="rounded-lg border border-success/40 bg-success/10 p-3 text-xs text-fg/85">
+                  <CheckCircle2
+                    className="inline h-4 w-4 mr-1 text-success"
+                    aria-hidden="true"
+                  />
+                  Total des prix de cession nets de frais (ligne 218) ≤ 305 € sur l'année :
+                  exonération (article 150 VH bis, II-B du CGI). Les lignes restent remplies
+                  pour information.
+                </div>
+              )}
+
+              {preview.avertissements.length > 0 && (
+                <details className="text-xs text-fg/75">
+                  <summary className="cursor-pointer font-semibold text-fg/85">
+                    {preview.avertissements.length} point
+                    {preview.avertissements.length > 1 ? "s" : ""} à vérifier avant dépôt
+                  </summary>
+                  <ul className="mt-2 list-disc pl-5 space-y-1">
+                    {preview.avertissements.map((a, i) => (
+                      <li key={i}>{a}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </>
           )}
 
           <div className="flex flex-wrap gap-3 pt-2">
@@ -832,13 +870,21 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           <p>
             Colonnes obligatoires (en-têtes en minuscules) :{" "}
             <code className="font-mono">date, type, asset, quantity</code>.
-            Optionnelles : <code className="font-mono">price_eur, fees, exchange</code>.
+            Optionnelles : <code className="font-mono">price_eur, fees, exchange, portfolio_value_eur</code>.
+          </p>
+          <p>
+            <code className="font-mono">price_eur</code> est le prix unitaire en euros.{" "}
+            <code className="font-mono">portfolio_value_eur</code>, sur une ligne{" "}
+            <code className="font-mono">sell</code>, est la valeur en euros de tout votre
+            portefeuille crypto au moment de cette vente (ligne 212 du formulaire). Sans elle,
+            l'outil la calcule avec les prix du jour qu'il connaît ; s'il en manque un, la
+            cession est marquée « à compléter » plutôt qu'estimée.
           </p>
           <pre className="overflow-x-auto rounded-lg bg-elevated/60 p-3 text-[11px] font-mono leading-relaxed">
-{`date,type,asset,quantity,price_eur,fees,exchange
-2024-03-15,buy,BTC,0.05,3200,5,Binance
-2024-09-22,sell,BTC,0.02,1450,3,Binance
-2024-11-10,reward,ETH,0.5,1800,0,Coinbase`}
+{`date,type,asset,quantity,price_eur,fees,exchange,portfolio_value_eur
+2024-03-15,buy,BTC,0.05,60000,5,Kraken,
+2024-09-22,sell,BTC,0.02,58000,3,Kraken,2140
+2024-11-10,reward,ETH,0.5,2300,0,Coinbase,`}
           </pre>
           <p>
             Types acceptés : <code className="font-mono">buy</code> (achat),{" "}

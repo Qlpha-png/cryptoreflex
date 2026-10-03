@@ -166,7 +166,7 @@ export const metadata: Metadata = {
     "fiscalité crypto",
     "calculateur crypto",
     "Coinbase",
-    "Binance",
+    "Kraken",
     "Revolut",
   ],
   authors: [{ name: BRAND.name }],

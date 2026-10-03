@@ -25,6 +25,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Permis Crypto FR — Testez vos connaissances + obtenez votre badge",
   description:
     "Quiz gratuit 50 questions sur la crypto en France (régulation MiCA, fiscalité PFU, sécurité wallet, écosystème). Score >70 % → votre Permis Crypto Cryptoreflex en PDF. Bientôt.",
@@ -88,7 +90,7 @@ export default function CryptoLicensePage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             <span className="gradient-text">Permis Crypto</span> FR
@@ -139,7 +141,7 @@ export default function CryptoLicensePage() {
           <Award className="mx-auto h-10 w-10 text-primary" aria-hidden />
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Accès anticipé au Permis Crypto</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscrivez-vous à la newsletter pour passer le
+            Date de lancement non fixée. Inscrivez-vous à la newsletter pour passer le
             quiz en avant-première et débloquer le badge collector early-bird.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

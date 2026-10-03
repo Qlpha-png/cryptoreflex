@@ -90,43 +90,59 @@ Si vous déclarez au format **papier** (déconseillé pour la crypto), télécha
 
 ---
 
-## 3. Les 8 colonnes du Cerfa 2086 — ligne par ligne
+## 3. Les lignes du formulaire 2086 — une par une
 
-Le formulaire 2086 comporte **8 colonnes** numérotées de 211 à 218. Voici chaque colonne, son rôle, et ce que vous devez saisir.
+Pour chaque cession, le formulaire 2086 comporte un bloc de lignes numérotées de **211 à 224**, en trois parties : la cession (211 à 218), le prix total d'acquisition de votre portefeuille (220 à 223), puis la plus-value ou moins-value (224). Les numéros ci-dessous sont ceux du formulaire officiel (impots.gouv.fr, déclaration des revenus 2025).
 
-### Colonne 211 — Date de la cession
+### Ligne 211 — Date de la cession
 
 La date à laquelle vous avez vendu (ordre exécuté). Si vous vendez en plusieurs fois sur la même journée la même crypto, vous pouvez **regrouper** sur une seule ligne (cession agrégée).
 
-### Colonne 212 — Prix de cession (€)
+### Ligne 212 — Valeur globale du portefeuille au moment de la cession (€)
 
-Le **montant brut** que vous avez reçu en euros. Pour une vente EUR sur Binance : c'est le montant crédité sur votre compte EUR avant retrait. Pour un achat de bien en crypto : c'est la valeur en euros du bien le jour de l'achat.
+Le **plus subtil** et le plus oublié. Vous devez renseigner la **valeur en euros de TOUT votre portefeuille crypto** (tous tokens, tous portefeuilles : plateformes + portefeuilles matériels + DeFi) au moment où vous avez vendu, actifs vendus compris. Cette valeur sert de **dénominateur** dans la formule de prorata de l'article 150 VH bis.
 
-### Colonne 213 — Frais de cession (€)
+Exemple : vous vendez 1 BTC à 45 000 euros, mais vous détenez aussi 10 ETH à 3 000 euros chacun (30 000 euros) et 5 000 USDC. Valeur globale = 45 000 + 30 000 + 5 000 = **80 000 euros**.
 
-La commission de la plateforme **directement liée** à cette cession (0,1 % Binance, 0,26 % Kraken, 0,5 % Coinbase Advanced Trade…). À ne pas confondre avec les frais de retrait (non déductibles) ou les frais de réseau (gas Ethereum, Bitcoin) qui ne sont pas déductibles non plus.
+### Ligne 213 — Prix de cession (€)
 
-### Colonne 214 — Prix de cession net (€)
+Le **montant brut** que vous avez reçu en euros. Pour une vente en euros sur une plateforme : c'est le montant crédité sur votre compte en euros avant retrait. Pour un achat de bien en crypto : c'est la valeur en euros du bien le jour de l'achat.
 
-Calcul automatique : colonne 212 moins colonne 213.
+### Ligne 214 — Frais de cession (€)
 
-### Colonne 215 — Valeur globale du portefeuille au jour de cession (€)
+La commission de la plateforme **directement liée** à cette cession (par exemple 0,26 % chez Kraken, 0,5 % sur Coinbase Advanced Trade). À ne pas confondre avec les frais de retrait (non déductibles) ou les frais de réseau (gas Ethereum, Bitcoin), qui ne sont pas déductibles non plus.
 
-Le **plus subtil** et le plus oublié. Vous devez renseigner la **valeur en euros de TOUT votre portefeuille crypto** (tous tokens, tous wallets : exchanges + cold wallets + DeFi) au moment où vous avez vendu. Cette valeur sert de **dénominateur** dans la formule de prorata article 150 VH bis.
+### Ligne 215 — Prix de cession net des frais (€)
 
-Exemple : vous vendez 1 BTC à 45 000 euros, mais vous détenez aussi 10 ETH à 3 000 euros chacun (30 000 euros), 5 000 USDC. Valeur globale = 45 000 + 30 000 + 5 000 = **80 000 euros**.
+Calcul automatique : ligne 213 moins ligne 214.
 
-### Colonne 216 — Prix total d'acquisition du portefeuille (€)
+### Lignes 216 et 217 — Soulte, et prix de cession net des soultes (€)
 
-La somme totale en euros de tous les achats que vous avez faits depuis le début, **diminuée** des fractions déjà déduites lors de cessions antérieures. Si c'est votre première cession, c'est simplement le total cumulé de tous vos achats (DCA inclus) depuis votre première crypto.
+La soulte est un versement en euros reçu ou payé lors d'un **échange** crypto contre crypto. Sans soulte (le cas de la grande majorité des ventes), la ligne 216 reste vide et la ligne 217 reprend la ligne 213. C'est cette ligne 217, **avant frais**, qui sert au prorata.
 
-### Colonne 217 — Fraction prix d'acquisition imputée à cette cession (€)
+### Ligne 218 — Prix de cession net des frais et des soultes (€)
 
-Calcul automatique : (colonne 216 × colonne 214) / colonne 215. C'est le **prorata** : vous n'imputez que la fraction du prix d'acquisition correspondant au pourcentage du portefeuille cédé.
+Sans soulte, c'est la ligne 215.
 
-### Colonne 218 — Plus-value ou moins-value (€)
+### Ligne 220 — Prix total d'acquisition du portefeuille (€)
 
-Calcul automatique : colonne 214 moins colonne 217. Une plus-value est positive, une moins-value est négative. Vous pouvez avoir des moins-values qui se compensent avec les plus-values de la même année (pas de report des années antérieures pour les actifs numériques — art. 150 VH bis).
+La somme en euros de **tous** vos achats depuis le début (DCA inclus), toutes cryptos confondues : « la somme de tous les prix acquittés en monnaie ayant cours légal », dit la notice. Les frais d'achat n'y sont pas cités : les compter dans le prix acquitté est la lecture courante, non confirmée par l'administration (détail dans notre [article sur les frais](/blog/frais-acquisition-crypto-deductible-2026)). Si c'est votre première cession, c'est simplement ce total cumulé.
+
+### Ligne 221 — Fractions de capital initial déjà déduites (€)
+
+Chaque cession antérieure a « consommé » une part de votre prix d'acquisition : la fraction imputée à l'époque (223 × 217 / 212 de cette cession-là). Vous reportez ici la somme de ces fractions, pour ne pas déduire deux fois le même capital.
+
+### Ligne 222 — Soultes reçues lors d'échanges antérieurs (€)
+
+Vide dans la plupart des cas.
+
+### Ligne 223 — Prix total d'acquisition net (€)
+
+Calcul automatique : ligne 220 moins ligne 221 moins ligne 222.
+
+### Ligne 224 — Plus-value ou moins-value (€)
+
+Calcul automatique : **224 = 218 − 223 × 217 / 212**. C'est le **prorata** : vous n'imputez que la fraction du prix d'acquisition correspondant à la part du portefeuille cédée, calculée sur le prix de cession **avant** frais ; les frais ne réduisent que le premier terme. Une plus-value est positive, une moins-value est négative. Les moins-values se compensent avec les plus-values de la même année, sans report sur les années suivantes (art. 150 VH bis).
 
 ---
 
@@ -144,20 +160,24 @@ Reprenons un cas concret pour bien visualiser. Vous allez voir, c'est beaucoup p
 
 **Cerfa 2086 ligne 1 — vente du 4 octobre 2025 :**
 
-| Colonne | Champ | Valeur |
+| Ligne | Champ | Valeur |
 |---|---|---|
-| 211 | Date cession | 04/10/2025 |
-| 212 | Prix cession | 50 000 € |
-| 213 | Frais cession | 50 € |
-| 214 | Prix cession net | 49 950 € |
-| 215 | Valeur globale portefeuille | 81 000 € (50k vendus + 25k BTC restants + 6k ETH) |
-| 216 | Prix total acquisition portefeuille | 48 000 € |
-| 217 | Fraction prix acquisition imputée | 29 600 € (48 000 × 49 950 / 81 000) |
-| 218 | Plus-value imposable | 20 350 € (49 950 − 29 600) |
+| 211 | Date de cession | 04/10/2025 |
+| 212 | Valeur globale du portefeuille | 81 000 € (50 000 vendus + 25 000 de BTC restant + 6 000 d'ETH) |
+| 213 | Prix de cession | 50 000 € |
+| 214 | Frais de cession | 50 € |
+| 215 | Prix de cession net des frais | 49 950 € |
+| 217 | Prix de cession net des soultes | 50 000 € (pas de soulte) |
+| 218 | Prix net des frais et soultes | 49 950 € |
+| 220 | Prix total d'acquisition | 48 000 € |
+| 221 | Fractions déjà déduites | 0 € (première cession) |
+| 223 | Prix total d'acquisition net | 48 000 € |
+| 224 | Plus-value | 20 320,37 € (49 950 − 48 000 × 50 000 / 81 000 = 49 950 − 29 629,63) |
 
 **Calcul PFU 31,4 % :**
 
-- 20 350 × 31,4 % = **6 389,90 euros d'impôt total** (2 604,80 IR + 3 785,10 PS).
+- 20 320,37 × 31,4 % = **6 380,60 euros d'impôt total** (2 601,01 IR + 3 779,59 PS).
+- Pour sa prochaine cession, Léa reportera en ligne 221 les **29 629,63 euros** déjà imputés.
 
 Léa reporte ensuite **20 350 euros en case 3AN du Cerfa 2042-C** (plus-value totale annuelle, somme de toutes les lignes du 2086).
 
@@ -182,7 +202,7 @@ Pour automatiser le 2086, plusieurs solutions :
 
 Une fois le 2086 rempli, vous reportez les totaux sur le **Cerfa 2042-C** (déclaration complémentaire) :
 
-- **Case 3AN** : total **plus-value** annuelle (somme positive de la colonne 218 du 2086).
+- **Case 3AN** : total **plus-value** annuelle (somme positive des lignes 224 du 2086).
 - **Case 3BN** : total **moins-value** annuelle (somme négative).
 
 Le système impots.gouv.fr **reporte automatiquement** ces totaux si vous utilisez l'annexe 2086 intégrée. En cas de saisie manuelle, vérifiez que les chiffres correspondent (erreur fréquente : oubli d'inverser le signe).
@@ -254,7 +274,7 @@ Non. Le 2086 est l'annexe obligatoire qui justifie le total reporté en case 3AN
 
 ### Comment déclarer une moins-value sur le 2086 ?
 
-Une moins-value se reporte avec un signe négatif dans la colonne 218. Le total des moins-values de l'année est ensuite reporté en case 3BN du Cerfa 2042-C. Cette moins-value est imputable **UNIQUEMENT sur les plus-values crypto de la même année** (article 150 VH bis I 4° du CGI). **Important** : contrairement aux plus-values mobilières classiques, **il n'existe AUCUN report sur les années suivantes** pour les actifs numériques détenus par un particulier. La case dédiée aux moins-values reportées des années antérieures (équivalent 3VG/3VH/3VR pour les actions cotées) **n'existe pas** pour les actifs numériques. Méthode complète et stratégie tax-loss harvesting : [Comment déduire ses pertes crypto 2026](/blog/deduire-pertes-crypto-impot-2026).
+Une moins-value se reporte avec un signe négatif dans la ligne 224. Le total des moins-values de l'année est ensuite reporté en case 3BN du Cerfa 2042-C. Cette moins-value est imputable **UNIQUEMENT sur les plus-values crypto de la même année** (article 150 VH bis I 4° du CGI). **Important** : contrairement aux plus-values mobilières classiques, **il n'existe AUCUN report sur les années suivantes** pour les actifs numériques détenus par un particulier. La case dédiée aux moins-values reportées des années antérieures (équivalent 3VG/3VH/3VR pour les actions cotées) **n'existe pas** pour les actifs numériques. Méthode complète et stratégie tax-loss harvesting : [Comment déduire ses pertes crypto 2026](/blog/deduire-pertes-crypto-impot-2026).
 
 ---
 

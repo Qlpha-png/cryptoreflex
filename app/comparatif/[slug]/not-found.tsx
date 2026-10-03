@@ -64,7 +64,7 @@ export default function ComparatifNotFound() {
                 id="cmp-search"
                 name="q"
                 type="search"
-                placeholder="Rechercher (Binance vs Coinbase, top frais…)"
+                placeholder="Rechercher (Coinbase vs Kraken, top frais…)"
                 autoComplete="off"
                 className="w-full rounded-xl bg-elevated border border-border pl-11 pr-4 py-3 text-fg placeholder:text-muted focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30 transition-colors"
               />

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "lastUpdated": "2026-05-09",
+    "lastUpdated": "2026-10-03",
     "source": "Recherche editoriale Cryptoreflex (a recouper avec annonces officielles avant claim)",
     "schemaVersion": "1.0",
     "disclaimer": "Les airdrops crypto evoluent vite. Verifie toujours l'URL officielle du projet AVANT de connecter votre wallet. Les fake airdrops sont la 1ere source de drainer de wallet en 2026.",
@@ -12,23 +12,23 @@
       "name": "Linea (Ignition)",
       "ticker": "LINEA",
       "category": "L2 Ethereum / ZK Rollup",
-      "status": "live",
+      "status": "expired",
       "snapshotDate": "2025-09-09",
-      "claimStartDate": "2026-09-29",
-      "claimEndDate": "2026-12-09",
+      "claimStartDate": "2025-09-10",
+      "claimEndDate": "2025-12-09",
       "fdvEstimateUsd": null,
       "eligibilityCriteria": [
-        "Bridge ETH vers Linea avant snapshot 2025-09-09",
+        "Bridge ETH vers Linea avant le snapshot du 2025-09-09",
         "10+ transactions on-chain Linea",
-        "Hold > 0.1 ETH bridged"
+        "Détenir plus de 0,1 ETH bridgé"
       ],
       "expectedAllocationPct": 9,
       "totalSupply": 72009990000,
-      "claimUrl": "https://linea.build/hub/airdrop",
+      "claimUrl": null,
       "explainerUrl": "https://linea.build/post/announcing-linea-association-and-token",
       "officialDomain": "linea.build",
       "riskLevel": "low",
-      "notes": "Plus de 800k wallets eligibles. Distribution sur 90 jours avec lock partiel."
+      "notes": "Claim terminé : fenêtre du 10 septembre au 9 décembre 2025 (90 jours). Environ 9,36 milliards de LINEA distribués à près de 750 000 adresses ; les jetons non réclamés sont retournés au fonds écosystème. Toute page de « claim » encore ouverte est une arnaque. Vérifié le 03/10/2026."
     },
     {
       "id": "scroll-airdrop",
@@ -195,23 +195,23 @@
       "name": "Monad (Points)",
       "ticker": "MON",
       "category": "Layer 1 / Parallel EVM",
-      "status": "upcoming",
+      "status": "expired",
       "snapshotDate": null,
-      "claimStartDate": "2026-Q3",
-      "claimEndDate": null,
+      "claimStartDate": "2025-10-14",
+      "claimEndDate": "2025-11-03",
       "fdvEstimateUsd": null,
       "eligibilityCriteria": [
-        "Testnet activite (transactions, bridges)",
+        "Activité sur le testnet (transactions, bridges)",
         "dApps natives (Kuru, Apriori)",
-        "NFT Monad community drops"
+        "NFT des communautés Monad"
       ],
       "expectedAllocationPct": null,
       "totalSupply": null,
       "claimUrl": null,
-      "explainerUrl": "https://monad.xyz",
+      "explainerUrl": "https://www.monad.xyz/announcements/the-mon-airdrop-results",
       "officialDomain": "monad.xyz",
       "riskLevel": "medium",
-      "notes": "Mainnet attendu Q3 2026. Programme points officiel pas encore lance, attentif aux fakes."
+      "notes": "Claim terminé : du 14 octobre au 3 novembre 2025 (4,73 milliards de MON ouverts à 289 000 comptes, environ 70 % réclamés). Les jetons ont été livrés au lancement du réseau principal, le 24 novembre 2025. Toute page de « claim » encore ouverte est une arnaque. Vérifié le 03/10/2026."
     },
     {
       "id": "megaeth-points",

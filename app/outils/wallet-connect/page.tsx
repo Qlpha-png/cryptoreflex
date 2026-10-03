@@ -44,6 +44,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Wallet Connect read-only — suivez vos wallets DeFi",
   description:
     "Bientôt : connecte votre wallet MetaMask, Rabby, Ledger, Phantom et suis automatiquement votre portfolio DeFi. Lecture seule, jamais de private key requise.",
@@ -100,7 +102,7 @@ export default function WalletConnectPage() {
     },
     {
       q: "Quelles blockchains seront supportées au lancement ?",
-      a: "V1 (Q3 2026) : Ethereum, Polygon, Arbitrum, Optimism, BSC, Base, Solana, Bitcoin, Tron. V2 : ajout de Avalanche, Cosmos hub, Sui, NEAR.",
+      a: "V1 (date non fixée) : Ethereum, Polygon, Arbitrum, Optimism, BSC, Base, Solana, Bitcoin, Tron. V2 : ajout de Avalanche, Cosmos hub, Sui, NEAR.",
     },
     {
       q: "C'est gratuit ?",
@@ -146,7 +148,7 @@ export default function WalletConnectPage() {
 
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Connectez votre wallet,{" "}
@@ -193,7 +195,7 @@ export default function WalletConnectPage() {
         <section className="mt-12">
           <h2 className="text-2xl font-bold">Wallets supportés au lancement</h2>
           <p className="mt-2 text-sm text-muted">
-            Liste qui évolue avant le lancement (Q3 2026) selon votre feedback.
+            Liste qui évolue avant le lancement (date non fixée) selon votre feedback.
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {SUPPORTED_WALLETS.map((w) => (
@@ -217,7 +219,7 @@ export default function WalletConnectPage() {
             Sois prévenu·e à l&apos;ouverture
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement prévu Q3 2026. Inscrivez-vous à la newsletter — accès
+            Date de lancement non fixée. Inscrivez-vous à la newsletter — accès
             anticipé pour les early adopters.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">

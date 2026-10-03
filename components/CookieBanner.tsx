@@ -63,10 +63,13 @@ export default function CookieBanner() {
     return () => window.removeEventListener("cr-open-cookie-banner", reopen);
   }, []);
 
-  // Focus initial sur le 1er bouton à l'ouverture (accessibilité).
+  // Focus initial sur le DIALOGUE à l'ouverture (accessibilité), pas sur
+  // « Tout accepter » : l'anneau de focus donnait au bouton d'acceptation un
+  // aspect différent de « Tout refuser » (CNIL : même niveau, même aspect —
+  // audit 03/10/2026). Tab mène ensuite au premier bouton.
   useEffect(() => {
-    if (open && firstFocusRef.current) {
-      firstFocusRef.current.focus();
+    if (open && dialogRef.current) {
+      dialogRef.current.focus({ preventScroll: true });
     }
   }, [open, customizing]);
 
@@ -110,6 +113,7 @@ export default function CookieBanner() {
       <div
         ref={dialogRef}
         role="dialog"
+        tabIndex={-1}
         aria-modal="false"
         aria-labelledby={titleId}
         aria-describedby={descId}
@@ -199,10 +203,12 @@ export default function CookieBanner() {
                   <Check className="h-4 w-4" aria-hidden="true" />
                   Tout accepter
                 </button>
+                {/* CNIL : « Tout refuser » au même niveau et avec le même aspect que « Tout accepter »
+                    (même style de bouton). Audit 03/10/2026. */}
                 <button
                   type="button"
                   onClick={handleRejectAll}
-                  className={btn.ghost}
+                  className={btn.primary}
                 >
                   <ShieldOff className="h-4 w-4" aria-hidden="true" />
                   Tout refuser
@@ -231,7 +237,7 @@ export default function CookieBanner() {
                 <button
                   type="button"
                   onClick={handleRejectAll}
-                  className={btn.ghost}
+                  className={btn.outline}
                 >
                   Tout refuser
                 </button>

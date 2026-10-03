@@ -37,9 +37,9 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/avis";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Avis plateformes crypto — comparatif 2026 (Coinbase, Binance, Kraken…)";
+const TITLE = "Avis plateformes crypto 2026 : Coinbase, Kraken, Bitpanda…";
 const DESCRIPTION =
-  "Tous nos avis détaillés sur les plateformes crypto disponibles en France : Coinbase, Binance, Kraken, Bitpanda, Bitget, Trade Republic… Frais, sécurité, conformité MiCA, support FR. Mis à jour avril 2026.";
+  "Nos avis détaillés sur les plateformes crypto autorisées en France : Coinbase, Kraken, Bitpanda, Bitstack, Trade Republic… Frais, sécurité, statut MiCA vérifié au registre, support en français.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     "meilleur exchange crypto france",
     "comparatif crypto MiCA",
     "Coinbase avis",
-    "Binance avis",
+    "Bitstack avis",
     "Kraken avis",
     "Bitpanda avis",
   ],

@@ -48,7 +48,8 @@ export const TAUX_PFU = TAUX_IR_PFU + TAUX_PS; // 0.314
 export const TAUX_COTISATIONS_BIC = 0.22;
 
 /** Tranches marginales d'imposition 2026 (barème IR). */
-export const TMI_VALUES = [0.11, 0.30, 0.41, 0.45] as const;
+/* 0 % inclus : étudiants et petits revenus, le public qui gagne le plus à l'option barème (case 3CN) */
+export const TMI_VALUES = [0, 0.11, 0.30, 0.41, 0.45] as const;
 export type TmiRate = (typeof TMI_VALUES)[number];
 
 /* -------------------------------------------------------------------------- */
@@ -59,12 +60,22 @@ export type TmiRate = (typeof TMI_VALUES)[number];
 export type Regime = "pfu" | "bareme" | "bic";
 
 export interface FiscaliteInput {
-  /** Total des cessions de l'année (ventes crypto en €). */
+  /** Total des cessions de l'année (ventes crypto en €, lignes 213). */
   totalCessions: number;
-  /** Total des prix d'acquisition correspondants (€). */
+  /**
+   * Prix total d'acquisition du portefeuille (€, ligne 220, net des fractions déjà
+   * imputées — ligne 223). Si tout le portefeuille a été vendu, c'est la somme des achats.
+   */
   totalAchats: number;
-  /** Frais de courtage cumulés (€). */
+  /** Frais de cession (€, lignes 214) : déduits du premier terme seulement, jamais du quotient. */
   fraisCourtage: number;
+  /**
+   * Valeur globale du portefeuille au moment de la cession (€, ligne 212), part vendue
+   * comprise. Facultatif : absent ou ≤ cessions → tout le portefeuille est réputé vendu
+   * (fraction imputée = tout le prix d'acquisition). Audit 03/10/2026 : sans ce champ, le
+   * calcul « cessions − achats » sous-estimait lourdement la plus-value d'une vente partielle.
+   */
+  valeurPortefeuille?: number;
   /** Régime fiscal choisi. */
   regime: Regime;
   /**
@@ -73,10 +84,11 @@ export interface FiscaliteInput {
    */
   tmi?: TmiRate;
   /**
-   * Plus-values nettes années antérieures reportables (€).
-   * En théorie non reportable pour particulier (PFU/Barème), mais on tolère
-   * un input optionnel pour les cas BIC ou pour ajuster manuellement.
-   * Soustrait de la base imposable (positif = déficit reporté).
+   * Déficits reportables des années antérieures (€) — RÉGIME BIC UNIQUEMENT.
+   * Pour un particulier (PFU ou barème, art. 150 VH bis), la moins-value d'une année
+   * ne se reporte jamais sur les suivantes : la valeur est IGNORÉE hors BIC.
+   * Audit 03/10/2026 : ce champ faisait baisser l'impôt d'un particulier (−628 € dans
+   * l'exemple testé). Soustrait de la base imposable en BIC (positif = déficit reporté).
    */
   reportablePrevious?: number;
 }
@@ -84,8 +96,14 @@ export interface FiscaliteInput {
 export interface FiscaliteResult {
   /** Régime utilisé pour le calcul (echo de l'input). */
   regime: Regime;
-  /** Plus-value brute = cessions − achats − frais. */
+  /** Plus-value brute = (cessions − frais de cession) − fraction du prix d'acquisition imputée. */
   plusValueBrute: number;
+  /** Fraction du prix total d'acquisition imputée à ces cessions (= 223 × 217 / 212). */
+  fractionAcquisition: number;
+  /** Part du portefeuille cédée (cessions / valeur globale), 1 si tout vendu. */
+  partCedee: number;
+  /** "prorata" si une valeur globale > cessions a été fournie, sinon "tout_vendu". */
+  methode: "prorata" | "tout_vendu";
   /** Plus-value nette imposable = brute − reports. */
   plusValueNette: number;
   /** Vrai si exonéré (total cessions ≤ 305 €). */
@@ -130,23 +148,41 @@ function safePositive(n: number | undefined): number {
 function computeNetPlusValue(input: FiscaliteInput): {
   plusValueBrute: number;
   plusValueNette: number;
+  fractionAcquisition: number;
+  partCedee: number;
+  methode: "prorata" | "tout_vendu";
 } {
   const cessions = safePositive(input.totalCessions);
   const achats = safePositive(input.totalAchats);
   const frais = safePositive(input.fraisCourtage);
-  const reports = safePositive(input.reportablePrevious);
+  const valeur = safePositive(input.valeurPortefeuille);
+  /* report de déficit : seulement en BIC (jamais pour un particulier, art. 150 VH bis) */
+  const reports = input.regime === "bic" ? safePositive(input.reportablePrevious) : 0;
 
-  const brute = cessions - achats - frais;
+  /* Formule du 2086 (l. 224 = l. 218 − l. 223 × l. 217 / l. 212) appliquée aux totaux :
+     le quotient se calcule sur le prix de cession BRUT ; les frais ne touchent que le 1er terme. */
+  const prorata = valeur > cessions && cessions > 0;
+  const partCedee = prorata ? cessions / valeur : 1;
+  const fractionAcquisition = achats * partCedee;
+  const brute = cessions - frais - fractionAcquisition;
   const nette = brute - reports;
-  return { plusValueBrute: brute, plusValueNette: nette };
+  return {
+    plusValueBrute: brute,
+    plusValueNette: nette,
+    fractionAcquisition,
+    partCedee,
+    methode: prorata ? "prorata" : "tout_vendu",
+  };
 }
 
 /**
  * Détermine si la situation est exonérée (seuil 305 € cumulés / an).
- * Seuil porte sur le total des cessions, pas sur la plus-value.
+ * Le seuil porte sur le total des prix de cession NETS de frais (lignes 218,
+ * additionnées en ligne 51 du formulaire 2086), pas sur la plus-value.
  */
-function isExoneree(totalCessions: number): boolean {
-  return safePositive(totalCessions) <= SEUIL_EXONERATION_EUR;
+function isExoneree(input: FiscaliteInput): boolean {
+  const net = safePositive(input.totalCessions) - safePositive(input.fraisCourtage);
+  return net <= SEUIL_EXONERATION_EUR;
 }
 
 /**
@@ -155,14 +191,17 @@ function isExoneree(totalCessions: number): boolean {
  */
 function emptyResult(
   regime: Regime,
-  plusValueBrute: number,
-  plusValueNette: number,
+  calc: ReturnType<typeof computeNetPlusValue>,
   flags: { exonere: boolean; deficit: boolean },
 ): FiscaliteResult {
+  const { plusValueBrute, plusValueNette } = calc;
   return {
     regime,
     plusValueBrute,
     plusValueNette,
+    fractionAcquisition: calc.fractionAcquisition,
+    partCedee: calc.partCedee,
+    methode: calc.methode,
     exonere: flags.exonere,
     deficit: flags.deficit,
     montantIR: 0,
@@ -186,16 +225,17 @@ function emptyResult(
  *   Si PV nette ≤ 0 : pas d'impôt (moins-value, déficit).
  */
 export function computeTaxPFU(input: FiscaliteInput): FiscaliteResult {
-  const { plusValueBrute, plusValueNette } = computeNetPlusValue(input);
+  const calc = computeNetPlusValue(input);
+  const { plusValueBrute, plusValueNette } = calc;
 
-  if (isExoneree(input.totalCessions)) {
-    return emptyResult("pfu", plusValueBrute, plusValueNette, {
+  if (isExoneree(input)) {
+    return emptyResult("pfu", calc, {
       exonere: true,
       deficit: false,
     });
   }
   if (plusValueNette <= 0) {
-    return emptyResult("pfu", plusValueBrute, plusValueNette, {
+    return emptyResult("pfu", calc, {
       exonere: false,
       deficit: true,
     });
@@ -208,6 +248,9 @@ export function computeTaxPFU(input: FiscaliteInput): FiscaliteResult {
     regime: "pfu",
     plusValueBrute,
     plusValueNette,
+    fractionAcquisition: calc.fractionAcquisition,
+    partCedee: calc.partCedee,
+    methode: calc.methode,
     exonere: false,
     deficit: false,
     montantIR,
@@ -232,16 +275,17 @@ export function computeTaxBareme(
   input: FiscaliteInput,
   tmi: TmiRate,
 ): FiscaliteResult {
-  const { plusValueBrute, plusValueNette } = computeNetPlusValue(input);
+  const calc = computeNetPlusValue(input);
+  const { plusValueBrute, plusValueNette } = calc;
 
-  if (isExoneree(input.totalCessions)) {
-    return emptyResult("bareme", plusValueBrute, plusValueNette, {
+  if (isExoneree(input)) {
+    return emptyResult("bareme", calc, {
       exonere: true,
       deficit: false,
     });
   }
   if (plusValueNette <= 0) {
-    return emptyResult("bareme", plusValueBrute, plusValueNette, {
+    return emptyResult("bareme", calc, {
       exonere: false,
       deficit: true,
     });
@@ -254,6 +298,9 @@ export function computeTaxBareme(
     regime: "bareme",
     plusValueBrute,
     plusValueNette,
+    fractionAcquisition: calc.fractionAcquisition,
+    partCedee: calc.partCedee,
+    methode: calc.methode,
     exonere: false,
     deficit: false,
     montantIR,
@@ -281,10 +328,11 @@ export function computeTaxBIC(
   input: FiscaliteInput,
   tmi: TmiRate,
 ): FiscaliteResult {
-  const { plusValueBrute, plusValueNette } = computeNetPlusValue(input);
+  const calc = computeNetPlusValue(input);
+  const { plusValueBrute, plusValueNette } = calc;
 
   if (plusValueNette <= 0) {
-    return emptyResult("bic", plusValueBrute, plusValueNette, {
+    return emptyResult("bic", calc, {
       exonere: false,
       deficit: true,
     });
@@ -298,6 +346,9 @@ export function computeTaxBIC(
     regime: "bic",
     plusValueBrute,
     plusValueNette,
+    fractionAcquisition: calc.fractionAcquisition,
+    partCedee: calc.partCedee,
+    methode: calc.methode,
     exonere: false,
     deficit: false,
     montantIR,
@@ -339,12 +390,16 @@ export function computeTax(input: FiscaliteInput): FiscaliteResult {
 /** Formate un montant € en locale fr-FR. */
 export function formatEuro(value: number, decimals = 2): string {
   if (!Number.isFinite(value)) return "—";
-  return value.toLocaleString("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+  // Séparateur de milliers : espace insécable classique plutôt que l'espace fine
+  // (U+202F) d'Intl, quasi invisible dans la police d'affichage (« 5636,30 € »).
+  return value
+    .toLocaleString("fr-FR", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    })
+    .replace(/ /g, " ");
 }
 
 /** Formate un pourcentage (0.30 → "30 %"). */

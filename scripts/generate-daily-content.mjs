@@ -66,6 +66,16 @@ const NEWS_KEYWORDS = [
   "binance", "coinbase", "kraken", "bitpanda", "ledger",
 ];
 
+/* Termes crypto « forts » : au moins un doit figurer dans le TITRE source pour qu'une actu
+   soit retenue (« france » ou « platform » seuls ne suffisent pas). */
+const NEWS_STRONG_KEYWORDS = [
+  "bitcoin", "btc", "ethereum", "eth", "solana", "sol", "xrp", "crypto", "cryptos", "cryptocurrency",
+  "cryptomonnaie", "cryptomonnaies", "blockchain", "stablecoin", "stablecoins", "usdc", "usdt", "mica",
+  "defi", "token", "tokens", "altcoin", "altcoins", "halving", "etf", "binance", "coinbase", "kraken",
+  "bitpanda", "ledger", "exchange", "wallet", "nft", "web3", "tether", "circle", "ripple", "cardano",
+  "memecoin", "staking", "l2", "layer 2", "layer-2", "rollup",
+];
+
 const MAX_NEWS_PER_RUN = 3;
 
 /* -------------------------------------------------------------------------- */
@@ -141,15 +151,24 @@ async function fetchRss(url) {
   }
 }
 
+/* Entités HTML des flux RSS (« MiCA&#39;s » restait tel quel dans originalTitle — audit 03/10/2026) */
+function decodeHtmlEntities(s) {
+  const named = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", hellip: "…", ndash: "–", mdash: "—" };
+  return String(s)
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&([a-z]+);/gi, (m, n) => named[n.toLowerCase()] ?? m);
+}
+
 function parseRssItems(xml) {
   const items = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   let m;
   while ((m = itemRegex.exec(xml)) && items.length < 50) {
     const block = m[1];
-    const title = (block.match(/<title>([\s\S]*?)<\/title>/) || [, ""])[1]
+    const title = decodeHtmlEntities((block.match(/<title>([\s\S]*?)<\/title>/) || [, ""])[1]
       .replace(/<!\[CDATA\[(.*?)\]\]>/s, "$1")
-      .trim();
+      .trim());
     const link = (block.match(/<link>([\s\S]*?)<\/link>/) || [, ""])[1].trim();
     const description = (block.match(/<description>([\s\S]*?)<\/description>/) || [, ""])[1]
       .replace(/<!\[CDATA\[(.*?)\]\]>/s, "$1")
@@ -170,9 +189,15 @@ async function fetchNewsRaw() {
       const xml = await fetchRss(source.url);
       const items = parseRssItems(xml);
       for (const it of items) {
+        /* Pertinence (audit 03/10/2026) : mots ENTIERS (« eth » ne doit plus matcher « method »,
+           ni « sol » « sold »), et au moins un terme crypto FORT dans le TITRE source. Les actus
+           d'IA pure (OpenAI, Anthropic…) passaient grâce à « eth » dans « whether ». */
+        const titleLc = it.title.toLowerCase();
         const text = `${it.title} ${it.description}`.toLowerCase();
-        const matched = NEWS_KEYWORDS.filter((k) => text.includes(k));
-        if (matched.length >= 1) {
+        const hasWord = (hay, k) => new RegExp(`(^|[^\\p{L}\\p{N}])${k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=$|[^\\p{L}\\p{N}])`, "iu").test(hay);
+        const matched = NEWS_KEYWORDS.filter((k) => hasWord(text, k));
+        const strongInTitle = NEWS_STRONG_KEYWORDS.some((k) => hasWord(titleLc, k));
+        if (matched.length >= 1 && strongInTitle) {
           all.push({ ...it, source: source.name, sourceUrl: it.link, matchedKeywords: matched });
         }
       }

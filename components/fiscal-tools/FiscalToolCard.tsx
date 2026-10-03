@@ -61,14 +61,22 @@ export default function FiscalToolCard({
       {/* Header : logo + nom + score */}
       <header className="flex items-start gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-elevated/70 border border-border overflow-hidden">
-          <Image
-            src={tool.logoUrl}
-            alt={`Logo ${tool.name}`}
-            width={40}
-            height={40}
-            className="object-contain"
-            unoptimized
-          />
+          {/* Sans fichier logo (Koinly, CoinTracking) : initiales plutôt qu'une image cassée dont le
+              texte alternatif débordait (« go Walti », audit 03/10/2026). */}
+          {tool.logoUrl ? (
+            <Image
+              src={tool.logoUrl}
+              alt={`Logo ${tool.name}`}
+              width={40}
+              height={40}
+              className="object-contain"
+              unoptimized
+            />
+          ) : (
+            <span aria-hidden="true" className="text-sm font-bold tracking-wide text-primary-soft">
+              {tool.name.slice(0, 2).toUpperCase()}
+            </span>
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <h3

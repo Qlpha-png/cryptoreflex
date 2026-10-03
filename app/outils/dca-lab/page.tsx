@@ -28,6 +28,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "DCA Lab — Comparez 6 stratégies DCA sur n'importe quelle crypto",
   description:
     "Simulateur avancé : DCA simple, DCA-X RSI, Value Averaging, Lump-Sum, 50/50, DCA-Out drawdown. Backtest sur 1-7 ans, toutes cryptos top 100. Vérifiez quelle stratégie aurait gagné. Bientôt.",
@@ -91,7 +93,7 @@ export default function DcaLabPage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             <span className="gradient-text">DCA Lab</span>
@@ -144,7 +146,7 @@ export default function DcaLabPage() {
           <TestTube2 className="mx-auto h-10 w-10 text-primary" aria-hidden />
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Activez l&apos;accès anticipé</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscrivez-vous à la newsletter pour tester le
+            Date de lancement non fixée. Inscrivez-vous à la newsletter pour tester le
             DCA Lab en avant-première et recevoir des backtests pré-calculés
             sur les 10 cryptos majeures.
           </p>

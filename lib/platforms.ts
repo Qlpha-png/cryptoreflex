@@ -278,14 +278,9 @@ export function platformsItemListSchema(platforms: Platform[], baseUrl: string) 
         category: "Cryptocurrency Exchange",
         url: `${baseUrl}/avis/${p.id}`,
         sameAs: p.websiteUrl,
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: p.scoring.global.toFixed(1),
-          bestRating: "5",
-          worstRating: "1",
-          ratingCount: Math.max(p.ratings.trustpilotCount || 0, 100),
-          reviewCount: Math.max(p.ratings.trustpilotCount || 0, 100),
-        },
+        /* Pas d'aggregateRating : la note est la nôtre (éditoriale) et le nombre d'avis venait
+           de Trustpilot (voire était inventé : Math.max(…, 100)). Google n'accepte que des notes
+           données directement par les utilisateurs du site. Audit 03/10/2026. */
         offers: {
           "@type": "Offer",
           url: p.affiliateUrl,

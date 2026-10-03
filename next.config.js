@@ -105,6 +105,14 @@ const nextConfig = {
   // ────────────────────────────────────────────────────────────────────
   async redirects() {
     return [
+      // AUDIT 03/10/2026 — la landing de campagne « MiCA juillet 2026 » (noindex)
+      // présentait encore la deadline au futur et Binance France « CASP en cours »
+      // (hors France depuis le 01/07/2026) : redirigée vers l'état des lieux à jour.
+      {
+        source: "/lp/mica-2026",
+        destination: "/etudes/mica-juillet-2026-etat-des-lieux",
+        permanent: true,
+      },
       // DÉMONÉTISATION (juin 2026) — le funnel de paiement du Pack Déclaration
       // est supprimé (site 100 % gratuit). Vraie redirection serveur (307,
       // évaluée AVANT le routing fichier) vers la ressource gratuite. La page

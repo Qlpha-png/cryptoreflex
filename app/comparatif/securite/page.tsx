@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   keywords: [
     "securite plateforme crypto",
     "Coinbase securite",
-    "Binance securite",
+    "Kraken securite",
     "proof of reserves",
     "cold storage exchange",
     "plateforme crypto la plus securisee",

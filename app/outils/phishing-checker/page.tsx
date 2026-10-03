@@ -23,6 +23,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Wallet Phishing Checker — Vérifiez si une adresse crypto est scam",
   description:
     "Collez une adresse crypto (BTC, ETH, SOL) → score de risque scam/phishing en 2 sec. Bases Chainabuse, ScamSniffer + custom FR. Gratuit, anonyme, 100 % automatisé.",
@@ -110,7 +112,7 @@ export default function PhishingCheckerPage() {
           <div>
             <h2 className="text-lg font-bold">Service en construction</h2>
             <p className="mt-2 text-sm text-fg/85">
-              Le checker live arrive en Q3 2026 (intégration ScamSniffer API
+              Le vérificateur en direct arrivera plus tard (date non fixée) (intégration ScamSniffer API
               + cache Redis). En attendant, vous pouvez consulter manuellement :
             </p>
             <ul className="mt-3 space-y-1 text-sm text-fg/80">

@@ -92,9 +92,16 @@ function toNumber(v: unknown, fallback = 0): number {
   return fallback;
 }
 
-/** Coerce string → Trend, fallback "neutral". */
+/**
+ * Coerce string → Trend, fallback "neutral".
+ * Le générateur écrit la tendance en français (« Haussier », « Baissier », « Neutre »), les
+ * anciens fichiers en anglais : les deux formes sont reconnues. Audit 03/10/2026 : 188 analyses
+ * haussières ou baissières s'affichaient « Neutre » parce que seul l'anglais était accepté.
+ */
 function toTrend(v: unknown): Trend {
-  if (v === "bullish" || v === "bearish" || v === "neutral") return v;
+  const s = String(v ?? "").trim().toLowerCase();
+  if (s === "bullish" || s === "haussier" || s === "haussière") return "bullish";
+  if (s === "bearish" || s === "baissier" || s === "baissière") return "bearish";
   return "neutral";
 }
 

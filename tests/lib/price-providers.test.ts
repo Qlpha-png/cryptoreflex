@@ -70,13 +70,28 @@ describe("price-providers cascade", () => {
     expect(bp.canHandle({ coingeckoId: "obscure-token-xyz", symbol: "XYZ", name: "X" })).toBe(false);
   });
 
-  it("staticProvider.fetch retourne STATIC_FALLBACK[id]", async () => {
+  it("staticProvider.fetch ne renvoie JAMAIS un prix figé (audit 2026-10-03)", async () => {
+    // La table statique date de mai 2026 : un prix figé affiché comme un
+    // cours courant est un chiffre faux. Le provider garde canHandle
+    // (supply pour estimateMarketCap) mais ne fournit plus de prix.
     const { PROVIDERS, STATIC_FALLBACK } = await import("@/lib/price-providers");
     const sp = PROVIDERS.find((p) => p.name === "static")!;
+    expect(STATIC_FALLBACK["bitcoin"].priceUsd).toBeGreaterThan(0);
     const result = await sp.fetch({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" });
-    expect(result).not.toBeNull();
-    expect(result?.priceUsd).toBe(STATIC_FALLBACK["bitcoin"].priceUsd);
-    expect(result?.marketCap).toBe(STATIC_FALLBACK["bitcoin"].marketCap);
+    expect(result).toBeNull();
+  });
+
+  it("fetchPriceCascade ne retombe pas sur le prix statique quand le live échoue", async () => {
+    const { fetchPriceCascade, PROVIDERS } = await import("@/lib/price-providers");
+    const spies = PROVIDERS.filter((p) => p.name !== "static").map((p) =>
+      vi.spyOn(p, "fetch").mockResolvedValue(null),
+    );
+    try {
+      const r = await fetchPriceCascade({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" });
+      expect(r).toBeNull();
+    } finally {
+      spies.forEach((s) => s.mockRestore());
+    }
   });
 
   it("staticProvider.fetch retourne null pour coingeckoId inconnu", async () => {

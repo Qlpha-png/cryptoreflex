@@ -53,6 +53,7 @@ import PdfModal from "@/components/calculateur-fiscalite/PdfModal";
 interface FormState {
   totalCessions: string;
   totalAchats: string;
+  valeurPortefeuille: string;
   fraisCourtage: string;
   regime: Regime;
   tmi: TmiRate;
@@ -62,6 +63,7 @@ interface FormState {
 const INITIAL: FormState = {
   totalCessions: "",
   totalAchats: "",
+  valeurPortefeuille: "",
   fraisCourtage: "",
   regime: "pfu",
   tmi: 0.30,
@@ -124,6 +126,7 @@ export default function CalculateurFiscalite() {
     const input: FiscaliteInput = {
       totalCessions: parseEuroInput(form.totalCessions),
       totalAchats: parseEuroInput(form.totalAchats),
+      valeurPortefeuille: parseEuroInput(form.valeurPortefeuille),
       fraisCourtage: parseEuroInput(form.fraisCourtage),
       regime: form.regime,
       tmi: form.tmi,
@@ -138,11 +141,16 @@ export default function CalculateurFiscalite() {
     const cessions = parseEuroInput(form.totalCessions);
     const achats = parseEuroInput(form.totalAchats);
     const frais = parseEuroInput(form.fraisCourtage);
+    const valeur = parseEuroInput(form.valeurPortefeuille);
     const reports = parseEuroInput(form.reportablePrevious);
 
     if (cessions < 0) next.totalCessions = "Le montant ne peut pas être négatif.";
     if (achats < 0) next.totalAchats = "Le montant ne peut pas être négatif.";
     if (frais < 0) next.fraisCourtage = "Le montant ne peut pas être négatif.";
+    if (valeur < 0) next.valeurPortefeuille = "Le montant ne peut pas être négatif.";
+    if (valeur > 0 && valeur < cessions)
+      next.valeurPortefeuille =
+        "La valeur du portefeuille ne peut pas être inférieure au montant vendu : la part vendue en fait partie.";
     if (reports < 0)
       next.reportablePrevious = "Le montant ne peut pas être négatif.";
 
@@ -287,22 +295,34 @@ export default function CalculateurFiscalite() {
           placeholder="Ex. 8000"
         />
 
-        {/* Total achats */}
+        {/* Prix total d'acquisition (ligne 220, net des fractions déjà imputées) */}
         <NumericField
           id="totalAchats"
-          label="Total des achats correspondants (€)"
-          hint="Prix d'acquisition des cryptos vendues (somme des montants investis pour ces cessions)."
+          label="Prix total d'acquisition de votre portefeuille (€)"
+          hint="Tout ce que vous avez payé en euros pour l'ensemble de vos cryptos détenues juste avant la vente (ligne 220 du 2086), moins les fractions déjà imputées lors de ventes antérieures (ligne 221). Si vous avez tout vendu : la somme de vos achats."
           value={form.totalAchats}
           onChange={(v) => update("totalAchats", v)}
           error={errors.totalAchats}
           placeholder="Ex. 5000"
         />
 
-        {/* Frais de courtage */}
+        {/* Valeur globale du portefeuille (ligne 212) — audit 03/10/2026 : sans elle, « cessions − achats »
+            sous-estimait lourdement la plus-value d'une vente partielle */}
+        <NumericField
+          id="valeurPortefeuille"
+          label="Valeur globale du portefeuille au moment de la vente (€) — facultatif"
+          hint="Valeur de toutes vos cryptos juste avant la vente, part vendue comprise (ligne 212). Laissez vide si vous avez vendu la totalité de votre portefeuille. Plusieurs ventes dans l'année : indiquez la valeur au moment de la principale, ou utilisez le générateur Cerfa 2086 pour un calcul ligne par ligne."
+          value={form.valeurPortefeuille}
+          onChange={(v) => update("valeurPortefeuille", v)}
+          error={errors.valeurPortefeuille}
+          placeholder="Ex. 15000"
+        />
+
+        {/* Frais de cession (ligne 214) */}
         <NumericField
           id="fraisCourtage"
-          label="Frais de courtage cumulés (€)"
-          hint="Total des frais payés à vos plateformes (achat, vente, retrait, conversion)."
+          label="Frais de cession (€)"
+          hint="Commissions prélevées par vos plateformes sur les ventes (ligne 214) : elles réduisent le prix de cession, pas le quotient. Les frais d'achat : ajoutez-les à vos achats si vous retenez cette lecture de la ligne 220. Les frais de retrait, le gas de vos transferts et swaps et les abonnements ne sont pas déductibles."
           value={form.fraisCourtage}
           onChange={(v) => update("fraisCourtage", v)}
           error={errors.fraisCourtage}
@@ -370,16 +390,20 @@ export default function CalculateurFiscalite() {
           </div>
         )}
 
-        {/* Reports antérieurs (optionnel) */}
-        <NumericField
-          id="reportablePrevious"
-          label="Plus-values antérieures reportables (€) — optionnel"
-          hint="Reports de plus-values d'années précédentes (rare pour particulier ; pertinent en BIC)."
-          value={form.reportablePrevious}
-          onChange={(v) => update("reportablePrevious", v)}
-          error={errors.reportablePrevious}
-          placeholder="0"
-        />
+        {/* Déficits reportables : régime BIC uniquement. Pour un particulier (PFU ou barème),
+            la moins-value ne se reporte pas d'une année sur l'autre : le champ est masqué et
+            ignoré par le moteur (audit 03/10/2026). */}
+        {form.regime === "bic" && (
+          <NumericField
+            id="reportablePrevious"
+            label="Déficits BIC reportables (€) — optionnel"
+            hint="Réservé au régime professionnel (BIC). Pour un particulier, les moins-values crypto ne se reportent pas sur les années suivantes."
+            value={form.reportablePrevious}
+            onChange={(v) => update("reportablePrevious", v)}
+            error={errors.reportablePrevious}
+            placeholder="0"
+          />
+        )}
 
         {/* Actions */}
         <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
@@ -412,6 +436,7 @@ export default function CalculateurFiscalite() {
             inputs={{
               cessions: parseEuroInput(form.totalCessions),
               achats: parseEuroInput(form.totalAchats),
+              valeur: parseEuroInput(form.valeurPortefeuille),
               frais: parseEuroInput(form.fraisCourtage),
               reports: parseEuroInput(form.reportablePrevious),
             }}
@@ -749,6 +774,8 @@ function RegimeOption({
 interface ResultInputs {
   cessions: number;
   achats: number;
+  /** Valeur globale du portefeuille au moment de la vente (ligne 212), 0 si non renseignée. */
+  valeur: number;
   frais: number;
   reports: number;
 }
@@ -859,7 +886,7 @@ function ResultPanel({
             <CountUp
               value={result.impotTotal}
               duration={900}
-              format={(n) => formatEuro(Math.round(n))}
+              format={(n) => formatEuro(n)} /* au centime : « 5 636,30 € », pas « 5636,00 € » (audit 03/10/2026) */
             />
           </span>
         </h3>
@@ -960,8 +987,16 @@ function BreakdownTable({
   inputs: ResultInputs;
   showCotisations: boolean;
 }) {
+  const partPct = (result.partCedee * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
   return (
     <div className="overflow-x-auto">
+      {result.methode === "tout_vendu" && inputs.achats > 0 && (
+        <p className="mb-3 text-xs text-muted">
+          Hypothèse : tout votre portefeuille a été vendu (fraction imputée = tout le prix
+          d&apos;acquisition). Si vous n&apos;avez vendu qu&apos;une partie, renseignez la valeur
+          globale du portefeuille au moment de la vente (ligne 212).
+        </p>
+      )}
       <table
         className="w-full text-sm"
         aria-label="Ventilation détaillée du calcul fiscal"
@@ -969,18 +1004,29 @@ function BreakdownTable({
         <thead>
           <tr className="text-left text-xs uppercase tracking-wider text-muted border-b border-border">
             <th className="px-2 py-2 font-medium">Poste</th>
-            <th className="px-2 py-2 font-medium text-right">Montant</th>
+            <th className="px-2 py-2 font-medium text-right whitespace-nowrap">Montant</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border/60">
-          <Row label="Total cessions (brut)" value={inputs.cessions} />
-          <Row label="Total achats" value={inputs.achats} />
-          <Row label="Frais de courtage" value={inputs.frais} />
-          {inputs.reports > 0 && (
-            <Row label="Reports antérieurs" value={inputs.reports} />
+          <Row label="Prix de cession (l. 213, brut)" value={inputs.cessions} />
+          <Row label="Frais de cession (l. 214)" value={inputs.frais} />
+          <Row label="Prix total d'acquisition du portefeuille (l. 220 − l. 221)" value={inputs.achats} />
+          {result.methode === "prorata" && (
+            <Row label="Valeur globale du portefeuille (l. 212)" value={inputs.valeur} />
           )}
           <Row
-            label="Plus-value brute (cessions − achats − frais)"
+            label={
+              result.methode === "prorata"
+                ? `Fraction du prix d'acquisition imputée (${partPct} % du portefeuille cédé)`
+                : "Fraction du prix d'acquisition imputée (tout vendu : 100 %)"
+            }
+            value={result.fractionAcquisition}
+          />
+          {inputs.reports > 0 && (
+            <Row label="Déficits BIC reportables" value={inputs.reports} />
+          )}
+          <Row
+            label="Plus-value brute (l. 224 : cession nette de frais − fraction imputée)"
             value={result.plusValueBrute}
           />
           <Row
@@ -1037,7 +1083,7 @@ function Row({
     <tr>
       <td className={`px-2 py-2 ${fontClass} text-white/85`}>{label}</td>
       <td
-        className={`px-2 py-2 text-right font-mono ${fontClass} ${colorClass}`}
+        className={`px-2 py-2 text-right font-mono whitespace-nowrap ${fontClass} ${colorClass}`}
       >
         {formatEuro(value)}
       </td>

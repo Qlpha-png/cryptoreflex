@@ -23,13 +23,15 @@ import {
  *  5. Frais de vente = valeur finale × sellFeeRate / 100.
  *  6. Plus-value nette = valueFinal - investissement - totalFees.
  *  7. ROI % = profitNet / investissement × 100.
- *  8. Impôt FR = profitNet × 31,4 % si profitNet > 305 € (PFU), sinon 0.
+ *  8. Impôt FR = profitNet × 31,4 % (PFU) si le total des ventes (valueFinal) dépasse 305 €
+ *     et que la plus-value est positive ; sinon 0. Le seuil de 305 € porte sur le total des
+ *     prix de cession de l'année, jamais sur la plus-value.
  *
  * @example
  * calculateROI({ buyPrice: 100, sellPrice: 200, quantity: 1, buyFeeRate: 0.5, sellFeeRate: 0.5 })
  * // → investmentInitial: 100, valueFinal: 200, profitGross: 100,
  * //   totalFees: 0.5 + 1 = 1.5, profitNet: ~98.5, roiPercent: ~98.5 %,
- * //   taxFr: 0 (98.5 <= 305 → exonéré)
+ * //   taxFr: 0 (total des ventes 200 € ≤ 305 € → exonéré)
  *
  * @example
  * calculateROI({ buyPrice: 100, sellPrice: 200, quantity: 5, buyFeeRate: 0.5, sellFeeRate: 0.5 })
@@ -72,10 +74,15 @@ export function calculateROI(input: ROIInput): ROIResult {
   const roiPercent =
     investmentInitial > 0 ? (profitNet / investmentInitial) * 100 : 0;
 
-  // ---- 3. Impôt français (PFU 31,4 %, seuil 305 €) ----
+  // ---- 3. Impôt français (PFU 31,4 %) ----
+  // Exonération (art. 150 VH bis, II B du CGI) : elle s'applique quand le TOTAL DES PRIX DE
+  // CESSION de l'année ne dépasse pas 305 €, pas quand la plus-value est sous 305 €.
+  // Pour cette opération unique, le prix de cession est valueFinal (brut, avant frais).
+  // Audit 03/10/2026 : l'ancien test « profitNet > 305 » affichait 0 € d'impôt pour
+  // 10 300 € de ventes et 300 € de gain (dû : 94,20 €).
   const { TAX_FREE_THRESHOLD_EUR, PFU_RATE } = ROI_TAX_CONSTANTS;
   const taxFr =
-    profitNet > TAX_FREE_THRESHOLD_EUR ? profitNet * PFU_RATE : 0;
+    valueFinal > TAX_FREE_THRESHOLD_EUR && profitNet > 0 ? profitNet * PFU_RATE : 0;
 
   return {
     investmentInitial: round2(investmentInitial),

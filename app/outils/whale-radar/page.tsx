@@ -27,6 +27,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Whale Radar FR — Surveillance temps réel des mouvements crypto majeurs",
   description:
     "Bientôt : flux live des transactions > 500 BTC / 10 000 ETH / dépôts-retraits exchanges majeurs, commentés en français. Premier service de surveillance whale francisé.",
@@ -82,7 +84,7 @@ export default function WhaleRadarPage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             <span className="gradient-text">Whale Radar</span> FR
@@ -116,7 +118,7 @@ export default function WhaleRadarPage() {
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">Sois prévenu·e au lancement</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscrivez-vous à la newsletter pour avoir accès
+            Date de lancement non fixée. Inscrivez-vous à la newsletter pour avoir accès
             anticipé.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

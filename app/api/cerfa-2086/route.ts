@@ -41,8 +41,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/auth";
 import { createRateLimiter } from "@/lib/rate-limit";
-import { generateFullCerfa, validateTransactions } from "@/lib/cerfa-2086";
+import { getClientIp } from "@/lib/ip";
+import {
+  buildSummary,
+  computeCessions,
+  generateFullCerfa,
+  validateTransactions,
+} from "@/lib/cerfa-2086";
 import { awardXp } from "@/lib/gamification";
+
+/* -------------------------------------------------------------------------- */
+/*  Aperçu (body.preview === true) — audit 2026-10-03                          */
+/* -------------------------------------------------------------------------- */
+// L'aperçu affiché avant téléchargement passe par le MÊME moteur que le PDF
+// (computeCessions + buildSummary) : plus de second calcul côté client, qui
+// divergeait du document. Sans compte (l'aperçu sert à décider), limité par IP,
+// aucun PDF généré, aucune écriture.
+const previewLimiter = createRateLimiter({
+  limit: 40,
+  windowMs: 10 * 60 * 1000,
+  key: "cerfa-2086-preview",
+});
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -70,32 +89,7 @@ const MAX_TAX_YEAR = new Date().getUTCFullYear() + 1;
 /* -------------------------------------------------------------------------- */
 
 export async function POST(req: NextRequest): Promise<Response> {
-  /* ---------- 1) Auth ---------- */
-  const user = await getUser();
-  if (!user) {
-    return NextResponse.json(
-      { ok: false, error: "Authentification requise." },
-      { status: 401 },
-    );
-  }
-
-  /* ---------- 2) Rate limit (par user.id, pas par IP) ---------- */
-  const rl = await limiter(`user:${user.id}`);
-  if (!rl.ok) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "Vous avez atteint la limite de 5 générations PDF par jour. Réessayez demain ou contactez le support si besoin.",
-      },
-      {
-        status: 429,
-        headers: { "Retry-After": String(rl.retryAfter) },
-      },
-    );
-  }
-
-  /* ---------- 3) Parse + validation du body ---------- */
+  /* ---------- 1) Parse du body (en premier : l'aperçu n'exige pas de compte) ---------- */
   // Garde-fou taille — Next limite par défaut mais on documente l'intention.
   const contentLengthHeader = req.headers.get("content-length");
   if (contentLengthHeader) {
@@ -129,7 +123,47 @@ export async function POST(req: NextRequest): Promise<Response> {
     transactions?: unknown;
     taxYear?: unknown;
     taxpayerName?: unknown;
+    preview?: unknown;
   };
+  const isPreview = body.preview === true;
+
+  /* ---------- 2) Auth + rate limit ---------- */
+  let user: Awaited<ReturnType<typeof getUser>> = null;
+  if (isPreview) {
+    // Aperçu : pas de compte requis, limité par IP (aucun PDF, aucune écriture).
+    const rl = await previewLimiter(getClientIp(req));
+    if (!rl.ok) {
+      return NextResponse.json(
+        { ok: false, error: "Trop d'aperçus demandés : réessayez dans quelques minutes." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
+      );
+    }
+  } else {
+    user = await getUser();
+    if (!user) {
+      return NextResponse.json(
+        { ok: false, error: "Authentification requise." },
+        { status: 401 },
+      );
+    }
+    // Rate limit par user.id, pas par IP.
+    const rl = await limiter(`user:${user.id}`);
+    if (!rl.ok) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "Vous avez atteint la limite de 5 générations PDF par jour. Réessayez demain ou contactez le support si besoin.",
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rl.retryAfter) },
+        },
+      );
+    }
+  }
+
+  /* ---------- 3) Validation ---------- */
 
   const taxYearNum = typeof body.taxYear === "number" ? body.taxYear : Number(body.taxYear);
   if (!Number.isFinite(taxYearNum) || taxYearNum < MIN_TAX_YEAR || taxYearNum > MAX_TAX_YEAR) {
@@ -157,6 +191,35 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       { status: 400 },
     );
+  }
+
+  /* ---------- 3b) Aperçu : mêmes calculs que le PDF, réponse JSON ---------- */
+  if (isPreview) {
+    try {
+      const cessions = computeCessions(validation.transactions, taxYearNum);
+      const summary = buildSummary(cessions, validation.transactions, taxYearNum);
+      return NextResponse.json(
+        {
+          ok: true,
+          summary,
+          cessions: cessions.map((c) => ({
+            date: c.date,
+            asset: c.asset,
+            quantity: c.quantity,
+            statut: c.statut,
+            prixCessionEur: c.prixCessionEur,
+            plusValueEur: c.plusValueEur,
+          })),
+        },
+        { headers: { "Cache-Control": "private, no-store, max-age=0" } },
+      );
+    } catch (err) {
+      console.error("[cerfa-2086] preview failed", err);
+      return NextResponse.json(
+        { ok: false, error: "Aperçu indisponible : vérifiez votre fichier et réessayez." },
+        { status: 500 },
+      );
+    }
   }
 
   /* ---------- 4) Génération PDF ---------- */
@@ -187,7 +250,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   // site. Best-effort, jamais bloquant : si le badge fail, le PDF est livré.
   // Rate-limit 1×/jour côté lib/gamification (cf. ACTION_LIMITS).
   try {
-    await awardXp(user.id, "cerfa_generated");
+    if (user) await awardXp(user.id, "cerfa_generated");
   } catch (err) {
     console.warn(
       "[cerfa-2086] awardXp failed:",

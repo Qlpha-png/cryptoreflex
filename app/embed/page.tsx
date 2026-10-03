@@ -60,7 +60,7 @@ const FAQ = [
   {
     question: "Puis-je personnaliser le style du widget ?",
     answer:
-      "Le widget v1 utilise des styles inline neutres (système de couleurs adaptatif clair/sombre). Pour la v2 (Q3 2026), nous prévoyons un attribut data-theme et des CSS variables --cryptoreflex-* pour customiser palette et typographie sans réécrire le widget.",
+      "Le widget v1 utilise des styles inline neutres (système de couleurs adaptatif clair/sombre). Pour une prochaine version (date non fixée), nous prévoyons un attribut data-theme et des CSS variables --cryptoreflex-* pour customiser palette et typographie sans réécrire le widget.",
   },
   {
     question: "L'attribution Cryptoreflex est-elle obligatoire ?",

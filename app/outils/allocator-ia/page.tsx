@@ -26,6 +26,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Allocator IA Crypto — Allocation portefeuille personnalisée FR",
   description:
     "Répondez à 5 questions (horizon, risque, conviction BTC, budget, objectif) → vous recevez une allocation crypto adaptée (%BTC, %ETH, %alts), justifiée par notre méthodologie et reliée aux fiches Cryptoreflex.",
@@ -85,7 +87,7 @@ export default function AllocatorIaPage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             <span className="gradient-text">Allocator IA</span> Crypto
@@ -119,7 +121,7 @@ export default function AllocatorIaPage() {
           <Brain className="mx-auto h-10 w-10 text-primary" aria-hidden />
           <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold">Soyez prévenu·e au lancement</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Lancement Q3 2026. Inscrivez-vous à la newsletter pour avoir l&apos;accès
+            Date de lancement non fixée. Inscrivez-vous à la newsletter pour avoir l&apos;accès
             anticipé et tester le moteur sur votre propre profil.
           </p>
           <Link href="/#cat-informe" className="mt-5 btn-primary btn-primary-shine">

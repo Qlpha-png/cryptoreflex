@@ -90,7 +90,9 @@ export const metadata: Metadata = {
 export default function AirdropsPage() {
   const live = getAirdropsByStatus("live");
   const upcoming = getAirdropsByStatus("upcoming");
-  const claimed = getAirdropsByStatus("claimed");
+  /* « Clôturé » = fenêtre de claim fermée (claimed) ET airdrops terminés (expired), recalculés
+     d'après les dates (audit 03/10/2026 : 8 airdrops terminés n'apparaissaient nulle part). */
+  const claimed = [...getAirdropsByStatus("claimed"), ...getAirdropsByStatus("expired")];
   const all = getAllAirdrops();
 
   const totalLiveValueUsd = live.reduce(
@@ -107,32 +109,32 @@ export default function AirdropsPage() {
       {
         question: "Qu'est-ce qu'un airdrop crypto ?",
         answer:
-          "Un airdrop est une distribution gratuite de tokens par un projet crypto a une liste de wallets eligibles. L'objectif : attirer des utilisateurs early, decentraliser la gouvernance, recompenser les premiers contributeurs. La distribution est effectuee a partir d'un snapshot (photo de la blockchain a un instant T) qui fixe les eligibles.",
+          "Un airdrop est une distribution gratuite de jetons par un projet crypto à une liste de portefeuilles éligibles. L'objectif : attirer des utilisateurs tôt, décentraliser la gouvernance, récompenser les premiers contributeurs. La distribution est effectuée à partir d'un snapshot (photo de la blockchain à un instant T) qui fixe les éligibles.",
       },
       {
-        question: "Comment savoir si je suis eligible a un airdrop ?",
+        question: "Comment savoir si je suis éligible à un airdrop ?",
         answer:
-          "Verifie sur le site OFFICIEL du projet (jamais sur un site tiers). Les checkers d'eligibilite officiels te demandent votre adresse wallet (lecture seule, jamais signature) et te disent si vous êtes eligible + le montant. ATTENTION : les sites de checker non officiels sont la 1ere source de fake airdrops drainer en 2026. Verifie le domaine 2x.",
+          "Vérifiez sur le site OFFICIEL du projet (jamais sur un site tiers). Les vérificateurs d'éligibilité officiels vous demandent votre adresse de portefeuille (lecture seule, jamais de signature) et vous indiquent si vous êtes éligible et pour quel montant. ATTENTION : les vérificateurs non officiels sont la première source de faux airdrops « draineurs » en 2026. Vérifiez le domaine deux fois.",
       },
       {
-        question: "Comment claim un airdrop en securite ?",
+        question: "Comment réclamer un airdrop en sécurité ?",
         answer:
-          "1) Verifie l'URL officielle (compare avec docs.projectname / le tweet officiel). 2) Connecte un wallet \"hot\" qui ne contient AUCUN autre token (eviter sweep total). 3) Signe l'unique transaction de claim, jamais d'autre. 4) Apres claim, transfere immediatement les tokens dans votre wallet principal. NE JAMAIS approuver un \"unlimited spend\" sur des tokens etrangers.",
+          "1) Vérifiez l'adresse officielle (comparez avec la documentation du projet ou son compte officiel). 2) Connectez un portefeuille dédié qui ne contient AUCUN autre jeton (pour éviter un vidage complet). 3) Signez l'unique transaction de claim, jamais une autre. 4) Après le claim, transférez immédiatement les jetons vers votre portefeuille principal. N'approuvez JAMAIS une dépense illimitée (« unlimited spend ») sur des jetons inconnus.",
       },
       {
         question: "Les airdrops sont-ils imposables en France ?",
         answer:
-          "Oui, les airdrops sont imposables, mais le traitement n'est pas tranche par une doctrine officielle dediee. Position majoritaire : pas d'imposition a la reception, plus-value a la cession contre euro (prix d'acquisition 0). Position prudente (airdrops actifs/farmes) : revenu (BNC) a la reception, a la valeur du jour. A confirmer selon votre situation et la doctrine a jour — voir notre guide dedie /blog/fiscalite-airdrops-crypto-france-2026.",
+          "Oui, les airdrops sont imposables, mais le traitement n'est pas tranché par une doctrine officielle dédiée. Position majoritaire : pas d'imposition à la réception, plus-value à la cession contre euros (prix d'acquisition de 0). Position prudente (airdrops « farmés », obtenus par une activité) : revenu (BNC) à la réception, à la valeur du jour. À confirmer selon votre situation et la doctrine à jour — voir notre guide dédié /blog/fiscalite-airdrops-crypto-france-2026.",
       },
       {
-        question: "Comment se proteger des fake airdrops ?",
+        question: "Comment se protéger des faux airdrops ?",
         answer:
-          "Regles d'or : (1) JAMAIS de \"surprise airdrop\" recu dans votre wallet sans avoir farm avant - c'est un scam 99% du temps. (2) JAMAIS connecter votre wallet principal sur un site clique depuis un lien Twitter/Telegram. (3) Toujours acceder via le domaine officiel direct (bookmark). (4) Verifie le smart contract sur Etherscan AVANT d'approuver une transaction. (5) Utilise un \"burner wallet\" dedie au farming.",
+          "Règles d'or : (1) un « airdrop surprise » reçu dans votre portefeuille sans activité préalable de votre part est une arnaque dans la quasi-totalité des cas. (2) Ne connectez JAMAIS votre portefeuille principal sur un site ouvert depuis un lien X ou Telegram. (3) Accédez toujours au domaine officiel directement (favori). (4) Vérifiez le contrat sur Etherscan AVANT d'approuver une transaction. (5) Utilisez un portefeuille dédié (« burner ») pour le farming.",
       },
       {
         question: "Combien rapporte un airdrop en moyenne ?",
         answer:
-          "Tres variable. La mediane historique 2024-2026 est ~500-1500$ par wallet eligible pour les airdrops L2 (ZKsync, Starknet, Linea). Mais les outliers sont enormes : Hyperliquid a distribue 31% de son supply, soit en moyenne 50k$+ pour les top farmers. A l'inverse, certains airdrops (ena, drift) sont bien plus modestes (~50-200$). Le ROI sur le \"temps farme\" est le vrai metric.",
+          "Très variable, et aucune moyenne fiable n'existe. Pour les grands airdrops de couches 2 (ZKsync, Starknet, Linea), beaucoup de portefeuilles éligibles ont reçu quelques centaines à quelques milliers de dollars ; les cas extrêmes comme Hyperliquid ont rapporté bien plus aux utilisateurs les plus actifs, tandis que d'autres distributions restent modestes. Le vrai indicateur est le rendement du temps passé, et la seule promesse fiable est : aucune.",
       },
     ]),
   ]);
@@ -160,10 +162,10 @@ export default function AirdropsPage() {
             <span className="gradient-text">agenda complet FR</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{all.length} airdrops</strong> auditees
-            par notre redaction : criteres d&apos;eligibilite, dates de
-            snapshot/claim, risque verifie, lien officiel uniquement. Aucun
-            scam, aucune promesse de gain.
+            <strong className="text-fg">{all.length} airdrops</strong> suivis
+            par notre rédaction : critères d&apos;éligibilité, dates de
+            snapshot et de claim, niveau de risque, lien officiel uniquement.
+            Aucune arnaque relayée, aucune promesse de gain.
           </p>
         </header>
 
@@ -177,16 +179,16 @@ export default function AirdropsPage() {
             icon={<CheckCircle2 className="h-4 w-4" />}
           />
           <Stat
-            label="A venir"
+            label="À venir"
             value={String(upcoming.length)}
-            sub="snapshot futur ou TBD"
+            sub="snapshot futur ou date inconnue"
             tone="amber"
             icon={<Clock className="h-4 w-4" />}
           />
           <Stat
-            label="Cloture"
+            label="Clôturés"
             value={String(claimed.length)}
-            sub="historique educatif"
+            sub="historique, à titre pédagogique"
             tone="primary"
             icon={<Gift className="h-4 w-4" />}
           />
@@ -198,22 +200,23 @@ export default function AirdropsPage() {
             <ShieldAlert className="h-5 w-5 text-accent-rose shrink-0 mt-0.5" />
             <div>
               <h2 className="text-sm font-bold text-fg">
-                Avant de claim un airdrop : 3 regles d&apos;or
+                Avant de réclamer un airdrop : 3 règles d&apos;or
               </h2>
               <ol className="mt-2 list-decimal pl-5 space-y-1 text-xs text-fg/85">
                 <li>
-                  Verifie le <strong className="text-fg">domaine officiel</strong>{" "}
-                  (depuis docs.projectname, pas un lien Twitter/Telegram).
+                  Vérifiez le <strong className="text-fg">domaine officiel</strong>{" "}
+                  (depuis la documentation du projet, pas depuis un lien X ou Telegram).
                 </li>
                 <li>
-                  Utilise un{" "}
-                  <strong className="text-fg">wallet burner dedie</strong> (vide
-                  des autres assets) pour signer la transaction de claim.
+                  Utilisez un{" "}
+                  <strong className="text-fg">portefeuille dédié (« burner »)</strong>, vide
+                  de tout autre actif, pour signer la transaction de claim.
                 </li>
                 <li>
-                  Ne signe <strong className="text-fg">qu&apos;UNE</strong>{" "}
-                  transaction (claim). Si on te demande &laquo; approve unlimited &raquo;
-                  ou &laquo; permit2 &raquo; sur un autre token : c&apos;est un drainer.
+                  Ne signez <strong className="text-fg">qu&apos;UNE</strong>{" "}
+                  transaction (le claim). Si l&apos;on vous demande une approbation
+                  illimitée (&laquo; approve unlimited &raquo;) ou un &laquo; permit2 &raquo;
+                  sur un autre jeton, c&apos;est un draineur.
                 </li>
               </ol>
             </div>
@@ -230,7 +233,7 @@ export default function AirdropsPage() {
               </h2>
             </div>
             <p className="mt-1 text-sm text-muted">
-              Action utilisateur possible. Verifie l&apos;eligibilite sur le
+              Vous pouvez agir maintenant. Vérifiez votre éligibilité sur le
               site officiel.
             </p>
             {totalLiveValueUsd > 0 && (
@@ -254,12 +257,12 @@ export default function AirdropsPage() {
         {upcoming.length > 0 && (
           <section className="mt-10">
             <h2 className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-300" />A venir —{" "}
+              <Clock className="h-5 w-5 text-amber-300" />À venir —{" "}
               {upcoming.length} airdrop{upcoming.length > 1 ? "s" : ""}
             </h2>
             <p className="mt-1 text-sm text-muted">
-              Programmes annonces, snapshot ou claim pas encore actifs.
-              Eligibilite a construire en amont (testnet, NFT, points).
+              Programmes annoncés, snapshot ou claim pas encore actifs.
+              L&apos;éligibilité se construit en amont (testnet, NFT, points).
             </p>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {upcoming.map((a) => (
@@ -274,11 +277,13 @@ export default function AirdropsPage() {
           <section className="mt-10">
             <h2 className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2">
               <Gift className="h-5 w-5 text-muted" />
-              Cloture — {claimed.length} airdrop{claimed.length > 1 ? "s" : ""}
+              Clôturés — {claimed.length} airdrop{claimed.length > 1 ? "s" : ""}
             </h2>
             <p className="mt-1 text-sm text-muted">
-              Periode de claim cloturee. Conserve ici comme reference
-              historique pour comprendre les patterns d&apos;eligibilite et FDV.
+              Période de claim terminée. Conservés comme référence historique,
+              pour comprendre les critères d&apos;éligibilité et les ordres de
+              grandeur. Toute page de « claim » encore ouverte pour l&apos;un
+              d&apos;eux est une arnaque.
             </p>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {claimed.map((a) => (
@@ -295,7 +300,7 @@ export default function AirdropsPage() {
 
         <p className="mt-6 text-[11px] text-muted leading-relaxed">
           {AIRDROPS_DISCLAIMER}{" "}
-          Donnees au {fmtDateFr(AIRDROPS_LAST_UPDATED)}. Verifie la fiscalite
+          Données au {fmtDateFr(AIRDROPS_LAST_UPDATED)}. Vérifiez la fiscalité
           via{" "}
           <Link
             href="/blog/fiscalite-airdrops-crypto-france-2026"
@@ -334,12 +339,12 @@ function AirdropCard({ airdrop: a }: { airdrop: Airdrop }) {
       {/* Stats grid */}
       <dl className="grid grid-cols-2 gap-2 text-xs">
         <Cell label="Snapshot" value={fmtDateFr(a.snapshotDate)} />
-        <Cell label="Claim debut" value={fmtDateFr(a.claimStartDate)} />
+        <Cell label="Début du claim" value={fmtDateFr(a.claimStartDate)} />
         {a.claimEndDate && (
-          <Cell label="Claim fin" value={fmtDateFr(a.claimEndDate)} />
+          <Cell label="Fin du claim" value={fmtDateFr(a.claimEndDate)} />
         )}
         {a.fdvEstimateUsd != null && (
-          <Cell label="FDV estimee" value={fmtCompactUsd(a.fdvEstimateUsd)} />
+          <Cell label="FDV estimée" value={fmtCompactUsd(a.fdvEstimateUsd)} />
         )}
         {a.expectedAllocationPct != null && (
           <Cell
@@ -353,8 +358,8 @@ function AirdropCard({ airdrop: a }: { airdrop: Airdrop }) {
             a.riskLevel === "low"
               ? "Faible"
               : a.riskLevel === "medium"
-                ? "Modere"
-                : "Eleve"
+                ? "Modéré"
+                : "Élevé"
           }
         />
       </dl>
@@ -362,7 +367,7 @@ function AirdropCard({ airdrop: a }: { airdrop: Airdrop }) {
       {/* Eligibility */}
       <div>
         <div className="text-[10px] uppercase tracking-wider text-muted font-semibold">
-          Criteres eligibilite
+          Critères d&apos;éligibilité
         </div>
         <ul className="mt-1.5 space-y-1 text-[12px] text-fg/85">
           {a.eligibilityCriteria.slice(0, 3).map((c, i) => (

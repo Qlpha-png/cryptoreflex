@@ -171,12 +171,26 @@ export default function PdfPreview({
           </h2>
           <table className="mt-2 w-full text-[10pt]">
             <tbody className="divide-y divide-slate-200">
-              <DataRow label="Total des cessions de l'année" value={formatEuro(input.totalCessions)} />
-              <DataRow label="Total des achats correspondants" value={formatEuro(input.totalAchats)} />
-              <DataRow label="Frais de courtage cumulés" value={formatEuro(input.fraisCourtage)} />
-              {input.reportablePrevious && input.reportablePrevious > 0 ? (
+              <DataRow label="Prix de cession de l'année (l. 213)" value={formatEuro(input.totalCessions)} />
+              <DataRow label="Frais de cession (l. 214)" value={formatEuro(input.fraisCourtage)} />
+              <DataRow label="Prix total d'acquisition du portefeuille (l. 220 − l. 221)" value={formatEuro(input.totalAchats)} />
+              {result.methode === "prorata" && input.valeurPortefeuille ? (
                 <DataRow
-                  label="Plus-values antérieures reportables"
+                  label="Valeur globale du portefeuille au moment de la vente (l. 212)"
+                  value={formatEuro(input.valeurPortefeuille)}
+                />
+              ) : null}
+              <DataRow
+                label={
+                  result.methode === "prorata"
+                    ? `Fraction du prix d'acquisition imputée (${formatPercent(result.partCedee, 1)} du portefeuille cédé)`
+                    : "Fraction du prix d'acquisition imputée (hypothèse : tout vendu)"
+                }
+                value={formatEuro(result.fractionAcquisition)}
+              />
+              {input.regime === "bic" && input.reportablePrevious && input.reportablePrevious > 0 ? (
+                <DataRow
+                  label="Déficits BIC reportables"
                   value={formatEuro(input.reportablePrevious)}
                 />
               ) : null}
@@ -194,8 +208,8 @@ export default function PdfPreview({
 
           {result.exonere ? (
             <p className="mt-2 text-[11pt] font-semibold text-emerald-700">
-              Exonéré : total des cessions ≤ 305 €. Aucun impôt dû sur les
-              plus-values crypto pour 2026.
+              Exonéré : total des cessions nettes de frais ≤ 305 € sur l&apos;année
+              (art. 150 VH bis, II-B). Aucun impôt dû sur ces plus-values crypto.
             </p>
           ) : result.deficit ? (
             <p className="mt-2 text-[11pt] font-semibold text-slate-700">

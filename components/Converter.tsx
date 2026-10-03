@@ -202,7 +202,9 @@ function Row({
       >
         {label}
       </label>
-      <div className="mt-2 flex items-center gap-3">
+      {/* Téléphone : montant et devise l'un sous l'autre (le sélecteur sortait de l'écran et le
+          montant se coupait sur 3 lignes — audit 03/10/2026). */}
+      <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
         {editable ? (
           <input
             id={inputId}
@@ -215,11 +217,11 @@ function Row({
             inputMode="decimal"
             aria-label={`Montant ${label}`}
             onChange={(e) => onAmountChange?.(parseFloat(e.target.value) || 0)}
-            className="flex-1 bg-transparent text-2xl font-mono font-bold text-white focus:outline-none"
+            className="w-full min-w-0 bg-transparent text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-white focus:outline-none"
           />
         ) : (
           <div
-            className="flex-1 text-2xl font-mono font-bold text-white"
+            className="w-full min-w-0 overflow-x-auto whitespace-nowrap text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-white"
             role="status"
             aria-live="polite"
             aria-label={loading ? "Conversion en cours" : `Resultat : ${formatAmount(amount, isFiat)} ${symbol.toUpperCase()}`}
@@ -237,7 +239,7 @@ function Row({
           value={symbol}
           onChange={(e) => onSymbolChange(e.target.value)}
           aria-label={`Devise ${label}`}
-          className="rounded-lg border border-border bg-elevated px-3 py-2 font-semibold text-white focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full min-w-0 sm:w-auto rounded-lg border border-border bg-elevated px-3 py-2 font-semibold text-white focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <optgroup label="Crypto">
             {CRYPTO_OPTIONS.map((s) => (

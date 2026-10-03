@@ -8,7 +8,7 @@
     {
       "id": "waltio",
       "name": "Waltio",
-      "logoUrl": "/logos/waltio.svg",
+      "logoUrl": "/logos/partners/waltio.svg",
       "websiteUrl": "https://waltio.com",
       "affiliateUrl": "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=fiscalite-fr",
       "country": "FR",
@@ -94,7 +94,7 @@
     {
       "id": "koinly",
       "name": "Koinly",
-      "logoUrl": "/logos/koinly.svg",
+      "logoUrl": "",
       "websiteUrl": "https://koinly.io",
       "affiliateUrl": "https://koinly.io?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate",
       "country": "GB",
@@ -170,7 +170,7 @@
     {
       "id": "cointracking",
       "name": "CoinTracking",
-      "logoUrl": "/logos/cointracking.svg",
+      "logoUrl": "",
       "websiteUrl": "https://cointracking.info",
       "affiliateUrl": "https://cointracking.info?ref=cryptoreflex",
       "country": "DE",

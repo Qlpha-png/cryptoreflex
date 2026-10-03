@@ -26,6 +26,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Gas Tracker FR — Frais Ethereum + L2 en temps réel",
   description:
     "Frais de gas Ethereum + L2 (Arbitrum, Optimism, Base, zkSync, Polygon) en temps réel, traduits en français + meilleure heure pour swap + alerte gas < X gwei. Gratuit.",
@@ -85,7 +87,7 @@ export default function GasTrackerFrPage() {
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Bientôt — Q3 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             <span className="gradient-text">Gas Tracker</span> FR

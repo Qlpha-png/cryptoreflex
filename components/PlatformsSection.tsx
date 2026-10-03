@@ -166,7 +166,7 @@ export default function PlatformsSection() {
                     Vous hésitez encore ?
                   </p>
                   <p className="text-sm text-fg/70 max-w-[240px] mb-4 leading-relaxed">
-                    Vois tous nos duels comparatifs (Coinbase vs Binance, Ledger vs Trezor…)
+                    Voyez tous nos duels comparatifs (Coinbase vs Kraken, Ledger vs Trezor…)
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
                     Voir les comparatifs

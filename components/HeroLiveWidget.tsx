@@ -170,29 +170,40 @@ function CoinRow({ coin }: { coin: CoinWithSpark }) {
         </div>
       </div>
 
-      {/* Sparkline mini avec figcaption sr-only (WCAG 1.1.1 Non-text Content) */}
-      <figure className="hidden sm:block shrink-0">
-        <Sparkline points={points} up={up} coinId={coin.id} />
-        <figcaption className="sr-only">
-          Tendance 7 jours {up ? "haussière" : "baissière"}
-        </figcaption>
-      </figure>
-
-      {/* Prix + variation 24h */}
-      <div className="text-right shrink-0">
-        <PriceFlash price={coin.price}>
-          <span className="text-sm font-semibold text-fg font-mono leading-tight tabular-nums inline-block">
-            {formatUsd(coin.price)}
-          </span>
-        </PriceFlash>
-        <div
-          className={`mt-0.5 inline-flex items-center gap-1 text-[11px] font-mono font-semibold ${trendCls}`}
-        >
-          <TrendIcon className="h-3 w-3" aria-hidden="true" />
-          <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>
-          {formatPct(coin.change24h)}
+      {/* Prix à 0 = aucune source live ni cache (audit 03/10/2026) : on le dit,
+          plutôt qu'une courbe synthétique et « +0,00 % » qui ressemblent à du vrai. */}
+      {!(coin.price > 0) ? (
+        <div className="text-right shrink-0">
+          <span className="text-sm font-semibold text-muted font-mono leading-tight inline-block">—</span>
+          <div className="mt-0.5 text-[11px] text-muted">Prix indisponible</div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Sparkline mini avec figcaption sr-only (WCAG 1.1.1 Non-text Content) */}
+          <figure className="hidden sm:block shrink-0">
+            <Sparkline points={points} up={up} coinId={coin.id} />
+            <figcaption className="sr-only">
+              Tendance 7 jours {up ? "haussière" : "baissière"}
+            </figcaption>
+          </figure>
+
+          {/* Prix + variation 24h */}
+          <div className="text-right shrink-0">
+            <PriceFlash price={coin.price}>
+              <span className="text-sm font-semibold text-fg font-mono leading-tight tabular-nums inline-block">
+                {formatUsd(coin.price)}
+              </span>
+            </PriceFlash>
+            <div
+              className={`mt-0.5 inline-flex items-center gap-1 text-[11px] font-mono font-semibold ${trendCls}`}
+            >
+              <TrendIcon className="h-3 w-3" aria-hidden="true" />
+              <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>
+              {formatPct(coin.change24h)}
+            </div>
+          </div>
+        </>
+      )}
     </li>
   );
 }

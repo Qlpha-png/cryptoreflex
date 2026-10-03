@@ -56,7 +56,7 @@ const Cerfa2086Generator = dynamic(
 
 const PAGE_TITLE = "Génération auto Cerfa 2086 crypto 2026 — gratuit";
 const PAGE_DESCRIPTION =
-  "Importez votre CSV Binance/Coinbase/Bitpanda et générez un Cerfa 2086 + 3916-bis pré-rempli en 30 secondes. Calcul officiel article 150 VH bis. 100 % gratuit, sans inscription.";
+  "Importez votre CSV Coinbase, Kraken ou Bitpanda (ou un ancien export Binance) et générez un récapitulatif Cerfa 2086 + 3916-bis. Formule de l'article 150 VH bis du CGI, ligne par ligne, à vérifier avant dépôt. Gratuit.";
 const PAGE_PATH = "/outils/cerfa-2086-auto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -128,13 +128,13 @@ export default function Cerfa2086AutoPage() {
           howToSchema({
             name: "Comment générer son Cerfa 2086 crypto en 30 secondes",
             description:
-              "Procédure officielle pour déclarer ses plus-values crypto via le formulaire 2086 (article 150 VH bis du CGI), à partir d'un export CSV d'exchange.",
+              "Procédure pour préparer la déclaration de ses plus-values crypto via le formulaire 2086 (article 150 VH bis du CGI), à partir d'un export CSV d'exchange. Le récapitulatif généré est à vérifier avant dépôt.",
             totalTime: "PT30S",
             estimatedCost: { currency: "EUR", value: 0 },
             steps: [
               {
                 name: "Exporter votre historique de trades",
-                text: "Allez dans votre compte Binance / Coinbase / Bitpanda → Export CSV. Sélectionnez toute la période fiscale (1er janv → 31 déc).",
+                text: "Allez dans votre compte Coinbase, Kraken ou Bitpanda (ou votre ancien compte Binance) → Export CSV. Sélectionnez toute la période fiscale (1er janv → 31 déc).",
               },
               {
                 name: "Importer le CSV dans l'outil",
@@ -146,7 +146,7 @@ export default function Cerfa2086AutoPage() {
               },
               {
                 name: "Générer le PDF Cerfa 2086 + 3916-bis",
-                text: "Cliquez sur Générer. L'outil applique la formule article 150 VH bis (prorata portefeuille), produit le 2086 pré-rempli + un 3916-bis par compte étranger détecté.",
+                text: "Cliquez sur Générer. L'outil applique la formule de l'article 150 VH bis (lignes 212 à 224 du 2086 : valeur globale du portefeuille, prix total d'acquisition minoré des fractions déjà imputées, frais de cession) et produit un récapitulatif ligne par ligne, à vérifier avant dépôt, + un 3916-bis par compte étranger détecté.",
               },
               {
                 name: "Reporter sur impots.gouv.fr",
@@ -173,18 +173,20 @@ export default function Cerfa2086AutoPage() {
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg text-fg/80 leading-relaxed">
-              Importez le CSV de vos exchanges (Binance, Coinbase, Bitpanda) ou
-              votre export JSON Waltio. Notre moteur applique la formule officielle
-              <strong> article 150 VH bis du CGI </strong> (prorata portefeuille)
-              et vous livre un PDF récapitulatif prêt à accompagner votre
-              déclaration sur impots.gouv.fr — avec un 3916-bis automatique pour
-              chaque compte étranger détecté.
+              Importez le CSV de vos exchanges (Coinbase, Kraken, Bitpanda, anciens exports Binance) ou
+              votre export JSON Waltio. Notre moteur applique la formule de
+              l&apos;<strong>article 150 VH bis du CGI</strong> telle que le
+              formulaire 2086 la pose (lignes 212 à 224 : valeur globale du
+              portefeuille au jour de la cession, prix total d&apos;acquisition
+              minoré des fractions déjà imputées, frais de cession) et vous livre
+              un PDF récapitulatif ligne par ligne, à vérifier avant dépôt sur
+              impots.gouv.fr — avec un 3916-bis pour chaque compte étranger détecté.
             </p>
 
             <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
               {[
-                { icon: FileText, label: "Annexe Cerfa 2086 — cessions ligne par ligne" },
-                { icon: ShieldCheck, label: "Calcul prorata portefeuille (formule officielle)" },
+                { icon: FileText, label: "Récapitulatif 2086 — lignes 211 à 224 par cession" },
+                { icon: ShieldCheck, label: "Formule de l'art. 150 VH bis, à vérifier avant dépôt" },
                 { icon: Sparkles, label: "3916-bis auto par exchange étranger détecté" },
                 { icon: ShieldCheck, label: "5 générations / jour incluses" },
               ].map(({ icon: Icon, label }) => (
@@ -206,11 +208,20 @@ export default function Cerfa2086AutoPage() {
               />
               <p>
                 <strong className="text-warning-fg">Aide à la déclaration — pas un conseil fiscal :</strong>{" "}
-                ce PDF est un document récapitulatif généré automatiquement.
-                Vérifiez chaque chiffre et faites valider votre déclaration par
-                un fiscaliste ou expert-comptable spécialisé crypto avant tout
-                dépôt officiel sur impots.gouv.fr. La fiscalité crypto évolue
-                régulièrement (LF, doctrine BOFiP).
+                ce PDF est un document récapitulatif généré automatiquement à
+                partir des seules données que vous importez, pas le formulaire
+                officiel. Vérifiez chaque chiffre et faites valider votre
+                déclaration par un fiscaliste ou expert-comptable spécialisé
+                crypto avant tout dépôt officiel sur impots.gouv.fr. La fiscalité
+                crypto évolue régulièrement (LF, doctrine BOFiP).{" "}
+                <strong className="text-fg">Non géré :</strong> échanges
+                crypto/crypto avec soulte, paiements en crypto, frais
+                d&apos;acquisition (montant indiqué à part), récompenses de
+                staking/airdrop (hypothèse signalée). Si la valeur globale de
+                votre portefeuille au jour d&apos;une cession ne peut pas être
+                établie à partir de vos données, la cession est marquée
+                « à compléter » dans le PDF : aucun chiffre n&apos;est estimé à
+                votre place.
               </p>
             </div>
           </div>

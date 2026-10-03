@@ -112,11 +112,11 @@ const NAV_GROUPS: FooterGroup[] = [
     id: "footer-tools-heading",
     title: "Outils & espace",
     links: [
-      { href: "/outils", label: "Tous les outils (28)" },
+      { href: "/outils", label: "Tous les outils" },
       { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 31,4 %" },
-      { href: "/outils/allocator-ia", label: "Allocator IA (nouveau)" },
-      { href: "/outils/whale-radar", label: "Whale Radar FR (nouveau)" },
-      { href: "/outils/dca-lab", label: "DCA Lab multi-stratégies (nouveau)" },
+      { href: "/outils/cerfa-2086-auto", label: "Générateur formulaire 2086" },
+      { href: "/outils/simulateur-dca", label: "Simulateur DCA" },
+      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA" },
       // BATCH 44a — convertisseur + alternative-a programmatic orphelins
       { href: "/convertisseur", label: "Convertisseur crypto temps réel" },
       { href: "/alternative-a", label: "Alternatives plateformes (post-MiCA)" },

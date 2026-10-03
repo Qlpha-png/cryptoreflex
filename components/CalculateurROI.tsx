@@ -211,12 +211,11 @@ export default function CalculateurROI() {
                 </>
               ) : (
                 <p className="text-sm text-fg leading-relaxed">
-                  <strong>Bonne nouvelle :</strong> votre plus-value nette de{" "}
-                  <span className="text-success-fg font-bold tabular-nums">
-                    {formatEur(result.profitNet)}
-                  </span>{" "}
-                  reste sous le seuil annuel d'exonération de 305 € — donc
-                  aucun impôt si c'est votre seule cession de l'année.
+                  <strong>Bonne nouvelle :</strong> le total de vos ventes de
+                  l&apos;année ({formatEur(result.valueFinal)}) ne dépasse pas le seuil
+                  de 305 € : aucune imposition, à condition que l&apos;ensemble de vos
+                  cessions de l&apos;année reste sous ce seuil. Le seuil porte sur le
+                  total des ventes, pas sur la plus-value.
                 </p>
               )}
               <Link

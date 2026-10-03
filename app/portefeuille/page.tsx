@@ -93,7 +93,8 @@ export default function PortefeuillePage() {
             la vue principale pour ne pas distraire les users qui veulent juste
             ajouter une position manuelle. */}
         <div className="mt-8">
-          <ExchangeConnect />
+          {/* Import de compte Binance retiré : Binance ne sert plus la France depuis le 01/07/2026
+              (audit 03/10/2026). À réactiver avec une plateforme autorisée. */}
         </div>
 
         {/* Aide pédagogique en bas */}

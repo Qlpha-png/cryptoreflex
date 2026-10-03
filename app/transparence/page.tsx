@@ -130,7 +130,7 @@ const FALLBACK_PARTNERS: Record<string, PartnerRowMinimal> = {
   waltio: {
     id: "waltio",
     name: "Waltio",
-    logo: "/logos/waltio.svg",
+    logo: "/logos/partners/waltio.svg",
     category: "fiscalité crypto",
     mica: {
       status: "Hors périmètre MiCA (SaaS fiscalité, pas un PSAN/CASP)",
@@ -689,11 +689,13 @@ function PartnershipRow({
         )}
       </td>
       <td className="px-4 py-3 align-top text-xs">
+        {/* Waltio n'est pas une plateforme d'échange : pas de page /avis (404 relevée le 03/10/2026),
+            sa présentation est sur la page des outils fiscaux. */}
         <Link
-          href={`/avis/${row.id}`}
+          href={row.id === "waltio" ? "/outils/declaration-fiscale-crypto" : `/avis/${row.id}`}
           className="inline-flex items-center gap-1 font-semibold text-primary-glow hover:text-primary whitespace-nowrap"
         >
-          Voir l'avis
+          {row.id === "waltio" ? "Voir la fiche" : "Voir l'avis"}
           <ExternalLink className="h-3 w-3" aria-hidden />
         </Link>
       </td>

@@ -93,12 +93,31 @@ describe("computeTaxPFU", () => {
     expect(avec.impotTotal).toBeLessThan(sans.impotTotal);
   });
 
-  it("déduit les reports antérieurs (reportablePrevious) de la PV nette", () => {
+  it("IGNORE les reports antérieurs en PFU : un particulier ne reporte jamais ses moins-values (audit 03/10/2026)", () => {
     const r = computeTaxPFU(base({ fraisCourtage: 0, reportablePrevious: 2000 }));
-    // PV brute = 5000, nette = 5000 - 2000 = 3000
+    // PV brute = 5000, nette = 5000 (le champ reportablePrevious ne compte pas hors BIC)
     expect(r.plusValueBrute).toBeCloseTo(5000, 6);
+    expect(r.plusValueNette).toBeCloseTo(5000, 6);
+    expect(r.impotTotal).toBeCloseTo(5000 * 0.314, 4);
+  });
+
+  it("IGNORE aussi les reports au barème", () => {
+    const r = computeTax(base({ regime: "bareme", tmi: 0.3, fraisCourtage: 0, reportablePrevious: 2000 }));
+    expect(r.plusValueNette).toBeCloseTo(5000, 6);
+  });
+
+  it("déduit les déficits reportables en BIC seulement (régime professionnel)", () => {
+    const r = computeTax(base({ regime: "bic", tmi: 0.3, fraisCourtage: 0, reportablePrevious: 2000 }));
+    // PV brute = 5000, nette = 5000 - 2000 = 3000
     expect(r.plusValueNette).toBeCloseTo(3000, 6);
-    expect(r.impotTotal).toBeCloseTo(3000 * 0.314, 4);
+  });
+
+  it("TMI 0 % disponible au barème : seuls les prélèvements sociaux (18,6 %) restent dus", () => {
+    const r = computeTaxBareme(base({ regime: "bareme" }), 0);
+    // nette = 10000 - 5000 - 100 = 4900
+    expect(r.montantIR).toBeCloseTo(0, 6);
+    expect(r.montantPS).toBeCloseTo(4900 * 0.186, 4);
+    expect(r.impotTotal).toBeCloseTo(4900 * 0.186, 4);
   });
 
   it("assainit les entrées négatives (safePositive → 0)", () => {
@@ -106,6 +125,50 @@ describe("computeTaxPFU", () => {
     // cessions sanitizées à 0 → ≤ 305 → exonéré
     expect(r.exonere).toBe(true);
     expect(r.impotTotal).toBe(0);
+  });
+});
+
+describe("prorata du portefeuille (ligne 212) — audit 03/10/2026", () => {
+  it("vente partielle : fraction du prix d'acquisition = achats × cessions / valeur globale (exemple Sophie)", () => {
+    // 1,5 BTC achetés 48 000 €, vente de 1 BTC à 50 000 € (frais 50 €), portefeuille 75 000 € juste avant
+    const r = computeTaxPFU(
+      base({ totalCessions: 50000, totalAchats: 48000, fraisCourtage: 50, valeurPortefeuille: 75000 }),
+    );
+    expect(r.methode).toBe("prorata");
+    expect(r.partCedee).toBeCloseTo(2 / 3, 10);
+    expect(r.fractionAcquisition).toBeCloseTo(32000, 6); // 48 000 × 50 000 / 75 000
+    expect(r.plusValueBrute).toBeCloseTo(17950, 6); // 49 950 − 32 000
+    expect(r.impotTotal).toBeCloseTo(17950 * 0.314, 4); // 5 636,30 €
+  });
+
+  it("les frais ne réduisent que le premier terme, jamais le quotient", () => {
+    const sans = computeTaxPFU(base({ totalCessions: 50000, totalAchats: 48000, fraisCourtage: 0, valeurPortefeuille: 75000 }));
+    const avec = computeTaxPFU(base({ totalCessions: 50000, totalAchats: 48000, fraisCourtage: 50, valeurPortefeuille: 75000 }));
+    expect(avec.fractionAcquisition).toBeCloseTo(sans.fractionAcquisition, 10);
+    expect(avec.plusValueBrute).toBeCloseTo(sans.plusValueBrute - 50, 10);
+  });
+
+  it("sans valeur globale (ou valeur ≤ cessions) : tout vendu, fraction = tout le prix d'acquisition", () => {
+    const a = computeTaxPFU(base({ totalCessions: 10000, totalAchats: 5000, fraisCourtage: 100 }));
+    expect(a.methode).toBe("tout_vendu");
+    expect(a.partCedee).toBe(1);
+    expect(a.fractionAcquisition).toBe(5000);
+    expect(a.plusValueBrute).toBeCloseTo(4900, 10);
+    const b = computeTaxPFU(base({ totalCessions: 10000, totalAchats: 5000, fraisCourtage: 100, valeurPortefeuille: 9000 }));
+    expect(b.methode).toBe("tout_vendu");
+    expect(b.plusValueBrute).toBeCloseTo(4900, 10);
+  });
+
+  it("le prorata s'applique aussi au barème et en BIC", () => {
+    const inp = base({ totalCessions: 50000, totalAchats: 48000, fraisCourtage: 50, valeurPortefeuille: 75000 });
+    expect(computeTaxBareme({ ...inp, regime: "bareme" }, 0.30).plusValueBrute).toBeCloseTo(17950, 6);
+    expect(computeTaxBIC({ ...inp, regime: "bic" }, 0.30).plusValueBrute).toBeCloseTo(17950, 6);
+  });
+
+  it("seuil de 305 € mesuré sur les cessions NETTES de frais (l. 218 / l. 51 du 2086)", () => {
+    // 310 € bruts − 6 € de frais = 304 € nets → exonéré ; 312 − 6 = 306 → imposable
+    expect(computeTaxPFU(base({ totalCessions: 310, totalAchats: 100, fraisCourtage: 6 })).exonere).toBe(true);
+    expect(computeTaxPFU(base({ totalCessions: 312, totalAchats: 100, fraisCourtage: 6 })).exonere).toBe(false);
   });
 });
 

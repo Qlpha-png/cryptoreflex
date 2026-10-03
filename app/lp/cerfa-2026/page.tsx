@@ -36,7 +36,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 const TITLE = "Cerfa 2086 gratuit : déclarez vos cryptos en 2 min — 2026";
 const DESCRIPTION =
-  "Outil gratuit qui génère votre Cerfa 2086 + 3916-bis depuis votre CSV exchange (Binance, Kraken, Coinbase). Sans inscription, méthodologie publique, conforme BOFiP.";
+  "Outil gratuit qui génère un récapitulatif Cerfa 2086 + 3916-bis depuis votre CSV exchange (Coinbase, Kraken, Bitpanda, anciens exports Binance). Formule du formulaire 2086 ligne par ligne, méthodologie publique, à vérifier avant dépôt.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -79,7 +79,7 @@ const STEPS = [
   {
     n: "1",
     title: "Exportez votre CSV",
-    text: "Sur Binance, Kraken, Coinbase, Bitstack, Coinhouse… Tous les exchanges français + UE supportés.",
+    text: "Sur Coinbase, Kraken, Bitpanda, Bitstack, Coinhouse (et vos anciens exports Binance)… Format CSV générique : tous les exchanges français et européens.",
   },
   {
     n: "2",

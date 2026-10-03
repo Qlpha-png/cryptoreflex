@@ -65,8 +65,22 @@ function statusOrder(s: AirdropStatus): number {
   return 3; // expired
 }
 
+/**
+ * Statut EFFECTIF, recalculé à partir des dates (audit 03/10/2026 : Linea restait « claim ouvert »
+ * en 2026 alors que sa fenêtre avait fermé le 09/12/2025). Les dates non ISO (ex. « 2026-Q3 »)
+ * laissent le statut déclaré.
+ */
+export function effectiveStatus(a: Airdrop, today = new Date().toISOString().slice(0, 10)): AirdropStatus {
+  const iso = (d: string | null) => (d && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null);
+  const start = iso(a.claimStartDate), end = iso(a.claimEndDate);
+  if (end && end < today) return "expired";
+  if (start && start > today) return "upcoming";
+  if (start && start <= today && (!end || end >= today) && a.status !== "claimed") return "live";
+  return a.status;
+}
+
 export function getAllAirdrops(): Airdrop[] {
-  return [...FILE.airdrops].sort((a, b) => {
+  return FILE.airdrops.map((a) => ({ ...a, status: effectiveStatus(a) })).sort((a, b) => {
     const so = statusOrder(a.status) - statusOrder(b.status);
     if (so !== 0) return so;
     // Au sein d'un meme groupe : par date claimStart descendante (recent en haut)

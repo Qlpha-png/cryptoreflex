@@ -27,6 +27,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Export Expert-Comptable Crypto — Format ECF Sage / Cegid / EBP",
   description:
     "Convertissez vos transactions crypto (CSV exchange) en écritures comptables prêtes à intégrer dans Sage, Cegid ou EBP (format ECF). Idéal indé/société crypto. Gratuit, automatisé.",
@@ -127,7 +129,7 @@ export default function ExportExpertComptablePage() {
             Être prévenu·e du lancement <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <p className="mt-3 text-xs text-muted">
-            Lancement Q3 2026. Inscription à la liste d&apos;attente pour être
+            Date de lancement non fixée. Inscription à la liste d&apos;attente pour être
             prévenu·e dès l&apos;ouverture.
           </p>
         </section>

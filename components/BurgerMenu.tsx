@@ -76,7 +76,7 @@ const SECTIONS: MenuSection[] = [
     Icon: Compass,
     intro: "Démarrer avec Cryptoreflex",
     items: [
-      { href: "/", label: "Accueil", desc: "780 cryptos · 28 outils · 34 plateformes" },
+      { href: "/", label: "Accueil", desc: "780 cryptos · 17 outils · 34 plateformes" },
       ...(isReflexCardsEnabled()
         ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: RC_BADGE }]
         : []),
@@ -125,23 +125,20 @@ const SECTIONS: MenuSection[] = [
     id: "outils",
     title: "Outils",
     Icon: Wrench,
-    intro: "28 calculateurs gratuits + IA",
+    intro: "Calculateurs et vérificateurs gratuits",
+    /* Seuls les outils réellement disponibles sont listés (audit 03/10/2026 : les pages
+       « Bientôt », les rendements stablecoins périmés et le résumé de whitepapers indisponible
+       ont été retirés du menu). */
     items: [
-      { href: "/outils", label: "Tous les outils (28)", desc: "Vue complète" },
+      { href: "/outils", label: "Tous les outils", desc: "Vue complète" },
       { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU", desc: "Impôt crypto en 2 min" },
-      { href: "/outils/cerfa-2086-auto", label: "Cerfa 2086 + 3916-bis auto", desc: "PDF pré-rempli en 30s — gratuit" },
-      { href: "/outils/radar-3916-bis", label: "Radar 3916-bis", desc: "Détecte amendes potentielles" },
-      { href: "/outils/simulateur-dca", label: "Simulateur DCA", desc: "Strategy long terme" },
-      { href: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", desc: "Net après frais" },
-      { href: "/outils/whale-radar", label: "Whale Radar", desc: "Mouvements > 1M$ en direct" },
-      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut MiCA en 1 clic" },
-      { href: "/outils/phishing-checker", label: "Phishing checker", desc: "URL crypto suspecte ?" },
-      { href: "/outils/wallet-connect", label: "Wallet Connect", desc: "Connectez votre wallet en sécurité" },
-      { href: "/outils/yield-stablecoins", label: "Yield stablecoins", desc: "USDC/USDT à 5%+ APR" },
-      { href: "/outils/allocator-ia", label: "Allocator IA", desc: "Portfolio personnalisé" },
-      { href: "/outils/portfolio-tracker", label: "Portfolio tracker", desc: "Suivi P&L en direct" },
+      { href: "/outils/cerfa-2086-auto", label: "Formulaire 2086 + 3916-bis", desc: "Pré-rempli à partir de vos transactions" },
+      { href: "/outils/radar-3916-bis", label: "Radar 3916-bis", desc: "Comptes à déclarer" },
+      { href: "/outils/simulateur-dca", label: "Simulateur DCA", desc: "Stratégie long terme" },
+      { href: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", desc: "Net après frais et impôt" },
+      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut officiel en 1 clic" },
+      { href: "/outils/portfolio-tracker", label: "Portfolio tracker", desc: "Suivi de vos positions" },
       { href: "/outils/glossaire-crypto", label: "Glossaire 250+ termes", desc: "Définitions claires FR" },
-      { href: "/outils/whitepaper-tldr", label: "Whitepaper TL;DR", desc: "Résumé IA des whitepapers" },
     ],
   },
   {

@@ -9,7 +9,7 @@
     {
       "id": "ledger",
       "name": "Ledger",
-      "logo": "/logos/ledger.svg",
+      "logo": "/logos/partners/ledger.svg",
       "tagline": "Pour qui c'est : autocustody premium pour HODL multi-cryptos avec 5500+ assets supportés",
       "websiteUrl": "https://www.ledger.com",
       "affiliateUrl": "https://shop.ledger.com/?r=5313c8e86d40",
@@ -106,7 +106,7 @@
     {
       "id": "trezor",
       "name": "Trezor",
-      "logo": "/logos/trezor.svg",
+      "logo": "/logos/partners/trezor.svg",
       "tagline": "Pour qui c'est : maximalistes Bitcoin et puristes open source cherchant transparence totale",
       "websiteUrl": "https://trezor.io",
       "affiliateUrl": "https://shop.trezor.io?utm_source=cryptoreflex",

@@ -230,7 +230,8 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   });
 
   // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
-  const competitor = p.scoring.fees >= 4.4 ? "Coinbase" : "Binance";
+  // Binance n'est plus proposé comme point de comparaison : hors France depuis le 01/07/2026 (audit 03/10/2026).
+  const competitor = p.scoring.fees >= 4.4 ? "Coinbase" : "Kraken";
   if (p.name !== competitor) {
     faq.push({
       q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,

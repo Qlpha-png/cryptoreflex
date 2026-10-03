@@ -179,16 +179,21 @@ export function validateCalculationData(raw: unknown): PdfCalculationData | null
   const validInput: FiscaliteInput = {
     totalCessions: num(input.totalCessions),
     totalAchats: num(input.totalAchats),
+    valeurPortefeuille: num(input.valeurPortefeuille),
     fraisCourtage: num(input.fraisCourtage),
     regime,
     tmi: typeof input.tmi === "number" ? (input.tmi as FiscaliteInput["tmi"]) : 0.30,
     reportablePrevious: num(input.reportablePrevious),
   };
 
+  const partCedee = num(result.partCedee);
   const validResult: FiscaliteResult = {
     regime,
     plusValueBrute: num(result.plusValueBrute),
     plusValueNette: typeof result.plusValueNette === "number" ? result.plusValueNette : 0,
+    fractionAcquisition: num(result.fractionAcquisition),
+    partCedee: partCedee > 0 && partCedee <= 1 ? partCedee : 1,
+    methode: result.methode === "prorata" ? "prorata" : "tout_vendu",
     exonere: Boolean(result.exonere),
     deficit: Boolean(result.deficit),
     montantIR: num(result.montantIR),

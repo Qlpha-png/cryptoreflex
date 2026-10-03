@@ -44,6 +44,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400; // 24h — donnée éditoriale, pas live
 
 export const metadata: Metadata = {
+  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  robots: { index: false, follow: true },
   title: "Comparateur APY stablecoins 2026 — où placer USDC, USDT, EURC en France",
   description:
     "Comparatif des rendements (APY) des stablecoins USDC, USDT, EURC sur les plateformes régulées MiCA en France. Données vérifiées, transparence totale.",

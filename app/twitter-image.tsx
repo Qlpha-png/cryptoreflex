@@ -115,8 +115,8 @@ export default async function TwitterImage() {
               flexWrap: "wrap",
             }}
           >
-            Coinbase, Binance, Revolut, Bitpanda… choisissez la meilleure
-            plateforme en 2 minutes.
+            Coinbase, Kraken, Revolut, Bitpanda… choisissez la meilleure
+            plateforme autorisée en France en 2 minutes.
           </div>
         </div>
 

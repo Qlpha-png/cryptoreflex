@@ -40,9 +40,19 @@ export const TAUX_PS = 0.186;
 export const TAUX_FLAT_TAX = TAUX_IR + TAUX_PS; // 0.314
 
 export interface PlusValueInput {
-  /** Montant de la cession (vente) en euros. */
+  /** Montant de la cession (vente) en euros — prix de cession brut (ligne 213 du 2086). */
   montantVente: number;
-  /** Prix total d'acquisition de tout le portefeuille (somme des achats), en euros. */
+  /**
+   * Frais de cession (ligne 214), en euros. Déduits du prix de cession dans le
+   * PREMIER terme de la formule uniquement, jamais dans le quotient
+   * prix de cession / valeur globale (BOI-RPPM-PVBMC-30-20 § 50, Remarque).
+   */
+  fraisCession?: number;
+  /**
+   * Prix total d'acquisition NET du portefeuille (ligne 223 du 2086) : somme
+   * des achats de tout le portefeuille, minorée des fractions de capital
+   * initial déjà imputées lors des cessions antérieures.
+   */
   acquisitionsTotales: number;
   /** Valeur globale du portefeuille au moment de la cession, en euros. */
   valeurPortefeuille: number;
@@ -81,14 +91,21 @@ export interface FlatTaxResult {
 /**
  * Calcule la plus-value imposable selon l'article 150 VH bis du CGI.
  *
- * Formule officielle :
- *   plus_value = montant_vente − (acquisitions_totales × montant_vente / valeur_portefeuille)
+ * Formule officielle (formulaire 2086 : l. 224 = l. 218 − [l. 223 × (l. 217 / l. 212)]) :
+ *   plus_value = (montant_vente − frais_cession)
+ *                − (acquisitions_totales × montant_vente / valeur_portefeuille)
  *
- * Le second terme représente le prix d'acquisition imputable à la cession,
- * proportionnel à la part du portefeuille cédée.
+ * Le second terme représente le prix d'acquisition imputable à la cession
+ * (« fraction de capital initial »), proportionnel à la part du portefeuille
+ * cédée. Les frais de cession ne réduisent PAS le montant de vente dans ce
+ * quotient (BOI-RPPM-PVBMC-30-20 § 50).
  */
 export function calculatePlusValue(input: PlusValueInput): PlusValueResult {
   const { montantVente, acquisitionsTotales, valeurPortefeuille } = input;
+  const fraisCession =
+    Number.isFinite(input.fraisCession) && (input.fraisCession ?? 0) > 0
+      ? (input.fraisCession as number)
+      : 0;
   const totalCessions = input.totalCessionsAnnee ?? montantVente;
 
   // Garde-fous : entrées invalides
@@ -121,7 +138,7 @@ export function calculatePlusValue(input: PlusValueInput): PlusValueResult {
 
   const prixAcquisitionImpute =
     (acquisitionsTotales * montantVente) / valeurPortefeuille;
-  const plusValue = montantVente - prixAcquisitionImpute;
+  const plusValue = montantVente - fraisCession - prixAcquisitionImpute;
 
   return {
     plusValue,

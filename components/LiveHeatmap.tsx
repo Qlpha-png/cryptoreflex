@@ -70,20 +70,14 @@ function hslForChange(value: number | null): string {
   }
   // Clamp à [-8, +8] pour stabiliser les couleurs au-delà.
   const v = Math.max(-8, Math.min(8, value));
-  if (v >= 0) {
-    // 0 → +8 : interpole gris → vert (intensité = v/8)
-    const t = v / 8;
-    const h = 215 + (145 - 215) * t; // 215 → 145
-    const s = 10 + (70 - 10) * t; // 10 → 70
-    const l = 22 + (38 - 22) * t; // 22 → 38
-    return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
-  }
-  // 0 → -8 : interpole gris → rouge
-  const t = -v / 8;
-  const h = 215 + (0 - 215) * t; // 215 → 0
-  const s = 10 + (70 - 10) * t;
-  const l = 22 + (42 - 22) * t;
-  return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
+  // Teinte FIXE par signe : vert (145) pour une hausse, rouge (0) pour une baisse. Seules la
+  // saturation et la luminosité varient avec l'intensité. Audit 03/10/2026 : l'ancienne
+  // interpolation de la teinte (215 → 0) traversait le vert, et BTC à −2 % s'affichait vert.
+  const t = Math.abs(v) / 8;
+  const h = v >= 0 ? 145 : 0;
+  const s = 10 + (70 - 10) * t; // 10 → 70
+  const l = v >= 0 ? 22 + (38 - 22) * t : 22 + (42 - 22) * t;
+  return `hsl(${h}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
 }
 
 function textColorForChange(value: number | null): string {

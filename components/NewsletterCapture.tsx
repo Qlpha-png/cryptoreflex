@@ -286,11 +286,8 @@ export default function NewsletterCapture() {
 
               {/* Trust signals déplacés sous le form (visible mais pas encombrant le top) */}
               <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-fg/65">
-                <span className="inline-flex items-center gap-1">
-                  <Users className="h-3 w-3 text-accent-cyan" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  <strong className="text-fg/85 tabular-nums">+250</strong> inscrits cette semaine
-                </span>
-                <span aria-hidden="true">·</span>
+                {/* Pas de compteur d'inscrits : le seul chiffre honnête serait mesuré en base.
+                    Le « +250 inscrits cette semaine » écrit en dur a été retiré (audit 03/10/2026). */}
                 <span className="inline-flex items-center gap-1">
                   <Lock className="h-3 w-3 text-emerald-400" strokeWidth={2.5} aria-hidden="true" focusable="false" />
                   RGPD · CNIL conforme

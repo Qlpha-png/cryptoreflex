@@ -149,7 +149,7 @@ const FAQ_ITEMS = [
     question:
       "Comment se calcule exactement la plus-value selon l'article 150 VH bis ?",
     answer:
-      "La formule officielle est : plus-value nette = prix de cession − (prix total d'acquisition × prix de cession / valeur globale du portefeuille au jour de cession) − frais. Notre calculateur applique ce prorata automatiquement.",
+      "La formule du formulaire 2086 (ligne 224) est : plus-value = prix de cession net des frais de cession − prix total d'acquisition × prix de cession brut / valeur globale du portefeuille au moment de la cession. Les frais ne réduisent que le premier terme, jamais le quotient. Notre calculateur applique ce prorata dès que vous renseignez la valeur globale de votre portefeuille ; sans elle, il considère que vous avez vendu tout votre portefeuille.",
   },
   {
     question:
@@ -161,7 +161,7 @@ const FAQ_ITEMS = [
     question:
       "Mes frais Binance ou Coinbase sont-ils déductibles de la plus-value ?",
     answer:
-      "Oui pour les frais de cession (commission Binance, Coinbase, Kraken sur la vente) — ils s'intègrent au prix de cession net. Les frais d'achat s'incorporent au prix d'acquisition. En revanche, les frais de retrait, frais de réseau (gas Ethereum) et abonnements de plateforme ne sont pas déductibles.",
+      "Oui pour les frais de cession (commission Coinbase, Kraken, Bitpanda sur la vente) : ils réduisent le prix de cession (ligne 214 du 2086), sans toucher au quotient de la formule. Les frais d'achat relèvent de la lecture retenue de la ligne 220 (« prix acquittés ») : les compter est courant, mais l'administration ne l'a pas écrit. Les frais de retrait, le gas de vos transferts et swaps et les abonnements de plateforme ne sont pas déductibles.",
   },
   {
     question:
@@ -405,7 +405,7 @@ export default function CalculateurFiscalitePage() {
         className="py-16 sm:py-20 border-t border-border/60"
       >
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <span className="badge-info">Méthode officielle</span>
+          <span className="badge-info">Formule de l'article 150 VH bis</span>
           <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Comment calculer son impôt crypto en France en 2026 ?
           </h2>
@@ -413,7 +413,7 @@ export default function CalculateurFiscalitePage() {
             <p>
               La fiscalité des plus-values crypto en France repose sur l'
               <strong>article 150 VH bis du CGI</strong>, complété par le BOFiP
-              BOI-RPPM-PVBMC-30-30. Pour un particulier en gestion occasionnelle,
+              BOI-RPPM-PVBMC-30-20 et la notice du formulaire 2086. Pour un particulier en gestion occasionnelle,
               le régime par défaut est le <strong>Prélèvement Forfaitaire Unique
               (PFU)</strong> à 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de
               prélèvements sociaux. Vous pouvez aussi opter pour le barème
@@ -428,17 +428,27 @@ export default function CalculateurFiscalitePage() {
               La formule officielle (article 150 VH bis)
             </h3>
             <p>
-              Notre calculateur applique la formule légale de prorata :{" "}
+              Le formulaire 2086 pose, ligne 224 :{" "}
               <em>
-                plus-value nette = prix de cession − (prix total d'acquisition ×
-                prix de cession / valeur globale du portefeuille au jour de
-                cession) − frais de cession
+                plus-value = (prix de cession − frais de cession) − prix total
+                d'acquisition × prix de cession / valeur globale du portefeuille
+                au moment de la cession
               </em>
               . C'est un calcul de fraction : vous n'imputez au prix de cession
               que la part du prix d'acquisition correspondant au pourcentage de
-              portefeuille effectivement cédé. Si vous vendez 1 BTC sur un
-              portefeuille total de 75 000 euros valant 50 000 euros, vous
-              n'imputez que 67 % de votre prix d'acquisition cumulé.
+              portefeuille effectivement cédé, et les frais ne réduisent que le
+              premier terme, jamais le quotient. Si vous vendez pour 50 000 euros
+              de BTC alors que tout votre portefeuille vaut 75 000 euros juste
+              avant la vente, vous n'imputez que 66,7 % de votre prix
+              d'acquisition. Notre calculateur applique ce prorata dès que vous
+              renseignez la valeur globale de votre portefeuille ; sans elle, il
+              considère que vous avez tout vendu (fraction = tout le prix
+              d'acquisition). Pour plusieurs ventes dans l'année, le formulaire
+              calcule chaque cession séparément : notre{" "}
+              <Link href="/outils/cerfa-2086-auto" className="text-primary-soft underline-offset-2 hover:underline">
+                générateur Cerfa 2086
+              </Link>{" "}
+              le fait ligne par ligne.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -735,10 +745,13 @@ export default function CalculateurFiscalitePage() {
               rubrique <strong>"Plus-values et gains divers"</strong> (rubrique
               3). Continuez jusqu'à l'écran "Plus-values sur actifs numériques",
               cliquez sur <strong>"Annexe 2086"</strong>. Le formulaire dynamique
-              s'ouvre avec ses 8 colonnes : date cession (211), prix cession
-              (212), frais (213), prix cession net (214), valeur globale
-              portefeuille (215), prix total acquisition (216), fraction
-              imputée (217), plus-value (218).
+              s'ouvre avec ses lignes numérotées : date de cession (211),
+              valeur globale du portefeuille (212), prix de cession (213),
+              frais de cession (214), prix net de frais (215), soulte (216 et
+              217), prix net de frais et soultes (218), puis prix total
+              d'acquisition (220), fractions déjà déduites (221), soultes
+              reçues (222), prix total d'acquisition net (223) et plus-value
+              ou moins-value (224).
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -746,12 +759,14 @@ export default function CalculateurFiscalitePage() {
             </h3>
             <p>
               Une ligne par cession (ou agrégation par crypto/mois si vous avez
-              plus de 30 cessions). Saisissez le prix de cession brut
-              (col. 212), les frais de cession (col. 213), le prix net (col.
-              214 = auto), la valeur globale de VOTRE portefeuille au jour de
-              cession (col. 215 — tous wallets confondus), le prix total
-              d'acquisition (col. 216), la fraction imputée (col. 217 = auto),
-              et la plus-value (col. 218 = auto). Tutoriel complet :{" "}
+              plus de 30 cessions). Saisissez la valeur globale de VOTRE
+              portefeuille au jour de la cession (ligne 212 — tous portefeuilles
+              confondus), le prix de cession brut (ligne 213), les frais de
+              cession (ligne 214), le prix total d'acquisition de votre
+              portefeuille (ligne 220) et les fractions déjà déduites lors de
+              vos cessions précédentes (ligne 221). Le formulaire calcule les
+              lignes 215, 218, 223 et la plus-value (ligne 224 = 218 − 223 ×
+              217 / 212). Tutoriel complet :{" "}
               <Link
                 href="/blog/declaration-crypto-cerfa-2086-tutoriel-2026"
                 className="text-primary-soft underline"
@@ -911,8 +926,9 @@ export default function CalculateurFiscalitePage() {
                   Vous voulez le PDF Cerfa 2086 pré-rempli ?
                 </h3>
                 <p className="mt-1 text-sm text-white/70">
-                  Importez votre CSV Binance/Coinbase et recevez un Cerfa 2086
-                  + 3916-bis auto en 30 s. 100 % gratuit, sans inscription.
+                  Importez votre CSV Coinbase, Kraken ou Bitpanda et recevez un
+                  récapitulatif Cerfa 2086 + 3916-bis ligne par ligne, à vérifier
+                  avant dépôt. Gratuit, compte Cryptoreflex requis pour le PDF.
                 </p>
               </div>
             </div>

@@ -28,7 +28,7 @@ export const BRAND = {
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout sur la crypto, en français",
   description:
-    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes comparées, dont 22 agréées MiCA en France (CASP UE + agrément AMF FR), 28 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes comparées, dont 22 agréées MiCA en France (CASP UE + agrément AMF FR), 17 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;
@@ -72,7 +72,7 @@ export const STATS = {
   cryptosCurated: 100,
   /**
    * Nombre d'outils dans app/outils/<slug>/page.tsx.
-   * = 23 free + 5 pro = 28 (cf. app/outils/page.tsx).
+   * = 17 outils réellement publiés (audit 03/10/2026 : les 9 outils « en préparation » ne comptent plus).
    */
-  tools: 28,
+  tools: 17,
 } as const;

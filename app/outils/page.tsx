@@ -51,10 +51,10 @@ import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 export const metadata: Metadata = {
   title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
   description:
-    "28 outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
+    "17 outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils"),
   openGraph: {
-    title: "28 outils crypto FR gratuits — Cryptoreflex",
+    title: "17 outils crypto FR gratuits — Cryptoreflex",
     description:
       "Calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
     url: "https://www.cryptoreflex.fr/outils",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "28 outils crypto FR gratuits — Cryptoreflex",
+    title: "17 outils crypto FR gratuits — Cryptoreflex",
     description:
       "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
   },
@@ -250,15 +250,6 @@ const TOOLS: Tool[] = [
   // Le tier "pro" ne marque plus qu'un niveau « avancé » (Fiscal Copilot,
   // Cerfa auto, IA) pour le tri/filtre interne.
   {
-    title: "Yield stablecoins (USDC/USDT/EURC)",
-    desc: "Comparateur APY sur les plateformes agréées MiCA + DeFi. Trie par rendement, lock-up, risque.",
-    href: "/outils/yield-stablecoins",
-    Icon: Zap,
-    tier: "free",
-    status: "new",
-    cat: "marche",
-  },
-  {
     title: "Tax Loss Harvesting (FR)",
     desc: "Réduis votre PFU 31,4 % en compensant vos plus-values par les moins-values réalisées avant le 31/12.",
     href: "/outils/tax-loss-harvesting",
@@ -422,7 +413,7 @@ export default function OutilsPage() {
   // le tri/filtre interne — aucun paywall associé.
   const advancedTools = TOOLS.filter((t) => t.tier === "pro").length;
   // Audit honnêteté (juin 2026) : distinguer les outils RÉELLEMENT disponibles
-  // des fonctionnalités « à venir » (status:"soon") pour ne pas survendre « 28 outils ».
+  // des fonctionnalités « à venir » (status:"soon") pour ne pas survendre « 17 outils ».
   const soonTools = TOOLS.filter((t) => t.status === "soon").length;
   const liveTools = totalTools - soonTools;
 

@@ -99,7 +99,7 @@ const FAQ_ITEMS = [
   {
     question: "Cet outil est-il fiable pour préparer ma déclaration ?",
     answer:
-      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, vous devez agréger l'ensemble de vos cessions de l'année, calculer le prix moyen pondéré d'acquisition (PMPA) et remplir le Cerfa 2086. Notre outil dédié /outils/calculateur-fiscalite gère cette complexité, ou consultez un expert-comptable spécialisé crypto.",
+      "Le calculateur ROI est conçu pour visualiser rapidement une opération unique. Pour une déclaration fiscale officielle, vous devez agréger l'ensemble de vos cessions de l'année, appliquer la méthode du portefeuille global (article 150 VH bis du CGI) et remplir le formulaire 2086. Notre générateur /outils/cerfa-2086-auto applique cette méthode cession par cession ; en cas de doute, consultez un expert-comptable spécialisé crypto.",
   },
 ];
 
@@ -237,7 +237,7 @@ export default function CalculateurROIPage() {
                       <li>• Plus-value nette : 492,50 €</li>
                       <li>• ROI : 98,50 %</li>
                       <li className="text-warning-fg font-semibold">
-                        • Impôt PFU : 147,75 €
+                        • Impôt PFU (31,4 %) : 154,65 €
                       </li>
                     </ul>
                   </>
@@ -257,11 +257,11 @@ export default function CalculateurROIPage() {
                   Vous allez vraiment déclarer ?
                 </h2>
                 <p className="mt-2 text-sm text-muted leading-relaxed">
-                  Pour la déclaration officielle, il faut agréger toutes vos
-                  cessions de l'année et calculer le prix moyen pondéré
-                  d'acquisition (PMPA). Notre calculateur fiscalité complet
-                  gère le PFU, le barème progressif, le BIC, et exporte un
-                  Cerfa 2086 prêt à joindre.
+                  Pour la déclaration officielle, chaque cession se calcule
+                  avec la méthode du portefeuille global (article 150 VH bis).
+                  Notre calculateur fiscalité compare le PFU, le barème
+                  progressif et le BIC, et notre générateur prépare le
+                  formulaire 2086 à partir de vos transactions.
                 </p>
                 <Link
                   href="/outils/calculateur-fiscalite"

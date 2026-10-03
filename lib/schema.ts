@@ -528,15 +528,10 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
           url: p.websiteUrl,
         },
       };
-      if (trustpilotCount >= 5) {
-        item.aggregateRating = {
-          "@type": "AggregateRating",
-          ratingValue: clampRating(p.scoring.global),
-          bestRating: 5,
-          worstRating: 0,
-          ratingCount: trustpilotCount,
-        };
-      }
+      /* Plus d'aggregateRating (audit 03/10/2026) : la note est NOTRE note éditoriale et le
+         nombre d'avis venait de Trustpilot. Google n'accepte que des notes données directement
+         par les utilisateurs du site ; mélanger les deux expose à une action manuelle. */
+      void trustpilotCount;
 
       return {
         "@type": "ListItem",
@@ -609,9 +604,9 @@ export function platformReviewSchema(p: Platform): JsonLd {
     },
   };
 
-  // Spam guard : on n'émet aggregateRating que si on a >= 5 avis Trustpilot
-  // vérifiables (sinon fabrication = risque manual action Google).
-  if (trustpilotCount >= 5) {
+  // Plus d'aggregateRating (audit 03/10/2026) : note éditoriale + compteur Trustpilot = données
+  // structurées trompeuses au sens de Google. Seul l'avis signé (Review + reviewRating) reste.
+  if (false) {
     product.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue,
@@ -658,8 +653,8 @@ export function platformSoftwareApplicationSchema(p: Platform): JsonLd {
     },
   };
 
-  // Pas d'aggregateRating sans preuve (cf. spam guard de platformReviewSchema).
-  if (trustpilotCount >= 5) {
+  // Plus d'aggregateRating du tout (audit 03/10/2026, voir platformReviewSchema).
+  if (false) {
     app.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue,

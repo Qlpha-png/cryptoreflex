@@ -40,11 +40,9 @@ export default function BriefHero({ brief }: { brief: NewsSummary }) {
           <Newspaper className="h-3.5 w-3.5" aria-hidden="true" />
           Le brief du jour
         </span>
+        {/* Plus de mention « En direct » : un brief est une édition datée, pas un flux (audit 03/10/2026) */}
         <span className="text-xs font-medium capitalize text-muted">
           Édition du {dateLong}
-        </span>
-        <span className="live-dot ml-auto hidden items-center text-[11px] font-bold uppercase tracking-[0.14em] text-accent-green sm:inline-flex">
-          En direct
         </span>
       </div>
 

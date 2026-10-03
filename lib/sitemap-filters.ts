@@ -8,7 +8,7 @@
  *  - 100 /cryptos/<id>/acheter-en-france des fiches éditoriales
  *    (canonical → /acheter/<id>/fr) ;
  *  - /cryptos/<coingeckoId> des fiches éditoriales (redirigées en 308) ;
- *  - /lp/cerfa-2026, /lp/mica-2026 (noindex) ;
+ *  - /lp/cerfa-2026 (noindex) ; /lp/mica-2026 redirigée (308) le 03/10/2026 ;
  *  - /pro, /pro-plus, /cgv-abonnement (pages de transition « tout est gratuit »,
  *    noindex depuis la démonétisation de juin 2026) ;
  *  - /alternative-a/ledger, /alternative-a/trezor (404 : wallets exclus de la route).
@@ -21,7 +21,6 @@ import { SLUG_ALIASES } from "@/lib/crypto-slug-aliases";
 /** Chemins exacts jamais soumis (noindex / transition). */
 export const SITEMAP_EXCLUDED_PATHS: ReadonlySet<string> = new Set([
   "/lp/cerfa-2026",
-  "/lp/mica-2026",
   "/pro",
   "/pro-plus",
   "/cgv-abonnement",

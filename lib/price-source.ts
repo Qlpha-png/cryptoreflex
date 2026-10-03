@@ -327,63 +327,15 @@ async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Source #3 — Static fallback (dataset hardcode)                            */
+/*  Source #3 — (supprimée le 2026-10-03)                                     */
 /* -------------------------------------------------------------------------- */
-
-/**
- * Snapshot statique du top 20 — derniere mise a jour manuelle 2026-05-03.
- * Sert de filet de securite ULTIME si Binance + CoinCap echouent (rare).
- * Le site continue a afficher des prix coherents au lieu de "—".
- *
- * V1 future : remplacer par un fetch Vercel KV qui contient le dernier
- * snapshot reussi (auto-update via cron).
- */
-// Snapshot statique mai 2026 — prix moyens lisses derniere semaine. Etendu
-// aux 30 cryptos les plus visitees du site pour eviter "—" sur les fiches
-// si Binance + CoinCap echouent (cas Vercel Edge IP block, freeze, etc.).
-// MAJ trimestrielle ou via cron (a faire BATCH 52 : auto-update via KV).
-const STATIC_FALLBACK: Record<string, Pick<PriceSnapshot, "priceUsd" | "change24h" | "marketCap" | "volume24h">> = {
-  bitcoin:    { priceUsd: 63662, change24h: 0,  marketCap: 1267000000000, volume24h: 35000000000 },
-  ethereum:   { priceUsd: 1667,  change24h: 0,  marketCap:  201000000000, volume24h: 18000000000 },
-  ripple:     { priceUsd: 1.13,  change24h: 0,  marketCap:   62000000000, volume24h:  2500000000 },
-  binancecoin:{ priceUsd: 605,   change24h: 0,  marketCap:   90700000000, volume24h:  1800000000 },
-  solana:     { priceUsd: 67,    change24h: 0,  marketCap:   31400000000, volume24h:  3000000000 },
-  cardano:    { priceUsd: 0.45,  change24h: 0,  marketCap:   16000000000, volume24h:   600000000 },
-  dogecoin:   { priceUsd: 0.12,  change24h: 0,  marketCap:   17000000000, volume24h:   900000000 },
-  tron:       { priceUsd: 0.16,  change24h: 0,  marketCap:   14000000000, volume24h:   500000000 },
-  "avalanche-2": { priceUsd: 30, change24h: 0,  marketCap:   12000000000, volume24h:   400000000 },
-  chainlink:  { priceUsd: 14,    change24h: 0,  marketCap:    8000000000, volume24h:   400000000 },
-  polkadot:   { priceUsd: 4.2,   change24h: 0,  marketCap:    6500000000, volume24h:   180000000 },
-  "matic-network": { priceUsd: 0.42, change24h: 0, marketCap: 4200000000, volume24h:  150000000 },
-  "the-open-network": { priceUsd: 4.8, change24h: 0, marketCap: 12000000000, volume24h: 200000000 },
-  "shiba-inu": { priceUsd: 0.000017, change24h: 0, marketCap: 10000000000, volume24h: 350000000 },
-  litecoin:   { priceUsd: 80,    change24h: 0,  marketCap:    6000000000, volume24h:   300000000 },
-  "bitcoin-cash": { priceUsd: 380, change24h: 0, marketCap:   7500000000, volume24h:   250000000 },
-  near:       { priceUsd: 4.5,   change24h: 0,  marketCap:    5000000000, volume24h:   180000000 },
-  uniswap:    { priceUsd: 8,     change24h: 0,  marketCap:    4800000000, volume24h:   120000000 },
-  aptos:      { priceUsd: 8.5,   change24h: 0,  marketCap:    4500000000, volume24h:   150000000 },
-  "internet-computer": { priceUsd: 9, change24h: 0, marketCap: 4200000000, volume24h: 100000000 },
-  "ethereum-classic": { priceUsd: 22, change24h: 0, marketCap: 3300000000, volume24h: 110000000 },
-  cosmos:     { priceUsd: 7,     change24h: 0,  marketCap:    2700000000, volume24h:    80000000 },
-  stellar:    { priceUsd: 0.10,  change24h: 0,  marketCap:    3000000000, volume24h:    90000000 },
-  filecoin:   { priceUsd: 4.5,   change24h: 0,  marketCap:    2700000000, volume24h:    90000000 },
-  monero:     { priceUsd: 165,   change24h: 0,  marketCap:    3000000000, volume24h:    50000000 },
-  algorand:   { priceUsd: 0.18,  change24h: 0,  marketCap:    1500000000, volume24h:    40000000 },
-  tezos:      { priceUsd: 0.85,  change24h: 0,  marketCap:    850000000,  volume24h:    20000000 },
-  "hedera-hashgraph": { priceUsd: 0.06, change24h: 0, marketCap: 2200000000, volume24h: 70000000 },
-  aave:       { priceUsd: 145,   change24h: 0,  marketCap:    2200000000, volume24h:    80000000 },
-  maker:      { priceUsd: 1450,  change24h: 0,  marketCap:    1300000000, volume24h:    40000000 },
-  sui:        { priceUsd: 1.5,   change24h: 0,  marketCap:    4500000000, volume24h:   180000000 },
-  arbitrum:   { priceUsd: 0.85,  change24h: 0,  marketCap:    3500000000, volume24h:   120000000 },
-  optimism:   { priceUsd: 1.6,   change24h: 0,  marketCap:    1800000000, volume24h:    60000000 },
-  tether:     { priceUsd: 1,     change24h: 0,  marketCap:  120000000000, volume24h: 50000000000 },
-  "usd-coin": { priceUsd: 1,     change24h: 0,  marketCap:   33000000000, volume24h:  6000000000 },
-  // FIX 2026-05-08 cycle 4 — coingeckoId corrige : "mantra" (NEW $OM
-  // Mantra Chain RWA L1 Cosmos) au lieu de "mantra-dao" (ANCIEN ERC-20
-  // mort). Notre data/hidden-gems.json decrit le NEW. Static fallback
-  // basé sur CoinGecko 2026-05-08 : $0.0103, mcap $52M.
-  mantra: { priceUsd: 0.0103, change24h: 0, marketCap: 52000000, volume24h: 4500000 },
-};
+// La table de prix figés de mai 2026 (BTC 63 662 $, ETH 1 667 $…) a été
+// retirée : ses valeurs arrivaient en production affichées comme un cours
+// courant dès que la cascade live échouait. Règle du site : aucun chiffre
+// faux. Derniers filets : cache KV du ticker (cron, TTL 6 h) et snapshot KV
+// (cron update-static-prices) ; sinon priceUsd 0 → « Prix indisponible ».
+// Le supply servant à estimer les capitalisations reste dans
+// lib/price-providers/static.ts (STATIC_FALLBACK, jamais affiché).
 
 const COIN_META: Record<string, { symbol: string; name: string }> = {
   bitcoin:    { symbol: "BTC", name: "Bitcoin" },
@@ -455,16 +407,17 @@ async function _getPriceSnapshot(coingeckoId: string): Promise<PriceSnapshot> {
       symbol: coingeckoId.toUpperCase().slice(0, 6),
       name: coingeckoId.charAt(0).toUpperCase() + coingeckoId.slice(1),
     };
-    const stat = STATIC_FALLBACK[coingeckoId];
+    // AUDIT 2026-10-03 — plus de prix figé de mai ici : priceUsd 0, le
+    // front affiche « — » / « Prix indisponible » (aucun chiffre faux).
     return {
       id: coingeckoId,
       symbol: meta.symbol,
       name: meta.name,
-      priceUsd: stat?.priceUsd ?? 0,
-      change24h: stat?.change24h ?? 0,
+      priceUsd: 0,
+      change24h: 0,
       change7d: null,
-      volume24h: stat?.volume24h ?? 0,
-      marketCap: stat?.marketCap ?? 0,
+      volume24h: 0,
+      marketCap: 0,
       sparkline7d: [],
       source: "static",
       fetchedAt: new Date().toISOString(),
@@ -675,31 +628,11 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
       image: "",
     }));
   }
-  // Fallback ultime : derive du STATIC_FALLBACK
-  return Object.entries(STATIC_FALLBACK)
-    .slice(0, limit)
-    .map(([id, stat], idx) => {
-      const meta = COIN_META[id]!;
-      return {
-        id,
-        symbol: meta.symbol,
-        name: meta.name,
-        priceUsd: stat.priceUsd,
-        change24h: stat.change24h,
-        change7d: null,
-        volume24h: stat.volume24h,
-        marketCap: stat.marketCap,
-        sparkline7d: [],
-        source: "static" as const,
-        fetchedAt,
-        marketCapRank: idx + 1,
-        // BUG FIX 2026-05-03 - oubli de la ligne 533 lors du 1er bug fix
-        // logos. CoinCap CDN 404 sur coins exotiques + retour string vide
-        // laisse CryptoLogo composant faire son lookup intelligent
-        // (lib/crypto-logos.ts CoinGecko CDN cache hardcode pour top 100).
-        image: "",
-      };
-    });
+  // AUDIT 2026-10-03 — plus de « fallback ultime » sur la table figée de mai :
+  // liste vide. Les appelants gèrent déjà ce cas (lib/coingecko.ts passe à la
+  // source suivante, le cron update-static-prices refuse d'écrire < 10 lignes,
+  // ce qui évitait de surcroît de recopier des prix de mai dans le KV).
+  return [];
 }
 
 export const getTopMarket = unstable_cache(

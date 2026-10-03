@@ -142,16 +142,22 @@ function CoinCardMobile({ coin }: { coin: CoinWithSpark }) {
             </span>
           </PriceFlash>
         </div>
-        <div className="flex items-center justify-between gap-2 mt-1">
-          <SparklineMini points={points} up={up} coinId={coin.id} />
-          <span
-            className={`text-[11px] font-mono font-bold inline-flex items-center gap-0.5 ${up ? "text-accent-green" : "text-danger-fg"}`}
-          >
-            <span aria-hidden="true">{up ? "▲" : "▼"}</span>
-            <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>
-            {formatPct(coin.change24h)}
-          </span>
-        </div>
+        {/* Prix à 0 = aucune source live ni cache (audit 03/10/2026) : pas de
+            courbe synthétique ni de « +0,00 % » qui ressemblent à du vrai. */}
+        {!(coin.price > 0) ? (
+          <div className="mt-1 text-[11px] text-muted">Prix indisponible</div>
+        ) : (
+          <div className="flex items-center justify-between gap-2 mt-1">
+            <SparklineMini points={points} up={up} coinId={coin.id} />
+            <span
+              className={`text-[11px] font-mono font-bold inline-flex items-center gap-0.5 ${up ? "text-accent-green" : "text-danger-fg"}`}
+            >
+              <span aria-hidden="true">{up ? "▲" : "▼"}</span>
+              <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>
+              {formatPct(coin.change24h)}
+            </span>
+          </div>
+        )}
       </div>
     </li>
   );
