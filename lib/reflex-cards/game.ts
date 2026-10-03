@@ -50,8 +50,10 @@ export type GameData = {
   watch: Record<string, number>;
   toty: string[];
   masked: number;
-  /** cartes de la collection « Les Pionniers » (identifiants masqués pour celles à venir) : la même liste que le serveur */
-  themePion: string[];
+  /** cartes de chaque collection thématique (identifiants masqués pour celles à venir) : les mêmes listes que le serveur */
+  themes: Record<string, string[]>;
+  /** nombre de cartes de l'album par rareté (les cartes à venir n'envoient plus leur rareté : le jeu a besoin des totaux) */
+  rarTotals: Record<string, number>;
 };
 
 export function gameData(day: number): GameData {
@@ -89,7 +91,9 @@ export function gameData(day: number): GameData {
   for (const [id, p] of Object.entries(P.cartes)) {
     const m = mask.get(id);
     cartes[m ?? id] = m
-      ? { fam: p.fam, sub: "", r: p.r, noto: fuzzy.get(id)!, part: p.part, ...(p.legende ? { legende: 1 } : {}), ...(p.merite ? { merite: 1 } : {}) }
+      /* carte à venir : famille (sa case dans l'album) et rang flou seulement — ni rareté, ni « légende », ni « méritée » :
+         rareté + famille suffisaient à deviner les futures Légendaires (audit du 03/10, décision Kev) */
+      ? { fam: p.fam, sub: "", r: "?", noto: fuzzy.get(id)!, part: p.part }
       : p;
   }
   const keep = <T>(o: Record<string, T>) => Object.fromEntries(Object.entries(o).filter(([id]) => !mask.has(id)));
@@ -102,7 +106,8 @@ export function gameData(day: number): GameData {
     watch: keep(RAW.watch),
     toty: day >= totyDay() ? RAW.toty.filter((id) => !mask.has(id)) : [],
     masked: mask.size,
-    themePion: (RULES.themes.find((t) => t.id === "th-pion")?.cards ?? []).map((id) => mask.get(id) ?? id),
+    themes: Object.fromEntries(RULES.themes.filter((t) => t.cards?.length).map((t) => [t.id, t.cards!.map((id) => mask.get(id) ?? id)])),
+    rarTotals: Object.entries(P.cartes).filter(([id]) => !P.fossiles[id]).reduce<Record<string, number>>((acc, [, p]) => ((acc[p.r] = (acc[p.r] ?? 0) + 1), acc), {}),
   };
 }
 
@@ -118,7 +123,7 @@ export function gameDataScript(day: number, next: GameNext | null = null): strin
   const d = gameData(day);
   /* GAME_LAUNCH : la date du jour 1, pour afficher de vraies dates de sortie sans dépendre de l'horloge ni du cache de la page ;
      GAME_NEXT : la prochaine partie en attente et son palier de joueurs ; GAME_TOTY_DAY : jour de révélation de l'Équipe (FAR = pas encore fixé) */
-  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEME_PION=${js(d.themePion)},GAME_NEXT=${js(next)},GAME_TOTY_DAY=${totyDay()};
+  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEMES=${js(d.themes)},GAME_RAR_TOTALS=${js(d.rarTotals)},GAME_NEXT=${js(next)},GAME_TOTY_DAY=${totyDay()};
 const CARDS=${js(d.cards)};
 const PALIERS=${js(d.paliers)};
 const NOTO=${js(d.noto)};

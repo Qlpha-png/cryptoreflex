@@ -109,9 +109,18 @@ describe("Reflex Cards — page du jeu : rien ne fuit", () => {
       process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "2026-10-02";
       const s1 = gameDataScript(1), s90 = gameDataScript(90);
       expect(s1).toContain('GAME_LAUNCH="2026-10-02"');
-      const pion = (s: string) => JSON.parse(s.match(/GAME_THEME_PION=(\[[^\]]*\])/)![1]) as string[];
+      const pion = (s: string) => (JSON.parse(s.match(/GAME_THEMES=(\{[^}]*\})/)![1]) as Record<string, string[]>)["th-pion"];
       const rules = (await import("@/data/reflex-cards-rules.json")).default as unknown as { themes: { id: string; cards?: string[] }[] };
       const want = rules.themes.find((t) => t.id === "th-pion")!.cards!;
+      /* toutes les collections à cartes sont envoyées, et les cartes à venir n'ont ni rareté ni drapeau « légende » */
+      const d1 = gameData(1);
+      expect(Object.keys(d1.themes).sort()).toEqual(rules.themes.filter((t) => t.cards?.length).map((t) => t.id).sort());
+      const maskedPaliers = Object.entries(d1.paliers.cartes).filter(([id]) => /^x\d{3}$/.test(id));
+      expect(maskedPaliers.length).toBe(d1.masked);
+      for (const [, p] of maskedPaliers) { expect(p.r).toBe("?"); expect("legende" in p).toBe(false); expect("merite" in p).toBe(false); expect(p.sub).toBe(""); }
+      expect(Object.values(d1.rarTotals).reduce((a, b) => a + b, 0)).toBe(881);
+      expect(d1.rarTotals).toEqual(gameData(90).rarTotals);
+      expect(d1.rarTotals.L).toBe(19);
       expect(pion(s90)).toEqual(want); // tout est sorti au jour 90 : la liste du serveur telle quelle
       const p1 = pion(s1);
       expect(p1).toHaveLength(want.length);
