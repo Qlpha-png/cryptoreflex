@@ -24,6 +24,8 @@ export interface KvClient {
   get<T = unknown>(key: string): Promise<T | null>;
   set(key: string, value: unknown, opts?: { ex?: number }): Promise<void>;
   del(key: string): Promise<void>;
+  /** Incrémente un compteur entier (créé à 1 s'il n'existe pas) ; `ttlSeconds` pose/renouvelle l'expiration. */
+  incr(key: string, ttlSeconds?: number): Promise<number>;
   lrange<T = unknown>(key: string, start: number, end: number): Promise<T[]>;
   lpush(key: string, value: unknown): Promise<number>;
   lrem(key: string, count: number, value: unknown): Promise<number>;
@@ -133,6 +135,12 @@ class RealKvClient implements KvClient {
     await this.exec(["del", key]);
   }
 
+  async incr(key: string, ttlSeconds?: number): Promise<number> {
+    const n = await this.exec<number>(["incr", key]);
+    if (ttlSeconds && ttlSeconds > 0) await this.exec(["expire", key, Math.ceil(ttlSeconds)]);
+    return n;
+  }
+
   async lrange<T = unknown>(key: string, start: number, end: number): Promise<T[]> {
     const raw = await this.exec<string[] | null>(["lrange", key, start, end]);
     if (!Array.isArray(raw)) return [];
@@ -217,6 +225,13 @@ class MockKvClient implements KvClient {
     this.store.delete(key);
     this.expires.delete(key);
     this.lists.delete(key);
+  }
+
+  async incr(key: string, ttlSeconds?: number): Promise<number> {
+    const cur = await this.get<number>(key);
+    const n = (typeof cur === "number" ? cur : 0) + 1;
+    await this.set(key, n, ttlSeconds && ttlSeconds > 0 ? { ex: ttlSeconds } : undefined);
+    return n;
   }
 
   async lrange<T = unknown>(key: string, start: number, end: number): Promise<T[]> {

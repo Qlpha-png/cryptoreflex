@@ -18,6 +18,7 @@ import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { supabaseGameDb, type GameDb } from "./store";
+import { bumpFunnel } from "./funnel";
 import type { Account, Ctx } from "./actions";
 import { GameError } from "./engine";
 import { parisToday, seasonDay } from "./season";
@@ -92,6 +93,7 @@ export async function resolvePlayer(req: NextRequest, o: { create: boolean; crea
       const token = randomBytes(32).toString("base64url");
       player = await db.createGuest(hashToken(token), o.today);
       setGuest = token;
+      void bumpFunnel("guest_new");
     }
   }
   /* jeton invité devenu inutile (partie rattachée, ou jeton inconnu) : on l'efface */

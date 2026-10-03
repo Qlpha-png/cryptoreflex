@@ -19,6 +19,7 @@ import { createRateLimiter } from "@/lib/rate-limit";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabaseSocialDb } from "@/lib/reflex-cards/social";
 import { applyReleases } from "@/lib/reflex-cards/releases";
+import { bumpFunnel } from "@/lib/reflex-cards/funnel";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -104,10 +105,18 @@ export async function POST(req: NextRequest) {
       : a === "repondre" ? await r.fdb.answer(w.player!, code, body.ok === true)
       : a === "retirer" ? await r.fdb.remove(w.player!, code)
       : await befriendByInvite(r.fdb, w.player!, code);
-    /* lien d'invitation accepté par un joueur qui n'a encore ouvert aucun booster : c'est un filleul (lot 3, parrainage) */
+    /* lien d'invitation accepté par un compte récent : c'est un filleul (parrainage). Depuis l'ouverture aux invités
+       (03/10/2026), l'ami a souvent déjà ouvert des boosters avant de créer son compte : la récompense (1 booster chacun,
+       plafonds dans rc_referral_reward) est versée tout de suite ; sinon elle l'est à son premier booster (afterOpen). */
+    let referral: { referee: boolean; referrer: boolean } | null = null;
     if (a === "invitation" && res === "accepted") {
       const host = await r.fdb.host(code);
-      if (host) await supabaseSocialDb(r.sb).referralNew(w.player!, host.pid).catch(() => {});
+      if (host) {
+        const sdb = supabaseSocialDb(r.sb);
+        const created = await sdb.referralNew(w.player!, host.pid).catch(() => "error");
+        if (created === "ok") referral = await sdb.referralReward(w.player!).catch(() => null);
+      }
+      void bumpFunnel("inv_accept");
     }
     const m = FRIEND_MSG[res] ?? { ok: false, msg: "Réessayez dans un instant." };
     const list = await view(r.fdb, w.player!);
@@ -116,8 +125,9 @@ export async function POST(req: NextRequest) {
       const f = list.friends.find((x) => x.code === code);
       if (res === "accepted" && f) msg = `Vous êtes maintenant amis avec ${f.pseudo} !`;
       else if (res === "self") msg = "C'est votre propre lien d'invitation.";
+      if (referral?.referee) msg += " Un booster offert vient d'être ajouté à votre réserve.";
     }
-    return w.finish(NextResponse.json(m.ok ? { ok: true, msg, list } : { ok: false, error: msg, list }, { status: m.ok ? 200 : 422, headers: NO_STORE }));
+    return w.finish(NextResponse.json(m.ok ? { ok: true, msg, list, ...(referral ? { referral } : {}) } : { ok: false, error: msg, list }, { status: m.ok ? 200 : 422, headers: NO_STORE }));
   } catch (e) {
     if (e instanceof FriendsNotReady) return w ? w.finish(notReady()) : notReady();
     return w ? w.finish(errorJson(e)) : errorJson(e);

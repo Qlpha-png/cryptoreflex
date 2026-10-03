@@ -32,6 +32,7 @@ import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter, authEmailRecipientLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { sendEmail } from "@/lib/email/client";
+import { bumpFunnel } from "@/lib/reflex-cards/funnel";
 import { signupConfirmEmail } from "@/lib/email/templates";
 import { randomPassword } from "@/lib/auth-guards";
 import { allowedAuthNext } from "@/lib/safe-redirect";
@@ -197,6 +198,7 @@ export async function POST(req: NextRequest) {
     return rollback("sendEmail", sent.error ?? "unknown");
   }
 
+  void bumpFunnel("account_new"); // tunnel Reflex Cards : compte créé (compteur du jour, sans donnée personnelle)
   return NextResponse.json({
     ok: true,
     needsConfirmation: true,

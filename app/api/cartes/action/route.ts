@@ -10,6 +10,7 @@ import { NO_STORE, SessionError, errorJson, gameCtx, resolvePlayer, type Who } f
 import { loadGame, runAction } from "@/lib/reflex-cards/store";
 import { toClient } from "@/lib/reflex-cards/actions";
 import { afterOpen, supabaseSocialDb } from "@/lib/reflex-cards/social";
+import { bumpFunnel } from "@/lib/reflex-cards/funnel";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { createRateLimiter } from "@/lib/rate-limit";
@@ -54,6 +55,8 @@ export async function POST(req: NextRequest) {
     /* services entre amis (4e échange, 2e pioche) : comptes seulement, un invité n'a pas d'amis */
     if (a === "service" && (body.id === "xtr" || body.id === "xpk") && who.account.guest) throw new SessionError(401, "Connectez-vous pour échanger avec vos amis.", "login");
     let out: Record<string, unknown> = await runAction(who.db, who.player, a, body, ctx, who.account);
+    /* tunnel d'arrivée : premier booster de cette partie (compteur sans donnée personnelle) */
+    if (a === "ouvrir" && !out.replay && (out.state as { pstats?: { opened?: number } } | undefined)?.pstats?.opened === 1) void bumpFunnel("first_pack");
     /* booster d'un compte : belle carte annoncée aux amis ; 1er booster d'un filleul → 1 booster chacun (lot 3) */
     if (a === "ouvrir" && !who.account.guest && !out.replay) {
       const sb = createSupabaseServiceRoleClient();
