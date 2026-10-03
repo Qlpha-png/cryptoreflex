@@ -180,14 +180,14 @@ export default function Cerfa2086AutoPage() {
               portefeuille au jour de la cession, prix total d&apos;acquisition
               minoré des fractions déjà imputées, frais de cession) et vous livre
               un PDF récapitulatif ligne par ligne, à vérifier avant dépôt sur
-              impots.gouv.fr — avec un 3916-bis pour chaque compte étranger détecté.
+              impots.gouv.fr — avec une fiche de préparation 3916-bis pour chaque compte étranger détecté (à recopier, rien à déposer).
             </p>
 
             <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
               {[
                 { icon: FileText, label: "Récapitulatif 2086 — lignes 211 à 224 par cession" },
                 { icon: ShieldCheck, label: "Formule de l'art. 150 VH bis, à vérifier avant dépôt" },
-                { icon: Sparkles, label: "3916-bis auto par exchange étranger détecté" },
+                { icon: Sparkles, label: "Fiche 3916-bis pré-remplie par compte étranger détecté" },
                 { icon: ShieldCheck, label: "5 générations / jour incluses" },
               ].map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-2 text-fg/85">

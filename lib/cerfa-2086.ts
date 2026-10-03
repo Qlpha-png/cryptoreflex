@@ -59,6 +59,7 @@ import {
   type RGB,
 } from "pdf-lib";
 import { calculateFlatTax, formatEur, SEUIL_EXONERATION_EUR } from "@/lib/tax-fr";
+import PSAN_REGISTRY from "@/data/psan-registry.json";
 
 /* -------------------------------------------------------------------------- */
 /*  Types publics                                                             */
@@ -1292,26 +1293,58 @@ function drawCessionBlock(ctx: PdfCtx, c: CerfaCession, n: number): void {
 }
 
 /** Génère un Cerfa 3916-bis simplifié (1 page par exchange étranger). */
+/** Entité légale, pays du siège et autorité d'une plateforme connue (data/psan-registry.json), pour pré-remplir la fiche 3916-bis. */
+function exchangeEntity(name: string): { legalEntity: string; headquarters: string; jurisdiction: string; verified: string } | null {
+  const n = name.trim().toLowerCase();
+  if (!n) return null;
+  type Row = { id?: string; name?: string; aliases?: string[]; legalEntity?: string; headquarters?: string; micaJurisdiction?: string; lastVerified?: string };
+  const list = (PSAN_REGISTRY as { platforms: Row[] }).platforms;
+  const hit = list.find((r) => [r.id, r.name, ...(r.aliases ?? [])].filter(Boolean).some((a) => String(a).toLowerCase() === n));
+  if (!hit || !hit.legalEntity) return null;
+  return { legalEntity: hit.legalEntity, headquarters: hit.headquarters ?? "", jurisdiction: hit.micaJurisdiction ?? "", verified: hit.lastVerified ?? "" };
+}
+
+/* Ligne vide à compléter à la main (jamais de texte fictif imprimé dans une case : audit 03/10/2026, remarque de Kev). */
+const BLANK = "______________________________";
+
 function draw3916Bis(ctx: PdfCtx, exchange: string, summary: CerfaSummary): void {
   addPage(ctx);
   drawHeader(
     ctx,
-    `Annexe 3916-bis - ${exchange}`,
-    `Déclaration d'un compte d'actifs numériques ouvert à l'étranger – Année ${summary.taxYear}`,
+    `Préparation du 3916-bis – ${exchange}`,
+    `Compte d'actifs numériques ouvert à l'étranger – Année ${summary.taxYear}`,
   );
+  drawParagraph(
+    ctx,
+    "Cette fiche ne se dépose pas : elle rassemble ce que vous recopierez dans l'annexe 3916-bis de votre déclaration en ligne sur impots.gouv.fr (un formulaire par compte). Les lignes vides se complètent à la main ; numéro de compte et dates figurent dans l'espace client de la plateforme.",
+    { size: 9, color: COLORS.muted },
+  );
+  ctx.cursorY -= 8;
 
   drawTitle(ctx, "1. Identification du déclarant");
-  drawKeyValue(ctx, "Nom du déclarant", summary.taxpayerName ?? "[À compléter]");
+  drawKeyValue(ctx, "Nom et prénom", summary.taxpayerName ?? BLANK);
   drawKeyValue(ctx, "Année fiscale", String(summary.taxYear));
   ctx.cursorY -= 8;
 
+  const ent = exchangeEntity(exchange);
   drawTitle(ctx, "2. Identification du compte");
   drawKeyValue(ctx, "Désignation du compte", exchange);
   drawKeyValue(ctx, "Type de compte", "Compte d'actifs numériques");
-  drawKeyValue(ctx, "Adresse de l'organisme gestionnaire", "[À compléter manuellement]");
-  drawKeyValue(ctx, "Numéro de compte", "[À compléter manuellement]");
-  drawKeyValue(ctx, "Date d'ouverture", "[À compléter manuellement]");
-  drawKeyValue(ctx, "Date de clôture (le cas échéant)", "—");
+  drawKeyValue(ctx, "Organisme gestionnaire (entité)", ent ? ent.legalEntity : BLANK);
+  drawKeyValue(ctx, "Pays du siège", ent && ent.headquarters ? ent.headquarters : BLANK);
+  if (ent && ent.jurisdiction) drawKeyValue(ctx, "Autorité de contrôle", ent.jurisdiction);
+  drawKeyValue(ctx, "Adresse complète de l'organisme", BLANK);
+  drawKeyValue(ctx, "Numéro de compte (ou identifiant client)", BLANK);
+  drawKeyValue(ctx, "Date d'ouverture", BLANK);
+  drawKeyValue(ctx, "Date de clôture (le cas échéant)", BLANK);
+  if (ent) {
+    ctx.cursorY -= 4;
+    drawParagraph(
+      ctx,
+      `Entité et pays pré-remplis d'après notre registre des plateformes${ent.verified ? ` (vérifié le ${ent.verified.split("-").reverse().join("/")})` : ""} : contrôlez-les dans vos conditions générales ou votre espace client, l'entité peut différer selon la date d'ouverture du compte.`,
+      { size: 8.5, color: COLORS.muted },
+    );
+  }
   ctx.cursorY -= 8;
 
   drawTitle(ctx, "3. Caractéristiques");
@@ -1422,7 +1455,7 @@ export async function generateCerfaPdf(
   }
 
   drawTitle(ctx, "Identification du contribuable");
-  drawKeyValue(ctx, "Nom / Prénom", summary.taxpayerName ?? "[À compléter manuellement]");
+  drawKeyValue(ctx, "Nom / Prénom", summary.taxpayerName ?? BLANK);
   drawKeyValue(ctx, "Année fiscale", String(summary.taxYear));
   drawKeyValue(
     ctx,
@@ -1542,7 +1575,7 @@ export async function generateCerfaPdf(
     ctx.cursorY -= 6;
     drawText(
       ctx,
-      "Une annexe 3916-bis est générée automatiquement pour chaque compte ci-dessus.",
+      "Une fiche de préparation 3916-bis suit pour chaque compte ci-dessus : à recopier dans votre déclaration en ligne, un formulaire par compte.",
       { size: 9, color: COLORS.muted },
     );
     ctx.cursorY -= 24;

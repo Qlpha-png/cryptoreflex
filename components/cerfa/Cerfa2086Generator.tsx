@@ -753,7 +753,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
                   <strong className="text-fg/80">Plateformes étrangères détectées :</strong>{" "}
                   {preview.foreignExchanges.join(", ")}
                   <span className="ml-2 text-fg/65">
-                    (un 3916-bis sera généré pour chaque compte)
+                    (une fiche de préparation 3916-bis par compte, à recopier dans votre déclaration en ligne)
                   </span>
                 </div>
               )}
