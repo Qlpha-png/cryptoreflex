@@ -390,7 +390,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Reflex Cards : hub + pages carte déjà visibles (sorties ou révélées) et indexables
   // (description + fiche à relier), seulement quand le jeu est activé (lib/reflex-cards/data.ts).
-  await applyReleases(); // sorties effectives (paliers de joueurs) : seules les cartes sorties sont indexées
+  await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs) : seules les cartes sorties sont indexées
   const reflexDay = seasonDay();
   const reflexCardRoutes: MetadataRoute.Sitemap = isReflexCardsEnabled()
     ? [

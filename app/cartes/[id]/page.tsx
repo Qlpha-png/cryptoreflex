@@ -59,7 +59,7 @@ interface Props {
 const rarityArticle = (c: ReflexCard) => (c.fossil ? "Fossile" : RNAME[c.r]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  await applyReleases();
+  await applyReleases({ readOnly: true });
   const c = getCard(params.id);
   if (!c || !isReflexCardsEnabled()) return {};
   const name = cleanName(c.name);
@@ -149,7 +149,7 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
 }
 
 export default async function CartePage({ params }: Props) {
-  await applyReleases(); // sorties effectives (paliers de joueurs)
+  await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs)
   if (!isReflexCardsEnabled()) notFound();
   const c = getCard(params.id);
   if (!c) notFound();

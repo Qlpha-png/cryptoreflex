@@ -61,7 +61,7 @@ export default async function CartesPage() {
   if (!isReflexCardsEnabled()) notFound();
   const day = seasonDay();
   /* sorties effectives : par paliers de joueurs inscrits (décision Kev, 03/10), plus par dates */
-  const rel = await applyReleases();
+  const rel = await applyReleases({ readOnly: true });
   /* héros et vitrine : révélations officielles du jour 1 (hors stablecoins pour le héros) */
   const hero = HERO_CARDS;
   const showcase = SHOWCASE_CARDS;

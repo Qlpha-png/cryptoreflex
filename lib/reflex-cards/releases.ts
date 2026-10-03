@@ -146,9 +146,32 @@ export async function releases(): Promise<Releases> {
   return rel;
 }
 
-/** à appeler au début de toute route ou page qui utilise le moteur : branche le calendrier effectif sur le moteur */
-export async function applyReleases(): Promise<Releases> {
-  const rel = await releases();
+/* ---------- lecture seule pour les PAGES pré-rendues (fiches de cartes, /cartes, widgets, sitemap) ----------
+   Les lectures KV en no-store et le client Supabase (no-store) rendent une page Next dynamique au pré-rendu :
+   dynamicParams=false n'est alors plus appliqué par Vercel et /cartes/<id-inconnu> répondait 200 (constat du 04/10/2026).
+   Ici : une seule lecture KV revalidée toutes les 60 s, pas de comptage de joueurs, jamais d'écriture. Les sorties ne se
+   déclenchent que depuis les routes du jeu (etat/action/jouer), appelées en permanence par les joueurs. */
+let MEM_RO: { at: number; rel: Releases } | null = null;
+export async function releasesForPages(): Promise<Releases> {
+  const now = Date.now();
+  if (MEM_RO && now - MEM_RO.at < MEM_TTL) return MEM_RO.rel;
+  const launch = launchDate();
+  const thresholds = releasePlayers();
+  if (!launch) { const rel = toReleases("2000-01-01", Array.from({ length: N_PARTS }, () => null), 0, thresholds); MEM_RO = { at: now, rel }; return rel; }
+  const stored = (await getKv().get<{ dates?: (string | null)[] }>(KV_RELEASES, { revalidate: 60 }).catch(() => null))?.dates ?? [];
+  const { dates } = computeReleases({ launch, today: parisToday(), players: 0, stored, thresholds, manual: manualReleases() });
+  const rel = toReleases(launch, dates, 0, thresholds);
+  MEM_RO = { at: now, rel };
+  return rel;
+}
+
+/** tests : oublie les mémoires courtes (sorties, joueurs) */
+export function resetReleasesMemory(): void { MEM = null; MEM_RO = null; PLAYERS_MEM = null; }
+
+/** à appeler au début de toute route ou page qui utilise le moteur : branche le calendrier effectif sur le moteur.
+ *  `readOnly` : pages pré-rendues (voir releasesForPages) ; sans option : routes du jeu (comptage, déclenchement, registre). */
+export async function applyReleases(opts?: { readOnly?: boolean }): Promise<Releases> {
+  const rel = opts?.readOnly ? await releasesForPages() : await releases();
   setPartDays(rel.days, rel.totyDay, rel.endDay);
   return rel;
 }

@@ -39,7 +39,7 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
 }
 
 export default async function EmbedCartePage({ params }: { params: { id: string } }) {
-  await applyReleases(); // sorties effectives (paliers de joueurs)
+  await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs)
   if (!isReflexCardsEnabled()) notFound();
   const c = getCard(params.id);
   if (!c || !shown(c)) notFound();

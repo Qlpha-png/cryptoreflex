@@ -20,8 +20,14 @@
  * Doc API REST Upstash : https://docs.upstash.com/redis/features/restapi
  */
 
+/** Options de lecture : `revalidate` = lecture compatible avec le pré-rendu Next (cache de données revalidé toutes les
+ *  N secondes) au lieu de `no-store`, qui rend dynamique toute page qui l'appelle (soft-404 /cartes/<id>, 04/10/2026). */
+export interface KvReadOpts {
+  revalidate?: number;
+}
+
 export interface KvClient {
-  get<T = unknown>(key: string): Promise<T | null>;
+  get<T = unknown>(key: string, opts?: KvReadOpts): Promise<T | null>;
   set(key: string, value: unknown, opts?: { ex?: number }): Promise<void>;
   del(key: string): Promise<void>;
   /** Incrémente un compteur entier (créé à 1 s'il n'existe pas) ; `ttlSeconds` pose/renouvelle l'expiration. */
@@ -59,7 +65,7 @@ class RealKvClient implements KvClient {
    * Upstash REST accepte aussi un POST avec body JSON ; on choisit GET avec path
    * pour la simplicité (caché par défaut côté CDN — on désactive avec no-store).
    */
-  private async exec<T = unknown>(args: (string | number)[]): Promise<T> {
+  private async exec<T = unknown>(args: (string | number)[], opts?: KvReadOpts): Promise<T> {
     const path = args.map((a) => encodeURIComponent(String(a))).join("/");
     const url = `${this.base}/${path}`;
 
@@ -69,7 +75,7 @@ class RealKvClient implements KvClient {
         Authorization: `Bearer ${this.token}`,
         accept: "application/json",
       },
-      cache: "no-store",
+      ...(opts?.revalidate != null ? { next: { revalidate: opts.revalidate } } : { cache: "no-store" as const }),
       // Timeout dur — KV doit répondre en <300 ms typiquement, 5s = panique.
       signal: AbortSignal.timeout(5000),
     });
@@ -111,8 +117,8 @@ class RealKvClient implements KvClient {
     return json.result;
   }
 
-  async get<T = unknown>(key: string): Promise<T | null> {
-    const raw = await this.exec<string | null>(["get", key]);
+  async get<T = unknown>(key: string, opts?: KvReadOpts): Promise<T | null> {
+    const raw = await this.exec<string | null>(["get", key], opts);
     if (raw == null) return null;
     try {
       return JSON.parse(raw) as T;
@@ -206,7 +212,7 @@ class MockKvClient implements KvClient {
     return false;
   }
 
-  async get<T = unknown>(key: string): Promise<T | null> {
+  async get<T = unknown>(key: string, _opts?: KvReadOpts): Promise<T | null> {
     if (this.isExpired(key)) return null;
     const v = this.store.get(key);
     return v == null ? null : (v as T);
