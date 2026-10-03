@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, CalendarDays, Gift, Landmark, Scale, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarDays, Gift, Landmark, Scale, ShieldCheck, Smartphone, Sparkles, UserPlus } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -116,12 +116,27 @@ export default async function CartesPage() {
               <p className="mt-4 text-lg text-fg/75">
                 {REFLEX_META.ncards} cartes à collectionner, une par crypto. Ouvrez des boosters gratuits, remplissez votre album et apprenez à connaître chaque projet. Aucun achat possible, aucune revente : on joue pour le plaisir de collectionner.
               </p>
+              {day >= 1 && (
+                <p className="mt-3 rounded-xl border border-border/70 bg-surface/60 px-4 py-3 text-sm text-fg/80">
+                  <strong className="text-fg">Comment on joue :</strong> rien à payer, rien à télécharger. Ouvrez votre premier booster
+                  sans compte ; un <strong className="text-fg">compte gratuit</strong> (une adresse e-mail suffit) garde vos cartes pour
+                  toujours, les retrouve sur tous vos appareils et ouvre les amis et les échanges.
+                </p>
+              )}
               <div className="mt-6 flex flex-wrap gap-3">
                 {/* le jeu est une page autonome (/cartes/jouer) : lien classique, pas de navigation côté client */}
                 {day >= 1 && (
                   <a href="/cartes/jouer" className="btn-primary text-sm py-2.5 px-5">
                     Jouer maintenant <ArrowRight className="h-4 w-4" />
                   </a>
+                )}
+                {day >= 1 && (
+                  <Link
+                    href="/inscription?next=%2Fcartes%2Fjouer"
+                    className="inline-flex items-center gap-2 rounded-xl border border-primary/50 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-fg hover:bg-primary/20"
+                  >
+                    <UserPlus className="h-4 w-4" /> Créer mon compte gratuit
+                  </Link>
                 )}
                 <a
                   href="#toutes-les-cartes"
@@ -204,6 +219,42 @@ export default async function CartesPage() {
       </section>
 
       {/* Calendrier */}
+      {/* Installer comme une appli (Kev, 04/10/2026) : PWA, sans store ; tutoriel par appareil. */}
+      {day >= 1 && (
+        <section id="application" className="scroll-mt-24 py-10">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+              <Smartphone className="h-6 w-6 text-primary" /> Jouez comme une appli, sans store
+            </h2>
+            <p className="mt-3 max-w-3xl text-fg/75">
+              Reflex Cards s&apos;installe comme une application : une icône sur votre écran d&apos;accueil, le jeu en plein écran,
+              sans barre d&apos;adresse. Rien à télécharger, pas de store, 0 € — c&apos;est la même partie et le même compte.
+            </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {[
+                { t: "iPhone et iPad (Safari)", s: ["Ouvrez le jeu dans Safari.", "Touchez Partager (le carré avec une flèche).", "Touchez « Sur l'écran d'accueil », puis Ajouter."] },
+                { t: "Android (Chrome)", s: ["Ouvrez le jeu, menu « Plus » → « Installer l'application ».", "Confirmez l'invite d'installation.", "Lancez Reflex Cards depuis l'icône."] },
+                { t: "Ordinateur (Chrome, Edge)", s: ["Ouvrez le jeu.", "Cliquez sur l'icône d'installation à droite de la barre d'adresse (ou menu → « Installer Reflex Cards »).", "Le jeu s'ouvre dans sa propre fenêtre."] },
+              ].map((c) => (
+                <div key={c.t} className="rounded-2xl border border-border bg-surface p-5">
+                  <h3 className="font-semibold">{c.t}</h3>
+                  <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm text-fg/75">
+                    {c.s.map((x) => (
+                      <li key={x}>{x}</li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <a href="/cartes/jouer#installer" className="btn-primary text-sm py-2.5 px-5">
+                Ouvrir le jeu et l&apos;installer <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
       <section id="calendrier" className="scroll-mt-24 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
@@ -321,9 +372,11 @@ export default async function CartesPage() {
             <dl className="mt-4 space-y-4 text-sm">
               {[
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
+                ["Faut-il un compte pour jouer ?", "Pour ouvrir votre premier booster, non. Pour garder vos cartes, les retrouver sur tous vos appareils et jouer avec vos amis, oui : un compte Cryptoreflex gratuit, une adresse e-mail suffit. Le jeu vous le propose au bon moment."],
+                ["Existe-t-il une application ?", "Oui, sans passer par un store : depuis le jeu, « Installer l'application » (menu Plus, ou la tuile de l'accueil) pose l'icône Reflex Cards sur votre écran d'accueil et ouvre le jeu en plein écran. Sur iPhone : Safari → Partager → « Sur l'écran d'accueil »."],
                 ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec le Colporteur dès maintenant, entre amis avec les comptes joueurs."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
-                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit (votre collection est enregistrée sur nos serveurs et vous suit sur tous vos appareils)" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Les parties suivantes sortiront plus tard dans la saison.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
+                ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "sans compte pour le premier booster, puis avec un compte Cryptoreflex gratuit pour garder votre collection sur tous vos appareils" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Les parties suivantes sortiront plus tard dans la saison.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (
                 <div key={q}>
                   <dt className="font-semibold text-fg">{q}</dt>
