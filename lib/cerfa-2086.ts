@@ -1425,6 +1425,23 @@ export async function generateCerfaPdf(
   });
   ctx.cursorY -= 66;
 
+  /* Mode d'emploi : à quoi sert ce document (demande de Kev, 03/10/2026) — le lecteur doit comprendre
+     qu'il recopie, qu'il ne dépose rien, et où il recopie. Parcours = celui du tutoriel du site. */
+  drawTitle(ctx, "À quoi sert ce document et comment l'utiliser");
+  const modeEmploi = [
+    "Ce PDF ne se dépose pas et ne se joint à rien : c'est votre feuille de route. Les chiffres sont calculés à partir des données que vous avez importées ; la déclaration elle-même se fait dans votre espace sur impots.gouv.fr (déclaration en ligne obligatoire, sauf exception).",
+    "Sur impots.gouv.fr : cliquez sur « Déclarer mes revenus », cochez la rubrique « Plus-values et gains divers », continuez jusqu'à l'écran « Plus-values sur actifs numériques », puis ouvrez l'« Annexe 2086 ».",
+    "Dans l'annexe 2086, recopiez pour chaque cession les lignes 211 à 224 indiquées ci-dessous (une colonne « Cession » par vente, 5 par page).",
+    "Reportez le total des lignes 224 en case 3AN de la 2042-C (plus-value) ou 3BN (moins-value) ; cochez 3CN seulement si vous optez pour le barème progressif.",
+    "Chaque compte ouvert sur une plateforme étrangère = une annexe 3916-bis à remplir en ligne : les fiches de préparation jointes (une par compte) rassemblent les informations à recopier.",
+    "Conservez ce PDF et vos exports : ils justifient chaque montant si l'administration vous le demande.",
+  ];
+  modeEmploi.forEach((t, i) => {
+    drawParagraph(ctx, t, { size: 8.5, color: COLORS.ink, bullet: `${i + 1}.` });
+    ctx.cursorY -= 2;
+  });
+  ctx.cursorY -= 8;
+
   if (summary.calculIncomplet) {
     ctx.page.drawRectangle({
       x: MARGIN_X - 4,

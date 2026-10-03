@@ -150,7 +150,7 @@ export default function Cerfa2086AutoPage() {
               },
               {
                 name: "Reporter sur impots.gouv.fr",
-                text: "Connectez-vous à impots.gouv.fr, allez dans la section Plus-values d'actifs numériques. Reportez les valeurs du PDF dans les cases correspondantes (les références sont annotées dans le PDF généré).",
+                text: "Le PDF ne se dépose pas : connectez-vous sur impots.gouv.fr → Déclarer mes revenus → rubrique « Plus-values et gains divers » → écran « Plus-values sur actifs numériques » → Annexe 2086. Recopiez les lignes 211 à 224 de chaque cession depuis le PDF, puis le total en case 3AN ou 3BN de la 2042-C ; une annexe 3916-bis par compte étranger.",
               },
             ],
           }),
@@ -301,7 +301,7 @@ export default function Cerfa2086AutoPage() {
               récapitulatif algorithmique à partir des données que vous importez.
               Le PDF généré ne se substitue pas à un dépôt officiel ni à l'avis
               d'un professionnel agréé. L'administration fiscale française dispose
-              d'un droit de reprise jusqu'à 6 ans : conservez vos archives.{" "}
+              d'un droit de reprise de 3 ans, porté à 10 ans si un compte étranger n'a pas été déclaré (art. L169 LPF) : conservez vos archives au moins 6 ans.{" "}
               <Link href="/transparence" className="underline hover:text-primary-soft">
                 Notre transparence
               </Link>{" "}

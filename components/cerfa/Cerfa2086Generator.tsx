@@ -455,6 +455,19 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         </p>
       </div>
 
+      {/* À quoi sert le document (demande de Kev, 03/10/2026) : le visiteur doit comprendre
+          AVANT d'importer qu'il obtient une feuille de route à recopier, pas un formulaire à envoyer. */}
+      <div className="rounded-xl border border-border bg-elevated/40 p-4 text-sm text-fg/85">
+        <p className="font-semibold text-fg">Ce que vous obtenez, et ce que vous en faites</p>
+        <p className="mt-1">
+          Un <strong>récapitulatif ligne par ligne</strong> (lignes 211 à 224 du 2086 pour chaque
+          cession, total à reporter en 3AN/3BN) et une <strong>fiche de préparation 3916-bis</strong>{" "}
+          par compte étranger. Vous <strong>recopiez</strong> ces chiffres dans votre déclaration en
+          ligne sur impots.gouv.fr : le PDF ne se dépose pas et ne se joint pas (le site des impôts
+          n&apos;accepte aucun fichier), il vous guide et vous sert de justificatif.
+        </p>
+      </div>
+
       {/* Mode "guidé" — 3 étapes visuelles pour rassurer un débutant */}
       <ol className="grid sm:grid-cols-3 gap-3 text-sm">
         {[
@@ -473,7 +486,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           {
             n: "3",
             title: "Téléchargez votre PDF",
-            desc: "Vérifiez l'aperçu, cliquez « Télécharger ». Cerfa 2086 + 3916-bis prêts.",
+            desc: "Vérifiez l'aperçu, téléchargez, puis recopiez les lignes dans votre déclaration en ligne (le PDF ne se dépose pas).",
             done: state === "success",
           },
         ].map((step) => (
@@ -845,14 +858,45 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             className="h-5 w-5 shrink-0 text-success mt-0.5"
             aria-hidden="true"
           />
-          <div>
-            <strong className="text-success">PDF généré et téléchargé !</strong>{" "}
-            Vérifiez chaque ligne avec votre fiscaliste avant de déposer votre
-            déclaration sur impots.gouv.fr.
+          <div className="min-w-0">
+            <strong className="text-success">PDF téléchargé.</strong> Et maintenant ? Ce PDF
+            ne se dépose pas : vous recopiez ses chiffres dans votre déclaration en ligne.
+            <ol className="mt-3 list-decimal pl-5 space-y-1.5 text-fg/85">
+              <li>
+                Sur <strong>impots.gouv.fr</strong> → « Déclarer mes revenus » → cochez la rubrique{" "}
+                <strong>« Plus-values et gains divers »</strong> → écran « Plus-values sur actifs
+                numériques » → ouvrez l&apos;<strong>Annexe 2086</strong>.
+              </li>
+              <li>
+                Pour chaque cession, recopiez les <strong>lignes 211 à 224</strong> telles qu&apos;elles
+                figurent dans le PDF (une colonne « Cession » par vente).
+              </li>
+              <li>
+                Reportez le total des lignes 224 en case <strong>3AN</strong> (plus-value) ou{" "}
+                <strong>3BN</strong> (moins-value) de la 2042-C ; <strong>3CN</strong> seulement si vous
+                optez pour le barème.
+              </li>
+              <li>
+                Un compte sur une plateforme étrangère = une <strong>annexe 3916-bis</strong> à remplir en
+                ligne, à l&apos;aide de la fiche de préparation jointe (une par compte).
+              </li>
+              <li>Gardez le PDF et vos exports CSV : ce sont vos justificatifs.</li>
+            </ol>
+            <p className="mt-3 text-xs text-fg/70">
+              Pas à pas avec captures d&apos;écran :{" "}
+              <a href="/blog/declaration-crypto-cerfa-2086-tutoriel-2026" className="underline hover:text-fg">
+                tutoriel Cerfa 2086
+              </a>{" "}
+              · comptes à déclarer :{" "}
+              <a href="/outils/radar-3916-bis" className="underline hover:text-fg">
+                radar 3916-bis
+              </a>
+              . Faites valider par un professionnel avant de valider votre déclaration.
+            </p>
             <button
               type="button"
               onClick={reset}
-              className="block mt-2 text-xs underline text-fg/70 hover:text-fg"
+              className="block mt-3 text-xs underline text-fg/70 hover:text-fg"
             >
               Générer un autre PDF
             </button>

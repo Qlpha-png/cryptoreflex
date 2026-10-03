@@ -14,7 +14,7 @@ const SITE = "https://www.cryptoreflex.fr";
 describe("shouldExcludeFromSitemap", () => {
   it.each([
     "/lp/cerfa-2026",
-    "/lp/mica-2026",
+    // /lp/mica-2026 n'existe plus : redirigée en 308 vers l'état des lieux MiCA (audit 03/10/2026)
     "/pro",
     "/pro-plus",
     "/cgv-abonnement",
