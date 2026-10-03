@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 import { getAllArticleSummaries, getAllCategories } from "@/lib/mdx";
@@ -101,6 +102,29 @@ export default async function BlogIndexPage() {
         </div>
 
         <BlogIndexClient articles={articles} categories={categories} />
+
+        {/* AUDIT 03/10/2026 — liste complète rendue côté serveur : la pagination du composant est en JavaScript et Google
+            n'y voyait que 12 articles sur ~95. Ici, un vrai lien par article, toujours présent dans le HTML. */}
+        <section aria-labelledby="tous-les-articles" className="mt-16 border-t border-border/60 pt-10">
+          <h2 id="tous-les-articles" className="text-xl font-bold text-fg">
+            Tous les articles ({articles.length})
+          </h2>
+          <ul className="mt-5 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
+            {articles.map((a) => {
+              const d = new Date(a.lastUpdated || a.date);
+              return (
+                <li key={a.slug} className="flex gap-3">
+                  <time dateTime={a.lastUpdated || a.date} className="w-20 shrink-0 font-mono text-xs text-muted">
+                    {Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("fr-FR")}
+                  </time>
+                  <Link href={`/blog/${a.slug}`} className="text-fg/85 hover:text-primary-soft">
+                    {a.title}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       </div>
     </section>
   );

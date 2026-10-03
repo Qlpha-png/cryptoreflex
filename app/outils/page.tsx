@@ -49,7 +49,7 @@ import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 // (Cerfa auto, IA) pour le tri/filtre interne. Layout root applique deja
 // '%s | Cryptoreflex' donc le suffix manuel est retire (evite doublon).
 export const metadata: Metadata = {
-  title: "Outils crypto FR 2026 — 28 calculateurs gratuits + IA",
+  title: "Outils crypto gratuits : 17 calculateurs",
   description:
     "17 outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils"),

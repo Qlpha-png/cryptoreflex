@@ -22,7 +22,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
-  title: "Nos partenaires — Hardware wallets & Fiscalité crypto FR",
+  title: "Partenaires : wallets et fiscalité crypto",
   description:
     "Notre sélection curée de partenaires crypto : Ledger, Trezor, Waltio. Avis indépendants après 4 à 8 ans d'usage réel, transparence totale sur les commissions affiliées.",
   alternates: withHreflang(`${BRAND.url}/partenaires`),

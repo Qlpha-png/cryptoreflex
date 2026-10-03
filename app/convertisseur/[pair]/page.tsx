@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const url = `https://www.cryptoreflex.fr/convertisseur/${parsed.from}-${parsed.to}`;
 
   return {
-    title: `Convertir ${fromUp} en ${toUp} — ${fromName} ${toName} en temps réel`,
+    title: `Convertir ${fromUp} en ${toUp} (${fromName}) en temps réel`,
     description: `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, taux CoinGecko mis à jour toutes les minutes.`,
     alternates: withHreflang(url),
     openGraph: {

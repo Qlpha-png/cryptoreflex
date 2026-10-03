@@ -6,7 +6,7 @@ import { Search, X } from "lucide-react";
 /**
  * OutilsSearchFilter — BATCH 45c (2026-05-03).
  *
- * Filtre interactif minimal pour le hub /outils (28 outils).
+ * Filtre interactif minimal pour le hub /outils (17 outils publiés).
  *
  * Strategie pragmatique : 0 refactor du hub server component. Le
  * composant agit sur le DOM apres render via attributs data-* poses

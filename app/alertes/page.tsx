@@ -125,7 +125,7 @@ export default async function AlertesPage() {
       isPartOf: { "@id": `${BRAND.url}/#website` },
       primaryImageOfPage: { "@type": "ImageObject", url: `${BRAND.url}/og-image.png` },
       datePublished: "2026-04-25",
-      dateModified: new Date().toISOString().slice(0, 10),
+      dateModified: "2026-10-01", // dernière modification réelle (git), pas la date du jour (audit 03/10/2026)
     },
     breadcrumbSchema([
       { name: "Accueil", url: "/" },

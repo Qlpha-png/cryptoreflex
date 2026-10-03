@@ -54,7 +54,7 @@ const PAGE_SIZE = 20;
 // BATCH 60#2 (2026-05-04) — retire 'Cryptoreflex' du title : layout root applique
 // deja template '%s | Cryptoreflex' -> sinon doublon 'Cryptoreflex | Cryptoreflex'
 // dans <title> + onglet navigateur + SERP.
-const PAGE_TITLE = "Actualités crypto FR — analyses & decryptages 2026";
+const PAGE_TITLE = "Actualités crypto — analyses et décryptages";
 const PAGE_DESCRIPTION =
   "Toutes les actualités crypto françaises décryptées par Cryptoreflex : marché, régulation MiCA, technologie blockchain et plateformes. Mises à jour quotidiennement.";
 

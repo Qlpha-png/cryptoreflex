@@ -28,6 +28,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import removedNews from "@/lib/news-removed-slugs.json";
+
+/* AUDIT 03/10/2026 — anciennes actus supprimées (mai 2026) : 308 vers le hub au lieu d'un 404 (263 erreurs Search Console). */
+const REMOVED_NEWS = new Set<string>(removedNews.slugs);
 
 /**
  * BATCH 21 — Defense-in-depth CSRF : check Origin/Referer sur les mutations
@@ -98,6 +102,14 @@ function isCrossSiteMutation(request: NextRequest): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  // Actus supprimées : redirection permanente vers /actualites, sans toucher à Supabase (branche la moins chère possible).
+  const { pathname } = request.nextUrl;
+  if (pathname.startsWith("/actualites/")) {
+    const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "");
+    if (REMOVED_NEWS.has(slug)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
+    return NextResponse.next();
+  }
+
   // BATCH 21 — CSRF check avant toute autre logique (early return si mutation
   // cross-site bloquée).
   if (isCrossSiteMutation(request)) {
@@ -200,6 +212,8 @@ export async function middleware(request: NextRequest) {
  */
 export const config = {
   matcher: [
+    // anciennes actus supprimées → 308 (voir REMOVED_NEWS) ; le hub /actualites reste hors middleware
+    "/actualites/:slug+",
     // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
     // pour couvrir 7 routes oubliées qui restaient soumises au middleware
     // Supabase alors qu'elles sont 100% read-only public :

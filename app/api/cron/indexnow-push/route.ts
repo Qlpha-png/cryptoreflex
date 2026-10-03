@@ -39,18 +39,9 @@ const CRITICAL_URLS = [
   "/academie/choisir",
   "/blog",
   // Pricing & monétisation
-  "/pro",
-  "/pro-plus",
   "/pack-declaration-crypto-2026",
   // Landings BATCH 7-10
-  "/outils/whale-radar",
-  "/outils/phishing-checker",
-  "/outils/allocator-ia",
-  "/outils/gas-tracker-fr",
-  "/outils/export-expert-comptable",
-  "/outils/crypto-license",
   "/outils/succession-crypto",
-  "/outils/dca-lab",
   "/cgu",
   // Outils principaux
   "/outils/calculateur-fiscalite",
@@ -58,7 +49,30 @@ const CRITICAL_URLS = [
   "/outils/verificateur-mica",
   "/outils/portfolio-tracker",
   "/outils/calculateur-roi-crypto",
+  "/outils/cerfa-2086-auto",
+  "/cartes",
 ];
+
+/** Adresses des plans du site news + articles dont <lastmod> date de moins de `hours` heures (best-effort, jamais bloquant). */
+async function recentSitemapUrls(hours: number): Promise<string[]> {
+  const since = Date.now() - hours * 3600 * 1000;
+  const out: string[] = [];
+  for (const sm of ["/sitemap-news.xml", "/sitemap-articles.xml"]) {
+    try {
+      const res = await fetch(`${BRAND.url}${sm}`, { cache: "no-store", signal: AbortSignal.timeout(8_000) });
+      if (!res.ok) continue;
+      const xml = await res.text();
+      for (const m of xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>(?:\s*<lastmod>([^<]+)<\/lastmod>)?/g)) {
+        const loc = m[1].trim();
+        const t = m[2] ? Date.parse(m[2].trim()) : NaN;
+        if (loc.startsWith(BRAND.url) && Number.isFinite(t) && t >= since) out.push(loc);
+      }
+    } catch {
+      /* plan du site indisponible : on pousse au moins les pages fixes */
+    }
+  }
+  return out;
+}
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   if (!verifyBearer(req, process.env.CRON_SECRET)) {
@@ -66,7 +80,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
-  const fullUrls = CRITICAL_URLS.map((path) => `${BRAND.url}${path}`);
+  /* AUDIT 03/10/2026 : en plus des pages fixes, les adresses PUBLIÉES OU MISES À JOUR depuis 72 h (plans du site news +
+     articles) : c'est ce qui sert vraiment, Bing/Yandex n'apprenant pas les nouvelles actus autrement. */
+  const fresh = await recentSitemapUrls(72);
+  const fullUrls = Array.from(new Set([...CRITICAL_URLS.map((path) => `${BRAND.url}${path}`), ...fresh])).slice(0, 500);
 
   // Push interne vers /api/indexnow (réutilise la logique d'auth + push)
   let upstreamStatus = 0;

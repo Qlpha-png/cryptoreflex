@@ -253,27 +253,34 @@ async function _fetchFromBinance(
   // intraday : l'axe X du graphe 7j affiche des heures. Au-delà → journalier.
   const hourly = days <= 7;
   const interval = hourly ? "1h" : "1d";
-  const limit = hourly ? Math.min(days * 24, 1000) : Math.min(days, 1000); // cap Binance = 1000
+  /* AUDIT 03/10/2026 — Binance plafonne à 1000 bougies par appel (= 2,7 ans en quotidien) : le simulateur DCA proposait
+     3 et 5 ans mais ne pouvait pas les servir. On remonte le temps par tranches de 1000 (endTime), 2 appels pour 5 ans. */
+  const wanted = hourly ? Math.min(days * 24, 1000) : Math.min(days, 1825);
 
   try {
-    const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=${interval}&limit=${limit}`;
-    const res = await fetch(url, {
-      next: { revalidate: 60 },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) {
-      // 400 = pair invalide (crypto pas listée) → return [], laisse fallback prendre
-      throw new Error(`Binance ${pair} → ${res.status}`);
+    type Kline = [number, string, string, string, string, ...unknown[]];
+    let all: Kline[] = [];
+    let endTime: number | undefined;
+    for (let round = 0; round < 3 && all.length < wanted; round++) {
+      const limit = Math.min(1000, wanted - all.length);
+      const url = `${BINANCE_BASE}/klines?symbol=${pair}&interval=${interval}&limit=${limit}${endTime ? `&endTime=${endTime}` : ""}`;
+      const res = await fetch(url, {
+        next: { revalidate: 60 },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!res.ok) {
+        throw new Error(`Binance ${pair} → ${res.status}`);
+      }
+      const klines = (await res.json()) as Kline[];
+      if (!Array.isArray(klines) || klines.length === 0) break;
+      all = klines.concat(all);
+      endTime = klines[0][0] - 1;
+      if (klines.length < limit) break; // début de la cotation atteint
     }
-    const klines = (await res.json()) as Array<
-      [number, string, string, string, string, ...unknown[]]
-    >;
-    if (!Array.isArray(klines) || klines.length === 0) return [];
+    if (all.length === 0) return [];
 
-    // klines format : [openTime, open, high, low, close, volume, ...]
-    // On garde t = openTime (ms) et price = close converti en EUR.
     const usdToEur = await _getEurUsdRate();
-    return klines.map((k) => ({
+    return all.map((k) => ({
       t: k[0],
       price: parseFloat(k[4]) * usdToEur,
     }));

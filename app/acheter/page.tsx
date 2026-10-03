@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
     url: `${BRAND.url}/acheter`,
     type: "website",
+    images: [{ url: `${BRAND.url}/og-image.png`, width: 1200, height: 630, alt: "Cryptoreflex" }],
   },
   twitter: {
     card: "summary_large_image",

@@ -148,6 +148,7 @@ const NAV_GROUPS: FooterGroup[] = [
       // Open data CC-BY 4.0 — ajout 2026-05-06 (signal d'autorité fort)
       { href: "/api-publique", label: "API publique CC-BY 4.0" },
       { href: "/embed", label: "Widgets embed (gratuit)" },
+      { href: "/feed.xml", label: "Flux RSS (guides + actualités)" },
       { href: "/confidentialite", label: "Confidentialité (RGPD)" },
       { href: "/mentions-legales", label: "Mentions légales" },
       { href: "/accessibilite", label: "Accessibilité (RGAA)" },

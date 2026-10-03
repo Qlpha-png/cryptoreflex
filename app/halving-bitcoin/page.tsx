@@ -148,7 +148,7 @@ const FAQ = [
 
 export default function HalvingPage() {
   const targetIso = NEXT_HALVING_DATE.toISOString();
-  const dateModified = new Date().toISOString().slice(0, 10);
+  const dateModified = "2026-06-11"; // dernière modification réelle de la page (git) — plus de « aujourd'hui » (audit 03/10/2026)
 
   const schemas = graphSchema([
     articleSchema({

@@ -122,9 +122,19 @@ function normalizeFrontmatter(
       ? raw.slug.trim()
       : fallbackSlug;
 
-  const date = (raw.date as string) ?? new Date().toISOString().slice(0, 10);
+  // AUDIT 03/10/2026 — plus jamais « la date du jour » comme date de publication (Google voyait des articles
+  // publiés à chaque build) : `date`, sinon `publishedAt`, sinon la date de mise à jour déclarée.
+  const date =
+    (raw.date as string) ??
+    (raw.publishedAt as string) ??
+    (raw.lastUpdated as string) ??
+    (raw.updatedAt as string) ??
+    (raw.updated as string) ??
+    (raw.dateModified as string) ??
+    "2026-01-01";
   const lastUpdated =
     (raw.lastUpdated as string) ??
+    (raw.updatedAt as string) ??
     (raw.updated as string) ??
     (raw.dateModified as string) ??
     date;

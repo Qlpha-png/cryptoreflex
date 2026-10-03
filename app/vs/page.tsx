@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
     url: `${BRAND.url}/vs`,
     type: "website",
+    images: [{ url: `${BRAND.url}/og-image.png`, width: 1200, height: 630, alt: "Cryptoreflex" }],
   },
   // BLOCs 0-7 audit FRONT P0-3 (2026-05-04) — twitter card specifique pour
   // eviter le fallback global "Cryptoreflex — Tout pour investir...".

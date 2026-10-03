@@ -31,7 +31,7 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/quiz";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Questionnaires crypto — trouvez votre plateforme et votre première crypto";
+const TITLE = "Questionnaires crypto : plateforme idéale";
 const DESCRIPTION =
   "Deux questionnaires courts et neutres pour vous aider à démarrer dans la crypto : quelle plateforme pour votre profil (6 questions) et quelle crypto pour votre premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
 

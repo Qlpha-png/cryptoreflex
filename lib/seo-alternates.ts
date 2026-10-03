@@ -31,14 +31,8 @@ type AlternatesValue = NonNullable<Metadata["alternates"]>;
  */
 export function withHreflang(canonicalUrl?: string): AlternatesValue {
   const url = canonicalUrl ?? BRAND.url;
-  return {
-    canonical: url,
-    languages: {
-      "fr-FR": url,
-      "fr-BE": url,
-      "fr-CH": url,
-      "fr-CA": url,
-      "x-default": url,
-    },
-  };
+  // AUDIT 03/10/2026 — plus de hreflang fr-FR/BE/CH/CA/x-default pointant tous vers la MÊME adresse : sans effet pour
+  // Google (il n'y a qu'une version), bruit dans les rapports. Le site est monolingue : le canonical suffit. Le nom de la
+  // fonction est gardé pour ne pas toucher aux ~200 pages qui l'appellent.
+  return { canonical: url, types: { "application/rss+xml": `${BRAND.url}/feed.xml` } };
 }

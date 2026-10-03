@@ -49,7 +49,7 @@ ${FISCAL_GUARDRAILS}
 
 FORMAT OUTPUT — JSON STRICT (rien autour, pas de balises code) :
 {
-  "title": "Titre journalistique, accrocheur mais factuel (≤ 90 caractères)",
+  "title": "Titre journalistique, accrocheur mais factuel, 55 caractères MAXIMUM (la page ajoute « | Cryptoreflex » ; Google coupe au-delà de 60)",
   "description": "Chapô / meta SEO (≤ 160 caractères)",
   "category": "Marché|Régulation|Technologie|Plateformes",
   "body": "Corps MDX"
@@ -152,7 +152,12 @@ function validateLLMOutput(parsed) {
     // Auto-coerce sur "Marché" plutôt que throw : la cat est cosmétique.
     parsed.category = "Marché";
   }
-  if (parsed.title.length > 110) parsed.title = parsed.title.slice(0, 107) + "...";
+  /* titre trop long (audit 03/10/2026 : 100 % des actus > 60 caractères) : coupe propre au dernier séparateur avant 62 */
+  if (parsed.title.length > 62) {
+    const head = parsed.title.slice(0, 62);
+    const cut = Math.max(head.lastIndexOf(" : "), head.lastIndexOf(" — "), head.lastIndexOf(" – "), head.lastIndexOf(", "), head.lastIndexOf(" ("));
+    parsed.title = (cut > 30 ? head.slice(0, cut) : head.slice(0, head.lastIndexOf(" ") > 30 ? head.lastIndexOf(" ") : 62) + "…").trim();
+  }
   if (parsed.description.length > 160) parsed.description = parsed.description.slice(0, 157) + "...";
   if (parsed.body.length < 500) {
     throw new Error(`LLM body too short: ${parsed.body.length} chars (expected ≥ 500)`);

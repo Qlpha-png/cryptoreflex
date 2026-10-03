@@ -105,6 +105,7 @@ export function generateMetadata({ params }: Props): Metadata {
       description,
       url: `${BRAND.url}/historique-prix/${c.id}/${annee}`,
       type: "article",
+      images: [{ url: `${BRAND.url}/og-image.png`, width: 1200, height: 630, alt: "Cryptoreflex" }],
     },
   };
 }
