@@ -124,9 +124,13 @@ export function shareText(p: number): string {
   return p >= 0.01 ? `${(p * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % des cartes tirées` : `${oddsText(p)} tirée`;
 }
 
-/** « 1 carte sur 57 000 » (arrondi lisible), pour le texte des pages */
+/**
+ * « 1 carte sur 8 005 », pour le texte des pages : MÊME précision que le chiffre imprimé sur la carte (odds() de render.ts :
+ * 8 005 · 20,1 k · 200 k · 1,2 M), écrit en toutes lettres (8 005 · 20 100 · 200 000 · 1 200 000). Kev 03/10 : la page
+ * et la carte ne doivent jamais afficher deux chiffres différents pour la même chance (avant : « 8 010 » contre « 8 005 »).
+ */
 export function oddsText(p: number): string {
   const x = 1 / p;
-  const r = x < 100 ? Math.round(x) : x < 10_000 ? Math.round(x / 10) * 10 : x < 1_000_000 ? Math.round(x / 1000) * 1000 : Math.round(x / 100_000) * 100_000;
+  const r = x < 1e4 ? Math.round(x) : x < 1e5 ? Math.round(x / 100) * 100 : x < 1e6 ? Math.round(x / 1000) * 1000 : x < 1e9 ? Math.round(x / 1e5) * 1e5 : Math.round(x / 1e8) * 1e8;
   return "1 carte sur " + r.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
 }
