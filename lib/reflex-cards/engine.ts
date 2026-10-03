@@ -56,7 +56,8 @@ export const CARD = new Map(RULES.cards.map((c) => [c.id, c]));
 const BASE = RULES.cards.filter((c) => !c.fossil);
 const PUBLIQUES = new Set([...RULES.ed.icon.list, ...RULES.ed.trophy.list]);
 const ED_ORDER = ["myth", "toty", "icon", "bds", "fossil"] as const;
-const PRESTIGE_ED: Record<string, number> = { relic: 10, myth: 9, toty: 8, icon: 7, trophy: 5.5, bds: 5.1, fossil: 3.6 };
+/* Trophée (récompense de défi) juste sous les Ultra rares (Kev 03/10) : jamais devant une UR, une Légendaire ou mieux */
+const PRESTIGE_ED: Record<string, number> = { relic: 10, myth: 9, toty: 8, icon: 7, bds: 5.1, trophy: 3.95, fossil: 3.6 };
 const FIN_BONUS: Record<Fin, number> = { holo: 0.3, ag: 0.5, or: 0.7, onyx: 0.9 };
 const COS = new Map(RULES.cos.map((x) => [x.id, x]));
 

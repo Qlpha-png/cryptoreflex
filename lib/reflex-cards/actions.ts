@@ -239,6 +239,16 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
         data: { ...reveal(i, rep), done: true, score: f.score, reward: f.rw, sol: f.sol },
       };
     }
+    case "accueil": {
+      /* la carte mise en avant sur l'Accueil (Kev 03/10) : une carte possédée « édition|carte », ou null = la plus belle automatiquement */
+      const k = b.key == null || b.key === "" ? null : String(b.key);
+      if (k !== null) {
+        if (!/^[a-z]{2,12}\|[a-z0-9-]{1,80}$/.test(k)) throw new GameError("bad", "Carte inconnue.");
+        const [ed, id] = k.split("|");
+        if (!(ed === "base" ? s.cards.has(id) : s.eds.has(k))) throw new GameError("bad", "Carte non possédée.");
+      }
+      return { patch: { player: { perso: { ...s.player.perso, hero: k } } }, msg: k ? "Carte de l'Accueil choisie." : "L'Accueil montre à nouveau votre plus belle carte." };
+    }
     case "lien-ami": {
       /* nouveau lien d'invitation : la version monte, tous les liens déjà partagés deviennent invalides (Kev 03/10) */
       const v = Number((s.player.perso as Record<string, unknown>).inviteV ?? 0);
@@ -296,7 +306,7 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
       colpD, first: s.player.first_day, trN: {}, trX: {}, pickN: {}, pickX: {}, reqOut: [], react: {}, gifts: [], inDay: null,
     },
     perso: {
-      pseudo: s.player.pseudo, title: P.title ?? null, pantheon: P.pantheon ?? null,
+      pseudo: s.player.pseudo, title: P.title ?? null, pantheon: P.pantheon ?? null, hero: typeof P.hero === "string" ? P.hero : null,
       cover: P.cover ?? RULES.cosDefault.cover, sleeve: P.sleeve ?? RULES.cosDefault.sleeve, frame: P.frame ?? RULES.cosDefault.frame,
       bg: P.bg ?? RULES.cosDefault.bg, pack: P.pack ?? RULES.cosDefault.pack, inv, ad: { on: false, give: [], want: [], init: true }, v9init: true, public: false,
     },

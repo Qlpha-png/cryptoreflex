@@ -121,6 +121,26 @@ describe("Reflex Cards — même finition : seuls les doublons ordinaires se don
   });
 });
 
+describe("Reflex Cards — carte de l'Accueil au choix (Kev 03/10)", () => {
+  it("une carte possédée, ou null (automatique) ; refus pour une carte non possédée ou une clé invalide", async () => {
+    const { pg, db } = await makeGameDb();
+    const P = await db.createGuest("e".repeat(64), "2026-10-29");
+    await pg.query("update public.rc_players set stock = 20 where player_id=$1", [P]);
+    for (let i = 0; i < 3; i++) await runAction(db, P, "ouvrir", { req: req() }, ctx, ACC);
+    const s = await loadGame(db, P, ctx);
+    const own = [...s.cards.keys()][0];
+    const r = await runAction(db, P, "accueil", { key: "base|" + own }, ctx, ACC);
+    expect(r.state.perso.hero).toBe("base|" + own);
+    expect(((await pg.query("select perso->>'hero' as h from public.rc_players where player_id=$1", [P])).rows[0] as { h: string }).h).toBe("base|" + own);
+    const missing = RULES.cards.find((c) => !c.fossil && !s.cards.has(c.id))!.id;
+    await expect(runAction(db, P, "accueil", { key: "base|" + missing }, ctx, ACC)).rejects.toThrow(/non possédée/);
+    await expect(runAction(db, P, "accueil", { key: "trophy|chainlink" }, ctx, ACC)).rejects.toThrow(/non possédée/);
+    await expect(runAction(db, P, "accueil", { key: "<b>|x" }, ctx, ACC)).rejects.toThrow(/inconnue/);
+    const r2 = await runAction(db, P, "accueil", { key: null }, ctx, ACC);
+    expect(r2.state.perso.hero).toBeNull();
+  });
+});
+
 describe("Reflex Cards — B3 : garde « holo ≤ exemplaires non numérotés »", () => {
   const ID = RULES.cards.find((c) => !c.fossil && c.r === "C")!.id;
   async function setup(b3: boolean) {
