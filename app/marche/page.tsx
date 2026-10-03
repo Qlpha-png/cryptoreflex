@@ -48,7 +48,7 @@ export const revalidate = 900;
 
 const PAGE_PATH = "/marche";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Marché crypto en direct : heatmap et sentiment";
+const TITLE = "Marché crypto en direct : heatmap, sentiment";
 const DESCRIPTION =
   "Tableau de bord du marché crypto temps réel : heatmap top 60, indice Fear & Greed, plus gros gagnants/perdants 24h, market cap globale et dominance BTC. Données CoinGecko et alternative.me.";
 
