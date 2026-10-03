@@ -43,7 +43,7 @@ describe("Reflex Cards — PWA du jeu", () => {
   it("manifest : identité propre au jeu, démarrage sur /cartes/jouer, scope « / », icônes PNG présentes, orientation libre", () => {
     const m = gameManifest();
     expect(m.id).toBe("/cartes/jouer");
-    expect(m.start_url).toBe("/cartes/jouer");
+    expect(m.start_url).toBe("/cartes/jouer#booster"); // l'app s'ouvre sur les boosters, pas sur l'accueil
     expect(m.scope).toBe("/");
     expect(m.display).toBe("standalone");
     expect(m.orientation).toBe("any");
@@ -86,10 +86,10 @@ describe("Reflex Cards — PWA du jeu", () => {
       process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED = "true";
       const on = siteManifest();
       expect(on.shortcuts?.[0]).toEqual(GAME_SHORTCUT);
-      expect(on.shortcuts?.[0]?.url).toBe("/cartes/jouer");
+      expect(on.shortcuts?.[0]?.url).toBe("/cartes/jouer#booster");
       process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED = "false";
       delete process.env.NEXT_PUBLIC_VERCEL_ENV;
-      expect(siteManifest().shortcuts?.some((s) => s.url === "/cartes/jouer")).toBe(false);
+      expect(siteManifest().shortcuts?.some((s) => s.url.startsWith("/cartes/jouer"))).toBe(false);
     } finally {
       if (prev === undefined) delete process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED; else process.env.NEXT_PUBLIC_REFLEX_CARDS_ENABLED = prev;
     }

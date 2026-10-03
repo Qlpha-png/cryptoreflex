@@ -48,7 +48,7 @@ test.describe("Reflex Cards — page du jeu", () => {
     expect(res.status()).toBe(200);
     expect(res.headers()["content-type"]).toContain("application/manifest+json");
     const m = (await res.json()) as { start_url: string; icons: { src: string }[] };
-    expect(m.start_url).toBe("/cartes/jouer");
+    expect(m.start_url).toBe("/cartes/jouer#booster");
     for (const i of m.icons) expect((await request.get(i.src)).status()).toBe(200);
     expect((await request.get("/reflex-cards/pwa.js")).status()).toBe(200);
   });

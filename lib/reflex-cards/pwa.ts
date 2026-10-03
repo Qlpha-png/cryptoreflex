@@ -40,8 +40,8 @@ const icon192: ManifestIcon = { src: GAME_ICONS.any192, sizes: "192x192", type: 
 export const GAME_SHORTCUT: ManifestShortcut = {
   name: "Jouer à Reflex Cards",
   short_name: "Reflex Cards",
-  description: "Vos boosters, votre album et le quiz du jour",
-  url: "/cartes/jouer",
+  description: "Vos boosters à ouvrir",
+  url: "/cartes/jouer#booster",
   icons: [icon192],
 };
 
@@ -52,7 +52,8 @@ export function gameManifest(): GameManifest {
     name: "Reflex Cards — le jeu de cartes crypto gratuit",
     short_name: "Reflex Cards",
     description: "Collectionnez une carte par crypto : boosters gratuits, album, missions et quiz du jour. Sans achat, sans revente.",
-    start_url: "/cartes/jouer",
+    /* l'app s'ouvre sur les boosters à ouvrir (Kev 03/10 : « pas l'accueil ») ; le jeu lit l'ancre au chargement */
+    start_url: "/cartes/jouer#booster",
     scope: "/",
     display: "standalone",
     orientation: "any",

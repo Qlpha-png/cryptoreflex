@@ -158,7 +158,7 @@ place dans `lib/reflex-cards/game.ts`.
 
 | Quoi | Où |
 |---|---|
-| Manifest de l'app « Reflex Cards » (nom, icône, démarre sur `/cartes/jouer`, scope `/`, orientation libre, raccourcis Booster / Album / Missions) | `lib/reflex-cards/pwa.ts`, route `app/cartes/manifest.webmanifest/route.ts` |
+| Manifest de l'app « Reflex Cards » (nom, icône, démarre sur les boosters `/cartes/jouer#booster`, scope `/`, orientation libre, raccourcis Booster / Album / Missions) | `lib/reflex-cards/pwa.ts`, route `app/cartes/manifest.webmanifest/route.ts` |
 | Icônes PNG (192, 512, maskable 512, Apple 180) : éventail de trois cartes, « R » doré | `public/icons/reflex-cards/` |
 | Balises injectées dans la page du jeu : manifest, mode application iOS (barre d'état noire opaque, pas de marge d'encoche à gérer), icône iPhone, script | `lib/reflex-cards/game.ts` → `pwaHead()` |
 | Script d'installation et de notifications : service worker du site (production), bannière « Installer » (Android/Chrome) ou pas-à-pas (iPhone), « Activer les notifications » (sujet `cartes`), `window.ReflexPWA` pour un futur bouton du jeu | `public/reflex-cards/pwa.js` (version dans `PWA_SCRIPT_VERSION`) |
