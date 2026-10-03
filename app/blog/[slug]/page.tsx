@@ -76,7 +76,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImageUrl = article.cover || `${url}/opengraph-image`;
 
   return {
-    title: seoTitle,
+    // AUDIT 03/10/2026 — au-delà de 46 caractères, le suffixe « | Cryptoreflex » ferait dépasser les 60 que Google affiche :
+    // on garde le titre tel quel, sans suffixe (titre absolu), plutôt qu'un titre tronqué au milieu.
+    title: seoTitle.length > 46 ? { absolute: seoTitle } : seoTitle,
     description: seoDescription,
     keywords: article.keywords,
     alternates: withHreflang(url),

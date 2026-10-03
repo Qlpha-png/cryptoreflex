@@ -85,7 +85,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     // Sans « — analyse Cryptoreflex » final : le template root ajoute la marque.
-    title: stripBrandSuffix(news.title),
+    // AUDIT 03/10/2026 — titre absolu (sans « | Cryptoreflex ») au-delà de 46 caractères : Google n'affiche que ~60.
+    title: stripBrandSuffix(news.title).length > 46 ? { absolute: stripBrandSuffix(news.title) } : stripBrandSuffix(news.title),
     description: news.description,
     alternates: {
       canonical: url,

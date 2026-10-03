@@ -208,11 +208,24 @@ async function fetchNewsRaw() {
   }
   // Dédoublonne par link
   const seen = new Set();
-  return all.filter((it) => {
+  const uniq = all.filter((it) => {
     if (seen.has(it.link)) return false;
     seen.add(it.link);
     return true;
   });
+  /* Audit 03/10/2026 : 117 actus sur 123 venaient de Decrypt — premier flux de la liste, ses items remplissaient toujours
+     les 3 places du jour. Tour de rôle entre sources (chaque flux garde son ordre, du plus récent au plus ancien), les
+     sources francophones d'abord : le lecteur est français. */
+  const order = ["Cryptoast", "Journal du Coin", "Decrypt", "Cointelegraph", "CoinDesk"];
+  const bySource = new Map(order.map((n) => [n, []]));
+  for (const it of uniq) {
+    if (!bySource.has(it.source)) bySource.set(it.source, []);
+    bySource.get(it.source).push(it);
+  }
+  const lists = [...bySource.values()].filter((l) => l.length);
+  const mixed = [];
+  for (let i = 0; lists.some((l) => i < l.length); i++) for (const l of lists) if (i < l.length) mixed.push(l[i]);
+  return mixed;
 }
 
 /* -------------------------------------------------------------------------- */
