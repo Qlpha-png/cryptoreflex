@@ -1,0 +1,65 @@
+---
+title: "Ethereum : payer l'IA sans révéler son identité, c'est désormais possible"
+description: "La zkAPI d'Ethereum permet de régler des services d'IA en USDC via des preuves cryptographiques, sans exposer son identité ni ses requêtes."
+date: "2026-10-03"
+category: "Technologie"
+source: "Decrypt"
+sourceUrl: "https://decrypt.co/379991/ethereum-now-pay-for-ai-without-revealing-identity"
+originalTitle: "Ethereum Now Lets You Pay for AI Without Revealing Who You Are"
+author: "La rédaction Cryptoreflex"
+image: "/news-covers/2026-10-03-ethereum-now-lets-you-pay-for-ai-without-revealing-who-you-are.jpg"
+imageCredit: "btckeychain (CC BY)"
+imageCreditUrl: "https://www.flickr.com/photos/100239928@N08/30770563673"
+keywords:
+  - "ethereum"
+  - "eth"
+  - "usdc"
+---
+
+Un nouveau protocole bâti sur Ethereum vient de franchir une étape technique significative : il est désormais possible de payer des modèles d'intelligence artificielle en cryptomonnaie, sans qu'aucune partie ne puisse relier à la fois l'identité de l'utilisateur et le contenu de ses requêtes. Une avancée qui mêle confidentialité, cryptographie et finance décentralisée — et qui mérite qu'on en comprenne les ressorts.
+
+## Qu'est-ce que la zkAPI et comment fonctionne-t-elle ?
+
+La zkAPI (pour *zero-knowledge API*) repose sur un principe cryptographique appelé « preuve à divulgation nulle de connaissance » (ou *zero-knowledge proof*, ZKP). Sans entrer dans les mathématiques, l'idée est simple : prouver qu'une information est vraie sans la révéler. Appliquer ce mécanisme aux paiements pour l'IA permet de dissocier deux données qui, ensemble, pourraient s'avérer sensibles — qui vous êtes, et ce que vous demandez à une machine.
+
+Concrètement, l'utilisateur prépaye un crédit en USDC (un stablecoin adossé au dollar américain) sur la blockchain Ethereum. Lorsqu'il interroge un modèle d'IA, une preuve cryptographique est générée : elle atteste que le paiement a bien été effectué, sans révéler l'adresse du portefeuille ni le contenu de la requête. Le fournisseur du modèle voit qu'il est payé ; il ne sait pas par qui, ni pour quoi.
+
+Cette architecture répond à une préoccupation croissante : à mesure que l'IA s'intègre dans des usages professionnels ou personnels sensibles — analyse médicale, conseil juridique, recherche confidentielle —, la question de la traçabilité des requêtes devient centrale.
+
+## Pourquoi Ethereum et pas une autre blockchain ?
+
+Ethereum n'a pas été choisi par hasard. Son écosystème concentre la majorité des outils de finance décentralisée (DeFi) et dispose d'une infrastructure mature pour les contrats intelligents (*smart contracts*), qui permettent d'automatiser des règles sans intermédiaire humain. L'USDC, émis par Circle, est l'un des stablecoins les mieux régulés du marché et bénéficie d'une liquidité importante sur le réseau.
+
+Les preuves à divulgation nulle de connaissance sont par ailleurs au cœur de la feuille de route technique d'Ethereum depuis plusieurs années, notamment via les *rollups* ZK qui permettent de traiter des transactions à grande échelle tout en préservant la confidentialité. La zkAPI s'inscrit donc dans une continuité logique de l'écosystème.
+
+Pour aller plus loin sur la structure technique d'Ethereum et de ses couches applicatives, vous pouvez consulter notre guide sur [les Layer 2 Ethereum](/blog/layer-2-ethereum-qu-est-ce-pourquoi-crucial-2026) ainsi que notre [introduction à la blockchain](/blog/qu-est-ce-que-la-blockchain-guide-ultra-simple-2026).
+
+## Ce que ça change concrètement pour un utilisateur français
+
+### Une promesse de confidentialité, mais pas d'anonymat absolu
+
+Il convient d'être précis : la zkAPI réduit la surface d'exposition des données, elle ne garantit pas un anonymat total. La transaction en USDC reste inscrite sur la blockchain Ethereum, qui est publique. Des analyses de chaîne (*on-chain analytics*) sophistiquées peuvent, dans certains cas, relier une adresse à une identité réelle — notamment si l'utilisateur a acheté ses USDC sur une plateforme qui a collecté ses documents d'identité (KYC).
+
+Autrement dit, la confidentialité offerte est celle de la requête vis-à-vis du fournisseur d'IA, pas une invisibilité totale vis-à-vis de l'ensemble du système.
+
+### Fiscalité : attention aux paiements en cryptomonnaie
+
+Pour un résident fiscal français, utiliser de l'USDC pour payer un service constitue une cession de cryptoactifs au sens de l'article 150 VH bis du Code général des impôts. Si la valeur de vos USDC a varié entre le moment de l'achat et celui du paiement — ce qui est peu probable pour un stablecoin, mais théoriquement possible —, une plus-value imposable pourrait être générée.
+
+Plus largement, tout paiement en cryptomonnaie pour un bien ou un service est une opération imposable dès lors que le total de vos cessions annuelles dépasse 305 €. Au-delà de ce seuil, les plus-values nettes sont soumises au prélèvement forfaitaire unique de 31,4 % (12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux, taux applicable aux revenus 2025 déclarés en 2026 en vertu de la LFSS 2026). Notre [guide complet sur la déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet) détaille ces mécanismes étape par étape.
+
+### MiCA et le cadre réglementaire européen
+
+Depuis le 1er juillet 2026, seuls les prestataires agréés sous le règlement MiCA (statut CASP) peuvent proposer des services sur cryptoactifs aux résidents français. La zkAPI, en tant que protocole décentralisé, ne relève pas directement de ce cadre — elle n'est pas un prestataire de services, mais un outil technique. En revanche, les plateformes qui pourraient intégrer cette technologie pour proposer des services à des clients français devront, elles, respecter les exigences MiCA. Pour comprendre ce que ce cadre implique, consultez notre article sur [MiCA phase 2 et ce qui change](/blog/mica-phase-2-juillet-2026-ce-qui-change).
+
+## L'enjeu de fond : vie privée et souveraineté numérique
+
+Au-delà de l'aspect technique, la zkAPI soulève une question de fond qui dépasse la crypto : à qui appartiennent vos données lorsque vous interrogez une IA ? Aujourd'hui, les grands fournisseurs de modèles — qu'ils soient américains ou autres — collectent, stockent et peuvent analyser vos requêtes. Dans des secteurs réglementés comme la santé ou le droit, cela pose des problèmes de conformité évidents.
+
+L'approche zero-knowledge appliquée aux paiements IA propose une réponse partielle : dissocier le flux financier du flux informationnel. Ce n'est pas une solution universelle, mais c'est une brique supplémentaire dans la construction d'une infrastructure numérique où l'utilisateur conserve davantage de maîtrise sur ses données.
+
+Pour les investisseurs qui s'intéressent à l'écosystème Ethereum au-delà du seul ETH comme actif spéculatif, ce type de développement illustre la profondeur applicative du réseau — et la diversité des cas d'usage qui continuent d'émerger, indépendamment des cycles de marché.
+
+*Source originale : [Decrypt — « Ethereum Now Lets You Pay for AI Without Revealing Who You Are »](https://decrypt.co/379991/ethereum-now-pay-for-ai-without-revealing-identity)*
+
+<Callout type="warning" title="Avertissement">Cet article est rédigé à titre informatif et pédagogique uniquement. Il ne constitue en aucun cas un conseil en investissement, une recommandation d'achat ou de vente de cryptoactifs, ni un conseil fiscal ou juridique. Les cryptomonnaies sont des actifs hautement volatils : vous pouvez perdre tout ou partie du capital investi. Consultez un professionnel agréé avant toute décision financière.</Callout>
