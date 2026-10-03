@@ -27,7 +27,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
-import { isAllowedPushEndpoint } from "@/lib/web-push";
+import { isAllowedPushEndpoint, mergeTopics } from "@/lib/web-push";
 import { createRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -49,9 +49,11 @@ interface SubscribeBody {
   endpoint?: unknown;
   keys?: { p256dh?: unknown; auth?: unknown };
   topics?: unknown;
+  /** true : AJOUTER `topics` à ceux déjà enregistrés pour cet appareil (jeu Reflex Cards) ; absent : remplacement (d'origine) */
+  merge?: unknown;
+  /** sujets à retirer (avec merge) */
+  remove?: unknown;
 }
-
-const DEFAULT_TOPICS = ["alerts", "brief"] as const;
 
 function isValidTopic(t: unknown): t is string {
   return typeof t === "string" && /^[a-z0-9_-]{1,32}$/.test(t);
@@ -101,10 +103,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const topics = Array.isArray(body.topics)
-    ? body.topics.filter(isValidTopic)
-    : Array.from(DEFAULT_TOPICS);
-  const finalTopics = topics.length > 0 ? topics : Array.from(DEFAULT_TOPICS);
+  /* sujets : remplacement par défaut (comportement d'origine, sujets par défaut si aucun) ; `merge: true` (jeu Reflex Cards,
+     public/reflex-cards/pwa.js) : ajoutés aux sujets déjà enregistrés pour cet appareil, `remove` retirés — un joueur qui
+     active les notifications du jeu garde ses alertes de prix, et inversement (lib/web-push.ts mergeTopics). */
+  const requested = Array.isArray(body.topics) ? body.topics.filter(isValidTopic) : [];
+  const merge = body.merge === true;
+  const remove = Array.isArray(body.remove) ? body.remove.filter(isValidTopic) : [];
 
   const supabase = createSupabaseServiceRoleClient();
   if (!supabase) {
@@ -118,7 +122,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // endpoint déjà à lui = simple mise à jour (toujours autorisée).
   const { data: existing, error: countError } = await supabase
     .from("user_push_subscriptions")
-    .select("endpoint")
+    .select("endpoint, topics")
     .eq("user_id", user.id);
   if (countError) {
     console.error("[push/subscribe] count failed:", countError.message);
@@ -127,8 +131,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
-  const rows = (existing ?? []) as Array<{ endpoint: string }>;
-  const alreadyMine = rows.some((r) => r.endpoint === endpoint);
+  const rows = (existing ?? []) as Array<{ endpoint: string; topics?: unknown }>;
+  const mine = rows.find((r) => r.endpoint === endpoint);
+  const alreadyMine = !!mine;
+  const finalTopics = mergeTopics(Array.isArray(mine?.topics) ? (mine.topics as string[]) : null, requested, { merge, remove });
   if (!alreadyMine && rows.length >= MAX_SUBSCRIPTIONS_PER_USER) {
     return NextResponse.json(
       {

@@ -153,9 +153,12 @@ export default function PushOptIn({
       const subRes = await fetch("/api/push/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        /* merge : les sujets déjà choisis sur cet appareil (dont « cartes », le jeu Reflex Cards) sont conservés ;
+           sans sujet connu, les sujets par défaut (alertes, brief) — cf. lib/web-push.ts mergeTopics */
         body: JSON.stringify({
           endpoint: json.endpoint,
           keys: json.keys,
+          merge: true,
         }),
       });
       if (!subRes.ok) {

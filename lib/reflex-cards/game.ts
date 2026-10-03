@@ -15,6 +15,7 @@ import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
 import { partDay, totyDay } from "./engine";
+import { pwaHead } from "./pwa";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
@@ -136,8 +137,11 @@ const WATCH=${js(d.watch)};`;
 const BODY = "</head>\n<body>";
 const SRV_BODY = '</head>\n<body class="srv srv-wait">\n<div id="srvLoad" role="status"><b>Chargement de votre partie…</b></div>';
 
-/** la page complète du jeu au jour `day` */
+/** la page complète du jeu au jour `day` : données du jour, balises PWA (manifest, icône, script d'installation) et, comptes
+ *  actifs, le voile de chargement */
 export function gameHtml(day: number, next: GameNext | null = null): string {
   const html = GAME_TEMPLATE.replace("/*__GAME_DATA__*/", () => gameDataScript(day, next));
-  return reflexAccountsMode() === "on" ? html.replace(BODY, () => SRV_BODY) : html;
+  const body = reflexAccountsMode() === "on" ? SRV_BODY : BODY;
+  /* les balises PWA juste avant </head> : le gabarit (généré ailleurs) n'est pas modifié, la page l'est à la volée */
+  return html.replace(BODY, () => pwaHead(process.env.NODE_ENV === "production") + body);
 }

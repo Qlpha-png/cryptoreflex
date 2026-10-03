@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { BRAND } from "@/lib/brand";
+import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
+import { GAME_SHORTCUT } from "@/lib/reflex-cards/pwa";
 
 /**
  * Manifest PWA — généré automatiquement par Next.js sur `/manifest.webmanifest`.
@@ -54,6 +56,9 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
     shortcuts: [
+      /* Reflex Cards (03/10/2026) : « Jouer » en tête quand le jeu est activé (le jeu a aussi son propre manifest,
+         /cartes/manifest.webmanifest, pour s'installer comme une app à part entière) */
+      ...(isReflexCardsEnabled() ? [GAME_SHORTCUT] : []),
       {
         name: "Outils crypto",
         short_name: "Outils",

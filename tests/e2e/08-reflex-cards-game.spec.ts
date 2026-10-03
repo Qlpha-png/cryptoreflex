@@ -37,4 +37,19 @@ test.describe("Reflex Cards — page du jeu", () => {
     await expect(page.locator("#world")).toBeHidden();
     expect(errors).toEqual([]);
   });
+
+  test("jeu ouvert : la page est installable (manifest dédié, métas iPhone, icônes PNG, script PWA)", async ({ page, request }) => {
+    test.skip(!LAUNCHED, "date de lancement absente");
+    await page.goto("/cartes/jouer");
+    await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/cartes/manifest.webmanifest");
+    await expect(page.locator('meta[name="apple-mobile-web-app-capable"]')).toHaveAttribute("content", "yes");
+    await expect(page.locator('script[src^="/reflex-cards/pwa.js"]')).toHaveCount(1);
+    const res = await request.get("/cartes/manifest.webmanifest");
+    expect(res.status()).toBe(200);
+    expect(res.headers()["content-type"]).toContain("application/manifest+json");
+    const m = (await res.json()) as { start_url: string; icons: { src: string }[] };
+    expect(m.start_url).toBe("/cartes/jouer");
+    for (const i of m.icons) expect((await request.get(i.src)).status()).toBe(200);
+    expect((await request.get("/reflex-cards/pwa.js")).status()).toBe(200);
+  });
 });

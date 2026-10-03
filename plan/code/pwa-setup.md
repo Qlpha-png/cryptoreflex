@@ -14,6 +14,20 @@
 | Enregistrement SW | `components/ServiceWorkerRegister.tsx` | Client component, monté dans `app/layout.tsx`. Actif uniquement en prod. |
 | Page offline | `app/offline/page.tsx` | Pré-cachée à l'install, sert de fallback en cas de navigation offline. |
 
+## 1 bis. Reflex Cards : la PWA du jeu (03/10/2026)
+
+Le jeu `/cartes/jouer` a sa propre identité d'application (icône « Reflex Cards », démarre sur le jeu) :
+
+| Rôle | Fichier |
+|---|---|
+| Manifest du jeu (`/cartes/manifest.webmanifest`) | `lib/reflex-cards/pwa.ts` + `app/cartes/manifest.webmanifest/route.ts` |
+| Icônes PNG 192 / 512 / maskable / Apple 180 | `public/icons/reflex-cards/` |
+| Balises injectées dans la page du jeu (manifest, métas iOS, script) | `lib/reflex-cards/game.ts` (`pwaHead`) |
+| Installation + notifications (sujet `cartes`) | `public/reflex-cards/pwa.js` |
+| Cron des notifications du jeu (`*/15`) | `app/api/cron/reflex-cards-push/route.ts`, règles dans `lib/reflex-cards/push.ts` |
+
+Détails et check-list : `plan/code/REFLEX-CARDS-APP-MOBILE.md`, § 11.
+
 ## 2. Check-list de mise en prod
 
 - [ ] `npm run build` passe sans erreur (le manifest est rendu à la build).

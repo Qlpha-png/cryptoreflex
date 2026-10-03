@@ -388,3 +388,52 @@ export async function sendPushToTopic(
 
   return aggregate;
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Sujets (topics) — Reflex Cards, 03/10/2026                                */
+/* -------------------------------------------------------------------------- */
+
+/** sujets d'une souscription qui n'en précise aucun (alertes de prix, brief) */
+export const DEFAULT_PUSH_TOPICS: readonly string[] = ["alerts", "brief"];
+
+/**
+ * Sujets à enregistrer après POST /api/push/subscribe :
+ *  - par défaut : REMPLACEMENT par `requested` (comportement d'origine), ou les sujets par défaut s'il n'y en a aucun ;
+ *  - `merge` : AJOUT de `requested` aux sujets déjà enregistrés pour cet appareil (`existing`, ou les sujets par défaut
+ *    pour un nouvel appareil), puis retrait de `remove` ;
+ *  - jamais vide (une souscription sans sujet ne recevrait rien) : les sujets par défaut en dernier recours.
+ * Pure : testée dans tests/lib/reflex-cards-push.test.ts.
+ */
+export function mergeTopics(
+  existing: readonly string[] | null,
+  requested: readonly string[],
+  o: { merge?: boolean; remove?: readonly string[]; defaults?: readonly string[] } = {},
+): string[] {
+  const defaults = o.defaults ?? DEFAULT_PUSH_TOPICS;
+  const base = o.merge ? [...(existing ?? defaults), ...requested] : requested.length ? [...requested] : [...defaults];
+  const rm = new Set(o.remove ?? []);
+  const out = [...new Set(base)].filter((t) => !rm.has(t));
+  return out.length ? out : [...defaults];
+}
+
+/** identifiants des utilisateurs abonnés à un sujet (service role ; pagination triée par 1 000, plafond PostgREST) */
+export async function listUserIdsForTopic(topic: string): Promise<string[]> {
+  const supabase = createSupabaseServiceRoleClient();
+  if (!supabase) return [];
+  const out = new Set<string>();
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await supabase
+      .from("user_push_subscriptions")
+      .select("id, user_id")
+      .contains("topics", JSON.stringify([topic]))
+      .order("id")
+      .range(from, from + 999);
+    if (error) {
+      console.warn("[web-push] listUserIdsForTopic:", error.message);
+      break;
+    }
+    for (const r of data ?? []) out.add(r.user_id as string);
+    if (!data || data.length < 1000) break;
+  }
+  return [...out];
+}

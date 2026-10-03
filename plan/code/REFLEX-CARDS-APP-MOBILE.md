@@ -2,8 +2,8 @@
 
 > Question de Kev (03/10/2026) : « Es-tu capable de me créer une application mobile pour mon jeu de cartes ? »
 > Réponse courte : **oui, sans réécrire le jeu**, en deux étapes. Ce document dit comment, en combien de temps,
-> à quel prix, ce qu'il faut décider et ce qui reste risqué. Statut : **proposition à valider par Kev** — rien n'est
-> encore codé.
+> à quel prix, ce qu'il faut décider et ce qui reste risqué. Statut : **étape A réalisée le 03/10/2026** (choix de Kev :
+> « fais A pour le moment, je verrai plus tard pour B ») — voir § 11 ; étape 0 (générateur) et étape B à décider.
 >
 > Méthode : lecture complète de `lib/reflex-cards/*`, `app/cartes/*`, `app/api/cartes/*`, `middleware.ts`, auth, PWA et
 > push du site ; trois audits parallèles du code (client du jeu, session/CSRF, push/installation) ; règles App Store et
@@ -150,3 +150,51 @@ Première année, option B complète : **≈ 125 USD** de comptes, plus l'évent
 - `data/reflex-cards-rules.json` : `maxs = 10`, `cycle = 900000` ms (15 min), quiz 5 Reflets, plafond 5/jour.
 - Limites de connexion : 10 tentatives / 15 min / IP (succès compris) ; 5 / e-mail ; une app derrière un NAT partagé peut toucher cette limite.
 - Compteurs du client : 50+ `color-mix()`, `@property`, `:has()`, 15 `backdrop-filter`, 27 `mix-blend-mode`, canvas de poussière en rAF → iOS ≥ 16.4, WebView ≥ 111.
+
+## 11. Étape A — réalisée (03/10/2026)
+
+Branche `claude/mobile-card-game-app-a9jp6w`. Le gabarit du jeu n'a pas été touché : tout passe par l'injection déjà en
+place dans `lib/reflex-cards/game.ts`.
+
+| Quoi | Où |
+|---|---|
+| Manifest de l'app « Reflex Cards » (nom, icône, démarre sur `/cartes/jouer`, scope `/`, orientation libre, raccourcis Booster / Album / Missions) | `lib/reflex-cards/pwa.ts`, route `app/cartes/manifest.webmanifest/route.ts` |
+| Icônes PNG (192, 512, maskable 512, Apple 180) : éventail de trois cartes, « R » doré | `public/icons/reflex-cards/` |
+| Balises injectées dans la page du jeu : manifest, mode application iOS (barre d'état noire opaque, pas de marge d'encoche à gérer), icône iPhone, script | `lib/reflex-cards/game.ts` → `pwaHead()` |
+| Script d'installation et de notifications : service worker du site (production), bannière « Installer » (Android/Chrome) ou pas-à-pas (iPhone), « Activer les notifications » (sujet `cartes`), `window.ReflexPWA` pour un futur bouton du jeu | `public/reflex-cards/pwa.js` (version dans `PWA_SCRIPT_VERSION`) |
+| Fusion des sujets push : le jeu ajoute `cartes` sans effacer les alertes de prix, et `/mon-compte` garde `cartes` | `lib/web-push.ts` (`mergeTopics`, `listUserIdsForTopic`), `app/api/push/subscribe/route.ts` (`merge`, `remove`), `components/PushOptIn.tsx` |
+| Notifications : « réserve de boosters pleine » (une fois par réserve, au plus toutes les 2 h 30, joueur actif, pas en train de jouer), « quiz du jour » (18 h, à ceux qui ne l'ont pas joué), « nouvelle sortie » (tous les abonnés) ; jamais de 22 h à 8 h | règles pures `lib/reflex-cards/push.ts`, cron `app/api/cron/reflex-cards-push/route.ts`, `vercel.json` (`*/15`) |
+| Raccourci « Jouer à Reflex Cards » dans le manifest du site | `app/manifest.ts` |
+| Tests : 25 nouveaux (injection, manifest, icônes, script, règles des notifications, fusion des sujets) + test e2e « installable » | `tests/lib/reflex-cards-pwa.test.ts`, `tests/lib/reflex-cards-push.test.ts`, `tests/e2e/08-reflex-cards-game.spec.ts` |
+
+Vérifié : `npx tsc --noEmit` propre, `npm test` 769 tests verts. (`npm run lint` n'a pas de configuration ESLint dans le
+dépôt : il demande d'en créer une, c'était déjà le cas avant.)
+
+### Mise en production — ce que Kev doit faire ou vérifier
+
+1. **Variables Vercel** (sans me les transmettre) : `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` et `CRON_SECRET`
+   présentes ; `REFLEX_CARDS_ACCOUNTS=true` (le cron ne notifie que des comptes).
+2. **Le cron** `/api/cron/reflex-cards-push` toutes les 15 minutes est déclaré dans `vercel.json` (crons Vercel, plan Pro).
+   Si les crons du site sont en réalité lancés par GitHub Actions (`.github/workflows/coolify-crons.yml`), l'y ajouter aussi,
+   en sachant qu'un cron GitHub part souvent en retard : la « réserve pleine » perd alors en précision.
+3. **Essai sur un Android** (Chrome) : ouvrir `/cartes/jouer`, attendre 20 s, « Installer » ; relancer depuis l'icône,
+   « Activer » les notifications ; vérifier dans Supabase que la ligne `user_push_subscriptions` porte `cartes` dans
+   `topics`. Puis ouvrir un booster et attendre : la notification arrive 20 à 35 minutes après (réserve pleine + pas de
+   geste depuis 20 minutes), hors 22 h-8 h.
+4. **Essai sur un iPhone** (Safari, iOS 16.4+) : Partager → Sur l'écran d'accueil ; lancer depuis l'icône (plein écran,
+   barre d'état noire) ; « Activer » les notifications. Sur iPhone, la connexion par **mot de passe** fonctionne dans
+   l'app ; un lien magique reçu par e-mail s'ouvre dans Safari, pas dans l'app (limite connue, cf. § 9).
+5. **Bouton dans le jeu** (facultatif, dans le générateur) : `window.ReflexPWA.show()` ouvre la bannière,
+   `window.ReflexPWA.enableNotifications()` lance l'abonnement — un bouton « Notifications » dans l'onglet Profil éviterait
+   d'attendre la bannière.
+6. **Étape 0 toujours à faire dans `Reflex-Cards/src/export-game.mjs`** : le plafond du jour à 90 (boucle de rechargement au
+   jour 91, vers le 19 novembre), les marges d'encoche, `100dvh`, l'historique des surcouches pour le bouton retour.
+
+### Déclencher le cron à la main
+
+```
+curl -H "Authorization: Bearer $CRON_SECRET" https://www.cryptoreflex.fr/api/cron/reflex-cards-push
+```
+
+La réponse détaille abonnés, candidats et envois (`full`, `quiz`, `release`). Premier passage : `release.init = true`
+(le calendrier des sorties est mémorisé sans rien annoncer).
