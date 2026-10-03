@@ -7,7 +7,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { GameError, dayAdd, type ColpDay, type GameState, type Patch, type PlayerRow, type CardRow, type Pity } from "./engine";
-import { planAction, planDaily, toClient, type Account, type Ctx } from "./actions";
+import { planAction, planDaily, toClient, type Account, type Ctx, type Planned } from "./actions";
 
 export interface Loaded {
   player: (PlayerRow & { player_id?: string }) | null;
@@ -233,17 +233,18 @@ export async function loadGame(db: GameDb, player: string, ctx: Ctx): Promise<Ga
   return toState(L);
 }
 
-/** une action du joueur : lecture → règles → écriture atomique ; recommence si la partie a changé entre-temps */
-export async function runAction(db: GameDb, player: string, a: string, body: Record<string, unknown>, ctx: Ctx, account: Account) {
+/** une action du joueur : lecture → règles → écriture atomique ; recommence si la partie a changé entre-temps.
+ *  plan : les règles appliquées (planAction ; la pioche chez un ami passe la sienne, avec le booster lu côté serveur) */
+export async function runAction(db: GameDb, player: string, a: string, body: Record<string, unknown>, ctx: Ctx, account: Account, plan: (s: GameState, a: string, b: Record<string, unknown>, ctx: Ctx) => Planned = planAction) {
   for (let attempt = 0; attempt < 6; attempt++) {
     /* demandes simultanées sur la même partie : petite attente au hasard pour qu'elles ne se percutent plus */
     if (attempt) await new Promise((r) => setTimeout(r, 15 * attempt + Math.random() * 40 * attempt));
     const s = await loadGame(db, player, ctx);
-    const plan = planAction(s, a, body, ctx);
-    if (!Object.keys(plan.patch).length) return { ok: true, msg: plan.msg, data: plan.data, state: toClient(s, ctx, account) };
+    const planned = plan(s, a, body, ctx);
+    if (!Object.keys(planned.patch).length) return { ok: true, msg: planned.msg, data: planned.data, state: toClient(s, ctx, account) };
     let res: ApplyResult;
     try {
-      res = await db.apply(player, s.player.version, plan.patch);
+      res = await db.apply(player, s.player.version, planned.patch);
     } catch (e) {
       if (/rc_conflict/.test(errMsg(e))) continue;
       /* booster rejoué (même demande) : on renvoie l'état sans rien recompter */
@@ -254,14 +255,14 @@ export async function runAction(db: GameDb, player: string, a: string, body: Rec
       throw dbError(e);
     }
     /* numérotées : plafond atteint dans le monde → la carte devient Holo */
-    if (a === "ouvrir" && plan.data?.items && res.numbered?.length) {
-      const items = plan.data.items as { fin: string | null; serial?: number | null }[];
+    if (a === "ouvrir" && planned.data?.items && res.numbered?.length) {
+      const items = planned.data.items as { fin: string | null; serial?: number | null }[];
       for (const n of res.numbered) { items[n.i].fin = n.fin; items[n.i].serial = n.serial; }
     }
     /* état après le geste calculé en mémoire (pas de relecture), puis mises à jour du jour éventuelles (objet mérité…) */
-    const after = applyPatch(s, plan.patch, res, ctx.now);
+    const after = applyPatch(s, planned.patch, res, ctx.now);
     const s2 = (await withDaily(db, player, after, ctx)) ?? (await loadGame(db, player, ctx));
-    return { ok: true, msg: plan.msg, data: plan.data, state: toClient(s2, ctx, account) };
+    return { ok: true, msg: planned.msg, data: planned.data, state: toClient(s2, ctx, account) };
   }
   throw new GameError("busy", "Votre partie est en cours de mise à jour ailleurs : réessayez.");
 }

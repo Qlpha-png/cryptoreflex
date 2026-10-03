@@ -232,6 +232,36 @@ export const holoDupN = (s: GameState, id: string): number => {
   const num = e.fins.ag.length + e.fins.or.length + e.fins.onyx.length;
   return Math.max(0, Math.min(e.holo, e.n - num) - (num === 0 ? 1 : 0));
 };
+/** échanges entre amis (Kev 03/10) : même finition des deux côtés — ordinaire, Holo, Argent, Or, Onyx (le numéro suit la carte) */
+export type TradeFin = "ord" | "holo" | "ag" | "or" | "onyx";
+export const TRADE_FINS: readonly TradeFin[] = ["ord", "holo", "ag", "or", "onyx"];
+const FIN_RANK = { ag: 1, or: 2, onyx: 3 } as const;
+/** cet exemplaire peut-il partir ? L'album garde toujours le plus bel exemplaire (numérotée de la plus belle finition,
+ *  sinon Holo, sinon ordinaire). Même règle, mot pour mot, que rc_copy_ok (supabase/migrations/20261003_reflex_cards_b4_social.sql). */
+export function copyOk(e: CardRow | undefined, fin: TradeFin, serial: number | null): boolean {
+  if (!e) return false;
+  const num = e.fins.ag.length + e.fins.or.length + e.fins.onyx.length;
+  if (fin === "ord") return e.n - e.holo - num - (num === 0 && e.holo === 0 ? 1 : 0) >= 1;
+  if (fin === "holo") return Math.min(e.holo, e.n - num) - (num === 0 ? 1 : 0) >= 1;
+  if (serial == null || !e.fins[fin].includes(serial)) return false;
+  const top = e.fins.onyx.length ? 3 : e.fins.or.length ? 2 : 1;
+  return FIN_RANK[fin] < top || e.fins[fin].length >= 2;
+}
+/** les exemplaires qui peuvent partir : ordinaires et Holo en plus (avec leur nombre), numérotées une par une */
+export function tradeables(cards: Map<string, CardRow>, day: number): { id: string; fin: TradeFin; serial: number | null; n: number }[] {
+  const out: { id: string; fin: TradeFin; serial: number | null; n: number }[] = [];
+  for (const [id, e] of cards) {
+    const c = CARD.get(id);
+    if (!c || c.fossil || !isOut(c, day)) continue;
+    const num = e.fins.ag.length + e.fins.or.length + e.fins.onyx.length;
+    const ord = e.n - e.holo - num - (num === 0 && e.holo === 0 ? 1 : 0);
+    if (ord >= 1) out.push({ id, fin: "ord", serial: null, n: ord });
+    const holo = Math.min(e.holo, e.n - num) - (num === 0 ? 1 : 0);
+    if (holo >= 1) out.push({ id, fin: "holo", serial: null, n: holo });
+    for (const f of ["ag", "or", "onyx"] as const) for (const sn of e.fins[f]) if (copyOk(e, f, sn)) out.push({ id, fin: f, serial: sn, n: 1 });
+  }
+  return out;
+}
 
 /* ---------- réserve de boosters (1 toutes les 15 min, 10 au plus) ---------- */
 export function refill(p: PlayerRow, now: number): { stock: number; stockAt: number } {
@@ -393,8 +423,10 @@ export const onSale = (id: string, day: number) => {
   const x = COS.get(id);
   return !!x && (x.src === "etal" || (RULES.eph[String(day)] ?? []).includes(id) || (RULES.eph[String(day - 1)] ?? []).includes(id));
 };
+/** services du Comptoir : ceux des règles + les deux services entre amis (prix affichés dans le jeu, onglet Probabilités) */
+export const SVC_ALL: { id: string; p: number; per: "day" | "week" }[] = [...RULES.svc, { id: "xtr", p: 100, per: "day" }, { id: "xpk", p: 80, per: "day" }];
 export const svcKey = (id: string, today: string) => {
-  const sv = RULES.svc.find((x) => x.id === id);
+  const sv = SVC_ALL.find((x) => x.id === id);
   return sv ? `${id}|${sv.per === "day" ? today : weekStart(today)}` : null;
 };
 /** carte au hasard (récompense de défi) : de préférence une carte sortie qui manque */

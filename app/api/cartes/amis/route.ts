@@ -16,6 +16,8 @@ import { supabaseGameDb } from "@/lib/reflex-cards/store";
 import { FRIEND_CODE_RE, FRIEND_MSG, FriendsNotReady, befriendByInvite, friendProfile, friendsView, inviteInfo, inviteToken, inviteVersion, supabaseFriendsDb, type FriendsDb } from "@/lib/reflex-cards/friends";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { supabaseSocialDb } from "@/lib/reflex-cards/social";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 
 export const runtime = "nodejs";
@@ -35,13 +37,13 @@ async function view(fdb: FriendsDb, player: string) {
   return { ...v, invite: inviteToken(v.code, inviteVersion(p?.perso)) };
 }
 
-async function who(req: NextRequest): Promise<{ w: Who; fdb: FriendsDb }> {
+async function who(req: NextRequest): Promise<{ w: Who; fdb: FriendsDb; sb: SupabaseClient }> {
   await applyReleases(); // calendrier effectif des sorties (aperçus de collections)
   const sb = createSupabaseServiceRoleClient();
   if (!sb) throw new SessionError(503, "Service momentanément indisponible.");
   const w = await resolvePlayer(req, { create: false, createAccount: true, today: gameCtx().today, db: supabaseGameDb(sb) });
   if (w.account.guest || !w.player) throw new SessionError(401, "Connectez-vous pour ajouter des amis.", "login");
-  return { w, fdb: supabaseFriendsDb(sb) };
+  return { w, fdb: supabaseFriendsDb(sb), sb };
 }
 
 export async function GET(req: NextRequest) {
@@ -102,6 +104,11 @@ export async function POST(req: NextRequest) {
       : a === "repondre" ? await r.fdb.answer(w.player!, code, body.ok === true)
       : a === "retirer" ? await r.fdb.remove(w.player!, code)
       : await befriendByInvite(r.fdb, w.player!, code);
+    /* lien d'invitation accepté par un joueur qui n'a encore ouvert aucun booster : c'est un filleul (lot 3, parrainage) */
+    if (a === "invitation" && res === "accepted") {
+      const host = await r.fdb.host(code);
+      if (host) await supabaseSocialDb(r.sb).referralNew(w.player!, host.pid).catch(() => {});
+    }
     const m = FRIEND_MSG[res] ?? { ok: false, msg: "Réessayez dans un instant." };
     const list = await view(r.fdb, w.player!);
     let msg = m.msg;

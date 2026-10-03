@@ -7,13 +7,15 @@ import { PGlite } from "@electric-sql/pglite";
 import { fromRcLoad, type GameDb, type Loaded } from "@/lib/reflex-cards/store";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export async function makeGameDb(o: { b3?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
+export async function makeGameDb(o: { b3?: boolean; b4?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
   const pg = new PGlite();
   await pg.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users (id uuid primary key);`);
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b1.sql", "utf8"));
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b2_amis.sql", "utf8"));
   /* B3 (rc_load + garde holo) par défaut ; { b3: false } = la base de production d'avant la migration */
   if (o.b3 !== false) await pg.exec(readFileSync("supabase/migrations/20261003_reflex_cards_b3_perf.sql", "utf8"));
+  /* B4 (social entre amis) par défaut avec B3 ; { b4: false } = la base d'avant cette migration */
+  if (o.b3 !== false && o.b4 !== false) await pg.exec(readFileSync("supabase/migrations/20261003_reflex_cards_b4_social.sql", "utf8"));
   const q = async (s: string, p: unknown[]) => (await pg.query(s, p)).rows as any[];
   const iso = (r: any) => ({ ...r, ...(r.first_at ? { first_at: new Date(r.first_at).toISOString() } : {}), ...(r.at ? { at: new Date(r.at).toISOString() } : {}), ...(r.day ? { day: new Date(r.day).toISOString().slice(0, 10) } : {}) });
   /** l'ancienne lecture (7 requêtes), gardée pour comparer avec rc_load */
@@ -106,8 +108,9 @@ export function fakeSupabase(pg: PGlite): any {
       const run = async () => {
         try {
           const keys = Object.keys(args);
-          const call = `public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${k === "p_patch" ? "::jsonb" : ""}`).join(", ")})`;
-          const params = keys.map((k) => (k === "p_patch" ? JSON.stringify(args[k]) : args[k]));
+          const js = (k: string) => k === "p_patch" || k === "p_data";
+          const call = `public.${id(fn)}(${keys.map((k, i) => `${id(k)} => $${i + 1}${js(k) ? "::jsonb" : ""}`).join(", ")})`;
+          const params = keys.map((k) => (js(k) ? JSON.stringify(args[k]) : args[k]));
           /* fonctions qui renvoient une table : comme PostgREST, un tableau d'objets (tri et limit/offset compris) */
           if (fn === "rc_friend_list" || fn === "rc_friend_cards") {
             const tail = `${order.length ? " order by " + order.map(id).join(", ") : ""}${range ? ` limit ${range[1] - range[0] + 1} offset ${range[0]}` : ""}`;

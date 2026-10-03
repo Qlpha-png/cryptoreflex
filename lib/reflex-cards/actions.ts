@@ -5,7 +5,7 @@
 import "server-only";
 import {
   CARD, RULES, GameError, activeMissions, cryptoRnd, colpOffers, craftDay, dayTables, earnedNow, giveNew, inClear, isOut, onSale,
-  ownsCos, planOpen, questProg, refill, spendDups, svcKey, tradeN, titleOk, themeProg, weekDone, weekStart, cosItem,
+  ownsCos, planOpen, questProg, refill, spendDups, svcKey, SVC_ALL, tradeN, titleOk, themeProg, weekDone, weekStart, cosItem,
   type GameState, type Patch, type Rar,
 } from "./engine";
 import { QJ_LEN, qjReward, quizDay } from "./quiz-day";
@@ -164,10 +164,12 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       return { patch: { player: { perso: { ...s.player.perso, [it.ty]: id } } } };
     }
     case "service": {
-      const sv = RULES.svc.find((x) => x.id === b.id), key = sv && svcKey(sv.id, ctx.today);
+      const sv = SVC_ALL.find((x) => x.id === b.id), key = sv && svcKey(sv.id, ctx.today);
       if (!sv || !key) throw new GameError("bad", "Service inconnu.");
       if (s.claims.has("s|" + key)) throw new GameError("done", sv.per === "day" ? "Déjà pris aujourd'hui." : "Déjà pris cette semaine.");
       reflets(s, sv.p);
+      /* entre amis : un 4e échange (xtr) ou une 2e pioche (xpk) aujourd'hui — le jalon suffit, pas de booster */
+      if (sv.id === "xtr" || sv.id === "xpk") return { patch: { player: { reflets: -sv.p }, claims: ["s|" + key] }, msg: sv.id === "xtr" ? "Un échange de plus aujourd'hui" : "Une pioche de plus aujourd'hui" };
       const player: Record<string, unknown> = { reflets: -sv.p, ...plusOne(s, ctx) };
       if (sv.id === "thm") {
         const fam = String(b.fam ?? "");

@@ -7,7 +7,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isReflexCardsEnabled, reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { NO_STORE, SessionError, errorJson, gameCtx, resolvePlayer, type Who } from "@/lib/reflex-cards/session";
-import { runAction } from "@/lib/reflex-cards/store";
+import { loadGame, runAction } from "@/lib/reflex-cards/store";
+import { toClient } from "@/lib/reflex-cards/actions";
+import { afterOpen, supabaseSocialDb } from "@/lib/reflex-cards/social";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { createRateLimiter } from "@/lib/rate-limit";
 
@@ -48,7 +51,15 @@ export async function POST(req: NextRequest) {
     if (!who.player) throw new SessionError(503, "Service momentanément indisponible.");
     const rl = await perPlayer(who.player);
     if (!rl.ok) throw new SessionError(429, "Doucement : trop de gestes en une minute.");
-    const out = await runAction(who.db, who.player, a, body, ctx, who.account);
+    /* services entre amis (4e échange, 2e pioche) : comptes seulement, un invité n'a pas d'amis */
+    if (a === "service" && (body.id === "xtr" || body.id === "xpk") && who.account.guest) throw new SessionError(401, "Connectez-vous pour échanger avec vos amis.", "login");
+    let out: Record<string, unknown> = await runAction(who.db, who.player, a, body, ctx, who.account);
+    /* booster d'un compte : belle carte annoncée aux amis ; 1er booster d'un filleul → 1 booster chacun (lot 3) */
+    if (a === "ouvrir" && !who.account.guest && !out.replay) {
+      const sb = createSupabaseServiceRoleClient();
+      const ref = sb ? await afterOpen(supabaseSocialDb(sb), who.player, out as Parameters<typeof afterOpen>[2]) : null;
+      if (ref) out = { ...out, referral: ref, state: toClient(await loadGame(who.db, who.player, ctx), ctx, who.account) };
+    }
     return who.finish(NextResponse.json(out, { headers: NO_STORE }));
   } catch (e) {
     /* les cookies (partie invitée tout juste créée, session rafraîchie) partent aussi avec un refus */
