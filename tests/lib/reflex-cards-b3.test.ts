@@ -161,9 +161,12 @@ describe("Reflex Cards — B3 : garde « holo ≤ exemplaires non numérotés »
     expect(await row(pg, P)).toMatchObject({ n: 2, holo: 1 });
     const mem = applyPatch(s, patch, res, ctx.now);
     expect(mem.cards.get(ID)).toMatchObject({ n: 2, holo: 1, fins: { ag: [7], or: [], onyx: [] } });
-    /* l'exemplaire de l'album et la numérotée restent : on ne peut plus rien rendre */
+    /* B4 : la numérotée EST l'exemplaire de l'album (le plus beau) : la dernière Holo peut encore partir, puis plus rien */
     const s2 = await loadGame(db, P, ctx);
-    await expect(db.apply(P, s2.player.version, { cards: [{ id: ID, dn: -1 }] })).rejects.toThrow(/rc_no_dup/);
+    await db.apply(P, s2.player.version, { cards: [{ id: ID, dn: -1 }] });
+    expect(await row(pg, P)).toMatchObject({ n: 1, holo: 0, fins: { ag: [7] } });
+    const s3 = await loadGame(db, P, ctx);
+    await expect(db.apply(P, s3.player.version, { cards: [{ id: ID, dn: -1 }] })).rejects.toThrow(/rc_no_dup/);
   });
   it("rendre seulement l'ordinaire : les Holo ne bougent pas", async () => {
     const { pg, db, P } = await setup(true);

@@ -22,6 +22,7 @@ vi.mock("@/lib/supabase/server", () => ({ createSupabaseServiceRoleClient: () =>
 const amis = await import("@/app/api/cartes/amis/route");
 const action = await import("@/app/api/cartes/action/route");
 const social = await import("@/app/api/cartes/social/route");
+const etat = await import("@/app/api/cartes/etat/route");
 const { CARD, RULES, isOut, copyOk, tradeables } = await import("@/lib/reflex-cards/engine");
 const { notablePull, planPick } = await import("@/lib/reflex-cards/social");
 
@@ -35,6 +36,7 @@ const mk = (path: string, o: { method?: string; body?: unknown } = {}) => {
 const USERS: Record<string, string> = {
   A: "cccccccc-0000-4000-8000-0000000000a1", B: "cccccccc-0000-4000-8000-0000000000b2", C: "cccccccc-0000-4000-8000-0000000000c3",
   D: "cccccccc-0000-4000-8000-0000000000d4", E: "cccccccc-0000-4000-8000-0000000000e5",
+  F: "cccccccc-0000-4000-8000-0000000000f6", G: "cccccccc-0000-4000-8000-0000000000a7",
 };
 const as = (k: string) => { auth.user = { id: USERS[k], email: `${k.toLowerCase()}@exemple.test`, email_confirmed_at: "2026-10-01T00:00:00Z", is_anonymous: false }; };
 const getAmis = async () => (await amis.GET(mk("/api/cartes/amis"))).json();
@@ -248,6 +250,24 @@ describe("échanges entre amis", () => {
   });
 });
 
+describe("Colporteur : une numérotée est l'exemplaire de l'album (garde de rc_apply alignée)", () => {
+  it("1 ordinaire + 1 Argent : l'ordinaire part au Colporteur, l'Argent reste", async () => {
+    as("C");
+    const st = await (await etat.GET(mk("/api/cartes/etat?jour=2"))).json();
+    const offers = st.state.pstats.colpD.offers as { r: string; id: string }[];
+    const i = offers.findIndex((o) => ["C", "PC", "R"].includes(o.r));
+    expect(i).toBeGreaterThanOrEqual(0);
+    const give = byR(offers[i].r).find((id) => id !== offers[i].id && id !== offers[0].id && id !== offers[1]?.id && id !== offers[2]?.id)!;
+    await setCard("C", give, 2, 0, { ag: [5], or: [], onyx: [] });
+    const r = await act({ a: "colporteur", i, give });
+    expect(r.status, r.j.error).toBe(200);
+    expect(await row("C", give)).toMatchObject({ n: 1, holo: 0, fins: { ag: [5] } });
+    /* plus rien à donner : l'Argent (le plus bel exemplaire) ne part jamais */
+    const j = offers.findIndex((o, k) => k !== i && o.r === offers[i].r);
+    if (j >= 0) expect((await act({ a: "colporteur", i: j, give })).status).toBe(422);
+  });
+});
+
 describe("cadeau du jour", () => {
   it("un doublon ordinaire par jour ; jamais l'exemplaire de l'album ; seulement à un ami", async () => {
     await setCard("A", C5, 1); await setCard("A", C4, 3, 0);
@@ -332,15 +352,26 @@ describe("parrainage", () => {
     await act({ a: "ouvrir", req: "55555555-5555-4555-8555-555555555555" });
     expect((await postAmis({ a: "invitation", tok })).status).toBe(200);
     expect((await pg.query("select count(*)::int as n from public.rc_referrals where referee=$1", [await pid("E")])).rows[0]).toEqual({ n: 0 });
-    /* plafond : 3 parrainages déjà payés à A cette semaine (D + 2 simulés) → le suivant ne paie que le filleul */
+    /* plafond : 3 parrainages déjà payés à A cette semaine (D + 2 simulés dans SON registre) → le suivant ne paie que le filleul */
     const pa = await pid("A");
-    await pg.query("delete from public.rc_referrals where referee=$1", [await pid("E")]);
-    for (const k of ["B", "C"]) await pg.query("insert into public.rc_referrals (referee, referrer, rewarded_at, referrer_paid) values ($1,$2,now(),true) on conflict (referee) do update set rewarded_at=now(), referrer_paid=true, referrer=excluded.referrer", [await pid(k), pa]);
+    expect((await pg.query("select count(*)::int as n from public.rc_claims where player_id=$1 and key like 'rf|%'", [pa])).rows[0]).toEqual({ n: 1 });
+    for (const x of ["x1", "x2"]) await pg.query("insert into public.rc_claims (player_id, key) values ($1, $2)", [pa, "rf|20261003000000000000|" + x]);
     await pg.query("insert into public.rc_referrals (referee, referrer) values ($1,$2)", [await pid("E"), pa]);
     const r = await pg.query<{ r: unknown }>("select public.rc_referral_reward($1, 10, 900000) as r", [await pid("E")]);
     expect(r.rows[0].r).toEqual({ referee: true, referrer: false });
     as("A");
     expect((await getSoc()).j.referral).toEqual({ week: 3, max: 3 });
+    /* supprimer le compte d'un filleul ne remet PAS le plafond à zéro (le registre est celui du parrain) */
+    await pg.query("delete from auth.users where id=$1", [USERS.D]);
+    expect((await pg.query<{ n: number }>("select count(*)::int as n from public.rc_referrals where referrer=$1", [pa])).rows[0].n).toBeLessThan(2);
+    expect((await getSoc()).j.referral).toEqual({ week: 3, max: 3 });
+  });
+  it("pas de parrainage croisé : un joueur qui a déjà parrainé quelqu'un ne peut pas devenir le filleul de son filleul", async () => {
+    as("F"); await getAmis(); as("G"); await getAmis();
+    const pf = await pid("F"), pgid = await pid("G");
+    expect((await pg.query<{ r: string }>("select public.rc_referral_new($1,$2) as r", [pgid, pf])).rows[0].r).toBe("ok");
+    expect((await pg.query<{ r: string }>("select public.rc_referral_new($1,$2) as r", [pf, pgid])).rows[0].r).toBe("already");
+    expect((await pg.query("select count(*)::int as n from public.rc_referrals where referee=$1", [pf])).rows[0]).toEqual({ n: 0 });
   });
 });
 

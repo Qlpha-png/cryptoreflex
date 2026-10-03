@@ -10,6 +10,11 @@ import { fromRcLoad, type GameDb, type Loaded } from "@/lib/reflex-cards/store";
 export async function makeGameDb(o: { b3?: boolean; b4?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
   const pg = new PGlite();
   await pg.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users (id uuid primary key);`);
+  /* comme Supabase : toute nouvelle table, fonction ou séquence du schéma public est d'office accessible à anon, authenticated et
+     service_role (privilèges par défaut) — les migrations doivent retirer explicitement ce qui ne doit pas l'être (relecture du 03/10) */
+  await pg.exec(`alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
+    alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
+    alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;`);
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b1.sql", "utf8"));
   await pg.exec(readFileSync("supabase/migrations/20261002_reflex_cards_b2_amis.sql", "utf8"));
   /* B3 (rc_load + garde holo) par défaut ; { b3: false } = la base de production d'avant la migration */

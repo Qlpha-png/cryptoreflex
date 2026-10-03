@@ -14,6 +14,7 @@
 --     1 booster ; le parrain au plus 3 fois par 7 jours ;
 --   - fil d'activité : belles cartes tirées, échanges, cadeaux, pioches, parrainages des amis (3 derniers jours) ;
 --     réactions d'un geste (4 au choix), aucune discussion libre.
+-- Corrige aussi rc_apply (B3) : une numérotée compte comme l'exemplaire de l'album (Colporteur et défis sur 1 ordinaire + 1 numérotée).
 -- Toute fonction qui modifie la partie d'un joueur fait monter sa version : un geste calculé sur l'ancien état est refusé
 -- par rc_apply (rc_conflict) et le serveur recommence sur l'état à jour.
 -- AUCUN accès direct depuis le navigateur : RLS activé SANS politique, droits retirés à anon et authenticated ;
@@ -259,7 +260,8 @@ declare
 begin
   v_b := public.rc_friend_of(p_a, p_code);
   if v_b is null then return 'not_friend'; end if;
-  perform 1 from public.rc_players where player_id = p_a for update;   -- deux propositions simultanées : l'une après l'autre
+  /* les deux joueurs verrouillés (ordre fixe) AVANT de compter : deux gestes simultanés ne dépassent jamais les plafonds */
+  perform 1 from public.rc_players where player_id in (p_a, v_b) order by player_id for update;
   perform public.rc_trades_expire(p_a);
   perform public.rc_trades_expire(v_b);
   if public.rc_trades_today(p_a, p_day) >= p_max then return 'limit_day'; end if;
@@ -303,9 +305,10 @@ begin
     update public.rc_trades set status = 'failed', done_at = now() where id = p_id;
     return 'gone';
   end if;
-  if public.rc_trades_today(p_me, p_day) >= p_max then return 'limit_day'; end if;
-  /* les deux parties verrouillées dans un ordre fixe (pas d'interblocage entre deux échanges croisés) */
+  /* les deux parties verrouillées dans un ordre fixe (pas d'interblocage entre deux échanges croisés), PUIS le plafond du jour :
+     deux acceptations simultanées ne dépassent jamais le plafond */
   perform 1 from public.rc_players where player_id in (t.a, t.b) order by player_id for update;
+  if public.rc_trades_today(p_me, p_day) >= p_max then return 'limit_day'; end if;
   if not public.rc_copy_ok(t.a, t.give_id, t.fin, t.give_serial) then
     update public.rc_trades set status = 'failed', done_at = now() where id = p_id;
     return 'no_give';
@@ -439,6 +442,8 @@ set search_path = public
 as $$
 begin
   if p_referee = p_referrer then return 'already'; end if;
+  /* un filleul arrive : il n'a encore parrainé personne (sinon deux joueurs se parraineraient l'un l'autre, 4 boosters au lieu de 2) */
+  if exists (select 1 from public.rc_referrals where referrer = p_referee) then return 'already'; end if;
   if not exists (select 1 from public.rc_players where player_id = p_referee and opened = 0 and owner is not null) then return 'not_new'; end if;
   insert into public.rc_referrals (referee, referrer) values (p_referee, p_referrer) on conflict (referee) do nothing;
   return case when found then 'ok' else 'already' end;
@@ -461,11 +466,17 @@ begin
   select * into r from public.rc_referrals where referee = p_referee and rewarded_at is null for update;
   if not found then return null; end if;
   if not exists (select 1 from public.rc_players where player_id = p_referee and opened >= 1) then return null; end if;
-  select count(*) into n from public.rc_referrals where referrer = r.referrer and referrer_paid and rewarded_at > now() - interval '7 days';
-  v_paid := n < 3;
+  /* parrain et filleul verrouillés AVANT de compter. Les parrainages payés sont comptés dans le registre du PARRAIN (jalons « rf| »
+     dans rc_claims) : supprimer le compte d'un filleul ne remet pas le plafond à zéro */
   perform 1 from public.rc_players where player_id in (r.referee, r.referrer) order by player_id for update;
+  select count(*) into n from public.rc_claims where player_id = r.referrer and key like 'rf|%' and at > now() - interval '7 days';
+  v_paid := n < 3;
   perform public.rc_plus_one(r.referee, p_max, p_cycle_ms);
-  if v_paid then perform public.rc_plus_one(r.referrer, p_max, p_cycle_ms); end if;
+  if v_paid then
+    perform public.rc_plus_one(r.referrer, p_max, p_cycle_ms);
+    insert into public.rc_claims (player_id, key)
+    values (r.referrer, 'rf|' || to_char(clock_timestamp() at time zone 'UTC', 'YYYYMMDDHH24MISSUS') || '|' || left(md5(r.referee::text), 12));
+  end if;
   update public.rc_referrals set rewarded_at = now(), referrer_paid = v_paid where referee = p_referee;
   perform public.rc_event_add(r.referee, 'referral', r.referrer, null, jsonb_build_object('paid', v_paid));
   return jsonb_build_object('referee', true, 'referrer', v_paid);
@@ -480,7 +491,7 @@ stable
 security definer
 set search_path = public
 as $$
-  select count(*)::int from public.rc_referrals where referrer = p_me and referrer_paid and rewarded_at > now() - interval '7 days'
+  select count(*)::int from public.rc_claims where player_id = p_me and key like 'rf|%' and at > now() - interval '7 days'
 $$;
 
 /* fil d'activité : mes événements, ceux de mes amis acceptés et ceux qui me concernent, 3 derniers jours, 40 au plus.
@@ -542,13 +553,139 @@ begin
 end;
 $$;
 
+/* ---------- rc_apply (B3) : garde des doublons alignée sur « l'album garde le plus bel exemplaire » ----------
+   Avant : rc_apply gardait toujours un exemplaire NON numéroté en plus des numérotées. Une carte en 1 ordinaire + 1 Argent
+   était donc proposée au Colporteur ou aux défis (tradeN = 1), puis refusée à chaque essai (« Ce doublon n'est plus disponible »).
+   Tout le reste de la fonction est identique à B3. */
+create or replace function public.rc_apply(p_player uuid, p_version int, p_patch jsonb)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_version int;
+  pl jsonb := coalesce(p_patch -> 'player', '{}'::jsonb);
+  c jsonb;
+  k text;
+  v_serial int;
+  v_cap int;
+  v_numbered jsonb := '[]'::jsonb;
+  v_day date;
+begin
+  update public.rc_players
+     set version = version + 1, updated_at = now()
+   where player_id = p_player and version = p_version
+  returning version into v_version;
+  if not found then
+    raise exception 'rc_conflict' using errcode = 'P0001';
+  end if;
+
+  update public.rc_players set
+    reflets  = reflets + coalesce((pl ->> 'reflets')::int, 0),
+    eclats   = eclats + coalesce((pl ->> 'eclats')::int, 0),
+    opened   = opened + coalesce((pl ->> 'opened')::int, 0),
+    stock    = coalesce((pl ->> 'stock')::int, stock),
+    stock_at = coalesce((pl ->> 'stock_at')::timestamptz, stock_at),
+    pity     = coalesce(pl -> 'pity', pity),
+    theme    = case when pl ? 'theme' then pl ->> 'theme' else theme end,
+    perso    = coalesce(pl -> 'perso', perso),
+    recent   = coalesce(pl -> 'recent', recent),
+    days     = coalesce(pl -> 'days', days),
+    pseudo   = coalesce(pl ->> 'pseudo', pseudo)
+  where player_id = p_player;
+
+  for c in select * from jsonb_array_elements(coalesce(p_patch -> 'cards', '[]'::jsonb)) loop
+    if (c ->> 'dn')::int > 0 then
+      insert into public.rc_cards (player_id, card_id, n, holo)
+      values (p_player, c ->> 'id', (c ->> 'dn')::int, coalesce((c ->> 'dholo')::int, 0))
+      on conflict (player_id, card_id)
+      do update set n = public.rc_cards.n + excluded.n, holo = public.rc_cards.holo + excluded.holo;
+    elsif (c ->> 'dn')::int < 0 then
+      /* on ne rend que des doublons : les numérotées restent toujours, et au moins un exemplaire. Une numérotée EST l'exemplaire
+         de l'album (le plus beau) : ses exemplaires ordinaires peuvent tous partir (même règle que tradeN / copyOk, B4) ;
+         holo ≤ exemplaires non numérotés : les exemplaires ordinaires partent d'abord, puis les Holo */
+      update public.rc_cards
+         set n = n + (c ->> 'dn')::int,
+             holo = least(holo, n + (c ->> 'dn')::int - jsonb_array_length(fins -> 'ag') - jsonb_array_length(fins -> 'or') - jsonb_array_length(fins -> 'onyx'))
+       where player_id = p_player and card_id = c ->> 'id'
+         and n + (c ->> 'dn')::int >= greatest(1, jsonb_array_length(fins -> 'ag') + jsonb_array_length(fins -> 'or') + jsonb_array_length(fins -> 'onyx'));
+      if not found then
+        raise exception 'rc_no_dup' using errcode = 'P0001';
+      end if;
+    end if;
+    if c ? 'fin' then
+      v_cap := case c ->> 'fin' when 'ag' then 99 when 'or' then 25 when 'onyx' then 1 end;
+      insert into public.rc_numbered (card_id, fin) values (c ->> 'id', c ->> 'fin') on conflict do nothing;
+      update public.rc_numbered set issued = issued + 1
+       where card_id = c ->> 'id' and fin = c ->> 'fin' and issued < v_cap
+      returning issued into v_serial;
+      if found then
+        update public.rc_cards set fins = jsonb_set(fins, array[c ->> 'fin'], (fins -> (c ->> 'fin')) || to_jsonb(v_serial))
+         where player_id = p_player and card_id = c ->> 'id';
+        v_numbered := v_numbered || jsonb_build_object('i', c -> 'i', 'fin', c ->> 'fin', 'serial', v_serial);
+      else
+        /* plafond atteint : le tirage devient Holo (règle publiée) */
+        update public.rc_cards set holo = holo + 1 where player_id = p_player and card_id = c ->> 'id';
+        v_numbered := v_numbered || jsonb_build_object('i', c -> 'i', 'fin', 'holo', 'serial', null);
+      end if;
+    end if;
+  end loop;
+
+  for c in select * from jsonb_array_elements(coalesce(p_patch -> 'eds', '[]'::jsonb)) loop
+    insert into public.rc_editions (player_id, ed, card_id, n)
+    values (p_player, c ->> 'ed', c ->> 'id', (c ->> 'dn')::int)
+    on conflict (player_id, ed, card_id) do update set n = public.rc_editions.n + excluded.n;
+  end loop;
+
+  for c in select * from jsonb_array_elements(coalesce(p_patch -> 'cos', '[]'::jsonb)) loop
+    insert into public.rc_cosmetics (player_id, item_id, no) values (p_player, c ->> 'id', (c ->> 'no')::int);
+  end loop;
+
+  for k in select * from jsonb_array_elements_text(coalesce(p_patch -> 'claims', '[]'::jsonb)) loop
+    insert into public.rc_claims (player_id, key) values (p_player, k);
+  end loop;
+
+  if p_patch ? 'day' then
+    v_day := (p_patch -> 'day' ->> 'day')::date;
+    insert into public.rc_days (player_id, day) values (p_player, v_day) on conflict do nothing;
+    for k in select * from jsonb_object_keys(coalesce(p_patch -> 'day' -> 'inc', '{}'::jsonb)) loop
+      update public.rc_days
+         set ev = jsonb_set(ev, array[k], to_jsonb(coalesce((ev ->> k)::int, 0) + (p_patch -> 'day' -> 'inc' ->> k)::int))
+       where player_id = p_player and day = v_day;
+    end loop;
+    if p_patch -> 'day' ? 'colp' then
+      update public.rc_days set colp = p_patch -> 'day' -> 'colp' where player_id = p_player and day = v_day;
+    end if;
+  end if;
+
+  if p_patch ? 'quiz' then
+    insert into public.rc_quiz (player_id, card_id, ok, day)
+    values (p_player, p_patch -> 'quiz' ->> 'id', (p_patch -> 'quiz' ->> 'ok')::boolean, (p_patch -> 'quiz' ->> 'day')::date)
+    on conflict (player_id, card_id) do update set ok = excluded.ok, day = excluded.day
+    where public.rc_quiz.ok = false;
+  end if;
+
+  if p_patch ? 'draw' then
+    insert into public.rc_draws (player_id, req, kind, day, cards)
+    values (p_player, (p_patch -> 'draw' ->> 'req')::uuid, p_patch -> 'draw' ->> 'kind', (p_patch -> 'draw' ->> 'day')::int, p_patch -> 'draw' -> 'cards');
+  end if;
+
+  /* holo_cap : la garde « holo ≤ exemplaires non numérotés » est appliquée (le serveur applique la même règle en mémoire) */
+  return jsonb_build_object('version', v_version, 'numbered', v_numbered, 'holo_cap', true);
+end;
+$$;
+
+revoke all on function public.rc_apply(uuid, int, jsonb) from public, anon, authenticated;
+grant execute on function public.rc_apply(uuid, int, jsonb) to service_role;
+
 /* ---------- droits : service_role seulement ; les outils internes ne sont appelables par personne d'autre ---------- */
-revoke all on function public.rc_friend_of(uuid, text) from public, anon, authenticated;
-revoke all on function public.rc_copy_ok(uuid, text, text, int) from public, anon, authenticated;
-revoke all on function public.rc_day_inc(uuid, date, text, int) from public, anon, authenticated;
-revoke all on function public.rc_move_copy(uuid, uuid, text, text, int) from public, anon, authenticated;
-revoke all on function public.rc_plus_one(uuid, int, bigint) from public, anon, authenticated;
-revoke all on function public.rc_trades_expire(uuid) from public, anon, authenticated;
+revoke all on function public.rc_friend_of(uuid, text) from public, anon, authenticated, service_role;
+revoke all on function public.rc_copy_ok(uuid, text, text, int) from public, anon, authenticated, service_role;
+revoke all on function public.rc_day_inc(uuid, date, text, int) from public, anon, authenticated, service_role;
+revoke all on function public.rc_move_copy(uuid, uuid, text, text, int) from public, anon, authenticated, service_role;
+revoke all on function public.rc_plus_one(uuid, int, bigint) from public, anon, authenticated, service_role;
+revoke all on function public.rc_trades_expire(uuid) from public, anon, authenticated, service_role;
 revoke all on function public.rc_trades_today(uuid, date) from public, anon, authenticated;
 revoke all on function public.rc_event_add(uuid, text, uuid, text, jsonb) from public, anon, authenticated;
 revoke all on function public.rc_event_friend(uuid, text, text, text, jsonb) from public, anon, authenticated;
