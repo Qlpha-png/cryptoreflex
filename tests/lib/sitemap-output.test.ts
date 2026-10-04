@@ -90,7 +90,12 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
     expect(iso("/outils")).toBeUndefined();
     expect(iso("/vs/bitcoin/ethereum")).toBeUndefined();
     const today = new Date().toISOString().slice(0, 10);
-    const stampedToday = entries.filter((e) => e.lastModified && new Date(e.lastModified).toISOString().slice(0, 10) === today);
+    /* 04/10/2026 : /historique-prix et /convertisseur portent une vraie date FIGÉE d'enrichissement des gabarits (LOT2B_UPDATE),
+       qui vaut « aujourd'hui » le jour du déploiement : on la contrôle à part, hors du garde-fou « maintenant partout ». */
+    expect(iso("/historique-prix/bitcoin/2022")).toBe("2026-10-04");
+    expect(iso("/convertisseur/btc-eur")).toBe("2026-10-04");
+    const fixedClusters = (p: string) => /^\/(historique-prix|convertisseur)\//.test(p);
+    const stampedToday = entries.filter((e) => !fixedClusters(e.url.replace(SITE, "")) && e.lastModified && new Date(e.lastModified).toISOString().slice(0, 10) === today);
     // Seules d'éventuelles entrées réellement datées d'aujourd'hui (contenu mis à jour ce jour, ex. une passe
     // éditoriale sur quelques dizaines d'articles) — jamais tout le sitemap (« maintenant » partout = > 5 000).
     expect(stampedToday.length).toBeLessThan(Math.max(50, Math.round(entries.length * 0.02)));
