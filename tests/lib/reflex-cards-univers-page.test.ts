@@ -55,7 +55,7 @@ describe("Univers — page du jeu", () => {
   });
   it("pages du site : indexation réservée aux Super rares et mieux avec texte, résumé « en bref » court", () => {
     const n = universCards().filter(universIndexable).length;
-    expect(n).toBeGreaterThan(300);
+    expect(n).toBeGreaterThan(200); // 04/10 : les pages au texte source anglais sortent de l'index
     expect(n).toBeLessThan(2000);
     expect(universIndexable(universById("wk_q13382352")!)).toBe(true); // Satoshi : Légendaire avec texte
     expect(universIndexable(universById("pr_springx")!)).toBe(false); // Commune

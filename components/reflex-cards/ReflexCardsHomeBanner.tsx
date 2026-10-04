@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 import CardVisual from "./CardVisual";
 import { HERO_CARDS, REFLEX_META, isReflexCardsEnabled, seasonDay } from "@/lib/reflex-cards/data";
+import { UNIVERS_ON, universCards } from "@/lib/reflex-cards/univers";
 
 /**
  * Bandeau Reflex Cards de la page d'accueil (Kev 02/10/2026 : « accessible et le mieux placé ») :
@@ -23,7 +24,7 @@ export default function ReflexCardsHomeBanner() {
                 <Sparkles className="h-3.5 w-3.5" /> {day >= 1 ? "Nouveau" : "Bientôt"} · Reflex Cards
               </span>
               <h2 id="reflex-cards-home" className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
-                Collectionnez les {REFLEX_META.ncards} cryptos en cartes
+                {UNIVERS_ON() ? `Collectionnez ${universCards().length.toLocaleString("fr-FR")} cartes crypto` : `Collectionnez les ${REFLEX_META.ncards} cryptos en cartes`}
               </h2>
               <p className="mt-2 text-fg/75">
                 {day >= 1 ? "Le jeu de cartes crypto gratuit de Cryptoreflex est ouvert" : "Bientôt sur Cryptoreflex, le jeu de cartes crypto gratuit"} : boosters offerts, album à compléter, six raretés, et pas un centime à dépenser. Aucune revente : on joue pour collectionner et apprendre.

@@ -33,6 +33,8 @@ interface Raw {
 const RAW = raw as unknown as Raw;
 
 export const UNIVERS_ON = (): boolean => process.env.REFLEX_CARDS_UNIVERS?.trim() === "true";
+/** note de la carte (40-99), même formule que le jeu (ovrOf) : rang dans la catégorie / total de la catégorie */
+export const universOvr = (rank: number, total: number): number => Math.round(40 + 59 * Math.pow(Math.max(0, 1 - (rank - 1) / Math.max(1, total - 1)), 2.2));
 
 export interface UCard {
   id: string; nom: string; sym: string; cat: Cat; sous: string; r: Row[5]; rank: number;
@@ -63,8 +65,8 @@ interface DescEntry { d: string; t: string; l: string; u: string; s: string }
 const DESC = (descRaw as unknown as { desc: Record<string, DescEntry> }).desc;
 /* textes source restés en anglais (descriptions DefiLlama, CoinGecko) : jamais affichés tels quels (Kev 04/10 : « tout en
    français ») ; à la place, une phrase française factuelle tirée des données de la carte (type de protocole, chaîne de la collection) */
-const EN_RE = /(the|and|of|is|are|for|with|your|our|we|that|which|on|to|an|by|from|built|platform|protocol|decentralized|users|first|leading|allows|enables|its|it)/gi;
-const FR_RE = /(le|la|les|des|du|une|un|est|sont|pour|avec|qui|sur|dans|et|de|en|au|aux|son|sa|ses)/gi;
+const EN_RE = /\b(the|and|of|is|are|for|with|your|our|we|that|which|on|to|an|by|from|built|platform|protocol|decentralized|users|first|leading|allows|enables|its|it)\b/gi;
+const FR_RE = /\b(le|la|les|des|du|une|un|est|sont|pour|avec|qui|sur|dans|et|de|en|au|aux|son|sa|ses)\b/gi;
 /** texte probablement anglais (plus de mots-outils anglais que français, au moins deux) */
 export function isEnglish(t: string): boolean {
   const en = (t.match(EN_RE) ?? []).length, fr = (t.match(FR_RE) ?? []).length;
@@ -144,7 +146,19 @@ export function sousFr(c: UCard): string {
 
 /** ligne envoyée au navigateur : [id, nom, symbole, catégorie, sous-type FR, rareté, rang, image, famille, en bref, année] (jamais la popularité brute) */
 export type ClientRow = [string, string, string, Cat, string, string, number, string, string, string, number];
-export const toClientRow = (c: UCard): ClientRow => [c.id, c.nom, c.sym, c.cat, sousFr(c), c.r, c.rank, c.img ?? "", c.fam, universBlurb(c.id), universYear(c.id)];
+/* écritures non latines (chinois, japonais, coréen, cyrillique…) : jamais affichées sur une carte (04/10) */
+const NON_LATIN_RE = /[Ѐ-ӿ؀-ۿऀ-ॿ฀-๿぀-ヿ㐀-鿿가-힯]/;
+/** texte lisible : « 牛来 (Niu Lai) est… » → « Niu Lai est… » ; symbole non latin → vide */
+export function latinText(s: string): string {
+  if (!s || !NON_LATIN_RE.test(s)) return s;
+  return s
+    .replace(/[Ѐ-ӿ؀-ۿऀ-ॿ฀-๿぀-ヿ㐀-鿿가-힯]+\s*\(([^()]*[A-Za-z][^()]*)\)/g, "$1")
+    .replace(/[Ѐ-ӿ؀-ۿऀ-ॿ฀-๿぀-ヿ㐀-鿿가-힯]+/g, "")
+    .replace(/\(\s*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+export const toClientRow = (c: UCard): ClientRow => [c.id, latinText(c.nom), latinText(c.sym), c.cat, sousFr(c), c.r, c.rank, c.img ?? "", c.fam, latinText(universBlurb(c.id)), universYear(c.id)];
 
 /* champs qui portent une carte dans les réponses du jeu (échanges, fil, boosters d'amis, profils, Colporteur, dernières cartes) ;
    on ne lit QUE ceux-là : des mots courants (« on », « packs », « ok », « base »…) sont aussi des identifiants de cryptos */
@@ -227,6 +241,9 @@ export function universRules(base: { cards: RCardLike[]; ed: Record<string, { p:
   const extra = (slot: "reliques" | "mythiques" | "icones") => Object.values(E).flatMap((e) => e[slot]).filter((id) => !!universById(id));
   const uniq = (l: string[]) => [...new Set(l)];
   const ed: UniversRulesPatch["ed"] = { ...base.ed };
+  /* Fossiles : le Musée n'existe pas dans l'Univers (le jeu le masque) ; ils ne se tirent donc plus (04/10 : une Fossile tirée
+     s'affichait « chance 1/NaN » et restait introuvable dans l'album). Les exemplaires déjà obtenus restent aux joueurs. */
+  if (ed.fossil) ed.fossil = { p: 0, list: [] };
   /* Rareté des éditions (décision du 04/10, dans l'esprit des règles de Kev « Mythiques = vraie rareté », « Icônes plus rares que les
      Légendaires », « Reliques quasi impossibles ») : avec 7 catégories de plus, on ne multiplie pas les chances par 8.
      - Icônes : 5 → 40 cartes, chance TOTALE ×3 (une Icône quelconque ≈ 1 carte sur 10 000, une Icône précise ≈ 1 sur 400 000 ;

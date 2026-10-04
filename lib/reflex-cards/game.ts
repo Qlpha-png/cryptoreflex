@@ -15,7 +15,7 @@ import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
 import { partDay, totyDay, RULES as ENGINE_RULES } from "./engine";
-import { CATS, CAT_LABEL, UNIVERS_ON, sousFr, universBlurb, universById, universCards, universEditions, universStats, universYear, type UCard } from "./univers";
+import { CATS, CAT_LABEL, UNIVERS_ON, latinText, sousFr, universBlurb, universById, universCards, universEditions, universMeta, universStats, universYear, type UCard } from "./univers";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
@@ -117,7 +117,7 @@ export function gameData(day: number): GameData {
    Les cartes possédées arrivent avec la partie (champ meta de /api/cartes/etat), les autres par /api/cartes/recherche. Tout est
    « sorti » et en clair : aucune carte masquée. */
 export interface UniversInfo {
-  total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions>;
+  catv: string; total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions>;
   /** chances TOTALES des éditions côté serveur (le navigateur les affiche, il ne tire plus rien) */
   ed: { myth: number; icon: number; toty: number; bds: number; relicAny: number; relics: string[] };
 }
@@ -127,8 +127,9 @@ const LEGACY_ROW = new Map(RAW.cards.map((r) => [r[0], r]));
 function universRow(c: UCard): Row {
   const old = LEGACY_ROW.get(c.id);
   const label = CAT_LABEL[c.cat];
-  if (old) { const r = [...old] as Row; r[3] = c.img ?? old[3]; r[4] = c.rank; r[5] = label; r[6] = c.fam || old[5]; return r; }
-  return [c.id, c.nom, c.sym, c.img ?? "", c.rank, label, sousFr(c), universYear(c.id), universBlurb(c.id), "", "", 0];
+  /* nom = celui du catalogue Univers (nom d'origine nettoyé des caractères non latins : « 币安人生 (BinanceLife) » → « BinanceLife ») */
+  if (old) { const r = [...old] as Row; r[1] = latinText(c.nom); r[2] = latinText(String(old[2] ?? "")); r[3] = c.img ?? old[3]; r[4] = c.rank; r[5] = label; r[6] = c.fam || old[5]; if (typeof r[8] === "string") r[8] = latinText(r[8]); return r; }
+  return [c.id, latinText(c.nom), latinText(c.sym), c.img ?? "", c.rank, label, sousFr(c), universYear(c.id), latinText(universBlurb(c.id)), "", "", 0];
 }
 export function universGame(day: number): GameDataU {
   const all = universCards(), st = universStats(), E = universEditions();
@@ -140,7 +141,8 @@ export function universGame(day: number): GameDataU {
     if (c.r === "L") stars.add(c.id);
     else if (c.r === "UR" && (urSeen[c.cat] = (urSeen[c.cat] ?? 0) + 1) <= 25) stars.add(c.id);
   }
-  for (const e of Object.values(E)) for (const id of e.icones) stars.add(id);
+  /* éditions : les cartes de base de TOUTES les Icônes, Mythiques et Reliques (Trésors et Chambre forte complets : 27 Mythiques, 24 Reliques) */
+  for (const e of Object.values(E)) for (const id of [...e.icones, ...e.mythiques, ...e.reliques]) stars.add(id);
   for (const id of [...RAW.publiques, ...RAW.toty]) stars.add(id);
   const rows: Row[] = [], cartes: Record<string, Palier> = {};
   for (const id of stars) {
@@ -156,13 +158,16 @@ export function universGame(day: number): GameDataU {
   return {
     cards: rows,
     paliers: { meta: {}, cartes, parties: [{ k: 0, jour: 1, collection: "Univers", partie: 1, taille: all.length, tete: [] }], fossiles: {} },
-    noto: RAW.noto, fiches: { desc: RAW.fiches.desc }, watch: RAW.watch,
+    /* fiches des cartes d'origine : jamais d'écriture non latine affichée (« 牛来 (Niu Lai) est un memecoin… » → « Niu Lai est… ») */
+    noto: RAW.noto,
+    fiches: { desc: Object.fromEntries(Object.entries(RAW.fiches.desc as Record<string, Record<string, unknown>>).map(([k, v]) => [k, { ...v, ...(typeof v.desc === "string" ? { desc: latinText(v.desc) } : {}), ...(typeof v.tag === "string" ? { tag: latinText(v.tag) } : {}) }])) },
+    watch: RAW.watch,
     toty: day >= totyDay() ? RAW.toty : [],
     masked: 0,
     themes: Object.fromEntries(RULES.themes.filter((t) => t.cards?.length).map((t) => [t.id, t.cards!])),
     rarTotals,
     univers: {
-      total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E,
+      catv: universMeta().genere, total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E,
       ed: { myth: ENGINE_RULES.ed.myth.p, icon: ENGINE_RULES.ed.icon.p, toty: ENGINE_RULES.ed.toty.p, bds: ENGINE_RULES.ed.bds.p, relicAny: ENGINE_RULES.relicP * ENGINE_RULES.relics.length, relics: ENGINE_RULES.relics },
     },
   };

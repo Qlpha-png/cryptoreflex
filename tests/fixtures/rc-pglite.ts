@@ -47,10 +47,11 @@ export async function makeGameDb(o: { b3?: boolean; b4?: boolean } = {}): Promis
       if (o.b3 !== false) return fromRcLoad((await q("select public.rc_load($1,$2) as r", [id, since]))[0].r);
       return legacyLoad(id, since);
     },
-    async edRanks(player) {
-      const { edRanksOf } = await import("@/lib/reflex-cards/store");
+    async edWorld() {
       const rows = (await q("select ed, card_id, player_id::text as player_id, first_at from public.rc_editions where ed in ('myth','relic') order by first_at, player_id", [])).map((r: any) => ({ ...r, first_at: new Date(r.first_at).toISOString() }));
-      return edRanksOf(rows, player);
+      const pseudos: Record<string, string> = {};
+      for (const p of await q("select player_id::text as player_id, pseudo from public.rc_players", [])) pseudos[p.player_id] = p.pseudo ?? "";
+      return { rows, pseudos };
     },
     async apply(id, version, patch) {
       try {

@@ -231,6 +231,8 @@ export interface CardEnv {
   ncards: number;
   /** emblème miniature de la série (SVG) */
   emb: string;
+  /** Univers : texte du pied de carte à la place de « S1 · 004/881 » (« Cryptos · 4/15 338 », comme dans le jeu) */
+  ft?: string;
 }
 
 /**
@@ -283,7 +285,7 @@ export function cardHTMLRaw(c: ReflexCard, env: CardEnv, key: string = c.id, cha
     <div class="sub" style="font-size:${c.subSize}px" title="${esc(rarLabel)} · ${esc(subTxt)}">${esc(subTxt)}</div>
     <div class="stats"><div title="${f1c[0] === "SCORE CR" ? "Score Cryptoreflex : note globale du projet sur 100 (décentralisation, maturité, communauté, conformité)" : f1c[0] === "LANCÉ" ? "Année de lancement" : "Numéro de la carte dans l'album"}"><span>${f1c[0]}</span><b>${f1c[1]}</b></div><div><span>NOTORIÉTÉ</span><b>${c.fossil ? "—" : "#" + c.noto}</b></div><div title="Chance qu'une carte tirée soit celle-ci"><span>CHANCE</span><b>${chance}</b></div></div>
     <div class="ab">${ab}</div>
-    <div class="ft">${ed ? "FOSSILE · S1" : `<i class="set">${env.emb}</i>S1 · ${String(c.num).padStart(3, "0")}/${env.ncards}<i class="pips" style="--g:${RC[c.r]}" title="${RNAME[c.r]}">${PIPS[c.r]}</i>`}</div>
+    <div class="ft">${ed ? "FOSSILE · S1" : `<i class="set">${env.emb}</i>${env.ft ? esc(env.ft) : `S1 · ${String(c.num).padStart(3, "0")}/${env.ncards}`}<i class="pips" style="--g:${RC[c.r]}" title="${RNAME[c.r]}">${PIPS[c.r]}</i>`}</div>
   </div><div class="shine"></div><div class="glare"></div><div class="sweep"></div></div></div>`;
 }
 

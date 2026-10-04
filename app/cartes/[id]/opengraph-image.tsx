@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
 import { BRAND } from "@/lib/brand";
-import { UNIVERS_ON, universById } from "@/lib/reflex-cards/univers";
+import { UNIVERS_ON, universById, universStats } from "@/lib/reflex-cards/univers";
 import { REFLEX_META, cleanName, getCard, isReflexCardsEnabled, isVisible, seasonDay, todayChance } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RNAME, odds, shade } from "@/lib/reflex-cards/render";
@@ -55,16 +55,19 @@ export default async function OgImage({ params }: { params: { id: string } }) {
   await applyReleases();
   const day = seasonDay();
   const out = isVisible(c, day);
-  const kind: ArtKind = !out ? "X" : c.fossil ? "F" : c.r;
+  /* Univers (04/10) : rareté et numéro du jeu actuel (chapitre Cryptos), comme sur la carte du jeu */
+  const uu = UNIVERS_ON() && !c.fossil ? universById(c.id) : undefined;
+  const cr = uu?.r ?? c.r;
+  const kind: ArtKind = !out ? "X" : c.fossil ? "F" : cr;
   const rc = artColor(kind);
   const fossil = kind === "F", upcoming = kind === "X";
   const name = latinName(cleanName(c.name));
   const tick = NON_LATIN.test(c.sym) ? "" : c.sym.toUpperCase();
-  const label = upcoming ? "CARTE À VENIR" : fossil ? "FOSSILE" : RNAME[c.r].toUpperCase();
+  const label = upcoming ? "CARTE À VENIR" : fossil ? "FOSSILE" : RNAME[cr].toUpperCase();
   /* symboles de rareté dessinés (la police des images de partage n'a ni ◆ ni ★) */
-  const pips = upcoming || fossil ? "" : PIPS[c.r];
-  const ncards = REFLEX_META.ncards;
-  const n3 = String(c.num).padStart(3, "0");
+  const pips = upcoming || fossil ? "" : PIPS[cr];
+  const ncards = uu ? universStats()[uu.cat].total.toLocaleString("fr-FR") : String(REFLEX_META.ncards);
+  const n3 = uu ? uu.rank.toLocaleString("fr-FR") : String(c.num).padStart(3, "0");
 
   /* rangée de chiffres de la vraie carte, sans la chance du jour (elle change) ; le fossile a une chance fixe */
   const f1c: [string, string] = c.score != null ? ["SCORE CR", String(c.score)] : c.year ? ["LANCÉ", String(c.year)] : ["N° ALBUM", n3];
@@ -72,7 +75,7 @@ export default async function OgImage({ params }: { params: { id: string } }) {
     ? [["RARETÉ", "?"], ["NUMÉRO", "?"], ["SORTIE", "BIENTÔT"]]
     : fossil
       ? [f1c, ["NOTORIÉTÉ", "—"], ["CHANCE", "1/" + odds(todayChance(c, day))]]
-      : [f1c, ["NOTORIÉTÉ", `#${c.noto}`], ...(f1c[0] === "SCORE CR" && c.year ? [["LANCÉ", String(c.year)] as [string, string]] : f1c[0] !== "N° ALBUM" ? [["N° ALBUM", n3] as [string, string]] : [])];
+      : [f1c, ["NOTORIÉTÉ", `#${uu ? uu.rank : c.noto}`], ...(f1c[0] === "SCORE CR" && c.year ? [["LANCÉ", String(c.year)] as [string, string]] : f1c[0] !== "N° ALBUM" ? [["N° ALBUM", n3] as [string, string]] : [])];
   const ab = upcoming ? { b: "Bientôt", t: "Sa rareté, son numéro et sa date de sortie restent secrets jusqu'à sa sortie." } : abParts(c.ab);
 
   const [inter, cardFonts, logo, guil] = await Promise.all([loadOgFonts(), loadCardFonts(), logoData(c.img), kind === "L" ? loadGuilloche() : Promise.resolve("")]);
@@ -153,7 +156,7 @@ export default async function OgImage({ params }: { params: { id: string } }) {
               </div>
             )}
             {!upcoming && !fossil && (
-              <div style={{ position: "absolute", top: 18 * S, left: 200 * S, width: 24 * S, height: 24 * S, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontWeight: 600, fontSize: 9 * S, color: "#0a0a0a" }}>{c.r}</div>
+              <div style={{ position: "absolute", top: 18 * S, left: 200 * S, width: 24 * S, height: 24 * S, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: MONO, fontWeight: 600, fontSize: 9 * S, color: "#0a0a0a" }}>{cr}</div>
             )}
 
             {/* logo dans le disque du médaillon (.rc-lg, 64 px), teinte sépia du fossile, reflet du dôme (.rc-dome) */}
@@ -217,7 +220,7 @@ export default async function OgImage({ params }: { params: { id: string } }) {
                   <div style={{ display: "flex", fontFamily: COND, fontWeight: 800, fontSize: 8, color: "#f2cf72", marginTop: -1 }}>R</div>
                 </div>
               )}
-              <div style={{ display: "flex" }}>{upcoming ? "S1 · RARETÉ SECRÈTE" : fossil ? "FOSSILE · S1" : `S1 · ${n3}/${ncards}`}</div>
+              <div style={{ display: "flex" }}>{upcoming ? "S1 · RARETÉ SECRÈTE" : fossil ? "FOSSILE · S1" : (uu ? `CRYPTOS · ${n3}/${ncards}` : `S1 · ${n3}/${ncards}`)}</div>
               {pips && <Pips color={rc} s={10} glow />}
             </div>
           </div>

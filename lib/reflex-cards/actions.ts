@@ -10,7 +10,7 @@ import {
 } from "./engine";
 import { QJ_LEN, qjReward, quizDay } from "./quiz-day";
 import { seasonDay } from "./season";
-import { UNIVERS_ON, toClientRow, universById, type ClientRow } from "./univers";
+import { UNIVERS_ON, toClientRow, universById, universMeta, type ClientRow } from "./univers";
 
 /** Univers : les lignes de catalogue des cartes que le joueur possède (le navigateur ne reçoit plus tout le catalogue) */
 export function metaRows(ids: Iterable<string>): ClientRow[] {
@@ -75,7 +75,10 @@ export function planDaily(s: GameState, ctx: Ctx): Patch | null {
   const d = s.days.get(ctx.today);
   /* offres du Colporteur figées pour la JOURNÉE (clé = date) : deux pages de jours différents entre 00 h 00 et 00 h 30 ne les
      font plus alterner ; l'ancienne clé « date|jour » reste acceptée pour aujourd'hui */
-  if (!d?.colp || (d.colp.k !== ctx.today && !d.colp.k.startsWith(ctx.today + "|"))) patch.day = { day: ctx.today, colp: colpOffers(s, ctx.today, ctx.day) };
+  /* offres tirées avant un changement de catalogue (carte retirée, ou rareté recalée : une « Super rare » devenue Ultra rare, alors
+     que la Boutique ne propose jamais d'Ultra rare) → offres du jour retirées à nouveau (04/10) */
+  const stale = !!d?.colp && d.colp.offers.some((o) => CARD.get(o.id)?.r !== o.r);
+  if (!d?.colp || stale || (d.colp.k !== ctx.today && !d.colp.k.startsWith(ctx.today + "|"))) patch.day = { day: ctx.today, colp: colpOffers(s, ctx.today, ctx.day) };
   const earned = earnedNow(s, ctx.day);
   if (earned.length) patch.cos = earned.map((id) => ({ id, no: null }));
   return Object.keys(patch).length ? patch : null;
@@ -372,6 +375,10 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
     v: s.player.version, day: ctx.day, today: ctx.today, account, ...(meta ? { meta } : {}),
     /* rang mondial de découverte des Mythiques et Reliques (vrai numéro « N° 1 au monde » ; absent = pas de numéro) */
     edNo: s.edNo ?? {},
+    /* découvertes du monde (Chambre forte, Mythiques, registre « Premier au monde ») : calculées, jamais écrites à la main */
+    world: s.world ?? { found: [] },
+    /* version du catalogue servi (Univers) : une page ouverte avant un changement de catalogue se recharge d'elle-même */
+    ...(UNIVERS_ON() ? { catv: universMeta().genere } : {}),
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
     pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
     /* Quiz du jour : les questions sans la bonne réponse tant qu'on n'y a pas répondu ; les questions déjà répondues

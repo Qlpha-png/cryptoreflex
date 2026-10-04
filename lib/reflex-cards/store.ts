@@ -32,8 +32,10 @@ export interface GameDb {
   load(player: string, since: string): Promise<Loaded>;
   /** lève Error("rc_conflict"), Error("rc_no_dup"), ou une erreur Postgres (code 23505 doublon, 23514 contrainte) */
   apply(player: string, version: number, patch: Patch): Promise<ApplyResult>;
-  /** rang mondial de découverte des Mythiques et Reliques du joueur (ordre d'obtention, tous joueurs confondus) */
-  edRanks?(player: string): Promise<Record<string, number>>;
+  /** lignes des Mythiques et Reliques de tous les joueurs (ordre d'obtention) et pseudos des premiers découvreurs */
+  edWorld?(): Promise<{ rows: EdRow[]; pseudos: Record<string, string> }>;
+  /** clé du cache des découvertes (stable pour la base de production) */
+  worldKey?: string;
 }
 
 /* ---------- Supabase (production) ---------- */
@@ -68,11 +70,19 @@ export function supabaseGameDb(sb: SupabaseClient): GameDb {
     }
   };
   return {
-    async edRanks(player) {
+    worldKey: "supabase",
+    async edWorld() {
       /* peu de lignes (une Mythique sur un million, une Relique sur un milliard) : tout est relu, trié par date d'obtention */
       const { data, error } = await sb.from("rc_editions").select("ed,card_id,player_id,first_at").in("ed", ["myth", "relic"]).order("first_at").order("player_id").limit(5000);
       if (error) throw new Error(error.message);
-      return edRanksOf((data ?? []) as EdRow[], player);
+      const rows = (data ?? []) as EdRow[];
+      const firsts = [...new Set(firstFinders(rows))];
+      const pseudos: Record<string, string> = {};
+      if (firsts.length) {
+        const r = await sb.from("rc_players").select("player_id,pseudo").in("player_id", firsts);
+        if (!r.error) for (const p of (r.data ?? []) as { player_id: string; pseudo: string | null }[]) pseudos[p.player_id] = p.pseudo || "";
+      }
+      return { rows, pseudos };
     },
     async findGuest(hash) {
       const { data, error } = await sb.from("rc_players").select("player_id").eq("guest_hash", hash).maybeSingle();
@@ -242,17 +252,41 @@ export function edRanksOf(rows: EdRow[], player: string): Record<string, number>
   }
   return out;
 }
-/** les rangs ne doivent jamais empêcher de jouer : en cas d'erreur, pas de numéro affiché */
-async function ranks(db: GameDb, player: string): Promise<Record<string, number>> {
-  if (!db.edRanks) return {};
-  try { return await db.edRanks(player); } catch { return {}; }
+/** premiers découvreurs (identifiants de partie) de chaque Mythique / Relique */
+export function firstFinders(rows: EdRow[]): string[] {
+  const seen = new Set<string>(), out: string[] = [];
+  for (const r of rows) { const k = r.ed + "|" + r.card_id; if (!seen.has(k)) { seen.add(k); out.push(r.player_id); } }
+  return out;
 }
-const hasNo = (s: GameState) => [...s.eds.keys()].some((k) => k.startsWith("myth|") || k.startsWith("relic|"));
+/** découvertes du monde : chaque clé trouvée, nombre d'exemplaires, pseudo du premier découvreur (« Un joueur » sans pseudo) */
+export function worldOf(rows: EdRow[], pseudos: Record<string, string>): { found: { k: string; n: number; first: string }[] } {
+  const m = new Map<string, { k: string; n: number; first: string }>();
+  for (const r of rows) {
+    const k = r.ed + "|" + r.card_id, e = m.get(k);
+    if (e) e.n++;
+    else m.set(k, { k, n: 1, first: (pseudos[r.player_id] || "").trim() || "Un joueur" });
+  }
+  return { found: [...m.values()] };
+}
+/* cache d'une minute par instance (les découvertes sont rares) ; vidé dès qu'une Mythique ou une Relique arrive */
+const WORLD = new Map<unknown, { at: number; rows: EdRow[]; pseudos: Record<string, string> }>();
+/** les rangs et le monde ne doivent jamais empêcher de jouer : en cas d'erreur, rien d'affiché */
+async function worldData(db: GameDb, player: string, fresh = false): Promise<{ ranks: Record<string, number>; world: { found: { k: string; n: number; first: string }[] } }> {
+  if (!db.edWorld) return { ranks: {}, world: { found: [] } };
+  try {
+    const key = db.worldKey ?? db;
+    let W = WORLD.get(key);
+    if (fresh || !W || Date.now() - W.at > 60_000) { W = { at: Date.now(), ...(await db.edWorld()) }; WORLD.set(key, W); }
+    return { ranks: edRanksOf(W.rows, player), world: worldOf(W.rows, W.pseudos) };
+  } catch { return { ranks: {}, world: { found: [] } }; }
+}
 
 /** charge la partie (déjà créée par session.ts) et applique les mises à jour du jour */
 export async function loadGame(db: GameDb, player: string, ctx: Ctx): Promise<GameState> {
   const s = await loadGame0(db, player, ctx);
-  if (hasNo(s)) s.edNo = await ranks(db, player);
+  const w = await worldData(db, player);
+  s.edNo = w.ranks;
+  s.world = w.world;
   return s;
 }
 async function loadGame0(db: GameDb, player: string, ctx: Ctx): Promise<GameState> {
@@ -296,8 +330,8 @@ export async function runAction(db: GameDb, player: string, a: string, body: Rec
     const after = applyPatch(s, planned.patch, res, ctx.now);
     const s2 = (await withDaily(db, player, after, ctx)) ?? (await loadGame(db, player, ctx));
     /* une Mythique ou une Relique vient d'arriver : son rang mondial est relu ; sinon on garde ceux déjà connus */
-    if (planned.patch.eds?.some((e) => e.ed === "myth" || e.ed === "relic")) s2.edNo = await ranks(db, player);
-    else if (!s2.edNo && s.edNo) s2.edNo = s.edNo;
+    if (planned.patch.eds?.some((e) => e.ed === "myth" || e.ed === "relic")) { const w = await worldData(db, player, true); s2.edNo = w.ranks; s2.world = w.world; }
+    else { if (!s2.edNo && s.edNo) s2.edNo = s.edNo; if (!s2.world && s.world) s2.world = s.world; }
     return { ok: true, msg: planned.msg, data: planned.data, state: toClient(s2, ctx, account) };
   }
   throw new GameError("busy", "Votre partie est en cours de mise à jour ailleurs : réessayez.");

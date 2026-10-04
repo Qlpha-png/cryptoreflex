@@ -30,6 +30,8 @@ import { reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { dayDate } from "@/lib/reflex-cards/season";
 import { applyReleases, FUTURE_LABEL } from "@/lib/reflex-cards/releases";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
+import UniversHub from "@/components/reflex-cards/UniversHub";
+import { UNIVERS_ON, universCards } from "@/lib/reflex-cards/univers";
 
 /**
  * /cartes — présentation de Reflex Cards (jeu de cartes crypto gratuit).
@@ -46,19 +48,36 @@ const TITLE = "Reflex Cards : le jeu de cartes crypto gratuit";
 const ACCOUNTS = reflexAccountsMode() === "on";
 const DESCRIPTION = `${REFLEX_META.ncards} cartes à collectionner, une par crypto, classées par notoriété durable et jamais par le prix. Gratuit, sans achat ni revente, ${ACCOUNTS ? "avec un compte Cryptoreflex gratuit" : "sans compte"} : la saison 1 se joue sur Cryptoreflex.`;
 
+/* Univers (04/10) : les vrais chiffres du jeu actuel */
+const descUnivers = () => `${universCards().length.toLocaleString("fr-FR")} cartes crypto à collectionner en 8 chapitres (cryptos, protocoles, plateformes, NFT, personnalités, événements, entreprises, concepts), classées par popularité et jamais par le prix. Gratuit, sans achat ni revente.`;
+
 export function generateMetadata(): Metadata {
   if (!isReflexCardsEnabled()) return {};
+  const description = UNIVERS_ON() ? descUnivers() : DESCRIPTION;
   return {
     title: TITLE,
-    description: DESCRIPTION,
+    description,
     alternates: withHreflang(PAGE_URL),
-    openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website" },
-    twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
+    openGraph: { title: TITLE, description, url: PAGE_URL, type: "website" },
+    twitter: { card: "summary_large_image", title: TITLE, description },
   };
 }
 
 export default async function CartesPage() {
   if (!isReflexCardsEnabled()) notFound();
+  if (UNIVERS_ON()) {
+    const schemaU = graphSchema([
+      { "@context": "https://schema.org", "@type": "CollectionPage", "@id": `${PAGE_URL}#collection`, url: PAGE_URL, name: TITLE, description: descUnivers(), inLanguage: "fr-FR", isPartOf: { "@id": `${BRAND.url}/#website` } } as JsonLd,
+      breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Reflex Cards", url: "/cartes" }]),
+    ]);
+    return (
+      <>
+        <StructuredData data={schemaU} id="reflex-cards-hub" />
+        <CardTilt />
+        <UniversHub accounts={ACCOUNTS} />
+      </>
+    );
+  }
   const day = seasonDay();
   /* sorties effectives : par paliers de joueurs inscrits (décision Kev, 03/10), plus par dates */
   const rel = await applyReleases({ readOnly: true });
@@ -205,7 +224,7 @@ export default async function CartesPage() {
             {[
               { icon: Gift, t: "Gratuit, pour toujours", d: `Un booster de 5 cartes offert toutes les 15 minutes, jusqu'à 10 en réserve. Rien à acheter, ${ACCOUNTS ? "un compte gratuit suffit" : "sans compte"}.` },
               { icon: ShieldCheck, t: "Vos cartes à vie", d: "Chaque carte obtenue reste dans votre collection, doubles compris : vous voyez combien vous en avez." },
-              { icon: Scale, t: "Échanges", d: "Le Colporteur échange avec vous chaque jour : 1 carte contre 1 doublon de même rareté. Entre amis : avec les comptes, bientôt. Aucune revente." },
+              { icon: Scale, t: "Échanges", d: "La Boutique échange avec vous chaque jour : 1 carte contre 1 doublon de même rareté ; entre amis, échangez vos doublons ou offrez-les. Aucune revente." },
               { icon: Landmark, t: "Aucune valeur marchande", d: "Les cartes ne s'achètent pas, ne se vendent pas et ne sont pas un conseil en investissement." },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="rounded-2xl border border-border bg-surface p-5">
@@ -374,7 +393,7 @@ export default async function CartesPage() {
                 ["Combien ça coûte ?", "Rien. Le jeu est gratuit et le restera : il n'y a rien à acheter."],
                 ["Faut-il un compte pour jouer ?", "Pour ouvrir votre premier booster, non. Pour garder vos cartes, les retrouver sur tous vos appareils et jouer avec vos amis, oui : un compte Cryptoreflex gratuit, une adresse e-mail suffit. Le jeu vous le propose au bon moment."],
                 ["Existe-t-il une application ?", "Oui, sans passer par un store : depuis le jeu, « Installer l'application » (menu Plus, ou la tuile de l'accueil) pose l'icône Reflex Cards sur votre écran d'accueil et ouvre le jeu en plein écran. Sur iPhone : Safari → Partager → « Sur l'écran d'accueil »."],
-                ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec le Colporteur dès maintenant, entre amis avec les comptes joueurs."],
+                ["Peut-on revendre ses cartes ?", "Non. Les cartes n'ont aucune valeur marchande. Seuls les échanges 1 contre 1, de même rareté, existent : avec la Boutique et entre amis."],
                 ["Comment une crypto devient-elle Légendaire ?", "Par sa notoriété durable sur 12 mois (pages vues Wikipédia et abonnés CoinGecko). Le prix et la capitalisation n'entrent jamais en compte."],
                 ["Quand le jeu ouvre-t-il ?", day >= 1 ? `La saison 1 « Genèse » est ouverte : on joue sur cryptoreflex.fr/cartes/jouer, ${ACCOUNTS ? "sans compte pour le premier booster, puis avec un compte Cryptoreflex gratuit pour garder votre collection sur tous vos appareils" : "sans compte (la partie est enregistrée dans votre navigateur)"}. Les parties suivantes sortiront plus tard dans la saison.` : "La saison 1 « Genèse » est en préparation et ouvrira très bientôt sur cette page."],
               ].map(([q, a]) => (

@@ -2,66 +2,74 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 import CardVisual from "@/components/reflex-cards/CardVisual";
-import { cleanName, getCard, isReflexCardsEnabled, isReleased, isRevealed, oddsText, seasonDay, todayChance } from "@/lib/reflex-cards/data";
+import { cleanName, getCard, isReflexCardsEnabled, oddsText, seasonDay, todayChance } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
+import { UNIVERS_ON, universById, universOvr, universStats } from "@/lib/reflex-cards/univers";
+import { universCardP } from "@/lib/reflex-cards/engine";
+import { rareCard } from "@/lib/reflex-cards/rare";
 
 /**
  * Bandeau « Cette crypto a sa carte » en haut des fiches /cryptos/[slug] (rédigées et LLM).
- * Rien ne fuite avant la sortie (décision Kev 02/10) :
- *  - carte révélée : la carte entière ;
- *  - sortie (ou fossile) : la case vide de l'album, la carte se trouve en booster ;
- *  - pas encore sortie : le dos de carte, sans rareté ni date.
- * Rien si le jeu est coupé ou si la crypto n'a pas de carte. L'id passé est l'identifiant CoinGecko.
+ * Kev 04/10 : « je veux qu'on puisse la voir dans sa forme la plus rare, je ne veux plus cacher pour attirer les gens, et donner
+ * envie » → la carte est montrée en grand dans sa version la plus rare (Mythique, Icône ou Onyx 1/1, photographiée avec le moteur du
+ * jeu), avec sa rareté et sa chance ACTUELLES (Univers : les mêmes que dans le jeu). Rien si le jeu est coupé ou sans carte.
  */
 export default async function ReflexCardPromo({ coingeckoIds, className }: { coingeckoIds: (string | null | undefined)[]; className?: string }) {
   if (!isReflexCardsEnabled()) return null;
-  const c = coingeckoIds.map((id) => (id ? getCard(id) : undefined)).find(Boolean);
-  if (!c) return null;
-  await applyReleases(); // sorties effectives (paliers de joueurs)
+  const ids = coingeckoIds.filter((x): x is string => !!x);
+  const legacy = ids.map((id) => getCard(id)).find(Boolean);
+  const univ = UNIVERS_ON() ? ids.map((id) => universById(id)).find(Boolean) : undefined;
+  if (!legacy && !univ) return null;
+  await applyReleases(); // sorties effectives (jeu d'origine)
   const day = seasonDay();
-  const name = cleanName(c.name);
-  const revealed = isRevealed(c);
-  const out = revealed || c.fossil || isReleased(c, day);
-  const col = !out ? "#e9b949" : c.fossil ? "#a8927a" : RC[c.r];
-  const rar = c.fossil ? "Fossile" : RNAME[c.r];
-  const title = !out ? `${name} aura sa carte Reflex` : `${name} a sa carte ${rar}`;
-  const sub = !out
-    ? "Elle sortira au fil de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex. Sa rareté reste secrète jusque-là."
-    : revealed && day < 1
-      ? `Révélée avant le lancement de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex : ${oddsText(todayChance(c, day))} tirée.`
-      : `À trouver dans les boosters de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex : ${oddsText(todayChance(c, day))} tirée.`;
-  /* vignette de 92 px : animations coupées (pas de rafraîchissement continu sur chaque fiche) */
-  const visual = <CardVisual card={c} mode={revealed ? "card" : out ? "slot" : "back"} day={day} width={92} uid="fiche" still />;
+  const id = legacy?.id ?? univ!.id;
+  const r = univ?.r ?? legacy!.r;
+  const name = cleanName(legacy?.name ?? univ!.nom);
+  const rare = rareCard(id);
+  const col = rare ? (rare.form === "myth" ? "#ff2d6f" : rare.form === "icon" ? "#e8d49a" : "#f7d774") : RC[r];
+  const chance = UNIVERS_ON() ? universCardP(day) : todayChance(legacy!, day);
+  const visual = rare ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="h-auto w-[132px] drop-shadow-[0_14px_24px_rgba(0,0,0,.55)] sm:w-[164px]" />
+  ) : legacy ? (
+    <CardVisual card={{ ...legacy, r, ...(univ ? { num: univ.rank, noto: univ.rank, ovr: universOvr(univ.rank, universStats()[univ.cat].total) } : {}) }} mode="card" day={day} width={120} uid="fiche" still chance={chance} ft={univ ? `Cryptos · ${univ.rank.toLocaleString("fr-FR")}` : undefined} />
+  ) : null;
 
   return (
     <section
       aria-label={`Carte Reflex ${name}`}
-      className={`flex items-center gap-4 rounded-2xl border p-3 sm:gap-5 sm:p-4 ${className ?? ""}`}
-      style={{ borderColor: `${col}55`, background: `linear-gradient(110deg, ${col}1f, transparent 65%)` }}
+      className={`flex items-center gap-4 rounded-2xl border p-3 sm:gap-6 sm:p-5 ${className ?? ""}`}
+      style={{ borderColor: `${col}66`, background: `radial-gradient(120% 140% at 0% 50%, ${col}26, transparent 60%)` }}
     >
-      {out ? (
-        <Link href={`/cartes/${c.id}`} className="shrink-0" aria-label={`Voir la carte ${name}`}>
+      {visual && (
+        <Link href={`/cartes/${id}`} className="shrink-0 transition-transform hover:-translate-y-0.5" aria-label={`Voir la carte ${name}`}>
           {visual}
         </Link>
-      ) : (
-        <div className="shrink-0">{visual}</div>
       )}
       <div className="min-w-0 flex-1">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide" style={{ color: col }}>
-          <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · {day >= 1 ? "nouveau" : "bientôt"}
+          <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · le jeu de cartes crypto gratuit
         </span>
         <p className="mt-1 text-base font-bold text-fg sm:text-lg">
-          {title} {out && !c.fossil && <span className="text-sm" style={{ color: col }}>{PIPS[c.r]}</span>}
+          {name} a sa carte {RNAME[r]} <span className="text-sm" style={{ color: RC[r] }}>{PIPS[r]}</span>
         </p>
-        <p className="mt-1 text-xs text-fg/70 sm:text-sm">{sub}</p>
-        <Link
-          href={out ? `/cartes/${c.id}` : "/cartes"}
-          className="mt-2 inline-flex items-center gap-1 text-sm font-semibold hover:underline"
-          style={{ color: col }}
-        >
-          {out ? "Voir la carte" : "Découvrir le jeu"} <ArrowRight className="h-4 w-4" />
-        </Link>
+        {rare && (
+          <p className="mt-1 text-sm text-fg/85">
+            Sa version la plus rare : <strong style={{ color: col }}>{rare.label}</strong>, {rare.phrase}.
+          </p>
+        )}
+        <p className="mt-1 text-xs text-fg/65 sm:text-sm">
+          À trouver dans les boosters gratuits : {oddsText(chance)} tirée. Un booster offert toutes les 15 minutes, sans achat.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <a href="/cartes/jouer" className="btn-primary px-4 py-2 text-sm">
+            Jouer gratuitement <ArrowRight className="h-4 w-4" />
+          </a>
+          <Link href={`/cartes/${id}`} className="inline-flex items-center gap-1 rounded-xl border border-border px-4 py-2 text-sm font-semibold text-fg/85 hover:border-primary/50 hover:text-fg">
+            Voir la carte
+          </Link>
+        </div>
       </div>
     </section>
   );

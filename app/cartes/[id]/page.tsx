@@ -32,8 +32,9 @@ import {
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
-import { CAT_LABEL, UNIVERS_ON, universBlurb, universById, universIndexable } from "@/lib/reflex-cards/univers";
-import { RULES, dayTables } from "@/lib/reflex-cards/engine";
+import { CAT_LABEL, UNIVERS_ON, universBlurb, universById, universCards, universIndexable, universOvr, universStats } from "@/lib/reflex-cards/univers";
+import { RULES, dayTables, universCardP } from "@/lib/reflex-cards/engine";
+import { rareCard } from "@/lib/reflex-cards/rare";
 import UniversCarte from "@/components/reflex-cards/UniversCarte";
 
 /**
@@ -65,6 +66,8 @@ interface Props {
 }
 
 const rarityArticle = (c: ReflexCard) => (c.fossil ? "Fossile" : RNAME[c.r]);
+/** ordinal féminin (« la 1re crypto », « la 12e ») */
+const ordF = (n: number) => (n === 1 ? "1re" : `${n.toLocaleString("fr-FR")}e`);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   await applyReleases({ readOnly: true });
@@ -81,11 +84,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!c || !isReflexCardsEnabled()) return {};
   const name = cleanName(c.name);
   const url = `${BRAND.url}/cartes/${c.id}`;
-  if (!isVisible(c, seasonDay())) {
+  if (!(UNIVERS_ON() && !c.fossil && universById(c.id)) && !isVisible(c, seasonDay())) {
     const t = `${name} : carte Reflex à venir`;
     return { title: t, description: `La carte Reflex de ${name} sortira au fil de la saison 1 de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex.`, robots: { index: false, follow: true }, alternates: withHreflang(url) };
   }
   const label = c.sym.toLowerCase() === name.toLowerCase() ? name : `${name} (${c.sym})`;
+  /* Univers (04/10) : rareté, numéro et total de cartes du JEU actuel (cohérence avec le jeu, Kev : « point sur le nombre de cartes ») */
+  const uu = UNIVERS_ON() && !c.fossil ? universById(c.id) : undefined;
+  if (uu) {
+    const total = universCards().length, catTotal = universStats()[uu.cat].total;
+    const t = `${label} : carte ${RNAME[uu.r]} Reflex Cards`;
+    const d = `Carte ${RNAME[uu.r]} n° ${uu.rank.toLocaleString("fr-FR")} sur ${catTotal.toLocaleString("fr-FR")} du chapitre Cryptos de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex. ${c.tag || ""}`.trim();
+    const sh = `Carte ${RNAME[uu.r]} n° ${uu.rank.toLocaleString("fr-FR")} des cryptos. ${total.toLocaleString("fr-FR")} cartes crypto à collectionner gratuitement, sans achat : ouvrez votre premier booster et tentez votre chance.`;
+    return { title: t, description: d, alternates: withHreflang(url), robots: isIndexable(c) ? undefined : { index: false, follow: true }, openGraph: { title: t, description: sh, url, type: "website" }, twitter: { card: "summary_large_image", title: t, description: sh } };
+  }
   const title = c.fossil ? `${name} : carte Fossile Reflex Cards` : `${label} : carte ${RNAME[c.r]} Reflex Cards`;
   const description = c.fossil
     ? `${name} au Musée des Fossiles de Reflex Cards : ce qui s'est passé et la leçon à retenir. Jeu de cartes crypto gratuit de Cryptoreflex.`
@@ -178,11 +190,19 @@ export default async function CartePage({ params }: Props) {
   const day = seasonDay();
   const name = cleanName(c.name);
   const fiche = ficheHref(c);
-  if (!isVisible(c, day)) return <CarteAVenir c={c} name={name} fiche={fiche} />;
-  const revealed = isRevealed(c);
-  const info = c.fossil ? null : rarityInfo(c.r);
-  const col = c.fossil ? "#a8927a" : RC[c.r];
-  const chance = todayChance(c, day);
+  /* Univers : toutes les cartes sont sorties (plus de page « à venir ») */
+  if (!(UNIVERS_ON() && !c.fossil && universById(c.id)) && !isVisible(c, day)) return <CarteAVenir c={c} name={name} fiche={fiche} />;
+  /* Univers (04/10) : la carte d'origine prend la rareté, le chapitre, le numéro et la chance du JEU actuel ; plus rien de caché
+     (Kev : « je ne veux plus cacher pour attirer les gens ») ; sa forme la plus rare est montrée */
+  const u = UNIVERS_ON() && !c.fossil ? universById(c.id) : undefined;
+  const st = u ? universStats()[u.cat] : null;
+  const cv: ReflexCard = u && st ? { ...c, r: u.r, num: u.rank, noto: u.rank, ovr: universOvr(u.rank, st.total) } : c;
+  const ft = u && st ? `Cryptos · ${u.rank.toLocaleString("fr-FR")}/${st.total.toLocaleString("fr-FR")}` : undefined;
+  const rare = rareCard(c.id);
+  const revealed = u ? true : isRevealed(c);
+  const info = c.fossil || u ? null : rarityInfo(c.r);
+  const col = c.fossil ? "#a8927a" : RC[cv.r];
+  const chance = u ? universCardP(day) : todayChance(c, day);
   const family = c.fossil ? [] : albumCards().filter((x) => x.fam === c.fam && isVisible(x, day));
   const idx = family.findIndex((x) => x.id === c.id);
   const near = family.slice(Math.max(0, idx - 4), idx + 5).filter((x) => x.id !== c.id).slice(0, 8);
@@ -203,13 +223,24 @@ export default async function CartePage({ params }: Props) {
         ["Chance", `${oddsText(chance)} tirée pour ce fossile`],
       ]
     : [
-        ["Rareté", <span key="r" style={{ color: col }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
-        ["Famille (chapitre)", c.fam],
-        ["N° d'album", `${String(c.num).padStart(3, "0")} / ${REFLEX_META.ncards}`],
-        ["Notoriété durable", `${ordinal(c.noto)} projet le plus connu de la saison`],
-        ...(c.year ? ([["Lancement", String(c.year)]] as [string, string][]) : []),
-        ["Sortie", c.sortie ? `${c.sortie.collection}, partie ${c.sortie.partie} · jour ${c.sortie.jour} de la saison${c.sortie.tete ? " (tête d'affiche)" : ""}` : "—"],
-        ["Fabrication", c.sortie ? `avec des éclats, dès le jour ${c.sortie.fabrication}` : "—"],
+        ["Rareté", <span key="r" style={{ color: col }}>{RNAME[cv.r]} {PIPS[cv.r]}</span>],
+        ...(u && st
+          ? ([
+              ["Chapitre", "Cryptos"],
+              ["Type", c.fam],
+              ["N° d'album", `${u.rank.toLocaleString("fr-FR")} / ${st.total.toLocaleString("fr-FR")}`],
+              ["Notoriété", `${ordF(u.rank)} crypto la plus connue de l'Univers`],
+              ...(c.year ? ([["Lancement", String(c.year)]] as [string, string][]) : []),
+              ...(rare ? ([["Version la plus rare", rare.label]] as [string, string][]) : []),
+            ] as [string, string][])
+          : ([
+              ["Famille (chapitre)", c.fam],
+              ["N° d'album", `${String(c.num).padStart(3, "0")} / ${REFLEX_META.ncards}`],
+              ["Notoriété durable", `${ordinal(c.noto)} projet le plus connu de la saison`],
+              ...(c.year ? ([["Lancement", String(c.year)]] as [string, string][]) : []),
+              ["Sortie", c.sortie ? `${c.sortie.collection}, partie ${c.sortie.partie} · jour ${c.sortie.jour} de la saison${c.sortie.tete ? " (tête d'affiche)" : ""}` : "—"],
+              ["Fabrication", c.sortie ? `avec des éclats, dès le jour ${c.sortie.fabrication}` : "—"],
+            ] as [string, string][])),
         ["Chance", `${oddsText(chance)} tirée ${day >= 1 ? "aujourd'hui" : "au lancement"}`],
       ];
 
@@ -230,7 +261,15 @@ export default async function CartePage({ params }: Props) {
 
           <div className="mt-6 grid gap-8 md:grid-cols-[288px,1fr] md:gap-12 items-start">
             <div className="mx-auto md:mx-0 md:sticky md:top-24">
-              <CardVisual card={c} mode={revealed ? "card" : "slot"} day={day} width={288} />
+              <CardVisual card={cv} mode={revealed ? "card" : "slot"} day={day} width={288} chance={u ? chance : undefined} ft={ft} />
+              {rare && (
+                <div className="mt-6 max-w-[288px] text-center">
+                  <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: rare.form === "myth" ? "#ff2d6f" : "#f7d774" }}>Sa version la plus rare</p>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="mx-auto mt-2 h-auto w-[220px] drop-shadow-[0_18px_30px_rgba(0,0,0,.55)]" />
+                  <p className="mt-2 text-xs text-muted"><strong className="text-fg/85">{rare.label}</strong> : {rare.phrase}.</p>
+                </div>
+              )}
               {!revealed && (
                 <p className="mt-3 max-w-[288px] text-center text-xs text-muted">
                   La case de l&apos;album est vide : la carte entière se découvre en l&apos;obtenant dans un booster.
@@ -244,12 +283,16 @@ export default async function CartePage({ params }: Props) {
                 style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                {c.fossil ? "Musée des Fossiles" : `Carte ${rarityArticle(c)} · Saison 1`}
+                {c.fossil ? "Musée des Fossiles" : u ? `Carte ${RNAME[cv.r]} · chapitre Cryptos` : `Carte ${rarityArticle(c)} · Saison 1`}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {name} {c.sym.toLowerCase() !== name.toLowerCase() && <span className="text-fg/50 text-2xl sm:text-3xl">({c.sym})</span>}
               </h1>
-              <p className="mt-3 text-fg/75">{rarityReason(c)}</p>
+              <p className="mt-3 text-fg/75">
+                {u && st
+                  ? `${RNAME[cv.r]} : la rareté est la place de la carte dans sa catégorie (notoriété, usage), jamais son prix. ${name} est la ${ordF(u.rank)} des ${st.total.toLocaleString("fr-FR")} cryptos de l'Univers Reflex Cards.`
+                  : rarityReason(c)}
+              </p>
 
               <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 rounded-2xl border border-border bg-surface p-5 text-sm">
                 {facts.map(([k, v]) => (
@@ -288,6 +331,17 @@ export default async function CartePage({ params }: Props) {
                 </div>
               )}
 
+              {u && st && (
+                <div className="mt-8 rounded-2xl border border-border p-5 text-sm text-fg/80">
+                  <div className="flex items-center gap-2 font-semibold text-fg">
+                    <CalendarDays className="h-4 w-4" style={{ color: col }} />
+                    Rareté {RNAME[cv.r]}
+                  </div>
+                  <p className="mt-2">
+                    Le chapitre Cryptos compte {(st[cv.r] ?? 0).toLocaleString("fr-FR")} cartes {RNAME[cv.r].toLowerCase()}s sur {st.total.toLocaleString("fr-FR")}. Toutes les cartes de l&apos;Univers ({universCards().length.toLocaleString("fr-FR")}) ont la même chance d&apos;être tirées : celle-ci, {oddsText(chance)}.
+                  </p>
+                </div>
+              )}
               {info && (
                 <div className="mt-8 rounded-2xl border border-border p-5 text-sm text-fg/80">
                   <div className="flex items-center gap-2 font-semibold text-fg">

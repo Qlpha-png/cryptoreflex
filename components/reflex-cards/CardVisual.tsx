@@ -21,6 +21,9 @@ interface Props {
   uid?: string;
   /** vignette figée : animations coupées (petites tailles, bandeaux) */
   still?: boolean;
+  /** Univers : chance de tirer CETTE carte et pied de carte du jeu actuel (« Cryptos · 4/15 338 ») à la place de ceux du jeu d'origine */
+  chance?: number;
+  ft?: string;
   className?: string;
 }
 
@@ -30,11 +33,11 @@ interface Props {
  * par render.ts, les fragments HTML (nom sur 2 lignes, accroche) sont contrôlés par
  * tests/lib/reflex-cards-data.test.ts. Aucune entrée utilisateur.
  */
-export default function CardVisual({ card, mode = "card", day, width = 240, uid, still = false, className }: Props) {
+export default function CardVisual({ card, mode = "card", day, width = 240, uid, still = false, className, chance, ft }: Props) {
   const s = width / 240;
   const html =
     mode === "card"
-      ? cardHTML(card, CARD_ENV, uid, "1/" + odds(todayChance(card, day)))
+      ? cardHTML(card, ft ? { ...CARD_ENV, ft } : CARD_ENV, uid, "1/" + odds(chance ?? todayChance(card, day)))
       : mode === "slot"
         ? forSite(card.fossil ? fossilSlotHTMLRaw(card, FOSSIL_P) : slotHTMLRaw(card, slotOdd(card, day)))
         : forSite(backHTMLRaw(CARD_ENV, uid ?? card.id));

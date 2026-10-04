@@ -123,6 +123,13 @@ export function dayTables(day: number): DayTables {
   return t;
 }
 
+/** Univers : chance qu'une carte tirée soit UNE carte donnée (toutes à égalité, moins la part des éditions et des reliques) */
+export function universCardP(day: number): number {
+  const T = dayTables(Math.max(1, day));
+  const pe = Object.values(T.ed).reduce((s, e) => s + e.p, 0) + RULES.relicP * RULES.relics.length;
+  return (1 - pe) / Math.max(1, BASE.length);
+}
+
 /* ---------- tirage (portage fidèle de drawPack du jeu v9) ---------- */
 export interface Item { id: string; ed: string | null; fin: Fin | null; serial?: number | null; pity?: Rar }
 export interface Pity { R: number; SR: number; UR: number; opened: number; gotSR: boolean; gotUR: boolean }
@@ -230,6 +237,8 @@ export interface GameState {
   quiz: Map<string, { ok: boolean; day: string }>;
   /** rang mondial de découverte de ses Mythiques et Reliques (« édition|carte » → n° 1, 2…), calculé à la lecture */
   edNo?: Record<string, number>;
+  /** découvertes du monde (Mythiques et Reliques) : clé « édition|carte », exemplaires, pseudo du premier découvreur */
+  world?: { found: { k: string; n: number; first: string }[] };
 }
 export interface ColpDay { k: string; offers: { r: Rar; id: string; done?: boolean }[]; line: number }
 export interface Patch {
