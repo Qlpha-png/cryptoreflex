@@ -302,8 +302,19 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
   for (const id of RULES.cosOwned) inv[id] = { t: Date.parse(s.player.first_day) };
   for (const [id, x] of s.cos) inv[id] = { t: x.t, ...(x.no ? { no: x.no } : {}) };
   const P = s.player.perso as Record<string, unknown>;
-  /* Univers : métadonnées des cartes possédées (base + éditions), le navigateur n'a plus le catalogue entier */
-  const meta = UNIVERS_ON() ? metaRows(new Set([...s.cards.keys(), ...[...s.eds.keys()].map((k) => k.split("|")[1])])) : undefined;
+  /* Univers : métadonnées de TOUTES les cartes que le jeu peut dessiner — possédées (base + éditions), offres du Colporteur,
+     dernières cartes tirées, fiches lues, quiz. Le navigateur n'a plus le catalogue entier : une carte affichée sans sa ligne
+     faisait planter le démarrage du jeu (écran noir, 04/10 : Colporteur tiré dans tout l'Univers). */
+  const meta = UNIVERS_ON()
+    ? metaRows(new Set([
+        ...s.cards.keys(),
+        ...[...s.eds.keys()].map((k) => k.split("|")[1]),
+        ...(colpD?.offers ?? []).map((o) => o.id),
+        ...(s.player.recent as { id?: unknown }[]).map((x) => (x && typeof x.id === "string" ? x.id : "")),
+        ...after("f|"),
+        ...s.quiz.keys(),
+      ]))
+    : undefined;
   return {
     v: s.player.version, day: ctx.day, today: ctx.today, account, ...(meta ? { meta } : {}),
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */

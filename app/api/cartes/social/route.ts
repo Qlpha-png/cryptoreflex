@@ -19,6 +19,7 @@ import { toClient } from "@/lib/reflex-cards/actions";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { applyReleases } from "@/lib/reflex-cards/releases";
+import { withUniversMeta } from "@/lib/reflex-cards/univers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,7 +28,8 @@ export const fetchCache = "force-no-store";
 const perPlayer = createRateLimiter({ limit: 30, windowMs: 60_000, key: "rc-social", forceKv: true });
 const ACTIONS = new Set(["echange", "echange-ok", "echange-non", "echange-annuler", "cadeau", "pioche", "reaction"]);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const CARD_RE = /^[a-z0-9-]{1,80}$/;
+/* « _ » : identifiants des cartes de l'Univers (pr_, wk_, ev_…) */
+const CARD_RE = /^[a-z0-9_-]{1,80}$/;
 
 const notFound = () => new NextResponse("Page introuvable", { status: 404 });
 const notReady = () => NextResponse.json({ ok: false, code: "not_ready", error: "Les échanges entre amis arrivent très bientôt." }, { status: 503, headers: NO_STORE });
@@ -55,10 +57,10 @@ export async function GET(req: NextRequest) {
       if (!FRIEND_CODE_RE.test(code)) return w.finish(refuse(422, "Un code ami fait 8 caractères (lettres et chiffres)."));
       const rows = await r.sdb.friendDups(w.player!, code);
       if (!rows) return w.finish(refuse(404, "Ce joueur n'est pas (ou plus) dans vos amis."));
-      return w.finish(NextResponse.json({ ok: true, code, dups: friendTradeables(rows, ctx.day) }, { headers: NO_STORE }));
+      return w.finish(NextResponse.json(withUniversMeta({ ok: true, code, dups: friendTradeables(rows, ctx.day) }), { headers: NO_STORE }));
     }
     const s = await loadGame(w.db, w.player!, ctx);
-    return w.finish(NextResponse.json({ ok: true, ...(await socialView(r.sdb, s, w.player!, ctx)) }, { headers: NO_STORE }));
+    return w.finish(NextResponse.json(withUniversMeta({ ok: true, ...(await socialView(r.sdb, s, w.player!, ctx)) }), { headers: NO_STORE }));
   } catch (e) {
     if (e instanceof SocialNotReady) return w ? w.finish(notReady()) : notReady();
     return w ? w.finish(errorJson(e)) : errorJson(e);
@@ -104,10 +106,10 @@ export async function POST(req: NextRequest) {
         const draw = await sdb.friendDraw(me, code);
         if (!draw) return w.finish(refuse(404, "Pas encore de booster ouvert chez cet ami."));
         /* l'ami vient d'ouvrir un autre booster : on montre d'abord le nouveau (la pioche se fait dans ce qu'on a vu) */
-        if (b.draw != null && Number(b.draw) !== Number(draw.id)) return w.finish(NextResponse.json({ ok: false, code: "new_draw", error: "Votre ami vient d'ouvrir un nouveau booster : le voici.", draw }, { status: 409, headers: NO_STORE }));
+        if (b.draw != null && Number(b.draw) !== Number(draw.id)) return w.finish(NextResponse.json(withUniversMeta({ ok: false, code: "new_draw", error: "Votre ami vient d'ouvrir un nouveau booster : le voici.", draw }), { status: 409, headers: NO_STORE }));
         const out = await runAction(db, me, "pioche", {}, ctx, account, planPick(draw));
         await sdb.event(me, "pick", code, String(out.data?.id ?? ""), {}).catch(() => {});
-        return w.finish(NextResponse.json({ ok: true, data: out.data, state: out.state, social: await socialView(sdb, await loadGame(db, me, ctx), me, ctx) }, { headers: NO_STORE }));
+        return w.finish(NextResponse.json(withUniversMeta({ ok: true, data: out.data, state: out.state, social: await socialView(sdb, await loadGame(db, me, ctx), me, ctx) }), { headers: NO_STORE }));
       }
       case "reaction": {
         const ev = Number(b.ev), rx = Number(b.rx);
@@ -119,7 +121,7 @@ export async function POST(req: NextRequest) {
     const m = socialMsg(a, res);
     if (cardsMoved) s = await loadGame(db, me, ctx);
     const body = { ...(m.ok ? { ok: true, msg: m.msg } : { ok: false, error: m.msg }), social: await socialView(sdb, s, me, ctx), ...(cardsMoved ? { state: toClient(s, ctx, account) } : {}) };
-    return w.finish(NextResponse.json(body, { status: m.ok ? 200 : 422, headers: NO_STORE }));
+    return w.finish(NextResponse.json(withUniversMeta(body), { status: m.ok ? 200 : 422, headers: NO_STORE }));
   } catch (e) {
     if (e instanceof SocialNotReady) return w ? w.finish(notReady()) : notReady();
     return w ? w.finish(errorJson(e)) : errorJson(e);

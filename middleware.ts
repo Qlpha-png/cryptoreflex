@@ -114,13 +114,17 @@ function isCrossSiteMutation(request: NextRequest): boolean {
 export async function middleware(request: NextRequest) {
   // Actus supprimées : redirection permanente vers /actualites, sans toucher à Supabase (branche la moins chère possible).
   const { pathname } = request.nextUrl;
-  /* page d'une carte Reflex : vrai 404 si l'identifiant n'existe pas dans l'Univers (sans Supabase, branche la moins chère) */
-  if (pathname.startsWith("/cartes/")) {
+  /* page d'une carte Reflex : vrai 404 si l'identifiant n'existe pas dans l'Univers (sans Supabase, branche la moins chère).
+     NB : un matcher dédié « /cartes/:id » n'était PAS appliqué (dev et prod, vérifié le 04/10) → /cartes passe par le matcher général. */
+  if (pathname === "/cartes" || pathname.startsWith("/cartes/")) {
     const id = decodeURIComponent(pathname.slice("/cartes/".length)).replace(/\/+$/, "");
     if (UNIVERS_ON && id && !id.includes("/") && !id.includes(".") && !CARTES_PASS.has(id) && !universHas(id)) {
-      return new NextResponse(NOT_FOUND_HTML, { status: 404, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
+      return new NextResponse(NOT_FOUND_HTML, { status: 404, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300", "x-reflex-univers": "404" } });
     }
-    return NextResponse.next();
+    /* en-tête de diagnostic : le middleware est passé ici, et avec quel état de l'interrupteur */
+    const pass = NextResponse.next();
+    pass.headers.set("x-reflex-univers", UNIVERS_ON ? "on" : "off");
+    return pass;
   }
   if (pathname.startsWith("/actualites/")) {
     const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "");
@@ -233,8 +237,7 @@ export const config = {
     // anciennes actus supprimées → 308 (voir REMOVED_NEWS) ; le hub /actualites reste hors middleware
     "/actualites/:slug+",
     // Reflex Cards Univers (04/10/2026) : /cartes/<id> → vrai 404 si l'identifiant n'existe pas (voir universHas) ; aucun appel Supabase
-    "/cartes/:id",
-    // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
+        // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
     // pour couvrir 7 routes oubliées qui restaient soumises au middleware
     // Supabase alors qu'elles sont 100% read-only public :
     // /quiz, /calendrier, /halving-bitcoin, /recherche, /transparence,
@@ -249,6 +252,6 @@ export const config = {
     // contrôle CSRF ci-dessus.
     // REFLEX CARDS (02/10/2026) : /cartes et /cartes/* sont 100 % publics en lecture (phase A, sans comptes) :
     // pas de refresh JWT Supabase. À revoir en phase B (comptes) si une page /cartes devient auth-aware.
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cartes|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
   ],
 };

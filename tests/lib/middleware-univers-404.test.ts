@@ -22,9 +22,12 @@ describe("middleware — cartes de l'Univers", () => {
     expect(r.status).toBe(404);
     expect(r.headers.get("content-type")).toContain("text/html");
     expect(await r.text()).toContain('name="robots" content="noindex"');
-    for (const p of ["/cartes/bitcoin", "/cartes/wk_q13382352", "/cartes/ev_pizza-day-2010", "/cartes/pr_aave", "/cartes/jouer", "/cartes/manifest.webmanifest", "/cartes/icon-192.png", "/cartes/wk_q13382352/opengraph-image"]) {
-      expect((await mw(get(p))).status, p).toBe(200);
+    for (const p of ["/cartes", "/cartes/bitcoin", "/cartes/wk_q13382352", "/cartes/ev_pizza-day-2010", "/cartes/pr_aave", "/cartes/jouer", "/cartes/manifest.webmanifest", "/cartes/icon-192.png", "/cartes/wk_q13382352/opengraph-image"]) {
+      const res = await mw(get(p));
+      expect(res.status, p).toBe(200);
+      expect(res.headers.get("x-reflex-univers"), p).toBe("on");
     }
+    expect(r.headers.get("x-reflex-univers")).toBe("404");
     expect((await mw(get("/cartes/Bitcoin"))).status).toBe(404); // sensible à la casse, comme les pages
   });
   it("Univers éteint : rien ne change (la page statique fait déjà un vrai 404)", async () => {

@@ -20,6 +20,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabaseSocialDb } from "@/lib/reflex-cards/social";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { bumpFunnel } from "@/lib/reflex-cards/funnel";
+import { withUniversMeta } from "@/lib/reflex-cards/univers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -67,9 +68,9 @@ export async function GET(req: NextRequest) {
       if (!FRIEND_CODE_RE.test(code)) return w.finish(NextResponse.json({ ok: false, error: "Un code ami fait 8 caractères (lettres et chiffres)." }, { status: 422, headers: NO_STORE }));
       const p = await friendProfile(r.fdb, w.player!, code);
       if (!p) return w.finish(NextResponse.json({ ok: false, error: "Ce joueur n'est pas (ou plus) dans vos amis." }, { status: 404, headers: NO_STORE }));
-      return w.finish(NextResponse.json({ ok: true, profil: p }, { headers: NO_STORE }));
+      return w.finish(NextResponse.json(withUniversMeta({ ok: true, profil: p }), { headers: NO_STORE }));
     }
-    return w.finish(NextResponse.json({ ok: true, ...(await view(r.fdb, w.player!)) }, { headers: NO_STORE }));
+    return w.finish(NextResponse.json(withUniversMeta({ ok: true, ...(await view(r.fdb, w.player!)) }), { headers: NO_STORE }));
   } catch (e) {
     if (e instanceof FriendsNotReady) return w ? w.finish(notReady()) : notReady();
     return w ? w.finish(errorJson(e)) : errorJson(e);
@@ -127,7 +128,7 @@ export async function POST(req: NextRequest) {
       else if (res === "self") msg = "C'est votre propre lien d'invitation.";
       if (referral?.referee) msg += " Un booster offert vient d'être ajouté à votre réserve.";
     }
-    return w.finish(NextResponse.json(m.ok ? { ok: true, msg, list, ...(referral ? { referral } : {}) } : { ok: false, error: msg, list }, { status: m.ok ? 200 : 422, headers: NO_STORE }));
+    return w.finish(NextResponse.json(withUniversMeta(m.ok ? { ok: true, msg, list, ...(referral ? { referral } : {}) } : { ok: false, error: msg, list }), { status: m.ok ? 200 : 422, headers: NO_STORE }));
   } catch (e) {
     if (e instanceof FriendsNotReady) return w ? w.finish(notReady()) : notReady();
     return w ? w.finish(errorJson(e)) : errorJson(e);

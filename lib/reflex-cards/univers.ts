@@ -119,6 +119,27 @@ export function sousFr(c: UCard): string {
 export type ClientRow = [string, string, string, Cat, string, string, number, string, string, string, number];
 export const toClientRow = (c: UCard): ClientRow => [c.id, c.nom, c.sym, c.cat, sousFr(c), c.r, c.rank, c.img ?? "", c.fam, universBlurb(c.id), universYear(c.id)];
 
+/* champs qui portent une carte dans les réponses du jeu (échanges, fil, boosters d'amis, profils, Colporteur, dernières cartes) ;
+   on ne lit QUE ceux-là : des mots courants (« on », « packs », « ok », « base »…) sont aussi des identifiants de cryptos */
+const CARD_KEYS = new Set(["id", "card", "give", "get", "cards", "best", "pantheon", "hero", "fiches"]);
+/** identifiants de cartes de l'Univers cités dans une réponse (valeurs des champs de carte, clés « édition|carte » comprises) */
+export function universIdsIn(v: unknown, out: Set<string> = new Set(), depth = 0, key = ""): Set<string> {
+  if (depth > 10) return out;
+  if (typeof v === "string") {
+    if (!CARD_KEYS.has(key) || !v || v.length > 100) return out;
+    if (universById(v)) out.add(v);
+    else if (v.includes("|")) { const id = v.split("|")[1]; if (id && universById(id)) out.add(id); }
+  } else if (Array.isArray(v)) for (const x of v) universIdsIn(x, out, depth + 1, key);
+  else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) universIdsIn(x, out, depth + 1, k);
+  return out;
+}
+/** Univers : joint à une réponse les lignes de toutes les cartes qu'elle cite (le jeu ne peut pas dessiner une carte sans sa ligne) */
+export function withUniversMeta<T extends object>(body: T): T & { meta?: ClientRow[] } {
+  if (!UNIVERS_ON()) return body;
+  const ids = universIdsIn(body);
+  return ids.size ? { ...body, meta: [...ids].map((id) => toClientRow(universById(id)!)) } : body;
+}
+
 /* ---------- recherche (album : « Chercher une carte ») ---------- */
 const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 let INDEX: { c: UCard; k: string }[] | null = null;
