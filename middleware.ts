@@ -29,6 +29,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import removedNews from "@/lib/news-removed-slugs.json";
+import { UNIVERS_IDS } from "@/lib/reflex-cards/univers-ids";
+
+/* REFLEX CARDS UNIVERS (04/10/2026) : /cartes/<id> est rendu à la demande (27 711 cartes, dynamicParams) ; un notFound() dans
+   une page rendue à la demande répond 200 (loading racine). Le middleware tranche AVANT le rendu : identifiant hors de la liste
+   exportée (lib/reflex-cards/univers-ids.ts, ≈ 390 Ko) = vrai 404. Construit une fois par isolat. */
+const UNIVERS_ON = process.env.REFLEX_CARDS_UNIVERS?.trim() === "true";
+let UNIVERS_SET: Set<string> | null = null;
+const universHas = (id: string) => (UNIVERS_SET ??= new Set(UNIVERS_IDS.split("\n"))).has(id);
+const CARTES_PASS = new Set(["jouer", "manifest.webmanifest"]);
+const NOT_FOUND_HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Carte introuvable · Reflex Cards</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07090f;color:#e8ecf3;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:24px}a{color:#f5b52a}</style></head><body><div><p style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9aa4b2">Reflex Cards</p><h1>Cette carte n'existe pas</h1><p>Aucune carte ne porte cet identifiant. <a href="/cartes">Voir le jeu</a> · <a href="/cartes/jouer">Ouvrir un booster</a></p></div></body></html>`;
 
 /* AUDIT 03/10/2026 — anciennes actus supprimées (mai 2026) : 308 vers le hub au lieu d'un 404 (263 erreurs Search Console). */
 const REMOVED_NEWS = new Set<string>(removedNews.slugs);
@@ -104,6 +114,14 @@ function isCrossSiteMutation(request: NextRequest): boolean {
 export async function middleware(request: NextRequest) {
   // Actus supprimées : redirection permanente vers /actualites, sans toucher à Supabase (branche la moins chère possible).
   const { pathname } = request.nextUrl;
+  /* page d'une carte Reflex : vrai 404 si l'identifiant n'existe pas dans l'Univers (sans Supabase, branche la moins chère) */
+  if (pathname.startsWith("/cartes/")) {
+    const id = decodeURIComponent(pathname.slice("/cartes/".length)).replace(/\/+$/, "");
+    if (UNIVERS_ON && id && !id.includes("/") && !id.includes(".") && !CARTES_PASS.has(id) && !universHas(id)) {
+      return new NextResponse(NOT_FOUND_HTML, { status: 404, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
+    }
+    return NextResponse.next();
+  }
   if (pathname.startsWith("/actualites/")) {
     const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "");
     if (REMOVED_NEWS.has(slug)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
@@ -214,6 +232,8 @@ export const config = {
   matcher: [
     // anciennes actus supprimées → 308 (voir REMOVED_NEWS) ; le hub /actualites reste hors middleware
     "/actualites/:slug+",
+    // Reflex Cards Univers (04/10/2026) : /cartes/<id> → vrai 404 si l'identifiant n'existe pas (voir universHas) ; aucun appel Supabase
+    "/cartes/:id",
     // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
     // pour couvrir 7 routes oubliées qui restaient soumises au middleware
     // Supabase alors qu'elles sont 100% read-only public :
