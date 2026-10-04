@@ -19,6 +19,24 @@ export function metaRows(ids: Iterable<string>): ClientRow[] {
   return out;
 }
 
+/* ---------- booster cadeau (perso.gift) ---------- */
+export interface Gift { id: string; from: string; title: string; msg: string; items: { id: string; ed: string | null }[] }
+const GIFT_ID_RE = /^[a-z0-9-]{3,60}$/;
+const txt = (v: unknown, max: number) => (typeof v === "string" ? v.replace(/[<>]/g, "").trim().slice(0, max) : "");
+/** le cadeau en attente dans le profil, s'il est bien formé et que toutes ses cartes existent dans le catalogue chargé */
+export function giftOf(P: Record<string, unknown>): Gift | null {
+  const g = P.gift as Record<string, unknown> | undefined;
+  if (!g || typeof g !== "object" || typeof g.id !== "string" || !GIFT_ID_RE.test(g.id) || !Array.isArray(g.items)) return null;
+  const items = (g.items as Record<string, unknown>[]).slice(0, 5).map((it) => ({ id: String(it?.id ?? ""), ed: it?.ed == null ? null : String(it.ed) }));
+  if (!items.length) return null;
+  for (const it of items) {
+    if (it.ed === "relic") { if (!RULES.relics.includes(it.id)) return null; }
+    else if (it.ed) { if (!RULES.ed[it.ed] || !RULES.ed[it.ed].list.includes(it.id) || !CARD.has(it.id)) return null; }
+    else if (!CARD.has(it.id)) return null;
+  }
+  return { id: g.id, from: txt(g.from, 40) || "un ami", title: txt(g.title, 80), msg: txt(g.msg, 400), items };
+}
+
 export interface Ctx { day: number; today: string; now: number }
 /** qui joue : invité (partie liée à ce navigateur) ou compte du site (e-mail affiché dans le jeu) */
 /** expired : un cookie de session du site était présent mais ne correspond plus à une session valide (à reconnecter) */
@@ -70,6 +88,37 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req)) throw new GameError("bad", "Demande invalide.");
       const o = planOpen(s, { day: ctx.day, today: ctx.today, now: ctx.now, req });
       return { patch: o.patch, data: { items: o.items, results: o.results, theme: o.theme } };
+    }
+    case "ouvrir-cadeau": {
+      /* booster cadeau (Kev 04/10) : posé dans le profil du joueur (perso.gift, par l'administrateur), ouvert UNE fois, à la main ;
+         ne consomme aucun booster de la réserve et ne touche pas aux garanties. Les cartes sont vérifiées contre le catalogue chargé. */
+      const req = String(b.req ?? "");
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req)) throw new GameError("bad", "Demande invalide.");
+      const P = (s.player.perso ?? {}) as Record<string, unknown>;
+      const g = giftOf(P);
+      if (!g || String(b.id ?? "") !== g.id) throw new GameError("gone", "Ce cadeau a déjà été ouvert : ses cartes sont dans votre collection.");
+      const items = g.items.map((it) => ({ id: it.id, ed: it.ed, fin: null, serial: null }));
+      const owned = new Set(s.cards.keys()), ownedEd = new Set(s.eds.keys());
+      let gain = 0, nw = 0;
+      const results = items.map((it) => {
+        let isNew: boolean, gg = 0;
+        if (it.ed) { const k = it.ed + "|" + it.id; isNew = !ownedEd.has(k); if (!isNew) gg = RULES.edDup[it.ed] ?? 0; ownedEd.add(k); }
+        else { isNew = !owned.has(it.id); if (!isNew) gg = RULES.shardDup[CARD.get(it.id)!.r]; owned.add(it.id); }
+        gain += gg;
+        if (isNew) nw++;
+        return { isNew, gain: gg };
+      });
+      const { gift: _done, ...rest } = P;
+      void _done;
+      const recent = [...items.map((it) => ({ id: it.id, ed: it.ed, fin: null, serial: null })), ...(s.player.recent as unknown[])].slice(0, 12);
+      const patch: Patch = {
+        player: { perso: { ...rest, giftOpened: { id: g.id, day: ctx.today } }, eclats: gain, recent },
+        cards: items.flatMap((it, i) => (it.ed ? [] : [{ i, id: it.id, dn: 1, dholo: 0 }])),
+        eds: items.filter((it) => it.ed).map((it) => ({ ed: it.ed as string, id: it.id, dn: 1 })),
+        ...(nw ? { day: { day: ctx.today, inc: { newc: nw } } } : {}),
+        draw: { req, kind: "gift", day: ctx.day, cards: items },
+      };
+      return { patch, data: { items, results, gift: { id: g.id, from: g.from, title: g.title, msg: g.msg } } };
     }
     case "mission": {
       const m = activeMissions(s, ctx.today).find((x) => x.key === b.key);
@@ -317,6 +366,8 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
     : undefined;
   return {
     v: s.player.version, day: ctx.day, today: ctx.today, account, ...(meta ? { meta } : {}),
+    /* rang mondial de découverte des Mythiques et Reliques (vrai numéro « N° 1 au monde » ; absent = pas de numéro) */
+    edNo: s.edNo ?? {},
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
     pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
     /* Quiz du jour : les questions sans la bonne réponse tant qu'on n'y a pas répondu ; les questions déjà répondues
@@ -341,6 +392,8 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
       pseudo: s.player.pseudo, title: P.title ?? null, pantheon: P.pantheon ?? null, hero: typeof P.hero === "string" ? P.hero : null,
       cover: P.cover ?? RULES.cosDefault.cover, sleeve: P.sleeve ?? RULES.cosDefault.sleeve, frame: P.frame ?? RULES.cosDefault.frame,
       bg: P.bg ?? RULES.cosDefault.bg, pack: P.pack ?? RULES.cosDefault.pack, inv, ad: { on: false, give: [], want: [], init: true }, v9init: true, public: false,
+      /* booster cadeau en attente : le message, jamais les cartes (surprise jusqu'à l'ouverture) */
+      gift: (() => { const g = giftOf(P); return g ? { id: g.id, from: g.from, title: g.title, msg: g.msg, n: g.items.length } : null; })(),
     },
   };
 }

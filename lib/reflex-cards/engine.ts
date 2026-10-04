@@ -213,6 +213,8 @@ export interface GameState {
   claims: Set<string>;
   days: Map<string, { ev: Record<string, number>; colp: ColpDay | null }>;
   quiz: Map<string, { ok: boolean; day: string }>;
+  /** rang mondial de découverte de ses Mythiques et Reliques (« édition|carte » → n° 1, 2…), calculé à la lecture */
+  edNo?: Record<string, number>;
 }
 export interface ColpDay { k: string; offers: { r: Rar; id: string; done?: boolean }[]; line: number }
 export interface Patch {
