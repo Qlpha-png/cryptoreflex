@@ -69,6 +69,8 @@ export function universBlurb(id: string): string {
   const first = d.match(/^.{20,}?[.!?](\s|$)/)?.[0]?.trim() ?? d;
   return first.length > 220 ? first.slice(0, 217).replace(/\s+\S*$/, "") + "…" : first;
 }
+/** page du site indexable : Super rare et mieux, avec un texte de présentation (les autres restent en noindex, hors sitemap) */
+export const universIndexable = (c: UCard): boolean => ["SR", "UR", "L"].includes(c.r) && !!DESC[c.id]?.d;
 /** année d'un événement (date AAAA-MM-JJ), 0 sinon */
 export const universYear = (id: string): number => { const t = DESC[id]?.t ?? ""; return /^\d{4}/.test(t) ? Number(t.slice(0, 4)) : 0; };
 
@@ -149,6 +151,8 @@ export interface UniversRulesPatch {
   families: string[];
   ed: Record<string, { p: number; list: string[] }>;
   relics: string[];
+  /** chance PAR relique (la chance d'une relique quelconque reste 1 sur 1 milliard) */
+  relicP: number;
   quests: { id: string; goal: number; card?: string }[];
   themes: { id: string; rew: number; fams?: boolean; cards?: string[] }[];
   /** tirage équiprobable sur tout le pool (WikiMasters) */
@@ -172,22 +176,28 @@ export function universRules(base: { cards: RCardLike[]; ed: Record<string, { p:
     for (let i = 0; i < ids.length; i += 9) pages.push(ids.slice(i, i + 9));
   }
   const E = universEditions();
-  const perCard = (k: string) => (base.ed[k]?.list.length ? base.ed[k].p / base.ed[k].list.length : 0);
   const extra = (slot: "reliques" | "mythiques" | "icones") => Object.values(E).flatMap((e) => e[slot]).filter((id) => !!universById(id));
   const uniq = (l: string[]) => [...new Set(l)];
   const ed: UniversRulesPatch["ed"] = { ...base.ed };
+  /* Rareté des éditions (décision du 04/10, dans l'esprit des règles de Kev « Mythiques = vraie rareté », « Icônes plus rares que les
+     Légendaires », « Reliques quasi impossibles ») : avec 7 catégories de plus, on ne multiplie pas les chances par 8.
+     - Icônes : 5 → 40 cartes, chance TOTALE ×3 (une Icône quelconque ≈ 1 carte sur 10 000, une Icône précise ≈ 1 sur 400 000 ;
+       toujours ~18 fois plus rare qu'une Légendaire, 1 sur 554) ;
+     - Mythiques : 6 → 27 cartes, chance TOTALE ×2 (une Mythique précise ≈ 1 sur 2,25 millions) ;
+     - Reliques : 3 → 24 cartes, chance TOTALE INCHANGÉE (« 1 carte sur 1 milliard », règle fixée pour toujours le 01/10). */
   const mythList = uniq([...base.ed.myth.list, ...extra("mythiques")]);
-  ed.myth = { p: perCard("myth") * mythList.length, list: mythList };
+  ed.myth = { p: base.ed.myth.p * 2, list: mythList };
   const iconList = uniq([...base.ed.icon.list, ...extra("icones")]);
-  ed.icon = { p: perCard("icon") * iconList.length, list: iconList };
+  ed.icon = { p: base.ed.icon.p * 3, list: iconList };
   const relics = uniq([...base.relics, ...extra("reliques")]);
+  const relicP = (base.relicP * base.relics.length) / relics.length;
   /* défis Univers : mêmes mécaniques (boosters, page, doublons, quiz, fiches, semaine), nouveaux objectifs transversaux */
   const quests: UniversRulesPatch["quests"] = [
     { id: "q-open", goal: 3 }, { id: "q-page", goal: 1 }, { id: "q-tour", goal: 8 }, { id: "q-swap", goal: 15 },
     { id: "q-perso", goal: 3 }, { id: "q-event", goal: 3 }, { id: "q-quiz", goal: 10 }, { id: "q-read", goal: 3, card: "aave" }, { id: "q-week", goal: 7 },
   ];
   return {
-    cards, parts: [{ jour: 1, collection: "Univers", partie: 1 }], pages, families: CATS.map((c) => CAT_LABEL[c]), ed, relics, quests,
+    cards, parts: [{ jour: 1, collection: "Univers", partie: 1 }], pages, families: CATS.map((c) => CAT_LABEL[c]), ed, relics, relicP, quests,
     themes: base.themes, equi: true, totyFromDay: base.totyFromDay,
   };
 }

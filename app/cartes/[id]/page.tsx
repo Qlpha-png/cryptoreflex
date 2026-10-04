@@ -32,6 +32,9 @@ import {
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
+import { CAT_LABEL, UNIVERS_ON, universBlurb, universById, universIndexable } from "@/lib/reflex-cards/univers";
+import { RULES, dayTables } from "@/lib/reflex-cards/engine";
+import UniversCarte from "@/components/reflex-cards/UniversCarte";
 
 /**
  * /cartes/[id] — page publique d'une carte Reflex (id = identifiant CoinGecko).
@@ -43,9 +46,14 @@ import type { ReflexCard } from "@/lib/reflex-cards/types";
  * loading.tsx racine, un notFound() dynamique répondrait 200). Régénération chaque heure : une carte
  * passe d'« à venir » à « sortie » le jour J sans redéploiement.
  * Indexable seulement si sortie, avec une description ET une fiche crypto à relier.
+ * Univers (REFLEX_CARDS_UNIVERS=true au build) : les 27 000 cartes du catalogue ne sont pas générées au build ; elles sont
+ * rendues à la demande (dynamicParams) et mises en cache une heure ; id inconnu = notFound() (page sans lecture « no-store » : vrai 404).
  */
-export const dynamicParams = false;
+export const dynamicParams = process.env.REFLEX_CARDS_UNIVERS?.trim() === "true";
 export const revalidate = 3600;
+
+/** part des tirages pris par les éditions (Mythiques, Équipe, Icônes, Bloc, Fossiles, Reliques) ce jour-là */
+const editionsShare = (day: number) => Object.values(dayTables(Math.max(1, day)).ed).reduce((s, e) => s + e.p, 0) + RULES.relicP * RULES.relics.length;
 
 export function generateStaticParams() {
   if (!isReflexCardsEnabled()) return [];
@@ -61,6 +69,15 @@ const rarityArticle = (c: ReflexCard) => (c.fossil ? "Fossile" : RNAME[c.r]);
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   await applyReleases({ readOnly: true });
   const c = getCard(params.id);
+  if (!c && isReflexCardsEnabled() && UNIVERS_ON()) {
+    const u = universById(params.id);
+    if (!u) return {};
+    const url = `${BRAND.url}/cartes/${u.id}`;
+    const title = `${u.nom} : carte ${RNAME[u.r]} Reflex Cards (${CAT_LABEL[u.cat]})`;
+    const blurb = universBlurb(u.id);
+    const description = `${blurb ? blurb + " " : ""}Carte ${RNAME[u.r].toLowerCase()} du chapitre ${CAT_LABEL[u.cat]} de Reflex Cards, le jeu de cartes crypto gratuit de Cryptoreflex.`.slice(0, 300);
+    return { title, description, alternates: withHreflang(url), robots: universIndexable(u) ? undefined : { index: false, follow: true }, openGraph: { title, description, url, type: "website" }, twitter: { card: "summary_large_image", title, description } };
+  }
   if (!c || !isReflexCardsEnabled()) return {};
   const name = cleanName(c.name);
   const url = `${BRAND.url}/cartes/${c.id}`;
@@ -152,7 +169,12 @@ export default async function CartePage({ params }: Props) {
   await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs)
   if (!isReflexCardsEnabled()) notFound();
   const c = getCard(params.id);
-  if (!c) notFound();
+  if (!c) {
+    /* carte de l'Univers (hors jeu d'origine) : page dédiée ; sinon vrai 404 */
+    const u = UNIVERS_ON() ? universById(params.id) : undefined;
+    if (!u) notFound();
+    return <UniversCarte c={u} pEditions={editionsShare(seasonDay())} />;
+  }
   const day = seasonDay();
   const name = cleanName(c.name);
   const fiche = ficheHref(c);

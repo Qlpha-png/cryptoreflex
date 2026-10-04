@@ -47,13 +47,16 @@ describe("Univers — catalogue et règles", () => {
       for (const [a, b] of [["L", "UR"], ["UR", "SR"], ["SR", "R"], ["R", "PC"], ["PC", "C"]]) expect(s[a], `${cat} ${a}≤${b}`).toBeLessThanOrEqual(s[b]);
     }
   });
-  it("éditions : Mythiques, Icônes et Reliques de chaque catégorie, taux par carte inchangés", () => {
-    const base = RULES_RAW as unknown as { ed: Record<string, { p: number; list: string[] }>; relics: string[] };
+  it("éditions : Mythiques (chance totale ×2), Icônes (×3), Reliques (1 sur 1 milliard inchangé) de chaque catégorie", () => {
+    const base = RULES_RAW as unknown as { ed: Record<string, { p: number; list: string[] }>; relics: string[]; relicP: number };
     expect(RULES.ed.myth.list.length).toBe(base.ed.myth.list.length + 7 * 3);
     expect(RULES.ed.icon.list.length).toBe(base.ed.icon.list.length + 7 * 5);
     expect(RULES.relics.length).toBe(base.relics.length + 7 * 3);
-    expect(RULES.ed.myth.p / RULES.ed.myth.list.length).toBeCloseTo(base.ed.myth.p / base.ed.myth.list.length, 12);
-    expect(RULES.ed.icon.p / RULES.ed.icon.list.length).toBeCloseTo(base.ed.icon.p / base.ed.icon.list.length, 12);
+    expect(RULES.ed.myth.p).toBeCloseTo(base.ed.myth.p * 2, 12);
+    expect(RULES.ed.icon.p).toBeCloseTo(base.ed.icon.p * 3, 12);
+    expect(RULES.relicP * RULES.relics.length).toBeCloseTo(base.relicP * base.relics.length, 15);
+    /* une Icône précise reste plus rare qu'une Légendaire précise */
+    expect(RULES.ed.icon.p / RULES.ed.icon.list.length).toBeLessThan(1 / universCards().length);
     for (const id of [...RULES.ed.myth.list, ...RULES.ed.icon.list]) expect(CARD.get(id), id).toBeTruthy();
     expect(RULES.ed.icon.list).toContain("wk_q6831501"); // Michael Saylor, Icône des Personnes
   });

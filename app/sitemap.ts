@@ -27,6 +27,9 @@ import {
 } from "@/lib/sitemap-filters";
 import { allCards as allReflexCards, isIndexable, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
+import { UNIVERS_ON, universCards, universIndexable } from "@/lib/reflex-cards/univers";
+/* date de la dernière mise à jour du catalogue Univers (export du 04/10/2026) */
+const UNIVERS_UPDATE = new Date("2026-10-04");
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -396,6 +399,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // (description + fiche à relier), seulement quand le jeu est activé (lib/reflex-cards/data.ts).
   await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs) : seules les cartes sorties sont indexées
   const reflexDay = seasonDay();
+  const legacyIds = new Set(allReflexCards().map((c) => c.id));
   const reflexCardRoutes: MetadataRoute.Sitemap = isReflexCardsEnabled()
     ? [
         { url: `${SITE_URL}/cartes`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.8 },
@@ -407,6 +411,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: "monthly" as const,
             priority: 0.5,
           })),
+        /* Univers : seules les Super rares, Ultra rares et Légendaires avec un texte (≈ 1 000 pages), hors cartes du jeu d'origine */
+        ...(UNIVERS_ON()
+          ? universCards()
+              .filter((c) => !legacyIds.has(c.id) && universIndexable(c))
+              .map((c) => ({ url: `${SITE_URL}/cartes/${c.id}`, lastModified: UNIVERS_UPDATE, changeFrequency: "monthly" as const, priority: 0.4 }))
+          : []),
       ]
     : [];
 

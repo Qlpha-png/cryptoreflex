@@ -14,7 +14,7 @@ import rulesRaw from "@/data/reflex-cards-rules.json";
 import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
-import { partDay, totyDay } from "./engine";
+import { partDay, totyDay, RULES as ENGINE_RULES } from "./engine";
 import { CATS, CAT_LABEL, UNIVERS_ON, sousFr, universBlurb, universById, universCards, universEditions, universStats, universYear, type UCard } from "./univers";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
@@ -116,7 +116,11 @@ export function gameData(day: number): GameData {
    La page n'embarque que les têtes d'affiche : Légendaires et Ultra rares de chaque catégorie, Icônes, Trophées, Équipe de la saison.
    Les cartes possédées arrivent avec la partie (champ meta de /api/cartes/etat), les autres par /api/cartes/recherche. Tout est
    « sorti » et en clair : aucune carte masquée. */
-export interface UniversInfo { total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions> }
+export interface UniversInfo {
+  total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions>;
+  /** chances TOTALES des éditions côté serveur (le navigateur les affiche, il ne tire plus rien) */
+  ed: { myth: number; icon: number; toty: number; bds: number; relicAny: number; relics: string[] };
+}
 export type GameDataU = GameData & { univers: UniversInfo | null };
 const LEGACY_ROW = new Map(RAW.cards.map((r) => [r[0], r]));
 /** ligne au format du jeu ([id, nom, symbole, image, rang, famille, sous-titre, année, en bref, accroche, slug, score]) */
@@ -151,7 +155,10 @@ export function universGame(day: number): GameDataU {
     masked: 0,
     themes: Object.fromEntries(RULES.themes.filter((t) => t.cards?.length).map((t) => [t.id, t.cards!])),
     rarTotals,
-    univers: { total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E },
+    univers: {
+      total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E,
+      ed: { myth: ENGINE_RULES.ed.myth.p, icon: ENGINE_RULES.ed.icon.p, toty: ENGINE_RULES.ed.toty.p, bds: ENGINE_RULES.ed.bds.p, relicAny: ENGINE_RULES.relicP * ENGINE_RULES.relics.length, relics: ENGINE_RULES.relics },
+    },
   };
 }
 

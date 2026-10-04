@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
+import { BRAND } from "@/lib/brand";
+import { UNIVERS_ON, universById } from "@/lib/reflex-cards/univers";
 import { REFLEX_META, cleanName, getCard, isReflexCardsEnabled, isVisible, seasonDay, todayChance } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RNAME, odds, shade } from "@/lib/reflex-cards/render";
@@ -42,7 +44,14 @@ const COND = "Barlow Condensed", MONO = "JetBrains Mono", BODY = "Space Grotesk"
 
 export default async function OgImage({ params }: { params: { id: string } }) {
   const c = isReflexCardsEnabled() ? getCard(params.id) : undefined;
-  if (!c) return new Response("Not found", { status: 404 });
+  if (!c) {
+    /* carte de l'Univers (hors jeu d'origine) : image de partage par défaut du site, jamais un 404 sur l'aperçu du lien */
+    if (isReflexCardsEnabled() && UNIVERS_ON() && universById(params.id)) {
+      const r = await fetch(`${BRAND.url}/og-default.png`, { next: { revalidate: 86400 } });
+      if (r.ok) return new Response(await r.arrayBuffer(), { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } });
+    }
+    return new Response("Not found", { status: 404 });
+  }
   await applyReleases();
   const day = seasonDay();
   const out = isVisible(c, day);

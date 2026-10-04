@@ -11,7 +11,7 @@ process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "2026-10-02";
 vi.resetModules();
 const { universGame, gameDataScript, gameHtml } = await import("@/lib/reflex-cards/game");
 const { metaRows } = await import("@/lib/reflex-cards/actions");
-const { universCards, universStats, CATS, CAT_LABEL } = await import("@/lib/reflex-cards/univers");
+const { universCards, universStats, CATS, CAT_LABEL, universById, universIndexable, universBlurb } = await import("@/lib/reflex-cards/univers");
 
 describe("Univers — page du jeu", () => {
   const d = universGame(1);
@@ -51,6 +51,15 @@ describe("Univers — page du jeu", () => {
     const dir = "C:/Users/kevin/AppData/Local/Temp/claude/Y---claude/4893978b-d9c0-460d-a319-6c72b0ae5f3e/scratchpad/audit/univers-page";
     mkdirSync(dir, { recursive: true });
     writeFileSync(dir + "/jeu-univers.html", html);
+  });
+  it("pages du site : indexation réservée aux Super rares et mieux avec texte, résumé « en bref » court", () => {
+    const n = universCards().filter(universIndexable).length;
+    expect(n).toBeGreaterThan(300);
+    expect(n).toBeLessThan(2000);
+    expect(universIndexable(universById("wk_q13382352")!)).toBe(true); // Satoshi : Légendaire avec texte
+    expect(universIndexable(universById("pr_springx")!)).toBe(false); // Commune
+    expect(universBlurb("ev_pizza-day-2010")).toMatch(/^Laszlo Hanyecz/);
+    expect(universBlurb("ev_pizza-day-2010").length).toBeLessThanOrEqual(220);
   });
   it("métadonnées des cartes possédées : lignes complètes, images dépliées", () => {
     const rows = metaRows(["bitcoin", "pr_aave", "wk_q13382352", "ev_pizza-day-2010", "inconnue"]);
