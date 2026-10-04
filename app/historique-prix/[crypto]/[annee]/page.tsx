@@ -16,7 +16,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
-import { getYearOhlc, getOhlcMeta, formatOhlcPrice } from "@/lib/historical-ohlc";
+import { getYearOhlc, getOhlcMeta, formatOhlcPrice, getYearMonths, yearStats, MONTHS_FR, formatSignedPct, formatCompactUsd } from "@/lib/historical-ohlc";
 import { HIST_YEARS, type HistYear } from "@/lib/historique-prix";
 
 /**
@@ -165,6 +165,11 @@ export default function HistoriquePrixPage({ params }: Props) {
   // OHLC annuel réel (Binance, USD) — null si pas de données pour ce couple.
   const ohlc = didNotExist ? null : getYearOhlc(c.id, annee);
   const ohlcMeta = getOhlcMeta(c.id);
+  // 04/10/2026 — détail mensuel (lot 2b) : tableau mois par mois, meilleur/pire mois, amplitude, repli, comparaison Bitcoin.
+  const months = didNotExist ? [] : getYearMonths(c.id, annee);
+  const stats = ohlc ? yearStats(ohlc) : null;
+  const btc = c.id !== "bitcoin" && ohlc ? getYearOhlc("bitcoin", annee) : null;
+  const pair = `${c.symbol.toUpperCase()}USDT`;
 
   const schemas = graphSchema([
     articleSchema({
@@ -172,7 +177,7 @@ export default function HistoriquePrixPage({ params }: Props) {
       title: `Prix ${c.name} (${c.symbol}) en ${annee} — historique annuel`,
       description: `Évolution du prix ${c.name} en ${annee} avec événements macro contextualisés.`,
       date: "2026-05-02",
-      dateModified: "2026-10-02",
+      dateModified: "2026-10-04",
       category: "Historique prix",
       tags: [c.name, c.symbol, "historique", annee, "prix crypto"],
     }),
@@ -264,6 +269,80 @@ export default function HistoriquePrixPage({ params }: Props) {
               {ohlc.m < 12
                 ? ` Année partielle (${ohlc.m} mois de cotation${ohlc.m > 1 ? "s" : ""}).`
                 : ""}
+            </p>
+          </section>
+        )}
+
+        {/* MOIS PAR MOIS (04/10/2026, lot 2b) — 12 bougies mensuelles Binance : la page répond enfin à « combien valait X
+            en mars 2022 ? », avec le meilleur et le pire mois, l'amplitude, le repli maximal et la comparaison à Bitcoin.
+            Rendu serveur (données locales) : rien à charger côté client. */}
+        {ohlc && stats && months.length > 0 && (
+          <section className="mt-10" aria-labelledby="mois-par-mois">
+            <h2 id="mois-par-mois" className="text-2xl font-bold tracking-tight">
+              {c.name} en {annee}, mois par mois
+            </h2>
+            <p className="mt-3 text-sm text-fg/85 leading-relaxed">
+              Sur {months.length === 12 ? "les douze mois" : `${months.length} mois cotés`} de {annee}, {c.name} a connu{" "}
+              <strong>{stats.up} mois de hausse</strong> et <strong>{stats.down} de baisse</strong>. Le meilleur mois est{" "}
+              <strong>{MONTHS_FR[stats.best.n - 1]}</strong> ({formatSignedPct(stats.best.chg)}), le pire{" "}
+              <strong>{MONTHS_FR[stats.worst.n - 1]}</strong> ({formatSignedPct(stats.worst.chg)}). Entre le plus bas ({formatOhlcPrice(ohlc.l)}) et
+              le plus haut ({formatOhlcPrice(ohlc.h)}) de l&apos;année, l&apos;amplitude atteint {formatSignedPct(stats.amplitude)}
+              {stats.maxDrawdown < 0 ? <> ; le repli maximal depuis un sommet de l&apos;année est de {formatSignedPct(stats.maxDrawdown)}</> : null}.
+              {btc ? (
+                <>
+                  {" "}Sur la même année, Bitcoin a fait {formatSignedPct(btc.chg)} :{" "}
+                  {ohlc.chg === btc.chg
+                    ? `${c.name} a fait jeu égal.`
+                    : `${c.name} a ${ohlc.chg > btc.chg ? "surperformé" : "sous-performé"} de ${Math.abs(ohlc.chg - btc.chg)} points.`}
+                </>
+              ) : null}
+            </p>
+            <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
+              <table className="w-full min-w-[640px] text-sm">
+                <caption className="sr-only">Prix mensuels de {c.name} en {annee} (USD, Binance)</caption>
+                <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                  <tr>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold">Mois</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Ouverture</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Clôture</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Plus haut</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Plus bas</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Variation</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Volume</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {months.map((m) => (
+                    <tr key={m.n} className="border-t border-border/70">
+                      <th scope="row" className="whitespace-nowrap px-3 py-2 font-medium capitalize text-fg">{MONTHS_FR[m.n - 1]}</th>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(m.o)}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(m.c)}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(m.h)}</td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(m.l)}</td>
+                      <td className={`whitespace-nowrap px-3 py-2 text-right tabular-nums font-semibold ${m.chg > 0 ? "text-accent-green" : m.chg < 0 ? "text-danger-fg" : "text-fg/70"}`}>
+                        {formatSignedPct(m.chg)}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-fg/80">{formatCompactUsd(m.q)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="border-t border-border bg-elevated/40 font-semibold">
+                  <tr>
+                    <th scope="row" className="whitespace-nowrap px-3 py-2 text-left">Année {annee}</th>
+                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(ohlc.o)}</td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(ohlc.c)}</td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(ohlc.h)}</td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatOhlcPrice(ohlc.l)}</td>
+                    <td className={`whitespace-nowrap px-3 py-2 text-right tabular-nums ${ohlc.chg > 0 ? "text-accent-green" : ohlc.chg < 0 ? "text-danger-fg" : ""}`}>{formatSignedPct(ohlc.chg)}</td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums">{formatCompactUsd(stats.volume)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-muted">
+              Bougies mensuelles {ohlcMeta?.source ?? "Binance"} de la paire {pair}, en {ohlcMeta?.currency ?? "USD"} ; la variation mesure
+              l&apos;écart ouverture→clôture de chaque mois, le volume est le montant échangé sur cette paire. Données indicatives, à
+              recouper avant toute décision ; ce ne sont pas des conseils en investissement.
             </p>
           </section>
         )}
