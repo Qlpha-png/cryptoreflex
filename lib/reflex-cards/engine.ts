@@ -9,6 +9,7 @@
 import "server-only";
 import { randomInt } from "node:crypto";
 import RULES_RAW from "@/data/reflex-cards-rules.json";
+import { UNIVERS_ON, universRules } from "./univers";
 
 export type Rar = "C" | "PC" | "R" | "SR" | "UR" | "L";
 type Fin = "holo" | "ag" | "or" | "onyx";
@@ -48,8 +49,13 @@ interface Rules {
   quests: { id: string; goal: number; card?: string }[];
   themes: { id: string; rew: number; fams?: boolean; cards?: string[] }[];
   titles: string[];
+  /** Univers (REFLEX_CARDS_UNIVERS=true) : tirage équiprobable sur tout le pool, règle WikiMasters */
+  equi?: true;
 }
-export const RULES = RULES_RAW as unknown as Rules;
+/* Univers (04/10/2026) : les règles du jeu actuel, dont les cartes, les pages, les familles, les éditions et les défis sont remplacés
+   par ceux du catalogue de 27 744 cartes ; économie, missions, objets, finitions et garanties inchangés. Sans la variable : rien ne change. */
+export const UNIVERS = UNIVERS_ON();
+export const RULES: Rules = UNIVERS ? { ...(RULES_RAW as unknown as Rules), ...universRules(RULES_RAW as unknown as Rules) } : (RULES_RAW as unknown as Rules);
 export const RAR = RULES.rar;
 const RNK = (r: Rar) => RAR.indexOf(r);
 export const CARD = new Map(RULES.cards.map((c) => [c.id, c]));
@@ -98,20 +104,23 @@ export const inClear = (id: string, day: number): boolean => {
 };
 export const craftDay = (c: RCard): number => (c.fossil ? 1 : relDay(c) + ((c.part as number) > 0 ? 7 : 0));
 
-interface DayTables { byRD: Record<Rar, RCard[]>; ed: Record<string, { p: number; list: string[] }> }
+interface DayTables { byRD: Record<Rar, RCard[]>; ed: Record<string, { p: number; list: string[] }>; all: RCard[]; byFam: Map<string, RCard[]> }
 const DAYC = new Map<string, DayTables>();
 export function dayTables(day: number): DayTables {
   const key = `${GEN}|${day}`; // le cache suit le calendrier effectif : une nouvelle sortie invalide les tables
   const hit = DAYC.get(key);
   if (hit) return hit;
-  const byRD = Object.fromEntries(RAR.map((r) => [r, BASE.filter((c) => c.r === r && isOut(c, day)).sort((a, b) => a.noto - b.noto)])) as Record<Rar, RCard[]>;
+  const all = BASE.filter((c) => isOut(c, day));
+  const byRD = Object.fromEntries(RAR.map((r) => [r, all.filter((c) => c.r === r).sort((a, b) => a.noto - b.noto)])) as Record<Rar, RCard[]>;
+  const byFam = new Map<string, RCard[]>();
+  for (const c of all) (byFam.get(c.fam) ?? byFam.set(c.fam, []).get(c.fam)!).push(c);
   const ed: DayTables["ed"] = {};
   for (const k of ED_ORDER) {
     let list = RULES.ed[k].list.filter((id) => inClear(id, day));
     if (k === "toty" && day < TOTY_DAY) list = [];
     ed[k] = { p: list.length ? RULES.ed[k].p : 0, list };
   }
-  const t = { byRD, ed };
+  const t = { byRD, ed, all, byFam };
   DAYC.set(key, t);
   return t;
 }
@@ -142,6 +151,12 @@ function drawOne(day: number, fam: string | null, rnd: Rnd): Item {
   for (const k of ED_ORDER) {
     if (x < T.ed[k].p) return { id: pick(T.ed[k].list, rnd), ed: k, fin: null };
     x -= T.ed[k].p;
+  }
+  /* Univers : chaque carte a la même chance (WikiMasters) — la rareté tombe d'elle-même, au prorata des effectifs ;
+     booster thématique : même chose à l'intérieur de la catégorie */
+  if (RULES.equi) {
+    const pool = (fam && T.byFam.get(fam)) || T.all;
+    return { id: pick(pool, rnd).id, ed: null, fin: rollFin(rnd) };
   }
   let y = rnd(), r: Rar = "C";
   for (const k of RAR) {
@@ -355,6 +370,10 @@ export function questProg(s: GameState, id: string): number {
     case "q-quiz": return quizDone(s);
     case "q-read": return fiches(s);
     case "q-week": return s.player.days.length;
+    /* défis Univers : une carte de chaque catégorie ; 3 Personnes ; 3 Événements */
+    case "q-tour": return RULES.families.filter((f) => [...s.cards.keys()].some((id) => CARD.get(id)?.fam === f)).length;
+    case "q-perso": return [...s.cards.keys()].filter((id) => CARD.get(id)?.fam === "Personnes").length;
+    case "q-event": return [...s.cards.keys()].filter((id) => CARD.get(id)?.fam === "Événements").length;
     default: return 0;
   }
 }
@@ -372,7 +391,8 @@ export function titleOk(s: GameState, id: string): boolean {
     case "t-ur": return BASE.filter((c) => c.r === "UR" && own(s, c.id)).length >= 5;
     case "t-l": return BASE.some((c) => c.r === "L" && own(s, c.id));
     case "t-icon": return anyEd(s, "icon");
-    case "t-silver": return BASE.filter((c) => c.r !== "L").every((c) => own(s, c.id));
+    /* Univers : l'album complet n'existe plus (27 744 cartes) → « Album d'argent » = 1 000 cartes différentes */
+    case "t-silver": return RULES.equi ? s.cards.size >= 1000 : BASE.filter((c) => c.r !== "L").every((c) => own(s, c.id));
     case "t-onyx": return [...s.cards.values()].some((e) => e.fins.onyx.length > 0);
     case "t-myth": return anyEd(s, "myth");
     default: return false;

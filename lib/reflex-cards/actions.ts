@@ -10,6 +10,14 @@ import {
 } from "./engine";
 import { QJ_LEN, qjReward, quizDay } from "./quiz-day";
 import { seasonDay } from "./season";
+import { UNIVERS_ON, toClientRow, universById, type ClientRow } from "./univers";
+
+/** Univers : les lignes de catalogue des cartes que le joueur possède (le navigateur ne reçoit plus tout le catalogue) */
+export function metaRows(ids: Iterable<string>): ClientRow[] {
+  const out: ClientRow[] = [];
+  for (const id of ids) { const c = universById(id); if (c) out.push(toClientRow(c)); }
+  return out;
+}
 
 export interface Ctx { day: number; today: string; now: number }
 /** qui joue : invité (partie liée à ce navigateur) ou compte du site (e-mail affiché dans le jeu) */
@@ -109,6 +117,15 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
           extra = id;
           break;
         }
+        /* défis Univers (04/10/2026) : tour des 8 catégories → 1 booster ; 3 Personnes → 100 éclats + 1 booster ; 3 Événements → 1 Super rare */
+        case "q-tour": patch.player = plusOne(s, ctx); break;
+        case "q-perso": patch.player = { ...plusOne(s, ctx), eclats: 100 }; break;
+        case "q-event": {
+          const id = giveNew(s, "SR", ctx.day);
+          patch.cards = [{ id, dn: 1 }];
+          extra = id;
+          break;
+        }
       }
       return { patch, msg: "Défi réussi", data: { card: extra || null } };
     }
@@ -199,7 +216,7 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
     }
     case "pantheon": {
       /* clés « édition|carte » strictes et sans doublon : rien d'autre ne doit entrer dans le profil */
-      const keys = [...new Set(Array.isArray(b.keys) ? b.keys.map(String) : [])].filter((k) => /^[a-z]{2,12}\|[a-z0-9-]{1,80}$/.test(k)).slice(0, 3);
+      const keys = [...new Set(Array.isArray(b.keys) ? b.keys.map(String) : [])].filter((k) => /^[a-z]{2,12}\|[a-z0-9_-]{1,80}$/.test(k)).slice(0, 3);
       for (const k of keys) {
         const [ed, id] = k.split("|");
         if (!(ed === "base" ? s.cards.has(id) : s.eds.has(k))) throw new GameError("bad", "Carte non possédée.");
@@ -245,7 +262,7 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       /* la carte mise en avant sur l'Accueil (Kev 03/10) : une carte possédée « édition|carte », ou null = la plus belle automatiquement */
       const k = b.key == null || b.key === "" ? null : String(b.key);
       if (k !== null) {
-        if (!/^[a-z]{2,12}\|[a-z0-9-]{1,80}$/.test(k)) throw new GameError("bad", "Carte inconnue.");
+        if (!/^[a-z]{2,12}\|[a-z0-9_-]{1,80}$/.test(k)) throw new GameError("bad", "Carte inconnue.");
         const [ed, id] = k.split("|");
         if (!(ed === "base" ? s.cards.has(id) : s.eds.has(k))) throw new GameError("bad", "Carte non possédée.");
       }
@@ -285,8 +302,10 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
   for (const id of RULES.cosOwned) inv[id] = { t: Date.parse(s.player.first_day) };
   for (const [id, x] of s.cos) inv[id] = { t: x.t, ...(x.no ? { no: x.no } : {}) };
   const P = s.player.perso as Record<string, unknown>;
+  /* Univers : métadonnées des cartes possédées (base + éditions), le navigateur n'a plus le catalogue entier */
+  const meta = UNIVERS_ON() ? metaRows(new Set([...s.cards.keys(), ...[...s.eds.keys()].map((k) => k.split("|")[1])])) : undefined;
   return {
-    v: s.player.version, day: ctx.day, today: ctx.today, account,
+    v: s.player.version, day: ctx.day, today: ctx.today, account, ...(meta ? { meta } : {}),
     /* le pseudo a-t-il déjà été choisi par le joueur ? (sinon le jeu le demande, une seule fois) */
     pseudoChosen: typeof P.pseudo === "string" && P.pseudo.length > 0,
     /* Quiz du jour : les questions sans la bonne réponse tant qu'on n'y a pas répondu ; les questions déjà répondues

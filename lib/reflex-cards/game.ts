@@ -15,6 +15,7 @@ import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
 import { partDay, totyDay } from "./engine";
+import { CATS, CAT_LABEL, UNIVERS_ON, universBlurb, universById, universCards, universEditions, universStats, universYear, type UCard } from "./univers";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
@@ -111,6 +112,49 @@ export function gameData(day: number): GameData {
   };
 }
 
+/* ---------- Univers (REFLEX_CARDS_UNIVERS=true) ----------
+   La page n'embarque que les têtes d'affiche : Légendaires et Ultra rares de chaque catégorie, Icônes, Trophées, Équipe de la saison.
+   Les cartes possédées arrivent avec la partie (champ meta de /api/cartes/etat), les autres par /api/cartes/recherche. Tout est
+   « sorti » et en clair : aucune carte masquée. */
+export interface UniversInfo { total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions> }
+export type GameDataU = GameData & { univers: UniversInfo | null };
+const LEGACY_ROW = new Map(RAW.cards.map((r) => [r[0], r]));
+/** ligne au format du jeu ([id, nom, symbole, image, rang, famille, sous-titre, année, en bref, accroche, slug, score]) */
+function universRow(c: UCard): Row {
+  const old = LEGACY_ROW.get(c.id);
+  const label = CAT_LABEL[c.cat];
+  if (old) { const r = [...old] as Row; r[3] = c.img ?? old[3]; r[4] = c.rank; r[5] = label; r[6] = c.fam || old[5]; return r; }
+  return [c.id, c.nom, c.sym, c.img ?? "", c.rank, label, c.fam || c.sous || "", universYear(c.id), universBlurb(c.id), "", "", 0];
+}
+export function universGame(day: number): GameDataU {
+  const all = universCards(), st = universStats(), E = universEditions();
+  const stars = new Set<string>();
+  for (const c of all) if (c.r === "L" || c.r === "UR") stars.add(c.id);
+  for (const e of Object.values(E)) for (const id of e.icones) stars.add(id);
+  for (const id of [...RAW.publiques, ...RAW.toty]) stars.add(id);
+  const rows: Row[] = [], cartes: Record<string, Palier> = {};
+  for (const id of stars) {
+    const c = universById(id);
+    if (!c) continue;
+    rows.push(universRow(c));
+    cartes[id] = { fam: CAT_LABEL[c.cat], sub: c.fam || c.sous || "", r: c.r, noto: c.rank, part: 0, ...(c.r === "L" ? { legende: 1 } : {}) };
+  }
+  const rarTotals: Record<string, number> = {};
+  for (const cat of CATS) for (const r of ["C", "PC", "R", "SR", "UR", "L"]) rarTotals[r] = (rarTotals[r] ?? 0) + (st[cat][r] ?? 0);
+  const cats: UniversInfo["cats"] = {};
+  for (const cat of CATS) cats[CAT_LABEL[cat]] = st[cat];
+  return {
+    cards: rows,
+    paliers: { meta: {}, cartes, parties: [{ k: 0, jour: 1, collection: "Univers", partie: 1, taille: all.length, tete: [] }], fossiles: {} },
+    noto: RAW.noto, fiches: { desc: RAW.fiches.desc }, watch: RAW.watch,
+    toty: day >= totyDay() ? RAW.toty : [],
+    masked: 0,
+    themes: Object.fromEntries(RULES.themes.filter((t) => t.cards?.length).map((t) => [t.id, t.cards!])),
+    rarTotals,
+    univers: { total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E },
+  };
+}
+
 /* JSON sûr dans un <script> : pas de « </script> », pas de séparateurs de ligne Unicode */
 const LS = String.fromCharCode(0x2028), PS = String.fromCharCode(0x2029);
 const js = (v: unknown) => JSON.stringify(v).replace(/</g, "\\u003c").split(LS).join("\\u2028").split(PS).join("\\u2029");
@@ -120,10 +164,11 @@ export interface GameNext { part: number; need: number; have: number | null }
 
 /** bloc de données injecté dans le gabarit */
 export function gameDataScript(day: number, next: GameNext | null = null): string {
-  const d = gameData(day);
+  const d: GameDataU = UNIVERS_ON() ? universGame(day) : { ...gameData(day), univers: null };
   /* GAME_LAUNCH : la date du jour 1, pour afficher de vraies dates de sortie sans dépendre de l'horloge ni du cache de la page ;
-     GAME_NEXT : la prochaine partie en attente et son palier de joueurs ; GAME_TOTY_DAY : jour de révélation de l'Équipe (FAR = pas encore fixé) */
-  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEMES=${js(d.themes)},GAME_RAR_TOTALS=${js(d.rarTotals)},GAME_NEXT=${js(next)},GAME_TOTY_DAY=${totyDay()};
+     GAME_NEXT : la prochaine partie en attente et son palier de joueurs ; GAME_TOTY_DAY : jour de révélation de l'Équipe (FAR = pas encore fixé) ;
+     GAME_UNIVERS : total et effectifs par catégorie du catalogue Univers (null = jeu actuel) */
+  return `const GAME_PUBLIC=true,GAME_DAY=${day},GAME_TOTY=${js(d.toty)},GAME_ACCOUNTS=${js(reflexAccountsMode())},GAME_LAUNCH=${js(launchDate())},GAME_THEMES=${js(d.themes)},GAME_RAR_TOTALS=${js(d.rarTotals)},GAME_NEXT=${js(next)},GAME_TOTY_DAY=${totyDay()},GAME_UNIVERS=${js(d.univers)};
 const CARDS=${js(d.cards)};
 const PALIERS=${js(d.paliers)};
 const NOTO=${js(d.noto)};
