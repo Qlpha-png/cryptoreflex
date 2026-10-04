@@ -32,12 +32,13 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
         if (best >= 2) R++; if (best >= 3) SR++; if (best >= 4) UR++; if (best >= 5) L++;
       }
       expect(unknown).toBe(0);
-      /* 04/10/2026, option D (Kev : « de bonnes cartes, un peu plus simplement ») : PC 27 / R 12 / SR 4,5 / UR 1,2 / L 0,3 % par
-         carte, Rare garantie au 6e booster — publié 63,1 · 26,6 · 7,2 · 1,5 % (docs/sim-option-d.txt) */
-      expect(R / N).toBeGreaterThan(0.62); expect(R / N).toBeLessThan(0.642);
-      expect(SR / N).toBeGreaterThan(0.255); expect(SR / N).toBeLessThan(0.278);
-      expect(UR / N).toBeGreaterThan(0.065); expect(UR / N).toBeLessThan(0.080);
-      expect(L / N).toBeGreaterThan(0.012); expect(L / N).toBeLessThan(0.018);
+      /* 04/10/2026, option W (Kev : « base-toi sur les taux de WikiMasters ») : chance d'un palier = sa part du pool WikiMasters
+         (C 71,98 / PC 18,62 / R 6,48 / SR 2,41 / UR 0,45 / L 0,063 % par carte), Rare garantie au 6e booster —
+         publié 41,1 · 13,8 · 2,5 · 0,3 % (docs/sim-option-w.txt) */
+      expect(R / N).toBeGreaterThan(0.400); expect(R / N).toBeLessThan(0.422);
+      expect(SR / N).toBeGreaterThan(0.130); expect(SR / N).toBeLessThan(0.147);
+      expect(UR / N).toBeGreaterThan(0.021); expect(UR / N).toBeLessThan(0.030);
+      expect(L / N).toBeGreaterThan(0.0022); expect(L / N).toBeLessThan(0.0042);
     });
   it("booster thématique : les cartes de base viennent de la catégorie, rareté inchangée", () => {
     const rnd = seeded(42), ps = freshPity();
@@ -49,7 +50,7 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       if (best >= 2) R++;
     }
     expect(fam).toBe(base);
-    expect(R / 50000).toBeGreaterThan(0.61); expect(R / 50000).toBeLessThan(0.655);
+    expect(R / 50000).toBeGreaterThan(0.395); expect(R / 50000).toBeLessThan(0.43);
   });
   it("l'Équipe de la saison ne tombe pas avant le jour 46", () => {
     expect(dayTables(45).ed.toty.p).toBe(0);
@@ -87,7 +88,7 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       const late: Pity = { R: 0, SR: 0, UR: 25, opened: 25, gotSR: true, gotUR: false };
       if (drawPack(30, late, null, seeded(seed)).some((it) => !it.ed && rank(it.id) >= 4)) forced++;
     }
-    expect(forced).toBeLessThan(60); // hasard seul : ≈ 7 % des boosters (option D, 04/10/2026) ; une garantie donnerait 400 / 400
+    expect(forced).toBeLessThan(30); // hasard seul : ≈ 2,5 % des boosters (option W, 04/10/2026) ; une garantie donnerait 400 / 400
     const net: Pity = { R: 0, SR: 0, UR: 299, opened: 299, gotSR: true, gotUR: false };
     expect(drawPack(30, net, null, seeded(5)).some((it) => !it.ed && rank(it.id) >= 4)).toBe(true);
   });
