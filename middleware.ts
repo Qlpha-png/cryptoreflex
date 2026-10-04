@@ -29,6 +29,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import removedNews from "@/lib/news-removed-slugs.json";
+import { isGoneDated, liveSet } from "@/lib/gone-content";
 import { UNIVERS_IDS } from "@/lib/reflex-cards/univers-ids";
 
 /* REFLEX CARDS UNIVERS (04/10/2026) : /cartes/<id> est rendu à la demande (27 711 cartes, dynamicParams) ; un notFound() dans
@@ -42,6 +43,11 @@ const NOT_FOUND_HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-
 
 /* AUDIT 03/10/2026 — anciennes actus supprimées (mai 2026) : 308 vers le hub au lieu d'un 404 (263 erreurs Search Console). */
 const REMOVED_NEWS = new Set<string>(removedNews.slugs);
+
+/* AUDIT GOOGLE 04/10/2026 — règle automatique : une actu ou une analyse DATÉE de plus de 3 jours qui n'est plus en ligne
+   → 308 vers son hub (lib/gone-content.ts ; listes calculées à chaque build par lib/live-content.cjs). */
+const LIVE_NEWS = liveSet(process.env.CR_LIVE_NEWS);
+const LIVE_TA = liveSet(process.env.CR_LIVE_TA);
 
 /**
  * BATCH 21 — Defense-in-depth CSRF : check Origin/Referer sur les mutations
@@ -128,7 +134,12 @@ export async function middleware(request: NextRequest) {
   }
   if (pathname.startsWith("/actualites/")) {
     const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "");
-    if (REMOVED_NEWS.has(slug)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
+    if (REMOVED_NEWS.has(slug) || isGoneDated(slug, LIVE_NEWS)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
+    return NextResponse.next();
+  }
+  if (pathname.startsWith("/analyses-techniques/")) {
+    const slug = decodeURIComponent(pathname.slice("/analyses-techniques/".length)).replace(/\/+$/, "");
+    if (isGoneDated(slug, LIVE_TA)) return NextResponse.redirect(new URL("/analyses-techniques", request.url), 308);
     return NextResponse.next();
   }
 
@@ -236,6 +247,8 @@ export const config = {
   matcher: [
     // anciennes actus supprimées → 308 (voir REMOVED_NEWS) ; le hub /actualites reste hors middleware
     "/actualites/:slug+",
+    // analyses techniques datées supprimées → 308 vers le hub (voir isGoneDated) ; aucun appel Supabase
+    "/analyses-techniques/:slug+",
     // Reflex Cards Univers (04/10/2026) : /cartes/<id> → vrai 404 si l'identifiant n'existe pas (voir universHas) ; aucun appel Supabase
         // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher
     // pour couvrir 7 routes oubliées qui restaient soumises au middleware

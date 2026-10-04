@@ -4,10 +4,20 @@
 const { buildSeoRedirects } = require("./lib/seo-redirects.cjs");
 // News publiées en double, supprimées le 2026-10-02 → 308 vers la première publication.
 const NEWS_DUPLICATE_REDIRECTS = require("./lib/news-duplicate-redirects.cjs");
+// Actus et analyses EN LIGNE, recalculées à chaque build : le middleware redirige (308) les adresses datées
+// absentes de ces listes (contenus supprimés). Voir lib/live-content.cjs et middleware.ts.
+const { buildLegacyRedirects } = require("./lib/legacy-redirects.cjs");
+const LIVE_CONTENT = require("./lib/live-content.cjs").liveContent();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // Inliné au build dans tous les bundles, middleware compris (valeurs = chaînes JSON).
+  env: {
+    CR_LIVE_NEWS: JSON.stringify(LIVE_CONTENT.news),
+    CR_LIVE_TA: JSON.stringify(LIVE_CONTENT.ta),
+  },
 
   // Cosmétique sécurité : on n'expose pas la stack technique aux scanners
   // (cf. P0-6 audit-back-live-final). Aucun impact UX/SEO direct, mais
@@ -384,6 +394,9 @@ const nextConfig = {
       // routing fichier : vrai 308 (un redirect() dans une page ISR répond 200 +
       // meta refresh en prod).
       ...buildSeoRedirects(),
+      // Audit Google 04/10/2026 — anciennes adresses encore vues en 404 (blog, comparatifs, alternatives) :
+      // règles générées depuis data/ (lib/legacy-redirects.cjs, test tests/lib/legacy-redirects.test.ts).
+      ...buildLegacyRedirects(),
       ...NEWS_DUPLICATE_REDIRECTS,
       // Landing de campagne « 12 plateformes qui vont disparaître en juillet 2026 » : échéance passée, contenu
       // périmé (audit 2026-10-02) → étude à jour, construite sur le registre MiCA de l'ESMA.
