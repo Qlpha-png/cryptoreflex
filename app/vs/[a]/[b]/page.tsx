@@ -36,6 +36,7 @@ import { TOP_PAIRS } from "@/lib/historical-prices";
 import {
   getCryptoPairs,
   isCanonicalPair,
+  isMeaningfulPair,
   canonicalizePair,
   getPairCryptos,
 } from "@/lib/programmatic-pages";
@@ -314,8 +315,25 @@ function buildVsCrossLinks(a: AnyCrypto, b: AnyCrypto): { href: string; label: s
     const [x, y] = [self.id, other.id].sort();
     const href = `/vs/${x}/${y}`;
     if (`${x}/${y}` === selfPair || seen.has(href)) continue;
+    /* 04/10/2026 — on ne pousse que des duels pertinents (tête de marché ou top 40 des deux côtés) */
+    if (!isMeaningfulPair(x, y)) continue;
     seen.add(href);
     links.push({ href, label: `${self.symbol} vs ${other.symbol}` });
+  }
+  /* longue traîne : au moins quelques duels contre les têtes de marché, toujours pertinents */
+  if (links.length < 6) {
+    for (const head of catalogue.slice(0, 10)) {
+      for (const self of [a, b]) {
+        if (head.id === a.id || head.id === b.id) continue;
+        const [x, y] = [self.id, head.id].sort();
+        const href = `/vs/${x}/${y}`;
+        if (seen.has(href) || !isMeaningfulPair(x, y)) continue;
+        seen.add(href);
+        links.push({ href, label: `${self.symbol} vs ${head.symbol}` });
+        if (links.length >= 12) break;
+      }
+      if (links.length >= 12) break;
+    }
   }
   return links.slice(0, 12);
 }

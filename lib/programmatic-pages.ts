@@ -69,6 +69,21 @@ export function getCryptoPairs(): CryptoPair[] {
   return out;
 }
 
+/**
+ * Paire « pertinente » (lot 2b, 04/10/2026) : les 4 950 paires restent servies, mais Google en jugeait des milliers
+ * sans valeur (Akash vs Theta…) → seules les paires pertinentes sont POUSSÉES (sitemap, liens croisés) :
+ * une tête de marché (10 premières du catalogue) contre n'importe quelle crypto, ou deux cryptos des 40 premières.
+ */
+const MEANINGFUL_HEAD = 10;
+const MEANINGFUL_TOP = 40;
+export function isMeaningfulPair(a: string, b: string): boolean {
+  if (!isCanonicalPair(a, b)) return false;
+  const ra = TOP_30_CRYPTO_IDS.indexOf(a);
+  const rb = TOP_30_CRYPTO_IDS.indexOf(b);
+  if (ra < 0 || rb < 0) return false;
+  return ra < MEANINGFUL_HEAD || rb < MEANINGFUL_HEAD || (ra < MEANINGFUL_TOP && rb < MEANINGFUL_TOP);
+}
+
 /** Vérifie qu'une paire est canonique (a < b et les deux dans la whitelist). */
 export function isCanonicalPair(a: string, b: string): boolean {
   if (a >= b) return false;
@@ -262,7 +277,8 @@ export interface ProgrammaticPageRoute {
  * niveau avec des noms différents ([slug] vs [a]).
  */
 export function getComparerPairRoutes(): ProgrammaticPageRoute[] {
-  return getCryptoPairs().map((p) => ({
+  /* sitemap : seules les paires pertinentes (voir isMeaningfulPair) ; les autres restent servies, pas poussées */
+  return getCryptoPairs().filter((p) => isMeaningfulPair(p.a, p.b)).map((p) => ({
     path: `/vs/${p.a}/${p.b}`,
     changeFrequency: "weekly" as const,
     priority: 0.6,

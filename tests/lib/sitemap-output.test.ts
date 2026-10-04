@@ -40,7 +40,7 @@ beforeAll(async () => {
 
 describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", () => {
   it("génère des milliers d'URLs sans doublon", () => {
-    expect(entries.length).toBeGreaterThan(5000);
+    expect(entries.length).toBeGreaterThan(3000) /* 04/10/2026 : /vs ne pousse plus que les ~1 400 paires pertinentes (lot 2b) */;
     expect(new Set(entries.map((e) => e.url)).size).toBe(entries.length);
   });
 
