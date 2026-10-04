@@ -660,12 +660,33 @@ async function _fetchFromCoinGecko(
  *    (vs 41 avant) après audit user "barre cassée sur la moitié des fiches".
  *    Bump invalide les datasets vides cachés sous v3 quand CC subissait
  *    rate-limit lors des 1ers fetchs des 8 coins ARB/DOT/ATOM/SUI/etc.
+ *  - v5-nonempty (2026-10-04) : un résultat VIDE n'est plus mis en cache. Au build Vercel (région US) Binance refuse,
+ *    CryptoCompare/CoinGecko saturent → [] était gardé 1 h et 85/160 pages /convertisseur restaient sans grille ni
+ *    historique jusqu'à expiration. unstable_cache ne mémorise pas une erreur : le wrapper interne lève EMPTY_HISTORY
+ *    quand la série est vide, le wrapper public rend [] (contrat inchangé pour les appelants) ; le prochain appel refait
+ *    la requête au lieu de resservir le vide.
  */
-export const fetchHistoricalPrices = unstable_cache(
-  _fetchHistoricalPrices,
-  ["coingecko-historical-v4-mapfix"],
+const EMPTY_HISTORY = "EMPTY_HISTORY";
+const _fetchHistoricalPricesCached = unstable_cache(
+  async (coinId: string, days: number): Promise<HistoricalPoint[]> => {
+    const pts = await _fetchHistoricalPrices(coinId, days);
+    if (pts.length === 0) throw new Error(EMPTY_HISTORY);
+    return pts;
+  },
+  ["coingecko-historical-v5-nonempty"],
   { revalidate: 3600, tags: ["coingecko-historical"] }
 );
+
+/** Série quotidienne (EUR) d'une crypto sur `days` jours ; [] si aucune source ne répond — jamais mis en cache dans ce cas. */
+export async function fetchHistoricalPrices(coinId: string, days: number): Promise<HistoricalPoint[]> {
+  try {
+    return await _fetchHistoricalPricesCached(coinId, days);
+  } catch (err) {
+    if (err instanceof Error && err.message === EMPTY_HISTORY) return [];
+    console.warn("[historical-prices] cache/fetch failed:", err instanceof Error ? err.message : err);
+    return [];
+  }
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Conversion temps réel (Converter)                                         */
