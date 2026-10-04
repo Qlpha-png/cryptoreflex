@@ -457,6 +457,7 @@ const nextConfig = {
     // (heatmaps + session replay). Clarity charge des scripts depuis
     // www.clarity.ms (loader) et des sub-domaines régionaux *.clarity.ms,
     // pose un pixel image (img-src) et envoie les events via XHR (connect-src).
+    // REFLEX CARDS UNIVERS (04/10/2026) : logos DefiLlama (icons.llamao.fi) et images Wikimedia (upload/thumb/commons) des 27 711 cartes.
     // FIX 2026-05-06 — Whitelist Ads pixels (Reddit + X + Google Ads) dans la CSP.
     // Sans ces hôtes, les <Script> en <head> sont injectés mais BLOQUÉS au runtime
     // par le navigateur (CSP violation). C'est exactement le bug qui empêchait
@@ -482,7 +483,7 @@ const nextConfig = {
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${cspExtraDev} https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://www.googletagmanager.com https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://www.redditstatic.com https://static.ads-twitter.com`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co https://*.reddit.com",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://icons.llamao.fi https://upload.wikimedia.org https://thumb.wikimedia.org https://commons.wikimedia.org https://www.clarity.ms https://*.clarity.ms https://*.google-analytics.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://t.co https://*.reddit.com",
       "font-src 'self' data:",
       // BATCH 20 — retiré api.binance.com du connect-src côté CSP : MiniOrderBook
       // passe maintenant par notre proxy serveur /api/binance/depth (cache edge
@@ -510,7 +511,7 @@ const nextConfig = {
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${cspExtraDev} https://va.vercel-scripts.com`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc",
+      "img-src 'self' data: https://assets.coingecko.com https://coin-images.coingecko.com https://cryptologos.cc https://icons.llamao.fi https://upload.wikimedia.org https://thumb.wikimedia.org https://commons.wikimedia.org",
       "font-src 'self' data:",
       "connect-src 'self' wss://stream.binance.com https://api.coingecko.com https://api.alternative.me https://va.vercel-scripts.com",
       "frame-src https://s.tradingview.com https://www.tradingview.com",

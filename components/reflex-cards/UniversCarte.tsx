@@ -6,7 +6,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import { PlayLink } from "@/components/reflex-cards/InviteLanding";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
-import { CAT_LABEL, universById, universCards, universDesc, universStats, type UCard } from "@/lib/reflex-cards/univers";
+import { CAT_LABEL, sousFr, universById, universCards, universDesc, universStats, type UCard } from "@/lib/reflex-cards/univers";
 import { oddsText } from "@/lib/reflex-cards/data";
 
 /**
@@ -39,7 +39,7 @@ export default function UniversCarte({ c, pEditions }: { c: UCard; pEditions: nu
     ["Rareté", <span key="r" style={{ color: col }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
     ["Catégorie (chapitre)", label],
     ["Place dans la catégorie", `n° ${fr(c.rank)} sur ${fr(total)}`],
-    ...(c.sous || c.fam ? ([["Type", c.fam || c.sous]] as [string, string][]) : []),
+    ...(sousFr(c) ? ([["Type", sousFr(c)]] as [string, string][]) : []),
     ...(d?.t ? ([["Date", dateFr(d.t)]] as [string, string][]) : []),
     ["Chance", `${oddsText(chance)} tirée`],
   ];
@@ -68,7 +68,7 @@ export default function UniversCarte({ c, pEditions }: { c: UCard; pEditions: nu
                   )}
                 </div>
                 <div className="mt-5 text-xl font-extrabold leading-tight">{c.nom}</div>
-                <div className="mt-1 text-xs uppercase tracking-wide text-muted">{c.sym || c.fam || c.sous || label}</div>
+                <div className="mt-1 text-xs uppercase tracking-wide text-muted">{c.sym || sousFr(c) || label}</div>
                 <div className="mt-4 rounded-full border px-3 py-1 text-xs font-bold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}>{RNAME[c.r]} {PIPS[c.r]}</div>
                 <div className="mt-auto pt-4 text-[11px] text-muted">{label} · {fr(c.rank)} / {fr(total)}</div>
               </div>
