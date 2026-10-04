@@ -35,7 +35,9 @@ import {
   COIN_IDS,
   FIAT_CODES,
   fetchConversionRate,
+  fetchHistoricalPrices,
 } from "@/lib/historical-prices";
+import { conversionGrid, formatConverted, formatAmount, ratioSeries, rateStats, pairKind, historySupported, signedPct, pairUseText, formatDay, FIAT_EUR_PRICE, fallbackRate, lastPrice } from "@/lib/convertisseur-stats";
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 
@@ -135,6 +137,32 @@ export default async function PairPage({ params }: PageProps) {
   // Pré-fetch côté serveur pour avoir un H1 dynamique
   const rate = await fetchConversionRate(from, to);
 
+  // 04/10/2026 (lot 2b « pages maigres ») — contenu chiffré rendu serveur : grille de montants dans les deux sens et un an
+  // d'historique du taux (séries quotidiennes en euros → exact entre cryptos et avec l'euro ; pas de bloc pour USD/GBP/CHF,
+  // on n'invente pas de taux de change). Tout échec réseau = bloc absent, jamais une page cassée.
+  const kind = pairKind(from, to);
+  let stats: ReturnType<typeof rateStats> = null;
+  /* dernier prix en euros de chaque côté : crypto = dernier point de sa série (365 j, cache 1 h), devise = taux fixe du site */
+  let eurFrom: number | null = FIAT_EUR_PRICE[from] ?? null;
+  let eurTo: number | null = FIAT_EUR_PRICE[to] ?? null;
+  try {
+    const hist = async (sym: string) => (isFiatSym(sym) ? null : COIN_IDS[sym] ? await fetchHistoricalPrices(COIN_IDS[sym], 365) : []);
+    const [hf, ht] = await Promise.all([hist(from), hist(to)]);
+    if (hf) eurFrom = lastPrice(hf);
+    if (ht) eurTo = lastPrice(ht);
+    if (historySupported(from) && historySupported(to) && (hf === null || hf.length >= 30) && (ht === null || ht.length >= 30)) {
+      stats = rateStats(ratioSeries(hf, ht));
+    }
+  } catch (e) {
+    console.warn("[convertisseur] historique indisponible", from, to, e);
+  }
+  const vsAvg = stats?.avg365 ? Math.round((stats.last / stats.avg365 - 1) * 100) : null;
+  /* taux de la grille : le taux du moment, sinon le rapport des derniers prix connus (le build subit parfois un 429 CoinGecko) */
+  const liveRate = rate?.rate != null && rate.rate > 0 ? rate.rate : null;
+  const gridRate = liveRate ?? fallbackRate(eurFrom, eurTo);
+  const grid = conversionGrid(gridRate);
+  const gridInverse = gridRate ? conversionGrid(1 / gridRate, [1, 10, 100, 1000]) : [];
+
   const faqItems = [
     {
       question: `Combien vaut 1 ${fromUp} en ${toUp} aujourd'hui ?`,
@@ -153,6 +181,19 @@ export default async function PairPage({ params }: PageProps) {
       answer: `Non, c'est le taux marché brut (mid-market). Comptez 0,1 à 1,5 % de frais en plus selon la plateforme et le mode d'achat (spot vs instant buy).`,
     },
   ];
+
+  if (stats) {
+    faqItems.push(
+      {
+        question: `Quel a été le plus haut du ${fromUp} en ${toUp} sur un an ?`,
+        answer: `Sur les ${stats.days} derniers jours couverts, le taux ${fromUp}/${toUp} a atteint au plus haut ${formatConverted(stats.max)} ${toUp} (le ${formatDay(stats.maxAt)}) et au plus bas ${formatConverted(stats.min)} ${toUp} (le ${formatDay(stats.minAt)}). Ces extrêmes sont des clôtures quotidiennes : un pic intrajournalier peut les dépasser.`,
+      },
+      {
+        question: `Le ${fromUp} monte-t-il ou baisse-t-il face au ${toUp} ?`,
+        answer: `Variation sur 30 jours : ${signedPct(stats.chg30)}${stats.chg365 != null ? ` ; sur un an : ${signedPct(stats.chg365)}` : ""}. Moyenne 30 jours : ${formatConverted(stats.avg30)} ${toUp}${stats.avg365 ? `, moyenne un an : ${formatConverted(stats.avg365)} ${toUp}` : ""}. Un taux au-dessus de sa moyenne annuelle signale une période haute, en dessous une période basse — c'est un repère, pas une prévision.`,
+      },
+    );
+  }
 
   // Suggestions : autres paires depuis ou vers les mêmes cryptos
   const suggestions = TOP_PAIRS.filter(
@@ -207,6 +248,96 @@ export default async function PairPage({ params }: PageProps) {
 
           <div className="mt-10 max-w-2xl">
             <Converter defaultFrom={from} defaultTo={to} defaultAmount={1} />
+          </div>
+
+          {/* GRILLE DE MONTANTS + UN AN D'HISTORIQUE (04/10/2026, lot 2b) — rendu serveur, données réelles, deux sens */}
+          {grid.length > 0 && (
+            <section className="mt-10" aria-labelledby="grille-conversion">
+              <h2 id="grille-conversion" className="text-2xl font-bold text-white">
+                Combien valent vos {fromUp} en {toUp} ? Les repères
+              </h2>
+              <p className="mt-2 text-sm text-white/70">
+                {liveRate ? "Au taux du moment" : "Au dernier cours quotidien connu"}, 1 {fromUp} = {formatConverted(grid[0].value)} {toUp}. Repères
+                arrondis, mis à jour chaque jour ; le convertisseur ci-dessus donne le montant exact à la seconde.
+              </p>
+              <div className="mt-4 grid gap-4 md:grid-cols-[3fr_2fr]">
+                <div className="overflow-x-auto rounded-2xl border border-border">
+                  <table className="w-full text-sm">
+                    <caption className="sr-only">Conversion de {fromUp} en {toUp} pour les montants courants</caption>
+                    <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                      <tr>
+                        <th scope="col" className="px-4 py-2.5 font-semibold">{fromName}</th>
+                        <th scope="col" className="px-4 py-2.5 font-semibold text-right">{toName}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {grid.map((r) => (
+                        <tr key={r.amount} className="border-t border-border/70">
+                          <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-white/85 tabular-nums">{formatAmount(r.amount)} {fromUp}</th>
+                          <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-white">{formatConverted(r.value)} {toUp}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {gridInverse.length > 0 && (
+                  <div className="overflow-x-auto rounded-2xl border border-border">
+                    <table className="w-full text-sm">
+                      <caption className="sr-only">Conversion inverse : {toUp} en {fromUp}</caption>
+                      <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                        <tr>
+                          <th scope="col" className="px-4 py-2.5 font-semibold">{toName}</th>
+                          <th scope="col" className="px-4 py-2.5 font-semibold text-right">{fromName}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {gridInverse.map((r) => (
+                          <tr key={r.amount} className="border-t border-border/70">
+                            <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-white/85 tabular-nums">{formatAmount(r.amount)} {toUp}</th>
+                            <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-white">{formatConverted(r.value)} {fromUp}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {stats && (
+            <section className="mt-10" aria-labelledby="un-an">
+              <h2 id="un-an" className="text-2xl font-bold text-white">
+                {fromUp}/{toUp} sur un an
+              </h2>
+              <dl className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <StatCell label="Moyenne 7 j" value={stats.avg7 != null ? `${formatConverted(stats.avg7)} ${toUp}` : "—"} />
+                <StatCell label="Moyenne 30 j" value={stats.avg30 != null ? `${formatConverted(stats.avg30)} ${toUp}` : "—"} />
+                <StatCell label="Moyenne 1 an" value={stats.avg365 != null ? `${formatConverted(stats.avg365)} ${toUp}` : "—"} />
+                <StatCell label="Plus haut 1 an" value={`${formatConverted(stats.max)} ${toUp}`} sub={formatDay(stats.maxAt)} />
+                <StatCell label="Plus bas 1 an" value={`${formatConverted(stats.min)} ${toUp}`} sub={formatDay(stats.minAt)} />
+                <StatCell label="Variation 30 j / 1 an" value={`${signedPct(stats.chg30)} / ${signedPct(stats.chg365)}`} tone={stats.chg30} />
+              </dl>
+              <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                Sur les {stats.days} derniers jours couverts (depuis le {formatDay(stats.firstAt)}), le taux {fromUp}/{toUp} a oscillé entre{" "}
+                {formatConverted(stats.min)} et {formatConverted(stats.max)} {toUp}.
+                {vsAvg != null ? (
+                  <>
+                    {" "}Il se situe aujourd&apos;hui {vsAvg === 0 ? "au niveau de" : vsAvg > 0 ? `${Math.abs(vsAvg)} % au-dessus de` : `${Math.abs(vsAvg)} % en dessous de`} sa
+                    moyenne annuelle.
+                  </>
+                ) : null}
+              </p>
+              <p className="mt-2 text-xs text-muted">
+                Clôtures quotidiennes (Binance, repli CryptoCompare puis CoinGecko), prix en dollars convertis en euros à un taux de change constant ;
+                valeurs indicatives, à recouper avant toute décision. Ce n&apos;est pas un conseil en investissement.
+              </p>
+            </section>
+          )}
+
+          <div className="mt-10 max-w-3xl">
+            <h2 className="text-2xl font-bold text-white">À quoi sert la conversion {fromUp} → {toUp} ?</h2>
+            <p className="mt-3 text-white/70 leading-relaxed">{pairUseText(kind, fromName, toName, fromUp, toUp)}</p>
           </div>
 
           {/* À propos des actifs de la paire (FIX 2026-06-13) — blocs uniques
@@ -319,6 +450,19 @@ export default async function PairPage({ params }: PageProps) {
         </div>
       </section>
     </>
+  );
+}
+
+const isFiatSym = (sym: string): boolean => Object.prototype.hasOwnProperty.call(FIAT_EUR_PRICE, sym);
+
+function StatCell({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: number | null }) {
+  const color = tone == null || tone === 0 ? "text-white" : tone > 0 ? "text-accent-green" : "text-danger-fg";
+  return (
+    <div className="rounded-xl border border-border bg-elevated/40 px-3 py-2.5">
+      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dd className={`mt-0.5 text-sm font-semibold tabular-nums ${color}`}>{value}</dd>
+      {sub ? <dd className="text-[11px] text-muted">{sub}</dd> : null}
+    </div>
   );
 }
 
