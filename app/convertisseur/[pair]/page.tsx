@@ -111,7 +111,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
-export const revalidate = 86400; // le taux affiché est fetché LIVE par Converter (client)
+// 04/10/2026 : 1 h (était 24 h). Au build Vercel, les sources de prix (Binance refuse les IP américaines, CoinGecko 429) laissent
+// une partie des 160 pages sans grille ni historique ; en ISR horaire, chaque page se régénère depuis la région cdg1 où les
+// sources répondent. Le taux affiché dans le widget reste fetché en direct côté client.
+export const revalidate = 3600;
 
 export default async function PairPage({ params }: PageProps) {
   const parsed = parsePair(params.pair);
