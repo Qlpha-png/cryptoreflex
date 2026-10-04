@@ -61,16 +61,43 @@ export const universMeta = () => RAW.meta;
 /* descriptions, dates et sources (fichier séparé, chargé une fois côté serveur) */
 interface DescEntry { d: string; t: string; l: string; u: string; s: string }
 const DESC = (descRaw as unknown as { desc: Record<string, DescEntry> }).desc;
-export const universDesc = (id: string): DescEntry | undefined => DESC[id];
+/* textes source restés en anglais (descriptions DefiLlama, CoinGecko) : jamais affichés tels quels (Kev 04/10 : « tout en
+   français ») ; à la place, une phrase française factuelle tirée des données de la carte (type de protocole, chaîne de la collection) */
+const EN_RE = /(the|and|of|is|are|for|with|your|our|we|that|which|on|to|an|by|from|built|platform|protocol|decentralized|users|first|leading|allows|enables|its|it)/gi;
+const FR_RE = /(le|la|les|des|du|une|un|est|sont|pour|avec|qui|sur|dans|et|de|en|au|aux|son|sa|ses)/gi;
+/** texte probablement anglais (plus de mots-outils anglais que français, au moins deux) */
+export function isEnglish(t: string): boolean {
+  const en = (t.match(EN_RE) ?? []).length, fr = (t.match(FR_RE) ?? []).length;
+  return en >= 2 && en > fr;
+}
+function frenchFallback(id: string): string {
+  const c = universById(id);
+  if (!c) return "";
+  const s = sousFr(c);
+  if (c.cat === "protocole") return `${c.nom} est un protocole de finance décentralisée${s ? ` de type « ${s} »` : ""}.`;
+  if (c.cat === "plateforme") return `${c.nom} est une plateforme d'échange de cryptomonnaies.`;
+  if (c.cat === "nft") return `${c.nom} est une collection NFT${s && s !== "Collection NFT" ? ` sur ${s}` : ""}.`;
+  return "";
+}
+const FR_CACHE = new Map<string, DescEntry | undefined>();
+/** description affichable (toujours en français) */
+export const universDesc = (id: string): DescEntry | undefined => {
+  if (FR_CACHE.has(id)) return FR_CACHE.get(id);
+  const e = DESC[id];
+  const out = e && e.d && isEnglish(e.d) ? { ...e, d: frenchFallback(id) } : e;
+  FR_CACHE.set(id, out);
+  return out;
+};
 /** phrase courte pour la carte (« en bref ») : première phrase, au plus 220 caractères */
 export function universBlurb(id: string): string {
-  const d = DESC[id]?.d ?? "";
+  const d = universDesc(id)?.d ?? "";
   if (!d) return "";
   const first = d.match(/^.{20,}?[.!?](\s|$)/)?.[0]?.trim() ?? d;
   return first.length > 220 ? first.slice(0, 217).replace(/\s+\S*$/, "") + "…" : first;
 }
 /** page du site indexable : Super rare et mieux, avec un texte de présentation (les autres restent en noindex, hors sitemap) */
-export const universIndexable = (c: UCard): boolean => ["SR", "UR", "L"].includes(c.r) && !!DESC[c.id]?.d;
+/* un texte source anglais remplacé par une phrase générée ne suffit pas pour une page indexée (page mince) */
+export const universIndexable = (c: UCard): boolean => ["SR", "UR", "L"].includes(c.r) && !!DESC[c.id]?.d && !isEnglish(DESC[c.id]!.d);
 /** année d'un événement (date AAAA-MM-JJ), 0 sinon */
 export const universYear = (id: string): number => { const t = DESC[id]?.t ?? ""; return /^\d{4}/.test(t) ? Number(t.slice(0, 4)) : 0; };
 

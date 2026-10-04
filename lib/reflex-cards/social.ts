@@ -112,7 +112,7 @@ export function friendTradeables(rows: DupRow[], day: number) {
 export function planPick(draw: DrawRow, rnd: Rnd = cryptoRnd) {
   return (s: GameState, _a: string, _b: Record<string, unknown>, ctx: Ctx): Planned => {
     const used = picksUsed(s, ctx.today), max = pickMax(s, ctx.today);
-    if (used >= max) throw new GameError("done", max > 1 ? "Pioches du jour utilisées : revenez demain." : "Pioche du jour utilisée : revenez demain (une 2e au Comptoir).");
+    if (used >= max) throw new GameError("done", max > 1 ? "Pioches du jour utilisées : revenez demain." : "Pioche du jour utilisée : revenez demain (une 2e à la Boutique).");
     const slots = draw.cards.map((it, i) => ({ it, i })).filter((x) => known(x.it.id, ctx.day));
     if (!slots.length) throw new GameError("gone", "Rien à piocher dans ce booster.");
     const { it, i } = slots[Math.floor(rnd() * slots.length)];
@@ -185,7 +185,7 @@ export function socialMsg(a: string, res: string): { ok: boolean; msg: string } 
     set: { ok: true, msg: "" },
     removed: { ok: true, msg: "" },
     not_friend: { ok: false, msg: "Ce joueur n'est pas (ou plus) dans vos amis." },
-    limit_day: { ok: false, msg: "Plus d'échange possible aujourd'hui : revenez demain (ou un de plus au Comptoir)." },
+    limit_day: { ok: false, msg: "Plus d'échange possible aujourd'hui : revenez demain (ou un de plus à la Boutique)." },
     limit_in: { ok: false, msg: "Votre ami a déjà 10 propositions en attente : réessayez plus tard." },
     dup: { ok: false, msg: "Proposition déjà envoyée : en attente de sa réponse." },
     no_give: { ok: false, msg: a === "echange-ok" ? "Votre ami n'a plus cette carte : échange annulé, rien n'a bougé." : "Vous n'avez plus cet exemplaire." },

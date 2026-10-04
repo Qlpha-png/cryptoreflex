@@ -15,12 +15,13 @@ const { universCards, universStats, CATS, CAT_LABEL, universById, universIndexab
 
 describe("Univers — page du jeu", () => {
   const d = universGame(1);
-  it("embarque les Légendaires et Ultra rares de chaque catégorie, les Icônes, les Trophées et l'Équipe", () => {
+  it("embarque toutes les Légendaires et les 25 premières Ultra rares de chaque catégorie, les Icônes, les Trophées et l'Équipe", () => {
     const ids = new Set(d.cards.map((r) => r[0]));
     const st = universStats();
     let lur = 0;
-    for (const c of CATS) lur += (st[c].L ?? 0) + (st[c].UR ?? 0);
+    for (const c of CATS) lur += (st[c].L ?? 0) + Math.min(25, st[c].UR ?? 0);
     expect(ids.size).toBeGreaterThanOrEqual(lur);
+    for (const c of universCards()) if (c.r === "L") expect(ids.has(c.id), c.id).toBe(true);
     expect(ids.size).toBeLessThan(600);
     expect(ids.has("bitcoin")).toBe(true);
     expect(ids.has("wk_q13382352")).toBe(true); // Satoshi (L Personnes)

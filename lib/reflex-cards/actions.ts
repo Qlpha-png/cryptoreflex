@@ -251,7 +251,9 @@ export function planAction(s: GameState, a: string, b: Record<string, unknown>, 
       const key = `c|${ctx.today}|${i}`, o = D.offers[i];
       if (s.claims.has(key)) throw new GameError("done", "Offre déjà prise.");
       /* le Colporteur donne une carte ordinaire : il ne prend qu'un doublon ORDINAIRE de même rareté (jamais une Holo ni une numérotée) */
-      if (CARD.get(give)?.r !== o.r || tradeN(s, give) < 1) throw new GameError("no_dup", `Il vous faut un doublon ordinaire (ni Holo ni numéroté) de la même rareté.`);
+      const want = CARD.get(o.id)?.r;
+      if (!want) throw new GameError("gone", "Cette offre n'est plus disponible.");
+      if (CARD.get(give)?.r !== want || tradeN(s, give) < 1) throw new GameError("no_dup", `Il vous faut un doublon ordinaire (ni Holo ni numéroté) de la même rareté.`);
       const isNew = !s.cards.has(o.id);
       return {
         patch: { cards: [{ id: give, dn: -1 }, { id: o.id, dn: 1 }], claims: [key], day: { day: ctx.today, inc: { trade: 1, ...(isNew ? { newc: 1 } : {}) } } },
@@ -346,7 +348,9 @@ export function toClient(s: GameState, ctx: Ctx, account: Account) {
   const quiz: Record<string, unknown> = {};
   for (const [id, q] of s.quiz) quiz[id] = q.ok ? { r: 1 } : { r: 0, d: q.day, ok: RULES.quiz[id] };
   const D = s.days.get(ctx.today)?.colp ?? null;
-  const colpD = D ? { ...D, offers: D.offers.map((o, i) => ({ ...o, done: s.claims.has(`c|${ctx.today}|${i}`) })) } : null;
+  /* rareté = celle de la carte AUJOURD'HUI (offres tirées avant un changement de catalogue : « Peu commune » affichée sur une Super
+     rare, 04/10) ; une carte sortie du catalogue rend l'offre indisponible */
+  const colpD = D ? { ...D, offers: D.offers.map((o, i) => ({ ...o, r: CARD.get(o.id)?.r ?? o.r, done: s.claims.has(`c|${ctx.today}|${i}`) || !CARD.has(o.id) })) } : null;
   const inv: Record<string, unknown> = {};
   for (const id of RULES.cosOwned) inv[id] = { t: Date.parse(s.player.first_day) };
   for (const [id, x] of s.cos) inv[id] = { t: x.t, ...(x.no ? { no: x.no } : {}) };

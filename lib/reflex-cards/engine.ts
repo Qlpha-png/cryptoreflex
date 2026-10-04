@@ -63,8 +63,6 @@ const BASE = RULES.cards.filter((c) => !c.fossil);
 const PUBLIQUES = new Set([...RULES.ed.icon.list, ...RULES.ed.trophy.list]);
 const ED_ORDER = ["myth", "toty", "icon", "bds", "fossil"] as const;
 /* Trophée (récompense de défi) juste sous les Ultra rares (Kev 03/10) : jamais devant une UR, une Légendaire ou mieux */
-const PRESTIGE_ED: Record<string, number> = { relic: 10, myth: 9, toty: 8, icon: 7, bds: 5.1, trophy: 3.95, fossil: 3.6 };
-const FIN_BONUS: Record<Fin, number> = { holo: 0.3, ag: 0.5, or: 0.7, onyx: 0.9 };
 const COS = new Map(RULES.cos.map((x) => [x.id, x]));
 
 /* ---------- dates (heure de Paris) ---------- */
@@ -130,7 +128,24 @@ export interface Item { id: string; ed: string | null; fin: Fin | null; serial?:
 export interface Pity { R: number; SR: number; UR: number; opened: number; gotSR: boolean; gotUR: boolean }
 const rarOf = (it: Item): Rar | null => (it.ed ? null : CARD.get(it.id)!.r);
 const baseRank = (it: Item) => (it.ed ? -1 : RNK(CARD.get(it.id)!.r));
-const prestige = (it: Item) => (it.ed ? PRESTIGE_ED[it.ed] : RNK(CARD.get(it.id)!.r) + (it.fin ? FIN_BONUS[it.fin] : 0));
+/* prestige = rareté RÉELLE d'un type de carte (−log10 de sa probabilité par carte tirée ; Kev 04/10 : « chaque rareté bien notée ») :
+   Relique > Mythique > Équipe > Icône > … ; une Commune Onyx passe devant une Légendaire ordinaire, une Argent devant une Holo ;
+   à type égal, le plus petit numéro d'abord (n° 1 avant n° 2). Sert à l'ordre de révélation du booster. */
+let TIER_SHARE: Record<Rar, number> | null = null;
+const tierShare = (r: Rar): number => {
+  if (!TIER_SHARE) {
+    if (RULES.equi) { const n = BASE.length || 1; TIER_SHARE = Object.fromEntries(RAR.map((k) => [k, BASE.filter((c) => c.r === k).length / n])) as Record<Rar, number>; }
+    else TIER_SHARE = RULES.wRar;
+  }
+  return TIER_SHARE[r] || 1e-3;
+};
+const ED_P: Record<string, number> = { relic: 1e-9, trophy: 0.03 };
+export function prestigeOf(it: Item): number {
+  const pe = it.ed ? ED_P[it.ed] ?? RULES.ed[it.ed]?.p : 0;
+  const p = it.ed ? (pe && pe > 0 ? pe : 1e-3) : tierShare(CARD.get(it.id)!.r) * (it.fin ? RULES.fin[it.fin]?.p || 1 : 1);
+  return -Math.log10(Math.max(p, 1e-15)) - (it.serial ? it.serial / 1e4 : 0);
+}
+const prestige = prestigeOf;
 function rollFin(rnd: Rnd): Fin | null {
   let x = rnd();
   for (const k of RULES.finOrder) {
@@ -429,7 +444,8 @@ function seeded(seed: number): Rnd {
 export function colpOffers(s: GameState, today: string, day: number): ColpDay {
   /* clé = la date seule (offres figées pour la journée) ; le tirage garde le jour de saison dans sa graine */
   const k = today, R = seeded(h32("colp|" + today + "|" + day));
-  const rs: Rar[] = [R() < 0.5 ? "C" : "PC", R() < 0.55 ? "R" : "PC", R() < 0.35 ? "SR" : "R"];
+  /* Kev 04/10 : une Super rare « de temps en temps, mais rare » (un jour sur cinq environ) dans la 3e offre */
+  const rs: Rar[] = [R() < 0.5 ? "C" : "PC", R() < 0.55 ? "R" : "PC", R() < 0.2 ? "SR" : "R"];
   const offers: ColpDay["offers"] = [];
   for (const r of rs) {
     const all = dayTables(day).byRD[r].filter((c) => !offers.some((o) => o.id === c.id));

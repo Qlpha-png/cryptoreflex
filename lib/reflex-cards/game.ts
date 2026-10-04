@@ -133,7 +133,13 @@ function universRow(c: UCard): Row {
 export function universGame(day: number): GameDataU {
   const all = universCards(), st = universStats(), E = universEditions();
   const stars = new Set<string>();
-  for (const c of all) if (c.r === "L" || c.r === "UR") stars.add(c.id);
+  /* têtes d'affiche embarquées dans la page : toutes les Légendaires + les 25 premières Ultra rares de chaque catégorie (le dosage du
+     04/10 compte ~760 Ultra rares : toutes les embarquer alourdirait la page de ~150 Ko ; les autres arrivent avec la partie) */
+  const urSeen: Record<string, number> = {};
+  for (const c of [...all].sort((a, b) => a.rank - b.rank)) {
+    if (c.r === "L") stars.add(c.id);
+    else if (c.r === "UR" && (urSeen[c.cat] = (urSeen[c.cat] ?? 0) + 1) <= 25) stars.add(c.id);
+  }
   for (const e of Object.values(E)) for (const id of e.icones) stars.add(id);
   for (const id of [...RAW.publiques, ...RAW.toty]) stars.add(id);
   const rows: Row[] = [], cartes: Record<string, Palier> = {};
