@@ -72,9 +72,50 @@ export function universBlurb(id: string): string {
 /** année d'un événement (date AAAA-MM-JJ), 0 sinon */
 export const universYear = (id: string): number => { const t = DESC[id]?.t ?? ""; return /^\d{4}/.test(t) ? Number(t.slice(0, 4)) : 0; };
 
-/** ligne envoyée au navigateur : [id, nom, symbole, catégorie, sous-type, rareté, rang, image, famille, en bref, année] (jamais la popularité brute) */
+/* sous-types lisibles en français (catégories DefiLlama, types de piratage, chaînes NFT, repères) : un seul endroit pour la page et l'API */
+const SOUS_FR: Record<string, string> = {
+  /* DefiLlama */
+  Lending: "Prêt", Dexs: "Échange décentralisé", "Liquid Staking": "Staking liquide", Bridge: "Pont", CDP: "Stablecoin adossé (CDP)", Yield: "Rendement",
+  Derivatives: "Dérivés", "Yield Aggregator": "Agrégateur de rendement", Restaking: "Restaking", "Liquid Restaking": "Restaking liquide", RWA: "Actifs réels (RWA)",
+  "Basis Trading": "Arbitrage de base", "Prediction Market": "Marché de prédiction", "NFT Marketplace": "Place de marché NFT", Launchpad: "Launchpad", Farm: "Ferme de rendement",
+  "Staking Pool": "Pool de staking", "Canonical Bridge": "Pont officiel", "Cross Chain Bridge": "Pont inter-chaînes", "Risk Curators": "Curateur de risque",
+  "Onchain Capital Allocator": "Allocation de capital", Indexes: "Indice", Privacy: "Confidentialité", Payments: "Paiements", Insurance: "Assurance",
+  "Leveraged Farming": "Rendement à levier", Options: "Options", "Options Vault": "Coffre d'options", Services: "Services", "Algo-Stables": "Stablecoin algorithmique",
+  Synthetics: "Actifs synthétiques", Gaming: "Jeu", "Liquidity manager": "Gestion de liquidité", "Liquidity Manager": "Gestion de liquidité", CeDeFi: "CeDeFi",
+  "Reserve Currency": "Monnaie de réserve", "Decentralized Stablecoin": "Stablecoin décentralisé", "Token Locker": "Verrouillage de jetons", Staking: "Staking",
+  SoFi: "Finance sociale", "Uncollateralized Lending": "Prêt sans garantie", Oracle: "Oracle", "Stablecoin Issuer": "Émetteur de stablecoin", "Stablecoin Wrapper": "Stablecoin enveloppé",
+  "Dual-Token Stablecoin": "Stablecoin à deux jetons", "Restaked BTC": "Bitcoin restaké", "Anchor BTC": "Bitcoin ancré", "Decentralized BTC": "Bitcoin décentralisé",
+  "Governance Incentives": "Incitations de gouvernance", "NftFi": "Finance NFT", "NFT Lending": "Prêt sur NFT", "Yield Lottery": "Loterie de rendement", "Treasury Manager": "Gestion de trésorerie",
+  "Collateral Markets": "Marchés de collatéral", "CDP Manager": "Gestion de CDP", "Decentralized AI": "IA décentralisée", "Wallets": "Portefeuille", "Telegram Bot": "Robot Telegram",
+  "Exotic Options": "Options exotiques", "Managed Token Pools": "Pools gérés", "Volume Boosting": "Incitation au volume", "Bug Bounty": "Prime aux bogues", "Ponzi": "Ponzi",
+  /* piratages DefiLlama */
+  "Access Control": "Faille d'accès", Rugpull: "Rug pull", "Key Compromise": "Clé compromise", "Oracle Manipulation": "Manipulation d'oracle", Reentrancy: "Réentrance",
+  "Bridge & Cross-Chain": "Pont piraté", "Frontend & Infrastructure": "Infrastructure piratée", "Social Engineering": "Ingénierie sociale", "Protocol Logic": "Logique du protocole",
+  "Token & Share Accounting": "Comptabilité des jetons", "Price Manipulation": "Manipulation de prix", Governance: "Gouvernance", "Flash Loan": "Prêt éclair", "Other": "Piratage",
+  "Smart Contract": "Contrat intelligent", "Infrastructure": "Infrastructure", pont: "Piratage de pont", piratage: "Piratage",
+  /* repères et Wikipédia */
+  "repère": "Repère historique", culture: "Culture", lieu: "Lieu", jeu: "Jeu",
+  /* chaînes NFT (CoinGecko) */
+  ethereum: "Ethereum", solana: "Solana", "binance-smart-chain": "BNB Chain", "polygon-pos": "Polygon", bitcoin: "Bitcoin (Ordinals)", base: "Base", arbitrum: "Arbitrum",
+  "arbitrum-one": "Arbitrum", avalanche: "Avalanche", optimism: "Optimism", "optimistic-ethereum": "Optimism", hyperevm: "HyperEVM", abstract: "Abstract", ronin: "Ronin",
+  "immutable-x": "Immutable", "zksync": "zkSync", linea: "Linea", blast: "Blast", sui: "Sui", aptos: "Aptos", ton: "TON", "the-open-network": "TON", cronos: "Cronos",
+  klaytn: "Kaia", "klay-token": "Kaia", fantom: "Fantom", gnosis: "Gnosis", xdai: "Gnosis", celo: "Celo", tezos: "Tezos", flow: "Flow", near: "NEAR", "near-protocol": "NEAR",
+  cardano: "Cardano", "mantle": "Mantle", scroll: "Scroll", "zora-network": "Zora", "berachain": "Berachain", sei: "Sei", "sei-network": "Sei", apechain: "ApeChain",
+  "shape": "Shape", "soneium": "Soneium", "ink": "Ink", "unichain": "Unichain", "world-chain": "World Chain", "sonic": "Sonic", "monad": "Monad", "plasma": "Plasma",
+};
+const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+/** sous-titre de la carte : famille crypto héritée, sinon sous-type traduit, sinon le nom de la catégorie */
+export function sousFr(c: UCard): string {
+  if (c.cat === "crypto") return c.fam || "Crypto";
+  if (c.cat === "plateforme") return "Plateforme d'échange";
+  const s = c.sous || "";
+  if (!s) return c.cat === "nft" ? "Collection NFT" : "";
+  return SOUS_FR[s] ?? (c.cat === "nft" ? cap(s.replace(/-/g, " ")) : s);
+}
+
+/** ligne envoyée au navigateur : [id, nom, symbole, catégorie, sous-type FR, rareté, rang, image, famille, en bref, année] (jamais la popularité brute) */
 export type ClientRow = [string, string, string, Cat, string, string, number, string, string, string, number];
-export const toClientRow = (c: UCard): ClientRow => [c.id, c.nom, c.sym, c.cat, c.sous, c.r, c.rank, c.img ?? "", c.fam, universBlurb(c.id), universYear(c.id)];
+export const toClientRow = (c: UCard): ClientRow => [c.id, c.nom, c.sym, c.cat, sousFr(c), c.r, c.rank, c.img ?? "", c.fam, universBlurb(c.id), universYear(c.id)];
 
 /* ---------- recherche (album : « Chercher une carte ») ---------- */
 const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");

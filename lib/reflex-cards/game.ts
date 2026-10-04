@@ -15,7 +15,7 @@ import { GAME_TEMPLATE } from "./game/template";
 import { reflexAccountsMode } from "./flag";
 import { launchDate } from "./season";
 import { partDay, totyDay } from "./engine";
-import { CATS, CAT_LABEL, UNIVERS_ON, universBlurb, universById, universCards, universEditions, universStats, universYear, type UCard } from "./univers";
+import { CATS, CAT_LABEL, UNIVERS_ON, sousFr, universBlurb, universById, universCards, universEditions, universStats, universYear, type UCard } from "./univers";
 
 const RULES = rulesRaw as unknown as { themes: { id: string; cards?: string[] }[] };
 
@@ -124,7 +124,7 @@ function universRow(c: UCard): Row {
   const old = LEGACY_ROW.get(c.id);
   const label = CAT_LABEL[c.cat];
   if (old) { const r = [...old] as Row; r[3] = c.img ?? old[3]; r[4] = c.rank; r[5] = label; r[6] = c.fam || old[5]; return r; }
-  return [c.id, c.nom, c.sym, c.img ?? "", c.rank, label, c.fam || c.sous || "", universYear(c.id), universBlurb(c.id), "", "", 0];
+  return [c.id, c.nom, c.sym, c.img ?? "", c.rank, label, sousFr(c), universYear(c.id), universBlurb(c.id), "", "", 0];
 }
 export function universGame(day: number): GameDataU {
   const all = universCards(), st = universStats(), E = universEditions();
@@ -137,7 +137,7 @@ export function universGame(day: number): GameDataU {
     const c = universById(id);
     if (!c) continue;
     rows.push(universRow(c));
-    cartes[id] = { fam: CAT_LABEL[c.cat], sub: c.fam || c.sous || "", r: c.r, noto: c.rank, part: 0, ...(c.r === "L" ? { legende: 1 } : {}) };
+    cartes[id] = { fam: CAT_LABEL[c.cat], sub: sousFr(c), r: c.r, noto: c.rank, part: 0, ...(c.r === "L" ? { legende: 1 } : {}) };
   }
   const rarTotals: Record<string, number> = {};
   for (const cat of CATS) for (const r of ["C", "PC", "R", "SR", "UR", "L"]) rarTotals[r] = (rarTotals[r] ?? 0) + (st[cat][r] ?? 0);
