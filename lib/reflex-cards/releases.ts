@@ -45,6 +45,19 @@ export interface Releases {
   endDay: number;
 }
 
+/**
+ * 04/10/2026 — DÉCISION KEV : « pas de saison pour le moment, développer le nombre de cartes ». Par défaut TOUTES les parties
+ * sont sorties dès le lancement (881 cartes dans les boosters, Équipe de la saison révélée, pas de fin de saison). Le découpage
+ * par paliers de joueurs reste codé : REFLEX_CARDS_SEASON_GATING=true le réactive.
+ */
+export const seasonGating = (): boolean => process.env.REFLEX_CARDS_SEASON_GATING?.trim() === "true";
+
+/** toutes les parties sorties le jour du lancement, aucune fin de saison */
+function allOutReleases(launch: string, thresholds: number[]): Releases {
+  const dates = Array.from({ length: N_PARTS }, () => launch);
+  return { ...toReleases(launch, dates, 0, thresholds), endDay: FAR };
+}
+
 export function releasePlayers(): number[] {
   const v = process.env.REFLEX_CARDS_RELEASE_PLAYERS?.trim();
   if (!v) return DEFAULT_PLAYERS;
@@ -132,6 +145,7 @@ export async function releases(): Promise<Releases> {
   const launch = launchDate();
   const thresholds = releasePlayers();
   if (!launch) { const rel = toReleases("2000-01-01", Array.from({ length: N_PARTS }, () => null), 0, thresholds); MEM = { at: now, rel }; return rel; }
+  if (!seasonGating()) { const rel = allOutReleases(launch, thresholds); MEM = { at: now, rel }; return rel; }
   const kv = getKv();
   const stored = kv.mocked ? [] : ((await kv.get<{ dates?: (string | null)[] }>(KV_RELEASES).catch(() => null))?.dates ?? []);
   const players = await countPlayers();
@@ -158,6 +172,7 @@ export async function releasesForPages(): Promise<Releases> {
   const launch = launchDate();
   const thresholds = releasePlayers();
   if (!launch) { const rel = toReleases("2000-01-01", Array.from({ length: N_PARTS }, () => null), 0, thresholds); MEM_RO = { at: now, rel }; return rel; }
+  if (!seasonGating()) { const rel = allOutReleases(launch, thresholds); MEM_RO = { at: now, rel }; return rel; }
   const stored = (await getKv().get<{ dates?: (string | null)[] }>(KV_RELEASES, { revalidate: 60 }).catch(() => null))?.dates ?? [];
   const { dates } = computeReleases({ launch, today: parisToday(), players: 0, stored, thresholds, manual: manualReleases() });
   const rel = toReleases(launch, dates, 0, thresholds);

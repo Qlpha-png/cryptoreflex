@@ -32,11 +32,12 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
         if (best >= 2) R++; if (best >= 3) SR++; if (best >= 4) UR++; if (best >= 5) L++;
       }
       expect(unknown).toBe(0);
-      /* 02/10/2026 au soir : Rare garantie au 6e booster, UR 0,15 % par carte sans 1re UR garantie — publié 37,1 · 7,2 · 1,0 · 0,17 % */
-      expect(R / N).toBeGreaterThan(0.366); expect(R / N).toBeLessThan(0.376);
-      expect(SR / N).toBeGreaterThan(0.069); expect(SR / N).toBeLessThan(0.076);
-      expect(UR / N).toBeGreaterThan(0.0088); expect(UR / N).toBeLessThan(0.0112);
-      expect(L / N).toBeGreaterThan(0.0013); expect(L / N).toBeLessThan(0.0021);
+      /* 04/10/2026, option D (Kev : « de bonnes cartes, un peu plus simplement ») : PC 27 / R 12 / SR 4,5 / UR 1,2 / L 0,3 % par
+         carte, Rare garantie au 6e booster — publié 63,1 · 26,6 · 7,2 · 1,5 % (docs/sim-option-d.txt) */
+      expect(R / N).toBeGreaterThan(0.62); expect(R / N).toBeLessThan(0.642);
+      expect(SR / N).toBeGreaterThan(0.255); expect(SR / N).toBeLessThan(0.278);
+      expect(UR / N).toBeGreaterThan(0.065); expect(UR / N).toBeLessThan(0.080);
+      expect(L / N).toBeGreaterThan(0.012); expect(L / N).toBeLessThan(0.018);
     });
   it("booster thématique : les cartes de base viennent de la catégorie, rareté inchangée", () => {
     const rnd = seeded(42), ps = freshPity();
@@ -48,7 +49,7 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       if (best >= 2) R++;
     }
     expect(fam).toBe(base);
-    expect(R / 50000).toBeGreaterThan(0.36); expect(R / 50000).toBeLessThan(0.383);
+    expect(R / 50000).toBeGreaterThan(0.61); expect(R / 50000).toBeLessThan(0.655);
   });
   it("l'Équipe de la saison ne tombe pas avant le jour 46", () => {
     expect(dayTables(45).ed.toty.p).toBe(0);
@@ -86,7 +87,7 @@ describe("Reflex Cards — tirage serveur : la rareté publiée", () => {
       const late: Pity = { R: 0, SR: 0, UR: 25, opened: 25, gotSR: true, gotUR: false };
       if (drawPack(30, late, null, seeded(seed)).some((it) => !it.ed && rank(it.id) >= 4)) forced++;
     }
-    expect(forced).toBeLessThan(20); // hasard seul : ~1 % des boosters ; une garantie donnerait 400 / 400
+    expect(forced).toBeLessThan(60); // hasard seul : ≈ 7 % des boosters (option D, 04/10/2026) ; une garantie donnerait 400 / 400
     const net: Pity = { R: 0, SR: 0, UR: 299, opened: 299, gotSR: true, gotUR: false };
     expect(drawPack(30, net, null, seeded(5)).some((it) => !it.ed && rank(it.id) >= 4)).toBe(true);
   });

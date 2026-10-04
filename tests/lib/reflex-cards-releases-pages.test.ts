@@ -28,20 +28,45 @@ const R = rules as unknown as { parts: { jour: number }[]; totyFromDay: number }
 const STATIC = R.parts.map((p) => p.jour);
 const LAUNCH = "2026-10-02";
 const KEY = "rc:releases:v1";
-let prevLaunch: string | undefined, prevManual: string | undefined;
+let prevLaunch: string | undefined, prevManual: string | undefined, prevGating: string | undefined;
 
 beforeEach(() => {
-  prevLaunch = process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE; prevManual = process.env.REFLEX_CARDS_RELEASES;
+  prevLaunch = process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE; prevManual = process.env.REFLEX_CARDS_RELEASES; prevGating = process.env.REFLEX_CARDS_SEASON_GATING;
   process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = LAUNCH; delete process.env.REFLEX_CARDS_RELEASES;
+  /* ces tests décrivent le découpage par paliers : depuis le 04/10/2026 il n'est actif qu'avec REFLEX_CARDS_SEASON_GATING=true */
+  process.env.REFLEX_CARDS_SEASON_GATING = "true";
   H.store.clear(); H.kvGet.mockClear(); H.kvSet.mockClear(); H.sbFactory.mockClear(); resetReleasesMemory();
 });
 afterEach(() => {
   if (prevLaunch === undefined) delete process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE; else process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = prevLaunch;
   if (prevManual === undefined) delete process.env.REFLEX_CARDS_RELEASES; else process.env.REFLEX_CARDS_RELEASES = prevManual;
+  if (prevGating === undefined) delete process.env.REFLEX_CARDS_SEASON_GATING; else process.env.REFLEX_CARDS_SEASON_GATING = prevGating;
   setPartDays(STATIC, R.totyFromDay, 90); resetReleasesMemory();
 });
 
-describe("Reflex Cards — sorties en lecture seule pour les pages pré-rendues", () => {
+describe("Reflex Cards — « pas de saison pour le moment » (Kev, 04/10/2026) : tout est sorti par défaut", () => {
+  it("sans REFLEX_CARDS_SEASON_GATING : toutes les parties sorties le jour du lancement, Équipe révélée, pas de fin de saison, ni KV ni Supabase", async () => {
+    delete process.env.REFLEX_CARDS_SEASON_GATING;
+    const rel = await releasesForPages();
+    expect(rel.dates.every((d) => d === LAUNCH)).toBe(true);
+    expect(rel.days.every((d) => d === 1)).toBe(true);
+    expect(rel.next).toBeNull();
+    expect(rel.totyDay).toBe(4);
+    expect(rel.endDay).toBe(FAR);
+    expect(H.kvGet).not.toHaveBeenCalled();
+    expect(H.kvSet).not.toHaveBeenCalled();
+    expect(H.sbFactory).not.toHaveBeenCalled();
+    const viaEngine = await applyReleases({ readOnly: true });
+    expect(viaEngine.days[N_PARTS - 1]).toBe(1);
+  });
+  it("REFLEX_CARDS_SEASON_GATING=true : retour au découpage par paliers (seule la partie 1 au lancement)", async () => {
+    const rel = await releasesForPages();
+    expect(rel.dates[0]).toBe(LAUNCH);
+    expect(rel.dates.slice(1).every((d) => d === null)).toBe(true);
+  });
+});
+
+describe("Reflex Cards — sorties en lecture seule pour les pages pré-rendues (paliers activés)", () => {
   it("lit le registre KV avec revalidation (jamais no-store), n'écrit rien et ne touche pas à Supabase", async () => {
     H.store.set(KEY, { dates: [null, "2026-10-03"], updated: "2026-10-03T10:00:00Z" });
     const rel = await releasesForPages();
