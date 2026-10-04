@@ -63,6 +63,10 @@ export const revalidate = 3600;
 type Entry = MetadataRoute.Sitemap[number];
 type ChangeFrequency = NonNullable<Entry["changeFrequency"]>;
 
+/** Date du dernier enrichissement des gabarits /historique-prix (mois par mois) et /convertisseur (grille, un an) — lot 2b.
+ *  Une vraie date de changement de contenu, figée : pas « aujourd'hui » à chaque build. */
+const LOT2B_UPDATE = new Date("2026-10-04");
+
 function entry(
   path: string,
   changeFrequency: ChangeFrequency,
@@ -359,7 +363,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // antérieures au lancement du projet (noindex côté page) — getHistYearsFor.
   const historiquePrixRoutes: MetadataRoute.Sitemap = getAllCryptos().flatMap((c) =>
     getHistYearsFor(c).map((annee) =>
-      entry(`/historique-prix/${c.id}/${annee}`, "yearly", 0.55),
+      entry(`/historique-prix/${c.id}/${annee}`, "yearly", 0.55, LOT2B_UPDATE),
     ),
   );
 
@@ -367,7 +371,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    * 4. Pages convertisseur SEO programmatic (top 30 pairs)
    * ---------------------------------------------------------------- */
   const converterPairRoutes: MetadataRoute.Sitemap = TOP_PAIRS.map(({ from, to }) =>
-    entry(`/convertisseur/${from}-${to}`, "daily", 0.5),
+    entry(`/convertisseur/${from}-${to}`, "daily", 0.5, LOT2B_UPDATE),
   );
 
   /* ----------------------------------------------------------------
