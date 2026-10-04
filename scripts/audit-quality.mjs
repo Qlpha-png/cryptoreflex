@@ -87,6 +87,9 @@ const FISCAL_EXTS = [...SOURCE_EXTS, ".json"]; // glossary.json / faq-crypto.jso
 const FISCAL_NUANCE =
   // négation imposable/taxable, tolérante au markdown (**pas** imposable / pas immédiatement imposable)
   "sans soulte|avec soulte|sursis|150[\\s ]?VH[\\s ]?bis|\\bpas[\\s*_]{0,3}(?:imposabl|taxabl|un fait)|" +
+  // 04/10/2026 : « un swap n'est pas une cession imposable », « aucune cession imposable derrière » = la nuance elle-même
+  // (gas des transferts/swaps non déductible) ; sans cette entrée, l'article frais-acquisition bloquait la publication quotidienne.
+  "pas une cession (?:imposable|taxable)|aucune cession (?:imposable|taxable)|li[ée] à aucune cession|" +
   "pas imm[ée]diatement (?:imposabl|taxabl)|" +
   "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
   "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
