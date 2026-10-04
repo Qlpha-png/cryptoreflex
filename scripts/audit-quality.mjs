@@ -193,6 +193,10 @@ const RULES = [
       /14 ?ao[ûu]t 2025|14\/08\/2025|02[\/-]09[\/-]2024|2 septembre 2024|(?:BO?FiP|BOFIP)\s*(?:d['’]\s*)?(?:ao[ûu]t\s*)?202[45]/gi,
     severity: "error",
     broadScan: true,
+    // 05/10/2026 : les fiches des cartes Reflex (données DefiLlama) citent des dates RÉELLES d'événements, dont le
+    // piratage de BtcTurk du 14/08/2025 — ce n'est pas un texte fiscal ; sans cette exclusion, la publication
+    // quotidienne des actus (gate du workflow daily-content) aurait été bloquée.
+    allowPaths: ["data/reflex-cards-univers-desc.json"],
     suggestion:
       "Supprimer la date BOFiP fabriquée. Référence officielle réelle = art. 150 VH bis CGI + BOFiP BOI-RPPM-PVBMC-30-30 (sans date inventée). Le timing staking/airdrop n'est pas tranché par une doctrine dédiée.",
   },
