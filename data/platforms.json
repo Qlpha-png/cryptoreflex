@@ -110,7 +110,7 @@
         "Coinbase Earn (gagner crypto en apprenant)"
       ],
       "weaknesses": [
-        "Frais élevés sur achat instantané (1,49%)",
+        "Achat instantané par carte cher (3,99 % + spread)",
         "Trustpilot très bas malgré la régulation",
         "Support client souvent critiqué"
       ],
@@ -321,7 +321,7 @@
         "Diversification crypto + actions + métaux"
       ],
       "weaknesses": [
-        "Spread élevé (1-2%)",
+        "1,49 % par achat en mode standard (1,99 % sur les indices)",
         "Frais cachés dans le spread",
         "Pas de trading avancé/levier"
       ],
@@ -825,7 +825,7 @@
       ],
       "weaknesses": [
         "Catalogue très limité (25 cryptos)",
-        "Frais 1% sur tout",
+        "1,49 % par achat sous 250 € (dégressif jusqu'à 0,49 %)",
         "Pas de trading actif"
       ],
       "badge": "Idéal débutant DCA",
@@ -1026,7 +1026,7 @@
       "idealFor": "Traders avancés cherchant produits dérivés avec profondeur carnet et options crypto",
       "strengths": [
         "Profondeur de carnet sur perp BTC/ETH parmi les meilleures",
-        "Frais futures ultra-compétitifs (taker 0,055%)",
+        "Frais spot de 0,10 % (maker et taker)",
         "Plateforme options crypto complète"
       ],
       "weaknesses": [
@@ -1339,7 +1339,7 @@
         "Earn (intérêts crypto) très simple à activer"
       ],
       "weaknesses": [
-        "Frais instantanés élevés (2,99 % CB)",
+        "Spread caché de 0,5 à 2 % dans l'application",
         "Carte exige souvent stake CRO pour bénéfices",
         "Support FR uniquement chat (pas phone)"
       ],
@@ -1742,8 +1742,8 @@
         "Régulation CySEC + MiCA + FCA"
       ],
       "weaknesses": [
-        "Spread élevé (0.75-2,9 %) = frais cachés substantiels",
-        "Frais retrait 5 € fiat + 2 % retrait crypto",
+        "1 % par achat ou vente, plus un spread (≈ 0,75 % sur le BTC, 1 à 5 % sur les altcoins)",
+        "Retrait en euros payant (5 € + 0,5 % de conversion), transfert de crypto vers un portefeuille : 2 %",
         "Pas de wallet self-custody"
       ],
       "badge": "Best copy trading",
@@ -2616,7 +2616,7 @@
       ],
       "weaknesses": [
         "Catalogue minimal (4 cryptos : BTC/ETH/LTC/BCH)",
-        "Frais élevés (2,3 % achat instantané + 1,5 % spread)",
+        "Frais élevés : 1,5 à 2,2 % selon le montant, plus un spread de change de 0,5 à 2,5 %",
         "Trustpilot PayPal global très bas"
       ],
       "badge": "Best on-ramp PayPal",
@@ -2711,7 +2711,7 @@
       "idealFor": "Traders pros voulant la plus grande liquidité spot + accès dérivés (margin, perp swaps)",
       "strengths": [
         "Liquidité haute sur paires majeures",
-        "Frais maker/taker très bas (0,1 / 0,2 %)",
+        "Frais de trading à 0 % (maker et taker, depuis le 17/12/2025)",
         "Trading dérivés avancé (margin, perp)"
       ],
       "weaknesses": [
@@ -3002,7 +3002,7 @@
       ],
       "weaknesses": [
         "Pas de support FR",
-        "Frais élevés (1.5-3 % spread + 2 % CB)",
+        "Frais élevés : environ 1 % de service et 1 à 3 % de spread (3 à 5 % au total)",
         "Pas de staking ni trading actif"
       ],
       "badge": "On-ramp NL",
@@ -3291,7 +3291,7 @@
         "Mining cloud + masternodes en alternative au staking simple"
       ],
       "weaknesses": [
-        "Frais élevés (1.5-2 %)",
+        "Frais élevés : environ 1,5 % par achat, 2,5 % par carte, retrait en euros payant",
         "Mining cloud = ROI souvent décevant en bear market",
         "Catalogue limité (~30 cryptos)"
       ],

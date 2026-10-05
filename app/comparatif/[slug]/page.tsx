@@ -28,7 +28,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
-import { fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -127,8 +127,8 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
     },
     {
       label: "Retrait SEPA",
-      aDisplay: typeof a.fees.withdrawalFiatSepa === "number" ? (a.fees.withdrawalFiatSepa === 0 ? "Gratuit" : `${a.fees.withdrawalFiatSepa}€`) : a.fees.withdrawalFiatSepa,
-      bDisplay: typeof b.fees.withdrawalFiatSepa === "number" ? (b.fees.withdrawalFiatSepa === 0 ? "Gratuit" : `${b.fees.withdrawalFiatSepa}€`) : b.fees.withdrawalFiatSepa,
+      aDisplay: typeof a.fees.withdrawalFiatSepa === "number" ? (a.fees.withdrawalFiatSepa === 0 ? "Gratuit" : `${fmtNb(a.fees.withdrawalFiatSepa)} €`) : a.fees.withdrawalFiatSepa,
+      bDisplay: typeof b.fees.withdrawalFiatSepa === "number" ? (b.fees.withdrawalFiatSepa === 0 ? "Gratuit" : `${fmtNb(b.fees.withdrawalFiatSepa)} €`) : b.fees.withdrawalFiatSepa,
       hint:
         typeof a.fees.withdrawalFiatSepa === "number" && typeof b.fees.withdrawalFiatSepa === "number"
           ? winner(a.fees.withdrawalFiatSepa, b.fees.withdrawalFiatSepa, true)
@@ -204,7 +204,7 @@ function buildVerdict(a: Platform, b: Platform): { intro: string; pickA: string;
 
   let intro: string;
   if (Math.abs(a.scoring.global - b.scoring.global) < 0.2) {
-    intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${a.scoring.global} vs ${b.scoring.global}). C'est une comparaison où le bon choix dépend strictement de vos priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur votre profil de trading, l'importance de l'expérience mobile, et la place que vous accordez à un support en français.`;
+    intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${fmtNb(a.scoring.global)} contre ${fmtNb(b.scoring.global)}). C'est une comparaison où le bon choix dépend strictement de vos priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur votre profil de trading, l'importance de l'expérience mobile, et la place que vous accordez à un support en français.`;
   } else if (a.scoring.global > b.scoring.global) {
     intro = `${a.name} (${fmtNb(a.scoring.global)}/5) devance ${b.name} (${fmtNb(b.scoring.global)}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${b.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
   } else {
@@ -319,7 +319,7 @@ export default function ComparisonPage({ params }: Props) {
               ? `Acteur français face à un acteur international : on compare l'accompagnement local et la profondeur de marché.`
               : spec.bucket === "wallet-vs-wallet"
                 ? `Deux références du wallet matériel comparées sur la sécurité, l'écosystème et la facilité d'usage.`
-                : `Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR. Données vérifiées le ${new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}.`}
+                : `Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR. Frais relevés le ${fmtDateFr(a.fees.verified?.date ?? "") || "—"}, statuts MiCA vérifiés le ${fmtDateFr(a.mica.lastVerified) || "—"}.`}
           </p>
 
           {/* Plateforme non autorisée en France (registre MiCA de l'ESMA, liste blanche AMF) */}

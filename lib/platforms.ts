@@ -309,7 +309,7 @@ export function platformsItemListSchema(platforms: Platform[], baseUrl: string) 
             "@type": "PriceSpecification",
             price: p.fees.spotMaker.toString(),
             priceCurrency: "EUR",
-            description: `Frais spot maker à partir de ${p.fees.spotMaker}% par transaction`,
+            description: `Frais spot maker à partir de ${p.fees.spotMaker.toLocaleString("fr-FR", { maximumFractionDigits: 3 })} % par transaction`,
           },
         },
       },
