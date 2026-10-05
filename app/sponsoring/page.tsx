@@ -27,8 +27,8 @@ import { withHreflang } from "@/lib/seo-alternates";
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
  *
- * Refonte 26/04/2026 — focus session « Lancement programme ambassadeurs +
- * sponsoring B2B » (consultant senior B2B).
+ * Refonte 26/04/2026 — sponsoring B2B (consultant senior B2B). Le programme
+ * ambassadeurs lancé en même temps a été retiré le 05/10/2026 (site gratuit).
  *
  * Choix produit :
  *  - 3 offres claires (V1 dispo, V2 M3+, V3 M4+) — pas de sur-vente.

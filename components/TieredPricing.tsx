@@ -6,12 +6,10 @@ import PricingCheckoutLink from "@/components/PricingCheckoutLink";
 /**
  * <TieredPricing /> — composant réutilisable de pricing 2 ou 3 colonnes.
  *
- * Utilisé sur :
- *  - /sponsoring (offres B2B)
- *  - /pro (plans abonnement)
- *  - /ambassadeurs (3 paliers)
+ * Utilisé sur : /sponsoring (offres B2B). (/pro est passé en page « 100 % gratuit » et /ambassadeurs a été
+ * retiré le 05/10/2026.)
  *
- * Pourquoi un seul composant pour 3 usages différents :
+ * Pourquoi un composant dédié :
  *  - Même grille visuelle (1 colonne mobile, n colonnes desktop).
  *  - Même logique de "highlight" sur 1 plan (ring or + ombre dorée).
  *  - Même CTA (Link interne ou ancre selon le préfixe `#` ou `/`).

@@ -141,7 +141,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/calendrier", "weekly", 0.7),
     // /partenariats a été 301 vers /sponsoring (audit SEO 01/05/2026).
     entry("/partenaires", "weekly", 0.85),
-    entry("/ambassadeurs", "monthly", 0.7),
     entry("/sponsoring", "monthly", 0.7),
     // /api-publique — docs des endpoints CC-BY 4.0 (stratégie backlinks).
     entry("/api-publique", "monthly", 0.7),

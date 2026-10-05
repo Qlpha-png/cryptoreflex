@@ -222,6 +222,15 @@ describe("legacy-redirects — les 33 chemins de la Search Console (toutes les r
     expect(resolve(dest!), `${p} → ${dest} : chaîne de redirections`).toBeNull();
   });
 
+  it("programme ambassadeurs retiré (05/10/2026) : /ambassadeurs et /ambassadeurs/merci → /contact en un saut", () => {
+    for (const p of ["/ambassadeurs", "/ambassadeurs/merci"]) {
+      expect(isRealPage(p), `${p} existe encore`).toBe(false);
+      expect(resolve(p)).toBe("/contact");
+      expect(isRealPage("/contact")).toBe(true);
+      expect(resolve("/contact")).toBeNull();
+    }
+  });
+
   it("aucune vraie page n'est masquée par une règle legacy (avis, alternatives, comparatifs publiés)", () => {
     for (const r of reviews) expect(resolve(`/avis/${r}`), `/avis/${r}`).toBeNull();
     for (const a of alternatives) expect(resolve(`/alternative-a/${a}`), `/alternative-a/${a}`).toBeNull();

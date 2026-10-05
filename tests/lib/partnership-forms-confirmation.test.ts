@@ -35,7 +35,7 @@ afterAll(() => {
   vi.unstubAllEnvs();
 });
 
-import { submitAmbassadeur, submitSponsoring } from "@/lib/partnership-forms";
+import { submitSponsoring } from "@/lib/partnership-forms";
 import { BRAND } from "@/lib/brand";
 
 function form(fields: Record<string, string>): FormData {
@@ -54,49 +54,6 @@ beforeEach(() => {
 function confirmationsTo(email: string) {
   return sendEmail.mock.calls.map((c) => c[0]).filter((o) => o.to === email);
 }
-
-describe("submitAmbassadeur — accusé de réception", () => {
-  it("ne recopie ni l'URL ni le canal ; prénom seul si lettres uniquement", async () => {
-    const victim = "amb-victime@example.com";
-    const res = await submitAmbassadeur(
-      form({
-        email: victim,
-        name: "Jean Dupont",
-        profileUrl: PHISH,
-        channel: `Gagnez 1 BTC sur ${PHISH}`,
-        consent: "on",
-      }),
-    );
-    expect(res).toEqual({ ok: true, mocked: false });
-
-    // L'email interne garde les détails (destinataire = équipe partenariats).
-    const internal = sendEmail.mock.calls.map((c) => c[0]).find((o) => o.to === BRAND.partnersEmail);
-    expect(internal?.html).toContain("crypto-bonus.example");
-
-    const [confirm] = confirmationsTo(victim);
-    expect(confirm).toBeDefined();
-    expect(confirm.html).toContain("Merci Jean !");
-    expect(confirm.html).not.toContain("crypto-bonus");
-    expect(confirm.text).not.toContain("crypto-bonus");
-    expect(confirm.html).not.toContain("Dupont");
-  });
-
-  it("nom contenant une URL / des chiffres → aucun nom recopié", async () => {
-    const victim = "amb-victime2@example.com";
-    await submitAmbassadeur(
-      form({ email: victim, name: "evil.com/claim", profileUrl: "https://x.example", consent: "on" }),
-    );
-    await submitAmbassadeur(
-      form({ email: "amb-victime3@example.com", name: "Support2FA urgent", profileUrl: "x", consent: "on" }),
-    );
-    const [c1] = confirmationsTo(victim);
-    const [c2] = confirmationsTo("amb-victime3@example.com");
-    expect(c1.html).toContain("<h2>Merci !</h2>");
-    expect(c1.html).not.toContain("evil.com");
-    expect(c2.html).toContain("<h2>Merci !</h2>");
-    expect(c2.html).not.toContain("Support2FA");
-  });
-});
 
 describe("submitSponsoring — accusé de réception", () => {
   it("ne recopie ni la société, ni l'offre, ni le budget", async () => {
@@ -120,12 +77,11 @@ describe("submitSponsoring — accusé de réception", () => {
 });
 
 describe("plafond d'accusés par destinataire", () => {
-  it("3 accusés max / adresse / 24 h, tous formulaires confondus ; l'email interne part toujours", async () => {
+  it("3 accusés max / adresse / 24 h ; l'email interne part toujours", async () => {
     const victim = "bombing-target@example.com";
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       await submitSponsoring(form({ email: victim, company: "ACME", consent: "on" }));
     }
-    await submitAmbassadeur(form({ email: victim, name: "Ana", profileUrl: "x", consent: "on" }));
     const r = await submitSponsoring(form({ email: victim, company: "ACME", consent: "on" }));
 
     expect(r).toEqual({ ok: true, mocked: false });

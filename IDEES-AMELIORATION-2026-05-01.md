@@ -132,8 +132,8 @@ Le moteur fiscal mérite 95%+ coverage. Effort 6-8h. Critical pour confiance Pro
 ### B4. Discord communauté + bot daily auto-post
 Effort 6h Discord setup + 4h bot. Risque : modération chronophage (1h/jour solo). Tester via Telegram canal **lecture seule** d'abord (effort 1h).
 
-### B5. Programme ambassadeurs activé
-La page `/ambassadeurs` existe — vérifier qu'elle est connectée (formulaire Supabase + workflow attribution code promo unique + dashboard commissions). Effort 12h.
+### B5. Programme ambassadeurs activé — ABANDONNÉ (programme retiré le 05/10/2026 : le site est gratuit, /ambassadeurs redirige vers /contact)
+La page `/ambassadeurs` existait — vérifier qu'elle est connectée (formulaire Supabase + workflow attribution code promo unique + dashboard commissions). Effort 12h.
 
 ### B6. Podcast quotidien IA-généré (text-to-speech ElevenLabs)
 3 min de brief audio chaque matin → Spotify/Apple via RSS. Effort initial 10h. Risque : qualité voix IA française mid-2026 acceptable mais pas premium. Peut différencier mais lourd à maintenir si pas automatisé E2E.

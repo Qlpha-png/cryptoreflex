@@ -35,7 +35,7 @@ const ALL_LINKS = [
 const NOT_IN_MENU = new Set([
   "api", "admin", "auteur", "connexion", "inscription", "mot-de-passe-oublie", "merci", "offline", "embed", "go", "lp",
   "pro", "pro-plus", "cgv-abonnement", "partenariats", "affiliations", "pack-declaration-crypto-2026", "recherche",
-  "labs", "wizard", "impact", "ambassadeurs", "sitemap-articles.xml", "sitemap-index.xml", "sitemap-news.xml",
+  "labs", "wizard", "impact", "sitemap-articles.xml", "sitemap-index.xml", "sitemap-news.xml",
 ]);
 
 describe("menu à source unique (lib/nav.ts)", () => {

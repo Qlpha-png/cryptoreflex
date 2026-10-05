@@ -256,7 +256,7 @@ export const config = {
     // /quiz, /calendrier, /halving-bitcoin, /recherche, /transparence,
     // /sponsoring, /a-propos, /methodologie, /accessibilite, /contact,
     // /confidentialite, /mentions-legales, /cgv-abonnement, /partenaires,
-    // /merci, /newsletter, /impact, /ambassadeurs, /go (affiliate redirector).
+    // /merci, /newsletter, /impact, /go (affiliate redirector).
     // Avant : ces routes faisaient un Supabase JWT round-trip à chaque hit
     // (TTFB +30 à +60ms inutile). Maintenant : middleware skipped, latence
     // p50 alignée sur le reste des SEO routes déjà exclues.
@@ -265,6 +265,6 @@ export const config = {
     // contrôle CSRF ci-dessus.
     // REFLEX CARDS (02/10/2026) : /cartes et /cartes/* sont 100 % publics en lecture (phase A, sans comptes) :
     // pas de refresh JWT Supabase. À revoir en phase B (comptes) si une page /cartes devient auth-aware.
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|ambassadeurs|go/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|api/stripe/webhook|embed/|cryptos/|blog/|comparer/|vs/|comparatif/|glossaire/|avis/|staking/|acheter/|convertisseur/|analyses-techniques/|actualites/|academie/|marche/|outils/|monitoring/|api/public/|api/historical|api/prices|api/search|api/news/|api/whales|api/onchain|api/convert|quiz/|calendrier|halving-bitcoin|recherche|transparence|sponsoring|a-propos|methodologie|accessibilite|contact|confidentialite|mentions-legales|cgv-abonnement|partenaires|merci|newsletter|impact|go/).*)",
   ],
 };

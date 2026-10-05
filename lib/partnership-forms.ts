@@ -1,6 +1,7 @@
 /**
  * Partnership / contact form handling — server actions partagées par
- * /ambassadeurs, /sponsoring et /contact.
+ * /sponsoring et /contact (programme ambassadeurs retiré le 05/10/2026 : il promettait 50 % de
+ * commission alors que le site est entièrement gratuit).
  *
  * Pattern :
  *  - Validation Zod-like maison (zéro dépendance, on garde le bundle léger).
@@ -35,11 +36,6 @@ export type FormResult =
 /*  Rate limiters dédiés (10 req/min/IP par formulaire)                       */
 /* -------------------------------------------------------------------------- */
 
-const ambassadeurLimiter = createRateLimiter({
-  limit: 5,
-  windowMs: 60_000,
-  key: "ambassadeur-form",
-});
 const sponsoringLimiter = createRateLimiter({
   limit: 5,
   windowMs: 60_000,
@@ -53,7 +49,7 @@ const contactLimiter = createRateLimiter({
 
 /**
  * Accusés de réception envoyés à l'adresse SAISIE (donc potentiellement celle
- * d'un tiers) : 3 / adresse / 24 h, tous formulaires confondus.
+ * d'un tiers) : 3 / adresse / 24 h (seul le formulaire sponsoring envoie un accusé).
  */
 const confirmationRecipientLimiter = createRecipientLimiter({
   limit: 3,
@@ -74,22 +70,6 @@ function getActionIp(): string {
     h.get("x-real-ip") ||
     "unknown"
   );
-}
-
-/**
- * Prénom affichable dans un email envoyé à une adresse non vérifiée.
- *
- * AUDIT SÉCURITÉ 2026-10-02 : l'accusé de réception part vers l'email SAISI
- * dans le formulaire. Recopier le nom / l'URL / la société saisis permettait
- * d'envoyer, depuis notre domaine, un texte de phishing (« Votre compte est
- * bloqué : https://… ») à n'importe qui. On ne garde donc que le 1er mot du
- * nom s'il ne contient QUE des lettres (accents, tiret, apostrophe), 30 car.
- * max — sinon rien. Aucune URL, aucun chiffre, aucun point possible.
- */
-function safeFirstName(name: string): string {
-  const first = name.trim().split(/\s+/)[0] ?? "";
-  if (!first || first.length > 30) return "";
-  return /^[\p{L}][\p{L}'’-]*$/u.test(first) ? first : "";
 }
 
 /** Retire CR/LF (sujet d'email construit avec une saisie utilisateur). */
@@ -136,109 +116,7 @@ function htmlToPlainText(html: string): string {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  1. Programme ambassadeurs                                                 */
-/* -------------------------------------------------------------------------- */
-
-export async function submitAmbassadeur(
-  formData: FormData
-): Promise<FormResult> {
-  const ip = getActionIp();
-  const rl = await ambassadeurLimiter(ip);
-  if (!rl.ok) {
-    return { ok: false, error: "Trop de tentatives. Réessayez dans une minute." };
-  }
-
-  // Honeypot — un humain ne voit pas ce champ ; un bot le remplit.
-  // On retourne `ok: true` mock pour ne pas révéler la présence du honeypot.
-  if (clean(formData.get("website"), 50)) {
-    return { ok: true, mocked: true };
-  }
-
-  const email = clean(formData.get("email"), 200);
-  const name = clean(formData.get("name"), 120);
-  const profileUrl = clean(formData.get("profileUrl"), 500);
-  const channel = clean(formData.get("channel"), 80);
-  const audience = clean(formData.get("audience"), 200);
-  const message = clean(formData.get("message"), 2000);
-  const consent = formData.get("consent") === "on";
-
-  if (!email || !isValidEmail(email)) {
-    return { ok: false, error: "Email invalide." };
-  }
-  if (!name) return { ok: false, error: "Le nom est obligatoire." };
-  if (!profileUrl) {
-    return { ok: false, error: "Indique le lien vers votre profil ou votre chaîne." };
-  }
-  if (!consent) {
-    return {
-      ok: false,
-      error: "Vous devez accepter le traitement de vos données pour soumettre.",
-    };
-  }
-
-  const html = `
-    <h2>Nouvelle candidature ambassadeur</h2>
-    <ul>
-      <li><strong>Nom :</strong> ${escapeHtml(name)}</li>
-      <li><strong>Email :</strong> ${escapeHtml(email)}</li>
-      <li><strong>Profil :</strong> <a href="${escapeHtml(profileUrl)}">${escapeHtml(profileUrl)}</a></li>
-      <li><strong>Canal principal :</strong> ${escapeHtml(channel || "non renseigné")}</li>
-      <li><strong>Audience :</strong> ${escapeHtml(audience || "non renseignée")}</li>
-    </ul>
-    <h3>Message</h3>
-    <p>${escapeHtml(message || "(aucun message)").replace(/\n/g, "<br>")}</p>
-    <hr>
-    <p style="color:#888;font-size:12px">
-      IP : ${escapeHtml(ip)}<br>
-      Soumis depuis : /ambassadeurs<br>
-      Source : ${BRAND.url}/ambassadeurs
-    </p>
-  `;
-
-  // Migration 27/04 → lib/email/client : `text` requis ; `tag`/`replyTo`/`from`
-  // ne sont plus exposés (REPLY_TO centralisé via BRAND_EMAIL.supportEmail).
-  // L'email du candidat reste accessible via le corps du message.
-  const result = await sendEmail({
-    to: BRAND.partnersEmail,
-    subject: oneLine(`[Ambassadeurs] Candidature de ${name}`),
-    html,
-    text: htmlToPlainText(html),
-  });
-
-  if (!result.ok) {
-    return { ok: false, error: result.error ?? "Envoi email impossible." };
-  }
-
-  // Confirmation au candidat — best-effort, on n'échoue pas si l'email
-  // accusé de réception part en vrac (le partenaire interne a déjà reçu).
-  // AUDIT 2026-10-02 : texte FIXE (aucune saisie recopiée hormis un prénom
-  // filtré) + plafond par destinataire, cf. safeFirstName.
-  const rcpt = await confirmationRecipientLimiter(email);
-  if (rcpt.ok) {
-    const firstName = safeFirstName(name);
-    const confirmHtml = `
-      <h2>Merci${firstName ? ` ${escapeHtml(firstName)}` : ""} !</h2>
-      <p>On a bien reçu votre candidature au programme ambassadeurs ${BRAND.name}.</p>
-      <p>Notre équipe t'écrit sous 5 à 7 jours ouvrés depuis <strong>${BRAND.partnersEmail}</strong>.
-      D'ici là, n'hésitez pas à compléter votre message en répondant à cet email
-      (capture d'audience, exemple de contenu, etc.).</p>
-      <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette candidature, ignorez simplement cet email.</p>
-      <hr>
-      <p style="color:#888;font-size:12px">${BRAND.name} – ${BRAND.url}</p>
-    `;
-    await sendEmail({
-      to: email,
-      subject: `Votre candidature ambassadeur ${BRAND.name} a bien été reçue`,
-      html: confirmHtml,
-      text: htmlToPlainText(confirmHtml),
-    });
-  }
-
-  return { ok: true, mocked: false };
-}
-
-/* -------------------------------------------------------------------------- */
-/*  2. Sponsoring                                                             */
+/*  1. Sponsoring                                                             */
 /* -------------------------------------------------------------------------- */
 
 export async function submitSponsoring(formData: FormData): Promise<FormResult> {
@@ -330,7 +208,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
 }
 
 /* -------------------------------------------------------------------------- */
-/*  3. Contact général (dispatch selon type de demande)                       */
+/*  2. Contact général (dispatch selon type de demande)                       */
 /* -------------------------------------------------------------------------- */
 
 const CONTACT_TYPE_TO_EMAIL: Record<string, string> = {

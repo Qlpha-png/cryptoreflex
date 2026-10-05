@@ -77,7 +77,7 @@ const CONTACT_CARDS: ContactCard[] = [
     Icon: Briefcase,
     title: "Partenariats B2B",
     description:
-      "Sponsoring articles, programme ambassadeurs, display affiliate, lead magnets co-brandés (PSAN/fintech FR).",
+      "Sponsoring articles, display affiliate, lead magnets co-brandés (PSAN/fintech FR).",
     email: BRAND.partnersEmail,
     cta: { label: "Voir les offres sponsoring", href: "/sponsoring" },
   },
