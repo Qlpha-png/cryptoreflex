@@ -181,7 +181,10 @@ async function checkRobots() {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "user-agent": UA },
     });
     const j = await r.json();
-    const runs = (j.workflow_runs || []).filter((w) => w.name && !/sentinelle/i.test(w.name) && w.status === "completed");
+    /* 05/10/2026 : la veille officielle est exclue — son « échec » signale une source officielle modifiée (ticket
+       « veille-officielle » dédié, traité par la routine), et relancer un passage « enregistrer » accepterait une nouvelle
+       référence sans relecture. */
+    const runs = (j.workflow_runs || []).filter((w) => w.name && !/sentinelle/i.test(w.name) && !/veille-officielle\.yml$/.test(w.path || "") && w.status === "completed");
     // dernier résultat par tâche : un échec réparé ensuite n'est plus un défaut
     const latest = new Map();
     for (const w of runs) if (!latest.has(w.name)) latest.set(w.name, w);
