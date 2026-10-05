@@ -128,7 +128,7 @@ async function jetonPiste() {
             if (v.nom) warn("loi", `identifiants PISTE inversés dans les secrets GitHub (PISTE_CLIENT_ID ↔ PISTE_CLIENT_SECRET) : ça marche, mais à remettre dans l'ordre`);
             return { ...env, token: j.access_token, entetes: null, nom: env.nom + v.nom + (basic ? " (en-tête Basic)" : "") };
           }
-          essais.push(`${env.nom}${v.nom}${basic ? " Basic" : ""} : HTTP ${res.status} ${propre(j.error || "")}`.trim());
+          essais.push(`${env.nom}${v.nom}${basic ? " Basic" : ""} : HTTP ${res.status} ${propre(j.error || "")} ${propre(j.error_description || "").slice(0, 120)}`.trim());
         } catch (e) {
           essais.push(`${env.nom}${v.nom} : ${raison(e)}`);
         }
@@ -142,7 +142,7 @@ async function jetonPiste() {
         const res = await req(`${env.api}/consult/getArticle`, { method: "POST", headers: { KeyId: cle, "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ id: "LEGIARTI000038612228" }) });
         const j = await res.json().catch(() => ({}));
         if (res.ok && j.article) return { ...env, entetes: { KeyId: cle }, nom: `${env.nom}, clé d'API contenue dans ${nomVar}` };
-        essais.push(`${env.nom} clé d'API ${nomVar} : HTTP ${res.status}`);
+        essais.push(`${env.nom} clé d'API ${nomVar} : HTTP ${res.status} ${propre(JSON.stringify(j)).slice(0, 160)}`);
       } catch (e) {
         essais.push(`${env.nom} clé d'API ${nomVar} : ${raison(e)}`);
       }
