@@ -25,6 +25,7 @@ import type {
   TAPayload,
 } from "./ta-types";
 import { TREND_LABEL_FR } from "./ta-types";
+import { fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers de formatage                                                      */
@@ -39,15 +40,15 @@ import { TREND_LABEL_FR } from "./ta-types";
 function formatPrice(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
   if (value >= 1000) {
-    return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
   }
   if (value >= 1) {
-    return value.toLocaleString("en-US", {
+    return value.toLocaleString("fr-FR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
   }
-  return value.toLocaleString("en-US", {
+  return value.toLocaleString("fr-FR", {
     minimumFractionDigits: 4,
     maximumFractionDigits: 4,
   });
@@ -57,7 +58,7 @@ function formatPrice(value: number): string {
 function formatPct(value: number, decimals = 2): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value > 0 ? "+" : "";
-  return `${sign}${value.toFixed(decimals)}%`;
+  return `${sign}${fmtFr(value, decimals)}%`;
 }
 
 /** Échappe les double-quotes dans une chaîne YAML. */
@@ -77,11 +78,11 @@ function distancePct(level: number, price: number): number {
 
 /** Interprétation textuelle du RSI pour l'intro. */
 function interpretRSI(rsi: number): string {
-  if (rsi >= 70) return `surachat (RSI ${rsi.toFixed(1)})`;
-  if (rsi >= 60) return `momentum acheteur fort (RSI ${rsi.toFixed(1)})`;
-  if (rsi >= 45) return `zone neutre (RSI ${rsi.toFixed(1)})`;
-  if (rsi >= 30) return `momentum vendeur (RSI ${rsi.toFixed(1)})`;
-  return `survente (RSI ${rsi.toFixed(1)})`;
+  if (rsi >= 70) return `surachat (RSI ${fmtFr(rsi, 1)})`;
+  if (rsi >= 60) return `momentum acheteur fort (RSI ${fmtFr(rsi, 1)})`;
+  if (rsi >= 45) return `zone neutre (RSI ${fmtFr(rsi, 1)})`;
+  if (rsi >= 30) return `momentum vendeur (RSI ${fmtFr(rsi, 1)})`;
+  return `survente (RSI ${fmtFr(rsi, 1)})`;
 }
 
 /** Interprétation textuelle du MACD. */
@@ -111,7 +112,7 @@ function buildFrontmatter(data: TAData, date: string): TAFrontmatter {
 
   const trendLabel = TREND_LABEL_FR[data.trend];
   const title = `${data.name} (${data.symbol}) — Analyse technique du ${formatDateFr(date)}`;
-  const description = `Analyse technique ${data.name} : RSI ${data.indicators.rsi.toFixed(1)}, tendance ${trendLabel.toLowerCase()}, niveaux clés et scénarios. Mise à jour ${formatDateFr(date)}.`;
+  const description = `Analyse technique ${data.name} : RSI ${fmtFr(data.indicators.rsi, 1)}, tendance ${trendLabel.toLowerCase()}, niveaux clés et scénarios. Mise à jour ${formatDateFr(date)}.`;
 
   return {
     title,
@@ -123,9 +124,9 @@ function buildFrontmatter(data: TAData, date: string): TAFrontmatter {
     coingeckoId: cgIdMap[data.symbol] ?? data.slug,
     currentPrice: data.price,
     trend: data.trend,
-    rsi: Number(data.indicators.rsi.toFixed(1)),
-    change24h: Number(data.change24h.toFixed(2)),
-    volatility: Number(data.volatility.toFixed(2)),
+    rsi: Number(fmtFr(data.indicators.rsi, 1)),
+    change24h: Number(fmtFr(data.change24h, 2)),
+    volatility: Number(fmtFr(data.volatility, 2)),
     image: data.image,
   };
 }
@@ -235,17 +236,17 @@ function buildBody(data: TAData, date: string): string {
   const table = [
     "| Indicateur | Valeur | Lecture |",
     "| --- | --- | --- |",
-    `| RSI (14) | ${indicators.rsi.toFixed(1)} | ${rsiBucket(indicators.rsi)} |`,
+    `| RSI (14) | ${fmtFr(indicators.rsi, 1)} | ${rsiBucket(indicators.rsi)} |`,
     `| MA 50 | ${formatPrice(indicators.ma50)} $ | ${price > indicators.ma50 ? "Prix au-dessus" : "Prix en-dessous"} |`,
     `| MA 200 | ${formatPrice(indicators.ma200)} $ | ${price > indicators.ma200 ? "Tendance LT haussière" : "Tendance LT baissière"} |`,
     `| EMA 12 | ${formatPrice(indicators.ema12)} $ | — |`,
     `| EMA 26 | ${formatPrice(indicators.ema26)} $ | — |`,
-    `| MACD | ${indicators.macd.macd.toFixed(2)} | ${macdBucket(indicators.macd.histogram)} |`,
-    `| Signal MACD | ${indicators.macd.signal.toFixed(2)} | — |`,
-    `| Histogramme | ${indicators.macd.histogram.toFixed(2)} | ${indicators.macd.histogram > 0 ? "Positif" : "Négatif"} |`,
+    `| MACD | ${fmtFr(indicators.macd.macd, 2)} | ${macdBucket(indicators.macd.histogram)} |`,
+    `| Signal MACD | ${fmtFr(indicators.macd.signal, 2)} | — |`,
+    `| Histogramme | ${fmtFr(indicators.macd.histogram, 2)} | ${indicators.macd.histogram > 0 ? "Positif" : "Négatif"} |`,
     `| Bollinger Haute | ${formatPrice(indicators.bollinger.upper)} $ | Plafond probable |`,
     `| Bollinger Basse | ${formatPrice(indicators.bollinger.lower)} $ | Plancher probable |`,
-    `| Volatilité (annualisée) | ${volatility.toFixed(1)}% | ${volatilityBucket(volatility)} |`,
+    `| Volatilité (annualisée) | ${fmtFr(volatility, 1)}% | ${volatilityBucket(volatility)} |`,
   ].join("\n");
 
   // ---- Niveaux clés ----
@@ -293,7 +294,7 @@ function buildBody(data: TAData, date: string): string {
   const volSection = [
     "### Volume & Volatilité",
     "",
-    `La volatilité annualisée de **${volatility.toFixed(1)}%** ${volatilityBucket(volatility).toLowerCase()}. Sur ${name}, cela signifie qu'un mouvement quotidien de l'ordre de ${(volatility / Math.sqrt(252)).toFixed(1)}% est statistiquement attendu — utile pour calibrer la taille de position et la distance au stop.`,
+    `La volatilité annualisée de **${fmtFr(volatility, 1)}%** ${volatilityBucket(volatility).toLowerCase()}. Sur ${name}, cela signifie qu'un mouvement quotidien de l'ordre de ${fmtFr((volatility / Math.sqrt(252)), 1)}% est statistiquement attendu — utile pour calibrer la taille de position et la distance au stop.`,
     "",
     data.volume24h
       ? `Volume 24h indicatif : **${formatCompact(data.volume24h)} $**.`

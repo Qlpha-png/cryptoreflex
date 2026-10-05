@@ -14,7 +14,7 @@ import {
   Plus,
   Equal,
 } from "lucide-react";
-import { getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
+import { getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
 import {
   getComparison,
   getPublishableComparisons,
@@ -27,6 +27,8 @@ import { breadcrumbSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -53,7 +55,7 @@ export function generateMetadata({ params }: Props): Metadata {
   // Duel impliquant une plateforme fermée au marché FR (ex : Gemini) → noindex.
   const indexable = isAvailableFr(a) && isAvailableFr(b);
   return {
-    title,
+    title: fitTitle(title),
     description,
     robots: indexable ? { index: true, follow: true } : { index: false, follow: true },
     alternates: withHreflang(`${BRAND.url}/comparatif/${params.slug}`),
@@ -93,27 +95,27 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
   const fees: CompareRow[] = [
     {
       label: "Frais réel (achat)",
-      aDisplay: a.fees.verified?.realCostPct ?? `${a.fees.instantBuy}%`,
-      bDisplay: b.fees.verified?.realCostPct ?? `${b.fees.instantBuy}%`,
+      aDisplay: a.fees.verified?.realCostPct ?? `${fmtNb(a.fees.instantBuy)}%`,
+      bDisplay: b.fees.verified?.realCostPct ?? `${fmtNb(b.fees.instantBuy)}%`,
       hint: "tie",
       note: "Coût réel pour un particulier (frais vérifié, sourcé et daté).",
     },
     {
       label: "Frais spot maker",
-      aDisplay: `${a.fees.spotMaker}%`,
-      bDisplay: `${b.fees.spotMaker}%`,
+      aDisplay: `${fmtNb(a.fees.spotMaker)}%`,
+      bDisplay: `${fmtNb(b.fees.spotMaker)}%`,
       hint: winner(a.fees.spotMaker, b.fees.spotMaker, true),
     },
     {
       label: "Frais spot taker",
-      aDisplay: `${a.fees.spotTaker}%`,
-      bDisplay: `${b.fees.spotTaker}%`,
+      aDisplay: `${fmtNb(a.fees.spotTaker)}%`,
+      bDisplay: `${fmtNb(b.fees.spotTaker)}%`,
       hint: winner(a.fees.spotTaker, b.fees.spotTaker, true),
     },
     {
       label: "Achat instantané (CB)",
-      aDisplay: `${a.fees.instantBuy}%`,
-      bDisplay: `${b.fees.instantBuy}%`,
+      aDisplay: `${fmtNb(a.fees.instantBuy)}%`,
+      bDisplay: `${fmtNb(b.fees.instantBuy)}%`,
       hint: winner(a.fees.instantBuy, b.fees.instantBuy, true),
     },
     {
@@ -143,8 +145,8 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
   const security: CompareRow[] = [
     {
       label: "Cold storage",
-      aDisplay: `${a.security.coldStoragePct}%`,
-      bDisplay: `${b.security.coldStoragePct}%`,
+      aDisplay: `${fmtNb(a.security.coldStoragePct)}%`,
+      bDisplay: `${fmtNb(b.security.coldStoragePct)}%`,
       hint: winner(a.security.coldStoragePct, b.security.coldStoragePct),
     },
     {
@@ -155,29 +157,29 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
     },
     {
       label: "Score MiCA",
-      aDisplay: `${a.scoring.mica}/5`,
-      bDisplay: `${b.scoring.mica}/5`,
+      aDisplay: `${fmtNb(a.scoring.mica)}/5`,
+      bDisplay: `${fmtNb(b.scoring.mica)}/5`,
       hint: winner(a.scoring.mica, b.scoring.mica),
     },
     {
       label: "Score sécurité global",
-      aDisplay: `${a.scoring.security}/5`,
-      bDisplay: `${b.scoring.security}/5`,
+      aDisplay: `${fmtNb(a.scoring.security)}/5`,
+      bDisplay: `${fmtNb(b.scoring.security)}/5`,
       hint: winner(a.scoring.security, b.scoring.security),
     },
     {
       label: "Dernier incident",
       aDisplay: a.security.lastIncident ?? "Aucun",
       bDisplay: b.security.lastIncident ?? "Aucun",
-      hint: !a.security.lastIncident && b.security.lastIncident ? "a" : a.security.lastIncident && !b.security.lastIncident ? "b" : "tie",
+      hint: hasNoIncident(a.security.lastIncident) && !hasNoIncident(b.security.lastIncident) ? "a" : !hasNoIncident(a.security.lastIncident) && hasNoIncident(b.security.lastIncident) ? "b" : "tie",
     },
   ];
 
   const ux: CompareRow[] = [
-    { label: "Score UX", aDisplay: `${a.scoring.ux}/5`, bDisplay: `${b.scoring.ux}/5`, hint: winner(a.scoring.ux, b.scoring.ux) },
-    { label: "Note App Store", aDisplay: `${a.ratings.appStore}/5`, bDisplay: `${b.ratings.appStore}/5`, hint: winner(a.ratings.appStore, b.ratings.appStore) },
-    { label: "Note Play Store", aDisplay: `${a.ratings.playStore}/5`, bDisplay: `${b.ratings.playStore}/5`, hint: winner(a.ratings.playStore, b.ratings.playStore) },
-    { label: "Trustpilot", aDisplay: `${a.ratings.trustpilot}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")})`, bDisplay: `${b.ratings.trustpilot}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")})`, hint: winner(a.ratings.trustpilot, b.ratings.trustpilot) },
+    { label: "Score UX", aDisplay: `${fmtNb(a.scoring.ux)}/5`, bDisplay: `${fmtNb(b.scoring.ux)}/5`, hint: winner(a.scoring.ux, b.scoring.ux) },
+    { label: "Note App Store", aDisplay: `${fmtNb(a.ratings.appStore)}/5`, bDisplay: `${fmtNb(b.ratings.appStore)}/5`, hint: winner(a.ratings.appStore, b.ratings.appStore) },
+    { label: "Note Play Store", aDisplay: `${fmtNb(a.ratings.playStore)}/5`, bDisplay: `${fmtNb(b.ratings.playStore)}/5`, hint: winner(a.ratings.playStore, b.ratings.playStore) },
+    { label: "Trustpilot", aDisplay: `${fmtNb(a.ratings.trustpilot)}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")})`, bDisplay: `${fmtNb(b.ratings.trustpilot)}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")})`, hint: winner(a.ratings.trustpilot, b.ratings.trustpilot) },
     { label: "Cryptos listées", aDisplay: `${a.cryptos.totalCount}`, bDisplay: `${b.cryptos.totalCount}`, hint: winner(a.cryptos.totalCount, b.cryptos.totalCount) },
   ];
 
@@ -185,7 +187,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
     { label: "Chat français", aDisplay: a.support.frenchChat ? "Oui" : "Non", bDisplay: b.support.frenchChat ? "Oui" : "Non", hint: a.support.frenchChat && !b.support.frenchChat ? "a" : !a.support.frenchChat && b.support.frenchChat ? "b" : "tie" },
     { label: "Téléphone FR", aDisplay: a.support.frenchPhone ? "Oui" : "Non", bDisplay: b.support.frenchPhone ? "Oui" : "Non", hint: a.support.frenchPhone && !b.support.frenchPhone ? "a" : !a.support.frenchPhone && b.support.frenchPhone ? "b" : "tie" },
     { label: "Délai réponse", aDisplay: a.support.responseTime, bDisplay: b.support.responseTime, hint: "tie" },
-    { label: "Score support", aDisplay: `${a.scoring.support}/5`, bDisplay: `${b.scoring.support}/5`, hint: winner(a.scoring.support, b.scoring.support) },
+    { label: "Score support", aDisplay: `${fmtNb(a.scoring.support)}/5`, bDisplay: `${fmtNb(b.scoring.support)}/5`, hint: winner(a.scoring.support, b.scoring.support) },
   ];
 
   return { fees, security, ux, support };
@@ -204,27 +206,27 @@ function buildVerdict(a: Platform, b: Platform): { intro: string; pickA: string;
   if (Math.abs(a.scoring.global - b.scoring.global) < 0.2) {
     intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${a.scoring.global} vs ${b.scoring.global}). C'est une comparaison où le bon choix dépend strictement de vos priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur votre profil de trading, l'importance de l'expérience mobile, et la place que vous accordez à un support en français.`;
   } else if (a.scoring.global > b.scoring.global) {
-    intro = `${a.name} (${a.scoring.global}/5) devance ${b.name} (${b.scoring.global}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${b.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
+    intro = `${a.name} (${fmtNb(a.scoring.global)}/5) devance ${b.name} (${fmtNb(b.scoring.global)}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${b.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
   } else {
-    intro = `${b.name} (${b.scoring.global}/5) devance ${a.name} (${a.scoring.global}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${a.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
+    intro = `${b.name} (${fmtNb(b.scoring.global)}/5) devance ${a.name} (${fmtNb(a.scoring.global)}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${a.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
   }
 
   const pickA =
     aFeesAdv > 0.3
-      ? `Choisissez ${a.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${a.fees.spotMaker}% vs ${b.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
+      ? `Choisissez ${a.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(a.fees.spotMaker)}% vs ${fmtNb(b.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv > 0.3
-        ? `Choisissez ${a.name} si la sécurité est votre priorité non-négociable. ${a.security.coldStoragePct}% en cold storage et un score MiCA ${a.scoring.mica}/5 placent la barre haut.`
+        ? `Choisissez ${a.name} si la sécurité est votre priorité non-négociable. ${fmtNb(a.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(a.scoring.mica)}/5 placent la barre haut.`
         : aUxAdv > 0.3
-          ? `Choisissez ${a.name} si l'expérience utilisateur est déterminante — l'app mobile note ${a.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
+          ? `Choisissez ${a.name} si l'expérience utilisateur est déterminante — l'app mobile note ${fmtNb(a.ratings.appStore)}/5 sur l'App Store et l'onboarding est calibré grand public.`
           : `Choisissez ${a.name} si vous valorisez : ${a.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${b.name}.`;
 
   const pickB =
     aFeesAdv < -0.3
-      ? `Choisissez ${b.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${b.fees.spotMaker}% vs ${a.fees.spotMaker}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
+      ? `Choisissez ${b.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(b.fees.spotMaker)}% vs ${fmtNb(a.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv < -0.3
-        ? `Choisissez ${b.name} si la sécurité est votre priorité non-négociable. ${b.security.coldStoragePct}% en cold storage et un score MiCA ${b.scoring.mica}/5 placent la barre haut.`
+        ? `Choisissez ${b.name} si la sécurité est votre priorité non-négociable. ${fmtNb(b.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(b.scoring.mica)}/5 placent la barre haut.`
         : aUxAdv < -0.3
-          ? `Choisissez ${b.name} si l'expérience utilisateur est déterminante — l'app mobile note ${b.ratings.appStore}/5 sur l'App Store et l'onboarding est calibré grand public.`
+          ? `Choisissez ${b.name} si l'expérience utilisateur est déterminante — l'app mobile note ${fmtNb(b.ratings.appStore)}/5 sur l'App Store et l'onboarding est calibré grand public.`
           : `Choisissez ${b.name} si vous valorisez : ${b.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${a.name}.`;
 
   const tradeoff = `Le vrai trade-off entre ${a.name} et ${b.name} se joue sur ${
@@ -352,7 +354,7 @@ export default function ComparisonPage({ params }: Props) {
                   </div>
                   <div className="text-right">
                     <div className="font-mono text-lg font-bold text-primary">
-                      {plat.scoring.global.toFixed(1)}
+                      {fmtFr(plat.scoring.global, 1)}
                     </div>
                     <div className="text-[10px] uppercase text-muted">Note globale</div>
                   </div>
@@ -404,7 +406,7 @@ export default function ComparisonPage({ params }: Props) {
         {/* TABLEAUX COMPARATIFS */}
         {(
           [
-            { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${a.fees.spotMaker}% en maker contre ${b.fees.spotMaker}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
+            { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${fmtNb(a.fees.spotMaker)}% en maker contre ${fmtNb(b.fees.spotMaker)}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
             { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `Les deux plateformes opèrent sous agrément MiCA en France. La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
             { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Notes d'app mobile, Trustpilot et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil — un investisseur passif accordera plus de poids à l'app, un trader actif au catalogue.` },
             { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (KYC bloqué, retrait en attente, suspicion de fraude), la qualité du support fait la différence entre une résolution en 24h et un mois de cauchemar administratif.` },

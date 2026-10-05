@@ -21,12 +21,12 @@ export default function EmbedLayout({
 }) {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         body { background: transparent !important; background-image: none !important; }
         body > nav, body > footer { display: none !important; }
         main { padding: 0 !important; }
         html { background: transparent !important; }
-      `}</style>
+      ` }} />
       <div style={{ padding: 12, minHeight: "100vh" }}>{children}</div>
     </>
   );

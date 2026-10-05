@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import {
   Code2,
   Sparkles,
@@ -11,6 +12,7 @@ import {
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
+import { fitDescription } from "@/lib/seo-text";
 
 /**
  * /embed — page de docs du widget JS Cryptoreflex.
@@ -26,11 +28,11 @@ import { BRAND } from "@/lib/brand";
 
 const TITLE = "Embed widgets — JS gratuit pour blogs FR";
 const DESCRIPTION =
-  "3 widgets JavaScript gratuits à embarquer sur votre blog : badge MiCA d'une plateforme, countdown deadline juillet 2026, top 10 cryptos. Sans inscription, CC-BY 4.0, 5 min d'install.";
+  "3 widgets JavaScript gratuits à embarquer sur votre blog : statut MiCA d'une plateforme, encart MiCA en vigueur, top 10 cryptos. Sans inscription, CC-BY 4.0, 5 min d'install.";
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: { canonical: `${BRAND.url}/embed` },
   openGraph: {
     title: "Widgets JavaScript Cryptoreflex pour blogs",
@@ -99,8 +101,8 @@ const softwareApplication = {
     price: "0",
     priceCurrency: "EUR",
   },
-  softwareVersion: "1.0.0",
-  releaseNotes: "v1.0 — psan-checker, mica-countdown, top-cryptos",
+  softwareVersion: "1.1.0",
+  releaseNotes: "v1.1 — statut « autorisée en France » depuis la fin de la période transitoire MiCA (1er juillet 2026), encart MiCA en vigueur à la place du compte à rebours",
   license: "https://creativecommons.org/licenses/by/4.0/",
 };
 
@@ -113,26 +115,25 @@ const SNIPPETS = [
     id: "psan-checker",
     title: "Badge MiCA d'une plateforme",
     description:
-      "Affiche le statut MiCA + agrément AMF d'une plateforme crypto donnée. Idéal pour un article du type \"Avis Coinbase 2026\" ou \"Comparatif Bitstack vs Trade Republic\".",
+      "Affiche si une plateforme est autorisée en France (agrément MiCA, registre de l'ESMA et liste blanche de l'AMF). Idéal pour un article du type \"Avis Coinbase 2026\" ou \"Comparatif Bitstack vs Trade Republic\".",
     snippet: `<div data-cryptoreflex-widget="psan-checker" data-platform="coinbase"></div>
 ${SCRIPT_TAG}`,
     notes: [
-      "data-platform : slug de la plateforme (coinbase, binance, kraken, bitpanda, bitstack, coinhouse, etc.)",
+      "data-platform : slug de la plateforme (coinbase, kraken, bitpanda, bitstack, coinhouse, etc.)",
       "Liste complète des slugs disponibles sur /api/public/psan-registry",
       "Le widget refuse silencieusement les slugs invalides (pas de plante).",
     ],
   },
   {
     id: "mica-countdown",
-    title: "Countdown deadline MiCA juillet 2026",
+    title: "Encart « MiCA en vigueur »",
     description:
-      "Compte à rebours en temps réel (jours + heures) jusqu'à la fin de la période transitoire MiCA UE. Idéal pour un article réglementation, une newsletter ou une homepage thématique.",
+      "Rappelle que MiCA s'applique en France depuis le 1er juillet 2026 et renvoie vers le vérificateur de plateformes. Idéal pour un article réglementation ou une page « bien choisir sa plateforme ».",
     snippet: `<div data-cryptoreflex-widget="mica-countdown"></div>
 ${SCRIPT_TAG}`,
     notes: [
       "Aucun paramètre requis.",
-      "Le countdown se met à jour automatiquement chaque minute (sans recharger la page).",
-      "Après le 30 juin 2026, affiche \"Deadline atteinte\".",
+      "Ancien compte à rebours : les sites qui l'ont intégré affichent automatiquement ce nouvel encart.",
     ],
   },
   {
@@ -152,7 +153,7 @@ ${SCRIPT_TAG}`,
 
 export default function EmbedPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="embed-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -175,8 +176,8 @@ export default function EmbedPage() {
             Widgets JavaScript Cryptoreflex
           </h1>
           <p className="mt-4 max-w-3xl text-lg text-slate-300">
-            3 widgets prêts à copier-coller dans votre blog FR : badge MiCA d'une
-            plateforme, countdown deadline juillet 2026, top 10 cryptos
+            3 widgets prêts à copier-coller dans votre blog FR : statut MiCA d'une
+            plateforme, encart « MiCA en vigueur », top 10 cryptos
             vulgarisées. <strong>5 minutes d'install</strong>, &lt; 5 Ko
             gzippé, données ouvertes mises à jour mensuellement.
           </p>
@@ -325,8 +326,9 @@ export default function EmbedPage() {
         </div>
       </section>
 
-      {/* Charge le widget script ici-même pour que les apercus live s'hydratent */}
-      <script async src="/embed/v1.js" />
-    </main>
+      {/* Aperçus en direct : le script est chargé APRÈS l'hydratation (lazyOnload). Chargé par une balise brute, il
+          modifiait la page avant React → erreurs #418/#422 et page entière re-rendue côté client (audit du 05/10/2026). */}
+      <Script src="/embed/v1.js" strategy="lazyOnload" />
+    </div>
   );
 }

@@ -8,6 +8,7 @@ import type { MarketCoin } from "@/lib/coingecko";
 import { formatUsd, formatCompactUsd } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import Sparkline from "@/components/Sparkline";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * CryptoScreener — table marché dense triable (DA Obsidian sprint 2b).
@@ -340,7 +341,7 @@ function PctCell({
     >
       <span aria-hidden="true">{up ? "▲" : "▼"}</span>
       <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-      {Math.abs(value).toFixed(2)}%
+      {fmtFr(Math.abs(value), 2)}%
     </td>
   );
 }

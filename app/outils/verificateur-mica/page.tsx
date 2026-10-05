@@ -18,13 +18,15 @@ import {
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 const PAGE_URL = `${BRAND.url}/outils/verificateur-mica`;
 
 export const metadata: Metadata = {
-  title: "Vérificateur MiCA : plateforme crypto autorisée en France ?",
-  description:
+  title: fitTitle("Vérificateur MiCA : plateforme crypto autorisée en France ?"),
+  description: fitDescription(
     "Vérifiez en 3 secondes si une plateforme crypto est agréée MiCA et autorisée à servir la France : autorité, date d'agrément, numéro AMF. Registre officiel de l'ESMA et liste blanche AMF.",
+  ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",

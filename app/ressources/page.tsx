@@ -40,12 +40,14 @@ import {
 import LeadMagnetCard from "@/components/lead-magnet/LeadMagnetCard";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
   title: "Ressources gratuites — PDFs, outils et guides crypto",
-  description:
+  description: fitDescription(
     "3 lead magnets PDF (Bible Fiscalité 2026, Checklist déclaration, Glossaire fiscal), 8 outils gratuits (calculateur fiscalité, simulateur DCA, vérificateur MiCA…) et accès au blog éditorial.",
+  ),
   alternates: withHreflang(BRAND.url + "/ressources"),
   openGraph: {
     title: "Ressources gratuites Cryptoreflex",
@@ -72,22 +74,22 @@ const LEAD_MAGNETS: LeadMagnetMeta[] = [
     id: "bible-fiscalite",
     title: "Bible Fiscalité Crypto 2026",
     description:
-      "Le guide exhaustif (30 pages) pour déclarer correctement vos cryptos sans payer un euro de trop. Cerfa 2086, 3916-bis, staking, DeFi, NFT — tout y est.",
-    pages: 30,
+      "Le guide complet pour déclarer correctement vos cryptos sans payer un euro de trop : méthode globale, Cerfa 2086, 3916-bis, staking, DeFi, NFT.",
+    pages: 14,
   },
   {
     id: "checklist",
     title: "Checklist Déclaration 2026",
     description:
-      "30 actions concrètes en 1 page A4. Imprimez et cochez au fur et à mesure. Aucune case ne doit rester vide avant le 19 mai 2026.",
-    pages: 1,
+      "30 actions concrètes à imprimer et cocher au fur et à mesure, de la collecte de vos historiques à la déclaration en ligne.",
+    pages: 4,
   },
   {
     id: "glossaire",
     title: "Glossaire Fiscal Crypto",
     description:
-      "50 termes fiscaux essentiels définis (PFU, BIC, BNC, Cerfa 2086, 3916-bis, MiCA, DAC8…). Ne jamais se faire avoir par son expert-comptable.",
-    pages: 8,
+      "47 termes fiscaux essentiels expliqués simplement (PFU, BIC, BNC, Cerfa 2086, 3916-bis, MiCA, DAC8…), pour comprendre chaque ligne de votre déclaration.",
+    pages: 10,
   },
 ];
 
@@ -103,7 +105,7 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Calculateur Fiscalité",
     description:
-      "Estimez votre impôt crypto français (PFU 31,4 % vs barème) et générez un export prêt pour la 2086.",
+      "Estimez votre impôt crypto (PFU 31,4 % ou barème) et téléchargez votre simulation en PDF.",
     href: "/outils/calculateur-fiscalite",
     Icon: Receipt,
     badge: "Top",
@@ -154,7 +156,7 @@ const TOOLS: ToolMeta[] = [
     title: "Calculateur de profits",
     description:
       "Simulez un achat / une vente avec frais. ROI net, plus-value et quantité achetée en un clic.",
-    href: "/outils#calculateur",
+    href: "/outils/profit-loss-calculator",
     Icon: Calculator,
   },
 ];

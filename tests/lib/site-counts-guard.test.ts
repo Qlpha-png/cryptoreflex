@@ -15,7 +15,6 @@ const EXCLUDE = [
   "lib/site-counts-compute.ts",
   "lib/reflex-cards/univers-ids.ts",
   "lib/reflex-cards/game/template.ts",
-  "app/labs/page.tsx", // vitrine technique en noindex
 ];
 const NB = "[ \\u00a0\\u202f]";
 

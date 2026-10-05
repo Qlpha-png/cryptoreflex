@@ -5,6 +5,7 @@ import StructuredData from "@/components/StructuredData";
 import { faqSchema, breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * /api-publique — page de documentation des endpoints publics CC-BY 4.0.
@@ -29,7 +30,7 @@ const DESCRIPTION =
   `5 endpoints JSON gratuits CC-BY 4.0 : ${STATS.platformsAudited} plateformes, registre MiCA, scores décentralisation, top cryptos, outils fiscaux. Sans inscription, CORS *.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: fitTitle(TITLE),
   description: DESCRIPTION,
   alternates: withHreflang(`${BRAND.url}/api-publique`),
   openGraph: {
@@ -258,7 +259,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, faq, datasetSchema]);
 
 export default function ApiPubliquePage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="api-publique-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -524,6 +525,6 @@ data = r.json()`}</code>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

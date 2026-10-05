@@ -373,7 +373,7 @@ Les quatre tableaux ci-dessous synthétisent les données clés des 9 plateforme
 
 ### 5.1 Comparatif des frais réels sur 1 000 € (achat instantané + revente spot taker)
 
-La simulation ci-dessous calcule le coût total d'un aller-retour standard : achat de 1 000 € en mode instantané (mode utilisé par 80 % des acheteurs débutants), puis revente spot taker du montant net reçu. Les frais de retrait fiat et les frais réseau crypto ne sont pas inclus dans ce calcul.
+La simulation ci-dessous calcule le coût total d'un aller-retour standard : achat de 1 000 € en mode instantané (le mode le plus utilisé par les acheteurs débutants), puis revente spot taker du montant net reçu. Les frais de retrait fiat et les frais réseau crypto ne sont pas inclus dans ce calcul.
 
 Méthode :
 - Achat instantané = 1 000 × (instantBuy / 100)
@@ -821,4 +821,4 @@ Si ce PDF vous a aidé à faire un choix plus éclairé, partagez-le. Pas pour n
 
 Bonne chance avec vos cryptos. N'investissez que ce que vous pouvez vous permettre de perdre. Vérifiez vos sources. Diversifiez. Sécurisez.
 
-— L'équipe Cryptoreflex, 26 avril 2026 (mise à jour le 2 octobre 2026)
+— L'équipe Cryptoreflex, 26 avril 2026 (mise à jour le 5 octobre 2026)

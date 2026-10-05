@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "À propos de Cryptoreflex",
     description:
-      "Le comparateur crypto indépendant français. Méthodologie publique, tests réels, transparence sur les liens d'affiliation.",
+      "Le comparateur crypto indépendant français. Méthodologie publique, données vérifiées, transparence sur les liens d'affiliation.",
     url: "/a-propos",
     type: "profile",
   },
@@ -67,7 +67,7 @@ export default function AProposPage() {
             </h1>
             <p className="mt-4 text-lg text-fg/75 max-w-2xl mx-auto">
               {BRAND.name} est un comparateur indépendant des plateformes crypto
-              accessibles aux résidents français. Méthodologie publique, tests réels,
+              accessibles aux résidents français. Méthodologie publique, données vérifiées,
               transparence sur les liens d'affiliation.
             </p>
           </header>

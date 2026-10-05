@@ -50,7 +50,6 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/marche/gainers-losers", label: "Plus fortes hausses et baisses", desc: "Depuis hier à la même heure" },
       { href: "/marche/fear-greed", label: "Indice peur et avidité", desc: "L'humeur du marché" },
       { href: "/marche/screener", label: "Trier les cryptos", desc: "Par prix, variation ou taille" },
-      { href: "/marche/whales", label: "Grosses transactions", desc: "Les mouvements géants, en direct" },
       { href: "/analyses-techniques", label: "Analyses techniques", desc: "Tendances et niveaux à surveiller" },
       { href: "/calendrier", label: "Calendrier", desc: "Les dates qui font bouger le marché" },
       { href: "/halving-bitcoin", label: "Halving du Bitcoin", desc: "Le prochain et ceux d'avant" },

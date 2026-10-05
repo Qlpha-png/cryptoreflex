@@ -33,7 +33,7 @@ export default function EmbedFooter({
         borderTop: "1px solid #262B33",
         fontSize: 11,
         color: "#9BA3AF",
-        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
       }}
     >
       {ymyl && (
@@ -50,7 +50,7 @@ export default function EmbedFooter({
           <AlertTriangle size={12} style={{ marginTop: 2, flexShrink: 0 }} />
           <span>
             Outil pédagogique — ne constitue pas un conseil en investissement
-            ni un conseil fiscal. Consulte un professionnel pour votre situation.
+            ni un conseil fiscal. Consultez un professionnel pour votre situation.
           </span>
         </p>
       )}
@@ -63,7 +63,7 @@ export default function EmbedFooter({
           flexWrap: "wrap",
         }}
       >
-        <span>License CC-BY 4.0</span>
+        <span>Licence CC-BY 4.0</span>
         <a
           href={`${BRAND.url}/outils/${toolSlug}?utm_source=embed&utm_medium=iframe&utm_campaign=${toolSlug}`}
           target="_top"
@@ -77,7 +77,7 @@ export default function EmbedFooter({
             fontWeight: 600,
           }}
         >
-          Powered by{" "}
+          Proposé par{" "}
           <strong style={{ color: "#FCD34D" }}>{BRAND.name}</strong>
           <ExternalLink size={11} />
         </a>

@@ -22,6 +22,10 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { getLinkableCryptoIds, linkableCryptoPath } from "@/lib/crypto-links";
+import { formatMicaDate, getMicaMeta } from "@/lib/mica";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 // FIX BUILD 2026-05-06 — `dynamicParams=true` + SSG limité aux 10 cryptos top.
 // Avant : 100 pages SSG forcées au build. Maintenant : 10 SSG + 90 ISR.
@@ -45,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const fiche = await getCryptoFiche(params.slug);
     if (fiche) {
       return {
-        title: `${fiche.name} (${fiche.symbol}) — fiche complète`,
+        title: fitTitle(`${fiche.name} (${fiche.symbol}) — fiche complète`),
         alternates: { canonical: `${BRAND.url}/cryptos/${fiche.coingecko_id}` },
         robots: { index: false, follow: true },
       };
@@ -64,8 +68,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${BRAND.url}/acheter/${meta.id}/fr`
     : `${BRAND.url}/cryptos/${meta.id}/acheter-en-france`;
   return {
-    title,
-    description,
+    title: fitTitle(title),
+    description: fitDescription(description),
     alternates: withHreflang(canonicalUrl),
     openGraph: {
       title,
@@ -86,7 +90,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *  - sinon on retombe sur les top exchanges (catalog large, BTC/ETH/SOL toujours dispo)
  */
 function platformsForCrypto(symbol: string): Platform[] {
-  const all = getAllPlatforms().filter(isAvailableFr);
+  // Les portefeuilles matériels (Ledger, Trezor…) ne vendent pas de crypto : sans ce filtre, Ledger sortait
+  // ici avec « 0,00 € de frais » (audit du 05/10/2026).
+  const all = getAllPlatforms().filter((p) => isAvailableFr(p) && p.category !== "wallet");
   const exact = all.filter((p) =>
     p.cryptos.stakingCryptos.includes(symbol.toUpperCase())
   );
@@ -123,6 +129,12 @@ export default async function AcheterEnFrancePage({ params }: Props) {
 
   // Fiche éditoriale (top10 / hidden gem) si disponible
   const editorial: AnyCrypto | undefined = getCryptoBySlug(meta.id);
+  // Lien vers la fiche seulement si elle existe (audit 05/10/2026 : Fantom et Stacks n'ont pas de fiche /cryptos/<id> ;
+  // la fiche Stacks est publiée sous « blockstack »).
+  const known = await getLinkableCryptoIds();
+  const ficheHref = editorial
+    ? `/cryptos/${meta.id}`
+    : (linkableCryptoPath(meta.coingeckoId, known) ?? linkableCryptoPath(meta.id, known));
 
   const platforms = platformsForCrypto(meta.symbol).slice(0, 5);
   const best = platforms[0];
@@ -130,7 +142,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
     { name: "Cryptos", url: `${BRAND.url}/cryptos` },
-    { name: meta.name, url: `${BRAND.url}/cryptos/${meta.id}` },
+    ...(ficheHref ? [{ name: meta.name, url: `${BRAND.url}${ficheHref}` }] : []),
     {
       name: `Acheter en France`,
       url: `${BRAND.url}/cryptos/${meta.id}/acheter-en-france`,
@@ -141,7 +153,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
-        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${best.scoring.global}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${best.fees.instantBuy}%, en spot taker ${best.fees.spotTaker}%. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
+        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${fmtNb(best.scoring.global)}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${fmtNb(best.fees.instantBuy)}%, en spot taker ${fmtNb(best.fees.spotTaker)}%. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
         : `En France, plusieurs plateformes agréées MiCA proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon votre usage.`,
     },
     {
@@ -154,7 +166,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     },
     {
       question: `Achat instantané (CB) ou virement SEPA pour ${meta.symbol} ?`,
-      answer: `L'achat par carte bancaire est ultra-rapide (5 secondes) mais coûte 1.5 à 3 % de frais. Le virement SEPA (gratuit ou ~0.1 %) prend 1 à 24 h mais est ${best ? `${(((best.fees.instantBuy - best.fees.spotTaker) / 100) * 1000).toFixed(0)} € moins cher pour 1 000 €` : "beaucoup moins cher"}. Pour des montants > 200 €, privilégiez le SEPA.`,
+      answer: `L'achat par carte bancaire est ultra-rapide (5 secondes) mais coûte 1,5 à 3 % de frais. Le virement SEPA (gratuit ou ~0,1 %) prend 1 à 24 h mais est ${best ? `${(((best.fees.instantBuy - best.fees.spotTaker) / 100) * 1000).toFixed(0)} € moins cher pour 1 000 €` : "beaucoup moins cher"}. Pour des montants > 200 €, privilégiez le SEPA.`,
     },
     {
       question: `Faut-il transférer ${meta.symbol} sur un wallet hardware ?`,
@@ -180,7 +192,11 @@ export default async function AcheterEnFrancePage({ params }: Props) {
             <span className="mx-1.5">/</span>
             <Link href="/cryptos" className="hover:text-fg">Cryptos</Link>
             <span className="mx-1.5">/</span>
-            <Link href={`/cryptos/${meta.id}`} className="hover:text-fg">{meta.name}</Link>
+            {ficheHref ? (
+              <Link href={ficheHref} className="hover:text-fg">{meta.name}</Link>
+            ) : (
+              <span>{meta.name}</span>
+            )}
             <span className="mx-1.5">/</span>
             <span className="text-fg">Acheter en France</span>
           </nav>
@@ -198,8 +214,8 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">
                 Comparatif 2026 des plateformes régulées MiCA pour acheter {meta.symbol},
-                avec frais réels, méthodes de paiement et fiscalité française. Mise à jour{" "}
-                {new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}.
+                avec frais réels, méthodes de paiement et fiscalité française. Statuts MiCA vérifiés le{" "}
+                {formatMicaDate(getMicaMeta().lastUpdated)}.
               </p>
             </div>
           </header>
@@ -221,12 +237,12 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               <Step
                 n={2}
                 title="Approvisionnez votre compte (CB ou virement SEPA)"
-                description="Carte bancaire = instantané mais 1.5-3 % de frais. Virement SEPA = quasi gratuit mais 1-24 h de délai. Au-delà de 200 €, le SEPA gagne."
+                description="Carte bancaire = instantané mais 1,5 à 3 % de frais. Virement SEPA = quasi gratuit mais 1-24 h de délai. Au-delà de 200 €, le SEPA gagne."
               />
               <Step
                 n={3}
                 title={`Achetez ${meta.symbol} et sécurisez`}
-                description={`Préférez un ordre spot (frais ~0.1-0.5 %) à l'achat instantané pour économiser. Pour > 1 000 €, transférez vers un wallet hardware (Ledger / Trezor).`}
+                description={`Préférez un ordre spot (frais ~0,1 à 0,5 %) à l'achat instantané pour économiser. Pour > 1 000 €, transférez vers un wallet hardware (Ledger / Trezor).`}
               />
             </ol>
           </section>
@@ -260,7 +276,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                             <p className="mt-0.5 text-sm text-fg/70">{p.tagline}</p>
                           </div>
                           <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2.5 py-1 whitespace-nowrap">
-                            {p.scoring.global}/5
+                            {fmtNb(p.scoring.global)}/5
                           </span>
                         </div>
 
@@ -268,13 +284,13 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                           <div>
                             <dt className="text-muted">Achat 1 000 € (CB)</dt>
                             <dd className="mt-1 font-mono font-semibold text-fg">
-                              {fees.instant.toFixed(2)} € de frais
+                              {fmtFr(fees.instant, 2)} € de frais
                             </dd>
                           </div>
                           <div>
                             <dt className="text-muted">Achat 1 000 € (spot)</dt>
                             <dd className="mt-1 font-mono font-semibold text-accent-green">
-                              {fees.spot.toFixed(2)} € de frais
+                              {fmtFr(fees.spot, 2)} € de frais
                             </dd>
                           </div>
                           <div>
@@ -327,7 +343,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 Icon={CreditCard}
                 title="Carte bancaire (CB)"
                 speed="Instantané"
-                fees="1.5 % – 3 %"
+                fees="1,5 % – 3 %"
                 pros={["Achat en 5 secondes", "Pas besoin d'IBAN configuré"]}
                 cons={["Frais élevés", "Plafond carte journalier"]}
               />
@@ -335,7 +351,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 Icon={Euro}
                 title="Virement SEPA"
                 speed="1-24 h"
-                fees="0 % – 0.5 %"
+                fees="0 % – 0,5 %"
                 pros={["Frais minimes", "Adapté aux gros montants"]}
                 cons={["Délai de réception", "Configuration initiale"]}
               />

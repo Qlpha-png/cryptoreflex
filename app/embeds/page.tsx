@@ -27,7 +27,7 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
- * /embeds — landing page qui présente les 4 widgets embeddables aux autres
+ * /embeds — landing page qui présente les widgets embeddables (EMBEDDABLE_TOOLS) aux autres
  * sites (blogs crypto FR, sites finance perso, agrégateurs).
  *
  * Stratégie linkable assets : chaque embed externe = un backlink dofollow
@@ -45,7 +45,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 // Mot-clé long-tail "widgets crypto embed gratuits" + brand en suffixe.
 const PAGE_TITLE = "Widgets crypto embed gratuits";
 const PAGE_DESCRIPTION =
-  "4 widgets crypto gratuits à intégrer en 1 ligne sur votre blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI. License CC-BY 4.0.";
+  `${EMBEDDABLE_TOOLS.length} widgets crypto gratuits à intégrer en 1 ligne sur votre blog ou site finance : calculateur fiscalité, simulateur DCA, convertisseur, ROI, heatmap. Licence CC-BY 4.0.`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -74,7 +74,7 @@ const FAQ_ITEMS = [
   {
     question: "Quelle license s'applique ?",
     answer:
-      "Creative Commons BY 4.0. Vous pouvez intégrer les widgets gratuitement, y compris sur des sites commerciaux ou monétisés (pub, affiliation), à une seule condition : conserver l'attribution « Powered by Cryptoreflex » avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
+      "Creative Commons BY 4.0. Vous pouvez intégrer les widgets gratuitement, y compris sur des sites commerciaux ou monétisés (pub, affiliation), à une seule condition : conserver l'attribution « Proposé par Cryptoreflex » avec le lien dofollow inclus dans le widget. C'est le contrat moral entre nous.",
   },
   {
     question: "Les iframes ralentissent-elles ma page ?",
@@ -135,14 +135,14 @@ export default function EmbedsLandingPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              License CC-BY 4.0 — gratuit, à vie
+              Licence CC-BY 4.0 — gratuit, à vie
             </span>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               Intégrez les outils{" "}
               <span className="gradient-text">Cryptoreflex</span> sur votre site
             </h1>
             <p className="mt-4 text-lg text-fg/80">
-              4 widgets crypto prêts à coller sur votre blog, votre site finance
+              {EMBEDDABLE_TOOLS.length} widgets crypto prêts à coller sur votre blog, votre site finance
               perso ou votre agrégateur. Une ligne d'iframe, zéro maintenance —
               on s'occupe des updates côté serveur.
             </p>
@@ -202,7 +202,7 @@ export default function EmbedsLandingPage() {
           <div className="max-w-3xl">
             <span className="badge-info">Catalogue</span>
             <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
-              4 widgets disponibles immédiatement
+              {EMBEDDABLE_TOOLS.length} widgets disponibles immédiatement
             </h2>
             <p className="mt-3 text-fg/70">
               Cliquez sur « Copier » et collez le snippet où vous voulez. C'est
@@ -273,13 +273,13 @@ export default function EmbedsLandingPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
             <h2 className="font-display text-2xl font-extrabold text-fg">
-              License Creative Commons BY 4.0
+              Licence Creative Commons BY 4.0
             </h2>
             <p className="mt-3 text-sm text-fg/80 leading-relaxed">
               Vous pouvez intégrer ces widgets <strong>gratuitement</strong>, y
               compris sur des sites commerciaux, en respectant{" "}
               <strong>une seule règle</strong> : conserver l'attribution
-              « Powered by Cryptoreflex » avec le lien <em>dofollow</em>
+              « Proposé par Cryptoreflex » avec le lien <em>dofollow</em>
               inclus en bas du widget. Ne masquez pas le footer, ne supprimez
               pas le lien — c'est le contrat moral.
             </p>

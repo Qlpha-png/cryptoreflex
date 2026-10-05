@@ -27,6 +27,10 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
+import { resolveCoingeckoId } from "@/lib/crypto-aliases";
+import { cryptoPagePath } from "@/lib/crypto-page-slug";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -43,9 +47,9 @@ export function generateMetadata({ params }: Props): Metadata {
   const pair = getStakingPair(params.slug);
   if (!pair) return { robots: { index: false, follow: false } };
   const title = `Staking ${pair.name} (${pair.symbol}) 2026 — APY, plateformes MiCA, risques`;
-  const description = `Comment staker ${pair.name} en France en 2026 : APY ${pair.apyMin}% – ${pair.apyMax}%, ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract). Guide Cryptoreflex.`;
+  const description = `Comment staker ${pair.name} en France en 2026 : APY ${fmtNb(pair.apyMin)}% – ${fmtNb(pair.apyMax)}%, ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract). Guide Cryptoreflex.`;
   return {
-    title,
+    title: fitTitle(title),
     description,
     alternates: withHreflang(`${BRAND.url}/staking/${pair.cryptoId}`),
     openGraph: {
@@ -131,7 +135,7 @@ export default function StakingDetailPage({ params }: Props) {
   const faqs = [
     {
       question: `Combien rapporte le staking de ${pair.name} en 2026 ?`,
-      answer: `Le rendement annuel net (APY) du staking ${pair.name} oscille entre ${pair.apyMin}% et ${pair.apyMax}% en avril 2026, soit ~${apyAvg.toFixed(1)}% en moyenne. Sur 1 000 € stakés pendant 1 an, le gain estimé est de ${projection1y.toFixed(0)} € (avant fiscalité). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
+      answer: `Le rendement annuel net (APY) du staking ${pair.name} oscille entre ${fmtNb(pair.apyMin)}% et ${fmtNb(pair.apyMax)}% en avril 2026, soit ~${fmtFr(apyAvg, 1)}% en moyenne. Sur 1 000 € stakés pendant 1 an, le gain estimé est de ${fmtFr(projection1y, 0)} € (avant fiscalité). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
     },
     {
       question: `Y a-t-il un lock-up sur le staking ${pair.name} ?`,
@@ -153,7 +157,7 @@ export default function StakingDetailPage({ params }: Props) {
       answer:
         platforms.length === 0
           ? `Aucune plateforme agréée MiCA ne propose actuellement le staking ${pair.name} de manière fiable en France à notre connaissance. Surveillez les annonces de Bitpanda, Kraken et Coinbase.`
-          : `${platforms.length} plateforme${platforms.length > 1 ? "s" : ""} régulée${platforms.length > 1 ? "s" : ""} MiCA propose${platforms.length > 1 ? "nt" : ""} le staking ${pair.name} en France : ${platforms.map((p) => p.name).join(", ")}. Notre recommandation : ${platforms[0]!.name} (note globale ${platforms[0]!.scoring.global}/5) pour la combinaison APY + sécurité + UX.`,
+          : `${platforms.length} plateforme${platforms.length > 1 ? "s" : ""} régulée${platforms.length > 1 ? "s" : ""} MiCA propose${platforms.length > 1 ? "nt" : ""} le staking ${pair.name} en France : ${platforms.map((p) => p.name).join(", ")}. Notre recommandation : ${platforms[0]!.name} (note globale ${fmtNb(platforms[0]!.scoring.global)}/5) pour la combinaison APY + sécurité + UX.`,
     },
   ];
 
@@ -194,8 +198,8 @@ export default function StakingDetailPage({ params }: Props) {
                 <Stat
                   Icon={TrendingUp}
                   label="APY"
-                  value={`${pair.apyMin}%–${pair.apyMax}%`}
-                  hint={`Net moyen : ~${apyAvg.toFixed(1)}%`}
+                  value={`${fmtNb(pair.apyMin)}%–${fmtNb(pair.apyMax)}%`}
+                  hint={`Net moyen : ~${fmtFr(apyAvg, 1)}%`}
                 />
                 <Stat
                   Icon={Lock}
@@ -245,7 +249,7 @@ export default function StakingDetailPage({ params }: Props) {
                         <p className="mt-1 text-sm text-fg/70">{p.tagline}</p>
                       </div>
                       <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2.5 py-1">
-                        {p.scoring.global}/5
+                        {fmtNb(p.scoring.global)}/5
                       </span>
                     </div>
                     <ul className="mt-3 space-y-1.5 text-xs text-fg/75">
@@ -255,7 +259,7 @@ export default function StakingDetailPage({ params }: Props) {
                       </li>
                       <li className="flex items-center gap-1.5">
                         <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" />
-                        Cold storage {p.security.coldStoragePct}% · 2FA · {p.security.insurance ? "Assurance" : "Sans assurance"}
+                        Cold storage {fmtNb(p.security.coldStoragePct)}% · 2FA · {p.security.insurance ? "Assurance" : "Sans assurance"}
                       </li>
                     </ul>
                     <div className="mt-4 flex items-center justify-between gap-2">
@@ -293,7 +297,7 @@ export default function StakingDetailPage({ params }: Props) {
                 amount={1000}
                 gain={projection1y}
                 apy={apyAvg}
-                description={`Avec un APY moyen de ${apyAvg.toFixed(1)}% (composé annuel)`}
+                description={`Avec un APY moyen de ${fmtFr(apyAvg, 1)}% (composé annuel)`}
               />
               <ProjectionCard
                 label="Sur 5 ans"
@@ -383,7 +387,8 @@ export default function StakingDetailPage({ params }: Props) {
                   Achetez d'abord du {pair.symbol} sur une plateforme agréée MiCA, puis activez le staking en 1 clic.
                 </p>
               </div>
-              <Link href={`/cryptos/${pair.cryptoId}`} className="btn-primary shrink-0">
+              {/* Stacks : la fiche est publiée sous l'identifiant CoinGecko « blockstack » (alias dans lib/crypto-aliases.ts). */}
+              <Link href={cryptoPagePath(resolveCoingeckoId(pair.cryptoId) ?? pair.cryptoId)} className="btn-primary shrink-0">
                 Voir la fiche {pair.name}
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -474,15 +479,15 @@ function ProjectionCard({
           {label}
         </span>
         <span className="text-[10px] font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5">
-          {apy.toFixed(1)}% APY
+          {fmtFr(apy, 1)}% APY
         </span>
       </div>
       <div className="mt-4 flex items-baseline gap-2">
-        <span className="text-3xl font-extrabold text-fg">+{gain.toFixed(0)} €</span>
+        <span className="text-3xl font-extrabold text-fg">+{fmtFr(gain, 0)} €</span>
         <span className="text-sm text-muted">de gain</span>
       </div>
       <p className="mt-1 text-sm text-fg/70">
-        {amount} € → <strong className="text-fg">{total.toFixed(0)} €</strong>
+        {amount} € → <strong className="text-fg">{fmtFr(total, 0)} €</strong>
       </p>
       <p className="mt-3 text-xs text-muted">{description}</p>
     </div>

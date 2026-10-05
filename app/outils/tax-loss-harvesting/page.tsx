@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  TrendingDown,
-  ArrowRight,
-  AlertTriangle,
-  Sparkles,
-  Calendar,
-  Calculator,
-} from "lucide-react";
+import { ArrowRight, AlertTriangle, Calculator, Scale } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
@@ -21,84 +14,87 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
- * /outils/tax-loss-harvesting — Page pédagogique fiscalité Q4.
+ * /outils/tax-loss-harvesting — « vendre à perte pour réduire son impôt » : ce qui marche vraiment en France.
  *
- * Présente la mécanique légale du tax-loss harvesting (article 150 VH bis
- * CGI) avec un scénario chiffré pédagogique. L'outil n'émet pas de
- * recommandation de cession personnalisée et redirige toute décision
- * vers un professionnel agréé (expert-comptable, avocat fiscaliste).
+ * Refonte du 05/10/2026 (audit) : l'ancienne page reprenait le « tax-loss harvesting » américain (vendre LA crypto
+ * en perte → moins-value → rachat le lendemain). C'est faux pour un particulier français : chaque cession se calcule
+ * avec la méthode GLOBALE (art. 150 VH bis, III — BOI-RPPM-PVBMC-30-20 § 1 et § 110) :
+ *   plus-value = prix de cession − prix total d'acquisition × prix de cession / valeur globale du portefeuille.
+ * Le signe dépend donc du portefeuille entier au jour de la vente, pas de la crypto vendue. Les moins-values ne
+ * s'imputent que sur les plus-values de même nature de la même année (art. 150 VH bis, IV — BOFiP § 160).
+ * L'ancienne FAQ citait aussi une source inexistante (« CE 26/04/2018 » pour un rachat) et comptait le swap
+ * crypto-crypto parmi les opérations imposables : retirés.
  *
- * UNIQUEMENT pertinent en France/UE, et SEULEMENT pour les pertes
- * REALISEES (pas les latentes — la fiscalité crypto FR ne reconnaît pas
- * la perte latente, contrairement aux US).
- *
- * Phase actuelle : page informationnelle + scénario statique illustratif.
- * Toute version dynamique future doit conserver le cadre informationnel
- * et ne pas verbaliser de recommandation de cession personnalisée.
- *
- * Refonte wording compliance 2026-05-14 — approche 1er juillet 2026 (fin
- * transitoire PSAN) → suppression de toute formulation incitative
- * ("Réduis ton PFU", "Vends tes positions", "Économie") au profit
- * d'une lecture pédagogique de scénarios (art. 150 VH bis CGI).
+ * Exemple vérifié (sans frais) : juin, vente 6 000 € d'un portefeuille de 30 000 € acheté 20 000 € → +2 000 €,
+ * prix d'acquisition restant 16 000 €. Décembre : portefeuille à 12 000 € → vente 6 000 € = −2 000 € (année 0 €) ;
+ * portefeuille à 20 000 € → vente 6 000 € = +1 200 € (année 3 200 €). PFU 31,4 % : 628 € / 0 € / 1 004,80 €.
  */
 
 export const revalidate = 86400;
 
+const TITLE = "Vendre à perte pour réduire son impôt crypto (France)";
+const DESCRIPTION =
+  "En France, c'est votre portefeuille entier qui décide : vendre une crypto en perte ne crée pas toujours une moins-value. La règle officielle et un exemple chiffré.";
+
 export const metadata: Metadata = {
-  title: "Tax-loss harvesting crypto FR — Comprendre la stratégie 2026",
-  description:
-    "Comprendre le mécanisme légal du tax-loss harvesting crypto : compensation intra-annuelle des moins-values, art. 150 VH bis CGI, exemple pédagogique. Outil informationnel, ne remplace pas un conseil fiscal.",
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/outils/tax-loss-harvesting`),
   openGraph: {
-    title: "Tax-loss harvesting crypto en France — Cryptoreflex",
-    description:
-      "Comment fonctionne la compensation des plus-values par les moins-values réalisées (art. 150 VH bis CGI). Tutoriel pédagogique.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: `${BRAND.url}/outils/tax-loss-harvesting`,
     type: "website",
   },
 };
 
+// fr-FR sépare les milliers par une espace fine (U+202F), presque invisible dans la police du site : espace insécable.
+const eur = (n: number) =>
+  `${n
+    .toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })
+    .replace(/ /g, " ")} €`;
+
 export default function TaxLossHarvestingPage() {
   const faqItems = [
     {
-      q: "Le tax-loss harvesting est-il légal en France ?",
-      a: "Oui, totalement. C'est l'application directe de l'article 150 VH bis du CGI : les moins-values réalisées sur l'année viennent s'imputer sur les plus-values réalisées la même année (compensation intra-annuelle). On ne triche pas, on optimise.",
+      q: "Vendre une crypto en perte crée-t-il toujours une moins-value ?",
+      a: "Non. Pour un particulier, chaque vente contre des euros se calcule sur le portefeuille entier (méthode globale de l'article 150 VH bis du CGI) : plus-value = prix de cession − prix total d'acquisition × prix de cession ÷ valeur globale du portefeuille. Si, le jour de la vente, l'ensemble de vos cryptos vaut plus que ce qu'il vous a coûté, la vente dégage une plus-value, même si la crypto vendue a baissé.",
     },
     {
-      q: "Puis-je racheter la même crypto immédiatement après la vente perte ?",
-      a: "En France OUI (contrairement aux US où la wash sale rule de 30 jours s'applique sur les actions/options). Vous pouvez vendre 1 ETH à perte le 28/12 et racheter 1 ETH le 29/12 sans perdre le bénéfice fiscal de la moins-value. Source : CE 26/04/2018 + BOFiP RPPM-PVBMC-30-30-20.",
+      q: "Puis-je échanger ma crypto en perte contre une autre crypto pour « réaliser » la perte ?",
+      a: "Non. Un échange entre cryptos n'est pas une cession imposable : il ne crée ni plus-value ni moins-value et ne change pas votre prix total d'acquisition. Seules comptent les ventes contre des euros (ou une autre monnaie officielle) et les paiements d'un bien ou d'un service en crypto.",
     },
     {
-      q: "Les pertes latentes (non vendues) comptent-elles ?",
-      a: "Non. La fiscalité crypto FR ne reconnaît QUE les opérations réalisées (vente, swap, dépense). Tant que vous n'avez pas vendu, votre perte n'existe pas pour l'administration fiscale.",
+      q: "Puis-je racheter juste après avoir vendu ?",
+      a: "Aucune règle propre aux cryptos n'interdit de racheter ensuite (il n'existe pas d'équivalent de la « wash sale rule » américaine). Mais l'administration peut écarter une opération dont le but est exclusivement ou principalement fiscal (abus de droit, articles L64 et L64 A du livre des procédures fiscales). Une vente suivie d'un rachat immédiat, sans autre motif, s'en approche : demandez l'avis d'un professionnel avant de le faire.",
     },
     {
-      q: "Que se passe-t-il si mes moins-values dépassent mes plus-values ?",
-      a: "Non, aucun report. Pour un particulier (article 150 VH bis du CGI), la compensation est strictement intra-annuelle : le solde net négatif est définitivement perdu au 31 décembre. Le report 10 ans existe pour les plus-values mobilières classiques (article 150-0 D 11), PAS pour la crypto — d'où l'intérêt d'agir avant la clôture.",
+      q: "Que devient une moins-value que je n'utilise pas ?",
+      a: "Elle est perdue. Les moins-values crypto ne s'imputent que sur les plus-values crypto de la même année (article 150 VH bis, IV). Pas de report sur les années suivantes, pas d'imputation sur les actions ou les autres revenus. Le report sur dix ans existe pour les valeurs mobilières (article 150-0 D, 11), pas pour les cryptos.",
     },
     {
-      q: "Quel timing optimal pour le tax-loss harvesting ?",
-      a: "Mi-décembre. Vous avez visibilité sur vos plus-values réalisées de l'année (cession crypto-fiat) et il vous reste 2 semaines pour vendre les positions perdantes avant le 31/12. Pas trop tôt (les marchés peuvent encore se retourner), pas trop tard (volume baisse fin décembre).",
+      q: "Comment savoir si mon portefeuille est globalement en perte ?",
+      a: "Additionnez la valeur, au jour de la vente, de toutes vos cryptos (toutes plateformes et tous portefeuilles confondus) et comparez-la à votre prix total d'acquisition restant (ligne 223 du formulaire 2086). En dessous, une vente crée une moins-value ; au-dessus, une plus-value. Le générateur 2086 gratuit fait ce calcul vente par vente.",
     },
   ];
 
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/tax-loss-harvesting",
-      title: "Tax-loss harvesting crypto FR — Comprendre la stratégie 2026",
-      description:
-        "Comprendre la compensation des plus-values crypto par les moins-values réalisées (art. 150 VH bis CGI). Outil informationnel pédagogique.",
+      title: TITLE,
+      description: DESCRIPTION,
       date: "2026-05-02",
-      dateModified: "2026-05-14",
+      dateModified: "2026-10-05",
       category: "Outil",
-      tags: ["tax loss harvesting", "fiscalité", "PFU", "moins-value", "pédagogie"],
+      tags: ["moins-value crypto", "fiscalité", "PFU", "méthode globale", "formulaire 2086"],
     }),
     breadcrumbSchema([
       { name: "Accueil", url: "/" },
       { name: "Outils", url: "/outils" },
-      { name: "Tax Loss Harvesting", url: "/outils/tax-loss-harvesting" },
+      { name: "Vendre à perte", url: "/outils/tax-loss-harvesting" },
     ]),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
@@ -113,59 +109,54 @@ export default function TaxLossHarvestingPage() {
           <span className="mx-2">/</span>
           <Link href="/outils" className="hover:text-fg">Outils</Link>
           <span className="mx-2">/</span>
-          <span className="text-fg/80">Tax Loss Harvesting</span>
+          <span className="text-fg/80">Vendre à perte</span>
         </nav>
 
         <header className="mt-6 max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-warning-fg">
-            <Calendar className="h-3 w-3" aria-hidden /> Optimal mi-décembre
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+            <Scale className="h-3 w-3" aria-hidden /> Règle officielle · mise à jour le 5 octobre 2026
           </span>
-          <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Comprendre le{" "}
-            <span className="gradient-text">tax-loss harvesting</span>{" "}
-            crypto avant le 31 décembre.
+          <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
+            Vendre à perte pour réduire son impôt crypto&nbsp;:{" "}
+            <span className="gradient-text">ce qui marche vraiment en France</span>
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Le tax-loss harvesting est une stratégie pédagogique qui consiste
-            à comprendre comment les moins-values réalisées peuvent compenser
-            les plus-values dans l&apos;année fiscale en cours (article 150 VH
-            bis CGI). Cet outil aide à identifier les éléments à vérifier
-            avant toute décision fiscale, sans recommander d&apos;action
-            particulière.
+            Aux États-Unis, on vend la crypto qui a baissé pour « encaisser » la perte. En France, ça ne marche pas
+            comme ça&nbsp;: c&apos;est <strong>votre portefeuille entier</strong> qui décide si une vente dégage un
+            gain ou une perte, pas la crypto que vous vendez.
           </p>
         </header>
 
-        {/* Avertissement réglementaire (compliance 2026-05-14) — affiché
-            en haut pour ne pas être manqué. Approche 1er juillet 2026
-            (fin transitoire PSAN) → sensibilité accrue sur wording fiscal. */}
-        <aside className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/[0.04] p-5 flex items-start gap-3 text-sm text-fg/85">
-          <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" aria-hidden />
-          <div className="leading-relaxed">
-            <strong className="block mb-1 text-amber-200">
-              Avertissement réglementaire
-            </strong>
-            Cet outil fournit une lecture pédagogique de scénarios possibles
-            basée sur l&apos;article 150 VH bis du CGI. Il ne constitue pas
-            un conseil fiscal, ne recommande aucune cession et ne remplace
-            pas l&apos;administration fiscale ni un professionnel agréé.
-            Toute décision de cession doit être prise par vous-même, après
-            vérification avec un expert-comptable ou un avocat fiscaliste.
-          </div>
-        </aside>
-
         <div className="mt-8">
           <Tldr
-            headline="Si vous avez réalisé des plus-values crypto cette année, la matérialisation de moins-values existantes avant le 31/12 peut, sous conditions, neutraliser tout ou partie de l'impôt PFU 31,4 %. À analyser avec un fiscaliste."
+            headline="Une vente contre des euros crée une moins-value seulement si, ce jour-là, l'ensemble de vos cryptos vaut moins que ce qu'il vous a coûté. Sinon, elle crée une plus-value, même si la crypto vendue a baissé."
             bullets={[
-              { emoji: "⚖️", text: "Cadre légal : article 150 VH bis CGI, compensation intra-annuelle" },
-              { emoji: "🔄", text: "Pas de wash sale rule en France (contrairement aux US) — vérifier le cas particulier avec un professionnel" },
-              { emoji: "📅", text: "Fenêtre temporelle pertinente : 15 → 31 décembre" },
-              { emoji: "⏳", text: "Moins-value imputable uniquement sur les plus-values crypto de la même année — aucun report, d'où l'urgence d'agir avant le 31/12" },
+              { emoji: "⚖️", text: "Méthode globale : article 150 VH bis du CGI (III), commentée au BOFiP (BOI-RPPM-PVBMC-30-20)" },
+              { emoji: "🔁", text: "Un échange crypto contre crypto ne crée ni gain ni perte" },
+              { emoji: "📅", text: "Une moins-value ne compense que les plus-values crypto de la même année, puis elle est perdue" },
+              { emoji: "🧾", text: "Le générateur 2086 calcule chaque vente avec la valeur de votre portefeuille" },
             ]}
-            readingTime="6 min"
+            readingTime="5 min"
             level="Intermédiaire"
           />
         </div>
+
+        {/* La règle */}
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold">La règle en une ligne</h2>
+          <p className="mt-3 text-fg/85 leading-relaxed">
+            Pour chaque vente, l&apos;administration ne regarde pas le prix d&apos;achat de la crypto vendue. Elle
+            applique cette formule à tout votre portefeuille&nbsp;:
+          </p>
+          <p className="mt-4 rounded-xl border border-border bg-elevated/40 p-4 font-mono text-sm text-fg">
+            plus-value = prix de vente − prix total d&apos;acquisition × prix de vente ÷ valeur de tout le portefeuille
+          </p>
+          <p className="mt-4 text-fg/85 leading-relaxed">
+            Le « prix total d&apos;acquisition » est ce que vous avez payé pour toutes vos cryptos, diminué de la part
+            déjà utilisée par vos ventes précédentes (ligne 223 du formulaire 2086). Si votre portefeuille vaut moins
+            que ce montant le jour de la vente, le résultat est négatif&nbsp;: c&apos;est une moins-value.
+          </p>
+        </section>
 
         {/* Exemple chiffré */}
         <section className="mt-12 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-6 sm:p-8">
@@ -173,78 +164,105 @@ export default function TaxLossHarvestingPage() {
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
               <Calculator className="h-5 w-5" aria-hidden />
             </span>
-            <h2 className="text-2xl font-bold">Exemple chiffré</h2>
+            <h2 className="text-2xl font-bold">Exemple chiffré (sans frais)</h2>
           </div>
+          <p className="mt-4 text-sm text-fg/85 leading-relaxed">
+            Léa a acheté pour <strong>{eur(20000)}</strong> de cryptos. En juin, son portefeuille vaut{" "}
+            <strong>{eur(30000)}</strong> et elle vend pour <strong>{eur(6000)}</strong>&nbsp;:
+            6&nbsp;000 − 20&nbsp;000 × 6&nbsp;000 ÷ 30&nbsp;000 = <strong className="text-success">+{eur(2000)}</strong> de
+            plus-value. Son prix total d&apos;acquisition restant tombe à <strong>{eur(16000)}</strong>. Sans autre
+            vente, elle paierait {eur(628)} d&apos;impôt (PFU 31,4&nbsp;%). En décembre, elle vend encore pour{" "}
+            {eur(6000)} d&apos;une crypto qui a baissé.
+          </p>
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
-            <div className="rounded-xl border border-border bg-background/50 p-5">
-              <div className="text-[11px] uppercase tracking-wider text-muted">
-                Scénario A — sans compensation
-              </div>
-              <ul className="mt-3 space-y-1 text-sm text-fg/85">
-                <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
-                <li>Moins-values latentes (non vendues) : <strong className="text-muted">non comptées</strong></li>
-                <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 31,4 % : <strong className="text-danger">1 570 €</strong>
-                </li>
-              </ul>
-            </div>
             <div className="rounded-xl border border-success/30 bg-success/5 p-5">
               <div className="text-[11px] uppercase tracking-wider text-success">
-                Scénario B — avec compensation
+                Cas 1 — portefeuille globalement en perte
               </div>
               <ul className="mt-3 space-y-1 text-sm text-fg/85">
-                <li>Plus-values réalisées : <strong className="text-success">+5 000 €</strong></li>
-                <li>Moins-values réalisées (vente le 28/12) : <strong className="text-danger">−4 000 €</strong></li>
+                <li>Valeur du portefeuille en décembre : <strong>{eur(12000)}</strong> (moins que {eur(16000)})</li>
+                <li>
+                  Vente : 6&nbsp;000 − 16&nbsp;000 × 6&nbsp;000 ÷ 12&nbsp;000 ={" "}
+                  <strong className="text-danger">−{eur(2000)}</strong>
+                </li>
+                <li>Total de l&apos;année : 2&nbsp;000 − 2&nbsp;000 = <strong>{eur(0)}</strong></li>
                 <li className="border-t border-border mt-3 pt-3">
-                  Impôt PFU 31,4 % sur 1 000 € : <strong className="text-fg">314 €</strong>
+                  Impôt : <strong className="text-fg">{eur(0)}</strong> au lieu de {eur(628)}
                 </li>
               </ul>
-              <p className="mt-3 text-xs text-fg/70 leading-relaxed">
-                Différence pédagogique : 1 256 €. Cette estimation théorique
-                dépend de votre situation fiscale globale et doit être validée
-                avec un professionnel avant toute décision.
-              </p>
+            </div>
+            <div className="rounded-xl border border-danger/30 bg-danger/5 p-5">
+              <div className="text-[11px] uppercase tracking-wider text-danger">
+                Cas 2 — portefeuille globalement en gain
+              </div>
+              <ul className="mt-3 space-y-1 text-sm text-fg/85">
+                <li>Valeur du portefeuille en décembre : <strong>{eur(20000)}</strong> (plus que {eur(16000)})</li>
+                <li>
+                  Vente : 6&nbsp;000 − 16&nbsp;000 × 6&nbsp;000 ÷ 20&nbsp;000 ={" "}
+                  <strong className="text-success">+{eur(1200)}</strong>
+                </li>
+                <li>Total de l&apos;année : 2&nbsp;000 + 1&nbsp;200 = <strong>{eur(3200)}</strong></li>
+                <li className="border-t border-border mt-3 pt-3">
+                  Impôt : <strong className="text-danger">{eur(1004.8)}</strong> au lieu de {eur(628)}
+                </li>
+              </ul>
             </div>
           </div>
+          <p className="mt-4 text-xs text-fg/70 leading-relaxed">
+            Même crypto vendue, même montant, résultat opposé&nbsp;: seule la valeur du portefeuille entier a changé.
+            Dans le cas 2, vendre la crypto « perdante » a <strong>augmenté</strong> l&apos;impôt.
+          </p>
         </section>
 
-        {/* Disclaimer renforcé (compliance 2026-05-14) — rappel après la
-            section chiffrée pour limiter toute interprétation prescriptive
-            du scénario présenté. */}
+        {/* Ce qui ne marche pas */}
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold">Ce qui ne marche pas</h2>
+          <ul className="mt-4 space-y-3 text-fg/85 leading-relaxed">
+            <li>
+              <strong>Échanger la crypto en perte contre une autre.</strong> Un échange entre cryptos n&apos;est pas
+              imposable&nbsp;: il ne crée ni gain ni perte.
+            </li>
+            <li>
+              <strong>Garder une moins-value pour plus tard.</strong> Elle ne compense que les plus-values crypto de
+              la même année (article 150 VH bis, IV), puis elle est perdue&nbsp;: aucun report, aucune imputation sur
+              les actions.
+            </li>
+            <li>
+              <strong>Compter une perte « sur le papier ».</strong> Tant que vous n&apos;avez rien vendu contre des
+              euros, il n&apos;y a ni plus-value ni moins-value.
+            </li>
+            <li>
+              <strong>Vendre et racheter aussitôt, sans autre raison que l&apos;impôt.</strong> Aucune règle propre
+              aux cryptos ne l&apos;interdit, mais l&apos;administration peut écarter une opération à but
+              exclusivement ou principalement fiscal (abus de droit, articles L64 et L64 A du livre des procédures
+              fiscales).
+            </li>
+          </ul>
+        </section>
+
         <div className="mt-10 rounded-xl border border-warning/30 bg-warning/5 p-4 flex items-start gap-3 text-sm text-fg/85">
           <AlertTriangle className="h-4 w-4 text-warning-fg mt-0.5 shrink-0" aria-hidden />
           <p className="leading-relaxed">
-            <strong>Information pédagogique, pas un conseil fiscal
-            personnalisé.</strong> Le scénario chiffré ci-dessus est une
-            illustration théorique de la mécanique légale et ne tient pas
-            compte de votre situation fiscale globale, de votre régime fiscal
-            (BIC pro, particulier), de vos comptes étrangers, ni d&apos;autres
-            cas particuliers (DeFi, NFT, staking). Toute décision de cession
-            doit être validée avec un expert-comptable ou un avocat fiscaliste.
+            <strong>Information générale, pas un conseil fiscal personnalisé.</strong> Cette page décrit la règle des
+            particuliers (article 150 VH bis du CGI). Une activité professionnelle (BIC), le minage, le staking ou la
+            DeFi peuvent relever d&apos;autres règles. Avant de vendre pour des raisons fiscales, faites vérifier
+            votre cas par un expert-comptable ou un avocat fiscaliste.
           </p>
         </div>
 
-        {/* CTA Pro (compliance 2026-05-14) — wording reformulé pour rester
-            informationnel : l'outil identifie des scénarios à examiner, ne
-            recommande pas de cession. Toute décision reste à valider avec
-            un professionnel. */}
         <section className="mt-12 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
-          <h2 className="text-2xl sm:text-3xl font-extrabold">
-            Analyse de scénarios fiscaux
-          </h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold">Faites le calcul avec vos chiffres</h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Suivez vos positions et vos moins-values latentes toute l&apos;année
-            avec le portefeuille Cryptoreflex, 100&nbsp;% gratuit, pour anticiper
-            l&apos;impact théorique d&apos;une cession sur votre plus-value annuelle.
-            Toute décision de cession reste à valider avec un professionnel.
+            Le générateur 2086 calcule chaque vente avec la valeur de votre portefeuille au jour de la vente, et vous
+            dit si elle crée une plus-value ou une moins-value. Gratuit, sans compte.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/portefeuille" className="btn-primary btn-primary-shine">
-              Suivre mon portefeuille (gratuit)
+            <Link href="/outils/cerfa-2086-auto" className="btn-primary btn-primary-shine">
+              Calculer mes ventes (2086)
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link href="/outils/calculateur-fiscalite" className="btn-ghost">
-              Calculateur fiscal (gratuit)
+              Estimer mon impôt
             </Link>
           </div>
         </section>
@@ -260,7 +278,7 @@ export default function TaxLossHarvestingPage() {
               >
                 <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg">
                   {item.q}
-                  <span className="text-primary transition-transform group-open:rotate-45">
+                  <span className="text-primary transition-transform group-open:rotate-45" aria-hidden="true">
                     +
                   </span>
                 </summary>
@@ -270,6 +288,10 @@ export default function TaxLossHarvestingPage() {
               </details>
             ))}
           </div>
+          <p className="mt-6 text-xs text-muted">
+            Sources&nbsp;: article 150 VH bis du code général des impôts (III et IV)&nbsp;; BOFiP
+            BOI-RPPM-PVBMC-30-20 (§ 1, § 110, § 160)&nbsp;; articles L64 et L64 A du livre des procédures fiscales.
+          </p>
         </section>
 
         <div className="mt-12">

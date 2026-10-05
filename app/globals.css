@@ -4,6 +4,17 @@
 
 /* Fonts: chargées via next/font (app/layout.tsx) — pas d'@import render-blocking. */
 
+/* Espace fine insécable (U+202F) des nombres français (« 20 000 € », format Intl fr-FR) : Inter la dessine avec 1 à
+   2 px, on lisait « 20000 € ». Cette micro-police (304 octets, scripts/build-nnbsp-font.py) ne contient que ce caractère,
+   avec la largeur d'une espace normale ; elle est en tête des piles de polices (tailwind.config.ts) et n'est
+   téléchargée que sur les pages qui affichent ce caractère (unicode-range). Audit du 05/10/2026. */
+@font-face {
+  font-family: "Cryptoreflex NNBSP";
+  src: url("/fonts/cr-nnbsp.woff2") format("woff2");
+  unicode-range: U+202F;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   /* iOS safe areas (notch + home indicator) */
@@ -142,7 +153,7 @@ body {
    s'alignent et ne sautent pas quand ils changent (sensation exchange).
    À appliquer sur tout chiffre LIVE (prix, %, volume). */
 .num-data {
-  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  font-family: "Cryptoreflex NNBSP", var(--font-mono), ui-monospace, SFMono-Regular, monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
@@ -870,7 +881,7 @@ body {
    avaient un H1 ~40px + badge pill = la composition timide que le
    panel a tuee sur la home. */
 .section-eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: "Cryptoreflex NNBSP", var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.18em;

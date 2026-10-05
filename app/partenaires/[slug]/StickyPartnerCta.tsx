@@ -65,7 +65,7 @@ export default function StickyPartnerCta({
             {priceFrom}
           </p>
         </div>
-        <Link
+        <Link prefetch={false}
           href={`/go/${slug}?ctx=detail&pos=sticky-mobile`}
           rel="sponsored noopener"
           target="_blank"

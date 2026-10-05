@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import type { AnyCrypto } from "@/lib/cryptos";
 import type { CoinDetail } from "@/lib/coingecko";
+import { fmtFr } from "@/lib/format-fr";
 
 interface Verdict {
   profile: string;
@@ -129,7 +130,7 @@ function computeVerdicts(
     const d = details[capiIdx];
     const capiUsd = d?.marketCap ?? 0;
     verdicts.push({
-      profile: "Liquidite & taille",
+      profile: "Liquidité et taille",
       icon: Droplets,
       winnerName: c.name,
       winnerSymbol: c.symbol,
@@ -158,7 +159,7 @@ function computeVerdicts(
       reasonParts.push(`Score beginner-friendly ${c.beginnerFriendly}/5`);
       reasonParts.push(`risque ${c.riskLevel.toLowerCase()}`);
     } else {
-      reasonParts.push(`Score Cryptoreflex ${c.reliability.score.toFixed(1)}/10`);
+      reasonParts.push(`Score Cryptoreflex ${fmtFr(c.reliability.score, 1)}/10`);
     }
     if (age != null && age >= 3) {
       reasonParts.push(`${age} ans d'historique`);
@@ -168,7 +169,7 @@ function computeVerdicts(
       icon: ShieldCheck,
       winnerName: c.name,
       winnerSymbol: c.symbol,
-      reason: `${reasonParts.join(" · ")}. Le plus rassurant pour debuter.`,
+      reason: `${reasonParts.join(" · ")}. Le plus rassurant pour débuter.`,
       accent: "green",
     });
   }
@@ -181,8 +182,8 @@ function computeVerdicts(
       profile: "Diversification",
       icon: Layers,
       winnerName: "Combo equilibre",
-      winnerSymbol: `${cryptos.length} categories`,
-      reason: `Vos ${cryptos.length} cryptos couvrent ${cryptos.length} categories distinctes. Vous reduisez l'exposition a un seul recit.`,
+      winnerSymbol: `${cryptos.length} catégories`,
+      reason: `Vos ${cryptos.length} cryptos couvrent ${cryptos.length} catégories distinctes. Vous réduisez l'exposition à un seul récit.`,
       accent: "amber",
     });
   } else {
@@ -202,7 +203,7 @@ function computeVerdicts(
         icon: Layers,
         winnerName: c.name,
         winnerSymbol: c.symbol,
-        reason: `Seule de sa categorie (${c.category}) dans ce comparatif. Apporte un angle unique au portefeuille.`,
+        reason: `Seule de sa catégorie (${c.category}) dans ce comparatif. Apporte un angle unique au portefeuille.`,
         accent: "amber",
       });
     } else {
@@ -210,8 +211,8 @@ function computeVerdicts(
         profile: "Diversification",
         icon: Layers,
         winnerName: "Profil concentre",
-        winnerSymbol: `${categories.size} categorie${categories.size > 1 ? "s" : ""}`,
-        reason: `Vos cryptos partagent peu de categories. Pour diversifier, ajoutez une crypto d'un autre secteur (DeFi, RWA, DePIN, stablecoin...).`,
+        winnerSymbol: `${categories.size} catégorie${categories.size > 1 ? "s" : ""}`,
+        reason: `Vos cryptos partagent peu de catégories. Pour diversifier, ajoutez une crypto d'un autre secteur (DeFi, RWA, DePIN, stablecoin...).`,
         accent: "amber",
       });
     }
@@ -254,8 +255,8 @@ function argmin<T>(arr: T[], key: (t: T, i: number) => number | null): number {
 
 function formatCompactUsd(n: number): string {
   if (!Number.isFinite(n) || n <= 0) return "—";
-  if (n >= 1e12) return `${(n / 1e12).toFixed(2)} T$`;
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} Md$`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(0)} M$`;
-  return `${(n / 1e3).toFixed(0)} k$`;
+  if (n >= 1e12) return `${fmtFr((n / 1e12), 2)} T$`;
+  if (n >= 1e9) return `${fmtFr((n / 1e9), 1)} Md$`;
+  if (n >= 1e6) return `${fmtFr((n / 1e6), 0)} M$`;
+  return `${fmtFr((n / 1e3), 0)} k$`;
 }

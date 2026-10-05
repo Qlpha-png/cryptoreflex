@@ -15,6 +15,7 @@ import StructuredData from "@/components/StructuredData";
 import FearGreedGauge from "@/components/FearGreedGauge";
 import EmptyState from "@/components/ui/EmptyState";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /marche/fear-greed — Page dédiée à l'index Fear & Greed Bitcoin.
@@ -29,9 +30,10 @@ export const revalidate = 3600;
 const PAGE_URL = `${BRAND.url}/marche/fear-greed`;
 
 export const metadata: Metadata = {
-  title: "Fear & Greed Index Bitcoin — Indice peur/cupidité crypto en direct",
-  description:
+  title: fitTitle("Fear & Greed Index Bitcoin — Indice peur/cupidité crypto en direct"),
+  description: fitDescription(
     "L'indice Fear & Greed Bitcoin mesure le sentiment du marché crypto sur une échelle de 0 (peur extrême) à 100 (cupidité extrême). Mise à jour quotidienne, gauge visuelle et explications.",
+  ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Fear & Greed Index Bitcoin — Sentiment crypto en direct",

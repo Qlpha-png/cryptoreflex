@@ -47,6 +47,8 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
+import { getLinkableCryptoIds } from "@/lib/crypto-links";
+import { corrigerAccentsProfond } from "@/lib/fr-accents";
 import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
 import { getYearOhlc, formatOhlcPrice } from "@/lib/historical-ohlc";
 import CryptoStats from "@/components/crypto-detail/CryptoStats";
@@ -107,6 +109,8 @@ import {
   buildComparerPairUrl,
   getSimilarCryptosForCompare,
 } from "@/lib/programmatic-pages";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -167,13 +171,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!c) {
     const fiche = await getCryptoFiche(canonical);
     if (fiche) {
-      const llm = fiche.llm_content as { tldr?: string };
+      const llm = corrigerAccentsProfond((fiche.llm_content ?? {}) as { tldr?: string });
       const url = `${BRAND.url}/cryptos/${canonical}`;
       return {
-        title: `${fiche.name} (${fiche.symbol}) — fiche complète`,
-        description:
-          llm?.tldr?.slice(0, 155) ||
-          `Tout sur ${fiche.name} : analyse, tokenomics, statut FR/UE, scores Cryptoreflex.`,
+        title: fitTitle(`${fiche.name} (${fiche.symbol}) — fiche complète`),
+        description: fitDescription(
+          llm?.tldr || `Tout sur ${fiche.name} : analyse, tokenomics, statut FR/UE, scores Cryptoreflex.`,
+        ),
         alternates: withHreflang(url),
         openGraph: {
           title: `${fiche.name} (${fiche.symbol}) — analyse Cryptoreflex`,
@@ -208,8 +212,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : `Tout savoir sur ${c.name} (${c.symbol}) : prix temps réel, ce que c'est, à quoi ça sert, forces/faiblesses et où acheter en France sur des plateformes régulées MiCA.`;
   const url = `${BRAND.url}/cryptos/${c.id}`;
   return {
-    title,
-    description,
+    title: fitTitle(title),
+    description: fitDescription(description),
     alternates: withHreflang(url),
     openGraph: {
       title,
@@ -311,12 +315,12 @@ function buildVerdict(c: AnyCrypto): string {
     const score = r.score;
     const auditList = r.auditedBy.length ? r.auditedBy.slice(0, 2).join(" et ") : "auditeurs reconnus";
     if (score >= 8.5) {
-      return `${c.name} coche la quasi-totalité des cases qu'on attend d'un projet crypto sérieux à ce stade : équipe identifiée, code open-source, ${r.yearsActive} années d'activité sans incident majeur, et au moins deux audits indépendants signés par ${auditList}. Notre score de fiabilité de ${score.toFixed(1)}/10 reflète cette robustesse opérationnelle. Cela ne dit rien de la performance future du token : la thèse "${c.tagline.toLowerCase()}" peut très bien échouer commercialement même si le code est béton. Mais sur le plan du "downside binaire" — rug pull, abandon, hack catastrophique — ${c.name} est probablement dans le quintile supérieur de l'univers altcoin.`;
+      return `${c.name} coche la quasi-totalité des cases qu'on attend d'un projet crypto sérieux à ce stade : équipe identifiée, code open-source, ${r.yearsActive} années d'activité sans incident majeur, et au moins deux audits indépendants signés par ${auditList}. Notre score de fiabilité de ${fmtFr(score, 1)}/10 reflète cette robustesse opérationnelle. Cela ne dit rien de la performance future du token : la thèse "${c.tagline.toLowerCase()}" peut très bien échouer commercialement même si le code est béton. Mais sur le plan du "downside binaire" — rug pull, abandon, hack catastrophique — ${c.name} est probablement dans le quintile supérieur de l'univers altcoin.`;
     }
     if (score >= 7) {
-      return `${c.name} est un projet sérieux mais avec quelques zones d'ombre qu'il faut accepter. Score de fiabilité ${score.toFixed(1)}/10 : équipe identifiée et audits récents, mais ${r.majorIncidents.startsWith("Aucun") ? "concentration des holders ou validateurs à surveiller" : r.majorIncidents.toLowerCase()}. C'est typiquement le profil d'une crypto où la thèse fondamentale est solide, mais où il faut sizer raisonnablement (pas plus de 1-3 % du portefeuille crypto) et accepter une volatilité supérieure à celle des Top 10.`;
+      return `${c.name} est un projet sérieux mais avec quelques zones d'ombre qu'il faut accepter. Score de fiabilité ${fmtFr(score, 1)}/10 : équipe identifiée et audits récents, mais ${r.majorIncidents.startsWith("Aucun") ? "concentration des holders ou validateurs à surveiller" : r.majorIncidents.toLowerCase()}. C'est typiquement le profil d'une crypto où la thèse fondamentale est solide, mais où il faut sizer raisonnablement (pas plus de 1-3 % du portefeuille crypto) et accepter une volatilité supérieure à celle des Top 10.`;
     }
-    return `${c.name} est intéressant sur le papier mais notre score de fiabilité de ${score.toFixed(1)}/10 reflète des risques structurels non négligeables : ${c.risks[0]?.toLowerCase() ?? "concentration ou liquidité limitée"}. Le projet n'est pas un scam — équipe identifiée, code ouvert, audits faits — mais il appartient à la catégorie "haute conviction / petite position" où le ratio risque/rendement n'est pas symétrique pour la plupart des investisseurs.`;
+    return `${c.name} est intéressant sur le papier mais notre score de fiabilité de ${fmtFr(score, 1)}/10 reflète des risques structurels non négligeables : ${c.risks[0]?.toLowerCase() ?? "concentration ou liquidité limitée"}. Le projet n'est pas un scam — équipe identifiée, code ouvert, audits faits — mais il appartient à la catégorie "haute conviction / petite position" où le ratio risque/rendement n'est pas symétrique pour la plupart des investisseurs.`;
   }
 
   // Top10
@@ -353,7 +357,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
     const g = c as HiddenGem;
     faq.push({
       q: `${g.name} est-il un projet fiable ?`,
-      a: `Notre score de fiabilité Cryptoreflex est de ${g.reliability.score.toFixed(1)}/10. Critères validés : équipe ${g.reliability.teamIdentified ? "identifiée publiquement" : "anonyme"}, code ${g.reliability.openSource ? "open-source" : "non ouvert"}, ${g.reliability.yearsActive} années d'activité, audits par ${g.reliability.auditedBy.join(", ")} (${g.reliability.lastAuditDate}). Incidents : ${g.reliability.majorIncidents}. Levée de fonds : ${g.reliability.fundingRaised}.`,
+      a: `Notre score de fiabilité Cryptoreflex est de ${fmtFr(g.reliability.score, 1)}/10. Critères validés : équipe ${g.reliability.teamIdentified ? "identifiée publiquement" : "anonyme"}, code ${g.reliability.openSource ? "open-source" : "non ouvert"}, ${g.reliability.yearsActive} années d'activité, audits par ${g.reliability.auditedBy.join(", ")} (${g.reliability.lastAuditDate}). Incidents : ${g.reliability.majorIncidents}. Levée de fonds : ${g.reliability.fundingRaised}.`,
     });
     faq.push({
       q: `Quels sont les principaux risques de ${g.name} ?`,
@@ -415,7 +419,7 @@ export default async function CryptoPage({ params }: Props) {
   if (!c) {
     const fiche = await getCryptoFiche(canonical);
     if (!fiche) notFound();
-    return <LLMFicheView fiche={fiche} />;
+    return <LLMFicheView fiche={fiche} knownIds={await getLinkableCryptoIds()} />;
   }
 
   const detail = await fetchCoinDetail(c.coingeckoId);
@@ -1323,7 +1327,7 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
       <section className="mt-12">
         <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
           <ShieldCheck className="h-6 w-6 text-primary" />
-          Reliability score : {r.score.toFixed(1)}/10 — détail
+          Score de fiabilité : {fmtFr(r.score, 1)}/10 — détail
         </h2>
         <p className="mt-2 text-sm text-muted max-w-3xl">
           Sept critères publics, vérifiables sur sources ouvertes (GitHub, registres, audits).

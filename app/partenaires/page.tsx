@@ -50,7 +50,7 @@ export default function PartnersPage() {
   const featured = getFeaturedPartners();
 
   return (
-    <main id="main-content" className="min-h-[80vh]">
+    <div id="main-content" className="min-h-[80vh]">
       {/* HERO VITRINE */}
       <section
         aria-labelledby="partners-hero"
@@ -181,7 +181,7 @@ export default function PartnersPage() {
           </p>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 
@@ -296,7 +296,7 @@ function PartnerShowcase({
 
           {/* Bottom : main CTA + commission disclosure */}
           <div className="mt-auto space-y-3">
-            <Link
+            <Link prefetch={false}
               href={`/go/${partner.slug}?ctx=vitrine&pos=main-cta`}
               className="btn-primary btn-primary-shine w-full min-h-[52px] inline-flex items-center justify-center gap-2 group/cta"
               rel="sponsored noopener"
@@ -392,7 +392,7 @@ function ProductTile({
 }) {
   const Icon = product.Icon;
   return (
-    <Link
+    <Link prefetch={false}
       href={`/go/${partner.slug}?ctx=product&pos=${product.id}`}
       rel="sponsored noopener"
       target="_blank"

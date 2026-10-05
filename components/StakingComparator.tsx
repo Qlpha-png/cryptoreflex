@@ -15,6 +15,7 @@ import {
 import type { StakingPair } from "@/lib/programmatic";
 import { getPlatformById, isAvailableFr } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
 /*  Types & constantes                                                 */
@@ -201,7 +202,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
           <div className="text-xs font-mono text-muted">{pair.symbol}</div>
         </div>
         <span className="shrink-0 rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-xs font-mono font-semibold text-success">
-          {pair.apyMin}% – {pair.apyMax}%
+          {fmtNb(pair.apyMin)}% – {fmtNb(pair.apyMax)}%
         </span>
       </header>
 
@@ -395,12 +396,12 @@ export default function StakingComparator({ pairs }: Props) {
         <StatPill label="Affichées" value={`${shown} / ${total}`} />
         <StatPill
           label="APY moyen"
-          value={shown > 0 ? `${stats.avg.toFixed(1)}%` : "—"}
+          value={shown > 0 ? `${fmtFr(stats.avg, 1)}%` : "—"}
           tone="success"
         />
         <StatPill
           label="APY max"
-          value={shown > 0 ? `${stats.max.toFixed(1)}%` : "—"}
+          value={shown > 0 ? `${fmtFr(stats.max, 1)}%` : "—"}
           tone="success"
         />
         <StatPill

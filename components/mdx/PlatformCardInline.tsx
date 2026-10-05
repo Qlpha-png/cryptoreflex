@@ -3,6 +3,7 @@ import { Star, ShieldCheck, Sparkles } from "lucide-react";
 import { getPlatformById, feeShort } from "@/lib/platforms";
 import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "@/components/PlatformLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 interface PlatformCardInlineProps {
   /** ID dans `data/platforms.json` (ex: "bitpanda"). */
@@ -58,7 +59,7 @@ export default function PlatformCardInline({
         <div className="flex flex-1 flex-wrap items-center gap-3 text-xs text-white/80 sm:justify-end">
           <span className="inline-flex items-center gap-1 rounded-full bg-elevated px-2.5 py-1 font-semibold">
             <Star className="h-3.5 w-3.5 text-primary-glow" aria-hidden />
-            {p.scoring.global.toFixed(1)} / 5
+            {fmtFr(p.scoring.global, 1)} / 5
           </span>
           {p.mica.micaCompliant && (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 font-semibold text-emerald-300">

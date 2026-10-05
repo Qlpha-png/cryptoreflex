@@ -30,6 +30,7 @@ import {
   MICA_TRANSITION_NOTICE,
 } from "@/lib/legal-disclaimers";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata SEO                                                              */
@@ -40,8 +41,9 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
   title: "Transparence et partenariats",
-  description:
+  description: fitDescription(
     "Liste exhaustive de nos partenariats d'affiliation, statut MiCA/CASP de chaque plateforme, type de rémunération perçue et engagement éditorial. Conformité loi Influenceurs juin 2023.",
+  ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: `Transparence et partenariats — ${BRAND.name}`,
@@ -117,7 +119,7 @@ const PAGE_LAST_UPDATED = "2026-04-30";
 interface PartnerRowMinimal {
   id: string;
   name: string;
-  logo: string;
+  logo: string | null;
   category: string;
   mica: {
     status: string;
@@ -645,13 +647,19 @@ function PartnershipRow({
       <td className="px-4 py-3 align-top">
         <div className="flex items-center gap-2.5">
           <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 ring-1 ring-border overflow-hidden">
-            <Image
-              src={row.logo}
-              alt=""
-              width={20}
-              height={20}
-              className="object-contain"
-            />
+            {row.logo ? (
+              <Image
+                src={row.logo}
+                alt=""
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+            ) : (
+              <span aria-hidden="true" className="text-[11px] font-bold text-fg/70">
+                {row.name.slice(0, 1)}
+              </span>
+            )}
           </span>
           <div>
             <div className="font-semibold text-fg">{row.name}</div>

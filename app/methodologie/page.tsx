@@ -115,7 +115,7 @@ export default function MethodologiePage() {
       </p>
       <p className="text-fg/85 leading-relaxed">
         Exemple de calcul (modèle générique) : si une plateforme obtient
-        Frais 3.0/5 (×20%) + Sécurité 4.7/5 (×25%) + MiCA 4.9/5 (×20%) + UX 4.6/5 (×15%) + Support 4.2/5 (×10%) + Catalogue 5.0/5 (×10%), son score consolidé est <strong>4.4/5</strong>.
+        Frais 3,0/5 (×20 %) + Sécurité 4,7/5 (×25 %) + MiCA 4,9/5 (×20 %) + UX 4,6/5 (×15 %) + Support 4,2/5 (×10 %) + Catalogue 5,0/5 (×10 %), son score consolidé est <strong>4,4/5</strong>.
         Le calcul est public, déterministe et recalculé automatiquement
         (cf. <code className="text-primary-soft">scripts/compute-platform-scores.mjs</code>) à chaque mise à jour
         d&apos;une sous-note. Aucun score ne dérive jamais de la formule.
@@ -214,7 +214,7 @@ export default function MethodologiePage() {
             Widgets embed
           </div>
           <p className="mt-1 text-sm text-muted">
-            3 widgets JavaScript prêts à coller (badge MiCA, countdown,
+            3 widgets JavaScript prêts à coller (statut MiCA, encart MiCA,
             top cryptos). Vanilla JS, &lt; 5 Ko gzippé.
           </p>
           <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">

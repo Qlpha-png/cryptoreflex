@@ -59,7 +59,7 @@ export function GET() {
         path: "/api/public/psan-registry",
         url: `${baseUrl}/api/public/psan-registry`,
         description:
-          "Registre PSAN (FR) + statut MiCA (UE) consolidé : agrément AMF, autorisation CASP, passeporting UE, risque deadline juillet 2026.",
+          "Registre PSAN (FR) + statut MiCA (UE) consolidé : agrément AMF, autorisation CASP, passeport UE, accès au marché français depuis le 1er juillet 2026.",
         responseShape:
           "{ _meta, platforms: [{ id, name, psanStatus, amfRegistration, micaStatus, atRiskJuly2026, ... }] }",
         updateFrequency: "monthly",

@@ -12,6 +12,7 @@
 import { Briefcase, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { PortfolioSummary } from "@/lib/portfolio-types";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
+import { fmtFr } from "@/lib/format-fr";
 
 interface PortfolioTotalsProps {
   summary: PortfolioSummary;
@@ -61,7 +62,7 @@ export default function PortfolioTotals({ summary }: PortfolioTotalsProps) {
         </div>
         <div className="mt-2 text-2xl sm:text-3xl font-extrabold tabular-nums">
           {totalChange24hPct >= 0 ? "+" : ""}
-          {totalChange24hPct.toFixed(2)} %
+          {fmtFr(totalChange24hPct, 2)} %
         </div>
         <div className="mt-1 text-sm font-semibold tabular-nums opacity-80">
           {totalChange24hEur >= 0 ? "+" : ""}

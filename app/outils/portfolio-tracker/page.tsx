@@ -19,6 +19,7 @@ import {
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /* Pas d'ISR particulier — la page est statique, le composant est Client. */
 export const revalidate = 86400;
@@ -48,8 +49,8 @@ const PAGE_PATH = "/outils/portfolio-tracker";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
+  title: fitTitle(PAGE_TITLE),
+  description: fitDescription(PAGE_DESCRIPTION),
   alternates: {
     canonical: PAGE_PATH,
     languages: { "fr-FR": PAGE_URL },

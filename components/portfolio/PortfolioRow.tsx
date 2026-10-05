@@ -13,6 +13,7 @@
 import { Trash2, AlertCircle } from "lucide-react";
 import type { PortfolioWithPrices } from "@/lib/portfolio-types";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 interface PortfolioRowProps {
   row: PortfolioWithPrices;
@@ -43,7 +44,7 @@ function fmtQty(value: number): string {
 function fmtPct(value: number | null): string {
   if (value === null || !Number.isFinite(value)) return "—";
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)} %`;
+  return `${sign}${fmtFr(value, 2)} %`;
 }
 
 export default function PortfolioRow({
@@ -108,7 +109,7 @@ export default function PortfolioRow({
 
       {/* Part % */}
       <td className="py-3 px-3 sm:px-4 text-right tabular-nums text-sm text-muted hidden md:table-cell">
-        {sharePct.toFixed(1)} %
+        {fmtFr(sharePct, 1)} %
       </td>
 
       {/* Variation 24h */}

@@ -97,7 +97,7 @@ export default function ComparerHubClient({ cryptos }: Props) {
               </>
             ) : (
               <>
-                <strong className="text-fg">{cryptos.length}</strong> cryptos analysees
+                <strong className="text-fg">{cryptos.length}</strong> cryptos analysées
                 — tape un nom pour filtrer
               </>
             )}

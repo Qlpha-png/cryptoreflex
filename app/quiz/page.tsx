@@ -17,6 +17,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 /**
  * /quiz — Hub Quiz (P0-5 audit-back-live-final).
@@ -37,7 +38,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,

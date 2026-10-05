@@ -29,6 +29,8 @@ import {
   graphSchema,
 } from "@/lib/schema";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { fmtNb } from "@/lib/format-fr";
 
 /**
  * /airdrops — Hub editorial des airdrops crypto FR (BLOC 3, 2026-05-04).
@@ -56,8 +58,8 @@ const DESCRIPTION =
   "Tous les airdrops crypto importants en 2026 : Linea, Morpho, Monad, MegaETH, EigenLayer... Statut live/clôturé/à venir, critères d'éligibilité vérifiables, lien officiel, niveau de risque. Source Cryptoreflex.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -349,7 +351,7 @@ function AirdropCard({ airdrop: a }: { airdrop: Airdrop }) {
         {a.expectedAllocationPct != null && (
           <Cell
             label="% airdrop"
-            value={`${a.expectedAllocationPct}% du supply`}
+            value={`${fmtNb(a.expectedAllocationPct)} % de l'offre totale`}
           />
         )}
         <Cell

@@ -23,6 +23,7 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
@@ -43,10 +44,10 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 export const metadata: Metadata = {
-  title:
-    "Sponsoring & placements B2B — articles, comparateur, newsletter",
-  description:
-    "PSAN, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
+  title: fitTitle("Sponsoring & placements B2B — articles, comparateur, newsletter"),
+  description: fitDescription(
+    "Plateforme agréée MiCA, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
+  ),
   alternates: withHreflang(`${BRAND.url}/sponsoring`),
   openGraph: {
     title: "Sponsoriser un placement Cryptoreflex",

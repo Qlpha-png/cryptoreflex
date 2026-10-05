@@ -7,6 +7,7 @@ import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 // Lazy-load : Client lourd (compare 5+ providers, calcul on input change).
 const CalculateurApyStaking = dynamic(
@@ -23,9 +24,10 @@ const CalculateurApyStaking = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Calculateur APY staking crypto 2026 — ETH, SOL, ADA, DOT, ATOM, NEAR",
-  description:
+  title: fitTitle("Calculateur APY staking crypto 2026 — ETH, SOL, ADA, DOT, ATOM, NEAR"),
+  description: fitDescription(
     "Calculez vos récompenses de staking en EUR sur ETH, SOL, ADA, DOT, ATOM, NEAR. Comparez staking direct vs liquid staking (Lido, Marinade) vs CEX (Coinbase, Kraken). APY indicatifs Q1 2026.",
+  ),
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/calculateur-apy-staking"),
   openGraph: {
     title: "Calculateur APY staking crypto — comparatif 2026",

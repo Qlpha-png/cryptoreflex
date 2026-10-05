@@ -7,7 +7,8 @@ import { ExternalLink, BarChart3, Coins, Calendar, Bot } from "lucide-react";
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
 import { resolveCoingeckoId } from "@/lib/crypto-aliases";
-import { cryptoPagePath } from "@/lib/crypto-page-slug";
+import { linkableCryptoPath } from "@/lib/crypto-links";
+import { corrigerAccentsProfond } from "@/lib/fr-accents";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
@@ -76,8 +77,9 @@ const SCORE_LABELS: Record<string, string> = {
   overall: "Score global",
 };
 
-export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
-  const llm = (fiche.llm_content || {}) as LLMContent;
+export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds: ReadonlySet<string> }) {
+  // texte généré par IA : accents manquants rétablis à l'affichage (lib/fr-accents.ts, audit du 05/10/2026)
+  const llm = corrigerAccentsProfond((fiche.llm_content || {}) as LLMContent);
   const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
 
   // BUG G fix (2026-05-09) — homogénéise le JSON-LD avec les fiches
@@ -290,18 +292,16 @@ export function LLMFicheView({ fiche }: { fiche: CryptoFicheRow }) {
           <h2 className="text-xl font-semibold mb-3">Concurrents directs</h2>
           <ul className="space-y-2">
             {llm.competitors.map((cp, i) => {
-              // Fix audit 2026-05-09 : 62% des coingeckoId LLM-generated étaient
-              // hallucinés (404). On résout via aliases + blacklist (cf.
-              // lib/crypto-aliases.ts) ; si null → on rend juste le name en
-              // span pour ne JAMAIS produire de lien mort côté SEO/UX.
-              const resolvedId = resolveCoingeckoId(cp.coingeckoId);
-              const isLinkable = resolvedId !== null;
+              // Identifiants générés par IA souvent approximatifs : alias connus, puis lien SEULEMENT si la fiche est
+              // publiée (lib/crypto-links.ts) ; sinon le nom seul. Audit 05/10/2026 : 214 liens menaient à une fiche
+              // introuvable (200 + noindex).
+              const href = linkableCryptoPath(cp.coingeckoId, knownIds);
               return (
                 <li key={i} className="rounded-xl border bg-card p-4">
                   <div className="font-medium">
-                    {isLinkable ? (
+                    {href ? (
                       <Link
-                        href={cryptoPagePath(resolvedId)}
+                        href={href}
                         className="hover:underline"
                       >
                         {cp.name}

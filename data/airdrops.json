@@ -1,10 +1,10 @@
 {
   "_meta": {
     "lastUpdated": "2026-10-03",
-    "source": "Recherche editoriale Cryptoreflex (a recouper avec annonces officielles avant claim)",
+    "source": "Recherche éditoriale Cryptoreflex (à recouper avec les annonces officielles avant tout claim)",
     "schemaVersion": "1.0",
-    "disclaimer": "Les airdrops crypto evoluent vite. Verifie toujours l'URL officielle du projet AVANT de connecter votre wallet. Les fake airdrops sont la 1ere source de drainer de wallet en 2026.",
-    "statusLegend": "live = claim en cours | upcoming = annonce mais pas encore ouvert | claimed = distribue mais claim window encore active | expired = claim window terminee (valeur historique conservee)"
+    "disclaimer": "Les airdrops crypto évoluent vite. Vérifiez toujours l'adresse officielle du projet AVANT de connecter votre wallet. Les faux airdrops sont l'une des premières causes de vidage de wallet (drainers).",
+    "statusLegend": "live = claim en cours | upcoming = annoncé mais pas encore ouvert | claimed = distribué, fenêtre de claim encore ouverte | expired = fenêtre de claim terminée (fiche conservée pour l'historique)"
   },
   "airdrops": [
     {
@@ -19,7 +19,7 @@
       "fdvEstimateUsd": null,
       "eligibilityCriteria": [
         "Bridge ETH vers Linea avant le snapshot du 2025-09-09",
-        "10+ transactions on-chain Linea",
+        "Plus de 10 transactions on-chain sur Linea",
         "Détenir plus de 0,1 ETH bridgé"
       ],
       "expectedAllocationPct": 9,
@@ -42,7 +42,7 @@
       "fdvEstimateUsd": 1500000000,
       "eligibilityCriteria": [
         "Bridge ETH vers Scroll avant 2025-10-19",
-        "Activite DeFi (Aave, Pendle, Ambient)",
+        "Activité DeFi (Aave, Pendle, Ambient)",
         "NFT Galxe Scroll Origins"
       ],
       "expectedAllocationPct": 7,
@@ -51,7 +51,7 @@
       "explainerUrl": "https://scroll.io/blog/airdrop-introducing-scr-token-genesis",
       "officialDomain": "scroll.io",
       "riskLevel": "low",
-      "notes": "Periode de claim cloturee. Tokens distribues a 567k wallets."
+      "notes": "Période de claim clôturée. Tokens distribués à 567 000 wallets."
     },
     {
       "id": "hyperliquid-airdrop",
@@ -65,7 +65,7 @@
       "fdvEstimateUsd": 6000000000,
       "eligibilityCriteria": [
         "Trading volume sur Hyperliquid avant snapshot",
-        "Points farming pre-token (saison 1)"
+        "Points farming avant le token (saison 1)"
       ],
       "expectedAllocationPct": 31,
       "totalSupply": 1000000000,
@@ -73,7 +73,7 @@
       "explainerUrl": "https://hyperliquid-co.gitbook.io/community-docs/aboutorange/hype-token",
       "officialDomain": "hyperliquid.xyz",
       "riskLevel": "low",
-      "notes": "Un des airdrops les plus genereux de 2024 : 31% du supply distribue gratuitement aux traders (vs 5-10% chez la moyenne). FDV ~6Md$ a peak."
+      "notes": "Un des airdrops les plus généreux de 2024 : 31 % de l'offre distribuée gratuitement aux traders (contre 5 à 10 % en moyenne). FDV d'environ 6 Md$ au sommet."
     },
     {
       "id": "blast-airdrop",
@@ -95,7 +95,7 @@
       "explainerUrl": "https://blast.io/en/airdrop",
       "officialDomain": "blast.io",
       "riskLevel": "medium",
-      "notes": "Critique pour l'unlock vesting agressif. Prix divise par 5 dans les 3 mois post-airdrop."
+      "notes": "Critiqué pour son calendrier de déblocage agressif. Prix divisé par 5 dans les 3 mois suivant l'airdrop."
     },
     {
       "id": "zk-airdrop",
@@ -109,7 +109,7 @@
       "fdvEstimateUsd": 4500000000,
       "eligibilityCriteria": [
         "Bridge ETH vers ZKsync Era avant 2024-03-24",
-        "10+ transactions sur 6 mois",
+        "Plus de 10 transactions sur 6 mois",
         "Volume DeFi > 100$"
       ],
       "expectedAllocationPct": 17.5,
@@ -118,7 +118,7 @@
       "explainerUrl": "https://blog.zknation.io/introducing-zk-token",
       "officialDomain": "zknation.io",
       "riskLevel": "low",
-      "notes": "Critique sur le seuil eligibilite : 31% des wallets actifs eligibles seulement. Forte deception communautaire malgre ~700M$ distribues."
+      "notes": "Critiqué pour son seuil d'éligibilité : seulement 31 % des wallets actifs éligibles. Forte déception de la communauté malgré environ 700 M$ distribués."
     },
     {
       "id": "starknet-airdrop",
@@ -131,8 +131,8 @@
       "claimEndDate": "2024-06-20",
       "fdvEstimateUsd": 14000000000,
       "eligibilityCriteria": [
-        "Activite Starknet (deploiement, bridge, dApps)",
-        "Github contributors Starknet ecosystem",
+        "Activité Starknet (déploiement, bridge, dApps)",
+        "Contributeurs GitHub de l'écosystème Starknet",
         "Stark Stoners NFT holders"
       ],
       "expectedAllocationPct": 7,
@@ -141,7 +141,7 @@
       "explainerUrl": "https://www.starknet.io/blog/strk-token-airdrop",
       "officialDomain": "starknet.io",
       "riskLevel": "low",
-      "notes": "Airdrop \"Provisions\" distribue a 1.3M+ wallets. FDV peak ~14Md$."
+      "notes": "Airdrop « Provisions » distribué à plus de 1,3 million de wallets. FDV d'environ 14 Md$ au sommet."
     },
     {
       "id": "berachain-airdrop",
@@ -155,8 +155,8 @@
       "fdvEstimateUsd": 3000000000,
       "eligibilityCriteria": [
         "Bong Bears NFT holders",
-        "Testnet Artio activite",
-        "Testnet Bartio activite",
+        "Testnet Artio activité",
+        "Testnet Bartio activité",
         "Boyco vault depositors"
       ],
       "expectedAllocationPct": 16.8,
@@ -165,7 +165,7 @@
       "explainerUrl": "https://blog.berachain.com/blog/airdrop-update",
       "officialDomain": "berachain.com",
       "riskLevel": "low",
-      "notes": "Modele \"Proof of Liquidity\" inedit. Mainnet launch 6 fevrier 2025. Communaute tres active."
+      "notes": "Modèle « Proof of Liquidity » inédit. Lancement du réseau principal le 6 février 2025. Communauté très active."
     },
     {
       "id": "morpho-airdrop",
@@ -188,7 +188,7 @@
       "explainerUrl": "https://docs.morpho.org/governance/morpho-token",
       "officialDomain": "morpho.org",
       "riskLevel": "low",
-      "notes": "Distribution progressive. Pas de claim deadline strict (legacy claims OK)."
+      "notes": "Distribution progressive, sans date limite stricte de claim."
     },
     {
       "id": "monad-points",
@@ -225,8 +225,8 @@
       "fdvEstimateUsd": null,
       "eligibilityCriteria": [
         "Mint MegaETH NFT (waitlist)",
-        "Testnet activite",
-        "dApps partenaires usage"
+        "Testnet activité",
+        "Utilisation des dApps partenaires"
       ],
       "expectedAllocationPct": null,
       "totalSupply": null,
@@ -234,7 +234,7 @@
       "explainerUrl": "https://megaeth.com",
       "officialDomain": "megaeth.com",
       "riskLevel": "medium",
-      "notes": "Mainnet TBD 2026. Forte hype sur la latence sub-millseconde."
+      "notes": "Date du réseau principal à vérifier sur le site officiel. Fort engouement pour sa latence inférieure à la milliseconde."
     },
     {
       "id": "fuel-airdrop",
@@ -248,7 +248,7 @@
       "fdvEstimateUsd": 800000000,
       "eligibilityCriteria": [
         "Forta Tokens holders",
-        "Testnet activite",
+        "Testnet activité",
         "Sway language contributors"
       ],
       "expectedAllocationPct": 6,
@@ -257,7 +257,7 @@
       "explainerUrl": "https://fuel.network/blog/fuel-token-airdrop",
       "officialDomain": "fuel.network",
       "riskLevel": "low",
-      "notes": "Airdrop discret mais propre. Communaute developers solide."
+      "notes": "Airdrop discret mais propre. Communauté de développeurs solide."
     },
     {
       "id": "eigenlayer-airdrop-s2",
@@ -272,7 +272,7 @@
       "eligibilityCriteria": [
         "Restakers ETH ou LSTs sur EigenLayer",
         "Operators d'AVS",
-        "Long stakers (boost duree)"
+        "Stakers de long terme (bonus de durée)"
       ],
       "expectedAllocationPct": 5,
       "totalSupply": 1670000000,
@@ -280,7 +280,7 @@
       "explainerUrl": "https://blog.eigenlayer.xyz/eigen-token",
       "officialDomain": "eigenlayer.xyz",
       "riskLevel": "low",
-      "notes": "S1 + S2 cumules ~5% du supply. Token a transferabilite limitee initialement (long terme)."
+      "notes": "Saisons 1 et 2 cumulées : environ 5 % de l'offre. Token d'abord peu transférable."
     }
   ]
 }

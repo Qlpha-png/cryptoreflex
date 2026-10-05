@@ -157,7 +157,7 @@ export default function Cerfa2086AutoPage() {
         ])}
       />
 
-      <main className="min-h-screen pb-24">
+      <div className="min-h-screen pb-24">
         {/* ============================ Hero ============================ */}
         <section className="relative py-14 sm:py-20">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -313,7 +313,7 @@ export default function Cerfa2086AutoPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

@@ -69,7 +69,7 @@ export default async function PreviewPdfPage({ params }: PageProps) {
 
   /* ----------- Cas nominal : on rend le PDF preview ----------- */
   return (
-    <main className="min-h-screen bg-slate-100 py-6 sm:py-10 print:bg-white print:py-0">
+    <div className="min-h-screen bg-slate-100 py-6 sm:py-10 print:bg-white print:py-0">
       <PdfPreview
         email={session.email}
         input={session.data.input}
@@ -77,6 +77,6 @@ export default async function PreviewPdfPage({ params }: PageProps) {
         calculatedAt={session.calculatedAt}
       />
       <PrintButton />
-    </main>
+    </div>
   );
 }

@@ -17,6 +17,8 @@
  *     per pair). Removed.
  */
 
+import { fmtFr } from "@/lib/format-fr";
+
 /**
  * Pearson correlation coefficient between two equal-length numeric series.
  *
@@ -71,11 +73,11 @@ export function describeCorrelation(r: number): string {
   if (Number.isNaN(r)) return "Donnée non disponible";
   const abs = Math.abs(r);
   const sign = r >= 0 ? "positive" : "négative";
-  if (abs >= 0.85) return `Corrélation ${sign} très forte (${r.toFixed(2)})`;
-  if (abs >= 0.6) return `Corrélation ${sign} forte (${r.toFixed(2)})`;
-  if (abs >= 0.3) return `Corrélation ${sign} modérée (${r.toFixed(2)})`;
-  if (abs >= 0.1) return `Corrélation ${sign} faible (${r.toFixed(2)})`;
-  return `Quasi indépendantes (${r.toFixed(2)})`;
+  if (abs >= 0.85) return `Corrélation ${sign} très forte (${fmtFr(r, 2)})`;
+  if (abs >= 0.6) return `Corrélation ${sign} forte (${fmtFr(r, 2)})`;
+  if (abs >= 0.3) return `Corrélation ${sign} modérée (${fmtFr(r, 2)})`;
+  if (abs >= 0.1) return `Corrélation ${sign} faible (${fmtFr(r, 2)})`;
+  return `Quasi indépendantes (${fmtFr(r, 2)})`;
 }
 
 /**

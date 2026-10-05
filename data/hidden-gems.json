@@ -70,7 +70,7 @@
       "name": "Celestia",
       "symbol": "TIA",
       "coingeckoId": "celestia",
-      "marketCapRange": "500M$ - 1.5Md$",
+      "marketCapRange": "500M$ - 1,5Md$",
       "yearCreated": 2023,
       "category": "Modular Blockchain / Data Availability",
       "tagline": "La première blockchain modulaire dédiée à la disponibilité des données",
@@ -216,7 +216,7 @@
       "name": "Ondo Finance",
       "symbol": "ONDO",
       "coingeckoId": "ondo-finance",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2021,
       "category": "Real World Assets (RWA)",
       "tagline": "Tokenisation institutionnelle de bons du Trésor américain et obligations",
@@ -265,7 +265,7 @@
       "name": "Arbitrum",
       "symbol": "ARB",
       "coingeckoId": "arbitrum",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2021,
       "category": "Layer 2 Ethereum",
       "tagline": "Le L2 Ethereum dominant en TVL avec le plus large écosystème DeFi",
@@ -365,7 +365,7 @@
       "name": "Filecoin",
       "symbol": "FIL",
       "coingeckoId": "filecoin",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2020,
       "category": "DePIN / Stockage décentralisé",
       "tagline": "Le réseau de stockage décentralisé qui rivalise avec AWS S3",
@@ -563,7 +563,7 @@
       "name": "Cosmos",
       "symbol": "ATOM",
       "coingeckoId": "cosmos",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2019,
       "category": "Layer 0 / Interopérabilité",
       "tagline": "L'Internet des Blockchains : chaque app sa propre chaine, toutes connectées",
@@ -617,7 +617,7 @@
       "category": "Layer 1 / Smart contracts",
       "tagline": "La blockchain orientée objets conçue par les ex-architectes du projet Diem de Meta",
       "what": "Sui est une blockchain Layer 1 fondée par Mysten Labs, équipe issue du projet Diem (ex-Libra) de Meta. Elle utilise le langage Move et un modèle 'orient objet' qui permet d'exécuter en parallèle des transactions indépendantes, atteignant des débits très élevés.",
-      "whyHiddenGem": "Architecture technique innovante adoptée par le gaming Web3 et la DeFi haute frequence. Croissance rapide en TVL et utilisateurs en 2024-2025. Onboarding facilité via zkLogin (connexion Google/Apple sans seed phrase).",
+      "whyHiddenGem": "Architecture technique innovante adoptée par le gaming Web3 et la DeFi haute fréquence. Croissance rapide en TVL et utilisateurs en 2024-2025. Onboarding facilité via zkLogin (connexion Google/Apple sans seed phrase).",
       "reliability": {
         "score": 7,
         "teamIdentified": true,
@@ -644,7 +644,7 @@
         "Jeunesse du projet : moins de 3 ans en mainnet, recul limite sur la robustesse",
         "Lien historique avec FTX (ex-investisseur), risque de pression vendeuse via la liquidation"
       ],
-      "useCase": "Gaming on-chain, DeFi haute frequence, NFT dynamiques, social Web3, paiements",
+      "useCase": "Gaming on-chain, DeFi haute fréquence, NFT dynamiques, social Web3, paiements",
       "whereToBuy": [
         "Coinbase",
         "Kraken",
@@ -719,14 +719,14 @@
       "category": "Layer 1 / DLT enterprise",
       "tagline": "La DLT enterprise gouvernée par Google, IBM, Boeing et jusqu'à 39 multinationales",
       "what": "Hedera n'est pas une blockchain classique mais un DLT (Distributed Ledger) base sur l'algorithme Hashgraph (consensus aBFT). Elle est gouvernée par un Conseil pouvant compter jusqu'à 39 membres (Google, IBM, Boeing, LG, Standard Bank, Deutsche Telekom...) qui gèrent les nœuds.",
-      "whyHiddenGem": "Adoption enterprise réelle (tokenisation par Standard Bank, identité par Avery Dennison). Frais ultra-bas (0.0001$). Fait partie des rares blockchains conformes a la réglementation US et MiCA. Carbon negative officiellement.",
+      "whyHiddenGem": "Adoption enterprise réelle (tokenisation par Standard Bank, identité par Avery Dennison). Frais ultra-bas (0,0001$). Fait partie des rares blockchains conformes a la réglementation US et MiCA. Carbon negative officiellement.",
       "reliability": {
         "score": 8,
         "teamIdentified": true,
         "openSource": true,
         "auditedBy": [
-          "Carnegie Mellon (academique)",
-          "FormVerified (verification formelle)"
+          "Carnegie Mellon (académique)",
+          "FormVerified (vérification formelle)"
         ],
         "lastAuditDate": "2024-11",
         "yearsActive": 7,
@@ -765,7 +765,7 @@
       "category": "Layer 1 / Paiements",
       "tagline": "Le rail de paiement crypto pour les remises et la finance inclusive",
       "what": "Stellar est une blockchain Layer 1 spécialisée dans les paiements transfrontaliers et l'émission d'actifs (stablecoins, monnaies tokenisées). Cofondée par Jed McCaleb (cofondateur de Ripple), elle vise les zones bancarisées insuffisamment.",
-      "whyHiddenGem": "Partenariats réels avec MoneyGram, Circle (USDC natif sur Stellar), Franklin Templeton (fonds tokenisé BENJI). Frais quasi nuls (<0.001$). Lancement de Soroban (smart contracts) en 2024 a relancé l'écosystème dev.",
+      "whyHiddenGem": "Partenariats réels avec MoneyGram, Circle (USDC natif sur Stellar), Franklin Templeton (fonds tokenisé BENJI). Frais quasi nuls (<0,001$). Lancement de Soroban (smart contracts) en 2024 a relancé l'écosystème dev.",
       "reliability": {
         "score": 8.5,
         "teamIdentified": true,
@@ -776,7 +776,7 @@
         ],
         "lastAuditDate": "2025-05",
         "yearsActive": 12,
-        "majorIncidents": "Bug d'inflation en 2017 ayant créé 2.25Md XLM excédentaires (correctif appliqué, surplus brûlé). Aucun incident depuis.",
+        "majorIncidents": "Bug d'inflation en 2017 ayant créé 2,25Md XLM excédentaires (correctif appliqué, surplus brûlé). Aucun incident depuis.",
         "fundingRaised": "39M$ (Stellar Development Foundation, dotation initiale)",
         "backers": [
           "Stellar Development Foundation (non-profit)",
@@ -856,7 +856,7 @@
       "name": "Tezos",
       "symbol": "XTZ",
       "coingeckoId": "tezos",
-      "marketCapRange": "600M$ - 1.5Md$",
+      "marketCapRange": "600M$ - 1,5Md$",
       "yearCreated": 2018,
       "category": "Layer 1 / Smart contracts",
       "tagline": "La blockchain auto-évolutive privilégiée par les institutions et l'art digital",
@@ -869,7 +869,7 @@
         "auditedBy": [
           "Trail of Bits",
           "Nomadic Labs (peer review)",
-          "Inria (academique)"
+          "Inria (académique)"
         ],
         "lastAuditDate": "2025-04",
         "yearsActive": 8,
@@ -971,8 +971,8 @@
         ],
         "lastAuditDate": "2025-09",
         "yearsActive": 5,
-        "majorIncidents": "Procès SEC 2020 contre Telegram (1.7Md$ a rembourser, projet abandonné par Telegram). Arrestation de Pavel Durov en France (août 2024) a fait chuter TON de 30%. Aucun hack réseau majeur.",
-        "fundingRaised": "1.7Md$ (ICO 2018, remboursé par Telegram), reprise communautaire ensuite",
+        "majorIncidents": "Procès SEC 2020 contre Telegram (1,7Md$ a rembourser, projet abandonné par Telegram). Arrestation de Pavel Durov en France (août 2024) a fait chuter TON de 30%. Aucun hack réseau majeur.",
+        "fundingRaised": "1,7Md$ (ICO 2018, remboursé par Telegram), reprise communautaire ensuite",
         "backers": [
           "TON Foundation",
           "Pantera Capital",
@@ -1003,7 +1003,7 @@
       "name": "Sei",
       "symbol": "SEI",
       "coingeckoId": "sei-network",
-      "marketCapRange": "800M$ - 2.5Md$",
+      "marketCapRange": "800M$ - 2,5Md$",
       "yearCreated": 2023,
       "category": "Layer 1 / Trading optimisé",
       "tagline": "Le Layer 1 spécialisé pour le trading on-chain ultra-rapide",
@@ -1035,7 +1035,7 @@
         "Concurrence directe de Solana, Injective, Hyperliquid sur le segment trading on-chain",
         "Calendrier de déblocage des tokens VC étalé jusqu'en 2027 (pression vendeuse continue)"
       ],
-      "useCase": "DEX a carnet d'ordres, dérivés perpetuels, trading haute frequence, RWA",
+      "useCase": "DEX à carnet d'ordres, dérivés perpétuels, trading haute fréquence, RWA",
       "whereToBuy": [
         "Coinbase",
         "Kraken",
@@ -1059,7 +1059,7 @@
       "category": "Layer 1 / Proof-of-Work",
       "tagline": "Le Proof-of-Work de nouvelle génération : la rapidité sans sacrifier la décentralisation",
       "what": "Kaspa est une blockchain Layer 1 Proof-of-Work qui utilise le protocole GhostDAG (un DAG, pas une chaine linéaire) permettant 1 bloc par seconde et plusieurs milliers de TPS, tout en conservant la sécurité du PoW. Pas de prévente, pas d'ICO, pas d'allocation insiders.",
-      "whyHiddenGem": "Lancé en 'fair launch' intégral (sans premine, sans VC) comme Bitcoin. Conception académique solide par Yonatan Sompolinsky (auteur du protocole GHOST cité dans le whitepaper Ethereum). Supply fixe (28.7Md KAS, émission déflationniste).",
+      "whyHiddenGem": "Lancé en 'fair launch' intégral (sans premine, sans VC) comme Bitcoin. Conception académique solide par Yonatan Sompolinsky (auteur du protocole GHOST cité dans le whitepaper Ethereum). Supply fixe (28,7Md KAS, émission déflationniste).",
       "reliability": {
         "score": 7,
         "teamIdentified": true,
@@ -1072,7 +1072,7 @@
         "majorIncidents": "Aucun hack majeur. Critiques sur l'absence d'audits formels par cabinets externes reconnus.",
         "fundingRaised": "0$ (fair launch, pas de prévente)",
         "backers": [
-          "Communaute uniquement (pas de VC)"
+          "Communauté uniquement (pas de VC)"
         ]
       },
       "risks": [
@@ -1118,7 +1118,7 @@
         "majorIncidents": "Bug d'inflation 2017 corrigé avant exploitation. Attaques mineures de spam transactionnel (résolues). Aucun hack majeur du protocole.",
         "fundingRaised": "0$ (fair launch, pas de prévente)",
         "backers": [
-          "Communaute (Monero Community Crowdfunding System)"
+          "Communauté (Monero Community Crowdfunding System)"
         ]
       },
       "risks": [
@@ -1147,7 +1147,7 @@
       "yearCreated": 2011,
       "category": "Layer 1 / Paiements PoW",
       "tagline": "L'argent face à l'or de Bitcoin : la crypto de paiement la plus ancienne et stable",
-      "what": "Litecoin est un fork de Bitcoin créé en 2011 par Charlie Lee (ex-Google, ex-Coinbase). Il vise les transactions plus rapides (bloc toutes les 2.5 minutes vs 10 pour BTC) et moins coûteuses. Supply fixe de 84M LTC. A intégré MimbleWimble (MWEB) en 2022 pour des transactions optionnellement privées.",
+      "what": "Litecoin est un fork de Bitcoin créé en 2011 par Charlie Lee (ex-Google, ex-Coinbase). Il vise les transactions plus rapides (bloc toutes les 2,5 minutes vs 10 pour BTC) et moins coûteuses. Supply fixe de 84M LTC. A intégré MimbleWimble (MWEB) en 2022 pour des transactions optionnellement privées.",
       "whyHiddenGem": "Une des cryptos les plus anciennes et stables, sans hack majeur en 14 ans. Adoption marchande réelle via BitPay, plus de 2000 commerçants. MimbleWimble a relancé l'intérêt privacy. ASIC-mineable mais décentralisé.",
       "reliability": {
         "score": 9,
@@ -1193,7 +1193,7 @@
       "category": "Layer 1 / Paiements PoW",
       "tagline": "Le hard fork historique de Bitcoin pour des paiements pas chers et rapides",
       "what": "Bitcoin Cash est un hard fork de Bitcoin survenu en août 2017, né du désaccord sur la taille des blocs. BCH a augmenté la taille des blocs (32 MB vs 1-4 MB pour BTC) afin de permettre plus de transactions à moindre coût, au prix d'une décentralisation réduite des nœuds.",
-      "whyHiddenGem": "Réseau historique avec 8 ans de fonctionnement sans hack du protocole. Frais réellement minimes (<0.01$). Smart contracts CashScript et CashTokens (2023) ont ouvert des cas d'usage NFT et tokens. Adoption significative en Amérique Latine (Bitcoin.com).",
+      "whyHiddenGem": "Réseau historique avec 8 ans de fonctionnement sans hack du protocole. Frais réellement minimes (<0,01$). Smart contracts CashScript et CashTokens (2023) ont ouvert des cas d'usage NFT et tokens. Adoption significative en Amérique Latine (Bitcoin.com).",
       "reliability": {
         "score": 7.5,
         "teamIdentified": true,
@@ -1206,7 +1206,7 @@
         "majorIncidents": "Hard fork BCH/BSV en novembre 2018 (chain split) qui a divisé la communauté. Pas de hack du protocole. Volatilité réputationnelle liée a Roger Ver.",
         "fundingRaised": "0$ (fork, pas d'ICO)",
         "backers": [
-          "Communaute (Bitcoin Cash Node, BCHD developers)"
+          "Communauté (Bitcoin Cash Node, BCHD developers)"
         ]
       },
       "risks": [
@@ -1297,7 +1297,7 @@
         ],
         "lastAuditDate": "n/a",
         "yearsActive": 12,
-        "majorIncidents": "Premine controversé au lancement (1.9M DASH créés en 2 jours, ~10% supply) admis par le fondateur Evan Duffield (bug de difficulty). Aucun hack technique majeur.",
+        "majorIncidents": "Premine controversé au lancement (1,9M DASH créés en 2 jours, ~10% supply) admis par le fondateur Evan Duffield (bug de difficulty). Aucun hack technique majeur.",
         "fundingRaised": "Trésorerie auto-financée via le réseau (10% des récompenses bloc)",
         "backers": [
           "Dash Core Group",
@@ -1343,7 +1343,7 @@
         "lastAuditDate": "2024-12",
         "yearsActive": 6,
         "majorIncidents": "Vulnérabilité 'xAPIC/AEPIC Leak' affectant les TEE Intel SGX révélée en 2022 a impacté la garantie de confidentialité (correctifs déployés). Aucun hack direct du réseau.",
-        "fundingRaised": "11.5M$",
+        "fundingRaised": "11,5M$",
         "backers": [
           "Arrington Capital",
           "Hashed",
@@ -1392,7 +1392,7 @@
         ],
         "lastAuditDate": "2025-09",
         "yearsActive": 6,
-        "majorIncidents": "Bug critique découvert en décembre 2021 sur Polygon PoS (3.8Md MATIC en risque), corrigé en silence avec un hard fork (controverse sur le manque de transparence). Hack de Galaxy Pool 2022 (mineur). Aucun fonds utilisateur perdu.",
+        "majorIncidents": "Bug critique découvert en décembre 2021 sur Polygon PoS (3,8Md MATIC en risque), corrigé en silence avec un hard fork (controverse sur le manque de transparence). Hack de Galaxy Pool 2022 (mineur). Aucun fonds utilisateur perdu.",
         "fundingRaised": "450M$ (incluant tour Polygon Labs 2022)",
         "backers": [
           "Sequoia Capital India",
@@ -1426,7 +1426,7 @@
       "name": "Optimism",
       "symbol": "OP",
       "coingeckoId": "optimism",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2021,
       "category": "Layer 2 Ethereum / Optimistic Rollup",
       "tagline": "L'Optimistic Rollup pionnier qui alimente la Superchain de Base et OP Mainnet",
@@ -1592,7 +1592,7 @@
           "Trail of Bits",
           "PeckShield",
           "ChainSecurity",
-          "Runtime Verification"
+          "Runtime Vérification"
         ],
         "lastAuditDate": "2024-08",
         "yearsActive": 9,
@@ -1700,7 +1700,7 @@
         "lastAuditDate": "2024-11",
         "yearsActive": 5,
         "majorIncidents": "Aucun exploit majeur, modèle robuste depuis 2021.",
-        "fundingRaised": "3.7M$",
+        "fundingRaised": "3,7M$",
         "backers": [
           "HashKey Capital",
           "Mechanism Capital",
@@ -1732,7 +1732,7 @@
       "name": "Curve DAO",
       "symbol": "CRV",
       "coingeckoId": "curve-dao-token",
-      "marketCapRange": "500M$ - 1.5Md$",
+      "marketCapRange": "500M$ - 1,5Md$",
       "yearCreated": 2020,
       "category": "DeFi / DEX Stableswap",
       "tagline": "L'AMM optimisé pour les stablecoins et actifs corrélés.",
@@ -1835,7 +1835,7 @@
       "yearCreated": 2021,
       "category": "DeFi / Perpetual DEX",
       "tagline": "Le perp DEX qui a démocratisé le trading on-chain sur Arbitrum.",
-      "what": "GMX est un DEX de produits dérivés perpetuels permettant de trader avec leverage jusqu'à 100x sur Arbitrum et Avalanche. Le pool GLP/GM agrège la liquidité et redistribue les fees aux holders de GMX et fournisseurs de liquidité.",
+      "what": "GMX est un DEX de produits dérivés perpétuels permettant de trader avec leverage jusqu'à 100x sur Arbitrum et Avalanche. Le pool GLP/GM agrège la liquidité et redistribue les fees aux holders de GMX et fournisseurs de liquidité.",
       "whyHiddenGem": "Modèle revenue-sharing rare en DeFi : les holders de GMX reçoivent une part des frais réels en ETH. GMX V2 introduit des pools isolés par marché, des frais réduits et un meilleur risk management. Précurseur d'un secteur (perp DEX) en plein boom.",
       "reliability": {
         "score": 7.5,
@@ -1859,7 +1859,7 @@
         "Concurrence intense de Hyperliquid, dYdX et Jupiter Perp",
         "Risque counterparty pour les LP GLP/GM lors de gros mouvements"
       ],
-      "useCase": "Trading perpetuel avec leverage, liquidity providing GLP/GM, staking GMX pour fees, gouvernance",
+      "useCase": "Trading perpétuel avec leverage, liquidity providing GLP/GM, staking GMX pour fees, gouvernance",
       "whereToBuy": [
         "Bybit",
         "OKX",
@@ -1882,7 +1882,7 @@
       "yearCreated": 2017,
       "category": "DeFi / Perpetual DEX",
       "tagline": "Le perp DEX historique migré vers son propre L1 Cosmos.",
-      "what": "dYdX est une plateforme de trading décentralisée de perpetuels avec un orderbook on-chain, à la différence des AMM. La V4 a migré l'ensemble du protocole d'un L2 StarkEx vers une chaîne Cosmos SDK dédiée (dYdX Chain).",
+      "what": "dYdX est une plateforme de trading décentralisée de perpétuels avec un orderbook on-chain, à la différence des AMM. La V4 a migré l'ensemble du protocole d'un L2 StarkEx vers une chaîne Cosmos SDK dédiée (dYdX Chain).",
       "whyHiddenGem": "Architecture orderbook + matching engine décentralisé unique, avec performance proche d'un CEX. Plus de 1000 milliards de dollars de volume cumulé historique. Programme de revenue sharing aux stakers DYDX (100% des fees redistribués) renforce la valeur du token.",
       "reliability": {
         "score": 8,
@@ -1983,7 +1983,7 @@
       "yearCreated": 2021,
       "category": "DeFi / DEX Aggregator (Solana)",
       "tagline": "L'agrégateur DEX dominant de l'écosystème Solana.",
-      "what": "Jupiter est l'agrégateur de liquidité numéro 1 sur Solana, qui route les swaps via tous les DEX (Raydium, Orca, Meteora...) pour offrir le meilleur prix. Il propose aussi des perpetuels (Jupiter Perp), du DCA, des limit orders et un launchpad (Jupiter Studio).",
+      "what": "Jupiter est l'agrégateur de liquidité numéro 1 sur Solana, qui route les swaps via tous les DEX (Raydium, Orca, Meteora...) pour offrir le meilleur prix. Il propose aussi des perpétuels (Jupiter Perp), du DCA, des limit orders et un launchpad (Jupiter Studio).",
       "whyHiddenGem": "Plus de 80% des swaps Solana passent par Jupiter, position quasi-monopolistique. Suite produit complète (perps, lending via Jupiter Lend, mobile app) qui en fait une 'super-app' DeFi. Airdrop en 4 phases avec gouvernance active de la communauté JUP.",
       "reliability": {
         "score": 8,
@@ -2007,7 +2007,7 @@
         "Tokenomics et burns ajustés plusieurs fois (incertitude sur dilution)",
         "Concurrence émergente d'autres agrégateurs (DFlow, Titan)"
       ],
-      "useCase": "Swap multi-DEX optimisé Solana, trading perpetuel Jupiter Perp, lending Jupiter Lend, DCA et limit orders, launchpad Jupiter Studio",
+      "useCase": "Swap multi-DEX optimisé Solana, trading perpétuel Jupiter Perp, lending Jupiter Lend, DCA et limit orders, launchpad Jupiter Studio",
       "whereToBuy": [
         "Bybit",
         "OKX",
@@ -2027,7 +2027,7 @@
       "name": "Raydium",
       "symbol": "RAY",
       "coingeckoId": "raydium",
-      "marketCapRange": "300M$ - 1.5Md$",
+      "marketCapRange": "300M$ - 1,5Md$",
       "yearCreated": 2021,
       "category": "DeFi / DEX (Solana)",
       "tagline": "Le DEX historique de Solana, principal hub de liquidité memecoins.",
@@ -2044,7 +2044,7 @@
         ],
         "lastAuditDate": "2024-08",
         "yearsActive": 5,
-        "majorIncidents": "Hack décembre 2022 via clé admin compromise (~4.4M$, indemnisé partiellement par treasury et émissions RAY) ; aucun exploit récent.",
+        "majorIncidents": "Hack décembre 2022 via clé admin compromise (~4,4M$, indemnisé partiellement par treasury et émissions RAY) ; aucun exploit récent.",
         "fundingRaised": "Pas de levée publique majeure",
         "backers": [
           "Alameda Research (avant faillite FTX)",
@@ -2080,7 +2080,7 @@
       "yearCreated": 2023,
       "category": "DeFi / Perpetual DEX & L1",
       "tagline": "Le perp DEX qui a explosé en 2024-2025 avec son propre L1 ultra-rapide.",
-      "what": "Hyperliquid est un échange de perpetuels décentralisé construit sur sa propre blockchain L1 (HyperBFT), avec orderbook on-chain à très haute fréquence. Il combine performance d'un CEX avec la transparence d'un DEX, et propose désormais un EVM (HyperEVM) pour des dApps.",
+      "what": "Hyperliquid est un échange de perpétuels décentralisé construit sur sa propre blockchain L1 (HyperBFT), avec orderbook on-chain à très haute fréquence. Il combine performance d'un CEX avec la transparence d'un DEX, et propose désormais un EVM (HyperEVM) pour des dApps.",
       "whyHiddenGem": "Airdrop HYPE en novembre 2024 (l'un des plus généreux et transparents de l'histoire) avec 31% des tokens à la communauté. Volume devenu comparable à celui de Binance Futures sur certaines paires. Développement HyperEVM ouvre l'écosystème aux apps tierces.",
       "reliability": {
         "score": 6,
@@ -2091,7 +2091,7 @@
         ],
         "lastAuditDate": "2024-11",
         "yearsActive": 2,
-        "majorIncidents": "26 mars 2025 : exploit JELLY (memecoin) via short-squeeze coordonné qui a transféré une position perdante de ~4M$ à la HLP vault (drawdown ~13.5M$ non réalisé). Validateurs ont voté la délistage en environ 2 minutes et fermé les positions au prix initial — décision controversée révélant la centralisation effective de la prise de décision malgré l'aspect 'décentralisé' affiché.",
+        "majorIncidents": "26 mars 2025 : exploit JELLY (memecoin) via short-squeeze coordonné qui a transféré une position perdante de ~4M$ à la HLP vault (drawdown ~13,5M$ non réalisé). Validateurs ont voté la délistage en environ 2 minutes et fermé les positions au prix initial — décision controversée révélant la centralisation effective de la prise de décision malgré l'aspect 'décentralisé' affiché.",
         "fundingRaised": "Aucune levée VC publique (équipe anonyme auto-financée)",
         "backers": [
           "Auto-financement équipe"
@@ -2103,7 +2103,7 @@
         "Tokenomics post-airdrop fragile : 70% des tokens encore à débloquer, risque de dilution massive 2026-2028",
         "France : aucune plateforme agréée par l'AMF ne propose HYPE à notre connaissance ; accès via Bybit ou OKX (selon l'offre de leur entité européenne agréée MiCA) ou via le DEX Hyperliquid, à mesurer fiscalement et juridiquement"
       ],
-      "useCase": "Trading perpetuel décentralisé high-performance, staking HYPE pour validation, fourniture de liquidité HLP, déploiement dApps sur HyperEVM",
+      "useCase": "Trading perpétuel décentralisé high-performance, staking HYPE pour validation, fourniture de liquidité HLP, déploiement dApps sur HyperEVM",
       "whereToBuy": [
         "Bybit",
         "OKX",
@@ -2321,7 +2321,7 @@
       "yearCreated": 2023,
       "category": "DeFi / Synthetic Dollar",
       "tagline": "Le 'dollar synthétique' USDe avec rendement issu du carry trade ETH.",
-      "what": "Ethena émet USDe, un dollar synthétique adossé à des positions delta-neutres : long ETH/BTC spot + short perpetuels équivalents. Le rendement provient des funding rates positifs sur les perps + staking ETH. Le sUSDe (staked USDe) capture ces rendements pour les holders.",
+      "what": "Ethena émet USDe, un dollar synthétique adossé à des positions delta-neutres : long ETH/BTC spot + short perpétuels équivalents. Le rendement provient des funding rates positifs sur les perps + staking ETH. Le sUSDe (staked USDe) capture ces rendements pour les holders.",
       "whyHiddenGem": "Croissance fulgurante depuis 2024 : USDe est devenu le 3e plus grand stablecoin avec plus de 5 milliards de dollars de supply. Modèle innovant de yield natif sans dépendance aux Treasuries US. Partenariats institutionnels (BlackRock BUIDL via USDtb) renforcent la crédibilité.",
       "reliability": {
         "score": 7,
@@ -2369,7 +2369,7 @@
       "name": "EigenLayer",
       "symbol": "EIGEN",
       "coingeckoId": "eigenlayer",
-      "marketCapRange": "500M$ - 2.5Md$",
+      "marketCapRange": "500M$ - 2,5Md$",
       "yearCreated": 2021,
       "category": "DeFi / Restaking",
       "tagline": "Le pionnier du restaking qui réutilise la sécurité d'Ethereum.",
@@ -2467,7 +2467,7 @@
       "name": "Helium",
       "symbol": "HNT",
       "coingeckoId": "helium",
-      "marketCapRange": "500M$ - 1.5Md$",
+      "marketCapRange": "500M$ - 1,5Md$",
       "yearCreated": 2019,
       "category": "DePIN / Wireless Network",
       "tagline": "Le réseau sans-fil décentralisé qui défie les opérateurs télécoms traditionnels",
@@ -2714,12 +2714,12 @@
       "name": "Artificial Superintelligence Alliance",
       "symbol": "FET",
       "coingeckoId": "fetch-ai",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2017,
       "category": "AI / Autonomous Agents",
       "tagline": "La fusion FET + AGIX + OCEAN qui forme l'alliance leader de l'IA décentralisée",
       "what": "Fetch.ai propose une plateforme d'agents autonomes (uAgents) capables de négocier, transacter et exécuter des tâches sur blockchain. En mars 2024, fusion votée avec SingularityNET (AGIX) et Ocean Protocol (OCEAN) pour former l'ASI Alliance autour du token unique FET.",
-      "whyHiddenGem": "Réunit trois projets historiques de l'IA crypto sous un seul token (cap visée 7.5Md$ tokens). Backer Bosch (partenariat industriel). Cas d'usage concrets : agents de mobilité, marketplaces énergie, agents de trading. Ben Goertzel (AGIX) et Bruce Pon (Ocean) au comité.",
+      "whyHiddenGem": "Réunit trois projets historiques de l'IA crypto sous un seul token (cap visée 7,5Md$ tokens). Backer Bosch (partenariat industriel). Cas d'usage concrets : agents de mobilité, marketplaces énergie, agents de trading. Ben Goertzel (AGIX) et Bruce Pon (Ocean) au comité.",
       "reliability": {
         "score": 7,
         "teamIdentified": true,
@@ -3197,12 +3197,12 @@
       "name": "Story Protocol",
       "symbol": "IP",
       "coingeckoId": "story-2",
-      "marketCapRange": "500M$ - 2.5Md$",
+      "marketCapRange": "500M$ - 2,5Md$",
       "yearCreated": 2025,
       "category": "AI / Intellectual Property Layer 1",
       "tagline": "La blockchain dédiée à la propriété intellectuelle à l'ère de l'IA générative",
       "what": "Story Protocol est une L1 EVM-compatible spécialisée dans la tokenisation et la gestion de la propriété intellectuelle (IP). Permet aux créateurs de licencier leurs œuvres on-chain avec royalties programmables, particulièrement pertinent face à l'IA générative.",
-      "whyHiddenGem": "Levée 140M$ en série B mené par a16z et Polychain en 2024 (valorisation 2.25Md$). Mainnet lancé en février 2025. Use case clair : permettre aux artistes de protéger et monétiser leur IP face aux modèles IA. PIL (Programmable IP License) standardisé.",
+      "whyHiddenGem": "Levée 140M$ en série B mené par a16z et Polychain en 2024 (valorisation 2,25Md$). Mainnet lancé en février 2025. Use case clair : permettre aux artistes de protéger et monétiser leur IP face aux modèles IA. PIL (Programmable IP License) standardisé.",
       "reliability": {
         "score": 6,
         "teamIdentified": true,
@@ -3262,7 +3262,7 @@
         "lastAuditDate": "2024-09",
         "yearsActive": 3,
         "majorIncidents": "Aucun hack. Critiques en 2024 sur la transparence des transactions internes du token et sur le modèle 'utilisateur = produit'.",
-        "fundingRaised": "4.5M$ seed (Polychain, Tribe Capital)",
+        "fundingRaised": "4,5M$ seed (Polychain, Tribe Capital)",
         "backers": [
           "Polychain Capital",
           "Tribe Capital",
@@ -3670,7 +3670,7 @@
       "name": "The Sandbox",
       "symbol": "SAND",
       "coingeckoId": "the-sandbox",
-      "marketCapRange": "500M$ - 1.5Md$",
+      "marketCapRange": "500M$ - 1,5Md$",
       "yearCreated": 2012,
       "category": "Gaming / Metaverse",
       "tagline": "Le metaverse français vétéran, déclin marqué post-hype 2021",
@@ -3719,7 +3719,7 @@
       "name": "Decentraland",
       "symbol": "MANA",
       "coingeckoId": "decentraland",
-      "marketCapRange": "400M$ - 1.2Md$",
+      "marketCapRange": "400M$ - 1,2Md$",
       "yearCreated": 2017,
       "category": "Gaming / Metaverse",
       "tagline": "Pionnier du metaverse on-chain, mais utilisateurs en chute libre",
@@ -3818,7 +3818,7 @@
       "name": "Gala",
       "symbol": "GALA",
       "coingeckoId": "gala",
-      "marketCapRange": "400M$ - 1.5Md$",
+      "marketCapRange": "400M$ - 1,5Md$",
       "yearCreated": 2019,
       "category": "Gaming / Metaverse",
       "tagline": "Plateforme gaming Web3 avec catalogue de jeux, mais controverses internes",
@@ -3973,7 +3973,7 @@
         ],
         "lastAuditDate": "2025-03",
         "yearsActive": 8,
-        "majorIncidents": "Depeg temporaire mars 2023 à 0.87$ (faillite SVB où Circle avait 3.3Md$, récupérés)",
+        "majorIncidents": "Depeg temporaire mars 2023 à 0,87$ (faillite SVB où Circle avait 3,3Md$, récupérés)",
         "fundingRaised": "850M$+ (Circle)",
         "backers": [
           "Goldman Sachs",
@@ -4020,7 +4020,7 @@
         "auditedBy": [
           "Trail of Bits",
           "PeckShield",
-          "Runtime Verification"
+          "Runtime Vérification"
         ],
         "lastAuditDate": "2024-08",
         "yearsActive": 9,
@@ -4055,7 +4055,7 @@
       "name": "OKB",
       "symbol": "OKB",
       "coingeckoId": "okb",
-      "marketCapRange": "1.5Md$ - 4Md$",
+      "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2018,
       "category": "Exchange Token",
       "tagline": "Le token utilitaire d'OKX, l'un des plus gros exchanges mondiaux",
@@ -4244,7 +4244,7 @@
       "name": "Starknet",
       "symbol": "STRK",
       "coingeckoId": "starknet",
-      "marketCapRange": "300M$ - 1.5Md$",
+      "marketCapRange": "300M$ - 1,5Md$",
       "yearCreated": 2021,
       "category": "L2 / Rollup ZK",
       "tagline": "L2 zk-STARK Ethereum par StarkWare, mais déblocages tokens massifs",
@@ -4311,7 +4311,7 @@
         ],
         "lastAuditDate": "2024-12",
         "yearsActive": 6,
-        "majorIncidents": "Crash flash du 13 avril 2025 : OM passe de ~6.21$ à ~0.49$ en environ 1h (~-92%), >5Md$ de capitalisation effacés. L'équipe invoque des liquidations forcées sur exchanges asiatiques ; on-chain montre des dépôts massifs vers exchanges (notamment via wallet attribué à Laser Digital). Le fondateur s'engage à brûler ~16.5% du supply (~160M$) en compensation.",
+        "majorIncidents": "Crash flash du 13 avril 2025 : OM passe de ~6,21$ à ~0,49$ en environ 1h (~-92%), >5Md$ de capitalisation effacés. L'équipe invoque des liquidations forcées sur exchanges asiatiques ; on-chain montre des dépôts massifs vers exchanges (notamment via wallet attribué à Laser Digital). Le fondateur s'engage à brûler ~16,5% du supply (~160M$) en compensation.",
         "fundingRaised": "151M$",
         "backers": [
           "Shorooq Partners",

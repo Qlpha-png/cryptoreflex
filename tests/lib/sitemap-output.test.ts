@@ -53,7 +53,8 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
     const bad = paths().filter((p) => /^\/cryptos\/[^/]+\/acheter-en-france$/.test(p));
     // Restent uniquement les cryptos SANS fiche éditoriale (guide self-canonical).
     expect(bad.sort()).toEqual(
-      ["ethereum-classic", "fantom", "stacks", "vechain"].map((id) => `/cryptos/${id}/acheter-en-france`),
+      // fantom retiré le 05/10/2026 (migré vers Sonic, redirigé vers /cryptos/sonic-3)
+      ["ethereum-classic", "stacks", "vechain"].map((id) => `/cryptos/${id}/acheter-en-france`),
     );
   });
 

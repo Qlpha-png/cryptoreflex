@@ -15,7 +15,7 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react";
-import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
@@ -39,6 +39,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -62,7 +63,7 @@ export function generateMetadata({ params }: Props): Metadata {
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec le
   // template root `%s | Cryptoreflex` qui doublait la marque.
   const title = `${p.name} avis 2026 — test complet & indépendant`;
-  const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${p.scoring.global}/5) basé sur 30 jours de test.`;
+  const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${fmtNb(p.scoring.global)}/5), selon notre méthodologie publique.`;
   return {
     title,
     description,
@@ -103,7 +104,7 @@ function Score({ value, label }: { value: number; label: string }) {
       <div className="flex items-baseline justify-between">
         <span className="text-xs uppercase tracking-wide text-muted">{label}</span>
         <span className="font-mono text-sm tabular-nums text-white">
-          {value.toFixed(1)}<span className="text-muted">/5</span>
+          {fmtFr(value, 1)}<span className="text-muted">/5</span>
         </span>
       </div>
       <div className="mt-2 h-1.5 rounded-full bg-elevated overflow-hidden">
@@ -142,13 +143,13 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
   const safe = p.scoring.security >= 4.6;
   const french = p.support.frenchPhone;
 
-  let headline = `${p.name} obtient ${p.scoring.global}/5 dans notre méthodologie 2026.`;
+  let headline = `${p.name} obtient ${fmtNb(p.scoring.global)}/5 dans notre méthodologie 2026.`;
   let recommendation: string;
 
   if (cheap && isExchange) {
-    recommendation = `Si votre priorité est de comprimer chaque centime de frais — typiquement parce que vous tradez du spot mensuellement ou que vous DCA-ez sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${p.fees.spotMaker}% maker / ${p.fees.spotTaker}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
+    recommendation = `Si votre priorité est de comprimer chaque centime de frais — typiquement parce que vous tradez du spot mensuellement ou que vous DCA-ez sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${fmtNb(p.fees.spotMaker)}% maker / ${fmtNb(p.fees.spotTaker)}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
   } else if (safe && french) {
-    recommendation = `${p.name} se distingue d'abord par ce que ${p.security.coldStoragePct}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne peuvent pas concurrencer Binance ou Bitget en pure compétition tarifaire.`;
+    recommendation = `${p.name} se distingue d'abord par ce que ${fmtNb(p.security.coldStoragePct)}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne peuvent pas concurrencer Binance ou Bitget en pure compétition tarifaire.`;
   } else if (p.cryptos.totalCount < 100) {
     recommendation = `${p.name} fait un pari clair : moins de cryptos (${p.cryptos.totalCount} listées), mais une expérience qu'on peut tendre à un parent ou à un collègue sans honte. Si vous cherchez à acheter Bitcoin, Ethereum et 3-4 majors sans jamais ouvrir un onglet trading, le fonctionnement est exactement calibré pour ça. Si vous voulez chasser la prochaine alt à 100M$ de capi, il faudra regarder ailleurs.`;
   } else {
@@ -157,8 +158,8 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
 
   const ideal = p.idealFor;
   const avoid = p.weaknesses[0]
-    ? `Si ${p.weaknesses[0].toLowerCase()} est un dealbreaker pour vous, regardez plutôt nos ${p.scoring.fees < 4 ? "alternatives à frais réduits" : "alternatives plus simples"}.`
-    : "Aucun dealbreaker structurel identifié à date.";
+    ? `Point faible principal : ${p.weaknesses[0].replace(/\.$/, "")}. Si c'est rédhibitoire pour vous, regardez plutôt nos ${p.scoring.fees < 4 ? "alternatives à frais réduits" : "alternatives plus simples"}.`
+    : "Aucun point rédhibitoire identifié à ce jour.";
 
   return { headline, recommendation, ideal, avoid };
 }
@@ -185,7 +186,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `Quels sont les frais réels sur ${p.name} ?`,
-    a: `Sur le marché spot, vous payez ${p.fees.spotMaker}% en maker et ${p.fees.spotTaker}% en taker. L'achat instantané (CB) coûte ${p.fees.instantBuy}%, ce qui reste plus cher que le passage par ordre limite. Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? `${p.fees.withdrawalFiatSepa}€` : p.fees.withdrawalFiatSepa}. Le spread observé : ${p.fees.spread}.`,
+    a: `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)}% en maker et ${fmtNb(p.fees.spotTaker)}% en taker. L'achat instantané (CB) coûte ${fmtNb(p.fees.instantBuy)}%, ce qui reste plus cher que le passage par ordre limite. Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? `${fmtNb(p.fees.withdrawalFiatSepa)} €` : p.fees.withdrawalFiatSepa}. Le spread observé : ${p.fees.spread}.`,
   });
 
   faq.push({
@@ -211,9 +212,9 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `${p.name} a-t-elle déjà subi un piratage ?`,
-    a: p.security.lastIncident
-      ? `Incident notable : ${p.security.lastIncident}. ${p.security.coldStoragePct}% des fonds clients sont stockés à froid (cold wallet) et ${p.security.insurance ? "couverts par une assurance dédiée" : "non couverts par une assurance externe"}.`
-      : `Aucun incident de sécurité majeur n'est documenté à date sur ${p.name}. ${p.security.coldStoragePct}% des fonds clients sont en cold storage, ${p.security.insurance ? "avec une couverture d'assurance" : "sans assurance externe formalisée"}.`,
+    a: !hasNoIncident(p.security.lastIncident)
+      ? `Incident notable : ${p.security.lastIncident}. ${fmtNb(p.security.coldStoragePct)}% des fonds clients sont stockés à froid (cold wallet) et ${p.security.insurance ? "couverts par une assurance dédiée" : "non couverts par une assurance externe"}.`
+      : `Aucun incident de sécurité majeur n'est documenté à date sur ${p.name}. ${fmtNb(p.security.coldStoragePct)}% des fonds clients sont en cold storage, ${p.security.insurance ? "avec une couverture d'assurance" : "sans assurance externe formalisée"}.`,
   });
 
   faq.push({
@@ -226,7 +227,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   // Q6 — quel dépôt minimum / how to start
   faq.push({
     q: `Quel est le dépôt minimum sur ${p.name} et comment recharger ?`,
-    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${p.fees.instantBuy}%.`,
+    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${fmtNb(p.fees.instantBuy)}%.`,
   });
 
   // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
@@ -374,13 +375,13 @@ export default function ReviewPage({ params }: Props) {
               <div className="flex items-center gap-2">
                 <Stars n={p.scoring.global} />
                 <span className="font-mono text-sm tabular-nums">
-                  <span className="text-white font-semibold">{p.scoring.global.toFixed(1)}</span>
+                  <span className="text-white font-semibold">{fmtFr(p.scoring.global, 1)}</span>
                   <span className="text-muted">/5</span>
                 </span>
               </div>
               <span className="text-xs text-muted">·</span>
               <span className="text-xs text-muted">
-                Trustpilot {p.ratings.trustpilot}/5 ({p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)
+                Trustpilot {fmtNb(p.ratings.trustpilot)}/5 ({p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)
               </span>
               <span className="text-xs text-muted">·</span>
               <span className="text-xs text-muted">
@@ -442,7 +443,7 @@ export default function ReviewPage({ params }: Props) {
           <ul className="mt-3 space-y-2 text-sm sm:text-base text-white/85 leading-relaxed">
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
-              <span><strong className="text-white">Note globale :</strong> {p.scoring.global.toFixed(1)}/5 — {p.badge ?? p.tagline}.</span>
+              <span><strong className="text-white">Note globale :</strong> {fmtFr(p.scoring.global, 1)}/5 — {p.badge ?? p.tagline}.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
@@ -450,7 +451,7 @@ export default function ReviewPage({ params }: Props) {
             </li>
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
-              <span><strong className="text-white">À éviter si :</strong> {p.weaknesses[0] ?? "aucun dealbreaker structurel."}.</span>
+              <span><strong className="text-white">À éviter si :</strong> {(p.weaknesses[0] ?? "aucun point rédhibitoire").replace(/\.$/, "")}.</span>
             </li>
           </ul>
           <div className="mt-5">
@@ -497,7 +498,7 @@ export default function ReviewPage({ params }: Props) {
                     <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez faire du staking ({p.cryptos.stakingCryptos.length} cryptos éligibles).</li>
                   )}
                   {p.mica.micaCompliant && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un dealbreaker pour vous.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un critère indispensable pour vous.</li>
                   )}
                 </ul>
               </div>
@@ -528,7 +529,7 @@ export default function ReviewPage({ params }: Props) {
             Frais réels chiffrés sur {p.name} (exemple 1 000 €)
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Estimation indicative au {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} — recoupe avec le backoffice de la plateforme avant tout investissement engageant.
+            Estimation indicative{v?.date ? ` (frais relevés le ${new Date(v.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })})` : ""} : vérifiez la grille tarifaire de la plateforme avant d&apos;investir.
           </p>
           {v && (
             <div className="mt-4 rounded-xl border border-primary/25 bg-primary/5 p-4">
@@ -553,7 +554,7 @@ export default function ReviewPage({ params }: Props) {
                 >
                   Source
                 </a>{" "}
-                · vérifié le {v.date}
+                · vérifié le {new Date(v.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
               </div>
             </div>
           )}
@@ -564,27 +565,27 @@ export default function ReviewPage({ params }: Props) {
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Achat instantané (CB)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+                    {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)}% sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {(1000 * p.fees.spotTaker / 100).toFixed(2)} €
+                    {fmtFr((1000 * p.fees.spotTaker / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{p.fees.spotTaker}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotTaker)}% sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {(1000 * p.fees.spotMaker / 100).toFixed(2)} €
+                    {fmtFr((1000 * p.fees.spotMaker / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{p.fees.spotMaker}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotMaker)}% sur 1 000 €</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
-                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{(1000 * p.fees.instantBuy / 100).toFixed(2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{(1000 * p.fees.spotMaker / 100).toFixed(2)} €</strong> — soit une économie de {((p.fees.instantBuy - p.fees.spotMaker) * 10).toFixed(2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
+                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{fmtFr((1000 * p.fees.instantBuy / 100), 2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> — soit une économie de {fmtFr(((p.fees.instantBuy - p.fees.spotMaker) * 10), 2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
               </p>
             </>
           ) : (
@@ -593,9 +594,9 @@ export default function ReviewPage({ params }: Props) {
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Frais d&apos;achat (courtier)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {(1000 * p.fees.instantBuy / 100).toFixed(2)} €
+                    {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{p.fees.instantBuy}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)}% sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Retrait SEPA</div>
@@ -603,7 +604,7 @@ export default function ReviewPage({ params }: Props) {
                     {typeof p.fees.withdrawalFiatSepa === "number"
                       ? p.fees.withdrawalFiatSepa === 0
                         ? "Gratuit"
-                        : `${p.fees.withdrawalFiatSepa} €`
+                        : `${fmtNb(p.fees.withdrawalFiatSepa)} €`
                       : p.fees.withdrawalFiatSepa}
                   </div>
                   <div className="mt-1 text-xs text-fg/60">par retrait</div>
@@ -620,7 +621,7 @@ export default function ReviewPage({ params }: Props) {
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">Notre scoring détaillé</h2>
           <p className="mt-2 text-sm text-muted max-w-2xl">
-            Six critères pondérés, chacun mesuré sur la base de tests réels et de données vérifiables (frais affichés, registres AMF, audits Trustpilot). Détails dans la <Link href="/methodologie" className="underline hover:text-white">méthodologie publique</Link>.
+            Six critères pondérés, chacun mesuré sur des données vérifiables (frais affichés par la plateforme, registres de l&apos;AMF et de l&apos;ESMA, avis Trustpilot). Détails dans la <Link href="/methodologie" className="underline hover:text-white">méthodologie publique</Link>.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Score value={p.scoring.fees} label="Frais" />
@@ -648,23 +649,23 @@ export default function ReviewPage({ params }: Props) {
                   <>
                     <tr>
                       <td className="px-4 py-3 text-muted">Spot maker</td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotMaker}%</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.spotMaker)}%</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 text-muted">Spot taker</td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.spotTaker}%</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.spotTaker)}%</td>
                     </tr>
                   </>
                 ) : (
                   <tr>
                     <td className="px-4 py-3 text-muted">{isWallet ? "Achat in-app (spread)" : "Frais d'achat/vente (courtier)"}</td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{isWallet ? p.fees.spread : `${p.fees.spotTaker}%`}</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{isWallet ? p.fees.spread : `${fmtNb(p.fees.spotTaker)}%`}</td>
                   </tr>
                 )}
                 {!isWallet && (
                   <tr>
                     <td className="px-4 py-3 text-muted">Achat instantané (CB)</td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{p.fees.instantBuy}%</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.instantBuy)}%</td>
                   </tr>
                 )}
                 <tr>
@@ -677,7 +678,7 @@ export default function ReviewPage({ params }: Props) {
                     {typeof p.fees.withdrawalFiatSepa === "number"
                       ? p.fees.withdrawalFiatSepa === 0
                         ? "Gratuit"
-                        : `${p.fees.withdrawalFiatSepa}€`
+                        : `${fmtNb(p.fees.withdrawalFiatSepa)} €`
                       : p.fees.withdrawalFiatSepa}
                   </td>
                 </tr>
@@ -710,7 +711,7 @@ export default function ReviewPage({ params }: Props) {
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Cold storage</div>
-              <div className="mt-1 text-2xl font-bold text-white">{p.security.coldStoragePct}%</div>
+              <div className="mt-1 text-2xl font-bold text-white">{fmtNb(p.security.coldStoragePct)}%</div>
               <p className="mt-2 text-sm text-white/70">
                 Pourcentage des fonds clients conservés hors-ligne. Au-dessus de 95% est considéré comme une bonne pratique.
               </p>
@@ -989,12 +990,12 @@ export default function ReviewPage({ params }: Props) {
                     <div className="text-sm font-semibold text-white">{op.name}</div>
                     <div className="flex items-center gap-1 text-xs text-amber-300">
                       <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      <span className="font-mono tabular-nums">{op.scoring.global.toFixed(1)}</span>
+                      <span className="font-mono tabular-nums">{fmtFr(op.scoring.global, 1)}</span>
                     </div>
                   </div>
                   <div className="mt-1 text-xs text-muted line-clamp-2">{op.tagline}</div>
                   <div className="mt-3 flex items-center gap-3 text-[11px] text-fg/60">
-                    <span>Frais : {op.fees.spotTaker}%</span>
+                    <span>Frais : {fmtNb(op.fees.spotTaker)}%</span>
                     <span>·</span>
                     <span>{op.cryptos.totalCount} cryptos</span>
                   </div>

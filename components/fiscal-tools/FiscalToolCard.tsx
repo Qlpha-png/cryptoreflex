@@ -15,6 +15,7 @@ import { Check, Star, X, ArrowRight } from "lucide-react";
 import AffiliateLink from "@/components/AffiliateLink";
 import { formatStartingPrice } from "@/lib/fiscal-tools";
 import type { FiscalTool } from "@/lib/fiscal-tools-types";
+import { fmtFr } from "@/lib/format-fr";
 
 interface FiscalToolCardProps {
   tool: FiscalTool;
@@ -96,7 +97,7 @@ export default function FiscalToolCard({
         </div>
         <div className="flex items-center gap-1 rounded-full bg-elevated px-2.5 py-1 text-xs font-bold text-primary-soft border border-primary/30">
           <Star className="h-3 w-3 fill-current" aria-hidden="true" />
-          {tool.score.toFixed(1)}/10
+          {fmtFr(tool.score, 1)}/10
         </div>
       </header>
 

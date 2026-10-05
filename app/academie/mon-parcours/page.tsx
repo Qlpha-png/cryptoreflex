@@ -32,8 +32,8 @@ export const metadata: Metadata = {
 
 export default function MonParcoursPage() {
   return (
-    <main className="py-0">
+    <div className="py-0">
       <MonParcoursDashboard />
-    </main>
+    </div>
   );
 }

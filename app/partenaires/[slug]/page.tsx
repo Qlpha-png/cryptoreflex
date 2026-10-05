@@ -61,6 +61,8 @@ import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import StickyPartnerCta from "./StickyPartnerCta";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 export const revalidate = 86400; // 24h
 
@@ -85,10 +87,10 @@ export function generateMetadata({ params }: Props): Metadata {
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec
   // le template root layout `%s | Cryptoreflex`.
   const title = `${partner.name} avis 2026 — test ${review.testDuration} indépendant`;
-  const description = `${partner.tagline} Note ${review.rating}/5 après ${review.testDuration} d'usage réel. Avantages, prix, FAQ et guide complet.`;
+  const description = `${partner.tagline} Note ${fmtNb(review.rating)}/5 après ${review.testDuration} d'usage réel. Avantages, prix, FAQ et guide complet.`;
 
   return {
-    title,
+    title: fitTitle(title),
     description,
     alternates: withHreflang(`${BRAND.url}/partenaires/${partner.slug}`),
     openGraph: {
@@ -184,7 +186,7 @@ export default function PartnerDetailPage({ params }: Props) {
 
   /* --------------------------------------------------------------------- */
   return (
-    <main id="main-content" className="min-h-[80vh] pb-24">
+    <div id="main-content" className="min-h-[80vh] pb-24">
       <StructuredData
         id="partner-detail"
         data={[
@@ -228,7 +230,7 @@ export default function PartnerDetailPage({ params }: Props) {
             <p className="text-xs sm:text-sm text-fg/75 leading-relaxed">
               <span className="font-bold text-fg">Lien affilié.</span> Cette
               page contient des liens affiliés (loi 9 juin 2023). Notre note de{" "}
-              {review.rating}/5 résulte de {review.testDuration} de test
+              {fmtNb(review.rating)}/5 résulte de {review.testDuration} de test
               terrain — pas d&apos;un partenariat commercial.
             </p>
           </div>
@@ -270,7 +272,7 @@ export default function PartnerDetailPage({ params }: Props) {
 
       {/* ─────────────────────── CTA FINAL ────────────────────────────────── */}
       <FinalCta partner={partner} review={review} />
-    </main>
+    </div>
   );
 }
 
@@ -349,7 +351,7 @@ function PartnerHero({
 
             {/* CTA principal hero */}
             <div className="mt-7 flex flex-col sm:flex-row gap-3 animate-hero-fade-up-delay-3">
-              <Link
+              <Link prefetch={false}
                 href={`/go/${partner.slug}?ctx=detail&pos=hero`}
                 rel="sponsored noopener"
                 target="_blank"
@@ -428,7 +430,7 @@ function PartnerHero({
               <div className="mt-6 grid grid-cols-3 gap-2 text-center">
                 <MiniStat
                   label="Note"
-                  value={`${review.rating}/5`}
+                  value={`${fmtNb(review.rating)}/5`}
                   icon={Star}
                 />
                 <MiniStat
@@ -475,7 +477,7 @@ function RatingDisplay({ rating }: { rating: number }) {
         })}
       </div>
       <span className="text-sm font-bold text-fg font-mono tabular-nums">
-        {rating.toFixed(1)}
+        {fmtFr(rating, 1)}
       </span>
       <span className="text-xs text-muted">/5</span>
     </div>
@@ -573,7 +575,7 @@ function PartnerVerdict({
             Vous vous reconnaissez dans &ldquo;à choisir si&rdquo; ? Passez à
             l&apos;action :
           </p>
-          <Link
+          <Link prefetch={false}
             href={`/go/${partner.slug}?ctx=detail&pos=verdict`}
             rel="sponsored noopener"
             target="_blank"
@@ -919,7 +921,7 @@ function BeforeAfter({
         className="partner-section mt-7 text-center"
         style={{ ["--i" as never]: 3 }}
       >
-        <Link
+        <Link prefetch={false}
           href={`/go/${partner.slug}?ctx=detail&pos=after-beforeafter`}
           rel="sponsored noopener"
           target="_blank"
@@ -1022,7 +1024,7 @@ function ProductShowcase({ partner }: { partner: Partner }) {
             Quel modèle est fait pour vous ?
           </h2>
         </div>
-        <Link
+        <Link prefetch={false}
           href={`/go/${partner.slug}?ctx=detail&pos=catalogue-link`}
           rel="sponsored noopener"
           target="_blank"
@@ -1058,7 +1060,7 @@ function ProductCard({
 }) {
   const Icon = product.Icon;
   return (
-    <Link
+    <Link prefetch={false}
       href={`/go/${partner.slug}?ctx=detail-product&pos=${product.id}`}
       rel="sponsored noopener"
       target="_blank"
@@ -1210,7 +1212,7 @@ function FieldTest({
             Ne perdez pas le momentum — passez sur {partner.name}.
           </p>
         </div>
-        <Link
+        <Link prefetch={false}
           href={`/go/${partner.slug}?ctx=detail&pos=after-field-test`}
           rel="sponsored noopener"
           target="_blank"
@@ -1528,7 +1530,7 @@ function FinalCta({
         </p>
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
+          <Link prefetch={false}
             href={`/go/${partner.slug}?ctx=detail&pos=final-cta`}
             rel="sponsored noopener"
             target="_blank"

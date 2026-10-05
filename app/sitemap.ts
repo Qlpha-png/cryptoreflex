@@ -198,19 +198,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // FIX 2026-05-02 #11 — TIER 3 features (audit consolidé 6 experts).
     entry("/outils/yield-stablecoins", "weekly", 0.8),
     entry("/outils/tax-loss-harvesting", "monthly", 0.75),
-    entry("/outils/wallet-connect", "monthly", 0.65),
     entry("/crypto-wrapped", "monthly", 0.6),
     // Pack Déclaration (ressource gratuite depuis juin 2026).
     entry("/pack-declaration-crypto-2026", "weekly", 0.9),
     // FIX 2026-05-02 #21+22 — innovation features landings + CGU.
-    entry("/outils/whale-radar", "monthly", 0.7),
-    entry("/outils/phishing-checker", "monthly", 0.75),
-    entry("/outils/allocator-ia", "monthly", 0.75),
-    entry("/outils/gas-tracker-fr", "weekly", 0.7),
-    entry("/outils/export-expert-comptable", "monthly", 0.8),
-    entry("/outils/crypto-license", "monthly", 0.7),
     entry("/outils/succession-crypto", "monthly", 0.7),
-    entry("/outils/dca-lab", "monthly", 0.7),
     entry("/cgu", "yearly", 0.3),
     // Académie : hub indexable (les leçons sont canonicalisées vers /blog).
     entry("/academie", "weekly", 0.8),
@@ -220,7 +212,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/airdrops", "weekly", 0.85),
     entry("/outils/profit-loss-calculator", "monthly", 0.8),
     entry("/faq-crypto", "weekly", 0.85),
-    entry("/marche/whales", "daily", 0.7),
     entry("/newsletter", "weekly", 0.7),
     // /portefeuille hors sitemap : disallow dans robots.txt (audit SEO 30/04/2026).
   ];

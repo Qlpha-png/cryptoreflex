@@ -8,6 +8,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { getAllCryptos } from "@/lib/cryptos";
 import { COUNTRIES, COUNTRY_CODES } from "@/lib/programmatic-pages";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /acheter — HUB INDEX (créé 2026-06-13, audit maillage SEO).
@@ -28,8 +29,8 @@ const PAGE_DESCRIPTION =
   "Comparez où et comment acheter chaque cryptomonnaie sur une plateforme régulée selon votre pays : France (AMF/PSAN), Belgique, Suisse (FINMA), Luxembourg, Monaco, Québec. Fiscalité et régulateur expliqués, sans jargon.";
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
+  title: fitTitle(PAGE_TITLE),
+  description: fitDescription(PAGE_DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/acheter`),
   openGraph: {
     title: PAGE_TITLE,

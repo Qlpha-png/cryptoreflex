@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
+import { getCryptoLogo, getCryptoLogoFromSymbol } from "@/lib/crypto-logos";
 import { getAllNewsSummaries } from "@/lib/news-mdx";
 import HomeLivePrices from "./HomeLivePrices";
 
@@ -20,7 +21,8 @@ export default async function HomeMarketToday({ market }: { market: MarketCoin[]
     id: m.id,
     symbol: m.symbol,
     name: m.name,
-    image: m.image,
+    // le flux de marché arrive parfois sans logo (src vide = 5 images cassées sur l'accueil, audit du 05/10/2026)
+    image: m.image || getCryptoLogo(m.id) || getCryptoLogoFromSymbol(m.symbol) || "",
     price: m.currentPrice,
     change24h: m.priceChange24h,
     href: cryptoPagePath(m.id),

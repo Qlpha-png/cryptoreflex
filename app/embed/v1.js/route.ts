@@ -13,7 +13,8 @@
  *
  * 3 types de widgets supportes :
  *   - psan-checker     : badge statut MiCA + PSAN d'une plateforme (param: platform)
- *   - mica-countdown   : countdown jusqu'au 30 juin 2026 (deadline MiCA)
+ *   - mica-countdown   : depuis le 05/10/2026, encart « MiCA en vigueur depuis le 1er juillet 2026 » (le compte à
+ *                        rebours vers le 30 juin 2026 était dépassé ; le type est gardé pour les sites qui l'ont intégré)
  *   - top-cryptos      : top 10 cryptos vulgarisees (param: limit, default 5)
  *
  * Branding : chaque widget rend un footer "Donnees Cryptoreflex" avec un
@@ -39,7 +40,7 @@ import { BRAND } from "@/lib/brand";
 export const dynamic = "force-static";
 export const revalidate = 86_400;
 
-const WIDGET_VERSION = "1.0.0";
+const WIDGET_VERSION = "1.1.0";
 
 function generateWidgetJs(): string {
   const baseUrl = BRAND.url;
@@ -62,7 +63,6 @@ function generateWidgetJs(): string {
   var BASE_URL = ${JSON.stringify(baseUrl)};
   var API_BASE = BASE_URL + "/api/public";
   var SAFE_SLUG_RE = /^[a-z0-9-]+$/;
-  var DEADLINE_MICA = new Date("2026-06-30T23:59:59Z").getTime();
 
   // ---- Styles inline (evite collision CSS host) -----------------------------
   var FONT_STACK =
@@ -131,7 +131,7 @@ function generateWidgetJs(): string {
     return (
       '<div style="' +
       attribFooterStyles() +
-      '">Donnees <a href="' +
+      '">Données <a href="' +
       BASE_URL +
       '" rel="dofollow" style="' +
       linkStyles() +
@@ -162,11 +162,11 @@ function generateWidgetJs(): string {
       node.innerHTML =
         '<div style="' +
         cardStyles() +
-        '">Widget Cryptoreflex : data-platform invalide. Slug attendu : minuscules + chiffres + tirets.</div>';
+        '">Widget Cryptoreflex : data-platform invalide : lettres minuscules, chiffres et tirets uniquement.</div>';
       return;
     }
 
-    node.innerHTML = '<div style="' + cardStyles() + '">Chargement...</div>';
+    node.innerHTML = '<div style="' + cardStyles() + '">Chargement…</div>';
 
     jsonGet(API_BASE + "/psan-registry")
       .then(function (data) {
@@ -180,24 +180,29 @@ function generateWidgetJs(): string {
             cardStyles() +
             '">Plateforme <code>' +
             escHtml(platform) +
-            '</code> non trouvee dans le registre Cryptoreflex.' +
+            '</code> absente du registre Cryptoreflex.' +
             attributionFooter() +
             "</div>";
           return;
         }
 
-        var micaOk = p.micaStatus === "authorized";
-        var atRisk = p.atRiskJuly2026 === true;
-        var statusColor = micaOk ? "#059669" : atRisk ? "#d97706" : "#64748b";
-        var statusLabel = micaOk
-          ? "MiCA conforme"
-          : atRisk
-          ? "Risque deadline juillet 2026"
-          : "Statut a verifier";
-        var statusIcon = micaOk ? "&#x2714;" : atRisk ? "&#x26A0;" : "&#x2139;";
+        // Mêmes règles que lib/mica.ts (getStatusColor / getPsanLabel) : depuis le 1er juillet 2026, seule une
+        // plateforme agréée MiCA ET accessible aux clients français est « autorisée en France ».
+        var outOfScope = p.micaStatus === "out_of_scope";
+        var revoked = p.psanStatus === "revoked";
+        var okFr = !outOfScope && !revoked && p.micaStatus === "authorized" && p.atRiskJuly2026 !== true;
+        var statusColor = okFr ? "#059669" : outOfScope || revoked ? "#64748b" : "#dc2626";
+        var statusLabel = okFr
+          ? "Autorisée en France"
+          : outOfScope
+          ? "Hors champ MiCA"
+          : revoked
+          ? "En liquidation"
+          : "Non autorisée en France";
+        var statusIcon = okFr ? "&#x2714;" : outOfScope || revoked ? "&#x2139;" : "&#x26A0;";
 
         var psanLine = p.amfRegistration
-          ? "Agrement AMF : " + escHtml(p.amfRegistration) + " - "
+          ? "Agrément AMF : " + escHtml(p.amfRegistration) + " · "
           : "";
 
         node.innerHTML =
@@ -218,11 +223,12 @@ function generateWidgetJs(): string {
           "</div>" +
           '<div style="font-size:12px;color:#475569;line-height:1.5;">' +
           psanLine +
-          "Statut MiCA : " +
-          escHtml(p.micaStatus || "inconnu") +
-          (p.micaJurisdiction
-            ? " (" + escHtml(p.micaJurisdiction) + ")"
-            : "") +
+          (p.micaStatus === "authorized"
+            ? "Agrément MiCA" + (p.micaJurisdiction ? " : " + escHtml(p.micaJurisdiction) : "")
+            : outOfScope
+            ? "Non concernée par l'agrément MiCA (portefeuille ou protocole)"
+            : "Aucun agrément MiCA au registre de l'ESMA") +
+          (p.restrictions && p.restrictions[0] ? "<br>" + escHtml(p.restrictions[0]) : "") +
           "</div>" +
           attributionFooter() +
           "</div>";
@@ -231,55 +237,35 @@ function generateWidgetJs(): string {
         node.innerHTML =
           '<div style="' +
           cardStyles() +
-          '">Widget Cryptoreflex : impossible de charger les donnees (' +
+          '">Widget Cryptoreflex : impossible de charger les données (' +
           escHtml(err.message) +
           ").</div>";
       });
   }
 
   // ---- Widget : mica-countdown --------------------------------------------
-  function fmtPlural(n, s) {
-    return n + " " + s + (n > 1 ? "s" : "");
-  }
-
+  // La période transitoire a pris fin le 30 juin 2026 : l'ancien compte à rebours est remplacé par un encart fixe.
   function renderMicaCountdown(node) {
-    function tick() {
-      var diff = DEADLINE_MICA - Date.now();
-      var label;
-      if (diff <= 0) {
-        label = "Deadline MiCA atteinte (30 juin 2026)";
-      } else {
-        var days = Math.floor(diff / (24 * 60 * 60 * 1000));
-        var hours = Math.floor(
-          (diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
-        );
-        label =
-          fmtPlural(days, "jour") +
-          " " +
-          fmtPlural(hours, "heure") +
-          " avant la deadline MiCA";
-      }
-      node.innerHTML =
-        '<div style="' +
-        cardStyles() +
-        '">' +
-        '<div style="display:flex;align-items:center;gap:10px;">' +
-        '<span style="' +
-        badgeStyles("#d97706") +
-        '"><span aria-hidden="true">&#x23F1;</span>MiCA UE</span>' +
-        '<span style="font-size:15px;font-weight:600;color:#0f172a;">' +
-        escHtml(label) +
-        "</span>" +
-        "</div>" +
-        '<div style="margin-top:8px;font-size:12px;color:#475569;">' +
-        "Fin de la periode transitoire pour les CASP. Verifiez la conformite de votre plateforme avant cette date." +
-        "</div>" +
-        attributionFooter() +
-        "</div>";
-    }
-    tick();
-    // Refresh chaque minute (les heures bougent visiblement)
-    setInterval(tick, 60_000);
+    node.innerHTML =
+      '<div style="' +
+      cardStyles() +
+      '">' +
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+      '<span style="' +
+      badgeStyles("#059669") +
+      '"><span aria-hidden="true">&#x2714;</span>MiCA</span>' +
+      '<span style="font-size:15px;font-weight:600;color:#0f172a;">En vigueur en France depuis le 1er juillet 2026</span>' +
+      "</div>" +
+      '<div style="margin-top:8px;font-size:12px;color:#475569;line-height:1.5;">' +
+      "Seules les plateformes agréées MiCA peuvent proposer leurs services aux clients français. " +
+      '<a href="' +
+      BASE_URL +
+      '/outils/verificateur-mica" target="_top" rel="noopener" style="' +
+      linkStyles() +
+      '">Vérifier une plateforme</a>' +
+      "</div>" +
+      attributionFooter() +
+      "</div>";
   }
 
   // ---- Widget : top-cryptos -----------------------------------------------
@@ -287,7 +273,7 @@ function generateWidgetJs(): string {
     var limitRaw = parseInt(node.getAttribute("data-limit") || "5", 10);
     var limit = isNaN(limitRaw) ? 5 : Math.min(Math.max(limitRaw, 1), 10);
 
-    node.innerHTML = '<div style="' + cardStyles() + '">Chargement...</div>';
+    node.innerHTML = '<div style="' + cardStyles() + '">Chargement…</div>';
 
     jsonGet(API_BASE + "/top-cryptos")
       .then(function (data) {
@@ -296,7 +282,7 @@ function generateWidgetJs(): string {
           node.innerHTML =
             '<div style="' +
             cardStyles() +
-            '">Donnees indisponibles temporairement.' +
+            '">Données temporairement indisponibles.' +
             attributionFooter() +
             "</div>";
           return;
@@ -326,7 +312,7 @@ function generateWidgetJs(): string {
           '">' +
           '<div style="font-weight:700;font-size:15px;color:#0f172a;margin-bottom:4px;">Top ' +
           limit +
-          " cryptos vulgarisees</div>" +
+          " cryptos expliquées simplement</div>" +
           '<ul style="margin:6px 0 0 0;padding:0;list-style:none;">' +
           rows +
           "</ul>" +
@@ -337,7 +323,7 @@ function generateWidgetJs(): string {
         node.innerHTML =
           '<div style="' +
           cardStyles() +
-          '">Widget Cryptoreflex : impossible de charger les donnees (' +
+          '">Widget Cryptoreflex : impossible de charger les données (' +
           escHtml(err.message) +
           ").</div>";
       });

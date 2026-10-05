@@ -17,14 +17,16 @@ import {
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: "Whitepaper TL;DR — Grille de red flags crypto (score BS)",
-  description:
+  title: fitTitle("Whitepaper TL;DR — Grille de red flags crypto (score BS)"),
+  description: fitDescription(
     "La méthode publique Cryptoreflex pour décoder un whitepaper crypto : grille de 15+ red flags (tokenomics, équipe, vesting, audits) et logique de score BS sur 100. Pédagogie gratuite, sans inscription.",
+  ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",

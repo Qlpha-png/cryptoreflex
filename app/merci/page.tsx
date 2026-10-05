@@ -112,7 +112,7 @@ export default function MerciPage() {
                 <div className="min-w-0">
                   <h2 className="font-bold text-fg">Votre guide PDF, tout de suite</h2>
                   <p className="text-xs text-muted mt-1">
-                    Les plateformes crypto régulées MiCA à utiliser en France 2026 (PDF, ~1.2 Mo)
+                    Les plateformes crypto régulées MiCA à utiliser en France 2026 (PDF, 57 pages)
                   </p>
                 </div>
               </div>

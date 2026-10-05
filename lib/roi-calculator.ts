@@ -6,6 +6,8 @@
  * complet, l'utilisateur est redirigé vers /outils/calculateur-fiscalite.
  */
 
+import { fmtFr } from "@/lib/format-fr";
+
 import {
   ROI_TAX_CONSTANTS,
   type ROIInput,
@@ -23,9 +25,10 @@ import {
  *  5. Frais de vente = valeur finale × sellFeeRate / 100.
  *  6. Plus-value nette = valueFinal - investissement - totalFees.
  *  7. ROI % = profitNet / investissement × 100.
- *  8. Impôt FR = profitNet × 31,4 % (PFU) si le total des ventes (valueFinal) dépasse 305 €
- *     et que la plus-value est positive ; sinon 0. Le seuil de 305 € porte sur le total des
- *     prix de cession de l'année, jamais sur la plus-value.
+ *  8. Impôt FR = profitNet × 31,4 % (PFU) si le prix de vente NET de frais (valueFinal − frais de
+ *     vente) dépasse 305 € et que la plus-value est positive ; sinon 0. Le seuil de 305 € porte sur
+ *     le total des prix de cession nets de frais de l'année (lignes 218 du 2086, comme le générateur
+ *     Cerfa), jamais sur la plus-value.
  *
  * @example
  * calculateROI({ buyPrice: 100, sellPrice: 200, quantity: 1, buyFeeRate: 0.5, sellFeeRate: 0.5 })
@@ -77,12 +80,14 @@ export function calculateROI(input: ROIInput): ROIResult {
   // ---- 3. Impôt français (PFU 31,4 %) ----
   // Exonération (art. 150 VH bis, II B du CGI) : elle s'applique quand le TOTAL DES PRIX DE
   // CESSION de l'année ne dépasse pas 305 €, pas quand la plus-value est sous 305 €.
-  // Pour cette opération unique, le prix de cession est valueFinal (brut, avant frais).
+  // Le formulaire 2086 mesure ce seuil sur les prix de cession NETS de frais (lignes 218,
+  // total ligne 51) : audit du 05/10/2026, aligné sur le générateur Cerfa (lib/cerfa-2086.ts).
   // Audit 03/10/2026 : l'ancien test « profitNet > 305 » affichait 0 € d'impôt pour
   // 10 300 € de ventes et 300 € de gain (dû : 94,20 €).
   const { TAX_FREE_THRESHOLD_EUR, PFU_RATE } = ROI_TAX_CONSTANTS;
+  const netSale = valueFinal - sellFees;
   const taxFr =
-    valueFinal > TAX_FREE_THRESHOLD_EUR && profitNet > 0 ? profitNet * PFU_RATE : 0;
+    netSale > TAX_FREE_THRESHOLD_EUR && profitNet > 0 ? profitNet * PFU_RATE : 0;
 
   return {
     investmentInitial: round2(investmentInitial),
@@ -134,5 +139,5 @@ export function formatEur(value: number): string {
 export function formatPctSigned(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)} %`;
+  return `${sign}${fmtFr(value, 2)} %`;
 }

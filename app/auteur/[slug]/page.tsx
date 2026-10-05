@@ -26,6 +26,7 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 interface Props {
   params: { slug: string };
@@ -47,7 +48,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const author = getAuthorById(params.slug);
   if (!author) return { robots: { index: false, follow: false } };
   return {
-    title: `${author.name} — ${author.role}`,
+    title: fitTitle(`${author.name} — ${author.role}`),
     description: author.shortBio,
     alternates: withHreflang(`/auteur/${author.id}`),
     openGraph: {

@@ -29,6 +29,7 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 /* -------------------------------------------------------------------------- */
 /*  ISR — revalidation 1x / jour (les tarifs des outils bougent rarement)     */
@@ -48,7 +49,7 @@ const PAGE_PATH = "/outils/declaration-fiscale-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: fitTitle(PAGE_TITLE),
   description: PAGE_DESCRIPTION,
   alternates: withHreflang(PAGE_PATH),
   keywords: [
@@ -227,7 +228,7 @@ export default function DeclarationFiscaleCryptoPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Comparatif éditorial 2026 — mis à jour {new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+              Comparatif éditorial 2026
             </span>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               Comparatif outils{" "}

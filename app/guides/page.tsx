@@ -94,7 +94,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, collection]);
 
 export default function GuidesHubPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="guides-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -169,6 +169,6 @@ export default function GuidesHubPage() {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import SuccessionCryptoTool from "@/components/SuccessionCryptoTool";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /outils/succession-crypto — outil « Succession crypto » (terminé le 05/10/2026 ; page « Bientôt » auparavant).
@@ -26,9 +27,10 @@ export const revalidate = 86400;
 const PATH = "/outils/succession-crypto";
 
 export const metadata: Metadata = {
-  title: "Succession crypto : transmettre ses cryptos à ses proches",
-  description:
+  title: fitTitle("Succession crypto : transmettre ses cryptos à ses proches"),
+  description: fitDescription(
     "Transmettre ses cryptos sans qu'elles se perdent : lettre d'intention gratuite à imprimer, liste de contrôle, testament et droits de succession en France. Rien n'est enregistré.",
+  ),
   alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: "Succession crypto — Cryptoreflex",

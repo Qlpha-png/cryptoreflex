@@ -65,7 +65,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   // === FONDAMENTAUX (top 4 par capi) ===
   {
     id: "top-4-capi",
-    title: "Top 4 capi",
+    title: "Top 4 des capitalisations",
     subtitle: "BTC, ETH, BNB, XRP : les 4 plus grosses capitalisations.",
     slugs: ["bitcoin", "ethereum", "bnb", "xrp"],
     category: "fondamentaux",
@@ -74,7 +74,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   {
     id: "btc-vs-eth-killers",
     title: "BTC vs Ethereum killers",
-    subtitle: "Bitcoin face aux 3 challengers smart-contracts les plus serieux.",
+    subtitle: "Bitcoin face aux 3 challengers « smart contracts » les plus sérieux.",
     slugs: ["bitcoin", "ethereum", "solana", "cardano"],
     category: "fondamentaux",
     icon: "Sparkles",
@@ -91,8 +91,8 @@ export const QUICK_COMBOS: QuickCombo[] = [
   },
   {
     id: "ecosystemes-emergents",
-    title: "Ecosystemes emergents",
-    subtitle: "Near, Sui, Aptos, Sei : la prochaine generation Layer 1.",
+    title: "Écosystèmes émergents",
+    subtitle: "Near, Sui, Aptos, Sei : la nouvelle génération de Layer 1.",
     slugs: ["near-protocol", "sui", "aptos", "sei"],
     category: "ecosystemes",
     icon: "Rocket",
@@ -102,7 +102,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   {
     id: "top-4-depin",
     title: "Top 4 DePIN",
-    subtitle: "Render, Filecoin, Helium, Akash : les reseaux d'infrastructure decentralisee.",
+    subtitle: "Render, Filecoin, Helium, Akash : les réseaux d'infrastructure décentralisée.",
     slugs: ["render", "filecoin", "helium", "akash-network"],
     category: "themes-tech",
     icon: "Cpu",
@@ -118,7 +118,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   {
     id: "top-4-rwa",
     title: "Top 4 RWA",
-    subtitle: "Chainlink, Ondo, Pendle, Polymesh : la tokenisation des actifs reels.",
+    subtitle: "Chainlink, Ondo, Pendle, Polymesh : la tokenisation des actifs réels.",
     slugs: ["chainlink", "ondo-finance", "pendle", "polymesh"],
     category: "themes-tech",
     icon: "Globe",
@@ -128,7 +128,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   {
     id: "top-4-stablecoins",
     title: "Stablecoins vs Bitcoin",
-    subtitle: "USDT, USDC, DAI face a BTC : compare la stabilite a l'actif de reference.",
+    subtitle: "USDT, USDC, DAI face à BTC : comparez la stabilité à l'actif de référence.",
     slugs: ["tether", "usd-coin", "dai", "bitcoin"],
     category: "themes-trade",
     icon: "DollarSign",
@@ -146,7 +146,7 @@ export const QUICK_COMBOS: QuickCombo[] = [
   {
     id: "diversification-classique",
     title: "Diversification classique",
-    subtitle: "BTC + ETH + 1 stablecoin + 1 altcoin : portefeuille debutant equilibre.",
+    subtitle: "BTC + ETH + 1 stablecoin + 1 altcoin : un portefeuille débutant équilibré.",
     slugs: ["bitcoin", "ethereum", "tether", "solana"],
     category: "decouverte",
     icon: "TrendingUp",
@@ -170,8 +170,8 @@ export function getQuickCombosByCategory(
 /** Labels FR par categorie (pour titres de section UI). */
 export const COMBO_CATEGORY_LABELS: Record<QuickCombo["category"], string> = {
   fondamentaux: "Fondamentaux",
-  ecosystemes: "Ecosystemes",
-  "themes-tech": "Themes tech",
-  "themes-trade": "Themes trading",
-  decouverte: "Decouverte",
+  ecosystemes: "Écosystèmes",
+  "themes-tech": "Thèmes tech",
+  "themes-trade": "Thèmes trading",
+  decouverte: "Découverte",
 };

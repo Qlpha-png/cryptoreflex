@@ -25,7 +25,7 @@ disclaimer: "Document indicatif. Pour une situation complexe (DeFi, BIC, NFT > 5
 - [ ] **7.** Sauvegardez les **exports CSV** dans un dossier "Fiscal-Crypto-2025" — à conserver au moins 6 ans (10 ans par prudence).
 - [ ] **8.** Notez votre **TMI 2025 estimée** (Tranche Marginale d'Imposition : 0 %, 11 %, 30 %, 41 % ou 45 %). Déterminez si vous avez intérêt à opter pour le barème plutôt que pour le PFU.
 - [ ] **9.** Identifiez les événements particuliers : **staking, airdrops, NFT, mining, DeFi, lending**. Leur régime fiscal varie et, pour le staking/airdrops, n'est pas tranché par une doctrine officielle dédiée (à vérifier au cas par cas).
-- [ ] **10.** Préparez la liste de vos **moins-values 2025** réalisées (vente effective requise pour matérialiser une perte sur token rugged ou stuck).
+- [ ] **10.** Repérez les ventes de 2025 qui dégagent une **moins-value** : avec la méthode globale, c'est le portefeuille entier au jour de la vente qui décide, pas la crypto vendue.
 
 ---
 
@@ -63,7 +63,7 @@ disclaimer: "Document indicatif. Pour une situation complexe (DeFi, BIC, NFT > 5
 
 Cette checklist est indicative, basée sur la fiscalité crypto en vigueur au 2 octobre 2026. Les dates de la campagne déclarative changent chaque année : référez-vous au calendrier officiel publié par la DGFiP sur impots.gouv.fr. **Pour toute situation complexe (DeFi multi-chain, NFT > 50 000 €, BIC pro, mining), consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur les choix fiscaux faits à partir de ce document.
 
-Référence légale : article 150 VH bis du CGI, BOI-RPPM-PVBMC-30-30, formulaires Cerfa 2086 et 3916-bis.
+Référence légale : article 150 VH bis du CGI, BOFiP BOI-RPPM-PVBMC-30, formulaires Cerfa 2086 et 3916-bis.
 
 ---
 

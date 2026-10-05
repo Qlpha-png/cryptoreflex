@@ -27,6 +27,8 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * /outils/yield-stablecoins — Comparateur APY stablecoins.
@@ -46,7 +48,7 @@ export const revalidate = 86400; // 24h — donnée éditoriale, pas live
 export const metadata: Metadata = {
   /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
   robots: { index: false, follow: true },
-  title: "Comparateur APY stablecoins 2026 — où placer USDC, USDT, EURC en France",
+  title: fitTitle("Comparateur APY stablecoins 2026 — où placer USDC, USDT, EURC en France"),
   description:
     "Comparatif des rendements (APY) des stablecoins USDC, USDT, EURC sur les plateformes régulées MiCA en France. Données vérifiées, transparence totale.",
   alternates: withHreflang(`${BRAND.url}/outils/yield-stablecoins`),
@@ -226,8 +228,8 @@ export default function YieldStablecoinsPage() {
                           </td>
                           <td className="px-3 py-3 font-mono tabular-nums text-right font-bold text-success">
                             {y.apyMin === y.apyMax
-                              ? `${y.apyMax.toFixed(1)} %`
-                              : `${y.apyMin.toFixed(1)} - ${y.apyMax.toFixed(1)} %`}
+                              ? `${fmtFr(y.apyMax, 1)} %`
+                              : `${fmtFr(y.apyMin, 1)} - ${fmtFr(y.apyMax, 1)} %`}
                           </td>
                           <td className="px-3 py-3 font-mono tabular-nums text-right text-fg/80">
                             {y.lockUpDays === 0 ? "—" : `${y.lockUpDays} j`}

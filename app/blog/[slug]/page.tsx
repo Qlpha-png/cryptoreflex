@@ -35,6 +35,7 @@ import {
   authorPersonSchema,
   getAuthorByIdOrDefault,
 } from "@/lib/authors";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 interface Props {
   params: { slug: string };
@@ -76,10 +77,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImageUrl = article.cover || `${url}/opengraph-image`;
 
   return {
-    // AUDIT 03/10/2026 — au-delà de 46 caractères, le suffixe « | Cryptoreflex » ferait dépasser les 60 que Google affiche :
-    // on garde le titre tel quel, sans suffixe (titre absolu), plutôt qu'un titre tronqué au milieu.
-    title: seoTitle.length > 46 ? { absolute: seoTitle } : seoTitle,
-    description: seoDescription,
+    // Titre ≤ 65 caractères, suffixe « | Cryptoreflex » seulement s'il tient, raccourci proprement sinon
+    // (lib/seo-text.ts, audit du 05/10/2026 : 4 articles dépassaient encore 70 caractères).
+    title: fitTitle(seoTitle),
+    description: fitDescription(seoDescription),
     keywords: article.keywords,
     alternates: withHreflang(url),
     authors: [{ name: author.name, url: `/auteur/${author.id}` }],

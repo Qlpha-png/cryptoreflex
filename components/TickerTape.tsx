@@ -5,6 +5,7 @@ import { Pause, Play } from "lucide-react";
 import { formatUsd, formatCompactUsd } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * TickerTape — bandeau marché "terminal" fin (DA Obsidian, sprint 1b).
@@ -74,7 +75,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
       </TapeCell>,
       <TapeCell key="dom" label="Dominance BTC">
         <span className="num-data text-ice-fg">
-          {globalMetrics.btcDominance.toFixed(1)}%
+          {fmtFr(globalMetrics.btcDominance, 1)}%
         </span>
       </TapeCell>,
     );
@@ -124,7 +125,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
             >
               <span aria-hidden="true">{up ? "▲" : "▼"}</span>
               <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-              {Math.abs(coin.change24h).toFixed(2)}%
+              {fmtFr(Math.abs(coin.change24h), 2)}%
             </span>
           </div>
         );
@@ -192,7 +193,7 @@ function Delta({ value }: { value: number }) {
     <span className={`num-data ${up ? "text-success-fg" : "text-danger-fg"}`}>
       <span aria-hidden="true">{up ? "▲" : "▼"}</span>
       <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-      {Math.abs(value).toFixed(2)}%
+      {fmtFr(Math.abs(value), 2)}%
     </span>
   );
 }

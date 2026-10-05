@@ -224,7 +224,7 @@ function Row({
             className="w-full min-w-0 overflow-x-auto whitespace-nowrap text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-white"
             role="status"
             aria-live="polite"
-            aria-label={loading ? "Conversion en cours" : `Resultat : ${formatAmount(amount, isFiat)} ${symbol.toUpperCase()}`}
+            aria-label={loading ? "Conversion en cours" : `Résultat : ${formatAmount(amount, isFiat)} ${symbol.toUpperCase()}`}
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin text-muted" aria-hidden="true" />

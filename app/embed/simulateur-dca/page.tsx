@@ -38,7 +38,7 @@ export default function EmbedSimulateurDcaPage() {
       style={{
         maxWidth: 720,
         margin: "0 auto",
-        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
       }}
     >
       <h1

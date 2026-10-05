@@ -241,7 +241,9 @@ export default function PortfolioTracker() {
   return (
     <div className="space-y-8">
       {/* Bloc ajout */}
-      <div className="glass rounded-2xl p-5 sm:p-6">
+      {/* relative z-20 : .glass (backdrop-filter) crée un contexte d'empilement ; sans z-index, la liste des cryptos
+          s'ouvrait SOUS le bloc suivant et ses choix n'étaient pas cliquables (audit navigateur du 05/10/2026). */}
+      <div className="glass relative z-20 rounded-2xl p-5 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-glow">
             <Plus className="h-5 w-5 text-background" />

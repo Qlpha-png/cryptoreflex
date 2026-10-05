@@ -4,7 +4,8 @@ import walletsData from "@/data/wallets.json";
 export interface Platform {
   id: string;
   name: string;
-  logo: string;
+  /** Chemin d'un fichier RÉEL de public/logos, ou null s'il n'existe pas de logo officiel (jamais de logo inventé). */
+  logo: string | null;
   tagline: string;
   websiteUrl: string;
   affiliateUrl: string;
@@ -155,6 +156,14 @@ export function getPlatformById(id: string): Platform | undefined {
  * Audit 05/10/2026 : l'ancienne version prenait toutes les entrées (portefeuilles Ledger et Trezor compris) pour
  * les données structurées « plateformes régulées MiCA en France », et Binance (non autorisé) était 8e.
  */
+/**
+ * Vrai si le libellé « dernier incident » signifie qu'il n'y en a pas (null, « Aucun incident majeur… »).
+ * Audit du 05/10/2026 : ces libellés s'affichaient en orange et produisaient « Incident notable : Aucun incident majeur ».
+ */
+export function hasNoIncident(lastIncident: string | null | undefined): boolean {
+  return !lastIncident || /^aucun\b/i.test(lastIncident.trim());
+}
+
 export function getTopPlatforms(n = 6): Platform[] {
   return getExchangePlatforms().filter(isAvailableFr).slice(0, n);
 }
@@ -205,12 +214,8 @@ export function feeShortFr(p: Platform): string {
   return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %` : "voir l'avis";
 }
 
-export function feeShort(p: Platform): string {
-  if (p.category === "wallet") return "spread in-app";
-  const mt = p.fees.verified?.makerTakerApplies ?? true;
-  const rc = mt ? p.fees.spotTaker : p.fees.instantBuy;
-  return `${rc}%`;
-}
+/** Alias de feeShortFr : tout le site est en français (« 1,49 % » et non « 1.49% », audit du 05/10/2026). */
+export const feeShort = feeShortFr;
 
 export const platformsMeta = data._meta;
 

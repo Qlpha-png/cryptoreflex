@@ -117,7 +117,7 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     lockUpDays: 0,
     productType: "Earn",
     risk: 2,
-    notes: "Tier-based : 25k$ first @ 5.5%, au-delà 4.5%.",
+    notes: "Par paliers : 5,5 % jusqu'à 25 000 $, 4,5 % au-delà.",
     url: "https://www.kraken.com/fr-fr",
   },
   {

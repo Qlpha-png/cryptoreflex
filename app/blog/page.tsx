@@ -47,7 +47,7 @@ export default async function BlogIndexPage() {
     "@id": `${BRAND.url}/blog#blog`,
     name: "Blog Cryptoreflex — Guides crypto FR",
     description:
-      "Guides clairs pour debuter dans la crypto : Bitcoin, MiCA, wallets, fiscalite, securite, comparatifs de plateformes.",
+      "Guides clairs pour débuter dans la crypto : Bitcoin, MiCA, wallets, fiscalité, sécurité, comparatifs de plateformes.",
     url: `${BRAND.url}/blog`,
     inLanguage: "fr-FR",
     publisher: {

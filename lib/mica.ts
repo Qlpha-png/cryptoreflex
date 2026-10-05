@@ -29,7 +29,8 @@ export interface PlatformMica {
   id: string;
   name: string;
   aliases: string[];
-  logo: string;
+  /** Chemin d'un logo présent dans public/logos, ou null (aucun logo officiel téléchargé). */
+  logo: string | null;
   websiteUrl: string;
   legalEntity: string;
   headquarters: string;

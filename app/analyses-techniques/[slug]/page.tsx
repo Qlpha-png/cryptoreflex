@@ -21,7 +21,13 @@ import SupportResistanceList from "@/components/ta/SupportResistanceList";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 import { withHreflang } from "@/lib/seo-alternates";
-import { stripBrandSuffix } from "@/lib/seo-title";
+import { fitTitle } from "@/lib/seo-text";
+import { getCryptoLogo, getCryptoLogoFromSymbol } from "@/lib/crypto-logos";
+import { fmtFr } from "@/lib/format-fr";
+
+/** Icône ronde d'une analyse : le logo de la crypto (CoinGecko), jamais l'image de partage du site (/og-default.png,
+ *  affichée en vignette ronde sur 345 analyses) ni un logo local absent (/logos/cardano.svg… en 404, audit 05/10/2026). */
+const taIcon = (a: { coingeckoId: string; symbol: string }) => getCryptoLogo(a.coingeckoId) ?? getCryptoLogoFromSymbol(a.symbol);
 
 // PriceChart : Client Component (fetch /api/historical au mount).
 // Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
@@ -61,16 +67,27 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
+/**
+ * Titre et description affichés : les fichiers écrits par le robot portent une date ISO (« Analyse technique BTC —
+ * 2026-10-05 ») ; Google et les partages reçoivent une date en français (audit du 05/10/2026, 345 analyses).
+ */
+function taTitle(a: { name: string; symbol: string; date: string }): string {
+  return `${a.name} (${a.symbol}) : analyse technique du ${formatDateFr(a.date)}`;
+}
+function taDescription(d: string): string {
+  return d.replace(/\b(\d{4}-\d{2}-\d{2})\b/g, (iso) => formatDateFr(iso));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getTAArticleBySlug(params.slug);
   if (!article) return { robots: { index: false, follow: false } };
   return {
-    title: stripBrandSuffix(article.title),
-    description: article.description,
+    title: fitTitle(taTitle(article)),
+    description: taDescription(article.description),
     alternates: withHreflang(`${BRAND.url}/analyses-techniques/${article.slug}`),
     openGraph: {
-      title: article.title,
-      description: article.description,
+      title: taTitle(article),
+      description: taDescription(article.description),
       url: `${BRAND.url}/analyses-techniques/${article.slug}`,
       type: "article",
       publishedTime: article.date,
@@ -93,15 +110,15 @@ function formatDateFr(iso: string): string {
 
 function formatPrice(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
-  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  if (value >= 1) return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return value.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (value >= 1000) return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+  if (value >= 1) return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return value.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
 function formatPct(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value > 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}%`;
+  return `${sign}${fmtFr(value, 2)}%`;
 }
 
 export default async function TAArticlePage({ params }: Props) {
@@ -121,8 +138,8 @@ export default async function TAArticlePage({ params }: Props) {
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: article.title,
-    description: article.description,
+    headline: taTitle(article),
+    description: taDescription(article.description),
     datePublished: article.date,
     dateModified: article.date,
     author: { "@type": "Organization", name: BRAND.name, url: BRAND.url },
@@ -176,10 +193,10 @@ export default async function TAArticlePage({ params }: Props) {
           {/* Header */}
           <header className="mb-8">
             <div className="flex items-center gap-3 mb-3">
-              {article.image ? (
+              {taIcon(article) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={article.image}
+                  src={taIcon(article)}
                   alt=""
                   className="h-10 w-10 rounded-full bg-elevated"
                   loading="eager"
@@ -307,9 +324,9 @@ export default async function TAArticlePage({ params }: Props) {
                       href={`/analyses-techniques/${o.slug}`}
                       className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3 hover:border-primary/40 transition-colors"
                     >
-                      {o.image ? (
+                      {taIcon(o) ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={o.image} alt="" className="h-8 w-8 rounded-full bg-elevated" loading="lazy" />
+                        <img src={taIcon(o)} alt="" className="h-8 w-8 rounded-full bg-elevated" loading="lazy" />
                       ) : (
                         <div className="h-8 w-8 rounded-full bg-elevated grid place-items-center text-[11px] font-bold text-primary">
                           {o.symbol.slice(0, 3)}
@@ -318,7 +335,7 @@ export default async function TAArticlePage({ params }: Props) {
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold truncate">{o.name}</div>
                         <div className="text-[11px] text-muted font-mono">
-                          {formatPrice(o.currentPrice)} $ · RSI {o.rsi.toFixed(1)}
+                          {formatPrice(o.currentPrice)} $ · RSI {fmtFr(o.rsi, 1)}
                         </div>
                       </div>
                       <TrendBadge trend={o.trend} size="sm" iconOnly />

@@ -20,6 +20,8 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * /avis — Hub des avis plateformes (P0-5 audit-back-live-final).
@@ -42,8 +44,8 @@ const DESCRIPTION =
   "Nos avis détaillés sur les plateformes crypto autorisées en France : Coinbase, Kraken, Bitpanda, Bitstack, Trade Republic… Frais, sécurité, statut MiCA vérifié au registre, support en français.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -231,8 +233,8 @@ export default function AvisHubPage() {
               Comment on note les plateformes
             </h2>
             <p className="mt-2 text-sm text-fg/70 max-w-3xl">
-              Six critères pondérés, mesurés sur la base de tests réels et de
-              données vérifiables (frais affichés, registres AMF/MiCA, audits
+              Six critères pondérés, mesurés sur la base de
+              données vérifiables (frais affichés, registres AMF/MiCA, avis
               Trustpilot). Aucune note n'est influencée par les commissions
               d'affiliation.
             </p>
@@ -272,7 +274,7 @@ function ReviewCard({ platform }: { platform: Platform }) {
           <div className="mt-1 flex items-center gap-1.5">
             <Star className="h-3.5 w-3.5 fill-primary text-primary" />
             <span className="font-mono text-sm tabular-nums text-fg">
-              {scoring.global.toFixed(1)}
+              {fmtFr(scoring.global, 1)}
               <span className="text-muted">/5</span>
             </span>
           </div>

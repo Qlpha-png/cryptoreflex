@@ -27,6 +27,7 @@ import type { Platform } from "@/lib/platforms";
 import { isAvailableFr } from "@/lib/platforms";
 import { affiliationNotice } from "@/lib/partnerships";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
+import { fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -875,7 +876,7 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
           className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5 whitespace-nowrap shrink-0"
           aria-label={`Note Cryptoreflex ${p.scoring.global} sur 5`}
         >
-          {p.scoring.global}/5
+          {fmtNb(p.scoring.global)}/5
         </span>
       </div>
 
@@ -899,7 +900,7 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
       <div className="mt-4 grid grid-cols-2 gap-3 text-[11px]">
         <div>
           <div className="text-muted uppercase tracking-wider">Frais taker</div>
-          <div className="mt-0.5 font-mono font-semibold text-fg">{p.fees.spotTaker}%</div>
+          <div className="mt-0.5 font-mono font-semibold text-fg">{fmtNb(p.fees.spotTaker)}%</div>
         </div>
         <div>
           <div className="text-muted uppercase tracking-wider">MiCA</div>

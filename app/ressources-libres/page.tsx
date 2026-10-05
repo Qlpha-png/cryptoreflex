@@ -27,6 +27,7 @@ import {
 import { GLOSSARY } from "@/lib/glossary";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /ressources-libres — page recensant tout ce qui est gratuit/open/réutilisable
@@ -49,11 +50,11 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const PAGE_TITLE =
   "Ressources libres — outils, données, assets sous CC-BY 4.0";
 const PAGE_DESCRIPTION =
-  "Tout ce qui est gratuit, open et réutilisable sur Cryptoreflex : 4 widgets embeddables, données ouvertes (top cryptos, plateformes MiCA, glossaire), logo de marque. License CC-BY 4.0.";
+  `Tout ce qui est gratuit, open et réutilisable sur Cryptoreflex : ${EMBEDDABLE_TOOLS.length} widgets embeddables, données ouvertes (top cryptos, plateformes MiCA, glossaire), logo de marque. Licence CC-BY 4.0.`;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
+  title: fitTitle(PAGE_TITLE),
+  description: fitDescription(PAGE_DESCRIPTION),
   alternates: withHreflang(PAGE_PATH),
   openGraph: {
     title: PAGE_TITLE,
@@ -119,7 +120,7 @@ export default function RessourcesLibresPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              License CC-BY 4.0 — réutilisation commerciale autorisée
+              Licence CC-BY 4.0 — réutilisation commerciale autorisée
             </span>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               Ressources libres{" "}
@@ -373,7 +374,7 @@ export default function RessourcesLibresPage() {
               </div>
               <div className="flex-1">
                 <h2 className="font-display text-2xl font-extrabold text-fg">
-                  License Creative Commons BY 4.0
+                  Licence Creative Commons BY 4.0
                 </h2>
                 <p className="mt-3 text-sm text-fg/80 leading-relaxed">
                   Tous les contenus listés sur cette page (widgets, données,

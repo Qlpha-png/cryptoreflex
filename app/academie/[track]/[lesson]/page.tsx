@@ -32,6 +32,7 @@ import { getArticleBySlug } from "@/lib/mdx";
 import { TRACKS, getTrack, getLesson, getNeighbors } from "@/lib/academy-tracks";
 import { breadcrumbSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 interface Props {
   params: { track: string; lesson: string };
@@ -69,8 +70,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${BRAND.url}/blog/${lesson.articleSlug}`;
 
   return {
-    title,
-    description: article.description,
+    title: fitTitle(title),
+    description: fitDescription(article.description),
     alternates: withHreflang(canonicalUrl),
     openGraph: {
       title,
@@ -128,7 +129,7 @@ export default async function LessonPage({ params }: Props) {
   ]);
 
   return (
-    <main className="py-8 sm:py-12">
+    <div className="py-8 sm:py-12">
       <StructuredData
         data={[schema, breadcrumbs]}
         id={`lesson-${lesson.articleSlug}`}
@@ -224,6 +225,6 @@ export default async function LessonPage({ params }: Props) {
           </aside>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

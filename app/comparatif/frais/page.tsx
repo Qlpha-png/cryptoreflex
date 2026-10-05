@@ -24,6 +24,8 @@ import {
   faqSchema,
   graphSchema,
 } from "@/lib/schema";
+import { fitTitle } from "@/lib/seo-text";
+import { fmtDateFr } from "@/lib/format-fr";
 
 /**
  * /comparatif/frais — Frais RÉELS des plateformes crypto FR.
@@ -50,7 +52,7 @@ const TITLE = `Frais crypto 2026 : ${PLATFORM_COUNT} plateformes comparées (fra
 const DESCRIPTION = `Frais réels vérifiés sur grilles officielles : maker, taker, achat carte, SEPA. ${PLATFORM_COUNT} plateformes crypto en France, sourcées et datées. Du moins cher au plus cher.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: fitTitle(TITLE),
   description: DESCRIPTION,
   alternates: withHreflang(PAGE_URL),
   openGraph: {
@@ -76,7 +78,7 @@ type Verified = NonNullable<
 interface FeesRow {
   id: string;
   name: string;
-  logo: string;
+  logo: string | null;
   /** Fiche /avis/<id> si elle existe, sinon null (pas de lien). */
   href: string | null;
   spotMaker: number;
@@ -110,11 +112,11 @@ function buildRows(): FeesRow[] {
 }
 
 function fmtPct(n: number): string {
-  return `${n.toFixed(2).replace(/\.?0+$/, "")}%`;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
 }
 
 function fmtSepa(v: number | string): string {
-  if (typeof v === "number") return v === 0 ? "Gratuit" : `${v}€`;
+  if (typeof v === "number") return v === 0 ? "Gratuit" : `${v.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`;
   return v;
 }
 
@@ -394,7 +396,7 @@ export default function ComparatifFraisPage() {
                         <span className="text-muted">—</span>
                       )}
                       {r.v?.date && (
-                        <div className="mt-0.5 text-[10px] text-muted">{r.v.date}</div>
+                        <div className="mt-0.5 text-[10px] text-muted">{fmtDateFr(r.v.date)}</div>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">

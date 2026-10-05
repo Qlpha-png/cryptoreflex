@@ -42,7 +42,7 @@ Ce document entre dans la catégorie YMYL (Your Money Your Life) au sens des gui
 
 ### Le marché crypto français en 2026 : un tournant réglementaire majeur
 
-Selon l'AMF, environ 12 % des Français adultes détiennent au moins un crypto-actif en 2026. Ce chiffre, stable depuis 2024, masque une réalité plus profonde : la qualité de la détention s'est radicalement transformée. Les utilisateurs ne cherchent plus simplement à "acheter du Bitcoin" — ils cherchent à le faire dans un cadre légal, sécurisé, et avec une fiscalité maîtrisée.
+Le nombre de Français qui détiennent des cryptos compte moins que la façon dont ils les détiennent, et c'est elle qui a changé. Les utilisateurs ne cherchent plus simplement à "acheter du Bitcoin" — ils cherchent à le faire dans un cadre légal, sécurisé, et avec une fiscalité maîtrisée.
 
 L'année 2026 marque l'application pleine et entière du règlement MiCA (Markets in Crypto-Assets) en France. Adopté par l'Union européenne, ce texte impose aux prestataires de services sur crypto-actifs d'obtenir un agrément CASP (Crypto-Asset Service Provider) auprès d'une autorité nationale compétente. La période transitoire française a pris fin le 1er juillet 2026 : depuis cette date, seul un prestataire agréé MiCA — par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France — peut servir les résidents français, et un ancien numéro PSAN ne vaut plus autorisation. Binance a ainsi cessé ses services sur crypto-actifs en France le 1er juillet 2026. Choisir une plateforme agréée MiCA n'est donc plus un détail optionnel : c'est la condition pour être servi légalement.
 
@@ -91,11 +91,11 @@ Le score global de chaque plateforme est une moyenne pondérée de 6 critères, 
 | Support en français | 10 % | Disponibilité chat FR, support téléphonique FR, temps de réponse moyen, qualité documentaire FR. |
 | Catalogue & services | 10 % | Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels. |
 
-La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les conséquences en cas de défaillance sont les plus irréparables. Un mauvais support client est récupérable — un hack qui entraîne la perte des fonds, non. Les frais (20 %) et la conformité réglementaire (20 %) sont co-deuxièmes, parce qu'en 2026 ces deux critères ont un impact direct sur l'accessibilité à long terme de votre compte. L'UX (15 %) compte davantage que le support (10 %) car elle détermine si vous utilisez réellement la plateforme ou si vous la laissez de côté après la première friction. Le catalogue (10 %) ferme le classement : c'est utile, mais 90 % des investisseurs particuliers n'ont besoin que de 10 à 20 cryptos.
+La sécurité est le critère le plus pondéré (25 %) car c'est celui dont les conséquences en cas de défaillance sont les plus irréparables. Un mauvais support client est récupérable — un hack qui entraîne la perte des fonds, non. Les frais (20 %) et la conformité réglementaire (20 %) sont co-deuxièmes, parce qu'en 2026 ces deux critères ont un impact direct sur l'accessibilité à long terme de votre compte. L'UX (15 %) compte davantage que le support (10 %) car elle détermine si vous utilisez réellement la plateforme ou si vous la laissez de côté après la première friction. Le catalogue (10 %) ferme le classement : c'est utile, mais la plupart des investisseurs particuliers n'ont besoin que de 10 à 20 cryptos.
 
 ### 2.2 Comment on calcule chaque sous-note
 
-**Frais (20 %)** : on collecte six données par plateforme — frais maker spot, frais taker spot, frais d'achat instantané, frais de retrait SEPA, frais de retrait crypto (indicatif par réseau), et spread typique annoncé. On simule ensuite un coût total sur une transaction représentative : achat de 1 000 € en mode instantané + une revente spot en mode taker. La sous-note reflète la compétitivité des frais réels, pas des frais théoriques. Une plateforme qui affiche 0,1 % de frais spot mais 1,8 % sur l'achat instantané (mode utilisé par 80 % des débutants) reçoit une note qui intègre les deux.
+**Frais (20 %)** : on collecte six données par plateforme — frais maker spot, frais taker spot, frais d'achat instantané, frais de retrait SEPA, frais de retrait crypto (indicatif par réseau), et spread typique annoncé. On simule ensuite un coût total sur une transaction représentative : achat de 1 000 € en mode instantané + une revente spot en mode taker. La sous-note reflète la compétitivité des frais réels, pas des frais théoriques. Une plateforme qui affiche 0,1 % de frais spot mais 1,8 % sur l'achat instantané (le mode le plus utilisé par les débutants) reçoit une note qui intègre les deux.
 
 **Sécurité (25 %)** : quatre dimensions sont évaluées. Le pourcentage de fonds en cold storage (hors ligne) — plus c'est élevé, mieux c'est. L'existence d'une assurance des fonds clients. Le caractère obligatoire ou seulement recommandé du MFA (authentification à deux facteurs). Et l'historique d'incidents : chaque hack significatif non remboursé dans les 12 mois est pénalisé lourdement. Un hack ancien entièrement remboursé est noté moins sévèrement.
 
@@ -128,7 +128,7 @@ Le critère catalogue est le seul critère entièrement dérivé de façon algor
 - +0,2 si la plateforme accepte au moins 5 méthodes de paiement distinctes
 - +0,3 si l'acteur est un broker multi-actifs (actions, ETF ou métaux précieux en plus de la crypto)
 
-Ce barème est intentionnellement simple et transparent. La courbe sur le nombre de cryptos est concave : les premières 100 cryptos comptent beaucoup (elles couvrent 99 % des besoins du marché retail), les suivantes de moins en moins. Avoir 800 cryptos au lieu de 400 ne vaut que 0,2 point supplémentaire. Les bonus staking et multi-actifs récompensent des services à valeur ajoutée réelle pour l'investisseur particulier.
+Ce barème est intentionnellement simple et transparent. La courbe sur le nombre de cryptos est concave : les premières 100 cryptos comptent beaucoup (elles couvrent l'essentiel des besoins des particuliers), les suivantes de moins en moins. Avoir 800 cryptos au lieu de 400 ne vaut que 0,2 point supplémentaire. Les bonus staking et multi-actifs récompensent des services à valeur ajoutée réelle pour l'investisseur particulier.
 
 Exemple de calcul pour Bitpanda (480 cryptos, staking oui, 7 méthodes de paiement, broker multi-actifs) :
 

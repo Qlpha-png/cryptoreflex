@@ -6,13 +6,15 @@ import { BRAND } from "@/lib/brand";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import StakingComparator from "@/components/StakingComparator";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Staking crypto en France 2026 — APY, plateformes MiCA, risques",
-  description:
+  title: fitTitle("Staking crypto en France 2026 — APY, plateformes MiCA, risques"),
+  description: fitDescription(
     "Comparateur staking 2026 pour 20 cryptos : filtres APY, lock-up, risque et plateforme. Plateformes agréées MiCA (Coinbase, Kraken, Bitpanda…) pour trouver le meilleur staking en France.",
+  ),
   alternates: withHreflang(`${BRAND.url}/staking`),
 };
 

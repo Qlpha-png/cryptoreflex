@@ -37,6 +37,7 @@ import PortfolioPieChart, {
 } from "@/components/PortfolioPieChart";
 import Sparkline from "@/components/Sparkline";
 import { useKeyboardNav } from "@/lib/use-keyboard-nav";
+import { fmtFr } from "@/lib/format-fr";
 
 const REFRESH_MS = 120_000; // 2 min — aligné avec le ticker / watchlist
 
@@ -419,7 +420,7 @@ export default function PortfolioView() {
         />
         <StatCard
           label="Performance"
-          value={`${gainPositive ? "+" : ""}${stats.gainPct.toFixed(2)}%`}
+          value={`${gainPositive ? "+" : ""}${fmtFr(stats.gainPct, 2)}%`}
           accent={gainPositive ? "green" : "rose"}
         />
         <StatCard
@@ -679,7 +680,7 @@ function HoldingRow({
               {`${up ? "+" : ""}${formatEur(gain)}`}
             </span>
             <span className="text-[10px] opacity-80">
-              {`${up ? "+" : ""}${pct.toFixed(2)}%`}
+              {`${up ? "+" : ""}${fmtFr(pct, 2)}%`}
             </span>
           </span>
         ) : (
@@ -766,7 +767,7 @@ function HoldingCardMobile({
               ) : (
                 <ArrowDownRight className="h-3 w-3" aria-hidden="true" />
               )}
-              {`${up ? "+" : ""}${pct.toFixed(2)}%`}
+              {`${up ? "+" : ""}${fmtFr(pct, 2)}%`}
             </div>
           )}
         </div>

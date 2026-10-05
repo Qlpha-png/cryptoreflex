@@ -12,6 +12,7 @@ import {
 import { getPlatformById } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 import { track } from "@/lib/analytics";
+import { fmtFr } from "@/lib/format-fr";
 
 const DURATION_OPTIONS = [
   { months: 6, label: "6 mois" },
@@ -169,7 +170,7 @@ export default function CalculateurApyStaking() {
               <div className="flex-1">
                 <span className="badge-info">Meilleur rendement net estimé</span>
                 <h3 className="mt-2 text-xl font-bold text-white">
-                  {bestRow.provider} — APY {bestRow.apy.toFixed(2)} %
+                  {bestRow.provider} — APY {fmtFr(bestRow.apy, 2)} %
                 </h3>
                 <p className="mt-1 text-sm text-white/70">
                   Avec {formatEur(amount)} stakés sur {months} mois, vous touchez
@@ -203,7 +204,7 @@ export default function CalculateurApyStaking() {
                           {METHOD_LABEL[r.method]}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-white/80">{r.apy.toFixed(2)} %</td>
+                      <td className="px-4 py-3 text-right text-white/80">{fmtFr(r.apy, 2)} %</td>
                       <td className="px-4 py-3 text-right text-white/60">{r.feePct} %</td>
                       <td className="px-4 py-3 text-right text-white/60">
                         {r.lockupDays === 0 ? "Liquide" : `${r.lockupDays} j`}

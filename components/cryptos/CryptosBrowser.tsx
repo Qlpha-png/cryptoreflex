@@ -19,6 +19,7 @@ import type { UnifiedCrypto } from "@/lib/cryptos-extended";
 import { useCompareList } from "@/lib/use-compare-list";
 import Tilt3D from "@/components/ui/Tilt3D";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * Navigateur /cryptos — liste UNIFIEE (100 premium + ~680 LLM) avec recherche,
@@ -402,7 +403,7 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
         {isGem && (
           <div className="shrink-0 rounded-lg border border-border bg-elevated px-2 py-1 text-center">
             <div className="text-[9px] uppercase tracking-wider text-muted">Fiabilité</div>
-            <div className="font-mono text-sm font-bold text-fg">{crypto.reliability.score.toFixed(1)}</div>
+            <div className="font-mono text-sm font-bold text-fg">{fmtFr(crypto.reliability.score, 1)}</div>
           </div>
         )}
       </div>

@@ -15,6 +15,7 @@ import {
   getAvailablePlatformCount,
   getPlatformById,
   type Platform,
+  hasNoIncident,
 } from "@/lib/platforms";
 import {
   getPublishableComparisons,
@@ -33,6 +34,8 @@ import {
   graphSchema,
   type JsonLd,
 } from "@/lib/schema";
+import { fitDescription } from "@/lib/seo-text";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * /comparatif — Hub des duels plateformes (P0-5 audit-back-live-final).
@@ -62,7 +65,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -358,13 +361,13 @@ export default function ComparatifHubPage() {
                 ~ (sibling) en fonction du radio coché. Pas de JS donc compatible
                 Server Component, et l'état n'est pas perdu au refresh.
               */}
-              <style>{`
+              <style dangerouslySetInnerHTML={{ __html: `
                 .profile-filter-wrap input[name="profile"] { display: none; }
                 .profile-filter-wrap .platform-card { display: flex; }
                 .profile-filter-wrap input#profile-debutant:checked ~ .platform-grid .platform-card:not([data-profile~="debutant"]) { display: none; }
                 .profile-filter-wrap input#profile-inter:checked ~ .platform-grid .platform-card:not([data-profile~="intermediaire"]) { display: none; }
                 .profile-filter-wrap input#profile-av:checked ~ .platform-grid .platform-card:not([data-profile~="avance"]) { display: none; }
-              `}</style>
+              ` }} />
 
               <div className="platform-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {topPlatforms.map((p) => (
@@ -503,14 +506,14 @@ function PlatformMiniCard({ platform }: { platform: Platform }) {
         <div className="font-bold text-fg truncate">{platform.name}</div>
         <div className="inline-flex items-center gap-1 text-xs text-amber-300 shrink-0">
           <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-          <span className="font-mono tabular-nums">{platform.scoring.global.toFixed(1)}</span>
+          <span className="font-mono tabular-nums">{fmtFr(platform.scoring.global, 1)}</span>
         </div>
       </div>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {platform.mica.micaCompliant && (
           <MiCAComplianceBadge variant="compact" />
         )}
-        {platform.security.coldStoragePct >= 95 && !platform.security.lastIncident && (
+        {platform.security.coldStoragePct >= 95 && hasNoIncident(platform.security.lastIncident) && (
           <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green">
             0 incident
           </span>

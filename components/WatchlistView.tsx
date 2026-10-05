@@ -19,6 +19,7 @@ import {
 } from "@/lib/watchlist";
 import EmptyState from "@/components/ui/EmptyState";
 import Sparkline from "@/components/Sparkline";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * Modèle simplifié des prix retournés par /api/prices.
@@ -499,13 +500,13 @@ function CardSkeleton() {
 function formatPrice(value: number): string {
   if (!value) return "—";
   if (value >= 1000) {
-    return value.toLocaleString("en-US", {
+    return value.toLocaleString("fr-FR", {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 0,
     });
   }
-  return value.toLocaleString("en-US", {
+  return value.toLocaleString("fr-FR", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: value < 1 ? 4 : 2,
@@ -514,5 +515,5 @@ function formatPrice(value: number): string {
 
 function formatPct(value: number): string {
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}%`;
+  return `${sign}${fmtFr(value, 2)}%`;
 }

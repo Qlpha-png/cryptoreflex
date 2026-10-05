@@ -132,7 +132,7 @@
         "instantBuy": 0,
         "withdrawalCrypto": "Frais réseau uniquement",
         "withdrawalFiatSepa": 0,
-        "spread": "Spread partenaires intégré (Invity ~1-2.5%)",
+        "spread": "Spread partenaires intégré (Invity ~1-2,5%)",
         "verified": {
           "date": "2026-06-13",
           "source": "https://trezor.io",

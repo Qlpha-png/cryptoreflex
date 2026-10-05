@@ -23,6 +23,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 // FIX LEGAL 2026-05-02 #16 (audit expert legal) — AmfDisclaimer educatif
 // obligatoire sur les outils ROI : frontière conseil personnalisé sinon floue.
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { fitTitle } from "@/lib/seo-text";
 
 /* ISR : recalcul tous les 24 h (la page est essentiellement statique). */
 export const revalidate = 86400;
@@ -52,7 +53,7 @@ const PAGE_PATH = "/outils/calculateur-roi-crypto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: fitTitle(PAGE_TITLE),
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_PATH,

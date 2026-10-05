@@ -1,4 +1,5 @@
 import data from "@/data/airdrops.json";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * lib/airdrops.ts — API typee pour data/airdrops.json (BLOC 3, 2026-05-04).
@@ -101,10 +102,10 @@ export function getAirdropById(id: string): Airdrop | null {
 /** Format USD compact (1.5Md$, 800M$, 12k$). */
 export function fmtCompactUsd(n: number | null): string {
   if (n == null || !Number.isFinite(n)) return "—";
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)}Md$`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(0)}M$`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}k$`;
-  return `${n.toFixed(0)}$`;
+  if (n >= 1e9) return `${fmtFr((n / 1e9), 1)}Md$`;
+  if (n >= 1e6) return `${fmtFr((n / 1e6), 0)}M$`;
+  if (n >= 1e3) return `${fmtFr((n / 1e3), 0)}k$`;
+  return `${fmtFr(n, 0)}$`;
 }
 
 /** Format date FR : "15 octobre 2025". null/undefined -> "—". */

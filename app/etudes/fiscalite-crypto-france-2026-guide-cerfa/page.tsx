@@ -24,6 +24,7 @@ import {
 import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /etudes/fiscalite-crypto-france-2026-guide-cerfa
@@ -51,8 +52,8 @@ const DESCRIPTION =
   "Tout sur la déclaration des cryptos en 2026 : régime PFU 31,4%, Cerfa 2086 ligne par ligne, annexe 3916-bis (comptes étrangers), cas particuliers (staking, NFT, airdrops). Sources BOFiP officielles.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/etudes/fiscalite-crypto-france-2026-guide-cerfa`),
   openGraph: {
     title: TITLE,
@@ -234,7 +235,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq, researchProject]);
 
 export default function FiscaliteCryptoStudyPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="fiscalite-study-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -1154,6 +1155,6 @@ export default function FiscaliteCryptoStudyPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

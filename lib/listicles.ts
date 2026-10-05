@@ -18,6 +18,7 @@ import {
   getTopCryptos,
   type AnyCrypto,
 } from "@/lib/cryptos";
+import { fmtNb } from "@/lib/format-fr";
 
 export type ListicleKind = "platform" | "crypto";
 
@@ -89,7 +90,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         }));
     },
     highlightLabel: "Score global",
-    highlight: (p) => `${p.scoring.global}/5`,
+    highlight: (p) => `${fmtNb(p.scoring.global)}/5`,
   },
   {
     slug: "exchanges-crypto-frais-bas",
@@ -110,11 +111,11 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         .map((p, i) => ({
           rank: i + 1,
           data: p,
-          reason: `Frais spot taker : ${p.fees.spotTaker}% — ${p.tagline}`,
+          reason: `Frais spot taker : ${fmtNb(p.fees.spotTaker)} % — ${p.tagline}`,
         }));
     },
     highlightLabel: "Spot taker",
-    highlight: (p) => `${p.fees.spotTaker}%`,
+    highlight: (p) => `${fmtNb(p.fees.spotTaker)} %`,
   },
   {
     slug: "plateformes-crypto-securisees",
@@ -135,11 +136,11 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         .map((p, i) => ({
           rank: i + 1,
           data: p,
-          reason: `Score sécurité : ${p.scoring.security}/5 — Cold storage ${p.security.coldStoragePct}%, ${p.security.insurance ? "assurance" : "sans assurance"}.`,
+          reason: `Score sécurité : ${fmtNb(p.scoring.security)}/5 — stockage à froid ${p.security.coldStoragePct} %, ${p.security.insurance ? "assurance" : "sans assurance"}.`,
         }));
     },
     highlightLabel: "Sécurité",
-    highlight: (p) => `${p.scoring.security}/5`,
+    highlight: (p) => `${fmtNb(p.scoring.security)}/5`,
   },
   {
     slug: "plateformes-crypto-debutants",
@@ -164,7 +165,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         }));
     },
     highlightLabel: "UX",
-    highlight: (p) => `${p.scoring.ux}/5`,
+    highlight: (p) => `${fmtNb(p.scoring.ux)}/5`,
   },
   {
     slug: "exchanges-crypto-francais",
@@ -192,7 +193,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         }));
     },
     highlightLabel: "Score global",
-    highlight: (p) => `${p.scoring.global}/5`,
+    highlight: (p) => `${fmtNb(p.scoring.global)}/5`,
   },
   {
     slug: "wallets-hardware-bitcoin",
@@ -217,7 +218,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         }));
     },
     highlightLabel: "Score sécurité",
-    highlight: (p) => `${p.scoring.security}/5`,
+    highlight: (p) => `${fmtNb(p.scoring.security)}/5`,
   },
 ];
 
@@ -281,7 +282,7 @@ const CRYPTO_LISTICLES: CryptoListicle[] = [
     },
     highlightLabel: "Fiabilité",
     highlight: (c) => {
-      if (c.kind === "hidden-gem") return `${c.reliability.score}/10`;
+      if (c.kind === "hidden-gem") return `${fmtNb(c.reliability.score)}/10`;
       return "—";
     },
   },

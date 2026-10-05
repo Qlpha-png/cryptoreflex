@@ -127,6 +127,11 @@ const PRINT_CSS = `
     break-after: avoid;
     page-break-after: avoid;
   }
+  /* Un titre ne se coupe jamais entre deux pages (« Chapitre 1 — … ce guide en » / « 2026 », vu le 05/10/2026). */
+  h1, h2, h3, h4 {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
   /* Le 1er H2 du document a une marge top reduite (proche du H1) */
   h1 + h2,
   .first-section h2 {

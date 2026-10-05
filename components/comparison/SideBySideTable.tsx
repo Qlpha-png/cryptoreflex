@@ -12,6 +12,7 @@
 
 import { Check, Minus, X } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 type Direction = "lower" | "higher" | "bool" | "none";
 
@@ -64,15 +65,15 @@ function determineWinner(row: Row): "a" | "b" | "tie" | "n/a" {
 function buildRows(a: Platform, b: Platform): Row[] {
   return [
     // GROUP : SCORING
-    { group: "Scoring Cryptoreflex", label: "Score global", a: a.scoring.global.toFixed(1) + "/5", b: b.scoring.global.toFixed(1) + "/5", aRaw: a.scoring.global, bRaw: b.scoring.global, direction: "higher" },
-    { label: "Frais (note)", a: a.scoring.fees.toFixed(1) + "/5", b: b.scoring.fees.toFixed(1) + "/5", aRaw: a.scoring.fees, bRaw: b.scoring.fees, direction: "higher" },
-    { label: "Sécurité (note)", a: a.scoring.security.toFixed(1) + "/5", b: b.scoring.security.toFixed(1) + "/5", aRaw: a.scoring.security, bRaw: b.scoring.security, direction: "higher" },
-    { label: "Conformité MiCA (note)", a: a.scoring.mica.toFixed(1) + "/5", b: b.scoring.mica.toFixed(1) + "/5", aRaw: a.scoring.mica, bRaw: b.scoring.mica, direction: "higher" },
-    { label: "UX (note)", a: a.scoring.ux.toFixed(1) + "/5", b: b.scoring.ux.toFixed(1) + "/5", aRaw: a.scoring.ux, bRaw: b.scoring.ux, direction: "higher" },
-    { label: "Support (note)", a: a.scoring.support.toFixed(1) + "/5", b: b.scoring.support.toFixed(1) + "/5", aRaw: a.scoring.support, bRaw: b.scoring.support, direction: "higher" },
+    { group: "Scoring Cryptoreflex", label: "Score global", a: fmtFr(a.scoring.global, 1) + "/5", b: fmtFr(b.scoring.global, 1) + "/5", aRaw: a.scoring.global, bRaw: b.scoring.global, direction: "higher" },
+    { label: "Frais (note)", a: fmtFr(a.scoring.fees, 1) + "/5", b: fmtFr(b.scoring.fees, 1) + "/5", aRaw: a.scoring.fees, bRaw: b.scoring.fees, direction: "higher" },
+    { label: "Sécurité (note)", a: fmtFr(a.scoring.security, 1) + "/5", b: fmtFr(b.scoring.security, 1) + "/5", aRaw: a.scoring.security, bRaw: b.scoring.security, direction: "higher" },
+    { label: "Conformité MiCA (note)", a: fmtFr(a.scoring.mica, 1) + "/5", b: fmtFr(b.scoring.mica, 1) + "/5", aRaw: a.scoring.mica, bRaw: b.scoring.mica, direction: "higher" },
+    { label: "UX (note)", a: fmtFr(a.scoring.ux, 1) + "/5", b: fmtFr(b.scoring.ux, 1) + "/5", aRaw: a.scoring.ux, bRaw: b.scoring.ux, direction: "higher" },
+    { label: "Support (note)", a: fmtFr(a.scoring.support, 1) + "/5", b: fmtFr(b.scoring.support, 1) + "/5", aRaw: a.scoring.support, bRaw: b.scoring.support, direction: "higher" },
 
     // GROUP : FRAIS
-    { group: "Frais", label: "Frais réel (achat)", a: a.fees.verified?.realCostPct ?? `${a.fees.instantBuy} %`, b: b.fees.verified?.realCostPct ?? `${b.fees.instantBuy} %`, direction: "none" },
+    { group: "Frais", label: "Frais réel (achat)", a: a.fees.verified?.realCostPct ?? `${fmtNb(a.fees.instantBuy)} %`, b: b.fees.verified?.realCostPct ?? `${fmtNb(b.fees.instantBuy)} %`, direction: "none" },
     { label: "Frais maker (spot)", a: a.fees.spotMaker + " %", b: b.fees.spotMaker + " %", aRaw: a.fees.spotMaker, bRaw: b.fees.spotMaker, direction: "lower" },
     { label: "Frais taker (spot)", a: a.fees.spotTaker + " %", b: b.fees.spotTaker + " %", aRaw: a.fees.spotTaker, bRaw: b.fees.spotTaker, direction: "lower" },
     { label: "Frais achat instantané", a: a.fees.instantBuy + " %", b: b.fees.instantBuy + " %", aRaw: a.fees.instantBuy, bRaw: b.fees.instantBuy, direction: "lower" },
@@ -89,7 +90,7 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Cryptos stakables", a: a.cryptos.stakingCryptos.length ? a.cryptos.stakingCryptos.join(", ") : "—", b: b.cryptos.stakingCryptos.length ? b.cryptos.stakingCryptos.join(", ") : "—", direction: "none" },
 
     // GROUP : SÉCURITÉ
-    { group: "Sécurité", label: "Cold storage", a: `${a.security.coldStoragePct} %`, b: `${b.security.coldStoragePct} %`, aRaw: a.security.coldStoragePct, bRaw: b.security.coldStoragePct, direction: "higher" },
+    { group: "Sécurité", label: "Cold storage", a: `${fmtNb(a.security.coldStoragePct)} %`, b: `${fmtNb(b.security.coldStoragePct)} %`, aRaw: a.security.coldStoragePct, bRaw: b.security.coldStoragePct, direction: "higher" },
     { label: "Assurance fonds clients", a: a.security.insurance, b: b.security.insurance, aRaw: a.security.insurance, bRaw: b.security.insurance, direction: "bool" },
     { label: "2FA obligatoire", a: a.security.twoFA, b: b.security.twoFA, aRaw: a.security.twoFA, bRaw: b.security.twoFA, direction: "bool" },
     { label: "Dernier incident notable", a: a.security.lastIncident ?? "Aucun rapporté", b: b.security.lastIncident ?? "Aucun rapporté", direction: "none" },
@@ -105,9 +106,9 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Temps de réponse", a: a.support.responseTime, b: b.support.responseTime, direction: "none" },
 
     // GROUP : NOTES UTILISATEURS
-    { group: "Notes utilisateurs", label: "Trustpilot", a: `${a.ratings.trustpilot.toFixed(1)}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, b: `${b.ratings.trustpilot.toFixed(1)}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
-    { label: "App Store", a: `${a.ratings.appStore.toFixed(1)}/5`, b: `${b.ratings.appStore.toFixed(1)}/5`, aRaw: a.ratings.appStore, bRaw: b.ratings.appStore, direction: "higher" },
-    { label: "Play Store", a: `${a.ratings.playStore.toFixed(1)}/5`, b: `${b.ratings.playStore.toFixed(1)}/5`, aRaw: a.ratings.playStore, bRaw: b.ratings.playStore, direction: "higher" },
+    { group: "Notes utilisateurs", label: "Trustpilot", a: `${fmtFr(a.ratings.trustpilot, 1)}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, b: `${fmtFr(b.ratings.trustpilot, 1)}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
+    { label: "App Store", a: `${fmtFr(a.ratings.appStore, 1)}/5`, b: `${fmtFr(b.ratings.appStore, 1)}/5`, aRaw: a.ratings.appStore, bRaw: b.ratings.appStore, direction: "higher" },
+    { label: "Play Store", a: `${fmtFr(a.ratings.playStore, 1)}/5`, b: `${fmtFr(b.ratings.playStore, 1)}/5`, aRaw: a.ratings.playStore, bRaw: b.ratings.playStore, direction: "higher" },
 
     // GROUP : BONUS
     { group: "Bonus de bienvenue", label: "Offre", a: a.bonus.welcome, b: b.bonus.welcome, direction: "none" },

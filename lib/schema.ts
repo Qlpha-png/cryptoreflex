@@ -570,7 +570,7 @@ export function platformReviewSchema(p: Platform): JsonLd {
     "@type": "Product",
     "@id": `${productUrl}#product`,
     name: p.name,
-    image: abs(p.logo),
+    image: abs(p.logo ?? "/og-image.png"),
     url: productUrl,
     description: p.tagline,
     brand: {
@@ -640,7 +640,7 @@ export function platformSoftwareApplicationSchema(p: Platform): JsonLd {
     "@type": "SoftwareApplication",
     "@id": `${productUrl}#software`,
     name: p.name,
-    image: abs(p.logo),
+    image: abs(p.logo ?? "/og-image.png"),
     url: productUrl,
     description: p.tagline,
     applicationCategory: "FinanceApplication",

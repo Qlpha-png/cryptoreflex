@@ -36,6 +36,8 @@ export const NESTED_ONLY_HUBS: ReadonlyArray<{ pattern: RegExp; hub: string }> =
   { pattern: /^\/lp\/[^/]+$/, hub: "/" },
   // /wizard/[parcours] → /outils (/wizard redirige vers /wizard/premier-achat)
   { pattern: /^\/wizard\/[^/]+$/, hub: "/outils" },
+  // 05/10/2026 : la fiche Stacks est publiée sous « blockstack » (/cryptos/stacks redirige) → pas de détour par la redirection
+  { pattern: /^\/cryptos\/stacks\/acheter-en-france$/, hub: "/cryptos/blockstack" },
   // /outils/calculateur-fiscalite/preview-pdf/[sessionId] → l'outil (pas de page preview-pdf)
   {
     pattern: /^\/outils\/calculateur-fiscalite\/preview-pdf\/[^/]+$/,

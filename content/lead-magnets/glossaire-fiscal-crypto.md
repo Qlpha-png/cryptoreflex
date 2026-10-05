@@ -1,5 +1,5 @@
 ---
-title: "Glossaire Fiscal Crypto — 50 termes indispensables"
+title: "Glossaire Fiscal Crypto — 47 termes indispensables"
 subtitle: "Le vocabulaire qu'il faut maîtriser pour ne pas se faire avoir par son expert-comptable (ou par soi-même)."
 author: "Cryptoreflex"
 date: "2026-04-26"
@@ -8,7 +8,7 @@ pages: 8
 disclaimer: "Document à valeur informative. Définitions issues de la doctrine fiscale française au 26 avril 2026."
 ---
 
-# Glossaire Fiscal Crypto — 50 termes indispensables
+# Glossaire Fiscal Crypto — 47 termes indispensables
 
 > Le vocabulaire qu'il faut maîtriser pour ne pas se faire avoir par son expert-comptable (ou par soi-même).
 
@@ -44,7 +44,7 @@ Régime applicable au trading **professionnel** de crypto-actifs (caractère hab
 Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 83 600 €/an (seuil 2026-2028 ; abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
 
 ### BOFIP (Bulletin Officiel des Finances Publiques)
-Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La doctrine BOI-RPPM-PVBMC-30-30 régit la fiscalité crypto. **Opposable à l'administration** : si vous avez suivi le BOFIP, vous êtes protégé d'un redressement même si la jurisprudence évolue.
+Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La série BOI-RPPM-PVBMC-30 commente la fiscalité crypto des particuliers. **Opposable à l'administration** : si vous avez suivi le BOFIP, vous êtes protégé d'un redressement même si la jurisprudence évolue.
 
 ## C
 

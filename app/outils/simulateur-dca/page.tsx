@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TrendingUp, ShieldCheck, Zap, ArrowRight, BookOpen } from "lucide-react";
 import dynamic from "next/dynamic";
+import { fitTitle } from "@/lib/seo-text";
 
 // Lazy-load DcaSimulator : Client lourd (chart Recharts + fetch historique
 // CoinGecko + recalcul on input change). Below-the-fold sous Hero. Audit
@@ -24,7 +25,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand
-  title: "Simulateur DCA crypto FR 2026 — backtest BTC/ETH/SOL 5 ans",
+  title: fitTitle("Simulateur DCA crypto FR 2026 — backtest BTC/ETH/SOL 5 ans"),
   description:
     "Backtest DCA réel : combien auriez-vous en investissant 100€/mois en BTC, ETH ou SOL depuis 2020 ? Comparaison achat unique vs étalé. Gratuit.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/simulateur-dca"),

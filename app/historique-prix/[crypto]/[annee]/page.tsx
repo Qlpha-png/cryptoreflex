@@ -18,6 +18,7 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
 import { getYearOhlc, getOhlcMeta, formatOhlcPrice, getYearMonths, yearStats, MONTHS_FR, formatSignedPct, formatCompactUsd } from "@/lib/historical-ohlc";
 import { HIST_YEARS, type HistYear } from "@/lib/historique-prix";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
@@ -96,7 +97,7 @@ export function generateMetadata({ params }: Props): Metadata {
     description = `${c.name} (${c.symbol}) en ${annee} : contexte macro du marché crypto, événements marquants et repères pour situer le projet cette année-là.`;
   }
   return {
-    title,
+    title: fitTitle(title),
     description,
     ...(didNotExist ? { robots: { index: false, follow: true } } : {}),
     alternates: withHreflang(`${BRAND.url}/historique-prix/${c.id}/${annee}`),

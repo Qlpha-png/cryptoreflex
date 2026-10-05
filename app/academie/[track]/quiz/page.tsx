@@ -15,6 +15,7 @@ import { TRACKS, getTrack } from "@/lib/academy-tracks";
 import { getQuizForTrack } from "@/lib/academy-quizzes";
 import TrackQuiz from "@/components/academy/TrackQuiz";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 interface Props {
   params: { track: string };
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `${BRAND.url}/academie/${track.id}/quiz`;
 
   return {
-    title,
+    title: fitTitle(title),
     description,
     alternates: withHreflang(url),
     // Pas d'OG image custom — on garde simple.
@@ -64,7 +65,7 @@ export default function QuizPage({ params }: Props) {
   if (!track || !questions) notFound();
 
   return (
-    <main className="py-10 sm:py-14">
+    <div className="py-10 sm:py-14">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
@@ -118,6 +119,6 @@ export default function QuizPage({ params }: Props) {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

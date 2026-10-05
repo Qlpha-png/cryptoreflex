@@ -12,6 +12,7 @@ import {
 import StructuredData from "@/components/StructuredData";
 import HalvingCountdown from "@/components/HalvingCountdown";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * /halving-bitcoin — Page evergreen avec compte à rebours et contenu pédagogique.
@@ -33,7 +34,7 @@ const NEXT_HALVING_DATE = new Date("2028-04-15T00:00:00Z");
 const NEXT_HALVING_BLOCK = 1_050_000;
 
 export const metadata: Metadata = {
-  title: "Halving Bitcoin 2028 — Compte à rebours, date, impact prix",
+  title: fitTitle("Halving Bitcoin 2028 — Compte à rebours, date, impact prix"),
   description:
     "Prochain halving Bitcoin : compte à rebours en direct jusqu'au block 1 050 000 (~avril 2028). Historique des halvings, impact sur le prix BTC, FAQ.",
   alternates: withHreflang(PAGE_URL),
@@ -446,7 +447,6 @@ export default function HalvingPage() {
         <p className="mt-6 text-[11px] text-muted leading-relaxed">
           Estimation calculée sur la base d'un temps moyen de 10 minutes par
           bloc. Données historiques publiques (CoinGecko, Glassnode, mempool.space).
-          Page mise à jour le {new Date().toLocaleDateString("fr-FR")}.
         </p>
       </div>
     </article>

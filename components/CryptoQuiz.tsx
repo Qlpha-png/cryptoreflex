@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import type { AnyCrypto } from "@/lib/cryptos";
 import { trackToolUsage } from "@/lib/analytics";
+import { fmtFr } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -619,7 +620,7 @@ function ResultView({
   const topRiskOrFiability =
     top.kind === "top10"
       ? `Risque ${top.riskLevel.toLowerCase()}`
-      : `Fiabilité ${top.reliability.score.toFixed(1)}/10`;
+      : `Fiabilité ${fmtFr(top.reliability.score, 1)}/10`;
 
   return (
     <div>

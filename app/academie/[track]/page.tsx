@@ -26,6 +26,7 @@ import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 interface Props {
   params: { track: string };
@@ -49,8 +50,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = `${BRAND.url}/academie/${track.id}`;
 
   return {
-    title,
-    description,
+    title: fitTitle(title),
+    description: fitDescription(description),
     alternates: withHreflang(url),
     openGraph: {
       title,
@@ -106,7 +107,7 @@ export default function TrackPage({ params }: Props) {
   ]);
 
   return (
-    <main className="py-10 sm:py-14">
+    <div className="py-10 sm:py-14">
       <StructuredData data={[schema, breadcrumbs]} id={`track-${track.id}`} />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -252,7 +253,7 @@ export default function TrackPage({ params }: Props) {
           </aside>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

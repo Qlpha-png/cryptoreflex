@@ -79,12 +79,12 @@ const COPY_DEFAULTS: Record<
   },
   hero: {
     title: "La crypto FR en 3 minutes, chaque matin",
-    subtitle: "Gratuit. Desabonnement 1 clic. Bonus PDF immediat.",
+    subtitle: "Gratuit. Désinscription en 1 clic. Guide PDF offert.",
     ctaLabel: "Recevoir la newsletter",
   },
   "newsletter-page": {
-    title: "Inscription a la newsletter",
-    subtitle: "Gratuit. Desabonnement 1 clic. Bonus PDF immediat.",
+    title: "Inscription à la newsletter",
+    subtitle: "Gratuit. Désinscription en 1 clic. Guide PDF offert.",
     ctaLabel: "Recevoir la newsletter",
   },
 };
@@ -422,7 +422,7 @@ export default function NewsletterInline({
               }}
             >
               <Download className="h-4 w-4" />
-              Télécharger le guide (PDF, 1.2 Mo)
+              Télécharger le guide (PDF, 57 pages)
             </a>
 
             <p className="mt-3 text-xs text-muted text-center">

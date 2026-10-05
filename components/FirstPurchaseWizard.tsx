@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
+import { fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -582,7 +583,7 @@ function Step3Platform({
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-bold text-lg text-fg">{p.name}</h3>
                     <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5">
-                      {p.scoring.global}/5
+                      {fmtNb(p.scoring.global)}/5
                     </span>
                     {p.badge && (
                       <span className="text-[10px] uppercase tracking-wider text-primary-soft">
@@ -596,7 +597,7 @@ function Step3Platform({
               <dl className="mt-3 grid grid-cols-3 gap-3 text-xs">
                 <div>
                   <dt className="text-muted">Frais spot</dt>
-                  <dd className="font-mono text-fg">{p.fees.spotTaker}%</dd>
+                  <dd className="font-mono text-fg">{fmtNb(p.fees.spotTaker)}%</dd>
                 </div>
                 <div>
                   <dt className="text-muted">Dépôt min</dt>
@@ -817,7 +818,7 @@ function Step5Recap({
         <RecapRow label="Crypto" value={cryptoLabel} onEdit={() => onEditStep(1)} />
         <RecapRow
           label="Plateforme"
-          value={platform ? `${platform.name} (${platform.scoring.global}/5)` : "—"}
+          value={platform ? `${platform.name} (${fmtNb(platform.scoring.global)}/5)` : "—"}
           onEdit={() => onEditStep(2)}
         />
         <RecapRow label="Paiement" value={paymentLabel} onEdit={() => onEditStep(3)} />

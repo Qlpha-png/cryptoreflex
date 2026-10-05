@@ -98,7 +98,7 @@ const POOL: Record<string, Step> = {
     href: "/lead-magnets/guide-plateformes-crypto-2026.pdf",
     Icon: Download,
     label: "Télécharger le PDF gratuit",
-    desc: "62 pages — étude indépendante des plateformes crypto FR (CASP MiCA + PSAN).",
+    desc: "57 pages — étude indépendante des plateformes crypto autorisées en France (agrément MiCA).",
   },
   pdfFiscalite: {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
@@ -181,7 +181,7 @@ const POOL: Record<string, Step> = {
     href: "/newsletter",
     Icon: Mail,
     label: "Newsletter quotidienne",
-    desc: "1 email matin (3 min) — actu + bonus PDF plateformes crypto FR.",
+    desc: "1 e-mail le matin (3 min) : l'actu, plus le guide PDF des plateformes offert.",
   },
   outils: {
     href: "/outils",

@@ -8,27 +8,19 @@ import { STATS, fmtCount } from "@/lib/brand";
  */
 import {
   ArrowDownUp,
-  Award,
   BookOpen,
-  Bot,
-  Brain,
   Briefcase,
   Calculator,
   Coins,
-  Eye,
-  FileSpreadsheet,
   FileText,
   GitCompare,
   Heart,
   LineChart,
   Radar,
-  ShieldAlert,
   ShieldCheck,
-  TestTube2,
   TrendingUp,
   Trophy,
   Wallet,
-  Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -184,8 +176,8 @@ export const TOOLS: Tool[] = [
     cat: "pedagogie",
   },
   {
-    title: "Whitepaper TLDR",
-    desc: "Collez un whitepaper crypto, recevez un résumé FR + score BS sur 100 (red flags détectés).",
+    title: "Grille des red flags (whitepaper)",
+    desc: "Les signaux d'alerte à vérifier vous-même dans un whitepaper, avec le poids de chacun. L'analyseur automatique est en refonte.",
     href: "/outils/whitepaper-tldr",
     Icon: FileText,
     tier: "free",
@@ -193,16 +185,6 @@ export const TOOLS: Tool[] = [
     cat: "pedagogie",
   },
 
-  // ─── IA & AVANCÉ ───
-  {
-    title: "Résumés éditoriaux par fiche",
-    desc: "Un résumé clair et des points clés sur chacune des 100 fiches crypto éditoriales Cryptoreflex.",
-    href: "/cryptos",
-    Icon: Bot,
-    tier: "free",
-    status: "live",
-    cat: "ia",
-  },
 
   // FIX 2026-05-02 #11 — TIER 3 features (5 nouvelles pages) du plan
   // d'audit consolidé 6 experts. Chaque outil a sa propre page avec
@@ -211,81 +193,19 @@ export const TOOLS: Tool[] = [
   // le tri/filtre interne. (Fiscal Copilot, page vitrine jamais construite :
   // retiré le 05/10/2026 → redirigé vers le générateur Cerfa.)
   {
-    title: "Tax Loss Harvesting (FR)",
-    desc: "Réduisez votre impôt (PFU 31,4 %) en compensant vos plus-values par des moins-values réalisées la même année, avant le 31/12.",
+    title: "Vendre à perte : le vrai calcul",
+    desc: "En France, c'est le portefeuille entier qui décide si une vente crée une moins-value. La règle officielle et un exemple chiffré.",
     href: "/outils/tax-loss-harvesting",
     Icon: TrendingUp,
     tier: "free",
     status: "new",
     cat: "fiscalite",
   },
-  {
-    title: "Wallet Connect read-only",
-    desc: "MetaMask, Rabby, Ledger, Phantom… Suivez votre portfolio DeFi multi-chain en lecture seule.",
-    href: "/outils/wallet-connect",
-    Icon: Wallet,
-    tier: "free",
-    status: "soon",
-    cat: "portfolio",
-  },
 
-  // FIX BATCH 20 (audit QA expert) — 8 outils BATCH 7-8 étaient orphelins
-  // (pages prod existantes mais pas listées ici → SEO siloing cassé +
-  // hub /outils sous-évalué).
-  {
-    title: "Whale Radar FR",
-    desc: "Surveille les mouvements > 500 BTC / 10 000 ETH en temps réel, contextualisés en français.",
-    href: "/outils/whale-radar",
-    Icon: Eye,
-    tier: "pro",
-    status: "soon",
-    cat: "marche",
-  },
-  {
-    title: "Phishing Checker",
-    desc: "Collez une adresse crypto → score de risque scam/phishing (Chainabuse + ScamSniffer + custom FR).",
-    href: "/outils/phishing-checker",
-    Icon: ShieldAlert,
-    tier: "free",
-    status: "soon",
-    cat: "portfolio",
-  },
-  {
-    title: "Allocator IA Crypto",
-    desc: "5 questions (horizon, risque, conviction BTC, budget, objectif) → allocation %BTC/%ETH/%alts.",
-    href: "/outils/allocator-ia",
-    Icon: Brain,
-    tier: "free",
-    status: "soon",
-    cat: "ia",
-  },
-  {
-    title: "Gas Tracker FR",
-    desc: "Frais de gas Ethereum + Layer 2 (Arbitrum, Optimism, Base…) traduits + alertes gas bas.",
-    href: "/outils/gas-tracker-fr",
-    Icon: Zap,
-    tier: "free",
-    status: "soon",
-    cat: "marche",
-  },
-  {
-    title: "Export Expert-Comptable",
-    desc: "Convertis vos CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). Gratuit.",
-    href: "/outils/export-expert-comptable",
-    Icon: FileSpreadsheet,
-    tier: "pro",
-    status: "soon",
-    cat: "fiscalite",
-  },
-  {
-    title: "Permis Crypto FR",
-    desc: "Quiz 50 questions (technique, régulation, fiscalité, sécurité). Score >70 % → votre Permis Crypto PDF.",
-    href: "/outils/crypto-license",
-    Icon: Award,
-    tier: "free",
-    status: "soon",
-    cat: "pedagogie",
-  },
+  // 05/10/2026 : les 8 outils « à venir » (Wallet Connect, Whale Radar, Phishing Checker, Allocator IA, Gas Tracker,
+  // Export Expert-Comptable, Permis Crypto, DCA Lab) sont retirés : pages vitrines de fonctions jamais construites,
+  // redirigées vers /outils (lib/legacy-redirects.cjs, règle 14). Même règle que le Fiscal Copilot : on n'affiche
+  // que ce qui marche.
   {
     title: "Succession Crypto",
     desc: "Lettre d'intention à imprimer pour vos proches, liste de contrôle et règles françaises (testament, droits de succession). Rien n'est enregistré.",
@@ -294,15 +214,6 @@ export const TOOLS: Tool[] = [
     tier: "free",
     status: "new",
     cat: "portfolio",
-  },
-  {
-    title: "DCA Lab",
-    desc: "Compare 6 stratégies DCA (simple, RSI, Value Averaging, Lump-Sum, 50/50, drawdown) sur 1-7 ans.",
-    href: "/outils/dca-lab",
-    Icon: TestTube2,
-    tier: "free",
-    status: "soon",
-    cat: "marche",
   },
 ];
 

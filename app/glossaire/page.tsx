@@ -8,13 +8,14 @@ import {
 } from "@/lib/glossary";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 const PAGE_DESCRIPTION =
   "Plus de 250 termes crypto expliqués simplement, sans jargon : blockchain, DeFi, wallets, fiscalité française, NFT, Layer 2 et plus. Référence pour comprendre la crypto en français.";
 
 export const metadata: Metadata = {
   title: "Glossaire crypto — 250+ termes expliqués simplement",
-  description: PAGE_DESCRIPTION,
+  description: fitDescription(PAGE_DESCRIPTION),
   alternates: withHreflang("/glossaire"),
   openGraph: {
     title: `Glossaire crypto | ${BRAND.name}`,

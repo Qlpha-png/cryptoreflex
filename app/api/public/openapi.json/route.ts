@@ -298,7 +298,7 @@ export function GET() {
             atRiskJuly2026: {
               type: "boolean",
               description:
-                "True si la plateforme risque d etre bloquee en UE apres la deadline MiCA du 30 juin 2026",
+                "True si la plateforme, même agréée MiCA ailleurs, n'est pas accessible aux clients français depuis la fin de la période transitoire (1er juillet 2026)",
             },
             publicSource: { type: "string", format: "uri" },
             lastVerified: { type: "string", format: "date" },

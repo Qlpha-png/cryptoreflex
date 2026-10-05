@@ -58,7 +58,7 @@ export default async function EmbedHeatmapPage() {
       style={{
         maxWidth: 1100,
         margin: "0 auto",
-        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
         color: "#FFF",
       }}
     >
@@ -116,7 +116,7 @@ export default async function EmbedHeatmapPage() {
           flexWrap: "wrap",
         }}
       >
-        <span>License CC-BY 4.0 · Données Binance + CoinGecko</span>
+        <span>Licence CC-BY 4.0 · Données Binance + CoinGecko</span>
         <a
           href={`${BRAND.url}/marche/heatmap?utm_source=embed&utm_medium=iframe&utm_campaign=heatmap`}
           target="_top"
@@ -130,7 +130,7 @@ export default async function EmbedHeatmapPage() {
             fontWeight: 600,
           }}
         >
-          Powered by{" "}
+          Proposé par{" "}
           <strong style={{ color: "#FCD34D" }}>{BRAND.name}</strong>
         </a>
       </footer>

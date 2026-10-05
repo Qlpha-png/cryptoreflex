@@ -11,6 +11,7 @@ import {
 import { getPlatformById } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 import { track } from "@/lib/analytics";
+import { fmtFr } from "@/lib/format-fr";
 
 const FREQUENCIES = [
   { id: "monthly" as const, label: "Mensuel" },
@@ -28,9 +29,9 @@ function formatEur(v: number): string {
 }
 
 function compactEur(v: number): string {
-  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)} M€`;
-  if (v >= 1_000) return `${(v / 1_000).toFixed(0)} k€`;
-  return `${v.toFixed(0)} €`;
+  if (v >= 1_000_000) return `${fmtFr((v / 1_000_000), 1)} M€`;
+  if (v >= 1_000) return `${fmtFr((v / 1_000), 0)} k€`;
+  return `${fmtFr(v, 0)} €`;
 }
 
 interface ChartPoint {
@@ -275,7 +276,7 @@ function ScenarioCard({
         </div>
       </div>
       <p className="mt-3 text-xs text-white/70">
-        ROI : <span className={roi >= 0 ? "text-accent-green" : "text-red-400"}>{roi.toFixed(0)} %</span>
+        ROI : <span className={roi >= 0 ? "text-accent-green" : "text-red-400"}>{fmtFr(roi, 0)} %</span>
       </p>
     </div>
   );

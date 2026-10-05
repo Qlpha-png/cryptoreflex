@@ -16,7 +16,7 @@
 
 import topCryptosData from "@/data/top-cryptos.json";
 import hiddenGemsData from "@/data/hidden-gems.json";
-import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, type Platform } from "@/lib/platforms";
 
 /* =====================================================================
  * 1. PLATEFORMES — /avis/[slug]
@@ -288,7 +288,7 @@ const ADDITIONAL_CRYPTOS: Array<{ id: string; coingeckoId: string; symbol: strin
   { id: "algorand", coingeckoId: "algorand", symbol: "ALGO", name: "Algorand" },
   { id: "tezos", coingeckoId: "tezos", symbol: "XTZ", name: "Tezos" },
   { id: "hedera", coingeckoId: "hedera-hashgraph", symbol: "HBAR", name: "Hedera" },
-  { id: "fantom", coingeckoId: "fantom", symbol: "FTM", name: "Fantom" },
+  // Fantom (FTM) retiré le 05/10/2026 : migré vers Sonic (S) en 2025 ; /cryptos/fantom/* redirige vers /cryptos/sonic-3.
   { id: "the-sandbox", coingeckoId: "the-sandbox", symbol: "SAND", name: "The Sandbox" },
   { id: "decentraland", coingeckoId: "decentraland", symbol: "MANA", name: "Decentraland" },
   { id: "aave", coingeckoId: "aave", symbol: "AAVE", name: "Aave" },
@@ -402,6 +402,8 @@ export function slugify(input: string): string {
 /** Plateformes qui supportent une crypto donnée — pour les CTAs croisés. */
 export function getPlatformsSelling(cryptoSymbol: string): Platform[] {
   return getAllPlatforms().filter((p) => {
+    // Un portefeuille matériel ne vend rien ; une plateforme non autorisée en France n'est pas proposée.
+    if (p.category === "wallet" || !isAvailableFr(p)) return false;
     // Heuristique : si la plateforme stake la crypto, elle la vend.
     if (p.cryptos.stakingCryptos.includes(cryptoSymbol)) return true;
     // Sinon, on regarde les gros catalogues agréés MiCA (audit 2026-10-02 : Binance

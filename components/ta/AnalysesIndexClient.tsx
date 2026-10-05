@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Clock, Sparkles, ArrowRight, TrendingUp, Tre
 import type { TAArticleSummary } from "@/lib/ta-mdx";
 import TrendBadge from "./TrendBadge";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * <AnalysesIndexClient /> — UI client de la page /analyses-techniques.
@@ -86,15 +87,15 @@ function isToday(iso: string): boolean {
 
 function formatPrice(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
-  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  if (value >= 1) return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return value.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (value >= 1000) return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+  if (value >= 1) return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return value.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
 function formatPct(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value > 0 ? "+" : "";
-  return `${sign}${value.toFixed(2)}%`;
+  return `${sign}${fmtFr(value, 2)}%`;
 }
 
 export default function AnalysesIndexClient({ articles }: Props) {
@@ -341,7 +342,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
             RSI · {rsiLabel}
           </span>
           <span className="text-[11px] font-mono font-semibold text-fg/85 tabular-nums">
-            {rsi.toFixed(1)}
+            {fmtFr(rsi, 1)}
           </span>
         </div>
         <div
@@ -349,7 +350,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
           aria-valuenow={rsi}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`RSI : ${rsi.toFixed(1)} sur 100. ${rsiLabel}.`}
+          aria-label={`RSI : ${fmtFr(rsi, 1)} sur 100. ${rsiLabel}.`}
           className="h-1.5 rounded-full bg-elevated overflow-hidden relative"
         >
           {/* Marqueurs 30 et 70 (zones overbought/oversold) */}

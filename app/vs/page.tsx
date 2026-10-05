@@ -7,6 +7,7 @@ import StructuredData from "@/components/StructuredData";
 import { getCryptoPairs } from "@/lib/programmatic-pages";
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * /vs — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -29,7 +30,7 @@ const PAGE_DESCRIPTION =
   `Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Comparez 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). ${fmtCount(STATS.vsPairs)} duels possibles.`;
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: fitTitle(PAGE_TITLE),
   description: PAGE_DESCRIPTION,
   alternates: withHreflang(`${BRAND.url}/vs`),
   openGraph: {
@@ -50,27 +51,29 @@ export const metadata: Metadata = {
 
 export const revalidate = 86400;
 
-// Top paires "stars" : couples crypto le plus recherchés FR
+// Top paires "stars" : couples crypto les plus recherchés FR.
+// Identifiants = ceux du catalogue (xrp, bnb, avalanche, near-protocol, polygon…) et ordre canonique a < b,
+// sinon le lien mène à une page absente (test : tests/vs-featured-pairs.test.ts).
 const FEATURED_PAIRS: Array<{ a: string; b: string; aLabel: string; bLabel: string }> = [
   { a: "bitcoin", b: "ethereum", aLabel: "Bitcoin", bLabel: "Ethereum" },
   { a: "ethereum", b: "solana", aLabel: "Ethereum", bLabel: "Solana" },
   { a: "bitcoin", b: "solana", aLabel: "Bitcoin", bLabel: "Solana" },
-  { a: "binancecoin", b: "ethereum", aLabel: "BNB", bLabel: "Ethereum" },
+  { a: "bnb", b: "ethereum", aLabel: "BNB", bLabel: "Ethereum" },
   { a: "cardano", b: "solana", aLabel: "Cardano", bLabel: "Solana" },
-  { a: "ripple", b: "stellar", aLabel: "XRP", bLabel: "Stellar" },
+  { a: "stellar", b: "xrp", aLabel: "Stellar", bLabel: "XRP" },
   { a: "tether", b: "usd-coin", aLabel: "USDT", bLabel: "USDC" },
-  { a: "polkadot", b: "cosmos", aLabel: "Polkadot", bLabel: "Cosmos" },
-  { a: "avalanche-2", b: "solana", aLabel: "Avalanche", bLabel: "Solana" },
-  { a: "matic-network", b: "arbitrum", aLabel: "Polygon", bLabel: "Arbitrum" },
-  { a: "litecoin", b: "bitcoin-cash", aLabel: "Litecoin", bLabel: "Bitcoin Cash" },
+  { a: "cosmos", b: "polkadot", aLabel: "Cosmos", bLabel: "Polkadot" },
+  { a: "avalanche", b: "solana", aLabel: "Avalanche", bLabel: "Solana" },
+  { a: "arbitrum", b: "polygon", aLabel: "Arbitrum", bLabel: "Polygon" },
+  { a: "bitcoin-cash", b: "litecoin", aLabel: "Bitcoin Cash", bLabel: "Litecoin" },
   { a: "chainlink", b: "the-graph", aLabel: "Chainlink", bLabel: "The Graph" },
-  { a: "uniswap", b: "aave", aLabel: "Uniswap", bLabel: "Aave" },
+  { a: "aave", b: "uniswap", aLabel: "Aave", bLabel: "Uniswap" },
   { a: "dogecoin", b: "shiba-inu", aLabel: "Dogecoin", bLabel: "Shiba Inu" },
   { a: "monero", b: "zcash", aLabel: "Monero", bLabel: "Zcash" },
-  { a: "tron", b: "binancecoin", aLabel: "TRON", bLabel: "BNB" },
-  { a: "near", b: "internet-computer", aLabel: "NEAR", bLabel: "Internet Computer" },
-  { a: "tezos", b: "algorand", aLabel: "Tezos", bLabel: "Algorand" },
-  { a: "filecoin", b: "arweave", aLabel: "Filecoin", bLabel: "Arweave" },
+  { a: "bnb", b: "tron", aLabel: "BNB", bLabel: "TRON" },
+  { a: "internet-computer", b: "near-protocol", aLabel: "Internet Computer", bLabel: "NEAR" },
+  { a: "algorand", b: "tezos", aLabel: "Algorand", bLabel: "Tezos" },
+  { a: "arweave", b: "filecoin", aLabel: "Arweave", bLabel: "Filecoin" },
   { a: "aptos", b: "sui", aLabel: "Aptos", bLabel: "Sui" },
 ];
 

@@ -50,7 +50,13 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
           return (
             <li key={c.id}>
               <Link href={c.href} className="flex items-center gap-3 px-4 py-3 hover:bg-elevated/40">
-                <Image src={c.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" unoptimized />
+                {c.image ? (
+                  <Image src={c.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" unoptimized />
+                ) : (
+                  <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-full bg-elevated text-[10px] font-bold text-primary">
+                    {c.symbol.slice(0, 3).toUpperCase()}
+                  </span>
+                )}
                 <span className="flex-1 min-w-0">
                   <span className="block truncate text-sm font-semibold text-fg">{c.name}</span>
                   <span className="block text-xs uppercase text-fg/55">{c.symbol}</span>

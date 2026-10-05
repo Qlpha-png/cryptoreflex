@@ -21,6 +21,7 @@ import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /guides/declaration-crypto-2026-checklist
@@ -45,8 +46,8 @@ const DESCRIPTION =
   "Checklist pas-à-pas pour déclarer correctement vos cryptomonnaies en 2026. 8 étapes à cocher, imprimable, couvre Cerfa 2086 + 3916-bis. Pour vous organiser avant la deadline.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/guides/declaration-crypto-2026-checklist`),
   openGraph: {
     title: TITLE,
@@ -165,7 +166,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, howTo]);
 
 export default function ChecklistPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="checklist-jsonld" data={jsonLd} />
 
       {/* Print stylesheet — page imprimable proprement */}
@@ -414,6 +415,6 @@ export default function ChecklistPage() {
           </p>
         </div>
       </footer>
-    </main>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getAllCryptosBrowsable } from "@/lib/cryptos-extended";
 import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
 import AcademyCrossLink from "@/components/AcademyCrossLink";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * Index /cryptos — Server Component.
@@ -33,7 +34,7 @@ export const revalidate = 86400;
 const SITE = "https://www.cryptoreflex.fr";
 
 export const metadata: Metadata = {
-  title: "Cryptos analysées : fiches, scores de fiabilité & risques",
+  title: fitTitle("Cryptos analysées : fiches, scores de fiabilité & risques"),
   description:
     "La plus grande base d'analyse crypto francophone : fiches détaillées avec score de fiabilité, statut MiCA, audits et risques. Recherche, filtres et navigation par pages.",
   alternates: { canonical: `${SITE}/cryptos` },

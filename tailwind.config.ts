@@ -122,9 +122,10 @@ const config: Config = {
       },
 
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "var(--font-sans)", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        // « Cryptoreflex NNBSP » : seulement U+202F, l'espace des milliers en français (voir app/globals.css).
+        sans: ["Cryptoreflex NNBSP", "var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["Cryptoreflex NNBSP", "var(--font-display)", "var(--font-sans)", "sans-serif"],
+        mono: ["Cryptoreflex NNBSP", "var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontVariantNumeric: {
         tabular: "tabular-nums",

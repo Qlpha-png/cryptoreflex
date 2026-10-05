@@ -14,6 +14,7 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /quiz/trouve-ton-exchange — Quiz "Trouve ton exchange en 60 sec".
@@ -36,8 +37,8 @@ const DESCRIPTION =
   "Réponds à 6 questions et compare les plateformes crypto selon votre profil (budget, fréquence, support FR, conformité MiCA). Outil pédagogique, sans recommandation personnalisée. 100 % gratuit, sans inscription.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: `${TITLE} — ${BRAND.name}`,

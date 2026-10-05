@@ -80,7 +80,7 @@ export default function EmbedPage({ params }: Params) {
         boxShadow: "0 8px 24px -8px rgba(0,0,0,.4)",
         maxWidth: 640,
         margin: "0 auto",
-        fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+        fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
         fontSize: 14,
         lineHeight: 1.4,
         boxSizing: "border-box",
@@ -179,7 +179,7 @@ export default function EmbedPage({ params }: Params) {
             textDecoration: "none",
           }}
         >
-          Powered by{" "}
+          Proposé par{" "}
           <strong style={{ color: "#F5A524" }}>Cryptoreflex</strong>
           <ExternalLink size={12} />
         </a>

@@ -395,7 +395,7 @@
         "foris dax",
         "crypto.com europe"
       ],
-      "logo": "/logos/crypto-com.svg",
+      "logo": "/logos/crypto-com.png",
       "websiteUrl": "https://crypto.com",
       "legalEntity": "Foris DAX MT Limited",
       "headquarters": "Malte",
@@ -510,7 +510,7 @@
         "okex",
         "okx europe"
       ],
-      "logo": "/logos/okx.svg",
+      "logo": "/logos/okx.png",
       "websiteUrl": "https://okx.com",
       "legalEntity": "OKX Europe Limited",
       "headquarters": "Malte",
@@ -567,7 +567,7 @@
         "mexc global",
         "mexc.co"
       ],
-      "logo": "/logos/mexc.svg",
+      "logo": null,
       "websiteUrl": "https://mexc.com",
       "legalEntity": "MEXC Global Ltd",
       "headquarters": "Victoria, Seychelles",
@@ -596,7 +596,7 @@
         "kucoin.com",
         "mek global"
       ],
-      "logo": "/logos/kucoin.svg",
+      "logo": null,
       "websiteUrl": "https://kucoin.com",
       "legalEntity": "KuCoin EU Exchange GmbH",
       "headquarters": "Autriche",
@@ -653,7 +653,7 @@
         "gate.com",
         "gate technology"
       ],
-      "logo": "/logos/gate-io.svg",
+      "logo": null,
       "websiteUrl": "https://gate.io",
       "legalEntity": "Gate Technology Limited",
       "headquarters": "Malte",
@@ -708,7 +708,7 @@
       "aliases": [
         "phemex.com"
       ],
-      "logo": "/logos/phemex.svg",
+      "logo": null,
       "websiteUrl": "https://phemex.com",
       "legalEntity": "Phemex Limited",
       "headquarters": "Singapour",
@@ -738,7 +738,7 @@
         "dydx.trade",
         "dydx foundation"
       ],
-      "logo": "/logos/dydx.svg",
+      "logo": null,
       "websiteUrl": "https://dydx.exchange",
       "legalEntity": "dYdX Trading Inc.",
       "headquarters": "Décentralisé (DAO Foundation Zoug, Suisse)",
@@ -766,7 +766,7 @@
         "hyperliquid.xyz",
         "hyperliquid labs"
       ],
-      "logo": "/logos/hyperliquid.svg",
+      "logo": null,
       "websiteUrl": "https://hyperliquid.xyz",
       "legalEntity": "Hyperliquid Labs",
       "headquarters": "Décentralisé (entité labs aux Îles Vierges britanniques)",
@@ -796,7 +796,7 @@
         "gemini europe",
         "gemini ireland"
       ],
-      "logo": "/logos/gemini.svg",
+      "logo": "/logos/gemini.png",
       "websiteUrl": "https://gemini.com",
       "legalEntity": "Gemini Intergalactic EU Ltd",
       "headquarters": "Malte",
@@ -854,7 +854,7 @@
         "bitfinex.com",
         "ifinex"
       ],
-      "logo": "/logos/bitfinex.svg",
+      "logo": "/logos/bitfinex.png",
       "websiteUrl": "https://bitfinex.com",
       "legalEntity": "iFinex Inc.",
       "headquarters": "Road Town, Îles Vierges britanniques",
@@ -884,7 +884,7 @@
         "huobi.com",
         "huobi global"
       ],
-      "logo": "/logos/htx.svg",
+      "logo": null,
       "websiteUrl": "https://htx.com",
       "legalEntity": "HTX Global Limited",
       "headquarters": "Seychelles",
@@ -913,7 +913,7 @@
         "bingx.com",
         "bingbon"
       ],
-      "logo": "/logos/bingx.svg",
+      "logo": null,
       "websiteUrl": "https://bingx.com",
       "legalEntity": "BingX Technology",
       "headquarters": "Singapour",
@@ -941,7 +941,7 @@
       "aliases": [
         "deribit.com"
       ],
-      "logo": "/logos/deribit.svg",
+      "logo": null,
       "websiteUrl": "https://deribit.com",
       "legalEntity": "Deribit B.V.",
       "headquarters": "Panama City, Panama (originellement Pays-Bas)",
@@ -970,7 +970,7 @@
         "n26.com",
         "n26 bank"
       ],
-      "logo": "/logos/n26.svg",
+      "logo": null,
       "websiteUrl": "https://n26.com",
       "legalEntity": "N26 Bank SE",
       "headquarters": "Allemagne",
@@ -1061,7 +1061,7 @@
         "etoro.com",
         "etoro europe"
       ],
-      "logo": "/logos/etoro.svg",
+      "logo": "/logos/etoro.png",
       "websiteUrl": "https://etoro.com",
       "legalEntity": "eToro (Europe) Ltd",
       "headquarters": "Chypre",
@@ -1118,7 +1118,7 @@
         "nexo.com",
         "nexo io"
       ],
-      "logo": "/logos/nexo.svg",
+      "logo": "/logos/nexo.png",
       "websiteUrl": "https://nexo.com",
       "legalEntity": "Nexo Capital UAB",
       "headquarters": "Vilnius, Lituanie",
@@ -1146,7 +1146,7 @@
       "aliases": [
         "youhodler.com"
       ],
-      "logo": "/logos/youhodler.svg",
+      "logo": null,
       "websiteUrl": "https://youhodler.com",
       "legalEntity": "Naumard Limited",
       "headquarters": "Lausanne, Suisse",
@@ -1175,7 +1175,7 @@
         "youngplatform.com",
         "young platform spa"
       ],
-      "logo": "/logos/young-platform.svg",
+      "logo": "/logos/young-platform.png",
       "websiteUrl": "https://youngplatform.com",
       "legalEntity": "YOUNG PLATFORM S.P.A.",
       "headquarters": "Italie",
@@ -1203,7 +1203,7 @@
       "aliases": [
         "paymium.com"
       ],
-      "logo": "/logos/paymium.svg",
+      "logo": "/logos/paymium.png",
       "websiteUrl": "https://paymium.com",
       "legalEntity": "PAYMIUM SAS",
       "headquarters": "France",
@@ -1230,7 +1230,7 @@
       "aliases": [
         "stackinsat.com"
       ],
-      "logo": "/logos/stackinsat.svg",
+      "logo": "/logos/stackin.png",
       "websiteUrl": "https://stackinsat.com",
       "legalEntity": "StackinSat SAS",
       "headquarters": "Bayonne, France",
@@ -1259,7 +1259,7 @@
         "feel-mining.com",
         "feelmining"
       ],
-      "logo": "/logos/feel-mining.svg",
+      "logo": "/logos/feel-mining.png",
       "websiteUrl": "https://feel-mining.com",
       "legalEntity": "BLOCKCHAIN PROCESS SECURITY (B.P.S.) SAS",
       "headquarters": "France",
@@ -1286,7 +1286,7 @@
       "aliases": [
         "deblock.com"
       ],
-      "logo": "/logos/deblock.svg",
+      "logo": null,
       "websiteUrl": "https://deblock.com",
       "legalEntity": "DEBLOCK SAS",
       "headquarters": "France",
@@ -1315,7 +1315,7 @@
         "sumeria.com",
         "lydia solutions"
       ],
-      "logo": "/logos/lydia.svg",
+      "logo": null,
       "websiteUrl": "https://sumeria.eu",
       "legalEntity": "Lydia Solutions SAS",
       "headquarters": "Paris, France",
@@ -1399,7 +1399,7 @@
         "metamask.io",
         "consensys"
       ],
-      "logo": "/logos/metamask.svg",
+      "logo": null,
       "websiteUrl": "https://metamask.io",
       "legalEntity": "ConsenSys Software Inc.",
       "headquarters": "Brooklyn, États-Unis",
@@ -1428,7 +1428,7 @@
         "phantom.app",
         "phantom.com"
       ],
-      "logo": "/logos/phantom.svg",
+      "logo": null,
       "websiteUrl": "https://phantom.app",
       "legalEntity": "Phantom Technologies Inc.",
       "headquarters": "San Francisco, États-Unis",
@@ -1456,7 +1456,7 @@
         "rabby.io",
         "debank"
       ],
-      "logo": "/logos/rabby.svg",
+      "logo": null,
       "websiteUrl": "https://rabby.io",
       "legalEntity": "DeBank Global Pte Ltd",
       "headquarters": "Singapour",
@@ -1483,7 +1483,7 @@
       "aliases": [
         "uphold.com"
       ],
-      "logo": "/logos/uphold.svg",
+      "logo": null,
       "websiteUrl": "https://uphold.com",
       "legalEntity": "Uphold Europe Limited",
       "headquarters": "Londres, Royaume-Uni (entité UE Lituanie)",
@@ -1511,7 +1511,7 @@
       "aliases": [
         "luno.com"
       ],
-      "logo": "/logos/luno.svg",
+      "logo": null,
       "websiteUrl": "https://luno.com",
       "legalEntity": "Luno Money UK Ltd",
       "headquarters": "Londres, Royaume-Uni",
@@ -1540,7 +1540,7 @@
         "blockchain.com",
         "blockchain.info"
       ],
-      "logo": "/logos/blockchain-com.svg",
+      "logo": null,
       "websiteUrl": "https://blockchain.com",
       "legalEntity": "Blockchain.com Operations (Malta) Limited",
       "headquarters": "Malte",
@@ -1595,7 +1595,7 @@
       "aliases": [
         "bitvavo.com"
       ],
-      "logo": "/logos/bitvavo.svg",
+      "logo": "/logos/bitvavo.png",
       "websiteUrl": "https://bitvavo.com",
       "legalEntity": "Bitvavo B.V.",
       "headquarters": "Pays-Bas",
@@ -1651,7 +1651,7 @@
       "aliases": [
         "bit2me.com"
       ],
-      "logo": "/logos/bit2me.svg",
+      "logo": null,
       "websiteUrl": "https://bit2me.com",
       "legalEntity": "Bitcoinforme S.L.",
       "headquarters": "Espagne",
@@ -1708,7 +1708,7 @@
         "wirexapp.com",
         "wirex"
       ],
-      "logo": "/logos/wirex.svg",
+      "logo": "/logos/wirex.png",
       "websiteUrl": "https://wirexapp.com",
       "legalEntity": "Wirex Limited",
       "headquarters": "Londres, Royaume-Uni",
@@ -1764,7 +1764,7 @@
         "robinhood.com",
         "robinhood crypto eu"
       ],
-      "logo": "/logos/robinhood.svg",
+      "logo": null,
       "websiteUrl": "https://robinhood.com",
       "legalEntity": "Robinhood Europe UAB",
       "headquarters": "Lituanie",
@@ -1819,7 +1819,7 @@
       "aliases": [
         "bitstamp.net"
       ],
-      "logo": "/logos/bitstamp.svg",
+      "logo": "/logos/bitstamp.png",
       "websiteUrl": "https://bitstamp.net",
       "legalEntity": "Bitstamp Europe S.A.",
       "headquarters": "Luxembourg",
@@ -1877,7 +1877,7 @@
         "ftx.us",
         "ftx europe"
       ],
-      "logo": "/logos/ftx.svg",
+      "logo": null,
       "websiteUrl": "https://ftx.com",
       "legalEntity": "FTX Trading Ltd. (en liquidation)",
       "headquarters": "Nassau, Bahamas",
@@ -1905,7 +1905,7 @@
         "lbank.com",
         "lbank.info"
       ],
-      "logo": "/logos/lbank.svg",
+      "logo": null,
       "websiteUrl": "https://lbank.com",
       "legalEntity": "LBK Blockchain Co. Limited",
       "headquarters": "Hong Kong",
@@ -1934,7 +1934,7 @@
         "ascendex.com",
         "bitmax"
       ],
-      "logo": "/logos/ascendex.svg",
+      "logo": null,
       "websiteUrl": "https://ascendex.com",
       "legalEntity": "AscendEX Foundation Ltd",
       "headquarters": "Singapour",
@@ -1962,7 +1962,7 @@
       "aliases": [
         "poloniex.com"
       ],
-      "logo": "/logos/poloniex.svg",
+      "logo": null,
       "websiteUrl": "https://poloniex.com",
       "legalEntity": "Polo Digital Assets Ltd",
       "headquarters": "Seychelles",
@@ -1990,7 +1990,7 @@
       "aliases": [
         "bitmart.com"
       ],
-      "logo": "/logos/bitmart.svg",
+      "logo": null,
       "websiteUrl": "https://bitmart.com",
       "legalEntity": "BitMart Group",
       "headquarters": "George Town, Îles Caïmans",
@@ -2018,7 +2018,7 @@
       "aliases": [
         "boursorama.com"
       ],
-      "logo": "/logos/boursorama.svg",
+      "logo": null,
       "websiteUrl": "https://boursorama.com",
       "legalEntity": "BoursoBank (ex-Boursorama Banque) SA",
       "headquarters": "Boulogne-Billancourt, France",
@@ -2046,7 +2046,7 @@
       "aliases": [
         "shapeshift.com"
       ],
-      "logo": "/logos/shapeshift.svg",
+      "logo": null,
       "websiteUrl": "https://shapeshift.com",
       "legalEntity": "ShapeShift DAO",
       "headquarters": "Décentralisé (DAO)",
@@ -2073,7 +2073,7 @@
       "aliases": [
         "delta.exchange"
       ],
-      "logo": "/logos/delta-exchange.svg",
+      "logo": null,
       "websiteUrl": "https://delta.exchange",
       "legalEntity": "Delta Exchange Ltd",
       "headquarters": "St. Vincent and the Grenadines",

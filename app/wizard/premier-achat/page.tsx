@@ -12,6 +12,7 @@ import {
   howToSchema,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 export const revalidate = 86400;
 
@@ -23,7 +24,7 @@ const PATH = "/wizard/premier-achat";
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: TITLE,

@@ -11,6 +11,7 @@ import { Check, X, ArrowRight, Minus } from "lucide-react";
 import AffiliateLink from "@/components/AffiliateLink";
 import { formatStartingPrice, getCheapestPaidPlan } from "@/lib/fiscal-tools";
 import type { FiscalTool } from "@/lib/fiscal-tools-types";
+import { fmtFr } from "@/lib/format-fr";
 
 interface FiscalToolComparisonTableProps {
   tools: FiscalTool[];
@@ -29,7 +30,7 @@ interface Row {
 }
 
 const ROWS: Row[] = [
-  { label: "Score Cryptoreflex", get: (t) => `${t.score.toFixed(1)} / 10` },
+  { label: "Score Cryptoreflex", get: (t) => `${fmtFr(t.score, 1)} / 10` },
   {
     label: "Pays d'édition",
     get: (t) =>
@@ -242,7 +243,7 @@ export default function FiscalToolComparisonTable({
                 )}
               </h3>
               <span className="text-xs text-primary-soft font-bold">
-                {tool.score.toFixed(1)}/10
+                {fmtFr(tool.score, 1)}/10
               </span>
             </div>
             <dl className="mt-3 space-y-1.5 text-xs">

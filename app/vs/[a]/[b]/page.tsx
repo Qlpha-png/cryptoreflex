@@ -62,6 +62,7 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
+import { fmtFr } from "@/lib/format-fr";
 
 // BATCH 58 (2026-05-03) — Extension TOP 30 -> TOP 100 (4950 paires).
 // Strategy : pre-build top 15 cryptos = 105 paires (les plus search FR), les
@@ -160,10 +161,10 @@ function fmtUsd(n: number | null | undefined): string {
   // = donnée manquante (impossible en réalité), pas une vraie valeur. On affiche
   // « — » plutôt que « 0.00 $ » (qui faisait douter de toute la donnée du tableau).
   if (n == null || Number.isNaN(n) || n === 0) return "—";
-  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)} Md $`;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} M $`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)} k $`;
-  return `${n.toFixed(2)} $`;
+  if (n >= 1_000_000_000) return `${fmtFr((n / 1_000_000_000), 1)} Md $`;
+  if (n >= 1_000_000) return `${fmtFr((n / 1_000_000), 1)} M $`;
+  if (n >= 1_000) return `${fmtFr((n / 1_000), 1)} k $`;
+  return `${fmtFr(n, 2)} $`;
 }
 
 function consensusOf(c: AnyCrypto): string {
@@ -410,9 +411,9 @@ function buildStrengths(c: AnyCrypto): string[] {
   // Hidden gem : derive depuis tagline + reliability + use case
   const out: string[] = [];
   if (c.reliability.score >= 8) {
-    out.push(`Score fiabilité ${c.reliability.score.toFixed(1)}/10 (équipe identifiée + audits).`);
+    out.push(`Score fiabilité ${fmtFr(c.reliability.score, 1)}/10 (équipe identifiée + audits).`);
   } else if (c.reliability.score >= 7) {
-    out.push(`Score fiabilité correct ${c.reliability.score.toFixed(1)}/10 — ${c.reliability.yearsActive} années d'activité.`);
+    out.push(`Score fiabilité correct ${fmtFr(c.reliability.score, 1)}/10 — ${c.reliability.yearsActive} années d'activité.`);
   }
   if (c.reliability.auditedBy && c.reliability.auditedBy.length > 0) {
     out.push(`Audits par ${c.reliability.auditedBy.slice(0, 2).join(" et ")}.`);
@@ -620,8 +621,8 @@ export default async function CryptoPairPage({ params }: Props) {
                 <Row label="Accessible aux débutants" a={beginnerScore(a)} b={beginnerScore(b)} />
                 <Row
                   label="Score décentralisation"
-                  a={decentA ? `${decentA.score.toFixed(1)}/10` : "—"}
-                  b={decentB ? `${decentB.score.toFixed(1)}/10` : "—"}
+                  a={decentA ? `${fmtFr(decentA.score, 1)}/10` : "—"}
+                  b={decentB ? `${fmtFr(decentB.score, 1)}/10` : "—"}
                   winner={
                     decentA && decentB
                       ? decentA.score > decentB.score
@@ -839,7 +840,7 @@ export default async function CryptoPairPage({ params }: Props) {
             {correlation !== null ? (
               <>
                 <div className="text-3xl font-extrabold text-fg">
-                  {correlation.toFixed(2)}
+                  {fmtFr(correlation, 2)}
                 </div>
                 <div className="mt-1 text-sm text-fg/80">{describeCorrelation(correlation)}</div>
                 <div className="mt-3 text-xs text-muted">

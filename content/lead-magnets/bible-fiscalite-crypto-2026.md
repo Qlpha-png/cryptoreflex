@@ -3,8 +3,8 @@ title: "Bible Fiscalité Crypto France 2026"
 subtitle: "Le guide exhaustif pour déclarer correctement vos cryptos sans payer un euro de trop"
 author: "Cryptoreflex"
 date: "2026-04-26"
-version: "1.0"
-pages: 30
+version: "1.1"
+pages: 14
 disclaimer: "Document à valeur informative — ne constitue pas un conseil fiscal personnalisé. Pour une situation complexe (DeFi, staking, BIC pro), consultez un expert-comptable agréé."
 ---
 
@@ -19,7 +19,7 @@ Ce document est à vocation pédagogique. La fiscalité crypto évolue réguliè
 ## Sommaire
 
 1. [Introduction — Pourquoi ce guide en 2026](#chapitre-1)
-2. [Cadre légal : article 150 VH bis et BOI-RPPM-PVBMC-30-30](#chapitre-2)
+2. [Cadre légal : article 150 VH bis et BOFiP (BOI-RPPM-PVBMC-30)](#chapitre-2)
 3. [Régime PFU 31,4 % vs barème progressif](#chapitre-3)
 4. [Le formulaire Cerfa 2086 — détail des cessions](#chapitre-4)
 5. [Le formulaire 3916-bis — comptes étrangers](#chapitre-5)
@@ -34,7 +34,7 @@ Ce document est à vocation pédagogique. La fiscalité crypto évolue réguliè
 
 ## Chapitre 1 — Introduction : pourquoi ce guide en 2026 {#chapitre-1}
 
-La détention de cryptomonnaies par les Français explose : selon l'AMF, près de 12 % de la population adulte détiendrait au moins un crypto-actif en 2026, contre 8 % en 2023. Pourtant, **moins de 30 % des détenteurs déclarent correctement leurs gains**, par méconnaissance des obligations ou par peur de la complexité administrative.
+De plus en plus de Français détiennent des cryptomonnaies, et beaucoup déclarent mal leurs gains, ou pas du tout, par méconnaissance des obligations ou par peur de la complexité administrative.
 
 L'année 2026 marque un tournant pour trois raisons :
 
@@ -46,7 +46,7 @@ Conséquence : **2026 n'est plus l'année où l'on peut "oublier" de déclarer**
 
 ---
 
-## Chapitre 2 — Cadre légal : article 150 VH bis et BOI-RPPM-PVBMC-30-30 {#chapitre-2}
+## Chapitre 2 — Cadre légal : article 150 VH bis et BOFiP (BOI-RPPM-PVBMC-30) {#chapitre-2}
 
 ### Le texte fondateur
 
@@ -69,7 +69,7 @@ Plus-value imposable = Prix de cession − (Prix total d'acquisition × Prix de 
 
 Cette formule signifie que si vous avez déjà fait des +3x sur votre portefeuille, vendre une partie revient à matérialiser une PV proportionnelle, même si vous vendez "que les BTC achetés récemment". Il n'y a **aucune méthode FIFO/LIFO/HIFO** chez le particulier français.
 
-### La doctrine BOI-RPPM-PVBMC-30-30
+### La doctrine BOI-RPPM-PVBMC-30
 
 C'est le bulletin officiel des finances publiques (BOFIP) qui interprète le 150 VH bis. À jour 2026, il précise :
 
@@ -123,20 +123,22 @@ Le **Cerfa 2086** est l'annexe à joindre à la déclaration 2042-C qui détaill
 
 Vous avez fait 3 ventes en 2025 :
 
-| Date | PF global ce jour | Prix vente | Acq. totale | PV |
+| Date | PF global ce jour | Prix vente | Acq. restante | PV |
 |---|---|---|---|---|
-| 12/03/2025 | 28 000 € | 5 000 € | 8 000 € | 3 571 € |
-| 02/07/2025 | 22 000 € | 3 000 € | 8 000 € | 1 909 € |
-| 18/11/2025 | 35 000 € | 4 000 € | 8 000 € | 3 086 € |
-| **Total** | — | **12 000 €** | — | **8 566 €** |
+| 12/03/2025 | 28 000 € | 5 000 € | 8 000,00 € | 3 571,43 € |
+| 02/07/2025 | 22 000 € | 3 000 € | 6 571,43 € | 2 103,90 € |
+| 18/11/2025 | 35 000 € | 4 000 € | 5 675,32 € | 3 351,39 € |
+| **Total** | — | **12 000 €** | — | **9 026,72 €** |
 
-Vous reportez 8 566 € sur la 2042-C ligne 3AN, et vous cochez en plus la case 3CN si vous optez pour le barème.
+Après chaque vente, le prix total d'acquisition diminue de la part déjà « utilisée » (ligne 221 du 2086) : 8 000 × 5 000 ÷ 28 000 = 1 428,57 € pour la 1re vente, d'où 6 571,43 € à la 2e. Oublier cette baisse sous-estime la plus-value.
+
+Vous reportez 9 027 € (arrondi à l'euro) sur la 2042-C, case 3AN, et vous cochez en plus la case 3CN si vous optez pour le barème.
 
 ### Les 3 erreurs fatales sur le 2086
 
-1. **Croire que les swaps crypto → crypto sont imposables** (BTC → ETH sans soulte = NON imposable, sursis art. 150 VH bis ; gardez quand même le suivi du PMP pour la future cession en euro)
+1. **Croire que les swaps crypto → crypto sont imposables** (BTC → ETH sans soulte = NON imposable, sursis art. 150 VH bis ; gardez quand même la trace de vos achats en euros : ils forment le prix total d'acquisition de votre portefeuille, ligne 220 du 2086, utilisé à la prochaine vente)
 2. **Mal calculer le portefeuille global** (= somme des valeurs de marché de TOUS les crypto-actifs détenus à la date de cession)
-3. **Ne pas inclure les frais d'achat dans le prix d'acquisition** (les frais réduisent la PV)
+3. **Jeter les justificatifs de frais** : les frais de vente réduisent le prix de cession (notice du 2086) ; pour les frais d'achat, la notice ne les cite pas à la ligne 220 et les compter dans le prix acquitté est la lecture la plus courante, à documenter
 
 ---
 
@@ -169,7 +171,7 @@ Un compte fermé en cours d'année se déclare quand même, pour chaque année o
 
 ### L'astuce qui fait gagner 5 heures
 
-Waltio (et concurrents) pré-remplissent automatiquement les 3916-bis à partir des connexions exchanges. Si vous avez 8 comptes étrangers, cela vous fait passer de 8 formulaires à remplir à la main à 1 PDF généré en 30 secondes.
+Waltio (et concurrents) pré-remplissent automatiquement les 3916-bis à partir des connexions exchanges. Si vous avez 8 comptes étrangers, ils vous donnent les informations de chaque compte, prêtes à recopier dans votre déclaration en ligne (impots.gouv n'accepte pas de fichier).
 
 ---
 
@@ -181,7 +183,7 @@ Waltio (et concurrents) pré-remplissent automatiquement les 3916-bis à partir 
 
 **Exemple (hypothèse « imposition à la réception », à confirmer)** : vous recevez 0,1 ETH de staking le 15 mars (valeur ce jour : 300 €).
 - Dans cette hypothèse, vous déclareriez 300 € en BNC (micro-BNC si < 83 600 € : abattement 34 %, ou régime réel).
-- Quand vous vendez ces 0,1 ETH plus tard à 350 €, votre PV brute serait de 50 € (pas 350 €).
+- Les 300 € déclarés s'ajoutent alors au prix total d'acquisition du portefeuille (ligne 220) : ils réduisent la plus-value de vos ventes suivantes, toujours calculée sur l'ensemble du portefeuille (méthode globale), jamais crypto par crypto.
 - Dans l'hypothèse « imposition à la cession », rien n'est dû à la réception ; toute la valeur de cession suit le régime des plus-values.
 
 ### Staking décentralisé (Lido, Rocket Pool, validateurs solo)
@@ -216,11 +218,11 @@ En pratique 2026 : la plupart des NFT (PFP, gaming, utility tokens) sont traité
 - **Mint** : prix payé = acquisition (à intégrer dans le portefeuille global).
 - **Vente sur marketplace** : cession imposable, frais de marketplace déductibles.
 - **Royalties créateur** : pour un créateur, revenus généralement imposables (souvent en BNC) ; régime à confirmer selon la nature de l'activité.
-- **Achat de NFT en ETH** : double événement (cession ETH + acquisition NFT).
+- **Achat de NFT en ETH** : si le NFT est un actif numérique, l'échange ETH → NFT est neutre, comme un swap ; s'il relève des biens meubles, payer en ETH est une cession imposable. Point à faire trancher.
 
 ### Pertes sur NFT illiquides
 
-Beaucoup de holders 2021-2022 ont des NFT à 0,01 ETH revendables. Pour matérialiser la perte, il faut **réellement vendre** (même à 0,001 ETH via une offre privée). Tant que vous les détenez, pas de perte fiscale.
+Revendre pour presque rien un NFT qui ne vaut plus rien ne crée pas de moins-value notable : avec la méthode globale, le résultat d'une vente est proportionnel à son prix. La perte joue autrement : la valeur du portefeuille a baissé alors que le prix d'achat reste dans le prix total d'acquisition, ce qui réduit la plus-value de vos ventes suivantes.
 
 ---
 
@@ -231,18 +233,18 @@ Beaucoup de holders 2021-2022 ont des NFT à 0,01 ETH revendables. Pour matéria
 Pour les particuliers (régime 150 VH bis), les MV crypto compensent les PV crypto **uniquement de la même année**. **Pas de report sur années suivantes** (contrairement au régime des plus-values mobilières classiques où on a 10 ans de report).
 
 **Exemple** :
-- 2025 : PV BTC +8 000 € + MV LUNA −3 000 € → PV nette imposable = 5 000 €.
-- 2026 : PV ETH +12 000 €. La MV non utilisée de 2025 n'est PAS reportable.
+- 2025 : une vente de mars dégage +8 000 €, une vente de novembre −3 000 € (portefeuille alors globalement en perte) → PV nette imposable = 5 000 €.
+- 2026 : vos ventes dégagent +12 000 €. La MV non utilisée de 2025 n'est PAS reportable.
 
-C'est dur, mais c'est la règle. **Stratégie** : si vous avez des MV latentes en fin d'année et des PV importantes, matérialisez-les (vendez puis rachetez éventuellement).
+C'est dur, mais c'est la règle. **Attention à la « vente à perte » de fin d'année** : vendre la crypto qui a baissé ne crée une moins-value que si **tout le portefeuille** vaut moins que son prix total d'acquisition ce jour-là ; sinon, la vente ajoute une plus-value. Et une vente suivie d'un rachat dans un but fiscal peut être remise en cause (abus de droit, articles L64 et L64 A du LPF). Exemple chiffré : cryptoreflex.fr/outils/tax-loss-harvesting.
 
 ### Tokens devenus illiquides (FTX, Celsius, exchanges en faillite)
 
-Les tokens stuck sur un exchange en faillite ne sont **pas déductibles tant que la perte n'est pas définitive** (jugement de liquidation, attestation officielle). Conservez les preuves d'irrécouvrabilité. Position prudente : attendre la liquidation officielle pour déduire.
+Une faillite n'est pas une cession : aucune moins-value n'est déclarée pour des tokens bloqués. Leur valeur, devenue nulle ou presque, ne compte plus dans la valeur globale du portefeuille, alors que leur prix d'achat reste dans le prix total d'acquisition : vos ventes suivantes dégagent donc moins de plus-value. Conservez les preuves (jugement de liquidation, déclaration de créance) et faites valider les montants importants.
 
 ### Tokens "rugged" (projet abandonné, créateurs disparus)
 
-Plus délicat. Si le token est encore tradable (même à 0,000001 €), vendez-le pour matérialiser la perte. Si plus aucun marché, la position dominante est de **constater la perte à la disparition du marché actif** (date de delisting), avec pièces justificatives (screenshots, communications, articles de presse).
+Même logique : vendre un token à 0,000001 € ne crée pas de moins-value notable, car le résultat d'une vente est proportionnel à son prix. La perte se traduit par la baisse de la valeur globale du portefeuille, alors que le prix d'achat du token reste dans le prix total d'acquisition. Gardez les pièces (captures, annonces de retrait de cotation, articles de presse) pour justifier la valeur nulle retenue.
 
 ---
 
@@ -318,17 +320,17 @@ La fiscalité crypto française est complexe mais **pas insurmontable**. L'erreu
 
 - [Calculateur fiscalité crypto](https://www.cryptoreflex.fr/outils/calculateur-fiscalite) — simulez votre imposition en 2 clics
 - [Checklist déclaration 2026](https://www.cryptoreflex.fr/api/lead-magnet/checklist) — 30 points concrets
-- [Glossaire fiscal crypto](https://www.cryptoreflex.fr/api/lead-magnet/glossaire) — 50 termes définis
+- [Glossaire fiscal crypto](https://www.cryptoreflex.fr/api/lead-magnet/glossaire) — 47 termes définis
 
 ### Outil recommandé : Waltio
 
 > Lien d'affiliation publicitaire — Cryptoreflex perçoit une commission. Cela ne change rien à notre méthodologie de recommandation.
 
-Pourquoi nous recommandons Waltio (testé sur 12 outils en 2025) :
+Pourquoi nous recommandons Waltio :
 
 1. **Outil français** : interface FR native, formulaires Cerfa français pré-remplis (pas une traduction d'outil US).
-2. **Conformité Cerfa 2086 + 3916-bis** : génération directe des PDF officiels.
-3. **200+ exchanges supportés** + DeFi multi-chain.
+2. **Cerfa 2086 + 3916-bis** : formulaires pré-remplis, à recopier dans votre déclaration en ligne (impots.gouv n'accepte pas de fichier).
+3. **Import de la plupart des plateformes et des blockchains**, DeFi comprise.
 4. **Tarification transparente** (relevée sur waltio.com le 2 octobre 2026) : suivi gratuit, puis 39 € par an jusqu'à 50 transactions (Lite), 99 € jusqu'à 1 000 (Starter), 249 € jusqu'à 10 000 (Smart), 999 € au-delà (Unlimited).
 5. **Support par e-mail**, chat à partir de l'offre Smart, centre d'aide en français.
 
@@ -343,4 +345,4 @@ Cryptoreflex n'est pas un cabinet fiscal et ne fournit aucun conseil personnalis
 ---
 
 *Cryptoreflex — Édition indépendante française. SIRET 103 352 621.*
-*Version 1.0 — 26 avril 2026, mise à jour le 2 octobre 2026. Mise à jour annuelle prévue en mars 2027.*
+*Version 1.1 — 26 avril 2026, mise à jour le 5 octobre 2026 (exemple du 2086 corrigé, méthode globale précisée). Mise à jour annuelle prévue en mars 2027.*

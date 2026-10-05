@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Calculator, TrendingUp, TrendingDown } from "lucide-react";
+import { fmtFr } from "@/lib/format-fr";
 
 export default function ProfitCalculator() {
   const [invested, setInvested] = useState(1000);
@@ -64,7 +65,7 @@ export default function ProfitCalculator() {
         </div>
 
         <div className="rounded-xl border border-border bg-elevated/40 p-5 space-y-3">
-          <Row label="Quantité achetée" value={`${result.quantity.toFixed(6)}`} />
+          <Row label="Quantité achetée" value={`${fmtFr(result.quantity, 6)}`} />
           <Row label="Valeur à la vente" value={fmtEur(result.gross)} />
           <Row label="Frais totaux" value={fmtEur(result.fees)} />
           <hr className="border-border/60" />
@@ -90,7 +91,7 @@ export default function ProfitCalculator() {
               ) : (
                 <TrendingDown className="h-4 w-4" />
               )}
-              {result.roi.toFixed(2)}%
+              {fmtFr(result.roi, 2)}%
             </span>
           </div>
         </div>

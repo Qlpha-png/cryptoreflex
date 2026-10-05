@@ -9,6 +9,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * MiniInvestSimulator — micro-calculateur "Si j'avais investi X€" (P1-10).
@@ -339,12 +340,12 @@ function formatEur(v: number): string {
       maximumFractionDigits: 0,
     }).format(v);
   } catch {
-    return `${v.toFixed(0)} €`;
+    return `${fmtFr(v, 0)} €`;
   }
 }
 
 function formatPct(v: number): string {
   const abs = Math.abs(v);
   const digits = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
-  return `${v.toFixed(digits)} %`;
+  return `${fmtFr(v, digits)} %`;
 }

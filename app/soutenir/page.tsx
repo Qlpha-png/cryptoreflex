@@ -17,6 +17,7 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 /**
  * /soutenir — page « soutien libre » (DÉMONÉTISATION juin 2026).
@@ -42,8 +43,9 @@ const HAS_SUPPORT_LINK = !!SUPPORT_URL && SUPPORT_URL.startsWith("http");
 
 export const metadata: Metadata = {
   title: { absolute: "Soutenir Cryptoreflex — 100 % gratuit, contribution libre" },
-  description:
+  description: fitDescription(
     "Cryptoreflex est gratuit pour tout le monde : fiches, calculateurs, comparateur et académie, sans paywall ni abonnement. Si le projet vous est utile, vous pouvez le soutenir librement.",
+  ),
   alternates: withHreflang(`${BRAND.url}/soutenir`),
   keywords: [
     "soutenir Cryptoreflex",

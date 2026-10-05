@@ -21,6 +21,7 @@ import { isAvailableFr, type Platform } from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
+import { fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -64,7 +65,7 @@ function fmtPct(n: number): string {
 }
 
 function fmtScore(n: number): string {
-  return `${n.toFixed(1)}/5`;
+  return `${fmtFr(n, 1)}/5`;
 }
 
 function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platform; gap: string } {
@@ -75,8 +76,8 @@ function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platfor
     (p.fees.verified?.makerTakerApplies ?? true) ? p.fees.spotTaker : p.fees.instantBuy;
   const ra = realCost(a);
   const rb = realCost(b);
-  if (ra <= rb) return { winner: a, loser: b, gap: `${(rb - ra).toFixed(2)} pts` };
-  return { winner: b, loser: a, gap: `${(ra - rb).toFixed(2)} pts` };
+  if (ra <= rb) return { winner: a, loser: b, gap: `${fmtFr((rb - ra), 2)} pts` };
+  return { winner: b, loser: a, gap: `${fmtFr((ra - rb), 2)} pts` };
 }
 
 function bestOnSecurity(a: Platform, b: Platform): { winner: Platform; loser: Platform } {

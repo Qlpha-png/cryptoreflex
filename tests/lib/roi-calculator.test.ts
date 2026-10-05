@@ -27,6 +27,12 @@ describe("calculateROI — seuil de 305 € sur le total des ventes", () => {
     expect(r.taxFr).toBeCloseTo((306 - 100) * 0.314, 2);
   });
 
+  it("le seuil se mesure sur la vente NETTE de frais (comme la ligne 218 du 2086)", () => {
+    // 310 € bruts − 2 % de frais = 303,80 € nets → exonéré ; 320 € bruts − 2 % = 313,60 € → imposé
+    expect(calculateROI({ buyPrice: 1, sellPrice: 3.1, quantity: 100, buyFeeRate: 0, sellFeeRate: 2 }).taxFr).toBe(0);
+    expect(calculateROI({ buyPrice: 1, sellPrice: 3.2, quantity: 100, buyFeeRate: 0, sellFeeRate: 2 }).taxFr).toBeGreaterThan(0);
+  });
+
   it("moins-value → aucun impôt, quel que soit le montant vendu", () => {
     const r = calculateROI({ buyPrice: 100, sellPrice: 90, quantity: 100, buyFeeRate: 0, sellFeeRate: 0 });
     expect(r.profitNet).toBeLessThan(0);

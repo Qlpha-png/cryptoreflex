@@ -34,6 +34,7 @@ import {
 import { getAllPlatforms } from "@/lib/platforms";
 import { getPublishableReviewSlugs } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import { fitTitle } from "@/lib/seo-text";
 
 // MAILLAGE 2026-06-13 — chaque plateforme citée renvoie vers son AVIS quand
 // la fiche existe (publishable) → parcours « où acheter → étudier la
@@ -60,6 +61,7 @@ import {
   howToSchema,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fmtFr } from "@/lib/format-fr";
 
 // 2026-06-13 — HARD 404 sur params invalides (fix soft-404 SEO). La page
 // est 100 % SYNCHRONE (aucun fetch réseau au build : tout vient de la data
@@ -109,7 +111,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const description = `Acheter ${c.name} ${country.inName} : plateformes, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator} (guide MiCA). Pas-à-pas Cryptoreflex.`;
 
   return {
-    title,
+    title: fitTitle(title),
     description,
     alternates: withHreflang(`${BRAND.url}/acheter/${c.id}/${country.code}`),
     openGraph: {
@@ -557,7 +559,7 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
                 Critères vérifiables sur sources ouvertes (registres, rapports d&apos;audit). Aucun jugement de valeur.
               </p>
               <dl className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <EditorialStat label="Score fiabilité" value={`${c.reliability.score.toFixed(1)}/10`} />
+                <EditorialStat label="Score fiabilité" value={`${fmtFr(c.reliability.score, 1)}/10`} />
                 <EditorialStat label="Levée de fonds" value={c.reliability.fundingRaised} />
                 <EditorialStat label="Audité par" value={c.reliability.auditedBy.join(", ")} />
               </dl>

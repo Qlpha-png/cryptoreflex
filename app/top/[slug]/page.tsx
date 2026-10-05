@@ -25,6 +25,9 @@ import {
   graphSchema,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
+import { formatMicaDate, getMicaMeta } from "@/lib/mica";
+import { fmtNb } from "@/lib/format-fr";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -41,7 +44,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const l = getListicle(params.slug);
   if (!l) return { robots: { index: false, follow: false } };
   return {
-    title: l.title,
+    title: fitTitle(l.title),
     description: l.description,
     alternates: withHreflang(`${BRAND.url}/top/${l.slug}`),
     openGraph: {
@@ -102,8 +105,8 @@ export default function TopListiclePage({ params }: Props) {
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">{listicle.intro}</p>
               <p className="mt-4 text-xs text-muted">
-                Mis à jour {new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}
-                {" "}— méthodologie data-driven (scoring Cryptoreflex × frais réels × statut MiCA).
+                Statuts MiCA vérifiés le {formatMicaDate(getMicaMeta().lastUpdated)} — méthode : score
+                Cryptoreflex, frais réels et statut MiCA.
               </p>
             </div>
           </header>
@@ -176,7 +179,7 @@ function buildListicleFaqs(
     return [
       {
         question: `Quelle est la meilleure plateforme du classement ?`,
-        answer: `${top.name} arrive en tête avec un score global de ${top.scoring.global}/5. ${top.tagline} Sa combinaison de ${top.fees.spotTaker}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "non agréé MiCA"} et ${top.support.frenchChat ? "support en français" : "support anglophone"} explique sa position.`,
+        answer: `${top.name} arrive en tête avec un score global de ${fmtNb(top.scoring.global)}/5. ${top.tagline} Sa combinaison de ${fmtNb(top.fees.spotTaker)}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "non agréé MiCA"} et ${top.support.frenchChat ? "support en français" : "support anglophone"} explique sa position.`,
       },
       {
         question: `Comment ce classement est-il établi ?`,
@@ -197,7 +200,7 @@ function buildListicleFaqs(
       answer: `${top.name} (${top.symbol}) ${
         top.kind === "top10"
           ? `est le projet n°${top.rank} par capitalisation. ${top.tagline}`
-          : `figure dans nos hidden gems avec un score de fiabilité ${(top as Extract<AnyCrypto, { kind: "hidden-gem" }>).reliability.score}/10. ${(top as Extract<AnyCrypto, { kind: "hidden-gem" }>).whyHiddenGem}`
+          : `figure dans nos hidden gems avec un score de fiabilité ${fmtNb((top as Extract<AnyCrypto, { kind: "hidden-gem" }>).reliability.score)}/10. ${(top as Extract<AnyCrypto, { kind: "hidden-gem" }>).whyHiddenGem}`
       }`,
     },
     {
@@ -255,7 +258,7 @@ function PlatformItem({
             </li>
             <li className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-accent-cyan shrink-0" />
-              Spot taker : {platform.fees.spotTaker}% · Instant : {platform.fees.instantBuy}%
+              Spot taker : {fmtNb(platform.fees.spotTaker)}% · Instant : {fmtNb(platform.fees.instantBuy)}%
             </li>
           </ul>
 

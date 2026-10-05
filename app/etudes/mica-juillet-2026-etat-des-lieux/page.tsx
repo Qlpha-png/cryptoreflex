@@ -25,6 +25,7 @@ import NewsletterInline from "@/components/NewsletterInline";
 import { withHreflang } from "@/lib/seo-alternates";
 import { getExchangePlatforms, isAvailableFr } from "@/lib/platforms";
 import { getAllMicaPlatforms } from "@/lib/mica";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /etudes/mica-juillet-2026-etat-des-lieux — état des lieux des plateformes crypto en France
@@ -46,8 +47,8 @@ const DESCRIPTION =
   "Après la fin de la période transitoire MiCA (1er juillet 2026) : quelles plateformes crypto sont agréées pour servir la France, lesquelles ne le sont pas. Données du registre officiel de l'ESMA et de la liste blanche de l'AMF, mises à jour le 2 octobre 2026.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/etudes/mica-juillet-2026-etat-des-lieux`),
   openGraph: {
     title: TITLE,
@@ -157,7 +158,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq]);
 
 export default function MicaStudyPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="mica-study-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -497,6 +498,6 @@ export default function MicaStudyPage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

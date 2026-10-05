@@ -56,6 +56,7 @@ import {
   type QuizResult,
 } from "@/lib/quiz-scoring";
 import { track, trackAffiliateClick, trackNewsletterSignup } from "@/lib/analytics";
+import { fmtNb } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Définition des questions                                                   */
@@ -600,13 +601,15 @@ function PlatformCard({
 
         {/* Logo */}
         <div className="shrink-0 hidden sm:block">
-          <Image
-            src={platform.logo}
-            alt=""
-            width={48}
-            height={48}
-            className="rounded-xl bg-elevated p-1.5"
-          />
+          {platform.logo ? (
+            <Image
+              src={platform.logo}
+              alt=""
+              width={48}
+              height={48}
+              className="rounded-xl bg-elevated p-1.5"
+            />
+          ) : null}
         </div>
 
         {/* Content */}
@@ -619,7 +622,7 @@ function PlatformCard({
               className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2.5 py-1 whitespace-nowrap"
               aria-label={`Score Cryptoreflex ${platform.scoring.global} sur 5`}
             >
-              {platform.scoring.global}/5
+              {fmtNb(platform.scoring.global)}/5
             </span>
           </div>
           <p className="mt-2 text-sm text-fg/80">{rationale}</p>

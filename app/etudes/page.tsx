@@ -110,7 +110,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, collection]);
 
 export default function EtudesHubPage() {
   return (
-    <main className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-[#05060A] text-slate-100">
       <StructuredData id="etudes-jsonld" data={jsonLd} />
 
       {/* Hero */}
@@ -197,6 +197,6 @@ export default function EtudesHubPage() {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

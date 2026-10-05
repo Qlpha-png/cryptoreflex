@@ -9,6 +9,7 @@ import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
 import CryptoScreener from "@/components/CryptoScreener";
 import EmptyState from "@/components/ui/EmptyState";
+import { fitDescription } from "@/lib/seo-text";
 
 /**
  * /marche/screener — screener top 100 (DA Obsidian sprint 2b).
@@ -30,7 +31,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,

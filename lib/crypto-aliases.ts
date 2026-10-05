@@ -5,22 +5,38 @@
  */
 export const COINGECKO_ID_ALIASES: Record<string, string> = {
   // Renommages historiques CoinGecko
-  polygon: "matic-network",
-  "polygon-pos": "matic-network",
+  // Polygon : fiche éditoriale « polygon » (POL) ; l'ancien identifiant CoinGecko matic-network y mène.
+  "polygon-pos": "polygon",
   lido: "lido-dao",
   render: "render-token",
   "render-network": "render-token",
   usdc: "usd-coin",
   centrifuge: "centrifuge-2",
-  "stacks-blockchain": "stacks",
-  blockstack: "stacks",
+  // 05/10/2026 : sens corrigé — la fiche Stacks est publiée sous l'identifiant CoinGecko « blockstack » (/cryptos/stacks
+  // n'existe pas ; l'ancien alias blockstack → stacks rendait le lien mort).
+  stacks: "blockstack",
+  "stacks-blockchain": "blockstack",
   "wrapped-bitcoin": "wrapped-bitcoin", // existe mais pas en DB → sera laissé text
   "staked-ether": "staked-ether", // N'existe pas → text only
   // Erreurs courantes LLM
   bnb: "binancecoin",
-  matic: "matic-network",
+  matic: "polygon",
   link: "chainlink",
-  // Plus à découvrir au fur et à mesure
+  // relevés par l'audit du 05/10/2026 (« concurrents directs » des fiches IA)
+  shib: "shiba-inu",
+  usdt: "tether",
+  ton: "toncoin",
+  "the-open-network": "toncoin",
+  "stellar-lumens": "stellar",
+  paxg: "pax-gold",
+  "paxos-gold": "pax-gold",
+  ondo: "ondo-finance",
+  "ethena-ena": "ethena",
+  "lido-finance": "lido-dao",
+  "pendle-finance": "pendle",
+  "artificial-superintelligence-alliance": "fetch-ai",
+  "matic-network": "polygon",
+  // Plus à découvrir au fur et à mesure (un lien n'est rendu que si la fiche existe : lib/crypto-links.ts)
 };
 
 /**

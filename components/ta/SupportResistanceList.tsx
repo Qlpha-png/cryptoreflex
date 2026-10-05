@@ -11,6 +11,7 @@
 
 import { ChevronUp, ChevronDown, ShieldCheck, ShieldAlert } from "lucide-react";
 import type { Levels } from "@/lib/ta-types";
+import { fmtFr } from "@/lib/format-fr";
 
 interface Props {
   levels: Levels;
@@ -25,9 +26,9 @@ interface Props {
 
 function formatPrice(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
-  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  if (value >= 1) return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return value.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (value >= 1000) return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+  if (value >= 1) return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return value.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
 function distancePct(level: number, price: number): number {
@@ -37,7 +38,7 @@ function distancePct(level: number, price: number): number {
 
 function fmtPct(pct: number): string {
   const sign = pct > 0 ? "+" : "";
-  return `${sign}${pct.toFixed(2)}%`;
+  return `${sign}${fmtFr(pct, 2)}%`;
 }
 
 /* -------------------------------------------------------------------------- */

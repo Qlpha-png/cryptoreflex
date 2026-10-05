@@ -49,7 +49,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
   },
   {
     slug: "eviter-pfu-30-crypto-bareme-progressif-legalement-2026",
-    title: "Eviter le PFU 31,4 % crypto — option barème progressif 2026",
+    title: "Éviter le PFU 31,4 % crypto — option barème progressif 2026",
     description:
       "PFU 31,4 % ou barème progressif sur vos plus-values 2026 ? Comparatif chiffré par TMI, option case 3CN (2042 C) et effet de seuil sur la TMI.",
     category: "Fiscalité",

@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { addHolding, getHoldings, type Holding } from "@/lib/portfolio";
 import { ALL_CRYPTOS } from "@/lib/programmatic";
+import { fmtFr } from "@/lib/format-fr";
 
 interface Connection {
   provider: string;
@@ -362,7 +363,7 @@ export default function ExchangeConnect() {
                       {b.symbol}
                     </span>
                     <span className="font-mono text-fg/70 tabular-nums">
-                      {b.total.toFixed(8)}
+                      {fmtFr(b.total, 8)}
                     </span>
                     <span
                       className={`text-[10px] uppercase tracking-wider rounded px-1.5 py-0.5 ${

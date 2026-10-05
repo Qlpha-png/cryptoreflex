@@ -77,6 +77,7 @@ import CompareSurpriseMe from "@/components/cryptos/CompareSurpriseMe";
 import CompareVerdict from "@/components/cryptos/CompareVerdict";
 import CompareSparkline from "@/components/cryptos/CompareSparkline";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                                */
@@ -521,7 +522,7 @@ function formatPctSigned(n: number | null | undefined): {
 } {
   if (n == null || !Number.isFinite(n)) return { text: "—", isUp: false };
   const sign = n >= 0 ? "+" : "";
-  return { text: `${sign}${n.toFixed(2)}%`, isUp: n >= 0 };
+  return { text: `${sign}${fmtFr(n, 2)}%`, isUp: n >= 0 };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -780,7 +781,7 @@ function DesktopTable({
                   score.score,
                 )}`}
               >
-                {score.score.toFixed(1)}/10
+                {fmtFr(score.score, 1)}/10
               </span>
               <div className="text-[10px] text-muted">
                 Nakamoto coef. {score.breakdown.nakamotoCoefficient}
@@ -832,7 +833,7 @@ function DesktopTable({
             return cell(
               <div className="space-y-0.5">
                 <div className="font-mono text-base font-bold tabular-nums">
-                  {c.reliability.score.toFixed(1)}/10
+                  {fmtFr(c.reliability.score, 1)}/10
                 </div>
                 <div className="text-[11px] text-muted">Fiabilité</div>
               </div>,
@@ -1071,7 +1072,7 @@ function MobileCard({
         {decScore && (
           <Stat
             label="Décentralisation"
-            value={`${decScore.score.toFixed(1)}/10`}
+            value={`${fmtFr(decScore.score, 1)}/10`}
           />
         )}
         {c.kind === "top10" ? (
@@ -1086,7 +1087,7 @@ function MobileCard({
           <>
             <Stat
               label="Fiabilité"
-              value={`${c.reliability.score.toFixed(1)}/10`}
+              value={`${fmtFr(c.reliability.score, 1)}/10`}
             />
             <Stat
               label="Années actives"

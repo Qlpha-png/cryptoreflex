@@ -3,6 +3,7 @@ import { Gem, ShieldCheck, AlertTriangle, ExternalLink, Activity } from "lucide-
 import AmfDisclaimer from "./AmfDisclaimer";
 import ScrollReveal from "./ui/ScrollReveal";
 import CryptoLogo from "./ui/CryptoLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 interface HiddenGem {
   rank: number;
@@ -121,7 +122,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
         <div
           className={`shrink-0 rounded-xl border px-3.5 py-2.5 text-center min-w-[64px] ${scoreColor}`}
           role="img"
-          aria-label={`Score de fiabilité : ${score.toFixed(1)} sur 10`}
+          aria-label={`Score de fiabilité : ${fmtFr(score, 1)} sur 10`}
         >
           <div
             aria-hidden="true"
@@ -133,7 +134,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
             aria-hidden="true"
             className="font-mono font-bold text-2xl sm:text-xl leading-none mt-1"
           >
-            {score.toFixed(1)}
+            {fmtFr(score, 1)}
           </div>
         </div>
       </div>

@@ -16,6 +16,12 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
+import { buildComparisonSlug, getPublishableComparisons } from "@/lib/programmatic";
+import { fmtFr } from "@/lib/format-fr";
+import { fitTitle } from "@/lib/seo-text";
+
+/** Duels publiés (/comparatif/<a>-vs-<b>) : le bouton « Comparer » n'apparaît que s'il mène à un vrai duel. */
+const PUBLISHED_DUELS = new Set(getPublishableComparisons().map((c) => c.slug));
 
 /**
  * /alternative-a/[plateforme] — Programmatic SEO intent transactionnel pur.
@@ -114,7 +120,7 @@ export function generateMetadata({ params }: Props): Metadata {
     override?.description ??
     `Vous cherchez à remplacer ${target.name} ? Voici ${DEFAULT_ALT_COUNT} plateformes crypto agréées MiCA, équivalentes ou meilleures sur frais, sécurité, support FR.`;
   return {
-    title,
+    title: fitTitle(title),
     description,
     alternates: withHreflang(`${BRAND.url}/alternative-a/${target.id}`),
     openGraph: {
@@ -243,7 +249,7 @@ export default function AlternativePage({ params }: Props) {
                 <div className="text-right shrink-0">
                   <div className="inline-flex items-center gap-1 text-sm font-bold text-fg">
                     <Star className="h-3.5 w-3.5 text-primary fill-primary" aria-hidden />
-                    {alt.scoring?.global?.toFixed(1) ?? "—"}/5
+                    {alt.scoring?.global != null ? fmtFr(alt.scoring.global, 1) : "—"}/5
                   </div>
                   {alt.mica?.micaCompliant && (
                     <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success">
@@ -276,13 +282,15 @@ export default function AlternativePage({ params }: Props) {
                   Voir l&apos;avis détaillé
                   <ArrowRight className="h-3 w-3" aria-hidden />
                 </Link>
-                <Link
-                  href={`/comparer/${[target.id, alt.id].sort().join("-vs-")}`}
-                  className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-fg hover:border-primary/40"
-                >
-                  Comparer avec {target.name}
-                  <ArrowRight className="h-3 w-3" aria-hidden />
-                </Link>
+                {PUBLISHED_DUELS.has(buildComparisonSlug(target.id, alt.id)) && (
+                  <Link
+                    href={`/comparatif/${buildComparisonSlug(target.id, alt.id)}`}
+                    className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-fg hover:border-primary/40"
+                  >
+                    Comparer avec {target.name}
+                    <ArrowRight className="h-3 w-3" aria-hidden />
+                  </Link>
+                )}
               </div>
             </article>
           ))}

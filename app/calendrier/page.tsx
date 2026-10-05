@@ -43,6 +43,7 @@ import CalendarPageClient from "@/components/calendar/CalendarPageClient";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import type { CryptoEvent } from "@/lib/events-types";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
@@ -55,8 +56,8 @@ const PAGE_DESCRIPTION =
   "Tous les événements crypto importants en 2026 : décisions FOMC de la Fed, halvings, listings nouveaux tokens, mises à jour réseau, conférences majeures (Token2049, Devcon, BTC Prague, EthCC).";
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
+  title: fitTitle(PAGE_TITLE),
+  description: fitDescription(PAGE_DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: PAGE_TITLE,
@@ -158,7 +159,7 @@ export default async function CalendarPage() {
       </section>
 
       {/* Main content */}
-      <main className="mx-auto max-w-6xl px-4 py-10">
+      <div className="mx-auto max-w-6xl px-4 py-10">
         <CalendarPageClient
           events={events}
           availableCryptos={availableCryptos}
@@ -184,7 +185,7 @@ export default async function CalendarPage() {
             </p>
           </div>
         </aside>
-      </main>
+      </div>
 
       {/* Next Steps Guide — main tenue : actualités, newsletter, blog. */}
       <NextStepsGuide context="calendar" />

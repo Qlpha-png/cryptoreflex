@@ -27,6 +27,8 @@ import { getCryptoSlugs } from "@/lib/cryptos";
 import LiveHeatmap from "@/components/LiveHeatmap";
 import FearGreedGauge from "@/components/FearGreedGauge";
 import GainerLoserList from "@/components/GainerLoserList";
+import { fitDescription } from "@/lib/seo-text";
+import { fmtFr } from "@/lib/format-fr";
 
 /**
  * /marche — DASHBOARD marché (DA Obsidian sprint 2, 2026-06-11).
@@ -54,7 +56,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -200,12 +202,12 @@ export default async function MarcheDashboardPage() {
               />
               <StatCard
                 label="Dominance BTC"
-                value={`${globalMetrics.btcDominance.toFixed(1)}%`}
+                value={`${fmtFr(globalMetrics.btcDominance, 1)}%`}
                 ice
               />
               <StatCard
                 label="Dominance ETH"
-                value={`${globalMetrics.ethDominance.toFixed(1)}%`}
+                value={`${fmtFr(globalMetrics.ethDominance, 1)}%`}
                 ice
               />
             </dl>
@@ -392,7 +394,7 @@ function StatCard({
             <span className="sr-only">
               {delta >= 0 ? "Hausse de" : "Baisse de"}
             </span>{" "}
-            {Math.abs(delta).toFixed(2)}%
+            {fmtFr(Math.abs(delta), 2)}%
           </span>
         )}
       </dd>

@@ -12,6 +12,7 @@ import {
 } from "@/lib/schema";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import ProfitLossCalculator from "@/components/outils/ProfitLossCalculator";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /outils/profit-loss-calculator — BLOC 4 (2026-05-04).
@@ -37,8 +38,8 @@ const DESCRIPTION =
   "Calculez votre profit ou perte crypto en 30 secondes : prix achat, prix vente, montant, frais. Décompose le PnL brut, net après frais, et après impôt PFU 31,4% France. Outil gratuit Cryptoreflex.";
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -77,27 +78,27 @@ export default function ProfitLossCalculatorPage() {
       {
         question: "Comment calcule-t-on le profit d'une crypto ?",
         answer:
-          "Profit brut = (prix_vente - prix_achat) × quantite. Profit net = profit_brut - frais_achat - frais_vente. En France, sur les plus-values realisees (cessions vers fiat ou achat de bien/service), s'applique le PFU (Prelevement Forfaitaire Unique) de 31,4% : 12.8% impot + 18.6% prelevements sociaux. Donc Net apres impot = Net × 0.686 (si plus-value).",
+          "Profit brut = (prix de vente − prix d'achat) × quantité. Profit net = profit brut − frais d'achat − frais de vente. Côté impôt, l'outil applique une estimation simple : PFU de 31,4 % (12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux) sur le gain net, et rien si vos ventes de l'année ne dépassent pas 305 € nets de frais. Le calcul officiel se fait sur l'ensemble de votre portefeuille (méthode globale, formulaire 2086) : pour vos vrais chiffres, utilisez le générateur 2086.",
       },
       {
-        question: "Les frais de plateforme (maker, taker, spread) sont-ils deductibles ?",
+        question: "Les frais de plateforme (maker, taker, spread) sont-ils déductibles ?",
         answer:
-          "Oui. Les frais d'acquisition ET les frais de cession sont deductibles du calcul de plus-value imposable (BOFiP BOI-RPPM-PVBMC-30-30). Inclut : frais maker/taker, spread \"instant buy\", frais retrait fiat, frais reseau (gas) si traceables. Documenter precisement chaque frais (relevé exchange).",
+          "Les frais payés pour la vente (commission de la plateforme, frais de réseau de cette vente) réduisent le prix de cession : c'est écrit dans la notice du formulaire 2086. Pour les frais d'achat, la notice ne les cite pas à la ligne 220 ; les compter dans le prix acquitté est la lecture la plus courante. Les frais de retrait vers votre banque et le gas de vos transferts ou swaps ne sont pas déductibles. Gardez le relevé de chaque frais.",
       },
       {
-        question: "Pourquoi mon PnL net est-il different du PnL brut affiche par l'exchange ?",
+        question: "Pourquoi mon résultat net est-il différent de celui affiché par la plateforme ?",
         answer:
-          "Les exchanges affichent souvent le PnL BRUT (avant frais) ou le PnL en USD (sans conversion EUR). Notre calcul integre : (1) frais d'achat reels, (2) frais de vente reels, (3) impot estime, (4) conversion en EUR si paire USD. Un PnL brut +1000$ peut devenir +650€ net apres frais et impot (20-35% d'ecart frequent).",
+          "Les plateformes affichent souvent un résultat BRUT (avant frais), parfois en dollars. Notre calcul intègre les frais d'achat et de vente réels et une estimation de l'impôt, en euros. Un gain brut de 1 000 $ peut ainsi devenir environ 650 € nets après frais et impôt.",
       },
       {
-        question: "Cet outil remplace-t-il un comptable / Waltio ?",
+        question: "Cet outil remplace-t-il un comptable ou Waltio ?",
         answer:
-          "Non. Cet outil est une simulation pedagogique pour UN trade. Pour votre declaration annuelle (formulaire 2086 + 3916-bis), il faut agreger TOUS vos trades + cessions taxables vs non-taxables (token-to-token = non taxable en FR depuis 2019, seuls les flux vers fiat/biens le sont). Utilisez notre /outils/cerfa-2086-auto ou un service comme Waltio/Koinly pour l'export.",
+          "Non. C'est une simulation pédagogique pour UNE opération. Pour votre déclaration annuelle (formulaire 2086 et 3916-bis), il faut reprendre toutes vos ventes contre des euros ou des biens et services ; les échanges entre cryptos ne sont pas imposables depuis 2019. Utilisez notre générateur 2086 ou un service comme Waltio ou Koinly.",
       },
       {
-        question: "Comment minimiser legalement l'impot sur ma plus-value ?",
+        question: "Comment réduire légalement l'impôt sur ma plus-value ?",
         answer:
-          "Strategies legales : (1) Etaler les ventes sur plusieurs annees fiscales (utiliser le seuil 305€/an en dessous duquel vous n'etes pas imposable), (2) Compenser les plus-values avec les pertes (carry-forward 10 ans), (3) Faire des dons crypto a association reconnue d'utilite publique (deductible 66%), (4) Si vous etes en plus-value latente importante, attendre 1 an pour eventuels changements legislatifs. JAMAIS d'optimisation fiscale agressive (\"PEL crypto\", offshore non declare) = risque TRACFIN + redressement.",
+          "Trois leviers légaux : (1) le seuil de 305 € : si le total de vos ventes de l'année, nettes de frais, ne dépasse pas 305 €, aucun impôt n'est dû ; (2) les moins-values de l'année compensent les plus-values de la même année, sans report sur les années suivantes ; attention, avec la méthode globale, une vente ne crée une moins-value que si tout votre portefeuille vaut moins que ce qu'il vous a coûté ; (3) l'option pour le barème progressif (case 3CN), intéressante si votre taux marginal d'imposition est de 0 ou 11 %. Jamais de montage agressif ni de compte étranger non déclaré : amende et redressement à la clé.",
       },
     ]),
   ]);
@@ -127,10 +128,10 @@ export default function ProfitLossCalculatorPage() {
             <span className="gradient-text">calcul net en 30s</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            Renseignez votre prix d&apos;achat, prix de vente, quantite et
+            Renseignez votre prix d&apos;achat, prix de vente, quantité et
             frais. On calcule votre{" "}
-            <strong className="text-fg">PnL brut, net apres frais, et apres impot PFU 31,4%</strong>{" "}
-            (France). Pure simulation educative — pas un conseil fiscal.
+            <strong className="text-fg">résultat brut, net de frais et après impôt (PFU 31,4 %)</strong>.
+            Simulation pédagogique, pas un conseil fiscal.
           </p>
         </header>
 
@@ -144,19 +145,20 @@ export default function ProfitLossCalculatorPage() {
           <h2 className="text-lg font-bold text-fg">La formule en clair</h2>
           <ol className="mt-3 space-y-2 text-sm text-fg/85 list-decimal pl-5">
             <li>
-              <strong className="text-fg">PnL brut</strong> = (prix_vente -
-              prix_achat) × quantite
+              <strong className="text-fg">Résultat brut</strong> = (prix de vente −
+              prix d&apos;achat) × quantité
             </li>
             <li>
-              <strong className="text-fg">PnL net frais</strong> = PnL brut -
-              frais_achat - frais_vente (en valeur absolue selon votre type
-              d&apos;ordre : maker/taker/spread)
+              <strong className="text-fg">Résultat net de frais</strong> = résultat brut −
+              frais d&apos;achat − frais de vente (maker, taker ou spread selon votre
+              type d&apos;ordre)
             </li>
             <li>
-              <strong className="text-fg">PnL net apres impot</strong> = si PnL
-              net frais &gt; 0 alors × (1 - 0.314), sinon inchange (les pertes
-              crypto s&apos;imputent uniquement sur vos plus-values crypto de la
-              meme annee, sans report sur les annees suivantes - art. 150 VH bis).
+              <strong className="text-fg">Résultat après impôt</strong> = résultat net
+              × (1 − 0,314) s&apos;il est positif et si la vente dépasse 305 € nets de
+              frais ; sinon inchangé. Une perte ne compense que des plus-values crypto
+              de la même année, sans report (art. 150 VH bis du CGI). Estimation sur une
+              opération isolée : le calcul officiel porte sur tout le portefeuille.
             </li>
           </ol>
         </section>
@@ -168,15 +170,15 @@ export default function ProfitLossCalculatorPage() {
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
-              Outil complementaire
+              Outil complémentaire
             </div>
             <div className="mt-2 text-base font-bold text-fg flex items-center gap-2">
-              Calculateur fiscalite PFU 31,4%
+              Calculateur de fiscalité (PFU 31,4 %)
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
-              Detaille vos obligations annuelles complete (cessions, moins-values,
-              declaration 2086).
+              Estimez l&apos;impôt de l&apos;année et voyez quoi déclarer (cessions,
+              moins-values, formulaire 2086).
             </div>
           </Link>
           <Link
@@ -184,7 +186,7 @@ export default function ProfitLossCalculatorPage() {
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
-              Outil complementaire
+              Outil complémentaire
             </div>
             <div className="mt-2 text-base font-bold text-fg flex items-center gap-2">
               Cerfa 2086 + 3916-bis auto
@@ -203,15 +205,15 @@ export default function ProfitLossCalculatorPage() {
 
         <p className="mt-6 text-[11px] text-muted leading-relaxed">
           Cet outil ne remplace pas un comptable ni un conseiller fiscal. Le
-          PFU 31,4% s&apos;applique sur les{" "}
-          <strong className="text-fg">cessions taxables</strong> uniquement
-          (vers fiat ou biens/services, pas token-to-token). Pour votre
-          declaration annuelle, voir notre{" "}
+          PFU de 31,4 % s&apos;applique aux{" "}
+          <strong className="text-fg">cessions imposables</strong> uniquement
+          (ventes contre des euros ou des biens et services, pas les échanges entre
+          cryptos). Pour votre déclaration annuelle, voir notre{" "}
           <Link
             href="/blog/comment-declarer-crypto-impots-2026-guide-complet"
             className="underline hover:text-fg"
           >
-            guide officiel impots crypto 2026
+            guide de déclaration crypto 2026
           </Link>
           .
         </p>

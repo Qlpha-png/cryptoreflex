@@ -13,6 +13,7 @@ import { ShieldCheck, TrendingUp, Calendar } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import PlatformLogo from "@/components/PlatformLogo";
+import { fmtFr } from "@/lib/format-fr";
 
 interface Props {
   a: Platform;
@@ -33,7 +34,7 @@ function PlatformBadge({ p }: { p: Platform }) {
       </div>
       <div className="text-center">
         <div className="text-lg font-bold text-white">{p.name}</div>
-        <div className="mt-1 text-xs text-muted">{p.scoring.global.toFixed(1)}/5</div>
+        <div className="mt-1 text-xs text-muted">{fmtFr(p.scoring.global, 1)}/5</div>
       </div>
       {p.badge && (
         <span className="badge-info text-[10px] uppercase tracking-wide">{p.badge}</span>

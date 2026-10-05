@@ -21,9 +21,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 const PAGE_URL = `${BRAND.url}/cryptos`;
-const PAGE_TITLE = `${STATS.cryptos} cryptos analysees : top 10, 90 hidden gems + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires 2026`;
+const PAGE_TITLE = `${STATS.cryptos} cryptos analysées : top 10, 90 hidden gems + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires 2026`;
 const PAGE_DESCRIPTION =
-  `Toutes les fiches crypto Cryptoreflex : ${STATS.cryptosCurated} fiches editoriales premium (top 10 + 90 hidden gems DePIN, RWA, Layer 2, gaming) + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires. Filtres categorie + recherche live + comparateur side-by-side.`;
+  `Toutes les fiches crypto Cryptoreflex : ${STATS.cryptosCurated} fiches éditoriales (top 10 + 90 hidden gems DePIN, RWA, Layer 2, gaming) + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires. Filtres categorie + recherche live + comparateur side-by-side.`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

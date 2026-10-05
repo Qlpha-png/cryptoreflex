@@ -11,6 +11,7 @@ import {
   faqSchema,
   graphSchema,
 } from "@/lib/schema";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
  * /faq-crypto — Hub FAQ XL crypto FR (BLOC 5, 2026-05-04).
@@ -59,8 +60,8 @@ const TITLE = `FAQ crypto FR : ${QUESTIONS.length} questions claires (débutant,
 const DESCRIPTION = `${QUESTIONS.length} questions / réponses sur les cryptos en France : comment débuter, fiscalité PFU 31,4%, MiCA juillet 2026, sécurité seed phrase, DeFi, staking. Réponses honnêtes, sources officielles, mises à jour 2026.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
+  title: fitTitle(TITLE),
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: TITLE,
@@ -78,11 +79,11 @@ export const metadata: Metadata = {
   },
   keywords: [
     "FAQ crypto",
-    "questions crypto debutant",
+    "questions crypto débutant",
     "comment acheter bitcoin france",
-    "fiscalite crypto 2026",
+    "fiscalité crypto 2026",
     "MiCA juillet 2026",
-    "seed phrase securite",
+    "seed phrase sécurité",
     "DCA crypto",
     "staking sur",
   ],
@@ -133,18 +134,18 @@ export default function FaqCryptoPage() {
           <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
             <span className="gradient-text">{QUESTIONS.length} questions</span>
             <br />
-            que tout investisseur crypto FR doit connaitre
+            que tout investisseur crypto en France doit connaître
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{CATEGORIES.length} categories</strong>{" "}
-            (debuter, fiscalite, securite, regulation, trading, DeFi). Reponses
-            honnetes, sources officielles (BOFiP, AMF, ESMA), mises a jour 2026.
+            <strong className="text-fg">{CATEGORIES.length} catégories</strong>{" "}
+            (débuter, fiscalité, sécurité, régulation, trading, DeFi). Des réponses
+            honnêtes, des sources officielles (BOFiP, AMF, ESMA), mises à jour en 2026.
           </p>
         </header>
 
         {/* Table of contents */}
         <nav
-          aria-label="Categories FAQ"
+          aria-label="Catégories de la FAQ"
           className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
         >
           {CATEGORIES.map((cat) => {
@@ -237,24 +238,24 @@ export default function FaqCryptoPage() {
           >
             <div className="text-[11px] font-bold uppercase tracking-wider text-muted flex items-center gap-2">
               <BookOpen className="h-3 w-3" />
-              Definitions
+              Définitions
             </div>
             <div className="mt-2 text-base font-bold text-fg">
               Glossaire 250+ termes
             </div>
             <div className="mt-1 text-xs text-muted">
-              DeFi, fiscalite, on-chain, technique
+              DeFi, fiscalité, on-chain, technique
             </div>
           </Link>
         </section>
 
         <p className="mt-12 text-[11px] text-muted leading-relaxed">
-          FAQ mise a jour le {FILE._meta.lastUpdated}. Sources : BOFiP-Impots,
-          AMF, ESMA, et notre experience editoriale Cryptoreflex. Cette page
-          n&apos;est pas un conseil en investissement personnalise, mais une
-          ressource educative. Voir notre{" "}
+          FAQ mise à jour le {new Date(FILE._meta.lastUpdated).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
+          Sources : BOFiP-Impôts, AMF, ESMA et notre expérience éditoriale. Cette page
+          n&apos;est pas un conseil en investissement personnalisé, mais une
+          ressource pédagogique. Voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">
-            methodologie publique
+            méthodologie publique
           </Link>{" "}
           et{" "}
           <Link href="/transparence" className="underline hover:text-fg">

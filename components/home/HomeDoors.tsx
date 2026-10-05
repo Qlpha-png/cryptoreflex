@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calculator, GalleryVerticalEnd, GraduationCap, Scale, type LucideIcon } from "lucide-react";
 import { feeShortFr, getTopPlatforms } from "@/lib/platforms";
+import PlatformLogo from "@/components/PlatformLogo";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/data";
 import { STATS, fmtCount } from "@/lib/brand";
 
@@ -40,7 +41,7 @@ function TopPlatforms() {
             className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/40 px-3 py-2 hover:border-primary/50"
           >
             {/* pas de fond blanc : certains logos sont blancs (Coinbase), comme dans le comparatif */}
-            <Image src={p.logo} alt="" width={28} height={28} className="h-7 w-7 rounded-md object-contain" />
+            <PlatformLogo id={p.id} name={p.name} size={28} className="h-7 w-7 rounded-md" />
             <span className="flex-1 min-w-0 truncate whitespace-nowrap text-sm font-semibold text-fg">{p.name}</span>
             {/* « frais d'achat » en entier, sauf dans les 4 colonnes étroites (≥ 1280 px) où « frais » suffit */}
             <span className="shrink-0 whitespace-nowrap text-xs text-fg/70">

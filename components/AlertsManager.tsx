@@ -113,7 +113,7 @@ export default function AlertsManager({ cryptos }: Props) {
   useEffect(() => {
     setHydrated(true);
 
-    // 1) Session + liste : /api/alerts/by-email (no-store) → 401 = anonyme.
+    // 1) Session + liste : /api/alerts/by-email?optional=1 (no-store) → anonymous: true = anonyme.
     fetchAlerts();
 
     // 2) Pré-remplissage depuis ?cryptoId=...
@@ -160,15 +160,15 @@ export default function AlertsManager({ cryptos }: Props) {
     setListState("loading");
     setListError("");
     try {
-      const res = await fetch("/api/alerts/by-email", { cache: "no-store" });
-      if (res.status === 401) {
+      const res = await fetch("/api/alerts/by-email?optional=1", { cache: "no-store" });
+      if (!res.ok && res.status !== 401) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as { ok: boolean; anonymous?: boolean; email?: string; alerts: PriceAlert[] };
+      if (res.status === 401 || data.anonymous) {
         setAuth("anon");
         setAlerts([]);
         setListState("idle");
         return;
       }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as { ok: boolean; email?: string; alerts: PriceAlert[] };
       if (data.email) setEmail(data.email);
       setAuth("user");
       setAlerts(Array.isArray(data.alerts) ? data.alerts : []);

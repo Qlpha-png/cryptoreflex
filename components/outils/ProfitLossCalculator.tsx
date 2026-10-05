@@ -16,6 +16,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { fmtFr } from "@/lib/format-fr";
 import {
   TrendingUp,
   TrendingDown,
@@ -48,7 +49,11 @@ function compute(
   const feesTotal = buyFees + sellFees;
   const pnlGross = amountReceived - amountInvested;
   const pnlNetFees = pnlGross - feesTotal;
-  const pfuApplied = pnlNetFees > 0;
+  // Exonération (art. 150 VH bis du CGI) : pas d'impôt si le total des ventes de l'année, NET de frais (ligne 218 du
+  // 2086), ne dépasse pas 305 € — audit du 05/10/2026 : l'outil appliquait le PFU dès qu'il y avait un gain.
+  // (Estimation pour cette seule vente : si vous avez vendu ailleurs dans l'année, c'est le total qui compte.)
+  const exempt = amountReceived - sellFees <= 305;
+  const pfuApplied = pnlNetFees > 0 && !exempt;
   const pnlNetTax = pfuApplied ? pnlNetFees * (1 - 0.314) : pnlNetFees; // net après PFU 31,4 %
   const pnlPctNetFees =
     amountInvested > 0 ? (pnlNetFees / amountInvested) * 100 : 0;
@@ -76,7 +81,7 @@ function fmtEur(n: number): string {
 function fmtPct(n: number): string {
   if (!Number.isFinite(n)) return "—";
   const sign = n >= 0 ? "+" : "";
-  return `${sign}${n.toFixed(2)}%`;
+  return `${sign}${fmtFr(n, 2)}%`;
 }
 
 export default function ProfitLossCalculator() {
@@ -157,7 +162,7 @@ export default function ProfitLossCalculator() {
 
           <div className="rounded-xl border border-border bg-elevated/30 p-3 text-[11px] text-muted">
             <strong className="text-fg/80">Frais typiques :</strong> Coinbase
-            Advanced ~0.4% maker / 0.6% taker · Instant Buy / Spread 1-2% ·
+            Advanced ~0,4 % maker / 0,6 % taker · achat instantané : écart de prix de 1 à 2 % ·
             Plus d&apos;infos sur{" "}
             <a
               href="/comparatif/frais"
@@ -227,7 +232,9 @@ export default function ProfitLossCalculator() {
               label={
                 result.pfuApplied
                   ? "Impôt PFU 31,4 % (estimé)"
-                  : "Impôt PFU (perte = non applicable)"
+                  : result.pnlNetFees > 0
+                    ? "Impôt PFU : 0 € (ventes de l'année ≤ 305 € nets de frais)"
+                    : "Impôt PFU (perte = non applicable)"
               }
               value={
                 result.pfuApplied

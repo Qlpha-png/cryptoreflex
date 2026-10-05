@@ -31,6 +31,7 @@ import StructuredData from "@/components/StructuredData";
 import FAQ from "@/components/mdx/FAQ";
 import { breadcrumbSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription } from "@/lib/seo-text";
 
 export const revalidate = 86400; // 1 jour — contenu très stable
 
@@ -41,7 +42,7 @@ const DESCRIPTION = `Académie crypto Cryptoreflex : ${TRACK_COUNT} parcours pé
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: DESCRIPTION,
+  description: fitDescription(DESCRIPTION),
   alternates: withHreflang(`${BRAND.url}/academie`),
   openGraph: {
     title: TITLE,
@@ -126,7 +127,7 @@ export default function AcademiePage() {
   ]);
 
   return (
-    <main className="py-12 sm:py-16">
+    <div className="py-12 sm:py-16">
       <StructuredData data={[courseSchema, breadcrumbs]} id="academie-course" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -366,7 +367,7 @@ export default function AcademiePage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

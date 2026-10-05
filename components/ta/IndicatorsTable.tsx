@@ -12,6 +12,7 @@
 
 import { Activity, ArrowDown, ArrowUp, Minus } from "lucide-react";
 import type { Indicators } from "@/lib/ta-types";
+import { fmtFr } from "@/lib/format-fr";
 
 interface Props {
   /** Indicateurs déjà calculés par lib/technical-analysis.ts. */
@@ -26,9 +27,9 @@ interface Props {
 
 function formatPrice(value: number): string {
   if (!Number.isFinite(value) || value === 0) return "—";
-  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  if (value >= 1) return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return value.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (value >= 1000) return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+  if (value >= 1) return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return value.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
 function rsiTone(rsi: number): "bullish" | "bearish" | "neutral" {
@@ -92,7 +93,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-xs uppercase tracking-wide text-muted">RSI (14)</span>
           <span className={`text-sm font-mono font-bold ${toneClasses(rsiTone(rsi))}`}>
-            {rsi.toFixed(1)} · {rsiBucketLabel}
+            {fmtFr(rsi, 1)} · {rsiBucketLabel}
           </span>
         </div>
         <div
@@ -100,7 +101,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
           aria-valuenow={rsi}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`RSI à ${rsi.toFixed(1)}`}
+          aria-label={`RSI à ${fmtFr(rsi, 1)}`}
           className="relative h-2 rounded-full bg-elevated overflow-hidden"
         >
           {/* Zones : survente (0-30) / neutre (30-70) / surachat (70-100) */}
@@ -127,15 +128,15 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
         <Cell label="EMA 26" value={`${formatPrice(indicators.ema26)} $`} tone="neutral" />
         <Cell
           label="MACD"
-          value={indicators.macd.macd.toFixed(2)}
+          value={fmtFr(indicators.macd.macd, 2)}
           tone={macdTone}
           hint={macdTone === "bullish" ? "Momentum haussier" : macdTone === "bearish" ? "Momentum baissier" : "Indécis"}
         />
         <Cell
           label="Histogramme"
-          value={indicators.macd.histogram.toFixed(2)}
+          value={fmtFr(indicators.macd.histogram, 2)}
           tone={macdTone}
-          hint={`Signal : ${indicators.macd.signal.toFixed(2)}`}
+          hint={`Signal : ${fmtFr(indicators.macd.signal, 2)}`}
         />
       </div>
 
@@ -144,7 +145,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-xs uppercase tracking-wide text-muted">Bandes de Bollinger (20, 2σ)</span>
           <span className="text-xs font-mono text-muted">
-            Position : {bbPosition.toFixed(0)}%
+            Position : {fmtFr(bbPosition, 0)}%
           </span>
         </div>
         <div className="relative h-2 rounded-full bg-gradient-to-r from-rose-500/20 via-amber-500/20 to-emerald-500/20 overflow-hidden">

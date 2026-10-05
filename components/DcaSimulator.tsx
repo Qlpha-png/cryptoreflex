@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { TrendingUp, TrendingDown, Calendar, Coins, Loader2 } from "lucide-react";
 import type { HistoricalPoint } from "@/lib/historical-prices";
+import { fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Types & constantes                                                        */
@@ -322,7 +323,7 @@ export default function DcaSimulator() {
                 />
                 <Stat
                   label="ROI DCA"
-                  value={`${positive ? "+" : ""}${result.roi.toFixed(1)}%`}
+                  value={`${positive ? "+" : ""}${fmtFr(result.roi, 1)}%`}
                   tone={positive ? "positive" : "negative"}
                   icon={
                     positive ? (
@@ -357,7 +358,7 @@ export default function DcaSimulator() {
                       }`}
                     >
                       {result.roi >= 0 ? "+" : ""}
-                      {result.roi.toFixed(1)} %
+                      {fmtFr(result.roi, 1)} %
                     </div>
                   </div>
                   <div>
@@ -375,7 +376,7 @@ export default function DcaSimulator() {
                       }`}
                     >
                       {result.lumpSumRoi >= 0 ? "+" : ""}
-                      {result.lumpSumRoi.toFixed(1)} %
+                      {fmtFr(result.lumpSumRoi, 1)} %
                     </div>
                   </div>
                 </div>

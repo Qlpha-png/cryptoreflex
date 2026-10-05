@@ -47,6 +47,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const user = await getUser();
   if (!user || !user.email) {
+    // ?optional=1 : la page /alertes demande « suis-je connecté ? » à chaque visite. Un 401 y affichait une erreur
+    // dans la console de chaque visiteur anonyme (audit navigateur du 05/10/2026) → 200 + anonymous: true.
+    if (req.nextUrl.searchParams.get("optional") === "1") {
+      return NextResponse.json({ ok: true, anonymous: true, alerts: [] }, { status: 200, headers: NO_STORE });
+    }
     return NextResponse.json(
       { ok: false, error: "Connexion requise.", alerts: [] },
       { status: 401, headers: NO_STORE },

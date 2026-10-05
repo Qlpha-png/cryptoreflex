@@ -32,13 +32,15 @@ import AlertsManager, {
   type AlertCryptoOption,
 } from "@/components/AlertsManager";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 const PAGE_URL = `${BRAND.url}/alertes`;
 
 export const metadata: Metadata = {
-  title: "Alertes prix crypto par email — gratuites, sans mot de passe",
-  description:
+  title: fitTitle("Alertes prix crypto par email — gratuites, sans mot de passe"),
+  description: fitDescription(
     "Créez vos alertes prix crypto en 30 secondes. Recevez un email dès que Bitcoin, Ethereum ou n'importe quelle crypto franchit votre seuil — gratuit, sans pub, désinscription en 1 clic.",
+  ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     type: "website",

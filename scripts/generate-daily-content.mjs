@@ -637,6 +637,13 @@ function detectTrend(prices) {
   return "Neutre";
 }
 
+/* Format français des analyses (audit du 05/10/2026) : « 85 921 $ » et non « $85 921 », « +1,20 % », date en toutes
+   lettres, tendance accordée au féminin (« la tendance est haussière »). */
+const frNum = (n, d) => n.toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const frUsd = (v) => `${frNum(v, v >= 1000 ? 0 : v >= 1 ? 2 : 4)} $`;
+const frDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const TREND_FEM = { Haussier: "haussière", Baissier: "baissière", Neutre: "neutre" };
+
 function buildTAArticle(crypto, prices, livePriceUsd, change24h) {
   const rsi = calcRSI(prices);
   const ma50 = Math.round(calcMA(prices, 50) * 100) / 100;
@@ -645,8 +652,9 @@ function buildTAArticle(crypto, prices, livePriceUsd, change24h) {
   const slug = `${TODAY}-${crypto.symbol.toLowerCase()}-analyse-technique`;
   const price = Math.round(livePriceUsd * 100) / 100;
 
-  const title = `Analyse technique ${crypto.symbol} — ${TODAY}`;
-  const description = `Analyse technique ${crypto.name} (${crypto.symbol}) du ${TODAY} : RSI, MA50/MA200, MACD, niveaux clés et scénarios par Cryptoreflex.`;
+  const title = `Analyse technique ${crypto.symbol} du ${frDate(TODAY)}`;
+  const description = `Analyse technique ${crypto.name} (${crypto.symbol}) du ${frDate(TODAY)} : RSI, moyennes mobiles 50 et 200 jours, niveaux clés et scénarios.`;
+  const trendFem = TREND_FEM[trend] ?? trend.toLowerCase();
 
   const frontmatter = `---
 title: "${yamlString(title)}"
@@ -666,19 +674,19 @@ author: "La rédaction Cryptoreflex"
 
   const body = `## Situation actuelle
 
-Le ${crypto.name} (${crypto.symbol}) s'échange à **$${price.toLocaleString("fr-FR")}** au ${TODAY}, en variation de **${change24h >= 0 ? "+" : ""}${change24h.toFixed(2)} %** sur 24 heures. La tendance générale est **${trend}**.
+Le ${crypto.name} (${crypto.symbol}) s'échange à **${frUsd(price)}** le ${frDate(TODAY)}, en variation de **${change24h >= 0 ? "+" : ""}${frNum(change24h, 2)} %** sur 24 heures. La tendance générale est **${trendFem}**.
 
 ## Indicateurs techniques
 
 | Indicateur | Valeur | Lecture |
 |---|---|---|
-| RSI (14) | ${rsi} | ${rsi > 70 ? "Surachat — risque de correction" : rsi < 30 ? "Survente — rebond possible" : "Zone neutre"} |
-| MA 50 | $${ma50.toLocaleString("fr-FR")} | ${price > ma50 ? "Prix au-dessus (signal haussier)" : "Prix en dessous (prudence)"} |
-| MA 200 | $${ma200.toLocaleString("fr-FR")} | ${price > ma200 ? "Tendance long terme haussière" : "Tendance long terme baissière"} |
+| RSI (14) | ${frNum(rsi, 1)} | ${rsi > 70 ? "Surachat — risque de correction" : rsi < 30 ? "Survente — rebond possible" : "Zone neutre"} |
+| MA 50 | ${frUsd(ma50)} | ${price > ma50 ? "Prix au-dessus (signal haussier)" : "Prix en dessous (prudence)"} |
+| MA 200 | ${frUsd(ma200)} | ${price > ma200 ? "Tendance long terme haussière" : "Tendance long terme baissière"} |
 
 ## Scénarios
 
-**Scénario haussier** : franchissement du résistance proche ouvrirait la voie vers une extension de la tendance ${trend.toLowerCase()}.
+**Scénario haussier** : le franchissement de la résistance proche ouvrirait la voie à un prolongement de la tendance${trend === "Neutre" ? " actuelle" : ` ${trendFem}`}.
 
 **Scénario baissier** : cassure du support clé déclencherait une correction vers les zones de support inférieures.
 

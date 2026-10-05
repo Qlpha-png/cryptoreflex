@@ -23,6 +23,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
+import { fitTitle } from "@/lib/seo-text";
 
 /**
  * /pack-declaration-crypto-2026 — Ressource GRATUITE pour la déclaration
@@ -43,7 +44,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Pack Déclaration Crypto 2026 — Cerfa 2086 et 3916-bis (gratuit)",
+  title: fitTitle("Pack Déclaration Crypto 2026 — Cerfa 2086 et 3916-bis (gratuit)"),
   description:
     "Déclarer ses cryptos pas à pas : générateur Cerfa 2086 (modèle CSV à remplir), fiches 3916-bis, calculateur d'impôt et guide. Gratuit, à vérifier avant dépôt.",
   alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026`),
