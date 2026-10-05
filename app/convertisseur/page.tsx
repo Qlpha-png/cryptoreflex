@@ -23,7 +23,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_TITLE = "Convertisseur crypto temps réel — toutes les paires";
 const OG_TITLE = "Convertisseur crypto temps réel — Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "Convertis BTC, ETH, SOL, USDT et 12 autres cryptos vers EUR/USD au taux du marché (Binance, Kraken, Coinbase…). Toutes les paires populaires en un clic.";
+  "Convertis BTC, ETH, SOL, USDT et 11 autres cryptos vers EUR/USD au taux du marché (Binance, Kraken, Coinbase…). Toutes les paires populaires en un clic.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
