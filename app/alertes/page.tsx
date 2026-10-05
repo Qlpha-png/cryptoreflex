@@ -67,7 +67,7 @@ export const metadata: Metadata = {
 const FAQ: { q: string; a: string }[] = [
   {
     q: "Comment fonctionnent les alertes prix Cryptoreflex ?",
-    a: "Vous vous connectez (un lien par email, sans mot de passe), vous choisissez une crypto et un seuil (par exemple Bitcoin > 50 000 €), et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification quotidienne via CoinGecko (8h UTC), anti-spam de 24h entre deux déclenchements pour la même alerte.",
+    a: "Vous vous connectez (un lien par email, sans mot de passe), vous choisissez une crypto et un seuil (par exemple Bitcoin > 50 000 €), et nous envoyons un message automatique dès que le prix franchit ce seuil. Vérification toutes les 15 minutes, anti-spam de 24 h entre deux déclenchements pour la même alerte.",
   },
   {
     q: "Faut-il créer un compte ?",
@@ -91,7 +91,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Le prix utilisé est-il fiable ?",
-    a: "Source : CoinGecko (agrégateur de référence pour les exchanges régulés). Latence typique : 1 à 3 minutes entre la variation réelle et notre déclenchement. Suffisant pour des alertes patrimoniales, pas adapté au trading haute fréquence.",
+    a: "Source : prix du marché agrégés de plusieurs sources (Binance, Kraken, Coinbase, CoinGecko…). Délai : 15 minutes au plus entre le franchissement du seuil et l'e-mail. Suffisant pour des alertes patrimoniales, pas adapté au trading haute fréquence.",
   },
 ];
 
@@ -164,7 +164,7 @@ export default async function AlertesPage() {
           <p className="mt-4 text-lg text-fg/80 max-w-3xl">
             Recevez un message dès qu'une crypto franchit votre seuil — Bitcoin
             au-dessus de 80 000 €, Ethereum sous 2 500 $, peu importe.
-            Vérification quotidienne, désinscription en 1 clic.
+            Vérification toutes les 15 minutes, désinscription en 1 clic.
           </p>
 
           {/* Trust signals */}
@@ -175,7 +175,7 @@ export default async function AlertesPage() {
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Zap className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
-              Données CoinGecko · cron quotidien
+              Prix du marché · vérifiés toutes les 15 minutes
             </li>
             <li className="inline-flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-primary-soft" aria-hidden="true" />
@@ -286,7 +286,7 @@ export default async function AlertesPage() {
 
         {/* Mentions */}
         <p className="mt-12 text-[11px] text-muted leading-relaxed">
-          Données prix : CoinGecko (vérification quotidienne par cron Cryptoreflex à 8h UTC).
+          Données prix : prix du marché agrégés de plusieurs sources (Binance, Kraken, Coinbase, CoinGecko…), vérifiés toutes les 15 minutes.
           Cette page n'est pas un conseil en investissement — voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>.
           Les emails sont envoyés depuis le domaine officiel <strong>{BRAND.domain}</strong>.

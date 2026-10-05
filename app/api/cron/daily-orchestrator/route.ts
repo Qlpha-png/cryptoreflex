@@ -33,9 +33,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { verifyBearer } from "@/lib/auth";
+import { getKv } from "@/lib/kv";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/* 05/10/2026 : lancé par Vercel Cron à 7 h UTC (vercel.json) ; GitHub le lançait avec 5 à 6 h de retard. Durée maximale
+   explicite (offre Pro), alignée sur ORCHESTRATOR_DEADLINE_MS. */
+export const maxDuration = 300;
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                                */
@@ -318,6 +322,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
       );
     }
+  }
+
+  /* 05/10/2026 : trace du dernier passage pour la sentinelle (heure, tâches en échec) — sans le corps des réponses. */
+  try {
+    await getKv().set(
+      "cron:orchestrator:last",
+      {
+        at: report.completedAt,
+        ok,
+        jobs: jobs.map((j) => ({ name: j.name, ok: j.ok, status: j.status, ms: j.durationMs, critical: !!SUB_CRONS.find((c) => c.name === j.name)?.critical, error: j.error ?? null })),
+      },
+      { ex: 7 * 86_400 },
+    );
+  } catch (e) {
+    console.warn("[orchestrator] trace KV impossible", e);
   }
 
   return NextResponse.json(report, { status: ok ? 200 : 207 });

@@ -577,6 +577,54 @@ async function generateNews() {
 /*  Generate TA (analyses techniques)                                         */
 /* -------------------------------------------------------------------------- */
 
+/* 05/10/2026 : CoinGecko (gratuit) répond 429 depuis les machines de GitHub → 3 analyses sur 5 perdues ce jour-là.
+   Source principale : données de marché publiques de Binance (data-api.binance.vision, paire USDT ≈ USD, ouverte depuis tous
+   les pays) ; CoinGecko en secours, avec deux nouvelles tentatives espacées en cas de 429. */
+const BINANCE_DATA = "https://data-api.binance.vision/api/v3";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function withRetry429(fn) {
+  for (let i = 0; ; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i < 2 && /→ 429/.test(String(e?.message))) { await sleep(20000 * (i + 1)); continue; }
+      throw e;
+    }
+  }
+}
+async function binanceCloses(symbol, days) {
+  const res = await fetch(`${BINANCE_DATA}/klines?symbol=${symbol}USDT&interval=1d&limit=${Math.min(days, 1000)}`, { signal: AbortSignal.timeout(10000) });
+  if (!res.ok) throw new Error(`Binance klines ${symbol} → ${res.status}`);
+  const rows = await res.json();
+  return rows.map((k) => parseFloat(k[4])).filter((x) => Number.isFinite(x) && x > 0);
+}
+async function binanceLive(symbol) {
+  const res = await fetch(`${BINANCE_DATA}/ticker/24hr?symbol=${symbol}USDT`, { signal: AbortSignal.timeout(8000) });
+  if (!res.ok) throw new Error(`Binance ticker ${symbol} → ${res.status}`);
+  const j = await res.json();
+  const price = parseFloat(j.lastPrice), change24h = parseFloat(j.priceChangePercent);
+  if (!(price > 0) || !Number.isFinite(change24h)) throw new Error(`Binance ticker ${symbol} : réponse invalide`);
+  return { price, change24h };
+}
+async function taPrices(crypto, days = 200) {
+  try {
+    const closes = await binanceCloses(crypto.symbol, days);
+    if (closes.length >= 50) return closes;
+    throw new Error(`Binance ${crypto.symbol} : historique trop court (${closes.length})`);
+  } catch (e) {
+    console.warn(`[ta-source] ${e.message} → CoinGecko`);
+    return withRetry429(() => fetchHistoricalPrices(crypto.coingeckoId, days));
+  }
+}
+async function taLive(crypto) {
+  try {
+    return await binanceLive(crypto.symbol);
+  } catch (e) {
+    console.warn(`[ta-source] ${e.message} → CoinGecko`);
+    return withRetry429(() => fetchLivePrice(crypto.coingeckoId));
+  }
+}
+
 async function fetchHistoricalPrices(coingeckoId, days = 200) {
   const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=${days}&interval=daily`;
   const res = await fetch(url, {
@@ -721,9 +769,9 @@ async function generateTA() {
     } catch { /* not exists */ }
 
     try {
-      const prices = await fetchHistoricalPrices(crypto.coingeckoId, 200);
+      const prices = await taPrices(crypto, 200);
       if (prices.length < 50) throw new Error(`historical too short: ${prices.length}`);
-      const live = await fetchLivePrice(crypto.coingeckoId);
+      const live = await taLive(crypto);
       const { content } = buildTAArticle(crypto, prices, live.price, live.change24h);
       await fs.writeFile(filePath, content, "utf8");
       created++;

@@ -53,6 +53,12 @@ jobs:
           # Override du modèle si besoin (default : anthropic/claude-3.5-sonnet)
           # LLM_MODEL: openai/gpt-4o
 
+      # 05/10/2026 : l'article de la semaine partait sans le garde-fou fiscal que passent les actus. Même contrôle : décimales
+      # au format français, article fautif écarté (il ne sera pas publié, le ticket d'échec habituel s'ouvre s'il ne reste rien).
+      - name: Contrôle de l'article (format + garde-fou fiscal)
+        id: gate
+        run: node scripts/content-gate.mjs --dirs=content/articles
+
       - name: Detect changes
         id: changes
         run: |

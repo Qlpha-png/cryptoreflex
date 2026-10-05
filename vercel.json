@@ -3,6 +3,9 @@
   "crons": [
     { "path": "/api/cron/refresh-ticker-prices", "schedule": "*/10 * * * *" },
     { "path": "/api/cron/update-static-prices", "schedule": "*/15 * * * *" },
-    { "path": "/api/cron/refresh-static-details", "schedule": "0 */6 * * *" }
+    { "path": "/api/cron/refresh-static-details", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/daily-orchestrator", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/streak-reminders", "schedule": "0 19 * * *" },
+    { "path": "/api/cron/evaluate-alerts", "schedule": "*/15 * * * *" }
   ]
 }

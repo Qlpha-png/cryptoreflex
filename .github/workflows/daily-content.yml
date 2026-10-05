@@ -67,8 +67,12 @@ jobs:
       # Volontairement bloquant : pas de `|| true`, pas de `continue-on-error`.
       # --fiscal-only ne lance que la famille fiscale (ignore la dette historique
       # no-signal-achat-direct, sans affaiblir la règle fiscale). Script zéro-dépendance.
-      - name: Gate audit fiscal anti-régression (bloquant)
-        run: node scripts/audit-quality.mjs --fiscal-only
+      # 05/10/2026 : un seul article fautif (ou un faux positif) bloquait toute la publication du jour. Le contrôle des contenus
+      # (scripts/content-gate.mjs) met les décimales au format français, écarte un NOUVEL article fautif (fichier + image) et
+      # publie les autres ; il reste bloquant si un article DÉJÀ publié est en faute.
+      - name: Contrôle des contenus (format + garde-fou fiscal)
+        id: gate
+        run: node scripts/content-gate.mjs
 
       - name: Detect changes
         id: changes
@@ -165,13 +169,40 @@ jobs:
       # Notification automatique en cas d'échec : ouvre une issue GitHub avec
       # contexte (run URL, labels). Pas de spam : un fail unique = 1 issue.
       # ----------------------------------------------------------------------
-      - name: Notify on failure
-        if: failure()
+      # Ticket UNIQUE (05/10/2026) : un échec complète le ticket ouvert au lieu d'en créer un par jour (13 tickets jamais
+      # fermés) ; un article écarté par le garde-fou y est signalé ; le premier passage vert le ferme.
+      - name: Ticket (échec, article écarté, retour au vert)
+        if: always()
         uses: actions/github-script@v9
+        env:
+          DROPPED: ${{ steps.gate.outputs.dropped }}
+          DROPPED_LIST: ${{ steps.gate.outputs.dropped_list }}
+          FAILED: ${{ job.status == 'failure' }}
         with:
           script: |
             const date = new Date().toISOString().slice(0, 10);
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "auto-content", per_page: 50 });
+            const mine = open.filter((i) => i.title.startsWith("[daily-content]"));
+            const failed = process.env.FAILED === "true", dropped = Number(process.env.DROPPED || 0);
+            if (!failed && dropped === 0) {
+              for (const i of mine) {
+                await github.rest.issues.createComment({ ...context.repo, issue_number: i.number, body: `✅ Publication du ${date} réussie : retour au vert. [Voir l'exécution](${runUrl})` });
+                await github.rest.issues.update({ ...context.repo, issue_number: i.number, state: "closed" });
+              }
+              return;
+            }
+            const lines = failed
+              ? [`❌ Échec de la publication du ${date}.`, `**Run** : ${runUrl}`]
+              : [`⚠️ Publication du ${date} faite, mais ${dropped} article(s) écarté(s) par le garde-fou fiscal (formulation à revoir) :`, ...String(process.env.DROPPED_LIST || "").split(" ").filter(Boolean).map((f) => `- \`${f}\``), `**Run** : ${runUrl}`];
+            if (mine.length) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: mine[0].number, body: lines.join("\n") });
+              return;
+            }
+            if (!failed) {
+              await github.rest.issues.create({ ...context.repo, title: `[daily-content] article(s) écarté(s) - ${date}`, body: lines.join("\n"), labels: ["auto-content"] });
+              return;
+            }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,

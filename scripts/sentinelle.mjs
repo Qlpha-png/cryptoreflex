@@ -86,6 +86,24 @@ async function checkKeyPages() {
 }
 
 /* ------------------------------------------------------------------ 2. fraîcheur */
+/* 05/10/2026 : analyses techniques du jour (5 cryptos) — une panne de la source de prix en avait fait perdre 3 sur 5. */
+async function checkAnalyses() {
+  try {
+    const { res } = await get(SITE + "/analyses-techniques");
+    const html = await res.text();
+    const dates = [...html.matchAll(/\/analyses-techniques\/(\d{4}-\d{2}-\d{2})-([a-z0-9]+)-analyse-technique/g)];
+    if (!dates.length) return fail("fraîcheur", "page des analyses techniques sans aucune analyse");
+    const last = dates.map((m) => m[1]).sort().pop();
+    const h = (Date.now() - Date.parse(last + "T04:30:00Z")) / HOUR;
+    const n = new Set(dates.filter((m) => m[1] === last).map((m) => m[2])).size;
+    if (h > 36) fail("fraîcheur", `dernière analyse technique du ${last} (robot des analyses en panne ?)`);
+    else if (n < 5) warn("fraîcheur", `${n} analyse(s) technique(s) sur 5 le ${last}`);
+    else ok("fraîcheur", `5 analyses techniques le ${last}`);
+  } catch (e) {
+    warn("fraîcheur", `page des analyses illisible : ${e.message}`);
+  }
+}
+
 async function checkFreshness() {
   // dernière actu publiée (flux RSS) : moins de 36 h
   try {
@@ -131,6 +149,17 @@ async function checkFreshness() {
       if (gap > 0.03) fail("prix", `prix du Bitcoin affiché ${Math.round(site)} $ contre ${Math.round(ref)} $ chez Kraken (écart ${(gap * 100).toFixed(1)} %)`);
       else ok("prix", `prix du Bitcoin cohérent (${Math.round(site)} $ / Kraken ${Math.round(ref)} $)`);
     }
+    /* 05/10/2026 : prix en euros (taux du jour) contre Kraken XBTEUR — un taux figé avait surévalué les euros de 3,3 % */
+    const top = await (await get(SITE + "/api/coins/top?limit=10&vs=eur")).res.json();
+    const eur = (top.coins || []).find((x) => x.id === "bitcoin")?.current_price;
+    const ke = await (await get("https://api.kraken.com/0/public/Ticker?pair=XBTEUR", { timeout: 15_000 })).res.json();
+    const refE = Number(Object.values(ke.result || {})[0]?.c?.[0]);
+    if (!eur || !refE) warn("prix", "comparaison du prix en euros impossible");
+    else {
+      const gapE = Math.abs(eur - refE) / refE;
+      if (gapE > 0.03) fail("prix", `prix du Bitcoin en euros ${Math.round(eur)} € contre ${Math.round(refE)} € chez Kraken (écart ${(gapE * 100).toFixed(1)} %)`);
+      else ok("prix", `prix en euros cohérent (${Math.round(eur)} € / Kraken ${Math.round(refE)} €)`);
+    }
   } catch (e) {
     warn("prix", `comparaison du prix impossible : ${e.message}`);
   }
@@ -156,6 +185,87 @@ async function checkRobots() {
     else ok("robots", `${latest.size} tâches GitHub, aucune en échec sur 26 h`);
   } catch (e) {
     warn("robots", `liste des tâches GitHub illisible : ${e.message}`);
+  }
+  /* 05/10/2026 : un robot qui ne se lance plus du tout ne produit aucun échec. Âge maximal du dernier passage (heures) ;
+     GitHub retarde souvent ses tâches programmées de plusieurs heures, d'où la marge. */
+  const CADENCE = [
+    ["daily-content.yml", "actus et analyses du jour", 30],
+    ["audit-navigateur.yml", "audit navigateur de nuit", 32],
+    ["health-check.yml", "contrôle de santé", 16],
+    ["freshness-check.yml", "contrôle de fraîcheur", 40],
+    ["refresh-prices-db.yml", "prix de la base", 16],
+    ["refresh-static-details-kv.yml", "détails des fiches", 16],
+    ["weekly-blog.yml", "article de la semaine", 8 * 24 + 12],
+    ["weekly-events.yml", "agenda de la semaine", 8 * 24 + 12],
+  ];
+  for (const [file, label, maxH] of CADENCE) {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${file}/runs?per_page=1`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "user-agent": UA },
+      });
+      const last = (await r.json()).workflow_runs?.[0];
+      const h = last ? (Date.now() - Date.parse(last.created_at)) / HOUR : Infinity;
+      if (h > maxH) fail("robots", `« ${label} » (${file}) n'a pas tourné depuis ${Number.isFinite(h) ? Math.round(h) + " h" : "jamais"} (maximum ${maxH} h)`);
+    } catch (e) {
+      warn("robots", `cadence de ${file} illisible : ${e.message}`);
+    }
+  }
+  ok("robots", `cadence vérifiée pour ${CADENCE.length} robots`);
+}
+
+/* 05/10/2026 : contenu programmé de Reflex Cards — les missions sont écrites date par date et les objets éphémères du
+   Comptoir jour de saison par jour de saison (1 à 90 au lancement) : sans prolongation, le Comptoir se vide en silence. */
+async function checkGameContent() {
+  try {
+    const rules = JSON.parse(readFileSync(path.join(ROOT, "data", "reflex-cards-rules.json"), "utf8"));
+    const { res } = await get(SITE + "/cartes/jouer");
+    const day = Number((await res.text()).match(/GAME_DAY=(\d+)/)?.[1]);
+    const ephMax = Math.max(...Object.keys(rules.eph || {}).map(Number).filter(Number.isFinite));
+    const lastMission = Object.keys(rules.missionsByDate || {}).sort().pop();
+    const missionsLeft = lastMission ? (Date.parse(lastMission) - Date.now()) / (24 * HOUR) : -1;
+    if (!Number.isFinite(day)) warn("jeu", "jour de saison de Reflex Cards illisible");
+    else if (day > ephMax) fail("jeu", `Reflex Cards : plus aucun objet éphémère au Comptoir (jour ${day}, programmés jusqu'au jour ${ephMax})`);
+    else if (ephMax - day < 30) warn("jeu", `Reflex Cards : objets éphémères programmés jusqu'au jour ${ephMax} (${ephMax - day} jours restants) — à prolonger`);
+    if (missionsLeft < 0) fail("jeu", "Reflex Cards : plus aucune mission programmée");
+    else if (missionsLeft < 30) warn("jeu", `Reflex Cards : missions programmées jusqu'au ${lastMission} — à prolonger`);
+    if (Number.isFinite(day) && day <= ephMax && missionsLeft >= 30) ok("jeu", `Reflex Cards : jour ${day}, éphémères jusqu'au jour ${ephMax}, missions jusqu'au ${lastMission}`);
+  } catch (e) {
+    warn("jeu", `contenu programmé du jeu illisible : ${e.message}`);
+  }
+}
+
+/* 05/10/2026 : l'orchestrateur quotidien (Vercel Cron, 7 h UTC) laisse une trace de son passage dans le KV. */
+async function checkOrchestrator() {
+  const kvUrl = process.env.KV_REST_API_URL?.replace(/\/$/, "");
+  const kvToken = process.env.KV_REST_API_TOKEN;
+  if (!kvUrl || !kvToken) return warn("robots", "orchestrateur quotidien non contrôlé (accès KV absent)");
+  try {
+    const r = await fetch(`${kvUrl}/get/${encodeURIComponent("cron:orchestrator:last")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+    const j = await r.json();
+    const t = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+    if (!t?.at) return warn("robots", "orchestrateur quotidien : pas encore de trace (premier passage attendu à 7 h UTC)");
+    const h = (Date.now() - Date.parse(t.at)) / HOUR;
+    if (h > 27) fail("robots", `orchestrateur quotidien (prix, alertes, e-mails, agenda) : dernier passage il y a ${Math.round(h)} h`);
+    const bad = (t.jobs || []).filter((x) => !x.ok);
+    for (const x of bad) (x.critical ? fail : warn)("robots", `orchestrateur : tâche « ${x.name} » en échec (${x.status || x.error || "?"})`);
+    if (h <= 27 && !bad.length) ok("robots", `orchestrateur quotidien passé il y a ${Math.round(h)} h, ${(t.jobs || []).length} tâches réussies`);
+  } catch (e) {
+    warn("robots", `trace de l'orchestrateur illisible : ${e.message}`);
+  }
+  /* alertes de prix : Vercel Cron toutes les 15 minutes */
+  try {
+    const r = await fetch(`${kvUrl}/get/${encodeURIComponent("cron:evaluate-alerts:last")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+    const j = await r.json();
+    const t = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+    if (!t?.at) warn("robots", "alertes de prix : pas encore de trace de passage");
+    else {
+      const min = (Date.now() - Date.parse(t.at)) / 60_000;
+      if (min > 60) fail("robots", `alertes de prix : dernière vérification il y a ${Math.round(min)} min (prévue toutes les 15 min)`);
+      else if (t.errors > 0) warn("robots", `alertes de prix : ${t.errors} erreur(s) au dernier passage`);
+      else ok("robots", `alertes de prix vérifiées il y a ${Math.round(min)} min (${t.checked} alertes)`);
+    }
+  } catch (e) {
+    warn("robots", `trace des alertes illisible : ${e.message}`);
   }
 }
 
@@ -279,7 +389,10 @@ async function checkSitemaps() {
 /* ------------------------------------------------------------------ exécution + rapport */
 await checkKeyPages();
 await checkFreshness();
+await checkAnalyses();
 await checkRobots();
+await checkOrchestrator();
+await checkGameContent();
 if (FULL) {
   await checkFiscal();
   await checkPartners();

@@ -24,9 +24,13 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { evaluateAndFire } from "@/lib/alerts";
 import { verifyBearer } from "@/lib/auth";
+import { getKv } from "@/lib/kv";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/* 05/10/2026 : lancé toutes les 15 minutes par Vercel Cron (vercel.json). Avant : une fois par jour, et la page /alertes annonçait
+   « 1 à 3 minutes » de latence. L'anti-spam de 24 h par alerte empêche tout envoi en double. */
+export const maxDuration = 60;
 
 /**
  * Deadline 55s — sous Vercel Hobby (60s hard limit) pour laisser 5s de marge
@@ -73,6 +77,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     console.info(
       `[cron-eval-end] session=${sessionId} checked=${report.checked} fired=${report.fired} skipped=${report.skipped} errors=${report.errors.length} durationMs=${report.durationMs}`,
     );
+    /* trace du passage pour la sentinelle (heure, nombres seulement : aucune adresse ni alerte) */
+    await getKv()
+      .set("cron:evaluate-alerts:last", { at: new Date().toISOString(), checked: report.checked, fired: report.fired, errors: report.errors.length }, { ex: 2 * 86_400 })
+      .catch((e: unknown) => console.warn("[cron-eval] trace KV impossible", e));
     return NextResponse.json(
       { ok: true, sessionId, ...report },
       { status: 200, headers: { "Cache-Control": "no-store" } },

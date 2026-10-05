@@ -23,12 +23,10 @@ name: Coolify cron triggers (daily-orchestrator + streak-reminders)
 # Le step curl utilise GET (pas POST) — c'est ce qu'attendent les routes Next
 # (route.ts exporte `GET`, pas `POST`).
 
+# 05/10/2026 : le site est sur Vercel (offre Pro) et ces deux tâches sont lancées à l'heure par Vercel Cron (vercel.json).
+# GitHub les lançait avec 5 à 6 h de retard (constaté le 04/10 : 13 h 02 et 22 h 15 au lieu de 7 h et 19 h). Ce flux ne sert
+# plus qu'au lancement à la main (secours) ; le garder programmé enverrait deux fois les e-mails du jour.
 on:
-  schedule:
-    # daily-orchestrator @ 7h UTC
-    - cron: "0 7 * * *"
-    # streak-reminders @ 19h UTC
-    - cron: "0 19 * * *"
   workflow_dispatch:
     inputs:
       job:
