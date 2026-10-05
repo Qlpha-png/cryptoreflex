@@ -65,7 +65,7 @@ Ce guide vous explique les **critères de qualification** (BIC pro vs BNC vs occ
 - **Lending** simple sur Aave/Compound → **occasionnel** ou **BNC**.
 - **Liquidity pool Uniswap V3** → souvent **BIC** (frais de transaction = activité commerciale habituelle).
 - **Swap crypto-to-crypto** (USDC ↔ ETH sur Uniswap) → **non imposable en France** (article 150 VH bis CGI). C'est la spécificité française.
-- **Impermanent loss** → réintégrable en moins-value à la sortie du pool.
+- **Impermanent loss** → pas de moins-value à la sortie du pool : retirer sa liquidité est un échange entre crypto-actifs, en sursis d'imposition ; la perte pèse sur le calcul global lors d'une cession en euros.
 - **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) intègre les principaux protocoles DeFi pour modéliser votre situation.
 
 ---
@@ -187,11 +187,11 @@ Fournir de la **liquidité concentrée** sur Uniswap V3 (Curve, Balancer, etc.) 
 | Frais de trading collectés (en EUR équivalent) | **Oui** (recettes) |
 | Récompenses additionnelles (UNI, AAVE airdrops liquidity mining) | **Oui** (recettes) |
 | Frais de gas Ethereum | **Déductibles** en charges (réel) |
-| Impermanent loss à la sortie | **Réintégrable** en moins-value |
+| Impermanent loss à la sortie | **Pas de moins-value** (échange en sursis) : la perte pèse sur le calcul global lors d'une cession en euros |
 | Frais de plateforme (Yearn, Convex) | **Déductibles** |
 
-<Callout type="warning" title="L'impermanent loss n'est PAS une moins-value tant que vous êtes dans le pool">
-La perte impermanente est, par définition, **virtuelle** tant que vous n'avez pas retiré votre liquidité. Elle ne devient une moins-value fiscale qu'au moment du retrait, lorsque la valeur en EUR de ce que vous récupérez est inférieure à la valeur en EUR de ce que vous aviez déposé (frais collectés inclus). C'est ce moment précis qui est le fait générateur.
+<Callout type="warning" title="L'impermanent loss n'est pas une moins-value fiscale, même à la sortie du pool">
+Pour un particulier, déposer des tokens dans un pool ou les retirer revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc ni fait générateur ni moins-value déclarable. La perte impermanente se retrouve indirectement dans votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible.
 </Callout>
 
 ---
@@ -231,7 +231,7 @@ Vous pouvez passer toute l'année à arbitrer entre stablecoins, à entrer/sorti
 | Lending classique → intérêts en USDC | Oui (cession EUR) | Occasionnel ou BNC | 2086 ou 2042-C-PRO |
 | Dépôt LP Uniswap V3 ETH/USDC | Non | — | — |
 | Frais de trading collectés | Oui (régulier = BIC) | BIC | 2042-C-PRO |
-| Retrait LP avec impermanent loss | Oui | Selon régime | 2086 ou 2042-C-PRO |
+| Retrait LP avec impermanent loss | Non (échange en sursis) | — | — |
 | Swap USDC → ETH sur Uniswap | **Non** (article 150 VH bis) | — | — |
 | Borrow ETH contre collatéral USDC | Non | — | — |
 | Liquidation forcée (perte de collatéral) | Oui (cession involontaire) | Plus-value occasionnelle | 2086 |
@@ -311,7 +311,7 @@ Tarif moyen d'un expert-comptable spécialisé crypto en 2026 : **800 à 2 500 �
   },
   {
     question: "Comment l'impermanent loss est-elle traitée fiscalement ?",
-    answer: "L'impermanent loss n'est pas une moins-value fiscalement reconnue tant que vous restez dans le pool — c'est une perte virtuelle. Elle devient une moins-value au moment où vous retirez votre liquidité, si la valeur en euros de ce que vous récupérez (tokens + frais collectés) est inférieure à la valeur en euros de ce que vous aviez initialement déposé. Cette moins-value est alors imputable sur vos plus-values de même nature de l'année ; en régime BIC, le déficit non imputé est reportable 6 ans (art. 156 CGI)."
+    answer: "Non. Pour un particulier, retirer sa liquidité d'un pool revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc l'impermanent loss ne crée aucune moins-value déclarable, ni dans le pool ni à la sortie. Elle pèse indirectement sur votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible."
   },
   {
     question: "Le yield farming est-il toujours en BIC ?",

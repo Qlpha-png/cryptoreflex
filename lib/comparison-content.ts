@@ -17,7 +17,7 @@
  *   wordCount export).
  */
 
-import { isAvailableFr, type Platform } from "@/lib/platforms";
+import { cardBuyPct, isAvailableFr, type Platform } from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
@@ -61,14 +61,14 @@ export interface ComparisonCopy {
 /* -------------------------------------------------------------------------- */
 
 function fmtPct(n: number): string {
-  return `${n.toFixed(n < 0.1 ? 2 : 2).replace(/\.?0+$/, "")} %`;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
 }
 
 function fmtScore(n: number): string {
   return `${fmtFr(n, 1)}/5`;
 }
 
-function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platform; gap: string } {
+function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platform; gap: string; gapPct: number } {
   // Coût réel : taker pour un exchange order-book, frais d'achat (instantBuy) pour
   // un courtier/app — sinon le taux "Pro" 0,20 % de certains hybrides (Nexo/Wirex/
   // Young) fausse le gagnant alors qu'ils coûtent ~2 % en achat réel.
@@ -76,8 +76,8 @@ function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platfor
     (p.fees.verified?.makerTakerApplies ?? true) ? p.fees.spotTaker : p.fees.instantBuy;
   const ra = realCost(a);
   const rb = realCost(b);
-  if (ra <= rb) return { winner: a, loser: b, gap: `${fmtFr((rb - ra), 2)} pts` };
-  return { winner: b, loser: a, gap: `${fmtFr((ra - rb), 2)} pts` };
+  if (ra <= rb) return { winner: a, loser: b, gap: `${fmtFr((rb - ra), 2)} point${rb - ra >= 2 ? "s" : ""}`, gapPct: rb - ra };
+  return { winner: b, loser: a, gap: `${fmtFr((ra - rb), 2)} point${ra - rb >= 2 ? "s" : ""}`, gapPct: ra - rb };
 }
 
 function bestOnSecurity(a: Platform, b: Platform): { winner: Platform; loser: Platform } {
@@ -259,9 +259,9 @@ const OVERRIDES: Record<string, SlugOverride> = {
   "binance-vs-kraken": {
     angle: "Catalogue géant + frais bas vs sécurité historique + Proof-of-Reserves",
     pick: (a, b) =>
-      `Pour le trader actif qui maximise frais et choix : ${a.name}. Pour qui dort mieux la nuit avec un acteur jamais hacké en 14 ans : ${b.name}.`,
+      `Pour qui veut un acteur jamais piraté avec perte de fonds clients depuis 2011 : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} reste, à frais quasi équivalents (0,16/0,26 % vs 0,1/0,1 %), la plateforme la plus saine du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, Proof-of-Reserves audité trimestriellement, support téléphonique en français — un combo rare. ${a.name} compense par un catalogue 30 % plus large (380 vs 290), la liquidité spot la plus profonde au monde et un écosystème futures complet. Pour la majorité des particuliers européens, l'écart de frais n'est pas décisif (0,16 % suffit). Conclusion : ${b.name} pour la tranquillité, ${a.name} si vous cherchez un asset spécifique introuvable ailleurs ou si vous tradez plus de 5 000 € / mois.`,
+      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) est l'une des plateformes les plus sûres du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée, support téléphonique en français. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -331,7 +331,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour la marque la plus rassurante et la pédagogie débutant : ${a.name}. Pour la sécurité maximale et le support FR par téléphone : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} sont les deux exchanges les plus matures du marché — fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} brille par 3 atouts décisifs : Proof-of-Reserves audité trimestriellement, frais 2 à 3 fois plus bas (0,16 / 0,26 % vs 0,4 / 0,6 %), et surtout le support téléphonique en français — quasi unique sur les grands exchanges internationaux. Verdict : ${b.name} pour qui priorise sécurité et frais ; ${a.name} pour qui débute totalement et veut la marque "Apple du crypto".`,
+      `${a.name} et ${b.name} sont les deux exchanges les plus matures du marché — fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} brille par 2 atouts : la preuve de réserves auditée et le support téléphonique en français, quasi unique sur les grands exchanges internationaux. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui priorise la sécurité et le support en français ; ${a.name} pour qui débute et veut la marque la plus connue.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -383,15 +383,25 @@ export function buildComparisonCopy(
     `Support FR : ${a.name} ${a.support.frenchPhone ? "tél +" : ""}${a.support.frenchChat ? " chat" : ""} (${a.support.responseTime}) vs ${b.name} ${b.support.frenchPhone ? "tél +" : ""}${b.support.frenchChat ? " chat" : ""} (${b.support.responseTime}).`,
   ];
 
-  const tldrPick = override?.pick
+  const okA = isAvailableFr(a), okB = isAvailableFr(b);
+  const blocked = !okA ? a : !okB ? b : null;
+  const allowed = blocked === a ? b : a;
+  const blockedNote = blocked
+    ? `${blocked.name} n'est pas autorisée à servir les résidents français (${blocked.mica.status.charAt(0).toLowerCase()}${blocked.mica.status.slice(1)}).${okA || okB ? ` En France, seul ${allowed.name} est une option.` : " Aucune des deux plateformes n'est une option en France."}`
+    : "";
+  const tldrPick = blocked
+    ? blockedNote
+    : override?.pick
     ? override.pick(a, b)
     : `Pour la majorité des Français qui débutent, ${ux.winner.name} offre la meilleure expérience d'entrée. Pour optimiser frais et flexibilité, ${fees.winner.name} reprend l'avantage à partir de quelques milliers d'euros de volume mensuel.`;
 
   /* ----------------------- ANALYSES PAR CRITÈRE ----------------------- */
 
   const feesAnalysis = [
-    `Sur les frais de trading spot, ${fees.winner.name} (${fmtPct(fees.winner.fees.spotMaker)} maker / ${fmtPct(fees.winner.fees.spotTaker)} taker) écrase ${fees.loser.name} (${fmtPct(fees.loser.fees.spotMaker)} / ${fmtPct(fees.loser.fees.spotTaker)}). L'écart de ${fees.gap} sur le taker peut sembler faible, mais sur un volume mensuel de 5 000 €, cela représente entre 25 € et 30 € de frais évités chaque mois — soit 300 à 360 € par an de différentiel net.`,
-    `Côté achat instantané (carte bancaire en 1 clic), ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. Cette commission est souvent invisible : elle est intégrée au prix affiché. Spread typique : ${a.name} entre ${a.fees.spread}, ${b.name} entre ${b.fees.spread}. Conseil pratique : pour des achats >100 €, basculer vers le mode "spot" ou "advanced trade" divise la facture par 3 à 10 sur la plupart des plateformes.`,
+    fees.gapPct > 0
+      ? `Sur le coût réel d'un achat, ${fees.winner.name} (${fmtPct(fees.winner.fees.spotMaker)} maker / ${fmtPct(fees.winner.fees.spotTaker)} taker) devance ${fees.loser.name} (${fmtPct(fees.loser.fees.spotMaker)} / ${fmtPct(fees.loser.fees.spotTaker)}). Sur un volume mensuel de 5 000 €, l'écart de ${fees.gap} représente ${fmtFr(fees.gapPct * 50, 2)} € de frais évités chaque mois, soit ${fmtFr(fees.gapPct * 600, 0)} € par an.`
+      : `Sur le coût réel d'un achat, ${a.name} et ${b.name} sont à égalité (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)} contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)}) : les frais ne départagent pas ces deux plateformes.`,
+    `Côté achat payé par carte bancaire, ${a.name} prélève ${fmtPct(cardBuyPct(a))} et ${b.name} ${fmtPct(cardBuyPct(b))}. Spread : ${a.name} ${a.fees.spread}, ${b.name} ${b.fees.spread}. Conseil pratique : pour des achats de plus de 100 €, un virement SEPA suivi d'un achat en mode « spot » ou « advanced » coûte nettement moins cher.`,
   ];
 
   const securityAnalysis = [
@@ -416,12 +426,14 @@ export function buildComparisonCopy(
 
   const catalogAnalysis = [
     `${cat.winner.name} domine sur le nombre brut de cryptos disponibles : ${cat.winner.cryptos.totalCount} cryptos contre ${cat.loser.cryptos.totalCount} pour ${cat.loser.name}. Cet écart est décisif si vous chassez les altcoins exotiques ou les nouvelles narratives (mémecoins Solana, tokens Layer 2, IA crypto). Pour 90 % des investisseurs qui restent sur top 30 (BTC, ETH, SOL, XRP, ADA…), les deux catalogues sont équivalents.`,
-    `Côté staking : ${a.name} ${a.cryptos.stakingAvailable ? `propose le staking sur ${a.cryptos.stakingCryptos.length} cryptos (${a.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking natif"}. ${b.name} ${b.cryptos.stakingAvailable ? `couvre ${b.cryptos.stakingCryptos.length} cryptos en staking (${b.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking"}. Le rendement varie de 3 % (ETH) à 15 % (cryptos émergentes), mais attention à la fiscalité française : les rewards de staking sont imposables, et le moment exact (réception ou cession) n'est pas tranché par une source officielle citable — vérifie la doctrine à jour.`,
+    `Côté staking : ${a.name} ${a.cryptos.stakingAvailable ? `propose le staking sur ${a.cryptos.stakingCryptos.length} cryptos (${a.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking natif"}. ${b.name} ${b.cryptos.stakingAvailable ? `couvre ${b.cryptos.stakingCryptos.length} cryptos en staking (${b.cryptos.stakingCryptos.join(", ")})` : "ne propose pas de staking"}. Le rendement varie selon la crypto et le réseau. Attention à la fiscalité française : ni le moment de l'imposition des récompenses (réception ou cession) ni leur régime ne sont tranchés par une source officielle — vérifiez la doctrine à jour.`,
   ];
 
   /* ----------------------- VERDICT FINAL + PROFILS + FAQ ----------------------- */
 
-  const finalVerdict = override?.finalVerdict
+  const finalVerdict = blocked
+    ? `${blockedNote} ${override?.finalVerdict ? override.finalVerdict(a, b) : ""}`.trim()
+    : override?.finalVerdict
     ? override.finalVerdict(a, b)
     : `Notre méthodologie place ${a.scoring.global >= b.scoring.global ? a.name : b.name} légèrement en tête (${fmtScore(Math.max(a.scoring.global, b.scoring.global))} vs ${fmtScore(Math.min(a.scoring.global, b.scoring.global))}), mais l'écart reste marginal. Les deux plateformes sont conformes MiCA et adaptées à un investisseur français en 2026. Le bon choix dépend de votre profil : voir la section "Quelle plateforme selon votre profil ?" ci-dessous pour une recommandation argumentée.`;
 

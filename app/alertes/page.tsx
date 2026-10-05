@@ -20,7 +20,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS, fmtCount } from "@/lib/brand";
 import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import {
   breadcrumbSchema,
@@ -207,7 +207,7 @@ export default async function AlertesPage() {
                 <h3 className="text-base font-semibold text-fg">Choisissez une crypto</h3>
               </div>
               <p className="mt-3 text-sm text-fg/75 leading-relaxed">
-                Bitcoin, Ethereum, Solana, ou parmi les 40+ cryptos suivies.
+                Bitcoin, Ethereum, Solana, ou parmi les {fmtCount(STATS.cryptos)} cryptos suivies.
                 Sélecteur avec recherche.
               </p>
             </li>

@@ -18,7 +18,7 @@ disclaimer: "Document à valeur informative. Définitions issues de la doctrine 
 Article du Code Général des Impôts qui régit la fiscalité des cessions de crypto-actifs par les particuliers depuis la loi de finances 2019. Pose les principes de la PFU 31,4 %, de la formule de calcul au prorata du portefeuille, et du seuil d'exonération à 305 €/an.
 
 ### Abattement durée de détention
-**N'existe PAS pour les crypto-actifs**. Contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements jusqu'à 65 % selon la durée, le crypto est imposé de façon identique, que vous le déteniez 5 jours ou 5 ans. Ne pas confondre avec le régime mobilier classique.
+**N'existe PAS pour les crypto-actifs**. Contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements de 50 à 65 % selon la durée (jusqu'à 85 % pour certains titres de PME), le crypto est imposé de façon identique, que vous le déteniez 5 jours ou 5 ans. Ne pas confondre avec le régime mobilier classique.
 
 ### Acquisition (prix d')
 Somme totale dépensée pour acquérir un crypto-actif, frais d'achat inclus. Important : on parle du prix d'acquisition **du portefeuille global**, pas d'un token spécifique. Utilisé dans la formule 150 VH bis.
@@ -75,7 +75,7 @@ Administration fiscale française. Reçoit les déclarations, calcule l'impôt, 
 Déclaration principale des revenus du foyer fiscal. La 2042-C est l'annexe complémentaire qui contient la section "Plus-values mobilières" (ligne 3AN pour une plus-value, 3BN pour une moins-value, case 3CN pour opter pour le barème).
 
 ### DeFi (Decentralized Finance)
-Finance décentralisée : protocoles on-chain (Aave, Compound, Uniswap, Curve, Lido, etc.) permettant de prêter, emprunter, échanger sans intermédiaire centralisé. Fiscalité **complexe et zone grise** : chaque opération (deposit, withdraw, claim) peut être un fait générateur.
+Finance décentralisée : protocoles on-chain (Aave, Compound, Uniswap, Curve, Lido, etc.) permettant de prêter, emprunter, échanger sans intermédiaire centralisé. Fiscalité **complexe** : pour un particulier, les dépôts, retraits et échanges entre crypto-actifs sont en sursis d'imposition ; le régime des récompenses (claim) n'est pas tranché.
 
 ## E
 
@@ -125,7 +125,7 @@ Perte réalisée à la cession d'un crypto-actif. Compensable avec les PV de la 
 ## N
 
 ### NFT (Non-Fungible Token)
-Token unique représentant un actif (œuvre digitale, item de jeu, certificat). Fiscalité : majoritairement traité comme crypto-actif (150 VH bis), parfois comme bien meuble (150 UA) selon la nature.
+Token unique représentant un actif (œuvre digitale, item de jeu, certificat). Fiscalité : depuis le 1er janvier 2026, article 150 VH ter du CGI (loi n° 2026-534 du 25 juin 2026) : la plus-value est imposée selon le régime du bien ou du droit que le NFT représente.
 
 ## P
 
@@ -155,7 +155,7 @@ Mécanisme du calcul IR : le revenu imposable est divisé par le nombre de parts
 Indicateur calculé par la DGFiP qui inclut **toutes** vos ressources, y compris les PV crypto. Sert de référence pour de nombreux droits et exonérations (CMU-C, taxe d'habitation résiduelle, bourses étudiantes…). Une PV crypto importante peut vous faire perdre des droits.
 
 ### Régime micro-BNC
-Régime simplifié pour les BNC : si CA < 83 600 € (seuil 2026-2028), abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5HQ ou 5JQ). Adapté pour les petits revenus de staking/lending.
+Régime simplifié pour les BNC : si CA < 83 600 € (seuil 2026-2028), abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5KU pour une activité non professionnelle, 5HQ si elle est professionnelle). Adapté pour les petits revenus de staking/lending.
 
 ### Report (de moins-value)
 **Pas de report pour les particuliers** sur les MV crypto (régime 150 VH bis). En revanche, en BIC pro : report sur 6 ans. En régime classique de PV mobilières : report sur 10 ans.

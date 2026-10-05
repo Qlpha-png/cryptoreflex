@@ -38,7 +38,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import LeadMagnetCard from "@/components/lead-magnet/LeadMagnetCard";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
 
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
   title: "Ressources gratuites — PDFs, outils et guides crypto",
   description: fitDescription(
-    "3 lead magnets PDF (Bible Fiscalité 2026, Checklist déclaration, Glossaire fiscal), 8 outils gratuits (calculateur fiscalité, simulateur DCA, vérificateur MiCA…) et accès au blog éditorial.",
+    `3 lead magnets PDF (Bible Fiscalité 2026, Checklist déclaration, Glossaire fiscal), une sélection de 8 de nos ${STATS.tools} outils gratuits (calculateur fiscalité, simulateur DCA, vérificateur MiCA…) et accès au blog éditorial.`,
   ),
   alternates: withHreflang(BRAND.url + "/ressources"),
   openGraph: {
@@ -170,7 +170,7 @@ const collectionPageJsonLd = {
   "@type": "CollectionPage",
   name: "Ressources gratuites Cryptoreflex",
   description:
-    "Catalogue exhaustif des ressources gratuites Cryptoreflex : 3 PDFs lead magnets fiscalité, 8 outils interactifs, et accès aux guides du blog.",
+    "Catalogue exhaustif des ressources gratuites Cryptoreflex : 3 PDFs lead magnets fiscalité, une sélection de 8 outils interactifs, et accès aux guides du blog.",
   url: BRAND.url + "/ressources",
   isPartOf: {
     "@type": "WebSite",
@@ -236,7 +236,7 @@ export default function RessourcesPage() {
             <p className="mt-3 text-fg/70">
               Tout ce qu'il vous faut pour comprendre, calculer et déclarer vos
               cryptos en 2026 : 3 PDFs téléchargeables (Bible Fiscalité,
-              Checklist déclaration, Glossaire), 8 outils interactifs et
+              Checklist déclaration, Glossaire), une sélection de 8 de nos {STATS.tools} outils interactifs et
               l'intégralité du blog éditorial.
             </p>
           </div>

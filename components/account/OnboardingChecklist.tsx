@@ -42,7 +42,7 @@ const STEPS: Step[] = [
   {
     id: "radar",
     title: "Lancez le Radar 3916-bis",
-    benefit: "Détecte jusqu'à 10 000 € d'amende potentielle (deadline mai)",
+    benefit: "Repère les comptes à déclarer : 750 € d'amende par compte oublié (1 500 € au-delà de 50 000 €)",
     cta: "Scanner (2 min)",
     href: "/outils/radar-3916-bis",
     Icon: ShieldCheck,

@@ -1,6 +1,6 @@
 {
   "$schema": "Cryptoreflex - Database PSAN pour Radar 3916-bis",
-  "lastUpdated": "2026-10-02",
+  "lastUpdated": "2026-10-05",
   "disclaimer": "Données basées sur informations publiques (Mentions Légales officielles, registres AMF/MFSA/ESMA, BOI-CF-CPF-30-20). Pour chaque exchange, le champ 'verifiedFields' liste ce qui est confirmé. Les champs marqués 'À vérifier' demandent une consultation directe des Mentions Légales officielles avant déclaration. Le user reste juridiquement responsable de ses déclarations.",
   "legal": {
     "boi": "BOI-CF-CPF-30-20 (Comptes ouverts à l'étranger - obligation déclarative)",
@@ -38,10 +38,10 @@
         "name",
         "country"
       ],
-      "warning": "Binance a opéré historiquement via une entité basée aux Îles Caïmans/Malte. Depuis 2023, Binance France SAS est enregistrée PSAN auprès de l'AMF. Si vous avez ouvert votre compte AVANT migration vers Binance France, le pays de référence peut être différent.",
+      "warning": "Binance France SAS a été enregistrée PSAN auprès de l'AMF le 4 mai 2022, et Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Le 3916-bis vise les comptes tenus par un établissement situé à l'étranger : vérifiez sur vos contrats quelle entité tenait votre compte (Binance France SAS, ou une entité étrangère pour les comptes plus anciens).",
       "entities": [
         {
-          "label": "Binance France (depuis 2023+)",
+          "label": "Binance France (enregistrée PSAN le 04/05/2022)",
           "legalName": "À vérifier sur la page Mentions Légales binance.com/fr",
           "country": "France",
           "isNonCooperative": false,
@@ -65,12 +65,19 @@
       "verifiedFields": [
         "name",
         "country",
-        "legalName",
-        "address"
+        "legalName"
       ],
       "entities": [
         {
-          "label": "Coinbase Europe (clients UE depuis 2024)",
+          "label": "Coinbase Luxembourg (entité agréée MiCA, CSSF)",
+          "legalName": "Coinbase Luxembourg S.A.",
+          "address": "Luxembourg - adresse précise à confirmer dans vos conditions d'utilisation",
+          "country": "Luxembourg",
+          "isNonCooperative": false,
+          "amendeRisque": 750
+        },
+        {
+          "label": "Coinbase Europe (anciens contrats, Irlande)",
           "legalName": "Coinbase Europe Limited",
           "address": "70 Sir John Rogerson's Quay, Dublin 2, D02 R296, Ireland",
           "registrationNumber": "Irish Company Number 629930 (à reconfirmer sur registre CRO)",
@@ -80,7 +87,7 @@
         }
       ],
       "officialLegalUrl": "https://www.coinbase.com/legal/user_agreement/europe",
-      "instruction": "Pour les clients UE, l'entité contractante est Coinbase Europe Limited (Irlande)."
+      "instruction": "Coinbase sert aujourd'hui les clients de l'UE via Coinbase Luxembourg S.A., agréée MiCA par la CSSF (registre de l'ESMA). Pour une année où votre contrat désignait encore Coinbase Europe Limited (Irlande), déclarez cette entité-là : vérifiez-la dans vos conditions d'utilisation."
     },
     {
       "id": "kraken",
@@ -93,8 +100,8 @@
       ],
       "entities": [
         {
-          "label": "Kraken UE (depuis 2024)",
-          "legalName": "Payward Europe Digital Solutions Ltd",
+          "label": "Kraken UE (agréée MiCA, Banque centrale d'Irlande)",
+          "legalName": "Payward Europe Solutions Limited",
           "address": "Dublin, Irlande - adresse précise à confirmer sur kraken.com/legal",
           "country": "Irlande",
           "isNonCooperative": false,
@@ -132,7 +139,7 @@
       "verifiedFields": [
         "name"
       ],
-      "warning": "ATTENTION : Bybit a 2 entités. L'historique Bybit Fintech Limited (BVI = pays NON-coopératif) génère une amende de 10 000 € si non déclaré. Bybit EU GmbH (Autriche) génère 750 €.",
+      "warning": "ATTENTION : Bybit a 2 entités. Déclarez celle qui figure sur votre contrat : Bybit EU GmbH (Autriche) ou, pour un compte plus ancien, Bybit Fintech Limited (îles Vierges britanniques). Dans les deux cas, un compte non déclaré coûte 750 € (1 500 € si la valeur de vos comptes à l'étranger dépasse 50 000 €) : les 10 000 € des États non coopératifs visent les comptes bancaires, pas les comptes d'actifs numériques.",
       "entities": [
         {
           "label": "Bybit EU GmbH (depuis 2025)",
@@ -206,8 +213,8 @@
       ],
       "entities": [
         {
-          "label": "OKX UE (depuis 2025)",
-          "legalName": "OKCOIN Europe Ltd",
+          "label": "OKX UE (agréée MiCA, MFSA)",
+          "legalName": "OKX Europe Limited",
           "address": "Malte - adresse précise à confirmer",
           "country": "Malte",
           "isNonCooperative": false,
@@ -215,7 +222,7 @@
         }
       ],
       "officialLegalUrl": "https://www.okx.com/eu/help/okcoin-europe-ltd-user-agreement",
-      "instruction": "Pour les clients UE, l'entité contractante est OKCOIN Europe Ltd (Malte)."
+      "instruction": "Pour les clients de l'UE, l'entité agréée MiCA est OKX Europe Limited (Malte), selon le registre de l'ESMA. Vérifiez le nom exact dans vos conditions d'utilisation."
     },
     {
       "id": "bitget",
@@ -372,7 +379,7 @@
         }
       ],
       "officialLegalUrl": "https://bingx.com/en-us/support/articles/360017574493",
-      "instruction": "Consultez vos Mentions Légales personnelles BingX. Si entité offshore (Seychelles), amende portée à 10 000 €."
+      "instruction": "Consultez vos mentions légales personnelles BingX et déclarez l'entité indiquée. Amende : 750 € par compte non déclaré (1 500 € au-delà de 50 000 €), quel que soit le pays de l'entité."
     }
   ]
 }

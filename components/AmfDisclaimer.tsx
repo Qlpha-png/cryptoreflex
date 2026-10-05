@@ -62,8 +62,8 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
     title: "Comparatif sponsorisé — pas un conseil en investissement",
     Icon: Scale,
     extra:
-      "Ce comparatif présente des plateformes enregistrées en tant que PSAN/CASP " +
-      "auprès de l'AMF ou de leur régulateur européen. Cryptoreflex peut percevoir " +
+      "Ce comparatif présente des plateformes agréées MiCA (CASP) " +
+      "par l'AMF ou par leur régulateur européen. Cryptoreflex peut percevoir " +
       "une commission d'affiliation lorsqu'un visiteur s'inscrit via un lien partenaire ; " +
       "cela n'influence ni le classement éditorial, ni la note attribuée. " +
       "Vérifiez systématiquement le statut PSAN/MiCA de la plateforme avant tout dépôt.",

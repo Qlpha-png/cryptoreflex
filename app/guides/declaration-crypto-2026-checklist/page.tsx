@@ -98,7 +98,7 @@ const STEPS: Step[] = [
     n: 4,
     title: "Vérifiez le seuil d'exonération de 305 €",
     detail:
-      "Si la SOMME de vos cessions crypto-fiat 2025 est < 305 €, vous êtes exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-dessus de 305 €, l'intégralité de la plus-value est imposable au PFU 31,4 %.",
+      "Si la SOMME de vos cessions crypto-fiat 2025 ne dépasse pas 305 €, vous êtes exonéré d'impôt sur la plus-value. Attention : c'est le PRIX DE CESSION qui compte, pas la plus-value. Au-delà de 305 €, l'intégralité de la plus-value est imposable au PFU 31,4 %.",
     why: "Ce seuil est une exonération mais pas une dispense de déclaration. Si vous avez des cryptos à l'étranger, vous devez quand même remplir le 3916-bis (qui est indépendant du 2086).",
   },
   {
@@ -120,7 +120,7 @@ const STEPS: Step[] = [
     n: 7,
     title: "Remplissez l'annexe 3916-bis (comptes étrangers)",
     detail:
-      "Pour chaque exchange étranger (Binance, Kraken Irlande, Coinbase Europe, Bitpanda Autriche, etc.) : 1 ligne sur 3916-bis avec le nom de l'établissement, adresse, numéro de compte, date d'ouverture (et éventuellement de clôture).",
+      "Pour chaque exchange étranger (Kraken Irlande, Coinbase Luxembourg, Bitpanda Autriche, ancien compte Binance tenu par une entité étrangère, etc.) : 1 ligne sur 3916-bis avec le nom de l'établissement, adresse, numéro de compte, date d'ouverture (et éventuellement de clôture).",
     why: "C'est l'oubli #1 dans les redressements observés en 2024-2025. Sanctions : 750 €/compte (1 500 € si la valeur des comptes dépasse 50 000 €). À déclarer même sans transaction dans l'année.",
     link: { href: "/etudes/fiscalite-crypto-france-2026-guide-cerfa#cerfa-3916", label: "Détail 3916-bis" },
   },

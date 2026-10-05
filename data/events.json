@@ -48,8 +48,8 @@
       "id": "consensus-miami-2026",
       "title": "Consensus Miami 2026",
       "category": "conference",
-      "date": "2026-05-12",
-      "isApproximate": true,
+      "date": "2026-05-05",
+      "isApproximate": false,
       "description": "Édition Miami de Consensus by CoinDesk — l'un des plus gros rassemblements crypto-fi des Amériques.",
       "impact": "medium",
       "links": [
@@ -85,8 +85,8 @@
       "id": "token2049-singapore-2026",
       "title": "Token2049 Singapore",
       "category": "conference",
-      "date": "2026-10-01",
-      "isApproximate": true,
+      "date": "2026-10-07",
+      "isApproximate": false,
       "description": "Plus grand sommet crypto APAC — annonces protocoles + flux institutionnel asiatique.",
       "impact": "medium"
     },

@@ -139,7 +139,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
             {oddsText(pCard("C")).replace("1 carte sur", "1 fois sur")}, une Légendaire précise {oddsText(pCard("L")).replace("1 carte sur", "1 fois sur")}.
             Dans un booster de 5 cartes, on tire en moyenne {fr(Math.round(pCard("C") * tot.C * 50) / 10)} Communes,{" "}
             {fr(Math.round(pCard("PC") * tot.PC * 50) / 10)} Peu commune et {fr(Math.round(pCard("R") * tot.R * 50) / 10)} Rare ; une
-            Ultra rare tombe environ 1 booster sur {fr(Math.round(1 / (1 - Math.pow(1 - pCard("UR") * tot.UR - pCard("L") * tot.L, 5))))}.
+            Ultra rare ou mieux tombe environ 1 booster sur {fr(Math.round(1 / (1 - Math.pow(1 - pCard("UR") * tot.UR - pCard("L") * tot.L, 5))))}.
           </p>
           <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
             {showcase.map(({ r, card, id, ft }) => (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { HelpCircle, ArrowRight, BookOpen } from "lucide-react";
 
 import data from "@/data/faq-crypto.json";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import {
@@ -229,7 +229,7 @@ export default function FaqCryptoPage() {
               Blog &amp; guides crypto
             </div>
             <div className="mt-1 text-xs text-muted">
-              100+ articles approfondis (8-15 min de lecture)
+              {STATS.articles} articles approfondis (8-15 min de lecture)
             </div>
           </Link>
           <Link

@@ -179,7 +179,7 @@ const FAQ_ITEMS = [
     question:
       "Quel est le calendrier de la déclaration crypto 2026 ?",
     answer:
-      "La déclaration en ligne ouvre le 9 avril 2026. Date limite selon votre département : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai 2026 (20-54), 4 juin 2026 (55-974 + 976 + outre-mer). La déclaration papier doit être déposée au plus tard le 19 mai 2026. Pour corriger une déclaration déjà déposée, le service de correction en ligne est ouvert du 29 juillet au 30 novembre 2026 inclus. Source : calendrier officiel impots.gouv.fr.",
+      "La campagne 2026 (revenus 2025) est close : la déclaration en ligne a ouvert le 9 avril 2026 et s'est terminée le 21 mai (départements 01-19 et non-résidents), le 28 mai (20-54) ou le 4 juin 2026 (55-974, 976 et outre-mer) ; la déclaration papier devait être déposée au plus tard le 19 mai 2026. Vous pouvez encore corriger une déclaration déjà déposée grâce au service de correction en ligne, ouvert jusqu'au 30 novembre 2026 inclus. Les revenus 2026 se déclareront au printemps 2027, aux dates que publiera impots.gouv.fr. Source : calendrier officiel impots.gouv.fr.",
   },
   {
     question:
@@ -529,8 +529,9 @@ export default function CalculateurFiscalitePage() {
               est négatif, l'excédent{" "}
               <strong>n'est pas reportable</strong> (différence majeure avec les
               actions cotées) : selon la doctrine administrative, la moins-value
-              non utilisée est définitivement perdue au 31 décembre — d'où
-              l'intérêt du tax-loss harvesting avant la clôture. Méthode dans{" "}
+              non utilisée est définitivement perdue au 31 décembre. Attention : avec la
+              méthode globale, vendre une crypto en baisse ne crée une moins-value que si
+              tout votre portefeuille est en perte ce jour-là. Méthode dans{" "}
               <Link
                 href="/blog/deduire-pertes-crypto-impot-2026"
                 className="text-primary-soft underline"
@@ -709,8 +710,8 @@ export default function CalculateurFiscalitePage() {
               2025). Le <strong>Cerfa 2086</strong> détaille vos cessions
               imposables ligne par ligne. Le <strong>Cerfa 3916-bis</strong>{" "}
               déclare vos comptes ouverts sur des plateformes étrangères
-              (Binance, Kraken Irlande, Bitget, Coinbase Irlande, Bitpanda
-              Autriche). L'oubli du 3916-bis coûte 750 à 1 500 euros
+              (Kraken Irlande, Coinbase Luxembourg, Bitpanda Autriche, ou un
+              ancien compte Binance ou Bitget encore ouvert). L'oubli du 3916-bis coûte 750 à 1 500 euros
               par compte (art. 1736 X CGI).
             </p>
 
@@ -810,15 +811,14 @@ export default function CalculateurFiscalitePage() {
               Étape 7 — Calendrier et derniers contrôles
             </h3>
             <p>
-              La déclaration en ligne ouvre le 9 avril 2026. Date limite en
-              ligne : 21 mai 2026 (départements 01-19 + non-résidents), 28 mai
-              2026 (20-54), 4 juin 2026 (55-976 + outre-mer). La déclaration
-              papier doit être déposée pour le 19 mai 2026. Vous pouvez modifier
-              votre déclaration en ligne via le service de correction, ouvert du
-              29 juillet au <strong>30 novembre 2026 inclus</strong>, ce qui est
+              La campagne 2026 (revenus 2025) est close : la déclaration en
+              ligne a ouvert le 9 avril 2026 et s&apos;est terminée le 21 mai
+              (départements 01-19 et non-résidents), le 28 mai (20-54) ou le 4
+              juin 2026 (55-976 et outre-mer). Vous pouvez encore modifier votre
+              déclaration en ligne via le service de correction, ouvert
+              jusqu&apos;au <strong>30 novembre 2026 inclus</strong>, ce qui est
               une bonne sécurité si vous réalisez avoir oublié une cession ou un
-              compte. Avis d'impôt envoyé entre
-              juillet et septembre 2026, paiement solde au 15 septembre 2026.
+              compte. Les revenus 2026 se déclareront au printemps 2027.
             </p>
           </div>
         </div>

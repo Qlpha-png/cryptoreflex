@@ -75,18 +75,6 @@ export const EVENTS_SEED: CryptoEvent[] = [
     importance: 3,
   },
   {
-    id: "etf-sol-decision-2026",
-    title: "Décision SEC sur l'ETF spot Solana",
-    date: "2026-07-15",
-    crypto: "SOL",
-    category: "ETF",
-    source: "SEC",
-    sourceUrl: "https://www.sec.gov/rules-regulations/self-regulatory-organization-rulemaking",
-    description:
-      "Deadline finale pour la SEC sur plusieurs demandes d'ETF spot Solana (VanEck, 21Shares, Bitwise). Une approbation ouvrirait un canal d'investissement institutionnel direct.",
-    importance: 3,
-  },
-  {
     id: "ltc-halving-2027",
     title: "Halving Litecoin (estimation)",
     date: "2027-08-04",
@@ -95,31 +83,31 @@ export const EVENTS_SEED: CryptoEvent[] = [
     source: "Litecoin Foundation",
     sourceUrl: "https://litecoin.org/",
     description:
-      "Cinquième halving de Litecoin : la récompense de bloc passe de 6,25 à 3,125 LTC. Date approximative basée sur le rythme moyen ~2,5 minutes par bloc.",
+      "Quatrième halving de Litecoin : la récompense de bloc passe de 6,25 à 3,125 LTC. Date approximative basée sur le rythme moyen ~2,5 minutes par bloc.",
     importance: 2,
   },
   {
     id: "token2049-singapore-2026",
     title: "Token2049 Singapore",
-    date: "2026-10-01",
+    date: "2026-10-07",
     crypto: "MARCHÉ",
     category: "Conference",
     source: "Token2049",
     sourceUrl: "https://www.asia.token2049.com/",
     description:
-      "Conférence crypto la plus influente d'Asie. Plus de 20 000 participants, fondateurs de protocoles majeurs, side-events sponsorisés dans tout Singapour.",
+      "Conférence crypto la plus influente d'Asie, les 7 et 8 octobre 2026 au Marina Bay Sands. Plus de 25 000 participants attendus, fondateurs de protocoles majeurs, side-events dans tout Singapour.",
     importance: 3,
   },
   {
-    id: "devcon-bali-2026",
-    title: "Devcon 8 — Bali",
+    id: "devcon-mumbai-2026",
+    title: "Devcon 8 — Mumbai",
     date: "2026-11-03",
     crypto: "ETH",
     category: "Conference",
     source: "Ethereum Foundation",
     sourceUrl: "https://devcon.org/",
     description:
-      "Devcon est la conférence Ethereum officielle organisée par la Fondation. Quatre jours de recherche, R&D protocole, applications et social layer.",
+      "Devcon est la conférence Ethereum officielle organisée par la Fondation : du 3 au 6 novembre 2026 au Jio World Centre de Mumbai (Inde). Quatre jours de recherche, R&D protocole, applications et social layer.",
     importance: 3,
   },
   {
@@ -258,44 +246,32 @@ export const EVENTS_SEED: CryptoEvent[] = [
       "Dernière réunion FOMC de 2025 — projections économiques de fin d'année et message sur la trajectoire 2026. Forte attention médiatique.",
     importance: 3,
   },
-  {
-    id: "sol-etf-deadline-2026-q1",
-    title: "Première deadline SEC ETF Solana (T1 2026)",
-    date: "2026-03-14",
-    crypto: "SOL",
-    category: "ETF",
-    source: "SEC",
-    sourceUrl: "https://www.sec.gov/rules-regulations/self-regulatory-organization-rulemaking",
-    description:
-      "Première fenêtre de décision SEC pour les S-1 ETF Solana spot. Reportée à juillet 2026 (deadline finale 240 jours).",
-    importance: 2,
-  },
 
   /* ========================================================================
    * 10 CONFÉRENCES RÉCURRENTES (mix futur + récent)
    * ======================================================================== */
   {
     id: "ethcc-2026",
-    title: "EthCC[8] — Cannes",
-    date: "2026-07-06",
+    title: "EthCC[9] — Cannes",
+    date: "2026-03-30",
     crypto: "ETH",
     category: "Conference",
     source: "EthCC",
     sourceUrl: "https://www.ethcc.io/",
     description:
-      "Édition 2026 de la conférence Ethereum Community Conference à Cannes. Cinq jours de talks indépendants, gratuits et orientés développeurs.",
+      "Neuvième édition de l'Ethereum Community Conference, à Cannes du 30 mars au 2 avril 2026 (Palais des Festivals). Quatre jours de talks orientés développeurs.",
     importance: 3,
   },
   {
     id: "consensus-2026",
-    title: "Consensus 2026 — Toronto",
-    date: "2026-05-14",
+    title: "Consensus 2026 — Miami",
+    date: "2026-05-05",
     crypto: "MARCHÉ",
     category: "Conference",
     source: "CoinDesk",
     sourceUrl: "https://consensus.coindesk.com/",
     description:
-      "Conférence majeure organisée par CoinDesk. Toronto pour 2026, après Austin en 2025. Mix institutionnels, régulateurs et builders Web3.",
+      "Conférence majeure organisée par CoinDesk, à Miami Beach du 5 au 7 mai 2026 (après Toronto en 2025). Mix institutionnels, régulateurs et builders Web3.",
     importance: 2,
   },
   {

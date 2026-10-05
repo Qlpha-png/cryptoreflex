@@ -337,7 +337,7 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
       "À partir de quel montant êtes-vous obligé de déclarer vos cessions crypto (et potentiellement imposé) ?",
     choices: [
       "Dès le premier euro de plus-value.",
-      "À partir de 305 € de cessions cumulées dans l'année (montant des ventes, pas de la plus-value).",
+      "Au-delà de 305 € de cessions cumulées dans l'année (montant des ventes, pas de la plus-value).",
       "À partir de 5 000 € de plus-value nette.",
       "Jamais, tant que les fonds restent sur la plateforme.",
     ],
@@ -379,13 +379,13 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
       "Vous faites du staking et du yield farming réguliers. Comment ces revenus sont-ils généralement qualifiés en France ?",
     choices: [
       "Exonérés — la DeFi n'est pas fiscalisée.",
-      "En BNC le plus souvent, voire en BIC si l'activité devient quasi-professionnelle.",
+      "Ce n'est pas tranché officiellement : plus-value à la cession en gestion occasionnelle, ou revenu (BNC) selon le profil.",
       "En traitements et salaires.",
       "En revenus fonciers.",
     ],
     correctIndex: 1,
     explanation:
-      "Les revenus récurrents de staking/DeFi (au-delà de la simple plus-value de cession) sont, selon l'interprétation répandue (aucune doctrine BOFiP dédiée), imposés en BNC tant que l'activité reste non professionnelle, et peuvent basculer en BIC si elle devient habituelle et organisée. La DeFi N'EST PAS défiscalisée : la revente ultérieure des tokens reçus génère en plus une plus-value distincte.",
+      "Aucune doctrine BOFiP ne traite des récompenses de staking ou de DeFi : selon le profil, elles sont imposées à la cession (plus-value, en gestion occasionnelle) ou comme un revenu (BNC), et le moment d'imposition (réception ou cession) n'est pas tranché. La DeFi N'EST PAS défiscalisée : la revente ultérieure des tokens reçus génère en plus une plus-value distincte.",
   },
 ];
 

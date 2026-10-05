@@ -54,12 +54,16 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
     const acquisitionCost = buy * qty;
     const currentValue = priceEur * qty;
     const gain = currentValue - acquisitionCost;
-    const tax = gain > 0 ? gain * 0.314 : 0; // PFU 31,4 % (cf. lib/fiscalite TAUX_PFU)
-    const net = gain > 0 ? currentValue - tax : currentValue;
+    /* seuil de 305 € (art. 150 VH bis II) : exonération si le TOTAL des cessions de l'année n'excède pas 305 € ;
+       ici, une seule vente de toute la position (audit du 05/10/2026 : 31,40 € affichés sur une vente de 200 €) */
+    const exempt = gain > 0 && currentValue <= 305;
+    const tax = gain > 0 && !exempt ? gain * 0.314 : 0; // PFU 31,4 % (cf. lib/fiscalite TAUX_PFU)
+    const net = currentValue - tax;
     return {
       acquisitionCost,
       currentValue,
       gain,
+      exempt,
       tax,
       net,
       gainPct: (gain / acquisitionCost) * 100,
@@ -171,7 +175,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
       >
         {!result ? (
           <p className="text-[13px] text-muted">
-            Saisis votre prix d&apos;achat moyen et la quantité de {symbol} pour voir
+            Saisissez votre prix d&apos;achat moyen et la quantité de {symbol} pour voir
             votre plus-value estimée et l&apos;impôt PFU dû à la cession en euros.
           </p>
         ) : (
@@ -198,10 +202,16 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
                 ni imputables sur d'autres types de plus-values. Correction
                 obligatoire pour crédibilité éditoriale. */}
             <ResultCell
-              label={result.gain > 0 ? "Impôt PFU 31,4 %" : "Aucun impôt"}
+              label={result.gain > 0 && !result.exempt ? "Impôt PFU 31,4 %" : "Aucun impôt"}
               value={fmt(result.tax)}
-              hint={result.gain > 0 ? "à la cession en €" : "moins-value (non reportable au PFU)"}
-              tone={result.gain > 0 ? "danger" : "success"}
+              hint={
+                result.exempt
+                  ? "vente ≤ 305 € : exonérée si c'est votre seule cession de l'année"
+                  : result.gain > 0
+                    ? "à la cession en €"
+                    : "moins-value (non reportable au PFU)"
+              }
+              tone={result.gain > 0 && !result.exempt ? "danger" : "success"}
             />
           </div>
         )}
@@ -211,10 +221,11 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
       <div className="mt-3 flex items-start gap-2">
         <Info className="h-3.5 w-3.5 text-muted shrink-0 mt-0.5" strokeWidth={2} aria-hidden="true" />
         <p className="text-[11px] text-muted leading-relaxed">
-          Calcul <strong className="text-fg/80">indicatif par opération</strong>. Le PFU réel
-          est dû sur la <strong className="text-fg/80">plus-value cumulée annuelle</strong>{" "}
-          (formule prorata Cerfa 2086). Pour le calcul exact (multi-opérations + déclaration),
-          utilise notre{" "}
+          Calcul <strong className="text-fg/80">indicatif</strong>, juste si cette position est
+          tout votre portefeuille crypto et que vous la vendez en entier. La plus-value réelle se
+          calcule sur <strong className="text-fg/80">l&apos;ensemble de votre portefeuille</strong>{" "}
+          (formule du Cerfa 2086), et rien n&apos;est dû si le total de vos ventes de l&apos;année ne
+          dépasse pas 305 €. Pour le calcul exact (plusieurs opérations, déclaration), utilisez notre{" "}
           <Link
             href="/outils/calculateur-fiscalite"
             className="inline-flex items-center gap-1 text-primary hover:text-primary-glow underline underline-offset-2 font-semibold"

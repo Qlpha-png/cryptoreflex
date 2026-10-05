@@ -173,23 +173,23 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     title: "Top exchanges crypto français — alternatives 100 % FR 2026",
     h1: "Exchanges crypto français : les alternatives 100 % FR (2026)",
     description:
-      "Plateformes crypto françaises agréées AMF : Coinhouse, Bitstack, Trade Republic. Frais, services, fiscalité auto. Comparatif Cryptoreflex 2026.",
+      "Plateformes crypto françaises agréées MiCA par l'AMF : Coinhouse, Bitstack, Paymium, Deblock, Meria. Frais, services, fiscalité. Comparatif Cryptoreflex 2026.",
     intro:
-      "Si vous voulez soutenir l'écosystème français ou simplifier votre déclaration fiscale (export 2086 prêt à l'emploi), il existe plusieurs alternatives 100 % FR enregistrées PSAN auprès de l'AMF. Voici les principales plateformes opérées depuis la France.",
+      "Si vous voulez soutenir l'écosystème français ou simplifier votre déclaration (un compte ouvert chez une plateforme française n'est pas un compte à l'étranger : pas de formulaire 3916-bis à remplir pour lui), plusieurs plateformes françaises sont agréées MiCA par l'AMF. Voici les principales.",
     monthlyVolumeFr: 320,
     difficulty: 16,
     select() {
-      // Heuristique : on reconnaît les plateformes FR par leur registration AMF non-null
-      // ET leur idealFor qui mentionne "France" ou par leur ID dans la liste statique.
-      const FRENCH_IDS = new Set(["coinhouse", "bitstack", "trade-republic", "swissborg"]);
+      // Sociétés françaises agréées MiCA par l'AMF (05/10/2026). Trade Republic (allemande, BaFin) et SwissBorg (suisse, servie
+      // en France par une filiale) n'y figurent plus : la page promet des plateformes « 100 % FR ».
+      const FRENCH_IDS = new Set(["coinhouse", "bitstack", "paymium", "deblock", "just-mining", "feel-mining"]);
       return getAllPlatforms()
-        .filter((p) => FRENCH_IDS.has(p.id))
+        .filter((p) => FRENCH_IDS.has(p.id) && isAvailableFr(p))
         .sort((a, b) => b.scoring.global - a.scoring.global)
         .slice(0, 5)
         .map((p, i) => ({
           rank: i + 1,
           data: p,
-          reason: `${p.tagline}${p.mica.amfRegistration ? ` — Enregistré PSAN (${p.mica.amfRegistration})` : ""}.`,
+          reason: `${p.tagline}${p.mica.amfRegistration ? ` — Agréée MiCA par l'AMF (n° ${p.mica.amfRegistration})` : ""}.`,
         }));
     },
     highlightLabel: "Score global",

@@ -15,7 +15,7 @@ import {
 import { ALL_CRYPTOS, getCrypto } from "@/lib/programmatic";
 import { getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
-import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform, cardBuyPct } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -104,9 +104,18 @@ function platformsForCrypto(symbol: string): Platform[] {
   return Array.from(new Set([...exact, ...topCatalog])).slice(0, 5);
 }
 
+/** Coût d'un achat après un virement SEPA : taker d'un carnet d'ordres, sinon frais du courtier. */
+const afterSepaPct = (p: Platform) => ((p.fees.verified?.makerTakerApplies ?? true) ? p.fees.spotTaker : p.fees.instantBuy);
+const pctFr = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
+const rangeFr = (xs: number[]) => {
+  if (!xs.length) return "—";
+  const lo = Math.min(...xs), hi = Math.max(...xs);
+  return lo === hi ? pctFr(lo) : `${pctFr(lo).replace(" %", "")} – ${pctFr(hi)}`;
+};
+
 function feesEstimate(p: Platform, amount: number): { instant: number; spot: number } {
-  const instant = (amount * p.fees.instantBuy) / 100;
-  const spot = (amount * p.fees.spotTaker) / 100;
+  const instant = (amount * cardBuyPct(p)) / 100;
+  const spot = (amount * afterSepaPct(p)) / 100;
   return { instant, spot };
 }
 
@@ -153,24 +162,28 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
-        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${fmtNb(best.scoring.global)}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). En achat instantané (CB), les frais sont d'environ ${fmtNb(best.fees.instantBuy)}%, en spot taker ${fmtNb(best.fees.spotTaker)}%. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
-        : `En France, plusieurs plateformes agréées MiCA proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez les frais d'achat instantané (souvent ~1-2 %) et les frais spot (~0,1-0,5 %) selon votre usage.`,
+        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${fmtNb(best.scoring.global)}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). Un achat payé par carte y coûte environ ${pctFr(cardBuyPct(best))}, et ${pctFr(afterSepaPct(best))} après un virement SEPA. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
+        : `En France, plusieurs plateformes agréées MiCA proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez le coût d'un achat par carte et celui d'un achat après virement, selon votre usage.`,
     },
     {
       question: `Quel montant minimum pour acheter du ${meta.symbol} ?`,
-      answer: `La plupart des plateformes régulées en France acceptent des achats à partir de 10 € (Bitstack, Bitpanda) à 25 € (Coinhouse, Trade Republic). Vous pouvez acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Bon point d'entrée pour expérimenter le DCA (Dollar Cost Averaging) avec des montants raisonnables, sans jouer "votre épargne" (la crypto reste un actif volatil, perte en capital possible).`,
+      answer: `Le minimum dépend de la plateforme (voir chaque fiche avis). Vous pouvez acheter une fraction de ${meta.symbol} — pas besoin d'acheter une unité entière. Bon point d'entrée pour expérimenter le DCA (Dollar Cost Averaging) avec des montants raisonnables, sans jouer "votre épargne" (la crypto reste un actif volatil, perte en capital possible).`,
     },
     {
       question: `Faut-il déclarer l'achat de ${meta.name} aux impôts ?`,
-      answer: `Non, l'achat seul n'est pas un événement fiscal. Vous devez déclarer uniquement quand vous vendez contre euros (cession imposable, PFU 31,4 % en 2026) ou quand vous utilisez ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
+      answer: `Non, l'achat seul n'est pas un événement fiscal. Vous devez déclarer uniquement quand vous vendez contre euros (cession imposable au PFU de 31,4 % depuis l'imposition des revenus 2025, si le total de vos cessions de l'année dépasse 305 €) ou quand vous utilisez ${meta.symbol} pour payer un bien/service. La détention sur un wallet en France impose toutefois de déclarer le compte sur l'annexe 3916-bis si la plateforme est étrangère.`,
     },
     {
       question: `Achat instantané (CB) ou virement SEPA pour ${meta.symbol} ?`,
-      answer: `L'achat par carte bancaire est ultra-rapide (5 secondes) mais coûte 1,5 à 3 % de frais. Le virement SEPA (gratuit ou ~0,1 %) prend 1 à 24 h mais est ${best ? `${(((best.fees.instantBuy - best.fees.spotTaker) / 100) * 1000).toFixed(0)} € moins cher pour 1 000 €` : "beaucoup moins cher"}. Pour des montants > 200 €, privilégiez le SEPA.`,
+      answer: best
+        ? cardBuyPct(best) > afterSepaPct(best)
+          ? `La carte est instantanée mais plus chère : sur ${best.name}, un achat de 1 000 € coûte ${fmtFr(cardBuyPct(best) * 10, 2)} € par carte contre ${fmtFr(afterSepaPct(best) * 10, 2)} € après un virement SEPA (1 à 24 h). Pour les montants importants, privilégiez le virement.`
+          : `Sur ${best.name}, un achat coûte ${pctFr(cardBuyPct(best))} par carte comme après un virement SEPA : la carte est simplement plus rapide.`
+        : `La carte est instantanée mais généralement plus chère qu'un achat après virement SEPA. Pour les montants importants, privilégiez le virement.`,
     },
     {
       question: `Faut-il transférer ${meta.symbol} sur un wallet hardware ?`,
-      answer: `Pour des montants conséquents (> 1 000-2 000 €), oui. Un Ledger ou Trezor met vos ${meta.symbol} hors ligne et vous protège du risque de faillite ou de hack de la plateforme. Pour des sommes accessoires que vous comptez vendre rapidement, garder sur un exchange MiCA avec assurance et 2FA est suffisant.`,
+      answer: `Pour des montants conséquents (> 1 000-2 000 €), oui. Un Ledger ou Trezor met vos ${meta.symbol} hors ligne et vous protège du risque de faillite ou de hack de la plateforme. Pour des sommes accessoires que vous comptez vendre rapidement, garder sur une plateforme agréée MiCA avec la double authentification activée reste acceptable.`,
     },
     {
       question: `Le ${meta.name} est-il MiCA-compliant en France ?`,
@@ -288,7 +301,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-muted">Achat 1 000 € (spot)</dt>
+                            <dt className="text-muted">Achat 1 000 € (après virement)</dt>
                             <dd className="mt-1 font-mono font-semibold text-accent-green">
                               {fmtFr(fees.spot, 2)} € de frais
                             </dd>
@@ -343,7 +356,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 Icon={CreditCard}
                 title="Carte bancaire (CB)"
                 speed="Instantané"
-                fees="1,5 % – 3 %"
+                fees={rangeFr(platforms.map(cardBuyPct))}
                 pros={["Achat en 5 secondes", "Pas besoin d'IBAN configuré"]}
                 cons={["Frais élevés", "Plafond carte journalier"]}
               />
@@ -351,7 +364,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 Icon={Euro}
                 title="Virement SEPA"
                 speed="1-24 h"
-                fees="0 % – 0,5 %"
+                fees={rangeFr(platforms.map(afterSepaPct))}
                 pros={["Frais minimes", "Adapté aux gros montants"]}
                 cons={["Délai de réception", "Configuration initiale"]}
               />
@@ -374,17 +387,18 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               <li className="flex gap-2">
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
-                  <strong>À la cession (vente vs euros) :</strong> Prélèvement Forfaitaire
-                  Unique (PFU) de 31,4 % sur la plus-value. Option pour le barème progressif
-                  possible si plus avantageuse.
+                  <strong>À la cession (vente contre euros) :</strong> prélèvement forfaitaire
+                  unique (PFU) de 31,4 % sur la plus-value, calculée sur l&apos;ensemble de votre
+                  portefeuille, si le total de vos cessions de l&apos;année dépasse 305 €. Option pour
+                  le barème progressif possible si plus avantageuse.
                 </span>
               </li>
               <li className="flex gap-2">
                 <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                 <span>
                   <strong>Annexe 2086 :</strong> à remplir pour chaque cession imposable.
-                  Les exchanges régulés FR (Coinhouse, Bitstack, Trade Republic) génèrent un
-                  export prêt à l'emploi.
+                  Exportez l&apos;historique de chaque plateforme : il faut la valeur de tout votre
+                  portefeuille au jour de chaque cession.
                 </span>
               </li>
               <li className="flex gap-2">
@@ -392,7 +406,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 <span>
                   <strong>Compte étranger :</strong> si vous avez un compte chez Coinbase ou Kraken
                   (ou en aviez un chez Binance, même fermé depuis), déclaration du compte sur formulaire
-                  3916-bis pour chaque année où il était ouvert (oubli = 750 € d'amende par compte, 1 500 € si solde &gt; 50 000 €).
+                  3916-bis pour chaque année où il était ouvert (oubli = 750 € d&apos;amende par compte, 1 500 € si la valeur de vos comptes à l&apos;étranger dépasse 50 000 €).
                 </span>
               </li>
             </ul>

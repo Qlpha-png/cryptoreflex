@@ -214,9 +214,18 @@ export async function _fetchEventsRaw(): Promise<CryptoEvent[]> {
  *
  * Pour forcer une refresh : `revalidateTag("events")` (cf. /api/cron/refresh-events).
  */
+/* Empreinte de la seed dans la clé de cache (05/10/2026) : avec une clé fixe, le cache de données survivait aux
+   déploiements et le calendrier montrait encore l'ancienne seed (ETF Solana, Consensus à Toronto) jusqu'à 1 h. */
+const SEED_FINGERPRINT = (() => {
+  const s = JSON.stringify(EVENTS_SEED);
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (Math.imul(h, 31) + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+})();
+
 export const fetchEvents = unstable_cache(
   async (): Promise<CryptoEvent[]> => _fetchEventsRaw(),
-  ["events-fetcher-v1"],
+  ["events-fetcher-v1", SEED_FINGERPRINT],
   { revalidate: CACHE_TTL_SECONDS, tags: [EVENTS_CACHE_TAG] }
 );
 

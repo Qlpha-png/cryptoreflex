@@ -106,7 +106,7 @@ const TOC = [
 const FAQ = [
   {
     q: "À partir de quel montant suis-je obligé de déclarer mes cessions crypto ?",
-    a: "À partir de 305 € de cessions cumulées dans l’année. En dessous de ce seuil, vous êtes exonéré de l’impôt sur la plus-value. Au-dessus, l’ensemble de la plus-value (et non l’excédent au-delà de 305 €) est imposable au PFU 31,4 %. Attention : le seuil de 305 € s’applique au montant des CESSIONS (vente vers euro), pas au montant de la plus-value elle-même.",
+    a: "Au-delà de 305 € de cessions cumulées dans l’année. Si le total ne dépasse pas 305 €, vous êtes exonéré de l’impôt sur la plus-value. Au-dessus, l’ensemble de la plus-value (et non l’excédent au-delà de 305 €) est imposable au PFU 31,4 %. Attention : le seuil de 305 € s’applique au montant des CESSIONS (vente vers euro), pas au montant de la plus-value elle-même.",
   },
   {
     q: "Le change crypto-vers-crypto (token-to-token) est-il imposable ?",
@@ -130,7 +130,7 @@ const FAQ = [
   },
   {
     q: "Les NFT et les memecoins sont-ils traités différemment ?",
-    a: "Pour les NFT : régime spécifique non encore stabilisé. La doctrine actuelle (BOFiP en cours de rédaction) tend à appliquer le régime des cessions d’œuvres d’art (régime forfaitaire 6,5 %) lorsque le NFT a une dimension artistique, sinon le régime PFU 31,4 % crypto. Les memecoins (DOGE, SHIB, etc.) suivent strictement le régime crypto classique : PFU 31,4 % à la cession contre euro.",
+    a: "Pour les NFT : depuis le 1er janvier 2026, l’article 150 VH ter du CGI (loi n° 2026-534 du 25 juin 2026) impose la plus-value de cession d’un NFT selon le régime du bien ou du droit qu’il représente (une œuvre d’art, un bijou ou un objet de collection relève par exemple du régime de ces biens). Les comptes NFT ouverts à l’étranger se déclarent sur le 3916-bis depuis le 1er juillet 2026. Les memecoins (DOGE, SHIB, etc.) suivent strictement le régime crypto classique : PFU 31,4 % à la cession contre euro.",
   },
   {
     q: "Si j’utilise un exchange français (Coinhouse, Bitstack), dois-je quand même remplir le 3916-bis ?",
@@ -370,7 +370,7 @@ export default function FiscaliteCryptoStudyPage() {
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
               <span>
-                <strong>Cessions &lt; 305 €</strong> dans l’année :
+                <strong>Cessions ≤ 305 €</strong> dans l’année :
                 exonération totale d’impôt (mais déclaration recommandée si
                 portefeuille étranger).
               </span>
@@ -397,10 +397,10 @@ export default function FiscaliteCryptoStudyPage() {
             <li className="flex items-start gap-2">
               <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
               <span>
-                <strong>Deadline 2026</strong> : déclaration des revenus 2025
-                avant le <strong>21 mai 2026</strong> (départements 1-19 et
-                non-résidents) ou <strong>début juin</strong> selon le
-                département.
+                <strong>Campagne 2026 close</strong> : les revenus 2025 se
+                déclaraient avant le <strong>21 mai, le 28 mai ou le 4 juin
+                2026</strong> selon le département ; correction en ligne
+                possible jusqu&apos;au <strong>30 novembre 2026</strong>.
               </span>
             </li>
           </ul>
@@ -769,25 +769,26 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <h3>5.3. NFT (Non-Fungible Tokens)</h3>
           <p>
-            Le régime fiscal des NFT n’est pas encore parfaitement stabilisé.
-            La doctrine actuelle, en cours de consolidation par BOFiP, tend à
-            distinguer :
+            Depuis le 1er janvier 2026, les NFT ont leur propre article :
+            l’article 150 VH ter du CGI, créé par la loi n° 2026-534 du 25 juin
+            2026 (article 91). La plus-value de cession d’un NFT (crypto-actif
+            unique et non fongible au sens de MiCA) est imposée selon le régime
+            du bien ou du droit qu’il représente :
           </p>
           <ul>
             <li>
-              les NFT « œuvres d’art » (collections art-digital, génératifs
-              certifiés) — éventuel régime forfaitaire 6,5 % des cessions
-              d’œuvres d’art ;
+              un NFT qui représente une œuvre d’art, un bijou ou un objet de
+              collection suit le régime de ces biens ;
             </li>
             <li>
-              les NFT « utilitaires » (PFP collection, in-game, gaming
-              assets) — régime PFU 31,4 % crypto classique.
+              un NFT qui donne un droit sur un autre bien (immobilier, par
+              exemple) suit le régime de ce bien.
             </li>
           </ul>
           <p>
-            Cette distinction crée une zone grise : la plupart des
-            contribuables et conseillers appliquent par sécurité le régime
-            crypto PFU 31,4 % à tous les NFT.
+            Les NFT ne relèvent donc plus de l’article 150 VH bis. Depuis le
+            1er juillet 2026, les comptes NFT ouverts à l’étranger se déclarent
+            aussi sur le formulaire 3916-bis.
           </p>
           <h3>5.4. DeFi (Aave, Uniswap, Compound, etc.)</h3>
           <p>
@@ -889,10 +890,11 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Les moins-values crypto ne sont pas reportables d’une année sur
             l’autre. Pour les utiliser, il faut les compenser{" "}
-            <strong>la même année</strong> avec des plus-values crypto. Si
-            votre portefeuille contient des positions perdantes que vous
-            comptez liquider, le faire avant le 31 décembre permet de
-            compenser les gains réalisés sur d’autres positions la même année.
+            <strong>la même année</strong> avec des plus-values crypto. Attention :
+            avec la méthode globale, vendre une position perdante ne crée une
+            moins-value que si l’ensemble de votre portefeuille vaut moins que
+            son prix total d’acquisition ce jour-là ; sinon, la vente ajoute
+            une plus-value.
           </p>
           <h3>7.3. Don manuel / transmission</h3>
           <p>

@@ -45,7 +45,7 @@ const FAQ_ITEMS = [
   {
     question: "Pourquoi ces 5 plateformes et pas 50 ?",
     answer:
-      "On affiche uniquement des plateformes que Cryptoreflex a auditées en profondeur (audit interne Q1 2026). Quand un lien nous rapporte quelque chose (parrainage), c'est indiqué à côté du lien et détaillé sur notre page transparence. Si on listait 50 plateformes, la qualité du scoring chuterait — la plupart des comparateurs grand public le font et finissent par recommander n'importe quoi.",
+      "On affiche uniquement des plateformes que Cryptoreflex a auditées en profondeur (notes établies au premier trimestre 2026). Quand un lien nous rapporte quelque chose (parrainage), c'est indiqué à côté du lien et détaillé sur notre page transparence. Si on listait 50 plateformes, la qualité du scoring chuterait — la plupart des comparateurs grand public le font et finissent par recommander n'importe quoi.",
   },
   {
     question: "Pourquoi une plateforme étrangère apparaît dans mes résultats ?",
@@ -60,7 +60,7 @@ const FAQ_ITEMS = [
   {
     question: "À quelle fréquence les notes sont-elles mises à jour ?",
     answer:
-      "Une fois par trimestre. À chaque audit interne, on revoit les notes prix/UX/sécurité de chaque plateforme. Date du dernier update : Q1 2026. Si une plateforme change drastiquement (nouveau pricing, faille de sécurité, perte de l'agrément MiCA), on met à jour en cours de trimestre.",
+      "Les notes de ce comparateur ont été établies au premier trimestre 2026. Les frais et statuts MiCA, eux, sont revérifiés sur les grilles et registres officiels (frais relevés le 5 octobre 2026, voir chaque fiche avis) : en cas d'écart, la fiche avis fait foi.",
   },
 ];
 
@@ -132,8 +132,8 @@ export default function ComparateurPersonnalisePage() {
             />
             <Card
               icon={<ShieldCheck className="h-6 w-6" />}
-              title="Audit Q1 2026"
-              text="Notes par axe revues chaque trimestre — pas un classement figé qui se traîne depuis 2022."
+              title="Notes du T1 2026"
+              text="Notes par axe établies au premier trimestre 2026 ; frais et statuts MiCA revérifiés sur les sources officielles."
             />
             <Card
               icon={<GitCompare className="h-6 w-6" />}

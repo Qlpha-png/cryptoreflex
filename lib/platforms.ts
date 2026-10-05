@@ -38,7 +38,13 @@ export interface Platform {
   fees: {
     spotMaker: number;
     spotTaker: number;
+    /** Achat simple dans l'appli depuis le solde en euros (après un virement), hors surcoût de la carte. */
     instantBuy: number;
+    /**
+     * Achat payé par carte bancaire, surcoût du dépôt par carte compris (ex. SwissBorg : 2,25 % + 0,99 %).
+     * Absent : la grille ne publie pas de surcoût distinct, on retombe sur instantBuy (cf. cardBuyPct).
+     */
+    cardBuy?: number;
     withdrawalCrypto: string;
     withdrawalFiatSepa: number | string;
     spread: string;
@@ -216,6 +222,11 @@ export function feeShortFr(p: Platform): string {
 
 /** Alias de feeShortFr : tout le site est en français (« 1,49 % » et non « 1.49% », audit du 05/10/2026). */
 export const feeShort = feeShortFr;
+
+/** Coût d'un achat payé par carte bancaire (surcoût du dépôt par carte compris quand la grille le publie). */
+export function cardBuyPct(p: Platform): number {
+  return p.fees.cardBuy ?? p.fees.instantBuy;
+}
 
 export const platformsMeta = data._meta;
 

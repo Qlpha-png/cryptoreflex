@@ -9,7 +9,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import {
   breadcrumbSchema,
@@ -76,7 +76,7 @@ const QUIZZES: QuizCard[] = [
     href: "/quiz/plateforme",
     title: "Quel exchange crypto pour vous ?",
     description:
-      "Six questions courtes pour matcher votre profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi nos 9 plateformes notées.",
+      `Six questions courtes pour matcher votre profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi les ${STATS.platforms} plateformes autorisées en France.`,
     questionCount: "6 questions",
     estimatedTime: "~2 minutes",
     highlights: [

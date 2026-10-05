@@ -44,7 +44,7 @@ const SUGGESTIONS = [
   {
     href: "/#plateformes",
     title: "Plateformes",
-    description: "Comparatif des exchanges Coinbase, Binance, Revolut…",
+    description: "Plateformes autorisées en France : Coinbase, Kraken, Bitpanda…",
     icon: Building2,
   },
   {

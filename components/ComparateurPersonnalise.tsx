@@ -198,8 +198,8 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
           <p>
             <strong className="text-amber-200">Reco indicative :</strong>{" "}
             ce comparateur est un outil d'aide à la décision basé sur l'audit
-            interne Cryptoreflex (Q1 2026). Les notes par axe sont mises à jour
-            chaque trimestre. Vérifiez toujours la conformité MiCA via notre{" "}
+            interne Cryptoreflex (notes établies au premier trimestre 2026).
+            Vérifiez toujours la conformité MiCA via notre{" "}
             <Link href="/outils/verificateur-mica" className="text-primary-soft underline">
               vérificateur MiCA
             </Link>{" "}

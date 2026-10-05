@@ -439,8 +439,8 @@ Une actualité crypto vient d'être publiée par **${raw.source}** le ${dateFr},
 Cette actualité s'inscrit dans le contexte plus large du marché crypto français en 2026, particulièrement marqué par :
 
 - L'application de **MiCA Phase 2** (1er juillet 2026) qui redéfinit les règles d'opération des plateformes en zone UE.
-- La transmission automatique des données utilisateurs des exchanges UE à la DGFiP (**directive DAC8**).
-- L'évolution constante de la doctrine BOFIP sur la fiscalité crypto (PFU 31,4 % depuis le 1er janvier 2026, formulaire 2086, déclaration 3916-bis).
+- La collecte des données des clients des plateformes de l'UE au titre de la **directive DAC8** (depuis le 1er janvier 2026, premier échange avec la DGFiP au plus tard le 30 septembre 2027).
+- L'évolution de la fiscalité crypto (PFU de 31,4 % depuis l'imposition des revenus 2025, formulaire 2086, déclaration 3916-bis).
 
 Les actualités de la catégorie « ${category} » impactent directement les choix de plateforme, de produits financiers et de stratégie fiscale des investisseurs français.
 

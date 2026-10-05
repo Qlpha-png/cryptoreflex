@@ -90,7 +90,7 @@ const FAQ_ITEMS = [
   {
     question: "À partir de quel montant les plus-values crypto sont-elles imposables ?",
     answer:
-      "Le seuil annuel d'exonération est de 305 € de cessions totales (vers euros ou stablecoins). En-dessous, aucune imposition. Au-delà, vous devez déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
+      "Le seuil annuel d'exonération est de 305 € de cessions totales (contre euros, biens ou services ; un échange contre un stablecoin n'est pas une cession imposable). En-dessous, aucune imposition. Au-delà, vous devez déclarer la plus-value nette globale via le formulaire 2086, et reporter sur le 2042. Notre calculateur affiche 0 € d'impôt en-dessous de ce seuil pour refléter cette règle.",
   },
   {
     question: "Faut-il déclarer même si on n'a pas vendu en euros ?",

@@ -128,7 +128,7 @@ const POOL: Record<string, Step> = {
     href: "/blog",
     Icon: BookOpen,
     label: "Tous les guides",
-    desc: "48 articles : fiscalité, sécurité, MiCA, choix de plateforme.",
+    desc: `${STATS.articles} articles : fiscalité, sécurité, MiCA, choix de plateforme.`,
   },
   beginnerGuide: {
     href: "/blog/bitcoin-guide-complet-debutant-2026",

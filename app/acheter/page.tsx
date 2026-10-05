@@ -26,7 +26,7 @@ import { fitDescription, fitTitle } from "@/lib/seo-text";
 const PAGE_TITLE =
   "Où acheter une crypto en 2026 : guides par pays (France, Belgique, Suisse…)";
 const PAGE_DESCRIPTION =
-  "Comparez où et comment acheter chaque cryptomonnaie sur une plateforme régulée selon votre pays : France (AMF/PSAN), Belgique, Suisse (FINMA), Luxembourg, Monaco, Québec. Fiscalité et régulateur expliqués, sans jargon.";
+  "Comparez où et comment acheter chaque cryptomonnaie sur une plateforme régulée selon votre pays : France (AMF, MiCA), Belgique, Suisse (FINMA), Luxembourg, Monaco, Québec. Fiscalité et régulateur expliqués, sans jargon.";
 
 export const metadata: Metadata = {
   title: fitTitle(PAGE_TITLE),

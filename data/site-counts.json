@@ -1,6 +1,6 @@
 {
   "_doc": "Généré par scripts/update-site-counts.mjs — ne pas modifier à la main (contrôlé par tests/lib/site-counts.test.ts).",
-  "platforms": 22,
+  "platforms": 23,
   "platformsAudited": 34,
   "cryptosCurated": 100,
   "llmFiches": 679,

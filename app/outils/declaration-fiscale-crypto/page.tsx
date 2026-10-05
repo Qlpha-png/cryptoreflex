@@ -109,12 +109,12 @@ const FAQ_ITEMS = [
   {
     question: "Que se passe-t-il si je change d'outil l'année suivante ?",
     answer:
-      "Vous pouvez importer votre historique CSV depuis n'importe lequel de ces 3 outils vers les 2 autres — c'est même conseillé pour comparer les calculs avant de valider votre déclaration. Waltio accepte directement les exports Koinly et CoinTracking. Conservez toujours vos archives fiscales 6 ans (durée du droit de reprise de l'administration).",
+      "Vous pouvez importer votre historique CSV depuis n'importe lequel de ces 3 outils vers les 2 autres — c'est même conseillé pour comparer les calculs avant de valider votre déclaration. Waltio accepte directement les exports Koinly et CoinTracking. Conservez vos archives au moins 6 ans : l'administration peut contrôler jusqu'à la fin de la 3e année qui suit l'imposition, et 10 ans si un compte à l'étranger n'a pas été déclaré.",
   },
   {
     question: "Ces outils sont-ils conformes à la fiscalité crypto 2026 ?",
     answer:
-      "Waltio met à jour son moteur de calcul à chaque évolution réglementaire française (LF 2024, ajustements DeFi, traitement des airdrops). Koinly et CoinTracking suivent la fiscalité internationale mais pas les spécificités françaises (formulaire 2086, abattement 305 €, neutralité crypto-crypto). Pour 2026, les 3 intègrent bien le régime PFU 31,4 % par défaut.",
+      "Waltio met à jour son moteur de calcul à chaque évolution réglementaire française (LF 2024, ajustements DeFi, traitement des airdrops). Koinly et CoinTracking suivent la fiscalité internationale mais pas les spécificités françaises (formulaire 2086, seuil d'exonération de 305 €, neutralité crypto-crypto). Pour 2026, les 3 intègrent bien le régime PFU 31,4 % par défaut.",
   },
   {
     question: "Faut-il un expert-comptable en plus de l'outil ?",

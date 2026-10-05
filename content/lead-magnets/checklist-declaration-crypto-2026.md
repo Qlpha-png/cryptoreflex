@@ -38,7 +38,7 @@ disclaimer: "Document indicatif. Pour une situation complexe (DeFi, BIC, NFT > 5
 - [ ] **15.** Vérifiez que la **plus-value totale** sur la 2086 correspond bien au montant reporté en 3AN (ou en 2042 si option barème).
 - [ ] **16.** Pour chaque compte étranger, remplissez un **formulaire 3916-bis** (PDF téléchargeable depuis impots.gouv ou pré-rempli par Waltio).
 - [ ] **17.** Joignez les **3916-bis en PJ numérique** ou imprimez-les si vous déclarez sur papier.
-- [ ] **18.** Si vous avez des **revenus de staking, lending, airdrops** : leur régime (plus-value vs BNC/BIC) et leur moment d'imposition ne sont pas tranchés officiellement — vérifiez la doctrine à jour et, en cas de doute, consultez un professionnel (le cas échéant, déclaration BNC case 5HQ/5JQ).
+- [ ] **18.** Si vous avez des **revenus de staking, lending, airdrops** : leur régime (plus-value ou BNC) et leur moment d'imposition ne sont pas tranchés officiellement — vérifiez la doctrine à jour et, en cas de doute, consultez un professionnel (le cas échéant, déclaration en BNC : case 5KU pour une activité non professionnelle au régime micro, 5HQ si elle est professionnelle).
 - [ ] **19.** Si vous êtes en **trading professionnel** (BIC) : déclaration séparée 2031 (BIC). Consultez un expert-comptable — c'est complexe.
 - [ ] **20.** Vérifiez le **récapitulatif** avant validation : montant total imposable, prélèvements, solde à payer estimé.
 

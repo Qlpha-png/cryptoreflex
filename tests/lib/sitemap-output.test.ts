@@ -87,7 +87,8 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
     };
     expect(iso("/cryptos/xrp")).toBe("2026-04-25");
     expect(iso("/cryptos/chain-2")).toBe("2026-08-15");
-    expect(iso("/avis/coinbase")).toBe("2026-06-13");
+    // date de vérification des frais (fees.verified.date) : revérifiés sur la grille officielle le 05/10/2026
+    expect(iso("/avis/coinbase")).toBe("2026-10-05");
     expect(iso("/outils")).toBeUndefined();
     expect(iso("/vs/bitcoin/ethereum")).toBeUndefined();
     const today = new Date().toISOString().slice(0, 10);
@@ -99,6 +100,8 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
     const stampedToday = entries.filter((e) => !fixedClusters(e.url.replace(SITE, "")) && e.lastModified && new Date(e.lastModified).toISOString().slice(0, 10) === today);
     // Seules d'éventuelles entrées réellement datées d'aujourd'hui (contenu mis à jour ce jour, ex. une passe
     // éditoriale sur quelques dizaines d'articles) — jamais tout le sitemap (« maintenant » partout = > 5 000).
-    expect(stampedToday.length).toBeLessThan(Math.max(50, Math.round(entries.length * 0.02)));
+    // 05/10/2026 : seuil relevé (50 → 120) après une revérification réelle des frais (17 fiches avis, leurs duels et
+    // « alternative à ») et 9 articles corrigés le même jour : 83 entrées légitimes. Le bug visé reste des milliers.
+    expect(stampedToday.length).toBeLessThan(Math.max(120, Math.round(entries.length * 0.03)));
   });
 });

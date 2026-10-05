@@ -51,7 +51,7 @@ const PROFILE_META: Record<ProfileKey, { label: string; icon: ReactNode; sub: st
   investisseur_francais: {
     label: "Investisseur FR",
     icon: <Flag className="h-5 w-5" />,
-    sub: "Priorité PSAN AMF, support FR, fiscalité claire",
+    sub: "Priorité agrément AMF, support FR, fiscalité claire",
   },
 };
 

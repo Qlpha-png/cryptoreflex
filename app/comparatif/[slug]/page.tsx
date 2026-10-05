@@ -14,7 +14,7 @@ import {
   Plus,
   Equal,
 } from "lucide-react";
-import { getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
+import { cardBuyPct, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
 import {
   getComparison,
   getPublishableComparisons,
@@ -113,10 +113,10 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
       hint: winner(a.fees.spotTaker, b.fees.spotTaker, true),
     },
     {
-      label: "Achat instantané (CB)",
-      aDisplay: `${fmtNb(a.fees.instantBuy)}%`,
-      bDisplay: `${fmtNb(b.fees.instantBuy)}%`,
-      hint: winner(a.fees.instantBuy, b.fees.instantBuy, true),
+      label: "Achat par carte (CB)",
+      aDisplay: `${fmtNb(cardBuyPct(a))} %`,
+      bDisplay: `${fmtNb(cardBuyPct(b))} %`,
+      hint: winner(cardBuyPct(a), cardBuyPct(b), true),
     },
     {
       label: "Spread",

@@ -243,8 +243,8 @@ export default function RadarPage() {
               {
                 icon: AlertTriangle,
                 color: "warning",
-                title: "750 € à 1 500 € par compte coopératif",
-                text: "Pour Binance France, Coinbase Europe, Kraken Ireland, Crypto.com Malte, Bitvavo NL — non-déclaration = 750 € par compte oublié (1 500 € si solde > 50 000 €).",
+                title: "750 € à 1 500 € par compte oublié",
+                text: "Coinbase (Luxembourg), Kraken (Irlande), Crypto.com (Malte), Bitvavo (Pays-Bas)… : 750 € par compte non déclaré, 1 500 € si la valeur de vos comptes à l'étranger dépasse 50 000 €, quel que soit le pays.",
               },
               {
                 icon: AlertTriangle,

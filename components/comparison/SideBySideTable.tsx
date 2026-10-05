@@ -97,7 +97,7 @@ function buildRows(a: Platform, b: Platform): Row[] {
 
     // GROUP : MICA / RÉGLEMENTATION
     { group: "Réglementation", label: "Statut MiCA", a: a.mica.status, b: b.mica.status, direction: "none" },
-    { label: "Enregistrement AMF (PSAN)", a: a.mica.amfRegistration ?? "—", b: b.mica.amfRegistration ?? "—", direction: "none" },
+    { label: "Agrément AMF (MiCA)", a: a.mica.amfRegistration ?? "—", b: b.mica.amfRegistration ?? "—", direction: "none" },
     { label: "Conforme MiCA", a: a.mica.micaCompliant, b: b.mica.micaCompliant, aRaw: a.mica.micaCompliant, bRaw: b.mica.micaCompliant, direction: "bool" },
 
     // GROUP : SUPPORT

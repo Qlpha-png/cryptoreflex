@@ -39,7 +39,7 @@ De plus en plus de Français détiennent des cryptomonnaies, et beaucoup déclar
 L'année 2026 marque un tournant pour trois raisons :
 
 1. **La période transitoire MiCA a pris fin le 1er juillet 2026** : depuis cette date, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut servir les résidents français. Binance, par exemple, a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Attention : un compte détenu à l'étranger, même fermé en cours d'année, se déclare quand même (3916-bis) pour chaque année où il était ouvert.
-2. **DAC8 entre en application** : à partir de 2026, les exchanges européens transmettent automatiquement à la DGFiP les données de leurs utilisateurs résidents fiscaux français. **Les contrôles vont mécaniquement augmenter.**
+2. **DAC8 entre en application** : depuis le 1er janvier 2026, les plateformes européennes collectent les données de leurs clients ; la DGFiP les recevra par échange entre administrations, au plus tard le 30 septembre 2027 pour l'année 2026. **Les contrôles vont mécaniquement augmenter.**
 3. **La doctrine reste incomplète** sur le staking, le lending et la DeFi : en l'absence de position officielle dédiée, ces zones de flou imposent la prudence (voir le chapitre 6).
 
 Conséquence : **2026 n'est plus l'année où l'on peut "oublier" de déclarer**. L'objectif de ce guide est de vous donner les armes pour faire votre déclaration en autonomie, ou d'être un client averti face à un expert-comptable ou un outil comme Waltio.
@@ -105,7 +105,7 @@ Vous pouvez **opter** (case **3CN** de la déclaration 2042 C) pour intégrer vo
 
 ### Cas particulier : abattement pour durée de détention
 
-**Il n'y a PAS d'abattement crypto pour durée de détention** (contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements jusqu'à 65 %). Tenir 5 ans ou 5 jours, taux identique.
+**Il n'y a PAS d'abattement crypto pour durée de détention** (contrairement aux actions hors PEA qui bénéficiaient historiquement d'abattements de 50 à 65 %, et jusqu'à 85 % pour certains titres de PME). Tenir 5 ans ou 5 jours, taux identique.
 
 ---
 
@@ -196,7 +196,7 @@ Intérêts perçus = BNC ou revenus de capitaux mobiliers selon configuration. L
 
 ### Yield farming et liquidity pools
 
-Très complexe. Chaque opération (deposit, withdraw, claim rewards, swap au sein du pool) peut générer un événement imposable. **Outil indispensable** (Waltio Starter ou Smart, Koinly, CoinTracking) pour reconstituer la chronologie.
+Très complexe. Pour un particulier, les dépôts, retraits et swaps entre crypto-actifs sont en sursis d'imposition (échanges sans soulte) ; le régime des récompenses n'est pas tranché. La difficulté est de reconstituer la chronologie et la valeur globale du portefeuille. **Outil indispensable** (Waltio Starter ou Smart, Koinly, CoinTracking) pour reconstituer la chronologie.
 
 ### Airdrops
 
@@ -209,16 +209,14 @@ Très complexe. Chaque opération (deposit, withdraw, claim rewards, swap au sei
 
 ### Régime applicable
 
-Le régime des NFT n'est pas stabilisé par une doctrine officielle claire : selon la nature du NFT (crypto-actif rattaché à une blockchain, ou objet d'art digital sans utilité on-chain), plusieurs régimes sont évoqués — actifs numériques (150 VH bis) ou biens meubles (article 150 UA du CGI). À vérifier au cas par cas.
-
-En pratique 2026 : la plupart des NFT (PFP, gaming, utility tokens) sont traités comme des crypto-actifs.
+Depuis le 1er janvier 2026, l'article 150 VH ter du CGI (loi n° 2026-534 du 25 juin 2026, article 91) impose la plus-value de cession d'un NFT selon le régime du bien ou du droit qu'il représente (œuvre d'art, objet de collection, droit sur un bien…). Les NFT ne relèvent plus de l'article 150 VH bis. Depuis le 1er juillet 2026, les comptes NFT ouverts à l'étranger se déclarent aussi sur le 3916-bis.
 
 ### Cas typiques
 
 - **Mint** : prix payé = acquisition (à intégrer dans le portefeuille global).
 - **Vente sur marketplace** : cession imposable, frais de marketplace déductibles.
 - **Royalties créateur** : pour un créateur, revenus généralement imposables (souvent en BNC) ; régime à confirmer selon la nature de l'activité.
-- **Achat de NFT en ETH** : si le NFT est un actif numérique, l'échange ETH → NFT est neutre, comme un swap ; s'il relève des biens meubles, payer en ETH est une cession imposable. Point à faire trancher.
+- **Achat de NFT en ETH** : depuis l'article 150 VH ter, le NFT n'est plus un actif numérique « ordinaire » : payer un NFT en ETH s'analyse comme une cession d'ETH, potentiellement imposable. Faites valider votre cas par un professionnel.
 
 ### Pertes sur NFT illiquides
 
@@ -300,7 +298,7 @@ Si vous faites > 100 transactions/mois, consultez un expert-comptable. Le passag
 ### Top 10 des erreurs fréquentes
 
 1. **Oublier le 3916-bis** sur Binance/Kraken/Bybit, y compris pour un compte fermé en cours d'année (750 €/compte, 1 500 € si > 50 000 €)
-2. **Ne pas déclarer les swaps** crypto-crypto (BTC → ETH)
+2. **Croire qu'il faut déclarer (ou payer l'impôt sur) les swaps** crypto-crypto sans soulte (BTC → ETH) : ils sont en sursis d'imposition et n'apparaissent pas sur le 2086
 3. **Confondre cessions et plus-value** pour le seuil 305 €
 4. **Reporter une MV crypto** sur les années suivantes (impossible pour particuliers)
 5. **Oublier de déclarer les rewards staking** (revenus imposables ; régime et moment à vérifier, non tranchés officiellement)

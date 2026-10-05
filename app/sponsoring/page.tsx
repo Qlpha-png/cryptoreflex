@@ -165,7 +165,7 @@ const TIERS: PricingTier[] = [
 /* -------------------------------------------------------------------------- */
 
 const CONDITIONS = [
-  "Votre plateforme doit être enregistrée PSAN AMF (ou en cours d'enregistrement MiCA via l'autorité d'un État membre UE).",
+  "Votre plateforme doit être agréée MiCA (CASP) avec un accès à la France : agrément de l'AMF ou passeport d'un autre État membre de l'UE.",
   "Pas de promotion de tokens à rendement irréaliste, schémas pump, NFT spéculatifs sans utilité, ou produits non conformes MiCA.",
   "Validation MiCA obligatoire : nous vérifions votre statut sur le registre AMF avant signature de devis.",
   "Maximum 1 article sponsorisé par mois sur Cryptoreflex — pour préserver la valeur perçue par nos lecteurs.",
@@ -207,7 +207,7 @@ const PROCESS_STEPS = [
 const FAQS = [
   {
     q: "Quelles plateformes acceptez-vous comme sponsor ?",
-    a: "Uniquement des PSAN enregistrés AMF ou des projets crypto en cours d'enregistrement MiCA dans un État membre UE. On vérifie systématiquement votre statut sur le registre officiel AMF avant signature. On refuse les exchanges offshore non régulés, les memecoins isolés, les schémas de rendement irréaliste, et tout token sans utilité avérée.",
+    a: "Uniquement des plateformes agréées MiCA avec un accès à la France (depuis le 1er juillet 2026, un ancien enregistrement PSAN ou un dossier en cours ne suffit plus). On vérifie systématiquement votre statut sur le registre MiCA de l'ESMA et la liste blanche de l'AMF avant signature. On refuse les exchanges offshore non régulés, les memecoins isolés, les schémas de rendement irréaliste, et tout token sans utilité avérée.",
   },
   {
     q: "Le sponsoring influence-t-il votre note ou votre verdict éditorial ?",

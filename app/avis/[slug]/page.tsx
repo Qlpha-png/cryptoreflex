@@ -15,7 +15,7 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react";
-import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
+import { cardBuyPct, getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
@@ -146,10 +146,21 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
   let headline = `${p.name} obtient ${fmtNb(p.scoring.global)}/5 dans notre méthodologie 2026.`;
   let recommendation: string;
 
+  /* 05/10/2026 : une plateforme non autorisée en France ne reçoit aucun verdict d'usage (avant : « difficile à battre »
+     sur /avis/binance, sous le bandeau rouge « n'est pas autorisée »). */
+  if (p.category !== "wallet" && !isAvailableFr(p)) {
+    return {
+      headline,
+      recommendation: `${p.name} n'est pas autorisée à servir les résidents français (${p.mica.status.charAt(0).toLowerCase()}${p.mica.status.slice(1)}). Nous ne donnons donc aucun verdict d'usage : comparez plutôt les plateformes agréées MiCA avec accès à la France.`,
+      ideal: "Aucun profil en France : la plateforme n'y est pas autorisée.",
+      avoid: "Vous résidez en France.",
+    };
+  }
+
   if (cheap && isExchange) {
     recommendation = `Si votre priorité est de comprimer chaque centime de frais — typiquement parce que vous tradez du spot mensuellement ou que vous DCA-ez sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${fmtNb(p.fees.spotMaker)}% maker / ${fmtNb(p.fees.spotTaker)}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
   } else if (safe && french) {
-    recommendation = `${p.name} se distingue d'abord par ce que ${fmtNb(p.security.coldStoragePct)}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne peuvent pas concurrencer Binance ou Bitget en pure compétition tarifaire.`;
+    recommendation = `${p.name} se distingue d'abord par ce que ${fmtNb(p.security.coldStoragePct)}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne rivalisent pas avec ceux des plateformes les moins chères.`;
   } else if (p.cryptos.totalCount < 100) {
     recommendation = `${p.name} fait un pari clair : moins de cryptos (${p.cryptos.totalCount} listées), mais une expérience qu'on peut tendre à un parent ou à un collègue sans honte. Si vous cherchez à acheter Bitcoin, Ethereum et 3-4 majors sans jamais ouvrir un onglet trading, le fonctionnement est exactement calibré pour ça. Si vous voulez chasser la prochaine alt à 100M$ de capi, il faudra regarder ailleurs.`;
   } else {
@@ -186,7 +197,9 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `Quels sont les frais réels sur ${p.name} ?`,
-    a: `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)}% en maker et ${fmtNb(p.fees.spotTaker)}% en taker. L'achat instantané (CB) coûte ${fmtNb(p.fees.instantBuy)}%, ce qui reste plus cher que le passage par ordre limite. Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? `${fmtNb(p.fees.withdrawalFiatSepa)} €` : p.fees.withdrawalFiatSepa}. Le spread observé : ${p.fees.spread}.`,
+    a: `${(p.fees.verified?.makerTakerApplies ?? true)
+      ? `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)} % en maker et ${fmtNb(p.fees.spotTaker)} % en taker. Un achat payé par carte coûte ${fmtNb(cardBuyPct(p))} %.`
+      : `${p.name} est un courtier : vous payez un frais d'achat unique, sans maker ni taker. Coût réel relevé : ${p.fees.verified?.realCostPct ?? `${fmtNb(p.fees.instantBuy)} %`}.`} Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? (p.fees.withdrawalFiatSepa === 0 ? "0 € (gratuit)" : `${fmtNb(p.fees.withdrawalFiatSepa)} €`) : p.fees.withdrawalFiatSepa}. Spread : ${p.fees.spread}.`,
   });
 
   faq.push({
@@ -201,7 +214,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   if (p.cryptos.stakingAvailable) {
     faq.push({
       q: `Peut-on faire du staking sur ${p.name} ?`,
-      a: `Oui. ${p.name} propose du staking sur ${p.cryptos.stakingCryptos.length} cryptos majeures, dont ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")}. Les APY varient selon la crypto (typiquement 2-12%) et sont versés directement sur votre compte. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
+      a: `Oui. ${p.name} propose du staking sur ${p.cryptos.stakingCryptos.length} cryptos majeures, dont ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")}. Les rendements varient selon la crypto et le réseau, et la plateforme prélève une commission sur les récompenses. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
     });
   } else {
     faq.push({
@@ -227,7 +240,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   // Q6 — quel dépôt minimum / how to start
   faq.push({
     q: `Quel est le dépôt minimum sur ${p.name} et comment recharger ?`,
-    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${fmtNb(p.fees.instantBuy)}%.`,
+    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${fmtNb(cardBuyPct(p))} %.`,
   });
 
   // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
@@ -236,7 +249,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   if (p.name !== competitor) {
     faq.push({
       q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,
-      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "les frais bas et le catalogue le plus large"}. Notre comparatif détaillé tranche selon votre profil.`,
+      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "la sécurité (aucun piratage majeur, preuve de réserves auditée)"}. Notre comparatif détaillé tranche selon votre profil.`,
     });
   }
 
@@ -563,11 +576,11 @@ export default function ReviewPage({ params }: Props) {
             <>
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-border bg-elevated p-4">
-                  <div className="text-xs uppercase tracking-wide text-muted">Achat instantané (CB)</div>
+                  <div className="text-xs uppercase tracking-wide text-muted">Achat par carte (CB)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
+                    {fmtFr((1000 * cardBuyPct(p) / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg/60">{fmtNb(cardBuyPct(p))} % sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
@@ -585,7 +598,7 @@ export default function ReviewPage({ params }: Props) {
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
-                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € en CB, vous payez environ <strong className="text-white">{fmtFr((1000 * p.fees.instantBuy / 100), 2)} €</strong> de frais. En passant par un ordre limité maker, ce coût tombe à <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> — soit une économie de {fmtFr(((p.fees.instantBuy - p.fees.spotMaker) * 10), 2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(p.fees.instantBuy, 0.01)) * 100)}%</strong>). Spread observé en plus : {p.fees.spread}.
+                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € payé par carte, vous payez environ <strong className="text-white">{fmtFr((1000 * cardBuyPct(p) / 100), 2)} €</strong> de frais. Après un virement, un ordre limité maker ramène ce coût à <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> — soit une économie de {fmtFr(((cardBuyPct(p) - p.fees.spotMaker) * 10), 2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(cardBuyPct(p), 0.01)) * 100)} %</strong>). Spread observé en plus : {p.fees.spread}.
               </p>
             </>
           ) : (
@@ -640,7 +653,9 @@ export default function ReviewPage({ params }: Props) {
             Frais sur {p.name}
           </h2>
           <p className="mt-3 text-white/80 leading-relaxed">
-            La structure de frais de {p.name} compte trois étages qu'il faut comprendre séparément avant de signer : les frais d'exécution sur le marché spot, le surcoût d'achat instantané par carte bancaire, et les frais ponctuels (dépôt SEPA, retrait crypto vers un wallet externe). Pour la plupart des utilisateurs grand public, ce sera l'étage 2 — l'instant buy en CB — qui pèsera le plus sur la rentabilité réelle, parce que c'est le plus utilisé et de loin le plus cher.
+            {mt
+              ? `La structure de frais de ${p.name} compte trois étages qu'il faut comprendre séparément avant de signer : les frais d'exécution sur le marché spot, le surcoût d'un achat payé par carte bancaire, et les frais ponctuels (dépôt SEPA, retrait crypto vers un wallet externe). Pour la plupart des utilisateurs grand public, c'est l'achat par carte qui pèse le plus sur la rentabilité réelle : c'est le plus utilisé et le plus cher.`
+              : `${p.name} est un courtier : un achat coûte un frais unique (souvent assorti d'un spread intégré au prix), auquel s'ajoutent les frais ponctuels (dépôt par carte, retrait en euros, retrait de crypto vers un wallet externe).`}
           </p>
           <div className="mt-5 overflow-hidden rounded-xl border border-border">
             <table className="w-full text-sm">
@@ -664,8 +679,8 @@ export default function ReviewPage({ params }: Props) {
                 )}
                 {!isWallet && (
                   <tr>
-                    <td className="px-4 py-3 text-muted">Achat instantané (CB)</td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.instantBuy)}%</td>
+                    <td className="px-4 py-3 text-muted">Achat par carte (CB)</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(cardBuyPct(p))} %</td>
                   </tr>
                 )}
                 <tr>

@@ -71,10 +71,10 @@
         "sourceVerifiedAt": "2026-05"
       },
       {
-        "date": "2026-Q4",
-        "status": "in-progress",
+        "date": "2025-12",
+        "status": "done",
         "title": "Fusaka",
-        "description": "Augmentation du nombre de blobs par bloc. Encore plus de scaling pour les L2. PeerDAS pour data availability.",
+        "description": "Activée le 3 décembre 2025 : augmentation du nombre de blobs par bloc et PeerDAS pour la disponibilité des données, au profit des Layer 2.",
         "sourceUrl": "https://ethereum.org/en/roadmap/",
         "sourceVerifiedAt": "2026-05"
       },

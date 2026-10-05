@@ -70,4 +70,6 @@ export const STATS = {
   tools: COUNTS.tools,
   /** Cartes Reflex Cards (catalogue Univers). */
   cards: COUNTS.cards,
+  /** Articles du blog (content/articles). */
+  articles: COUNTS.articles,
 } as const;
