@@ -3,6 +3,7 @@ import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import Logo from "./Logo";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
+import { FOOTER_KEY_LINKS, FOOTER_LEGAL, visibleSections } from "@/lib/nav";
 
 /**
  * Footer — pied de page Cryptoreflex (CRITIQUE SEO sitelinks Google + UX engagement final).
@@ -65,103 +66,19 @@ function FooterLink({ href, children, showChevron = true }: FooterLinkProps) {
   );
 }
 
-interface FooterGroup {
-  id: string;
-  title: string;
-  links: { href: string; label: string }[];
-}
-
-const NAV_GROUPS: FooterGroup[] = [
-  {
-    id: "footer-discover-heading",
-    title: "Découvrir",
-    links: [
-      { href: "/comparatif", label: "Comparatif plateformes crypto FR" },
-      { href: "/quiz/plateforme", label: "Questionnaire : comparer les plateformes" },
-      { href: "/wizard/premier-achat", label: "Faire son premier achat crypto" },
-      { href: "/cryptos", label: "100 cryptomonnaies analysées" },
-      // BATCH 44a — exposition des hubs programmatic orphelins (audit SEO)
-      // 2026-06-13 — pointe vers /vs (vrai hub 4950 duels maillé) et non
-      // /comparer (legacy 105 paires) : le label promettait 4950.
-      { href: "/vs", label: "Comparer 2 cryptos (4950 duels)" },
-      { href: "/acheter", label: "Où acheter une crypto (par pays)" },
-      { href: "/marche", label: "Marché crypto en direct" },
-      { href: "/marche/heatmap", label: "Heatmap marché crypto" },
-      ...(isReflexCardsEnabled() ? [{ href: "/cartes", label: "Reflex Cards : jeu de cartes crypto" }] : []),
-    ],
-  },
-  {
-    id: "footer-learn-heading",
-    title: "Apprendre",
-    links: [
-      { href: "/academie", label: "Académie crypto débutants" },
-      { href: "/blog", label: "Guides crypto pédagogiques" },
-      // Études cornerstone (recherche longue, sources publiques) — ajout 2026-05-06
-      { href: "/etudes", label: "Études cornerstone (MiCA, fiscalité)" },
-      // Guides actionnables (HowTo, checklist imprimable) — ajout 2026-05-06
-      { href: "/guides", label: "Guides pratiques actionnables" },
-      { href: "/actualites", label: "Actualités crypto FR" },
-      { href: "/calendrier", label: "Calendrier crypto (halvings, ETF, FOMC)" },
-      { href: "/quiz/crypto", label: "Questionnaire : quelle crypto pour vous ?" },
-      // BATCH 44a — historique programmatic 240 URLs orphelines
-      { href: "/historique-prix", label: "Historique prix crypto par année" },
-      { href: "/glossaire", label: "Glossaire crypto (définitions)" },
-    ],
-  },
-  {
-    id: "footer-tools-heading",
-    title: "Outils & espace",
-    links: [
-      { href: "/outils", label: "Tous les outils" },
-      { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU 31,4 %" },
-      { href: "/outils/cerfa-2086-auto", label: "Générateur formulaire 2086" },
-      { href: "/outils/simulateur-dca", label: "Simulateur DCA" },
-      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA" },
-      // BATCH 44a — convertisseur + alternative-a programmatic orphelins
-      { href: "/convertisseur", label: "Convertisseur crypto temps réel" },
-      { href: "/alternative-a", label: "Alternatives plateformes (post-MiCA)" },
-      { href: "/alertes", label: "Alertes prix crypto" },
-      { href: "/watchlist", label: "Ma watchlist" },
-      { href: "/portefeuille", label: "Mon portefeuille" },
-      { href: "/newsletter", label: "Newsletter quotidienne" },
-    ],
-  },
-  {
-    id: "footer-pro-heading",
-    title: "Soutien & contact",
-    links: [
-      { href: "/soutenir", label: "Soutenir Cryptoreflex" },
-      { href: "/ambassadeurs", label: "Programme ambassadeurs" },
-      { href: "/sponsoring", label: "Sponsoring B2B" },
-      { href: "/contact", label: "Nous contacter" },
-    ],
-  },
-  {
-    id: "footer-legal-heading",
-    title: "Légal & transparence",
-    links: [
-      // Charte éthique — ajout 2026-05-07. En tête car c'est l'engagement
-      // moral le plus important + signal E-E-A-T fort pour Google.
-      { href: "/charte", label: "Charte éthique éditoriale" },
-      { href: "/methodologie", label: "Méthodologie publique" },
-      { href: "/transparence", label: "Affiliation transparente" },
-      // Open data CC-BY 4.0 — ajout 2026-05-06 (signal d'autorité fort)
-      { href: "/api-publique", label: "API publique CC-BY 4.0" },
-      { href: "/embed", label: "Widgets embed (gratuit)" },
-      { href: "/feed.xml", label: "Flux RSS (guides + actualités)" },
-      { href: "/confidentialite", label: "Confidentialité (RGPD)" },
-      { href: "/mentions-legales", label: "Mentions légales" },
-      { href: "/accessibilite", label: "Accessibilité (RGAA)" },
-    ],
-  },
-];
+/* MENU À SOURCE UNIQUE (05/10/2026, Kev : « tout bien rangé ») : les rubriques viennent de lib/nav.ts, comme la
+   barre du haut, le menu complet et la barre du bas. Sur téléphone, seul le titre de chaque rubrique s'affiche (lien
+   vers sa page d'entrée) : le pied de page reste court ; les listes complètes restent dans le HTML. */
+/** Rubriques du pied de page (sans « Mon espace ») ; 6 liens au plus, le reste via « Tout voir ». */
+const GROUPS = visibleSections(isReflexCardsEnabled()).filter((g) => g.id !== "espace");
+const MAX_LINKS = 6;
 
 export default async function Footer() {
   return (
     <footer
       // Audit A11y : retire role="contentinfo" redondant (<footer> top-level l'a déjà implicite).
       aria-label="Pied de page Cryptoreflex"
-      className="relative mt-32 bg-surface border-t border-border/60 overflow-hidden"
+      className="relative mt-12 bg-surface border-t border-border/60 overflow-hidden"
     >
       {/* Glow radial subtle brand top-left (Audit Visual) */}
       <div
@@ -177,7 +94,7 @@ export default async function Footer() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Trust badges cluster (Audit Visual + SEO E-E-A-T) */}
-        <div className="flex flex-wrap items-center gap-2 mb-8">
+        <div className="hidden md:flex flex-wrap items-center gap-2 mb-8">
           {/* FIX LEGAL 2026-05-02 #16 — "MiCA-aligned" pouvait laisser
               entendre un agrément (pratique commerciale trompeuse L.121-2
               conso). Reformulé en "MiCA · info publique" qui décrit
@@ -236,32 +153,55 @@ export default async function Footer() {
               Édité depuis la France par{" "}
               <span className="text-fg/90 font-medium">Kevin Voisin</span>{" "}
               (Entreprise Individuelle). Directeur de publication : Kevin Voisin.{" "}
-              Hébergé en UE (Vercel · Frankfurt).
+              Hébergé par Vercel (serveurs en Europe, région Paris).
             </p>
           </div>
 
-          {/* 5 silos de navigation (lg:col-span-9 réparti en 5×col-span-2 + 1×col-span-2 marge) */}
-          {NAV_GROUPS.map((group) => (
-            <nav
-              key={group.id}
-              aria-labelledby={group.id}
-              className="lg:col-span-2"
-            >
-              {/* H3 (Footer ne doit pas avoir 5 H2 qui noient le rotor SR
-                  par-dessus la hiérarchie de contenu — audit a11y 30/04/2026). */}
-              <h3 id={group.id} className="font-semibold mb-3 text-white/90 text-sm">
-                {group.title}
-              </h3>
-              <ul className="space-y-2 text-sm text-fg/75">
-                {group.links.map((link) => (
-                  <li key={link.href}>
-                    <FooterLink href={link.href}>{link.label}</FooterLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
+          {/* L'essentiel : les 4 liens les plus utiles */}
+          <nav aria-labelledby="footer-key-heading" className="lg:col-span-2">
+            <h3 id="footer-key-heading" className="font-semibold mb-3 text-white/90 text-sm">L&apos;essentiel</h3>
+            <ul className="space-y-2 text-sm text-fg/75">
+              {FOOTER_KEY_LINKS.map((link) => (
+                <li key={link.href}>
+                  <FooterLink href={link.href}>{link.label}</FooterLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Rubriques (source unique lib/nav.ts) : titre seul sur téléphone, 6 liens + « Tout voir » sur ordinateur */}
+          <div className="md:col-span-2 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-6">
+            {GROUPS.map((group) => (
+              <nav key={group.id} aria-labelledby={`footer-${group.id}`}>
+                <h3 id={`footer-${group.id}`} className="font-semibold text-sm md:mb-3">
+                  <Link href={group.href} className="text-white/90 hover:text-white">{group.title}</Link>
+                </h3>
+                <ul className="hidden md:block space-y-2 text-sm text-fg/75">
+                  {group.links.slice(0, MAX_LINKS).map((link) => (
+                    <li key={link.href}>
+                      <FooterLink href={link.href}>{link.label}</FooterLink>
+                    </li>
+                  ))}
+                  {group.links.length > MAX_LINKS && (
+                    <li>
+                      <Link href={group.href} className="text-primary-soft hover:text-primary">Tout voir →</Link>
+                    </li>
+                  )}
+                </ul>
+              </nav>
+            ))}
+          </div>
         </div>
+        {/* Légal et services, en une ligne */}
+        <nav aria-label="Informations légales" className="mt-10 pt-4 border-t border-border/60">
+          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-fg/70">
+            {FOOTER_LEGAL.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="hover:text-white">{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         {/* Trust ring final — fix audit 30/04/2026 :
             SUPPRIMÉ "SEPA · CIF ORIAS partenaires vérifiés" qui sous-entendait
@@ -269,7 +209,7 @@ export default async function Footer() {
             agréés AMF — RISQUE AMF (démarchage régulé non détenu).
             Cryptoreflex n'a aucun partenariat CIF ORIAS et n'est pas autorisé
             à le suggérer. Contraste passé à fg/70 pour WCAG AA. */}
-        <div className="mt-10 pt-4 border-t border-border/60 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-fg/70">
+        <div className="mt-4 hidden md:flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-fg/70">
           <span className="inline-flex items-center gap-1">
             <Lock className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
             Hébergé en UE

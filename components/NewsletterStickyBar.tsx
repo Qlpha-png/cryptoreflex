@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, FormEvent } from "react";
+import { usePathname } from "next/navigation";
 import { Mail, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { track } from "@/lib/analytics";
 
@@ -15,9 +16,10 @@ import { track } from "@/lib/analytics";
  *    (l'utilisateur n'a pas a ouvrir une modale supplementaire)
  *  - Permet d'A/B-tester ou desactiver independamment via env var / flag.
  *
- * Triggers :
- *  - Apparition apres 30 secondes sur la page OU 50 % de scroll (ce qui arrive en premier)
- *  - Dismiss persistant 7 jours via localStorage (cle: cr_nl_sticky_dismiss_until)
+ * Triggers (Kev 04/10/2026 : accueil simple, une seule newsletter) :
+ *  - JAMAIS à la première page vue ; à partir de la 2e page de la visite, après 30 secondes OU 50 % de scroll
+ *  - UNE fois : dès qu'elle s'affiche, elle ne revient pas avant 30 jours (cle: cr_nl_sticky_dismiss_until)
+ *  - Jamais sur l'accueil (qui a déjà son bloc newsletter en bas)
  *  - Hide definitif si cookie cr_newsletter_subscribed=1 (deja inscrit)
  *  - Hide sur /newsletter et /merci (pas de double prompt)
  *
@@ -28,11 +30,24 @@ import { track } from "@/lib/analytics";
  */
 
 const DISMISS_KEY = "cr_nl_sticky_dismiss_until";
-const DISMISS_DAYS = 7;
+const DISMISS_DAYS = 30;
+const PAGEVIEWS_KEY = "cr_nl_pageviews";
+const MIN_PAGEVIEWS = 2;
 const SHOW_AFTER_MS = 30_000;
 const SCROLL_THRESHOLD = 0.5;
 // /embed : widgets en iframe sur des sites tiers (la barre recouvrirait le widget).
 const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed"];
+
+/** Pages vues dans la visite (onglet) : la barre attend la 2e. */
+function countPageview(): number {
+  try {
+    const n = parseInt(window.sessionStorage.getItem(PAGEVIEWS_KEY) ?? "0", 10) + 1;
+    window.sessionStorage.setItem(PAGEVIEWS_KEY, String(n));
+    return n;
+  } catch {
+    return 1;
+  }
+}
 
 function isAlreadySubscribed(): boolean {
   if (typeof document === "undefined") return false;
@@ -64,12 +79,15 @@ export default function NewsletterStickyBar() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const pathname = usePathname() ?? "/";
 
   useEffect(() => {
     // Suppression precoce : path bloque, deja inscrit, ou dismiss actif.
     if (typeof window === "undefined") return;
-    const path = window.location.pathname;
-    if (SUPPRESSED_PATHS.some((p) => path.startsWith(p))) return;
+    const path = pathname;
+    const views = countPageview();
+    if (path === "/" || SUPPRESSED_PATHS.some((p) => path.startsWith(p))) return;
+    if (views < MIN_PAGEVIEWS) return;
     if (isAlreadySubscribed()) return;
     if (isDismissActive()) return;
 
@@ -80,6 +98,7 @@ export default function NewsletterStickyBar() {
       if (opened) return;
       opened = true;
       setOpen(true);
+      persistDismiss(); // une seule fois : pas de retour avant 30 jours, même sans clic sur la croix
       track("Newsletter Sticky Shown", { path });
     };
 
@@ -99,7 +118,7 @@ export default function NewsletterStickyBar() {
       if (timeoutId) clearTimeout(timeoutId);
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [pathname]);
 
   const onDismiss = () => {
     setOpen(false);

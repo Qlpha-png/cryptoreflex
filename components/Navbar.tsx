@@ -7,13 +7,12 @@ import {
   Menu,
   X,
   Sparkles,
-  Crown,
   UserCircle2,
-  ShoppingBag,
 } from "lucide-react";
 import Logo from "./Logo";
 import dynamic from "next/dynamic";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
+import { NAV_CTA, topNav } from "@/lib/nav";
 
 // Lazy : le badge fetch /api/gamification/me et n'a aucun intérêt pour les
 // users non-authentifiés (composant return null). Pas la peine d'inclure
@@ -107,21 +106,13 @@ const BurgerMenu = dynamic(() => import("@/components/BurgerMenu"), {
 /* REFLEX CARDS (Kev 02/10/2026 : « accessible et le mieux placé ») : 2e lien, juste après Marché,
    avec un point doré « nouveau ». Visible seulement quand le jeu est activé (variables publiques :
    même rendu côté serveur et navigateur). */
-const NAV = [
-  { href: "/marche", label: "Marché", desc: "Prix live, heatmap, Fear & Greed, gainers/losers" },
-  ...(isReflexCardsEnabled()
-    ? [{ href: "/cartes", label: "Cartes", desc: "Reflex Cards, le jeu de cartes crypto gratuit", isNew: true as const }]
-    : []),
-  { href: "/actualites", label: "Actu", desc: "Le brief quotidien + l'actualité crypto FR décryptée" },
-  /* Avec « Cartes », 6 liens : mesuré le 02/10/2026, le logo s'écrasait (0 px à 768, 34 px à 1024) et le
-     burger sortait de l'écran. Académie passe dans le burger sous 1280 px, Outils sous 1024 px
-     (logo ≥ 79 px partout ; il était déjà écrasé à 18 px à 768 avant l'ajout). Seulement si Cartes est affiché. */
-  { href: "/academie", label: "Académie", desc: "Parcours guidés & quiz de validation", ...(isReflexCardsEnabled() ? { hideBelowXl: true as const } : {}) },
-  { href: "/outils", label: "Outils", desc: "Calculateurs, simulateurs, glossaire", ...(isReflexCardsEnabled() ? { hideOnMd: true as const } : {}) },
-  { href: "/partenaires", label: "Partenaires", desc: "Ledger, Trezor, Waltio — nos affiliés sélectionnés" },
-  { href: "/blog", label: "Blog", desc: "Guides débutants & analyses", burgerOnly: true as const },
-  { href: "/soutenir", label: "Soutien", desc: "Soutenez un éditeur indé — contribution volontaire", premium: true as const, burgerOnly: true as const },
-];
+/* MENU À SOURCE UNIQUE (05/10/2026, Kev : « tout bien rangé, qu'un enfant de 8 ans trouve tout ») : les onglets
+   viennent de lib/nav.ts, comme le menu complet, la barre du bas et le pied de page. Largeurs mesurées : sous
+   1024 px, Outils passe dans le menu ; sous 1280 px, Apprendre aussi (le logo ne doit jamais être écrasé). */
+/* 768 px mesuré le 05/10 : avec Plateformes, le logo tombait à 60 px → Plateformes passe dans le menu sous 1024 px
+   (le bouton « Comparer les plateformes » reste visible à côté). */
+const HIDE: Record<string, string> = { "/comparatif": "hidden lg:inline-flex", "/outils": "hidden lg:inline-flex", "/academie": "hidden xl:inline-flex" };
+const NAV = topNav(isReflexCardsEnabled()).map((l) => ({ ...l, hide: HIDE[l.href] ?? "", isNew: l.href === "/cartes" }));
 
 /**
  * Détermine si un lien de navigation correspond à la page courante.
@@ -141,6 +132,13 @@ export default function Navbar() {
   const pathname = usePathname() ?? "/";
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Bouton « Menu » de la barre du bas (MobileBottomNav) : ouvre le même menu complet.
+  useEffect(() => {
+    const openMenu = () => setOpen(true);
+    window.addEventListener("cr:open-menu", openMenu);
+    return () => window.removeEventListener("cr:open-menu", openMenu);
+  }, []);
 
   // Lock body scroll quand menu mobile ouvert
   useEffect(() => {
@@ -283,75 +281,30 @@ export default function Navbar() {
             aria-label="Navigation principale"
             className="hidden md:flex items-center gap-5 lg:gap-7 ml-6 lg:ml-10"
           >
-            {NAV.filter((item) => !("burgerOnly" in item && item.burgerOnly)).map((item) => {
+            {NAV.map((item) => {
               const active = isActive(item.href, pathname);
-              const isPremium = "premium" in item && item.premium === true;
-              const isRevenue = "revenueAccent" in item && item.revenueAccent === true;
-              const hideOnMd = "hideOnMd" in item && item.hideOnMd === true;
-              const hideBelowXl = "hideBelowXl" in item && item.hideBelowXl === true;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  data-nav-item={isPremium ? "pro" : isRevenue ? "partenaires" : "regular"}
                   className={`relative inline-flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] rounded py-1 group/nav whitespace-nowrap
                              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                              focus-visible:ring-offset-2 focus-visible:ring-offset-background
-                             ${hideOnMd ? "hidden lg:inline-flex" : ""}
-                             ${hideBelowXl ? "hidden xl:inline-flex" : ""}
-                             ${
-                               isPremium
-                                 ? `nav-pro overflow-hidden rounded-full px-2.5 py-1 ring-1 ring-primary/25 bg-primary/[0.08]
-                                    transition-[color,background-color,box-shadow] duration-200
-                                    hover:ring-primary/50 hover:bg-primary/[0.14]
-                                    motion-safe:animate-nav-pro-pulse
-                                    ${active ? "text-primary-glow font-bold ring-primary/60 bg-primary/[0.16]" : "text-primary hover:text-primary-glow font-semibold"}`
-                                 : isRevenue
-                                   ? `transition-colors duration-200
-                                      ${active ? "text-primary font-semibold" : "text-fg/85 hover:text-primary font-semibold"}`
-                                   : active
-                                     ? "text-fg font-semibold transition-colors"
-                                     : "text-fg/70 hover:text-fg transition-colors"
-                             }`}
+                             ${item.hide}
+                             ${active ? "text-fg font-semibold transition-colors" : "text-fg/70 hover:text-fg transition-colors"}`}
                 >
-                  {isPremium && (
-                    <Crown
-                      className="h-3.5 w-3.5 transition-transform duration-300 ease-out
-                                 motion-safe:group-hover/nav:-rotate-[8deg] motion-safe:group-hover/nav:scale-110
-                                 drop-shadow-[0_0_6px_rgba(252,211,77,0.45)]"
-                      strokeWidth={2}
-                      aria-hidden="true"
-                    />
-                  )}
-                  {isRevenue && (
-                    <ShoppingBag
-                      className={`h-3.5 w-3.5 transition-all duration-300 ease-out
-                                  motion-safe:group-hover/nav:-translate-y-0.5 motion-safe:group-hover/nav:scale-110
-                                  ${active ? "text-primary" : "text-primary/80 group-hover/nav:text-primary"}`}
-                      strokeWidth={1.85}
-                      aria-hidden="true"
-                    />
-                  )}
                   {item.label}
-                  {"isNew" in item && item.isNew && (
+                  {item.isNew && (
                     <>
                       <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]" />
                       <span className="sr-only">(nouveauté)</span>
                     </>
                   )}
-                  {/* Underline classique pour les items non-premium ; pour Pro,
-                      le pill ring + bg + pulse remplacent l'underline visuellement. */}
-                  {!isPremium && (
-                    <span
-                      aria-hidden="true"
-                      className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px transition-opacity duration-200 ${
-                        isRevenue ? "bg-primary" : "bg-fg"
-                      } ${
-                        active ? "opacity-100" : isRevenue ? "opacity-0 group-hover/nav:opacity-70" : "opacity-0 group-hover/nav:opacity-40"
-                      }`}
-                    />
-                  )}
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute left-0 right-0 -bottom-1 h-px bg-fg transition-opacity duration-200 ${active ? "opacity-100" : "opacity-0 group-hover/nav:opacity-40"}`}
+                  />
                 </Link>
               );
             })}
@@ -403,12 +356,12 @@ export default function Navbar() {
             {/* CTA primary — Audit SEO/CRO : "/quiz/plateforme" (KPI conversion)
                 au lieu de "/#plateformes" (ancre, 0 PageRank, 0 conversion attribuée). */}
             <Link
-              href="/quiz/plateforme"
+              href={NAV_CTA.href}
               data-cta="navbar-primary"
               className="btn-primary text-sm py-2 whitespace-nowrap shrink-0 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <Sparkles className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-              Comparer les plateformes
+              {NAV_CTA.label}
             </Link>
           </div>
 

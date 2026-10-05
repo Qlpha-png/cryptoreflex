@@ -1,256 +1,56 @@
-// Refonte 26/04/2026 - 3-5 catégories pour réduire la charge cognitive utilisateur (feedback : "tout est trop sur le home page")
+/**
+ * Accueil — refonte du 05/10/2026 (Kev, 04/10 : « un accueil propre, joli et simple, qui redirige proprement et
+ * facilement, qu'un enfant de 8 ans trouve toutes les informations qu'il souhaite, tout bien rangé et automatisé »).
+ *
+ * Mesuré avant : 22 écrans sur téléphone, 17 sur ordinateur, 14 blocs, « newsletter » ×7.
+ * Maintenant, dans l'ordre : bandeau marché en direct → promesse (Hero, la courbe du Bitcoin) → « Que voulez-vous
+ * faire ? » (4 portes) → le marché aujourd'hui (cours en direct + 3 actus) → confiance en une ligne → newsletter,
+ * une seule fois. Chiffres : STATS (data/site-counts.json, recalculé automatiquement). Retirés de l'accueil (rien
+ * n'est supprimé du dépôt) : défilé des régulateurs, grande réassurance, onglets d'ancres, grandes cartes top 10,
+ * carrousel du blog, grille académie, doublons outils et quiz, « Avant de partir », bouton collant mobile.
+ */
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import {
-  ArrowRight,
-  BarChart3,
-  Coins,
-  GraduationCap,
-  Mail,
-  Newspaper,
-  Target,
-  Wrench,
-} from "lucide-react";
 
-import {
-  fetchTopMarket,
-  fetchGlobalMetrics,
-  fetchFearGreed,
-  type CoinId,
-  type CoinPrice,
-} from "@/lib/coingecko";
+import { fetchTopMarket, fetchGlobalMetrics, fetchFearGreed, type CoinId, type CoinPrice } from "@/lib/coingecko";
 import TickerTape, { type TickerCoin } from "@/components/TickerTape";
 import Hero from "@/components/Hero";
-// PriceTicker retiré BATCH 35d (user "enlève ça") — doublon avec MarketTable + /marche
-import ReassuranceSection from "@/components/ReassuranceSection";
-// BATCH 41a — wire Reveal scroll fade-up sur sections home (composant
-// existait mais jamais utilisé). Pattern Anthropic/Linear : sections
-// apparaissent en fade-up quand 15% visible viewport.
-import Reveal from "@/components/ui/Reveal";
-// BATCH 41b — bandeau régulateurs/sources qui défilent (Stripe Press
-// pattern). Comble la zone morte entre Hero et Reassurance.
-import TrustMarquee from "@/components/TrustMarquee";
-// MarketTable retiré BATCH 36 (audit Bug Hunter : import inutilisé, jamais rendu)
-// BeginnerJourney retiré 30/05/2026 (feedback Kev « range la home ») — doublon
-// du parcours « Débutant » de l'Académie. Remplacé par AcademyHomeTeaser, qui
-// pointe vers /academie. Composant conservé dans components/ pour réutilisation.
-import AcademyHomeTeaser from "@/components/AcademyHomeTeaser";
-import StartHere from "@/components/StartHere";
-import ReflexCardsHomeBanner from "@/components/reflex-cards/ReflexCardsHomeBanner";
-import Top10CryptosSection from "@/components/Top10CryptosSection";
-import PlatformsSection from "@/components/PlatformsSection";
-// BATCH 26 — PlatformsMarquee retiré de la home (doublon). Composant
-// conservé dans components/ pour réutilisation future ailleurs.
-import BlogPreview from "@/components/BlogPreview";
-import ToolsTeaser from "@/components/ToolsTeaser";
-// NewsTickerServer retiré le 26/04 (doublon avec NewsBar — feedback user "mal agencé")
-import QuizPromo from "@/components/QuizPromo";
-// NewsBar retiré BATCH 35d (user "enlève ça") — doublon avec /actualites + CryptoNewsAggregator par fiche
-import TodaysNewsAndEvents from "@/components/TodaysNewsAndEvents";
-import NextStepsGuide from "@/components/NextStepsGuide";
+import HomeDoors from "@/components/home/HomeDoors";
+import HomeMarketToday from "@/components/home/HomeMarketToday";
+import HomeTrustLine from "@/components/home/HomeTrustLine";
 import StructuredData from "@/components/StructuredData";
+import { BRAND, STATS } from "@/lib/brand";
+import { withHreflang } from "@/lib/seo-alternates";
+import { graphSchema, topPlatformsItemListSchema } from "@/lib/schema";
 
-// PERF PHASE 2 — 2026-05-09 — lazy-load des composants client UNIQUEMENT
-// rendus sous le fold ou off-screen (mobile/scrolled). Aucun impact SEO :
-//  - HomeAnchorNav : chips de nav sticky, JS-only (le scroll-spy + le
-//    rendu visuel des chips arrivent après hydration, pas dans le SSR).
-//  - NewsletterCapture : tout en bas de page, hors viewport initial.
-//  - StickyMobileCta : barre mobile-only qui n'apparaît qu'après >400 px
-//    de scroll, jamais dans le viewport initial.
-//  - TrustMarquee : bandeau marquee CSS-driven, visuel uniquement.
-// Gain estimé : ~30-50 KB JS retiré du first-load chunk + ~15-25 KB de
-// RSC payload (les "use client" sortent du flight stream initial).
-const HomeAnchorNav = dynamic(() => import("@/components/HomeAnchorNav"), {
-  ssr: false,
-  loading: () => null,
-});
+// Formulaire en bas de page, hors de l'écran initial : chargé après coup (aucun impact SEO).
 const NewsletterCapture = dynamic(() => import("@/components/NewsletterCapture"), {
   ssr: false,
-  loading: () => (
-    <div
-      aria-hidden="true"
-      className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8"
-      style={{ minHeight: 320 }}
-    />
-  ),
+  loading: () => <div aria-hidden="true" className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8" style={{ minHeight: 320 }} />,
 });
-const StickyMobileCta = dynamic(() => import("@/components/StickyMobileCta"), {
-  ssr: false,
-  loading: () => null,
-});
-import { BRAND } from "@/lib/brand";
-import { withHreflang } from "@/lib/seo-alternates";
-import {
-  graphSchema,
-  topPlatformsItemListSchema,
-} from "@/lib/schema";
 
-// QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
-// le HTML seed peut dater, les données fraîches arrivent côté client.
-//
-// PERF 2026-10-02 — 300 → 3600. Données réellement sensibles au temps :
-//  - prix du TickerTape + tête BTC du Hero : rafraîchis côté client
-//    (useLivePrices, polling/SSE) → le seed SSR peut dater d'1 h ;
-//  - MCap/dominance/F&G : caches amont de 30 min à 1 h de toute façon.
-// ATTENTION : en Next 14 la revalidation effective d'une route = MIN(segment,
-// fetch `next.revalidate`, `unstable_cache.revalidate`). Elle valait 60 s
-// (pas 300 !) à cause des caches MDX articles/news à 60 s — passés à 1 h,
-// clés scopées par commit (lib/mdx.ts, lib/news-mdx.ts). Plancher restant :
-// fetchTopMarket / fetchGlobalMetrics (unstable_cache 1800 s) → ~30 min.
+// Prix du bandeau et des 5 cours : rafraîchis côté navigateur (useLivePrices) ; le HTML peut dater d'une heure.
 export const revalidate = 3600;
 
-/**
- * Métadonnées de la home — canonical explicite (P0-3 audit-back-live-final).
- *
- * Pourquoi un canonical explicite alors que la home est implicitement la racine ?
- * Sans canonical déclaré, Google peut considérer le `?utm_source=…` ou les
- * variantes apex/www comme des duplicates, et choisir une version arbitraire.
- * Le canonical absolu (BRAND.url, déjà en `www.`) verrouille la version
- * canonique pour tous les crawlers.
- */
+const TITLE = "Crypto France : plateformes, fiches et impôts | Cryptoreflex";
+const DESCRIPTION = `Comparez les ${STATS.platforms} plateformes autorisées en France, ${STATS.cryptos.toLocaleString("fr-FR")} fiches crypto, calcul de l'impôt et formulaire 2086, jeu de cartes. Gratuit, méthode publique.`;
+
 export const metadata: Metadata = {
-  // Fix audit SEO 30/04/2026 — avant : pas de `title` exporté ici → la home
-  // utilisait le `default` du root layout (« Cryptoreflex — Comparatifs,
-  // guides et outils crypto », 51 chars, aucun keyword "France" ni "MiCA").
-  // Maintenant : title explicite ciblé sur la requête principale.
-  // BATCH 23 SEO P0 #2 — title raccourci à 56 chars (avant 80 chars).
-  title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
-  // BATCH 36 — fix audit SEO P0 : meta description ramenée à 155 chars (avant
-  // 289 = tronquée en SERP). Action verb + différenciateur + CTA implicite.
-  description:
-    "Comparez 22 plateformes agréées MiCA, analysez 780 cryptos (score fiabilité), calculez votre fiscalité PFU. 17 outils crypto, méthodologie publique.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: withHreflang(BRAND.url),
   openGraph: {
     url: BRAND.url,
-    title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
-    description:
-      "L'écosystème crypto français : 22 plateformes agréées MiCA, 780 fiches crypto, 17 outils (PFU, DCA, fiscalité). Méthode publique.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Cryptoreflex — Écosystème crypto France 2026",
-      },
-    ],
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Cryptoreflex — la crypto en France, simple et vérifiée" }],
   },
-  twitter: {
-    title: "Crypto France 2026 — 780 cryptos, MiCA, outils IA",
-    description:
-      "L'écosystème crypto français : 22 plateformes agréées MiCA, 780 fiches crypto, 17 outils (PFU, DCA, fiscalité).",
-  },
+  twitter: { title: TITLE, description: DESCRIPTION },
 };
 
-/**
- * En-tête de catégorie réutilisable. Sert de "respiration" entre les blocs et
- * structure la page en 4 grandes sections sémantiques (H2). UX : un visiteur
- * doit pouvoir scanner la page en lisant uniquement les titres de catégorie.
- *
- * Audit Block 1 RE-AUDIT 26/04/2026 (Agents SEO + A11y, P0 convergence) :
- *  - Avant : id="cat-X" sur la section + un second `<h2 sr-only>` doublon
- *    avec le même texte = NVDA/JAWS lit le titre 2 fois au rotor + saut Hn.
- *  - Fix : id="cat-X" porté DIRECTEMENT par le H2 visible. Les wrappers
- *    `<section aria-labelledby="cat-X">` pointent maintenant correctement
- *    sur le H2 visible (un seul H2 par catégorie, hiérarchie propre).
- */
-function CategoryHeader({
-  Icon,
-  eyebrow,
-  title,
-  intro,
-  ctaHref,
-  ctaLabel,
-  anchorId,
-  variant = "primary",
-}: {
-  Icon: typeof Target;
-  eyebrow: string;
-  title: string;
-  intro: string;
-  ctaHref?: string;
-  ctaLabel?: string;
-  /** ID porté par le H2 visible (sert d'ancre pour HomeAnchorNav + aria-labelledby). */
-  anchorId: string;
-  /**
-   * Hiérarchie visuelle (audit home 2026-06) :
-   *  - "primary"   : section forte (Comparer / Explorer) — H2 large.
-   *  - "secondary" : section d'appui (Académie / Outils / Actu / Newsletter) —
-   *    H2 plus discret + intro atténuée. Crée 2 niveaux sans refonte graphique.
-   */
-  variant?: "primary" | "secondary";
-}) {
-  const isSecondary = variant === "secondary";
-  return (
-    <header
-      className={`mx-auto max-w-7xl px-4 pb-2 sm:px-6 lg:px-8 ${
-        isSecondary ? "pt-12 sm:pt-14" : "pt-16 sm:pt-20"
-      }`}
-    >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
-            <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-            {eyebrow}
-          </span>
-          <h2
-            id={anchorId}
-            className={`mt-4 font-extrabold tracking-tight ${
-              isSecondary
-                ? "text-2xl text-fg/90 sm:text-3xl"
-                : "text-3xl sm:text-4xl"
-            }`}
-          >
-            {title}
-          </h2>
-          <p
-            className={`mt-3 ${
-              isSecondary
-                ? "text-sm text-fg/60 sm:text-base"
-                : "text-base text-fg/70 sm:text-lg"
-            }`}
-          >
-            {intro}
-          </p>
-        </div>
-        {ctaHref && ctaLabel ? (
-          <Link href={ctaHref} className="btn-ghost self-start py-2.5 text-sm">
-            {ctaLabel}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        ) : null}
-      </div>
-    </header>
-  );
-}
-
-/**
- * Séparateur visuel léger entre catégories — gradient gold subtil pour rester
- * dans la palette dark + or sans alourdir le rendu mobile (1 div, no JS).
- */
-function CategoryDivider() {
-  return (
-    <div className="filon-hairline mx-auto my-2 max-w-7xl" />
-  );
-}
-
 export default async function HomePage() {
-  // Audit Block 1 RE-AUDIT 26/04/2026 (Agent back) :
-  //  - Avant : `Promise.all([fetchPrices(), fetchTopMarket(20)])` =
-  //    DOUBLON de quota CoinGecko free tier (30 req/min). fetchTopMarket(20)
-  //    contient déjà BTC/ETH/SOL.
-  //  - Fix : un seul fetch (top 20), on dérive prices = top 6 pour le ticker
-  //    via mapping MarketCoin → CoinPrice (currentPrice → price, etc.).
-  //    Économie -50% appels CG, -200ms TTFB cold-start.
-  // DA OBSIDIAN sprint 1b — fetchGlobalMetrics (/global, cache 30 min) et
-  // fetchFearGreed (alternative.me, pas CoinGecko) s'ajoutent SANS doublon
-  // de quota : 3 endpoints distincts. Ils alimentaient déjà GlobalMetricsBar
-  // (server component) ; le TickerTape les reprend, la barre est retirée.
-  const [market, globalMetrics, fearGreed] = await Promise.all([
-    fetchTopMarket(20),
-    fetchGlobalMetrics(),
-    fetchFearGreed(),
-  ]);
+  // Un seul appel « top 20 » sert au bandeau, à la courbe du Hero et aux 5 cours (quota CoinGecko).
+  const [market, globalMetrics, fearGreed] = await Promise.all([fetchTopMarket(20), fetchGlobalMetrics(), fetchFearGreed()]);
   const tickerCoins: TickerCoin[] = market.slice(0, 8).map((m) => ({
     id: m.id,
     symbol: m.symbol,
@@ -268,251 +68,32 @@ export default async function HomePage() {
     marketCap: m.marketCap,
     image: m.image,
   }));
-
-  // Extrait les sparklines 7j pour BTC / ETH / SOL afin de les injecter dans le Hero.
   const heroSparklines: Record<string, number[]> = {};
   for (const c of market) {
-    if (c.id === "bitcoin" || c.id === "ethereum" || c.id === "solana") {
-      heroSparklines[c.id] = c.sparkline7d ?? [];
-    }
+    if (c.id === "bitcoin" || c.id === "ethereum" || c.id === "solana") heroSparklines[c.id] = c.sparkline7d ?? [];
   }
 
-  // Date "MAJ" affichée dans le widget — ISO du build/refresh courant.
-  const updatedAt = new Date().toISOString();
-
-  /*
-   * BATCH 36 — fix Schema dedup (audit SEO P0) : Organization + WebSite
-   * étaient injectés 2× (1× dans layout id="global-graph", 1× ici dans
-   * id="home-graph"). graphSchema dedup par @id DANS son array mais pas
-   * entre 2 <script> JSON-LD séparés. Risque : Google parse 2 entités
-   * concurrentes. Solution : layout = source unique pour Org+WebSite,
-   * page home rend uniquement les schemas spécifiques (ItemList).
-   * BreadcrumbList minimal 1 item retiré aussi (Google ignore 1-item).
-   */
-  const homeSchema = graphSchema([
-    topPlatformsItemListSchema(6),
-  ]);
+  // Données structurées : les 3 plateformes affichées dans la porte « Acheter » (autorisées en France uniquement).
+  const homeSchema = graphSchema([topPlatformsItemListSchema(3)]);
 
   return (
     <>
       <StructuredData data={homeSchema} id="home-graph" />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          BLOC HERO — contexte marché + promesse + 1 CTA fort.
-          Audit Block 1 RE-AUDIT 26/04/2026 (5 agents convergents : Performance,
-          Visual, UX, Conversion, Mobile) : le Hero est rendu EN PREMIER pour
-          maximiser le LCP (avant : 4 bandeaux empilés au-dessus repoussaient
-          le H1 sous le fold mobile, ~340px de chrome avant la promesse).
-          Les bandeaux (metrics / news / ticker) viennent APRÈS le Hero, comme
-          ressources contextuelles. Réduit -300ms LCP p75 mobile estimé.
-         ────────────────────────────────────────────────────────────────── */}
-      {/* DA OBSIDIAN sprint 1b — TickerTape : bandeau marché "terminal" FIN
-          (28px) au-dessus du Hero. ≠ ancien PriceTicker (retiré BATCH 35d) :
-          il fusionne prix top 8 + MCap + dominance + F&G en UNE ligne et
-          REMPLACE GlobalMetricsBar (zéro bandeau net ajouté). Impact LCP
-          négligeable (~30px, le H1 reste above-the-fold). */}
       <TickerTape
         coins={tickerCoins}
         globalMetrics={
           globalMetrics
-            ? {
-                mcapUsd: globalMetrics.totalMarketCapUsd,
-                mcapChange24h: globalMetrics.marketCapChange24h,
-                btcDominance: globalMetrics.btcDominance,
-              }
+            ? { mcapUsd: globalMetrics.totalMarketCapUsd, mcapChange24h: globalMetrics.marketCapChange24h, btcDominance: globalMetrics.btcDominance }
             : null
         }
-        fearGreed={
-          fearGreed
-            ? { value: fearGreed.value, label: fearGreed.classification }
-            : null
-        }
+        fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification } : null}
       />
-      <Hero
-        prices={prices}
-        sparklines={heroSparklines}
-        updatedAt={updatedAt}
-        fearGreed={fearGreed?.value ?? null}
-      />
-      {/* ──────────────────────────────────────────────────────────────────
-          ROUTEUR D'INTENTION — « Par où commencer ? » (audit Codex 2026-06)
-          REMONTÉ juste après le Hero (avant TrustMarquee / Reassurance / Metrics
-          / AnchorNav) : il arrivait ~2,5 écrans desktop trop bas. Le Hero reste
-          PREMIER (protège H1 + LCP) ; StartHere donne immédiatement les 3 portes
-          d'intention. Server Component pur (0 JS client). */}
-      <StartHere />
-      {/* REFLEX CARDS — bandeau du jeu de cartes, juste après le routeur d'intention
-          (Kev 02/10/2026 : « accessible et le mieux placé »). Rien si le jeu est coupé. */}
-      <ReflexCardsHomeBanner />
-      {/* BATCH 41b — TrustMarquee : bandeau régulateurs qui défilent
-          slowly entre Hero et Reassurance. Comble la zone morte narrative
-          + signal "ces 8 sources nous surveillent". Pause au hover. */}
-      <TrustMarquee />
-      {/* BATCH 41a — Reveal scroll fade-up sur ReassuranceSection (et
-          toutes les sections suivantes via Reveal wrapper). Anim subtle :
-          opacity 0→1 + translate Y 24px→0, easing emphasized 700ms,
-          déclenchée à 15% viewport. prefers-reduced-motion bypass via
-          CSS .reveal class (cf. Reveal.tsx + globals.css). */}
-      <Reveal>
-        <ReassuranceSection />
-      </Reveal>
-      {/* BATCH 35d "enlève ça" (NewsBar + PriceTicker) puis DA OBSIDIAN
-          2026-06-11 : GlobalMetricsBar (MCap + F&G + dominance) a fusionné
-          dans le TickerTape tout en haut de page — données identiques,
-          un bandeau de moins dans le flux. */}
-
-      {/* Sticky in-page nav (chips type onglets) — feedback utilisateur
-          26/04/2026 "des onglets pour faire respirer + pas se perdre".
-          Permet au visiteur de scroll-to-section direct vs scroller 5 viewports. */}
-      <HomeAnchorNav />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 1 (PRIMAIRE) — COMPARER LES PLATEFORMES
-          Audit Codex : H2 parent RESTAURÉ. PlatformsSection est conçu pour
-          vivre SOUS un CategoryHeader (son titre interne reste un H3 :
-          « Sélection éditoriale — N options » → pas de doublon avec ce H2).
-          Pas de CTA ici pour éviter le doublon avec le « Voir les comparatifs »
-          interne de PlatformsSection. anchorId="cat-comparer" porte l'id sur le
-          H2 (cohérent avec les autres sections ; HomeAnchorNav + StickyMobileCta
-          retrouvent l'élément via getElementById, même position en haut de section).
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-comparer">
-        <CategoryHeader
-          variant="primary"
-          Icon={BarChart3}
-          eyebrow="Comparer"
-          title="Comparer les plateformes"
-          intro="Frais réels, sécurité, conformité MiCA, support FR — méthodologie publique, verdict tranché."
-          anchorId="cat-comparer"
-        />
-        <Reveal>
-          <PlatformsSection />
-        </Reveal>
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 2 (PRIMAIRE) — EXPLORER (catalogue cryptos + derniers guides)
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-cryptos">
-        <CategoryHeader
-          variant="primary"
-          Icon={Coins}
-          eyebrow="Explorer"
-          title="780 fiches crypto"
-          intro="Le top 10 expliqué simplement, 90 hidden gems avec score de fiabilité et 680 fiches exploratoires. Chaque fiche : à quoi ça sert, les risques, les sources — sans hype."
-          ctaHref="/cryptos"
-          ctaLabel="Voir les 780 fiches"
-          anchorId="cat-cryptos"
-        />
-        <Reveal>
-          <Top10CryptosSection />
-        </Reveal>
-        <Reveal delay={120}>
-          <BlogPreview />
-        </Reveal>
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 3 (SECONDAIRE) — ACADÉMIE (teaser uniquement, pas un chantier)
-          L'Académie vit dans /academie ; la home n'en garde qu'un teaser + CTA.
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-academie">
-        <CategoryHeader
-          variant="secondary"
-          Icon={GraduationCap}
-          eyebrow="Académie · 100% gratuit"
-          title="Apprenez la crypto, de zéro à autonome"
-          intro="Des parcours structurés — concepts, sécurité, fiscalité française, DeFi — avec quiz de validation. Progression sauvegardée, sans compte ni paywall."
-          ctaHref="/academie"
-          ctaLabel="Découvrir l'académie"
-          anchorId="cat-academie"
-        />
-        <Reveal>
-          <AcademyHomeTeaser />
-        </Reveal>
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 4 (SECONDAIRE) — OUTILS
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-outils">
-        <CategoryHeader
-          variant="secondary"
-          Icon={Wrench}
-          eyebrow="Outils crypto"
-          title="Outils"
-          intro="Calculateurs, simulateurs, convertisseur — gratuits, sans inscription ni email demandé."
-          ctaHref="/outils"
-          ctaLabel="Tous les outils"
-          anchorId="cat-outils"
-        />
-        <Reveal>
-          <ToolsTeaser />
-        </Reveal>
-        <Reveal delay={120}>
-          <QuizPromo />
-        </Reveal>
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 5 (SECONDAIRE) — ACTUALITÉS & CALENDRIER (déplacée plus bas :
-          secondaire pour un 1er visiteur, vit en page dédiée /actualites).
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-actu">
-        <CategoryHeader
-          variant="secondary"
-          Icon={Newspaper}
-          eyebrow="Live & frais"
-          title="Actualités & calendrier"
-          intro="Les news crypto qui comptent vraiment + les events à ne pas rater (halvings, FOMC, ETF deadlines)."
-          anchorId="cat-actu"
-        />
-        <TodaysNewsAndEvents />
-      </section>
-
-      <CategoryDivider />
-
-      {/* ──────────────────────────────────────────────────────────────────
-          CATÉGORIE 6 (SECONDAIRE) — RESTER INFORMÉ (clôture engagement)
-         ────────────────────────────────────────────────────────────────── */}
-      <section aria-labelledby="cat-informe">
-        <CategoryHeader
-          variant="secondary"
-          Icon={Mail}
-          eyebrow="Newsletter"
-          title="Rester informé"
-          intro="Le brief crypto FR du matin, en 3 minutes — les actus qui comptent vraiment, sans hype ni shilling."
-          anchorId="cat-informe"
-        />
-        <Reveal>
-          <NewsletterCapture />
-        </Reveal>
-      </section>
-
-      {/* Ressources finales — rôle DISTINCT du routeur d'intention en tête :
-          StartHere route par persona (apprendre/comparer/comprendre) ; ici on
-          ne re-route pas, on propose les ressources à emporter (PDF, calculateur,
-          newsletter). Cf. selectSteps() case "homepage" dans NextStepsGuide. */}
-      <NextStepsGuide
-        context="homepage"
-        title="Avant de partir, gardez ça sous la main"
-        intro="Les ressources les plus utiles pour aller plus loin — à votre rythme."
-      />
-
-      {/* StickyMobileCta — barre CTA flottante mobile au-dessus de
-          MobileBottomNav. Audit Block 1 RE-AUDIT (Conversion + Mobile P1) :
-          le pouce vit dans la zone "easy" Hoober, +15-22% CTR estimé. Visible
-          <lg uniquement, après scroll>400px, disparaît quand on entre dans
-          #cat-comparer pour éviter doublon. Dismissible (sessionStorage). */}
-      <StickyMobileCta />
+      <Hero prices={prices} sparklines={heroSparklines} updatedAt={new Date().toISOString()} fearGreed={fearGreed?.value ?? null} />
+      <HomeDoors />
+      <HomeMarketToday market={market} />
+      <HomeTrustLine />
+      {/* une seule newsletter sur l'accueil (le formulaire porte son titre et l'ancre #newsletter) */}
+      <NewsletterCapture />
     </>
   );
 }

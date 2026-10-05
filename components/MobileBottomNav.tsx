@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Newspaper, Wrench, ShoppingBag, GalleryVerticalEnd } from "lucide-react";
+import { Home, TrendingUp, Coins, Wrench, GalleryVerticalEnd, Menu } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
+import { bottomNav } from "@/lib/nav";
 
 /**
  * FIX BUNDLE 2026-05-06 — Suppression de `motion/react` (~25KB JS dans le
@@ -73,15 +74,22 @@ type Tab = {
 /* REFLEX CARDS (Kev 02/10/2026 : « accessible et le mieux placé ») : quand le jeu est activé,
    « Cartes » prend la place d'« Outils » (5 onglets max ; Outils reste dans le menu burger et le
    pied de page). Point doré « nouveau ». Variables publiques : même rendu serveur et navigateur. */
-const TABS: ReadonlyArray<Tab> = [
-  { href: "/", label: "Accueil", Icon: Home },
-  { href: "/quiz/plateforme", label: "Questionnaire", Icon: Sparkles },
-  { href: "/partenaires", label: "Partenaires", Icon: ShoppingBag, revenue: true },
-  { href: "/actualites", label: "Actu", Icon: Newspaper },
-  isReflexCardsEnabled()
-    ? { href: "/cartes", label: "Cartes", Icon: GalleryVerticalEnd, isNew: true }
-    : { href: "/outils", label: "Outils", Icon: Wrench },
-];
+/* MENU À SOURCE UNIQUE (05/10/2026, Kev : « qu'un enfant de 8 ans trouve tout ») : Accueil, Marché, Cryptos et
+   Cartes (Outils si le jeu est coupé) viennent de lib/nav.ts ; le 5e bouton « Menu » ouvre le menu complet. Plus
+   d'onglet doré en permanence (audit 03/10/2026) : les offres partenaires sont dans la rubrique Plateformes. */
+const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  "/": Home,
+  "/marche": TrendingUp,
+  "/cryptos": Coins,
+  "/cartes": GalleryVerticalEnd,
+  "/outils": Wrench,
+};
+const TABS: ReadonlyArray<Tab> = bottomNav(isReflexCardsEnabled()).map((l) => ({
+  href: l.href,
+  label: l.label,
+  Icon: ICONS[l.href] ?? Home,
+  isNew: l.href === "/cartes",
+}));
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
@@ -94,7 +102,7 @@ export default function MobileBottomNav() {
 
   // Indicator positionné en pourcentage (5 tabs = 20% chacune, centré).
   // CSS transition cubic-bezier ≈ spring visuel sans framer-motion.
-  const tabsCount = TABS.length;
+  const tabsCount = TABS.length + 1; // + le bouton « Menu »
   const indicatorLeft = activeIdx >= 0
     ? `${(activeIdx + 0.5) * (100 / tabsCount)}%`
     : "-100%"; // hors champ si aucun match (rare, fallback safe)
@@ -170,6 +178,18 @@ export default function MobileBottomNav() {
             </li>
           );
         })}
+        <li className="relative flex-1">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("cr:open-menu"))}
+            aria-haspopup="dialog"
+            aria-controls="burger-menu"
+            className="relative flex w-full flex-col items-center justify-center gap-0.5 min-h-[56px] px-1 py-2 text-muted hover:text-fg active:text-fg transition-colors duration-fast"
+          >
+            <Menu className="relative h-[22px] w-[22px]" strokeWidth={1.85} aria-hidden="true" />
+            <span className="relative text-[11px] leading-none whitespace-nowrap font-medium">Menu</span>
+          </button>
+        </li>
       </ul>
     </nav>
   );

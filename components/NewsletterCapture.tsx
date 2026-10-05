@@ -11,7 +11,6 @@ import {
   Download,
   Lock,
   Users,
-  Sparkles,
 } from "lucide-react";
 import { track } from "@/lib/analytics";
 import { trackAdsConversion } from "@/lib/ads-conversion";
@@ -42,7 +41,7 @@ import { BRAND } from "@/lib/brand";
  *
  * VAGUE 4 — UX (7/10 → 9/10)
  *  - Social proof badge "+ 250 inscrits cette semaine" (semi-statique)
- *  - "Ce que tu reçois" 3 puces au-dessus du form
+ *  - "Ce que vous recevez" 3 puces au-dessus du form
  *  - Lead magnet badge "+ PDF 62 pages offert" dans le H2 area
  *  - Validation onBlur (icône check verte si valide)
  *  - enterKeyHint="send" sur input (clavier mobile iOS/Android montre "send")
@@ -177,8 +176,8 @@ export default function NewsletterCapture() {
     >
       <StructuredData id="newsletter-subscribe-schema" data={subscribeSchema} />
 
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-4 pb-14 lg:pt-6 lg:pb-20">
-        <div className="glass rounded-2xl p-6 sm:p-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-2 pb-10 lg:pt-6 lg:pb-16">
+        <div className="glass rounded-2xl p-5 sm:p-8">
           {status !== "success" ? (
             <>
               {/* Header simplifié — Mail icon + Title sur même ligne (avant : icon flottant + 3 badges
@@ -247,7 +246,7 @@ export default function NewsletterCapture() {
                     value={email}
                     onChange={(e) => handleEmailChange(e.target.value)}
                     onBlur={handleEmailBlur}
-                    placeholder="ton.email@exemple.fr"
+                    placeholder="votre.email@exemple.fr"
                     aria-invalid={status === "error" || emailValid === false}
                     aria-describedby={status === "error" ? "newsletter-error" : "newsletter-hint"}
                     disabled={status === "loading"}
@@ -315,19 +314,9 @@ export default function NewsletterCapture() {
                 )}
               </div>
 
-              {/* Bonus visible : lead magnet — Audit UX P0 : badge dynamism pulse */}
-              <div className="mt-6 pt-5 border-t border-border flex items-start gap-3 text-sm text-fg/85">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary shrink-0 badge-pulse-strong">
-                  <Sparkles className="h-4 w-4" strokeWidth={2} aria-hidden="true" focusable="false" />
-                </span>
-                <span>
-                  <strong className="text-fg">Bonus à l&apos;inscription :</strong> le PDF{" "}
-                  <em className="text-primary-soft not-italic font-semibold">
-                    « Les plateformes crypto régulées MiCA à utiliser en France 2026 »
-                  </em>{" "}
-                  (62 pages, étude indépendante avec méthodologie publique 6 critères).
-                </span>
-              </div>
+              {/* Promesse « PDF bonus » retirée le 05/10/2026 : le guide (public/lead-magnets/guide-plateformes-crypto-2026.pdf)
+                  date d'avril, fait 57 pages et non 62, et précède la mise à jour des statuts MiCA du 02/10/2026.
+                  À remettre quand le guide sera régénéré avec les statuts actuels. */}
             </>
           ) : (
             <div role="status" aria-live="polite">

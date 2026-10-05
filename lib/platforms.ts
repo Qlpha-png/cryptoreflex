@@ -150,9 +150,13 @@ export function getPlatformById(id: string): Platform | undefined {
   return ALL.find((p) => p.id === id);
 }
 
-/** Top N plateformes pour la home (par score global). */
+/**
+ * Top N plateformes pour la home (par score global) : UNIQUEMENT des exchanges/courtiers autorisés en France.
+ * Audit 05/10/2026 : l'ancienne version prenait toutes les entrées (portefeuilles Ledger et Trezor compris) pour
+ * les données structurées « plateformes régulées MiCA en France », et Binance (non autorisé) était 8e.
+ */
 export function getTopPlatforms(n = 6): Platform[] {
-  return getAllPlatforms().slice(0, n);
+  return getExchangePlatforms().filter(isAvailableFr).slice(0, n);
 }
 
 /** Plateformes filtrées par statut MiCA. */
@@ -193,6 +197,14 @@ export function getAvailablePlatformCount(): number {
  * - hardware wallet : spread broker in-app (pas de frais de trading).
  * Évite le « Frais spot 0,XX % » trompeur pour les non-exchanges.
  */
+/** Même règle que feeShort, au format français (« 0,4 % ») — pour l'accueil et les listes en français. */
+export function feeShortFr(p: Platform): string {
+  if (p.category === "wallet") return "spread intégré";
+  const mt = p.fees.verified?.makerTakerApplies ?? true;
+  const rc = Number(mt ? p.fees.spotTaker : p.fees.instantBuy);
+  return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %` : "voir l'avis";
+}
+
 export function feeShort(p: Platform): string {
   if (p.category === "wallet") return "spread in-app";
   const mt = p.fees.verified?.makerTakerApplies ?? true;

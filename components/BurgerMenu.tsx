@@ -13,9 +13,8 @@
  *
  * Specs (issu agent UX research + benchmark Linear/Vercel/Stripe) :
  *  - Sticky search bar Cmd+K en haut du drawer (filtre 145+ pages live)
- *  - 7 catégories en sections accordéon (Découvrir / Plateformes / Cryptos
- *    / Outils / Apprendre / Marché / Membres)
- *  - 3 highlights en haut (Quiz Plateforme, Soutien libre, Partenaires)
+ *  - Rubriques en accordéon, lues dans lib/nav.ts (source unique, 05/10/2026)
+ *  - Plus d'encarts promotionnels en tête (audit 03/10/2026 : le menu s'ouvrait sur 4 encarts)
  *  - Animations 240ms cubic-bezier(0.32,0.72,0,1) iOS spring
  *  - Stagger 30ms par item à l'ouverture
  *  - Reduced-motion : fade simple 120ms
@@ -30,31 +29,24 @@ import {
   ArrowRight,
   BookOpen,
   ChevronDown,
+  Coins,
   Compass,
-  Crown,
-  DollarSign,
   GalleryVerticalEnd,
-  Gift,
-  Heart,
+  Scale,
   Search,
-  Sparkles,
-  Target,
   TrendingUp,
+  UserCircle2,
   Wrench,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
-import { isLaunched } from "@/lib/reflex-cards/season";
-
-/* Reflex Cards : « bientôt » avant le lancement, « nouveau » ensuite (le menu est rendu côté client seulement) */
-const RC_BADGE = isLaunched() ? "NOUVEAU" : "BIENTÔT";
+import { visibleSections, type NavSectionId } from "@/lib/nav";
 
 interface MenuItem {
   href: string;
   label: string;
   desc?: string;
-  badge?: string; // ex "NEW", "PRO"
 }
 
 interface MenuSection {
@@ -65,138 +57,28 @@ interface MenuSection {
   items: MenuItem[];
 }
 
-/**
- * Sections complètes du menu burger.
- * Source : audit Explore agent (BATCH 60) — 145 routes utilisateur en 7 catégories.
- */
-const SECTIONS: MenuSection[] = [
-  {
-    id: "decouvrir",
-    title: "Découvrir",
-    Icon: Compass,
-    intro: "Démarrer avec Cryptoreflex",
-    items: [
-      { href: "/", label: "Accueil", desc: "780 cryptos · 17 outils · 34 plateformes" },
-      ...(isReflexCardsEnabled()
-        ? [{ href: "/cartes", label: "Reflex Cards", desc: "Le jeu de cartes crypto gratuit", badge: RC_BADGE }]
-        : []),
-      { href: "/quiz/plateforme", label: "Questionnaire plateforme idéale", desc: "Trouvez votre plateforme en 5 questions", badge: "POPULAIRE" },
-      { href: "/wizard/premier-achat", label: "Mon 1er achat crypto", desc: "Parcours guidé en 5 étapes" },
-      { href: "/newsletter", label: "Newsletter quotidienne", desc: "3 min/jour, sans bullshit", badge: "NEW" },
-      { href: "/methodologie", label: "Notre méthodologie", desc: "6 critères publics, 0 bullshit" },
-      { href: "/transparence", label: "Transparence affiliation", desc: "Qui paie, comment, combien" },
-      { href: "/impact", label: "Notre impact", desc: "Mission Cryptoreflex en chiffres" },
-      { href: "/a-propos", label: "À propos", desc: "L'équipe Cryptoreflex" },
-      { href: "/contact", label: "Contact", desc: "Une question ? On répond sous 48h" },
-    ],
-  },
-  {
-    id: "plateformes",
-    title: "Plateformes",
-    Icon: DollarSign,
-    intro: "Comparer & choisir où acheter",
-    items: [
-      { href: "/comparatif", label: "Comparatif plateformes", desc: "22 plateformes agréées MiCA" },
-      { href: "/comparatif/frais", label: "Frais : ranking 2026", desc: "Maker, taker, spread, SEPA", badge: "NEW" },
-      { href: "/comparatif/securite", label: "Sécurité : audit complet", desc: "Cold storage, hack, MiCA", badge: "NEW" },
-      { href: "/avis", label: "Avis détaillés", desc: "Tests réels de chaque plateforme" },
-      { href: "/alternative-a", label: "Alternatives plateformes", desc: "Migration post-MiCA simplifiée" },
-      { href: "/partenaires", label: "Partenaires recommandés", desc: "Ledger, Trezor, Waltio, Koinly..." },
-    ],
-  },
-  {
-    id: "cryptos",
-    title: "Cryptos",
-    Icon: Sparkles,
-    intro: "780 fiches + 4950 comparatifs",
-    items: [
-      { href: "/cryptos", label: "780 fiches crypto", desc: "100 fiches premium + 680 LLM" },
-      { href: "/comparer", label: "Comparer 2 cryptos", desc: "Hub des 100 fiches éditoriales", badge: "MASSIF" },
-      { href: "/vs", label: "Tous les duels crypto", desc: "4950 paires analysées (BTC vs ETH, etc.)" },
-      { href: "/cryptos/comparer", label: "Comparateur dynamique", desc: "Compare 3-4 cryptos avec prix live" },
-      { href: "/airdrops", label: "Airdrops 2026", desc: "Linea, Monad, Morpho, EigenLayer...", badge: "NEW" },
-      { href: "/historique-prix", label: "Historique des prix", desc: "30 cryptos × 8 années (240 pages)" },
-      { href: "/convertisseur", label: "Convertisseur live", desc: "BTC, ETH, SOL → EUR/USD" },
-      { href: "/halving-bitcoin", label: "Halving Bitcoin", desc: "Countdown + analyse cycles" },
-      { href: "/staking", label: "Staking crypto", desc: "Rendement annuel par crypto" },
-    ],
-  },
-  {
-    id: "outils",
-    title: "Outils",
-    Icon: Wrench,
-    intro: "Calculateurs et vérificateurs gratuits",
-    /* Seuls les outils réellement disponibles sont listés (audit 03/10/2026 : les pages
-       « Bientôt », les rendements stablecoins périmés et le résumé de whitepapers indisponible
-       ont été retirés du menu). */
-    items: [
-      { href: "/outils", label: "Tous les outils", desc: "Vue complète" },
-      { href: "/outils/calculateur-fiscalite", label: "Calculateur fiscalité PFU", desc: "Impôt crypto en 2 min" },
-      { href: "/outils/cerfa-2086-auto", label: "Formulaire 2086 + 3916-bis", desc: "Pré-rempli à partir de vos transactions" },
-      { href: "/outils/radar-3916-bis", label: "Radar 3916-bis", desc: "Comptes à déclarer" },
-      { href: "/outils/simulateur-dca", label: "Simulateur DCA", desc: "Stratégie long terme" },
-      { href: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", desc: "Net après frais et impôt" },
-      { href: "/outils/verificateur-mica", label: "Vérificateur MiCA", desc: "Statut officiel en 1 clic" },
-      { href: "/outils/portfolio-tracker", label: "Portfolio tracker", desc: "Suivi de vos positions" },
-      { href: "/outils/glossaire-crypto", label: "Glossaire 250+ termes", desc: "Définitions claires FR" },
-    ],
-  },
-  {
-    id: "apprendre",
-    title: "Apprendre",
-    Icon: BookOpen,
-    intro: "Guides, académie, blog",
-    items: [
-      { href: "/blog", label: "Blog & guides crypto", desc: "100+ articles" },
-      { href: "/academie", label: "Académie Cryptoreflex", desc: "Parcours structurés débutant → expert" },
-      { href: "/faq-crypto", label: "FAQ crypto FR", desc: "20+ questions claires (fisc, sécurité, MiCA)", badge: "NEW" },
-      { href: "/glossaire", label: "Glossaire crypto", desc: "250+ termes expliqués" },
-      { href: "/blog/comment-declarer-crypto-impots-2026-guide-complet", label: "Déclarer ses crypto impôts 2026", desc: "Guide officiel mis à jour" },
-      { href: "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026", label: "Cold vs Hot wallet", desc: "Comment sécuriser ses cryptos" },
-      { href: "/quiz", label: "Tous les questionnaires", desc: "Trouvez votre plateforme et votre crypto" },
-    ],
-  },
-  {
-    id: "marche",
-    title: "Marché",
-    Icon: TrendingUp,
-    intro: "Live, news, events",
-    items: [
-      { href: "/marche", label: "Marché crypto live", desc: "Prix temps réel + dominance" },
-      { href: "/marche/heatmap", label: "Heatmap coins", desc: "Variations 24h en couleur" },
-      { href: "/marche/fear-greed", label: "Fear & Greed Index", desc: "Sentiment du marché" },
-      { href: "/marche/gainers-losers", label: "Top gainers / losers", desc: "Mouvements 24h" },
-      { href: "/marche/whales", label: "Whale Watcher", desc: "Top 30 transactions ≥ 1M$ live", badge: "NEW" },
-      { href: "/actualites", label: "Actualités crypto", desc: "News quotidiennes FR" },
-      { href: "/analyses-techniques", label: "Analyses techniques", desc: "RSI, MACD, niveaux clés" },
-      { href: "/calendrier", label: "Calendrier crypto", desc: "Halvings, FOMC, ETF deadlines" },
-    ],
-  },
-  {
-    id: "membres",
-    title: "Membres",
-    Icon: Crown,
-    intro: "Portefeuille, alertes, soutien libre",
-    items: [
-      { href: "/soutenir", label: "Soutenir Cryptoreflex", desc: "Contribution volontaire — tout reste gratuit" },
-      { href: "/portefeuille", label: "Mon portefeuille", desc: "Suivi positions live" },
-      { href: "/watchlist", label: "Ma watchlist", desc: "Cryptos favorites avec alertes" },
-      { href: "/alertes", label: "Alertes prix", desc: "Notifications custom par crypto" },
-      { href: "/mon-compte", label: "Mon compte", desc: "Profil et préférences" },
-      { href: "/ambassadeurs", label: "Programme ambassadeurs", desc: "Gagne en partageant" },
-    ],
-  },
-];
+const ICONS: Record<NavSectionId, LucideIcon> = {
+  marche: TrendingUp,
+  cryptos: Coins,
+  plateformes: Scale,
+  apprendre: BookOpen,
+  outils: Wrench,
+  jouer: GalleryVerticalEnd,
+  cryptoreflex: Compass,
+  espace: UserCircle2,
+};
 
-/** 3 highlights revenus en haut du drawer (KPI conversion), précédés de Reflex Cards quand le jeu est actif. */
-const HIGHLIGHTS: { href: string; label: string; sub: string; Icon: LucideIcon; tone: "primary" | "accent" }[] = [
-  ...(isReflexCardsEnabled()
-    ? [{ href: "/cartes", label: "Reflex Cards", sub: `Le jeu de cartes crypto gratuit · ${RC_BADGE.toLowerCase()}`, Icon: GalleryVerticalEnd, tone: "primary" as const }]
-    : []),
-  { href: "/quiz/plateforme", label: "Décodez votre plateforme", sub: "Questionnaire 2 min · sans email", Icon: Target, tone: "primary" },
-  { href: "/soutenir", label: "Soutenir Cryptoreflex", sub: "Contribution libre · tout gratuit", Icon: Heart, tone: "primary" },
-  { href: "/partenaires", label: "Offres partenaires", sub: "Ledger, Trezor, Waltio…", Icon: Gift, tone: "accent" },
-];
+/**
+ * Rubriques du menu : source unique lib/nav.ts (Kev 04/10/2026 : « tout bien rangé, qu'un enfant de 8 ans trouve
+ * tout »). Plus d'encarts promotionnels en tête : la recherche d'abord, puis les rubriques, repliées.
+ */
+const SECTIONS: MenuSection[] = visibleSections(isReflexCardsEnabled()).map((sec) => ({
+  id: sec.id,
+  title: sec.title,
+  intro: sec.intro,
+  Icon: ICONS[sec.id],
+  items: sec.links,
+}));
 
 /** Normalise pour matching insensible accents/casse. */
 function normalize(s: string): string {
@@ -214,7 +96,7 @@ interface Props {
 export default function BurgerMenu({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [openSections, setOpenSections] = useState<Set<string>>(
-    new Set(["decouvrir", "cryptos", "outils"]) // 3 sections ouvertes par défaut
+    new Set() // toutes repliées : on lit d'abord la liste des rubriques
   );
   const dialogRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -358,7 +240,7 @@ export default function BurgerMenu({ open, onClose }: Props) {
               inputMode="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher une page (Bitcoin, fiscalité, MiCA...)"
+              placeholder="Rechercher : impôts, Bitcoin…"
               className="w-full h-11 pl-11 pr-12 rounded-xl border border-border bg-elevated/60 text-[14px] text-fg placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
               aria-label="Rechercher dans le menu"
             />
@@ -374,7 +256,7 @@ export default function BurgerMenu({ open, onClose }: Props) {
             ) : (
               <kbd
                 aria-hidden="true"
-                className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-6 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted"
+                className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center justify-center h-6 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted"
               >
                 ⌘K
               </kbd>
@@ -397,42 +279,6 @@ export default function BurgerMenu({ open, onClose }: Props) {
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 burger-scroll">
-          {/* Highlights revenus (3 cards) */}
-          {!query.trim() && (
-            <div className="mb-4 grid grid-cols-1 gap-2 burger-stagger">
-              {HIGHLIGHTS.map((h, idx) => (
-                <Link
-                  key={h.href}
-                  href={h.href}
-                  onClick={onClose}
-                  style={{ ["--burger-i" as string]: idx } as React.CSSProperties}
-                  className={`burger-item group flex items-center gap-3 rounded-xl border p-3 transition-all
-                              ${h.tone === "primary"
-                                ? "border-primary/40 bg-gradient-to-br from-primary/15 to-primary/5 hover:border-primary/60 hover:from-primary/20"
-                                : "border-accent-cyan/30 bg-gradient-to-br from-accent-cyan/10 to-accent-cyan/5 hover:border-accent-cyan/50"
-                              }`}
-                >
-                  <div
-                    className={`h-9 w-9 rounded-lg flex items-center justify-center
-                                ${h.tone === "primary"
-                                  ? "bg-primary/20 text-primary-glow"
-                                  : "bg-accent-cyan/20 text-accent-cyan"
-                                }`}
-                  >
-                    <h.Icon className="h-4 w-4" strokeWidth={2} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-bold text-fg group-hover:text-primary-glow transition-colors">
-                      {h.label}
-                    </div>
-                    <div className="text-[11px] text-fg/65 mt-0.5">{h.sub}</div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-fg/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
-                </Link>
-              ))}
-            </div>
-          )}
-
           {/* Sections accordéon */}
           <nav aria-label="Catégories" className="space-y-1">
             {filteredSections.map((sec, sIdx) => {
@@ -440,7 +286,7 @@ export default function BurgerMenu({ open, onClose }: Props) {
               return (
                 <div
                   key={sec.id}
-                  style={{ ["--burger-i" as string]: sIdx + HIGHLIGHTS.length } as React.CSSProperties}
+                  style={{ ["--burger-i" as string]: sIdx } as React.CSSProperties}
                   className="burger-item rounded-xl"
                 >
                   <button
@@ -486,21 +332,6 @@ export default function BurgerMenu({ open, onClose }: Props) {
                                 <span className="text-[13px] font-medium text-fg/85 group-hover:text-primary-glow transition-colors">
                                   {item.label}
                                 </span>
-                                {item.badge && (
-                                  <span
-                                    className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
-                                                ${item.badge === "PRO"
-                                                  ? "bg-primary/20 text-primary border border-primary/40"
-                                                  : item.badge === "SOUTIEN"
-                                                    ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
-                                                    : item.badge === "POPULAIRE"
-                                                      ? "bg-accent-green/15 text-accent-green border border-accent-green/30"
-                                                      : "bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30"
-                                                }`}
-                                  >
-                                    {item.badge}
-                                  </span>
-                                )}
                               </div>
                               {item.desc && (
                                 <div className="text-[11px] text-fg/55 mt-0.5 leading-snug">
@@ -540,7 +371,6 @@ export default function BurgerMenu({ open, onClose }: Props) {
           <span className="flex items-center gap-1.5">
             Astuce&nbsp;: <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 font-mono text-[10px]">ESC</kbd> pour fermer
           </span>
-          <span>v3.2</span>
         </div>
       </div>
 

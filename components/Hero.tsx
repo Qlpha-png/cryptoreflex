@@ -146,7 +146,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
               ariaLabel="Comparer les plateformes crypto en 2 minutes — questionnaire pédagogique, aucun email demandé"
             />
             <Link
-              href="#cat-informe"
+              href="#newsletter"
               className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-fg transition-colors"
               aria-label="Recevoir le brief crypto FR par email"
             >
@@ -158,7 +158,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           {/* Statline mono — les preuves en une ligne, sans carte */}
           <p className="mt-9 font-mono text-xs sm:text-sm text-muted tabular-nums animate-hero-fade-up animate-hero-fade-up-delay-4">
             <span className="text-fg/85">{STATS.platforms}</span> plateformes
-            MiCA
+            autorisées
             <span className="hero-stat-sep" aria-hidden="true">·</span>
             <span className="text-fg/85">{STATS.cryptos}</span> fiches crypto
             <span className="hero-stat-sep" aria-hidden="true">·</span>

@@ -1,0 +1,76 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useLivePrices } from "@/lib/hooks/useLivePrices";
+
+/**
+ * 5 cours de l'accueil, en direct (même mécanisme que le bandeau du haut : flux serveur, sinon relevé toutes les
+ * 30 s). Règle d'exactitude (audit 03/10/2026) : un prix n'est jamais présenté comme « en direct » sans son heure ;
+ * tant que le direct n'a pas répondu, les valeurs de la page sont grisées et marquées « indicatives ».
+ */
+
+export interface HomeCoin {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  price: number;
+  change24h: number;
+  /** Lien vers la fiche, calculé côté serveur (cryptoPagePath : pas de redirection coingeckoId → id). */
+  href: string;
+}
+
+const fmtPrice = (v: number) =>
+  `${v.toLocaleString("fr-FR", { maximumFractionDigits: v >= 100 ? 0 : v >= 1 ? 2 : 4 })} $`;
+/** Variation arrondie au centième ; une variation qui s'arrondit à 0 s'affiche « 0,00 % » (jamais « -0,00 % »). */
+const round2 = (v: number) => {
+  const r = Math.round(v * 100) / 100;
+  return Object.is(r, -0) ? 0 : r;
+};
+const fmtPct = (v: number) => {
+  const r = round2(v);
+  return `${r > 0 ? "+" : ""}${r.toLocaleString("fr-FR", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} %`;
+};
+const pctClass = (v: number) => {
+  const r = round2(v);
+  return r > 0 ? "text-success-fg" : r < 0 ? "text-danger-fg" : "text-fg/60";
+};
+
+export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
+  const { prices, lastUpdate, status } = useLivePrices(coins.map((c) => c.id));
+  const live = lastUpdate !== null && Object.keys(prices).length > 0;
+  return (
+    <div>
+      <ul className={`divide-y divide-border/60 rounded-2xl border border-border bg-surface ${live ? "" : "opacity-80"}`}>
+        {coins.map((c) => {
+          const lp = prices[c.id];
+          const price = lp?.price ?? c.price;
+          const change = lp?.change24h ?? c.change24h;
+          return (
+            <li key={c.id}>
+              <Link href={c.href} className="flex items-center gap-3 px-4 py-3 hover:bg-elevated/40">
+                <Image src={c.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" unoptimized />
+                <span className="flex-1 min-w-0">
+                  <span className="block truncate text-sm font-semibold text-fg">{c.name}</span>
+                  <span className="block text-xs uppercase text-fg/55">{c.symbol}</span>
+                </span>
+                <span className="text-right tabular-nums">
+                  <span className="block text-sm font-semibold text-fg">{fmtPrice(price)}</span>
+                  <span className={`block text-xs ${pctClass(change)}`}>{fmtPct(change)}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-2 text-xs text-fg/60" aria-live="polite">
+        {live
+          ? `En direct · mis à jour à ${lastUpdate!.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
+          : status === "error"
+            ? "Cours indicatifs (le direct ne répond pas) — voir le marché en direct."
+            : "Cours indicatifs, en attente du direct…"}
+      </p>
+    </div>
+  );
+}
