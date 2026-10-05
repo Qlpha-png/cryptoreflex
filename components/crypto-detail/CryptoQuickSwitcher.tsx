@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, Gem, Trophy, ArrowRight } from "lucide-react";
 import { getAllCryptos } from "@/lib/cryptos";
+import { STATS } from "@/lib/brand";
 
 /**
  * CryptoQuickSwitcher — barre de recherche compacte intégrée en haut des
@@ -246,7 +247,7 @@ export default function CryptoQuickSwitcher({
               onClick={() => setIsOpen(false)}
               className="font-semibold text-primary-soft hover:text-primary"
             >
-              Voir les 780 fiches →
+              Voir les {STATS.cryptos} fiches →
             </Link>
           </div>
         </div>

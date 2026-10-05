@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Swords, Sparkles } from "lucide-react";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS, fmtCount } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getCryptoPairs } from "@/lib/programmatic-pages";
@@ -24,9 +24,9 @@ import { withHreflang } from "@/lib/seo-alternates";
 // Avant : "Duels crypto-vs-crypto — 4950 paires comparees | Cryptoreflex | Cryptoreflex"
 // (doublon visible onglet + SERP). Egalement fix "435 paires" -> "4950 paires"
 // (BATCH 58 a etendu top 30 -> top 100 = 4950 paires).
-const PAGE_TITLE = "Duels crypto-vs-crypto : 4950 paires comparées (BTC vs ETH, etc.)";
+const PAGE_TITLE = `Duels crypto-vs-crypto : ${fmtCount(STATS.vsPairs)} paires comparées (BTC vs ETH, etc.)`;
 const PAGE_DESCRIPTION =
-  "Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Compare 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). 4950 duels possibles.";
+  `Bitcoin vs Ethereum, Solana vs Cardano, BNB vs XRP… Comparez 2 cryptos côte à côte (prix, market cap, supply, roadmap, fiscalité FR). ${fmtCount(STATS.vsPairs)} duels possibles.`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -135,16 +135,16 @@ export default function VsHub() {
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider mb-4">
             <Swords className="h-3 w-3" aria-hidden="true" />
-            {totalPairs} duels possibles
+            {fmtCount(totalPairs)} duels possibles
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg leading-tight">
             Duels{" "}
             <span className="gradient-text">crypto vs crypto</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
-            Compare 2 cryptos côte à côte : prix, market cap, supply, roadmap,
-            fiscalité FR. {totalPairs} combinaisons possibles parmi nos 100
-            cryptos analysées.
+            Comparez 2 cryptos côte à côte : prix, market cap, supply, roadmap,
+            fiscalité FR. {fmtCount(totalPairs)} combinaisons possibles parmi nos{" "}
+            {STATS.cryptosCurated} fiches éditoriales.
           </p>
         </header>
 
@@ -225,9 +225,9 @@ export default function VsHub() {
             Vous voulez un autre duel ?
           </h2>
           <p className="text-sm text-muted mb-4 max-w-xl mx-auto">
-            Notre page /comparer propose un selecteur libre pour les{" "}
-            {totalPairs - FEATURED_PAIRS.length} autres combinaisons,
-            ou compose ta propre comparaison multi-crypto.
+            Notre page /comparer propose un sélecteur libre pour les{" "}
+            {fmtCount(totalPairs - FEATURED_PAIRS.length)} autres combinaisons,
+            ou composez votre propre comparaison multi-crypto.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/comparer" className="btn-primary text-sm">
@@ -235,7 +235,7 @@ export default function VsHub() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/cryptos" className="btn-ghost text-sm">
-              Voir les 780 fiches crypto
+              Voir les {STATS.cryptos} fiches crypto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

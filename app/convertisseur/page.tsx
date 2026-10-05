@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowLeftRight, Globe } from "lucide-react";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
@@ -129,7 +129,7 @@ export default function ConvertisseurHub() {
             Vous cherchez plus que de la conversion ?
           </h2>
           <p className="text-sm text-muted mb-4 max-w-xl mx-auto">
-            On a 17 outils crypto gratuits : calculateur fiscalité PFU, simulateur
+            On a {STATS.tools} outils crypto gratuits : calculateur fiscalité PFU, simulateur
             DCA backtest 5 ans, glossaire 250+ termes.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">

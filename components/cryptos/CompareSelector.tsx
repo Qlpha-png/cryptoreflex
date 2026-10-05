@@ -26,6 +26,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Plus, Search, X, Check } from "lucide-react";
 import { MAX_COMPARE, useCompareList } from "@/lib/use-compare-list";
+import { STATS } from "@/lib/brand";
 
 interface CryptoOption {
   id: string;
@@ -302,7 +303,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                     href="/cryptos"
                     className="text-primary-soft hover:underline"
                   >
-                    Voir les 780 fiches
+                    Voir les {STATS.cryptos} fiches
                   </Link>
                 </div>
               </div>

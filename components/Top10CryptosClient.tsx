@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import ScrollReveal from "./ui/ScrollReveal";
 import CryptoLogo from "./ui/CryptoLogo";
+import { STATS } from "@/lib/brand";
 
 /**
  * Top10CryptosClient — version interactive de la section "Top 10 expliquées".
@@ -341,7 +342,7 @@ export default function Top10CryptosClient({
             href="/cryptos"
             className="text-[12px] text-muted hover:text-primary inline-flex items-center gap-1"
           >
-            Voir les 780 fiches
+            Voir les {STATS.cryptos} fiches
             <span aria-hidden="true">→</span>
           </a>
           {/* E-E-A-T freshness en discret à droite */}
@@ -505,7 +506,7 @@ export default function Top10CryptosClient({
               href="/cryptos"
               className="btn-primary inline-flex items-center justify-center"
             >
-              Explorer les 780 fiches crypto
+              Explorer les {STATS.cryptos} fiches crypto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link

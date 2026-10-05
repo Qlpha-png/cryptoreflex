@@ -3,6 +3,8 @@
  * Si le nom, le domaine ou la baseline change, ne modifier qu'ici.
  */
 
+import COUNTS from "@/data/site-counts.json";
+
 export const BRAND = {
   name: "Cryptoreflex",
   /**
@@ -27,8 +29,8 @@ export const BRAND = {
   email: "contact@cryptoreflex.fr",
   partnersEmail: "partners@cryptoreflex.fr",
   tagline: "Tout sur la crypto, en français",
-  description:
-    "780 fiches crypto (100 fiches éditoriales + 680 fiches LLM, score fiabilité, on-chain live, roadmap), 34 plateformes comparées, dont 22 agréées MiCA en France (CASP UE + agrément AMF FR), 17 outils (DCA, ROI, fiscalité PFU, Cerfa 2086, Whale Radar, Allocator IA), IA Q&A par fiche, alertes prix gratuites. Méthodologie publique, sans bullshit.",
+  /** Description courte du site (chiffres réels, data/site-counts.json). */
+  description: `${COUNTS.cryptos} fiches crypto, ${COUNTS.platformsAudited} plateformes comparées dont ${COUNTS.platforms} autorisées en France (registres AMF et ESMA), ${COUNTS.tools} outils gratuits (fiscalité PFU, Cerfa 2086, simulateur DCA, convertisseur) et le jeu de cartes Reflex Cards. Méthodologie publique.`,
   /** Identifiant utilisé dans les UTM des liens d'affiliation. */
   utmSource: "cryptoreflex",
 } as const;
@@ -45,34 +47,27 @@ export const BRAND = {
  * endroits désynchronisés. Cette constante garantit qu'il n'y a plus
  * jamais de drift catalog vs UI.
  *
- * Mise à jour : à chaque ajout de plateforme/crypto/outil, modifier ici
- * uniquement (les helpers `getAllPlatforms().length` etc. existent mais
- * ne sont pas utilisables côté Server Component pendant le build sans
- * import de data files lourds — STATS reste la version "display").
+ * Mise à jour (depuis le 05/10/2026) : PLUS RIEN À LA MAIN. Les valeurs viennent de
+ * data/site-counts.json, recalculé depuis les données par `node scripts/update-site-counts.mjs`
+ * (chaque nuit par la sentinelle). tests/lib/site-counts.test.ts échoue si le fichier ne correspond
+ * plus aux données du dépôt (plateforme, outil ou carte ajouté sans recompter).
  */
+/** Nombre au format français, milliers séparés par une espace insécable classique (U+00A0, pas U+202F). */
+export const fmtCount = (n: number): string => n.toLocaleString("fr-FR").replace(/ /g, " ");
+
 export const STATS = {
-  /**
-   * Nombre de plateformes DISPONIBLES en France, affiché partout (« X plateformes »).
-   * = exchanges/brokers de data/platforms.json HORS plateformes fermées au marché FR
-   * (Gemini, avril 2026) et hors hardware wallets. Source UNIQUE pour les strings —
-   * ne jamais hardcoder ce nombre ailleurs, importer STATS.platforms (ou, en Server
-   * Component, getAvailablePlatformCount() dans lib/platforms.ts).
-   * Depuis le 02/10/2026 : agréées MiCA avec accès à la France (registre ESMA / liste blanche AMF),
-   * cf. isAvailableFr. 34 auditées − 12 non autorisées en France = 22 ; recompter à chaque mise à jour du registre.
-   */
-  platforms: 22,
-  /**
-   * Nombre TOTAL de fiches crypto disponibles sur le site.
-   * = 100 fiches éditoriales statiques (10 top + 90 hidden gems) + 680 fiches
-   *   LLM exploratoires en DB (Supabase) = 780.
-   * Pour le sous-total éditorial uniquement, voir `cryptosCurated`.
-   */
-  cryptos: 780,
-  /** Sous-total des fiches crypto éditoriales (data/top-cryptos.json + hidden-gems). */
-  cryptosCurated: 100,
-  /**
-   * Nombre d'outils dans app/outils/<slug>/page.tsx.
-   * = 17 outils réellement publiés (audit 03/10/2026 : les 9 outils « en préparation » ne comptent plus).
-   */
-  tools: 17,
+  /** Plateformes disponibles en France (registres officiels, isAvailableFr). */
+  platforms: COUNTS.platforms,
+  /** Plateformes auditées (exchanges et courtiers, disponibles ou non en France). */
+  platformsAudited: COUNTS.platformsAudited,
+  /** Fiches crypto publiées au total (éditoriales + exploratoires en base, d'après le plan du site). */
+  cryptos: COUNTS.cryptos,
+  /** Fiches crypto éditoriales (data/top-cryptos.json + hidden-gems). */
+  cryptosCurated: COUNTS.cryptosCurated,
+  /** Duels /vs possibles entre fiches éditoriales. */
+  vsPairs: COUNTS.vsPairs,
+  /** Outils publiés (lib/tools-catalog.ts, hors « à venir »). */
+  tools: COUNTS.tools,
+  /** Cartes Reflex Cards (catalogue Univers). */
+  cards: COUNTS.cards,
 } as const;

@@ -1,30 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  Calculator,
   TrendingUp,
-  ArrowDownUp,
-  ShieldCheck,
   ArrowRight,
   BookOpen,
-  LineChart,
   Briefcase,
-  Coins,
-  GitCompare,
-  Radar,
   FileText,
   Sparkles,
-  Bot,
-  Wallet,
-  Zap,
-  Trophy,
-  Eye,
-  ShieldAlert,
-  Brain,
-  FileSpreadsheet,
-  Award,
   Heart,
-  TestTube2,
   type LucideIcon,
 } from "lucide-react";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
@@ -32,7 +15,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import AcademyCrossLink from "@/components/AcademyCrossLink";
 import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 // BATCH 45b — innovation tech 2026 paroxysme. Wire Reveal scroll fade-up
 // sur sections + Tilt3D sur cards hub. Composants existants, juste branches.
@@ -51,10 +34,10 @@ import OutilsSearchFilter from "@/components/OutilsSearchFilter";
 export const metadata: Metadata = {
   title: "Outils crypto gratuits : 17 calculateurs",
   description:
-    "17 outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.",
+    `${STATS.tools} outils crypto FR : calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique.`,
   alternates: withHreflang("https://www.cryptoreflex.fr/outils"),
   openGraph: {
-    title: "17 outils crypto FR gratuits — Cryptoreflex",
+    title: `${STATS.tools} outils crypto FR gratuits — Cryptoreflex`,
     description:
       "Calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
     url: "https://www.cryptoreflex.fr/outils",
@@ -62,297 +45,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "17 outils crypto FR gratuits — Cryptoreflex",
+    title: `${STATS.tools} outils crypto FR gratuits — Cryptoreflex`,
     description:
       "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
   },
 };
-
-/* -------------------------------------------------------------------------- */
-/*  Types                                                                     */
-/* -------------------------------------------------------------------------- */
-
-type Tier = "free" | "pro";
-type Status = "live" | "new" | "soon";
-
-interface Tool {
-  title: string;
-  desc: string;
-  href: string;
-  Icon: LucideIcon;
-  tier: Tier;
-  status?: Status;
-  cat: "fiscalite" | "marche" | "portfolio" | "pedagogie" | "ia";
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Catalogue (20 outils — 16 historiques + 4 TIER 3 ajoutés 2026-05-02)      */
-/* -------------------------------------------------------------------------- */
-
-const TOOLS: Tool[] = [
-  // ─── FISCALITÉ ───
-  {
-    title: "Cerfa 2086 + 3916-bis auto",
-    desc: "Importez votre CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul officiel 150 VH bis.",
-    href: "/outils/cerfa-2086-auto",
-    Icon: FileText,
-    tier: "pro",
-    status: "new",
-    cat: "fiscalite",
-  },
-  {
-    title: "Radar 3916-bis",
-    desc: "Détecte vos amendes potentielles (750 € par compte, 1 500 € au-delà de 50 000 €) sur vos comptes crypto étrangers en 2 min.",
-    href: "/outils/radar-3916-bis",
-    Icon: Radar,
-    tier: "free",
-    status: "live",
-    cat: "fiscalite",
-  },
-  {
-    title: "Calculateur fiscalité PFU 31,4 %",
-    desc: "Simule votre impôt crypto en 2 min. Régime PFU ou barème, prorata portefeuille intégré.",
-    href: "/outils/calculateur-fiscalite",
-    Icon: Calculator,
-    tier: "free",
-    status: "live",
-    cat: "fiscalite",
-  },
-  {
-    title: "Comparatif outils déclaration",
-    desc: "Waltio vs Koinly vs CoinTracking : choisis l'outil adapté à votre volume de transactions.",
-    href: "/outils/declaration-fiscale-crypto",
-    Icon: GitCompare,
-    tier: "free",
-    status: "live",
-    cat: "fiscalite",
-  },
-  {
-    title: "Calculateur ROI crypto",
-    desc: "ROI net après frais (achat → vente). Plus-value, % de gain, équivalent en euros.",
-    href: "/outils/calculateur-roi-crypto",
-    Icon: TrendingUp,
-    tier: "free",
-    status: "live",
-    cat: "fiscalite",
-  },
-
-  // ─── MARCHÉ ───
-  {
-    title: "Convertisseur crypto live",
-    desc: "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos majeures, taux CoinGecko 60s.",
-    href: "/outils/convertisseur",
-    Icon: ArrowDownUp,
-    tier: "free",
-    status: "live",
-    cat: "marche",
-  },
-  {
-    title: "Simulateur DCA backtest",
-    desc: "Et si vous aviez investi 100 €/mois en BTC depuis 2020 ? Backtest réel sur 5 ans.",
-    href: "/outils/simulateur-dca",
-    Icon: LineChart,
-    tier: "free",
-    status: "live",
-    cat: "marche",
-  },
-  {
-    title: "Vérificateur MiCA / CASP",
-    desc: "Votre plateforme crypto est-elle conforme MiCA et autorisée en France à partir du 1er juillet 2026 ?",
-    href: "/outils/verificateur-mica",
-    Icon: ShieldCheck,
-    tier: "free",
-    status: "live",
-    cat: "marche",
-  },
-  {
-    title: "Simulateur halving Bitcoin",
-    desc: "Compte à rebours du prochain halving (avril 2028) + impact prix historique.",
-    href: "/outils/simulateur-halving-bitcoin",
-    Icon: Coins,
-    tier: "free",
-    status: "live",
-    cat: "marche",
-  },
-
-  // ─── PORTFOLIO ───
-  {
-    title: "Portfolio tracker",
-    desc: "Suivez votre valeur live en EUR, P&L automatique, allocation par crypto. 100 % local (RGPD).",
-    href: "/outils/portfolio-tracker",
-    Icon: Briefcase,
-    tier: "free",
-    status: "live",
-    cat: "portfolio",
-  },
-  {
-    title: "Calculateur APY staking",
-    desc: "Comparez le rendement réel staking (ETH, SOL, ADA, ATOM…) après commission validateur.",
-    href: "/outils/calculateur-apy-staking",
-    Icon: Wallet,
-    tier: "free",
-    status: "live",
-    cat: "portfolio",
-  },
-  {
-    title: "Comparateur personnalisé",
-    desc: "Compare jusqu'à 4 plateformes crypto sur vos critères (frais, sécurité, MiCA, support FR).",
-    href: "/outils/comparateur-personnalise",
-    Icon: GitCompare,
-    tier: "free",
-    status: "live",
-    cat: "portfolio",
-  },
-
-  // ─── PÉDAGOGIE ───
-  {
-    title: "Glossaire crypto 250+",
-    desc: "250+ termes crypto vulgarisés (DeFi, MEV, restaking, RWA, MiCA, PSAN, Cerfa 2086…).",
-    href: "/outils/glossaire-crypto",
-    Icon: BookOpen,
-    tier: "free",
-    status: "live",
-    cat: "pedagogie",
-  },
-  {
-    title: "Comparer 2 cryptos",
-    desc: "4 950 duels prêts entre top 100 cryptos éditoriales (BTC vs ETH, SOL vs ADA…) + tableau side-by-side.",
-    href: "/comparer",
-    Icon: Trophy,
-    tier: "free",
-    status: "new",
-    cat: "pedagogie",
-  },
-  {
-    title: "Whitepaper TLDR",
-    desc: "Collez un whitepaper crypto, recevez un résumé FR + score BS sur 100 (red flags détectés).",
-    href: "/outils/whitepaper-tldr",
-    Icon: FileText,
-    tier: "free",
-    status: "live",
-    cat: "pedagogie",
-  },
-
-  // ─── IA & AVANCÉ ───
-  {
-    title: "Résumés éditoriaux par fiche",
-    desc: "Un résumé clair et des points clés sur chacune des 100 fiches crypto éditoriales Cryptoreflex.",
-    href: "/cryptos",
-    Icon: Bot,
-    tier: "free",
-    status: "live",
-    cat: "ia",
-  },
-
-  // FIX 2026-05-02 #11 — TIER 3 features (5 nouvelles pages) du plan
-  // d'audit consolidé 6 experts. Chaque outil a sa propre page avec
-  // landing + maillage + schemas. Démonétisation juin 2026 : tous gratuits.
-  // Le tier "pro" ne marque plus qu'un niveau « avancé » (Fiscal Copilot,
-  // Cerfa auto, IA) pour le tri/filtre interne.
-  {
-    title: "Tax Loss Harvesting (FR)",
-    desc: "Réduis votre PFU 31,4 % en compensant vos plus-values par les moins-values réalisées avant le 31/12.",
-    href: "/outils/tax-loss-harvesting",
-    Icon: TrendingUp,
-    tier: "free",
-    status: "new",
-    cat: "fiscalite",
-  },
-  {
-    title: "Fiscal Copilot IA",
-    desc: "Agent conversationnel qui parse votre CSV exchange et génère votre Cerfa 2086 pré-rempli. Sources légales citées.",
-    href: "/outils/fiscal-copilot",
-    Icon: Sparkles,
-    tier: "pro",
-    status: "soon",
-    cat: "ia",
-  },
-  {
-    title: "Wallet Connect read-only",
-    desc: "MetaMask, Rabby, Ledger, Phantom… Suivez votre portfolio DeFi multi-chain en lecture seule.",
-    href: "/outils/wallet-connect",
-    Icon: Wallet,
-    tier: "free",
-    status: "soon",
-    cat: "portfolio",
-  },
-
-  // FIX BATCH 20 (audit QA expert) — 8 outils BATCH 7-8 étaient orphelins
-  // (pages prod existantes mais pas listées ici → SEO siloing cassé +
-  // hub /outils sous-évalué).
-  {
-    title: "Whale Radar FR",
-    desc: "Surveille les mouvements > 500 BTC / 10 000 ETH en temps réel, contextualisés en français.",
-    href: "/outils/whale-radar",
-    Icon: Eye,
-    tier: "pro",
-    status: "soon",
-    cat: "marche",
-  },
-  {
-    title: "Phishing Checker",
-    desc: "Collez une adresse crypto → score de risque scam/phishing (Chainabuse + ScamSniffer + custom FR).",
-    href: "/outils/phishing-checker",
-    Icon: ShieldAlert,
-    tier: "free",
-    status: "soon",
-    cat: "portfolio",
-  },
-  {
-    title: "Allocator IA Crypto",
-    desc: "5 questions (horizon, risque, conviction BTC, budget, objectif) → allocation %BTC/%ETH/%alts.",
-    href: "/outils/allocator-ia",
-    Icon: Brain,
-    tier: "free",
-    status: "soon",
-    cat: "ia",
-  },
-  {
-    title: "Gas Tracker FR",
-    desc: "Frais de gas Ethereum + Layer 2 (Arbitrum, Optimism, Base…) traduits + alertes gas bas.",
-    href: "/outils/gas-tracker-fr",
-    Icon: Zap,
-    tier: "free",
-    status: "soon",
-    cat: "marche",
-  },
-  {
-    title: "Export Expert-Comptable",
-    desc: "Convertis vos CSV exchange en écritures comptables ECF (Sage / Cegid / EBP). Gratuit.",
-    href: "/outils/export-expert-comptable",
-    Icon: FileSpreadsheet,
-    tier: "pro",
-    status: "soon",
-    cat: "fiscalite",
-  },
-  {
-    title: "Permis Crypto FR",
-    desc: "Quiz 50 questions (technique, régulation, fiscalité, sécurité). Score >70 % → votre Permis Crypto PDF.",
-    href: "/outils/crypto-license",
-    Icon: Award,
-    tier: "free",
-    status: "soon",
-    cat: "pedagogie",
-  },
-  {
-    title: "Succession Crypto",
-    desc: "Guide légal FR + checklist sécurité + générateur lettre d'intention crypto pour votre notaire.",
-    href: "/outils/succession-crypto",
-    Icon: Heart,
-    tier: "free",
-    status: "soon",
-    cat: "portfolio",
-  },
-  {
-    title: "DCA Lab",
-    desc: "Compare 6 stratégies DCA (simple, RSI, Value Averaging, Lump-Sum, 50/50, drawdown) sur 1-7 ans.",
-    href: "/outils/dca-lab",
-    Icon: TestTube2,
-    tier: "free",
-    status: "soon",
-    cat: "marche",
-  },
-];
+import { TOOLS, PUBLISHED_TOOLS, type Tool } from "@/lib/tools-catalog";
 
 /* -------------------------------------------------------------------------- */
 /*  Catégories pour groupement visuel                                         */

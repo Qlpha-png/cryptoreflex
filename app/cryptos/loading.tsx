@@ -1,3 +1,4 @@
+import { STATS } from "@/lib/brand";
 /**
  * BATCH 48a (2026-05-03) — Suspense skeleton pour /cryptos.
  *
@@ -11,7 +12,7 @@
  */
 export default function CryptosLoading() {
   return (
-    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label="Chargement des 780 cryptos analysées">
+    <div className="py-12 sm:py-16 motion-safe:animate-pulse" aria-busy="true" aria-label={`Chargement des ${STATS.cryptos} fiches crypto`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb skeleton */}
         <div className="h-3 w-32 rounded bg-elevated mb-6" />

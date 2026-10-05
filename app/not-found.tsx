@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { STATS } from "@/lib/brand";
 import {
   ArrowRight,
   ArrowLeft,
@@ -23,7 +24,7 @@ import {
 export const metadata: Metadata = {
   title: "Page introuvable",
   description:
-    "Cette page n'existe pas (encore !). Découvrez nos 780 cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.",
+    `Cette page n'existe pas (encore !). Découvrez nos ${STATS.cryptos} cryptos analysées, nos comparatifs de plateformes MiCA et nos outils gratuits.`,
   robots: { index: false, follow: false },
 };
 
@@ -36,7 +37,7 @@ const SUGGESTIONS = [
   },
   {
     href: "/cryptos",
-    title: "780 cryptos analysées",
+    title: `${STATS.cryptos} cryptos analysées`,
     description: "Notre sélection complète : score fiabilité, on-chain, roadmap.",
     icon: Trophy,
   },

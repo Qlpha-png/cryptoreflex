@@ -25,7 +25,7 @@ import {
   EMBEDDABLE_TOOLS,
 } from "@/lib/schema-tools";
 import { GLOSSARY } from "@/lib/glossary";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -264,7 +264,7 @@ export default function RessourcesLibresPage() {
             <DatasetCard
               icon={<Database className="h-6 w-6" />}
               title="Plateformes MiCA"
-              count="34 plateformes vérifiées"
+              count={`${STATS.platformsAudited} plateformes vérifiées`}
               description="Agrément MiCA, autorité, date d'agrément et accès à la France, d'après le registre de l'ESMA et la liste blanche AMF."
               href="/outils/verificateur-mica"
               format="HTML / JSON-LD / iframe"

@@ -1,0 +1,14 @@
+{
+  "_doc": "Généré par scripts/update-site-counts.mjs — ne pas modifier à la main (contrôlé par tests/lib/site-counts.test.ts).",
+  "platforms": 22,
+  "platformsAudited": 34,
+  "cryptosCurated": 100,
+  "llmFiches": 679,
+  "cryptos": 779,
+  "vsPairs": 4950,
+  "tools": 17,
+  "cards": 25298,
+  "news": 117,
+  "articles": 94,
+  "updatedAt": "2026-10-04"
+}

@@ -24,7 +24,7 @@ import path from "node:path";
 import { verifyBearer } from "@/lib/auth";
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getAllUpcomingEvents } from "@/lib/crypto-events";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS, fmtCount } from "@/lib/brand";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
 
 export const runtime = "nodejs";
@@ -277,8 +277,8 @@ ${data.faq.answer}
 
 ## ⚡ Outils Cryptoreflex
 
-- [📊 780 fiches crypto analysées](/cryptos) — 100 fiches premium + 680 LLM, score fiabilité, on-chain live, roadmap
-- [⚖️ Comparer 2 cryptos face à face](/comparer) — 4 950 duels prêts
+- [📊 ${STATS.cryptos} fiches crypto](/cryptos) — ${STATS.cryptosCurated} fiches éditoriales + ${STATS.cryptos - STATS.cryptosCurated} fiches exploratoires, score de fiabilité, données on-chain
+- [⚖️ Comparer 2 cryptos face à face](/comparer) — ${fmtCount(STATS.vsPairs)} duels prêts
 - [🧮 Calculateur fiscalité PFU 31,4%](/outils/calculateur-fiscalite) — gratuit
 - [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte vos amendes potentielles
 

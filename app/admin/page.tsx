@@ -35,7 +35,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getUser } from "@/lib/auth";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { getAllArticleSummaries } from "@/lib/mdx";
 
@@ -196,14 +196,14 @@ const ADMIN_LINKS_GROUPS: Array<{
     links: [
       {
         href: "/cryptos",
-        title: "780 fiches crypto",
+        title: `${STATS.cryptos} fiches crypto`,
         description: "Hub /cryptos (100 éditoriales + 680 LLM)",
         Icon: FileText,
       },
       {
         href: "/comparer",
         title: "4 950 comparatifs crypto",
-        description: "Hub /comparer (entre les 100 fiches éditoriales)",
+        description: `Hub /comparer (entre les ${STATS.cryptosCurated} fiches éditoriales)`,
         Icon: FileText,
       },
       {
@@ -215,7 +215,7 @@ const ADMIN_LINKS_GROUPS: Array<{
       {
         href: "/outils",
         title: "Tous les outils",
-        description: "17 outils Cryptoreflex",
+        description: `${STATS.tools} outils Cryptoreflex`,
         Icon: Settings,
       },
     ],

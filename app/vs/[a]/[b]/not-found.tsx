@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Search, GitCompareArrows, Trophy } from "lucide-react";
+import { STATS } from "@/lib/brand";
 
 /**
  * not-found.tsx co-localisé au segment /vs/[a]/[b].
@@ -20,7 +21,7 @@ import { ArrowLeft, Search, GitCompareArrows, Trophy } from "lucide-react";
 export const metadata: Metadata = {
   title: "Ce comparatif n'existe pas — Cryptoreflex",
   description:
-    "Ce comparatif crypto vs crypto n'existe pas (encore !). Découvre tous nos duels et nos 780 cryptos analysées.",
+    `Ce comparatif crypto vs crypto n'existe pas (encore !). Découvrez tous nos duels et nos ${STATS.cryptos} cryptos analysées.`,
   robots: { index: false, follow: false },
 };
 
@@ -88,7 +89,7 @@ export default function VsNotFound() {
               className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
             >
               <Trophy className="h-4 w-4" />
-              Les 780 cryptos analysées
+              Les {STATS.cryptos} cryptos analysées
             </Link>
             <Link
               href="/"

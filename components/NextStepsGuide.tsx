@@ -16,6 +16,7 @@ import {
   Wrench,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { STATS } from "@/lib/brand";
 
 /**
  * NextStepsGuide — composant "main tenue" qui apparaît en bas de chaque page
@@ -185,7 +186,7 @@ const POOL: Record<string, Step> = {
   outils: {
     href: "/outils",
     Icon: Wrench,
-    label: "17 outils crypto",
+    label: `${STATS.tools} outils crypto`,
     desc: "Calculateurs, simulateurs, convertisseur, glossaire 250+ termes.",
   },
   topCryptos: {

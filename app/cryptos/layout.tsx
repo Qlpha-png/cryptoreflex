@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 
 /**
@@ -21,9 +21,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  */
 
 const PAGE_URL = `${BRAND.url}/cryptos`;
-const PAGE_TITLE = "780 cryptos analysees : top 10, 90 hidden gems + 680 fiches LLM 2026";
+const PAGE_TITLE = `${STATS.cryptos} cryptos analysees : top 10, 90 hidden gems + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires 2026`;
 const PAGE_DESCRIPTION =
-  "Toutes les fiches crypto Cryptoreflex : 100 fiches editoriales premium (top 10 + 90 hidden gems DePIN, RWA, Layer 2, gaming) + 680 fiches LLM exploratoires. Filtres categorie + recherche live + comparateur side-by-side.";
+  `Toutes les fiches crypto Cryptoreflex : ${STATS.cryptosCurated} fiches editoriales premium (top 10 + 90 hidden gems DePIN, RWA, Layer 2, gaming) + ${(STATS.cryptos - STATS.cryptosCurated)} fiches exploratoires. Filtres categorie + recherche live + comparateur side-by-side.`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     description: PAGE_DESCRIPTION,
   },
   keywords: [
-    "780 cryptos",
+    `${STATS.cryptos} cryptos`,
     "100 fiches crypto",
     "fiches crypto FR",
     "top 10 crypto 2026",

@@ -11,7 +11,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -51,7 +51,7 @@ export function GET() {
         path: "/api/public/platforms",
         url: `${baseUrl}/api/public/platforms`,
         description:
-          "Catalogue des 34 plateformes crypto comparées (frais, sécurité, MiCA, support FR). Mise à jour mensuelle.",
+          `Catalogue des ${STATS.platformsAudited} plateformes crypto comparées (frais, sécurité, MiCA, support FR). Mise à jour mensuelle.`,
         responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
         updateFrequency: "monthly",
       },

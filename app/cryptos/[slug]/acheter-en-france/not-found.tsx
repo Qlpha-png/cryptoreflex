@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Search, Trophy, ShieldCheck } from "lucide-react";
+import { STATS } from "@/lib/brand";
 
 /**
  * BUG FIX 2026-05-09 — `/cryptos/[bad-slug]/acheter-en-france` retournait
@@ -11,7 +12,7 @@ import { ArrowLeft, Search, Trophy, ShieldCheck } from "lucide-react";
 export const metadata: Metadata = {
   title: "Crypto introuvable — Cryptoreflex",
   description:
-    "Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvrez nos 780 cryptos analysées sur des plateformes régulées MiCA.",
+    `Cette crypto n'est pas (encore) couverte par notre guide d'achat. Découvrez nos ${STATS.cryptos} cryptos analysées sur des plateformes régulées MiCA.`,
   robots: { index: false, follow: false },
 };
 
@@ -70,7 +71,7 @@ export default function AcheterEnFranceNotFound() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-primary text-base">
               <Trophy className="h-4 w-4" />
-              Les 780 cryptos analysées
+              Les {STATS.cryptos} cryptos analysées
             </Link>
             <Link
               href="/"

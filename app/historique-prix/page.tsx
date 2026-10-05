@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, TrendingUp, Calendar } from "lucide-react";
-import { BRAND } from "@/lib/brand";
+import { BRAND, STATS } from "@/lib/brand";
 import { breadcrumbSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -151,7 +151,7 @@ export default function HistoriquePrixHub() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-ghost text-sm">
-              Les 780 fiches crypto
+              Les {STATS.cryptos} fiches crypto
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link href="/comparer" className="btn-ghost text-sm">

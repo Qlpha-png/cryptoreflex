@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Search, Trophy, Wallet } from "lucide-react";
+import { STATS } from "@/lib/brand";
 
 /**
  * not-found.tsx co-localisé au segment /acheter/[crypto]/[pays].
@@ -19,7 +20,7 @@ import { ArrowLeft, Search, Trophy, Wallet } from "lucide-react";
 export const metadata: Metadata = {
   title: "Ce guide d'achat n'existe pas — Cryptoreflex",
   description:
-    "Ce guide d'achat crypto n'est pas disponible. Découvrez nos 780 cryptos analysées et où les acheter.",
+    `Ce guide d'achat crypto n'est pas disponible. Découvrez nos ${STATS.cryptos} cryptos analysées et où les acheter.`,
   robots: { index: false, follow: false },
 };
 
@@ -80,7 +81,7 @@ export default function AcheterNotFound() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/cryptos" className="btn-primary text-base">
               <Trophy className="h-4 w-4" />
-              Les 780 cryptos analysées
+              Les {STATS.cryptos} cryptos analysées
             </Link>
             <Link
               href="/"
