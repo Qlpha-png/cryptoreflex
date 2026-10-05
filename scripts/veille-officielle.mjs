@@ -102,21 +102,40 @@ const PISTE = [
   { nom: "production", oauth: "https://oauth.piste.gouv.fr/api/oauth/token", api: "https://api.piste.gouv.fr/dila/legifrance/lf-engine-app" },
   { nom: "bac à sable", oauth: "https://sandbox-oauth.piste.gouv.fr/api/oauth/token", api: "https://sandbox-api.piste.gouv.fr/dila/legifrance/lf-engine-app" },
 ];
+/** Forme d'un identifiant, sans jamais le révéler : longueur, format UUID, espaces parasites. */
+const forme = (v) => `${v.length} car.${/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v.trim()) ? ", format UUID" : ""}${v !== v.trim() ? ", ESPACES AUTOUR" : ""}`;
 async function jetonPiste() {
-  const id = process.env.PISTE_CLIENT_ID, secret = process.env.PISTE_CLIENT_SECRET;
-  if (!id || !secret) return { erreur: "PISTE_CLIENT_ID / PISTE_CLIENT_SECRET absents" };
+  const brutId = process.env.PISTE_CLIENT_ID || "", brutSecret = process.env.PISTE_CLIENT_SECRET || "";
+  if (!brutId.trim() || !brutSecret.trim()) return { erreur: "PISTE_CLIENT_ID / PISTE_CLIENT_SECRET absents" };
+  const id = brutId.trim(), secret = brutSecret.trim();
   const essais = [];
+  // Ordre normal, puis identifiants inversés (collage dans le mauvais champ), en formulaire puis en en-tête « Basic ».
+  const variantes = [
+    { nom: "", id, secret },
+    { nom: " (identifiants inversés)", id: secret, secret: id },
+  ];
   for (const env of PISTE) {
-    try {
-      const res = await req(env.oauth, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded", accept: "application/json" }, body: new URLSearchParams({ grant_type: "client_credentials", client_id: id, client_secret: secret, scope: "openid" }) });
-      const j = await res.json().catch(() => ({}));
-      if (res.ok && j.access_token) return { ...env, token: j.access_token };
-      essais.push(`${env.nom} : HTTP ${res.status} ${propre(j.error || "")}`.trim());
-    } catch (e) {
-      essais.push(`${env.nom} : ${raison(e)}`);
+    for (const v of variantes) {
+      for (const basic of [false, true]) {
+        try {
+          const headers = { "content-type": "application/x-www-form-urlencoded", accept: "application/json" };
+          const corps = { grant_type: "client_credentials", scope: "openid" };
+          if (basic) headers.authorization = `Basic ${Buffer.from(`${v.id}:${v.secret}`).toString("base64")}`;
+          else Object.assign(corps, { client_id: v.id, client_secret: v.secret });
+          const res = await req(env.oauth, { method: "POST", headers, body: new URLSearchParams(corps) });
+          const j = await res.json().catch(() => ({}));
+          if (res.ok && j.access_token) {
+            if (v.nom) warn("loi", `identifiants PISTE inversés dans les secrets GitHub (PISTE_CLIENT_ID ↔ PISTE_CLIENT_SECRET) : ça marche, mais à remettre dans l'ordre`);
+            return { ...env, token: j.access_token, nom: env.nom + v.nom + (basic ? " (en-tête Basic)" : "") };
+          }
+          essais.push(`${env.nom}${v.nom}${basic ? " Basic" : ""} : HTTP ${res.status} ${propre(j.error || "")}`.trim());
+        } catch (e) {
+          essais.push(`${env.nom}${v.nom} : ${raison(e)}`);
+        }
+      }
     }
   }
-  return { erreur: `jeton refusé (${essais.join(" ; ")})` };
+  return { erreur: `jeton refusé (${essais.join(" ; ")}) ; PISTE_CLIENT_ID = ${forme(brutId)}, PISTE_CLIENT_SECRET = ${forme(brutSecret)}` };
 }
 async function lf(api, chemin, corps) {
   const res = await req(api.api + chemin, { method: "POST", headers: { authorization: `Bearer ${api.token}`, "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(corps) });
