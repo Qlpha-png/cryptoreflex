@@ -17,13 +17,21 @@
 import { getAllCryptos } from "@/lib/cryptos";
 import { EDITORIAL_CG_TO_ID } from "@/lib/crypto-page-slug";
 import { SLUG_ALIASES } from "@/lib/crypto-slug-aliases";
+import { TOOLS } from "@/lib/tools-catalog";
 
-/** Chemins exacts jamais soumis (noindex / transition). */
+/**
+ * Chemins exacts jamais soumis (noindex / transition).
+ * Sentinelle 05/10/2026 : les outils « à venir » (noindex depuis l'audit du 03/10) et la page des rendements
+ * stablecoins (noindex jusqu'à sa refonte) étaient encore dans le plan du site. Les outils viennent maintenant du
+ * catalogue (status « soon ») : un outil qui passe « à venir » sort du plan tout seul.
+ */
 export const SITEMAP_EXCLUDED_PATHS: ReadonlySet<string> = new Set([
   "/lp/cerfa-2026",
   "/pro",
   "/pro-plus",
   "/cgv-abonnement",
+  "/outils/yield-stablecoins",
+  ...TOOLS.filter((t) => t.status === "soon").map((t) => t.href),
 ]);
 
 export interface SitemapFilterContext {

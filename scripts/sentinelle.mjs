@@ -202,7 +202,18 @@ async function checkPartners() {
 }
 
 /* ------------------------------------------------------------------ 6. toutes les adresses des plans du site (nuit) */
+/** En-tête HTML d'une page, avec 2 nouvelles tentatives sur coupure réseau (constaté depuis GitHub le 05/10/2026). */
 async function readHead(url) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await readHeadOnce(url);
+    } catch (e) {
+      if (attempt >= 2) throw e;
+      await new Promise((r) => setTimeout(r, 3000 + attempt * 5000));
+    }
+  }
+}
+async function readHeadOnce(url) {
   const res = await fetch(url, { redirect: "manual", headers: { "user-agent": UA }, signal: AbortSignal.timeout(30_000) });
   let html = "";
   if (res.body && (res.headers.get("content-type") || "").includes("html")) {
@@ -245,13 +256,20 @@ async function checkSitemaps() {
         if (/noindex/i.test(robots)) { bad++; problems.push(`${path_} est dans le plan mais en noindex`); }
         else if (canon && canon.replace(/\/$/, "") !== u.replace(/\/$/, "")) { bad++; problems.push(`${path_} : canonique vers ${canon.replace(SITE, "")}`); }
       } catch (e) {
-        bad++;
-        problems.push(`${u.replace(SITE, "")} : ${e.message}`);
+        done++;
+        netErrors.push(`${u.replace(SITE, "")} : ${e.message}`);
       }
     }
   };
-  await Promise.all(Array.from({ length: 4 }, worker));
+  const netErrors = [];
+  await Promise.all(Array.from({ length: 3 }, worker));
   if (blocked > done * 0.05) warn("plans du site", `${blocked} adresses bloquées par la protection Vercel (contrôle partiel)`);
+  // coupures réseau persistantes : défaut seulement si elles dépassent 1 % des adresses (sinon c'est le réseau du robot)
+  if (netErrors.length > done * 0.01) {
+    fail("plans du site", `${netErrors.length} adresses injoignables après 3 essais (ex. ${netErrors.slice(0, 3).join(" ; ")})`);
+  } else if (netErrors.length) {
+    warn("plans du site", `${netErrors.length} adresses injoignables après 3 essais, sous le seuil de 1 % (${netErrors.slice(0, 3).join(" ; ")})`);
+  }
   if (bad) {
     for (const p of problems.slice(0, 40)) fail("plans du site", p);
     if (problems.length > 40) fail("plans du site", `… et ${problems.length - 40} autres`);
