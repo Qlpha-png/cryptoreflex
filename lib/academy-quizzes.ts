@@ -357,7 +357,7 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Deux obligations distinctes : le Cerfa 2086 détaille le calcul de vos plus-values (reporté ensuite sur la 2042 C), et le Cerfa 3916-bis déclare chaque compte d'actifs numériques ouvert sur une plateforme étrangère. Oublier le 3916-bis coûte 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année (art. 1736, X du CGI).",
+      "Deux obligations distinctes : le Cerfa 2086 détaille le calcul de vos plus-values (reporté ensuite sur la 2042 C), et le Cerfa 3916-bis déclare chaque compte de crypto-actifs ouvert sur une plateforme étrangère. Oublier le 3916-bis coûte 750 € par compte non déclaré, porté à 1 500 € si la valeur du compte a dépassé 50 000 € dans l'année (art. 1736, X du CGI).",
   },
   {
     id: "fis-q4-bareme-vs-pfu",
@@ -502,7 +502,7 @@ const QUIZ_STABLECOINS: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation:
-      "Échanger un actif numérique contre un autre (y compris un stablecoin) relève du sursis d'imposition (art. 150 VH bis). Le seuil de 305 € porte sur le total des cessions en euros sur l'année, pas sur un gain latent : il ne s'applique pas ici.",
+      "Échanger un crypto-actif contre un autre (y compris un stablecoin) relève du sursis d'imposition (art. 150 VH bis). Le seuil de 305 € porte sur le total des cessions en euros sur l'année, pas sur un gain latent : il ne s'applique pas ici.",
   },
   {
     id: "stb-q4-mica",

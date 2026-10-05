@@ -135,7 +135,7 @@ const FALLBACK_PARTNERS: Record<string, PartnerRowMinimal> = {
     logo: "/logos/partners/waltio.svg",
     category: "fiscalité crypto",
     mica: {
-      status: "Hors périmètre MiCA (SaaS fiscalité, pas un PSAN/CASP)",
+      status: "Hors périmètre MiCA (SaaS fiscalité, pas un CASP)",
       lastVerified: "2026-05-04",
       amfRegistration: null,
     },
@@ -420,7 +420,7 @@ export default function TransparencePage() {
             <ShieldCheck className="h-6 w-6 text-accent-cyan shrink-0 mt-1" />
             <div>
               <h2 className="text-2xl font-bold text-fg">
-                Cryptoreflex n'est ni PSAN ni CIF
+                Cryptoreflex n'est ni CASP ni CIF
               </h2>
               <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed">
                 {NOT_PSAN_NOT_CIF_NOTICE}

@@ -63,8 +63,8 @@ export default function CguPage() {
         fiches crypto, comparatifs plateformes) ; (2) des outils interactifs
         (calculateurs, simulateurs, convertisseur, glossaire) ; (3) une
         newsletter optionnelle. L&apos;ensemble de ces services est accessible
-        sans frais et sans abonnement. Le Site n&apos;est <strong>ni un PSAN
-        agréé AMF, ni un CIF, ni un courtier</strong>. Aucun conseil personnalisé
+        sans frais et sans abonnement. Le Site n&apos;est <strong>ni un prestataire de services sur
+        crypto-actifs (CASP), ni un CIF, ni un courtier</strong>. Aucun conseil personnalisé
         en investissement n&apos;est fourni.
       </p>
 

@@ -118,7 +118,7 @@ const faqs = [
   },
   {
     q: "Donnez-vous des conseils d'investissement ?",
-    a: "Non. Cryptoreflex n'est pas un PSAN ni un conseiller financier. La newsletter délivre de l'information factuelle sur le marché crypto, pas des recommandations d'achat ou de vente.",
+    a: "Non. Cryptoreflex n'est ni un prestataire de services sur crypto-actifs (CASP) ni un conseiller financier. La newsletter délivre de l'information factuelle sur le marché crypto, pas des recommandations d'achat ou de vente.",
   },
   {
     q: "Mes données sont-elles partagées ?",

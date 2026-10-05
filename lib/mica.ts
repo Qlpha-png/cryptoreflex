@@ -6,7 +6,7 @@ import psanRegistry from "@/data/psan-registry.json";
 
 /**
  * Statut PSAN (Prestataire de Services sur Actifs Numériques) — régime FR
- * pré-MiCA, en vigueur depuis la loi PACTE de 2019.
+ * pré-MiCA, issu de la loi PACTE de 2019, en vigueur jusqu'au 30 juin 2026.
  */
 export type PsanStatus =
   | "registered" // Enregistré (PSAN simple) ou Agréé

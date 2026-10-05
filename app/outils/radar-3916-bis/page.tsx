@@ -73,11 +73,11 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "Qu'est-ce que le formulaire 3916-bis ?",
-    a: "Le 3916-bis est une déclaration annuelle obligatoire pour toute personne physique fiscalement domiciliée en France ayant ouvert, détenu, utilisé ou clôturé au moins un compte d'actifs numériques (crypto-monnaies) auprès d'un exchange établi à l'étranger. Référence : BOI-CF-CPF-30-20 et article 1736 X du CGI.",
+    a: "Le 3916-bis est une déclaration annuelle obligatoire pour toute personne physique fiscalement domiciliée en France ayant ouvert, détenu, utilisé ou clôturé au moins un compte de crypto-actifs (crypto-monnaies) auprès d'un exchange établi à l'étranger. Référence : BOI-CF-CPF-30-20 et article 1736 X du CGI.",
   },
   {
     q: "Quelle est l'amende si je ne déclare pas ?",
-    a: "750 € par compte d'actifs numériques non déclaré, porté à 1 500 € par compte si la valeur de vos comptes à l'étranger dépasse 50 000 € (article 1736, X du CGI). S'y ajoutent 125 € par omission ou inexactitude (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration. Le montant de 10 000 € par compte situé dans un État non coopératif concerne les comptes bancaires, pas les comptes crypto.",
+    a: "750 € par compte de crypto-actifs non déclaré, porté à 1 500 € par compte si la valeur de vos comptes à l'étranger dépasse 50 000 € (article 1736, X du CGI). S'y ajoutent 125 € par omission ou inexactitude (250 € au-delà de 50 000 €), dans la limite de 10 000 € par déclaration. Le montant de 10 000 € par compte situé dans un État non coopératif concerne les comptes bancaires, pas les comptes crypto.",
   },
   {
     q: "Mon compte est vide / fermé, dois-je quand même le déclarer ?",

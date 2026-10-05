@@ -192,7 +192,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
       un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne un PSAN.</p>
       <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email.</p>
       <hr>
-      <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un PSAN ni un CIF.
+      <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un prestataire de services sur crypto-actifs (CASP) ni un CIF.
       Tout contenu sponsorisé est explicitement signalé conformément à l'art. 222-15 du règlement général AMF
       et à la charte ARPP. ${BRAND.url}</p>
     `;

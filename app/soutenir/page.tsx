@@ -331,7 +331,7 @@ export default function SoutenirPage() {
               },
               {
                 q: "Y a-t-il des limites à ce que propose Cryptoreflex ?",
-                a: "Oui : de la pédagogie et des outils, pas de conseil en investissement personnalisé. Cryptoreflex n'est ni un PSAN ni un CIF immatriculé. Pour une situation fiscale ou patrimoniale précise, consultez un professionnel réglementé.",
+                a: "Oui : de la pédagogie et des outils, pas de conseil en investissement personnalisé. Cryptoreflex n'est ni un prestataire de services sur crypto-actifs (CASP) ni un CIF immatriculé. Pour une situation fiscale ou patrimoniale précise, consultez un professionnel réglementé.",
               },
             ].map((f) => (
               <details key={f.q} className="group">

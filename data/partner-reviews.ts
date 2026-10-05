@@ -494,7 +494,7 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Déclarer ses cryptos en France, c'est un piège technique",
-        body: "L'art. 150 VH bis CGI impose une méthode globale, cession par cession (valeur de tout le portefeuille, prix total d'acquisition). Un tableur ne le fait pas tout seul. En plus, chaque compte d'actifs numériques ouvert, utilisé ou clos auprès d'une plateforme établie à l'étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis, sous peine de 750 € d'amende par compte oublié, 1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année (art. 1736, X du CGI). Sans outil, c'est un long travail manuel, avec un vrai risque d'erreur.",
+        body: "L'art. 150 VH bis CGI impose une méthode globale, cession par cession (valeur de tout le portefeuille, prix total d'acquisition). Un tableur ne le fait pas tout seul. En plus, chaque compte de crypto-actifs ouvert, utilisé ou clos auprès d'une plateforme établie à l'étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis, sous peine de 750 € d'amende par compte oublié, 1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année (art. 1736, X du CGI). Sans outil, c'est un long travail manuel, avec un vrai risque d'erreur.",
         stat: "750 €",
       },
       solution: {
@@ -623,7 +623,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         reason: "Aide à éviter l'amende de 750 € (ou 1 500 €) par compte non déclaré",
         description:
-          "Article 1736, X du CGI : 750 € d'amende par compte d'actifs numériques à l'étranger non déclaré (1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année). Waltio fournit les informations à déclarer pour chaque plateforme que vous avez ajoutée, même avec l'offre gratuite. Cinq comptes oubliés, c'est 3 750 € d'amende, ou 7 500 € au-delà de 50 000 €.",
+          "Article 1736, X du CGI : 750 € d'amende par compte de crypto-actifs à l'étranger non déclaré (1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année). Waltio fournit les informations à déclarer pour chaque plateforme que vous avez ajoutée, même avec l'offre gratuite. Cinq comptes oubliés, c'est 3 750 € d'amende, ou 7 500 € au-delà de 50 000 €.",
       },
       {
         reason: "Le calcul automatisé, sans tableur",

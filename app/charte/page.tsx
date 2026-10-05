@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Charte éthique éditoriale — ${BRAND.name}`,
     description:
-      "Pédagogie crypto neutre, pas PSAN, pas CIF, pas d'influenceur payé. Engagement public sur ce qu'on FAIT et ce qu'on NE FAIT JAMAIS.",
+      "Pédagogie crypto neutre, pas CASP, pas CIF, pas d'influenceur payé. Engagement public sur ce qu'on FAIT et ce qu'on NE FAIT JAMAIS.",
     url: PAGE_URL,
     type: "article",
     siteName: BRAND.name,
@@ -135,7 +135,7 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On ne donne JAMAIS de conseil en investissement personnalisé",
     detail:
-      "Cryptoreflex n'est ni PSAN agréé, ni CIF (Conseiller en Investissements Financiers). On ne vous dit pas « achetez ça maintenant » ou « vendez ça ». Pour un conseil personnel, voyez un CIF inscrit à l'ORIAS ou un fiscaliste agréé.",
+      "Cryptoreflex n'est ni prestataire de services sur crypto-actifs (CASP), ni CIF (Conseiller en Investissements Financiers). On ne vous dit pas « achetez ça maintenant » ou « vendez ça ». Pour un conseil personnel, voyez un CIF inscrit à l'ORIAS ou un fiscaliste agréé.",
   },
   {
     title: "On ne publie pas de prédictions de prix",
@@ -296,8 +296,9 @@ export default function ChartePage() {
               <li className="flex gap-2">
                 <XCircle className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
                 <span>
-                  <strong>Pas PSAN</strong> (Prestataire de Services sur Actifs
-                  Numériques agréé AMF) — on ne reçoit, ne conserve, ne
+                  <strong>Pas CASP</strong> (prestataire de services sur
+                  crypto-actifs agréé MiCA, qui a remplacé le PSAN le 1er juillet
+                  2026) — on ne reçoit, ne conserve, ne
                   transmet aucun ordre, aucun fonds.
                 </span>
               </li>

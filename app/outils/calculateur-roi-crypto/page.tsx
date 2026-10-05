@@ -95,7 +95,7 @@ const FAQ_ITEMS = [
   {
     question: "Faut-il déclarer même si on n'a pas vendu en euros ?",
     answer:
-      "Les stablecoins (USDC, USDT, DAI) sont des actifs numériques : une conversion crypto → stablecoin sans soulte n’est pas un fait générateur (sursis, art. 150 VH bis CGI), au même titre qu’un swap crypto → crypto. Vous n’êtes imposé qu’à la cession contre euro (FIAT), un bien/service, ou en présence d’une soulte. Pour un calcul exhaustif, utilisez notre calculateur fiscalité complet.",
+      "Les stablecoins (USDC, USDT, DAI) sont des crypto-actifs : une conversion crypto → stablecoin sans soulte n’est pas un fait générateur (sursis, art. 150 VH bis CGI), au même titre qu’un swap crypto → crypto. Vous n’êtes imposé qu’à la cession contre euro (FIAT), un bien/service, ou en présence d’une soulte. Pour un calcul exhaustif, utilisez notre calculateur fiscalité complet.",
   },
   {
     question: "Cet outil est-il fiable pour préparer ma déclaration ?",

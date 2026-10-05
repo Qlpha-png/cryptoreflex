@@ -19,7 +19,7 @@
  *           SANS nuance (non tranché / à vérifier / source officielle) ;
  *        d. seuils inventés (">10 swaps/an", "5 000 €/an") distinguant particulier/pro.
  *      Base officielle : art. 150 VH bis CGI + BOFiP BOI-RPPM-PVBMC-30-30 (échange sans
- *      soulte entre actifs numériques = sursis, pas de fait générateur ; imposition
+ *      soulte entre crypto-actifs = sursis, pas de fait générateur ; imposition
  *      seulement à la cession contre euro/bien/service ou avec soulte). Le timing du
  *      staking/airdrop n'est PAS tranché par une doctrine officielle dédiée.
  *      Scan ÉLARGI (broadScan) : + content/news (bot daily), content/lead-magnets, data (+ .json).
@@ -216,7 +216,7 @@ const RULES = [
     broadScan: true,
     allowContextRegex: new RegExp(FISCAL_NUANCE, "i"),
     suggestion:
-      "Un échange SANS SOULTE entre actifs numériques (crypto↔crypto, crypto↔stablecoin) = SURSIS d'imposition (art. 150 VH bis CGI) : pas un fait générateur. Imposable seulement à la cession contre euro/bien/service ou avec soulte. Ajouter la nuance ou corriger.",
+      "Un échange SANS SOULTE entre crypto-actifs (crypto↔crypto, crypto↔stablecoin) = SURSIS d'imposition (art. 150 VH bis CGI) : pas un fait générateur. Imposable seulement à la cession contre euro/bien/service ou avec soulte. Ajouter la nuance ou corriger.",
   },
   {
     id: "fiscal-staking-reception-sans-nuance",

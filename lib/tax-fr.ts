@@ -6,7 +6,7 @@
  *   - 12,8 % au titre de l'impôt sur le revenu (IR)
  *   - 18,6 % au titre des prélèvements sociaux (PS)
  *
- * Périmètre : cessions à titre onéreux d'actifs numériques par un particulier
+ * Périmètre : cessions à titre onéreux de crypto-actifs par un particulier
  * dans le cadre d'une gestion non professionnelle (occasionnel).
  *
  * Important :

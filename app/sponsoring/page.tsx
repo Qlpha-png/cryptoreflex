@@ -515,7 +515,7 @@ export default function SponsoringPage() {
             <span>
               <strong className="text-fg">Statut éditeur —</strong>{" "}
               {BRAND.name} est un éditeur web indépendant français. Nous ne
-              sommes ni un PSAN (prestataire de services sur actifs numériques),
+              sommes ni un prestataire de services sur crypto-actifs (CASP),
               ni un CIF (conseiller en investissements financiers). Aucun
               contenu publié ne constitue un conseil en investissement
               personnalisé.
@@ -531,7 +531,7 @@ export default function SponsoringPage() {
               contenu sponsorisé est explicitement signalé conformément à
               l&apos;art. 222-15 du règlement général AMF, à la charte ARPP
               « Communication publicitaire numérique » et aux recommandations
-              DDPP. Aucune promotion d&apos;actif numérique non régulé MiCA.
+              DDPP. Aucune promotion de crypto-actif non régulé MiCA.
             </span>
           </p>
           <p className="flex items-start gap-2">

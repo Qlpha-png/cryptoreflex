@@ -49,7 +49,7 @@ export default function RegulatoryFooter({
           <strong className="text-fg/80">
             Site éditorial indépendant.
           </strong>{" "}
-          Cryptoreflex n'est ni PSAN, ni CASP, ni CIF. Aucun contenu publié
+          Cryptoreflex n'est ni prestataire de services sur crypto-actifs (CASP), ni CIF. Aucun contenu publié
           ne constitue un conseil en investissement personnalisé. L'investissement
           en cryptoactifs comporte un risque élevé de perte totale en capital.
           Les liens marqués{" "}

@@ -398,8 +398,8 @@ export default function AcheterPaysPage({ params }: Props) {
             Régulation {country.regulator}
           </h2>
           <p className="mt-3 text-base text-fg/85 leading-relaxed">
-            {capitalizeFirst(country.inName)}, la supervision des prestataires de services sur actifs
-            numériques relève de {country.regulatorWithArticle}. Vérifier l'autorisation d'une
+            {capitalizeFirst(country.inName)}, la supervision des prestataires de services sur
+            crypto-actifs relève de {country.regulatorWithArticle}. Vérifier l'autorisation d'une
             plateforme avant d'y déposer des fonds reste la première règle d'hygiène
             financière. Les plateformes opérant sous régime MiCA (UE) bénéficient du
             passporting européen et sont reconnues dans tous les États membres.

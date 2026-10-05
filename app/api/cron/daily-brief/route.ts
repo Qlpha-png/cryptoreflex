@@ -43,9 +43,9 @@ const ROTATING_FAQS: Array<{ question: string; answer: string }> = [
       "Pour un particulier, les plus-values crypto sont imposées au PFU (Prélèvement Forfaitaire Unique) de 31,4 % par défaut (12,8 % d'impôt + 18,6 % de prélèvements sociaux), uniquement lors de la conversion en euros (article 150 VH bis du CGI). Tant que vous restez en crypto-vers-crypto, aucun impôt n'est dû. Voir notre /outils/calculateur-fiscalite pour simuler votre note fiscale.",
   },
   {
-    question: "MiCA Phase 2 : qu'est-ce qui change le 30 juin 2026 ?",
+    question: "MiCA : qu'est-ce qui a changé le 1er juillet 2026 ?",
     answer:
-      "Le 30 juin 2026, la fenêtre de transition MiCA s'achève. Les plateformes crypto qui n'ont pas obtenu l'agrément CASP (Crypto-Asset Service Provider) ne pourront plus servir les résidents français. Vérifiez le statut de votre plateforme sur /outils/verificateur-mica.",
+      "La période de transition MiCA a pris fin le 30 juin 2026. Depuis le 1er juillet 2026, les plateformes crypto qui n'ont pas obtenu l'agrément CASP (Crypto-Asset Service Provider) ne peuvent plus servir les résidents français. Vérifiez le statut de votre plateforme sur /outils/verificateur-mica.",
   },
   {
     question: "Faut-il déclarer ses comptes crypto à l'étranger en France ?",
@@ -283,7 +283,7 @@ ${data.faq.answer}
 - [🚨 Radar 3916-bis](/outils/radar-3916-bis) — détecte vos amendes potentielles
 
 <Callout type="warning" title="Pas un conseil financier">
-  Ce brief est une synthèse pédagogique automatisée des données de marché publiques (CoinGecko). Il ne constitue pas un conseil d'investissement. Cryptoreflex n'est pas Prestataire de Services sur Actifs Numériques (PSAN/CASP). Investir en crypto comporte un risque de perte en capital.
+  Ce brief est une synthèse pédagogique automatisée des données de marché publiques (CoinGecko). Il ne constitue pas un conseil d'investissement. Cryptoreflex n'est pas prestataire de services sur crypto-actifs (CASP). Investir en crypto comporte un risque de perte en capital.
 </Callout>
 
 _Brief généré automatiquement le ${dateLong} à 7h00 (Europe/Paris). Source data : CoinGecko, Cryptoreflex éditorial. Disclaimer complet : [/transparence](${BRAND.url}/transparence)._

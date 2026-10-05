@@ -216,7 +216,7 @@ Depuis le 1er janvier 2026, l'article 150 VH ter du CGI (loi n° 2026-534 du 25 
 - **Mint** : prix payé = acquisition (à intégrer dans le portefeuille global).
 - **Vente sur marketplace** : cession imposable, frais de marketplace déductibles.
 - **Royalties créateur** : pour un créateur, revenus généralement imposables (souvent en BNC) ; régime à confirmer selon la nature de l'activité.
-- **Achat de NFT en ETH** : depuis l'article 150 VH ter, le NFT n'est plus un actif numérique « ordinaire » : payer un NFT en ETH s'analyse comme une cession d'ETH, potentiellement imposable. Faites valider votre cas par un professionnel.
+- **Achat de NFT en ETH** : depuis l'article 150 VH ter, le NFT n'est plus un crypto-actif « ordinaire » : payer un NFT en ETH s'analyse comme une cession d'ETH, potentiellement imposable. Faites valider votre cas par un professionnel.
 
 ### Pertes sur NFT illiquides
 

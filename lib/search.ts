@@ -78,7 +78,7 @@ const GLOSSARY: Array<{
   {
     term: "PSAN",
     definition:
-      "Prestataire de Services sur Actifs Numériques — statut français supplanté progressivement par MiCA.",
+      "Prestataire de Services sur Actifs Numériques — ancien statut français, en vigueur jusqu'au 30 juin 2026 et remplacé par l'agrément MiCA (CASP).",
     url: "/methodologie",
     keywords: ["amf", "regulation", "france", "agrement", "enregistrement"],
   },

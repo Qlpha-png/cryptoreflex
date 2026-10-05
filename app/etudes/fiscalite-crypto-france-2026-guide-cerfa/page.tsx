@@ -110,7 +110,7 @@ const FAQ = [
   },
   {
     q: "Le change crypto-vers-crypto (token-to-token) est-il imposable ?",
-    a: "Non. Les échanges sans soulte entre actifs numériques bénéficient d’un sursis d’imposition (article 150 VH bis, II-A du CGI ; BOFiP BOI-RPPM-PVBMC-30-30) : l’échange n’est pas un fait générateur, aucun gain ni perte n’est constaté à cette occasion, et aucune obligation déclarative n’en découle. Seule la cession contre une devise ayant cours légal (euro, dollar, etc.) ou contre un bien/service déclenche un événement imposable.",
+    a: "Non. Les échanges sans soulte entre crypto-actifs bénéficient d’un sursis d’imposition (article 150 VH bis, II-A du CGI ; BOFiP BOI-RPPM-PVBMC-30-30) : l’échange n’est pas un fait générateur, aucun gain ni perte n’est constaté à cette occasion, et aucune obligation déclarative n’en découle. Seule la cession contre une devise ayant cours légal (euro, dollar, etc.) ou contre un bien/service déclenche un événement imposable.",
   },
   {
     q: "Comment calcule-t-on la plus-value ?",
@@ -379,7 +379,7 @@ export default function FiscaliteCryptoStudyPage() {
               <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
               <span>
                 <strong>Token-to-token non taxable</strong> : un échange sans
-                soulte entre actifs numériques bénéficie d’un sursis
+                soulte entre crypto-actifs bénéficie d’un sursis
                 d’imposition (art. 150 VH bis du CGI). Seule la cession
                 token-to-fiat (ou token-to-bien/service) déclenche un événement
                 imposable.
@@ -491,8 +491,9 @@ export default function FiscaliteCryptoStudyPage() {
           <h2>2. Régime fiscal applicable</h2>
           <h3>2.1. Le PFU 31,4 %</h3>
           <p>
-            Les plus-values de cession d’actifs numériques par les particuliers
-            relèvent du <strong>Prélèvement Forfaitaire Unique (PFU)</strong>{" "}
+            Les plus-values de cession de crypto-actifs (appelés « actifs
+            numériques » jusqu’au 30 juin 2026 et encore sur le formulaire 2086)
+            par les particuliers relèvent du <strong>Prélèvement Forfaitaire Unique (PFU)</strong>{" "}
             défini à l’article 200 A du Code général des impôts (CGI). Le taux
             est de <strong>31,4 %</strong>, qui se décompose en :
           </p>
@@ -507,7 +508,7 @@ export default function FiscaliteCryptoStudyPage() {
           </ul>
           <p>
             Le PFU s’applique <strong>par défaut</strong> aux plus-values de
-            cession d’actifs numériques depuis l’imposition des revenus 2023.
+            cession de crypto-actifs depuis l’imposition des revenus 2023.
             Les contribuables peuvent opter pour le <strong>barème progressif</strong>{" "}
             en cochant la <strong>case 3CN</strong> de la déclaration 2042 C :
             l’option porte sur l’ensemble des plus-values crypto de l’année,
@@ -592,7 +593,7 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             Le formulaire <strong>Cerfa 2086</strong> est l’annexe à la
             déclaration des revenus (formulaire 2042) qui détaille chaque
-            cession d’actifs numériques de l’année. Il se compose de plusieurs
+            cession de crypto-actifs de l’année. Il se compose de plusieurs
             sections :
           </p>
           <h3>3.1. Identification du contribuable</h3>
@@ -676,8 +677,8 @@ export default function FiscaliteCryptoStudyPage() {
           <p>
             L’annexe 3916-bis (réf. CERFA 16091) est obligatoire pour toute
             personne physique ou morale fiscalement domiciliée en France qui{" "}
-            <strong>détient, ouvre, utilise ou clôt</strong> un compte d’actifs
-            numériques chez un prestataire établi à l’étranger.
+            <strong>détient, ouvre, utilise ou clôt</strong> un compte de
+            crypto-actifs chez un prestataire établi à l’étranger.
           </p>
           <h3>4.1. Quels exchanges sont concernés ?</h3>
           <p>
