@@ -20,7 +20,38 @@
  */
 
 import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
 import { createSupabaseServerClient, createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+
+/**
+ * Client de LECTURE des fiches publiques (is_published), compatible avec les pages servies en cache (ISR).
+ *
+ * Audit 05/10/2026 (sentinelle) : depuis le 02/10, le client service-role force « no-store » (correctif Reflex Cards).
+ * Pendant la régénération ISR, Next refuse un fetch no-store (« Dynamic server usage ») ; l'erreur, avalée par les
+ * try/catch ci-dessous, devenait « fiche introuvable », mise en cache 6 h : ~390 fiches servies en faux 404 (noindex)
+ * et le hub /cryptos réduit aux 100 fiches éditoriales. Ici : fetch revalidé toutes les heures (lecture publique),
+ * le client no-store reste réservé à l'écriture (upsertCryptoFiche) et à Reflex Cards.
+ */
+function fichesReadClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const { cache: _cache, ...rest } = (init ?? {}) as RequestInit;
+        return fetch(input, { ...rest, next: { revalidate: 3600 } } as RequestInit);
+      },
+    },
+  });
+}
+
+/** Erreurs internes de Next (rendu dynamique, notFound, redirect) : à relancer, jamais à transformer en « absent ». */
+function rethrowNextInternal(err: unknown): void {
+  const digest = (err as { digest?: unknown } | null)?.digest;
+  if (typeof digest === "string" && /^(DYNAMIC_SERVER_USAGE|NEXT_NOT_FOUND|NEXT_REDIRECT)/.test(digest)) throw err;
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -84,7 +115,7 @@ export interface CryptoFicheRow {
  * (is_published=true), pas besoin de session — service-role va bien.
  */
 async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFicheRow | null> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return null;
   try {
     const { data, error } = await sb
@@ -93,16 +124,13 @@ async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFiche
       .eq("coingecko_id", coingeckoId)
       .eq("is_published", true)
       .maybeSingle();
-    if (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`[cryptos-db] getCryptoFiche(${coingeckoId}) error:`, error.message);
-      return null;
-    }
+    if (error) throw new Error(`[cryptos-db] getCryptoFiche(${coingeckoId}) : ${error.message}`);
     return (data as CryptoFicheRow) ?? null;
   } catch (err) {
+    rethrowNextInternal(err);
     // eslint-disable-next-line no-console
     console.warn(`[cryptos-db] getCryptoFiche(${coingeckoId}) exception:`, err);
-    return null;
+    throw err; // jamais de null mis en cache sur une panne
   }
 }
 
@@ -120,7 +148,7 @@ async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFiche
 export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
   const cached = unstable_cache(
     () => _getCryptoFicheUncached(coingeckoId),
-    [`crypto-fiche-v1`, coingeckoId],
+    [`crypto-fiche-v2`, coingeckoId], // v2 (05/10/2026) : purge des faux « introuvable » mis en cache
     { revalidate: 21600, tags: [`crypto-fiche:${coingeckoId}`] },
   );
   return cached();
@@ -132,7 +160,7 @@ export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRo
  * "mantra-dao" coingeckoId historique — desormais alignes).
  */
 async function _getCryptoFicheBySlugUncached(slug: string): Promise<CryptoFicheRow | null> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return null;
   try {
     const { data, error } = await sb
@@ -180,7 +208,7 @@ export async function getPublishedCoingeckoIds(
   limit = 1000,
   tiers: QualityTier[] = ["T1", "T2", "T3"],
 ): Promise<string[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -222,7 +250,7 @@ export async function getFeaturedCryptosLight(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],
 ): Promise<CryptoFicheLight[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -251,7 +279,7 @@ export async function getFeaturedCryptosLight(
  * qui liste bien les ~680. Champs minimaux pour les cartes du hub.
  */
 export async function getAllPublishedLlmCryptosLight(limit = 2000): Promise<CryptoFicheLight[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -266,7 +294,8 @@ export async function getAllPublishedLlmCryptosLight(limit = 2000): Promise<Cryp
       return [];
     }
     return (data as CryptoFicheLight[]) ?? [];
-  } catch {
+  } catch (err) {
+    rethrowNextInternal(err);
     return [];
   }
 }
@@ -275,7 +304,7 @@ export async function getFeaturedCryptos(
   limit = 50,
   tiers: QualityTier[] = ["T1", "T2"],
 ): Promise<CryptoFicheRow[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -304,7 +333,7 @@ async function _searchCryptosUncached(
   limit = 20,
 ): Promise<CryptoFicheLight[]> {
   if (!query || query.trim().length < 2) return [];
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     // OPTIM 2026-05-10 — select light (5 fields vs *) = -90% bandwidth.
@@ -349,7 +378,7 @@ export async function getCryptosByCategory(
   category: string,
   limit = 50,
 ): Promise<CryptoFicheRow[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb
@@ -375,7 +404,7 @@ export async function getCryptosByCategory(
  * + ISR on-demand revalidation).
  */
 export async function getPublishedCryptoSlugs(limit = 1000): Promise<string[]> {
-  const sb = createSupabaseServiceRoleClient();
+  const sb = fichesReadClient();
   if (!sb) return [];
   try {
     const { data, error } = await sb

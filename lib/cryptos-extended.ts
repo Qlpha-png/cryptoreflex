@@ -32,6 +32,7 @@
 import { unstable_cache } from "next/cache";
 import { getAllCryptos as getAllStaticCryptos } from "@/lib/cryptos";
 import { getAllPublishedLlmCryptosLight } from "@/lib/cryptos-db";
+import { SLUG_ALIASES } from "@/lib/crypto-slug-aliases";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -66,7 +67,7 @@ export interface UnifiedCrypto {
  * Tier T3 inclus : on prend tout le pipeline (limit 1000 = max actuel ~680).
  * Les statiques sont prioritaires (apparaissent en premier dans le tableau).
  */
-export const getAllCryptosUnified = unstable_cache(
+const unifiedCached = unstable_cache(
   async (): Promise<UnifiedCrypto[]> => {
     // FIX 2026-05-30 — getAllPublishedLlmCryptosLight (SANS filtre quality_tier)
     // au lieu de getFeaturedCryptosLight (limité T1/T2/T3) : la plupart des ~680
@@ -78,9 +79,21 @@ export const getAllCryptosUnified = unstable_cache(
       getAllPublishedLlmCryptosLight(2000),
     ]);
 
+    // Panne de base (liste vide) : on LÈVE, pour que unstable_cache ne mémorise pas une liste réduite aux 100 fiches
+    // éditoriales pendant 6 h (audit 05/10/2026) ; getAllCryptosUnified() retombe alors sur les statiques, sans cache.
+    if (!llm.length) throw new Error("[cryptos-extended] fiches exploratoires indisponibles : liste non mise en cache");
+
     // Set des coingeckoIds statiques pour eviter doublons LLM (BTC, ETH...).
-    const staticIds = new Set(statics.map((c) => c.coingeckoId));
-    const llmFiltered = llm.filter((f) => !staticIds.has(f.coingecko_id));
+    // 05/10/2026 : mêmes exclusions que le plan du site (lib/sitemap-filters.ts) — anciens identifiants qui redirigent
+    // (SLUG_ALIASES, ex. onyxcoin → chain-2), identifiants égaux à ceux des fiches éditoriales, lignes en double.
+    const staticIds = new Set([...statics.map((c) => c.coingeckoId), ...statics.map((c) => c.id)]);
+    // + une seule entrée par identifiant (deux lignes en base pour la même crypto = un seul lien, comme le plan du site).
+    const seenLlm = new Set<string>();
+    const llmFiltered = llm.filter((f) => {
+      if (staticIds.has(f.coingecko_id) || f.coingecko_id in SLUG_ALIASES || seenLlm.has(f.coingecko_id)) return false;
+      seenLlm.add(f.coingecko_id);
+      return true;
+    });
 
     return [
       ...statics.map((c) => ({
@@ -104,10 +117,22 @@ export const getAllCryptosUnified = unstable_cache(
   },
   // v2 : nouvelle clé pour repartir propre (l'ancienne "cryptos-unified" pouvait
   // être figée à ~100, peuplée pendant un build sans accès Supabase + filtre tier).
-  ["cryptos-unified-v2"],
+  ["cryptos-unified-v5"], // v5 (05/10/2026) : doublons retirés (alias, identifiants éditoriaux, lignes en double)
   // Cache 6h : la liste change rarement (1×/jour via cron LLM-pipeline).
   { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
 );
+
+/** Liste unifiée (cache 6 h) ; en cas de panne de la base, repli non mis en cache sur les fiches éditoriales. */
+export async function getAllCryptosUnified(): Promise<UnifiedCrypto[]> {
+  try {
+    return await unifiedCached();
+  } catch (err) {
+    const digest = (err as { digest?: unknown } | null)?.digest;
+    if (typeof digest === "string" && digest.startsWith("DYNAMIC_SERVER_USAGE")) throw err;
+    console.warn("[cryptos-extended] liste unifiée indisponible, repli sur les fiches éditoriales :", (err as Error).message);
+    return staticsOnly();
+  }
+}
 
 /**
  * Alias utilisé par le hub /cryptos. Depuis le fix du filtre quality_tier,
@@ -116,3 +141,15 @@ export const getAllCryptosUnified = unstable_cache(
  * un seul cache, partout (hub, /alertes, /api).
  */
 export const getAllCryptosBrowsable = getAllCryptosUnified;
+
+/** Repli sans cache quand la base ne répond pas : les fiches éditoriales seules (jamais mémorisé). */
+function staticsOnly(): UnifiedCrypto[] {
+  return getAllStaticCryptos().map((c) => ({
+    id: c.id,
+    coingeckoId: c.coingeckoId,
+    name: c.name,
+    symbol: c.symbol,
+    category: c.category,
+    source: "static" as const,
+  }));
+}
