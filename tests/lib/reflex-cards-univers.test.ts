@@ -11,7 +11,7 @@ import RULES_RAW from "@/data/reflex-cards-rules.json";
 process.env.REFLEX_CARDS_UNIVERS = "true";
 vi.resetModules();
 const { CARD, RULES, UNIVERS, dayTables, drawPack, inClear, universCardP } = await import("@/lib/reflex-cards/engine");
-const { CATS, CAT_LABEL, UNIV_W, searchUnivers, universById, universCards, universStats } = await import("@/lib/reflex-cards/univers");
+const { CATS, CAT_LABEL, UNIV_CAT_W, UNIV_W, searchUnivers, universById, universCards, universStats } = await import("@/lib/reflex-cards/univers");
 
 const seeded = (seed: number): Rnd => {
   let a = seed;
@@ -75,7 +75,7 @@ describe("Univers — rareté tirée d'abord (UNIV_W), garanties conservées", (
     const rnd = seeded(2026), ps = freshPity(), N = 50000;
     const seen = new Map<string, number>();
     let R = 0, worst = 0, since = 0, cards = 0;
-    const byR: Record<string, number> = {};
+    const byR: Record<string, number> = {}, byF: Record<string, number> = {};
     for (let i = 0; i < N; i++) {
       const p = drawPack(1, ps, null, rnd);
       let best = -1;
@@ -84,6 +84,8 @@ describe("Univers — rareté tirée d'abord (UNIV_W), garanties conservées", (
         cards++;
         const r = CARD.get(it.id)!.r;
         byR[r] = (byR[r] ?? 0) + 1;
+        const f = CARD.get(it.id)!.fam;
+        byF[f] = (byF[f] ?? 0) + 1;
         seen.set(it.id, (seen.get(it.id) ?? 0) + 1);
         best = Math.max(best, RNK(r));
       }
@@ -101,9 +103,43 @@ describe("Univers — rareté tirée d'abord (UNIV_W), garanties conservées", (
     expect(byR.L / cards).toBeLessThan(UNIV_W.L * 1.2);
     expect(byR.UR / cards).toBeGreaterThan(UNIV_W.UR * 0.9);
     expect(byR.UR / cards).toBeLessThan(UNIV_W.UR * 1.15);
-    /* toutes les cartes restent atteignables : 250 000 cartes tirées, au moins 99 % vues au moins une fois */
-    expect(seen.size / total).toBeGreaterThan(0.99);
+    /* part de chaque catégorie ≈ UNIV_CAT_W (05/10 au soir : la catégorie est tirée après la rareté) */
+    for (const c of CATS) {
+      const share = (byF[CAT_LABEL[c]] ?? 0) / cards;
+      expect(share, c).toBeGreaterThan(UNIV_CAT_W[c] * 0.95);
+      expect(share, c).toBeLessThan(UNIV_CAT_W[c] * 1.05);
+    }
+    /* cartes « hors crypto » (personnes, événements, entreprises, concepts, plateformes) : ~1,6 par booster (0,27 avant) */
+    const autres = ["Personnes", "Événements", "Entreprises", "Concepts", "Plateformes"].reduce((s, f) => s + (byF[f] ?? 0), 0);
+    expect(autres / N).toBeGreaterThan(1.5);
+    /* toutes les cartes restent atteignables : 250 000 cartes tirées, au moins 97 % vues au moins une fois (les cryptos, désormais
+       35 % des tirages pour 61 % du catalogue, sortent un peu moins : leurs Ultra rares et Légendaires ne sont pas toutes vues) ;
+       la chance de CHAQUE carte est strictement positive (test suivant) */
+    expect(seen.size / total).toBeGreaterThan(0.97);
     expect(R / N).toBeGreaterThan(0.55);
+  });
+  it("tirage par catégorie : parts UNIV_CAT_W, chaque carte atteignable, une Légendaire jamais plus probable qu'une Commune", () => {
+    expect(Object.values(UNIV_CAT_W).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 9);
+    expect(RULES.wFam).toEqual(Object.fromEntries(CATS.map((c) => [CAT_LABEL[c], UNIV_CAT_W[c]])));
+    const T = dayTables(1);
+    /* somme des chances de toutes les cartes de base = part hors éditions et reliques (≈ 1) */
+    let sum = 0;
+    for (const r of RULES.rar) for (const c of T.byRD[r]) {
+      const p = universCardP(1, r, c.fam);
+      expect(p, c.id).toBeGreaterThan(0);
+      sum += p;
+    }
+    expect(sum).toBeGreaterThan(0.99);
+    expect(sum).toBeLessThanOrEqual(1 + 1e-12);
+    /* une Légendaire précise, quelle que soit sa catégorie, n'est jamais plus facile à obtenir qu'une Commune précise */
+    const labels = CATS.map((c) => CAT_LABEL[c]);
+    const minC = Math.min(...labels.map((f) => universCardP(1, "C", f)));
+    for (const f of labels) expect(universCardP(1, "L", f), f).toBeLessThanOrEqual(minC);
+    /* dans une même catégorie, l'ordre des raretés est respecté */
+    const order = ["L", "UR", "SR", "R", "PC", "C"] as const;
+    for (const f of labels) for (let i = 0; i < order.length - 1; i++) {
+      expect(universCardP(1, order[i], f), f + " " + order[i]).toBeLessThanOrEqual(universCardP(1, order[i + 1], f));
+    }
   });
   it("la chance d'une carte précise dépend de sa rareté : Légendaire < Ultra rare < … < Commune", () => {
     const order = ["L", "UR", "SR", "R", "PC", "C"] as const;

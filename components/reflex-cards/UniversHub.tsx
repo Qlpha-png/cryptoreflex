@@ -37,8 +37,11 @@ const escHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").re
 export default function UniversHub({ accounts }: { accounts: boolean }) {
   const all = universCards(), total = all.length, st = universStats();
   const day = seasonDay();
-  /* chance d'une carte précise, par rareté ; part de chaque rareté parmi les cartes tirées */
+  /* chance moyenne d'une carte de rareté r (sert aux parts de rareté) ; chance d'une carte précise d'une catégorie (05/10 au soir :
+     la catégorie est tirée après la rareté, selon RULES.wFam) */
   const pCard = (r: Rarity) => universCardP(day, r);
+  const pCat = (r: Rarity, cat: Cat) => universCardP(day, r, CAT_LABEL[cat]);
+  const catShare = (cat: Cat) => RULES.wFam?.[CAT_LABEL[cat]] ?? 0;
   const tot: Record<Rarity, number> = Object.fromEntries(RAR.map((r) => [r, CATS.reduce((s, c) => s + ((st[c] as Record<string, number>)[r] ?? 0), 0)])) as Record<Rarity, number>;
   const nIcons = RULES.ed.icon?.list.length ?? 0, nMyth = RULES.ed.myth?.list.length ?? 0, nRelic = RULES.relics.length;
   /* éventail : les formes les plus rares (images du moteur du jeu) */
@@ -134,9 +137,10 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Six raretés, de la Commune à la Légendaire</h2>
           <p className="mt-2 max-w-3xl text-fg/70">
-            La rareté d&apos;une carte, c&apos;est sa place dans sa catégorie (popularité, usage, histoire), jamais son prix. Un booster
-            tire d&apos;abord une rareté, puis une carte au hasard parmi celles de cette rareté : une Commune précise sort{" "}
-            {oddsText(pCard("C")).replace("1 carte sur", "1 fois sur")}, une Légendaire précise {oddsText(pCard("L")).replace("1 carte sur", "1 fois sur")}.
+            La rareté d&apos;une carte, c&apos;est sa place dans sa catégorie (popularité, usage, histoire), jamais son prix. Chaque carte
+            d&apos;un booster tire d&apos;abord une rareté, puis une catégorie, puis une carte au hasard parmi celles de cette catégorie et
+            de cette rareté : une Commune crypto précise sort {oddsText(pCat("C", "crypto")).replace("1 carte sur", "1 fois sur")}, une
+            Légendaire crypto précise {oddsText(pCat("L", "crypto")).replace("1 carte sur", "1 fois sur")}.
             Dans un booster de 5 cartes, on tire en moyenne {fr(Math.round(pCard("C") * tot.C * 50) / 10)} Communes,{" "}
             {fr(Math.round(pCard("PC") * tot.PC * 50) / 10)} Peu commune et {fr(Math.round(pCard("R") * tot.R * 50) / 10)} Rare ; une
             Ultra rare ou mieux tombe environ 1 booster sur {fr(Math.round(1 / (1 - Math.pow(1 - pCard("UR") * tot.UR - pCard("L") * tot.L, 5))))}.
@@ -145,7 +149,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
             {showcase.map(({ r, card, id, ft }) => (
               <li key={r} className="flex flex-col items-center text-center">
                 <Link href={`/cartes/${id}`} aria-label={`Carte ${card.name}`}>
-                  <CardVisual card={card} day={day} width={150} uid={`uh-${r}`} chance={pCard(r)} ft={ft} />
+                  <CardVisual card={card} day={day} width={150} uid={`uh-${r}`} chance={pCat(r, universById(id)?.cat ?? "crypto")} ft={ft} />
                 </Link>
                 <p className="mt-3 text-sm font-bold" style={{ color: RC[r] }}>
                   {RNAME[r]} <span className="text-xs">{PIPS[r]}</span>
@@ -212,7 +216,11 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       <section id="chapitres" className="scroll-mt-24 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Les 8 chapitres de l&apos;album</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">{fr(total)} cartes au total. Ouvrez un chapitre pour voir ses Légendaires et ses Ultra rares.</p>
+          <p className="mt-2 max-w-3xl text-fg/70">
+            {fr(total)} cartes au total, toutes en jeu. Chaque chapitre a sa part des tirages : les petits chapitres (personnes,
+            événements, entreprises, concepts) sortent bien plus souvent que leur taille ne le voudrait, pour qu&apos;un booster ne soit
+            pas fait que de cryptos. Ouvrez un chapitre pour voir ses Légendaires et ses Ultra rares.
+          </p>
           <div className="mt-6 space-y-3">
             {CATS.map((cat) => {
               const s = st[cat] as Record<string, number>;
@@ -225,6 +233,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
                     </span>
                     <span className="shrink-0 text-right text-xs text-muted">
                       <b className="text-fg">{fr(s.total)}</b> cartes
+                      <span className="block">{pct1(catShare(cat))} des tirages</span>
                       <span className="block" style={{ color: RC.L }}>{fr(s.L ?? 0)} Légendaires</span>
                     </span>
                   </summary>

@@ -12,6 +12,14 @@ import { pct, type CardEnv } from "./render";
 import { partDay } from "./engine";
 
 const DATA = raw as unknown as ReflexCardsData;
+/* 05/10/2026 : caractères invisibles hérités des noms d'origine (« \u200b\u200bStable », carte stable-2) retirés au chargement :
+   ils passaient dans les vignettes et les libellés d'accessibilité de /cartes. Les liaisons d'émojis (U+200D) ne sont pas touchées. */
+const INVIS = /[\u200b\u200c\u200e\u200f\u2060-\u2064\ufeff\u00ad]/g;
+for (const c of DATA.cartes) {
+  c.name = c.name.replace(INVIS, "");
+  if (c.nm?.html) c.nm.html = c.nm.html.replace(INVIS, "");
+  if (c.ph?.html) c.ph.html = c.ph.html.replace(INVIS, "");
+}
 const BY_ID = new Map(DATA.cartes.map((c) => [c.id, c]));
 
 export const REFLEX_META = DATA.meta;

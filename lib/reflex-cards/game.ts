@@ -122,6 +122,8 @@ export interface UniversInfo {
   ed: { myth: number; icon: number; toty: number; bds: number; relicAny: number; relics: string[] };
   /** part de chaque rareté parmi les cartes tirées (UNIV_W, 05/10) : le navigateur en déduit les chances affichées */
   w: Record<string, number>;
+  /** part de chaque catégorie une fois la rareté tirée (UNIV_CAT_W, 05/10 au soir), par libellé (« Cryptos »…) */
+  wf: Record<string, number>;
 }
 export type GameDataU = GameData & { univers: UniversInfo | null };
 const LEGACY_ROW = new Map(RAW.cards.map((r) => [r[0], r]));
@@ -172,6 +174,7 @@ export function universGame(day: number): GameDataU {
       catv: universMeta().genere, total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E,
       ed: { myth: ENGINE_RULES.ed.myth.p, icon: ENGINE_RULES.ed.icon.p, toty: ENGINE_RULES.ed.toty.p, bds: ENGINE_RULES.ed.bds.p, relicAny: ENGINE_RULES.relicP * ENGINE_RULES.relics.length, relics: ENGINE_RULES.relics },
       w: { ...ENGINE_RULES.wRar },
+      wf: { ...(ENGINE_RULES.wFam ?? {}) },
     },
   };
 }

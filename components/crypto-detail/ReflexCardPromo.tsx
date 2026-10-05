@@ -5,7 +5,7 @@ import CardVisual from "@/components/reflex-cards/CardVisual";
 import { cleanName, getCard, isReflexCardsEnabled, oddsText, seasonDay, todayChance } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
-import { UNIVERS_ON, universById, universOvr, universStats } from "@/lib/reflex-cards/univers";
+import { CAT_LABEL, UNIVERS_ON, universById, universOvr, universStats } from "@/lib/reflex-cards/univers";
 import { universCardP } from "@/lib/reflex-cards/engine";
 import { rareCard } from "@/lib/reflex-cards/rare";
 
@@ -28,7 +28,7 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
   const name = cleanName(legacy?.name ?? univ!.nom);
   const rare = rareCard(id);
   const col = rare ? (rare.form === "myth" ? "#ff2d6f" : rare.form === "icon" ? "#e8d49a" : "#f7d774") : RC[r];
-  const chance = UNIVERS_ON() ? universCardP(day, r) : todayChance(legacy!, day);
+  const chance = UNIVERS_ON() ? universCardP(day, r, univ ? CAT_LABEL[univ.cat] : undefined) : todayChance(legacy!, day);
   const visual = rare ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="h-auto w-[132px] drop-shadow-[0_14px_24px_rgba(0,0,0,.55)] sm:w-[164px]" />

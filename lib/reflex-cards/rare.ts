@@ -6,14 +6,17 @@
  */
 import "server-only";
 import raw from "@/data/reflex-cards-rare.json";
+import { RULES } from "@/lib/reflex-cards/engine";
 
 export type RareForm = "myth" | "icon" | "onyx";
 export interface RareCard { src: string; form: RareForm; label: string; phrase: string; w: number; h: number }
 
 const DATA = raw as unknown as { cartes: Record<string, { f: RareForm; t: string; r: string; w: number; h: number }> };
 
+/* chance d'une Mythique quelconque = celle du moteur (Univers : 1 carte tirée sur 500 000 depuis le 04/10 ; jeu d'origine : 1 sur 1 000 000) */
+const MYTH_ODDS = Math.round(1 / (RULES.ed.myth?.p || 1e-6)).toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
 const PHRASE: Record<RareForm, string> = {
-  myth: "une carte sur un million, numérotée dans l'ordre de découverte",
+  myth: `une des ${RULES.ed.myth?.list.length ?? 0} Mythiques (il en sort une sur ${MYTH_ODDS} cartes tirées), numérotée dans l'ordre de découverte`,
   icon: "une Icône : 40 cartes en tout, plus rares qu'une Légendaire",
   onyx: "l'unique exemplaire de la saison, numéroté 1/1",
 };

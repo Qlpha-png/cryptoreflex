@@ -9,7 +9,7 @@
  * Les cryptos gardent leur identifiant CoinGecko : les collections existantes restent valables telles quelles ; une carte déjà en jeu
  * ne descend jamais de rareté (Légendaires à vie : le plancher est appliqué à l'export).
  *
- * La rareté d'une carte est sa place dans sa catégorie. Tirage : d'abord la rareté (UNIV_W), puis une carte au hasard parmi celles de
+ * La rareté d'une carte est sa place dans sa catégorie. Tirage : d'abord la rareté (UNIV_W), puis la catégorie (UNIV_CAT_W, 05/10), puis une carte au hasard parmi celles de
  * cette rareté (de la catégorie, pour un booster thématique). Les garanties (Rare au 6e booster, 1re Super rare, filets invisibles)
  * sont conservées.
  */
@@ -216,6 +216,18 @@ type Rar = "C" | "PC" | "R" | "SR" | "UR" | "L";
  * (1 sur 100). Une Légendaire précise devient ~4 fois plus rare qu'une Commune précise (avant : la même chance).
  */
 export const UNIV_W: Record<Rar, number> = { C: 0.573, PC: 0.25, R: 0.115, SR: 0.048, UR: 0.012, L: 0.002 };
+/**
+ * Part de chaque CATÉGORIE parmi les cartes tirées (05/10/2026, Kev : « t'as mis que les cryptos en jeu ? »). Avant : une carte au
+ * hasard parmi toutes celles de la rareté, donc au prorata du catalogue (cryptos 61 %, protocoles 27 %, NFT 7 %, et 5 % seulement
+ * pour personnes, événements, entreprises, concepts et plateformes réunis : une carte sur vingt). Désormais : la rareté (UNIV_W,
+ * inchangée), PUIS la catégorie selon ces parts, puis une carte au hasard parmi celles de cette catégorie et de cette rareté.
+ * Calibrage : les cinq petites catégories (4 Légendaires chacune) sont plafonnées pour qu'une Légendaire précise ne soit JAMAIS plus
+ * probable qu'une Commune précise, quelle que soit la catégorie (contrôlé par tests/lib/reflex-cards-univers.test.ts).
+ * Par booster de 5 cartes : ~1,6 carte « hors crypto » (personne, événement, entreprise, concept, plateforme) au lieu de 0,25.
+ */
+export const UNIV_CAT_W: Record<Cat, number> = {
+  crypto: 0.35, protocole: 0.21, nft: 0.12, plateforme: 0.06, evenement: 0.065, personne: 0.065, entreprise: 0.065, concept: 0.065,
+};
 interface RCardLike { id: string; r: Rar; fam: string; noto: number; num: number | string; part: number | null; legende?: 1; fossil?: 1; year?: number }
 /** le sous-ensemble des règles que l'Univers remplace (le reste — économie, missions, objets… — est repris tel quel) */
 export interface UniversRulesPatch {
@@ -233,6 +245,8 @@ export interface UniversRulesPatch {
   univ: true;
   /** part de chaque rareté parmi les cartes tirées (UNIV_W) */
   wRar: Record<Rar, number>;
+  /** part de chaque catégorie (par libellé : « Cryptos »…) parmi les cartes tirées, une fois la rareté tirée (UNIV_CAT_W) */
+  wFam: Record<string, number>;
   totyFromDay: number;
 }
 /**
@@ -277,6 +291,6 @@ export function universRules(base: { cards: RCardLike[]; ed: Record<string, { p:
   ];
   return {
     cards, parts: [{ jour: 1, collection: "Univers", partie: 1 }], pages, families: CATS.map((c) => CAT_LABEL[c]), ed, relics, relicP, quests,
-    themes: base.themes, univ: true, wRar: UNIV_W, totyFromDay: base.totyFromDay,
+    themes: base.themes, univ: true, wRar: UNIV_W, wFam: Object.fromEntries(CATS.map((c) => [CAT_LABEL[c], UNIV_CAT_W[c]])), totyFromDay: base.totyFromDay,
   };
 }

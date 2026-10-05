@@ -51,6 +51,8 @@ interface Rules {
   titles: string[];
   /** Univers (REFLEX_CARDS_UNIVERS=true) : catalogue de 25 000+ cartes ; la part de chaque rareté est UNIV_W (lib/reflex-cards/univers.ts) */
   univ?: true;
+  /** Univers : part de chaque catégorie (libellé de famille) une fois la rareté tirée (UNIV_CAT_W) ; absent = au prorata des cartes */
+  wFam?: Record<string, number>;
 }
 /* Univers (04/10/2026) : les règles du jeu actuel, dont les cartes, les pages, les familles, les éditions et les défis sont remplacés
    par ceux du catalogue de 27 744 cartes ; économie, missions, objets, finitions et garanties inchangés. Sans la variable : rien ne change. */
@@ -102,7 +104,7 @@ export const inClear = (id: string, day: number): boolean => {
 };
 export const craftDay = (c: RCard): number => (c.fossil ? 1 : relDay(c) + ((c.part as number) > 0 ? 7 : 0));
 
-interface DayTables { byRD: Record<Rar, RCard[]>; ed: Record<string, { p: number; list: string[] }>; all: RCard[]; byFam: Map<string, RCard[]> }
+interface DayTables { byRD: Record<Rar, RCard[]>; ed: Record<string, { p: number; list: string[] }>; all: RCard[]; byFam: Map<string, RCard[]>; byRF: Map<string, RCard[]> }
 const DAYC = new Map<string, DayTables>();
 export function dayTables(day: number): DayTables {
   const key = `${GEN}|${day}`; // le cache suit le calendrier effectif : une nouvelle sortie invalide les tables
@@ -112,23 +114,38 @@ export function dayTables(day: number): DayTables {
   const byRD = Object.fromEntries(RAR.map((r) => [r, all.filter((c) => c.r === r).sort((a, b) => a.noto - b.noto)])) as Record<Rar, RCard[]>;
   const byFam = new Map<string, RCard[]>();
   for (const c of all) (byFam.get(c.fam) ?? byFam.set(c.fam, []).get(c.fam)!).push(c);
+  /* (rareté, catégorie) → cartes, pour le tirage par catégorie de l'Univers */
+  const byRF = new Map<string, RCard[]>();
+  for (const r of RAR) for (const c of byRD[r]) { const k = r + "|" + c.fam; (byRF.get(k) ?? byRF.set(k, []).get(k)!).push(c); }
   const ed: DayTables["ed"] = {};
   for (const k of ED_ORDER) {
     let list = RULES.ed[k].list.filter((id) => inClear(id, day));
     if (k === "toty" && day < TOTY_DAY) list = [];
     ed[k] = { p: list.length ? RULES.ed[k].p : 0, list };
   }
-  const t = { byRD, ed, all, byFam };
+  const t = { byRD, ed, all, byFam, byRF };
   DAYC.set(key, t);
   return t;
 }
 
-/** Univers : chance qu'une carte tirée soit UNE carte donnée de rareté r (part de sa rareté ÷ cartes de cette rareté, hors éditions et
- *  reliques). Depuis le 05/10 elle dépend de la rareté : une Légendaire précise est plus rare qu'une Commune précise. */
-export function universCardP(day: number, r: Rar): number {
+/** catégories qui ont des cartes de rareté r, avec leur poids (UNIV_CAT_W) ; null hors Univers */
+function famWeights(T: DayTables, r: Rar): [string, number][] | null {
+  if (!RULES.wFam) return null;
+  return Object.entries(RULES.wFam).filter(([f, w]) => w > 0 && (T.byRF.get(r + "|" + f)?.length ?? 0) > 0);
+}
+/** Univers : chance qu'une carte tirée soit UNE carte donnée de rareté r (hors éditions et reliques). Depuis le 05/10 elle dépend de
+ *  la rareté ET de la catégorie (fam = libellé, ex. « Personnes ») : part de la rareté × part de la catégorie ÷ cartes de ce couple.
+ *  Sans fam : moyenne sur toute la rareté (sert aux parts de rareté). */
+export function universCardP(day: number, r: Rar, fam?: string): number {
   const T = dayTables(Math.max(1, day));
   const pe = Object.values(T.ed).reduce((s, e) => s + e.p, 0) + RULES.relicP * RULES.relics.length;
-  return ((1 - pe) * (RULES.wRar[r] ?? 0)) / Math.max(1, T.byRD[r]?.length ?? 0);
+  const base = (1 - pe) * (RULES.wRar[r] ?? 0);
+  const fw = fam ? famWeights(T, r) : null;
+  if (fw) {
+    const tot = fw.reduce((s, [, w]) => s + w, 0), w = fw.find(([f]) => f === fam)?.[1] ?? 0, n = T.byRF.get(r + "|" + fam)?.length ?? 0;
+    return tot > 0 && n > 0 ? (base * w) / tot / n : 0;
+  }
+  return base / Math.max(1, T.byRD[r]?.length ?? 0);
 }
 
 /* ---------- tirage (portage fidèle de drawPack du jeu v9) ---------- */
@@ -162,8 +179,15 @@ function rollFin(rnd: Rnd): Fin | null {
   return null;
 }
 function baseItem(r: Rar, day: number, fam: string | null, rnd: Rnd): Item {
-  const all = dayTables(day).byRD[r];
-  const pool = fam && all.some((c) => c.fam === fam) ? all.filter((c) => c.fam === fam) : all;
+  const T = dayTables(day), all = T.byRD[r];
+  let pool = fam && all.some((c) => c.fam === fam) ? all.filter((c) => c.fam === fam) : all;
+  /* Univers (05/10) : hors booster thématique, la catégorie est tirée selon UNIV_CAT_W avant la carte */
+  const fw = !fam ? famWeights(T, r) : null;
+  if (fw && fw.length) {
+    let z = rnd() * fw.reduce((s, [, w]) => s + w, 0), chosen = fw[fw.length - 1][0];
+    for (const [f, w] of fw) if ((z -= w) < 0) { chosen = f; break; }
+    pool = T.byRF.get(r + "|" + chosen) ?? all;
+  }
   return { id: pick(pool, rnd).id, ed: null, fin: rollFin(rnd) };
 }
 function drawOne(day: number, fam: string | null, rnd: Rnd): Item {

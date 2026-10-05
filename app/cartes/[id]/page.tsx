@@ -184,7 +184,7 @@ export default async function CartePage({ params }: Props) {
     /* carte de l'Univers (hors jeu d'origine) : page dédiée ; sinon vrai 404 */
     const u = UNIVERS_ON() ? universById(params.id) : undefined;
     if (!u) notFound();
-    return <UniversCarte c={u} chance={universCardP(seasonDay(), u.r)} />;
+    return <UniversCarte c={u} chance={universCardP(seasonDay(), u.r, CAT_LABEL[u.cat])} />;
   }
   const day = seasonDay();
   const name = cleanName(c.name);
@@ -201,7 +201,7 @@ export default async function CartePage({ params }: Props) {
   const revealed = u ? true : isRevealed(c);
   const info = c.fossil || u ? null : rarityInfo(c.r);
   const col = c.fossil ? "#a8927a" : RC[cv.r];
-  const chance = u ? universCardP(day, u.r) : todayChance(c, day);
+  const chance = u ? universCardP(day, u.r, CAT_LABEL[u.cat]) : todayChance(c, day);
   const family = c.fossil ? [] : albumCards().filter((x) => x.fam === c.fam && isVisible(x, day));
   const idx = family.findIndex((x) => x.id === c.id);
   const near = family.slice(Math.max(0, idx - 4), idx + 5).filter((x) => x.id !== c.id).slice(0, 8);
