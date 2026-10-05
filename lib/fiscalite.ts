@@ -7,16 +7,24 @@
  * Différent de `lib/tax-fr.ts` qui calcule la PV selon la formule officielle
  * 150 VH bis (prorata du portefeuille). Ici, on raisonne sur des totaux
  * agrégés (cessions / achats / frais) — modèle plus simple et adapté à un
- * choix de régime (PFU / Barème / BIC).
+ * choix de régime (PFU / Barème / BNC).
  *
  * Régimes couverts :
- *   - PFU 31,4 % (par défaut, particulier occasionnel)
+ *   - PFU 31,4 % (par défaut, particulier, art. 150 VH bis)
  *       12,8 % IR + 18,6 % prélèvements sociaux
- *   - Barème progressif IR (option) : TMI utilisateur + 18,6 % PS
- *   - BIC professionnel (trading habituel) : TMI + 18,6 % PS + cotisations
- *     URSSAF (~22 % du bénéfice net) — estimation simplifiée.
+ *   - Barème progressif IR (option globale, case 3CN) : TMI utilisateur + 18,6 % PS
+ *   - BNC (art. 92, 2-1° bis CGI, depuis le 01/01/2023) : trading « dans des conditions
+ *     analogues à celles d'un professionnel », sans que ce soit la profession. Barème (TMI)
+ *     + 18,6 % PS du patrimoine (art. L136-6, I-f CSS), AUCUNE cotisation d'indépendant,
+ *     pas de seuil de 305 €, déficit reportable 6 ans sur des BNC non professionnels
+ *     (art. 156-I-2°). Base = estimation (déclaration contrôlée, gains nets de l'année).
+ *     BOFiP BOI-BNC-CHAMP-10-10-20-40 § 1080 : régime réservé à des « cas d'espèce exceptionnels ».
+ *   - Non couvert : le trader dont c'est le MÉTIER (BIC, art. 34) — cotisations d'indépendant
+ *     à la place des prélèvements sociaux, à calculer avec l'URSSAF ou un expert-comptable.
+ *     Ancien modèle « BIC = TMI + 18,6 % + 22 % » supprimé le 05/10/2026 : il cumulait deux
+ *     assiettes qui s'excluent, et 22 % n'est aucun taux officiel.
  *
- * Seuil d'exonération 2026 : si total des cessions ≤ 305 €/an, pas d'impôt.
+ * Seuil d'exonération : si total des cessions ≤ 305 €/an, pas d'impôt (150 VH bis seulement).
  * Référence : article 150 VH bis du CGI + BOI-RPPM-PVBMC-30-30.
  *
  * /!\ Ces calculs sont indicatifs. Pour un avis personnalisé, consulter
@@ -34,20 +42,18 @@ export const SEUIL_EXONERATION_EUR = 305;
 export const TAUX_IR_PFU = 0.128;
 
 /**
- * Taux des prélèvements sociaux (CSG/CRDS) — applicable PFU et Barème.
- * 18,6 % depuis le 1er janvier 2026 : la LFSS 2026 a relevé la CSG sur les
- * revenus du capital de 9,2 % à 10,6 % (+1,4 pt). Était 17,2 % jusqu'aux
- * gains réalisés en 2025. Source : impots.gouv.fr (nouveautés revenus 2025).
+ * Taux des prélèvements sociaux du patrimoine (CSG 10,6 % + CRDS 0,5 % + solidarité 7,5 %),
+ * applicable en PFU, au barème et aux BNC non professionnels. 18,6 % dès les revenus 2025
+ * (déclarés en 2026) : la LFSS 2026 a relevé la CSG sur les revenus du patrimoine de 9,2 % à
+ * 10,6 %. 17,2 % pour les revenus 2023 et 2024. Source : impots.gouv.fr, brochure IR 2026
+ * (nouveautés) ; art. L136-8 CSS.
  */
 export const TAUX_PS = 0.186;
 
-/** Taux global PFU (flat tax) = 31,4 % depuis 2026. */
+/** Taux global PFU (flat tax) = 31,4 % dès les plus-values 2025. */
 export const TAUX_PFU = TAUX_IR_PFU + TAUX_PS; // 0.314
 
-/** Taux estimé des cotisations sociales TNS (URSSAF) en BIC. */
-export const TAUX_COTISATIONS_BIC = 0.22;
-
-/** Tranches marginales d'imposition 2026 (barème IR). */
+/** Tranches marginales d'imposition (barème IR des revenus 2025 : 11 600 / 29 579 / 84 577 / 181 917 € par part). */
 /* 0 % inclus : étudiants et petits revenus, le public qui gagne le plus à l'option barème (case 3CN) */
 export const TMI_VALUES = [0, 0.11, 0.30, 0.41, 0.45] as const;
 export type TmiRate = (typeof TMI_VALUES)[number];
@@ -57,7 +63,7 @@ export type TmiRate = (typeof TMI_VALUES)[number];
 /* -------------------------------------------------------------------------- */
 
 /** Régime fiscal applicable au calcul. */
-export type Regime = "pfu" | "bareme" | "bic";
+export type Regime = "pfu" | "bareme" | "bnc";
 
 export interface FiscaliteInput {
   /** Total des cessions de l'année (ventes crypto en €, lignes 213). */
@@ -79,16 +85,15 @@ export interface FiscaliteInput {
   /** Régime fiscal choisi. */
   regime: Regime;
   /**
-   * Tranche marginale d'imposition (TMI) — requise pour Barème et BIC.
-   * Ignorée en PFU. Valeurs : 0.11, 0.30, 0.41, 0.45.
+   * Tranche marginale d'imposition (TMI) — requise pour Barème et BNC.
+   * Ignorée en PFU. Valeurs : 0, 0.11, 0.30, 0.41, 0.45.
    */
   tmi?: TmiRate;
   /**
-   * Déficits reportables des années antérieures (€) — RÉGIME BIC UNIQUEMENT.
-   * Pour un particulier (PFU ou barème, art. 150 VH bis), la moins-value d'une année
-   * ne se reporte jamais sur les suivantes : la valeur est IGNORÉE hors BIC.
-   * Audit 03/10/2026 : ce champ faisait baisser l'impôt d'un particulier (−628 € dans
-   * l'exemple testé). Soustrait de la base imposable en BIC (positif = déficit reporté).
+   * Déficits BNC non professionnels des 6 années précédentes (€) — RÉGIME BNC UNIQUEMENT
+   * (art. 156-I-2° CGI : imputables sur les bénéfices d'activités semblables, jamais sur le
+   * revenu global). Pour un particulier (PFU ou barème, art. 150 VH bis), la moins-value d'une
+   * année ne se reporte jamais : la valeur est IGNORÉE hors BNC (audit 03/10/2026).
    */
   reportablePrevious?: number;
 }
@@ -114,9 +119,12 @@ export interface FiscaliteResult {
   montantIR: number;
   /** Part prélèvements sociaux (18,6 %). */
   montantPS: number;
-  /** Cotisations sociales URSSAF (BIC uniquement). */
+  /**
+   * Cotisations d'indépendant : toujours 0 (aucun régime calculé ici n'en comporte).
+   * Champ conservé pour la compatibilité des calculs déjà enregistrés (aperçu PDF).
+   */
   cotisationsSociales: number;
-  /** Impôt total = IR + PS + cotisations. */
+  /** Impôt total = IR + PS. */
   impotTotal: number;
   /** Net après impôt = PV nette − impôt total. */
   netApresImpot: number;
@@ -156,8 +164,8 @@ function computeNetPlusValue(input: FiscaliteInput): {
   const achats = safePositive(input.totalAchats);
   const frais = safePositive(input.fraisCourtage);
   const valeur = safePositive(input.valeurPortefeuille);
-  /* report de déficit : seulement en BIC (jamais pour un particulier, art. 150 VH bis) */
-  const reports = input.regime === "bic" ? safePositive(input.reportablePrevious) : 0;
+  /* report de déficit : seulement en BNC (jamais pour un particulier, art. 150 VH bis) */
+  const reports = input.regime === "bnc" ? safePositive(input.reportablePrevious) : 0;
 
   /* Formule du 2086 (l. 224 = l. 218 − l. 223 × l. 217 / l. 212) appliquée aux totaux :
      le quotient se calcule sur le prix de cession BRUT ; les frais ne touchent que le 1er terme. */
@@ -313,18 +321,21 @@ export function computeTaxBareme(
 }
 
 /**
- * BIC professionnel (trading habituel / activité régulière).
+ * BNC non professionnels (art. 92, 2-1° bis CGI) — trading « dans des conditions analogues
+ * à celles d'un professionnel », sans que ce soit la profession du contribuable.
  *
- * On considère le bénéfice net (= PV nette) comme un revenu professionnel :
- *   - imposé à la TMI du foyer (IR au barème)
- *   - + 18,6 % PS
- *   - + ~22 % cotisations sociales TNS (URSSAF micro-BIC ou TNS classique)
- *
- * Le seuil 305 € ne s'applique PAS au BIC (régime pro). On garde la possibilité
- * d'un déficit (moins-value) sans impôt, mais en BIC celui-ci est en principe
- * imputable et reportable — non modélisé ici.
+ *   - bénéfice B = gains nets de l'année (même formule que le 2086) − déficits BNC reportés ;
+ *     ESTIMATION : la base exacte d'un bénéfice BNC en crypto n'est fixée par aucun texte ;
+ *   - impôt sur le revenu = B × TMI (simplification : ignore les changements de tranche,
+ *     la décote et le quotient familial) ;
+ *   - prélèvements sociaux du patrimoine = B × 18,6 % (case 5HY) ;
+ *   - aucune cotisation d'indépendant (activité non professionnelle) ;
+ *   - pas de seuil de 305 € (propre à l'art. 150 VH bis) ;
+ *   - déficit : aucun impôt, reportable 6 ans sur des BNC non professionnels.
+ * Micro-BNC (abattement 34 %) non calculé : le sens de « recettes » pour des ventes de
+ * crypto n'est pas défini officiellement.
  */
-export function computeTaxBIC(
+export function computeTaxBNC(
   input: FiscaliteInput,
   tmi: TmiRate,
 ): FiscaliteResult {
@@ -332,7 +343,7 @@ export function computeTaxBIC(
   const { plusValueBrute, plusValueNette } = calc;
 
   if (plusValueNette <= 0) {
-    return emptyResult("bic", calc, {
+    return emptyResult("bnc", calc, {
       exonere: false,
       deficit: true,
     });
@@ -340,10 +351,9 @@ export function computeTaxBIC(
 
   const montantIR = plusValueNette * tmi;
   const montantPS = plusValueNette * TAUX_PS;
-  const cotisationsSociales = plusValueNette * TAUX_COTISATIONS_BIC;
-  const impotTotal = montantIR + montantPS + cotisationsSociales;
+  const impotTotal = montantIR + montantPS;
   return {
-    regime: "bic",
+    regime: "bnc",
     plusValueBrute,
     plusValueNette,
     fractionAcquisition: calc.fractionAcquisition,
@@ -353,7 +363,7 @@ export function computeTaxBIC(
     deficit: false,
     montantIR,
     montantPS,
-    cotisationsSociales,
+    cotisationsSociales: 0,
     impotTotal,
     netApresImpot: plusValueNette - impotTotal,
     tauxEffectif: impotTotal / plusValueNette,
@@ -364,7 +374,7 @@ export function computeTaxBIC(
  * Dispatcher unique selon le régime — utile dans le composant pour ne pas
  * dupliquer la logique de switch côté UI.
  *
- * Pour Barème/BIC sans TMI fournie, on retombe sur la TMI 30 % par défaut
+ * Pour Barème/BNC sans TMI fournie, on retombe sur la TMI 30 % par défaut
  * (médiane représentative pour ne pas afficher un résultat absurde).
  */
 export function computeTax(input: FiscaliteInput): FiscaliteResult {
@@ -375,8 +385,8 @@ export function computeTax(input: FiscaliteInput): FiscaliteResult {
       return computeTaxPFU(input);
     case "bareme":
       return computeTaxBareme(input, tmi);
-    case "bic":
-      return computeTaxBIC(input, tmi);
+    case "bnc":
+      return computeTaxBNC(input, tmi);
     default:
       // Garde-fou : régime inconnu → comportement PFU
       return computeTaxPFU(input);
@@ -418,7 +428,7 @@ export function regimeLabel(regime: Regime): string {
       return "PFU 31,4 % (flat tax)";
     case "bareme":
       return "Barème progressif IR";
-    case "bic":
-      return "BIC professionnel";
+    case "bnc":
+      return "BNC (trading mené comme un professionnel)";
   }
 }

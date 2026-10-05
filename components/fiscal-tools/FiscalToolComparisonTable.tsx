@@ -279,8 +279,8 @@ export default function FiscalToolComparisonTable({
       {/* Mention sponsored globale */}
       <p className="text-[11px] text-muted text-center">
         Liens d'affiliation publicitaires — Cryptoreflex perçoit une commission
-        si vous souscrivez via ces liens. Le classement reste basé sur nos tests
-        éditoriaux (cf.{" "}
+        si vous souscrivez via ces liens. Le classement reste basé sur nos critères
+        éditoriaux publics (cf.{" "}
         <a href="/methodologie" className="underline hover:text-primary-soft">
           méthodologie
         </a>

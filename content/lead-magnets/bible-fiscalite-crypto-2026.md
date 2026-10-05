@@ -14,7 +14,7 @@ disclaimer: "Document à valeur informative — ne constitue pas un conseil fisc
 
 ## Avertissement YMYL
 
-Ce document est à vocation pédagogique. La fiscalité crypto évolue régulièrement (loi de finances annuelle, doctrine BOFIP, jurisprudence). Les exemples chiffrés sont indicatifs au 26 avril 2026 et basés sur la loi de finances 2025 + réglementation MiCA en vigueur. **Pour toute situation complexe — trading professionnel, DeFi multi-chain, staking délégué, NFT, mining — consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur les choix fiscaux faits à partir de ce document.
+Ce document est à vocation pédagogique. La fiscalité crypto évolue régulièrement (loi de finances annuelle, doctrine BOFIP, jurisprudence). Les exemples chiffrés sont indicatifs au 5 octobre 2026 et basés sur la loi de finances et la loi de financement de la sécurité sociale pour 2026, et sur la réglementation MiCA en vigueur. **Pour toute situation complexe — trading professionnel, DeFi multi-chain, staking délégué, NFT, mining — consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur les choix fiscaux faits à partir de ce document.
 
 ## Sommaire
 
@@ -26,7 +26,7 @@ Ce document est à vocation pédagogique. La fiscalité crypto évolue réguliè
 6. [Fiscalité du staking, lending et DeFi](#chapitre-6)
 7. [NFT : achat, vente, royalties](#chapitre-7)
 8. [Déduction des moins-values et pertes irrécouvrables](#chapitre-8)
-9. [Trading professionnel : le passage en BIC](#chapitre-9)
+9. [Trading mené comme un professionnel (cas rares) : BNC, ou BIC si c'est votre métier](#chapitre-9)
 10. [Calendrier 2026 et erreurs fréquentes](#chapitre-10)
 11. [Conclusion + Outils recommandés](#conclusion)
 
@@ -246,37 +246,52 @@ Même logique : vendre un token à 0,000001 € ne crée pas de moins-value nota
 
 ---
 
-## Chapitre 9 — Trading professionnel : le passage en BIC {#chapitre-9}
+## Chapitre 9 — Trading mené comme un professionnel (cas rares) : BNC, ou BIC si c'est votre métier {#chapitre-9}
 
-### Quand bascule-t-on en pro ?
+### Quand quitte-t-on le régime des particuliers ?
 
-Les critères jurisprudentiels (Conseil d'État 2018) :
+Depuis le 1er janvier 2023 (article 92, 2-1° bis du CGI, issu de l'article 70 de la loi de finances pour 2022), les gains d'achat-revente de crypto réalisés « dans des conditions analogues à celles d'un professionnel », sans que ce soit votre métier, relèvent des **BNC** (bénéfices non commerciaux). Avant 2023, ce trading habituel relevait des BIC.
 
-1. **Caractère habituel** des opérations (volume + fréquence)
-2. **Activité organisée** (stratégie, tools, temps consacré)
-3. **Sources de revenus principales** (le trading est l'activité principale)
+Le BOFiP (BOI-BNC-CHAMP-10-10-20-40, § 1080) réserve ce régime à des **cas exceptionnels**, appréciés selon un faisceau d'indices :
 
-Pas de seuil chiffré, mais en pratique : > 200 transactions/an + revenus crypto > 50 % de vos revenus = risque qualification BIC.
+1. **Moyens matériels et informatiques** importants
+2. **Techniques d'investissement et d'achat-revente** proches de celles des professionnels (opérations nombreuses et sophistiquées, recherche organisée d'informations)
+3. **Compétences et formation professionnelles**
+
+Il n'existe **aucun seuil chiffré** (nombre de transactions, part de vos revenus). Par défaut, vous restez au régime des particuliers (article 150 VH bis), même si vous êtes un investisseur actif.
 
 ### Conséquences fiscales
 
-Au lieu du PFU 31,4 %, vous passez en **BIC professionnel** :
-- Imposition à la TMI sur les bénéfices nets
-- 18,6 % de PS
-- Cotisations sociales TNS (~ 22 % du bénéfice net en SSI/URSSAF)
-- TVA possible au-delà de 37 500 € de CA en prestations de services (franchise en base de TVA dépassée ; les cessions de crypto restent exonérées de TVA)
+Au lieu du PFU 31,4 %, votre bénéfice est soumis :
+- à l'**impôt sur le revenu au barème progressif** (selon votre TMI) ;
+- à **18,6 % de prélèvements sociaux** (revenus 2025 et suivants ; 17,2 % pour 2023 et 2024), à reporter en case 5HY.
 
-**Total potentiel** : 70-75 % de prélèvements sur les bénéfices nets. Très lourd.
+Pas de cotisations URSSAF en plus : l'activité n'étant pas votre profession, seuls les prélèvements sociaux sont dus (c'est la lecture la plus probable, aucun texte ne le dit expressément). Pas non plus de seuil d'exonération de 305 € : il n'existe qu'au régime des particuliers.
 
-### Avantage du BIC
+À une TMI de 30 %, cela représente environ 48,6 % du bénéfice, contre 31,4 % au PFU.
 
-- **Report des déficits** sur 6 ans (vs 0 an en PV particulière)
-- **Déduction des charges réelles** (matériel, abonnements, formation, expert-comptable)
-- **Choix régime micro-BIC** : CA < 203 100 € pour l'achat-revente (abattement forfaitaire 71 %) ou < 83 600 € pour les prestations de services (abattement 50 %) — seuils 2026-2028
+### Comment déclarer
+
+- **Micro-BNC** (recettes jusqu'à 83 600 €) : abattement forfaitaire de 34 % (305 € minimum), recettes brutes en case 5KU de la 2042-C-PRO. Attention : pour des ventes de crypto, la notion de « recettes » (prix de vente ou gains ?) n'est pas définie officiellement. Si l'on retient les prix de vente, le micro-BNC impose 66 % de vos ventes, même si vous perdez de l'argent.
+- **Déclaration contrôlée** (déclaration 2035) : possible sur option même sous le seuil, obligatoire si le seuil est dépassé deux années de suite. Vous déduisez vos frais réels (outils, abonnements, matériel, frais de plateforme). Bénéfice en case 5JG, déficit en case 5JJ. Le calcul exact du bénéfice pour des crypto n'est pas tranché officiellement.
+
+Ces cases sont celles des BNC « non professionnels » : c'est le classement le plus probable (le BOFiP parle d'« exercice non professionnel »), mais aucune doctrine ne le tranche expressément pour la crypto. La règle des pertes ci-dessous en dépend : faites-la valider par un expert-comptable.
+
+### Et les pertes ?
+
+En déclaration contrôlée, un déficit s'impute sur les bénéfices d'activités semblables (BNC non professionnels) de la même année ou des 6 années suivantes, jamais sur votre revenu global. En micro-BNC, aucun déficit n'est possible.
+
+### Si le trading est votre métier : BIC
+
+Si l'achat-revente de crypto est votre **profession**, vos gains relèvent des **BIC** (article 34 du CGI) :
+- résultat calculé selon les règles BIC (régime réel : déclaration 2031), imposé au barème progressif ;
+- **cotisations de travailleur indépendant** (URSSAF) **à la place** des 18,6 % de prélèvements sociaux, pas en plus ;
+- TVA possible au-delà de 37 500 € de CA en prestations de services (franchise en base de TVA dépassée ; les cessions de crypto restent exonérées de TVA) ;
+- micro-BIC : il n'est pas exclu, mais sa catégorie pour la crypto (ventes : abattement de 71 %, seuil de 203 100 € ; ou services : abattement de 50 %, seuil de 83 600 €) et le chiffre d'affaires à retenir ne sont pas tranchés.
 
 ### Recommandation
 
-Si vous faites > 100 transactions/mois, consultez un expert-comptable. Le passage en BIC est complexe mais peut être bénéfique selon votre situation (notamment pour reporter les pertes 2024-2025).
+Ce régime ne se choisit pas : il dépend de la façon dont vous opérez, et c'est l'administration qui l'apprécie. Si votre trading est mené comme un professionnel (moyens, techniques et compétences de professionnel), faites valider votre situation par un expert-comptable avant de déclarer.
 
 ---
 
@@ -291,9 +306,9 @@ Si vous faites > 100 transactions/mois, consultez un expert-comptable. Le passag
 | 21 mai 2026 | Date limite départements 01-19 et non-résidents |
 | 28 mai 2026 | Date limite départements 20-54 |
 | 4 juin 2026 | Date limite départements 55-976 |
+| Vers la fin juillet 2026 | Avis d'imposition, avec l'échéancier du solde à payer |
 | 29 juillet – 30 novembre 2026 | Service de correction en ligne de la déclaration (impots.gouv.fr) |
-| Septembre 2026 | Avis d'imposition reçus |
-| Octobre 2026 | Solde à payer si dépassement |
+| Septembre – décembre 2026 | Solde à payer : en une fois le 25 septembre s'il ne dépasse pas 300 €, sinon en 4 prélèvements (25/09, 26/10, 25/11, 28/12) |
 
 ### Top 10 des erreurs fréquentes
 
@@ -336,11 +351,11 @@ Pourquoi nous recommandons Waltio :
 
 ### Disclaimer final
 
-Ce guide a été rédigé avec le maximum de soin, basé sur la doctrine fiscale en vigueur au 26 avril 2026. **Il ne se substitue pas à un conseil fiscal personnalisé**. Pour une situation patrimoniale > 100 000 € de cryptos, ou pour des activités complexes (DeFi, mining, NFT à grande échelle, BIC pro), **consultez impérativement un expert-comptable agréé** (idéalement membre de la commission crypto-actifs de l'Ordre des experts-comptables).
+Ce guide a été rédigé avec le maximum de soin, basé sur la doctrine fiscale en vigueur au 5 octobre 2026. **Il ne se substitue pas à un conseil fiscal personnalisé**. Pour une situation patrimoniale > 100 000 € de cryptos, ou pour des activités complexes (DeFi, mining, NFT à grande échelle, BIC pro), **consultez impérativement un expert-comptable agréé** (idéalement membre de la commission crypto-actifs de l'Ordre des experts-comptables).
 
 Cryptoreflex n'est pas un cabinet fiscal et ne fournit aucun conseil personnalisé. La rédaction décline toute responsabilité sur les choix fiscaux faits à partir de ce document.
 
 ---
 
 *Cryptoreflex — Édition indépendante française. SIRET 103 352 621.*
-*Version 1.1 — 26 avril 2026, mise à jour le 5 octobre 2026 (exemple du 2086 corrigé, méthode globale précisée). Mise à jour annuelle prévue en mars 2027.*
+*Version 1.1 — 26 avril 2026, mise à jour le 5 octobre 2026 (exemple du 2086 corrigé, méthode globale précisée, chapitre 9 corrigé : régime BNC du trading mené comme un professionnel). Mise à jour annuelle prévue en mars 2027.*

@@ -157,7 +157,7 @@ export const CLUSTERS: Cluster[] = [
     hubPath: "/wizard/premier-achat",
     nodes: [
       { path: "/wizard/premier-achat", label: "Wizard premier achat", weight: 3 },
-      { path: "/quiz/trouve-ton-exchange", label: "Questionnaire : trouvez votre exchange", weight: 3 },
+      { path: "/quiz/plateforme", label: "Questionnaire : trouvez votre plateforme", weight: 3 },
       { path: "/blog/premier-achat-crypto-france-2026-guide-step-by-step", label: "Premier achat crypto guide", weight: 3 },
       { path: "/blog/comment-acheter-bitcoin-france-2026-guide-debutant", label: "Acheter Bitcoin", weight: 2 },
       { path: "/blog/acheter-ethereum-eth-france-2026-guide", label: "Acheter Ethereum", weight: 2 },
@@ -503,7 +503,6 @@ export function buildEntityIndex(): Map<string, EntityIndexEntry> {
     "calculateur-fiscalite",
     "calculateur-roi-crypto",
     "cerfa-2086-auto",
-    "comparateur-personnalise",
     "convertisseur",
     "declaration-fiscale-crypto",
     "glossaire-crypto",

@@ -26,7 +26,7 @@
  */
 
 import { getKv } from "@/lib/kv";
-import type { FiscaliteInput, FiscaliteResult } from "@/lib/fiscalite";
+import { computeTax, type FiscaliteInput, type FiscaliteResult } from "@/lib/fiscalite";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -173,8 +173,11 @@ export function validateCalculationData(raw: unknown): PdfCalculationData | null
     return Number.isFinite(n) && n >= 0 ? n : 0;
   };
 
-  const regime = input.regime;
-  if (regime !== "pfu" && regime !== "bareme" && regime !== "bic") return null;
+  /* « bic » = ancien nom du régime BNC (avant le 05/10/2026) : accepté puis recalculé plus bas,
+     car l'ancien résultat contenait des cotisations de 22 % qui n'ont aucune base légale. */
+  const legacyBic = input.regime === "bic";
+  const regime = legacyBic ? "bnc" : input.regime;
+  if (regime !== "pfu" && regime !== "bareme" && regime !== "bnc") return null;
 
   const validInput: FiscaliteInput = {
     totalCessions: num(input.totalCessions),
@@ -204,5 +207,5 @@ export function validateCalculationData(raw: unknown): PdfCalculationData | null
     tauxEffectif: typeof result.tauxEffectif === "number" ? result.tauxEffectif : 0,
   };
 
-  return { input: validInput, result: validResult };
+  return { input: validInput, result: legacyBic ? computeTax(validInput) : validResult };
 }

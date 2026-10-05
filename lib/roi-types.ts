@@ -33,9 +33,15 @@ export interface ROIResult {
   /** Total des frais payés (achat + vente). */
   totalFees: number;
   /**
+   * Prix de vente net de frais : valueFinal - frais de vente. C'est ce montant
+   * qui est comparé au seuil d'exonération de 305 € (ligne 218 du 2086).
+   */
+  netSale: number;
+  /**
    * Impôt français estimé (PFU 31,4 %) sur la plus-value nette.
-   * 0 si plus-value <= seuil 305 € OU si plus-value <= 0.
-   * Ne tient pas compte du barème progressif ni des situations BIC.
+   * 0 si le prix de vente net de frais <= seuil 305 € (le seuil porte sur les
+   * cessions, pas sur la plus-value) OU si plus-value <= 0.
+   * Ne tient pas compte du barème progressif ni des régimes BNC et BIC.
    */
   taxFr: number;
   /** Indique si l'entrée a été rejetée (valeurs invalides). */
@@ -48,7 +54,8 @@ export interface ROIResult {
 export const ROI_TAX_CONSTANTS = {
   /** Seuil annuel d'exonération sur les cessions (Cerfa 2086). */
   TAX_FREE_THRESHOLD_EUR: 305,
-  /** PFU = 12,8 % IR + 18,6 % prélèvements sociaux = 31,4 % depuis 2026
-   *  (CSG relevée de 9,2 % à 10,6 % par la LFSS 2026). Était 30 % jusqu'en 2025. */
+  /** PFU = 12,8 % IR + 18,6 % prélèvements sociaux = 31,4 % dès les plus-values 2025
+   *  déclarées en 2026 (CSG relevée de 9,2 % à 10,6 % par la LFSS 2026).
+   *  Était 30 % pour les plus-values réalisées jusqu'en 2024. */
   PFU_RATE: 0.314,
 } as const;

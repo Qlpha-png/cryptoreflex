@@ -119,7 +119,7 @@ const FAQ_ITEMS = [
   {
     question: "Faut-il un expert-comptable en plus de l'outil ?",
     answer:
-      "Pour un particulier en gestion non professionnelle (PFU 31,4 %), l'outil seul suffit dans 95 % des cas. En revanche, si vous êtes au régime BIC, en activité de mining/staking professionnel, ou si vous faites de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement vos données.",
+      "Pour un particulier en gestion non professionnelle (PFU 31,4 %), l'outil seul suffit dans 95 % des cas. En revanche, si vous relevez du régime BNC (trading mené comme un professionnel, cas rares) ou du régime BIC (trading exercé comme métier), en activité de mining/staking professionnel, ou si vous faites de la DeFi complexe (LP tokens, prêts), un expert-comptable spécialisé crypto reste indispensable. Les 3 outils proposent un mode \"accès comptable\" pour partager facilement vos données.",
   },
 ];
 
@@ -143,28 +143,8 @@ export default function DeclarationFiscaleCryptoPage() {
     url: `${BRAND.url}${PAGE_PATH}#waltio`,
     brand: { "@type": "Brand", name: "Waltio" },
     category: "TaxPreparationSoftware",
-    // NOTE — `aggregateRating` volontairement absent : on n'a pas (encore) de
-    // base d'avis utilisateurs vérifiés. Hardcoder une note expose à une
-    // manual action Google ("Review snippet spam"). On garde une `Review`
-    // ÉDITORIALE unique — éthiquement OK car identifiée comme avis Cryptoreflex.
-    review: {
-      "@type": "Review",
-      author: {
-        "@type": "Organization",
-        name: BRAND.name,
-        url: BRAND.url,
-      },
-      datePublished: "2026-04-26",
-      name: `Avis éditorial ${BRAND.name} sur ${waltio.name}`,
-      reviewBody:
-        "Testé sur 3 cycles fiscaux complets (2023, 2024, 2025) avec import multi-exchanges (Binance, Coinbase, Kraken, Ledger). Génération conforme du Cerfa 2086 et du 3916-bis selon l'article 150 VH bis du CGI. Support FR réactif. Notre #1 pour un contribuable français.",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: "4.7",
-        bestRating: "5",
-        worstRating: "1",
-      },
-    },
+    // Ni aggregateRating ni Review (05/10/2026) : Cryptoreflex n'a pas testé Waltio et ne publie pas de note maison ;
+    // une note affichée sur un partenaire affilié serait trompeuse (et expose à une action manuelle Google).
     offers: {
       "@type": "Offer",
       url: waltio.affiliateUrl,
@@ -272,7 +252,7 @@ export default function DeclarationFiscaleCryptoPage() {
               Cet article ne constitue pas un conseil fiscal personnalisé. Les
               tarifs et fonctionnalités sont à recouper sur les sites officiels
               avant souscription. Consultez un expert-comptable agréé pour les
-              situations complexes (BIC, mining, DeFi avancé). Voir notre{" "}
+              situations complexes (BNC, BIC, mining, DeFi avancé). Voir notre{" "}
               <Link
                 href="/transparence"
                 className="underline hover:text-primary-soft"
@@ -448,10 +428,10 @@ export default function DeclarationFiscaleCryptoPage() {
                 />
                 <div>
                   <h3 className="font-display font-bold text-lg text-fg">
-                    Expert-comptable : au-delà de 5 000 transactions ou en BIC
+                    Expert-comptable : au-delà de 5 000 transactions, ou si vous relevez des BNC ou des BIC
                   </h3>
                   <p className="mt-2 text-sm text-fg/75">
-                    Activité habituelle, mining professionnel, DeFi avancé
+                    Trading mené comme un professionnel (cas rares, régime BNC) ou exercé comme métier (régime BIC), mining professionnel, DeFi avancé
                     (yield farming, prêts, LP tokens), structures juridiques
                     spécifiques (EURL, SASU)… Là, l'outil ne suffit plus :
                     un outil (Waltio Smart 249 €/an ou Unlimited 999 €/an) +

@@ -2,8 +2,13 @@
  * Partner Reviews — long-form content pour pages /partenaires/[slug].
  *
  * Conçu suite aux recommandations de l'agent SEO Pages Partenaires :
- * structure 1500+ mots, Schema.org Product+Review+FAQPage, E-E-A-T
- * (auteur identifié, dates, sources légales), preuves d'usage réel.
+ * structure 1500+ mots, Schema.org Product+FAQPage, E-E-A-T
+ * (auteur identifié, dates, sources légales).
+ *
+ * 2026-10-05 : l'équipe n'a jamais eu ces produits en main. Les fiches
+ * analysent les informations publiques (fabricant, documentation, grilles
+ * tarifaires). Ne pas réintroduire de revendication d'essai personnel, de
+ * durée d'essai ni d'anecdote vécue.
  *
  * Style éditorial sales-driven : pages partenaires affiliés rémunérés.
  * Pas de critique inter-partenaires, ton positif aligné sur la mission
@@ -50,16 +55,19 @@ export interface PartnerBeforeAfter {
 export interface PartnerReview {
   /** Slug partenaire (lien avec data/partners.ts) */
   slug: string;
-  /** Note globale /5 (basée sur notre test terrain) */
+  /**
+   * Note Trustpilot (TrustScore /5) relevée à la date externalReviewDate. Ce n'est PAS une note Cryptoreflex : aucune grille
+   * maison n'est documentée (05/10/2026 : les anciennes notes 4,2 / 4,4 / 4,0 reprenaient des relevés Trustpilot faux).
+   */
   rating: number;
-  /** Nombre d'avis Trustpilot/G2 cumulés (pour aggregateRating Schema.org) */
+  /** Nombre d'avis Trustpilot à la même date */
   externalReviewCount: number;
+  /** Date du relevé Trustpilot (ISO YYYY-MM-DD) */
+  externalReviewDate: string;
   /** Source publique de l'aggregateRating */
   externalReviewSource: { name: string; url: string };
   /** Date dernière mise à jour review (ISO YYYY-MM-DD) */
   lastUpdated: string;
-  /** Durée de notre test terrain */
-  testDuration: string;
   /** Synthèse en 30 secondes (verdict bref) */
   verdict: {
     summary: string;
@@ -92,552 +100,552 @@ export const partnerReviews: PartnerReview[] = [
   /* ============================ LEDGER ============================ */
   {
     slug: "ledger",
-    rating: 4.2,
-    externalReviewCount: 45000,
+    // fr.trustpilot.com/review/www.ledger.com relu le 05/10/2026 (JSON-LD) : ratingValue 3.3, reviewCount 2737.
+    rating: 3.3,
+    externalReviewCount: 2737,
+    externalReviewDate: "2026-10-05",
     externalReviewSource: {
       name: "Trustpilot",
-      url: "https://fr.trustpilot.com/review/ledger.com",
+      url: "https://fr.trustpilot.com/review/www.ledger.com",
     },
-    lastUpdated: "2026-10-02",
-    testDuration: "8 ans (2018 → aujourd'hui)",
+    lastUpdated: "2026-10-05",
     verdict: {
       summary:
-        "Ledger reste le hardware wallet le plus mature pour 90% des utilisateurs : Secure Element certifié, écosystème riche, support FR. Le drama Recover (2023) a entamé la confiance des puristes mais ne change rien à la sécurité de l'appareil tant que vous n'activez pas le service.",
+        "Ledger, fabricant français fondé en 2014, annonce plus de 8 millions d'appareils vendus. Ses portefeuilles gardent vos clés dans une puce sécurisée certifiée (CC EAL5+ ou EAL6+ selon le modèle) et s'utilisent avec l'application Ledger Wallet (ex-Ledger Live). Le service Ledger Recover, critiqué à son annonce en 2023, est un abonnement payant et optionnel : il ne fonctionne que si vous y souscrivez.",
       bestFor: [
         "Premier hardware wallet (débutant 2k–50k €)",
-        "Voyageur / nomade crypto (Nano X Bluetooth)",
-        "User multi-chains (5500+ tokens supportés)",
-        "Audience FR cherchant du support en français",
+        "Usage sur téléphone (Bluetooth sur Nano X, Nano Gen5, Flex et Stax)",
+        "Détenteur de nombreuses cryptos (plus de 15 000 annoncées par Ledger)",
+        "Public francophone : site, boutique et centre d'aide en français",
       ],
       notFor: [
-        "Puristes open-source absolus (préférer Trezor)",
-        "Cypherpunks qui exigent firmware 100% auditable",
-        "Linux-only users (Ledger Live tourne mais moins natif)",
+        "Ceux qui exigent un code 100 % open source (le système Ledger OS ne l'est qu'en partie)",
+        "Utilisateurs d'iPhone qui visent le Nano S Plus (il ne fonctionne pas avec iOS)",
+        "Utilisateurs de Chromebook (non compatible selon Ledger)",
       ],
     },
     pedagogy: {
       problem: {
-        title: "Vos cryptos sur un exchange ne vous appartiennent pas",
-        body: "FTX, Celsius, Mt.Gox, Voyager, BlockFi : 30+ milliards de dollars perdus en 10 ans par des utilisateurs qui pensaient que leurs cryptos étaient en sécurité chez un acteur \"sérieux\". Tant que vos cryptos sont sur Coinbase, Kraken ou Bitpanda, vous détenez une dette envers eux — pas du Bitcoin. \"Not your keys, not your coins\" n'est pas un slogan : c'est une règle de survie patrimoniale.",
-        stat: "30 Md$",
+        title: "Sur une plateforme, vos cryptos dépendent de la plateforme",
+        body: "Mt.Gox (2014), FTX et Celsius (2022) : quand une plateforme fait faillite ou se fait pirater, ses clients voient leurs retraits bloqués, parfois pendant des années. Tant que vos cryptos restent sur une plateforme, c'est elle qui détient les clés : votre solde est une promesse de sa part. « Pas vos clés, pas vos cryptos » résume ce risque.",
       },
       solution: {
-        title: "Une puce certifiée militaire qui garde vos clés hors-ligne",
-        body: "Ledger isole vos clés privées dans un Secure Element (puce certifiée Common Criteria EAL5+, même grade que les passeports biométriques). Cette puce résiste aux attaques physiques connues : extraction par micro-soudure, glitching électrique, side-channel. Même si votre ordinateur est piraté demain, vos cryptos restent intactes parce que la signature des transactions se fait DANS l'appareil, pas sur votre PC.",
-        stat: "EAL5+",
+        title: "Une puce sécurisée qui garde vos clés hors ligne",
+        body: "Ledger stocke vos clés privées dans une puce Secure Element, le même type de puce que celles des passeports et des cartes bancaires. Elle est certifiée Common Criteria EAL5+ (Nano X) ou EAL6+ (Nano S Plus, Nano Gen5, Flex, Stax). Selon Ledger, elle intègre des protections contre l'analyse de ses signaux physiques (attaques dites « side-channel ») et contre l'injection de fautes (laser, variations de tension). Même si votre ordinateur est infecté, la transaction est signée dans l'appareil, après votre validation sur son écran.",
+        stat: "EAL5+/6+",
       },
       mechanism: {
         title: "Comment ça fonctionne, simplement",
         body: "Vous n'avez pas besoin d'être ingénieur. Le hardware wallet sépare deux choses qui devraient toujours être séparées : votre portefeuille (la blockchain, où sont vos cryptos) et votre clé pour y accéder (qui doit rester chez vous).",
         steps: [
-          "À l'achat, vous générez une seed de 24 mots — c'est la clé maîtresse, à noter sur papier (jamais photo, jamais cloud).",
-          "Chaque transaction nécessite une confirmation physique sur l'écran du Ledger : vous vérifiez l'adresse, vous validez avec un bouton.",
-          "Si vous perdez ou cassez l'appareil, vous rachetez n'importe quel hardware compatible BIP-39 et vous restaurez avec votre seed.",
+          "À l'installation, l'appareil génère une phrase de récupération de 24 mots : c'est la clé maîtresse, à noter sur papier (jamais en photo, jamais dans le cloud).",
+          "Chaque transaction nécessite une confirmation physique sur l'écran du Ledger : vous vérifiez l'adresse, puis vous validez sur l'appareil.",
+          "Si vous perdez ou cassez l'appareil, vous restaurez vos comptes avec ces 24 mots sur un nouveau Ledger (la phrase suit le standard BIP-39, que d'autres portefeuilles compatibles savent aussi lire).",
         ],
       },
       roi: {
-        title: "Le calcul, sans bullshit",
-        body: "Nano S Plus : 79 €. Si vous protégez ne serait-ce que 5 000 € de cryptos, c'est 1,6% de votre patrimoine alloué à la sécurité physique — l'équivalent d'une assurance habitation pour votre portefeuille. Lissé sur 8 ans d'usage moyen : 0,82 €/mois. Le coût d'un café par trimestre pour ne pas finir comme un client FTX qui attend toujours son dépôt 4 ans après.",
-        stat: "0,82 €/mois",
+        title: "Le calcul, en clair",
+        body: "Nano S Plus : 59 € (prix affiché sur la boutique officielle Ledger le 5 octobre 2026). Si vous protégez 5 000 € de cryptos, cela représente environ 1,2 % de ce montant, payé une seule fois. Réparti sur 8 ans (simple hypothèse de durée d'utilisation) : environ 0,61 €/mois. À mettre en face du risque de blocage sur une plateforme : selon Ledger, la récupération des fonds des clients de FTX a pris près de trois ans.",
+        stat: "0,61 €/mois",
       },
     },
     beforeAfter: {
       beforeTitle: "Sans hardware wallet",
       beforeItems: [
-        "Vos cryptos vivent sur un exchange — vous détenez une promesse, pas du Bitcoin",
-        "Un hack du PC, un mot de passe leaké, un phishing email = vidange instantanée",
-        "Vous vérifiez frénétiquement les news pour voir si \"votre\" exchange tient encore",
-        "En cas de défaillance (FTX, Celsius), vous devenez créancier dans une procédure de 4+ ans",
+        "Vos cryptos restent sur une plateforme : c'est elle qui détient les clés",
+        "Un ordinateur infecté, un mot de passe volé ou un e-mail d'hameçonnage peuvent suffire à vider le compte",
+        "Vous surveillez l'actualité pour savoir si « votre » plateforme tient encore",
+        "En cas de faillite (FTX, Celsius), vous devenez créancier dans une procédure qui peut durer des années",
       ],
       afterTitle: "Avec votre Ledger",
       afterItems: [
-        "Vos clés sont OFFLINE dans le Secure Element — inaccessibles à distance",
-        "Chaque transaction nécessite VOTRE confirmation physique sur l'écran du Nano",
-        "Vous dormez tranquille même si un exchange fait la une demain matin",
-        "Votre seed phrase de 24 mots = filet de sécurité absolu, recoverable n'importe où",
+        "Vos clés restent hors ligne, dans la puce sécurisée de l'appareil",
+        "Chaque transaction nécessite VOTRE confirmation physique sur l'écran du Ledger",
+        "La faillite d'une plateforme ne touche pas les cryptos que vous gardez vous-même",
+        "Votre phrase de 24 mots permet de tout restaurer sur un nouvel appareil",
       ],
     },
     sections: [
       {
-        title: "Pourquoi on a testé Ledger pendant 8 ans",
+        title: "Ledger, un fabricant français",
         content:
-          "On a acheté notre premier Ledger Nano S en 2018, après le hack de Bitfinex et le crash de plusieurs exchanges centralisés. À l'époque, l'offre française se résumait à Ledger ou Trezor (importé). Huit ans plus tard, on a possédé successivement : Nano S, Nano S Plus (×2), Nano X, et passé en revue le Stax sans l'acheter.\n\nLedger est une exception industrielle française : 3 millions d'utilisateurs revendiqués, présence à Paris, design produit Tony Fadell (créateur de l'iPod), R&D et fabrication partielle en Europe. C'est l'une des rares marques crypto où on peut dire \"made in France\" sans inventer.",
+          "Ledger est une société française fondée en 2014, dont le siège est à Paris. Elle dispose d'un site de production à Vierzon (Cher) et annonce plus de 8 millions d'appareils vendus. Tous les modèles ne sont pas fabriqués en France : Ledger a par exemple annoncé en 2023 que le Stax serait fabriqué et assemblé au Vietnam. Le Stax a été dessiné avec Tony Fadell, l'un des pères de l'iPod.",
       },
       {
-        title: "Ce qu'on a confirmé en 8 ans d'usage quotidien",
+        title: "Les points forts de Ledger",
         content:
-          "**Le Secure Element fait son job.** La puce ST33K1M5 (certifiée Common Criteria EAL5+) résiste aux attaques physiques connues : extraction de clé par micro-soudure, glitching électrique, side-channel. Le grade EAL5+ est celui exigé pour les passeports biométriques européens. Si on vous vole votre wallet, le Secure Element rend l'attaque économiquement non rentable.\n\n**Ledger Live est devenu LA référence.** Vrai dashboard mature : historique multi-comptes, swap intégré, staking ETH/SOL/DOT/ATOM en quelques clics, intégration MetaMask/Rabby native via WebUSB. Sur 200+ transactions signées en 2025, zéro bug bloquant. L'app desktop est sortie en 2018 et s'améliore release après release.\n\n**Le support en français est un game-changer.** Email contact dédié FR, réponse sous 24h en semaine. Quand on a eu une question firmware Nano X en 2024, ticket résolu en 36h. Pour un user FR qui n'est pas à l'aise en anglais, c'est tranquillité d'esprit garantie.",
+          "**La puce sécurisée fait son travail.** Selon le modèle, il s'agit d'une ST33K1M5 certifiée Common Criteria EAL6+ (Nano S Plus, Nano Gen5, Flex, Stax) ou d'une ST33J2M0 certifiée EAL5+ (Nano X). Ledger indique qu'elle intègre des protections contre les attaques physiques courantes : analyse des signaux (side-channel) et injection de fautes (laser, variations de tension). Ce type de puce équipe aussi les passeports et les cartes bancaires.\n\n**Ledger Wallet centralise la gestion.** L'application (appelée Ledger Live jusqu'à son changement de nom) regroupe vos comptes, l'achat, l'échange et le staking (ETH, SOL, DOT, délégation sur Cosmos, entre autres) via des prestataires tiers. Votre Ledger fonctionne aussi avec des portefeuilles comme MetaMask ou Rabby, l'appareil restant le signataire. La première version de l'application est sortie en juillet 2018.\n\n**Le site, la boutique et l'aide existent en français.** Fiches produits, conditions de vente, garantie et articles du centre d'aide sont publiés en français sur ledger.com, shop.ledger.com et support.ledger.com.",
       },
       {
-        title: "Pourquoi Ledger est le choix par défaut en 2026",
+        title: "Ce que propose Ledger en 2026",
         content:
-          "**Made in France, design Tony Fadell.** Rare dans la crypto : Ledger est l'une des seules marques où le \"made in Europe\" n'est pas un slogan. Design produit signé Tony Fadell (créateur de l'iPod et du thermostat Nest). R&D et fabrication partielle à Vierzon, France. L'écosystème français pour l'écosystème français.\n\n**5 500+ tokens supportés en natif.** Bitcoin, Ethereum, Solana, BNB Chain, Polygon, Arbitrum, Optimism, Cardano, Polkadot, Avalanche... Ledger Live affiche la quasi-totalité de l'écosystème majeur. Aucun autre fabricant grand public n'offre cette couverture multi-chains.\n\n**Bluetooth chiffré sur Nano X = mobilité réelle.** App iOS + Android natives, Bluetooth Low Energy chiffré, signature physique sur l'appareil. Pour un freelance crypto en déplacement, le Nano X est l'unique solution mobile vraiment sérieuse.",
+          "**Une gamme de cinq modèles.** Nano S Plus (59 €), Nano X (99 €), Nano Gen5 (179 €), Flex (249 €) et Stax (399 €) : prix affichés sur la boutique officielle le 5 octobre 2026. Les Nano Gen5, Flex et Stax ont un écran tactile E Ink ; les Nano S Plus et Nano X ont un petit écran OLED de 1,1 pouce, non tactile.\n\n**Plus de 15 000 cryptos annoncées.** Ledger annonce plus de 15 000 cryptos prises en charge, dont plus de 500 directement dans l'application Ledger Wallet (Bitcoin, Ethereum, Solana, XRP, stablecoins…) ; les autres passent par des portefeuilles tiers compatibles.\n\n**Le Bluetooth pour signer depuis votre téléphone.** Les Nano X, Nano Gen5, Flex et Stax se connectent en Bluetooth à l'application mobile (iOS 15 et plus, Android 10 et plus). Pour le Nano X, Ledger précise que seules des données publiques passent par Bluetooth et que la liaison est chiffrée ; vos clés restent dans l'appareil et chaque transaction se valide sur son écran. Le Nano S Plus, lui, se branche en USB-C (ordinateur ou téléphone Android) et ne fonctionne pas avec l'iPhone.",
       },
     ],
     specs: [
-      { label: "Modèles testés", value: "Nano S, Nano S Plus, Nano X" },
-      { label: "Secure Element", value: "ST33K1M5 (CC EAL5+)" },
-      { label: "Cryptos supportées", value: "5 500+" },
-      { label: "Compatibilité", value: "Windows, macOS, Linux, iOS, Android" },
-      { label: "Connectivité", value: "USB-C (Nano S Plus), USB-C + Bluetooth (Nano X)" },
-      { label: "Open-source", value: "Apps : oui · OS BOLOS : partiel" },
-      { label: "Prix d'entrée", value: "79 € (Nano S Plus)" },
-      { label: "Garantie", value: "2 ans Ledger SAS" },
+      { label: "Modèles en vente", value: "Nano S Plus, Nano X, Nano Gen5, Flex, Stax" },
+      { label: "Secure Element", value: "ST33K1M5 (CC EAL6+) ; ST33J2M0 (CC EAL5+) sur le Nano X" },
+      { label: "Cryptos prises en charge", value: "15 000+ annoncées, dont 500+ dans Ledger Wallet" },
+      { label: "Compatibilité", value: "Windows 10/11, macOS Monterey/Ventura, Ubuntu LTS 20.04/22.04 (liste de la boutique Ledger), Android 10+, iOS 15+ (pas d'iOS pour le Nano S Plus)" },
+      { label: "Connectivité", value: "USB-C (Nano S Plus) ; USB-C + Bluetooth (Nano X) ; USB-C + Bluetooth + NFC (Nano Gen5, Flex, Stax)" },
+      { label: "Open-source", value: "Application Ledger Wallet et apps : oui · Ledger OS : en partie" },
+      { label: "Prix d'entrée", value: "59 € (Nano S Plus, boutique officielle, 5 octobre 2026)" },
+      { label: "Garantie", value: "Garantie légale de conformité : 2 ans (achat par un particulier) ; garantie limitée Ledger : 1 an ; Ledger Replace (3 ans) en option payante" },
     ],
     setupSteps: [
       {
-        title: "1. Achat depuis source officielle uniquement",
+        title: "1. Achat neuf, auprès d'une source officielle",
         description:
-          "N'achetez JAMAIS un Ledger d'occasion (Amazon, Leboncoin, Vinted). Risque pré-flashed : un attaquant peut pré-générer la seed et vous la \"révéler\" comme si vous veniez de la créer. Achetez sur shop.ledger.com (notre lien affilié -10% pour Pro) ou revendeurs certifiés (Fnac, Boulanger).",
+          "Achetez neuf sur shop.ledger.com, sur une boutique officielle Ledger (y compris sur Amazon) ou chez un revendeur agréé (Ledger cite par exemple Fnac et Darty). Évitez l'occasion et les vendeurs tiers non agréés des places de marché. Ledger le rappelle : un vrai Ledger n'est jamais livré avec une phrase de récupération ou un code PIN déjà renseignés. Si c'est le cas, n'utilisez pas l'appareil.",
       },
       {
-        title: "2. Génération de la seed (24 mots)",
+        title: "2. Création de la phrase de récupération (24 mots)",
         description:
-          "Branchez, créez un PIN 4-8 chiffres (jamais 0000 ou 1234), générez la seed. NOTEZ-LA À LA MAIN sur les feuilles fournies. JAMAIS de photo, JAMAIS de cloud, JAMAIS de notes téléphone. Si vous faites ça, le hardware ne sert à rien.",
+          "Branchez l'appareil, choisissez un code PIN de 4 à 8 chiffres (jamais 0000 ou 1234), puis laissez l'appareil générer votre phrase de 24 mots. NOTEZ-LA À LA MAIN sur les feuilles fournies. JAMAIS de photo, JAMAIS de cloud, JAMAIS de notes sur le téléphone : sinon, l'appareil ne protège plus rien. Pendant l'installation, l'application Ledger Wallet vérifie aussi que votre appareil est authentique.",
       },
       {
-        title: "3. Test recovery dès J1",
+        title: "3. Vérification de la sauvegarde dès le premier jour",
         description:
-          "C'est l'étape que 80% des gens sautent. Réinitialisez le wallet (Settings > Security > Reset). Restaurez-le avec votre seed. Si ça marche, votre sauvegarde est valide. Si pas, recommencez l'étape 2 maintenant — pas dans 6 mois quand vous avez 5 000 € dessus.",
+          "Installez l'application Recovery Check depuis Ledger Wallet : sur l'appareil déjà configuré, elle vérifie que les mots que vous avez notés correspondent bien à sa phrase. Si la vérification échoue, refaites votre sauvegarde maintenant, avant d'y placer de l'argent. Vous pouvez ensuite désinstaller l'application.",
       },
       {
-        title: "4. Premier transfert : montant test 10 €",
+        title: "4. Premier transfert : un petit montant test",
         description:
-          "Avant de transférer 5 000 € depuis votre plateforme d'achat, envoyez d'abord 10 € de BTC. Vérifiez que ça arrive bien sur votre wallet Ledger Live. Une seule lettre changée dans l'adresse = fonds perdus à jamais. Le test à 10 € coûte 1 € de fees, pas 5 000 € de regret.",
+          "Avant de transférer une grosse somme depuis votre plateforme d'achat, envoyez d'abord un petit montant. Vérifiez qu'il arrive bien dans Ledger Wallet. Une erreur d'adresse peut faire perdre les fonds définitivement : comparez l'adresse affichée sur l'écran du Ledger avec celle collée sur la plateforme. Le test coûte quelques frais de réseau, bien moins qu'une erreur sur la totalité.",
       },
       {
-        title: "5. Stockage seed offline + redondance",
+        title: "5. Stockage de la phrase hors ligne, en double",
         description:
-          "La feuille papier dans le tiroir = mauvaise idée long-terme (incendie, dégât des eaux). Investissez 30 € dans un Cryptosteel ou équivalent métallique. Idéalement 2 copies en 2 lieux différents (chez vous + coffre bancaire / parents).",
+          "La feuille papier dans un tiroir est fragile sur le long terme (incendie, dégât des eaux). Une sauvegarde en métal résiste mieux ; la boutique Ledger en vend plusieurs (tuiles en acier ou en titane). Idéalement, gardez 2 copies dans 2 lieux différents (chez vous et dans un coffre ou chez un proche de confiance).",
       },
     ],
     faq: [
       {
-        question: "Ledger est-il vraiment sûr en 2026 après le drama Recover ?",
+        question: "Ledger est-il sûr en 2026, après la polémique Ledger Recover ?",
         answer:
-          "Oui, tant que vous n'activez pas le service Recover. Le Secure Element et le firmware de signature offline restent fonctionnels comme avant. La controverse portait sur la communication marketing initiale (\"votre seed ne quittera jamais l'appareil\"), pas sur une faille de sécurité technique. Si vous voulez la garantie philosophique absolue, regardez Trezor ou Coldcard.",
+          "En mai 2023, l'annonce de Ledger Recover a suscité de vives critiques ; le PDG de Ledger a reconnu une erreur de communication dans un message publié le 23 mai 2023. Recover est un abonnement payant et optionnel : si vous y souscrivez, votre appareil chiffre une copie de votre clé, la découpe en trois fragments et les confie à trois sociétés (Coincover, Ledger et EscrowTech) ; deux fragments suffisent pour restaurer l'accès, après vérification de votre identité. Si vous n'y souscrivez pas, le service ne fonctionne pas. Ledger a publié le livre blanc de ce protocole en juin 2023. Si vous tenez à un système entièrement open source, sachez que Ledger OS ne l'est qu'en partie.",
       },
       {
         question: "Quelle différence entre Nano S Plus et Nano X ?",
         answer:
-          "Nano S Plus (79 €) suffit pour 90% des users : USB-C, écran 128×64, 100+ apps simultanées, support de tous les coins majeurs. Nano X (149 €) ajoute Bluetooth chiffré + batterie pour signer en mobilité depuis votre téléphone (iOS + Android). Si vous utilisez votre wallet 100% depuis votre ordinateur fixe, Nano S Plus est largement suffisant — vous payez +70 € pour rien.",
+          "Le Nano S Plus (59 €) se branche en USB-C à un ordinateur ou à un téléphone Android ; il ne fonctionne pas avec l'iPhone et n'a pas de batterie. Le Nano X (99 €) ajoute le Bluetooth et une batterie (jusqu'à 5 heures d'autonomie selon Ledger) : vous pouvez l'utiliser avec l'application mobile, sur iOS comme sur Android. Les deux ont un écran de 128 × 64 pixels et acceptent jusqu'à 100 apps. Leur puce diffère : ST33K1M5 certifiée EAL6+ sur le Nano S Plus, ST33J2M0 certifiée EAL5+ sur le Nano X. Si vous utilisez votre portefeuille uniquement depuis un ordinateur, le Nano S Plus suffit, et il coûte 40 € de moins (prix de la boutique Ledger au 5 octobre 2026).",
       },
       {
-        question: "Peut-on acheter Ledger d'occasion ?",
+        question: "Peut-on acheter un Ledger d'occasion ?",
         answer:
-          "Non. Risque pre-flashed massif : un attaquant peut acheter un Ledger, générer une seed connue de lui, le re-emballer sous plastique, et vous le revendre sur Leboncoin. Quand vous allumez, l'appareil vous \"propose\" la seed pré-générée comme si elle était nouvelle. Vous transférez vos cryptos dessus, l'attaquant les vide. Achat neuf depuis shop.ledger.com ou revendeur certifié uniquement.",
+          "Ce n'est pas recommandé. Un appareil d'occasion, ou vendu par un vendeur non agréé, a pu être modifié ou préparé par un escroc. Ledger le rappelle : un vrai Ledger n'est jamais livré avec une phrase de récupération ou un code PIN déjà renseignés ; si c'est le cas, n'utilisez pas l'appareil et n'y envoyez aucune crypto. Achetez neuf sur shop.ledger.com, sur une boutique officielle Ledger (y compris sur Amazon) ou chez un revendeur agréé, puis laissez l'application Ledger Wallet vérifier l'authenticité de l'appareil pendant l'installation.",
       },
       {
         question: "Ledger fonctionne-t-il avec MetaMask ?",
         answer:
-          "Oui, parfaitement. Connexion via USB (Nano S Plus) ou Bluetooth (Nano X). Vous importez votre compte Ledger dans MetaMask, et chaque transaction nécessite une confirmation physique sur l'appareil. C'est exactement le setup que recommande l'écosystème DeFi : MetaMask comme interface, Ledger comme signataire isolé. Les clés privées ne quittent jamais le Secure Element.",
+          "Oui. Ledger cite MetaMask et Rabby parmi les portefeuilles logiciels qui se connectent à ses appareils. Sur ordinateur, l'extension MetaMask se connecte à votre Ledger ; sur téléphone, l'application MetaMask Mobile se connecte au Nano X en Bluetooth (depuis mars 2024). Vos clés privées restent dans l'appareil et chaque transaction doit être validée sur son écran : MetaMask sert d'interface, le Ledger de signataire.",
       },
       {
         question: "Que faire si je perds mon Ledger ?",
         answer:
-          "Rien — du moins, rien d'urgent. Le Ledger en lui-même ne contient pas de cryptos, il contient la clé privée chiffrée. Vos cryptos sont sur la blockchain. Tant que vous avez votre seed phrase de 24 mots, vous pouvez acheter un nouveau Ledger (ou Trezor, ou n'importe quel hardware compatible BIP-39) et restaurer l'accès complet à vos fonds. Le PIN est protégé : 3 mauvais essais et l'appareil se réinitialise automatiquement.",
+          "Pas de panique. L'appareil ne contient pas vos cryptos, qui restent sur la blockchain : il garde vos clés privées. Avec votre phrase de 24 mots, vous restaurez vos comptes sur un nouvel appareil Ledger (la phrase suit le standard BIP-39, que d'autres portefeuilles compatibles savent aussi lire). Celui qui trouve votre appareil ne peut rien en faire sans votre code PIN : après trois codes erronés, l'appareil se réinitialise.",
       },
     ],
     whyBuyNow: [
       {
-        reason: "Le hardware le plus mature du marché (8 ans d'usage testé)",
+        reason: "Un écosystème en place depuis des années",
         description:
-          "Secure Element ST33K1M5 certifié CC EAL5+, app Ledger Live polish, écosystème 5500+ tokens. Vous n'achetez pas un produit jeune : vous achetez 8 ans d'itérations sécurité.",
+          "Ledger existe depuis 2014 et annonce plus de 8 millions d'appareils vendus. Son application (Ledger Live, devenue Ledger Wallet) est sortie en juillet 2018. Puce certifiée CC EAL5+ ou EAL6+ selon le modèle, plus de 15 000 cryptos annoncées.",
       },
       {
-        reason: "Made in France — design + R&D + fabrication EU",
+        reason: "Une société française, un site de production à Vierzon",
         description:
-          "Rare dans la crypto : Ledger est l'une des seules marques où le \"made in Europe\" n'est pas un slogan. Design Tony Fadell (créateur iPod). Fabrication partielle Vierzon, France.",
+          "Siège à Paris, site de production à Vierzon (Cher). Tous les modèles n'y sont pas fabriqués : Ledger a annoncé un assemblage du Stax au Vietnam. Le Stax a été dessiné avec Tony Fadell, l'un des pères de l'iPod.",
       },
       {
-        reason: "Bluetooth chiffré (Nano X) pour signer en mobilité",
+        reason: "Le Bluetooth pour signer depuis votre téléphone",
         description:
-          "Si vous utilisez votre wallet depuis votre iPhone ou Android en déplacement, Nano X est le seul qui le fait bien. App mobile iOS + Android natives. Pour un freelance crypto qui voyage, c'est game-changer.",
+          "Les Nano X, Nano Gen5, Flex et Stax se connectent en Bluetooth à l'application Ledger Wallet sur iPhone et Android. Pour le Nano X, Ledger précise que la liaison est chiffrée et ne transporte que des données publiques ; la validation se fait toujours sur l'appareil. Pratique si vous gérez vos cryptos en déplacement.",
       },
       {
-        reason: "Support en français sous 24h ouvrées",
+        reason: "Une garantie écrite noir sur blanc",
         description:
-          "L'écosystème FR a souvent des questions spécifiques (fiscalité, transferts SEPA depuis exchanges). Le support Ledger est en français, réactif. Pour un user FR qui galère en anglais, c'est tranquillité d'esprit.",
+          "Ledger accorde une garantie limitée d'un an, qui s'ajoute à la garantie légale de conformité de deux ans prévue par la loi française. Une protection de 3 ans (Ledger Replace) est proposée en option, contre paiement.",
       },
     ],
     socialProof: [
-      { stat: "3 millions+", source: "Utilisateurs Ledger dans le monde (data Ledger 2025)" },
-      { stat: "Note 4.2/5", source: "45 000+ avis Trustpilot ledger.com" },
-      { stat: "EAL5+", source: "Certification Common Criteria du Secure Element ST33" },
+      { stat: "8 millions+", source: "Appareils Ledger vendus (chiffre annoncé par Ledger sur ledger.com, octobre 2026)" },
+      { stat: "3,3/5", source: "TrustScore Trustpilot de www.ledger.com (2 737 avis, relevé le 5 octobre 2026)" },
+      { stat: "EAL6+", source: "Certification Common Criteria de la puce ST33K1M5 (Nano S Plus, Nano Gen5, Flex, Stax ; EAL5+ sur le Nano X)" },
     ],
     risksAvoided: [
-      "Vol de fonds suite à hack d'exchange (FTX, Celsius, Mt.Gox = 30+ Mds$ perdus depuis 2014)",
-      "Phishing de seed phrase (1ère cause de perte crypto retail FR — étude AMF 2024)",
-      "Extraction de clé par attaque physique (Secure Element rend l'attaque non rentable)",
-      "Interception réseau lors de signature transaction (signature offline air-gap)",
+      "Blocage de vos fonds en cas de faillite ou de piratage d'une plateforme (Mt.Gox en 2014, FTX et Celsius en 2022)",
+      "Hameçonnage de votre phrase de récupération, à condition de retenir la règle de Ledger : un vrai Ledger ne vous demande jamais de la saisir sur un ordinateur, un téléphone ou un site",
+      "Extraction de clé par attaque physique (puce conçue pour résister à l'analyse de ses signaux et à l'injection de fautes)",
+      "Interception de la connexion : la signature se fait dans l'appareil, et Ledger précise pour le Nano X que seules des données publiques transitent par Bluetooth",
     ],
   },
 
   /* ============================ TREZOR ============================ */
   {
     slug: "trezor",
-    rating: 4.4,
-    externalReviewCount: 3200,
+    // fr.trustpilot.com/review/trezor.io relu le 05/10/2026 (JSON-LD) : ratingValue 4.6, reviewCount 2020.
+    rating: 4.6,
+    externalReviewCount: 2020,
+    externalReviewDate: "2026-10-05",
     externalReviewSource: {
       name: "Trustpilot",
       url: "https://fr.trustpilot.com/review/trezor.io",
     },
-    lastUpdated: "2026-04-28",
-    testDuration: "5 ans (Trezor One depuis 2020, Safe 3 depuis 2024)",
+    lastUpdated: "2026-10-05",
     verdict: {
       summary:
-        "Trezor est le hardware wallet pour ceux qui ne veulent pas faire confiance aveuglément à une marque. 100% open-source du firmware au software, audits communautaires permanents, philosophie souveraine. UX moins polish que Ledger Live, pas de Bluetooth, mais c'est un trade-off conscient pour la transparence radicale.",
+        "Trezor s'adresse à ceux qui veulent vérifier plutôt que croire sur parole : le firmware (le logiciel interne de l'appareil) est open source et peut être recompilé pour être comparé à la version officielle. La gamme actuelle compte trois modèles équipés d'un Élément Sécurisé : Safe 3 (59 €), Safe 5 (129 €) et Safe 7 (249 €), ce dernier ajoutant le Bluetooth et la compatibilité iPhone complète.",
       bestFor: [
-        "Cypherpunks et puristes open-source",
-        "Audit-conscious users avec patrimoine sérieux (>20 k€)",
-        "Bitcoin maximalists (Trezor Safe 3 BTC-only)",
-        "Linux users (intégration native)",
+        "Ceux qui veulent un code que chacun peut vérifier",
+        "Ceux qui ne détiennent que du bitcoin (versions « Bitcoin-only » des Safe 3, 5 et 7)",
+        "Ceux qui veulent répartir leur sauvegarde en plusieurs morceaux (sauvegarde multi-fragments)",
+        "Les utilisateurs de Linux (Trezor Suite fonctionne sous Windows, macOS, Linux et Android)",
       ],
       notFor: [
-        "Débutants total qui cherchent l'UX la plus polish",
-        "Users qui veulent signer depuis iPhone (mobile Android-only)",
-        "Audience FR exigeant un support en français (UI/doc majoritairement EN)",
+        "Les utilisateurs d'iPhone qui choisissent un Safe 3 ou un Safe 5 : sur iOS, ces modèles servent seulement à suivre son solde, acheter et recevoir (seul le Safe 7 est entièrement compatible iOS)",
+        "Ceux qui ne veulent rien gérer eux-mêmes : si l'appareil est perdu et que vous n'avez pas de sauvegarde valide, vos fonds sont perdus définitivement",
       ],
     },
     pedagogy: {
       problem: {
         title: "Faire confiance à un fabricant, c'est encore faire confiance",
-        body: "Le marketing crypto vous vend de la \"sécurité\" comme une boîte noire : achetez ce produit, faites-nous confiance, on vous promet que c'est bien fait. Mais comment vérifiez-vous ? Si le firmware est fermé, vous n'avez aucun moyen de savoir ce qu'il fait vraiment. Une mise à jour silencieuse pourrait, en théorie, exfiltrer votre seed sans que vous vous en aperceviez — et vous ne pourriez pas le démontrer.",
-        stat: "0%",
+        body: "Un portefeuille matériel garde vos clés hors ligne. Mais si son logiciel interne est fermé, vous devez croire le fabricant sur parole quant à ce qu'il fait réellement : ni vous ni des chercheurs indépendants ne pouvez relire le code pour le vérifier.",
       },
       solution: {
-        title: "100% du code public sur GitHub — vérifiable par n'importe qui",
-        body: "Trezor publie chaque ligne du firmware, du bootloader et de Trezor Suite en open-source depuis 2014. La communauté audite en continu. Si quelqu'un essaie de cacher quelque chose, c'est détecté en heures, pas en années. Vous n'achetez pas un produit qui vous promet la sécurité — vous achetez un produit dont la sécurité est démontrable mathématiquement et publiquement.",
-        stat: "11 ans",
+        title: "Un firmware public, que chacun peut relire et recompiler",
+        body: "Le code du firmware Trezor et de son programme de démarrage (le bootloader) est publié sur GitHub sous licences libres (GPLv3, LGPLv3, MIT). Trezor documente une compilation « reproductible » : avec un peu de technique, chacun peut recompiler le firmware et vérifier qu'il est identique à la version officielle. Selon Trezor, son code est ouvert depuis plus de 12 ans.",
+        stat: "12 ans",
       },
       mechanism: {
-        title: "Comment la transparence crée la sécurité",
-        body: "Le paradoxe : montrer le code rend l'appareil PLUS sûr, pas moins. Parce que des milliers d'yeux scrutent en permanence ce que mille employés Ledger ne pourraient pas vérifier eux-mêmes. C'est le principe \"many eyes\" cher à la sécurité informatique sérieuse depuis Linux.",
+        title: "Comment Trezor protège vos clés",
+        body: "Vos clés privées sont créées dans le Trezor et y restent. Le modèle de sécurité de Trezor part du principe que l'ordinateur ou le téléphone connecté peut être piraté : chaque opération sensible doit donc être relue et confirmée sur l'écran de l'appareil.",
         steps: [
-          "Vous téléchargez Trezor Suite (open-source) — vous pouvez compiler depuis source si vous voulez la paranoïa absolue.",
-          "Vous générez votre seed BIP-39 24 mots, OU vous activez Shamir Backup (5 parts dont 3 nécessaires) sur Safe 5.",
-          "Chaque transaction est signée hors-ligne dans le Secure Element Optiga (EAL6+), avec validation visuelle sur l'écran couleur.",
+          "Vous installez l'application Trezor Suite. L'appareil est livré sans firmware : Trezor Suite installe le firmware officiel et vérifie l'authenticité de l'appareil.",
+          "Vous notez votre sauvegarde : 20 mots par défaut sur les Safe 3, 5 et 7 (12 et 24 mots restent possibles). Avec la sauvegarde de 20 mots, vous pourrez passer plus tard à une sauvegarde multi-fragments, par exemple 3 morceaux sur 5.",
+          "Vous choisissez un code PIN (jusqu'à 50 chiffres). L'Élément Sécurisé, une puce certifiée EAL6+, ne libère le secret qui protège vos clés qu'avec le bon PIN, et l'efface après 16 erreurs (10 sur le Safe 7).",
         ],
       },
       roi: {
-        title: "Le prix de la souveraineté crypto",
-        body: "Trezor Safe 3 : 79 €. Sur un horizon crypto réaliste de 10 ans, ça fait 7,90 €/an pour la liberté de NE PAS faire confiance. Pour un investisseur qui dépasse les 20 k€ en patrimoine numérique, ce coût est insignifiant face au principe : vous ne déléguez à personne le contrôle de votre avenir financier.",
-        stat: "7,90 €/an",
+        title: "Ce que coûte un Trezor",
+        body: "Le Trezor Safe 3, modèle d'entrée de gamme, coûte 59 € sur la boutique officielle (Safe 5 : 129 € ; Safe 7 : 249 €). Réparti sur 10 ans d'utilisation, le Safe 3 revient à 5,90 € par an. Pour donner une idée de la durée de suivi : le Model One, sorti en 2014 et plus commercialisé depuis janvier 2026, recevra des correctifs de sécurité critiques au moins jusqu'en 2036, selon Trezor.",
+        stat: "5,90 €/an",
       },
     },
     beforeAfter: {
-      beforeTitle: "Sans contrôle souverain",
+      beforeTitle: "Avec un appareil au code fermé",
       beforeItems: [
-        "Vous faites confiance à un fabricant qui peut, en théorie, pousser une update opaque",
-        "En cas de pression étatique sur la marque, vous n'avez aucun moyen de savoir si le firmware a été modifié",
-        "Si la société disparaît ou est rachetée, le code peut devenir inaccessible",
-        "Vous ne pouvez pas démontrer la sécurité — vous y croyez sur parole marketing",
+        "Vous devez croire le fabricant sur parole quant à ce que fait le logiciel de l'appareil",
+        "Les chercheurs indépendants ne peuvent pas relire librement le code",
+        "En cas de faille, vous dépendez entièrement de ce que le fabricant choisit de publier",
       ],
-      afterTitle: "Avec Trezor open-source",
+      afterTitle: "Avec Trezor",
       afterItems: [
-        "Chaque ligne de firmware est sur GitHub — vous pouvez la lire, la compiler, la flasher vous-même",
-        "Toute backdoor serait détectée par la communauté en heures, signalée publiquement",
-        "Si SatoshiLabs disparaît demain, le projet continue (déjà arrivé : Trezor One forké à plusieurs reprises)",
-        "Shamir Backup natif : vous fragmentez votre seed sur 5 lieux, 3 nécessaires pour restaurer",
+        "Le code du firmware est public sur GitHub : vous pouvez le lire, et même le recompiler pour le comparer à la version officielle",
+        "Trezor Suite vérifie l'authenticité de l'appareil et du firmware installé",
+        "Trezor publie la liste des vulnérabilités corrigées et récompense les chercheurs qui les signalent",
+        "Sauvegarde multi-fragments : votre sauvegarde est découpée en plusieurs morceaux, et seul le nombre minimum que vous avez choisi permet de restaurer",
       ],
     },
     sections: [
       {
-        title: "Pourquoi Trezor est un must pour patrimoines sérieux",
+        title: "Pourquoi choisir Trezor",
         content:
-          "Avoir 2 hardware wallets de fabricants différents = best practice de sécurité absolue (\"vendor diversification\"). C'est ce qu'on recommande à toute personne avec >50 k€ en crypto. Trezor s'impose naturellement comme le second wallet de référence.\n\nOn a acheté un Trezor One en 2020, puis upgrade vers Safe 3 en 2024 quand le Secure Element Optiga a été ajouté. Le différentiateur Trezor, c'est la **transparence radicale** : chaque ligne de firmware est sur GitHub, chaque release est signée et auditable, la communauté trouve les bugs avant les attaquants. C'est le principe \"many eyes\" de la sécurité informatique appliqué au hardware.",
+          "Avoir deux portefeuilles matériels de fabricants différents évite de dépendre d'un seul fournisseur si un produit présente une faille ou est arrêté. Trezor est une option solide pour ce second appareil, ou pour un premier.\n\nSa particularité, c'est la **transparence** : le code du firmware est public sur GitHub, chaque version peut être recompilée pour vérifier qu'elle correspond au firmware officiel, et Trezor Suite contrôle l'authenticité du firmware installé sur votre appareil.",
       },
       {
-        title: "Ce qu'on adore : l'open-source intégral",
+        title: "Le point fort : un code public",
         content:
-          "**Firmware 100% open-source depuis 2014.** Vous pouvez télécharger le code source, le compiler vous-même, le flasher sur votre appareil. Personne ne peut vous imposer une mise à jour cachée. Si SatoshiLabs disparaît demain, la communauté peut continuer le projet — c'est gravé dans la licence.\n\n**Trezor Suite est aussi open-source.** Vous pouvez auditer chaque interaction de l'app desktop. La paranoïa cypherpunk peut compiler Suite depuis le code source pour s'assurer qu'il n'y a pas de télémétrie cachée. Personne d'autre n'offre cette transparence à ce niveau.\n\n**Shamir Backup natif (SLIP-39) sur Safe 5 et Model T.** Vous pouvez fractionner votre seed en 5 parts dont 3 sont nécessaires pour restaurer. Idéal pour patrimoines sérieux : 1 part chez vous, 1 chez vos parents, 1 dans un coffre bancaire, 1 chez votre notaire, 1 dans un coffre fort distant. Aucun lieu compromis ne donne accès aux fonds — 3/5 reconstituent la seed.",
+          "**Firmware open source.** Le code du firmware et du bootloader (le petit programme qui démarre l'appareil) est publié sur GitHub sous licences libres (GPLv3, LGPLv3, MIT). Trezor documente une compilation « reproductible » : vous pouvez recompiler le firmware et vérifier qu'il est identique à la version officielle. Ces licences permettraient aussi à d'autres développeurs de reprendre le code si Trezor cessait son activité.\n\n**Trezor Suite, un code consultable.** Le code de l'application est lui aussi public sur GitHub, mais sous une licence propre à Trezor (T-RSL) qui en autorise la consultation sans permettre de le redistribuer. Ce n'est donc pas une licence libre au sens strict.\n\n**Sauvegarde multi-fragments (norme SLIP-39, proposée par Trezor).** Sur les Safe 3, Safe 5 et Safe 7, votre sauvegarde peut être découpée en 1 à 16 morceaux de 20 mots, avec un nombre minimum à réunir pour restaurer, par exemple 3 sur 5. Perdre un ou deux morceaux ne bloque pas l'accès, et quelqu'un qui en trouve moins que le minimum ne peut rien en faire. Vous pouvez par exemple en garder un chez vous, un chez un proche de confiance et un dans un coffre.",
       },
       {
-        title: "11 ans de leadership sur la transparence",
+        title: "Plus de dix ans d'historique",
         content:
-          "**Pionnier historique du marché.** Trezor a inventé le hardware wallet en 2014 — avant Ledger, avant Coldcard. Onze ans plus tard, l'expérience accumulée se voit dans chaque détail : les bugs ont été corrigés en public, les attaques tentées ont été documentées, le code a été durci par des centaines d'audits indépendants.\n\n**Secure Element Optiga Trust M (Safe 3 et Safe 5).** Certification Common Criteria EAL6+ — un niveau supérieur à la moyenne du marché. Le Safe 3 à 79 € offre la même résistance physique que les modèles haut-de-gamme.\n\n**Communauté de sécurité active.** Trezor a un programme de bug bounty officiel, des audits publics récurrents, et des chercheurs en sécurité qui scrutent chaque release. C'est la marque qui investit le plus dans la R&D sécurité ouverte.",
+          "**Un pionnier.** Trezor a été fondé en 2013 et présente son Model One, sorti en 2014, comme le premier portefeuille matériel au monde. L'équipe a aussi contribué à des standards de portefeuille : BIP39 (la sauvegarde sous forme de liste de mots), BIP44 (l'organisation des comptes) et SLIP39 (la sauvegarde multi-fragments). Les anciens Model One et Model T ne sont plus commercialisés depuis janvier 2026, mais Trezor annonce pour eux des correctifs de sécurité critiques au moins jusqu'en 2036.\n\n**Un Élément Sécurisé sur toute la gamme actuelle.** Les Safe 3 et Safe 5 intègrent une puce OPTIGA Trust M certifiée Common Criteria EAL6+, choisie selon Trezor parce que sa documentation est accessible sans accord de confidentialité (NDA). Le Safe 7 y ajoute une seconde puce, TROPIC01, conçue pour pouvoir être auditée par des chercheurs indépendants.\n\n**Une sécurité ouverte aux critiques.** Trezor récompense les chercheurs qui signalent des failles (jusqu'à 100 000 $ pour une faille critique, sans plafond dans les cas exceptionnels) et publie la liste des vulnérabilités corrigées sur son portail de sécurité. En juin 2026, il a par exemple rendu publique une faille matérielle de la puce TROPIC01, découverte lors d'un audit indépendant. Selon Trezor, elle exige d'avoir l'appareil en main, de le démonter et un équipement de laboratoire spécialisé, et ne donne accès ni au code PIN ni aux fonds. Comme elle touche le matériel, elle ne peut pas être corrigée par une mise à jour du firmware.",
       },
     ],
     specs: [
-      { label: "Modèles testés", value: "Trezor One (2020), Safe 3 (2024)" },
-      { label: "Secure Element (Safe 3)", value: "Optiga Trust M (CC EAL6+)" },
-      { label: "Cryptos supportées", value: "~1 200 (focus BTC + ETH + alts majeurs)" },
-      { label: "Compatibilité", value: "Windows, macOS, Linux (natif), Android" },
-      { label: "Connectivité", value: "USB-C (One : USB-A)" },
-      { label: "Open-source", value: "100% (firmware + Suite + bootloader)" },
-      { label: "Prix d'entrée", value: "49 € (Trezor One)" },
-      { label: "Garantie", value: "2 ans SatoshiLabs" },
+      { label: "Modèles en vente", value: "Trezor Safe 3, Safe 5 et Safe 7 (Model One et Model T arrêtés)" },
+      { label: "Élément Sécurisé", value: "OPTIGA Trust M, certifié CC EAL6+ (Safe 3, 5 et 7) ; + TROPIC01 sur le Safe 7" },
+      { label: "Cryptos prises en charge", value: "Des milliers de cryptos et jetons selon Trezor (quelques exceptions selon le modèle)" },
+      { label: "Application Trezor Suite", value: "Windows, macOS, Linux et Android ; iOS complet uniquement avec le Safe 7" },
+      { label: "Connectivité", value: "USB-C sur les trois modèles ; Bluetooth en plus sur le Safe 7" },
+      { label: "Code source", value: "Firmware open source (GPLv3, LGPLv3, MIT) ; code de Trezor Suite public sous licence Trezor (T-RSL)" },
+      { label: "Prix sur trezor.io (05/10/2026)", value: "Safe 3 : 59 € ; Safe 5 : 129 € ; Safe 7 : 249 €" },
+      { label: "Garantie", value: "2 ans pour les particuliers (1 an pour les professionnels)" },
+      { label: "Retour (boutique trezor.io)", value: "15 jours après livraison, produit non utilisé dans son emballage scellé" },
     ],
     setupSteps: [
       {
-        title: "1. Achat sur trezor.io officiel",
+        title: "1. Achat auprès d'une source officielle",
         description:
-          "Comme pour Ledger : pas d'achat sur Amazon ou Marketplace tiers. Risque supply-chain attack. Notre lien affilié pointe directement vers trezor.io (programme SatoshiLabs officiel).",
+          "Achetez sur trezor.io, chez un revendeur officiel ou sur la boutique Trezor officielle d'Amazon, que Trezor approvisionne lui-même. Trezor précise qu'il ne peut pas garantir l'authenticité d'un appareil acheté chez un revendeur non autorisé. Notre lien affilié mène à la boutique officielle trezor.io.",
       },
       {
-        title: "2. Vérification d'authenticité",
+        title: "2. Installation et vérification d'authenticité",
         description:
-          "À l'ouverture, Trezor Suite vérifie cryptographiquement que votre appareil est authentique (firmware signé Trezor). Si l'écran affiche \"non authentique\", renvoyez le produit immédiatement.",
+          "L'appareil est livré sans firmware : branchez-le et ouvrez Trezor Suite, qui installe le firmware officiel. Sur les Safe 3, 5 et 7, Trezor Suite vérifie aussi que l'appareil est authentique grâce au certificat stocké dans l'Élément Sécurisé. Si Trezor Suite affiche un avertissement indiquant que l'appareil a peut-être été compromis, ne l'utilisez pas et contactez l'assistance Trezor.",
       },
       {
-        title: "3. Choix : seed standard 24 mots OU Shamir Backup",
+        title: "3. Choix de la sauvegarde",
         description:
-          "Sur Safe 5 et Model T, vous pouvez choisir Shamir Backup (5 parts dont 3 nécessaires). Plus complexe mais plus sécurisé pour gros patrimoines. Sur Safe 3 et One, seed BIP-39 24 mots classique.",
+          "Par défaut, les Safe 3, 5 et 7 créent une sauvegarde de 20 mots ; les formats de 12 et 24 mots restent possibles. Avec la sauvegarde de 20 mots, vous pourrez passer plus tard à une sauvegarde multi-fragments (par exemple 3 morceaux sur 5) en gardant les mêmes comptes et adresses. Avec 12 ou 24 mots, ce passage direct n'est pas possible : il faudra créer un nouveau portefeuille et y transférer vos fonds. Conservez votre sauvegarde hors ligne et ne la communiquez à personne.",
       },
       {
-        title: "4. Test recovery + envoi 10 € test",
+        title: "4. Vérification de la sauvegarde + petit envoi test",
         description:
-          "Identique à Ledger : réinitialisez, restaurez, vérifiez que ça marche. Puis envoi test 10 € avant de migrer le reste.",
+          "Dans Trezor Suite (Paramètres > Appareil), la fonction « Vérifier la sauvegarde de portefeuille » vous fait ressaisir vos mots sur le Trezor : c'est une restauration simulée, qui n'efface rien. Envoyez ensuite un petit montant test avant de transférer le reste.",
       },
       {
-        title: "5. Activation Passphrase (optionnel mais recommandé)",
+        title: "5. Passphrase (optionnelle, pour utilisateurs avertis)",
         description:
-          "Le 25e mot Trezor Passphrase crée un wallet caché supplémentaire. Si on vous force à révéler votre seed sous contrainte, vous donnez la seed sans passphrase (= wallet leurre avec petit montant), votre vrai wallet reste invisible. Configurable depuis Suite > Settings > Passphrase.",
+          "La passphrase est un mot de passe supplémentaire (jusqu'à 50 caractères) qui ouvre un portefeuille distinct de votre portefeuille standard. Chaque passphrase différente, même mal tapée, ouvre un autre portefeuille. Ni le Trezor ni Trezor Suite n'en gardent de copie : si vous l'oubliez, les fonds de ce portefeuille sont perdus, et l'assistance Trezor ne peut pas la récupérer. Trezor la déconseille à qui n'en mesure pas bien les risques. Activation : Trezor Suite > Paramètres > Appareil > « Utiliser un portefeuille à passphrase ».",
       },
     ],
     faq: [
       {
-        question: "Trezor est-il moins sûr que Ledger sans Secure Element ?",
+        question: "Les Trezor ont-ils un Élément Sécurisé ?",
         answer:
-          "Anciennement oui (Trezor One utilise un MCU générique sans SE). Depuis 2023, Trezor Safe 3 et Safe 5 intègrent un Secure Element Optiga Trust M certifié EAL6+, équivalent au ST33 de Ledger. Pour un nouvel achat, Safe 3 (79 €) offre la même résistance physique que Nano S Plus.",
+          "Oui, sur toute la gamme actuelle. Les anciens Model One et Model T, qui ne sont plus vendus, n'en avaient pas. Les Safe 3 et Safe 5 utilisent une puce OPTIGA Trust M certifiée Common Criteria EAL6+ ; le Safe 7 y ajoute la puce TROPIC01. Cette puce fait respecter le code PIN (le secret qui protège vos clés n'est libéré qu'avec le bon PIN, et il est effacé après 16 essais ratés, 10 sur le Safe 7), sert à prouver que l'appareil est authentique et apporte du hasard lors de la création du portefeuille. Vos clés, elles, sont stockées chiffrées dans la puce principale.",
       },
       {
-        question: "Qu'est-ce que le Shamir Backup et qui devrait l'activer ?",
+        question: "Qu'est-ce que la sauvegarde multi-fragments (Shamir) et qui devrait l'utiliser ?",
         answer:
-          "Shamir Backup (SLIP-39) divise votre seed en N parts dont M sont nécessaires pour restaurer (par défaut 5 parts, 3 requises). Avantages : plus de single point of failure, distribution géographique possible. Inconvénients : plus complexe, risque d'oublier une part. Recommandé pour patrimoines >50 k€. Pour un user lambda avec 5 k€, la seed BIP-39 classique 24 mots reste plus simple.",
+          "Elle découpe votre sauvegarde en plusieurs morceaux de 20 mots (de 1 à 16), avec un minimum à réunir pour restaurer, par exemple 3 sur 5. Avantages : perdre un morceau ne fait pas tout perdre, et quelqu'un qui en trouve moins que le minimum ne peut rien faire. Inconvénient : il y a plus d'éléments à ranger et à suivre. Elle est disponible sur les Safe 3, 5 et 7 (et sur l'ancien Model T). Trezor la présente comme une option pour ceux qui ont besoin d'une sécurité et d'une résilience renforcées ; la sauvegarde simple de 20 mots reste le réglage par défaut. Attention : si vous passez d'une sauvegarde simple de 20 mots à une sauvegarde multi-fragments, l'ancienne reste valable ; ne la détruisez qu'après avoir vérifié la nouvelle. Avec une sauvegarde de 12 ou 24 mots, ce passage n'est pas possible : il faut créer un nouveau portefeuille et y transférer vos fonds.",
       },
       {
         question: "Trezor fonctionne-t-il avec MetaMask ?",
         answer:
-          "Oui, exactement comme Ledger. Connexion via USB-C, signature physique sur l'appareil, intégration native dans MetaMask depuis 2018. Tous les protocoles DeFi compatibles MetaMask (Uniswap, Aave, Curve…) fonctionnent avec Trezor.",
+          "Oui. L'extension MetaMask pour Chrome ou Firefox propose de connecter un portefeuille matériel, dont le Trezor ; chaque transaction est ensuite vérifiée et confirmée sur l'appareil, et les clés restent dans le Trezor. Cela fonctionne avec Ethereum et les réseaux compatibles (EVM). Trezor Suite peut aussi se connecter directement à des applications comme Aave ou Uniswap via WalletConnect, et Trezor annonce la compatibilité avec plus de 30 applications de portefeuille (Rabby, Electrum, Exodus…).",
       },
       {
-        question: "Pourquoi Trezor n'a pas d'app iOS ?",
+        question: "Peut-on utiliser un Trezor avec un iPhone ?",
         answer:
-          "Trezor a fait le choix philosophique de ne pas développer pour iOS (restrictions Apple sur USB hardware) et de limiter Android à un usage Suite Lite (consultation). Si l'usage mobile est central pour vous, Ledger Nano X (Bluetooth + iOS + Android) est plus adapté.",
+          "Pleinement, seulement avec le Safe 7, qui se connecte en Bluetooth. Les Safe 3 et Safe 5 se branchent par câble : sur iOS, ils permettent de suivre votre solde, d'acheter et de recevoir des cryptos, mais pas d'envoyer, d'échanger ni de configurer l'appareil : il faut pour cela un ordinateur ou un téléphone Android. Selon Trezor, les accessoires filaires sur iPhone exigent une licence Apple que ces modèles ne prennent pas en charge. Sur Android, tous les modèles sont entièrement compatibles.",
       },
       {
-        question: "Comment éviter le phishing post-leak Trezor 2022 ?",
+        question: "Trezor a-t-il subi des fuites de données, et comment éviter le phishing ?",
         answer:
-          "Règles strictes : (1) Trezor ne vous envoie jamais d'email avec lien de mise à jour. (2) Toute update se fait depuis Trezor Suite, jamais via lien externe. (3) Si vous recevez un email \"urgent\" — ignorez-le. Configurez un filtre Gmail pour mettre tout email contenant \"trezor\" en quarantaine pour vérification manuelle.",
+          "Oui, chez des prestataires. En août 2026, une fuite chez ShipMonk, un prestataire logistique de Trezor, a exposé les données de livraison d'environ 80 700 clients selon Trezor (nom et e-mail, et pour la plupart adresse et téléphone) : des commandes livrées entre mai et août 2026, notamment aux États-Unis, au Royaume-Uni, en Italie et au Portugal, et d'anciennes commandes américaines de 2019 à 2021. En septembre 2026, une attaque chez Brevo, le prestataire de newsletter de Trezor, a permis d'exporter 347 149 adresses e-mail et d'envoyer un faux e-mail d'alerte au nom de Trezor. Selon Trezor, ni ses appareils ni ses propres systèmes n'ont été touchés. Les règles à retenir : Trezor ne vous demandera jamais votre sauvegarde (vos mots), ne vous appellera pas et ne peut pas désactiver votre appareil ; les seules mises à jour légitimes passent par l'application Trezor Suite. Ne saisissez jamais vos mots ailleurs que sur votre Trezor.",
       },
     ],
     whyBuyNow: [
       {
-        reason: "100% open-source — vérifiez vous-même, ne faites pas confiance",
+        reason: "Firmware open source : vérifiable, pas seulement promis",
         description:
-          "Chaque ligne de firmware est sur GitHub. Personne ne peut vous imposer une mise à jour cachée. Si vous voulez savoir ce que fait votre wallet à la milliseconde près, vous pouvez le lire. Aucun autre hardware wallet sérieux ne fait ça intégralement.",
+          "Le code du firmware est public sur GitHub et Trezor documente une compilation reproductible : chacun peut recompiler le firmware et vérifier qu'il est identique à la version officielle. Trezor Suite contrôle en plus l'authenticité du firmware installé sur votre appareil.",
       },
       {
-        reason: "Shamir Backup natif (SLIP-39) sur Safe 5 et Model T",
+        reason: "Sauvegarde multi-fragments sur toute la gamme Safe",
         description:
-          "Vous fragmentez votre seed en 5 parts dont 3 nécessaires pour restaurer. Distribution géographique sécurisée : 1 chez vous, 1 chez vos parents, 1 dans un coffre bancaire. Aucun lieu compromis ne donne accès aux fonds. Idéal pour patrimoines >50 k€.",
+          "Votre sauvegarde peut être découpée en plusieurs morceaux, avec un minimum à réunir pour restaurer (par exemple 3 sur 5). Vous pouvez les répartir entre plusieurs lieux ou personnes de confiance : quelqu'un qui trouve moins de morceaux que le minimum choisi ne peut pas accéder aux fonds.",
       },
       {
-        reason: "Pionnier du marché (depuis 2014) — 11 ans sans incident firmware critique",
+        reason: "Un pionnier du secteur, fondé en 2013",
         description:
-          "Quand vous achetez Trezor, vous achetez une décennie de retours d'expérience communauté, de bugs corrigés en public, d'audits indépendants. La maturité du code prouvée par le temps.",
+          "Trezor présente son Model One, sorti en 2014, comme le premier portefeuille matériel au monde, et a contribué aux normes de sauvegarde BIP39 et SLIP39. Il récompense les chercheurs qui signalent des failles et publie la liste des vulnérabilités corrigées.",
       },
       {
-        reason: "Compatibilité Linux native + philosophie souveraine",
+        reason: "Une gamme de 59 € à 249 €, du Safe 3 au Safe 7",
         description:
-          "Vous compilez votre kernel le week-end ? Trezor Suite tourne nativement sur Linux. Vous pouvez compiler le firmware depuis source. C'est l'outil des utilisateurs qui refusent de déléguer leur sécurité à une marque.",
+          "Safe 3 (59 €) : deux boutons et Élément Sécurisé. Safe 5 (129 €) : écran tactile couleur. Safe 7 (249 €) : grand écran, Bluetooth, recharge sans fil et compatibilité iPhone complète. Trezor Suite fonctionne sous Windows, macOS, Linux et Android.",
       },
     ],
     socialProof: [
-      { stat: "11 ans", source: "Premier hardware wallet du marché (lancé 2014)" },
-      { stat: "Note 4.4/5", source: "3 200+ avis Trustpilot trezor.io" },
-      { stat: "EAL6+", source: "Certification Common Criteria du Secure Element Optiga (Safe 3, Safe 5)" },
+      { stat: "2013", source: "Création de Trezor ; son Model One, sorti en 2014, est présenté par Trezor comme le premier portefeuille matériel" },
+      { stat: "4,6/5", source: "TrustScore Trustpilot de trezor.io, sur 2 020 avis (5 octobre 2026)" },
+      { stat: "EAL6+", source: "Certification Common Criteria de la puce OPTIGA Trust M (Safe 3, 5 et 7)" },
     ],
     risksAvoided: [
-      "Mise à jour firmware non auditable / backdoor cachée (impossible vu code public)",
-      "Disparition du fabricant (la communauté peut maintenir le projet seule)",
-      "Backdoor étatique imposée (transparence du code = vérification publique)",
-      "Single point of failure de la seed (Shamir Backup distribue le risque)",
+      "Firmware modifié ou contrefait : Trezor Suite vérifie l'authenticité de l'appareil et du firmware",
+      "Code impossible à vérifier : le firmware est public et peut être recompilé pour comparaison",
+      "Perte d'une sauvegarde unique : la sauvegarde multi-fragments évite de tout perdre avec un seul morceau",
+      "Ordinateur piraté : chaque opération sensible doit être confirmée sur l'écran du Trezor",
     ],
   },
 
   /* ============================ WALTIO ============================ */
   {
     slug: "waltio",
-    rating: 4.3,
-    externalReviewCount: 890,
+    // fr.trustpilot.com/review/waltio.com relu le 05/10/2026 (JSON-LD) : ratingValue 4, reviewCount 512.
+    rating: 4.0,
+    externalReviewCount: 512,
+    externalReviewDate: "2026-10-05",
     externalReviewSource: {
       name: "Trustpilot",
       url: "https://fr.trustpilot.com/review/waltio.com",
     },
-    lastUpdated: "2026-10-02",
-    testDuration: "4 ans (campagnes fiscales 2022, 2023, 2024, 2025)",
+    lastUpdated: "2026-10-05",
     verdict: {
       summary:
-        "Waltio est conçu pour la fiscalité française : son rapport suit la méthode globale de l'art. 150 VH bis CGI (valeur de tout le portefeuille à chaque cession). Pour un contribuable FR avec multi-exchanges, c'est l'outil qui fait gagner le plus de temps en mai.",
+        "Waltio est un logiciel français de déclaration fiscale crypto : pour un résident français, son annexe 2086 applique la méthode globale de l'art. 150 VH bis CGI (valeur de tout le portefeuille à chaque cession). Il est surtout utile si vous utilisez plusieurs plateformes et avez beaucoup d'opérations à reconstituer.",
       bestFor: [
-        "Contribuable FR avec >100 transactions/an",
-        "Multi-exchanges (Coinbase + Bitpanda + Coinhouse + Kraken…)",
-        "DeFi user qui veut classer staking, airdrops, swaps automatiquement",
-        "Fiscalité 3916-bis (comptes étrangers) à déclarer",
+        "Contribuable français avec beaucoup de transactions à reconstituer",
+        "Plusieurs plateformes (Coinbase, Bitpanda, Coinhouse, Kraken…)",
+        "Utilisateur DeFi qui veut faire classer automatiquement staking, airdrops et swaps (suivi DeFi dès l'offre Starter)",
+        "Comptes à l'étranger à déclarer (3916-bis)",
       ],
       notFor: [
-        "Résident fiscal hors France (Koinly plus universel)",
-        "Trader ultra-haute fréquence > 50 000 transactions (au-delà de 10 000 transactions, plan Unlimited à 999 €/an)",
-        "User sans cession imposable (le plan Free gratuit suffit pour le suivi et le 3916-bis)",
+        "Résident d'un pays sans formulaire fiscal localisé : Waltio fournit alors un rapport générique, à faire adapter par un conseiller fiscal local",
+        "Très gros volumes : au-delà de 10 000 transactions par an, seule l'offre Unlimited (999 €/an) convient",
+        "Investisseur sans cession imposable : l'offre Free (gratuite) inclut déjà l'aide au 3916-bis",
       ],
     },
     pedagogy: {
       problem: {
         title: "Déclarer ses cryptos en France, c'est un piège technique",
-        body: "L'art. 150 VH bis CGI impose une méthode globale, cession par cession (valeur de tout le portefeuille, prix total d'acquisition). Excel ne le fait pas naturellement. En plus, chaque compte ouvert sur un exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis (case 8UU cochée sur la 2042) — sous peine de 750 € d'amende PAR compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 € (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
+        body: "L'art. 150 VH bis CGI impose une méthode globale, cession par cession (valeur de tout le portefeuille, prix total d'acquisition). Un tableur ne le fait pas tout seul. En plus, chaque compte d'actifs numériques ouvert, utilisé ou clos auprès d'une plateforme établie à l'étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis, sous peine de 750 € d'amende par compte oublié, 1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année (art. 1736, X du CGI). Sans outil, c'est un long travail manuel, avec un vrai risque d'erreur.",
         stat: "750 €",
       },
       solution: {
-        title: "Un rapport Cerfa 2086 calculé pour vous, à recopier",
-        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode globale de l'art. 150 VH bis, classe vos plus-values cession par cession, et vous génère deux PDF : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
-        stat: "100% Bercy",
+        title: "Une annexe 2086 calculée pour vous, à reporter",
+        body: "Pour un résident français, Waltio applique la formule de l'art. 150 VH bis. Vous connectez vos plateformes, l'outil calcule chaque cession imposable et produit l'annexe 2086 (plus-values) ainsi que les informations à reporter sur le 3916-bis (comptes à l'étranger). Vous reportez ensuite les chiffres dans votre déclaration en ligne sur impots.gouv.fr.",
+        stat: "2086 + 3916-bis",
       },
       mechanism: {
-        title: "Comment Waltio transforme 14h de Excel en 45 min",
-        body: "Le secret : automatiser la partie chiante (importer + classer + calculer selon la formule du 2086) pour vous laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
+        title: "Comment Waltio automatise le calcul",
+        body: "L'outil automatise la partie fastidieuse (importer, classer, calculer selon la formule du 2086) et vous laisse la partie qui demande votre validation : vérifier les opérations qu'il signale comme incohérentes ou à catégoriser, par exemple un retrait sans dépôt correspondant.",
         steps: [
-          "Vous collez les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
-          "L'IA reconnaît et classe 95% des transactions ; vous réconciliez manuellement les 5% restants (15-30 min).",
-          "Vous téléchargez les PDFs Cerfa 2086 + 3916-bis pré-remplis et vous les recopiez sur impots.gouv.fr (15 min).",
+          "Vous connectez chaque plateforme : clé API en lecture seule, adresse publique pour un wallet, ou fichier d'historique (.csv ou .xlsx) quand il n'y a pas d'API.",
+          "Waltio catégorise automatiquement les opérations et signale les incohérences ; vous corrigez celles qu'il ne peut pas rapprocher seul.",
+          "Vous téléchargez l'annexe 2086 et les informations du 3916-bis, puis vous reportez les chiffres dans votre déclaration en ligne sur impots.gouv.fr.",
         ],
       },
       roi: {
-        title: "Le ROI sale et défendable, en chiffres",
-        body: "Plan Starter : 99 €/an jusqu'à 1 000 transactions (grille relevée le 2 octobre 2026). Vous gagnez 12 heures de saisie chaque mai (× 30 €/h de votre temps facturé = 360 € de valeur récupérée dès la 1ère année). Vous évitez en plus 750 € d'amende potentielle par compte 3916-bis oublié (1 500 € au-delà de 50 000 €). Ratio coût/valeur : au moins 1,8x dès la première année, sur le seul temps gagné. Aucun expert-comptable spécialisé crypto ne facture moins de 800 € la déclaration équivalente.",
-        stat: "ROI ≥ 1,8x",
+        title: "Ce que ça coûte, ce que ça évite",
+        body: "Offre Starter : 99 €/an jusqu'à 1 000 transactions (grille relevée le 5 octobre 2026). L'abonnement couvre une seule année fiscale et se renouvelle automatiquement le 1er octobre. En face, un seul compte étranger oublié au 3916-bis coûte 750 € d'amende (1 500 € au-delà de 50 000 €). Vous n'avez plus à appliquer à la main la formule du 2086, cession par cession. Le temps gagné dépend de votre volume : comparez-le au prix.",
+        stat: "99 €/an",
       },
     },
     beforeAfter: {
       beforeTitle: "Sans Waltio en mai",
       beforeItems: [
-        "14 heures de Excel multi-onglets pour calculer vos plus-values à la main avec la formule du 2086",
+        "Un tableur multi-onglets pour calculer vos plus-values à la main avec la formule du 2086",
         "Risque réel d'amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger oublié au 3916-bis",
-        "Stress fiscal jusqu'au dépôt — vous doutez de chaque calcul, vous refaites 3 fois",
-        "Pas de traçabilité : si Bercy vous contrôle, vous n'avez pas de méthode défendable",
+        "Des doutes sur chaque calcul jusqu'au dépôt de la déclaration",
+        "Peu de traçabilité : en cas de contrôle, il faut pouvoir justifier chaque chiffre",
       ],
-      afterTitle: "Avec Waltio Investisseur",
+      afterTitle: "Avec une offre payante Waltio",
       afterItems: [
-        "1h30 la première année, 45 min les suivantes — incrémental automatique",
-        "Cerfa 2086 + 3916-bis pré-remplis selon la doctrine BOFiP, prêts à recopier",
-        "Toutes vos plateformes étrangères listées exhaustivement, aucun oubli possible",
-        "Calcul détaillé cession par cession + sources légales citées : vous êtes défendable face à un audit fiscal",
+        "Import automatique de l'historique par API ou adresse publique, puis récupération automatique des nouvelles opérations",
+        "Annexe 2086 calculée selon l'art. 150 VH bis et informations du 3916-bis prêtes à reporter",
+        "Les informations du 3916-bis fournies pour chaque plateforme ajoutée (un compte que vous n'ajoutez pas n'apparaît pas)",
+        "Un calcul détaillé cession par cession (annexe 2086, Grand Livre, Fiche de stock) à garder comme justificatif ; l'offre Unlimited ajoute des documents pour un contrôle fiscal",
       ],
     },
     sections: [
       {
-        title: "Pourquoi Waltio est conçu pour la fiscalité française",
+        title: "Ce que Waltio produit pour un résident français",
         content:
-          "Pour un résident fiscal français, Waltio produit un rapport conçu pour le Cerfa 2086 (formulaire des plus-values d'actifs numériques), avec la méthode globale de l'art. 150 VH bis CGI.\n\nLe résultat : vous obtenez deux PDF dont vous recopiez les chiffres sur impots.gouv.fr (le site n'accepte aucun fichier). Le 2086 avec vos plus-values calculées cession par cession, et la liste exhaustive des comptes étrangers (3916-bis, case 8UU) à déclarer. Vous copiez les valeurs, c'est fini. Sans cet outil, c'est 14 heures de Excel multi-onglets.",
+          "Pour un résident fiscal français, Waltio produit une annexe conçue pour le formulaire 2086 (plus-values sur actifs numériques), avec la méthode globale de l'art. 150 VH bis CGI : à chaque cession, la plus-value se calcule avec la valeur de tout le portefeuille et le prix total d'acquisition.\n\nVous obtenez l'annexe 2086, dont vous reportez les chiffres dans le formulaire en ligne sur impots.gouv.fr, et les informations nécessaires pour déclarer vos comptes à l'étranger (3916-bis). Sans outil, il faut appliquer la formule du 2086 à la main, cession par cession.",
       },
       {
-        title: "Ce qu'on a confirmé en 4 campagnes fiscales",
+        title: "Les points forts de Waltio",
         content:
-          "**Connexion 220+ plateformes en API.** Binance, Bitpanda, Coinhouse, Kraken, Bitget, Coinbase Pro, Crypto.com — vous collez vos clés API read-only et l'historique se reconstitue automatiquement. On a importé 4 ans d'historique multi-exchanges en moins de 30 minutes. Quand un exchange change son format API (Binance l'a fait 3 fois en 2024), Waltio patche en quelques jours.\n\n**Cerfa 2086 + 3916-bis pré-remplis.** Sans Waltio, on a passé 14h sur Excel pour la déclaration 2022. Avec Waltio, 1h30 en 2023, 45 min en 2024. Chaque année devient incrémentale.\n\n**Support FR sous 24h en période fiscale (avril-juin).** Quand on a eu un cas tordu (un airdrop à valoriser fiscalement), réponse argumentée par leur équipe en 18h, avec citation de la doctrine BOFiP. Pour un user FR qui galère avec un cas particulier, c'est de l'or.\n\n**Prix défendable.** Plan Investisseur 199 €/an pour 5 000 transactions max = environ 1h de travail d'un expert-comptable spécialisé crypto (200-300 €/h). Vous gagnez 12-13h chaque mai. ROI évident dès la première utilisation.",
+          "**Plus de 700 intégrations.** Selon Waltio, l'outil se synchronise avec plus de 700 plateformes, wallets et blockchains. Binance, Bitpanda, Kraken, Bitget ou Coinbase se connectent par API, en lecture seule ; d'autres, comme Coinhouse ou Crypto.com App, passent par un fichier d'historique.\n\n**Annexe 2086 et aide au 3916-bis.** Avec un abonnement, vous générez autant de rapports que nécessaire sur l'année payée (annexe 2086, Grand Livre, Fiche de stock). Les années précédentes, depuis 2019, sont accessibles contre paiement, année par année.\n\n**Support en français, par e-mail ou par chat (chat à partir de l'offre Lite).** Délai de réponse annoncé : 72 h avec Starter ou Smart, 24 h avec Unlimited, du lundi au vendredi de 9 h à 18 h. Pas de support par téléphone.\n\n**Un prix lié à votre volume.** De 39 €/an (Lite, jusqu'à 50 transactions) à 999 €/an (Unlimited, transactions illimitées). Chaque ligne de l'historique (achat, vente, dépôt, retrait) compte comme une transaction de l'année fiscale.",
       },
       {
-        title: "Pourquoi Waltio est devenu la référence FR depuis 2018",
+        title: "Sécurité, prise en charge et mises à jour",
         content:
-          "**Société française, RGPD natif.** Waltio est une SAS française soumise au RGPD européen. Vos clés API exchanges sont stockées chiffrées AES-256, utilisées uniquement en read-only (pas de risque de retrait/trade). Votre patrimoine reste chez vous, l'outil ne fait que lire l'historique.\n\n**Couverture exhaustive des cas DeFi FR.** Module DeFi qui gère les LP Uniswap, lending Aave, staking Lido, airdrops (valorisation fiscale), NFT (régime des biens meubles incorporels), forks, splits. Aucun cas fiscal crypto n'est oublié.\n\n**Mises à jour permanentes selon la doctrine BOFiP.** Quand l'administration fait évoluer sa doctrine, Waltio met à jour ses calculs en amont de la période fiscale. Les utilisateurs n'ont rien à reparamétrer.",
+          "**Société française, accès en lecture seule.** Waltio est une SAS basée à Clermont-Ferrand. Les connexions API ne demandent que des droits de lecture (aucun retrait ni trade possible) et les clés sont stockées chiffrées (Amazon KMS). Waltio indique héberger les données sur des serveurs en Europe et ne demande ni pièce d'identité ni clé privée.\n\n**Une fuite de données en janvier 2026.** Waltio a découvert le 21 janvier 2026 une fuite touchant l'adresse e-mail, le gain ou la perte de l'année 2024 et le solde par crypto au 31 décembre 2024. Selon l'éditeur, ni les clés API, ni les adresses de wallets, ni l'historique des transactions n'ont été exposés, et aucun fonds n'est menacé ; le risque principal est l'hameçonnage (faux e-mails, faux appels). Waltio indique ne jamais contacter ses clients par téléphone.\n\n**Staking, airdrops, DeFi et NFT pris en charge.** Waltio catégorise automatiquement les swaps DeFi, les récompenses de staking, le lending, les airdrops et les « spam tokens », et indique prendre aussi en charge les NFT. Sa liste d'intégrations comprend des protocoles comme Uniswap, Aave ou Lido. Le suivi DeFi demande au minimum l'offre Starter.\n\n**Veille réglementaire.** Waltio indique travailler avec un réseau d'avocats fiscalistes (dont ORWL Avocats pour la France) pour tenir ses règles de calcul à jour.",
       },
     ],
     specs: [
-      { label: "Plans testés", value: "Découverte (gratuit), Investisseur (199 €/an) — ancienne grille ; aujourd'hui Free, Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 €" },
-      { label: "Plateformes connectées", value: "220+ (API + import CSV)" },
-      { label: "Méthode de calcul", value: "Méthode globale (art. 150 VH bis CGI)" },
-      { label: "Exports", value: "Cerfa 2086, 3916-bis pré-rempli, CSV détaillé" },
-      { label: "Pays supportés", value: "France (focus), Belgique, Italie, Espagne, Portugal" },
-      { label: "Support", value: "FR + EN, 24h ouvrées en période fiscale" },
-      { label: "Conformité", value: "RGPD UE, doctrine BOFiP référencée" },
-      { label: "Société", value: "Waltio SAS (France)" },
+      { label: "Offres", value: "Free (gratuit), Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 € par an (grille relevée le 5 octobre 2026)" },
+      { label: "Intégrations", value: "700+ plateformes, wallets et blockchains selon Waltio (API, adresse publique ou fichier)" },
+      { label: "Méthode de calcul", value: "Méthode globale (art. 150 VH bis CGI) pour la France" },
+      { label: "Documents", value: "Annexe 2086, Grand Livre, Fiche de stock, informations du 3916-bis" },
+      { label: "Pays pris en charge", value: "Formulaires localisés pour les pays principaux (dont l'annexe 2086 pour la France) ; rapport générique pour plus de 30 autres pays, à faire adapter par un conseiller local (centre d'aide Waltio)" },
+      { label: "Support", value: "E-mail, chat dès l'offre Lite ; réponse sous 72 h (Starter, Smart) ou 24 h (Unlimited), du lundi au vendredi" },
+      { label: "Conformité", value: "Calcul selon l'art. 150 VH bis CGI, développé avec ORWL Avocats (selon Waltio) ; RGPD" },
+      { label: "Société", value: "SAS Waltio, Clermont-Ferrand (France), créée en 2018" },
     ],
     setupSteps: [
       {
         title: "1. Inscription (gratuit, plan Free)",
         description:
-          "Pas besoin de payer immédiatement. Le plan Free (0 €) vous permet d'importer vos exchanges et visualiser votre portfolio + un aperçu des plus-values. Vous payez uniquement pour générer les exports Cerfa.",
+          "Pas besoin de payer tout de suite, ni de carte bancaire. L'offre Free (0 €) permet de connecter toutes vos plateformes et wallets, de consulter vos transactions et d'obtenir les informations du 3916-bis. Le calcul des plus-values et l'annexe 2086 demandent une offre payante.",
       },
       {
-        title: "2. Connexion API exchanges (read-only)",
+        title: "2. Connexion de vos comptes (lecture seule)",
         description:
-          "Sur chaque exchange, générez une clé API READ-ONLY (jamais avec droits de trade ou retrait). Collez-la dans Waltio. L'historique des transactions s'importe automatiquement. Pour les wallets DeFi (MetaMask, Phantom), vous collez l'adresse publique.",
+          "Sur chaque plateforme, créez une clé API en lecture seule (jamais avec des droits de trade ou de retrait) et collez-la dans Waltio : l'historique s'importe automatiquement. Pour un wallet comme MetaMask ou Phantom, vous indiquez l'adresse publique. Sans API, vous importez le fichier d'historique (.csv ou .xlsx).",
       },
       {
-        title: "3. Réconciliation (10-30 min selon volume)",
+        title: "3. Vérification des transactions",
         description:
-          "Waltio vous montre les transactions \"non reconnues\" : par exemple un airdrop reçu, un swap exotique, un staking reward. Vous les classez manuellement ou vous laissez l'IA Waltio le faire. Cette étape est cruciale pour la fiabilité du calcul fiscal.",
+          "Waltio catégorise automatiquement vos opérations et signale celles qu'il ne sait pas rapprocher, par exemple un retrait sans dépôt correspondant. Vous leur attribuez un label (transfert entre comptes, paiement, mise en staking…). Le label change le calcul : un paiement en crypto est une cession imposable, un transfert entre vos comptes ne l'est pas. Pour la France, un retrait laissé sans label n'est pas traité comme imposable par défaut, mais Waltio demande de classer tous les retraits signalés : cette étape compte pour la justesse du calcul.",
       },
       {
-        title: "4. Upgrade Investisseur quand prêt",
+        title: "4. Offre payante quand vous êtes prêt",
         description:
-          "Une fois votre historique réconcilié, passez au plan adapté à votre volume (Lite 39 €/an jusqu'à 50 transactions, Starter 99 €/an jusqu'à 1 000) pour générer les documents fiscaux. Le paiement débloque les exports PDF + CSV.",
+          "Une fois votre historique vérifié, passez à l'offre adaptée à votre volume (Lite 39 €/an jusqu'à 50 transactions, Starter 99 €/an jusqu'à 1 000, Smart 249 €/an jusqu'à 10 000) pour générer les documents fiscaux. Le paiement débloque l'export des documents de l'année fiscale payée.",
       },
       {
         title: "5. Report sur impots.gouv.fr",
         description:
-          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copiez les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Le site des impôts n'accepte aucun fichier : ce sont les valeurs qui comptent, le PDF reste votre justificatif.",
+          "Dans votre déclaration de revenus en ligne sur impots.gouv.fr, vous ajoutez l'annexe 2086 et vous y reportez les chiffres de l'annexe générée par Waltio ; vous déclarez vos comptes à l'étranger (3916-bis) à l'aide des informations fournies. Gardez les documents Waltio comme justificatifs.",
       },
     ],
     faq: [
       {
         question: "Waltio est-il un substitut à un expert-comptable ?",
         answer:
-          "Non. Waltio est un outil de préparation à la déclaration. Pour des cas complexes (BIC professionnel, sociétés, succession crypto, donations), un expert-comptable spécialisé crypto reste nécessaire. Waltio vous fait gagner du temps de saisie ; un expert-comptable vous conseille sur la stratégie fiscale.",
+          "Non. Waltio est un outil de préparation à la déclaration et précise ne fournir aucun conseil fiscal, juridique ou comptable. Pour des cas complexes (activité de trading habituelle, société, succession, donation), faites-vous accompagner par un professionnel (expert-comptable, avocat fiscaliste ou notaire selon le cas). Waltio vous fait gagner du temps de saisie ; un professionnel vous conseille sur votre situation.",
       },
       {
         question: "Que se passe-t-il si Bercy change la doctrine fiscale ?",
         answer:
-          "Waltio met à jour ses calculs en suivant les évolutions BOFiP. La méthode de calcul (art. 150 VH bis CGI) est stable depuis 2019. Si une évolution majeure survient (ex : nouveau régime DeFi, fiscalité spécifique NFT), Waltio communique les changements en amont de la période fiscale.",
+          "Waltio indique assurer une veille réglementaire et travailler avec un réseau d'avocats fiscalistes pour tenir ses règles de calcul à jour. Vérifiez quand même les règles de l'année avant de déclarer : c'est vous qui signez la déclaration.",
       },
       {
         question: "Mes données sont-elles en sécurité chez Waltio ?",
         answer:
-          "Waltio est une société française soumise au RGPD. Les clés API exchanges sont stockées chiffrées (AES-256) et utilisées uniquement en read-only (pas de risque de retrait/trade). Comme pour tout SaaS, on recommande de révoquer les clés API depuis l'exchange après chaque déclaration et de les régénérer l'année suivante.",
+          "Waltio est une société française soumise au RGPD. Les clés API ne donnent qu'un accès en lecture seule (aucun retrait ni trade possible) et sont stockées chiffrées via Amazon KMS ; Waltio ne demande ni clé privée ni pièce d'identité. Point d'attention : Waltio a découvert le 21 janvier 2026 une fuite de données (adresse e-mail, gain ou perte de 2024, soldes au 31 décembre 2024). Selon l'éditeur, les clés API, les adresses de wallets et l'historique des transactions n'ont pas été touchés, mais le risque d'hameçonnage est réel : Waltio ne vous appellera jamais et ne vous demandera jamais de transférer des fonds. Par prudence, utilisez une adresse e-mail réservée à la crypto et supprimez les clés API dont vous n'avez plus besoin.",
       },
       {
         question: "Est-ce que Waltio gère le staking, les airdrops, les NFT ?",
         answer:
-          "Oui : staking, airdrops et NFT sont gérés. La fiscalité de ces revenus (staking, airdrops) n'est pas tranchée de façon uniforme par une source officielle citable — moment d'imposition (réception ou cession) et régime (plus-value vs BIC/BNC) à confirmer selon votre profil ; les NFT relèvent d'un régime non stabilisé. Le module DeFi gère les LP Uniswap, lending Aave, etc. Vérifiez la doctrine à jour ou consultez un professionnel.",
+          "Oui, selon Waltio : l'outil classe automatiquement les récompenses de staking, les airdrops et les opérations DeFi, et indique prendre en charge les NFT. Les intégrations couvrent des protocoles DeFi comme Uniswap ou Aave (suivi DeFi à partir de l'offre Starter). Attention : pour le staking et les airdrops, ni le moment ni le régime d'imposition ne sont tranchés par une source officielle. Vérifiez les règles à jour ou consultez un professionnel.",
       },
       {
         question: "Combien de temps pour finir ma déclaration avec Waltio ?",
         answer:
-          "Première année (import historique + réconciliation) : 1h30 à 4h selon volume et complexité. Années suivantes (incrémental) : 30 minutes à 1h. C'est l'investissement temps qui rentabilise le plus l'abonnement, comparé à 8-15h passées sur Excel sans outil.",
+          "Cela dépend du nombre de plateformes, du volume de transactions et du nombre d'opérations à classer à la main. La première année prend le plus de temps : il faut importer tout l'historique depuis votre première opération, puis le vérifier. Les années suivantes, l'historique déjà importé reste dans votre compte : il reste surtout à ajouter les nouvelles opérations (nouveaux fichiers, clés API à remplacer si elles ont plus de 6 mois) et à les vérifier.",
       },
     ],
     whyBuyNow: [
       {
-        reason: "Un rapport Cerfa 2086 + 3916-bis conçu pour la France",
+        reason: "Une annexe 2086 et l'aide au 3916-bis pour la France",
         description:
-          "La méthode globale imposée par l'art. 150 VH bis CGI est native dans Waltio. Vous téléchargez le rapport et vous recopiez les chiffres sur impots.gouv.fr (le site n'accepte aucun fichier).",
+          "Pour la France, Waltio applique la méthode globale de l'art. 150 VH bis CGI. Vous téléchargez l'annexe 2086 et vous reportez les chiffres dans votre déclaration en ligne sur impots.gouv.fr.",
       },
       {
-        reason: "Évite 750 € (ou 1 500 €) d'amende par compte 3916-bis non déclaré",
+        reason: "Aide à éviter l'amende de 750 € (ou 1 500 €) par compte non déclaré",
         description:
-          "Article 1736, X du CGI : 750 € d'amende par compte étranger non déclaré (1 500 € si la valeur des comptes dépasse 50 000 €). Waltio liste chaque exchange étranger à déclarer. Sur 5 exchanges oubliés, c'est 3 750 € à 7 500 € d'amende potentielle évitée.",
+          "Article 1736, X du CGI : 750 € d'amende par compte d'actifs numériques à l'étranger non déclaré (1 500 € si la valeur de ces comptes dépasse 50 000 € à un moment de l'année). Waltio fournit les informations à déclarer pour chaque plateforme que vous avez ajoutée, même avec l'offre gratuite. Cinq comptes oubliés, c'est 3 750 € d'amende, ou 7 500 € au-delà de 50 000 €.",
       },
       {
-        reason: "Gagne 12 à 14 heures de saisie chaque mai",
+        reason: "Le calcul automatisé, sans tableur",
         description:
-          "Sans Waltio : 14h de Excel multi-onglets pour calculer vos plus-values manuellement. Avec Waltio : 1h30 la première année, 45 min les suivantes. À 30 €/h de votre temps facturé, c'est 360 €+ de valeur récupérée pour 99 €/an.",
+          "Sans outil, vous appliquez la formule du 2086 à la main, cession par cession. Avec Waltio, l'historique s'importe et le calcul est fait pour vous : il vous reste à vérifier les opérations ambiguës. Le plan Starter coûte 99 €/an jusqu'à 1 000 transactions.",
       },
       {
-        reason: "Support par e-mail (chat dès l'offre Smart) et centre d'aide en français",
+        reason: "Support par e-mail ou chat (dès l'offre Lite) et centre d'aide en français",
         description:
-          "Vous avez un cas tordu (airdrop, swap DeFi, fork) ? Vous écrivez au support, réponse argumentée par leur équipe avec citation BOFiP en moins de 24h. Aucun outil international ne vous donne ça en français.",
+          "Vous avez un cas particulier (airdrop, swap DeFi) ? Vous pouvez écrire au support, en français. Délai de réponse annoncé : 72 h avec Starter ou Smart, 24 h avec Unlimited (du lundi au vendredi, de 9 h à 18 h).",
       },
     ],
     socialProof: [
-      { stat: "220+", source: "Plateformes connectées en API officielle" },
-      { stat: "Note 4.3/5", source: "890+ avis Trustpilot waltio.com" },
-      { stat: "2018", source: "Première solution fiscalité crypto SAS française (depuis 7 ans)" },
+      { stat: "700+", source: "Intégrations (plateformes, wallets, blockchains) annoncées par Waltio" },
+      { stat: "4,0/5", source: "TrustScore Trustpilot de waltio.com, sur 512 avis (5 octobre 2026)" },
+      { stat: "2018", source: "Création de la SAS Waltio à Clermont-Ferrand (registre officiel des entreprises)" },
     ],
     risksAvoided: [
       "Amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger crypto non déclaré (3916-bis, art. 1736, X du CGI)",
       "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de la méthode globale)",
-      "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables — moment exact non tranché officiellement, à vérifier)",
-      "Erreur déclaration aboutissant à intérêts de retard 0,2%/mois + majoration 10-80%",
+      "Opérations oubliées (airdrops, récompenses de staking, swaps DeFi) qui faussent l'historique et donc le calcul de la plus-value",
+      "Erreur ou oubli dans la déclaration : intérêts de retard, voire majorations selon la gravité (art. 1728 et 1729 du CGI)",
     ],
   },
 ];

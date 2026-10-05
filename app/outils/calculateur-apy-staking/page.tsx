@@ -57,7 +57,7 @@ const FAQ_ITEMS = [
   {
     question: "Comment sont taxées mes récompenses de staking en France ?",
     answer:
-      "Les récompenses de staking sont imposables, mais le moment exact (à la réception comme un revenu, ou à la cession contre euro) n'est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour — aucune doctrine dédiée au staking n'a été publiée. Lors d'une vente contre euro, le régime des cessions d'actifs numériques s'applique (PFU 31,4 %). Une activité de staking exercée à titre professionnel peut relever du BIC. Cet outil donne une estimation, pas un conseil fiscal : vérifiez la doctrine à jour et consultez un expert-comptable.",
+      "Les récompenses de staking sont imposables, mais le moment exact (à la réception comme un revenu, ou à la cession contre euro) n'est pas tranché par une source officielle (BOFiP) que nous puissions citer à ce jour — aucune doctrine dédiée au staking n'a été publiée. Lors d'une vente contre euro, le régime des cessions d'actifs numériques s'applique (PFU 31,4 %). Selon votre activité, le staking peut relever d'un autre régime (BNC ou BIC). Cet outil donne une estimation, pas un conseil fiscal : vérifiez la doctrine à jour et faites valider votre cas par un expert-comptable.",
   },
   {
     question: "Le staking est-il sans risque ?",

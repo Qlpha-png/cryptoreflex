@@ -60,7 +60,7 @@ const CRITERIA = [
   { name: "Frais réels", weight: 20, what: "Frais maker/taker spot, achat instantané, retrait fiat SEPA, retrait crypto, spread typique. Calcul d'un coût total par transaction type pour 1000€." },
   { name: "Sécurité", weight: 25, what: "Cold storage %, assurance des fonds, MFA obligatoire, audits de sécurité tiers, historique d'incidents et de remboursements." },
   { name: "Conformité MiCA", weight: 20, what: "Agrément MiCA (CASP) et accès à la France, autorité qui l'a délivré, ancienneté de l'agrément, restrictions imposées." },
-  { name: "Expérience utilisateur", weight: 15, what: "Onboarding, ergonomie de l'app, qualité des notes Trustpilot, App Store, Play Store. Test pratique du parcours d'achat." },
+  { name: "Expérience utilisateur", weight: 15, what: "Onboarding, ergonomie de l'app, qualité des notes Trustpilot, App Store, Play Store." },
   { name: "Support en français", weight: 10, what: "Disponibilité chat FR, support téléphonique FR, temps de réponse moyen, qualité documentaire FR." },
   { name: "Catalogue & services", weight: 10, what: "Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels (carte, lending)." },
 ];
@@ -108,10 +108,11 @@ export default function MethodologiePage() {
         Calcul du score global
       </h2>
       <p className="text-fg/85 leading-relaxed">
-        Chaque critère est noté de 0 à 5 par le fondateur sur la base de tests personnels (ouverture
-        de compte, achat, retrait) et de sources publiques vérifiables (registre PSAN/CASP de
-        l&apos;AMF, conditions tarifaires officielles, audits de sécurité publiés). Le score global
-        est la moyenne pondérée des 6 critères, sur une échelle 0–5.
+        Chaque critère est noté de 0 à 5 par le fondateur à partir de sources publiques
+        vérifiables : registres MiCA de l&apos;ESMA et de l&apos;AMF, grilles tarifaires
+        officielles, documentation des plateformes, audits de sécurité publiés. Aucune note ne
+        repose sur un test personnel. Le score global est la moyenne pondérée des 6 critères, sur
+        une échelle 0–5.
       </p>
       <p className="text-fg/85 leading-relaxed">
         Exemple de calcul (modèle générique) : si une plateforme obtient

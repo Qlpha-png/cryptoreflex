@@ -6,8 +6,8 @@
  * Form + state + calculs pour /outils/calculateur-fiscalite.
  *
  * Inputs : total cessions, total achats, frais courtage, régime fiscal,
- *          TMI (si Barème/BIC), reports antérieurs (optionnel).
- * Output : plus-value nette, impôt total, ventilation IR/PS/cotisations,
+ *          TMI (si Barème/BNC), déficits BNC reportés (optionnel, BNC seulement).
+ * Output : plus-value nette, impôt total, ventilation IR/PS,
  *          revenu net, tableau récap.
  *
  * Lead magnet : à l'affichage du résultat, propose une capture email
@@ -249,7 +249,7 @@ export default function CalculateurFiscalite() {
     }
   }
 
-  const needsTmi = form.regime === "bareme" || form.regime === "bic";
+  const needsTmi = form.regime === "bareme" || form.regime === "bnc";
 
   /* --------- Render -------------------------------------------------------- */
   return (
@@ -350,16 +350,25 @@ export default function CalculateurFiscalite() {
               onChange={(v) => update("regime", v)}
             />
             <RegimeOption
-              value="bic"
+              value="bnc"
               current={form.regime}
-              title="BIC pro"
-              subtitle="Trading habituel"
+              title="BNC"
+              subtitle="Trader comme un pro (rare)"
               onChange={(v) => update("regime", v)}
             />
           </div>
+          {/* Art. 92, 2-1° bis CGI depuis le 01/01/2023 ; BOFiP BOI-BNC-CHAMP-10-10-20-40 § 1080 (« cas d'espèce exceptionnels »). */}
+          {form.regime === "bnc" && (
+            <p className="mt-3 rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm text-white/90">
+              Régime rare, réservé à celui qui trade toute l&apos;année comme un professionnel
+              (opérations nombreuses, outils et techniques de trader), sans que ce soit son métier.
+              En cas de doute, c&apos;est le PFU qui s&apos;applique. Si le trading est votre métier
+              (régime BIC), ce simulateur ne convient pas : voyez un expert-comptable.
+            </p>
+          )}
         </fieldset>
 
-        {/* TMI : visible uniquement si Barème ou BIC */}
+        {/* TMI : visible uniquement si Barème ou BNC */}
         {needsTmi && (
           <div>
             <label
@@ -390,14 +399,14 @@ export default function CalculateurFiscalite() {
           </div>
         )}
 
-        {/* Déficits reportables : régime BIC uniquement. Pour un particulier (PFU ou barème),
-            la moins-value ne se reporte pas d'une année sur l'autre : le champ est masqué et
-            ignoré par le moteur (audit 03/10/2026). */}
-        {form.regime === "bic" && (
+        {/* Déficits reportables : régime BNC uniquement (art. 156-I-2° : 6 ans, sur des BNC non
+            professionnels). Pour un particulier (PFU ou barème), la moins-value ne se reporte pas
+            d'une année sur l'autre : le champ est masqué et ignoré par le moteur (audit 03/10/2026). */}
+        {form.regime === "bnc" && (
           <NumericField
             id="reportablePrevious"
-            label="Déficits BIC reportables (€) — optionnel"
-            hint="Réservé au régime professionnel (BIC). Pour un particulier, les moins-values crypto ne se reportent pas sur les années suivantes."
+            label="Déficits BNC des 6 dernières années (€) — optionnel"
+            hint="Réservé au régime BNC : un déficit se déduit de vos bénéfices BNC non professionnels des 6 années suivantes. Pour un particulier (PFU ou barème), les moins-values crypto ne se reportent pas."
             value={form.reportablePrevious}
             onChange={(v) => update("reportablePrevious", v)}
             error={errors.reportablePrevious}
@@ -533,7 +542,7 @@ function WaltioPostResultCta({
 
   // Headline contextuel selon le profil fiscal (CRO 26-04)
   // - Exonéré (≤ 305 €) : focus sur 3916-bis (obligatoire même sans impôt)
-  // - Régime BIC : focus expert-comptable / pro
+  // - Régime BNC : focus expert-comptable
   // - Gros impôt > 1000 € : focus optimisation (compensation des moins-values, etc.)
   // - Cas standard : focus économie de temps
   let headline: string;
@@ -542,10 +551,10 @@ function WaltioPostResultCta({
     headline = "Vous êtes exonéré — mais le 3916-bis reste obligatoire";
     pitch =
       "Même sans impôt à payer, chaque compte ouvert sur une plateforme étrangère (Kraken, Coinbase, ou Binance pour les années où vous y aviez un compte) doit être déclaré (formulaire 3916-bis). 750 € d’amende par compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 €. Waltio le pré-remplit automatiquement à partir de vos connexions API.";
-  } else if (regime === "bic") {
-    headline = "BIC professionnel : votre expert-comptable va vous aimer";
+  } else if (regime === "bnc") {
+    headline = "Régime BNC : faites valider votre calcul";
     pitch =
-      "Au régime BIC, votre expert-comptable facture 600 € à 5 000 € selon le volume. Un export Waltio propre (Smart 249 €/an jusqu'à 10 000 transactions) peut alléger son travail, et vous gardez l'historique détaillé en cas de contrôle.";
+      "Le régime BNC est rare et son calcul exact n'est pas fixé par l'administration pour les cryptos : faites valider votre situation par un expert-comptable. Un export Waltio propre (Smart 249 €/an jusqu'à 10 000 transactions) peut alléger son travail, et vous gardez l'historique détaillé en cas de contrôle.";
   } else if (taxAmount >= 1000) {
     headline = `Économisez potentiellement des centaines d'€ sur ces ${formatEuro(
       taxAmount,
@@ -799,7 +808,7 @@ function ResultPanel({
   onEmailChange: (v: string) => void;
   onEmailSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }) {
-  const showCotisations = result.regime === "bic";
+  const isBnc = result.regime === "bnc";
 
   // Cas 1 : exonéré (≤ 305 €)
   if (result.exonere) {
@@ -843,19 +852,24 @@ function ResultPanel({
             className="h-5 w-5 shrink-0 text-info-fg mt-0.5"
             aria-hidden="true"
           />
-          <p>
-            Votre plus-value nette est de <strong>{formatEuro(result.plusValueNette)}</strong>{" "}
-            (déficit). Aucun impôt n'est dû. Pour un particulier au régime
-            PFU/Barème, cette moins-value n'est <strong>pas reportable</strong>{" "}
-            sur les années suivantes — elle ne s'impute que sur les plus-values
-            crypto de la même année.
-          </p>
+          {isBnc ? (
+            <p>
+              Votre résultat est de <strong>{formatEuro(result.plusValueNette)}</strong>{" "}
+              (déficit). Aucun impôt n&apos;est dû. Au régime BNC, ce déficit se déduit de vos
+              bénéfices BNC non professionnels des <strong>6 années suivantes</strong>, jamais de
+              votre revenu global.
+            </p>
+          ) : (
+            <p>
+              Votre plus-value nette est de <strong>{formatEuro(result.plusValueNette)}</strong>{" "}
+              (déficit). Aucun impôt n'est dû. Pour un particulier au régime
+              PFU/Barème, cette moins-value n'est <strong>pas reportable</strong>{" "}
+              sur les années suivantes — elle ne s'impute que sur les plus-values
+              crypto de la même année.
+            </p>
+          )}
         </div>
-        <BreakdownTable
-          result={result}
-          inputs={inputs}
-          showCotisations={showCotisations}
-        />
+        <BreakdownTable result={result} inputs={inputs} />
         <EmailCapture
           email={email}
           state={emailState}
@@ -873,7 +887,7 @@ function ResultPanel({
       <header>
         <p className="text-xs uppercase tracking-wider text-muted">
           Régime : {regimeLabel(result.regime)}
-          {(result.regime === "bareme" || result.regime === "bic") && (
+          {(result.regime === "bareme" || result.regime === "bnc") && (
             <> — TMI {formatPercent(tmi, 0)}</>
           )}
         </p>
@@ -919,26 +933,41 @@ function ResultPanel({
         />
       </div>
 
-      {showCotisations && (
+      {isBnc && (
         <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-white/90 flex gap-3">
           <Info
             className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
             aria-hidden="true"
           />
           <p>
-            En BIC, on a estimé en plus{" "}
-            <strong>{formatEuro(result.cotisationsSociales)}</strong> de
-            cotisations sociales URSSAF (~22 %). À affiner avec votre expert-comptable
-            (micro-BIC, TNS classique, abattement forfaitaire).
+            Estimation BNC : impôt sur le revenu à votre tranche (sans recalcul complet du
+            barème) + 18,6 % de prélèvements sociaux, sans cotisation d&apos;indépendant et sans
+            seuil de 305 €. Le micro-BNC (abattement de 34 %) n&apos;est pas calculé : pour des
+            ventes de cryptos, l&apos;administration n&apos;a pas défini ce que sont ses « recettes ».
           </p>
         </div>
       )}
 
-      <BreakdownTable
-        result={result}
-        inputs={inputs}
-        showCotisations={showCotisations}
-      />
+      {/* Décote (art. 197 CGI, revenus 2025 : 897 € / 1 483 € − 45,25 % de l'impôt brut) : à TMI 11 %, chaque euro ajouté coûte
+          alors ≈ 16 % d'IR, plus que les 12,8 % du PFU ; le calcul « TMI × plus-value » l'ignore (05/10/2026). */}
+      {result.regime === "bareme" && tmi <= 0.11 && (
+        <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-white/90 flex gap-3">
+          <Info
+            className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
+            aria-hidden="true"
+          />
+          <p>
+            Estimation simplifiée : votre tranche est appliquée à toute la plus-value. Si elle vous
+            fait changer de tranche, ou si votre impôt bénéficie de la <strong>décote</strong> (impôt
+            brut inférieur à 1 982 € pour une personne seule, 3 277 € pour un couple, revenus 2025),
+            l&apos;impôt réel au barème est plus élevé : à TMI 11 %, chaque euro ajouté coûte alors
+            environ 16 %, plus que les 12,8 % du PFU. Vérifiez avec le simulateur d&apos;impots.gouv
+            avant de cocher la case 3CN.
+          </p>
+        </div>
+      )}
+
+      <BreakdownTable result={result} inputs={inputs} />
 
       <EmailCapture
         email={email}
@@ -981,11 +1010,9 @@ function SummaryTile({
 function BreakdownTable({
   result,
   inputs,
-  showCotisations,
 }: {
   result: ReturnType<typeof computeTax>;
   inputs: ResultInputs;
-  showCotisations: boolean;
 }) {
   const partPct = (result.partCedee * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 });
   return (
@@ -1022,15 +1049,15 @@ function BreakdownTable({
             }
             value={result.fractionAcquisition}
           />
-          {inputs.reports > 0 && (
-            <Row label="Déficits BIC reportables" value={inputs.reports} />
+          {result.regime === "bnc" && inputs.reports > 0 && (
+            <Row label="Déficits BNC reportés (6 ans)" value={inputs.reports} />
           )}
           <Row
             label="Plus-value brute (l. 224 : cession nette de frais − fraction imputée)"
             value={result.plusValueBrute}
           />
           <Row
-            label="Plus-value nette imposable"
+            label={result.regime === "bnc" ? "Bénéfice BNC imposable (estimation)" : "Plus-value nette imposable"}
             value={result.plusValueNette}
             emphasis
           />
@@ -1040,13 +1067,6 @@ function BreakdownTable({
             value={result.montantPS}
             negative
           />
-          {showCotisations && (
-            <Row
-              label="Cotisations sociales URSSAF (~22 %)"
-              value={result.cotisationsSociales}
-              negative
-            />
-          )}
           <Row label="Impôt total" value={result.impotTotal} negative emphasis />
           <Row
             label="Net après impôt"

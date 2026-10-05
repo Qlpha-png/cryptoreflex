@@ -247,7 +247,7 @@ const J0_CONTENT_HTML =
   "<li><strong>Récupérez tous vos historiques</strong> sur chaque exchange (CSV ou API). Sans données complètes, impossible de calculer votre plus-value selon la formule officielle 150 VH bis.</li>" +
   "<li><strong>Identifiez vos plateformes étrangères</strong> (Binance, Kraken, Bybit…) — chacune doit être déclarée via le formulaire <strong>3916-bis</strong>, y compris un compte fermé en cours d'année. Oubli = amende 750 € par compte (1 500 € si solde &gt; 50 000 €).</li>" +
   "<li><strong>Comptez vos cessions, pas vos achats</strong>. Si vous avez moins de 305 € de cessions sur l'année, vous êtes <strong>exonéré·e</strong>.</li>" +
-  "<li><strong>Choisissez votre régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant si TMI 0 % ou 11 %). On en reparle au mail 3.</li>" +
+  "<li><strong>Choisissez votre régime</strong> : PFU 31,4 % par défaut, ou option barème progressif (intéressant à TMI 0 % ; à TMI 11 %, seulement sans décote). On en reparle au mail 3.</li>" +
   "<li><strong>N'oubliez pas vos pertes</strong> : elles peuvent compenser vos gains de la même année. On creuse au mail 4.</li>" +
   "</ol>" +
   '<p style="margin-top:24px;">Pour automatiser tout ça (import des exchanges, calcul plus-value, génération Cerfa), nous recommandons <strong>Waltio</strong> — outil français, agréé expert-comptable, pré-remplissage 2086 + 3916-bis automatique.</p>';
@@ -363,14 +363,14 @@ const J5_CONTENT_HTML =
   '<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;background:#1F2937;border-radius:8px;margin:12px 0;">' +
   '<tr><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Votre TMI</td><td style="border-bottom:1px solid #374151;font-weight:700;color:#F5A524;">Choix optimal</td></tr>' +
   "<tr><td>0 % (non imposable)</td><td>Barème (vous ne payez que les 18,6 % de PS)</td></tr>" +
-  "<tr><td>11 %</td><td>Barème (29,6 % au lieu de 31,4 %)</td></tr>" +
+  "<tr><td>11 %</td><td>Barème (29,6 % au lieu de 31,4 %), sauf si votre impôt bénéficie de la décote : alors PFU</td></tr>" +
   "<tr><td>30 %</td><td>PFU (48,6 % au barème contre 31,4 %)</td></tr>" +
   "<tr><td>41 / 45 %</td><td>PFU (économie large)</td></tr>" +
   "</table>" +
   '<h2 style="font-size:18px;color:#F5A524;margin-top:24px;">Exemple chiffré (PV crypto = 5 000 €)</h2>' +
   '<ul style="padding-left:20px;">' +
   "<li>TMI 0 % → barème : <strong>930 €</strong> (prélèvements sociaux uniquement) contre 1 570 € au PFU → <strong>économie 640 €</strong></li>" +
-  "<li>TMI 11 % → barème : <strong>1 480 €</strong> d'impôt contre 1 570 € au PFU → économie 90 €</li>" +
+  "<li>TMI 11 % → barème : <strong>1 480 €</strong> d'impôt contre 1 570 € au PFU → économie 90 €, mais seulement si votre impôt ne bénéficie pas de la décote. Avec la décote, chaque euro ajouté coûte environ 16 % d'impôt : le barème devient plus cher que le PFU. Simulez avant de cocher.</li>" +
   "<li>TMI 41 % → barème : 2 980 € contre 1 570 € au PFU → <strong>perte 1 410 €</strong> si vous choisissez le barème</li>" +
   "</ul>" +
   '<p style="margin-top:16px;background:#1F2937;padding:12px;border-left:3px solid #F5A524;"><strong>Comment opter :</strong> cochez la <strong>case 3CN</strong> de la déclaration 2042 C (là où vous reportez votre plus-value en 3AN). L\'option porte sur <strong>toutes</strong> vos plus-values crypto de l\'année et elle est irrévocable, mais elle ne touche <strong>pas</strong> vos dividendes ni vos intérêts (leur option, la case 2OP, est distincte).</p>';
@@ -396,11 +396,12 @@ const J5: EmailInSequence = {
   textBody:
     "PFU 31,4 % ou barème progressif ?\n\n" +
     "Règle simple :\n" +
-    "- TMI 0 % ou 11 % → barème (vous payez moins).\n" +
+    "- TMI 0 % → barème (vous payez moins).\n" +
+    "- TMI 11 % → barème, sauf si votre impôt bénéficie de la décote : alors PFU.\n" +
     "- TMI 30 % et plus → PFU (vous payez moins).\n\n" +
     "Exemple PV 5 000 EUR :\n" +
     "- TMI 0 % → 930 EUR au barème contre 1 570 EUR au PFU (-640 EUR)\n" +
-    "- TMI 11 % → 1 480 EUR contre 1 570 EUR (-90 EUR)\n" +
+    "- TMI 11 % → 1 480 EUR contre 1 570 EUR (-90 EUR), seulement sans décote\n" +
     "- TMI 41 % → 2 980 EUR contre 1 570 EUR (+1 410 EUR si vous choisissez le barème)\n\n" +
     "Pour opter : case 3CN de la déclaration 2042 C (option globale pour vos cryptos de l'année, irrévocable, sans effet sur vos dividendes).\n\n" +
     "Comparez avec notre calculateur : " +

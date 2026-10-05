@@ -155,7 +155,7 @@ export function jsonLdSafe(obj: JsonLd): string {
  * tags). Inclut les chiffres-clés, la mission, et les piliers de notation.
  */
 const ORG_DESCRIPTION_LONG =
-  "Cryptoreflex.fr est le portail francophone indépendant de référence pour comparer les plateformes crypto régulées MiCA, comprendre la fiscalité crypto en France (article 150 VH bis, formulaire 2086, flat tax 31,4%) et se former à l'investissement crypto. Méthodologie publique en 6 critères, tests réels par le fondateur Kevin Voisin, transparence intégrale sur les rémunérations affiliées.";
+  "Cryptoreflex.fr est le portail francophone indépendant de référence pour comparer les plateformes crypto régulées MiCA, comprendre la fiscalité crypto en France (article 150 VH bis, formulaire 2086, flat tax 31,4%) et se former à l'investissement crypto. Méthodologie publique en 6 critères, frais relevés sur les grilles tarifaires officielles, statuts vérifiés sur les registres de l'ESMA et de l'AMF, transparence intégrale sur les rémunérations affiliées.";
 
 export function organizationSchema(): JsonLd {
   return {

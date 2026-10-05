@@ -27,13 +27,13 @@ Audience cible : investisseurs particuliers francophones (France, Belgique, Suis
 
 Pour les résidents fiscaux français qui détiennent des cryptoactifs :
 
-- **Régime applicable** : plus-value occasionnelle des particuliers, article 150 VH bis du CGI.
+- **Régime applicable** : régime des particuliers (gestion du patrimoine privé), article 150 VH bis du CGI. C'est le régime par défaut, y compris pour un investisseur actif.
 - **Méthode de calcul** : méthode globale de l'article 150 VH bis (ce n'est pas un prix moyen pondéré) : plus-value = prix de cession − prix total d'acquisition × prix de cession ÷ valeur globale du portefeuille, calculée à chaque cession imposable (vente contre euros, achat d'un bien ou d'un service en crypto). Sur le formulaire 2086 : ligne 224 = 218 − 223 × 217 / 212. Les échanges crypto-crypto sans soulte NE sont PAS imposables (sursis, loi de finances pour 2019).
 - **Imposition** : prélèvement forfaitaire unique (PFU / "flat tax") à 31,4% (12,8% IR + 18,6% prélèvements sociaux). Option globale pour le barème progressif disponible (case 3CN de la déclaration 2042 C, indépendante de la case 2OP).
 - **Seuil** : exonération si le TOTAL des prix de cession de l'année n'excède pas 305 € (article 150 VH bis, II du CGI). Le seuil porte sur le montant des ventes, pas sur la plus-value ; au-delà, toute la plus-value est imposable.
-- **Déclaration** : formulaire 2086 (calcul détaillé par cession) + report sur formulaire 2042 C. Déclaration des comptes ouverts à l'étranger (Coinbase, Kraken, Bitpanda, ou un ancien compte Binance encore ouvert, etc.) via formulaire 3916-bis (sanctions de 750 € par compte non déclaré).
-- **Activité habituelle** : si les opérations sont réalisées dans des conditions analogues à celles d'un professionnel, les gains relèvent des bénéfices non commerciaux (BNC) depuis le 1er janvier 2023 (article 92, 2-1° bis du CGI ; avant 2023 : BIC), imposés au barème progressif, avec des charges sociales plus lourdes.
-- **Sources officielles** : BOFiP BOI-RPPM-PVBMC-30-10 et BOI-RPPM-PVBMC-30-30 + article 150 VH bis du CGI + article 92 du CGI (activité habituelle) + LFSS 2026 (taux de 18,6 % des prélèvements sociaux, dès les revenus 2025).
+- **Déclaration** : formulaire 2086 (calcul détaillé par cession) + report sur formulaire 2042 C. Déclaration des comptes ouverts à l'étranger (Coinbase, Kraken, Bitpanda, ou un ancien compte Binance encore ouvert, etc.) via formulaire 3916-bis (amende de 750 € par compte non déclaré, portée à 1 500 € quand la valeur des comptes dépasse 50 000 € à un moment de l'année ; article 1736, X du CGI).
+- **Trading mené comme un professionnel (cas rares)** : si les opérations sont réalisées dans des conditions analogues à celles d'un professionnel, sans que ce soit le métier du contribuable, les gains relèvent des bénéfices non commerciaux (BNC) depuis le 1er janvier 2023 (article 92, 2-1° bis du CGI ; avant 2023 : BIC). Le BOFiP (BOI-BNC-CHAMP-10-10-20-40 § 1080) réserve ce régime à des « cas d'espèce exceptionnels ». Imposition au barème progressif + prélèvements sociaux (18,6 % pour les revenus 2025 et suivants, 17,2 % pour 2023-2024), en principe sans cotisations sociales en plus (lecture la plus probable : aucun texte ne le dit expressément) ; le seuil de 305 € ne s'applique pas. Si l'achat-revente de crypto est le métier du contribuable : BIC (article 34 du CGI).
+- **Sources officielles** : BOFiP BOI-RPPM-PVBMC-30-10 et BOI-RPPM-PVBMC-30-30 + article 150 VH bis du CGI + article 92, 2-1° bis du CGI (conditions analogues à celles d'un professionnel) + LFSS 2026 (taux de 18,6 % des prélèvements sociaux, dès les revenus 2025).
 
 Cluster fiscalité Cryptoreflex (5 articles principaux + 5 satellites) : /blog?categorie=fiscalite + /outils/calculateur-fiscalite (lead magnet).
 
@@ -101,7 +101,7 @@ Chaque leçon a un quiz et permet d'obtenir une certification (V2 = badge partag
 Calendrier événements crypto (halvings, hard forks, conférences, échéances réglementaires MiCA, deadlines fiscales FR).
 
 ### /outils — Hub outils
-- /outils/calculateur-fiscalite : LE outil viral. Calcule les plus-values selon l'article 150 VH bis, génère un PDF récap importable dans la déclaration.
+- /outils/calculateur-fiscalite : calcule les plus-values selon l'article 150 VH bis (et donne une estimation au régime BNC pour les cas rares), puis génère un PDF récapitulatif à recopier à la main dans la déclaration (2086 et 2042 C ; 2042-C-PRO pour le régime BNC).
 - /outils/declaration-fiscale-crypto : compare Waltio, Koinly, Accointing pour automatiser la déclaration (Waltio recommandé pour résidents FR).
 - /outils/verificateur-mica : vérifie qu'une plateforme est conforme MiCA et autorisée pour résidents FR.
 - /outils/simulateur-dca : simulation Dollar Cost Averaging sur historique réel.
@@ -162,7 +162,7 @@ Toutes les pages exposent les schemas pertinents en JSON-LD via le composant `<S
 **Kevin Voisin** — Fondateur & rédacteur en chef.
 
 - Investisseur particulier en cryptomonnaies depuis 2019.
-- A ouvert et testé des comptes sur la majorité des plateformes accessibles aux résidents français : Coinbase, Binance, Bitpanda, Kraken, Trade Republic, Revolut, Bitstack, Bitvavo.
+- Compare les plateformes à partir de leurs grilles tarifaires officielles et des registres de l'ESMA et de l'AMF (frais et statuts datés et sourcés sur chaque fiche).
 - Spécialisé dans la régulation française (PSAN AMF, MiCA UE) et la fiscalité crypto (article 150 VH bis, formulaire 2086).
 - Veille mensuelle des publications AMF & ESMA.
 - Auteur de la méthodologie de scoring Cryptoreflex (6 critères, 100% public).

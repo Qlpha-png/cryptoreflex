@@ -135,7 +135,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Pilier "Innovation features killer" (26-04-2026).
     entry("/outils/calculateur-apy-staking", "monthly", 0.7),
     entry("/outils/simulateur-halving-bitcoin", "monthly", 0.7),
-    entry("/outils/comparateur-personnalise", "monthly", 0.7),
     // Piliers V2 (26-04) : pages-mère News auto, Analyses TA auto, Calendrier.
     entry("/analyses-techniques", "daily", 0.8, latestTA),
     entry("/calendrier", "weekly", 0.7),
@@ -186,7 +185,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/quiz/plateforme", "monthly", 0.7),
     entry("/quiz/crypto", "monthly", 0.7),
     // Quiz "Trouve ton exchange en 60 sec" (lead magnet).
-    entry("/quiz/trouve-ton-exchange", "weekly", 0.85),
     // Programmatic SEO — /comparer (hub cryptos vs cryptos).
     entry("/comparer", "weekly", 0.75),
     entry("/wizard/premier-achat", "monthly", 0.7),

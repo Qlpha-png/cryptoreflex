@@ -1,6 +1,9 @@
 import platformsData from "@/data/platforms.json";
 import walletsData from "@/data/wallets.json";
 
+/** Fiabilité d'un coût du comparateur : publié en entier, majorant (marge publiée au plus), ou marge non chiffrée en plus. */
+export type CostKind = "exact" | "max" | "partiel";
+
 export interface Platform {
   id: string;
   name: string;
@@ -45,6 +48,30 @@ export interface Platform {
      * Absent : la grille ne publie pas de surcoût distinct, on retombe sur instantBuy (cf. cardBuyPct).
      */
     cardBuy?: number;
+    /**
+     * Coût d'un achat par le chemin le plus simple de l'appli (refonte du comparateur, 05/10/2026), relevé sur la
+     * source officielle : % + frais fixe + minimum par tranche ; spreadUnpublished = marge ajoutée au prix sans être
+     * chiffrée (le coût affiché n'est alors qu'un minimum). cardPct null = pas d'achat par carte pour un résident français.
+     */
+    /**
+     * Coût réel d'un achat de Bitcoin par le chemin le plus simple de l'appli, après virement SEPA (comparateur, 05/10/2026).
+     * Montants en euros recalculés depuis la grille officielle (source), null = la plateforme ne publie pas ce coût.
+     *  - « exact » : tout le coût est publié ;
+     *  - « max » : la plateforme publie un maximum pour sa marge, le montant est ce maximum (« au plus ») ;
+     *  - « partiel » : une marge non chiffrée s'ajoute au montant.
+     */
+    cost?: {
+      path: string;
+      c100: number | null;
+      c1000: number | null;
+      kind: CostKind;
+      /** null : pas d'achat par carte pour un résident français */
+      card: { c100: number | null; c1000: number | null; kind: CostKind } | null;
+      /** précision affichée sous le prix (une phrase) */
+      note?: string;
+      date: string;
+      source: string;
+    };
     withdrawalCrypto: string;
     withdrawalFiatSepa: number | string;
     spread: string;

@@ -6,9 +6,9 @@ excerpt: "Vous avez reçu un airdrop Arbitrum, Optimism, Jupiter ou ENS ? Commen
 category: "Fiscalité"
 date: "2026-05-01"
 publishedAt: "2026-05-01"
-updatedAt: "2026-10-02"
-lastUpdated: "2026-10-02"
-dateModified: "2026-10-02"
+updatedAt: "2026-10-05"
+lastUpdated: "2026-10-05"
+dateModified: "2026-10-05"
 readTime: "11 min"
 readingTime: 11
 author: "Kevin Voisin"
@@ -44,7 +44,7 @@ schema:
   audience: "Particuliers résidents fiscaux français bénéficiaires d'airdrops crypto"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="1 mai 2026" updatedAt="2 octobre 2026" readingTime="11 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="1 mai 2026" updatedAt="5 octobre 2026" readingTime="11 min" methodology="/methodologie" />
 
 <Callout type="warning" title="Disclaimer fiscal">
 Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. La doctrine fiscale française sur les airdrops reste très partielle au 1er mai 2026 — vérifiez systématiquement les rescrits récents et consultez un expert-comptable pour des montants significatifs (> 5 000 €).
@@ -64,7 +64,7 @@ Ce guide vous explique les **deux régimes possibles**, comment fixer le **prix 
 - **Prix d'acquisition** : si imposé en BNC à la réception → la valeur du jour s'ajoute au prix total d'acquisition du portefeuille (ligne 220 du 2086). Sinon → rien ne s'y ajoute (prix d'acquisition nul). Dans les deux cas, la plus-value se calcule ensuite avec la formule globale, sur tout le portefeuille.
 - **Formulaires** : **2086** pour la cession (plus-value), **2042-C-PRO case 5KU/5HQ** si vous retenez le BNC.
 - **Justificatifs critiques** : screenshot Snapshot/Etherscan du claim, prix CoinGecko historique au jour J, hash de transaction.
-- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) intègre les airdrops dans la formule de plus-value globale.
+- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) estime l'impôt de vos ventes (PFU, barème, ou BNC pour un trading mené comme un professionnel, cas rares) ; il ne traite pas directement les airdrops. Pour une vente, intégrez vos tokens d'airdrop à la valeur du portefeuille, avec un prix d'acquisition nul en position plus-value.
 
 ---
 
@@ -127,7 +127,7 @@ Le régime **BNC (article 92 CGI)** devient incontournable si vous cumulez les i
 - Vous utilisez des **outils dédiés** (Nansen, Dune queries, scripts d'automatisation) pour identifier les opportunités.
 - Le **revenu cumulé annuel** est significatif vs votre patrimoine.
 
-Dans ce cas, déclaration au régime **micro-BNC** (abattement 34 %) si recettes < 83 600 €, sinon **BNC réel**. Cotisations sociales URSSAF/SSI dès lors que l'activité est habituelle/professionnelle (pas de seuil de franchise).
+Dans ce cas, déclaration au régime **micro-BNC** (abattement de 34 %, au minimum 305 €) tant que vos recettes de l'année précédente ou de l'avant-dernière année ne dépassent pas 83 600 € ; au-delà de ce seuil deux années de suite, ou sur option, **BNC réel**. Charges sociales : 18,6 % de prélèvements sociaux (17,2 % pour les revenus 2023 et 2024) si l'activité est non professionnelle ; si elle est professionnelle (exercée à titre habituel, constant et dans un but lucratif), des cotisations URSSAF/SSI remplacent en principe ces prélèvements sociaux (elles ne s'y ajoutent pas).
 
 ---
 
@@ -182,7 +182,7 @@ Le hash de transaction du claim (visible sur Etherscan, Arbiscan, Solscan, etc.)
 **Position BNC (déclaration en mars 2023)** :
 - Recette BNC 2023 : 1 200 × 1,00 = 1 200 €
 - Abattement micro-BNC 34 % : base = 792 €
-- Si TMI 30 % + PS 17,2 % = 792 × 47,2 % = **373,82 €** d'impôt en 2023
+- Si TMI 30 % + PS 17,2 % = 792 × 47,2 % = **373,82 €** d'impôt au titre de 2023
 - En 2026 : les 1 200 € imposés en BNC s'ajoutent au prix total d'acquisition, qui passe à 3 200 €. Plus-value = 960 − [3 200 × (960 / 5 000)] = 960 − 614,40 = **345,60 €**, soit **108,52 €** de PFU.
 
 Sur 3 ans, la position plus-value est **plus avantageuse** ici (180,86 € contre 373,82 € + 108,52 € = 482,34 €). Mais elle suppose qu'aucun rescrit ne vienne requalifier rétroactivement.
@@ -197,11 +197,11 @@ Sur 3 ans, la position plus-value est **plus avantageuse** ici (180,86 € contr
 
 **Position BNC** :
 - Recette BNC 2024 : 350 × 0,70 = 245 €
-- Micro-BNC : base = 245 × 0,66 = 161,70 €
-- TMI 30 % + PS = 161,70 × 47,2 % = **76,32 €** payés en 2024.
-- Pas d'impact 2025 ni 2026 si pas de cession.
+- Micro-BNC : 245 € de recettes, c'est moins que l'abattement minimum de 305 €. Le bénéfice imposable est donc nul (le micro-BNC ne crée jamais de déficit), si ce sont les seules recettes BNC de Marc cette année-là.
+- Impôt et prélèvements sociaux au titre de 2024 : **0 €**, mais la recette doit quand même être déclarée en case 5KU.
+- Les 245 € s'ajoutent au prix total d'acquisition du portefeuille, ce qui réduira la plus-value d'une vente future.
 
-Tant que Marc ne vend pas, la position plus-value est **plus simple et économique**. Mais il a intérêt à **conserver la traçabilité** (hash + cours du jour) au cas où le régime se précise.
+Ici, la position BNC ne coûte rien en impôt, mais elle oblige à déclarer la recette. Tant que Marc ne vend pas, la position plus-value reste **la plus simple**. Il a intérêt à **conserver la traçabilité** (hash + cours du jour) au cas où le régime se précise.
 
 ### Exemple 3 : Airdrop ENS (revente partielle)
 
@@ -219,8 +219,8 @@ C'est un **airdrop passif pur** (aucun claim conditionné, juste un mapping de d
 À reporter sur le **formulaire 2086** pour la cession de mai 2026, puis case **3AN** du **2042**.
 
 <CTABox
-  title="Calculez votre imposition airdrop en 2 minutes"
-  description="Notre calculateur estime l'impôt de vos ventes (PFU, barème ou BIC) avec la formule officielle du prorata. Pour un airdrop, saisissez-le selon la position que vous retenez."
+  title="Calculez l'impôt de vos ventes de crypto en 2 minutes"
+  description="Notre calculateur estime l'impôt de vos ventes (PFU, barème, ou BNC pour un trading mené comme un professionnel, cas rares) avec la formule officielle du prorata. Il ne traite pas directement les airdrops : intégrez vos tokens à la valeur du portefeuille selon la position que vous retenez."
   ctaText="Lancer le calculateur"
   ctaUrl="/outils/calculateur-fiscalite"
   variant="primary"
@@ -246,9 +246,9 @@ C'est un **airdrop passif pur** (aucun claim conditionné, juste un mapping de d
 1. Tenez un **journal des recettes** : date, hash, token, quantité, cours EUR, contre-valeur.
 2. Cumulez l'année civile.
 3. **Formulaire 2042-C-PRO** :
-   - Régime micro-BNC (recettes < 83 600 €) : case **5KU** (NCN sans CGA) ou **5HQ** (BNC professionnels).
+   - Régime micro-BNC (recettes ≤ 83 600 €, voir section 2) : case **5KU** (BNC non professionnels : recettes brutes, l'abattement de 34 % est appliqué automatiquement) ou **5HQ** (BNC professionnels, recettes brutes également).
    - Régime réel : annexe **2035** + report 2042-C-PRO.
-4. Si l'activité est habituelle/professionnelle (BNC pro), affiliation URSSAF/SSI (pas de seuil de franchise) — inscription micro-entrepreneur ou réel.
+4. Si l'activité est professionnelle (BNC pro), affiliation URSSAF/SSI (pas de seuil de franchise) — inscription micro-entrepreneur ou réel ; les cotisations remplacent alors les prélèvements sociaux. Sinon, reportez aussi le revenu net après abattement (34 %, au minimum 305 €) en case **5HY** : il supporte 18,6 % de prélèvements sociaux (17,2 % pour les revenus 2023 et 2024).
 
 ### N'oubliez pas le 3916-bis
 

@@ -232,6 +232,17 @@ const nextConfig = {
       // `acheter-*-france-2026-guide` (template CTA "outil fiscalité"). On
       // n'a pas de fiche produit dédiée à chaque outil ; on redirige vers
       // notre comparatif Waltio vs Koinly vs Accointing qui couvre les 2.
+      // 05/10/2026 — un seul questionnaire de choix de plateforme (refonte du comparateur)
+      {
+        source: "/quiz/trouve-ton-exchange",
+        destination: "/quiz/plateforme",
+        permanent: true,
+      },
+      {
+        source: "/outils/comparateur-personnalise",
+        destination: "/quiz/plateforme",
+        permanent: true,
+      },
       {
         source: "/outils/waltio",
         destination: "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026",

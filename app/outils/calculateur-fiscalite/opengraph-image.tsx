@@ -143,7 +143,7 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            PFU 31,4 % • Barème progressif • BIC • Cerfa 2086 • 3916-bis
+            PFU 31,4 % • Barème progressif • BNC • Cerfa 2086 • 3916-bis
           </div>
         </div>
 

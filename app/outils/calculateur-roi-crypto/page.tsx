@@ -85,7 +85,7 @@ const FAQ_ITEMS = [
   {
     question: "Quel impôt est appliqué sur les plus-values crypto en France ?",
     answer:
-      "Par défaut, les particuliers en gestion non professionnelle sont soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux. L'option pour le barème progressif reste possible et peut être plus avantageuse si la TMI est de 0 ou 11 %. Notre outil affiche l'estimation PFU par défaut.",
+      "Par défaut, les particuliers en gestion non professionnelle sont soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu + 18,6 % de prélèvements sociaux. L'option pour le barème progressif reste possible : elle est plus avantageuse à TMI 0 % ; à TMI 11 %, seulement si votre impôt ne bénéficie pas de la décote. Notre outil affiche l'estimation PFU par défaut.",
   },
   {
     question: "À partir de quel montant les plus-values crypto sont-elles imposables ?",
@@ -261,7 +261,7 @@ export default function CalculateurROIPage() {
                   Pour la déclaration officielle, chaque cession se calcule
                   avec la méthode du portefeuille global (article 150 VH bis).
                   Notre calculateur fiscalité compare le PFU, le barème
-                  progressif et le BIC, et notre générateur prépare le
+                  progressif et le régime BNC, et notre générateur prépare le
                   formulaire 2086 à partir de vos transactions.
                 </p>
                 <Link
@@ -308,7 +308,9 @@ export default function CalculateurROIPage() {
             <strong className="text-fg">Avertissement :</strong> ce calculateur
             est à but pédagogique et ne constitue pas un conseil fiscal ou en
             investissement. Le PFU à 31,4 % s'applique aux particuliers en
-            gestion non professionnelle ; les situations BIC pro, la
+            gestion non professionnelle ; le régime BNC (trading mené comme un
+            professionnel, cas rares), le régime BIC (trading exercé comme
+            métier), la
             compensation des moins-values et les régimes spécifiques (staking, NFT,
             DeFi) ne sont pas couverts par cet outil. Consultez un
             expert-comptable agréé crypto-actifs pour toute déclaration

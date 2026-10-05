@@ -6,9 +6,9 @@ excerpt: "La DeFi (Aave, Uniswap, Curve, Compound) explose les catégories fisca
 category: "Fiscalité"
 date: "2026-04-26"
 publishedAt: "2026-04-26"
-updatedAt: "2026-10-02"
-lastUpdated: "2026-10-02"
-dateModified: "2026-10-02"
+updatedAt: "2026-10-05"
+lastUpdated: "2026-10-05"
+dateModified: "2026-10-05"
 readTime: "18 min"
 readingTime: 18
 author: "Kevin Voisin"
@@ -47,7 +47,7 @@ schema:
   audience: "Particuliers résidents fiscaux français utilisant des protocoles DeFi (Aave, Uniswap, Compound, Curve, etc.)"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="2 octobre 2026" readingTime="18 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="5 octobre 2026" readingTime="18 min" methodology="/methodologie" />
 
 <Callout type="warning" title="Disclaimer fiscal — sujet ultra-complexe">
 Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. La fiscalité DeFi française est en construction : les positions varient entre cabinets d'experts-comptables, et la DGFiP n'a publié aucune doctrine spécifique au 26 avril 2026. **Si vous faites du DeFi à plus de quelques milliers d'euros par an, consultez un expert-comptable ou un avocat fiscaliste spécialisé crypto** — l'article ci-dessous reflète la doctrine majoritaire mais n'est pas un substitut à un avis personnalisé.
@@ -55,18 +55,18 @@ Cet article fournit des informations générales et ne constitue pas un conseil 
 
 Vous faites du **yield farming sur Aave**, du **lending sur Compound**, vous fournissez de la **liquidité sur Uniswap V3** ou Curve, et vous vous demandez comment tout ça se déclare ? Mauvaise nouvelle : la doctrine fiscale française **n'a aucun cadre spécifique pour la DeFi**. Bonne nouvelle : on peut appliquer les **principes généraux** (BIC, BNC, plus-value occasionnelle) au cas par cas.
 
-Ce guide vous explique les **critères de qualification** (BIC pro vs BNC vs occasionnel), passe en revue **chaque type d'opération DeFi** (yield, lending, LP, swaps), et vous aide à structurer une déclaration cohérente. Avec un focus sur le **piège majeur** : en France, **chaque swap crypto-to-crypto sur Uniswap n'est PAS un fait générateur** d'impôt (article 150 VH bis CGI), contrairement à beaucoup d'autres juridictions.
+Ce guide vous explique les **critères de qualification** (BIC pro vs BNC vs occasionnel), passe en revue **chaque type d'opération DeFi** (yield, lending, LP, swaps), et vous aide à structurer une déclaration cohérente. Avec un focus sur le **piège majeur** : en France, pour un particulier (régime de l'article 150 VH bis du CGI), **chaque swap crypto-to-crypto sur Uniswap n'est PAS un fait générateur** d'impôt, contrairement à beaucoup d'autres juridictions.
 
 ## TL;DR (60 secondes)
 
-- **3 régimes possibles** selon le profil : occasionnel (PFU 31,4 %), BNC (barème + URSSAF), BIC (barème + cotisations).
+- **3 régimes possibles** selon le profil : occasionnel (PFU 31,4 %), BNC (barème + 18,6 % de prélèvements sociaux, en principe sans cotisations URSSAF), BIC (barème + cotisations d'indépendant, à la place des 18,6 %).
 - **Critères de bascule** : régularité, volume, infrastructure, automatisation (bots), recherche active de revenus.
-- **Yield farming** intensif → souvent **BIC** (activité commerciale par nature).
+- **Yield farming** intensif → souvent **BIC** selon de nombreux fiscalistes (non tranché officiellement).
 - **Lending** simple sur Aave/Compound → **occasionnel** ou **BNC**.
-- **Liquidity pool Uniswap V3** → souvent **BIC** (frais de transaction = activité commerciale habituelle).
-- **Swap crypto-to-crypto** (USDC ↔ ETH sur Uniswap) → **non imposable en France** (article 150 VH bis CGI). C'est la spécificité française.
-- **Impermanent loss** → pas de moins-value à la sortie du pool : retirer sa liquidité est un échange entre crypto-actifs, en sursis d'imposition ; la perte pèse sur le calcul global lors d'une cession en euros.
-- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) intègre les principaux protocoles DeFi pour modéliser votre situation.
+- **Liquidity pool Uniswap V3** → souvent **BIC** selon de nombreux fiscalistes (frais de transaction perçus de façon habituelle), non tranché officiellement.
+- **Swap crypto-to-crypto** (USDC ↔ ETH sur Uniswap) → **non imposable en France** pour un particulier (article 150 VH bis CGI). C'est la spécificité française. Ce sursis ne vaut pas en BIC, et en BNC le traitement des échanges n'est pas tranché (voir la section 6).
+- **Impermanent loss** → pour un particulier, pas de moins-value à la sortie du pool : retirer sa liquidité est un échange entre crypto-actifs, en sursis d'imposition ; la perte pèse sur le calcul global lors d'une cession en euros. En BIC ou en BNC, son traitement n'est pas tranché.
+- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) estime l'impôt sur vos ventes de crypto en euros, selon le régime que vous choisissez. Il ne traite pas les revenus DeFi eux-mêmes.
 
 ---
 
@@ -83,29 +83,32 @@ Faute de doctrine spécifique, il faut **appliquer les régimes généraux** :
 | Régime | Article CGI | Imposition | Cotisations |
 |---|---|---|---|
 | **Plus-value occasionnelle** (actifs numériques) | 150 VH bis | PFU 31,4 % ou barème | Aucune |
-| **BNC** (Bénéfices Non Commerciaux) | 92 | Barème progressif | URSSAF si > seuil |
-| **BIC** (Bénéfices Industriels et Commerciaux) | 34 | Barème progressif | Cotisations sociales |
+| **BNC** (Bénéfices Non Commerciaux) | 92 | Barème progressif + 18,6 % de prélèvements sociaux | Aucune en principe (activité non professionnelle ; l'URSSAF ne l'écrit pas explicitement) |
+| **BIC** (Bénéfices Industriels et Commerciaux) | 34 | Barème progressif | Cotisations d'indépendant, à la place des 18,6 % de prélèvements sociaux |
 
 ---
 
 ## 2. Critères BIC vs BNC vs occasionnel pour la DeFi
 
-Le **faisceau d'indices** retenu par la jurisprudence :
+Voici les **indices** le plus souvent avancés pour les revenus DeFi (lending, farming, fourniture de liquidité). Ce sont des repères indicatifs, pas une grille officielle. Pour l'achat-revente (trading, arbitrage, bots), voyez le paragraphe sous le tableau : régime des particuliers par défaut, BNC dans des cas exceptionnels, BIC seulement si c'est votre métier.
 
 | Critère | Occasionnel | BNC | BIC |
 |---|---|---|---|
-| Régularité | Ponctuel | Régulier | Habituel et continu |
-| Volume annuel | Faible | Moyen | Élevé (souvent > 50 k€) |
-| Infrastructure | Wallet perso | Outils standards | Bots, scripts, multi-wallets |
-| Stratégie | Buy & hold | Délégation, lending passif | Arbitrage, MEV, market making |
+| Régularité | Ponctuel | Régulier | Habituel et continu, comme métier |
+| Volume annuel | Faible | Moyen | Élevé |
+| Infrastructure | Wallet perso | Outils standards | Structure professionnelle (c'est votre métier) |
+| Stratégie | Buy & hold | Délégation, lending passif | Fourniture de liquidité active, market making |
 | Intention | Patrimoniale | Revenus complémentaires | Recherche active de profits |
-| Risque pris | Modéré | Calculé | Spéculatif, à effet de levier |
+| Risque pris | Modéré | Calculé | Élevé |
+
+**Attention pour le trading (achat-revente, arbitrage)** : depuis le 1er janvier 2023 (art. 92, 2-1° bis du CGI), l'achat, la vente et l'échange de crypto réalisés dans des conditions analogues à celles d'un professionnel (moyens informatiques, techniques de trading, compétences), sans que ce soit votre métier, relèvent des **BNC**, pas des BIC. Le BOFiP réserve ce régime à des cas exceptionnels : par défaut, vous restez au régime des particuliers. Le **BIC** ne vaut que si l'achat-revente de crypto est votre profession.
 
 **Règle empirique** :
 
 - **Buy & hold + lending occasionnel** → régime des plus-values d'actifs numériques.
 - **Lending récurrent + farming passif** → BNC (revenus passifs récurrents non commerciaux).
-- **Trading actif + LP + arbitrage + bots** → BIC (activité commerciale par nature).
+- **LP régulier** → souvent BIC selon de nombreux fiscalistes (non tranché officiellement).
+- **Trading actif + arbitrage + bots** → régime des particuliers par défaut ; BNC pour un trading mené comme un professionnel (cas rares, voir ci-dessus) ; BIC seulement si c'est votre profession.
 
 <Callout type="info" title="Pourquoi le BIC pour le LP ?">
 Fournir de la liquidité sur Uniswap vous rémunère via les frais de trading payés par les utilisateurs du pool. Ces frais sont assimilables à une rémunération de service (intermédiation financière), donc à une activité commerciale. C'est pourquoi de nombreux fiscalistes qualifient le LP en BIC dès qu'il est régulier et significatif. Le BNC reste possible pour des LP très ponctuels et passifs.
@@ -115,18 +118,18 @@ Fournir de la liquidité sur Uniswap vous rémunère via les frais de trading pa
 
 ## 3. Yield farming : presque toujours BIC
 
-Le **yield farming** consiste à enchaîner les protocoles pour maximiser le rendement (déposer USDC dans Aave, emprunter ETH, le déposer dans Curve, claim les CRV, restaker, etc.). Cette activité présente **tous les marqueurs du BIC** :
+Le **yield farming** consiste à enchaîner les protocoles pour maximiser le rendement (déposer USDC dans Aave, emprunter ETH, le déposer dans Curve, claim les CRV, restaker, etc.). Cette activité présente **la plupart des marqueurs** que les fiscalistes associent au BIC :
 
 - Opérations **multiples et hebdomadaires** (claim des récompenses, rebalancing).
 - Recherche active de **rendement maximal**.
 - Souvent **automatisé** (Yearn Finance, Beefy, scripts perso).
-- Volume **généralement significatif** (> 10-20 k€).
+- Volume **généralement significatif**.
 
 ### Conséquences fiscales du BIC
 
 - Imposition au **barème progressif** sur le bénéfice (recettes − charges déductibles).
-- **Cotisations sociales** TNS (Travailleur Non Salarié) si activité non salariée.
-- **Régime micro-BIC** possible si recettes < 203 100 € (achat-revente, abattement 71 %) ou < 83 600 € (prestations de services, abattement 50 %).
+- **Cotisations sociales** de travailleur indépendant (TNS), **à la place** des prélèvements sociaux de 18,6 % (pas en plus).
+- **Régime micro-BIC** possible si recettes < 203 100 € (achat-revente, abattement 71 %) ou < 83 600 € (prestations de services, abattement 50 %). Pour des crypto, la catégorie à retenir n'est pas tranchée officiellement.
 - Déclaration : **formulaire 2042-C-PRO** + éventuellement **2031** (réel).
 - **Comptabilité** souvent obligatoire (livre des recettes/dépenses).
 
@@ -136,11 +139,13 @@ Sophie déploie 50 000 € en stablecoins sur 5 protocoles (Aave, Compound, Conv
 
 - Recettes annuelles : 50 000 × 12 % = **6 000 €**
 - Régime micro-BIC services : abattement 50 % → base imposable **3 000 €**
-- TMI 30 % + PS 18,6 % = 3 000 × 48,6 % = **1 458 €** d'impôt
-- + Cotisations TNS micro ≈ 22 % sur les 6 000 € (selon activité) = **~1 320 €**
-- **Total : ~ 2 778 €** (46 % du revenu brut)
+- Impôt sur le revenu, estimé à sa tranche de 30 % : 3 000 × 30 % = **900 €**
+- + Cotisations de micro-entrepreneur (prestations de services BIC) : 21,2 % + 0,1 % de formation professionnelle sur les 6 000 € = **~1 278 €**. Elles remplacent les prélèvements sociaux de 18,6 % : Sophie ne paie pas les deux.
+- **Total : ~ 2 178 €** (36 % du revenu brut)
 
-À comparer au régime occasionnel (PFU 31,4 % à la cession) : très défavorable pour Sophie en BIC, mais c'est probablement la qualification correcte au regard de la jurisprudence.
+Ces chiffres sont indicatifs : pour des crypto, la catégorie micro-BIC (ventes ou services) et le chiffre d'affaires à retenir ne sont pas tranchés officiellement. À faire valider par un expert-comptable.
+
+À comparer au régime occasionnel (PFU 31,4 % à la cession) : défavorable pour Sophie en BIC, mais c'est la qualification que retiennent souvent les fiscalistes pour ce profil (non tranchée officiellement).
 
 ---
 
@@ -154,31 +159,31 @@ Le **lending** simple (déposer de l'USDC sur Aave et toucher des intérêts) es
 - Vous touchez ~250 USDC d'intérêts en un an (5 % APR).
 - Vous retirez en décembre : 5 250 USDC.
 
-→ Pour ce profil, le **régime occasionnel** est défendable. Vous cédez les 250 USDC reçus comme intérêts, soumis au PFU 31,4 % (ou barème).
+→ Pour ce profil, le **régime occasionnel** est défendable. Si vous vendez ensuite les 250 USDC reçus comme intérêts, la plus-value est imposée au PFU 31,4 % (ou au barème), sauf si le total de vos cessions de l'année ne dépasse pas 305 € : elle est alors exonérée (voir le cas 1 de la section 8 pour le calcul).
 
 ### Cas BNC
 
 - Vous lendez sur 4-5 protocoles différents.
 - Vous faites des dépôts/retraits régulièrement (rebalancing).
-- Vos recettes annuelles dépassent 1 000-2 000 €.
+- Vos recettes annuelles deviennent significatives.
 
-→ La qualification **BNC** devient probable. Régime micro-BNC : abattement 34 %, imposition au barème.
+→ La qualification **BNC** devient probable. Régime micro-BNC (recettes jusqu'à 83 600 €) : abattement 34 %, imposition au barème, plus 18,6 % de prélèvements sociaux.
 
 ### Comment trancher ?
 
-Dans le doute, le **principe de prudence** veut qu'on retienne **la qualification la plus rigoureuse** (BNC plutôt qu'occasionnel) pour éviter une requalification rétroactive.
+Dans le doute, faites valider votre situation par un expert-comptable avant de déclarer : le régime des revenus de lending n'est pas tranché officiellement.
 
 ---
 
 ## 5. Liquidity pool Uniswap V3 : presque toujours BIC
 
-Fournir de la **liquidité concentrée** sur Uniswap V3 (Curve, Balancer, etc.) est désormais une activité **fiscalement assimilée à l'intermédiation financière** :
+Fournir de la **liquidité concentrée** sur Uniswap V3 (ou de la liquidité sur Curve, Balancer, etc.) est une activité que les fiscalistes **assimilent souvent à de l'intermédiation financière** (aucune doctrine officielle à ce jour) :
 
 - Vous rendez un service (= vous mettez en relation acheteurs/vendeurs).
 - Vous êtes **rémunéré par des frais** (0,01 % à 1 % selon les pools).
 - Vous **gérez activement** votre position (concentration, rebalancing, IL hedging).
 
-→ La majorité des fiscalistes recommandent le **BIC** dès lors que le LP est régulier ou significatif.
+→ De nombreux fiscalistes recommandent le **BIC** dès lors que le LP est régulier ou significatif.
 
 ### Calcul du résultat BIC pour un LP
 
@@ -187,11 +192,11 @@ Fournir de la **liquidité concentrée** sur Uniswap V3 (Curve, Balancer, etc.) 
 | Frais de trading collectés (en EUR équivalent) | **Oui** (recettes) |
 | Récompenses additionnelles (UNI, AAVE airdrops liquidity mining) | **Oui** (recettes) |
 | Frais de gas Ethereum | **Déductibles** en charges (réel) |
-| Impermanent loss à la sortie | **Pas de moins-value** (échange en sursis) : la perte pèse sur le calcul global lors d'une cession en euros |
+| Impermanent loss à la sortie | **Non tranché** : le sursis d'imposition des échanges (art. 150 VH bis) ne vaut que pour les particuliers. À faire valider par un expert-comptable |
 | Frais de plateforme (Yearn, Convex) | **Déductibles** |
 
-<Callout type="warning" title="L'impermanent loss n'est pas une moins-value fiscale, même à la sortie du pool">
-Pour un particulier, déposer des tokens dans un pool ou les retirer revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc ni fait générateur ni moins-value déclarable. La perte impermanente se retrouve indirectement dans votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible.
+<Callout type="warning" title="Pour un particulier, l'impermanent loss n'est pas une moins-value fiscale, même à la sortie du pool">
+Pour un particulier, déposer des tokens dans un pool ou les retirer revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc ni fait générateur ni moins-value déclarable. La perte impermanente se retrouve indirectement dans votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible. En BIC ou en BNC, son traitement n'est pas tranché : faites-le valider par un expert-comptable.
 </Callout>
 
 ---
@@ -205,16 +210,18 @@ Voici la **spécificité française** la plus importante : l'**article 150 VH bi
 - Swap **DAI → USDT** sur Curve : **non imposable**.
 - Conversion **ETH → wETH** : **non imposable**.
 
-L'imposition n'intervient **qu'à la cession en EUR** (ou en bien/service). C'est un **gros avantage** par rapport aux US (où chaque swap est taxable) et permet de faire du **yield farming intra-crypto sans déclencher d'impôt** tant que rien ne sort en EUR.
+L'imposition n'intervient **qu'à la cession en EUR** (ou en bien/service). C'est un **gros avantage** par rapport aux US (où chaque swap est taxable) et permet à un particulier d'**enchaîner les échanges intra-crypto sans déclencher d'impôt** tant que rien ne sort en EUR.
 
 ### Conséquence pratique
 
-Vous pouvez passer toute l'année à arbitrer entre stablecoins, à entrer/sortir de pools, à staker/unstaker — **rien de tout ça n'est imposable** tant que vous ne convertissez pas en EUR. Seul le **résultat final** au moment de la cession EUR compte (et les éventuelles récompenses, dont le régime et le moment d'imposition ne sont pas tranchés par une source officielle dédiée — à vérifier selon votre profil).
+Au régime des particuliers, vous pouvez passer toute l'année à arbitrer entre stablecoins, à entrer/sortir de pools, à staker/unstaker — **rien de tout ça n'est imposable** tant que vous ne convertissez pas en EUR. Seul le **résultat final** au moment de la cession EUR compte (et les éventuelles récompenses, dont le régime et le moment d'imposition ne sont pas tranchés par le BOFiP ; pour le staking, la FAQ d'impots.gouv le range en BNC, mais le BOFiP ne traite pas ce cas : à faire valider selon votre profil).
+
+Attention : ce sursis est une règle du régime des particuliers (art. 150 VH bis). Il ne vaut pas si vos opérations relèvent des BNC ou des BIC. En BNC, l'imposition des échanges entre crypto n'est pas tranchée officiellement : dans ces deux cas, faites valider votre situation par un expert-comptable.
 
 <CTABox
-  title="Mappez votre activité DeFi à la bonne qualification fiscale"
-  description="Notre calculateur fiscalité crypto identifie automatiquement vos patterns DeFi (yield farming, lending, LP) et vous suggère la qualification la plus probable (occasionnel, BNC ou BIC) avec le détail des calculs."
-  ctaText="Analyser mon activité DeFi"
+  title="Estimez l'impôt sur vos ventes de crypto"
+  description="Notre calculateur fiscalité crypto estime l'impôt sur vos cessions en euros, selon le régime que vous choisissez (PFU, barème ou BNC). Il ne qualifie pas votre activité à votre place et ne traite pas les revenus DeFi (yield farming, lending, LP) : pour ces cas, faites valider votre situation par un expert-comptable."
+  ctaText="Estimer mon impôt"
   ctaUrl="/outils/calculateur-fiscalite"
   variant="primary"
 />
@@ -230,13 +237,15 @@ Vous pouvez passer toute l'année à arbitrer entre stablecoins, à entrer/sorti
 | Récompense AAVE claim | Selon régime (non tranché officiellement) | Selon profil | 2042-C-PRO |
 | Lending classique → intérêts en USDC | Oui (cession EUR) | Occasionnel ou BNC | 2086 ou 2042-C-PRO |
 | Dépôt LP Uniswap V3 ETH/USDC | Non | — | — |
-| Frais de trading collectés | Oui (régulier = BIC) | BIC | 2042-C-PRO |
-| Retrait LP avec impermanent loss | Non (échange en sursis) | — | — |
-| Swap USDC → ETH sur Uniswap | **Non** (article 150 VH bis) | — | — |
+| Frais de trading collectés | Selon régime (non tranché officiellement) | Souvent BIC si régulier | 2042-C-PRO |
+| Retrait LP avec impermanent loss | Non pour un particulier (échange en sursis) ; non tranché en BIC/BNC | — | — |
+| Swap USDC → ETH sur Uniswap | **Non** pour un particulier (article 150 VH bis) | — | — |
 | Borrow ETH contre collatéral USDC | Non | — | — |
 | Liquidation forcée (perte de collatéral) | Oui (cession involontaire) | Plus-value occasionnelle | 2086 |
 | Récompenses farming (UNI, CRV) | Selon régime (non tranché officiellement) | Selon profil | 2042-C-PRO |
-| Vente des récompenses contre EUR | Oui | Occasionnel ou cession activité | 2086 |
+| Vente des récompenses contre EUR | Oui | Occasionnel ou activité (BNC/BIC) | 2086 (occasionnel) ou 2042-C-PRO (BNC/BIC) |
+
+Dans ce tableau, « Non » pour un dépôt, un retrait ou un swap vaut pour un particulier (sursis de l'art. 150 VH bis). En BIC ou en BNC, le traitement de ces échanges n'est pas tranché officiellement.
 
 ---
 
@@ -244,29 +253,29 @@ Vous pouvez passer toute l'année à arbitrer entre stablecoins, à entrer/sorti
 
 ### Cas 1 — Lending occasionnel simple
 
-- 5 000 USDC sur Aave en 2025, 250 USDC d'intérêts, retrait en décembre, vente en EUR.
-- **2086** : une ligne "cession de 250 USDC" avec valeur d'acquisition 0 €.
-- Plus-value imposable au PFU 31,4 % (ou barème).
+- 5 000 USDC sur Aave en 2025, 250 USDC d'intérêts, retrait en décembre, puis vente des 250 USDC en euros.
+- Si le total de vos cessions de l'année (prix de vente en euros) ne dépasse pas 305 €, la plus-value est exonérée (art. 150 VH bis).
+- Au-delà, la cession se déclare sur la **2086**. La plus-value ne se calcule pas avec une valeur d'acquisition propre aux 250 USDC, mais sur l'ensemble de votre portefeuille : prix de cession − (prix total d'acquisition × prix de cession ÷ valeur globale du portefeuille). Elle est imposée au PFU 31,4 % (ou au barème).
 
 ### Cas 2 — LP Uniswap régulier qualifié BIC
 
 - Recettes brutes 12 000 € sur l'année (frais collectés + récompenses).
 - **Régime micro-BIC services** : abattement 50 % → base 6 000 €.
 - Déclaration : **2042-C-PRO**, case **5KP** ou **5KO**.
-- Cotisations TNS si > seuil.
+- Cotisations sociales d'indépendant (en micro-entreprise, à titre indicatif : 21,2 % + 0,1 % du chiffre d'affaires pour des prestations de services BIC), à la place des prélèvements sociaux de 18,6 %.
 
 ### Cas 3 — Yield farmer pro
 
 - 50 000 € déployés, 30+ protocoles, recettes 8 000 €.
 - Statut **micro-entrepreneur** ou **EI BIC réel**.
 - Déclaration : **2042-C-PRO** + éventuellement **2031** + comptabilité.
-- Cotisations TNS calculées sur le résultat.
+- Cotisations sociales d'indépendant (sur le chiffre d'affaires en micro-entreprise, sur le résultat au réel), à la place des prélèvements sociaux de 18,6 %.
 
 ---
 
 ## 9. Erreurs courantes et bonnes pratiques
 
-- **Croire qu'un swap stablecoin déclenche l'impôt** : faux en France (article 150 VH bis), vrai aux US.
+- **Croire qu'un swap stablecoin déclenche l'impôt** : faux en France pour un particulier (article 150 VH bis), vrai aux US.
 - **Mal qualifier un yield farmer en occasionnel** : risque de requalification BIC avec rappel de cotisations.
 - **Ignorer le 3916-bis** sur les comptes étrangers (CEX utilisés pour entrer en DeFi, comme Coinbase ou Kraken), y compris un compte fermé en cours d'année : il se déclare pour chaque année où il était ouvert.
 - **Ne pas tracker les frais de gas** : ils sont déductibles en BIC réel.
@@ -282,11 +291,11 @@ Pour documenter votre activité DeFi, utilisez au minimum un outil comme **Koinl
 
 Si votre activité DeFi représente **plus de quelques milliers d'euros annuels**, ne vous lancez pas seul dans la déclaration. Trois raisons :
 
-1. **Risque de requalification rétroactive** : la DGFiP peut requalifier vos opérations BIC sur 4-6 ans après contrôle.
+1. **Risque de requalification rétroactive** : après contrôle, la DGFiP peut requalifier vos opérations (en BNC ou en BIC). En principe, elle peut remonter jusqu'à la fin de la 3e année qui suit l'année des revenus. Ce délai va jusqu'à la fin de la 10e année si l'activité est occulte : vous n'avez pas déposé dans les délais les déclarations obligatoires et vous n'avez pas déclaré votre activité à l'organisme unique des formalités d'entreprises (art. L169 du Livre des procédures fiscales).
 2. **Complexité technique** : aucun outil grand public ne couvre 100 % des protocoles DeFi.
 3. **Optimisation légale** : un expert peut structurer (statut, réel vs micro) pour économiser plusieurs milliers d'euros par an.
 
-Tarif moyen d'un expert-comptable spécialisé crypto en 2026 : **800 à 2 500 € par déclaration**, déductible si vous êtes en BIC/BNC réel.
+Les honoraires d'un expert-comptable spécialisé crypto dépendent du volume et de la complexité : demandez un devis. Ils sont déductibles si vous êtes en BIC au réel ou en BNC en déclaration contrôlée.
 
 ---
 
@@ -303,19 +312,19 @@ Tarif moyen d'un expert-comptable spécialisé crypto en 2026 : **800 à 2 500 �
 <FAQ items={[
   {
     question: "Un swap USDC → ETH sur Uniswap est-il imposable en France ?",
-    answer: "Non. L'article 150 VH bis du Code général des impôts précise qu'un échange entre actifs numériques n'est pas un fait générateur d'impôt. Que vous swapiez USDC contre ETH, ETH contre wstETH, ou DAI contre USDT, aucune imposition n'est due tant que vous ne convertissez pas en euros (ou que vous n'utilisez pas vos cryptos pour acheter un bien/service). C'est une particularité française très favorable comparée aux États-Unis où chaque swap est taxable."
+    answer: "Pour un particulier, non. L'article 150 VH bis du Code général des impôts, qui fixe le régime des particuliers, précise qu'un échange entre actifs numériques n'est pas un fait générateur d'impôt. Que vous swapiez USDC contre ETH, ETH contre wstETH, ou DAI contre USDT, aucune imposition n'est due tant que vous ne convertissez pas en euros (ou que vous n'utilisez pas vos cryptos pour acheter un bien/service). C'est une particularité française très favorable comparée aux États-Unis où chaque swap est taxable. Ce sursis ne vaut pas en BIC, et en BNC le traitement des échanges n'est pas tranché : dans ces cas, faites valider votre situation par un expert-comptable."
   },
   {
     question: "Si je fournis de la liquidité sur Uniswap V3, suis-je en BIC ?",
-    answer: "Très probablement, oui, dès lors que votre activité de LP est régulière ou significative. Les frais de trading que vous collectez sont la rémunération d'un service d'intermédiation financière, ce qui correspond à la définition d'une activité commerciale au sens de l'article 34 du CGI. Pour un LP très ponctuel et passif (par exemple une seule position laissée 12 mois sans intervention), le BNC ou même l'occasionnel restent défendables. Au-delà, retenez le BIC."
+    answer: "Souvent, oui, selon de nombreux fiscalistes, dès lors que votre activité de LP est régulière ou significative. Ils analysent les frais de trading que vous collectez comme la rémunération d'un service d'intermédiation, donc comme une activité commerciale (article 34 du CGI). Aucune doctrine officielle ne le confirme à ce jour. Pour un LP très ponctuel et passif (par exemple une seule position laissée 12 mois sans intervention), le BNC ou même l'occasionnel restent défendables. Au-delà, le BIC est l'hypothèse la plus souvent retenue : faites valider votre situation par un expert-comptable."
   },
   {
-    question: "Comment l'impermanent loss est-elle traitée fiscalement ?",
-    answer: "Non. Pour un particulier, retirer sa liquidité d'un pool revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc l'impermanent loss ne crée aucune moins-value déclarable, ni dans le pool ni à la sortie. Elle pèse indirectement sur votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible."
+    question: "L'impermanent loss crée-t-elle une moins-value fiscale ?",
+    answer: "Non. Pour un particulier, retirer sa liquidité d'un pool revient à échanger des actifs numériques entre eux, sans soulte : c'est en sursis d'imposition (art. 150 VH bis), donc l'impermanent loss ne crée aucune moins-value déclarable, ni dans le pool ni à la sortie. Elle pèse indirectement sur votre calcul : lors d'une cession en euros, la valeur globale de votre portefeuille est plus faible. En BIC ou en BNC, son traitement n'est pas tranché : faites valider par un expert-comptable."
   },
   {
     question: "Le yield farming est-il toujours en BIC ?",
-    answer: "Pas toujours, mais souvent. Le yield farming intensif (multiples protocoles, claim hebdomadaire, automatisation, volume > 10-20 k€) présente la plupart des marqueurs du BIC : régularité, infrastructure, recherche active de revenus. Pour un yield farmer ponctuel (un dépôt sur Aave une fois dans l'année), le régime occasionnel ou BNC reste possible. La qualification se fait au cas par cas, via un faisceau d'indices."
+    answer: "Pas toujours, mais souvent. Le yield farming intensif (multiples protocoles, claim hebdomadaire, automatisation, volume important) présente la plupart des marqueurs du BIC : régularité, infrastructure, recherche active de revenus. Pour un yield farmer ponctuel (un dépôt sur Aave une fois dans l'année), le régime occasionnel ou BNC reste possible. La qualification se fait au cas par cas, via un faisceau d'indices."
   },
   {
     question: "Dois-je déclarer mes wallets DeFi en Cerfa 3916-bis ?",
@@ -332,8 +341,8 @@ Article rédigé sur la base des articles 92 (BNC), 34 (BIC) et 150 VH bis (plus
 
 <KeyTakeaways>
 - Aucun cadre fiscal dédié à la DeFi n'existe : vous appliquez les régimes généraux (plus-value occasionnelle, BNC ou BIC) selon un faisceau d'indices comme la régularité, le volume et l'automatisation.
-- Retenez la spécificité française : un swap crypto contre crypto n'est pas un fait générateur d'impôt, donc vous pouvez farmer en intra-crypto sans déclencher d'imposition tant que rien ne sort en euros.
+- Retenez la spécificité française : pour un particulier (art. 150 VH bis), un swap crypto contre crypto n'est pas un fait générateur d'impôt, donc rien n'est imposé tant que rien ne sort en euros. Ce sursis ne vaut pas en BIC, et en BNC le traitement des échanges n'est pas tranché.
 - Le yield farming intensif et la fourniture de liquidité régulière penchent souvent vers le BIC, alors que le lending simple et ponctuel peut rester en occasionnel ou en BNC.
-- La perte impermanente n'est pas une moins-value tant que vous êtes dans le pool : elle ne se matérialise qu'au moment du retrait.
+- Pour un particulier, la perte impermanente n'est pas une moins-value, ni dans le pool ni à la sortie (le retrait est un échange en sursis) : elle pèse seulement sur votre calcul lors d'une cession en euros. En BIC ou en BNC, son traitement n'est pas tranché.
 - Tracez vos opérations avec un outil dédié, n'oubliez pas le 3916-bis pour vos comptes sur exchanges étrangers, et faites-vous accompagner par un expert dès que les montants deviennent significatifs.
 </KeyTakeaways>

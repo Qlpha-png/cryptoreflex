@@ -300,8 +300,8 @@ export default function CalculateurApyStaking() {
             les récompenses de staking sont imposables, mais le moment exact (à
             la perception comme un revenu, ou à la cession contre euro) n’est pas
             tranché par une source officielle que nous puissions citer à ce jour —
-            l’administration n’a pas publié de doctrine dédiée. Si vous stakez à
-            titre professionnel (volume conséquent, automatisation), vous pouvez relever du BIC.
+            l’administration n’a pas publié de doctrine dédiée. Avec un gros volume
+            ou une activité automatisée, le régime peut être différent.
             Cet outil produit une <strong>estimation</strong> — pas un conseil
             d'investissement ni fiscal. Consultez un expert-comptable pour votre cas.
           </p>

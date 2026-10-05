@@ -6,9 +6,9 @@ excerpt: "Comment sont imposées les récompenses de staking ETH, Solana ou Card
 category: "Fiscalité"
 date: "2026-04-26"
 publishedAt: "2026-04-26"
-updatedAt: "2026-10-02"
-lastUpdated: "2026-10-02"
-dateModified: "2026-10-02"
+updatedAt: "2026-10-05"
+lastUpdated: "2026-10-05"
+dateModified: "2026-10-05"
 readTime: "17 min"
 readingTime: 17
 author: "Kevin Voisin"
@@ -45,7 +45,7 @@ schema:
   audience: "Particuliers résidents fiscaux français pratiquant le staking de cryptoactifs"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="2 octobre 2026" readingTime="17 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="5 octobre 2026" readingTime="17 min" methodology="/methodologie" />
 
 <Callout type="warning" title="Disclaimer fiscal">
 Cet article fournit des informations générales et ne constitue pas un conseil fiscal personnalisé. Consultez un expert-comptable pour votre situation. La doctrine fiscale française sur le staking reste mouvante au 26 avril 2026 — vérifiez systématiquement les rescrits et la jurisprudence à jour.
@@ -59,11 +59,11 @@ Ce guide vous explique le **fait générateur de l'impôt** (réception ? conver
 
 - **Pas de régime spécifique** : aucune doctrine officielle (BOFiP) ne traite du staking ; ni le moment ni le régime d'imposition des récompenses ne sont tranchés.
 - **Staking occasionnel** (petits montants, 1 ou 2 cryptos via plateforme custodial) → souvent **régime des plus-values d'actifs numériques** (PFU 31,4 % à la cession ultérieure).
-- **Staking régulier ou actif** (validateur perso, plusieurs réseaux, infrastructure dédiée) → **BNC** (barème progressif + cotisations sociales URSSAF/SSI dès lors que l'activité est habituelle/professionnelle, sans seuil de franchise).
+- **Staking régulier ou actif** (validateur perso, plusieurs réseaux, infrastructure dédiée) → **BNC** : barème progressif + 18,6 % de prélèvements sociaux si l'activité est non professionnelle ; si elle est exercée à titre professionnel, des cotisations URSSAF/SSI remplacent en principe ces prélèvements sociaux (elles ne s'y ajoutent pas).
 - **Fait générateur** : à la **cession** des tokens reçus en staking dans le régime occasionnel (interprétation majoritaire sans doctrine BOFiP dédiée, appuyée sur la jurisprudence Conseil d'État 2018), pas à la réception.
-- **Valeur d'acquisition** : 0 € pour les récompenses dans le régime occasionnel (la plus-value imposable = totalité du prix de vente).
+- **Valeur d'acquisition** : 0 € pour les récompenses dans le régime occasionnel (elles n'ajoutent rien au prix d'acquisition, ce qui augmente la plus-value calculée au prorata de tout le portefeuille).
 - **Liquid staking (Lido stETH)** : la conversion ETH → stETH est traitée comme un échange = pas de fait générateur (article 150 VH bis), mais les rebasing de récompenses sont sujets à interprétation.
-- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) modélise les deux régimes (occasionnel vs BNC) sur vos récompenses staking.
+- **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) estime l'impôt de vos ventes (PFU, barème, ou BNC pour un trading mené comme un professionnel, cas rares) ; il ne traite pas directement les récompenses de staking.
 
 ---
 
@@ -92,7 +92,7 @@ Attention à une confusion fréquente : la **décision du Conseil d'État du 26 
 ### Conséquences pratiques
 
 1. Vous recevez 0,5 ETH en récompense de staking → selon cette interprétation (non tranchée officiellement), **rien à déclarer cette année** si vous ne vendez pas.
-2. Vous vendez ces 0,5 ETH 2 ans plus tard à 2 000 € chacun (1 000 € total) → ces ETH ayant un prix d'acquisition nul, ils augmentent d'autant la plus-value (calculée sur l'ensemble du portefeuille), imposable au PFU 31,4 %.
+2. Vous vendez ces 0,5 ETH 2 ans plus tard à 2 000 € chacun (1 000 € total) → ces ETH ayant un prix d'acquisition nul, ils augmentent la plus-value (calculée sur l'ensemble du portefeuille), imposable au PFU 31,4 %.
 3. **Pas de valeur d'acquisition** des récompenses (= 0 €) puisque vous ne les avez pas "achetées".
 
 <Callout type="info" title="Pourquoi la valeur d'acquisition est de 0 €">
@@ -113,7 +113,7 @@ Si vos récompenses staking ont une valeur d'acquisition de 0 €, elles **augme
 
 ### Qui est concerné par le BNC ?
 
-Le **régime des Bénéfices Non Commerciaux** (article 92 CGI) s'applique si votre activité de staking présente un **caractère habituel et professionnel**. La DGFiP regarde un **faisceau d'indices** :
+Le BOFiP ne traite pas du staking. La FAQ d'impots.gouv (mise à jour le 17 juillet 2026) indique pourtant que les bénéfices du staking relèvent des **Bénéfices Non Commerciaux** (article 92 CGI), sans distinguer selon votre niveau d'activité. Ce guide sépare la gestion occasionnelle d'une activité **habituelle**, mais ce point n'est pas tranché : faites valider votre cas par un expert-comptable. Les indices d'une activité habituelle :
 
 - **Régularité** des opérations (récompenses quotidiennes, hebdomadaires).
 - **Volume** des actifs stakés (très significatif vs votre patrimoine).
@@ -123,24 +123,24 @@ Le **régime des Bénéfices Non Commerciaux** (article 92 CGI) s'applique si vo
 - **Recherche de revenus complémentaires explicite**.
 
 <Callout type="warning" title="Pas de seuil clair en 2026">
-Aucun texte ne fixe un seuil chiffré (en EUR ou en nombre de récompenses) au-delà duquel le BNC s'impose automatiquement. C'est une appréciation au cas par cas par l'administration. Un solo staker ETH avec 32 ETH+ qui fait tourner son nœud pourrait être regardé comme exerçant une activité professionnelle, mais aucun texte ne le tranche. Un particulier qui dépose 2 ETH sur Coinbase Earn restera en occasionnel.
+Aucun texte ne fixe un seuil chiffré (en EUR ou en nombre de récompenses) au-delà duquel le BNC s'impose automatiquement. C'est une appréciation au cas par cas par l'administration. Un solo staker ETH avec 32 ETH+ qui fait tourner son nœud pourrait être regardé comme exerçant une activité professionnelle, mais aucun texte ne le tranche. Un particulier qui dépose 2 ETH sur Coinbase Earn relève plutôt, selon l'interprétation majoritaire, de la gestion occasionnelle, sans certitude (voir la FAQ d'impots.gouv citée plus haut).
 </Callout>
 
-### Régime micro-BNC (recettes < 83 600 €)
+### Régime micro-BNC (recettes ≤ 83 600 €)
 
-Si vous choisissez (ou basculez en) BNC, le **régime micro-BNC** s'applique automatiquement tant que vos recettes annuelles ne dépassent pas **83 600 €** (seuil 2026-2028) :
+Si votre activité relève du BNC, le **régime micro-BNC** s'applique automatiquement tant que vos recettes de l'année précédente ou de l'avant-dernière année ne dépassent pas **83 600 €** (seuil 2026-2028) :
 
-- **Abattement forfaitaire** de 34 % (frais réputés couverts).
-- Imposition au **barème progressif** sur 66 % des recettes.
-- **Cotisations sociales URSSAF/SSI** : dues dès que l'activité est qualifiée d'habituelle/professionnelle (BNC pro) — il n'existe pas de seuil de franchise sociale ; faites qualifier votre cas par un expert-comptable.
-- Déclaration : formulaire **2042-C-PRO**, case 5HQ ou 5IQ selon situation.
+- **Abattement forfaitaire** de 34 %, avec un minimum de 305 € (frais réputés couverts).
+- Imposition au **barème progressif** sur le reste (66 % des recettes dans le cas général).
+- **Charges sociales** : 18,6 % de prélèvements sociaux sur le revenu après abattement si l'activité est non professionnelle. Si elle est professionnelle (exercée à titre habituel, constant et dans un but lucratif), des cotisations URSSAF/SSI remplacent en principe ces prélèvements sociaux (elles ne s'y ajoutent pas). Faites qualifier votre cas par un expert-comptable.
+- Déclaration : formulaire **2042-C-PRO**, case **5KU** si l'activité est non professionnelle, **5HQ** si elle est professionnelle (détails en section 7).
 
 ### Régime BNC réel
 
-Au-delà de 83 600 €, ou sur option, vous passez au **BNC déclaration contrôlée (régime réel)** :
+Si vos recettes dépassent 83 600 € deux années de suite, ou sur option, vous passez au **BNC déclaration contrôlée (régime réel)** :
 
 - Vous déduisez vos **frais réels** (matériel, électricité, abonnements).
-- Vous tenez une **comptabilité commerciale** (livre des recettes/dépenses).
+- Vous tenez une **comptabilité de trésorerie** (livre-journal des recettes et des dépenses).
 - Vous déclarez via **2035 + 2042-C-PRO**.
 
 ---
@@ -155,7 +155,7 @@ C'est la question la plus discutée dans la communauté fiscaliste crypto. Voici
 | Récompense vendue contre EUR | **Cession** | Plus-value occasionnelle (PFU 31,4 %) |
 | Récompense vendue contre une autre crypto | **Aucun** (article 150 VH bis CGI) | Reporté à la cession EUR ultérieure |
 | Récompense utilisée pour acheter un bien/service | **Cession** | Plus-value occasionnelle (PFU 31,4 %) |
-| Activité régulière qualifiée BNC | **Réception des récompenses** (cours du jour) | BNC (barème + URSSAF) |
+| Activité régulière qualifiée BNC | **Réception des récompenses** (cours du jour) | BNC (barème + prélèvements sociaux, ou cotisations URSSAF à la place si l'activité est professionnelle) |
 
 <Callout type="info" title="La nuance BNC vs occasionnel sur le fait générateur">
 En BNC, l'imposition intervient à la **réception** de la récompense (au cours du jour), comme pour n'importe quel revenu professionnel. En occasionnel, l'imposition est différée à la **cession**. C'est une différence majeure : en BNC vous payez l'impôt même si vous n'avez pas vendu, alors qu'en occasionnel vous payez seulement quand vous convertissez en EUR.
@@ -172,17 +172,17 @@ En BNC, l'imposition intervient à la **réception** de la récompense (au cours
 - **Pooled staking via CEX** (Coinbase, Kraken) : occasionnel pour la grande majorité.
 - **Liquid staking (Lido stETH, Rocket Pool rETH)** : voir section dédiée plus bas.
 
-**Exemple chiffré** : vous déposez 5 ETH sur Coinbase Earn en janvier 2025. APR 4,5 % = **0,225 ETH récompense annuelle** = environ 525 € au cours moyen 2025 (2 333 €/ETH). En décembre 2025, vous vendez ces 0,225 ETH à 600 €.
+**Exemple chiffré** : vous déposez sur Coinbase Earn, en janvier 2025, 5 ETH achetés 9 000 € au total. APR 4,5 % = **0,225 ETH récompense annuelle** = environ 525 € au cours moyen 2025 (2 333 €/ETH). En décembre 2025, vous vendez ces 0,225 ETH à 600 €, soit 2 666,67 €/ETH : votre portefeuille de 5,225 ETH vaut alors 13 933,33 €.
 
-- Régime occasionnel : 600 € × 31,4 % = **188,40 € d'impôt**.
-- Régime BNC micro : 525 € × 66 % = 346,50 € ; (TMI 30 % + PS 18,6 %) = 48,6 % ; 346,50 € × 48,6 % = **168,40 €** + cotisations URSSAF si seuil atteint.
+- Régime occasionnel : plus-value = 600 − [9 000 × (600 / 13 933,33)] = 600 − 387,56 = 212,44 € ; PFU 31,4 % = **66,71 € d'impôt**.
+- Régime BNC micro (si l'activité relevait du BNC) : sur 525 € de recettes, 34 % ne donnerait que 178,50 €, c'est donc l'abattement minimum de 305 € qui s'applique ; base = 220 € ; (TMI 30 % + PS 18,6 %) = 48,6 % ; 220 € × 48,6 % = 106,92 € (calcul simplifié au taux marginal). S'y ajoute le PFU sur la vente de décembre : le prix total d'acquisition passe à 9 525 €, la plus-value à 600 − [9 525 × (600 / 13 933,33)] = 189,83 €, soit 59,61 € de PFU. Total : **166,53 €**. Si l'activité était jugée professionnelle, des cotisations URSSAF remplaceraient les 18,6 % de prélèvements sociaux (elles ne s'y ajoutent pas).
 
 ### Solana (SOL) — APR 6 à 8 %
 
 - **Délégation à un validateur** via Phantom, Solflare ou CEX → occasionnel dans la majorité des cas.
 - **Récompenses très fréquentes** (chaque epoch, soit ~2-3 jours) → la complexité comptable peut rapidement justifier le BNC en cas de gros volume.
 
-**Exemple** : 100 SOL délégués via Phantom à 7 % APR = 7 SOL/an. Au cours moyen 2025 (~150 €/SOL), recettes ≈ 1 050 €. Vente partielle en décembre = imposable au PFU 31,4 % sur le prix de vente.
+**Exemple** : 100 SOL délégués via Phantom à 7 % APR = 7 SOL/an. Au cours moyen 2025 (~150 €/SOL), recettes ≈ 1 050 €. Vente partielle en décembre = plus-value calculée au prorata de tout votre portefeuille, imposable au PFU 31,4 %.
 
 ### Cardano (ADA) — APR 3 à 4 %
 
@@ -193,8 +193,8 @@ En BNC, l'imposition intervient à la **réception** de la récompense (au cours
 **Exemple** : 10 000 ADA délégués à 4 % APR = 400 ADA/an. Au cours moyen 2025 (~0,55 €), recettes ≈ 220 €. Cession = imposable au PFU 31,4 %.
 
 <CTABox
-  title="Calculez l'impact fiscal de votre staking en 2 minutes"
-  description="Notre calculateur fiscalité crypto modélise les deux scénarios (occasionnel PFU vs BNC) sur vos récompenses ETH, SOL, ADA, et vous dit lequel optimise votre impôt selon votre TMI et votre volume."
+  title="Calculez l'impôt de vos ventes de crypto en 2 minutes"
+  description="Notre calculateur fiscalité crypto estime l'impôt de vos ventes (PFU, barème, ou BNC pour un trading mené comme un professionnel, cas rares) avec la formule officielle du prorata. Il ne traite pas directement les récompenses de staking : pour un cas complexe, faites valider votre situation par un expert-comptable."
   ctaText="Lancer le calculateur"
   ctaUrl="/outils/calculateur-fiscalite"
   variant="primary"
@@ -242,9 +242,10 @@ Le rebasing quotidien de stETH change le solde de tokens en wallet sans transact
 1. Tenez un journal : date, quantité reçue, cours du jour, contre-valeur EUR.
 2. Cumulez les recettes annuelles.
 3. Reportez sur le **formulaire 2042-C-PRO** :
-   - Régime micro-BNC : case **5KU** pour une activité non professionnelle (5LU et 5MU pour les autres membres du foyer), case **5HQ** si l'activité est professionnelle.
+   - Régime micro-BNC : case **5KU** pour une activité non professionnelle (5LU et 5MU pour les autres membres du foyer), case **5HQ** si l'activité est professionnelle. Dans les deux cas, indiquez les recettes brutes : l'abattement est appliqué automatiquement.
    - Régime réel : annexe 2035 + report sur 2042-C-PRO.
-4. Si l'activité est habituelle/professionnelle (BNC pro), affiliation URSSAF/SSI obligatoire (pas de seuil de franchise) — inscription au régime micro-entrepreneur ou réel.
+4. Si l'activité est non professionnelle, reportez aussi le revenu net en case **5HY** (en micro-BNC, le montant après l'abattement de 34 %, au minimum 305 €) : c'est sur ce montant que portent les 18,6 % de prélèvements sociaux.
+5. Si l'activité est professionnelle (BNC pro), affiliation URSSAF/SSI obligatoire (pas de seuil de franchise) — inscription au régime micro-entrepreneur ou réel. Les cotisations remplacent alors les prélèvements sociaux.
 
 ---
 
@@ -261,17 +262,18 @@ Le rebasing quotidien de stETH change le solde de tokens en wallet sans transact
 - Prix de cession : 3 062,50 €
 - Prix d'acquisition cumulé : 9 000 € (les 5 ETH d'origine ; les récompenses comptent pour 0 €)
 - Valeur globale portefeuille (avant cession) : 5 ETH × 2 500 + 0,225 ETH × 2 500 = 13 062,50 €
-- Plus-value imposable = 3 062,50 − [9 000 × (3 062,50 / 13 062,50)] = 3 062,50 − 2 109,46 = **953,04 €**
-- PFU 31,4 % = **299,25 €** d'impôt.
+- Plus-value imposable = 3 062,50 − [9 000 × (3 062,50 / 13 062,50)] = 3 062,50 − 2 110,05 = **952,45 €**
+- PFU 31,4 % = **299,07 €** d'impôt.
 
-**Si BNC micro (alternative)** :
+**Si l'activité relevait du BNC (micro-BNC)** :
 
 - Récompense reçue : 0,225 ETH au cours moyen 2025 = ~525 €
-- Abattement 34 % : base imposable = 525 × 0,66 = 346,50 €
-- Imposition TMI 30 % + PS 18,6 % = 346,50 × 48,6 % = **168,40 €**
-- Mais à la revente ultérieure des 0,225 ETH, plus-value classique sur la différence (cours réception → cours vente).
+- Abattement : 34 % ne donnerait que 178,50 €, c'est donc l'abattement minimum de 305 € qui s'applique ; base imposable = 525 − 305 = 220 €
+- Imposition TMI 30 % + PS 18,6 % = 220 × 48,6 % = **106,92 €**
+- Vente de décembre : les 525 € s'ajoutent au prix total d'acquisition, qui passe à 9 525 € ; plus-value = 3 062,50 − [9 525 × (3 062,50 / 13 062,50)] = 3 062,50 − 2 233,13 = 829,37 € ; PFU 31,4 % = **260,42 €**
+- Total BNC : 106,92 + 260,42 = **367,34 €**, contre 299,07 € en occasionnel.
 
-Dans ce cas : **occasionnel reste plus avantageux** pour Marc (volume modéré, salarié principal).
+Dans cet exemple, **le régime occasionnel coûte moins cher** à Marc. Mais ce n'est pas un choix : c'est la nature de votre activité qui détermine le régime (voir section 3).
 
 ---
 
@@ -279,9 +281,9 @@ Dans ce cas : **occasionnel reste plus avantageux** pour Marc (volume modéré, 
 
 - **Croire que la question est tranchée** : selon l'interprétation majoritaire, en gestion occasionnelle, seule la cession compte ; mais une autre approche impose les récompenses à la réception, et aucune source officielle ne départage.
 - **Utiliser le mauvais cours** pour la valeur d'acquisition BNC (prendre le cours du jour exact, pas un cours moyen).
-- **Mélanger plus-values et BNC** dans la déclaration : ce sont deux rubriques distinctes (3AN vs 5HQ).
+- **Mélanger plus-values et BNC** dans la déclaration : ce sont deux rubriques distinctes (3AN vs 5KU ou 5HQ).
 - **Oublier les comptes étrangers** : si vous stakez via Coinbase ou Kraken, le compte doit être déclaré en [Cerfa 3916-bis](/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026). Un compte fermé en cours d'année (par exemple un ancien compte Binance, la plateforme ayant cessé ses services en France le 1er juillet 2026) se déclare aussi, pour chaque année où il était ouvert.
-- **Sous-estimer le BNC** pour un solo staker : la requalification rétroactive en BNC peut être très coûteuse (cotisations URSSAF + majorations).
+- **Sous-estimer le BNC** pour un solo staker : la requalification rétroactive en BNC peut être très coûteuse (impôt, prélèvements sociaux ou cotisations URSSAF selon le cas, + majorations).
 
 <Callout type="tip" title="Documenter, documenter, documenter">
 Conservez TOUS les justificatifs : exports CSV de la plateforme (Coinbase, Kraken, Lido), historiques des récompenses, captures d'écran avec dates, cours du jour. L'administration peut contrôler jusqu'à la fin de la 3e année qui suit l'imposition (10 ans si un compte à l'étranger n'a pas été déclaré) : conservez ces preuves au moins 6 ans. Sans documentation, vous ne pouvez pas justifier votre calcul de plus-value.
@@ -305,7 +307,7 @@ Conservez TOUS les justificatifs : exports CSV de la plateforme (Coinbase, Krake
   },
   {
     question: "Quelle est la valeur d'acquisition d'un ETH reçu en staking ?",
-    answer: "Dans le régime occasionnel, la valeur d'acquisition est de 0 €. Vous n'avez pas \"acheté\" cet ETH, vous l'avez reçu gratuitement. Conséquence : à la revente, la totalité du prix de cession est plus-value imposable (avec la formule du prorata sur la valeur globale du portefeuille). Dans le régime BNC, vous déclarez la récompense au cours du jour de réception, et cette valeur devient votre prix d'acquisition pour une éventuelle revente future."
+    answer: "Dans le régime occasionnel, la valeur d'acquisition est de 0 €. Vous n'avez pas \"acheté\" cet ETH, vous l'avez reçu gratuitement. Conséquence : à la revente, cet ETH n'ajoute rien au prix total d'acquisition, ce qui augmente la plus-value calculée avec la formule du prorata sur la valeur globale du portefeuille. Dans le régime BNC, vous déclarez la récompense au cours du jour de réception, et cette valeur devient votre prix d'acquisition pour une éventuelle revente future."
   },
   {
     question: "Le liquid staking via Lido (stETH) déclenche-t-il un fait générateur d'impôt ?",

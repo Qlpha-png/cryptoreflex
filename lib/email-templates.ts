@@ -229,7 +229,7 @@ export interface CalculateurFiscaliteWelcomeContext {
   email: string;
   /** Résumé du calcul à afficher dans l'email. */
   summary: {
-    /** Régime utilisé : "pfu" | "bareme" | "bic". */
+    /** Régime utilisé : "pfu" | "bareme" | "bnc". */
     regime: string;
     /** Plus-value nette en € (peut être négative). */
     plusValueNette: number;
@@ -261,7 +261,7 @@ function formatEuroEmail(value: number): string {
 function regimeLabelEmail(regime: string): string {
   if (regime === "pfu") return "PFU 31,4 % (flat tax)";
   if (regime === "bareme") return "Barème progressif IR";
-  if (regime === "bic") return "BIC professionnel";
+  if (regime === "bnc" || regime === "bic") return "BNC (trading mené comme un professionnel)";
   return regime;
 }
 
@@ -436,7 +436,7 @@ export function calculateurFiscaliteWelcomeHtml(
             <td style="padding:28px 28px 0 28px;">
               <div style="border:1px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.05);border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;color:#FCD34D;">
                 <strong style="color:#FDE68A;">Pas un conseil fiscal personnalisé.</strong>
-                Cet outil produit une estimation indicative. Les régimes (PFU, barème, BIC) et les cas
+                Cet outil produit une estimation indicative. Les régimes (PFU, barème, BNC) et les cas
                 particuliers (DeFi, staking, NFT, mining) peuvent nécessiter l'avis d'un expert-comptable.
                 ${esc(BRAND.name)} n'est pas un cabinet d'expertise comptable.
               </div>

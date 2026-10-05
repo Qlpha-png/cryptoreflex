@@ -157,7 +157,7 @@ export const SEO_TOPICS = [
     outline: [
       "Le P2E à la lumière du droit fiscal français",
       "Activité occasionnelle : régime de la plus-value",
-      "Activité habituelle : BNC ou BIC ?",
+      "Joueur qui opère comme un professionnel, ou dont c'est le métier : quel régime ? (non tranché, à faire valider par un expert-comptable)",
       "NFT in-game : statut fiscal au moment de la vente",
       "Cas pratique : Axie Infinity, Star Atlas, Pixels",
       "Comment éviter une requalification en activité professionnelle",
@@ -201,7 +201,7 @@ export const SEO_TOPICS = [
     outline: [
       "Pourquoi comparer LMNP et staking crypto",
       "LMNP : régime micro-BIC ou réel",
-      "Staking : BNC professionnel ou plus-value (selon profil)",
+      "Staking : revenu (BNC) ou plus-value ? (non tranché, selon le profil)",
       "Tableau comparatif rendement net après impôt",
       "Risques propres à chaque enveloppe",
       "Diversification : combiner les deux",

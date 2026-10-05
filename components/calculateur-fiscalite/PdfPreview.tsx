@@ -77,8 +77,8 @@ export default function PdfPreview({
   result,
   calculatedAt,
 }: PdfPreviewProps) {
-  const showCotisations = result.regime === "bic";
-  const showTmi = result.regime === "bareme" || result.regime === "bic";
+  const isBnc = result.regime === "bnc";
+  const showTmi = result.regime === "bareme" || isBnc;
   const tmiNum = typeof input.tmi === "number" ? input.tmi : 0.30;
 
   return (
@@ -188,9 +188,9 @@ export default function PdfPreview({
                 }
                 value={formatEuro(result.fractionAcquisition)}
               />
-              {input.regime === "bic" && input.reportablePrevious && input.reportablePrevious > 0 ? (
+              {isBnc && input.reportablePrevious && input.reportablePrevious > 0 ? (
                 <DataRow
-                  label="Déficits BIC reportables"
+                  label="Déficits BNC reportés (6 ans)"
                   value={formatEuro(input.reportablePrevious)}
                 />
               ) : null}
@@ -234,11 +234,11 @@ export default function PdfPreview({
               </div>
               <p className="mt-2 text-[9pt] text-slate-600">
                 Taux effectif global : <strong>{formatPercent(result.tauxEffectif)}</strong>
-                {showCotisations && (
+                {isBnc && (
                   <>
                     {" "}
-                    · dont {formatEuro(result.cotisationsSociales)} de
-                    cotisations URSSAF estimées (~22 %).
+                    · Estimation BNC : impôt à votre tranche + 18,6 % de prélèvements sociaux,
+                    sans cotisation d&apos;indépendant ni seuil de 305 €.
                   </>
                 )}
               </p>
@@ -263,19 +263,19 @@ export default function PdfPreview({
               </div>
               <ul className="mt-2 space-y-1 text-[9.5pt] text-slate-700">
                 <li>
-                  <span className="font-mono text-slate-500">L1 — Prix de cession :</span>{" "}
+                  <span className="font-mono text-slate-500">Prix de cession (l. 213) :</span>{" "}
                   <strong>{formatEuro(input.totalCessions)}</strong>
                 </li>
                 <li>
-                  <span className="font-mono text-slate-500">L2 — Prix total d'acquisition :</span>{" "}
+                  <span className="font-mono text-slate-500">Prix total d'acquisition (l. 220) :</span>{" "}
                   <strong>{formatEuro(input.totalAchats)}</strong>
                 </li>
                 <li>
-                  <span className="font-mono text-slate-500">L3 — Frais :</span>{" "}
+                  <span className="font-mono text-slate-500">Frais de cession (l. 214) :</span>{" "}
                   <strong>{formatEuro(input.fraisCourtage)}</strong>
                 </li>
                 <li>
-                  <span className="font-mono text-slate-500">Plus-value imposable :</span>{" "}
+                  <span className="font-mono text-slate-500">{isBnc ? "Bénéfice estimé :" : "Plus-value imposable :"}</span>{" "}
                   <strong className="text-amber-700">{formatEuro(result.plusValueNette)}</strong>
                 </li>
               </ul>
@@ -288,8 +288,8 @@ export default function PdfPreview({
               </div>
               <p className="mt-2 text-[9.5pt] text-slate-700">
                 À déposer même <strong>sans vente</strong> dès lors qu'un compte
-                est ouvert sur une plateforme étrangère (Binance, Kraken,
-                Coinbase, Bitpanda, Crypto.com…).
+                est ouvert sur une plateforme étrangère (Kraken, Coinbase,
+                Bitpanda, Crypto.com…).
               </p>
               <p className="mt-1 text-[9pt] text-amber-700">
                 ⚠ Amende de 750 € par compte non déclaré (1 500 € si solde
@@ -298,12 +298,22 @@ export default function PdfPreview({
             </div>
           </div>
 
-          <div className="mt-3 rounded bg-slate-100 p-3 text-[9.5pt] text-slate-700">
-            <strong>Report sur la 2042-C :</strong> ligne <span className="font-mono">3AN</span>{" "}
-            (plus-values) ou <span className="font-mono">3BN</span> (moins-values,
-            non reportables sur les années suivantes). Cochez la case <span className="font-mono">3CN</span> si
-            vous optez pour le barème progressif.
-          </div>
+          {isBnc ? (
+            <div className="mt-3 rounded bg-slate-100 p-3 text-[9.5pt] text-slate-700">
+              <strong>Régime BNC (2042-C-PRO, revenus non professionnels) :</strong> bénéfice en
+              case <span className="font-mono">5JG</span> (déficit en <span className="font-mono">5JJ</span>)
+              après une déclaration 2035, et le même revenu en case <span className="font-mono">5HY</span>{" "}
+              pour les prélèvements sociaux. Cases du formulaire 2026 (revenus 2025) : à revérifier
+              chaque année, et à faire valider par un expert-comptable.
+            </div>
+          ) : (
+            <div className="mt-3 rounded bg-slate-100 p-3 text-[9.5pt] text-slate-700">
+              <strong>Report sur la 2042-C :</strong> ligne <span className="font-mono">3AN</span>{" "}
+              (plus-values) ou <span className="font-mono">3BN</span> (moins-values,
+              non reportables sur les années suivantes). Cochez la case <span className="font-mono">3CN</span> si
+              vous optez pour le barème progressif.
+            </div>
+          )}
         </section>
 
         {/* ===================== RECO WALTIO (affilié) ===================== */}
@@ -322,9 +332,8 @@ export default function PdfPreview({
               <p className="mt-1 text-[10pt] leading-relaxed text-slate-700">
                 Pour les portefeuilles {">"} 5 000 € ou multi-plateformes
                 (DeFi, staking, NFT inclus), Waltio génère automatiquement le
-                Cerfa 2086 + récap fiscal officiel. Connexion API à 50+
-                plateformes. <strong>Promo Cryptoreflex :</strong> -10 % sur
-                votre premier abonnement.
+                formulaire 2086 et la liste des comptes à déclarer au
+                3916-bis, à recopier sur impots.gouv.fr.
               </p>
               <div className="mt-2 inline-block rounded border border-amber-500 bg-amber-50 px-3 py-1 text-[9.5pt] font-mono text-amber-800">
                 cryptoreflex.fr/go/waltio

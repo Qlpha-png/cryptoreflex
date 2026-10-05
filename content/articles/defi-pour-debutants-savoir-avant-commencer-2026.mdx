@@ -7,9 +7,9 @@ excerpt: "La DeFi promet 5 à 15 % de rendement, l'accès global, sans banque ni
 category: "Pédagogie"
 date: "2026-04-26"
 publishedAt: "2026-04-26"
-updatedAt: "2026-04-26"
-lastUpdated: "2026-04-26"
-dateModified: "2026-04-26"
+updatedAt: "2026-10-05"
+lastUpdated: "2026-10-05"
+dateModified: "2026-10-05"
 readTime: "13 min"
 readingTime: 13
 author: "Kevin Voisin"
@@ -42,7 +42,7 @@ schema:
   audience: "Débutants francophones intéressés par la DeFi mais ne sachant pas par où commencer en 2026"
 ---
 
-<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="26 avril 2026" readingTime="13 min" methodology="/methodologie" />
+<AuthorBox author="Kevin Voisin" publishedAt="26 avril 2026" updatedAt="5 octobre 2026" readingTime="13 min" methodology="/methodologie" />
 
 La **DeFi** (« Decentralized Finance », ou **finance décentralisée** en français) est probablement le sujet crypto le plus excitant et le plus dangereux pour un débutant. D'un côté, des rendements de 5 à 15 % par an, l'accès à des produits financiers sans banque, des innovations magnifiques. De l'autre, **plus de 12 milliards de dollars perdus** en hacks, exploits et rug pulls depuis 2020.
 
@@ -58,7 +58,7 @@ Cet article vous donne le minimum vital à comprendre **avant** d'envoyer votre 
 - **Avantages** : rendements supérieurs au livret A, accès global, transparence totale.
 - **Risques majeurs** : bug de smart contract (ex : Curve juillet 2023), perte impermanente sur les pools, rug pulls (faux projets), hacks de bridge.
 - **Comment débuter** : commencer petit (50-200 €), uniquement sur protocoles audités et établis depuis > 3 ans, sur un L2 pour des frais raisonnables.
-- **Fiscalité française 2026** : rewards imposables, mais le moment et le régime exacts ne sont pas tranchés par une source officielle dédiée ; cession contre euro = PFU 31,4 %, activité habituelle/pro = BIC/BNC au cas par cas.
+- **Fiscalité française 2026** : rewards imposables, mais le moment et le régime exacts ne sont pas tranchés par une source officielle dédiée ; cession contre euro = PFU 31,4 %, activité menée comme un professionnel = BNC au cas par cas (BIC seulement si c'est votre métier).
 
 ---
 
@@ -284,25 +284,24 @@ C'est un sujet où la doctrine n'est **pas encore totalement stabilisée**, et o
 - **Swaps crypto → crypto** : neutres fiscalement (pas un événement imposable).
 - **Vente crypto → EUR** : Flat Tax 31,4 % sur la plus-value.
 - **Conversion stablecoin → stablecoin** : neutre.
-- **Déclaration des comptes étrangers** (3916-bis) : obligatoire pour Aave, Uniswap, Lido (oui, même les protocoles décentralisés sont assimilés à des comptes étrangers pour la doctrine fiscale).
+- **Déclaration des comptes étrangers** (3916-bis) : obligatoire pour chaque compte ouvert auprès d'une plateforme établie à l'étranger. Un wallet non custodial (MetaMask, Ledger) qui vous sert à utiliser Aave, Uniswap ou Lido n'est pas un compte tenu par une entreprise : il n'entre pas dans le 3916-bis (voir notre [guide 3916-bis](/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026)).
 
 ### Pour le particulier « actif »
 
-Si l'administration fiscale considère que votre activité DeFi est **habituelle et organisée** (grand nombre de transactions, gestion active, structure professionnelle), vous pouvez être requalifié :
+Si l'administration fiscale considère que votre activité DeFi dépasse la simple gestion de votre patrimoine (opérations nombreuses et sophistiquées, outils et techniques de trader professionnel), vous pouvez être requalifié :
 
-- **BIC** (Bénéfices Industriels et Commerciaux) : pour le trading actif.
-- **BNC** (Bénéfices Non Commerciaux) : pour le yield farming actif, mining, validateur staking.
+- **BNC** (Bénéfices Non Commerciaux) : depuis le 1er janvier 2023, pour le trading mené « dans des conditions analogues à celles d'un professionnel » sans que ce soit votre métier (article 92 du CGI). Le BNC peut aussi viser le mining, le yield farming actif ou le validateur staking.
+- **BIC** (Bénéfices Industriels et Commerciaux) : seulement si l'achat-revente de crypto est votre métier.
 
-Dans ces deux cas, le taux est le **barème progressif IR + cotisations sociales** (~ 17 à 45 %), beaucoup moins favorable que le PFU 31,4 %.
+En BNC non professionnels, le bénéfice est imposé au **barème progressif de l'impôt sur le revenu (0 à 45 % selon votre tranche) + 18,6 % de prélèvements sociaux**, sans seuil d'exonération de 305 €. Dès la tranche à 30 %, le taux marginal atteint 48,6 % (30 % + 18,6 %), contre 31,4 % pour le PFU. Mais il s'applique à un bénéfice, calculé après l'abattement de 34 % du micro-BNC ou après déduction des frais réels : l'écart réel dépend donc de votre cas. Si le trading est votre métier (BIC), des cotisations de travailleur indépendant remplacent les prélèvements sociaux : elles ne s'y ajoutent pas.
 
 [Guide fiscal complet 2086 + 3916-bis →](/blog/comment-declarer-crypto-impots-2026-guide-complet)
 
-<Callout type="info" title="Les seuils de requalification (indicatifs)">
-La frontière n'est pas chiffrée précisément, mais les jurisprudences récentes (2023-2025) suggèrent un risque de requalification si :
-- Plus de 200 transactions DeFi par an.
-- Activité représentant > 25 % de vos revenus totaux.
-- Utilisation de structures (SCI, holding) pour gérer l'activité.
-- Achat de matériel professionnel (serveur dédié, abonnements analytics).
+<Callout type="info" title="Pas de seuil chiffré : un faisceau d'indices">
+Aucun texte ne fixe de seuil (ni nombre de transactions, ni part de vos revenus). Pour le trading, le BOFiP (BOI-BNC-CHAMP-10-10-20-40, § 1080) réserve le régime BNC à des « cas d'espèce exceptionnels », appréciés selon un faisceau d'indices :
+- L'importance des moyens matériels et informatiques (serveur dédié, outils d'analyse).
+- Les techniques d'investissement et d'achat-revente utilisées.
+- Vos compétences et votre formation professionnelles.
 
 En cas de doute, consultez un expert-comptable spécialisé crypto.
 </Callout>
@@ -378,5 +377,5 @@ Cet article est éducatif et ne constitue ni un conseil en investissement, ni un
 - Le risque numéro un n'est pas la baisse du marché, c'est le bug de smart contract, la perte impermanente sur les pools, le rug pull et le hack de bridge : un capital peut disparaître irréversiblement.
 - Si vous ne pouvez pas expliquer en une phrase d'où vient un rendement, c'est qu'il n'y a pas de rendement réel : méfiez-vous des promesses élevées et des projets à équipe anonyme sans audit.
 - Commencez petit, sur un Layer 2 pour des frais raisonnables, et uniquement sur des protocoles audités et établis depuis longtemps ; protégez votre capital avec un hardware wallet.
-- Côté impôts, les récompenses de staking/farming sont taxables (le moment exact — perception ou cession — n'est pas tranché officiellement), les swaps crypto contre crypto sans soulte sont neutres (sursis, art. 150 VH bis), et vos comptes restent à déclarer ; une activité jugée habituelle peut basculer en BIC ou BNC.
+- Côté impôts, les récompenses de staking/farming sont taxables (le moment exact — perception ou cession — n'est pas tranché officiellement), les swaps crypto contre crypto sans soulte sont neutres (sursis, art. 150 VH bis), et vos comptes restent à déclarer ; une activité menée comme un professionnel peut basculer en BNC (en BIC seulement si c'est votre métier).
 </KeyTakeaways>

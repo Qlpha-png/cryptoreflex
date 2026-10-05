@@ -35,13 +35,13 @@ Formulaire Cerfa à joindre à la déclaration 2042-C qui détaille **chaque ces
 ## B
 
 ### Barème progressif
-Régime d'imposition optionnel (case 3CN de la 2042 C) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux pour TMI 0 % et 11 %, désavantageux dès TMI 30 %.
+Régime d'imposition optionnel (case 3CN de la 2042 C) où les plus-values crypto s'ajoutent au revenu global et sont soumises à la TMI du foyer (0 / 11 / 30 / 41 / 45 %) + 18,6 % de prélèvements sociaux. Avantageux à TMI 0 % ; à TMI 11 %, seulement si votre impôt ne bénéficie pas de la décote (sinon chaque euro de plus-value coûte environ 16 % d'impôt) ; désavantageux dès TMI 30 %.
 
 ### BIC (Bénéfices Industriels et Commerciaux)
-Régime applicable au trading **professionnel** de crypto-actifs (caractère habituel + activité organisée + revenus principaux). Imposition à la TMI + 18,6 % PS + cotisations TNS URSSAF (~22 %). Lourd mais permet le report des déficits 6 ans et la déduction des charges réelles.
+Régime applicable quand l'achat-revente de crypto-actifs est votre **profession** (article 34 du CGI). Bénéfice imposé au barème progressif (TMI), avec des cotisations de travailleur indépendant (URSSAF) qui remplacent les 18,6 % de prélèvements sociaux (elles ne s'y ajoutent pas). Permet la déduction des charges réelles et, en principe, le report des déficits sur 6 ans. Depuis le 1er janvier 2023, un trading réalisé dans des conditions analogues à celles d'un professionnel, sans que ce soit votre métier, relève des BNC (voir ce mot), et non plus des BIC.
 
 ### BNC (Bénéfices Non Commerciaux)
-Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Régime micro-BNC si CA < 83 600 €/an (seuil 2026-2028 ; abattement forfaitaire 34 %), ou déclaration contrôlée au-delà.
+Régime fiscal applicable au mining et, selon l'analyse retenue, à certains revenus de staking/lending/airdrops — leur qualification et leur moment d'imposition ne sont pas tranchés par une doctrine officielle dédiée. Depuis le 1er janvier 2023 (article 92 du CGI), il s'applique aussi aux gains d'achat-revente de crypto réalisés « dans des conditions analogues à celles d'un professionnel », sans que ce soit votre métier : un cas exceptionnel selon le BOFiP, apprécié selon un faisceau d'indices (moyens matériels et informatiques, techniques de trading, compétences professionnelles). Ces gains sont imposés au barème progressif + 18,6 % de prélèvements sociaux, sans seuil d'exonération de 305 €. Selon la lecture la plus probable (aucun texte ne le dit expressément), il n'y a pas de cotisations URSSAF en plus. Le micro-BNC s'applique de plein droit si les recettes ne dépassent pas 83 600 €/an (seuil 2026-2028 ; abattement forfaitaire de 34 %, 305 € minimum). Vous pouvez aussi opter pour la déclaration contrôlée (déclaration 2035, frais réels), seule à permettre de constater un déficit ; elle devient obligatoire si le seuil est dépassé deux années de suite (voir « Régime micro-BNC »).
 
 ### BOFIP (Bulletin Officiel des Finances Publiques)
 Ensemble des commentaires administratifs publiés par la DGFiP qui interprètent les textes fiscaux. La série BOI-RPPM-PVBMC-30 commente la fiscalité crypto des particuliers. **Opposable à l'administration** : si vous avez suivi le BOFIP, vous êtes protégé d'un redressement même si la jurisprudence évolue.
@@ -117,7 +117,7 @@ Prêt de crypto-actifs sur une plateforme (centralisée ou DeFi) en échange d'i
 Règlement européen (UE 2023/1114) qui encadre les Crypto-Asset Service Providers (CASP). En France, la période transitoire a pris fin le 1er juillet 2026 : depuis, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut fournir des services sur crypto-actifs à des résidents français. Le régime PSAN a pris fin.
 
 ### Mining
-Activité de validation des transactions blockchain en échange de tokens. Considéré fiscalement comme **BNC professionnel** dès qu'il est habituel (achat de matériel ASIC, électricité dédiée). Charges déductibles (matériel, électricité, internet).
+Activité de validation des transactions blockchain en échange de tokens. Le mining relève des **BNC** (article 92 du CGI). Il est professionnel s'il est exercé à titre habituel et constant, dans un but lucratif (conditions cumulatives) ; sinon, il relève des BNC non professionnels. À faire valider par un expert-comptable. En déclaration contrôlée, charges déductibles (matériel, électricité, internet).
 
 ### Moins-value (MV)
 Perte réalisée à la cession d'un crypto-actif. Compensable avec les PV de la **même année** uniquement (pas de report sur années suivantes pour les particuliers).
@@ -155,10 +155,10 @@ Mécanisme du calcul IR : le revenu imposable est divisé par le nombre de parts
 Indicateur calculé par la DGFiP qui inclut **toutes** vos ressources, y compris les PV crypto. Sert de référence pour de nombreux droits et exonérations (CMU-C, taxe d'habitation résiduelle, bourses étudiantes…). Une PV crypto importante peut vous faire perdre des droits.
 
 ### Régime micro-BNC
-Régime simplifié pour les BNC : si CA < 83 600 € (seuil 2026-2028), abattement forfaitaire 34 %, déclaration en 2042-C-PRO (case 5KU pour une activité non professionnelle, 5HQ si elle est professionnelle). Adapté pour les petits revenus de staking/lending.
+Régime simplifié pour les BNC : si les recettes ne dépassent pas 83 600 € (seuil 2026-2028), abattement forfaitaire 34 % (305 € minimum), déclaration en 2042-C-PRO (case 5KU pour une activité non professionnelle, 5HQ si elle est professionnelle). Adapté pour les petits revenus de staking/lending. Pour des ventes de crypto (trading relevant des BNC), la notion de « recettes » (prix de vente ou gains ?) n'est pas définie officiellement : si l'on retient les prix de vente, 66 % des ventes sont imposés, même en cas de perte. Vous pouvez renoncer au micro-BNC en optant pour la déclaration contrôlée (déclaration 2035, frais réels), seule à permettre de constater un déficit. À faire valider par un expert-comptable.
 
 ### Report (de moins-value)
-**Pas de report pour les particuliers** sur les MV crypto (régime 150 VH bis). En revanche, en BIC pro : report sur 6 ans. En régime classique de PV mobilières : report sur 10 ans.
+**Pas de report pour les particuliers** sur les MV crypto (régime 150 VH bis). En BNC (trading dans des conditions analogues à celles d'un professionnel, en déclaration contrôlée) : si l'activité est classée en BNC non professionnels (le classement le plus probable, non tranché pour la crypto), un déficit s'impute sur les bénéfices d'activités semblables de la même année ou des 6 années suivantes, jamais sur le revenu global. En BIC pro : report sur 6 ans. En régime classique de PV mobilières : report sur 10 ans.
 
 ## S
 
@@ -182,7 +182,7 @@ Pour les particuliers : **non applicable** aux opérations crypto (jurisprudence
 ## U
 
 ### URSSAF
-Organisme collecteur des cotisations sociales en France. Recouvre les cotisations TNS (~22 %) en cas de basculement BIC pro (trading professionnel, mining habituel).
+Organisme collecteur des cotisations sociales en France. Recouvre les cotisations de travailleur indépendant, dues notamment quand l'achat-revente de crypto est votre profession (BIC) : elles remplacent les 18,6 % de prélèvements sociaux, elles ne s'y ajoutent pas. Un trading qui relève des BNC (conditions analogues à celles d'un professionnel, sans que ce soit votre métier) ne supporte, selon la lecture la plus probable, que les 18,6 % de prélèvements sociaux, sans cotisations URSSAF.
 
 ## V
 
@@ -193,7 +193,7 @@ Voir "Portefeuille global". À calculer à la **date de chaque cession** — pas
 
 ## Disclaimer
 
-Ce glossaire a été mis à jour le 2 octobre 2026. Les définitions s'appuient sur le CGI, le BOFIP et la pratique des professionnels du chiffre. **Pour toute situation patrimoniale complexe ou doute spécifique, consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur l'application de ces définitions à un cas individuel.
+Ce glossaire a été mis à jour le 5 octobre 2026. Les définitions s'appuient sur le CGI, le BOFIP et la pratique des professionnels du chiffre. **Pour toute situation patrimoniale complexe ou doute spécifique, consultez un expert-comptable agréé**. Cryptoreflex décline toute responsabilité sur l'application de ces définitions à un cas individuel.
 
 ---
 

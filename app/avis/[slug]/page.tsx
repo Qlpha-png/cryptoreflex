@@ -62,7 +62,7 @@ export function generateMetadata({ params }: Props): Metadata {
   // marque en suffixe auto-ajouté par root layout. Title <60c, description <155c.
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec le
   // template root `%s | Cryptoreflex` qui doublait la marque.
-  const title = `${p.name} avis 2026 — test complet & indépendant`;
+  const title = `${p.name} avis 2026 — analyse complète et indépendante`;
   const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${fmtNb(p.scoring.global)}/5), selon notre méthodologie publique.`;
   return {
     title,
@@ -379,7 +379,7 @@ export default function ReviewPage({ params }: Props) {
             <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">
               {p.name} avis 2026
               <span className="block mt-1 text-2xl sm:text-3xl text-fg/70 font-bold">
-                Test complet par Cryptoreflex
+                Analyse indépendante Cryptoreflex
               </span>
             </h1>
             <p className="mt-3 text-lg text-white/70">{p.tagline}</p>

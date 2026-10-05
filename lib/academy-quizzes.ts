@@ -174,16 +174,16 @@ const QUIZ_AVANCE: QuizQuestion[] = [
   {
     id: "adv-q1-defi-fisca",
     question:
-      "Vous faites du yield farming régulier sur Aave (lending) et Uniswap (LP). Quelle qualification fiscale est la plus probable en France ?",
+      "Vous faites du yield farming régulier sur Aave (lending) et Uniswap (LP). Que peut-on dire de la qualification fiscale de vos gains en France ?",
     choices: [
-      "Plus-values mobilières (PFU 31,4%).",
-      "BNC (bénéfices non commerciaux) en activité non professionnelle.",
+      "Plus-values sur valeurs mobilières (comme des actions), case 2OP.",
+      "Non tranché officiellement : revenu (BNC) ou plus-value à la cession, selon le profil.",
       "Salaire imposé en traitements et salaires.",
       "Aucune — la DeFi est défiscalisée.",
     ],
     correctIndex: 1,
     explanation:
-      "Pour des opérations DeFi régulières et organisées sans achat-revente d'actifs, le BNC (non pro) est la qualification la plus souvent retenue (aucune doctrine BOFiP dédiée ne tranche le sujet). Si l'activité devient quasi-professionnelle, le BIC peut être imposé. La DeFi N'EST PAS défiscalisée.",
+      "Aucune doctrine BOFiP ne traite du yield farming : selon le profil, les gains sont imposés comme un revenu (BNC) ou à la cession (plus-value, art. 150 VH bis du CGI). Les crypto-actifs ne sont pas des valeurs mobilières : la case 2OP ne les concerne pas. Si l'activité devient votre métier, le régime peut changer : faites-le valider par un expert-comptable. La DeFi N'EST PAS défiscalisée.",
   },
   {
     id: "adv-q2-3916",
@@ -365,13 +365,13 @@ const QUIZ_FISCALITE: QuizQuestion[] = [
       "Quand l'option pour le barème progressif (case 3CN) est-elle plus avantageuse que le PFU sur vos plus-values crypto ?",
     choices: [
       "Toujours.",
-      "Quand votre tranche marginale d'imposition (TMI) est faible : 0 % ou 11 %.",
+      "À TMI 0 % ; à TMI 11 %, seulement si votre impôt ne bénéficie pas de la décote.",
       "Quand vous êtes dans la tranche à 45 %.",
       "Jamais, le PFU est toujours meilleur.",
     ],
     correctIndex: 1,
     explanation:
-      "Au barème, votre TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total ; à TMI 11 % : 29,6 % — tous deux sous les 31,4 % du PFU. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. L'option (case 3CN de la déclaration 2042 C) porte sur toutes vos plus-values crypto de l'année, sans toucher à vos dividendes ni à vos intérêts.",
+      "Au barème, votre TMI remplace les 12,8 % du PFU (les 18,6 % de prélèvements sociaux restent dus). À TMI 0 % : 18,6 % au total, sous les 31,4 % du PFU. À TMI 11 % : 29,6 % en principe, mais si votre impôt bénéficie de la décote, chaque euro ajouté coûte environ 16 % d'impôt (≈ 34,6 % au total) : le PFU redevient meilleur. Au-delà (30 %, 41 %, 45 %), le PFU reste plus avantageux. L'option (case 3CN de la déclaration 2042 C) porte sur toutes vos plus-values crypto de l'année, sans toucher à vos dividendes ni à vos intérêts.",
   },
   {
     id: "fis-q5-defi-bic-bnc",
@@ -718,13 +718,13 @@ const QUIZ_DEFI: QuizQuestion[] = [
       "Vous faites du yield farming régulier en DeFi en France. Comment c'est généralement traité fiscalement ?",
     choices: [
       "Totalement défiscalisé tant que vous ne sortez pas en euros.",
-      "Revenus généralement imposables (BNC, voire BIC si l'activité est habituelle/organisée), ET la revente ultérieure des jetons reçus génère une plus-value distincte.",
+      "Revenus généralement imposables (le plus souvent en BNC), ET la revente ultérieure des jetons reçus génère une plus-value distincte.",
       "Seule la plus-value finale compte ; les revenus reçus ne sont jamais imposables.",
       "Imposé uniquement au-delà d'un million d'euros de gains.",
     ],
     correctIndex: 1,
     explanation:
-      "La DeFi n'est pas hors impôt : les revenus récurrents sont, selon l'interprétation répandue (aucune doctrine BOFiP dédiée), imposés (BNC, ou BIC si habituel/organisé), et revendre plus tard les jetons reçus crée une plus-value distincte. C'est un cumul de deux faits générateurs, pas une zone franche.",
+      "La DeFi n'est pas hors impôt : les revenus récurrents sont, selon l'interprétation répandue (aucune doctrine BOFiP dédiée), imposés (le plus souvent en BNC), et revendre plus tard les jetons reçus crée une plus-value distincte. C'est un cumul de deux faits générateurs, pas une zone franche.",
   },
   {
     id: "defi-q5-faux",

@@ -98,7 +98,7 @@ export default function ProfitLossCalculatorPage() {
       {
         question: "Comment réduire légalement l'impôt sur ma plus-value ?",
         answer:
-          "Trois leviers légaux : (1) le seuil de 305 € : si le total de vos ventes de l'année, nettes de frais, ne dépasse pas 305 €, aucun impôt n'est dû ; (2) les moins-values de l'année compensent les plus-values de la même année, sans report sur les années suivantes ; attention, avec la méthode globale, une vente ne crée une moins-value que si tout votre portefeuille vaut moins que ce qu'il vous a coûté ; (3) l'option pour le barème progressif (case 3CN), intéressante si votre taux marginal d'imposition est de 0 ou 11 %. Jamais de montage agressif ni de compte étranger non déclaré : amende et redressement à la clé.",
+          "Trois leviers légaux : (1) le seuil de 305 € : si le total de vos ventes de l'année, nettes de frais, ne dépasse pas 305 €, aucun impôt n'est dû ; (2) les moins-values de l'année compensent les plus-values de la même année, sans report sur les années suivantes ; attention, avec la méthode globale, une vente ne crée une moins-value que si tout votre portefeuille vaut moins que ce qu'il vous a coûté ; (3) l'option pour le barème progressif (case 3CN), intéressante à un taux marginal d'imposition de 0 %, et à 11 % seulement si votre impôt ne bénéficie pas de la décote. Jamais de montage agressif ni de compte étranger non déclaré : amende et redressement à la clé.",
       },
     ]),
   ]);

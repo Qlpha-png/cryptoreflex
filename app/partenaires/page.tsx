@@ -24,12 +24,12 @@ export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
   title: "Partenaires : wallets et fiscalité crypto",
   description:
-    "Notre sélection curée de partenaires crypto : Ledger, Trezor, Waltio. Avis indépendants après 4 à 8 ans d'usage réel, transparence totale sur les commissions affiliées.",
+    "Notre sélection de partenaires crypto : Ledger, Trezor, Waltio. Analyses fondées sur les informations publiées par chaque marque, transparence totale sur les commissions affiliées.",
   alternates: withHreflang(`${BRAND.url}/partenaires`),
   openGraph: {
     title: "Partenaires Cryptoreflex — Hardware wallets & Fiscalité crypto FR",
     description:
-      "Sélection curée : Ledger, Trezor, Waltio. Avis indépendants après usage réel, commissions transparentes.",
+      "Sélection : Ledger, Trezor, Waltio. Analyses sur sources publiques, commissions transparentes.",
     url: `${BRAND.url}/partenaires`,
     type: "website",
     siteName: BRAND.name,
@@ -77,12 +77,13 @@ export default function PartnersPage() {
             className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-fg tracking-[-0.025em] leading-[1.1]"
           >
             Les outils qu&apos;on{" "}
-            <span className="gradient-text">utilise vraiment</span>.
+            <span className="gradient-text">recommande</span>.
           </h1>
           <p className="mt-6 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
-            Une curation lente. On teste, on garde, on retire. Ces marques sont
-            ici parce qu&apos;elles tiennent dans la durée — testées en
-            conditions réelles avant d&apos;être recommandées.
+            Une sélection courte. On analyse les caractéristiques, les prix et
+            les conditions publiés par chaque marque, et on retire celles qui
+            ne sont plus recommandables. Nos avis reposent sur ces sources
+            publiques, pas sur une utilisation personnelle des produits.
           </p>
         </div>
       </section>
@@ -104,8 +105,8 @@ export default function PartnersPage() {
               <p className="text-sm text-fg/75 leading-relaxed">
                 Cette page contient des liens affiliés (loi 9 juin 2023). Si
                 une marque cesse d&apos;être recommandable, elle quitte
-                immédiatement la sélection — la rigueur du test prime sur la
-                relation commerciale.
+                immédiatement la sélection : la rigueur de l&apos;analyse prime
+                sur la relation commerciale.
               </p>
             </div>
           </div>
@@ -144,8 +145,8 @@ export default function PartnersPage() {
           <ul className="mt-6 space-y-3">
             {[
               {
-                title: "Test terrain minimum 6 mois",
-                desc: "Pas de review après 48h d'unboxing. On utilise le produit en conditions réelles.",
+                title: "Analyse des informations officielles",
+                desc: "On étudie les caractéristiques, les prix et les conditions publiés par la marque. Les liens de parrainage sont déclarés comme tels.",
               },
               {
                 title: "Audit indépendant obligatoire",
@@ -161,7 +162,7 @@ export default function PartnersPage() {
               },
               {
                 title: "Best-in-class dans leur catégorie",
-                desc: "Chaque marque est leader sur son segment, validée par des millions d'utilisateurs et nos 4 à 8 ans d'usage personnel.",
+                desc: "Chaque marque est une référence connue sur son segment : portefeuilles matériels pour Ledger et Trezor, fiscalité crypto française pour Waltio.",
               },
             ].map((c) => (
               <li key={c.title} className="flex items-start gap-3">
@@ -177,7 +178,7 @@ export default function PartnersPage() {
             ))}
           </ul>
           <p className="mt-6 text-xs text-muted italic">
-            Si vous hésitez, n&apos;achète pas. Reviens quand vous saurez pourquoi.
+            Si vous hésitez, n&apos;achetez pas. Revenez quand vous saurez pourquoi.
           </p>
         </div>
       </section>
@@ -263,20 +264,13 @@ function PartnerShowcase({
             {partner.shortDescription}
           </p>
 
-          {/* Why we use it */}
-          <div className="mb-5 rounded-xl bg-elevated/40 border border-border p-4">
-            <p className="text-[10px] uppercase tracking-wider text-primary-soft font-semibold mb-1.5">
-              Pourquoi on l&apos;utilise
-            </p>
-            <p className="text-sm text-fg/80 leading-relaxed italic">
-              &ldquo;{partner.whyWeUseIt}&rdquo;
-            </p>
-          </div>
+          {/* Bloc « Pourquoi on l'utilise » (partner.whyWeUseIt) retiré le
+              2026-10-05 : il affirmait un usage personnel jamais réalisé. */}
 
           {/* Pros */}
           <div className="mb-4">
             <p className="text-[10px] uppercase tracking-wider text-success font-semibold mb-2">
-              Ce qu&apos;on aime
+              Points forts
             </p>
             <ul className="space-y-1.5">
               {partner.pros.slice(0, 3).map((p) => (

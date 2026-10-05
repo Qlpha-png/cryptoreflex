@@ -146,15 +146,6 @@ export const TOOLS: Tool[] = [
     status: "live",
     cat: "portfolio",
   },
-  {
-    title: "Comparateur personnalisé",
-    desc: "Compare jusqu'à 4 plateformes crypto sur vos critères (frais, sécurité, MiCA, support FR).",
-    href: "/outils/comparateur-personnalise",
-    Icon: GitCompare,
-    tier: "free",
-    status: "live",
-    cat: "portfolio",
-  },
 
   // ─── PÉDAGOGIE ───
   {

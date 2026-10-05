@@ -1,597 +1,225 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Trophy,
-  Sparkles,
-  TrendingUp,
-  Zap,
-  ShieldCheck,
-  Star,
-} from "lucide-react";
+import { ArrowRight, ChevronDown, ShieldAlert, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 
-import {
-  getAllPlatforms, isAvailableFr,
-  getAvailablePlatformCount,
-  getPlatformById,
-  type Platform,
-  hasNoIncident,
-} from "@/lib/platforms";
-import {
-  getPublishableComparisons,
-  type ComparisonSpec,
-} from "@/lib/programmatic";
-import { BRAND } from "@/lib/brand";
+import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
+import { getPublishableComparisons, type ComparisonSpec } from "@/lib/programmatic";
+import { buildRows } from "@/lib/comparateur";
+import { BRAND, STATS } from "@/lib/brand";
 import { affiliationNotice, getAffiliationKind } from "@/lib/partnerships";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
-import NextStepsGuide from "@/components/NextStepsGuide";
-import AcademyCrossLink from "@/components/AcademyCrossLink";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import PlatformLogo from "@/components/PlatformLogo";
+import Comparateur from "@/components/comparateur/Comparateur";
+import { breadcrumbSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { fitDescription } from "@/lib/seo-text";
-import { fmtFr } from "@/lib/format-fr";
 
 /**
- * /comparatif — Hub des duels plateformes (P0-5 audit-back-live-final).
- *
- * Server Component. Liste les 36+ comparatifs publiables, regroupés par
- * "bucket" (exchange-vs-exchange, broker-vs-broker, etc.) — c'est la
- * structure naturelle pour qu'un visiteur comparant deux exchanges trouve
- * sa paire en un coup d'œil.
- *
- * Tri intra-bucket : par priority décroissante (volume mensuel / difficulté).
- *
- * SEO : page indexable, canonical, breadcrumb, Schema.org CollectionPage +
- * ItemList des duels.
+ * /comparatif — refonte du 05/10/2026 (GO de Kev : « beau, fluide, simple, qu'un enfant de 8 ans puisse tout faire »).
+ * Avant : 0 tableau, 43 tuiles de duels dont 12 avec Binance, 14 écrans sur téléphone, portefeuilles mélangés aux
+ * plateformes, pastilles « Audit récent » et « 0 incident » sans source. Maintenant : deux questions et une liste
+ * classée par le coût réel d'un achat (lib/comparateur.ts), un panier « Comparer », le reste replié.
  */
 
 export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-// AUDIT 2026-05-03 — fix doublon "Cryptoreflex | Cryptoreflex" :
-// le layout root applique template '%s | Cryptoreflex'. Si le TITLE
-// inclut deja '— Cryptoreflex', le template ajoute encore '| Cryptoreflex'
-// = doublon visible dans onglet et SERP. Fix : retirer le suffix manuel.
 const TITLE = "Comparatif plateformes crypto MiCA 2026";
-const DESCRIPTION =
-  "Comparatifs binaires des plateformes crypto en France : Coinbase vs Kraken, Ledger vs Trezor, Bitpanda vs Trade Republic, Coinbase vs Bitpanda et 30+ autres duels. Frais, sécurité, MiCA, verdict.";
+const DESCRIPTION = `Les ${STATS.platforms} plateformes crypto autorisées en France, classées par le vrai coût d'un achat de 100 € ou 1 000 € (après virement ou par carte). Frais relevés sur les grilles officielles, agréments vérifiés.`;
 
 export const metadata: Metadata = {
   title: TITLE,
   description: fitDescription(DESCRIPTION),
   alternates: withHreflang(PAGE_URL),
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: PAGE_URL,
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-  keywords: [
-    "comparatif plateforme crypto",
-    "Coinbase vs Kraken",
-    "Ledger vs Trezor",
-    "meilleur exchange france",
-    "comparatif crypto MiCA",
-  ],
+  openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, type: "website" },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
+  keywords: ["comparatif plateforme crypto", "meilleure plateforme crypto france", "frais plateforme crypto", "comparatif crypto MiCA"],
 };
 
-/* -------------------------------------------------------------------------- */
-/*  Buckets — labels & ordre d'affichage                                       */
-/* -------------------------------------------------------------------------- */
-
-const BUCKET_ORDER: Array<ComparisonSpec["bucket"]> = [
-  "exchange-vs-exchange",
-  "broker-vs-broker",
-  "exchange-vs-broker",
-  "wallet-vs-wallet",
-  "fr-vs-international",
+const FAQ = [
+  {
+    question: "Comment Cryptoreflex classe les plateformes ?",
+    answer:
+      "Par le coût réel d'un achat de Bitcoin de 100 € ou de 1 000 € par le chemin le plus simple de l'appli, après un virement ou par carte. Les frais sont relevés sur la grille tarifaire officielle de chaque plateforme (source et date affichées). Quand la plateforme publie un maximum pour sa marge, on compte ce maximum (« au plus »). Quand elle ajoute une marge sans la chiffrer, son coût n'est qu'un minimum et elle passe après celles dont le coût est publié ; celles qui ne publient pas leurs frais passent en dernier.",
+  },
+  {
+    question: "Pourquoi Binance n'est-elle pas dans la liste ?",
+    answer:
+      "Binance a cessé ses services sur crypto-actifs en France le 1er juillet 2026, à la fin de la période transitoire MiCA, et ne figure pas au registre MiCA de l'ESMA. Depuis cette date, seule une plateforme agréée MiCA avec un accès à la France peut servir les résidents français.",
+  },
+  {
+    question: "Qu'est-ce que l'agrément MiCA ?",
+    answer:
+      "MiCA est le règlement européen sur les crypto-actifs. Une plateforme qui sert des clients en France doit être agréée comme prestataire (CASP), par l'AMF ou par l'autorité d'un autre pays de l'Union avec un passeport vers la France. Nous vérifions chaque statut sur le registre de l'ESMA et la liste blanche de l'AMF.",
+  },
+  {
+    question: "Cryptoreflex est-il payé par les plateformes ?",
+    answer:
+      "Certains liens sont rémunérés (parrainage ou affiliation) : c'est indiqué à côté du lien et détaillé sur la page Transparence. Le classement n'en tient pas compte : il suit uniquement le coût et les critères publics.",
+  },
 ];
 
-const BUCKET_LABELS: Record<ComparisonSpec["bucket"], string> = {
-  "exchange-vs-exchange": "Exchange vs Exchange",
-  "broker-vs-broker": "Broker vs Broker",
-  "exchange-vs-broker": "Exchange vs Broker",
-  "wallet-vs-wallet": "Hardware wallets",
-  "fr-vs-international": "Acteur FR vs International",
-};
-
-const BUCKET_DESCRIPTIONS: Record<ComparisonSpec["bucket"], string> = {
-  "exchange-vs-exchange":
-    "Duels entre exchanges purs : frais spot, profondeur de carnet, catalogue.",
-  "broker-vs-broker":
-    "Duels entre brokers / banques crypto : UX simplifiée, achat instantané, support FR.",
-  "exchange-vs-broker":
-    "Quand on hésite entre un exchange (frais bas, plus technique) et un broker (UX simple, plus cher).",
-  "wallet-vs-wallet":
-    "Duels entre hardware wallets pour la conservation cold storage à long terme.",
-  "fr-vs-international":
-    "Acteur français (Coinhouse, Bitstack…) vs international (Coinbase, Kraken, Bitpanda…).",
-};
-
-/* -------------------------------------------------------------------------- */
-/*  Page                                                                      */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/*  Profils — segmentation visiteur (issue #17 backlog : intent commercial)   */
-/* -------------------------------------------------------------------------- */
-/**
- * Mapping plateforme -> profils recommandés (heuristique basée sur scoring) :
- *  - debutant  : UX >= 4.5 (prioritise simplicité)
- *  - avance    : fees >= 4.4 (prioritise frais bas)
- *  - intermediaire : tout le reste avec score global >= 4.0 (équilibre).
- * Une plateforme peut appartenir à plusieurs profils.
- */
-function profilesFor(p: Platform): Array<"debutant" | "intermediaire" | "avance"> {
-  const out: Array<"debutant" | "intermediaire" | "avance"> = [];
-  if (p.scoring.ux >= 4.5) out.push("debutant");
-  if (p.scoring.fees >= 4.4) out.push("avance");
-  if (p.scoring.global >= 4.0) out.push("intermediaire");
-  return out.length ? out : ["intermediaire"];
+function duelTitle(c: ComparisonSpec): string {
+  return `${getPlatformById(c.a)?.name ?? c.a} vs ${getPlatformById(c.b)?.name ?? c.b}`;
 }
 
-export default function ComparatifHubPage() {
-  const all = getPublishableComparisons();
-  const topPlatforms = getAllPlatforms().filter(isAvailableFr).slice(0, 8);
+export default function ComparatifPage() {
+  const all = getAllPlatforms();
+  /* mention affichée seulement quand le lien rapporte quelque chose (sinon : bruit inutile sous chaque carte) */
+  const rows = buildRows(all, (id) => (getAffiliationKind(id) ? affiliationNotice(id) : ""));
+  const wallets = all.filter((p) => p.category === "wallet");
+  const blocked: Platform[] = all.filter((p) => p.category !== "wallet" && !isAvailableFr(p));
+  const duels = getPublishableComparisons().filter((c) => {
+    const a = getPlatformById(c.a), b = getPlatformById(c.b);
+    return !!a && !!b && isAvailableFr(a) && isAvailableFr(b);
+  }).sort((x, y) => y.priority - x.priority);
 
-  // Regroupement par bucket.
-  const byBucket = new Map<ComparisonSpec["bucket"], ComparisonSpec[]>();
-  for (const c of all) {
-    const arr = byBucket.get(c.bucket) ?? [];
-    arr.push(c);
-    byBucket.set(c.bucket, arr);
-  }
-  // Tri intra-bucket par priority (volume / difficulté).
-  for (const arr of byBucket.values()) {
-    arr.sort((a, b) => b.priority - a.priority);
-  }
-
-  // Top 6 globaux pour la "rangée mise en avant". Audit 2026-10-02 : on ne
-  // met en avant que les duels entre plateformes autorisées en France (les
-  // duels avec Binance, Bitget… restent listés par bucket, avec avertissement).
-  const top6 = [...all]
-    .filter((c) => {
-      const pa = getPlatformById(c.a);
-      const pb = getPlatformById(c.b);
-      return !!pa && !!pb && isAvailableFr(pa) && isAvailableFr(pb);
-    })
-    .sort((a, b) => b.priority - a.priority)
-    .slice(0, 6);
-
-  // Schema.org : CollectionPage + ItemList + Breadcrumb.
-  const itemListSchema: JsonLd = {
+  const itemList: JsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "@id": `${PAGE_URL}#collection`,
-    url: PAGE_URL,
-    name: TITLE,
-    description: DESCRIPTION,
-    inLanguage: "fr-FR",
-    isPartOf: { "@id": `${BRAND.url}/#website` },
-    mainEntity: {
-      "@type": "ItemList",
-      numberOfItems: all.length,
-      itemListOrder: "https://schema.org/ItemListOrderDescending",
-      itemListElement: all.map((c, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        url: `${BRAND.url}/comparatif/${c.slug}`,
-        name: comparisonTitle(c),
-      })),
-    },
+    "@type": "ItemList",
+    "@id": `${PAGE_URL}#plateformes`,
+    name: `Plateformes crypto autorisées en France`,
+    numberOfItems: rows.length,
+    itemListElement: rows.map((r, i) => ({ "@type": "ListItem", position: i + 1, url: `${BRAND.url}/avis/${r.id}`, name: r.name })),
   };
-
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Comparatifs", url: PAGE_PATH },
+  const schema = graphSchema([
+    itemList,
+    breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Comparatif", url: PAGE_PATH }]),
+    faqSchema(FAQ),
   ]);
-
-  // BATCH 25 SEO P1 — FAQPage Schema sur /comparatif. Éligibilité People
-  // Also Ask + +15% impressions estimé (audit SEO BATCH 20). Q/R alignées
-  // avec la pillar page comparateur de plateformes crypto FR.
-  const faqs = faqSchema([
-    {
-      question:
-        "Comment Cryptoreflex compare les plateformes crypto en France ?",
-      answer:
-        "Notre méthodologie publique évalue chaque plateforme sur 6 critères pondérés : frais réels (achat/vente/retrait), sécurité (custody, audits, historique de hack), conformité MiCA (agrément CASP), qualité du support FR, ergonomie de la plateforme et catalogue d'actifs disponibles. Score global sur 5 étoiles, détails par critère sur chaque fiche /avis.",
-    },
-    {
-      question: "Qu'est-ce que MiCA et pourquoi c'est important ?",
-      answer:
-        "MiCA (Markets in Crypto-Assets) est le règlement européen, applicable depuis juin 2024 (stablecoins) et décembre 2024 (prestataires), qui harmonise la régulation des plateformes crypto à l'échelle UE. Toute plateforme servant les résidents UE doit obtenir un agrément CASP (Crypto-Asset Service Provider). En France, la période transitoire a pris fin le 1er juillet 2026 : depuis, seul un prestataire agréé MiCA peut servir les résidents français, et l'ancien régime PSAN ne vaut plus autorisation. Une plateforme MiCA-compliant offre des garanties sur la séparation des fonds, l'audit des réserves et la transparence des frais.",
-    },
-    {
-      question: "Combien de plateformes sont comparées sur Cryptoreflex ?",
-      answer: `À ce jour, ${getAvailablePlatformCount()} plateformes crypto (exchanges et brokers) disponibles en France sont auditées et comparées sur Cryptoreflex : exchanges centralisés (Coinbase, Kraken, Bitpanda…), brokers (eToro, Trade Republic) et services spécialisés (Bitstack, Feel Mining), complétés par des hardware wallets (Ledger, Trezor). Liste complète sur /avis.`,
-    },
-    {
-      question: "Cryptoreflex perçoit-il des commissions sur les comparatifs ?",
-      answer:
-        "Oui, Cryptoreflex est rémunéré par affiliation lorsqu'un visiteur s'inscrit sur une plateforme via nos liens (signalés par la mention « Publicité » et l'attribut rel=\"sponsored\"). Ces partenariats financent la gratuité du contenu et N'INFLUENCENT PAS le classement : la méthodologie est publique et les rémunérations détaillées sur /transparence.",
-    },
-    {
-      question: "Comment choisir entre Coinbase et Kraken ?",
-      answer:
-        "Coinbase = pour les débutants en France (interface simple, support FR, agréée MiCA par la CSSF luxembourgeoise). Kraken = sécurité maximale (audits proof-of-reserves trimestriels, aucun vol de fonds clients par piratage à notre connaissance), agréée MiCA par la Banque centrale d'Irlande, mais interface moins ergonomique. Binance n'est plus une option : elle a cessé ses services sur crypto-actifs en France le 1er juillet 2026. Comparatif détaillé sur /comparatif/coinbase-vs-kraken.",
-    },
-  ]);
-
-  const schema = graphSchema([itemListSchema, breadcrumbs, faqs]);
 
   return (
     <>
       <StructuredData data={schema} id="comparatif-hub" />
-
-      <section className="py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-12">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
+            <Link href="/" className="hover:text-fg">Accueil</Link>
             <span className="mx-2">/</span>
-            <span className="text-fg/80">Comparatifs</span>
+            <span className="text-fg/80">Comparatif</span>
           </nav>
 
-          {/* Header */}
-          <header className="mt-6 max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
-              <Sparkles className="h-3.5 w-3.5" />
-              {all.length} duels disponibles
+          <header className="mt-5 max-w-3xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> Comparatif des plateformes crypto
             </span>
-            <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Comparatifs <span className="gradient-text">plateformes crypto</span>
+            <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-5xl">
+              Où acheter des cryptos <span className="gradient-text">en France ?</span>
             </h1>
-            <p className="mt-3 text-lg text-fg/70">
-              Vous hésitez entre deux plateformes ? Choisissez votre duel. Chaque
-              comparatif détaille frais, sécurité, support FR, conformité MiCA
-              et bonus, avec un verdict tranché à la fin.
+            <p className="mt-3 text-base text-fg/75 sm:text-lg">
+              Les {rows.length} plateformes autorisées, rangées par le prix que vous payez vraiment. Répondez à deux questions,
+              la liste se range toute seule.
             </p>
           </header>
 
-          {/* Quiz CTA pré-fold (issue #17 — intent commercial fort) */}
-          <Link
-            href="/quiz/trouve-ton-exchange"
-            className="mt-8 group flex items-center justify-between gap-4 rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-primary-glow/10 p-5 hover:border-primary/70 transition-colors"
-          >
-            <div className="flex items-center gap-4 min-w-0">
-              <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/20 border border-primary/40 text-primary-glow">
-                <Zap className="h-5 w-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-base sm:text-lg font-bold text-fg">
-                  Vous hésitez entre 3 plateformes ? Faites le questionnaire en 30 s
-                </div>
-                <div className="mt-0.5 text-xs sm:text-sm text-fg/70">
-                  6 questions · résultat personnalisé · aucune inscription requise
-                </div>
-              </div>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-xl bg-primary/20 px-3 py-2 text-sm font-semibold text-primary-glow group-hover:bg-primary/30 transition-colors shrink-0">
-              Démarrer
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </div>
-          </Link>
+          <div className="mt-6">
+            <Comparateur rows={rows} duelSlugs={duels.map((d) => d.slug)} />
+          </div>
 
-          {/* Top plateformes — cards avec badges MiCA (issue #19) */}
-          <section className="mt-12">
-            <header className="flex items-center gap-3 mb-6">
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green/10 border border-accent-green/30 text-accent-green">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">
-                  Top plateformes agréées MiCA
-                </h2>
-                <p className="text-sm text-fg/70 mt-0.5">
-                  Filtrez par profil pour voir celles qui vous correspondent.
-                </p>
-              </div>
-            </header>
+          {/* Le reste, replié : une idée par bloc */}
+          <div className="mt-10 space-y-3">
+            <details className="group rounded-2xl border border-border bg-surface p-4 open:pb-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
+                <span className="inline-flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-accent-green" aria-hidden="true" /> Comment on calcule ?</span>
+                <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <ul className="mt-3 space-y-2 text-sm text-fg/80">
+                <li>• On prend le chemin le plus simple de chaque appli : un achat de Bitcoin depuis votre solde en euros, après un virement SEPA (ou par carte si vous le choisissez).</li>
+                <li>• Les frais viennent de la grille tarifaire officielle de la plateforme : la source et la date sont sous chaque ligne.</li>
+                <li>• « au plus » : la plateforme publie un maximum pour sa marge, et c&apos;est ce maximum que l&apos;on compte.</li>
+                <li>• « + marge non publiée » : la plateforme ajoute une marge au prix sans la chiffrer. Le montant affiché est alors un minimum, et elle passe après celles dont le coût est publié.</li>
+                <li>• « Non publié » : la plateforme ne chiffre pas ses frais. Elle passe en dernier.</li>
+                <li>• Seules les plateformes agréées MiCA avec un accès à la France sont classées (registre de l&apos;ESMA, liste blanche de l&apos;AMF).</li>
+              </ul>
+              <Link href="/methodologie" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
+                Toute la méthode <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </details>
 
-            {/*
-              Filtres profil — interaction CSS pure via :checked + sibling.
-
-              BLOCK 11 fix (Agent /comparatif audit P0/P1) :
-                - Avant : role="tablist" sur wrapper + radios sr-only sans
-                  focus-visible style. WCAG 2.4.7 (focus visible) cassé +
-                  axe-core "aria-required-children" score 0/10 (tablist
-                  attend des tabpanel enfants, qu'on n'a pas).
-                - Après : role="radiogroup" + aria-label + peer-focus-visible
-                  ring sur chaque label (l'input reste sr-only mais reçoit
-                  toujours le focus clavier via Tab/Arrow native — radios
-                  groupés par name="profile"). On retire role="tablist" qui
-                  était incorrect.
-
-              Comportement clavier natif :
-                Tab focus le 1er radio, ←→/↑↓ change la sélection (browser
-                radio group native), zéro JS. Le ring visible est piloté par
-                peer-focus-visible/X sur chaque label associé.
-            */}
-            <div className="profile-filter-wrap">
-              <div
-                className="flex flex-wrap gap-2 mb-5"
-                role="radiogroup"
-                aria-label="Filtre par profil utilisateur"
-              >
-                <input type="radio" name="profile" id="profile-all" defaultChecked className="peer/all sr-only" />
-                <label
-                  htmlFor="profile-all"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/all:border-primary peer-checked/all:bg-primary/15 peer-checked/all:text-primary-glow peer-focus-visible/all:ring-2 peer-focus-visible/all:ring-primary peer-focus-visible/all:ring-offset-2 peer-focus-visible/all:ring-offset-background transition-colors"
-                >
-                  Tous
-                </label>
-                <input type="radio" name="profile" id="profile-debutant" className="peer/deb sr-only" />
-                <label
-                  htmlFor="profile-debutant"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/deb:border-primary peer-checked/deb:bg-primary/15 peer-checked/deb:text-primary-glow peer-focus-visible/deb:ring-2 peer-focus-visible/deb:ring-primary peer-focus-visible/deb:ring-offset-2 peer-focus-visible/deb:ring-offset-background transition-colors"
-                >
-                  Débutant
-                </label>
-                <input type="radio" name="profile" id="profile-inter" className="peer/int sr-only" />
-                <label
-                  htmlFor="profile-inter"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/int:border-primary peer-checked/int:bg-primary/15 peer-checked/int:text-primary-glow peer-focus-visible/int:ring-2 peer-focus-visible/int:ring-primary peer-focus-visible/int:ring-offset-2 peer-focus-visible/int:ring-offset-background transition-colors"
-                >
-                  Intermédiaire
-                </label>
-                <input type="radio" name="profile" id="profile-av" className="peer/av sr-only" />
-                <label
-                  htmlFor="profile-av"
-                  className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-semibold text-fg/70 hover:border-primary/40 peer-checked/av:border-primary peer-checked/av:bg-primary/15 peer-checked/av:text-primary-glow peer-focus-visible/av:ring-2 peer-focus-visible/av:ring-primary peer-focus-visible/av:ring-offset-2 peer-focus-visible/av:ring-offset-background transition-colors"
-                >
-                  Avancé
-                </label>
-              </div>
-
-              {/*
-                Filtre purement CSS : on rend toutes les cards et on les masque via
-                ~ (sibling) en fonction du radio coché. Pas de JS donc compatible
-                Server Component, et l'état n'est pas perdu au refresh.
-              */}
-              <style dangerouslySetInnerHTML={{ __html: `
-                .profile-filter-wrap input[name="profile"] { display: none; }
-                .profile-filter-wrap .platform-card { display: flex; }
-                .profile-filter-wrap input#profile-debutant:checked ~ .platform-grid .platform-card:not([data-profile~="debutant"]) { display: none; }
-                .profile-filter-wrap input#profile-inter:checked ~ .platform-grid .platform-card:not([data-profile~="intermediaire"]) { display: none; }
-                .profile-filter-wrap input#profile-av:checked ~ .platform-grid .platform-card:not([data-profile~="avance"]) { display: none; }
-              ` }} />
-
-              <div className="platform-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {topPlatforms.map((p) => (
-                  <PlatformMiniCard key={p.id} platform={p} />
+            <details className="group rounded-2xl border border-border bg-surface p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
+                <span className="inline-flex items-center gap-2"><Wallet className="h-5 w-5 text-primary" aria-hidden="true" /> Pour garder vos cryptos vous-même</span>
+                <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <p className="mt-3 text-sm text-fg/80">
+                Un portefeuille matériel garde vos cryptos hors ligne, sous votre seul contrôle. Il n&apos;achète rien : vous achetez sur une plateforme, puis vous transférez.
+              </p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {wallets.map((w) => (
+                  <Link key={w.id} href={`/avis/${w.id}`} className="flex items-center gap-3 rounded-xl border border-border bg-background p-3 hover:border-primary/50">
+                    <PlatformLogo id={w.id} name={w.name} size={32} />
+                    <span className="font-bold text-fg">{w.name}</span>
+                    <ArrowRight className="ml-auto h-4 w-4 text-muted" aria-hidden="true" />
+                  </Link>
                 ))}
               </div>
-            </div>
-          </section>
+            </details>
 
-          {/* Top 6 mis en avant */}
-          <section className="mt-12">
-            <header className="flex items-center gap-3 mb-6">
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300">
-                <TrendingUp className="h-5 w-5" />
+            <details className="group rounded-2xl border border-border bg-surface p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
+                <span className="inline-flex items-center gap-2"><ShieldAlert className="h-5 w-5 text-red-300" aria-hidden="true" /> À éviter en France ({blocked.length})</span>
+                <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <p className="mt-3 text-sm text-fg/80">Ces plateformes ne peuvent pas (ou plus) servir les résidents français.</p>
+              <ul className="mt-3 divide-y divide-border">
+                {blocked.map((p) => (
+                  <li key={p.id} className="flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:gap-3">
+                    <Link href={`/avis/${p.id}`} className="shrink-0 font-semibold text-fg hover:text-primary">{p.name}</Link>
+                    <span className="text-xs text-fg/65">{p.mica.status}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+
+            <details className="group rounded-2xl border border-border bg-surface p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
+                <span>Les duels détaillés ({duels.length})</span>
+                <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {duels.map((c) => (
+                  <Link key={c.slug} href={`/comparatif/${c.slug}`} className="flex items-center justify-between gap-2 rounded-xl border border-border bg-background px-3 py-2.5 text-sm font-semibold text-fg hover:border-primary/50">
+                    {duelTitle(c)} <ArrowRight className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
+                  </Link>
+                ))}
               </div>
-              <h2 className="text-2xl font-bold tracking-tight">
-                Les comparatifs les plus consultés
-              </h2>
-            </header>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {top6.map((c) => (
-                <ComparisonCard key={c.slug} comparison={c} highlight />
+            </details>
+          </div>
+
+          <div className="mt-8 flex flex-col items-start gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-base font-bold text-fg">Pas sûr de votre choix ?</p>
+              <p className="mt-1 text-sm text-fg/70">Six questions courtes, une plateforme conseillée et deux autres pistes.</p>
+            </div>
+            <Link href="/quiz/plateforme" className="btn-primary shrink-0 px-4 py-2.5 text-sm">
+              Faire le questionnaire <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <section className="mt-10" aria-labelledby="faq-comparatif">
+            <h2 id="faq-comparatif" className="text-xl font-extrabold text-fg">Questions fréquentes</h2>
+            <div className="mt-3 space-y-2">
+              {FAQ.map((f) => (
+                <details key={f.question} className="group rounded-2xl border border-border bg-surface p-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-fg">
+                    {f.question}
+                    <ChevronDown className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <p className="mt-2 text-sm leading-relaxed text-fg/80">{f.answer}</p>
+                </details>
               ))}
             </div>
           </section>
 
-          {/* CTA milieu de page — push vers quiz pour les indécis */}
-          <div className="mt-12 rounded-2xl border border-border bg-surface p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-            <div>
-              <div className="text-base font-bold text-fg">
-                Toujours pas décidé ?
-              </div>
-              <p className="mt-1 text-sm text-fg/70 max-w-xl">
-                Notre questionnaire croise vos priorités (frais, sécurité, support FR, niveau) avec les data 2026 et vous sort 1 plateforme principale + 2 alternatives.
-              </p>
-            </div>
-            <Link
-              href="/quiz/trouve-ton-exchange"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-background hover:bg-primary-glow transition-colors shrink-0"
-            >
-              Faire le questionnaire (30 s)
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          {/* Buckets */}
-          <div className="mt-16 space-y-16">
-            {BUCKET_ORDER.map((bucket) => {
-              const list = byBucket.get(bucket) ?? [];
-              if (list.length === 0) return null;
-              return (
-                <section key={bucket} id={bucket}>
-                  <header className="mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary-soft">
-                        <Trophy className="h-5 w-5" />
-                      </div>
-                      <h2 className="text-2xl font-bold tracking-tight">
-                        {BUCKET_LABELS[bucket]}
-                        <span className="ml-2 text-sm font-normal text-muted">
-                          ({list.length})
-                        </span>
-                      </h2>
-                    </div>
-                    <p className="mt-2 text-sm text-fg/70 max-w-3xl">
-                      {BUCKET_DESCRIPTIONS[bucket]}
-                    </p>
-                  </header>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {list.map((c) => (
-                      <ComparisonCard key={c.slug} comparison={c} />
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-
-          {/* CTA bas de page — répétition (CRO best practice) */}
-          <section className="mt-16 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-primary-glow/10 p-6 sm:p-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Trouvez votre plateforme en 30 secondes
-            </h2>
-            <p className="mt-3 text-base text-fg/80 max-w-2xl mx-auto">
-              Plus rapide que de comparer {getAvailablePlatformCount()} fiches plateformes une par une : le questionnaire pose 6 questions et vous sort la plateforme calibrée pour votre profil — débutant, intermédiaire ou avancé.
-            </p>
-            <Link
-              href="/quiz/trouve-ton-exchange"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
-            >
-              <Zap className="h-4 w-4" />
-              Lancer le questionnaire
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </section>
-
-          {/* Disclaimer AMF + affiliation */}
-          <p className="mt-10 text-xs text-muted leading-relaxed max-w-3xl">
-            Cryptoreflex est un média éditorial indépendant. Nous percevons une commission via les liens d&apos;affiliation, sans surcoût pour vous et sans biais sur les notes attribuées (méthodologie publique sur <Link href="/methodologie" className="underline hover:text-fg">/methodologie</Link>). Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
+          <p className="mt-10 max-w-3xl text-xs leading-relaxed text-muted">
+            Cryptoreflex est un média indépendant. Certains liens sont rémunérés, sans surcoût pour vous et sans effet sur le
+            classement (<Link href="/transparence" className="underline hover:text-fg">transparence</Link>,{" "}
+            <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>). Investir dans les crypto-actifs
+            comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
           </p>
         </div>
       </section>
-      <NextStepsGuide context="comparator" />
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-16">
-        <AcademyCrossLink
-          title="Bien choisir sa plateforme, ça s'apprend"
-          links={[
-            { href: "/academie/plateformes", label: "Choisir sa plateforme" },
-            { href: "/academie/securite", label: "Sécuriser ses cryptos" },
-          ]}
-        />
-      </section>
     </>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/*  PlatformMiniCard — card avec badges visuels MiCA / score / profile       */
-/*  Issue #19 backlog : badges MiCA prominents sur les cards.                 */
-/* -------------------------------------------------------------------------- */
-
-function PlatformMiniCard({ platform }: { platform: Platform }) {
-  const profiles = profilesFor(platform);
-  // Refonte 26/04/2026 (audit Lighthouse P0 #3) : carte avec 2 CTA distincts.
-  // Avant : 1 seul <Link> wrap autour de la card -> aucun lien rel="sponsored"
-  // dans le HTML SSR -> non-conformite Loi Influenceurs juin 2023 sur la
-  // page de conversion principale. Maintenant : "Voir l'avis" (interne) +
-  // "Visiter" (affilie avec rel="sponsored nofollow noopener noreferrer").
-  return (
-    <div
-      data-profile={profiles.join(" ")}
-      className="platform-card group flex-col rounded-2xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="font-bold text-fg truncate">{platform.name}</div>
-        <div className="inline-flex items-center gap-1 text-xs text-amber-300 shrink-0">
-          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-          <span className="font-mono tabular-nums">{fmtFr(platform.scoring.global, 1)}</span>
-        </div>
-      </div>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {platform.mica.micaCompliant && (
-          <MiCAComplianceBadge variant="compact" />
-        )}
-        {platform.security.coldStoragePct >= 95 && hasNoIncident(platform.security.lastIncident) && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green">
-            0 incident
-          </span>
-        )}
-        {platform.scoring.security >= 4.7 && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-blue-400/30 bg-blue-400/10 px-2 py-0.5 text-[10px] font-semibold text-blue-300">
-            Audit récent
-          </span>
-        )}
-      </div>
-      <div className="mt-3 text-xs text-fg/60 line-clamp-2">{platform.tagline}</div>
-      <div className="mt-4 flex items-center gap-2 text-xs">
-        <Link
-          href={`/avis/${platform.id}`}
-          className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 font-semibold text-fg/80 hover:bg-elevated hover:border-primary/30 transition-colors flex-1 justify-center"
-        >
-          Voir l&apos;avis
-        </Link>
-        <a
-          href={platform.affiliateUrl}
-          target="_blank"
-          rel="sponsored nofollow noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded-lg bg-primary text-background px-3 py-2 font-semibold hover:bg-primary-glow transition-colors flex-1 justify-center"
-          aria-label={`Visiter ${platform.name}${getAffiliationKind(platform.id) ? " (lien rémunéré)" : ""}`}
-        >
-          Visiter
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </a>
-      </div>
-      <p className="mt-2 text-[10px] text-muted text-center">
-        {affiliationNotice(platform.id)} · <Link href="/transparence" className="underline hover:text-fg">transparence</Link>
-      </p>
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Helpers & sub-components                                                  */
-/* -------------------------------------------------------------------------- */
-
-function comparisonTitle(c: ComparisonSpec): string {
-  const a = getPlatformById(c.a);
-  const b = getPlatformById(c.b);
-  const aName = a?.name ?? c.a;
-  const bName = b?.name ?? c.b;
-  return `${aName} vs ${bName}`;
-}
-
-function ComparisonCard({
-  comparison,
-  highlight = false,
-}: {
-  comparison: ComparisonSpec;
-  highlight?: boolean;
-}) {
-  const a = getPlatformById(comparison.a);
-  const b = getPlatformById(comparison.b);
-  const aName = a?.name ?? comparison.a;
-  const bName = b?.name ?? comparison.b;
-
-  return (
-    <Link
-      href={`/comparatif/${comparison.slug}`}
-      className={`group rounded-2xl border bg-surface p-4 transition-colors flex items-center justify-between gap-3 ${
-        highlight
-          ? "border-primary/30 hover:border-primary/60 bg-primary/5"
-          : "border-border hover:border-primary/40"
-      }`}
-    >
-      <div className="min-w-0 flex-1">
-        <div className="font-bold text-fg truncate">
-          {aName} <span className="text-muted">vs</span> {bName}
-        </div>
-        <div className="mt-1 text-[11px] text-muted">
-          {BUCKET_LABELS[comparison.bucket]}
-        </div>
-      </div>
-      <ArrowRight className="h-4 w-4 text-primary-soft shrink-0 transition-transform group-hover:translate-x-0.5" />
-    </Link>
   );
 }

@@ -52,7 +52,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 /* -------------------------------------------------------------------------- */
 /*  SEO meta — H1 et meta alignées sur la cible "calculateur fiscalité crypto */
-/*  France 2026" + variantes longues (PFU 31,4 %, barème, BIC).                 */
+/*  France 2026" + variantes longues (PFU 31,4 %, barème, BNC).                 */
 /* -------------------------------------------------------------------------- */
 
 // Audit SEO 26-04 — title raccourci de 75 → 50 chars (≤ 60 cible Google SERP).
@@ -60,7 +60,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 31,4%, Cerfa";
 // 158 caractères, optimisé Google SERP
 const PAGE_DESCRIPTION =
-  "Calculez votre impôt crypto 2026 en 2 min : PFU 31,4%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Formule de l'article 150 VH bis du CGI, gratuit, anonyme.";
+  "Calculez votre impôt crypto 2026 en 2 min : PFU 31,4 %, barème progressif ou BNC. Aide Cerfa 2086 + 3916-bis. Formule de l'article 150 VH bis du CGI, gratuit, anonyme.";
 const PAGE_PATH = "/outils/calculateur-fiscalite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -123,7 +123,7 @@ const FAQ_ITEMS = [
     question:
       "Quel régime fiscal s'applique aux plus-values crypto en France en 2026 ?",
     answer:
-      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux. Vous pouvez aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si vous tradez de manière habituelle, l'administration peut requalifier votre activité en BIC professionnel.",
+      "Par défaut, un particulier en gestion non professionnelle est soumis au Prélèvement Forfaitaire Unique (PFU) de 31,4 % : 12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux. Vous pouvez aussi opter pour le barème progressif (TMI 11/30/41/45 %) si c'est plus avantageux. Si vous tradez toute l'année comme un professionnel, sans que ce soit votre métier, vos gains relèvent des BNC depuis 2023 (article 92 du CGI) ; c'est un cas rare.",
   },
   {
     question: "À partir de quel montant dois-je déclarer mes plus-values crypto ?",
@@ -133,17 +133,17 @@ const FAQ_ITEMS = [
   {
     question: "PFU ou barème progressif : que choisir ?",
     answer:
-      "Le PFU à 31,4 % est avantageux dès que votre TMI dépasse 12,8 %. Le barème devient intéressant si votre TMI est de 0 ou 11 %. Notre calculateur affiche les deux scénarios — comparez le résultat avant de cocher l'option case 3CN de la déclaration 2042 C.",
+      "Le PFU à 31,4 % est avantageux dès que votre TMI dépasse 12,8 %. À TMI 0 %, le barème est plus intéressant. À TMI 11 %, il ne l'est que si votre impôt ne bénéficie pas de la décote : sinon, chaque euro de plus-value coûte environ 16 % d'impôt au barème, plus que les 12,8 % du PFU. Simulez avant de cocher la case 3CN. Notre calculateur estime un régime à la fois : faites le calcul avec le PFU, puis avec le barème.",
   },
   {
-    question: "Quand bascule-t-on en BIC professionnel ?",
+    question: "Quand bascule-t-on au régime BNC ?",
     answer:
-      "Il n'y a pas de seuil chiffré officiel. Le BIC s'applique en cas d'activité habituelle, organisée et utilisant des outils complexes (bots, leverage, arbitrage). En BIC, le bénéfice est imposé à votre TMI + 18,6 % PS + cotisations sociales URSSAF (~22 %). C'est généralement moins avantageux que le PFU pour des plus-values modérées.",
+      "Il n'y a pas de seuil chiffré. Depuis le 1er janvier 2023, les gains d'un trading mené « dans des conditions analogues à celles d'un professionnel » relèvent des BNC (article 92 du CGI). Selon le BOFiP, ce régime vise des cas exceptionnels, appréciés sur un faisceau d'indices : opérations nombreuses et sophistiquées, moyens informatiques, techniques et compétences de trader. Le bénéfice est alors imposé au barème, plus 18,6 % de prélèvements sociaux, sans seuil de 305 €. Les déficits se reportent 6 ans sur des BNC de même nature. Si le trading est votre métier, c'est le régime BIC, avec des cotisations d'indépendant : voyez un expert-comptable.",
   },
   {
     question: "Cet outil prend-il en compte le staking, le DeFi et les NFT ?",
     answer:
-      "Non, pas directement. Le régime et le moment d'imposition des revenus de staking et de lending ne sont pas tranchés par une source officielle citable (selon le profil : plus-value en gestion occasionnelle, ou BIC/BNC en activité habituelle/professionnelle). Les NFT et les opérations DeFi (yield farming, prêts, airdrops) dépassent aussi le cadre de cet outil. Pour ces situations, consultez un expert-comptable spécialisé.",
+      "Non, pas directement. Le régime et le moment d'imposition des revenus de staking et de lending ne sont pas tranchés par une source officielle citable (selon le profil : plus-value du particulier, ou BNC ou BIC selon l'activité). Les NFT et les opérations DeFi (yield farming, prêts, airdrops) dépassent aussi le cadre de cet outil. Pour ces situations, consultez un expert-comptable spécialisé.",
   },
   {
     question:
@@ -198,7 +198,7 @@ const FAQ_ITEMS = [
     question:
       "Combien me coûte Waltio par rapport à un expert-comptable crypto ?",
     answer:
-      "Waltio : Lite 39 €/an (jusqu'à 50 transactions), Starter 99 €/an (jusqu'à 1 000, DeFi inclus) ou Smart 249 €/an (jusqu'à 10 000) — tarifs relevés sur waltio.com le 2 octobre 2026. Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre la plupart des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable : un export Waltio propre (offre Smart à 249 €/an, ou supérieure selon le volume) peut alléger son travail.",
+      "Waltio : Lite 39 €/an (jusqu'à 50 transactions), Starter 99 €/an (jusqu'à 1 000, DeFi inclus) ou Smart 249 €/an (jusqu'à 10 000) — tarifs relevés sur waltio.com le 2 octobre 2026. Les honoraires d'un expert-comptable dépendent du volume et de la complexité : demandez un devis. Pour un particulier au régime PFU, Waltio couvre la plupart des cas sans expert-comptable. Au régime BNC (ou BIC si le trading est votre métier), gardez l'expert-comptable : un export Waltio propre (offre Smart à 249 €/an, ou supérieure selon le volume) peut alléger son travail.",
   },
   {
     question: "Waltio prend-il en compte le DeFi, le staking et les NFT ?",
@@ -230,7 +230,7 @@ const webAppSchema: JsonLd = generateWebApplicationSchema({
   featureList: [
     "PFU 31,4 % (12,8 % IR + 18,6 % PS)",
     "Barème progressif IR (TMI 11/30/41/45 %)",
-    "BIC professionnel (TMI + PS + URSSAF)",
+    "BNC, trading mené comme un professionnel (barème + 18,6 % PS)",
     "Seuil exonération 305 € / an pris en compte",
     "Calcul 100 % local — aucune donnée envoyée",
     "Aide Cerfa 2086 + 2042-C par email",
@@ -240,7 +240,7 @@ const webAppSchema: JsonLd = generateWebApplicationSchema({
     "calculateur fiscalité crypto",
     "PFU 30",
     "barème progressif",
-    "BIC crypto",
+    "BNC crypto",
     "Cerfa 2086",
     "3916-bis",
   ],
@@ -351,14 +351,14 @@ export default function CalculateurFiscalitePage() {
               Estimez votre impôt sur les plus-values crypto en 2 min selon le
               régime fiscal applicable : <strong>PFU 31,4 %</strong>,{" "}
               <strong>barème progressif IR</strong> ou{" "}
-              <strong>BIC professionnel</strong>. Calcul officiel article{" "}
+              <strong>BNC</strong> (trading mené comme un professionnel, cas rares). Formule de l&apos;article{" "}
               <strong>150 VH bis</strong>, 100 % local, aucune donnée envoyée.
             </p>
 
             <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
               {[
                 { icon: Lock, label: "Calcul local — aucune donnée envoyée" },
-                { icon: CheckCircle2, label: "PFU, barème, BIC : 3 régimes" },
+                { icon: CheckCircle2, label: "PFU, barème, BNC : 3 régimes" },
                 { icon: FileText, label: "Aide Cerfa 2086 + 2042-C par email" },
                 { icon: ShieldCheck, label: "Seuil 305 € pris en compte" },
               ].map(({ icon: Icon, label }) => (
@@ -542,17 +542,22 @@ export default function CalculateurFiscalitePage() {
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
-              BIC professionnel — quand bascule-t-on ?
+              Régime BNC — quand bascule-t-on ?
             </h3>
             <p>
-              Si vous tradez de manière habituelle, organisée et avec des
-              outils avancés (bots, levier, arbitrage), l'administration peut
-              requalifier votre activité en <strong>BIC professionnel</strong>.
-              Le bénéfice net est alors imposé à votre TMI + 18,6 % PS +
-              cotisations sociales URSSAF (~22 %). Le calculateur intègre cette
-              option pour vous aider à comparer les trois régimes. Pas de seuil
-              chiffré officiel — c'est une appréciation faisceau d'indices par
-              le service vérificateur.
+              Depuis le 1er janvier 2023, si vous tradez dans des conditions
+              analogues à celles d'un professionnel (opérations nombreuses et
+              sophistiquées, moyens informatiques, techniques de trader) sans
+              que ce soit votre métier, vos gains relèvent des{" "}
+              <strong>BNC</strong> (article 92 du CGI). Le BOFiP réserve ce
+              régime à des cas exceptionnels, appréciés sur un faisceau
+              d'indices : il n'existe pas de seuil chiffré. Le bénéfice est
+              imposé au barème, plus 18,6 % de prélèvements sociaux, sans
+              cotisation d'indépendant et sans seuil de 305 € ; un déficit se
+              reporte 6 ans sur des BNC de même nature. Si le trading est votre
+              métier, c'est le régime <strong>BIC</strong>, avec des
+              cotisations d'indépendant à la place des prélèvements sociaux :
+              ce calculateur ne le couvre pas.
             </p>
           </div>
         </div>
@@ -574,8 +579,10 @@ export default function CalculateurFiscalitePage() {
               (12,8 % d'IR + 18,6 % de prélèvements sociaux). Mais vous pouvez{" "}
               <strong>opter pour le barème progressif</strong> de l'impôt sur le
               revenu via la <strong>case 3CN de la déclaration 2042 C</strong>. Pour
-              certains profils (TMI 0 ou 11 %), cette option divise l'impôt par
-              deux. Pour d'autres (TMI 30, 41, 45 %), elle est désastreuse.
+              les non-imposables (TMI 0 %), cette option fait nettement baisser
+              l'impôt. À TMI 11 %, le gain est faible, et il devient une perte si
+              votre impôt bénéficie de la décote. Pour d'autres (TMI 30, 41, 45 %),
+              elle est désastreuse.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">
@@ -612,9 +619,9 @@ export default function CalculateurFiscalitePage() {
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">11 %</td>
                     <td className="px-3 py-2">31,4 %</td>
-                    <td className="px-3 py-2">29,6 %</td>
+                    <td className="px-3 py-2">29,6 % (≈ 34,6 % avec la décote)</td>
                     <td className="px-3 py-2 text-success font-semibold">
-                      Barème (−1,8 pt)
+                      Barème (−1,8 pt), sauf décote : PFU
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
@@ -649,9 +656,14 @@ export default function CalculateurFiscalitePage() {
             <p>
               Le PFU est avantageux dès que votre TMI dépasse{" "}
               <strong>12,8 %</strong>, c'est-à-dire à partir de la tranche 30 %
-              (revenu fiscal au-dessus de 29 579 euros pour une part). En
-              tranche 11 % et 0 %, le barème est gagnant. Notre calculateur
-              affiche les deux scénarios côte à côte selon votre TMI déclarée.
+              (revenu imposable au-dessus de 29 579 euros pour une part). En
+              tranche 0 %, le barème est gagnant. En tranche 11 %, il ne l'est
+              que si votre impôt ne bénéficie pas de la décote (impôt brut
+              inférieur à 1 982 € pour une personne seule, 3 277 € pour un
+              couple, revenus 2025) : dans cette zone, chaque euro ajouté coûte
+              environ 16 % d'impôt. Notre calculateur estime un régime à la
+              fois ; pour un chiffre exact au barème, utilisez le simulateur
+              officiel d'impots.gouv.
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8">

@@ -244,8 +244,8 @@ export default function TaxLossHarvestingPage() {
           <AlertTriangle className="h-4 w-4 text-warning-fg mt-0.5 shrink-0" aria-hidden />
           <p className="leading-relaxed">
             <strong>Information générale, pas un conseil fiscal personnalisé.</strong> Cette page décrit la règle des
-            particuliers (article 150 VH bis du CGI). Une activité professionnelle (BIC), le minage, le staking ou la
-            DeFi peuvent relever d&apos;autres règles. Avant de vendre pour des raisons fiscales, faites vérifier
+            particuliers (article 150 VH bis du CGI). Le trading exercé comme métier (BIC), le trading mené comme un professionnel
+            (cas rares, BNC), le minage, le staking ou la DeFi peuvent relever d&apos;autres règles. Avant de vendre pour des raisons fiscales, faites vérifier
             votre cas par un expert-comptable ou un avocat fiscaliste.
           </p>
         </div>

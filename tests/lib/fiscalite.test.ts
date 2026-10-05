@@ -4,10 +4,9 @@ import {
   TAUX_IR_PFU,
   TAUX_PS,
   TAUX_PFU,
-  TAUX_COTISATIONS_BIC,
   computeTaxPFU,
   computeTaxBareme,
-  computeTaxBIC,
+  computeTaxBNC,
   computeTax,
   formatPercent,
   formatEuro,
@@ -44,9 +43,10 @@ describe("fiscalité — garde-fou des taux 2026 (anti-régression)", () => {
     expect(TAUX_PS).not.toBe(0.172);
   });
 
-  it("seuil d'exonération = 305 € et cotisations BIC = 22 %", () => {
+  it("seuil d'exonération = 305 € ; plus aucun taux de cotisations « BIC 22 % » (supprimé le 05/10/2026, sans base légale)", async () => {
     expect(SEUIL_EXONERATION_EUR).toBe(305);
-    expect(TAUX_COTISATIONS_BIC).toBe(0.22);
+    const mod = (await import("@/lib/fiscalite")) as Record<string, unknown>;
+    expect(mod.TAUX_COTISATIONS_BIC).toBeUndefined();
   });
 });
 
@@ -95,7 +95,7 @@ describe("computeTaxPFU", () => {
 
   it("IGNORE les reports antérieurs en PFU : un particulier ne reporte jamais ses moins-values (audit 03/10/2026)", () => {
     const r = computeTaxPFU(base({ fraisCourtage: 0, reportablePrevious: 2000 }));
-    // PV brute = 5000, nette = 5000 (le champ reportablePrevious ne compte pas hors BIC)
+    // PV brute = 5000, nette = 5000 (le champ reportablePrevious ne compte pas hors BNC)
     expect(r.plusValueBrute).toBeCloseTo(5000, 6);
     expect(r.plusValueNette).toBeCloseTo(5000, 6);
     expect(r.impotTotal).toBeCloseTo(5000 * 0.314, 4);
@@ -106,8 +106,8 @@ describe("computeTaxPFU", () => {
     expect(r.plusValueNette).toBeCloseTo(5000, 6);
   });
 
-  it("déduit les déficits reportables en BIC seulement (régime professionnel)", () => {
-    const r = computeTax(base({ regime: "bic", tmi: 0.3, fraisCourtage: 0, reportablePrevious: 2000 }));
+  it("déduit les déficits reportables en BNC seulement (art. 156-I-2° : 6 ans, sur des BNC non professionnels)", () => {
+    const r = computeTax(base({ regime: "bnc", tmi: 0.3, fraisCourtage: 0, reportablePrevious: 2000 }));
     // PV brute = 5000, nette = 5000 - 2000 = 3000
     expect(r.plusValueNette).toBeCloseTo(3000, 6);
   });
@@ -159,10 +159,10 @@ describe("prorata du portefeuille (ligne 212) — audit 03/10/2026", () => {
     expect(b.plusValueBrute).toBeCloseTo(4900, 10);
   });
 
-  it("le prorata s'applique aussi au barème et en BIC", () => {
+  it("le prorata s'applique aussi au barème et en BNC", () => {
     const inp = base({ totalCessions: 50000, totalAchats: 48000, fraisCourtage: 50, valeurPortefeuille: 75000 });
     expect(computeTaxBareme({ ...inp, regime: "bareme" }, 0.30).plusValueBrute).toBeCloseTo(17950, 6);
-    expect(computeTaxBIC({ ...inp, regime: "bic" }, 0.30).plusValueBrute).toBeCloseTo(17950, 6);
+    expect(computeTaxBNC({ ...inp, regime: "bnc" }, 0.30).plusValueBrute).toBeCloseTo(17950, 6);
   });
 
   it("seuil de 305 € mesuré sur les cessions NETTES de frais (l. 218 / l. 51 du 2086)", () => {
@@ -188,20 +188,27 @@ describe("computeTaxBareme", () => {
   });
 });
 
-describe("computeTaxBIC", () => {
-  it("ajoute les cotisations URSSAF 22 % (taux effectif = TMI + PS + 22 %)", () => {
-    const r = computeTaxBIC(base(), 0.30); // PV 4900
+describe("computeTaxBNC (art. 92, 2-1° bis CGI, depuis le 01/01/2023)", () => {
+  it("barème (TMI) + 18,6 % de prélèvements sociaux du patrimoine, AUCUNE cotisation d'indépendant (art. L136-6, I-f CSS)", () => {
+    const r = computeTaxBNC(base({ regime: "bnc" }), 0.30); // PV 4900
+    expect(r.regime).toBe("bnc");
     expect(r.montantIR).toBeCloseTo(4900 * 0.30, 6);
     expect(r.montantPS).toBeCloseTo(4900 * 0.186, 6);
-    expect(r.cotisationsSociales).toBeCloseTo(4900 * 0.22, 6);
-    expect(r.tauxEffectif).toBeCloseTo(0.30 + 0.186 + 0.22, 10); // 0,706
+    expect(r.cotisationsSociales).toBe(0);
+    expect(r.impotTotal).toBeCloseTo(4900 * (0.30 + 0.186), 6);
+    expect(r.tauxEffectif).toBeCloseTo(0.30 + 0.186, 10); // 0,486 (l'ancien « BIC » en comptait 0,706)
   });
 
-  it("N'applique PAS le seuil 305 € (régime professionnel)", () => {
-    const r = computeTaxBIC(base({ totalCessions: 200, totalAchats: 0, fraisCourtage: 0 }), 0.30);
+  it("N'applique PAS le seuil de 305 € (propre à l'article 150 VH bis)", () => {
+    const r = computeTaxBNC(base({ regime: "bnc", totalCessions: 200, totalAchats: 0, fraisCourtage: 0 }), 0.30);
     expect(r.exonere).toBe(false);
-    expect(r.impotTotal).toBeGreaterThan(0); // imposé malgré cessions ≤ 305
-    expect(r.impotTotal).toBeCloseTo(200 * (0.30 + 0.186 + 0.22), 4);
+    expect(r.impotTotal).toBeCloseTo(200 * (0.30 + 0.186), 4);
+  });
+
+  it("déficit : aucun impôt", () => {
+    const r = computeTaxBNC(base({ regime: "bnc", totalCessions: 1000, totalAchats: 3000, fraisCourtage: 0 }), 0.30);
+    expect(r.deficit).toBe(true);
+    expect(r.impotTotal).toBe(0);
   });
 });
 
@@ -209,10 +216,10 @@ describe("computeTax — dispatcher", () => {
   it("route vers le bon régime", () => {
     expect(computeTax(base({ regime: "pfu" })).regime).toBe("pfu");
     expect(computeTax(base({ regime: "bareme", tmi: 0.30 })).regime).toBe("bareme");
-    expect(computeTax(base({ regime: "bic", tmi: 0.30 })).regime).toBe("bic");
+    expect(computeTax(base({ regime: "bnc", tmi: 0.30 })).regime).toBe("bnc");
   });
 
-  it("retombe sur TMI 30 % par défaut pour barème/BIC sans TMI", () => {
+  it("retombe sur TMI 30 % par défaut pour barème/BNC sans TMI", () => {
     const r = computeTax(base({ regime: "bareme" }));
     expect(r.montantIR).toBeCloseTo(4900 * 0.30, 6);
   });

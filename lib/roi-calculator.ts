@@ -1,8 +1,8 @@
 /**
  * Calculateur ROI / Plus-value crypto — fonction pure (Pilier 5).
  *
- * Exclu : barème progressif, BIC pro, abattement durée de détention
- * (non applicable aux crypto-actifs en France hors BIC). Pour le détail
+ * Exclu : barème progressif, régimes BNC et BIC, abattement durée de détention
+ * (non applicable au régime des particuliers, art. 150 VH bis). Pour le détail
  * complet, l'utilisateur est redirigé vers /outils/calculateur-fiscalite.
  */
 
@@ -96,6 +96,7 @@ export function calculateROI(input: ROIInput): ROIResult {
     profitNet: round2(profitNet),
     roiPercent: round2(roiPercent),
     totalFees: round2(totalFees),
+    netSale: round2(netSale),
     taxFr: round2(taxFr),
     invalid: false,
   };
@@ -115,6 +116,7 @@ function emptyResult(error: string): ROIResult {
     profitNet: 0,
     roiPercent: 0,
     totalFees: 0,
+    netSale: 0,
     taxFr: 0,
     invalid: true,
     error,

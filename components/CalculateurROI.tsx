@@ -211,18 +211,18 @@ export default function CalculateurROI() {
                 </>
               ) : (
                 <p className="text-sm text-fg leading-relaxed">
-                  <strong>Bonne nouvelle :</strong> le total de vos ventes de
-                  l&apos;année ({formatEur(result.valueFinal)}) ne dépasse pas le seuil
-                  de 305 € : aucune imposition, à condition que l&apos;ensemble de vos
-                  cessions de l&apos;année reste sous ce seuil. Le seuil porte sur le
-                  total des ventes, pas sur la plus-value.
+                  <strong>Bonne nouvelle :</strong> cette vente, nette de frais
+                  ({formatEur(result.netSale)}), ne dépasse pas le seuil de 305 € :
+                  aucune imposition, à condition que le total de vos cessions de
+                  l&apos;année, nettes de frais, reste sous ce seuil. Le seuil porte sur
+                  le total des ventes, pas sur la plus-value.
                 </p>
               )}
               <Link
                 href="/outils/calculateur-fiscalite"
                 className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary-glow"
               >
-                Calcul fiscal complet (barème, BIC, abattements)
+                Calcul fiscal complet (PFU, barème, BNC)
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -261,7 +261,7 @@ export default function CalculateurROI() {
       <p className="mt-6 text-xs text-muted leading-relaxed">
         Cet outil est purement pédagogique et ne constitue pas un conseil
         fiscal ou en investissement. L'impôt affiché applique le PFU à 31,4 %
-        sans tenir compte du barème progressif, de l'option BIC ni de la
+        sans tenir compte du barème progressif, du régime BNC (rare) ni de la
         compensation des moins-values. Pour une déclaration officielle, consultez
         un expert-comptable agréé crypto-actifs.
       </p>

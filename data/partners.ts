@@ -73,7 +73,8 @@ export interface Partner {
   /** Description courte (1-2 phrases) sur la vitrine */
   shortDescription: string;
   /** Pourquoi on les a sélectionnés (philosophie éditoriale) */
-  whyWeUseIt: string;
+  /** Pourquoi on le recommande, à partir des seuls faits produits (Kev 05/10/2026 : aucun usage personnel ne doit être raconté). */
+  whyWeChoseIt: string;
   /** URL affiliée tracking via /go/[slug] (le redirect ajoute UTM) */
   affiliateUrl: string;
   /** Path logo SVG dans /public (placeholder si manquant) */
@@ -109,11 +110,11 @@ export const partners: Partner[] = [
     slug: "ledger",
     name: "Ledger",
     category: "hardware-wallet",
-    tagline: "Le hardware wallet français qui domine le marché mondial.",
+    tagline: "Le hardware wallet français : plus de 8 millions d'appareils vendus selon Ledger.",
     shortDescription:
-      "Leader français incontesté (3M+ utilisateurs). Secure Element certifié CC EAL5+, écosystème Ledger Live mature, support en français, design Tony Fadell (créateur iPod).",
-    whyWeUseIt:
-      "On l'utilise depuis 2018 et c'est notre choix de référence. Hardware best-in-class, écosystème le plus large du marché (5 500+ tokens), made in France. Pour la majorité des utilisateurs crypto, Ledger est l'outil qui fait le job du premier coup.",
+      "Fabricant français fondé en 2014. Puce sécurisée certifiée CC EAL5+ ou EAL6+ selon le modèle, application Ledger Wallet (ex-Ledger Live), site, boutique et centre d'aide en français. Le Stax a été dessiné avec Tony Fadell (l'un des pères de l'iPod).",
+    whyWeChoseIt:
+      "Un portefeuille matériel très répandu (plus de 8 millions d'appareils vendus selon Ledger) : il garde vos clés hors ligne, et son application gère plus de 500 cryptos, plus de 15 000 avec des portefeuilles tiers.",
     // Lien officiel Ledger Affiliate Program (email d'onboarding 26/04/2026).
     // r=5313c8e86d40 = ID affilié unique Cryptoreflex pour tracker conversions.
     affiliateUrl: "https://shop.ledger.com/?r=5313c8e86d40",
@@ -121,13 +122,14 @@ export const partners: Partner[] = [
     brandColor: "#000000",
     since: "2014",
     country: "France",
-    priceFrom: "79 €",
-    commission: "taux compétitif Ledger Affiliate",
+    priceFrom: "59 €",
+    // Taux de départ public du programme (FAQ affiliation support.ledger.com, vérifiée le 05/10/2026).
+    commission: "10 % par vente (taux de départ du programme Ledger)",
     pros: [
-      "Secure Element certifié CC EAL5+ (résiste extraction physique)",
-      "Écosystème mature : 5 500+ tokens, MetaMask/Rabby intégrations",
-      "Made in France — design + R&D + fabrication partielle EU",
-      "Mises à jour firmware régulières, support FR",
+      "Puce sécurisée certifiée CC EAL5+ ou EAL6+ selon le modèle, dotée selon Ledger de protections contre les attaques physiques courantes",
+      "15 000+ cryptos annoncées, compatible MetaMask et Rabby",
+      "Société française : siège à Paris, site de production à Vierzon",
+      "Mises à jour de Ledger OS fournies par Ledger, site, boutique et centre d'aide en français",
     ],
     cons: [],
     featured: true,
@@ -136,37 +138,37 @@ export const partners: Partner[] = [
       {
         name: "Premier hardware wallet",
         description:
-          "Vous avez 2 000–50 000 € en crypto sur un exchange. Vous voulez sortir, simplement. Nano S Plus 79 €, setup 15 min, vous dormez mieux.",
+          "Vous avez 2 000–50 000 € en crypto sur une plateforme. Vous voulez sortir, simplement. Nano S Plus à 59 €, installation guidée par l'application Ledger Wallet.",
       },
       {
         name: "Voyageur / nomade crypto",
         description:
-          "Vous signez des transactions en déplacement depuis votre téléphone. Nano X (149 €) avec Bluetooth chiffré.",
+          "Vous signez des transactions en déplacement depuis votre téléphone. Nano X (99 €) avec Bluetooth chiffré, ou Nano Gen5, Flex et Stax à écran tactile.",
       },
     ],
     products: [
       {
         id: "nano-s-plus",
         name: "Ledger Nano S Plus",
-        price: "79 €",
-        description: "Le hardware wallet best-seller, suffisant pour 90% des besoins.",
+        price: "59 €",
+        description: "Le modèle d'entrée de gamme : USB-C, sans batterie, pour ordinateur et Android.",
         Icon: ShieldCheck,
         badge: { label: "Recommandé débutant", tone: "primary" },
         highlights: [
-          "Écran 128×64 lisible",
-          "100+ apps simultanées",
-          "USB-C, compatible MetaMask",
+          "Écran OLED 128×64",
+          "Jusqu'à 100 apps installées",
+          "USB-C, compatible MetaMask (pas d'iPhone)",
         ],
       },
       {
         id: "nano-x",
         name: "Ledger Nano X",
-        price: "149 €",
-        description: "Bluetooth chiffré + batterie pour signer en mobilité.",
+        price: "99 €",
+        description: "Bluetooth chiffré + batterie pour signer depuis votre téléphone.",
         Icon: Smartphone,
         highlights: [
-          "Bluetooth Low Energy chiffré",
-          "Batterie autonome",
+          "Bluetooth Low Energy 5.2 chiffré",
+          "Batterie : jusqu'à 5 h d'autonomie",
           "App mobile iOS + Android",
         ],
       },
@@ -174,12 +176,12 @@ export const partners: Partner[] = [
         id: "stax",
         name: "Ledger Stax",
         price: "399 €",
-        description: "Écran e-ink tactile premium, signature visuelle.",
+        description: "Grand écran tactile E Ink incurvé, le haut de gamme de Ledger.",
         Icon: Sparkles,
         badge: { label: "Premium", tone: "warning" },
         highlights: [
-          "Écran e-ink courbe tactile",
-          "Charge sans fil Qi",
+          "Écran tactile E Ink incurvé de 3,7 pouces",
+          "Recharge sans fil Qi",
           "Design Tony Fadell (iPod)",
         ],
       },
@@ -189,78 +191,81 @@ export const partners: Partner[] = [
     slug: "trezor",
     name: "Trezor",
     category: "hardware-wallet",
-    tagline: "100% open-source. Aucun secret, aucune backdoor.",
+    tagline: "Un firmware open source : chacun peut vérifier ce qu'il fait.",
     shortDescription:
-      "Pionnier du hardware wallet (2014, République tchèque). Firmware + software entièrement auditables sur GitHub. Shamir Backup natif sur Model T.",
-    whyWeUseIt:
-      "C'est le wallet qu'on garde en parallèle de Ledger pour la diversification fabricant (best practice patrimoine sérieux). Code 100% public sur GitHub : vous n'avez pas à faire confiance, vous vérifiez vous-même. La référence absolue pour qui veut la souveraineté complète.",
+      "Pionnier du portefeuille matériel (fondé en 2013, basé à Prague, premier modèle en 2014). Firmware open source publié sur GitHub. Sauvegarde multi-fragments sur les Safe 3, 5 et 7.",
+    whyWeChoseIt:
+      "Un portefeuille matériel dont le code est public : chacun peut vérifier ce qu'il fait. Un bon second appareil pour ne pas dépendre d'un seul fabricant.",
     affiliateUrl: "https://affil.trezor.io/aff_c?offer_id=137&aff_id=141576",
     logoPath: "/logos/partners/trezor.svg",
     brandColor: "#1B1B1B",
-    since: "2014",
+    // trezor.io/about (05/10/2026) : « 2013 — Fondation de Trezor » ; Model One sorti en 2014.
+    since: "2013",
     country: "République tchèque",
-    priceFrom: "49 €",
-    commission: "12% par vente",
+    // Prix trezor.io au 05/10/2026 : Safe 3 59 €, Safe 5 129 €, Safe 7 249 € (Model One et Model T arrêtés).
+    priceFrom: "59 €",
+    // trezor.io/affiliate : « jusqu'à 15 % » de la valeur nette (hors TVA et livraison).
+    commission: "jusqu'à 15 % du montant de la vente (hors TVA et livraison)",
     pros: [
-      "100% open-source (firmware + Trezor Suite + bootloader auditables sur GitHub)",
-      "Shamir Backup natif (fractionnement seed multi-sites) sur Safe 5 et Model T",
-      "Audits publics récurrents par la communauté de sécurité",
-      "Compatibilité Linux native, philosophie souveraine assumée",
+      "Firmware open source (GPLv3, LGPLv3, MIT), recompilable pour vérifier qu'il correspond à la version officielle",
+      "Sauvegarde multi-fragments (jusqu'à 16 morceaux) sur Safe 3, Safe 5 et Safe 7",
+      "Programme de récompenses pour les failles signalées et liste publique des vulnérabilités corrigées",
+      "Trezor Suite sous Windows, macOS, Linux et Android (iPhone : complet avec le Safe 7)",
     ],
     cons: [],
     featured: true,
     order: 2,
     personas: [
       {
-        name: "Cypherpunk / privacy advocate",
+        name: "Vérifier plutôt que croire",
         description:
-          "\"Don't trust, verify\" n'est pas un slogan — c'est votre mode de vie. Trezor est votre seul choix possible.",
+          "Vous préférez vérifier le code plutôt que croire le marketing. Le firmware Trezor est public et peut être recompilé pour être comparé à la version officielle.",
       },
       {
-        name: "Audit-conscious user",
+        name: "Patrimoine à protéger dans la durée",
         description:
-          "Patrimoine crypto sérieux (>20 k€). Vous voulez vérifier le code, pas faire confiance au marketing. Trezor expose tout.",
+          "Vous voulez répartir votre sauvegarde entre plusieurs lieux. La sauvegarde multi-fragments des Safe 3, 5 et 7 permet par exemple de restaurer avec 3 morceaux sur 5.",
       },
     ],
     products: [
       {
         id: "safe-3",
         name: "Trezor Safe 3",
-        price: "79 €",
-        description: "Secure Element + open-source. Le sweet spot du marché.",
+        price: "59 €",
+        description: "Élément Sécurisé et deux boutons : le modèle d'entrée de gamme.",
         Icon: ShieldCheck,
         imagePath: "/products/trezor-safe-3.png",
-        badge: { label: "Best-seller", tone: "success" },
+        badge: { label: "Entrée de gamme", tone: "primary" },
         highlights: [
-          "Secure Element EAL6+ certifié",
-          "100% open-source",
-          "20+ langues, écran couleur",
+          "Élément Sécurisé certifié EAL6+",
+          "Firmware open source",
+          "Écran OLED monochrome 0,96\", USB-C",
         ],
       },
       {
         id: "safe-5",
         name: "Trezor Safe 5",
-        price: "169 €",
-        description: "Écran tactile couleur, haptic feedback premium.",
+        price: "129 €",
+        description: "Écran tactile couleur et retour haptique à chaque confirmation.",
         Icon: Smartphone,
         imagePath: "/products/trezor-safe-5.png",
         highlights: [
-          "Écran tactile couleur 1.54\"",
-          "Vibrations haptic feedback",
-          "Shamir Backup natif",
+          "Écran tactile couleur 1,54\"",
+          "Retour haptique, verre Gorilla Glass 3",
+          "Sauvegarde multi-fragments",
         ],
       },
       {
-        id: "model-t",
-        name: "Trezor Model T",
-        price: "189 €",
-        description: "Modèle premium historique, support coins étendu.",
+        id: "safe-7",
+        name: "Trezor Safe 7",
+        price: "249 €",
+        description: "Grand écran, Bluetooth et compatibilité iPhone complète.",
         Icon: Crown,
-        imagePath: "/products/trezor-model-t.png",
+        badge: { label: "Haut de gamme", tone: "warning" },
         highlights: [
-          "Écran tactile couleur",
-          "Shamir Backup (SLIP-39)",
-          "Compatible 1500+ cryptos",
+          "Écran tactile couleur 2,5\"",
+          "Deux Éléments Sécurisés (OPTIGA + TROPIC01)",
+          "Bluetooth, recharge sans fil Qi2",
         ],
       },
     ],
@@ -271,9 +276,9 @@ export const partners: Partner[] = [
     category: "fiscalite",
     tagline: "Votre Cerfa 2086 préparé pour vous, sans Excel.",
     shortDescription:
-      "SaaS français leader fiscalité crypto. Génère Cerfa 2086 + 3916-bis pré-remplis selon la méthode globale de l'art. 150 VH bis CGI. Connecte 220+ plateformes.",
-    whyWeUseIt:
-      "On déclare nos propres plus-values dessus depuis 2022. Un outil conçu pour la fiscalité française : rapport 2086 + 3916-bis calculé selon la méthode globale de l'art. 150 VH bis.",
+      "Logiciel français de déclaration fiscale crypto. Prépare l'annexe 2086 selon la méthode globale de l'art. 150 VH bis CGI et les informations du 3916-bis. Plus de 700 intégrations (plateformes, wallets, blockchains).",
+    whyWeChoseIt:
+      "Un outil conçu pour la fiscalité française : il prépare le formulaire 2086 selon la méthode globale de l'article 150 VH bis et les informations des comptes à déclarer au 3916-bis.",
     affiliateUrl: "https://www.waltio.com/fr/?a_aid=Cryptoreflex",
     logoPath: "/logos/partners/waltio.svg",
     // Couleur officielle Waltio = purple #503BFF (vérifiée logo officiel waltio.com).
@@ -281,30 +286,31 @@ export const partners: Partner[] = [
     since: "2018",
     country: "France",
     priceFrom: "Gratuit",
-    commission: "20% par vente",
+    commission: "jusqu'à 20 % par vente",
     pros: [
-      "Cerfa 2086 + 3916-bis pré-remplis automatiquement",
-      "Méthode globale de l'art. 150 VH bis CGI appliquée nativement",
-      "Support par e-mail, chat à partir de l'offre Smart",
-      "Connexion 220+ plateformes (Binance, Bitpanda, Coinhouse, Kraken, MetaMask…)",
+      "Annexe 2086 calculée et formulaires 3916-bis pré-remplis",
+      "Méthode globale de l'art. 150 VH bis CGI appliquée pour la France",
+      "Support par e-mail, chat à partir de l'offre Lite",
+      "Plus de 700 intégrations (Binance, Bitpanda, Coinhouse, Kraken, MetaMask…)",
     ],
     cons: [
-      "Plan Unlimited à 999 €/an au-delà de 10 000 transactions",
-      "Couverture moins exhaustive que Koinly sur chains exotiques (Sui, Aptos, Cosmos)",
-      "Hors-sujet si vous n'êtes pas résident fiscal français",
+      "Offre Unlimited à 999 €/an au-delà de 10 000 transactions",
+      "Pas de connexion automatique aux blockchains Sui et Aptos (liste officielle vérifiée le 5 octobre 2026)",
+      "Formulaires fiscaux localisés seulement pour les pays principaux ; ailleurs, un rapport générique à faire adapter par un conseiller local",
+      "Fuite de données découverte en janvier 2026 (e-mail, gain ou perte 2024, soldes fin 2024) : restez vigilant face à l'hameçonnage",
     ],
     featured: true,
     order: 3,
     personas: [
       {
-        name: "Tax-anxious deadline mai",
+        name: "Déclaration de dernière minute",
         description:
-          "Multi-exchange, deadline approche, vous paniquez. Waltio Starter (99 €/an, jusqu'à 1 000 transactions) + nos guides = déclaration en un week-end.",
+          "Plusieurs plateformes, la date limite approche. Waltio Starter (99 €/an, jusqu'à 1 000 transactions) et nos guides vous aident à préparer la déclaration.",
       },
       {
-        name: "Investor lourd >100 k€",
+        name: "Gros volumes, plusieurs wallets",
         description:
-          "Plusieurs wallets, gros volumes. Waltio Smart (249 €/an, jusqu'à 10 000 transactions) + un cabinet spécialisé en complément.",
+          "Plusieurs wallets, beaucoup d'opérations. Waltio Smart (249 €/an, jusqu'à 10 000 transactions) + un cabinet spécialisé en complément.",
       },
     ],
     products: [
@@ -325,7 +331,7 @@ export const partners: Partner[] = [
         id: "starter",
         name: "Starter",
         price: "99 €/an",
-        description: "Le plan adapté à la majorité des contribuables (Lite à 39 €/an jusqu'à 50 transactions).",
+        description: "Jusqu'à 1 000 transactions par an (Lite à 39 €/an jusqu'à 50 transactions).",
         Icon: FileText,
         badge: { label: "Recommandé", tone: "primary" },
         highlights: [
@@ -343,7 +349,7 @@ export const partners: Partner[] = [
         highlights: [
           "Jusqu'à 10 000 transactions",
           "Suivi CeFi et DeFi",
-          "Guide de déclaration pas à pas",
+          "Guide de déclaration sur impots.gouv.fr",
         ],
       },
     ],

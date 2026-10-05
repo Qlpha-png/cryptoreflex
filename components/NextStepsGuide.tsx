@@ -104,7 +104,7 @@ const POOL: Record<string, Step> = {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
     Icon: Download,
     label: "Bible Fiscalité Crypto 2026",
-    desc: "13 pages — comprendre PFU 31,4 %, formulaire 2086, 3916-bis.",
+    desc: "15 pages — comprendre PFU 31,4 %, formulaire 2086, 3916-bis.",
   },
   calculateurFiscalite: {
     href: "/outils/calculateur-fiscalite",

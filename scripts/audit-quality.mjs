@@ -96,6 +96,9 @@ const FISCAL_NUANCE =
   "pas un [ée]v[ée]nement (?:imposabl|taxabl|fiscal)|" +
   "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
   "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
+  // 05/10/2026 : citer la FAQ impots.gouv (staking en BNC, modifiée le 17/07/2026, relue le 05/10/2026) en renvoyant à un professionnel
+  // est une nuance sourcée (le BOFiP ne traite pas le staking), pas une règle affirmée.
+  "FAQ (?:d['’])?impots\\.gouv|à faire valider|" +
   "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente|BNC|plus-value)|" +
   // cession LÉGITIMEment imposable (contre euro/fiat/devise/bien-service) — ne pas flaguer
   "contre (?:un[e]? |des )?euro|en euros|contre fiat|contre devise|cours légal|monnaie ayant cours l[ée]gal|\\bfiat\\b|vers (?:le )?fiat|" +

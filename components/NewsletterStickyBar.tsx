@@ -36,7 +36,8 @@ const MIN_PAGEVIEWS = 2;
 const SHOW_AFTER_MS = 30_000;
 const SCROLL_THRESHOLD = 0.5;
 // /embed : widgets en iframe sur des sites tiers (la barre recouvrirait le widget).
-const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed"];
+// /comparatif (05/10/2026) : la barre recouvrait la liste et le panier « Comparer » du comparateur sur téléphone.
+const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed", "/comparatif"];
 
 /** Pages vues dans la visite (onglet) : la barre attend la 2e. */
 function countPageview(): number {

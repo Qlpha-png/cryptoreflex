@@ -75,21 +75,21 @@ const LEAD_MAGNETS: LeadMagnetMeta[] = [
     title: "Bible Fiscalité Crypto 2026",
     description:
       "Le guide complet pour déclarer correctement vos cryptos sans payer un euro de trop : méthode globale, Cerfa 2086, 3916-bis, staking, DeFi, NFT.",
-    pages: 14,
+    pages: 15,
   },
   {
     id: "checklist",
     title: "Checklist Déclaration 2026",
     description:
       "30 actions concrètes à imprimer et cocher au fur et à mesure, de la collecte de vos historiques à la déclaration en ligne.",
-    pages: 4,
+    pages: 5,
   },
   {
     id: "glossaire",
     title: "Glossaire Fiscal Crypto",
     description:
       "47 termes fiscaux essentiels expliqués simplement (PFU, BIC, BNC, Cerfa 2086, 3916-bis, MiCA, DAC8…), pour comprendre chaque ligne de votre déclaration.",
-    pages: 10,
+    pages: 11,
   },
 ];
 
@@ -322,7 +322,7 @@ export default function RessourcesPage() {
             disposition (PDFs et outils) sont fournies à titre indicatif et ne
             constituent pas un conseil fiscal ou financier personnalisé. La
             fiscalité crypto évolue régulièrement. Pour toute situation complexe
-            (DeFi, BIC pro, mining, NFT &gt; 50 000 €), consultez un
+            (DeFi, BNC, BIC pro, mining, NFT &gt; 50 000 €), consultez un
             expert-comptable agréé.
           </p>
         </div>

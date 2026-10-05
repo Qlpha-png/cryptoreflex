@@ -26,7 +26,7 @@ export default async function OgImage({ params }: Props) {
 
   const name = partner?.name ?? "Partenaire";
   const tagline =
-    partner?.tagline ?? "Notre avis détaillé, basé sur usage réel.";
+    partner?.tagline ?? "Notre analyse détaillée.";
   const rating = review?.rating ?? null;
   const priceFrom = partner?.priceFrom ?? "";
   const brandColor = partner?.brandColor ?? "#F59E0B";
@@ -196,7 +196,7 @@ export default async function OgImage({ params }: Props) {
                     display: "flex",
                   }}
                 >
-                  Note Cryptoreflex
+                  Note Trustpilot
                 </span>
                 <span
                   style={{
@@ -207,7 +207,7 @@ export default async function OgImage({ params }: Props) {
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  {rating.toFixed(1)}
+                  {rating.toFixed(1).replace(".", ",")}
                   <span
                     style={{
                       fontSize: 30,

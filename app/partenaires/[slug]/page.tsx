@@ -2,13 +2,17 @@
  * /partenaires/[slug] — Page review long-form pour un partenaire affilié.
  *
  * Conçue suite aux recommandations de 10 agents experts conversion :
- *  - Hero brand-color + verdict 30s + rating Schema.org
+ *  - Hero brand-color + verdict 30s + note selon notre grille d'analyse
  *  - Vitrine produits dynamique (3 CTAs distincts)
- *  - Field-test sections honnêtes (pros + cons obligatoire)
+ *  - Sections d'analyse (sources publiques, aucun test personnel revendiqué)
  *  - "Pourquoi maintenant" (loss aversion sourcée, sans comparaison inter-partenaires)
  *  - Specs table + Setup steps + FAQ accordéon (Schema.org FAQPage)
  *  - CTAs distribués (hero, in-content x3, sticky mobile, end-of-page)
- *  - JSON-LD Product + Review + AggregateRating + FAQPage + BreadcrumbList
+ *  - JSON-LD Product (sans Review ni AggregateRating) + FAQPage + BreadcrumbList
+ *
+ * 2026-10-05 : l'équipe n'a jamais eu ces produits en main. Ne pas
+ * réintroduire de revendication d'essai personnel, de durée d'essai, ni de
+ * Review/AggregateRating fondé sur un essai.
  *
  * Honnêteté radicale (pattern Wirecutter/RTings) : la section
  * "Ce qu'on n'aime pas" reste obligatoire. La transparence est notre
@@ -86,8 +90,8 @@ export function generateMetadata({ params }: Props): Metadata {
 
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec
   // le template root layout `%s | Cryptoreflex`.
-  const title = `${partner.name} avis 2026 — test ${review.testDuration} indépendant`;
-  const description = `${partner.tagline} Note ${fmtNb(review.rating)}/5 après ${review.testDuration} d'usage réel. Avantages, prix, FAQ et guide complet.`;
+  const title = `${partner.name} : avis 2026, caractéristiques et prix`;
+  const description = `${partner.tagline} Note Trustpilot ${fmtNb(review.rating)}/5 (${review.externalReviewCount.toLocaleString("fr-FR")} avis). Caractéristiques, prix, FAQ et guide de mise en route.`;
 
   return {
     title: fitTitle(title),
@@ -141,34 +145,15 @@ export default function PartnerDetailPage({ params }: Props) {
   ];
 
   /* ------------------------------ JSON-LD ------------------------------ */
+  // Product simple : pas de Review ni d'AggregateRating. La note affichée est
+  // celle de Trustpilot : Google interdit de baliser des avis agrégés depuis un
+  // autre site, et Cryptoreflex n'a pas testé le produit.
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: partner.name,
     description: partner.shortDescription,
     brand: { "@type": "Brand", name: partner.name },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: review.rating,
-      bestRating: 5,
-      worstRating: 1,
-      reviewCount: review.externalReviewCount,
-    },
-    review: {
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: review.rating,
-        bestRating: 5,
-      },
-      author: {
-        "@type": "Organization",
-        name: BRAND.name,
-        url: BRAND.url,
-      },
-      datePublished: review.lastUpdated,
-      reviewBody: review.verdict.summary,
-    },
     offers: partner.products.map((p) => ({
       "@type": "Offer",
       name: p.name,
@@ -229,9 +214,13 @@ export default function PartnerDetailPage({ params }: Props) {
             />
             <p className="text-xs sm:text-sm text-fg/75 leading-relaxed">
               <span className="font-bold text-fg">Lien affilié.</span> Cette
-              page contient des liens affiliés (loi 9 juin 2023). Notre note de{" "}
-              {fmtNb(review.rating)}/5 résulte de {review.testDuration} de test
-              terrain — pas d&apos;un partenariat commercial.
+              page contient des liens affiliés (loi 9 juin 2023). La note de{" "}
+              {fmtNb(review.rating)}/5 est celle de Trustpilot (
+              {review.externalReviewCount.toLocaleString("fr-FR")} avis, relevée le{" "}
+              {new Date(review.externalReviewDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}),
+              pas la nôtre : le partenariat ne la change pas. Notre analyse repose
+              sur les informations publiées par {partner.name} et sur des sources
+              publiques, pas sur une utilisation personnelle du produit.
             </p>
           </div>
         </aside>
@@ -252,8 +241,8 @@ export default function PartnerDetailPage({ params }: Props) {
       {/* ─────────────────────── PRODUITS VITRINE ────────────────────────── */}
       <ProductShowcase partner={partner} />
 
-      {/* ─────────────────────── FIELD TEST SECTIONS ─────────────────────── */}
-      <FieldTest partner={partner} review={review} />
+      {/* ─────────────────────── SECTIONS D'ANALYSE ──────────────────────── */}
+      <PartnerAnalysis partner={partner} review={review} />
 
       {/* ─────────────────────── RISQUES ÉVITÉS (loss aversion) ───────────── */}
       <RisksAvoided review={review} partner={partner} />
@@ -315,8 +304,8 @@ function PartnerHero({
                 AVIS CRYPTOREFLEX · {review.lastUpdated.slice(0, 4)}
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 text-xs text-muted">
-                <Clock className="h-3 w-3" aria-hidden="true" />
-                Testé sur {review.testDuration}
+                <ListChecks className="h-3 w-3" aria-hidden="true" />
+                Analyse sur sources publiques
               </span>
             </div>
 
@@ -344,8 +333,8 @@ function PartnerHero({
                 rel="noopener nofollow"
                 className="text-xs text-muted hover:text-fg transition-colors"
               >
-                {review.externalReviewCount.toLocaleString("fr-FR")} avis sur{" "}
-                {review.externalReviewSource.name} ↗
+                Note {review.externalReviewSource.name} ·{" "}
+                {review.externalReviewCount.toLocaleString("fr-FR")} avis ↗
               </a>
             </div>
 
@@ -429,7 +418,7 @@ function PartnerHero({
 
               <div className="mt-6 grid grid-cols-3 gap-2 text-center">
                 <MiniStat
-                  label="Note"
+                  label="Trustpilot"
                   value={`${fmtNb(review.rating)}/5`}
                   icon={Star}
                 />
@@ -538,10 +527,9 @@ function PartnerVerdict({
               id="verdict-title"
               className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
             >
-              Notre prise après {review.testDuration}
+              Notre analyse en bref
             </h2>
           </div>
-          <RatingDisplay rating={review.rating} />
         </div>
 
         <p className="text-base sm:text-lg text-fg/85 leading-relaxed mb-7 italic border-l-2 border-primary/40 pl-4">
@@ -1144,10 +1132,10 @@ function ProductCard({
 }
 
 /* ========================================================================== */
-/*  FIELD TEST SECTIONS                                                        */
+/*  SECTIONS D'ANALYSE (sources publiques, aucun test personnel)              */
 /* ========================================================================== */
 
-function FieldTest({
+function PartnerAnalysis({
   partner,
   review,
 }: {
@@ -1156,7 +1144,7 @@ function FieldTest({
 }) {
   return (
     <section
-      aria-labelledby="field-test-title"
+      aria-labelledby="analysis-title"
       className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 mt-16"
     >
       <header
@@ -1165,13 +1153,13 @@ function FieldTest({
       >
         <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
           <ListChecks className="h-3.5 w-3.5" aria-hidden="true" />
-          NOTRE TEST TERRAIN · {review.testDuration}
+          NOTRE ANALYSE
         </span>
         <h2
-          id="field-test-title"
+          id="analysis-title"
           className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
         >
-          Ce qu&apos;on a réellement vu en usage
+          Ce qu&apos;il faut savoir avant de choisir
         </h2>
       </header>
 
@@ -1206,10 +1194,10 @@ function FieldTest({
       >
         <div>
           <p className="font-bold text-fg mb-0.5">
-            Convaincu par {review.testDuration} de retour terrain ?
+            {partner.name} correspond à votre besoin ?
           </p>
           <p className="text-sm text-fg/75">
-            Ne perdez pas le momentum — passez sur {partner.name}.
+            Consultez l&apos;offre et les prix à jour sur le site officiel.
           </p>
         </div>
         <Link prefetch={false}
@@ -1346,7 +1334,7 @@ function SpecsTable({ review }: { review: PartnerReview }) {
           id="specs-title"
           className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
         >
-          Les specs vérifiées
+          Les caractéristiques principales
         </h2>
       </header>
 
@@ -1399,7 +1387,7 @@ function SetupSteps({
           id="setup-title"
           className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
         >
-          Comment on configure {partner.name} sans se planter
+          Comment configurer {partner.name} sans erreur
         </h2>
       </header>
 
@@ -1455,7 +1443,7 @@ function PartnerFAQ({ review }: { review: PartnerReview }) {
           id="faq-title"
           className="mt-2 text-2xl sm:text-3xl font-extrabold text-fg tracking-tight"
         >
-          Les objections qu&apos;on entend tous les jours
+          Les questions les plus courantes
         </h2>
       </header>
 

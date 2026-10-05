@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
   title: { absolute: "Calculateur fiscalité crypto — Cryptoreflex (embed)" },
   description:
-    "Calculateur fiscalité crypto France 2026 (PFU, barème, BIC) — version embeddable.",
+    "Calculateur fiscalité crypto France 2026 (PFU, barème, BNC) — version embeddable.",
   robots: { index: false, follow: true },
 };
 
@@ -66,7 +66,7 @@ export default function EmbedCalculateurFiscalitePage() {
           lineHeight: 1.4,
         }}
       >
-        Estime votre impôt PFU 31,4 % / barème / BIC en 2 minutes — calcul 100 %
+        Estimez votre impôt PFU 31,4 % / barème / BNC en 2 minutes — calcul 100 %
         local.
       </p>
 

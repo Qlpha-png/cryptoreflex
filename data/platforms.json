@@ -56,7 +56,21 @@
           "verdict": "fiable",
           "note": "Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple coûte bien plus cher (carte 3,99 % + spread, relevé du 13/06/2026). Retrait SEPA gratuit (dépôt 0,15 €)."
         },
-        "cardBuy": 3.99
+        "cardBuy": 3.99,
+        "cost": {
+          "path": "Appli Coinbase : Acheter (achat simple), payé avec le solde en euros",
+          "c100": null,
+          "c1000": null,
+          "kind": "partiel",
+          "card": {
+            "c100": null,
+            "c1000": null,
+            "kind": "partiel"
+          },
+          "note": "Coinbase ne chiffre pas les frais de l'achat simple. Coinbase Advanced : 0,50 % (0,50 € pour 100 €).",
+          "date": "2026-10-05",
+          "source": "https://help.coinbase.com/fr/coinbase/trading-and-funding/pricing-and-fees/fees"
+        }
       },
       "deposit": {
         "minEur": 2,
@@ -265,6 +279,20 @@
           "realCostPct": "1,49 % (la plupart des cryptos) · 0,99 % (Bitcoin, stablecoins) · 2,49 % (petites capitalisations) · Fusion 0,25 %",
           "verdict": "fiable",
           "note": "Grille officielle v4.0.0 du 08/07/2026 : 0,99 % sur les stablecoins et le Bitcoin, 1,49 % sur les autres cryptos, 2,49 % sur les cryptos de moins de 100 M€ de capitalisation, 1,99 % sur les indices ; Bitpanda Fusion 0,25 % au premier palier (moins de 100 000 € sur 30 jours). Dépôt et retrait SEPA gratuits."
+        },
+        "cost": {
+          "path": "Appli Bitpanda : Bitcoin › Acheter, payé avec le solde en euros",
+          "c100": 0.99,
+          "c1000": 9.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 0.99,
+            "c1000": 9.9,
+            "kind": "partiel"
+          },
+          "note": "Bitcoin : 0,99 %. Autres cryptos : 1,49 % ; petites capitalisations : 2,49 %.",
+          "date": "2026-10-05",
+          "source": "https://cdn.bitpanda.com/terms-and-conditions/cost-transparency-crypto-bitpanda-fr-latest.pdf"
         }
       },
       "deposit": {
@@ -371,6 +399,20 @@
           "realCostPct": "0,40/0,80 % (Pro, premier palier) · Instant Buy 1 % + frais",
           "verdict": "fiable",
           "note": "Kraken Pro, premier palier : 0,40 % maker / 0,80 % taker (grille officielle). Instant Buy (appli simple) = 1 % + frais du moyen de paiement. Retrait SEPA 1 € (relevé du 13/06/2026)."
+        },
+        "cost": {
+          "path": "Appli Kraken : achat instantané, payé avec le solde en euros",
+          "c100": 1,
+          "c1000": 10,
+          "kind": "partiel",
+          "card": {
+            "c100": 5,
+            "c1000": 47.75,
+            "kind": "partiel"
+          },
+          "note": "Kraken Pro : 0,80 %. Par carte : dépôt à 3,75 % + 0,25 €.",
+          "date": "2026-10-05",
+          "source": "https://www.kraken.com/fr/features/fee-schedule"
         }
       },
       "deposit": {
@@ -581,6 +623,20 @@
           "realCostPct": "1 € fixe/ordre + spread ~1 % (estimé)",
           "verdict": "fiable",
           "note": "1 € fixe par ordre + spread intégré ~1 % (estimé par des tiers, non publié par Trade Republic). Dépôt SEPA gratuit. Modèle courtier (pas de maker/taker). Depuis le 14/11/2025 : envoi et réception de cryptos vers ou depuis un portefeuille externe (frais de réseau uniquement) et staking sans frais supplémentaires (SOL, ETH, DOT…), d'après la page crypto officielle (50 cryptos)."
+        },
+        "cost": {
+          "path": "Appli Trade Republic : ordre ponctuel payé avec le solde",
+          "c100": 1,
+          "c1000": 1,
+          "kind": "partiel",
+          "card": {
+            "c100": null,
+            "c1000": null,
+            "kind": "partiel"
+          },
+          "note": "1 € par ordre ; plans d'épargne sans frais d'ordre. Carte : frais affichés avant le paiement seulement.",
+          "date": "2026-10-05",
+          "source": "https://traderepublic.com/fr-fr/crypto"
         }
       },
       "deposit": {
@@ -682,7 +738,21 @@
           "verdict": "fiable",
           "note": "Grille officielle publiée le 09/02/2026 (offre Classique, particuliers) : achat 0,99 % via le Compte Euro ou un virement SEPA, 1,99 % par carte et en achat récurrent, vente 1,29 %, conversion entre cryptos 0,79 %, plus 0,12 € de frais de traitement par transaction. Retrait de crypto : frais de réseau + 0,29 % (minimum 1,49 €, maximum 150 €). Virements SEPA sortants gratuits."
         },
-        "cardBuy": 1.99
+        "cardBuy": 1.99,
+        "cost": {
+          "path": "Compte Euro Coinhouse alimenté par virement, puis « Acheter »",
+          "c100": 1.11,
+          "c1000": 10.02,
+          "kind": "partiel",
+          "card": {
+            "c100": 2.11,
+            "c1000": 20.02,
+            "kind": "partiel"
+          },
+          "note": "0,99 % + 0,12 € par achat.",
+          "date": "2026-10-05",
+          "source": "https://cms-www.coinhouse.com/wp-content/uploads/2026/08/CH_-GrilleTarifaire_Web_FR_AUG26.pdf"
+        }
       },
       "deposit": {
         "minEur": 30,
@@ -769,20 +839,34 @@
         "registerSource": "Registre MiCA de l'ESMA au 29/09/2026 · liste blanche AMF"
       },
       "fees": {
-        "spotMaker": 1.49,
-        "spotTaker": 1.49,
-        "instantBuy": 1.49,
+        "spotMaker": 1.5,
+        "spotTaker": 1.5,
+        "instantBuy": 1.5,
         "withdrawalCrypto": "Variable",
         "withdrawalFiatSepa": 0,
-        "spread": "dégressif (inclus)",
+        "spread": "0 à 1 % (inclus dans le prix)",
         "verified": {
-          "date": "2026-06-13",
-          "source": "https://bitstack-app.com/documents/politique-tarifaire",
+          "date": "2026-10-05",
+          "source": "https://help.bitstack-app.com/fr/articles/6377515-quels-sont-les-prix-et-les-frais-pratiques-par-bitstack",
           "model": "dca",
           "makerTakerApplies": false,
-          "realCostPct": "1,49 % (<250 €, dégressif jusqu'à 0,49 %)",
+          "realCostPct": "1,50 % (moins de 250 € d'achats dans le mois) · 1,25 % (jusqu'à 1 000 €) · 1,00 % au-delà · + marge de 0 à 1 %",
           "verdict": "fiable",
-          "note": "App DCA Bitcoin (page officielle). 1,49 % (<250 €) dégressif jusqu'à 0,49 % (gros volumes), min 0,29 €. Retrait d'espèces au distributeur avec la carte Bitstack : gratuit jusqu'à 200 €/mois ou 5 retraits, puis 1 € ou 1 %."
+          "note": "App d'épargne Bitcoin. Grille en vigueur depuis le 01/09/2026 : 1,50 % / 1,25 % / 1,00 % selon le volume d'achats et de ventes sur 30 jours (transaction en cours comprise), 0,75 % avec Bitstack Plus, plus une marge de 0 à 1 % incluse dans le prix. Par carte : + 0,70 %. Achat minimum : 1 €."
+        },
+        "cost": {
+          "path": "Appli Bitstack : Épargne › Acheter, payé avec le compte euro",
+          "c100": 2.5,
+          "c1000": 22.5,
+          "kind": "max",
+          "card": {
+            "c100": 3.2,
+            "c1000": 29.5,
+            "kind": "max"
+          },
+          "note": "Bitcoin uniquement. 1,50 % sous 250 € d'achats dans le mois, 1,25 % jusqu'à 1 000 €, puis 1 %, plus une marge de 0 à 1 %.",
+          "date": "2026-10-05",
+          "source": "https://help.bitstack-app.com/fr/articles/6377515-quels-sont-les-prix-et-les-frais-pratiques-par-bitstack"
         }
       },
       "deposit": {
@@ -795,7 +879,7 @@
         ]
       },
       "cryptos": {
-        "totalCount": 25,
+        "totalCount": 1,
         "stakingAvailable": false,
         "stakingCryptos": []
       },
@@ -830,8 +914,8 @@
         "Onboarding ultra simple"
       ],
       "weaknesses": [
-        "Catalogue très limité (25 cryptos)",
-        "1,49 % par achat sous 250 € (dégressif jusqu'à 0,49 %)",
+        "Bitcoin uniquement",
+        "1,50 % par achat sous 250 € d'achats dans le mois (1 % au-delà de 1 000 €), plus une marge de 0 à 1 %",
         "Pas de trading actif"
       ],
       "badge": "Idéal débutant DCA",
@@ -880,7 +964,21 @@
           "verdict": "fiable",
           "note": "Grille officielle du 31/08/2026 : frais d'échange 0,99 % ; dépôt par carte 2,25 % (zone Standard, dont la France, minimum 5 €) ; retrait en euros 0,10 % (minimum 1,50 €, maximum 100 €). Dépôt SEPA gratuit (relevé du 13/06/2026). Cashback BORG conditionné au blocage du jeton : ce n'est pas le taux de base."
         },
-        "cardBuy": 3.24
+        "cardBuy": 3.24,
+        "cost": {
+          "path": "Appli SwissBorg : « Échanger » EUR → BTC depuis le compte en euros",
+          "c100": 0.99,
+          "c1000": 9.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 5.99,
+            "c1000": 32.4,
+            "kind": "partiel"
+          },
+          "note": "Par carte : 2,25 % de frais de dépôt, 5 € minimum.",
+          "date": "2026-10-05",
+          "source": "https://swissborg.com/legal/pricing-policy"
+        }
       },
       "deposit": {
         "minEur": 50,
@@ -982,6 +1080,20 @@
           "realCostPct": "0,25 % (spot, taux unique Bybit EU) · carte via tiers ~1-3 %",
           "verdict": "fiable",
           "note": "Bybit EU (entité agréée pour la France) : taux unique de 0,25 % (maker = taker) au niveau VIP 0, depuis le 05/10/2026 (grille officielle). Achat par carte via des prestataires tiers (1-3 %, non publié par Bybit). Retrait SEPA en euros non vérifié."
+        },
+        "cost": {
+          "path": "Bybit EU : One-Click Buy, payé avec le solde en euros",
+          "c100": 1.8,
+          "c1000": 18,
+          "kind": "max",
+          "card": {
+            "c100": null,
+            "c1000": null,
+            "kind": "partiel"
+          },
+          "note": "1,30 % en semaine en journée, 1,80 % la nuit et le week-end. Carte : frais non publiés.",
+          "date": "2026-10-05",
+          "source": "https://www.bybit.eu/en-EU/help-center/article/FAQ-One-Click-Buy/"
         }
       },
       "deposit": {
@@ -1086,6 +1198,20 @@
           "realCostPct": "1,49 % (minimum de 0,99 € à 2,99 € par ordre sous 200 €) + spread",
           "verdict": "douteux",
           "note": "Plan Standard (grille officielle) : le plus élevé entre 1,49 % et un minimum par ordre de 0,99 € (2 à 5 €), 1,49 € (5 à 25 €), 1,99 € (25 à 100 €), 2,49 € (100 à 150 €) ou 2,99 € (150 à 200 €) ; pas de minimum au-delà de 200 €. Exemple : 2,49 € sur un achat de 100 € (2,49 %). Spread « one-sided » de 0 à 3 % en plus (document officiel RDAEL). Modèle courtier, pas de maker/taker."
+        },
+        "cost": {
+          "path": "Appli Revolut (plan Standard) : Crypto › Acheter, payé avec le solde",
+          "c100": 2.49,
+          "c1000": 14.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 2.49,
+            "c1000": 14.9,
+            "kind": "partiel"
+          },
+          "note": "1,49 % avec un minimum par ordre (2,49 € de 100 à 150 €) ; 1 % de plus au-delà de 1 000 € d'échanges dans le mois.",
+          "date": "2026-10-05",
+          "source": "https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/"
         }
       },
       "deposit": {
@@ -1189,6 +1315,20 @@
           "realCostPct": "0,10/0,20 % (compte spot) · 0,08/0,10 % (compte spot et dérivés) · carte via tiers 3-6 %",
           "verdict": "fiable",
           "note": "Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte via des tiers (MoonPay, Banxa) : 3 à 6 %. SEPA gratuit."
+        },
+        "cost": {
+          "path": "Appli OKX : Buy, payé avec le solde en euros",
+          "c100": 1,
+          "c1000": 10,
+          "kind": "max",
+          "card": {
+            "c100": 2.99,
+            "c1000": 29.9,
+            "kind": "max"
+          },
+          "note": "Marge de 1 % au plus. Mode avancé : 0,20 %.",
+          "date": "2026-10-05",
+          "source": "https://www.okx.com/en-eu/help/how-do-i-buy-crypto-with-my-cash-balance-eea"
         }
       },
       "deposit": {
@@ -1293,7 +1433,21 @@
           "verdict": "douteux",
           "note": "Appli Crypto.com (EEE), grille officielle du 19/05/2026 : 0,80 % par achat depuis le solde ou échange entre cryptos, jusqu'à 4 % par carte bancaire ; retrait SEPA 1 €. Exchange : 0,25/0,50 % au palier de base (sources tierces concordantes, tableau officiel illisible)."
         },
-        "cardBuy": 4
+        "cardBuy": 4,
+        "cost": {
+          "path": "Appli Crypto.com : Buy, payé avec le portefeuille en euros",
+          "c100": 0.8,
+          "c1000": 8,
+          "kind": "partiel",
+          "card": {
+            "c100": 4,
+            "c1000": 40,
+            "kind": "partiel"
+          },
+          "note": "Par carte : jusqu'à 4 %.",
+          "date": "2026-10-05",
+          "source": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+        }
       },
       "deposit": {
         "minEur": 1,
@@ -1494,6 +1648,20 @@
           "realCostPct": "0,30/0,40 % (Pro) · Instant Buy carte/PayPal 4 %",
           "verdict": "fiable",
           "note": "Instant Buy (carte/Apple Pay/Google Pay/PayPal) = 4 %, pas 1,5 %. Le 0,30/0,40 % exige le mode Pro (ordres limit). Retrait SEPA 3 €."
+        },
+        "cost": {
+          "path": "Appli Bitstamp, mode Basic : Buy, payé avec le solde en euros",
+          "c100": 2.3,
+          "c1000": 23,
+          "kind": "max",
+          "card": {
+            "c100": 6.3,
+            "c1000": 63,
+            "kind": "max"
+          },
+          "note": "Marge de 1,8 %, jusqu'à 2,3 % quand le marché s'agite. Mode Pro : 0,40 %.",
+          "date": "2026-10-05",
+          "source": "https://www.bitstamp.net/fee-schedule/"
         }
       },
       "deposit": {
@@ -1595,7 +1763,21 @@
           "verdict": "fiable",
           "note": "Pas de jeton à détenir. Achat aux frais de trading (taker 0,25 %). Dépôt par carte, Apple Pay, Google Pay ou PayPal : 1 % (grille officielle ; les frais de dépôt varient selon le pays), soit environ 1,25 % pour un achat payé par carte. Dépôt SEPA gratuit."
         },
-        "cardBuy": 1.25
+        "cardBuy": 1.25,
+        "cost": {
+          "path": "Appli Bitvavo : Buy (ordre au marché), payé avec le solde en euros",
+          "c100": 0.25,
+          "c1000": 2.5,
+          "kind": "exact",
+          "card": {
+            "c100": 1.25,
+            "c1000": 12.5,
+            "kind": "exact"
+          },
+          "note": "Par carte : + 1 % de frais de dépôt.",
+          "date": "2026-10-05",
+          "source": "https://bitvavo.com/fr/fees"
+        }
       },
       "deposit": {
         "minEur": 1,
@@ -1699,6 +1881,20 @@
           "realCostPct": "1 % par ordre (+ spread altcoins jusqu'à 5 %)",
           "verdict": "fiable",
           "note": "1 % par achat ou vente (paliers Bronze à Gold). Achat sans levier = vraie crypto ; levier ou vente à découvert = CFD, produit à risque. Retrait gratuit et sans minimum depuis un compte en euros (5 $ et 30 $ minimum seulement depuis le compte en dollars). Pas de frais d'inactivité. Transfert de crypto vers eToro Money : 2 %."
+        },
+        "cost": {
+          "path": "eToro : fiche Bitcoin › Trader, depuis le compte en euros",
+          "c100": 1.75,
+          "c1000": 17.5,
+          "kind": "partiel",
+          "card": {
+            "c100": 2.34,
+            "c1000": 23.4,
+            "kind": "partiel"
+          },
+          "note": "1 % + 0,75 % de conversion euro-dollar. eToro précise que certaines positions crypto peuvent être des CFD.",
+          "date": "2026-10-05",
+          "source": "https://www.etoro.com/fr/trading/fees/"
         }
       },
       "deposit": {
@@ -1801,7 +1997,21 @@
           "verdict": "fiable",
           "note": "Grille officielle : ordres limites 0,40 % maker / 0,60 % taker (moins de 10 000 € sur 30 jours) ; ordres au marché et échanges 1,49 % ; carte jusqu'à 3,5 % ; retrait SEPA 0,99 € (minimum 10 €) ; retrait BTC gratuit en ≈ 24 h ou 0,00004 BTC en ≈ 10 min. Frais d'inactivité supprimés depuis le 01/01/2025 pour les comptes ouverts sur paymium.com."
         },
-        "cardBuy": 3.5
+        "cardBuy": 3.5,
+        "cost": {
+          "path": "Paymium : Achat / Vente › Acheter, payé avec le solde en euros",
+          "c100": 1.49,
+          "c1000": 14.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 3.5,
+            "c1000": 35,
+            "kind": "partiel"
+          },
+          "note": "Par carte : jusqu'à 3,5 %.",
+          "date": "2026-10-05",
+          "source": "https://www.paymium.com/fr/tarification"
+        }
       },
       "deposit": {
         "minEur": 10,
@@ -1896,6 +2106,20 @@
           "realCostPct": "1,99 % (Standard gratuit)",
           "verdict": "fiable",
           "note": "1,99 % tout compris (plan Standard gratuit). Premium (14,99 €/mois ou 120 €/an) : 0,49 % ; offre Native (détenteurs d'un NFT Deblock) : gratuit (grille officielle applicable depuis le 05/07/2026). Néobanque + wallet self-custody. Virements SEPA gratuits. Pas de maker/taker."
+        },
+        "cost": {
+          "path": "Appli Deblock : Crypto › Acheter, payé avec le compte en euros",
+          "c100": 1.99,
+          "c1000": 19.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 1.99,
+            "c1000": 19.9,
+            "kind": "partiel"
+          },
+          "note": "Plan Standard ; 0,49 % avec l'abonnement Premium.",
+          "date": "2026-10-05",
+          "source": "https://deblock.com/fr/accords-juridiques"
         }
       },
       "deposit": {
@@ -2096,6 +2320,20 @@
           "realCostPct": "carte 4,5 % + spread 1-3 % = 5-8 % · virement ~1 %",
           "verdict": "fiable",
           "note": "On-ramp (pas de trading). Carte 4,5 % + spread 1-3 % intégré = coût réel 5-8 %. Minimum ~3,99 €/transaction (≈20 % sur 20 €). Virement SEPA ~1 % bien moins cher."
+        },
+        "cost": {
+          "path": "MoonPay : achat avec le solde MoonPay Balance",
+          "c100": null,
+          "c1000": null,
+          "kind": "partiel",
+          "card": {
+            "c100": null,
+            "c1000": null,
+            "kind": "partiel"
+          },
+          "note": "MoonPay ne publie que des plafonds, qui se contredisent. Achat minimum : 20 €.",
+          "date": "2026-10-05",
+          "source": "https://www.moonpay.com/legal/europe_pricing_disclosure"
         }
       },
       "deposit": {
@@ -2193,6 +2431,20 @@
           "realCostPct": "1,5 % BTC · 2,5 % autres · 3,5 % peu liquides + spread Bitpanda",
           "verdict": "fiable",
           "note": "1,5 % UNIQUEMENT sur BTC ; 2,5 % autres cryptos ; 3,5 % peu liquides ; + spread Bitpanda en sus (page officielle N26). Metal : 1 %/2 % plafonné 5000 €/mois. SEPA gratuit."
+        },
+        "cost": {
+          "path": "Appli N26 : Investissements › Crypto › Acheter, débité du compte courant",
+          "c100": 1.5,
+          "c1000": 15,
+          "kind": "partiel",
+          "card": {
+            "c100": 4.5,
+            "c1000": 45,
+            "kind": "partiel"
+          },
+          "note": "Par carte : recharge du compte à 3 % (la première est gratuite).",
+          "date": "2026-10-05",
+          "source": "https://support.n26.com/en-fr/app-and-features/savings-and-invest/how-n26-crypto-works"
         }
       },
       "deposit": {
@@ -2287,6 +2539,16 @@
           "realCostPct": "1,49 % (achat instantané ; 1,29 % avec code de parrainage) · plan d'épargne : 0,99 % les 7 premiers jours, puis 0 %",
           "verdict": "fiable",
           "note": "Courtier BTC (page officielle mise à jour le 30/09/2026). Achat instantané 1,49 % (1,29 % avec un code de parrainage) ; plan d'épargne Auto-Invest 0,99 % les 7 premiers jours (0,79 % avec un code), puis gratuit dès le 8e jour. Retrait BTC : 1 000 sats ; retrait EUR 1 € ; dépôt SEPA gratuit."
+        },
+        "cost": {
+          "path": "Appli 21bitcoin : Buy › One-Time Purchase, payé avec le compte en euros",
+          "c100": 1.49,
+          "c1000": 14.9,
+          "kind": "partiel",
+          "card": null,
+          "note": "Bitcoin uniquement. Marge annoncée « typique » de 0,3 à 0,5 %.",
+          "date": "2026-10-05",
+          "source": "https://21bitcoin.app/en/fees"
         }
       },
       "deposit": {
@@ -2481,6 +2743,20 @@
           "realCostPct": "Pro 0,20 % · App ~0,2-0,4 % + spread",
           "verdict": "douteux",
           "note": "Retrait en euros 1,99 € (minimum 20 €, page officielle). Dépôt par carte réservé aux cartes italiennes, depuis l'Italie (2,2 % + 0,25 €) : pas d'achat par carte depuis la France. Pro = 0,20 % et appli = commission + spread 0,15-0,5 % (sources tierces, non confirmées). Token YNG réduit les frais (optionnel)."
+        },
+        "cost": {
+          "path": "Appli Young Platform (mode simple) : Acheter, payé avec le solde en euros",
+          "c100": 3.29,
+          "c1000": 26.9,
+          "kind": "max",
+          "card": {
+            "c100": 5.74,
+            "c1000": 49.15,
+            "kind": "max"
+          },
+          "note": "2,49 € par ordre jusqu'à 100 €, puis 1,89 % ; marge de 0,40 à 0,80 % en plus.",
+          "date": "2026-10-05",
+          "source": "https://exchange.youngplatform.com/fr/fees"
         }
       },
       "deposit": {
@@ -3060,6 +3336,20 @@
           "realCostPct": "0 % commission + spread ~0,30 %",
           "verdict": "douteux",
           "note": "Commission 0 + spread ~0,30 % (tierce ; officiel = 'variable' sans %). Dépôt carte/e-wallet 0,7 % au-delà de 2000 € cumulés. FX 0,15 %. Pas de retrait crypto on-chain (Wallet T212)."
+        },
+        "cost": {
+          "path": "Trading 212 : compte Crypto, achat payé avec le solde",
+          "c100": 0,
+          "c1000": 0,
+          "kind": "partiel",
+          "card": {
+            "c100": 0,
+            "c1000": 0,
+            "kind": "partiel"
+          },
+          "note": "Sans commission : la marge est intégrée au prix, sans chiffre publié.",
+          "date": "2026-10-05",
+          "source": "https://www.trading212.com/fr/terms/crypto"
         }
       },
       "deposit": {
@@ -3251,7 +3541,21 @@
           "verdict": "fiable",
           "note": "Grille officielle Meria : achat 0,99 % sur BTC, ETH et USDC par virement ou depuis le solde (carte : 1,5 % sur BTC, 1,75 % sur ETH et USDC), 2,39 % sur les autres cryptos (3,15 % par carte). Retrait en euros : 1,24 % de conversion, minimum 100 €. Retrait de crypto à frais fixes (ex. 0,00012 BTC). Commission de staking de 5 à 14 % des récompenses."
         },
-        "cardBuy": 3.15
+        "cardBuy": 3.15,
+        "cost": {
+          "path": "Meria : achat payé avec le solde en euros (dépôt par virement)",
+          "c100": 0.99,
+          "c1000": 9.9,
+          "kind": "partiel",
+          "card": {
+            "c100": 1.5,
+            "c1000": 15,
+            "kind": "partiel"
+          },
+          "note": "Virement de 100 € minimum ; des euros déposés mais non utilisés ne peuvent pas être renvoyés à la banque.",
+          "date": "2026-10-05",
+          "source": "https://www.meria.com/feePolicy"
+        }
       },
       "deposit": {
         "minEur": 50,
@@ -3351,6 +3655,20 @@
           "realCostPct": "1,5 % achat carte (1 % Platinum)",
           "verdict": "fiable",
           "note": "1,5 % achat carte (1 % Platinum 14,99 €/mois). Vente fiat 1 %. Retrait EUR 2 €. ⚠ Retrait stablecoins USDT/USDC = 26 $. Staking 3 %."
+        },
+        "cost": {
+          "path": "Feel Mining : Acheter, payé avec le solde en euros",
+          "c100": 1.5,
+          "c1000": 15,
+          "kind": "partiel",
+          "card": {
+            "c100": 3,
+            "c1000": 30,
+            "kind": "partiel"
+          },
+          "note": "1 % avec l'abonnement Platinum.",
+          "date": "2026-10-05",
+          "source": "https://feel-mining.com/offres-et-frais"
         }
       },
       "deposit": {

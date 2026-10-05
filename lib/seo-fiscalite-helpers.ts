@@ -75,7 +75,7 @@ export const FISCALITE_SILO: FiscaliteRelatedArticle[] = [
     slug: "fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique",
     title: "Fiscalité DeFi France 2026 — BIC ou BNC ?",
     description:
-      "Yield farming, lending, LP tokens, airdrops : quel régime fiscal pour votre DeFi en 2026 ? Critères BIC/BNC, exemples chiffrés, jurisprudence DGFiP.",
+      "Yield farming, lending, LP tokens, airdrops : quel régime fiscal pour votre DeFi en 2026 ? Critères BIC/BNC, exemples chiffrés et ce qui reste non tranché.",
     category: "Fiscalité",
     cluster: "silo",
   },
@@ -184,7 +184,7 @@ function calculatorSoftwareSchema(description: string): JsonLd {
     featureList: [
       "Calcul PFU 31,4 % (12,8 % IR + 18,6 % PS)",
       "Option barème progressif IR",
-      "Régime BIC professionnel",
+      "Estimation au régime BNC (cas rares)",
       "Seuil exonération 305 € pris en compte",
       "Aide Cerfa 2086 + 2042-C",
       "Calcul 100 % local (aucune donnée envoyée)",
@@ -193,25 +193,8 @@ function calculatorSoftwareSchema(description: string): JsonLd {
     // manual action si la note n'est pas représentative d'avis utilisateurs
     // réels collectés (cf. policy "Review snippet"). À ré-activer quand on aura
     // ≥ 5 reviews authentiques (Trustpilot ou formulaire post-utilisation PDF).
-    // En attendant, on signale notre verdict éditorial via une `Review` unique.
-    review: {
-      "@type": "Review",
-      author: {
-        "@type": "Organization",
-        name: BRAND.name,
-        url: BRAND.url,
-      },
-      datePublished: "2026-04-26",
-      name: `Verdict éditorial ${BRAND.name} — calculateur fiscalité crypto`,
-      reviewBody:
-        "Outil testé en interne par l'équipe Cryptoreflex sur 12 cas types (DCA, swap, gros gain, micro montant, BIC). Calcul conforme à l'article 150 VH bis du CGI et au BOFiP en vigueur. Calcul 100 % local — aucune donnée envoyée.",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: "4.7",
-        bestRating: "5",
-        worstRating: "1",
-      },
-    },
+    // 05/10/2026 : plus de `Review` notée par le site sur son propre outil (avis auto-attribué, et son texte
+    // annonçait des « tests internes par l'équipe » invérifiables).
     publisher: {
       "@type": "Organization",
       name: BRAND.name,
@@ -266,7 +249,7 @@ export function generateFiscaliteSchema(
       },
       {
         name: "Choisir entre PFU 31,4 % et barème progressif",
-        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que votre TMI dépasse 12,8 %. Si votre TMI est à 0 ou 11 %, optez pour le barème progressif via la case 3CN de la déclaration 2042 C. Le calculateur affiche les deux scénarios côte à côte.",
+        text: "Le PFU à 31,4 % (12,8 % IR + 18,6 % PS) est avantageux dès que votre TMI dépasse 12,8 %. À TMI 0 %, le barème progressif (case 3CN de la déclaration 2042 C) est plus avantageux. À TMI 11 %, il ne l'est que si votre impôt ne bénéficie pas de la décote : sinon, chaque euro de plus-value coûte environ 16 % d'impôt au barème, plus que les 12,8 % du PFU. Simulez avant de cocher la case 3CN. Le calculateur estime un régime à la fois : faites le calcul avec le PFU, puis avec le barème, pour comparer.",
         url: "/blog/bareme-progressif-vs-pfu-crypto-2026",
       },
       {
