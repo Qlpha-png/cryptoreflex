@@ -126,7 +126,7 @@ async function jetonPiste() {
           const j = await res.json().catch(() => ({}));
           if (res.ok && j.access_token) {
             if (v.nom) warn("loi", `identifiants PISTE inversés dans les secrets GitHub (PISTE_CLIENT_ID ↔ PISTE_CLIENT_SECRET) : ça marche, mais à remettre dans l'ordre`);
-            return { ...env, token: j.access_token, nom: env.nom + v.nom + (basic ? " (en-tête Basic)" : "") };
+            return { ...env, token: j.access_token, entetes: null, nom: env.nom + v.nom + (basic ? " (en-tête Basic)" : "") };
           }
           essais.push(`${env.nom}${v.nom}${basic ? " Basic" : ""} : HTTP ${res.status} ${propre(j.error || "")}`.trim());
         } catch (e) {
@@ -135,10 +135,23 @@ async function jetonPiste() {
       }
     }
   }
+  // Repli : PISTE accepte aussi une « clé d'API » (en-tête KeyId) — l'un des deux secrets peut en être une.
+  for (const env of PISTE) {
+    for (const [nomVar, cle] of [["PISTE_CLIENT_ID", id], ["PISTE_CLIENT_SECRET", secret]]) {
+      try {
+        const res = await req(`${env.api}/consult/getArticle`, { method: "POST", headers: { KeyId: cle, "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ id: "LEGIARTI000038612228" }) });
+        const j = await res.json().catch(() => ({}));
+        if (res.ok && j.article) return { ...env, entetes: { KeyId: cle }, nom: `${env.nom}, clé d'API contenue dans ${nomVar}` };
+        essais.push(`${env.nom} clé d'API ${nomVar} : HTTP ${res.status}`);
+      } catch (e) {
+        essais.push(`${env.nom} clé d'API ${nomVar} : ${raison(e)}`);
+      }
+    }
+  }
   return { erreur: `jeton refusé (${essais.join(" ; ")}) ; PISTE_CLIENT_ID = ${forme(brutId)}, PISTE_CLIENT_SECRET = ${forme(brutSecret)}` };
 }
 async function lf(api, chemin, corps) {
-  const res = await req(api.api + chemin, { method: "POST", headers: { authorization: `Bearer ${api.token}`, "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(corps) });
+  const res = await req(api.api + chemin, { method: "POST", headers: { ...(api.entetes || { authorization: `Bearer ${api.token}` }), "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(corps) });
   const brut = await res.text();
   let json = null;
   try { json = JSON.parse(brut); } catch {}
