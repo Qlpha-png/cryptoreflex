@@ -21,17 +21,12 @@ const CAT_INTRO: Record<string, string> = {
 const fr = (n: number) => n.toLocaleString("fr-FR").replace(/ /g, " ");
 const dateFr = (t: string) => (/^\d{4}-\d{2}-\d{2}/.test(t) ? new Date(t.slice(0, 10) + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : t);
 
-/** chance qu'une carte tirée soit celle-ci (toutes les cartes à égalité, moins la part des éditions) */
-export function universCardChance(pEditions: number): number {
-  return (1 - pEditions) / universCards().length;
-}
-
-export default function UniversCarte({ c, pEditions }: { c: UCard; pEditions: number }) {
+/** chance : probabilité qu'une carte tirée soit celle-ci, calculée par le moteur (universCardP : dépend de la rareté depuis le 05/10) */
+export default function UniversCarte({ c, chance }: { c: UCard; chance: number }) {
   const d = universDesc(c.id);
   const col = RC[c.r];
   const label = CAT_LABEL[c.cat];
   const total = universStats()[c.cat].total;
-  const chance = universCardChance(pEditions);
   const linked = d?.l ? universById(d.l) : undefined;
   const near = universCards().filter((x) => x.cat === c.cat && Math.abs(x.rank - c.rank) <= 4 && x.id !== c.id).sort((a, b) => a.rank - b.rank).slice(0, 8);
   const schema = graphSchema([breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Reflex Cards", url: "/cartes" }, { name: c.nom, url: `/cartes/${c.id}` }])]);
@@ -114,7 +109,7 @@ export default function UniversCarte({ c, pEditions }: { c: UCard; pEditions: nu
               <div className="mt-8 rounded-2xl border border-border p-5 text-sm text-fg/80">
                 <div className="font-semibold text-fg">Comment la rareté est décidée</div>
                 <p className="mt-2">
-                  Chaque carte de l&apos;Univers a la même chance de tomber dans un booster : {oddsText(chance).replace("1 carte sur", "1 sur")}. La rareté d&apos;une carte est sa place dans sa catégorie (notoriété, usage, histoire), jamais son prix. Le chapitre {label} compte {fr(total)} cartes, dont {fr(universStats()[c.cat].L ?? 0)} Légendaires.
+                  La rareté d&apos;une carte est sa place dans sa catégorie (notoriété, usage, histoire), jamais son prix. Un booster tire d&apos;abord une rareté (les plus hautes sont les plus rares), puis une carte au hasard parmi celles de cette rareté : celle-ci sort {oddsText(chance).replace("1 carte sur", "1 sur")}. Le chapitre {label} compte {fr(total)} cartes, dont {fr(universStats()[c.cat].L ?? 0)} Légendaires.
                 </p>
               </div>
               <div className="mt-8 rounded-2xl border border-border bg-surface p-5">

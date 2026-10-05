@@ -9,8 +9,9 @@
  * Les cryptos gardent leur identifiant CoinGecko : les collections existantes restent valables telles quelles ; une carte déjà en jeu
  * ne descend jamais de rareté (Légendaires à vie : le plancher est appliqué à l'export).
  *
- * Règle de tirage WikiMasters : TOUTES les cartes ont la même chance (drapeau `equi` lu par engine.ts) ; la rareté d'une carte est
- * sa place dans sa catégorie. Les garanties (Rare au 6e booster, 1re Super rare, filets invisibles) sont conservées.
+ * La rareté d'une carte est sa place dans sa catégorie. Tirage : d'abord la rareté (UNIV_W), puis une carte au hasard parmi celles de
+ * cette rareté (de la catégorie, pour un booster thématique). Les garanties (Rare au 6e booster, 1re Super rare, filets invisibles)
+ * sont conservées.
  */
 import "server-only";
 import raw from "@/data/reflex-cards-univers.json";
@@ -204,6 +205,17 @@ export function searchUnivers(q: string, cat: Cat | null, limit = 30): UCard[] {
 
 /* ---------- règles du moteur ---------- */
 type Rar = "C" | "PC" | "R" | "SR" | "UR" | "L";
+/**
+ * Part de chaque rareté parmi les cartes tirées (hors éditions et reliques).
+ * Historique : jusqu'au 04/10, option W (C 72 % · PC 18,6 % · R 6,5 % · SR 2,4 % · UR 0,45 % · L 0,063 %) ; du 04 au 05/10, Univers
+ * équiprobable : chaque carte à égalité, donc chaque rareté au prorata de son effectif (C 40 % · PC 30 % · R 18 % · SR 8,5 % ·
+ * UR 3 % · L 0,57 %) → une Ultra rare dans 1 booster sur 6, autant de chance sur une Super rare que sur une Commune (retour de
+ * Valérie, 05/10 : « y'a trop de rares, du coup c'est plus rare »).
+ * Décision de Kev (05/10) : « rehausser la rareté entre ce qu'on avait avant et maintenant » → moyenne géométrique des deux, arrondie :
+ * par booster de 5 cartes, une Rare ou mieux 62 % · Super rare ou mieux 27 % · Ultra rare ou mieux 6,8 % (1 sur 15) · Légendaire 1 %
+ * (1 sur 100). Une Légendaire précise devient ~4 fois plus rare qu'une Commune précise (avant : la même chance).
+ */
+export const UNIV_W: Record<Rar, number> = { C: 0.573, PC: 0.25, R: 0.115, SR: 0.048, UR: 0.012, L: 0.002 };
 interface RCardLike { id: string; r: Rar; fam: string; noto: number; num: number | string; part: number | null; legende?: 1; fossil?: 1; year?: number }
 /** le sous-ensemble des règles que l'Univers remplace (le reste — économie, missions, objets… — est repris tel quel) */
 export interface UniversRulesPatch {
@@ -217,8 +229,10 @@ export interface UniversRulesPatch {
   relicP: number;
   quests: { id: string; goal: number; card?: string }[];
   themes: { id: string; rew: number; fams?: boolean; cards?: string[] }[];
-  /** tirage équiprobable sur tout le pool (WikiMasters) */
-  equi: true;
+  /** catalogue Univers (objectifs adaptés : « Album d'argent » = 1 000 cartes…) */
+  univ: true;
+  /** part de chaque rareté parmi les cartes tirées (UNIV_W) */
+  wRar: Record<Rar, number>;
   totyFromDay: number;
 }
 /**
@@ -263,6 +277,6 @@ export function universRules(base: { cards: RCardLike[]; ed: Record<string, { p:
   ];
   return {
     cards, parts: [{ jour: 1, collection: "Univers", partie: 1 }], pages, families: CATS.map((c) => CAT_LABEL[c]), ed, relics, relicP, quests,
-    themes: base.themes, equi: true, totyFromDay: base.totyFromDay,
+    themes: base.themes, univ: true, wRar: UNIV_W, totyFromDay: base.totyFromDay,
   };
 }

@@ -1,5 +1,5 @@
 /**
- * Reflex Cards — Univers (REFLEX_CARDS_UNIVERS=true) : 27 744 cartes, tirage équiprobable, garanties conservées,
+ * Reflex Cards — Univers (REFLEX_CARDS_UNIVERS=true) : 25 000+ cartes, rareté tirée d'abord (UNIV_W, 05/10), garanties conservées,
  * identifiants du jeu actuel retrouvés, éditions par catégorie, recherche.
  */
 import { describe, it, expect, vi } from "vitest";
@@ -10,8 +10,8 @@ import RULES_RAW from "@/data/reflex-cards-rules.json";
    on recharge le moteur pour qu'il lise l'Univers */
 process.env.REFLEX_CARDS_UNIVERS = "true";
 vi.resetModules();
-const { CARD, RULES, UNIVERS, dayTables, drawPack, inClear } = await import("@/lib/reflex-cards/engine");
-const { CATS, CAT_LABEL, searchUnivers, universById, universCards, universStats } = await import("@/lib/reflex-cards/univers");
+const { CARD, RULES, UNIVERS, dayTables, drawPack, inClear, universCardP } = await import("@/lib/reflex-cards/engine");
+const { CATS, CAT_LABEL, UNIV_W, searchUnivers, universById, universCards, universStats } = await import("@/lib/reflex-cards/univers");
 
 const seeded = (seed: number): Rnd => {
   let a = seed;
@@ -23,7 +23,9 @@ const RNK = (r: string) => RULES.rar.indexOf(r as "C");
 describe("Univers — catalogue et règles", () => {
   it("l'interrupteur est lu et le catalogue chargé", () => {
     expect(UNIVERS).toBe(true);
-    expect(RULES.equi).toBe(true);
+    expect(RULES.univ).toBe(true);
+    expect(RULES.wRar).toEqual(UNIV_W);
+    expect(Object.values(UNIV_W).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 9);
     expect(universCards().length).toBeGreaterThan(25000);
     /* les 2 Fossiles du Musée (Terra, UST) sont aussi des cartes du catalogue : pas de doublon */
     expect(RULES.cards.length).toBe(universCards().length);
@@ -68,8 +70,8 @@ describe("Univers — catalogue et règles", () => {
   });
 });
 
-describe("Univers — tirage équiprobable, garanties conservées", () => {
-  it("50 000 boosters : chaque palier au prorata de son effectif, Rare garantie au 6e booster", () => {
+describe("Univers — rareté tirée d'abord (UNIV_W), garanties conservées", () => {
+  it("50 000 boosters : chaque rareté à sa part UNIV_W, Rare garantie au 6e booster", () => {
     const rnd = seeded(2026), ps = freshPity(), N = 50000;
     const seen = new Map<string, number>();
     let R = 0, worst = 0, since = 0, cards = 0;
@@ -91,13 +93,26 @@ describe("Univers — tirage équiprobable, garanties conservées", () => {
       worst = Math.max(worst, since);
     }
     expect(worst).toBeLessThan(RULES.pity.R);
-    /* part des Communes tirées ≈ part des Communes du pool (71-72 %), à la garantie près */
-    const total = universCards().length, nC = universCards().filter((c) => c.r === "C").length;
-    expect(byR.C / cards).toBeGreaterThan(nC / total - 0.06);
-    expect(byR.C / cards).toBeLessThan(nC / total + 0.01);
-    /* 250 000 cartes tirées sur 27 744 : au moins 99 % des cartes vues au moins une fois (équiprobabilité) */
+    /* part de chaque rareté tirée ≈ UNIV_W (les garanties remontent un peu R et SR, baissent un peu C) */
+    const total = universCards().length;
+    expect(byR.C / cards).toBeGreaterThan(UNIV_W.C - 0.04);
+    expect(byR.C / cards).toBeLessThan(UNIV_W.C + 0.005);
+    expect(byR.L / cards).toBeGreaterThan(UNIV_W.L * 0.8);
+    expect(byR.L / cards).toBeLessThan(UNIV_W.L * 1.2);
+    expect(byR.UR / cards).toBeGreaterThan(UNIV_W.UR * 0.9);
+    expect(byR.UR / cards).toBeLessThan(UNIV_W.UR * 1.15);
+    /* toutes les cartes restent atteignables : 250 000 cartes tirées, au moins 99 % vues au moins une fois */
     expect(seen.size / total).toBeGreaterThan(0.99);
-    expect(R / N).toBeGreaterThan(0.3);
+    expect(R / N).toBeGreaterThan(0.55);
+  });
+  it("la chance d'une carte précise dépend de sa rareté : Légendaire < Ultra rare < … < Commune", () => {
+    const order = ["L", "UR", "SR", "R", "PC", "C"] as const;
+    for (let i = 0; i < order.length - 1; i++) expect(universCardP(1, order[i]), order[i]).toBeLessThan(universCardP(1, order[i + 1]));
+    /* somme sur toutes les cartes de base = part hors éditions et reliques (≈ 1) */
+    const T = dayTables(1);
+    const sum = RULES.rar.reduce((s, r) => s + universCardP(1, r) * T.byRD[r].length, 0);
+    expect(sum).toBeGreaterThan(0.99);
+    expect(sum).toBeLessThanOrEqual(1);
   });
   it("booster thématique Personnes : que des Personnes", () => {
     const rnd = seeded(7), ps = freshPity();

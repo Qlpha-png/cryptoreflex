@@ -31,7 +31,8 @@ const CAT_DESC: Record<Cat, string> = {
 export default function UniversHub({ accounts }: { accounts: boolean }) {
   const all = universCards(), total = all.length, st = universStats();
   const day = seasonDay();
-  const pCard = universCardP(day);
+  /* chance d'une carte précise, par rareté ; part de chaque rareté parmi les cartes tirées */
+  const pCard = (r: Rarity) => universCardP(day, r);
   const tot: Record<Rarity, number> = Object.fromEntries(RAR.map((r) => [r, CATS.reduce((s, c) => s + ((st[c] as Record<string, number>)[r] ?? 0), 0)])) as Record<Rarity, number>;
   const nIcons = RULES.ed.icon?.list.length ?? 0, nMyth = RULES.ed.myth?.list.length ?? 0, nRelic = RULES.relics.length;
   /* éventail : les formes les plus rares (images du moteur du jeu) */
@@ -109,23 +110,25 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       {/* Raretés : le dosage réel */}
       <section className="py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold sm:text-3xl">Six raretés, toutes les cartes à égalité</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">Six raretés, de la Commune à la Légendaire</h2>
           <p className="mt-2 max-w-3xl text-fg/70">
-            Chaque carte a la même chance d&apos;être tirée ({oddsText(pCard)}). La rareté d&apos;une carte, c&apos;est sa place dans sa
-            catégorie (popularité, usage, histoire), jamais son prix. Dans un booster de 5 cartes, on tire en moyenne{" "}
-            {fr(Math.round((tot.C / total) * 50) / 10)} Communes, {fr(Math.round((tot.PC / total) * 50) / 10)} Peu communes et{" "}
-            {fr(Math.round((tot.R / total) * 50) / 10)} Rare.
+            La rareté d&apos;une carte, c&apos;est sa place dans sa catégorie (popularité, usage, histoire), jamais son prix. Un booster
+            tire d&apos;abord une rareté, puis une carte au hasard parmi celles de cette rareté : une Commune précise sort{" "}
+            {oddsText(pCard("C")).replace("1 carte sur", "1 fois sur")}, une Légendaire précise {oddsText(pCard("L")).replace("1 carte sur", "1 fois sur")}.
+            Dans un booster de 5 cartes, on tire en moyenne {fr(Math.round(pCard("C") * tot.C * 50) / 10)} Communes,{" "}
+            {fr(Math.round(pCard("PC") * tot.PC * 50) / 10)} Peu commune et {fr(Math.round(pCard("R") * tot.R * 50) / 10)} Rare ; une
+            Ultra rare tombe environ 1 booster sur {fr(Math.round(1 / (1 - Math.pow(1 - pCard("UR") * tot.UR - pCard("L") * tot.L, 5))))}.
           </p>
           <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
             {showcase.map(({ r, card, id, ft }) => (
               <li key={r} className="flex flex-col items-center text-center">
                 <Link href={`/cartes/${id}`} aria-label={`Carte ${card.name}`}>
-                  <CardVisual card={card} day={day} width={150} uid={`uh-${r}`} chance={pCard} ft={ft} />
+                  <CardVisual card={card} day={day} width={150} uid={`uh-${r}`} chance={pCard(r)} ft={ft} />
                 </Link>
                 <p className="mt-3 text-sm font-bold" style={{ color: RC[r] }}>
                   {RNAME[r]} <span className="text-xs">{PIPS[r]}</span>
                 </p>
-                <p className="text-xs text-muted">{fr(tot[r])} cartes · {pct1(tot[r] / total)} des tirages</p>
+                <p className="text-xs text-muted">{fr(tot[r])} cartes · {pct1(pCard(r) * tot[r])} des tirages</p>
               </li>
             ))}
           </ul>

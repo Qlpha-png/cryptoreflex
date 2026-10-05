@@ -120,6 +120,8 @@ export interface UniversInfo {
   catv: string; total: number; cats: Record<string, Record<string, number>>; labels: Record<string, string>; editions: ReturnType<typeof universEditions>;
   /** chances TOTALES des éditions côté serveur (le navigateur les affiche, il ne tire plus rien) */
   ed: { myth: number; icon: number; toty: number; bds: number; relicAny: number; relics: string[] };
+  /** part de chaque rareté parmi les cartes tirées (UNIV_W, 05/10) : le navigateur en déduit les chances affichées */
+  w: Record<string, number>;
 }
 export type GameDataU = GameData & { univers: UniversInfo | null };
 const LEGACY_ROW = new Map(RAW.cards.map((r) => [r[0], r]));
@@ -169,6 +171,7 @@ export function universGame(day: number): GameDataU {
     univers: {
       catv: universMeta().genere, total: all.length, cats, labels: Object.fromEntries(CATS.map((c) => [c, CAT_LABEL[c]])), editions: E,
       ed: { myth: ENGINE_RULES.ed.myth.p, icon: ENGINE_RULES.ed.icon.p, toty: ENGINE_RULES.ed.toty.p, bds: ENGINE_RULES.ed.bds.p, relicAny: ENGINE_RULES.relicP * ENGINE_RULES.relics.length, relics: ENGINE_RULES.relics },
+      w: { ...ENGINE_RULES.wRar },
     },
   };
 }

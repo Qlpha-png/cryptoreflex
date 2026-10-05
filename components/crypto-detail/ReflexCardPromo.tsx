@@ -28,7 +28,7 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
   const name = cleanName(legacy?.name ?? univ!.nom);
   const rare = rareCard(id);
   const col = rare ? (rare.form === "myth" ? "#ff2d6f" : rare.form === "icon" ? "#e8d49a" : "#f7d774") : RC[r];
-  const chance = UNIVERS_ON() ? universCardP(day) : todayChance(legacy!, day);
+  const chance = UNIVERS_ON() ? universCardP(day, r) : todayChance(legacy!, day);
   const visual = rare ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="h-auto w-[132px] drop-shadow-[0_14px_24px_rgba(0,0,0,.55)] sm:w-[164px]" />

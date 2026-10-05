@@ -33,7 +33,7 @@ import { applyReleases } from "@/lib/reflex-cards/releases";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
 import { CAT_LABEL, UNIVERS_ON, universBlurb, universById, universCards, universIndexable, universOvr, universStats } from "@/lib/reflex-cards/univers";
-import { RULES, dayTables, universCardP } from "@/lib/reflex-cards/engine";
+import { universCardP } from "@/lib/reflex-cards/engine";
 import { rareCard } from "@/lib/reflex-cards/rare";
 import UniversCarte from "@/components/reflex-cards/UniversCarte";
 
@@ -54,7 +54,6 @@ export const dynamicParams = process.env.REFLEX_CARDS_UNIVERS?.trim() === "true"
 export const revalidate = 3600;
 
 /** part des tirages pris par les éditions (Mythiques, Équipe, Icônes, Bloc, Fossiles, Reliques) ce jour-là */
-const editionsShare = (day: number) => Object.values(dayTables(Math.max(1, day)).ed).reduce((s, e) => s + e.p, 0) + RULES.relicP * RULES.relics.length;
 
 export function generateStaticParams() {
   if (!isReflexCardsEnabled()) return [];
@@ -185,7 +184,7 @@ export default async function CartePage({ params }: Props) {
     /* carte de l'Univers (hors jeu d'origine) : page dédiée ; sinon vrai 404 */
     const u = UNIVERS_ON() ? universById(params.id) : undefined;
     if (!u) notFound();
-    return <UniversCarte c={u} pEditions={editionsShare(seasonDay())} />;
+    return <UniversCarte c={u} chance={universCardP(seasonDay(), u.r)} />;
   }
   const day = seasonDay();
   const name = cleanName(c.name);
@@ -202,7 +201,7 @@ export default async function CartePage({ params }: Props) {
   const revealed = u ? true : isRevealed(c);
   const info = c.fossil || u ? null : rarityInfo(c.r);
   const col = c.fossil ? "#a8927a" : RC[cv.r];
-  const chance = u ? universCardP(day) : todayChance(c, day);
+  const chance = u ? universCardP(day, u.r) : todayChance(c, day);
   const family = c.fossil ? [] : albumCards().filter((x) => x.fam === c.fam && isVisible(x, day));
   const idx = family.findIndex((x) => x.id === c.id);
   const near = family.slice(Math.max(0, idx - 4), idx + 5).filter((x) => x.id !== c.id).slice(0, 8);
@@ -338,7 +337,7 @@ export default async function CartePage({ params }: Props) {
                     Rareté {RNAME[cv.r]}
                   </div>
                   <p className="mt-2">
-                    Le chapitre Cryptos compte {(st[cv.r] ?? 0).toLocaleString("fr-FR")} cartes {RNAME[cv.r].toLowerCase()}s sur {st.total.toLocaleString("fr-FR")}. Toutes les cartes de l&apos;Univers ({universCards().length.toLocaleString("fr-FR")}) ont la même chance d&apos;être tirées : celle-ci, {oddsText(chance)}.
+                    Le chapitre Cryptos compte {(st[cv.r] ?? 0).toLocaleString("fr-FR")} cartes {RNAME[cv.r].toLowerCase()}s sur {st.total.toLocaleString("fr-FR")}. Un booster tire d&apos;abord une rareté, puis une carte au hasard parmi celles de cette rareté : celle-ci sort {oddsText(chance)}.
                   </p>
                 </div>
               )}

@@ -49,8 +49,8 @@ interface Rules {
   quests: { id: string; goal: number; card?: string }[];
   themes: { id: string; rew: number; fams?: boolean; cards?: string[] }[];
   titles: string[];
-  /** Univers (REFLEX_CARDS_UNIVERS=true) : tirage équiprobable sur tout le pool, règle WikiMasters */
-  equi?: true;
+  /** Univers (REFLEX_CARDS_UNIVERS=true) : catalogue de 25 000+ cartes ; la part de chaque rareté est UNIV_W (lib/reflex-cards/univers.ts) */
+  univ?: true;
 }
 /* Univers (04/10/2026) : les règles du jeu actuel, dont les cartes, les pages, les familles, les éditions et les défis sont remplacés
    par ceux du catalogue de 27 744 cartes ; économie, missions, objets, finitions et garanties inchangés. Sans la variable : rien ne change. */
@@ -123,11 +123,12 @@ export function dayTables(day: number): DayTables {
   return t;
 }
 
-/** Univers : chance qu'une carte tirée soit UNE carte donnée (toutes à égalité, moins la part des éditions et des reliques) */
-export function universCardP(day: number): number {
+/** Univers : chance qu'une carte tirée soit UNE carte donnée de rareté r (part de sa rareté ÷ cartes de cette rareté, hors éditions et
+ *  reliques). Depuis le 05/10 elle dépend de la rareté : une Légendaire précise est plus rare qu'une Commune précise. */
+export function universCardP(day: number, r: Rar): number {
   const T = dayTables(Math.max(1, day));
   const pe = Object.values(T.ed).reduce((s, e) => s + e.p, 0) + RULES.relicP * RULES.relics.length;
-  return (1 - pe) / Math.max(1, BASE.length);
+  return ((1 - pe) * (RULES.wRar[r] ?? 0)) / Math.max(1, T.byRD[r]?.length ?? 0);
 }
 
 /* ---------- tirage (portage fidèle de drawPack du jeu v9) ---------- */
@@ -141,8 +142,7 @@ const baseRank = (it: Item) => (it.ed ? -1 : RNK(CARD.get(it.id)!.r));
 let TIER_SHARE: Record<Rar, number> | null = null;
 const tierShare = (r: Rar): number => {
   if (!TIER_SHARE) {
-    if (RULES.equi) { const n = BASE.length || 1; TIER_SHARE = Object.fromEntries(RAR.map((k) => [k, BASE.filter((c) => c.r === k).length / n])) as Record<Rar, number>; }
-    else TIER_SHARE = RULES.wRar;
+    TIER_SHARE = RULES.wRar;
   }
   return TIER_SHARE[r] || 1e-3;
 };
@@ -174,12 +174,8 @@ function drawOne(day: number, fam: string | null, rnd: Rnd): Item {
     if (x < T.ed[k].p) return { id: pick(T.ed[k].list, rnd), ed: k, fin: null };
     x -= T.ed[k].p;
   }
-  /* Univers : chaque carte a la même chance (WikiMasters) — la rareté tombe d'elle-même, au prorata des effectifs ;
-     booster thématique : même chose à l'intérieur de la catégorie */
-  if (RULES.equi) {
-    const pool = (fam && T.byFam.get(fam)) || T.all;
-    return { id: pick(pool, rnd).id, ed: null, fin: rollFin(rnd) };
-  }
+  /* la rareté d'abord (Univers : UNIV_W depuis le 05/10, au lieu de « toutes les cartes à égalité »), puis une carte de cette rareté ;
+     booster thématique : parmi celles de la catégorie */
   let y = rnd(), r: Rar = "C";
   for (const k of RAR) {
     if ((y -= RULES.wRar[k]) < 0) { r = k; break; }
@@ -418,7 +414,7 @@ export function titleOk(s: GameState, id: string): boolean {
     case "t-l": return BASE.some((c) => c.r === "L" && own(s, c.id));
     case "t-icon": return anyEd(s, "icon");
     /* Univers : l'album complet n'existe plus (27 744 cartes) → « Album d'argent » = 1 000 cartes différentes */
-    case "t-silver": return RULES.equi ? s.cards.size >= 1000 : BASE.filter((c) => c.r !== "L").every((c) => own(s, c.id));
+    case "t-silver": return RULES.univ ? s.cards.size >= 1000 : BASE.filter((c) => c.r !== "L").every((c) => own(s, c.id));
     case "t-onyx": return [...s.cards.values()].some((e) => e.fins.onyx.length > 0);
     case "t-myth": return anyEd(s, "myth");
     default: return false;
