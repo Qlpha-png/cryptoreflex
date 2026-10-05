@@ -1,0 +1,116 @@
+# Veille officielle — les sources dont dépendent les chiffres du site, relues chaque nuit (Kev, 05/10/2026 : « qu'ils se
+# mettent à jour automatiquement sur les sources officielles, je n'ai pas envie d'avoir la moindre erreur »).
+#
+#  - Légifrance (API officielle PISTE, secrets PISTE_CLIENT_ID / PISTE_CLIENT_SECRET) : nouvelle version d'un article
+#    suivi, version à venir déjà publiée, et chiffres attendus (305 €, 12,8 %, barème, décote, 10,6 %…) ;
+#  - BOFiP (pages officielles + jeu de données ouvert), pages impots.gouv / service-public, registre MiCA de l'ESMA,
+#    grilles de frais citées par le comparateur.
+# Un changement : le job échoue (e-mail GitHub), le ticket « veille-officielle » est créé ou complété, et la routine
+# Claude du matin relit la source, met le site à jour, puis relance ce workflow avec « enregistrer » (nouvelle référence
+# data/veille/etat.json). Script : scripts/veille-officielle.mjs ; sources : data/veille/sources.json.
+name: Veille officielle (lois, BOFiP, registres, frais)
+
+on:
+  schedule:
+    - cron: "40 4 * * *" # 6 h 40 à Paris, avant le contrôle complet de la sentinelle
+  workflow_dispatch:
+    inputs:
+      enregistrer:
+        description: "Enregistrer l'état observé comme nouvelle référence (seulement après mise à jour du site)"
+        type: boolean
+        default: false
+      detail:
+        description: "Imprimer les extraits officiels (versions, phrases chiffrées)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: veille-officielle
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Veille
+        id: run
+        continue-on-error: true
+        env:
+          PISTE_CLIENT_ID: ${{ secrets.PISTE_CLIENT_ID }}
+          PISTE_CLIENT_SECRET: ${{ secrets.PISTE_CLIENT_SECRET }}
+          VEILLE_REPORT: veille-report.md
+        run: node scripts/veille-officielle.mjs ${{ inputs.enregistrer && '--enregistrer' || '' }} ${{ inputs.detail && '--detail' || '' }}
+
+      - name: Enregistrer la nouvelle référence
+        # aussi quand des écarts de valeur restent : les versions relues sont enregistrées, l'écart reste signalé
+        if: inputs.enregistrer
+        run: |
+          if git diff --quiet -- data/veille/etat.json; then
+            echo "Référence inchangée."
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git add data/veille/etat.json
+          git commit -m "chore(veille): nouvelle référence des sources officielles" \
+            -m "Généré par .github/workflows/veille-officielle.yml (option « enregistrer »)." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep 2
+          done
+          exit 1
+
+      - name: Ticket « veille-officielle »
+        if: always()
+        uses: actions/github-script@v9
+        env:
+          OUTCOME: ${{ steps.run.outcome }}
+        with:
+          script: |
+            const fs = require("fs");
+            const report = fs.existsSync("veille-report.md") ? fs.readFileSync("veille-report.md", "utf8") : "(rapport absent)";
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const failed = process.env.OUTCOME === "failure";
+            const defects = report.split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
+            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "veille-officielle", per_page: 10 });
+            const issue = open[0];
+            if (failed) {
+              const body = `${report}\n\n[Voir l'exécution](${runUrl})`;
+              if (!issue) {
+                await github.rest.issues.create({ ...context.repo, title: "[Veille officielle] une source officielle a changé", body, labels: ["veille-officielle"] });
+                return;
+              }
+              // une seule alerte par ensemble d'écarts identique (pas un commentaire par nuit)
+              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
+              const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
+              if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
+            } else if (issue) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Plus aucun écart avec les sources officielles.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+            }
+
+      - name: Échec si changement (e-mail GitHub)
+        if: steps.run.outcome == 'failure'
+        run: |
+          echo "Une source officielle a changé : voir le ticket « veille-officielle »."
+          exit 1

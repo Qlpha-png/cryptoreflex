@@ -1,0 +1,45 @@
+{
+  "_lisezmoi": "Sources officielles surveillées chaque nuit par scripts/veille-officielle.mjs (.github/workflows/veille-officielle.yml). « attendus » = phrases qui doivent figurer TELLES QUELLES dans le texte officiel (espaces normalisées) : si l'une disparaît, un chiffre du site est peut-être devenu faux. L'état de référence (versions, dates, empreintes) est dans data/veille/etat.json, réécrit seulement par « --enregistrer » après relecture.",
+  "legifrance": [
+    { "cle": "CGI art. 150 VH bis", "texte": "LEGITEXT000006069577", "num": "150 VH bis", "idConnu": "LEGIARTI000038612228", "sujet": "Régime des plus-values crypto des particuliers : seuil de 305 €, méthode globale, sursis des échanges", "attendus": ["305 €"] },
+    { "cle": "CGI art. 150 VH ter", "texte": "LEGITEXT000006069577", "num": "150 VH ter", "sujet": "NFT : régime du bien ou du droit représenté (loi n° 2026-534)", "attendus": [] },
+    { "cle": "CGI art. 200 C", "texte": "LEGITEXT000006069577", "num": "200 C", "sujet": "Taux forfaitaire de 12,8 % sur les plus-values crypto", "attendus": ["12,8 %"] },
+    { "cle": "CGI art. 197", "texte": "LEGITEXT000006069577", "num": "197", "sujet": "Barème de l'impôt sur le revenu et décote (calculateur, articles barème)", "attendus": ["11 600 €", "29 579 €", "84 577 €", "181 917 €", "897 €", "1 483 €", "45,25 %"] },
+    { "cle": "CGI art. 92", "texte": "LEGITEXT000006069577", "num": "92", "idConnu": "LEGIARTI000028448395", "sujet": "BNC : opérations sur actifs numériques menées comme un professionnel (2-1° bis)", "attendus": ["actifs numériques"] },
+    { "cle": "CGI art. 102 ter", "texte": "LEGITEXT000006069577", "num": "102 ter", "idConnu": "LEGIARTI000053546823", "sujet": "Micro-BNC : abattement de 34 %, minimum de 305 €", "attendus": ["34 %", "305 €"] },
+    { "cle": "CGI art. 156", "texte": "LEGITEXT000006069577", "num": "156", "idConnu": "LEGIARTI000054373682", "sujet": "Déficits BNC non professionnels : imputation sur 6 ans", "attendus": ["six années suivantes"] },
+    { "cle": "CGI art. 1649 bis C", "texte": "LEGITEXT000006069577", "num": "1649 bis C", "sujet": "Déclaration des comptes d'actifs numériques à l'étranger (3916-bis)", "attendus": ["actifs numériques"] },
+    { "cle": "CGI art. 1736", "texte": "LEGITEXT000006069577", "num": "1736", "sujet": "Amende 3916-bis : 750 € par compte, 1 500 € au-delà de 50 000 €", "attendus": ["750 €", "1 500 €", "50 000 €"] },
+    { "cle": "CSS art. L136-6", "texte": "LEGITEXT000006073189", "num": "L136-6", "idConnu": "LEGIARTI000051218166", "sujet": "CSG sur les revenus du patrimoine : assiette (plus-values crypto)", "attendus": ["150 VH bis"] },
+    { "cle": "CSS art. L136-8", "texte": "LEGITEXT000006073189", "num": "L136-8", "idConnu": "LEGIARTI000051287395", "sujet": "Taux de CSG de 10,6 % sur les revenus du patrimoine (18,6 % de prélèvements sociaux au total)", "attendus": ["10,6 %"] },
+    { "cle": "LPF art. L169", "texte": "LEGITEXT000006069583", "num": "L169", "idConnu": "LEGIARTI000051759330", "sujet": "Délai de reprise : 3 ans, 10 ans si compte à l'étranger non déclaré", "attendus": ["troisième année", "dixième année"] }
+  ],
+  "bofip": {
+    "fiches": [
+      { "id": "BOI-RPPM-PVBMC-30", "page": "https://bofip.impots.gouv.fr/bofip/11966-PGP.html", "sujet": "Plus-values sur actifs numériques : vue d'ensemble" },
+      { "id": "BOI-RPPM-PVBMC-30-10", "page": "https://bofip.impots.gouv.fr/bofip/11967-PGP.html", "sujet": "Champ d'application (150 VH bis)" },
+      { "id": "BOI-RPPM-PVBMC-30-20", "page": "https://bofip.impots.gouv.fr/bofip/11968-PGP.html", "sujet": "Calcul de la plus-value (méthode globale, exemple chiffré du Cerfa)" },
+      { "id": "BOI-RPPM-PVBMC-30-30", "page": "https://bofip.impots.gouv.fr/bofip/11969-PGP.html", "sujet": "Imposition (taux, option barème)" },
+      { "id": "BOI-BNC-CHAMP-10-10-20-40", "page": "https://bofip.impots.gouv.fr/bofip/2824-PGP.html", "sujet": "BNC : opérations sur actifs numériques (§ 1080 cas exceptionnels)" },
+      { "id": "BOI-BIC-CHAMP-60-50", "page": "https://bofip.impots.gouv.fr/bofip/4755-PGP.html", "sujet": "BIC : achat-revente de crypto à titre de métier" },
+      { "id": "BOI-BNC-DECLA-20-10", "page": "https://bofip.impots.gouv.fr/bofip/4807-PGP.html", "sujet": "Micro-BNC" },
+      { "id": "BOI-IR-LIQ-20-20-30", "page": "https://bofip.impots.gouv.fr/bofip/2495-PGP.html", "sujet": "Décote" },
+      { "id": "BOI-CF-INF-20-10-50", "page": "https://bofip.impots.gouv.fr/bofip/10841-PGP.html", "sujet": "Amendes des comptes à l'étranger (3916-bis)" },
+      { "id": "BOI-CF-PGR-10-20", "page": "https://bofip.impots.gouv.fr/bofip/1396-PGP.html", "sujet": "Délai de reprise" }
+    ],
+    "_filets": "Requêtes sur le jeu de données ouvert bofip-vigueur (mis à jour chaque mois) : toute fiche nouvelle ou modifiée qui cite le régime crypto est signalée, même si elle n'est pas suivie ci-dessus.",
+    "filets": ["\"actifs numériques\" AND \"150 VH bis\""]
+  },
+  "pages": [
+    { "cle": "impots.gouv : FAQ plus-values crypto", "url": "https://www.impots.gouv.fr/particulier/questions/comment-declarer-les-plus-ou-moins-values-sur-cessions-dactifs-numeriques", "repere": "modifi[ée] le (\\d{2}/\\d{2}/\\d{4})", "attendus": ["31,4 %", "12,8 %", "18,6 %", "305 €"], "sujet": "Taux, seuil, staking (BNC)" },
+    { "cle": "impots.gouv : formulaire 2086", "url": "https://www.impots.gouv.fr/formulaire/2086/declaration-des-plus-ou-moins-values-de-cessions-dactifs-numeriques", "repere": "Mill[ée]sime (\\d{4})", "attendus": [], "sujet": "Nouveau millésime du 2086 = numéros de lignes du générateur Cerfa à revérifier" },
+    { "cle": "service-public : prélèvements sociaux (F2329)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2329", "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})", "attendus": ["10,6 %", "0,5 %", "7,5 %", "18,6 %"], "sujet": "18,6 % de prélèvements sociaux" },
+    { "cle": "service-public : barème de l'impôt (F1419)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1419", "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})", "attendus": ["11 600 €", "29 579 €", "84 577 €", "181 917 €"], "sujet": "Tranches du barème" }
+  ],
+  "registre": {
+    "esma": "https://www.esma.europa.eu/sites/default/files/2024-12/CASPS.csv",
+    "exceptions": {
+      "gemini": "Autorisée au registre (passeport FR) mais sortie commerciale de France en avril 2026 : affichée comme non disponible."
+    }
+  }
+}

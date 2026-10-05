@@ -68,3 +68,8 @@ backup/
 # Logs Codex/Hermes locaux
 .codex-next-start.*.log
 .next_vercel.log
+
+# rapports locaux des robots de contrôle
+sentinelle-report.md
+sentinelle-repairs.json
+veille-report.md
