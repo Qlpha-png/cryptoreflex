@@ -3,7 +3,7 @@ import { ArrowRight, Crown, Gift, Landmark, Scale, ShieldCheck, Smartphone, Spar
 
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import { getCard, oddsText, seasonDay } from "@/lib/reflex-cards/data";
-import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
+import { FAM, PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import { CATS, CAT_LABEL, universById, universCards, universOvr, universStats, type Cat } from "@/lib/reflex-cards/univers";
 import { RULES, universCardP } from "@/lib/reflex-cards/engine";
 import { rareCard } from "@/lib/reflex-cards/rare";
@@ -28,6 +28,12 @@ const CAT_DESC: Record<Cat, string> = {
   concept: "Les idées : blockchain, preuve de travail, DeFi…",
 };
 
+/** exemple d'une rareté sans carte du jeu d'origine (Commune) : une vraie crypto du catalogue, nom court, logo CoinGecko */
+const SHOWCASE_FALLBACK: Partial<Record<Rarity, { id: string; fam: string; sub: string; fact: string }>> = {
+  C: { id: "fxhash", fam: "Plateforme", sub: "Art génératif", fact: "Jeton de fxhash, plateforme d'art génératif." },
+};
+const escHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
 export default function UniversHub({ accounts }: { accounts: boolean }) {
   const all = universCards(), total = all.length, st = universStats();
   const day = seasonDay();
@@ -37,13 +43,29 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
   const nIcons = RULES.ed.icon?.list.length ?? 0, nMyth = RULES.ed.myth?.list.length ?? 0, nRelic = RULES.relics.length;
   /* éventail : les formes les plus rares (images du moteur du jeu) */
   const fan = ["bitcoin", "ethereum", "solana"].map((id) => ({ id, rare: rareCard(id), name: universById(id)?.nom ?? id })).filter((x) => x.rare);
+  /* 05/10/2026 (Kev : « ça dit 6 raretés, on en voit 5 ») : aucune carte du jeu d'origine n'est Commune dans l'Univers (elles
+     sont toutes parmi les 2 000 cryptos les plus connues). La Commune est donc dessinée à partir de sa ligne du catalogue. */
+  const fromUnivers = (r: Rarity): { r: Rarity; card: ReflexCard; id: string; ft: string } | null => {
+    const f = SHOWCASE_FALLBACK[r];
+    const u = f ? (() => { try { return universById(f.id); } catch { return undefined; } })() : undefined;
+    const base = "https://coin-images.coingecko.com/coins/images/";
+    if (!f || !u || u.r !== r || !u.img?.startsWith(base)) return null;
+    const total = (st.crypto as Record<string, number>).total;
+    const card: ReflexCard = {
+      id: u.id, name: u.nom, sym: u.sym, img: u.img.slice(base.length).replace(/\?.*$/, "").replace("/large/", "/"), fam: f.fam, famColor: FAM[f.fam]?.c ?? "#60a5fa",
+      sub: f.sub, year: 0, r, noto: u.rank, ovr: universOvr(u.rank, total), num: u.rank, fossil: false, legende: false, merite: false, score: null, slug: "",
+      desc: f.fact, tag: "", sortie: null, fossile: null, nm: { size: 25, two: false, html: escHtml(u.nom) }, ph: { size: 19, two: false, html: escHtml(u.nom) },
+      subSize: 9.5, ab: `<b>En bref</b> ${escHtml(f.fact)}`, chance: "", chanceP: 0,
+    };
+    return { r, card, id: u.id, ft: `Cryptos · ${u.rank.toLocaleString("fr-FR")}/${total.toLocaleString("fr-FR")}` };
+  };
   /* une carte du jeu d'origine par rareté, avec sa rareté ACTUELLE (Univers) */
   const showcase = RAR.map((r) => {
     /* exemple de rareté : une crypto connue du jeu d'origine, jamais un produit financier tokenisé ni un stablecoin */
     const ok = (lc: ReflexCard) => !/RWA|Actifs réels|tokeni|Stablecoin/i.test(`${lc.fam} ${lc.sub} ${lc.name}`);
     const u = all.filter((c) => c.cat === "crypto" && c.r === r).sort((a, b) => a.rank - b.rank).find((c) => { const lc = getCard(c.id); return !!lc && ok(lc); });
     const lc = u ? getCard(u.id) : undefined;
-    return u && lc ? { r, card: { ...lc, r, num: u.rank, noto: u.rank, ovr: universOvr(u.rank, (st.crypto as Record<string, number>).total) } as ReflexCard, id: u.id, ft: `Cryptos · ${u.rank.toLocaleString("fr-FR")}/${(st.crypto as Record<string, number>).total.toLocaleString("fr-FR")}` } : null;
+    return u && lc ? { r, card: { ...lc, r, num: u.rank, noto: u.rank, ovr: universOvr(u.rank, (st.crypto as Record<string, number>).total) } as ReflexCard, id: u.id, ft: `Cryptos · ${u.rank.toLocaleString("fr-FR")}/${(st.crypto as Record<string, number>).total.toLocaleString("fr-FR")}` } : fromUnivers(r);
   }).filter((x): x is { r: Rarity; card: ReflexCard; id: string; ft: string } => !!x);
   const top = (cat: Cat) => all.filter((c) => c.cat === cat && (c.r === "L" || c.r === "UR")).sort((a, b) => a.rank - b.rank).slice(0, 24);
 
