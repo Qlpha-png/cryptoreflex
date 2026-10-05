@@ -1,0 +1,134 @@
+# Sentinelle — détection d'erreurs automatique de cryptoreflex.fr (Kev, 04/10/2026 : « une détection d'erreur fiable
+# et automatisée pour te prévenir même quand je ne suis pas actif »).
+#
+#  - toutes les heures et après chaque déploiement de production : contrôle léger (pages clés, chiffres de l'accueil,
+#    fraîcheur des actus et des prix, prix du Bitcoin contre Kraken, échecs des autres tâches GitHub) ;
+#  - chaque nuit (après la publication des actus) : contrôle complet (+ moteur Cerfa 2086 sur l'exemple officiel du
+#    BOFiP, liens partenaires, TOUTES les adresses des plans du site) et recomptage des chiffres du site
+#    (data/site-counts.json, commité s'il a changé).
+#
+# Un défaut : le job échoue (GitHub envoie un e-mail), le ticket « Sentinelle » est créé ou complété (une seule fois
+# par ensemble de défauts identique), et la routine Claude planifiée s'en charge. Retour au vert : ticket fermé.
+# Script : scripts/sentinelle.mjs (aucun secret ni donnée personnelle dans le rapport).
+name: Sentinelle (détection d'erreurs)
+
+on:
+  schedule:
+    - cron: "17 * * * *" # contrôle léger, toutes les heures
+    - cron: "35 5 * * *" # contrôle complet, 7 h 35 à Paris (après le robot d'actus de 4 h 30 UTC)
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Contrôle complet (sinon léger)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+
+concurrency:
+  group: sentinelle
+  cancel-in-progress: false
+
+jobs:
+  sentinelle:
+    # après un déploiement : seulement les déploiements de production réussis
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      FULL: ${{ github.event.schedule == '35 5 * * *' || inputs.full == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Laisser le déploiement se propager
+        if: github.event_name == 'deployment_status'
+        run: sleep 90
+
+      - name: Dépendances (contrôle complet seulement)
+        if: env.FULL == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Recompter les chiffres du site
+        if: env.FULL == 'true'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node scripts/update-site-counts.mjs
+          if git diff --quiet -- data/site-counts.json; then
+            echo "Chiffres inchangés."
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git add data/site-counts.json
+          git commit -m "chore(chiffres): recomptage automatique des chiffres du site" \
+            -m "Généré par .github/workflows/sentinelle.yml (scripts/update-site-counts.mjs)." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep 2
+          done
+          exit 1
+
+      - name: Contrôles
+        id: run
+        continue-on-error: true
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTINELLE_REPORT: sentinelle-report.md
+        run: node scripts/sentinelle.mjs ${{ env.FULL == 'true' && '--full' || '' }}
+
+      - name: Ticket « Sentinelle »
+        if: always()
+        uses: actions/github-script@v9
+        env:
+          OUTCOME: ${{ steps.run.outcome }}
+        with:
+          script: |
+            const fs = require("fs");
+            const report = fs.existsSync("sentinelle-report.md") ? fs.readFileSync("sentinelle-report.md", "utf8") : "(rapport absent)";
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const failed = process.env.OUTCOME === "failure";
+            const defects = report.split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
+            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "sentinelle", per_page: 10 });
+            const issue = open[0];
+            if (failed) {
+              const body = `${report}\n\n[Voir l'exécution](${runUrl})`;
+              if (!issue) {
+                await github.rest.issues.create({ ...context.repo, title: "[Sentinelle] défauts détectés sur cryptoreflex.fr", body, labels: ["sentinelle"] });
+                return;
+              }
+              // une seule alerte par ensemble de défauts identique (pas un commentaire par heure)
+              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
+              const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
+              if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
+            } else if (issue) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+            }
+
+      - name: Échec si défaut (e-mail GitHub)
+        if: steps.run.outcome == 'failure'
+        run: |
+          echo "La sentinelle a trouvé des défauts : voir le ticket « Sentinelle »."
+          exit 1
