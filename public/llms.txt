@@ -10,7 +10,7 @@ Dernière mise à jour : 2026-05-06.
 ## Navigation principale
 
 - [Accueil](https://www.cryptoreflex.fr/) : tableau de bord marché crypto + sélection plateformes MiCA + outils
-- [Comparatif plateformes](https://www.cryptoreflex.fr/comparatif) : comparateur Coinbase, Binance, Kraken, Bitpanda, etc.
+- [Comparatif plateformes](https://www.cryptoreflex.fr/comparatif) : comparateur des plateformes agréées MiCA accessibles depuis la France (Coinbase, Kraken, Bitpanda, etc.) ; Binance n'y est plus autorisée depuis le 1er juillet 2026.
 - [Avis plateformes](https://www.cryptoreflex.fr/avis) : reviews indépendantes (1 page par plateforme)
 - [Blog](https://www.cryptoreflex.fr/blog) : guides longs (10-20 min de lecture)
 - [Actualités](https://www.cryptoreflex.fr/actualites) : news quotidiennes (regulation, marche, technologie, plateformes)
@@ -76,7 +76,7 @@ Cryptoreflex publie un guide complet et un calculateur gratuit pour faciliter ce
 ## Avis plateformes (indépendants, score sur 5)
 
 - [Avis Coinbase 2026](https://www.cryptoreflex.fr/avis/coinbase)
-- [Avis Binance 2026](https://www.cryptoreflex.fr/avis/binance)
+- [Avis Binance 2026](https://www.cryptoreflex.fr/avis/binance) : plateforme non autorisée en France depuis le 1er juillet 2026
 - [Avis Kraken 2026](https://www.cryptoreflex.fr/avis/kraken)
 - [Avis Bitpanda 2026](https://www.cryptoreflex.fr/avis/bitpanda)
 - [Avis Bitvavo 2026](https://www.cryptoreflex.fr/avis/bitvavo)
